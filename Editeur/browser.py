@@ -21,7 +21,6 @@
 """
 # Modules Python
 import os,string
-from tkFileDialog import *
 
 # Modules Eficas
 import Interp

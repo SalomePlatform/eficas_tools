@@ -21,8 +21,14 @@
 """
 import string
 
-import prefs
 import Noyau
+
+try:
+  import prefs
+  lang=prefs.lang
+except:
+  lang='fr'
+  
 
 class OBJECT:
   from Noyau.N_CO import CO
@@ -123,7 +129,7 @@ class OBJECT:
          en tenant compte de la langue
      """
      try :
-        return getattr(self.definition,prefs.lang)
+        return getattr(self.definition,lang)
      except:
         return ''
 

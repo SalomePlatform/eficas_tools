@@ -1,4 +1,4 @@
-#@ MODIF N_OBJECT Noyau  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_OBJECT Noyau  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG

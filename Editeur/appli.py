@@ -24,11 +24,12 @@
     L'aspect applicatif doit etre pris en charge par la classe dérivée
 """
 # Modules Python
+import os
 import sys
 import types
 import Pmw
 import Tkinter
-from tkMessageBox import showinfo,askyesno,showerror
+from widgets import showerror
 
 # Modules Eficas
 import splash
@@ -61,11 +62,15 @@ class APPLI:
       self.affiche_FAQ()
       # AY : cas ou le nom du fichier a été passé en argument
       if fichier :
-           try :
-                self.bureau.openJDC( str(MakeNomComplet.FILENAME(fichier)) )
-           except Exception,e :
-                showerror( "ARGUMENT INVALIDE", str(e) )
+           fich=str(MakeNomComplet.FILENAME(fichier))
+           if not os.path.isfile(fich):
+              showerror("Fichier inexistant", "Fichier %s en argument n'existe pas" % fich)
+           else:
+              self.bureau.openJDC( fich)
       # AY : fin
+      # PN : ajout d un attribut pour indiquer si 
+      # l appli a ete lance depuis Salome
+      self.salome=0
 
   def send_message(self,message):
       self.message=message

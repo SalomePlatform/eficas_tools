@@ -223,7 +223,7 @@ class PARAMETRE :
     """
         Donne un echo de self sous la forme nom = valeur
     """
-    return self.nom+' = '+str(self.valeur)+'\n'
+    return self.nom+' = '+str(self.valeur)
 
   def __str__(self):
     """

@@ -1,17 +1,23 @@
-tiny:
-	env PYTHONPATH=`pwd`:`pwd`/..:`pwd`/../Aster epydoc -n EFICASV1.5 --show-imports -o tiny_api  \
-                            ../Aster/prefs.py \
-                            ../Noyau/*.py \
-                            ../Validation/*.py \
-                            ../Ihm/*.py \
-                            ../Extensions/*.py \
-                            ../Accas/*.py \
-                            ../Editeur/*.py \
-                            ../generator/*.py \
-                            ../convert/*.py \
-                            ../convert/Parserv5/__init__.py \
-                            ../convert/Parserv5/conv.py \
-                      ../AIDE/__init__.py  ../AIDE/aide_gui.py  ../AIDE/aide_objets.py  ../AIDE/viewer.py \
-                            ../Tools/*.py \
-                            ../Tools/*/*.py \
+EFICAS=..
+
+api:
+	(export PYTHONPATH=$(EFICAS)/Aster;\
+           epydoc -n EFICAS  --show-imports -o api_eficas -u http://eficas.der.edf.fr \
+                     $(EFICAS)/Noyau/ \
+                     $(EFICAS)/Validation/ \
+                     $(EFICAS)/Ihm/ \
+                     $(EFICAS)/Extensions/ \
+                     $(EFICAS)/Accas/ \
+                     $(EFICAS)/Editeur/ \
+                     $(EFICAS)/generator/ \
+                     $(EFICAS)/convert/*.py $(EFICAS)/convert/Parserv5/__init__.py $(EFICAS)/convert/Parserv5/conv.py \
+                     $(EFICAS)/AIDE/__init__.py $(EFICAS)/AIDE/aide_gui.py $(EFICAS)/AIDE/aide_objets.py $(EFICAS)/AIDE/viewer.py \
+                     $(EFICAS)/Tools/ \
+                            )
+
+debug:                       # options -v --debug pour debugger
+	(export PYTHONPATH=$(EFICAS)/Aster;\
+           epydoc -n EFICAS  --show-imports -v --debug -o api_debug -u http://eficas.der.edf.fr \
+                     $(EFICAS)/Editeur/ \
+                            )
 

@@ -28,7 +28,6 @@ import os,sys,py_compile
 import traceback
 import cPickle
 import Pmw
-from tkMessageBox import showinfo,showerror
 
 # Modules Eficas
 import prefs
@@ -36,6 +35,7 @@ import splash
 import fontes
 import analyse_catalogue
 from Noyau.N_CR import CR
+from widgets import showinfo,showerror
 from widgets import Fenetre
 from utils import init_rep_cata_dev
 

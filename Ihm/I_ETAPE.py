@@ -153,11 +153,14 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             # Il n'existe pas de concept de ce nom dans le voisinage de l'etape courante
             # On peut donc créer le concept retourné.
             # Il est créé sans nom mais enregistré dans la liste des concepts existants
-            self.get_sd_prod()
-            # Il suffit de changer son attribut nom pour le nommer
-            self.sd.nom = nom
-            self.sdnom=nom
-            return 1,"Nommage du concept effectué"
+            try:
+               self.get_sd_prod()
+               # Il suffit de changer son attribut nom pour le nommer
+               self.sd.nom = nom
+               self.sdnom=nom
+               return 1,"Nommage du concept effectué"
+            except:
+               return 0,"Nommage impossible"+str(sys.exc_info()[1])
       else :
           old_nom=self.sd.nom
           if string.find(old_nom,'sansnom') :

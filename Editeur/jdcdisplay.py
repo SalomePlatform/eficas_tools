@@ -30,7 +30,7 @@ import Pmw
 # Modules Eficas
 import panels
 from treeitemincanvas import TREEITEMINCANVAS
-from tkMessageBox import showinfo,showerror
+from widgets import showinfo,showerror
 
 class CONFIG:
    isdeveloppeur='NON'

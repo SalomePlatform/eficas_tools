@@ -24,8 +24,8 @@
 import os,string
 import traceback
 import Pmw
-from tkFileDialog import askopenfilename,asksaveasfilename
-from tkMessageBox import showinfo,askyesno,showerror
+from widgets import askopenfilename,asksaveasfilename
+from widgets import showinfo,askyesno,showerror
 
 # Modules Eficas
 import splash
@@ -244,7 +244,7 @@ class BUREAU:
                                  defaultextension=".comm",
                                  filetypes = filetypes,
                                  initialdir = self.initialdir)
-      if file != '':
+      if file :
           self.fileName = file
           e=extension_fichier(file)
           self.JDCName=stripPath(file)
@@ -327,9 +327,9 @@ class BUREAU:
       """ 
           Sauvegarde le JDC courant.
           Retourne 1 si la sauvegarde s'est bien faite, 0 sinon.
-            - Si echo = 'oui' : interactif (l'utilisateur donne le nom sous lequel il 
+          Si echo = 'oui' : interactif (l'utilisateur donne le nom sous lequel il 
                             veut sauver le JDC
-            - Si echo = 'non' : muet (sauvegarde le JDC dans JDC.procedure)
+          Si echo = 'non' : muet (sauvegarde le JDC dans JDC.procedure)
       """
       if not hasattr(self,'JDC') : return 0
       format=self.appli.format_fichier.get()
@@ -352,6 +352,15 @@ class BUREAU:
       if echo =='oui' or self.JDCDisplay_courant.fichier == None:
           return self.asknomsauvegardeJDC()
       elif self.JDCDisplay_courant.fichier != None :
+          #PN  Ajout --> Salome
+          # Pour sauvegarde dans l etude si lancement depuis salome
+          if self.appli.salome != 0:
+             import eficas_etude 
+             self.appli.salome.rangeInStudy(self.JDCDisplay_courant.fichier)
+	     from panelsSalome import SALOME_UNIQUE_BASE_Panel
+	     if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
+		self.appli.salome.creeConfigTxt(self.appli.CONFIGURATION.initialdir,SALOME_UNIQUE_BASE_Panel.dict_fichier_unite)
+          #PN  Fin Ajout --> Salome
           # le JDC a déjà un nom : on sauvegarde directement sans demander
           # un autre nom au développeur
           if not save_in_file(self.JDCDisplay_courant.fichier,self.jdc_fini) :
@@ -376,7 +385,16 @@ class BUREAU:
                                      filetypes = filtyp,
                                      initialdir = self.appli.CONFIGURATION.initialdir)
                                      #initialdir = self.appli.CONFIGURATION.rep_user)
-      if sauvegarde != '':
+      if sauvegarde :
+          # PN ajout --> Salome
+          # Pour sauvegarde dans l etude si lancement depuis salome
+          if self.appli.salome != 0:
+             import eficas_etude 
+             self.appli.salome.rangeInStudy(sauvegarde)
+	     from panelsSalome import SALOME_UNIQUE_BASE_Panel
+	     if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
+		self.appli.salome.creeConfigTxt(self.appli.CONFIGURATION.initialdir,SALOME_UNIQUE_BASE_Panel.dict_fichier_unite)
+          # PN fin ajout --> Salome
           if not save_in_file(sauvegarde,self.jdc_fini) :
               showinfo("Erreur","Problème à la sauvegarde du fichier "+`sauvegarde`)
               return 0
@@ -466,7 +484,7 @@ class BUREAU:
    def visuJDC_py(self):
       """ 
           Méthode permettant d'afficher dans une fenêtre à part l'écho au 
-          format python du jdc courant 
+            format python du jdc courant 
       """
       if not hasattr(self,'JDC') : return
       jdc_fini = self.get_text_JDC('python')
@@ -478,7 +496,7 @@ class BUREAU:
    def visuJDC(self):
       """ 
           Méthode permettant d'afficher dans une fenêtre à part l'écho au 
-          format .comm ou .py du jdc courant 
+            format .comm ou .py du jdc courant 
       """
       if not hasattr(self,'JDC') : return
       titre = 'fichier '+ self.JDCName + ' à la syntaxe '+ self.code

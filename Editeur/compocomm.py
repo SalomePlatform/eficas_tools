@@ -89,7 +89,12 @@ class COMMPanel(panels.OngletPanel):
     Affiche dans self.widget_text la valeur de l'objet commentaire
     (annule d'éventuelles modifications faite par l'utilisateur)
     """
-    self.widget_text.settext(self.node.item.get_valeur())
+    t=self.node.item.get_valeur()
+    try:
+        self.widget_text.settext(unicode(t))
+    except:
+        # Si probleme avec unicode
+        self.widget_text.settext(t)
     
 class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
     panel = COMMPanel

@@ -473,53 +473,49 @@ class PythonGenerator:
           syntaxe python
       """
       if type(obj.valeur) in (types.TupleType,types.ListType) :
-        s = ''
-        for val in obj.valeur :
-          if type(val) == types.InstanceType :
-            if hasattr(obj.etape,'sdprods'):
-               if val in obj.etape.sdprods :
+         s = ''
+         for val in obj.valeur :
+            if type(val) == types.InstanceType :
+               if hasattr(obj.etape,'sdprods') and val in obj.etape.sdprods :
                   s = s + "CO('"+ self.generator(val) +"')"
                elif val.__class__.__name__ == 'CO':
                   s = s + "CO('"+ self.generator(val) +"')"
+               elif isinstance(val,PARAMETRE):
+                  # il ne faut pas prendre la string que retourne gener
+                  # mais seulement le nom dans le cas d'un paramètre
+                  s = s + val.nom
                else:
                   s = s + self.generator(val)
-            elif isinstance(val,PARAMETRE):
-               # il ne faut pas prendre la string que retourne gener
-               # mais seulement le nom dans le cas d'un paramètre
-               s = s + val.nom
-            else:
-               s = s + self.generator(val)
-          elif type(val) == types.FloatType :
-            # Pour un flottant on utilise str qui a une precision de
-            # "seulement" 12 chiffres : evite les flottants du genre 0.599999999999998
-            s = s + str(val)
-          else :
-            s = s + `val`
-          s = s + ','
-        if len(obj.valeur) > 1:
-           s = '(' + s + '),'
+            elif type(val) == types.FloatType :
+               # Pour un flottant on utilise str qui a une precision de
+               # "seulement" 12 chiffres : evite les flottants du genre 0.599999999999998
+               s = s + str(val)
+            else :
+               # Pour les autres types on utilise repr
+               s = s + `val`
+            s = s + ','
+         if len(obj.valeur) > 1:
+            s = '(' + s + '),'
       else :
-        val=obj.valeur
-        if type(val) == types.InstanceType :
-          if hasattr(obj.etape,'sdprods'):
-             if val in obj.etape.sdprods :
+         val=obj.valeur
+         if type(val) == types.InstanceType :
+            if hasattr(obj.etape,'sdprods') and val in obj.etape.sdprods :
+               s = "CO('"+ self.generator(val) +"')"
+            elif val.__class__.__name__ == 'CO':
                 s = "CO('"+ self.generator(val) +"')"
-             elif val.__class__.__name__ == 'CO':
-                s = "CO('"+ self.generator(val) +"')"
-             else:
+            elif isinstance(val,PARAMETRE):
+                # il ne faut pas prendre la string que retourne gener
+                # mais seulement le nom dans le cas d'un paramètre
+                s = val.nom
+            else:
                 s = self.generator(val)
-          elif isinstance(val,PARAMETRE):
-             # il ne faut pas prendre la string que retourne gener
-             # mais seulement le nom dans le cas d'un paramètre
-             s = val.nom
-          else:
-             s = self.generator(val)
-        elif type(val) == types.FloatType :
-          #s = repr_float(val)
-          s = str(val)
-        else :
-          s = `val`
-        s= s + ','
+         elif type(val) == types.FloatType :
+            # Pour un flottant on utilise str 
+            s = str(val)
+         else :
+            # Pour les autres types on utilise repr
+            s = `val`
+         s= s + ','
       return s
 
 

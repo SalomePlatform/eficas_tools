@@ -42,6 +42,9 @@ ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')
 # lang indique la langue utilisée pour les chaines d'aide : fr ou ang
 lang='fr'
 
+# Codage des strings qui accepte les accents (en remplacement de 'ascii')
+encoding='iso-8859-1'
+
 labels= ('Fichier','Edition','Jeu de commandes',
 #               'Catalogue','Browsers',
                 'Options',
@@ -72,7 +75,7 @@ menu_defs={ 'bureau': [
               ),
               ('Jeu de commandes',[
                                    ('Rapport de validation','visuCRJDC'),
-           #                        ('Fichier à plat','visu_a_plat'),
+#                                   ('Fichier à plat','visu_a_plat'),
                                    ('Fichier format v6','visuJDC_py'),
                                    ('Fichier source','visu_txt_brut_JDC'),
                                    ('Paramètres Eficas','affichage_fichier_ini'),

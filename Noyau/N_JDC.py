@@ -1,4 +1,4 @@
-#@ MODIF N_JDC Noyau  DATE 05/11/2003   AUTEUR CAMBIER S.CAMBIER 
+#@ MODIF N_JDC Noyau  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG

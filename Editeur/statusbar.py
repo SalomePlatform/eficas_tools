@@ -37,13 +37,11 @@ class STATUSBAR:
       self.label.pack(side='left',expand=1,fill='both')
 
    def affiche_infos(self,texte):
-      assert type(texte) is types.StringType
       if len(texte)>150 :
           texte_infos=texte[0:150]
       else :
           texte_infos=texte
       self.label.configure(text=texte_infos)
-
 
    def reset_affichage_infos(self):
       """ Efface tout message présent dans le panneau en bas d'EFICAS """

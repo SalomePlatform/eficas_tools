@@ -1,4 +1,4 @@
-#@ MODIF macr_aspic_mail_ops Macro  DATE 19/01/2004   AUTEUR DURAND C.DURAND 
+#@ MODIF macr_aspic_mail_ops Macro  DATE 30/01/2004   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -497,6 +497,17 @@ def macr_aspic_mail_ops(self,EXEC_MAILLAGE,TYPE_ELEM,RAFF_MAIL,TUBULURE,
   __MAPROV=DEFI_GROUP(reuse   =__MAPROV,
                       MAILLAGE=__MAPROV,
                       **motscles )
+#
+  if not SAIN :
+     motscles={}
+     motscles['CREA_GROUP_NO']=[]
+     if not (TFISS=='NON_DEB')  :
+        motscles['CREA_GROUP_NO'].append(_F(GROUP_MA = 'FONDFISS',))
+     if (TFISS=='NON_DEB') and (FISS_SOUDURE['TYPE']=='LONGUE') :
+        motscles['CREA_GROUP_NO'].append(_F(GROUP_MA = ('FOND_SUP','FOND_INF',),))
+     __MAPROV=DEFI_GROUP(reuse   =__MAPROV,
+                         MAILLAGE=__MAPROV,
+                         **motscles )
 #
   __MAPROV=MODI_MAILLAGE(reuse   =__MAPROV,
                          MAILLAGE=__MAPROV,

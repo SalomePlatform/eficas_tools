@@ -84,11 +84,7 @@ def save_in_file(file,text):
       retourne 1 si OK 0 sinon
   """
   try :
-      if type(text) == types.StringType:
-         f=open(file,'w')
-      else:
-         # Probablement Unicode
-         f=codecs.open(file,'w','iso-8859-1')
+      f=open(file,'w')
       f.write(text)
       f.close()
       return 1

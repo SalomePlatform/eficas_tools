@@ -335,6 +335,47 @@ class MCSIMP(I_OBJECT.OBJECT):
      Retourne le type attendu par le mot-clé simple
      """
      return self.definition.type
+
+#--------------------------------------------------------------------------------
+# PN : ajout pour Salome des methodes suivantes (jusqu aux méthodes surchargees)
+#--------------------------------------------------------------------------------
+  def get_salome_valeurs(self):
+       l=[]
+       if not hasattr(self,'list_salome_valeurs'):
+           self.list_salome_valeurs=[]
+       if self.list_salome_valeurs != [] :
+           for val in self.list_salome_valeurs:
+                l.append(val)
+       return l
+
+  def put_salome_valeurs(self,list):
+       self.list_salome_valeurs=[]
+       for val in list:
+           self.list_salome_valeurs.append(val)
+
+  def add_salome_valeurs(self,val):
+      if not hasattr(self,'list_salome_valeurs'):
+           self.list_salome_valeurs=[]
+      try:
+           self.list_salome_valeurs.append(val)
+      except :
+           try:
+              for uneval in val :
+                  self.list_salome_valeurs.append(uneval)
+           except :
+              pass
+
+  def has_salome_valeurs(self):
+      if not hasattr(self,'list_salome_valeurs'):
+           self.list_salome_valeurs=[]
+      if self.list_salome_valeurs != []:
+           return true
+      else:
+           return false
+
+#--------------------------------------------------------------------------------
+# PN : fin ajout pour Salome 
+#--------------------------------------------------------------------------------
  
 #ATTENTION SURCHARGE : toutes les methodes ci apres sont des surcharges du Noyau et de Validation
 # Elles doivent etre reintegrees des que possible

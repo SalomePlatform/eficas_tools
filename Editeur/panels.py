@@ -21,9 +21,9 @@ import string
 import os
 from Tkinter import *
 import Pmw
-import tkMessageBox
 import time
 
+import widgets
 from widgets import ListeChoix
 from widgets import ListeChoixParGroupes
 import prefs
@@ -511,7 +511,7 @@ class OngletPanel(Panel) :
         commande_comment = self.node.item.get_objet_commentarise()
         self.parent.appli.bureau.JDCDisplay_courant.ReplaceObjectNode(self.node,commande_comment,None)
     except Exception,e:
-        tkMessageBox.showerror("TOO BAD",str(e))
+        widgets.showerror("TOO BAD",str(e))
     return
       
 class Panel_Inactif(Panel):

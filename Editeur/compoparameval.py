@@ -27,9 +27,9 @@ d'EFICAS
 from Tkinter import *
 import Pmw
 import string
-import tkMessageBox
 
 # import modules EFICAS
+import widgets
 import Objecttreeitem
 import panels
 import fontes
@@ -131,7 +131,7 @@ class PARAM_EVALPanel(panels.OngletPanel):
         self.parent.appli.affiche_infos("Expression EVAL %s modifiée" %self.node.item.get_nom())
     else:
         # la formule est incorrecte : on affiche les erreurs
-        tkMessageBox.showerror("Expression EVAL incorrecte",erreur)
+        widgets.showerror("Expression EVAL incorrecte",erreur)
         self.parent.appli.affiche_infos("Expression EVAL %s non modifiée" %self.node.item.get_nom())
     
   def display_valeur(self):
@@ -152,7 +152,7 @@ class PARAM_EVALPanel(panels.OngletPanel):
     nom = self.entry_nom.get()
     test,erreur = self.node.item.verif_nom(nom)
     if not test :
-        tkMessageBox.showerror("Nom invalide",erreur)
+        widgets.showerror("Nom invalide",erreur)
         self.entry_nom.focus()
         self.entry_nom.selection_range(0,END)
         self.parent.appli.affiche_infos("Nom du paramètre refusé")
@@ -166,7 +166,7 @@ class PARAM_EVALPanel(panels.OngletPanel):
     exp_eval = self.entry_val.get()
     test,erreur = self.node.item.verif_eval(exp_eval)
     if not test:
-        tkMessageBox.showerror("Expression EVAL invalide",erreur)
+        widgets.showerror("Expression EVAL invalide",erreur)
         self.entry_val.focus()
         self.entry_val.selection_range(0,END)
         self.parent.appli.affiche_infos("Expression EVAL refusée")

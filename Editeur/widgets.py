@@ -22,6 +22,7 @@
 #          EFICAS
 # ----------------------------------------------------------
 
+import Tkinter
 from Tkinter import *
 import Pmw
 import os,sys,re,string
@@ -36,6 +37,18 @@ from centerwindow import centerwindow
 
 from Noyau.N_utils import repr_float
 from Accas import AsException
+
+# Surcharge de la fonction askyesno qui retourne un resultat errone en Python 2.3 avec Tk 8.4
+# et Tkinter.wantobject==1
+import tkMessageBox
+def askyesno(title=None, message=None, **options):
+    "Ask a question; return true if the answer is yes"
+    s = tkMessageBox._show(title, message, tkMessageBox.QUESTION, tkMessageBox.YESNO, **options)
+    if s == tkMessageBox.YES:return 1
+    if s == tkMessageBox.NO:return 0
+    if s:return 1
+    return 0
+
     
 class Fenetre :
     """ Cette classe permet de créer une fenêtre Toplevel dans laquelle
@@ -115,7 +128,7 @@ class Fenetre :
                                #initialdir = self.appli.CONFIGURATION.rep_user,
                                initialdir = self.appli.CONFIGURATION.initialdir,
                                title="Sauvegarde du "+self.titre)
-        if file != '':
+        if file :
             if not save_in_file(file,self.texte) :
                 showerror("Sauvegarde impossible",
                        "Impossible de sauvegarder le texte dans le fichier spécifié\n"+
@@ -671,6 +684,12 @@ class ListeChoix :
         label.configure(bg='gray95',fg='black')
         self.arg_selected = ''
         if commande != None : commande(mot)
+
+    def remove_selected_item(self):
+        index=self.MCbox.index(self.selection[1])
+        lign,col=map(int,string.split(index,'.'))
+        del self.liste[lign-1]
+        self.affiche_liste()
 
     def entry_changed(self,event=None):
         """ Cette méthode est invoquée chaque fois que l'utilisateur modifie le contenu

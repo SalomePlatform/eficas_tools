@@ -23,12 +23,9 @@
 # Modules Python
 import os,sys,string,types
 import traceback
-try:
-  from tkMessageBox import showinfo,askyesno,showerror,askretrycancel
-except:
-  pass
 
 # Modules Eficas
+from widgets import showinfo,showerror,askretrycancel
 import utils
 
 class CONFIG:

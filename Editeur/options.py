@@ -21,9 +21,9 @@
 """
 # Modules Python
 import os,string
-from tkFileDialog import *
 
 # Modules Eficas
+from widgets import askopenfilename
 
 # l'option affichage_commandes peut prendre les valeurs "groupes" ou "alphabetic"
 affichage_commandes="alphabetic"
@@ -62,7 +62,7 @@ class OPTIONS:
       file = askopenfilename(title="Choix d'un catalogue personnel",
                              defaultextension=".py",
                              filetypes = ( ("Catalogue", "cata*.py"),))
-      if file != '':
+      if file :
           self.parent.update_idletasks()
           self.appli.reset_affichage_infos()
           rep_fic = os.path.dirname(file)

@@ -25,12 +25,11 @@
 import string
 from Tkinter import Label
 import Pmw
-from tkCommonDialog import Dialog
-from tkFileDialog import *
-from tkMessageBox import askyesno,showerror
 import traceback
 
 # Modules Eficas
+from widgets import showerror
+from widgets import askopenfilename
 import patches
 import appli
 from widgets import Fenetre

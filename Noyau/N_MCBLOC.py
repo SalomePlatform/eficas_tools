@@ -1,4 +1,4 @@
-#@ MODIF N_MCBLOC Noyau  DATE 03/09/2002   AUTEUR GNICOLAS G.NICOLAS 
+#@ MODIF N_MCBLOC Noyau  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG

@@ -27,9 +27,9 @@ d'EFICAS
 from Tkinter import *
 import Pmw
 import string
-import tkMessageBox
 
 # import modules EFICAS
+import widgets
 import panels
 import fontes
 import compooper
@@ -142,7 +142,7 @@ valeurs seront effectivement prises en compte."""
         self.parent.appli.affiche_infos("FORMULE %s modifiée" %self.node.item.get_nom())
     else:
         # la formule est incorrecte : on affiche les erreurs
-        tkMessageBox.showerror("Formule incorrecte",erreur)
+        widgets.showerror("Formule incorrecte",erreur)
         self.parent.appli.affiche_infos("FORMULE %s non modifiée" %self.node.item.get_nom())
     
   def display_valeur(self):
@@ -180,7 +180,7 @@ valeurs seront effectivement prises en compte."""
         else:
             test,erreur = self.node.item.verif_nom(nom)
         if not test:
-            tkMessageBox.showerror("Nom invalide",erreur)
+            widgets.showerror("Nom invalide",erreur)
             self.entry_nom.focus()
             self.entry_nom.selection_range(0,END)
             self.parent.appli.affiche_infos("%s n'est pas un nom valide pour une FORMULE" %nom)
@@ -198,7 +198,7 @@ valeurs seront effectivement prises en compte."""
         else:
             test,erreur = self.node.item.verif_arguments(arguments)
         if not test:
-            tkMessageBox.showerror("Argument(s) invalide(s)",erreur)
+            widgets.showerror("Argument(s) invalide(s)",erreur)
             self.entry_arg.focus()
             self.entry_arg.selection_range(0,END)
             self.parent.appli.affiche_infos("Argument(s) invalide(s) pour une FORMULE")
@@ -220,7 +220,7 @@ valeurs seront effectivement prises en compte."""
             test,erreur = self.node.item.verif_formule((new_nom,new_typ,new_arg,new_exp))
  
         if not test:
-            tkMessageBox.showerror("Corps de FORMULE invalide",erreur)
+            widgets.showerror("Corps de FORMULE invalide",erreur)
             self.entry_exp.focus()
             self.entry_exp.selection_range(0,END)
             self.parent.appli.affiche_infos("Corps de FORMULE invalide")

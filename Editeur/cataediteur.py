@@ -23,7 +23,7 @@ import sys
 import types
 import string
 import Pmw
-from tkMessageBox import showinfo,askyesno,showerror,askretrycancel
+from widgets import showinfo
 from Tkinter import *
 
 # Modules Eficas
@@ -39,7 +39,7 @@ import definition_cata
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cataediteur.py,v 1.2 2002/05/15 15:31:58 eficas Exp $"
+__Id__="$Id: cataediteur.py,v 1.3.6.1 2004/03/01 11:14:09 eficas Exp $"
 #
 
 Fonte_Niveau = fontes.canvas_gras_italique

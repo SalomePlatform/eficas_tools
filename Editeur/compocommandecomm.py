@@ -20,7 +20,7 @@
 from Tkinter import *
 import Pmw
 import string
-from tkMessageBox import showerror
+from widgets import showerror
 
 import Objecttreeitem
 import panels

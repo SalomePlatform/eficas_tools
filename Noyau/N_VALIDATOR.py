@@ -1,4 +1,4 @@
-#@ MODIF N_VALIDATOR Noyau  DATE 09/09/2003   AUTEUR DURAND C.DURAND 
+#@ MODIF N_VALIDATOR Noyau  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -257,7 +257,7 @@ class RangeVal(ListVal):
           return valeur > self.low and valeur < self.high
 
       def info_erreur_item(self) :
-          return "La valeur doit être comprise entre %s et %s" % (self.low,
+          return "La valeur doit etre comprise entre %s et %s" % (self.low,
                                                                   self.high)
 
       def verif_cata(self):
@@ -281,7 +281,7 @@ class CardVal(Valid):
           return "longueur de liste comprise entre  %s et %s" % (self.min,self.max)
 
       def info_erreur_liste(self):
-          return "La cardinalité de la liste doit être comprise entre %s et %s" % (self.min,self.max)
+          return "Le cardinal de la liste doit etre compris entre %s et %s" % (self.min,self.max)
 
       def is_list(self):
           return self.max == '**' or self.max > 1
@@ -336,7 +336,7 @@ class PairVal(ListVal):
           return "valeur paire"
 
       def info_erreur_item(self):
-          return "La valeur saisie doit être paire"
+          return "La valeur saisie doit etre paire"
 
       def verif_item(self,valeur):
           if type(valeur) == types.InstanceType:
@@ -469,7 +469,7 @@ class OrdList(ListVal):
           return "liste %s" % self.ord
 
       def info_erreur_liste(self) :
-          return "La liste doit être en ordre "+self.ord
+          return "La liste doit etre en ordre "+self.ord
 
       def verif(self,valeur):
           if type(valeur) in (types.ListType,types.TupleType):

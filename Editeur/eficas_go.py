@@ -32,6 +32,7 @@ def lance_eficas(code,fichier=None):
     """
         Lance l'appli EFICAS
     """
+
     root = Tkinter.Tk()
     splash.init_splash(root,code=code,titre="Lancement d'EFICAS pour %s" %code)
     splash._splash.configure(text="Chargement d'EFICAS en cours.\n Veuillez patienter ...")

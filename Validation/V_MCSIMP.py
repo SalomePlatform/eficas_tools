@@ -1,4 +1,4 @@
-#@ MODIF V_MCSIMP Validation  DATE 06/10/2003   AUTEUR DURAND C.DURAND 
+#@ MODIF V_MCSIMP Validation  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -100,10 +100,7 @@ class MCSIMP:
               self.cr.fatal("None n'est pas une valeur autorisée")
         else:
            # type,into ...
-           #valid = self.verif_type(val=v,cr=cr)*self.verif_into(cr=cr)*self.verif_card(cr=cr)
-           valid = self.verif_type(val=v,cr=cr)
-           valid=valid*self.verif_into(cr=cr)
-           valid=valid*self.verif_card(cr=cr)
+           valid = self.verif_type(val=v,cr=cr)*self.verif_into(cr=cr)*self.verif_card(cr=cr)
            #
            # On verifie les validateurs s'il y en a et si necessaire (valid == 1)
            #

@@ -65,7 +65,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     """
         Donne un echo de self sous la forme nom = valeur
     """
-    return self.nom+' = '+ repr(self.valeur) + '\n'
+    return self.nom+' = '+ repr(self.valeur) 
 
   def __str__(self):
     """

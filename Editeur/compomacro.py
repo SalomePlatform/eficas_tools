@@ -22,8 +22,6 @@ import os,sys,string
 import types
 import Tkinter
 import Pmw
-from tkFileDialog import *
-from tkMessageBox import showinfo,showerror,askyesno
 import traceback
 
 # Modules Eficas
@@ -32,11 +30,13 @@ import panels
 import fontes
 import compooper
 import convert
+from widgets import askopenfilename
 from widgets import Fenetre,FenetreYesNo
+from widgets import showinfo,showerror
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.10 2002/11/14 12:14:20 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.11.2.1 2004/03/01 11:14:09 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -222,7 +222,7 @@ class MACROPanel(panels.OngletPanel):
          sélectionné dans self.entry 
     """
     file = askopenfilename(title="Choix du fichier %s" %self.node.item.get_nom())
-    if file != '' :
+    if file :
       self.entry.delete(0,Tkinter.END)
       self.entry.insert(0,file)
     
