@@ -33,14 +33,18 @@ dir_download= "/home/eficas/WWW/telechargement/eficas"
 def main():
    if os.path.isdir('dist'):shutil.rmtree('dist')
 
-   copyfiles('.',path_distrib,['LICENSE.TERMS','INSTALL'])
+   copyfiles('.',path_distrib,['LICENSE.TERMS','INSTALL','NEWS'])
 
    copyfiles('../Editeur',os.path.join(path_distrib,'Editeur'),['*.py','faqs.txt'])
    copyfiles('../Ihm',os.path.join(path_distrib,'Ihm'),['*.py'])
    copyfiles('../Extensions',os.path.join(path_distrib,'Extensions'),['*.py'])
    copyfiles('../Accas',os.path.join(path_distrib,'Accas'),['*.py'])
+   # AIDE
    copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
    copyfiles('../AIDE/fichiers',os.path.join(path_distrib,'AIDE','fichiers'),['*'])
+   copyfiles('.',os.path.join(path_distrib,'AIDE','fichiers'),['INSTALL','NEWS'])
+   copyfiles('../Editeur',os.path.join(path_distrib,'AIDE','fichiers'),['faqs.txt'])
+   # Code_Aster
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
                                                             'editeur.ini',
                                                             'properties.py',
