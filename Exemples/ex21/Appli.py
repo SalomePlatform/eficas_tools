@@ -36,13 +36,13 @@ class Appli:
 
    def affiche_infos(self,message):
       self.statusbar.showtext(message)
-      print message
+      #print message
       return
 
    def efface_aide(self,event):
       return
 
    def affiche_aide(self,event,aide):
-      print aide
+      #print aide
       return
 

@@ -11,3 +11,7 @@ ICONDIR=os.path.join(REPINI,'../..','Editeur','icons')
 
 # INSTALLDIR sert à localiser faqs.txt et les modules Eficas
 #INSTALLDIR=os.path.join(REPINI,'..','Editeur')
+
+# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
+lang='fr'
+
