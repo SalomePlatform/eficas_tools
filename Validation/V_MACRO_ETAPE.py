@@ -95,6 +95,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
             break
 
         self.set_valid(valid)
+
         return self.valid
 
    def update_sdprod(self,cr='non'):
