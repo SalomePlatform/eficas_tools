@@ -58,32 +58,32 @@ appli_composants=['readercata','bureau',
 
 menu_defs={ 'bureau': [
               ('Fichier',[
-                           ('Nouveau','newJDC'),
-                           ('Ouvrir','openJDC'),
-                           ('Enregistrer','saveJDC'),
-                           ('Enregistrer sous','saveasJDC'),
+                           ('Nouveau','newJDC','<Control-n>'),
+                           ('Ouvrir','openJDC','<Control-o>'),
+                           ('Enregistrer','saveJDC','<Control-e>'),
+                           ('Enregistrer sous','saveasJDC','<Control-s>'),
                            None,
-                           ('Fermer','closeJDC'),
-                           ('Quitter','exitEFICAS'),
+                           ('Fermer','closeJDC','<Control-f>'),
+                           ('Quitter','exitEFICAS','<Control-q>'),
                          ]
               ),
               ('Edition',[
-                           ('Copier','copy'),
-                           ('Couper','cut'),
-                           ('Coller','paste'),
+                           ('Copier','copy','<Control-c>'),
+                           ('Couper','cut','<Control-x>'),
+                           ('Coller','paste','<Control-v>'),
                          ]
               ),
               ('Jeu de commandes',[
-                                   ('Rapport de validation','visuCRJDC'),
-#                                   ('Fichier à plat','visu_a_plat'),
+                                   ('Rapport de validation','visuCRJDC','<Control-r>'),
+                                   ('Fichier à plat','visu_a_plat','<Control-p>'),
                                    ('Fichier format v6','visuJDC_py'),
-                                   ('Fichier source','visu_txt_brut_JDC'),
+                                   ('Fichier source','visu_txt_brut_JDC','<Control-b>'),
                                    ('Paramètres Eficas','affichage_fichier_ini'),
                                    ('Mots-clés inconnus','mc_inconnus'),
                                   ]
               ),
               ('Aide',[
-                        ('Aide EFICAS','aideEFICAS'),
+                        ('Aide EFICAS','aideEFICAS','<Control-a>'),
                       ]
               ),
              ]

@@ -72,6 +72,8 @@ class APPLI:
       # l appli a ete lance depuis Salome
       self.salome=0
 
+     
+
   def send_message(self,message):
       self.message=message
 
@@ -209,6 +211,13 @@ class APPLI:
          if not item :
             menu.add_separator()
          else:
+            if len(item)==3:
+               raccourci=item[2]
+               newitem=(item[0],item[1])
+            else :
+	       raccourci=""
+               newitem=item
+            item=newitem
             label,method=item
             if type(method) == types.TupleType:
                # On a un tuple => on cree une cascade
@@ -223,6 +232,8 @@ class APPLI:
             else:
                command=getattr(appli_composant,method)
                menu.add_command(label=label,command=command)
+               if raccourci != "" :
+                  self.top.bind(raccourci,command)
       # Si au moins un radiobouton existe on invoke le premier
       if radio:menu.invoke(radio)
 

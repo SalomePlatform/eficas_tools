@@ -41,26 +41,26 @@ from fenetre_mc_inconnus import fenetre_mc_inconnus
 class BUREAU:
    menu_defs=[
               ('Fichier',[
-                           ('Nouveau','newJDC'),
-                           ('Ouvrir','openJDC'),
-                           ('Enregistrer','saveJDC'),
-                           ('Enregistrer sous','saveasJDC'),
+                           ('Nouveau','newJDC','<Control-n>'),
+                           ('Ouvrir','openJDC','<Control-o>'),
+                           ('Enregistrer','saveJDC','<Control-e>'),
+                           ('Enregistrer sous','saveasJDC''<Control-s>'),
                            None,
-                           ('Fermer','closeJDC'),
-                           ('Quitter','exitEFICAS'),
+                           ('Fermer','closeJDC','<Control-f>'),
+                           ('Quitter','exitEFICAS','<Control-q>'),
                          ]
               ),
               ('Edition',[
-                           ('Copier','copy'),
-                           ('Couper','cut'),
-                           ('Coller','paste'),
+                           ('Copier','copy','<Control-c>'),
+                           ('Couper','cut','<Control-x>'),
+                           ('Coller','paste','<Control-v>'),
                          ]
               ),
               ('Jeu de commandes',[
-                                   ('Rapport de validation','visuCRJDC'),
-                                   ('Fichier à plat','visu_a_plat'),
+                                   ('Rapport de validation','visuCRJDC','<Control-r>'),
+                                   ('Fichier à plat','visu_a_plat','<Control-p>'),
                                    ('Fichier .py','visuJDC_py'),
-                                   ('Fichier source','visu_txt_brut_JDC'),
+                                   ('Fichier source','visu_txt_brut_JDC','<Control-b>'),
                                    ('Paramètres Eficas','affichage_fichier_ini'),
                                    ('Mots-clés inconnus','mc_inconnus'),
                                   ]
@@ -130,7 +130,7 @@ class BUREAU:
       #self.JDC.set_context()
       self.JDCName = self.JDC.nom
 
-   def newJDC(self):
+   def newJDC(self,event=None):
       """
           Initialise un nouveau JDC vierge
       """
@@ -173,7 +173,7 @@ class BUREAU:
       texte = "Jeu de commandes :" + self.JDCName+" ouvert"
       self.appli.affiche_infos(texte)
 
-   def closeJDC (self) :
+   def closeJDC (self,event=None) :
       """
       Ferme le JDC courant et détruit l'onglet associé dans le notebook self.nb
       """
@@ -200,7 +200,7 @@ class BUREAU:
           self.JDCDisplay_courant = None
           self.appli.toolbar.inactive_boutons()
 
-   def visuCRJDC(self):
+   def visuCRJDC(self,event=None):
       return self.visuCR(mode='JDC')
 
    def visuCR(self,mode):
@@ -239,6 +239,8 @@ class BUREAU:
       if not hasattr(self,'initialdir'):
          #self.initialdir = self.appli.CONFIGURATION.rep_user
          self.initialdir = self.appli.CONFIGURATION.initialdir
+      if file.__class__.__name__ in  ('Event',):
+         file=None
       if not file :
           file = askopenfilename(title="Ouverture d'un fichier de commandes Aster",
                                  defaultextension=".comm",
@@ -316,7 +318,7 @@ class BUREAU:
       else :
           return self.GetLabelJDC(nb_jdc)
 
-   def saveasJDC(self):
+   def saveasJDC(self,event=None):
       """ 
            Sauvegarde le JDC courant en demandant impérativement à l'utilisateur de
            donner le nom du fichier de sauvegarde 
@@ -421,7 +423,7 @@ class BUREAU:
       tab = self.nb.tab(num_page)
       tab.configure(text = nom)
 
-   def exitEFICAS(self):
+   def exitEFICAS(self,event=None):
       """
           Permet de sortir d'EFICAS en demandant à l'utilisateur
           s'il veut sauvegarder les modifications en cours
@@ -449,19 +451,19 @@ class BUREAU:
               l.append(JDCDisplay)
       return l
 
-   def copy(self):
+   def copy(self,event=None):
       """
           Lance la copie sur le JDC courant
       """
       if self.JDCDisplay_courant : self.JDCDisplay_courant.doCopy()
 
-   def paste(self):
+   def paste(self,event=None):
       """
            Lance le collage sur le JDC courant
       """
       if self.JDCDisplay_courant : self.JDCDisplay_courant.doPaste()
 
-   def cut(self):
+   def cut(self,event=None):
       """
          Lance le cut sur le JDC courant
       """
@@ -548,7 +550,7 @@ class BUREAU:
           traceback.print_exc()
           pass
 
-   def visu_a_plat(self):
+   def visu_a_plat(self,event=None):
       """ 
           Méthode permettant d'afficher dans une fenêtre à part l'écho 'à plat' du jdc courant 
       """
@@ -558,7 +560,7 @@ class BUREAU:
       if self.jdc_fini == None : return
       self.visu_fichier_cmd = Fenetre(self.appli,titre=titre,texte = self.jdc_fini)
 
-   def visu_txt_brut_JDC(self):
+   def visu_txt_brut_JDC(self,event=None):
       """
            Méthode permettant d'afficher le jeu de commandes tel qu'il a été passé au JDC
       """
@@ -604,7 +606,7 @@ class BUREAU:
       #print "mc_inconnus_new_list: ",l
       #CCAR: Il n' y a pas de retour vers le JDC
 
-   def aideEFICAS(self):
+   def aideEFICAS(self,event=None):
       AIDE.go(master=self.parent)
 
    def update_jdc_courant(self):
