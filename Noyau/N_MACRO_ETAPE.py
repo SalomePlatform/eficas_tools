@@ -1,4 +1,4 @@
-#@ MODIF N_MACRO_ETAPE Noyau  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_MACRO_ETAPE Noyau  DATE 09/10/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -511,7 +511,20 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
       d={}
       self.g_context = d
       self.contexte_fichier_init = d
-      exec code in self.parent.g_context,d
+      globs=self.parent.get_global_contexte()
+      exec code in globs,d
+
+   def get_global_contexte(self):
+      """
+          Cette methode retourne le contexte global fourni
+          par le parent(self) a une etape fille (l'appelant) pour
+          realiser des evaluations de texte Python (INCLUDE,...)
+      """
+      # Le contexte global est forme par concatenation du contexte
+      # du parent de self et de celui de l'etape elle meme (self)
+      d=self.parent.get_global_contexte()
+      d.update(self.g_context)
+      return d
 
 
 

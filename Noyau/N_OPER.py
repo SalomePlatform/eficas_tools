@@ -1,4 +1,4 @@
-#@ MODIF N_OPER Noyau  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_OPER Noyau  DATE 09/10/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG

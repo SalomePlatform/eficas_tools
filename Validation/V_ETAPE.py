@@ -1,4 +1,4 @@
-#@ MODIF V_ETAPE Validation  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF V_ETAPE Validation  DATE 09/10/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG

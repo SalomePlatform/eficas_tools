@@ -1,4 +1,4 @@
-#@ MODIF N_MCBLOC Noyau  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_MCBLOC Noyau  DATE 03/09/2002   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -103,3 +103,5 @@ class MCBLOC(N_MCCOMPO.MCCOMPO):
       """
       visitor.visitMCBLOC(self)
 
+   def makeobjet(self):
+      return self.definition(val = None,  nom = self.nom,parent = self.parent)

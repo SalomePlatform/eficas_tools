@@ -1,4 +1,4 @@
-#@ MODIF N_MCLIST Noyau  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_MCLIST Noyau  DATE 03/09/2002   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -24,6 +24,7 @@
     de type ENTITE
 """
 
+from copy import copy
 import UserList
 
 class MCList(UserList.UserList):
@@ -109,3 +110,37 @@ class MCList(UserList.UserList):
       """
       visitor.visitMCList(self)
 
+   def get_sd_utilisees(self):
+      """ 
+        Retourne la liste des concepts qui sont utilisés à l'intérieur de self
+        ( comme valorisation d'un MCS) 
+      """
+      l=[]
+      for child in self.data:
+        l.extend(child.get_sd_utilisees())
+      return l
+
+   def copy(self):
+      """
+        Réalise la copie d'une MCList
+      """
+      liste = self.data[0].definition.list_instance()
+      # FR -->Il faut spécifier un parent pour la méthode init qui attend 2 arguments ...
+      liste.init(self.nom,self.parent)
+      for objet in self:
+        new_obj = objet.copy()
+        # Pour etre coherent avec le constructeur de mots cles facteurs N_FACT.__call__
+        # dans lequel le parent de l'element d'une MCList est le parent de la MCList
+        new_obj.reparent(self.parent)
+        liste.append(new_obj)
+      return liste
+
+   def reparent(self,parent):
+      """
+         Cette methode sert a reinitialiser la parente de l'objet
+      """
+      self.parent=parent
+      self.jdc=parent.jdc
+      self.etape=parent.etape
+      for mcfact in self.data:
+        mcfact.reparent(parent)

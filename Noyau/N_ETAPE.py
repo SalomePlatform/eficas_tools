@@ -1,4 +1,4 @@
-#@ MODIF N_ETAPE Noyau  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_ETAPE Noyau  DATE 03/09/2002   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -27,6 +27,7 @@
 import types,sys,string,os
 import linecache
 import traceback
+from copy import copy
 
 # Modules EFICAS
 import N_MCCOMPO
@@ -317,6 +318,51 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
       if self.sd:
         d[self.sd.nom]=self.sd
 
+   def copy(self):
+      """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
+          et sans sd 
+      """
+      etape = copy(self)
+      etape.sd = None
+      etape.state = 'modified'
+      etape.reuse = None
+      etape.sdnom = None
+      etape.etape=etape
+      etape.mc_liste=[]
+      for objet in self.mc_liste:
+        new_obj = objet.copy()
+        new_obj.reparent(etape)
+        etape.mc_liste.append(new_obj)
+      return etape
 
+   def copy_reuse(self,old_etape):
+      """ Méthode qui copie le reuse d'une autre étape. 
+      """
+      if hasattr(old_etape,"reuse") :
+        self.reuse = old_etape.reuse
 
+   def copy_sdnom(self,old_etape):
+      """ Méthode qui copie le sdnom d'une autre étape. 
+      """
+      if hasattr(old_etape,"sdnom") :
+        self.sdnom = old_etape.sdnom
 
+   def get_sd_utilisees(self):
+      """ 
+          Retourne la liste des concepts qui sont utilisés à l'intérieur d'une commande
+          ( comme valorisation d'un MCS) 
+      """
+      l=[]
+      for child in self.mc_liste:
+        l.extend(child.get_sd_utilisees())
+      return l
+
+   def reparent(self,parent):
+     """
+         Cette methode sert a reinitialiser la parente de l'objet
+     """
+     self.parent=parent
+     self.jdc=parent.get_jdc_root()
+     self.etape=self
+     for mocle in self.mc_liste:
+        mocle.reparent(self)

@@ -1,4 +1,4 @@
-#@ MODIF N_MCCOMPO Noyau  DATE 29/05/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_MCCOMPO Noyau  DATE 03/09/2002   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -24,7 +24,7 @@
 """
 
 import types
-
+from copy import copy
 import N_OBJECT
 
 class MCCOMPO(N_OBJECT.OBJECT):
@@ -313,5 +313,40 @@ class MCCOMPO(N_OBJECT.OBJECT):
       nom = mc.nom
       self.jdc.mc_globaux[nom]=mc
 
+   def copy(self):
+    """ Retourne une copie de self """
+    objet = self.makeobjet()
+    # FR : attention !!! avec makeobjet, objet a le meme parent que self
+    # ce qui n'est pas du tout bon dans le cas d'une copie !!!!!!!
+    # FR : peut-on passer par là autrement que dans le cas d'une copie ???
+    # FR --> je suppose que non
+    # XXX CCAR : le pb c'est qu'on vérifie ensuite quel parent avait l'objet
+    # Il me semble preferable de changer le parent a la fin quand la copie est acceptee
+    objet.valeur = copy(self.valeur)
+    objet.val = copy(self.val)
+    objet.mc_liste=[]
+    for obj in self.mc_liste:
+      new_obj = obj.copy()
+      new_obj.reparent(objet)
+      objet.mc_liste.append(new_obj)
+    return objet
 
+   def reparent(self,parent):
+     """
+         Cette methode sert a reinitialiser la parente de l'objet
+     """
+     self.parent=parent
+     self.jdc=parent.get_jdc_root()
+     self.etape=parent.etape
+     for mocle in self.mc_liste:
+        mocle.reparent(self)
 
+   def get_sd_utilisees(self):
+    """ 
+        Retourne la liste des concepts qui sont utilisés à l'intérieur de self
+        ( comme valorisation d'un MCS) 
+    """
+    l=[]
+    for child in self.mc_liste:
+      l.extend(child.get_sd_utilisees())
+    return l

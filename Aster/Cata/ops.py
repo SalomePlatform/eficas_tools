@@ -1,4 +1,4 @@
-#@ MODIF ops Cata  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF ops Cata  DATE 09/10/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -241,4 +241,4 @@ def INCLUDE_MATERIAU(self,NOM_AFNOR,TYPE_MODELE,VARIANTE,TYPE_VALE,NOM_MATER,
     d={}
     self.g_context = d
     self.contexte_fichier_init = d
-    exec code in self.parent.g_context,d
+    exec code in self.parent.get_global_contexte(),d
