@@ -91,7 +91,7 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
   def convertit_group_no_from_salome(self,liste_in):
       newr=[]
       try:
-          print liste_in
+      #if ( 1 == 1 ) :
 	  for entree in liste_in :
 	       travail=[]
 	       travail.append(entree)
@@ -105,6 +105,7 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
                for i in r :
                    newr.append(i)
       except:
+      #else :
 	   print "pas de groupe de noeuds associé"
 	   showerror("Pas de groupe associé","Cet Objet ne peut pas être défini comme un ensemble de groupe de noeuds")
       return newr
@@ -166,7 +167,6 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
           pass
 
       entryname_list=SMESH_utils.entryToName(salome.myStudy,entrychaine)
-      print  entryname_list
       self.entrygroupe.delete(0,END)
       self.sortie.delete(0,END)
       for entryname in entryname_list:
@@ -206,7 +206,6 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
               if i not in liste_valeurs:
 	         valeur.append(i)
 	      
-          print valeur
           if valeur==[]:
 	     entryname_list=[]
 
@@ -379,12 +378,11 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
   dict_fichier_unite={}
 
 
-  def SALOME_DONNEES_HOMARD_FICHIERS_NOM_MED_MAILLAGE_N(self):
+  def SALOME_DONNEES_HOMARD_TRAITEMENT_FICHIER_MED_MAILLAGE_N(self):
       entrychaine=salome.sg.getAllSelected()
       if entrychaine != '':
           self.entry2.delete(0,END)
           try:
-              print salome.myStudy
               SO = salome.myStudy.FindObjectID(entrychaine[0])
           except:
               boo = 0
@@ -412,8 +410,31 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
               self.valid_valeur()
 
 
-  def SALOME_DONNEES_HOMARD_FICHIERS_NOM_MED_MAILLAGE_NP1(self):
-      self.SALOME_DONNEES_HOMARD_FICHIERS_NOM_MED_MAILLAGE_N()
+  def SALOME_DONNEES_HOMARD_TRAITEMENT_NOM_MED_MAILLAGE_N(self):
+      EntryName=''
+      entrychaine=salome.sg.getAllSelected()
+      if entrychaine != '':
+          self.entry2.delete(0,END)
+          try:
+              SO = salome.myStudy.FindObjectID(entrychaine[0])
+          except:
+              boo = 0
+              SO = None
+
+          if SO is not None:
+	     myBuilder = salome.myStudy.NewBuilder()
+             ok, AtName = myBuilder.FindAttribute(SO,"AttributeName")
+	     if ok:
+		EntryName=AtName.Value()
+
+      if EntryName != '':
+          self.entry2.insert(0,EntryName)
+          self.entry.delete(0,END)
+          self.entry.insert(0,EntryName)
+          self.valid_valeur()
+
+  def SALOME_DONNEES_HOMARD_TRAITEMENT_FICHIER_MED_MAILLAGE_NP1(self):
+      self.SALOME_DONNEES_HOMARD_TRAITEMENT_FICHIER_MED_MAILLAGE_N()
 
 
   def SALOME_LIRE_MAILLAGE_UNITE(self):
@@ -424,9 +445,7 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
 	  self.entry2.delete(0,END)
 
           try:
-	      print salome.myStudy
               SO = salome.myStudy.FindObjectID(entrychaine[0])
-	      print SO
           except:
               boo = 0
               SO = None
@@ -453,7 +472,6 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
 
           print "FileName = " , FileName
           if FileName != '' :
-              print FileName
               self.entry2.insert(0,FileName)
               typefic='D'
               SALOME_UNIQUE_BASE_Panel.dict_fichier_unite[unite]=typefic+FileName
@@ -466,7 +484,6 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
       commande="SALOME"
       for i in range(0,len( genea )) :
         commande=commande+"_"+ genea[i]
-      print SALOME_UNIQUE_BASE_Panel.__dict__[commande]
       (SALOME_UNIQUE_BASE_Panel.__dict__[commande])(self)
 
 

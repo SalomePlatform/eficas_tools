@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 # --------------------------------------------------
 # debut entete
 # --------------------------------------------------
@@ -45,7 +45,7 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
 #
 # 2. Les fichiers en entree/sortie
 #
-         MESSAGES =  SIMP(statut='f' ,typ='TXM',
+         MESSAGES =  SIMP(statut='o' ,typ='TXM',
                          fr="Nom du fichier contenant les messages de sortie",
                          ang="Log File"),
 #
@@ -63,8 +63,9 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
 #
            regles=( AU_MOINS_UN('RAFFINEMENT','DERAFFINEMENT','INFORMATION'),
                     EXCLUS('RAFFINEMENT','INFORMATION'),
-                    PRESENT_PRESENT('RAFFINEMENT','DERAFFINEMENT'),
-                    PRESENT_PRESENT('DERAFFINEMENT','RAFFINEMENT'),),
+                    EXCLUS('DERAFFINEMENT','INFORMATION'),),
+                    #PRESENT_PRESENT('RAFFINEMENT','DERAFFINEMENT'),
+                    #PRESENT_PRESENT('DERAFFINEMENT','RAFFINEMENT'),),
            RAFFINEMENT      =SIMP(statut='f',typ='TXM',     
                                  fr="Choix du mode de raffinement.",
                                  ang="Choice of refinement mode.",
