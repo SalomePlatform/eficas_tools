@@ -244,8 +244,16 @@ class JDCDISPLAY:
       # il faut déclarer le JDCDisplay_courant modifié
       self.init_modif()
       # suppression éventuelle du noeud sélectionné
+      # si possible on renomme l objet comme le noeud couper
       if self.edit == "couper":
-          self.appli.noeud_a_editer.delete()
+          try :
+            nom = self.appli.noeud_a_editer.item.object.sd.nom
+            self.appli.noeud_a_editer.delete()
+	    test,mess = child.item.nomme_sd(nom)
+	    child.verif()
+	    child.racine.update()
+	  except :
+            self.appli.noeud_a_editer.delete()
       # on rend la copie à nouveau possible en libérant le flag edit
       self.edit="copier"
 
