@@ -135,7 +135,7 @@ class APPLI:
 
   def affiche_FAQ(self):
       import faq
-      faq.affiche(self.top)
+      #faq.affiche(self.top)
 
   def affiche_infos(self,message):
       self.statusbar.affiche_infos(message)
