@@ -13,7 +13,8 @@ class EXCLUS(I_REGLE.REGLE):
      if not regle_active : return liste_a_purger
 
      for mc in self.mcs:
-        if mc in liste_a_purger:
+        # Il ne faut pas purger un mot cle present. Sa cardinalite est verifiee par ailleurs
+        if mc in liste_a_purger and mc not in liste_mc_presents:
            liste_a_purger.remove(mc)
      return liste_a_purger
 

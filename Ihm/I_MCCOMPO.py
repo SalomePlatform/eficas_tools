@@ -95,6 +95,20 @@ class MCCOMPO(I_OBJECT.OBJECT):
           liste.remove(k)
         if self.definition.entites[k].label=='BLOC':
           liste.remove(k)
+    # Pour corriger les exces qui pourraient etre commis dans la methode purge_liste
+    # des regles, on essaie de compenser comme suit :
+    # on ajoute les mots cles facteurs presents dont l'occurence n'est pas atteinte
+    for k in liste_mc_presents:
+      if k in liste:continue
+      objet = self.get_child(k,restreint = 'oui')
+      if isinstance(objet,MCFACT):
+          # un mot-clé facteur ne peut pas être répété plus de self.max fois
+          if objet.definition.max > 1:
+             liste.append(k)
+      elif isinstance(objet,MCList):
+          nb_occur_maxi = objet[0].definition.max
+          if len(objet) < nb_occur_maxi:
+              liste.append(k)
     return liste
 
   def liste_mc_presents(self):

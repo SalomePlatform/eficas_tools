@@ -161,3 +161,14 @@ class MCList:
      """
      for motcle in self.data :
          motcle.verif_existence_sd()
+
+  def get_sd_utilisees(self):
+    """
+        Retourne la liste des concepts qui sont utilisés à l'intérieur de self
+        ( comme valorisation d'un MCS)
+    """
+    l=[]
+    for motcle in self.data:
+      l.extend(motcle.get_sd_utilisees())
+    return l
+

@@ -14,8 +14,9 @@ class UN_PARMI(I_REGLE.REGLE):
      if not regle_active : return liste_a_purger
 
      # Si un des mots clés est présent, on les enlève tous
+     # sauf celui ci
      for mc in self.mcs:
-        if mc in liste_a_purger:
+        if mc in liste_a_purger and mc not in liste_mc_presents:
            liste_a_purger.remove(mc)
      return liste_a_purger
 
