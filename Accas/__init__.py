@@ -39,11 +39,11 @@ from A_EXCLUS import EXCLUS
 from A_ENSEMBLE import ENSEMBLE
 from A_A_CLASSER import A_CLASSER
 
-from Noyau.N_ASSD import ASSD,assd
-from Noyau.N_GEOM import GEOM,geom
-from Noyau.N_FONCTION import FONCTION
-from Noyau.N_FONCTION import fonction
-from Noyau.N_CO import CO
+from A_ASSD import ASSD,assd
+from A_ASSD import GEOM,geom
+from A_ASSD import FONCTION, fonction
+from A_ASSD import CO
+
 from Noyau.N__F import _F
 
 from Noyau.N_Exception import AsException

@@ -453,6 +453,8 @@ class PythonGenerator:
             if hasattr(obj.etape,'sdprods'):
                if val in obj.etape.sdprods :
                   s = s + "CO('"+ self.generator(val) +"')"
+               elif val.__class__.__name__ == 'CO':
+                  s = s + "CO('"+ self.generator(val) +"')"
                else:
                   s = s + self.generator(val)
             elif isinstance(val,PARAMETRE):
@@ -471,6 +473,8 @@ class PythonGenerator:
         if type(val) == types.InstanceType :
           if hasattr(obj.etape,'sdprods'):
              if val in obj.etape.sdprods :
+                s = "CO('"+ self.generator(val) +"')"
+             elif val.__class__.__name__ == 'CO':
                 s = "CO('"+ self.generator(val) +"')"
              else:
                 s = self.generator(val)

@@ -32,6 +32,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
          self.niveau = None
          self.etape = None
       self.state = 'undetermined'
+      self.actif=1
       self.mc_liste=self.build_mc()
 
    def build_mc(self):

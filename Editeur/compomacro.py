@@ -23,8 +23,8 @@ import convert
 from widgets import Fenetre
 
 #
-__version__="$Name: V1_1p1 $"
-__Id__="$Id: compomacro.py,v 1.1.1.1 2001/12/04 15:38:22 eficas Exp $"
+__version__="$Name:  $"
+__Id__="$Id: compomacro.py,v 1.1.1.1 2002/03/26 09:08:45 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -187,6 +187,11 @@ class MACROTreeItem(compooper.EtapeTreeItem):
       Ce nom dépend de la validité de l'objet
       """
       if self.object.isactif():
+        if self.object.state != 'unchanged':
+           # Si des modifications ont eu lieu on force le calcul des concepts de sortie
+           # et celui du contexte glissant
+           self.object.get_type_produit(force=1)
+           self.object.parent.reset_context()
         if self.object.isvalid():
           return "ast-green-square"
         else:
@@ -273,10 +278,6 @@ class MACROTreeItem(compooper.EtapeTreeItem):
       
   def verif_condition_bloc(self):
       return self.object.verif_condition_bloc()
-
-  def nomme_sd(self,nom):
-      """ Lance la méthode de nommage de la SD """
-      return self.object.nomme_sd(nom)
 
   def get_noms_sd_oper_reentrant(self):
       return self.object.get_noms_sd_oper_reentrant()

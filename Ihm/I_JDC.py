@@ -6,9 +6,8 @@ import string,linecache
 
 # Modules Eficas
 import I_OBJECT
-from Noyau.N_ASSD import assd
+from Noyau.N_ASSD import ASSD
 from Noyau.N_ETAPE import ETAPE
-from Noyau.N_CO import CO
 from Noyau.N_Exception import AsException
 from Extensions import commentaire,parametre,parametre_eval
 
@@ -21,6 +20,7 @@ class JDC(I_OBJECT.OBJECT):
       self.niveau=self
       self.params=[]
       self.fonctions=[]
+      self._etape_context=None
 
    def get_cmd(self,nomcmd):
       """
@@ -38,19 +38,31 @@ class JDC(I_OBJECT.OBJECT):
       l=[]
       for k,v in d.items():
         if type(v) != types.InstanceType : continue
-        if assd in types_permis or CO in types_permis :
-          l.append(k)
-          continue
-        for type_ok in types_permis:
-          if type_ok in ('R','I','C','TXM') and v in self.params : l.append(k)
-          elif type_ok == 'R' and v.__class__.__name__ == 'reel' : l.append(k)
-          elif type_ok == 'I' and v.__class__.__name__ == 'entier' : l.append(k)
-          elif type_ok == 'C' and v.__class__.__name__ == 'complexe' : l.append(k)
-          elif type_ok == 'TXM' and v.__class__.__name__ == 'chaine' : l.append(k)
-          elif type(type_ok) != types.ClassType : continue
-          elif v.__class__ == type_ok or issubclass(v.__class__,type_ok): l.append(k)
+        # On considère que seul assd indique un type quelconque pas CO
+        elif self.assd in types_permis :
+           l.append(k)
+        elif self.est_permis(v,types_permis):
+           l.append(k)
       l.sort()
       return l
+
+   def est_permis(self,v,types_permis):
+      for type_ok in types_permis:
+          if type_ok in ('R','I','C','TXM') and v in self.params : 
+             return 1
+          elif type_ok == 'R' and v.__class__.__name__ == 'reel' : 
+             return 1
+          elif type_ok == 'I' and v.__class__.__name__ == 'entier' : 
+             return 1
+          elif type_ok == 'C' and v.__class__.__name__ == 'complexe' : 
+             return 1
+          elif type_ok == 'TXM' and v.__class__.__name__ == 'chaine' : 
+             return 1
+          elif type(type_ok) != types.ClassType : 
+             continue
+          elif v.__class__ == type_ok or issubclass(v.__class__,type_ok):
+             return 1
+      return 0
 
    def addentite(self,name,pos):
       """
@@ -83,6 +95,7 @@ class JDC(I_OBJECT.OBJECT):
         if pos == None : pos = 0
         self.etapes.insert(pos,objet)
         self.editmode=0
+        self.reset_context()
         self.active_etapes()
         return objet
       elif name == "PARAMETRE_EVAL":
@@ -93,6 +106,7 @@ class JDC(I_OBJECT.OBJECT):
         if pos == None : pos = 0
         self.etapes.insert(pos,objet)
         self.editmode=0
+        self.reset_context()
         self.active_etapes()
         return objet
       elif type(name)==types.InstanceType:
@@ -100,10 +114,8 @@ class JDC(I_OBJECT.OBJECT):
         # existante (par copie donc)
         # on est donc nécessairement en mode editeur ...
         objet = name
-        objet.jdc = objet.parent = self
-        #XXX current_step n'existe plus. A priori le parent devrait etre self
-        # ainsi que le step courant.
-        #objet.parent = self.current_step
+        # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
+        objet.reparent(self)
         self.set_current_step()
         if isinstance(objet,ETAPE):
           if objet.nom_niveau_definition == 'JDC':
@@ -117,6 +129,7 @@ class JDC(I_OBJECT.OBJECT):
         self.etapes.insert(pos,objet)
         self.active_etapes()
         self.editmode=0
+        self.reset_context()
         return objet
       else :
         # On veut ajouter une nouvelle commande
@@ -125,11 +138,13 @@ class JDC(I_OBJECT.OBJECT):
           cmd=self.get_cmd(name)
           # L'appel a make_objet n'a pas pour effet d'enregistrer l'étape
           # auprès du step courant car editmode vaut 1
+          # Par contre elle a le bon parent grace a set_current_step
           e=cmd.make_objet()
           if pos == None : pos = 0
           self.etapes.insert(pos,e)
           self.reset_current_step()
           self.editmode=0
+          self.reset_context()
           self.active_etapes()
           return e
         except:
@@ -151,13 +166,15 @@ class JDC(I_OBJECT.OBJECT):
    def get_sd_avant_etape(self,nom_sd,etape):
       return self.get_contexte_avant(etape).get(nom_sd,None)
 
-   def get_sd_apres_etape(self,nom_sd,etape):
+   def get_sd_apres_etape(self,nom_sd,etape,avec='non'):
       """ 
            Cette méthode retourne la SD de nom nom_sd qui est éventuellement
-            définie apres etape
+            définie apres etape 
+           Si avec vaut 'non' exclut etape de la recherche
       """
       ietap=self.etapes.index(etape)
-      for e in self.etapes[ietap+1:]:
+      if avec == 'non':ietap=ietap+1
+      for e in self.etapes[ietap:]:
         sd=e.get_sdprods(nom_sd)
         if sd:
           if hasattr(e,'reuse'):
@@ -165,16 +182,17 @@ class JDC(I_OBJECT.OBJECT):
               return sd
       return None
 
-   def get_sd_autour_etape(self,nom_sd,etape):
+   def get_sd_autour_etape(self,nom_sd,etape,avec='non'):
       """
            Fonction: retourne la SD de nom nom_sd qui est éventuellement
             définie avant ou apres etape
            Permet de vérifier si un concept de meme nom existe dans le périmètre 
            d'une étape
+           Si avec vaut 'non' exclut etape de la recherche
       """
       sd=self.get_sd_avant_etape(nom_sd,etape)
       if sd:return sd
-      return self.get_sd_apres_etape(nom_sd,etape)
+      return self.get_sd_apres_etape(nom_sd,etape,avec)
 
    def active_etapes(self):
       """
@@ -267,6 +285,12 @@ class JDC(I_OBJECT.OBJECT):
       """
       self.params.append(param)
 
+   def register_fonction(self,fonction):
+      """
+          Cette méthode sert à ajouter une fonction dans la liste des fonctions
+      """
+      self.fonctions.append(fonction)
+
    def delete_param(self,param):
       """
           Supprime le paramètre param de la liste des paramètres
@@ -297,6 +321,14 @@ class JDC(I_OBJECT.OBJECT):
         nom = form.nom
         if not nom : continue
         if d.has_key(nom): l_fonctions.append(form.get_formule())
+
+      # on ajoute les concepts produits par DEFI_VALEUR
+      # XXX On pourrait peut etre faire plutot le test sur le type
+      # de concept : entier, reel, complexe, etc.
+      for k,v in d.items():
+         if hasattr(v,'etape') and v.etape.nom in ('DEFI_VALEUR',):
+            l_constantes.append(k)
+
       # on retourne les deux listes
       return l_constantes,l_fonctions
 
@@ -372,4 +404,70 @@ class JDC(I_OBJECT.OBJECT):
       text=string.replace(text,'\r\n','\n')
       linecache.cache[file]=0,0,string.split(text,'\n'),file
       return file,text
+
+
+   def get_genealogie(self):
+      """
+          Retourne la liste des noms des ascendants de l'objet self
+          jusqu'à la première ETAPE parent.
+      """
+      return []
+
+   def NommerSdprod(self,sd,sdnom):
+      """
+          Nomme la SD apres avoir verifie que le nommage est possible : nom
+          non utilise
+          Si le nom est deja utilise, leve une exception
+          Met le concept créé dans le concept global g_context
+      """
+      # XXX En mode editeur dans EFICAS, le nommage doit etre géré différemment
+      # Le dictionnaire g_context ne représente pas le contexte
+      # effectif avant une étape.
+      # Il faut utiliser get_contexte_avant avec une indication de l'étape
+      # traitée. Pour le moment, il n'y a pas de moyen de le faire : ajouter 
+      # un attribut dans le JDC ???
+      if CONTEXT.debug : print "JDC.NommerSdprod ",sd,sdnom
+      if self._etape_context:
+         o=self.get_contexte_avant(self._etape_context).get(sdnom,None)
+      else:
+         o=self.g_context.get(sdnom,None)
+      if isinstance(o,ASSD):
+         raise AsException("Nom de concept deja defini : %s" % sdnom)
+
+      # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
+      # Ajoute a la creation (appel de reg_sd).
+      self.g_context[sdnom]=sd
+      sd.nom=sdnom
+
+   def set_etape_context(self,etape):
+      """
+          Positionne l'etape qui sera utilisee dans NommerSdProd pour
+          decider si le concept passé pourra etre  nommé
+      """
+      self._etape_context=etape
+
+   def reset_context(self):
+      """ 
+          Cette methode reinitialise le contexte glissant pour pouvoir
+          tenir compte des modifications de l'utilisateur : création
+          de commandes, nommage de concepts, etc.
+      """
+      self.current_context={}
+      self.index_etape_courante=0
+
+   def del_param(self,param):
+      """
+          Supprime le paramètre param de la liste des paramètres
+          et du contexte gobal
+      """
+      if param in self.params : self.params.remove(param)
+      if self.g_context.has_key(param.nom) : del self.g_context[param.nom]
+
+   def del_fonction(self,fonction):
+      """
+          Supprime la fonction fonction de la liste des fonctions
+          et du contexte gobal
+      """
+      if fonction in self.fonctions : self.fonctions.remove(fonction)
+      if self.g_context.has_key(fonction.nom) : del self.g_context[fonction.nom]
 

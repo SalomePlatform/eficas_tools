@@ -25,24 +25,6 @@ class MCCOMPO(I_OBJECT.OBJECT):
     else:
       return self.nom
 
-  def get_genealogie(self):
-    """ 
-        Retourne la liste des noms des ascendants (noms de MCSIMP,MCFACT,MCBLOC
-        ou ETAPE) de self jusqu'au premier objet etape rencontré
-    """
-    l=[]
-    objet = self
-    while objet.nature != 'JDC' :
-      if not objet.isMCList() :
-        l.append(string.strip(objet.nom))
-      else :
-        pass
-      # Si objet.etape == etape c'est que objet est l'étape origine de la généalogie
-      if objet.etape == objet: break
-      objet = objet.parent
-    l.reverse()
-    return l
-
   def get_liste_mc_ordonnee(self,liste,dico):
     """
        Retourne la liste ordonnée (suivant le catalogue) des mots-clés
@@ -219,6 +201,8 @@ class MCCOMPO(I_OBJECT.OBJECT):
             new_obj.init(objet.nom,self)
             new_obj.append(old_obj)
             new_obj.append(objet)
+            # Il ne faut pas oublier de reaffecter le parent d'obj
+            objet.reparent(self)
             self.mc_liste.remove(old_obj)
             self.mc_liste.insert(index,new_obj)
             self.fin_modif()
@@ -227,12 +211,16 @@ class MCCOMPO(I_OBJECT.OBJECT):
             # une liste d'objets de même type existe déjà
             #print "une liste d'objets de même type existe déjà"
             old_obj.append(objet)
+            # Il ne faut pas oublier de reaffecter le parent d'obj
+            objet.reparent(self)
             self.fin_modif()
             return old_obj
       if pos == None :
         self.mc_liste.append(objet)
       else :
         self.mc_liste.insert(pos,objet)
+      # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
+      objet.reparent(self)
       self.fin_modif()
       return objet
 
@@ -308,13 +296,14 @@ class MCCOMPO(I_OBJECT.OBJECT):
     # ce qui n'est pas du tout bon dans le cas d'une copie !!!!!!!
     # FR : peut-on passer par là autrement que dans le cas d'une copie ???
     # FR --> je suppose que non
-    objet.parent = None
+    # XXX CCAR : le pb c'est qu'on vérifie ensuite quel parent avait l'objet
+    # Il me semble preferable de changer le parent a la fin quand la copie est acceptee
     objet.valeur = copy(self.valeur)
     objet.val = copy(self.val)
     objet.mc_liste=[]
     for obj in self.mc_liste:
       new_obj = obj.copy()
-      new_obj.parent = objet
+      new_obj.reparent(objet)
       objet.mc_liste.append(new_obj)
     return objet
 
@@ -371,3 +360,12 @@ class MCCOMPO(I_OBJECT.OBJECT):
             liste_retraits.append(k)
     return liste_ajouts,liste_retraits
 
+  def reparent(self,parent):
+     """
+         Cette methode sert a reinitialiser la parente de l'objet
+     """
+     self.parent=parent
+     self.jdc=parent.get_jdc_root()
+     self.etape=parent.etape
+     for mocle in self.mc_liste:
+        mocle.reparent(self)

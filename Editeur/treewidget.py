@@ -14,7 +14,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.1.1.1 2002/03/26 09:08:45 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.2 2002/03/27 16:20:02 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -523,21 +523,23 @@ class Node :
         
     def full_creation(self,name,pos=None):
         """
-        Interface avec ACCAS : création de l'objet de nom name et
-        du noeud associé. Retourne le noeud fils ainsi créé
+            Interface avec ACCAS : création de l'objet de nom name et
+            du noeud associé. Retourne le noeud fils ainsi créé
         """
         item = self.item.additem(name,pos)
         if item == None or item == 0:
             # impossible d'ajouter le noeud de nom : name
             return 0
         nature = item.get_nature()
-        #if nature =="COMMANDE" or nature == "OPERATEUR" or nature == "PROCEDURE":
         if nature in ("COMMANDE","OPERATEUR","PROCEDURE","COMMENTAIRE",
                       "PARAMETRE","COMMANDE_COMMENTARISEE","PARAMETRE_EVAL"):
             # on veut ajouter une commande ou un commentaire ou un paramètre
             # il ne faut pas rechercher un même objet déjà existant
             # à modifier : il faut tester l'attribut 'repetable' 
             enfant = None
+        elif self.item.object.isMCList():
+            # Dans ce cas on ne fait pas de remplacement. On ne cherche pas un objet de meme nom
+            enfant=None
         else :
             enfant = self.get_node_fils(item.get_nom())
         if enfant :
@@ -613,6 +615,9 @@ class Node :
             # on donne la position depuis l'extérieur
             # (appel de append_child par append_brother par exemple)
             index = pos
+        elif type(pos) == types.InstanceType:
+            # pos est un item. Il faut inserer name apres pos
+            index = self.item.get_index(pos) +1
         else :
             if type(name) == types.InstanceType:
                 index = self.item.get_index_child(name.nom)

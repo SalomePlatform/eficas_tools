@@ -148,7 +148,7 @@ class JDCDISPLAY:
       Ne permet que la copie d'objets de type Commande ou MCF
       """
       objet_a_copier = self.appli.noeud_a_editer.item.get_copie_objet()
-      if objet_a_copier.__class__.__name__ in ('ETAPE','PROC_ETAPE','MACRO_ETAPE'):
+      if objet_a_copier.__class__.__name__ in ('ETAPE','PROC_ETAPE','MACRO_ETAPE','FORM_ETAPE'):
           self.doPaste_Commande(objet_a_copier)
       elif objet_a_copier.__class__.__name__ == "MCFACT":
           self.doPaste_MCF(objet_a_copier)
@@ -159,14 +159,16 @@ class JDCDISPLAY:
 
    def doPaste_Commande(self,objet_a_copier):
       """
-      Réalise la copie de l'objet passé en argument qui est nécessairement une commande
+          Réalise la copie de l'objet passé en argument qui est nécessairement 
+          une commande
       """
       # il faut vérifier que le noeud sélectionné (noeud courant) est bien
       # une commande ou un JDC sinon la copie est impossible ...
       if self.node_selected.item.isCommande() :
           child = self.node_selected.append_brother(objet_a_copier,retour='oui')
       elif self.node_selected.item.isJdc() :
-          child = self.node_selected.append_child(objet_a_copier,retour='oui')
+          child = self.node_selected.append_child(objet_a_copier,pos='first',
+                                                     retour='oui')
       else:
           showinfo("Copie impossible",
                    "Vous ne pouvez coller la commande copiée à ce niveau de l'arborescence !")
@@ -195,10 +197,17 @@ class JDCDISPLAY:
           child = self.node_selected.append_child(objet_a_copier,retour='oui')
       elif self.node_selected.item.isMCList() :
           # le noeud courant est une MCList
-          child = self.node_selected.parent.append_child(objet_a_copier,retour='oui')
+          child = self.node_selected.parent.append_child(objet_a_copier,pos='first',retour='oui')
       elif self.node_selected.item.isMCFact():
           # le noeud courant est un MCFACT
-          child = self.node_selected.parent.append_child(objet_a_copier,retour='oui')
+          if self.node_selected.parent.item.isMCList():
+             # le noeud selectionne est un MCFACT dans une MCList
+             child = self.node_selected.parent.append_child(objet_a_copier,
+                                                            pos=self.node_selected.item,
+                                                            retour='oui')
+          else:
+             # le noeud MCFACT selectionne n'est pas dans une MCList
+             child = self.node_selected.parent.append_child(objet_a_copier,retour='oui')
       else:
           showinfo("Copie impossible",
                    "Vous ne pouvez coller le mot-clé facteur copié à ce niveau de l'arborescence !")

@@ -53,12 +53,13 @@ class MCList:
        Réalise la copie d'une MCList
     """
     liste = self.data[0].definition.list_instance()
-    # XXX Pas de parent ??
-    # FR -->Il faut en spécifier un pour la méthode init qui attend 2 arguments ...
+    # FR -->Il faut spécifier un parent pour la méthode init qui attend 2 arguments ...
     liste.init(self.nom,self.parent)
     for objet in self:
       new_obj = objet.copy()
-      new_obj.parent = liste
+      # Pour etre coherent avec le constructeur de mots cles facteurs N_FACT.__call__
+      # dans lequel le parent de l'element d'une MCList est le parent de la MCList
+      new_obj.reparent(self.parent)
       liste.append(new_obj)
     return liste
 
@@ -116,3 +117,36 @@ class MCList:
      """
      if self.parent == None: return None
      return self.parent.get_etape()
+
+  def get_genealogie(self):
+     """
+         Retourne la liste des noms des ascendants.
+         Un objet MCList n'est pas enregistré dans la genealogie.
+         XXX Meme si le MCFACT fils ne l'est pas lui non plus ????
+     """
+     if self.parent: 
+        return self.parent.get_genealogie()
+     else:
+        return []
+
+  def get_liste_mc_ordonnee_brute(self,liste,dico):
+     """
+         Retourne la liste ordonnée (suivant le catalogue) BRUTE des mots-clés
+         d'une entité composée dont le chemin complet est donné sous forme
+         d'une liste du type :ETAPE + MCFACT ou MCBLOC + ...
+     """
+     for arg in liste:
+        objet_cata = dico[arg]
+        dico=objet_cata.dico
+     return objet_cata.liste
+
+  def reparent(self,parent):
+     """
+         Cette methode sert a reinitialiser la parente de l'objet
+     """
+     self.parent=parent
+     self.jdc=parent.jdc
+     self.etape=etape
+     for mcfact in self.data:
+        mcfact.reparent(parent)
+

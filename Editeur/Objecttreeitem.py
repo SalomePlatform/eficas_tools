@@ -393,6 +393,12 @@ class SequenceTreeItem(ObjectTreeItem):
     def GetText(self):
       return  "    "
 
+    def additem(self,obj,pos):
+        # XXX Passer par addentite  de MCList ???
+        self.object.insert(pos,obj)
+        item = self.make_objecttreeitem(self.appli, obj.nom + ":", obj)
+        return item
+
     def suppitem(self,item):
         if not self.object.isMCList():return 1
         try :

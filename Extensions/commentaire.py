@@ -145,5 +145,11 @@ class COMMENTAIRE :
     """
     return []
 
+  def get_sdprods(self,nom_sd):
+     """
+         Retourne les concepts produits par la commande
+     """
+     return None
+
 
 

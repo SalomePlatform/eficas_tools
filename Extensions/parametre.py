@@ -33,6 +33,7 @@ class PARAMETRE :
     self.definition=self
     self.jdc = self.parent = CONTEXT.get_current_step()
     self.niveau=self.parent.niveau
+    self.actif=1
     self.register()
 
   def interprete_valeur(self,val):

@@ -36,6 +36,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     self.jdc = self.parent = CONTEXT.get_current_step()
     self.definition=self
     self.niveau = self.parent.niveau
+    self.actif=1
     # Ceci est-il indispensable ???
     #self.appel = N_utils.callee_where(niveau=2)
     self.register()

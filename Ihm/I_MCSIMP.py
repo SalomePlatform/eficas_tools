@@ -7,10 +7,21 @@ myrepr.maxstring = 100
 myrepr.maxother = 100
 
 from Noyau.N_utils import repr_float
+
+# Attention : les classes ASSD,.... peuvent etre surchargées
+# dans le package Accas. Il faut donc prendre des précautions si
+# on utilise les classes du Noyau pour faire des tests (isxxxx, ...)
+# Si on veut créer des objets comme des CO avec les classes du noyau
+# ils n'auront pas les conportements des autres packages (pb!!!)
+# Il vaut mieux les importer d'Accas mais problème d'import circulaire,
+# on ne peut pas les importer au début.
+# On fait donc un import local quand c'est nécessaire (peut occasionner
+# des pbs de prformance).
 from Noyau.N_ASSD import ASSD,assd
 from Noyau.N_GEOM import GEOM,geom
 from Noyau.N_CO import CO
-from Noyau.N_EVAL import EVAL
+# fin attention
+
 from Extensions import parametre
 import I_OBJECT
 
@@ -82,7 +93,8 @@ class MCSIMP(I_OBJECT.OBJECT):
     """
     for typ in self.definition.type:
       if type(typ) == types.ClassType :
-        if typ is CO : return 1
+        if issubclass(typ,CO) :
+           return 1
     return 0
 
   def wait_assd(self):
@@ -104,7 +116,7 @@ class MCSIMP(I_OBJECT.OBJECT):
     """
     for typ in self.definition.type:
       if type(typ) == types.ClassType :
-        if typ in (GEOM,ASSD,geom,assd) or issubclass(typ,GEOM) :
+        if typ.__name__ in ("GEOM","ASSD","geom","assd") or issubclass(typ,GEOM) :
           return 1
     return 0
 
@@ -165,6 +177,8 @@ class MCSIMP(I_OBJECT.OBJECT):
         # type de nom new_valeur
         if self.wait_co():
           try:
+            # Pour avoir la classe CO avec tous ses comportements
+            from Accas import CO
             self.valeur=CO(new_valeur)
           except:
             traceback.print_exc()
@@ -204,6 +218,8 @@ class MCSIMP(I_OBJECT.OBJECT):
       return sd,1
     else:
       d={}
+      # On veut EVAL avec tous ses comportements. On utilise Accas. Perfs ??
+      from Accas import EVAL
       d['EVAL']=EVAL
       try :
         objet = eval(new_valeur,d)
@@ -260,10 +276,48 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def set_valeur_co(self,nom_co):
       """
-      Affecte à self l'objet de type CO et de nom nom_co
+          Affecte à self l'objet de type CO et de nom nom_co
       """
-      new_objet = CO(nom_co)
+      step=self.etape.parent
+      if nom_co == None or nom_co == '':
+         new_objet=None
+      else:
+         # Pour le moment on importe en local le CO de Accas.
+         # Si problème de perfs, il faudra faire autrement
+         from Accas import CO
+         # Avant de créer un concept il faut s'assurer du contexte : step 
+         # courant
+         sd= step.get_sd_autour_etape(nom_co,self.etape,avec='oui')
+         if sd:
+            # Si un concept du meme nom existe deja dans la portée de l'étape
+            # on ne crée pas le concept
+            return 0,"un concept de meme nom existe deja"
+         # Il n'existe pas de concept de meme nom. On peut donc le créer 
+         # Il faut néanmoins que la méthode NommerSdProd de step gère les 
+         # contextes en mode editeur
+         # Normalement la méthode  du Noyau doit etre surchargée
+         # On déclare l'étape du mot clé comme etape courante pour NommerSdprod
+         cs= CONTEXT.get_current_step()
+         CONTEXT.unset_current_step()
+         CONTEXT.set_current_step(step)
+         step.set_etape_context(self.etape)
+         new_objet = CO(nom_co)
+         CONTEXT.unset_current_step()
+         CONTEXT.set_current_step(cs)
       self.valeur = new_objet
       self.val = new_objet
       self.init_modif()
+      step.reset_context()
+      # On force l'enregistrement de new_objet en tant que concept produit 
+      # de la macro en appelant get_type_produit avec force=1
+      self.etape.get_type_produit(force=1)
+      return 1,"Concept créé"
 	
+  def reparent(self,parent):
+     """
+         Cette methode sert a reinitialiser la parente de l'objet
+     """
+     self.parent=parent
+     self.jdc=parent.jdc
+     self.etape=parent.etape
+

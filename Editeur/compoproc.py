@@ -130,10 +130,6 @@ class ProcEtapeTreeItem(compooper.EtapeTreeItem):
   def verif_condition_bloc(self):
     return self.object.verif_condition_bloc()
 
-  def nomme_sd(self,nom):
-      """ Lance la méthode de nommage de la SD """
-      return self.object.nomme_sd(nom)
-
   def get_noms_sd_oper_reentrant(self):
       return self.object.get_noms_sd_oper_reentrant()        
 

@@ -5,13 +5,16 @@
 #              SEE THE FILE "LICENSE.TERMS" FOR INFORMATION ON USAGE AND
 #              REDISTRIBUTION OF THIS FILE.
 # ======================================================================
+# Modules Python
 import string,types,os
 from Tkinter import *
 import Pmw
 from tkFileDialog import *
 from tkMessageBox import showinfo
 from copy import copy,deepcopy
+import traceback
 
+# Modules Eficas
 import Objecttreeitem
 import prefs
 import panels
@@ -51,7 +54,8 @@ class newSIMPPanel(panels.OngletPanel):
 
   def record_valeur(self,name=None,mess='Valeur du mot-clé enregistrée'):
       """
-      Enregistre  val comme valeur de self.node.item.object SANS faire de test de validité
+          Enregistre  val comme valeur de self.node.item.object SANS 
+          faire de test de validité
       """
       if self.parent.modified == 'n' : self.parent.init_modif()
       if name != None:
@@ -878,7 +882,7 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       self.listbox.place(relx=0.5,rely=0.3,relheight=0.4,anchor='center')
       # affichage du bouton 'Nouveau concept'
       self.b_co = Pmw.OptionMenu(self.frame_valeur,labelpos='w',label_text = "Nouveau concept : ",
-                                 items = ('OUI','NON'),menubutton_width=10)
+                                 items = ('NON','OUI'),menubutton_width=10)
       self.b_co.configure(command = lambda e,s=self : s.ask_new_concept())
       self.b_co.place(relx=0.05,rely=0.6,anchor='w')
       self.label_co = Label(self.frame_valeur,text='Nom du nouveau concept :')
@@ -890,7 +894,6 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       self.label_valeur = Label(self.frame_valeur,textvariable=self.valeur_choisie)
       self.aide = Label(self.frame_valeur, text = aide)
       self.aide.place(relx=0.5,rely=0.85,anchor='n')
-      self.b_co.invoke('NON')
       # affichage de la valeur courante
       self.display_valeur()
       
@@ -902,13 +905,68 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       pour valoriser le mot-clé simple courant ou cliquez sur NOUVEAU CONCEPT pour
       entrer le nom d'un concept non encore existant"""
 
+  def valid_valeur(self):
+      """
+      Teste si la valeur fournie par l'utilisateur est une valeur permise :
+      - si oui, l'enregistre
+      - si non, restaure l'ancienne valeur
+      """
+      if self.parent.modified == 'n' : self.parent.init_modif()
+      valeur = self.get_valeur()
+      print "valid_valeur ",valeur
+      self.erase_valeur()
+      anc_val = self.node.item.get_valeur()
+      print "anc_val ",anc_val
+      test_CO=self.node.item.is_CO(anc_val)
+      test = self.node.item.set_valeur(valeur)
+      if not test :
+          mess = "impossible d'évaluer : %s " %`valeur`
+          self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée :"+mess)
+          return
+      elif self.node.item.isvalid() :
+          self.parent.appli.affiche_infos('Valeur du mot-clé enregistrée')
+          if test_CO:
+             # il faut egalement propager la destruction de l'ancien concept
+             self.node.item.delete_valeur_co(valeur=anc_val)
+             # et on force le recalcul des concepts de sortie de l'etape
+             self.node.item.object.etape.get_type_produit(force=1)
+             # et le recalcul du contexte
+             self.node.item.object.etape.parent.reset_context()
+          self.node.parent.select()
+      else :
+          cr = self.node.item.get_cr()
+          mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
+          self.record_valeur(anc_val,mess=mess)
+          return
+      if self.node.item.get_position()=='global':
+          self.node.etape.verif_all()
+      elif self.node.item.get_position()=='global_jdc':
+          self.node.racine.verif_all()
+      else :
+          self.node.parent.verif()
+      self.node.update()
+
   def valid_nom_concept_co(self,event=None):
       """
       Lit le nom donné par l'utilisateur au concept de type CO qui doit être
       la valeur du MCS courant et stocke cette valeur
       """
+      if self.parent.modified == 'n' : self.parent.init_modif()
+      anc_val = self.node.item.get_valeur()
       nom_concept = self.entry_co.get()
-      self.node.item.set_valeur_co(nom_concept)
+      test,mess=self.node.item.set_valeur_co(nom_concept)
+      if not test:
+          # On n'a pas pu créer le concept
+          self.parent.appli.affiche_infos(mess)
+          return
+      elif self.node.item.isvalid() :
+          self.parent.appli.affiche_infos('Valeur du mot-clé enregistrée')
+          self.node.parent.select()
+      else :
+          cr = self.node.item.get_cr()
+          mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
+          self.record_valeur(anc_val,mess=mess)
+          return
       if self.node.item.get_position()=='global':
           self.node.etape.verif_all()
       elif self.node.item.get_position()=='global_jdc':
@@ -932,6 +990,9 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
           self.label_valeur.place_forget()
           self.entry_co.focus()
       elif new_concept == 'NON':
+          # On est passe de OUI à NON, on supprime la valeur
+          self.node.item.delete_valeur_co()
+          self.record_valeur(name=None,mess="Suppression CO enregistrée")
           self.label_co.place_forget()
           self.entry_co.place_forget()
           self.l_resu.place(relx=0.05,rely=0.7)
@@ -942,14 +1003,40 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       Affiche la valeur de l'objet pointé par self
       """
       valeur = self.node.item.get_valeur()
-      if valeur == None : return # pas de valeur à afficher ...
+      if valeur == None or valeur == '': 
+         self.valeur_choisie.set('')
+         return # pas de valeur à afficher ...
       # il faut configurer le bouton si la valeur est un objet CO
       # sinon afficher le nom du concept dans self.valeur_choisie
-      if valeur.__class__.__name__ != 'CO':
-          self.valeur_choisie.set(valeur.nom)
-      else:
+      if self.node.item.is_CO():
           self.b_co.invoke('OUI')
           self.entry_co.insert(0,valeur.nom)
+      else:
+          self.valeur_choisie.set(valeur.nom)
+
+  def record_valeur(self,name=None,mess='Valeur du mot-clé enregistrée'):
+      """
+      Enregistre  val comme valeur de self.node.item.object SANS faire de test de validité
+      """
+      if self.parent.modified == 'n' : self.parent.init_modif()
+      if name != None:
+          valeur =name
+      else :
+          self.entry_co.delete(0,END)
+          valeur= self.entry_co.get()
+      self.node.item.set_valeur_co(valeur)
+      self.parent.appli.affiche_infos(mess)
+      # On met a jour le display dans le panneau
+      self.display_valeur()
+      if self.node.item.get_position()=='global':
+          self.node.etape.verif_all()
+      elif self.node.item.get_position()=='global_jdc':
+          self.node.racine.verif_all()
+      else :
+          self.node.parent.verif()
+      if self.node.item.isvalid():
+          self.node.parent.select()
+      self.node.update()
 
 
 class UNIQUE_BASE_Panel(UNIQUE_Panel):
@@ -1135,7 +1222,6 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
                   else:
                       # on attend un entier, un réel ou une string
                       self.panel = UNIQUE_BASE_Panel
-
       
   def SetText(self, text):
     try:
@@ -1227,17 +1313,21 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return 1
 
   def GetType(self):
-      """ Retourne le type de valeur attendu par l'objet représenté par l'item.
+      """ 
+          Retourne le type de valeur attendu par l'objet représenté par l'item.
       """
       return self.object.get_type()
 
   def GetIntervalle(self):
-      """ Retourne le domaine de valeur attendu par l'objet représenté par l'item.
+      """ 
+           Retourne le domaine de valeur attendu par l'objet représenté 
+           par l'item.
       """
       return self.object.getintervalle()
 
   def IsInIntervalle(self,valeur):
-      """ Retourne 1 si la valeur est dans l'intervalle permis par
+      """ 
+          Retourne 1 si la valeur est dans l'intervalle permis par
           l'objet représenté par l'item.
       """
       return self.object.isinintervalle(valeur)
@@ -1246,14 +1336,15 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       """
       Affecte au MCS pointé par self l'objet de type CO et de nom nom_co
       """
-      self.object.set_valeur_co(nom_co)
+      return self.object.set_valeur_co(nom_co)
       
   def get_sd_avant_du_bon_type(self):
       """
       Retourne la liste des noms des SD présentes avant l'étape qui contient
       le MCS pointé par self et du type requis par ce MCS
       """
-      return self.object.jdc.get_sd_avant_du_bon_type(self.object.etape,self.object.definition.type)
+      return self.object.etape.parent.get_sd_avant_du_bon_type(self.object.etape,
+                                                               self.object.definition.type)
     
   def GetListeValeurs(self) :
       """ Retourne la liste des valeurs de object """
@@ -1271,6 +1362,34 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
         - retourne l'objet associé si on a pu interpréter (entier, réel, ASSD,...)
         - retourne 'valeur' (chaîne de caractères) sinon """
       return self.object.eval_valeur(valeur)
+
+  def is_CO(self,valeur=None):
+      """
+         Indique si valeur est un concept produit de la macro
+         Cette méthode n'a de sens que pour un MCSIMP d'une MACRO
+         Si valeur vaut None on teste la valeur du mot cle
+      """
+      # Pour savoir si un concept est un nouveau concept de macro
+      # on regarde s'il est présent dans l'attribut sdprods de l'étape
+      # ou si son nom de classe est CO.
+      # Il faut faire les 2 tests car une macro non valide peut etre
+      # dans un etat pas tres catholique avec des CO pas encore types
+      # et donc pas dans sdprods (resultat d'une exception dans type_sdprod)
+      if not valeur:valeur=self.object.valeur
+      if valeur in self.object.etape.sdprods:return 1
+      if type(valeur) is not types.ClassType:return 0
+      if valeur.__class__.__name__ == 'CO':return 1
+      return 0
+
+  def delete_valeur_co(self,valeur=None):
+      """
+           Supprime la valeur du mot cle (de type CO)
+           il faut propager la destruction aux autres etapes
+      """
+      if not valeur : valeur=self.object.valeur
+      # XXX faut il vraiment appeler del_sdprod ???
+      #self.object.etape.parent.del_sdprod(valeur)
+      self.object.etape.parent.delete_concept(valeur)
 
 import Accas
 treeitem = SIMPTreeItem

@@ -145,6 +145,8 @@ class Interpreteur_Formule:
             texte = [texte,]
         for text_arg in texte:
             text_arg = string.replace(text_arg,'\n','')
+            # Enleve les espaces
+            text_arg = string.replace(text_arg,' ','')
             try:
                 self.l_operateurs.append(self.split_operateurs(text_arg))
             except InterpreteurException,e:

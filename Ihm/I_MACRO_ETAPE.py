@@ -11,6 +11,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def __init__(self):
       I_ETAPE.ETAPE.__init__(self)
+      # XXX CCAR : ne suis pas certain que typret doive etre 
+      # initialise à None (a verifier)
+      self.typret=None
 
   def get_sdprods(self,nom_sd):
     """ 
@@ -61,6 +64,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
                              context_ini = context_ini,
                              appli=self.jdc.appli)
        j.analyse()
+       # XXX en passant par un jdc auxiliaire, on risque de rendre les etapes inactives
+       # on les force dans l'etat actif
+       for etape in j.etapes:
+          etape.active()
     except:
        traceback.print_exc()
        return None

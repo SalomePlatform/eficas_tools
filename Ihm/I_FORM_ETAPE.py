@@ -56,6 +56,15 @@ class FORM_ETAPE(MACRO_ETAPE):
         else:
             return ''
 
+    def get_formule(self):
+        """
+        Retourne un tuple décrivant la formule :
+        (nom,type_retourne,arguments,corps)
+        """
+        t,a,c = self.analyse_formule()
+        n = self.get_nom()
+        return (n,t,a,c)
+
     def verif_arguments(self,arguments = None):
         """
         Vérifie si les arguments passés en argument (si aucun prend les arguments courants)

@@ -21,7 +21,7 @@
 import os,shutil,glob,sys
 import types
 
-version="$Name:  $"[7:-2] or 'Test'
+version="$Name:  $"[7:-2] or 'Test1_2'
 
 path_Noyau="../../../Tutorial/Superv"
 nom_distrib="Eficas"+version+"AsterSTA6"

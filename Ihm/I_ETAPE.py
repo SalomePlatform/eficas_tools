@@ -63,7 +63,8 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
       if self.isvalid() :
          if type(self.definition.op_init) == types.FunctionType :
-            apply(self.definition.op_init,(self,self.master.g_context))   
+            # XXX Normalement en mode editeur g_context ne peut pas etre utilisé
+            apply(self.definition.op_init,(self,self.parent.g_context))   
       self.state = 'modified'
     
    def nomme_sd(self,nom) :
@@ -234,13 +235,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       etape.state = 'modified'
       etape.reuse = None
       etape.sdnom = None
+      etape.etape=etape
       etape.mc_liste=[]
       for objet in self.mc_liste:
         new_obj = objet.copy()
-	new_obj.parent = etape
-	if hasattr(new_obj,'isMcList') :
-	   if new_obj.isMCList() :
-	      new_obj.init(new_obj.nom,etape)
+        new_obj.reparent(etape)
         etape.mc_liste.append(new_obj)
       return etape
 
@@ -273,4 +272,21 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       for child in self.mc_liste:
         l.extend(child.get_sd_utilisees())
       return l
+
+   def get_genealogie(self):
+      """ 
+          Retourne la liste des noms des ascendants de l'objet self
+          en s'arretant à la première ETAPE rencontrée
+      """
+      return [self.nom]
+
+   def reparent(self,parent):
+     """
+         Cette methode sert a reinitialiser la parente de l'objet
+     """
+     self.parent=parent
+     self.jdc=parent.get_jdc_root()
+     self.etape=self
+     for mocle in self.mc_liste:
+        mocle.reparent(self)
 

@@ -30,6 +30,7 @@ class COMMANDE_COMM:
         self.definition=self
         self.nom = ''
         self.niveau = self.parent.niveau
+        self.actif=1
         #self.appel = N_utils.callee_where(niveau=2)
         if reg=='oui' : self.register()
             

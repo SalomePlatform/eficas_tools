@@ -10,6 +10,7 @@ from tkMessageBox import showinfo,askyesno,showerror
 
 # Modules Eficas
 import splash
+import prefs
 import convert
 import generator
 from jdcdisplay import JDCDISPLAY
@@ -58,6 +59,14 @@ class BUREAU:
                         ('Delete24',"delete","Supprime l'objet courant",'jdc'),
                         ('Help24',"view_doc","Documentation de l'objet courant",'jdc')
                        )
+   try:
+      menu_defs=prefs.menu_defs['bureau']
+   except:
+      pass
+   try:
+      button_defs=prefs.button_defs['bureau']
+   except:
+      pass
 
    def __init__(self,appli,parent):
       self.parent=parent
@@ -108,6 +117,7 @@ class BUREAU:
                          cata_ord_dico=self.cata_ordonne_dico,
                          appli=self.appli)
       self.JDCName=J.nom
+      self.fileName=None
       self.ShowJDC(J,self.JDCName)
       self.appli.toolbar.active_boutons()
 
@@ -504,12 +514,16 @@ class BUREAU:
       """
       if not hasattr(self,'JDC') : return
       titre = "fichier de commandes utilisateur"
-      texte = self.JDC.procedure
-      if texte == None:
+      #texte = self.JDC.procedure
+      #if texte == None:
+      if self.JDCDisplay_courant.fichier == None:
             self.appli.affiche_infos("Pas de fichier initial")
-            showerror("Impossible de visualiser le fichier initial","EFICAS ne peut visualiser le fichier \
-                       initial.\nIl s'agit d'un nouveau JDC")
+            showerror("Impossible de visualiser le fichier initial",
+                      "EFICAS ne peut visualiser le fichier initial.\nIl s'agit d'un nouveau JDC")
             return
+      f=open(self.JDCDisplay_courant.fichier,'r')
+      texte=f.read()
+      f.close()
       self.visu_texte_JDC = Fenetre(self.appli,titre=titre,texte=texte)
 
    def affichage_fichier_ini(self):

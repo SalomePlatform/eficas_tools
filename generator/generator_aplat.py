@@ -268,7 +268,7 @@ class AplatGenerator:
       text = ''
       init = self.init + self.sep + obj.nom
       old_init=self.init
-      for data in self.data :
+      for data in obj.data :
         i=i+1
         self.init = init + self.sep + "occurrence n°"+`i`
         text = text + self.generator(data)
@@ -283,7 +283,7 @@ class AplatGenerator:
       if type(obj.valeur) in (types.TupleType,types.ListType) :
          # On est en présence d'une liste de valeur
          rep = '('
-         for val in self.valeur:
+         for val in obj.valeur:
            if type(val) == types.InstanceType :
              rep = rep + self.generator(val) +','
            else:

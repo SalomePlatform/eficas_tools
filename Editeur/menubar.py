@@ -12,7 +12,10 @@ class MENUBAR:
       self.parent.configure(menu=self.menubar)
       self.init()
 
-   labels= ('Fichier','Edition','Jeu de commandes','Catalogue','Browsers','Options')
+   try:
+      from prefs import labels
+   except:
+      labels= ('Fichier','Edition','Jeu de commandes','Catalogue','Browsers','Options')
 
    def init(self):
       self.menudict={}
@@ -20,12 +23,4 @@ class MENUBAR:
          menu=Menu(self.menubar,tearoff=0)
          self.menudict[label]=menu
          self.menubar.add_cascade(label=label,menu=menu)
-
-      #self.optionmenu.add_command(label='Catalogue développeur',command=self.choix_cata_developpeur)
-
-      #self.browsermenu.add_command(label='Browser catalogue',command = self.browser_catalogue)
-      #self.browsermenu.add_command(label='Shell',command = self.shell)
-      #self.browsermenu.add_command(label='Editeur catalogue',command = self.edite_catalogue)
-
-
 

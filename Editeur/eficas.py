@@ -17,7 +17,10 @@ from widgets import Fenetre
 
 class EFICAS(appli.APPLI):
 
-  extensions=['readercata','bureau','browser','options']
+  try:
+     from prefs import extensions
+  except:
+     extensions=['readercata','bureau','browser','options']
 
   def get_texte_infos(self):
      texte=appli.APPLI.get_texte_infos(self)

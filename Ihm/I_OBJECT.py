@@ -2,7 +2,12 @@
 """
 import string
 
+import Noyau
+
 class OBJECT:
+  from Noyau.N_CO import CO
+  from Noyau.N_ASSD import assd
+
   def isMCList(self):
     """ 
         Retourne 1 si self est une MCList (liste de mots-clés), 
@@ -86,4 +91,18 @@ class OBJECT:
         Retourne la liste des noms des ascendants (noms de MCSIMP,MCFACT,MCBLOC
         ou ETAPE) de self jusqu'au premier objet etape rencontré
     """
-    return []
+    if self.parent:
+       l=self.parent.get_genealogie()
+       l.append(string.strip(self.nom))
+       return l
+    else:
+       return [string.strip(self.nom)]
+
+  def reparent(self,parent):
+     """
+         Cette methode sert a reinitialiser la parente de l'objet
+     """
+     self.parent=parent
+     self.jdc=parent.jdc
+
+
