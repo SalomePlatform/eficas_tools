@@ -57,8 +57,8 @@ class APPLI:
       self.message=''
       self.cree_composants_graphiques()
       self.load_appli_composants()			# Creation du BUREAU
-      self.affiche_FAQ()
       splash.fini_splash()
+      self.affiche_FAQ()
       # AY : cas ou le nom du fichier a été passé en argument
       if fichier :
            try :

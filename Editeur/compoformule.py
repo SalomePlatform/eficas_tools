@@ -78,7 +78,7 @@ class FORMULEPanel(panels.OngletPanel):
     self.option_menu_typ.place(relx=0.33,rely=0.23)
     Label(self.frame_valeur,text= 'Arguments : ').place(relx=0.,rely=0.40)
     self.entry_arg = Entry(self.frame_valeur)
-    Label(self.frame_valeur,text= 'Expression : ').place(relx=0.,rely=0.60)
+    Label(self.frame_valeur,text= 'Expression : ').place(relx=0.,rely=0.65)
     self.entry_exp = Entry(self.frame_valeur)
     # binding sur les entries
     self.entry_nom.bind("<Return>",self.verif_nom)
@@ -87,18 +87,21 @@ class FORMULEPanel(panels.OngletPanel):
     # affichage des entries
     self.entry_nom.place(relx=0.35,rely=0.10,relwidth=0.2)
     self.entry_arg.place(relx=0.35,rely=0.40,relwidth=0.4)
-    Label(self.frame_valeur,text='Entrer les arguments sous la forme').place(relx=0.35,rely=0.45) 
-    Label(self.frame_valeur,text='TYPE : VARIABLE séparés par des virgules (,)').place(relx=0.35,rely=0.49) 
-    Label(self.frame_valeur,text= 'Exemple REEL:INST,ENTIER:COEF').place(relx=0.35,rely=0.53) 
-    self.entry_exp.place(relx=0.35,rely=0.60,relwidth=0.60)
-    # affichage d'une phrase d'aide
-    aide = """
-    Un retour de chariot dans une zone de saisie vous permet de vérifier si
-    la valeur que vous avez entrée est valide.
-    Ce n'est qu'après avoir appuyé sur le bouton Valider que les nouvelles
-    valeurs seront effectivement prises en compte
-    """
-    Label(self.frame_valeur,text=aide).place(relx=0.5,rely=0.7,anchor='n')
+
+    # affichage d'une phrase d'aide pour les arguments
+    aide = """Entrer les arguments sous la forme
+TYPE : VARIABLE séparés par des virgules (,)
+Exemple REEL:INST,ENTIER:COEF """
+    Label(self.frame_valeur,text=aide, justify="l").place(relx=0.5,rely=0.47,anchor='n') 
+
+    self.entry_exp.place(relx=0.35,rely=0.65,relwidth=0.60)
+    # affichage d'une phrase d'aide pour l'expression
+    aide = """Un retour de chariot dans une zone de saisie vous permet de vérifier si
+la valeur que vous avez entrée est valide.
+Ce n'est qu'après avoir appuyé sur le bouton Valider que les nouvelles
+valeurs seront effectivement prises en compte."""
+    Label(self.frame_valeur,text=aide).place(relx=0.5,rely=0.75,anchor='n')
+
     # affichage des nom, type retourné, arguments et corps de la FORMULE
     self.display_valeur()
     # affichage des boutons

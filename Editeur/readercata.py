@@ -283,7 +283,7 @@ class READERCATA:
           self.version_code = liste_choix[0]
           return
       # création d'une boîte de dialogue modale
-      self.fenetre_choix_cata = Pmw.Dialog(self.parent,
+      self.fenetre_choix_cata = Pmw.Dialog(splash._splash, #avec self.parent, ne marche pas sous Windows
                                            buttons=('OK','ANNULER'),
                                            defaultbutton = 'OK',
                                            title = "Choix d'une version du code %s" %self.code,
