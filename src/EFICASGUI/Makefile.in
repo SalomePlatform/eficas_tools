@@ -39,6 +39,9 @@ salomedsgui.py \
 SMESH_utils.py \
 eficasSalome.py  
 
+# _CS_gbo_151104 Ajout pour compatibilité ascendante entre versions de Eficas
+EXPORT_PYSCRIPTS+=eficas_etude.py
+
 PYUIC = pyuic
 
 %.py:%.ui
