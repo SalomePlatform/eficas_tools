@@ -382,9 +382,9 @@ class MCCOMPO(I_OBJECT.OBJECT):
     liste_retraits = []
     dict = self.cree_dict_valeurs(self.mc_liste)
     for k,v in self.definition.entites.items():
-      #dict = self.cree_dict_valeurs(self.mc_liste)
       if v.label=='BLOC' :
-        if v.verif_presence(dict) :
+        globs= self.jdc and self.jdc.condition_context or {}
+        if v.verif_presence(dict,globs):
           # le bloc doit être présent
           if not self.get_child(k,restreint = 'oui'):
             # le bloc n'est pas présent et il doit être créé

@@ -23,6 +23,7 @@
     Il s'appuie sur la classe READERCATA
 """
 # Modules Python
+import time
 import os,sys,py_compile
 import traceback
 import cPickle
@@ -36,6 +37,7 @@ import fontes
 import analyse_catalogue
 from Noyau.N_CR import CR
 from widgets import Fenetre
+from utils import init_rep_cata_dev
 
 #import catabrowser
 
@@ -96,17 +98,23 @@ class READERCATA:
       # détermination de fic_cata_c et fic_cata_p
       self.fic_cata_c = self.fic_cata + 'c'
       self.fic_cata_p = os.path.splitext(self.fic_cata)[0]+'_pickled.py'
+      print "Debut compil cata: ",time.clock()
       # compilation éventuelle du catalogue
       test = self.compile_cata(self.fic_cata,self.fic_cata_c)
+      print "Fin compil cata: ",time.clock()
       if not test : showerror("Compilation catalogue","Impossible de compiler le catalogue %s" %self.fic_cata)
       # import du catalogue
+      print "Debut import_cata: ",time.clock()
       self.cata = self.import_cata(self.fic_cata)
+      print "Fin import_cata: ",time.clock()
       if not self.cata : showerror("Import du catalogue","Impossible d'importer le catalogue %s" %self.fic_cata)
       # analyse du catalogue (ordre des mots-clés)
       #XXX A priori ceci fait double emploi. Il faut d'abord calculer l'ordre
       # puis fabriquer le CATAItem
       #CCAR :self.catalo = catabrowser.CATAItem(self,"Catalogue",self.cata)
+      print "Debut Retrouve_Ordre: ",time.clock()
       self.Retrouve_Ordre_Cata_Standard()
+      print "Fin Retrouve_Ordre: ",time.clock()
       # chargement et analyse des catalogues développeur (le cas échéant)
       if self.appli.CONFIGURATION.isdeveloppeur == 'OUI' :
           init_rep_cata_dev(self.fic_cata,self.appli.CONFIGURATION.path_cata_dev)

@@ -41,15 +41,6 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def ident(self):
       return self.nom
 
-   def get_fr(self):
-      """ 
-         Retourne l'attribut fr de self.definition 
-      """
-      try:
-         return self.definition.fr
-      except:
-         return ''
-
    def get_sdname(self):
       if CONTEXT.debug : print "SDNAME ",self.reuse,self.sd,self.sd.get_name()
       if self.reuse != None:
@@ -106,65 +97,87 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       if len(nom) > 8 and self.jdc.definition.code == 'ASTER':
         return 0,"Nom de concept trop long (maxi 8 caractères)"
       self.init_modif()
-      # Cas particulier des opérateurs réentrants
       if not self.isvalid(sd='non') : return 0,"Nommage du concept refusé : l'opérateur n'est pas valide"
+      #
+      # Cas particulier des opérateurs obligatoirement réentrants
+      #
       if self.definition.reentrant == 'o':
         # FR : appel à get_sdprod incorrect : il faut appeler get_sd_avant_etape
         #self.sd = self.reuse = self.jdc.get_sdprod(nom)
 	self.sd = self.reuse = self.jdc.get_sd_avant_etape(nom,self)
         if self.sd != None :
+          self.sdnom=self.sd.nom
           return 1,"Concept existant"
         else:
           return 0,"Opérateur réentrant mais concept non existant"
+      #
+      # Cas particulier des opérateurs facultativement réentrants
+      #
+      old_reuse=None
       if self.definition.reentrant == 'f' :
         sd = self.jdc.get_sd_avant_etape(nom,self)
         if sd != None :
 	  # FR : il faut tester que la sd trouvée est du bon type !!!!!!!!!!!!!!!!!
 	  if isinstance(sd,self.get_type_produit()) :
              self.sd = self.reuse = sd
+             self.sdnom = sd.nom
              return 1,"Opérateur facultativement réentrant et concept existant trouvé"
 	  else:
 	     return 0,"Concept déjà existant et de mauvais type"
         else :
-          # il faut éventuellement enlever le lien vers une SD existante car si on passe ici
+          # il faut enlever le lien vers une SD existante car si on passe ici
 	  # cela signifie que l'opérateur n'est pas utilisé en mode réentrant.
-	  # Si on ne fait pas cela, le nom de l'opérateur réutilisé est aussi modifié
-	  # et on ne peut plus modifier la SD de l'opérateur
+	  # Si on ne fait pas cela, on risque de modifier une SD produite par un autre opérateur
 	  if self.reuse :
-	     self.sd = self.reuse = None
-      # l'opérateur n'est pas réentrant ou facultativement reentrant mais pas dans ce cas
+             old_reuse=self.reuse
+	     self.sd = self.reuse = self.sdnom = None
+      #
+      # On est dans le cas ou l'opérateur n'est pas réentrant ou est facultativement reentrant
+      # mais est utilisé en mode non réentrant
+      #
       if self.sd == None :
           if self.parent.get_sd_autour_etape(nom,self):
+            # Un concept de ce nom existe dans le voisinage de l'etape courante
             # On force self.valid a 0 car l appel a isvalid precedent l a mis a 1
             # mais ceci indique seulement une validité partielle
             # isvalid ne devrait peut etre pas mettre l attribut valid à 1 si sd == 'non'
             self.valid=0
-            return 0,"Nommage du concept refuse : un concept de meme nom existe deja"
-          # Il n'existe pas de sd de nom sdnom. On peut donc créer le concept retourné.
-          # Il est créé sans nom mais enregistré dans la liste des concepts existants
-          self.get_sd_prod()
-          self.sd.nom = nom
-          return 1,"Nommage du concept effectué"
-      else :
-        old_nom=self.sd.nom
-        if string.find(old_nom,'sansnom') :
-           # Dans le cas où old_nom == sansnom, isvalid retourne 0 alors que ...
-	   # par contre si le concept existe et qu'il s'appelle sansnom c'est que l'étape est valide
-	   # on peut donc le nommer sans test préalable
-	   self.sd.nom=nom
-           return 1,"Nommage du concept effectué"
-        if self.isvalid() :
-          # Normalement l appel de isvalid a mis a jour le concept produit (son type)
-          # Il suffit de spécifier l attribut nom de sd pour le nommer si le nom n est pas
-          # deja attribué
-          if self.parent.get_sd_autour_etape(nom,self):
+            # On retablit l'ancien concept reentrant s'il existait
+            if old_reuse:
+               self.sd=self.reuse=old_reuse
+               self.sdnom=old_reuse.nom
             return 0,"Nommage du concept refuse : un concept de meme nom existe deja"
           else:
-            self.sd.nom=nom
+            # Il n'existe pas de concept de ce nom dans le voisinage de l'etape courante
+            # On peut donc créer le concept retourné.
+            # Il est créé sans nom mais enregistré dans la liste des concepts existants
+            self.get_sd_prod()
+            # Il suffit de changer son attribut nom pour le nommer
+            self.sd.nom = nom
+            self.sdnom=nom
             return 1,"Nommage du concept effectué"
-        else:
-          # Normalement on ne devrait pas passer ici
-          return 0,'Normalement on ne devrait pas passer ici'
+      else :
+          old_nom=self.sd.nom
+          if string.find(old_nom,'sansnom') :
+            # Dans le cas où old_nom == sansnom, isvalid retourne 0 alors que ...
+	    # par contre si le concept existe et qu'il s'appelle sansnom c'est que l'étape est valide
+	    # on peut donc le nommer sans test préalable
+	    self.sd.nom=nom
+            self.sdnom=nom
+            return 1,"Nommage du concept effectué"
+          if self.isvalid() :
+            # Normalement l appel de isvalid a mis a jour le concept produit (son type)
+            # Il suffit de spécifier l attribut nom de sd pour le nommer si le nom n est pas
+            # deja attribué
+            if self.parent.get_sd_autour_etape(nom,self):
+              return 0,"Nommage du concept refuse : un concept de meme nom existe deja"
+            else:
+              self.sd.nom=nom
+              self.sdnom=nom
+              return 1,"Nommage du concept effectué"
+          else:
+            # Normalement on ne devrait pas passer ici
+            return 0,'Normalement on ne devrait pas passer ici'
 
    def get_sdprods(self,nom_sd):
       """ 

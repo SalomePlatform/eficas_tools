@@ -188,5 +188,14 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
    def isoblig(self):
       return self.definition.statut=='o'
 
+   def get_fr(self):
+     """
+        Retourne le texte d'aide dans la langue choisie
+     """
+     try :
+        return getattr(self.definition,prefs.lang)
+     except:
+        return ''
+
 
 

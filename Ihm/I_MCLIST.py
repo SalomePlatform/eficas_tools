@@ -191,3 +191,13 @@ class MCList:
       l.extend(motcle.get_sd_utilisees())
     return l
 
+  def get_fr(self):
+     """
+         Retourne la chaine d'aide contenue dans le catalogue
+         en tenant compte de la langue
+     """
+     try :
+        return self.data[0].get_fr()
+     except:
+        return ''
+

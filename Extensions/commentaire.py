@@ -173,3 +173,9 @@ class COMMENTAIRE :
   def verif_existence_sd(self):
      pass
 
+  def get_fr(self):
+    """
+    Retourne le commentaire lui meme 
+    """
+    return self.valeur
+

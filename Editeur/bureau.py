@@ -34,7 +34,7 @@ import convert
 import generator
 import AIDE
 from jdcdisplay import JDCDISPLAY
-from utils import extension,stripPath,save_in_file
+from utils import extension_fichier,stripPath,save_in_file
 from widgets import Fenetre,Ask_Format_Fichier
 from fenetre_mc_inconnus import fenetre_mc_inconnus
 
@@ -101,7 +101,7 @@ class BUREAU:
 
    def cree_cataitem(self):
       """
-          On récupère dans l'extension readercata les variables 
+          On récupère dans l'appli_composant readercata les variables 
           qui servent par la suite pour la création des JDC
       """
       self.cataitem=self.appli.readercata.cataitem
@@ -230,7 +230,8 @@ class BUREAU:
       else:
           filetypes = ( ("format "+self.appli.format_fichier.get(), ".py"),)
       if not hasattr(self,'initialdir'):
-         self.initialdir = self.appli.CONFIGURATION.rep_user
+         #self.initialdir = self.appli.CONFIGURATION.rep_user
+         self.initialdir = self.appli.CONFIGURATION.initialdir
       if not file :
           file = askopenfilename(title="Ouverture d'un fichier de commandes Aster",
                                  defaultextension=".comm",
@@ -238,7 +239,7 @@ class BUREAU:
                                  initialdir = self.initialdir)
       if file != '':
           self.fileName = file
-          e=extension(file)
+          e=extension_fichier(file)
           self.JDCName=stripPath(file)
           self.initialdir = os.path.dirname(file)
       else :
@@ -363,7 +364,8 @@ class BUREAU:
       sauvegarde = asksaveasfilename(title=titre,
                                      defaultextension=defext,
                                      filetypes = filtyp,
-                                     initialdir = self.appli.CONFIGURATION.rep_user)
+                                     initialdir = self.appli.CONFIGURATION.initialdir)
+                                     #initialdir = self.appli.CONFIGURATION.rep_user)
       if sauvegarde != '':
           if not save_in_file(sauvegarde,self.jdc_fini) :
               showinfo("Erreur","Problème à la sauvegarde du fichier "+`sauvegarde`)

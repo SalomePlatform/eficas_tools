@@ -53,13 +53,17 @@ class MCSIMP(I_OBJECT.OBJECT):
     if self.valeur == None : 
       return None
     elif type(self.valeur) == types.FloatType : 
-      txt = repr_float(self.valeur)
+      #txt = repr_float(self.valeur)
+      # Normalement str fait un travail correct
+      txt = str(self.valeur)
     elif type(self.valeur) in (types.ListType,types.TupleType) :
       txt='('
       i=0
       for val in self.valeur:
         if type(val) == types.FloatType : 
-           txt=txt + i*',' + repr_float(val)
+           # Normalement str fait un travail correct
+           #txt=txt + i*',' + repr_float(val)
+           txt=txt + i*',' + str(val)
         elif type(val) == types.InstanceType and isinstance(val,ASSD): 
            txt = txt + i*',' + val.get_name()
         else: 
@@ -73,8 +77,16 @@ class MCSIMP(I_OBJECT.OBJECT):
         if isinstance(txt,parametre.PARAMETRE):
           return str(txt)
       return repr(txt)
-    # il faut tronquer txt au delà d'un certain nombre de caractères
-    # et avant tout retour chariot (txt peut être une chaîne de caractères
+    # txt peut etre une longue chaine sur plusieurs lignes.
+    # Il est possible de tronquer cette chaine au premier \n et 
+    # de limiter la longueur de la chaine a 30 caracteres. Cependant
+    # ceci provoque une perte d'information pour l'utilisateur
+    # Pour le moment on retourne la chaine telle que
+    return txt
+
+    # Partie de code inaccessible (pour memoire)
+    # txt est tronquee au dela d'un certain nombre de caractères
+    # et avant tout retour chariot (txt peut etre une chaine de caractères
     # sur plusieurs lignes (ex:shell)
     txt = string.split(txt,'\n')[0]
     if len(txt) < 30 :

@@ -110,7 +110,8 @@ class Fenetre :
         """ Permet de sauvegarder le texte dans un fichier dont on a demandé le nom
         à l'utilisateur """
         file = asksaveasfilename(defaultextension = '.comm',
-                               initialdir = self.appli.CONFIGURATION.rep_user,
+                               #initialdir = self.appli.CONFIGURATION.rep_user,
+                               initialdir = self.appli.CONFIGURATION.initialdir,
                                title="Sauvegarde du "+self.titre)
         if file != '':
             if not save_in_file(file,self.texte) :

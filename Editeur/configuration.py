@@ -74,8 +74,9 @@ class CONFIG:
          print string.join(l[2:])
          sys.exit()
       for attr in self.l_nom_param:
-          nom_attr,statut = attr
-          valeur = d.get(nom_attr,None)
+          nom_attr,statut,defaut = attr
+          #valeur = d.get(nom_attr,None)
+          valeur = d.get(nom_attr,defaut)
           if not valeur and statut=='o':
               showerror("Erreur","Une erreur s'est produite dans la relecture du fichier de configuration : "
                        + self.fic_ini+"\n EFICAS va vous demander les nouveaux paramètres")
@@ -100,7 +101,7 @@ class CONFIG:
           traceback.print_exc()
           return
       for attr in self.l_nom_param:
-          nom_attr,statut = attr
+          nom_attr,statut,defaut = attr
           valeur = d.get(nom_attr,None)
           if valeur :
               setattr(self,nom_attr,valeur)
@@ -113,6 +114,14 @@ class CONFIG:
       (label,nature,nom_var,defaut)
       """
       self.l_param=[]
+      # répertoire initial pour OPEN/SAVE des fichiers de commande
+      # Par defaut, EFICAS utilise le repertoire utilisateur $HOME/Eficas_install
+      # Il est possible de specifier dans editeur.ini ou eficas.ini un autre chemin
+      # Ce peut etre un chemin absolu ou le repertoire courant (os.curdir)
+      if hasattr(self,'initialdir'):
+          self.l_param.append(("Répertoire initial pour Open/save des fichiers de commande",'rep','initialdir',self.initialdir))
+      else:
+          self.l_param.append(("Répertoire initial pour Open/save des fichiers de commande",'rep','initialdir',self.rep_user))
       # répertoire de travail
       if hasattr(self,'rep_travail'):
           self.l_param.append(("Répertoire de travail",'rep','rep_travail',self.rep_travail))
@@ -154,11 +163,10 @@ class CONFIG:
       self.l_nom_param=[]
       statut='o'
       for tup in self.l_param:
-          #self.l_nom_param.append((tup[2],statut))
           if tup[1] == 'YesNo':
               # les paramètres suivant tup sont facultatifs ...
               statut='f'
-          self.l_nom_param.append((tup[2],statut))
+          self.l_nom_param.append((tup[2],statut,tup[3])) # nom,statut,defaut
 
   def affichage_fichier_ini(self):
       """

@@ -36,7 +36,7 @@ from widgets import Fenetre
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.3 2002/04/05 06:32:38 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.4 2002/05/15 15:31:58 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -51,7 +51,7 @@ class MACROPanel(panels.OngletPanel):
       nb.add('Concept', tab_text='Nommer concept')
     if ficini == 1:
       nb.add('Fichierinit',tab_text = 'Fichier %s' %self.node.item.get_nom())
-    nb.add('Commande', tab_text='Insérer Commande')
+    nb.add('Commande', tab_text='Nouvelle Commande')
     nb.add('Commentaire',tab_text='Paramètre/Commentaire')
     panneau=Pmw.PanedWidget(nb.page("Mocles"),
                             orient='horizontal')

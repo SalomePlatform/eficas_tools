@@ -20,7 +20,9 @@
 """
     Ce module contient des utilitaires divers
 """
-import os
+import os,re
+import glob
+import traceback
 
 def substract_list(liste1,liste2):
   """ 
@@ -88,11 +90,55 @@ def save_in_file(file,text):
   except:
     return 0
 
-def extension(pathAndFile):
+def extension_fichier(pathAndFile):
     """ Return ext if path/filename.ext is given """
     return os.path.splitext(pathAndFile)[1][1:]
 
 def stripPath(pathAndFile):
     """ Return filename.ext if path/filename.ext is given """
     return os.path.split(pathAndFile)[1]
+
+def init_rep_cata_dev(fic_cata,rep_goal):
+  """ initialise le répertoire des catalogues développeurs (chemin d'accès donné
+  dans le fichier eficas.ini cad :
+      - le crée s'il n'existe pas encore
+      - copie dedans les 3 fichiers nécessaires :
+          * __init__.py (pour que ce répertoire puisse être interprété comme un package)
+          * entete.py (pour réaliser les import nécessaires à l'interprétation des catalogues)
+          * declaration_concepts.py (idem)
+      - crée le fichier cata_developpeur.py qui sera par la suite importé"""
+  try :
+    if not os.path.isdir(rep_goal) :
+      os.mkdir(rep_goal)
+    texte_entete = get_entete_cata(fic_cata)
+    # rep_goal doit contenir les catalogues du développeur sous la forme *.capy
+    # il faut créer le catalogue développeur par concaténation de entete,declaration_concepts
+    # et de tous ces fichiers
+    cur_dir = os.getcwd()
+    os.chdir(rep_goal)
+    l_cata_dev = glob.glob('*.capy')
+    if os.path.isfile('cata_developpeur.py') : os.remove('cata_developpeur.py')
+    if len(l_cata_dev) :
+      # des catalogues développeurs sont effectivement présents : on crée cata_dev.py dans rep_goal
+      str = ''
+      str = str + texte_entete+'\n'
+      for file in l_cata_dev :
+        str = str + open(file,'r').read() +'\n'
+      open('cata_developpeur.py','w+').write(str)
+    os.chdir(cur_dir)
+  except:
+    traceback.print_exc()
+    print "Impossible de transférer les fichiers requis dans :",rep_goal
+
+def get_entete_cata(fic_cata):
+  """ Retrouve l'entete du catalogue """
+  l_lignes = open(fic_cata,'r').readlines()
+  txt = ''
+  flag = 0
+  for ligne in l_lignes :
+    if re.match("# debut entete",ligne) : flag = 1
+    if re.match("# fin entete",ligne) : break
+    if not flag : continue
+    txt = txt + ligne
+  return txt
 

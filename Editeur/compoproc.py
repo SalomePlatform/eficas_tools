@@ -31,7 +31,7 @@ class PROCPanel(panels.OngletPanel):
     nb.pack(fill = 'both', expand = 1)
     self.nb=nb
     nb.add('Mocles', tab_text='Ajouter mots-clés')
-    nb.add('Commande', tab_text='Insérer Commande')
+    nb.add('Commande', tab_text='Nouvelle Commande')
     nb.add('Commentaire',tab_text='Paramètre/Commentaire')
     panneau=Pmw.PanedWidget(nb.page("Mocles"),
                             orient='horizontal')

@@ -32,6 +32,7 @@ import Tkinter
 import splash
 import prefs
 import fontes
+import tooltip
 
 VERSION="EFICAS v1.3"
 
@@ -50,7 +51,7 @@ class APPLI:
       self.format_fichier = Tkinter.StringVar()
       self.message=''
       self.cree_composants_graphiques()
-      self.load_extensions()
+      self.load_appli_composants()
       self.affiche_FAQ()
       splash.fini_splash()
 
@@ -90,18 +91,18 @@ class APPLI:
       import statusbar
       self.statusbar=statusbar.STATUSBAR(self.top)
 
-  def load_extensions(self):
-      splash._splash.configure(text = "Chargement des extensions")
-      for mname in self.extensions:
-         self.load_extension(mname)
+  def load_appli_composants(self):
+      splash._splash.configure(text = "Chargement des appli_composants")
+      for mname in self.appli_composants:
+         self.load_appli_composant(mname)
 
-  def load_extension(self,mname):
+  def load_appli_composant(self,mname):
       module=__import__(mname,globals(),locals())
       factory=getattr(module,mname.upper())
-      extension=factory(self,self.top)
-      setattr(self,mname,extension)
-      self.fill_menus(extension,extension.menu_defs)
-      self.toolbar.creer_boutons_extension(extension.button_defs,extension)
+      appli_composant=factory(self,self.top)
+      setattr(self,mname,appli_composant)
+      self.fill_menus(appli_composant,appli_composant.menu_defs)
+      self.toolbar.creer_boutons_appli_composant(appli_composant.button_defs,appli_composant)
 
   def affiche_FAQ(self):
       import faq
@@ -172,14 +173,14 @@ class APPLI:
       x=event.x
       y=event.y
       widget=event.widget
-      self.aide = Tkinter.Label(widget ,text = aide,
-                        bg="yellow",relief="ridge",anchor='w')
-      self.aide.place(in_=widget,
-                      relx=0.5,rely=0.5,anchor='center')
-      print aide
-      return
+      self.aide=tooltip.TOOLTIP(widget)
+      self.aide.xoffset = 10
+      self.aide.yoffset = - widget.winfo_height()/2
+      self.aide.setText(aide)
+      self.aide._showTip()
+      return 
 
-  def fill_menus(self,extension,defs):
+  def fill_menus(self,appli_composant,defs):
       menudict=self.menubar.menudict
       for mname,itemlist in defs:
           menu=menudict.get(mname)
@@ -189,7 +190,7 @@ class APPLI:
                 menu.add_separator()
              else:
                 label,method=item
-                command=getattr(extension,method)
+                command=getattr(appli_composant,method)
                 menu.add_command(label=label,command=command)
                 
       

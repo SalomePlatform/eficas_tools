@@ -1269,7 +1269,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
     Retourne le texte à afficher dans l'arbre représentant la valeur de l'objet
     pointé par self 
     """
-    return self.object.GetText()
+    text= self.object.GetText()
+    return text
 
   def wait_co(self):
       """

@@ -21,6 +21,7 @@
 """
 import string
 
+import prefs
 import Noyau
 
 class OBJECT:
@@ -123,5 +124,15 @@ class OBJECT:
      """
      self.parent=parent
      self.jdc=parent.jdc
+
+  def get_fr(self):
+     """
+         Retourne la chaine d'aide contenue dans le catalogue
+         en tenant compte de la langue
+     """
+     try :
+        return getattr(self.definition,prefs.lang)
+     except:
+        return ''
 
 

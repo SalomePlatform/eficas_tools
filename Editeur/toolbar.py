@@ -156,7 +156,7 @@ class TOOLBAR:
       """
       self.fen_infos.destroy()
 
-  def creer_boutons_extension(self,l_boutons,extension):
+  def creer_boutons_appli_composant(self,l_boutons,appli_composant):
       for bouton in l_boutons :
           if not bouton :
               # on veut afficher un bouton vide (=espace entre boutons)
@@ -165,7 +165,7 @@ class TOOLBAR:
                      relief = 'flat').pack(side='left')
               continue
           nom_fic,commande,texte,statut = bouton
-          commande=getattr(extension,commande)
+          commande=getattr(appli_composant,commande)
           b = Button(self.barreboutons,
                      image = images.get_image(nom_fic),
                      command = commande,

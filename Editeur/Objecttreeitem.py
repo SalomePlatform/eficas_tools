@@ -313,10 +313,7 @@ class ObjectTreeItem(TreeItem,Delegate):
 
     def get_fr(self):
         """ Retourne le fr de l'objet pointé par self """
-        try:
-           return self.object.get_fr()
-        except:
-           return ''
+        return self.object.get_fr()
 
     def get_docu(self):
         """ Retourne la clé de doc de l'objet pointé par self """

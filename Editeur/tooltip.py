@@ -23,6 +23,28 @@
 """
 
 import Tkinter
+import types
+
+def destruct(obj):
+    # assist in breaking circular references
+    if obj is not None:
+        assert type(obj) is types.InstanceType
+        for k in obj.__dict__.keys():
+            obj.__dict__[k] = None
+            ##del obj.__dict__[k]
+
+def after(widget, ms, func, *args):
+    timer = apply(widget.after, (ms, func) + args)
+    command = widget._tclCommands[-1]
+    return (timer, command, widget)
+
+def after_cancel(t):
+    if t is not None:
+        t[2].after_cancel(t[0])
+        try:
+            t[2].deletecommand(t[1])
+        except Tkinter.TclError:
+            pass
 
 class TOOLTIP:
     def __init__(self,widget):
@@ -94,4 +116,17 @@ class TOOLTIP:
         self.label.pack(ipadx=1, ipady=1)
         self.tooltip.wm_geometry("%+d%+d" % (x, y))
         self.tooltip.wm_deiconify()
+
+if __name__ == "__main__":
+   root=Tkinter.Tk()
+
+   def aide(event):
+      tp=TOOLTIP(root)
+      tp.setText("texte d'aide")
+      tp._showTip()
+
+   label = Tkinter.Label(root, text="coucou")
+   label.bind("<ButtonPress>", aide)
+   label.pack()
+   root.mainloop()
 
