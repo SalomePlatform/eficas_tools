@@ -166,12 +166,20 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
             self.parent.appli.affiche_infos(commentaire)
             return
 
-      encorevalide=self.node.item.valide_item(valeur)
-      if encorevalide :
-         listecourante=self.Liste_valeurs.get_liste()
-         encorevalide=self.node.item.valide_liste_partielle(valeur,listecourante)
-         if not encorevalide : encorevalide = -1
-      self.add_valeur_sans_into(valeur,encorevalide)
+      atraiter=[]
+      try :
+         for v in valeur:
+	    atraiter.append(v)
+      except :
+         atraiter.append(valeur)
+
+      for valeur in atraiter :
+         encorevalide=self.node.item.valide_item(valeur)
+         if encorevalide :
+            listecourante=self.Liste_valeurs.get_liste()
+            encorevalide=self.node.item.valide_liste_partielle(valeur,listecourante)
+            if not encorevalide : encorevalide = -1
+         self.add_valeur_sans_into(valeur,encorevalide)
     
   def select_in_file(self):
       """ Permet d'ouvrir un fichier choisi par l'utilisateur. """
@@ -263,7 +271,18 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       if hasattr(self,'entry'):
          # Traitement d'une entree unique
          valeurentree = self.entry.get()
-         valeur,validite=self.node.item.eval_valeur(valeurentree)
+	 if (valeurentree[0] != "(") and (valeurentree.find(',') < len(valeurentree)):
+	    valeurs=[]
+	    for v in valeurentree.split(','):
+	      vsimple,validite=self.node.item.eval_valeur(v)
+	      if validite :
+		 valeurs.append(vsimple)
+	      else:
+		 commentaire = "impossible d'évaluer : %s " %`valeurentree`
+		 break
+	    valeur=valeurs
+         else: 
+            valeur,validite=self.node.item.eval_valeur(valeurentree)
          if not validite :
             commentaire = "impossible d'évaluer : %s " %`valeurentree`
          else:
