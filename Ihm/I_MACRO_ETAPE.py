@@ -367,20 +367,20 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          Ceci suppose que les relations entre unites et noms ont été memorisees préalablement
       """
       
-      if unite != self.fichier_unite:
-         # Changement d'unite
+      self.fichier_err=None
+      self.old_contexte_fichier_init=self.contexte_fichier_init
+
+      if unite != self.fichier_unite or not self.parent.recorded_units.has_key(unite):
+         # Changement d'unite ou Nouvelle unite
          f,text=self.get_file(unite=unite,fic_origine=self.parent.nom)
          units={}
-         self.fichier_ini = f
-         self.fichier_text=text
+         if f is not None:
+            self.fichier_ini = f
+            self.fichier_text=text
          self.recorded_units=units
-      elif not self.parent.recorded_units.has_key(unite):
-         # Nouvelle unite
-         f,text=self.get_file(unite=unite,fic_origine=self.parent.nom)
-         units={}
-         self.fichier_ini = f
-         self.fichier_text=text
-         self.recorded_units=units
+         if self.fichier_ini is None and self.jdc.appli:
+            self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
+                     message="Ce fichier ne sera pas pris en compte\n"+"Le fichier associé n'est pas défini")
       else:
          # Meme unite existante
          f,text,units=self.parent.recorded_units[unite]
@@ -388,11 +388,18 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.fichier_text=text
          self.recorded_units=units
 
-      self.fichier_err=None
-      self.old_contexte_fichier_init=self.contexte_fichier_init
+      if self.fichier_ini is None:
+         # Le fichier n'est pas défini
+         self.fichier_err="Le fichier associé n'est pas défini"
+         self.parent.change_unit(unite,self,self.fichier_unite)
+         self.g_context={}
+         self.contexte_fichier_init={}
+         self.parent.reset_context()
+         self.reevalue_sd_jdc()
+         return
 
       try:
-        self.make_contexte_include(f,text)
+        self.make_contexte_include(self.fichier_ini,self.fichier_text)
         # Les 3 attributs fichier_ini fichier_text recorded_units doivent etre corrects
         # avant d'appeler change_unit
         self.parent.change_unit(unite,self,self.fichier_unite)
@@ -479,11 +486,16 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       units={}
       if self.parent.old_recorded_units.has_key(unite):
          f,text,units=self.parent.old_recorded_units[unite]
+         self.recorded_units=units
+         return f,text
       elif self.jdc :
          f,text=self.jdc.get_file(unite=unite,fic_origine=fic_origine)
       else:
          f,text=None,None
       self.recorded_units=units
+      if f is None and self.jdc.appli:
+         self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
+                          message="Ce fichier ne sera pas pris en compte\n"+"Le fichier associé n'est pas défini")
       return f,text
 
 #ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro)

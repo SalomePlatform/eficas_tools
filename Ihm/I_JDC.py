@@ -528,6 +528,11 @@ class JDC(I_OBJECT.OBJECT):
       self.sds_dict[sdnom]=sd
       sd.nom=sdnom
 
+      # En plus si restrict vaut 'non', on insere le concept dans le contexte du JDC
+      if restrict == 'non':
+         self.g_context[sdnom]=sd
+
+
    def set_etape_context(self,etape):
       """
           Positionne l'etape qui sera utilisee dans NommerSdProd pour
