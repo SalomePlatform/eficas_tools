@@ -53,50 +53,45 @@ class MCSIMP(I_OBJECT.OBJECT):
     if self.valeur == None : 
       return None
     elif type(self.valeur) == types.FloatType : 
+      # Traitement d'un flottant isolé
       #txt = repr_float(self.valeur)
       # Normalement str fait un travail correct
       txt = str(self.valeur)
     elif type(self.valeur) in (types.ListType,types.TupleType) :
+      # Traitement des listes
       txt='('
       i=0
       for val in self.valeur:
         if type(val) == types.FloatType : 
-           # Normalement str fait un travail correct
+           # CCAR : Normalement str fait un travail correct
            #txt=txt + i*',' + repr_float(val)
            txt=txt + i*',' + str(val)
-        elif type(val) == types.InstanceType and isinstance(val,ASSD): 
+        elif isinstance(val,ASSD): 
            txt = txt + i*',' + val.get_name()
     #PN
     # ajout du elif
-        elif val.__class__.__name__ in  ('PARAMETRE','PARAMETRE_EVAL'):
-      	     txt = txt + i*','+ str(val) 
+        elif type(val) == types.InstanceType and val.__class__.__name__ in  ('PARAMETRE','PARAMETRE_EVAL'):
+      	   txt = txt + i*','+ str(val) 
         else: 
            txt = txt + i*','+ myrepr.repr(val)
         i=1
       txt=txt+')'
     else:
+      # Traitement des autres cas
       txt = self.getval()
-    if type(txt) != types.StringType:
+
       if type(txt) == types.InstanceType:
         if isinstance(txt,parametre.PARAMETRE):
-          return str(txt)
-      return repr(txt)
+          txt= str(txt)
+      else:
+        txt=repr(txt)
+
     # txt peut etre une longue chaine sur plusieurs lignes.
     # Il est possible de tronquer cette chaine au premier \n et 
     # de limiter la longueur de la chaine a 30 caracteres. Cependant
     # ceci provoque une perte d'information pour l'utilisateur
     # Pour le moment on retourne la chaine telle que
     return txt
-
-    # Partie de code inaccessible (pour memoire)
-    # txt est tronquee au dela d'un certain nombre de caractères
-    # et avant tout retour chariot (txt peut etre une chaine de caractères
-    # sur plusieurs lignes (ex:shell)
-    txt = string.split(txt,'\n')[0]
-    if len(txt) < 30 :
-      return txt
-    else:
-      return txt[0:29]
 
   def getval(self):
     """ 
