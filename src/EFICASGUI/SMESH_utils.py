@@ -4,7 +4,7 @@
 # Author    : Paul RASCLE, EDF
 # Project   : SALOME
 # Copyright : EDF 2003
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.3 2004/12/10 18:55:02 salome Exp $
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.4 2005/02/01 10:55:41 salome Exp $
 #=============================================================================
 
 from omniORB import CORBA
@@ -55,7 +55,6 @@ def entryToIorString(myStudy,entry):
             print "no IOR attribute on study object: ", entry
         else:
             iorString = iorso.Value()
-
     return iorString
 
 
@@ -113,51 +112,65 @@ def entryToName(myStudy,entryList):
 
 
     #--------------------------------------------------------------------------
-def getMainShape(myStudy,entry):
+def getMainShape(anObject):
     """
     Cette méthode retourne une référence ior de l'objet principal qui
     contient l'entry passée en argument.
     """
-    anObject=entryToIor(myStudy,entry)
-    subShape=anObject._narrow(GEOM.GEOM_Object)
-    iorMain = subShape.GetMainShape()
-    return iorMain
+    try :
+       subShape=anObject._narrow(GEOM.GEOM_Object)
+       objMain = subShape.GetMainShape()
+       IORobjMain = orb.object_to_string(objMain)
+    except :
+       IORobjMain= None
+    return IORobjMain
 
+def getShapeContenante(myStudy,entry):
+    try :
+       anObject=entryToIor(myStudy,entry)
+       Shape=anObject._narrow(GEOM.GEOM_Object)
+       ShapeIor=orb.object_to_string(Shape)
+    except :
+       print "pb avec l IOR: pas un objet"
+       return None
 
-def getMainShapeName(myStudy,entry):
-    """
-    Retourne la sérialisation de l'ior du MainShape de l'entry passé
-    en argument.
-    """
-    iorMain = getMainShape(myStudy,entry)
-    if iorMain==None:
-        return None
-    iorStringMain=  orb.object_to_string(iorMain)
-    return iorStringMain
+    MainShapeIOR=ShapeIor
+    while anObject != None :
+       iorStringMain = getMainShape(anObject) 
+       if iorStringMain == None :
+          break
+       if ( MainShapeIOR != iorStringMain ):
+          anObject =  orb.string_to_object(iorStringMain)
+          if anObject :
+             MainShapeIOR=iorStringMain
+       else : 
+          anObject = None
+          
+    return MainShapeIOR 
 
     #--------------------------------------------------------------------------
 
 def getSMESHSubShapeIndexes(myStudy, entryList, typenoeudorcell = 0):
     # typenoeudorcell = 0 on traite des noeuds
     # typenoeudorcell = 1 on traite des faces
+
     refList = []
-    subShapeIndexes = []
-    
+    iorStringMain = None
     if len(entryList) > 0:
-        iorStringMain = getMainShapeName(myStudy, entryList[0])
+        # PN : prévoir une boucle ???
+        # Pour etre sure que toutes les faces appartiennent à la meme strucute ??
+        iorStringMain = getShapeContenante(myStudy, entryList[0])
 
     if iorStringMain == None:
-        raise RuntimeException("L'ior CORBA n'est pas défini")
-
+        # C'est le cas ou on a loade un fichier hdf et on est pas passe par geom
+        # par exemple ....
+        return refList
     
-    #myCL=smesh.GetOrCreateCL(str(iorStringMain))
     myCLinit=CLinit()
     myCL=myCLinit.GetOrCreateCL(iorStringMain)
 
     if len(entryList) > 0:
          for idShape in entryList:
-             print "idShape"
-             print idShape
              refShape = singleEntryToName(myStudy,idShape)
              if refShape != None:
                   for Shape in refShape:
@@ -165,7 +178,6 @@ def getSMESHSubShapeIndexes(myStudy, entryList, typenoeudorcell = 0):
              IORShape = entryToIor(myStudy,idShape)
              myCL.SetIdAsCL(orb.object_to_string(IORShape),typenoeudorcell)
             
-    studyId = myStudy._get_StudyId()
     return refList
 
     #--------------------------------------------------------------------------
@@ -174,10 +186,8 @@ def getAsterGroupNo(myStudy,entryList):
     typenoeudorcell = 0
     subShapeIndexes = getSMESHSubShapeIndexes(myStudy, entryList,typenoeudorcell)
     labelGroupNo = []
-    print "d"
     for val in subShapeIndexes:
         labelGroupNo.append(val)
-    print "e"
     return labelGroupNo
 
     #--------------------------------------------------------------------------
@@ -187,8 +197,6 @@ def getAsterGroupMa(myStudy,entryList):
     subShapeIndexes = getSMESHSubShapeIndexes(myStudy, entryList,typenoeudorcell)
     labelGroupMa = []
     for val in subShapeIndexes:
-        #label="GMM%d"%(val)
-        print "################> val = ", val
         labelGroupMa.append(val)
     return labelGroupMa
 
