@@ -36,7 +36,7 @@ from widgets import Fenetre,FenetreYesNo
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.8 2002/11/12 13:26:04 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.9 2002/11/12 18:36:08 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -335,7 +335,11 @@ class INCLUDETreeItem(MACROTreeItem):
 
   def makeView(self,appli):
     nom=self.object.nom
-    if hasattr(self.object,'fichier_ini'):nom=nom+' '+self.object.fichier_ini
+    if hasattr(self.object,'fichier_ini'):
+       if self.object.fichier_ini is None:
+          nom=nom+' '+"Fichier non défini"
+       else:
+          nom=nom+' '+self.object.fichier_ini
     macrodisplay.makeMacroDisplay(appli,self.object,nom)
 
 class INCLUDE_MATERIAUTreeItem(INCLUDETreeItem): pass

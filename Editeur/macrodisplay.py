@@ -81,9 +81,10 @@ class MacroDisplay:
     self.appli=appli
     self.barre=Tkinter.Frame(self.fenetre,relief="ridge",bd=2)
     self.barre.pack(expand=1,fill=Tkinter.X)
-    b=Tkinter.Button(self.barre,image=images.get_image("Zoom24"),command=self.visufile)
-    b.pack(side='left')
-    tp=tooltip.TOOLTIP(b,"View file")
+    if self.jdc.fichier_text is not None:
+      b=Tkinter.Button(self.barre,image=images.get_image("Zoom24"),command=self.visufile)
+      b.pack(side='left')
+      tp=tooltip.TOOLTIP(b,"View file")
     self.mainPart=Pmw.ScrolledCanvas(self.fenetre,
                                      hull_width=600,
                                      hull_height=500,
