@@ -77,9 +77,9 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       self.frame_boutons_fleches = Frame(self.frame_right)
       self.frame_boutons_fleches.place(relx=0.,rely=0.2,relwidth=0.2,relheight=0.5)
       self.frame_choix = Frame(self.frame_right)
-      self.frame_choix.place(relx=0.2,rely=0.2,relwidth=0.7,relheight=0.5)
+      self.frame_choix.place(relx=0.2,rely=0.2,relwidth=0.7,relheight=0.8)
       self.frame_aide = Frame(self.frame_right)
-      self.frame_aide.place(relx=0.1,rely=0.7,relwidth=0.8,relheight=0.3)
+      self.frame_aide.place(relx=0.1,rely=0.8,relwidth=0.8,relheight=0.2)
       self.frame_boutons = Frame(self.frame2)
       self.frame_boutons.place(relx=0.35,rely=0.,relwidth=0.3,relheight=1.)
       for fram in (self.frame1,self.frame2,self.frame_right,self.frame_valeurs,
@@ -95,16 +95,18 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
                                       titre="Valeur(s) actuelle(s)")
 
       # Création de l'entry ou de la liste des SD
-      self.label = Label(self.frame_choix,text="Valeur :")
       # PN : pour ajouter les validators
+      self.label = Label(self.frame_choix,text="Valeur :")
       self.make_entry(frame = self.frame_choix,command = self.add_valeur_plusieurs_base)
-      self.label.place(relx=0.05,rely=0.5)
+      self.label.place(relx=0.05,rely=0.3)
 
-      # Création d'un bouton "Importer ..." sur le panel.
+      # Création d'un bouton "Importer ..." et d'un bouton "Paramatres" sur le panel.
       bouton_valeurs_fichier = Button(self.frame_choix,
-                                      text="Importer ...",
+                                      text="Importer",
                                       command=self.select_in_file)
-      bouton_valeurs_fichier.place(relx=0.28,rely=0.7,relwidth=0.6)
+      bouton_valeurs_fichier.place(relx=0.28,rely=0.4,relwidth=0.6)
+      bouton_parametres = Button(self.frame_choix, text="Parametres", command=self.affiche_parametre)
+      bouton_parametres.place(relx=0.28,rely=0.6,relwidth=0.6)
       self.ajout_valeurs = None
 
       # boutons Ajouter et Supprimer
@@ -134,15 +136,16 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
                               command = self.annule_modifs_valeur)
       for but in (bouton_accepter,bouton_annuler):
           but.pack(side='left',padx=5)
-            # traitement de la fenetre des parametres
+
+  def affiche_parametre(self) :
       if self.node.item.get_liste_param_possible() != [ ]:
          txtparam=""
-         for param in self.node.item.get_liste_param_possible():
-            txtparam=txtparam+repr(param)+"\n"
-         self.fenetreparam=FenetreDeParametre( self,
-                                       self.node.item,
-                                       self.parent.appli,
-                                       txtparam)
+	 for param in self.node.item.get_liste_param_possible():
+	    txtparam=txtparam+repr(param)+"\n"
+	 if txtparam=="":
+	    showerror("Aucun parametre ","Pas de parametre de ce type")
+	 else :
+	    self.fenetreparam=FenetreDeParametre( self, self.node.item, self.parent.appli, txtparam)
 
 
   def add_valeur_plusieurs_base(self,name=None):
@@ -240,7 +243,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
           self.entry1.focus()
       else:
           self.entry = Entry(frame,relief='sunken')
-          self.entry.place(relx=0.28,rely=0.5,relwidth=0.6)
+          self.entry.place(relx=0.28,rely=0.2,relwidth=0.6)
           self.entry.bind("<Return>",lambda e,c=command:c())
           self.entry.focus()
 

@@ -32,6 +32,7 @@ import prefs
 import panels
 import images
 from widgets import FenetreDeParametre
+from widgets import showerror
 
 from Noyau.N_CR import justify_text
 from utils import substract_list
@@ -62,9 +63,9 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       self.frame_valeur.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
       self.frame_valeur.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
       self.label = Label(self.frame_valeur,text='Valeur :')
-      self.label.place(relx=0.1,rely=0.5)
+      self.label.place(relx=0.1,rely=0.2)
       self.entry = Entry(self.frame_valeur,relief='sunken')
-      self.entry.place(relx=0.28,rely=0.5,relwidth=0.6)
+      self.entry.place(relx=0.28,rely=0.2,relwidth=0.6)
       self.entry.bind("<Return>",lambda e,c=self.valid_valeur:c())
       # aide associée au panneau
       self.frame_valeur.update()
@@ -73,17 +74,21 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
 			wraplength=int(self.frame_valeur.winfo_width()*0.8),
 			justify='center')
       self.aide.place(relx=0.5,rely=0.7,anchor='n')
+      # bouton parametre
+      bouton_parametres = Button(self.frame_valeur, text="Parametres", command=self.affiche_parametre)
+      bouton_parametres.place(relx=0.28,rely=0.5,relwidth=0.4)
       # affichage de la valeur du MCS
       self.display_valeur()
-      # traitement de la fenetre des parametres
-      if self.node.item.get_liste_param_possible() != [ ]:
-         txtparam=""
-         for param in self.node.item.get_liste_param_possible():
-            txtparam=txtparam+repr(param)+"\n"
-         self.fenetreparam=FenetreDeParametre( self,
-				       self.node.item,
-                                       self.parent.appli,
-                                       txtparam)
+
+  def affiche_parametre(self) :
+     if self.node.item.get_liste_param_possible() != [ ]:
+	txtparam=""
+	for param in self.node.item.get_liste_param_possible():
+	   txtparam=txtparam+repr(param)+"\n"
+	if txtparam=="":
+	   showerror("Aucun parametre ","Pas de parametre de ce type")
+	else :
+	   self.fenetreparam=FenetreDeParametre( self, self.node.item, self.parent.appli, txtparam)
 
   def destroy(self):
       try :
