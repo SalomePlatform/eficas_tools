@@ -36,7 +36,7 @@ from widgets import Fenetre,FenetreYesNo
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.7 2002/11/12 12:25:01 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.8 2002/11/12 13:26:04 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -121,6 +121,9 @@ class MACROPanel(panels.OngletPanel):
        self.node.item.object.fichier_err="Le fichier n'est pas defini"
        self.node.item.object.contexte_fichier_init={}
        self.node.item.object.recorded_units={}
+       self.node.item.object.fichier_unite="PasDefini"
+       import Extensions.jdc_include
+       self.node.item.object.JdC_aux=Extensions.jdc_include.JdC_include
 
     old_fic = self.node.item.object.fichier_ini
     old_text = self.node.item.object.fichier_text
