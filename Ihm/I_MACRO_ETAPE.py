@@ -192,7 +192,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
      if not self.isactif():return
      # CCAR : meme modification que dans I_ETAPE
      if not self.isvalid(sd='non') : return
-     else:self.state='undetermined'
      self.sdnom=nom
      try:
         # On positionne la macro self en tant que current_step pour que les 
@@ -215,10 +214,19 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
         return sd
      except AsException,e:
         self.reset_current_step()
-        raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
-                             'fichier : ',self.appel[1],e)
+        # Une erreur s'est produite lors de la construction du concept
+        # Comme on est dans EFICAS, on essaie de poursuivre quand meme
+        # Si on poursuit, on a le choix entre deux possibilités :
+        # 1. on annule la sd associée à self
+        # 2. on la conserve mais il faut qu'elle soit correcte et la retourner
+        # En plus il faut rendre coherents sdnom et sd.nom
+        self.sd=None
+        self.sdnom=None
+        self.valid=0
+        return self.sd
+        #raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
+        #                     'fichier : ',self.appel[1],e)
      except EOFError:
-        #self.reset_current_step()
         raise
      except :
         self.reset_current_step()

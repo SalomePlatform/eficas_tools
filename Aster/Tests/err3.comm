@@ -31,7 +31,19 @@ vectelem=CALC_VECT_ELEM(OPTION='CHAR_ACOU',
 sansnom=ASSE_VECTEUR(VECT_ELEM=None,
                      NUME_DDL=num,);
 
+sansnom=ASSE_VECTEUR(VECT_ELEM=vectelem,
+                     NUME_DDL=num,);
+
+ch=ASSE_VECTEUR(VECT_ELEM=vectelem,
+                     NUME_DDL=num,);
+
 sansnom=COMB_CHAM_NO(COMB_C=_F(CHAM_NO=None,),);
+
+sansnom=COMB_CHAM_NO(COMB_C=_F(CHAM_NO=ch,
+                            COEF_R=1,),);
+
+chno=COMB_CHAM_NO(COMB_C=_F(CHAM_NO=ch,
+                            COEF_R=1,),);
 
 matasm=FACT_LDLT(reuse =matasm,
                  MATR_ASSE=matasm,);
@@ -39,3 +51,10 @@ matasm=FACT_LDLT(reuse =matasm,
 sansnom=RESO_LDLT(MATR_FACT=matasm,
                   CHAM_NO=None,
                   );
+sansnom=RESO_LDLT(MATR_FACT=matasm,
+                  CHAM_NO=chno,
+                  );
+rr =RESO_LDLT(MATR_FACT=matasm,
+                  CHAM_NO=chno,
+                  );
+
