@@ -454,7 +454,7 @@ class Formulaire:
             function = self.inactive
         else:
             return
-        # on applique la méthode sur les boutons (activation ou désactivation)    
+        # on applique la méthode sur les boutons (activation ou désactivation)  
         for widget in self.widgets :
             if type(widget) == types.TupleType:
                 for widg in widget :
@@ -479,7 +479,7 @@ class Formulaire:
 
 # --------------------------------------------------------------------------------
 #       Validateurs des noms de répertoire, de fichiers et de catalogues
-# --------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
     def repvalidator(self,text):
         """
@@ -684,12 +684,16 @@ class ListeChoix :
     def get_liste_old(self):
         return self.liste
 
+    # PN attention à la gestion des paramétres
+    # cela retourne H = 1 , et ni H, ni 1
+    #            print repr(val)
+    #            print val.__class__.__name__
     def get_liste(self):
         l=[]
         for val in self.liste:
             try:
-                val = eval(val)
-                l.append(val)
+                v = eval(val)
+		l.append(v)
             except:
                 l.append(val)
         return l
