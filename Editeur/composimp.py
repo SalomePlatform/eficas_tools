@@ -89,7 +89,11 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
               elif self.wait_assd():
                   # on attend une SD
                   from uniqueassdpanel import UNIQUE_ASSD_Panel
-                  self.panel = UNIQUE_ASSD_Panel
+                  from uniqueassdpanel import UNIQUE_ASSD_Panel_Reel
+                  if 'R' in self.GetType():
+		     self.panel = UNIQUE_ASSD_Panel_Reel
+                  else :
+                     self.panel = UNIQUE_ASSD_Panel
               else:
                   # on attend une valeur d'un type de base (entier,réel,...)
                   if self.wait_complex():
