@@ -43,6 +43,11 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
       Crée la page de saisie d'une liste de valeurs à priori quelconques,
       cad qui ne sont  pas à choisir dans une liste prédéfinie
       """
+      genea=self.node.item.get_genealogie()
+      if "VALE" in genea:
+	self.nb_valeurs=2
+      if "VALE_C" in genea:
+	self.nb_valeurs=3
       # On récupère la bulle d'aide du panneau, l'objet, l'aide,min et max (cardinalité de la liste),
       # et la liste des valeurs déjà affectées à l'objet courant
       bulle_aide=self.get_bulle_aide()
@@ -126,10 +131,14 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
 
 
   def decoupeListeValeurs(self,liste):
-      #decoupe la liste des valeurs en 2 ( les x puis les y)
+      #decoupe la liste des valeurs en n ( les x puis les y)
+      nb=self.nb_valeurs
       l_valeurs=[]
-      for i in range(len(liste)/2) :
-          t=(liste[i*2], liste[i*2+1])
+      for i in range(len(liste)/nb) :
+          if (nb==2):
+              t=(liste[i*nb], liste[i*nb+1])
+          else:
+              t=(liste[i*nb], liste[i*nb+1], liste[i*nb+2])
           l_valeurs.append(t)
       return l_valeurs
 
@@ -155,15 +164,24 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
            doublevaleur_entree=doublevaleur_entree[0:-2]
 	val1=doublevaleur_entree.split(',')[0] 
 	val2=doublevaleur_entree.split(',')[1] 
+        saisie=(val1,val2)
+        if (self.nb_valeurs==3):
+	    val3=doublevaleur_entree.split(',')[2] 
+            saisie=(val1,val2,val3)
       except :
         commentaire = "%s n est pas un tuple de la forme (x,y)" %`doublevaleur_entree`
+        if (self.nb_valeurs==3):
+	    commentaire = "%s n est pas un tuple de la forme (x,y,z)" %`doublevaleur_entree`
         self.parent.appli.affiche_infos(commentaire)
         return
 
       # et seulement d un tuple
       try:
-	val3=doublevaleur_entree.split(',')[2]
+	val=doublevaleur_entree.split(',')[self.nb_valeurs]
         commentaire = "%s n est pas un tuple de la forme (x,y)" %`doublevaleur_entree`
+        if (self.nb_valeurs==3):
+	    commentaire = "%s n est pas un tuple de la forme (x,y,z)" %`doublevaleur_entree`
+        self.parent.appli.affiche_infos(commentaire)
         self.parent.appli.affiche_infos(commentaire)
         return
       except :
@@ -171,7 +189,7 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
 	pass
 
       # on verifie la validite des valeurs sont correctes
-      valeur,validite=self.node.item.eval_valeur((val1,val2))
+      valeur,validite=self.node.item.eval_valeur(saisie)
       if not validite :
         commentaire = "impossible d'évaluer : %s " %`doublevaleur_entree`
         self.parent.appli.affiche_infos(commentaire)
@@ -200,7 +218,13 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
       # sinon on ajoute la valeur à la fin
       if (self.Liste_valeurs.selection != None):
          ligne=self.Liste_valeurs.cherche_selected_item()
-         l1_valeurs.insert(ligne,(valeur[0],valeur[1]))
+         if self.nb_valeurs==2:
+            l1_valeurs.insert(ligne,(valeur[0],valeur[1]))
+         else :
+            l1_valeurs.insert(ligne,(valeur[0],valeur[1],valeur[2]))
       else :
-         l1_valeurs.append((valeur[0],valeur[1]))
+         if self.nb_valeurs==2:
+            l1_valeurs.append((valeur[0],valeur[1]))
+         else :
+            l1_valeurs.append((valeur[0],valeur[1],valeur[2]))
       self.Liste_valeurs.put_liste(l1_valeurs)
