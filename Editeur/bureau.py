@@ -508,7 +508,7 @@ class BUREAU:
       except AttributeError:
           pass
 
-   def visuJDC_py(self):
+   def visuJDC_py(self,event=None):
       """ 
           Méthode permettant d'afficher dans une fenêtre à part l'écho au 
             format python du jdc courant 
