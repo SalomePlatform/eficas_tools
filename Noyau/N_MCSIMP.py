@@ -99,39 +99,39 @@ class MCSIMP(N_OBJECT.OBJECT):
       visitor.visitMCSIMP(self)
 
    def copy(self):
-    """ Retourne une copie de self """
-    objet = self.makeobjet()
-    # il faut copier les listes et les tuples mais pas les autres valeurs
-    # possibles (réel,SD,...)
-    if type(self.valeur) in (types.ListType,types.TupleType):
-       objet.valeur = copy(self.valeur)
-    else:
-       objet.valeur = self.valeur
-    objet.val = objet.valeur
-    return objet
+      """ Retourne une copie de self """
+      objet = self.makeobjet()
+      # il faut copier les listes et les tuples mais pas les autres valeurs
+      # possibles (réel,SD,...)
+      if type(self.valeur) in (types.ListType,types.TupleType):
+         objet.valeur = copy(self.valeur)
+      else:
+         objet.valeur = self.valeur
+      objet.val = objet.valeur
+      return objet
 
    def makeobjet(self):
-    return self.definition(val = None, nom = self.nom,parent = self.parent)
+      return self.definition(val = None, nom = self.nom,parent = self.parent)
 
    def reparent(self,parent):
-     """
+      """
          Cette methode sert a reinitialiser la parente de l'objet
-     """
-     self.parent=parent
-     self.jdc=parent.jdc
-     self.etape=parent.etape
+      """
+      self.parent=parent
+      self.jdc=parent.jdc
+      self.etape=parent.etape
 
    def get_sd_utilisees(self):
-    """ 
-        Retourne une liste qui contient la SD utilisée par self si c'est le cas
-        ou alors une liste vide
-    """
-    l=[]
-    if type(self.valeur) == types.InstanceType:
-      #XXX Est ce différent de isinstance(self.valeur,ASSD) ??
-      if issubclass(self.valeur.__class__,ASSD) : l.append(self.valeur)
-    elif type(self.valeur) in (types.TupleType,types.ListType):
-      for val in self.valeur :
-         if type(val) == types.InstanceType:
-            if issubclass(val.__class__,ASSD) : l.append(val)
-    return l
+      """ 
+          Retourne une liste qui contient la SD utilisée par self si c'est le cas
+          ou alors une liste vide
+      """
+      l=[]
+      if type(self.valeur) == types.InstanceType:
+        #XXX Est ce différent de isinstance(self.valeur,ASSD) ??
+        if issubclass(self.valeur.__class__,ASSD) : l.append(self.valeur)
+      elif type(self.valeur) in (types.TupleType,types.ListType):
+        for val in self.valeur :
+           if type(val) == types.InstanceType:
+              if issubclass(val.__class__,ASSD) : l.append(val)
+      return l

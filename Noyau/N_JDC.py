@@ -1,4 +1,4 @@
-#@ MODIF N_JDC Noyau  DATE 26/09/2003   AUTEUR DURAND C.DURAND 
+#@ MODIF N_JDC Noyau  DATE 05/11/2003   AUTEUR CAMBIER S.CAMBIER 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -100,6 +100,7 @@ NONE = None
       self.condition_context={}
       self.index_etape_courante=0
       self.UserError="UserError"
+      self.alea = None
 
    def compile(self):
       """
@@ -323,9 +324,11 @@ NONE = None
                                " a l unite %s" % unite)
          if not os.path.exists(file):
             raise AsException("%s n'est pas un fichier existant" % unite)
-      fproc=open(file,'r')
-      text=string.replace(fproc.read(),'\r\n','\n')
-      fproc.close()
+         fproc=open(file,'r')
+         text=fproc.read()
+         fproc.close()
+      if file == None : return None,None
+      text=string.replace(text,'\r\n','\n')
       linecache.cache[file]=0,0,string.split(text,'\n'),file
       return file,text
 
@@ -394,9 +397,12 @@ NONE = None
       if index_etape >= self.index_etape_courante:
          # On calcule le contexte en partant du contexte existant
          d=self.current_context
+         if self.index_etape_courante==0 and self.context_ini:
+            d.update(self.context_ini)
          liste_etapes=self.etapes[self.index_etape_courante:index_etape]
       else:
          d=self.current_context={}
+         if self.context_ini:d.update(self.context_ini)
          liste_etapes=self.etapes
 
       for e in liste_etapes:
@@ -409,3 +415,14 @@ NONE = None
 
    def get_global_contexte(self):
       return self.g_context.copy()
+
+   def get_cmd(self,nomcmd):
+      """
+          Méthode pour recuperer la definition d'une commande
+          donnee par son nom dans les catalogues declares
+          au niveau du jdc
+      """
+      for cata in self.cata:
+          if hasattr(cata,nomcmd):
+             return getattr(cata,nomcmd)
+

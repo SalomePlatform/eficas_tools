@@ -144,3 +144,14 @@ class MCList(UserList.UserList):
       self.etape=parent.etape
       for mcfact in self.data:
         mcfact.reparent(parent)
+
+   def get_etape(self):
+      """
+         Retourne l'étape à laquelle appartient self
+         Un objet de la catégorie etape doit retourner self pour indiquer que
+         l'étape a été trouvée
+         XXX double emploi avec self.etape ???
+      """
+      if self.parent == None: return None
+      return self.parent.get_etape()
+

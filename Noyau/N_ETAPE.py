@@ -361,3 +361,12 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
      self.etape=self
      for mocle in self.mc_liste:
         mocle.reparent(self)
+
+   def get_cmd(self,nomcmd):
+      """
+          Méthode pour recuperer la definition d'une commande
+          donnee par son nom dans les catalogues declares
+          au niveau du jdc
+          Appele par un ops d'une macro en Python
+      """
+      return self.jdc.get_cmd(nomcmd)

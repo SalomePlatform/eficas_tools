@@ -529,6 +529,17 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
       d.update(self.g_context)
       return d
 
+   def copy(self):
+      """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
+          et sans sd
+          On surcharge la methode de ETAPE pour exprimer que les concepts crees
+          par la MACRO d'origine ne sont pas crees par la copie mais eventuellement
+          seulement utilises
+      """
+      etape=N_ETAPE.ETAPE.copy(self)
+      etape.sdprods=[]
+      return etape
+
 
 
 

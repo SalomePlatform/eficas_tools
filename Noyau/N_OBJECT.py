@@ -89,3 +89,10 @@ class OBJECT:
       else:
         return val
 
+   def reparent(self,parent):
+      """
+         Cette methode sert a reinitialiser la parente de l'objet
+      """
+      self.parent=parent
+      self.jdc=parent.jdc
+
