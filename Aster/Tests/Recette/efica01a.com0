@@ -1,0 +1,77 @@
+POURSUITE(CODE=_F(  NOM = 'EFICA01A'))
+
+
+TRAN_GE2=DYNA_TRAN_MODAL(  MASS_GENE=MGEN_BIC,   RIGI_GENE=RGEN_BIC,
+                 METHODE='EULER',
+                 AMOR_REDUIT=( 0.07,  0.07, ),
+                MODE_STAT=MSTA_BIC,EXCIT=(
+                _F(  VECT_GENE = VECT_X1,  ACCE = ACCELER1,
+                       MULT_APPUI = 'OUI',
+                       DIRECTION = ( 1., 0., 0.,), NOEUD = 'NO1',
+                       VITE = VITESSE1, DEPL = DEPLACE1), 
+                _F(  VECT_GENE = VECT_X2,  ACCE = ACCELER2,
+                       MULT_APPUI = 'OUI',
+                       DIRECTION = ( 1., 0., 0.,), NOEUD = 'NO11',
+                       VITE = VITESSE2, DEPL = DEPLACE2)), 
+                CHOC=_F(  GROUP_NO_1 = 'MASSES1',
+                       GROUP_NO_2 = 'MASSES2',
+                       OBSTACLE = GRILLE,
+                       INTITULE = 'NO2/NO12',
+                       NORM_OBST = (0., 0., 1.,),
+                       DIST_1 = 0.4495,
+                       DIST_2 = 0.4495,
+                       RIGI_NOR = 2.88E7,
+                       AMOR_NOR = 0.,
+                       RIGI_TAN = 0.,
+                       COULOMB = 0.),
+                 INCREMENT=_F( INST_INIT = 0.,  INST_FIN = 1.,  PAS = 0.00025),
+                ARCHIVAGE=_F(  PAS_ARCH = 8)
+                )
+
+LISTIMP=DEFI_LIST_REEL(  DEBUT=0.,
+                    INTERVALLE=_F(  JUSQU_A = 1.,  NOMBRE = 500))
+
+RESUA1=REST_BASE_PHYS(  RESU_GENE=TRAN_GE1,
+                        LIST_INST=LISTIMP,
+                        INTERPOL='LIN',
+                        NOM_CHAM='DEPL',
+                        MULT_APPUI='OUI'
+                       )
+
+RESUR1=REST_BASE_PHYS(  RESU_GENE=TRAN_GE1,
+                        LIST_INST=LISTIMP,
+                        INTERPOL='LIN',
+                        NOM_CHAM='DEPL',
+                        MULT_APPUI='NON'
+                       )
+
+
+NO2_DXA=RECU_FONCTION(  NOEUD='NO2',  NOM_CMP='DX',  NOM_CHAM='DEPL',
+                        RESULTAT=RESUA1,  
+                        LIST_INST=LISTIMP,   INTERPOL='LIN' )
+
+NO2_DX_A=RECU_FONCTION(  NOEUD='NO2',  NOM_CMP='DX',  NOM_CHAM='DEPL',
+                         RESU_GENE=TRAN_GE2,  
+                         MULT_APPUI='OUI',        INTERP_NUME='LIN',
+                         LIST_INST=LISTIMP,   INTERPOL='LIN' )
+
+DIFF=CALC_FONCTION(COMB=(
+               _F(  FONCTION = NO2_DX_A,  COEF = 1.),
+               _F(  FONCTION = NO2_DXA,   COEF = -1.))
+                    )
+
+TEST_FONCTION(VALEUR=(
+    _F(  FONCTION = DIFF, VALE_PARA = 0.10, VALE_REFE = 0.,
+             CRITERE = 'ABSOLU', PRECISION = 3.E-5),
+    _F(  FONCTION = DIFF, VALE_PARA = 0.30, VALE_REFE = 0.,
+             CRITERE = 'ABSOLU', PRECISION = 3.E-5),
+    _F(  FONCTION = DIFF, VALE_PARA = 0.50, VALE_REFE = 0.,
+             CRITERE = 'ABSOLU', PRECISION = 3.E-5),
+    _F(  FONCTION = DIFF, VALE_PARA = 0.70, VALE_REFE = 0.,
+             CRITERE = 'ABSOLU', PRECISION = 3.E-5),
+    _F(  FONCTION = DIFF, VALE_PARA = 1.00, VALE_REFE = 0.,
+             CRITERE = 'ABSOLU', PRECISION = 3.E-5))
+             )
+
+
+FIN()

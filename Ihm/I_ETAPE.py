@@ -94,13 +94,14 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       if len(nom) > 8 and self.jdc.definition.code == 'ASTER':
         return 0,"Nom de concept trop long (maxi 8 caractères)"
       self.init_modif()
+      #
+      # On verifie d'abord si les mots cles sont valides
+      #
       if not self.isvalid(sd='non') : return 0,"Nommage du concept refusé : l'opérateur n'est pas valide"
       #
       # Cas particulier des opérateurs obligatoirement réentrants
       #
       if self.definition.reentrant == 'o':
-        # FR : appel à get_sdprod incorrect : il faut appeler get_sd_avant_etape
-        #self.sd = self.reuse = self.jdc.get_sdprod(nom)
 	self.sd = self.reuse = self.jdc.get_sd_avant_etape(nom,self)
         if self.sd != None :
           self.sdnom=self.sd.nom
@@ -135,10 +136,6 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       if self.sd == None :
           if self.parent.get_sd_autour_etape(nom,self):
             # Un concept de ce nom existe dans le voisinage de l'etape courante
-            # On force self.valid a 0 car l appel a isvalid precedent l a mis a 1
-            # mais ceci indique seulement une validité partielle
-            # isvalid ne devrait peut etre pas mettre l attribut valid à 1 si sd == 'non'
-            self.valid=0
             # On retablit l'ancien concept reentrant s'il existait
             if old_reuse:
                self.sd=self.reuse=old_reuse
@@ -159,9 +156,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             # Dans le cas où old_nom == sansnom, isvalid retourne 0 alors que ...
 	    # par contre si le concept existe et qu'il s'appelle sansnom c'est que l'étape est valide
 	    # on peut donc le nommer sans test préalable
-	    self.sd.nom=nom
-            self.sdnom=nom
-            return 1,"Nommage du concept effectué"
+            if self.parent.get_sd_autour_etape(nom,self):
+              return 0,"Nommage du concept refuse : un concept de meme nom existe deja"
+            else:
+	      self.sd.nom=nom
+              self.sdnom=nom
+              return 1,"Nommage du concept effectué"
           if self.isvalid() :
             # Normalement l appel de isvalid a mis a jour le concept produit (son type)
             # Il suffit de spécifier l attribut nom de sd pour le nommer si le nom n est pas
@@ -364,8 +364,9 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       # CCAR : cette modification ne corrige le probleme qu'en partie. Il faudrait probablement
       # supprimer les erreurs fatales (exception ) et retourner systematiquement un objet produit
       # meme en cas d'erreur et reporter l'emission du message d'erreur a la phase de validation
+      #
       if not self.isvalid(sd='non') : return
-      else:self.state='undetermined'
+      #else:self.state='undetermined'
       self.sdnom=nom
       try:
          if self.parent:
@@ -384,8 +385,18 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             self.Execute()
          return sd
       except AsException,e:
-         raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
-                              'fichier : ',self.appel[1],e)
+         # Une erreur s'est produite lors de la construction du concept
+         # Comme on est dans EFICAS, on essaie de poursuivre quand meme
+         # Si on poursuit, on a le choix entre deux possibilités :
+         # 1. on annule la sd associée à self
+         # 2. on la conserve mais il faut la retourner
+         # En plus il faut rendre coherents sdnom et sd.nom
+         self.sd=None
+         self.sdnom=None
+         self.valid=0
+         return self.sd
+         #raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
+         #                     'fichier : ',self.appel[1],e)
       except EOFError:
          # XXX Normalement le contexte courant doit etre le parent.
          # Il n'y a pas de raison de remettre le contexte au parent

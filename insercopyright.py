@@ -1,4 +1,6 @@
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
+import glob,os
+
+copyright="""#            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
@@ -18,28 +20,19 @@
 #
 # ======================================================================
 """
-"""
-from Tkinter import Menu
 
-class MENUBAR:
-   def __init__(self,appli,parent):
-      # L'attribut appli pointe vers l'objet application qui détient la menubar et les autres composants
-      self.appli=appli
-      # L'attribut parent pointe vers l'objet graphique parent de la menubar
-      self.parent=parent
-      self.menubar=Menu(self.parent)
-      self.parent.configure(menu=self.menubar)
-      self.init()
+listfich=glob.glob('*')
+for fich in listfich:
+   if not os.path.isfile(fich):continue
+   print "Lecture ",fich
+   f=open(fich,'r')
+   text=f.read()
+   f.close()
+   os.rename(fich,fich+'.bak')
 
-   try:
-      from prefs import labels
-   except:
-      labels= ('Fichier','Edition','Jeu de commandes','Catalogue','Browsers','Options','Aide')
+   text=copyright + text
 
-   def init(self):
-      self.menudict={}
-      for label in self.labels:
-         menu=Menu(self.menubar,tearoff=0)
-         self.menudict[label]=menu
-         self.menubar.add_cascade(label=label,menu=menu)
+   f2=open(fich,'w')
+   f2.write(text)
+   f2.close()
 

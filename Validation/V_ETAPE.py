@@ -61,24 +61,39 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
         return self.valid
       else:
         valid = 1
+        # on teste les enfants
+        for child in self.mc_liste :
+          if not child.isvalid():
+            valid = 0
+            break
+        # on teste les règles de self
+        text_erreurs,test_regles = self.verif_regles()
+        if not test_regles :
+          if cr == 'oui' : self.cr.fatal(string.join(("Règle(s) non respectée(s) :", text_erreurs)))
+          valid = 0
+        if self.reste_val != {}:
+          if cr == 'oui' :
+            self.cr.fatal("Mots cles inconnus :" + string.join(self.reste_val.keys(),','))
+          valid=0
+        if sd == "non":
+          # Dans ce cas, on ne teste qu'une validité partielle (sans tests sur le concept produit)
+          # Conséquence : on ne change pas l'état ni l'attribut valid, on retourne simplement
+          # l'indicateur de validité valid
+          return valid
+        #
+        # On complète les tests avec ceux sur le concept produit
+        #
         if hasattr(self,'valid'):
           old_valid = self.valid
         else:
           old_valid = None
-        # on teste si demandé la structure de donnée (par défaut)
-        if sd == 'oui':
-          if self.sd != None :pass
-            # Ce test parait superflu. Il est sur que si sd existe il s'agit du concept produit
-            # Quelle pourrait etre la raison qui ferait que sd n existe pas ???
-            #if self.jdc.get_sdprod(self.sd.nom) == None :
-            #  if cr == 'oui' :
-            #    self.cr.fatal('Le concept '+self.sd.nom+" n'existe pas")
-            #  valid = 0
-          else :
-            if cr == 'oui' : self.cr.fatal("Concept retourné non défini")
-            valid = 0
-        # on teste, si elle existe, le nom de la sd (sa longueur doit etre <= 8 caractères)
-        if self.sd != None :
+
+        if self.sd == None:
+          # Le concept produit n'existe pas => erreur
+          if cr == 'oui' : self.cr.fatal("Concept retourné non défini")
+          valid = 0
+        else:
+          # on teste, si elle existe, le nom de la sd (sa longueur doit etre <= 8 caractères)
           # la SD existe déjà : on regarde son nom
           if self.sd.nom != None :
             if len(self.sd.nom) > 8 and self.jdc.definition.code == 'ASTER' :
@@ -95,21 +110,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
               if cr == 'oui' :
                 self.cr.fatal("Pas de nom pour le concept retourné")
               valid = 0
-        # on teste les enfants
-        for child in self.mc_liste :
-          if not child.isvalid():
-            valid = 0
-            break
-        # on teste les règles de self
-        text_erreurs,test_regles = self.verif_regles()
-        if not test_regles :
-          if cr == 'oui' : self.cr.fatal(string.join(("Règle(s) non respectée(s) :", text_erreurs)))
-          valid = 0
-        if self.reste_val != {}:
-          if cr == 'oui' :
-            self.cr.fatal("Mots cles inconnus :" + string.join(self.reste_val.keys(),','))
-          valid=0
-        if sd == 'oui' and valid:
+        if valid:
           valid = self.update_sdprod(cr)
         self.valid = valid
         self.state = 'unchanged'

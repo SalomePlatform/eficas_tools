@@ -65,6 +65,10 @@ class BUREAU:
                                    ('Mots-clés inconnus','mc_inconnus'),
                                   ]
               ),
+              ('Aide',[
+                        ('Aide EFICAS','aideEFICAS'),
+                      ]
+              ),
              ]
 
    button_defs  =      (('New24',"newJDC","Création d'un nouveau fichier",'always'),

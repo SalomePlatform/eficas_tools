@@ -62,6 +62,24 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
         return self.valid
       else:
         valid = 1
+        # on teste les mots cles de la commande
+        for child in self.mc_liste :
+          if not child.isvalid():
+            valid = 0
+            break
+        # on teste les règles de la commande
+        text_erreurs,test_regles = self.verif_regles()
+        if not test_regles :
+          if cr == 'oui' : self.cr.fatal(string.join(("Règle(s) non respectée(s) :", text_erreurs)))
+          valid = 0
+        if self.reste_val != {}:
+          if cr == 'oui' :
+            self.cr.fatal("Mots cles inconnus :" + string.join(self.reste_val.keys(),','))
+          valid=0
+        if sd == "non":
+           # Dans ce cas, on ne calcule qu'une validite partielle, on ne modifie pas l'état de self
+           # on retourne simplement l'indicateur valid
+           return valid
         if hasattr(self,'valid'):
           old_valid = self.valid
         else:
@@ -84,21 +102,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
               if cr == 'oui' :
                 self.cr.fatal("Pas de nom pour le concept retourné")
               valid = 0
-        # on teste les enfants
-        for child in self.mc_liste :
-          if not child.isvalid():
-            valid = 0
-            break
-        # on teste les règles de self
-        text_erreurs,test_regles = self.verif_regles()
-        if not test_regles :
-          if cr == 'oui' : self.cr.fatal(string.join(("Règle(s) non respectée(s) :", text_erreurs)))
-          valid = 0
-        if self.reste_val != {}:
-          if cr == 'oui' :
-            self.cr.fatal("Mots cles inconnus :" + string.join(self.reste_val.keys(),','))
-          valid=0
-        if sd == 'oui' and valid:
+        if valid:
           valid = self.update_sdprod(cr)
         # Si la macro comprend des etapes internes, on teste leur validite
         for e in self.etapes:
