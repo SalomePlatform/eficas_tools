@@ -807,6 +807,11 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       # Remplissage du panneau
       self.valeur_choisie = StringVar()
       self.valeur_choisie.set('')
+      min,max =  self.node.item.GetMinMax()
+      if (min == 1 and min == max and len(liste_noms_sd)==1):
+	  self.valeur_choisie.set(liste_noms_sd[0])
+          self.valid_valeur()
+	 
       self.frame_valeur = Frame(page)
       self.frame_valeur.pack(fill='both',expand=1)
       self.frame_valeur.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
