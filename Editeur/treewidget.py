@@ -27,7 +27,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.14 2004/09/10 15:51:52 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.15 2004/09/20 09:24:14 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -693,6 +693,7 @@ class Node :
         pere = self.parent
         nbold = pere.get_nb_children()
 
+        index = self.parent.children.index(self) - 1 
         if self.parent.delete_child(self):
             if self.item.get_position() == 'global':
                 self.etape.verif_all()
@@ -705,7 +706,16 @@ class Node :
 
         nbnew = pere.get_nb_children()
         pere.redraw(nbnew-nbold)
-	pere.select()
+
+        # Le noeud n'est pas au 1er niveau
+        if  pere.parent.parent != None:
+            pere.select()
+        else:
+            enfants = self.parent.children
+            try:
+              enfants[index].select()
+            except :
+	      enfants[index+1].select()
 
     def doPaste(self,node_selected):
         self.appli.message="Vous ne pouvez copier que des commandes ou des mots-clés facteurs !"
