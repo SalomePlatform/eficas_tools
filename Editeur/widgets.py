@@ -206,7 +206,7 @@ class FenetreDeSelection(Fenetre):
         self.fenetre.title(titre)
         self.but_save.configure(text="Ajouter",command=self.traite_selection)
         # séparateur par défaut
-        self.separateur = ";"
+        self.separateur = ';'
         # création de la zone de saisie du séparateur
         l_separateurs_autorises = self.get_separateurs_autorises()
         self.choix_sep = Pmw.ComboBox(self.frame_boutons,
@@ -225,6 +225,7 @@ class FenetreDeSelection(Fenetre):
         self.but_save.place(relx=0.6,rely=0.6,anchor='center')
         self.but_quit.place(relx=0.8,rely=0.6,anchor='center')
         self.but_all.place(relx=0.7,rely=0.2,anchor='center')
+	self.choose_separateur('espace')
      
 
     def get_separateurs_autorises(self):
@@ -247,7 +248,8 @@ class FenetreDeSelection(Fenetre):
 	texte=self.texte.splitlines()
 	for l in texte :
 	    for mot in string.split(l,self.separateur):
-	       liste.append(mot)
+	       if mot != '' and mot != ' ' and mot != self.separateur :
+	          liste.append(mot)
 	self.traite_selection(liste)
 
     def traite_selection(self,liste=None):
