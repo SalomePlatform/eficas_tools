@@ -37,7 +37,7 @@ from widgets import showinfo,showerror
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.13 2004/09/10 15:51:49 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.14 2004/09/20 09:24:14 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -196,6 +196,7 @@ class MACROPanel(panels.OngletPanel):
     # L'evaluation de text dans un JDC auxiliaire s'est bien passé
     # on peut poursuivre le traitement
     self.node.item.object.init_modif() 
+    self.node.item.object.state="undetermined"
     self.node.item.object.fichier_ini = new_fic
     self.node.item.object.fichier_text=text
     self.node.item.object.fichier_err=None

@@ -109,14 +109,16 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        CONTEXT.set_current_step(self)
        raise Exception("Impossible de relire le fichier\n"+str(j.cr))
 
-    cr=j.report()
-    if not cr.estvide():
+    if not j.isvalid():
        # L'INCLUDE n'est pas valide.
+       # on produit un rapport d'erreurs
        # On force le contexte (etape courante) à self
+       cr=j.report()
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(self)
-       raise Exception("Le fichier include contient des erreurs\n"+str(j.cr))
+       raise Exception("Le fichier include contient des erreurs\n"+str(cr))
 
+    # Si aucune erreur rencontrée
     # On recupere le contexte de l'include verifie
     try:
        j_context=j.get_verif_contexte()
@@ -477,6 +479,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
      # la commande modifies. Ceci peut conduire a la construction ou
      # a la reconstruction d'etapes dans le cas d'INCLUDE ou d'INCLUDE_MATERIAU
      # Il faut donc positionner le current_step avant l'appel
+     if self.state == "undetermined":return 1
      CONTEXT.unset_current_step()
      CONTEXT.set_current_step(self)
      valid=Validation.V_MACRO_ETAPE.MACRO_ETAPE.update_sdprod(self,cr=cr)
@@ -491,7 +494,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       """
       try:
          sd=Noyau.N_MACRO_ETAPE.MACRO_ETAPE.Build_sd(self,nom)
-         self.state="modified"
       except AsException,e:
          # Une erreur s'est produite lors de la construction du concept
          # Comme on est dans EFICAS, on essaie de poursuivre quand meme
