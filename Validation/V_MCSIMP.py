@@ -84,17 +84,18 @@ class MCSIMP:
           if cr == 'oui' :
             self.cr.fatal(string.join(("Mot-clé : ",self.nom," obligatoire non valorisé")))
           valid = 0
-        # type,into ...
-        valid = self.verif_type(val=v,cr=cr)*self.verif_into(cr=cr)*self.verif_card(cr=cr)
-        #
-        # On verifie les validateurs s'il y en a
-        #
-        if self.definition.validators and not self.definition.validators.verif(self.valeur):
-           if cr == 'oui' :
+        if v != None :
+          # type,into ...
+          valid = self.verif_type(val=v,cr=cr)*self.verif_into(cr=cr)*self.verif_card(cr=cr)
+          #
+          # On verifie les validateurs s'il y en a
+          #
+          if self.definition.validators and not self.definition.validators.verif(self.valeur):
+            if cr == 'oui' :
               self.cr.fatal(string.join(("Mot-clé : ",self.nom,"devrait avoir ",self.definition.validators.info())))
-           valid=0
-        # fin des validateurs
-        #
+            valid=0
+          # fin des validateurs
+          #
         self.valid = valid
         self.state = 'unchanged'
         # Si la validité du mot clé a changé, on le signale à l'objet parent
@@ -173,7 +174,6 @@ class MCSIMP:
               return 0
           except:
             print "problème avec :",self.nom
-            print 'valeur =',valeur
             return 0
         for type_permis in self.definition.type:
           if self.compare_type(valeur,type_permis) : return 1
