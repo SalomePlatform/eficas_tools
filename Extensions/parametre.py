@@ -70,6 +70,34 @@ class PARAMETRE :
       print "******* Probleme : pas de valeur négative"
       return None
     
+  def __add__(self,a):
+    try :
+      return self.valeur+a.valeur
+    except :
+      print "******* Probleme : a l addition"
+      return None
+
+  def __radd__(self,a):
+    try :
+      return self.valeur+a.valeur
+    except :
+      print "******* Probleme : a l addition"
+      return None
+
+  def __sub__(self,a):
+    try :
+      return self.valeur  - a.valeur
+    except :
+      print "******* Probleme : a la soustraction"
+      return None
+
+  def __rsub__(self,a):
+    try :
+      return a.valeur - self.valeur
+    except :
+      print "******* Probleme : a la soustraction"
+      return None
+
   def __mul__(self,a):
     try :
       return self.valeur*a.valeur
@@ -82,6 +110,48 @@ class PARAMETRE :
       return self.valeur*a.valeur
     except :
       print "******* Probleme : a la multiplication"
+      return None
+
+  def __mul__(self,a):
+    try :
+      return self.valeur*a.valeur
+    except :
+      print "******* Probleme : a la multiplication"
+      return None
+
+  def __rmul__(self,a):
+    try :
+      return self.valeur*a.valeur
+    except :
+      print "******* Probleme : a la multiplication"
+      return None
+
+  def __add__(self,other):
+    try :
+      return self.valeur+other
+    except :
+      print "******* Probleme : a l addition"
+      return None
+
+  def __radd__(self,other):
+    try :
+      return self.valeur+other
+    except :
+      print "******* Probleme : a l addition"
+      return None
+
+  def __sub__(self,other):
+    try :
+      return self.valeur  - other
+    except :
+      print "******* Probleme : a la soustraction"
+      return None
+
+  def __rsub__(self,other):
+    try :
+      return other - self.valeur
+    except :
+      print "******* Probleme : a la soustraction"
       return None
 
   def  __mul__ (self,other):
@@ -105,7 +175,6 @@ class PARAMETRE :
       except :
          print "******* Probleme : a la multiplication"
     return retour
-
 
 
   def interprete_valeur(self,val):
