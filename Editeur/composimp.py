@@ -101,8 +101,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
                       self.panel = UNIQUE_BASE_Panel
       # cas particulier des fonctions
       genea = self.get_genealogie()
-      if "DEFI_FONCTION" in genea :
-         if "VALE" in genea :
+      if "VALE" in genea or "VALE_C" in genea:
+         if "DEFI_FONCTION" in genea :
             from fonctionpanel import FONCTION_Panel
             self.panel=FONCTION_Panel
       #---------------------------------------------------------

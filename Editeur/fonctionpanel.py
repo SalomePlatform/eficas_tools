@@ -85,7 +85,7 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
       # création des objets dans les frames
       liste_commandes_valeurs = (("<Button-1>",self.selectValeur),
                                  ("<Button-3>",self.deselectValeur),
-                                 ("<Double-Button-1>",self.sup_valeur_sans_into))
+                                 ("<Double-Button-1>",self.afficheValeurListe))
       self.Liste_valeurs = ListeChoix(self,self.frame_valeurs,l2_valeurs,liste_commandes = liste_commandes_valeurs,
                                       titre="Valeur(s) actuelle(s)")
 
@@ -129,6 +129,9 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
       for but in (bouton_accepter,bouton_annuler):
           but.pack(side='left',padx=5)
 
+
+  def afficheValeurListe(self,name):
+      self.display_valeur(name)
 
   def decoupeListeValeurs(self,liste):
       #decoupe la liste des valeurs en n ( les x puis les y)
