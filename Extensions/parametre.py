@@ -45,6 +45,7 @@ class PARAMETRE :
 
   def __init__(self,nom,valeur=None):
     # parent ne peut être qu'un objet de type JDC
+    self.dict_valeur=[]
     self.valeur = self.interprete_valeur(valeur)
     self.val=valeur
     self.nom = nom
@@ -56,8 +57,6 @@ class PARAMETRE :
     self.actif=1
     self.state='undetermined'
     self.register()
-    self.dict_valeur=[]
-    self.interprete_valeur(valeur)
 
   def __getitem__(self,key):
     param_item=ITEM_PARAMETRE(self,key)
