@@ -72,6 +72,7 @@ class JDC(V_MCCOMPO.MCCOMPO):
             if not e.isvalid():
               valid = 0
               break
+        self.state="unchanged"
         self.valid = valid
         return self.valid
 
