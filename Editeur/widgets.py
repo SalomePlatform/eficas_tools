@@ -668,7 +668,7 @@ class Formulaire:
 class ListeChoix :
     """ Cette classe est utilisée pour afficher une liste de choix passée en paramètre
         en passant les commandes à lancer suivant différents bindings """
-    def __init__(self,parent,page,liste,liste_commandes=[],liste_marques =[],active ='oui',filtre='non',titre=''):
+    def __init__(self,parent,page,liste,liste_commandes=[],liste_marques =[],active ='oui',filtre='non',titre='',optionReturn=None):
         self.parent = parent
         self.page = page
         self.liste = liste
@@ -680,6 +680,7 @@ class ListeChoix :
         self.active = active
         self.titre = titre
         self.filtre = filtre
+        self.optionReturn = optionReturn
         self.init()
 
     def init(self):        
@@ -716,6 +717,7 @@ class ListeChoix :
         self.MCbox.pack(fill='y',expand=1,padx=2,pady=2)
         self.MCbox.configure(yscrollcommand=self.MCscroll.set)
 
+
     def affiche_liste(self):
         """ Affiche la liste dans la fenêtre"""
         liste_labels=[]
@@ -736,11 +738,11 @@ class ListeChoix :
               mot="("
               premier=1
               for val in objet:
-	          if (not premier):
-		     mot=mot+"," 
-                  else:
-                     premier=0
-                  mot=mot+str(val)
+	         if (not premier):
+		   mot=mot+"," 
+                 else:
+                   premier=0
+                 mot=mot+str(val)
               mot=mot+")"
           else:
               mot=`objet`
@@ -753,6 +755,9 @@ class ListeChoix :
                                    window=label,
                                    stretch = 1)
           self.MCbox.insert(END,'\n')
+          if self.optionReturn != None :
+              label.bind("<Return>",lambda e,s=self,c=self.liste_commandes[2][1],x=objet,l=label : s.chooseitemsurligne(x,l,c))
+          label.bind("<Key-Right>",lambda e,s=self,x=objet,l=label : s.selectNextItem(x,l))
           if self.active == 'oui':
               label.bind(self.liste_commandes[0][0],lambda e,s=self,c=self.liste_commandes[0][1],x=objet,l=label : s.selectitem(x,l,c))
               label.bind(self.liste_commandes[1][0],lambda e,s=self,c=self.liste_commandes[1][1],x=objet,l=label : s.deselectitem(l,x,c))
@@ -781,6 +786,15 @@ class ListeChoix :
 	except:
 	   pass
 
+    def chooseitemsurligne(self,mot,label,commande):
+        """ Active la méthode de choix passée en argument"""
+        try:
+           mot=self.arg_selected
+           commande(mot)
+        except AsException,e:
+           raison=str(e)
+           showerror(raison.split('\n')[0],raison)
+
     def chooseitem(self,mot,label,commande):
         """ Active la méthode de choix passée en argument"""
         try:
@@ -788,6 +802,24 @@ class ListeChoix :
         except AsException,e:
            raison=str(e)
            showerror(raison.split('\n')[0],raison)
+        
+    def selectNextItem(self,mot,label):
+        try :
+           index=self.liste.index(mot)
+           indexsuivant=index+1
+           motsuivant=self.liste[indexsuivant]
+           labelsuivant=self.dico_labels[motsuivant]
+           self.clear_marque()
+           if self.selection != None :
+              self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
+              self.selection = (mot,label,self.selection[2])
+           self.highlightitem(labelsuivant)
+           self.arg_selected=motsuivant
+           labelsuivant.focus_set()
+        # PN il faut faire quelque chose pour être dans la fenetre
+        except:
+           pass
+           
         
     def selectitem(self,mot,label,commande) :
         """ Met l'item sélectionné (représenté par son label) en surbrillance
@@ -838,6 +870,10 @@ class ListeChoix :
                 self.MCbox.see(index)
                 self.arg_selected = arg
                 break
+        try :
+          self.dico_labels[self.arg_selected].focus_set()
+        except :
+          pass
 
     def get_liste_old(self):
         return self.liste
@@ -1090,6 +1126,7 @@ class ListeChoixParGroupes(ListeChoix) :
                          lambda e,s=self,c=self.liste_commandes[1][1],x=cmd,l=label : s.deselectitem(l,x,c))
                   label.bind(self.liste_commandes[2][0],
                          lambda e,s=self,c=self.liste_commandes[2][1],x=cmd,l=label : s.chooseitem(x,l,c))
+                  label.bind("<Key-Down>", self.selectNextItem(event))
 
         for marque in self.liste_marques:
            try:

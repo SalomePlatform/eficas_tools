@@ -27,7 +27,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.17 2004/11/15 14:01:36 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.18 2004/11/17 16:08:34 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -41,6 +41,8 @@ class Tree :
         self.canvas.bind("<Key-Next>", self.page_down)
         self.canvas.bind("<Key-Up>", self.unit_up)
         self.canvas.bind("<Key-Down>", self.unit_down)             
+        self.canvas.bind("<Key-Left>", self.mot_up)
+        self.canvas.bind("<Key-Right>", self.mot_down)
         self.canvas.bind("<1>", self.canvas_select)             
         self.tree = self
         self.command = command
@@ -62,6 +64,14 @@ class Tree :
         event.widget.yview_scroll(-1, "unit")
     def unit_down(self,event):
         event.widget.yview_scroll(1, "unit")              
+
+    def mot_down(self,event):
+        self.select_next(None)
+        self.canvas.focus_set()
+
+    def mot_up(self,event):
+        self.node_selected.select_mot_previous()
+        self.canvas.focus_set()
 
     def build_children(self):
         """ Construit la liste des enfants de self """
@@ -104,6 +114,7 @@ class Tree :
 
     def select_next(self,event):
         self.node_selected.select_next()
+        self.canvas.focus_set()
 
     def select_previous(self,event):
         self.node_selected.select_previous()
@@ -227,13 +238,26 @@ class Node :
             self.children[ind].select()
         else :
             index = self.parent.children.index(self) + 1
-            if isinstance(self.parent,TREE) :
+            try :
+              if isinstance(self.parent,TREE) :
                 try:
                     self.children[ind].select()
                 except:
                     self.children[0].select()
-            else :                
+              else :                
                 self.parent.select_next(index)
+            except :
+                self.parent.select_next(index)
+
+    def select_mot_previous(self):
+        index = self.parent.children.index(self) - 1
+        try :
+            if index > 0  :
+               self.parent.children[index].select()
+            else :
+               self.parent.select()
+        except:
+            self.parent.select()
 
     def select_previous(self):
         """ on doit d'abord sélectionner(dans l'ordre) :

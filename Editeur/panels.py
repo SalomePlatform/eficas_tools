@@ -352,13 +352,13 @@ class OngletPanel(Panel) :
       if options.affichage_commandes == "alphabetic":
          liste_cmd = self.get_liste_cmd()
          Liste = ListeChoix(self,frame2,liste_cmd,liste_commandes = liste_commandes,
-                                   filtre='oui',titre = "Commandes")
+                                   filtre='oui',titre = "Commandes",optionReturn="oui")
       else:
          liste_groupes=self.node.item.object.niveau.definition.liste_groupes
          dict_groupes=self.node.item.object.niveau.definition.dict_groupes
          Liste = ListeChoixParGroupes(self,frame2,liste_groupes,dict_groupes,
                                       liste_commandes = liste_commandes,
-                                      filtre='oui',titre = "Commandes")
+                                      filtre='oui',titre = "Commandes",optionReturn="oui")
       Liste.affiche_liste()
       self.command_entry=Liste.entry
       # aide associée au panneau
@@ -376,13 +376,13 @@ class OngletPanel(Panel) :
       if options.affichage_commandes == "alphabetic":
          liste_cmd = self.get_liste_cmd()
          Liste = ListeChoix(self,page,liste_cmd,liste_commandes = liste_commandes,
-                            filtre='oui',titre = "Commandes")
+                            filtre='oui',titre = "Commandes",optionReturn="oui")
       else:
          liste_groupes=self.node.item.object.niveau.definition.liste_groupes
          dict_groupes=self.node.item.object.niveau.definition.dict_groupes
          Liste = ListeChoixParGroupes(self,page,liste_groupes,dict_groupes,
                                       liste_commandes = liste_commandes,
-                                      filtre='oui',titre = "Commandes")
+                                      filtre='oui',titre = "Commandes",optionReturn="oui")
       Liste.affiche_liste()
        # aide associée au panneau
       bulle_aide="""Double-cliquez sur la commande que vous voulez ajouter au jeu de commandes"""
