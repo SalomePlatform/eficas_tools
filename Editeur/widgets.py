@@ -137,6 +137,12 @@ class Fenetre :
             else:
                 showinfo("Sauvegarde effectuée","Sauvegarde effectuée dans le fichier %s" %file)
 
+    def destroy(self):
+        try :
+	   self.fenetre.destroy()
+	except :
+	   pass
+
 class FenetreYesNo(Fenetre):
     def __init__(self,appli,titre="",texte="",yes="Yes",no="No"):
         self.appli=appli
@@ -212,6 +218,7 @@ class FenetreDeSelection(Fenetre):
         self.but_save.place_forget()
         self.but_save.place(relx=0.6,rely=0.5,anchor='center')
         self.but_quit.place(relx=0.8,rely=0.5,anchor='center')
+     
 
     def get_separateurs_autorises(self):
         """
@@ -381,6 +388,52 @@ class FenetreDeSelection(Fenetre):
         liste = self.panel.Liste_valeurs.get_liste()
         liste.extend(liste_valeurs)
         self.panel.Liste_valeurs.put_liste(liste)
+
+class FenetreDeParametre(Fenetre) :
+    def __init__(self,parent,item,appli,texte):
+        self.parent=parent
+        self.appli=appli
+        self.fenetre = Toplevel()
+        self.fenetre.configure(width = 250,height=100)
+        self.fenetre.protocol("WM_DELETE_WINDOW", self.quit)
+        self.fenetre.title("Parametres")
+        self.titre = "Parametres"
+        self.texte = string.replace(texte,'\r\n','\n')
+        fonte=fontes.standardcourier10
+
+        # définition des frames
+        self.frame_texte = Frame(self.fenetre)
+        self.frame_texte.place(relx=0,rely=0,relwidth=1,relheight=0.9)
+        # définition de la zone texte et du scrollbar
+        self.zone_texte = Text(self.frame_texte,font=fonte)
+        self.zone_texte.bind("<Key-Prior>", self.page_up)
+        self.zone_texte.bind("<Key-Next>", self.page_down)
+        self.zone_texte.bind("<Key-Up>", self.unit_up)
+        self.zone_texte.bind("<Key-Down>", self.unit_down)
+        self.zone_texte.bind("<Double-Button-3>", self.OnButton3doubleclick)
+        self.scroll_v = Scrollbar (self.frame_texte,command = self.zone_texte.yview)
+        self.scroll_v.pack(side='right',fill ='y')
+        self.zone_texte.pack(side='top',fill='both',expand=1,padx=5,pady=10)
+        self.zone_texte.configure(yscrollcommand=self.scroll_v.set)
+        # affichage du texte
+        self.affiche_texte(self.texte)
+        self.zone_texte.config(state="disabled")
+
+    def OnButton3doubleclick(self,event):
+        try:
+            selection=self.zone_texte.selection_get()
+        except:
+            showerror("Pas de donnée sélectionnée",
+                       "Selectionner un parametre")
+        l_param = ""
+        for param in selection.splitlines():
+	    nomparam=param[0:param.find("=")-1]
+            if nomparam != '' : 
+		l_param=l_param+nomparam+','
+	self.parent.entry.delete(0,Tkinter.END)
+	self.parent.entry.insert(0,l_param[0:-1])
+	self.parent.valid_valeur()
+	self.quit()
 
 class Formulaire:
     """

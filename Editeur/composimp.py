@@ -262,6 +262,21 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
          listevalideliste=listevalideitem
       return listevalideliste
 
+  def get_liste_param_possible(self):
+  # 
+      liste_param=[]
+      for param in self.object.jdc.params:
+	  encorevalide=self.valide_item(param.valeur)
+          if encorevalide:
+	     type_param=param.valeur.__class__.__name__
+	     for typ in self.definition.type:
+		 if typ=='R' and type_param=='float':
+		     liste_param.append(param)
+		 if typ=='I' and type_param=='int':
+		     liste_param.append(param)
+		 if typ=='TXM' and type_param=='str':
+		     liste_param.append(repr(param))
+      return liste_param
 
   #--------------------------------------------------
   #

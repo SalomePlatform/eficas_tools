@@ -34,6 +34,7 @@ from widgets import showinfo
 from widgets import askopenfilename
 from widgets import ListeChoix
 from widgets import FenetreDeSelection
+from widgets import FenetreDeParametre
 
 from Noyau.N_CR import justify_text
 from utils import substract_list
@@ -133,6 +134,16 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
                               command = self.annule_modifs_valeur)
       for but in (bouton_accepter,bouton_annuler):
           but.pack(side='left',padx=5)
+            # traitement de la fenetre des parametres
+      if self.node.item.get_liste_param_possible() != [ ]:
+         txtparam=""
+         for param in self.node.item.get_liste_param_possible():
+            txtparam=txtparam+repr(param)+"\n"
+         self.fenetreparam=FenetreDeParametre( self,
+                                       self.node.item,
+                                       self.parent.appli,
+                                       txtparam)
+
 
   def add_valeur_plusieurs_base(self,name=None):
       if name != None :

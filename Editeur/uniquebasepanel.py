@@ -21,6 +21,7 @@
 # Modules Python
 import string,types,os
 from Tkinter import *
+from Tkinter import Widget
 import Pmw
 from copy import copy,deepcopy
 import traceback
@@ -30,8 +31,7 @@ import Objecttreeitem
 import prefs
 import panels
 import images
-from widgets import ListeChoix
-from widgets import FenetreDeSelection
+from widgets import FenetreDeParametre
 
 from Noyau.N_CR import justify_text
 from utils import substract_list
@@ -66,7 +66,6 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       self.entry = Entry(self.frame_valeur,relief='sunken')
       self.entry.place(relx=0.28,rely=0.5,relwidth=0.6)
       self.entry.bind("<Return>",lambda e,c=self.valid_valeur:c())
-      self.entry.focus()
       # aide associée au panneau
       self.frame_valeur.update()
       self.aide = Label(self.frame_valeur, 
@@ -76,6 +75,22 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       self.aide.place(relx=0.5,rely=0.7,anchor='n')
       # affichage de la valeur du MCS
       self.display_valeur()
+      # traitement de la fenetre des parametres
+      if self.node.item.get_liste_param_possible() != [ ]:
+         txtparam=""
+         for param in self.node.item.get_liste_param_possible():
+            txtparam=txtparam+repr(param)+"\n"
+         self.fenetreparam=FenetreDeParametre( self,
+				       self.node.item,
+                                       self.parent.appli,
+                                       txtparam)
+
+  def destroy(self):
+      try :
+      	self.fenetreparam.destroy()
+      except :
+	pass
+      Widget.destroy(self)
 
   def get_aide(self):
       """
