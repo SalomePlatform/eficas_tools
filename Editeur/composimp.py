@@ -1777,9 +1777,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       # et donc pas dans sdprods (resultat d'une exception dans type_sdprod)
       if not valeur:valeur=self.object.valeur
       if valeur in self.object.etape.sdprods:return 1
-      if type(valeur) is not types.ClassType:return 0
-      if hasattr(valeur,'__class__'):
-         if valeur.__class__.__name__ == 'CO':return 1
+      if type(valeur) is not types.InstanceType:return 0
+      if valeur.__class__.__name__ == 'CO':return 1
       return 0
 
   def delete_valeur_co(self,valeur=None):
