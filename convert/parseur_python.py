@@ -99,6 +99,12 @@ class AFFECTATION(ENTITE_JDC):
         nom = string.strip(nom)
         if valeur[-1] == '\n': valeur = valeur[:-1]
         valeur = string.strip(valeur)
+	## traitement des "
+	if valeur[0]=='"':
+	   valeur=valeur[1:-1]
+	if valeur[-1]=='"':
+	   valeur=valeur[0:-2]
+
         return nom+' = PARAMETRE(nom=\''+nom+'\',valeur="'+valeur+'")\n\n'
 
 class COMMANDE_COMMENTARISEE(ENTITE_JDC):
