@@ -28,6 +28,7 @@
 
 # import de modules Python
 import string,types
+from math import *
 
 # import de modules Eficas
 from Noyau.N_CR import CR
@@ -61,6 +62,51 @@ class PARAMETRE :
   def __getitem__(self,key):
     param_item=ITEM_PARAMETRE(self,key)
     return param_item
+
+  def __neg__(self):
+    try:
+      return -1*self.valeur
+    except:
+      print "******* Probleme : pas de valeur négative"
+      return None
+    
+  def __mul__(self,a):
+    try :
+      return self.valeur*a.valeur
+    except :
+      print "******* Probleme : a la multiplication"
+      return None
+
+  def __rmul__(self,a):
+    try :
+      return self.valeur*a.valeur
+    except :
+      print "******* Probleme : a la multiplication"
+      return None
+
+  def  __mul__ (self,other):
+    retour=None
+    try :
+      retour = eval(self.valeur) * other
+    except :
+      try :
+         retour = self.valeur * other
+      except :
+         print "******* Probleme : a la multiplication"
+    return retour
+
+  def __rmul__ (self,other):
+    retour=None
+    try :
+      retour = eval(self.valeur) * other
+    except :
+      try :
+         retour = self.valeur * other
+      except :
+         print "******* Probleme : a la multiplication"
+    return retour
+
+
 
   def interprete_valeur(self,val):
     """
