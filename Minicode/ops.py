@@ -1,7 +1,21 @@
+#@ MODIF ops Cata  DATE 23/10/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
 #
-__version__="$Name: FR_28_06_10_00 $"
-__Id__="$Id: ops.py,v 1.12.18.3 2001/06/19 12:24:51 iliade Exp $"
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
 #
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+# ======================================================================
 
 # Modules Python
 import types
@@ -10,6 +24,15 @@ import string,linecache,os,traceback,re
 # Modules Eficas
 import Accas
 from Accas import ASSD
+
+try:
+   import aster
+   # Si le module aster est présent, on le connecte
+   # au JDC
+   import Build.B_CODE
+   Build.B_CODE.CODE.codex=aster
+except:
+   pass
 
 def DEBUT(self,PAR_LOT,**args):
    """
@@ -23,35 +46,35 @@ def POURSUITE(self,PAR_LOT,**args):
    """
    self.jdc.set_par_lot(PAR_LOT)
    if self.codex and os.path.isfile("glob.1"):
-      # Le module d'execution est accessible et glob.1 est present
-      if hasattr(self,'fichier_init'):return
-      self.fichier_init='glob.1'
-      self.jdc.initexec()
-      lot,ier,lonuti,concepts=self.codex.poursu(self,1)
-      self.icmd=lonuti
-      #print "Fin de debut",ier,lot,lonuti
-      pos=0
-      d={}
-      while pos+80 < len(concepts)+1:
-        nomres=concepts[pos:pos+8]
-        concep=concepts[pos+8:pos+24]
-        nomcmd=concepts[pos+24:pos+40]
-        statut=concepts[pos+40:pos+48]
-        if nomres[0] not in (' ','.','&') and statut != '&DETRUIT':
-           exec nomres+'='+string.lower(concep)+'()' in self.parent.g_context,d
-        pos=pos+80
-      for k,v in d.items():
-        self.parent.NommerSdprod(v,k)
-      self.g_context=d
-      return
+     # Le module d'execution est accessible et glob.1 est present
+     if hasattr(self,'fichier_init'):return
+     self.fichier_init='glob.1'
+     self.jdc.initexec()
+     lot,ier,lonuti,concepts=self.codex.poursu(self,1)
+     self.icmd=lonuti
+     #print "Fin de debut",ier,lot,lonuti
+     pos=0
+     d={}
+     while pos+80 < len(concepts)+1:
+       nomres=concepts[pos:pos+8]
+       concep=concepts[pos+8:pos+24]
+       nomcmd=concepts[pos+24:pos+40]
+       statut=concepts[pos+40:pos+48]
+       if nomres[0] not in (' ','.','&') and statut != '&DETRUIT':
+          exec nomres+'='+string.lower(concep)+'()' in self.parent.g_context,d
+       pos=pos+80
+     for k,v in d.items():
+       self.parent.NommerSdprod(v,k)
+     self.g_context=d
+     return
    else:
-      # Si le module d'execution n est pas accessible ou glob.1 absent on 
-      # demande un fichier (EFICAS)
-      # Il faut éviter de réinterpréter le fichier à chaque appel de
-      # POURSUITE
-      if hasattr(self,'fichier_init'):
-         return
-      self.make_poursuite()
+     # Si le module d'execution n est pas accessible ou glob.1 absent on 
+     # demande un fichier (EFICAS)
+     # Il faut éviter de réinterpréter le fichier à chaque appel de
+     # POURSUITE
+     if hasattr(self,'fichier_init'):
+        return
+     self.make_poursuite()
 
 def POURSUITE_context(self,d):
    """
@@ -69,6 +92,7 @@ def INCLUDE(self,UNITE,**args):
    """ 
        Fonction sd_prod pour la macro INCLUDE
    """
+   if not UNITE : return
    if hasattr(self,'unite'):return
    self.unite=UNITE
 
@@ -102,11 +126,13 @@ def detruire(self,d):
            sd.append(e)
            e=e.nom
          if d.has_key(e):del d[e]
+         if self.jdc.sds_dict.has_key(e):del self.jdc.sds_dict[e]
      else:
        if isinstance(mcs,ASSD):
          sd.append(mcs)
          mcs=mcs.nom
        if d.has_key(mcs):del d[mcs]
+       if self.jdc.sds_dict.has_key(mcs):del self.jdc.sds_dict[mcs]
    for s in sd:
      # On signale au parent que le concept s n'existe plus apres l'étape self
      self.parent.delete_concept_after_etape(self,s)
@@ -151,9 +177,9 @@ def subst_materiau(text,NOM_MATER,EXTRACTION):
              if m.group(3) == "EVAL":
                ll.append("  "+m.group(1)+' = EVAL("'+m.group(4)+"("+str(TEMP)+')"),')
              elif m.group(3) == "SUPPR":
-	       pass
+               pass
              else:
-	       ll.append(l)
+               ll.append(l)
            else: # On cherche la fin du mot cle facteur en cours de substitution
              m=regfin.match(l)
              if m: # On l a trouve. On le supprime de la liste
@@ -179,13 +205,16 @@ def INCLUDE_MATERIAU(self,NOM_AFNOR,TYPE_MODELE,VARIANTE,TYPE_VALE,NOM_MATER,
       Fonction sd_prod pour la macro INCLUDE_MATERIAU
   """
   mat=string.join((NOM_AFNOR,'_',TYPE_MODELE,'_',VARIANTE,'.',TYPE_VALE),'')
-  if not hasattr(self,'mat') or self.mat != mat:
-    self.mat=mat
+  if not hasattr(self,'mat') or self.mat != mat or self.nom_mater != NOM_MATER :
     # On récupère le répertoire des matériaux dans les arguments 
     # supplémentaires du JDC
-    rep_mat=self.jdc.args["rep_mat"]
+    rep_mat=self.jdc.args.get("rep_mat","NOrep_mat")
     f=os.path.join(rep_mat,mat)
+    self.mat=mat
+    self.nom_mater=NOM_MATER
     if not os.path.isfile(f):
+       del self.mat
+       self.make_contexte(f,"#Texte sans effet pour reinitialiser le contexte a vide\n")
        raise "Erreur sur le fichier materiau: "+f
     # Les materiaux sont uniquement disponibles en syntaxe Python
     # On lit le fichier et on supprime les éventuels \r
@@ -201,7 +230,6 @@ def INCLUDE_MATERIAU(self,NOM_AFNOR,TYPE_MODELE,VARIANTE,TYPE_VALE,NOM_MATER,
     # et le contexte de l etape (local au sens Python)
     # Il faut auparavant l'enregistrer aupres du module linecache (utile pour nommage.py)
     linecache.cache[f]=0,0,string.split(self.text,'\n'),f
-    code=compile(self.text,f,'exec')
     if self.jdc.par_lot == 'NON':
       # On est en mode commande par commande
       # On teste la validite de la commande avec interruption eventuelle
@@ -213,7 +241,5 @@ def INCLUDE_MATERIAU(self,NOM_AFNOR,TYPE_MODELE,VARIANTE,TYPE_VALE,NOM_MATER,
       # commandes car le prefixe PRFXCO doit etre initialise dans le Fortran
       self.codex.opsexe(self,0,-1,-self.definition.op)  
 
-    d={}
-    self.g_context = d
-    self.contexte_fichier_init = d
-    exec code in self.parent.g_context,d
+    self.make_contexte(f,self.text)
+

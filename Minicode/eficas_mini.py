@@ -14,16 +14,19 @@ for a in args:
    if a == "-display":
       os.environ['DISPLAY']=args[args.index("-display")+1]
 
+import Misc.Trace
 import Editeur
 from Editeur import eficas_go
 
 def main():
+   Misc.Trace.begin_trace()
    if len(sys.argv) > 1 :
        # on veut ouvrir un fichier directement au lancement d'Eficas
-       eficas_go.lance_eficas(code='SATURNE',fichier = sys.argv[1])
+       eficas_go.lance_eficas(code='ASTER',fichier = sys.argv[1])
    else:
        # on veut ouvrir Eficas 'vide'
-       eficas_go.lance_eficas(code='SATURNE')
+       eficas_go.lance_eficas(code='ASTER')
+   Misc.Trace.end_trace()
 
 def hidez():
    from Misc import Cyclops

@@ -7,7 +7,7 @@ from Accas import *
 
 import ops
 
-JdC = JDC_CATA(code='SATURNE',
+JdC = JDC_CATA(code='ASTER',
                execmodul=None,
                regles = (AU_MOINS_UN('DEBUT','POURSUITE'),
                          AU_MOINS_UN('FIN'),
@@ -26,6 +26,12 @@ class reel    (ASSD):pass
 class complexe(ASSD):pass
 class liste   (ASSD):pass
 class chaine  (ASSD):pass
+
+# Type geometriques
+class no  (GEOM):pass
+class grno(GEOM):pass
+class ma  (GEOM):pass
+class grma(GEOM):pass
 
 
 class sonde(ASSD):pass
@@ -62,6 +68,13 @@ class matr_elem_depl_c(matr_elem):pass
 class matr_elem_depl_r(matr_elem):pass
 class matr_elem_pres_c(matr_elem):pass
 class matr_elem_temp_r(matr_elem):pass
+class mater           (ASSD):pass
+
+
+# fonction :
+#--------------------------------
+class para_sensi(fonction):pass
+class fonction_c(fonction):pass
 
 # matr_asse :
 #--------------------------------
@@ -1502,6 +1515,50 @@ MACRO2 =MACRO(nom="MACRO2",op= -5 ,docu="U4.61.21-c",
          MODELE          =SIMP(statut='o',typ=modele),
 );
 
+def macro3_prod(self,MAILLAGE,MAIL2,**args):
+   self.type_sdprod(MAIL2,maillage)
+   if not MAILLAGE:return None
+   return maillage
+
+MACRO3 =MACRO(nom="MACRO3",op= -5 ,docu="U4.61.21-c",
+                      sd_prod=macro3_prod,
+                      fr="Calcul des matrices assemblées (matr_asse_gd) par exemple de rigidité, de masse ",
+         MAILLAGE          =SIMP(statut='f',typ=maillage),
+         MAIL2          =SIMP(statut='o',typ=(CO,maillage)),
+);
+
+def errmacro_prod(self,MAILLAGE,**args):
+   #Erreur de programmation
+   a=1/0
+   return maillage
+
+ERRMACRO =MACRO(nom="ERRMACRO",op= -5 ,docu="U4.61.21-c",
+                      sd_prod=errmacro_prod,
+                      fr="Calcul des matrices assemblées (matr_asse_gd) par exemple de rigidité, de masse ",
+         MAILLAGE          =SIMP(statut='o',typ=maillage),
+);
+
+def erroper_prod(self,MAILLAGE,**args):
+   #Erreur de programmation
+   a=1/0
+   return maillage
+
+ERROPER =OPER(nom="ERROPER",op= -5 ,docu="U4.61.21-c",
+                      sd_prod=erroper_prod,
+                      fr="Calcul des matrices assemblées (matr_asse_gd) par exemple de rigidité, de masse ",
+         MAILLAGE          =SIMP(statut='o',typ=maillage),
+);
+
+def errproc_init(self,MAILLAGE,**args):
+   #Erreur de programmation
+   a=1/0
+
+ERRPROC =PROC(nom="ERRPROC",op= -5 ,docu="U4.61.21-c",
+                      op_init=errproc_init,
+                      fr="Calcul des matrices assemblées (matr_asse_gd) par exemple de rigidité, de masse ",
+         MAILLAGE          =SIMP(statut='o',typ=maillage),
+);
+
 class concept(ASSD):pass
 
 def op1_prod(x,**args):
@@ -1548,4 +1605,150 @@ OP2 = MACRO(nom='OP2',op=1,sd_prod=op2_prod,reentrant='f',
                             ),
                    ),
           );
+
+DETRUIRE=PROC(nom="DETRUIRE",op=-7,docu="U4.14.01-d",
+            UIinfo={"groupes":("Gestion du travail",)},
+              fr="Destruction d un concept utilisateur dans la base GLOBALE",
+             op_init=ops.detruire,
+            CONCEPT     =FACT(statut='o',min=01,
+            NOM         =SIMP(statut='o',typ=assd,max='**'),
+        ),
+);
+
+INCLUDE_MATERIAU=MACRO(nom="INCLUDE_MATERIAU",op=-14,docu="U4.43.02-a",
+            UIinfo={"groupes":("Modélisation",)},
+                       fr=" ",
+         sd_prod=ops.INCLUDE_MATERIAU,op_init=ops.INCLUDE_context,fichier_ini=0,
+         NOM_AFNOR       =SIMP(statut='o',typ='TXM' ),
+         TYPE_MODELE     =SIMP(statut='o',typ='TXM',into=("REF","PAR") ),
+         VARIANTE        =SIMP(statut='o',typ='TXM',
+                               into=("A","B","C","D","E","F","G","H","I","J",
+                                     "K","L","M","N","O","P","Q","R","S","T","U","V",
+                                     "W","X","Y","Z",) ),
+         TYPE_VALE       =SIMP(statut='o',typ='TXM',into=("NOMI","MINI","MAXI") ),
+         NOM_MATER       =SIMP(statut='o',typ='TXM' ),
+         UNITE           =SIMP(statut='f',typ='I',defaut= 32 ),
+         EXTRACTION      =FACT(statut='f',min=1,max=99,
+           COMPOR          =SIMP(statut='o',typ='TXM' ),
+           TEMP_EVAL       =SIMP(statut='o',typ='R' ),
+         ),
+         INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
+)  ;
+
+def defi_fonction_prod(VALE,VALE_PARA,VALE_C,NOEUD_PARA,**args):
+  if VALE != None  : return fonction
+  if VALE_C != None  : return fonction_c
+  if VALE_PARA != None  : return fonction
+  if NOEUD_PARA != None  : return fonction
+  raise AsException("type de concept resultat non prevu")
+
+DEFI_FONCTION=OPER(nom="DEFI_FONCTION",op=3,sd_prod=defi_fonction_prod
+                    ,fr="Définition des valeurs réelles ou complexes d une fonction réelle",
+                     docu="U4.31.02-g3",reentrant='n',
+            UIinfo={"groupes":("Fonction",)},
+         regles=(UN_PARMI('VALE','VALE_C','VALE_PARA','NOEUD_PARA'),),
+         NOM_PARA        =SIMP(statut='o',typ='TXM',
+                               into=("DX","DY","DZ","DRX","DRY","DRZ","TEMP",
+                                     "INST","X","Y","Z","EPSI","META","FREQ","PULS",
+                                     "AMOR","ABSC","SIGM","HYDR","SECH","PORO","SAT",
+                                     "PGAZ","PCAP","VITE") ),
+         NOM_RESU        =SIMP(statut='f',typ='TXM',defaut="TOUTRESU"),
+         VALE            =SIMP(statut='f',typ='R',min=2,max='**',
+                               fr ="Fonction réelle définie par une liste de couples (abscisse,ordonnée)"),
+         VALE_C          =SIMP(statut='f',typ='R',min=2,max='**',
+                               fr ="Fonction complexe définie par une liste de couples"),
+         VALE_PARA       =SIMP(statut='f',typ=listr8,
+                               fr ="Fonction réelle définie par deux concepts de type listr8" ),
+         b_vale_para     =BLOC(condition = "VALE_PARA != None",
+           VALE_FONC       =SIMP(statut='o',typ=listr8 ),
+         ),
+         NOEUD_PARA      =SIMP(statut='f',typ=no,max='**',
+                               fr ="Fonction réelle définie par une liste de noeuds et un maillage"),
+         b_noeud_para    =BLOC(condition = "NOEUD_PARA != None",
+           MAILLAGE        =SIMP(statut='o',typ=maillage ),
+           VALE_Y          =SIMP(statut='o',typ='R',max='**'),
+         ),
+
+         INTERPOL        =SIMP(statut='f',typ='TXM',max=2,defaut="LIN",into=("NON","LIN","LOG") ),
+         PROL_DROITE     =SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
+         PROL_GAUCHE     =SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
+         VERIF           =SIMP(statut='f',typ='TXM',defaut="CROISSANT",into=("CROISSANT","NON") ),
+         INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
+         TITRE           =SIMP(statut='f',typ='TXM',max='**'),
+)  ;
+
+DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater,
+                   fr="Définition des paramètres décrivant le comportement d un matériau",
+                   docu="U4.43.01-g4",reentrant='n',
+            UIinfo={"groupes":("Modélisation",)},
+       regles=(EXCLUS('ELAS','ELAS_FO','ELAS_FLUI','ELAS_ISTR','ELAS_ISTR_FO','ELAS_ORTH',
+                      'ELAS_ORTH_FO','ELAS_COQUE','ELAS_COQUE_FO',
+                      'SURF_ETAT_SATU','CAM_CLAY_THM','SURF_ETAT_NSAT'),
+               EXCLUS('THER','THER_FO','THER_ORTH','THER_NL'),
+               ),
+#
+# comportement élastique
+#
+           ELAS            =FACT(statut='f',min=0,max=1,
+             E               =SIMP(statut='o',typ='R',val_min=0.E+0),
+             NU              =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=0.5E+0),
+             RHO             =SIMP(statut='f',typ='R'),
+             ALPHA           =SIMP(statut='f',typ='R'),
+             AMOR_ALPHA      =SIMP(statut='f',typ='R'),
+             AMOR_BETA       =SIMP(statut='f',typ='R'),
+             AMOR_HYST       =SIMP(statut='f',typ='R'),
+           ),
+           ELAS_FO         =FACT(statut='f',min=0,max=1,
+             regles=(PRESENT_PRESENT('ALPHA','TEMP_DEF_ALPHA'),),
+             E               =SIMP(statut='o',typ=fonction),
+             NU              =SIMP(statut='o',typ=fonction),
+             RHO             =SIMP(statut='f',typ='R'),
+             TEMP_DEF_ALPHA  =SIMP(statut='f',typ='R'),
+             PRECISION       =SIMP(statut='f',typ='R',defaut= 1.),
+             ALPHA           =SIMP(statut='f',typ=fonction),
+             AMOR_ALPHA      =SIMP(statut='f',typ=fonction),
+             AMOR_BETA       =SIMP(statut='f',typ=fonction),
+             AMOR_HYST       =SIMP(statut='f',typ=fonction),
+             K_DESSIC        =SIMP(statut='f',typ='R',defaut= 0.E+0 ),
+             B_ENDOGE        =SIMP(statut='f',typ='R',defaut= 0.E+0 ),
+             FONC_DESORP     =SIMP(statut='f',typ=fonction),
+             VERI_P1         =SIMP(statut='c',typ='TXM',defaut="TEMP",into=("TEMP","INST",) ),
+             VERI_P2         =SIMP(statut='c',typ='TXM',defaut="INST",into=("TEMP","INST",) ),
+             VERI_P3         =SIMP(statut='c',typ='TXM',defaut="HYDR",into=("HYDR",) ),
+             VERI_P4         =SIMP(statut='c',typ='TXM',defaut="SECH",into=("SECH",) ),
+           ),
+#
+# comportement thermique
+#
+           THER_NL         =FACT(statut='f',min=0,max=1,
+             regles=(UN_PARMI('BETA','RHO_CP', ),),
+             LAMBDA          =SIMP(statut='o',typ=fonction),
+             BETA            =SIMP(statut='f',typ=fonction),
+             RHO_CP          =SIMP(statut='f',typ=fonction),
+             VERI_P1         =SIMP(statut='c',typ='TXM',defaut="TEMP",into=("TEMP",) ),
+           ),
+           THER_HYDR       =FACT(statut='f',min=0,max=1,
+             LAMBDA          =SIMP(statut='o',typ=fonction),
+             BETA            =SIMP(statut='f',typ=fonction),
+             AFFINITE        =SIMP(statut='o',typ=fonction),
+             CHALHYDR        =SIMP(statut='o',typ='R'),
+             QSR_K           =SIMP(statut='o',typ='R'),
+             VERI_P1         =SIMP(statut='c',typ='TXM',defaut="TEMP",into=("HYDR",) ),
+             VERI_P2         =SIMP(statut='c',typ='TXM',defaut="HYDR",into=("HYDR",) ),
+           ),
+           THER            =FACT(statut='f',min=0,max=1,
+             LAMBDA          =SIMP(statut='o',typ='R'),
+             RHO_CP          =SIMP(statut='f',typ='R'),
+           ),
+           THER_FO         =FACT(statut='f',min=0,max=1,
+             LAMBDA          =SIMP(statut='o',typ=fonction),
+             RHO_CP          =SIMP(statut='f',typ=fonction),
+             VERI_P1         =SIMP(statut='c',typ='TXM',defaut="INST",into=("INST",) ),
+           ),
+)
+
+RETOUR=PROC(nom="RETOUR",op= -2,docu="U4.13.02-e",
+            UIinfo={"groupes":("Gestion du travail",)},
+            fr="Retour au fichier de commandes appelant",
+) ;
 
