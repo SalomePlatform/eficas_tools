@@ -75,8 +75,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           prefix_include=self.prefix
        # ATTENTION : le dictionnaire recorded_units sert à memoriser les unites des 
        # fichiers inclus. Il est preferable de garder le meme dictionnaire pendant
-       # tout le traitement et de ne pas le reinitialiser brutalement (utiliser clear plutot)
-       # si on ne veut pas perdre la memoire des unites.
+       # tout le traitement et de ne pas le reinitialiser brutalement (utiliser 
+       # clear plutot) si on ne veut pas perdre la memoire des unites.
        # En principe si la memorisation est faite au bon moment il n'est pas necessaire
        # de prendre cette precaution mais ce n'est pas vrai partout.
        old_recorded_units=self.recorded_units.copy()
@@ -102,7 +102,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        return None
 
     if not j.cr.estvide():
-       # Erreurs dans l'INCLUDE. On garde la memoire du fichier mais on n'insere pas les concepts
+       # Erreurs dans l'INCLUDE. On garde la memoire du fichier 
+       # mais on n'insere pas les concepts
        # On force le contexte (etape courante) à self
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(self)
@@ -110,21 +111,25 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
     cr=j.report()
     if not cr.estvide():
+       # L'INCLUDE n'est pas valide.
        # On force le contexte (etape courante) à self
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(self)
        raise Exception("Le fichier include contient des erreurs\n"+str(j.cr))
 
-    # On recupere le contexte apres la derniere etape
-    j_context=j.get_contexte_avant(None)
-
-    # Cette verification n'est plus necessaire elle est integree dans le JDC_INCLUDE
-    self.verif_contexte(j_context)
+    # On recupere le contexte de l'include verifie
+    try:
+       j_context=j.get_verif_contexte()
+    except:
+       CONTEXT.unset_current_step()
+       CONTEXT.set_current_step(self)
+       raise
 
     # On remplit le dictionnaire des concepts produits inclus
     # en retirant les concepts présents dans le  contexte initial
     # On ajoute egalement le concept produit dans le sds_dict du parent
-    # sans verification car on est sur (verification integrée) que le nommage est possible
+    # sans verification car on est sur (verification integrée) que 
+    # le nommage est possible
     self.g_context.clear()
     for k,v in j_context.items():
        if not context_ini.has_key(k) or context_ini[k] != v:
@@ -143,22 +148,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
     return j_context
 
-  def verif_contexte(self,context):
-     """
-         On verifie que le contexte context peut etre inséré dans le jeu
-         de commandes à la position de self
-     """
-     for nom_sd,sd in context.items():
-        if not isinstance(sd,ASSD):continue
-        #if self.parent.get_sd_apres_etape(nom_sd,etape=self):
-        if self.parent.get_sd_apres_etape_avec_detruire(nom_sd,sd,etape=self):
-           # Il existe un concept produit par une etape apres self => impossible d'inserer
-           # On force le contexte (etape courante) à self
-           CONTEXT.unset_current_step()
-           CONTEXT.set_current_step(self)
-           raise Exception("Impossible d'inclure le fichier. Un concept de nom " + 
-                           "%s existe déjà dans le jeu de commandes." % nom_sd)
-
   def reevalue_sd_jdc(self):
      """
          Avec la liste des SD qui ont été supprimées, propage la 
@@ -174,8 +163,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
      """ 
          Réalise la différence entre les 2 contextes 
          old_contexte_fichier_init et contexte_fichier_init
-         cad retourne la liste des sd qui ont disparu ou ne derivent pas de la meme classe
-         et des sd qui ont ete remplacees
+         cad retourne la liste des sd qui ont disparu ou ne derivent pas 
+         de la meme classe et des sd qui ont ete remplacees
      """
      if not hasattr(self,'old_contexte_fichier_init'):return [],[]
      l_sd_suppressed = []
@@ -351,9 +340,11 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
         self.g_context={}
         self.contexte_fichier_init={}
 
-      # Le contexte du parent doit etre reinitialise car les concepts produits ont changé
+      # Le contexte du parent doit etre reinitialise car les concepts 
+      # produits ont changé
       self.parent.reset_context()
-      # Si des concepts ont disparu lors du changement de fichier, on demande leur suppression
+      # Si des concepts ont disparu lors du changement de fichier, on 
+      # demande leur suppression
       self.reevalue_sd_jdc()
 
   def record_unite(self):

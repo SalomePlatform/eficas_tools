@@ -41,9 +41,23 @@ class FACTPanel(panels.OngletPanel) :
     nb.setnaturalsize()
     self.affiche()
 
+import treewidget
+class Node(treewidget.Node):
+    def doPaste(self,node_selected):
+        objet_a_copier = self.item.get_copie_objet()
+        child=node_selected.doPaste_MCF(objet_a_copier)
+        return child
+
+    def doPaste_MCF(self,objet_a_copier):
+        child = self.parent.append_child(objet_a_copier,
+                                              pos=self.item,
+                                              retour='oui')
+        return child
+
 
 class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
   panel = FACTPanel
+  itemNode=Node
   
   def IsExpandable(self):
     return 1
@@ -66,12 +80,6 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
   def iscopiable(self):
     return 1
 
-  def isMCFact(self):
-      """
-      Retourne 1 si l'objet pointé par self est un MCFact, 0 sinon
-      """
-      return 1
-    
   def GetIconName(self):
     if self.object.isvalid():
       return "ast-green-los"
@@ -95,7 +103,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def additem(self,name,pos):
     if isinstance(name,Objecttreeitem.ObjectTreeItem) :
-        objet = self.object.addentite(name.object,pos)
+        objet = self.object.addentite(name.getObject(),pos)
     else :
         objet = self.object.addentite(name,pos)
     self.expandable = 1
@@ -112,16 +120,20 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
          Cette methode a pour fonction de supprimer l'item passé en argument
          des fils de l'item FACT qui est son pere
            - item = item du MOCLE à supprimer du MOCLE père
-           - item.object = MCSIMP ou MCBLOC 
+           - item.getObject() = MCSIMP ou MCBLOC 
       """
-      if item.object.isoblig() :
-          self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ')
-          return 0
-      else :
-          self.object.suppentite(item.object)
-          message = "Mot-clé " + item.object.nom + " supprimé"
-          self.appli.affiche_infos(message)
-          return 1
+      itemobject=item.getObject()
+      if itemobject.isoblig() :
+         self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ')
+         return 0
+
+      if self.object.suppentite(itemobject):
+         message = "Mot-clé " + itemobject.nom + " supprimé"
+         self.appli.affiche_infos(message)
+         return 1
+      else:
+         self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-clé')
+         return 0
 
   def verif_condition_bloc(self):
       return self.object.verif_condition_bloc()

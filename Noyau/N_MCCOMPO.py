@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#@ MODIF N_MCCOMPO Noyau  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
+#@ MODIF N_MCCOMPO Noyau  DATE 16/03/2004   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -356,3 +356,20 @@ class MCCOMPO(N_OBJECT.OBJECT):
     for child in self.mc_liste:
       l.extend(child.get_sd_utilisees())
     return l
+
+   def get_sd_mcs_utilisees(self):
+    """ 
+          Retourne la ou les SD utilisée par self sous forme d'un dictionnaire :
+          . Si aucune sd n'est utilisée, le dictionnaire est vide.
+          . Sinon, les clés du dictionnaire sont les mots-clés derrière lesquels on
+            trouve des sd ; la valeur est la liste des sd attenante.
+            Exemple : { 'VALE_F': [ <Cata.cata.para_sensi instance at 0x9419854>,
+                                    <Cata.cata.para_sensi instance at 0x941a204> ],
+                        'MODELE': [<Cata.cata.modele instance at 0x941550c>] }
+    """
+    dico = {}
+    for child in self.mc_liste:
+      daux = child.get_sd_mcs_utilisees()
+      for cle in daux.keys():
+        dico[cle] = daux[cle]
+    return dico

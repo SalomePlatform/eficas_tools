@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#@ MODIF macr_cabri_mail_ops Macro  DATE 24/11/2003   AUTEUR DURAND C.DURAND 
+#@ MODIF macr_cabri_mail_ops Macro  DATE 23/08/2004   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -151,14 +151,13 @@ def macr_cabri_mail_ops(self,EXEC_MAILLAGE,RAFF_MAILLAGE,VERI_MAIL,GEOM_BRID,
   if (imp_formF == 1):
     if (imp_form == 'CASTEM'):
       imp_ngib = IMPRESSION['NIVE_GIBI']
-      IMPR_RESU(RESU = _F(MAILLAGE=nomres,
-                          FORMAT = 'CASTEM',
-                          NIVE_GIBI = imp_ngib,),)
+      IMPR_RESU( RESU = _F(MAILLAGE=nomres, ),
+                 FORMAT = 'CASTEM', NIVE_GIBI = imp_ngib )
     if (imp_form == 'IDEAS'):
       imp_nver = IMPRESSION['VERSION']
-      IMPR_RESU(RESU = _F(MAILLAGE=nomres,
-                          FORMAT = 'IDEAS',
-                          VERSION = imp_nver,),)                
+      IMPR_RESU(RESU = _F(MAILLAGE=nomres,),
+                FORMAT = 'IDEAS', VERSION = imp_nver )
+                                
   return ier
 
 

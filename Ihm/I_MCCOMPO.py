@@ -32,18 +32,10 @@ import I_OBJECT
 class MCCOMPO(I_OBJECT.OBJECT):
   def getlabeltext(self):
     """ 
-       Retourne le label de self suivant qu'il s'agit d'un MCFACT, 
-       d'un MCBLOC ou d'un MCFACT appartenant à une MCList : 
-       utilisée pour l'affichage dans l'arbre
+       Retourne le label de self 
+       utilisé pour l'affichage dans l'arbre
     """
-    objet = self.parent.get_child(self.nom)
-    # objet peut-être self ou une MCList qui contient self ...
-    if isinstance(objet,MCList) :
-      index = objet.get_index(self)+1 # + 1 à cause de la numérotation qui commence à 0
-      label = self.nom +'_'+`index`+':'
-      return label
-    else:
-      return self.nom
+    return self.nom
 
   def get_liste_mc_ordonnee(self,liste,dico):
     """
@@ -205,61 +197,70 @@ class MCCOMPO(I_OBJECT.OBJECT):
       else :
         # dans ce cas on est en mode copie d'un motcle
         objet = name
+	# Appel de la methode qui fait le menage dans les references
+	# sur les concepts produits (verification que les concepts existent
+	# dans le contexte de la commande courante).
 	objet.verif_existence_sd()
-      # si un objet de même nom est déjà présent dans la liste
-      # et si l'objet est répétable
-      # il faut créer une MCList et remplacer l'objet de la liste
-      # par la MCList
-      test1 = objet.isrepetable()
+
+      # On verifie que l'ajout d'objet est autorise
+      if self.ispermis(objet) == 0:
+        self.jdc.send_message("L'objet %s ne peut être un fils de %s" %(objet.nom,
+	                                                                self.nom))
+        self.fin_modif()
+        return 0
+
+      # On cherche s'il existe deja un mot cle de meme nom
       old_obj = self.get_child(objet.nom,restreint = 'oui')
-      test2 = self.ispermis(objet)
-      #print "test1,test2=",test1,test2
-      if test1 == 0 and old_obj :
-        self.jdc.send_message("L'objet %s ne peut pas être répété" %objet.nom)
-        self.fin_modif()
-        return 0
-      if test2 == 0:
-        self.jdc.send_message("L'objet %s ne peut être un fils de %s" %(objet.nom,self.nom))
-        self.fin_modif()
-        return 0
-      if test1 :
-        if old_obj :
-          #if not isinstance(old_obj,MCList):
-          if not old_obj.isMCList():
-            # un objet de même nom existe déjà mais ce n'est pas une MCList
-            # Il faut en créer une 
-            # L'objet existant (old_obj) est certainement un MCFACT 
-            # qui pointe vers un constructeur
-            # de MCList : definition.liste_instance
-            #print "un objet de même type existe déjà"
-            index = self.mc_liste.index(old_obj)
-            #XXX remplacé par definition.list_instance : new_obj = MCList()
-            new_obj = old_obj.definition.list_instance()
-            new_obj.init(objet.nom,self)
-            new_obj.append(old_obj)
-            new_obj.append(objet)
-            # Il ne faut pas oublier de reaffecter le parent d'obj
-            objet.reparent(self)
-            self.mc_liste.remove(old_obj)
-            self.mc_liste.insert(index,new_obj)
+      if not old_obj :
+         # Le mot cle n'existe pas encore. On l'ajoute a la position
+	 # demandee (pos)
+         if pos == None :
+           self.mc_liste.append(objet)
+         else :
+           self.mc_liste.insert(pos,objet)
+         # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
+         objet.reparent(self)
+         self.fin_modif()
+         return objet
+      else:
+         # Le mot cle existe deja. Si le mot cle est repetable,
+         # on cree une liste d'objets. Dans le cas contraire,
+         # on emet un message d'erreur.
+         if not old_obj.isrepetable():
+            self.jdc.send_message("L'objet %s ne peut pas être répété" %objet.nom)
             self.fin_modif()
-            return new_obj
-          else :
-            # une liste d'objets de même type existe déjà
-            #print "une liste d'objets de même type existe déjà"
-            old_obj.append(objet)
-            # Il ne faut pas oublier de reaffecter le parent d'obj
-            objet.reparent(self)
-            self.fin_modif()
-            return old_obj
-      if pos == None :
-        self.mc_liste.append(objet)
-      else :
-        self.mc_liste.insert(pos,objet)
-      # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
-      objet.reparent(self)
-      self.fin_modif()
-      return objet
+            return 0
+         else:
+            if not old_obj.isMCList():
+               # un objet de même nom existe déjà mais ce n'est pas une MCList
+               # Il faut en créer une 
+               # L'objet existant (old_obj) est certainement un MCFACT 
+               # qui pointe vers un constructeur
+               # de MCList : definition.liste_instance
+               index = self.mc_liste.index(old_obj)
+               new_obj = old_obj.definition.list_instance()
+               new_obj.init(objet.nom,self)
+               new_obj.append(old_obj)
+               new_obj.append(objet)
+               # Il ne faut pas oublier de reaffecter le parent d'obj
+               objet.reparent(self)
+               self.mc_liste.remove(old_obj)
+               self.mc_liste.insert(index,new_obj)
+               self.fin_modif()
+               return new_obj
+            else :
+               # une liste d'objets de même type existe déjà
+               if not old_obj.ajout_possible():
+                  self.jdc.send_message("L'objet %s ne peut pas être répété" %objet.nom)
+                  self.fin_modif()
+                  return 0
+               if objet.isMCList():
+                  objet=objet.data[0]
+               old_obj.append(objet)
+               # Il ne faut pas oublier de reaffecter le parent d'obj
+               objet.reparent(self)
+               self.fin_modif()
+               return old_obj
 
   def ispermis(self,fils):
     """ 

@@ -40,7 +40,7 @@ import definition_cata
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cataediteur.py,v 1.4 2004/03/11 09:59:00 eficas Exp $"
+__Id__="$Id: cataediteur.py,v 1.5 2004/09/10 15:51:48 eficas Exp $"
 #
 
 Fonte_Niveau = fontes.canvas_gras_italique
@@ -688,7 +688,7 @@ class OPERItem(OBJECTItem):
 
   def additem(self,name,pos):
       if isinstance(name,TreeItem) :
-          cmd=self.object.addentite(name.object,pos)
+          cmd=self.object.addentite(name.getObject(),pos)
       else :
           cmd = self.object.addentite(name,pos)
       typ = TYPE_COMPLET(cmd)
@@ -790,7 +790,7 @@ class NIVEAUItem(OPERItem):
 
   def additem(self,name,pos):
       if isinstance(name,TreeItem) :
-          cmd=self.object.addentite(name.object,pos)
+          cmd=self.object.addentite(name.getObject(),pos)
       else :
           cmd = self.object.addentite(name,pos)
       typ = TYPE_COMPLET(obj)
@@ -799,16 +799,19 @@ class NIVEAUItem(OPERItem):
 
   def suppitem(self,item) :
     # item = item de l'ETAPE à supprimer du JDC
-    # item.object = ETAPE ou _C
+    # item.getObject() = ETAPE ou _C
     # self.object = JDC
-    self.object.suppentite(item.object)
-    if isinstance(item.object,_C):
-        message = "Commentaire supprimé"
-        self.appli.affiche_infos(message)
-    else :
-        message = "Commande " + item.object.nom + " supprimée"
-        self.appli.affiche_infos(message)
-    return 1
+    itemobject=item.getObject()
+    if self.object.suppentite(itemobject):
+       if isinstance(itemobject,_C):
+          message = "Commentaire supprimé"
+       else :
+          message = "Commande " + itemobject.nom + " supprimée"
+       self.appli.affiche_infos(message)
+       return 1
+    else:
+       self.appli.affiche_infos("Pb interne : impossible de supprimer cet objet")
+       return 0
 
   def GetText(self):
       return ''
@@ -901,7 +904,7 @@ class CataEditeur:
 
   def shell(self,event=None):
       import Interp
-      d={'j':self.tree.item.object}
+      d={'j':self.tree.item.getObject()}
       Interp.InterpWindow(d,parent=self.parent)
       
   def visuCR(self,mode='Cata'):

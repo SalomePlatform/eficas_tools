@@ -47,11 +47,24 @@ class MCList:
       else:
         return 0
 
+  def isrepetable(self):
+    """
+       Indique si l'objet est répétable.
+       Retourne 1 si le mot-clé facteur self peut être répété
+       Retourne 0 dans le cas contraire
+    """
+    if self.data[0].definition.max > 1:
+       # marche avec '**'
+       return 1
+    else :
+       return 0
+
   def isoblig(self):
      """
      Une MCList n'est jamais obligatoire (même si le MCFACT qu'elle représente l'est
      """
-     return 0
+     return self.data[0].definition.statut=='o'
+     #return 0
 
   def liste_mc_presents(self):
     return []
@@ -123,6 +136,14 @@ class MCList:
     self.state = 'modified'
     if self.parent:
       self.parent.init_modif()
+
+  def fin_modif(self):
+    """
+      Méthode appelée après qu'une modification a été faite afin de déclencher
+      d'éventuels traitements post-modification
+    """
+    if self.parent:
+      self.parent.fin_modif()
 
   def get_genealogie(self):
      """

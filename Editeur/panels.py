@@ -493,11 +493,10 @@ class OngletPanel(Panel) :
       nom = string.strip(nom)
       if nom == '' : return # si pas de nom, on ressort sans rien faire ...
       if self.parent.modified == 'n' : self.parent.init_modif()
-      # Pourquoi node.etape ???
-      #test,mess = self.node.etape.item.nomme_sd(nom)
       test,mess = self.node.item.nomme_sd(nom)
-      self.parent.appli.affiche_infos(mess)
+      self.node.verif()
       self.node.racine.update()
+      self.parent.appli.affiche_infos(mess)
   
   def changed(self):
       pass

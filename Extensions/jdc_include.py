@@ -59,7 +59,7 @@ class JDC_POURSUITE(JDC):
           non utilise
           Ajoute un prefixe s'il est specifie (INCLUDE_MATERIAU)
           Si le nom est deja utilise, leve une exception
-          Met le concept créé dans le concept global g_context
+          Met le concept créé dans le contexe global g_context
       """
       if self.prefix_include:
           if sdnom != self.prefix_include:sdnom=self.prefix_include+sdnom
@@ -67,11 +67,13 @@ class JDC_POURSUITE(JDC):
       if isinstance(o,ASSD):
          raise AsException("Nom de concept deja defini : %s" % sdnom)
 
-      # Il faut verifier en plus que le jdc_pere apres l'etape etape_include
+      # On pourrait verifier que le jdc_pere apres l'etape etape_include
       # ne contient pas deja un concept de ce nom
-      #if self.jdc_pere.get_sd_apres_etape(sdnom,etape=self.etape_include):
+      #if self.jdc_pere.get_sd_apres_etape_avec_detruire(sdnom,etape=self.etape_include):
          # Il existe un concept apres self => impossible d'inserer
       #   raise AsException("Nom de concept deja defini : %s" % sdnom)
+      # On a choisi de ne pas faire ce test ici mais de le faire en bloc
+      # si necessaire apres en appelant la methode verif_contexte
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
       # Ajoute a la creation (appel de reg_sd).
@@ -81,6 +83,33 @@ class JDC_POURSUITE(JDC):
       # En plus si restrict vaut 'non', on insere le concept dans le contexte du JDC
       if restrict == 'non':
          self.g_context[sdnom]=sd
+
+   def get_verif_contexte(self):
+      j_context=self.get_contexte_avant(None)
+      self.verif_contexte(j_context)
+      return j_context
+
+   def verif_contexte(self,context):
+      """
+         Cette methode verifie si le contexte passé en argument (context)
+         peut etre inséré dans le jdc pere de l'include.
+         Elle verifie que les concepts contenus dans ce contexte n'entrent
+         pas en conflit avec les concepts produits dans le jdc pere
+         apres l'include.
+         Si le contexte ne peut pas etre inséré, la méthode leve une
+         exception sinon elle retourne le contexte inchangé
+      """
+      for nom_sd,sd in context.items():
+        if not isinstance(sd,ASSD):continue
+        if self.jdc_pere.get_sd_apres_etape_avec_detruire(nom_sd,sd,
+                                                       etape=self.etape_include):
+           # Il existe un concept produit par une etape apres self 
+           # => impossible d'inserer
+           raise Exception("Impossible d'inclure le fichier. Un concept de nom " +
+                           "%s existe déjà dans le jeu de commandes." % nom_sd)
+
+      return context
+
 
 class JDC_INCLUDE(JDC_POURSUITE):
    def active_etapes(self):

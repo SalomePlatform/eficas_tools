@@ -27,7 +27,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.13 2003/09/25 15:25:10 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.14 2004/09/10 15:51:52 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -66,7 +66,7 @@ class Tree :
     def build_children(self):
         """ Construit la liste des enfants de self """
         self.children = []
-        child = Node(self,self.item,self.command,self.rmenu)
+        child = self.item.itemNode(self,self.item,self.command,self.rmenu)
         self.children.append(child)
         child.state='expanded'
 
@@ -184,7 +184,7 @@ class Node :
         sublist = self.item._GetSubList()
         if not sublist : return
         for item in sublist :
-            child = Node(self,item,self.command,self.rmenu)
+            child = item.itemNode(self,item,self.command,self.rmenu)
             self.children.append(child)
             
     #-----------------------------------------------
@@ -525,8 +525,8 @@ class Node :
 	    print "Erreur dans move :"
             print self
             print self.item
-            print self.item.object
-            print self.item.object.definition.label
+            print self.item.getObject()
+            print self.item.getObject().definition.label
             print 'y=',self.y
             print 'dy=',dy
         # on déplace tous les items de dy
@@ -548,7 +548,7 @@ class Node :
             except:
 	        print "Erreur dans trace_ligne :"
                 print child
-                print child.item.object
+                print child.item.getObject()
 
     def last_child(self):
         lchild=self
@@ -566,6 +566,10 @@ class Node :
         self.delete_node_child(node1)
         self.children.insert(index,node2)
         
+    def replace_enfant(self,item):
+        """ Retourne le noeud fils à éventuellement remplacer """
+        return self.get_node_fils(item.get_nom())
+
     def full_creation(self,name,pos=None):
         """
             Interface avec ACCAS : création de l'objet de nom name et
@@ -575,25 +579,14 @@ class Node :
         if item == None or item == 0:
             # impossible d'ajouter le noeud de nom : name
             return 0
-        nature = item.get_nature()
-        if nature in ("COMMANDE","OPERATEUR","PROCEDURE","COMMENTAIRE",
-                      "PARAMETRE","COMMANDE_COMMENTARISEE","PARAMETRE_EVAL"):
-            # on veut ajouter une commande ou un commentaire ou un paramètre
-            # il ne faut pas rechercher un même objet déjà existant
-            # à modifier : il faut tester l'attribut 'repetable' 
-            enfant = None
-        elif self.item.object.isMCList():
-            # Dans ce cas on ne fait pas de remplacement. On ne cherche pas un objet de meme nom
-            enfant=None
-        else :
-            enfant = self.get_node_fils(item.get_nom())
+
+        enfant = self.replace_enfant(item)
         if enfant :
-            # un fils de même nom existe déjà : on remplace
-            # un MCFACT (ou une MCList) par une (autre) MCList
-            child = Node(self,item,self.command,self.rmenu)
+            # un fils de même nom existe déjà : on le remplace
+            child = item.itemNode(self,item,self.command,self.rmenu)
             self.replace_node(enfant,child)
         else :            
-            child = Node(self, item,self.command,self.rmenu)
+            child = item.itemNode(self, item,self.command,self.rmenu)
             if pos is None:
                 self.children.append(child)
             else :
@@ -639,12 +632,8 @@ class Node :
            child.state = 'expanded'
         if not child.children : child.build_children()
         if verif == 'oui':
-            test = child.item.isMCList()
-            if test :
-                child.children[-1].verif_condition()
-            else :
-                child.verif_condition()
-            self.verif_condition()
+           child.verif_condition()
+           self.verif_condition()
         return child
             
     def append_child(self,name,pos=None,verif='oui',retour='non'):
@@ -701,104 +690,36 @@ class Node :
     def delete(self):
         """ Méthode externe pour la destruction du noeud ET de l'objet
             Gère l'update du canvas"""
-        if self.parent.item.isMCList():
-            pere = self.parent.parent
-            nbold = pere.get_nb_children()
-            if self.parent.delete_child(self):
-                self.parent.traite_mclist()
+        pere = self.parent
+        nbold = pere.get_nb_children()
+
+        if self.parent.delete_child(self):
             if self.item.get_position() == 'global':
                 self.etape.verif_all()
             elif self.item.get_position() == 'global_jdc':
                 self.racine.verif_all()
             else:
                 self.parent.verif_condition()
-            nbnew = pere.get_nb_children()
         else:
-            pere = self.parent
-            nbold = pere.get_nb_children()
-            if self.parent.delete_child(self):
-                if self.item.get_position() == 'global':
-                    self.etape.verif_all()
-                elif self.item.get_position() == 'global_jdc':
-                    self.racine.verif_all()
-                else:
-                    self.parent.verif_condition()
-            else :
-                print 'Erreur dans la destruction de ',self.item.get_nom(),' dans delete'
-            nbnew = pere.get_nb_children()
+            print 'Erreur dans la destruction de ',self.item.get_nom(),' dans delete'
+
+        nbnew = pere.get_nb_children()
         pere.redraw(nbnew-nbold)
 	pere.select()
 
-    def copynode(self,node,pos) :
-        """ node est le noeud à copier à la position pos de self ( = parent de node) """
-        objet_copie = node.item.get_copie_objet()
-        child = self.full_creation(node.item,pos)
-        child.displayed = node.displayed
-        #child.image_id = node.image_id
-        #child.label_id = node.label_id
-        if child.item.get_nature() == "MCList":
-            child.item.object[-1].mc_liste = objet_copie.mc_liste
-        else :
-            try :
-                child.item.object.mc_liste = objet_copie.mc_liste
-            except:
-                traceback.print_exc()
+    def doPaste(self,node_selected):
+        self.appli.message="Vous ne pouvez copier que des commandes ou des mots-clés facteurs !"
+        return 0
 
     #--------------------------------------------------------------
     # Méthodes de vérification du contexte et de validité du noeud
     #--------------------------------------------------------------
-    def traite_mclist_OLD(self):
-        """ Dans le cas d'une MCList il faut vérifier qu'elle n'est pas vide
-            ou réduite à un seul élément suite à une destruction
-        """
-        # self représente une MCList
-	print "on passe par traite_mclist ",len(self.item)
-        if len(self.item) == 0 :
-            # la liste est vide : il faut la supprimer
-            self.delete()
-        elif len(self.item) == 1:
-            # il ne reste plus qu'un élément dans la liste
-            # il faut supprimer la liste et créer directement l'objet
-            index = self.parent.children.index(self)
-            noeud = self.children[0]
-            if self.parent.delete_child(self):
-                self.parent.append_node_child(noeud.item,pos=index,verif='non')
-            else:
-	        print "destruction de self impossible !"
-            #if self.parent.delete_child(self):
-            #    self.parent.copynode(self.children[0],index)
-            #else :
-            #    print 'erreur dans la destruction de :',self.item.get_nom(),' dans traite_mclist'
-        else :
-            return
-
-    def traite_mclist(self):
-        """ Dans le cas d'une MCList il faut vérifier qu'elle n'est pas vide
-            ou réduite à un seul élément suite à une destruction
-        """
-        # self représente une MCList
-        if len(self.item) == 0 :
-            # la liste est vide : il faut la supprimer
-            self.delete()
-        elif len(self.item) == 1:
-            # il ne reste plus qu'un élément dans la liste
-            # il faut supprimer la liste et créer directement l'objet
-            index = self.parent.children.index(self)
-            noeud = self.children[0]
-	    noeud.parent = self.parent
-	    self.parent.delete_node_child(self)
-            self.parent.item.replace_child(self.item,noeud.item)
-	    self.parent.children.insert(index,noeud)
-        else :
-            return
-	    
     def verif_all(self):
         self.verif_all_children()
             
     def verif_all_children(self):
         if not self.children : self.build_children()
-        if self.nature != 'JDC' :
-            self.verif()
+        self.verif()
         for child in self.children :
             child.verif_all_children()
 
@@ -819,7 +740,6 @@ class Node :
         on crée ou supprime les noeuds concernés
         (self est d'un niveau inférieur ou égal à l'ETAPE)
         """
-        if self.item.object.__class__.__name__ == 'ETAPE_NIVEAU': return 0
         test = 0
         l_bloc_arajouter,l_bloc_aenlever = self.verif_condition_bloc()
         if len(l_bloc_arajouter) > 0:

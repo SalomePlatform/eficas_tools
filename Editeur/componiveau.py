@@ -40,8 +40,24 @@ class NIVEAUPanel(panels.OngletPanel):
         self.bouton_com.pack_forget()
         self.makeJDCPage(panneau.pane('left'))
 
+import treewidget
+class Node(treewidget.Node):
+    def verif_condition(self):
+        """
+        on lance la vérification des conditions de chaque bloc de self
+        on crée ou supprime les noeuds concernés
+        (self est d'un niveau inférieur ou égal à l'ETAPE)
+        """
+        return 0
+
+    def replace_enfant(self,item):
+        """ Retourne le noeud fils à éventuellement remplacer """
+        return None
+
+
 class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
   panel = NIVEAUPanel
+  itemNode=Node
 
   def isactif(self):
       return self.object.isactif()
@@ -73,9 +89,6 @@ class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
       else:
           return "ast-white-text"
   
-  def keys_old(self):
-    return range(len(self.object.etapes))
-
   def keys(self):
       if self.object.etapes_niveaux != []:
           return range(len(self.object.etapes_niveaux))
@@ -101,7 +114,7 @@ class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def additem(self,name,pos):
       if isinstance(name,Objecttreeitem.TreeItem) :
-          cmd=self.object.addentite(name.object,pos)
+          cmd=self.object.addentite(name.getObject(),pos)
       else :
           cmd = self.object.addentite(name,pos)
       item = self.make_objecttreeitem(self.appli,cmd.nom + " : ", cmd)
@@ -109,16 +122,19 @@ class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def suppitem(self,item) :
     # item = item de l'ETAPE à supprimer du JDC
-    # item.object = ETAPE ou COMMENTAIRE
+    # item.getObject() = ETAPE ou COMMENTAIRE
     # self.object = JDC
-    self.object.suppentite(item.object)
-    if isinstance(item.object,commentaire.COMMENTAIRE):
-        message = "Commentaire supprimé"
-        self.appli.affiche_infos(message)
-    else :
-        message = "Commande " + item.object.nom + " supprimée"
-        self.appli.affiche_infos(message)
-    return 1
+    itemobject=item.getObject()
+    if self.object.suppentite(itemobject):
+       if isinstance(item.object,commentaire.COMMENTAIRE):
+          message = "Commentaire supprimé"
+       else :
+          message = "Commande " + itemobject.nom + " supprimée"
+       self.appli.affiche_infos(message)
+       return 1
+    else:
+       self.appli.affiche_infos("Pb interne : impossible de supprimer cet objet")
+       return 0
 
   def GetText(self):
       return ''

@@ -31,7 +31,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_reduit.py,v 1.4 2004/01/29 18:16:48 eficas Exp $"
+__Id__="$Id: cata_reduit.py,v 1.5 2004/09/10 15:51:43 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
@@ -535,6 +535,30 @@ BLOCBLOC=OPER(nom="BLOCBLOC",op=1,sd_prod=toto,
                                c_unit4       =BLOC(condition = "TOTO4 == 'AAA'", UNITE4   =SIMP(statut='f',typ='I',defaut=25),),
                               ),
              )
+
+CARDFACT=OPER(nom="CARDFACT",op=1,sd_prod=toto,reentrant='f',
+              A=FACT(F=SIMP(typ='TXM')),
+              B=FACT(statut='f',F=SIMP(typ='TXM')),
+              C=FACT(statut='o',F=SIMP(typ='TXM')),
+              D=FACT(statut='f',min=3,max=5,F=SIMP(typ='TXM')),
+              E=FACT(statut='o',min=3,max=5,F=SIMP(typ='TXM')),
+              F=FACT(statut='o',min=3,max=5,F=SIMP(statut='o',typ='TXM')),
+              TOTO=SIMP(typ='TXM'),
+              bl=BLOC(condition="TOTO=='a'",
+                      DD=FACT(statut='f',min=3,max=5,F=SIMP(typ='TXM')),
+                      DE=FACT(statut='o',min=3,max=5,F=SIMP(typ='TXM')),
+                      DF=FACT(statut='o',min=3,max=5,F=SIMP(statut='o',typ='TXM')),
+                     ),
+              bl2=BLOC(condition="reuse",
+                      ED=FACT(statut='f',min=3,max=5,F=SIMP(typ='TXM')),
+                      EE=FACT(statut='o',min=3,max=5,F=SIMP(typ='TXM')),
+                      EF=FACT(statut='o',min=3,max=5,F=SIMP(statut='o',typ='TXM')),
+                     ),
+              X=FACT(statut='f',min=3,max=5,F=FACT(max=3,X=SIMP(typ='TXM'),
+                                                   Y=FACT(max=3,Z=SIMP(typ='TXM'),),
+                                                  ),
+                    ),
+	     )
 
 #& MODIF COMMANDE  DATE 21/03/2003   AUTEUR ASSIRE A.ASSIRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION

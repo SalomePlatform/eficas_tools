@@ -33,23 +33,10 @@ class BLOCTreeItem(compofact.FACTTreeItem):
           if v.nom == name : return v
       return None
     
-  def additem(self,name,pos):
-      if isinstance(name,Objecttreeitem.ObjectTreeItem) :
-          mcent=self.object.addentite(name.object,pos=pos)
-      else :
-          mcent = self.object.addentite(name,pos=pos)
-      if mcent == 0 :
-        # on ne peut ajouter l'élément de nom name
-        return 0
-      self.expandable=1
-      def setfunction(value, object=mcent):
-          object.setval(value)
-      item = self.make_objecttreeitem(self.appli,mcent.nom + " : ", mcent, setfunction)
-      return item
-
   def iscopiable(self):
     return 0
-  
+
+
 import Accas
 treeitem = BLOCTreeItem
 objet = Accas.MCBLOC   

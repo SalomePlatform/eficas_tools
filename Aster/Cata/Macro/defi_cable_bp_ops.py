@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#@ MODIF defi_cable_bp_ops Macro  DATE 19/01/2004   AUTEUR DURAND C.DURAND 
+#@ MODIF defi_cable_bp_ops Macro  DATE 17/08/2004   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -79,7 +79,7 @@ def defi_cable_bp_ops(self,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM,GROUP_MA_BETON,
   # RECUPERATION DES INFOS DONNEES PAR LE MOT-CLE "CONE"
 
   if CONE:
-    dCONE=CONE.cree_dict_valeurs(CONE.mc_liste)
+    dCONE=CONE[0].cree_dict_valeurs(CONE[0].mc_liste)
     for i in dCONE.keys():
       if dCONE[i]==None : del dCONE[i]
 
@@ -122,18 +122,11 @@ def defi_cable_bp_ops(self,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM,GROUP_MA_BETON,
 
   # RECUPERATION DES INFOS DONNEES PAR LE MOT-CLE "DEFI_CABLE"
 
-  if DEFI_CABLE.__class__.__name__=='MCList' :
-     dDEFI_CABLE=[]
-     for j in DEFI_CABLE :
-         dDEFI_CABLE.append(j.cree_dict_valeurs(j.mc_liste))
-         for i in dDEFI_CABLE[-1].keys():
-             if dDEFI_CABLE[-1][i]==None : del dDEFI_CABLE[-1][i]
-
-  elif DEFI_CABLE.__class__.__name__=='MCFACT' :
-     dDEFI_CABLE=[]
-     dDEFI_CABLE.append(DEFI_CABLE.cree_dict_valeurs(DEFI_CABLE.mc_liste))
-     for i in dDEFI_CABLE[-1].keys():
-         if dDEFI_CABLE[-1][i]==None : del dDEFI_CABLE[-1][i]
+  dDEFI_CABLE=[]
+  for j in DEFI_CABLE :
+      dDEFI_CABLE.append(j.cree_dict_valeurs(j.mc_liste))
+      for i in dDEFI_CABLE[-1].keys():
+          if dDEFI_CABLE[-1][i]==None : del dDEFI_CABLE[-1][i]
 
 
   # BOUCLE SUR LES FACTEURS DU MOT-CLE "DEFI_CABLE"
@@ -283,7 +276,7 @@ def defi_cable_bp_ops(self,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM,GROUP_MA_BETON,
   # LANCEMENT DE DEFI_CABLE_BP
 
   if RELAXATION:
-    dRelaxation=RELAXATION.cree_dict_valeurs(RELAXATION.mc_liste)
+    dRelaxation=RELAXATION[0].cree_dict_valeurs(RELAXATION[0].mc_liste)
     for i in dRelaxation.keys():
       if dRelaxation[i]==None : del dRelaxation[i]
 

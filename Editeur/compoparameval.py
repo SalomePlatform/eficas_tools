@@ -173,7 +173,7 @@ class PARAM_EVALPanel(panels.OngletPanel):
         self.parent.appli.affiche_infos("Expression EVAL refusée")
     else:
         self.parent.appli.affiche_infos("Expression EVAL acceptée")
-            
+
 class PARAM_EVALTreeItem(Objecttreeitem.ObjectTreeItem):
     """
     Classe servant à définir l'item porté par le noeud de l'arbre d'EFICAS

@@ -302,8 +302,6 @@ class BUREAU:
 	  if len(self.JDC.etapes) == 0 : return
 	  # dans le cas où le JDC est invalide, on affiche son CR
           if not self.JDC.isvalid():
-	  #cr = self.JDC.report()
-	  #if not cr.estvide() : 
 	     self.appli.top.update()
 	     self.visuCR(mode='JDC')
 

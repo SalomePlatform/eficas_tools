@@ -25,6 +25,8 @@ import types,string,os,glob,imp,sys
 from repr import Repr
 from copy import copy,deepcopy
 
+import treewidget
+
 myrepr = Repr()
 myrepr.maxstring = 100
 myrepr.maxother = 100
@@ -37,6 +39,16 @@ class TreeItem:
     is used.
 
     """
+    # itemNode est une factory qui doit retourner un objet de la classe Node
+    # ou dérivé de cette classe.
+    # Le widget arbre utilisera cet objet comme noeud associé au tree item.
+    # Par defaut, utilise la classe Node de base
+    # La signature de la factory est la suivante :
+    # itemNode(treeOrNode,item,command,rmenu)
+    # ou treeOrNode est le noeud parent, item est l'item associé
+    # command est une fonction python appelée sur sélection graphique
+    # du noeud et rmenu est une fonction python appelée sur click droit sur le noeud
+    itemNode=treewidget.Node
 
     def __init__(self):
         """Constructor.  Do whatever you need to do."""
@@ -123,7 +135,9 @@ class ObjectTreeItem(TreeItem,Delegate):
         self.labeltext = labeltext
         self.appli = appli
         Delegate.__init__(self,object)
-        #self.object = object
+	# On cache l'objet initial (pour destruction eventuelle
+	# ultérieure)
+        self._object = object
         self.setfunction = setfunction
         self.expandable = 1
         self.init()
@@ -131,11 +145,14 @@ class ObjectTreeItem(TreeItem,Delegate):
     def init(self):
         return
 
+    def getObject(self):
+        return self._object
+
     def copy(self):
         """
         Crée un item copie de self
         """
-        object = self.object.copy()
+        object = self._object.copy()
         appli = copy(self.appli)
         labeltext = copy(self.labeltext)
         fonction = deepcopy(self.setfunction)
@@ -156,13 +173,6 @@ class ObjectTreeItem(TreeItem,Delegate):
         """
         # None --> fonte et couleur par défaut
         return self.labeltext,None,None
-
-    #def get_attribut(self,nom_attribut) :
-    #    """ 
-    #       Retourne l'attribut de nom nom_attribut de l'objet sur lequel
-    #       pointe self s'il existe, None sinon
-    #    """
-    #    return self.object.get_attribut(nom_attribut)
 
     def get_nature(self) :
         """ 
@@ -250,7 +260,6 @@ class ObjectTreeItem(TreeItem,Delegate):
     def get_jdc(self):
         """ Retourne le jdc auquel appartient l'objet pointé par self """
         return self.object.jdc
-        #return self.object.get_attribut('jdc')
     
     def get_valeur(self):
         """ Retourne la valeur de l'objet pointé par self """
@@ -277,32 +286,6 @@ class ObjectTreeItem(TreeItem,Delegate):
         """
         Retourne 1 si l'objet est copiable, 0 sinon
         Par défaut retourne 0
-        """
-        return 0
-    
-    def isMCList(self):
-        """ Retourne 1 si l'objet pointé par self est une MClist, 0 sinon"""
-        #if isinstance(self.object,MCList) :
-        if self.object.__class__.__name__ == 'MCList':
-            return 1
-        else :
-            return 0
-
-    def isCommande(self):
-        """
-        Retourne 1 si l'objet pointé par self est une Commande, 0 sinon
-        """
-        return 0
-
-    def isJdc(self):
-        """
-        Retourne 1 si l'objet pointé par self est un JDC, 0 sinon
-        """
-        return 0
-
-    def isMCFact(self):
-        """
-        Retourne 1 si l'objet pointé par self est un MCFact, 0 sinon
         """
         return 0
     
@@ -385,44 +368,42 @@ class AtomicObjectTreeItem(ObjectTreeItem):
 
 class SequenceTreeItem(ObjectTreeItem):
     def IsExpandable(self):
-        return len(self.object) > 0
+        return len(self._object) > 0
 
     def __len__(self) :
-        return len(self.object)
+        return len(self._object)
    
     def keys(self):
-        return range(len(self.object))
+        return range(len(self._object))
 
     def GetIconName(self):
-        if self.object.isvalid():
+        if self._object.isvalid():
           return "ast-green-los"
-        elif self.object.isoblig():
+        elif self._object.isoblig():
           return "ast-red-los"
         else:
           return "ast-yel-los"
 
     def ajout_possible(self):
-        return self.object.ajout_possible()
+        return self._object.ajout_possible()
 
     def get_index(self,child):
         """ Retourne le numéro de child dans la liste des enfants de self """
-        return self.object.get_index(child.object)
+        return self._object.get_index(child.getObject())
 
     def GetText(self):
       return  "    "
 
     def additem(self,obj,pos):
-        # XXX Passer par addentite  de MCList ???
-        self.object.insert(pos,obj)
+        self._object.insert(pos,obj)
         item = self.make_objecttreeitem(self.appli, obj.nom + ":", obj)
         return item
 
     def suppitem(self,item):
-        if not self.object.isMCList():return 1
         try :
-            self.object.remove(item.object)
+            self._object.remove(item.getObject())
             # la liste peut être retournée vide !
-            message = "Mot-clé " + item.object.nom + " supprimé"
+            message = "Mot-clé " + item.getObject().nom + " supprimé"
             self.appli.affiche_infos(message)
             return 1
         except:
@@ -430,7 +411,7 @@ class SequenceTreeItem(ObjectTreeItem):
 
     def GetSubList(self):
         sublist = []
-        for obj in self.object.data:
+        for obj in self._object.data:
             def setfunction(value, object=obj):
                 object = value
             item = make_objecttreeitem(self.appli, obj.nom + ":", obj, setfunction)

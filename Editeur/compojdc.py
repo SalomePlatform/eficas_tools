@@ -58,19 +58,33 @@ class JDCPanel(panels.OngletPanel):
     Liste.MCbox.bind("<Button-3>", lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
     Liste.MCbox.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
 
+import treewidget
+class Node(treewidget.Node):
+    def verif_all_children(self):
+        if not self.children : self.build_children()
+        for child in self.children :
+            child.verif_all_children()
+
+    def replace_enfant(self,item):
+        """ Retourne le noeud fils à éventuellement remplacer """
+        return None
+
+    def doPaste_Commande(self,objet_a_copier):
+        """
+          Réalise la copie de l'objet passé en argument qui est nécessairement
+          une commande
+        """
+        child = self.append_child(objet_a_copier,pos='first',retour='oui')
+        return child
+
+
 class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
   panel = JDCPanel
+  itemNode=Node
   
   def IsExpandable(self):
-#    return len(self.object.etapes) > 0
     return 1
 
-  def isJdc(self):
-      """
-      Retourne 1 si l'objet pointé par self est un JDC, 0 sinon
-      """
-      return 1
-    
   def GetText(self):
       return  "    "
 
@@ -94,7 +108,7 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def additem(self,name,pos):
       if isinstance(name,Objecttreeitem.ObjectTreeItem) :
-          cmd=self.object.addentite(name.object,pos)
+          cmd=self.object.addentite(name.getObject(),pos)
       else :
           cmd = self.object.addentite(name,pos)
       item = self.make_objecttreeitem(self.appli,cmd.nom + " : ", cmd)
@@ -102,16 +116,19 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def suppitem(self,item) :
     # item = item de l'ETAPE à supprimer du JDC
-    # item.object = ETAPE ou COMMENTAIRE
+    # item.getObject() = ETAPE ou COMMENTAIRE
     # self.object = JDC
-    self.object.suppentite(item.object)
-    if item.object.nature == "COMMENTAIRE" :
-        message = "Commentaire supprimé"
-        self.appli.affiche_infos(message)
-    else :
-        message = "Commande " + item.object.nom + " supprimée"
-        self.appli.affiche_infos(message)
-    return 1
+    itemobject=item.getObject()
+    if self.object.suppentite(itemobject):
+       if itemobject.nature == "COMMENTAIRE" :
+          message = "Commentaire supprimé"
+       else :
+          message = "Commande " + itemobject.nom + " supprimée"
+       self.appli.affiche_infos(message)
+       return 1
+    else:
+       self.appli.affiche_infos("Pb interne : impossible de supprimer cet objet")
+       return 0
 
   def GetSubList(self):
     sublist=[]

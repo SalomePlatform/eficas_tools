@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#@ MODIF reca_algo Macro  DATE 19/01/2004   AUTEUR DURAND C.DURAND 
+#@ MODIF reca_algo Macro  DATE 06/04/2004   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -72,7 +72,8 @@ class Dimension:
    
 #------------------------------------------
 def cond(matrix):
-    e=LinearAlgebra.eigenvalues(matrix)
+    e1=LinearAlgebra.eigenvalues(matrix)
+    e=map(abs,e1)
     size=len(e)
     e=Numeric.sort(e)
     try:
@@ -83,7 +84,7 @@ def cond(matrix):
 
 #-----------------------------------------
 def norm(matrix):
-    e=LinearAlgebra.eigenvalues(matrix)
+    e=LinearAlgebra.Heigenvalues(matrix)
     size=len(e)
     e=Numeric.sort(e)
     norm=e[size-1]
@@ -110,7 +111,7 @@ def temps_CPU(self,restant_old,temps_iter_old):
    # Fonction controlant le temps CPU restant
    CPU=INFO_EXEC_ASTER(LISTE_INFO = ("CPU_RESTANT",))
    TEMPS=CPU['CPU_RESTANT',1]
-   DETRUIRE(CONCEPT=_F(NOM='CPU'))
+   DETRUIRE(CONCEPT=_F(NOM='CPU'),INFO=1)
    err=0
    # Indique une execution interactive
    if (TEMPS>1.E+9):

@@ -93,8 +93,47 @@ class OPERPanel(panels.OngletPanel):
       except:
           traceback.print_exc()
 
+import treewidget
+class Node(treewidget.Node):
+    def doPaste(self,node_selected):
+        """
+            Déclenche la copie de l'objet item avec pour cible
+            l'objet passé en argument : node_selected
+        """
+        objet_a_copier = self.item.get_copie_objet()
+        child=node_selected.doPaste_Commande(objet_a_copier)
+        return child
+
+    def doPaste_Commande(self,objet_a_copier):
+        """
+          Réalise la copie de l'objet passé en argument qui est nécessairement
+          une commande
+        """
+        child = self.append_brother(objet_a_copier,retour='oui')
+        return child
+
+    def doPaste_MCF(self,objet_a_copier):
+        """
+           Réalise la copie de l'objet passé en argument (objet_a_copier)
+           Il s'agit forcément d'un mot clé facteur
+        """
+        child = self.append_child(objet_a_copier,pos='first',retour='oui')
+        return child
+
+
 class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
+  """ La classe EtapeTreeItem est un adaptateur des objets ETAPE du noyau
+      Accas. Elle leur permet d'etre affichés comme des noeuds
+      d'un arbre graphique.
+      Cette classe a entre autres deux attributs importants :
+        - _object qui est un pointeur vers l'objet du noyau
+        - object qui pointe vers l'objet auquel sont délégués les
+          appels de méthode et les accès aux attributs
+      Dans le cas d'une ETAPE, _object et object pointent vers le 
+      meme objet.
+  """
   panel = OPERPanel
+  itemNode=Node
   
   def IsExpandable(self):
       return 1
@@ -104,13 +143,12 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       Retourne le nom de l'icône à afficher dans l'arbre
       Ce nom dépend de la validité de l'objet
       """
-      if self.object.isactif():
-        if self.object.isvalid():
-          return "ast-green-square"
-        else:
-          return "ast-red-square"
+      if not self.object.isactif():
+         return "ast-white-square"
+      elif self.object.isvalid():
+         return "ast-green-square"
       else:
-        return "ast-white-square"
+         return "ast-red-square"
 
   def GetLabelText(self):
       """ Retourne 3 valeurs :
@@ -141,7 +179,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def additem(self,name,pos):
       if isinstance(name,Objecttreeitem.ObjectTreeItem) :
-          mcent = self.object.addentite(name.object,pos)
+          mcent = self.object.addentite(name.getObject(),pos)
       else :
           mcent = self.object.addentite(name,pos)
       self.expandable=1
@@ -155,15 +193,18 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def suppitem(self,item) :
       # item : item du MOCLE de l'ETAPE à supprimer
-      # item.object = MCSIMP, MCFACT, MCBLOC ou MCList 
-      if item.object.isoblig() :
+      # item.getObject() = MCSIMP, MCFACT, MCBLOC ou MCList 
+      itemobject=item.getObject()
+      if itemobject.isoblig() :
           self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ')
           return 0
-      else :
-          self.object.suppentite(item.object)
-          message = "Mot-clé " + item.object.nom + " supprimé"
+      if self.object.suppentite(itemobject):
+          message = "Mot-clé " + itemobject.nom + " supprimé"
           self.appli.affiche_infos(message)
           return 1
+      else :
+          self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-clé')
+          return 0
 
   def GetText(self):
       try:
@@ -193,12 +234,6 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       return 1
 
-  def isCommande(self):
-      """
-      Retourne 1 si l'objet pointé par self est une Commande, 0 sinon
-      """
-      return 1
-      
   def verif_condition_bloc(self):
       return self.object.verif_condition_bloc()
 
@@ -237,12 +272,14 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def replace_child(self,old_item,new_item):
      """
-     Remplace old_item.object par new_item.object dans les fils de self.object
+     Remplace old_item.getObject() par new_item.getObject() dans 
+     les fils de self.object
      """
-     index = self.object.mc_liste.index(old_item.object)
+     old_itemobject=old_item.getObject()
+     index = self.object.mc_liste.index(old_itemobject)
      self.object.init_modif()
-     self.object.mc_liste.remove(old_item.object)
-     self.object.mc_liste.insert(index,new_item.object)
+     self.object.mc_liste.remove(old_itemobject)
+     self.object.mc_liste.insert(index,new_item.getObject())
      self.object.fin_modif()
      
 import Accas

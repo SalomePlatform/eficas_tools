@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#@ MODIF macr_aspic_mail_ops Macro  DATE 30/01/2004   AUTEUR CIBHHLV L.VIVAN 
+#@ MODIF macr_aspic_mail_ops Macro  DATE 17/08/2004   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17,6 +17,8 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
+
+from math import sqrt,cos,sin,pi,pow,tan
 
 # Ecriture du fichier GIBI principal (dgib) - ASPID0
 def write_file_dgib_ASPID0(nomFichierDATG,UNITD, EPT1, DET1, D1, D2, EPT2, DET2, ZMAX, H,
@@ -111,8 +113,233 @@ def write_file_dgib_ASPID2(nomFichierDATG,UNITD, EPT1, DET1, D1, D2, EPT2, DET2,
                            THETA, A, C, EPS, RC0, RC1, RC2, RC3,
                            ALP,BETA, NS, NC, NT, POSI ,NDT,NSDT,TFISS,
                            ZETA,ITYPSO,DPENE, NIVMAG, loc_datg) :
+# 
+  CALPHA = cos(ALPHA*pi/180.)
+  SALPHA = sin(ALPHA*pi/180.)
+  CTHETA = cos(THETA*pi/180.)
+  STHETA = sin(THETA*pi/180.)
+#
+  AOLD = A
+#
+  if (ITYPSO == 1) :
+# PIQUAGE TYPE 1
+     if (POSI == 'DROIT') :
+#    PIQUAGE DROIT
+        if (TFISS == 'DEB_INT') :
+#       POSITION INTERNE
+           SGAMMA = STHETA * (DET1/2.0)/( (DEC/2.0) -EPC)
+           SGAMME = STHETA * (DET1/2.0)/( (DEC/2.0) )
+           RAPPA = sqrt(1.0 - pow(SGAMMA,2))
+           RAPPE = sqrt(1.0 - pow(SGAMME,2))
+           AP =  A - (1.0 - RAPPA)*A  
+           RAPP = (AP/EPC*RAPPE) + (1.0-(AP/EPC))*RAPPA
+           XA = (DET1/2.0) * CTHETA 
+           YA = (DET1/2.0) * STHETA      
+           ZA = ((DEC/2.0) -EPC) * sqrt(1.0 - pow(SGAMMA,2))
+           ZA0 = (DEC/2.0) - EPC
+           XA0 = DET1/2.0
+           XN0 = XA0
+           YN0 = 0.0 
+           ZN0 = ZA0 + A
+           XN = XN0 * CTHETA 
+           YN = XN0 * STHETA
+           SGAMN = YN / ZN0
+           ZN = ZN0 * sqrt(1.0 - (SGAMN*SGAMN))
+           D0N0 = sqrt( pow((XA0 - XN0),2) + pow((ZA0 - ZN0),2) )
+           DN = sqrt( pow((XA - XN),2) + pow((YA - YN),2) + pow((ZA - ZN),2) )
+           RAPP = D0N0 / DN
+           ECART = (1.0 - RAPP) * D0N0
+           A = A - ECART
+        elif (TFISS == 'DEB_EXT') :
+#       POSITION EXTERNE
+           SGAMME = STHETA * (DET1/2.0)/ (DEC/2.0) 
+           RAPPE = sqrt(1.0 - pow(SGAMME,2))
+           A =  A  -(1.0 - RAPPE)*A  
+
+     elif (POSI == 'INCLINE') :
+#    PIQUAGE INCLINE
+        SGAMMA = STHETA * (DET1/2.0)/ ( (DEC/2.0) -EPC)
+        XA = (DET1/2.0) * CTHETA 
+        YA = (DET1/2.0) * STHETA     
+        ZA = ((DEC/2.0) - EPC) * sqrt(1.0 - pow(SGAMMA,2))
+        ZA0 = (DEC/2.0) - EPC
+        ZD0 = DEC/2.0
+        XA0 = DET1/2.0
+        XD0 = XA0 + (tan(ALPHA*pi/180.0) * EPC)   
+        A0D0 = sqrt( pow((ZD0 - ZA0),2) + pow((XD0 - XA0),2) )
+        EPSIL = STHETA * tan(ALPHA*pi/180.0) 
+        PHI = (EPSIL * ZA) - YA
+        DELTA = pow(PHI,2) - ((1 + pow(EPSIL,2))*(pow(PHI,2) - (pow((DEC/2.0),2)*pow(EPSIL,2))))
+        if (THETA > 0) :          
+           YD = ( sqrt(DELTA) - PHI) / (1.0 + pow(EPSIL,2))
+        else :
+          YD = ( -1.0*sqrt(DELTA) - PHI) / (1.0 + pow(EPSIL,2))
+
+        ZD = sqrt(pow((DEC/2.0),2) - pow(YD,2))  
+
+        if ( (abs(THETA - 0.0) < 1.e-3) or ((abs(THETA - 180.0)) < 1.e-3) ) :
+           XD = CTHETA * XD0
+        else :
+           XD = YD / tan(THETA*pi/180.0)
+
+        AD = sqrt( pow((XA - XD),2) + pow((YA - YD),2) + pow((ZA - ZD),2) )       
+        RAPP =  A0D0 / AD          
+
+        if (TFISS == 'DEB_EXT') :       
+           XN0 = XD0 - A*SALPHA 
+           YN0 = 0.0 
+           ZN0 = ZD0 - A*CALPHA 
+           XN = XN0 * CTHETA 
+           YN = XN0 * STHETA
+           SGAMN = YN / ZN0
+           ZN = ZN0 * sqrt(1.0 - pow(SGAMN,2))
+           D0N0 = sqrt( pow((XD0 - XN0),2) + pow((ZD0 - ZN0),2) )
+           DN = sqrt( pow((XD - XN),2) + pow((YD - YN),2) + pow((ZD - ZN),2) )       
+           RAPP = D0N0 / DN
+           ECART = (RAPP - 1.0) * D0N0
+           A = A + ECART
+           
+        if (TFISS == 'DEB_INT') :
+           XN0 = XA0 + A*SALPHA 
+           YN0 = 0.0
+           ZN0 = ZA0 + A*CALPHA 
+           XN = XN0 * CTHETA 
+           YN = XN0 * STHETA
+           SGAMN = YN / ZN0
+           ZN = ZN0 * sqrt(1.0 - pow(SGAMN,2))
+           D0N0 = sqrt( pow((XA0 - XN0),2) + pow((ZA0 - ZN0),2) )
+           DN = sqrt( pow((XA - XN),2) + pow((YA - YN),2) + pow((ZA - ZN),2) )       
+           RAPP = D0N0 / DN
+           ECART = (RAPP - 1.0) * D0N0
+           A = A + ECART
+
+  elif (ITYPSO == 2) :
+# PIQUAGE TYPE 2
+     if (POSI == 'DROIT') :
+#    PIQUAGE DROIT
+        SGAMMI = STHETA * ((DET1/2.0) - EPT1)/(DEC/2.0)
+        XI = ((DET1/2.0) - EPT1) * CTHETA 
+        YI = ((DET1/2.0) - EPT1) * STHETA
+        ZI =  (DEC/2.0)  * sqrt(1.0 - pow(SGAMMI,2))
+        XI0 = (DET1/2.0) -EPT1
+        YI0 = 0.0 
+        ZI0 = (DEC/2.0)
+        
+        SGAMMA = STHETA * (DET1/2.0)/((DEC/2.0) -EPC)
+        YA = (DET1/2.0) * STHETA     
+        ZA = ((DEC/2.0) - EPC) * sqrt(1.0 - pow(SGAMMA,2))
+        TGALP = H / EPC
+        EPSIL =  STHETA * TGALP
+        PHI = (EPSIL * ZA) - YA
+        DELTA = pow(PHI,2) - (1.0 + pow(EPSIL,2))*(pow(PHI,2) - pow((DEC/2.0),2)*pow(EPSIL,2)) 
+        if (THETA > 0) :          
+           YD = (sqrt(DELTA) - PHI) / (1.0 + pow(EPSIL,2))
+        else :
+           YD = (-1.0*sqrt(DELTA) - PHI) / (1.0 + pow(EPSIL,2))
+
+        ZD = sqrt( pow((DEC/2.0),2) - pow(YD,2) )
+        if ( (abs(THETA - 0.0) < 1.0e-3) or
+             (abs(THETA - 180.0) < 1.0e-3) or
+             (abs(THETA + 180.0) < 1.0e-3) or
+             (abs(THETA + 90.0) < 1.0e-3) or
+             (abs(THETA - 90.0) < 1.0e-3) ) :
+           XD = CTHETA * ((DET1/2.0) + H)
+        else :
+           XD = YD / (tan(THETA*pi/180.0))
+
+        XD0 = (DET1/2.0) + H 
+        YD0 = 0.0 
+        ZD0 = (DEC/2.0) 
+        
+        if (TFISS == 'DEB_EXT') :
+           XN0 = XD0 - A
+           YN0 = 0.0 
+           ZN0 = ZI0 
+           XN = XN0 * CTHETA 
+           YN = XN0 * STHETA 
+           DZID = abs(ZI - ZD) 
+           DXYID = sqrt( pow((XD - XI),2) + pow((YD - YI),2) )
+           DXYIN = sqrt( pow((XN - XI),2) + pow((YN - YI),2) )
+           DZIN = (DXYIN * DZID) / DXYID
+           ZN = ZI - DZIN         
+           D0N0 = sqrt( pow((XD0 - XN0),2) + pow((ZD0 - ZN0),2) )
+           DN = sqrt( pow((XD - XN),2) + pow((YD - YN),2) + pow((ZD - ZN),2) ) 
+           RAPP = D0N0 / DN 
+           ECART = DN - D0N0 
+           A = A - ECART
+
+        if (TFISS == 'DEB_INT') :
+           XN0 = XI0 + A
+           YN0 = 0.0 
+           ZN0 = ZI0 
+           XN = XN0 * CTHETA
+           YN = XN0 * STHETA 
+           SGAMN = YN / ZN0 
+           ZN = ZN0 * sqrt(1.0 - pow(SGAMN,2))
+           I0N0 = sqrt( pow((XI0 - XN0),2) + pow((ZI0 - ZN0),2) ) 
+           IN = sqrt( pow((XI - XN),2) + pow((YI - YN),2) + pow((ZI - ZN),2) ) 
+           RAPP = I0N0 / IN 
+           ECART = I0N0 * ( 1.0 - RAPP ) 
+           A = A - ECART
+        
+     elif (POSI == 'INCLINE') :
+#    PIQUAGE INCLINE
+        TGALPHA = SALPHA/CALPHA
+        REPB = (DEC/2.0) + JEU + (EPT1*TGALPHA) 
+        SGAMB = (STHETA * DET1/2.0 ) / REPB 
+        CGAMB = sqrt(1.0 - pow(SGAMB,2)) 
+        XB = (DET1/2.0) * CTHETA
+        YB = (DET1/2.0) * STHETA
+        ZB = ( (DEC/2.0) + JEU + (EPT1*TGALPHA) ) * CGAMB
+        XB0 = (DET1/2.0)
+        YB0 = 0.0
+        ZB0 = (DEC/2.0) + JEU + (EPT1*TGALPHA)
+#
+        RIT1 = (DET1/2.0) - EPT1 
+        REPG = (DEC/2.0) + JEU 
+        SGAMG = ((STHETA ) * RIT1) / REPG
+        CGAMG = sqrt(1.0 - pow(SGAMG,2))
+        XG = RIT1 * CTHETA
+        YG = RIT1 * STHETA
+        ZG = ((DEC/2.0) + JEU) * CGAMG
+        XG0 = RIT1
+        YG0 = 0.0
+        ZG0 = (DEC/2.0) + JEU
+#
+        if (TFISS == 'DEB_INT')  :
+           XN0 = XG0 + A*CALPHA 
+           YN0 = 0.0
+           ZN0 = ZG0 + A*SALPHA 
+           XN = XN0 * CTHETA 
+           YN = XN0 * STHETA
+           SGAMN = YN / ZN0
+           ZN = ZN0 * sqrt(1.0 - pow(SGAMN,2))
+           G0N0 = sqrt( pow((XG0 - XN0),2) + pow((ZG0 - ZN0),2) )
+           GN = sqrt( pow((XG - XN),2) + pow((YG - YN),2) + pow((ZG - ZN),2) )
+           RAPP = G0N0 / GN
+           ECART = (RAPP - 1.0) * G0N0
+           A = A + ECART
+
+        if (TFISS == 'DEB_EXT') :
+           XN0 = XB0 - A*CALPHA
+           YN0 = 0.0
+           ZN0 = ZB0 - A*SALPHA
+           XN = XN0 * CTHETA
+           YN = XN0 * STHETA
+           SGAMN = YN / ZN0
+           ZN = ZN0 * sqrt(1.0 - pow(SGAMN,2))
+           B0N0 = sqrt( pow((XB0 - XN0),2) + pow((ZB0 - ZN0),2) )
+           BN = sqrt( pow((XB - XN),2) + pow((YB - YN),2) + pow((ZB - ZN),2) )
+           RAPP = B0N0 / BN
+           ECART = (RAPP - 1.0) * B0N0
+           A = A + ECART
+
+  print ' <MACR_ASPIC_MAIL> CORRECTION PROFONDEUR DEFAUT'
+  print ' PROFONDEUR SUR PIQUAGE   : ', AOLD
+  print ' PROFONDEUR SUR EQUERRE   : ', A
 
 # Ouverture du fichier d'entrée de commandes
+
   fdgib=open(nomFichierDATG,'w')
   POIVIR = ' ;                                         \n'
   texte='****************************************************************\n'
@@ -170,7 +397,6 @@ def macr_aspic_mail_ops(self,EXEC_MAILLAGE,TYPE_ELEM,RAFF_MAIL,TUBULURE,
   from Accas import _F
   import types
   import aster 
-  from math import sqrt,cos,sin,pi
   ier=0
   
 # On importe les definitions des commandes a utiliser dans la macro
@@ -181,7 +407,6 @@ def macr_aspic_mail_ops(self,EXEC_MAILLAGE,TYPE_ELEM,RAFF_MAIL,TUBULURE,
   MODI_MAILLAGE =self.get_cmd('MODI_MAILLAGE')
   AFFE_MODELE   =self.get_cmd('AFFE_MODELE')
   CREA_MAILLAGE =self.get_cmd('CREA_MAILLAGE')
-  DEFI_FICHIER  =self.get_cmd('DEFI_FICHIER')
   IMPR_RESU     =self.get_cmd('IMPR_RESU')
 
 # La macro compte pour 1 dans la numerotation des commandes
@@ -603,21 +828,16 @@ def macr_aspic_mail_ops(self,EXEC_MAILLAGE,TYPE_ELEM,RAFF_MAIL,TUBULURE,
                          )
 #
   if IMPRESSION!=None:
-     if IMPRESSION.__class__.__name__  !='MCList' : IMPRESSION  =[IMPRESSION,]
      for impr in IMPRESSION :
-#
-         if impr['FICHIER']!=None:
-            DEFI_FICHIER(FICHIER = impr['FICHIER'],
-                         UNITE   = impr['UNITE'  ] )
 #
          motscles={}
          if impr['FORMAT']=='IDEAS'  : motscles['VERSION']  =impr['VERSION']
          if impr['FORMAT']=='CASTEM' : motscles['NIVE_GIBI']=impr['NIVE_GIBI']
-         if impr['FICHIER']!=None    : motscles['FICHIER']  =impr['FICHIER']
-         impr_resu = _F( MAILLAGE = nomres,
-                         FORMAT   = impr['FORMAT'],
-                         **motscles)
-         IMPR_RESU( RESU = impr_resu )
+         if impr['UNITE']!=None      : motscles['UNITE']    =impr['UNITE']
+         impr_resu = _F( MAILLAGE = nomres,)
+#
+         IMPR_RESU( RESU = impr_resu, 
+                    FORMAT = impr['FORMAT'],**motscles )
 #
   return ier
 

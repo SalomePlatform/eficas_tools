@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#@ MODIF macr_aspic_calc_ops Macro  DATE 03/02/2004   AUTEUR LEBOUVIE F.LEBOUVIER 
+#@ MODIF macr_aspic_calc_ops Macro  DATE 17/08/2004   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -69,7 +69,6 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
   APPRES= ('PEAUINT ','LEVRTUBU','LEVRCORP')
 #------------------------------------------------------------------
 #
-  if mc_AFFE_MATERIAU.__class__.__name__!='MCList' : mc_AFFE_MATERIAU=[mc_AFFE_MATERIAU,]
   i=0
   for mate in mc_AFFE_MATERIAU:
      if mate['RCCM']=='OUI' :
@@ -105,14 +104,15 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
        return ier
 #
   if TORS_CORP!=None :
-     if TORS_CORP['NOEUD'] not in ('P1_CORP','P2_CORP') :
-       ier=ier+1
-       self.cr.fatal("""<E> <MACR_ASPIC_CALC> TORS_CORP[NOEUD] : on attend 'P1_CORP' ou 'P2_CORP'""")
-       return ier
-     if TORS_CORP['NOEUD']==EQUILIBRE['NOEUD'] :
-       ier=ier+1
-       self.cr.fatal("""<E> <MACR_ASPIC_CALC> on ne peut appliquer un torseur sur TORS_CORP[NOEUD] car ce noeud est bloque""")
-       return ier
+     for tors in TORS_CORP :
+         if tors['NOEUD'] not in ('P1_CORP','P2_CORP') :
+            ier=ier+1
+            self.cr.fatal("""<E> <MACR_ASPIC_CALC> TORS_CORP[NOEUD] : on attend 'P1_CORP' ou 'P2_CORP'""")
+            return ier
+         if tors['NOEUD']==EQUILIBRE['NOEUD'] :
+           ier=ier+1
+           self.cr.fatal("""<E> <MACR_ASPIC_CALC> on ne peut appliquer un torseur sur TORS_CORP[NOEUD] car ce noeud est bloque""")
+           return ier
 #
   if (TYPE_MAILLAGE[:4]=='SAIN') and (THETA_3D!=None) :
      ier=ier+1
@@ -260,7 +260,6 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 #         chargement mecanique : torseur sur le corps
 #
   if TORS_CORP!=None:
-     if TORS_CORP.__class__.__name__!='MCList' : TORS_CORP=[TORS_CORP,]
      __chtrc = [None]*6
      i=0
      for tors in TORS_CORP :
@@ -280,7 +279,6 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 #         chargement mecanique : torseur sur la tubulure
 #
   if TORS_TUBU!=None:
-     if TORS_TUBU.__class__.__name__!='MCList' : TORS_TUBU=[TORS_TUBU,]
      __chtrt = [None]*6
      i=0
      for tors in TORS_TUBU :
@@ -335,23 +333,23 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
   if COMP_ELAS!=None :
     motscles['COMP_ELAS'] =_F(GROUP_MA=GRMAIL[:-2] ,RELATION=COMP_ELAS['RELATION'])
 #
-  dSolveur=SOLVEUR.cree_dict_valeurs(SOLVEUR.mc_liste)
+  dSolveur=SOLVEUR[0].cree_dict_valeurs(SOLVEUR[0].mc_liste)
   for i in dSolveur.keys():
       if dSolveur[i]==None : del dSolveur[i]
 #
-  dConverg=CONVERGENCE.cree_dict_valeurs(CONVERGENCE.mc_liste)
+  dConverg=CONVERGENCE[0].cree_dict_valeurs(CONVERGENCE[0].mc_liste)
   for i in dConverg.keys():
       if dConverg[i]==None : del dConverg[i]
 #
-  dNewton=NEWTON.cree_dict_valeurs(NEWTON.mc_liste)
+  dNewton=NEWTON[0].cree_dict_valeurs(NEWTON[0].mc_liste)
   for i in dNewton.keys():
       if dNewton[i]==None : del dNewton[i]
 #
-  dRechlin=RECH_LINEAIRE.cree_dict_valeurs(RECH_LINEAIRE.mc_liste)
+  dRechlin=RECH_LINEAIRE[0].cree_dict_valeurs(RECH_LINEAIRE[0].mc_liste)
   for i in dRechlin.keys():
       if dRechlin[i]==None : del dRechlin[i]
 #
-  dIncrem=INCREMENT.cree_dict_valeurs(INCREMENT.mc_liste)
+  dIncrem=INCREMENT[0].cree_dict_valeurs(INCREMENT[0].mc_liste)
   for i in dIncrem.keys():
       if dIncrem[i]==None : del dIncrem[i]
 #
@@ -438,6 +436,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
         mcfact.append( _F(**mcsimp) )
       __pmpbsd=POST_RCCM(MATER       = MRCCM,
                          MAILLAGE    = MAILLAGE,
+                         TYPE_RESU_MECA = 'EVOLUTION',
                          TYPE_RESU   = 'VALE_MAX',
                          OPTION      = 'PM_PB',
                          SEGMENT     = mcfact,
@@ -524,6 +523,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
         mcfact.append( _F(**mcsimp) )
       __pmpbsi=POST_RCCM(MATER       = MRCCM,
                          MAILLAGE    = MAILLAGE,
+                         TYPE_RESU_MECA = 'EVOLUTION',
                          TYPE_RESU   = 'VALE_MAX',
                          OPTION      = 'PM_PB',
                          SEGMENT     = mcfact,
@@ -673,7 +673,6 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
                                 LEVRE_SUP = _F(GROUP_MA='LEVRCORP',),
                                 LEVRE_INF = _F(GROUP_MA='LEVRTUBU',),**motscles)
       if THETA_3D!=None:
-        if THETA_3D.__class__.__name__!='MCList' : THETA_3D=[THETA_3D,]
         for tht3d in THETA_3D : 
 #
 #          --- commande CALC_THETA ---
@@ -689,13 +688,11 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 #
           montit = 'G_THETA AVEC R_INF = '+str(tht3d['R_INF'])+' ET R_SUP = '+str(tht3d['R_SUP'])
           motscles={}
-          charge  =[]
-          if (PRES_REP['PRES_LEVRE']=='OUI') and (TYPE_MAILLAGE[-4:]=='_DEB') : charge.append(__chpres)
-          if ECHANGE  !=None                                                  : charge.append(chmeth  )
           if COMP_ELAS!=None:  motscles['COMP_ELAS']=  _F(TOUT     = 'OUI',
                                                           RELATION = COMP_ELAS['RELATION'],)
           if COMP_INCR!=None:  motscles['COMP_INCR']=  _F(RELATION = COMP_INCR['RELATION'],)
-          if charge!=[]:       motscles['CHARGE'   ]= charge
+          if mcfex!=[]:       motscles['EXCIT'] =mcfex
+          print motscles
           __gtheta = CALC_G_THETA_T( MODELE     = modele,
                                      CHAM_MATER = affmat,
                                      THETA      = __theta,
@@ -708,7 +705,6 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 #
           if OPTION=='CALC_G_MAX' :
             if BORNES!=None:
-              if BORNES.__class__.__name__!='MCList' : BORNES=[BORNES,]
               mcfact=[]
               for born in BORNES :
                 mcfact.append(_F( NUME_ORDRE = born['NUME_ORDRE'] ,
@@ -730,12 +726,9 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 #
           montit = 'G_LOCAL AVEC R_INF = '+str(tht3d['R_INF'])+' ET R_SUP = '+str(tht3d['R_SUP'])
           motscles={}
-          charge  =[]
-          if (PRES_REP['PRES_LEVRE']=='OUI') and (TYPE_MAILLAGE[-4:]=='_DEB') : charge.append(__chpres)
-          if ECHANGE  !=None                                                  : charge.append(chmeth  )
           if COMP_ELAS!=None:  motscles['COMP_ELAS'    ]=  _F(TOUT     = 'OUI',
                                                               RELATION = COMP_ELAS['RELATION'],)
-          if charge!=[]:       motscles['CHARGE'       ]= charge
+          if mcfex!=[]:       motscles['EXCIT'] =mcfex
           if FERME:
                                motscles['LISSAGE_THETA']= 'LAGRANGE'
                                motscles['LISSAGE_G'    ]= 'LAGRANGE'
@@ -752,7 +745,6 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 #
           if OPTION=='CALC_G_MAX_LOCAL' :
             if BORNES!=None:
-              if BORNES.__class__.__name__!='MCList' : BORNES=[BORNES,]
               motscles={}
               mcfact=[]
               if FERME:
@@ -781,6 +773,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
   if IMPRESSION!=None:
     mcfresu =[]
     motscles={}
+    motsclei={}
     if IMPRESSION['FORMAT'] in ('IDEAS','CASTEM') :
       ncham   =[]
       if IMPRESSION['NOM_CHAM']!=None :
@@ -802,10 +795,10 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
       elif IMPRESSION['INST']!=None :
                                   motscles['INST'      ]= IMPRESSION['INST']
     if IMPRESSION['FORMAT']=='IDEAS' :
-                                  motscles['VERSION'   ]= IMPRESSION['VERSION']
+                                  motsclei['VERSION'   ]= IMPRESSION['VERSION']
     if IMPRESSION['FORMAT']=='CASTEM' :
-                                  motscles['NIVE_GIBI' ]= IMPRESSION['NIVE_GIBI']
-    mcfresu.append(_F(MAILLAGE=MAILLAGE,RESULTAT=nomres,FORMAT=IMPRESSION['FORMAT'],**motscles))
+                                  motsclei['NIVE_GIBI' ]= IMPRESSION['NIVE_GIBI']
+    mcfresu.append(_F(MAILLAGE=MAILLAGE,RESULTAT=nomres,**motscles))
     if ECHANGE!=None:
       motscles={}
       if IMPRESSION['FORMAT'] in ('IDEAS','CASTEM') :
@@ -823,11 +816,12 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
         elif IMPRESSION['INST']!=None :
                                     motscles['INST'      ]= IMPRESSION['INST']
       if IMPRESSION['FORMAT']=='IDEAS' :
-                                    motscles['VERSION'   ]= IMPRESSION['VERSION']
+                                    motsclei['VERSION'   ]= IMPRESSION['VERSION']
       if IMPRESSION['FORMAT']=='CASTEM' :
-                                    motscles['NIVE_GIBI' ]= IMPRESSION['NIVE_GIBI']
-      mcfresu.append(_F(RESULTAT=nomres,FORMAT=IMPRESSION['FORMAT'],**motscles))
+                                    motsclei['NIVE_GIBI' ]= IMPRESSION['NIVE_GIBI']
+      mcfresu.append(_F(RESULTAT=nomres,**motscles))
     IMPR_RESU( MODELE = modele,
-               RESU   = mcfresu )
+               RESU   = mcfresu,
+               FORMAT=IMPRESSION['FORMAT'],**motsclei)
 #
   return ier

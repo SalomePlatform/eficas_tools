@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#@ MODIF N_JDC Noyau  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
+#@ MODIF N_JDC Noyau  DATE 18/05/2004   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -169,6 +169,7 @@ NONE = None
         # de commandes avant la fin
         # Fonctionnement normal, ne doit pas etre considere comme une erreur
         CONTEXT.unset_current_step()
+        self.traiter_fin_exec('commande')
 
       except AsException,e:
         # une erreur a ete identifiee
@@ -190,6 +191,7 @@ NONE = None
       except self.UserError,exc_val:
         self.traiter_user_exception(exc_val)
         CONTEXT.unset_current_step()
+        self.traiter_fin_exec('commande')
     
       except :
         # erreur inattendue
@@ -203,6 +205,15 @@ NONE = None
                            self.nom+'\n'+ string.join(l))
         del exc_typ,exc_val,exc_fr
         CONTEXT.unset_current_step()
+
+   def traiter_fin_exec(self,mode,etape=None):
+       """
+          Cette methode realise un traitement final apres l'execution de toutes
+          les commandes en mode commande par commande ou par lot
+          Par defaut il n'y a pas de traitement. Elle doit etre surchargee
+          pour en introduire un
+       """
+       print "FIN D'EXECUTION",mode,etape
 
    def traiter_user_exception(self,exc_val):
        """Cette methode realise un traitement sur les exceptions utilisateur    

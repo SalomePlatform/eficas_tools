@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#@ MODIF N_MCLIST Noyau  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
+#@ MODIF N_MCLIST Noyau  DATE 17/08/2004   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -27,6 +27,7 @@
 
 from copy import copy
 import UserList
+import types
 
 class MCList(UserList.UserList):
    """ Liste semblable a la liste Python
@@ -121,6 +122,23 @@ class MCList(UserList.UserList):
         l.extend(child.get_sd_utilisees())
       return l
 
+   def get_sd_mcs_utilisees(self):
+      """ 
+          Retourne la ou les SD utilisée par self sous forme d'un dictionnaire :
+          . Si aucune sd n'est utilisée, le dictionnaire est vide.
+          . Sinon, les clés du dictionnaire sont les mots-clés derrière lesquels on
+            trouve des sd ; la valeur est la liste des sd attenante.
+            Exemple : { 'VALE_F': [ <Cata.cata.para_sensi instance at 0x9419854>,
+                                    <Cata.cata.para_sensi instance at 0x941a204> ],
+                        'MODELE': [<Cata.cata.modele instance at 0x941550c>] }
+     """
+      dico = {}
+      for child in self.data:
+        daux = child.get_sd_mcs_utilisees()
+        for cle in daux.keys():
+          dico[cle] = daux[cle]
+      return dico
+
    def copy(self):
       """
         Réalise la copie d'une MCList
@@ -156,3 +174,11 @@ class MCList(UserList.UserList):
       if self.parent == None: return None
       return self.parent.get_etape()
 
+   def __getitem__(self,key):
+      """
+         Dans le cas d un mot cle facteur de longueur 1 on simule un scalaire
+      """
+      if type(key) != types.IntType and len(self) ==1:
+         return self.data[0].get_mocle(key)
+      else:
+         return self.data[key]

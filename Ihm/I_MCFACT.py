@@ -35,3 +35,23 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
   def isoblig(self):
     return self.definition.statut=='o'
 
+  def getlabeltext(self):
+    """
+       Retourne le label de self suivant qu'il s'agit d'un MCFACT
+       isolé ou d'un MCFACT appartenant à une MCList :
+       utilisée pour l'affichage dans l'arbre
+    """
+    objet = self.parent.get_child(self.nom)
+    # objet peut-être self ou une MCList qui contient self ...
+    if objet is None or objet is self:
+      return "Erreur - mclist inexistante: "+self.nom
+
+    try:
+      if len(objet) > 1 :
+        index = objet.get_index(self)+1 # + 1 à cause de la numérotation qui commence à 0
+        return self.nom +'_'+`index`+':'
+      else:
+        return self.nom
+    except:
+        return "Erreur - mot clé facteur de nom: "+self.nom
+

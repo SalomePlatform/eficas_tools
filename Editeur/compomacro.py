@@ -37,7 +37,7 @@ from widgets import showinfo,showerror
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.12 2004/03/11 09:59:00 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.13 2004/09/10 15:51:49 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -229,107 +229,10 @@ class MACROPanel(panels.OngletPanel):
     
     
 class MACROTreeItem(compooper.EtapeTreeItem):
+  """ Cette classe hérite d'une grande partie des comportements
+      de la classe compooper.EtapeTreeItem
+  """
   panel=MACROPanel
-
-  def IsExpandable(self):
-      return 1
-
-  def GetIconName(self):
-      """
-      Retourne le nom de l'icône à afficher dans l'arbre
-      Ce nom dépend de la validité de l'objet
-      """
-      if not self.object.isactif():
-        return "ast-white-square"
-      else:
-        if self.object.isvalid():
-          return "ast-green-square"
-        else:
-          return "ast-red-square"
-
-  def GetLabelText(self):
-      """ Retourne 3 valeurs :
-      - le texte à afficher dans le noeud représentant l'item
-      - la fonte dans laquelle afficher ce texte
-      - la couleur du texte
-      """
-      if self.object.isactif():
-        # None --> fonte et couleur par défaut
-        return self.labeltext,None,None
-      else:
-        return self.labeltext,fontes.standard_italique,None
-      
-  def get_objet(self,name) :
-      for v in self.object.mc_liste:
-          if v.nom == name : return v
-      return None
-      
-  def additem(self,name,pos):
-      if isinstance(name,Objecttreeitem.ObjectTreeItem) :
-          mcent = self.object.addentite(name.object,pos)
-      else :
-          mcent = self.object.addentite(name,pos)
-      self.expandable=1
-      if mcent == 0 :
-          # on ne peut ajouter l'élément de nom name
-          return 0
-      def setfunction(value, object=mcent):
-          object.setval(value)
-      item = self.make_objecttreeitem(self.appli,mcent.nom + " : ", mcent, setfunction)
-      return item
-
-  def suppitem(self,item) :
-      # item : item du MOCLE de l'ETAPE à supprimer
-      # item.object = MCSIMP, MCFACT, MCBLOC ou MCList 
-      if item.object.isoblig() :
-          self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ')
-	  print "Impossible de supprimer un mot-clé obligatoire"
-          return 0
-      else :
-          self.object.suppentite(item.object)
-          message = "Mot-clé " + item.object.nom + " supprimé"
-          self.appli.affiche_infos(message)
-          return 1
-
-  def GetText(self):
-      try:
-          return self.object.get_sdname()
-      except:
-          return ''
-
-  def keys(self):
-      keys=self.object.mc_dict.keys()
-      return keys
-
-  def GetSubList(self):
-      sublist=[]
-      for obj in self.object.mc_liste:
-        def setfunction(value, object=obj):
-          object.setval(value)
-        item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
-        sublist.append(item)
-      return sublist
-
-  def isvalid(self):
-      return self.object.isvalid()
-
-  def iscopiable(self):
-      """
-      Retourne 1 si l'objet est copiable, 0 sinon
-      """
-      return 1
-
-  def isCommande(self):
-      """
-      Retourne 1 si l'objet pointé par self est une Commande, 0 sinon
-      """
-      return 1
-      
-  def verif_condition_bloc(self):
-      return self.object.verif_condition_bloc()
-
-  def get_noms_sd_oper_reentrant(self):
-      return self.object.get_noms_sd_oper_reentrant()
 
 class INCLUDETreeItem(MACROTreeItem):
   rmenu_specs=[("View","makeView")]
@@ -346,8 +249,10 @@ class INCLUDETreeItem(MACROTreeItem):
 class INCLUDE_MATERIAUTreeItem(INCLUDETreeItem): pass
 class POURSUITETreeItem(INCLUDETreeItem): pass
 
-treeitem=MACROTreeItem
 def treeitem(appli, labeltext, object, setfunction=None):
+   """ Factory qui retourne l'item adapté au type de macro : 
+       INCLUDE, POURSUITE, MACRO
+   """
    if object.nom == "INCLUDE_MATERIAU":
       return INCLUDE_MATERIAUTreeItem(appli, labeltext, object, setfunction)
    elif object.nom == "INCLUDE":

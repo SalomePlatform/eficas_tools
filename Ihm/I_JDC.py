@@ -206,8 +206,11 @@ class JDC(I_OBJECT.OBJECT):
             if autre_sd is not sd :
               # L'etape produit un concept de meme nom
               if hasattr(e,'reuse') and e.reuse == autre_sd:
-                 # Le concept est reutilise, ce n'est pas un produit de l'etape
-                 continue
+                 # Le concept etant reutilise, on interrompt la recherche. 
+                 # On considere qu'il n'y a pas de nouveau concept defini
+                 # meme si dans les etapes suivantes le concept est detruit
+                 # et un concept de meme nom créé.
+                 return None
               else:
                  # Le concept est produit par l'etape
                  return autre_sd
@@ -283,6 +286,8 @@ class JDC(I_OBJECT.OBJECT):
       """  
           Cette methode a pour fonction de supprimer une étape dans 
           un jeu de commandes
+          Retourne 1 si la suppression a pu être effectuée,
+          Retourne 0 dans le cas contraire
       """
       self.init_modif()
       # On memorise le contexte avant l'etape a supprimer
@@ -304,6 +309,7 @@ class JDC(I_OBJECT.OBJECT):
       
       self.reset_context()
       self.fin_modif()
+      return 1
 
    def analyse(self):
       self.compile()

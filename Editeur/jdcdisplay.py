@@ -228,82 +228,19 @@ class JDCDISPLAY:
       Lance la copie de l'objet placé dans self.appli.noeud_a_editer
       Ne permet que la copie d'objets de type Commande ou MCF
       """
-      objet_a_copier = self.appli.noeud_a_editer.item.get_copie_objet()
-      if objet_a_copier.__class__.__name__ in ('ETAPE','PROC_ETAPE','MACRO_ETAPE','FORM_ETAPE'):
-          self.doPaste_Commande(objet_a_copier)
-      elif objet_a_copier.__class__.__name__ == "MCFACT":
-          self.doPaste_MCF(objet_a_copier)
-      else:
-          showinfo("Copie impossible",
-                   "Vous ne pouvez copier que des commandes ou des mots-clés facteurs !")
-      return
+      child=self.appli.noeud_a_editer.doPaste(self.node_selected)
 
-   def doPaste_Commande(self,objet_a_copier):
-      """
-          Réalise la copie de l'objet passé en argument qui est nécessairement 
-          une commande
-      """
-      # il faut vérifier que le noeud sélectionné (noeud courant) est bien
-      # une commande ou un JDC sinon la copie est impossible ...
-      if self.node_selected.item.isCommande() :
-          child = self.node_selected.append_brother(objet_a_copier,retour='oui')
-      elif self.node_selected.item.isJdc() :
-          child = self.node_selected.append_child(objet_a_copier,pos='first',
-                                                     retour='oui')
-      else:
-          showinfo("Copie impossible",
-                   "Vous ne pouvez coller la commande copiée à ce niveau de l'arborescence !")
+      if child == 0:
+          if self.appli.message != '':
+             showerror("Copie refusée",self.appli.message)
+             self.appli.message = ''
           self.appli.affiche_infos("Copie refusée")
-          return
+
       # il faut déclarer le JDCDisplay_courant modifié
       self.init_modif()
       # suppression éventuelle du noeud sélectionné
       if self.edit == "couper":
           self.appli.noeud_a_editer.delete()
-      if child == 0:
-          # la copie est impossible
-          if self.appli.message != '':
-              showerror("Copie refusée",self.appli.message)
-              self.appli.message = ''
-          self.appli.affiche_infos("Copie refusée")
-      # on rend la copie à nouveau possible en libérant le flag edit
-      self.edit="copier"
-
-   def doPaste_MCF(self,objet_a_copier):
-      """
-      Réalise la copie de l'objet passé en argument qui est nécessairement un MCF
-      """
-      if self.node_selected.item.isCommande() :
-          # le noeud courant est une ETAPE
-          child = self.node_selected.append_child(objet_a_copier,retour='oui')
-      elif self.node_selected.item.isMCList() :
-          # le noeud courant est une MCList
-          child = self.node_selected.parent.append_child(objet_a_copier,pos='first',retour='oui')
-      elif self.node_selected.item.isMCFact():
-          # le noeud courant est un MCFACT
-          if self.node_selected.parent.item.isMCList():
-             # le noeud selectionne est un MCFACT dans une MCList
-             child = self.node_selected.parent.append_child(objet_a_copier,
-                                                            pos=self.node_selected.item,
-                                                            retour='oui')
-          else:
-             # le noeud MCFACT selectionne n'est pas dans une MCList
-             child = self.node_selected.parent.append_child(objet_a_copier,retour='oui')
-      else:
-          showinfo("Copie impossible",
-                   "Vous ne pouvez coller le mot-clé facteur copié à ce niveau de l'arborescence !")
-          self.appli.affiche_infos("Copie refusée")
-          return
-      # il faut déclarer le JDCDisplay_courant modifié
-      self.init_modif()
-      # suppression éventuelle du noeud sélectionné
-      if self.edit == "couper":
-          self.appli.noeud_a_editer.delete()
-      if child == 0:
-          if self.appli.message != '':
-              showerror("Copie refusée",self.appli.message)
-              self.appli.message = ''
-          self.appli.affiche_infos("Copie refusée")
       # on rend la copie à nouveau possible en libérant le flag edit
       self.edit="copier"
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#@ MODIF N_MCSIMP Noyau  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
+#@ MODIF N_MCSIMP Noyau  DATE 16/03/2004   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -124,7 +124,7 @@ class MCSIMP(N_OBJECT.OBJECT):
 
    def get_sd_utilisees(self):
       """ 
-          Retourne une liste qui contient la SD utilisée par self si c'est le cas
+          Retourne une liste qui contient la ou les SD utilisée par self si c'est le cas
           ou alors une liste vide
       """
       l=[]
@@ -136,3 +136,18 @@ class MCSIMP(N_OBJECT.OBJECT):
            if type(val) == types.InstanceType:
               if issubclass(val.__class__,ASSD) : l.append(val)
       return l
+
+   def get_sd_mcs_utilisees(self):
+      """ 
+          Retourne la ou les SD utilisée par self sous forme d'un dictionnaire :
+          . Si aucune sd n'est utilisée, le dictionnaire est vide.
+          . Sinon, la clé du dictionnaire est le mot-clé simple ; la valeur est
+            la liste des sd attenante.
+            Exemple : { 'VALE_F': [ <Cata.cata.para_sensi instance at 0x9419854>,
+                                    <Cata.cata.para_sensi instance at 0x941a204> ] }
+      """
+      l=self.get_sd_utilisees()
+      dico = {}
+      if len(l) > 0 :
+        dico[self.nom] = l
+      return dico
