@@ -1,3 +1,9 @@
+Version 1.7 : (12/2004)
+   Mise en synchronisation avec la version STA7 de Code_Aster (7.4) et avec les nouvelles formules
+   (plus proches de python). 
+   Disparition des PARAMETRE-EVAL
+   Les touches raccourcis (CtrlC par exple) sont activées et paramétrables dans prefs.py.
+
 Version 1.6 : (05/2004)
    Mise en synchronisation avec la version STA7 de Code_Aster (7.2.26)
    Evolution de la saisie des valeurs pour definir une fonction (EO2003-241) :
