@@ -20,6 +20,7 @@
 """
 """
 # Modules Python
+import sys
 import string,types
 from copy import copy
 
@@ -40,10 +41,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def get_sdname(self):
       if CONTEXT.debug : print "SDNAME ",self.reuse,self.sd,self.sd.get_name()
+      sdname=''
       if self.reuse != None:
         sdname= self.reuse.get_name()
       else:
-        sdname=self.sd.get_name()
+        if self.sd:sdname=self.sd.get_name()
       if string.find(sdname,'sansnom') != -1 or string.find(sdname,'SD_') != -1:
         # dans le cas où la SD est 'sansnom' ou 'SD_' on retourne la chaîne vide
         return ''
@@ -59,7 +61,6 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
          Met l'état de l'étape à : modifié
          Propage la modification au parent
-         Si la fonction op_init existe, l'active
       """
       # Une action
       # doit etre realisée apres init_modif et la validite reevaluée
@@ -76,11 +77,10 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           ex : INCLUDE et POURSUITE
       """
       if self.isvalid() :
-         if type(self.definition.op_init) == types.FunctionType :
-            # XXX Normalement en mode editeur g_context ne peut pas etre utilisé
-            apply(self.definition.op_init,(self,self.parent.g_context))   
-      self.state = 'modified'
-    
+         d=self.parent.get_contexte_apres(self)
+      if self.parent:
+        self.parent.fin_modif()
+
    def nomme_sd(self,nom) :
       """
           Cette méthode a pour fonction de donner un nom (nom) au concept 
@@ -190,9 +190,9 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           Il faut ajouter la sd si elle existe au contexte global du JDC
           et à la liste des sd
       """
+      if self.actif:return
       self.actif = 1
       if not self.sd : return
-      # XXX Pourquoi faut-il faire ce qui suit ??? par defaut les etapes sont actives
       try:
         self.jdc.append_sdprod(self.sd)
       except:
@@ -209,6 +209,31 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       self.jdc.del_sdprod(self.sd)
       self.jdc.delete_concept_after_etape(self,self.sd)
 
+   def control_sdprods(self,d):
+      """
+          Cette methode doit updater le contexte fournit par
+          l'appelant en argument (d) en fonction de sa definition
+          tout en verifiant que ses concepts produits ne sont pas 
+          deja definis dans le contexte
+      """
+      if type(self.definition.op_init) == types.FunctionType:
+        apply(self.definition.op_init,(self,d))
+      if self.sd:
+        if d.has_key(self.sd.nom):
+           # Le concept est deja defini
+           if self.reuse and self.reuse is d[self.sd.nom]:
+              # Le concept est reutilise : situation normale
+              pass
+           else:
+              # Redefinition du concept, on l'annule
+              #XXX on pourrait simplement annuler son nom pour conserver les objets
+              # l'utilisateur n'aurait alors qu'a renommer le concept (faisable??)
+              self.sd=self.reuse=self.sdnom=None
+              self.init_modif()
+        else:
+           # Le concept n'est pas defini, on peut updater d
+           d[self.sd.nom]=self.sd
+
    def supprime_sdprods(self):
       """ 
           Fonction:
@@ -217,8 +242,6 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             Une procedure n'en a aucun
             Une macro en a en général plus d'un
       """
-      # XXX pour les macros il faudrait peut etre aussi 
-      #     supprimer les concepts a droite du = ???
       if not self.is_reentrant() :
         # l'étape n'est pas réentrante
         # le concept retourné par l'étape est à supprimer car il était 
@@ -243,6 +266,22 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
         self.init_modif()
       for child in self.mc_liste :
         child.delete_concept(sd)
+
+   def replace_concept(self,old_sd,sd):
+      """
+          Inputs :
+             old_sd=concept remplace
+             sd = nouveau concept 
+          Fonction :
+             Mettre a jour les mots cles de l etape et eventuellement
+             le concept produit si reuse
+             suite au remplacement  du concept old_sd
+      """
+      if self.reuse and self.reuse == old_sd:
+        self.sd=self.reuse=sd
+        self.init_modif()
+      for child in self.mc_liste :
+        child.replace_concept(old_sd,sd)
 
    def make_register(self):
       """
@@ -392,8 +431,10 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
          # En plus il faut rendre coherents sdnom et sd.nom
          self.sd=None
          self.sdnom=None
+         self.state="unchanged"
          self.valid=0
          return self.sd
+
          #raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
          #                     'fichier : ',self.appel[1],e)
       except EOFError:

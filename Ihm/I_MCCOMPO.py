@@ -309,6 +309,18 @@ class MCCOMPO(I_OBJECT.OBJECT):
     for child in self.mc_liste :
       child.delete_concept(sd)
 
+  def replace_concept(self,old_sd,sd):
+    """
+        Inputs :
+           old_sd=concept remplace
+           sd = nouveau concept
+        Fonction :
+           Mettre a jour les fils de l objet suite au remplacement  du
+           concept old_sd
+    """
+    for child in self.mc_liste :
+      child.replace_concept(old_sd,sd)
+
   def delete_mc_global(self,mc):
     """ 
         Supprime le mot-clé mc de la liste des mots-clés globaux de l'étape 

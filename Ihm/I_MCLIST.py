@@ -71,6 +71,18 @@ class MCList:
     for child in self.data :
       child.delete_concept(sd)
 
+  def replace_concept(self,old_sd,sd):
+    """
+        Inputs :
+           old_sd=concept remplacé
+           sd=nouveau concept
+        Fonction :
+           Mettre a jour les fils de l objet suite au remplacement 
+           du concept old_sd
+    """
+    for child in self.data :
+      child.replace_concept(old_sd,sd)
+
   def copy(self):
     """
        Réalise la copie d'une MCList

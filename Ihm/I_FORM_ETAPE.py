@@ -262,7 +262,7 @@ class FORM_ETAPE(MACRO_ETAPE):
          Inputs :
            sd=concept detruit
          Fonction :
-           Mettre a jour les mos cles de l etape et eventuellement le concept produit si reuse
+           Mettre a jour les mots cles de l etape et eventuellement le concept produit si reuse
            suite à la disparition du concept sd
            Seuls les mots cles simples MCSIMP font un traitement autre que de transmettre aux fils,
 	   sauf les objets FORM_ETAPE qui doivent vérifier que le concept détruit n'est pas 
@@ -270,3 +270,14 @@ class FORM_ETAPE(MACRO_ETAPE):
         """
         self.init_modif()
          
+    def replace_concept(self,old_sd,sd):
+        """
+         Inputs :
+           old_sd=concept remplace
+           sd = nouveau concept
+         Fonction :
+           Les objets FORM_ETAPE devraient vérifier que le concept remplacé n'est pas
+           utilisé dans le corps de la fonction
+        """
+        self.init_modif()
+

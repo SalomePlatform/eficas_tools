@@ -21,7 +21,8 @@ import I_ETAPE
 
 
 # import rajoutés suite à l'ajout de Build_sd --> à résorber
-import traceback,types
+import sys
+import traceback,types,string
 import Noyau
 from Noyau import N_Exception
 from Noyau.N_Exception import AsException
@@ -51,6 +52,18 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
       """
       for child in self.mc_liste :
         child.delete_concept(sd)
+
+   def replace_concept(self,old_sd,sd):
+      """
+          Inputs :
+             old_sd=concept remplacé
+             sd=nouveau concept
+          Fonction :
+             Mettre a jour les mots cles de l etape
+             suite au remplacement du concept old_sd
+      """
+      for child in self.mc_liste :
+        child.replace_concept(old_sd,sd)
 
    def Build_sd(self):
       """

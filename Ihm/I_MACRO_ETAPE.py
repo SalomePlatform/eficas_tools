@@ -20,6 +20,7 @@
 """
 """
 # Modules Python
+import sys
 import traceback,types,string
 
 # Modules Eficas
@@ -27,7 +28,7 @@ import I_ETAPE
 from Noyau.N_ASSD import ASSD
 
 # import rajoutés suite à l'ajout de Build_sd --> à résorber
-import Noyau
+import Noyau, Validation.V_MACRO_ETAPE
 from Noyau import N_Exception
 from Noyau.N_Exception import AsException
 # fin import à résorber
@@ -35,8 +36,6 @@ from Noyau.N_Exception import AsException
 class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def __init__(self):
-      # XXX CCAR : ne suis pas certain que typret doive etre 
-      # initialise à None (a verifier)
       self.typret=None
 
   def get_sdprods(self,nom_sd):
@@ -44,31 +43,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          Fonction : retourne le concept produit par l etape de nom nom_sd
                     s il existe sinon None
     """
-    if self.sd:
-      if self.sd.nom == nom_sd:
-         return self.sd
+    if self.sd and self.sd.nom == nom_sd :return self.sd
     for co in self.sdprods:
-      if co.nom==nom_sd:return co
+      if co.nom == nom_sd:return co
+    if type(self.definition.op_init) == types.FunctionType:
+      d={}
+      apply(self.definition.op_init,(self,d))
+      return d.get(nom_sd,None)
     return None
-
-  def make_contexte(self,fichier,text):    
-    """
-        Cette méthode sert à créer un contexte en interprétant un texte source
-        Python
-    """
-    # on récupère le contexte d'un nouveau jdc dans lequel on interprete text
-    contexte = self.get_contexte_jdc(fichier,text)
-    if contexte == None :
-      raise Exception("Impossible de relire le fichier")
-    else:
-      self.g_context = contexte
-      if hasattr(self,'contexte_fichier_init'):
-        self.old_contexte_fichier_init = self.contexte_fichier_init
-      self.contexte_fichier_init = contexte
-      # XXX la validité ne doit pas etre forcée à 1. Que faut-il faire exactement ???
-      self.init_modif()
-      #self.valid = 1
-      #self.state = 'unchanged'
 
   def get_contexte_jdc(self,fichier,text):
     """ 
@@ -76,41 +58,75 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          contexte final
          cad le dictionnaire des sd disponibles à la dernière étape
          Si text n'est pas un texte de jdc valide, retourne None
+         ou leve une exception
          --> utilisée par ops.POURSUITE et INCLUDE
     """
     try:
-       # on essaie de créer un objet JDC...
+       # on essaie de créer un objet JDC auxiliaire avec un contexte initial
        context_ini = self.parent.get_contexte_avant(self)
 
+       # Indispensable avant de creer un nouveau JDC
        CONTEXT.unset_current_step()
-       j=self.jdc.definition(procedure=text,cata=self.jdc.cata,
-                             nom=fichier,
-                             context_ini = context_ini,
-                             appli=self.jdc.appli)
+       args=self.jdc.args
+       prefix_include=None
+       if hasattr(self,'prefix'):
+          prefix_include=self.prefix
+
+       j=self.JdC_aux( procedure=text,cata=self.jdc.cata,
+                                nom=fichier,
+                                context_ini = context_ini,
+                                appli=self.jdc.appli,
+                                jdc_pere=self.jdc,etape_include=self,
+                                prefix_include=prefix_include,**args)
+
        j.analyse()
-       # XXX en passant par un jdc auxiliaire, on risque de rendre les etapes inactives
-       # on les force dans l'etat actif
-       for etape in j.etapes:
-          etape.active()
     except:
        traceback.print_exc()
+       # On force le contexte (etape courante) à self
+       CONTEXT.unset_current_step()
+       CONTEXT.set_current_step(self)
        return None
-    CONTEXT.set_current_step(self)
-    if not j.cr.estvide():
-        raise Exception("Impossible de relire le fichier\n"+str(j.cr))
 
-    #XXX la validité d'un source inclus n'est pas identique à celle d'un JDC complet
-    #    impossible de la tester en dehors du JDC d'accueil
-    #cr=j.report()
-    #if not cr.estvide():
-    #    raise Exception("Le fichier contient des erreurs\n"+str(j.cr))
+    if not j.cr.estvide():
+       # On force le contexte (etape courante) à self
+       CONTEXT.unset_current_step()
+       CONTEXT.set_current_step(self)
+       # Erreurs dans l'INCLUDE. On garde la memoire du fichier mais on n'insere pas les concepts
+       # et les etapes. Ce traitement doit etre fait par l'appelant qui recoit l'exception
+       raise Exception("Impossible de relire le fichier\n"+str(j.cr))
+
+    cr=j.report()
+    if not cr.estvide():
+       # On force le contexte (etape courante) à self
+       CONTEXT.unset_current_step()
+       CONTEXT.set_current_step(self)
+       raise Exception("Le fichier include contient des erreurs\n"+str(j.cr))
+
+    # Cette verification n'est plus necessaire elle est integree dans le JDC_INCLUDE
+    #self.verif_contexte(j_context)
+
+    # On recupere le contexte apres la derniere etape
     j_context=j.get_contexte_avant(None)
-    # XXX j.g_context doit donner le meme résultat
-    # On retourne le contexte apres la derniere etape
-    # XXX j.supprime() ???
-    self.verif_contexte(j_context)
-    # Le contexte est acceptable. On récupère les étapes internes (pour validation)
+
+    # On remplit le dictionnaire des concepts produits inclus
+    # en retirant les concepts présents dans le  contexte initial
+    self.g_context.clear()
+    for k,v in j_context.items():
+       if not context_ini.has_key(k) or context_ini[k] != v:
+           self.g_context[k]=v
+
+    # On récupère les étapes internes (pour validation)
     self.etapes=j.etapes
+
+    # ainsi que le contexte courant
+    self.current_context=j.current_context
+    self.index_etape_courante=j.index_etape_courante
+
+    # XXX j.supprime() ???
+    # On force le contexte (etape courante) à self
+    CONTEXT.unset_current_step()
+    CONTEXT.set_current_step(self)
+
     return j_context
 
   def verif_contexte(self,context):
@@ -128,27 +144,71 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
   def reevalue_sd_jdc(self):
      """
          Avec la liste des SD qui ont été supprimées, propage la 
-         disparition de ces SD dans totues les étapes et descendants
+         disparition de ces SD dans toutes les étapes et descendants
      """
-     l_sd = self.diff_contextes()
-     if len(l_sd) == 0 : return
-     for sd in l_sd:
-        self.jdc.delete_concept(sd)
+     l_sd_supp,l_sd_repl = self.diff_contextes()
+     for sd in l_sd_supp:
+        self.parent.delete_concept_after_etape(self,sd)
+     for old_sd,sd in l_sd_repl:
+        self.parent.replace_concept_after_etape(self,old_sd,sd)
 
   def diff_contextes(self):
      """ 
          Réalise la différence entre les 2 contextes 
          old_contexte_fichier_init et contexte_fichier_init
-         cad retourne la liste des sd qui ont disparu 
+         cad retourne la liste des sd qui ont disparu ou ne derivent pas de la meme classe
+         et des sd qui ont ete remplacees
      """
-     if not hasattr(self,'old_contexte_fichier_init'):return []
+     if not hasattr(self,'old_contexte_fichier_init'):return [],[]
      l_sd_suppressed = []
+     l_sd_replaced = []
      for old_key in self.old_contexte_fichier_init.keys():
        if not self.contexte_fichier_init.has_key(old_key):
          if isinstance(self.old_contexte_fichier_init[old_key],ASSD):
            l_sd_suppressed.append(self.old_contexte_fichier_init[old_key])
-     return l_sd_suppressed
+       else:
+         if isinstance(self.old_contexte_fichier_init[old_key],ASSD):
+            # Un concept de meme nom existe
+            old_class=self.old_contexte_fichier_init[old_key].__class__
+            if not isinstance(self.contexte_fichier_init[old_key],old_class):
+               # S'il n'est pas d'une classe derivee, on le supprime
+               l_sd_suppressed.append(self.old_contexte_fichier_init[old_key])
+            else:
+               l_sd_replaced.append((self.old_contexte_fichier_init[old_key],self.contexte_fichier_init[old_key]))
+     return l_sd_suppressed,l_sd_replaced
       
+  def control_sdprods(self,d):
+      """
+          Cette methode doit updater le contexte fournit par
+          l'appelant en argument (d) en fonction de sa definition
+          tout en verifiant que ses concepts produits ne sont pas
+          deja definis dans le contexte
+      """
+      if type(self.definition.op_init) == types.FunctionType:
+        apply(self.definition.op_init,(self,d))
+      if self.sd:
+        if d.has_key(self.sd.nom):
+           # Le concept est deja defini
+           if self.reuse and self.reuse is d[self.sd.nom]:
+              # Le concept est reutilise : situation normale
+              pass
+           else:
+              # Redefinition du concept, on l'annule
+              #XXX on pourrait simplement annuler son nom pour conserver les objets
+              # l'utilisateur n'aurait alors qu'a renommer le concept (faisable??)
+              self.sd=self.reuse=self.sdnom=None
+              self.init_modif()
+        else:
+           # Le concept n'est pas defini, on peut updater d
+           d[self.sd.nom]=self.sd
+      # On verifie les concepts a droite du signe =
+      for co in self.sdprods:
+        if d.has_key(co.nom) and co is not d[co.nom] :
+           self.delete_concept(co)
+        else:
+           d[co.nom]=co
+       
+
   def supprime_sdprods(self):
       """
           Fonction:
@@ -171,12 +231,12 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # Si la macro a des etapes et des concepts inclus, on les detruit
       for nom_sd,co in self.g_context.items():
          if not isinstance(co,ASSD):continue
-         print "Delete: ",self.nom,co.nom
          self.parent.del_sdprod(co)
          self.parent.delete_concept(co)
       # On met g_context à blanc
       self.g_context={}
          
+#ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro)
   def Build_sd(self,nom):
      """
         Construit le concept produit de l'opérateur. Deux cas 
@@ -220,8 +280,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
         # 1. on annule la sd associée à self
         # 2. on la conserve mais il faut qu'elle soit correcte et la retourner
         # En plus il faut rendre coherents sdnom et sd.nom
+        # On choisit de retourner None et de mettre l'etape invalide 
         self.sd=None
         self.sdnom=None
+        self.state="unchanged"
         self.valid=0
         return self.sd
         #raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
@@ -234,3 +296,175 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
         raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
                           'fichier : ',self.appel[1]+'\n',
                            string.join(l))
+
+  def make_contexte_include(self,fichier,text):
+    """
+        Cette méthode sert à créer un contexte en interprétant un texte source
+        Python
+    """
+    # on récupère le contexte d'un nouveau jdc dans lequel on interprete text
+    contexte = self.get_contexte_jdc(fichier,text)
+    if contexte == None :
+      raise Exception("Impossible de construire le jeu de commandes correspondant au fichier")
+    else:
+      # Pour les macros de type include : INCLUDE, INCLUDE_MATERIAU et POURSUITE
+      # l'attribut g_context est un dictionnaire qui contient les concepts produits par inclusion
+      # l'attribut contexte_fichier_init est un dictionnaire qui contient les concepts produits
+      # en sortie de macro. g_context est obtenu en retirant de contexte_fichier_init les concepts
+      # existants en debut de macro contenus dans context_ini (dans get_contexte_jdc)
+      # g_context est utilisé pour avoir les concepts produits par la macro
+      # contexte_fichier_init est utilisé pour avoir les concepts supprimés par la macro
+      self.contexte_fichier_init = contexte
+
+  def reevalue_fichier_init(self):
+      """Recalcule les concepts produits par le fichier enregistre"""
+      old_context=self.contexte_fichier_init
+      try:
+         self.make_contexte_include(self.fichier_ini ,self.fichier_text)
+      except:
+         l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+         self.fichier_err = string.join(l)
+         self.etapes=[]
+         self.g_context={}
+
+         self.old_contexte_fichier_init=old_context
+         self.contexte_fichier_init={}
+         self.reevalue_sd_jdc()
+         return
+
+      # L'evaluation s'est bien passee
+      self.fichier_err = None
+      self.old_contexte_fichier_init=old_context
+      self.reevalue_sd_jdc()
+
+  def make_poursuite(self):
+      """ Cette methode est appelée par la fonction sd_prod de la macro POURSUITE
+      """
+      if not hasattr(self,'fichier_ini') :
+         # Si le fichier n'est pas defini on le demande
+         f,text=self.get_file(fic_origine=self.parent.nom)
+         # On memorise le fichier retourne
+         self.fichier_ini = f
+         self.fichier_text = text
+         import Extensions.jdc_include
+         self.JdC_aux=Extensions.jdc_include.JdC_poursuite
+         self.contexte_fichier_init={}
+         if f is None:
+             self.fichier_err="Le fichier POURSUITE n'est pas defini"
+         else:
+             self.fichier_err=None
+
+         if self.fichier_err is not None: raise Exception(self.fichier_err)
+
+         try:
+           self.make_contexte_include(self.fichier_ini,self.fichier_text)
+         except:
+           l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+           if self.jdc.appli:
+              self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier poursuite",
+                                            message="Ce fichier ne sera pas pris en compte\n"+string.join(l)
+                                           )
+           self.g_context={}
+           self.etapes=[]
+           self.fichier_err = string.join(l)
+           self.contexte_fichier_init={}
+           raise
+
+      else:
+         # Si le fichier est deja defini on ne reevalue pas le fichier
+         # et on leve une exception si une erreur a été enregistrée
+         if self.fichier_err is not None: raise Exception(self.fichier_err)
+
+
+#ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro)
+  def make_include(self,unite=None):
+      """
+          Inclut un fichier dont l'unite logique est unite
+          Cette methode est appelee par la fonction sd_prod de la macro INCLUDE
+          Si l'INCLUDE est invalide, la methode doit produire une exception 
+          Sinon on retourne None. Les concepts produits par l'INCLUDE sont
+          pris en compte par le JDC parent lors du calcul du contexte (appel de ???)
+      """
+
+      # On supprime l'attribut unite qui bloque l'evaluation du source de l'INCLUDE
+      # car on ne s'appuie pas sur lui dans EFICAS mais sur l'attribut fichier_ini
+      del self.unite
+      # Si unite n'a pas de valeur, l'etape est forcement invalide. On peut retourner None
+      if not unite : return
+
+      if not hasattr(self,'fichier_ini') : 
+         # Si le fichier n'est pas defini on le demande
+         f,text=self.get_file(unite=unite,fic_origine=self.parent.nom)
+         # On memorise le fichier retourne
+         self.fichier_ini  = f
+         self.fichier_text = text
+         self.contexte_fichier_init={}
+         if f is None:
+             self.fichier_err="Le fichier INCLUDE n est pas defini"
+         else:
+             self.fichier_err=None
+         import Extensions.jdc_include
+         self.JdC_aux=Extensions.jdc_include.JdC_include
+
+         if self.fichier_err is not None: raise Exception(self.fichier_err)
+
+         try:
+           self.make_contexte_include(self.fichier_ini ,self.fichier_text)
+         except:
+           l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+           if self.jdc.appli:
+              self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
+                                            message="Ce fichier ne sera pas pris en compte\n"+string.join(l)
+                                           )
+           self.g_context={}
+           self.etapes=[]
+           self.fichier_err = string.join(l)
+           self.contexte_fichier_init={}
+           raise
+
+      else:
+         # Si le fichier est deja defini on ne reevalue pas le fichier
+         # et on leve une exception si une erreur a été enregistrée
+         #self.reevalue_fichier_init()
+         if self.fichier_err is not None: raise Exception(self.fichier_err)
+        
+
+#ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro)
+  def make_contexte(self,fichier,text):
+    """
+        Cette méthode sert à créer un contexte pour INCLUDE_MATERIAU
+        en interprétant un texte source Python
+        Elle est appelee par la fonction sd_prd d'INCLUDE_MATERIAU
+    """
+    # On supprime l'attribut mat qui bloque l'evaluation du source de l'INCLUDE_MATERIAU
+    # car on ne s'appuie pas sur lui dans EFICAS mais sur l'attribut fichier_ini
+    if hasattr(self,'mat'):del self.mat
+    self.fichier_ini =fichier
+    self.fichier_text=text
+    self.fichier_err=None 
+    self.contexte_fichier_init={}
+    # On specifie la classe a utiliser pour le JDC auxiliaire
+    import Extensions.jdc_include
+    self.JdC_aux=Extensions.jdc_include.JdC_include
+    try:
+       self.make_contexte_include(self.fichier_ini ,self.fichier_text)
+    except:
+       l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+       self.g_context={}
+       self.etapes=[]
+       self.fichier_err = string.join(l)
+       self.contexte_fichier_init={}
+       raise
+
+#ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro)
+  def update_sdprod(self,cr='non'):
+     # Cette methode peut etre appelee dans EFICAS avec des mots cles de 
+     # la commande modifies. Ceci peut conduire a la construction ou
+     # a la reconstruction d'etapes dans le cas d'INCLUDE ou d'INCLUDE_MATERIAU
+     # Il faut donc positionner le current_step avant l'appel
+     CONTEXT.unset_current_step()
+     CONTEXT.set_current_step(self)
+     valid=Validation.V_MACRO_ETAPE.MACRO_ETAPE.update_sdprod(self,cr=cr)
+     CONTEXT.unset_current_step()
+     return valid
+

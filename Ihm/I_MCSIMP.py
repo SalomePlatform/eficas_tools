@@ -200,6 +200,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         self.val = new_valeur
         self.valeur = valeur
         self.init_modif()
+        self.fin_modif()
         return 1
       else:
         # On n'a pas trouve de concept ni réussi à évaluer la valeur 
@@ -214,27 +215,30 @@ class MCSIMP(I_OBJECT.OBJECT):
           except:
             traceback.print_exc()
             return 0
-          self.val=self.valeur
           self.init_modif()
+          self.val=self.valeur
+          self.fin_modif()
           return 1
         elif type(new_valeur)==types.StringType and self.wait_TXM():
+          self.init_modif()
           self.val = new_valeur
           self.valeur = new_valeur
-          self.init_modif()
+          self.fin_modif()
           return 1
         else:
           return 0
     else :
       # on ne fait aucune vérification ...
+      self.init_modif()
       try:
         self.valeur = eval(new_valeur)
         self.val = eval(new_valeur)
-        self.init_modif()
+        self.fin_modif()
         return 1
       except:
         self.valeur = new_valeur
         self.val = new_valeur
-        self.init_modif()
+        self.fin_modif()
         return 1
 
   def eval_valeur(self,new_valeur):
@@ -280,6 +284,32 @@ class MCSIMP(I_OBJECT.OBJECT):
       if self.valeur == sd:
         self.valeur=None
         self.val=None
+        self.init_modif()
+
+  def replace_concept(self,old_sd,sd):
+    """
+        Inputs :
+           old_sd=concept remplacé
+           sd=nouveau concept
+        Fonction :
+           Met a jour la valeur du mot cle simple suite au remplacement 
+           du concept old_sd
+    """
+    if type(self.valeur) == types.TupleType :
+      if old_sd in self.valeur:
+        self.valeur=list(self.valeur)
+        i=self.valeur.index(old_sd)
+        self.valeur[i]=sd
+        self.init_modif()
+    elif type(self.valeur) == types.ListType:
+      if old_sd in self.valeur:
+        i=self.valeur.index(old_sd)
+        self.valeur[i]=sd
+        self.init_modif()
+    else:
+      if self.valeur == old_sd:
+        self.valeur=sd
+        self.val=sd
         self.init_modif()
 
   def copy(self):
@@ -339,9 +369,10 @@ class MCSIMP(I_OBJECT.OBJECT):
          new_objet = CO(nom_co)
          CONTEXT.unset_current_step()
          CONTEXT.set_current_step(cs)
+      self.init_modif()
       self.valeur = new_objet
       self.val = new_objet
-      self.init_modif()
+      self.fin_modif()
       step.reset_context()
       # On force l'enregistrement de new_objet en tant que concept produit 
       # de la macro en appelant get_type_produit avec force=1
@@ -371,13 +402,16 @@ class MCSIMP(I_OBJECT.OBJECT):
 	 else:
 	    l.append(sd)
        self.valeur=l
+       # Est ce init_modif ou init_modif_up
+       # Normalement init_modif va avec fin_modif
        self.init_modif()
+       self.fin_modif()
      else:
        if isinstance(self.valeur,ASSD) :
 	  if self.valeur not in l_sd_avant_etape :
 	     self.valeur = None
              self.init_modif()
- 
+             self.fin_modif()
  
   def get_min_max(self):
      """
@@ -392,6 +426,48 @@ class MCSIMP(I_OBJECT.OBJECT):
      """
      return self.definition.type
  
+#ATTENTION : toutes les methodes ci apres sont des surcharges du Noyau et de Validation
+# Elles doivent etre reintegrees des que possible
+
+  def isvalid(self,cr='non'):
+      """
+         Cette méthode retourne un indicateur de validité de l'objet
+         de type MCSIMP
+
+         - 0 si l'objet est invalide
+
+         - 1 si l'objet est valide
+
+         Le paramètre cr permet de paramétrer le traitement. 
+         Si cr == 'oui'
+             la méthode construit également un comte-rendu de validation
+             dans self.cr qui doit avoir été créé préalablement.
+      """
+      if self.state == 'unchanged':
+        return self.valid
+      else:
+        valid = 1
+        if hasattr(self,'valid'):
+          old_valid = self.valid
+        else:
+          old_valid = None
+        v=self.valeur
+        #  presence
+        if self.isoblig() and v == None :
+          if cr == 'oui' :
+            self.cr.fatal(string.join(("Mot-clé : ",self.nom," obligatoire non valorisé")))
+          valid = 0
+        # type,into ...
+        valid = self.verif_type(cr=cr)*self.verif_into(cr=cr)*self.verif_card(cr=cr)
+        self.valid = valid
+        self.state = 'unchanged'
+        # Si la validité du mot clé a changé, on le signale à l'objet parent
+        if not old_valid:
+          self.init_modif_up()
+        elif old_valid != self.valid : 
+          self.init_modif_up()
+        return self.valid
+
  
  
  

@@ -216,6 +216,57 @@ class JDC(I_OBJECT.OBJECT):
       if sd:return sd
       return self.get_sd_apres_etape(nom_sd,etape,avec)
 
+   def get_contexte_avant(self,etape):
+      """
+         Retourne le dictionnaire des concepts connus avant etape
+         On tient compte des commandes qui modifient le contexte
+         comme DETRUIRE ou les macros
+         Si etape == None, on retourne le contexte en fin de JDC
+      """
+      # L'étape courante pour laquelle le contexte a été calculé est
+      # mémorisée dans self.index_etape_courante
+      # XXX on pourrait faire mieux dans le cas PAR_LOT="NON" : en
+      # mémorisant l'étape
+      # courante pendant le processus de construction des étapes.
+      # Si on insère des commandes (par ex, dans EFICAS), il faut préalablement
+      # remettre ce pointeur à 0
+      if etape:
+         index_etape=self.etapes.index(etape)
+      else:
+         index_etape=len(self.etapes)
+      if index_etape >= self.index_etape_courante:
+         # On calcule le contexte en partant du contexte existant
+         d=self.current_context
+         if self.index_etape_courante==0 and self.context_ini:
+            d.update(self.context_ini)
+         liste_etapes=self.etapes[self.index_etape_courante:index_etape]
+      else:
+         d=self.current_context={}
+         if self.context_ini:d.update(self.context_ini)
+         liste_etapes=self.etapes
+
+      for e in liste_etapes:
+         if e is etape:
+            break
+         if e.isactif():
+            e.update_context(d)
+      self.index_etape_courante=index_etape
+      return d
+
+   def get_contexte_apres(self,etape):
+      """
+         Retourne le dictionnaire des concepts connus apres etape
+         On tient compte des commandes qui modifient le contexte
+         comme DETRUIRE ou les macros
+         Si etape == None, on retourne le contexte en fin de JDC
+      """
+      if not etape: return self.get_contexte_avant(etape)
+
+      d=self.get_contexte_avant(etape)
+      if etape.isactif():etape.update_context(d)
+      self.index_etape_courante=self.index_etape_courante+1
+      return d
+
    def active_etapes(self):
       """
           Cette méthode a pour fonction de désactiver les étapes qui doivent
@@ -245,6 +296,10 @@ class JDC(I_OBJECT.OBJECT):
           un jeu de commandes
       """
       self.init_modif()
+      # On memorise le contexte avant l'etape a supprimer
+      d=self.get_contexte_avant(etape)
+      index_etape=self.etapes.index(etape)
+
       self.etapes.remove(etape)
       if etape.niveau is not self:
         # Dans ce cas l'étape est enregistrée dans un niveau
@@ -253,25 +308,13 @@ class JDC(I_OBJECT.OBJECT):
       etape.supprime_sdprods()
       self.active_etapes()
 
-   def del_sdprod(self,sd):
-      """
-          Supprime la SD sd de la liste des sd et des dictionnaires de contexte
-      """
-      if sd in self.sds : self.sds.remove(sd)
-      if self.g_context.has_key(sd.nom) : del self.g_context[sd.nom]
-
-   def delete_concept(self,sd):
-      """ 
-          Inputs :
-             sd=concept detruit
-          Fonction :
-             Mettre a jour les etapes du JDC suite à la disparition du 
-             concept sd
-             Seuls les mots cles simples MCSIMP font un traitement autre 
-             que de transmettre aux fils
-      """
-      for etape in self.etapes :
-        etape.delete_concept(sd)
+      # Apres suppression de l'etape il faut controler que les etapes
+      # suivantes ne produisent pas des concepts DETRUITS dans op_init de etape
+      for e in self.etapes[index_etape:]:
+         e.control_sdprods(d)
+      
+      self.reset_context()
+      self.fin_modif()
 
    def analyse(self):
       self.compile()
@@ -368,17 +411,6 @@ class JDC(I_OBJECT.OBJECT):
       if self.appli:
          self.appli.send_message(message)
 
-#XXX ne semble pas servir pour JDC
-#   def reevalue_sd_jdc(self):
-      #""" 
-          #Avec la liste des SD qui ont été supprimées, propage la disparition de ces
-          #SD dans toutes les étapes et descendants
-      #"""
-      #l_sd = self.diff_contextes()
-      #if len(l_sd) == 0 : return
-      #for sd in l_sd:
-        #self.jdc.delete_concept(sd)
-
    def init_modif(self):
       """
       Méthode appelée au moment où une modification va être faite afin de 
@@ -387,6 +419,7 @@ class JDC(I_OBJECT.OBJECT):
       self.state = 'modified'
 
    def fin_modif(self):
+      self.isvalid()
       pass
 
    def get_liste_mc_inconnus(self):
@@ -423,6 +456,7 @@ class JDC(I_OBJECT.OBJECT):
          fproc=open(file,'r')
          text=fproc.read()
          fproc.close()
+      if file == None : return None,None
       text=string.replace(text,'\r\n','\n')
       linecache.cache[file]=0,0,string.split(text,'\n'),file
       return file,text
@@ -435,30 +469,34 @@ class JDC(I_OBJECT.OBJECT):
       """
       return []
 
-   def NommerSdprod(self,sd,sdnom):
+   def NommerSdprod(self,sd,sdnom,restrict='non'):
       """
-          Nomme la SD apres avoir verifie que le nommage est possible : nom
-          non utilise
+          Nomme la SD apres avoir verifie que le nommage est possible : 
+          nom non utilise
           Si le nom est deja utilise, leve une exception
           Met le concept créé dans le concept global g_context
       """
       # XXX En mode editeur dans EFICAS, le nommage doit etre géré différemment
       # Le dictionnaire g_context ne représente pas le contexte
       # effectif avant une étape.
-      # Il faut utiliser get_contexte_avant avec une indication de l'étape
-      # traitée. Pour le moment, il n'y a pas de moyen de le faire : ajouter 
-      # un attribut dans le JDC ???
+      # Il faut utiliser get_contexte_avant avec indication de l'étape
+      # traitée. 
+      # Cette etape est indiquee par l'attribut _etape_context qui a ete 
+      # positionné préalablement par un appel à set_etape_context
+
       if CONTEXT.debug : print "JDC.NommerSdprod ",sd,sdnom
+
       if self._etape_context:
          o=self.get_contexte_avant(self._etape_context).get(sdnom,None)
       else:
-         o=self.g_context.get(sdnom,None)
+         o=self.sds_dict.get(sdnom,None)
+
       if isinstance(o,ASSD):
          raise AsException("Nom de concept deja defini : %s" % sdnom)
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
       # Ajoute a la creation (appel de reg_sd).
-      self.g_context[sdnom]=sd
+      self.sds_dict[sdnom]=sd
       sd.nom=sdnom
 
    def set_etape_context(self,etape):
@@ -477,6 +515,14 @@ class JDC(I_OBJECT.OBJECT):
       self.current_context={}
       self.index_etape_courante=0
 
+   def del_sdprod(self,sd):
+      """
+          Supprime la SD sd de la liste des sd et des dictionnaires de contexte
+      """
+      if sd in self.sds : self.sds.remove(sd)
+      if self.g_context.has_key(sd.nom) : del self.g_context[sd.nom]
+      if self.sds_dict.has_key(sd.nom) : del self.sds_dict[sd.nom]
+
    def del_param(self,param):
       """
           Supprime le paramètre param de la liste des paramètres
@@ -492,4 +538,102 @@ class JDC(I_OBJECT.OBJECT):
       """
       if fonction in self.fonctions : self.fonctions.remove(fonction)
       if self.g_context.has_key(fonction.nom) : del self.g_context[fonction.nom]
+
+   def append_sdprod(self,sd):
+      """
+          Ajoute la SD sd à la liste des sd en vérifiant au préalable qu'une SD de
+          même nom n'existe pas déjà
+      """
+      if sd == None or sd.nom == None:return
+
+      o=self.sds_dict.get(sd.nom,None)
+      if isinstance(o,ASSD):
+         raise AsException("Nom de concept deja defini : %s" % sd.nom)
+      self.sds_dict[sd.nom]=sd
+      self.g_context[sd.nom] = sd
+      if sd not in self.sds : self.sds.append(sd)
+
+   def append_param(self,param):
+      """
+          Ajoute le paramètre param à la liste des params
+          et au contexte global
+      """
+      # il faudrait vérifier qu'un paramètre de même nom n'existe pas déjà !!!
+      if param not in self.params : self.params.append(param)
+      self.g_context[param.nom]=param
+
+   def append_fonction(self,fonction):
+      """
+          Ajoute la fonction fonction à la liste des fonctions
+          et au contexte global
+      """
+      # il faudrait vérifier qu'une fonction de même nom n'existe pas déjà !!!
+      if fonction not in self.fonctions : self.fonctions.append(fonction)
+      self.g_context[fonction.nom]=fonction
+
+   def delete_concept_after_etape(self,etape,sd):
+      """
+          Met à jour les étapes du JDC qui sont après etape en fonction
+          de la disparition du concept sd
+      """
+      index = self.etapes.index(etape)+1
+      if index == len(self.etapes) : 
+         return # etape est la dernière étape du jdc ...on ne fait rien !
+      for child in self.etapes[index:]:
+        child.delete_concept(sd)
+
+   def delete_concept(self,sd):
+      """
+          Inputs :
+             sd=concept detruit
+          Fonction :
+             Mettre a jour les etapes du JDC suite à la disparition du
+             concept sd
+             Seuls les mots cles simples MCSIMP font un traitement autre
+             que de transmettre aux fils
+      """
+      for etape in self.etapes :
+        etape.delete_concept(sd)
+
+   def replace_concept_after_etape(self,etape,old_sd,sd):
+      """
+          Met à jour les étapes du JDC qui sont après etape en fonction
+          du remplacement du concept sd
+      """
+      index = self.etapes.index(etape)+1
+      if index == len(self.etapes) :
+         return # etape est la dernière étape du jdc ...on ne fait rien !
+      for child in self.etapes[index:]:
+        child.replace_concept(old_sd,sd)
+
+   def dump_state(self):
+      print "dump_state"
+      print "JDC.state: ",self.state
+      for etape in self.etapes :
+         print etape.nom+".state: ",etape.state
+      
+#ATTENTION cette methode surcharge la methode du package Validation : a reintegrer
+   def isvalid(self,cr='non'):
+      """
+        Méthode booléenne qui retourne 0 si le JDC est invalide, 1 sinon
+      """
+      # FR : on prend en compte l'état du JDC ('unchanged','modified','undetermined')
+      # afin d'accélérer le test de validité du JDC
+      if self.state == 'unchanged':
+        return self.valid
+      else:
+        valid = 1
+        texte,test = self.verif_regles()
+        if test == 0:
+          if cr == 'oui': self.cr.fatal(string.strip(texte))
+          valid = 0
+        if valid :
+          for e in self.etapes:
+            if not e.isactif() : continue
+            if not e.isvalid():
+              valid = 0
+              break
+        self.state="unchanged"
+        self.valid = valid
+        return self.valid
 
