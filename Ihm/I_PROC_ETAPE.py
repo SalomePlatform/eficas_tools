@@ -85,7 +85,6 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
         raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
                               'fichier : ',self.appel[1],e)
       except EOFError:
-        self.reset_current_step()
         raise
       except :
         l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])

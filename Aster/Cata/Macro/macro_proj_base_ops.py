@@ -1,4 +1,4 @@
-#@ MODIF macro_proj_base_ops Macro  DATE 11/06/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF macro_proj_base_ops Macro  DATE 20/01/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -27,7 +27,8 @@ def macro_proj_base_ops(self,BASE,NB_VECT,MATR_ASSE_GENE,VECT_ASSE_GENE,**args):
   PROJ_MATR_BASE =self.get_cmd('PROJ_MATR_BASE')
   PROJ_VECT_BASE =self.get_cmd('PROJ_VECT_BASE')
   # La macro compte pour 1 dans la numerotation des commandes
-  self.icmd=1
+  #self.icmd=1
+  self.set_icmd(1)
 
   nompro=None
   iocc=0
