@@ -313,7 +313,7 @@ NONE = None
       """
       if self.appli :
          # Si le JDC est relié à une application maitre, on délègue la recherche
-         file= self.appli.get_file(unite,fic_origine)
+         file,text= self.appli.get_file(unite,fic_origine)
       else:
          file = None
          if unite != None:
