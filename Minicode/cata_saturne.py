@@ -3,6 +3,8 @@
 import Accas
 from Accas import *
 
+#CONTEXT.debug=1
+
 import ops
 
 JdC = JDC_CATA(code='SATURNE',
@@ -1499,3 +1501,51 @@ MACRO2 =MACRO(nom="MACRO2",op= -5 ,docu="U4.61.21-c",
                       fr="Calcul des matrices assemblées (matr_asse_gd) par exemple de rigidité, de masse ",
          MODELE          =SIMP(statut='o',typ=modele),
 );
+
+class concept(ASSD):pass
+
+def op1_prod(x,**args):
+   if x == 0:return concept
+   if x == 1:return concept
+   raise AsException("type de concept resultat non prevu")
+
+OP1 = OPER(nom='OP1',op=1,sd_prod=op1_prod,reentrant='f',
+           a=SIMP(statut='o',typ='I',into=(0,1,2)),
+           b=SIMP(typ=concept),
+           ccc=FACT(statut='d',d=SIMP(typ='I'),e=SIMP(typ='I')),
+           b_1=BLOC(condition="a==0",
+                    x=SIMP(statut='o',typ='I',into=(0,1)),
+                    c=FACT(d=SIMP(typ='I'),e=SIMP(typ='I')),
+                   ),
+           b_2=BLOC(condition="a==1",
+                    x=SIMP(statut='o',typ='I',into=(0,1)),
+                    b_2=BLOC(condition="1",
+                             cc=FACT(d=SIMP(typ='I'),e=SIMP(typ='I')),
+                             c=FACT(d=SIMP(typ='I'),e=SIMP(typ='I')),
+                            ),
+                   ),
+          );
+
+
+def op2_prod(self,x,**args):
+   if x == 0:return concept
+   if x == 1:return concept
+   raise AsException("type de concept resultat non prevu")
+
+OP2 = MACRO(nom='OP2',op=1,sd_prod=op2_prod,reentrant='f',
+           a=SIMP(statut='o',typ='I',into=(0,1,2)),
+           b=SIMP(typ=concept),
+           ccc=FACT(statut='d',d=SIMP(typ='I'),e=SIMP(typ='I')),
+           b_1=BLOC(condition="a==0",
+                    x=SIMP(statut='o',typ='I',into=(0,1)),
+                    c=FACT(d=SIMP(typ='I'),e=SIMP(typ='I')),
+                   ),
+           b_2=BLOC(condition="a==1",
+                    x=SIMP(statut='o',typ='I',into=(0,1)),
+                    b_2=BLOC(condition="1",
+                             cc=FACT(d=SIMP(typ='I'),e=SIMP(typ='I')),
+                             c=FACT(d=SIMP(typ='I'),e=SIMP(typ='I')),
+                            ),
+                   ),
+          );
+
