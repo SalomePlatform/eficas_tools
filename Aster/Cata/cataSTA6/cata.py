@@ -30,7 +30,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata.py,v 1.1 2004/11/19 09:06:20 eficas Exp $"
+__Id__="$Id: cata.py,v 1.2 2004/12/10 12:49:00 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
@@ -12614,7 +12614,7 @@ MACR_RECAL = MACRO(nom="MACR_RECAL",op=macr_recal_ops,docu="U4.73.02",
 # ======================================================================
 # RESPONSABLE JMBHH01 J.M.PROIX
 
-from Macro.macr_cara_poutre_ops import macro_cara_poutre_ops
+from cataSTA6.macro_cara_poutre_ops import macro_cara_poutre_ops
 
 MACRO_CARA_POUTRE=MACRO(nom="MACRO_CARA_POUTRE",op=macro_cara_poutre_ops,sd_prod=tabl_cara_geom,
                        docu="U4.42.02-d1",reentrant='n',
