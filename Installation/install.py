@@ -3,7 +3,7 @@ OUI,NON = 1,0
 
 ## constantes pour les tests de versions 
 
-python_min = 21
+python_min = 20
 tcl_min = 83
 tk_min  = 83
 pmw_min = 85

@@ -23,7 +23,7 @@ import types
 
 version="$Name:  $"[7:-2] or 'Test1_2'
 # ==========Path du noyau fourni par Aster====================
-path_Noyau="../../../Tutorial/Superv"
+path_Noyau="../../Accas6.3.0"
 # ============================================================
 nom_distrib="Eficas"+version+"AsterSTA6"
 path_distrib=os.path.join("dist",nom_distrib)
@@ -57,7 +57,9 @@ def main():
 
    copyfiles('../Tools',os.path.join(path_distrib,'Tools'),['*.py'])
    copyfiles('../Tools/foztools',os.path.join(path_distrib,'Tools','foztools'),['*.py'])
-
+   
+   copyfiles('../Installation',path_distrib,['README_install','install.py'])
+   
    tarball= maketarball('dist',nom_distrib,nom_distrib)
    try:
       shutil.copy(tarball,dir_download)
