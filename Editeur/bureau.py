@@ -206,7 +206,7 @@ class BUREAU:
           Demande à l'utilisateur quel JDC existant il veut ouvrir
       """
       if self.code == 'ASTER':
-          filetypes = ( ("format "+self.appli.format_fichier.get(), ".comm"),)
+          filetypes = ( ("format "+self.appli.format_fichier.get(), ".comm"),("Tous",'*'))
       else:
           filetypes = ( ("format "+self.appli.format_fichier.get(), ".py"),)
       if not hasattr(self,'initialdir'):

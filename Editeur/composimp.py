@@ -445,10 +445,12 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       bouton_add.place(relx=0.3,rely=0.35)
       bouton_sup.place(relx=0.3,rely=0.65)
       # affichage de l'aide
+      self.frame_aide.update()
       self.aide = Label(self.frame_aide,
                         text = aide,
                         justify='center',
-                        anchor='center')
+                        anchor='center',
+			wraplength=int(self.frame_aide.winfo_width()*0.8))
       self.aide.place(relx=0.5,rely=0.5,anchor='center',relwidth=1)
       self.Liste_valeurs.affiche_liste()
       # boutons Accepter et Annuler
@@ -892,7 +894,11 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       self.l_resu = Label(self.frame_valeur,text='Structure de donnée choisie :')
       self.valeur_choisie = StringVar()
       self.label_valeur = Label(self.frame_valeur,textvariable=self.valeur_choisie)
-      self.aide = Label(self.frame_valeur, text = aide)
+      self.frame_valeur.update()
+      self.aide = Label(self.frame_valeur,
+                        text = aide,
+			wraplength=int(self.frame_valeur.winfo_width()*0.8),
+			justify='center')
       self.aide.place(relx=0.5,rely=0.85,anchor='n')
       # affichage de la valeur courante
       self.display_valeur()
@@ -1065,7 +1071,11 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       self.entry.bind("<Return>",lambda e,c=self.valid_valeur:c())
       self.entry.focus()
       # aide associée au panneau
-      self.aide = Label(self.frame_valeur, text = aide)
+      self.frame_valeur.update()
+      self.aide = Label(self.frame_valeur, 
+                        text = aide,
+			wraplength=int(self.frame_valeur.winfo_width()*0.8),
+			justify='center')
       self.aide.place(relx=0.5,rely=0.7,anchor='n')
       # affichage de la valeur du MCS
       self.display_valeur()
@@ -1132,7 +1142,11 @@ class UNIQUE_COMP_Panel(UNIQUE_Panel):
       self.entry1.place(relx=0.27,rely = 0.5,relwidth=0.35)
       self.entry2.place(relx=0.65,rely = 0.5,relwidth=0.35)
       self.entry1.focus()
-      self.aide = Label(self.frame_valeur, text = aide)
+      self.frame_valeur.update()
+      self.aide = Label(self.frame_valeur,
+                        text = aide,
+                        wraplength=int(self.frame_valeur.winfo_width()*0.8),
+			justify='center')
       self.aide.place(relx=0.5,rely=0.7,anchor='n')
 
   def get_bulle_aide(self):

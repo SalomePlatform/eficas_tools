@@ -47,7 +47,7 @@ menu_defs={ 'bureau': [
               ('Jeu de commandes',[
                                    ('Rapport de validation','visuCRJDC'),
            #                        ('Fichier à plat','visu_a_plat'),
-                                   ('Fichier .py','visuJDC_py'),
+                                   ('Fichier format v6','visuJDC_py'),
                                    ('Fichier source','visu_txt_brut_JDC'),
                                    ('Paramètres Eficas','affichage_fichier_ini'),
                                    ('Mots-clés inconnus','mc_inconnus'),
