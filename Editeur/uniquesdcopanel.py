@@ -108,15 +108,20 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       """
       if self.parent.modified == 'n' : self.parent.init_modif()
       valeur = self.get_valeur()
+
       self.erase_valeur()
       anc_val = self.node.item.get_valeur()
       test_CO=self.node.item.is_CO(anc_val)
+      #PN essai pour bug dans MACRO_PROJ_BASE 
+      valeur,validite=self.node.item.eval_valeur(valeur)
       test = self.node.item.set_valeur(valeur)
       if not test :
           mess = "impossible d'évaluer : %s " %`valeur`
           self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée :"+mess)
           return
-      elif self.node.item.isvalid() :
+      #PN essai pour bug dans MACRO_PROJ_BASE 
+      #elif self.node.item.isvalid() :
+      elif validite: 
           self.parent.appli.affiche_infos('Valeur du mot-clé enregistrée')
           if test_CO:
              # il faut egalement propager la destruction de l'ancien concept
