@@ -71,9 +71,9 @@ class newSIMPPanel(panels.OngletPanel):
           self.node.racine.verif_all()
       else :
           self.node.parent.verif()
+      self.node.update()
       if self.node.item.isvalid():
           self.node.parent.select()
-      self.node.update()
 # ----------------------------------------------------------------------------------------
 #   Méthodes utlisées pour la manipulation des items dans les listes de choix
 # ----------------------------------------------------------------------------------------
