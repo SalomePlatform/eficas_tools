@@ -10,7 +10,7 @@ pmw_min = 85
 test = 0
 
 try:
-    import sys,string,re,types
+    import sys,string,re,types,traceback
     import os,commands
 except Exception,e:
     print "Mauvaise installation de Python"
@@ -186,7 +186,7 @@ class SplashScreen(Tkinter.Toplevel):
     def init(self,args={}):
         self.text = Tkinter.StringVar()
         self.text.set('')
-        self.icone = 'logo_edf.gif'
+        self.icone = 'Editeur/icons/logo_edf.gif'
         self.barre = 'non'
         if args == {} : return
         if args.has_key('text'):
@@ -198,7 +198,7 @@ class SplashScreen(Tkinter.Toplevel):
         else:
             self.code = 'inconnu'
         if self.code == 'ASTER' :
-            self.icone = 'code_aster.gif'
+            self.icone = 'Editeur/icons/code_aster.gif'
         
     def CreateWidgets(self):
         fic_image = os.path.join("./", self.icone)
@@ -347,14 +347,14 @@ class Config(Tkinter.Toplevel):
         # designation, texte d'invite , option par defaut(unix), option par defaut(windows), flag obligatoire/facultatif
         self.l_tx_items = (('rep_install'   ,
                             "Répertoire d'installation :",
-                            'usr/local',
+                            '',
                             '',
                             'o'),
                            ('rep_travail'   ,
                             'Répertoire de travail :',
                             'tmp',
                             'tmp',
-                            'o'),
+                            'f'),
                            ('rep_mat'       ,
                             'Répertoire matériaux :',
                             None,
@@ -368,7 +368,7 @@ class Config(Tkinter.Toplevel):
                             ),
                            ('acrobat'       ,
                             'Exécutable Acrobat Reader :',
-                            'usr/bin/acroread',
+                            '/usr/bin/acroread',
                             'acrobat.exe',
                             'o')
                            )
@@ -465,11 +465,11 @@ class Config(Tkinter.Toplevel):
         self.deactivate_entries()           #  Les entrees et les boutons sont desactivees
         self.deactivate_buttons()           #  pendant les operations d'installation
         #self.decompress_archive()
-        if not os.path.exists(os.path.join(REPERTOIRE,'Eficas')):
-            self.afficher_fatale("Il manque des fichiers d'EFICAS")
-            self.install_running = 0
-            return
-        self.nb_fichiers = self.compte_fichiers(os.path.join(REPERTOIRE,'Eficas'))
+        #if not os.path.exists(os.path.join(REPERTOIRE,'Eficas')):
+        #    self.afficher_fatale("Il manque des fichiers d'EFICAS")
+        #    self.install_running = 0
+        #    return
+        self.nb_fichiers = self.compte_fichiers(REPERTOIRE)
         if self.nb_fichiers == 0:
             self.afficher_fatale("Il manque des fichiers d'EFICAS")
             self.install_running = 0
@@ -483,7 +483,7 @@ class Config(Tkinter.Toplevel):
                 return
         except:
             self.install_running = 0
-            afficher_fatale("Impossible de créer certains répertoires")
+            self.afficher_fatale("Impossible de créer certains répertoires")
             
         # affiche la fenêtre avec la barre de progression
         self.afficher_copie_fichiers()          
@@ -494,11 +494,12 @@ class Config(Tkinter.Toplevel):
                 self.activate_buttons()
                 self.install_running = 0
                 return
-        except:
+        except :
+	    traceback.print_exc()
             self.install_running = 0
-            afficher_fatale("Impossible de copier certains fichiers")
+            self.afficher_fatale("Impossible de copier certains fichiers")
 
-        self.rm_temp_dirs()                     # efface les répertoires temporaires
+        #self.rm_temp_dirs()                     # efface les répertoires temporaires
         try:
             self.creer_fic_conf()                   # crée le fichier eficas.conf
         except:
@@ -771,19 +772,18 @@ class Config(Tkinter.Toplevel):
         Crée le fichier editeur.ini a partir des données saisies
         par l'administrateur.
         """
-        fichier_conf = os.path.join(self.normaliser_chemin(self.rep_install.get_valeur()),"Eficas/Accas/editeur.ini")
+        fichier_conf = os.path.join(self.normaliser_chemin(self.rep_install.get_valeur()),"Eficas/Aster/editeur.ini")
         f = open(fichier_conf,'w')
         f.write("path_doc        =    "+'"'+self.normaliser_chemin(self.rep_docaster.get_valeur())+'"\n')
         f.write("exec_acrobat    =    "+'"'+self.normaliser_chemin(self.acrobat.get_valeur())+'"\n')
         f.write('isdeveloppeur   =    "NON"\n')
         f.write("rep_travail     =    "+'"'+self.normaliser_chemin(self.rep_travail.get_valeur())+'"\n')
-        f.write("rep_cata        =    "+'"'+os.path.join(self.normaliser_chemin(self.rep_install.get_valeur()),"Eficas/Cata")+'"/\n') # attention au dernier slash
+        f.write("rep_cata        =    "+'"'+os.path.join(self.normaliser_chemin(self.rep_install.get_valeur()),"Eficas/Aster/Cata/")+'"\n') # attention au dernier slash
         f.write("rep_mat         =    "+'"'+self.normaliser_chemin(self.rep_mat.get_valeur())+'"\n')
-        cata = """catalogues = (('ASTER','v5',rep_cata + 'cata_aster_v5.py','defaut'),
-              ('ASTER','v6',rep_cata + 'cata_aster_v6.py')
-             )\n"""
+        cata = """catalogues = (('ASTER','v6',rep_cata + 'cata_STA6.py','python','defaut'),)\n"""
         f.write(cata)
         f.close()
+	
 
     def move_files(self):
         """
@@ -792,7 +792,7 @@ class Config(Tkinter.Toplevel):
         """
         # création du répertoire Eficas
         rep_eficas = os.path.join(self.rep_install.get_valeur(),'Eficas')
-        self.copy_rep(os.path.join(REPERTOIRE,'Eficas'),rep_eficas)
+        self.copy_rep(REPERTOIRE,rep_eficas)
 
     def copy_rep(self,rep_dep,rep_arr):
         """
@@ -810,7 +810,7 @@ class Config(Tkinter.Toplevel):
                 commande_delete= self.d_commandes['delete']+nom_complet_dep
                 try:
                     os.system(commande_copie)
-                    os.system(commande_delete)
+                    #os.system(commande_delete)
                     self.attente.update_barre()
                 except Exception,e:
                     pass
