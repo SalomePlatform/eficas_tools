@@ -309,7 +309,10 @@ class PARSEUR_PYTHON:
                                 commande_courante = None
                         else:
                             #--> poursuite d'une affectation
-                            affectation_courante.append_text(ligne)
+			    # PN -- pour Empecher une erreur pas propre
+			    if affectation_courante != None :
+                               affectation_courante.append_text(ligne)
+                            #affectation_courante.append_text(ligne)
 
 
     def get_texte(self):
