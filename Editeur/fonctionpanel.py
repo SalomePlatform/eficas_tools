@@ -32,6 +32,8 @@ import panels
 import images
 from widgets import ListeChoix
 from widgets import FenetreDeSelection
+from widgets import askopenfilename
+from widgets import showinfo
 
 from Noyau.N_CR import justify_text
 from utils import substract_list
@@ -138,6 +140,9 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
       #decoupe la liste des valeurs en n ( les x puis les y)
       nb=self.nb_valeurs
       l_valeurs=[]
+      if (len(liste)%nb != 0):
+          message="La cardinalité n'est pas correcte, la dernière valeur est ignorée"
+          showinfo("Problème",message)
       for i in range(len(liste)/nb) :
           if (nb==2):
               t=(liste[i*nb], liste[i*nb+1])
@@ -258,4 +263,26 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
 	self.entry.insert(0,affiche)
       except :
 	self.entry.delete(0,END)
+
+# Surcharge de select in file pour prendre en compte la saisie de tuple
+  def select_in_file(self):
+      """ Permet d'ouvrir un fichier choisi par l'utilisateur. """
+      nom_fichier = askopenfilename(title="Choix fichier :")
+
+      if not nom_fichier:
+          return
+
+      try:
+          f = open(nom_fichier, "rb")
+          selection_texte = f.read()
+          f.close()
+          self.add_double_valeur_plusieurs_base = FenetreDeSelection(self,
+                                                  self.node.item,
+                                                  self.parent.appli,
+                                                  titre="Sélection de valeurs",
+                                                  texte=selection_texte,
+                                                  cardinal = self.nb_valeurs)
+      except:
+          traceback.print_exc()
+          showinfo("Erreur de fichier","impossible d'ouvir le fichier "+nom_fichier)
 

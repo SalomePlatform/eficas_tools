@@ -185,8 +185,9 @@ class FenetreDeSelection(Fenetre):
     """ Classe dérivée de Fenêtre permettant la récupération d'une zone de texte sélectionnée.
         Cette classe est utilisée pour affecter une liste de valeurs à un mot-clé.
     """
-    def __init__(self,panel,item,appli,titre="",texte=""):
+    def __init__(self,panel,item,appli,titre="",texte="",cardinal=1):
         Fenetre.__init__(self,appli,titre=titre,texte=texte)
+        self.cardinal=cardinal
         self.fenetre.configure(width = 320,height=400)
         centerwindow(self.fenetre)
         self.panel = panel
@@ -248,6 +249,24 @@ class FenetreDeSelection(Fenetre):
         if self.test_probleme(message,"Vérifiez le domaine des valeurs") == 0:
             return
         # Ajoute les valeurs dans la liste de valeurs du mot-clé
+        if self.cardinal != 1 :
+           nb=self.cardinal
+           l_valeurs=[]
+           # a ameliorer
+           if (len(liste_valeurs)%nb != 0):
+                message="La cardinalité n'est pas correcte"
+                self.test_probleme(message,"On attend des tuples")
+                return
+           for i in range(len(liste_valeurs)/nb) :
+               if (nb==2):
+                   t=(liste_valeurs[i*nb], liste_valeurs[i*nb+1])
+               elif (nb ==3):
+                   t=(liste_valeurs[i*nb], liste_valeurs[i*nb+1], liste_valeurs[i*nb+2])
+               else :
+                  print "probleme : prevenir la maintenance Eficas"
+                  return
+               l_valeurs.append(t)
+           liste_valeurs=l_valeurs
         self.ajouter_valeurs(liste_valeurs)
         self.appli.affiche_infos("Liste de valeurs acceptée")
 

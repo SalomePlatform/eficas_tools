@@ -111,9 +111,9 @@ class PLUSIEURS_ASSD_Panel(PLUSIEURS_Panel):
 	 valeurentree = self.get_valeur()
       valeur,validite=self.node.item.eval_valeur(valeurentree)
       if not validite :
-             commentaire = "impossible d'évaluer : %s " %`valeurentree`
-             self.parent.appli.affiche_infos(commentaire)
-             return
+         commentaire = "impossible d'évaluer : %s " %`valeurentree`
+         self.parent.appli.affiche_infos(commentaire)
+         return
       self.add_valeur_sans_into(valeur)
 
   def get_bulle_aide(self):
