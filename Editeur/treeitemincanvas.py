@@ -27,7 +27,7 @@ import Objecttreeitem
 import treewidget
 
 class TREEITEMINCANVAS:
-   def __init__(self,object,nom="",parent=None,appli=None,sel=None):
+   def __init__(self,object,nom="",parent=None,appli=None,sel=None,rmenu=None):
       self.object=object
       self.nom=nom
 
@@ -49,7 +49,7 @@ class TREEITEMINCANVAS:
       if not sel:
          def sel(event=None):
             return
-      self.tree=treewidget.Tree(self.appli,self.item,self.canvas,command=sel)
+      self.tree=treewidget.Tree(self.appli,self.item,self.canvas,command=sel,rmenu=rmenu)
       self.tree.draw()
 
    def mainloop(self):

@@ -47,9 +47,9 @@ def after_cancel(t):
             pass
 
 class TOOLTIP:
-    def __init__(self,widget):
+    def __init__(self,widget,text=None):
         self.widget=widget
-        self.text = None
+        self.text = text
         self.timer = None
         self.tooltip = None
         self.label = None
@@ -119,14 +119,8 @@ class TOOLTIP:
 
 if __name__ == "__main__":
    root=Tkinter.Tk()
-
-   def aide(event):
-      tp=TOOLTIP(root)
-      tp.setText("texte d'aide")
-      tp._showTip()
-
    label = Tkinter.Label(root, text="coucou")
-   label.bind("<ButtonPress>", aide)
    label.pack()
+   tp=TOOLTIP(label,"texte d'aide")
    root.mainloop()
 

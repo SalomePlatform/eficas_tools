@@ -23,6 +23,7 @@
    les informations attachées au noeud de l'arbre sélectionné
 """
 # Modules Python
+import types
 import Tkinter
 import Pmw
 
@@ -76,7 +77,47 @@ class JDCDISPLAY:
       self.pane.add('selected',min=0.4)
       self.pane.pack(expand=1,fill='both')
       self.tree=TREEITEMINCANVAS(jdc,nom_jdc,self.pane.pane('treebrowser'),
-                 self.appli,self.select_node)
+                 self.appli,self.select_node,self.make_rmenu)
+
+   def make_rmenu(self,node,event):
+      if hasattr(node.item,'rmenu_specs'):
+         rmenu = Tkinter.Menu(self.pane.pane('treebrowser'), tearoff=0)
+         #node.select()
+         self.cree_menu(rmenu,node.item.rmenu_specs,node)
+         rmenu.tk_popup(event.x_root,event.y_root)
+
+   def cree_menu(self,menu,itemlist,node):
+      """
+            Ajoute les items du tuple itemlist
+            dans le menu menu
+      """
+      number_item=0
+      radio=None
+      for item in itemlist:
+         number_item=number_item + 1
+         if not item :
+            menu.add_separator()
+         else:
+            label,method=item
+            if type(method) == types.TupleType:
+                 # On a un tuple => on cree une cascade
+                 menu_cascade=Tkinter.Menu(menu)
+                 menu.add_cascade(label=label,menu=menu_cascade)
+                 self.cree_menu(menu_cascade,method,node)
+            elif method[0] == '&':
+                 # On a une chaine avec & en tete => on cree un radiobouton
+                 try:
+                    command=getattr(node.item,method[1:])
+                    menu.add_radiobutton(label=label,command=lambda a=self.appli,c=command:c(a))
+                    if radio == None:radio=number_item
+                 except:pass
+            else:
+                 try:
+                    command=getattr(node.item,method)
+                    menu.add_command(label=label,command=lambda a=self.appli,c=command:c(a))
+                 except:pass
+      # Si au moins un radiobouton existe on invoke le premier
+      if radio:menu.invoke(radio)
 
    def select_node(self,node):
       """

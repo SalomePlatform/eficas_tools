@@ -36,7 +36,7 @@ from widgets import Fenetre,FenetreYesNo
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.5 2002/09/09 10:39:06 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.6 2002/11/06 17:25:56 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -68,19 +68,7 @@ class MACROPanel(panels.OngletPanel):
     self.makeParamCommentPage_for_etape(nb.page("Commentaire"))
     nb.tab('Mocles').focus_set()
     nb.setnaturalsize()
-    #self.monmenu=Tkinter.Menu(self.parent.appli.menubar,tearoff=0)
-    #self.monmenu.add_command(label='Build',command=self.Build)
-    #self.monmenu.add_command(label='View',command=self.View)
-    #self.parent.appli.add_menu(label="Macro",menu=self.monmenu)    
     self.affiche()
-
-  def Build(self):
-    print "Build"
-    self.node.item.object.Build()
-
-  def View(self):
-    print "View"
-    MacroDisplay(self.parent.appli,self.node.item.object,self.node.item.object.nom)
 
   def makeFichierPage(self,page):
     """
@@ -132,11 +120,13 @@ class MACROPanel(panels.OngletPanel):
        self.node.item.object.fichier_text=None
        self.node.item.object.fichier_err="Le fichier n'est pas defini"
        self.node.item.object.contexte_fichier_init={}
+       self.node.item.object.recorded_units={}
 
     old_fic = self.node.item.object.fichier_ini
     old_text = self.node.item.object.fichier_text
     old_err = self.node.item.object.fichier_err
     old_context=self.node.item.object.contexte_fichier_init
+    old_units=self.node.item.object.recorded_units
 
     new_fic = self.entry.get()
     if not os.path.isfile(new_fic) :
@@ -149,6 +139,7 @@ class MACROPanel(panels.OngletPanel):
     # Si probleme a la lecture-conversion on arrete le traitement
     if not text:
        return
+    self.node.item.object.recorded_units={}
 
     try:
       self.node.item.object.make_contexte_include(new_fic,text)
@@ -157,7 +148,8 @@ class MACROPanel(panels.OngletPanel):
       self.parent.appli.affiche_infos("Fichier invalide")
       l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
       f=FenetreYesNo(self.parent.appli,titre="Fichier invalide : voulez vous retablir l ancien fichier ?",
-                             texte="Erreur dans l'interprétation du nouveau fichier ...\n\n"+string.join(l))
+                             texte="Erreur dans l'interprétation du nouveau fichier ...\n\n"+string.join(l),
+                             yes="Retablir",no="Changer")
       f.wait()
       reponse=f.result
       if reponse:
@@ -167,18 +159,21 @@ class MACROPanel(panels.OngletPanel):
          self.node.item.object.fichier_text=old_text
          self.node.item.object.fichier_err=old_err
          self.node.item.object.contexte_fichier_init=old_context
+         self.node.item.object.recorded_units=old_units
          self.parent.appli.affiche_infos("Fichier invalide ... Ancien fichier restauré")
          if old_fic:
              self.entry.insert(0,self.node.item.object.fichier_ini)
       else:
          # On conserve la memoire du nouveau fichier
-         # mais on n'utilise pas les etapes et concepts crees par ce fichier
+         # mais on n'utilise pas les concepts crees par ce fichier
          # on met l'etape en erreur : fichier_err=string.join(l)
          self.node.item.object.init_modif()
          self.node.item.object.fichier_ini=new_fic
          self.node.item.object.fichier_text=text
          self.node.item.object.fichier_err=string.join(l)
-         self.node.item.object.etapes=[]
+         # On enregistre la modification de fichier
+         self.node.item.object.record_unite()  
+         #self.node.item.object.etapes=[]
          self.node.item.object.g_context={}
          # Le contexte du parent doit etre reinitialise car les concepts produits ont changé
          self.node.item.object.parent.reset_context()
@@ -198,6 +193,8 @@ class MACROPanel(panels.OngletPanel):
     self.node.item.object.fichier_ini = new_fic
     self.node.item.object.fichier_text=text
     self.node.item.object.fichier_err=None
+    # On enregistre la modification de fichier
+    self.node.item.object.record_unite()  
     # Le contexte du parent doit etre reinitialise car les concepts produits ont changé
     self.node.item.object.parent.reset_context()
 
@@ -328,42 +325,29 @@ class MACROTreeItem(compooper.EtapeTreeItem):
   def get_noms_sd_oper_reentrant(self):
       return self.object.get_noms_sd_oper_reentrant()
 
-class INCLUDE_MATERIAUTreeItem(MACROTreeItem):
-  pass
+class INCLUDETreeItem(MACROTreeItem):
+  rmenu_specs=[("View","makeView")]
+
+  def makeView(self,appli):
+    nom=self.object.nom
+    if hasattr(self.object,'fichier_ini'):nom=nom+' '+self.object.fichier_ini
+    macrodisplay.makeMacroDisplay(appli,self.object,nom)
+
+class INCLUDE_MATERIAUTreeItem(INCLUDETreeItem): pass
+class POURSUITETreeItem(INCLUDETreeItem): pass
 
 treeitem=MACROTreeItem
 def treeitem(appli, labeltext, object, setfunction=None):
    if object.nom == "INCLUDE_MATERIAU":
       return INCLUDE_MATERIAUTreeItem(appli, labeltext, object, setfunction)
    elif object.nom == "INCLUDE":
-      return MACROTreeItem(appli, labeltext, object, setfunction)
+      return INCLUDETreeItem(appli, labeltext, object, setfunction)
+   elif object.nom == "POURSUITE":
+      return POURSUITETreeItem(appli, labeltext, object, setfunction)
    else:
       return MACROTreeItem(appli, labeltext, object, setfunction)
 
 import Accas
 objet=Accas.MACRO_ETAPE
     
-class MacroDisplay:
-  def __init__(self,appli,jdc,nom_jdc):
-    self.fenetre = Tkinter.Toplevel()
-    self.fenetre.configure(width = 800,height=500)
-    self.fenetre.protocol("WM_DELETE_WINDOW", self.quit)
-    self.fenetre.title("Visualisation Macro_Etape")
-    self.jdc=jdc
-    self.nom_jdc=nom_jdc
-    self.appli=appli
-    self.mainPart=Pmw.ScrolledCanvas(self.fenetre,
-                                     hull_width=600,
-                                     hull_height=500,
-                                     borderframe=1)
-    self.canvas=self.mainPart.component('canvas')
-    Pmw.Color.changecolor(self.canvas,background='gray95')
-    self.mainPart.pack(padx=10,pady=10,fill = 'both', expand = 1)
-    self.item=MACRO2TreeItem(self.appli,nom_jdc,jdc)
-    import treewidget
-    self.tree = treewidget.Tree(self.appli,self.item,self.mainPart,command=None)
-    self.tree.draw()
-    
-  def quit(self):
-    self.fenetre.destroy()
-
+import macrodisplay

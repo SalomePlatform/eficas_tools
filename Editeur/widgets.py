@@ -123,7 +123,7 @@ class Fenetre :
                 showinfo("Sauvegarde effectuée","Sauvegarde effectuée dans le fichier %s" %file)
 
 class FenetreYesNo(Fenetre):
-    def __init__(self,appli,titre="",texte=""):
+    def __init__(self,appli,titre="",texte="",yes="Yes",no="No"):
         self.appli=appli
         self.fenetre = Toplevel()
         self.fenetre.configure(width = 800,height=500)
@@ -150,8 +150,8 @@ class FenetreYesNo(Fenetre):
         self.zone_texte.pack(side='top',fill='both',expand=1,padx=5,pady=10)
         self.zone_texte.configure(yscrollcommand=self.scroll_v.set)
         # définition des boutons
-        self.but_yes = Button(self.frame_boutons,text = "Yes",command=self.yes)
-        self.but_no = Button(self.frame_boutons,text = "No",command = self.no)
+        self.but_yes = Button(self.frame_boutons,text = yes,command=self.yes)
+        self.but_no = Button(self.frame_boutons,text = no,command = self.no)
         self.but_yes.place(relx=0.4,rely=0.5,anchor='center')
         self.but_no.place(relx=0.6,rely=0.5,anchor='center')
         # affichage du texte

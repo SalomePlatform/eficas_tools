@@ -26,13 +26,13 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.8 2002/10/16 13:27:35 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.9 2002/11/06 17:25:57 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
 
 class Tree :
-    def __init__(self,appli,jdc_item,scrolledcanvas,command = None):
+    def __init__(self,appli,jdc_item,scrolledcanvas,command = None,rmenu=None):
         self.item = jdc_item
         self.scrolledcanvas = scrolledcanvas
         self.canvas = self.scrolledcanvas.component('canvas')
@@ -40,13 +40,18 @@ class Tree :
         self.canvas.bind("<Key-Next>", self.page_down)
         self.canvas.bind("<Key-Up>", self.unit_up)
         self.canvas.bind("<Key-Down>", self.unit_down)             
+        self.canvas.bind("<1>", self.canvas_select)             
         self.tree = self
         self.command = command
+        self.rmenu=rmenu
         self.appli = appli
         self.parent = None
         self.racine = self
         self.node_selected = None
         self.build_children()
+
+    def canvas_select(self,event):
+        self.canvas.focus_set()
 
     def page_up(self,event):
         event.widget.yview_scroll(-1, "page")
@@ -60,7 +65,7 @@ class Tree :
     def build_children(self):
         """ Construit la liste des enfants de self """
         self.children = []
-        child = Node(self,self.item,self.command)
+        child = Node(self,self.item,self.command,self.rmenu)
         self.children.append(child)
         child.state='expanded'
 
@@ -85,7 +90,10 @@ class Tree :
             child.update()
 
     def resizescrollregion(self):
-        self.scrolledcanvas.resizescrollregion()
+        x0,y0,x1,y1=self.canvas.bbox(ALL)
+        y1=y1+(self.canvas.winfo_height()/20-1)*20
+        self.canvas.configure(scrollregion = (x0,y0,x1,y1))
+        #self.scrolledcanvas.resizescrollregion()
 
     def select_next(self,event):
         self.node_selected.select_next()
@@ -100,17 +108,42 @@ class Tree :
     def verif_all(self):
         for child in self.children :
             self.verif_all_children()
+
+    def see(self,items):
+        x1, y1, x2, y2=apply(self.canvas.bbox, items)
+        while x2 > self.canvas.canvasx(0)+self.canvas.winfo_width():
+            old=self.canvas.canvasx(0)
+            self.canvas.xview_scroll( 1, 'units')
+            # avoid endless loop if we can't scroll
+            if old == self.canvas.canvasx(0):
+                break
+        while y2 > self.canvas.canvasy(0)+self.canvas.winfo_height():
+            old=self.canvas.canvasy(0)
+            self.canvas.yview_scroll( 1, 'units')
+            if old == self.canvas.canvasy(0):
+                break
+        # done in this order to ensure upper-left of object is visible
+        while x1 < self.canvas.canvasx(0):
+            old=self.canvas.canvasx(0)
+            self.canvas.xview_scroll( -1, 'units')
+            if old == self.canvas.canvasx(0):
+                break
+        while y1 < self.canvas.canvasy(0):
+            old=self.canvas.canvasy(0)
+            self.canvas.yview_scroll( -1, 'units')
+            if old == self.canvas.canvasy(0):
+                break
             
 class Node :
-    def __init__(self,parent,item,command=None):
+    def __init__(self,parent,item,command=None,rmenu=None):
         self.parent = parent
         self.item = item
         self.command = command
+        self.rmenu=rmenu
         self.tree = self.parent.tree
         self.appli = self.parent.appli
         self.canvas = self.parent.canvas
         self.init()
-        #self.build_children()
 
     def init(self):
         self.state='collapsed'
@@ -144,7 +177,7 @@ class Node :
         sublist = self.item._GetSubList()
         if not sublist : return
         for item in sublist :
-            child = Node(self,item,self.command)
+            child = Node(self,item,self.command,self.rmenu)
             self.children.append(child)
             
     #-----------------------------------------------
@@ -162,6 +195,7 @@ class Node :
         self.tree.node_selected = self
         if self.command:apply(self.command,(self,))
         self.highlight()
+        self.make_visible()
 
     def deselect(self, event=None):
         """ Déselectionne self """
@@ -170,9 +204,10 @@ class Node :
             
     def make_visible(self):
         """ Rend l'objet self visible cad déplace le scroll pour que self soit dans
-        la fenêtre de visu"""
-        x0,y0,x1,y1 = self.canvas.bbox(ALL)
-        self.canvas.yview("moveto",self.y/y1)
+            la fenêtre de visu
+        """
+        lchild=self.last_child()
+        self.tree.see((self.image_id,lchild.image_id))
         
     def select_next(self,ind=0):
         """ on doit chercher à sélectionner dans l'ordre:
@@ -203,6 +238,15 @@ class Node :
             self.parent.children[index].select()
         except:
             self.parent.select()
+
+    def popup(self,event=None):
+        """
+            Declenche le traitement associé au clic droit de la souris
+            sur l'icone du Node
+        """
+        if not self.rmenu:return
+        apply(self.rmenu,(self,event))
+
     #-----------------------------------------------
     # Méthodes de recherche d'informations
     #-----------------------------------------------
@@ -268,6 +312,7 @@ class Node :
         if image != None :
             self.image_id = self.canvas.create_image(self.x+15,self.y,image = image)
             self.canvas.tag_bind(self.image_id,"<1>",self.select)
+            self.canvas.tag_bind(self.image_id,"<3>",self.popup)
             self.id.append(self.image_id)
         else:
             self.image_id = None
@@ -311,6 +356,7 @@ class Node :
         self.id.append(self.label_id)
         # bindings sur le widget label
         self.label.bind("<1>", self.select)
+        self.label.bind("<3>", self.popup)
         self.label.bind("<Enter>",self.enter)
         self.label.bind("<Leave>",self.leave)
         # valeur de cet objet à afficher
@@ -386,6 +432,7 @@ class Node :
         # il suffit d'updater les coordonnees et de retracer les lignes
         self.racine.update_coords()
         self.racine.trace_ligne()
+        self.tree.resizescrollregion()
         
     def update_coords(self):
         """ Permet d'updater les coordonnes de self et de tous ses enfants"""
@@ -467,8 +514,6 @@ class Node :
             print 'dy=',dy
         # on déplace tous les items de dy
         self.canvas.move('move',0,dy)
-        # il faut réactualiser la zone de scroll
-        self.tree.resizescrollregion()
 
     def trace_ligne(self):
         """ Dessine les lignes verticales entre frères et entre père et premier fils"""
@@ -487,6 +532,12 @@ class Node :
 	        print "Erreur dans trace_ligne :"
                 print child
                 print child.item.object
+
+    def last_child(self):
+        lchild=self
+        if self.state == 'expanded' and self.children:
+           lchild= self.children[-1].last_child()
+        return lchild
 
     #------------------------------------------------------------------
     # Méthodes de création et destruction de noeuds
@@ -522,10 +573,10 @@ class Node :
         if enfant :
             # un fils de même nom existe déjà : on remplace
             # un MCFACT (ou une MCList) par une (autre) MCList
-            child = Node(self,item,self.command)
+            child = Node(self,item,self.command,self.rmenu)
             self.replace_node(enfant,child)
         else :            
-            child = Node(self, item,self.command)
+            child = Node(self, item,self.command,self.rmenu)
             if pos is None:
                 self.children.append(child)
             else :
@@ -675,6 +726,7 @@ class Node :
                 child.item.object.mc_liste = objet_copie.mc_liste
             except:
                 traceback.print_exc()
+
     #--------------------------------------------------------------
     # Méthodes de vérification du contexte et de validité du noeud
     #--------------------------------------------------------------
