@@ -195,8 +195,8 @@ class Panel(Frame) :
       """
       Suppression du noeud courant
       """
+      # On signale au parent du panel (le JDCDisplay) une modification 
       if self.parent.modified == 'n' : self.parent.init_modif()
-      pere = self.node.parent
       self.node.delete()
       
   def affiche(self):

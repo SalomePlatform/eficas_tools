@@ -26,7 +26,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.9 2002/11/06 17:25:57 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.10 2002/11/12 12:25:02 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -88,6 +88,12 @@ class Tree :
         """ Update tous les éléments de l'arbre """
         for child in self.children:
             child.update()
+
+    def update_valid(self) :
+        """Cette methode a pour but de mettre a jour la validite du noeud
+           et de propager la demande de mise à jour à son parent
+        """
+        pass
 
     def resizescrollregion(self):
         x0,y0,x1,y1=self.canvas.bbox(ALL)
@@ -432,6 +438,7 @@ class Node :
         # il suffit d'updater les coordonnees et de retracer les lignes
         self.racine.update_coords()
         self.racine.trace_ligne()
+        self.update_valid()
         self.tree.resizescrollregion()
         
     def update_coords(self):
@@ -469,6 +476,13 @@ class Node :
             for child in self.children:
                 if child.displayed != 0 : child.update_texte()
         
+    def update_valid(self) :
+        """Cette methode a pour but de mettre a jour la validite du noeud
+           et de propager la demande de mise à jour à son parent
+        """
+        self.update_icone()
+        self.parent.update_valid()
+
     def update(self,event=None) :
         """ Classe Node :
             Cette méthode est appelée pour demander l update d un noeud 
