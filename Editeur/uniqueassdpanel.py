@@ -75,7 +75,7 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
           self.reset_old_valeur(anc_val,mess=mess)
 
-  def makeValeurPage(self,page):
+  def makeValeurPage(self,page,reel="non"):
       """
           Génère la page de saisie de la valeur du mot-clé simple courant qui doit être une 
           SD de type dérivé d'ASSD
@@ -90,10 +90,11 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       self.valeur_choisie = StringVar()
       self.valeur_choisie.set('')
       min,max =  self.node.item.GetMinMax()
-      if (min == 1 and min == max and len(liste_noms_sd)==1):
+      if (min == 1 and min == max and len(liste_noms_sd)==1 ):
           if self.valeur_choisie.get() != liste_noms_sd[0]:
-	     self.valeur_choisie.set(liste_noms_sd[0])
-             self.valid_valeur_automatique()
+            if ('R' not in self.node.item.get_type()) :
+	        self.valeur_choisie.set(liste_noms_sd[0])
+                self.valid_valeur_automatique()
 	 
       self.frame_valeur = Frame(page)
       self.frame_valeur.pack(fill='both',expand=1)
@@ -112,6 +113,13 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       Label(self.frame_valeur,textvariable=self.valeur_choisie).place(relx=0.5,rely=0.6)
       # affichage de la valeur courante
       self.display_valeur()
+      if self.__class__.__name__ == 'UNIQUE_ASSD_Panel_Reel' :
+        Label(self.frame_valeur,text='Valeur Réelle').place(relx=0.1,rely=0.9)
+	self.entry = Entry(self.frame_valeur,relief='sunken')
+        self.entry.place(relx=0.28,rely=0.9,relwidth=0.6)
+        self.entry.bind("<Return>",lambda e,c=self.valid_valeur_reel:c())
+
+
 
   def get_bulle_aide(self):
       """
@@ -175,4 +183,26 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
 
   def erase_valeur(self):
       pass
+
+  def appel_make(self,page):
+      self.makeValeurPage(page,reel="oui")
+      
+class UNIQUE_ASSD_Panel_Reel(UNIQUE_ASSD_Panel):
+ 
+  def valid_valeur_reel(self):
+      if self.parent.modified == 'n' : self.parent.init_modif()
+      anc_val = self.node.item.get_valeur()
+      valeurentree = self.entry.get()
+      self.valeur_choisie.set(valeurentree)
+      self.valid_valeur()
+
+  def display_valeur(self):
+      valeur = self.node.item.get_valeur()
+      if valeur == None or valeur == '' : return # pas de valeur à afficher ...
+      if type(valeur) == types.FloatType :
+         self.valeur_choisie.set(valeur)
+      else :
+         self.valeur_choisie.set(valeur.nom)
+
+       
 
