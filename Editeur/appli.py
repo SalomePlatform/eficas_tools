@@ -163,7 +163,7 @@ class APPLI:
           Retourne un texte d'informations sur la session courante d'EFICAS
       """
       texte = VERSION + '\n\n'
-      texte = texte + 'EFICAS est un produit développé par \nEDF-Division Stratégie et Développement\n'
+      texte = texte + 'EFICAS est un produit développé par \nEDF-R&D\n'
       texte = texte + 'Equipe : SINETICS\n\n'
       texte = texte + 'Code utilisé : %s version %s\n' % (self.code,properties.version)
       return texte
