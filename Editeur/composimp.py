@@ -1060,8 +1060,8 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
           # On est passe de OUI à NON, on supprime la valeur
 # PN correction de bug (on passe de non a non et cela supprime la valeur)
 # ajout du if de le ligne suivane
-      	  if self.node.item.is_CO():
-          	self.node.item.delete_valeur_co()
+          if self.node.item.is_CO():
+                self.node.item.delete_valeur_co()
                 self.record_valeur(name=None,mess="Suppression CO enregistrée")
                 self.label_co.place_forget()
                 self.entry_co.place_forget()

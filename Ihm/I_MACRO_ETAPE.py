@@ -39,6 +39,17 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       self.typret=None
       self.recorded_units={}
 
+  def copy(self):
+      """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
+          et sans sd
+          On surcharge la methode de ETAPE pour exprimer que les concepts crees
+          par la MACRO d'origine ne sont pas crees par la copie mais eventuellement 
+          seulement utilises
+      """
+      etape=I_ETAPE.ETAPE.copy(self)
+      etape.sdprods=[]
+      return etape
+
   def get_sdprods(self,nom_sd):
     """ 
          Fonction : retourne le concept produit par l etape de nom nom_sd

@@ -235,7 +235,7 @@ class JDCDISPLAY:
       else:
           showinfo("Copie impossible",
                    "Vous ne pouvez copier que des commandes ou des mots-clés facteurs !")
-          return
+      return
 
    def doPaste_Commande(self,objet_a_copier):
       """
