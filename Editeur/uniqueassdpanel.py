@@ -124,10 +124,17 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       Retourne la phrase d'aide indiquant de quel type doit être la valeur à donner par l'utilisateur
       """
       mc = self.node.item.get_definition()
-      type = mc.type[0].__name__  
+      try :
+      	type = mc.type[0].__name__  
+      except :
+        type = str(mc.type[0])
       if len(mc.type)>1 :
           for typ in mc.type[1:] :
-              type = type + ' ou '+typ.__name__
+	      try :
+	        l=typ.__name__
+	      except:
+	        l=str(typ)
+              type = type + ' ou '+l
       commentaire="Un objet de type "+type+" est attendu"
       aideval=self.node.item.aide()
       commentaire=commentaire +"\n"+ aideval
