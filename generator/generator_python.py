@@ -234,7 +234,9 @@ class PythonGenerator:
          en une liste de chaines de caractères à la syntaxe python
       """
       if type(obj.valeur) == types.StringType:
-        return obj.nom + " = '" + obj.valeur + "';\n"
+        # PN pour corriger le bug a='3+4' au lieu de a= 3+4
+        #return obj.nom + " = '" + obj.valeur + "';\n"
+        return obj.nom + " = " + obj.valeur + ";\n"
       else:
         return obj.nom + ' = ' + str(obj.valeur) + ';\n'
 
