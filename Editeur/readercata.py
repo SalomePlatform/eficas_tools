@@ -127,7 +127,12 @@ class READERCATA:
       #
       uiinfo.traite_UIinfo(self.cata)
       self.update_barre()
+
       #
+      # traitement des clefs documentaires
+      #
+      self.traite_clefs_documentaires()
+
       # chargement et analyse des catalogues développeur (le cas échéant)
       #
       if self.appli.CONFIGURATION.isdeveloppeur == 'OUI' :
@@ -376,4 +381,26 @@ class READERCATA:
               cr.add(cata.JdC.report())
       texte_cr = str(cr)
       self.visu_texte_cr = Fenetre(self.appli,titre=titre,texte=texte_cr)
+
+
+   def traite_clefs_documentaires(self):
+      try:
+        self.fic_cata_clef=os.path.splitext(self.fic_cata_c)[0]+'_clefs_docu'
+        f=open(self.fic_cata_clef)
+      except:
+        print "Pas de fichier associé contenant des clefs documentaires"
+        return
+
+      dict_clef_docu={}
+      for l in f.readlines():
+          clef=l.split(':')[0]
+          docu=l.split(':')[1]
+          docu=docu[0:-1]
+          dict_clef_docu[clef]=docu
+      for oper in self.cata.JdC.commandes:
+        if hasattr(oper,'docu'):
+           clef=oper.get_docu()
+           if dict_clef_docu.has_key(clef):
+              oper.docu=dict_clef_docu[clef]
+              print oper.get_docu()
 
