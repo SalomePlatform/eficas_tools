@@ -205,10 +205,18 @@ class PythonGenerator:
          Cette méthode convertit un COMMENTAIRE
          en une liste de chaines de caractères à la syntaxe python
       """
-      l_lignes = string.split(obj.valeur,'\n')
+      # modification pour répondre à la demande de C. Durand, d'éviter
+      # l'ajout systématique d'un dièse, à la suite du commentaire
+      # Dans la chaine de caracteres obj.valeur, on supprime le dernier
+      # saut de ligne
+      sans_saut = re.sub("\n$","",obj.valeur)
+      l_lignes = string.split(sans_saut,'\n')
       txt=''
       for ligne in l_lignes:
         txt = txt + '#'+ligne+'\n'
+
+      # suppression du dernier saut de ligne
+      txt = re.sub("\n$","",txt)
       return txt
 
    def generPARAMETRE_EVAL(self,obj):
