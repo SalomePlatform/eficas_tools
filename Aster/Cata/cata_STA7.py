@@ -34,7 +34,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_aster_v6.py,v 1.12 2001/01/16 15:55:05 iliade Exp $"
+__Id__="$Id: cata_STA7.py,v 1.9 2004/10/07 18:12:20 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
@@ -12877,6 +12877,8 @@ def form_pyth_ops(self,d):
   NOM_PARA=self.etape['NOM_PARA']
   VALE    =self.etape['VALE']
   if type(NOM_PARA) not in (types.ListType,types.TupleType) : NOM_PARA=[NOM_PARA,]
+  if self.sd == None:
+     return
   self.sd.nompar     = NOM_PARA
   texte='____x='+string.join(VALE.splitlines())
   try : 
@@ -17446,6 +17448,7 @@ MACRO_PROJ_BASE=MACRO(nom="MACRO_PROJ_BASE",op=macro_proj_base_ops,
          PROFIL          =SIMP(statut='f',typ='TXM',defaut="DIAG",into=("PLEIN","DIAG") ),
          MATR_ASSE_GENE  =FACT(statut='f',max='**',
            MATRICE         =SIMP(statut='o',typ=(CO,matr_asse)),
+           #MATRICE         =SIMP(statut='o',typ=CO),
            MATR_ASSE       =SIMP(statut='f',typ=matr_asse_depl_r),
            MATR_ASSE_GENE  =SIMP(statut='f',typ=matr_asse_gene_r),
          ),
