@@ -1,0 +1,12 @@
+Verion 1.3 (11/2002):
+   Mise en synchronisation avec la version STA6 de Code_Aster de septembre 2002
+   Ajout de la possibilité de visualiser les INCLUDE, INCLUDE_MATERIAU et POURSUITE (popup
+   sur click droit de la souris sur l'icone de la commande)
+   Possibilité d'afficher la liste des commandes par groupe (menu option->affichage commandes)
+   Reprise profonde du mécanisme de gestion des fichiers inclus (voir menus d'AIDE pour plus de détails)
+   Corrections diverses 
+    
+
+Version 1.2 (5/2002):
+    Reconception de la version 1.1 : décomposition en packages Python
+    Mise en synchronisation avec la version STA6 de Code_Aster de fevrier 2002
