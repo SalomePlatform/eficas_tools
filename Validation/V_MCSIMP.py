@@ -162,7 +162,6 @@ class MCSIMP:
             if not self.verif_type(val=val,cr=cr) : return 0
           return 1
       elif type(valeur) == types.ListType:
-        if self.is_complexe(valeur) : return 1
         for val in valeur:
             if not self.verif_type(val=val,cr=cr) : return 0
         return 1
@@ -210,9 +209,7 @@ class MCSIMP:
             return 1
       else :
         # on est dans le cas d'un ensemble discret de valeurs possibles (into)
-        # PN : pour résoudre le pb du copier /coller de la liste Ordonnee
-        # if type(self.valeur) == types.TupleType :
-        if type(self.valeur) in (types.ListType,types.TupleType) :
+        if type(self.valeur) == types.TupleType :
           for e in self.valeur:
             if e not in self.definition.into:
               if cr=='oui':
@@ -252,7 +249,7 @@ class MCSIMP:
       # Pour permettre l'utilisation de complexes Python
       #elif type(valeur) == types.ComplexType:
         #return 1
-      elif type(valeur) != types.TupleType and  type(valeur) != types.ListType:
+      elif type(valeur) != types.TupleType :
         return 0
       else:
         if len(valeur) != 3 :
