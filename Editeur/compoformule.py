@@ -87,8 +87,9 @@ class FORMULEPanel(panels.OngletPanel):
     # affichage des entries
     self.entry_nom.place(relx=0.35,rely=0.10,relwidth=0.2)
     self.entry_arg.place(relx=0.35,rely=0.40,relwidth=0.4)
-    Label(self.frame_valeur,text= 'Entrer les arguments sous la forme TYPE : VARIABLE séparés par des ,').place(relx=0.35,rely=0.45) 
-    Label(self.frame_valeur,text= 'Exemple REEL:INST,ENTIER:COEF').place(relx=0.35,rely=0.49) 
+    Label(self.frame_valeur,text='Entrer les arguments sous la forme').place(relx=0.35,rely=0.45) 
+    Label(self.frame_valeur,text='TYPE : VARIABLE séparés par des ,').place(relx=0.35,rely=0.49) 
+    Label(self.frame_valeur,text= 'Exemple REEL:INST,ENTIER:COEF').place(relx=0.35,rely=0.53) 
     self.entry_exp.place(relx=0.35,rely=0.60,relwidth=0.60)
     # affichage d'une phrase d'aide
     aide = """
