@@ -58,6 +58,7 @@ class APPLI:
       self.cree_composants_graphiques()
       self.load_appli_composants()			# Creation du BUREAU
       self.affiche_FAQ()
+      splash.fini_splash()
       # AY : cas ou le nom du fichier a été passé en argument
       if fichier :
            try :
@@ -65,7 +66,6 @@ class APPLI:
            except Exception,e :
                 showerror( "ARGUMENT INVALIDE", str(e) )
       # AY : fin
-      splash.fini_splash()
 
   def send_message(self,message):
       self.message=message
