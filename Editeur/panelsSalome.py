@@ -401,7 +401,6 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
              print "a"
           else :
 	     Comment=FileAttr.Value()
-             print "ICI"
              print Comment
              if Comment.find("FICHIERMED")== -1 :
                 FileName=''

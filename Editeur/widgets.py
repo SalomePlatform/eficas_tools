@@ -628,6 +628,16 @@ class ListeChoix :
           elif type(objet) == types.FloatType :
               #mot = repr_float(objet)
               mot = str(objet)
+          elif type(objet) == types.TupleType :
+              mot="("
+              premier=1
+              for val in objet:
+	          if (not premier):
+		     mot=mot+"," 
+                  else:
+                     premier=0
+                  mot=mot+str(val)
+              mot=mot+")"
           else:
               mot=`objet`
           label = Label(self.MCbox,
@@ -684,6 +694,11 @@ class ListeChoix :
         label.configure(bg='gray95',fg='black')
         self.arg_selected = ''
         if commande != None : commande(mot)
+
+    def cherche_selected_item(self):
+        index=self.MCbox.index(self.selection[1])
+        lign,col=map(int,string.split(index,'.'))
+        return lign
 
     def remove_selected_item(self):
         index=self.MCbox.index(self.selection[1])

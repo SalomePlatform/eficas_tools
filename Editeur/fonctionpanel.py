@@ -146,12 +146,13 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
   def add_double_valeur_plusieurs_base(self):
       # on verifie qu'il s agit bien d un tuple
       # on enleve les parentheses eventuelles
-      doublevaleur_entree=self.get_valeur()
+      #doublevaleur_entree,validite,commentaire=self.get_valeur_double()
+      doublevaleur_entree= self.entry.get()
       try:
-	if doublevaleur_entree[0]=='(' :
-	   doublevaleur_entree=doublevaleur_entree[1:-1]
-	if doublevaleur_entree[-1]==')' :
-	   doublevaleur_entree=doublevaleur_entree[0:-2]
+        if doublevaleur_entree[0]=='(' :
+           doublevaleur_entree=doublevaleur_entree[1:-1]
+        if doublevaleur_entree[-1]==')' :
+           doublevaleur_entree=doublevaleur_entree[0:-2]
 	val1=doublevaleur_entree.split(',')[0] 
 	val2=doublevaleur_entree.split(',')[1] 
       except :
@@ -195,17 +196,11 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
         self.parent.appli.affiche_infos(commentaire)
 	return
      
-      # si une valeur est selectionnee on la remplace
-      # sinon on ajoute la valeur
+      # si une valeur est selectionnee on insere apres 
+      # sinon on ajoute la valeur à la fin
       if (self.Liste_valeurs.selection != None):
-         l1_valeurs=[]
-         trouve=0
-         for val in self.Liste_valeurs.get_liste():
-          if val == self.Liste_valeurs.selection[0] and trouve == 0:
-             l1_valeurs.append((valeur[0],valeur[1]))
-             trouve=1
-	  else :
-	     l1_valeurs.append(val)
+         ligne=self.Liste_valeurs.cherche_selected_item()
+         l1_valeurs.insert(ligne,(valeur[0],valeur[1]))
       else :
          l1_valeurs.append((valeur[0],valeur[1]))
       self.Liste_valeurs.put_liste(l1_valeurs)
