@@ -190,9 +190,7 @@ class MCSIMP:
             	if self.compare_type(obj,type_permis) : 
 	    	    return 1
           except Exception,e :
-            print "AAAAAAAAAAAAA"
-            print "e = ",str(e)
-            pass
+            if CONTEXT.debug : print "e = ",str(e)
 
       if cr =='oui':
           self.cr.fatal("%s n'est pas d'un type autorisé" %`valeur`)
