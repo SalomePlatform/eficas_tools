@@ -63,7 +63,7 @@ class Panel(Frame) :
       self.bouton_doc=None
       self.bouton_com=None
       self.bouton_sup=None
-      self.frame_eval=None
+      #self.frame_eval=None
       self.label=None
       self.frame_boutons=None
       self.frame_comment=None
@@ -156,21 +156,21 @@ class Panel(Frame) :
       if self.parent.modified == 'n' : self.parent.init_modif()
       return self.node.append_child("PARAMETRE",'first')
 
-  def ajout_parametre_eval(self,ind='after'):
-      """
-      Ajoute un paramètre EVAL à l'intérieur du JDC :
-      - si ind='after'  : l'ajoute après l'objet courant
-      - si ind='before' : l'ajoute avant.
-      """
-      if self.parent.modified == 'n' : self.parent.init_modif()
-      return self.node.append_brother("PARAMETRE_EVAL",ind)
+#  def ajout_parametre_eval(self,ind='after'):
+#      """
+#      Ajoute un paramètre EVAL à l'intérieur du JDC :
+#      - si ind='after'  : l'ajoute après l'objet courant
+#      - si ind='before' : l'ajoute avant.
+#      """
+#      if self.parent.modified == 'n' : self.parent.init_modif()
+#      return self.node.append_brother("PARAMETRE_EVAL",ind)
     
-  def ajout_parametre_eval_first(self):
-      """
-      Ajoute un paramètre EVAL en début de JDC
-      """
-      if self.parent.modified == 'n' : self.parent.init_modif()
-      return self.node.append_child("PARAMETRE_EVAL",'first')
+#  def ajout_parametre_eval_first(self):
+#      """
+#      Ajoute un paramètre EVAL en début de JDC
+#      """
+#      if self.parent.modified == 'n' : self.parent.init_modif()
+#      return self.node.append_child("PARAMETRE_EVAL",'first')
     
 # ------------------------------------------------------------------------
    
@@ -426,11 +426,11 @@ class OngletPanel(Panel) :
       # les frame ...
       self.frame_comment = Frame(page,bd=1,relief='raised')
       self.frame_param   = Frame(page,bd=1,relief='raised')
-      self.frame_eval    = Frame(page,bd=1,relief='raised')
+      #self.frame_eval    = Frame(page,bd=1,relief='raised')
       self.frame_boutons = Frame(page,bd=1,relief='raised')
-      self.frame_comment.place(relx=0,rely=0,relwidth=1,relheight=0.28)
-      self.frame_param.place(relx=0,rely=0.28,relwidth=1,relheight=0.28)
-      self.frame_eval.place(relx=0,rely=0.56,relwidth=1,relheight=0.28)
+      self.frame_comment.place(relx=0,rely=0,relwidth=1,relheight=0.40)
+      self.frame_param.place(relx=0,rely=0.40,relwidth=1,relheight=0.40)
+      #self.frame_eval.place(relx=0,rely=0.56,relwidth=1,relheight=0.28)
       self.frame_boutons.place(relx=0,rely=0.84,relwidth=1,relheight=0.16)
       # remplissage de la frame commentaire
       Label(self.frame_comment,text = "Insérer un commentaire :").place(relx=0.1,rely=0.5,anchor='w')
@@ -453,16 +453,16 @@ class OngletPanel(Panel) :
       but_param_avant.place(relx=0.6,rely=0.3,anchor='w',relwidth=0.3)
       but_param_apres.place(relx=0.6,rely=0.7,anchor='w',relwidth=0.3)
       # remplissage de la frame eval
-      Label(self.frame_eval,text="Insérer un paramètre EVAL :").place(relx=0.1,rely=0.5,anchor='w')
+      #Label(self.frame_eval,text="Insérer un paramètre EVAL :").place(relx=0.1,rely=0.5,anchor='w')
           #Label(self.frame_eval,text='Non encore disponible').place(relx=0.6,rely=0.5,anchor='w')
-      but_eval_avant = Button(self.frame_eval,
-                              text = "AVANT "+self.node.item.get_nom(),
-                              command = lambda s=self :s.ajout_parametre_eval(ind = 'before'))
-      but_eval_apres = Button(self.frame_eval,
-                              text = "APRES "+self.node.item.get_nom(),
-                              command = self.ajout_parametre_eval)
-      but_eval_avant.place(relx=0.6,rely=0.3,anchor='w',relwidth=0.3)
-      but_eval_apres.place(relx=0.6,rely=0.7,anchor='w',relwidth=0.3)      
+      #but_eval_avant = Button(self.frame_eval,
+      #                        text = "AVANT "+self.node.item.get_nom(),
+      #                        command = lambda s=self :s.ajout_parametre_eval(ind = 'before'))
+      #but_eval_apres = Button(self.frame_eval,
+      #                        text = "APRES "+self.node.item.get_nom(),
+      #                        command = self.ajout_parametre_eval)
+      #but_eval_avant.place(relx=0.6,rely=0.3,anchor='w',relwidth=0.3)
+      #but_eval_apres.place(relx=0.6,rely=0.7,anchor='w',relwidth=0.3)      
       # remplissage de la frame boutons
       Button(self.frame_boutons,
              text="Commentariser toute la commande",

@@ -101,10 +101,11 @@ class PARAMETRE :
                         return val
                 l_new_val.append(v)
             return tuple(l_new_val)
-        else:
+	# PN : commente le print
+        #else:
             # on a réussi à évaluer val en autre chose qu'un tuple ...
-            print "on a réussi à évaluer %s en autre chose qu'un tuple ..." %val
-            print 'on trouve : ',str(valeur),' de type : ',type(valeur)
+            #print "on a réussi à évaluer %s en autre chose qu'un tuple ..." %val
+            #print 'on trouve : ',str(valeur),' de type : ',type(valeur)
     # on retourne val comme une string car on n'a pas su l'interpréter
     return val
 

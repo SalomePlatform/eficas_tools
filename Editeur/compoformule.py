@@ -68,19 +68,17 @@ class FORMULEPanel(panels.OngletPanel):
     # affichage du titre du panneau
     self.titre = StringVar()
     self.titre.set("FORMULE "+self.node.item.get_nom())
+
+    self.entry_nom = Entry(self.frame_valeur)
     Label(self.frame_valeur,textvariable=self.titre,font=Fonte_TITRE).place(relx=0.5,rely=0.,anchor='n')
     # création des labels et entries associés aux nom, type retourné, arguments et corps de la FORMULE
+    
     Label(self.frame_valeur,text= 'Nom de la formule : ').place(relx=0.,rely=0.1)
-    self.entry_nom = Entry(self.frame_valeur)
-    Label(self.frame_valeur,text= 'Type retourné : ').place(relx=0.,rely=0.25)
-    self.option_menu_typ = Pmw.OptionMenu(self.frame_valeur,labelpos='w',
-                                          label_text='',
-                                          items = self.node.item.get_liste_types_autorises())
-    self.option_menu_typ.place(relx=0.33,rely=0.23)
     Label(self.frame_valeur,text= 'Arguments : ').place(relx=0.,rely=0.40)
     self.entry_arg = Entry(self.frame_valeur)
     Label(self.frame_valeur,text= 'Expression : ').place(relx=0.,rely=0.65)
     self.entry_exp = Entry(self.frame_valeur)
+
     # binding sur les entries
     self.entry_nom.bind("<Return>",self.verif_nom)
     self.entry_arg.bind("<Return>",self.verif_arguments)
@@ -91,8 +89,8 @@ class FORMULEPanel(panels.OngletPanel):
 
     # affichage d'une phrase d'aide pour les arguments
     aide = """Entrer les arguments sous la forme
-TYPE : VARIABLE séparés par des virgules (,)
-Exemple REEL:INST,ENTIER:COEF """
+de VARIABLES séparées par des virgules (,)
+Exemple X,Y,Z """
     Label(self.frame_valeur,text=aide, justify="l").place(relx=0.5,rely=0.47,anchor='n') 
 
     self.entry_exp.place(relx=0.35,rely=0.65,relwidth=0.60)
@@ -131,9 +129,11 @@ valeurs seront effectivement prises en compte."""
     if self.parent.modified == 'n' : self.parent.init_modif()
     # on récupère les nouveaux nom, type retourné, arguments et corps de la FORMULE
     new_nom = self.entry_nom.get()
-    new_typ = self.option_menu_typ.getcurselection()
+    new_typ="REEL" 
     new_arg = self.entry_arg.get()
     new_exp = self.entry_exp.get()
+    self.verif_arguments
+    self.verif_corps
     # on essaie de les stocker
     test,erreur = self.node.item.save_formule(new_nom,new_typ,new_arg,new_exp)
     if test :
@@ -161,9 +161,6 @@ valeurs seront effectivement prises en compte."""
     nom = self.node.item.get_nom()
     if nom != '':
         self.entry_nom.insert(END,nom)
-    type = self.node.item.get_type()
-    if type :
-        self.option_menu_typ.invoke(type)
     args = self.node.item.get_args()
     if args:
         self.entry_arg.insert(END,args)
@@ -212,13 +209,13 @@ valeurs seront effectivement prises en compte."""
         Lance la vérification du corps de formule présent dans entry_exp
         """
 	new_nom = self.entry_nom.get()
-        new_typ = self.option_menu_typ.getcurselection()
+	new_typ="REEL"
         new_arg = self.entry_arg.get()
         new_exp = self.entry_exp.get()
         if new_exp == '':
             test,erreur = 0,"Aucune expression fournie !"
         else:
-            test,erreur = self.node.item.verif_formule((new_nom,new_typ,new_arg,new_exp))
+            test,erreur = self.node.item.verif_formule_python((new_nom,new_typ,new_arg,new_exp))
  
         if not test:
             widgets.showerror("Corps de FORMULE invalide",erreur)
@@ -257,6 +254,7 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
       Ce nom dépend de la validité de l'objet
       """
       if self.object.isactif():
+	self.object.state="modified"
         if self.object.isvalid():
           return "ast-green-square"
         else:
@@ -297,17 +295,27 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
       """
       Retourne les arguments de la FORMULE
       """
-      args = self.object.arguments
+      args=""
+      for mot in self.object.mc_liste:
+	  if mot.nom == 'NOM_PARA':
+	     args=mot.valeur
+	     break
       if args :
-          return self.object.arguments[1:-1] #on enlève les parenthèses ouvrante et fermante
-      else:
-          return None
+          if args[0] == "(" and args[-1] ==")":
+	     args=args[1:-1]
+      return args
 
     def get_corps(self):
       """
       Retourne le corps de la FORMULE
       """
-      return self.object.corps
+      corps=""
+      for mot in self.object.mc_liste:
+	  if mot.nom == 'VALE':
+	     corps=mot.valeur
+	     break
+      return corps
+
 
     def get_liste_types_autorises(self):
       """
@@ -325,11 +333,11 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
           - si non, laisse les paramètres anciens de la FORMULE inchangés et 
             retourne 0
       """
-      test,erreur = self.object.verif_formule(formule=(new_nom,new_typ,new_arg,
+      test,erreur = self.object.verif_formule_python(formule=(new_nom,new_typ,new_arg,
                                                        new_exp))
       if test :
           # la formule est bien correcte : on sauve les nouveaux paramètres
-          self.object.update(formule=(new_nom,new_typ,new_arg,new_exp))
+          test=self.object.update_formule_python(formule=(new_nom,new_typ,new_exp,new_arg))
       return test,erreur
 
 # ---------------------------------------------------------------------------
@@ -353,6 +361,13 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
         Lance la vérification de FORMULE passée en argument
         """
 	return self.object.verif_formule(formule=formule)
+
+
+    def verif_formule_python(self,formule):
+        """
+        Lance la vérification de FORMULE passée en argument
+        """
+	return self.object.verif_formule_python(formule=formule)
 
 import Accas
 treeitem =FORMULETreeItem

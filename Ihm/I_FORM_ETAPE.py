@@ -42,6 +42,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         # il faut pour les FORMULE décortiquer l'expression ...
         self.type_retourne,self.arguments,self.corps = self.analyse_formule()
 
+
     def analyse_formule(self):
         """
         Cette méthode décortique l'expression de la FORMULE.
@@ -109,20 +110,21 @@ class FORM_ETAPE(MACRO_ETAPE):
         test = 1
         arguments = arguments[1:-1] # on enlève les parenthèses ouvrante et fermante
         l_arguments = string.split(arguments,',')
-        for argument in l_arguments:
-            argument = string.strip(argument)
-            try:
-                typ,nom = string.split(argument,':')
-                # pas de vérification sur le nom de l'argument
-                # vérification du type de l'argument
-                typ = string.strip(typ)
-                if typ not in self.l_types_autorises :
-                    test = 0
-                    erreur = erreur + "Le type "+typ+" n'est pas un type permis pour "+nom+'\n'
-            except:
-                # l'argument ne respecte pas la syntaxe : typ_arg : nom_arg
-                test = 0
-                erreur = erreur+"Syntaxe argument non valide : "+argument+'\n'
+        #for argument in l_arguments:
+        #    argument = string.strip(argument)
+        #    try:
+	#	nom=argument
+        #        typ,nom = string.split(argument,':')
+        #        #pas de vérification sur le nom de l'argument
+        #        #vérification du type de l'argument
+        #        typ = string.strip(typ)
+        #        if typ not in self.l_types_autorises :
+        #            test = 0
+        #            erreur = erreur + "Le type "+typ+" n'est pas un type permis pour "+nom+'\n'
+        #    except:
+        #        # l'argument ne respecte pas la syntaxe : typ_arg : nom_arg
+        #        test = 0
+        #        erreur = erreur+"Syntaxe argument non valide : "+argument+'\n'
         return test,erreur
 
     def verif_corps(self,corps=None,arguments=None):
@@ -165,6 +167,8 @@ class FORM_ETAPE(MACRO_ETAPE):
             return 0,"Pas de nom donné à la FORMULE"
         if len(nom) > 8 :
             return 0,"Un nom de FORMULE ne peut dépasser 8 caractères"
+	if nom[0] > "0" and nom[0] < "9" :
+	    return 0,"Un nom de FORMULE ne peut pas commencer par un chiffre"
         sd = self.parent.get_sd_autour_etape(nom,self)
         if sd :
             return 0,"Un concept de nom %s existe déjà !" %nom
@@ -214,6 +218,36 @@ class FORM_ETAPE(MACRO_ETAPE):
                 erreur = erreur+(len(mess) > 0)*'\n'+mess
         return test,erreur
 
+    def verif_formule_python(self,formule=None):
+        """
+	Pour l instant ne fait qu un compile python
+	il serait possible d ajouter des tests sur les arguments
+	ou le type retourne mais ...
+	"""
+        if not formule :
+            formule = (None,None,None,None)
+        test_nom,erreur_nom = self.verif_nom(formule[0])
+        if formule[2]:
+            args = '('+formule[2]+')'
+        else:
+            args = None
+        test_arguments,erreur_arguments = self.verif_arguments(args)
+	corps=formule[3]
+	erreur_formule= ''
+	test_formule=1
+	try :
+	    compile(corps,'<string>','eval')
+	except :
+	    erreur_formule= "le corps de la formule n'est pas une formule python valide"
+	    test_formule=0
+        erreur = ''
+        test = test_nom*test_arguments*test_formule
+        if not test :
+            for mess in (erreur_nom,erreur_arguments,erreur_formule):
+                erreur = erreur+(len(mess) > 0)*'\n'+mess
+        return test,erreur
+
+
     def update(self,formule):
         """
         Méthode externe.
@@ -221,7 +255,6 @@ class FORM_ETAPE(MACRO_ETAPE):
         par les nouvelles valeurs passées dans le tuple formule.
         On stocke les valeurs SANS vérifications.
         """
-        self.init_modif()
         self.type_retourne = formule[1]
         self.arguments = '('+formule[2]+')'
         self.corps = formule[3]
@@ -234,6 +267,34 @@ class FORM_ETAPE(MACRO_ETAPE):
         sd = self.get_sd_prod()
         if sd:
             sd.nom = formule[0]
+
+    # bidouille PN 
+    # Il faut que formule soit constitue de 
+    # nom de la formule
+    # type retourne
+    # parametres
+    # corps de la fonction
+    def update_formule_python(self,formule):
+        self.build_mc()
+        self.mc_liste=[]
+        if len(formule) < 4 :
+	   return O
+	i=1
+	for k,v in self.definition.entites.items():
+	    child=self.definition.entites[k](None,nom=k,parent=self)
+	    new_valeur=formule[i+1]
+	    child.valeur = new_valeur
+	    child.state = 'modified'
+	    self.mc_liste.append(child)
+	    i=i+1
+        self.arguments = formule[3]
+        self.corps = formule[2]
+        self.type_retourne = formule[1]
+	sd = self.get_sd_prod()
+        if sd:
+            sd.nom = formule[0]
+        self.init_modif()
+	return 1
 
     def active(self):
         """

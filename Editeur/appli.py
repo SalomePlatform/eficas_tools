@@ -44,7 +44,7 @@ from Misc import MakeNomComplet
 VERSION="EFICAS v1.6"
 
 class APPLI: 
-  def __init__ (self,master,code='ASTER',fichier=None) :
+  def __init__ (self,master,code='ASTER',fichier=None,test=0) :
       self.top=master
       self.code=code
       self.top.protocol("WM_DELETE_WINDOW",self.exitEFICAS)
@@ -53,14 +53,16 @@ class APPLI:
       self.top.title(VERSION + ' pour '+self.code)
       self.top.withdraw()
       self.initializeTk(master)
+      self.test=test
       Pmw.initialise(master)
       self.lecture_parametres()
       self.format_fichier = Tkinter.StringVar()
       self.message=''
       self.cree_composants_graphiques()
       self.load_appli_composants()			# Creation du BUREAU
-      splash.fini_splash()
-      self.affiche_FAQ()
+      if (self.test == 0):
+           splash.fini_splash()
+           self.affiche_FAQ()
       # AY : cas ou le nom du fichier a été passé en argument
       if fichier :
            fich=str(MakeNomComplet.FILENAME(fichier))
@@ -88,7 +90,8 @@ class APPLI:
       """
           Active la lecture des paramètres standards et utilisateur
       """
-      splash._splash.configure(text = "Chargement des paramètres utilisateur")
+      if (self.test == 0):
+         splash._splash.configure(text = "Chargement des paramètres utilisateur")
       import configuration
       self.CONFIGURATION = configuration.make_config(self,prefs.REPINI)
 
@@ -100,19 +103,23 @@ class APPLI:
            - bureau
            - statusbar
       """
-      splash._splash.configure(text = "Chargement de l'IHM")
-      splash._splash.configure(text = "Chargement de la menubar")
+      if (self.test == 0):
+         splash._splash.configure(text = "Chargement de l'IHM")
+         splash._splash.configure(text = "Chargement de la menubar")
       import menubar
       self.menubar=menubar.MENUBAR(self,self.top)
-      splash._splash.configure(text = "Chargement de la toolbar")
+      if (self.test == 0):
+         splash._splash.configure(text = "Chargement de la toolbar")
       import toolbar
       self.toolbar=toolbar.TOOLBAR(self,self.top)
-      splash._splash.configure(text = "Chargement de la statusbar")
+      if (self.test == 0):
+         splash._splash.configure(text = "Chargement de la statusbar")
       import statusbar
       self.statusbar=statusbar.STATUSBAR(self.top)
 
   def load_appli_composants(self):
-      splash._splash.configure(text = "Chargement des appli_composants")
+      if (self.test == 0):
+         splash._splash.configure(text = "Chargement des appli_composants")
       for mname in self.appli_composants:
          self.load_appli_composant(mname)
 
@@ -126,7 +133,7 @@ class APPLI:
 
   def affiche_FAQ(self):
       import faq
-      faq.affiche(self.top)
+      #faq.affiche(self.top)
 
   def affiche_infos(self,message):
       self.statusbar.affiche_infos(message)

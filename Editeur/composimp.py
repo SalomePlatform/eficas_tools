@@ -546,7 +546,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
             essai_valeur="'" + valeur + "'"
             valeurretour,validite= self.object.eval_valeur(essai_valeur)
       if hasattr(valeurretour,'__class__'):
-         if valeurretour.__class__.__name__ in ('PARAMETRE','PARAMETRE_EVAL'):
+         #if valeurretour.__class__.__name__ in ('PARAMETRE','PARAMETRE_EVAL'):
+         if valeurretour.__class__.__name__ in ('PARAMETRE',):
             validite=1
       if self.wait_co():
          try:

@@ -96,7 +96,8 @@ class BUREAU:
    def __init__(self,appli,parent):
       self.parent=parent
       self.appli=appli
-      splash._splash.configure(text = "Création du bureau")
+      if self.appli.test == 0 :
+         splash._splash.configure(text = "Création du bureau")
       self.nb = Pmw.NoteBook(self.parent,raisecommand=self.selectJDC)
       self.nb.pack(fill='both',expand=1)
       self.JDCDisplay_courant=None

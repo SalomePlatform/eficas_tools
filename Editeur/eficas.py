@@ -50,6 +50,9 @@ class EFICAS(appli.APPLI):
   def exitEFICAS(self):
      self.bureau.exitEFICAS()
 
+  def getBureau(self):
+      return self.bureau
+      
   def browse(self,result):
       if result == 'Browse':
         self.ulfile = askopenfilename(title="Choix fichier :")

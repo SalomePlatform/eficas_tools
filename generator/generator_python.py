@@ -296,13 +296,11 @@ class PythonGenerator:
         l=[]
         nom = obj.get_nom()
         if nom == '' : nom = 'sansnom'
-        if len(obj.mc_liste)>0:
-            l.append(nom + ' = FORMULE(')
-            s=obj.type_retourne + ' = ' + "'''" + obj.arguments + ' = ' + obj.corps+"'''"
-            l.append(s)
-            l.append(');')
-        else:
-            l.append(nom+' = FORMULE();')
+        l.append(nom + ' = FORMULE(')
+        for v in obj.mc_liste:
+	    text=self.generator(v)
+	    l.append(v.nom+'='+text)
+        l.append(');')
         return l
 
    def generMACRO_ETAPE(self,obj):

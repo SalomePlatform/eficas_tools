@@ -69,7 +69,8 @@ class READERCATA:
           dans le répertoire Cata 
       """
       message1 = "Compilation des fichiers Eficas \n\n Veuillez patienter ..."
-      splash._splash.configure(text = message1)
+      if self.appli.test == 0 :
+         splash._splash.configure(text = message1)
       self.configure_barre(4)
       liste_cata_possibles=[]
       for catalogue in self.appli.CONFIGURATION.catalogues:
@@ -102,31 +103,37 @@ class READERCATA:
       self.fic_cata_c = self.fic_cata + 'c'
       self.fic_cata_p = os.path.splitext(self.fic_cata)[0]+'_pickled.py'
 
-      splash._splash.configure(text = "Debut compil cata: %d s" % time.clock())
+      if self.appli.test == 0 :
+         splash._splash.configure(text = "Debut compil cata: %d s" % time.clock())
       # compilation éventuelle du catalogue
       test = self.compile_cata(self.fic_cata,self.fic_cata_c)
       self.update_barre()
-      splash._splash.configure(text = "Fin compil cata: %d s" % time.clock())
+      if self.appli.test == 0 :
+         splash._splash.configure(text = "Fin compil cata: %d s" % time.clock())
       if not test : showerror("Compilation catalogue","Impossible de compiler le catalogue %s" %self.fic_cata)
 
       # import du catalogue
-      splash._splash.configure(text = "Debut import_cata: %d s" % time.clock())
+      if self.appli.test == 0 :
+         splash._splash.configure(text = "Debut import_cata: %d s" % time.clock())
       self.cata = self.import_cata(self.fic_cata)
       self.update_barre()
-      splash._splash.configure(text = "Fin import_cata: %d s" % time.clock())
+      if self.appli.test == 0 :
+         splash._splash.configure(text = "Fin import_cata: %d s" % time.clock())
       if not self.cata : showerror("Import du catalogue","Impossible d'importer le catalogue %s" %self.fic_cata)
 
       #
       # analyse du catalogue (ordre des mots-clés)
       #
-      splash._splash.configure(text = "Debut Retrouve_Ordre: %d s" % time.clock())
+      if self.appli.test == 0 :
+         splash._splash.configure(text = "Debut Retrouve_Ordre: %d s" % time.clock())
       # Retrouve_Ordre_Cata_Standard fait une analyse textuelle du catalogue
       # remplacé par Retrouve_Ordre_Cata_Standard_autre qui utilise une numerotation
       # des mots clés à la création
       #self.Retrouve_Ordre_Cata_Standard()
       self.Retrouve_Ordre_Cata_Standard_autre()
       self.update_barre()
-      splash._splash.configure(text = "Fin Retrouve_Ordre: %d s" % time.clock())
+      if self.appli.test == 0 :
+         splash._splash.configure(text = "Fin Retrouve_Ordre: %d s" % time.clock())
       #
       # analyse des données liées à l'IHM : UIinfo
       #
@@ -165,7 +172,8 @@ class READERCATA:
           Réalise l'import du catalogue dont le chemin d'accès est donné par cata
       """
       import imp
-      splash._splash.configure(text = "Chargement du catalogue")
+      if self.appli.test == 0 :
+         splash._splash.configure(text = "Chargement du catalogue")
       nom_cata = os.path.splitext(os.path.basename(cata))[0]
       rep_cata = os.path.dirname(cata)
       sys.path[:0] = [rep_cata]
@@ -217,7 +225,8 @@ class READERCATA:
       if self.code != 'ASTER' : return
       fic_cata = os.path.join(self.appli.CONFIGURATION.path_cata_dev,'cata_developpeur.py')
       message="Chargement catalogue développeur présent dans :\n %s..." % self.appli.CONFIGURATION.path_cata_dev
-      splash._splash.configure(text = message,barre='oui')
+      if self.appli.test == 0 :
+         splash._splash.configure(text = message,barre='oui')
       cata_dev_ordonne = analyse_cata.analyse_catalogue(self,self.fic_cata)
       self.cata_dev_ordonne_cr = cata_dev_ordonne.cr
       cata_dev_ordonne_dico = cata_dev_ordonne.entites
@@ -233,7 +242,8 @@ class READERCATA:
       """
       if self.code != 'ASTER' : return
       message="Chargement catalogue développeur présent dans :\n %s..." % self.appli.CONFIGURATION.path_cata_dev
-      splash._splash.configure(text = message,barre='oui')
+      if self.appli.test == 0 :
+         splash._splash.configure(text = message,barre='oui')
       cata_dev_ordonne_dico = autre_analyse_cata.analyse_catalogue(self.cata_dev)
       self.cata_ordonne_dico.update(cata_dev_ordonne_dico)
       self.appli.affiche_infos(" catalogue(s) développeur(s) chargé(s)" )
@@ -248,7 +258,8 @@ class READERCATA:
           try:
               f = open(self.fic_cata_p)
               u = cPickle.Unpickler(f)
-              splash._splash.configure(text = "Analyse du catalogue")
+              if self.appli.test == 0 :
+                 splash._splash.configure(text = "Analyse du catalogue")
               self.cata_ordonne_dico = u.load()
               f.close()
           except :
@@ -256,7 +267,8 @@ class READERCATA:
               # ou (le plus probable) s'il a été créé sous un autre OS
               self.Get_Ordre_Cata(mode='cata')
       elif mode == 'cata':
-          splash._splash.configure(text = "Analyse du catalogue",barre='oui')
+          if self.appli.test == 0 :
+              splash._splash.configure(text = "Analyse du catalogue",barre='oui')
           cata_ordonne = analyse_catalogue.analyse_catalogue(self,self.fic_cata)
           self.cata_ordonne_cr = cata_ordonne.cr
           self.cata_ordonne_dico = cata_ordonne.entites
@@ -344,7 +356,8 @@ class READERCATA:
       if time1 > time2:
           try:
               # le catalogue doit être recompilé avant d'être importé
-              splash._splash.configure(text="Compilation du catalogue\nCela peut prendre plusieurs secondes ...")
+              if self.appli.test == 0 :
+                 splash._splash.configure(text="Compilation du catalogue\nCela peut prendre plusieurs secondes ...")
               py_compile.compile(cata)
           except:
               return 0
@@ -359,14 +372,16 @@ class READERCATA:
       """ Configure la barre de progression en lui passant comme paramètre le
           nombre de commandes du catalogue qui lui sert à déterminer la longueur de son incrément """
       try:
-          splash._splash.configure(barre='oui',ratio = nbcommandes)
+          if self.appli.test == 0 :
+             splash._splash.configure(barre='oui',ratio = nbcommandes)
       except:
           pass
 
    def update_barre(self):
       """ Update la position de la barre de progression : la fait progresser de son incrément """
       try:
-          splash._splash.update_barre()
+          if self.appli.test == 0 :
+             splash._splash.update_barre()
       except:
           pass
 
