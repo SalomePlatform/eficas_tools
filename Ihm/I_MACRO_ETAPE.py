@@ -276,8 +276,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       """
       try:
          sd=Noyau.N_MACRO_ETAPE.MACRO_ETAPE.Build_sd(self,nom)
-         self.state="unchanged"
-         self.valid=1
+         self.state="changed"
       except AsException,e:
          # Une erreur s'est produite lors de la construction du concept
          # Comme on est dans EFICAS, on essaie de poursuivre quand meme

@@ -397,6 +397,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
       try:
          sd=Noyau.N_ETAPE.ETAPE.Build_sd(self,nom)
+         self.state="changed"
       except AsException,e:
          # Une erreur s'est produite lors de la construction du concept
          # Comme on est dans EFICAS, on essaie de poursuivre quand meme

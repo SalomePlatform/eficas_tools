@@ -73,6 +73,7 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
       """
       try:
          sd=Noyau.N_PROC_ETAPE.PROC_ETAPE.Build_sd(self)
+         self.state="changed"
       except AsException,e:
          # Une erreur s'est produite lors de la construction du concept
          # Comme on est dans EFICAS, on essaie de poursuivre quand meme
