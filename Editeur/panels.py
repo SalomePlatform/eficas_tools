@@ -270,7 +270,14 @@ class OngletPanel(Panel) :
   def affiche(self):
       page=self.nb.getcurselection()
       self.nb.page(page).focus_set()
-      if page == 'Concept':self._any.component('entry').focus_set()
+      if page == 'Concept':
+          try:
+#	      _any est un pointeur sur entry
+#	      component est une methode de pmw 
+#	      a priori, jamais ok
+              self._any.component('entry').focus_set()
+          except:
+              pass
       self.tkraise()
 
 # ------------------------------------------------------------------------
@@ -296,7 +303,7 @@ class OngletPanel(Panel) :
       self._any.focus()
       # aide associée au panneau
       bulle_aide="""Tapez dans la zone de saisie le nom que vous voulez donner
-      au concept retoruné par l'opérateur courant et pressez <Return> pour valider"""
+      au concept retounré par l'opérateur courant et pressez <Return> pour valider"""
       page.bind("<Button-3>", lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
       page.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
         

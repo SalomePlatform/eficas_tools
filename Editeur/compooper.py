@@ -30,8 +30,8 @@ class OPERPanel(panels.OngletPanel):
     nb = Pmw.NoteBook(self,raisecommand=self.raisecmd)
     nb.pack(fill = 'both', expand = 1)
     self.nb=nb
-    nb.add('Mocles', tab_text='Nouveau mot-clé')
     nb.add('Concept', tab_text='Nommer concept')
+    nb.add('Mocles', tab_text='Nouveau mot-clé')
     nb.add('Commande', tab_text='Nouvelle Commande')
     nb.add('Commentaire',tab_text='Paramètre/Commentaire')
     panneau=Pmw.PanedWidget(nb.page("Mocles"),
@@ -45,7 +45,8 @@ class OPERPanel(panels.OngletPanel):
     self.makeReglesPage(panneau.pane('right'))
     #self.makeCommentairePage(nb.page("Commentaire"))
     self.makeParamCommentPage_for_etape(nb.page("Commentaire"))
-    nb.tab('Mocles').focus_set()
+    #nb.tab('Mocles').focus_set()
+    nb.tab('Concept').focus_set()
     nb.setnaturalsize()
     self.affiche()
 
