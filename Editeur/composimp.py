@@ -946,7 +946,9 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       valeur = self.get_valeur()
       self.erase_valeur()
       anc_val = self.node.item.get_valeur()
+      valeur,validite=self.node.item.eval_valeur_item(valeur)
       test = self.node.item.set_valeur(valeur)
+      print self.node.item.isvalid()
       if not test :
           mess = "impossible d'évaluer : %s " %`valeur`
           self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée :"+mess)
@@ -959,7 +961,6 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
           else :
               self.node.parent.verif()
           self.node.update()
-          #self.node.parent.select()
       else :
           cr = self.node.item.get_cr()
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
@@ -1413,7 +1414,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       Cette méthode attribue le panel à l'objet pointé par self en fonction de la
       nature de la valeur demandée pour cet objet
       """
-      print "affect_panel : ",self.nom,self.is_list(),self.has_into(), self.get_into(None)
+      #print "affect_panel : ",self.nom,self.is_list(),self.has_into(), self.get_into(None)
       if self.wait_shell():
           # l'objet attend un shell
           self.panel = SHELLPanel
@@ -1742,7 +1743,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 	 if type(valeur) == types.StringType and self.object.wait_TXM():
             essai_valeur="'" + valeur + "'"
             valeurretour,validite= self.object.eval_valeur(essai_valeur)
-      if valeurretour.__class__.__name__ in ('PARAMETRE','PARAMETRE_EVAL'):
+      if hasattr(valeurretour,'__class__'):
+         if valeurretour.__class__.__name__ in ('PARAMETRE','PARAMETRE_EVAL'):
             validite=1
       if self.wait_co():
          try:
@@ -1776,7 +1778,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       if not valeur:valeur=self.object.valeur
       if valeur in self.object.etape.sdprods:return 1
       if type(valeur) is not types.ClassType:return 0
-      if valeur.__class__.__name__ == 'CO':return 1
+      if hasattr(valeur,'__class__'):
+         if valeur.__class__.__name__ == 'CO':return 1
       return 0
 
   def delete_valeur_co(self,valeur=None):
