@@ -39,6 +39,8 @@ from utils import extension_fichier,stripPath,save_in_file
 from widgets import Fenetre,Ask_Format_Fichier
 from fenetre_mc_inconnus import fenetre_mc_inconnus
 
+import comploader
+
 class BUREAU:
    menu_defs=[
               ('Fichier',[
@@ -103,6 +105,7 @@ class BUREAU:
       self.JDCDisplay_courant=None
       self.fileName=None
       self.liste_JDCDisplay=[]
+      comploader.charger_composants()
       self.cree_cataitem()
 
    def cree_cataitem(self):

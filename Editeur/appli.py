@@ -53,6 +53,8 @@ class APPLI:
       self.top.title(VERSION + ' pour '+self.code)
       self.top.withdraw()
       self.initializeTk(master)
+      # L'attribut test permet d'activer les panneaux de splash et d'erreur (test=0)
+      # Si test est different de 0, les panneaux ne sont pas activés
       self.test=test
       Pmw.initialise(master)
       self.lecture_parametres()

@@ -28,10 +28,7 @@ import types,string,re
 
 from Noyau import N_CR
 from Noyau.N_utils import repr_float
-from Accas import ETAPE,PROC_ETAPE,MACRO_ETAPE,ETAPE_NIVEAU,JDC,FORM_ETAPE
-from Accas import MCSIMP,MCFACT,MCBLOC,MCList,EVAL
-from Accas import GEOM,ASSD,MCNUPLET
-from Accas import COMMENTAIRE,PARAMETRE, PARAMETRE_EVAL,COMMANDE_COMM
+import Accas
 from Extensions.parametre import ITEM_PARAMETRE
 from Formatage import Formatage
 
@@ -110,40 +107,41 @@ class PythonGenerator:
          place (dépend des gouts !!!)
       """
       # ATTENTION a l'ordre des tests : il peut avoir de l'importance (héritage)
-      if isinstance(obj,PROC_ETAPE):
+      if isinstance(obj,Accas.PROC_ETAPE):
          return self.generPROC_ETAPE(obj)
-      elif isinstance(obj,MACRO_ETAPE):
-         return self.generMACRO_ETAPE(obj)
-      elif isinstance(obj,FORM_ETAPE):
+      # Attention doit etre placé avant MACRO (raison : héritage)
+      elif isinstance(obj,Accas.FORM_ETAPE):
          return self.generFORM_ETAPE(obj)
-      elif isinstance(obj,ETAPE):
+      elif isinstance(obj,Accas.MACRO_ETAPE):
+         return self.generMACRO_ETAPE(obj)
+      elif isinstance(obj,Accas.ETAPE):
          return self.generETAPE(obj)
-      elif isinstance(obj,MCFACT):
+      elif isinstance(obj,Accas.MCFACT):
          return self.generMCFACT(obj)
-      elif isinstance(obj,MCList):
+      elif isinstance(obj,Accas.MCList):
          return self.generMCList(obj)
-      elif isinstance(obj,MCBLOC):
+      elif isinstance(obj,Accas.MCBLOC):
          return self.generMCBLOC(obj)
-      elif isinstance(obj,MCSIMP):
+      elif isinstance(obj,Accas.MCSIMP):
          return self.generMCSIMP(obj)
-      elif isinstance(obj,ASSD):
+      elif isinstance(obj,Accas.ASSD):
          return self.generASSD(obj)
-      elif isinstance(obj,ETAPE_NIVEAU):
+      elif isinstance(obj,Accas.ETAPE_NIVEAU):
          return self.generETAPE_NIVEAU(obj)
-      elif isinstance(obj,COMMENTAIRE):
+      elif isinstance(obj,Accas.COMMENTAIRE):
          return self.generCOMMENTAIRE(obj)
       # Attention doit etre placé avant PARAMETRE (raison : héritage)
-      elif isinstance(obj,PARAMETRE_EVAL):
+      elif isinstance(obj,Accas.PARAMETRE_EVAL):
          return self.generPARAMETRE_EVAL(obj)
-      elif isinstance(obj,PARAMETRE):
+      elif isinstance(obj,Accas.PARAMETRE):
          return self.generPARAMETRE(obj)
-      elif isinstance(obj,EVAL):
+      elif isinstance(obj,Accas.EVAL):
          return self.generEVAL(obj)
-      elif isinstance(obj,COMMANDE_COMM):
+      elif isinstance(obj,Accas.COMMANDE_COMM):
          return self.generCOMMANDE_COMM(obj)
-      elif isinstance(obj,JDC):
+      elif isinstance(obj,Accas.JDC):
          return self.generJDC(obj)
-      elif isinstance(obj,MCNUPLET):
+      elif isinstance(obj,Accas.MCNUPLET):
          return self.generMCNUPLET(obj)
       elif isinstance(obj,ITEM_PARAMETRE):
          return self.generITEM_PARAMETRE(obj)
@@ -277,11 +275,11 @@ class PythonGenerator:
         str = 'reuse ='+ self.generator(obj.reuse) + ','
         l.append(str)
       for v in obj.mc_liste:
-        if isinstance(v,MCBLOC) :
+        if isinstance(v,Accas.MCBLOC) :
           liste=self.generator(v)
           for mocle in liste :
             l.append(mocle)
-        elif isinstance(v,MCSIMP) :
+        elif isinstance(v,Accas.MCSIMP) :
           text=self.generator(v)
           l.append(v.nom+'='+text)
         else:
@@ -314,7 +312,6 @@ class PythonGenerator:
          Cette méthode convertit une macro-étape
          en une liste de chaines de caractères à la syntaxe python
       """
-      if obj.definition.nom == 'FORMULE' : return self.gen_formule(obj)
       try:
         if obj.sd == None:
           sdname=''
@@ -330,11 +327,11 @@ class PythonGenerator:
          str = "reuse =" + self.generator(obj.reuse) + ','
          l.append(str)
       for v in obj.mc_liste:
-        if isinstance(v,MCBLOC) :
+        if isinstance(v,Accas.MCBLOC) :
           liste=self.generator(v)
           for mocle in liste :
             l.append(mocle)
-        elif isinstance(v,MCSIMP) :
+        elif isinstance(v,Accas.MCSIMP) :
           text=self.generator(v)
           l.append(v.nom+'='+text)
         else:
@@ -343,30 +340,6 @@ class PythonGenerator:
           liste[0]=v.nom+'='+liste[0]
           l.append(liste)
 
-      if len(l) == 1:
-        l[0]=label+');'
-      else :
-        l.append(');')
-      return l
-
-   def gen_formule(self,obj):
-      """
-           Méthode particuliere aux objets de type FORMULE
-      """
-      try:
-        if obj.sd == None:
-          sdname=''
-        else:
-          sdname= self.generator(obj.sd)
-      except:
-        sdname='sansnom'
-      l=[]
-      label=sdname + ' = FORMULE('
-      l.append(label)
-      for v in obj.mc_liste:
-        s=''
-        s= v.nom+':'+sdname+'('+v.valeur+')'
-        l.append(s)
       if len(l) == 1:
         l[0]=label+');'
       else :
@@ -382,11 +355,11 @@ class PythonGenerator:
       label=obj.definition.nom+'('
       l.append(label)
       for v in obj.mc_liste:
-        if isinstance(v,MCBLOC) :
+        if isinstance(v,Accas.MCBLOC) :
           liste=self.generator(v)
           for mocle in liste :
             l.append(mocle)
-        elif isinstance(v,MCSIMP) :
+        elif isinstance(v,Accas.MCSIMP) :
           text=self.generator(v)
           l.append(v.nom+'='+text)
         else:
@@ -416,12 +389,12 @@ class PythonGenerator:
       l=[]
       l.append('_F(')
       for v in obj.mc_liste:
-         if not isinstance(v,MCSIMP) and not isinstance (v,MCBLOC) :
+         if not isinstance(v,Accas.MCSIMP) and not isinstance (v,Accas.MCBLOC) :
            # on est en présence d'une entite composée : on récupère une liste
            liste=self.generator(v)
            liste[0]=v.nom+'='+liste[0]
            l.append(liste)
-         elif isinstance(v,MCBLOC):
+         elif isinstance(v,Accas.MCBLOC):
            liste=self.generator(v)
            for arg in liste :
              l.append(arg)
@@ -441,12 +414,12 @@ class PythonGenerator:
           Convertit un objet MCList en une liste de chaines de caractères à la
           syntaxe python
       """
-      l=[]
-      str =  '('
-      l.append(str)
-      for mcfact in obj.data:
-         l.append(self.generator(mcfact))
-      l.append('),')
+      if len(obj.data) > 1:
+         l=['(']
+         for mcfact in obj.data: l.append(self.generator(mcfact))
+         l.append('),')
+      else:
+         l= self.generator(obj.data[0])
       return l
 
    def generMCBLOC(self,obj):
@@ -456,11 +429,11 @@ class PythonGenerator:
       """
       l=[]
       for v in obj.mc_liste:
-        if isinstance(v,MCBLOC) :
+        if isinstance(v,Accas.MCBLOC) :
           liste=self.generator(v)
           for mocle in liste :
             l.append(mocle)
-        elif isinstance(v,MCList):
+        elif isinstance(v,Accas.MCList):
           liste=self.generator(v)
           liste[0]=v.nom+'='+liste[0]
           for mocle in liste :
@@ -487,7 +460,7 @@ class PythonGenerator:
                   s = s + "CO('"+ self.generator(val) +"')"
                elif val.__class__.__name__ == 'CO':
                   s = s + "CO('"+ self.generator(val) +"')"
-               elif isinstance(val,PARAMETRE):
+               elif isinstance(val,Accas.PARAMETRE):
                   # il ne faut pas prendre la string que retourne gener
                   # mais seulement le nom dans le cas d'un paramètre
                   s = s + val.nom
@@ -510,7 +483,7 @@ class PythonGenerator:
                s = "CO('"+ self.generator(val) +"')"
             elif val.__class__.__name__ == 'CO':
                 s = "CO('"+ self.generator(val) +"')"
-            elif isinstance(val,PARAMETRE):
+            elif isinstance(val,Accas.PARAMETRE):
                 # il ne faut pas prendre la string que retourne gener
                 # mais seulement le nom dans le cas d'un paramètre
                 s = val.nom

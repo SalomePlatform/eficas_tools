@@ -103,14 +103,14 @@ class READERCATA:
       self.fic_cata_c = self.fic_cata + 'c'
       self.fic_cata_p = os.path.splitext(self.fic_cata)[0]+'_pickled.py'
 
-      if self.appli.test == 0 :
-         splash._splash.configure(text = "Debut compil cata: %d s" % time.clock())
+      #if self.appli.test == 0 :
+      #   splash._splash.configure(text = "Debut compil cata: %d s" % time.clock())
       # compilation éventuelle du catalogue
-      test = self.compile_cata(self.fic_cata,self.fic_cata_c)
-      self.update_barre()
-      if self.appli.test == 0 :
-         splash._splash.configure(text = "Fin compil cata: %d s" % time.clock())
-      if not test : showerror("Compilation catalogue","Impossible de compiler le catalogue %s" %self.fic_cata)
+      #test = self.compile_cata(self.fic_cata,self.fic_cata_c)
+      #self.update_barre()
+      #if self.appli.test == 0 :
+      #   splash._splash.configure(text = "Fin compil cata: %d s" % time.clock())
+      #if not test : showerror("Compilation catalogue","Impossible de compiler le catalogue %s" %self.fic_cata)
 
       # import du catalogue
       if self.appli.test == 0 :
@@ -178,8 +178,9 @@ class READERCATA:
       rep_cata = os.path.dirname(cata)
       sys.path[:0] = [rep_cata]
       try :
-          f,p,d = imp.find_module(nom_cata)
-          o = imp.load_module(nom_cata,f,p,d)
+          o=__import__(nom_cata)
+          #f,p,d = imp.find_module(nom_cata)
+          #o = imp.load_module(nom_cata,f,p,d)
           return o
       except Exception,e:
           traceback.print_exc()

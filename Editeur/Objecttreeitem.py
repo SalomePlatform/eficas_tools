@@ -25,6 +25,8 @@ import types,string,os,glob,imp,sys
 from repr import Repr
 from copy import copy,deepcopy
 
+# import du chargeur de composants
+from comploader import gettreeitem,make_objecttreeitem
 import treewidget
 
 myrepr = Repr()
@@ -417,48 +419,3 @@ class SequenceTreeItem(ObjectTreeItem):
             item = make_objecttreeitem(self.appli, obj.nom + ":", obj, setfunction)
             sublist.append(item)
         return sublist
-
-def gettreeitem(object):
-    """
-       Cette fonction retourne la classe item associée à l'objet object.
-       Cette classe item dépend bien sûr de la nature de object, d'où
-       l'interrogation du dictionnaire composants
-    """
-    if type(object) == types.InstanceType:
-      # On cherche d abord dans les composants (plugins)
-      try:
-        return composants[object.__class__]
-      except:
-        # On cherche une eventuelle classe heritee (aleatoire car sans ordre)
-        for e in composants.keys():
-          if isinstance(object,e):return composants[e]
-    # On n'a rien trouve dans les composants
-    return ObjectTreeItem
-
-def charger_composants():
-    """
-        Cette fonction a pour but de charger tous les modules composants graphiques
-        (fichiers compo*.py dans le même répertoire que ce module )
-        et de remplir le dictionnaire composants utilisé par make_objecttreeitem
-    """
-    composants={}
-    repertoire=os.path.dirname(__file__)
-    listfich=glob.glob(os.path.join(repertoire, "compo*.py"))
-    for fichier in listfich:
-        m= os.path.basename(fichier)[:-3]
-        module=__import__(m,globals(),locals())
-        composants[module.objet]=module.treeitem
-    return composants
-
-def make_objecttreeitem(appli,labeltext, object, setfunction=None):
-    """
-       Cette fonction permet de construire et de retourner un objet
-       de type item associé à l'object passé en argument.
-    """
-    c = gettreeitem(object)
-    return c(appli,labeltext, object, setfunction)
-
-# Dictionnaire {object : item} permettant d'associer un item à un object
-# Ce dictionnaire est renseigné par la méthode charger_composants 
-composants = charger_composants()
-
