@@ -36,7 +36,7 @@ from widgets import Fenetre,FenetreYesNo
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.6 2002/11/06 17:25:56 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.7 2002/11/12 12:25:01 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -127,6 +127,7 @@ class MACROPanel(panels.OngletPanel):
     old_err = self.node.item.object.fichier_err
     old_context=self.node.item.object.contexte_fichier_init
     old_units=self.node.item.object.recorded_units
+    old_etapes=self.node.item.object.etapes
 
     new_fic = self.entry.get()
     if not os.path.isfile(new_fic) :
@@ -160,6 +161,7 @@ class MACROPanel(panels.OngletPanel):
          self.node.item.object.fichier_err=old_err
          self.node.item.object.contexte_fichier_init=old_context
          self.node.item.object.recorded_units=old_units
+         self.node.item.object.etapes=old_etapes
          self.parent.appli.affiche_infos("Fichier invalide ... Ancien fichier restauré")
          if old_fic:
              self.entry.insert(0,self.node.item.object.fichier_ini)
