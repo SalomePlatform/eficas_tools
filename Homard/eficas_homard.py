@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -18,30 +19,23 @@
 #
 # ======================================================================
 
-import os
+"""
+    Ce module sert \xe0 lancer EFICAS configur\xe9 pour Code_Aster
+"""
+# Modules Python
+import sys
 
+# Modules Eficas
 import prefs
+sys.path[:0]=[prefs.INSTALLDIR]
 
-rep_cata = os.path.join(prefs.REPINI,'Cata')
+import Editeur
+from Editeur import eficas_go
 
-# Accès à la documentation Aster
-path_doc              = os.path.join(rep_cata,'..','Doc')
-exec_acrobat    =       "/usr/bin/acroread"
-# Utilisateur/Développeur
-isdeveloppeur   =       "NON"
-path_cata_dev   =       "/tmp/cata"
-# Répertoire temporaire
-rep_travail     =   "/tmp"
-# Répertoire initial
-initialdir=os.curdir
-
-# Choix des catalogues
-rep_mat="bidon"
-
-catalogues = (
-              #('ASTER','v5',os.path.join(rep_cata,'cata_STA5.py'),'asterv5'),
-              #('ASTER','v6',os.path.join(rep_cata,'cata_STA6.py'),'python'),
-              ('ASTER','v7',os.path.join(rep_cata,'cata_STA7.py'),'python','defaut'),
-              ('HOMARD','v1',os.path.join(rep_cata,'homard_cata_STA7.py'),'homard'),
-             )
+if len(sys.argv) > 1 :
+    # on veut ouvrir un fichier directement au lancement d'Eficas
+    eficas_go.lance_eficas(code='HOMARD',fichier = sys.argv[1])
+else:
+    # on veut ouvrir Eficas 'vide'
+    eficas_go.lance_eficas(code='HOMARD')
 

@@ -377,6 +377,44 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
 
   dict_fichier_unite={}
 
+
+  def SALOME_DONNEES_HOMARD_FICHIERS_NOM_MED_MAILLAGE_N(self):
+      entrychaine=salome.sg.getAllSelected()
+      if entrychaine != '':
+          self.entry2.delete(0,END)
+          try:
+              print salome.myStudy
+              SO = salome.myStudy.FindObjectID(entrychaine[0])
+          except:
+              boo = 0
+              SO = None
+
+          FileName=''
+          if SO != None:
+              myBuilder = salome.myStudy.NewBuilder()
+              boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeFileType")
+              if boo:
+                 val=FileAttr.Value()
+                 if (val !="FICHIERMED"):
+                     boo=0
+                     showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
+                 else:
+                     boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeExternalFileDef")
+              if boo :
+                FileName=FileAttr.Value()
+              else:
+                 showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
+          if FileName != '' :
+              self.entry2.insert(0,FileName)
+              self.entry.delete(0,END)
+              self.entry.insert(0,FileName)
+              self.valid_valeur()
+
+
+  def SALOME_DONNEES_HOMARD_FICHIERS_NOM_MED_MAILLAGE_NP1(self):
+      self.SALOME_DONNEES_HOMARD_FICHIERS_NOM_MED_MAILLAGE_N()
+
+
   def SALOME_LIRE_MAILLAGE_UNITE(self):
 
       unite=self.node.item.get_valeur()
@@ -396,29 +434,42 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
 	      myBuilder = salome.myStudy.NewBuilder()
               boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeComment")
 
-          if boo == 0 :
-	     FileName=''
-             print "a"
-          else :
-	     Comment=FileAttr.Value()
-             print Comment
-             if Comment.find("FICHIERMED")== -1 :
-                FileName=''
-             else :
-                FileName=Comment[10:]
-
+          FileName=''
+          if SO != None:
+              myBuilder = salome.myStudy.NewBuilder()
+              boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeFileType")
+              if boo:
+                 boo=0
+                 val=FileAttr.Value()
+                 if (val !="FICHIERMED"):
+                     showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
+                 else:
+                     boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeExternalFileDef")
+          if boo :
+              FileName=FileAttr.Value()
+          else:
+              showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
 
           print "FileName = " , FileName
-	  if FileName != '' :
+          if FileName != '' :
               print FileName
-	      self.entry2.insert(0,FileName)
+              self.entry2.insert(0,FileName)
               typefic='D'
               SALOME_UNIQUE_BASE_Panel.dict_fichier_unite[unite]=typefic+FileName
           else :
-	      print "il faut afficher une Fenetre d impossibilité"
-	      showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associé")
+              print "il faut afficher une Fenetre d impossibilit\xe9"
+              showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
 
-  def makeValeurPage(self,page):
+  def redistribue_selon_simp(self):
+      genea = self.node.item.get_genealogie()
+      commande="SALOME"
+      for i in range(0,len( genea )) :
+        commande=commande+"_"+ genea[i]
+      print SALOME_UNIQUE_BASE_Panel.__dict__[commande]
+      (SALOME_UNIQUE_BASE_Panel.__dict__[commande])(self)
+
+
+  makeValeurPage(self,page):
       """
       Génère la page de saisie de la valeur du mot-clé simple courant qui doit être de type
       de base cad entier, réel, string ou complexe
@@ -441,8 +492,8 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
       self.entry.bind("<Return>",lambda e,c=self.valid_valeur:c())
 
       # PN : Ajout d'un bouton pour selectionner  à partir de Salome  
-      self.b = Button(self.frame_valeur,text='Relier a selection',command=self.SALOME_LIRE_MAILLAGE_UNITE)
-      self.b.place(relx=0.1,rely=0.1)
+      self.b = Button(self.frame_valeur,text='Relier selection',command=self.redistribue_selon_simp)
+      self.b.place(relx=0.05,rely=0.1)
       unite=self.node.item.get_valeur()
       self.entry2 = Entry(self.frame_valeur,relief='sunken')
       self.entry2.place(relx=0.3,rely=0.1)

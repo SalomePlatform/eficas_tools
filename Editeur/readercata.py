@@ -70,12 +70,16 @@ class READERCATA:
       message1 = "Compilation des fichiers Eficas \n\n Veuillez patienter ..."
       splash._splash.configure(text = message1)
       self.configure_barre(4)
-      if len(self.appli.CONFIGURATION.catalogues) == 1:
-          self.fic_cata = self.appli.CONFIGURATION.catalogues[0][2]
+      liste_cata_possibles=[]
+      for catalogue in self.appli.CONFIGURATION.catalogues:
+          if catalogue[0] == self.code :
+             liste_cata_possibles.append(catalogue)
+      if len(liste_cata_possibles)==1:
+          self.fic_cata = liste_cata_possibles[0][2]
           self.code = self.appli.CONFIGURATION.catalogues[0][0]
-          self.version_code = self.appli.CONFIGURATION.catalogues[0][1]
-          self.appli.format_fichier.set(self.appli.CONFIGURATION.catalogues[0][3])
-      elif len(self.appli.CONFIGURATION.catalogues) == 0:
+          self.version_code = liste_cata_possibles[0][1]
+          self.appli.format_fichier.set(liste_cata_possibles[0][3])
+      elif len(liste_cata_possibles)==0:
           # aucun catalogue défini dans le fichier Accas/editeur.ini
           if self.code == 'ASTER' :
               self.fic_cata = os.path.join(prefs.CODE_PATH,'Cata','cata.py')
