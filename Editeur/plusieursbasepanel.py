@@ -145,6 +145,10 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
 	 if txtparam=="":
 	    showerror("Aucun parametre ","Pas de parametre de ce type")
 	 else :
+	    try :
+	    	self.self.fenetreparam.destroy()
+	    except:
+	        pass
 	    self.fenetreparam=FenetreDeParametre( self, self.node.item, self.parent.appli, txtparam)
 
 
