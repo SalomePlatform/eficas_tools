@@ -478,8 +478,20 @@ class BUREAU:
           if self.JDCDisplay_courant.modified == 'n' : 
              self.JDCDisplay_courant.init_modif()
           pere = self.JDCDisplay_courant.node_selected.parent
-          self.JDCDisplay_courant.node_selected.delete()
-          pere.select()
+          # Le noeud n'est pas au 1er niveau
+          if  pere.parent.parent != None:
+              self.JDCDisplay_courant.node_selected.delete()
+              pere.select()
+          else:
+              noeudselecte = self.JDCDisplay_courant.node_selected
+              parent = noeudselecte.parent
+              enfants = parent.children
+              index = enfants.index(noeudselecte) 
+              self.JDCDisplay_courant.node_selected.delete()
+              try:
+              	enfants[index].select()
+              except :
+		enfants[index-1].select()
       except AttributeError:
           pass
 
