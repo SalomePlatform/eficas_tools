@@ -28,6 +28,7 @@ import sys
 import types
 import Pmw
 import Tkinter
+from tkMessageBox import showinfo,askyesno,showerror
 
 # Modules Eficas
 import splash
@@ -35,6 +36,7 @@ import prefs
 import fontes
 import tooltip
 import properties
+from widgets import Fenetre
 
 VERSION="EFICAS v1.3"
 
@@ -78,7 +80,7 @@ class APPLI:
       """
           Cree les constituants de l'application :
            - menubar
-           - tollbar
+           - toolbar
            - bureau
            - statusbar
       """
@@ -217,3 +219,12 @@ class APPLI:
           menu=menudict.get(mname)
           if not menu:continue
           self.cree_menu(menu,itemlist,appli_composant)
+
+  def update_jdc_courant(self):
+      self.bureau.update_jdc_courant()
+
+  def affiche_alerte(self,titre,message):
+      f=Fenetre(self, titre="Compte-rendu d'erreur", texte = titre + "\n\n" + message)
+      f.wait()
+
+

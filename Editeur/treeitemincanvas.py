@@ -55,3 +55,6 @@ class TREEITEMINCANVAS:
    def mainloop(self):
       self.parent.mainloop()
 
+   def update(self):
+      """Cette methode est utilisee pour signaler une mise a jour des objets associes"""
+      self.tree.update()

@@ -37,6 +37,9 @@ class Panel(Frame) :
   Elle est toujours dérivée.
   """
   def __init__(self,parent,panneau,node) :
+      # Le parent d'un panel est un objet de la classe JDCDISPLAY ou derivee
+      # ou un objet qui a les attributs : appli (de classe APPLI ou derivee),
+      # modified et la methode init_modif
       self.parent=parent
       self.panneau = panneau
       self.node=node

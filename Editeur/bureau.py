@@ -139,7 +139,9 @@ class BUREAU:
       CONTEXT.unset_current_step()
       J=self.cata[0].JdC(cata=self.cata,
                          cata_ord_dico=self.cata_ordonne_dico,
-                         appli=self.appli)
+                         appli=self.appli,
+                         rep_mat=self.appli.CONFIGURATION.rep_mat,
+                         )
       self.JDCName=J.nom
       self.fileName=None
       self.ShowJDC(J,self.JDCName)
@@ -209,6 +211,7 @@ class BUREAU:
           if not hasattr(self,'JDC') : return
           titre="rapport de validation du jeu de commandes courant"
           cr = self.JDC.report()
+          self.update_jdc_courant()
       elif mode == 'CATA':
           from Noyau.N_CR import CR
           cr = CR()
@@ -277,7 +280,9 @@ class BUREAU:
       CONTEXT.unset_current_step()
       J=self.cata[0].JdC(procedure=text,appli=self.appli,
                          cata=self.cata,cata_ord_dico=self.cata_ordonne_dico,
-                         nom = self.JDCName)
+                         nom = self.JDCName,
+                         rep_mat=self.appli.CONFIGURATION.rep_mat,
+                         )
       J.analyse()
       txt_exception = J.cr.get_mess_exception()
       if txt_exception :
@@ -582,3 +587,8 @@ class BUREAU:
 
    def aideEFICAS(self):
       AIDE.go(master=self.parent)
+
+   def update_jdc_courant(self):
+      self.JDCDisplay_courant.update()
+
+

@@ -26,7 +26,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.7 2002/09/10 15:59:37 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.8 2002/10/16 13:27:35 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -71,8 +71,6 @@ class Tree :
         for child in self.children:
             child.draw(x,lasty)
             lasty = child.lasty + 15
-            child.trace_ligne()
-        #self.update()
         self.children[0].select()
         self.resizescrollregion()
 
@@ -289,6 +287,7 @@ class Node :
             child.draw(x,y)
             nb = child.get_nb_children()
             y = y + 20*(nb+1)
+        self.trace_ligne()
 
     def drawtext(self):
         """ Affiche les deux zones de texte après l'icône de couleur de l'objet """
@@ -363,26 +362,17 @@ class Node :
         nb = self.get_nb_children()
         self.state = 'collapsed'
         self.collapse_children()
-        self.efface()
-        try:
-            self.move(-20*nb)
-        except:
-            pass
-        self.draw(self.x,self.y)
+        self.redraw(-nb)
         self.select()
-        self.update()
-
+   
     def expand(self,event = None):
         """ Expanse self et le retrace """
         if not self.item.isactif() : return
         if not self.children : self.build_children()
         self.state = 'expanded'
         nb = self.get_nb_children()
-        self.move(20*nb)
-        self.efface()
-        self.draw(self.x,self.y)
+        self.redraw(nb)
         self.select()
-        self.update()
 
     def redraw(self,nb):
         """ Redessine self :  nb est le décalage à introduire
@@ -392,7 +382,10 @@ class Node :
         # on efface self et on le redessine
         self.efface()
         self.draw(self.x,self.y)
-        self.update()
+        # Il n'est pas nécessaire d'appeler update
+        # il suffit d'updater les coordonnees et de retracer les lignes
+        self.racine.update_coords()
+        self.racine.trace_ligne()
         
     def update_coords(self):
         """ Permet d'updater les coordonnes de self et de tous ses enfants"""
@@ -495,19 +488,6 @@ class Node :
                 print child
                 print child.item.object
 
-    def make_visible_OBSOLETE(self,nb):
-        """ Cette méthode a pour but de rendre le noeud self (avec tous ses descendants
-        affichés) visible dans le canvas """
-        x = self.canvas.canvasx(self.canvas.cget('width'))
-        y = self.canvas.canvasy(self.canvas.cget('height'))
-        #print 'x,y =',x,y
-        x0,y0,x1,y1 = self.canvas.bbox(ALL)
-        #print 'x0,y1=',x0,y1
-        y_deb = self.y
-        nb = self.get_nb_children()
-        y_fin = y_deb + 20*nb
-        #print 'y_deb,y_fin=',y_deb,y_fin
-        
     #------------------------------------------------------------------
     # Méthodes de création et destruction de noeuds
     # Certaines de ces méthodes peuvent être appelées depuis l'externe
@@ -577,7 +557,6 @@ class Node :
         """
         if not self.children : self.build_children()
         if pos == None :
-            #pos = len(self.children)
             if type(fils) == types.InstanceType:
                 pos = self.item.get_index_child(fils.nom)
             else:
@@ -586,10 +565,12 @@ class Node :
         if child == 0 :
             # on n'a pas pu créer le noeud fils
             return 0
-        child.displayed = 1
         self.state = 'expanded'
+        child.displayed = 1
+        if child.item.isactif():
+           child.state = 'expanded'
+        if not child.children : child.build_children()
         if verif == 'oui':
-            if not child.children : child.build_children()
             test = child.item.isMCList()
             if test :
                 child.children[-1].verif_condition()
@@ -629,8 +610,6 @@ class Node :
         nbnew = self.get_nb_children()
         self.redraw(nbnew-nbold)
         child.select()
-        child.expand()
-        #child.make_visible()
         if retour == 'oui': return child
 
     def delete_node_child(self,child):

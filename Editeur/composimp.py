@@ -60,7 +60,7 @@ class newSIMPPanel(panels.OngletPanel):
       nb.setnaturalsize()
       
 # ----------------------------------------------------------------------------------------
-#   Méthodes utlisées pour l'affectation de la valeur donnée par l'utilisateur
+#   Méthodes utilisées pour l'affectation de la valeur donnée par l'utilisateur
 #    au mot-clé courant
 # ----------------------------------------------------------------------------------------
 
@@ -73,8 +73,14 @@ class newSIMPPanel(panels.OngletPanel):
       if name != None:
           valeur =name
       else :
+          #XXX Pourquoi proceder ainsi ? Il n'est pas possible de mettre
+          # None comme valeur du mot cle. 
+          # Probablement que ce debranchement permet de mettre record_valeur
+          # en call back, il faut donc aller chercher la valeur dans l'entry
           valeur= self.entry.get()
           self.entry.delete(0,END)
+          #XXX Pour permettre la mise a None du mot cle, on remet None si valeur == ''
+          if valeur == '':valeur=None
       self.node.item.set_valeur(valeur,evaluation='non')
       self.parent.appli.affiche_infos(mess)
       if self.node.item.get_position()=='global':
@@ -86,8 +92,9 @@ class newSIMPPanel(panels.OngletPanel):
       self.node.update()
       if self.node.item.isvalid():
           self.node.parent.select()
+
 # ----------------------------------------------------------------------------------------
-#   Méthodes utlisées pour la manipulation des items dans les listes de choix
+#   Méthodes utilisées pour la manipulation des items dans les listes de choix
 # ----------------------------------------------------------------------------------------
   def selectValeur(self,name):
       self.selected_valeur = name

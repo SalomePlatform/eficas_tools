@@ -85,6 +85,7 @@ class Fenetre :
 
     def wait(self):
         self.fenetre.grab_set()
+        self.zone_texte.focus_set()
         self.fenetre.wait_window(self.fenetre)
 
     def quit(self):
@@ -120,6 +121,50 @@ class Fenetre :
                           "Vérifiez les droits d'écriture")
             else:
                 showinfo("Sauvegarde effectuée","Sauvegarde effectuée dans le fichier %s" %file)
+
+class FenetreYesNo(Fenetre):
+    def __init__(self,appli,titre="",texte=""):
+        self.appli=appli
+        self.fenetre = Toplevel()
+        self.fenetre.configure(width = 800,height=500)
+        self.fenetre.protocol("WM_DELETE_WINDOW", self.quit)
+        self.fenetre.title(titre)
+        self.texte = string.replace(texte,'\r\n','\n')
+        self.titre = titre
+        fonte=fontes.standardcourier10
+        # définition des frames
+        self.frame_texte = Frame(self.fenetre)
+        self.frame_boutons = Frame(self.fenetre)
+        self.frame_boutons.place(relx=0,rely=0,    relwidth=1.,relheight=0.1)
+        self.frame_texte.place(  relx=0,rely=0.1,  relwidth=1, relheight=0.9)
+        # définition de la zone texte et du scrollbar
+        self.zone_texte = Text(self.frame_texte,font=fonte)
+        self.zone_texte.bind("<Key-Prior>", self.page_up)
+        self.zone_texte.bind("<Key-Next>", self.page_down)
+        self.zone_texte.bind("<Key-Up>", self.unit_up)
+        self.zone_texte.bind("<Key-Down>", self.unit_down)
+        self.scroll_v = Scrollbar (self.frame_texte,command = self.zone_texte.yview)
+        #self.scroll_h = Scrollbar (self.frame_texte,command = self.zone_texte.xview)
+        self.scroll_v.pack(side='right',fill ='y')
+        #self.scroll_h.pack(side='bottom',fill ='x')
+        self.zone_texte.pack(side='top',fill='both',expand=1,padx=5,pady=10)
+        self.zone_texte.configure(yscrollcommand=self.scroll_v.set)
+        # définition des boutons
+        self.but_yes = Button(self.frame_boutons,text = "Yes",command=self.yes)
+        self.but_no = Button(self.frame_boutons,text = "No",command = self.no)
+        self.but_yes.place(relx=0.4,rely=0.5,anchor='center')
+        self.but_no.place(relx=0.6,rely=0.5,anchor='center')
+        # affichage du texte
+        self.affiche_texte(self.texte)
+        centerwindow(self.fenetre)
+
+    def yes(self):
+        self.result=1
+        self.quit()
+
+    def no(self):
+        self.result=0
+        self.quit()
 
 class FenetreDeSelection(Fenetre):
     """ Classe dérivée de Fenêtre permettant la récupération d'une zone de texte sélectionnée.
@@ -555,7 +600,7 @@ class ListeChoix :
 
     def affiche_liste(self):
         """ Affiche la liste dans la fenêtre"""
-        i=0
+        liste_labels=[]
         self.MCbox.config(state=NORMAL)
         self.MCbox.delete(1.0,END)
         for objet in self.liste :
@@ -575,6 +620,7 @@ class ListeChoix :
                         text = mot,
                         fg = 'black',bg = 'gray95',justify = 'left')
           self.dico_labels[mot]=label
+          liste_labels.append(label)
           self.MCbox.window_create(END,
                                    window=label,
                                    stretch = 1)
@@ -583,12 +629,13 @@ class ListeChoix :
               label.bind(self.liste_commandes[0][0],lambda e,s=self,c=self.liste_commandes[0][1],x=objet,l=label : s.selectitem(x,l,c))
               label.bind(self.liste_commandes[1][0],lambda e,s=self,c=self.liste_commandes[1][1],x=objet,l=label : s.deselectitem(l,x,c))
               label.bind(self.liste_commandes[2][0],lambda e,s=self,c=self.liste_commandes[2][1],x=objet,l=label : s.chooseitem(x,l,c))
-          try :
-              self.liste_marques.index(i)
-              self.markitem(label)
-          except:
+
+        for marque in self.liste_marques:
+           try:
+              self.markitem(liste_labels[marque])
+           except:
               pass
-          i=i+1
+
         self.MCbox.config(state=DISABLED)
         self.selection = None
 

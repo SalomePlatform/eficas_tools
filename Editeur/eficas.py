@@ -31,6 +31,7 @@ from tkMessageBox import askyesno,showerror
 import traceback
 
 # Modules Eficas
+import patches
 import appli
 from widgets import Fenetre
 
@@ -68,7 +69,7 @@ class EFICAS(appli.APPLI):
         self._ulfile.setentry('')
         self.dialog.deactivate(result)
         self.ulfile = None
-        self.text=''
+        self.text=None
 
   def get_file(self,unite=None,fic_origine = ''):
       """ 
@@ -128,4 +129,11 @@ class EFICAS(appli.APPLI):
          self.affiche_infos("Type de fichier non reconnu")
          showerror("Type de fichier non reconnu","EFICAS ne sait pas ouvrir ce type de fichier")
          return None
+
+  def affiche_texte(self,entete,texte):
+      """Cette methode ouvre une fenetre modale dans laquelle on affiche un texte
+      """
+      self.affiche_infos(entete)
+      f=Fenetre(self, titre=entete, texte = texte)
+      f.wait()
 

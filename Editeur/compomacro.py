@@ -23,7 +23,7 @@ import types
 import Tkinter
 import Pmw
 from tkFileDialog import *
-from tkMessageBox import showinfo,showerror
+from tkMessageBox import showinfo,showerror,askyesno
 import traceback
 
 # Modules Eficas
@@ -32,11 +32,11 @@ import panels
 import fontes
 import compooper
 import convert
-from widgets import Fenetre
+from widgets import Fenetre,FenetreYesNo
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.4 2002/05/15 15:31:58 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.5 2002/09/09 10:39:06 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -95,9 +95,9 @@ class MACROPanel(panels.OngletPanel):
     Tkinter.Button(page,text='Valider',command = self.change_fichier_init).place(relx=0.3,rely=0.8)
     Tkinter.Button(page,text='Browse',command = self.browse_fichier_init).place(relx=0.5,rely=0.8)
     Tkinter.Button(page,text='Annuler',command = self.annule_fichier_init).place(relx=0.7,rely=0.8)
-    if hasattr(self.node.item.object,'fichier_init'):
-      if self.node.item.object.fichier_init :
-        self.entry.insert(0,self.node.item.object.fichier_init)
+    if hasattr(self.node.item.object,'fichier_ini'):
+      if self.node.item.object.fichier_ini :
+        self.entry.insert(0,self.node.item.object.fichier_ini)
     self.entry.focus()
 
   def convert_file(self,file):
@@ -127,9 +127,17 @@ class MACROPanel(panels.OngletPanel):
     """ 
         Effectue le changement de fichier d'initialisation s'il est valide 
     """
-    if not hasattr(self.node.item.object,'fichier_init'):
-       self.node.item.object.fichier_init=None
-    old_fic = self.node.item.object.fichier_init
+    if not hasattr(self.node.item.object,'fichier_ini'):
+       self.node.item.object.fichier_ini=None
+       self.node.item.object.fichier_text=None
+       self.node.item.object.fichier_err="Le fichier n'est pas defini"
+       self.node.item.object.contexte_fichier_init={}
+
+    old_fic = self.node.item.object.fichier_ini
+    old_text = self.node.item.object.fichier_text
+    old_err = self.node.item.object.fichier_err
+    old_context=self.node.item.object.contexte_fichier_init
+
     new_fic = self.entry.get()
     if not os.path.isfile(new_fic) :
       showinfo("Fichier introuvable","Le fichier que vous avez saisi\n"+
@@ -138,50 +146,80 @@ class MACROPanel(panels.OngletPanel):
       return
     # On convertit le fichier
     text=self.convert_file(new_fic)
-    if not text:return
+    # Si probleme a la lecture-conversion on arrete le traitement
+    if not text:
+       return
+
     try:
-      self.node.item.object.make_contexte(new_fic,text)
-      self.parent.appli.affiche_infos("Fichier %s modifié" %self.node.item.get_nom())
+      self.node.item.object.make_contexte_include(new_fic,text)
     except:
-      #traceback.print_exc()
-      l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
-      showinfo("Fichier invalide",
-               "Erreur dans l'interprétation du nouveau fichier ...\n"+
-               "L'ancien va être restauré\n"+string.join(l))
-
-      self.entry.delete(0,Tkinter.END)
+      # Erreurs lors de l'evaluation de text dans un JDC auxiliaire
       self.parent.appli.affiche_infos("Fichier invalide")
-
-      if old_fic:
-         # On convertit le fichier
-         #text=self.convert_file(old_fic)
-         #if not text:return
-         #self.node.item.object.make_contexte(old_fic,text)
-         self.node.item.object.fichier_init=old_fic
-         self.entry.insert(0,self.node.item.object.fichier_init)
+      l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+      f=FenetreYesNo(self.parent.appli,titre="Fichier invalide : voulez vous retablir l ancien fichier ?",
+                             texte="Erreur dans l'interprétation du nouveau fichier ...\n\n"+string.join(l))
+      f.wait()
+      reponse=f.result
+      if reponse:
+         # On retablit l'ancien fichier
+         self.entry.delete(0,Tkinter.END)
+         self.node.item.object.fichier_ini=old_fic
+         self.node.item.object.fichier_text=old_text
+         self.node.item.object.fichier_err=old_err
+         self.node.item.object.contexte_fichier_init=old_context
          self.parent.appli.affiche_infos("Fichier invalide ... Ancien fichier restauré")
+         if old_fic:
+             self.entry.insert(0,self.node.item.object.fichier_ini)
+      else:
+         # On conserve la memoire du nouveau fichier
+         # mais on n'utilise pas les etapes et concepts crees par ce fichier
+         # on met l'etape en erreur : fichier_err=string.join(l)
+         self.node.item.object.init_modif()
+         self.node.item.object.fichier_ini=new_fic
+         self.node.item.object.fichier_text=text
+         self.node.item.object.fichier_err=string.join(l)
+         self.node.item.object.etapes=[]
+         self.node.item.object.g_context={}
+         # Le contexte du parent doit etre reinitialise car les concepts produits ont changé
+         self.node.item.object.parent.reset_context()
+
+         self.node.item.object.old_contexte_fichier_init=old_context
+         self.node.item.object.contexte_fichier_init={}
+         self.node.item.object.reevalue_sd_jdc()
+
+         self.node.item.object.fin_modif()
+         self.parent.appli.affiche_infos("Fichier invalide ... Nouveau fichier mémorisé")
+         self.node.update()
       return
-    # si on passe ici, c'est que le new_fic a bien été correctement 
-    #  interprété ...
-    self.node.item.object.fichier_init = new_fic
-    # il faut lancer la réévaluation de tout le jdc ... 
+
+    # L'evaluation de text dans un JDC auxiliaire s'est bien passé
+    # on peut poursuivre le traitement
+    self.node.item.object.init_modif() 
+    self.node.item.object.fichier_ini = new_fic
+    self.node.item.object.fichier_text=text
+    self.node.item.object.fichier_err=None
+    # Le contexte du parent doit etre reinitialise car les concepts produits ont changé
+    self.node.item.object.parent.reset_context()
+
+    # Si des concepts ont disparu lors du changement de fichier, on demande leur suppression
+    self.node.item.object.old_contexte_fichier_init=old_context
     self.node.item.object.reevalue_sd_jdc()
-    self.node.racine.update()
+
+    self.node.item.object.fin_modif()
+    self.parent.appli.affiche_infos("Fichier %s modifié" %self.node.item.get_nom())
+    self.node.update()
 
   def annule_fichier_init(self,event=None):
-    """ retaure dans self.entry le nom de fichier_init"""
+    """ Restaure dans self.entry le nom de fichier_init"""
     self.entry.delete(0,Tkinter.END)
-    self.entry.insert(0,self.node.item.object.fichier_init)
+    self.entry.insert(0,self.node.item.object.fichier_ini)
 
   def browse_fichier_init(self,event=None):
     """ 
          Propose à l'utilisateur une Bsf et retourne le fichier 
          sélectionné dans self.entry 
     """
-    file = askopenfilename(title="Choix du fichier %s" %self.node.item.get_nom(),
-                         #  filetypes = ( ("Aster", ".comm"),("Python", ".py")),
-                         #  defaultextension=".comm"
-                          )
+    file = askopenfilename(title="Choix du fichier %s" %self.node.item.get_nom())
     if file != '' :
       self.entry.delete(0,Tkinter.END)
       self.entry.insert(0,file)
@@ -198,18 +236,13 @@ class MACROTreeItem(compooper.EtapeTreeItem):
       Retourne le nom de l'icône à afficher dans l'arbre
       Ce nom dépend de la validité de l'objet
       """
-      if self.object.isactif():
-        if self.object.state != 'unchanged':
-           # Si des modifications ont eu lieu on force le calcul des concepts de sortie
-           # et celui du contexte glissant
-           self.object.get_type_produit(force=1)
-           self.object.parent.reset_context()
+      if not self.object.isactif():
+        return "ast-white-square"
+      else:
         if self.object.isvalid():
           return "ast-green-square"
         else:
           return "ast-red-square"
-      else:
-        return "ast-white-square"
 
   def GetLabelText(self):
       """ Retourne 3 valeurs :
@@ -295,8 +328,19 @@ class MACROTreeItem(compooper.EtapeTreeItem):
   def get_noms_sd_oper_reentrant(self):
       return self.object.get_noms_sd_oper_reentrant()
 
-import Accas
+class INCLUDE_MATERIAUTreeItem(MACROTreeItem):
+  pass
+
 treeitem=MACROTreeItem
+def treeitem(appli, labeltext, object, setfunction=None):
+   if object.nom == "INCLUDE_MATERIAU":
+      return INCLUDE_MATERIAUTreeItem(appli, labeltext, object, setfunction)
+   elif object.nom == "INCLUDE":
+      return MACROTreeItem(appli, labeltext, object, setfunction)
+   else:
+      return MACROTreeItem(appli, labeltext, object, setfunction)
+
+import Accas
 objet=Accas.MACRO_ETAPE
     
 class MacroDisplay:

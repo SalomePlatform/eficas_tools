@@ -265,3 +265,9 @@ class JDCDISPLAY:
       # on rend la copie à nouveau possible en libérant le flag edit
       self.edit="copier"
 
+   def update(self):
+      """Cette methode est utilisee par le JDC associe pour 
+         signaler des modifications globales du JDC
+      """
+      self.tree.update()
+
