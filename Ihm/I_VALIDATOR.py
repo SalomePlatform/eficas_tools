@@ -64,7 +64,15 @@ class Valid:
        return 0
 
    def valide_liste_partielle(self,liste_courante):
-       return 0
+       """
+          Cette methode retourne un entier qui indique si liste_courante est partiellement valide (valeur 1)
+          ou invalide (valeur 0). La validation partielle concerne les listes en cours de construction : on
+          veut savoir si la liste en construction peut etre complétée ou si elle peut déjà etre considérée
+          comme invalide.
+          En général un validateur effectue la meme validation pour les listes partielles et les
+          listes complètes.
+       """
+       return self.verif(liste_courante)
 
    def verif_item(self,valeur):
        """
@@ -159,27 +167,20 @@ class OrVal(Valid):
        return 0
 
    def info_erreur_item(self):
-       chaine=""
-       a=1
+       l=[]
        for v in self.validators:
-	   if v.info_erreur_item() != " " :
-              if a==1:
-                 chaine=v.info_erreur_item()
-                 a=0
-	      else:
-                 chaine=chaine+" \n ou "+ v.info_erreur_item()
+           err=v.info_erreur_item()
+	   if err != " " : l.append(err)
+       chaine=" \n ou ".join(l)
        return chaine
 
    def info_erreur_liste(self):
-       chaine=""
-       a=1
+       l=[]
        for v in self.validators:
-	   if v.info_erreur_liste() != " " :
-              if a==1:
-                 chaine=v.info_erreur_liste()
-                 a=0
-	      else:
-                 chaine=chaine+" \n ou "+v.info_erreur_liste()
+           err=v.info_erreur_liste()
+	   if err != " " : l.append(err)
+       chaine=" \n ou ".join(l)
+       return chaine
 
    def is_list(self):
        """
@@ -224,6 +225,17 @@ class OrVal(Valid):
            validator_into.extend(v_into)
        return validator_into
     
+   def valide_liste_partielle(self,liste_courante=None):
+       """
+           Méthode de validation de liste partielle pour le validateur Or.
+           Si un des validateurs gérés par le validateur Or considère la liste comme 
+           valide, le validateur Or la considère comme valide.
+       """
+       for validator in self.validators:
+           v=validator.valide_liste_partielle(liste_courante)
+           if v :
+              return 1
+       return 0
 
 class AndVal(Valid):
    def info(self):
@@ -258,6 +270,18 @@ class AndVal(Valid):
            if not v :
               # L'info n'est probablement pas la meme que pour verif ???
               self.local_info=validator.info()
+              return 0
+       return 1
+
+   def valide_liste_partielle(self,liste_courante=None):
+       """
+           Méthode de validation de liste partielle pour le validateur And.
+           Tous les validateurs gérés par le validateur And doivent considèrer la liste comme 
+           valide, pour que le validateur And la considère comme valide.
+       """
+       for validator in self.validators:
+           v=validator.valide_liste_partielle(liste_courante)
+           if not v :
               return 0
        return 1
 
@@ -321,7 +345,6 @@ class CardVal(Valid):
 
    def valide_liste_partielle(self,liste_courante=None):
 	validite=1
-        print liste_courante
         if liste_courante != None :
            if len(liste_courante) > self.max :
               validite=0
@@ -405,13 +428,50 @@ class RangeVal(ListVal):
    def info_erreur_item(self) :
        return "La valeur doit être comprise entre %s et %s" % (self.low,self.high)
 
+CoercableFuncs = { types.IntType:     int,
+                   types.LongType:    long,
+                   types.FloatType:   float,
+                   types.ComplexType: complex,
+                   types.UnicodeType: unicode }
+
 class TypeVal(ListVal):
-   def verif_item(self,valeur):
-       try:
-          self.coerce(valeur)
-       except:
-          return 0
-       return 1
+      """
+          Cette classe est un validateur qui controle qu'une valeur
+          est bien du type Python attendu.
+          Pour une liste on verifie que tous les elements sont du bon type.
+      """
+      def __init__(self, aType):
+          if type(aType) != types.TypeType:
+             aType=type(aType)
+          self.aType=aType
+          try:
+             self.coerce=CoercableFuncs[ aType ]
+          except:
+             self.coerce = self.identity
+
+      def info(self):
+          return "valeur de %s" % self.aType
+
+      def identity ( self, value ):
+          if type( value ) == self.aType:
+             return value
+          raise ValError
+
+      def verif(self,valeur):
+          if type(valeur) in (types.ListType,types.TupleType):
+             for val in valeur:
+                 valid=self.verif_item(val)
+                 if valid == 0:return 0
+             return 1
+          else:
+             return self.verif_item(valeur)
+
+      def verif_item(self,valeur):
+          try:
+             self.coerce(valeur)
+          except:
+             return 0
+          return 1
 
 class PairVal(ListVal):
 

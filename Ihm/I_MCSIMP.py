@@ -390,7 +390,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 	       l.append(sd)
 	 else:
 	    l.append(sd)
-       self.valeur=l
+       self.valeur=tuple(l)
        # Est ce init_modif ou init_modif_up
        # Normalement init_modif va avec fin_modif
        self.init_modif()
@@ -428,14 +428,18 @@ class MCSIMP(I_OBJECT.OBJECT):
         elif valeur.__class__.__name__ in ('PARAMETRE',):
           # il faut tester si la valeur du parametre est un entier
           #XXX ne serait ce pas plutot complexe ???? sinon expliquer
-          return self.is_entier(valeur.valeur)
+          return self.is_complexe(valeur.valeur)
         else:
           print "Objet non reconnu dans is_complexe %s" %`valeur`
           return 0
       # Pour permettre l'utilisation de complexes Python
       #elif type(valeur) == types.ComplexType:
         #return 1
-      elif type(valeur) != types.TupleType and type(valeur) != types.ListType :
+      elif type(valeur) == types.ListType :
+        # On n'autorise pas les listes de complexes
+        return 0
+      elif type(valeur) != types.TupleType :
+        # Un complexe doit etre un tuple
         return 0
       else:
         if len(valeur) != 3 :
@@ -557,4 +561,41 @@ class MCSIMP(I_OBJECT.OBJECT):
 
         self.set_valid(valid)
         return self.valid
+
+  def verif_into(self,cr='non'):
+      """
+      Vérifie si la valeur de self est bien dans l'ensemble discret de valeurs
+      donné dans le catalogue derrière l'attribut into ou vérifie que valeur est bien compris
+      entre val_min et val_max
+      """
+      if self.definition.into == None :
+        #on est dans le cas d'un ensemble continu de valeurs possibles (intervalle)
+        if type(self.valeur)==types.TupleType :
+          test = 1
+          for val in self.valeur :
+            if type(val)!=types.StringType and type(val)!=types.InstanceType:
+              test = test*self.isinintervalle(val,cr=cr)
+          return test
+        else :
+          val = self.valeur
+          if type(val)!=types.StringType and type(val)!=types.InstanceType:
+            return self.isinintervalle(self.valeur,cr=cr)
+          else :
+            return 1
+      else :
+        # on est dans le cas d'un ensemble discret de valeurs possibles (into)
+        # PN : pour résoudre le pb du copier /coller de la liste Ordonnee
+        # if type(self.valeur) == types.TupleType :
+        if type(self.valeur) in (types.ListType,types.TupleType) :
+          for e in self.valeur:
+            if e not in self.definition.into:
+              if cr=='oui':
+                self.cr.fatal(string.join(("La valeur :",`e`," n'est pas permise pour le mot-clé :",self.nom)))
+              return 0
+        else:
+          if self.valeur == None or self.valeur not in self.definition.into:
+            if cr=='oui':
+              self.cr.fatal(string.join(("La valeur :",`self.valeur`," n'est pas permise pour le mot-clé :",self.nom)))
+            return 0
+        return 1
 
