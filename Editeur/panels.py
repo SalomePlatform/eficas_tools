@@ -21,6 +21,7 @@ import string
 import os
 from Tkinter import *
 import Pmw
+import tkMessageBox
 import time
 
 from widgets import ListeChoix
@@ -504,8 +505,14 @@ class OngletPanel(Panel) :
     """
     Cette méthode a pour but de commentariser la commande pointée par self.node
     """
-    commande_comment = self.node.item.get_objet_commentarise()
-    self.parent.appli.bureau.JDCDisplay_courant.ReplaceObjectNode(self.node,commande_comment,None)
+    # On traite par une exception le cas où l'utilisateur final cherche à désactiver
+    # (commentariser) un commentaire.
+    try :
+        commande_comment = self.node.item.get_objet_commentarise()
+        self.parent.appli.bureau.JDCDisplay_courant.ReplaceObjectNode(self.node,commande_comment,None)
+    except Exception,e:
+        tkMessageBox.showerror("TOO BAD",str(e))
+    return
       
 class Panel_Inactif(Panel):
   """
@@ -533,3 +540,4 @@ class Panel_Inactif(Panel):
       self.bouton_sup.place(relx=0.5,rely=0.8,anchor='center')
 
 
+if __name__ == "__main__" : pass

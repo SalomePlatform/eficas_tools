@@ -265,6 +265,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         représentatif de self.object
         --> à surcharger par les différents items
         """
+        raise Exception("MESSAGE AU DEVELOPPEUR : il faut surcharger la methode get_objet_commentarise() pour la classe "+self.__class__.__name__)
         pass
         
     def isvalid(self):

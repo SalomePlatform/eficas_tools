@@ -138,6 +138,15 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
       Retourne la liste des fils de self
       """
       return []
+
+
+    def get_objet_commentarise(self):
+       """
+           La méthode get_objet_commentarise() de la classe compocomm.COMMTreeItem
+           surcharge la méthode get_objet_commentarise de la classe Objecttreeitem.ObjectTreeItem
+           elle a pour but d'empecher l'utilisateur final de commentariser un commentaire.
+       """
+       raise Exception( 'Citoyen : tu peux "commentariser" une commande MAIS PAS UN COMMENTAIRE' )
   
 import Extensions
 treeitem =COMMTreeItem
