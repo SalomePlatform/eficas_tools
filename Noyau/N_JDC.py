@@ -1,4 +1,4 @@
-#@ MODIF N_JDC Noyau  DATE 09/10/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_JDC Noyau  DATE 23/10/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -146,6 +146,9 @@ NONE = None
          # d'un autre par exemple)
          if self.context_ini :
             self.g_context.update(self.context_ini)
+            # Update du dictionnaire des concepts
+            for sdnom,sd in self.context_ini.items():
+               if isinstance(sd,ASSD):self.sds_dict[sdnom]=sd
 
          if self.appli != None : 
             self.appli.affiche_infos('Interprétation du fichier de \

@@ -1,4 +1,4 @@
-#@ MODIF ops Cata  DATE 09/10/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF ops Cata  DATE 23/10/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -92,6 +92,7 @@ def INCLUDE(self,UNITE,**args):
    """ 
        Fonction sd_prod pour la macro INCLUDE
    """
+   if not UNITE : return
    if hasattr(self,'unite'):return
    self.unite=UNITE
 
@@ -204,13 +205,16 @@ def INCLUDE_MATERIAU(self,NOM_AFNOR,TYPE_MODELE,VARIANTE,TYPE_VALE,NOM_MATER,
       Fonction sd_prod pour la macro INCLUDE_MATERIAU
   """
   mat=string.join((NOM_AFNOR,'_',TYPE_MODELE,'_',VARIANTE,'.',TYPE_VALE),'')
-  if not hasattr(self,'mat') or self.mat != mat:
-    self.mat=mat
+  if not hasattr(self,'mat') or self.mat != mat or self.nom_mater != NOM_MATER :
     # On récupère le répertoire des matériaux dans les arguments 
     # supplémentaires du JDC
-    rep_mat=self.jdc.args["rep_mat"]
+    rep_mat=self.jdc.args.get("rep_mat","NOrep_mat")
     f=os.path.join(rep_mat,mat)
+    self.mat=mat
+    self.nom_mater=NOM_MATER
     if not os.path.isfile(f):
+       del self.mat
+       self.make_contexte(f,"#Texte sans effet pour reinitialiser le contexte a vide\n")
        raise "Erreur sur le fichier materiau: "+f
     # Les materiaux sont uniquement disponibles en syntaxe Python
     # On lit le fichier et on supprime les éventuels \r
@@ -226,7 +230,6 @@ def INCLUDE_MATERIAU(self,NOM_AFNOR,TYPE_MODELE,VARIANTE,TYPE_VALE,NOM_MATER,
     # et le contexte de l etape (local au sens Python)
     # Il faut auparavant l'enregistrer aupres du module linecache (utile pour nommage.py)
     linecache.cache[f]=0,0,string.split(self.text,'\n'),f
-    code=compile(self.text,f,'exec')
     if self.jdc.par_lot == 'NON':
       # On est en mode commande par commande
       # On teste la validite de la commande avec interruption eventuelle
@@ -238,7 +241,5 @@ def INCLUDE_MATERIAU(self,NOM_AFNOR,TYPE_MODELE,VARIANTE,TYPE_VALE,NOM_MATER,
       # commandes car le prefixe PRFXCO doit etre initialise dans le Fortran
       self.codex.opsexe(self,0,-1,-self.definition.op)  
 
-    d={}
-    self.g_context = d
-    self.contexte_fichier_init = d
-    exec code in self.parent.get_global_contexte(),d
+    self.make_contexte(f,self.text)
+

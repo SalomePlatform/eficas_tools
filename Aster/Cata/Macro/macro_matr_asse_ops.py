@@ -1,4 +1,4 @@
-#@ MODIF macro_matr_asse_ops Macro  DATE 11/06/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF macro_matr_asse_ops Macro  DATE 15/10/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -23,6 +23,7 @@ def macro_matr_asse_ops(self,MODELE,CHAM_MATER,CARA_ELEM,MATR_ASSE,
      Ecriture de la macro MACRO_MATR_ASSE
   """
   ier=0
+
   # On met le mot cle NUME_DDL dans une variable locale pour le proteger
   numeddl=NUME_DDL
   # On importe les definitions des commandes a utiliser dans la macro
@@ -76,6 +77,18 @@ def macro_matr_asse_ops(self,MODELE,CHAM_MATER,CARA_ELEM,MATR_ASSE,
   lrigel = 0
   lmasel = 0
 
+# decalage eventuel en premiere position dans la liste de l occurence de MATR_ASSE contenant 
+# l option de rigidite
+  try :
+    for m in MATR_ASSE:
+      option=m['OPTION']
+      if option in ('RIGI_MECA','RIGI_MECA_LAGR','RIGI_THER','RIGI_ACOU') :
+         decal=m
+         MATR_ASSE.remove(decal)
+         MATR_ASSE.insert(0,decal)
+         break
+  except: pass
+
   iocc=0
   for m in MATR_ASSE:
     iocc=iocc+1
@@ -83,7 +96,7 @@ def macro_matr_asse_ops(self,MODELE,CHAM_MATER,CARA_ELEM,MATR_ASSE,
     if iocc == 1 and lnume == 1 and option not in ('RIGI_MECA','RIGI_MECA_LAGR',
                                                    'RIGI_THER','RIGI_ACOU')      :
       ier=ier+1
-      self.cr.fatal("LA PREMIERE OPTION DOIT ETRE RIGI_MECA OU RIGI_THER OU RIGI_ACOU OU RIGI_MECA_LAGR")
+      self.cr.fatal("UNE DES OPTIONS DOIT ETRE RIGI_MECA OU RIGI_THER OU RIGI_ACOU OU RIGI_MECA_LAGR")
       return ier
 
     if m['SIEF_ELGA']!=None and option!='RIGI_GEOM':
