@@ -7,6 +7,7 @@
 # ======================================================================
 from Tkinter import *
 import Pmw
+import traceback
 import Objecttreeitem
 import panels
 import fontes
@@ -68,7 +69,8 @@ class OPERPanel(panels.OngletPanel):
           choix = self.listbox.getcurselection()[0]
           self.valeur_choisie.set(choix)
       except:
-          pass
+          traceback.print_exc()
+	  
 
   def choose_valeur_from_list(self,command):
       try:
@@ -76,7 +78,7 @@ class OPERPanel(panels.OngletPanel):
           self.valeur_choisie.set(choix)
           apply(command,(),{})
       except:
-          pass
+          traceback.print_exc()
 
 class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   panel = OPERPanel

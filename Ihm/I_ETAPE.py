@@ -83,7 +83,9 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       # Cas particulier des opérateurs réentrants
       if not self.isvalid(sd='non') : return 0,"Nommage du concept refusé : l'opérateur n'est pas valide"
       if self.definition.reentrant == 'o':
-        self.sd = self.reuse = self.jdc.get_sdprod(nom)
+        # FR : appel à get_sdprod incorrect : il faut appeler get_sd_avant_etape
+        #self.sd = self.reuse = self.jdc.get_sdprod(nom)
+	self.sd = self.reuse = self.jdc.get_sd_avant_etape(nom,self)
         if self.sd != None :
           return 1,"Concept existant"
         else:
