@@ -743,7 +743,11 @@ class ListeChoix :
 		   mot=mot+"," 
                  else:
                    premier=0
-                 mot=mot+str(val)
+                 valtexte = self.parent.get_valeur_texte(val)
+                 if valtexte != "" :
+                    mot=mot+valtexte
+                 else:
+                    mot=mot+str(val)
               mot=mot+")"
           else:
               mot=`objet`
