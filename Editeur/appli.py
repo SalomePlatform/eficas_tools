@@ -41,7 +41,7 @@ import properties
 from widgets import Fenetre
 from Misc import MakeNomComplet
 
-VERSION="EFICAS v1.6"
+VERSION="EFICAS v1.7"
 
 class APPLI: 
   def __init__ (self,master,code='ASTER',fichier=None,test=0) :
@@ -135,7 +135,7 @@ class APPLI:
 
   def affiche_FAQ(self):
       import faq
-      #faq.affiche(self.top)
+      faq.affiche(self.top)
 
   def affiche_infos(self,message):
       self.statusbar.affiche_infos(message)
