@@ -257,6 +257,12 @@ class OngletPanel(Panel) :
               self._any.focus()
           except:
               pass
+      elif page == 'Commande':
+          try:
+              self.command_entry.component('entry').focus()
+          except:
+              pass
+
 
   def affiche(self):
       page=self.nb.getcurselection()
@@ -342,6 +348,7 @@ class OngletPanel(Panel) :
                                       liste_commandes = liste_commandes,
                                       filtre='oui',titre = "Commandes")
       Liste.affiche_liste()
+      self.command_entry=Liste.entry
       # aide associée au panneau
       bulle_aide="""Double-cliquez sur la commande que vous voulez ajouter au jeu de commandes"""
       Liste.MCbox.bind("<Button-3>", lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
@@ -450,7 +457,6 @@ class OngletPanel(Panel) :
              command = self.comment_commande).place(relx=0.5,rely=0.5,anchor='center')
     
   def deselectMC(self,name):
-      #EFICAS.affiche_infos('')
       self.parent.appli.affiche_infos('')
     
   def get_liste_cmd_old(self):
@@ -462,7 +468,6 @@ class OngletPanel(Panel) :
       return listeCmd
 
   def deselectCmd(self,name):
-      #EFICAS.affiche_infos('')
       self.parent.appli.affiche_infos('')
     
   def execConcept(self):
@@ -479,7 +484,6 @@ class OngletPanel(Panel) :
       # Pourquoi node.etape ???
       #test,mess = self.node.etape.item.nomme_sd(nom)
       test,mess = self.node.item.nomme_sd(nom)
-      #EFICAS.affiche_infos(mess)
       self.parent.appli.affiche_infos(mess)
       self.node.racine.update()
   
@@ -491,9 +495,7 @@ class OngletPanel(Panel) :
     Cette méthode a pour but de commentariser la commande pointée par self.node
     """
     commande_comment = self.node.item.get_objet_commentarise()
-    #XXX il faudrait ici aussi eviter l'appel à EFICAS
     self.parent.appli.bureau.JDCDisplay_courant.ReplaceObjectNode(self.node,commande_comment,None)
-    #EFICAS.JDCDisplay_courant.ReplaceObjectNode(self.node,commande_comment,None)
       
 class Panel_Inactif(Panel):
   """

@@ -26,7 +26,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.6 2002/09/09 10:39:06 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.7 2002/09/10 15:59:37 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -75,11 +75,6 @@ class Tree :
         #self.update()
         self.children[0].select()
         self.resizescrollregion()
-
-    def deselectall_old(self):
-        """ déselectionne tous les éléments de l'arbre """
-        for child in self.children:
-            child.deselect()
 
     def deselectall(self):
         """ déselectionne tous les éléments de l'arbre """
@@ -169,16 +164,6 @@ class Node :
         self.tree.node_selected = self
         if self.command:apply(self.command,(self,))
         self.highlight()
-        self.canvas.focus_force()
-        #self.make_visible()
-
-    def deselect_old(self, event=None):
-        """ Déselectionne self """
-        self.selected = 0
-        if self.displayed == 1:
-            self.dehighlight()
-        for child in self.children:
-            child.deselect()
 
     def deselect(self, event=None):
         """ Déselectionne self """

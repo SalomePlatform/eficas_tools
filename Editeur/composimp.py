@@ -131,6 +131,12 @@ class newSIMPPanel(panels.OngletPanel):
   def deselectChoix(self,name):
       self.selectChoix = None
       
+  def raisecmd(self,page):
+      try:
+         self.entry.focus()
+      except:
+         pass
+
 class SHELLPanel(newSIMPPanel):
   """
   Classe Panel utilisé pour les mots-clés simples qui attendent un shell pour valeur
@@ -1120,6 +1126,7 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       if valeur == None : return # pas de valeur à afficher ...
       self.entry.delete(0,END)
       self.entry.insert(0,valeur)
+      self.entry.focus()
       
 class UNIQUE_COMP_Panel(UNIQUE_Panel):
   """
