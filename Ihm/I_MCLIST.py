@@ -28,9 +28,13 @@ class MCList:
         return 0
 
   def isoblig(self):
-    for i in self.data:
-      if i.isoblig():return 1
-    return 0
+     """
+     Une MCList n'est jamais obligatoire (même si le MCFACT qu'elle représente l'est
+     """
+     return 0
+     #for i in self.data:
+     #  if i.isoblig():return 1
+     #return 0
 
   def liste_mc_presents(self):
     return []

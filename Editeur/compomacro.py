@@ -24,7 +24,7 @@ from widgets import Fenetre
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.1.1.1 2002/03/26 09:08:45 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.2 2002/04/03 11:35:12 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -235,6 +235,7 @@ class MACROTreeItem(compooper.EtapeTreeItem):
       # item.object = MCSIMP, MCFACT, MCBLOC ou MCList 
       if item.object.isoblig() :
           self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ')
+	  print "Impossible de supprimer un mot-clé obligatoire"
           return 0
       else :
           self.object.suppentite(item.object)

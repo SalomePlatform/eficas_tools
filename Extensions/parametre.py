@@ -250,7 +250,8 @@ class PARAMETRE :
     """
     return []
 
-
+  def verif_existence_sd(self):
+     pass
 
 
 

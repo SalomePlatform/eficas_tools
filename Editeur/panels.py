@@ -152,7 +152,6 @@ class Panel(Frame) :
       if self.parent.modified == 'n' : self.parent.init_modif()
       pere = self.node.parent
       self.node.delete()
-      pere.select()
       
   def affiche(self):
       """ Force l'affichage des fenêtres en cours """

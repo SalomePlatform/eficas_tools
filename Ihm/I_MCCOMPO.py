@@ -160,6 +160,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
       """
       self.init_modif()
       if type(name)==types.StringType :
+        # on est en mode création d'un motcle 
         if self.ispermis(name) == 0 : return 0
         objet=self.definition.entites[name](val=None,nom=name,parent=self)
         if hasattr(objet.definition,'position'):
@@ -168,7 +169,9 @@ class MCCOMPO(I_OBJECT.OBJECT):
           elif objet.definition.position == 'global_jdc' :
             self.append_mc_global_jdc(objet)
       else :
+        # dans ce cas on est en mode copie d'un motcle
         objet = name
+	objet.verif_existence_sd()
       # si un objet de même nom est déjà présent dans la liste
       # et si l'objet est répétable
       # il faut créer une MCList et remplacer l'objet de la liste

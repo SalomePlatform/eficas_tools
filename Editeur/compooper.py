@@ -220,6 +220,16 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       commande_comment.jdc = commande_comment.parent = self.object.jdc
       return commande_comment
 
+  def replace_child(self,old_item,new_item):
+     """
+     Remplace old_item.object par new_item.object dans les fils de self.object
+     """
+     index = self.object.mc_liste.index(old_item.object)
+     self.object.init_modif()
+     self.object.mc_liste.remove(old_item.object)
+     self.object.mc_liste.insert(index,new_item.object)
+     self.object.fin_modif()
+     
 import Accas
 treeitem = EtapeTreeItem
 objet = Accas.ETAPE    

@@ -151,5 +151,6 @@ class COMMENTAIRE :
      """
      return None
 
-
+  def verif_existence_sd(self):
+     pass
 

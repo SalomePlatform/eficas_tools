@@ -39,7 +39,35 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem):
         Retourne 1 si l'objet pointé par self est un MCFact, 0 sinon
         """
         return 0
-    
+
+    def isMCList(self):
+        """
+        Retourne 1 si l'objet pointé par self est une MCList, 0 sinon
+        """
+        return 1
+	
+    def additem(self,obj,pos):
+        """
+	Ajoute un objet MCFACT à la MCList (self.object) à la position pos
+	"""
+	self.object.init_modif()
+	obj.verif_existence_sd()
+	obj.reparent(self.object.parent)
+	self.object.insert(pos,obj)
+        item = self.make_objecttreeitem(self.appli, obj.nom + ":", obj)
+        return item  
+
+    def suppitem(self,item):
+        """
+	Retire un objet MCFACT de la MCList (self.object) 
+	"""
+        self.object.init_modif()
+        self.object.remove(item.object)
+        # la liste peut être retournée vide !
+        message = "Mot-clé " + item.object.nom + " supprimé"
+        self.appli.affiche_infos(message)
+        return 1
+	    
 import Accas
 treeitem = MCListTreeItem
 objet = Accas.MCList    

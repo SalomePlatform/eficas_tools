@@ -22,8 +22,9 @@ import os,shutil,glob,sys
 import types
 
 version="$Name:  $"[7:-2] or 'Test1_2'
-
+# ==========Path du noyau fourni par Aster====================
 path_Noyau="../../../Tutorial/Superv"
+# ============================================================
 nom_distrib="Eficas"+version+"AsterSTA6"
 path_distrib=os.path.join("dist",nom_distrib)
 path_TextTools="/home/eficas/pkg/mxTools/egenix2.0.2pourWindows/mx/TextTools"

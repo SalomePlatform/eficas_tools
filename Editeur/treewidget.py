@@ -5,7 +5,7 @@
 #              SEE THE FILE "LICENSE.TERMS" FOR INFORMATION ON USAGE AND
 #              REDISTRIBUTION OF THIS FILE.
 # ======================================================================
-import os,sys,string,re,types
+import os,sys,string,re,types,traceback
 from Tkinter import *
 
 
@@ -14,7 +14,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.2 2002/03/27 16:20:02 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.3 2002/04/03 11:35:12 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -683,6 +683,7 @@ class Node :
                 print 'Erreur dans la destruction de ',self.item.get_nom(),' dans delete'
             nbnew = pere.get_nb_children()
         pere.redraw(nbnew-nbold)
+	pere.select()
 
     def copynode(self,node,pos) :
         """ node est le noeud à copier à la position pos de self ( = parent de node) """
@@ -697,10 +698,35 @@ class Node :
             try :
                 child.item.object.mc_liste = objet_copie.mc_liste
             except:
-                pass
+                traceback.print_exc()
     #--------------------------------------------------------------
     # Méthodes de vérification du contexte et de validité du noeud
     #--------------------------------------------------------------
+    def traite_mclist_OLD(self):
+        """ Dans le cas d'une MCList il faut vérifier qu'elle n'est pas vide
+            ou réduite à un seul élément suite à une destruction
+        """
+        # self représente une MCList
+	print "on passe par traite_mclist ",len(self.item)
+        if len(self.item) == 0 :
+            # la liste est vide : il faut la supprimer
+            self.delete()
+        elif len(self.item) == 1:
+            # il ne reste plus qu'un élément dans la liste
+            # il faut supprimer la liste et créer directement l'objet
+            index = self.parent.children.index(self)
+            noeud = self.children[0]
+            if self.parent.delete_child(self):
+                self.parent.append_node_child(noeud.item,pos=index,verif='non')
+            else:
+	        print "destruction de self impossible !"
+            #if self.parent.delete_child(self):
+            #    self.parent.copynode(self.children[0],index)
+            #else :
+            #    print 'erreur dans la destruction de :',self.item.get_nom(),' dans traite_mclist'
+        else :
+            return
+
     def traite_mclist(self):
         """ Dans le cas d'une MCList il faut vérifier qu'elle n'est pas vide
             ou réduite à un seul élément suite à une destruction
@@ -714,15 +740,13 @@ class Node :
             # il faut supprimer la liste et créer directement l'objet
             index = self.parent.children.index(self)
             noeud = self.children[0]
-            if self.parent.delete_child(self):
-                self.parent.append_node_child(noeud.item,pos=index,verif='non')
-            #if self.parent.delete_child(self):
-            #    self.parent.copynode(self.children[0],index)
-            #else :
-            #    print 'erreur dans la destruction de :',self.item.get_nom(),' dans traite_mclist'
+	    noeud.parent = self.parent
+	    self.parent.delete_node_child(self)
+            self.parent.item.replace_child(self.item,noeud.item)
+	    self.parent.children.insert(index,noeud)
         else :
             return
-
+	    
     def verif_all(self):
         self.verif_all_children()
             
