@@ -164,7 +164,7 @@ class APPLI:
       """
       texte = VERSION + '\n\n'
       texte = texte + 'EFICAS est un produit développé par \nEDF-Division Stratégie et Développement\n'
-      texte = texte + 'Equipe : MTI/MMN\n\n'
+      texte = texte + 'Equipe : SINETICS\n\n'
       texte = texte + 'Code utilisé : %s version %s\n' % (self.code,properties.version)
       return texte
 
