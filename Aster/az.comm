@@ -14,7 +14,7 @@ P4 = [2,3,4];
 #Pas trouve		shellpanel
 
 aaa = FORMULE(VALE='a+z',
-              NOM_PARA=('a','z'),);
+              NOM_PARA=('a','z',),);
 
 MAIL=LIRE_MAILLAGE(UNITE=P3,);
 
@@ -54,7 +54,7 @@ CARA=AFFE_CARA_ELEM(MODELE=MOD,
 # 'AFFE_MODELE', 'AFFE', 'b_mecanique'--> plusieursintopanel
 
 F1=DEFI_FONCTION(NOM_PARA='DX',
-                 VALE=(5.0,3.0,),);
+                 VALE=(5.0,3.0,P4[1],P3,),);
 
 F3=DEFI_FONCTION(NOM_PARA='DRX',
                  VALE_C=(5.0,7.0,9.0,9.0,8.0,7.0,),);
