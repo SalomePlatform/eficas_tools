@@ -19,7 +19,7 @@ import Editeur
 from Editeur import eficas_go
 
 def main():
-   Misc.Trace.begin_trace()
+   #Misc.Trace.begin_trace()
    if len(sys.argv) > 1 :
        # on veut ouvrir un fichier directement au lancement d'Eficas
        eficas_go.lance_eficas(code='ASTER',fichier = sys.argv[1])
