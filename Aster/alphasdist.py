@@ -45,6 +45,7 @@ def main():
    copyfiles('../AIDE/fichiers',os.path.join(path_distrib,'AIDE','fichiers'),['*'])
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
                                                             'editeur.ini',
+                                                            'properties.py',
                                                             'eficas_aster.py',
                                                            ])
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
