@@ -3,11 +3,16 @@
     Ce module sert à lancer EFICAS configuré pour Code_Mini
 """
 # Modules Python
-import sys
+import sys,os
 
 # Modules Eficas
 import prefs
 sys.path[:0]=[prefs.INSTALLDIR]
+
+args=sys.argv[1:]
+for a in args:
+   if a == "-display":
+      os.environ['DISPLAY']=args[args.index("-display")+1]
 
 import Editeur
 from Editeur import eficas_go
