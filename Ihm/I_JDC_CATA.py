@@ -23,6 +23,10 @@ class JDC_CATA:
   def __init__(self):
     self.l_noms_entites=[]
 
+  def get_liste_cmd(self):
+    self.l_noms_entites.sort()
+    return self.l_noms_entites
+
 #ATTENTION SURCHARGE: cette methode doit etre synchronisée avec celle du Noyau
   def enregistre(self,commande):
     """ 
@@ -31,8 +35,3 @@ class JDC_CATA:
     """
     N_JDC_CATA.JDC_CATA.enregistre(self,commande)
     self.l_noms_entites.append(commande.nom)
-
-  def get_liste_cmd(self):
-    self.l_noms_entites.sort()
-    return self.l_noms_entites
-

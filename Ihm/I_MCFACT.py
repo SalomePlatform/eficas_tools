@@ -31,6 +31,6 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
      else :
        return 0
 
-  def makeobjet(self):
-     return self.definition(val = None, nom = self.nom,parent = self.parent)
+  def isoblig(self):
+    return self.definition.statut=='o'
 

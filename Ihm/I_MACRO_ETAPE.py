@@ -39,17 +39,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       self.typret=None
       self.recorded_units={}
 
-  def copy(self):
-      """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
-          et sans sd
-          On surcharge la methode de ETAPE pour exprimer que les concepts crees
-          par la MACRO d'origine ne sont pas crees par la copie mais eventuellement 
-          seulement utilises
-      """
-      etape=I_ETAPE.ETAPE.copy(self)
-      etape.sdprods=[]
-      return etape
-
   def get_sdprods(self,nom_sd):
     """ 
          Fonction : retourne le concept produit par l etape de nom nom_sd
@@ -268,94 +257,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # On met g_context à blanc
       self.g_context={}
          
-#ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
-  def Build_sd(self,nom):
-      """
-           Methode de Noyau surchargee pour poursuivre malgre tout
-           si une erreur se produit pendant la creation du concept produit
-      """
-      try:
-         sd=Noyau.N_MACRO_ETAPE.MACRO_ETAPE.Build_sd(self,nom)
-         self.state="modified"
-      except AsException,e:
-         # Une erreur s'est produite lors de la construction du concept
-         # Comme on est dans EFICAS, on essaie de poursuivre quand meme
-         # Si on poursuit, on a le choix entre deux possibilités :
-         # 1. on annule la sd associée à self
-         # 2. on la conserve mais il faut la retourner
-         # On choisit de l'annuler
-         # En plus il faut rendre coherents sdnom et sd.nom
-         self.sd=None
-         self.sdnom=None
-         self.state="unchanged"
-         self.valid=0
-
-      return self.sd
-
-#ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro ou a reintegrer)
-  def Build_sd_old(self,nom):
-     """
-        Construit le concept produit de l'opérateur. Deux cas 
-        peuvent se présenter :
-
-           - le parent n'est pas défini. Dans ce cas, l'étape prend en charge 
-             la création et le nommage du concept.
-
-           - le parent est défini. Dans ce cas, l'étape demande au parent la 
-             création et le nommage du concept.
-
-     """
-     if not self.isactif():return
-     # CCAR : meme modification que dans I_ETAPE
-     if not self.isvalid(sd='non') : return
-     self.sdnom=nom
-     try:
-        # On positionne la macro self en tant que current_step pour que les 
-        # étapes créées lors de l'appel à sd_prod et à op_init aient la macro
-        #  comme parent 
-        self.set_current_step()
-        if self.parent:
-           sd= self.parent.create_sdprod(self,nom)
-           if type(self.definition.op_init) == types.FunctionType: 
-              apply(self.definition.op_init,(self,self.parent.g_context))
-        else:
-           sd=self.get_sd_prod()
-           if sd != None and self.reuse == None:
-              # On ne nomme le concept que dans le cas de non reutilisation 
-              # d un concept
-              sd.nom=nom
-        self.reset_current_step()
-        # Si on est arrive ici, l'etape est valide
-        self.state="unchanged"
-        self.valid=1
-        if self.jdc and self.jdc.par_lot == "NON" :
-           self.Execute()
-        return sd
-     except AsException,e:
-        self.reset_current_step()
-        # Une erreur s'est produite lors de la construction du concept
-        # Comme on est dans EFICAS, on essaie de poursuivre quand meme
-        # Si on poursuit, on a le choix entre deux possibilités :
-        # 1. on annule la sd associée à self
-        # 2. on la conserve mais il faut qu'elle soit correcte et la retourner
-        # En plus il faut rendre coherents sdnom et sd.nom
-        # On choisit de retourner None et de mettre l'etape invalide 
-        self.sd=None
-        self.sdnom=None
-        self.state="unchanged"
-        self.valid=0
-        return self.sd
-        #raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
-        #                     'fichier : ',self.appel[1],e)
-     except EOFError:
-        raise
-     except :
-        self.reset_current_step()
-        l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-        raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
-                          'fichier : ',self.appel[1]+'\n',
-                           string.join(l))
-
   def make_contexte_include(self,fichier,text):
     """
         Cette méthode sert à créer un contexte en interprétant un texte source
@@ -461,59 +362,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          if hasattr(self,'fichier_unite') : 
             self.parent.record_unit(self.fichier_unite,self)
 
-  def make_poursuite(self):
-      """ Cette methode est appelée par la fonction sd_prod de la macro POURSUITE
-      """
-      if not hasattr(self,'fichier_ini') :
-         # Si le fichier n'est pas defini on le demande
-         f,text=self.get_file_memo(fic_origine=self.parent.nom)
-         # On memorise le fichier retourne
-         self.fichier_ini = f
-         self.fichier_unite = None
-         self.fichier_text = text
-         self.fichier_err=None
-         import Extensions.jdc_include
-         self.JdC_aux=Extensions.jdc_include.JdC_poursuite
-         self.contexte_fichier_init={}
-
-         if f is None:
-             self.fichier_err="Le fichier POURSUITE n'est pas defini"
-             self.parent.record_unit(None,self)
-             raise Exception(self.fichier_err)
-
-         try:
-           self.make_contexte_include(self.fichier_ini,self.fichier_text)
-           self.parent.record_unit(None,self)
-         except:
-           l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
-           if self.jdc.appli:
-              self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier poursuite",
-                                            message="Ce fichier ne sera pas pris en compte\n"+string.join(l)
-                                           )
-           self.parent.record_unit(None,self)
-           self.g_context={}
-           self.fichier_err = string.join(l)
-           self.contexte_fichier_init={}
-           raise
-
-      else:
-         # Si le fichier est deja defini on ne reevalue pas le fichier
-         # et on leve une exception si une erreur a été enregistrée
-         self.update_fichier_init(None)
-         if self.fichier_err is not None: raise Exception(self.fichier_err)
-
-  def get_file(self,unite=None,fic_origine=''):
-      """Retourne le nom du fichier et le source correspondant a l'unite unite
-         Initialise en plus recorded_units
-      """
-      units={}
-      if self.jdc :
-         f,text=self.jdc.get_file(unite=unite,fic_origine=fic_origine)
-      else:
-         f,text=None,None
-      self.recorded_units=units
-      return f,text
-
   def get_file_memo(self,unite=None,fic_origine=''):
       """Retourne le nom du fichier et le source correspondant a l'unite unite
          Initialise en plus recorded_units
@@ -533,7 +381,20 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
                           message="Ce fichier ne sera pas pris en compte\n"+"Le fichier associé n'est pas défini")
       return f,text
 
-#ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro)
+#ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
+  def get_file(self,unite=None,fic_origine=''):
+      """Retourne le nom du fichier et le source correspondant a l'unite unite
+         Initialise en plus recorded_units
+      """
+      units={}
+      if self.jdc :
+         f,text=self.jdc.get_file(unite=unite,fic_origine=fic_origine)
+      else:
+         f,text=None,None
+      self.recorded_units=units
+      return f,text
+
+#ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
   def make_include(self,unite=None):
       """
           Inclut un fichier dont l'unite logique est unite
@@ -589,7 +450,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          if self.fichier_err is not None: raise Exception(self.fichier_err)
         
 
-#ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro)
+#ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
   def make_contexte(self,fichier,text):
     """
         Cette méthode sert à créer un contexte pour INCLUDE_MATERIAU
@@ -618,7 +479,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.contexte_fichier_init={}
        raise
 
-#ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro)
+#ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
   def update_sdprod(self,cr='non'):
      # Cette methode peut etre appelee dans EFICAS avec des mots cles de 
      # la commande modifies. Ceci peut conduire a la construction ou
@@ -629,4 +490,70 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
      valid=Validation.V_MACRO_ETAPE.MACRO_ETAPE.update_sdprod(self,cr=cr)
      CONTEXT.unset_current_step()
      return valid
+
+#ATTENTION SURCHARGE: cette methode surcharge celle de Noyau a garder en synchro 
+  def Build_sd(self,nom):
+      """
+           Methode de Noyau surchargee pour poursuivre malgre tout
+           si une erreur se produit pendant la creation du concept produit
+      """
+      try:
+         sd=Noyau.N_MACRO_ETAPE.MACRO_ETAPE.Build_sd(self,nom)
+         self.state="modified"
+      except AsException,e:
+         # Une erreur s'est produite lors de la construction du concept
+         # Comme on est dans EFICAS, on essaie de poursuivre quand meme
+         # Si on poursuit, on a le choix entre deux possibilités :
+         # 1. on annule la sd associée à self
+         # 2. on la conserve mais il faut la retourner
+         # On choisit de l'annuler
+         # En plus il faut rendre coherents sdnom et sd.nom
+         self.sd=None
+         self.sdnom=None
+         self.state="unchanged"
+         self.valid=0
+
+      return self.sd
+
+#ATTENTION SURCHARGE: cette methode surcharge celle de Noyau a garder en synchro 
+  def make_poursuite(self):
+      """ Cette methode est appelée par la fonction sd_prod de la macro POURSUITE
+      """
+      if not hasattr(self,'fichier_ini') :
+         # Si le fichier n'est pas defini on le demande
+         f,text=self.get_file_memo(fic_origine=self.parent.nom)
+         # On memorise le fichier retourne
+         self.fichier_ini = f
+         self.fichier_unite = None
+         self.fichier_text = text
+         self.fichier_err=None
+         import Extensions.jdc_include
+         self.JdC_aux=Extensions.jdc_include.JdC_poursuite
+         self.contexte_fichier_init={}
+
+         if f is None:
+             self.fichier_err="Le fichier POURSUITE n'est pas defini"
+             self.parent.record_unit(None,self)
+             raise Exception(self.fichier_err)
+
+         try:
+           self.make_contexte_include(self.fichier_ini,self.fichier_text)
+           self.parent.record_unit(None,self)
+         except:
+           l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+           if self.jdc.appli:
+              self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier poursuite",
+                                            message="Ce fichier ne sera pas pris en compte\n"+string.join(l)
+                                           )
+           self.parent.record_unit(None,self)
+           self.g_context={}
+           self.fichier_err = string.join(l)
+           self.contexte_fichier_init={}
+           raise
+
+      else:
+         # Si le fichier est deja defini on ne reevalue pas le fichier
+         # et on leve une exception si une erreur a été enregistrée
+         self.update_fichier_init(None)
+         if self.fichier_err is not None: raise Exception(self.fichier_err)
 

@@ -117,13 +117,6 @@ class OBJECT:
     else:
        return [string.strip(self.nom)]
 
-  def reparent(self,parent):
-     """
-         Cette methode sert a reinitialiser la parente de l'objet
-     """
-     self.parent=parent
-     self.jdc=parent.jdc
-
   def get_fr(self):
      """
          Retourne la chaine d'aide contenue dans le catalogue
@@ -133,5 +126,4 @@ class OBJECT:
         return getattr(self.definition,prefs.lang)
      except:
         return ''
-
 

@@ -184,7 +184,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
       return 0
 
   def isoblig(self):
-    return self.definition.statut=='o'
+      return 0
 
   def addentite(self,name,pos=None):
       """ 
@@ -337,34 +337,6 @@ class MCCOMPO(I_OBJECT.OBJECT):
     nom = mc.nom
     del self.jdc.mc_globaux[nom]
 
-  def copy(self):
-    """ Retourne une copie de self """
-    objet = self.makeobjet()
-    # FR : attention !!! avec makeobjet, objet a le même parent que self
-    # ce qui n'est pas du tout bon dans le cas d'une copie !!!!!!!
-    # FR : peut-on passer par là autrement que dans le cas d'une copie ???
-    # FR --> je suppose que non
-    # XXX CCAR : le pb c'est qu'on vérifie ensuite quel parent avait l'objet
-    # Il me semble preferable de changer le parent a la fin quand la copie est acceptee
-    objet.valeur = copy(self.valeur)
-    objet.val = copy(self.val)
-    objet.mc_liste=[]
-    for obj in self.mc_liste:
-      new_obj = obj.copy()
-      new_obj.reparent(objet)
-      objet.mc_liste.append(new_obj)
-    return objet
-
-  def get_sd_utilisees(self):
-    """ 
-        Retourne la liste des concepts qui sont utilisés à l'intérieur de self
-        ( comme valorisation d'un MCS) 
-    """
-    l=[]
-    for child in self.mc_liste:
-      l.extend(child.get_sd_utilisees())
-    return l
-
   def get_liste_mc_inconnus(self):
      """
      Retourne la liste des mots-clés inconnus dans self
@@ -392,7 +364,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
     """
     liste_ajouts = []
     liste_retraits = []
-    dict = self.cree_dict_valeurs(self.mc_liste)
+    dict = self.cree_dict_condition(self.mc_liste)
     for k,v in self.definition.entites.items():
       if v.label=='BLOC' :
         globs= self.jdc and self.jdc.condition_context or {}
@@ -407,16 +379,6 @@ class MCCOMPO(I_OBJECT.OBJECT):
             # le bloc est présent : il faut l'enlever
             liste_retraits.append(k)
     return liste_ajouts,liste_retraits
-
-  def reparent(self,parent):
-     """
-         Cette methode sert a reinitialiser la parente de l'objet
-     """
-     self.parent=parent
-     self.jdc=parent.get_jdc_root()
-     self.etape=parent.etape
-     for mocle in self.mc_liste:
-        mocle.reparent(self)
 
   def verif_existence_sd(self):
      """

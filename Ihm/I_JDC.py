@@ -43,14 +43,6 @@ class JDC(I_OBJECT.OBJECT):
       self.recorded_units={}
       self.old_recorded_units={}
 
-   def get_cmd(self,nomcmd):
-      """
-          Retourne l'objet de type COMMANDE de nom nomcmd
-      """
-      for cata in self.cata:
-         if hasattr(cata,nomcmd):
-            return getattr(cata,nomcmd)
-
    def get_sd_avant_du_bon_type(self,etape,types_permis):
       """
           Retourne la liste des concepts avant etape d'un type acceptable
@@ -249,43 +241,6 @@ class JDC(I_OBJECT.OBJECT):
       if sd:return sd
       return self.get_sd_apres_etape(nom_sd,etape,avec)
 
-   def get_contexte_avant(self,etape):
-      """
-         Retourne le dictionnaire des concepts connus avant etape
-         On tient compte des commandes qui modifient le contexte
-         comme DETRUIRE ou les macros
-         Si etape == None, on retourne le contexte en fin de JDC
-      """
-      # L'étape courante pour laquelle le contexte a été calculé est
-      # mémorisée dans self.index_etape_courante
-      # XXX on pourrait faire mieux dans le cas PAR_LOT="NON" : en
-      # mémorisant l'étape
-      # courante pendant le processus de construction des étapes.
-      # Si on insère des commandes (par ex, dans EFICAS), il faut préalablement
-      # remettre ce pointeur à 0
-      if etape:
-         index_etape=self.etapes.index(etape)
-      else:
-         index_etape=len(self.etapes)
-      if index_etape >= self.index_etape_courante:
-         # On calcule le contexte en partant du contexte existant
-         d=self.current_context
-         if self.index_etape_courante==0 and self.context_ini:
-            d.update(self.context_ini)
-         liste_etapes=self.etapes[self.index_etape_courante:index_etape]
-      else:
-         d=self.current_context={}
-         if self.context_ini:d.update(self.context_ini)
-         liste_etapes=self.etapes
-
-      for e in liste_etapes:
-         if e is etape:
-            break
-         if e.isactif():
-            e.update_context(d)
-      self.index_etape_courante=index_etape
-      return d
-
    def get_contexte_apres(self,etape):
       """
          Retourne le dictionnaire des concepts connus apres etape
@@ -354,29 +309,6 @@ class JDC(I_OBJECT.OBJECT):
       if not self.cr.estvide():return
       self.exec_compile()
       self.active_etapes()
-
-   def register(self,etape):
-      """ 
-           Cette méthode ajoute  etape dans la liste
-           des etapes self.etapes et retourne l identificateur d'étape
-           fourni par l appel a g_register
-
-           A quoi sert editmode ?
-              - Si editmode vaut 1, on est en mode edition de JDC. On cherche 
-                à enregistrer une étape que l'on a créée avec eficas (en passant 
-                par addentite) auquel cas on ne veut récupérer que son numéro 
-                d'enregistrement et c'est addentité qui l'enregistre dans 
-                self.etapes à la bonne place...
-              - Si editmode vaut 0, on est en mode relecture d'un fichier de 
-                commandes et on doit enregistrer l'étape à la fin de self.etapes 
-                (dans ce cas l'ordre des étapes est bien l'ordre chronologique 
-                de leur création   )
-      """
-      if not self.editmode:
-         self.etapes.append(etape)
-      else:
-         pass
-      return self.g_register(etape)
 
    def register_parametre(self,param):
       """
@@ -469,74 +401,12 @@ class JDC(I_OBJECT.OBJECT):
 	       if l : l_mc.extend(l)
      return l_mc    
 
-   def get_file(self,unite=None,fic_origine=''):
-      """
-          Retourne le nom du fichier correspondant à un numero d'unité
-          logique (entier) ainsi que le source contenu dans le fichier
-      """
-      if self.appli :
-         # Si le JDC est relié à une application maitre, on délègue la recherche
-         file,text = self.appli.get_file(unite,fic_origine)
-      else:
-         file = None
-         if unite != None:
-            if os.path.exists("fort."+str(unite)):
-               file= "fort."+str(unite)
-         if file == None :
-            raise AsException("Impossible de trouver le fichier correspondant \
-                               a l unite %s" % unite)
-         if not os.path.exists(file):
-            raise AsException("%s n'est pas un fichier existant" % unite)
-         fproc=open(file,'r')
-         text=fproc.read()
-         fproc.close()
-      if file == None : return None,None
-      text=string.replace(text,'\r\n','\n')
-      linecache.cache[file]=0,0,string.split(text,'\n'),file
-      return file,text
-
-
    def get_genealogie(self):
       """
           Retourne la liste des noms des ascendants de l'objet self
           jusqu'à la première ETAPE parent.
       """
       return []
-
-   def NommerSdprod(self,sd,sdnom,restrict='non'):
-      """
-          Nomme la SD apres avoir verifie que le nommage est possible : 
-          nom non utilise
-          Si le nom est deja utilise, leve une exception
-          Met le concept créé dans le concept global g_context
-      """
-      # XXX En mode editeur dans EFICAS, le nommage doit etre géré différemment
-      # Le dictionnaire g_context ne représente pas le contexte
-      # effectif avant une étape.
-      # Il faut utiliser get_contexte_avant avec indication de l'étape
-      # traitée. 
-      # Cette etape est indiquee par l'attribut _etape_context qui a ete 
-      # positionné préalablement par un appel à set_etape_context
-
-      if CONTEXT.debug : print "JDC.NommerSdprod ",sd,sdnom
-
-      if self._etape_context:
-         o=self.get_contexte_avant(self._etape_context).get(sdnom,None)
-      else:
-         o=self.sds_dict.get(sdnom,None)
-
-      if isinstance(o,ASSD):
-         raise AsException("Nom de concept deja defini : %s" % sdnom)
-
-      # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
-      # Ajoute a la creation (appel de reg_sd).
-      self.sds_dict[sdnom]=sd
-      sd.nom=sdnom
-
-      # En plus si restrict vaut 'non', on insere le concept dans le contexte du JDC
-      if restrict == 'non':
-         self.g_context[sdnom]=sd
-
 
    def set_etape_context(self,etape):
       """
@@ -610,17 +480,6 @@ class JDC(I_OBJECT.OBJECT):
       if fonction not in self.fonctions : self.fonctions.append(fonction)
       self.g_context[fonction.nom]=fonction
 
-   def delete_concept_after_etape(self,etape,sd):
-      """
-          Met à jour les étapes du JDC qui sont après etape en fonction
-          de la disparition du concept sd
-      """
-      index = self.etapes.index(etape)+1
-      if index == len(self.etapes) : 
-         return # etape est la dernière étape du jdc ...on ne fait rien !
-      for child in self.etapes[index:]:
-        child.delete_concept(sd)
-
    def delete_concept(self,sd):
       """
           Inputs :
@@ -663,4 +522,76 @@ class JDC(I_OBJECT.OBJECT):
       else:
          self.recorded_units[unit]=(etape.fichier_ini ,etape.fichier_text,etape.recorded_units)
 
-#ATTENTION SURCHARGE : cette methode surcharge la methode du package Validation : a reintegrer
+#ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
+   def register(self,etape):
+      """
+           Cette méthode ajoute  etape dans la liste
+           des etapes self.etapes et retourne l identificateur d'étape
+           fourni par l appel a g_register
+
+           A quoi sert editmode ?
+              - Si editmode vaut 1, on est en mode edition de JDC. On cherche
+                à enregistrer une étape que l'on a créée avec eficas (en passant
+                par addentite) auquel cas on ne veut récupérer que son numéro
+                d'enregistrement et c'est addentité qui l'enregistre dans
+                self.etapes à la bonne place...
+              - Si editmode vaut 0, on est en mode relecture d'un fichier de
+                commandes et on doit enregistrer l'étape à la fin de self.etapes
+                (dans ce cas l'ordre des étapes est bien l'ordre chronologique
+                de leur création   )
+      """
+      if not self.editmode:
+         self.etapes.append(etape)
+      else:
+         pass
+      return self.g_register(etape)
+
+#ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
+   def NommerSdprod(self,sd,sdnom,restrict='non'):
+      """
+          Nomme la SD apres avoir verifie que le nommage est possible :
+          nom non utilise
+          Si le nom est deja utilise, leve une exception
+          Met le concept créé dans le concept global g_context
+      """
+      # XXX En mode editeur dans EFICAS, le nommage doit etre géré différemment
+      # Le dictionnaire g_context ne représente pas le contexte
+      # effectif avant une étape.
+      # Il faut utiliser get_contexte_avant avec indication de l'étape
+      # traitée.
+      # Cette etape est indiquee par l'attribut _etape_context qui a ete
+      # positionné préalablement par un appel à set_etape_context
+
+      if CONTEXT.debug : print "JDC.NommerSdprod ",sd,sdnom
+
+      if self._etape_context:
+         o=self.get_contexte_avant(self._etape_context).get(sdnom,None)
+      else:
+         o=self.sds_dict.get(sdnom,None)
+
+      if isinstance(o,ASSD):
+         raise AsException("Nom de concept deja defini : %s" % sdnom)
+
+      # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
+      # Ajoute a la creation (appel de reg_sd).
+      self.sds_dict[sdnom]=sd
+      sd.nom=sdnom
+
+      # En plus si restrict vaut 'non', on insere le concept dans le contexte du JDC
+      if restrict == 'non':
+         self.g_context[sdnom]=sd
+
+#ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
+   def delete_concept_after_etape(self,etape,sd):
+      """
+          Met à jour les étapes du JDC qui sont après etape en fonction
+          de la disparition du concept sd
+      """
+      index = self.etapes.index(etape)+1
+      if index == len(self.etapes) :
+         return # etape est la dernière étape du jdc ...on ne fait rien !
+      for child in self.etapes[index:]:
+        child.delete_concept(sd)
+
+#ATTENTION SURCHARGE : les methodes ci-dessous surchargent des methodes de Noyau et Validation : a reintegrer
+

@@ -21,7 +21,6 @@ from I_ASSD import ASSD
 
 class FONCTION(ASSD):
   def __init__(self,etape=None,sd=None,reg='oui'):
-    #ASSD.__init__(self,etape=etape,sd=sd,reg=reg)
     if reg=='oui':
       self.jdc.register_fonction(self)
 

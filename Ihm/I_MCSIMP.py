@@ -79,7 +79,7 @@ class MCSIMP(I_OBJECT.OBJECT):
     elif isinstance(self.valeur,ASSD): 
       # Cas des ASSD
       txt=self.getval()
-    elif type(self.valeur) == types.InstanceType and val.__class__.__name__ in  ('PARAMETRE','PARAMETRE_EVAL'):
+    elif type(self.valeur) == types.InstanceType and self.valeur.__class__.__name__ in  ('PARAMETRE','PARAMETRE_EVAL'):
       # Cas des PARAMETRES
       txt=str(self.valeur)
     else:
@@ -181,50 +181,6 @@ class MCSIMP(I_OBJECT.OBJECT):
   def isoblig(self):
     return self.definition.statut=='o'
 
-#  def set_valeur(self,new_valeur,evaluation='oui'):
-#    """
-#        Remplace la valeur de self(si elle existe) par new_valeur
-#            - si evaluation = 'oui' : 
-#                        essaie d'évaluer new_valeur dans le contexte
-#            - si evaluation = 'non' : 
-#                        n'essaie pas d'évaluer (on stocke une string ou 
-#                        une valeur de la liste into )
-#    """
-#    if evaluation == 'oui' and not self.wait_assd_or_geom():
-#      valeur,test = self.eval_valeur(new_valeur)
-#      if test :
-#        self.val = new_valeur
-#        self.valeur = valeur
-#        self.init_modif()
-#        self.fin_modif()
-#        return 1
-#      else:
-#        # On n'a pas trouve de concept ni réussi à évaluer la valeur 
-#        # dans le contexte
-#        # Si le mot cle simple attend un type CO on crée un objet de ce 
-#        # type de nom new_valeur
-#        if self.wait_co():
-#          try:
-#            # Pour avoir la classe CO avec tous ses comportements
-#            from Accas import CO
-#            self.valeur=CO(new_valeur)
-#          except:
-#            traceback.print_exc()
-#            return 0
-#          self.init_modif()
-#          self.val=self.valeur
-#          self.fin_modif()
-#          return 1
-#        elif type(new_valeur)==types.StringType and self.wait_TXM():
-#          self.init_modif()
-#          self.val = new_valeur
-#          self.valeur = new_valeur
-#          self.fin_modif()
-#          return 1
-#        else:
-#          return 0
-#    else :
-      # on ne fait aucune vérification ...
   def set_valeur(self,new_valeur,evaluation='oui'):
         self.init_modif()
         self.valeur = new_valeur
@@ -301,33 +257,6 @@ class MCSIMP(I_OBJECT.OBJECT):
         self.val=sd
         self.init_modif()
 
-  def copy(self):
-    """ Retourne une copie de self """
-    objet = self.makeobjet()
-    # il faut copier les listes et les tuples mais pas les autres valeurs
-    # possibles (réel,SD,...)
-    if type(self.valeur) in (types.ListType,types.TupleType):
-       objet.valeur = copy(self.valeur)
-    else:
-       objet.valeur = self.valeur
-    objet.val = objet.valeur
-    return objet
-
-  def makeobjet(self):
-    return self.definition(val = None, nom = self.nom,parent = self.parent)
-
-  def get_sd_utilisees(self):
-    """ 
-        Retourne une liste qui contient la SD utilisée par self si c'est le cas
-        ou alors une liste vide
-    """
-    l=[]
-    if type(self.valeur) == types.InstanceType:
-      #XXX Est ce différent de isinstance(self.valeur,ASSD) ??
-      if issubclass(self.valeur.__class__,ASSD) : l.append(self.valeur)
-    return l
-
-
   def set_valeur_co(self,nom_co):
       """
           Affecte à self l'objet de type CO et de nom nom_co
@@ -368,14 +297,6 @@ class MCSIMP(I_OBJECT.OBJECT):
       self.etape.get_type_produit(force=1)
       return 1,"Concept créé"
 	
-  def reparent(self,parent):
-     """
-         Cette methode sert a reinitialiser la parente de l'objet
-     """
-     self.parent=parent
-     self.jdc=parent.jdc
-     self.etape=parent.etape
-
   def verif_existence_sd(self):
      """
         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
@@ -417,185 +338,4 @@ class MCSIMP(I_OBJECT.OBJECT):
  
 #ATTENTION SURCHARGE : toutes les methodes ci apres sont des surcharges du Noyau et de Validation
 # Elles doivent etre reintegrees des que possible
-
-  def is_complexe(self,valeur):
-      """ Retourne 1 si valeur est un complexe, 0 sinon """
-      if type(valeur) == types.InstanceType :
-        #XXX je n'y touche pas pour ne pas tout casser mais il serait
-        #XXX préférable d'appeler une méthode de valeur : return valeur.is_type('C'), par exemple
-        if valeur.__class__.__name__ in ('EVAL','complexe','PARAMETRE_EVAL'):
-          return 1
-        elif valeur.__class__.__name__ in ('PARAMETRE',):
-          # il faut tester si la valeur du parametre est un entier
-          #XXX ne serait ce pas plutot complexe ???? sinon expliquer
-          return self.is_complexe(valeur.valeur)
-        else:
-          print "Objet non reconnu dans is_complexe %s" %`valeur`
-          return 0
-      # Pour permettre l'utilisation de complexes Python
-      #elif type(valeur) == types.ComplexType:
-        #return 1
-      elif type(valeur) == types.ListType :
-        # On n'autorise pas les listes de complexes
-        return 0
-      elif type(valeur) != types.TupleType :
-        # Un complexe doit etre un tuple
-        return 0
-      else:
-        if len(valeur) != 3 :
-          return 0
-        else:
-          if type(valeur[0]) != types.StringType : return 0
-          if string.strip(valeur[0]) not in ('RI','MP'):
-            return 0
-          else:
-            if not self.is_reel(valeur[1]) or not self.is_reel(valeur[2]) : return 0
-            else: return 1
-
-  def is_reel(self,valeur):
-      """
-      Retourne 1 si valeur est un reel, 0 sinon
-      """
-      if type(valeur) == types.InstanceType :
-        #XXX je n'y touche pas pour ne pas tout casser mais il serait
-        #XXX préférable d'appeler une méthode de valeur : return valeur.is_type('R'), par exemple
-        #XXX ou valeur.is_reel()
-        #XXX ou encore valeur.compare(self.is_reel)
-        if valeur.__class__.__name__ in ('EVAL','reel','PARAMETRE_EVAL') :
-          return 1
-        elif valeur.__class__.__name__ in ('PARAMETRE',):
-          # il faut tester si la valeur du parametre est un réel
-          return self.is_reel(valeur.valeur)
-        else:
-          print "Objet non reconnu dans is_reel %s" %`valeur`
-          return 0
-      elif type(valeur) not in (types.IntType,types.FloatType,types.LongType):
-        # ce n'est pas un réel
-        return 0
-      else:
-        return 1
-
-  def is_entier(self,valeur):
-      """ Retourne 1 si valeur est un entier, 0 sinon """
-      if type(valeur) == types.InstanceType :
-        #XXX je n'y touche pas pour ne pas tout casser mais il serait
-        #XXX préférable d'appeler une méthode de valeur : return valeur.is_type('I'), par exemple
-        if valeur.__class__.__name__ in ('EVAL','entier','PARAMETRE_EVAL') :
-          return 1
-        elif valeur.__class__.__name__ in ('PARAMETRE',):
-          # il faut tester si la valeur du parametre est un entier
-          return self.is_entier(valeur.valeur)
-        else:
-          print "Objet non reconnu dans is_reel %s" %`valeur`
-          return 0
-      elif type(valeur) not in (types.IntType,types.LongType):
-        # ce n'est pas un entier
-        return 0
-      else:
-        return 1
-
-  def is_object_from(self,objet,classe):
-      """
-           Retourne 1 si valeur est un objet de la classe classe ou d'une 
-           sous-classe de classe, 0 sinon
-      """
-      if type(objet) != types.InstanceType :
-          return 0
-      if not objet.__class__ == classe and not issubclass(objet.__class__,classe):
-        return 0
-      else:
-        return 1
-
-  def get_valid(self):
-       if hasattr(self,'valid'):
-          return self.valid
-       else:
-          self.valid=None
-          return None
-
-  def set_valid(self,valid):
-       old_valid=self.get_valid()
-       self.valid = valid
-       self.state = 'unchanged'
-       if not old_valid or old_valid != self.valid :
-           self.init_modif_up()
-
-  def isvalid(self,cr='non'):
-      """
-         Cette méthode retourne un indicateur de validité de l'objet de type MCSIMP
-
-           - 0 si l'objet est invalide
-           - 1 si l'objet est valide
-
-         Le paramètre cr permet de paramétrer le traitement. Si cr == 'oui'
-         la méthode construit également un comte-rendu de validation
-         dans self.cr qui doit avoir été créé préalablement.
-      """
-      if self.state == 'unchanged':
-        return self.valid
-      else:
-        v=self.valeur
-        valid = 1
-        #  verifiaction presence
-        if self.isoblig() and v == None :
-          if cr == 'oui' :
-            self.cr.fatal(string.join(("Mot-clé : ",self.nom," obligatoire non valorisé")))
-          valid = 0
-
-        if v is None:
-          valid=0
-          if cr == 'oui' :
-             self.cr.fatal("None n'est pas une valeur autorisée")
-        else:
-          # type,into ...
-          valid = self.verif_type(val=v,cr=cr)*self.verif_into(cr=cr)*self.verif_card(cr=cr)
-          #
-          # On verifie les validateurs s'il y en a et si necessaire (valid == 1)
-          #
-          if valid and self.definition.validators and not self.definition.validators.verif(self.valeur):
-            if cr == 'oui' :
-              self.cr.fatal(string.join(("Mot-clé : ",self.nom,"devrait avoir ",self.definition.validators.info())))
-            valid=0
-          # fin des validateurs
-          #
-
-        self.set_valid(valid)
-        return self.valid
-
-  def verif_into(self,cr='non'):
-      """
-      Vérifie si la valeur de self est bien dans l'ensemble discret de valeurs
-      donné dans le catalogue derrière l'attribut into ou vérifie que valeur est bien compris
-      entre val_min et val_max
-      """
-      if self.definition.into == None :
-        #on est dans le cas d'un ensemble continu de valeurs possibles (intervalle)
-        if type(self.valeur)==types.TupleType :
-          test = 1
-          for val in self.valeur :
-            if type(val)!=types.StringType and type(val)!=types.InstanceType:
-              test = test*self.isinintervalle(val,cr=cr)
-          return test
-        else :
-          val = self.valeur
-          if type(val)!=types.StringType and type(val)!=types.InstanceType:
-            return self.isinintervalle(self.valeur,cr=cr)
-          else :
-            return 1
-      else :
-        # on est dans le cas d'un ensemble discret de valeurs possibles (into)
-        # PN : pour résoudre le pb du copier /coller de la liste Ordonnee
-        # if type(self.valeur) == types.TupleType :
-        if type(self.valeur) in (types.ListType,types.TupleType) :
-          for e in self.valeur:
-            if e not in self.definition.into:
-              if cr=='oui':
-                self.cr.fatal(string.join(("La valeur :",`e`," n'est pas permise pour le mot-clé :",self.nom)))
-              return 0
-        else:
-          if self.valeur == None or self.valeur not in self.definition.into:
-            if cr=='oui':
-              self.cr.fatal(string.join(("La valeur :",`self.valeur`," n'est pas permise pour le mot-clé :",self.nom)))
-            return 0
-        return 1
 

@@ -291,49 +291,6 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       for child in self.mc_liste :
         child.replace_concept(old_sd,sd)
 
-#ATTENTION SURCHARGE: cette methode doit etre gardée en synchronisation avec Noyau
-   def make_register(self):
-      """
-         Initialise les attributs jdc, id, niveau et réalise les
-         enregistrements nécessaires
-         Pour EFICAS, on tient compte des niveaux
-         Surcharge la methode make_register du package Noyau
-      """
-      if self.parent :
-         self.jdc = self.parent.get_jdc_root()
-         self.id=   self.parent.register(self)
-         if self.definition.niveau :
-            # La définition est dans un niveau. En plus on
-            # l'enregistre dans le niveau
-            self.nom_niveau_definition = self.definition.niveau.nom
-            self.niveau = self.parent.dict_niveaux[self.nom_niveau_definition]
-            self.niveau.register(self)
-         else:
-            # La définition est au niveau global
-            self.nom_niveau_definition = 'JDC'
-            self.niveau=self.parent
-      else:
-         self.jdc = self.parent =None
-         self.id=None
-         self.niveau=None
-
-   def copy(self):
-      """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
-          et sans sd 
-      """
-      etape = copy(self)
-      etape.sd = None
-      etape.state = 'modified'
-      etape.reuse = None
-      etape.sdnom = None
-      etape.etape=etape
-      etape.mc_liste=[]
-      for objet in self.mc_liste:
-        new_obj = objet.copy()
-        new_obj.reparent(etape)
-        etape.mc_liste.append(new_obj)
-      return etape
-
    def get_noms_sd_oper_reentrant(self):
       """ 
           Retourne la liste des noms de concepts utilisés à l'intérieur de la commande
@@ -354,32 +311,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       l_noms.sort()
       return l_noms
 
-   def get_sd_utilisees(self):
-      """ 
-          Retourne la liste des concepts qui sont utilisés à l'intérieur d'une commande
-          ( comme valorisation d'un MCS) 
-      """
-      l=[]
-      for child in self.mc_liste:
-        l.extend(child.get_sd_utilisees())
-      return l
-
    def get_genealogie(self):
       """ 
           Retourne la liste des noms des ascendants de l'objet self
           en s'arretant à la première ETAPE rencontrée
       """
       return [self.nom]
-
-   def reparent(self,parent):
-     """
-         Cette methode sert a reinitialiser la parente de l'objet
-     """
-     self.parent=parent
-     self.jdc=parent.get_jdc_root()
-     self.etape=self
-     for mocle in self.mc_liste:
-        mocle.reparent(self)
 
    def verif_existence_sd(self):
      """
@@ -412,91 +349,29 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
       return self.sd
 
-   def Build_sd_old(self,nom):
+#ATTENTION SURCHARGE: cette methode doit etre gardée en synchronisation avec Noyau
+   def make_register(self):
       """
-         Construit le concept produit de l'opérateur. Deux cas 
-         peuvent se présenter :
-        
-           - le parent n'est pas défini. Dans ce cas, l'étape prend en charge la création 
-             et le nommage du concept.
-
-           - le parent est défini. Dans ce cas, l'étape demande au parent la création et 
-             le nommage du concept.
-
+         Initialise les attributs jdc, id, niveau et réalise les
+         enregistrements nécessaires
+         Pour EFICAS, on tient compte des niveaux
+         Surcharge la methode make_register du package Noyau
       """
-      if not self.isactif():return
-      # FR : attention cette méthode ne devrait pas se trouver là car elle surcharge celle qui 
-      # se trouve dans N_ETAPE.py et elle est partie intégrante du noyau, mais, suite à l'absence de 
-      # test de validité de l'opérateur avant d'essayer de déterminer la sd produite, on n'arrivait
-      # pas à relire avec EFICAS un fichier contenant une étape encore incomplète du style :
-      #  sansnom = AFFE_CHAR_CINE(MODELE=None)
-      # Suite à la stabilisation du noyau d'Aster, je n'ai pas eu d'autre solution que de surcharger
-      # cette méthode ici en rajoutant le test manquant ...
-      # CCAR : cette modification ne corrige le probleme qu'en partie. Il faudrait probablement
-      # supprimer les erreurs fatales (exception ) et retourner systematiquement un objet produit
-      # meme en cas d'erreur et reporter l'emission du message d'erreur a la phase de validation
-      #
-      if not self.isvalid(sd='non') : return
-      self.sdnom=nom
-      try:
-         if self.parent:
-            sd= self.parent.create_sdprod(self,nom)
-            if type(self.definition.op_init) == types.FunctionType: 
-               apply(self.definition.op_init,(self,self.parent.g_context))
+      if self.parent :
+         self.jdc = self.parent.get_jdc_root()
+         self.id=   self.parent.register(self)
+         if self.definition.niveau :
+            # La définition est dans un niveau. En plus on
+            # l'enregistre dans le niveau
+            self.nom_niveau_definition = self.definition.niveau.nom
+            self.niveau = self.parent.dict_niveaux[self.nom_niveau_definition]
+            self.niveau.register(self)
          else:
-            sd=self.get_sd_prod()
-            # On n'utilise pas self.definition.op_init car self.parent 
-            # n'existe pas
-            if sd != None and self.reuse == None:
-               # On ne nomme le concept que dans le cas de non reutilisation 
-               # d un concept
-               sd.nom=nom
-         if self.jdc and self.jdc.par_lot == "NON" :
-            self.Execute()
-         return sd
-      except AsException,e:
-         # Une erreur s'est produite lors de la construction du concept
-         # Comme on est dans EFICAS, on essaie de poursuivre quand meme
-         # Si on poursuit, on a le choix entre deux possibilités :
-         # 1. on annule la sd associée à self
-         # 2. on la conserve mais il faut la retourner
-         # En plus il faut rendre coherents sdnom et sd.nom
-         self.sd=None
-         self.sdnom=None
-         self.state="unchanged"
-         self.valid=0
-         return self.sd
+            # La définition est au niveau global
+            self.nom_niveau_definition = 'JDC'
+            self.niveau=self.parent
+      else:
+         self.jdc = self.parent =None
+         self.id=None
+         self.niveau=None
 
-         #raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
-         #                     'fichier : ',self.appel[1],e)
-      except EOFError:
-         # XXX Normalement le contexte courant doit etre le parent.
-         # Il n'y a pas de raison de remettre le contexte au parent
-         #self.reset_current_step()
-         raise
-      except :
-         l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-         raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
-                           'fichier : ',self.appel[1]+'\n',
-                            string.join(l))
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-        
-     

@@ -51,9 +51,6 @@ class MCList:
      Une MCList n'est jamais obligatoire (même si le MCFACT qu'elle représente l'est
      """
      return 0
-     #for i in self.data:
-     #  if i.isoblig():return 1
-     #return 0
 
   def liste_mc_presents(self):
     return []
@@ -80,21 +77,6 @@ class MCList:
     """
     for child in self.data :
       child.replace_concept(old_sd,sd)
-
-  def copy(self):
-    """
-       Réalise la copie d'une MCList
-    """
-    liste = self.data[0].definition.list_instance()
-    # FR -->Il faut spécifier un parent pour la méthode init qui attend 2 arguments ...
-    liste.init(self.nom,self.parent)
-    for objet in self:
-      new_obj = objet.copy()
-      # Pour etre coherent avec le constructeur de mots cles facteurs N_FACT.__call__
-      # dans lequel le parent de l'element d'une MCList est le parent de la MCList
-      new_obj.reparent(self.parent)
-      liste.append(new_obj)
-    return liste
 
   def get_docu(self):
     return self.data[0].definition.get_docu()
@@ -141,16 +123,6 @@ class MCList:
     if self.parent:
       self.parent.init_modif()
 
-  def get_etape(self):
-     """
-        Retourne l'étape à laquelle appartient self
-        Un objet de la catégorie etape doit retourner self pour indiquer que
-        l'étape a été trouvée
-        XXX double emploi avec self.etape ???
-     """
-     if self.parent == None: return None
-     return self.parent.get_etape()
-
   def get_genealogie(self):
      """
          Retourne la liste des noms des ascendants.
@@ -173,16 +145,6 @@ class MCList:
         dico=objet_cata.entites
      return objet_cata.ordre_mc
 
-  def reparent(self,parent):
-     """
-         Cette methode sert a reinitialiser la parente de l'objet
-     """
-     self.parent=parent
-     self.jdc=parent.jdc
-     self.etape=parent.etape
-     for mcfact in self.data:
-        mcfact.reparent(parent)
-
   def verif_existence_sd(self):
      """
         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
@@ -190,16 +152,6 @@ class MCList:
      """
      for motcle in self.data :
          motcle.verif_existence_sd()
-
-  def get_sd_utilisees(self):
-    """
-        Retourne la liste des concepts qui sont utilisés à l'intérieur de self
-        ( comme valorisation d'un MCS)
-    """
-    l=[]
-    for motcle in self.data:
-      l.extend(motcle.get_sd_utilisees())
-    return l
 
   def get_fr(self):
      """

@@ -37,15 +37,3 @@ class A_CLASSER(I_REGLE.REGLE):
     text = text + t[0:-4] +'\n'
     return text
 
-  def init_couples_permis(self):
-    """ 
-       Crée la liste des couples permis parmi les self.args, 
-       càd pour chaque élément de self.args0 crée tous les couples possibles 
-       avec un élément de self.args1
-    """
-    liste = []
-    for arg0 in self.args0:
-      for arg1 in self.args1:
-        liste.append((arg0,arg1))
-    self.liste_couples = liste
-
