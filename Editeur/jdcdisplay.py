@@ -25,6 +25,7 @@ class JDCDISPLAY:
       self.jdc=jdc
       self.nom_jdc=nom_jdc
       self.fichier=None
+      self.panel_courant=None
 
       if not appli:
          class Appli:
@@ -78,13 +79,32 @@ class JDCDISPLAY:
          Lance la génération du panneau contextuel de l'objet sélectionné 
          dans l'arbre
       """
+      if self.panel_courant:
+          # On detruit le panneau
+          self.panel_courant.destroy()
+          o=self.panel_courant
+          self.panel_courant=None
+          # Mettre à 1 pour verifier les cycles entre objets
+          # pour les panneaux
+          withCyclops=0
+          if withCyclops:
+             from Misc import Cyclops
+             z = Cyclops.CycleFinder()
+             z.register(o)
+             del o
+             z.find_cycles()
+             z.show_stats()
+             z.show_cycles()
+
+
       if node.item.isactif():
           if hasattr(node.item,"panel"):
-              return node.item.panel(self,self.pane.pane('selected'),node)
+              self.panel_courant=node.item.panel(self,self.pane.pane('selected'),node)
           else:
               raise Exception("Le noeud sélectionné n'a pas de panel associé")
       else:
-          return panels.Panel_Inactif(self,self.pane.pane('selected'),node)
+          self.panel_courant = panels.Panel_Inactif(self,self.pane.pane('selected'),node)
+      return self.panel_courant
 
    def init_modif(self):
       """

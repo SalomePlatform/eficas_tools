@@ -29,6 +29,29 @@ class Panel(Frame) :
       self.creer_boutons()
       self.init()
 
+  def destroy(self):
+      Frame.destroy(self)
+      self.panneau=None
+      self.parent=None
+      self.node=None
+      # Because on herite de Frame
+      self.master=None
+      # On supprime explicitement les references aux objets Tk
+      self.nb=None
+      self.fr_but=None
+      self.bouton_cata=None
+      self.bouton_doc=None
+      self.bouton_com=None
+      self.bouton_sup=None
+      self.frame_eval=None
+      self.label=None
+      self.frame_boutons=None
+      self.frame_comment=None
+      self.frame_param=None
+      # On termine la suppression de facon brutale (objets Tk et non Tk)
+      for k in self.__dict__.keys():
+         setattr(self,k,None)
+
   def creer_boutons(self):
       """
       Méthode créant les boutons se trouvant dans la partie contextuelle d'EFICAS

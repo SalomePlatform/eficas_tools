@@ -12,10 +12,30 @@ sys.path[:0]=[prefs.INSTALLDIR]
 import Editeur
 from Editeur import eficas_go
 
-if len(sys.argv) > 1 :
-    # on veut ouvrir un fichier directement au lancement d'Eficas
-    eficas_go.lance_eficas(code='SATURNE',fichier = sys.argv[1])
+def main():
+   if len(sys.argv) > 1 :
+       # on veut ouvrir un fichier directement au lancement d'Eficas
+       eficas_go.lance_eficas(code='SATURNE',fichier = sys.argv[1])
+   else:
+       # on veut ouvrir Eficas 'vide'
+       eficas_go.lance_eficas(code='SATURNE')
+
+def hidez():
+   from Misc import Cyclops
+   z = Cyclops.CycleFinder()
+   z.run(main)
+   z.find_cycles()
+   z.show_stats()
+   z.show_cycles()
+   # z.show_cycleobjs()
+   # z.show_sccs()
+   z.show_arcs()
+
+withCyclops=0
+
+if withCyclops:
+   hidez()
 else:
-    # on veut ouvrir Eficas 'vide'
-    eficas_go.lance_eficas(code='SATURNE')
+   main()
+
 
