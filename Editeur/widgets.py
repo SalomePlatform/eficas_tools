@@ -420,7 +420,11 @@ class FenetreDeParametre(Fenetre) :
 
 	# définition des boutons
 	self.frame_boutons = Frame(self.fenetre)
-	self.frame_boutons.place(relheight=0.3,relx=0,rely=0.7,relwidth=1.)
+	self.frame_boutons.place(relheight=0.3,relx=0,rely=0.65,relwidth=1.)
+	self.label1 = Label(self.frame_boutons,text="surligner la")
+	self.label2 = Label(self.frame_boutons,text="ligne entière")
+	self.label1.place(relx=0.1,rely=0)
+	self.label2.place(relx=0.1,rely=0.5)
 	self.but_quit = Button(self.frame_boutons,text = "Fermer",command=self.quit)
 	self.but_save = Button(self.frame_boutons,text = "Choisir",command = self.Choisir)
 	self.but_save.place(relx=0.6,rely=0,relheight=1)
@@ -744,6 +748,20 @@ class ListeChoix :
         self.MCbox.config(state=DISABLED)
         self.selection = None
 
+    def clear_marque(self):
+        try:
+          self.dico_labels[self.arg_selected].configure(bg='gray95',fg='black')
+          self.arg_selected = ''
+	except :
+	  pass
+
+    def surligne(self,marque):
+        try :
+	   self.highlightitem(self.dico_labels[marque])
+           self.arg_selected = marque
+	except:
+	   pass
+
     def chooseitem(self,mot,label,commande):
         """ Active la méthode de choix passée en argument"""
         try:
@@ -755,6 +773,7 @@ class ListeChoix :
     def selectitem(self,mot,label,commande) :
         """ Met l'item sélectionné (représenté par son label) en surbrillance
             et lance la commande associée au double-clic"""
+	self.clear_marque()
         if self.selection != None :
             self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
         self.highlightitem(label)
@@ -821,7 +840,7 @@ class ListeChoix :
     def put_liste(self,liste):
         self.liste = liste
         self.affiche_liste()
-        
+
 class Affichage :
   """ Cette classe permet d'afficher au lancement d'EFICAS le message
       d'attente et la barre de progression"""
