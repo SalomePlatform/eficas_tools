@@ -39,7 +39,7 @@ import definition_cata
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cataediteur.py,v 1.1.1.1 2002/03/26 09:08:46 eficas Exp $"
+__Id__="$Id: cataediteur.py,v 1.2 2002/05/15 15:31:58 eficas Exp $"
 #
 
 Fonte_Niveau = fontes.canvas_gras_italique
@@ -146,7 +146,7 @@ class Panel(Frame) :
       texte_infos = ''
       for e in cmd.entites.keys() :
           if e == name :
-              texte_infos=cmd.entites[e].fr
+              texte_infos=getattr(cmd.entites[e],'fr')
               break
       if texte_infos == '' : texte_infos="Pas d'infos disponibles"
       self.parent.appli.affiche_infos(texte_infos)
@@ -665,7 +665,7 @@ class OPERItem(OBJECTItem):
     for k in l_cles_fils :
       typ = TYPE_COMPLET(dico_fils[k])
       if type(self.objet_cata_ordonne) == types.InstanceType :
-        objet_cata = self.objet_cata_ordonne.dico[k]
+        objet_cata = self.objet_cata_ordonne.entites[k]
       else :
         objet_cata = self.objet_cata_ordonne.get(k,None)
       item = make_objecttreeitem(self.appli,typ + " : ",dico_fils[k],objet_cata_ordonne = objet_cata)
@@ -677,7 +677,7 @@ class OPERItem(OBJECTItem):
     return self.object.get_valeur_attribut('nom')
 
   def get_liste_mc_ordonnee(self):
-    return self.objet_cata_ordonne.liste
+    return self.objet_cata_ordonne.ordre_mc
 
   def GetIconName(self):
     if self.object.isvalid():
@@ -766,7 +766,7 @@ class NIVEAUItem(OPERItem):
     for k in l_cles_fils :
       typ = TYPE_COMPLET(dico_fils[k])
       if type(self.objet_cata_ordonne) == types.InstanceType :
-        objet_cata = self.objet_cata_ordonne.dico[k]
+        objet_cata = self.objet_cata_ordonne.entites[k]
       else :
         objet_cata = self.objet_cata_ordonne.get(k,None)
       item = make_objecttreeitem(self.appli,typ + " : ",dico_fils[k],objet_cata_ordonne = objet_cata)

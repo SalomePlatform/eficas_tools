@@ -72,7 +72,7 @@ class JDCDISPLAY:
       self.modified='n'
 
       self.pane=Pmw.PanedWidget(self.parent,orient='horizontal')
-      self.pane.add('treebrowser',min=0.4)
+      self.pane.add('treebrowser',min=0.4,size=0.5)
       self.pane.add('selected',min=0.4)
       self.pane.pack(expand=1,fill='both')
       self.tree=TREEITEMINCANVAS(jdc,nom_jdc,self.pane.pane('treebrowser'),

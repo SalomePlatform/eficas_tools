@@ -36,7 +36,7 @@ from Accas import FACT,BLOC,SIMP
 
 #
 __version__="$Name:  $"
-__Id__="$Id: catabrowser.py,v 1.1.1.1 2002/03/26 09:08:46 eficas Exp $"
+__Id__="$Id: catabrowser.py,v 1.2 2002/05/15 15:31:58 eficas Exp $"
 #
 class Tableau:
   incr = 10
@@ -236,8 +236,8 @@ class CATAItem(TreeItem):
   def get_liste_mc_ordonnee(self):
     """ Retourne la liste ordonnée (suivant le catalogue) brute des fils
     de l'entite courante """
-    if hasattr(self.objet_cata_ordonne,'liste'):
-      return self.objet_cata_ordonne.liste
+    if hasattr(self.objet_cata_ordonne,'ordre_mc'):
+      return self.objet_cata_ordonne.ordre_mc
     else :
       l=self.objet_cata_ordonne.keys()
       l.sort()
@@ -260,7 +260,7 @@ class CATAItem(TreeItem):
     l_cles_fils = self.get_liste_mc_ordonnee()
     for k in l_cles_fils :
       if type(self.objet_cata_ordonne) == types.InstanceType :
-        objet_cata = self.objet_cata_ordonne.dico[k]
+        objet_cata = self.objet_cata_ordonne.entites[k]
       else :
         objet_cata = self.objet_cata_ordonne.get(k,None)
       item = make_objecttreeitem(self.appli,k + " : ",self.d_fils[k],

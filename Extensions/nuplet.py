@@ -25,9 +25,10 @@ import types
 
 # Modules Eficas
 from Noyau import N_ENTITE,N_MCLIST,N_CR
+from Ihm import I_ENTITE
 import mcnuplet
 
-class NUPL(N_ENTITE.ENTITE):
+class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
    """
    """
    class_instance = mcnuplet.MCNUPLET
@@ -38,6 +39,7 @@ class NUPL(N_ENTITE.ENTITE):
    def __init__(self,fr="",ang="",docu="",statut='f',defaut=None,min=0,max=1,
                     elements=None):
       N_ENTITE.ENTITE.__init__(self)
+      I_ENTITE.ENTITE.__init__(self)
       self.fr=fr
       self.ang=ang
       self.docu=docu

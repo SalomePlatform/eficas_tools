@@ -23,6 +23,7 @@ from Tkinter import *
 import Pmw
 
 from widgets import ListeChoix
+import prefs
 
 SEPARATEUR = '-'*30
 
@@ -201,10 +202,9 @@ class Panel(Frame) :
       texte_infos = ''
       for e in cmd.entites.keys() :
           if e == name :
-              texte_infos=cmd.entites[e].fr
+              texte_infos=getattr(cmd.entites[e],prefs.lang)
               break
       if texte_infos == '' : texte_infos="Pas d'infos disponibles"
-      #EFICAS.affiche_infos(texte_infos)
       self.parent.appli.affiche_infos(texte_infos)
 
   def defMC(self,name):
@@ -219,9 +219,8 @@ class Panel(Frame) :
   def selectCmd(self,name):
       """ On retrouve la commande sous le curseur pour affichage du fr """
       if name != 'COMMENTAIRE' and name != SEPARATEUR:
-          #EFICAS.affiche_infos(self.parent.appli.cataitem.d_fils[name].fr)
-          #self.parent.appli.affiche_infos(self.parent.appli.cataitem.d_fils[name].fr)
-          self.parent.appli.affiche_infos(self.parent.jdc.get_cmd(name).fr)
+          texte_infos=getattr(self.parent.jdc.get_cmd(name),prefs.lang)
+          self.parent.appli.affiche_infos(texte_infos)
           
   def defCmd(self,name):
       """

@@ -175,7 +175,7 @@ class COMMENTAIRE :
 
   def get_fr(self):
     """
-    Retourne le commentaire lui meme 
+    Retourne le commentaire lui meme tronque a la 1ere ligne
     """
-    return self.valeur
+    return self.valeur.split('\n',1)[0]
 

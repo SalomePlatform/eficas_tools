@@ -43,12 +43,12 @@ ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')
 lang='fr'
 
 labels= ('Fichier','Edition','Jeu de commandes',
-              # 'Catalogue','Browsers','Options'
+#               'Catalogue','Browsers','Options',
                 'Aide',
            )
 
 appli_composants=['readercata','bureau',
-                 # 'browser','options'
+#                  'browser','options'
            ]
 
 menu_defs={ 'bureau': [

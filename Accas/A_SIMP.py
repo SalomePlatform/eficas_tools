@@ -23,3 +23,7 @@ import A_MCSIMP
 
 class SIMP(N_SIMP.SIMP,I_ENTITE.ENTITE):
    class_instance=A_MCSIMP.MCSIMP
+   def __init__(self,*tup,**args):
+      I_ENTITE.ENTITE.__init__(self)
+      N_SIMP.SIMP.__init__(self,*tup,**args)
+

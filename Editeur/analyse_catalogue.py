@@ -23,7 +23,7 @@ import re,string,cPickle,os
 from Noyau.N_CR import CR
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.1.1.1 2002/03/26 09:08:45 eficas Exp $"
+__Id__="$Id: analyse_catalogue.py,v 1.2 2002/05/15 15:31:58 eficas Exp $"
 __version__="$Name:  $"
 #
 l_noms_commandes = ['OPER','PROC','MACRO','FORM']
@@ -104,15 +104,15 @@ class ENTITE :
 		l=[]
 		d={}
 		if len(self.children)==0:
-			self.liste = l
-			self.dico = d
+			self.ordre_mc = l
+			self.entites = d
 			return
 		try :
 			for child in self.children:
 				l.append(child.nom)
 				d[child.nom]=child
-			self.liste = l
-			self.dico = d
+			self.ordre_mc = l
+			self.entites = d
 		except:
 			print 'erreur :',self.nom,self.__class__
 		
@@ -266,8 +266,8 @@ class CATALOGUE_CATA:
 		for cmd in self.liste_commandes:
 			l.append(cmd.nom)
 			d[cmd.nom]=cmd
-		self.liste = l
-		self.dico = d
+		self.ordre_mc = l
+		self.entites = d
 
 	def report(self):
 		""" retourne l'objet rapport du catalogue de commande """
@@ -295,7 +295,7 @@ def make_cata_pickle(fic_cata):
   cata_ordonne = analyse_catalogue(None,fic_cata)
   f = open(fic_cata_p,'w+')
   p = cPickle.Pickler(f)
-  p.dump(cata_ordonne.dico)
+  p.dump(cata_ordonne.entites)
   f.close()
   
 if __name__ == "__main__" :

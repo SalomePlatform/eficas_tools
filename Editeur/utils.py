@@ -99,14 +99,16 @@ def stripPath(pathAndFile):
     return os.path.split(pathAndFile)[1]
 
 def init_rep_cata_dev(fic_cata,rep_goal):
-  """ initialise le répertoire des catalogues développeurs (chemin d'accès donné
-  dans le fichier eficas.ini cad :
+  """ 
+      Initialise le répertoire des catalogues développeurs (chemin d'accès donné
+      dans le fichier eficas.ini cad :
       - le crée s'il n'existe pas encore
       - copie dedans les 3 fichiers nécessaires :
           * __init__.py (pour que ce répertoire puisse être interprété comme un package)
           * entete.py (pour réaliser les import nécessaires à l'interprétation des catalogues)
           * declaration_concepts.py (idem)
-      - crée le fichier cata_developpeur.py qui sera par la suite importé"""
+      - crée le fichier cata_developpeur.py qui sera par la suite importé
+  """
   try :
     if not os.path.isdir(rep_goal) :
       os.mkdir(rep_goal)

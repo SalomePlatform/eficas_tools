@@ -40,6 +40,7 @@ from widgets import Fenetre
 from utils import init_rep_cata_dev
 
 #import catabrowser
+import autre_analyse_cata
 
 class READERCATA:
 
@@ -58,12 +59,7 @@ class READERCATA:
       self.code=self.appli.code
       self.appli.format_fichier.set('python')
       self.OpenCata()
-
       self.cataitem=None
-      #XXX CCAR : Pour le moment je ne construis pas le CATAItem
-      #self.cataitem = catabrowser.CATAItem(self,"Catalogue "+self.code,
-                                           #self.cata,
-                                           #objet_cata_ordonne = self.cata_ordonne_dico)
 
    def OpenCata(self):
       """ 
@@ -108,14 +104,19 @@ class READERCATA:
       self.cata = self.import_cata(self.fic_cata)
       print "Fin import_cata: ",time.clock()
       if not self.cata : showerror("Import du catalogue","Impossible d'importer le catalogue %s" %self.fic_cata)
+      #
       # analyse du catalogue (ordre des mots-clés)
-      #XXX A priori ceci fait double emploi. Il faut d'abord calculer l'ordre
-      # puis fabriquer le CATAItem
-      #CCAR :self.catalo = catabrowser.CATAItem(self,"Catalogue",self.cata)
+      #
       print "Debut Retrouve_Ordre: ",time.clock()
-      self.Retrouve_Ordre_Cata_Standard()
+      # Retrouve_Ordre_Cata_Standard fait une analyse textuelle du catalogue
+      # remplacé par Retrouve_Ordre_Cata_Standard_autre qui utilise une numerotation
+      # des mots clés à la création
+      #self.Retrouve_Ordre_Cata_Standard()
+      self.Retrouve_Ordre_Cata_Standard_autre()
       print "Fin Retrouve_Ordre: ",time.clock()
+      #
       # chargement et analyse des catalogues développeur (le cas échéant)
+      #
       if self.appli.CONFIGURATION.isdeveloppeur == 'OUI' :
           init_rep_cata_dev(self.fic_cata,self.appli.CONFIGURATION.path_cata_dev)
           fic_cata_dev = os.path.join(self.appli.CONFIGURATION.path_cata_dev,'cata_developpeur.py')
@@ -128,7 +129,8 @@ class READERCATA:
                   self.cata = (self.cata,)
               else:
                   self.cata_dev =self.import_cata(fic_cata_dev)
-                  self.Retrouve_Ordre_Cata_Developpeur()
+                  #self.Retrouve_Ordre_Cata_Developpeur()
+                  self.Retrouve_Ordre_Cata_Developpeur_autre()
                   self.cata = (self.cata,self.cata_dev)
           else:
               self.cata = (self.cata,)
@@ -152,6 +154,15 @@ class READERCATA:
           traceback.print_exc()
           return 0
 
+   def Retrouve_Ordre_Cata_Standard_autre(self):
+      """ 
+          Construit une structure de données dans le catalogue qui permet
+          à EFICAS de retrouver l'ordre des mots-clés dans le texte du catalogue.
+          Pour chaque entité du catlogue on crée une liste de nom ordre_mc qui
+          contient le nom des mots clés dans le bon ordre
+      """ 
+      self.cata_ordonne_dico=autre_analyse_cata.analyse_catalogue(self.cata)
+
    def Retrouve_Ordre_Cata_Standard(self):
       """ 
           Retrouve l'ordre des mots-clés dans le catalogue, cad :
@@ -172,6 +183,37 @@ class READERCATA:
           # il faut retrouver l'ordre du catalogue et refaire pickle
           self.Get_Ordre_Cata(mode='cata')
       self.appli.affiche_infos("Catalogue standard chargé")
+
+   def Retrouve_Ordre_Cata_Developpeur(self):
+      """ 
+          Retrouve l'ordre des mots-clés dans le catalogue, cad :
+          - si ce dernier a été modifié, relance l'analyse du catalogue pour déterminer
+            l'ordre des mots-clés dans le catalogue
+          - s'il n'a pas été modifié, relie le fichier pickle 
+      """
+      if self.code != 'ASTER' : return
+      fic_cata = os.path.join(self.appli.CONFIGURATION.path_cata_dev,'cata_developpeur.py')
+      message="Chargement catalogue développeur présent dans :\n %s..." % self.appli.CONFIGURATION.path_cata_dev
+      splash._splash.configure(text = message,barre='oui')
+      cata_dev_ordonne = analyse_cata.analyse_catalogue(self,self.fic_cata)
+      self.cata_dev_ordonne_cr = cata_dev_ordonne.cr
+      cata_dev_ordonne_dico = cata_dev_ordonne.entites
+      self.cata_ordonne_dico.update(cata_dev_ordonne_dico)
+      self.appli.affiche_infos(" catalogue(s) développeur(s) chargé(s)" )
+
+   def Retrouve_Ordre_Cata_Developpeur_autre(self):
+      """
+          Retrouve l'ordre des mots-clés dans le catalogue, cad :
+          - si ce dernier a été modifié, relance l'analyse du catalogue pour déterminer
+            l'ordre des mots-clés dans le catalogue
+          - s'il n'a pas été modifié, relie le fichier pickle
+      """
+      if self.code != 'ASTER' : return
+      message="Chargement catalogue développeur présent dans :\n %s..." % self.appli.CONFIGURATION.path_cata_dev
+      splash._splash.configure(text = message,barre='oui')
+      cata_dev_ordonne_dico = autre_analyse_cata.analyse_catalogue(self.cata_dev)
+      self.cata_ordonne_dico.update(cata_dev_ordonne_dico)
+      self.appli.affiche_infos(" catalogue(s) développeur(s) chargé(s)" )
 
    def Get_Ordre_Cata(self,mode='pickle'):
       """ 
@@ -194,7 +236,7 @@ class READERCATA:
           splash._splash.configure(text = "Analyse du catalogue",barre='oui')
           cata_ordonne = analyse_catalogue.analyse_catalogue(self,self.fic_cata)
           self.cata_ordonne_cr = cata_ordonne.cr
-          self.cata_ordonne_dico = cata_ordonne.dico
+          self.cata_ordonne_dico = cata_ordonne.entites
           splash._splash.configure(text = "Sauvegarde des informations sur le catalogue")
           f = open(self.fic_cata_p,'w+')
           p = cPickle.Pickler(f)

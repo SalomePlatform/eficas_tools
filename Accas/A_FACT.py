@@ -25,3 +25,7 @@ import A_MCLIST
 class FACT(N_FACT.FACT,I_ENTITE.ENTITE):
    class_instance=A_MCFACT.MCFACT
    list_instance=A_MCLIST.MCList
+   def __init__(self,*tup,**args):
+      I_ENTITE.ENTITE.__init__(self)
+      N_FACT.FACT.__init__(self,*tup,**args)
+

@@ -26,7 +26,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.5 2002/05/15 15:31:59 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.6 2002/09/09 10:39:06 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -342,8 +342,6 @@ class Node :
             self.dehighlight()
         self.text_id = self.canvas.create_window(textx, texty,anchor="w", window=self.text)
         self.id.append(self.text_id)
-        # Redefinit la region de scroll du canvas pour inclure tous les items créés
-        self.tree.scrolledcanvas.resizescrollregion()
         
     def highlight(self,event=None):
         """ Met en surbrillance self"""

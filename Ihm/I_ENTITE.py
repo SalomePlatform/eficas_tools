@@ -17,7 +17,21 @@
 #
 #
 # ======================================================================
+_no=0
+
+def number_entite(entite):
+   """
+      Fonction qui attribue un numero unique a tous les objets du catalogue
+      Ce numero permet de conserver l'ordre des objets
+   """
+   global _no
+   _no=_no+1
+   entite._no=_no
+
 class ENTITE:
+  def __init__(self):
+     number_entite(self)
+    
   def get_docu(self):
     if hasattr(self,'docu') :
       if self.docu != "" : return self.docu

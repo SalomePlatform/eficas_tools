@@ -23,3 +23,6 @@ import A_ETAPE
 
 class OPER(N_OPER.OPER,I_ENTITE.ENTITE):
    class_instance=A_ETAPE.ETAPE
+   def __init__(self,*tup,**args):
+      I_ENTITE.ENTITE.__init__(self)
+      N_OPER.OPER.__init__(self,*tup,**args)

@@ -62,8 +62,8 @@ class MCCOMPO(I_OBJECT.OBJECT):
     """
     for arg in liste:
         objet_cata = dico[arg]
-        dico=objet_cata.dico
-    return objet_cata.liste
+        dico=objet_cata.entites
+    return objet_cata.ordre_mc
 
   def filtre_liste_mc(self,liste_brute):
     """ 

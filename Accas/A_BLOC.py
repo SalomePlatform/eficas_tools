@@ -23,3 +23,7 @@ import A_MCBLOC
 
 class BLOC(N_BLOC.BLOC,I_ENTITE.ENTITE):
    class_instance=A_MCBLOC.MCBLOC
+   def __init__(self,*tup,**args):
+      I_ENTITE.ENTITE.__init__(self)
+      N_BLOC.BLOC.__init__(self,*tup,**args)
+
