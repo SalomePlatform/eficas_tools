@@ -8,19 +8,32 @@
 """
 import sys
 
-def begin_trace():
+# Variables globales
+def _filter(frame):
+  return 0
+filter=_filter
+
+_upcall=0
+_call=1
+_return=0
+_exception=1
+_line=0
+
+# Paramètres
+cara="+"
+ldec=1
+
+def begin_trace(filtre=None,upcall=0):
+     global _upcall,filter
+     if filtre: filter=filtre
+     _upcall=upcall
      sys.settrace(trace_dispatch)
 
 def end_trace():
+     global _upcall,filter
+     filter=_filter
+     _upcall=0
      sys.settrace(None)
-
-def filter(filename):
-  return (filename[-10:] == 'Tkinter.py') or (filename[:21] == '/home01/chris/pkg/Pmw')
-
-cara="+"
-ldec=2
-dec = cara*ldec
-curframe=None
 
 def compute_level(frame):
    """Calcule le niveau dans la pile d'execution"""
@@ -29,47 +42,53 @@ def compute_level(frame):
       frame=frame.f_back
       level=level+1
    return level-1
-  
 
+def upcall():
+    frame=sys._getframe(1)
+    level=compute_level(frame)
+    print level*cara,frame.f_code.co_name, " : ",frame.f_code.co_filename,frame.f_lineno
+    frame=frame.f_back
+    print level*' ',"-> appele par : ",frame.f_code.co_name,frame.f_code.co_filename,frame.f_lineno
+    
 def dispatch_call(frame, arg):
      """ Cette fonction est appelée par trace_dispatch
          pour tracer les appels à des fonctions ou méthodes
      """
-     global dec,curframe
      try:
-       dec = cara*ldec*compute_level(frame)
+       level = ldec*(compute_level(frame)-1)
        name = frame.f_code.co_name
        if not name: name = '???'
-       if not filter(frame.f_code.co_filename):
-           print dec +' call', name, frame.f_lineno,frame.f_code.co_filename
-       # La trace des appels suivants est decalee de +
-       dec=dec+cara*ldec
+       if not filter(frame):
+           print level*cara +' call', name, frame.f_code.co_filename,frame.f_lineno
+           if _upcall:
+              f_back=frame.f_back
+              print level*' ',"-> appele par : ",f_back.f_code.co_name,f_back.f_code.co_filename,f_back.f_lineno
      except:
-       print "Pb dans dispatch_call: ",frame,curframe
+       print "Pb dans dispatch_call: ",frame
      return trace_dispatch
 
 def dispatch_exception(frame, arg):
      """ Cette fonction est appelée par trace_dispatch
          pour tracer les exceptions
      """
-     global dec,curframe
      try:
-       dec = cara*ldec*(compute_level(frame)+1)
+       dec = cara*ldec*(compute_level(frame)+0)
        name = frame.f_code.co_name
        if not name: name = '???'
-       if not filter(frame.f_code.co_filename):
-          print dec+' exception', name, frame.f_lineno,frame.f_code.co_filename,arg[0],arg[1]
+       if not filter(frame):
+          print dec,name,'exception',frame.f_code.co_filename,frame.f_lineno,arg[0],arg[1]
      except:
-       print "Pb dans dispatch_exception: ",frame,curframe
+       print "Pb dans dispatch_exception: ",frame
      return trace_dispatch
 
 def dispatch_return(frame, arg):
      """ Cette fonction est appelée par trace_dispatch
          pour tracer les retours de fonction
      """
-     global dec,curframe
-#     print dec+' return', arg
      dec = cara*ldec*compute_level(frame)
+     name = frame.f_code.co_name
+     if not name: name = '???'
+     print dec,name,'return', arg
      return trace_dispatch
 
 def dispatch_line(frame, arg):
@@ -81,17 +100,18 @@ def dispatch_line(frame, arg):
      if not name: name = '???'
      fn=frame.f_code.co_filename
      line = linecache.getline(fn, frame.f_lineno)
-     print dec,name,frame.f_lineno,':',line.strip()
+     dec = cara*ldec*compute_level(frame)
+     print dec,name,':',line.strip(),frame.f_lineno
      return trace_dispatch
 
 def trace_dispatch(frame,event,arg):
      """ Cette fonction sert à tracer tous les appels
          à des fonctions ou à des méthodes.
      """
-     if event == 'call': return dispatch_call(frame, arg)
-     if event == 'return': return dispatch_return(frame, arg)
-#     if event == 'line': return dispatch_line(frame, arg)
-     if event == 'exception': return dispatch_exception(frame, arg)
+     if _call and event == 'call': return dispatch_call(frame, arg)
+     if _return and event == 'return': return dispatch_return(frame, arg)
+     if _line and event == 'line': return dispatch_line(frame, arg)
+     if _exception and event == 'exception': return dispatch_exception(frame, arg)
      return trace_dispatch
 
 def a(x):
@@ -123,7 +143,10 @@ def g():
       pass
 
 def _test():
-   begin_trace()
+   def filter(frame):
+       return not frame.f_code.co_name == 'a'
+
+   begin_trace(filtre=filter,upcall=1)
    a(5)
    try:
      d(0)
