@@ -1,8 +1,8 @@
-#@ MODIF stanley_ops Macro  DATE 30/11/2004   AUTEUR MCOURTOI M.COURTOIS 
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
+#@ MODIF pre_gmsh_ops Macro  DATE 11/06/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -18,49 +18,44 @@
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
 
-
-
-def stanley_ops(self,RESULTAT,MODELE,CHAM_MATER,CARA_ELEM,**args):
-
+def pre_gmsh_ops(self,UNITE_MAILLAGE,UNITE_GMSH,MODI_QUAD,**args):
   """
-     Importation et lancement de Stanley
+     Ecriture de la macro PRE_GMSH
   """
-
-  import os,string
-  import aster
-  from Accas import _F
-  from Noyau.N_utils import AsType
-  from Utilitai.Utmess import UTMESS
-
+  import os
+  from Macro.ajout_quad_gmsh import ajout_quad_gmsh
   ier=0
+
+  PRE_GMSH_LECT =self.get_cmd('PRE_GMSH_LECT')
 
   # La macro compte pour 1 dans la numerotation des commandes
   self.icmd=1
 
+  if MODI_QUAD=='OUI':
+     cur_dir=os.getcwd()
+     unit  = str(UNITE_GMSH)
+     nomFichierGmsh = cur_dir+'/fort.'+unit
+     nomFichierMail = cur_dir+'/sortie'
 
-  # On ne lance Stanley que si la variable DISPLAY est définie
-  if os.environ.has_key('DISPLAY'):
-  
-    import Stanley
-    from Stanley import stanley
-  
-    if (RESULTAT and MODELE and CHAM_MATER):
-      _MAIL = aster.getvectjev( string.ljust(MODELE.nom,8) + '.MODELE    .NOMA        ' )
-      _MAIL = string.strip(_MAIL[0])
-      MAILLAGE = self.jdc.g_context[_MAIL]
-      if CARA_ELEM:
-        stanley.STANLEY(RESULTAT,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM)
-      else:
-        stanley.STANLEY(RESULTAT,MAILLAGE,MODELE,CHAM_MATER,None)
-    else:
-      stanley.PRE_STANLEY()
+#    récupération du fichier .msh complet mis dans la string 'texte'
 
-  else:
-      UTMESS('A','STANLEY',
-            """Aucune variable d'environnement DISPLAY définie !
-               STANLEY ne pourra pas fonctionner. On l'ignore.
+     fproc=open(nomFichierGmsh,'r')
+     texte=fproc.read()
+     fproc.close()
 
-               Si vous etes en Interactif, cochez le bouton Suivi Interactif
-               dans ASTK.""")
+     resu=ajout_quad_gmsh(texte)
+     if not resu:
+        ier=ier+1
+        self.cr.fatal("Erreur dans la methode python de transformation mailles lineaires-quadratiques")
+        return ier
+
+     fsort=open(nomFichierMail,'w')
+     fsort.write(resu)
+     fsort.close()
+     os.system('cp '+nomFichierMail+' '+nomFichierGmsh)
+
+  PRE_GMSH_LECT(UNITE_MAILLAGE = UNITE_MAILLAGE,
+                UNITE_GMSH     = UNITE_GMSH     )
 
   return ier
+

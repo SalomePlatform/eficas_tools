@@ -1,4 +1,4 @@
-#@ MODIF stanley_ops Macro  DATE 30/11/2004   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF stanley_ops Macro  DATE 23/11/2004   AUTEUR ASSIRE A.ASSIRE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -56,11 +56,6 @@ def stanley_ops(self,RESULTAT,MODELE,CHAM_MATER,CARA_ELEM,**args):
       stanley.PRE_STANLEY()
 
   else:
-      UTMESS('A','STANLEY',
-            """Aucune variable d'environnement DISPLAY définie !
-               STANLEY ne pourra pas fonctionner. On l'ignore.
-
-               Si vous etes en Interactif, cochez le bouton Suivi Interactif
-               dans ASTK.""")
+      UTMESS('A','STANLEY',"Aucune variable d'environnement DISPLAY n'est définie!\n               STANLEY ne peut pas fonctionner. On l'ignore.\n\n               Si vous etes en Interactif, cochez le bouton Suivi Interactif\n               dans ASTK.")
 
   return ier

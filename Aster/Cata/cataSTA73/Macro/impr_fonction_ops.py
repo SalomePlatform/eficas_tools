@@ -1,4 +1,4 @@
-#@ MODIF impr_fonction_ops Macro  DATE 30/11/2004   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF impr_fonction_ops Macro  DATE 22/11/2004   AUTEUR MCOURTOI M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -32,8 +32,6 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
    macro='IMPR_FONCTION'
    import aster
    from Accas import _F
-   from Utilitai import Graph
-   from Utilitai.Utmess import UTMESS
    ier=0
    # La macro compte pour 1 dans la numerotation des commandes
    self.set_icmd(1)
@@ -61,8 +59,9 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
          niv='A'
       else:
          niv='I'
+      from Utilitai.Utmess import UTMESS
       UTMESS(niv,macro,'Le fichier '+nomfich+' existe déjà, on écrit ' \
-             'à la suite.')
+             'à la suite.',self)
 
    # 0.2. Récupération des valeurs sous COURBE
    unparmi=('FONCTION','LIST_RESU','FONC_X','ABSCISSE')
@@ -98,7 +97,8 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
                typ=obj.__class__.__name__
                break
          if obj==None:
-            UTMESS('S',macro,'incohérence entre le catalogue et la macro.')
+            from Utilitai.Utmess import UTMESS
+            UTMESS('S',macro,'incohérence entre le catalogue et la macro.', self)
          if typi=='FONCTION':
             if typ=='nappe_sdaster':
                lpar,lval=obj.Valeurs()
@@ -118,6 +118,7 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
    # 1. Récupération des valeurs des N courbes sous forme
    #    d'une liste de N listes
    #----------------------------------------------
+   from Utilitai import Graph
    graph=Graph.Graph()
    iocc=-1
    for dCi in Courbe:
@@ -130,10 +131,11 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
             obj=dCi[typi]
             typ=obj.__class__.__name__
             break
-      if not dCi.has_key('LEGENDE') and hasattr(obj,'get_name'):
-            dCi['LEGENDE']=obj.get_name()
+      if not dCi.has_key('LEGENDE'):
+         dCi['LEGENDE']=obj.get_name()
       if obj==None:
-         UTMESS('S',macro,'incohérence entre le catalogue et la macro.')
+         from Utilitai.Utmess import UTMESS
+         UTMESS('S',macro,'incohérence entre le catalogue et la macro.',self)
 
       # 1.2. Extraction des valeurs
 
@@ -173,7 +175,7 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
                   'Val' : [lx,ly],
                   'Lab' : [dic['NOM_PARA_FONC'],dic['NOM_RESU']]
                }
-               Graph.AjoutParaCourbe(dicC, args=dCi)
+               AjoutParaCourbe(dicC, args=dCi)
                graph.AjoutCourbe(**dicC)
          else:
             ftmp__=obj
@@ -206,25 +208,27 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
                   'Val' : [lx,lr],
                   'Lab' : [dpar['NOM_PARA'],dpar['NOM_RESU']]
                }
-            Graph.AjoutParaCourbe(dicC, args=dCi)
+            AjoutParaCourbe(dicC, args=dCi)
             graph.AjoutCourbe(**dicC)
 
       # 1.2.2. Mot-clé LIST_RESU
       elif typi=='LIST_RESU':
          if interp and iocc>0:
+            from Utilitai.Utmess import UTMESS
             UTMESS('S',macro,"""Il n'y a pas de règles d'interpolation pour LIST_PARA/LIST_RESU,
      LIST_PARA/LIST_RESU ne peut donc apparaitre qu'une seule fois
-     et à la première occurence de COURBE""")
+     et à la première occurence de COURBE""",self)
          lx=dCi['LIST_PARA'].Valeurs()
          lr=obj.Valeurs()
          if len(lx)<>len(lr):
-            UTMESS('S',macro,"LIST_PARA et LIST_RESU n'ont pas la meme taille")
+            from Utilitai.Utmess import UTMESS
+            UTMESS('S',macro,"LIST_PARA et LIST_RESU n'ont pas la meme taille",self)
          # on stocke les données dans le Graph
          dicC={
             'Val' : [lx,lr],
             'Lab' : [dCi['LIST_PARA'].get_name(),obj.get_name()]
          }
-         Graph.AjoutParaCourbe(dicC, args=dCi)
+         AjoutParaCourbe(dicC, args=dCi)
          graph.AjoutCourbe(**dicC)
 
       # 1.2.3. Mot-clé FONC_X
@@ -234,10 +238,12 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
          ob2=dCi['FONC_Y']
          # peut-on blinder au niveau du catalogue
          if typ=="nappe_sdaster" or ob2.__class__.__name__=="nappe_sdaster":
-            UTMESS('S',macro,"FONC_X/FONC_Y ne peuvent pas etre des nappes !")
+            from Utilitai.Utmess import UTMESS
+            UTMESS('S',macro,"FONC_X/FONC_Y ne peuvent pas etre des nappes !",self)
          if interp and iocc>0:
+            from Utilitai.Utmess import UTMESS
             UTMESS('S',macro,"""Au format 'TABLEAU' ,FONC_X/FONC_Y ne peut apparaitre qu'une seule fois
-     et à la première occurence de COURBE""")
+     et à la première occurence de COURBE""",self)
          ftmp__=obj
          dpar=ftmp__.Parametres()
          ftm2__=ob2
@@ -284,25 +290,27 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
                'Val' : [lx,ly],
                'Lab' : [dpar['NOM_RESU'],dpa2['NOM_RESU']]
             }
-         Graph.AjoutParaCourbe(dicC, args=dCi)
+         AjoutParaCourbe(dicC, args=dCi)
          graph.AjoutCourbe(**dicC)
 
       # 1.2.4. Mot-clé ABSCISSE / ORDONNEE
       elif typi=='ABSCISSE':
          if interp and iocc>0:
+            from Utilitai.Utmess import UTMESS
             UTMESS('S',macro,"""Il n'y a pas de règles d'interpolation pour ABSCISSE/ORDONNEE,
      ABSCISSE/ORDONNEE ne peut donc apparaitre qu'une seule fois
-     et à la première occurence de COURBE""")
+     et à la première occurence de COURBE""",self)
          lx=obj
          lr=dCi['ORDONNEE']
          if len(lx)<>len(lr):
-            UTMESS('S',macro,"ABSCISSE et ORDONNEE n'ont pas la meme taille")
+            from Utilitai.Utmess import UTMESS
+            UTMESS('S',macro,"ABSCISSE et ORDONNEE n'ont pas la meme taille",self)
          # on stocke les données dans le Graph
          dicC={
             'Val' : [lx,lr],
             'Lab' : ['Absc','Ordo']
          }
-         Graph.AjoutParaCourbe(dicC, args=dCi)
+         AjoutParaCourbe(dicC, args=dCi)
          graph.AjoutCourbe(**dicC)
 
       # 1.2.9. ménage
@@ -322,7 +330,6 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
    #----------------------------------------------
 
    # 2.0. Surcharge des propriétés du graphique et des axes
-   # (bloc quasiment identique dans Table)
    if args['TITRE']<>None:          graph.Titre=args['TITRE']
    if args['SOUS_TITRE']<>None:     graph.SousTitre=args['SOUS_TITRE']
    if FORMAT in ('XMGRACE','AGRAF'):
@@ -369,7 +376,8 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
 
    # 2.39. Format inconnu
    else:
-      UTMESS('S',macro,'Format inconnu : '+FORMAT)
+      from Utilitai.Utmess import UTMESS
+      UTMESS('S',macro,'Format inconnu : '+FORMAT,self)
 
    # Traiter le cas des UL réservées
    if args['UNITE'] and args['UNITE'] in ul_reserve:
@@ -391,3 +399,22 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
             TYPE='ASCII', ACCES='APPEND' )
 
    return ier
+
+# ------------------------------------------------------------------------------
+def AjoutParaCourbe(dCourbe, args):
+   """Ajoute les arguments fournis par l'utilisateur (args) dans le dictionnaire
+   décrivant la courbe (dCourbe).
+   """
+   # correspondance : mot-clé Aster / clé du dico de l'objet Graph
+   keys={
+      'LEGENDE'         : 'Leg',
+      'STYLE'           : 'Sty',
+      'COULEUR'         : 'Coul',
+      'MARQUEUR'        : 'Marq',
+      'FREQ_MARQUEUR'   : 'FreqM',
+      'TRI'             : 'Tri',
+   }
+   for mc, key in keys.items():
+      if args.has_key(mc):
+         dCourbe[key]=args[mc]
+
