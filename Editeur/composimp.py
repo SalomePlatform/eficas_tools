@@ -948,7 +948,6 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       anc_val = self.node.item.get_valeur()
       valeur,validite=self.node.item.eval_valeur_item(valeur)
       test = self.node.item.set_valeur(valeur)
-      print self.node.item.isvalid()
       if not test :
           mess = "impossible d'évaluer : %s " %`valeur`
           self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée :"+mess)
@@ -1364,6 +1363,21 @@ class UNIQUE_COMP_Panel(UNIQUE_Panel):
                         wraplength=int(self.frame_valeur.winfo_width()*0.8),
 			justify='center')
       self.aide.place(relx=0.5,rely=0.7,anchor='n')
+      # affichage de la valeur du MCS
+      self.display_valeur()
+
+  def display_valeur(self):
+      """
+      Affiche la valeur de l'objet pointé par self
+      """
+      valeur = self.node.item.get_valeur()
+      if valeur == None or valeur == '' : return # pas de valeur à afficher ...
+      typ_cplx,x1,x2=valeur
+      self.entry1.delete(0,END)
+      self.entry2.delete(0,END)
+      self.typ_cplx.set(typ_cplx)
+      self.entry1.setentry(x1)
+      self.entry2.setentry(x2)
 
   def get_bulle_aide(self):
       """
@@ -1450,7 +1464,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
                   else:
                       # on attend un entier, un réel ou une string
                       self.panel = UNIQUE_BASE_Panel
-      print "affect_panel : ",self.panel
+      #print "affect_panel : ",self.panel
 
   def is_list(self):
       """
@@ -1536,6 +1550,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
          validite=1
       elif self.definition.validators :
          validite=self.definition.validators.valide_liste_partielle(valeur)
+
       if validite==0:
          min,max=self.GetMinMax()
          if len(valeur) < min :
@@ -1755,10 +1770,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
       # on est dans le cas où on a évalué et où on n'aurait pas du
       if self.object.wait_TXM() :
-	  if type(valeurretour) != 'str':
-                if valeur[0]=="'" and valeur[-1]=="'" :
-		   valeurretour=str(valeur)
-		   validite=1
+	  if type(valeurretour) != types.StringType:
+             valeurretour=str(valeur)
+             validite=1
 
       return valeurretour,validite
       

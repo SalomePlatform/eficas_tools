@@ -21,6 +21,7 @@
 """
 # Modules Python
 import Tkinter
+import types
 
 class STATUSBAR:
    def __init__(self,parent):
@@ -36,6 +37,7 @@ class STATUSBAR:
       self.label.pack(side='left',expand=1,fill='both')
 
    def affiche_infos(self,texte):
+      assert type(texte) is types.StringType
       if len(texte)>150 :
           texte_infos=texte[0:150]
       else :
