@@ -7,7 +7,7 @@
    utilisée par héritage multiple pour composer les traitements.
 """
 # Modules Python
-import string,types
+import string,types,sys
 import traceback
 
 # Modules EFICAS
@@ -120,7 +120,11 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
           # Erreur pendant le calcul du type retourné
           if CONTEXT.debug:traceback.print_exc()
           self.sd=None
-          if cr == 'oui' : self.cr.fatal('Impossible d affecter un type au résultat')
+          if cr == 'oui' : 
+             l=traceback.format_exception(sys.exc_info()[0],
+                                          sys.exc_info()[1],
+                                          sys.exc_info()[2])
+             self.cr.fatal('Impossible d affecter un type au résultat\n'+string.join(l[2:]))
           return 0
       # on teste maintenant si la SD est r\351utilis\351e ou s'il faut la cr\351er
       if self.reuse:
