@@ -238,7 +238,17 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
         if "R" in self.object.definition.type:
            clef=self.object.GetNomConcept()
            if self.appli.dict_reels.has_key(clef):
-              valeurs=self.appli.dict_reels[clef]
+              if type(valeurs) == types.TupleType:
+                 valeurs_reelles=[]
+                 for val in valeurs :
+                    if self.appli.dict_reels[clef].has_key(val) : 
+                       valeurs_reelles.append(self.appli.dict_reels[clef][val])
+                    else :
+                       valeurs_reelles.append(val)
+              else :
+                 if self.appli.dict_reels[clef].has_key(valeurs):
+                    valeurs_reelles=self.appli.dict_reels[clef][valeurs]
+              valeurs=valeurs_reelles
       except :
         pass
       return valeurs
