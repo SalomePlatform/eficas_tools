@@ -21,5 +21,5 @@
 #     IDENTIFICATION DU GESTIONNAIRE DE COMMANDE ACCAS A PARTIR
 #     DE LA VERSION DU CODE_ASTER ASSOCIE
 #----------------------------------------------------------------------
-version = "7.1.0"
-date = "23/04/2003"
+version = "7.4.0"
+date = "22/11/2004"
