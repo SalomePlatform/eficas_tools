@@ -74,6 +74,7 @@ class PythonGenerator:
                          fin='fin CR format python pour python')
       # Le texte au format python est stocké dans l'attribut text
       self.text=''
+      self.appli=None
 
    def writefile(self,filename):
       fp=open(filename,'w')
@@ -88,6 +89,7 @@ class PythonGenerator:
           Si format vaut 'standard', retourne un texte obtenu par concaténation de la liste
           Si format vaut 'beautifie', retourne le meme texte beautifié
       """
+      self.appli=obj.appli
       liste= self.generator(obj)
       if format == 'brut':
          self.text=liste
@@ -491,7 +493,14 @@ class PythonGenerator:
                 s = self.generator(val)
          elif type(val) == types.FloatType :
             # Pour un flottant on utilise str 
-            s = str(val)
+            # ou la notation scientifique
+            try :
+              clefobj=obj.GetNomConcept()
+              if self.parent.appli.dict_reels.has_key(clefobj):
+                 if self.parent.appli.dict_reels[clefobj].has_key(val):
+                    s=self.parent.appli.dict_reels[clefobj][val]
+            except:
+               s = str(val)
          else :
             # Pour les autres types on utilise repr
             s = `val`
