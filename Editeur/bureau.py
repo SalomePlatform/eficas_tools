@@ -182,6 +182,8 @@ class BUREAU:
       """
       Ferme le JDC courant et détruit l'onglet associé dans le notebook self.nb
       """
+      if self.JDCDisplay_courant == None:
+         return
       if self.JDCDisplay_courant.modified == 'o' :
           message = "Voulez-vous sauvegarder le jeu de commandes "+self.JDC.nom+" courant ?"
           reponse = askyesno(title="Sauvegarde du jdc courant",
