@@ -64,34 +64,65 @@ class newSIMPPanel(panels.OngletPanel):
 #    au mot-clé courant
 # ----------------------------------------------------------------------------------------
 
-  def record_valeur(self,name=None,mess='Valeur du mot-clé enregistrée'):
+  def reset_old_valeur(self,name=None,mess='Valeur du mot-clé enregistrée'):
       """
           Enregistre  val comme valeur de self.node.item.object SANS 
-          faire de test de validité
+          faire de test de validité ni ré-évaluer l'ancienne valeur
+          permet de rester avec des valeurs non entrees et de ne pas 
+          ré-évaluer des entiers par exemple
+      """
+      if self.parent.modified == 'n' : self.parent.init_modif()
+      self.node.item.set_valeur(name)
+      self.parent.appli.affiche_infos(mess)
+      if self.node.item.get_position()=='global':
+           self.node.etape.verif_all()
+      elif self.node.item.get_position()=='global_jdc':
+           self.node.racine.verif_all()
+      else :
+           self.node.parent.verif()
+      self.node.update()
+
+  def record_valeur(self,name=None,mess='Valeur du mot-clé enregistrée'):
+      """
+          Enregistre  val comme valeur de self.node.item.object  
+	  en evaluant l item et en le validant 
       """
       if self.parent.modified == 'n' : self.parent.init_modif()
       if name != None:
-          valeur =name
+          valeur = name
+          validite = 1
       else :
-          #XXX Pourquoi proceder ainsi ? Il n'est pas possible de mettre
-          # None comme valeur du mot cle. 
-          # Probablement que ce debranchement permet de mettre record_valeur
-          # en call back, il faut donc aller chercher la valeur dans l'entry
-          valeur= self.entry.get()
+          valeurentree= self.entry.get()
           self.entry.delete(0,END)
-          #XXX Pour permettre la mise a None du mot cle, on remet None si valeur == ''
-          if valeur == '':valeur=None
-      self.node.item.set_valeur(valeur,evaluation='non')
-      self.parent.appli.affiche_infos(mess)
-      if self.node.item.get_position()=='global':
-          self.node.etape.verif_all()
-      elif self.node.item.get_position()=='global_jdc':
-          self.node.racine.verif_all()
+          if valeurentree == '': valeurentree=None
+          valeur,validite=self.node.item.eval_valeur(valeurentree)
+          if not validite :
+          	valeur= self.entry.get()
+                commentaire = "impossible d'évaluer : %s " %`valeurentree`
+          	self.parent.appli.affiche_infos(commentaire)
+		
+      if validite : 
+         if self.node.item.is_list() :
+            validite=self.node.item.valide_liste_complete(valeur)
+            commentaire=self.node.item.info_erreur_liste()
+         else :
+	    validite=self.node.item.valide_item(valeur)
+            commentaire=self.node.item.info_erreur_item()
+ 
+      if validite :
+          self.node.item.set_valeur(valeur)
+          self.parent.appli.affiche_infos(mess)
+          if self.node.item.get_position()=='global':
+              self.node.etape.verif_all()
+          elif self.node.item.get_position()=='global_jdc':
+              self.node.racine.verif_all()
+          else :
+              self.node.parent.verif()
+          self.node.update()
+          if self.node.item.isvalid():
+              self.node.parent.select()
       else :
-          self.node.parent.verif()
-      self.node.update()
-      if self.node.item.isvalid():
-          self.node.parent.select()
+          self.parent.appli.affiche_infos(commentaire)
 
 # ----------------------------------------------------------------------------------------
 #   Méthodes utilisées pour la manipulation des items dans les listes de choix
@@ -107,30 +138,35 @@ class newSIMPPanel(panels.OngletPanel):
       Supprime la valeur selectionnée de la liste des valeurs et la rajoute
       à la liste des choix possibles
       """
-      liste_valeurs = self.Liste_valeurs.get_liste()
-      liste_valeurs.remove(self.selected_valeur)
-      liste_choix = self.node.item.get_definition().into
-      liste_choix = substract_list(liste_choix,liste_valeurs)
-      self.Liste_valeurs.put_liste(liste_valeurs)
-      self.Liste_choix.put_liste(liste_choix)
-      self.selected_valeur = None
+      if hasattr(self,'selected_valeur') :
+         if ( self.selected_valeur != None and self.selected_valeur != ''):
+            liste_valeurs = self.Liste_valeurs.get_liste()
+            liste_valeurs.remove(self.selected_valeur)
+            self.Liste_valeurs.put_liste(liste_valeurs)
+            listeActuelle=self.Liste_valeurs.get_liste()
+            liste_choix=self.node.item.get_liste_possible(listeActuelle)
+            self.Liste_choix.put_liste(liste_choix)
+            self.selected_valeur = None
 
   def add_choix(self,name=None):
       """
       Ajoute le choix selectionné à la liste des valeurs et le retire
       de la liste des choix possibles
       """
-      min,max = self.node.item.GetMinMax()
-      liste_valeurs = self.Liste_valeurs.get_liste()
-      if len(liste_valeurs) >= max :
-          self.parent.appli.affiche_infos("La liste ne peut pas avoir plus de %d éléments" %max)
-          return
-      liste_valeurs.append(self.selected_choix)
-      liste_choix = self.Liste_choix.get_liste()
-      #  liste_choix.remove(self.selected_choix)
-      self.Liste_valeurs.put_liste(liste_valeurs)
-      self.Liste_choix.put_liste(liste_choix)
-      self.selected_choix = None
+      
+      if hasattr(self,'selected_choix') :
+         if (self.selected_choix != None and self.selected_choix != ''):
+            min,max = self.node.item.GetMinMax()
+            liste_valeurs = self.Liste_valeurs.get_liste()
+            if len(liste_valeurs) >= max :
+                self.parent.appli.affiche_infos("La liste ne peut pas avoir plus de %d éléments" %max)
+                return
+            liste_valeurs.append(self.selected_choix)
+            self.Liste_valeurs.put_liste(liste_valeurs)
+            listeActuelle=self.Liste_valeurs.get_liste()
+            liste_choix=self.node.item.get_liste_possible(listeActuelle)
+            self.Liste_choix.put_liste(liste_choix)
+            self.selected_choix = None
 
   def selectChoix(self,name):
       self.selected_choix = name
@@ -197,7 +233,7 @@ class SHELLPanel(newSIMPPanel):
           valeur = val
       else:
           valeur = self.node.item.get_valeur()
-      if valeur == None : return
+      if valeur == None  or valeur == '': return
       self.text.insert(END,valeur)
 
 class PLUSIEURS_Panel(newSIMPPanel):
@@ -211,17 +247,11 @@ class PLUSIEURS_Panel(newSIMPPanel):
       et l'affecte au mot-clé courant.
       """
       l1_valeurs = self.Liste_valeurs.get_liste()
-      # PN : remplacement des paramétres par leur nom (cf get_liste)
-      #      
       l_valeurs=[]
       for  val in l1_valeurs :
-           if val.__class__.__name__ in ('PARAMETRE','PARAMETRE_EVAL'):
-		v=val.nom
-           else:
-                v=val
-           l_valeurs.append(v)
+        if val != '' and val != None :
+           l_valeurs.append(val)
     
-      print "l_valeurs = ", l_valeurs
       longueur = len(l_valeurs)
       if longueur < min or longueur > max :
           self.parent.appli.affiche_infos("Valeur refusée : nombre d'éléments incorrect dans la liste")
@@ -232,11 +262,11 @@ class PLUSIEURS_Panel(newSIMPPanel):
          valeur = l_valeurs[0]
       else:
          valeur = None
+
       self.parent.appli.affiche_infos("Valeur acceptée")
-      print "valeur = " ,valeur
       self.record_valeur(valeur)
-      if self.node.item.isvalid():
-          self.node.parent.select()
+      #if self.node.item.isvalid():
+      #    self.node.parent.select()
       # fermeture de la fenêtre de sélection
       if self.ajout_valeurs:
           self.ajout_valeurs.quit()
@@ -250,63 +280,67 @@ class PLUSIEURS_Panel(newSIMPPanel):
       if self.ajout_valeurs:
           self.ajout_valeurs.quit()
           
-  def traite_reel(self,valeur):
-      """
-      Cette fonction a pour but de rajouter le '.' en fin de chaîne pour un réel
-      ou de détecter si on fait référence à un concept produit par DEFI_VALEUR
-      ou un EVAL ...
-      """
-      valeur = string.strip(valeur)
-      liste_reels = self.node.item.get_sd_avant_du_bon_type()
-      if valeur in liste_reels:
-          return valeur
-      if len(valeur) >= 3 :
-          if valeur[0:4] == 'EVAL' :
-              # on a trouvé un EVAL --> on retourne directement la valeur
-              return valeur
-      if string.find(valeur,'.') == -1 :
-          # aucun '.' n'a été trouvé dans valeur --> on en rajoute un à la fin
-          return valeur+'.'
-      else:
-          return valeur
-        
-  def add_valeur_sans_into(self,name=None):
+  def add_valeur_sans_into(self,name=None,encorevalide=1):
       """
       Lit ce que l'utilisateur a saisi dans self.entry et cherche à
       l'évaluer :
         - si la valeur est acceptable, elle est ajoutée dans la liste des valeurs
         - sinon elle est refusée
+      encorevalide vaut 1 si le validateur trouve l item et la liste correctes
+                        0 si le validateur trouve la valeur de l item incorrecte
+                       -1 si le validateur trouve la liste incorrecte
       """
-      min,max = self.node.item.GetMinMax()
+
+      commentaire="Valeur incorrecte : ajout à la liste refusé"
+      testvalide=1
+
+      # Lecture de la zone de saisie et evaluation si nécessaire
       if name != None :
-          valeur = name
+         valeur = name
       else:
-          valeur = self.get_valeur()
-      if self.node.item.wait_reel():
-          valeur = self.traite_reel(valeur)
-      if self.node.item.wait_geom():
-          val,test1 = valeur,1
-      else:
-          val,test1 = self.node.item.object.eval_valeur(valeur)
-      if test1 :
-          test2 = self.node.item.object.verif_type(val)
-          if test2 :
-              liste_valeurs = self.Liste_valeurs.get_liste()
-              if len(liste_valeurs) >= max :
-                  self.parent.appli.affiche_infos("La liste a déjà atteint le nombre maximum d'éléments, ajout refusé")
-                  self.erase_valeur()
-                  return
-              liste_valeurs.append(val)
-              self.Liste_valeurs.put_liste(liste_valeurs)
-              self.erase_valeur()
-              self.parent.appli.affiche_infos("Nouvelle valeur acceptée")
-          else:
-              self.parent.appli.affiche_infos("Valeur incorrecte : ajout à la liste refusé")
-      else:
-          print "impossible d'évaluer %s" %val
-          self.parent.appli.affiche_infos("Valeur incorrecte : ajout à la liste refusé")
-      #if self.node.item.isvalid():
-      #    self.node.parent.select()
+         valeurentree = self.get_valeur()
+         if valeurentree == '': valeur=None
+         valeurentree,testvalide=self.node.item.eval_valeur(valeur)
+         if (not testvalide) :
+            commentaire = "impossible d'évaluer : %s " %`valeurentree`
+
+      # Pas de traitement des valeurs nulles ( a priori clic involontaire
+      if (valeur == None or valeur =="") :
+          commentaire = "Pas de saisie des valeurs nulles"
+          encorevalide = -2 
+          testtype=0
+      else :
+          testtype = self.node.item.object.verif_type(valeur)
+          if not testtype :
+            commentaire ="Type de la valeur incorrecte"
+            encorevalide=-2
+		
+      if (encorevalide ==0) :
+         commentaire=self.node.item.info_erreur_item()
+      if (encorevalide == -1) :
+         commentaire=self.node.item.info_erreur_liste()
+	 # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
+         min,max = self.node.item.GetMinMax()
+         if len(self.Liste_valeurs.get_liste()) >= max : 
+            commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
+
+      if testvalide and (encorevalide == 1):
+         min,max = self.node.item.GetMinMax()
+
+         if testtype :
+            liste_valeurs = self.Liste_valeurs.get_liste()
+            if len(liste_valeurs) >= max :
+                commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
+            else :
+               liste_valeurs.append(valeur)
+               self.Liste_valeurs.put_liste(liste_valeurs)
+               self.erase_valeur()
+               commentaire="Nouvelle valeur acceptée"
+         else :
+            commentaire ="Type de la valeur incorrecte"
+
+      #self.erase_valeur()
+      self.parent.appli.affiche_infos(commentaire)
 
   def sup_valeur_sans_into(self,name=None):
       """
@@ -319,7 +353,6 @@ class PLUSIEURS_Panel(newSIMPPanel):
           # la valeur sélectionnée n'est pas dans la liste
           return
       self.Liste_valeurs.put_liste(liste_valeurs)
-      #self.display_valeur('')
       self.display_valeur(self.selected_valeur)
       self.selected_valeur = None      
 
@@ -355,9 +388,12 @@ class PLUSIEURS_INTO_Panel(PLUSIEURS_Panel):
       bulle_aide=self.get_bulle_aide()
       objet_mc = self.node.item.get_definition()
       min,max = self.node.item.GetMinMax()
-      l_choix=list(objet_mc.into)
-      l_choix.sort()
+      #l_choix=list(objet_mc.into)
       l_valeurs = self.node.item.GetListeValeurs()
+      l_choix= self.node.item.get_liste_possible(l_valeurs)
+      # reinitialisation de l_valeurs
+      l_valeurs = self.node.item.GetListeValeurs()
+
       # remplissage du panneau
       self.frame_valeurs = Frame(page)
       self.frame_valeurs.place(relx=0.05,rely=0.05,relwidth=0.35,relheight=0.7)
@@ -375,9 +411,11 @@ class PLUSIEURS_INTO_Panel(PLUSIEURS_Panel):
       liste_commandes_choix = (("<Button-1>",self.selectChoix),
                                ("<Button-3>",self.deselectChoix),
                                ("<Double-Button-1>",self.add_choix))
-      self.Liste_valeurs = ListeChoix(self,self.frame_valeurs,l_valeurs,liste_commandes = liste_commandes_valeurs,
+      self.Liste_valeurs = ListeChoix(self,self.frame_valeurs,
+                                      l_valeurs,liste_commandes = liste_commandes_valeurs,
                                       titre="Valeur(s) actuelle(s)")
-      self.Liste_choix = ListeChoix(self,self.frame_choix,l_choix,liste_commandes = liste_commandes_choix,
+      self.Liste_choix = ListeChoix(self,self.frame_choix,l_choix,
+                                    liste_commandes = liste_commandes_choix,
                                     titre= "Valeurs possibles")
       bouton_add = Button(self.frame_boutons_fleches,
                           #text="<--",
@@ -415,6 +453,7 @@ class PLUSIEURS_INTO_Panel(PLUSIEURS_Panel):
       Retourne la phrase d'aide indiquant de quel type de base doivent être les valeurs
       que saisit l'utilisateur
       """
+      commentaire=""
       mc = self.node.item.get_definition()
       d_aides = { 'TXM' : 'chaînes de caractères',
                   'R'   : 'réels',
@@ -427,10 +466,12 @@ class PLUSIEURS_INTO_Panel(PLUSIEURS_Panel):
          else :
 	    return "entrez entre "+str(mc.min)+" et "+str(mc.max)+" valeurs"
       if mc.min == mc.max:
-          return "Une liste de "+str(mc.min)+" "+d_aides[type]+" est attendue"
+	    commentaire="Une liste de "+str(mc.min)+" "+d_aides[type]+" est attendue"
       else :
-          return "Entre "+str(mc.min)+" et "+str(mc.max)+" valeurs de type  "+d_aides[type]+" sont attendues"
-      return "  "
+	    commentaire="Entre "+str(mc.min)+" et "+str(mc.max)+" valeurs de type  "+d_aides[type]+" sont attendues"
+      aideval=self.node.item.aide()
+      commentaire=commentaire + "\n" + aideval
+      return commentaire
 
   def get_bulle_aide(self):
       """
@@ -467,6 +508,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       aide = justify_text(texte=aide)
       min,max = self.node.item.GetMinMax()
       l_valeurs = self.node.item.GetListeValeurs()
+
       # création des frames globales
       self.frame1 = Frame(page,relief='groove',bd=2)
       self.frame2 = Frame(page)
@@ -474,6 +516,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       self.frame2.place(relx=0.,rely=0.85,relwidth=1,relheight=0.15)
       self.frame_right = Frame(self.frame1)
       self.frame_right.place(relx=0.35,rely=0.,relwidth=0.65,relheight=1.)
+
       # création des frames internes
       self.frame_valeurs = Frame(self.frame1)
       self.frame_valeurs.place(relx=0.02,rely=0.05,relwidth=0.35,relheight=0.95)
@@ -489,26 +532,31 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
                  self.frame_boutons_fleches,self.frame_choix,self.frame_aide,self.frame_boutons):
           fram.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
           fram.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
+
       # création des objets dans les frames
       liste_commandes_valeurs = (("<Button-1>",self.selectValeur),
                                  ("<Button-3>",self.deselectValeur),
                                  ("<Double-Button-1>",self.sup_valeur_sans_into))
       self.Liste_valeurs = ListeChoix(self,self.frame_valeurs,l_valeurs,liste_commandes = liste_commandes_valeurs,
                                       titre="Valeur(s) actuelle(s)")
+
       # Création de l'entry ou de la liste des SD
       self.label = Label(self.frame_choix,text="Valeur :")
-      self.make_entry(frame = self.frame_choix,command = self.add_valeur_sans_into)
+      # PN : pour ajouter les validators
+      self.make_entry(frame = self.frame_choix,command = self.add_valeur_plusieurs_base)
       self.label.place(relx=0.05,rely=0.5)
+
       # Création d'un bouton "Importer ..." sur le panel.
       bouton_valeurs_fichier = Button(self.frame_choix,
                                       text="Importer ...",
                                       command=self.select_in_file)
       bouton_valeurs_fichier.place(relx=0.28,rely=0.7,relwidth=0.6)
       self.ajout_valeurs = None
+
       # boutons Ajouter et Supprimer
       bouton_add = Button(self.frame_boutons_fleches,
                           image = images.get_image('arrow_left'),
-                          command = self.add_valeur_sans_into)
+                          command = self.add_valeur_plusieurs_base)
       bouton_sup = Button(self.frame_boutons_fleches,
                           image = images.get_image('arrow_right'),
                           command = self.sup_valeur_sans_into)
@@ -533,6 +581,25 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       for but in (bouton_accepter,bouton_annuler):
           but.pack(side='left',padx=5)
 
+  def add_valeur_plusieurs_base(self,name=None):
+      if name != None :
+         valeur = name
+      else:
+         valeurentree = self.get_valeur()
+         if valeurentree == '': valeur=None
+         valeur,validite=self.node.item.eval_valeur(valeurentree)
+         if not validite :
+            commentaire = "impossible d'évaluer : %s " %`valeurentree`
+            self.parent.appli.affiche_infos(commentaire)
+            return
+
+      encorevalide=self.node.item.valide_item(valeur)
+      if encorevalide :
+         listecourante=self.Liste_valeurs.get_liste()
+         encorevalide=self.node.item.valide_liste_partielle(valeur,listecourante)
+         if not encorevalide : encorevalide = -1
+      self.add_valeur_sans_into(valeur,encorevalide)
+    
   def select_in_file(self):
       """ Permet d'ouvrir un fichier choisi par l'utilisateur. """
       nom_fichier = askopenfilename(title="Choix fichier :")
@@ -572,6 +639,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       Retourne la phrase d'aide indiquant de quel type de base doivent être les valeurs
       que saisit l'utilisateur
       """
+      commentaire=""
       mc = self.node.item.get_definition()
       d_aides = { 'TXM' : 'chaînes de caractères',
                   'R'   : 'réels',
@@ -580,9 +648,12 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       type = mc.type[0]
       if not d_aides.has_key(type) : return 'Type de base inconnu'
       if mc.min == mc.max:
-          return "Une liste de "+d_aides[type]+" chaînes de caractères est attendue"
+          commentaire="Une liste de "+d_aides[type]+" chaînes de caractères est attendue"
       else :
-          return "Une liste de "+d_aides[type]+" est attendue (min="+`mc.min`+",max="+`mc.max`+')'
+          commentaire="Une liste de "+d_aides[type]+" est attendue (min="+`mc.min`+",max="+`mc.max`+')'
+      aideval=self.node.item.aide()
+      commentaire=commentaire +"\n"+aideval
+      return commentaire
 
   def make_entry(self,frame,command):
       """
@@ -657,7 +728,8 @@ class PLUSIEURS_ASSD_Panel(PLUSIEURS_Panel):
                                  ("<Double-Button-1>",self.sup_valeur_sans_into))
       liste_commandes_choix = (("<Button-1>",self.selectChoix),
                                ("<Button-3>",self.deselectChoix),
-                               ("<Double-Button-1>",self.add_valeur_sans_into))
+      #                         ("<Double-Button-1>",self.add_valeur_sans_into))
+                               ("<Double-Button-1>",self.add_eval_valeur_sans_into))
       self.Liste_valeurs = ListeChoix(self,self.frame_valeurs,l_valeurs,liste_commandes = liste_commandes_valeurs,
                                       titre="Valeur(s) actuelle(s)")
       self.Liste_choix = ListeChoix(self,self.frame_choix,l_choix,liste_commandes = liste_commandes_choix,
@@ -665,7 +737,8 @@ class PLUSIEURS_ASSD_Panel(PLUSIEURS_Panel):
       bouton_add = Button(self.frame_boutons_fleches,
                           #text="<--",
                           image = images.get_image('arrow_left'),
-                          command = self.add_valeur_sans_into)
+      #                    command = self.add_valeur_sans_into)
+                          command = self.add_eval_valeur_sans_into)
       bouton_sup = Button(self.frame_boutons_fleches,
                           #text="-->",
                           image = images.get_image('arrow_right'),
@@ -685,6 +758,14 @@ class PLUSIEURS_ASSD_Panel(PLUSIEURS_Panel):
       for fram in (self.frame_valeurs,self.frame_boutons_fleches,self.frame_choix,self.frame_boutons):
           fram.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
           fram.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
+  
+  def add_eval_valeur_sans_into(self,valeurentree=None):
+      valeur,validite=self.node.item.eval_valeur(valeurentree)
+      if not validite :
+             commentaire = "impossible d'évaluer : %s " %`valeurentree`
+             self.parent.appli.affiche_infos(commentaire)
+             return
+      self.add_valeur_sans_into(valeur)
 
   def get_bulle_aide(self):
       """
@@ -706,15 +787,20 @@ class PLUSIEURS_ASSD_Panel(PLUSIEURS_Panel):
       Retourne la phrase d'aide indiquant de quel type doivent être les
       valeurs que doit entrer l'utilisateur
       """
+      commentaire=""
       mc = self.node.item.get_definition()
       type = mc.type[0].__name__  
       if len(mc.type)>1 :
           for typ in mc.type[1:] :
               type = type + ' ou '+typ.__name__
       if mc.min == mc.max:
-        return "Une liste de "+`mc.min`+" objets de type "+type+" est attendue"
+        commentaire="Une liste de "+`mc.min`+" objets de type "+type+" est attendue"
       else :
-        return "Une liste d'objets de type "+type+" est attendue (min="+`mc.min`+",max="+`mc.max`+')'
+        commentaire="Une liste d'objets de type "+type+" est attendue (min="+`mc.min`+",max="+`mc.max`+')'
+      aideval=self.node.item.aide()
+      commentaire=commentaire +"\n"+ aideval
+      return commentaire
+
     
   def sup_valeur(self,name=None):
       """
@@ -772,13 +858,20 @@ class UNIQUE_Panel(newSIMPPanel):
       - si non, restaure l'ancienne valeur
       """
       if self.parent.modified == 'n' : self.parent.init_modif()
-      valeur = self.get_valeur()
-      self.erase_valeur()
       anc_val = self.node.item.get_valeur()
+      valeurentree = self.get_valeur()
+      self.erase_valeur()
+      valeur,validite=self.node.item.eval_valeur(valeurentree)
+      if not validite :
+             commentaire = "impossible d'évaluer : %s " %`valeurentree`
+             self.parent.appli.affiche_infos(commentaire)
+             return
+   
       test = self.node.item.set_valeur(valeur)
+       
       if not test :
           mess = "impossible d'évaluer : %s " %`valeur`
-          self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée :"+mess)
+          self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée : "+mess)
       elif self.node.item.isvalid() :
           self.parent.appli.affiche_infos('Valeur du mot-clé enregistrée')
 	  if self.node.item.get_position()=='global':
@@ -792,7 +885,7 @@ class UNIQUE_Panel(newSIMPPanel):
       else :
           cr = self.node.item.get_cr()
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
-          self.record_valeur(anc_val,mess=mess)
+          self.reset_old_valeur(anc_val,mess=mess)
 
 class UNIQUE_INTO_Panel(UNIQUE_Panel):
   """
@@ -811,10 +904,12 @@ class UNIQUE_INTO_Panel(UNIQUE_Panel):
       # remplissage du panel
       self.frame_valeur = Frame(page)
       self.frame_valeur.pack(fill='both',expand=1)
-      self.frame_valeur.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
+      self.frame_valeur.bind("<Button-3>",lambda e,s=self,a=bulle_aide : 
+                              s.parent.appli.affiche_aide(e,a))
       self.frame_valeur.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
-      l_choix=list(objet_mc.into)
-      l_choix.sort()
+      #l_choix=list(objet_mc.into)
+      #l_choix.sort()
+      l_choix=self.node.item.get_liste_possible([])
       self.label = Label(self.frame_valeur,text='Choisir une valeur :')
       self.label.pack(side='top')
       self.frame = Frame(page)
@@ -822,7 +917,8 @@ class UNIQUE_INTO_Panel(UNIQUE_Panel):
       liste_commandes = (("<Button-1>",self.selectChoix),
                          ("<Button-3>",self.deselectChoix),
                          ("<Double-Button-1>",self.record_valeur))
-      self.Liste_choix = ListeChoix(self,self.frame,l_choix,liste_commandes = liste_commandes,
+      self.Liste_choix = ListeChoix(self,self.frame,l_choix,
+                                    liste_commandes = liste_commandes,
                                     titre="Valeurs possibles")
       self.Liste_choix.affiche_liste()
 
@@ -867,7 +963,7 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       else :
           cr = self.node.item.get_cr()
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
-          self.record_valeur(anc_val,mess=mess)
+          self.reset_old_valeur(anc_val,mess=mess)
 
   def makeValeurPage(self,page):
       """
@@ -922,7 +1018,11 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       if len(mc.type)>1 :
           for typ in mc.type[1:] :
               type = type + ' ou '+typ.__name__
-      return  "Un objet de type "+type+" est attendu"
+      commentaire="Un objet de type "+type+" est attendu"
+      aideval=self.node.item.aide()
+      commentaire=commentaire +"\n"+ aideval
+      return commentaire
+
     
   def select_valeur_from_list(self):
       """
@@ -953,7 +1053,7 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       Affiche la valeur de l'objet pointé par self
       """
       valeur = self.node.item.get_valeur()
-      if valeur == None : return # pas de valeur à afficher ...
+      if valeur == None or valeur == '' : return # pas de valeur à afficher ...
       self.valeur_choisie.set(valeur.nom)
 
   def erase_valeur(self):
@@ -1048,7 +1148,7 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       else :
           cr = self.node.item.get_cr()
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
-          self.record_valeur(anc_val,mess=mess)
+          self.reset_old_valeur(anc_val,mess=mess)
           return
       if self.node.item.get_position()=='global':
           self.node.etape.verif_all()
@@ -1077,7 +1177,7 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       else :
           cr = self.node.item.get_cr()
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
-          self.record_valeur(anc_val,mess=mess)
+          self.reset_old_valeur(anc_val,mess=mess)
           return
       if self.node.item.get_position()=='global':
           self.node.etape.verif_all()
@@ -1201,7 +1301,10 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
                   'R'   : "Un réel est attendu",
                   'I'   : "Un entier est attendu"}
       type = mc.type[0]
-      return d_aides.get(type,"Type de base inconnu")
+      commentaire=d_aides.get(type,"Type de base inconnu")
+      aideval=self.node.item.aide()
+      commentaire=commentaire +"\n"+ aideval
+      return commentaire
 
   def get_bulle_aide(self):
       """
@@ -1215,7 +1318,7 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       Affiche la valeur de l'objet pointé par self
       """
       valeur = self.node.item.get_valeur()
-      if valeur == None : return # pas de valeur à afficher ...
+      if valeur == None or valeur == '' : return # pas de valeur à afficher ...
       self.entry.delete(0,END)
       self.entry.insert(0,valeur)
       self.entry.focus()
@@ -1275,7 +1378,10 @@ class UNIQUE_COMP_Panel(UNIQUE_Panel):
       Retourne la phrase d'aide décrivant le type de la valeur que peut prendre
       le mot-clé simple courant
       """
-      return 'Un complexe est attendu'
+      commentaire='Un complexe est attendu'
+      aideval=self.node.item.aide()
+      commentaire=commentaire +"\n"+ aideval
+      return commentaire
 
   def get_valeur(self):
       """
@@ -1311,23 +1417,15 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       if self.wait_shell():
           # l'objet attend un shell
           self.panel = SHELLPanel
-      elif self.wait_into():
+      elif self.has_into():
           # l'objet prend sa (ses) valeur(s) dans un ensemble discret de valeurs
-          min,max = self.GetMinMax()
-          # PN : 
-          # Remplacement du if ??
-          #if max != 1 and ((min != 0 and min != max) or (min == 0)):
-          assert (min <= max)
-          if max > 1 :
-             # l'objet attend une liste de valeurs
+          if self.is_list() :
              self.panel = PLUSIEURS_INTO_Panel
           else:
-             # l'objet n'attend qu'une seule valeur
              self.panel = UNIQUE_INTO_Panel
       else:
           # l'objet prend une ou des valeurs à priori quelconques
-          min,max = self.GetMinMax()
-          if max != 1 :
+          if self.is_list() :
               # on attend une liste de valeurs mais de quel type ?
               if self.wait_assd():
                   # on attend une liste de SD
@@ -1351,7 +1449,126 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
                   else:
                       # on attend un entier, un réel ou une string
                       self.panel = UNIQUE_BASE_Panel
+      print "affect_panel : ",self.panel
+
+  def is_list(self):
+      """
+          Cette méthode indique si le mot cle simple attend une liste (valeur de retour 1)
+          ou s'il n'en attend pas (valeur de retour 0)
+
+          Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
+          Dans le cas sans validateur, l'information est donnée par l'attribut max
+          de la definition du mot cle.
+          Dans le cas avec validateur, il faut combiner l'information précédente avec
+          celle issue de l'appel de la méthode is_list sur le validateur.On utilisera
+          l'operateur ET pour effectuer cette combinaison (AndVal).
+      """
+      is_a_list=0
+      min,max = self.GetMinMax()
+      assert (min <= max)
+      if max > 1 :
+		is_a_list=1
+      # Dans le cas avec validateurs, pour que le mot cle soit considéré
+      # comme acceptant une liste, il faut que max soit supérieur a 1
+      # ET que la méthode is_list du validateur retourne 1. Dans les autres cas
+      # on retournera 0 (n'attend pas de liste)
+      if self.definition.validators :
+         is_a_list= self.definition.validators.is_list() * is_a_list
+      return is_a_list 
+
+  def get_into(self,liste_courante=None):
+      """
+          Cette méthode retourne la liste de choix proposée par le mot cle. Si le mot cle ne propose
+          pas de liste de choix, la méthode retourne None.
+          L'argument d'entrée liste_courante, s'il est différent de None, donne la liste des choix déjà
+          effectués par l'utilisateur. Dans ce cas, la méthode get_into doit calculer la liste des choix
+          en en tenant compte.
+          Cette méthode part du principe que la relation entre into du mot clé et les validateurs est
+          une relation de type ET (AndVal).
+      """
+      if not self.object.definition.validators :
+         return self.object.definition.into
+      else:
+         return self.object.definition.validators.get_into(liste_courante,self.definition.into)
+
+  def has_into(self):
+      """
+          Cette méthode indique si le mot cle simple propose un choix (valeur de retour 1)
+          ou s'il n'en propose pas (valeur de retour 0)
+
+          Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
+          Dans le cas sans validateur, l'information est donnée par l'attribut into
+          de la definition du mot cle.
+	  Dans le cas avec validateurs, pour que le mot cle soit considéré
+          comme proposant un choix, il faut que into soit présent OU
+          que la méthode has_into du validateur retourne 1. Dans les autres cas
+          on retournera 0 (ne propose pas de choix)
+      """
+      has_an_into=0
+      if self.definition.into:
+      	 has_an_into=1
+      elif self.definition.validators :
+         has_an_into= self.definition.validators.has_into()
+      return has_an_into
+
+  def valide_item(self,item):
+      """
+	On fait un try except pour les erreurs de types (exple
+	on rentre 1 pour une chaine de caracteres
+      """
+      valide=1
+      if self.definition.validators :
+         try :
+            valide=self.definition.validators.verif_item(item)
+         except :
+	    valide = 0
+      return valide
+     
+  def valide_liste_partielle(self,item,listecourante):
+      valeuravant=self.object.valeur
+      valeur=listecourante
+      valeur.append(item)
+      valeur = tuple(valeur)
+      retour=self.object.set_valeur(valeur)
+      validite=0
+      if self.object.isvalid():
+         validite=1
+      elif self.definition.validators :
+         validite=self.definition.validators.valide_liste_partielle(valeur)
+      if validite==0:
+         min,max=self.GetMinMax()
+         if len(valeur) < min :
+	    validite=1
+      retour=self.object.set_valeur(valeuravant)
+      return validite 
+
+  def valide_liste_complete (self,valeur):
+      valeuravant=self.object.valeur
+      retour=self.object.set_valeur(valeur)
+      validite=0
+      if self.object.isvalid():
+         validite=1
+      retour=self.object.set_valeur(valeuravant)
+      return validite
+     
+  def info_erreur_item(self) :
+      commentaire=""
+      if self.definition.validators :
+         commentaire=self.definition.validators.info_erreur_item()
+      return commentaire
       
+  def aide(self) :
+      commentaire=""
+      if self.definition.validators :
+         commentaire=self.definition.validators.aide()
+      return commentaire
+
+  def info_erreur_liste(self) :
+      commentaire=""
+      if self.definition.validators :
+         commentaire=self.definition.validators.info_erreur_liste()
+      return commentaire
+
   def SetText(self, text):
     try:
       value = eval(text)
@@ -1375,79 +1592,6 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
     """
     text= self.object.GetText()
     return text
-
-  def has_into(self):
-      """
-          Cette méthode indique si le mot cle simple propose un choix (valeur de retour 1)
-          ou s'il n'en propose pas (valeur de retour 0)
-
-          Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
-          Dans le cas sans validateur, l'information est donnée par l'attribut into
-          de la definition du mot cle.
-          Dans le cas avec validateur, il faut combiner l'information précédente avec
-          celle issue de l'appel de la méthode has_into sur le validateur. On utilisera
-          l'operateur ET pour effectuer cette combinaison (AndVal).
-      """
-      if not self.object.definition.validators:
-           if self.definition.into:
-               return 1
-           else:
-               return 0
-      else:
-           # Dans le cas avec validateurs, pour que le mot cle soit considéré
-           # comme proposant un choix, il faut que into soit présent OU
-           # que la méthode has_into du validateur retourne 1. Dans les autres cas
-           # on retournera 0 (ne propose pas de choix)
-           if self.definition.into:
-                return 1
-           elif self.object.definition.validators.has_into():
-                return 1
-           else:
-                return 0
-
-  def get_into(self,liste_courante=None):
-      """
-          Cette méthode retourne la liste de choix proposée par le mot cle. Si le mot cle ne propose
-          pas de liste de choix, la méthode retourne None.
-          L'argument d'entrée liste_courante, s'il est différent de None, donne la liste des choix déjà
-          effectués par l'utilisateur. Dans ce cas, la méthode get_into doit calculer la liste des choix
-          en en tenant compte.
-          Cette méthode part du principe que la relation entre into du mot clé et les validateurs est
-          une relation de type ET (AndVal).
-      """
-      if not self.object.definition.validators :
-         return self.object.definition.into
-      else:
-         return self.object.definition.validators.get_into(liste_courante,self.definition.into)
-         
-  def is_list(self):
-      """
-          Cette méthode indique si le mot cle simple attend une liste (valeur de retour 1)
-          ou s'il n'en attend pas (valeur de retour 0)
-
-          Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
-          Dans le cas sans validateur, l'information est donnée par l'attribut max 
-          de la definition du mot cle.
-          Dans le cas avec validateur, il faut combiner l'information précédente avec
-          celle issue de l'appel de la méthode is_list sur le validateur.On utilisera
-          l'operateur ET pour effectuer cette combinaison (AndVal).
-      """
-      if not self.object.definition.validators:
-           if self.definition.max <= 1:
-               return 0
-           else: 
-               return 1
-      else:
-           # Dans le cas avec validateurs, pour que le mot cle soit considéré 
-           # comme acceptant une liste, il faut que max soit supérieur a 1
-           # ET que la méthode is_list du validateur retourne 1. Dans les autres cas
-           # on retournera 0 (n'attend pas de liste)
-           if self.definition.max <= 1:
-                return 0
-           elif not self.object.definition.validators.is_list():
-                return 0
-           else:
-                return 1
 
   def wait_co(self):
       """
@@ -1546,6 +1690,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       Retourne la liste des noms des SD présentes avant l'étape qui contient
       le MCS pointé par self et du type requis par ce MCS
       """
+      a=self.object.etape.parent.get_sd_avant_du_bon_type(self.object.etape,self.object.definition.type)
       return self.object.etape.parent.get_sd_avant_du_bon_type(self.object.etape,
                                                                self.object.definition.type)
     
@@ -1557,14 +1702,64 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       pass
 
   def isvalid(self):
+    valide=self.object.isvalid()
     return self.object.isvalid()
 
   def eval_valeur(self,valeur):
       """ Lance l'interprétation de 'valeur' (chaîne de caractères) comme valeur
       de l'objet pointé par self :
         - retourne l'objet associé si on a pu interpréter (entier, réel, ASSD,...)
-        - retourne 'valeur' (chaîne de caractères) sinon """
-      return self.object.eval_valeur(valeur)
+        - retourne 'valeur' (chaîne de caractères) sinon
+        - retourne None en cas d invalidite
+        - retourne invalide si 1 des objets du tuple l est
+      """
+      validite=1
+      if type(valeur) in (types.ListType,types.TupleType) :
+         valeurretour=[]
+         for item in valeur :
+             newvaleur,validiteitem=self.eval_valeur_item(item)
+             valeurretour.append(newvaleur)
+             if validiteitem == 0:
+		validite=0
+      else :
+         valeurretour,validite= self.eval_valeur_item(valeur)
+      if validite == 0 :
+	 valeurretour = None
+      return valeurretour,validite
+
+  def eval_valeur_item(self,valeur):
+      if valeur==None or valeur == "" :
+	 return None,0
+      validite=1
+      if self.wait_reel():
+             valeurinter = self.traite_reel(valeur)
+             valeurretour,validite= self.object.eval_valeur(valeurinter)
+      elif self.wait_geom():
+             valeurretour,validite = valeur,1
+      else :
+             valeurretour,validite= self.object.eval_valeur(valeur)
+      if validite == 0:
+	 if type(valeur) == types.StringType and self.object.wait_TXM():
+            essai_valeur="'" + valeur + "'"
+            valeurretour,validite= self.object.eval_valeur(essai_valeur)
+      if valeurretour.__class__.__name__ in ('PARAMETRE','PARAMETRE_EVAL'):
+            validite=1
+      if self.wait_co():
+         try:
+            valeurretour=Accas.CO(valeur)
+         except:
+            valeurretour=None
+            validite=0
+
+      # on est dans le cas où on a évalué et où on n'aurait pas du
+      if self.object.wait_TXM() :
+	  if type(valeurretour) != 'str':
+                if valeur[0]=="'" and valeur[-1]=="'" :
+		   valeurretour=str(valeur)
+		   validite=1
+
+      return valeurretour,validite
+      
 
   def is_CO(self,valeur=None):
       """
@@ -1593,6 +1788,51 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       # XXX faut il vraiment appeler del_sdprod ???
       #self.object.etape.parent.del_sdprod(valeur)
       self.object.etape.parent.delete_concept(valeur)
+
+  def get_liste_possible(self,listeActuelle=[]):
+      if hasattr(self.definition.validators,'into'):
+	 self.get_definition().into=self.definition.validators.into 
+      valeurspossibles = self.get_definition().into
+      listevalideitem=[]
+      for item in valeurspossibles:
+          encorevalide=self.valide_item(item)
+          if encorevalide :
+             listevalideitem.append(item)
+      # on ne verifie pas la liste des choix si max = 1 
+      # (sinon cela enleve tous les choix possibles)
+      min,max=self.GetMinMax()
+      if max != 1 : 
+         listevalideliste=[]
+         for item in listevalideitem:
+             listetravail=[]
+             for item2 in listeActuelle : listetravail.append(item2)
+             encorevalide=self.valide_liste_partielle(item,listetravail)
+             if encorevalide :
+                listevalideliste.append(item)
+      else :
+         listevalideliste=listevalideitem
+      return listevalideliste
+
+  def traite_reel(self,valeur):
+      """
+      Cette fonction a pour but de rajouter le '.' en fin de chaîne pour un réel
+      ou de détecter si on fait référence à un concept produit par DEFI_VALEUR
+      ou un EVAL ...
+      """
+      valeur = string.strip(valeur)
+      liste_reels = self.get_sd_avant_du_bon_type()
+      if valeur in liste_reels:
+          return valeur
+      if len(valeur) >= 3 :
+          if valeur[0:4] == 'EVAL' :
+              # on a trouvé un EVAL --> on retourne directement la valeur
+              return valeur
+      if string.find(valeur,'.') == -1 :
+          # aucun '.' n'a été trouvé dans valeur --> on en rajoute un à la fin
+          return valeur+'.'
+      else:
+          return valeur
+        
 
 import Accas
 treeitem = SIMPTreeItem

@@ -9,7 +9,7 @@ from Accas import EVAL,PARAMETRE,COMMENTAIRE,PARAMETRE_EVAL,COMMANDE_COMM
 from Accas import ASSD,CO,GEOM,fonction,geom,assd
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_saturne.py,v 1.10 2000/10/24 10:32:56 iliade Exp $"
+__Id__="$Id: cata_saturne2.py,v 1.1.1.1.6.1 2003/10/16 12:13:36 eficas Exp $"
 #
 
 import ops
@@ -53,6 +53,9 @@ INCLUDE=MACRO(nom="INCLUDE",op=-1,docu="U4.13.01-e",
 POURSUITE=MACRO(nom="POURSUITE",op=0,repetable='n',fr="Poursuite d une étude",
                 docu="U4.11.03-f1",sd_prod = ops.POURSUITE,
                 op_init = ops.POURSUITE_context,fichier_ini = 1,
+         HDF             =FACT(statut='f',min=1,max=1,
+           FICHIER         =SIMP(fr="nom du fichier hdf associe",statut='o',typ='TXM'),
+         ),
          PAR_LOT         =SIMP(fr="mode de traitement des commandes",statut='f',typ='TXM',
                            into=("OUI","NON"),defaut="OUI"),
          BASE            =FACT(fr="définition des parmètres associés aux bases JEVEUX",

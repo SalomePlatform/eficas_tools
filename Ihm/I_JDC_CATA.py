@@ -23,6 +23,7 @@ class JDC_CATA:
   def __init__(self):
     self.l_noms_entites=[]
 
+#ATTENTION SURCHARGE: cette methode doit etre synchronisée avec celle du Noyau
   def enregistre(self,commande):
     """ 
         Cette méthode surcharge la méthode de la classe du Noyau

@@ -1,4 +1,4 @@
-#@ MODIF N_JDC Noyau  DATE 23/10/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_JDC Noyau  DATE 26/09/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -237,17 +237,17 @@ NONE = None
 
    def create_sdprod(self,etape,nomsd):
       """ 
-                  Intention : Cette methode doit fabriquer le concept produit retourne
+          Intention : Cette methode doit fabriquer le concept produit retourne
                   par l'etape etape et le nommer.
                   Elle est appelée à l'initiative de l'etape
                   pendant le processus de construction de cette etape : 
-                    - methode __call__ de la classe CMD (OPER ou MACRO)
+                    methode __call__ de la classe CMD (OPER ou MACRO)
                   Ce travail est réalisé par le contexte supérieur 
                   (etape.parent) car dans certains cas, le concept ne doit 
                   pas etre fabriqué mais l'etape doit simplement utiliser 
                   un concept préexistant.
-                      1.  etape.reuse != None : le concept est réutilisé
-                      2.  l'étape appartient à une macro qui a déclaré un 
+                  Cas 1 : etape.reuse != None : le concept est réutilisé
+                  Cas 2 : l'étape appartient à une macro qui a déclaré un 
                           concept de sortie qui doit etre produit par cette 
                           etape.
                   Dans le cas du JDC, le deuxième cas ne peut pas se produire.

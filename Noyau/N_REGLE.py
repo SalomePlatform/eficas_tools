@@ -29,12 +29,12 @@
 
     A la creation de l'objet regle on lui passe la liste des noms de mots cles concernes
 
-    Exemple::
+    Exemple ::
 
-        # Création de l'objet règle UNPARMI
-        r=UNPARMI("INFO","AFFE")
-        # Vérification de la règle r sur le dictionnaire passé en argument
-        r.verif({"INFO":v1,"AFFE":v2)
+    # Création de l'objet règle UNPARMI
+    r=UNPARMI("INFO","AFFE")
+    # Vérification de la règle r sur le dictionnaire passé en argument
+    r.verif({"INFO":v1,"AFFE":v2)
 """
 
 import types
@@ -54,7 +54,7 @@ class REGLE:
          et le deuxième un entier.
  
          L'entier peut valoir 0 ou 1. -- s'il vaut 1, la règle est vérifiée
-         s'il vaut 0, la règle n'est pas vérifiée et le texte joint contient
+          s'il vaut 0, la règle n'est pas vérifiée et le texte joint contient
          un commentaire de la non validité.
       """
       raise "NotImplemented : class REGLE should be derived"

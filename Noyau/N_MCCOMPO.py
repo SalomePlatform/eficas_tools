@@ -125,14 +125,15 @@ class MCCOMPO(N_OBJECT.OBJECT):
         Cette méthode réalise les opérations suivantes en plus de transformer 
         la liste en dictionnaire :
 
-           - ajouter tous les mots-clés non présents avec la valeur None
-           - ajouter tous les mots-clés globaux (attribut position = 'global' 
-             et 'global_jdc')
+        - ajouter tous les mots-clés non présents avec la valeur None
 
-        ATTENTION : on ne remonte pas (semble en contradiction avec la 
-        programmation de la méthode get_valeur du bloc) les 
-        mots-clé fils d'un bloc au niveau du
-        contexte car celà peut générer des erreurs.
+        - ajouter tous les mots-clés globaux (attribut position = 'global' 
+          et 'global_jdc')
+
+        ATTENTION : -- on ne remonte pas (semble en contradiction avec la 
+                      programmation de la méthode get_valeur du bloc) les 
+                      mots-clé fils d'un bloc au niveau du
+                      contexte car celà peut générer des erreurs.
 
         L'argument liste est, en général, une mc_liste en cours de 
         construction, contenant les mots-clés locaux et les blocs déjà créés.
@@ -285,7 +286,8 @@ class MCCOMPO(N_OBJECT.OBJECT):
           Retourne le fils de self de nom name ou None s'il n'existe pas
           Si restreint vaut oui : ne regarde que dans la mc_liste
           Si restreint vaut non : regarde aussi dans les entites possibles 
-          avec defaut. (Ce dernier cas n'est utilisé que dans le catalogue)
+          avec defaut    
+           (Ce dernier cas n'est utilisé que dans le catalogue)
       """
       for v in self.mc_liste:
         if v.nom == name : return v

@@ -65,7 +65,27 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
       for child in self.mc_liste :
         child.replace_concept(old_sd,sd)
 
+#ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
    def Build_sd(self):
+      """
+           Methode de Noyau surchargee pour poursuivre malgre tout
+           si une erreur se produit pendant la creation du concept produit
+      """
+      try:
+         sd=Noyau.N_PROC_ETAPE.PROC_ETAPE.Build_sd(self)
+      except AsException,e:
+         # Une erreur s'est produite lors de la construction du concept
+         # Comme on est dans EFICAS, on essaie de poursuivre quand meme
+         # Si on poursuit, on a le choix entre deux possibilités :
+         # 1. on annule la sd associée à self
+         # 2. on la conserve mais il faut la retourner
+         # En plus il faut rendre coherents sdnom et sd.nom
+         self.sd=None
+         self.sdnom=None
+         self.state="unchanged"
+         self.valid=0
+
+   def Build_sd_old(self):
       """
           Cette methode applique la fonction op_init au contexte du parent
           et lance l'exécution en cas de traitement commande par commande

@@ -1,4 +1,4 @@
-#@ MODIF V_MCBLOC Validation  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF V_MCBLOC Validation  DATE 26/09/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -35,7 +35,8 @@ import V_MCCOMPO
 class MCBLOC(V_MCCOMPO.MCCOMPO):
    """
       Cette classe a un attribut de classe :
-          - txt_nat qui sert pour les comptes-rendus liés à cette classe
+
+      - txt_nat qui sert pour les comptes-rendus liés à cette classe
    """
 
    txt_nat="Bloc :"

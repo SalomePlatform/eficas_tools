@@ -696,10 +696,10 @@ class ListeChoix :
     def get_liste(self):
         l=[]
         for val in self.liste:
-            try:
-                v = eval(val)
-		l.append(v)
-            except:
+#            try:
+#                v = eval(val)
+#    		l.append(v)
+#            except:
                 l.append(val)
         return l
     

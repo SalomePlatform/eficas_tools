@@ -1,4 +1,4 @@
-#@ MODIF macr_adap_mail_ops Macro  DATE 01/07/2003   AUTEUR GNICOLAS G.NICOLAS 
+#@ MODIF macr_adap_mail_ops Macro  DATE 13/10/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -45,10 +45,12 @@ def macr_adap_mail_ops ( self,
 #     est conservé dans la liste Liste_Passages. Cette liste est nécessairement globale pour pouvoir
 #     la retrouver à chaque nouveau passage.
 #     Description du dictionnaire de passages :
-#        dico['Maillage_0']          = o ; string ; nom du concept du maillage initial de la série d'adaptation
-#        dico['Maillage_NP1']        = o ; string ; nom du concept du dernier maillage adapté
-#        dico['Rep_Calc_HOMARD'] = o ; string ; Nom du répertoire de calcul pour HOMARD
-#        dico['niter']               = o ; entier ; numéro d'itération
+#        dico['Maillage_0']             = o ; string ; nom du concept du maillage initial de la série d'adaptation
+#        dico['Maillage_NP1']           = o ; string ; nom du concept du dernier maillage adapté
+#        dico['Rep_Calc_HOMARD_global'] = o ; string ; Nom global du répertoire de calcul pour HOMARD
+#        dico['Rep_Calc_HOMARD_local']  = o ; string ; Nom local du répertoire de calcul pour HOMARD
+#                                                      depuis le répertoire de calcul pour ASTER
+#        dico['niter']                  = o ; entier ; numéro d'itération
 #
 #  3. Les caractéristiques d'un maillage sont conservées dans un dictionnaire. Il y a autant de
 #     dictionnaires que de maillages manipulés. L'ensemble de ces dictionnaires est conservé
@@ -242,8 +244,10 @@ def macr_adap_mail_ops ( self,
 #
   niter = 0
   Nom_Rep_local = Nom_Concept_Maillage_N + "_" + modhom + "_" + str(Numero_Passage_Fonction)
-  Rep_Calc_HOMARD = os.path.join(Rep_Calc_ASTER,Nom_Rep_local)
-###  print "Rep_Calc_HOMARD = ", Rep_Calc_HOMARD
+  Rep_Calc_HOMARD_local = os.path.join('.',Nom_Rep_local)
+  Rep_Calc_HOMARD_global = os.path.join(Rep_Calc_ASTER,Nom_Rep_local)
+###  print "Rep_Calc_HOMARD_local  = ", Rep_Calc_HOMARD_local
+###  print "Rep_Calc_HOMARD_global = ", Rep_Calc_HOMARD_global
 #
 # 3.2.2. ==> En adaptation :
 #
@@ -258,7 +262,8 @@ def macr_adap_mail_ops ( self,
     for dico in Liste_Passages :
       if ( dico['Maillage_NP1'] == Nom_Concept_Maillage_N ) :
         niter   = dico['niter'] + 1
-        Rep_Calc_HOMARD = dico['Rep_Calc_HOMARD']
+        Rep_Calc_HOMARD_local  = dico['Rep_Calc_HOMARD_local']
+        Rep_Calc_HOMARD_global = dico['Rep_Calc_HOMARD_global']
 #
 # 3.2.2.2. ==> Memorisation de ce passage
 #
@@ -268,7 +273,8 @@ def macr_adap_mail_ops ( self,
       dico = {}
       dico['Maillage_0']   = Nom_Concept_Maillage_N
       dico['Maillage_NP1'] = Nom_Concept_Maillage_NP1
-      dico['Rep_Calc_HOMARD']      = Rep_Calc_HOMARD
+      dico['Rep_Calc_HOMARD_local']  = Rep_Calc_HOMARD_local
+      dico['Rep_Calc_HOMARD_global'] = Rep_Calc_HOMARD_global
       dico['niter']        = niter
       Liste_Passages.append(dico)
 #
@@ -283,7 +289,7 @@ def macr_adap_mail_ops ( self,
         L.append(dico)
       Liste_Passages = L
 #
-###  print "niter = ", niter, ", Rep_Calc_HOMARD = ", Rep_Calc_HOMARD
+###  print "niter = ", niter, ", Rep_Calc_HOMARD_global = ", Rep_Calc_HOMARD_global
 #
 #--------------------------------------------------------------------
 # 4. Ecriture des commandes
@@ -296,10 +302,10 @@ def macr_adap_mail_ops ( self,
   if ( niter == 0 ) :
 #
     try :
-      os.mkdir(Rep_Calc_HOMARD)
+      os.mkdir(Rep_Calc_HOMARD_global)
     except os.error,codret_partiel :
       self.cr.warn("Code d'erreur de mkdir : " + str(codret_partiel[0]) + " : " + codret_partiel[1])
-      self.cr.fatal("Impossible de créer le répertoire de travail pour HOMARD : "+Rep_Calc_HOMARD)
+      self.cr.fatal("Impossible de créer le répertoire de travail pour HOMARD : "+Rep_Calc_HOMARD_global)
       codret = codret + 1
 #
 # 4.2. ==> Ecriture des commandes de creation des donnees MED
@@ -326,7 +332,7 @@ def macr_adap_mail_ops ( self,
   Unite_Fichier_ASTER_vers_HOMARD = 1787 + 2*Numero_Passage_Fonction
   Fichier_ASTER_vers_HOMARD = os.path.join(Rep_Calc_ASTER,"fort." + str(Unite_Fichier_ASTER_vers_HOMARD))
   Nom_Symbolique_Fichier_ASTER_vers_HOMARD = "ASTER_to_HOMARD"
-  Fichier_HOMARD_Entree = os.path.join(Rep_Calc_HOMARD,"MAILL."+str(niter)+".MED")
+  Fichier_HOMARD_Entree = os.path.join(Rep_Calc_HOMARD_global,"MAILL."+str(niter)+".MED")
 ###  print "Fichier_ASTER_vers_HOMARD = ",Fichier_ASTER_vers_HOMARD
 ###  print "Fichier_HOMARD_Entree = ",Fichier_HOMARD_Entree
   try :
@@ -341,7 +347,7 @@ def macr_adap_mail_ops ( self,
   if ( modhom == "ADAP" ) :
     Unite_Fichier_HOMARD_vers_ASTER = Unite_Fichier_ASTER_vers_HOMARD + 1
     Fichier_HOMARD_vers_ASTER = os.path.join(Rep_Calc_ASTER,"fort." + str(Unite_Fichier_HOMARD_vers_ASTER))
-    Fichier_HOMARD_Sortie = os.path.join(Rep_Calc_HOMARD,"MAILL."+str(niter+1)+".MED")
+    Fichier_HOMARD_Sortie = os.path.join(Rep_Calc_HOMARD_global,"MAILL."+str(niter+1)+".MED")
 ###    print "Fichier_HOMARD_vers_ASTER = ",Fichier_HOMARD_vers_ASTER
 ###    print "Fichier_HOMARD_Sortie = ",Fichier_HOMARD_Sortie
     try :
@@ -502,15 +508,17 @@ def macr_adap_mail_ops ( self,
 #
   dico = {}
 #
-  Fichier_Configuration = os.path.join(Rep_Calc_HOMARD,'HOMARD.Configuration')
+  Nom_Fichier_Configuration = 'HOMARD.Configuration'
+  Fichier_Configuration = os.path.join(Rep_Calc_HOMARD_local,'HOMARD.Configuration')
 #                                 1234567890123456
   dico[Fichier_Configuration] = ('HOMARD_CONFIG','FICHIER_CONF',unite)
 #
   if ( modhom != "ADAP" ) :
     unite = unite + 1
-    Fichier_Donnees = os.path.join(Rep_Calc_HOMARD,'HOMARD.Donnees')
+    Nom_Fichier_Donnees = 'HOMARD.Donnees'
+    Fichier_Donnees = os.path.join(Rep_Calc_HOMARD_local,Nom_Fichier_Donnees)
 #                             1234567890123456
-    dico[Fichier_Donnees] = ('HOMARD_DONNEES','FICHIER_DONN',unite)
+    dico[Fichier_Donnees] = ('HOMARD_DONN','FICHIER_DONN',unite)
 #
 # 4.3.3.2. ==> L'ouverture de ces fichiers
 #
@@ -537,7 +545,7 @@ def macr_adap_mail_ops ( self,
 #              Remarque : aujourd'hui on est obligé de passer par le numéro d'unité logique
 #
   for fic in dico.keys() :
-    DEFI_FICHIER ( ACTION= "LIBERER", NOM_SYSTEME = fic, UNITE = dico[fic][2], INFO = INFO )
+    DEFI_FICHIER ( ACTION= "LIBERER", UNITE = dico[fic][2], INFO = INFO )
 #
 # 4.4. ==> Ecriture de la commande d'exécution de homard
 #    Remarque : dans la donnée de la version de HOMARD, il faut remplacer
@@ -556,12 +564,12 @@ def macr_adap_mail_ops ( self,
     VERSION_HOMARD=VERSION_HOMARD[:-6]
 #
   if ( modhom == "ADAP" ) :
-    Fichier_Donnees = '0'
+    Nom_Fichier_Donnees = '0'
 #
-  EXEC_LOGICIEL ( ARGUMENT = (_F(NOM_PARA=Rep_Calc_HOMARD), # nom du repertoire
+  EXEC_LOGICIEL ( ARGUMENT = (_F(NOM_PARA=Rep_Calc_HOMARD_global), # nom du repertoire
                               _F(NOM_PARA=VERSION_HOMARD),  # version de homard
                               _F(NOM_PARA=str(INFO)),       # niveau d information
-                              _F(NOM_PARA=Fichier_Donnees), # fichier de données HOMARD
+                              _F(NOM_PARA=Nom_Fichier_Donnees), # fichier de données HOMARD
                              ),
                   LOGICIEL = homard
                 )
@@ -610,7 +618,7 @@ def macr_adap_mail_ops ( self,
 # 5. Menage des fichiers MED et HOMARD devenus inutiles
 #--------------------------------------------------------------------
 #
-  fic = os.path.join(Rep_Calc_HOMARD,"MAILL."+str(niter)+".HOM")
+  fic = os.path.join(Rep_Calc_HOMARD_global,"MAILL."+str(niter)+".HOM")
   Liste_aux = [ Fichier_ASTER_vers_HOMARD, Fichier_HOMARD_Entree, fic ]
   if ( modhom == "ADAP" ) :
     Liste_aux.append(Fichier_HOMARD_vers_ASTER)
@@ -633,7 +641,7 @@ def macr_adap_mail_ops ( self,
         self.cr.warn("Impossible de détruire le fichier : "+fic)
         codret = codret + 1
 ###  print os.listdir(Rep_Calc_ASTER)
-###  print os.listdir(Rep_Calc_HOMARD)
+###  print os.listdir(Rep_Calc_HOMARD_global)
 #
 #--------------------------------------------------------------------
 # 6. C'est fini !

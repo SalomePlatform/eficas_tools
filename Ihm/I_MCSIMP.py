@@ -66,6 +66,10 @@ class MCSIMP(I_OBJECT.OBJECT):
            txt=txt + i*',' + str(val)
         elif type(val) == types.InstanceType and isinstance(val,ASSD): 
            txt = txt + i*',' + val.get_name()
+    #PN
+    # ajout du elif
+        elif val.__class__.__name__ in  ('PARAMETRE','PARAMETRE_EVAL'):
+      	     txt = txt + i*','+ str(val) 
         else: 
            txt = txt + i*','+ myrepr.repr(val)
         i=1
@@ -182,57 +186,52 @@ class MCSIMP(I_OBJECT.OBJECT):
   def isoblig(self):
     return self.definition.statut=='o'
 
-  def set_valeur(self,new_valeur,evaluation='oui'):
-    """
-        Remplace la valeur de self(si elle existe) par new_valeur
-            - si evaluation = 'oui' : 
-                        essaie d'évaluer new_valeur dans le contexte
-            - si evaluation = 'non' : 
-                        n'essaie pas d'évaluer (on stocke une string ou 
-                        une valeur de la liste into )
-    """
-    if evaluation == 'oui' and not self.wait_assd_or_geom():
-      valeur,test = self.eval_valeur(new_valeur)
-      if test :
-        self.val = new_valeur
-        self.valeur = valeur
-        self.init_modif()
-        self.fin_modif()
-        return 1
-      else:
-        # On n'a pas trouve de concept ni réussi à évaluer la valeur 
-        # dans le contexte
-        # Si le mot cle simple attend un type CO on crée un objet de ce 
-        # type de nom new_valeur
-        if self.wait_co():
-          try:
-            # Pour avoir la classe CO avec tous ses comportements
-            from Accas import CO
-            self.valeur=CO(new_valeur)
-          except:
-            traceback.print_exc()
-            return 0
-          self.init_modif()
-          self.val=self.valeur
-          self.fin_modif()
-          return 1
-        elif type(new_valeur)==types.StringType and self.wait_TXM():
-          self.init_modif()
-          self.val = new_valeur
-          self.valeur = new_valeur
-          self.fin_modif()
-          return 1
-        else:
-          return 0
-    else :
+#  def set_valeur(self,new_valeur,evaluation='oui'):
+#    """
+#        Remplace la valeur de self(si elle existe) par new_valeur
+#            - si evaluation = 'oui' : 
+#                        essaie d'évaluer new_valeur dans le contexte
+#            - si evaluation = 'non' : 
+#                        n'essaie pas d'évaluer (on stocke une string ou 
+#                        une valeur de la liste into )
+#    """
+#    if evaluation == 'oui' and not self.wait_assd_or_geom():
+#      valeur,test = self.eval_valeur(new_valeur)
+#      if test :
+#        self.val = new_valeur
+#        self.valeur = valeur
+#        self.init_modif()
+#        self.fin_modif()
+#        return 1
+#      else:
+#        # On n'a pas trouve de concept ni réussi à évaluer la valeur 
+#        # dans le contexte
+#        # Si le mot cle simple attend un type CO on crée un objet de ce 
+#        # type de nom new_valeur
+#        if self.wait_co():
+#          try:
+#            # Pour avoir la classe CO avec tous ses comportements
+#            from Accas import CO
+#            self.valeur=CO(new_valeur)
+#          except:
+#            traceback.print_exc()
+#            return 0
+#          self.init_modif()
+#          self.val=self.valeur
+#          self.fin_modif()
+#          return 1
+#        elif type(new_valeur)==types.StringType and self.wait_TXM():
+#          self.init_modif()
+#          self.val = new_valeur
+#          self.valeur = new_valeur
+#          self.fin_modif()
+#          return 1
+#        else:
+#          return 0
+#    else :
       # on ne fait aucune vérification ...
-      self.init_modif()
-      try:
-        self.valeur = eval(new_valeur)
-        self.val = eval(new_valeur)
-        self.fin_modif()
-        return 1
-      except:
+  def set_valeur(self,new_valeur,evaluation='oui'):
+        self.init_modif()
         self.valeur = new_valeur
         self.val = new_valeur
         self.fin_modif()
@@ -243,7 +242,6 @@ class MCSIMP(I_OBJECT.OBJECT):
         Essaie d'évaluer new_valeur comme une SD, une déclaration Python 
         ou un EVAL: Retourne la valeur évaluée (ou None) et le test de réussite (1 ou 0)
     """
-    #sd = self.jdc.get_sd_avant_etape(new_valeur,self.etape)
     sd = self.jdc.get_contexte_avant(self.etape).get(new_valeur,None)
     if sd :
       return sd,1
@@ -256,15 +254,6 @@ class MCSIMP(I_OBJECT.OBJECT):
         objet = eval(new_valeur,d)
         return objet,1
       except Exception:
-# PN :
-#    - Ajout de quote autour de la valeur en cas de chaine de caracteres 
-        if type(new_valeur)==types.StringType and self.wait_TXM():
-            new_valeur="'"+new_valeur+"'"
-            try :
-		objet = eval(new_valeur,d)
-		return objet,1
-            except :
-        	return None,0
         if CONTEXT.debug : traceback.print_exc()
         return None,0
 
@@ -433,3 +422,144 @@ class MCSIMP(I_OBJECT.OBJECT):
  
 #ATTENTION SURCHARGE : toutes les methodes ci apres sont des surcharges du Noyau et de Validation
 # Elles doivent etre reintegrees des que possible
+
+  def is_complexe(self,valeur):
+      """ Retourne 1 si valeur est un complexe, 0 sinon """
+      if type(valeur) == types.InstanceType :
+        #XXX je n'y touche pas pour ne pas tout casser mais il serait
+        #XXX préférable d'appeler une méthode de valeur : return valeur.is_type('C'), par exemple
+        if valeur.__class__.__name__ in ('EVAL','complexe','PARAMETRE_EVAL'):
+          return 1
+        elif valeur.__class__.__name__ in ('PARAMETRE',):
+          # il faut tester si la valeur du parametre est un entier
+          #XXX ne serait ce pas plutot complexe ???? sinon expliquer
+          return self.is_entier(valeur.valeur)
+        else:
+          print "Objet non reconnu dans is_complexe %s" %`valeur`
+          return 0
+      # Pour permettre l'utilisation de complexes Python
+      #elif type(valeur) == types.ComplexType:
+        #return 1
+      elif type(valeur) != types.TupleType :
+        return 0
+      else:
+        if len(valeur) != 3 :
+          return 0
+        else:
+          if type(valeur[0]) != types.StringType : return 0
+          if string.strip(valeur[0]) not in ('RI','MP'):
+            return 0
+          else:
+            if not self.is_reel(valeur[1]) or not self.is_reel(valeur[2]) : return 0
+            else: return 1
+
+  def is_reel(self,valeur):
+      """
+      Retourne 1 si valeur est un reel, 0 sinon
+      """
+      if type(valeur) == types.InstanceType :
+        #XXX je n'y touche pas pour ne pas tout casser mais il serait
+        #XXX préférable d'appeler une méthode de valeur : return valeur.is_type('R'), par exemple
+        #XXX ou valeur.is_reel()
+        #XXX ou encore valeur.compare(self.is_reel)
+        if valeur.__class__.__name__ in ('EVAL','reel','PARAMETRE_EVAL') :
+          return 1
+        elif valeur.__class__.__name__ in ('PARAMETRE',):
+          # il faut tester si la valeur du parametre est un réel
+          return self.is_reel(valeur.valeur)
+        else:
+          print "Objet non reconnu dans is_reel %s" %`valeur`
+          return 0
+      elif type(valeur) not in (types.IntType,types.FloatType,types.LongType):
+        # ce n'est pas un réel
+        return 0
+      else:
+        return 1
+
+  def is_entier(self,valeur):
+      """ Retourne 1 si valeur est un entier, 0 sinon """
+      if type(valeur) == types.InstanceType :
+        #XXX je n'y touche pas pour ne pas tout casser mais il serait
+        #XXX préférable d'appeler une méthode de valeur : return valeur.is_type('I'), par exemple
+        if valeur.__class__.__name__ in ('EVAL','entier','PARAMETRE_EVAL') :
+          return 1
+        elif valeur.__class__.__name__ in ('PARAMETRE',):
+          # il faut tester si la valeur du parametre est un entier
+          return self.is_entier(valeur.valeur)
+        else:
+          print "Objet non reconnu dans is_reel %s" %`valeur`
+          return 0
+      elif type(valeur) not in (types.IntType,types.LongType):
+        # ce n'est pas un entier
+        return 0
+      else:
+        return 1
+
+  def is_object_from(self,objet,classe):
+      """
+           Retourne 1 si valeur est un objet de la classe classe ou d'une 
+           sous-classe de classe, 0 sinon
+      """
+      if type(objet) != types.InstanceType :
+          return 0
+      if not objet.__class__ == classe and not issubclass(objet.__class__,classe):
+        return 0
+      else:
+        return 1
+
+  def get_valid(self):
+       if hasattr(self,'valid'):
+          return self.valid
+       else:
+          self.valid=None
+          return None
+
+  def set_valid(self,valid):
+       old_valid=self.get_valid()
+       self.valid = valid
+       self.state = 'unchanged'
+       if not old_valid or old_valid != self.valid :
+           self.init_modif_up()
+
+  def isvalid(self,cr='non'):
+      """
+         Cette méthode retourne un indicateur de validité de l'objet de type MCSIMP
+
+           - 0 si l'objet est invalide
+           - 1 si l'objet est valide
+
+         Le paramètre cr permet de paramétrer le traitement. Si cr == 'oui'
+         la méthode construit également un comte-rendu de validation
+         dans self.cr qui doit avoir été créé préalablement.
+      """
+      if self.state == 'unchanged':
+        return self.valid
+      else:
+        v=self.valeur
+        valid = 1
+        #  verifiaction presence
+        if self.isoblig() and v == None :
+          if cr == 'oui' :
+            self.cr.fatal(string.join(("Mot-clé : ",self.nom," obligatoire non valorisé")))
+          valid = 0
+
+        if v is None:
+          valid=0
+          if cr == 'oui' :
+             self.cr.fatal("None n'est pas une valeur autorisée")
+        else:
+          # type,into ...
+          valid = self.verif_type(val=v,cr=cr)*self.verif_into(cr=cr)*self.verif_card(cr=cr)
+          #
+          # On verifie les validateurs s'il y en a et si necessaire (valid == 1)
+          #
+          if valid and self.definition.validators and not self.definition.validators.verif(self.valeur):
+            if cr == 'oui' :
+              self.cr.fatal(string.join(("Mot-clé : ",self.nom,"devrait avoir ",self.definition.validators.info())))
+            valid=0
+          # fin des validateurs
+          #
+
+        self.set_valid(valid)
+        return self.valid
+

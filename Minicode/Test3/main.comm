@@ -1,5 +1,26 @@
-# Changer unite 15 par incl.14
-DEBUT()
-INCLUDE(UNITE=15)
-MA=LIRE_MAILLAGE()
-FIN()
+
+#  Scenario de test
+# 1- Donner le fichier incl.15 pour l'include unite 15 
+# 2- Donner le fichier incl.16 pour l'include unité 16
+#Le fichier de commandes est invalide car MA est défini plusieurs fois
+#  3- Changer include unite 15 par incl.14 :
+# Le changement doit etre accepté mais la commande LIRE_MAILLAGE
+#reste invalide     
+# 4- Detruire la commande INCLUDE et nommer le concept de LIRE_MAILLAGE MA
+# 5- Ajouter un INCLUDE avant LIRE_MAILLAGE d'unité 16 (incl.16)
+#L'INCLUDE doit etre invalide
+# 6- Changer le nom du concept de LIRE_MAILLAGE en MMM
+# L'INCLUDE reste invalide bien que le conflit soit résolu
+# 7- Revalider l'INCLUDE en allant dans l'onglet Fichier INCLUDE et en cliquant
+#     sur le bouton Valider
+#
+#
+#
+
+DEBUT();
+
+INCLUDE(UNITE=15,);
+
+MA=LIRE_MAILLAGE();
+
+FIN();

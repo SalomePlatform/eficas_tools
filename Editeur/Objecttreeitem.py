@@ -320,9 +320,9 @@ class ObjectTreeItem(TreeItem,Delegate):
         """ Retourne la clé de doc de l'objet pointé par self """
         return self.object.get_docu()
 
-    def set_valeur(self,new_valeur,evaluation='oui'):
+    def set_valeur(self,new_valeur):
         """ Remplace la valeur de l'objet pointé par self par new_valeur """
-        return self.object.set_valeur(new_valeur,evaluation=evaluation)
+        return self.object.set_valeur(new_valeur)
         
     def GetText(self):
         return myrepr.repr(self.object)

@@ -9,6 +9,9 @@
    interface sera stabilisée.
 """
 
+import types
+import Noyau.N_VALIDATOR
+
 class Valid:
    """
         Cette classe est la classe mere de toutes les classes complémentaires
@@ -60,6 +63,20 @@ class Valid:
        """
        return 0
 
+   def valide_liste_partielle(self,liste_courante):
+       return 0
+
+   def verif_item(self,valeur):
+       """
+          La methode verif du validateur effectue une validation complete de la valeur.
+          valeur peut etre un scalaire ou une liste. Le validateur doit traiter les 2
+          aspects s'il accepte des listes (dans ce cas la methode is_list doit retourner 1).
+          La methode valid_item sert pour effectuer des validations partielles de liste
+          Elle doit uniquement verifier la validite d'un item de liste mais pas les caracteristiques
+          de la liste
+       """
+       return 0
+
    def get_into(self,liste_courante=None,into_courant=None):
        """
           Cette méthode retourne la liste de choix proposée par le validateur. Si le validateur ne propose
@@ -80,9 +97,89 @@ class Valid:
        """
        return into_courant
 
+   def is_eval(self,valeur):
+       """
+           Cette méthode indique si valeur est un objet de type EVAL ou autre
+           que l'on ne cherchera pas à evaluer et qui doit etre considere comme toujours valide
+           Si c'est un objet de ce type elle retourne la valeur 1 sinon la valeur 0
+       """
+       if type(valeur) == types.InstanceType :
+          if valeur.__class__.__name__ in ('EVAL','entier','reel','chaine','complexe','liste','PARAMETRE_EVAL') :
+             return 1
+       return 0
+
+   def is_param(self,valeur):
+       """
+           Cette méthode indique si valeur est un objet de type PARAMETRE
+           dont on cherchera à evaluer la valeur (valeur.valeur)
+       """
+       if type(valeur) == types.InstanceType :
+          if valeur.__class__.__name__ in ('PARAMETRE',):
+             return 1
+       return 0
+
+   def is_unknown(self,valeur):
+       """
+           Cette méthode indique si valeur est un objet de type inconnu
+           c'est à dire ni de type EVAL ni de type PARAMETRE
+       """
+       if type(valeur) == types.InstanceType :
+          if not self.is_eval(valeur) and not self.is_param(valeur):
+             return 1
+       return 0
+
+   def surcharge_verif(self,methode_verif_initiale,valeur):
+       if type(valeur) == types.InstanceType :
+          #CCAR: pour le moment on fait comme dans is_entier de V_MCSIMP.py
+          # mais il serait préférable d'appeler une méthode de valeur : valeur.AsType()
+          # qui donnerait le type générique de l'objet.
+          # Pour un objet de "type" entier on obtiendrait par exemple 'I'
+          if valeur.__class__.__name__ in ('EVAL','entier','reel','chaine','complexe','liste','PARAMETRE_EVAL') :
+             # On ne vérifie pas le type d'un EVAL ou d'un objet de classe entier, .... C'est toujours valide
+             return 1
+          elif valeur.__class__.__name__ in ('PARAMETRE',):
+             # Dans le cas d'un parametre, il faut tester si la valeur du parametre est un entier
+             valeur=valeur.valeur
+          else:
+             # Objet inconnu : invalide
+             print "Objet non reconnu dans surcharge_verif : %s" %`valeur`
+             return 0
+
+       return methode_verif_initiale(self,valeur)
+
 class FunctionVal(Valid):pass
 
 class OrVal(Valid):
+   def verif_item(self,valeur):
+       for validator in self.validators:
+           v=validator.verif_item(valeur)
+           if v :
+              return 1
+       return 0
+
+   def info_erreur_item(self):
+       chaine=""
+       a=1
+       for v in self.validators:
+	   if v.info_erreur_item() != "" :
+              if a==1:
+                 chaine=v.info_erreur_item()
+                 a=0
+	      else:
+                 chaine=chaine+" \n ou "+ v.info_erreur_item()
+       return chaine
+
+   def info_erreur_liste(self):
+       chaine=""
+       a=1
+       for v in self.validators:
+	   if v.info_erreur_liste() != "" :
+              if a==1:
+                 chaine=v.info_erreur_liste()
+                 a=0
+	      else:
+                 chaine=chaine+" \n ou "+v.info_erreur_liste()
+
    def is_list(self):
        """
           Si plusieurs validateurs sont reliés par un OU
@@ -120,13 +217,49 @@ class OrVal(Valid):
        """
        validator_into=[]
        for validator in self.validators:
-           v_into=v.get_info(liste_courante,into_courant)
+           v_into=validator.get_into(liste_courante,into_courant)
            if v_into is None:
               return v_into
            validator_into.extend(v_into)
        return validator_into
+    
 
 class AndVal(Valid):
+   def info(self):
+       return "\n et ".join([v.info() for v in self.validators])
+
+   def info_erreur_item(self):
+       chaine=""
+       a=1
+       for v in self.validators:
+	   if v.info_erreur_item() != "" :
+              if a==1:
+                 chaine=v.info_erreur_item()
+                 a=0
+	      else:
+                 chaine=chaine+" \n et "+v.info_erreur_item()
+       return chaine
+
+   def info_erreur_liste(self):
+       a=1
+       for v in self.validators:
+	   if v.info_erreur_liste() != "" :
+              if a==1:
+                 chaine=v.info_erreur_liste()
+                 a=0
+	      else:
+                 chaine=chaine+" \n et "+v.info_erreur_liste()
+       return chaine
+
+   def verif_item(self,valeur):
+       for validator in self.validators:
+           v=validator.verif_item(valeur)
+           if not v :
+              # L'info n'est probablement pas la meme que pour verif ???
+              self.local_info=validator.info()
+              return 0
+       return 1
+
    def is_list(self):
        """
           Si plusieurs validateurs sont reliés par un ET
@@ -155,6 +288,7 @@ class AndVal(Valid):
               return 1
        return 0
 
+
    def get_into(self,liste_courante=None,into_courant=None):
        """
           Dans le cas ou plusieurs validateurs sont reliés par un ET
@@ -166,17 +300,31 @@ class AndVal(Valid):
           En revanche, Enum(1,2,3) ET Enum(4,5,6) ne propose pas de choix
        """
        for validator in self.validators:
-           into_courant=v.get_info(liste_courante,into_courant)
+           into_courant=validator.get_into(liste_courante,into_courant)
            if into_courant in ([],None):
               return into_courant
        return into_courant
 
 class CardVal(Valid):
+   def info(self):
+       return "longueur de liste comprise entre  %s et %s" % (self.min,self.max)
+
    def is_list(self):
        if self.max == '**' or self.max > 1:
              return 1
        else:
              return 0
+
+   def verif_item(self,valeur):
+       return 1
+
+   def valide_liste_partielle(self,liste_courante=None):
+	validite=1
+        print liste_courante
+        if liste_courante != None :
+           if len(liste_courante) > self.max :
+              validite=0
+        return validite
 
    def get_into(self,liste_courante=None,into_courant=None):
        if into_courant is None:
@@ -189,6 +337,9 @@ class CardVal(Valid):
           return into_courant
        else:
           return []
+
+   def info_erreur_liste(self):
+       return "La cardinalité de la liste doit être comprise entre %s et %s" % (self.min,self.max)
 
 class ListVal(Valid):
    def is_list(self):
@@ -210,6 +361,10 @@ class ListVal(Valid):
           return liste_choix
 
 class EnumVal(ListVal):
+   def verif_item(self,valeur):
+       if valeur not in self.into:return 0
+       return 1
+
    def has_into(self):
        return 1
  
@@ -222,14 +377,86 @@ class EnumVal(ListVal):
               if e in self.into:
                  liste_choix.append(e)
        return liste_choix
+
+   def info_erreur_item(self):
+       return "La valeur n'est pas dans la liste des choix possibles"
           
-class LongStr(ListVal):pass
-class RangeVal(ListVal):pass
-class TypeVal(ListVal):pass
-class PairVal(ListVal):pass
-class InstanceVal(ListVal):pass
+class LongStr(ListVal):
+   def info_erreur_item(self):
+       return "Longueur de la chaine incorrecte"
+
+   def verif_item(self,valeur):
+       low=self.low
+       high=self.high
+       if valeur[0]=="'" and valeur[-1]=="'" :
+          low=low+2
+          high=high+2
+       if len(valeur) < low :return 0
+       if len(valeur) > high:return 0
+       return 1
+ 
+class RangeVal(ListVal):
+   def verif_item(self,valeur):
+       if valeur < self.low :return 0
+       if valeur > self.high:return 0
+       return 1
+
+   def info_erreur_item(self) :
+       return "La valeur doit être comprise entre %s et %s" % (self.low,self.high)
+
+class TypeVal(ListVal):
+   def verif_item(self,valeur):
+       try:
+          self.coerce(valeur)
+       except:
+          return 0
+       return 1
+
+class PairVal(ListVal):
+
+   def info_erreur_item(self):
+       return "La valeur saisie doit être paire"
+
+   #ATTENTION METHODE SURCHARGEE: a resorber dans une future version
+   def verif_item(self,valeur):
+       if self.is_eval(valeur):
+          return 1
+       elif self.is_param(valeur):
+          valeur=valeur.valeur
+       elif self.is_unknown(valeur):
+          return 0
+       return valeur % 2 == 0
+
+   def verif(self,valeur):
+          if self.is_param(valeur):
+             valeur=valeur.valeur
+          if type(valeur) in (types.ListType,types.TupleType):
+             for val in valeur:
+                if not self.verif_item(val):
+                   return 0
+             return 1
+          else:
+             return self.verif_item(valeur)
+
+   def verif_old(self,valeur):
+       print "Ihm.I_MCSIMP.PairVal.verif: ",valeur
+       return self.surcharge_verif(Noyau.N_VALIDATOR.PairVal.verif,valeur)
+
+class InstanceVal(ListVal):
+   def verif_item(self,valeur):
+       if not isinstance(valeur,self.aClass): return 0
+       return 1
 
 class NoRepeat(ListVal):
+   def info(self):
+       return "pas de presence de doublon dans la liste"
+
+   def info_erreur_liste(self):
+       return "Les doublons ne sont pas permis"
+
+   def verif_item(self,valeur):
+       return 1
+
    def get_into(self,liste_courante=None,into_courant=None):
        """
           Methode get_into spécifique pour validateur NoRepeat
@@ -247,6 +474,9 @@ class NoRepeat(ListVal):
           return liste_choix
  
 class OrdList(ListVal):
+   def verif_item(self,valeur):
+       return 1
+
    def get_into(self,liste_courante=None,into_courant=None):
        """
           Methode get_into spécifique pour validateur OrdList 
@@ -267,9 +497,6 @@ class OrdList(ListVal):
               liste_choix.append(e)
           return liste_choix
 
+   def info_erreur_liste(self) :
+       return "La liste doit être en ordre "+self.ord
           
-          
-
-
-
-

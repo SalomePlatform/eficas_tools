@@ -1,4 +1,13 @@
-POURSUITE()
-MMA=LIRE_MAILLAGE()
-INCLUDE(UNITE=23)
-FIN()
+
+#Test de poursuite avec include emboites
+#Utiliser deb0.comm comme fichier initial de deb1.comm
+#ensuite utiliser les fichiers incl.* correspondant au numero
+#d'unité indiqué
+
+POURSUITE();
+
+MMA=LIRE_MAILLAGE();
+
+INCLUDE(UNITE=23,);
+
+FIN();

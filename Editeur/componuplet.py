@@ -30,7 +30,7 @@ import panels
 
 #
 __version__="$Name:  $"
-__Id__="$Id: componuplet.py,v 1.2 2002/05/15 15:31:58 eficas Exp $"
+__Id__="$Id: componuplet.py,v 1.3.2.1 2003/10/09 14:57:58 eficas Exp $"
 #
 
 myrepr = Repr()
@@ -66,7 +66,8 @@ class NUPLETPanel(panels.OngletPanel):
       aide=self.gen_aide(obj)
       if objet_mc.into != None :
         l_choix=list(objet_mc.into)
-        obj.set_valeur(l_choix[0],evaluation='non')
+        #obj.set_valeur(l_choix[0],evaluation='non')
+        obj.set_valeur(l_choix[0])
         option=Pmw.OptionMenu (frame_valeur,
                 items = l_choix,
                 menubutton_width = 10,
@@ -91,7 +92,8 @@ class NUPLETPanel(panels.OngletPanel):
       Enregistre  val comme valeur de self.node.item.object SANS faire de 
       test de validité
     """
-    obj.set_valeur(val,evaluation='non')
+    #obj.set_valeur(val,evaluation='non')
+    obj.set_valeur(val)
     self.parent.appli.affiche_infos(mess)
     self.node.parent.verif()
     self.node.update()
@@ -111,7 +113,8 @@ class NUPLETPanel(panels.OngletPanel):
           self.parent.appli.affiche_infos('Valeur du mot-cl\351 enregistr\351e')
           e.widget.insert(0,obj.getval())
       else:
-          obj.set_valeur(anc_val,evaluation='non')
+          #obj.set_valeur(anc_val,evaluation='non')
+          obj.set_valeur(anc_val)
           self.parent.appli.affiche_infos("valeur du mot-cl\351 non autoris\351e")
           e.widget.insert(0,anc_val)
     else:

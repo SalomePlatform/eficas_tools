@@ -23,6 +23,7 @@
 import os,re
 import glob
 import traceback
+import codecs,types
 
 def substract_list(liste1,liste2):
   """ 
@@ -83,12 +84,16 @@ def save_in_file(file,text):
       retourne 1 si OK 0 sinon
   """
   try :
-    f=open(file,'w+')
-    f.write(text)
-    f.close()
-    return 1
+      if type(text) == types.StringType:
+         f=open(file,'w')
+      else:
+         # Probablement Unicode
+         f=codecs.open(file,'w','iso-8859-1')
+      f.write(text)
+      f.close()
+      return 1
   except:
-    return 0
+      return 0
 
 def extension_fichier(pathAndFile):
     """ Return ext if path/filename.ext is given """

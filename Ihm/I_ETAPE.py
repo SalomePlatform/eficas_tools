@@ -20,9 +20,12 @@
 """
 """
 # Modules Python
-import sys
+import sys,re
 import string,types
 from copy import copy
+
+# Objet re pour controler les identificateurs Python
+concept_re=re.compile(r'[a-zA-Z_]\w*$')
 
 # import rajoutés suite à l'ajout de Build_sd --> à résorber
 import traceback
@@ -91,8 +94,13 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             - 0 si le nommage n'a pas pu etre mené à son terme,
             - 1 dans le cas contraire
       """
+      # Le nom d'un concept doit etre un identificateur Python (toujours vrai ?)
+      if not concept_re.match(nom):
+         return 0,"Un nom de concept doit etre un identificateur Python"
+
       if len(nom) > 8 and self.jdc.definition.code == 'ASTER':
         return 0,"Nom de concept trop long (maxi 8 caractères)"
+
       self.init_modif()
       #
       # On verifie d'abord si les mots cles sont valides
@@ -283,6 +291,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       for child in self.mc_liste :
         child.replace_concept(old_sd,sd)
 
+#ATTENTION SURCHARGE: cette methode doit etre gardée en synchronisation avec Noyau
    def make_register(self):
       """
          Initialise les attributs jdc, id, niveau et réalise les
@@ -380,7 +389,29 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
      for motcle in self.mc_liste :
          motcle.verif_existence_sd()
      
+#ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
    def Build_sd(self,nom):
+      """
+           Methode de Noyau surchargee pour poursuivre malgre tout
+           si une erreur se produit pendant la creation du concept produit
+      """
+      try:
+         sd=Noyau.N_ETAPE.ETAPE.Build_sd(self,nom)
+      except AsException,e:
+         # Une erreur s'est produite lors de la construction du concept
+         # Comme on est dans EFICAS, on essaie de poursuivre quand meme
+         # Si on poursuit, on a le choix entre deux possibilités :
+         # 1. on annule la sd associée à self
+         # 2. on la conserve mais il faut la retourner
+         # En plus il faut rendre coherents sdnom et sd.nom
+         self.sd=None
+         self.sdnom=None
+         self.state="unchanged"
+         self.valid=0
+
+      return self.sd
+
+   def Build_sd_old(self,nom):
       """
          Construit le concept produit de l'opérateur. Deux cas 
          peuvent se présenter :

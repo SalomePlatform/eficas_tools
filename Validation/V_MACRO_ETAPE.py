@@ -1,4 +1,4 @@
-#@ MODIF V_MACRO_ETAPE Validation  DATE 06/01/2003   AUTEUR ASSIRE A.ASSIRE 
+#@ MODIF V_MACRO_ETAPE Validation  DATE 26/09/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -99,11 +99,11 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
       """ 
            Cette méthode met à jour le concept produit en fonction des conditions initiales :
 
-            - Il n'y a pas de concept retourné (self.definition.sd_prod == None)
+            1- Il n'y a pas de concept retourné (self.definition.sd_prod == None)
 
-            - Le concept retourné n existait pas (self.sd == None)
+            2- Le concept retourné n existait pas (self.sd == None)
 
-            - Le concept retourné existait. On change alors son type ou on le supprime
+            3- Le concept retourné existait. On change alors son type ou on le supprime
 
            En cas d'erreur (exception) on retourne un indicateur de validité de 0 sinon de 1
       """

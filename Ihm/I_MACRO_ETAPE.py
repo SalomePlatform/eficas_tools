@@ -268,8 +268,33 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # On met g_context à blanc
       self.g_context={}
          
-#ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro)
+#ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
   def Build_sd(self,nom):
+      """
+           Methode de Noyau surchargee pour poursuivre malgre tout
+           si une erreur se produit pendant la creation du concept produit
+      """
+      try:
+         sd=Noyau.N_MACRO_ETAPE.MACRO_ETAPE.Build_sd(self,nom)
+         self.state="unchanged"
+         self.valid=1
+      except AsException,e:
+         # Une erreur s'est produite lors de la construction du concept
+         # Comme on est dans EFICAS, on essaie de poursuivre quand meme
+         # Si on poursuit, on a le choix entre deux possibilités :
+         # 1. on annule la sd associée à self
+         # 2. on la conserve mais il faut la retourner
+         # On choisit de l'annuler
+         # En plus il faut rendre coherents sdnom et sd.nom
+         self.sd=None
+         self.sdnom=None
+         self.state="unchanged"
+         self.valid=0
+
+      return self.sd
+
+#ATTENTION : cette methode surcharge celle de Noyau (a garder en synchro ou a reintegrer)
+  def Build_sd_old(self,nom):
      """
         Construit le concept produit de l'opérateur. Deux cas 
         peuvent se présenter :
