@@ -2,20 +2,15 @@
 
 DEBUT();
 P1 = 9.8;
-
 P2 = 8.8;
-
 P3 = 7;
-
-_param_5 = P3*P1;
-
-_param_4 = 3.0;
+P5 = P3*P1;
+P4 = [2,3,4]
 
 #Pas trouve		shellpanel
 
 MAIL=LIRE_MAILLAGE(UNITE=P3,);
-
-MAILLA2=LIRE_MAILLAGE(UNITE=20,);
+MAILLA2=LIRE_MAILLAGE(UNITE=P4[1],);
 # 'LIRE_MAILLAGE', 'UNITE'            --> uniquebasepanel
 
 AFFE1=AFFE_MODELE(MAILLAGE=MAILLA2,
