@@ -356,15 +356,32 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          les noms des fichiers
          Ceci suppose que les relations entre unites et noms ont été memorisees préalablement
       """
-      if self.parent.recorded_units.has_key(unite):
-         f,text,units=self.parent.recorded_units[unite]
-      else:
+      if unite != self.fichier_unite:
+         # Changement d'unite
          f,text=self.get_file(unite=unite,fic_origine=self.parent.nom)
          units={}
-      self.fichier_ini = f
-      self.fichier_text=text
+         self.fichier_ini = f
+         self.fichier_text=text
+         self.recorded_units=units
+         # Les 3 attributs fichier_ini fichier_text recorded_units doivent etre corrects
+         # avant d'appeler change_unit
+         self.parent.change_unit(unite,self,self.fichier_unite)
+      elif not self.parent.recorded_units.has_key(unite):
+         # Nouvelle unite
+         f,text=self.get_file(unite=unite,fic_origine=self.parent.nom)
+         units={}
+         self.fichier_ini = f
+         self.fichier_text=text
+         self.recorded_units=units
+         self.parent.change_unit(unite,self,self.fichier_unite)
+      else:
+         # Meme unite existante
+         f,text,units=self.parent.recorded_units[unite]
+         self.fichier_ini = f
+         self.fichier_text=text
+         self.recorded_units=units
+
       self.fichier_err=None
-      self.recorded_units=units
       self.old_contexte_fichier_init=self.contexte_fichier_init
 
       try:
@@ -433,15 +450,11 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          if self.fichier_err is not None: raise Exception(self.fichier_err)
 
   def get_file(self,unite=None,fic_origine=''):
-      """
-         Retourne le nom du fichier associe a l unite logique unite (entier)
-         ainsi que le source contenu dans le fichier
-         Retourne en plus un dictionnaire contenant les sous includes memorises
+      """Retourne le nom du fichier et le source correspondant a l'unite unite
+         Initialise en plus recorded_units
       """
       units={}
-      if self.parent.recorded_units.has_key(unite):
-         f,text,units=self.parent.recorded_units[unite]
-      elif self.jdc :
+      if self.jdc :
          f,text=self.jdc.get_file(unite=unite,fic_origine=fic_origine)
       else:
          f,text=None,None
@@ -463,7 +476,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       del self.unite
       # Si unite n'a pas de valeur, l'etape est forcement invalide. On peut retourner None
       if not unite : return
-      self.fichier_unite=unite
 
       if not hasattr(self,'fichier_ini') : 
          # Si le fichier n'est pas defini on le demande
@@ -472,6 +484,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.fichier_ini  = f
          self.fichier_text = text
          self.contexte_fichier_init={}
+         self.fichier_unite=unite
          self.parent.record_unit(unite,self)
          if f is None:
              self.fichier_err="Le fichier INCLUDE n est pas defini"
@@ -500,6 +513,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          # Si le fichier est deja defini on ne reevalue pas le fichier
          # et on leve une exception si une erreur a été enregistrée
          self.update_fichier_init(unite)
+         self.fichier_unite=unite
          if self.fichier_err is not None: raise Exception(self.fichier_err)
         
 

@@ -441,9 +441,7 @@ class JDC(I_OBJECT.OBJECT):
           Retourne le nom du fichier correspondant à un numero d'unité
           logique (entier) ainsi que le source contenu dans le fichier
       """
-      if self.recorded_units.has_key(unite):
-         return self.recorded_units[unite]
-      elif self.appli :
+      if self.appli :
          # Si le JDC est relié à une application maitre, on délègue la recherche
          file,text = self.appli.get_file(unite,fic_origine)
       else:
@@ -615,6 +613,10 @@ class JDC(I_OBJECT.OBJECT):
       for etape in self.etapes :
          print etape.nom+".state: ",etape.state
       
+   def change_unit(self,unit,etape,old_unit):
+      if self.recorded_units.has_key(old_unit):del self.recorded_units[old_unit]
+      self.record_unit(unit,etape)
+
    def record_unit(self,unit,etape):
       """Enregistre les unites logiques incluses et les infos relatives a l'etape"""
       if unit is None:
