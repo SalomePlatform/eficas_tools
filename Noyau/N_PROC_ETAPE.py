@@ -97,8 +97,6 @@ class PROC_ETAPE(N_ETAPE.ETAPE):
                apply(self.definition.op_init,(self,self.parent.g_context))
          else:
             pass
-         if self.jdc.par_lot == "NON" :
-            self.Execute()
       except AsException,e:
         raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
                               'fichier : ',self.appel[1],e)
@@ -109,6 +107,9 @@ class PROC_ETAPE(N_ETAPE.ETAPE):
         raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
                           'fichier : ',self.appel[1]+'\n',
                           string.join(l))
+
+      self.Execute()
+      return None
 
    def supprime(self):
       """

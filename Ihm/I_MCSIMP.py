@@ -435,58 +435,5 @@ class MCSIMP(I_OBJECT.OBJECT):
      """
      return self.definition.type
  
-#ATTENTION : toutes les methodes ci apres sont des surcharges du Noyau et de Validation
+#ATTENTION SURCHARGE : toutes les methodes ci apres sont des surcharges du Noyau et de Validation
 # Elles doivent etre reintegrees des que possible
-
-  def isvalid(self,cr='non'):
-      """
-         Cette méthode retourne un indicateur de validité de l'objet
-         de type MCSIMP
-
-         - 0 si l'objet est invalide
-
-         - 1 si l'objet est valide
-
-         Le paramètre cr permet de paramétrer le traitement. 
-         Si cr == 'oui'
-             la méthode construit également un comte-rendu de validation
-             dans self.cr qui doit avoir été créé préalablement.
-      """
-      if self.state == 'unchanged':
-        return self.valid
-      else:
-        valid = 1
-        if hasattr(self,'valid'):
-          old_valid = self.valid
-        else:
-          old_valid = None
-        v=self.valeur
-        #  presence
-        if self.isoblig() and v == None :
-          if cr == 'oui' :
-            self.cr.fatal(string.join(("Mot-clé : ",self.nom," obligatoire non valorisé")))
-          valid = 0
-        # type,into ...
-        valid = self.verif_type(cr=cr)*self.verif_into(cr=cr)*self.verif_card(cr=cr)
-        self.valid = valid
-        self.state = 'unchanged'
-        # Si la validité du mot clé a changé, on le signale à l'objet parent
-        if not old_valid:
-          self.init_modif_up()
-        elif old_valid != self.valid : 
-          self.init_modif_up()
-        return self.valid
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 

@@ -658,28 +658,4 @@ class JDC(I_OBJECT.OBJECT):
       else:
          self.recorded_units[unit]=(etape.fichier_ini ,etape.fichier_text,etape.recorded_units)
 
-#ATTENTION cette methode surcharge la methode du package Validation : a reintegrer
-   def isvalid(self,cr='non'):
-      """
-        Méthode booléenne qui retourne 0 si le JDC est invalide, 1 sinon
-      """
-      # FR : on prend en compte l'état du JDC ('unchanged','modified','undetermined')
-      # afin d'accélérer le test de validité du JDC
-      if self.state == 'unchanged':
-        return self.valid
-      else:
-        valid = 1
-        texte,test = self.verif_regles()
-        if test == 0:
-          if cr == 'oui': self.cr.fatal(string.strip(texte))
-          valid = 0
-        if valid :
-          for e in self.etapes:
-            if not e.isactif() : continue
-            if not e.isvalid():
-              valid = 0
-              break
-        self.state="unchanged"
-        self.valid = valid
-        return self.valid
-
+#ATTENTION SURCHARGE : cette methode surcharge la methode du package Validation : a reintegrer
