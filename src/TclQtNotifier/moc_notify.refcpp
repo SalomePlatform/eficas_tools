@@ -1,0 +1,183 @@
+/****************************************************************************
+** Notifier meta object code from reading C++ file 'notify.h'
+**
+** Created: Wed Feb 5 17:19:07 2003
+**      by: The Qt MOC ($Id: moc_notify.refcpp,v 1.1.2.1 2004/05/18 11:40:21 salome Exp $)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#undef QT_NO_COMPAT
+#include "notify.h"
+#include <qmetaobject.h>
+#include <qapplication.h>
+
+#include <private/qucomextra_p.h>
+#if !defined(Q_MOC_OUTPUT_REVISION) || (Q_MOC_OUTPUT_REVISION != 19)
+#error "This file was generated using the moc from 3.0.6. It"
+#error "cannot be used with the include files from this version of Qt."
+#error "(The moc has changed too much.)"
+#endif
+
+const char *Notifier::className() const
+{
+    return "Notifier";
+}
+
+QMetaObject *Notifier::metaObj = 0;
+static QMetaObjectCleanUp cleanUp_Notifier;
+
+#ifndef QT_NO_TRANSLATION
+QString Notifier::tr( const char *s, const char *c )
+{
+    if ( qApp )
+	return qApp->translate( "Notifier", s, c, QApplication::DefaultCodec );
+    else
+	return QString::fromLatin1( s );
+}
+#ifndef QT_NO_TRANSLATION_UTF8
+QString Notifier::trUtf8( const char *s, const char *c )
+{
+    if ( qApp )
+	return qApp->translate( "Notifier", s, c, QApplication::UnicodeUTF8 );
+    else
+	return QString::fromUtf8( s );
+}
+#endif // QT_NO_TRANSLATION_UTF8
+
+#endif // QT_NO_TRANSLATION
+
+QMetaObject* Notifier::staticMetaObject()
+{
+    if ( metaObj )
+	return metaObj;
+    QMetaObject* parentObject = QObject::staticMetaObject();
+    static const QUMethod slot_0 = {"dataReceived", 0, 0 };
+    static const QUMethod slot_1 = {"dataWritable", 0, 0 };
+    static const QUMethod slot_2 = {"dataExcept", 0, 0 };
+    static const QMetaData slot_tbl[] = {
+	{ "dataReceived()", &slot_0, QMetaData::Public },
+	{ "dataWritable()", &slot_1, QMetaData::Public },
+	{ "dataExcept()", &slot_2, QMetaData::Public }
+    };
+    metaObj = QMetaObject::new_metaobject(
+	"Notifier", parentObject,
+	slot_tbl, 3,
+	0, 0,
+#ifndef QT_NO_PROPERTIES
+	0, 0,
+	0, 0,
+#endif // QT_NO_PROPERTIES
+	0, 0 );
+    cleanUp_Notifier.setMetaObject( metaObj );
+    return metaObj;
+}
+
+void* Notifier::qt_cast( const char* clname )
+{
+    if ( !qstrcmp( clname, "Notifier" ) ) return (Notifier*)this;
+    return QObject::qt_cast( clname );
+}
+
+bool Notifier::qt_invoke( int _id, QUObject* _o )
+{
+    switch ( _id - staticMetaObject()->slotOffset() ) {
+    case 0: dataReceived(); break;
+    case 1: dataWritable(); break;
+    case 2: dataExcept(); break;
+    default:
+	return QObject::qt_invoke( _id, _o );
+    }
+    return TRUE;
+}
+
+bool Notifier::qt_emit( int _id, QUObject* _o )
+{
+    return QObject::qt_emit(_id,_o);
+}
+#ifndef QT_NO_PROPERTIES
+
+bool Notifier::qt_property( int _id, int _f, QVariant* _v)
+{
+    return QObject::qt_property( _id, _f, _v);
+}
+#endif // QT_NO_PROPERTIES
+
+
+const char *Timer::className() const
+{
+    return "Timer";
+}
+
+QMetaObject *Timer::metaObj = 0;
+static QMetaObjectCleanUp cleanUp_Timer;
+
+#ifndef QT_NO_TRANSLATION
+QString Timer::tr( const char *s, const char *c )
+{
+    if ( qApp )
+	return qApp->translate( "Timer", s, c, QApplication::DefaultCodec );
+    else
+	return QString::fromLatin1( s );
+}
+#ifndef QT_NO_TRANSLATION_UTF8
+QString Timer::trUtf8( const char *s, const char *c )
+{
+    if ( qApp )
+	return qApp->translate( "Timer", s, c, QApplication::UnicodeUTF8 );
+    else
+	return QString::fromUtf8( s );
+}
+#endif // QT_NO_TRANSLATION_UTF8
+
+#endif // QT_NO_TRANSLATION
+
+QMetaObject* Timer::staticMetaObject()
+{
+    if ( metaObj )
+	return metaObj;
+    QMetaObject* parentObject = QObject::staticMetaObject();
+    static const QUMethod slot_0 = {"timeout", 0, 0 };
+    static const QMetaData slot_tbl[] = {
+	{ "timeout()", &slot_0, QMetaData::Public }
+    };
+    metaObj = QMetaObject::new_metaobject(
+	"Timer", parentObject,
+	slot_tbl, 1,
+	0, 0,
+#ifndef QT_NO_PROPERTIES
+	0, 0,
+	0, 0,
+#endif // QT_NO_PROPERTIES
+	0, 0 );
+    cleanUp_Timer.setMetaObject( metaObj );
+    return metaObj;
+}
+
+void* Timer::qt_cast( const char* clname )
+{
+    if ( !qstrcmp( clname, "Timer" ) ) return (Timer*)this;
+    return QObject::qt_cast( clname );
+}
+
+bool Timer::qt_invoke( int _id, QUObject* _o )
+{
+    switch ( _id - staticMetaObject()->slotOffset() ) {
+    case 0: timeout(); break;
+    default:
+	return QObject::qt_invoke( _id, _o );
+    }
+    return TRUE;
+}
+
+bool Timer::qt_emit( int _id, QUObject* _o )
+{
+    return QObject::qt_emit(_id,_o);
+}
+#ifndef QT_NO_PROPERTIES
+
+bool Timer::qt_property( int _id, int _f, QVariant* _v)
+{
+    return QObject::qt_property( _id, _f, _v);
+}
+#endif // QT_NO_PROPERTIES

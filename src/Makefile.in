@@ -1,0 +1,20 @@
+#==============================================================================
+#  File      : Makefile.in
+#  Created   : ven déc  7 13:32:20 CET 2001
+#  Author    : Paul RASCLE, EDF
+#  Project   : SALOME
+#  Copyright : EDF 2001
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/ASTER_SRC/src/Makefile.in,v 1.3.2.1 2004/06/07 17:40:26 salome Exp $
+#==============================================================================
+
+# source path
+top_srcdir=@top_srcdir@
+top_builddir=..
+srcdir=@srcdir@
+VPATH=.:@srcdir@
+
+@COMMENCE@
+
+SUBDIRS = TclQtNotifier EFICASGUI 
+
+@MODULE@

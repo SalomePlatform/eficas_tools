@@ -1,0 +1,75 @@
+from distutils.core import setup, Extension
+
+import os,sys
+
+TCLHOME=os.getenv("TCLHOME")
+if not TCLHOME:
+   print "TCLHOME not set : use /usr"
+   TCLHOME="/usr"
+TKINCL=os.path.join(TCLHOME,"include")
+
+QT_INCLUDES="@QT_INCLUDES@".split()
+SIP_INCLUDES="@SIP_INCLUDES@".split()
+QT_LIBS="@QT_MT_LIBS@".split()
+PYQT_LIBS="@PYQT_LIBS@".split()
+
+PYDIR=sys.prefix
+VERS="%s.%s" % (sys.version_info[0],sys.version_info[1])
+
+def find_file(filename, std_dirs, paths):
+    """Searches for the directory where a given file is located,
+    and returns a possibly-empty list of additional directories, or None
+    if the file couldn't be found at all.
+
+    'filename' is the name of a file, such as readline.h or libcrypto.a.
+    'std_dirs' is the list of standard system directories; if the
+        file is found in one of them, no additional directives are needed.
+    'paths' is a list of additional locations to check; if the file is
+        found in one of them, the resulting list will contain the directory.
+    """
+
+    # Check the standard locations
+    for dir in std_dirs:
+        f = os.path.join(dir, filename)
+        if os.path.exists(f): return []
+
+    # Check the additional directories
+    for dir in paths:
+        f = os.path.join(dir, filename)
+        if os.path.exists(f):
+            return [dir]
+
+    # Not found anywhere
+    return None
+
+inc_dirs=[TKINCL]
+
+for version in ['8.4', '8.3', '8.2', '8.1', '8.0']:
+    # Check for the include files on Debian, where
+    # they're put in /usr/include/{tcl,tk}X.Y
+    debian_tcl_include = [ '/usr/include/tcl' + version ]
+    debian_tk_include =  [ '/usr/include/tk'  + version ] + debian_tcl_include
+    tcl_includes = find_file('tcl.h', inc_dirs, debian_tcl_include)
+    tk_includes = find_file('tk.h', inc_dirs, debian_tk_include)
+    if tcl_includes and tk_includes:
+       break
+
+print "Found Tk version:",version
+print "Found Tcl includes:",tcl_includes
+print "Found Tk includes:",tk_includes
+
+include_dirs=[".", "@srcdir@", TKINCL]+tcl_includes+tk_includes
+libs_tk=["tk"+version,"tcl"+version]
+
+setup(name="notifqt", version="1.0",
+    ext_modules=[
+             Extension("notifqt", ["@srcdir@/notifqtmodule.cpp", "moc_notify.cpp", ],
+                        include_dirs=include_dirs,
+                        library_dirs=[ ],
+                        libraries=libs_tk,
+                        extra_compile_args= SIP_INCLUDES + QT_INCLUDES,
+                        extra_objects=[],
+                        extra_link_args=QT_LIBS + PYQT_LIBS ,
+                      )
+                ])
+

@@ -1,0 +1,13 @@
+# Fichier adlv100a.para : regroupe les paramètres d'exécution de l'étude
+
+masterdir = "%(REP_ETUDE)s"
+etude = "%(ETUDE)s"
+prof_etd = (
+("comm","%(COMMAND_FILE_NAME)s","%(LOCAL_USER)s","%(LOCAL_MACHINE)s","1.i","D"),
+("med","%(MESH_FILE_NAME)s","%(LOCAL_USER)s","%(LOCAL_MACHINE)s","21","D"),
+("resu","%(REP_ETUDE)s/%(ETUDE)s.resu","%(LOCAL_USER)s","%(LOCAL_MACHINE)s","8","R"),
+("med","%(REP_ETUDE)s/%(ETUDE)s.med","%(LOCAL_USER)s","%(LOCAL_MACHINE)s","80","R"),
+("mess","%(REP_ETUDE)s/%(ETUDE)s.mess","%(LOCAL_USER)s","%(LOCAL_MACHINE)s","6","R"),
+("unv","%(REP_ETUDE)s/%(ETUDE)s.unv","%(LOCAL_USER)s","%(LOCAL_MACHINE)s","30","R"),
+("base","%(REP_ETUDE)s/%(ETUDE)s.base","%(LOCAL_USER)s","%(LOCAL_MACHINE)s","40","R"),
+)

@@ -1,0 +1,48 @@
+# -* Makefile *- 
+#
+# Author : Nicolas REJNERI
+# Date   : Sun May 05 11:45:40 2002
+# $Header $
+#
+
+# source path
+top_srcdir=@top_srcdir@
+top_builddir=../..
+srcdir=@srcdir@
+VPATH=.:@srcdir@:@top_srcdir@/idl:$(top_builddir)/idl:${KERNEL_ROOT_DIR}/idl/salome
+
+
+@COMMENCE@
+
+# header files 
+EXPORT_HEADERS=
+
+# Libraries targets
+LIB = 
+
+LIB_SRC =
+
+LIB_MOC =
+
+LIB_CLIENT_IDL =
+
+LIB_SERVER_IDL = 
+
+EXPORT_PYSCRIPTS = 
+
+# additionnal information to compil and link file
+
+lib: notifqt.so
+
+notifqt.so: moc_notify.cpp
+	python setup.py install --install-lib=$(top_builddir)/lib/salome
+
+
+install: notifqt.so
+	$(INSTALL) -d $(libdir)
+	cp -p $(top_builddir)/lib/salome/notifqt.so $(libdir)
+
+
+#pattern rules
+moc_%.cpp : %.h
+	$(MOC) $< -o $@
