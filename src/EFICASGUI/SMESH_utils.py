@@ -4,7 +4,7 @@
 # Author    : Paul RASCLE, EDF
 # Project   : SALOME
 # Copyright : EDF 2003
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.1.1.1 2004/09/28 09:41:16 salome Exp $
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.2 2004/12/10 16:43:25 salome Exp $
 #=============================================================================
 
 from omniORB import CORBA
@@ -25,28 +25,23 @@ smesh = lcc.FindOrLoadComponent("FactoryServer", "SMESH")
     #--------------------------------------------------------------------------
 
 def entryToIor(myStudy,entry):
-    myBuilder = myStudy.NewBuilder()
+    """
+    Retourne une référence ior de l'entry passée en argument.
+    """
     ior = None
-    SO = None
-    try:
-        SO = myStudy.FindObjectID(entry)
-    except:
-        print "invalid entry: ",entry
-        SO = None
-    if SO != None:
-        boo,iorso = myBuilder.FindAttribute(SO,"AttributeIOR")
-        if boo == 0:
-            print "no IOR attribute on study object: ", entry
-        else:
-            iorString = iorso.Value()
-            print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>iorString =",iorString
-            ior = orb.string_to_object(iorString)
+    iorString = entryToIorString(myStudy,entry)
+    if iorString != None:
+        ior = orb.string_to_object(iorString)
     return ior
 
-
-def entryToIor2(myStudy,entry):
+def entryToIorString(myStudy,entry):
+    """
+    Retourne la sérialisation de l'ior de l'entry passée en
+    argument. Il s'agit de l'attribut AttributeIOR associé à l'entry
+    dans l'arbre d'étude.
+    """
     myBuilder = myStudy.NewBuilder()
-    ior = None
+    iorString = None
     SO = None
     try:
         SO = myStudy.FindObjectID(entry)
@@ -59,13 +54,17 @@ def entryToIor2(myStudy,entry):
             print "no IOR attribute on study object: ", entry
         else:
             iorString = iorso.Value()
-            ior = orb.string_to_object(iorString)
+
     return iorString
 
 
     #--------------------------------------------------------------------------
 
-def entryToName2(myStudy,entry):
+def singleEntryToName(myStudy,entry):
+    """
+    Retourne le nom l'entry passée en argument. Il s'agit de
+    l'attribut AttributeName associé à l'entry dans l'arbre d'étude.
+    """
     myBuilder = myStudy.NewBuilder()
     name =[] 
     SO = None
@@ -82,7 +81,10 @@ def entryToName2(myStudy,entry):
                 name.append(nameso.Value())
     return name
 
-def entryToName(myStudy,entryList):
+def entryListToName(myStudy,entryList):
+    """
+    Récupération de la liste des noms à partir d'une liste d'entry.
+    """
     myBuilder = myStudy.NewBuilder()
     name =[]
     SO = None
@@ -100,56 +102,38 @@ def entryToName(myStudy,entryList):
                 name.append(nameso.Value())
     return name
 
+def entryToName(myStudy,entryList):
+    """
+    Cette méthode sert juste à assurer la compatibilité avec le
+    logiciel Eficas. Eficas (panelsSalome.py) fait appel à entryToList
+    en passant une entryList en argument.
+    """
+    return entryListToName(myStudy,entryList)
+
 
     #--------------------------------------------------------------------------
-    """
 def getMainShape(myStudy,entry):
-    anObject=entryToIor(myStudy,entry)
-    subShape=anObject._narrow(GEOM.GEOM_Object)
-    if subShape == None:
-        print "entry does not give a shape: ", entry
-        return None
-    isMain=subShape.IsMainShape()
-    if isMain:
-        iorMain=subShape
-    else:
-        iorStringMain=subShape._get_MainName()
-        iorMain = orb.string_to_object(iorStringMain)
-    return iorMain
     """
-
-
-def getMainShapeName(myStudy,entry):
+    Cette méthode retourne une référence ior de l'objet principal qui
+    contient l'entry passée en argument.
+    """
     anObject=entryToIor(myStudy,entry)
     subShape=anObject._narrow(GEOM.GEOM_Object)
     iorMain = subShape.GetMainShape()
-    stringior=  orb.object_to_string(iorMain)
-    print "###############>stringior", stringior
-    return stringior
+    return iorMain
 
-def getMainShapeName3(myStudy,entry):
-    anObject=entryToIor(myStudy,entry)
-    subShape=anObject._narrow(GEOM.GEOM_Object)
-    stringior = subShape.GetMainShape().GetName()
-    print "###############>stringior", stringior
-    return stringior
 
-def getMainShapeName2(myStudy,entry):
-    anObject=entryToIor(myStudy,entry)
-    subShape=anObject._narrow(GEOM.GEOM_Gen)
-    if subShape == None:
-        print "entry does not give a shape: ", entry
+def getMainShapeName(myStudy,entry):
+    """
+    Retourne la sérialisation de l'ior du MainShape de l'entry passé
+    en argument.
+    """
+    iorMain = getMainShape(myStudy,entry)
+    if iorMain==None:
         return None
-    isMain=subShape.IsMainShape()
-    if isMain:
-        iorMain=subShape
-    else:
-        print "############### iorStringMain=subShape._get_MainName()"
-        iorStringMain=subShape._get_MainName()
-        iorMain = orb.string_to_object(iorStringMain)
-        
-    stringior=  orb.object_to_string(iorMain)
-    return stringior
+    iorStringMain=  orb.object_to_string(iorMain)
+    return iorStringMain
+
     #--------------------------------------------------------------------------
 
 def getSMESHSubShapeIndexes(myStudy, entryList, typenoeudorcell = 0):
@@ -160,22 +144,20 @@ def getSMESHSubShapeIndexes(myStudy, entryList, typenoeudorcell = 0):
     
     print "################  len(entryList)=", len(entryList)
     if len(entryList) > 0:
-        iorMain = getMainShapeName(myStudy, entryList[0])
+        iorStringMain = getMainShapeName(myStudy, entryList[0])
 
-    if iorMain == None:
+    if iorStringMain == None:
         raise RuntimeException("L'ior CORBA n'est pas défini")
 
-    print "################ iormain=", iorMain
-    # _CS_gbo Test
-    #iorMain = "facebas2 facebas1"
+    print "################ iorStringMain=", iorStringMain
     
-    myCL=smesh.GetOrCreateCL(str(iorMain))
+    myCL=smesh.GetOrCreateCL(str(iorStringMain))
 
     if len(entryList) > 0:
          for idShape in entryList:
              print "idShape"
              print idShape
-             refShape = entryToName2(myStudy,idShape)
+             refShape = singleEntryToName(myStudy,idShape)
              if refShape != None:
                   for Shape in refShape:
                       refList.append(Shape)
