@@ -235,6 +235,8 @@ class BUREAU:
       """
       if self.code == 'ASTER':
           filetypes = ( ("format "+self.appli.format_fichier.get(), ".comm"),("Tous",'*'))
+      elif self.code == 'HOMARD' :
+          filetypes = ( ("format "+self.appli.format_fichier.get(), ".py"),("Tous",'*'))
       else:
           filetypes = ( ("format "+self.appli.format_fichier.get(), ".py"),)
       if not hasattr(self,'initialdir'):
