@@ -152,8 +152,7 @@ NONE = None
                if isinstance(sd,ASSD):self.sds_dict[sdnom]=sd
 
          if self.appli != None : 
-            self.appli.affiche_infos('Interprétation du fichier de \
-                                      commandes en cours ...')
+            self.appli.affiche_infos('Interprétation du fichier de commandes en cours ...')
          # On sauve le contexte pour garder la memoire des constantes
          # En mode edition (EFICAS) ou lors des verifications le contexte 
          # est recalculé
