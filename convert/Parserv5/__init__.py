@@ -30,8 +30,9 @@ except:
       import TextTools
    except:
       # Aucun des deux packages n'est installé
-      print """ Le package mx.TextTools ou TextTools doit etre
-   installé pour pouvoir relire des fichiers de commandes 
-   au format Aster V5
-   voir : http://www.lemburg.com/python/mxExtensions.html
-   """
+      #print """ Le package mx.TextTools ou TextTools doit etre
+   #installé pour pouvoir relire des fichiers de commandes 
+   #au format Aster V5
+   #voir : http://www.lemburg.com/python/mxExtensions.html
+   #"""
+       pass
