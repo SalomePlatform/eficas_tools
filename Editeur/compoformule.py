@@ -78,7 +78,7 @@ class FORMULEPanel(panels.OngletPanel):
     self.option_menu_typ.place(relx=0.33,rely=0.23)
     Label(self.frame_valeur,text= 'Arguments : ').place(relx=0.,rely=0.40)
     self.entry_arg = Entry(self.frame_valeur)
-    Label(self.frame_valeur,text= 'Expression : ').place(relx=0.,rely=0.55)
+    Label(self.frame_valeur,text= 'Expression : ').place(relx=0.,rely=0.60)
     self.entry_exp = Entry(self.frame_valeur)
     # binding sur les entries
     self.entry_nom.bind("<Return>",self.verif_nom)
@@ -87,7 +87,9 @@ class FORMULEPanel(panels.OngletPanel):
     # affichage des entries
     self.entry_nom.place(relx=0.35,rely=0.10,relwidth=0.2)
     self.entry_arg.place(relx=0.35,rely=0.40,relwidth=0.4)
-    self.entry_exp.place(relx=0.35,rely=0.55,relwidth=0.55)
+    Label(self.frame_valeur,text= 'Entrer les arguments sous la forme TYPE : VARIABLE séparés par des ,').place(relx=0.35,rely=0.45) 
+    Label(self.frame_valeur,text= 'Exemple REEL:INST,ENTIER:COEF').place(relx=0.35,rely=0.49) 
+    self.entry_exp.place(relx=0.35,rely=0.60,relwidth=0.60)
     # affichage d'une phrase d'aide
     aide = """
     Un retour de chariot dans une zone de saisie vous permet de vérifier si
