@@ -34,7 +34,7 @@ class JDC_POURSUITE(JDC):
                      cata_ord_dico=None,parent=None,
                      nom='SansNom',appli=None,context_ini=None,
                      jdc_pere=None,etape_include=None,prefix_include=None,
-                     recorded_units=None,**args):
+                     recorded_units=None,old_recorded_units=None,**args):
 
       JDC.__init__(self, definition=definition,
                          procedure=procedure,
@@ -50,6 +50,7 @@ class JDC_POURSUITE(JDC):
       self.etape_include=etape_include
       self.prefix_include=prefix_include
       if recorded_units is not None:self.recorded_units=recorded_units
+      if old_recorded_units is not None:self.old_recorded_units=old_recorded_units
 
    def NommerSdprod(self,sd,sdnom,restrict='non'):
       """
