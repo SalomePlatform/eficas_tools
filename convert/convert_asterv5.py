@@ -93,7 +93,7 @@ class AsterParser:
          self.cr.fatal("Impossible ouvrir fichier %s" % filename)
          return
 
-   def convert(self,outformat):
+   def convert(self,outformat,appli=None):
       if outformat == 'exec':
          return self.getexec()
       elif outformat == 'execnoparseur':

@@ -78,7 +78,7 @@ class IniParser(ConfigParser):
       except Exception,e:
          self.cr.fatal(str(e))
 
-   def convert(self,outformat):
+   def convert(self,outformat,appli=None):
       if outformat == 'eval':
          return self.getdicttext()
       elif outformat == 'dict':

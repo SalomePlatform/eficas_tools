@@ -103,7 +103,7 @@ class PythonParser:
          self.cr.fatal("Impossible ouvrir fichier %s" % filename)
          return
 
-   def convert(self,outformat):
+   def convert(self,outformat,appli=None):
       if outformat == 'exec':
          try:
             return parseur_python.PARSEUR_PYTHON(self.text).get_texte()
