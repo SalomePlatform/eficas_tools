@@ -6,7 +6,27 @@ TCLHOME=os.getenv("TCLHOME")
 if not TCLHOME:
    print "TCLHOME not set : use /usr"
    TCLHOME="/usr"
-TKINCL=os.path.join(TCLHOME,"include")
+TCLINCL=os.path.join(TCLHOME,"include")
+TCLLIB=os.path.join(TCLHOME,"lib")
+
+# _CS_gbo_ Ajout de TKHOME pour la modularité des installations. Si
+# TKHOME n'est pas définie, elle prend la valeur de TCLHOME.
+TKHOME=os.getenv("TKHOME")
+if not TKHOME:
+   print "TKHOME not set : use ", TCLHOME
+   TKHOME=TCLHOME
+TKINCL=os.path.join(TKHOME,"include")
+TKLIB=os.path.join(TKHOME,"lib")
+
+# _CS_gbo_ Ajout de TIXHOME pour la modularité des installations. Si
+# TIXHOME n'est pas définie, elle prend la valeur de TCLHOME.
+TIXHOME=os.getenv("TIXHOME")
+if not TIXHOME:
+   print "TIXHOME not set : use ", TCLHOME
+   TIXHOME=TCLHOME
+TIXINCL=os.path.join(TIXHOME,"include")
+TIXLIB=os.path.join(TIXHOME,"lib")
+
 
 QT_INCLUDES="@QT_INCLUDES@".split()
 SIP_INCLUDES="@SIP_INCLUDES@".split()
@@ -31,7 +51,9 @@ def find_file(filename, std_dirs, paths):
     # Check the standard locations
     for dir in std_dirs:
         f = os.path.join(dir, filename)
-        if os.path.exists(f): return []
+        # if os.path.exists(f): return []
+	# _CS_gbo_ A priori, c'est plutôt ce comportement qu'il faut implémenter
+        if os.path.exists(f): return [dir]
 
     # Check the additional directories
     for dir in paths:
@@ -42,30 +64,66 @@ def find_file(filename, std_dirs, paths):
     # Not found anywhere
     return None
 
-inc_dirs=[TKINCL]
+inc_dirs=[TCLINCL,TKINCL,TIXINCL]
+lib_dirs=[TCLLIB,TKLIB,TIXLIB]
 
-for version in ['8.4', '8.3', '8.2', '8.1', '8.0']:
-    # Check for the include files on Debian, where
-    # they're put in /usr/include/{tcl,tk}X.Y
-    debian_tcl_include = [ '/usr/include/tcl' + version ]
-    debian_tk_include =  [ '/usr/include/tk'  + version ] + debian_tcl_include
-    tcl_includes = find_file('tcl.h', inc_dirs, debian_tcl_include)
-    tk_includes = find_file('tk.h', inc_dirs, debian_tk_include)
-    if tcl_includes and tk_includes:
-       break
+# _CS_gbo_ Je pense qu'il faut dissocier la recherche dans les
+# répertoires définis sur la base de TCLHOME (paramétrage utilisateur)
+# de la recherche aux emplacement système par défaut. Par ailleurs, le
+# positionnement du numéro de version sert ici à définir le nom de la
+# bibliothèques à lié (libtcl8.3.so par exemple). Il serait plus
+# pertinant de faire le même contrôle que pour les includes
+
+tcl_includes = find_file('tcl.h', inc_dirs, [])
+tk_includes = find_file('tk.h', inc_dirs, [])
+if tcl_includes and tk_includes:
+    # On recherche la bibliothèque "versionnées"
+    for version in ['8.4', '8.3', '8.2', '8.1', '8.0']:
+        libtcl = 'libtcl' + version + '.so'
+        libtk  = 'libtk' + version + '.so'
+        tcl_lib = find_file(libtcl, lib_dirs, [])
+        tk_lib  = find_file(libtk, lib_dirs, [])
+        if tcl_lib and tk_lib:
+	    # On retiend ce numéro de version
+            break
+
+
+#
+# Recherche des includes dans les emplacement système par
+# défaut. Cette boucle est entammée uniquement si les include n'ont pas
+# encore été déterminés.
+#
+if not tcl_includes or not tk_includes or not tcl_lib or not tk_lib:
+   for version in ['8.4', '8.3', '8.2', '8.1', '8.0']:
+       # Check for the include files on Debian, where
+       # they're put in /usr/include/{tcl,tk}X.Y
+       debian_tcl_include = [ '/usr/include/tcl' + version ]
+       debian_tk_include =  [ '/usr/include/tk'  + version ] + debian_tcl_include
+       tcl_includes = find_file('tcl.h', [], debian_tcl_include)
+       tk_includes = find_file('tk.h', [], debian_tk_include)
+       if tcl_includes and tk_includes:
+          break
+   # _CS_gbo_ Si quand bien même on ne trouve pas les éléments
+   # recherchés, je pense qu'il faut arrêter le setup, il y a un problème
+   # de configuration.
+   if not tcl_includes or not tk_includes:
+	print "setup.py: Impossible de définir la configuration Tcl/Tk"
+	sys.exit(1)
+
 
 print "Found Tk version:",version
 print "Found Tcl includes:",tcl_includes
 print "Found Tk includes:",tk_includes
 
-include_dirs=[".", "@srcdir@", TKINCL]+tcl_includes+tk_includes
+include_dirs=[".", "@srcdir@"]+tcl_includes+tk_includes
 libs_tk=["tk"+version,"tcl"+version]
 
 setup(name="notifqt", version="1.0",
     ext_modules=[
-             Extension("notifqt", ["@srcdir@/notifqtmodule.cpp", "moc_notify.cpp", ],
+             Extension("notifqt", ["@srcdir@/notifqtmodule.cpp", "moc_notify.cpp",
+                                  ],
                         include_dirs=include_dirs,
-                        library_dirs=[ ],
+                        library_dirs=lib_dirs,
                         libraries=libs_tk,
                         extra_compile_args= SIP_INCLUDES + QT_INCLUDES,
                         extra_objects=[],
