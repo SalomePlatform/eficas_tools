@@ -137,6 +137,12 @@ class BLOC(N_ENTITE.ENTITE):
           l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
           raise AsException("Catalogue entite : ", self.nom,", de pere : ", self.pere.nom,
                      '\n',"Erreur dans la condition : ", self.condition,string.join(l))
+        except TypeError:
+          # erreur 'normale' : un mot-clé est en fait un morceau de mot clef : TYPE_CHAM[0:2] par exemple 
+          if CONTEXT.debug:
+             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
+             print "WARNING : Erreur a l'evaluation de la condition "+string.join(l)
+          return 0
         except:
           l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
           raise AsException("Catalogue entite : ", self.nom,", de pere : ", self.pere.nom,
