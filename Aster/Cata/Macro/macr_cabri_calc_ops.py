@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF macr_cabri_calc_ops Macro  DATE 18/11/2003   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

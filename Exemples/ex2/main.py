@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Cet exemple montre :
    - la création d'une définition de mot-clé facteur comportant un mot-clé simple

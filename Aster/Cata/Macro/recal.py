@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF recal Macro  DATE 13/01/2004   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

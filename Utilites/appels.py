@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Module appels
 -------------
@@ -14,7 +15,7 @@ def NULL( *l_args, **d_args  ) : pass
 if DEVELOPPEUR :
 
     import developpeur
-    developpeur.sortie.write( "import de "+__name__+" : $Id$" )
+    developpeur.sortie.write( "import de "+__name__+" : $Id: appels.py,v 1.2 2003/03/06 14:36:11 eficas Exp $" )
     developpeur.sortie.write( "\n" )
 
     import sys

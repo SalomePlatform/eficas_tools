@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import glob,os
 
 copyright="""#            CONFIGURATION MANAGEMENT OF EDF VERSION

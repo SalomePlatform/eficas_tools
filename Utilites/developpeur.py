@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
     Ce module permet de définir la variable DEVELOPPEUR indiquant
     que l'utilisateur courant fait partie de la liste des développeurs.
@@ -28,7 +29,7 @@ if test_devel :
         DEVELOPPEUR=d_dev[ os.getuid() ]
         import sys
         sortie=sys.stderr
-        sortie.write( "import de "+__name__+" : $Id$" )
+        sortie.write( "import de "+__name__+" : $Id: developpeur.py,v 1.1 2003/03/06 14:36:11 eficas Exp $" )
         sortie.write( "\n" )
 
 

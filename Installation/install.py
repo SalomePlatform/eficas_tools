@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 SUCCES,ECHEC = 1,0
 OUI,NON = 1,0
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import aide_objets
 import aide_gui

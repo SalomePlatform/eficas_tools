@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from Accas import SIMP,FACT,BLOC
 from Accas import AsException,AsType

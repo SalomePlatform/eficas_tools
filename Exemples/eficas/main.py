@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Exemple d'utilisation d'un JDC sur le cas test eficas
    de la base de test d'ASTER

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF nommage Noyau  DATE 18/03/2003   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Vérification des cycles de référence d'objets sur 
    un exemple avec des opérateurs

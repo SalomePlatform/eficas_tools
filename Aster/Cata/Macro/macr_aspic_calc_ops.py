@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF macr_aspic_calc_ops Macro  DATE 03/02/2004   AUTEUR LEBOUVIE F.LEBOUVIER 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #& MODIF COMMANDE  DATE 10/07/2001   AUTEUR ACBHHCD G.DEVESA 
 #		CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

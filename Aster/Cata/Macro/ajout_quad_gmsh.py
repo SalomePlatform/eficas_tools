@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF ajout_quad_gmsh Macro  DATE 11/06/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

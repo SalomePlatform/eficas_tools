@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Construction d'un item JDC
 """

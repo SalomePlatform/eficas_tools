@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF N_OPER Noyau  DATE 09/10/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

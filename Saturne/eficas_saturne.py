@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #!/usr/bin/env python
 """
     Ce module sert à lancer EFICAS configuré pour Code_Saturne

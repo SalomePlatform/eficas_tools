@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF macr_cabri_mail_dat Macro  DATE 20/05/2003   AUTEUR MABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

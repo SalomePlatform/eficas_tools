@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 SD1=DEFI_SONDE(Z=1,
                X=2,

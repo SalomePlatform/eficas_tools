@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
     Ce module sert à tracer les appels aux methodes pendant
     l'exécution.

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Cet exemple met en oeuvre le profiling de Python sur un cas
    avec plusieurs éléments de définition,

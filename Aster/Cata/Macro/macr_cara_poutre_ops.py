@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF macr_cara_poutre_ops Macro  DATE 19/01/2004   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

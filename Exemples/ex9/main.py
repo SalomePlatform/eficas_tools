@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Cet exemple construit un objet de définition (cata) de type FACT
    qui est composé d'un objet SIMP et d'un bloc conditionnel

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Ce module génère l'IHM permettant d'accéder à l'aide en ligne d'une application(ex: EFICAS)
 Il analyse l'objet index passé en argument et génére automatiquement en conséquence le menu

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF macro_mode_meca_ops Macro  DATE 20/01/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF ops Cata  DATE 06/09/2003   AUTEUR D6BHHJP J.P.LEFEBVRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

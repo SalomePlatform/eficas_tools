@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
      Ce module sert à construire les distributions d'EFICAS en fonction
      du tag CVS courant

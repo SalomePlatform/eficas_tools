@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF macro_miss_3d_ops Macro  DATE 04/11/2003   AUTEUR ACBHHCD G.DEVESA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Module Cyclops version 0.9.4.
 # Released to the public domain 18-Jul-1999,
 # by Tim Peters (tim_one@email.msn.com).

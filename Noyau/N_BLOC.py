@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF N_BLOC Noyau  DATE 29/05/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

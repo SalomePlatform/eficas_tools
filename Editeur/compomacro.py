@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -36,7 +37,7 @@ from widgets import showinfo,showerror
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.11.2.1 2004/03/01 11:14:09 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.12 2004/03/11 09:59:00 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):

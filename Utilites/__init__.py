@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-    $Id: __init__.py,v 1.3 2003/02/06 15:11:22 eficas Exp $
+    $Id: __init__.py,v 1.4 2003/03/06 14:36:11 eficas Exp $
 
     Le package UTILITES contient les fonctions permettant
     d'instrumenter un script :

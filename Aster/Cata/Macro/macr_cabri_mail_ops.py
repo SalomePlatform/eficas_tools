@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF macr_cabri_mail_ops Macro  DATE 24/11/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

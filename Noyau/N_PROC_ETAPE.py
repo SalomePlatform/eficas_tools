@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF N_PROC_ETAPE Noyau  DATE 26/09/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF fiabilite_mefisto Macro  DATE 16/01/2004   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

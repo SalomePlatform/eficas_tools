@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # debut entete
 import Accas
 from Accas import AU_MOINS_UN,UN_PARMI,EXCLUS,PRESENT_PRESENT
@@ -8,7 +9,7 @@ from Accas import SIMP,FACT,BLOC
 from Accas import ASSD 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_saturne.py,v 1.10 2000/10/24 10:32:56 iliade Exp $"
+__Id__="$Id: cata_saturne.py,v 1.1.1.1 2002/03/26 09:08:47 eficas Exp $"
 #
 
 JdC = JDC_CATA(code='SATURNE',

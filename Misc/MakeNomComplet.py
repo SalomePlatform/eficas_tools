@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Auteur : A. Yessayan
 # Date : jeudi 06/03/2003 a 14:36:00
 
@@ -32,7 +33,7 @@ except :
 
 if DEVELOPPEUR :
     import developpeur
-    developpeur.sortie.write( "import de "+__name__+" : $Id: MakeNomComplet.py,v 1.1 2003/03/06 16:09:53 eficas Exp $" )
+    developpeur.sortie.write( "import de "+__name__+" : $Id: MakeNomComplet.py,v 1.2 2003/03/07 14:30:48 eficas Exp $" )
     developpeur.sortie.write( "\n" )
 
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -30,7 +31,7 @@ import panels
 
 #
 __version__="$Name:  $"
-__Id__="$Id: componuplet.py,v 1.3.2.1 2003/10/09 14:57:58 eficas Exp $"
+__Id__="$Id: componuplet.py,v 1.4 2003/10/16 14:31:22 eficas Exp $"
 #
 
 myrepr = Repr()

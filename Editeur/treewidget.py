@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -26,7 +27,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.12 2003/03/10 17:24:43 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.13 2003/09/25 15:25:10 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard

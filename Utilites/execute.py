@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Module exec
 -----------
@@ -15,7 +16,7 @@ if DEVELOPPEUR :
     import scrute
     import types
     import developpeur
-    developpeur.sortie.write( "import de "+__name__+" : $Id$" )
+    developpeur.sortie.write( "import de "+__name__+" : $Id: execute.py,v 1.1 2003/03/06 14:36:11 eficas Exp $" )
     developpeur.sortie.write( "\n" )
     developpeur.sortie.flush()
 

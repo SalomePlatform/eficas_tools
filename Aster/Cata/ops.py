@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF ops Cata  DATE 12/11/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #& MODIF ENTETE  DATE 18/03/2003   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -30,7 +31,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_reduit.py,v 1.3 2003/10/23 12:12:14 eficas Exp $"
+__Id__="$Id: cata_reduit.py,v 1.4 2004/01/29 18:16:48 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,

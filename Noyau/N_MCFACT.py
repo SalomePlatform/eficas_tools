@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF N_MCFACT Noyau  DATE 03/09/2002   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

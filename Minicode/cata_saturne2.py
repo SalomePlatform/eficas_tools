@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # debut entete
 import Accas
 from Accas import AU_MOINS_UN,UN_PARMI,EXCLUS,PRESENT_PRESENT
@@ -9,7 +10,7 @@ from Accas import EVAL,PARAMETRE,COMMENTAIRE,PARAMETRE_EVAL,COMMANDE_COMM
 from Accas import ASSD,CO,GEOM,fonction,geom,assd
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_saturne2.py,v 1.1.1.1.6.1 2003/10/16 12:13:36 eficas Exp $"
+__Id__="$Id: cata_saturne2.py,v 1.2 2003/10/16 14:31:22 eficas Exp $"
 #
 
 import ops

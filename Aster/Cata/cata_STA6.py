@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #& MODIF COMMANDE  DATE 24/06/2002   AUTEUR F1BHHAJ J.ANGLES 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -29,7 +30,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_aster_v6.py,v 1.12 2001/01/16 15:55:05 iliade Exp $"
+__Id__="$Id: cata_STA6.py,v 1.4 2002/11/06 16:21:47 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,

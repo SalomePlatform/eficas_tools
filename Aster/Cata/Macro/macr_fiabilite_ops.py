@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF macr_fiabilite_ops Macro  DATE 16/01/2004   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

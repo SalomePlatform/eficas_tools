@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF V_PRESENT_PRESENT Validation  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Cet exemple construit un objet regle (cata) 
    de type AU_MOINS_UN

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 sansnom=DEFI_SONDE(Z=45,
                    X=None,

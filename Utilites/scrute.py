@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Module scrute
 -------------
@@ -21,7 +22,7 @@ def NULL( *l_args, **d_args  ) : pass
 if DEVELOPPEUR :
 
     import developpeur
-    developpeur.sortie.write( "import de "+__name__+" : $Id$" )
+    developpeur.sortie.write( "import de "+__name__+" : $Id: scrute.py,v 1.2 2003/03/06 14:36:12 eficas Exp $" )
     developpeur.sortie.write( "\n" )
     import re
     import linecache

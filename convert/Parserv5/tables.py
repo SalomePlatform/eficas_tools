@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -28,8 +29,8 @@
 from TextTools import *
 
 #
-__version__="$Name: V1_4 $"
-__Id__="$Id: tables.py,v 1.2 2002/05/15 15:32:00 eficas Exp $"
+__version__="$Name:  $"
+__Id__="$Id: tables.py,v 1.4 2003/09/18 16:16:54 eficas Exp $"
 #
 
 err0='ERR0 , erreur non identifiee : '

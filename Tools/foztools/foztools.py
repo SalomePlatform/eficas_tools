@@ -1,4 +1,5 @@
-# $Header: /home/eficas/CVSROOT/EficasV1/Tools/foztools/foztools.py,v 1.1.1.1 2001/12/04 15:38:23 eficas Exp $
+# -*- coding: utf-8 -*-
+# $Header: /home/eficas/CVSROOT/EficasV1/Tools/foztools/foztools.py,v 1.1.1.1 2002/03/26 09:08:47 eficas Exp $
 
 ###########################################################################
 # This is a set of Python widgets, built on top of pythonTk.  They are

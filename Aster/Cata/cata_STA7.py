@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #& MODIF ENTETE  DATE 02/12/2003   AUTEUR PBADEL P.BADEL 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -31,7 +32,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_STA7.py,v 1.5.2.1 2004/03/01 11:00:25 eficas Exp $"
+__Id__="$Id: cata_STA7.py,v 1.6 2004/03/11 09:58:59 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,

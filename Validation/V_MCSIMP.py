@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF V_MCSIMP Validation  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF macr_aspic_mail_ops Macro  DATE 30/01/2004   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

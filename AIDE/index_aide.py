@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Contient la description des fichiers d'aide et leur structuration
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import types
 from Noyau import N_VALIDATOR
 from Ihm import I_VALIDATOR

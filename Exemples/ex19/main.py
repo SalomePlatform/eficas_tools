@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Exemple d'utilisation d'un générateur au format asterv5
 

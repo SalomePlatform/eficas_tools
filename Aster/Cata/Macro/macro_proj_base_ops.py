@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF macro_proj_base_ops Macro  DATE 19/01/2004   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

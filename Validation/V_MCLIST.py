@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF V_MCLIST Validation  DATE 29/05/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

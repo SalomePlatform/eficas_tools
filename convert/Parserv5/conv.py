@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -30,7 +31,7 @@ except :
 
 #
 __version__="$Name:  $"
-__Id__="$Id: conv.py,v 1.4 2003/08/08 10:14:37 eficas Exp $"
+__Id__="$Id: conv.py,v 1.5 2003/09/18 16:16:54 eficas Exp $"
 #
 
 Keywords=('MAILLE_1','MAILLE_2','MAILLE_ESCL','MAILLE_FOND','MAILLE_MAIT','MAILLE_ORIG','MAILLE',

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Exemple d'utilisation avec des mots-clés facteurs multiples.
    Cet exemple construit un objet de définition (cata) de type FACT

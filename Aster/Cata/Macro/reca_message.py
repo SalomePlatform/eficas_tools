@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #@ MODIF reca_message Macro  DATE 13/01/2003   AUTEUR PABHHHH N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

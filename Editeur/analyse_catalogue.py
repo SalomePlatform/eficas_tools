@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -23,7 +24,7 @@ import re,string,cPickle,os
 from Noyau.N_CR import CR
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.2 2002/05/15 15:31:58 eficas Exp $"
+__Id__="$Id: analyse_catalogue.py,v 1.3 2002/09/10 15:59:37 eficas Exp $"
 __version__="$Name:  $"
 #
 l_noms_commandes = ['OPER','PROC','MACRO','FORM']

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #!/usr/local/bin/python
 import Tkinter
 from foztools import Slider

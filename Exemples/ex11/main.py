@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Exemple d'utilisation avec un opérateur
    Cet exemple construit un objet de définition (OP1) de type OPER

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 
 # REPINI sert à localiser le fichier editeur.ini

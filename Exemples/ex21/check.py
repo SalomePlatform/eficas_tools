@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Script Python permettant de faire une verification avec
    l'outil pychecker

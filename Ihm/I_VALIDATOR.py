@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
    Ce module contient des classes permettant de définir des validateurs
    pour EFICAS. Ces classes constituent un complément à des classes existantes

@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 import re,types
 import sys
 
 sortie=sys.stderr
-sortie.write( "import de "+__name__+" : $Id$" )
+sortie.write( "import de "+__name__+" : $Id: funcname.py,v 1.1 2003/03/06 14:36:11 eficas Exp $" )
 sortie.write( "\n" )
 
 def get_nombre_de_blancs( str ) :

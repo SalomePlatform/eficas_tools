@@ -1,6 +1,12 @@
 
 
 DEBUT();
+P1 = 9.8;
+
+P2 = eeee;
+
+P3 = 7;
+
 #Pas trouve		shellpanel
 
 MAIL=LIRE_MAILLAGE();

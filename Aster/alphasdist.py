@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
      Ce module sert à construire les distributions de versions alpha d'EFICAS en fonction
      du tag CVS courant (Vx_yaz). Une version alpha est une version dont toutes les fonctionnalités

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Ce module génère un objet INDEX par lecture et interprétation du fichier texte
 le décrivant (ex : index_aide.py)

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -36,7 +37,7 @@ from Accas import FACT,BLOC,SIMP
 
 #
 __version__="$Name:  $"
-__Id__="$Id: catabrowser.py,v 1.2 2002/05/15 15:31:58 eficas Exp $"
+__Id__="$Id: catabrowser.py,v 1.3 2002/09/10 15:59:37 eficas Exp $"
 #
 class Tableau:
   incr = 10
