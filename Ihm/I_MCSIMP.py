@@ -348,7 +348,18 @@ class MCSIMP(I_OBJECT.OBJECT):
              self.init_modif()
  
  
- 
+  def get_min_max(self):
+     """
+     Retourne les valeurs min et max admissibles pour la valeur de self
+     """
+     return self.definition.min,self.definition.max
+
+
+  def get_type(self):
+     """
+     Retourne le type attendu par le mot-clé simple
+     """
+     return self.definition.type
  
  
  

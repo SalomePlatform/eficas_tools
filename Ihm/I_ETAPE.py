@@ -93,8 +93,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       if self.definition.reentrant == 'f' :
         sd = self.jdc.get_sd_avant_etape(nom,self)
         if sd != None :
-          self.sd = self.reuse = sd
-          return 1,"Opérateur facultativement réentrant et concept existant trouvé"
+	  # FR : il faut tester que la sd trouvée est du bon type !!!!!!!!!!!!!!!!!
+	  if isinstance(sd,self.get_type_produit()) :
+             self.sd = self.reuse = sd
+             return 1,"Opérateur facultativement réentrant et concept existant trouvé"
+	  else:
+	     return 0,"Concept déjà existant et de mauvais type"
         else :
           # il faut éventuellement enlever le lien vers une SD existante car si on passe ici
 	  # cela signifie que l'opérateur n'est pas utilisé en mode réentrant.
@@ -300,6 +304,56 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
      for motcle in self.mc_liste :
          motcle.verif_existence_sd()
      
+   def Build_sd(self,nom):
+      """
+         Construit le concept produit de l'opérateur. Deux cas 
+         peuvent se présenter :
+        
+         - le parent n'est pas défini. Dans ce cas, l'étape prend en charge la création 
+           et le nommage du concept.
+
+         - le parent est défini. Dans ce cas, l'étape demande au parent la création et 
+           le nommage du concept.
+
+      """
+      if not self.isactif():return
+      # FR : attention cette méthode ne devrait pas se trouver là car elle surcharge celle qui 
+      # se trouve dans N_ETAPE.py et elle est partie intégrante du noyau, mais, suite à l'absence de 
+      # test de validité de l'opérateur avant d'essayer de déterminer la sd produite, on n'arrivait
+      # pas à relire avec EFICAS un fichier contenant une étape encore incomplète du style :
+      #  sansnom = AFFE_CHAR_CINE(MODELE=None)
+      # Suite à la stabilisation du noyau d'Aster, je n'ai pas eu d'autre solution que de surcharger
+      # cette méthode ici en rajoutant le test manquant ...
+      if not self.isvalid(sd='non') : return
+      try:
+         if self.parent:
+            sd= self.parent.create_sdprod(self,nom)
+            if type(self.definition.op_init) == types.FunctionType: 
+               apply(self.definition.op_init,(self,self.parent.g_context))
+         else:
+            sd=self.get_sd_prod()
+            # On n'utilise pas self.definition.op_init car self.parent 
+            # n'existe pas
+            if sd != None and self.reuse == None:
+               # On ne nomme le concept que dans le cas de non reutilisation 
+               # d un concept
+               sd.nom=nom
+         if self.jdc and self.jdc.par_lot == "NON" :
+            self.Execute()
+         return sd
+      except AsException,e:
+         raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
+                              'fichier : ',self.appel[1],e)
+      except EOFError:
+         # XXX Normalement le contexte courant doit etre le parent.
+         # Il n'y a pas de raison de remettre le contexte au parent
+         #self.reset_current_step()
+         raise
+      except :
+         l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
+         raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
+                           'fichier : ',self.appel[1]+'\n',
+                            string.join(l))
      
      
      

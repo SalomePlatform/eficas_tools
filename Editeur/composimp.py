@@ -472,10 +472,13 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
           f = open(nom_fichier, "rb")
           selection_texte = f.read()
           f.close()
-          self.ajout_valeurs = FenetreDeSelection(self, self.node.item,
-                                         titre="Sélection de valeurs",
-                                         texte=selection_texte)
+          self.ajout_valeurs = FenetreDeSelection(self, 
+	                                          self.node.item,
+						  self.parent.appli,
+                                        	  titre="Sélection de valeurs",
+                                        	  texte=selection_texte)
       except:
+          traceback.print_exc()
           showinfo("Erreur de fichier","impossible d'ouvir le fichier "+nom_fichier)
           
   def get_bulle_aide(self):

@@ -217,3 +217,19 @@ class COMMANDE_COMM:
       """
       return []
 
+    def reparent(self,parent):
+      """
+          Cette methode sert a reinitialiser la parente de l'objet
+      """
+      self.parent=parent
+      self.jdc=parent.get_jdc_root()
+      self.etape=self
+
+    def verif_existence_sd(self):
+      """
+         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
+	 avant étape, sinon enlève la référence à ces concepts
+	 --> sans objet pour les commandes commentarisées
+      """
+      pass
+	
