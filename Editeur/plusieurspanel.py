@@ -118,8 +118,11 @@ class PLUSIEURS_Panel(newSIMPPanel):
       else :
           testtype = self.node.item.object.verif_type(valeur)
           if not testtype :
-            commentaire ="Type de la valeur incorrecte"
-            encorevalide=-2
+	    if valeur.__class__.__name__ in ( 'PARAMETRE', 'ITEM_PARAMETRE') :
+	       testtype = 1
+	    else :
+               commentaire ="Type de la valeur incorrecte"
+               encorevalide=-2
 		
       if (encorevalide ==0) :
          commentaire=self.node.item.info_erreur_item()
