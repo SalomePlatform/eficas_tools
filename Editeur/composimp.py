@@ -605,7 +605,15 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           if (self.is_param(valeur)):
 	      return valeur
           else:
-              return valeur+'.'
+	      if string.find(valeur,'e') != -1:
+	         # Notation scientifique ?
+		 try :
+	            r=eval(valeur)
+		    return valeur
+		 except :
+		    return None
+	      else :
+                 return valeur+'.'
       else:
           return valeur
         
