@@ -260,6 +260,15 @@ class MCSIMP(I_OBJECT.OBJECT):
         objet = eval(new_valeur,d)
         return objet,1
       except Exception:
+# PN :
+#    - Ajout de quote autour de la valeur en cas de chaine de caracteres 
+        if type(new_valeur)==types.StringType and self.wait_TXM():
+            new_valeur="'"+new_valeur+"'"
+            try :
+		objet = eval(new_valeur,d)
+		return objet,1
+            except :
+        	return None,0
         if CONTEXT.debug : traceback.print_exc()
         return None,0
 
