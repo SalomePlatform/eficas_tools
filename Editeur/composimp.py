@@ -1058,12 +1058,15 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
           self.entry_co.focus()
       elif new_concept == 'NON':
           # On est passe de OUI à NON, on supprime la valeur
-          self.node.item.delete_valeur_co()
-          self.record_valeur(name=None,mess="Suppression CO enregistrée")
-          self.label_co.place_forget()
-          self.entry_co.place_forget()
-          self.l_resu.place(relx=0.05,rely=0.7)
-          self.label_valeur.place(relx=0.45,rely=0.7)
+# PN correction de bug (on passe de non a non et cela supprime la valeur)
+# ajout du if de le ligne suivane
+      	  if self.node.item.is_CO():
+          	self.node.item.delete_valeur_co()
+                self.record_valeur(name=None,mess="Suppression CO enregistrée")
+                self.label_co.place_forget()
+                self.entry_co.place_forget()
+                self.l_resu.place(relx=0.05,rely=0.7)
+                self.label_valeur.place(relx=0.45,rely=0.7)
           
   def display_valeur(self):
       """
