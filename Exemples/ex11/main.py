@@ -28,6 +28,16 @@ class concept:
       """ Retourne 1 si sd est du bon type par rapport à la classe """
       return 0
 
+class cata:
+   def __init__(self):
+      CONTEXT.unset_current_cata()
+      CONTEXT.set_current_cata(self)
+
+   def enregistre(self,commande):
+      return
+
+c=cata()
+
 OP1 = OPER(nom='OP1',op=1,sd_prod=concept,reentrant='f',
            a=SIMP(typ='I'),
            c=SIMP(typ='I',position='global'),
