@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -21,13 +21,21 @@
 # ======================================================================
 
 """
-    Ce module sert \xe0 lancer EFICAS configur\xe9 pour Code_Aster
+   Ce module sert à lancer EFICAS configuré pour Code_Aster
 """
 # Modules Python
 import sys
 
 # Modules Eficas
 import prefs
+if hasattr(prefs,'encoding'):
+   # Hack pour changer le codage par defaut des strings
+   import sys
+   reload(sys)
+   sys.setdefaultencoding(prefs.encoding)
+   del sys.setdefaultencoding
+   # Fin hack
+
 sys.path[:0]=[prefs.INSTALLDIR]
 
 import Editeur
@@ -39,4 +47,3 @@ if len(sys.argv) > 1 :
 else:
     # on veut ouvrir Eficas 'vide'
     eficas_go.lance_eficas(code='HOMARD')
-

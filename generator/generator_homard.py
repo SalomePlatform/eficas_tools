@@ -1,0 +1,216 @@
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+#
+#
+# ======================================================================
+"""
+    Ce module contient le plugin generateur de fichier au format 
+    homard pour EFICAS.
+
+"""
+import traceback
+import types,string,re
+
+from Noyau import N_CR
+from Noyau.N_utils import repr_float
+from Accas import ETAPE,PROC_ETAPE,MACRO_ETAPE,ETAPE_NIVEAU,JDC,FORM_ETAPE
+from Accas import MCSIMP,MCFACT,MCBLOC,MCList,EVAL
+from Accas import GEOM,ASSD,MCNUPLET
+from Accas import COMMENTAIRE,PARAMETRE, PARAMETRE_EVAL,COMMANDE_COMM
+from Formatage import Formatage
+from generator_python import PythonGenerator
+
+def entryPoint():
+   """
+       Retourne les informations nécessaires pour le chargeur de plugins
+
+       Ces informations sont retournées dans un dictionnaire
+   """
+   return {
+        # Le nom du plugin
+          'name' : 'homard',
+        # La factory pour créer une instance du plugin
+          'factory' : HomardGenerator,
+          }
+
+
+class HomardGenerator(PythonGenerator):
+   """
+       Ce generateur parcourt un objet de type JDC et produit
+       un texte au format eficas et 
+       un texte au format homard 
+
+   """
+   # Les extensions de fichier préconisées
+   extensions=('.comm',)
+
+   def __init__(self,cr=None):
+      # Si l'objet compte-rendu n'est pas fourni, on utilise le compte-rendu standard
+      if cr :
+         self.cr=cr
+      else:
+         self.cr=N_CR.CR(debut='CR generateur format homard pour homard',
+                         fin='fin CR format homard pour homard')
+      # Le texte au format homard est stocké dans l'attribut text
+      self.dico_mot_clef={}
+      self.assoc={}
+      self.lmots_clef_calcules = ('SuivFron','TypeBila','ModeHOMA','CCAssoci', 'CCNoChaI','HOMaiN__','HOMaiNP1')
+      self.lmots_genea = ('NOM_MED_MAILLAGE_N','NOM_MED_MAILLAGE_NP1')
+#,'COMPOSANTE','NUME_ORDRE','INST','PRECISION','CRITERE')
+      self.init_assoc()
+      self.text=''
+      self.textehomard=[]
+
+   def init_assoc(self):
+      self.lmot_clef  = ('CCMaiN__', 'CCNoMN__', 'CCIndica', 'CCSolN__', 'CCFronti', 'CCNoMFro', 'CCMaiNP1', 
+                         'CCNoMNP1', 'CCSolNP1', 'TypeRaff', 'TypeDera', 'NiveauMa', 'SeuilHau', 'SeuilHRe', 
+			 'SeuilHPE', 'NiveauMi', 'SeuilBas', 'SeuilBRe', 'SeuilBPE', 'ListeStd', 'NumeIter', 
+			 'Langue  ', 'CCGroFro', 'CCNoChaI', 'CCNumOrI', 'CCNumPTI', 'SuivFron', 'TypeBila', 
+			 'ModeHOMA', 'HOMaiN__', 'HOMaiNP1')
+
+# Bizarre demander a Gerald : 
+#		CVSolNP1
+      self.assoc['CCMaiN__']='FICHIERS:NOM_MED_MAILLAGE_N'
+      self.assoc['CCNoMN__']='TRAITEMENT:NOM_MED_MAILLAGE_N'
+      self.assoc['CCIndica']='FICHIERS:NOM_MED_MAILLAGE_N'
+      self.assoc['CCSolN__']='FICHIERS:NOM_MED_MAILLAGE_N'
+      self.assoc['CCFronti']='FIC_FRON'
+      self.assoc['CCNoMFro']='NOM_MED_MAILLAGE_FRONTIERE'
+      self.assoc['CCMaiNP1']='FICHIERS:NOM_MED_MAILLAGE_NP1'
+      self.assoc['CCNoMNP1']='TRAITEMENT:NOM_MED_MAILLAGE_NP1'
+      self.assoc['CCSolNP1']='FICHIERS:NOM_MED_MAILLAGE_NP1'
+      self.assoc['TypeRaff']='RAFFINEMENT'
+      self.assoc['TypeDera']='DERAFFINEMENT'
+      self.assoc['NiveauMa']='NIVE_MAX'
+      self.assoc['SeuilHau']='CRIT_RAFF_ABS'
+      self.assoc['SeuilHRe']='CRIT_RAFF_REL'
+      self.assoc['SeuilHPE']='CRIT_RAFF_PE'
+      self.assoc['NiveauMi']='NIVE_MIN'
+      self.assoc['SeuilBas']='CRIT_DERA_ABS'
+      self.assoc['SeuilBRe']='CRIT_DERA_REL'
+      self.assoc['SeuilBPE']='CRIT_DERA_PE'
+      self.assoc['ListeStd']='INFORMATION'
+      self.assoc['NumeIter']='NITER'
+      self.assoc['Langue  ']='LANGUE'
+      self.assoc['CCGroFro']='GROUP_MA'
+#     self.assoc['CCNoChaI']='NOM_MED' (on doit aussi ajouter 'COMPOSANTE')
+      self.assoc['CCNumOrI']='NUME_ORDRE'
+      self.assoc['CCNumPTI']='NUME_ORDRE'
+
+
+   def gener(self,obj,format='brut'):
+      self.text=PythonGenerator.gener(self,obj,format)
+      self.genereConfiguration()
+      return self.text
+
+   def generMCSIMP(self,obj) :
+      """
+          Convertit un objet MCSIMP en une liste de chaines de caractères à la
+          syntaxe homard
+      """
+      s=PythonGenerator.generMCSIMP(self,obj)
+      if obj.nom in self.lmots_genea:
+	 genea = obj.get_genealogie()
+         clef=genea[1]+":"+genea[-1]
+      else :
+	 clef=obj.nom
+      self.dico_mot_clef[clef]=obj.val
+      return s
+
+   def genereConfiguration(self):
+      ligbla=31*' '
+      self.textehomard=[]
+      for mot in self.lmot_clef:
+          if mot not in self.lmots_clef_calcules :
+	     clef_eficas=self.assoc[mot]
+             if self.dico_mot_clef.has_key(clef_eficas):
+		val=self.dico_mot_clef[clef_eficas]
+                if val != None:
+		   try :
+		    ligne=mot+' '+val
+		   except:
+		    ligne=mot+' '+repr(val)
+		   ligne.rjust(32)
+                   self.textehomard.append(ligne)
+          else:
+             val=apply(HomardGenerator.__dict__[mot],(self,))
+             if val != None:
+                mot.rjust(8)
+	        ligne=mot+' '+val
+	        ligne.rjust(32)
+                self.textehomard.append(ligne)
+
+   def get_homard(self):
+       return self.textehomard
+
+   def SuivFron(self):
+        val="non"
+	if self.dico_mot_clef.has_key('NOM_MED_MAILLAGE_FRONTIERE'):
+	   if self.dico_mot_clef['NOM_MED_MAILLAGE_FRONTIERE'] != None:
+		val="oui"
+        return val
+
+   def TypeBila(self):
+        inttypeBilan = 1
+        retour=None
+        dict_val={'NOMBRE':7,'INTERPENETRATION':3,'QUALITE':5,'CONNEXITE':11,'TAILLE':13}
+        for mot in ('NOMBRE','QUALITE','INTERPENETRATION','CONNEXITE','TAILLE'):
+	    if self.dico_mot_clef.has_key(mot):
+	       if (self.dico_mot_clef[mot] == "OUI"):
+		  inttypeBilan=inttypeBilan*dict_val[mot]
+                  retour = repr(inttypeBilan)
+	return retour
+
+
+   def ModeHOMA(self):
+        intModeHOMA=1
+	if self.dico_mot_clef.has_key('INFORMATION'):
+	   if self.dico_mot_clef['INFORMATION'] == "OUI":
+	      intModeHOMA=2
+        return repr(intModeHOMA)
+	   
+   def CCAssoci(self):
+        return 'MED' 
+
+   def CCNoChaI(self):
+	if not (self.dico_mot_clef.has_key('NOM_MED')):
+	   return None
+	if (self.dico_mot_clef['NOM_MED']== None):
+	   return None
+	if not (self.dico_mot_clef.has_key('COMPOSANTE')):
+	   return None
+        if (self.dico_mot_clef['COMPOSANTE']== None):
+           return None
+        chaine=self.dico_mot_clef['NOM_MED']+' '+self.dico_mot_clef['COMPOSANTE']
+        return chaine
+
+   def HOMaiN__(self):
+       chaine=None
+       if self.dico_mot_clef.has_key('NITER'):
+	  if self.dico_mot_clef['NITER'] != None :
+             num="M"+repr(self.dico_mot_clef['NITER'])
+	     chaine=num+" "+num+".hom"
+       return chaine
+
+   def HOMaiNP1(self):
+       chaine=None
+       if self.dico_mot_clef.has_key('NITER'):
+	  if self.dico_mot_clef['NITER'] != None :
+             num="M"+repr(self.dico_mot_clef['NITER']+1)
+	     chaine=num+" "+num+".hom"
+       return chaine
+

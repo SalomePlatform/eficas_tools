@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 # --------------------------------------------------
 # debut entete
 # --------------------------------------------------
@@ -75,12 +75,10 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
            RAFFINEMENT      =SIMP(statut='f',typ='TXM',     
                                  fr="Choix du mode de raffinement.",
                                  ang="Choice of refinement mode.",
-                                 defaut="LIBRE",
                                  into=("LIBRE","UNIFORME","NON","NON-CONFORME","NON-CONFORME-INDICATEUR") ),
            DERAFFINEMENT   =SIMP(statut='f',typ='TXM',     
                                  fr="Choix du mode de deraffinement.",
                                  ang="Choice of unrefinement mode.",
-                                 defaut="LIBRE",
                                  into=("LIBRE","UNIFORME","NON") ),
            INFORMATION     =SIMP(statut='f',typ='TXM',
                                  fr="Information sur un maillage",
