@@ -470,7 +470,7 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
       (SALOME_UNIQUE_BASE_Panel.__dict__[commande])(self)
 
 
-  makeValeurPage(self,page):
+  def makeValeurPage(self,page):
       """
       Génère la page de saisie de la valeur du mot-clé simple courant qui doit être de type
       de base cad entier, réel, string ou complexe
