@@ -33,6 +33,8 @@ import splash
 import prefs
 import fontes
 
+VERSION="EFICAS v1.3"
+
 class APPLI: 
   def __init__ (self,master,code='ASTER',fichier=None) :
       self.top=master
@@ -40,7 +42,7 @@ class APPLI:
       self.top.protocol("WM_DELETE_WINDOW",self.exitEFICAS)
       self.top.minsize(900,500)
       self.top.geometry("900x500")
-      self.top.title('EFICAS v1.1 pour '+self.code)
+      self.top.title(VERSION + ' pour '+self.code)
       self.top.withdraw()
       self.initializeTk(master)
       Pmw.initialise(master)
@@ -147,7 +149,7 @@ class APPLI:
       """
           Retourne un texte d'informations sur la session courante d'EFICAS
       """
-      texte = 'EFICAS v1.1\n\n'
+      texte = VERSION + '\n\n'
       texte = texte + 'EFICAS est un produit développé par \nEDF-Division Stratégie et Développement\n'
       texte = texte + 'Equipe : MTI/MMN\n\n'
       texte = texte + 'Code utilisé : %s\n' %self.code

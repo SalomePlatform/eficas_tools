@@ -8,9 +8,9 @@ faire :
 
 ce qui a pour effet de créer un répertoire de nom <nom_distrib>.
 
-Tel que Eficas est prêt à etre executé mais il est conseillé d'utiliser la procédure
-d'installation install.py qui teste la bonne installation des prérequis et permet de
-personnaliser l'installation (lire les instructions dans README_install).
+Pour modifier l'emplacement de la doc, le chemin d'accès à Acrobat Reader,
+les catalogues, il faut modifier le fichier editeur.ini dans le répertoire Aster.
+
 
 ATTENTION : 
 Si Eficas est installé dans un répertoire particulier d'administration 
@@ -18,10 +18,14 @@ dans lequel les utilisateurs n'ont pas le droit d'écriture, il faut que
 l'administrateur lance Eficas pour générer
 les fichiers et catalogues compilés .pyc et _pickled.py
 
+
+
 2- Utilisation d'Eficas
 
 Pour utiliser Eficas, aller dans le répertoire Aster et faire :
 	python eficas_aster.py
+
+
 
 3- Installation avec un noyau pré-installé
 

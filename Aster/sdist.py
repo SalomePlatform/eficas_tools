@@ -33,7 +33,7 @@ dir_download= "/home/eficas/WWW/telechargement/eficas"
 def main():
    if os.path.isdir('dist'):shutil.rmtree('dist')
 
-   copyfiles('.',path_distrib,['README','LICENSE.TERMS','INSTALL'])
+   copyfiles('.',path_distrib,['LICENSE.TERMS','INSTALL'])
 
    copyfiles('../Editeur',os.path.join(path_distrib,'Editeur'),['*.py','faqs.txt'])
    copyfiles('../Ihm',os.path.join(path_distrib,'Ihm'),['*.py'])
@@ -59,8 +59,6 @@ def main():
 
    copyfiles('../Tools',os.path.join(path_distrib,'Tools'),['*.py'])
    copyfiles('../Tools/foztools',os.path.join(path_distrib,'Tools','foztools'),['*.py'])
-   
-   copyfiles('../Installation',path_distrib,['README_install','install.py'])
    
    tarball= maketarball('dist',nom_distrib,nom_distrib)
    try:
