@@ -430,16 +430,22 @@ class MCSIMP(I_OBJECT.OBJECT):
 	   if v.__class__.__name__=='PARAMETRE' or v.__class__.__name__ == 'ITEM_PARAMETRE':
 	      verif_type=1
 	   else:
-	      verif_type=self.verif_type(val=v,cr=cr)
+	      verif_type=self.verif_type(val=v,cr=None)
 	      # cas des tuples avec un ITEM_PARAMETRE
               if verif_type == 0:
                  if type(v) == types.TupleType :
 	           new_val=[]
 	           for i in v:
-	             if i.__class__.__name__ != 'ITEM_PARAMETRE': 
-		        new_val.append(i)
+	             if i.__class__.__name__ != 'PARAMETRE': 
+	                if i.__class__.__name__ != 'ITEM_PARAMETRE': 
+		           new_val.append(i)
 		   if new_val != [] :
 		     verif_type=self.verif_type(val=new_val,cr=cr)
+		   else :
+		     # Cas d une liste de paramétre
+		     verif_type= 1
+		 else:
+	             verif_type=self.verif_type(val=v,cr=None)
            valid = verif_type*self.verif_into(cr=cr)*self.verif_card(cr=cr)
            #
            # On verifie les validateurs s'il y en a et si necessaire (valid == 1)
@@ -456,7 +462,6 @@ class MCSIMP(I_OBJECT.OBJECT):
 	   if valid == 0:
               if cr == 'oui' :
 		 self.cr.fatal(string.join( repr (self.valeur), " a un indice incorrect"))
-		 print "hhhhhhhhhhhhhhhhhhh"
 
         self.set_valid(valid)
         return self.valid
