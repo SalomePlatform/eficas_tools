@@ -1,4 +1,5 @@
+# Changer unite 15 par incl.14
 DEBUT()
-INCLUDE(UNITE=14)
+INCLUDE(UNITE=15)
 MA=LIRE_MAILLAGE()
 FIN()
