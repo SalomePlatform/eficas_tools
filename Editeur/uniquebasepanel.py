@@ -88,6 +88,10 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
 	if txtparam=="":
 	   showerror("Aucun parametre ","Pas de parametre de ce type")
 	else :
+	   try :
+	   	self.fenetreparam.destroy()
+	   except :
+	        pass
 	   self.fenetreparam=FenetreDeParametre( self, self.node.item, self.parent.appli, txtparam)
 
   def destroy(self):
