@@ -30,7 +30,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_reduit.py,v 1.2 2003/10/16 14:31:22 eficas Exp $"
+__Id__="$Id: cata_reduit.py,v 1.3 2003/10/23 12:12:14 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
@@ -509,6 +509,32 @@ PLS_BASE_NOREPEAT=OPER(nom="PLS_BASE_NOREPEAT",op=19,sd_prod=cara_pout,
   VAR7=SIMP(statut='o',typ='I',min=1,max=6,validators=[NoRepeat(),PairVal()]),
 ) ;
 
+def toto(**args):
+    return maillage
+
+BLOCBLOC=OPER(nom="BLOCBLOC",op=1,sd_prod=toto,
+                TITI  =SIMP(statut='f',typ='TXM',defaut='AAA',into=('AAA','BBB'),),
+                TUTU  =SIMP(statut='f',typ='TXM',defaut='AAA',into=('AAA','BBB'),),
+                TATA  =SIMP(statut='f',typ='TXM',defaut='AAA',into=('AAA','BBB'),),
+                TOTO  =SIMP(statut='f',typ='TXM',defaut='AAA',into=('AAA','BBB'),),
+                b_unit1  =BLOC(condition = "TITI =='AAA'",
+                               TOTO1  =SIMP(statut='f',typ='TXM',defaut='AAA',into=('AAA','BBB'),),
+                               c_unit1       =BLOC(condition = "TOTO1 == 'AAA'", UNITE1   =SIMP(statut='f',typ='I',defaut=25),),
+                              ),
+                b_unit2  =BLOC(condition = "TUTU =='AAA'",
+                               TOTO2  =SIMP(statut='f',typ='TXM',defaut='AAA',into=('AAA','BBB'),),
+                               c_unit2       =BLOC(condition = "TOTO2 == 'BBB'", UNITE2   =SIMP(statut='f',typ='I',defaut=25),),
+                              ),
+                b_unit3  =BLOC(condition = "TATA =='BBB'",
+                               TOTO3  =SIMP(statut='f',typ='TXM',defaut='AAA',into=('AAA','BBB'),),
+                               c_unit3       =BLOC(condition = "TOTO3 == 'BBB'", UNITE3   =SIMP(statut='f',typ='I',defaut=25),),
+                              ),
+                b_unit4  =BLOC(condition = "TOTO =='BBB'",
+                               TOTO4  =SIMP(statut='f',typ='TXM',defaut='AAA',into=('AAA','BBB'),),
+                               c_unit4       =BLOC(condition = "TOTO4 == 'AAA'", UNITE4   =SIMP(statut='f',typ='I',defaut=25),),
+                              ),
+             )
+
 #& MODIF COMMANDE  DATE 21/03/2003   AUTEUR ASSIRE A.ASSIRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -573,4 +599,32 @@ FIN=PROC(nom="FIN",op=9999,repetable='n',fr="Fin d'une étude",
                                statut='f',typ='TXM',defaut="OUI",into=("OUI","NON",) ),
          FICHIER         =SIMP(statut='f',typ='TXM',defaut="MESSAGE"),
 )  ;
+
+FORMULE = FORM( nom='FORMULE',op=ops.build_formule,sd_prod=formule,
+                docu="U4.31.05-e",
+                fr="Définition d une fonction",reentrant = 'n',
+                regles=(UN_PARMI('REEL','COMPLEXE'),),
+
+##### fonctions entieres interdites suite au probleme AL2003-072
+#####           regles=(UN_PARMI('REEL','ENTIER','COMPLEXE'),),
+#####           ENTIER   = SIMP(typ = 'shell',),
+
+                REEL     = SIMP(typ = 'shell',),
+                COMPLEXE = SIMP(typ = 'shell',),
+) ;
+
+DETRUIRE=PROC(nom="DETRUIRE",op=-7,docu="U4.14.01-e",
+            UIinfo={"groupes":("Gestion du travail",)},
+              fr="Destruction d un concept utilisateur dans la base GLOBALE",
+             op_init=ops.detruire,
+             regles=(UN_PARMI('CONCEPT','OBJET',),),
+            CONCEPT     =FACT(statut='f',
+                NOM         =SIMP(statut='o',typ=assd,validators=NoRepeat(),max='**'),
+            ),
+            OBJET  =FACT(statut='f',
+               CHAINE      =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**'),
+               POSITION    =SIMP(statut='o',typ='I'  ,validators=NoRepeat(),max='**'),
+            ),
+            INFO          =SIMP(statut='f',typ='I',into=(1,2),defaut=2, ),
+);
 

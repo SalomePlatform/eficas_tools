@@ -1,4 +1,4 @@
-#@ MODIF ops Cata  DATE 06/09/2003   AUTEUR D6BHHJP J.P.LEFEBVRE 
+#@ MODIF ops Cata  DATE 12/11/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -69,7 +69,7 @@ def build_debut(self,**args):
    self.definition.op=None
    return ier
 
-def POURSUITE(self,PAR_LOT,CODE,HDF,**args):
+def POURSUITE(self,PAR_LOT,CODE,HDF=None,**args):
    """
        Fonction sdprod de la macro POURSUITE
    """
@@ -197,12 +197,6 @@ def detruire(self,d):
            if d.has_key(e):del d[e]
            if self.jdc.sds_dict.has_key(e):del self.jdc.sds_dict[e]
        else:
-#CCAR: ajout de ce test pour ne pas détruire une formule. Faut-il le reintegrer 
-#      dans le catalogue d'Aster ? Est-il spécial EFICAS ?
-         if isinstance(mcs,formule):
-           cr=self.parent.report()
-           cr.fatal("la destruction d'une FORMULE est impossible" )
-#CCAR: fin ajout
          if isinstance(mcs,ASSD):
            sd.append(mcs)
            mcs=mcs.nom
