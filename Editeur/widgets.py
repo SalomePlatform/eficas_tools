@@ -892,7 +892,7 @@ class ListeChoixParGroupes(ListeChoix) :
 
     def affiche_liste(self):
         """ Affiche la liste dans la fenêtre"""
-        i=0
+        liste_labels=[]
         self.MCbox.config(state=NORMAL)
         self.MCbox.delete(1.0,END)
         for grp in self.liste_groupes:
@@ -906,6 +906,7 @@ class ListeChoixParGroupes(ListeChoix) :
                         fg = 'black',bg = 'gray95',justify = 'left')
            # On stocke la relation entre le nom de la commande et le label
            self.dico_labels[grp]=label
+           liste_labels.append(label)
            self.MCbox.window_create(END,
                                    window=label,
                                    stretch = 1)
@@ -927,9 +928,13 @@ class ListeChoixParGroupes(ListeChoix) :
                          lambda e,s=self,c=self.liste_commandes[1][1],x=cmd,l=label : s.deselectitem(l,x,c))
                   label.bind(self.liste_commandes[2][0],
                          lambda e,s=self,c=self.liste_commandes[2][1],x=cmd,l=label : s.chooseitem(x,l,c))
-              # On marque les items specifies dans liste_marques
-              #if i in self.liste_marques : self.markitem(label)
-              i=i+1
+
+        for marque in self.liste_marques:
+           try:
+              self.markitem(liste_labels[marque])
+           except:
+              pass
+
         self.MCbox.config(state=DISABLED)
         self.selection = None
 
