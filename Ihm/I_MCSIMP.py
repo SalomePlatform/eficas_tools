@@ -398,3 +398,63 @@ class MCSIMP(I_OBJECT.OBJECT):
 #ATTENTION SURCHARGE : toutes les methodes ci apres sont des surcharges du Noyau et de Validation
 # Elles doivent etre reintegrees des que possible
 
+
+  def isvalid(self,cr='non'):
+      """
+         Cette méthode retourne un indicateur de validité de l'objet de type MCSIMP
+
+           - 0 si l'objet est invalide
+           - 1 si l'objet est valide
+
+         Le paramètre cr permet de paramétrer le traitement. Si cr == 'oui'
+         la méthode construit également un comte-rendu de validation
+         dans self.cr qui doit avoir été créé préalablement.
+      """
+      if self.state == 'unchanged':
+        return self.valid
+      else:
+        valid = 1
+        v=self.valeur
+        #  verification presence
+        if self.isoblig() and v == None :
+          if cr == 'oui' :
+            self.cr.fatal(string.join(("Mot-clé : ",self.nom," obligatoire non valorisé")))
+          valid = 0
+
+        if v is None:
+           valid=0
+           if cr == 'oui' :
+              self.cr.fatal("None n'est pas une valeur autorisée")
+        else:
+           # type,into ...
+	   if v.__class__.__name__=='PARAMETRE' or v.__class__.__name__ == 'ITEM_PARAMETRE':
+	      verif_type=1
+	   else:
+	      verif_type=self.verif_type(val=v,cr=cr)
+	      # cas des tuples avec un ITEM_PARAMETRE
+              if verif_type == 0:
+	         new_val=[]
+	         for i in v:
+	             if i.__class__.__name__ != 'ITEM_PARAMETRE': 
+		        new_val.append(i)
+		     if new_val != [] :
+		        verif_type=self.verif_type(val=new_val,cr=cr)
+           valid = verif_type*self.verif_into(cr=cr)*self.verif_card(cr=cr)
+           #
+           # On verifie les validateurs s'il y en a et si necessaire (valid == 1)
+           #
+           if valid and self.definition.validators and not self.definition.validators.verif(self.valeur):
+              if cr == 'oui' :
+                 self.cr.fatal(string.join(("Mot-clé : ",self.nom,"devrait avoir ",self.definition.validators.info())))
+              valid=0
+           # fin des validateurs
+           #
+	# cas d un item Parametre
+	if self.valeur.__class__.__name__ == 'ITEM_PARAMETRE':
+	   valid=self.valeur.isvalid()
+	   if valid == 0:
+              if cr == 'oui' :
+		 self.cr.fatal(string.join( repr (self.valeur), " a un indice incorrect"))
+
+        self.set_valid(valid)
+        return self.valid
