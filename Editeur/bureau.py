@@ -361,7 +361,7 @@ class BUREAU:
           #PN  Ajout --> Salome
           # Pour sauvegarde dans l etude si lancement depuis salome
           if self.appli.salome != 0:
-             import eficas_etude 
+             import eficasEtude 
              self.appli.salome.rangeInStudy(self.JDCDisplay_courant.fichier)
 	     from panelsSalome import SALOME_UNIQUE_BASE_Panel
 	     if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
@@ -397,7 +397,7 @@ class BUREAU:
           # PN ajout --> Salome
           # Pour sauvegarde dans l etude si lancement depuis salome
           if self.appli.salome != 0:
-             import eficas_etude 
+             import eficasEtude 
              self.appli.salome.rangeInStudy(sauvegarde)
 	     from panelsSalome import SALOME_UNIQUE_BASE_Panel
 	     if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
@@ -625,7 +625,7 @@ class BUREAU:
        except:
            print "Pb a la sauvegarde sous le format homard"
        if self.appli.salome != 0:
-           import eficas_etude
+           import eficasEtude
            self.appli.salome.rangeInStudy(file_homard)
 
 # ---------------------------------------------------------------------------
