@@ -1,0 +1,1162 @@
+L'objet de définition est valide 
+L'objet MCFACT basé sur le dictionnaire {'sect3': {'c': 3, 'd': 5}, 'a': 1, 'mcf1': {'b': 2, 'a': 1}, 'c': 2, 'mcf2': ({'c': 3}, {'c': 5})} est valide 
+*********************************************
+*  Trié par temps interne (20 plus grands)  *
+*********************************************
+         750 function calls (669 primitive calls) in 0.170 CPU seconds
+
+   Ordered by: internal time
+   List reduced from 288 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.010    0.010    0.010    0.010 ../../../Noyau/N_MCLIST.py:15(init)
+      6/1    0.010    0.002    0.010    0.010 ../../../Validation/V_MCCOMPO.py:32(report)
+        1    0.010    0.010    0.170    0.170 profile:0(main())
+        1    0.010    0.010    0.010    0.010 ../../Accas/A_MACRO_ETAPE.py:1(?)
+        1    0.010    0.010    0.010    0.010 /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:11(?)
+        1    0.010    0.010    0.010    0.010 ../../Accas/A_A_CLASSER.py:1(?)
+        3    0.010    0.003    0.010    0.003 ../../../Noyau/N_MCBLOC.py:18(__init__)
+        1    0.010    0.010    0.010    0.010 ../../../Noyau/N_MCFACT.py:5(?)
+       16    0.010    0.001    0.010    0.001 ../../../Noyau/N_OBJECT.py:27(supprime)
+        1    0.010    0.010    0.010    0.010 ../../Noyau/N_JDC_CATA.py:4(?)
+        1    0.010    0.010    0.010    0.010 /home01/chris/pkg/python2.1/lib/python2.1/types.py:4(?)
+        1    0.010    0.010    0.010    0.010 ../../Build/B_ETAPE.py:2(?)
+        1    0.010    0.010    0.010    0.010 ../../Accas/A_JDC.py:1(?)
+        1    0.010    0.010    0.010    0.010 ../../../Noyau/N_OPER.py:12(OPER)
+        1    0.010    0.010    0.010    0.010 ../../Accas/A_MCSIMP.py:1(?)
+     29/2    0.010    0.000    0.010    0.005 ../../Noyau/N_CR.py:48(estvide)
+     11/7    0.010    0.001    0.010    0.001 ../../../Noyau/N_MCCOMPO.py:93(cree_dict_valeurs)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_constants.py:23(error)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_PROC.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_ENTITE.py:3(?)
+
+
+***********************************************
+*  Liste des appellés triée par temps interne *
+***********************************************
+   Ordered by: internal time
+
+Function                                                                     called...
+../../../Noyau/N_MCLIST.py:15(init)                                           --
+../../../Validation/V_MCCOMPO.py:32(report)                                   ../../../Validation/V_MCCOMPO.py:32(report)(3)    0.010
+                                                                              ../../../Validation/V_MCFACT.py:24(isvalid)(5)    0.000
+                                                                              ../../../Validation/V_MCLIST.py:51(report)(1)    0.000
+                                                                              ../../Noyau/N_CR.py:10(__init__)(6)    0.000
+                                                                              ../../Noyau/N_CR.py:44(add)(12)    0.000
+                                                                              ../../Validation/V_MCBLOC.py:24(isvalid)(1)    0.000
+                                                                              ../../Validation/V_MCSIMP.py:385(report)(8)    0.000
+profile:0(main())                                                             <string>:1(?)(1)    0.160
+../../Accas/A_MACRO_ETAPE.py:1(?)                                             ../../../Validation/V_MACRO_ETAPE.py:8(?)(1)    0.000
+                                                                              ../../Accas/A_MACRO_ETAPE.py:6(MACRO_ETAPE)(1)    0.000
+                                                                              ../../Build/B_MACRO_ETAPE.py:2(?)(1)    0.000
+                                                                              ../../Execution/E_MACRO_ETAPE.py:1(?)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:11(?)                /home01/chris/pkg/python2.1/lib/python2.1/sre_constants.py:14(?)(1)    0.000
+../../Accas/A_A_CLASSER.py:1(?)                                               ../../Accas/A_A_CLASSER.py:4(A_CLASSER)(1)    0.000
+                                                                              ../../Validation/V_A_CLASSER.py:2(?)(1)    0.000
+../../../Noyau/N_MCBLOC.py:18(__init__)                                       ../../../Noyau/N_MCCOMPO.py:16(build_mc)(3)    0.030
+../../../Noyau/N_MCFACT.py:5(?)                                               ../../../Noyau/N_MCCOMPO.py:4(?)(1)    0.000
+                                                                              ../../../Noyau/N_MCFACT.py:9(MCFACT)(1)    0.000
+../../../Noyau/N_OBJECT.py:27(supprime)                                       --
+../../Noyau/N_JDC_CATA.py:4(?)                                                ../../../Noyau/N_JDC.py:3(?)(1)    0.000
+                                                                              ../../Noyau/N_JDC_CATA.py:11(JDC_CATA)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/traceback.py:1(?)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/types.py:4(?)                       /home01/chris/pkg/python2.1/lib/python2.1/types.py:35(_C)(1)    0.000
+../../Build/B_ETAPE.py:2(?)                                                   ../../../Noyau/N_BLOC.py:4(?)(1)    0.000
+                                                                              ../../../Noyau/N_MCBLOC.py:5(?)(1)    0.000
+                                                                              ../../Build/B_ETAPE.py:18(ETAPE)(1)    0.000
+                                                                              ../../Noyau/N_EVAL.py:2(?)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/repr.py:1(?)(1)    0.000
+../../Accas/A_JDC.py:1(?)                                                     ../../Accas/A_JDC.py:6(JDC)(1)    0.000
+                                                                              ../../Build/B_JDC.py:2(?)(1)    0.000
+                                                                              ../../Build/__init__.py:0(?)(1)    0.000
+                                                                              ../../Execution/E_JDC.py:2(?)(1)    0.000
+                                                                              ../../Execution/__init__.py:0(?)(1)    0.000
+                                                                              ../../Validation/V_JDC.py:8(?)(1)    0.000
+                                                                              ../../Validation/__init__.py:6(?)(1)    0.000
+../../../Noyau/N_OPER.py:12(OPER)                                             --
+../../Accas/A_MCSIMP.py:1(?)                                                  ../../Accas/A_MCSIMP.py:4(MCSIMP)(1)    0.000
+                                                                              ../../Validation/V_MCSIMP.py:8(?)(1)    0.000
+../../Noyau/N_CR.py:48(estvide)                                               ../../Noyau/N_CR.py:48(estvide)(27)    0.010
+../../../Noyau/N_MCCOMPO.py:93(cree_dict_valeurs)                             ../../../Noyau/N_BLOC.py:63(__call__)(2)    0.010
+                                                                              ../../../Noyau/N_BLOC.py:90(verif_presence)(2)    0.000
+                                                                              ../../../Noyau/N_MCBLOC.py:51(get_valeur)(1)    0.000
+                                                                              ../../../Noyau/N_MCCOMPO.py:93(cree_dict_valeurs)(2)    0.010
+                                                                              ../../../Noyau/N_MCCOMPO.py:165(recherche_mc_globaux)(11)    0.000
+                                                                              ../../../Noyau/N_MCCOMPO.py:195(supprime)(2)    0.010
+                                                                              ../../../Noyau/N_MCFACT.py:47(get_valeur)(4)    0.000
+                                                                              ../../../Noyau/N_MCLIST.py:29(get_valeur)(2)    0.000
+                                                                              ../../../Noyau/N_MCSIMP.py:55(get_valeur)(9)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_constants.py:23(error)          --
+../../../Noyau/N_PROC.py:4(?)                                                 ../../../Noyau/N_PROC.py:11(PROC)(1)    0.000
+                                                                              ../../../Noyau/N_PROC_ETAPE.py:4(?)(1)    0.000
+../../Build/B_ENTITE.py:3(?)                                                  ../../Build/B_ENTITE.py:9(ENTITE)(1)    0.000
+                                                                              ../../Build/utils.py:2(?)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/repr.py:5(Repr)                     --
+/home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:343(_code)           /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:19(_compile)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:234(_compile_info)(1)    0.000
+../../Validation/V_MCBLOC.py:8(?)                                             ../../Validation/V_MCBLOC.py:15(MCBLOC)(1)    0.000
+../../Validation/V_AU_MOINS_UN.py:2(?)                                        ../../Validation/V_AU_MOINS_UN.py:2(AU_MOINS_UN)(1)    0.000
+../../../Noyau/N_MCSIMP.py:9(MCSIMP)                                          --
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:73(__init__)           --
+../../../Noyau/N_MCBLOC.py:5(?)                                               ../../../Noyau/N_MCBLOC.py:11(MCBLOC)(1)    0.000
+../../Accas/A_PROC_ETAPE.py:1(?)                                              ../../Accas/A_PROC_ETAPE.py:6(PROC_ETAPE)(1)    0.000
+                                                                              ../../Build/B_PROC_ETAPE.py:2(?)(1)    0.000
+                                                                              ../../Execution/E_PROC_ETAPE.py:1(?)(1)    0.000
+                                                                              ../../Validation/V_PROC_ETAPE.py:8(?)(1)    0.000
+../../Accas/A_SIMP.py:4(SIMP)                                                 --
+../../../Noyau/N_MCCOMPO.py:4(?)                                              ../../../Noyau/N_MCCOMPO.py:10(MCCOMPO)(1)    0.000
+../../../Noyau/N_ENTITE.py:27(affecter_parente)                               --
+../../../Noyau/N_MCFACT.py:13(__init__)                                       ../../../Noyau/N_MCCOMPO.py:16(build_mc)(5)    0.030
+                                                                              ../../../Noyau/N_MCFACT.py:37(GETVAL)(5)    0.000
+../../../Validation/V_ETAPE.py:18(ETAPE)                                      --
+../../Accas/A_PRESENT_PRESENT.py:4(PRESENT_PRESENT)                           --
+../../../Noyau/N_BLOC.py:29(__init__)                                         ../../../Noyau/N_ENTITE.py:27(affecter_parente)(1)    0.000
+../../Noyau/N_Exception.py:3(?)                                               ../../Noyau/N_Exception.py:8(AsException)(1)    0.000
+../../Noyau/N_CR.py:44(add)                                                   --
+../../Noyau/N_GEOM.py:3(?)                                                    ../../Noyau/N_GEOM.py:6(GEOM)(1)    0.000
+                                                                              ../../Noyau/N_GEOM.py:45(geom)(1)    0.000
+../../Noyau/N_FORM_ETAPE.py:3(FORM_ETAPE)                                     --
+../../Build/B_PROC_ETAPE.py:8(PROC_ETAPE)                                     --
+../../Validation/V_PROC_ETAPE.py:17(PROC_ETAPE)                               --
+../../Accas/A_SIMP.py:1(?)                                                    ../../Accas/A_MCSIMP.py:1(?)(1)    0.010
+                                                                              ../../Accas/A_SIMP.py:4(SIMP)(1)    0.000
+../../../Noyau/N_ENTITE.py:3(?)                                               ../../../Noyau/N_ENTITE.py:7(ENTITE)(1)    0.000
+                                                                              ../../Noyau/N_CR.py:2(?)(1)    0.000
+../../Accas/A_PRESENT_ABSENT.py:1(?)                                          ../../Accas/A_PRESENT_ABSENT.py:4(PRESENT_ABSENT)(1)    0.000
+                                                                              ../../Validation/V_PRESENT_ABSENT.py:2(?)(1)    0.000
+../../Accas/A_FACT.py:6(FACT)                                                 --
+../../../Noyau/N_MCCOMPO.py:10(MCCOMPO)                                       --
+../../../Noyau/N_FACT.py:69(__call__)                                         ../../../Noyau/N_MCLIST.py:15(init)(1)    0.010
+                                                                              ../../Accas/A_MCFACT.py:5(__init__)(5)    0.030
+                                                                              ../../Accas/A_MCLIST.py:5(__init__)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:73(append)(2)    0.000
+../../../Noyau/N_PROC.py:11(PROC)                                             --
+../../../Validation/V_MCCOMPO.py:73(dict_mc_presents)                         /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:17(__eq__)(1)    0.000
+../../../Noyau/N_FACT.py:3(?)                                                 ../../../Noyau/N_FACT.py:11(FACT)(1)    0.000
+                                                                              ../../../Noyau/N_MCFACT.py:5(?)(1)    0.010
+                                                                              ../../../Noyau/N_MCLIST.py:5(?)(1)    0.000
+../../../Noyau/N_MCLIST.py:9(MCList)                                          --
+../../../Noyau/N_MCCOMPO.py:195(supprime)                                     ../../../Noyau/N_MCCOMPO.py:195(supprime)(3)    0.010
+                                                                              ../../../Noyau/N_MCLIST.py:44(supprime)(1)    0.010
+                                                                              ../../../Noyau/N_OBJECT.py:27(supprime)(16)    0.010
+../../Build/B_ETAPE.py:18(ETAPE)                                              --
+../../../Noyau/N_MACRO.py:4(?)                                                ../../../Noyau/N_MACRO.py:12(MACRO)(1)    0.000
+                                                                              ../../../Noyau/N_MACRO_ETAPE.py:4(?)(1)    0.000
+../../../Noyau/N_MCLIST.py:44(supprime)                                       ../../../Noyau/N_MCCOMPO.py:195(supprime)(2)    0.010
+../../Validation/V_MCSIMP.py:107(verif_type)                                  ../../Validation/V_MCSIMP.py:314(compare_type)(16)    0.000
+../../../Validation/V_MACRO_ETAPE.py:19(MACRO_ETAPE)                          --
+../../../Noyau/N_JDC.py:15(JDC)                                               ../../Noyau/utils.py:3(?)(1)    0.000
+../../Validation/V_EXCLUS.py:2(EXCLUS)                                        --
+../../Accas/A_OPER.py:1(?)                                                    ../../../Noyau/N_OPER.py:4(?)(1)    0.020
+                                                                              ../../Accas/A_ETAPE.py:1(?)(1)    0.010
+                                                                              ../../Accas/A_OPER.py:5(OPER)(1)    0.000
+                                                                              ../../Build/B_ENTITE.py:3(?)(1)    0.000
+../../../Noyau/N_BLOC.py:63(__call__)                                         ../../Accas/A_MCBLOC.py:6(__init__)(3)    0.010
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:181(__next)            --
+../../Build/B_CODE.py:4(?)                                                    ../../Build/B_CODE.py:7(CODE)(1)    0.000
+                                                                              ../../Build/codex.py:3(?)(1)    0.000
+../../../Noyau/N_MCLIST.py:5(?)                                               ../../../Noyau/N_MCLIST.py:9(MCList)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:1(?)(1)    0.000
+../../../Validation/V_MCLIST.py:17(MCList)                                    --
+/home01/chris/pkg/python2.1/lib/python2.1/string.py:20(?)                     --
+../../../Noyau/N_MCFACT.py:47(get_valeur)                                     --
+../../Accas/A_JDC_CATA.py:1(?)                                                ../../Accas/A_JDC.py:1(?)(1)    0.010
+                                                                              ../../Accas/A_JDC_CATA.py:4(JDC_CATA)(1)    0.000
+                                                                              ../../Noyau/N_JDC_CATA.py:4(?)(1)    0.010
+                                                                              ../../Noyau/__init__.py:10(?)(1)    0.020
+../../Validation/V_PROC_ETAPE.py:8(?)                                         ../../Validation/V_PROC_ETAPE.py:17(PROC_ETAPE)(1)    0.000
+../../Noyau/N_FONCTION.py:1(?)                                                ../../Noyau/N_FONCTION.py:3(FONCTION)(1)    0.000
+                                                                              ../../Noyau/N_FONCTION.py:5(fonction)(1)    0.000
+../../Validation/V_MCSIMP.py:38(__init__)                                     --
+../../Validation/V_PRESENT_ABSENT.py:2(?)                                     ../../Validation/V_PRESENT_ABSENT.py:2(PRESENT_ABSENT)(1)    0.000
+../../Noyau/N_SIMP.py:104(__call__)                                           ../../Accas/A_MCSIMP.py:5(__init__)(8)    0.000
+../../Validation/V_JDC.py:8(?)                                                ../../../Validation/V_MCCOMPO.py:4(?)(1)    0.000
+                                                                              ../../Validation/V_JDC.py:17(JDC)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:14(?)                  /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:71(Pattern)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:90(SubPattern)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:176(Tokenizer)(1)    0.000
+../../Validation/V_MCBLOC.py:24(isvalid)                                      ../../../Validation/V_MCCOMPO.py:49(verif_regles)(2)    0.000
+                                                                              ../../Validation/V_MCSIMP.py:41(isvalid)(2)    0.000
+../../Build/B_MACRO_ETAPE.py:48(MACRO_ETAPE)                                  --
+/home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:19(_compile)         --
+../../../Noyau/N_MACRO.py:12(MACRO)                                           --
+../../Accas/A_FORM.py:1(?)                                                    ../../Accas/A_FORM.py:5(FORM)(1)    0.000
+                                                                              ../../Accas/A_FORM_ETAPE.py:1(?)(1)    0.000
+                                                                              ../../Noyau/N_FORM.py:1(?)(1)    0.000
+../../Accas/A_ENSEMBLE.py:1(?)                                                ../../Accas/A_ENSEMBLE.py:4(ENSEMBLE)(1)    0.000
+                                                                              ../../Validation/V_ENSEMBLE.py:2(?)(1)    0.000
+../../Execution/E_ETAPE.py:2(?)                                               ../../Execution/E_ETAPE.py:11(ETAPE)(1)    0.000
+                                                                              ../../Execution/genpy.py:12(?)(1)    0.000
+../../../Noyau/N_BLOC.py:70(verif_cata)                                       ../../../Noyau/N_ENTITE.py:68(verif_cata_regles)(1)    0.000
+../../../Noyau/N_ENTITE.py:15(__init__)                                       --
+../../Accas/A_FORM_ETAPE.py:6(FORM_ETAPE)                                     --
+../../../Validation/V_MCLIST.py:51(report)                                    ../../../Validation/V_MCCOMPO.py:32(report)(2)    0.010
+                                                                              ../../../Validation/V_MCLIST.py:29(isvalid)(1)    0.000
+                                                                              ../../Noyau/N_CR.py:10(__init__)(1)    0.000
+                                                                              ../../Noyau/N_CR.py:44(add)(2)    0.000
+../../../Noyau/N_BLOC.py:90(verif_presence)                                   <string>:0(?)(3)    0.000
+../../Noyau/N_SIMP.py:10(SIMP)                                                --
+../../Validation/V_JDC.py:17(JDC)                                             --
+main.py:11(main)                                                              ../../../Noyau/N_BLOC.py:29(__init__)(1)    0.000
+                                                                              ../../../Noyau/N_ENTITE.py:49(report)(1)    0.000
+                                                                              ../../../Noyau/N_FACT.py:29(__init__)(4)    0.000
+                                                                              ../../../Noyau/N_FACT.py:69(__call__)(1)    0.030
+                                                                              ../../../Noyau/N_MCCOMPO.py:195(supprime)(1)    0.010
+                                                                              ../../../Validation/V_MCCOMPO.py:32(report)(1)    0.010
+                                                                              ../../Accas/__init__.py:11(?)(1)    0.100
+                                                                              ../../Noyau/N_CR.py:48(estvide)(2)    0.010
+                                                                              ../../Noyau/N_REGLE.py:23(__init__)(1)    0.000
+                                                                              ../../Noyau/N_SIMP.py:26(__init__)(9)    0.000
+../../../Noyau/N_MCSIMP.py:45(GETVAL)                                         --
+/home01/chris/pkg/python2.1/lib/python2.1/UserList.py:1(?)                    /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:3(UserList)(1)    0.000
+../../Accas/A_MCSIMP.py:4(MCSIMP)                                             --
+../../Validation/V_MCSIMP.py:155(verif_into)                                  ../../Validation/V_MCSIMP.py:357(isinintervalle)(16)    0.000
+../../Build/B_CODE.py:7(CODE)                                                 --
+../../../Noyau/N_MCFACT.py:37(GETVAL)                                         --
+../../Validation/V_MCSIMP.py:82(verif_card)                                   --
+../../Noyau/N_CO.py:1(?)                                                      ../../Noyau/N_CO.py:3(CO)(1)    0.000
+../../Accas/A_ETAPE.py:6(ETAPE)                                               --
+../../Validation/V_A_CLASSER.py:4(A_CLASSER)                                  --
+../../Noyau/N_CR.py:6(CR)                                                     --
+../../Validation/V_EXCLUS.py:2(?)                                             ../../Validation/V_EXCLUS.py:2(EXCLUS)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_constants.py:141(makedict)      --
+../../Build/B_OBJECT.py:12(OBJECT)                                            --
+/home01/chris/pkg/python2.1/lib/python2.1/UserList.py:21(__cast)              --
+/home01/chris/pkg/python2.1/lib/python2.1/UserList.py:3(UserList)             --
+../../Accas/A_PROC.py:5(PROC)                                                 --
+../../Build/B_JDC.py:2(?)                                                     ../../Build/B_CODE.py:4(?)(1)    0.000
+                                                                              ../../Build/B_JDC.py:9(JDC)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/repr.py:1(?)                        /home01/chris/pkg/python2.1/lib/python2.1/repr.py:5(Repr)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/repr.py:6(__init__)(1)    0.000
+../../../Noyau/N_ENTITE.py:49(report)                                         ../../../Noyau/N_BLOC.py:70(verif_cata)(1)    0.000
+                                                                              ../../../Noyau/N_ENTITE.py:49(report)(13)    0.000
+                                                                              ../../../Noyau/N_FACT.py:109(verif_cata)(4)    0.000
+                                                                              ../../Noyau/N_CR.py:10(__init__)(14)    0.000
+                                                                              ../../Noyau/N_CR.py:44(add)(13)    0.000
+                                                                              ../../Noyau/N_SIMP.py:78(verif_cata)(9)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:307(_parse_sub)        /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:194(match)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:362(_parse)(1)    0.000
+../../Noyau/N__F.py:3(_F)                                                     --
+/home01/chris/pkg/python2.1/lib/python2.1/sre.py:125(_compile)                /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:358(compile)(1)    0.000
+../../Validation/V_MCSIMP.py:77(isoblig)                                      --
+../../Accas/A_MCSIMP.py:5(__init__)                                           ../../../Noyau/N_MCSIMP.py:13(__init__)(8)    0.000
+                                                                              ../../Validation/V_MCSIMP.py:38(__init__)(8)    0.000
+../../Accas/A_MCBLOC.py:1(?)                                                  ../../Accas/A_MCBLOC.py:5(MCBLOC)(1)    0.000
+                                                                              ../../Build/B_OBJECT.py:2(?)(1)    0.000
+                                                                              ../../Validation/V_MCBLOC.py:8(?)(1)    0.000
+../../Validation/V_AU_MOINS_UN.py:11(verif)                                   ../../Noyau/N_REGLE.py:42(liste_to_dico)(1)    0.000
+../../Noyau/N_Exception.py:8(AsException)                                     --
+../../../Noyau/N_OBJECT.py:4(?)                                               ../../../Noyau/N_OBJECT.py:6(OBJECT)(1)    0.000
+../../Execution/E_JDC.py:2(?)                                                 ../../Execution/E_JDC.py:7(JDC)(1)    0.000
+../../../Noyau/N_PROC_ETAPE.py:15(PROC_ETAPE)                                 --
+../../../Validation/V_MCCOMPO.py:4(?)                                         ../../../Validation/V_MCCOMPO.py:13(MCCOMPO)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre.py:17(?)                        /home01/chris/pkg/python2.1/lib/python2.1/copy_reg.py:5(?)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/copy_reg.py:14(pickle)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre.py:125(_compile)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre.py:228(Scanner)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:11(?)(1)    0.010
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:14(?)(1)    0.000
+../../Execution/E_ETAPE.py:11(ETAPE)                                          --
+../../Noyau/N_FONCTION.py:3(FONCTION)                                         --
+../../Accas/A_MACRO_ETAPE.py:6(MACRO_ETAPE)                                   --
+../../Execution/genpy.py:12(?)                                                ../../Execution/genpy.py:19(genpy)(1)    0.000
+                                                                              ../../Execution/utils.py:2(?)(1)    0.000
+../../Noyau/N_EVAL.py:4(EVAL)                                                 --
+../../../Noyau/N_MCBLOC.py:11(MCBLOC)                                         --
+../../Validation/V_A_CLASSER.py:2(?)                                          ../../Validation/V_A_CLASSER.py:4(A_CLASSER)(1)    0.000
+../../Execution/genpy.py:19(genpy)                                            --
+../../Build/utils.py:2(?)                                                     --
+../../Accas/A_JDC_CATA.py:4(JDC_CATA)                                         --
+../../Validation/__init__.py:6(?)                                             --
+../../Build/B_EVAL.py:2(?)                                                    ../../Build/B_EVAL.py:7(EVAL)(1)    0.000
+../../Build/codex.py:3(?)                                                     --
+../../Noyau/N_REGLE.py:22(REGLE)                                              --
+../../../Noyau/nommage.py:14(?)                                               /home01/chris/pkg/python2.1/lib/python2.1/re.py:23(?)(1)    0.010
+../../Accas/A_BLOC.py:1(?)                                                    ../../Accas/A_BLOC.py:5(BLOC)(1)    0.000
+                                                                              ../../Accas/A_MCBLOC.py:1(?)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:194(match)             --
+/home01/chris/pkg/python2.1/lib/python2.1/traceback.py:1(?)                   /home01/chris/pkg/python2.1/lib/python2.1/linecache.py:6(?)(1)    0.000
+../../../Noyau/N_FACT.py:11(FACT)                                             --
+../../../Validation/V_UN_PARMI.py:2(UN_PARMI)                                 --
+../../Validation/V_AU_MOINS_UN.py:2(AU_MOINS_UN)                              --
+../../Noyau/N_SIMP.py:3(?)                                                    ../../../Noyau/N_ENTITE.py:3(?)(1)    0.000
+                                                                              ../../../Noyau/N_MCSIMP.py:5(?)(1)    0.000
+                                                                              ../../Noyau/N_SIMP.py:10(SIMP)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/types.py:4(?)(1)    0.010
+../../../Validation/V_MCCOMPO.py:49(verif_regles)                             ../../../Validation/V_MCCOMPO.py:73(dict_mc_presents)(11)    0.000
+                                                                              ../../Validation/V_AU_MOINS_UN.py:11(verif)(1)    0.000
+../../Accas/A_AU_MOINS_UN.py:1(?)                                             ../../Accas/A_AU_MOINS_UN.py:4(AU_MOINS_UN)(1)    0.000
+                                                                              ../../Noyau/N_REGLE.py:18(?)(1)    0.000
+                                                                              ../../Validation/V_AU_MOINS_UN.py:2(?)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:176(Tokenizer)         --
+../../../Validation/V_MCFACT.py:24(isvalid)                                   ../../../Validation/V_MCCOMPO.py:49(verif_regles)(9)    0.000
+                                                                              ../../../Validation/V_MCFACT.py:24(isvalid)(2)    0.000
+                                                                              ../../../Validation/V_MCLIST.py:29(isvalid)(1)    0.000
+                                                                              ../../Validation/V_MCBLOC.py:24(isvalid)(1)    0.000
+                                                                              ../../Validation/V_MCSIMP.py:41(isvalid)(13)    0.000
+../../../Noyau/N_MACRO_ETAPE.py:4(?)                                          ../../../Noyau/N_MACRO_ETAPE.py:17(MACRO_ETAPE)(1)    0.000
+../../Accas/A_MCFACT.py:4(MCFACT)                                             --
+../../Validation/V_MCSIMP.py:8(?)                                             ../../Validation/V_MCSIMP.py:17(MCSIMP)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/linecache.py:6(?)                   --
+../../Noyau/N_FORM_ETAPE.py:1(?)                                              ../../Noyau/N_FORM_ETAPE.py:3(FORM_ETAPE)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre.py:228(Scanner)                 --
+../../Accas/A_MACRO.py:1(?)                                                   ../../../Noyau/N_MACRO.py:4(?)(1)    0.000
+                                                                              ../../Accas/A_MACRO.py:5(MACRO)(1)    0.000
+                                                                              ../../Accas/A_MACRO_ETAPE.py:1(?)(1)    0.010
+../../Accas/A_MCLIST.py:4(MCList)                                             --
+/home01/chris/pkg/python2.1/lib/python2.1/copy_reg.py:5(?)                    /home01/chris/pkg/python2.1/lib/python2.1/copy_reg.py:14(pickle)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:607(parse)             /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:73(__init__)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:177(__init__)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:200(get)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:307(_parse_sub)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:358(compile)         /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:343(_code)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:607(parse)(1)    0.000
+../../Accas/A_OPER.py:5(OPER)                                                 --
+../../../Noyau/N_BLOC.py:13(BLOC)                                             --
+../../Noyau/N_FONCTION.py:5(fonction)                                         --
+../../Accas/A_AU_MOINS_UN.py:4(AU_MOINS_UN)                                   --
+../../Execution/E_MACRO_ETAPE.py:1(?)                                         ../../Execution/E_MACRO_ETAPE.py:2(MACRO_ETAPE)(1)    0.000
+../../../Validation/V_MCCOMPO.py:13(MCCOMPO)                                  --
+../../../Validation/V_MACRO_ETAPE.py:8(?)                                     ../../../Validation/V_MACRO_ETAPE.py:19(MACRO_ETAPE)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:90(SubPattern)         --
+../../../Noyau/N_ENTITE.py:68(verif_cata_regles)                              --
+../../../Noyau/N_FACT.py:109(verif_cata)                                      ../../../Noyau/N_ENTITE.py:68(verif_cata_regles)(4)    0.000
+../../../Validation/V_MCLIST.py:29(isvalid)                                   ../../../Validation/V_MCFACT.py:24(isvalid)(4)    0.000
+../../Validation/V_PRESENT_PRESENT.py:2(PRESENT_PRESENT)                      --
+../../Build/B_PROC_ETAPE.py:2(?)                                              ../../Build/B_PROC_ETAPE.py:8(PROC_ETAPE)(1)    0.000
+../../Noyau/__init__.py:10(?)                                                 ../../../Noyau/N_FACT.py:3(?)(1)    0.010
+                                                                              ../../Noyau/N_SIMP.py:3(?)(1)    0.010
+                                                                              ../../Noyau/context.py:1(?)(1)    0.000
+../../Accas/A_PRESENT_PRESENT.py:1(?)                                         ../../Accas/A_PRESENT_PRESENT.py:4(PRESENT_PRESENT)(1)    0.000
+                                                                              ../../Validation/V_PRESENT_PRESENT.py:2(?)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/re.py:23(?)                         /home01/chris/pkg/python2.1/lib/python2.1/sre.py:17(?)(1)    0.010
+../../Accas/A_FACT.py:1(?)                                                    ../../Accas/A_FACT.py:6(FACT)(1)    0.000
+                                                                              ../../Accas/A_MCFACT.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_MCLIST.py:1(?)(1)    0.000
+../../Accas/A_EXCLUS.py:1(?)                                                  ../../Accas/A_EXCLUS.py:4(EXCLUS)(1)    0.000
+                                                                              ../../Validation/V_EXCLUS.py:2(?)(1)    0.000
+../../Validation/V_MCBLOC.py:15(MCBLOC)                                       --
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:92(__init__)           --
+../../Build/B_EVAL.py:7(EVAL)                                                 --
+../../../Noyau/N_MACRO_ETAPE.py:17(MACRO_ETAPE)                               --
+../../Execution/__init__.py:0(?)                                              --
+../../Validation/V_MCSIMP.py:385(report)                                      ../../Noyau/N_CR.py:10(__init__)(8)    0.000
+                                                                              ../../Validation/V_MCSIMP.py:41(isvalid)(8)    0.000
+../../Accas/A_EXCLUS.py:4(EXCLUS)                                             --
+../../Build/B_MACRO_ETAPE.py:2(?)                                             ../../Build/B_MACRO_ETAPE.py:48(MACRO_ETAPE)(1)    0.000
+                                                                              ../../Noyau/N__F.py:1(?)(1)    0.000
+../../Validation/V_MCSIMP.py:41(isvalid)                                      ../../Validation/V_MCSIMP.py:77(isoblig)(16)    0.000
+                                                                              ../../Validation/V_MCSIMP.py:82(verif_card)(16)    0.000
+                                                                              ../../Validation/V_MCSIMP.py:107(verif_type)(16)    0.000
+                                                                              ../../Validation/V_MCSIMP.py:155(verif_into)(16)    0.000
+../../../Validation/V_MCFACT.py:15(MCFACT)                                    --
+/home01/chris/pkg/python2.1/lib/python2.1/UserList.py:4(__init__)             --
+../../Accas/A_MCFACT.py:5(__init__)                                           ../../../Noyau/N_MCFACT.py:13(__init__)(5)    0.030
+                                                                              ../../../Validation/V_MCCOMPO.py:21(__init__)(5)    0.000
+../../Noyau/N_GEOM.py:6(GEOM)                                                 --
+../../../Noyau/N_OPER.py:4(?)                                                 ../../../Noyau/N_ETAPE.py:4(?)(1)    0.000
+                                                                              ../../../Noyau/N_OPER.py:12(OPER)(1)    0.010
+                                                                              ../../../Noyau/nommage.py:14(?)(1)    0.010
+../../../Noyau/N_FACT.py:29(__init__)                                         ../../../Noyau/N_ENTITE.py:27(affecter_parente)(4)    0.000
+../../Noyau/N_JDC_CATA.py:11(JDC_CATA)                                        --
+../../../Noyau/N_OBJECT.py:17(get_etape)                                      ../../../Noyau/N_OBJECT.py:17(get_etape)(5)    0.000
+../../Accas/A_MCLIST.py:5(__init__)                                           /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:4(__init__)(1)    0.000
+../../Noyau/context.py:1(?)                                                   --
+../../../Noyau/N_JDC.py:3(?)                                                  ../../../Noyau/N_JDC.py:15(JDC)(1)    0.000
+                                                                              ../../Noyau/N_ASSD.py:3(?)(1)    0.000
+                                                                              ../../Noyau/N_Exception.py:3(?)(1)    0.000
+../../Validation/V_ENSEMBLE.py:2(?)                                           ../../Validation/V_ENSEMBLE.py:2(ENSEMBLE)(1)    0.000
+../../Noyau/N_ASSD.py:3(?)                                                    ../../Noyau/N_ASSD.py:6(ASSD)(1)    0.000
+                                                                              ../../Noyau/N_ASSD.py:74(assd)(1)    0.000
+../../Execution/E_MACRO_ETAPE.py:2(MACRO_ETAPE)                               --
+../../Noyau/N__F.py:1(?)                                                      ../../Noyau/N__F.py:3(_F)(1)    0.000
+../../Accas/__init__.py:11(?)                                                 ../../Accas/A_AU_MOINS_UN.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_A_CLASSER.py:1(?)(1)    0.010
+                                                                              ../../Accas/A_BLOC.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_ENSEMBLE.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_EVAL.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_EXCLUS.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_FACT.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_FORM.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_JDC_CATA.py:1(?)(1)    0.040
+                                                                              ../../Accas/A_MACRO.py:1(?)(1)    0.010
+                                                                              ../../Accas/A_OPER.py:1(?)(1)    0.030
+                                                                              ../../Accas/A_PRESENT_ABSENT.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_PRESENT_PRESENT.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_PROC.py:1(?)(1)    0.000
+                                                                              ../../Accas/A_SIMP.py:1(?)(1)    0.010
+                                                                              ../../Accas/A_UN_PARMI.py:1(?)(1)    0.000
+                                                                              ../../Noyau/N_CO.py:1(?)(1)    0.000
+                                                                              ../../Noyau/N_FONCTION.py:1(?)(1)    0.000
+                                                                              ../../Noyau/N_GEOM.py:3(?)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_constants.py:14(?)              /home01/chris/pkg/python2.1/lib/python2.1/sre_constants.py:23(error)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_constants.py:141(makedict)(3)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:177(__init__)          /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:181(__next)(1)    0.000
+../../Execution/utils.py:2(?)                                                 --
+../../Accas/A_UN_PARMI.py:1(?)                                                ../../../Validation/V_UN_PARMI.py:2(?)(1)    0.000
+                                                                              ../../Accas/A_UN_PARMI.py:4(UN_PARMI)(1)    0.000
+../../Accas/A_JDC.py:6(JDC)                                                   --
+../../Noyau/N_GEOM.py:45(geom)                                                --
+../../Accas/A_A_CLASSER.py:4(A_CLASSER)                                       --
+../../Noyau/N_SIMP.py:78(verif_cata)                                          --
+/home01/chris/pkg/python2.1/lib/python2.1/UserList.py:73(append)              --
+../../Accas/A_FORM.py:5(FORM)                                                 --
+../../Execution/E_PROC_ETAPE.py:1(?)                                          ../../Execution/E_PROC_ETAPE.py:2(PROC_ETAPE)(1)    0.000
+../../Accas/A_MACRO.py:5(MACRO)                                               --
+../../Validation/V_MCSIMP.py:257(is_entier)                                   --
+../../../Noyau/N_OBJECT.py:6(OBJECT)                                          --
+../../../Noyau/N_BLOC.py:4(?)                                                 ../../../Noyau/N_BLOC.py:13(BLOC)(1)    0.000
+../../Noyau/N_EVAL.py:2(?)                                                    ../../Noyau/N_EVAL.py:4(EVAL)(1)    0.000
+../../Noyau/N_FORM.py:4(FORM)                                                 --
+../../Validation/V_MCSIMP.py:357(isinintervalle)                              --
+../../../Noyau/N_ENTITE.py:7(ENTITE)                                          --
+../../Accas/A_EVAL.py:1(?)                                                    ../../Accas/A_EVAL.py:4(EVAL)(1)    0.000
+                                                                              ../../Build/B_EVAL.py:2(?)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/types.py:35(_C)                     --
+../../Accas/A_PROC.py:1(?)                                                    ../../../Noyau/N_PROC.py:4(?)(1)    0.000
+                                                                              ../../Accas/A_PROC.py:5(PROC)(1)    0.000
+                                                                              ../../Accas/A_PROC_ETAPE.py:1(?)(1)    0.000
+../../Validation/V_PRESENT_PRESENT.py:2(?)                                    ../../Validation/V_PRESENT_PRESENT.py:2(PRESENT_PRESENT)(1)    0.000
+../../Validation/V_MCSIMP.py:314(compare_type)                                ../../Validation/V_MCSIMP.py:257(is_entier)(16)    0.000
+../../Noyau/utils.py:3(?)                                                     --
+../../Validation/V_MCSIMP.py:17(MCSIMP)                                       --
+<string>:0(?)                                                                 --
+../../../Noyau/N_MCSIMP.py:13(__init__)                                       ../../../Noyau/N_MCSIMP.py:45(GETVAL)(8)    0.000
+../../../Validation/V_ETAPE.py:8(?)                                           ../../../Validation/V_ETAPE.py:18(ETAPE)(1)    0.000
+../../Accas/A_ENSEMBLE.py:4(ENSEMBLE)                                         --
+../../Build/B_JDC.py:9(JDC)                                                   --
+../../../Noyau/N_PROC_ETAPE.py:4(?)                                           ../../../Noyau/N_PROC_ETAPE.py:15(PROC_ETAPE)(1)    0.000
+../../../Validation/V_MCCOMPO.py:21(__init__)                                 --
+../../Accas/A_BLOC.py:5(BLOC)                                                 --
+../../Accas/A_MCLIST.py:1(?)                                                  ../../../Validation/V_MCLIST.py:8(?)(1)    0.000
+                                                                              ../../Accas/A_MCLIST.py:4(MCList)(1)    0.000
+../../Noyau/N_ASSD.py:6(ASSD)                                                 --
+../../Noyau/N_REGLE.py:42(liste_to_dico)                                      --
+../../../Noyau/N_MCCOMPO.py:165(recherche_mc_globaux)                         ../../../Noyau/N_OBJECT.py:17(get_etape)(11)    0.000
+../../Noyau/N_CR.py:10(__init__)                                              --
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:200(get)               /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:181(__next)(2)    0.000
+../../../Noyau/N_ETAPE.py:4(?)                                                ../../../Noyau/N_ETAPE.py:17(ETAPE)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:141(getwidth)          --
+/home01/chris/pkg/python2.1/lib/python2.1/copy_reg.py:25(constructor)         --
+../../../Noyau/N_MCLIST.py:29(get_valeur)                                     --
+../../Accas/A_EVAL.py:4(EVAL)                                                 --
+../../../Noyau/N_MCBLOC.py:51(get_valeur)                                     ../../../Noyau/N_MCSIMP.py:55(get_valeur)(1)    0.000
+../../../Noyau/N_MCCOMPO.py:16(build_mc)                                      ../../../Noyau/N_BLOC.py:63(__call__)(1)    0.010
+                                                                              ../../../Noyau/N_BLOC.py:90(verif_presence)(1)    0.000
+                                                                              ../../../Noyau/N_FACT.py:69(__call__)(3)    0.030
+                                                                              ../../../Noyau/N_MCCOMPO.py:81(ordonne_liste)(8)    0.000
+                                                                              ../../../Noyau/N_MCCOMPO.py:93(cree_dict_valeurs)(9)    0.010
+                                                                              ../../Noyau/N_SIMP.py:104(__call__)(8)    0.000
+../../../Noyau/N_ETAPE.py:17(ETAPE)                                           --
+../../Accas/A_UN_PARMI.py:4(UN_PARMI)                                         --
+../../Noyau/N_FORM.py:1(?)                                                    ../../Noyau/N_FORM.py:4(FORM)(1)    0.000
+                                                                              ../../Noyau/N_FORM_ETAPE.py:1(?)(1)    0.000
+../../Noyau/N_SIMP.py:26(__init__)                                            ../../../Noyau/N_ENTITE.py:15(__init__)(9)    0.000
+../../../Validation/V_MCLIST.py:8(?)                                          ../../../Validation/V_MCLIST.py:17(MCList)(1)    0.000
+../../Accas/A_FORM_ETAPE.py:1(?)                                              ../../Accas/A_FORM_ETAPE.py:6(FORM_ETAPE)(1)    0.000
+../../Noyau/N_REGLE.py:18(?)                                                  ../../Noyau/N_REGLE.py:22(REGLE)(1)    0.000
+../../Accas/A_ETAPE.py:1(?)                                                   ../../../Validation/V_ETAPE.py:8(?)(1)    0.000
+                                                                              ../../Accas/A_ETAPE.py:6(ETAPE)(1)    0.000
+                                                                              ../../Build/B_ETAPE.py:2(?)(1)    0.010
+                                                                              ../../Execution/E_ETAPE.py:2(?)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/repr.py:6(__init__)                 --
+<string>:1(?)                                                                 main.py:11(main)(1)    0.160
+../../Build/B_OBJECT.py:2(?)                                                  ../../Build/B_OBJECT.py:12(OBJECT)(1)    0.000
+../../../Noyau/N_MCSIMP.py:5(?)                                               ../../../Noyau/N_MCSIMP.py:9(MCSIMP)(1)    0.000
+                                                                              ../../../Noyau/N_OBJECT.py:4(?)(1)    0.000
+../../../Validation/V_MCFACT.py:8(?)                                          ../../../Validation/V_MCFACT.py:15(MCFACT)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:71(Pattern)            --
+../../Accas/A_MCFACT.py:1(?)                                                  ../../../Validation/V_MCFACT.py:8(?)(1)    0.000
+                                                                              ../../Accas/A_MCFACT.py:4(MCFACT)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:234(_compile_info)   /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:141(getwidth)(1)    0.000
+/home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:362(_parse)            /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:92(__init__)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:200(get)(1)    0.000
+../../Noyau/N_REGLE.py:23(__init__)                                           --
+../../../Validation/V_UN_PARMI.py:2(?)                                        ../../../Validation/V_UN_PARMI.py:2(UN_PARMI)(1)    0.000
+../../Accas/A_MCBLOC.py:5(MCBLOC)                                             --
+../../Noyau/N_CR.py:2(?)                                                      ../../Noyau/N_CR.py:6(CR)(1)    0.000
+                                                                              /home01/chris/pkg/python2.1/lib/python2.1/string.py:20(?)(1)    0.000
+../../Accas/A_MCBLOC.py:6(__init__)                                           ../../../Noyau/N_MCBLOC.py:18(__init__)(3)    0.010
+                                                                              ../../../Validation/V_MCCOMPO.py:21(__init__)(3)    0.000
+../../Accas/A_PROC_ETAPE.py:6(PROC_ETAPE)                                     --
+../../Execution/E_JDC.py:7(JDC)                                               --
+../../Execution/E_PROC_ETAPE.py:2(PROC_ETAPE)                                 --
+../../Noyau/N_ASSD.py:74(assd)                                                --
+../../Validation/V_PRESENT_ABSENT.py:2(PRESENT_ABSENT)                        --
+../../Accas/A_PRESENT_ABSENT.py:4(PRESENT_ABSENT)                             --
+../../../Noyau/N_MCCOMPO.py:81(ordonne_liste)                                 --
+../../Validation/V_ENSEMBLE.py:2(ENSEMBLE)                                    --
+/home01/chris/pkg/python2.1/lib/python2.1/copy_reg.py:14(pickle)              /home01/chris/pkg/python2.1/lib/python2.1/copy_reg.py:25(constructor)(2)    0.000
+profile:0(profiler)                                                           profile:0(main())(1)    0.170
+/home01/chris/pkg/python2.1/lib/python2.1/UserList.py:17(__eq__)              /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:21(__cast)(1)    0.000
+../../../Noyau/N_MCSIMP.py:55(get_valeur)                                     --
+../../../Noyau/N_MCFACT.py:9(MCFACT)                                          --
+../../Build/__init__.py:0(?)                                                  --
+../../Build/B_ENTITE.py:9(ENTITE)                                             --
+../../Noyau/N_CO.py:3(CO)                                                     --
+
+
+************************************************************
+*  Liste des appellants de is_reel triée par temps interne *
+************************************************************
+*********************************************
+*  Trié par temps cumulé (20 plus grands)   *
+*********************************************
+         750 function calls (669 primitive calls) in 0.170 CPU seconds
+
+   Ordered by: cumulative time
+   List reduced from 288 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.010    0.010    0.170    0.170 profile:0(main())
+        1    0.000    0.000    0.160    0.160 <string>:1(?)
+        1    0.000    0.000    0.160    0.160 main.py:11(main)
+        1    0.000    0.000    0.100    0.100 ../../Accas/__init__.py:11(?)
+        1    0.000    0.000    0.040    0.040 ../../Accas/A_JDC_CATA.py:1(?)
+      5/1    0.000    0.000    0.030    0.030 ../../../Noyau/N_MCFACT.py:13(__init__)
+      8/1    0.000    0.000    0.030    0.030 ../../../Noyau/N_MCCOMPO.py:16(build_mc)
+      5/1    0.000    0.000    0.030    0.030 ../../Accas/A_MCFACT.py:5(__init__)
+      4/1    0.000    0.000    0.030    0.030 ../../../Noyau/N_FACT.py:69(__call__)
+        1    0.000    0.000    0.030    0.030 ../../Accas/A_OPER.py:1(?)
+        1    0.000    0.000    0.020    0.020 ../../../Noyau/N_OPER.py:4(?)
+        1    0.000    0.000    0.020    0.020 ../../Noyau/__init__.py:10(?)
+        3    0.000    0.000    0.010    0.003 ../../Accas/A_MCBLOC.py:6(__init__)
+        1    0.010    0.010    0.010    0.010 ../../../Noyau/N_MCLIST.py:15(init)
+       16    0.010    0.001    0.010    0.001 ../../../Noyau/N_OBJECT.py:27(supprime)
+      6/1    0.010    0.002    0.010    0.010 ../../../Validation/V_MCCOMPO.py:32(report)
+        1    0.010    0.010    0.010    0.010 ../../Accas/A_MACRO_ETAPE.py:1(?)
+        1    0.010    0.010    0.010    0.010 /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:11(?)
+        1    0.000    0.000    0.010    0.010 ../../../Noyau/N_MCLIST.py:44(supprime)
+        1    0.000    0.000    0.010    0.010 /home01/chris/pkg/python2.1/lib/python2.1/re.py:23(?)
+
+
+*********************************************
+*  Trié par noms de fonction                *
+*********************************************
+         750 function calls (669 primitive calls) in 0.170 CPU seconds
+
+   Ordered by: function name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_PROC.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_ENTITE.py:3(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_MCBLOC.py:8(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_AU_MOINS_UN.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCBLOC.py:5(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_PROC_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCCOMPO.py:4(?)
+        1    0.010    0.010    0.010    0.010 ../../Noyau/N_JDC_CATA.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_Exception.py:3(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_GEOM.py:3(?)
+        1    0.000    0.000    0.010    0.010 ../../Accas/A_SIMP.py:1(?)
+        1    0.010    0.010    0.010    0.010 /home01/chris/pkg/python2.1/lib/python2.1/types.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_ENTITE.py:3(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_PRESENT_ABSENT.py:1(?)
+        1    0.000    0.000    0.010    0.010 ../../Accas/A_ETAPE.py:1(?)
+        1    0.000    0.000    0.160    0.160 <string>:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_PRESENT_PRESENT.py:1(?)
+        1    0.010    0.010    0.010    0.010 ../../Accas/A_A_CLASSER.py:1(?)
+        1    0.000    0.000    0.010    0.010 ../../Noyau/N_SIMP.py:3(?)
+        1    0.000    0.000    0.020    0.020 ../../Noyau/__init__.py:10(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_AU_MOINS_UN.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_PROC_ETAPE.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_MACRO_ETAPE.py:8(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MACRO_ETAPE.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../Execution/E_MACRO_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:8(?)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/linecache.py:6(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_FORM_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_OBJECT.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCSIMP.py:5(?)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_MCFACT.py:8(?)
+        1    0.010    0.010    0.010    0.010 ../../Accas/A_MCSIMP.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MCFACT.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_UN_PARMI.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_CR.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/__init__.py:0(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N__F.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_ASSD.py:3(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_MACRO_ETAPE.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_A_CLASSER.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../Execution/E_JDC.py:2(?)
+        1    0.000    0.000    0.010    0.010 /home01/chris/pkg/python2.1/lib/python2.1/sre.py:17(?)
+        1    0.000    0.000    0.000    0.000 ../../Execution/genpy.py:12(?)
+        1    0.000    0.000    0.040    0.040 ../../Accas/A_JDC_CATA.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_FORM.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_OBJECT.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_ETAPE.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MCLIST.py:1(?)
+        1    0.000    0.000    0.010    0.010 ../../../Noyau/N_FACT.py:3(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_PROC_ETAPE.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_MCLIST.py:8(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MACRO.py:4(?)
+        1    0.010    0.010    0.010    0.010 ../../Build/B_ETAPE.py:2(?)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/traceback.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_EVAL.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_FORM_ETAPE.py:1(?)
+        1    0.000    0.000    0.030    0.030 ../../Accas/A_OPER.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_MCCOMPO.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_ETAPE.py:8(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_CODE.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCLIST.py:5(?)
+        3    0.000    0.000    0.000    0.000 <string>:0(?)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/string.py:20(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/utils.py:3(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_PRESENT_PRESENT.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_PROC_ETAPE.py:8(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_FONCTION.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_PROC.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_PRESENT_ABSENT.py:2(?)
+        1    0.010    0.010    0.010    0.010 ../../Accas/A_JDC.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_JDC.py:8(?)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:14(?)
+        1    0.000    0.000    0.000    0.000 ../../Execution/__init__.py:0(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_REGLE.py:18(?)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/copy_reg.py:5(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_FORM.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_ENSEMBLE.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Execution/E_ETAPE.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_EVAL.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_BLOC.py:4(?)
+        1    0.000    0.000    0.010    0.010 ../../Accas/A_MACRO.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Execution/E_PROC_ETAPE.py:1(?)
+        1    0.000    0.000    0.010    0.010 /home01/chris/pkg/python2.1/lib/python2.1/re.py:23(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_FACT.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_BLOC.py:1(?)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:1(?)
+        1    0.000    0.000    0.010    0.010 ../../../Noyau/nommage.py:14(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_UN_PARMI.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_EXCLUS.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Execution/utils.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_CO.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/codex.py:3(?)
+        1    0.010    0.010    0.010    0.010 ../../../Noyau/N_MCFACT.py:5(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_EXCLUS.py:2(?)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_constants.py:14(?)
+        1    0.000    0.000    0.100    0.100 ../../Accas/__init__.py:11(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_EVAL.py:2(?)
+        1    0.010    0.010    0.010    0.010 ../../Accas/A_MACRO_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_ENSEMBLE.py:2(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_JDC.py:2(?)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/repr.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_JDC.py:3(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/context.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Validation/__init__.py:6(?)
+        1    0.000    0.000    0.020    0.020 ../../../Noyau/N_OPER.py:4(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/utils.py:2(?)
+        1    0.010    0.010    0.010    0.010 /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:11(?)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MCBLOC.py:1(?)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_ASSD.py:6(ASSD)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_AU_MOINS_UN.py:2(AU_MOINS_UN)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_AU_MOINS_UN.py:4(AU_MOINS_UN)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_A_CLASSER.py:4(A_CLASSER)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_A_CLASSER.py:4(A_CLASSER)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_Exception.py:8(AsException)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_BLOC.py:5(BLOC)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_BLOC.py:13(BLOC)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_CO.py:3(CO)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_CODE.py:7(CODE)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_CR.py:6(CR)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_ENSEMBLE.py:2(ENSEMBLE)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_ENSEMBLE.py:4(ENSEMBLE)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_ENTITE.py:9(ENTITE)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_ENTITE.py:7(ENTITE)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_ETAPE.py:18(ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_ETAPE.py:6(ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_ETAPE.py:17(ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_ETAPE.py:18(ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Execution/E_ETAPE.py:11(ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_EVAL.py:4(EVAL)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_EVAL.py:7(EVAL)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_EVAL.py:4(EVAL)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_EXCLUS.py:4(EXCLUS)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_EXCLUS.py:2(EXCLUS)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_FACT.py:6(FACT)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_FACT.py:11(FACT)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_FONCTION.py:3(FONCTION)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_FORM.py:5(FORM)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_FORM.py:4(FORM)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_FORM_ETAPE.py:3(FORM_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_FORM_ETAPE.py:6(FORM_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_GEOM.py:6(GEOM)
+        5    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCFACT.py:37(GETVAL)
+        8    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCSIMP.py:45(GETVAL)
+        1    0.000    0.000    0.000    0.000 ../../Execution/E_JDC.py:7(JDC)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_JDC.py:6(JDC)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_JDC.py:17(JDC)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_JDC.py:15(JDC)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_JDC.py:9(JDC)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_JDC_CATA.py:4(JDC_CATA)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_JDC_CATA.py:11(JDC_CATA)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MACRO.py:5(MACRO)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MACRO.py:12(MACRO)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MACRO_ETAPE.py:17(MACRO_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Execution/E_MACRO_ETAPE.py:2(MACRO_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_MACRO_ETAPE.py:48(MACRO_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_MACRO_ETAPE.py:19(MACRO_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MACRO_ETAPE.py:6(MACRO_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MCBLOC.py:5(MCBLOC)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_MCBLOC.py:15(MCBLOC)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCBLOC.py:11(MCBLOC)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_MCCOMPO.py:13(MCCOMPO)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCCOMPO.py:10(MCCOMPO)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCFACT.py:9(MCFACT)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MCFACT.py:4(MCFACT)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_MCFACT.py:15(MCFACT)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MCLIST.py:4(MCList)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCLIST.py:9(MCList)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_MCLIST.py:17(MCList)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCSIMP.py:9(MCSIMP)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MCSIMP.py:4(MCSIMP)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:17(MCSIMP)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_OBJECT.py:12(OBJECT)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_OBJECT.py:6(OBJECT)
+        1    0.010    0.010    0.010    0.010 ../../../Noyau/N_OPER.py:12(OPER)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_OPER.py:5(OPER)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_PRESENT_ABSENT.py:2(PRESENT_ABSENT)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_PRESENT_ABSENT.py:4(PRESENT_ABSENT)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_PRESENT_PRESENT.py:4(PRESENT_PRESENT)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_PRESENT_PRESENT.py:2(PRESENT_PRESENT)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_PROC.py:11(PROC)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_PROC.py:5(PROC)
+        1    0.000    0.000    0.000    0.000 ../../Build/B_PROC_ETAPE.py:8(PROC_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_PROC_ETAPE.py:17(PROC_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_PROC_ETAPE.py:6(PROC_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../Execution/E_PROC_ETAPE.py:2(PROC_ETAPE)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_PROC_ETAPE.py:15(PROC_ETAPE)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:71(Pattern)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_REGLE.py:22(REGLE)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/repr.py:5(Repr)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_SIMP.py:4(SIMP)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_SIMP.py:10(SIMP)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre.py:228(Scanner)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:90(SubPattern)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:176(Tokenizer)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_UN_PARMI.py:2(UN_PARMI)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_UN_PARMI.py:4(UN_PARMI)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:3(UserList)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/types.py:35(_C)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N__F.py:3(_F)
+      4/1    0.000    0.000    0.030    0.030 ../../../Noyau/N_FACT.py:69(__call__)
+        3    0.000    0.000    0.010    0.003 ../../../Noyau/N_BLOC.py:63(__call__)
+        8    0.000    0.000    0.000    0.000 ../../Noyau/N_SIMP.py:104(__call__)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:21(__cast)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:17(__eq__)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:73(__init__)
+      5/1    0.000    0.000    0.030    0.030 ../../../Noyau/N_MCFACT.py:13(__init__)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_BLOC.py:29(__init__)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/repr.py:6(__init__)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_REGLE.py:23(__init__)
+        3    0.000    0.000    0.010    0.003 ../../Accas/A_MCBLOC.py:6(__init__)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MCLIST.py:5(__init__)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:92(__init__)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:177(__init__)
+        9    0.000    0.000    0.000    0.000 ../../../Noyau/N_ENTITE.py:15(__init__)
+        3    0.010    0.003    0.010    0.003 ../../../Noyau/N_MCBLOC.py:18(__init__)
+        8    0.000    0.000    0.000    0.000 ../../Accas/A_MCSIMP.py:5(__init__)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:4(__init__)
+        9    0.000    0.000    0.000    0.000 ../../Noyau/N_SIMP.py:26(__init__)
+      5/1    0.000    0.000    0.030    0.030 ../../Accas/A_MCFACT.py:5(__init__)
+        8    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:38(__init__)
+       29    0.000    0.000    0.000    0.000 ../../Noyau/N_CR.py:10(__init__)
+        4    0.000    0.000    0.000    0.000 ../../../Noyau/N_FACT.py:29(__init__)
+        8    0.000    0.000    0.000    0.000 ../../../Validation/V_MCCOMPO.py:21(__init__)
+        8    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCSIMP.py:13(__init__)
+        3    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:181(__next)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:343(_code)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:19(_compile)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre.py:125(_compile)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:234(_compile_info)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:362(_parse)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:307(_parse_sub)
+       27    0.000    0.000    0.000    0.000 ../../Noyau/N_CR.py:44(add)
+        5    0.000    0.000    0.000    0.000 ../../../Noyau/N_ENTITE.py:27(affecter_parente)
+        2    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:73(append)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_ASSD.py:74(assd)
+      8/1    0.000    0.000    0.030    0.030 ../../../Noyau/N_MCCOMPO.py:16(build_mc)
+       16    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:314(compare_type)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_compile.py:358(compile)
+        2    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/copy_reg.py:25(constructor)
+     11/7    0.010    0.001    0.010    0.001 ../../../Noyau/N_MCCOMPO.py:93(cree_dict_valeurs)
+       11    0.000    0.000    0.000    0.000 ../../../Validation/V_MCCOMPO.py:73(dict_mc_presents)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_constants.py:23(error)
+     29/2    0.010    0.000    0.010    0.005 ../../Noyau/N_CR.py:48(estvide)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_FONCTION.py:5(fonction)
+        1    0.000    0.000    0.000    0.000 ../../Execution/genpy.py:19(genpy)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_GEOM.py:45(geom)
+        2    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:200(get)
+    16/11    0.000    0.000    0.000    0.000 ../../../Noyau/N_OBJECT.py:17(get_etape)
+       10    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCSIMP.py:55(get_valeur)
+        4    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCFACT.py:47(get_valeur)
+        2    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCLIST.py:29(get_valeur)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCBLOC.py:51(get_valeur)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:141(getwidth)
+        1    0.010    0.010    0.010    0.010 ../../../Noyau/N_MCLIST.py:15(init)
+       16    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:257(is_entier)
+       16    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:357(isinintervalle)
+       16    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:77(isoblig)
+        2    0.000    0.000    0.000    0.000 ../../Validation/V_MCBLOC.py:24(isvalid)
+       23    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:41(isvalid)
+     11/7    0.000    0.000    0.000    0.000 ../../../Validation/V_MCFACT.py:24(isvalid)
+        2    0.000    0.000    0.000    0.000 ../../../Validation/V_MCLIST.py:29(isvalid)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_REGLE.py:42(liste_to_dico)
+        1    0.000    0.000    0.160    0.160 main.py:11(main)
+        1    0.010    0.010    0.170    0.170 profile:0(main())
+        3    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_constants.py:141(makedict)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:194(match)
+        8    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCCOMPO.py:81(ordonne_liste)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:607(parse)
+        2    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/copy_reg.py:14(pickle)
+        0    0.000             0.000          profile:0(profiler)
+       11    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCCOMPO.py:165(recherche_mc_globaux)
+        8    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:385(report)
+      6/1    0.010    0.002    0.010    0.010 ../../../Validation/V_MCCOMPO.py:32(report)
+        1    0.000    0.000    0.000    0.000 ../../../Validation/V_MCLIST.py:51(report)
+     14/1    0.000    0.000    0.000    0.000 ../../../Noyau/N_ENTITE.py:49(report)
+       16    0.010    0.001    0.010    0.001 ../../../Noyau/N_OBJECT.py:27(supprime)
+      8/3    0.000    0.000    0.010    0.003 ../../../Noyau/N_MCCOMPO.py:195(supprime)
+        1    0.000    0.000    0.010    0.010 ../../../Noyau/N_MCLIST.py:44(supprime)
+        1    0.000    0.000    0.000    0.000 ../../Validation/V_AU_MOINS_UN.py:11(verif)
+       16    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:82(verif_card)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_BLOC.py:70(verif_cata)
+        4    0.000    0.000    0.000    0.000 ../../../Noyau/N_FACT.py:109(verif_cata)
+        9    0.000    0.000    0.000    0.000 ../../Noyau/N_SIMP.py:78(verif_cata)
+        5    0.000    0.000    0.000    0.000 ../../../Noyau/N_ENTITE.py:68(verif_cata_regles)
+       16    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:155(verif_into)
+        3    0.000    0.000    0.000    0.000 ../../../Noyau/N_BLOC.py:90(verif_presence)
+       11    0.000    0.000    0.000    0.000 ../../../Validation/V_MCCOMPO.py:49(verif_regles)
+       16    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:107(verif_type)
+
+
+*********************************************
+*  Statistique standard                     *
+*********************************************
+         750 function calls (669 primitive calls) in 0.170 CPU seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        3    0.000    0.000    0.000    0.000 <string>:0(?)
+        1    0.000    0.000    0.160    0.160 <string>:1(?)
+        1    0.000    0.000    0.000    0.000 A_AU_MOINS_UN.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_AU_MOINS_UN.py:4(AU_MOINS_UN)
+        1    0.010    0.010    0.010    0.010 A_A_CLASSER.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_A_CLASSER.py:4(A_CLASSER)
+        1    0.000    0.000    0.000    0.000 A_BLOC.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_BLOC.py:5(BLOC)
+        1    0.000    0.000    0.000    0.000 A_ENSEMBLE.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_ENSEMBLE.py:4(ENSEMBLE)
+        1    0.000    0.000    0.010    0.010 A_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_ETAPE.py:6(ETAPE)
+        1    0.000    0.000    0.000    0.000 A_EVAL.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_EVAL.py:4(EVAL)
+        1    0.000    0.000    0.000    0.000 A_EXCLUS.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_EXCLUS.py:4(EXCLUS)
+        1    0.000    0.000    0.000    0.000 A_FACT.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_FACT.py:6(FACT)
+        1    0.000    0.000    0.000    0.000 A_FORM.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_FORM.py:5(FORM)
+        1    0.000    0.000    0.000    0.000 A_FORM_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_FORM_ETAPE.py:6(FORM_ETAPE)
+        1    0.010    0.010    0.010    0.010 A_JDC.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_JDC.py:6(JDC)
+        1    0.000    0.000    0.040    0.040 A_JDC_CATA.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_JDC_CATA.py:4(JDC_CATA)
+        1    0.000    0.000    0.010    0.010 A_MACRO.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_MACRO.py:5(MACRO)
+        1    0.010    0.010    0.010    0.010 A_MACRO_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_MACRO_ETAPE.py:6(MACRO_ETAPE)
+        1    0.000    0.000    0.000    0.000 A_MCBLOC.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_MCBLOC.py:5(MCBLOC)
+        3    0.000    0.000    0.010    0.003 A_MCBLOC.py:6(__init__)
+        1    0.000    0.000    0.000    0.000 A_MCFACT.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_MCFACT.py:4(MCFACT)
+      5/1    0.000    0.000    0.030    0.030 A_MCFACT.py:5(__init__)
+        1    0.000    0.000    0.000    0.000 A_MCLIST.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_MCLIST.py:4(MCList)
+        1    0.000    0.000    0.000    0.000 A_MCLIST.py:5(__init__)
+        1    0.010    0.010    0.010    0.010 A_MCSIMP.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_MCSIMP.py:4(MCSIMP)
+        8    0.000    0.000    0.000    0.000 A_MCSIMP.py:5(__init__)
+        1    0.000    0.000    0.030    0.030 A_OPER.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_OPER.py:5(OPER)
+        1    0.000    0.000    0.000    0.000 A_PRESENT_ABSENT.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_PRESENT_ABSENT.py:4(PRESENT_ABSENT)
+        1    0.000    0.000    0.000    0.000 A_PRESENT_PRESENT.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_PRESENT_PRESENT.py:4(PRESENT_PRESENT)
+        1    0.000    0.000    0.000    0.000 A_PROC.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_PROC.py:5(PROC)
+        1    0.000    0.000    0.000    0.000 A_PROC_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_PROC_ETAPE.py:6(PROC_ETAPE)
+        1    0.000    0.000    0.010    0.010 A_SIMP.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_SIMP.py:4(SIMP)
+        1    0.000    0.000    0.000    0.000 A_UN_PARMI.py:1(?)
+        1    0.000    0.000    0.000    0.000 A_UN_PARMI.py:4(UN_PARMI)
+        1    0.000    0.000    0.000    0.000 B_CODE.py:4(?)
+        1    0.000    0.000    0.000    0.000 B_CODE.py:7(CODE)
+        1    0.000    0.000    0.000    0.000 B_ENTITE.py:3(?)
+        1    0.000    0.000    0.000    0.000 B_ENTITE.py:9(ENTITE)
+        1    0.000    0.000    0.000    0.000 B_ETAPE.py:18(ETAPE)
+        1    0.010    0.010    0.010    0.010 B_ETAPE.py:2(?)
+        1    0.000    0.000    0.000    0.000 B_EVAL.py:2(?)
+        1    0.000    0.000    0.000    0.000 B_EVAL.py:7(EVAL)
+        1    0.000    0.000    0.000    0.000 B_JDC.py:2(?)
+        1    0.000    0.000    0.000    0.000 B_JDC.py:9(JDC)
+        1    0.000    0.000    0.000    0.000 B_MACRO_ETAPE.py:2(?)
+        1    0.000    0.000    0.000    0.000 B_MACRO_ETAPE.py:48(MACRO_ETAPE)
+        1    0.000    0.000    0.000    0.000 B_OBJECT.py:12(OBJECT)
+        1    0.000    0.000    0.000    0.000 B_OBJECT.py:2(?)
+        1    0.000    0.000    0.000    0.000 B_PROC_ETAPE.py:2(?)
+        1    0.000    0.000    0.000    0.000 B_PROC_ETAPE.py:8(PROC_ETAPE)
+        1    0.000    0.000    0.000    0.000 E_ETAPE.py:11(ETAPE)
+        1    0.000    0.000    0.000    0.000 E_ETAPE.py:2(?)
+        1    0.000    0.000    0.000    0.000 E_JDC.py:2(?)
+        1    0.000    0.000    0.000    0.000 E_JDC.py:7(JDC)
+        1    0.000    0.000    0.000    0.000 E_MACRO_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 E_MACRO_ETAPE.py:2(MACRO_ETAPE)
+        1    0.000    0.000    0.000    0.000 E_PROC_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 E_PROC_ETAPE.py:2(PROC_ETAPE)
+        1    0.000    0.000    0.000    0.000 N_ASSD.py:3(?)
+        1    0.000    0.000    0.000    0.000 N_ASSD.py:6(ASSD)
+        1    0.000    0.000    0.000    0.000 N_ASSD.py:74(assd)
+        1    0.000    0.000    0.000    0.000 N_BLOC.py:13(BLOC)
+        1    0.000    0.000    0.000    0.000 N_BLOC.py:29(__init__)
+        1    0.000    0.000    0.000    0.000 N_BLOC.py:4(?)
+        3    0.000    0.000    0.010    0.003 N_BLOC.py:63(__call__)
+        1    0.000    0.000    0.000    0.000 N_BLOC.py:70(verif_cata)
+        3    0.000    0.000    0.000    0.000 N_BLOC.py:90(verif_presence)
+        1    0.000    0.000    0.000    0.000 N_CO.py:1(?)
+        1    0.000    0.000    0.000    0.000 N_CO.py:3(CO)
+       29    0.000    0.000    0.000    0.000 N_CR.py:10(__init__)
+        1    0.000    0.000    0.000    0.000 N_CR.py:2(?)
+       27    0.000    0.000    0.000    0.000 N_CR.py:44(add)
+     29/2    0.010    0.000    0.010    0.005 N_CR.py:48(estvide)
+        1    0.000    0.000    0.000    0.000 N_CR.py:6(CR)
+        9    0.000    0.000    0.000    0.000 N_ENTITE.py:15(__init__)
+        5    0.000    0.000    0.000    0.000 N_ENTITE.py:27(affecter_parente)
+        1    0.000    0.000    0.000    0.000 N_ENTITE.py:3(?)
+     14/1    0.000    0.000    0.000    0.000 N_ENTITE.py:49(report)
+        5    0.000    0.000    0.000    0.000 N_ENTITE.py:68(verif_cata_regles)
+        1    0.000    0.000    0.000    0.000 N_ENTITE.py:7(ENTITE)
+        1    0.000    0.000    0.000    0.000 N_ETAPE.py:17(ETAPE)
+        1    0.000    0.000    0.000    0.000 N_ETAPE.py:4(?)
+        1    0.000    0.000    0.000    0.000 N_EVAL.py:2(?)
+        1    0.000    0.000    0.000    0.000 N_EVAL.py:4(EVAL)
+        1    0.000    0.000    0.000    0.000 N_Exception.py:3(?)
+        1    0.000    0.000    0.000    0.000 N_Exception.py:8(AsException)
+        4    0.000    0.000    0.000    0.000 N_FACT.py:109(verif_cata)
+        1    0.000    0.000    0.000    0.000 N_FACT.py:11(FACT)
+        4    0.000    0.000    0.000    0.000 N_FACT.py:29(__init__)
+        1    0.000    0.000    0.010    0.010 N_FACT.py:3(?)
+      4/1    0.000    0.000    0.030    0.030 N_FACT.py:69(__call__)
+        1    0.000    0.000    0.000    0.000 N_FONCTION.py:1(?)
+        1    0.000    0.000    0.000    0.000 N_FONCTION.py:3(FONCTION)
+        1    0.000    0.000    0.000    0.000 N_FONCTION.py:5(fonction)
+        1    0.000    0.000    0.000    0.000 N_FORM.py:1(?)
+        1    0.000    0.000    0.000    0.000 N_FORM.py:4(FORM)
+        1    0.000    0.000    0.000    0.000 N_FORM_ETAPE.py:1(?)
+        1    0.000    0.000    0.000    0.000 N_FORM_ETAPE.py:3(FORM_ETAPE)
+        1    0.000    0.000    0.000    0.000 N_GEOM.py:3(?)
+        1    0.000    0.000    0.000    0.000 N_GEOM.py:45(geom)
+        1    0.000    0.000    0.000    0.000 N_GEOM.py:6(GEOM)
+        1    0.000    0.000    0.000    0.000 N_JDC.py:15(JDC)
+        1    0.000    0.000    0.000    0.000 N_JDC.py:3(?)
+        1    0.000    0.000    0.000    0.000 N_JDC_CATA.py:11(JDC_CATA)
+        1    0.010    0.010    0.010    0.010 N_JDC_CATA.py:4(?)
+        1    0.000    0.000    0.000    0.000 N_MACRO.py:12(MACRO)
+        1    0.000    0.000    0.000    0.000 N_MACRO.py:4(?)
+        1    0.000    0.000    0.000    0.000 N_MACRO_ETAPE.py:17(MACRO_ETAPE)
+        1    0.000    0.000    0.000    0.000 N_MACRO_ETAPE.py:4(?)
+        1    0.000    0.000    0.000    0.000 N_MCBLOC.py:11(MCBLOC)
+        3    0.010    0.003    0.010    0.003 N_MCBLOC.py:18(__init__)
+        1    0.000    0.000    0.000    0.000 N_MCBLOC.py:5(?)
+        1    0.000    0.000    0.000    0.000 N_MCBLOC.py:51(get_valeur)
+        1    0.000    0.000    0.000    0.000 N_MCCOMPO.py:10(MCCOMPO)
+      8/1    0.000    0.000    0.030    0.030 N_MCCOMPO.py:16(build_mc)
+       11    0.000    0.000    0.000    0.000 N_MCCOMPO.py:165(recherche_mc_globaux)
+      8/3    0.000    0.000    0.010    0.003 N_MCCOMPO.py:195(supprime)
+        1    0.000    0.000    0.000    0.000 N_MCCOMPO.py:4(?)
+        8    0.000    0.000    0.000    0.000 N_MCCOMPO.py:81(ordonne_liste)
+     11/7    0.010    0.001    0.010    0.001 N_MCCOMPO.py:93(cree_dict_valeurs)
+      5/1    0.000    0.000    0.030    0.030 N_MCFACT.py:13(__init__)
+        5    0.000    0.000    0.000    0.000 N_MCFACT.py:37(GETVAL)
+        4    0.000    0.000    0.000    0.000 N_MCFACT.py:47(get_valeur)
+        1    0.010    0.010    0.010    0.010 N_MCFACT.py:5(?)
+        1    0.000    0.000    0.000    0.000 N_MCFACT.py:9(MCFACT)
+        1    0.010    0.010    0.010    0.010 N_MCLIST.py:15(init)
+        2    0.000    0.000    0.000    0.000 N_MCLIST.py:29(get_valeur)
+        1    0.000    0.000    0.010    0.010 N_MCLIST.py:44(supprime)
+        1    0.000    0.000    0.000    0.000 N_MCLIST.py:5(?)
+        1    0.000    0.000    0.000    0.000 N_MCLIST.py:9(MCList)
+        8    0.000    0.000    0.000    0.000 N_MCSIMP.py:13(__init__)
+        8    0.000    0.000    0.000    0.000 N_MCSIMP.py:45(GETVAL)
+        1    0.000    0.000    0.000    0.000 N_MCSIMP.py:5(?)
+       10    0.000    0.000    0.000    0.000 N_MCSIMP.py:55(get_valeur)
+        1    0.000    0.000    0.000    0.000 N_MCSIMP.py:9(MCSIMP)
+    16/11    0.000    0.000    0.000    0.000 N_OBJECT.py:17(get_etape)
+       16    0.010    0.001    0.010    0.001 N_OBJECT.py:27(supprime)
+        1    0.000    0.000    0.000    0.000 N_OBJECT.py:4(?)
+        1    0.000    0.000    0.000    0.000 N_OBJECT.py:6(OBJECT)
+        1    0.010    0.010    0.010    0.010 N_OPER.py:12(OPER)
+        1    0.000    0.000    0.020    0.020 N_OPER.py:4(?)
+        1    0.000    0.000    0.000    0.000 N_PROC.py:11(PROC)
+        1    0.000    0.000    0.000    0.000 N_PROC.py:4(?)
+        1    0.000    0.000    0.000    0.000 N_PROC_ETAPE.py:15(PROC_ETAPE)
+        1    0.000    0.000    0.000    0.000 N_PROC_ETAPE.py:4(?)
+        1    0.000    0.000    0.000    0.000 N_REGLE.py:18(?)
+        1    0.000    0.000    0.000    0.000 N_REGLE.py:22(REGLE)
+        1    0.000    0.000    0.000    0.000 N_REGLE.py:23(__init__)
+        1    0.000    0.000    0.000    0.000 N_REGLE.py:42(liste_to_dico)
+        1    0.000    0.000    0.000    0.000 N_SIMP.py:10(SIMP)
+        8    0.000    0.000    0.000    0.000 N_SIMP.py:104(__call__)
+        9    0.000    0.000    0.000    0.000 N_SIMP.py:26(__init__)
+        1    0.000    0.000    0.010    0.010 N_SIMP.py:3(?)
+        9    0.000    0.000    0.000    0.000 N_SIMP.py:78(verif_cata)
+        1    0.000    0.000    0.000    0.000 N__F.py:1(?)
+        1    0.000    0.000    0.000    0.000 N__F.py:3(_F)
+        1    0.000    0.000    0.000    0.000 UserList.py:1(?)
+        1    0.000    0.000    0.000    0.000 UserList.py:17(__eq__)
+        1    0.000    0.000    0.000    0.000 UserList.py:21(__cast)
+        1    0.000    0.000    0.000    0.000 UserList.py:3(UserList)
+        1    0.000    0.000    0.000    0.000 UserList.py:4(__init__)
+        2    0.000    0.000    0.000    0.000 UserList.py:73(append)
+        1    0.000    0.000    0.000    0.000 V_AU_MOINS_UN.py:11(verif)
+        1    0.000    0.000    0.000    0.000 V_AU_MOINS_UN.py:2(?)
+        1    0.000    0.000    0.000    0.000 V_AU_MOINS_UN.py:2(AU_MOINS_UN)
+        1    0.000    0.000    0.000    0.000 V_A_CLASSER.py:2(?)
+        1    0.000    0.000    0.000    0.000 V_A_CLASSER.py:4(A_CLASSER)
+        1    0.000    0.000    0.000    0.000 V_ENSEMBLE.py:2(?)
+        1    0.000    0.000    0.000    0.000 V_ENSEMBLE.py:2(ENSEMBLE)
+        1    0.000    0.000    0.000    0.000 V_ETAPE.py:18(ETAPE)
+        1    0.000    0.000    0.000    0.000 V_ETAPE.py:8(?)
+        1    0.000    0.000    0.000    0.000 V_EXCLUS.py:2(?)
+        1    0.000    0.000    0.000    0.000 V_EXCLUS.py:2(EXCLUS)
+        1    0.000    0.000    0.000    0.000 V_JDC.py:17(JDC)
+        1    0.000    0.000    0.000    0.000 V_JDC.py:8(?)
+        1    0.000    0.000    0.000    0.000 V_MACRO_ETAPE.py:19(MACRO_ETAPE)
+        1    0.000    0.000    0.000    0.000 V_MACRO_ETAPE.py:8(?)
+        1    0.000    0.000    0.000    0.000 V_MCBLOC.py:15(MCBLOC)
+        2    0.000    0.000    0.000    0.000 V_MCBLOC.py:24(isvalid)
+        1    0.000    0.000    0.000    0.000 V_MCBLOC.py:8(?)
+        1    0.000    0.000    0.000    0.000 V_MCCOMPO.py:13(MCCOMPO)
+        8    0.000    0.000    0.000    0.000 V_MCCOMPO.py:21(__init__)
+      6/1    0.010    0.002    0.010    0.010 V_MCCOMPO.py:32(report)
+        1    0.000    0.000    0.000    0.000 V_MCCOMPO.py:4(?)
+       11    0.000    0.000    0.000    0.000 V_MCCOMPO.py:49(verif_regles)
+       11    0.000    0.000    0.000    0.000 V_MCCOMPO.py:73(dict_mc_presents)
+        1    0.000    0.000    0.000    0.000 V_MCFACT.py:15(MCFACT)
+     11/7    0.000    0.000    0.000    0.000 V_MCFACT.py:24(isvalid)
+        1    0.000    0.000    0.000    0.000 V_MCFACT.py:8(?)
+        1    0.000    0.000    0.000    0.000 V_MCLIST.py:17(MCList)
+        2    0.000    0.000    0.000    0.000 V_MCLIST.py:29(isvalid)
+        1    0.000    0.000    0.000    0.000 V_MCLIST.py:51(report)
+        1    0.000    0.000    0.000    0.000 V_MCLIST.py:8(?)
+       16    0.000    0.000    0.000    0.000 V_MCSIMP.py:107(verif_type)
+       16    0.000    0.000    0.000    0.000 V_MCSIMP.py:155(verif_into)
+        1    0.000    0.000    0.000    0.000 V_MCSIMP.py:17(MCSIMP)
+       16    0.000    0.000    0.000    0.000 V_MCSIMP.py:257(is_entier)
+       16    0.000    0.000    0.000    0.000 V_MCSIMP.py:314(compare_type)
+       16    0.000    0.000    0.000    0.000 V_MCSIMP.py:357(isinintervalle)
+        8    0.000    0.000    0.000    0.000 V_MCSIMP.py:38(__init__)
+        8    0.000    0.000    0.000    0.000 V_MCSIMP.py:385(report)
+       23    0.000    0.000    0.000    0.000 V_MCSIMP.py:41(isvalid)
+       16    0.000    0.000    0.000    0.000 V_MCSIMP.py:77(isoblig)
+        1    0.000    0.000    0.000    0.000 V_MCSIMP.py:8(?)
+       16    0.000    0.000    0.000    0.000 V_MCSIMP.py:82(verif_card)
+        1    0.000    0.000    0.000    0.000 V_PRESENT_ABSENT.py:2(?)
+        1    0.000    0.000    0.000    0.000 V_PRESENT_ABSENT.py:2(PRESENT_ABSENT)
+        1    0.000    0.000    0.000    0.000 V_PRESENT_PRESENT.py:2(?)
+        1    0.000    0.000    0.000    0.000 V_PRESENT_PRESENT.py:2(PRESENT_PRESENT)
+        1    0.000    0.000    0.000    0.000 V_PROC_ETAPE.py:17(PROC_ETAPE)
+        1    0.000    0.000    0.000    0.000 V_PROC_ETAPE.py:8(?)
+        1    0.000    0.000    0.000    0.000 V_UN_PARMI.py:2(?)
+        1    0.000    0.000    0.000    0.000 V_UN_PARMI.py:2(UN_PARMI)
+        2    0.000    0.000    0.000    0.000 __init__.py:0(?)
+        1    0.000    0.000    0.020    0.020 __init__.py:10(?)
+        1    0.000    0.000    0.100    0.100 __init__.py:11(?)
+        1    0.000    0.000    0.000    0.000 __init__.py:6(?)
+        1    0.000    0.000    0.000    0.000 codex.py:3(?)
+        1    0.000    0.000    0.000    0.000 context.py:1(?)
+        2    0.000    0.000    0.000    0.000 copy_reg.py:14(pickle)
+        2    0.000    0.000    0.000    0.000 copy_reg.py:25(constructor)
+        1    0.000    0.000    0.000    0.000 copy_reg.py:5(?)
+        1    0.000    0.000    0.000    0.000 genpy.py:12(?)
+        1    0.000    0.000    0.000    0.000 genpy.py:19(genpy)
+        1    0.000    0.000    0.000    0.000 linecache.py:6(?)
+        1    0.000    0.000    0.160    0.160 main.py:11(main)
+        1    0.000    0.000    0.010    0.010 nommage.py:14(?)
+        1    0.010    0.010    0.170    0.170 profile:0(main())
+        0    0.000             0.000          profile:0(profiler)
+        1    0.000    0.000    0.010    0.010 re.py:23(?)
+        1    0.000    0.000    0.000    0.000 repr.py:1(?)
+        1    0.000    0.000    0.000    0.000 repr.py:5(Repr)
+        1    0.000    0.000    0.000    0.000 repr.py:6(__init__)
+        1    0.000    0.000    0.000    0.000 sre.py:125(_compile)
+        1    0.000    0.000    0.010    0.010 sre.py:17(?)
+        1    0.000    0.000    0.000    0.000 sre.py:228(Scanner)
+        1    0.010    0.010    0.010    0.010 sre_compile.py:11(?)
+        1    0.000    0.000    0.000    0.000 sre_compile.py:19(_compile)
+        1    0.000    0.000    0.000    0.000 sre_compile.py:234(_compile_info)
+        1    0.000    0.000    0.000    0.000 sre_compile.py:343(_code)
+        1    0.000    0.000    0.000    0.000 sre_compile.py:358(compile)
+        1    0.000    0.000    0.000    0.000 sre_constants.py:14(?)
+        3    0.000    0.000    0.000    0.000 sre_constants.py:141(makedict)
+        1    0.000    0.000    0.000    0.000 sre_constants.py:23(error)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:14(?)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:141(getwidth)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:176(Tokenizer)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:177(__init__)
+        3    0.000    0.000    0.000    0.000 sre_parse.py:181(__next)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:194(match)
+        2    0.000    0.000    0.000    0.000 sre_parse.py:200(get)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:307(_parse_sub)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:362(_parse)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:607(parse)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:71(Pattern)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:73(__init__)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:90(SubPattern)
+        1    0.000    0.000    0.000    0.000 sre_parse.py:92(__init__)
+        1    0.000    0.000    0.000    0.000 string.py:20(?)
+        1    0.000    0.000    0.000    0.000 traceback.py:1(?)
+        1    0.000    0.000    0.000    0.000 types.py:35(_C)
+        1    0.010    0.010    0.010    0.010 types.py:4(?)
+        2    0.000    0.000    0.000    0.000 utils.py:2(?)
+        1    0.000    0.000    0.000    0.000 utils.py:3(?)
+
+
+*************************************************
+*  Trié par fichier seulement methodes __init__ *
+*************************************************
+         750 function calls (669 primitive calls) in 0.170 CPU seconds
+
+   Ordered by: file name
+   List reduced from 288 to 25 due to restriction <'__init__'>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.000    0.000 ../../../Noyau/N_BLOC.py:29(__init__)
+        9    0.000    0.000    0.000    0.000 ../../../Noyau/N_ENTITE.py:15(__init__)
+        4    0.000    0.000    0.000    0.000 ../../../Noyau/N_FACT.py:29(__init__)
+        3    0.010    0.003    0.010    0.003 ../../../Noyau/N_MCBLOC.py:18(__init__)
+      5/1    0.000    0.000    0.030    0.030 ../../../Noyau/N_MCFACT.py:13(__init__)
+        8    0.000    0.000    0.000    0.000 ../../../Noyau/N_MCSIMP.py:13(__init__)
+        8    0.000    0.000    0.000    0.000 ../../../Validation/V_MCCOMPO.py:21(__init__)
+        3    0.000    0.000    0.010    0.003 ../../Accas/A_MCBLOC.py:6(__init__)
+      5/1    0.000    0.000    0.030    0.030 ../../Accas/A_MCFACT.py:5(__init__)
+        1    0.000    0.000    0.000    0.000 ../../Accas/A_MCLIST.py:5(__init__)
+        8    0.000    0.000    0.000    0.000 ../../Accas/A_MCSIMP.py:5(__init__)
+        1    0.000    0.000    0.100    0.100 ../../Accas/__init__.py:11(?)
+        1    0.000    0.000    0.000    0.000 ../../Build/__init__.py:0(?)
+        1    0.000    0.000    0.000    0.000 ../../Execution/__init__.py:0(?)
+       29    0.000    0.000    0.000    0.000 ../../Noyau/N_CR.py:10(__init__)
+        1    0.000    0.000    0.000    0.000 ../../Noyau/N_REGLE.py:23(__init__)
+        9    0.000    0.000    0.000    0.000 ../../Noyau/N_SIMP.py:26(__init__)
+        1    0.000    0.000    0.020    0.020 ../../Noyau/__init__.py:10(?)
+        8    0.000    0.000    0.000    0.000 ../../Validation/V_MCSIMP.py:38(__init__)
+        1    0.000    0.000    0.000    0.000 ../../Validation/__init__.py:6(?)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/UserList.py:4(__init__)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/repr.py:6(__init__)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:73(__init__)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:177(__init__)
+        1    0.000    0.000    0.000    0.000 /home01/chris/pkg/python2.1/lib/python2.1/sre_parse.py:92(__init__)
+
+

@@ -1,0 +1,219 @@
+"""
+   Ce module contient la classe JDCDISPLAY qui réalise l'affichage
+   du jeu de commandes sous la forme d'un arbre et de panneaux qui portent
+   les informations attachées au noeud de l'arbre sélectionné
+"""
+# Modules Python
+import Tkinter
+import Pmw
+
+# Modules Eficas
+import panels
+from treeitemincanvas import TREEITEMINCANVAS
+from tkMessageBox import showinfo,showerror
+
+class CONFIG:
+   isdeveloppeur='NON'
+
+class JDCDISPLAY:
+   """
+       Cette classe ajoute à la class TREEITEMINCANVAS l'affichage des infos
+       attachées au noeud sélectionné dans un notebook
+       L'objet item associé au jdc est créé par la classe TREEITEMINCANVAS
+   """
+   def __init__(self,jdc,nom_jdc,appli=None,parent=None):
+      self.jdc=jdc
+      self.nom_jdc=nom_jdc
+      self.fichier=None
+
+      if not appli:
+         class Appli:
+            def __init__(self):
+               self.CONFIGURATION=CONFIG()
+            def affiche_infos(self,message):
+               print message
+               return
+
+            def efface_aide(self,event):
+               return
+
+            def affiche_aide(self,event,aide):
+               print aide
+               return
+
+         appli=Appli()
+      self.appli=appli
+
+      if not parent:
+         parent=Tkinter.Tk()
+         Pmw.initialise(parent)
+      self.parent=parent
+      self.node_selected = None
+      self.modified='n'
+
+      self.pane=Pmw.PanedWidget(self.parent,orient='horizontal')
+      self.pane.add('treebrowser',min=0.5)
+      self.pane.add('selected',min=0.5)
+      self.pane.pack(expand=1,fill='both')
+      self.tree=TREEITEMINCANVAS(jdc,nom_jdc,self.pane.pane('treebrowser'),
+                 self.appli,self.select_node)
+
+   def select_node(self,node):
+      """
+          Cette méthode est appelée à chaque fois qu'un noeud est sélectionné
+          dans l'arbre.
+          Elle permet l'affichage du panneau correspondant au noeud sélectionné
+      """
+      if node is not self.node_selected :
+         self.create_panel(node)
+      # on conserve la trace du noeud sélectionné et de celui d'avant
+      if self.node_selected :
+          self.ancien_node = self.node_selected
+          self.node_selected = node
+      else:
+          self.ancien_node = self.node_selected = node
+
+   def create_panel(self,node):
+      """
+         Lance la génération du panneau contextuel de l'objet sélectionné 
+         dans l'arbre
+      """
+      if node.item.isactif():
+          if hasattr(node.item,"panel"):
+              return node.item.panel(self,self.pane.pane('selected'),node)
+          else:
+              raise Exception("Le noeud sélectionné n'a pas de panel associé")
+      else:
+          return panels.Panel_Inactif(self,self.pane.pane('selected'),node)
+
+   def init_modif(self):
+      """
+          Met l'attribut modified à 'o' : utilisé par Eficas pour savoir 
+          si un JDC doit être sauvegardé avant destruction ou non
+      """
+      self.modified = 'o'
+
+   def stop_modif(self):
+      """
+          Met l'attribut modified à 'n' : utilisé par Eficas pour savoir 
+          si un JDC doit être sauvegardé avant destruction ou non
+      """
+      self.modified = 'n'
+
+   def mainloop(self):
+      self.parent.mainloop()
+
+   def ReplaceObjectNode(self,node,new_object,nom_sd=None):
+      """
+      Cette méthode sert à remplacer l'objet pointé par node par
+      new_object.
+      Si nom_sd : on remplace un OPER et on essaie de renommer la
+      nouvelle sd par nom_sd
+      """
+      child = node.append_brother(new_object,retour='oui')
+      if child == 0:
+          self.appli.affiche_infos("Impossible de remplacer l'objet du noeud courant")
+      else:
+          self.init_modif()
+          node.delete()
+          if nom_sd:
+              child.item.nomme_sd(nom_sd)
+          child.update()
+
+   def doCut(self):
+      """
+      Stocke dans Eficas.noeud_a_editer le noeud à couper
+      """
+      if not self.node_selected.item.iscopiable():
+          showinfo("Copie impossible",
+                   "Cette version d'EFICAS ne permet que la copie d'objets de type 'Commande' ou mot-clé facteur")
+          return
+      self.edit="couper"
+      self.appli.noeud_a_editer = self.node_selected
+
+   def doCopy(self):
+      """
+      Stocke dans Eficas.noeud_a_editer le noeud à copier
+      """
+      if not self.node_selected.item.iscopiable():
+          showinfo("Copie impossible",
+                   "La copie d'un tel objet n'est pas permise")
+          return
+      self.edit="copier"
+      self.appli.noeud_a_editer = self.node_selected
+
+   def doPaste(self):
+      """
+      Lance la copie de l'objet placé dans self.appli.noeud_a_editer
+      Ne permet que la copie d'objets de type Commande ou MCF
+      """
+      objet_a_copier = self.appli.noeud_a_editer.item.get_copie_objet()
+      if objet_a_copier.__class__.__name__ in ('ETAPE','PROC_ETAPE','MACRO_ETAPE'):
+          self.doPaste_Commande(objet_a_copier)
+      elif objet_a_copier.__class__.__name__ == "MCFACT":
+          self.doPaste_MCF(objet_a_copier)
+      else:
+          showinfo("Copie impossible",
+                   "Vous ne pouvez copier que des commandes ou des mots-clés facteurs !")
+          return
+
+   def doPaste_Commande(self,objet_a_copier):
+      """
+      Réalise la copie de l'objet passé en argument qui est nécessairement une commande
+      """
+      # il faut vérifier que le noeud sélectionné (noeud courant) est bien
+      # une commande ou un JDC sinon la copie est impossible ...
+      if self.node_selected.item.isCommande() :
+          child = self.node_selected.append_brother(objet_a_copier,retour='oui')
+      elif self.node_selected.item.isJdc() :
+          child = self.node_selected.append_child(objet_a_copier,retour='oui')
+      else:
+          showinfo("Copie impossible",
+                   "Vous ne pouvez coller la commande copiée à ce niveau de l'arborescence !")
+          self.appli.affiche_infos("Copie refusée")
+          return
+      # il faut déclarer le JDCDisplay_courant modifié
+      self.init_modif()
+      # suppression éventuelle du noeud sélectionné
+      if self.edit == "couper":
+          self.appli.noeud_a_editer.delete()
+      if child == 0:
+          # la copie est impossible
+          if self.appli.message != '':
+              showerror("Copie refusée",self.appli.message)
+              self.appli.message = ''
+          self.appli.affiche_infos("Copie refusée")
+      # on rend la copie à nouveau possible en libérant le flag edit
+      self.edit="copier"
+
+   def doPaste_MCF(self,objet_a_copier):
+      """
+      Réalise la copie de l'objet passé en argument qui est nécessairement un MCF
+      """
+      if self.node_selected.item.isCommande() :
+          # le noeud courant est une ETAPE
+          child = self.node_selected.append_child(objet_a_copier,retour='oui')
+      elif self.node_selected.item.isMCList() :
+          # le noeud courant est une MCList
+          child = self.node_selected.parent.append_child(objet_a_copier,retour='oui')
+      elif self.node_selected.item.isMCFact():
+          # le noeud courant est un MCFACT
+          child = self.node_selected.parent.append_child(objet_a_copier,retour='oui')
+      else:
+          showinfo("Copie impossible",
+                   "Vous ne pouvez coller le mot-clé facteur copié à ce niveau de l'arborescence !")
+          self.appli.affiche_infos("Copie refusée")
+          return
+      # il faut déclarer le JDCDisplay_courant modifié
+      self.init_modif()
+      # suppression éventuelle du noeud sélectionné
+      if self.edit == "couper":
+          self.appli.noeud_a_editer.delete()
+      if child == 0:
+          if self.appli.message != '':
+              showerror("Copie refusée",self.appli.message)
+              self.appli.message = ''
+          self.appli.affiche_infos("Copie refusée")
+      # on rend la copie à nouveau possible en libérant le flag edit
+      self.edit="copier"
+

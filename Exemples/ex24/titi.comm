@@ -1,0 +1,102 @@
+
+
+SD1=DEFI_SONDE(Z=1,
+               X=2,
+               Y=3,);
+#
+#
+#
+
+_param_1 = 1;
+
+_param_2 = 2;
+
+_param_4 = EVAL("""23""");
+
+
+SD2=DEFI_SONDE(Z=1,
+               X=2,
+               Y=3,);
+
+SD3=DEFI_SONDE(Z=3,
+               X=4,
+               Y=5,);
+
+SD4=DEFI_SONDE(Z=12,
+               X=11,
+               Y=10,);
+
+SD5=DEFI_SONDE(Z=21,
+               X=21,
+               Y=21,);
+
+temperature=DEFI_SCALA(RESTITUE=_F(NOMVAR='temperature',
+                                   ILISVR=1,
+                                   ICHRVR=1,
+                                   IHISVR=SD1,),
+                       MODELE=_F(SIGMAS=0.90000000000000002,
+                                 SCAMAX=1000,
+                                 VALREF=300.0,
+                                 SCAMIN=270,
+                                 VISLS0=0.050000000000000003,
+                                 IVISLS=1,),
+                       NUMERIC=_F(IMLIGR=1,
+                                  CLIMGR=1.7,
+                                  EPSRGR=1.E-4,
+                                  NITMAX=1000,
+                                  IDIRCL=0,
+                                  IDIFF=1,
+                                  NSWRGR=2,
+                                  NSWRSM=10,
+                                  EPSILO=1.0000000000000001E-05,
+                                  ISTAT=1,
+                                  ICONV=1,
+                                  BLENCV=0.5,
+                                  ISCHCV=1,),);
+
+cb=DEFI_SCALA(RESTITUE=_F(NOMVAR='bore',),
+              MODELE=_F(VALREF=1000.0,
+                        VISLS0=0.29999999999999999,),
+              NUMERIC=_F(ICONV=1,
+                         BLENCV=0,),);
+
+CALCUL_SATURNE(ENVELOPPE=_F(IFOENV=2,
+                            FICEVI='Enveloppe_vers_solveur          ',
+                            IMPEVI=83,
+                            IMPEVO=84,
+                            FICEVO='Solveur_vers_enveloppe          ',),
+               CONSTANTES_PHYSIQUES=_F(FLUIDE=_F(VISCL0=0.10000000000000001,
+                                                 P0=1.E4,
+                                                 RO0=1000.0,),
+                                       GRAVITE=_F(GX=0,
+                                                  GY=0,
+                                                  GZ=0,),),
+               HISTORIQUE_PONCTUEL=_F(FICHIERS_HISTORIQUES=_F(EXTHIS='histo',
+                                                              EMPHIS='./',),
+                                      NTHSAV=20,
+                                      NTHIST=1,),
+               OPTIONS_TURBULENCE=_F(ISCALT=temperature,
+                                     IGRAKE=0,),
+               VARIABLES=_F(IWARNI=3,
+                            NTLIST=2,
+                            MASVOL1=_F(NOMVAR='Masse_vol1',
+                                       ILISVR=1,
+                                       ICHRVR=0,
+                                       IHISVR=SD2,),),
+               MARCHE_TEMPS=_F(IDTVAR=2,
+                               DTREF=1.E-3,
+                               XCFMAX=0.5,),
+               FICHIERS_CALCUL=_F(SUITE_AVAL=_F(FICAVA='sui_amo',
+                                                IMPAVA=70,
+                                                IFOAVA=1,),
+                                  FICHIER_STOP=_F(FICSTP='ficstop',
+                                                  IMPSTP=82,),),
+               GESTION_CALCUL=_F(NTMABS=1000,
+                                 TTPABS=10.5,
+                                 ISUITE=0,
+                                 NTPABS=100,),
+               OPTIONS_EQUATIONS=_F(),
+               POST_PROC_ENSIGHT=_F(IFOENS=1,
+                                    NTCHR=3,
+                                    ITCHR=10,),
+               );
