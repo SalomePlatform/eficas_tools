@@ -1,4 +1,4 @@
-#@ MODIF N_ETAPE Noyau  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_ETAPE Noyau  DATE 03/09/2002   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -27,6 +27,7 @@
 import types,sys,string,os
 import linecache
 import traceback
+from copy import copy
 
 # Modules EFICAS
 import N_MCCOMPO
@@ -128,16 +129,10 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
                # On ne nomme le concept que dans le cas de non reutilisation 
                # d un concept
                sd.nom=nom
-         if self.jdc and self.jdc.par_lot == "NON" :
-            self.Execute()
-         return sd
       except AsException,e:
          raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
                               'fichier : ',self.appel[1],e)
       except EOFError:
-         # XXX Normalement le contexte courant doit etre le parent.
-         # Il n'y a pas de raison de remettre le contexte au parent
-         #self.reset_current_step()
          raise
       except :
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
@@ -145,11 +140,14 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
                            'fichier : ',self.appel[1]+'\n',
                             string.join(l))
 
+      self.Execute()
+      return sd
+
    def Execute(self):
       """
-         Cette methode est prevue pour faire une execution dans le cas
-         ou par_lot == 'NON'
-         Par defaut, elle ne fait rien
+         Cette methode est un point d'entree prevu pour realiser une execution immediatement
+         apres avoir construit les mots cles et le concept produit.
+         Par defaut, elle ne fait rien. Elle doit etre surchargee dans une autre partie du programme.
       """
       return
 
@@ -182,16 +180,14 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
       else:
         sd_prod=self.definition.sd_prod
       # on teste maintenant si la SD est réutilisée ou s'il faut la créer
-      if self.reuse:
-        # Il est preferable de traiter cette erreur ultérieurement : ce n'est pas une erreur fatale
-        #if AsType(self.reuse) != sd_prod:
-        #  raise AsException("type de concept reutilise incompatible avec type produit")
+      if self.definition.reentrant != 'n' and self.reuse:
+        # Le concept produit est specifie reutilise (reuse=xxx). C'est une erreur mais non fatale.
+        # Elle sera traitee ulterieurement.
         self.sd=self.reuse
       else:
         self.sd= sd_prod(etape=self)
-        # Si reuse n'a pas ete donné, c'est une erreur. Ne pas corriger afin de la detecter ensuite
-        #if self.definition.reentrant == 'o':
-        #  self.reuse = self.sd
+        # Si l'operateur est obligatoirement reentrant et reuse n'a pas ete specifie, c'est une erreur. 
+        # On ne fait rien ici. L'erreur sera traiter par la suite.
       return self.sd
 
    def get_type_produit(self):
@@ -317,6 +313,51 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
       if self.sd:
         d[self.sd.nom]=self.sd
 
+   def copy(self):
+      """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
+          et sans sd 
+      """
+      etape = copy(self)
+      etape.sd = None
+      etape.state = 'modified'
+      etape.reuse = None
+      etape.sdnom = None
+      etape.etape=etape
+      etape.mc_liste=[]
+      for objet in self.mc_liste:
+        new_obj = objet.copy()
+        new_obj.reparent(etape)
+        etape.mc_liste.append(new_obj)
+      return etape
 
+   def copy_reuse(self,old_etape):
+      """ Méthode qui copie le reuse d'une autre étape. 
+      """
+      if hasattr(old_etape,"reuse") :
+        self.reuse = old_etape.reuse
 
+   def copy_sdnom(self,old_etape):
+      """ Méthode qui copie le sdnom d'une autre étape. 
+      """
+      if hasattr(old_etape,"sdnom") :
+        self.sdnom = old_etape.sdnom
 
+   def get_sd_utilisees(self):
+      """ 
+          Retourne la liste des concepts qui sont utilisés à l'intérieur d'une commande
+          ( comme valorisation d'un MCS) 
+      """
+      l=[]
+      for child in self.mc_liste:
+        l.extend(child.get_sd_utilisees())
+      return l
+
+   def reparent(self,parent):
+     """
+         Cette methode sert a reinitialiser la parente de l'objet
+     """
+     self.parent=parent
+     self.jdc=parent.get_jdc_root()
+     self.etape=self
+     for mocle in self.mc_liste:
+        mocle.reparent(self)

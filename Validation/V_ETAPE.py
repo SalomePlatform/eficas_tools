@@ -1,4 +1,4 @@
-#@ MODIF V_ETAPE Validation  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF V_ETAPE Validation  DATE 06/01/2003   AUTEUR ASSIRE A.ASSIRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -39,6 +39,56 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
    """
    """
 
+   def valid_child(self):
+       """ Cette methode teste la validite des mots cles de l'etape """
+       for child in self.mc_liste :
+           if not child.isvalid():
+              return 0 
+       return 1
+
+   def valid_regles(self,cr):
+       """ Cette methode teste la validite des regles de l'etape """
+       text_erreurs,test_regles = self.verif_regles()
+       if not test_regles :
+          if cr == 'oui' : self.cr.fatal(string.join(("Règle(s) non respectée(s) :", text_erreurs)))
+          return 0 
+       return 1
+
+   def valid_sdnom(self,cr):
+       """ Cette methode teste la validite du nom du concept produit par l'etape """
+       valid=1
+       if self.sd.nom != None :
+          if self.jdc and self.jdc.definition.code == 'ASTER' and len(self.sd.nom) > 8 :
+             #  le nom de la sd doit avoir une longueur <= 8 caractères pour ASTER
+             if cr == 'oui' :
+                self.cr.fatal("Le nom de concept %s est trop long (8 caractères maxi)" %self.sd.nom)
+             valid = 0
+          if string.find(self.sd.nom,'sansnom') != -1 :
+             # la SD est 'sansnom' : --> erreur
+             if cr == 'oui' :
+                self.cr.fatal("Pas de nom pour le concept retourné")
+             valid = 0
+          elif string.find(self.sd.nom,'SD_') != -1 :
+             # la SD est 'SD_' cad son nom = son id donc pas de nom donné par utilisateur : --> erreur
+             if cr == 'oui' :
+                self.cr.fatal("Pas de nom pour le concept retourné")
+             valid = 0
+       return valid
+
+   def get_valid(self):
+       if hasattr(self,'valid'):
+          return self.valid
+       else:
+          self.valid=None
+          return None
+
+   def set_valid(self,valid):
+       old_valid=self.get_valid()
+       self.valid = valid
+       self.state = 'unchanged'
+       if not old_valid or old_valid != self.valid : 
+           self.init_modif_up()
+
    def isvalid(self,sd='oui',cr='non'):
       """ 
          Methode pour verifier la validité de l'objet ETAPE. Cette méthode
@@ -60,61 +110,37 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
       if self.state == 'unchanged' :
         return self.valid
       else:
-        valid = 1
-        if hasattr(self,'valid'):
-          old_valid = self.valid
-        else:
-          old_valid = None
-        # on teste si demandé la structure de donnée (par défaut)
-        if sd == 'oui':
-          if self.sd != None :pass
-            # Ce test parait superflu. Il est sur que si sd existe il s'agit du concept produit
-            # Quelle pourrait etre la raison qui ferait que sd n existe pas ???
-            #if self.jdc.get_sdprod(self.sd.nom) == None :
-            #  if cr == 'oui' :
-            #    self.cr.fatal('Le concept '+self.sd.nom+" n'existe pas")
-            #  valid = 0
-          else :
-            if cr == 'oui' : self.cr.fatal("Concept retourné non défini")
-            valid = 0
-        # on teste, si elle existe, le nom de la sd (sa longueur doit etre <= 8 caractères)
-        if self.sd != None :
-          # la SD existe déjà : on regarde son nom
-          if self.sd.nom != None :
-            if len(self.sd.nom) > 8 and self.jdc.definition.code == 'ASTER' :
-              if cr == 'oui' :
-                self.cr.fatal("Le nom de concept %s est trop long (8 caractères maxi)" %self.sd.nom)
-              valid = 0
-            if string.find(self.sd.nom,'sansnom') != -1 :
-              # la SD est 'sansnom' : --> erreur
-              if cr == 'oui' :
-                self.cr.fatal("Pas de nom pour le concept retourné")
-              valid = 0
-            elif string.find(self.sd.nom,'SD_') != -1 :
-              # la SD est 'SD_' cad son nom = son id donc pas de nom donné par utilisateur : --> erreur
-              if cr == 'oui' :
-                self.cr.fatal("Pas de nom pour le concept retourné")
-              valid = 0
-        # on teste les enfants
-        for child in self.mc_liste :
-          if not child.isvalid():
-            valid = 0
-            break
-        # on teste les règles de self
-        text_erreurs,test_regles = self.verif_regles()
-        if not test_regles :
-          if cr == 'oui' : self.cr.fatal(string.join(("Règle(s) non respectée(s) :", text_erreurs)))
-          valid = 0
+        valid=self.valid_child()
+        valid=valid * self.valid_regles(cr)
+
         if self.reste_val != {}:
           if cr == 'oui' :
             self.cr.fatal("Mots cles inconnus :" + string.join(self.reste_val.keys(),','))
           valid=0
-        if sd == 'oui' and valid:
+
+        if sd == "non":
+          # Dans ce cas, on ne teste qu'une validité partielle (sans tests sur le concept produit)
+          # Conséquence : on ne change pas l'état ni l'attribut valid, on retourne simplement
+          # l'indicateur de validité valid
+          return valid
+
+        if self.definition.reentrant == 'n' and self.reuse:
+          # Il ne peut y avoir de concept reutilise avec un OPER non reentrant
+          if cr == 'oui' : self.cr.fatal('Operateur non reentrant : ne pas utiliser reuse ')
+          valid=0
+
+        if self.sd == None:
+          # Le concept produit n'existe pas => erreur
+          if cr == 'oui' : self.cr.fatal("Concept retourné non défini")
+          valid = 0
+        else:
+          valid = valid * self.valid_sdnom(cr)
+
+        if valid:
           valid = self.update_sdprod(cr)
-        self.valid = valid
-        self.state = 'unchanged'
-        if old_valid:
-          if old_valid != self.valid : self.init_modif_up()
+
+        self.set_valid(valid)
+
         return self.valid
 
    def update_sdprod(self,cr='non'):
@@ -150,11 +176,12 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
         if AsType(self.reuse) != sd_prod:
           if cr == 'oui' : self.cr.fatal('Type de concept reutilise incompatible avec type produit')
           valid= 0
-        if self.sdnom[0] != '_' and self.reuse.nom != self.sdnom:
-          # Le nom de la variable de retour (self.sdnom) doit etre le meme que celui du concept reutilise (self.reuse.nom)
-          if cr == 'oui' : 
-             self.cr.fatal('Concept reutilise : le nom de la variable de retour devrait etre %s et non %s' %(self.reuse.nom,self.sdnom))
-          valid= 0
+        if self.sdnom!='':
+           if self.sdnom[0] != '_' and self.reuse.nom != self.sdnom:
+             # Le nom de la variable de retour (self.sdnom) doit etre le meme que celui du concept reutilise (self.reuse.nom)
+             if cr == 'oui' : 
+                self.cr.fatal('Concept reutilise : le nom de la variable de retour devrait etre %s et non %s' %(self.reuse.nom,self.sdnom))
+             valid= 0
         if valid:self.sd=self.reuse
       else:
         if sd_prod == None:# Pas de concept retourné
@@ -171,7 +198,6 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
         if self.definition.reentrant == 'o':
            if cr == 'oui' : self.cr.fatal('Commande obligatoirement reentrante : specifier reuse=concept')
            valid=0 
-           #self.reuse = self.sd
       return valid
 
 

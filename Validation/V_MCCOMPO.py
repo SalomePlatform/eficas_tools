@@ -1,4 +1,4 @@
-#@ MODIF V_MCCOMPO Validation  DATE 29/05/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF V_MCCOMPO Validation  DATE 09/10/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -77,7 +77,8 @@ class MCCOMPO:
 
            - testglob = booléen 1 si toutes les règles OK, 0 sinon 
       """
-      dictionnaire=self.dict_mc_presents(restreint='oui')
+      #dictionnaire=self.dict_mc_presents(restreint='oui')
+      dictionnaire=self.dict_mc_presents(restreint='non') # On verifie les regles avec les defauts affectés
       texte=''
       testglob = 1
       for r in self.definition.regles:

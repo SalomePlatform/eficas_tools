@@ -1,4 +1,4 @@
-#@ MODIF macro_mode_meca_ops Macro  DATE 11/06/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF macro_mode_meca_ops Macro  DATE 20/01/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -36,7 +36,8 @@ def macro_mode_meca_ops(self,MATR_A,MATR_B,INFO,METHODE,OPTION,CALC_FREQ,
   IMPR_RESU         =self.get_cmd('IMPR_RESU')
   EXTR_MODE         =self.get_cmd('EXTR_MODE')
   # La macro compte pour 1 dans la numerotation des commandes
-  self.icmd=1
+  #self.icmd=1
+  self.set_icmd(1)
 
   nompro=None
   iocc=0
@@ -60,20 +61,6 @@ def macro_mode_meca_ops(self,MATR_A,MATR_B,INFO,METHODE,OPTION,CALC_FREQ,
         motscfa['FREQ']=(CALC_FREQ['FREQ'][i],CALC_FREQ['FREQ'][i+1])
      else:
         motscfa['FREQ']=(lborne[i],lborne[i+1])
-     if METHODE=='TRI_DIAG':
-        motscfa['NMAX_ITER_ORTHO'] =CALC_FREQ['NMAX_ITER_ORTHO']
-        motscfa['PREC_ORTHO']      =CALC_FREQ['PREC_ORTHO']
-        motscfa['PREC_LANCZOS']    =CALC_FREQ['PREC_LANCZOS']
-        motscfa['NMAX_ITER_QR']    =CALC_FREQ['NMAX_ITER_QR']
-     elif METHODE=='JACOBI':
-        motscfa['NMAX_ITER_BATHE'] =CALC_FREQ['NMAX_ITER_BATHE']
-        motscfa['PREC_BATHE']      =CALC_FREQ['PREC_BATHE']
-        motscfa['NMAX_ITER_JACOBI']=CALC_FREQ['NMAX_ITER_JACOBI']
-        motscfa['PREC_JACOBI']     =CALC_FREQ['PREC_JACOBI']
-     elif METHODE=='SORENSEN':
-        motscfa['NMAX_ITER_SOREN'] =CALC_FREQ['NMAX_ITER_SOREN']
-        motscfa['PARA_ORTHO_SOREN']=CALC_FREQ['PARA_ORTHO_SOREN']
-        motscfa['PREC_SOREN']      =CALC_FREQ['PREC_SOREN']
      motscit['CALC_FREQ']=_F(OPTION          ='BANDE',
                              SEUIL_FREQ      =CALC_FREQ['SEUIL_FREQ'],
                              NPREC_SOLVEUR   =CALC_FREQ['NPREC_SOLVEUR'],
@@ -85,6 +72,33 @@ def macro_mode_meca_ops(self,MATR_A,MATR_B,INFO,METHODE,OPTION,CALC_FREQ,
                              STURM      =VERI_MODE['STURM'],
                              PREC_SHIFT =VERI_MODE['PREC_SHIFT'])
      motscit['STOP_FREQ_VIDE']=CALC_FREQ['STOP_FREQ_VIDE']
+
+     if METHODE=='TRI_DIAG':
+        if args.has_key('NMAX_ITER_ORTHO'):
+           motscit['NMAX_ITER_ORTHO'] =args['NMAX_ITER_ORTHO']
+        if args.has_key('PREC_ORTHO'):
+           motscit['PREC_ORTHO']      =args['PREC_ORTHO']
+        if args.has_key('PREC_LANCZOS'):
+           motscit['PREC_LANCZOS']    =args['PREC_LANCZOS']
+        if args.has_key('MAX_ITER_QR'):
+           motscit['NMAX_ITER_QR']    =args['NMAX_ITER_QR']
+     elif METHODE=='JACOBI':
+        if args.has_key('NMAX_ITER_BATHE'):
+           motscit['NMAX_ITER_BATHE'] =args['NMAX_ITER_BATHE']
+        if args.has_key('PREC_BATHE'):
+           motscit['PREC_BATHE']      =args['PREC_BATHE']
+        if args.has_key('NMAX_ITER_JACOBI'):
+           motscit['NMAX_ITER_JACOBI']=args['NMAX_ITER_JACOBI']
+        if args.has_key('PREC_JACOBI'):
+           motscit['PREC_JACOBI']     =args['PREC_JACOBI']
+     elif METHODE=='SORENSEN':
+        if args.has_key('NMAX_ITER_SOREN'):
+           motscit['NMAX_ITER_SOREN'] =args['NMAX_ITER_SOREN']
+        if args.has_key('PARA_ORTHO_SOREN'):
+           motscit['PARA_ORTHO_SOREN']=args['PARA_ORTHO_SOREN']
+        if args.has_key('PREC_SOREN'):
+           motscit['PREC_SOREN']      =args['PREC_SOREN']
+
      __nomre0=MODE_ITER_SIMULT(MATR_A  =MATR_A,
                                   MATR_B  =MATR_B,
                                   INFO    =INFO,

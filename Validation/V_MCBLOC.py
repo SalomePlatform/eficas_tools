@@ -70,7 +70,7 @@ class MCBLOC(V_MCCOMPO.MCCOMPO):
           valid = 0
         self.valid = valid
         self.state = 'unchanged'
-        if old_valid:
-          if old_valid != self.valid : self.init_modif_up()
+        if not old_valid or old_valid != self.valid : 
+           self.init_modif_up()
         return self.valid
 

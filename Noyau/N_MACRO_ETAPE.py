@@ -1,4 +1,4 @@
-#@ MODIF N_MACRO_ETAPE Noyau  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_MACRO_ETAPE Noyau  DATE 06/01/2003   AUTEUR ASSIRE A.ASSIRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -124,15 +124,13 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
                # d un concept
                sd.nom=nom
          self.reset_current_step()
-         if self.jdc and self.jdc.par_lot == "NON" :
-            self.Execute()
-         return sd
       except AsException,e:
          self.reset_current_step()
          raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
                               'fichier : ',self.appel[1],e)
-      except EOFError:
-         #self.reset_current_step()
+      except (EOFError,self.jdc.UserError):
+         # Le retablissement du step courant n'est pas strictement necessaire. On le fait pour des raisons de coherence
+         self.reset_current_step()
          raise
       except :
          self.reset_current_step()
@@ -140,6 +138,9 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
          raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
                            'fichier : ',self.appel[1]+'\n',
                             string.join(l))
+
+      self.Execute()
+      return sd
 
    def get_sd_prod(self):
       """
@@ -167,7 +168,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
           # les concepts produits dans self.sdprods, il faut le mettre à zéro avant de l'appeler
           self.sdprods=[]
           sd_prod= apply(sd_prod,(self,),d)
-        except EOFError:
+        except (EOFError,self.jdc.UserError):
           raise
         except:
           if CONTEXT.debug: traceback.print_exc()
@@ -175,10 +176,9 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
           raise AsException("impossible d affecter un type au resultat\n",string.join(l[2:]))
 
       # on teste maintenant si la SD est réutilisée ou s'il faut la créer
-      if self.reuse:
-        # Il est preferable de traiter cette erreur ultérieurement : ce n'est pas une erreur fatale
-        #if AsType(self.reuse) != sd_prod:
-        #  raise AsException("type de concept reutilise incompatible avec type produit")
+      if self.definition.reentrant != 'n' and self.reuse:
+        # Le concept produit est specifie reutilise (reuse=xxx). C'est une erreur mais non fatale.
+        # Elle sera traitee ulterieurement.
         self.sd=self.reuse
       else:
         if sd_prod == None:
@@ -186,9 +186,8 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
         else:
           self.sd= sd_prod(etape=self)
           self.typret=sd_prod
-        # Si reuse n'a pas ete donné, c'est une erreur. Ne pas corriger afin de la detecter ensuite
-        #if self.definition.reentrant == 'o':
-        #  self.reuse = self.sd
+          # Si la commande est obligatoirement reentrante et reuse n'a pas ete specifie, c'est une erreur. 
+          # On ne fait rien ici. L'erreur sera traitee par la suite. 
       return self.sd
 
    def get_type_produit(self,force=0):
@@ -368,7 +367,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
          # On force également le nom stocké dans l'attribut sdnom : on lui donne le nom 
          # du concept associé à nomsd
          etape.sdnom=sd.nom
-      elif etape.reuse != None:
+      elif etape.definition.reentrant != 'n' and etape.reuse != None:
          # On est dans le cas d'une commande avec reutilisation d'un concept existant
          # get_sd_prod fait le necessaire : verifications, associations, etc. mais ne cree 
          # pas un nouveau concept. Il retourne le concept reutilise
@@ -380,7 +379,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
          # En effet une commande avec reutilisation d'un concept verifie que le nom de 
          # la variable a gauche du signe = est le meme que celui du concept reutilise.
          # Lorsqu'une telle commande apparait dans une macro, on supprime cette verification.
-         if etape.sdnom[0] == '_':
+         if (etape.sdnom == '' or etape.sdnom[0] == '_'):
             etape.sdnom=sd.nom
       else:
          # On est dans le cas de la creation d'un nouveau concept
@@ -409,6 +408,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
       # les macros devrait peut etre etre déplacée dans Build ???
 
       if CONTEXT.debug : print "MACRO.NommerSdprod: ",sd,sdnom
+
       if hasattr(self,'prefix'):
         # Dans le cas de l'include_materiau on ajoute un prefixe au nom du concept
         if sdnom != self.prefix:sdnom=self.prefix+sdnom
@@ -416,7 +416,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
       if self.Outputs.has_key(sdnom):
         # Il s'agit d'un concept de sortie de la macro produit par une sous commande
         sdnom=self.Outputs[sdnom].nom
-      elif sdnom[0] == '_':
+      elif sdnom != '' and sdnom[0] == '_':
         # Si le nom du concept commence par le caractere _ on lui attribue
         # un identificateur JEVEUX construit par gcncon et respectant
         # la regle gcncon legerement adaptee ici
@@ -492,7 +492,10 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
       """
           Inclut un fichier poursuite
       """
-      f,text=self.get_file(fic_origine=self.parent.nom)
+      try:
+         f,text=self.get_file(fic_origine=self.parent.nom)
+      except:
+         raise AsException("Impossible d'ouvrir la base pour une poursuite")
       self.fichier_init=f
       if f == None:return
       self.make_contexte(f,text)
@@ -511,7 +514,20 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
       d={}
       self.g_context = d
       self.contexte_fichier_init = d
-      exec code in self.parent.g_context,d
+      globs=self.parent.get_global_contexte()
+      exec code in globs,d
+
+   def get_global_contexte(self):
+      """
+          Cette methode retourne le contexte global fourni
+          par le parent(self) a une etape fille (l'appelant) pour
+          realiser des evaluations de texte Python (INCLUDE,...)
+      """
+      # Le contexte global est forme par concatenation du contexte
+      # du parent de self et de celui de l'etape elle meme (self)
+      d=self.parent.get_global_contexte()
+      d.update(self.g_context)
+      return d
 
 
 
