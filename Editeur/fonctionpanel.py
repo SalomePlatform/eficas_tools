@@ -236,7 +236,12 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
             l1_valeurs.append((valeur[0],valeur[1]))
          else :
             l1_valeurs.append((valeur[0],valeur[1],valeur[2]))
+      i = 0
+      while i < self.nb_valeurs : 
+         self.set_valeur_texte(saisie[i])
+         i=i+1
       self.Liste_valeurs.put_liste(l1_valeurs)
+      self.Liste_valeurs.affiche_liste()
 
 
   def display_valeur(self,val=None):
