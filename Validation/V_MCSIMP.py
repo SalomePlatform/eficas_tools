@@ -162,6 +162,7 @@ class MCSIMP:
             if not self.verif_type(val=val,cr=cr) : return 0
           return 1
       elif type(valeur) == types.ListType:
+        if self.is_complexe(valeur) : return 1
         for val in valeur:
             if not self.verif_type(val=val,cr=cr) : return 0
         return 1
@@ -251,7 +252,7 @@ class MCSIMP:
       # Pour permettre l'utilisation de complexes Python
       #elif type(valeur) == types.ComplexType:
         #return 1
-      elif type(valeur) != types.TupleType :
+      elif type(valeur) != types.TupleType and  type(valeur) != types.ListType:
         return 0
       else:
         if len(valeur) != 3 :

@@ -435,7 +435,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       # Pour permettre l'utilisation de complexes Python
       #elif type(valeur) == types.ComplexType:
         #return 1
-      elif type(valeur) != types.TupleType :
+      elif type(valeur) != types.TupleType and type(valeur) != types.ListType :
         return 0
       else:
         if len(valeur) != 3 :
