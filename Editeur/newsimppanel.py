@@ -159,7 +159,11 @@ class newSIMPPanel(panels.OngletPanel):
             if len(liste_valeurs) >= max :
                 self.parent.appli.affiche_infos("La liste ne peut pas avoir plus de %d éléments" %max)
                 return
-            liste_valeurs.append(self.selected_choix)
+            if (self.Liste_valeurs.selection != None):
+                ligne=self.Liste_valeurs.cherche_selected_item()
+                liste_valeurs.insert(ligne,self.selected_choix)
+            else :
+                liste_valeurs.append(self.selected_choix)
             self.Liste_valeurs.put_liste(liste_valeurs)
             listeActuelle=self.Liste_valeurs.get_liste()
             liste_choix=self.node.item.get_liste_possible(listeActuelle)

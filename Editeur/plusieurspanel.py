@@ -137,7 +137,11 @@ class PLUSIEURS_Panel(newSIMPPanel):
             if len(liste_valeurs) >= max :
                 commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
             else :
-               liste_valeurs.append(valeur)
+               if (self.Liste_valeurs.selection != None):
+                   ligne=self.Liste_valeurs.cherche_selected_item()
+                   liste_valeurs.insert(ligne,valeur)
+               else :
+                   liste_valeurs.append(valeur)
                self.Liste_valeurs.put_liste(liste_valeurs)
                self.erase_valeur()
                commentaire="Nouvelle valeur acceptée"

@@ -106,6 +106,8 @@ class PLUSIEURS_ASSD_Panel(PLUSIEURS_Panel):
           fram.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
   
   def add_eval_valeur_sans_into(self,valeurentree=None):
+      if valeurentree == None:
+	 valeurentree = self.get_valeur()
       valeur,validite=self.node.item.eval_valeur(valeurentree)
       if not validite :
              commentaire = "impossible d'évaluer : %s " %`valeurentree`
