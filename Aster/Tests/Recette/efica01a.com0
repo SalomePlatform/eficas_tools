@@ -42,7 +42,7 @@ RESUR1=REST_BASE_PHYS(  RESU_GENE=TRAN_GE1,
                         LIST_INST=LISTIMP,
                         INTERPOL='LIN',
                         NOM_CHAM='DEPL',
-                        MULT_APPUI='NON'
+#                        MULT_APPUI='NON'
                        )
 
 

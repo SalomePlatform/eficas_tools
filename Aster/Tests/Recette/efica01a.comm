@@ -29,7 +29,7 @@
 # - verifier les acces a la doc
 #
 
-DEBUT(CODE=_F( NOM = 'EFICA01A'))
+DEBUT()
 
 MAILLAGE=LIRE_MAILLAGE( )
 
