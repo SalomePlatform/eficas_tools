@@ -146,6 +146,10 @@ class PLUSIEURS_Panel(newSIMPPanel):
                    liste_valeurs.insert(ligne,valeur)
                else :
                    liste_valeurs.append(valeur)
+               try :
+                  self.set_valeur_texte(str(self.entry.get()))
+               except :
+                  pass
                self.Liste_valeurs.put_liste(liste_valeurs)
                self.erase_valeur()
                commentaire="Nouvelle valeur acceptée"

@@ -732,8 +732,9 @@ class ListeChoix :
           elif type(objet) in (types.StringType,types.IntType):
               mot = objet
           elif type(objet) == types.FloatType :
-              #mot = repr_float(objet)
-              mot = str(objet)
+              mot = self.parent.get_valeur_texte(objet)
+              if mot == "" :
+                 mot = str(objet)
           elif type(objet) == types.TupleType :
               mot="("
               premier=1
