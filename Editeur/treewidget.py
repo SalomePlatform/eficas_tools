@@ -27,7 +27,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.16 2004/10/26 12:38:23 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.17 2004/11/15 14:01:36 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -727,6 +727,14 @@ class Node :
     def doPaste(self,node_selected):
         self.appli.message="Vous ne pouvez copier que des commandes ou des mots-clés facteurs !"
         return 0
+
+    def doPaste_Commande(self,objet_a_copier):
+        """
+	Réalise la copie de l'objet passé en argument qui est nécessairement
+	une commande
+	"""
+	child = self.append_brother(objet_a_copier,retour='oui')
+	return child
 
     #--------------------------------------------------------------
     # Méthodes de vérification du contexte et de validité du noeud
