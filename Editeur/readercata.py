@@ -388,7 +388,7 @@ class READERCATA:
         self.fic_cata_clef=os.path.splitext(self.fic_cata_c)[0]+'_clefs_docu'
         f=open(self.fic_cata_clef)
       except:
-        print "Pas de fichier associé contenant des clefs documentaires"
+        #print "Pas de fichier associé contenant des clefs documentaires"
         return
 
       dict_clef_docu={}
@@ -398,8 +398,5 @@ class READERCATA:
           docu=docu[0:-1]
           dict_clef_docu[clef]=docu
       for oper in self.cata.JdC.commandes:
-        if hasattr(oper,'docu'):
-           clef=oper.get_docu()
-           if dict_clef_docu.has_key(clef):
+           if dict_clef_docu.has_key(oper.nom):
               oper.docu=dict_clef_docu[clef]
-
