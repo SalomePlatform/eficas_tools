@@ -133,7 +133,6 @@ class HomardGenerator(PythonGenerator):
       return s
 
    def cherche_dependance(self,mot):
-       print mot
        b_eval = 0
        a_eval=self.dico_mot_depend[mot]
        try :
