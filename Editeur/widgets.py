@@ -193,6 +193,11 @@ class FenetreDeSelection(Fenetre):
     """
     def __init__(self,panel,item,appli,titre="",texte="",cardinal=1):
         Fenetre.__init__(self,appli,titre=titre,texte=texte)
+	self.frame_boutons.place_forget()
+        self.frame_texte.place_forget()
+        self.frame_texte.place(relx=0,rely=0,relwidth=1,relheight=0.8)
+        self.frame_boutons.place(relheight=0.2,relx=0,rely=0.8,relwidth=1.)
+
         self.cardinal=cardinal
         self.fenetre.configure(width = 320,height=400)
         centerwindow(self.fenetre)
@@ -216,8 +221,10 @@ class FenetreDeSelection(Fenetre):
         # Replacement
         self.but_quit.place_forget()
         self.but_save.place_forget()
-        self.but_save.place(relx=0.6,rely=0.5,anchor='center')
-        self.but_quit.place(relx=0.8,rely=0.5,anchor='center')
+	self.but_all  = Button(self.frame_boutons,text = "Tout Sélectionner", command=self.tout)
+        self.but_save.place(relx=0.6,rely=0.6,anchor='center')
+        self.but_quit.place(relx=0.8,rely=0.6,anchor='center')
+        self.but_all.place(relx=0.7,rely=0.2,anchor='center')
      
 
     def get_separateurs_autorises(self):
@@ -235,12 +242,22 @@ class FenetreDeSelection(Fenetre):
         else:
             self.separateur = nom_sep
         
-    def traite_selection(self):
+    def tout(self):
+        liste=[]
+	texte=self.texte.splitlines()
+	for l in texte :
+	    for mot in string.split(l,self.separateur):
+	       liste.append(mot)
+	self.traite_selection(liste)
+
+    def traite_selection(self,liste=None):
         """ Cette méthode effectue tous les traitements nécessaires pour vérifier
             et affecter la liste de valeurs à l'objet réprésenté par self.item
         """
         # Récupère la liste des chaines de caractères de la zone sélectionnée
-        message,liste = self.recupere_liste()
+	message=""
+	if liste == None:
+           message,liste = self.recupere_liste()
         if self.test_probleme(message,"Sélectionnez des données") == 0:
             return
         # Vérifie que le nombre de données est dans les limites attendues
@@ -358,7 +375,7 @@ class FenetreDeSelection(Fenetre):
             éléments dans le type voulu en cas de succès, sinon retourne None.
         """
         liste_valeurs = []
-        message = ""
+	message = ""
         for chaine in liste:
             if f_conversion:
                 try:
