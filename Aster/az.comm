@@ -9,19 +9,24 @@ P3 = 7;
 
 P5 = P3*P1;
 
+_param_6 = P1-3;
+
 P4 = [2,3,4];
 
 #Pas trouve		shellpanel
+
+MAILLA2=LIRE_MAILLAGE(UNITE=P4[1],);
 
 aaa = FORMULE(VALE='a+z',
               NOM_PARA=('a','z',),);
 
 MAIL=LIRE_MAILLAGE(UNITE=P3,);
-
-MAILLA2=LIRE_MAILLAGE(UNITE=P4[1],);
 # 'LIRE_MAILLAGE', 'UNITE'            --> uniquebasepanel
 
-AFFE1=AFFE_MODELE(MAILLAGE=MAILLA2,
+az = FORMULE(VALE='aaaaa',
+             NOM_PARA=('ae','inst',),);
+
+AFFE1=AFFE_MODELE(MAILLAGE=MAIL,
                   AFFE=(_F(GROUP_MA=('RESSORT','eee',),
                            PHENOMENE='MECANIQUE',
                            MODELISATION='DIS_T',),
@@ -47,7 +52,7 @@ CARA=AFFE_CARA_ELEM(MODELE=MOD,
                     POUTRE=_F(GROUP_MA='MA',
                               SECTION='CERCLE',
                               CARA='R',
-                              VALE=1.0,),);
+                              VALE=(3.0,_param_6,),),);
 # 'AFFE_MODELE', 'MAILLAGE'           --> uniqueassdpanel
 #  AFFE_MODELE', 'AFFE', 'GROUP_MA'   --> plusieursbasepanel 
 # 'AFFE_MODELE', 'AFFE', 'PHENOMENE'  --> uniqueintopanel

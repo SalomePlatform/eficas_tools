@@ -371,6 +371,14 @@ class BUREAU:
 	     from panelsSalome import SALOME_UNIQUE_BASE_Panel
 	     if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
 		self.appli.salome.creeConfigTxt(self.appli.CONFIGURATION.initialdir,SALOME_UNIQUE_BASE_Panel.dict_fichier_unite)
+	     try :
+	     #if ( 1 == 1 ) :
+	     	import eficasCL
+	     	MyCLinit=eficasCL.CLinit()
+	     	MyCLinit.traiteCL()
+	     except :
+	     #else :
+	        pass
           #PN  Fin Ajout --> Salome
           # le JDC a déjà un nom : on sauvegarde directement sans demander
           # un autre nom au développeur
@@ -407,6 +415,14 @@ class BUREAU:
 	     from panelsSalome import SALOME_UNIQUE_BASE_Panel
 	     if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
 		self.appli.salome.creeConfigTxt(self.appli.CONFIGURATION.initialdir,SALOME_UNIQUE_BASE_Panel.dict_fichier_unite)
+	     #try :
+	     if ( 1 == 1 ):
+	        import eficasCL
+	        MyCLinit=eficasCL.CLinit()
+	        MyCLinit.traiteCL()
+	     #except :
+	     else :
+	        pass
           # PN fin ajout --> Salome
           if not save_in_file(sauvegarde,self.jdc_fini) :
               showinfo("Erreur","Problème à la sauvegarde du fichier "+`sauvegarde`)
@@ -631,7 +647,7 @@ class BUREAU:
            print "Pb a la sauvegarde sous le format homard"
        if self.appli.salome != 0:
            import eficasEtude
-           self.appli.salome.rangeInStudy(file_homard)
+           self.appli.salome.rangeInStudy(file_homard,"_CONF")
 
 # ---------------------------------------------------------------------------
 #     			Méthodes liées aux mots-clés inconnus

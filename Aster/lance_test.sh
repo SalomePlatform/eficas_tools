@@ -1,9 +1,7 @@
 unalias do
-for file in `ls /local/noyret/Install_Eficas/lescomm/z*`
+for file in `ls /local/noyret/Install_Eficas/lescomm/*`
 do
-        echo $file
 	filepath=$file
-	#filepath=/local/noyret/Install_Eficas/lescomm/$file
 	grep "VISU_EFICAS='NON'" $filepath > /dev/null 2>/dev/null
 	rc=$?
 	if [ "$rc" != "0" ]
@@ -12,7 +10,8 @@ do
 	    rc=$?
 	    if  [ "$rc" != "0" ]
 	    then
- 	    	./test_eficas.py $filepath  | grep -v mx.TextTools | grep -v Aster | grep -v relire| grep -v mxExtensions | grep -v DEBUT | grep -v FIN 
+                echo $file
+ 	    	./test_eficas.py $filepath 
 	    fi
 	fi
 #        read a; if [ "$a" == "b" ]  
