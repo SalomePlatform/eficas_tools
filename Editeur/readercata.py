@@ -402,5 +402,4 @@ class READERCATA:
            clef=oper.get_docu()
            if dict_clef_docu.has_key(clef):
               oper.docu=dict_clef_docu[clef]
-              print oper.get_docu()
 
