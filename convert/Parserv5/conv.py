@@ -23,11 +23,14 @@ try :
     import TextTools
 except : 
     ""
-from tables import ERRORS
+try :
+    from tables import ERRORS
+except : 
+    ""
 
 #
 __version__="$Name:  $"
-__Id__="$Id: conv.py,v 1.2 2003/07/01 10:26:14 salome Exp $"
+__Id__="$Id: conv.py,v 1.4 2003/08/08 10:14:37 eficas Exp $"
 #
 
 Keywords=('MAILLE_1','MAILLE_2','MAILLE_ESCL','MAILLE_FOND','MAILLE_MAIT','MAILLE_ORIG','MAILLE',
