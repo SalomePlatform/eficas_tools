@@ -39,9 +39,16 @@ class FONCTION(N_FONCTION.FONCTION,I_FONCTION.FONCTION,ASSD):
       N_FONCTION.FONCTION.__init__(self,etape=etape,sd=sd,reg=reg)
       I_FONCTION.FONCTION.__init__(self,etape=etape,sd=sd,reg=reg)
 
-class fonction(N_FONCTION.fonction,I_FONCTION.fonction,ASSD):
+class formule(N_FONCTION.formule,I_FONCTION.formule,ASSD):
    def __init__(self,etape=None,sd=None,reg='oui'):
-      N_FONCTION.fonction.__init__(self,etape=etape,sd=sd,reg=reg)
+      N_FONCTION.formule.__init__(self,etape=etape,sd=sd,reg=reg)
+      I_FONCTION.formule.__init__(self,etape=etape,sd=sd,reg=reg)
+
+# On conserve fonction (ceinture et bretelles)
+# fonction n'existe plus dans N_FONCTION on le remplace par formule
+class fonction(N_FONCTION.formule,I_FONCTION.fonction,ASSD):
+   def __init__(self,etape=None,sd=None,reg='oui'):
+      N_FONCTION.formule.__init__(self,etape=etape,sd=sd,reg=reg)
       I_FONCTION.fonction.__init__(self,etape=etape,sd=sd,reg=reg)
 
 class GEOM(N_GEOM.GEOM,I_ASSD.ASSD,ASSD):pass

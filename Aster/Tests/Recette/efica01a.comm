@@ -125,30 +125,35 @@ ACCE1 = FORMULE(REEL="""(REEL:INST) = SIN(OMEGAA*INST) """)
 ACCELER1=CALC_FONC_INTERP( FONCTION=ACCE1, LIST_PARA=L_INST,
                                PROL_DROITE='LINEAIRE',
                               PROL_GAUCHE='LINEAIRE',
+                              NOM_PARA='INST',
                                NOM_RESU='ACCE'       )
 
 ACCE2 = FORMULE(REEL="""(REEL:INST) =- SIN(OMEGAA*INST) """)
 ACCELER2=CALC_FONC_INTERP( FONCTION=ACCE2, LIST_PARA=L_INST,
                                PROL_DROITE='LINEAIRE',
                               PROL_GAUCHE='LINEAIRE',
+                              NOM_PARA='INST',
                                NOM_RESU='ACCE'       )
 
 VITE1 = FORMULE(REEL="""(REEL:INST) =-COS(OMEGAA*INST)/OMEGAA """)
 VITESSE1=CALC_FONC_INTERP( FONCTION=VITE1, LIST_PARA=L_INST,
                        PROL_DROITE='LINEAIRE',
                       PROL_GAUCHE='LINEAIRE',
+                              NOM_PARA='INST',
                       NOM_RESU='VITE'       )
 
 DEPL1 = FORMULE(REEL="""(REEL:INST) =-SIN(OMEGAA*INST)/(OMEGAA**2) """)
 DEPLACE1=CALC_FONC_INTERP( FONCTION=DEPL1, LIST_PARA=L_INST,
                        PROL_DROITE='LINEAIRE',
                       PROL_GAUCHE='LINEAIRE',
+                              NOM_PARA='INST',
                       NOM_RESU='DEPL'       )
 
 VITE2 = FORMULE(REEL="""(REEL:INST) =COS(OMEGAA*INST)/OMEGAA """)
 VITESSE2=CALC_FONC_INTERP( FONCTION=VITE2, LIST_PARA=L_INST,
                        PROL_DROITE='LINEAIRE',
                       PROL_GAUCHE='LINEAIRE',
+                              NOM_PARA='INST',
                       NOM_RESU='VITE'       )
 
 INCLUDE(   UNITE=11,   INFO=1 )

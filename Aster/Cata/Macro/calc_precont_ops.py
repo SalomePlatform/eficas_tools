@@ -1,4 +1,4 @@
-#@ MODIF calc_precont_ops Macro  DATE 04/03/2003   AUTEUR ASSIRE A.ASSIRE 
+#@ MODIF calc_precont_ops Macro  DATE 01/04/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -28,10 +28,6 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
   """
      Ecriture de la macro CALC_PRECONT
   """
-  import Numeric
-  import os
-  import sys
-  import types
   import copy
   import aster
   import string
@@ -109,8 +105,9 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
 
   # Teste si INST_INIT est bien plus petit que INST_FIN
   if __TMAX <= __TMIN:
-    print 'ERREUR : INST_FIN PLUS PETIT QUE INST_INIT'
-    sys.exit(1)
+    ier=ier+1
+    self.cr.fatal("""ERREUR : INST_FIN PLUS PETIT QUE INST_INIT""")
+    return ier
 
   # Cree la liste d'instant __L2 allant de __TMIN a __TMAX et contenant 
   # un instant supplementaire __TINT
@@ -190,21 +187,21 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
   motscle3['RELA_CINE_BP']=[]
   __GROUP_MA_A=[]
   Result = [[None]*1]
-  for m in CABLE_BP:
+  for mcabl in CABLE_BP:
     # Creation de mots-cles pour les AFFE_CHAR_MECA
-    motscles['RELA_CINE_BP'].append(_F(CABLE_BP=m,
+    motscles['RELA_CINE_BP'].append(_F(CABLE_BP=mcabl,
                                        SIGM_BPEL = 'OUI',
                                        RELA_CINE = 'NON',) )
-    motscle2['RELA_CINE_BP'].append(_F(CABLE_BP=m,
+    motscle2['RELA_CINE_BP'].append(_F(CABLE_BP=mcabl,
                                        SIGM_BPEL = 'NON',
                                        RELA_CINE = 'OUI',) )
-    motscle3['RELA_CINE_BP'].append(_F(CABLE_BP=m,
+    motscle3['RELA_CINE_BP'].append(_F(CABLE_BP=mcabl,
                                        SIGM_BPEL = 'OUI',
                                        RELA_CINE = 'OUI',) )
 
     # Creation de __GROUP_MA_A : liste des noms des cables contenus 
     # dans chaque concept CABLE_BP = cables  a activer 
-    __TCAB = RECU_TABLE(CO=m,NOM_TABLE='CABLE_BP');
+    __TCAB = RECU_TABLE(CO=mcabl,NOM_TABLE='CABLE_BP');
     __nb = 0
     while 1: 
       try:
@@ -235,8 +232,8 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
   __GROUP_MA_I=[]
 
   if CABLE_BP_INACTIF:
-    for m in CABLE_BP_INACTIF:
-      __TCA0 = RECU_TABLE(CO=m,NOM_TABLE='CABLE_BP');
+    for mcabl in CABLE_BP_INACTIF:
+      __TCA0 = RECU_TABLE(CO=mcabl,NOM_TABLE='CABLE_BP');
       __nb = 0
       while 1: 
         try:
@@ -261,9 +258,9 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
           break
     motscle6={}
     motscle6['RELA_CINE_BP']=[]
-    for m in CABLE_BP_INACTIF:
+    for mcabl in CABLE_BP_INACTIF:
       # Creation de mots-cles pour les AFFE_CHAR_MECA
-      motscle6['RELA_CINE_BP'].append(_F(CABLE_BP=m,
+      motscle6['RELA_CINE_BP'].append(_F(CABLE_BP=mcabl,
                                          SIGM_BPEL = 'NON',
                                          RELA_CINE = 'OUI',) )  
                                                
@@ -300,11 +297,14 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
 
   __MOD = string.ljust(MODELE.nom,8)
   __MOD =__MOD+'.MODELE    .NOMA        '
-  __MAIL = aster.getvectjev(__MOD)
+  __LMAIL = aster.getvectjev(__MOD)
+  __MAIL  = string.strip(__LMAIL[0])
 
-  __M_CA=AFFE_MODELE( MAILLAGE=__MAIL[0],
-                       AFFE    =_F( GROUP_MA = __GROUP_MA_A,
-                                    PHENOMENE = 'MECANIQUE',
+  objma=self.get_sd_avant_etape(__MAIL,self)
+
+  __M_CA=AFFE_MODELE( MAILLAGE=objma,
+                       AFFE    =_F( GROUP_MA     = __GROUP_MA_A,
+                                    PHENOMENE    = 'MECANIQUE',
                                     MODELISATION = 'BARRE') )
   
 
@@ -462,7 +462,7 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
                      ARCHIVAGE = _F(NUME_INIT = __no,
                                     DETR_NUME_SUIV = 'OUI' ),
                      PARM_THETA = PARM_THETA,
-                     INFO     =INFO,
+                     INFO  =INFO,
                      TITRE = TITRE,    
                      EXCIT =dExcit2,                 
                      )  

@@ -16,7 +16,7 @@ ATTENTION :
 Si Eficas est installé dans un répertoire particulier d'administration 
 dans lequel les utilisateurs n'ont pas le droit d'écriture, il faut que
 l'administrateur lance Eficas pour générer
-les fichiers et catalogues compilés .pyc et _pickled.py
+les fichiers et catalogues compilés .pyc 
 
 
 

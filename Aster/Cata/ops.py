@@ -1,4 +1,4 @@
-#@ MODIF ops Cata  DATE 20/01/2003   AUTEUR DURAND C.DURAND 
+#@ MODIF ops Cata  DATE 07/04/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -24,7 +24,7 @@ import string,linecache,os,traceback,re
 # Modules Eficas
 import Accas
 from Accas import ASSD
-from Noyau.N_FONCTION import fonction
+from Noyau.N_FONCTION import formule
 
 try:
    import aster
@@ -41,7 +41,7 @@ def DEBUT(self,PAR_LOT,CODE,**args):
    """
    self.jdc.set_par_lot(PAR_LOT)
    if CODE!=None :
-      self.jdc.fico=CODE.valeur['NOM']
+      self.jdc.fico=CODE['NOM']
    else:
       self.jdc.fico=None
 
@@ -69,7 +69,7 @@ def POURSUITE(self,PAR_LOT,CODE,**args):
    """
    self.jdc.set_par_lot(PAR_LOT)
    if CODE!=None :
-      self.jdc.fico=CODE.valeur['NOM']
+      self.jdc.fico=CODE['NOM']
    else:
       self.jdc.fico=None
    if self.codex and os.path.isfile("glob.1"):
@@ -183,7 +183,7 @@ def detruire(self,d):
          if d.has_key(e):del d[e]
          if self.jdc.sds_dict.has_key(e):del self.jdc.sds_dict[e]
      else:
-       if isinstance(mcs,fonction):
+       if isinstance(mcs,formule):
          cr=self.parent.report()
          cr.fatal("la destruction d'une FORMULE est impossible" )
        if isinstance(mcs,ASSD):
@@ -195,25 +195,42 @@ def detruire(self,d):
      # On signale au parent que le concept s n'existe plus apres l'étape self
      self.parent.delete_concept_after_etape(self,s)
 
-def subst_materiau(text,NOM_MATER,EXTRACTION):
+def subst_materiau(text,NOM_MATER,EXTRACTION,UNITE_LONGUEUR):
    """
        Cette fonction retourne un texte obtenu à partir du texte passé en argument (text)
        en substituant le nom du materiau par NOM_MATER 
        et en réalisant les extractions spéciifées dans EXTRACTION
    """
    lines=string.split(text,'\n')
+
+##### traitement de UNIT : facteur multiplicatif puissance de 10
+   regmcsu=re.compile(r" *(.*) *= *([^ ,]*) *## +([^ ]*) *([^ ]*)")
+   ll_u=[]
+   for l in lines:
+       m=regmcsu.match(l)
+       if m:
+          if m.group(3) == "UNIT":
+             if   UNITE_LONGUEUR=='M'  : coef = '0'
+             elif UNITE_LONGUEUR=='MM' : coef = m.group(4)
+             print ' UNITE_LONGUEUR = BINGO'
+             print ' UNITE_LONGUEUR = ',m.group(4),type(m.group(4))
+             ll_u.append('   '+m.group(1)+" = "+m.group(2)+coef)
+          else : ll_u.append(l)
+       else : ll_u.append(l)
+
+##### traitement de EXTRACTION
    if EXTRACTION:
-     ll=[]
      regmcf=re.compile(r" *(.*) *= *_F\( *## +(.*) +(.*)")
      regmcs=re.compile(r" *(.*) *= *([^ ,]*) *, *## +([^ ]*) *([^ ]*)")
      regfin=re.compile(r" *\) *")
+     ll=[]
      temps={};lmcf=[]
      for e in EXTRACTION:
        mcf=e['COMPOR']
        lmcf.append(mcf)
        temps[mcf]=e['TEMP_EVAL']
      FLAG=0
-     for l in lines:
+     for l in ll_u:
        m=regmcf.match(l)
        if m: # On a trouve un mot cle facteur "commentarise"
          if m.group(2) == "SUBST": # il est de plus substituable
@@ -245,7 +262,7 @@ def subst_materiau(text,NOM_MATER,EXTRACTION):
                del temps[mcf]
              ll.append(l)
    else:
-     ll=lines
+     ll=ll_u
 
    for l in ll:
      print l
@@ -258,7 +275,7 @@ def subst_materiau(text,NOM_MATER,EXTRACTION):
    return text
 
 def INCLUDE_MATERIAU(self,NOM_AFNOR,TYPE_MODELE,VARIANTE,TYPE_VALE,NOM_MATER,
-                    EXTRACTION,INFO,**args):
+                    EXTRACTION,UNITE_LONGUEUR,INFO,**args):
   """ 
       Fonction sd_prod pour la macro INCLUDE_MATERIAU
   """
@@ -279,7 +296,7 @@ def INCLUDE_MATERIAU(self,NOM_AFNOR,TYPE_MODELE,VARIANTE,TYPE_VALE,NOM_MATER,
     text=string.replace(open(f).read(),'\r\n','\n')
     # On effectue les substitutions necessaires
     self.prefix=NOM_MATER
-    self.text= subst_materiau(text,NOM_MATER,EXTRACTION)
+    self.text= subst_materiau(text,NOM_MATER,EXTRACTION,UNITE_LONGUEUR)
     if INFO == 2:
       print "INCLUDE_MATERIAU: ", self.mat,' ',NOM_MATER,'\n'
       print self.text
@@ -300,7 +317,8 @@ def build_formule(self,**args):
   """
   from Build import B_utils
   for mc in self.mc_liste:
-    if mc.nom in ('REEL','ENTIER','COMPLEXE'):
+###    if mc.nom in ('REEL','ENTIER','COMPLEXE'):
+    if mc.nom in ('REEL','COMPLEXE'):
       texte= self.sd.get_name()+ string.strip(mc.valeur)
       mc.valeur=B_utils.ReorganisationDe(texte,80)
   # ATTENTION : FORMULE est une des rares commandes qui a besoin de

@@ -4,6 +4,7 @@ DEPLACE2=CALC_FONC_INTERP( FONCTION=DEPL2,
                            LIST_PARA=L_INST,
                            PROL_DROITE='LINEAIRE',
                            PROL_GAUCHE='LINEAIRE',
+                           NOM_PARA='INST',
                            NOM_RESU='DEPL'       )
 
 MONO_X=CALC_CHAR_SEISME(  MATR_MASS=MASSE,

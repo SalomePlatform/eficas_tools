@@ -1,4 +1,4 @@
-#@ MODIF macro_proj_base_ops Macro  DATE 20/01/2003   AUTEUR DURAND C.DURAND 
+#@ MODIF macro_proj_base_ops Macro  DATE 11/03/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17,7 +17,7 @@
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
 
-def macro_proj_base_ops(self,BASE,NB_VECT,MATR_ASSE_GENE,VECT_ASSE_GENE,**args):
+def macro_proj_base_ops(self,BASE,NB_VECT,MATR_ASSE_GENE,VECT_ASSE_GENE,PROFIL,**args):
   """
      Ecriture de la macro MACRO_PROJ_BASE
   """
@@ -30,14 +30,9 @@ def macro_proj_base_ops(self,BASE,NB_VECT,MATR_ASSE_GENE,VECT_ASSE_GENE,**args):
   #self.icmd=1
   self.set_icmd(1)
 
-  nompro=None
-  iocc=0
+  _num=NUME_DDL_GENE(BASE=BASE,NB_VECT=NB_VECT,STOCKAGE=PROFIL)
   if MATR_ASSE_GENE:
     for m in MATR_ASSE_GENE:
-      iocc=iocc+1
-      if (iocc==1 or (m['PROFIL']!=nompro)):
-         _num=NUME_DDL_GENE(BASE=BASE,NB_VECT=NB_VECT,STOCKAGE=m['PROFIL'])
-      nompro=m['PROFIL']
       motscles={}
       if   m['MATR_ASSE']     :  motscles['MATR_ASSE']     =m['MATR_ASSE']
       elif m['MATR_ASSE_GENE']:  motscles['MATR_ASSE_GENE']=m['MATR_ASSE_GENE']
@@ -48,12 +43,9 @@ def macro_proj_base_ops(self,BASE,NB_VECT,MATR_ASSE_GENE,VECT_ASSE_GENE,**args):
       self.DeclareOut('mm',m['MATRICE'])
       mm=PROJ_MATR_BASE(BASE=BASE,NUME_DDL_GENE=_num,**motscles)
 
-  iocc=0
   if VECT_ASSE_GENE:
+    _num=NUME_DDL_GENE(BASE=BASE,NB_VECT=NB_VECT,STOCKAGE=PROFIL)
     for v in VECT_ASSE_GENE:
-      iocc=iocc+1
-      if (iocc==1 and not MATR_ASSE_GENE):
-         _num=NUME_DDL_GENE(BASE=BASE,NB_VECT=NB_VECT,STOCKAGE='DIAG')
       motscles={}
       if   v['VECT_ASSE']     :  motscles['VECT_ASSE']     =v['VECT_ASSE']
       elif v['VECT_ASSE_GENE']:  motscles['VECT_ASSE_GENE']=v['VECT_ASSE_GENE']

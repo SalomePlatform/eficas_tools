@@ -37,5 +37,9 @@ class FONCTION(ASSD):
       # on est dans le cas d'une fonction
       return (self.nom,'REEL','(REEL:x)','''bidon''')
 
+# On ajoute la classe formule pour etre cohérent avec la
+# modification de C Durand sur la gestion des formules dans le superviseur
+# On conserve l'ancienne classe fonction (ceinture et bretelles)
 class fonction(FONCTION) : pass
+class formule(FONCTION) : pass
 

@@ -793,6 +793,37 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
   Classe servant à définir le panneau associé aux objets qui attendent une valeur unique
   d'un type dérivé d'ASSD
   """
+  def valid_valeur_automatique(self):
+      """
+         Réalise la validation d'un concept sans remonter dans le
+         node parent dans le cas ou il n'y a qu'un concept possible (liste de longueur 1)
+         Identique à valid_valeur moins appel de self.node.parent.select()
+         On pourrait supposer que le seul concept présent est valide et donc ne pas
+         réaliser tous les tests de vérification.
+      """
+      if self.parent.modified == 'n' : self.parent.init_modif()
+      valeur = self.get_valeur()
+      self.erase_valeur()
+      anc_val = self.node.item.get_valeur()
+      test = self.node.item.set_valeur(valeur)
+      if not test :
+          mess = "impossible d'évaluer : %s " %`valeur`
+          self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée :"+mess)
+      elif self.node.item.isvalid() :
+          self.parent.appli.affiche_infos('Valeur du mot-clé enregistrée')
+          if self.node.item.get_position()=='global':
+              self.node.etape.verif_all()
+          elif self.node.item.get_position()=='global_jdc':
+              self.node.racine.verif_all()
+          else :
+              self.node.parent.verif()
+          self.node.update()
+          #self.node.parent.select()
+      else :
+          cr = self.node.item.get_cr()
+          mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
+          self.record_valeur(anc_val,mess=mess)
+
   def makeValeurPage(self,page):
       """
           Génère la page de saisie de la valeur du mot-clé simple courant qui doit être une 
@@ -809,8 +840,9 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       self.valeur_choisie.set('')
       min,max =  self.node.item.GetMinMax()
       if (min == 1 and min == max and len(liste_noms_sd)==1):
-	  self.valeur_choisie.set(liste_noms_sd[0])
-          self.valid_valeur()
+          if self.valeur_choisie.get() != liste_noms_sd[0]:
+	     self.valeur_choisie.set(liste_noms_sd[0])
+             self.valid_valeur_automatique()
 	 
       self.frame_valeur = Frame(page)
       self.frame_valeur.pack(fill='both',expand=1)
