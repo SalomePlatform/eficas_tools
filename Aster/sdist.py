@@ -48,7 +48,6 @@ def main():
    # Code_Aster
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
                                                             'editeur.ini',
-                                                            'properties.py',
                                                             'eficas_aster.py',
                                                            ])
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
@@ -63,6 +62,7 @@ def main():
    copyfiles(os.path.join(path_Noyau,'Cata'),os.path.join(path_distrib,'Aster','Cata'),['*.py',
                                                                                        ])
    copyfiles(os.path.join(path_Noyau,'Macro'),os.path.join(path_distrib,'Aster','Cata','Macro'),['*.py'])
+   copyfiles(os.path.join(path_Noyau,'Accas'),os.path.join(path_distrib,'Aster'),['properties.py'])
 
    copyfiles('../Tools',os.path.join(path_distrib,'Tools'),['*.py'])
    copyfiles('../Tools/foztools',os.path.join(path_distrib,'Tools','foztools'),['*.py'])
