@@ -127,9 +127,7 @@ class newSIMPPanel(panels.OngletPanel):
           return
       liste_valeurs.append(self.selected_choix)
       liste_choix = self.Liste_choix.get_liste()
-      # PN en attendant mieux
-      if "TYPE_ANCRAGE" not in self.node.item.get_genealogie():
-         liste_choix.remove(self.selected_choix)
+      #  liste_choix.remove(self.selected_choix)
       self.Liste_valeurs.put_liste(liste_valeurs)
       self.Liste_choix.put_liste(liste_choix)
       self.selected_choix = None
