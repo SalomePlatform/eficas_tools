@@ -71,7 +71,7 @@ class fenetre_mc_inconnus :
        Affichage du label dans la zone concernée
        """
        txt = " Un ou plusieurs mots-clés inconnus ont été trouvés dans le fichier de commandes."
-       txt = txt + "En cliquant sur leur nom, vous pourrez soit corriger l'orthographe soit supprimer ce mot-clé"
+       #txt = txt + "En cliquant sur leur nom, vous pourrez soit corriger l'orthographe soit supprimer ce mot-clé"
        self.fenetre.update_idletasks()
        Label(self.frame1,
              text = txt,
@@ -96,8 +96,8 @@ class fenetre_mc_inconnus :
 	   e = Entry(self.frame2)
 	   e.grid(row=i,column=0,sticky=W)
 	   e.insert(END,nom_mc)
-	   e.bind("<Button-1>",lambda event,en=e,m=mc,s=self : s.select_mc(m,en))
-	   e.bind("<Return>",lambda e,s=self : s.modifie_mc())
+	   #e.bind("<Button-1>",lambda event,en=e,m=mc,s=self : s.select_mc(m,en))
+	   #e.bind("<Return>",lambda e,s=self : s.modifie_mc())
 	   e.configure(relief='flat',state='disabled')
            self.widgets.append((e,lab))
            i=i+1
@@ -120,9 +120,10 @@ class fenetre_mc_inconnus :
 	self.b_quit = Button(self.frame3,
 	                    text = "Fermer",
 			    command = self.quit)
-	self.b_mod.place(relx=0.25,rely=0.5,anchor='center')
-	self.b_sup.place(relx=0.50,rely=0.5,anchor='center')
-	self.b_quit.place(relx=0.75,rely=0.5,anchor='center')
+	#self.b_mod.place(relx=0.25,rely=0.5,anchor='center')
+	#self.b_sup.place(relx=0.50,rely=0.5,anchor='center')
+	#self.b_quit.place(relx=0.75,rely=0.5,anchor='center')
+	self.b_quit.place(relx=0.50,rely=0.5,anchor='center')
 	    		    
     def wait_new_list(self):
         """

@@ -39,6 +39,8 @@ def main():
    copyfiles('../Ihm',os.path.join(path_distrib,'Ihm'),['*.py'])
    copyfiles('../Extensions',os.path.join(path_distrib,'Extensions'),['*.py'])
    copyfiles('../Accas',os.path.join(path_distrib,'Accas'),['*.py'])
+   copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
+   copyfiles('../AIDE/fichiers',os.path.join(path_distrib,'AIDE/fichiers'),['*'])
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
                                                             'editeur.ini',
                                                             'eficas_aster.py',

@@ -32,6 +32,7 @@ import splash
 import prefs
 import convert
 import generator
+import AIDE
 from jdcdisplay import JDCDISPLAY
 from utils import extension,stripPath,save_in_file
 from widgets import Fenetre,Ask_Format_Fichier
@@ -570,6 +571,8 @@ class BUREAU:
       l_mc = self.JDCDisplay_courant.jdc.get_liste_mc_inconnus()
       o = fenetre_mc_inconnus(l_mc)
       l = o.wait_new_list()
-      print "mc_inconnus_new_list: ",l
+      #print "mc_inconnus_new_list: ",l
       #CCAR: Il n' y a pas de retour vers le JDC
 
+   def aideEFICAS(self):
+      AIDE.go(master=self.parent)

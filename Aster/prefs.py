@@ -41,6 +41,7 @@ ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')
 
 labels= ('Fichier','Edition','Jeu de commandes',
               # 'Catalogue','Browsers','Options'
+                'Aide',
            )
 
 extensions=['readercata','bureau',
@@ -72,6 +73,10 @@ menu_defs={ 'bureau': [
                                    ('Paramètres Eficas','affichage_fichier_ini'),
                                    ('Mots-clés inconnus','mc_inconnus'),
                                   ]
+              ),
+              ('Aide',[
+                        ('Aide EFICAS','aideEFICAS'),
+                      ]
               ),
              ]
            }
