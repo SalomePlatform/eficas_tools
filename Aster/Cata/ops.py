@@ -1,3 +1,21 @@
+#@ MODIF ops Cata  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+# ======================================================================
 
 # Modules Python
 import types
@@ -107,11 +125,13 @@ def detruire(self,d):
            sd.append(e)
            e=e.nom
          if d.has_key(e):del d[e]
+         if self.jdc.sds_dict.has_key(e):del self.jdc.sds_dict[e]
      else:
        if isinstance(mcs,ASSD):
          sd.append(mcs)
          mcs=mcs.nom
        if d.has_key(mcs):del d[mcs]
+       if self.jdc.sds_dict.has_key(mcs):del self.jdc.sds_dict[mcs]
    for s in sd:
      # On signale au parent que le concept s n'existe plus apres l'étape self
      self.parent.delete_concept_after_etape(self,s)
@@ -156,9 +176,9 @@ def subst_materiau(text,NOM_MATER,EXTRACTION):
              if m.group(3) == "EVAL":
                ll.append("  "+m.group(1)+' = EVAL("'+m.group(4)+"("+str(TEMP)+')"),')
              elif m.group(3) == "SUPPR":
-	       pass
+               pass
              else:
-	       ll.append(l)
+               ll.append(l)
            else: # On cherche la fin du mot cle facteur en cours de substitution
              m=regfin.match(l)
              if m: # On l a trouve. On le supprime de la liste
