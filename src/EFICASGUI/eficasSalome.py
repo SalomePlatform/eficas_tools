@@ -19,14 +19,14 @@ root=Tkinter.Tk()
 root.withdraw()
 
 
-def runEficas(ws,code="ASTER"):
+def runEficas(ws,code="ASTER",fichier=None):
     global initialised
     if not initialised:
         t=Tkinter.Toplevel()
         t.withdraw()
         print t.geometry()
         print t.winfo_geometry()
-        import dataEficas; dataEficas.init(t,code)
+        import dataEficas; dataEficas.init(t,code,fichier)
         t.update()
         print t.geometry()
         print t.winfo_geometry()

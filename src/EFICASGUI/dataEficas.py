@@ -16,12 +16,12 @@ import import_code
 import splash
 
 
-def init(top,code="ASTER"):
+def init(top,code="ASTER",fichier=None):
     splash.init_splash(top,code=code,titre="Lancement d'EFICAS pour %s" %code)
     splash._splash.configure(text="Chargement d'EFICAS en cours.\n Veuillez patienter ...")
     # Enregistrement dans l étude
     import eficasEtude
-    MaRef=eficasEtude.Eficas_In_Study()
+    MaRef=eficasEtude.Eficas_In_Study(code)
 
     import eficas
     class MyEficas(eficas.EFICAS):
@@ -32,5 +32,6 @@ def init(top,code="ASTER"):
         def contexte(self):
             self.salome=MaRef
 
-    moi=MyEficas(top,code=code)
+    print code
+    moi=MyEficas(top,code=code,fichier=fichier)
     moi.contexte()

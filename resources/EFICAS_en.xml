@@ -27,5 +27,10 @@
         <toolbutton-item item-id="4046" label-id="Eficas pour Homard" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande HOMARD avec Eficas" accel-id="" toggle-id="" execute-action=""/>
     </toolbar>
 
+  <!-- ### POPUP MENU ###  -->
+     <popupmenu label-id="" context-id="" parent-id="ObjectBrowser" object-id="73">
+	<popup-item item-id="9042" pos-id="" label-id="Eficas" icon-id="" tooltip-id="Editer avec Eficas" execute-action=""/>
+    </popupmenu>
+
   </desktop>	
 </application>

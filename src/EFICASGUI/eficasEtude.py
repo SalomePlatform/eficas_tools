@@ -4,7 +4,7 @@
 # Author    : Pascale NOYRET, EDF
 # Project   : SALOME
 # Copyright : EDF 2003
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/ASTER_SRC/src/ASTERGUI/eficasEtude.py,v 1.1.1.1.2.1 2004/05/18 11:40:21 salome Exp $
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/eficasEtude.py,v 1.1.1.1 2004/09/28 09:41:16 salome Exp $
 #=============================================================================
 
 import salome
@@ -18,22 +18,23 @@ aGuiDS=salomedsgui.guiDS()
 
 class Eficas_In_Study:
 
-      def __init__(self):
+      def __init__(self,code):
           import SMESH_utils
           self.enregistre()
+	  self.code=code
           self.liste_deja_la=[]
           
       def  enregistre(self):
            self.fatherId=aGuiDS.enregistre("Eficas")
            salome.sg.updateObjBrowser(0)
 
-      def  rangeInStudy(self,fichier):
+      def  rangeInStudy(self,fichier, suf=""):
 	   if fichier not in self.liste_deja_la :
 	        self.liste_deja_la.append(fichier)
                 Nom=re.split("/",fichier)[-1]
 
                 self.commId=aGuiDS.createItemInStudy(self.fatherId,Nom)
-                aGuiDS.setExternalFileAttribute(self.commId,"FICHIER_EFICAS",fichier)
+                aGuiDS.setExternalFileAttribute(self.commId,"FICHIER_EFICAS_"+self.code+suf,fichier)
                 salome.sg.updateObjBrowser(0)
 
       def creeConfigTxt(self,fichier,dico):

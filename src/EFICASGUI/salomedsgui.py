@@ -67,6 +67,8 @@ class guiDS:
                 FName = A1._narrow(SALOMEDS.AttributeName)
                 FName.SetValue(objectName)
                 objId = newObj.GetID()
+	    else:
+	        objId = listSO[0].GetID()
         return objId
 
     def getReference(self,objectId):

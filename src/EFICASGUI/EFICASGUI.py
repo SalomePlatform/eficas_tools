@@ -29,6 +29,8 @@ import salome
 
 sg=salome.SalomeGUI()
 sgPyQt=SalomePyQt.SalomePyQt()
+import salomedsgui
+aGuiDS=salomedsgui.guiDS()
 print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 
 # -----------------------------------------------------------------------------
@@ -76,6 +78,23 @@ def activeStudyChanged(ID):
    print "On a changé d'étude active",studyId
    print sgPyQt.getStudyId()
 
+def definePopup(theContext, theObject, theParent):
+   print "EFICASGUI --- definePopup"
+   theContext = ""
+   theParent = "ObjectBrowser"
+   a=salome.sg.getAllSelected()
+   if len(a) >0:
+       theObject="73"
+   return (theContext, theObject, theParent)
+
+
+def customPopup(popup, theContext, theObject, theParent):
+   print "EFICASGUI --- customPopup"
+   popup.removeItem(99000)
+   popup.removeItem(99001)
+   popup.removeItem(99002)
+   popup.removeItem(99003)
+
 
 # -----------------------------------------------------------------------------
 
@@ -89,9 +108,23 @@ def runEficaspourHomard(ws):
    print "runEficas"
    eficasSalome.runEficas(ws,"HOMARD")
     
-def runEficasHomard():
+def runEficasHomard(ws):
    print "runEficas"
    eficasSalome.runEficas(None,"HOMARD")
+
+def runEficasFichier(ws):
+   print "runEficasFichier"
+   attr=None
+   code="ASTER"
+   a=salome.sg.getAllSelected()
+   if len(a) == 1:
+      boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_ASTER",a[0])
+      if boo :
+         code = "ASTER" 
+      else :
+         boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_HOMARD",a[0])
+	 code = "HOMARD"
+   eficasSalome.runEficas(ws,code,attr)
 
 # Partie applicative
 
@@ -100,5 +133,6 @@ dict_command={
                946:runEficaspourHomard,
                4041:runEficas,
                4046:runEficaspourHomard,
+	       9042:runEficasFichier,
              }
 
