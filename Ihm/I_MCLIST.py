@@ -97,10 +97,10 @@ class MCList:
      for mcfact in self.data :
         if mcfact.isvalid() : continue
         l_child = mcfact.get_liste_mc_inconnus()
-	if l_child :
-	   l = [self]
-	   l.extend(l_child)
-	   l_mc.append(l)
+        for mc in l_child:
+           l = [self]
+           l.extend(mc)
+           l_mc.append(l)
      return l_mc
 
   def verif_condition_regles(self,liste_presents):

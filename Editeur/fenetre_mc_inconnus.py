@@ -65,10 +65,6 @@ class fenetre_mc_inconnus :
        self.frame1.place(relx=0,rely=0,relheight=0.2,relwidth=1)
        self.frame2.place(relx=0,rely=0.2,relheight=0.6,relwidth=1)
        self.frame3.place(relx=0,rely=0.8,relheight=0.2,relwidth=1)
-       self.frame21 = Frame(self.frame2)
-       self.frame22 = Frame(self.frame2)
-       self.frame21.place(relx=0,rely=0,relwidth=0.6,relheight=1)
-       self.frame22.place(relx=0.6,rely=0,relwidth=0.4,relheight=1)
     
     def init_label(self):
        """
@@ -87,19 +83,24 @@ class fenetre_mc_inconnus :
        """
        Affiche les mots-clés à modifier ou supprimer  
        """
+       i=0
+       self.widgets=[]
        for mc in self.l_mc :
            # mc est une liste :
            # mc contient comme premiers arguments l'étape et éventuellement les blocs, mcfact ...
 	   # et contient comme 2 derniers éléments le nom du mot-clé et sa valeur
 	   path_mc = self.get_path(mc[0:-2])
 	   nom_mc  = mc[-2]
-	   Label(self.frame21,text = path_mc).pack(side='left')
-	   e = Entry(self.frame22)
-	   e.pack(side='left')
+	   lab=Label(self.frame2,text = path_mc)
+	   lab.grid(row=i,column=1,sticky=W)
+	   e = Entry(self.frame2)
+	   e.grid(row=i,column=0,sticky=W)
 	   e.insert(END,nom_mc)
 	   e.bind("<Button-1>",lambda event,en=e,m=mc,s=self : s.select_mc(m,en))
 	   e.bind("<Return>",lambda e,s=self : s.modifie_mc())
 	   e.configure(relief='flat',state='disabled')
+           self.widgets.append((e,lab))
+           i=i+1
 
     def init_boutons(self):
         """
@@ -139,7 +140,6 @@ class fenetre_mc_inconnus :
 	"""
 	txt = ''
 	for o in l_o :
-           print o
 	   txt = txt + o.nom+'/'
 	# on enlève le dernier slash en trop
 	txt = txt[0:-1]
@@ -175,6 +175,9 @@ class fenetre_mc_inconnus :
 	"""
 	index = self.l_mc.index(self.mc_courant)
 	self.new_l_mc[index] = None
+        e,lab=self.widgets[index]
+        e.grid_remove()
+        lab.grid_remove()
 	self.desactive_boutons()
 	self.desactive_entry()	
 	

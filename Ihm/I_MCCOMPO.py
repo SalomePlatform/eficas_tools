@@ -364,9 +364,9 @@ class MCCOMPO(I_OBJECT.OBJECT):
      for child in self.mc_liste :
         if child.isvalid() : continue
         l_child = child.get_liste_mc_inconnus()
-	if l_child :
+        for mc in l_child:
 	   l = [self]
-	   l.extend(l_child)
+	   l.extend(mc)
 	   l_mc.append(l)
      return l_mc
 
