@@ -69,14 +69,12 @@ class HomardGenerator(PythonGenerator):
       # Le texte au format homard est stocké dans l'attribut text
       self.dico_mot_clef={}
       self.assoc={}
-      self.lmots_clef_calcules = ('SuivFron','TypeBila','ModeHOMA','CCAssoci', 'CCNoChaI','HOMaiN__','HOMaiNP1')
-      self.lmots_genea = ('NOM_MED_MAILLAGE_N','NOM_MED_MAILLAGE_NP1')
-#,'COMPOSANTE','NUME_ORDRE','INST','PRECISION','CRITERE')
       self.init_assoc()
       self.text=''
       self.textehomard=[]
 
    def init_assoc(self):
+      self.lmots_clef_calcules = ('SuivFron','TypeBila','ModeHOMA','CCAssoci', 'CCNoChaI','HOMaiN__','HOMaiNP1')
       self.lmot_clef  = ('CCMaiN__', 'CCNoMN__', 'CCIndica', 'CCSolN__', 'CCFronti', 'CCNoMFro', 'CCMaiNP1', 
                          'CCNoMNP1', 'CCSolNP1', 'TypeRaff', 'TypeDera', 'NiveauMa', 'SeuilHau', 'SeuilHRe', 
 			 'SeuilHPE', 'NiveauMi', 'SeuilBas', 'SeuilBRe', 'SeuilBPE', 'ListeStd', 'NumeIter', 
@@ -85,15 +83,15 @@ class HomardGenerator(PythonGenerator):
 
 # Bizarre demander a Gerald : 
 #		CVSolNP1
-      self.assoc['CCMaiN__']='FICHIERS:NOM_MED_MAILLAGE_N'
-      self.assoc['CCNoMN__']='TRAITEMENT:NOM_MED_MAILLAGE_N'
-      self.assoc['CCIndica']='FICHIERS:NOM_MED_MAILLAGE_N'
-      self.assoc['CCSolN__']='FICHIERS:NOM_MED_MAILLAGE_N'
+      self.assoc['CCMaiN__']='FICHIER_MED_MAILLAGE_N'
+      self.assoc['CCNoMN__']='NOM_MED_MAILLAGE_N'
+      self.assoc['CCIndica']='FICHIER_MED_MAILLAGE_N'
+      self.assoc['CCSolN__']='FICHIER_MED_MAILLAGE_N'
       self.assoc['CCFronti']='FIC_FRON'
       self.assoc['CCNoMFro']='NOM_MED_MAILLAGE_FRONTIERE'
-      self.assoc['CCMaiNP1']='FICHIERS:NOM_MED_MAILLAGE_NP1'
-      self.assoc['CCNoMNP1']='TRAITEMENT:NOM_MED_MAILLAGE_NP1'
-      self.assoc['CCSolNP1']='FICHIERS:NOM_MED_MAILLAGE_NP1'
+      self.assoc['CCMaiNP1']='FICHIER_MED_MAILLAGE_NP1'
+      self.assoc['CCNoMNP1']='NOM_MED_MAILLAGE_NP1'
+      self.assoc['CCSolNP1']='FICHIER_MED_MAILLAGE_NP1'
       self.assoc['TypeRaff']='RAFFINEMENT'
       self.assoc['TypeDera']='DERAFFINEMENT'
       self.assoc['NiveauMa']='NIVE_MAX'
@@ -104,14 +102,20 @@ class HomardGenerator(PythonGenerator):
       self.assoc['SeuilBas']='CRIT_DERA_ABS'
       self.assoc['SeuilBRe']='CRIT_DERA_REL'
       self.assoc['SeuilBPE']='CRIT_DERA_PE'
-      self.assoc['ListeStd']='INFORMATION'
+      self.assoc['ListeStd']='MESSAGES'
       self.assoc['NumeIter']='NITER'
       self.assoc['Langue  ']='LANGUE'
       self.assoc['CCGroFro']='GROUP_MA'
 #     self.assoc['CCNoChaI']='NOM_MED' (on doit aussi ajouter 'COMPOSANTE')
       self.assoc['CCNumOrI']='NUME_ORDRE'
       self.assoc['CCNumPTI']='NUME_ORDRE'
-
+     
+      self.dico_mot_depend={}
+     
+      # Attention a la synthaxe
+      self.dico_mot_depend['CCIndica'] ='self.dico_mot_clef["RAFFINEMENT"] == "LIBRE" or self.dico_mot_clef["DERAFFINEMENT"] == "LIBRE"'
+      self.dico_mot_depend['CCSolN__'] ='self.dico_mot_clef.has_key("NITER")'
+      self.dico_mot_depend['CCSolNP1'] ='self.dico_mot_clef.has_key("NITER")'
 
    def gener(self,obj,format='brut'):
       self.text=PythonGenerator.gener(self,obj,format)
@@ -124,18 +128,37 @@ class HomardGenerator(PythonGenerator):
           syntaxe homard
       """
       s=PythonGenerator.generMCSIMP(self,obj)
-      if obj.nom in self.lmots_genea:
-	 genea = obj.get_genealogie()
-         clef=genea[1]+":"+genea[-1]
-      else :
-	 clef=obj.nom
+      clef=obj.nom
       self.dico_mot_clef[clef]=obj.val
       return s
+
+   def cherche_dependance(self,mot):
+       print mot
+       b_eval = 0
+       a_eval=self.dico_mot_depend[mot]
+       try :
+	  b_eval=eval(self.dico_mot_depend[mot])
+       except :
+	  for l in a_eval.split(" or "):
+              try:
+		 b_eval=eval(l)
+	         if not (b_eval == 0 ):
+		     break
+              except :
+		 pass
+       return b_eval
+
 
    def genereConfiguration(self):
       ligbla=31*' '
       self.textehomard=[]
       for mot in self.lmot_clef:
+
+#	  on verifie d'abord que le mot clef doit bien être calculé
+          if self.dico_mot_depend.has_key(mot) :
+             if self.cherche_dependance(mot) == 0 :
+	      	continue
+
           if mot not in self.lmots_clef_calcules :
 	     clef_eficas=self.assoc[mot]
              if self.dico_mot_clef.has_key(clef_eficas):
