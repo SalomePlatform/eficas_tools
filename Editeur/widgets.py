@@ -403,14 +403,13 @@ class FenetreDeParametre(Fenetre) :
 
         # définition des frames
         self.frame_texte = Frame(self.fenetre)
-        self.frame_texte.place(relx=0,rely=0,relwidth=1,relheight=0.9)
+        self.frame_texte.place(relx=0,rely=0,relwidth=1,relheight=0.7)
         # définition de la zone texte et du scrollbar
         self.zone_texte = Text(self.frame_texte,font=fonte)
         self.zone_texte.bind("<Key-Prior>", self.page_up)
         self.zone_texte.bind("<Key-Next>", self.page_down)
         self.zone_texte.bind("<Key-Up>", self.unit_up)
         self.zone_texte.bind("<Key-Down>", self.unit_down)
-        self.zone_texte.bind("<Double-Button-3>", self.OnButton3doubleclick)
         self.scroll_v = Scrollbar (self.frame_texte,command = self.zone_texte.yview)
         self.scroll_v.pack(side='right',fill ='y')
         self.zone_texte.pack(side='top',fill='both',expand=1,padx=5,pady=10)
@@ -419,7 +418,16 @@ class FenetreDeParametre(Fenetre) :
         self.affiche_texte(self.texte)
         self.zone_texte.config(state="disabled")
 
-    def OnButton3doubleclick(self,event):
+	# définition des boutons
+	self.frame_boutons = Frame(self.fenetre)
+	self.frame_boutons.place(relheight=0.3,relx=0,rely=0.7,relwidth=1.)
+	self.but_quit = Button(self.frame_boutons,text = "Fermer",command=self.quit)
+	self.but_save = Button(self.frame_boutons,text = "Choisir",command = self.Choisir)
+	self.but_save.place(relx=0.6,rely=0,relheight=1)
+	self.but_quit.place(relx=0.8,rely=0,relheight=1)
+
+
+    def Choisir(self):
         try:
             selection=self.zone_texte.selection_get()
         except:
