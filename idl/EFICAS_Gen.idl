@@ -1,0 +1,15 @@
+#ifndef __EFICAS_GEN__
+#define __EFICAS_GEN__
+
+#include "SALOME_Component.idl"
+#include "SALOME_Exception.idl"
+
+module EFICAS_ORB
+{
+  interface EFICAS_Gen : Engines::Component
+  {
+  };
+};
+
+#endif
+
