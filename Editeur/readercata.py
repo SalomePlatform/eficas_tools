@@ -69,6 +69,7 @@ class READERCATA:
       """
       message1 = "Compilation des fichiers Eficas \n\n Veuillez patienter ..."
       splash._splash.configure(text = message1)
+      self.configure_barre(4)
       if len(self.appli.CONFIGURATION.catalogues) == 1:
           self.fic_cata = self.appli.CONFIGURATION.catalogues[0][2]
           self.code = self.appli.CONFIGURATION.catalogues[0][0]
@@ -95,32 +96,37 @@ class READERCATA:
       # détermination de fic_cata_c et fic_cata_p
       self.fic_cata_c = self.fic_cata + 'c'
       self.fic_cata_p = os.path.splitext(self.fic_cata)[0]+'_pickled.py'
-      print "Debut compil cata: ",time.clock()
+
+      splash._splash.configure(text = "Debut compil cata: %d s" % time.clock())
       # compilation éventuelle du catalogue
       test = self.compile_cata(self.fic_cata,self.fic_cata_c)
-      print "Fin compil cata: ",time.clock()
+      self.update_barre()
+      splash._splash.configure(text = "Fin compil cata: %d s" % time.clock())
       if not test : showerror("Compilation catalogue","Impossible de compiler le catalogue %s" %self.fic_cata)
+
       # import du catalogue
-      print "Debut import_cata: ",time.clock()
+      splash._splash.configure(text = "Debut import_cata: %d s" % time.clock())
       self.cata = self.import_cata(self.fic_cata)
-      print "Fin import_cata: ",time.clock()
+      self.update_barre()
+      splash._splash.configure(text = "Fin import_cata: %d s" % time.clock())
       if not self.cata : showerror("Import du catalogue","Impossible d'importer le catalogue %s" %self.fic_cata)
+
       #
       # analyse du catalogue (ordre des mots-clés)
       #
-      print "Debut Retrouve_Ordre: ",time.clock()
+      splash._splash.configure(text = "Debut Retrouve_Ordre: %d s" % time.clock())
       # Retrouve_Ordre_Cata_Standard fait une analyse textuelle du catalogue
       # remplacé par Retrouve_Ordre_Cata_Standard_autre qui utilise une numerotation
       # des mots clés à la création
       #self.Retrouve_Ordre_Cata_Standard()
       self.Retrouve_Ordre_Cata_Standard_autre()
-      print "Fin Retrouve_Ordre: ",time.clock()
+      self.update_barre()
+      splash._splash.configure(text = "Fin Retrouve_Ordre: %d s" % time.clock())
       #
       # analyse des données liées à l'IHM : UIinfo
       #
-      print "Debut UIinfo: ",time.clock()
       uiinfo.traite_UIinfo(self.cata)
-      print "Fin UIinfo: ",time.clock()
+      self.update_barre()
       #
       # chargement et analyse des catalogues développeur (le cas échéant)
       #

@@ -26,7 +26,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.10 2002/11/12 12:25:02 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.11 2003/03/07 16:17:12 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -97,9 +97,9 @@ class Tree :
 
     def resizescrollregion(self):
         x0,y0,x1,y1=self.canvas.bbox(ALL)
-        y1=y1+(self.canvas.winfo_height()/20-1)*20
+        # On ajoute une marge approximativement de la moitié du canvas
+        y1=y1+self.canvas.winfo_height()/2
         self.canvas.configure(scrollregion = (x0,y0,x1,y1))
-        #self.scrolledcanvas.resizescrollregion()
 
     def select_next(self,event):
         self.node_selected.select_next()
@@ -480,7 +480,9 @@ class Node :
         """Cette methode a pour but de mettre a jour la validite du noeud
            et de propager la demande de mise à jour à son parent
         """
-        self.update_icone()
+        if self.image_id != None :
+            image = self.geticonimage()
+            self.canvas.itemconfig(self.image_id,image=image)
         self.parent.update_valid()
 
     def update(self,event=None) :
