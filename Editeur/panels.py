@@ -33,7 +33,6 @@ class Panel(Frame) :
       Frame.destroy(self)
       self.panneau=None
       self.parent=None
-      self.node=None
       # Because on herite de Frame
       self.master=None
       # On supprime explicitement les references aux objets Tk
@@ -50,7 +49,11 @@ class Panel(Frame) :
       self.frame_param=None
       # On termine la suppression de facon brutale (objets Tk et non Tk)
       for k in self.__dict__.keys():
-         setattr(self,k,None)
+         # il est plus prudent de ne pas détruire le lien sur le Node
+	 # si on voulait mettre l'attribut node à None, il faudrait
+	 # que tous les appels à node.parent.select() apparaissent après
+	 # toutes les autres actions liées au panel (node.item.isglobal(), ...)
+         if k != 'node' : setattr(self,k,None)
 
   def creer_boutons(self):
       """

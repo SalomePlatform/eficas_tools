@@ -706,22 +706,20 @@ class UNIQUE_Panel(newSIMPPanel):
       if not test :
           mess = "impossible d'évaluer : %s " %`valeur`
           self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée :"+mess)
-          return
       elif self.node.item.isvalid() :
           self.parent.appli.affiche_infos('Valeur du mot-clé enregistrée')
+	  if self.node.item.get_position()=='global':
+              self.node.etape.verif_all()
+	  elif self.node.item.get_position()=='global_jdc':
+              self.node.racine.verif_all()
+	  else :
+              self.node.parent.verif()
+	  self.node.update()
           self.node.parent.select()
       else :
           cr = self.node.item.get_cr()
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
           self.record_valeur(anc_val,mess=mess)
-          return
-      if self.node.item.get_position()=='global':
-          self.node.etape.verif_all()
-      elif self.node.item.get_position()=='global_jdc':
-          self.node.racine.verif_all()
-      else :
-          self.node.parent.verif()
-      self.node.update()
 
 class UNIQUE_INTO_Panel(UNIQUE_Panel):
   """
