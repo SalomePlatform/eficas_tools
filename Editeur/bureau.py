@@ -44,7 +44,7 @@ class BUREAU:
                            ('Nouveau','newJDC','<Control-n>'),
                            ('Ouvrir','openJDC','<Control-o>'),
                            ('Enregistrer','saveJDC','<Control-e>'),
-                           ('Enregistrer sous','saveasJDC''<Control-s>'),
+                           ('Enregistrer sous','saveasJDC','<Control-s>'),
                            None,
                            ('Fermer','closeJDC','<Control-f>'),
                            ('Quitter','exitEFICAS','<Control-q>'),
@@ -339,6 +339,8 @@ class BUREAU:
          # Le generateur existe on l'utilise
          g=generator.plugins[format]()
          jdc_formate=g.gener(self.JDC,format='beautifie')
+         if format == 'homard':
+            self.jdc_homard=g.get_homard()
          if not g.cr.estvide():
             print g.cr
             self.appli.affiche_infos("Erreur à la generation")
@@ -369,6 +371,8 @@ class BUREAU:
               showinfo("Erreur","Problème à la sauvegarde du fichier :" + `self.JDCDisplay_courant.fichier`)
               return 0
           else :
+              if self.appli.format_fichier.get() == 'homard':
+                  self.save_homard(self.JDCDisplay_courant.fichier,self.jdc_homard)
               self.JDCDisplay_courant.stop_modif()
               self.appli.affiche_infos("sauvegarde de "+`self.JDCDisplay_courant.fichier`+" effectuée")
               return 1
@@ -401,6 +405,8 @@ class BUREAU:
               showinfo("Erreur","Problème à la sauvegarde du fichier "+`sauvegarde`)
               return 0
           else :
+              if self.appli.format_fichier.get() == 'homard':
+                  self.save_homard(sauvegarde,self.jdc_homard)
               self.JDCDisplay_courant.stop_modif()
               self.appli.affiche_infos("Sauvegarde effectuée")
               if sauvegarde != self.JDCDisplay_courant.fichier :
@@ -606,6 +612,19 @@ class BUREAU:
           test = test * self.saveJDC(echo = 'non')
       return test
 
+   def save_homard(self,nom,texte):
+       file_homard=nom+'.conf_homard'
+       try:
+           f=open(file_homard,'w')
+           for ligne in texte:
+               f.write(ligne)
+               f.write('\n')
+           f.close()
+       except:
+           print "Pb a la sauvegarde sous le format homard"
+       if self.appli.salome != 0:
+           import eficas_etude
+           self.appli.salome.rangeInStudy(file_homard)
 
 # ---------------------------------------------------------------------------
 #     			Méthodes liées aux mots-clés inconnus
