@@ -331,7 +331,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       #  sansnom = AFFE_CHAR_CINE(MODELE=None)
       # Suite à la stabilisation du noyau d'Aster, je n'ai pas eu d'autre solution que de surcharger
       # cette méthode ici en rajoutant le test manquant ...
+      # CCAR : cette modification ne corrige le probleme qu'en partie. Il faudrait probablement
+      # supprimer les erreurs fatales (exception ) et retourner systematiquement un objet produit
+      # meme en cas d'erreur et reporter l'emission du message d'erreur a la phase de validation
       if not self.isvalid(sd='non') : return
+      else:self.state='undetermined'
       try:
          if self.parent:
             sd= self.parent.create_sdprod(self,nom)
