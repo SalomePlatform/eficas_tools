@@ -55,10 +55,16 @@ class FORM_ETAPE(MACRO_ETAPE):
             # pas de fils pour self --> la FORMULE est incomplète
             return None,None,None
 	type_retourne="REEL"
-        child = self.mc_liste[0] # child est un MCSIMP 
-        corps = child.getval()
-	child = self.mc_liste[1]
-        l_args= child.getval()
+        if len(self.mc_liste) > 0:
+           child = self.mc_liste[0] # child est un MCSIMP 
+           corps = child.getval()
+	else:
+	   corps = None
+        if len(self.mc_liste) > 1:
+	   child = self.mc_liste[1]
+           l_args= child.getval()
+	else :
+	   l_args=None
         return type_retourne,l_args,corps
 
     def get_nom(self):

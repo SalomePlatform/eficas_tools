@@ -308,6 +308,11 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
       if args :
           if args[0] == "(" and args[-1] ==")":
 	     args=args[1:-1]
+	  # transforme en tuple si ce n est pas déjà le casa
+	  try :
+	     args=string.split(args,',')
+	  except :
+	     pass
       return args
 
     def get_corps(self):
