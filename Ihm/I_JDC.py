@@ -40,6 +40,7 @@ class JDC(I_OBJECT.OBJECT):
       self.params=[]
       self.fonctions=[]
       self._etape_context=None
+      self.recorded_units={}
 
    def get_cmd(self,nomcmd):
       """
@@ -440,7 +441,9 @@ class JDC(I_OBJECT.OBJECT):
           Retourne le nom du fichier correspondant à un numero d'unité
           logique (entier) ainsi que le source contenu dans le fichier
       """
-      if self.appli :
+      if self.recorded_units.has_key(unite):
+         return self.recorded_units[unite]
+      elif self.appli :
          # Si le JDC est relié à une application maitre, on délègue la recherche
          file,text = self.appli.get_file(unite,fic_origine)
       else:
@@ -612,6 +615,14 @@ class JDC(I_OBJECT.OBJECT):
       for etape in self.etapes :
          print etape.nom+".state: ",etape.state
       
+   def record_unit(self,unit,etape):
+      """Enregistre les unites logiques incluses et les infos relatives a l'etape"""
+      if unit is None:
+         # Cas de POURSUITE
+         self.recorded_units[None]=(etape.fichier_ini ,etape.fichier_text,etape.recorded_units)
+      else:
+         self.recorded_units[unit]=(etape.fichier_ini ,etape.fichier_text,etape.recorded_units)
+
 #ATTENTION cette methode surcharge la methode du package Validation : a reintegrer
    def isvalid(self,cr='non'):
       """
