@@ -7,6 +7,12 @@ import traceback,types,string
 import I_ETAPE
 from Noyau.N_ASSD import ASSD
 
+# import rajoutés suite à l'ajout de Build_sd --> à résorber
+import Noyau
+from Noyau import N_Exception
+from Noyau.N_Exception import AsException
+# fin import à résorber
+
 class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def __init__(self):
@@ -153,3 +159,48 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # On met g_context à blanc
       self.g_context={}
          
+  def Build_sd(self,nom):
+     """
+        Construit le concept produit de l'opérateur. Deux cas 
+        peuvent se présenter :
+
+        - le parent n'est pas défini. Dans ce cas, l'étape prend en charge 
+          la création et le nommage du concept.
+
+        - le parent est défini. Dans ce cas, l'étape demande au parent la 
+          création et le nommage du concept.
+
+     """
+     if not self.isactif():return
+     try:
+        # On positionne la macro self en tant que current_step pour que les 
+        # étapes créées lors de l'appel à sd_prod et à op_init aient la macro
+        #  comme parent 
+        self.set_current_step()
+        if self.parent:
+           sd= self.parent.create_sdprod(self,nom)
+           if type(self.definition.op_init) == types.FunctionType: 
+              apply(self.definition.op_init,(self,self.parent.g_context))
+        else:
+           sd=self.get_sd_prod()
+           if sd != None and self.reuse == None:
+              # On ne nomme le concept que dans le cas de non reutilisation 
+              # d un concept
+              sd.nom=nom
+        self.reset_current_step()
+        if self.jdc and self.jdc.par_lot == "NON" :
+           self.Execute()
+        return sd
+     except AsException,e:
+        self.reset_current_step()
+        raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
+                             'fichier : ',self.appel[1],e)
+     except EOFError:
+        #self.reset_current_step()
+        raise
+     except :
+        self.reset_current_step()
+        l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
+        raise AsException("Etape ",self.nom,'ligne : ',self.appel[0],
+                          'fichier : ',self.appel[1]+'\n',
+                           string.join(l))

@@ -4,6 +4,13 @@
 import string,types
 from copy import copy
 
+# import rajoutés suite à l'ajout de Build_sd --> à résorber
+import traceback
+import Noyau
+from Noyau import N_Exception
+from Noyau.N_Exception import AsException
+# fin import à résorber
+
 # Modules EFICAS
 import I_MCCOMPO
 
