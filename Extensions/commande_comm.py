@@ -156,6 +156,9 @@ class COMMANDE_COMM:
     def delete_concept(self,sd):
         pass
 
+    def replace_concept (self,old_sd,sd):
+        pass
+
     def get_sdprods(self,nom_sd):
         return None
 
