@@ -56,6 +56,12 @@ class PARAMETRE :
     self.actif=1
     self.state='undetermined'
     self.register()
+    self.dict_valeur=[]
+    self.interprete_valeur(valeur)
+
+  def __getitem__(self,key):
+    param_item=ITEM_PARAMETRE(self,key)
+    return param_item
 
   def interprete_valeur(self,val):
     """
@@ -85,6 +91,7 @@ class PARAMETRE :
         valeur = eval(val)
     except:
         pass
+    #PN je n ose pas modifier je rajoute
     if valeur != None :
         if type(valeur) == types.TupleType:
             l_new_val = []
@@ -107,7 +114,21 @@ class PARAMETRE :
             #print "on a réussi à évaluer %s en autre chose qu'un tuple ..." %val
             #print 'on trouve : ',str(valeur),' de type : ',type(valeur)
     # on retourne val comme une string car on n'a pas su l'interpréter
+    if valeur != None :
+       if type(valeur).__name__ == 'list':
+          self.dict_valeur=[]
+          for i in range(len(valeur)):
+	      self.dict_valeur.append(valeur[i])
     return val
+
+  def get_valeurs(self):
+    valeurretour=[]
+    if self.dict_valeur != []:
+       for val in self.dict_valeur:
+           valeurretour.append(val)
+    else:
+        valeurretour.append(self.valeur)
+    return valeurretour
 
   def set_valeur(self,new_valeur):
     """
@@ -284,4 +305,24 @@ class PARAMETRE :
 
 
 
+class ITEM_PARAMETRE :
+  def __init__(self,param_pere,item=None):
+      self.param_pere = param_pere
+      self.item = item
+      
 
+  def __repr__(self):
+    return self.param_pere.nom+'['+str(self.item)+']'
+
+
+  def isvalid(self):
+      isvalid = 1
+      if self.item < 0:
+         isvalid =  0
+      try:
+	 longueur= len(self.param_pere.dict_valeur) - 1
+      except:
+         longueur=0
+      if self.item > longueur :
+         isvalid= 0
+      return isvalid

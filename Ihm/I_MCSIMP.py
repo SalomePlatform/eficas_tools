@@ -206,8 +206,25 @@ class MCSIMP(I_OBJECT.OBJECT):
         objet = eval(new_valeur,d)
         return objet,1
       except Exception:
+	itparam=self.cherche_item_parametre(new_valeur)
+	if itparam:
+	     return itparam,1
         if CONTEXT.debug : traceback.print_exc()
         return None,0
+
+  def cherche_item_parametre (self,new_valeur):
+        try:
+	  nomparam=new_valeur[0:new_valeur.find("[")]
+	  indice=new_valeur[new_valeur.find("[")+1:new_valeur.find("]")]
+	  for p in self.jdc.params:
+	     if p.nom == nomparam :
+	        if int(indice) < len(p.get_valeurs()):
+		   itparam=parametre.ITEM_PARAMETRE(p,int(indice))
+		   return itparam
+	  return None
+	except:
+	  return None
+
 
   def delete_concept(self,sd):
     """ 

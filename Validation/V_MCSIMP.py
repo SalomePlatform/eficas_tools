@@ -112,6 +112,12 @@ class MCSIMP:
               valid=0
            # fin des validateurs
            #
+	# cas d un item Parametre
+	if self.valeur.__class__.__name__ == 'ITEM_PARAMETRE':
+	   valid=self.valeur.isvalid()
+	   if valid == 0:
+              if cr == 'oui' :
+		 self.cr.fatal(string.join( repr (self.valeur), " a un indice incorrect"))
 
         self.set_valid(valid)
         return self.valid
@@ -267,7 +273,11 @@ class MCSIMP:
           return 0
       elif type(valeur) not in (types.IntType,types.FloatType,types.LongType):
         # ce n'est pas un réel
-        return 0
+	try :
+	  valeur=valeur +1
+	  return 1
+	except:
+          return 0
       else:
         return 1
 
@@ -321,6 +331,11 @@ class MCSIMP:
           # on a à faire à un PARAMETRE qui définit une liste d'items
           # --> on teste sur la première car on n'accepte que les liste homogènes
           valeur = valeur.valeur[0]
+
+      if valeur.__class__.__name__ == 'PARAMETRE' or valeur.__class__.__name__ == 'ITEM_PARAMETRE':
+	# on admet que c'est OK
+	return 1
+
       if type_permis == 'R':
         return self.is_reel(valeur)
       elif type_permis == 'I':
