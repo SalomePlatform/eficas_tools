@@ -1,3 +1,23 @@
+#@ MODIF N_MACRO Noyau  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 """ 
     Ce module contient la classe de definition MACRO
     qui permet de spécifier les caractéristiques d'une macro-commande
@@ -39,7 +59,7 @@ class MACRO(N_ENTITE.ENTITE):
                         non répétable ne doit apparaitre qu'une fois dans une exécution. C'est du ressort
                         de l'objet gérant le contexte d'exécution de vérifier cette contrainte.
 
-    - fr   : commentaire associé en français
+    - fr   : commentaire associé en francais
 
     - ang : commentaire associé en anglais
 
@@ -50,7 +70,7 @@ class MACRO(N_ENTITE.ENTITE):
     - op_init : cet attribut vaut None ou une fonction. Si cet attribut ne vaut pas None, cette
                       fonction est exécutée lors des phases d'initialisation de l'étape associée.
 
-    - niveau : indique le niveau dans lequel est rangé l'opérateur. Les opérateurs peuvent être
+    - niveau : indique le niveau dans lequel est rangé l'opérateur. Les opérateurs peuvent etre
                      rangés par niveau. Ils apparaissent alors exclusivement dans leur niveau de rangement.
                      Si niveau vaut None, l'opérateur est rangé au niveau global.
 
@@ -134,17 +154,17 @@ class MACRO(N_ENTITE.ENTITE):
           Méthode de vérification des attributs de définition
       """
       if self.op is not None and (type(self.op) != types.IntType or self.op > 0) :
-        self.cr.fatal("L'attribut 'op' doit être un entier signé : %s" %`self.op`)
+        self.cr.fatal("L'attribut 'op' doit etre un entier signé : %s" %`self.op`)
       if self.proc is not None and type(self.proc) != types.FunctionType:
-        self.cr.fatal("L'attribut op doit être une fonction Python : %s" % `self.proc`)
+        self.cr.fatal("L'attribut op doit etre une fonction Python : %s" % `self.proc`)
       if type(self.regles) != types.TupleType :
-        self.cr.fatal("L'attribut 'regles' doit être un tuple : %s" %`self.regles`)
+        self.cr.fatal("L'attribut 'regles' doit etre un tuple : %s" %`self.regles`)
       if type(self.fr) != types.StringType :
-        self.cr.fatal("L'attribut 'fr' doit être une chaîne de caractères : %s" %`self.fr`)
+        self.cr.fatal("L'attribut 'fr' doit etre une chaine de caractères : %s" %`self.fr`)
       if type(self.docu) != types.StringType :
-        self.cr.fatal("L'attribut 'docu' doit être une chaîne de caractères : %s" %`self.docu` )
+        self.cr.fatal("L'attribut 'docu' doit etre une chaine de caractères : %s" %`self.docu` )
       if type(self.nom) != types.StringType :
-        self.cr.fatal("L'attribut 'nom' doit être une chaîne de caractères : %s" %`self.nom`)
+        self.cr.fatal("L'attribut 'nom' doit etre une chaine de caractères : %s" %`self.nom`)
       if self.reentrant not in ('o','n','f'):
         self.cr.fatal("L'attribut 'reentrant' doit valoir 'o','n' ou 'f' : %s" %`self.reentrant`)
       self.verif_cata_regles()

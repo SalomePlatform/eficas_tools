@@ -1,9 +1,29 @@
+#@ MODIF N_BLOC Noyau  DATE 29/05/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 """ 
     Ce module contient la classe de definition BLOC
     qui permet de spécifier les caractéristiques des blocs de mots clés 
 """
 
-import types,string
+import types,string,sys
 import traceback
 
 import N_ENTITE
@@ -73,21 +93,21 @@ class BLOC(N_ENTITE.ENTITE):
          Les éventuels messages d'erreur sont écrits dans l'objet compte-rendu (self.cr).
       """
       if type(self.fr) != types.StringType :
-        self.cr.fatal("L'attribut 'fr' doit être une chaîne de caractères : %s" %`self.fr`)
+        self.cr.fatal("L'attribut 'fr' doit etre une chaine de caractères : %s" %`self.fr`)
       if type(self.docu) != types.StringType :
-        self.cr.fatal("L'attribut 'docu' doit être une chaîne de caractères : %s" %`self.docu`)
+        self.cr.fatal("L'attribut 'docu' doit etre une chaine de caractères : %s" %`self.docu`)
       if type(self.regles) != types.TupleType :
-        self.cr.fatal("L'attribut 'regles' doit être un tuple : %s" %`self.regles` )
+        self.cr.fatal("L'attribut 'regles' doit etre un tuple : %s" %`self.regles` )
       if self.statut not in ['f','o'] :
         self.cr.fatal("L'attribut 'statut' doit valoir 'o' ou 'f' : %s" %`self.statut` )
       if self.condition != None :
         if type(self.condition) != types.StringType :
-          self.cr.fatal("L'attribut 'condition' doit être une chaîne de caractères : %s" %`self.condition`)
+          self.cr.fatal("L'attribut 'condition' doit etre une chaine de caractères : %s" %`self.condition`)
       else:
         self.cr.fatal("La condition ne doit pas valoir None !")
       self.verif_cata_regles()
 
-   def verif_presence(self,dict):
+   def verif_presence(self,dict,globs):
       """
          Cette méthode vérifie si le dictionnaire passé en argument (dict)
          est susceptible de contenir un bloc de mots-clés conforme à la 
@@ -102,15 +122,15 @@ class BLOC(N_ENTITE.ENTITE):
       """
       # On recopie le dictionnaire pour protéger l'original 
       dico=dict.copy()
-      # XXX on ajoute AsType pour permettre les évaluations
-      # XXX pour le moment en commentaire. Voir si on ne peut pas faire autrement.
-      #dico['AsType']=AsType
       if self.condition != None :
         try:
-          test = eval(self.condition,dico)
+          test = eval(self.condition,globs,dico)
           return test
         except NameError:
           # erreur 'normale' : un mot-clé n'est pas présent et on veut l'évaluer dans la condition
+          if CONTEXT.debug:
+             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
+             print "WARNING : Erreur a l'evaluation de la condition "+string.join(l)
           return 0
         except SyntaxError:
           # le texte de la condition n'est pas du Python correct --> faute de catalogue

@@ -1,3 +1,23 @@
+#@ MODIF N_MCCOMPO Noyau  DATE 29/05/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 """ 
     Ce module contient la classe MCCOMPO qui sert à factoriser les comportements 
     des OBJECT composites
@@ -60,7 +80,9 @@ class MCCOMPO(N_OBJECT.OBJECT):
       dico_valeurs = self.cree_dict_valeurs(mc_liste)
       for k,v in self.definition.entites.items():
          if v.label != 'BLOC':continue
-         if v.verif_presence(dico_valeurs):
+         # condition and a or b  : Equivalent de l'expression :  condition ? a : b du langage C
+         globs= self.jdc and self.jdc.condition_context or {}
+         if v.verif_presence(dico_valeurs,globs):
             # Si le bloc existe :
             #        1- on le construit
             #        2- on l'ajoute à mc_liste
@@ -157,8 +179,10 @@ class MCCOMPO(N_OBJECT.OBJECT):
       # Il nous reste à évaluer la présence des blocs en fonction du contexte qui a changé
       for k,v in self.definition.entites.items():
         if v.label != 'BLOC' : continue
-        if v.verif_presence(dico):
-          # le bloc k doit être présent : on crée temporairement l'objet MCBLOC correspondant
+        # condition and a or b  : Equivalent de l'expression :  condition ? a : b du langage C
+        globs= self.jdc and self.jdc.condition_context or {}
+        if v.verif_presence(dico,globs):
+          # le bloc k doit etre présent : on crée temporairement l'objet MCBLOC correspondant
           # on lui passe un parent égal à None pour qu'il ne soit pas enregistré
           bloc = v(nom=k,val=None,parent=None)
           dico_bloc = bloc.cree_dict_valeurs()
@@ -203,7 +227,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
    def supprime(self):
       """ 
          Méthode qui supprime toutes les références arrières afin que l'objet puisse
-         être correctement détruit par le garbage collector
+         etre correctement détruit par le garbage collector
       """
       N_OBJECT.OBJECT.supprime(self)
       for child in self.mc_liste :

@@ -1,3 +1,23 @@
+#@ MODIF N_MCLIST Noyau  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 """ 
     Ce module contient la classe MCList qui sert à controler la valeur
     d'une liste de mots-clés facteur par rapport à sa définition portée par un objet
@@ -44,7 +64,7 @@ class MCList(UserList.UserList):
    def supprime(self):
       """ 
          Méthode qui supprime toutes les références arrières afin que l'objet puisse
-         être correctement détruit par le garbage collector 
+         etre correctement détruit par le garbage collector 
       """
       self.parent = None
       self.etape = None
@@ -73,7 +93,7 @@ class MCList(UserList.UserList):
         if k == name:
           if v.defaut != None : return v(None,k,None)
       # si on passe ici, c'est que l'on demande un fils qui n'est pas possible --> erreur
-      #print "Erreur : %s ne peut être un descendant de %s" %(name,self.nom)
+      #print "Erreur : %s ne peut etre un descendant de %s" %(name,self.nom)
       return None
 
    def isBLOC(self):

@@ -1,3 +1,23 @@
+#@ MODIF V_ETAPE Validation  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 """
    Ce module contient la classe mixin ETAPE qui porte les méthodes
    nécessaires pour réaliser la validation d'un objet de type ETAPE
@@ -7,7 +27,7 @@
    utilisée par héritage multiple pour composer les traitements.
 """
 # Modules Python
-import string,types
+import string,types,sys
 import traceback
 
 # Modules EFICAS
@@ -57,7 +77,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
           else :
             if cr == 'oui' : self.cr.fatal("Concept retourné non défini")
             valid = 0
-        # on teste, si elle existe, le nom de la sd (sa longueur doit être <= 8 caractères)
+        # on teste, si elle existe, le nom de la sd (sa longueur doit etre <= 8 caractères)
         if self.sd != None :
           # la SD existe déjà : on regarde son nom
           if self.sd.nom != None :
@@ -118,15 +138,24 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
           # Erreur pendant le calcul du type retourné
           if CONTEXT.debug:traceback.print_exc()
           self.sd=None
-          if cr == 'oui' : self.cr.fatal('Impossible d affecter un type au résultat')
+          if cr == 'oui' : 
+             l=traceback.format_exception(sys.exc_info()[0],
+                                           sys.exc_info()[1],
+                                           sys.exc_info()[2])
+             self.cr.fatal('Impossible d affecter un type au résultat\n'+string.join(l[2:]))
           return 0
       # on teste maintenant si la SD est r\351utilis\351e ou s'il faut la cr\351er
+      valid=1
       if self.reuse:
         if AsType(self.reuse) != sd_prod:
           if cr == 'oui' : self.cr.fatal('Type de concept reutilise incompatible avec type produit')
-          return 0
-        self.sd=self.reuse
-        return 1
+          valid= 0
+        if self.sdnom[0] != '_' and self.reuse.nom != self.sdnom:
+          # Le nom de la variable de retour (self.sdnom) doit etre le meme que celui du concept reutilise (self.reuse.nom)
+          if cr == 'oui' : 
+             self.cr.fatal('Concept reutilise : le nom de la variable de retour devrait etre %s et non %s' %(self.reuse.nom,self.sdnom))
+          valid= 0
+        if valid:self.sd=self.reuse
       else:
         if sd_prod == None:# Pas de concept retourné
           # Que faut il faire de l eventuel ancien sd ?
@@ -138,10 +167,12 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
           else: 
              # Le sd n existait pas , on ne le crée pas
              if cr == 'oui' : self.cr.fatal("Concept retourné non défini")
-             return 0
+             valid=0 
         if self.definition.reentrant == 'o':
-          self.reuse = self.sd
-        return 1
+           if cr == 'oui' : self.cr.fatal('Commande obligatoirement reentrante : specifier reuse=concept')
+           valid=0 
+           #self.reuse = self.sd
+      return valid
 
 
    def report(self):

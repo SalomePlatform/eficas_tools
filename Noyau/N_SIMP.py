@@ -1,3 +1,23 @@
+#@ MODIF N_SIMP Noyau  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 """ Ce module contient la classe de definition SIMP
     qui permet de spécifier les caractéristiques des mots clés simples
 """
@@ -82,21 +102,21 @@ class SIMP(N_ENTITE.ENTITE):
       """
       if type(self.min) != types.IntType :
          if self.min != '**':
-            self.cr.fatal("L'attribut 'min' doit être un entier : "+`self.min`)
+            self.cr.fatal("L'attribut 'min' doit etre un entier : "+`self.min`)
       if type(self.max) != types.IntType :
          if self.max != '**' :
-            self.cr.fatal("L'attribut 'max' doit être un entier : "+`self.max`)
+            self.cr.fatal("L'attribut 'max' doit etre un entier : "+`self.max`)
       if self.min > self.max :
          self.cr.fatal("Nombres d'occurrence min et max invalides : %s %s" %(`self.min`,`self.max`))
       if type(self.fr) != types.StringType :
-         self.cr.fatal("L'attribut 'fr' doit être une chaîne de caractères : %s" +`self.fr`)
+         self.cr.fatal("L'attribut 'fr' doit etre une chaine de caractères : %s" +`self.fr`)
       if self.statut not in ['o','f','c','d']:
          self.cr.fatal("L'attribut 'statut' doit valoir 'o','f','c' ou 'd' : %s" %`self.statut`)
       if self.homo != 0 and self.homo != 1 :
          self.cr.fatal("L'attribut 'homo' doit valoir 0 ou 1 : %s" %`self.homo`)
       if self.into != None :
          if type(self.into) != types.TupleType :
-            self.cr.fatal("L'attribut 'into' doit être un tuple : %s" %`self.into`)
+            self.cr.fatal("L'attribut 'into' doit etre un tuple : %s" %`self.into`)
       if self.position not in ['local','global','global_jdc']:
          self.cr.fatal("L'attribut 'position' doit valoir 'local','global' ou 'global_jdc' : %s" %`self.position`)
 

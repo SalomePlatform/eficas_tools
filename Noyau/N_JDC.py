@@ -1,3 +1,23 @@
+#@ MODIF N_JDC Noyau  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 """
    Ce module contient la classe JDC qui sert à interpréter un jeu de commandes
 """
@@ -30,6 +50,7 @@ from Accas import _F
 from Accas import *
 NONE = None
 """
+
    from N_utils import SEP
 
    def __init__(self,definition=None,procedure=None,cata=None,
@@ -69,10 +90,14 @@ NONE = None
       self.cr = self.CR(debut = "CR phase d'initialisation", 
                         fin = "fin CR phase d'initialisation")
       self.g_context={}
+      # Liste pour stocker tous les concepts produits dans le JDC
       self.sds=[]
+      # Dictionnaire pour stocker tous les concepts du JDC (acces rapide par le nom)
+      self.sds_dict={}
       self.etapes=[]
       self.mc_globaux={}
       self.current_context={}
+      self.condition_context={}
       self.index_etape_courante=0
 
    def compile(self):
@@ -111,6 +136,11 @@ NONE = None
             if type(obj_cata) == types.ModuleType :
                init2 = "from "+obj_cata.__name__+" import *"
                exec init2 in self.g_context
+
+         # Initialisation du contexte global pour l'évaluation des conditions de BLOC
+         # On utilise une copie de l'initialisation du contexte du jdc
+         self.condition_context=self.g_context.copy()
+
          # Si l'attribut context_ini n'est pas vide, on ajoute au contexte global
          # le contexte initial (--> permet d'évaluer un JDC en récupérant un contexte
          # d'un autre par exemple)
@@ -216,7 +246,7 @@ NONE = None
          self.NommerSdprod(sd,nomsd)
       return sd
 
-   def NommerSdprod(self,sd,sdnom):
+   def NommerSdprod(self,sd,sdnom,restrict='non'):
       """ 
           Nomme la SD apres avoir verifie que le nommage est possible : nom 
           non utilise
@@ -224,14 +254,18 @@ NONE = None
           Met le concept créé dans le concept global g_context
       """
       if CONTEXT.debug : print "JDC.NommerSdprod ",sd,sdnom
-      o=self.g_context.get(sdnom,None)
+      o=self.sds_dict.get(sdnom,None)
       if isinstance(o,ASSD):
          raise AsException("Nom de concept deja defini : %s" % sdnom)
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
       # Ajoute a la creation (appel de reg_sd).
-      self.g_context[sdnom]=sd
+      self.sds_dict[sdnom]=sd
       sd.nom=sdnom
+
+      # En plus si restrict vaut 'non', on insere le concept dans le contexte du JDC
+      if restrict == 'non':
+         self.g_context[sdnom]=sd
 
    def reg_sd(self,sd):
       """ 

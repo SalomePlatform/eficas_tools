@@ -1,3 +1,23 @@
+#@ MODIF N_CR Noyau  DATE 29/05/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 """ Ce module contient la classe compte-rendu de validation
 """
 
@@ -99,14 +119,14 @@ class CR :
 
    def __str__(self):
       """
-        Retourne une chaîne de caractères décorée et représentative de self
+        Retourne une chaine de caractères décorée et représentative de self
       """
       s=''
       self.beautifie_messages()
-      s=s+string.join(self.crok_belle)
-      s=s+string.join(self.crwarn_belle)
-      s=s+string.join(self.crfatal_belle)
-      s=s+string.join(self.crexception_belle)
+      s=s+string.join(self.crok_belle,'')
+      s=s+string.join(self.crwarn_belle,'')
+      s=s+string.join(self.crfatal_belle,'')
+      s=s+string.join(self.crexception_belle,'')
       for subcr in self.subcr:
          if self.verbeux == 'oui':
             s=s+str(subcr)+'\n'
@@ -121,7 +141,7 @@ class CR :
 
    def report(self,decalage = 2):
       """
-        Retourne une chaîne de caractères non encadrée mais représentative de self
+        Retourne une chaine de caractères non encadrée mais représentative de self
       """
       s=''
       # on stocke dans s les messages de premier niveau
@@ -145,7 +165,7 @@ class CR :
 
    def get_mess_fatal(self):
       """
-          Retourne une chaîne de caractères contenant les messages de 
+          Retourne une chaine de caractères contenant les messages de 
           la liste crfatal (du dernier au premier)
       """
       self.crfatal.reverse()
@@ -157,7 +177,7 @@ class CR :
 
    def get_mess_exception(self):
       """
-          Retourne une chaîne de caractères contenant les messages 
+          Retourne une chaine de caractères contenant les messages 
           de la liste crexception (du dernier au premier)
       """
       self.crexception.reverse()
@@ -172,7 +192,7 @@ class CR :
 
 def justify_text(texte='',cesure=50):
   """
-      Prend la chaîne de caractères 'texte' et la retourne avec un retour chariot
+      Prend la chaine de caractères 'texte' et la retourne avec un retour chariot
       tous les 'cesure' caractères s'il y a lieu (le retour chariot est placé dans un blanc
       et non au milieu d'un mot
   """
@@ -201,7 +221,7 @@ def justify_text(texte='',cesure=50):
 
 def encadre_message(texte,motif):
   """ 
-     Retourne la chaîne de caractères texte entourée d'un cadre formés
+     Retourne la chaine de caractères texte entourée d'un cadre formés
      d'éléments 'motif'
   """
   texte = justify_text(texte,cesure=80)
