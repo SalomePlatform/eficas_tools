@@ -62,8 +62,8 @@ class APPLI:
       if fichier :
            try :
                 self.bureau.openJDC( str(MakeNomComplet.FILENAME(fichier)) )
-           except :
-                pass
+           except Exception,e :
+                showerror( "ARGUMENT INVALIDE", str(e) )
       # AY : fin
       splash.fini_splash()
 

@@ -32,7 +32,7 @@ except :
 
 if DEVELOPPEUR :
     import developpeur
-    developpeur.sortie.write( "import de "+__name__+" : $Id$" )
+    developpeur.sortie.write( "import de "+__name__+" : $Id: MakeNomComplet.py,v 1.1 2003/03/06 16:09:53 eficas Exp $" )
     developpeur.sortie.write( "\n" )
 
 
@@ -69,7 +69,7 @@ class FILENAME :
             self.rep = self.getcwd_( rep )
             self.file = liste[-1]
         except Exception,e :
-            raise Exception( "nom de fichier INVALIDE : "+s+'\n'+str(e) )
+            raise Exception( "nom de repertoire INVALIDE : "+rep )
 
     def getcwd_ ( self , rep ) :
         prev = os.getcwd()
