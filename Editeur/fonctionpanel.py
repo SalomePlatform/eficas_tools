@@ -255,7 +255,6 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
         affiche="("
         separe=""
 	for val in valeur:
-            print str(val)
 	    affiche=affiche+separe+str(val)
 	    separe=","
         affiche=affiche+")"
