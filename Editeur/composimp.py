@@ -563,6 +563,12 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       if valeur.__class__.__name__ == 'CO':return 1
       return 0
 
+  def is_param(self,valeur) :
+      for param in self.jdc.params:
+	  if (repr(param) == valeur):
+	     return 1
+      return 0
+
   def traite_reel(self,valeur):
       """
       Cette fonction a pour but de rajouter le '.' en fin de chaîne pour un réel
@@ -579,7 +585,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
               return valeur
       if string.find(valeur,'.') == -1 :
           # aucun '.' n'a été trouvé dans valeur --> on en rajoute un à la fin
-          return valeur+'.'
+          if (self.is_param(valeur)):
+	      return valeur
+          else:
+              return valeur+'.'
       else:
           return valeur
         

@@ -231,3 +231,30 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
          else :
             l1_valeurs.append((valeur[0],valeur[1],valeur[2]))
       self.Liste_valeurs.put_liste(l1_valeurs)
+
+
+  def display_valeur(self,val=None):
+      """
+      Affiche la valeur passée en argument dans l'entry de saisie.
+      Par défaut affiche la valeur du mot-clé simple
+      Doit être redéfinie pour un pb avec les parametres dans un tuple
+      """
+      if not val :
+          valeur = self.node.item.object.getval()
+      else:
+          valeur = val
+      if not valeur : return
+
+      try:
+        affiche="("
+        separe=""
+	for val in valeur:
+            print str(val)
+	    affiche=affiche+separe+str(val)
+	    separe=","
+        affiche=affiche+")"
+        self.entry.delete(0,END)
+	self.entry.insert(0,affiche)
+      except :
+	self.entry.delete(0,END)
+

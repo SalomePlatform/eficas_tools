@@ -274,8 +274,6 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       Par défaut affiche la valeur du mot-clé simple
       """
       if not val :
-          #valeur = self.node.item.getval()
-          #valeur = self.node.item.get_valeur()
           valeur = self.node.item.object.getval()
       else:
           valeur = val

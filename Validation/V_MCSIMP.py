@@ -171,7 +171,29 @@ class MCSIMP:
       for type_permis in self.definition.type:
           if self.compare_type(valeur,type_permis) : return 1
 
-      # si on sort de la boucle précédente par ici c'est que l'on n'a trouvé aucun type valable --> valeur refusée
+      # si on sort de la boucle précédente par ici c'est qu'on n'a trouvé aucun type valable --> valeur refusée
+      # on essaie d evaluer si c est un parametre tordu : exemple a*b ou a et b sont definis
+      if valeur.__class__.__name__ in ('PARAMETRE_EVAL','PARAMETRE'):
+          try :
+
+            # On crée un dictionnaire qui servira de contexte aux evaluations
+            # Ce dictionnaire sera initialisé avec les paramètres du JDC
+            d={}
+            for param in self.jdc.params :
+                expression = param.nom+'='+repr(param.valeur)
+                # ici on enrichit le dictionnaire d
+                exec expression in d
+
+            obj=eval( valeur.valeur,d) 
+
+            for type_permis in self.definition.type:
+            	if self.compare_type(obj,type_permis) : 
+	    	    return 1
+          except Exception,e :
+            print "AAAAAAAAAAAAA"
+            print "e = ",str(e)
+            pass
+
       if cr =='oui':
           self.cr.fatal("%s n'est pas d'un type autorisé" %`valeur`)
       return 0
