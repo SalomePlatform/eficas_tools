@@ -20,12 +20,13 @@
 
 import string,os,Numeric
 
-#from Utilitai.transpose import transpose
 
 ######################################################################
 ####  méthode de construction du VALE pour le format libre
 ######################################################################
 def m_format_libre(texte,INDIC_PARA,INDIC_RESU,SEPAR):
+
+  from Utilitai.transpose import transpose
 
   # format LIBRE
   # Les lignes contenant autre chose que des séquences de nombres

@@ -22,7 +22,6 @@
 
 import string
 
-#from Utilitai.transpose import transpose
 
 ######################################################################
 ####  méthode de construction du dictionnaire
@@ -30,6 +29,7 @@ import string
 ######################################################################
 def lecture_table(texte,nume,separ):
 
+  from Utilitai.transpose import transpose
   # format ASTER
   # Les lignes contenant autre chose que des séquences de nombres
   # réels et de séparateurs sont considérées comme délimitant deux

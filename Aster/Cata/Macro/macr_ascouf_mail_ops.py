@@ -21,7 +21,6 @@
 
 
 from math import sqrt,cos,sin,pi,tan,log,fabs,ceil,fmod,floor
-#from Utilitai import funct_root
 
 ################################################################################
 ################################################################################
@@ -90,6 +89,7 @@ def ASCFON(RC,RM,EP,ORIEN,AZIM,AXEC,POS,Y):
 def ASCFIS(ALPHA, RM, RC, EP, SUREP, GEOM, AXEA,
            AXEC, AZIM, POS, SF, DSF, BETA, ORIEN):
 
+  from Utilitai import funct_root
   if POS=='DEB_INT':
      if (AZIM>=120.) and (AZIM<=240.0): X = RM-EP/2.0 - SUREP
      else:                              X = RM-EP/2.0

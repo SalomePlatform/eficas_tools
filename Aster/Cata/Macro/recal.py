@@ -29,7 +29,7 @@ import Gnuplot
 import Cata
 from Cata.cata import INCLUDE,DETRUIRE
 from Accas import _F
-#from Utilitai.extract import EXTRACT
+from Utilitai.extract import EXTRACT
 
 import os
 
