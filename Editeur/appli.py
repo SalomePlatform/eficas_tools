@@ -34,6 +34,7 @@ import splash
 import prefs
 import fontes
 import tooltip
+import properties
 
 VERSION="EFICAS v1.3"
 
@@ -154,7 +155,7 @@ class APPLI:
       texte = VERSION + '\n\n'
       texte = texte + 'EFICAS est un produit développé par \nEDF-Division Stratégie et Développement\n'
       texte = texte + 'Equipe : MTI/MMN\n\n'
-      texte = texte + 'Code utilisé : %s\n' %self.code
+      texte = texte + 'Code utilisé : %s version %s\n' % (self.code,properties.version)
       return texte
 
   def efface_aide(self,event):
