@@ -29,6 +29,22 @@ class Formatage :
      Cette classe contient toutes les méthodes nécessaires au formatage
      de la chaine de caracteres issue d'un generator en un fichier
      'lisible' ie avec indentations
+
+     L'objet attend en parametre du constructeur (argument l_jdc) une representation
+     du jeu de commandes sous la forme d'une liste.
+
+     Chaque element de la liste est la representation d'une etape.
+
+     La representation d'une etape est une liste dont le premier element est une chaine de
+     caracteres donnant le debut de la commande ("xxx=lire_maillage(", par exemple).
+     Les elements suivants sont les representations des mots cles simples et facteurs.
+     Elle se termine avec un element de fin : ");"
+
+     La representation d'un mot cle simple est une chaine de caracteres (info=2, par exemple).
+
+     La representation d'un mot cle facteur est semblable à celle de l'étape : premier element
+     caracteristique du mot cle facteur suivi d'elements representatifs des mots cles simples.
+     Elle se termine avec un element de fin : ")" ou "),".
   """
   def __init__(self,l_jdc,code=None,mode=None,sep='=',l_max=72):
     # l_jdc représente le jeu de commandes brut sous forme de liste
@@ -49,6 +65,7 @@ class Formatage :
       self.count = self.count+1
       self.texte_etape = ''
       if type(etape)==types.ListType:
+        # L'etape est sous la forme d'une liste dont le premier element est une chaine
         self.indent=[]
         self.indent.append(len(etape[0]))
         self.indent_courant = self.indent[0]
@@ -56,17 +73,29 @@ class Formatage :
         if len(etape)>1 :
           self.formate_etape(etape[1:])
       else :
+        # L'etape est deja sous forme de chaine de caracteres
         self.indent=[]
         self.texte_etape = etape
       self.jdc_fini = self.jdc_fini + '\n' + self.texte_etape
     return self.jdc_fini
 
   def formate_etape(self,liste):
+    """
+        Enrichissement de la chaine de caracteres representant l'etape (attribut
+	texte_etape de l'objet Formatage).
+        Les elements a ajouter sont dans l'argument liste de la methode.
+	L'objet "liste" à traiter a été produit par le module generator. En particulier
+	les parenthèses et les virgules ont été produites par ce module
+    """
+    l_patterns_fin_etape = ( ');' , ');\n' )
+    l_patterns_fin_mcf   = ( ')'  , '),'   )
+
     ind = 0
     for element in liste :
       if type(element) == types.ListType:
+
         # il s'agit d'un mot-clé facteur
-        # on écrit son nom
+        # on écrit son nom (element[0])
         longueur = self.longueur(self.texte_etape)
         try:
           increment = len(('\n'+self.indent_courant*' ')*ind + element[0])
@@ -81,8 +110,9 @@ class Formatage :
         # on écrit ses fils
         self.formate_etape(element[1:])
       elif type(element) == types.StringType:
-        # il s'agit d'un mot-clé simple ou de ')' ou ');' ou '),'
-        if element == ')' or element == '),':
+        # il s'agit d'un mot-clé simple ou de ')' ou ');' ou '),' ou ');\n'
+        if element in l_patterns_fin_mcf :
+          # ici, on traite le mot-clef facteur "element"
           self.texte_etape = self.texte_etape + string.strip(element)
           length = len(self.indent)
           if length > 1:
@@ -91,7 +121,8 @@ class Formatage :
             self.indent_courant=self.indent[length-2]
           else :
             self.indent_courant=self.indent[0]
-        elif element == ');':
+        elif element in l_patterns_fin_etape :
+          # ici, on traite l'etape "element"
           length = len(self.indent)
           if length > 1:
             last = self.indent[length-1]
@@ -101,6 +132,7 @@ class Formatage :
             self.indent_courant=self.indent[0]
           self.texte_etape = self.texte_etape + string.strip(element)
         else :
+          # ici, on traite un mot-clef simple (element)
           longueur = self.longueur(self.texte_etape)
           increment = len(('\n'+self.indent_courant*' ')*ind + string.strip(element))
           #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(element)
@@ -109,7 +141,7 @@ class Formatage :
           else :
             # il faut couper ...
             nom,valeur = string.split(element,self.sep,1)
-            chaine = self.creer_chaine(nom,valeur,'\n'+self.indent_courant*' ',ind)+','
+            chaine = self.creer_chaine(nom,valeur,'\n'+self.indent_courant*' ',ind)
             #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(element)
             self.texte_etape = self.texte_etape + chaine
       ind = 1
@@ -123,18 +155,25 @@ class Formatage :
     return len(liste[-1])
 
   def creer_chaine(self,nom,valeur,increment,ind):
+    """
+        La methode creer_chaine reconstitue un objet Eficas à partir de
+             - son nom,
+             - sa valeur.
+    """
     s=''
     if len(increment + nom + self.sep) <= self.l_max:
       texte = increment*ind
       label = nom + self.sep
       s=texte + label
       longueur = len(increment + label)
-      if len(string.split(valeur,'(')) == 1:
+
+      if '(' not in valeur:
         # il s'agit d'une vraie chaîne de caractères
         val = len(valeur)
         texte = (self.l_max-2-val)*' '+valeur
         s=s+'\n'+texte
-      else :
+
+      elif ',' in valeur:
         # il s'agit d'une liste
         liste = string.split(valeur,',')
         i=0
@@ -150,9 +189,18 @@ class Formatage :
           else :
             i=1
             if ajout[-1] != ')':
-              texte = texte  + increment + (len(label)+2)*' ' + ajout +','
+              texte = texte  + increment + (len(label)+2)*' ' + ajout  + ','
             else :
               texte = texte  + increment + (len(label)+2)*' ' + ajout
-      s=s+texte
+
+        s=s+texte
+        s =  s + ','
+
+      else :
+        # On a une ( mais pas de , . On passe la chaine sans modification
+        val = len(valeur)
+        texte = (self.l_max-2-val)*' '+valeur
+        s=s+'\n'+texte
+
     return s
 
