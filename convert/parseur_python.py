@@ -207,11 +207,10 @@ class PARSEUR_PYTHON:
 
     def analyse(self):
         """
-        Transforme dans self.fichier les commentaires Python (#...) par un objet
-        commentaire qui pourra donc être interprété par EFICAS.
-        Stocke le résultat dans self.texte
+        Eclate la chaine self.texte en self.l_objets une liste lignes d'instructions
+        et de commentaires (parmi lesquels des instructions "commentarisées").
         """
-        #l_lignes = open(self.fichier,'r').readlines()
+        #AY##l_lignes = open(self.fichier,'r').readlines()
         l_lignes = string.split(self.texte,'\n')
         commentaire_courant             = None
         commande_courante               = None
@@ -245,6 +244,10 @@ class PARSEUR_PYTHON:
                             # on crée un objet commande_commentarisee_courante
                             commande_commentarisee_courante = COMMANDE_COMMENTARISEE(self)
                             commande_commentarisee_courante.append_text(ligne)
+                        # si la ligne courante se termine par un ';', on décide - par hypothèse et peut-être à tort - que
+                        # la commande commentarisée courante est terminée !!
+                        if re.search( '; *$', ligne ) != None :
+                            commande_commentarisee_courante = None
                         continue
                     else:
                         # on a un double commentaire en fin de ligne
@@ -300,7 +303,8 @@ class PARSEUR_PYTHON:
                         else:
                             #--> poursuite d'une affectation
                             affectation_courante.append_text(ligne)
-                                
+
+
     def get_texte(self):
         """
         Retourne le texte issu de l'analyse
