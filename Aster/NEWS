@@ -1,3 +1,10 @@
+Verion 1.4 (5/2003):
+   Mise en synchronisation avec la version STA7 de Code_Aster de mai 2003 (7.1)
+   Possibilité de donner un nom de fichier en argument lors de l'ouverture d'EFICAS (EO2003-060)
+   Correction d'une anomalie dans la fonctionnalité de commentarisation des commandes (AO2003-041)
+   Ajout du bouton de documentation dans le pannneau FORMULE (AO2002-447)
+   Selection automatique du concept quand il n'en existe qu'un (EO2002-162)
+
 Verion 1.3 (11/2002):
    Mise en synchronisation avec la version STA6 de Code_Aster de septembre 2002
    Ajout de la possibilité de visualiser les INCLUDE, INCLUDE_MATERIAU et POURSUITE (popup
@@ -5,7 +12,6 @@ Verion 1.3 (11/2002):
    Possibilité d'afficher la liste des commandes par groupe (menu option->affichage commandes)
    Reprise profonde du mécanisme de gestion des fichiers inclus (voir menus d'AIDE pour plus de détails)
    Corrections diverses 
-    
 
 Version 1.2 (5/2002):
     Reconception de la version 1.1 : décomposition en packages Python

@@ -21,11 +21,11 @@
 import os,shutil,glob,sys
 import types
 
-version="$Name:  $"[7:-2] or 'Test1_2'
+version="$Name:  $"[7:-2] or 'Test1_4'
 # ==========Path du noyau fourni par Aster====================
 path_Noyau="../../AccasAster"
 # ============================================================
-nom_distrib="Eficas"+version+"AsterSTA6"
+nom_distrib="Eficas"+version+"AsterSTA7"
 path_distrib=os.path.join("dist",nom_distrib)
 path_TextTools="/home/eficas/pkg/mxTools/egenix2.0.2pourWindows/mx/TextTools"
 dir_download= "/home/eficas/WWW/telechargement/eficas"
@@ -38,6 +38,7 @@ def main():
    copyfiles('../Editeur',os.path.join(path_distrib,'Editeur'),['*.py','faqs.txt'])
    copyfiles('../Ihm',os.path.join(path_distrib,'Ihm'),['*.py'])
    copyfiles('../Extensions',os.path.join(path_distrib,'Extensions'),['*.py'])
+   copyfiles('../Misc',os.path.join(path_distrib,'Misc'),['*.py'])
    copyfiles('../Accas',os.path.join(path_distrib,'Accas'),['*.py'])
    # AIDE
    copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
