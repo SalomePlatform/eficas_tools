@@ -29,7 +29,6 @@ import string,types,re
 import traceback
 
 # import modules Eficas
-import Accas
 import interpreteur_formule
 from Noyau.N_CR import CR
 import parametre
@@ -39,8 +38,7 @@ pattern_eval       = re.compile(r'^(EVAL)([ \t\r\f\v]*)\(([\w\W]*)')
 class PARAMETRE_EVAL(parametre.PARAMETRE) :
   """
   Cette classe permet de créer des objets de type PARAMETRE_EVAL
-  cad des affectations directes évaluées dans le jeu de commandes
-              (ex: a=EVAL('''10.*SQRT(25)'''))
+  cad des affectations directes évaluées dans le jeu de commandes (ex: a=EVAL('''10.*SQRT(25)'''))
   qui sont interprétées par le parseur de fichiers Python.
   Les objets ainsi créés constituent des paramètres évalués pour le jdc
   """
@@ -49,6 +47,8 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
 
   def __init__(self,nom,valeur=None):
     # parent ne peut être qu'un objet de type JDC
+    import Accas
+    self.Accas_EVAL=Accas.EVAL
     self.valeur = self.interprete_valeur(valeur)
     self.val    = valeur
     self.nom = nom
@@ -83,7 +83,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     d={}
     val = string.strip(val)
     if val[-1] == ';' : val = val[0:-1]
-    d['EVAL'] = Accas.EVAL
+    d['EVAL'] = self.Accas_EVAL
     try:
         valeur = eval(val,{},d)
         return valeur
@@ -173,8 +173,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
   def verif_parametre_eval(self,param=None,cr='non'):
     """
     Vérifie la validité du paramètre EVAL passé en argument.
-    Ce nouveau paramètre est passé sous la forme d'un tuple :
-                (nom,valeur)
+    Ce nouveau paramètre est passé sous la forme d'un tuple : (nom,valeur)
     Si aucun tuple passé, prend les valeurs courantes de l'objet
     Retourne :
             - un booléen, qui vaut 1 si EVAL licite, 0 sinon
@@ -211,8 +210,8 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     """
     Retourne 1 si self est valide, 0 sinon
     Un paramètre évalué est considéré comme valide si :
-    - il a un nom
-    - il a une valeur qui est interprétable par l'interpréteur de FORMULEs
+      - il a un nom
+      - il a une valeur qui est interprétable par l'interpréteur de FORMULEs
     """
     resu,erreur= self.verif_parametre_eval(cr=cr)
     return resu

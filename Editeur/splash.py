@@ -44,9 +44,9 @@ class SplashScreen(Toplevel):
         Provides a splash screen. Usage:
         Subclass and override 'CreateWidgets()'
         In constructor of main window/application call
-        - S = SplashScreen(main=self)        (if caller is Toplevel)
-        - S = SplashScreen(main=self.master) (if caller is Frame)
-        - S.quit()  after you are done creating your widgets etc.
+           - S = SplashScreen(main=self)        (if caller is Toplevel)
+           - S = SplashScreen(main=self.master) (if caller is Frame)
+           - S.quit()  after you are done creating your widgets etc.
     """
     def __init__(self, master=None,**args):
         Toplevel.__init__(self, master, relief='groove',

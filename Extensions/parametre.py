@@ -134,8 +134,8 @@ class PARAMETRE :
     """
     Retourne 1 si self est valide, 0 sinon
     Un paramètre est considéré comme valide si :
-    - il a un nom
-    - il a une valeur
+      - il a un nom
+      - il a une valeur
     """
     if self.nom == '' :
         if cr == 'oui':
@@ -258,8 +258,8 @@ class PARAMETRE :
         Evalue les conditions de tous les blocs fils possibles
         (en fonction du catalogue donc de la définition) de self et
         retourne deux listes :
-        - la première contient les noms des blocs à rajouter
-        - la seconde contient les noms des blocs à supprimer
+          - la première contient les noms des blocs à rajouter
+          - la seconde contient les noms des blocs à supprimer
     """
     return [],[]
 

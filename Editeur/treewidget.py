@@ -26,7 +26,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.11 2003/03/07 16:17:12 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.12 2003/03/10 17:24:43 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -488,14 +488,14 @@ class Node :
     def update(self,event=None) :
         """ Classe Node :
             Cette méthode est appelée pour demander l update d un noeud 
-             d'un jeu de commandes
-             Cette demande est transmise au noeud racine (le JDC) qui update
-             tout l arbre représentant le jeu de commandes
-             Pendant cette mise à jour, on appelle la méthode isvalid qui
-             fera l update de tous les objets déclarés modifiés lors des
-             actions précédentes
-             La métode isvalid est en général appelée par l intermédiaire de
-             update_icone -> geticonimage -> GetIconName
+            d'un jeu de commandes
+            Cette demande est transmise au noeud racine (le JDC) qui update
+            tout l arbre représentant le jeu de commandes
+            Pendant cette mise à jour, on appelle la méthode isvalid qui
+            fera l update de tous les objets déclarés modifiés lors des
+            actions précédentes
+            La métode isvalid est en général appelée par l intermédiaire de
+            update_icone -> geticonimage -> GetIconName
         """
         self.racine.update_coords()
         self.racine.trace_ligne()

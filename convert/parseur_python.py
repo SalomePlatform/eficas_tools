@@ -141,9 +141,9 @@ class PARSEUR_PYTHON:
     """
     Cette classe sert à générer un objet PARSEUR_PYTHON qui réalise l'analyse d'un texte 
     représentant un JDC Python en distinguant :
-    - les commentaires inter commandes
-    - les affectations
-    - les commandes
+      - les commentaires inter commandes
+      - les affectations
+      - les commandes
     """
     pattern_commande   = re.compile(r'^([A-Z][A-Z0-9_]+)([ \t\r\f\v]*)\(([\w\W]*)')
     pattern_eval       = re.compile(r'^(EVAL)([ \t\r\f\v]*)\(([\w\W]*)')

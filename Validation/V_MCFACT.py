@@ -35,8 +35,7 @@ import V_MCCOMPO
 class MCFACT(V_MCCOMPO.MCCOMPO):
    """
       Cette classe a un attribut de classe :
-
-      - txt_nat qui sert pour les comptes-rendus liés à cette classe
+         - txt_nat qui sert pour les comptes-rendus liés à cette classe
    """
 
    txt_nat="Mot cle Facteur :"

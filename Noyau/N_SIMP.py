@@ -33,11 +33,11 @@ class SIMP(N_ENTITE.ENTITE):
 
     Cette classe a deux attributs de classe 
 
-    - class_instance qui indique la classe qui devra etre utilisée 
+          - class_instance qui indique la classe qui devra etre utilisée 
             pour créer l'objet qui servira à controler la conformité d'un 
             mot-clé simple avec sa définition
 
-    - label qui indique la nature de l'objet de définition (ici, SIMP)
+          - label qui indique la nature de l'objet de définition (ici, SIMP)
 
    """
    class_instance = N_MCSIMP.MCSIMP
@@ -50,31 +50,31 @@ class SIMP(N_ENTITE.ENTITE):
       """
           Un mot-clé simple est caractérisé par les attributs suivants :
 
-          - type : cet attribut est obligatoire et indique le type de valeur attendue 
+              - type : cet attribut est obligatoire et indique le type de valeur attendue 
 
-          - fr   :
+              - fr   :
 
-          - ang :
+              - ang :
 
-          - statut :
+              - statut :
 
-          - into   :
+              - into   :
 
-          - defaut :
+              - defaut :
 
-          - min
+              - min
 
-          - max
+              - max
 
-          - homo
+              - homo
 
-          - position
+              - position
 
-          - val_min
+              - val_min
 
-          - val_max
+              - val_max
 
-          - docu
+              - docu
       """
       N_ENTITE.ENTITE.__init__(self,validators)
       # Initialisation des attributs

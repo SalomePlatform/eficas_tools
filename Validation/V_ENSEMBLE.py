@@ -22,7 +22,7 @@
 class ENSEMBLE:
    """
       La règle vérifie que si un mot-clé de self.mcs est present 
-          parmi les elements de args tous les autres doivent etre presents.
+      parmi les elements de args tous les autres doivent etre presents.
 
       Ces arguments sont transmis à la règle pour validation sous la forme 
       d'une liste de noms de mots-clés ou d'un dictionnaire dont 

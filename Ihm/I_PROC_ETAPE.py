@@ -35,7 +35,7 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
    def get_sdprods(self,nom_sd):
       """ 
          Fonction : retourne le concept produit par l etape de nom nom_sd
-                    s il existe sinon None
+         s il existe sinon None
          Une PROC ne produit aucun concept
       """
       return None
@@ -43,12 +43,12 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
    def delete_concept(self,sd):
       """
           Inputs :
-             sd=concept detruit
+             - sd=concept detruit
           Fonction :
-             Mettre a jour les mots cles de l etape 
-             suite à la disparition du concept sd
-             Seuls les mots cles simples MCSIMP font un traitement autre
-             que de transmettre aux fils
+          Mettre a jour les mots cles de l etape 
+          suite à la disparition du concept sd
+          Seuls les mots cles simples MCSIMP font un traitement autre
+          que de transmettre aux fils
       """
       for child in self.mc_liste :
         child.delete_concept(sd)
@@ -56,11 +56,11 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
    def replace_concept(self,old_sd,sd):
       """
           Inputs :
-             old_sd=concept remplacé
-             sd=nouveau concept
+             - old_sd=concept remplacé
+             - sd=nouveau concept
           Fonction :
-             Mettre a jour les mots cles de l etape
-             suite au remplacement du concept old_sd
+          Mettre a jour les mots cles de l etape
+          suite au remplacement du concept old_sd
       """
       for child in self.mc_liste :
         child.replace_concept(old_sd,sd)

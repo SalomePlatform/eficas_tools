@@ -94,9 +94,9 @@ def evalnom(text,d):
   """
    Retourne un nom pour le concept resultat identifie par text
    Pour obtenir ce nom il y a plusieurs possibilites :
-    1-text est un identificateur python c est le nom du concept
-    2-text est un element d une liste on construit le nom en
-      evaluant la partie indice dans le contexte de l appelant d
+    1. text est un identificateur python c est le nom du concept
+    2. text est un element d une liste on construit le nom en
+       evaluant la partie indice dans le contexte de l appelant d
   """
   l=re.split('([\[\]]+)',text)
   #print l

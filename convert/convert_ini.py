@@ -54,10 +54,8 @@ class IniParser(ConfigParser):
 
        Ses caractéristiques principales sont exposées dans 2 attributs 
        de classe :
-
-       - extensions : qui donne une liste d'extensions de fichier préconisées
-
-       - formats : qui donne une liste de formats de sortie supportés
+         - extensions : qui donne une liste d'extensions de fichier préconisées
+         - formats : qui donne une liste de formats de sortie supportés
    """
    # Les extensions de fichier préconisées
    extensions=('.ini','.conf')

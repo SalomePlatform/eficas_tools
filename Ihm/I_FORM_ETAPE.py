@@ -188,8 +188,7 @@ class FORM_ETAPE(MACRO_ETAPE):
     def verif_formule(self,formule=None):
         """
         Vérifie la validité de la formule passée en argument.
-        Cette nouvelle formule est passée sous la forme d'un tuple :
-                (nom,type_retourne,arguments,corps)
+        Cette nouvelle formule est passée sous la forme d'un tuple : (nom,type_retourne,arguments,corps)
         Si aucune formule passée, prend les valeurs courantes de la formule
         Retourne :
             - un booléen, qui vaut 1 si formule licite, 0 sinon
@@ -260,24 +259,24 @@ class FORM_ETAPE(MACRO_ETAPE):
     def delete_concept(self,sd):
         """ 
          Inputs :
-           sd=concept detruit
+           - sd=concept detruit
          Fonction :
-           Mettre a jour les mots cles de l etape et eventuellement le concept produit si reuse
-           suite à la disparition du concept sd
-           Seuls les mots cles simples MCSIMP font un traitement autre que de transmettre aux fils,
-	   sauf les objets FORM_ETAPE qui doivent vérifier que le concept détruit n'est pas 
-	   utilisé dans le corps de la fonction
+         Mettre a jour les mots cles de l etape et eventuellement le concept produit si reuse
+         suite à la disparition du concept sd
+         Seuls les mots cles simples MCSIMP font un traitement autre que de transmettre aux fils,
+	 sauf les objets FORM_ETAPE qui doivent vérifier que le concept détruit n'est pas 
+	 utilisé dans le corps de la fonction
         """
         self.init_modif()
          
     def replace_concept(self,old_sd,sd):
         """
          Inputs :
-           old_sd=concept remplace
-           sd = nouveau concept
+           - old_sd=concept remplace
+           - sd = nouveau concept
          Fonction :
-           Les objets FORM_ETAPE devraient vérifier que le concept remplacé n'est pas
-           utilisé dans le corps de la fonction
+         Les objets FORM_ETAPE devraient vérifier que le concept remplacé n'est pas
+         utilisé dans le corps de la fonction
         """
         self.init_modif()
 

@@ -36,11 +36,11 @@ class BLOC(N_ENTITE.ENTITE):
 
     Cette classe a deux attributs de classe :
 
-    - class_instance qui indique la classe qui devra etre utilisée 
+          - class_instance qui indique la classe qui devra etre utilisée 
             pour créer l'objet qui servira à controler la conformité d'un 
             bloc de mots-clés avec sa définition
 
-    - label qui indique la nature de l'objet de définition (ici, BLOC)
+          - label qui indique la nature de l'objet de définition (ici, BLOC)
 
    """
    class_instance = N_MCBLOC.MCBLOC
@@ -52,17 +52,12 @@ class BLOC(N_ENTITE.ENTITE):
       """
           Un bloc est caractérisé par les attributs suivants :
 
-          - fr   : chaine de caractere commentaire pour aide en ligne (en francais)
-
-          - ang : chaine de caractere commentaire pour aide en ligne (en anglais)
-
-          - regles : liste d'objets de type REGLE pour vérifier la cohérence des sous-objets
-
-          - statut : obligatoire ('o') ou facultatif ('f')
-
-          - condition : chaine de caractère evaluable par l'interpreteur Python
-
-          - entites : dictionnaire contenant les sous-objets de self (mots-clés). La clé du dictionnaire 
+             - fr   : chaine de caractere commentaire pour aide en ligne (en francais)
+             - ang : chaine de caractere commentaire pour aide en ligne (en anglais)
+             - regles : liste d'objets de type REGLE pour vérifier la cohérence des sous-objets
+             - statut : obligatoire ('o') ou facultatif ('f')
+             - condition : chaine de caractère evaluable par l'interpreteur Python
+             - entites : dictionnaire contenant les sous-objets de self (mots-clés). La clé du dictionnaire 
                      est le nom du mot-clé et la valeur l'objet de définition correspondant. Cet attribut
                      est initialisé avec l'argument args de la méthode __init__
 

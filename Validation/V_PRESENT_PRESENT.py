@@ -22,7 +22,7 @@
 class PRESENT_PRESENT:
    """
       La règle vérifie que si le premier mot-clé de self.mcs est present 
-          parmi les elements de args les autres doivent l'etre aussi
+      parmi les elements de args les autres doivent l'etre aussi
 
       Ces arguments sont transmis à la règle pour validation sous la forme 
       d'une liste de noms de mots-clés ou d'un dictionnaire dont 

@@ -68,8 +68,7 @@ class CR :
    def estvide(self):
       """ 
            Retourne 1 si self ne contient aucun message grave (fatal ou exception) et
-                          aucun CR qui en contienne,
-                    0 sinon
+           aucun CR qui en contienne, 0 sinon
       """
       if self.crexception : return 0
       if self.crfatal : return 0

@@ -37,13 +37,13 @@ from Noyau.N_Exception import AsException
 class MCSIMP:
    """
       COMMENTAIRE CCAR
-        Cette classe est quasiment identique à la classe originale d'EFICAS
-        a part quelques changements cosmétiques et des chagements pour la
-        faire fonctionner de facon plus autonome par rapport à l'environnement
-        EFICAS
+      Cette classe est quasiment identique à la classe originale d'EFICAS
+      a part quelques changements cosmétiques et des chagements pour la
+      faire fonctionner de facon plus autonome par rapport à l'environnement
+      EFICAS
  
-        A mon avis, il faudrait aller plus loin et réduire les dépendances
-        amont au strict nécessaire.
+      A mon avis, il faudrait aller plus loin et réduire les dépendances
+      amont au strict nécessaire.
 
         - Est il indispensable de faire l'évaluation de la valeur dans le contexte
           du jdc dans cette classe.
@@ -63,9 +63,8 @@ class MCSIMP:
          Cette méthode retourne un indicateur de validité de l'objet
          de type MCSIMP 
          
-         - 0 si l'objet est invalide
- 
-         - 1 si l'objet est valide
+           - 0 si l'objet est invalide
+           - 1 si l'objet est valide
 
          Le pramètre cr permet de paramétrer le traitement. Si cr == 'oui'
          la méthode construit également un comte-rendu de validation
@@ -111,8 +110,8 @@ class MCSIMP:
    def verif_card(self,cr='non'):
       """ 
          un mot-clé simple ne peut etre répété :
-           la cardinalité ici s'entend par la vérification que le nombre d'arguments de self.valeur
-           est bien compris entre self.min et self.max dans le cas où il s'agit d'une liste
+         la cardinalité ici s'entend par la vérification que le nombre d'arguments de self.valeur
+         est bien compris entre self.min et self.max dans le cas où il s'agit d'une liste
       """
       card = 1
       min=self.definition.min
@@ -135,12 +134,13 @@ class MCSIMP:
 
    def verif_type(self,val=None,cr='non'):
       """
-        FONCTION :
+         FONCTION :
          Cette methode verifie que le type de l'argument val est en conformite avec celui 
          qui est declare dans la definition du mot cle simple.
          Elle a plusieurs modes de fonctionnement liés à la valeur de cr.
          Si cr vaut 'oui' : elle remplit le compte-rendu self.cr sinon elle ne le remplit pas.
-        PARAMETRE DE RETOUR :
+
+         PARAMETRE DE RETOUR :
          Cette méthode retourne une valeur booléenne qui vaut 1 si le type de val est correct ou 0 sinon
          
       """

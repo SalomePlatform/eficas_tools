@@ -142,7 +142,7 @@ class MCSIMP(I_OBJECT.OBJECT):
   def wait_assd_or_geom(self):
     """ 
          Retourne 1 si le mot-clé simple attend un objet de type
-          assd, ASSD, geom ou GEOM
+         assd, ASSD, geom ou GEOM
          Retourne 0 dans le cas contraire
     """
     for typ in self.definition.type:
@@ -244,8 +244,7 @@ class MCSIMP(I_OBJECT.OBJECT):
   def eval_valeur(self,new_valeur):
     """
         Essaie d'évaluer new_valeur comme une SD, une déclaration Python 
-        ou un EVAL:
-           Retourne la valeur évaluée (ou None) et le test de réussite (1 ou 0)
+        ou un EVAL: Retourne la valeur évaluée (ou None) et le test de réussite (1 ou 0)
     """
     #sd = self.jdc.get_sd_avant_etape(new_valeur,self.etape)
     sd = self.jdc.get_contexte_avant(self.etape).get(new_valeur,None)
@@ -275,10 +274,10 @@ class MCSIMP(I_OBJECT.OBJECT):
   def delete_concept(self,sd):
     """ 
         Inputs :
-           sd=concept detruit
+           - sd=concept detruit
         Fonction :
-           Met a jour la valeur du mot cle simple suite à la disparition 
-           du concept sd
+        Met a jour la valeur du mot cle simple suite à la disparition 
+        du concept sd
     """
     if type(self.valeur) == types.TupleType :
       if sd in self.valeur:
@@ -298,11 +297,11 @@ class MCSIMP(I_OBJECT.OBJECT):
   def replace_concept(self,old_sd,sd):
     """
         Inputs :
-           old_sd=concept remplacé
-           sd=nouveau concept
+           - old_sd=concept remplacé
+           - sd=nouveau concept
         Fonction :
-           Met a jour la valeur du mot cle simple suite au remplacement 
-           du concept old_sd
+        Met a jour la valeur du mot cle simple suite au remplacement 
+        du concept old_sd
     """
     if type(self.valeur) == types.TupleType :
       if old_sd in self.valeur:

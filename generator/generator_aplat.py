@@ -59,8 +59,7 @@ class AplatGenerator:
 
        Ses caractéristiques principales sont exposées dans des attributs 
        de classe :
-
-       - extensions : qui donne une liste d'extensions de fichier préconisées
+         - extensions : qui donne une liste d'extensions de fichier préconisées
 
    """
    # Les extensions de fichier préconisées
@@ -86,10 +85,8 @@ class AplatGenerator:
 
    def gener(self,obj,format='brut'):
       """
-          Retourne une représentation du JDC obj sous une
-          forme qui est paramétrée par format.
-          Si format vaut 'brut', 'standard' ou 'beautifie', retourne le texte issu
-                       de generator
+          Retourne une représentation du JDC obj sous une forme qui est paramétrée par format.
+          Si format vaut 'brut', 'standard' ou 'beautifie', retourne le texte issu de generator
       """
       liste= self.generator(obj)
       if format == 'brut':

@@ -60,8 +60,7 @@ class PythonGenerator:
 
        Ses caractéristiques principales sont exposées dans des attributs 
        de classe :
-
-       - extensions : qui donne une liste d'extensions de fichier préconisées
+         - extensions : qui donne une liste d'extensions de fichier préconisées
 
    """
    # Les extensions de fichier préconisées

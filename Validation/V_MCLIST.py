@@ -37,10 +37,8 @@ from Noyau.N_Exception import AsException
 class MCList:
    """
       Cette classe a deux attributs de classe :
-
-      - CR qui sert à construire l'objet compte-rendu
-
-      - txt_nat qui sert pour les comptes-rendus liés à cette classe
+        - CR qui sert à construire l'objet compte-rendu
+        - txt_nat qui sert pour les comptes-rendus liés à cette classe
    """
 
    CR=N_CR.CR

@@ -163,8 +163,8 @@ class COMMANDE_COMM:
         """
         Cette méthode a pour but de décommentariser l'objet courant,
         cad de retourner un tuple contenant :
-        - l'objet CMD associé
-        - le nom de la sdprod éventuellement produite (sinon None)
+          - l'objet CMD associé
+          - le nom de la sdprod éventuellement produite (sinon None)
         """
         # on récupère le contexte avant la commande commentarisée
         context_ini = self.jdc.get_contexte_avant(self)
@@ -218,8 +218,8 @@ class COMMANDE_COMM:
           Evalue les conditions de tous les blocs fils possibles
           (en fonction du catalogue donc de la définition) de self et
           retourne deux listes :
-          - la première contient les noms des blocs à rajouter
-          - la seconde contient les noms des blocs à supprimer
+            - la première contient les noms des blocs à rajouter
+            - la seconde contient les noms des blocs à supprimer
       """
       return [],[]
 

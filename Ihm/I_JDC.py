@@ -193,7 +193,7 @@ class JDC(I_OBJECT.OBJECT):
    def get_sd_apres_etape_avec_detruire(self,nom_sd,sd,etape,avec='non'):
       """ 
            Cette méthode retourne la SD sd de nom nom_sd qui est éventuellement
-            définie apres etape en tenant compte des concepts detruits
+           définie apres etape en tenant compte des concepts detruits
            Si avec vaut 'non' exclut etape de la recherche
       """
       ietap=self.etapes.index(etape)
@@ -220,7 +220,7 @@ class JDC(I_OBJECT.OBJECT):
    def get_sd_apres_etape(self,nom_sd,etape,avec='non'):
       """ 
            Cette méthode retourne la SD de nom nom_sd qui est éventuellement
-            définie apres etape 
+           définie apres etape 
            Si avec vaut 'non' exclut etape de la recherche
       """
       ietap=self.etapes.index(etape)
@@ -236,7 +236,7 @@ class JDC(I_OBJECT.OBJECT):
    def get_sd_autour_etape(self,nom_sd,etape,avec='non'):
       """
            Fonction: retourne la SD de nom nom_sd qui est éventuellement
-            définie avant ou apres etape
+           définie avant ou apres etape
            Permet de vérifier si un concept de meme nom existe dans le périmètre 
            d'une étape
            Si avec vaut 'non' exclut etape de la recherche
@@ -356,16 +356,17 @@ class JDC(I_OBJECT.OBJECT):
            Cette méthode ajoute  etape dans la liste
            des etapes self.etapes et retourne l identificateur d'étape
            fourni par l appel a g_register
+
            A quoi sert editmode ?
-           - Si editmode vaut 1, on est en mode edition de JDC. On cherche 
-           à enregistrer une étape que l'on a créée avec eficas (en passant 
-           par addentite) auquel cas on ne veut récupérer que son numéro 
-           d'enregistrement et c'est addentité qui l'enregistre dans 
-           self.etapes à la bonne place...
-           - Si editmode vaut 0, on est en mode relecture d'un fichier de 
-           commandes et on doit enregistrer l'étape à la fin de self.etapes 
-           (dans ce cas l'ordre des étapes est bien l'ordre chronologique 
-           de leur création   )
+              - Si editmode vaut 1, on est en mode edition de JDC. On cherche 
+                à enregistrer une étape que l'on a créée avec eficas (en passant 
+                par addentite) auquel cas on ne veut récupérer que son numéro 
+                d'enregistrement et c'est addentité qui l'enregistre dans 
+                self.etapes à la bonne place...
+              - Si editmode vaut 0, on est en mode relecture d'un fichier de 
+                commandes et on doit enregistrer l'étape à la fin de self.etapes 
+                (dans ce cas l'ordre des étapes est bien l'ordre chronologique 
+                de leur création   )
       """
       if not self.editmode:
          self.etapes.append(etape)
@@ -619,12 +620,12 @@ class JDC(I_OBJECT.OBJECT):
    def delete_concept(self,sd):
       """
           Inputs :
-             sd=concept detruit
+             - sd=concept detruit
           Fonction :
-             Mettre a jour les etapes du JDC suite à la disparition du
-             concept sd
-             Seuls les mots cles simples MCSIMP font un traitement autre
-             que de transmettre aux fils
+          Mettre a jour les etapes du JDC suite à la disparition du
+          concept sd
+          Seuls les mots cles simples MCSIMP font un traitement autre
+          que de transmettre aux fils
       """
       for etape in self.etapes :
         etape.delete_concept(sd)

@@ -38,11 +38,11 @@
 
     La méthode readfile a pour fonction de lire un fichier dont le
     nom est passé en argument de la fonction.
-       convertisseur.readfile(nom_fichier)
+       - convertisseur.readfile(nom_fichier)
 
     La méthode convert a pour fonction de convertir le fichier
     préalablement lu dans un objet du format passé en argument.
-       objet=convertisseur.convert(outformat)
+       - objet=convertisseur.convert(outformat)
 
     Ce convertisseur supporte le format de sortie exec
 
@@ -74,10 +74,8 @@ class PythonParser:
 
        Ses caractéristiques principales sont exposées dans 2 attributs 
        de classe :
-
-       - extensions : qui donne une liste d'extensions de fichier préconisées
-
-       - formats : qui donne une liste de formats de sortie supportés
+          - extensions : qui donne une liste d'extensions de fichier préconisées
+          - formats : qui donne une liste de formats de sortie supportés
    """
    # Les extensions de fichier préconisées
    extensions=('.py',)

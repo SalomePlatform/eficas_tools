@@ -147,11 +147,11 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
       """ 
            Cette méthode met à jour le concept produit en fonction des conditions initiales :
 
-            1- Il n'y a pas de concept retourné (self.definition.sd_prod == None)
+            - Il n'y a pas de concept retourné (self.definition.sd_prod == None)
 
-            2- Le concept retourné n existait pas (self.sd == None)
+            - Le concept retourné n existait pas (self.sd == None)
 
-            3- Le concept retourné existait. On change alors son type ou on le supprime
+            - Le concept retourné existait. On change alors son type ou on le supprime
 
            En cas d'erreur (exception) on retourne un indicateur de validité de 0 sinon de 1
       """

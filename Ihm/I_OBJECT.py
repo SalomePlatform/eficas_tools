@@ -30,8 +30,7 @@ class OBJECT:
 
   def isMCList(self):
     """ 
-        Retourne 1 si self est une MCList (liste de mots-clés), 
-                 0 sinon (défaut) 
+        Retourne 1 si self est une MCList (liste de mots-clés), 0 sinon (défaut) 
     """
     return 0
 
@@ -101,8 +100,8 @@ class OBJECT:
         Evalue les conditions de tous les blocs fils possibles 
         (en fonction du catalogue donc de la définition) de self et
         retourne deux listes :
-        - la première contient les noms des blocs à rajouter
-        - la seconde contient les noms des blocs à supprimer
+          - la première contient les noms des blocs à rajouter
+          - la seconde contient les noms des blocs à supprimer
     """
     return [],[]
 

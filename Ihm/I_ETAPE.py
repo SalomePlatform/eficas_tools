@@ -85,11 +85,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
           Cette méthode a pour fonction de donner un nom (nom) au concept 
           produit par l'étape (self).
-          - si le concept n'existe pas, on essaye de le créer (à condition que l'étape soit valide ET non réentrante)
-          - si il existe déjà, on le renomme et on répercute les changements dans les autres étapes    
+            - si le concept n'existe pas, on essaye de le créer (à condition que l'étape soit valide ET non réentrante)
+            - si il existe déjà, on le renomme et on répercute les changements dans les autres étapes    
           Les valeurs de retour sont :
-           0 si le nommage n'a pas pu etre mené à son terme,
-           1 dans le cas contraire
+            - 0 si le nommage n'a pas pu etre mené à son terme,
+            - 1 dans le cas contraire
       """
       if len(nom) > 8 and self.jdc.definition.code == 'ASTER':
         return 0,"Nom de concept trop long (maxi 8 caractères)"
@@ -179,7 +179,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def get_sdprods(self,nom_sd):
       """ 
          Fonction : retourne le concept produit par l etape de nom nom_sd
-                    s il existe sinon None
+         s il existe sinon None
       """
       if self.sd:
         if self.sd.nom == nom_sd:return self.sd
@@ -236,7 +236,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def supprime_sdprods(self):
       """ 
-          Fonction:
+            Fonction:
             Lors d'une destruction d'etape, detruit tous les concepts produits
             Un opérateur n a qu un concept produit 
             Une procedure n'en a aucun
@@ -253,13 +253,13 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def delete_concept(self,sd):
       """ 
           Inputs :
-             sd=concept detruit
+             - sd=concept detruit
           Fonction :
-             Mettre a jour les mots cles de l etape et eventuellement 
-             le concept produit si reuse
-             suite à la disparition du concept sd
-             Seuls les mots cles simples MCSIMP font un traitement autre 
-             que de transmettre aux fils
+          Mettre a jour les mots cles de l etape et eventuellement 
+          le concept produit si reuse
+          suite à la disparition du concept sd
+          Seuls les mots cles simples MCSIMP font un traitement autre 
+          que de transmettre aux fils
       """
       if self.reuse and self.reuse == sd:
         self.sd=self.reuse=None
@@ -270,12 +270,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def replace_concept(self,old_sd,sd):
       """
           Inputs :
-             old_sd=concept remplace
-             sd = nouveau concept 
+             - old_sd=concept remplace
+             - sd = nouveau concept 
           Fonction :
-             Mettre a jour les mots cles de l etape et eventuellement
-             le concept produit si reuse
-             suite au remplacement  du concept old_sd
+          Mettre a jour les mots cles de l etape et eventuellement
+          le concept produit si reuse
+          suite au remplacement  du concept old_sd
       """
       if self.reuse and self.reuse == old_sd:
         self.sd=self.reuse=sd
@@ -385,11 +385,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
          Construit le concept produit de l'opérateur. Deux cas 
          peuvent se présenter :
         
-         - le parent n'est pas défini. Dans ce cas, l'étape prend en charge la création 
-           et le nommage du concept.
+           - le parent n'est pas défini. Dans ce cas, l'étape prend en charge la création 
+             et le nommage du concept.
 
-         - le parent est défini. Dans ce cas, l'étape demande au parent la création et 
-           le nommage du concept.
+           - le parent est défini. Dans ce cas, l'étape demande au parent la création et 
+             le nommage du concept.
 
       """
       if not self.isactif():return

@@ -61,12 +61,11 @@ class MCList:
   def delete_concept(self,sd):
     """ 
         Inputs :
-           sd=concept detruit
-        Fonction :
-           Mettre a jour les fils de l objet suite à la disparition 
-           du concept sd
-           Seuls les mots cles simples MCSIMP font un traitement autre 
-           que de transmettre aux fils
+           - sd=concept detruit
+        Fonction : Mettre a jour les fils de l objet suite à la disparition 
+        du concept sd
+        Seuls les mots cles simples MCSIMP font un traitement autre 
+        que de transmettre aux fils
     """
     for child in self.data :
       child.delete_concept(sd)
@@ -74,11 +73,10 @@ class MCList:
   def replace_concept(self,old_sd,sd):
     """
         Inputs :
-           old_sd=concept remplacé
-           sd=nouveau concept
-        Fonction :
-           Mettre a jour les fils de l objet suite au remplacement 
-           du concept old_sd
+           - old_sd=concept remplacé
+           - sd=nouveau concept
+        Fonction : Mettre a jour les fils de l objet suite au remplacement 
+        du concept old_sd
     """
     for child in self.data :
       child.replace_concept(old_sd,sd)
@@ -128,8 +126,8 @@ class MCList:
         Evalue les conditions de tous les blocs fils possibles 
         (en fonction du catalogue donc de la définition) de self et 
         retourne deux listes :
-        - la première contient les noms des blocs à rajouter
-        - la seconde contient les noms des blocs à supprimer
+           - la première contient les noms des blocs à rajouter
+           - la seconde contient les noms des blocs à supprimer
     """
     # Sans objet pour une liste de mots clés facteurs
     return [],[]

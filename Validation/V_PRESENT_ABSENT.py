@@ -22,8 +22,8 @@
 class PRESENT_ABSENT: 
    """
       La règle vérifie que si le premier mot-clé de self.mcs est present 
-          parmi les elements de args les autres mots clés de self.mcs
-           doivent etre absents
+      parmi les elements de args les autres mots clés de self.mcs
+      doivent etre absents
 
       Ces arguments sont transmis à la règle pour validation sous la forme 
       d'une liste de noms de mots-clés ou d'un dictionnaire dont 

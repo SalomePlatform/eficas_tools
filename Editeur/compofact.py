@@ -110,8 +110,8 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
       """ 
          Cette methode a pour fonction de supprimer l'item passé en argument
          des fils de l'item FACT qui est son pere
-          item = item du MOCLE à supprimer du MOCLE père
-          item.object = MCSIMP ou MCBLOC 
+           - item = item du MOCLE à supprimer du MOCLE père
+           - item.object = MCSIMP ou MCBLOC 
       """
       if item.object.isoblig() :
           self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ')

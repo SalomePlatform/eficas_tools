@@ -34,13 +34,11 @@ class FACT(N_ENTITE.ENTITE):
 
     Cette classe a trois attributs de classe 
 
-    - class_instance qui indique la classe qui devra etre utilisée 
-            pour créer l'objet qui servira à controler la conformité d'un 
-            mot-clé facteur avec sa définition
-
-    - list_instance
-
-    - label qui indique la nature de l'objet de définition (ici, FACT)
+          - class_instance qui indique la classe qui devra etre utilisée 
+                  pour créer l'objet qui servira à controler la conformité d'un 
+                  mot-clé facteur avec sa définition
+          - list_instance
+          - label qui indique la nature de l'objet de définition (ici, FACT)
    """
    class_instance = N_MCFACT.MCFACT
    list_instance = N_MCLIST.MCList
@@ -52,23 +50,15 @@ class FACT(N_ENTITE.ENTITE):
       """
           Un mot-clé facteur est caractérisé par les attributs suivants :
 
-          - fr   :
-
-          - ang :
-
-          - statut :
-
-          - defaut :
-
-          - regles
-
-          - min
-
-          - max
-
-          - position
-
-          - docu
+             - fr   :
+             - ang :
+             - statut :
+             - defaut :
+             - regles
+             - min
+             - max
+             - position
+             - docu
       """
       N_ENTITE.ENTITE.__init__(self,validators)
       # Initialisation des attributs
@@ -97,14 +87,14 @@ class FACT(N_ENTITE.ENTITE):
           MCFACT soit une liste de type MCLIST.
 
           La creation d un mot cle facteur depend de son statut
-          Si statut ='o'   il est obligatoire
-          Si statut == 'd' il est facultatif mais ses sous mots cles avec 
+             - Si statut ='o'   il est obligatoire
+             - Si statut == 'd' il est facultatif mais ses sous mots cles avec 
                            defaut sont visibles
-          Si statut == 'f' il est facultatif et ses sous mots avec defaut ne 
+             - Si statut == 'f' il est facultatif et ses sous mots avec defaut ne 
                            sont pas visibles
-          Si statut == 'c' il est cache ???
-          Si defaut != None, on utilise cette valeur pour calculer la valeur 
-                             par defaut du mot cle facteur
+             - Si statut == 'c' il est cache ???
+             - Si defaut != None, on utilise cette valeur pour calculer la valeur 
+                           par defaut du mot cle facteur
       """
       if val == None:
         if self.defaut == None:

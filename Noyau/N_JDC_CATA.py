@@ -34,11 +34,11 @@ class JDC_CATA(N_ENTITE.ENTITE):
 
     Attributs de classe :
 
-    - class_instance qui indique la classe qui devra etre utilisée 
+          - class_instance qui indique la classe qui devra etre utilisée 
             pour créer l'objet qui servira à controler la conformité 
             du jeu de commandes avec sa définition
 
-    - label qui indique la nature de l'objet de définition (ici, JDC)
+          - label qui indique la nature de l'objet de définition (ici, JDC)
 
    """
    class_instance = N_JDC.JDC

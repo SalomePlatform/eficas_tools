@@ -53,7 +53,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
   def get_sdprods(self,nom_sd):
     """ 
          Fonction : retourne le concept produit par l etape de nom nom_sd
-                    s il existe sinon None
+         s il existe sinon None
     """
     if self.sd and self.sd.nom == nom_sd :return self.sd
     for co in self.sdprods:
@@ -244,10 +244,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
   def supprime_sdprods(self):
       """
           Fonction:
-            Lors d'une destruction d'etape, detruit tous les concepts produits
-            Un opérateur n a qu un concept produit
-            Une procedure n'en a aucun
-            Une macro en a en général plus d'un
+          Lors d'une destruction d'etape, detruit tous les concepts produits
+          Un opérateur n a qu un concept produit
+          Une procedure n'en a aucun
+          Une macro en a en général plus d'un
       """
       if not self.is_reentrant() :
          # l'étape n'est pas réentrante
@@ -274,11 +274,11 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
         Construit le concept produit de l'opérateur. Deux cas 
         peuvent se présenter :
 
-        - le parent n'est pas défini. Dans ce cas, l'étape prend en charge 
-          la création et le nommage du concept.
+           - le parent n'est pas défini. Dans ce cas, l'étape prend en charge 
+             la création et le nommage du concept.
 
-        - le parent est défini. Dans ce cas, l'étape demande au parent la 
-          création et le nommage du concept.
+           - le parent est défini. Dans ce cas, l'étape demande au parent la 
+             création et le nommage du concept.
 
      """
      if not self.isactif():return

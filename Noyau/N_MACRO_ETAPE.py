@@ -45,7 +45,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
 
           - definition : objet portant les attributs de définition d'une étape 
                          de type macro-commande. Il est initialisé par 
-                          l'argument oper.
+                         l'argument oper.
 
           - reuse : indique le concept d'entrée réutilisé. Il se trouvera donc
                     en sortie si les conditions d'exécution de l'opérateur 
@@ -99,11 +99,11 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
          Construit le concept produit de l'opérateur. Deux cas 
          peuvent se présenter :
         
-         - le parent n'est pas défini. Dans ce cas, l'étape prend en charge 
-           la création et le nommage du concept.
+              - le parent n'est pas défini. Dans ce cas, l'étape prend en charge 
+                la création et le nommage du concept.
 
-         - le parent est défini. Dans ce cas, l'étape demande au parent la 
-           création et le nommage du concept.
+              - le parent est défini. Dans ce cas, l'étape demande au parent la 
+                création et le nommage du concept.
 
       """
       if not self.isactif():return
@@ -146,15 +146,15 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
       """
         Retourne le concept résultat d'une macro étape
         La difference avec une etape ou une proc-etape tient a ce que
-         le concept produit peut exister ou pas
+        le concept produit peut exister ou pas
         Si sd_prod == None le concept produit n existe pas on retourne None
         Deux cas :
-         cas 1 : sd_prod  n'est pas une fonction
+               - sd_prod  n'est pas une fonction
                  il s'agit d'une sous classe de ASSD
                  on construit le sd à partir de cette classe
                  et on le retourne
-         cas 2 : sd_prod est une fonction
-                  on l'évalue avec les mots-clés de l'étape (mc_liste)
+               - sd_prod est une fonction
+                 on l'évalue avec les mots-clés de l'étape (mc_liste)
                  on construit le sd à partir de la classe obtenue
                  et on le retourne
       """
@@ -193,12 +193,12 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
    def get_type_produit(self,force=0):
       """
            Retourne le type du concept résultat de l'étape et eventuellement type
-            les concepts produits "à droite" du signe égal (en entrée)
+           les concepts produits "à droite" du signe égal (en entrée)
            Deux cas :
-            cas 1 : sd_prod de oper n'est pas une fonction
+                  - sd_prod de oper n'est pas une fonction
                     il s'agit d'une sous classe de ASSD
                     on retourne le nom de la classe
-            cas 2 : il s'agit d'une fonction
+                  - il s'agit d'une fonction
                     on l'évalue avec les mots-clés de l'étape (mc_liste)
                     et on retourne son résultat
       """
@@ -266,11 +266,12 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
    def type_sdprod(self,co,t):
       """
            Cette methode a pour fonction de typer le concept co avec le type t
-            dans les conditions suivantes
-            1- co est un concept produit de self
-            2- co est un concept libre : on le type et on l attribue à self
+           dans les conditions suivantes
+            1. co est un concept produit de self
+            2. co est un concept libre : on le type et on l attribue à self
+
            Elle enregistre egalement les concepts produits (on fait l hypothese
-            que la liste sdprods a été correctement initialisee, vide probablement)
+           que la liste sdprods a été correctement initialisee, vide probablement)
       """
       if not hasattr(co,'etape'):
          # Le concept vaut None probablement. On ignore l'appel
@@ -334,7 +335,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
 
    def create_sdprod(self,etape,nomsd):
       """ 
-          Intention : Cette methode doit fabriquer le concept produit retourne
+                  Intention : Cette methode doit fabriquer le concept produit retourne
                   par l'etape etape et le nommer.
                   Elle est appelée à l'initiative de l'etape
                   pendant le processus de construction de cette etape : methode __call__
@@ -342,9 +343,9 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
                   Ce travail est réalisé par le contexte supérieur (etape.parent)
                   car dans certains cas, le concept ne doit pas etre fabriqué mais
                   l'etape doit simplement utiliser un concept préexistant.
-                  Cas 1 : etape.reuse != None : le concept est réutilisé
-                  Cas 2 : l'étape appartient à une macro qui a déclaré un concept
-                          de sortie qui doit etre produit par cette etape.
+                      - Cas 1 : etape.reuse != None : le concept est réutilisé
+                      - Cas 2 : l'étape appartient à une macro qui a déclaré un concept
+                        de sortie qui doit etre produit par cette etape.
       """
       if self.Outputs.has_key(nomsd):
          # Il s'agit d'un concept de sortie de la macro. Il ne faut pas le créer

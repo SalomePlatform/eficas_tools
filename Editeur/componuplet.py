@@ -30,7 +30,7 @@ import panels
 
 #
 __version__="$Name:  $"
-__Id__="$Id: componuplet.py,v 1.1.1.1 2002/03/26 09:08:46 eficas Exp $"
+__Id__="$Id: componuplet.py,v 1.2 2002/05/15 15:31:58 eficas Exp $"
 #
 
 myrepr = Repr()
@@ -89,7 +89,7 @@ class NUPLETPanel(panels.OngletPanel):
   def record_valeur(self,val=None,obj=None,mess='Valeur du mot-cl\351 enregistr\351e'):
     """ 
       Enregistre  val comme valeur de self.node.item.object SANS faire de 
-       test de validit\351 
+      test de validité
     """
     obj.set_valeur(val,evaluation='non')
     self.parent.appli.affiche_infos(mess)
@@ -99,7 +99,7 @@ class NUPLETPanel(panels.OngletPanel):
   def valid_valeur(self,e,obj=None,mess='Valeur du mot-cl\351 enregistr\351e'):
     """ 
       Enregistre  val comme valeur de self.node.item.object avec
-       test de validit\351 
+      test de validité
     """
     valeur=e.widget.get()
     e.widget.delete(0,Tkinter.END)

@@ -327,9 +327,9 @@ class BUREAU:
       """ 
           Sauvegarde le JDC courant.
           Retourne 1 si la sauvegarde s'est bien faite, 0 sinon.
-          Si echo = 'oui' : interactif (l'utilisateur donne le nom sous lequel il 
+            - Si echo = 'oui' : interactif (l'utilisateur donne le nom sous lequel il 
                             veut sauver le JDC
-          Si echo = 'non' : muet (sauvegarde le JDC dans JDC.procedure)
+            - Si echo = 'non' : muet (sauvegarde le JDC dans JDC.procedure)
       """
       if not hasattr(self,'JDC') : return 0
       format=self.appli.format_fichier.get()
@@ -466,7 +466,7 @@ class BUREAU:
    def visuJDC_py(self):
       """ 
           Méthode permettant d'afficher dans une fenêtre à part l'écho au 
-            format python du jdc courant 
+          format python du jdc courant 
       """
       if not hasattr(self,'JDC') : return
       jdc_fini = self.get_text_JDC('python')
@@ -478,7 +478,7 @@ class BUREAU:
    def visuJDC(self):
       """ 
           Méthode permettant d'afficher dans une fenêtre à part l'écho au 
-            format .comm ou .py du jdc courant 
+          format .comm ou .py du jdc courant 
       """
       if not hasattr(self,'JDC') : return
       titre = 'fichier '+ self.JDCName + ' à la syntaxe '+ self.code

@@ -30,7 +30,7 @@ class OBJECT:
       Elle ne peut etre instanciée.
       Une sous classe doit obligatoirement implémenter les méthodes :
 
-      - __init__
+          - __init__
 
    """
 

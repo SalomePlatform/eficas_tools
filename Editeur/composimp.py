@@ -274,8 +274,8 @@ class PLUSIEURS_Panel(newSIMPPanel):
       """
       Lit ce que l'utilisateur a saisi dans self.entry et cherche à
       l'évaluer :
-      - si la valeur est acceptable, elle est ajoutée dans la liste des valeurs
-      - sinon elle est refusée
+        - si la valeur est acceptable, elle est ajoutée dans la liste des valeurs
+        - sinon elle est refusée
       """
       min,max = self.node.item.GetMinMax()
       if name != None :
