@@ -1,4 +1,23 @@
-#@ MODIF tables Parsers DATE 15/02/2001    AUTEUR YESSAYAN A.YESSAYAN
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+#
+#
+# ======================================================================
+
 """
     Ce fichier définit une table de tags à utiliser avec le package
     mxTextTools pour décoder un fichier au format Asterv5.
@@ -10,7 +29,7 @@ from TextTools import *
 
 #
 __version__="$Name:  $"
-__Id__="$Id: tables.tag,v 1.11.18.1 2001/06/15 17:20:24 iliade Exp $"
+__Id__="$Id: tables.tag,v 1.1.1.1 2002/03/26 09:08:45 eficas Exp $"
 #
 
 err0='ERR0 , erreur non identifiee : '
@@ -24,9 +43,10 @@ err7='ERR7 , mot cle facteur errone : '
 err8='ERR8 , signe = ou ( attendu : '
 err9='ERR9 , ( attendue : '
 err10='ERR10 , vexpr attendue : '
+err11='ERR11 , ) attendue : '
 
 ERRORS=(err0,err1,err2,err3,err4,err5,err6,err7,err8,err9,
-        err10)
+        err10,err11)
 
 white_set=set(whitespace)
 
@@ -170,6 +190,16 @@ t_complexe = \
     (err7,Table,t_err,MatchFail,MatchOk),
   ))
 
+# Table pour identifier le keyword PI
+
+t_PI = \
+    ('PI',Table,(
+      (None,Word,'PI',MatchFail),
+      (None,IsIn,alpha+'_'+number,MatchOk,+1),
+      (None,Skip,-1),
+      (None,Jump,To,MatchFail),
+    ))
+
 t_vexpr = (
     ('par',Is,'(',+5,+1),
       commespaces     + (+1,),
@@ -181,7 +211,7 @@ t_vexpr = (
     ('sign',IsIn,'+-',+3,+1),
       commespaces     + (+1,),
       ('vexpr',Table,ThisTable,+19,+10),
-    ("PI",Word,'PI',+1,+9),
+    t_PI            + (+1,+9),
     t_ident         + (MatchFail,),
     commespaces     + (+1,),
     ('listpar',Is,'(',+6,+1), # on peut avoir une liste de parametres
@@ -307,9 +337,9 @@ t_formule = \
     commespaces     + (+1,),
     ('vexpr',Table,t_vexpr,+9),
     commespaces     + (+1,),
-    (None,Is,')',+8),
+    (None,Is,')',+9),
     commespaces     + (+1,),
-    (None,Is,')',+6),
+    (None,Is,')',+7),
     commespaces     + (+1,),
     (None,Is,';',+3),
     (None,AllNotIn,'\n',+1),
@@ -318,6 +348,8 @@ t_formule = \
     (err0,Table,t_err,MatchFail,MatchOk),
     # <err9>
     (err9,Table,t_err,MatchFail,MatchOk),
+    # <err11>
+    (err11,Table,t_err,MatchFail,MatchOk),
   ))
 
 t_nom_ope = \

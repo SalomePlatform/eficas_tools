@@ -14,6 +14,7 @@ INSTALLDIR=os.path.join(REPINI,'..')
 # Peut valoir None (defaut)
 CODE_PATH = None
 #CODE_PATH = os.path.join(REPINI,'../../Superv')
+CODE_PATH = "/home01/chris/projet_Eficas/Devel/SUPER6_3/Aster6_3/bibpyt"
 
 # ICONDIR sert à localiser le répertoire contenant les icones
 # Par défaut on utilise le répertoire icons dans Editeur

@@ -1,9 +1,21 @@
-#@ MODIF analyse_catalogue Accas  DATE 02/07/2001   AUTEUR D6BHHJP J.P.LEFEBVRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
-#              SEE THE FILE "LICENSE.TERMS" FOR INFORMATION ON USAGE AND
-#              REDISTRIBUTION OF THIS FILE.
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+#
+#
 # ======================================================================
 from string import split,strip,lowercase,uppercase
 import re,string,cPickle,os
@@ -11,8 +23,8 @@ import re,string,cPickle,os
 from Noyau.N_CR import CR
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.13.18.3 2001/06/19 12:24:48 iliade Exp $"
-__version__="$Name: FR_28_06_10_00 $"
+__Id__="$Id: analyse_catalogue.py,v 1.1.1.1 2002/03/26 09:08:45 eficas Exp $"
+__version__="$Name:  $"
 #
 l_noms_commandes = ['OPER','PROC','MACRO','FORM']
 l_noms_composes=['FACT','BLOC','NUPL','FORM']
