@@ -104,8 +104,8 @@ class Panel(Frame) :
           self.bouton_cata.place(relx=0.5,rely = 0.5,relheight = 0.8,anchor='center')
           self.bouton_doc.place(relx=0.75,rely = 0.5,relheight = 0.8,anchor='center')
       else:
-          self.bouton_sup.place(relx=0.3,rely = 0.5,relheight = 0.8,anchor='center')
-          self.bouton_doc.place(relx=0.7,rely = 0.5,relheight = 0.8,anchor='center')
+          self.bouton_sup.place(relx=0.25,rely = 0.5,relheight = 0.8,anchor='center')
+          self.bouton_doc.place(relx=0.5,rely = 0.5,relheight = 0.8,anchor='center')
 
   def show_catalogue(self):
       try:
@@ -513,6 +513,7 @@ class OngletPanel(Panel) :
     except Exception,e:
         widgets.showerror("TOO BAD",str(e))
     return
+
       
 class Panel_Inactif(Panel):
   """
