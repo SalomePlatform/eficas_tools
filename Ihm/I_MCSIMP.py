@@ -87,7 +87,14 @@ class MCSIMP(I_OBJECT.OBJECT):
         if type(val) == types.FloatType : 
            # CCAR : Normalement str fait un travail correct
            #txt=txt + i*',' + repr_float(val)
-           txt=txt + i*',' + str(val)
+           clefobj=self.GetNomConcept()
+           if self.jdc.appli.dict_reels.has_key(clefobj):
+              if self.jdc.appli.dict_reels[clefobj].has_key(val):
+                 txt=txt + i*',' +self.jdc.appli.dict_reels[clefobj][val]
+              else :
+                 txt=txt + i*',' + str(val)
+           else :
+              txt=txt + i*',' + str(val)
         elif isinstance(val,ASSD): 
            txt = txt + i*',' + val.get_name()
     #PN

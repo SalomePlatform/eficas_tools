@@ -346,7 +346,7 @@ class PARSEUR_PYTHON:
               valeur=""
               nouvelindice=indiceC+1
               if texte[nouvelindice] != "(":
-                 while ( texte[nouvelindice] != ","):
+                 while ( texte[nouvelindice] != "," and texte[nouvelindice] != ")"):
                     valeur=valeur+texte[nouvelindice]
                     nouvelindice=nouvelindice+1
                     if nouvelindice == len(texte) :

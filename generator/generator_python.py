@@ -471,7 +471,15 @@ class PythonGenerator:
             elif type(val) == types.FloatType :
                # Pour un flottant on utilise str qui a une precision de
                # "seulement" 12 chiffres : evite les flottants du genre 0.599999999999998
-               s = s + str(val)
+               s2=str(val)
+               try :
+                 clefobj=obj.GetNomConcept()
+                 if self.appli.dict_reels.has_key(clefobj):
+                    if self.appli.dict_reels[clefobj].has_key(val):
+                       s2=self.appli.dict_reels[clefobj][val]
+               except:
+                  pass
+               s = s + s2
             else :
                # Pour les autres types on utilise repr
                s = s + `val`
@@ -494,13 +502,14 @@ class PythonGenerator:
          elif type(val) == types.FloatType :
             # Pour un flottant on utilise str 
             # ou la notation scientifique
+            s = str(val)
             try :
               clefobj=obj.GetNomConcept()
-              if self.parent.appli.dict_reels.has_key(clefobj):
-                 if self.parent.appli.dict_reels[clefobj].has_key(val):
-                    s=self.parent.appli.dict_reels[clefobj][val]
+              if self.appli.dict_reels.has_key(clefobj):
+                 if self.appli.dict_reels[clefobj].has_key(val):
+                    s=self.appli.dict_reels[clefobj][val]
             except:
-               s = str(val)
+              pass
          else :
             # Pour les autres types on utilise repr
             s = `val`
