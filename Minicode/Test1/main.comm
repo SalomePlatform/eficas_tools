@@ -1,0 +1,11 @@
+# Changer l'include 14
+# 1 en reprenant le meme fichier
+# 2 en prenant le fichier incl.17 qui contient une commande DETRUIRE
+
+DEBUT()
+INCLUDE(UNITE=14)
+DETRUIRE()
+INCLUDE(UNITE=23)
+DETRUIRE()
+FIN()
+
