@@ -209,7 +209,9 @@ class MCSIMP:
             return 1
       else :
         # on est dans le cas d'un ensemble discret de valeurs possibles (into)
-        if type(self.valeur) == types.TupleType :
+        # PN : pour résoudre le pb du copier /coller de la liste Ordonnee
+        # if type(self.valeur) == types.TupleType :
+        if type(self.valeur) in (types.ListType,types.TupleType) :
           for e in self.valeur:
             if e not in self.definition.into:
               if cr=='oui':
