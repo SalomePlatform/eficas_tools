@@ -1,3 +1,23 @@
+#@ MODIF N_ETAPE Noyau  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 """ 
     Ce module contient la classe ETAPE qui sert à vérifier et à exécuter
     une commande
@@ -94,6 +114,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
       """
       if not self.isactif():return
+      self.sdnom=nom
       try:
          if self.parent:
             sd= self.parent.create_sdprod(self,nom)
@@ -162,13 +183,15 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         sd_prod=self.definition.sd_prod
       # on teste maintenant si la SD est réutilisée ou s'il faut la créer
       if self.reuse:
-        if AsType(self.reuse) != sd_prod:
-          raise AsException("type de concept reutilise incompatible avec type produit")
+        # Il est preferable de traiter cette erreur ultérieurement : ce n'est pas une erreur fatale
+        #if AsType(self.reuse) != sd_prod:
+        #  raise AsException("type de concept reutilise incompatible avec type produit")
         self.sd=self.reuse
       else:
         self.sd= sd_prod(etape=self)
-        if self.definition.reentrant == 'o':
-          self.reuse = self.sd
+        # Si reuse n'a pas ete donné, c'est une erreur. Ne pas corriger afin de la detecter ensuite
+        #if self.definition.reentrant == 'o':
+        #  self.reuse = self.sd
       return self.sd
 
    def get_type_produit(self):
@@ -205,7 +228,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
    def supprime(self):
       """
          Méthode qui supprime toutes les références arrières afin que l'objet puisse
-         être correctement détruit par le garbage collector
+         etre correctement détruit par le garbage collector
       """
       N_MCCOMPO.MCCOMPO.supprime(self)
       self.jdc=None

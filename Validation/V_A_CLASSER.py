@@ -1,3 +1,23 @@
+#@ MODIF V_A_CLASSER Validation  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 
 import types
 
@@ -16,13 +36,13 @@ class A_CLASSER:
       elif type(args[0]) == types.StringType:
         self.args0 = (args[0],)
       else :
-        print "Le premier argument de :",args," doit être un tuple ou une string"
+        print "Le premier argument de :",args," doit etre un tuple ou une string"
       if type(args[1]) == types.TupleType:
         self.args1 = args[1]
       elif type(args[1]) == types.StringType:
         self.args1 = (args[1],)
       else :
-        print "Le deuxième argument de :",args," doit être un tuple ou une string"
+        print "Le deuxième argument de :",args," doit etre un tuple ou une string"
       # création de la liste des mcs
       liste = []
       for arg0 in self.args0:
@@ -62,7 +82,7 @@ class A_CLASSER:
               couple.append(nom)
       if len(couple) > 0 :
         l_couples.append(tuple(couple))
-      # l_couples peut être vide si l'on n'a pas réussi à trouver au moins un
+      # l_couples peut etre vide si l'on n'a pas réussi à trouver au moins un
       # élément de self.mcs
       if len(l_couples) == 0 :
         message = "- Il faut qu'au moins un objet de la liste : "+`self.args0`+\
@@ -76,7 +96,7 @@ class A_CLASSER:
         if len(couple) == 1 :
           # on a un 'faux' couple
           if couple[0] not in self.args1:
-            text = text+"- L'objet : "+couple[0]+" doit être suivi d'un objet de la liste : "+\
+            text = text+"- L'objet : "+couple[0]+" doit etre suivi d'un objet de la liste : "+\
                    `self.args1`+'\n'
             test = 0
           else :
@@ -84,11 +104,11 @@ class A_CLASSER:
               # ce n'est pas le seul couple --> licite
               break
             else :
-              text = text+"- L'objet : "+couple[0]+" doit être précédé d'un objet de la liste : "+\
+              text = text+"- L'objet : "+couple[0]+" doit etre précédé d'un objet de la liste : "+\
                    `self.args0`+'\n'
               test = 0
         elif couple not in self.liste_couples :
-          text = text+"- L'objet : "+couple[0]+" ne peut être suivi de : "+couple[1]+'\n'
+          text = text+"- L'objet : "+couple[0]+" ne peut etre suivi de : "+couple[1]+'\n'
           test = 0
       return text,test
 

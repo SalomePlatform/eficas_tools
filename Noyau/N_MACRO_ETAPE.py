@@ -1,3 +1,23 @@
+#@ MODIF N_MACRO_ETAPE Noyau  DATE 26/06/2002   AUTEUR DURAND C.DURAND 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+#                                                                       
+#                                                                       
+# ======================================================================
 """ 
     Ce module contient la classe MACRO_ETAPE qui sert à vérifier et à exécuter
     une commande
@@ -87,6 +107,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
 
       """
       if not self.isactif():return
+      self.sdnom=nom
       try:
          # On positionne la macro self en tant que current_step pour que les 
          # étapes créées lors de l'appel à sd_prod et à op_init aient la macro
@@ -155,8 +176,9 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
 
       # on teste maintenant si la SD est réutilisée ou s'il faut la créer
       if self.reuse:
-        if AsType(self.reuse) != sd_prod:
-          raise AsException("type de concept reutilise incompatible avec type produit")
+        # Il est preferable de traiter cette erreur ultérieurement : ce n'est pas une erreur fatale
+        #if AsType(self.reuse) != sd_prod:
+        #  raise AsException("type de concept reutilise incompatible avec type produit")
         self.sd=self.reuse
       else:
         if sd_prod == None:
@@ -164,8 +186,9 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
         else:
           self.sd= sd_prod(etape=self)
           self.typret=sd_prod
-        if self.definition.reentrant == 'o':
-          self.reuse = self.sd
+        # Si reuse n'a pas ete donné, c'est une erreur. Ne pas corriger afin de la detecter ensuite
+        #if self.definition.reentrant == 'o':
+        #  self.reuse = self.sd
       return self.sd
 
    def get_type_produit(self,force=0):
@@ -206,7 +229,11 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
       # mémorisée dans self.index_etape_courante
       # Si on insère des commandes (par ex, dans EFICAS), il faut
       # préalablement remettre ce pointeur à 0
-      index_etape=self.etapes.index(etape)
+      if etape:
+         index_etape=self.etapes.index(etape)
+      else:
+         index_etape=len(self.etapes)
+
       if index_etape >= self.index_etape_courante:
          # On calcule le contexte en partant du contexte existant
          d=self.current_context
@@ -226,7 +253,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
    def supprime(self):
       """
          Méthode qui supprime toutes les références arrières afin que 
-         l'objet puisse être correctement détruit par le garbage collector
+         l'objet puisse etre correctement détruit par le garbage collector
       """
       N_MCCOMPO.MCCOMPO.supprime(self)
       self.jdc=None
@@ -332,31 +359,60 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
             raise AsException("Le type du concept produit %s devrait etre une sur classe de %s" %(sd.__class__,sdprod))
          # La propriete du concept est transferee a l'etape avec le type attendu par l'étape
          etape.sd=sd
-         #sd.__call__=sdprod
-         #XXX Il semble plus logique que ce soit class et non pas call ???
-         sd.__class__=sdprod
          sd.etape=etape
-      else:
+         # On donne au concept le type produit par la sous commande.
+         # Le principe est le suivant : apres avoir verifie que le type deduit par la sous commande
+         # est bien coherent avec celui initialement affecte par la macro (voir ci dessus)
+         # on affecte au concept ce type car il peut etre plus precis (derive, en general)
+         sd.__class__=sdprod
+         # On force également le nom stocké dans l'attribut sdnom : on lui donne le nom 
+         # du concept associé à nomsd
+         etape.sdnom=sd.nom
+      elif etape.reuse != None:
+         # On est dans le cas d'une commande avec reutilisation d'un concept existant
+         # get_sd_prod fait le necessaire : verifications, associations, etc. mais ne cree 
+         # pas un nouveau concept. Il retourne le concept reutilise
          sd= etape.get_sd_prod()
-         if sd != None and etape.reuse == None:
-            # ATTENTION : On ne nomme la SD que dans le cas de non reutilisation d un concept
+         # Dans le cas d'un concept nomme automatiquement : _xxx, __xxx,
+         # On force le nom stocke dans l'attribut sdnom  de l'objet etape : on lui donne le nom 
+         # du concept  reutilise (sd ou etape.reuse c'est pareil)
+         # Ceci est indispensable pour eviter des erreurs lors des verifications des macros
+         # En effet une commande avec reutilisation d'un concept verifie que le nom de 
+         # la variable a gauche du signe = est le meme que celui du concept reutilise.
+         # Lorsqu'une telle commande apparait dans une macro, on supprime cette verification.
+         if etape.sdnom[0] == '_':
+            etape.sdnom=sd.nom
+      else:
+         # On est dans le cas de la creation d'un nouveau concept
+         sd= etape.get_sd_prod()
+         if sd != None :
             self.NommerSdprod(sd,nomsd)
       return sd
 
-   def NommerSdprod(self,sd,sdnom):
+   def NommerSdprod(self,sd,sdnom,restrict='non'):
       """ 
           Cette methode est appelee par les etapes internes de la macro
           La macro appelle le JDC pour valider le nommage
           On considere que l espace de nom est unique et géré par le JDC
           Si le nom est deja utilise, l appel leve une exception
+          Si restrict=='non', on insere le concept dans le contexte de la macro
+          Si restrict=='oui', on n'insere pas le concept dans le contexte de la macro
       """
+      # Normalement, lorsqu'on appelle cette methode, on ne veut nommer que des concepts nouvellement crees.
+      # Le filtrage sur les concepts a creer ou a ne pas creer est fait dans la methode
+      # create_sdprod. La seule chose a verifier apres conversion eventuelle du nom
+      # est de verifier que le nom n'est pas deja attribue. Ceci est fait en delegant
+      # au JDC par l'intermediaire du parent.
+
       #XXX attention inconsistence : prefix et gcncon ne sont pas 
       # définis dans le package Noyau. La methode NommerSdprod pour
       # les macros devrait peut etre etre déplacée dans Build ???
+
       if CONTEXT.debug : print "MACRO.NommerSdprod: ",sd,sdnom
       if hasattr(self,'prefix'):
         # Dans le cas de l'include_materiau on ajoute un prefixe au nom du concept
         if sdnom != self.prefix:sdnom=self.prefix+sdnom
+
       if self.Outputs.has_key(sdnom):
         # Il s'agit d'un concept de sortie de la macro produit par une sous commande
         sdnom=self.Outputs[sdnom].nom
@@ -377,14 +433,21 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
           sdnom=self.gcncon('.')
         else:
           sdnom=self.gcncon('_')
-      if self.sd != None and self.sd.nom == sdnom :
-        # Il s'agit du concept produit par la macro, il a deja ete nomme.
-        # On se contente de donner le meme nom au concept produit par la sous commande
-        # sans passer par la routine de nommage
-        sd.nom=sdnom
       else:
-        # On propage le nommage au contexte superieur
-        self.parent.NommerSdprod(sd,sdnom)
+        # On est dans le cas d'un nom de concept global. 
+        pass
+
+      if restrict == 'non':
+         # On demande le nommage au parent mais sans ajout du concept dans le contexte du parent
+         # car on va l'ajouter dans le contexte de la macro
+         self.parent.NommerSdprod(sd,sdnom,restrict='oui')
+         # On ajoute dans le contexte de la macro les concepts nommes
+         # Ceci est indispensable pour les CO (macro) dans un INCLUDE
+         self.g_context[sdnom]=sd
+      else:
+         # La demande de nommage vient probablement d'une macro qui a mis
+         # le concept dans son contexte. On ne traite plus que le nommage (restrict="oui")
+         self.parent.NommerSdprod(sd,sdnom,restrict='oui')
 
    def delete_concept_after_etape(self,etape,sd):
       """
