@@ -30,7 +30,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_reduit.py,v 1.1.2.2 2003/10/16 10:09:09 eficas Exp $"
+__Id__="$Id: cata_reduit.py,v 1.2 2003/10/16 14:31:22 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
@@ -493,7 +493,7 @@ TESTS_VALID=OPER(nom="TESTS_VALID",op=19,sd_prod=cara_elem,
   EnumVal=SIMP(statut='o',typ='I',validators=EnumVal((3,2,4,8,9,15))),
   OrdList=SIMP(statut='o',typ='I',max='**',validators=OrdList("croissant")),
   OrdList2=SIMP(statut='o',typ='I',into=(1,2,3,4,5,6),max='**',validators=OrdList("croissant")),
-  TypeVal=SIMP(statut='o',typ='I',validators=TypeVal(int)),
+  TypeVal=SIMP(statut='o',typ='I',validators=TypeVal(1)),
 ) ;
 
 PLS_BASE_NOREPEAT=OPER(nom="PLS_BASE_NOREPEAT",op=19,sd_prod=cara_pout,
