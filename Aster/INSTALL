@@ -2,17 +2,20 @@
 
 1- Installation standard
 
-Pour installer EFICAS a partir de la distribution : Eficas.tgz
+Pour installer EFICAS a partir de la distribution : <nom_distrib>.tgz
 faire :
-	tar xzvf Eficas.tgz
+	tar xzvf <nom_distrib>.tgz
 
-ce qui a pour effet de créer un répertoire Eficas
-Tel que Eficas est prêt à etre executé.
+ce qui a pour effet de créer un répertoire de nom <nom_distrib>.
+
+Tel que Eficas est prêt à etre executé mais il est conseillé d'utiliser la procédure
+d'installation install.py qui teste la bonne installation des prérequis et permet de
+personnaliser l'installation (lire les instructions dans README_install).
 
 ATTENTION : 
 Si Eficas est installé dans un répertoire particulier d'administration 
 dans lequel les utilisateurs n'ont pas le droit d'écriture, il faut que
-l'administrateur lance Eficas avec les deux versions 5 et 6 pour générer
+l'administrateur lance Eficas pour générer
 les fichiers et catalogues compilés .pyc et _pickled.py
 
 2- Utilisation d'Eficas

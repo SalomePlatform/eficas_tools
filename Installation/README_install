@@ -1,7 +1,7 @@
 
 
 	=================================================
-	    Procédure d'installation d'EFICAS (suite)
+	    Procédure d'installation d'EFICAS 
 	=================================================
 
 Pour lancer la procédure d'installation, tapez :
@@ -15,7 +15,7 @@ pré-requis pour EFICAS (cf README)
 
 La procédure va vous demander un certain nombre de chemins d'accès nécessaires à l'établissement du
 fichier de configuration d'EFICAS qui s'appelle editeur.ini et qui se trouvera, une fois EFICAS,
-installé, dans le répertoire Eficas/Accas
+installé, dans le répertoire Eficas/Aster
 
 - Répertoire d'installation 	: répertoire dans lequel vous voulez installer Eficas
 - Répertoire de travail 	: répertoire de travail temporaire d'EFICAS
@@ -25,15 +25,15 @@ installé, dans le répertoire Eficas/Accas
 - Exécutable Acrobat Reader 	: chemin d'accès complet à l'exécutable Acrobat Reader
 
 
-Catalogues Aster   : 	EFICAS installe par défaut les catalogues Aster v5 et v6 qui se trouvent en
-			/Eficas/Cata.
+Catalogues Aster   : 	EFICAS installe par défaut le catalogue Aster v6 qui se trouve en
+			Eficas/Aster/Cata.
 			Si vous voulez en installer d'autres, il faut qu'ils se trouvent dans ce même répertoire
 			ou qu'il y ait un lien dans ce répertoire vers le fichier.
 			Pour ajouter d'autres catalogues, il faut aller modifier directement le fichier editeur.ini
 
 	
 
-Lancement d'EFICAS : 	le fichier à lancer est /Eficas/Editeur/eficas_aster.py
+Lancement d'EFICAS : 	le fichier à lancer est Eficas/Aster/eficas_aster.py
 			il faut le lancer précédé du chemin d'accès à l'interpréteur Python comme
 			pour la procédure d'installation.
 
