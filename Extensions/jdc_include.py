@@ -1,3 +1,23 @@
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+#
+#
+# ======================================================================
+
 """
    Ce module contient la classe JDC_INCLUDE qui sert a inclure
    dans un jeu de commandes une partie de jeu de commandes
@@ -13,7 +33,8 @@ class JDC_POURSUITE(JDC):
    def __init__(self,definition=None,procedure=None,cata=None,
                      cata_ord_dico=None,parent=None,
                      nom='SansNom',appli=None,context_ini=None,
-                     jdc_pere=None,etape_include=None,prefix_include=None,**args):
+                     jdc_pere=None,etape_include=None,prefix_include=None,
+                     recorded_units=None,**args):
 
       JDC.__init__(self, definition=definition,
                          procedure=procedure,
@@ -28,6 +49,7 @@ class JDC_POURSUITE(JDC):
       self.jdc_pere=jdc_pere
       self.etape_include=etape_include
       self.prefix_include=prefix_include
+      if recorded_units is not None:self.recorded_units=recorded_units
 
    def NommerSdprod(self,sd,sdnom,restrict='non'):
       """
@@ -42,14 +64,12 @@ class JDC_POURSUITE(JDC):
       o=self.sds_dict.get(sdnom,None)
       if isinstance(o,ASSD):
          raise AsException("Nom de concept deja defini : %s" % sdnom)
+
       # Il faut verifier en plus que le jdc_pere apres l'etape etape_include
       # ne contient pas deja un concept de ce nom
-
-      mysd= self.jdc_pere.get_sd_apres_etape(sdnom,etape=self.etape_include)
-      if mysd:
       #if self.jdc_pere.get_sd_apres_etape(sdnom,etape=self.etape_include):
          # Il existe un concept apres self => impossible d'inserer
-         raise AsException("Nom de concept deja defini : %s" % sdnom)
+      #   raise AsException("Nom de concept deja defini : %s" % sdnom)
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
       # Ajoute a la creation (appel de reg_sd).
