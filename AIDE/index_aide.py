@@ -16,9 +16,9 @@ items =("Aide en ligne EFICAS",None,
             ( 
                ("FAQs",os.path.join(repertoire,"..","Editeur","faqs.txt"),None),
                ("Install",os.path.join(repertoire,"..","INSTALL"), 
-                                                      ( 
-                                                         ("Procedure d'installation",os.path.join(repertoire,"..","README_install"),None), 
-                                                      )
+                                ( 
+                                   ("Procedure d'installation",os.path.join(repertoire,"..","INSTALL"),None), 
+                                )
               ),
             ),
        )

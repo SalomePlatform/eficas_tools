@@ -21,9 +21,12 @@ import string
 import os
 from Tkinter import *
 import Pmw
+import time
 
 from widgets import ListeChoix
+from widgets import ListeChoixParGroupes
 import prefs
+import options
 
 SEPARATEUR = '-'*30
 
@@ -316,17 +319,28 @@ class OngletPanel(Panel) :
       but_apres.grid(column = 1,row =3)
       
   def makeCommandePage(self,page):
+      """
+         Cree l'onglet
+      """
       frame1 = Frame(page,height = 20)
       frame1.pack(side='top',fill='x')
       label = Label(frame1,text ="La commande choisie sera ajoutée\n APRES la commande courante")
       label.pack(side='top')
       frame2 = Frame(page)
       frame2.pack(side='top',fill='both',expand=1)
-      liste_cmd = self.get_liste_cmd()
       liste_commandes = (("<Enter>",self.selectCmd),
                          ("<Leave>",self.deselectCmd),
                          ("<Double-Button-1>",self.defCmd))
-      Liste = ListeChoix(self,frame2,liste_cmd,liste_commandes = liste_commandes,filtre='oui',titre = "Commandes")
+      if options.affichage_commandes == "alphabetic":
+         liste_cmd = self.get_liste_cmd()
+         Liste = ListeChoix(self,frame2,liste_cmd,liste_commandes = liste_commandes,
+                                   filtre='oui',titre = "Commandes")
+      else:
+         liste_groupes=self.node.item.object.niveau.definition.liste_groupes
+         dict_groupes=self.node.item.object.niveau.definition.dict_groupes
+         Liste = ListeChoixParGroupes(self,frame2,liste_groupes,dict_groupes,
+                                      liste_commandes = liste_commandes,
+                                      filtre='oui',titre = "Commandes")
       Liste.affiche_liste()
       # aide associée au panneau
       bulle_aide="""Double-cliquez sur la commande que vous voulez ajouter au jeu de commandes"""
@@ -337,11 +351,19 @@ class OngletPanel(Panel) :
       """
       Crée la page correspondant à un objet de type JDC
       """
-      liste_cmd = self.get_liste_cmd()
       liste_commandes = (("<Enter>",self.selectCmd),
                          ("<Leave>",self.deselectCmd),
                          ("<Double-Button-1>",self.defCmdFirst))
-      Liste = ListeChoix(self,page,liste_cmd,liste_commandes = liste_commandes,filtre='oui',titre = "Commandes")
+      if options.affichage_commandes == "alphabetic":
+         liste_cmd = self.get_liste_cmd()
+         Liste = ListeChoix(self,page,liste_cmd,liste_commandes = liste_commandes,
+                            filtre='oui',titre = "Commandes")
+      else:
+         liste_groupes=self.node.item.object.niveau.definition.liste_groupes
+         dict_groupes=self.node.item.object.niveau.definition.dict_groupes
+         Liste = ListeChoixParGroupes(self,page,liste_groupes,dict_groupes,
+                                      liste_commandes = liste_commandes,
+                                      filtre='oui',titre = "Commandes")
       Liste.affiche_liste()
        # aide associée au panneau
       bulle_aide="""Double-cliquez sur la commande que vous voulez ajouter au jeu de commandes"""

@@ -5,7 +5,8 @@ sys.path[:0]=['../..','../../..']
 import convert
 
 p=convert.plugins['asterv5']()
-p.readfile('totalmod.comm')
+p.readfile('torsion.comm')
+#p.readfile('totalmod.comm')
 if not p.cr.estvide():
    print p.cr
    sys.exit(0)

@@ -24,7 +24,7 @@ from tables import ERRORS
 
 #
 __version__="$Name:  $"
-__Id__="$Id: conv.py,v 1.1.1.1 2002/03/26 09:08:45 eficas Exp $"
+__Id__="$Id: conv.py,v 1.2 2002/05/15 15:32:00 eficas Exp $"
 #
 
 Keywords=('MAILLE_1','MAILLE_2','MAILLE_ESCL','MAILLE_FOND','MAILLE_MAIT','MAILLE_ORIG','MAILLE',
@@ -459,6 +459,8 @@ def format_errs(text,tags):
 def conver(text):
    from tables import aster_script
    import re
+   # On ajoute un '\n' en fin au cas ou il serait absent
+   text=text+'\n'
    text=string.upper(text)
    result, taglist, next = TextTools.tag(text,aster_script)
    # Pour vérifier les résultats intermédiaires décommenter la ligne suivante

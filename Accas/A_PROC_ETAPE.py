@@ -27,4 +27,3 @@ class PROC_ETAPE(I_PROC_ETAPE.PROC_ETAPE,
    def __init__(self,oper=None,args={}):
       N_PROC_ETAPE.PROC_ETAPE.__init__(self,oper=oper,args=args)
       V_PROC_ETAPE.PROC_ETAPE.__init__(self)
-      I_PROC_ETAPE.PROC_ETAPE.__init__(self)

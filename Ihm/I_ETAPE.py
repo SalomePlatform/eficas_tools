@@ -35,9 +35,6 @@ import I_MCCOMPO
 
 class ETAPE(I_MCCOMPO.MCCOMPO):
 
-   def __init__(self):
-      self.niveau=self.jdc
-
    def ident(self):
       return self.nom
 
@@ -252,6 +249,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
          Initialise les attributs jdc, id, niveau et réalise les
          enregistrements nécessaires
          Pour EFICAS, on tient compte des niveaux
+         Surcharge la methode make_register du package Noyau
       """
       if self.parent :
          self.jdc = self.parent.get_jdc_root()

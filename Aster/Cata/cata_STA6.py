@@ -29,7 +29,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_aster_v6.py,v 1.12 2001/01/16 15:55:05 iliade Exp $"
+__Id__="$Id: cata_STA6.py,v 1.1.1.2 2002/09/02 17:27:12 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
@@ -337,6 +337,7 @@ class vect_elem_temp_r(vect_elem):pass
 AFFE_CARA_ELEM=OPER(nom="AFFE_CARA_ELEM",op=  19,sd_prod=cara_elem,
                     fr="Affectation de caractéristiques à des éléments de structure",
                     docu="U4.42.01-g3",reentrant='n',
+                    UIinfo={'groupes':('CACHE',)},
          regles=(AU_MOINS_UN('POUTRE','BARRE','COQUE','CABLE','DISCRET','MASSIF',
                              'ASSE_GRIL','GRILLE','AFFE_SECT','AFFE_FIBRE'),),
          MODELE          =SIMP(statut='o',typ=modele ),
@@ -617,6 +618,7 @@ AFFE_CARA_ELEM=OPER(nom="AFFE_CARA_ELEM",op=  19,sd_prod=cara_elem,
 AFFE_CHAR_ACOU=OPER(nom="AFFE_CHAR_ACOU",op=  68,sd_prod=char_acou,
                     fr="Affectation de charges et conditions aux limites acoustiques constantes",
                     docu="U4.44.04-e",reentrant='n',
+                    UIinfo={'groupes':('CALCUL','ACOU')},
          regles=(AU_MOINS_UN('PRES_IMPO','VITE_FACE','IMPE_FACE','LIAISON_UNIF' ),),
          MODELE          =SIMP(statut='o',typ=modele ),
          VERI_DDL        =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),

@@ -2,3 +2,5 @@ Ce répertoire contient une série d'exemples localisés
 dans des sous-répertoires de nom exNNN où NNN est le numéro
 de l'exemple
 
+ex18 :
+  Cet exemple test met en oeuvre le convertisseur asterV5

@@ -35,7 +35,6 @@ from Noyau.N_Exception import AsException
 class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def __init__(self):
-      I_ETAPE.ETAPE.__init__(self)
       # XXX CCAR : ne suis pas certain que typret doive etre 
       # initialise à None (a verifier)
       self.typret=None

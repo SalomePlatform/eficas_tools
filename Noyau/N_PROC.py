@@ -79,7 +79,7 @@ class PROC(N_ENTITE.ENTITE):
    label = 'PROC'
 
    def __init__(self,nom,op,reentrant='n',repetable='o',fr="",ang="",
-                docu="",regles=(),op_init=None,niveau = None,**args):
+                docu="",regles=(),op_init=None,niveau = None,UIinfo=None,**args):
       """
          Méthode d'initialisation de l'objet PROC. Les arguments sont utilisés pour initialiser
          les attributs de meme nom
@@ -105,6 +105,7 @@ class PROC(N_ENTITE.ENTITE):
       else:
          self.niveau=current_cata.get_niveau(niveau)
          self.niveau.enregistre(self)
+      self.UIinfo=UIinfo
       self.affecter_parente()
 
    def __call__(self,**args):

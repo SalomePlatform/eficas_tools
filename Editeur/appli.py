@@ -25,6 +25,7 @@
 """
 # Modules Python
 import sys
+import types
 import Pmw
 import Tkinter
 
@@ -180,17 +181,38 @@ class APPLI:
       self.aide._showTip()
       return 
 
+  def cree_menu(self,menu,itemlist,appli_composant):
+      """
+          Ajoute les items du tuple itemlist
+          dans le menu menu
+      """
+      number_item=0
+      radio=None
+      for item in itemlist:
+         number_item=number_item + 1
+         if not item :
+            menu.add_separator()
+         else:
+            label,method=item
+            if type(method) == types.TupleType:
+               # On a un tuple => on cree une cascade
+               menu_cascade=Tkinter.Menu(menu)
+               menu.add_cascade(label=label,menu=menu_cascade)
+               self.cree_menu(menu_cascade,method,appli_composant)
+            elif method[0] == '&':
+               # On a une chaine avec & en tete => on cree un radiobouton
+               command=getattr(appli_composant,method[1:])
+               menu.add_radiobutton(label=label,command=command)
+               if radio == None:radio=number_item
+            else:
+               command=getattr(appli_composant,method)
+               menu.add_command(label=label,command=command)
+      # Si au moins un radiobouton existe on invoke le premier
+      if radio:menu.invoke(radio)
+
   def fill_menus(self,appli_composant,defs):
       menudict=self.menubar.menudict
       for mname,itemlist in defs:
           menu=menudict.get(mname)
           if not menu:continue
-          for item in itemlist:
-             if not item :
-                menu.add_separator()
-             else:
-                label,method=item
-                command=getattr(appli_composant,method)
-                menu.add_command(label=label,command=command)
-                
-      
+          self.cree_menu(menu,itemlist,appli_composant)

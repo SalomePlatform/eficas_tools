@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17,13 +18,24 @@
 #
 #
 # ======================================================================
-from Noyau import N_ETAPE
-from Validation import V_ETAPE
-from Ihm import I_ETAPE
 
-class ETAPE(I_ETAPE.ETAPE,V_ETAPE.ETAPE,
-            N_ETAPE.ETAPE):
-   def __init__(self,oper=None,reuse=None,args={}):
-      # Pas de constructeur pour B_ETAPE.ETAPE
-      N_ETAPE.ETAPE.__init__(self,oper,reuse,args)
-      V_ETAPE.ETAPE.__init__(self)
+"""
+    Ce module sert à lancer EFICAS configuré pour Descartes
+"""
+# Modules Python
+import sys
+
+# Modules Eficas
+import prefs
+sys.path[:0]=[prefs.INSTALLDIR]
+
+import Editeur
+from Editeur import eficas_go
+
+if len(sys.argv) > 1 :
+    # on veut ouvrir un fichier directement au lancement d'Eficas
+    eficas_go.lance_eficas(code='DESCARTES',fichier = sys.argv[1])
+else:
+    # on veut ouvrir Eficas 'vide'
+    eficas_go.lance_eficas(code='DESCARTES')
+

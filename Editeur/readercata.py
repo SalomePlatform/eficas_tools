@@ -41,6 +41,7 @@ from utils import init_rep_cata_dev
 
 #import catabrowser
 import autre_analyse_cata
+import uiinfo
 
 class READERCATA:
 
@@ -114,6 +115,12 @@ class READERCATA:
       #self.Retrouve_Ordre_Cata_Standard()
       self.Retrouve_Ordre_Cata_Standard_autre()
       print "Fin Retrouve_Ordre: ",time.clock()
+      #
+      # analyse des données liées à l'IHM : UIinfo
+      #
+      print "Debut UIinfo: ",time.clock()
+      uiinfo.traite_UIinfo(self.cata)
+      print "Fin UIinfo: ",time.clock()
       #
       # chargement et analyse des catalogues développeur (le cas échéant)
       #
@@ -321,7 +328,7 @@ class READERCATA:
       if time1 > time2:
           try:
               # le catalogue doit être recompilé avant d'être importé
-              splash._splash.configure(text="Compilation du catalogue\nCela peut prendre une trentaine de secondes ...")
+              splash._splash.configure(text="Compilation du catalogue\nCela peut prendre plusieurs secondes ...")
               py_compile.compile(cata)
           except:
               return 0

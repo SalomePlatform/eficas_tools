@@ -77,6 +77,8 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
           #XXX et global_jdc ??
         mc_liste.append(objet)
         k=k+1
+      # Un nuplet n'a pas de mots inconnus
+      self.reste_val={}
       return mc_liste
 
    def isvalid(self,cr='non'):

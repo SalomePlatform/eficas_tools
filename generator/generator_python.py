@@ -412,7 +412,7 @@ class PythonGenerator:
            for arg in liste :
              l.append(arg)
          else:
-           # on a est en présence d'un MCSIMP : on récupère une string
+           # on est en présence d'un MCSIMP : on récupère une string
            text =self.generator(v)
            l.append(v.nom+'='+text)
       # il faut être plus subtil dans l'ajout de la virgule en différenciant 
@@ -482,6 +482,10 @@ class PythonGenerator:
                s = s + val.nom
             else:
                s = s + self.generator(val)
+          elif type(val) == types.FloatType :
+            # Pour un flottant on utilise str qui a une precision de
+            # "seulement" 12 chiffres : evite les flottants du genre 0.599999999999998
+            s = s + str(val)
           else :
             s = s + `val`
           s = s + ','
@@ -504,9 +508,8 @@ class PythonGenerator:
           else:
              s = self.generator(val)
         elif type(val) == types.FloatType :
-          # Pour un réel on fait un formattage spécial
-          # XXX bizarrement ce n'est pas fait pour une liste
-          s = repr_float(val)
+          #s = repr_float(val)
+          s = str(val)
         else :
           s = `val`
         s= s + ','

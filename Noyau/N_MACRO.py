@@ -85,7 +85,7 @@ class MACRO(N_ENTITE.ENTITE):
    nommage = nommage
 
    def __init__(self,nom,op,sd_prod=None,reentrant='n',repetable='o',fr="",ang="",
-                docu="",regles=(),op_init=None,niveau = None,fichier_ini=0,**args):
+                docu="",regles=(),op_init=None,niveau = None,fichier_ini=0,UIinfo=None,**args):
       """
          Méthode d'initialisation de l'objet MACRO. Les arguments sont utilisés pour initialiser
          les attributs de meme nom
@@ -125,6 +125,7 @@ class MACRO(N_ENTITE.ENTITE):
       else:
          self.niveau=current_cata.get_niveau(niveau)
          self.niveau.enregistre(self)
+      self.UIinfo=UIinfo
       self.affecter_parente()
 
    def __call__(self,reuse=None,**args):

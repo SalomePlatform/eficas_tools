@@ -24,6 +24,7 @@
 import traceback
 
 from Noyau import N_OBJECT
+import prefs
 
 class ETAPE_NIVEAU(N_OBJECT.OBJECT):
 
@@ -127,4 +128,13 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
     """
     self.jdc.suppentite(etape)
 
+
+  def get_fr(self):
+     """
+        Retourne le texte d'aide dans la langue choisie
+     """
+     try :
+        return getattr(self.definition,prefs.lang)
+     except:
+        return ''
 

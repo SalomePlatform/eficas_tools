@@ -25,14 +25,17 @@ from tkFileDialog import *
 
 # Modules Eficas
 
+# l'option affichage_commandes peut prendre les valeurs "groupes" ou "alphabetic"
+affichage_commandes="alphabetic"
 
 class OPTIONS:
 
    menu_defs=[
-              ('Options',[
-                           ("Catalogue développeur",'choix_cata_developpeur'),
-                         ]
-              )
+        ('Options',[
+                   ("Affichage commandes",(("alphabétique",'&affichage_alpha'),("groupes",'&affichage_grp'))),
+                   # ("Catalogue développeur",'choix_cata_developpeur'),
+                   ]
+        )
              ]
 
    button_defs=[]
@@ -40,6 +43,14 @@ class OPTIONS:
    def __init__(self,appli,parent):
       self.appli=appli
       self.parent=parent
+
+   def affichage_grp(self):
+      global affichage_commandes
+      affichage_commandes="groupes"
+
+   def affichage_alpha(self):
+      global affichage_commandes
+      affichage_commandes="alphabetic"
 
    def choix_cata_developpeur(self):
       """ 

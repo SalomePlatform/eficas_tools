@@ -366,7 +366,8 @@ class AsterGenerator:
           elif self.wait_geom(obj):
             s = s + val
           elif type(val) == types.FloatType :
-            s = s + self.repr_float(val)
+            #s = s + self.repr_float(val)
+            s = s + str(val)
           else :
             s = s + `val`
         s = s + ')'
@@ -383,7 +384,8 @@ class AsterGenerator:
         elif self.wait_geom(obj):
             s = obj.valeur
         elif type(obj.valeur) == types.FloatType :
-            s = self.repr_float(obj.valeur)
+            #s = self.repr_float(obj.valeur)
+            s = str(obj.valeur)
         else :
           s = `obj.valeur`
         s=obj.nom+':'+s+' '

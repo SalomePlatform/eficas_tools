@@ -567,7 +567,8 @@ class ListeChoix :
           elif type(objet) in (types.StringType,types.IntType):
               mot = objet
           elif type(objet) == types.FloatType :
-              mot = repr_float(objet)
+              #mot = repr_float(objet)
+              mot = str(objet)
           else:
               mot=`objet`
           label = Label(self.MCbox,
@@ -819,3 +820,100 @@ class BARRE_K2000(Toplevel):
         
     def quit(self):
         self.quit = 1        
+
+class ListeChoixParGroupes(ListeChoix) :
+    """ 
+        Cette classe est utilisée pour afficher une liste de commandes classées par
+        groupes. L'utilisateur peut réaliser des actions de selection
+        qui déclenchent des actions spécifiées par les bindings contenus dans liste_commandes
+    """
+    def __init__(self,parent,page,liste_groupes,dict_groupes,liste_commandes=[],liste_marques =[],
+                      active ='oui',filtre='non',titre=''):
+        self.parent = parent
+        self.page = page
+        self.liste_groupes = liste_groupes
+        self.dict_groupes = dict_groupes
+        self.dico_labels={}
+        self.selection = None
+        self.liste_commandes = liste_commandes
+        self.liste_marques = liste_marques
+        self.arg_selected=''
+        self.active = active
+        self.titre = titre
+        self.filtre = filtre
+        self.init()
+
+    def affiche_liste(self):
+        """ Affiche la liste dans la fenêtre"""
+        i=0
+        self.MCbox.config(state=NORMAL)
+        self.MCbox.delete(1.0,END)
+        for grp in self.liste_groupes:
+           # On itère sur les groupes
+           if grp == "CACHE":continue
+           liste_commandes=self.dict_groupes[grp]
+           text="GROUPE<<<<<<<< "+grp+" "
+           text=text+">"*max(0,30-len(text))
+           label = Label(self.MCbox,
+                        text = text,
+                        fg = 'black',bg = 'gray95',justify = 'left')
+           # On stocke la relation entre le nom de la commande et le label
+           self.dico_labels[grp]=label
+           self.MCbox.window_create(END,
+                                   window=label,
+                                   stretch = 1)
+           self.MCbox.insert(END,'\n')
+           for cmd in liste_commandes:
+              label = Label(self.MCbox,
+                        text = cmd,
+                        fg = 'black',bg = 'gray95',justify = 'left')
+              # On stocke la relation entre le nom de la commande et le label
+              self.dico_labels[cmd]=label
+              self.MCbox.window_create(END,
+                                   window=label,
+                                   stretch = 1)
+              self.MCbox.insert(END,'\n')
+              if self.active == 'oui':
+                  label.bind(self.liste_commandes[0][0],
+                         lambda e,s=self,c=self.liste_commandes[0][1],x=cmd,l=label : s.selectitem(x,l,c))
+                  label.bind(self.liste_commandes[1][0],
+                         lambda e,s=self,c=self.liste_commandes[1][1],x=cmd,l=label : s.deselectitem(l,x,c))
+                  label.bind(self.liste_commandes[2][0],
+                         lambda e,s=self,c=self.liste_commandes[2][1],x=cmd,l=label : s.chooseitem(x,l,c))
+              # On marque les items specifies dans liste_marques
+              #if i in self.liste_marques : self.markitem(label)
+              i=i+1
+        self.MCbox.config(state=DISABLED)
+        self.selection = None
+
+    def entry_changed(self,event=None):
+        """ 
+            Cette méthode est invoquée chaque fois que l'utilisateur modifie le contenu
+            de l'entry et frappe <Return>
+        """
+        if self.arg_selected != '' : self.deselectitem(self.dico_labels[self.arg_selected])
+        filtre = self.entry.get()+"*"
+        FILTRE = string.upper(filtre)
+        #
+        # On cherche d'abord dans les noms de groupe
+        # puis dans les noms de commande groupe par groupe
+        #
+        for grp in self.liste_groupes:
+            if fnmatch.fnmatch(grp,filtre) or fnmatch.fnmatch(grp,FILTRE) :
+                index = self.MCbox.index(self.dico_labels[grp])
+                self.MCbox.see(index)
+                # On ne selectionne pas le groupe
+                #self.arg_selected = grp
+                # On a trouve un groupe on arrete la recherche
+                return
+
+        for grp in self.liste_groupes:
+           for cmd in self.dict_groupes[grp] :
+              if fnmatch.fnmatch(cmd,filtre) or fnmatch.fnmatch(cmd,FILTRE) :
+                 self.highlightitem(self.dico_labels[cmd])
+                 index = self.MCbox.index(self.dico_labels[cmd])
+                 self.MCbox.see(index)
+                 self.arg_selected = cmd
+                 # On a trouve une commande  on arrete la recherche
+                 return
+

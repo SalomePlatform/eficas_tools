@@ -39,16 +39,18 @@ CODE_PATH = None
 # Par défaut on utilise le répertoire icons dans Editeur
 ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')
 
-# lang indique la langue utilisée pour les chaines d'aide : fr ou an
+# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
 lang='fr'
 
 labels= ('Fichier','Edition','Jeu de commandes',
-#               'Catalogue','Browsers','Options',
+#               'Catalogue','Browsers',
+                'Options',
                 'Aide',
            )
 
 appli_composants=['readercata','bureau',
-#                  'browser','options'
+#                  'browser',
+                   'options',
            ]
 
 menu_defs={ 'bureau': [
