@@ -37,6 +37,7 @@ import fontes
 import tooltip
 import properties
 from widgets import Fenetre
+from Misc import MakeNomComplet
 
 VERSION="EFICAS v1.3"
 
@@ -55,8 +56,15 @@ class APPLI:
       self.format_fichier = Tkinter.StringVar()
       self.message=''
       self.cree_composants_graphiques()
-      self.load_appli_composants()
+      self.load_appli_composants()			# Creation du BUREAU
       self.affiche_FAQ()
+      # AY : cas ou le nom du fichier a été passé en argument
+      if fichier :
+           try :
+                self.bureau.openJDC( str(MakeNomComplet.FILENAME(fichier)) )
+           except :
+                pass
+      # AY : fin
       splash.fini_splash()
 
   def send_message(self,message):
