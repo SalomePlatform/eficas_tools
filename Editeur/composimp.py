@@ -127,7 +127,9 @@ class newSIMPPanel(panels.OngletPanel):
           return
       liste_valeurs.append(self.selected_choix)
       liste_choix = self.Liste_choix.get_liste()
-      liste_choix.remove(self.selected_choix)
+      # PN en attendant mieux
+      if "TYPE_ANCRAGE" not in self.node.item.get_genealogie():
+         liste_choix.remove(self.selected_choix)
       self.Liste_valeurs.put_liste(liste_valeurs)
       self.Liste_choix.put_liste(liste_choix)
       self.selected_choix = None
@@ -415,7 +417,7 @@ class PLUSIEURS_INTO_Panel(PLUSIEURS_Panel):
          else :
 	    return "entrez entre "+str(mc.min)+" et "+str(mc.max)+" valeurs"
       if mc.min == mc.max:
-          return "Une liste de "+str(mc.min)+d_aides[type]+" est attendue"
+          return "Une liste de "+str(mc.min)+" "+d_aides[type]+" est attendue"
       else :
           return "Entre "+str(mc.min)+" et "+str(mc.max)+" valeurs de type  "+d_aides[type]+" sont attendues"
       return "  "
@@ -1301,7 +1303,11 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       elif self.wait_into():
           # l'objet prend sa (ses) valeur(s) dans un ensemble discret de valeurs
           min,max = self.GetMinMax()
-          if max != 1 and ((min != 0 and min != max) or (min == 0)):
+          # PN : 
+          # Remplacement du if ??
+          #if max != 1 and ((min != 0 and min != max) or (min == 0)):
+          assert (min <= max)
+          if max > 1 :
              # l'objet attend une liste de valeurs
              self.panel = PLUSIEURS_INTO_Panel
           else:
