@@ -146,7 +146,14 @@ class MCList:
      """
      self.parent=parent
      self.jdc=parent.jdc
-     self.etape=etape
+     self.etape=parent.etape
      for mcfact in self.data:
         mcfact.reparent(parent)
 
+  def verif_existence_sd(self):
+     """
+        Vérifie que les structures de données utilisées dans self existent bien dans le contexte
+	avant étape, sinon enlève la référence à ces concepts
+     """
+     for motcle in self.data :
+         motcle.verif_existence_sd()

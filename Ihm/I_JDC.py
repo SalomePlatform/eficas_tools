@@ -127,6 +127,9 @@ class JDC(I_OBJECT.OBJECT):
             objet.parent.dict_niveaux[objet.nom_niveau_definition].register(objet)
             objet.niveau = objet.parent.dict_niveaux[objet.nom_niveau_definition]
         self.etapes.insert(pos,objet)
+	# il faut vérifier que les concepts utilisés par objet existent bien
+	# à ce niveau d'arborescence
+	objet.verif_existence_sd()
         self.active_etapes()
         self.editmode=0
         self.reset_context()

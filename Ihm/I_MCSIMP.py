@@ -254,9 +254,13 @@ class MCSIMP(I_OBJECT.OBJECT):
   def copy(self):
     """ Retourne une copie de self """
     objet = self.makeobjet()
-    #XXX est ce utile ??
-    objet.valeur = copy(self.valeur)
-    objet.val = copy(self.val)
+    # il faut copier les listes et les tuples mais pas les autres valeurs
+    # possibles (réel,SD,...)
+    if type(self.valeur) in (types.ListType,types.TupleType):
+       objet.valeur = copy(self.valeur)
+    else:
+       objet.valeur = self.valeur
+    objet.val = objet.valeur
     return objet
 
   def makeobjet(self):
@@ -321,3 +325,41 @@ class MCSIMP(I_OBJECT.OBJECT):
      self.jdc=parent.jdc
      self.etape=parent.etape
 
+  def verif_existence_sd(self):
+     """
+        Vérifie que les structures de données utilisées dans self existent bien dans le contexte
+	avant étape, sinon enlève la référence à ces concepts
+     """
+     l_sd_avant_etape = self.jdc.get_contexte_avant(self.etape).values()  
+     if type(self.valeur) in (types.TupleType,types.ListType) :
+       l=[]
+       for sd in self.valeur:
+         if isinstance(sd,ASSD) :
+	    if sd in l_sd_avant_etape :
+	       l.append(sd)
+	 else:
+	    l.append(sd)
+       self.valeur=l
+       self.init_modif()
+     else:
+       if isinstance(self.valeur,ASSD) :
+	  if self.valeur not in l_sd_avant_etape :
+	     self.valeur = None
+             self.init_modif()
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

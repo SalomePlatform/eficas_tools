@@ -913,10 +913,8 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       """
       if self.parent.modified == 'n' : self.parent.init_modif()
       valeur = self.get_valeur()
-      print "valid_valeur ",valeur
       self.erase_valeur()
       anc_val = self.node.item.get_valeur()
-      print "anc_val ",anc_val
       test_CO=self.node.item.is_CO(anc_val)
       test = self.node.item.set_valeur(valeur)
       if not test :

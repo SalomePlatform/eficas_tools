@@ -369,3 +369,11 @@ class MCCOMPO(I_OBJECT.OBJECT):
      self.etape=parent.etape
      for mocle in self.mc_liste:
         mocle.reparent(self)
+
+  def verif_existence_sd(self):
+     """
+        Vérifie que les structures de données utilisées dans self existent bien dans le contexte
+	avant étape, sinon enlève la référence à ces concepts
+     """
+     for motcle in self.mc_liste :
+         motcle.verif_existence_sd()
