@@ -54,17 +54,11 @@ class FORM_ETAPE(MACRO_ETAPE):
         if len(self.mc_liste) == 0:
             # pas de fils pour self --> la FORMULE est incomplète
             return None,None,None
-        child = self.mc_liste[0] # child est un MCSIMP
-        type_retourne = child.definition.nom
-        valeur = child.getval()
-        # c'est dans valeur que se trouvent la liste des arguments et le corps de la fonction
-        try:
-            l_args,corps = string.split(valeur,'=',1)
-        except:
-            # pas de signe = --> la formule est fausse
-            return type_retourne,None,None
-        l_args = string.strip(l_args)
-        corps = string.strip(corps)
+	type_retourne="REEL"
+        child = self.mc_liste[0] # child est un MCSIMP 
+        corps = child.getval()
+	child = self.mc_liste[1]
+        l_args= child.getval()
         return type_retourne,l_args,corps
 
     def get_nom(self):
@@ -269,25 +263,36 @@ class FORM_ETAPE(MACRO_ETAPE):
             sd.nom = formule[0]
 
     # bidouille PN 
-    # Il faut que formule soit constitue de 
+    # Il faut que formule soit constituee de 
     # nom de la formule
     # type retourne
     # parametres
     # corps de la fonction
+    # il faut aussi que les arguments soient sous forme de tuple
     def update_formule_python(self,formule):
         self.build_mc()
         self.mc_liste=[]
         if len(formule) < 4 :
 	   return O
+        arguments=formule[3]
+	if arguments[0] == '(' :
+	   arguments=[1,-1 ]
+	if arguments[-1] == '(' :
+	   arguments=[0,-2 ]
+	self.arguments=tuple(arguments.split(','))
+
 	i=1
 	for k,v in self.definition.entites.items():
 	    child=self.definition.entites[k](None,nom=k,parent=self)
 	    new_valeur=formule[i+1]
-	    child.valeur = new_valeur
+	    if i+1 == 3 :
+	       child.valeur = self.arguments
+	    else :
+	       child.valeur = new_valeur
 	    child.state = 'modified'
 	    self.mc_liste.append(child)
 	    i=i+1
-        self.arguments = formule[3]
+	   
         self.corps = formule[2]
         self.type_retourne = formule[1]
 	sd = self.get_sd_prod()
