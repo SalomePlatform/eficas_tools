@@ -29,3 +29,7 @@ ce premier fichier seront systématiquement redemandés à l'utilisateur.
 5- Le nom d'un fichier INCLUDE_MATERIAU est construit à partir des valeurs des mots-clés
 de la commande, il n'est donc jamais demandé explicitement à l'utilisateur.
 
+6- En cas de modification importante des fichiers inclus il est recommandé de demander
+la revalidation du jeu de commandes avec le menu Jeu de commandes -> rapport de validation.
+La remise à jour de la validité peut entrainer des resultats surprenants dans des cas particuliers
+d'INCLUDE enchainés contenant des commandes DETRUIRE.
