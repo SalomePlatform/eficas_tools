@@ -110,10 +110,13 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
     # On remplit le dictionnaire des concepts produits inclus
     # en retirant les concepts présents dans le  contexte initial
+    # On ajoute egalement le concept produit dans le sds_dict du parent
+    # sans verification car on est sur (verification integrée) que le nommage est possible
     self.g_context.clear()
     for k,v in j_context.items():
        if not context_ini.has_key(k) or context_ini[k] != v:
            self.g_context[k]=v
+           self.parent.sds_dict[k]=v
 
     # On récupère les étapes internes (pour validation)
     self.etapes=j.etapes
