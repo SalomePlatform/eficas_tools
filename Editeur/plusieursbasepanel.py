@@ -127,6 +127,9 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
 			wraplength=int(self.frame_aide.winfo_width()*0.8))
       self.aide.place(relx=0.5,rely=0.5,anchor='center',relwidth=1)
       self.Liste_valeurs.affiche_liste()
+      if len(l_valeurs) > 0 :
+          liste_marque=l_valeurs[-1]
+          self.Liste_valeurs.surligne(liste_marque)
       # boutons Accepter et Annuler
       bouton_accepter = Button(self.frame_boutons,
                                text='Valider',
@@ -151,6 +154,8 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
 	        pass
 	    self.fenetreparam=FenetreDeParametre( self, self.node.item, self.parent.appli, txtparam)
 
+  def valid_valeur(self):
+      self.add_valeur_plusieurs_base()
 
   def add_valeur_plusieurs_base(self,name=None):
       if name != None :
@@ -294,6 +299,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       """
       if not val :
           valeur = self.node.item.object.getval()
+	  print "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"
       else:
           valeur = val
       if not valeur : return
