@@ -76,15 +76,15 @@ class MCSIMP(I_OBJECT.OBJECT):
            txt = txt + i*','+ myrepr.repr(val)
         i=1
       txt=txt+')'
+    elif isinstance(self.valeur,ASSD): 
+      # Cas des ASSD
+      txt=self.getval()
+    elif type(self.valeur) == types.InstanceType and val.__class__.__name__ in  ('PARAMETRE','PARAMETRE_EVAL'):
+      # Cas des PARAMETRES
+      txt=str(self.valeur)
     else:
       # Traitement des autres cas
-      txt = self.getval()
-
-      if type(txt) == types.InstanceType:
-        if isinstance(txt,parametre.PARAMETRE):
-          txt= str(txt)
-      else:
-        txt=repr(txt)
+      txt = myrepr.repr(self.valeur)
 
     # txt peut etre une longue chaine sur plusieurs lignes.
     # Il est possible de tronquer cette chaine au premier \n et 
