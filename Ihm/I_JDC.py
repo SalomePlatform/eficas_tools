@@ -41,6 +41,7 @@ class JDC(I_OBJECT.OBJECT):
       self.fonctions=[]
       self._etape_context=None
       self.recorded_units={}
+      self.old_recorded_units={}
 
    def get_cmd(self,nomcmd):
       """
@@ -188,6 +189,33 @@ class JDC(I_OBJECT.OBJECT):
 
    def get_sd_avant_etape(self,nom_sd,etape):
       return self.get_contexte_avant(etape).get(nom_sd,None)
+
+   def get_sd_apres_etape_avec_detruire(self,nom_sd,sd,etape,avec='non'):
+      """ 
+           Cette méthode retourne la SD sd de nom nom_sd qui est éventuellement
+            définie apres etape en tenant compte des concepts detruits
+           Si avec vaut 'non' exclut etape de la recherche
+      """
+      ietap=self.etapes.index(etape)
+      if avec == 'non':ietap=ietap+1
+      d={nom_sd:sd}
+      for e in self.etapes[ietap:]:
+         if e.isactif():
+            e.update_context(d)
+            autre_sd=d.get(nom_sd,None)
+            if autre_sd is None:
+              # Le concept a ete detruit
+              return None
+            if autre_sd is not sd :
+              # L'etape produit un concept de meme nom
+              if hasattr(e,'reuse') and e.reuse == autre_sd:
+                 # Le concept est reutilise, ce n'est pas un produit de l'etape
+                 continue
+              else:
+                 # Le concept est produit par l'etape
+                 return autre_sd
+      # On n'a rien trouve. Pas de concept de nom nom_sd
+      return None
 
    def get_sd_apres_etape(self,nom_sd,etape,avec='non'):
       """ 
