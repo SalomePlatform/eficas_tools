@@ -37,6 +37,7 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
     self.etapes_niveaux = []
     self.dict_niveaux={}
     self.editmode = 0
+    self.state="undetermined"
     self.build_niveaux()
 
   def build_niveaux(self):

@@ -43,6 +43,7 @@ class COMMANDE_COMM:
         self.nom = ''
         self.niveau = self.parent.niveau
         self.actif=1
+        self.state="unchanged"
         #self.appel = N_utils.callee_where(niveau=2)
         if reg=='oui' : self.register()
             
@@ -245,3 +246,6 @@ class COMMANDE_COMM:
       """
       pass
 	
+    def control_sdprods(self,d):
+      """sans objet pour les commandes commentarisées"""
+      pass

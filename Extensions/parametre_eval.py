@@ -56,6 +56,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     self.definition=self
     self.niveau = self.parent.niveau
     self.actif=1
+    self.state='undetermined'
     # Ceci est-il indispensable ???
     #self.appel = N_utils.callee_where(niveau=2)
     self.register()

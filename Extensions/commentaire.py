@@ -44,6 +44,7 @@ class COMMENTAIRE :
     self.nom=''
     self.niveau = self.parent.niveau
     self.actif=1
+    self.state="unchanged"
     self.register()
 
   def register(self):
@@ -178,4 +179,8 @@ class COMMENTAIRE :
     Retourne le commentaire lui meme tronque a la 1ere ligne
     """
     return self.valeur.split('\n',1)[0]
+
+  def control_sdprods(self,d):
+      """sans objet """
+      pass
 

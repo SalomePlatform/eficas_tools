@@ -53,6 +53,7 @@ class PARAMETRE :
     self.jdc = self.parent = CONTEXT.get_current_step()
     self.niveau=self.parent.niveau
     self.actif=1
+    self.state='undetermined'
     self.register()
 
   def interprete_valeur(self,val):
@@ -271,6 +272,10 @@ class PARAMETRE :
 
   def verif_existence_sd(self):
      pass
+
+  def control_sdprods(self,d):
+      """sans objet """
+      pass
 
 
 
