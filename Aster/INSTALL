@@ -1,0 +1,33 @@
+
+
+1- Installation standard
+
+Pour installer EFICAS a partir de la distribution : Eficas.tgz
+faire :
+	tar xzvf Eficas.tgz
+
+ce qui a pour effet de créer un répertoire Eficas
+Tel que Eficas est prêt à etre executé.
+
+ATTENTION : 
+Si Eficas est installé dans un répertoire particulier d'administration 
+dans lequel les utilisateurs n'ont pas le droit d'écriture, il faut que
+l'administrateur lance Eficas avec les deux versions 5 et 6 pour générer
+les fichiers et catalogues compilés .pyc et _pickled.py
+
+2- Utilisation d'Eficas
+
+Pour utiliser Eficas, aller dans le répertoire Aster et faire :
+	python eficas_aster.py
+
+3- Installation avec un noyau pré-installé
+
+Aller dans le répertoire Aster du répertoire Eficas
+et modifier le fichier prefs.py comme suit :
+Mettre dans la variable CODE_PATH le chemin absolu vers
+le répertoire contenant les deux répertoires Noyau et Validation que vous voulez
+utiliser à la place de ceux fournis dans la livraison d'Eficas
+
+Pour changer les catalogues, modifier le fichier editeur.ini dans le répertoire Aster
+
+
