@@ -233,7 +233,15 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def GetListeValeurs(self) :
       """ Retourne la liste des valeurs de object """
-      return self.object.get_liste_valeurs()
+      valeurs=self.object.get_liste_valeurs()
+      try :
+        if "R" in self.object.definition.type:
+           clef=self.object.GetNomConcept()
+           if self.appli.dict_reels.has_key(clef):
+              valeurs=self.appli.dict_reels[clef]
+      except :
+        pass
+      return valeurs
     
   def get_liste_possible(self,listeActuelle=[]):
       if hasattr(self.definition.validators,'into'):

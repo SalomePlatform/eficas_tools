@@ -38,7 +38,7 @@ def traite_entiteNUPL(entite):
    """
    entite.ordre_mc=[]
 
-def traite_entite(entite):
+def traite_entite(entite,liste_simp_reel):
    """
        Cette fonction ajoute a l'objet entite un attribut de nom ordre_mc
        qui est une liste contenant le nom des sous entites dans l'ordre 
@@ -53,19 +53,26 @@ def traite_entite(entite):
       if isinstance(v,NUPL):
          traite_entiteNUPL(v)
       else:
-         traite_entite(v)
+         traite_reel(v,liste_simp_reel)
+         traite_entite(v,liste_simp_reel)
       l.append((v._no,k))
    l.sort()
    entite.ordre_mc=[ item for index, item in l ]
 
-def analyse_niveau(cata_ordonne_dico,niveau):
+def traite_reel(objet,liste_simp_reel):
+    if objet.__class__.__name__ == "SIMP":
+       if ( 'R' in objet.type):
+          if objet.nom not in liste_simp_reel :
+             liste_simp_reel.append(objet.nom)
+
+def analyse_niveau(cata_ordonne_dico,niveau,liste_simp_reel):
    """
        Analyse un niveau dans un catalogue de commandes
    """
    if niveau.l_niveaux == ():
        # Il n'y a pas de sous niveaux
        for oper in niveau.entites:
-           traite_entite(oper)
+           traite_entite(oper,liste_simp_reel)
            cata_ordonne_dico[oper.nom]=oper
    else:
        for niv in niveau.l_niveaux:
@@ -80,15 +87,17 @@ def analyse_catalogue(cata):
       du catalogue indexées par leur nom
    """
    cata_ordonne_dico={}
+   liste_simp_reel=[]
    if cata.JdC.l_niveaux == ():
        # Il n'y a pas de niveaux
+       a=1
        for oper in cata.JdC.commandes:
-           traite_entite(oper)
+           traite_entite(oper,liste_simp_reel)
            cata_ordonne_dico[oper.nom]=oper
    else:
        for niv in cata.JdC.l_niveaux:
-           analyse_niveau(cata_ordonne_dico,niv)
-   return cata_ordonne_dico
+           analyse_niveau(cata_ordonne_dico,niv,liste_simp_reel)
+   return cata_ordonne_dico,liste_simp_reel
 
 
 if __name__ == "__main__" :

@@ -46,18 +46,39 @@ from Extensions import parametre
 import I_OBJECT
 
 class MCSIMP(I_OBJECT.OBJECT):
+
+  def GetNomConcept(self):
+      p=self
+      while p.parent :
+         try :
+            nomconcept=p.get_sdname()
+            return nomconcept
+         except:
+            try :
+               nomconcept= p.object.get_sdname()
+               return nomconcept
+            except :
+               pass
+         p=p.parent
+      return ""
+
   def GetText(self):
     """
         Retourne le texte à afficher dans l'arbre représentant la valeur de l'objet
         pointé par self
     """
+
     if self.valeur == None : 
       return None
     elif type(self.valeur) == types.FloatType : 
       # Traitement d'un flottant isolé
-      #txt = repr_float(self.valeur)
+      # txt = repr_float(self.valeur)
       # Normalement str fait un travail correct
       txt = str(self.valeur)
+      clefobj=self.GetNomConcept()
+      if self.jdc.appli.dict_reels.has_key(clefobj):
+        if self.jdc.appli.dict_reels[clefobj].has_key(self.valeur):
+           txt=self.jdc.appli.dict_reels[clefobj][self.valeur]
     elif type(self.valeur) in (types.ListType,types.TupleType) :
       # Traitement des listes
       txt='('
@@ -99,6 +120,11 @@ class MCSIMP(I_OBJECT.OBJECT):
        Retourne une chaîne de caractère représentant la valeur de self 
     """
     val=self.valeur
+    if type(val) == types.FloatType : 
+      clefobj=self.GetNomConcept()
+      if self.jdc.appli.dict_reels.has_key(clefobj):
+        if self.jdc.appli.dict_reels[clefobj].has_key(val):
+           return self.jdc.appli.dict_reels[clefobj][val]
     if type(val) != types.TupleType :
       try:
         return val.get_name()

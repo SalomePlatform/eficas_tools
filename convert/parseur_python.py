@@ -159,6 +159,7 @@ class PARSEUR_PYTHON:
     def __init__(self,texte):
         self.texte = texte
         self.l_objets=None
+        self.appli=None
 
     def is_affectation(self,texte):
         """
@@ -285,6 +286,10 @@ class PARSEUR_PYTHON:
                         commande_courante.append_text(ligne)
                         if commande_courante.get_nb_par() == 0:
                             # la commande courante est terminée (autant de parenthèses fermantes qu'ouvrantes)
+                            try :
+                               self.analyse_reel(commande_courante.texte)
+                            except :
+                               pass
                             commande_courante = None
                     else:
                         # il peut s'agir d'une commande ou d'une affectation ...
@@ -306,6 +311,7 @@ class PARSEUR_PYTHON:
                             affectation_courante = None
                             if commande_courante.get_nb_par() == 0:
                                 # la commande courante est terminée (autant de parenthèses fermantes qu'ouvrantes)
+                                self.analyse_reel(commande_courante.texte)
                                 commande_courante = None
                         else:
                             #--> poursuite d'une affectation
@@ -315,10 +321,106 @@ class PARSEUR_PYTHON:
                             #affectation_courante.append_text(ligne)
 
 
-    def get_texte(self):
+    def enleve (self,texte) :
+        i=0
+        chaine=""
+        while (i<len(texte)):
+          if (texte[i] == " " or texte[i] == "\n" or texte[i] == "\t") :
+             i=i+1
+          else :
+             chaine=chaine+texte[i]
+             i=i+1
+        return chaine 
+            
+    def construit_genea(self,texte):
+        indiceC=0
+        mot=""
+        dict_reel_concept={}
+
+        # traitement pour chaque caractere
+        while (indiceC < len(texte)): 
+           c=texte[indiceC]
+           if ( c == "," or c == "(" or c == ")"):
+              mot=""
+           elif ( c== "="):
+              valeur=""
+              nouvelindice=indiceC+1
+              if texte[nouvelindice] != "(":
+                 while ( texte[nouvelindice] != ","):
+                    valeur=valeur+texte[nouvelindice]
+                    nouvelindice=nouvelindice+1
+                    if nouvelindice == len(texte) :
+			nouvelindice=nouvelindice -1
+                        break
+                 if mot in self.appli.liste_simp_reel:
+                    if valeur[0] != "'":
+                       try :
+                         clef=eval(valeur)
+                         if str(clef) != str(valeur) :
+                            dict_reel_concept[clef]=valeur
+                       except :
+                         pass
+                 mot=""
+                 indiceC=nouvelindice
+              else:
+               # s agit -il d un tuple 
+                 if texte[nouvelindice+1] != "(":
+                    tuple=False
+                    while ( texte[nouvelindice] != "="):
+                       if texte[nouvelindice] == ")" :
+                          tuple=True
+                          break
+                       else :
+                          nouvelindice=nouvelindice+1
+                          if nouvelindice == len(texte) :
+			     nouvelindice=nouvelindice -1
+                             break
+                    if tuple :
+                       valeur=texte[indiceC+1:nouvelindice+1]
+                       indiceC=nouvelindice+1 
+                       if mot in self.appli.liste_simp_reel:
+                          valeur=valeur[1:-1]
+                          for val in valeur.split(',') :
+                          # Attention la derniere valeur est""
+                             try :
+                                if val[0] != "'":
+                                  clef=eval(val)
+                                  if str(clef) != str(val) :
+                                     dict_reel_concept[clef]=val
+                             except :
+                                  pass
+                       mot=""
+               # ou de ( imbriqueés
+                 else :
+                    mot=""
+           else :
+              mot=mot+texte[indiceC]
+           indiceC=indiceC+1
+        # traitement du dernier inutile
+        # c est un ; 
+        return dict_reel_concept
+
+    def analyse_reel(self,commande) :
+        nomConcept=None
+        # On verifie qu on a bien un OPER
+        # et pas une MACRO
+        if commande.find("=") > commande.find("(") :
+           return
+        if commande.find("=") > 0:
+           epure1=self.enleve(commande)
+           nomConcept=epure1.split("=")[0]
+           index=epure1.find("=")
+           epure2=epure1[index+1:len(epure1)].replace("_F(","(")
+           dict_reel_concept=self.construit_genea(epure2)
+        if nomConcept !=None :
+           if len(dict_reel_concept) != 0:
+              self.appli.dict_reels[nomConcept]=dict_reel_concept
+
+    def get_texte(self,appli=None):
         """
         Retourne le texte issu de l'analyse
         """
+        self.appli=appli
         if not self.l_objets : self.analyse()
         txt=''
         for obj in self.l_objets:

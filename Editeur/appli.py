@@ -53,6 +53,8 @@ class APPLI:
       self.top.title(VERSION + ' pour '+self.code)
       self.top.withdraw()
       self.initializeTk(master)
+      self.dict_reels={}
+      self.liste_simp_reel=[]
       # L'attribut test permet d'activer les panneaux de splash et d'erreur (test=0)
       # Si test est different de 0, les panneaux ne sont pas activés
       self.test=test
@@ -62,6 +64,9 @@ class APPLI:
       self.message=''
       self.cree_composants_graphiques()
       self.load_appli_composants()			# Creation du BUREAU
+      # PN : ajout d un attribut pour indiquer si 
+      # l appli a ete lance depuis Salome
+      self.salome=0
       if (self.test == 0):
            splash.fini_splash()
            self.affiche_FAQ()
@@ -73,11 +78,7 @@ class APPLI:
            else:
               self.bureau.openJDC( fich)
       # AY : fin
-      # PN : ajout d un attribut pour indiquer si 
-      # l appli a ete lance depuis Salome
-      self.salome=0
 
-     
 
   def send_message(self,message):
       self.message=message

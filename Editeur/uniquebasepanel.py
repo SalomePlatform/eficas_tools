@@ -129,6 +129,9 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       """
       valeur = self.node.item.get_valeur()
       if valeur == None or valeur == '' : return # pas de valeur à afficher ...
+      valeur_texte=self.get_valeur_texte(valeur)
+      if valeur_texte != "":
+         valeur=valeur_texte
       self.entry.delete(0,END)
       self.entry.insert(0,valeur)
       self.entry.focus()

@@ -102,11 +102,11 @@ class PythonParser:
       except:
          self.cr.fatal("Impossible ouvrir fichier %s" % filename)
          return
-
-   def convert(self,outformat):
+   
+   def convert(self,outformat,appli=None):
       if outformat == 'exec':
          try:
-            return parseur_python.PARSEUR_PYTHON(self.text).get_texte()
+            return parseur_python.PARSEUR_PYTHON(self.text).get_texte(appli)
          except:
             # Erreur lors de la conversion
             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],
@@ -122,4 +122,5 @@ class PythonParser:
       else:
          raise "Format de sortie : %s, non supporté"
          return None
+
 

@@ -193,7 +193,7 @@ class READERCATA:
           Pour chaque entité du catlogue on crée une liste de nom ordre_mc qui
           contient le nom des mots clés dans le bon ordre
       """ 
-      self.cata_ordonne_dico=autre_analyse_cata.analyse_catalogue(self.cata)
+      self.cata_ordonne_dico,self.appli.liste_simp_reel=autre_analyse_cata.analyse_catalogue(self.cata)
 
    def Retrouve_Ordre_Cata_Standard(self):
       """ 
@@ -245,7 +245,7 @@ class READERCATA:
       message="Chargement catalogue développeur présent dans :\n %s..." % self.appli.CONFIGURATION.path_cata_dev
       if self.appli.test == 0 :
          splash._splash.configure(text = message,barre='oui')
-      cata_dev_ordonne_dico = autre_analyse_cata.analyse_catalogue(self.cata_dev)
+      cata_dev_ordonne_dico,self.appli.liste_simp_reel=autre_analyse_cata.analyse_catalogue(self.cata)
       self.cata_ordonne_dico.update(cata_dev_ordonne_dico)
       self.appli.affiche_infos(" catalogue(s) développeur(s) chargé(s)" )
 

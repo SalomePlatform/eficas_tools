@@ -58,6 +58,7 @@ class UNIQUE_Panel(newSIMPPanel):
       """
       return self.entry.get()
     
+  
   def valid_valeur(self):
       """
       Teste si la valeur fournie par l'utilisateur est une valeur permise :
@@ -75,6 +76,8 @@ class UNIQUE_Panel(newSIMPPanel):
              return
    
       test = self.node.item.set_valeur(valeur)
+      if test :
+          self.set_valeur_texte(str(valeurentree))
        
       if not test :
           mess = "impossible d'évaluer : %s " %`valeur`

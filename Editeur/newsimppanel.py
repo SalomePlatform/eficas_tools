@@ -183,3 +183,28 @@ class newSIMPPanel(panels.OngletPanel):
       except:
          pass
 
+# ----------------------------------------------------------------------------------------
+#   Méthodes utilisées pour la manipulation des items en notation scientifique
+# ----------------------------------------------------------------------------------------
+  def set_valeur_texte(self,texte_valeur) :
+      """ Sert à mettre à jour la notation scientifique"""
+      try :
+        if "R" in self.node.item.object.definition.type:
+            if texte_valeur[0] != "'":
+               clef=eval(texte_valeur)
+               if str(clef) != str(texte_valeur) :
+                  clefobj=self.node.item.object.GetNomConcept()
+                  self.parent.appli.dict_reels[clefobj][clef]=texte_valeur
+      except:
+        pass
+
+
+  def get_valeur_texte(self,valeur) :
+     valeur_texte=""
+     if "R" in self.node.item.object.definition.type:
+        clefobj=self.node.item.object.GetNomConcept()
+        if self.parent.appli.dict_reels.has_key(clefobj):
+           if self.parent.appli.dict_reels[clefobj].has_key(valeur):
+              valeur_texte=self.parent.appli.dict_reels[clefobj][valeur]
+     return valeur_texte
+ 

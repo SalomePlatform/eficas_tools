@@ -107,6 +107,7 @@ class BUREAU:
       self.liste_JDCDisplay=[]
       comploader.charger_composants()
       self.cree_cataitem()
+      self.text_reel=""
 
    def cree_cataitem(self):
       """
@@ -271,7 +272,7 @@ class BUREAU:
          # Le convertisseur existe on l'utilise
          p=convert.plugins[format]()
          p.readfile(file)
-         text=p.convert('exec')
+         text=p.convert('exec',self.appli)
          if not p.cr.estvide(): 
             self.appli.affiche_infos("Erreur à la conversion")
             Fenetre(self.appli,
@@ -665,5 +666,4 @@ class BUREAU:
 
    def update_jdc_courant(self):
       self.JDCDisplay_courant.update()
-
 
