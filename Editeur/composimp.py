@@ -212,7 +212,18 @@ class PLUSIEURS_Panel(newSIMPPanel):
       Méthode qui récupère la liste des valeurs donnée par l'utilisateur
       et l'affecte au mot-clé courant.
       """
-      l_valeurs = self.Liste_valeurs.get_liste()
+      l1_valeurs = self.Liste_valeurs.get_liste()
+      # PN : remplacement des paramétres par leur nom (cf get_liste)
+      #      
+      l_valeurs=[]
+      for  val in l1_valeurs :
+           if val.__class__.__name__ in ('PARAMETRE','PARAMETRE_EVAL'):
+		v=val.nom
+           else:
+                v=val
+           l_valeurs.append(v)
+    
+      print "l_valeurs = ", l_valeurs
       longueur = len(l_valeurs)
       if longueur < min or longueur > max :
           self.parent.appli.affiche_infos("Valeur refusée : nombre d'éléments incorrect dans la liste")
@@ -224,6 +235,7 @@ class PLUSIEURS_Panel(newSIMPPanel):
       else:
          valeur = None
       self.parent.appli.affiche_infos("Valeur acceptée")
+      print "valeur = " ,valeur
       self.record_valeur(valeur)
       if self.node.item.isvalid():
           self.node.parent.select()
