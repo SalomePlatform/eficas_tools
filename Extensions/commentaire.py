@@ -148,6 +148,9 @@ class COMMENTAIRE :
   def delete_concept(self,sd):
     pass
 
+  def replace_concept (self,old_sd,sd):
+    pass
+
   def verif_condition_bloc(self):
     """
         Evalue les conditions de tous les blocs fils possibles
