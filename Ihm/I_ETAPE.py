@@ -355,6 +355,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       # meme en cas d'erreur et reporter l'emission du message d'erreur a la phase de validation
       if not self.isvalid(sd='non') : return
       else:self.state='undetermined'
+      self.sdnom=nom
       try:
          if self.parent:
             sd= self.parent.create_sdprod(self,nom)

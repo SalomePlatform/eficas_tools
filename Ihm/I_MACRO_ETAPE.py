@@ -194,6 +194,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
      # CCAR : meme modification que dans I_ETAPE
      if not self.isvalid(sd='non') : return
      else:self.state='undetermined'
+     self.sdnom=nom
      try:
         # On positionne la macro self en tant que current_step pour que les 
         # étapes créées lors de l'appel à sd_prod et à op_init aient la macro
