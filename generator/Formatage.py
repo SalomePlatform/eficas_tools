@@ -78,6 +78,8 @@ class Formatage :
         self.texte_etape = etape
       self.jdc_fini = self.jdc_fini + '\n' + self.texte_etape
     return self.jdc_fini
+  
+  
 
   def formate_etape(self,liste):
     """
@@ -110,42 +112,74 @@ class Formatage :
         # on écrit ses fils
         self.formate_etape(element[1:])
       elif type(element) == types.StringType:
+
         # il s'agit d'un mot-clé simple ou de ')' ou ');' ou '),' ou ');\n'
+
         if element in l_patterns_fin_mcf :
-          # ici, on traite le mot-clef facteur "element"
-          self.texte_etape = self.texte_etape + string.strip(element)
-          length = len(self.indent)
-          if length > 1:
-            last = self.indent[length-1]
-            self.indent.remove(last)
-            self.indent_courant=self.indent[length-2]
-          else :
-            self.indent_courant=self.indent[0]
+              self.traite_mcfact(s_mcfact=element,ind=ind)
         elif element in l_patterns_fin_etape :
-          # ici, on traite l'etape "element"
-          length = len(self.indent)
-          if length > 1:
-            last = self.indent[length-1]
-            self.indent.remove(last)
-            self.indent_courant=self.indent[length-2]
-          else :
-            self.indent_courant=self.indent[0]
-          self.texte_etape = self.texte_etape + string.strip(element)
+              self.traite_etape(s_etape=element,ind=ind)
         else :
-          # ici, on traite un mot-clef simple (element)
-          longueur = self.longueur(self.texte_etape)
-          increment = len(('\n'+self.indent_courant*' ')*ind + string.strip(element))
-          #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(element)
-          if ((1-ind)*longueur+increment)  <= self.l_max :
-            self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind + string.strip(element)
-          else :
-            # il faut couper ...
-            nom,valeur = string.split(element,self.sep,1)
-            chaine = self.creer_chaine(nom,valeur,'\n'+self.indent_courant*' ',ind)
-            #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(element)
-            self.texte_etape = self.texte_etape + chaine
+              self.traite_mcsimp(s_mcsimp=element,ind=ind)
+
       ind = 1
-      
+
+  def traite_etape(self,s_etape,ind) :
+      """
+          Traite une partie du jdc formaté : s_etape, une chaîne de caractères
+          contenant une étape
+          L'attribut self.texte_etape est modifié (complété) par le traitement
+          L'attribut self.indent est modifié par le traitement
+          L'attribut self.indent_courant est modifié par le traitement
+      """
+      length = len(self.indent)
+      if length > 1:
+          last = self.indent[length-1]
+          self.indent.remove(last)
+          self.indent_courant=self.indent[length-2]
+      else :
+          self.indent_courant=self.indent[0]
+      self.texte_etape = self.texte_etape + string.strip(s_etape)
+
+  def traite_mcfact(self,s_mcfact,ind) :
+      """
+          Traite une partie du jdc formaté : s_mcfact, une chaîne de caractères
+          contenant un mot-clef facteur.
+          L'attribut self.texte_etape est modifié (complété) par le traitement
+          L'attribut self.indent est modifié par le traitement
+          L'attribut self.indent_courant est modifié par le traitement
+      """
+      self.texte_etape = self.texte_etape + string.strip(s_mcfact)
+      length = len(self.indent)
+      if length > 1:
+           last = self.indent[length-1]
+           self.indent.remove(last)
+           self.indent_courant=self.indent[length-2]
+      else :
+           self.indent_courant=self.indent[0]
+      return
+
+
+  def traite_mcsimp(self,s_mcsimp,ind) :
+      """
+          Traite une partie du jdc formaté : s_mcsimp, une chaîne de caractères
+          contenant un mot-clef simple.
+          L'attribut self.texte_etape est modifié (complété) par le traitement
+      """
+      longueur = self.longueur(self.texte_etape)
+      increment = len(('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp))
+      #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
+      if ((1-ind)*longueur+increment)  <= self.l_max :
+          self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
+      else :
+          # il faut couper ...
+          nom,valeur = string.split(s_mcsimp,self.sep,1)
+          chaine = self.creer_chaine(nom,valeur,'\n'+self.indent_courant*' ',ind)
+          #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
+          self.texte_etape = self.texte_etape + chaine
+      return
+
+
   def longueur(self,texte):
     """ 
        texte est une string qui peut contenir des retours chariots
@@ -203,4 +237,3 @@ class Formatage :
         s=s+'\n'+texte
 
     return s
-
