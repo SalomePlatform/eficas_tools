@@ -270,7 +270,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           if encorevalide:
 	     type_param=param.valeur.__class__.__name__
 	     for typ in self.definition.type:
-		 if typ=='R' and type_param!='str':
+		 if typ=='R':
 		     liste_param.append(param)
 		 if typ=='I' and type_param=='int':
 		     liste_param.append(param)
