@@ -60,6 +60,8 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     """
     if not val : return None
     d={}
+    val = string.strip(val)
+    if val[-1] == ';' : val = val[0:-1]
     d['EVAL'] = Accas.EVAL
     try:
         valeur = eval(val,{},d)

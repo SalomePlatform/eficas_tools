@@ -257,3 +257,13 @@ class MCSIMP(I_OBJECT.OBJECT):
       if issubclass(self.valeur.__class__,ASSD) : l.append(self.valeur)
     return l
 
+
+  def set_valeur_co(self,nom_co):
+      """
+      Affecte à self l'objet de type CO et de nom nom_co
+      """
+      new_objet = CO(nom_co)
+      self.valeur = new_objet
+      self.val = new_objet
+      self.init_modif()
+	

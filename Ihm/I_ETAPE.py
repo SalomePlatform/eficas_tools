@@ -237,6 +237,10 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       etape.mc_liste=[]
       for objet in self.mc_liste:
         new_obj = objet.copy()
+	new_obj.parent = etape
+	if hasattr(new_obj,'isMcList') :
+	   if new_obj.isMCList() :
+	      new_obj.init(new_obj.nom,etape)
         etape.mc_liste.append(new_obj)
       return etape
 

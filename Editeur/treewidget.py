@@ -13,8 +13,8 @@ import fontes
 import images
 
 #
-__version__="$Name: V1_1p1 $"
-__Id__="$Id: treewidget.py,v 1.1.1.1 2001/12/04 15:38:23 eficas Exp $"
+__version__="$Name:  $"
+__Id__="$Id: treewidget.py,v 1.1.1.1 2002/03/26 09:08:45 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -468,6 +468,7 @@ class Node :
         try:
             self.canvas.addtag_overlapping('move',bbox1[0],self.y +10,bbox1[2],bbox1[3])
         except:
+	    print "Erreur dans move :"
             print self
             print self.item
             print self.item.object
@@ -493,6 +494,7 @@ class Node :
             try:
                 child.trace_ligne()
             except:
+	        print "Erreur dans trace_ligne :"
                 print child
                 print child.item.object
 

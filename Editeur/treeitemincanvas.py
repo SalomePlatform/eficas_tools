@@ -25,7 +25,7 @@ class TREEITEMINCANVAS:
       self.parent=parent
 
       self.item=Objecttreeitem.make_objecttreeitem(self.appli,self.nom,self.object)
-      self.canvas=Pmw.ScrolledCanvas(self.parent,borderframe=1)
+      self.canvas=Pmw.ScrolledCanvas(self.parent,borderframe=1,canvas_background='gray95')
       self.canvas.pack(padx=10,pady=10,fill = 'both', expand = 1)
       if not sel:
          def sel(event=None):

@@ -49,11 +49,16 @@ class MCList:
       child.delete_concept(sd)
 
   def copy(self):
+    """
+       Réalise la copie d'une MCList
+    """
     liste = self.data[0].definition.list_instance()
     # XXX Pas de parent ??
-    liste.init(self.nom)
+    # FR -->Il faut en spécifier un pour la méthode init qui attend 2 arguments ...
+    liste.init(self.nom,self.parent)
     for objet in self:
       new_obj = objet.copy()
+      new_obj.parent = liste
       liste.append(new_obj)
     return liste
 
@@ -93,3 +98,21 @@ class MCList:
     # Sans objet pour une liste de mots clés facteurs
     return [],[]
 
+  def init_modif(self):
+    """
+       Met l'état de l'objet à modified et propage au parent
+       qui vaut None s'il n'existe pas
+    """
+    self.state = 'modified'
+    if self.parent:
+      self.parent.init_modif()
+
+  def get_etape(self):
+     """
+        Retourne l'étape à laquelle appartient self
+        Un objet de la catégorie etape doit retourner self pour indiquer que
+        l'étape a été trouvée
+        XXX double emploi avec self.etape ???
+     """
+     if self.parent == None: return None
+     return self.parent.get_etape()

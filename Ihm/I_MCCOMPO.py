@@ -32,7 +32,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
     """
     l=[]
     objet = self
-    while objet.definition.label != 'JDC' :
+    while objet.nature != 'JDC' :
       if not objet.isMCList() :
         l.append(string.strip(objet.nom))
       else :
@@ -304,11 +304,17 @@ class MCCOMPO(I_OBJECT.OBJECT):
   def copy(self):
     """ Retourne une copie de self """
     objet = self.makeobjet()
+    # FR : attention !!! avec makeobjet, objet a le même parent que self
+    # ce qui n'est pas du tout bon dans le cas d'une copie !!!!!!!
+    # FR : peut-on passer par là autrement que dans le cas d'une copie ???
+    # FR --> je suppose que non
+    objet.parent = None
     objet.valeur = copy(self.valeur)
     objet.val = copy(self.val)
     objet.mc_liste=[]
     for obj in self.mc_liste:
       new_obj = obj.copy()
+      new_obj.parent = objet
       objet.mc_liste.append(new_obj)
     return objet
 

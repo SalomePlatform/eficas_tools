@@ -110,6 +110,7 @@ class APPLI:
         root.option_add('*background', 'grey')
         root.option_add('*foreground', 'black')
         root.option_add('*EntryField.Entry.background', 'white')
+	root.option_add('*Entry*background', 'white')
         root.option_add('*Listbox*background', 'white')
         root.option_add('*Listbox*selectBackground', '#00008b')
         root.option_add('*Listbox*selectForeground', 'white')

@@ -1,5 +1,6 @@
 """
 """
+import string
 
 class OBJECT:
   def isMCList(self):
@@ -80,4 +81,9 @@ class OBJECT:
     """
     return [],[]
 
-
+  def get_genealogie(self):
+    """ 
+        Retourne la liste des noms des ascendants (noms de MCSIMP,MCFACT,MCBLOC
+        ou ETAPE) de self jusqu'au premier objet etape rencontré
+    """
+    return []
