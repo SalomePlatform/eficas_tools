@@ -228,7 +228,12 @@ class JDCDISPLAY:
       Lance la copie de l'objet placé dans self.appli.noeud_a_editer
       Ne permet que la copie d'objets de type Commande ou MCF
       """
-      child=self.appli.noeud_a_editer.doPaste(self.node_selected)
+      try:
+         child=self.appli.noeud_a_editer.doPaste(self.node_selected)
+      except:
+         showinfo("Action de coller impossible",
+                  "L'action de coller apres un tel objet n'est pas permise")
+         return
 
       if child == 0:
           if self.appli.message != '':
