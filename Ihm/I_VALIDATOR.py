@@ -27,7 +27,7 @@ class Valid:
           sur la liste elle meme et non sur ses items, la méthode
           doit retourner une chaine vide.
        """
-       return ""
+       return " "
 
    def aide(self):
        """
@@ -45,7 +45,7 @@ class Valid:
           elle meme et pas sur ses items. Dans le cas où le validateur ne fait pas de vérification
           sur des listes, elle retourne une chaine vide
        """
-       return ""
+       return " "
 
    def is_list(self):
        """
@@ -104,6 +104,7 @@ class Valid:
            Si c'est un objet de ce type elle retourne la valeur 1 sinon la valeur 0
        """
        if type(valeur) == types.InstanceType :
+        if hasattr(valeur,'__class__'):
           if valeur.__class__.__name__ in ('EVAL','entier','reel','chaine','complexe','liste','PARAMETRE_EVAL') :
              return 1
        return 0
@@ -161,7 +162,7 @@ class OrVal(Valid):
        chaine=""
        a=1
        for v in self.validators:
-	   if v.info_erreur_item() != "" :
+	   if v.info_erreur_item() != " " :
               if a==1:
                  chaine=v.info_erreur_item()
                  a=0
@@ -173,7 +174,7 @@ class OrVal(Valid):
        chaine=""
        a=1
        for v in self.validators:
-	   if v.info_erreur_liste() != "" :
+	   if v.info_erreur_liste() != " " :
               if a==1:
                  chaine=v.info_erreur_liste()
                  a=0
@@ -232,7 +233,7 @@ class AndVal(Valid):
        chaine=""
        a=1
        for v in self.validators:
-	   if v.info_erreur_item() != "" :
+	   if v.info_erreur_item() != " " :
               if a==1:
                  chaine=v.info_erreur_item()
                  a=0
@@ -243,7 +244,7 @@ class AndVal(Valid):
    def info_erreur_liste(self):
        a=1
        for v in self.validators:
-	   if v.info_erreur_liste() != "" :
+	   if v.info_erreur_liste() != " " :
               if a==1:
                  chaine=v.info_erreur_liste()
                  a=0
