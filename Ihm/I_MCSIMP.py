@@ -114,9 +114,6 @@ class MCSIMP(I_OBJECT.OBJECT):
       s=s+' )'
       return s
 
-  def get_min_max(self):
-    return self.definition.min,self.definition.max
-
   def wait_co(self):
     """
         Méthode booléenne qui retourne 1 si l'objet attend un objet ASSD 

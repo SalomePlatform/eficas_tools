@@ -35,6 +35,7 @@ from utils import save_in_file
 from centerwindow import centerwindow
 
 from Noyau.N_utils import repr_float
+from Accas import AsException
     
 class Fenetre :
     """ Cette classe permet de créer une fenêtre Toplevel dans laquelle
@@ -641,7 +642,11 @@ class ListeChoix :
 
     def chooseitem(self,mot,label,commande):
         """ Active la méthode de choix passée en argument"""
-        commande(mot)
+        try:
+           commande(mot)
+        except AsException,e:
+           raison=str(e)
+           showerror(raison.split('\n')[0],raison)
         
     def selectitem(self,mot,label,commande) :
         """ Met l'item sélectionné (représenté par son label) en surbrillance

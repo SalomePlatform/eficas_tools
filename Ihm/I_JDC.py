@@ -171,6 +171,10 @@ class JDC(I_OBJECT.OBJECT):
           self.reset_context()
           self.active_etapes()
           return e
+        except AsException,e:
+          self.reset_current_step()
+          self.editmode=0
+          raise AsException("Impossible d ajouter la commande "+name + '\n' +str(e))
         except:
           traceback.print_exc()
           self.reset_current_step()

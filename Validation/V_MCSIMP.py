@@ -84,7 +84,11 @@ class MCSIMP:
           if cr == 'oui' :
             self.cr.fatal(string.join(("Mot-clé : ",self.nom," obligatoire non valorisé")))
           valid = 0
-        if v != None :
+        if v is None:
+          valid=0
+          if cr == 'oui' :
+             self.cr.fatal("None n'est pas une valeur autorisée")
+        else:
           # type,into ...
           valid = self.verif_type(val=v,cr=cr)*self.verif_into(cr=cr)*self.verif_card(cr=cr)
           #

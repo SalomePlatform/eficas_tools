@@ -1307,6 +1307,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       Cette méthode attribue le panel à l'objet pointé par self en fonction de la
       nature de la valeur demandée pour cet objet
       """
+      print "affect_panel : ",self.nom,self.is_list(),self.has_into(), self.get_into(None)
       if self.wait_shell():
           # l'objet attend un shell
           self.panel = SHELLPanel
@@ -1374,6 +1375,79 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
     """
     text= self.object.GetText()
     return text
+
+  def has_into(self):
+      """
+          Cette méthode indique si le mot cle simple propose un choix (valeur de retour 1)
+          ou s'il n'en propose pas (valeur de retour 0)
+
+          Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
+          Dans le cas sans validateur, l'information est donnée par l'attribut into
+          de la definition du mot cle.
+          Dans le cas avec validateur, il faut combiner l'information précédente avec
+          celle issue de l'appel de la méthode has_into sur le validateur. On utilisera
+          l'operateur ET pour effectuer cette combinaison (AndVal).
+      """
+      if not self.object.definition.validators:
+           if self.definition.into:
+               return 1
+           else:
+               return 0
+      else:
+           # Dans le cas avec validateurs, pour que le mot cle soit considéré
+           # comme proposant un choix, il faut que into soit présent OU
+           # que la méthode has_into du validateur retourne 1. Dans les autres cas
+           # on retournera 0 (ne propose pas de choix)
+           if self.definition.into:
+                return 1
+           elif self.object.definition.validators.has_into():
+                return 1
+           else:
+                return 0
+
+  def get_into(self,liste_courante=None):
+      """
+          Cette méthode retourne la liste de choix proposée par le mot cle. Si le mot cle ne propose
+          pas de liste de choix, la méthode retourne None.
+          L'argument d'entrée liste_courante, s'il est différent de None, donne la liste des choix déjà
+          effectués par l'utilisateur. Dans ce cas, la méthode get_into doit calculer la liste des choix
+          en en tenant compte.
+          Cette méthode part du principe que la relation entre into du mot clé et les validateurs est
+          une relation de type ET (AndVal).
+      """
+      if not self.object.definition.validators :
+         return self.object.definition.into
+      else:
+         return self.object.definition.validators.get_into(liste_courante,self.definition.into)
+         
+  def is_list(self):
+      """
+          Cette méthode indique si le mot cle simple attend une liste (valeur de retour 1)
+          ou s'il n'en attend pas (valeur de retour 0)
+
+          Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
+          Dans le cas sans validateur, l'information est donnée par l'attribut max 
+          de la definition du mot cle.
+          Dans le cas avec validateur, il faut combiner l'information précédente avec
+          celle issue de l'appel de la méthode is_list sur le validateur.On utilisera
+          l'operateur ET pour effectuer cette combinaison (AndVal).
+      """
+      if not self.object.definition.validators:
+           if self.definition.max <= 1:
+               return 0
+           else: 
+               return 1
+      else:
+           # Dans le cas avec validateurs, pour que le mot cle soit considéré 
+           # comme acceptant une liste, il faut que max soit supérieur a 1
+           # ET que la méthode is_list du validateur retourne 1. Dans les autres cas
+           # on retournera 0 (n'attend pas de liste)
+           if self.definition.max <= 1:
+                return 0
+           elif not self.object.definition.validators.is_list():
+                return 0
+           else:
+                return 1
 
   def wait_co(self):
       """
