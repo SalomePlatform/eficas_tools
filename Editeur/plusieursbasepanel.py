@@ -299,7 +299,6 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       """
       if not val :
           valeur = self.node.item.object.getval()
-	  print "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"
       else:
           valeur = val
       if not valeur : return
