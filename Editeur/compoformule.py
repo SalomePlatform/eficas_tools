@@ -163,7 +163,12 @@ valeurs seront effectivement prises en compte."""
         self.entry_nom.insert(END,nom)
     args = self.node.item.get_args()
     if args:
-        self.entry_arg.insert(END,args)
+        texte_args=""
+	for i in args :
+	    if texte_args != "" :
+	       texte_args = texte_args +","
+	    texte_args=texte_args + i
+        self.entry_arg.insert(END,texte_args)
     corps = self.node.item.get_corps()
     if corps :
         self.entry_exp.insert(END,self.node.item.get_corps())
