@@ -32,6 +32,7 @@ from Accas import ETAPE,PROC_ETAPE,MACRO_ETAPE,ETAPE_NIVEAU,JDC,FORM_ETAPE
 from Accas import MCSIMP,MCFACT,MCBLOC,MCList,EVAL
 from Accas import GEOM,ASSD,MCNUPLET
 from Accas import COMMENTAIRE,PARAMETRE, PARAMETRE_EVAL,COMMANDE_COMM
+from Extensions.parametre import ITEM_PARAMETRE
 from Formatage import Formatage
 
 def entryPoint():
@@ -144,6 +145,8 @@ class PythonGenerator:
          return self.generJDC(obj)
       elif isinstance(obj,MCNUPLET):
          return self.generMCNUPLET(obj)
+      elif isinstance(obj,ITEM_PARAMETRE):
+         return self.generITEM_PARAMETRE(obj)
       else:
          raise "Type d'objet non prévu",obj
 
@@ -228,6 +231,9 @@ class PythonGenerator:
          return obj.nom + ' = None ;\n'
       else:
          return obj.nom + ' = '+ self.generator(obj.valeur) +';\n'
+
+   def generITEM_PARAMETRE(self,obj):
+       return repr(obj) 
 
    def generPARAMETRE(self,obj):
       """
