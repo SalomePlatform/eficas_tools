@@ -51,6 +51,10 @@ def main():
                                                             'editeur.ini',
                                                             'eficas_aster.py',
                                                            ])
+   copyfiles('Cata/pre74',os.path.join(path_distrib,'Aster','Cata','pre74'),['*.py'])
+   copyfiles('Cata/cataSTA5',os.path.join(path_distrib,'Aster','Cata','cataSTA5'),['*.py'])
+   copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
+
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
    copyfiles('../convert/Parserv5',os.path.join(path_distrib,'convert','Parserv5'),['*.py'])
 

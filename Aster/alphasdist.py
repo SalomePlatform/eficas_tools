@@ -43,6 +43,9 @@ def main():
    copyfiles('../Misc',os.path.join(path_distrib,'Misc'),['*.py'])
    copyfiles('../Accas',os.path.join(path_distrib,'Accas'),['*.py'])
    copyfiles('Cata/Macro',os.path.join(path_distrib,'Aster','Cata','Macro'),['*.py'])
+   copyfiles('Cata/pre74',os.path.join(path_distrib,'Aster','Cata','pre74'),['*.py'])
+   copyfiles('Cata/cataSTA5',os.path.join(path_distrib,'Aster','Cata','cataSTA5'),['*.py'])
+   copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
    copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
    copyfiles('../AIDE/fichiers',os.path.join(path_distrib,'AIDE','fichiers'),['*'])
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
