@@ -3,70 +3,88 @@ Module message
 --------------
     le module message propose la fonction MESSAGE pour afficher
     sur la stderr, le texte passé en argument.
+    N.B. : la fonction MESSAGE n'est opérante que pour les développeurs
+           (la variable DEVELOPPEUR doit être définie)
 """
 
-import sys
-sortie=sys.stderr
-sortie.write( "import de "+__name__+" : $Id$" )
-sortie.write( "\n" )
+try :
+	from developpeur import DEVELOPPEUR
+except :
+	DEVELOPPEUR=None
 
-def MESSAGE( text , offset=1 ) :
+def NULL( *l_args, **d_args  ) : pass
 
-    """
-    Fonction MESSAGE
-    ----------------
-    La fonction MESSAGE affiche sur la stderr, le texte passé en argument.
-    Elle précise également le nom du fichier et le numéro de la ligne où
-    elle a été appelée.
+if DEVELOPPEUR :
 
-    Usage :
+    import developpeur
+    developpeur.sortie.write( "import de "+__name__+" : $Id$" )
+    developpeur.sortie.write( "\n" )
+
+    import sys
+    import ici
+
+    def MESSAGE( text , offset=1 ) :
+
+        """
+        Fonction MESSAGE
+        ----------------
+        La fonction MESSAGE affiche sur la stderr, le texte passé en argument.
+        Elle précise également le nom du fichier et le numéro de la ligne où
+        elle a été appelée.
+
+        Usage :
         from message import MESSAGE
 
         MESSAGE("debut du traitement")
         MESSAGE( "Exception interceptée "+str(e) )
-    """
+        """
 
-    sortie=sys.stderr
-
-    import ici
-    ici.ICI( offset )
-    sortie.write( str(text)+'\n' )
-    sortie.flush()
-    return
+        ici.ICI( offset )
+        developpeur.sortie.write( str(text)+'\n' )
+        developpeur.sortie.flush()
+        return
 
 
 
-def DEBUT() :
+    def DEBUT() :
 
-    """
-    Fonction DEBUT
-    --------------
-    La fonction DEBUT affiche sur la stderr, le texte signalant le début
-    d'un traitement
+        """
+        Fonction DEBUT
+        --------------
+        La fonction DEBUT affiche sur la stderr, le texte signalant le début
+        d'un traitement
 
-    Usage :
-        from message import *
-        DEBUT()
-    """
+        Usage :
+            from message import *
+            DEBUT()
+            N.B. : la fonction DEBUT n'est opérante que pour les développeurs
+        """
 
-    MESSAGE("DEBUT du traitement",offset=2)
-    return
+        developpeur.sortie.write( '\n\n' )
+        MESSAGE("DEBUT du traitement [",offset=2)
+        return
 
 
 
-def FIN() :
+    def FIN() :
 
-    """
-    Fonction FIN
-    ------------
-    La fonction FIN affiche sur la stderr, le texte signalant la fin
-    d'un traitement
+        """
+        Fonction FIN
+        ------------
+        La fonction FIN affiche sur la stderr, le texte signalant la fin
+        d'un traitement
 
-    Usage :
-        from message import *
-        FIN()
-    """
+        Usage :
+            from message import *
+            FIN()
 
-    print
-    MESSAGE("FIN du traitement",offset=2)
-    return
+            N.B. : la fonction FIN n'est opérante que pour les développeurs
+        """
+
+        MESSAGE("] FIN du traitement",offset=2)
+        return
+
+else :
+    MESSAGE= NULL
+    DEBUT = NULL
+    FIN = NULL

@@ -1,5 +1,5 @@
 """
-    $Id: __init__.py,v 1.2 2003/02/04 10:40:57 eficas Exp $
+    $Id: __init__.py,v 1.3 2003/02/06 15:11:22 eficas Exp $
 
     Le package UTILITES contient les fonctions permettant
     d'instrumenter un script :
@@ -10,14 +10,22 @@
 
 
 ##__all__ = [ "ici" , "message" , "scrute" , "pause" , "appels" ]
-from pause import *
+
+try :
+	from developpeur import *
+except :
+	pass
 from ici import *
+from execute import *
+from pause import *
 from scrute import *
 from message import *
 from appels import *
+from modification import *
 
 
 
 if __name__ == "__main__" :
-    print dir()
-    print "import du package effectué !"
+    MODIFICATION( "toto" )
+    developpeur.write( dir()+'\n' )
+    developpeur.write( "import du package effectué !" +'\n' )

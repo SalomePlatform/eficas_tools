@@ -4,42 +4,54 @@ Module pause
     le module pause propose la fonction PAUSE pour effectuer
     une attente.
 """
+try :
+	from developpeur import DEVELOPPEUR
+except :
+	DEVELOPPEUR=None
 
-import sys
-sortie=sys.stderr
-sortie.write( "import de "+__name__+" : $Id$" )
-sortie.write( "\n" )
+def NULL( *l_args, **d_args  ) : pass
 
-def PAUSE( secondes ) :
+if DEVELOPPEUR :
 
-    """
+    import developpeur
+    developpeur.sortie.write( "import de "+__name__+" : $Id$" )
+    developpeur.sortie.write( "\n" )
 
-    Fonction PAUSE
-    ----------------
-    La fonction PAUSE permet d'interrompre le traitement pendant un délai
-    passé en argument. La localisation de l'appel est tracée sur la stderr
+    import sys
+    import ici
+    
+    def PAUSE( secondes ) :
+    
+        """
+    
+        Fonction PAUSE
+        ----------------
+        La fonction PAUSE permet d'interrompre le traitement pendant un délai
+        passé en argument. La localisation de l'appel est tracée sur la stderr
+    
+        Usage :
+            from pause import PAUSE
+    
+            PAUSE(secondes=5)
+        """
+    
+        if secondes > 0 :
+            developpeur.sortie.write( "\n\n\n" )
+            ici.ICI()
+                
+            developpeur.sortie.write( "pause de "+str(secondes)+" secondes" )
+            developpeur.sortie.write( "\n\n\n" )
+            developpeur.sortie.flush()
+    
+            import time
+            time.sleep( secondes )
+    
+        developpeur.sortie.flush()
+    
+        return
 
-    Usage :
-        from pause import PAUSE
-
-        PAUSE(secondes=5)
-    """
-
-    if secondes > 0 :
-        sortie.write( "\n\n\n" )
-        import ici
-        ici.ICI()
-            
-        sortie.write( "pause de "+str(secondes)+" secondes" )
-        sortie.write( "\n\n\n" )
-        sortie.flush()
-
-        import time
-        time.sleep( secondes )
-
-    sortie.flush()
-
-    return
+else :
+    PAUSE = NULL
 
 
 if __name__ == "__main__" :
