@@ -4,7 +4,7 @@
 # Author    : Paul RASCLE, EDF
 # Project   : SALOME
 # Copyright : EDF 2003
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.2 2004/12/10 16:43:25 salome Exp $
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.3 2004/12/10 18:55:02 salome Exp $
 #=============================================================================
 
 from omniORB import CORBA
@@ -12,6 +12,7 @@ import LifeCycleCORBA
 import SALOMEDS
 import GEOM
 import SMESH
+from eficasCL import *
 
 # initialise the ORB
 orb = CORBA.ORB_init([''], CORBA.ORB_ID)
@@ -142,16 +143,16 @@ def getSMESHSubShapeIndexes(myStudy, entryList, typenoeudorcell = 0):
     refList = []
     subShapeIndexes = []
     
-    print "################  len(entryList)=", len(entryList)
     if len(entryList) > 0:
         iorStringMain = getMainShapeName(myStudy, entryList[0])
 
     if iorStringMain == None:
         raise RuntimeException("L'ior CORBA n'est pas défini")
 
-    print "################ iorStringMain=", iorStringMain
     
-    myCL=smesh.GetOrCreateCL(str(iorStringMain))
+    #myCL=smesh.GetOrCreateCL(str(iorStringMain))
+    myCLinit=CLinit()
+    myCL=myCLinit.GetOrCreateCL(iorStringMain)
 
     if len(entryList) > 0:
          for idShape in entryList:
@@ -173,8 +174,10 @@ def getAsterGroupNo(myStudy,entryList):
     typenoeudorcell = 0
     subShapeIndexes = getSMESHSubShapeIndexes(myStudy, entryList,typenoeudorcell)
     labelGroupNo = []
+    print "d"
     for val in subShapeIndexes:
         labelGroupNo.append(val)
+    print "e"
     return labelGroupNo
 
     #--------------------------------------------------------------------------

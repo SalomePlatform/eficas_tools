@@ -37,6 +37,9 @@ eficasEtude.py \
 EFICASGUI.py   \
 salomedsgui.py \
 SMESH_utils.py \
+eficasCL.py   \
+ChoixMaillage.py \
+MonChoixMaillage.py \
 eficasSalome.py  
 
 # _CS_gbo_151104 Ajout pour compatibilité ascendante entre versions de Eficas
