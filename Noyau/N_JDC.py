@@ -110,8 +110,7 @@ NONE = None
       """
       try:
         if self.appli != None : 
-           self.appli.affiche_infos('Compilation du fichier de commandes \
-                                     en cours ...')
+           self.appli.affiche_infos('Compilation du fichier de commandes en cours ...')
         self.proc_compile=compile(self.procedure,self.nom,'exec')
       except SyntaxError,e:
         if CONTEXT.debug : traceback.print_exc()
