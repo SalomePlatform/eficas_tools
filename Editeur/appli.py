@@ -39,7 +39,7 @@ import properties
 from widgets import Fenetre
 from Misc import MakeNomComplet
 
-VERSION="EFICAS v1.5"
+VERSION="EFICAS v1.6"
 
 class APPLI: 
   def __init__ (self,master,code='ASTER',fichier=None) :

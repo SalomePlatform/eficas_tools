@@ -1809,6 +1809,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       if hasattr(self.definition.validators,'into'):
 	 self.get_definition().into=self.definition.validators.into 
       valeurspossibles = self.get_definition().into
+      # CCAR : Ne serait-il pas preferable d'appeler get_into ?
+      #valeurspossibles=self.get_into(listeActuelle)
+
       listevalideitem=[]
       for item in valeurspossibles:
           encorevalide=self.valide_item(item)

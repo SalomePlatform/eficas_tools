@@ -36,7 +36,7 @@ from widgets import Fenetre,FenetreYesNo
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.9 2002/11/12 18:36:08 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.10 2002/11/14 12:14:20 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
