@@ -194,6 +194,8 @@ class newSIMPPanel(panels.OngletPanel):
                clef=eval(texte_valeur)
                if str(clef) != str(texte_valeur) :
                   clefobj=self.node.item.object.GetNomConcept()
+                  if not self.parent.appli.dict_reels.has_key(clefobj):
+                     self.parent.appli.dict_reels[clefobj] = {}
                   self.parent.appli.dict_reels[clefobj][clef]=texte_valeur
       except:
         pass
