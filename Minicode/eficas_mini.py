@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
     Ce module sert à lancer EFICAS configuré pour Code_Mini
 """
@@ -23,10 +23,10 @@ def main():
    #Misc.Trace.begin_trace()
    if len(sys.argv) > 1 :
        # on veut ouvrir un fichier directement au lancement d'Eficas
-       eficas_go.lance_eficas(code='ASTER',fichier = sys.argv[1])
+       eficas_go.lance_eficas(code='MINICODE',fichier = sys.argv[1])
    else:
        # on veut ouvrir Eficas 'vide'
-       eficas_go.lance_eficas(code='ASTER')
+       eficas_go.lance_eficas(code='MINICODE')
    Misc.Trace.end_trace()
 
 def hidez():

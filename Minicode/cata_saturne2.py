@@ -6,11 +6,10 @@ from Accas import ENSEMBLE,PRESENT_ABSENT
 from Accas import JDC_CATA,NIVEAU
 from Accas import OPER,PROC,MACRO,FORM
 from Accas import SIMP,FACT,BLOC
-from Accas import EVAL,PARAMETRE,COMMENTAIRE,PARAMETRE_EVAL,COMMANDE_COMM
 from Accas import ASSD,CO,GEOM,fonction,geom,assd
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_saturne2.py,v 1.2 2003/10/16 14:31:22 eficas Exp $"
+__Id__="$Id: cata_saturne2.py,v 1.3 2004/09/10 15:52:03 eficas Exp $"
 #
 
 import ops

@@ -18,8 +18,8 @@
 #
 #
 # ======================================================================
-from Noyau import N_EVAL 
+from Ihm import I_EVAL 
 
-class EVAL(N_EVAL.EVAL):
+class EVAL(I_EVAL.EVAL):
    def __init__(self,str):
-      N_EVAL.EVAL.__init__(self,str)
+      I_EVAL.EVAL.__init__(self,str)
