@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF macr_recal_ops Macro  DATE 19/01/2004   AUTEUR DURAND C.DURAND 
+#@ MODIF macr_recal_ops Macro  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17,6 +17,8 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
+
+
 
 def macr_recal_ops(self,UNITE_ESCL, RESU_EXP, POIDS, LIST_PARA, RESU_CALC, 
                         ITER_MAXI, RESI_GLOB_RELA,UNITE_RESU,PARA_DIFF_FINI,

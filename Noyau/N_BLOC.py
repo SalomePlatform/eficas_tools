@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF N_BLOC Noyau  DATE 29/05/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF N_BLOC Noyau  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,6 +19,8 @@
 #                                                                       
 #                                                                       
 # ======================================================================
+
+
 """ 
     Ce module contient la classe de definition BLOC
     qui permet de spécifier les caractéristiques des blocs de mots clés 

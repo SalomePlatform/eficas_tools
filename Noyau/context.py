@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF context Noyau  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF context Noyau  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,6 +19,8 @@
 #                                                                       
 #                                                                       
 # ======================================================================
+
+
 _root=None
 _cata=None
 debug=0

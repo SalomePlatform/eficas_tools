@@ -1,4 +1,5 @@
-#@ MODIF stanley_ops Macro  DATE 05/04/2004   AUTEUR ASSIRE A.ASSIRE 
+#@ MODIF stanley_ops Macro  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -16,6 +17,8 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
+
+
 
 def stanley_ops(self,RESULTAT,MODELE,CHAM_MATER,CARA_ELEM,**args):
 

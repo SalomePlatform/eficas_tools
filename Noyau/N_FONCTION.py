@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF N_FONCTION Noyau  DATE 11/03/2003   AUTEUR DURAND C.DURAND 
+#@ MODIF N_FONCTION Noyau  DATE 28/09/2004   AUTEUR DURAND C.DURAND 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,8 +19,30 @@
 #                                                                       
 #                                                                       
 # ======================================================================
+
 from N_ASSD import ASSD
+import string
 
 class FONCTION(ASSD):pass
 
-class formule(FONCTION) : pass
+class formule(ASSD):
+   def __init__(self,**args):
+      ASSD.__init__(self,**args)
+      self.nompar    =None
+      self.expression=None
+   def __call__(self,*val):
+      context=self.jdc.const_context
+      i=0
+      for param in self.nompar : 
+         context[param]=val[i]
+         i=i+1
+      try :
+       exec(self.expression) in context
+      except :
+       print 75*'!'
+       print '! '+string.ljust('Erreur evaluation formule '+self.nom,72)+'!'
+       print 75*'!'
+       raise
+      res=context['____x']
+      del(context)
+      return res

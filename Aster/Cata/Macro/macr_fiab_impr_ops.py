@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF macr_fiab_impr_ops Macro  DATE 23/08/2004   AUTEUR CIBHHLV L.VIVAN 
+#@ MODIF macr_fiab_impr_ops Macro  DATE 05/10/2004   AUTEUR CIBHHLV L.VIVAN 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17,6 +17,8 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
+
+
 # RESPONSABLE GNICOLAS G.NICOLAS
 #
 def macr_fiab_impr_ops(self, INFO,
@@ -64,11 +66,11 @@ def macr_fiab_impr_ops(self, INFO,
 # 2. Définition d'un fichier d'échange
 #____________________________________________________________________
 # 
-  iunit = DEFI_FICHIER ( ACTION= "ASSOCIER",
-#                         FICHIER = Nom_Symbolique_Fichier_ASTER_vers_FIABILITE,
-                         UNITE = Unite_Fichier_ASTER_vers_FIABILITE,
-                         TYPE = "ASCII",
-                         INFO = INFO )
+  DEFI_FICHIER ( ACTION= "ASSOCIER",
+#                FICHIER = Nom_Symbolique_Fichier_ASTER_vers_FIABILITE,
+                 UNITE = Unite_Fichier_ASTER_vers_FIABILITE,
+                 TYPE = "ASCII",
+                 INFO = INFO )
 #____________________________________________________________________
 #
 # 4. Ecriture de la valeur cible
@@ -96,9 +98,9 @@ def macr_fiab_impr_ops(self, INFO,
 # 6. Libération du fichier d'échange
 #____________________________________________________________________
 # 
-  iunit = DEFI_FICHIER ( ACTION= "LIBERER",
-                         UNITE = Unite_Fichier_ASTER_vers_FIABILITE,
-                         INFO = INFO )
+  DEFI_FICHIER ( ACTION= "LIBERER",
+                 UNITE = Unite_Fichier_ASTER_vers_FIABILITE,
+                 INFO = INFO )
 #
 #--------------------------------------------------------------------
 # 7. C'est fini !

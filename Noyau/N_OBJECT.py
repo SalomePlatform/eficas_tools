@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF N_OBJECT Noyau  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
+#@ MODIF N_OBJECT Noyau  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,6 +19,8 @@
 #                                                                       
 #                                                                       
 # ======================================================================
+
+
 """ 
     Ce module contient la classe OBJECT classe mère de tous les objets
     servant à controler les valeurs par rapport aux définitions

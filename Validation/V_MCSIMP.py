@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF V_MCSIMP Validation  DATE 17/08/2004   AUTEUR DURAND C.DURAND 
+#@ MODIF V_MCSIMP Validation  DATE 20/09/2004   AUTEUR DURAND C.DURAND 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,6 +19,7 @@
 #                                                                       
 #                                                                       
 # ======================================================================
+
 """
    Ce module contient la classe mixin MCSIMP qui porte les méthodes
    nécessaires pour réaliser la validation d'un objet de type MCSIMP
@@ -225,7 +226,7 @@ class MCSIMP:
       if type(valeur) == types.InstanceType :
         #XXX je n'y touche pas pour ne pas tout casser mais il serait
         #XXX préférable d'appeler une méthode de valeur : return valeur.is_type('C'), par exemple
-        if valeur.__class__.__name__ in ('EVAL','complexe','PARAMETRE_EVAL'):
+        if valeur.__class__.__name__ in ('complexe','PARAMETRE_EVAL'):
           return 1
         elif valeur.__class__.__name__ in ('PARAMETRE',):
           # il faut tester si la valeur du parametre est un complexe
@@ -257,7 +258,7 @@ class MCSIMP:
         #XXX préférable d'appeler une méthode de valeur : return valeur.is_type('R'), par exemple
         #XXX ou valeur.is_reel()
         #XXX ou encore valeur.compare(self.is_reel)
-        if valeur.__class__.__name__ in ('EVAL','reel','PARAMETRE_EVAL') :
+        if valeur.__class__.__name__ in ('reel','PARAMETRE_EVAL') :
           return 1
         elif valeur.__class__.__name__ in ('PARAMETRE',):
           # il faut tester si la valeur du parametre est un réel
@@ -275,7 +276,7 @@ class MCSIMP:
       if type(valeur) == types.InstanceType :
         #XXX je n'y touche pas pour ne pas tout casser mais il serait
         #XXX préférable d'appeler une méthode de valeur : return valeur.is_type('I'), par exemple
-        if valeur.__class__.__name__ in ('EVAL','entier','PARAMETRE_EVAL') :
+        if valeur.__class__.__name__ in ('entier','PARAMETRE_EVAL') :
           return 1
         elif valeur.__class__.__name__ in ('PARAMETRE',):
           # il faut tester si la valeur du parametre est un entier

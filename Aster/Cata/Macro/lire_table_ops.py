@@ -1,4 +1,5 @@
-#@ MODIF lire_table_ops Macro  DATE 06/07/2004   AUTEUR CIBHHPD S.VANDENBERGHE 
+#@ MODIF lire_table_ops Macro  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17,8 +18,11 @@
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
 
+
+
 import string
 
+#from Utilitai.transpose import transpose
 
 ######################################################################
 ####  méthode de construction du dictionnaire
@@ -34,7 +38,6 @@ def lecture_table(texte,nume,separ):
   # VALE_PARA et VALE_RESU est l indice permettant de pointer sur la
   # fonction voulue, au sens de ce découpage.
 
-  from Utilitai.transpose import transpose
   if string.strip(separ)=='' : separ=None
   tab_lue={}
   nume_lign=[]

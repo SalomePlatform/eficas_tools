@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF macr_cabri_mail_ops Macro  DATE 23/08/2004   AUTEUR CIBHHLV L.VIVAN 
+#@ MODIF macr_cabri_mail_ops Macro  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -235,9 +235,16 @@ def write_file_dgib_STD(unite_mgib,unite_datg,msh_bride,geo_bride):
     text = text + "** Type bride standard: "+geo_bride+"\n"
    
     text = text + "\n"
-    text = text + "opti dime 3 \n"
-    text = text + " elem cub8 SAUV FORM '"+nomFichierMGIB+"';\n"   
-    text = text + "opti nive 10;\n"
+    text = text + "nomfich = CHAINE \n"
+    if len(nomFichierMGIB)>72:
+      raise Exception, 'Nom de fichier trop long (limité à 72 caractères ' \
+         'pour GIBI) :\n',nomFichierMGIB
+    elif len(nomFichierMGIB)<=69:
+      text = text + "'"+nomFichierMGIB+"';\n"
+    else:
+      text = text + "'"+nomFichierMGIB[:69]+"'\n" \
+                  + "'"+nomFichierMGIB[69:]+"';\n"
+    text = text + "opti dime 3 elem cub8 SAUV FORM nomfich;\n"
     text = text + "dens 1;\n"
     text = text + "\n"
     fdgib.write(text)
@@ -309,8 +316,16 @@ def write_file_dgib_QQE(unite_mgib,unite_datg,msh_bride,geo_bride):
     text = text + "**************************************************************\n"
     text = text + "titre '"+"Bride Quelconque"+"';\n"
     text = text + "\n"
-    text = text + "opti dime 3 \n"
-    text = text + " elem cub8 SAUV FORM '"+nomFichierMGIB+"';\n"   
+    text = text + "nomfich = CHAINE \n"
+    if len(nomFichierMGIB)>72:
+      raise Exception, 'Nom de fichier trop long (limité à 72 caractères ' \
+         'pour GIBI) :\n',nomFichierMGIB
+    elif len(nomFichierMGIB)<=69:
+      text = text + "'"+nomFichierMGIB+"';\n"
+    else:
+      text = text + "'"+nomFichierMGIB[:69]+"'\n" \
+                  + "'"+nomFichierMGIB[69:]+"';\n"
+    text = text + "opti dime 3 elem cub8 SAUV FORM nomfich;\n"
     text = text + "dens 1;\n"
     text = text + "\n"
     fdgib.write(text)
@@ -413,6 +428,8 @@ def para_text(dico_var,var):
 # Accès au catalogue des brides standards
 # (les brides standards sont décrites dans le fichier Data_Brides.py)
 #=============================================================================================
+
+
 
 # Imprime tout le catalogue des brides standards disponibles dans un fichier texte
 def print_bride_std(nom_fichier):

@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF macro_miss_3d_ops Macro  DATE 23/08/2004   AUTEUR CIBHHLV L.VIVAN 
+#@ MODIF macro_miss_3d_ops Macro  DATE 05/10/2004   AUTEUR CIBHHLV L.VIVAN 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17,6 +17,8 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
+
+
 
 def macro_miss_3d_ops(self,UNITE_IMPR_ASTER,UNITE_OPTI_MISS,
                            UNITE_MODELE_SOL,UNITE_RESU_IMPE,
@@ -36,7 +38,7 @@ def macro_miss_3d_ops(self,UNITE_IMPR_ASTER,UNITE_OPTI_MISS,
   #self.icmd=1
   self.set_icmd(1)
 
-  iunit = DEFI_FICHIER(ACTION='LIBERER',UNITE=UNITE_IMPR_ASTER)
+  DEFI_FICHIER(ACTION='LIBERER',UNITE=UNITE_IMPR_ASTER)
 
   import aster 
   loc_fic=aster.repout()

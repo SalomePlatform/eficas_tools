@@ -1,4 +1,5 @@
-#@ MODIF lire_fonction_ops Macro  DATE 16/06/2004   AUTEUR DURAND C.DURAND 
+#@ MODIF lire_fonction_ops Macro  DATE 20/09/2004   AUTEUR DURAND C.DURAND 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,6 +20,7 @@
 
 import string,os,Numeric
 
+#from Utilitai.transpose import transpose
 
 ######################################################################
 ####  méthode de construction du VALE pour le format libre
@@ -33,7 +35,6 @@ def m_format_libre(texte,INDIC_PARA,INDIC_RESU,SEPAR):
   # INDIC_PARA et INDIC_RESU est l indice permettant de pointer sur la
   # fonction voulue, au sens de ce découpage.
 
-  from Utilitai.transpose import transpose
   l_fonc=[]
   fonc  =[]
   ier   =0
@@ -185,6 +186,43 @@ def lire_fonction_ops(self,FORMAT,TYPE,SEPAR,INDIC_PARA,UNITE,
                            TITRE      =TITRE,
                            VERIF      =VERIF,
                            VALE       =liste_vale,)
+
+  elif TYPE=='FONCTION_C':
+    # mise en forme de la liste de valeurs suivant le format choisi :
+    if 'INDIC_REEL' in args :
+                              indic1=args['INDIC_REEL']
+                              indic2=args['INDIC_IMAG']
+    if 'INDIC_MODU' in args :
+                              indic1=args['INDIC_MODU']
+                              indic2=args['INDIC_PHAS']
+    ier,message,liste_vale_r=m_format_libre(texte,INDIC_PARA,indic1,SEPAR)
+    if ier!=0 :
+       self.cr.fatal(message)
+       return ier
+    ier,message,liste_vale_i=m_format_libre(texte,INDIC_PARA,indic2,SEPAR)
+    if ier!=0 :
+       self.cr.fatal(message)
+       return ier
+    liste=[]
+    if   'INDIC_REEL' in args :
+      for i in range(len(liste_vale_r)/2) :
+        liste=liste+[liste_vale_r[2*i],liste_vale_r[2*i+1],liste_vale_i[2*i+1]]
+    elif 'INDIC_MODU' in args :
+      for i in range(len(liste_vale_r)/2) :
+        module=liste_vale_r[2*i+1]
+        phase =liste_vale_i[2*i+1]
+        liste=liste+[liste_vale_r[2*i],module*cos(phase),module*sin(phase)]
+
+    # création de la fonction ASTER :
+    ut_fonc=DEFI_FONCTION( NOM_PARA   =NOM_PARA,
+                           NOM_RESU   =NOM_RESU,
+                           PROL_DROITE=PROL_DROITE,
+                           PROL_GAUCHE=PROL_GAUCHE,
+                           INTERPOL   =INTERPOL,
+                           INFO       =INFO,
+                           TITRE      =TITRE,
+                           VERIF      =VERIF,
+                           VALE_C     =liste,)
 
   elif TYPE=='NAPPE':
 

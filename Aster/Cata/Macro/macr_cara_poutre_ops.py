@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF macr_cara_poutre_ops Macro  DATE 19/01/2004   AUTEUR DURAND C.DURAND 
+#@ MODIF macr_cara_poutre_ops Macro  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -558,6 +558,8 @@ def macr_cara_poutre_ops(self,UNITE_MAILLAGE,SYME_X,SYME_Y,GROUP_MA_BORD,
 # --- =        DU  CENTRE DE TORSION/CISAILLEMENT                      =
 # --- =        DES COEFFICIENTS DE CISAILLEMENT                        =
 #     ==================================================================
+
+
 #
 
 

@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF __init__ Noyau  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF __init__ Noyau  DATE 27/09/2004   AUTEUR CIBHHLV L.VIVAN 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,6 +19,8 @@
 #                                                                       
 #                                                                       
 # ======================================================================
+
+
 """ 
     Ce package fournit les classes de base d'EFICAS.
     Ces classes permettent d'effectuer quelques opérations basiques :

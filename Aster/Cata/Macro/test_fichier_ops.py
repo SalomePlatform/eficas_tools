@@ -1,4 +1,5 @@
-#@ MODIF test_fichier_ops Macro  DATE 30/03/2004   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF test_fichier_ops Macro  DATE 05/10/2004   AUTEUR CIBHHLV L.VIVAN 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17,7 +18,7 @@
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
 
-def test_fichier_ops(self, FICHIER, NOM_SYSTEME, NB_CHIFFRE, EPSILON, VALE_K, INFO, **args):
+def test_fichier_ops(self, UNITE, FICHIER, NB_CHIFFRE, EPSILON, VALE_K, INFO, **args):
    """
      Macro TEST_FICHIER permettant de tester la non-regression d'un fichier
      'a une tolerance' pres pour les nombres reels en calculant
@@ -32,42 +33,73 @@ def test_fichier_ops(self, FICHIER, NOM_SYSTEME, NB_CHIFFRE, EPSILON, VALE_K, IN
 
    # On importe les definitions des commandes a utiliser dans la macro
    # Le nom de la variable doit etre obligatoirement le nom de la commande
-   CREA_TABLE   =self.get_cmd('CREA_TABLE')
-   TEST_TABLE   =self.get_cmd('TEST_TABLE')
+   INFO_EXEC_ASTER = self.get_cmd('INFO_EXEC_ASTER')
+   DETRUIRE        = self.get_cmd('DETRUIRE')
+   CREA_TABLE      = self.get_cmd('CREA_TABLE')
+   TEST_TABLE      = self.get_cmd('TEST_TABLE')
 
    import os.path
+   import re
+   from types import StringType
    from Macro.test_fichier_ops import md5file
 
-   # calcule le md5sum du fichier
-   ier, mdsum = md5file(NOM_SYSTEME, NB_CHIFFRE, EPSILON, INFO)
-   if ier != 0:
-      if ier==4:
-         texte_erreur='Fichier inexistant : '+NOM_SYSTEME
+   # vérifie la syntaxe des expressions régulières fournies
+   l_regexp=[]
+   if args['EXPR_IGNORE']:
+      if type(args['EXPR_IGNORE']) is StringType:
+         lexp = [args['EXPR_IGNORE']]
       else:
-         texte_erreur='Erreur dans md5file, code retour = '+str(ier)
-      texte_erreur='<F> <TEST_FICHIER> '+texte_erreur
-#      raise aster.FatalError,texte_erreur
-      self.cr.fatal(texte_erreur)
-      return ier
+         lexp = args['EXPR_IGNORE']
+      for exp in lexp:
+         try:
+            obj=re.compile(exp)
+         except re.error, s:
+            print '<F> <TEST_FICHIER> <INVALID_REGEXP> '+str(s)+' pour "'+exp+'"'
+         else:
+            l_regexp.append(exp)
+      if len(l_regexp) < len(lexp):
+         self.cr.fatal(' <F> <TEST_FICHIER> Expression régulière invalide (voir <INVALID_REGEXP>)')
 
-   # comparaison a la reference
+
    is_ok=0
-   if INFO > 0 :
-      print ' %-20s : %32s' % ('REFERENCE',VALE_K)
-      print
 
-   if mdsum == VALE_K:
-      is_ok=1
+   # vérifier que le fichier a été fermé
+   tinfo__ = INFO_EXEC_ASTER(LISTE_INFO='ETAT_UNITE', FICHIER=FICHIER)
+   
+   if tinfo__['ETAT_UNITE',1].find('OUVERT')>-1:
+      print "<A> <TEST_FICHIER> LE FICHIER N'A PAS ETE FERME :\n",FICHIER
+
+   # fichier correctement fermé
+   else:
+      # calcule le md5sum du fichier
+      ier, mdsum = md5file(FICHIER, NB_CHIFFRE, EPSILON, l_regexp, INFO)
+      if ier != 0:
+         if ier==4:
+            texte_erreur='Fichier inexistant : '+FICHIER
+         else:
+            texte_erreur='Erreur dans md5file, code retour = '+str(ier)
+         texte_erreur='<S> <TEST_FICHIER> '+texte_erreur
+         # aujourd'hui, je ne sais pas déclencher autre chose que <F>...
+         self.cr.fatal(texte_erreur)
+         return ier
+
+      # comparaison a la reference
+      if INFO > 0 :
+         print ' %-20s : %32s' % ('REFERENCE',VALE_K)
+         print
+
+      if mdsum == VALE_K:
+         is_ok=1
 
    # produit le TEST_TABLE
-   __tab1=CREA_TABLE(LISTE=(_F(PARA='TEST',
+   tab1__=CREA_TABLE(LISTE=(_F(PARA='TEST',
                                TYPE_K='K8',
                                LISTE_K='VALEUR  ',),
                             _F(PARA='BOOLEEN',
                                LISTE_I=is_ok,),),)
    if args['REFERENCE'] == 'NON_REGRESSION':
-      TEST_TABLE(FICHIER=FICHIER,
-                 TABLE=__tab1,
+      TEST_TABLE(UNITE=UNITE,
+                 TABLE=tab1__,
                  FILTRE=_F(NOM_PARA='TEST',
                            VALE_K='VALEUR  ',),
                  NOM_PARA='BOOLEEN',
@@ -77,8 +109,8 @@ def test_fichier_ops(self, FICHIER, NOM_SYSTEME, NB_CHIFFRE, EPSILON, VALE_K, IN
                  REFERENCE=args['REFERENCE'],
                  VERSION=args['VERSION'],)
    else:
-      TEST_TABLE(FICHIER=FICHIER,
-                 TABLE=__tab1,
+      TEST_TABLE(UNITE=UNITE,
+                 TABLE=tab1__,
                  FILTRE=_F(NOM_PARA='TEST',
                            VALE_K='VALEUR  ',),
                  NOM_PARA='BOOLEEN',
@@ -86,17 +118,21 @@ def test_fichier_ops(self, FICHIER, NOM_SYSTEME, NB_CHIFFRE, EPSILON, VALE_K, IN
                  PRECISION=1.e-3,
                  CRITERE='ABSOLU',
                  REFERENCE=args['REFERENCE'],)
+
+   DETRUIRE(CONCEPT=_F(NOM=('tinfo__','tab1__'),),)
    return ier
 
 
-def md5file(fich,nbch,epsi,info=0):
+def md5file(fich,nbch,epsi,regexp_ignore=[],info=0):
    """
    Cette methode retourne le md5sum d'un fichier en arrondissant les nombres
    reels a la valeur significative.
    IN :
-      fich  : nom du fichier
-      nbch : nombre de decimales significatives
-      epsi  : valeur en deca de laquelle on prend 0.
+      fich          : nom du fichier
+      nbch          : nombre de decimales significatives
+      epsi          : valeur en deca de laquelle on prend 0
+      regexp_ignore : liste d'expressions régulières permettant d'ignorer
+         certaines lignes
    OUT :
       code retour : 0 si ok, >0 sinon
       md5sum
@@ -116,23 +152,34 @@ def md5file(fich,nbch,epsi,info=0):
    format_float='%'+str(nbch+7)+'.'+str(nbch)+'g'
    m=md5.new()
    i=0
-   for ligne in f.xreadlines():
-#python2.3   for ligne in f:
+   for ligne in f:
       i=i+1
+      if info>=2:
+         print 'LIGNE',i,
       # pour decouper 123E+987-1.2345
    #    r=re.split(' +|([0-9]+)\-+',ligne)
-      r=string.split(ligne)
-      for x in r:
-         try:
-            if abs(float(x))<epsi:
-               s='0'
-            else:
-               s=format_float % float(x)
-         except ValueError:
-            s=x
-         if info>=2:
-            print 'LIGNE',i,'VALEUR RETENUE',s
-         m.update(s)
+      keep=True
+      for exp in regexp_ignore:
+         if re.search(exp,ligne):
+            keep=False
+            if info>=2:
+               print ' >>>>>>>>>> IGNOREE <<<<<<<<<<',
+            break
+      if keep:
+         r=string.split(ligne)
+         for x in r:
+            try:
+               if abs(float(x))<epsi:
+                  s='0'
+               else:
+                  s=format_float % float(x)
+            except ValueError:
+               s=x
+            if info>=2:
+               print ' %s' % s,
+            m.update(s)
+      if info>=2:
+         print
    f.close()
    md5sum=m.hexdigest()
    if info>=1:

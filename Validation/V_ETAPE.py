@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF V_ETAPE Validation  DATE 26/09/2003   AUTEUR DURAND C.DURAND 
+#@ MODIF V_ETAPE Validation  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,6 +19,8 @@
 #                                                                       
 #                                                                       
 # ======================================================================
+
+
 """
    Ce module contient la classe mixin ETAPE qui porte les méthodes
    nécessaires pour réaliser la validation d'un objet de type ETAPE

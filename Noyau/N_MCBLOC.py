@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF N_MCBLOC Noyau  DATE 04/02/2004   AUTEUR CAMBIER S.CAMBIER 
+#@ MODIF N_MCBLOC Noyau  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,6 +19,8 @@
 #                                                                       
 #                                                                       
 # ======================================================================
+
+
 """ 
     Ce module contient la classe MCBLOC qui sert à controler la valeur
     d'un bloc de mots-clés par rapport à sa définition portée par un objet

@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF macr_aspic_calc_ops Macro  DATE 17/08/2004   AUTEUR DURAND C.DURAND 
+#@ MODIF macr_aspic_calc_ops Macro  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17,6 +17,8 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
+
+
 def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM,
                              FOND_FISS_1,FOND_FISS_2,CHARGE,RESU_THER,AFFE_MATERIAU,EQUILIBRE,
                              PRES_REP,ECHANGE,TORS_CORP,TORS_TUBU,COMP_INCR,COMP_ELAS,

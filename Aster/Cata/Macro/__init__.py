@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF __init__ Macro  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF __init__ Macro  DATE 20/09/2004   AUTEUR DURAND C.DURAND 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG

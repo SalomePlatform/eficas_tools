@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF N_ENTITE Noyau  DATE 09/09/2003   AUTEUR DURAND C.DURAND 
+#@ MODIF N_ENTITE Noyau  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,6 +19,8 @@
 #                                                                       
 #                                                                       
 # ======================================================================
+
+
 """ 
     Ce module contient la classe ENTITE qui est la classe de base
     de toutes les classes de definition d'EFICAS.

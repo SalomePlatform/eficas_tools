@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF recal Macro  DATE 16/06/2004   AUTEUR DURAND C.DURAND 
+#@ MODIF recal Macro  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19,6 +19,8 @@
 # ======================================================================
 
 
+
+
 import string
 import copy
 import Numeric
@@ -27,7 +29,7 @@ import Gnuplot
 import Cata
 from Cata.cata import INCLUDE,DETRUIRE
 from Accas import _F
-from Utilitai.extract import EXTRACT
+#from Utilitai.extract import EXTRACT
 
 import os
 
