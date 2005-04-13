@@ -162,6 +162,7 @@ class JDCDISPLAY:
           if hasattr(node.item,"panel"):
               self.panel_courant=node.item.panel(self,self.pane.pane('selected'),node)
           else:
+              print node.item
               raise Exception("Le noeud sélectionné n'a pas de panel associé")
       else:
           self.panel_courant = panels.Panel_Inactif(self,self.pane.pane('selected'),node)

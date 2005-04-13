@@ -40,45 +40,55 @@ import tooltip
 import properties
 from widgets import Fenetre
 from Misc import MakeNomComplet
+import session
 
 VERSION="EFICAS v1.7"
 
 class APPLI: 
   def __init__ (self,master,code='ASTER',fichier=None,test=0) :
-      self.top=master
       self.code=code
+      self.top=master
       self.top.protocol("WM_DELETE_WINDOW",self.exitEFICAS)
       self.top.minsize(900,500)
       self.top.geometry("900x500")
       self.top.title(VERSION + ' pour '+self.code)
       self.top.withdraw()
       self.initializeTk(master)
+      Pmw.initialise(master)
+
       self.dict_reels={}
       self.liste_simp_reel=[]
       # L'attribut test permet d'activer les panneaux de splash et d'erreur (test=0)
       # Si test est different de 0, les panneaux ne sont pas activés
       self.test=test
-      Pmw.initialise(master)
+
+      # Lecture des parametres de configuration (fichier global editeur.ini 
+      # et utilisateur eficas.ini)
       self.lecture_parametres()
+
       self.format_fichier = Tkinter.StringVar()
       self.message=''
+      # Avant la creation du bureau qui lit le catalogue
+      self.version_code=session.d_env.cata
+
+      # Creation de la menubar, toolbar, messagebar
       self.cree_composants_graphiques()
-      self.load_appli_composants()			# Creation du BUREAU
+      # Creation des autres composants graphiques dont le bureau (parametrable par prefs.py)
+      self.load_appli_composants()		
+
       # PN : ajout d un attribut pour indiquer si 
       # l appli a ete lance depuis Salome
       self.salome=0
       if (self.test == 0):
            splash.fini_splash()
-           self.affiche_FAQ()
-      # AY : cas ou le nom du fichier a été passé en argument
-      if fichier :
-           fich=str(MakeNomComplet.FILENAME(fichier))
-           if not os.path.isfile(fich):
-              showerror("Fichier inexistant", "Fichier %s en argument n'existe pas" % fich)
-           else:
-              self.bureau.openJDC( fich)
-      # AY : fin
+           #self.affiche_FAQ()
 
+      cwd=os.getcwd()
+      # Ouverture des fichiers de commandes donnes sur la ligne de commande
+      for study in session.d_env.studies:
+          os.chdir(cwd)
+          d=session.get_unit(study,self)
+          self.bureau.openJDC(study["comm"],d)
 
   def send_message(self,message):
       self.message=message
@@ -100,10 +110,9 @@ class APPLI:
 
   def cree_composants_graphiques(self):
       """
-          Cree les constituants de l'application :
+          Cree les constituants graphiques fixes de l'application :
            - menubar
            - toolbar
-           - bureau
            - statusbar
       """
       if (self.test == 0):
@@ -121,6 +130,13 @@ class APPLI:
       self.statusbar=statusbar.STATUSBAR(self.top)
 
   def load_appli_composants(self):
+      """
+          Cree les autres constituants graphiques de l'application :
+           - bureau 
+           - readercata
+           - ...
+          Cette creation est parametrable par fichier prefs.py
+      """
       if (self.test == 0):
          splash._splash.configure(text = "Chargement des appli_composants")
       for mname in self.appli_composants:
@@ -136,7 +152,7 @@ class APPLI:
 
   def affiche_FAQ(self):
       import faq
-      #faq.affiche(self.top)
+      faq.affiche(self.top)
 
   def affiche_infos(self,message):
       self.statusbar.affiche_infos(message)

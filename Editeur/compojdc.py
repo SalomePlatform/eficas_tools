@@ -107,10 +107,12 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
           return range(len(self.object.etapes))
 
   def additem(self,name,pos):
+      print self.object
       if isinstance(name,Objecttreeitem.ObjectTreeItem) :
           cmd=self.object.addentite(name.getObject(),pos)
       else :
           cmd = self.object.addentite(name,pos)
+      print cmd
       item = self.make_objecttreeitem(self.appli,cmd.nom + " : ", cmd)
       return item
 
@@ -153,6 +155,12 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
   def get_l_noms_etapes(self):
       """ Retourne la liste des noms des étapes de self.object"""
       return self.object.get_l_noms_etapes()
+
+  def get_liste_cmd(self):
+      print "get_liste_cmd"
+      print self.object.niveau.definition
+      listeCmd = self.object.niveau.definition.get_liste_cmd()
+      return listeCmd
 
     
 import Accas

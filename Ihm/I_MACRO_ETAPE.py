@@ -63,6 +63,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          ou leve une exception
          --> utilisée par ops.POURSUITE et INCLUDE
     """
+    #print "get_contexte_jdc"
     try:
        # on essaie de créer un objet JDC auxiliaire avec un contexte initial
        context_ini = self.parent.get_contexte_avant(self)
@@ -80,12 +81,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # En principe si la memorisation est faite au bon moment il n'est pas necessaire
        # de prendre cette precaution mais ce n'est pas vrai partout.
        old_recorded_units=self.recorded_units.copy()
-       self.recorded_units.clear()
+       #print "get_contexte_jdc",id(self.recorded_units)
+       #self.recorded_units.clear()
 
-       j=self.JdC_aux( procedure=text,cata=self.jdc.cata,
-                                nom=fichier,
-                                context_ini = context_ini,
+       j=self.JdC_aux( procedure=text, nom=fichier,
                                 appli=self.jdc.appli,
+                                cata=self.jdc.cata,
+                                cata_ord_dico=self.jdc.cata_ordonne_dico,
+                                context_ini = context_ini,
                                 jdc_pere=self.jdc,etape_include=self,
                                 prefix_include=prefix_include,
                                 recorded_units=self.recorded_units,
@@ -142,6 +145,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     # On recupere le contexte courant
     self.current_context=j.current_context
     self.index_etape_courante=j.index_etape_courante
+    self.jdc_aux=j
 
     # XXX j.supprime() ???
     # On rétablit le contexte (etape courante) à self
@@ -254,6 +258,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
         Cette méthode sert à créer un contexte en interprétant un texte source
         Python
     """
+    #print "make_contexte_include"
     # on récupère le contexte d'un nouveau jdc dans lequel on interprete text
     contexte = self.get_contexte_jdc(fichier,text)
     if contexte == None :
@@ -294,11 +299,13 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          les noms des fichiers
          Ceci suppose que les relations entre unites et noms ont été memorisees préalablement
       """
-      
+      #print "update_fichier_init",unite
       self.fichier_err=None
       self.old_contexte_fichier_init=self.contexte_fichier_init
 
-      if unite != self.fichier_unite or not self.parent.recorded_units.has_key(unite):
+      #print self,self.parent,self.parent.recorded_units
+      #if unite != self.fichier_unite or not self.parent.recorded_units.has_key(unite):
+      if not self.parent.recorded_units.has_key(unite):
          # Changement d'unite ou Nouvelle unite
          f,text=self.get_file(unite=unite,fic_origine=self.parent.nom)
          units={}
@@ -360,10 +367,18 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       """Retourne le nom du fichier et le source correspondant a l'unite unite
          Initialise en plus recorded_units
       """
-      units={}
+      #print "get_file_memo",unite,fic_origine,self,self.parent
+      #print self.parent.old_recorded_units
+      #print self.parent.recorded_units
+      if unite is None:
+         units={}
+      else:
+         units=self.parent.recorded_units
       if self.parent.old_recorded_units.has_key(unite):
          f,text,units=self.parent.old_recorded_units[unite]
+         #print id(self.recorded_units)
          self.recorded_units=units
+         #print id(self.recorded_units)
          return f,text
       elif self.jdc :
          f,text=self.jdc.get_file(unite=unite,fic_origine=fic_origine)
@@ -380,6 +395,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       """Retourne le nom du fichier et le source correspondant a l'unite unite
          Initialise en plus recorded_units
       """
+      #print "get_file",unite
       units={}
       if self.jdc :
          f,text=self.jdc.get_file(unite=unite,fic_origine=fic_origine)
@@ -397,7 +413,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           Sinon on retourne None. Les concepts produits par l'INCLUDE sont
           pris en compte par le JDC parent lors du calcul du contexte (appel de ???)
       """
-
+      #print "make_include",unite
       # On supprime l'attribut unite qui bloque l'evaluation du source de l'INCLUDE
       # car on ne s'appuie pas sur lui dans EFICAS mais sur l'attribut fichier_ini
       del self.unite

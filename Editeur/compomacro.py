@@ -37,7 +37,7 @@ from widgets import showinfo,showerror
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.14 2004/09/20 09:24:14 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.15 2005/03/10 09:25:30 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -144,7 +144,7 @@ class MACROPanel(panels.OngletPanel):
     # Si probleme a la lecture-conversion on arrete le traitement
     if not text:
        return
-    self.node.item.object.recorded_units={}
+    #self.node.item.object.recorded_units={}
 
     try:
       self.node.item.object.make_contexte_include(new_fic,text)
@@ -236,7 +236,17 @@ class MACROTreeItem(compooper.EtapeTreeItem):
   panel=MACROPanel
 
 class INCLUDETreeItem(MACROTreeItem):
-  rmenu_specs=[("View","makeView")]
+  rmenu_specs=[("View","makeView"),
+               ("Edit","makeEdit"),
+              ]
+
+  def makeEdit(self,appli):
+    print "makeEdit",self.object,self.object.nom
+    print self.object.jdc_aux,self.object.jdc_aux.nom
+    # On cree un nouvel onglet dans le bureau
+    appli.bureau.ShowJDC(self.object.jdc_aux,self.object.jdc_aux.nom,
+                             label_onglet=None,
+                             JDCDISPLAY=macrodisplay.MACRODISPLAY)
 
   def makeView(self,appli):
     nom=self.object.nom

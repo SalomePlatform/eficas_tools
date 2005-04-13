@@ -27,7 +27,7 @@ import images
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.18 2004/11/17 16:08:34 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.19 2005/02/25 11:38:03 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -599,6 +599,7 @@ class Node :
             Interface avec ACCAS : création de l'objet de nom name et
             du noeud associé. Retourne le noeud fils ainsi créé
         """
+        print "full_creation",name,pos,self.item
         item = self.item.additem(name,pos)
         if item == None or item == 0:
             # impossible d'ajouter le noeud de nom : name

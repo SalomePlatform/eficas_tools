@@ -415,6 +415,18 @@ class JDC(I_OBJECT.OBJECT):
       """
       return []
 
+   def get_liste_cmd(self):
+      """
+          Retourne la liste des commandes du catalogue
+      """
+      return self.niveau.definition.get_liste_cmd()
+
+   def get_groups(self):
+      """
+          Retourne la liste des groupes
+      """
+      return self.niveau.definition.liste_groupes,self.niveau.definition.dict_groupes
+
    def set_etape_context(self,etape):
       """
           Positionne l'etape qui sera utilisee dans NommerSdProd pour
@@ -518,16 +530,22 @@ class JDC(I_OBJECT.OBJECT):
          print etape.nom+".state: ",etape.state
       
    def change_unit(self,unit,etape,old_unit):
-      if self.recorded_units.has_key(old_unit):del self.recorded_units[old_unit]
+      #print "change_unit",unit,etape,old_unit
+      #print id(self.recorded_units),self.recorded_units
+      #if self.recorded_units.has_key(old_unit):del self.recorded_units[old_unit]
       self.record_unit(unit,etape)
 
    def record_unit(self,unit,etape):
       """Enregistre les unites logiques incluses et les infos relatives a l'etape"""
+      #print "record_unit",unit,etape
       if unit is None:
          # Cas de POURSUITE
          self.recorded_units[None]=(etape.fichier_ini ,etape.fichier_text,etape.recorded_units)
       else:
          self.recorded_units[unit]=(etape.fichier_ini ,etape.fichier_text,etape.recorded_units)
+      #print id(self.recorded_units),self.recorded_units
+      #print self.recorded_units.get(None,(None,"",{}))[2]
+      #print self.recorded_units.get(None,(None,"",{}))[2].get(None,(None,"",{}))
 
 #ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
    def register(self,etape):

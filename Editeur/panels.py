@@ -354,8 +354,8 @@ class OngletPanel(Panel) :
          Liste = ListeChoix(self,frame2,liste_cmd,liste_commandes = liste_commandes,
                                    filtre='oui',titre = "Commandes",optionReturn="oui")
       else:
-         liste_groupes=self.node.item.object.niveau.definition.liste_groupes
-         dict_groupes=self.node.item.object.niveau.definition.dict_groupes
+         liste_commandes=liste_commandes+(("<Return>",self.defCmd),)
+         liste_groupes,dict_groupes=self.get_groups()
          Liste = ListeChoixParGroupes(self,frame2,liste_groupes,dict_groupes,
                                       liste_commandes = liste_commandes,
                                       filtre='oui',titre = "Commandes",optionReturn="oui")
@@ -378,8 +378,8 @@ class OngletPanel(Panel) :
          Liste = ListeChoix(self,page,liste_cmd,liste_commandes = liste_commandes,
                             filtre='oui',titre = "Commandes",optionReturn="oui")
       else:
-         liste_groupes=self.node.item.object.niveau.definition.liste_groupes
-         dict_groupes=self.node.item.object.niveau.definition.dict_groupes
+         liste_commandes=liste_commandes+(("<Return>",self.defCmd),)
+         liste_groupes,dict_groupes=self.get_groups()
          Liste = ListeChoixParGroupes(self,page,liste_groupes,dict_groupes,
                                       liste_commandes = liste_commandes,
                                       filtre='oui',titre = "Commandes",optionReturn="oui")
@@ -475,8 +475,13 @@ class OngletPanel(Panel) :
       listeCmd = self.cata.listCmd()
       return listeCmd
 
+  def get_groups(self):
+      jdc=self.node.item.object.get_jdc_root()
+      return jdc.get_groups()
+
   def get_liste_cmd(self):
-      listeCmd = self.node.item.object.niveau.definition.get_liste_cmd()
+      jdc=self.node.item.object.get_jdc_root()
+      listeCmd = jdc.get_liste_cmd()
       return listeCmd
 
   def deselectCmd(self,name):

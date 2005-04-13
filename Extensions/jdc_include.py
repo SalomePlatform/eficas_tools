@@ -110,6 +110,19 @@ class JDC_POURSUITE(JDC):
 
       return context
 
+   def get_liste_cmd(self):
+      """
+          Retourne la liste des commandes du catalogue
+      """
+      return self.jdc_pere.get_liste_cmd()
+
+   def get_groups(self):
+      """
+          Retourne la liste des commandes du catalogue par groupes
+      """
+      return self.jdc_pere.get_groups()
+
+
 
 class JDC_INCLUDE(JDC_POURSUITE):
    def active_etapes(self):

@@ -60,6 +60,8 @@ class READERCATA:
       self.parent=parent
       self.code=self.appli.code
       self.appli.format_fichier.set('python')
+      self.version_code=self.appli.version_code
+      self.fic_cata=None
       self.OpenCata()
       self.cataitem=None
 
@@ -72,33 +74,31 @@ class READERCATA:
       if self.appli.test == 0 :
          splash._splash.configure(text = message1)
       self.configure_barre(4)
+
       liste_cata_possibles=[]
       for catalogue in self.appli.CONFIGURATION.catalogues:
           if catalogue[0] == self.code :
              liste_cata_possibles.append(catalogue)
-      if len(liste_cata_possibles)==1:
+
+      if self.version_code is not None:
+          # La version a ete fixee
+          for cata in liste_cata_possibles:
+             if self.version_code == cata[1]:
+                self.fic_cata = cata[2]
+                self.appli.format_fichier.set(cata[3])
+      elif len(liste_cata_possibles)==1:
           self.fic_cata = liste_cata_possibles[0][2]
           self.code = self.appli.CONFIGURATION.catalogues[0][0]
           self.version_code = liste_cata_possibles[0][1]
           self.appli.format_fichier.set(liste_cata_possibles[0][3])
-      elif len(liste_cata_possibles)==0:
-          # aucun catalogue défini dans le fichier Accas/editeur.ini
-          if self.code == 'ASTER' :
-              self.fic_cata = os.path.join(prefs.CODE_PATH,'Cata','cata.py')
-          elif self.code == 'SATURNE' :
-              self.fic_cata = os.path.join(prefs.CODE_PATH,'Cata','cata_saturne.py')
-          elif self.code == 'DESCARTES':
-              self.fic_cata = os.path.join(prefs.CODE_PATH,'Cata','cata_descartes.py')
-          else :
-              print 'Code inconnu'
-              sys.exit(0)
       else:
           # plusieurs catalogues sont disponibles : il faut demander à l'utilisateur
           # lequel il veut utiliser ...
           self.ask_choix_catalogue()
+
       if self.fic_cata == None :
-          self.parent.destroy()
           sys.exit(0)
+
       # détermination de fic_cata_c et fic_cata_p
       self.fic_cata_c = self.fic_cata + 'c'
       self.fic_cata_p = os.path.splitext(self.fic_cata)[0]+'_pickled.py'
@@ -171,7 +171,6 @@ class READERCATA:
       """ 
           Réalise l'import du catalogue dont le chemin d'accès est donné par cata
       """
-      import imp
       if self.appli.test == 0 :
          splash._splash.configure(text = "Chargement du catalogue")
       nom_cata = os.path.splitext(os.path.basename(cata))[0]
@@ -179,8 +178,6 @@ class READERCATA:
       sys.path[:0] = [rep_cata]
       try :
           o=__import__(nom_cata)
-          #f,p,d = imp.find_module(nom_cata)
-          #o = imp.load_module(nom_cata,f,p,d)
           return o
       except Exception,e:
           traceback.print_exc()

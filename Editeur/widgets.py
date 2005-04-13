@@ -874,11 +874,13 @@ class ListeChoix :
                 index = self.MCbox.index(self.dico_labels[arg])
                 self.MCbox.see(index)
                 self.arg_selected = arg
+                self.dico_labels[self.arg_selected].focus_set()
                 break
-        try :
-          self.dico_labels[self.arg_selected].focus_set()
-        except :
-          pass
+
+        #try :
+          #self.dico_labels[self.arg_selected].focus_set()
+        #except :
+          #pass
 
     def get_liste_old(self):
         return self.liste
@@ -1076,9 +1078,16 @@ class ListeChoixParGroupes(ListeChoix) :
         Cette classe est utilisée pour afficher une liste de commandes classées par
         groupes. L'utilisateur peut réaliser des actions de selection
         qui déclenchent des actions spécifiées par les bindings contenus dans liste_commandes
+        Exemple de binding:
+           liste_commandes = (("<Enter>",self.selectCmd),
+                              ("<Leave>",self.deselectCmd),
+                              ("<Double-Button-1>",self.defCmd))
+        Il s'agit d'une liste de doublets dont le premier element est un evenement et le 
+        deuxieme un callback a appeler sur l'evenement en question.
+
     """
     def __init__(self,parent,page,liste_groupes,dict_groupes,liste_commandes=[],liste_marques =[],
-                      active ='oui',filtre='non',titre=''):
+                      active ='oui',filtre='non',titre='',optionReturn=None):
         self.parent = parent
         self.page = page
         self.liste_groupes = liste_groupes
@@ -1091,6 +1100,7 @@ class ListeChoixParGroupes(ListeChoix) :
         self.active = active
         self.titre = titre
         self.filtre = filtre
+        self.optionReturn = optionReturn
         self.init()
 
     def affiche_liste(self):
@@ -1124,14 +1134,40 @@ class ListeChoixParGroupes(ListeChoix) :
                                    window=label,
                                    stretch = 1)
               self.MCbox.insert(END,'\n')
+
+              def null(*tp,**args): return
+
               if self.active == 'oui':
-                  label.bind(self.liste_commandes[0][0],
-                         lambda e,s=self,c=self.liste_commandes[0][1],x=cmd,l=label : s.selectitem(x,l,c))
-                  label.bind(self.liste_commandes[1][0],
-                         lambda e,s=self,c=self.liste_commandes[1][1],x=cmd,l=label : s.deselectitem(l,x,c))
-                  label.bind(self.liste_commandes[2][0],
-                         lambda e,s=self,c=self.liste_commandes[2][1],x=cmd,l=label : s.chooseitem(x,l,c))
-                  label.bind("<Key-Down>", self.selectNextItem(event))
+                  # Traitement par defaut des evenements
+                  label.bind("<Enter>",lambda e,s=self,c=null,x=cmd,l=label: s.selectitem(x,l,c))
+                  label.bind("<Leave>",lambda e,s=self,c=null,x=cmd,l=label: s.deselectitem(l,x,c))
+                  label.bind("<Double-Button-1>",lambda e,s=self,c=null,x=cmd,l=label: s.chooseitem(x,l,c))
+                  label.bind("<Return>",lambda e,s=self,c=null,x=cmd,l=label: s.chooseitem(x,l,c))
+                  label.bind("<Key-Right>",lambda e,s=self,c=null,x=cmd,l=label,gr=grp: s.selectNextItem(x,l,c,gr,x))
+                  label.bind("<Key-Down>",lambda e,s=self,c=null,x=cmd,l=label,gr=grp: s.selectNextItem(x,l,c,gr,x))
+                  label.bind("<Key-Left>",lambda e,s=self,c=null,x=cmd,l=label,gr=grp: s.selectPrevItem(x,l,c,gr,x))
+                  label.bind("<Key-Up>",lambda e,s=self,c=null,x=cmd,l=label,gr=grp: s.selectPrevItem(x,l,c,gr,x))
+
+                  # Si des callbacks sont definis on les utilise
+                  for event,callback in self.liste_commandes:
+                      if event == "<Enter>":
+                         label.bind("<Enter>",lambda e,s=self,c=callback,x=cmd,l=label: s.selectitem(x,l,c))
+                      elif event == "<Leave>":
+                         label.bind("<Leave>",lambda e,s=self,c=callback,x=cmd,l=label: s.deselectitem(l,x,c))
+                      elif event == "<Double-Button-1>":
+                         label.bind("<Double-Button-1>",lambda e,s=self,c=callback,x=cmd,l=label: s.chooseitem(x,l,c))
+                      elif event == "<Return>":
+                         label.bind("<Return>",lambda e,s=self,c=callback,x=cmd,l=label: s.chooseitem(x,l,c))
+                      elif event == "<Key-Right>":
+                         label.bind("<Key-Right>",lambda e,s=self,c=callback,x=cmd,l=label,gr=grp:s.selectNextItem(x,l,c,gr,x))
+                      elif event == "<Key-Down>":
+                         label.bind("<Key-Down>",lambda e,s=self,c=callback,x=cmd,l=label,gr=grp:s.selectNextItem(x,l,c,gr,x))
+                      elif event == "<Key-Left>":
+                         label.bind("<Key-Left>",lambda e,s=self,c=callback,x=cmd,l=label,gr=grp:s.selectPrevItem(x,l,c,gr,x))
+                      elif event == "<Key-Up>":
+                         label.bind("<Key-Up>",lambda e,s=self,c=callback,x=cmd,l=label,gr=grp:s.selectPrevItem(x,l,c,gr,x))
+                      else:
+                         label.bind(event,lambda e,s=self,c=callback,x=cmd,l=label: c())
 
         for marque in self.liste_marques:
            try:
@@ -1142,12 +1178,68 @@ class ListeChoixParGroupes(ListeChoix) :
         self.MCbox.config(state=DISABLED)
         self.selection = None
 
+    def selectPrevItem(self,mot,label,callback,group,cmd):
+        g=self.liste_groupes.index(group)
+        liste_commandes=self.dict_groupes[group]
+        c=liste_commandes.index(cmd)
+        if c > 0:
+           co=liste_commandes[c-1]
+        else:
+           # debut de liste. On passe au groupe precedent
+           if g > 0:
+              gr=self.liste_groupes[g-1]
+              co=self.dict_groupes[gr][-1]
+           else:
+              # debut des groupes. On ne fait rien
+              return
+
+        # On a trouve l'item precedent
+        self.clear_marque()
+        labelsuivant=self.dico_labels[co]
+        if self.selection != None :
+           self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
+           self.selection = (co,labelsuivant,self.selection[2])
+        index = self.MCbox.index(labelsuivant)
+        self.MCbox.see(index)
+        self.arg_selected=co
+        self.highlightitem(labelsuivant)
+        labelsuivant.focus_set()
+        callback(co)
+
+    def selectNextItem(self,mot,label,callback,group,cmd):
+        g=self.liste_groupes.index(group)
+        liste_commandes=self.dict_groupes[group]
+        c=liste_commandes.index(cmd)
+        try:
+           co=liste_commandes[c+1]
+        except:
+           # fin de liste. On passe au groupe suivant
+           try:
+              gr=self.liste_groupes[g+1]
+              co=self.dict_groupes[gr][0]
+           except:
+              # fin des groupes. On ne fait rien
+              return
+        # On a trouve l'item suivant
+        self.clear_marque()
+        labelsuivant=self.dico_labels[co]
+        if self.selection != None :
+           self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
+           self.selection = (co,labelsuivant,self.selection[2])
+        index = self.MCbox.index(labelsuivant)
+        self.MCbox.see(index)
+        self.arg_selected=co
+        self.highlightitem(labelsuivant)
+        labelsuivant.focus_set()
+        callback(co)
+
     def entry_changed(self,event=None):
         """ 
             Cette méthode est invoquée chaque fois que l'utilisateur modifie le contenu
             de l'entry et frappe <Return>
         """
         if self.arg_selected != '' : self.deselectitem(self.dico_labels[self.arg_selected])
+
         filtre = self.entry.get()+"*"
         FILTRE = string.upper(filtre)
         #
@@ -1156,10 +1248,12 @@ class ListeChoixParGroupes(ListeChoix) :
         #
         for grp in self.liste_groupes:
             if fnmatch.fnmatch(grp,filtre) or fnmatch.fnmatch(grp,FILTRE) :
+                self.highlightitem(self.dico_labels[grp])
                 index = self.MCbox.index(self.dico_labels[grp])
                 self.MCbox.see(index)
                 # On ne selectionne pas le groupe
                 #self.arg_selected = grp
+                self.dico_labels[grp].focus_set()
                 # On a trouve un groupe on arrete la recherche
                 return
 
@@ -1170,6 +1264,7 @@ class ListeChoixParGroupes(ListeChoix) :
                  index = self.MCbox.index(self.dico_labels[cmd])
                  self.MCbox.see(index)
                  self.arg_selected = cmd
+                 self.dico_labels[self.arg_selected].focus_set()
                  # On a trouve une commande  on arrete la recherche
                  return
 

@@ -153,7 +153,7 @@ class BUREAU:
       self.ShowJDC(J,self.JDCName)
       self.appli.toolbar.active_boutons()
 
-   def ShowJDC(self,JDC,nom,label_onglet=None):
+   def ShowJDC(self,JDC,nom,label_onglet=None,JDCDISPLAY=JDCDISPLAY):
       """
           Lance l'affichage du JDC cad création du JDCDisplay
           Rajoute le JDCDisplay à la liste des JDCDisplay si label_onglet == None cad si on crée
@@ -161,9 +161,8 @@ class BUREAU:
       """
       self.JDC=JDC
       self.JDCName = self.JDC.nom = nom
-      #XXX CCAR: pour le moment mis en commentaire
-      #self.JDC.set_context()
       if label_onglet == None :
+          # On veut un nouvel onglet
           label_onglet = self.GetLabelJDC()
           self.nb.add(label_onglet,tab_text = nom,tab_width=20)
           new = 'oui'
@@ -236,7 +235,7 @@ class BUREAU:
       texte_cr = str(cr)
       self.visu_texte_cr = Fenetre(self.appli,titre=titre,texte=texte_cr)
 
-   def openJDC(self,file=None):
+   def openJDC(self,file=None,units=None):
       """
           Demande à l'utilisateur quel JDC existant il veut ouvrir
       """
@@ -249,8 +248,10 @@ class BUREAU:
       if not hasattr(self,'initialdir'):
          #self.initialdir = self.appli.CONFIGURATION.rep_user
          self.initialdir = self.appli.CONFIGURATION.initialdir
+
       if file.__class__.__name__ in  ('Event',):
          file=None
+
       if not file :
           file = askopenfilename(title="Ouverture d'un fichier de commandes Aster",
                                  defaultextension=".comm",
@@ -260,11 +261,9 @@ class BUREAU:
           self.fileName = file
           e=extension_fichier(file)
           self.JDCName=stripPath(file)
-          self.initialdir = os.path.dirname(file)
+          self.initialdir = os.path.dirname(os.path.abspath(file))
       else :
           return
-      #XXX CCAR: pour le moment mis en commentaire
-      #if self.JDCDisplay_courant:self.JDCDisplay_courant.jdc.unset_context()
 
       format=self.appli.format_fichier.get()
       # Il faut convertir le contenu du fichier en fonction du format
@@ -295,6 +294,10 @@ class BUREAU:
                          nom = self.JDCName,
                          rep_mat=self.appli.CONFIGURATION.rep_mat,
                          )
+      if units is not None:
+         J.recorded_units=units
+         J.old_recorded_units=units
+
       J.analyse()
       txt_exception = J.cr.get_mess_exception()
       if txt_exception :

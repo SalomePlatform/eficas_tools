@@ -23,25 +23,26 @@
     un ecran Splash pour faire patentier l'utilisateur
 """
 # Modules Python
+import sys
 import Tkinter
 
 # Modules Eficas
 import import_code
 import splash
+import session
 
 def lance_eficas(code,fichier=None):
     """
         Lance l'appli EFICAS
     """
+    # Analyse des arguments de la ligne de commande
+    options=session.parse(sys.argv)
 
     root = Tkinter.Tk()
     splash.init_splash(root,code=code,titre="Lancement d'EFICAS pour %s" %code)
     splash._splash.configure(text="Chargement d'EFICAS en cours.\n Veuillez patienter ...")
     import eficas
-    if fichier :
-        eficas.EFICAS(root,code=code,fichier = fichier)
-    else:
-        eficas.EFICAS(root,code=code)
+    eficas.EFICAS(root,code=code)
 
     root.mainloop()
 

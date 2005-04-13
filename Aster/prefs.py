@@ -19,7 +19,7 @@
 #
 # ======================================================================
 
-import os
+import os,sys
 
 # REPINI sert à localiser le fichier editeur.ini
 # Obligatoire
@@ -90,3 +90,9 @@ menu_defs={ 'bureau': [
              ]
            }
 
+userprefs=os.path.expanduser("~/Eficas_install/prefs.py")
+if os.path.isfile(userprefs):
+   try:
+      execfile(userprefs)
+   except:
+      pass

@@ -30,9 +30,12 @@ import Tkinter,Pmw
 import images
 import tooltip
 import Objecttreeitem
+import compojdc
+import treewidget
 from widgets import Fenetre
 
-class MACRO2TreeItem(Objecttreeitem.ObjectTreeItem):
+#class MACRO2TreeItem(Objecttreeitem.ObjectTreeItem):
+class MACRO2TreeItem(compojdc.JDCTreeItem):
   def IsExpandable(self):
     return 1
 
@@ -145,4 +148,49 @@ class MacroDisplay:
 
 def makeMacroDisplay(appli,jdc,nom_jdc):
   return MacroDisplay(appli,jdc,nom_jdc)
+
+class TREEITEMINCANVAS:
+   def __init__(self,object,nom="",parent=None,appli=None,sel=None,rmenu=None):
+      print "TREEITEMINCANVAS",object
+      self.object=object
+      self.nom=nom
+      self.appli=appli
+      self.parent=parent
+
+      self.item=MACRO2TreeItem(self.appli,self.nom,self.object)
+      self.canvas=Pmw.ScrolledCanvas(self.parent,borderframe=1,canvas_background='gray95')
+      self.canvas.pack(padx=10,pady=10,fill = 'both', expand = 1)
+      if not sel:
+         def sel(event=None):
+            return
+      self.tree=treewidget.Tree(self.appli,self.item,self.canvas,command=sel,rmenu=rmenu)
+      self.tree.draw()
+
+   def mainloop(self):
+      self.parent.mainloop()
+
+   def update(self):
+      """Cette methode est utilisee pour signaler une mise a jour des objets associes"""
+      self.tree.update()
+
+import jdcdisplay
+
+class MACRODISPLAY(jdcdisplay.JDCDISPLAY):
+   def __init__(self,jdc,nom_jdc,appli=None,parent=None):
+      print "MACRODISPLAY",jdc
+      self.jdc=jdc
+      self.nom_jdc=nom_jdc
+      self.fichier=None
+      self.panel_courant=None
+      self.appli=appli
+      self.parent=parent
+      self.node_selected = None
+      self.modified='n'
+
+      self.pane=Pmw.PanedWidget(self.parent,orient='horizontal')
+      self.pane.add('treebrowser',min=0.4,size=0.5)
+      self.pane.add('selected',min=0.4)
+      self.pane.pack(expand=1,fill='both')
+      self.tree=TREEITEMINCANVAS(jdc,nom_jdc,self.pane.pane('treebrowser'),
+                 self.appli,self.select_node,self.make_rmenu)
 
