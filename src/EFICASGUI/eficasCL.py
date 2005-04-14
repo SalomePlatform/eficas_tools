@@ -44,7 +44,16 @@ class CLinit:
            attrName  = aShapeSO.FindAttribute("AttributeName")[1]
        	   anAttr = attrName._narrow(SALOMEDS.AttributeName)
            Name = anAttr.Value()
-           Mesh.CreateGroupFromGEOM(SMESH.FACE,Name,GEOMShape)
+	   #_CS_cbo: ajout de la determination de la dimension de la geometrie
+           #Mesh.CreateGroupFromGEOM(SMESH.FACE,Name,GEOMShape)
+	   ShapeType = GEOMShape.GetShapeType()
+	   print ShapeType
+	   if str(ShapeType) is "EDGE":
+	       print "--------------- EDGE existing Mesh"
+               Mesh.CreateGroupFromGEOM(SMESH.EDGE,Name,GEOMShape)
+	   else:
+	       print "--------------- FACE existing Mesh"
+	       Mesh.CreateGroupFromGEOM(SMESH.FACE,Name,GEOMShape)
        del dict_CL[GEOMIor]
            
 
@@ -70,7 +79,16 @@ class CLinit:
            attrName  = aShapeSO.FindAttribute("AttributeName")[1]
        	   anAttr = attrName._narrow(SALOMEDS.AttributeName)
            Name = anAttr.Value()
-           newMesh.CreateGroupFromGEOM(SMESH.FACE,Name,GEOMShape)
+           #_CS_cbo: ajout de la determination de la dimension de la geometrie
+           #newMesh.CreateGroupFromGEOM(SMESH.FACE,Name,GEOMShape)
+           ShapeType = GEOMShape.GetShapeType()
+           print ShapeType
+           if str(ShapeType) is "EDGE":
+               print "--------------- EDGE newMesh"
+               newMesh.CreateGroupFromGEOM(SMESH.EDGE,Name,GEOMShape)
+           else:
+               print "--------------- FACE newMesh"
+               newMesh.CreateGroupFromGEOM(SMESH.FACE,Name,GEOMShape)
        del dict_CL[GEOMIor]
 
     def NomShape(self,numero):
