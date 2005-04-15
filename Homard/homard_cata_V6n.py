@@ -30,6 +30,89 @@ class grma(GEOM):pass
 # fin entete
 # --------------------------------------------------
 
+def bloc_adaptation():
+    return BLOC(condition = "( RAFFINEMENT != None ) or ( DERAFFINEMENT != None ) ",
+                fr="Nom MED du maillage en sortie, numero d'iteration",
+                ang="MED name of the out-mesh, iteration rank",
+                NITER =SIMP(statut='o',typ='I',
+                           fr="Numéro d'itération avant l'adaptation.",
+                           ang="Iteration number before adaptation." ),
+                NOM_MED_MAILLAGE_NP1 =SIMP(statut='o',typ='TXM',
+                           fr="Nom MED du maillage en sortie",
+                           ang="MED name of the out-mesh" ),
+                FICHIER_MED_MAILLAGE_NP1 =SIMP(statut='o',typ='TXM',
+                           fr="Nom du fichier MED du maillage en sortie",
+                           ang="MED file name of the out-mesh" ),
+           )
+
+#
+def critere_de_raffinement() :
+  return BLOC(condition = "( RAFFINEMENT != 'NON' ) ",
+               fr="Critère de raffinement.",
+               ang="Refinement threshold.",
+               regles=(UN_PARMI ( 'CRIT_RAFF_ABS', 'CRIT_RAFF_REL', 'CRIT_RAFF_PE' ),),
+               CRIT_RAFF_ABS   =SIMP (statut='f',typ='R',
+                                      fr="Critère absolu",
+                                      ang="Absolute threshold"  ),
+               CRIT_RAFF_REL   =SIMP (statut='f',typ='R',
+                                      fr="Critère relatif",
+                                      ang="Relative threshold" ),
+               CRIT_RAFF_PE    =SIMP (statut='f',typ='R',
+                                      fr="Pourcentage d'éléments",
+                                      ang="Percentage of elements" ),
+               )
+#
+def critere_de_deraffinement():
+   return BLOC(condition = "( DERAFFINEMENT != 'NON' ) ",
+               fr="Critère de déraffinement.",
+               ang="Unrefinement threshold.",
+               regles=(UN_PARMI ( 'CRIT_DERA_ABS', 'CRIT_DERA_REL', 'CRIT_DERA_PE' ),),
+               CRIT_DERA_ABS =SIMP(statut='f',typ='R' ,
+                                   fr="Critère absolu",
+                                   ang="Absolute threshold" ),
+               CRIT_DERA_REL   =SIMP(statut='f',typ='R',
+                                     fr="Critère relatif",
+                                     ang="Relative threshold" ),
+               CRIT_DERA_PE    =SIMP(statut='f',typ='R',
+                                     fr="Pourcentage d'éléments",
+                                     ang="Percentage of elements" ),
+          )
+
+def indicateur_d_erreur():
+   return  BLOC(condition = "( RAFFINEMENT == 'LIBRE' ) or ( RAFFINEMENT == 'NON-CONFORME' ) or \
+                          ( RAFFINEMENT == 'NON-CONFORME-INDICATEUR') or (DERAFFINEMENT == 'LIBRE')",
+             fr="Indicateur d'erreur",
+             ang="Error indicator",
+             NOM_MED  =    SIMP (statut='o',typ='TXM',
+                             fr="Nom MED de l'indicateur d'erreur.",
+                             ang="MED name of error indicator.",),
+             COMPOSANTE  = SIMP(statut='o',typ='TXM',
+                             fr="Nom de la composante de l'indicateur d'erreur retenue.",
+                             ang="Name of the selected component of the error indicator.",),
+             NUME_ORDRE  = SIMP(statut='f',typ='I',
+                             fr="Numero d'ordre de l'indicateur.",
+                             ang="Rank number of the error indicator.",),
+             NUME_PAS_TEMPS  = SIMP(statut='f',typ='I',
+                             fr="Numero de pas de temps de l'indicateur.",
+                             ang="Time step number of the error indicator.",),
+                           ) 
+
+def niveau_maximum():
+   return BLOC ( condition = " ( RAFFINEMENT == 'LIBRE' ) or ( RAFFINEMENT == 'NON-CONFORME' ) or \
+                                ( RAFFINEMENT == 'NON-CONFORME-INDICATEUR' ) or \
+                                ( RAFFINEMENT == 'UNIFORME' ) ",
+                 NIVE_MAX      = SIMP(statut='f',typ='I',
+                                 fr="Niveau maximum de profondeur de raffinement",
+                                 ang="Maximum level for refinement"),
+                           )
+#
+def niveau_minimum():
+   return BLOC ( condition = " ( DERAFFINEMENT == 'LIBRE' ) or ( DERAFFINEMENT == 'UNIFORME' ) ",
+                 NIVE_MIN  = SIMP(statut='f',typ='I',
+                             fr="Niveau minimum de déraffinement",
+                             ang="Minimum level for unrefinement" ),
+                           ) 
+
 
 DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
             UIinfo={"groupes":("Fonction",)},
@@ -51,33 +134,76 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
 #
 # 3. Le type de traitement :
 #
-         TRAITEMENT      =FACT(statut='o',
+          TRAITEMENT      =FACT(statut='o',
+           regles=( UN_PARMI('TYPE_RAFFINEMENT_LIBRE','TYPE_DERAFFINEMENT_UNIFORME','TYPE_RAFFINEMENT_UNIFORME','INFORMATION'),
+###                    EXCLUS('TYPE_RAFFINEMENT_LIBRE','INFORMATION'),
+###                    EXCLUS('TYPE_RAFFINEMENT_UNIFORME','INFORMATION'),
+		    ),
 #
-# 3.1. DEUX CHOIX EXCLUSIFS :
+          TYPE_RAFFINEMENT_LIBRE = FACT(statut='f',
+                           RAFFINEMENT   = SIMP (statut='o',typ='TXM',
+                                           fr="Choix du mode de raffinement.",
+                                           ang="Choice of refinement mode.",
+                                           into=("NON","LIBRE","NON-CONFORME","NON-CONFORME-INDICATEUR"),),
+
+                           DERAFFINEMENT = SIMP(statut='o',typ='TXM',
+                                           fr="Choix du mode de deraffinement.",
+                                           ang="Choice of unrefinement mode.",
+                                           into=("NON","LIBRE",),),
+
+                           b_adaptation 	      = bloc_adaptation(),
+           		   b_indicateur_d_erreur      = indicateur_d_erreur(),
+           		   b_critere_de_raffinement   = critere_de_raffinement(),
+           		   b_critere_de_deraffinement = critere_de_deraffinement(),
+                           b_niveau_minimum 	      = niveau_minimum(),
+                           b_niveau_maximum 	      = niveau_maximum(),
+
+                                   ),
+
 #
-#      A. ADAPTATION AVEC DES VARIANTES SUR LE MODE DE RAFFINEMENT/DERAFFINEMENT
-#         . RAFFINEMENT ET DERAFFINEMENT
-#         . RAFFINEMENT SEUL
-#         . DERAFFINEMENT SEUL
-#      B. INFORMATION SUR UN MAILLAGE
+           TYPE_RAFFINEMENT_UNIFORME = FACT( statut='f',
+                           RAFFINEMENT   = SIMP (statut='o',typ='TXM',
+                                           fr="Choix du mode de raffinement.",
+                                           ang="Choice of refinement mode.",
+					   defaut="UNIFORME",
+                                           into=("UNIFORME",),),
+
+                           DERAFFINEMENT = SIMP(statut='o',typ='TXM',
+                                           fr="Choix du mode de deraffinement.",
+                                           ang="Choice of unrefinement mode.",
+					   defaut="NON",
+                                           into=("NON",),),
+
+                           b_adaptation 	      = bloc_adaptation(),
+                           b_niveau_minimum 	      = niveau_minimum(),
+                           b_niveau_maximum 	      = niveau_maximum(),
+
+                                       ),
+
 #
-           regles=( AU_MOINS_UN('RAFFINEMENT','DERAFFINEMENT','INFORMATION'),
-                    EXCLUS('RAFFINEMENT','INFORMATION'),
-                    EXCLUS('DERAFFINEMENT','INFORMATION'),),
-                    #PRESENT_PRESENT('RAFFINEMENT','DERAFFINEMENT'),
-                    #PRESENT_PRESENT('DERAFFINEMENT','RAFFINEMENT'),),
-           RAFFINEMENT      =SIMP(statut='f',typ='TXM',     
-                                 fr="Choix du mode de raffinement.",
-                                 ang="Choice of refinement mode.",
-                                 into=("LIBRE","UNIFORME","NON","NON-CONFORME","NON-CONFORME-INDICATEUR") ),
-           DERAFFINEMENT   =SIMP(statut='f',typ='TXM',     
-                                 fr="Choix du mode de deraffinement.",
-                                 ang="Choice of unrefinement mode.",
-                                 into=("LIBRE","UNIFORME","NON") ),
+           TYPE_DERAFFINEMENT_UNIFORME = FACT( statut='f',
+                           RAFFINEMENT   = SIMP (statut='o',typ='TXM',
+                                           fr="Choix du mode de raffinement.",
+                                           ang="Choice of refinement mode.",
+					   defaut="NON",
+                                           into=("NON",),),
+
+                           DERAFFINEMENT = SIMP(statut='o',typ='TXM',
+                                           fr="Choix du mode de deraffinement.",
+                                           ang="Choice of unrefinement mode.",
+					   defaut="UNIFORME",
+                                           into=("UNIFORME",),),
+
+                           b_adaptation 	      = bloc_adaptation(),
+                           b_niveau_minimum 	      = niveau_minimum(),
+                           b_niveau_maximum 	      = niveau_maximum(),
+                                       ),
+#
            INFORMATION     =SIMP(statut='f',typ='TXM',
                                  fr="Information sur un maillage",
                                  ang="Information on a mesh",
                                  into=("OUI",) ),
+       ),
 #
 # 3.2. LES CONTRAINTES :
 #
@@ -111,85 +237,15 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
 #      D. LE NUMERO D'ITERATION DU MAILLAGE DE DEPART
 #      E. LA MISE A JOUR DE SOLUTION
 #
-           NOM_MED_MAILLAGE_N    =SIMP(statut='o',typ='TXM',     
+           NOM_MED_MAILLAGE_N    = SIMP(statut='o',typ='TXM',     
                                  fr="Nom MED du maillage en entrée",
                                  ang="MED name of the in-mesh",),
-           FICHIER_MED_MAILLAGE_N    =SIMP(statut='o',typ='TXM',     
+           FICHIER_MED_MAILLAGE_N  = SIMP(statut='o',typ='TXM',     
                                  fr="Nom du fichier MED du maillage en entrée",
                                  ang="MED file name of the in-mesh",),
 #
-           b_iteration_maj_champ =BLOC(condition = "( RAFFINEMENT != None ) or ( DERAFFINEMENT != None ) ",
-                           fr="Nom MED du maillage en sortie, numero d'iteration et mise à jour de champs",
-                           ang="MED name of the out-mesh, iteration rank and field updating",
-                           NITER                =SIMP(statut='o',typ='I',
-                           fr="Numéro d'itération avant l'adaptation.",
-                           ang="Iteration number before adaptation." ),
-                           NOM_MED_MAILLAGE_NP1 =SIMP(statut='o',typ='TXM',
-                           fr="Nom MED du maillage en sortie",
-                           ang="MED name of the out-mesh" ),
-                           FICHIER_MED_MAILLAGE_NP1 =SIMP(statut='o',typ='TXM',
-                           fr="Nom du fichier MED du maillage en sortie",
-                           ang="MED file name of the out-mesh" ),
-                           ) ,
 #
-           b_indicateur_d_erreur  =BLOC(condition = "( RAFFINEMENT == 'LIBRE' ) or ( RAFFINEMENT == 'NON-CONFORME' ) or \
-                                                     ( RAFFINEMENT == 'NON-CONFORME-INDICATEUR' ) or ( DERAFFINEMENT == 'LIBRE' ) ",
-                           fr="Indicateur d'erreur",
-                           ang="Error indicator",
-                           NOM_MED  =SIMP(statut='o',typ='TXM',
-                           fr="Nom MED de l'indicateur d'erreur.",
-                           ang="MED name of error indicator.",),
-                           COMPOSANTE  =SIMP(statut='o',typ='TXM',
-                           fr="Nom de la composante de l'indicateur d'erreur retenue.",
-                           ang="Name of the selected component of the error indicator.",),
-                           NUME_ORDRE  =SIMP(statut='f',typ='I',
-                           fr="Numero d'ordre de l'indicateur.",
-                           ang="Rank number of the error indicator.",),
-                           ) ,
 #
-           b_critere_de_raffinement =BLOC( condition = "( RAFFINEMENT == 'LIBRE' ) or ( RAFFINEMENT == 'NON-CONFORME' ) or \
-                                                        ( RAFFINEMENT == 'NON-CONFORME-INDICATEUR' ) ",
-                           fr="Critère de raffinement.",
-                           ang="Refinement threshold.",
-                           regles=(UN_PARMI ( 'CRIT_RAFF_ABS', 'CRIT_RAFF_REL', 'CRIT_RAFF_PE' ),),
-                           CRIT_RAFF_ABS   =SIMP(statut='f',typ='R',
-                                                 fr="Critère absolu",
-                                                 ang="Absolute threshold"  ),
-                           CRIT_RAFF_REL   =SIMP(statut='f',typ='R',
-                                                 fr="Critère relatif",
-                                                 ang="Relative threshold" ),
-                           CRIT_RAFF_PE    =SIMP(statut='f',typ='R',
-                                                 fr="Pourcentage d'éléments",
-                                                 ang="Percentage of elements" ),
-                           ) ,
-#
-           b_critere_de_deraffinement =BLOC ( condition = "( DERAFFINEMENT == 'LIBRE' ) ",
-                           fr="Critère de déraffinement.",
-                           ang="Unrefinement threshold.",
-                           regles=(UN_PARMI ( 'CRIT_DERA_ABS', 'CRIT_DERA_REL', 'CRIT_DERA_PE' ),),
-                           CRIT_DERA_ABS   =SIMP(statut='f',typ='R' ,
-                                                 fr="Critère absolu",
-                                                 ang="Absolute threshold" ),
-                           CRIT_DERA_REL   =SIMP(statut='f',typ='R',
-                                                 fr="Critère relatif",
-                                                 ang="Relative threshold" ),
-                           CRIT_DERA_PE    =SIMP(statut='f',typ='R',
-                                                 fr="Pourcentage d'éléments",
-                                                 ang="Percentage of elements" ),
-                           ) ,
-#
-           b_niveau_maximum =BLOC ( condition = " ( RAFFINEMENT == 'LIBRE' ) or ( RAFFINEMENT == 'NON-CONFORME' ) or \
-                                                  ( RAFFINEMENT == 'NON-CONFORME-INDICATEUR' ) or ( RAFFINEMENT == 'UNIFORME' ) ",
-                           NIVE_MAX        =SIMP(statut='f',typ='I',
-                                                 fr="Niveau maximum de profondeur de raffinement",
-                                                 ang="Maximum level for refinement"),
-                           ) ,
-#
-           b_niveau_minimum =BLOC ( condition = " ( DERAFFINEMENT == 'LIBRE' ) or ( DERAFFINEMENT == 'UNIFORME' ) ",
-                           NIVE_MIN        =SIMP(statut='f',typ='I',
-                                                 fr="Niveau minimum de déraffinement",
-                                                 ang="Minimum level for unrefinement" ),
-                           ) ,
 #
 # 3.3. Le suivi de frontiere eventuel :
 #
@@ -208,7 +264,6 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
 			                 ang="MED File including the boundary mesh" ),
                                ), 
 #
-         ),
 #
 # 4. L'ANALYSE DU MAILLAGE
 #
@@ -246,5 +301,9 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
                           ang="Sizes of mesh sub-domains." ),
 #
          ),
+#
+#
+# 5. Les fichiers en entree/sortie
+#
 #
 )  ;
