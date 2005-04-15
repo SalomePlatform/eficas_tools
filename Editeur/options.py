@@ -34,6 +34,7 @@ class OPTIONS:
    menu_defs=[
         ('Options',[
                    ("Affichage commandes",(("alphabétique",'&affichage_alpha'),("groupes",'&affichage_grp'))),
+                   ("Couleur",(("fond",'change_fond'),("barre",'change_barre'))),
                    # ("Catalogue développeur",'choix_cata_developpeur'),
                    ]
         )
@@ -52,6 +53,15 @@ class OPTIONS:
    def affichage_alpha(self):
       global affichage_commandes
       affichage_commandes="alphabetic"
+
+   def change_fond(self):
+      from tkColorChooser import askcolor
+      #nouvelle=askcolor(self.appli.background)
+      nouvelle=askcolor('grey')
+      print "yyyyyyyyyyyyyyyyyyyyy" 
+
+   def change_barre(self):
+      print "yyyyyyyyyyyyyyyyyyyyy" 
 
    def choix_cata_developpeur(self):
       """ 
