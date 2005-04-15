@@ -37,10 +37,15 @@ comm=ppp
 La session utilisera le catalogue V7.3 en mode debug.
 """
 
-import optparse
-from optparse import OptionValueError
-import traceback
-import ConfigParser, os
+try:
+   import optparse
+   from optparse import OptionValueError
+except:
+   from Tools import optparse
+   from Tools.optparse import OptionValueError
+
+import os,traceback
+import ConfigParser
 
 # Les valeurs decodees par optparse sont mises dans un objet dictionnaire-like.
 # On l'utilise comme environnement de session.
@@ -223,7 +228,7 @@ def create_parser():
 
 def parse(args):
     parser=create_parser()
-    (options,args)=parser.parse_args(args)
+    (options,args)=parser.parse_args(args[1:])
     if not hasattr(options,"studies"):
        options.studies=[]
        options.comm=[]
@@ -232,8 +237,7 @@ def parse(args):
     except:
        pass
 
-    if len(args) > 1:
-      for file in args[1:]:
+    for file in args:
          if os.path.isfile(file):
             options.comm.append(file)
             options.studies.append({"comm":file})
