@@ -1,6 +1,8 @@
-unalias do
+#unalias do
+#set -x
 for file in `ls /local/noyret/Install_Eficas/lescomm/*`
 do
+        print $file
 	filepath=$file
 	grep "VISU_EFICAS='NON'" $filepath > /dev/null 2>/dev/null
 	rc=$?
