@@ -9,6 +9,8 @@ dict_CL={}
 
 class CLinit:
     def __init__(self):
+       geom = salome.lcc.FindOrLoadComponent("FactoryServer", "GEOM")
+       self.GroupOp  = geom.GetIGroupOperations(salome.myStudyId)
        self.smesh=None
        self._d = SalomePyQt.SalomePyQt().getDesktop()
        self.get_maillages()
@@ -26,34 +28,28 @@ class CLinit:
        if len(dict_CL) > 0:
           Choix=MonChoixMaillage.MonChoixMaillage(self,0,self._d)
        salome.sg.updateObjBrowser(0)
-
+       
+    
     def traiteMaillage(self,indiceIOR,NomMaillage):
        MeshIOR = self.correspondanceNomIOR[str(NomMaillage)]
        Mesh = salome.orb.string_to_object(MeshIOR)
        GEOMIor = dict_CL.keys()[indiceIOR]
        for monIOR in dict_CL[GEOMIor].CLOnNode.keys():
-       	   GEOMShape = salome.orb.string_to_object(monIOR)
+           GEOMShape = salome.orb.string_to_object(monIOR)
            aShapeSO = salome.myStudy.FindObjectIOR(monIOR)
            attrName  = aShapeSO.FindAttribute("AttributeName")[1]
-       	   anAttr = attrName._narrow(SALOMEDS.AttributeName)
+           anAttr = attrName._narrow(SALOMEDS.AttributeName)
            Name = anAttr.Value()
            Mesh.CreateGroupFromGEOM(SMESH.NODE,Name,GEOMShape)
        for monIOR in dict_CL[GEOMIor].CLOnCell.keys():
-       	   GEOMShape = salome.orb.string_to_object(monIOR)
+           GEOMShape = salome.orb.string_to_object(monIOR)
            aShapeSO = salome.myStudy.FindObjectIOR(monIOR)
            attrName  = aShapeSO.FindAttribute("AttributeName")[1]
-       	   anAttr = attrName._narrow(SALOMEDS.AttributeName)
+           anAttr = attrName._narrow(SALOMEDS.AttributeName)
            Name = anAttr.Value()
-	   #_CS_cbo: ajout de la determination de la dimension de la geometrie
-           #Mesh.CreateGroupFromGEOM(SMESH.FACE,Name,GEOMShape)
-	   ShapeType = GEOMShape.GetShapeType()
-	   print ShapeType
-	   if str(ShapeType) is "EDGE":
-	       print "--------------- EDGE existing Mesh"
-               Mesh.CreateGroupFromGEOM(SMESH.EDGE,Name,GEOMShape)
-	   else:
-	       print "--------------- FACE existing Mesh"
-	       Mesh.CreateGroupFromGEOM(SMESH.FACE,Name,GEOMShape)
+           #_CS_cbo: ajout de la determination de la dimension de la geometrie
+           type = self.getShapeType(GEOMShape)
+           Mesh.CreateGroupFromGEOM(type,Name,GEOMShape)           
        del dict_CL[GEOMIor]
            
 
@@ -61,34 +57,27 @@ class CLinit:
        GEOMIor = dict_CL.keys()[indiceIOR]
        shape = salome.orb.string_to_object(GEOMIor)
        if self.smesh == None :
-         self.smesh = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
-	 self.smesh.SetCurrentStudy(salome.myStudy)
+           self.smesh = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
+           self.smesh.SetCurrentStudy(salome.myStudy)
        assert (self.smesh)
        newMesh  = self.smesh.CreateMesh(shape)
        self.SetName(salome.ObjectToID(newMesh),NomMaillage)
        for monIOR in dict_CL[GEOMIor].CLOnNode.keys():
            GEOMShape = salome.orb.string_to_object(monIOR)
-	   aShapeSO = salome.myStudy.FindObjectIOR(monIOR)
-	   attrName  = aShapeSO.FindAttribute("AttributeName")[1]
-	   anAttr = attrName._narrow(SALOMEDS.AttributeName)
-	   Name = anAttr.Value()
-	   newMesh.CreateGroupFromGEOM(SMESH.NODE,Name,GEOMShape)
-       for monIOR in dict_CL[GEOMIor].CLOnCell.keys():
-       	   GEOMShape = salome.orb.string_to_object(monIOR)
            aShapeSO = salome.myStudy.FindObjectIOR(monIOR)
            attrName  = aShapeSO.FindAttribute("AttributeName")[1]
-       	   anAttr = attrName._narrow(SALOMEDS.AttributeName)
+           anAttr = attrName._narrow(SALOMEDS.AttributeName)
+           Name = anAttr.Value()
+           newMesh.CreateGroupFromGEOM(SMESH.NODE,Name,GEOMShape)
+       for monIOR in dict_CL[GEOMIor].CLOnCell.keys():
+           GEOMShape = salome.orb.string_to_object(monIOR)
+           aShapeSO = salome.myStudy.FindObjectIOR(monIOR)
+           attrName  = aShapeSO.FindAttribute("AttributeName")[1]
+           anAttr = attrName._narrow(SALOMEDS.AttributeName)
            Name = anAttr.Value()
            #_CS_cbo: ajout de la determination de la dimension de la geometrie
-           #newMesh.CreateGroupFromGEOM(SMESH.FACE,Name,GEOMShape)
-           ShapeType = GEOMShape.GetShapeType()
-           print ShapeType
-           if str(ShapeType) is "EDGE":
-               print "--------------- EDGE newMesh"
-               newMesh.CreateGroupFromGEOM(SMESH.EDGE,Name,GEOMShape)
-           else:
-               print "--------------- FACE newMesh"
-               newMesh.CreateGroupFromGEOM(SMESH.FACE,Name,GEOMShape)
+           type = self.getShapeType(GEOMShape)
+           newMesh.CreateGroupFromGEOM(type,Name,GEOMShape)
        del dict_CL[GEOMIor]
 
     def NomShape(self,numero):
@@ -114,6 +103,35 @@ class CLinit:
 	   self.correspondanceNomIOR[Name] = MeshIor
            liste.append(Name)
        return liste
+
+    def getShapeType(self,GEOMShape):
+       """
+       Determination du type de geometrie pour les conditions aux limites.
+       
+       Le type de geometrie determine le type de mailles.
+       Voir le dictionnnaire ShapeType dans geompy.py pour les correspondances type - numero.
+       """ 
+       type = []
+       tgeo = str(GEOMShape.GetShapeType())
+       if tgeo == "VERTEX":
+           type = SMESH.NODE
+       elif tgeo == "EDGE":
+           type = SMESH.EDGE
+       elif tgeo == "FACE":
+           type = SMESH.FACE
+       elif tgeo == "SOLID":
+           type = SMESH.VOLUME
+       elif tgeo == "COMPOUND":
+           tgeo = self.GroupOp.GetType(GEOMShape)
+           if tgeo == 7:
+               type = SMESH.NODE
+           elif tgeo == 6:
+               type = SMESH.EDGE
+           elif tgeo == 4:
+               type = SMESH.FACE
+           elif tgeo == 2:
+               type = SMESH.VOLUME
+       return type
 
     def get_maillages(self):
        self.Liste_maillages={}
