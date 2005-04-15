@@ -460,7 +460,7 @@ class MCSIMP(I_OBJECT.OBJECT):
               self.cr.fatal("None n'est pas une valeur autorisée")
         else:
            # type,into ...
-	   if v.__class__.__name__=='PARAMETRE' or v.__class__.__name__ == 'ITEM_PARAMETRE':
+	   if v.__class__.__name__ in ('PARAMETRE' , 'EVAL', 'ITEM_PARAMETRE','PARAMETRE_EVAL'):
 	      verif_type=1
 	   else:
 	      verif_type=self.verif_type(val=v,cr=None)
@@ -469,16 +469,15 @@ class MCSIMP(I_OBJECT.OBJECT):
                  if type(v) == types.TupleType :
 	           new_val=[]
 	           for i in v:
-	             if i.__class__.__name__ != 'PARAMETRE': 
-	                if i.__class__.__name__ != 'ITEM_PARAMETRE': 
-		           new_val.append(i)
+	             if i.__class__.__name__  not in ('PARAMETRE','EVAL', 'ITEM_PARAMETRE','PARAMETRE_EVAL'): 
+		          new_val.append(i)
 		   if new_val != [] :
 		     verif_type=self.verif_type(val=new_val,cr=cr)
 		   else :
 		     # Cas d une liste de paramétre
 		     verif_type= 1
 		 else:
-	             verif_type=self.verif_type(val=v,cr=None)
+	             verif_type=self.verif_type(val=v,cr=cr)
            valid = verif_type*self.verif_into(cr=cr)*self.verif_card(cr=cr)
            #
            # On verifie les validateurs s'il y en a et si necessaire (valid == 1)

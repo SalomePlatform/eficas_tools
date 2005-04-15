@@ -108,7 +108,7 @@ class HomardGenerator(PythonGenerator):
       self.assoc['CCGroFro']='GROUP_MA'
 #     self.assoc['CCNoChaI']='NOM_MED' (on doit aussi ajouter 'COMPOSANTE')
       self.assoc['CCNumOrI']='NUME_ORDRE'
-      self.assoc['CCNumPTI']='NUME_ORDRE'
+      self.assoc['CCNumPTI']='NUME_PAS_TEMPS'
      
       self.dico_mot_depend={}
      
@@ -218,7 +218,7 @@ class HomardGenerator(PythonGenerator):
 	   return None
         if (self.dico_mot_clef['COMPOSANTE']== None):
            return None
-        chaine=self.dico_mot_clef['NOM_MED']+' '+self.dico_mot_clef['COMPOSANTE']
+        chaine=self.dico_mot_clef['COMPOSANTE']+' '+self.dico_mot_clef['NOM_MED']
         return chaine
 
    def HOMaiN__(self):
