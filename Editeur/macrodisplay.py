@@ -75,18 +75,18 @@ class MACRO2TreeItem(compojdc.JDCTreeItem):
       return self.object.get_l_noms_etapes()
 
 class MacroDisplay:
-  def __init__(self,appli,objet,nom_jdc):
+  def __init__(self,appli,macroitem,nom_jdc):
     self.fenetre = Tkinter.Toplevel()
     self.fenetre.configure(width = 800,height=500)
     self.fenetre.protocol("WM_DELETE_WINDOW", self.quit)
     self.fenetre.title("Visualisation Macro_Etape")
-    self.objet=objet
-    self.jdc=objet.jdc_aux
+    self.macroitem=macroitem
+    self.jdc=macroitem.object.jdc_aux
     self.nom_jdc=nom_jdc
     self.appli=appli
     self.barre=Tkinter.Frame(self.fenetre,relief="ridge",bd=2)
     self.barre.pack(expand=1,fill=Tkinter.X)
-    if self.objet.fichier_text is not None:
+    if self.macroitem.object.fichier_text is not None:
       b=Tkinter.Button(self.barre,image=images.get_image("Zoom24"),command=self.visufile)
       b.pack(side='left')
       tp=tooltip.TOOLTIP(b,"View file")
@@ -103,7 +103,7 @@ class MacroDisplay:
     self.tree.draw()
 
   def visufile(self):
-    Fenetre(self.appli,titre="Source du fichier inclus",texte=self.jdc.fichier_text)
+    Fenetre(self.appli,titre="Source du fichier inclus",texte=self.macroitem.object.fichier_text)
 
   def make_rmenu(self,node,event):
       if hasattr(node.item,'rmenu_specs'):
@@ -145,10 +145,14 @@ class MacroDisplay:
       if radio:menu.invoke(radio)
 
   def quit(self):
+    try:
+       self.macroitem.views.remove(self)
+    except:
+       pass
     self.fenetre.destroy()
 
-def makeMacroDisplay(appli,jdc,nom_jdc):
-  return MacroDisplay(appli,jdc,nom_jdc)
+def makeMacroDisplay(appli,macroitem,nom_item):
+  return MacroDisplay(appli,macroitem,nom_item)
 
 class TREEITEMINCANVAS:
    def __init__(self,object,nom="",parent=None,appli=None,sel=None,rmenu=None):

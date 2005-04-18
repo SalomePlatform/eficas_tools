@@ -306,7 +306,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       self.old_contexte_fichier_init=self.contexte_fichier_init
       old_fichier_ini=self.fichier_ini
 
-      print "update_fichier_init",self,self.parent,self.parent.recorded_units
+      #print "update_fichier_init",self,self.parent,self.parent.recorded_units
 
       #if unite != self.fichier_unite or not self.parent.recorded_units.has_key(unite):
       if not self.parent.recorded_units.has_key(unite):
@@ -511,7 +511,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
      # la commande modifies. Ceci peut conduire a la construction ou
      # a la reconstruction d'etapes dans le cas d'INCLUDE ou d'INCLUDE_MATERIAU
      # Il faut donc positionner le current_step avant l'appel
-     if self.state == "undetermined":return 1
      CONTEXT.unset_current_step()
      CONTEXT.set_current_step(self)
      valid=Validation.V_MACRO_ETAPE.MACRO_ETAPE.update_sdprod(self,cr=cr)
@@ -545,6 +544,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
   def make_poursuite(self):
       """ Cette methode est appelée par la fonction sd_prod de la macro POURSUITE
       """
+      print "make_poursuite"
       if not hasattr(self,'fichier_ini') :
          # Si le fichier n'est pas defini on le demande
          f,text=self.get_file_memo(fic_origine=self.parent.nom)
