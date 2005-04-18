@@ -1,5 +1,7 @@
 POURSUITE()
 #import traceback
 #traceback.print_stack()
+print "=================================="
 print "coucou1"
+print "=================================="
 FIN()
