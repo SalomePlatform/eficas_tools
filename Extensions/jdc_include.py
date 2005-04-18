@@ -29,14 +29,26 @@
 """
 from Accas import JDC,ASSD,AsException,JDC_CATA
 
+class NOTIFIER:
+   def __init__(self):
+      self.subscribers=[]
 
-class JDC_POURSUITE(JDC):
+   def subscribe(self,obj):
+      if not obj in self.subscribers:
+         self.subscribers.append(obj)
+
+   def notify(self):
+      for obj in self.subscribers:
+         obj.notify(self)
+
+class JDC_POURSUITE(JDC,NOTIFIER):
    def __init__(self,definition=None,procedure=None,cata=None,
                      cata_ord_dico=None,parent=None,
                      nom='SansNom',appli=None,context_ini=None,
                      jdc_pere=None,etape_include=None,prefix_include=None,
                      recorded_units=None,old_recorded_units=None,**args):
 
+      NOTIFIER.__init__(self)
       JDC.__init__(self, definition=definition,
                          procedure=procedure,
                          cata=cata,
@@ -122,6 +134,35 @@ class JDC_POURSUITE(JDC):
       """
       return self.jdc_pere.get_groups()
 
+   def init_modif(self):
+      """
+         Met l'état de l'étape à : modifié
+         Propage la modification au parent
+
+         Attention : init_modif doit etre appelé avant de réaliser une modification
+         La validité devra etre recalculée apres cette modification
+         mais par un appel à fin_modif pour préserver l'état modified
+         de tous les objets entre temps
+      """
+      print "init_modif",self,self.etape_include
+      self.state = 'modified'
+      self.etape_include.init_modif()
+
+   def fin_modif(self):
+      """
+          Méthode appelée une fois qu'une modification a été faite afin de
+          déclencher d'éventuels traitements post-modification
+          ex : INCLUDE et POURSUITE
+      """
+      print "fin_modif",self,self.etape_include
+      self.etape_include.fin_modif()
+      #self.notify()
+
+   def supprime(self):
+      """
+          On ne supprime rien pour un jdc auxiliaire d'include ou de poursuite
+      """
+      pass
 
 
 class JDC_INCLUDE(JDC_POURSUITE):
