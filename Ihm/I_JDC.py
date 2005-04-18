@@ -100,6 +100,7 @@ class JDC(I_OBJECT.OBJECT):
         self.etapes.insert(pos,objet)
         self.editmode=0
         self.active_etapes()
+        self.fin_modif()
         return objet
       elif name == "PARAMETRE":
         # ajout d'un parametre
@@ -111,6 +112,7 @@ class JDC(I_OBJECT.OBJECT):
         self.editmode=0
         self.reset_context()
         self.active_etapes()
+        self.fin_modif()
         return objet
       elif name == "PARAMETRE_EVAL":
         # ajout d'un parametre EVAL
@@ -122,6 +124,7 @@ class JDC(I_OBJECT.OBJECT):
         self.editmode=0
         self.reset_context()
         self.active_etapes()
+        self.fin_modif()
         return objet
       elif type(name)==types.InstanceType:
         # on est dans le cas où on veut ajouter une commande déjà 
@@ -147,6 +150,8 @@ class JDC(I_OBJECT.OBJECT):
         self.active_etapes()
         self.editmode=0
         self.reset_context()
+        print "addentite",self.etapes
+        self.fin_modif()
         return objet
       else :
         # On veut ajouter une nouvelle commande
@@ -163,6 +168,8 @@ class JDC(I_OBJECT.OBJECT):
           self.editmode=0
           self.reset_context()
           self.active_etapes()
+          print "addentite",self.etapes
+          self.fin_modif()
           return e
         except AsException,e:
           self.reset_current_step()
@@ -389,9 +396,11 @@ class JDC(I_OBJECT.OBJECT):
       Méthode appelée au moment où une modification va être faite afin de 
       déclencher d'éventuels traitements pré-modification
       """
+      print "init_modif",self
       self.state = 'modified'
 
    def fin_modif(self):
+      print "fin_modif",self
       self.isvalid()
       pass
 

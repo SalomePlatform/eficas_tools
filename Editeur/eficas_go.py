@@ -31,12 +31,13 @@ import import_code
 import splash
 import session
 
-def lance_eficas(code,fichier=None):
+def lance_eficas(code=None,fichier=None):
     """
         Lance l'appli EFICAS
     """
     # Analyse des arguments de la ligne de commande
     options=session.parse(sys.argv)
+    code=options.code
 
     root = Tkinter.Tk()
     splash.init_splash(root,code=code,titre="Lancement d'EFICAS pour %s" %code)

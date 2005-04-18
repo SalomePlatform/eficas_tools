@@ -109,13 +109,13 @@ class JDCDISPLAY:
                  # On a une chaine avec & en tete => on cree un radiobouton
                  try:
                     command=getattr(node.item,method[1:])
-                    menu.add_radiobutton(label=label,command=lambda a=self.appli,c=command:c(a))
+                    menu.add_radiobutton(label=label,command=lambda a=self.appli,c=command,n=node:c(a,n))
                     if radio == None:radio=number_item
                  except:pass
             else:
                  try:
                     command=getattr(node.item,method)
-                    menu.add_command(label=label,command=lambda a=self.appli,c=command:c(a))
+                    menu.add_command(label=label,command=lambda a=self.appli,c=command,n=node:c(a,n))
                  except:pass
       # Si au moins un radiobouton existe on invoke le premier
       if radio:menu.invoke(radio)

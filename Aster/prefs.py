@@ -36,6 +36,9 @@ INSTALLDIR=os.path.join(REPINI,'..')
 CODE_PATH = None
 #CODE_PATH = os.path.join(REPINI,'../../Superv')
 
+# la variable code donne le nom du code a selectionner
+code="ASTER" 
+
 # ICONDIR sert à localiser le répertoire contenant les icones
 # Par défaut on utilise le répertoire icons dans Editeur
 ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')

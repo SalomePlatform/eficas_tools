@@ -46,6 +46,7 @@ except:
 
 import os,traceback
 import ConfigParser
+import prefs
 
 # Les valeurs decodees par optparse sont mises dans un objet dictionnaire-like.
 # On l'utilise comme environnement de session.
@@ -207,9 +208,11 @@ def create_parser():
     parser.add_option("-j","--jdc",dest="comm",type='string',
                     action="callback",callback=check_comm,
                     help="nom du fichier de commandes")
+
     parser.add_option("-p","--poursuite", type="string",dest="pours",
                   action="callback", callback=check_poursuite,
                   help="nom du fichier poursuite")
+
     parser.add_option("-i","--include", 
                   action="callback", callback=check_include,
                   nargs=2, help="numero d'unite suivi du nom du fichier include")
@@ -220,6 +223,9 @@ def create_parser():
 
     parser.add_option("-c","--cata", action="store", type="string",dest="cata",
                   help="version de catalogue a utiliser")
+
+    parser.add_option("-k","--kode", action="store", type="string",dest="code",
+                  help="nom du code a utiliser",default=prefs.code)
 
     parser.add_option("-d","--debug", action="store", type="int",dest="debug",
                   help="niveau de debug")

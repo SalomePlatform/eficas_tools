@@ -41,4 +41,4 @@ sys.path[:0]=[prefs.INSTALLDIR]
 import Editeur
 from Editeur import eficas_go
 
-eficas_go.lance_eficas(code='ASTER')
+eficas_go.lance_eficas()

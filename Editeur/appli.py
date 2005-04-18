@@ -45,7 +45,7 @@ import session
 VERSION="EFICAS v1.7"
 
 class APPLI: 
-  def __init__ (self,master,code='ASTER',fichier=None,test=0) :
+  def __init__ (self,master,code=prefs.code,fichier=None,test=0) :
       self.code=code
       self.top=master
       self.top.protocol("WM_DELETE_WINDOW",self.exitEFICAS)

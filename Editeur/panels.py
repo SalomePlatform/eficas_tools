@@ -480,7 +480,9 @@ class OngletPanel(Panel) :
       return jdc.get_groups()
 
   def get_liste_cmd(self):
+      print "get_liste_cmd",self.node.item.object
       jdc=self.node.item.object.get_jdc_root()
+      print jdc
       listeCmd = jdc.get_liste_cmd()
       return listeCmd
 

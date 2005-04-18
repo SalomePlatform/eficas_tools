@@ -37,7 +37,7 @@ from widgets import showinfo,showerror
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.15 2005/03/10 09:25:30 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.16 2005/04/13 14:59:31 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -240,22 +240,38 @@ class INCLUDETreeItem(MACROTreeItem):
                ("Edit","makeEdit"),
               ]
 
-  def makeEdit(self,appli):
+  def __init__(self,appli, labeltext, object, setfunction):
+    MACROTreeItem.__init__(self,appli, labeltext, object, setfunction)
+    self.views=[]
+
+  def makeEdit(self,appli,node):
     print "makeEdit",self.object,self.object.nom
-    print self.object.jdc_aux,self.object.jdc_aux.nom
+    print "makeEdit",self.object.jdc_aux,self.object.jdc_aux.nom
+    self.parent_node=node
     # On cree un nouvel onglet dans le bureau
     appli.bureau.ShowJDC(self.object.jdc_aux,self.object.jdc_aux.nom,
                              label_onglet=None,
                              JDCDISPLAY=macrodisplay.MACRODISPLAY)
+    self.myjdc=appli.bureau.JDCDisplay_courant
+    self.object.jdc_aux.subscribe(self)
 
-  def makeView(self,appli):
+  def notify(self,obj):
+    print "notify",self,obj
+    self.parent_node.update_valid()
+    # Il faudrait redessiner l'arbre de maniere optimale
+    # et pas seulement l'updater
+    for display in self.views:
+       display.tree.update()
+
+  def makeView(self,appli,node):
     nom=self.object.nom
     if hasattr(self.object,'fichier_ini'):
        if self.object.fichier_ini is None:
           nom=nom+' '+"Fichier non défini"
        else:
           nom=nom+' '+self.object.fichier_ini
-    macrodisplay.makeMacroDisplay(appli,self.object,nom)
+    macdisp=macrodisplay.makeMacroDisplay(appli,self.object,nom)
+    self.views.append(macdisp)
 
 class INCLUDE_MATERIAUTreeItem(INCLUDETreeItem): pass
 class POURSUITETreeItem(INCLUDETreeItem): pass

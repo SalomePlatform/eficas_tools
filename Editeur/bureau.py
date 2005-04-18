@@ -464,7 +464,7 @@ class BUREAU:
       liste = self.GetListeJDCaSauvegarder()
       if liste != [] :
           # Certains fichiers n'ont pas été sauvegardés ...
-          if askyesno("Enregistrer modifications","Enregister les modifications ?") :
+          if askyesno("Enregistrer modifications","Enregistrer les modifications ?") :
               test = self.saveall(liste)
               if test != 1 :
                   return

@@ -80,6 +80,11 @@ class READERCATA:
           if catalogue[0] == self.code :
              liste_cata_possibles.append(catalogue)
 
+      if len(liste_cata_possibles)==0:
+          showerror("Import du catalogue","Pas de catalogue defini pour le code %s" % self.code)
+          self.appli.quit()
+          sys.exit(1)
+
       if self.version_code is not None:
           # La version a ete fixee
           for cata in liste_cata_possibles:
@@ -97,6 +102,7 @@ class READERCATA:
           self.ask_choix_catalogue()
 
       if self.fic_cata == None :
+          print "Pas de catalogue pour code %s, version %s" %(self.code,self.version_code)
           sys.exit(0)
 
       # détermination de fic_cata_c et fic_cata_p
@@ -297,7 +303,8 @@ class READERCATA:
       # test si plusieurs catalogues ou non
       if len(liste_choix) == 0:
           showerror("Aucun catalogue déclaré pour %s" %self.code)
-          self.quit()
+          self.appli.quit()
+          sys.exit(1)
       elif len(liste_choix) == 1:
           self.fic_cata = self.dico_catalogues[liste_choix[0]][2]
           self.version_code = liste_choix[0]

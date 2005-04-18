@@ -66,10 +66,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
          Met l'état de l'étape à : modifié
          Propage la modification au parent
       """
-      # Une action
-      # doit etre realisée apres init_modif et la validite reevaluée
-      # apres cette action. L'état modified de tous les objets doit etre
-      # preservé.
+      # init_modif doit etre appelé avant de réaliser une modification
+      # La validité devra etre recalculée apres cette modification
+      # mais dans l'appel à fin_modif pour préserver l'état modified
+      # de tous les objets entre temps
+      print "init_modif",self,self.parent
       self.state = 'modified'
       if self.parent:
         self.parent.init_modif()
@@ -80,6 +81,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           déclencher d'éventuels traitements post-modification
           ex : INCLUDE et POURSUITE
       """
+      print "fin_modif",self,self.parent
       if self.isvalid() :
          d=self.parent.get_contexte_apres(self)
       if self.parent:
@@ -114,6 +116,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 	self.sd = self.reuse = self.jdc.get_sd_avant_etape(nom,self)
         if self.sd != None :
           self.sdnom=self.sd.nom
+          self.fin_modif()
           return 1,"Concept existant"
         else:
           return 0,"Opérateur réentrant mais concept non existant"
@@ -128,6 +131,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 	  if isinstance(sd,self.get_type_produit()) :
              self.sd = self.reuse = sd
              self.sdnom = sd.nom
+             self.fin_modif()
              return 1,"Opérateur facultativement réentrant et concept existant trouvé"
 	  else:
 	     return 0,"Concept déjà existant et de mauvais type"
@@ -159,6 +163,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
                # Il suffit de changer son attribut nom pour le nommer
                self.sd.nom = nom
                self.sdnom=nom
+               self.fin_modif()
                return 1,"Nommage du concept effectué"
             except:
                return 0,"Nommage impossible"+str(sys.exc_info()[1])
@@ -173,6 +178,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             else:
 	      self.sd.nom=nom
               self.sdnom=nom
+              self.fin_modif()
               return 1,"Nommage du concept effectué"
           if self.isvalid() :
             # Normalement l appel de isvalid a mis a jour le concept produit (son type)
@@ -183,6 +189,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             else:
               self.sd.nom=nom
               self.sdnom=nom
+              self.fin_modif()
               return 1,"Nommage du concept effectué"
           else:
             # Normalement on ne devrait pas passer ici
