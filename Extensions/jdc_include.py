@@ -156,7 +156,7 @@ class JDC_POURSUITE(JDC,NOTIFIER):
       """
       print "fin_modif",self,self.etape_include
       self.etape_include.fin_modif()
-      #self.notify()
+      self.notify()
 
    def supprime(self):
       """

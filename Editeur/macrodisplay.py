@@ -75,17 +75,18 @@ class MACRO2TreeItem(compojdc.JDCTreeItem):
       return self.object.get_l_noms_etapes()
 
 class MacroDisplay:
-  def __init__(self,appli,jdc,nom_jdc):
+  def __init__(self,appli,objet,nom_jdc):
     self.fenetre = Tkinter.Toplevel()
     self.fenetre.configure(width = 800,height=500)
     self.fenetre.protocol("WM_DELETE_WINDOW", self.quit)
     self.fenetre.title("Visualisation Macro_Etape")
-    self.jdc=jdc
+    self.objet=objet
+    self.jdc=objet.jdc_aux
     self.nom_jdc=nom_jdc
     self.appli=appli
     self.barre=Tkinter.Frame(self.fenetre,relief="ridge",bd=2)
     self.barre.pack(expand=1,fill=Tkinter.X)
-    if self.jdc.fichier_text is not None:
+    if self.objet.fichier_text is not None:
       b=Tkinter.Button(self.barre,image=images.get_image("Zoom24"),command=self.visufile)
       b.pack(side='left')
       tp=tooltip.TOOLTIP(b,"View file")
@@ -96,7 +97,7 @@ class MacroDisplay:
     self.canvas=self.mainPart.component('canvas')
     Pmw.Color.changecolor(self.canvas,background='gray95')
     self.mainPart.pack(padx=10,pady=10,fill = 'both', expand = 1)
-    self.item=MACRO2TreeItem(self.appli,nom_jdc,jdc)
+    self.item=MACRO2TreeItem(self.appli,nom_jdc,self.jdc)
     import treewidget
     self.tree = treewidget.Tree(self.appli,self.item,self.mainPart,command=None,rmenu=self.make_rmenu)
     self.tree.draw()
