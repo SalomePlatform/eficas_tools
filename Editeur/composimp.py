@@ -122,9 +122,11 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
           self.select_noeud_maille=0
           if (self.clef_fonction.find("GROUP_NO") != -1)  :
-             self.select_noeud_maille=1
+             if (self.clef_fonction.find("_GROUP_NO") == -1 ):
+                 self.select_noeud_maille=1
           if (self.clef_fonction.find("GROUP_MA") != -1) :
-             self.select_noeud_maille=1
+             if (self.clef_fonction.find("_GROUP_MA") == -1 ):
+                 self.select_noeud_maille=1
 
           recherche=panelsSalome.dict_classes_salome[self.panel]
           if hasattr(recherche,self.clef_fonction):

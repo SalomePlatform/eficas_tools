@@ -90,8 +90,8 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
 
   def convertit_group_no_from_salome(self,liste_in):
       newr=[]
-      try:
-      #if ( 1 == 1 ) :
+      #try:
+      if ( 1 == 1 ) :
 	  for entree in liste_in :
 	       travail=[]
 	       travail.append(entree)
@@ -104,8 +104,8 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
 		   dict_geom_numgroupe[entreeName]=r
                for i in r :
                    newr.append(i)
-      except:
-      #else :
+      #except:
+      else :
 	   print "pas de groupe de noeuds associé"
 	   showerror("Pas de groupe associé","Cet Objet ne peut pas être défini comme un ensemble de groupe de noeuds")
       return newr
@@ -135,7 +135,12 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
       if SALOME_PLUSIEURS_BASE_Panel.__dict__.has_key(self.clef_fonction):
            valeur=apply(SALOME_PLUSIEURS_BASE_Panel.__dict__[self.clef_fonction],(self,entrychaine))
       else :
-	   if self.clef_fonction.find("GROUP_NO") != -1 :
+           if (self.clef_fonction.find("GROUP_NO") != -1) and (self.clef_fonction.find("GROUP_MA") != -1) :
+              if (self.clef_fonction.find("GROUP_NO") < self.clef_fonction.find("GROUP_MA")) :
+		valeur=self.convertit_group_maille_from_salome(entrychaine)
+	      else :
+		valeur=self.convertit_group_no_from_salome(entrychaine)  
+	   elif self.clef_fonction.find("GROUP_NO") != -1 :
 	       valeur=self.convertit_group_no_from_salome(entrychaine)
 	   else :
 	       if self.clef_fonction.find("GROUP_MA") != -1 :
