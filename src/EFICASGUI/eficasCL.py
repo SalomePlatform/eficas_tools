@@ -190,7 +190,7 @@ class CL:
 	  else :
 	     self.CLOnNode[CLName] = 1
       if (nodeOrCell == 1) :
-          print "FFFFFACCE"
+          print "MAILLE"
           if self.CLOnCell.has_key(CLName):
 	     self.CLOnCell[CLName] = self.CLOnCell[CLName] + 1
 	  else :
