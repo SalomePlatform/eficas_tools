@@ -6,14 +6,19 @@ using namespace std;
 #include <sys/time.h>
 #include <Python.h>
 #include <sip.h>
+#include <qglobal.h>
 
 /*
  * With Qt version 3.0, we must use this horrible hack : #define private public
  * With Qt version > 3.0, this no more needed
  * So commentarize #define QT30, with Qt version > 3.0
  */
-#undef QT32
+#if (QT_VERSION >= 0x030200)
+#define QT32
+#else
 #define QT30
+#endif
+
 #ifdef QT30
 #define private public /* We need to use processNextEvent(),
                              therefore we need
@@ -285,8 +290,7 @@ static void DoEvents()
     PyObject *res=PyObject_CallMethod(tkinter,"dooneevent","i",2);
     if(!res){
       PyErr_Print();
-      SIP_UNBLOCK_THREADS
-      return;
+      break;
     }
     ret= PyInt_AsLong(res);
     SCRUTE(ret);
@@ -296,7 +300,7 @@ static void DoEvents()
   }
 
   Py_DECREF(tkinter);
-  SCRUTE(tkinter->ob_refcnt);
+  //SCRUTE(tkinter->ob_refcnt);
   SIP_UNBLOCK_THREADS
   MESSAGE("end of DoEvents");
   return;

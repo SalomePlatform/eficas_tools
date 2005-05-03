@@ -31,6 +31,7 @@ TIXLIB=os.path.join(TIXHOME,"lib")
 QT_INCLUDES="@QT_INCLUDES@".split()
 SIP_INCLUDES="@SIP_INCLUDES@".split()
 QT_LIBS="@QT_MT_LIBS@".split()
+SIP_LIBS="@SIP_LIBS@".split()
 PYQT_LIBS="@PYQT_LIBS@".split()
 
 PYDIR=sys.prefix
@@ -127,7 +128,7 @@ setup(name="notifqt", version="1.0",
                         libraries=libs_tk,
                         extra_compile_args= SIP_INCLUDES + QT_INCLUDES,
                         extra_objects=[],
-                        extra_link_args=QT_LIBS + PYQT_LIBS ,
+                        extra_link_args=QT_LIBS + PYQT_LIBS + SIP_LIBS,
                       )
                 ])
 
