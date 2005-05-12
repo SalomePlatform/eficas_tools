@@ -140,7 +140,17 @@ class guiDS:
             print val
         return val
             
-            
+    def getTypeAttribute(self, objectId):
+        mySO = self._myStudy.FindObjectID(objectId)
+        boo,RefSO = mySO.ReferencedObject()
+        if boo:
+            mySO = RefSO
+        boo,attr =  self._myBuilder.FindAttribute(mySO,"AttributeFileType")
+        val=""
+        if boo:
+            val=attr.Value()
+        return val
+
     def getChildren(self, objectId):
         children=[]
         mySO = self._myStudy.FindObjectID(objectId)
