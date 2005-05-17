@@ -1,4 +1,4 @@
-#@ MODIF impr_fonction_ops Macro  DATE 30/11/2004   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF impr_fonction_ops Macro  DATE 11/05/2005   AUTEUR MCOURTOI M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -31,9 +31,10 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
    """
    macro='IMPR_FONCTION'
    import aster
-   from Accas import _F
-   from Utilitai import Graph
-   from Utilitai.Utmess import UTMESS
+   from Accas               import _F
+   from Utilitai            import Graph
+   from Utilitai.Utmess     import UTMESS
+   from Utilitai.UniteAster import UniteAster
    ier=0
    # La macro compte pour 1 dans la numerotation des commandes
    self.set_icmd(1)
@@ -42,21 +43,21 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
    # Le nom de la variable doit etre obligatoirement le nom de la commande
    CALC_FONC_INTERP = self.get_cmd('CALC_FONC_INTERP')
    DEFI_LIST_REEL   = self.get_cmd('DEFI_LIST_REEL')
-   DEFI_FICHIER     = self.get_cmd('DEFI_FICHIER')
    DETRUIRE         = self.get_cmd('DETRUIRE')
 
    #----------------------------------------------
    # 0. Traitement des arguments, initialisations
    # unité logique des fichiers réservés
    ul_reserve=(8,)
+   UL = UniteAster()
 
    # 0.1. Fichier
    nomfich=None
    if args['UNITE'] and args['UNITE']<>6:
-      nomfich='fort.'+str(args['UNITE'])
+      nomfich=UL.Nom(args['UNITE'])
       if INFO==2:
          print ' Nom du fichier :',nomfich
-   if nomfich and os.path.exists(nomfich):
+   if nomfich and os.path.exists(nomfich) and os.stat(nomfich).st_size<>0:
       if FORMAT=='XMGRACE':
          niv='A'
       else:
@@ -74,7 +75,8 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
    for Ci in COURBE:
       iocc+=1
       dC = Ci.cree_dict_valeurs(Ci.mc_liste)
-      if dC.has_key('LIST_PARA') and i0==0: i0=iocc
+      if dC.has_key('LIST_PARA') and dC['LIST_PARA']!=None and i0==0:
+         i0=iocc
       for mc in dC.keys():
          if dC[mc]==None: del dC[mc]
       Courbe.append(dC)
@@ -142,6 +144,7 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
          if typ=='nappe_sdaster':
             lpar,lval=obj.Valeurs()
             dico,ldicf=obj.Parametres()
+            Leg=dCi['LEGENDE']
             for i in range(len(lpar)):
                p=lpar[i]
                lx=lval[i][0]
@@ -169,12 +172,16 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
                   lx=lv2[0][0]
                   ly=lv2[0][1]
                # on stocke les données dans le Graph
+               nomresu=dic['NOM_RESU'].strip()+'_'+str(len(graph.Legendes))
                dicC={
                   'Val' : [lx,ly],
-                  'Lab' : [dic['NOM_PARA_FONC'],dic['NOM_RESU']]
+                  'Lab' : [dic['NOM_PARA_FONC'],nomresu]
                }
+               # ajoute la valeur du paramètre
+               dCi['LEGENDE'] = '%s %s=%g' % (Leg,dic['NOM_PARA'].strip(),p)
                Graph.AjoutParaCourbe(dicC, args=dCi)
                graph.AjoutCourbe(**dicC)
+               DETRUIRE(CONCEPT=_F(NOM=('li__','ftmp__'),),ALARME='NON',INFO=1)
          else:
             ftmp__=obj
             dpar=ftmp__.Parametres()
@@ -194,17 +201,19 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
             lx=lval[0]
             lr=lval[1]
             if typ=='fonction_c' and dCi.has_key('PARTIE'):
-               if dCi['PARTIE']=='COMPLEXE' : lr=lval[2]
+               if dCi['PARTIE']=='IMAG' : lr=lval[2]
             # on stocke les données dans le Graph
             if typ=='fonction_c' and not dCi.has_key('PARTIE'):
+               nomresu=dpar['NOM_RESU'].strip()+'_'+str(len(graph.Legendes))
                dicC={
                   'Val' : lval,
-                  'Lab' : [dpar['NOM_PARA'],dpar['NOM_RESU']+'_R',dpar['NOM_RESU']+'_I']
+                  'Lab' : [dpar['NOM_PARA'],nomresu+'_R',nomresu+'_I']
                }
             else:
+               nomresu=dpar['NOM_RESU'].strip()+'_'+str(len(graph.Legendes))
                dicC={
                   'Val' : [lx,lr],
-                  'Lab' : [dpar['NOM_PARA'],dpar['NOM_RESU']]
+                  'Lab' : [dpar['NOM_PARA'],nomresu]
                }
             Graph.AjoutParaCourbe(dicC, args=dCi)
             graph.AjoutCourbe(**dicC)
@@ -275,14 +284,18 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
          # on stocke les données dans le Graph
          # on imprime la liste des paramètres seulement si LIST_PARA
          if intloc:
+            nomresur=dpar['NOM_RESU'].strip()+'_'+str(len(graph.Legendes))
+            nomresu2=dpa2['NOM_RESU'].strip()+'_'+str(len(graph.Legendes)+1)
             dicC={
                'Val' : [lt,lx,ly],
-               'Lab' : [dpar['NOM_PARA'],dpar['NOM_RESU'],dpa2['NOM_RESU']]
+               'Lab' : [dpar['NOM_PARA'],nomresur,nomresu2]
             }
          else:
+            nomresur=dpar['NOM_RESU'].strip()+'_'+str(len(graph.Legendes))
+            nomresu2=dpa2['NOM_RESU'].strip()+'_'+str(len(graph.Legendes)+1)
             dicC={
                'Val' : [lx,ly],
-               'Lab' : [dpar['NOM_RESU'],dpa2['NOM_RESU']]
+               'Lab' : [nomresur,nomresu2]
             }
          Graph.AjoutParaCourbe(dicC, args=dCi)
          graph.AjoutCourbe(**dicC)
@@ -358,7 +371,7 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
    elif FORMAT=='AGRAF':
       nomdigr=None
       if args['UNITE_DIGR']<>6:
-         nomdigr='fort.'+str(args['UNITE_DIGR'])
+         nomdigr=UL.Nom(args['UNITE_DIGR'])
       kargs['FICHIER']=[nomfich, nomdigr]
       kargs['dform']={ 'formR' : '%12.5E' }
 
@@ -373,21 +386,15 @@ def impr_fonction_ops(self, FORMAT, COURBE, INFO, **args):
 
    # Traiter le cas des UL réservées
    if args['UNITE'] and args['UNITE'] in ul_reserve:
-      DEFI_FICHIER( ACTION='LIBERER', UNITE=args['UNITE'], )
+      UL.Etat(args['UNITE'], etat='F')
    if FORMAT=='AGRAF' and args['UNITE_DIGR']<>args['UNITE'] \
          and args['UNITE_DIGR'] in ul_reserve:
-      DEFI_FICHIER( ACTION='LIBERER', UNITE=args['UNITE_DIGR'], )
+      UL.Etat(args['UNITE_DIGR'], etat='F')
 
    # 2.4. On trace !
    graph.Trace(**kargs)
 
    # 99. Traiter le cas des UL réservées
-   if args['UNITE'] and args['UNITE'] in ul_reserve:
-      DEFI_FICHIER( ACTION='ASSOCIER', UNITE=args['UNITE'],
-            TYPE='ASCII', ACCES='APPEND' )
-   if FORMAT=='AGRAF' and args['UNITE_DIGR']<>args['UNITE'] \
-         and args['UNITE_DIGR'] in ul_reserve:
-      DEFI_FICHIER( ACTION='ASSOCIER', UNITE=args['UNITE_DIGR'],
-            TYPE='ASCII', ACCES='APPEND' )
+   UL.EtatInit()
 
    return ier
