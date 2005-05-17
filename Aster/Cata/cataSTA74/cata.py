@@ -34,7 +34,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_aster_v6.py,v 1.12 2001/01/16 15:55:05 iliade Exp $"
+__Id__="$Id: cata_STA7.py,v 1.11 2004/12/03 15:38:28 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,

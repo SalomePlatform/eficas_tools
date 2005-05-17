@@ -1,4 +1,4 @@
-#@ MODIF ops Cata  DATE 07/03/2005   AUTEUR DURAND C.DURAND 
+#@ MODIF ops Cata  DATE 05/10/2004   AUTEUR CIBHHLV L.VIVAN 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -27,7 +27,6 @@ import pickle
 # Modules Eficas
 import Accas
 from Accas import ASSD
-#from Utilitai.Utmess import UTMESS
 
 try:
    import aster
@@ -128,24 +127,19 @@ def POURSUITE(self,PAR_LOT,CODE,**args):
      # On supprime du pickle_context les concepts valant None, ca peut 
      # etre le cas des concepts non executés, placés après FIN.
      pickle_context=get_pickled_context()
-     from Utilitai.Utmess import UTMESS
      if pickle_context==None :
-        UTMESS('F','Poursuite',"Erreur a la relecture du fichier pick.1 : aucun objet sauvegardé ne sera récupéré")
+        self.jdc.cr.fatal("<F> Erreur a la relecture du fichier pick.1 : aucun objet sauvegardé ne sera récupéré")
         return
-     from Cata.cata  import ASSD
-     from Noyau.N_CO import CO
      for elem in pickle_context.keys():
          if type(pickle_context[elem])==types.InstanceType :
             pickle_class=pickle_context[elem].__class__
             if elem in self.g_context.keys():
                poursu_class=self.g_context[elem].__class__
                if poursu_class!=pickle_class :
-                  UTMESS('F','Poursuite',"Types incompatibles entre glob.1 et pick.1 pour concept de nom "+elem)
+                  self.jdc.cr.fatal("<F> types incompatibles entre glob.1 et pick.1 pour concept de nom "+elem)
                   return
-            elif isinstance(pickle_context[elem],ASSD) and not isinstance(pickle_context[elem],CO) : 
-            # on n'a pas trouvé le concept dans la base et sa classe est ASSD : ce n'est pas normal
-            # sauf dans le cas de CO : il n'a alors pas été typé et c'est normal qu'il soit absent de la base
-               UTMESS('F','Poursuite',"Concept de nom "+elem+" et de type "+str(pickle_class)+" introuvable dans la base globale")
+            else: 
+               self.jdc.cr.fatal("<F> concept de nom "+elem+" et de type "+str(pickle_class)+" introuvable dans la base globale")
                return
          if pickle_context[elem]==None : del pickle_context[elem]
      self.g_context.update(pickle_context)
@@ -357,6 +351,8 @@ def subst_materiau(text,NOM_MATER,EXTRACTION,UNITE_LONGUEUR):
    else:
      ll=ll_u
 
+   for l in ll:
+     print l
    lines=ll
    ll=[]
    for l in lines:
@@ -411,8 +407,6 @@ def INCLUDE_MATERIAU(self,NOM_AFNOR,TYPE_MODELE,VARIANTE,TYPE_VALE,NOM_MATER,
       self.Execute_alone()
 
     self.make_contexte(f,self.text)
-    for k,v in self.g_context.items() :
-        if isinstance(v,ASSD) and k!=v.nom : del self.g_context[k]
 
 def build_procedure(self,**args):
     """
