@@ -1,0 +1,5 @@
+DEBUT()
+import traceback
+traceback.print_stack()
+a=
+FIN()
