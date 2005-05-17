@@ -23,16 +23,18 @@
     un ecran Splash pour faire patentier l'utilisateur
 """
 # Modules Python
+import sys
 import Tkinter
 
 # Modules Eficas
 import import_code
+import session
 
 def lance_eficas(code,fichier=None):
     """
         Lance l'appli EFICAS
     """
-
+    options=session.parse(sys.argv)
     root = Tkinter.Tk()
     import eficas
     if fichier :
