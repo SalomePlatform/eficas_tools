@@ -1,23 +1,31 @@
 #unalias do
 #set -x
-for file in `ls /local/noyret/Install_Eficas/lescomm/*`
+version=V8
+passe=1
+rm -rf ./Tests_Batch/${version}/ok_${passe}
+rm -rf ./Tests_Batch/${version}/bad_${passe}
+rm -rf ./Tests_Batch/${version}/nt_${passe}
+for file in `cat ./Tests_Batch/${version}/aTester`
 do
-        print $file
-	filepath=$file
-	grep "VISU_EFICAS='NON'" $filepath > /dev/null 2>/dev/null
+        echo $file
+	grep "VISU_EFICAS='NON'" $file > /dev/null 2>/dev/null
 	rc=$?
 	if [ "$rc" != "0" ]
 	then
-	    grep INCLUDE $filepath | grep -v "#" | grep -v INCLUDE_MATERIAU > /dev/null 2>/dev/null
+	    grep INCLUDE $file | grep -v "#" | grep -v INCLUDE_MATERIAU > /dev/null 2>/dev/null
 	    rc=$?
 	    if  [ "$rc" != "0" ]
 	    then
-                echo $file
- 	    	./test_eficas.py $filepath 
+ 	    	cr=`./test_eficas.py $file` 
+		if [ "${cr}" != "" ]
+		then
+			echo $file >> ./Tests_Batch/${version}/bad_${passe}
+		else
+			echo $file >> ./Tests_Batch/${version}/ok_${passe}
+		fi
 	    fi
-	fi
-#        read a; if [ "$a" == "b" ]  
-#	then  
-#	   exit  
-#	fi 
+	else
+	   echo $file >> ./Tests_Batch/${version}/nt_${passe}
+	fi 
+	read a
 done
