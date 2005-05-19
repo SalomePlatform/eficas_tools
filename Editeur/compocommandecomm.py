@@ -18,6 +18,7 @@
 #
 #
 # ======================================================================
+import traceback
 from Tkinter import *
 import Pmw
 import string
@@ -93,11 +94,13 @@ class COMMANDE_COMMPanel(panels.OngletPanel):
       Réalise la décommentarisation de self
       """
       try:
+          pos=self.node.parent.children.index(self.node)
           commande,nom = self.node.item.uncomment()
+          self.node.parent.children[pos].select()
       except Exception,e:
           showerror("Erreur !",str(e))
           return
-      self.parent.appli.bureau.JDCDisplay_courant.ReplaceObjectNode(self.node,commande,nom)
+      #self.parent.appli.bureau.JDCDisplay_courant.ReplaceObjectNode(self.node,commande,nom)
     
 class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
     panel = COMMANDE_COMMPanel
@@ -159,6 +162,7 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
       try:
         commande,nom = self.object.uncomment()
       except Exception,e:
+        traceback.print_exc()
         raise e
       return commande,nom
   

@@ -93,27 +93,37 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
     return keys
 
   def GetSubList(self):
-    sublist=[]
-    for obj in self.object.mc_liste:
-      def setfunction(value, object=obj):
-        object.setval(value)
-      item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
-      sublist.append(item)
-    return sublist
+      """
+         Reactualise la liste des items fils stockes dans self.sublist
+      """
+      liste=self.object.mc_liste
+      sublist=[None]*len(liste)
+      # suppression des items lies aux objets disparus
+      for item in self.sublist:
+         old_obj=item.getObject()
+         if old_obj in liste:
+            pos=liste.index(old_obj)
+            sublist[pos]=item
+         else:
+            pass # objets supprimes ignores
+      # ajout des items lies aux nouveaux objets
+      pos=0
+      for obj in liste:
+         if sublist[pos] is None:
+            # nouvel objet : on cree un nouvel item
+            def setfunction(value, object=obj):
+                object.setval(value)
+            item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
+            sublist[pos]=item
+         pos=pos+1
+
+      self.sublist=sublist
+      return self.sublist
 
   def additem(self,name,pos):
-    if isinstance(name,Objecttreeitem.ObjectTreeItem) :
-        objet = self.object.addentite(name.getObject(),pos)
-    else :
-        objet = self.object.addentite(name,pos)
-    self.expandable = 1
-    if objet == 0 :
-        # on ne peut ajouter l'élément de nom name
-        return 0
-    def setfunction(value, object=objet):
-      object.setval(value)
-    item = self.make_objecttreeitem(self.appli,objet.nom + " : ", objet, setfunction)
-    return item
+    #print "compofact.additem",name,pos
+    objet = self.object.addentite(name,pos)
+    return objet
 
   def suppitem(self,item) :
       """ 
@@ -135,7 +145,30 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
          self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-clé')
          return 0
 
-  def verif_condition_bloc(self):
+  def GetSubList_BAK(self):
+    sublist=[]
+    for obj in self.object.mc_liste:
+      def setfunction(value, object=obj):
+        object.setval(value)
+      item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
+      sublist.append(item)
+    return sublist
+
+  def additem_BAK(self,name,pos):
+    if isinstance(name,Objecttreeitem.ObjectTreeItem) :
+        objet = self.object.addentite(name.getObject(),pos)
+    else :
+        objet = self.object.addentite(name,pos)
+    self.expandable = 1
+    if objet == 0 :
+        # on ne peut ajouter l'élément de nom name
+        return 0
+    def setfunction(value, object=objet):
+      object.setval(value)
+    item = self.make_objecttreeitem(self.appli,objet.nom + " : ", objet, setfunction)
+    return item
+
+  def verif_condition_bloc_BAK(self):
       return self.object.verif_condition_bloc()
 
 import Accas

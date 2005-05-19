@@ -32,8 +32,10 @@ from math import *
 
 # import de modules Eficas
 from Noyau.N_CR import CR
+from Noyau import N_OBJECT
+from Ihm import I_OBJECT
 
-class PARAMETRE :
+class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
   """
      Cette classe permet de créer des objets de type PARAMETRE
      cad des affectations directes dans le jeu de commandes (ex: a=10.)

@@ -32,6 +32,7 @@ from Noyau.N_ASSD import ASSD
 import Noyau, Validation.V_MACRO_ETAPE
 from Noyau import N_Exception
 from Noyau.N_Exception import AsException
+import Accas # attention aux imports circulaires
 # fin import à résorber
 
 class MACRO_ETAPE(I_ETAPE.ETAPE):
@@ -63,10 +64,13 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          ou leve une exception
          --> utilisée par ops.POURSUITE et INCLUDE
     """
-    print "get_contexte_jdc"
+    #print "get_contexte_jdc"
     try:
        # on essaie de créer un objet JDC auxiliaire avec un contexte initial
-       context_ini = self.parent.get_contexte_avant(self)
+       # Attention get_contexte_avant retourne un dictionnaire qui contient
+       # le contexte courant. Ce dictionnaire est reactualise regulierement.
+       # Si on veut garder l'etat du contexte fige, il faut en faire une copie.
+       context_ini = self.parent.get_contexte_avant(self).copy()
 
        # Indispensable avant de creer un nouveau JDC
        CONTEXT.unset_current_step()
@@ -98,7 +102,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # On récupère les étapes internes (pour validation)
        self.etapes=j.etapes
        self.jdc_aux=j
-       print "get_contexte_jdc",id(self.etapes)
+       #print "get_contexte_jdc",id(self.etapes)
     except:
        traceback.print_exc()
        # On force le contexte (etape courante) à self
@@ -125,12 +129,16 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
     # Si aucune erreur rencontrée
     # On recupere le contexte de l'include verifie
+    #print "context_ini",j.context_ini
+    #print "g_context",j.g_context
     try:
        j_context=j.get_verif_contexte()
     except:
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(self)
        raise
+
+    #print "context_ini",j.context_ini
 
     # On remplit le dictionnaire des concepts produits inclus
     # en retirant les concepts présents dans le  contexte initial
@@ -153,6 +161,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     # On rétablit le contexte (etape courante) à self
     CONTEXT.unset_current_step()
     CONTEXT.set_current_step(self)
+    #print "context_ini",self.jdc_aux.context_ini
 
     return j_context
 
@@ -161,6 +170,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          Avec la liste des SD qui ont été supprimées, propage la 
          disparition de ces SD dans toutes les étapes et descendants
      """
+     #print "reevalue_sd_jdc"
      l_sd_supp,l_sd_repl = self.diff_contextes()
      for sd in l_sd_supp:
         self.parent.delete_concept_after_etape(self,sd)
@@ -230,12 +240,12 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def supprime_sdprods(self):
       """
-          Fonction:
-          Lors d'une destruction d'etape, detruit tous les concepts produits
+          Fonction: Lors de la destruction de la macro-etape, detruit tous les concepts produits
           Un opérateur n a qu un concept produit
           Une procedure n'en a aucun
           Une macro en a en général plus d'un
       """
+      #print "supprime_sdprods"
       if not self.is_reentrant() :
          # l'étape n'est pas réentrante
          # le concept retourné par l'étape est à supprimer car il était
@@ -254,13 +264,118 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.parent.delete_concept(co)
       # On met g_context à blanc
       self.g_context={}
+
+  def delete_concept(self,sd):
+      """
+          Fonction : Mettre a jour les mots cles de l etape et eventuellement
+          le concept produit si reuse suite à la disparition du concept sd
+          Seuls les mots cles simples MCSIMP font un traitement autre
+          que de transmettre aux fils
+      """
+      #print "delete_concept",sd
+      I_ETAPE.ETAPE.delete_concept(self,sd)
+      for etape in self.etapes:
+         etape.delete_concept(sd)
+
+  def replace_concept(self,old_sd,sd):
+      """
+          Fonction : Mettre a jour les mots cles de l etape et le concept produit si reuse 
+          suite au remplacement  du concept old_sd par sd
+      """
+      #print "replace_concept",old_sd,sd
+      I_ETAPE.ETAPE.replace_concept(self,old_sd,sd)
+      for etape in self.etapes:
+         etape.replace_concept(sd)
          
+  def change_fichier_init(self,new_fic,text):
+    """
+       Tente de changer le fichier include. Le precedent include est conservé
+       dans old_xxx
+    """
+    if not hasattr(self,'fichier_ini'):
+       self.fichier_ini=None
+       self.fichier_text=None
+       self.fichier_err="Le fichier n'est pas defini"
+       self.contexte_fichier_init={}
+       self.recorded_units={}
+       self.jdc_aux=None
+       self.fichier_unite="PasDefini"
+       import Extensions.jdc_include
+       self.JdC_aux=Extensions.jdc_include.JdC_include
+
+    self.old_fic = self.fichier_ini
+    self.old_text = self.fichier_text
+    self.old_err = self.fichier_err
+    self.old_context=self.contexte_fichier_init
+    self.old_units=self.recorded_units
+    self.old_etapes=self.etapes
+    self.old_jdc_aux=self.jdc_aux
+
+    self.fichier_ini = new_fic
+    self.fichier_text=text
+
+    try:
+       self.make_contexte_include(new_fic,text)
+    except:
+       l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+       self.fichier_err=string.join(l)
+       raise
+
+    # L'evaluation de text dans un JDC auxiliaire s'est bien passé
+    # on peut poursuivre le traitement
+    self.init_modif()
+    self.state="undetermined"
+    self.fichier_err=None
+    # On enregistre la modification de fichier
+    self.record_unite()
+    # Le contexte du parent doit etre reinitialise car les concepts produits ont changé
+    self.parent.reset_context()
+
+    # Si des concepts ont disparu lors du changement de fichier, on demande leur suppression
+    self.old_contexte_fichier_init=self.old_context
+    self.reevalue_sd_jdc()
+
+    self.fin_modif()
+
+  def restore_fichier_init(self):
+    """
+       Restaure le fichier init enregistre dans old_xxx
+    """
+    self.fichier_ini=self.old_fic
+    self.fichier_text=self.old_text
+    self.fichier_err=self.old_err
+    self.contexte_fichier_init=self.old_context
+    self.recorded_units=self.old_units
+    self.etapes=self.old_etapes
+    self.jdc_aux=self.old_jdc_aux
+
+  def force_fichier_init(self):
+    """
+       Force le fichier init en erreur
+    """
+    # On conserve la memoire du nouveau fichier
+    # mais on n'utilise pas les concepts crees par ce fichier
+    # on met l'etape en erreur : fichier_err=string.join(l)
+    self.init_modif()
+    # On enregistre la modification de fichier
+    self.record_unite()
+    #self.etapes=[]
+    self.g_context={}
+    # Le contexte du parent doit etre reinitialise car les concepts produits ont changé
+    self.parent.reset_context()
+
+    self.old_contexte_fichier_init=self.old_context
+    self.contexte_fichier_init={}
+    self.reevalue_sd_jdc()
+
+    self.fin_modif()
+
   def make_contexte_include(self,fichier,text):
     """
         Cette méthode sert à créer un contexte en interprétant un texte source
         Python
     """
-    print "make_contexte_include"
+    #print "make_contexte_include"
     # on récupère le contexte d'un nouveau jdc dans lequel on interprete text
     contexte = self.get_contexte_jdc(fichier,text)
     if contexte == None :
@@ -275,8 +390,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # contexte_fichier_init est utilisé pour avoir les concepts supprimés par la macro
       self.contexte_fichier_init = contexte
 
-  def reevalue_fichier_init(self):
+  def reevalue_fichier_init_OBSOLETE(self):
       """Recalcule les concepts produits par le fichier enregistre"""
+      #print "reevalue_fichier_init"
       old_context=self.contexte_fichier_init
       try:
          self.make_contexte_include(self.fichier_ini ,self.fichier_text)
@@ -295,13 +411,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       self.fichier_err = None
       self.old_contexte_fichier_init=old_context
       self.reevalue_sd_jdc()
+      #print "reevalue_fichier_init",self.jdc_aux.context_ini
 
   def update_fichier_init(self,unite):
       """Reevalue le fichier init sans demander (dans la mesure du possible) a l'utilisateur 
          les noms des fichiers
          Ceci suppose que les relations entre unites et noms ont été memorisees préalablement
       """
-      print "update_fichier_init",unite
+      #print "update_fichier_init",unite
       self.fichier_err=None
       self.old_contexte_fichier_init=self.contexte_fichier_init
       old_fichier_ini=self.fichier_ini
@@ -339,6 +456,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
       if old_fichier_ini == self.fichier_ini:
          # Le fichier inclus n'a pas changé. On ne recrée pas le contexte
+         #print "update_fichier_init.fichier inchange",self.jdc_aux.context_ini
          return
 
       try:
@@ -363,6 +481,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # Si des concepts ont disparu lors du changement de fichier, on 
       # demande leur suppression
       self.reevalue_sd_jdc()
+      #print "update_fichier_init",self.jdc_aux.context_ini
 
   def record_unite(self):
       if self.nom == "POURSUITE":
@@ -421,7 +540,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           Sinon on retourne None. Les concepts produits par l'INCLUDE sont
           pris en compte par le JDC parent lors du calcul du contexte (appel de ???)
       """
-      print "make_include",unite
+      #print "make_include",unite
       # On supprime l'attribut unite qui bloque l'evaluation du source de l'INCLUDE
       # car on ne s'appuie pas sur lui dans EFICAS mais sur l'attribut fichier_ini
       del self.unite
@@ -452,6 +571,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          try:
            self.make_contexte_include(self.fichier_ini ,self.fichier_text)
            self.parent.record_unit(unite,self)
+           #print "make_include.context_ini",self.jdc_aux.context_ini
          except:
            l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
            if self.jdc.appli:
@@ -544,7 +664,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
   def make_poursuite(self):
       """ Cette methode est appelée par la fonction sd_prod de la macro POURSUITE
       """
-      print "make_poursuite"
+      #print "make_poursuite"
       if not hasattr(self,'fichier_ini') :
          # Si le fichier n'est pas defini on le demande
          f,text=self.get_file_memo(fic_origine=self.parent.nom)
@@ -586,4 +706,104 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          # et on leve une exception si une erreur a été enregistrée
          self.update_fichier_init(None)
          if self.fichier_err is not None: raise Exception(self.fichier_err)
+
+#ATTENTION SURCHARGE: cette methode surcharge celle de Noyau a garder en synchro 
+  def type_sdprod(self,co,t):
+      """
+           Cette methode a pour fonction de typer le concept co avec le type t
+            dans les conditions suivantes
+            1- co est un concept produit de self
+            2- co est un concept libre : on le type et on l attribue à self
+           Elle enregistre egalement les concepts produits (on fait l hypothese
+            que la liste sdprods a été correctement initialisee, vide probablement)
+      """
+      #print "type_sdprod",co,t
+      if not hasattr(co,'etape'):
+         # Le concept vaut None probablement. On ignore l'appel
+         return
+      #
+      # On cherche a discriminer les differents cas de typage d'un concept
+      # produit par une macro qui est specifie dans un mot cle simple.
+      # On peut passer plusieurs fois par type_sdprod ce qui explique
+      # le nombre important de cas.
+      #
+      # Cas 1 : Le concept est libre. Il vient d'etre cree par CO(nom)
+      # Cas 2 : Le concept est produit par la macro. On est deja passe par type_sdprod.
+      #         Cas semblable a Cas 1.
+      # Cas 3 : Le concept est produit par la macro englobante (parent). On transfere
+      #         la propriete du concept de la macro parent a la macro courante (self)
+      #         en verifiant que le type est valide
+      # Cas 4 : La concept est la propriete d'une etape fille. Ceci veut dire qu'on est
+      #         deja passe par type_sdprod et que la propriete a ete transfere a une
+      #         etape fille. Cas semblable a Cas 3.
+      # Cas 5 : Le concept est produit par une etape externe a la macro.
+      #
+      if co.etape == None:
+         # Cas 1 : le concept est libre
+         # On l'attache a la macro et on change son type dans le type demande
+         # Recherche du mot cle simple associe au concept
+         mcs=self.get_mcs_with_co(co)
+         if len(mcs) != 1:
+            raise AsException("""Erreur interne.
+Il ne devrait y avoir qu'un seul mot cle porteur du concept CO (%s)""" % co)
+         mcs=mcs[0]
+         #
+         # Attention : la seule modif est ici : Accas.CO au lieu de CO
+         #
+         if not Accas.CO in mcs.definition.type:
+            raise AsException("""Erreur interne.
+Impossible de changer le type du concept (%s). Le mot cle associe ne supporte pas CO mais seulement (%s)""" %(co,mcs.definition.type))
+         co.etape=self
+         co.__class__ = t
+         self.sdprods.append(co)
+
+      elif co.etape== self:
+         # Cas 2 : le concept est produit par la macro (self)
+         # On est deja passe par type_sdprod (Cas 1 ou 3).
+         # Il suffit de le mettre dans la liste des concepts produits (self.sdprods)
+         # Le type du concept doit etre coherent avec le type demande (seulement derive)
+         if not isinstance(co,t):
+            raise AsException("""Erreur interne.
+Le type demande (%s) et le type du concept (%s) devraient etre derives""" %(t,co.__class__))
+         self.sdprods.append(co)
+
+      elif co.etape== self.parent:
+         # Cas 3 : le concept est produit par la macro parente (self.parent)
+         # on transfere la propriete du concept a la macro fille
+         # et on change le type du concept comme demande
+         # Au prealable, on verifie que le concept existant (co) est une instance
+         # possible du type demande (t)
+         # Cette règle est normalement cohérente avec les règles de vérification des mots-clés
+         if not isinstance(co,t):
+            raise AsException("""
+Impossible de changer le type du concept produit (%s) en (%s).
+Le type actuel (%s) devrait etre une classe derivee du nouveau type (%s)""" % (co,t,co.__class__,t))
+         mcs=self.get_mcs_with_co(co)
+         if len(mcs) != 1:
+            raise AsException("""Erreur interne.
+Il ne devrait y avoir qu'un seul mot cle porteur du concept CO (%s)""" % co)
+         mcs=mcs[0]
+         if not Accas.CO in mcs.definition.type:
+            raise AsException("""Erreur interne.
+Impossible de changer le type du concept (%s). Le mot cle associe ne supporte pas CO mais seulement (%s)""" %(co,mcs.definition.type))
+         co.etape=self
+         # On ne change pas le type car il respecte la condition isinstance(co,t)
+         #co.__class__ = t
+         self.sdprods.append(co)
+
+      elif self.issubstep(co.etape):
+         # Cas 4 : Le concept est propriété d'une sous etape de la macro (self).
+         # On est deja passe par type_sdprod (Cas 3 ou 1).
+         # Il suffit de le mettre dans la liste des concepts produits (self.sdprods)
+         # Le type du concept et t doivent etre derives.
+         # Il n'y a aucune raison pour que la condition ne soit pas verifiee.
+         if not isinstance(co,t):
+            raise AsException("""Erreur interne.
+Le type demande (%s) et le type du concept (%s) devraient etre derives""" %(t,co.__class__))
+         self.sdprods.append(co)
+
+      else:
+         # Cas 5 : le concept est produit par une autre étape
+         # On ne fait rien
+         return
 

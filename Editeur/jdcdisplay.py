@@ -25,6 +25,7 @@
 """
 # Modules Python
 import types
+import traceback
 import Tkinter
 import Pmw
 
@@ -128,12 +129,13 @@ class JDCDISPLAY:
       """
       if node is not self.node_selected :
          self.create_panel(node)
-      # on conserve la trace du noeud sélectionné et de celui d'avant
-      if self.node_selected :
-          self.ancien_node = self.node_selected
-          self.node_selected = node
-      else:
-          self.ancien_node = self.node_selected = node
+      self.node_selected = node
+      ## on conserve la trace du noeud sélectionné et de celui d'avant
+      #if self.node_selected :
+          #self.ancien_node = self.node_selected
+          #self.node_selected = node
+      #else:
+          #self.ancien_node = self.node_selected = node
 
    def create_panel(self,node):
       """
@@ -157,12 +159,14 @@ class JDCDISPLAY:
              z.show_stats()
              z.show_cycles()
 
+      if node is None:
+          self.panel_courant=None
+          return self.panel_courant
 
       if node.item.isactif():
           if hasattr(node.item,"panel"):
               self.panel_courant=node.item.panel(self,self.pane.pane('selected'),node)
           else:
-              print node.item
               raise Exception("Le noeud sélectionné n'a pas de panel associé")
       else:
           self.panel_courant = panels.Panel_Inactif(self,self.pane.pane('selected'),node)
@@ -198,9 +202,10 @@ class JDCDISPLAY:
       else:
           self.init_modif()
           node.delete()
-          if nom_sd:
-              child.item.nomme_sd(nom_sd)
-          child.update()
+          #if nom_sd:
+              #child.item.nomme_sd(nom_sd)
+          child.select()
+          #child.update()
 
    def doCut(self):
       """
@@ -232,6 +237,7 @@ class JDCDISPLAY:
       try:
          child=self.appli.noeud_a_editer.doPaste(self.node_selected)
       except:
+         traceback.print_exc()
          showinfo("Action de coller impossible",
                   "L'action de coller apres un tel objet n'est pas permise")
          return
@@ -241,20 +247,19 @@ class JDCDISPLAY:
              showerror("Copie refusée",self.appli.message)
              self.appli.message = ''
           self.appli.affiche_infos("Copie refusée")
+          return
 
       # il faut déclarer le JDCDisplay_courant modifié
       self.init_modif()
       # suppression éventuelle du noeud sélectionné
       # si possible on renomme l objet comme le noeud couper
       if self.edit == "couper":
-          try :
-            nom = self.appli.noeud_a_editer.item.object.sd.nom
-            self.appli.noeud_a_editer.delete()
-	    test,mess = child.item.nomme_sd(nom)
-	    child.verif()
-	    child.racine.update()
-	  except :
-            self.appli.noeud_a_editer.delete()
+         #nom = self.appli.noeud_a_editer.item.object.sd.nom
+         item=self.appli.noeud_a_editer.item
+         self.appli.noeud_a_editer.delete()
+         child.item.update(item)
+	 #test,mess = child.item.nomme_sd(nom)
+         child.select()
       # on rend la copie à nouveau possible en libérant le flag edit
       self.edit="copier"
 

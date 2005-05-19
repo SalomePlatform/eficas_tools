@@ -18,7 +18,9 @@
 #
 #
 # ======================================================================
+import types,traceback
 from copy import copy
+import CONNECTOR
 
 class MCList:
   def isMCList(self):
@@ -64,7 +66,48 @@ class MCList:
      Une MCList n'est jamais obligatoire (même si le MCFACT qu'elle représente l'est
      """
      return self.data[0].definition.statut=='o'
-     #return 0
+  
+  def suppentite(self,obj):
+      """
+        Supprime le mot cle facteur obj de la MCLIST
+      """
+      self.init_modif()
+      self.remove(obj)
+      CONNECTOR.Emit(self,"supp",obj)
+      self.fin_modif()
+      return 1
+
+  def addentite(self,obj,pos=None):
+      """
+        Ajoute le mot cle facteur obj a la MCLIST a la position pos
+        Retourne None si l'ajout est impossible
+      """
+      if type(obj)==types.StringType :
+         # on est en mode création d'un motcle
+         raise "traitement non prevu"
+
+      if not self.ajout_possible():
+         self.jdc.send_message("L'objet %s ne peut pas être ajouté" % obj.nom)
+         return None
+
+      if self.nom != obj.nom:
+         return None
+
+      if obj.isMCList():
+         obj=obj.data[0]
+
+      # Traitement du copier coller seulement 
+      # Les autres cas d'ajout sont traites dans MCFACT
+      self.init_modif()
+      obj.verif_existence_sd()
+      obj.reparent(self.parent)
+      if pos is None:
+         self.append(obj)
+      else:
+         self.insert(pos,obj)
+      CONNECTOR.Emit(self,"add",obj)
+      self.fin_modif()
+      return obj
 
   def liste_mc_presents(self):
     return []
@@ -117,6 +160,16 @@ class MCList:
     # Sans objet pour une liste de mots clés facteurs
     return []
 
+  def deep_update_condition_bloc(self):
+     """
+        Parcourt l'arborescence des mcobject et realise l'update
+        des blocs conditionnels par appel de la methode update_condition_bloc
+     """
+    
+     #print "deep_update_condition_bloc",self
+     for mcfact in self.data :
+         mcfact.deep_update_condition_bloc()
+
   def verif_condition_bloc(self):
     """ 
         Evalue les conditions de tous les blocs fils possibles 
@@ -125,7 +178,7 @@ class MCList:
            - la première contient les noms des blocs à rajouter
            - la seconde contient les noms des blocs à supprimer
     """
-    # Sans objet pour une liste de mots clés facteurs
+    # Sans objet pour une liste de mots clés facteurs (a voir !!!)
     return [],[]
 
   def init_modif(self):
@@ -142,6 +195,8 @@ class MCList:
       Méthode appelée après qu'une modification a été faite afin de déclencher
       d'éventuels traitements post-modification
     """
+    #print "fin_modif",self
+    CONNECTOR.Emit(self,"valid")
     if self.parent:
       self.parent.fin_modif()
 

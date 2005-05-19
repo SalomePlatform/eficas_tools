@@ -23,6 +23,7 @@ from Tkinter import *
 import Pmw
 import Objecttreeitem
 import panels
+import traceback
 
 class MCLISTPanel(panels.Panel):
     def init(self):
@@ -35,12 +36,12 @@ class MCLISTPanel(panels.Panel):
         self.label = Label(self,text = texte)
         self.label.place(relx=0.5,rely=0.4,anchor='center')
         if test_ajout:
-            Button(self,text="AJOUTER",command=self.ajout_occurrence).place(relx=0.5,rely=0.6,anchor='center')
+            self.but=Button(self,text="AJOUTER",command=self.ajout_occurrence)
+            self.but.place(relx=0.5,rely=0.6,anchor='center')
             #Button(self,text="NON",command=None).place(relx=0.6,rely=0.6,anchor='center')
 
     def ajout_occurrence(self,event=None):
         self.node.parent.append_child(self.node.item.get_nom())
-
 
 import compofact
 import treewidget
@@ -48,13 +49,15 @@ class Node(treewidget.Node):
     def doPaste(self,node_selected):
         objet_a_copier = self.item.get_copie_objet()
         child=node_selected.doPaste_MCF(objet_a_copier)
+        #print "doPaste",child
         return child
 
     def doPaste_MCF(self,objet_a_copier):
         if self.item.isMCList() :
           # le noeud courant est une MCList
-          child = self.parent.append_child(objet_a_copier,pos='first',retour='oui')
-        elif self.item.isMCFact():
+          child = self.append_child(objet_a_copier,pos='first',retour='oui')
+          #child = self.parent.append_child(objet_a_copier,pos='first',retour='oui')
+        elif self.item.isMCFact() :
           # le noeud courant est un MCFACT
           if self.parent.item.isMCList():
              # le noeud selectionne est un MCFACT dans une MCList
@@ -69,14 +72,17 @@ class Node(treewidget.Node):
                    "Vous ne pouvez coller le mot-clé facteur copié à ce niveau de l'arborescence !")
           self.appli.affiche_infos("Copie refusée")
           child=None
+        #print "doPaste_MCF",child
         return child
 
     def replace_enfant(self,item):
         """ Retourne le noeud fils à éventuellement remplacer """
+        raise "OBSOLETE"
         if self.item.isMCList():return None
         return self.get_node_fils(item.get_nom())
 
     def verif_condition(self):
+        raise "OBSOLETE"
         if self.item.isMCList():
            self.children[-1].verif_condition()
         else:
@@ -86,6 +92,7 @@ class Node(treewidget.Node):
         """ Dans le cas d'une MCList il faut vérifier qu'elle n'est pas vide
             ou réduite à un seul élément suite à une destruction
         """
+        raise "OBSOLETE"
         # self représente une MCList
         if len(self.item) == 0 :
             # la liste est vide : il faut la supprimer
@@ -106,6 +113,7 @@ class Node(treewidget.Node):
             Supprime child des enfants de self, tous les id associés
             ET l'objet associé
         """
+        raise "OBSOLETE"
         if self.item.isMCList():
            if self.item.suppitem(child.item):
               self.delete_node_child(child)
@@ -162,10 +170,38 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
 
     def GetSubList(self):
         self.updateDelegate()
-	if len(self._object) > 1:
-	   return Objecttreeitem.SequenceTreeItem.GetSubList(self)
-	else:
+	if len(self._object) <= 1:
+           self._object.data[0].alt_parent=self._object
 	   return compofact.FACTTreeItem.GetSubList(self)
+
+        liste=self._object.data
+        sublist=[None]*len(liste)
+        # suppression des items lies aux objets disparus
+        for item in self.sublist:
+           old_obj=item.getObject()
+           if old_obj in liste:
+              pos=liste.index(old_obj)
+              sublist[pos]=item
+           else:
+              pass # objets supprimes ignores
+        # ajout des items lies aux nouveaux objets
+        pos=0
+        for obj in liste:
+           if sublist[pos] is None:
+              # nouvel objet : on cree un nouvel item
+              def setfunction(value, object=obj):
+                  object=value
+              item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
+              sublist[pos]=item
+              #Attention : on ajoute une information supplementaire pour l'actualisation de 
+              # la validite. L'attribut parent d'un MCFACT pointe sur le parent de la MCLISTE
+              # et pas sur la MCLISTE elle meme ce qui rompt la chaine de remontee des
+              # informations de validite. alt_parent permet de remedier a ce defaut.
+              obj.alt_parent=self._object
+           pos=pos+1
+
+        self.sublist=sublist
+        return self.sublist
 
     def GetIconName(self):
         if self._object.isvalid():
@@ -197,47 +233,35 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
         """
 	return len(self._object) > 1
 	
+    def get_copie_objet(self):
+        return self._object.data[0].copy()
+
     def additem(self,obj,pos):
-        """
-	Ajoute un objet MCFACT à la MCList (self.object) à la position pos
-	"""
+        #print "compomclist.additem",obj,pos
 	if len(self._object) <= 1:
-	   return compofact.FACTTreeItem.additem(self,obj,pos)
+           return compofact.FACTTreeItem.additem(self,obj,pos)
 
-        if type(obj)==types.StringType :
-          # on est en mode création d'un motcle
-          raise "traitement non prevu"
-
-        if not self._object.ajout_possible():
-           return None
-
-        if self._object.nom != obj.nom:
-           return None
-
-	self.object.init_modif()
-	obj.verif_existence_sd()
-	obj.reparent(self.object.parent)
-	self.object.insert(pos,obj)
-	self.object.fin_modif()
-
-        item = self.make_objecttreeitem(self.appli, obj.nom + ":", obj)
-        return item  
+        o= self.object.addentite(obj,pos)
+        return o
 
     def suppitem(self,item):
         """
 	Retire un objet MCFACT de la MCList (self.object) 
 	"""
+        #print "compomclist.suppitem",item
         obj=item.getObject()
 	if len(self._object) <= 1:
 	   return compofact.FACTTreeItem.suppitem(self,item)
 
-        self.object.init_modif()
-        self.object.remove(obj)
-	if len(self._object) == 1:
-           self.updateDelegate()
-        message = "Mot-clé " + obj.nom + " supprimé"
-        self.appli.affiche_infos(message)
-        return 1
+        if self.object.suppentite(obj):
+	   if len(self._object) == 1: self.updateDelegate()
+           message = "Mot-clé " + obj.nom + " supprimé"
+           self.appli.affiche_infos(message)
+           return 1
+        else:
+           self.appli.affiche_infos('Impossible de supprimer ce mot-clé')
+           return 0
+
 	    
 import Accas
 objet = Accas.MCList    

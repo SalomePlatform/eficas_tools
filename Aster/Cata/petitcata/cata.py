@@ -31,7 +31,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata_reduit.py,v 1.6 2004/09/20 09:24:11 eficas Exp $"
+__Id__="$Id: cata.py,v 1.1 2004/11/19 09:06:23 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
@@ -467,6 +467,17 @@ AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele,docu="U4.41.01-g",
             UIinfo={"groupes":("Modélisation",)},
 VERIF=SIMP(statut='f',typ='TXM',max=2,into=("MAILLE","NOEUD")),
 ) ;
+
+GLOB_OPER=OPER(nom="GLOB_OPER",op=18,sd_prod=modele,docu="U4.41.01-g",
+        FORMAT          =SIMP(statut='f',typ='TXM',position='global',
+                               into=("TABLEAU","AGRAF","XMGRACE",),),
+                b_unit1  =BLOC(condition = "FORMAT == 'TABLEAU'",
+                               TOTO1  =SIMP(statut='f',typ='TXM',defaut='AAA',into=('AAA','BBB'),),
+                              ),
+                b_unit2  =BLOC(condition = "FORMAT == None",
+                               TOTO2  =SIMP(statut='f',typ='TXM',defaut='AAA',into=('AAA','BBB'),),
+                              ),
+             )
 
 PLS_BASE_SIMPLE=OPER(nom="PLS_BASE_SIMPLE",op=19,sd_prod=cara_elem,
                     fr="Exemple de PLUSIEURS_BASE_Panel sans validator",

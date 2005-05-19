@@ -20,13 +20,23 @@
 # ======================================================================
 """
     Ce module permet de lancer l'application EFICAS en affichant
-    un ecran Splash pour faire patentier l'utilisateur
+    un ecran Splash pour faire patienter l'utilisateur
 """
 # Modules Python
 import sys
 import Tkinter
 
 # Modules Eficas
+import prefs
+if hasattr(prefs,'encoding'):
+   # Hack pour changer le codage par defaut des strings
+   import sys
+   reload(sys)
+   sys.setdefaultencoding(prefs.encoding)
+   del sys.setdefaultencoding
+   # Fin hack
+
+import styles
 import import_code
 import splash
 import session

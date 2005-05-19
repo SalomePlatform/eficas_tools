@@ -35,6 +35,8 @@ from widgets import showerror
 # Modules Eficas
 import splash
 import prefs
+import styles
+from styles import style
 import fontes
 import tooltip
 import properties
@@ -175,13 +177,13 @@ class APPLI:
         root.option_add('*Listbox*Font',fontes.standard)
 
   def initializeTk_colors_common(self, root):
-        root.option_add('*background', 'grey')
-        root.option_add('*foreground', 'black')
-        root.option_add('*EntryField.Entry.background', 'white')
-	root.option_add('*Entry*background', 'white')
-        root.option_add('*Listbox*background', 'white')
-        root.option_add('*Listbox*selectBackground', '#00008b')
-        root.option_add('*Listbox*selectForeground', 'white')
+        root.option_add('*background', style.background)
+        root.option_add('*foreground', style.foreground)
+        root.option_add('*EntryField.Entry.background', style.entry_background)
+	root.option_add('*Entry*background', style.entry_background)
+        root.option_add('*Listbox*background', style.list_background)
+        root.option_add('*Listbox*selectBackground', style.list_select_background)
+        root.option_add('*Listbox*selectForeground', style.list_select_foreground)
 
   def initializeTk_mac(self, root):
         self.initializeTk_colors_common(root)

@@ -89,7 +89,8 @@ class PythonGenerator:
           Si format vaut 'standard', retourne un texte obtenu par concaténation de la liste
           Si format vaut 'beautifie', retourne le meme texte beautifié
       """
-      self.appli=obj.appli
+      self.appli=obj.get_jdc_root().appli
+      #self.appli=obj.appli
       liste= self.generator(obj)
       if format == 'brut':
          self.text=liste

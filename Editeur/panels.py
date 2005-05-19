@@ -23,6 +23,7 @@ import os
 from Tkinter import *
 import Pmw
 import time
+import traceback
 
 import widgets
 from widgets import ListeChoix
@@ -49,6 +50,10 @@ class Panel(Frame) :
       self.place(x=0,y=0,relheight=1,relwidth=1)
       self.creer_boutons()
       self.init()
+
+  def __del__(self):
+      """ appele a la destruction du panel """
+      #print "PANEL DETRUIT"
 
   def destroy(self):
       Frame.destroy(self)
@@ -238,6 +243,9 @@ class Panel(Frame) :
       if name == SEPARATEUR:return
       if self.parent.modified == 'n' : self.parent.init_modif()
       if name != "COMMENTAIRE":
+          #parent=self.node.parent
+          #new_obj = parent.item.append_child(name,self.node.item.getObject())
+          #parent.children[parent.children.index(self.node)+1].select()
           new_node = self.node.append_brother(name,'after')
       else :
           new_node = self.ajout_commentaire()
@@ -247,6 +255,8 @@ class Panel(Frame) :
       if name == SEPARATEUR:return
       if self.parent.modified == 'n' : self.parent.init_modif()
       if name != "COMMENTAIRE":
+          #new_obj = self.node.item.append_child(name,'first')
+          #self.node.children[0].select()
           new_node = self.node.append_child(name,'first')
       else :
           new_node = self.ajout_commentaire_first()
@@ -471,7 +481,7 @@ class OngletPanel(Panel) :
   def deselectMC(self,name):
       self.parent.appli.affiche_infos('')
     
-  def get_liste_cmd_old(self):
+  def get_liste_cmd_BAK(self):
       listeCmd = self.cata.listCmd()
       return listeCmd
 
@@ -480,9 +490,8 @@ class OngletPanel(Panel) :
       return jdc.get_groups()
 
   def get_liste_cmd(self):
-      print "get_liste_cmd",self.node.item.object
+      #print "get_liste_cmd",self.node.item.object
       jdc=self.node.item.object.get_jdc_root()
-      print jdc
       listeCmd = jdc.get_liste_cmd()
       return listeCmd
 
@@ -501,8 +510,8 @@ class OngletPanel(Panel) :
       if nom == '' : return # si pas de nom, on ressort sans rien faire ...
       if self.parent.modified == 'n' : self.parent.init_modif()
       test,mess = self.node.item.nomme_sd(nom)
-      self.node.verif()
-      self.node.racine.update()
+      #self.node.verif()
+      #self.node.racine.update()
       self.parent.appli.affiche_infos(mess)
   
   def changed(self):
@@ -515,9 +524,12 @@ class OngletPanel(Panel) :
     # On traite par une exception le cas où l'utilisateur final cherche à désactiver
     # (commentariser) un commentaire.
     try :
+        pos=self.node.parent.children.index(self.node)
         commande_comment = self.node.item.get_objet_commentarise()
-        self.parent.appli.bureau.JDCDisplay_courant.ReplaceObjectNode(self.node,commande_comment,None)
+        self.node.parent.children[pos].select()
+        #self.parent.appli.bureau.JDCDisplay_courant.ReplaceObjectNode(self.node,commande_comment,None)
     except Exception,e:
+        traceback.print_exc()
         widgets.showerror("TOO BAD",str(e))
     return
 

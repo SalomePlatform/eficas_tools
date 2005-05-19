@@ -61,12 +61,14 @@ class JDCPanel(panels.OngletPanel):
 import treewidget
 class Node(treewidget.Node):
     def verif_all_children(self):
+        raise "OBSOLETE"
         if not self.children : self.build_children()
         for child in self.children :
             child.verif_all_children()
 
     def replace_enfant(self,item):
         """ Retourne le noeud fils à éventuellement remplacer """
+        raise "OBSOLETE"
         return None
 
     def doPaste_Commande(self,objet_a_copier):
@@ -74,7 +76,9 @@ class Node(treewidget.Node):
           Réalise la copie de l'objet passé en argument qui est nécessairement
           une commande
         """
+        #child = self.item.append_child(objet_a_copier,pos='first')
         child = self.append_child(objet_a_copier,pos='first',retour='oui')
+        #if child is None : return 0
         return child
 
 
@@ -107,14 +111,8 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
           return range(len(self.object.etapes))
 
   def additem(self,name,pos):
-      print self.object
-      if isinstance(name,Objecttreeitem.ObjectTreeItem) :
-          cmd=self.object.addentite(name.getObject(),pos)
-      else :
-          cmd = self.object.addentite(name,pos)
-      print cmd
-      item = self.make_objecttreeitem(self.appli,cmd.nom + " : ", cmd)
-      return item
+      cmd = self._object.addentite(name,pos)
+      return cmd
 
   def suppitem(self,item) :
     # item = item de l'ETAPE à supprimer du JDC
@@ -133,34 +131,53 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
        return 0
 
   def GetSubList(self):
-    sublist=[]
+    """
+       Retourne la liste des items fils de l'item jdc.
+       Cette liste est conservee et mise a jour a chaque appel
+    """
     if self.object.etapes_niveaux != []:
         liste = self.object.etapes_niveaux
     else:
         liste = self.object.etapes
-    key=0
-    for value in liste:
-      def setfunction(value, key=key, object=liste):
-        object[key] = value
-      item = self.make_objecttreeitem(self.appli,value.ident() + " : ", value, setfunction)
-      sublist.append(item)
-      key=key+1
-    return sublist
+    sublist=[None]*len(liste)
+    # suppression des items lies aux objets disparus
+    for item in self.sublist:
+       old_obj=item.getObject()
+       if old_obj in liste:
+          pos=liste.index(old_obj)
+          sublist[pos]=item
+       else:
+          pass # objets supprimes ignores
+    # ajout des items lies aux nouveaux objets
+    pos=0
+    for obj in liste:
+       if sublist[pos] is None:
+          # nouvel objet : on cree un nouvel item
+          item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj)
+          sublist[pos]=item
+       pos=pos+1
 
-  def verif_condition_bloc(self):
-      # retourne la liste des sous-items dont la condition est valide
-      # sans objet pour le JDC
-      return [],[]
+    self.sublist=sublist
+    return self.sublist
 
   def get_l_noms_etapes(self):
       """ Retourne la liste des noms des étapes de self.object"""
       return self.object.get_l_noms_etapes()
 
   def get_liste_cmd(self):
-      print "get_liste_cmd"
-      print self.object.niveau.definition
+      #print "get_liste_cmd",self.object.niveau.definition
       listeCmd = self.object.niveau.definition.get_liste_cmd()
       return listeCmd
+
+  def additem_BAK(self,name,pos):
+      cmd=self.addentite(name,pos)
+      item = self.make_objecttreeitem(self.appli,cmd.nom + " : ", cmd)
+      return item
+
+  def verif_condition_bloc_BAK(self):
+      # retourne la liste des sous-items dont la condition est valide
+      # sans objet pour le JDC
+      return [],[]
 
     
 import Accas

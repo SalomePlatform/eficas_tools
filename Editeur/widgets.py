@@ -882,7 +882,7 @@ class ListeChoix :
         #except :
           #pass
 
-    def get_liste_old(self):
+    def get_liste_BAK(self):
         return self.liste
 
     # PN attention à la gestion des paramétres

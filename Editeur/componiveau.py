@@ -42,7 +42,7 @@ class NIVEAUPanel(panels.OngletPanel):
 
 import treewidget
 class Node(treewidget.Node):
-    def verif_condition(self):
+    def verif_condition_BAK(self):
         """
         on lance la vérification des conditions de chaque bloc de self
         on crée ou supprime les noeuds concernés
@@ -50,7 +50,7 @@ class Node(treewidget.Node):
         """
         return 0
 
-    def replace_enfant(self,item):
+    def replace_enfant_BAK(self,item):
         """ Retourne le noeud fils à éventuellement remplacer """
         return None
 
@@ -62,9 +62,6 @@ class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
   def isactif(self):
       return self.object.isactif()
     
-  def IsExpandable_old(self):
-      return self.object.isactif()
-
   def IsExpandable(self):
       return 1
     

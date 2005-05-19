@@ -99,3 +99,5 @@ if os.path.isfile(userprefs):
       execfile(userprefs)
    except:
       pass
+
+sys.path[:0]=[INSTALLDIR]

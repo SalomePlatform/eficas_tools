@@ -34,45 +34,8 @@ import compojdc
 import treewidget
 from widgets import Fenetre
 
-#class MACRO2TreeItem(Objecttreeitem.ObjectTreeItem):
 class MACRO2TreeItem(compojdc.JDCTreeItem):
-  def IsExpandable(self):
-    return 1
-
-  def GetText(self):
-      return  "    "
-
-  def GetIconName(self):
-    if self.object.isvalid():
-      return "ast-green-square"
-    else:
-      return "ast-red-square"
-
-  def keys(self):
-    return range(len(self.object.etapes))
-
-  def GetSubList(self):
-    sublist=[]
-    for key in self.keys():
-      liste = self.object.etapes
-      try:
-        value = liste[key]
-      except KeyError:
-        continue
-      def setfunction(value, key=key, object=liste):
-        object[key] = value
-      item = self.make_objecttreeitem(self.appli,value.ident() + " : ", value, setfunction)
-      sublist.append(item)
-    return sublist
-
-  def verif_condition_bloc(self):
-      # retourne la liste des sous-items dont la condition est valide
-      # sans objet pour le JDC
-      return [],[]
-
-  def get_l_noms_etapes(self):
-      """ Retourne la liste des noms des étapes de self.object"""
-      return self.object.get_l_noms_etapes()
+      pass
 
 class MacroDisplay:
   def __init__(self,appli,macroitem,nom_jdc):
@@ -156,7 +119,7 @@ def makeMacroDisplay(appli,macroitem,nom_item):
 
 class TREEITEMINCANVAS:
    def __init__(self,object,nom="",parent=None,appli=None,sel=None,rmenu=None):
-      print "TREEITEMINCANVAS",object
+      #print "TREEITEMINCANVAS",object
       self.object=object
       self.nom=nom
       self.appli=appli
@@ -182,7 +145,7 @@ import jdcdisplay
 
 class MACRODISPLAY(jdcdisplay.JDCDISPLAY):
    def __init__(self,jdc,nom_jdc,appli=None,parent=None):
-      print "MACRODISPLAY",jdc
+      #print "MACRODISPLAY",jdc
       self.jdc=jdc
       self.nom_jdc=nom_jdc
       self.fichier=None

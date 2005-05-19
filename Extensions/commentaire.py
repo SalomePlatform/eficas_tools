@@ -24,8 +24,10 @@
 """
 
 from Noyau.N_CR import CR
+from Noyau import N_OBJECT
+from Ihm import I_OBJECT
 
-class COMMENTAIRE :
+class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
   """ 
       Cette classe permet de créer des objets de type COMMENTAIRE 
   """

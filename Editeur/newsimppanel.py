@@ -72,13 +72,13 @@ class newSIMPPanel(panels.OngletPanel):
       if self.parent.modified == 'n' : self.parent.init_modif()
       self.node.item.set_valeur(name)
       self.parent.appli.affiche_infos(mess)
-      if self.node.item.get_position()=='global':
-           self.node.etape.verif_all()
-      elif self.node.item.get_position()=='global_jdc':
-           self.node.racine.verif_all()
-      else :
-           self.node.parent.verif()
-      self.node.update()
+      #if self.node.item.get_position()=='global':
+           #self.node.etape.verif_all()
+      #elif self.node.item.get_position()=='global_jdc':
+           #self.node.racine.verif_all()
+      #else :
+           #self.node.parent.verif()
+      #self.node.update()
 
   def record_valeur(self,name=None,mess='Valeur du mot-clé enregistrée'):
       """
@@ -111,15 +111,15 @@ class newSIMPPanel(panels.OngletPanel):
       if validite :
           self.node.item.set_valeur(valeur)
           self.parent.appli.affiche_infos(mess)
-          if self.node.item.get_position()=='global':
-              self.node.etape.verif_all()
-          elif self.node.item.get_position()=='global_jdc':
-              self.node.racine.verif_all()
-          else :
-              self.node.parent.verif()
-          self.node.update()
-          if self.node.item.isvalid():
-              self.node.parent.select()
+          #if self.node.item.get_position()=='global':
+              #self.node.etape.verif_all()
+          #elif self.node.item.get_position()=='global_jdc':
+              #self.node.racine.verif_all()
+          #else :
+              #self.node.parent.verif()
+          #self.node.update()
+          #if self.node.item.isvalid():
+          #    self.node.parent.select()
       else :
           self.parent.appli.affiche_infos(commentaire)
 

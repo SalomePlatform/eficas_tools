@@ -218,7 +218,7 @@ class BUREAU:
           if not hasattr(self,'JDC') : return
           titre="rapport de validation du jeu de commandes courant"
           cr = self.JDC.report()
-          self.update_jdc_courant()
+          #self.update_jdc_courant()
       elif mode == 'CATA':
           from Noyau.N_CR import CR
           cr = CR()
@@ -352,7 +352,6 @@ class BUREAU:
          if format == 'homard':
             self.jdc_homard=g.get_homard()
          if not g.cr.estvide():
-            print g.cr
             self.appli.affiche_infos("Erreur à la generation")
             showerror("Erreur à la generation","EFICAS ne sait pas convertir ce JDC")
             return
@@ -506,26 +505,9 @@ class BUREAU:
           Lance la suppression du noeud courant
       """
       if not self.JDCDisplay_courant : return
-      try:
-          if self.JDCDisplay_courant.modified == 'n' : 
-             self.JDCDisplay_courant.init_modif()
-          pere = self.JDCDisplay_courant.node_selected.parent
-          # Le noeud n'est pas au 1er niveau
-          if  pere.parent.parent != None:
-              self.JDCDisplay_courant.node_selected.delete()
-              pere.select()
-          else:
-              noeudselecte = self.JDCDisplay_courant.node_selected
-              parent = noeudselecte.parent
-              enfants = parent.children
-              index = enfants.index(noeudselecte) 
-              self.JDCDisplay_courant.node_selected.delete()
-              try:
-              	enfants[index].select()
-              except :
-		enfants[index-1].select()
-      except AttributeError:
-          pass
+      if self.JDCDisplay_courant.modified == 'n' : 
+         self.JDCDisplay_courant.init_modif()
+      self.JDCDisplay_courant.node_selected.delete()
 
    def visuJDC_py(self,event=None):
       """ 
@@ -557,7 +539,6 @@ class BUREAU:
          g=generator.plugins[format]()
          jdc_formate=g.gener(self.JDC,format='beautifie')
          if not g.cr.estvide():
-            print g.cr
             self.appli.affiche_infos("Erreur à la generation")
             showerror("Erreur à la generation","EFICAS ne sait pas convertir ce JDC")
             return

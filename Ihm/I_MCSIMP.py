@@ -40,10 +40,12 @@ from Noyau.N_utils import repr_float
 from Noyau.N_ASSD import ASSD,assd
 from Noyau.N_GEOM import GEOM,geom
 from Noyau.N_CO import CO
+import Accas
 # fin attention
 
 from Extensions import parametre
 import I_OBJECT
+import CONNECTOR
 
 class MCSIMP(I_OBJECT.OBJECT):
 
@@ -215,10 +217,62 @@ class MCSIMP(I_OBJECT.OBJECT):
   def isoblig(self):
     return self.definition.statut=='o'
 
+  def valid_valeur(self,new_valeur):
+      """
+        Verifie que la valeur passee en argument (new_valeur) est valide
+        sans modifier la valeur courante (evite d'utiliser set_valeur et est plus performant)
+      """
+      old_valeur=self.valeur
+      old_val=self.val
+      self.valeur = new_valeur
+      self.val = new_valeur
+      self.state="modified"
+      validite=self.isvalid()
+      self.valeur = old_valeur
+      self.val = old_valeur
+      self.state="modified"
+      self.isvalid()
+      return validite
+
+  def valid_valeur_partielle(self,new_valeur):
+      """
+        Verifie que la valeur passee en argument (new_valeur) est partiellement valide
+        sans modifier la valeur courante (evite d'utiliser set_valeur et est plus performant)
+      """
+      old_valeur=self.valeur
+      old_val=self.val
+
+      self.valeur = new_valeur
+      self.val = new_valeur
+      self.state="modified"
+      validite=0
+      if self.isvalid():
+         validite=1
+      elif self.definition.validators :
+         validite=self.definition.validators.valide_liste_partielle(new_valeur)
+
+      if validite==0:
+         min,max=self.get_min_max()
+         if len(new_valeur) < min :
+            validite=1
+
+      self.valeur = old_valeur
+      self.val = old_valeur
+      self.state="modified"
+      self.isvalid()
+      return validite
+
   def set_valeur(self,new_valeur,evaluation='oui'):
+        #print "set_valeur",new_valeur
         self.init_modif()
         self.valeur = new_valeur
         self.val = new_valeur
+        if self.definition.position == 'global' : 
+           self.etape.deep_update_condition_bloc()
+        elif self.definition.position == 'global_jdc' :
+           self.jdc.deep_update_condition_bloc()
+        else:
+           self.parent.update_condition_bloc()
         self.fin_modif()
         return 1
 
@@ -227,14 +281,15 @@ class MCSIMP(I_OBJECT.OBJECT):
         Essaie d'évaluer new_valeur comme une SD, une déclaration Python 
         ou un EVAL: Retourne la valeur évaluée (ou None) et le test de réussite (1 ou 0)
     """
-    sd = self.jdc.get_contexte_avant(self.etape).get(new_valeur,None)
+    #print "eval_valeur",new_valeur
+    sd = self.jdc.get_sd_avant_etape(new_valeur,self.etape)
+    #sd = self.jdc.get_contexte_avant(self.etape).get(new_valeur,None)
     if sd :
       return sd,1
     else:
       d={}
       # On veut EVAL avec tous ses comportements. On utilise Accas. Perfs ??
-      from Accas import EVAL
-      d['EVAL']=EVAL
+      d['EVAL']=Accas.EVAL
       try :
         objet = eval(new_valeur,d)
         return objet,1
@@ -267,20 +322,24 @@ class MCSIMP(I_OBJECT.OBJECT):
         Met a jour la valeur du mot cle simple suite à la disparition 
         du concept sd
     """
+    #print "delete_concept",sd
     if type(self.valeur) == types.TupleType :
       if sd in self.valeur:
+        self.init_modif()
         self.valeur=list(self.valeur)
         self.valeur.remove(sd)
-        self.init_modif()
+        self.fin_modif()
     elif type(self.valeur) == types.ListType:
       if sd in self.valeur:
-        self.valeur.remove(sd)
         self.init_modif()
+        self.valeur.remove(sd)
+        self.fin_modif()
     else:
       if self.valeur == sd:
+        self.init_modif()
         self.valeur=None
         self.val=None
-        self.init_modif()
+        self.fin_modif()
 
   def replace_concept(self,old_sd,sd):
     """
@@ -291,34 +350,36 @@ class MCSIMP(I_OBJECT.OBJECT):
         Met a jour la valeur du mot cle simple suite au remplacement 
         du concept old_sd
     """
+    #print "replace_concept",old_sd,sd
     if type(self.valeur) == types.TupleType :
       if old_sd in self.valeur:
+        self.init_modif()
         self.valeur=list(self.valeur)
         i=self.valeur.index(old_sd)
         self.valeur[i]=sd
-        self.init_modif()
+        self.fin_modif()
     elif type(self.valeur) == types.ListType:
       if old_sd in self.valeur:
+        self.init_modif()
         i=self.valeur.index(old_sd)
         self.valeur[i]=sd
-        self.init_modif()
+        self.fin_modif()
     else:
       if self.valeur == old_sd:
+        self.init_modif()
         self.valeur=sd
         self.val=sd
-        self.init_modif()
+        self.fin_modif()
 
   def set_valeur_co(self,nom_co):
       """
           Affecte à self l'objet de type CO et de nom nom_co
       """
+      #print "set_valeur_co",nom_co
       step=self.etape.parent
       if nom_co == None or nom_co == '':
          new_objet=None
       else:
-         # Pour le moment on importe en local le CO de Accas.
-         # Si problème de perfs, il faudra faire autrement
-         from Accas import CO
          # Avant de créer un concept il faut s'assurer du contexte : step 
          # courant
          sd= step.get_sd_autour_etape(nom_co,self.etape,avec='oui')
@@ -335,7 +396,7 @@ class MCSIMP(I_OBJECT.OBJECT):
          CONTEXT.unset_current_step()
          CONTEXT.set_current_step(step)
          step.set_etape_context(self.etape)
-         new_objet = CO(nom_co)
+         new_objet = Accas.CO(nom_co)
          CONTEXT.unset_current_step()
          CONTEXT.set_current_step(cs)
       self.init_modif()
@@ -346,6 +407,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       # On force l'enregistrement de new_objet en tant que concept produit 
       # de la macro en appelant get_type_produit avec force=1
       self.etape.get_type_produit(force=1)
+      #print "set_valeur_co",new_objet
       return 1,"Concept créé"
 	
   def verif_existence_sd(self):
@@ -353,9 +415,12 @@ class MCSIMP(I_OBJECT.OBJECT):
         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
 	avant étape, sinon enlève la référence à ces concepts
      """
+     #print "verif_existence_sd"
+     # Attention : possible probleme avec include
      l_sd_avant_etape = self.jdc.get_contexte_avant(self.etape).values()  
      if type(self.valeur) in (types.TupleType,types.ListType) :
        l=[]
+       self.init_modif()
        for sd in self.valeur:
          if isinstance(sd,ASSD) :
 	    if sd in l_sd_avant_etape :
@@ -363,15 +428,12 @@ class MCSIMP(I_OBJECT.OBJECT):
 	 else:
 	    l.append(sd)
        self.valeur=tuple(l)
-       # Est ce init_modif ou init_modif_up
-       # Normalement init_modif va avec fin_modif
-       self.init_modif()
        self.fin_modif()
      else:
        if isinstance(self.valeur,ASSD) :
 	  if self.valeur not in l_sd_avant_etape :
-	     self.valeur = None
              self.init_modif()
+	     self.valeur = None
              self.fin_modif()
  
   def get_min_max(self):

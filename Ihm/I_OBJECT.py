@@ -29,7 +29,8 @@ try:
   lang=prefs.lang
 except:
   lang='fr'
-  
+
+import CONNECTOR
 
 class OBJECT:
   from Noyau.N_CO import CO
@@ -66,8 +67,10 @@ class OBJECT:
       Méthode appelée après qu'une modification a été faite afin de déclencher
       d'éventuels traitements post-modification
       """
+      #print "fin_modif",self
       # pour les objets autres que les commandes, aucun traitement spécifique 
       # on remonte l'info de fin de modif au parent
+      CONNECTOR.Emit(self,"valid")
       if self.parent:
         self.parent.fin_modif()
 

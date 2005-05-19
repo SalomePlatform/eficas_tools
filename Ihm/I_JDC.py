@@ -30,6 +30,7 @@ from Noyau.N_ASSD import ASSD
 from Noyau.N_ETAPE import ETAPE
 from Noyau.N_Exception import AsException
 from Extensions import commentaire,parametre,parametre_eval
+import CONNECTOR
 
 class JDC(I_OBJECT.OBJECT):
    """
@@ -43,6 +44,12 @@ class JDC(I_OBJECT.OBJECT):
       self._etape_context=None
       self.recorded_units={}
       self.old_recorded_units={}
+
+   def get_index(self,objet):
+      """
+        Retourne la position d'objet dans la liste self
+      """
+      return self.etapes.index(objet)
 
    def get_sd_avant_du_bon_type(self,etape,types_permis):
       """
@@ -100,6 +107,7 @@ class JDC(I_OBJECT.OBJECT):
         self.etapes.insert(pos,objet)
         self.editmode=0
         self.active_etapes()
+        CONNECTOR.Emit(self,"add",objet)
         self.fin_modif()
         return objet
       elif name == "PARAMETRE":
@@ -112,6 +120,7 @@ class JDC(I_OBJECT.OBJECT):
         self.editmode=0
         self.reset_context()
         self.active_etapes()
+        CONNECTOR.Emit(self,"add",objet)
         self.fin_modif()
         return objet
       elif name == "PARAMETRE_EVAL":
@@ -124,6 +133,7 @@ class JDC(I_OBJECT.OBJECT):
         self.editmode=0
         self.reset_context()
         self.active_etapes()
+        CONNECTOR.Emit(self,"add",objet)
         self.fin_modif()
         return objet
       elif type(name)==types.InstanceType:
@@ -132,7 +142,9 @@ class JDC(I_OBJECT.OBJECT):
         # on est donc nécessairement en mode editeur ...
         objet = name
         # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
+        #if hasattr(objet,'sd'):print "addentite",objet.sd
         objet.reparent(self)
+        #if hasattr(objet,'sd'):print "addentite",objet.sd
         self.set_current_step()
         if isinstance(objet,ETAPE):
           if objet.nom_niveau_definition == 'JDC':
@@ -146,11 +158,13 @@ class JDC(I_OBJECT.OBJECT):
         self.etapes.insert(pos,objet)
 	# il faut vérifier que les concepts utilisés par objet existent bien
 	# à ce niveau d'arborescence
+        #if hasattr(objet,'sd'):print "addentite",objet.sd
 	objet.verif_existence_sd()
         self.active_etapes()
         self.editmode=0
         self.reset_context()
-        print "addentite",self.etapes
+        #print "addentite",self.etapes
+        CONNECTOR.Emit(self,"add",objet)
         self.fin_modif()
         return objet
       else :
@@ -168,7 +182,8 @@ class JDC(I_OBJECT.OBJECT):
           self.editmode=0
           self.reset_context()
           self.active_etapes()
-          print "addentite",self.etapes
+          #print "addentite",self.etapes
+          CONNECTOR.Emit(self,"add",e)
           self.fin_modif()
           return e
         except AsException,e:
@@ -296,10 +311,12 @@ class JDC(I_OBJECT.OBJECT):
           Retourne 1 si la suppression a pu être effectuée,
           Retourne 0 dans le cas contraire
       """
+      #print "suppentite",self
       self.init_modif()
       # On memorise le contexte avant l'etape a supprimer
       d=self.get_contexte_avant(etape)
       index_etape=self.etapes.index(etape)
+      #print "suppentite",index_etape,d
 
       self.etapes.remove(etape)
       if etape.niveau is not self:
@@ -315,6 +332,7 @@ class JDC(I_OBJECT.OBJECT):
          e.control_sdprods(d)
       
       self.reset_context()
+      CONNECTOR.Emit(self,"supp",etape)
       self.fin_modif()
       return 1
 
@@ -396,13 +414,22 @@ class JDC(I_OBJECT.OBJECT):
       Méthode appelée au moment où une modification va être faite afin de 
       déclencher d'éventuels traitements pré-modification
       """
-      print "init_modif",self
+      #print "init_modif",self
       self.state = 'modified'
 
    def fin_modif(self):
-      print "fin_modif",self
+      #print "fin_modif",self
+      CONNECTOR.Emit(self,"valid")
       self.isvalid()
       pass
+
+   def deep_update_condition_bloc(self):
+      # pour le moment, on ne fait rien
+      raise "Not implemented"
+
+   def update_condition_bloc(self):
+      # pour le moment, on ne fait rien
+      raise "Not implemented"
 
    def get_liste_mc_inconnus(self):
      """
@@ -456,6 +483,10 @@ class JDC(I_OBJECT.OBJECT):
       """
           Supprime la SD sd de la liste des sd et des dictionnaires de contexte
       """
+      #print "del_sdprod",self,sd
+      #print "del_sdprod",self.sds
+      #print "del_sdprod",self.g_context
+      #print "del_sdprod",self.sds_dict
       if sd in self.sds : self.sds.remove(sd)
       if self.g_context.has_key(sd.nom) : del self.g_context[sd.nom]
       if self.sds_dict.has_key(sd.nom) : del self.sds_dict[sd.nom]
@@ -518,6 +549,7 @@ class JDC(I_OBJECT.OBJECT):
           Seuls les mots cles simples MCSIMP font un traitement autre
           que de transmettre aux fils
       """
+      #print "delete_concept",self,sd
       for etape in self.etapes :
         etape.delete_concept(sd)
 

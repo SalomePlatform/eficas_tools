@@ -22,12 +22,15 @@
 """
 import string,types
 from copy import copy
+import traceback
 
 from Noyau.N_MCLIST import MCList
 from Noyau.N_MCSIMP import MCSIMP
 from Noyau.N_MCFACT import MCFACT
 from Noyau.N_MCBLOC import MCBLOC
 import I_OBJECT
+
+import CONNECTOR
 
 class MCCOMPO(I_OBJECT.OBJECT):
   def getlabeltext(self):
@@ -134,6 +137,21 @@ class MCCOMPO(I_OBJECT.OBJECT):
       l.append(k)
     return l
 
+  def get_index_child(self,nom_fils):
+      """
+        Retourne l'index dans la liste des fils de self du nouveau fils de nom nom_fils
+        Permet de savoir à quelle position il faut ajouter un nouveau mot-clé
+      """
+      cata_ordonne = self.jdc.cata_ordonne_dico
+      liste_noms_mc_ordonnee = self.get_liste_mc_ordonnee_brute(self.get_genealogie(),cata_ordonne)
+      liste_noms_mc_presents = self.liste_mc_presents()
+      index=0
+      for nom in liste_noms_mc_ordonnee:
+          if nom == nom_fils:break
+          if nom not in liste_noms_mc_presents :continue
+          index=index+1
+      return index
+          
   def ordonne_liste_mc(self,liste_mc_a_ordonner,liste_noms_mc_ordonnee):
     """
         Retourne liste_mc_a_ordonner ordonnée suivant l'ordre 
@@ -164,12 +182,19 @@ class MCCOMPO(I_OBJECT.OBJECT):
        return 0
 
     try :
-      if hasattr(objet.definition,'position'):
-          if objet.definition.position == 'global' :
-            self.delete_mc_global(objet)
-          elif objet.definition.position == 'global_jdc' :
-            self.delete_mc_global_jdc(objet)
       self.mc_liste.remove(objet)
+      CONNECTOR.Emit(self,"supp",objet)
+
+      if hasattr(objet.definition,'position'):
+         if objet.definition.position == 'global' :
+            self.delete_mc_global(objet)
+            self.etape.deep_update_condition_bloc()
+         elif objet.definition.position == 'global_jdc' :
+            self.delete_mc_global_jdc(objet)
+            self.jdc.deep_update_condition_bloc()
+      else:
+         self.update_condition_bloc()
+
       self.fin_modif()
       return 1
     except:
@@ -184,6 +209,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
           Ajoute le mot-cle name à la liste des mots-cles de
           l'objet MCCOMPOSE
       """
+      #print "I_MCCOMPO.addentite",name,pos
       self.init_modif()
       if type(name)==types.StringType :
         # on est en mode création d'un motcle 
@@ -211,15 +237,20 @@ class MCCOMPO(I_OBJECT.OBJECT):
 
       # On cherche s'il existe deja un mot cle de meme nom
       old_obj = self.get_child(objet.nom,restreint = 'oui')
+      #print "addentite",old_obj
+      #if old_obj:print "addentite",old_obj.isrepetable(),old_obj.isMCList(),old_obj.ajout_possible()
       if not old_obj :
+         #print self.mc_liste,objet
          # Le mot cle n'existe pas encore. On l'ajoute a la position
 	 # demandee (pos)
          if pos == None :
            self.mc_liste.append(objet)
          else :
            self.mc_liste.insert(pos,objet)
+         #print self.mc_liste,objet
          # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
          objet.reparent(self)
+         CONNECTOR.Emit(self,"add",objet)
          self.fin_modif()
          return objet
       else:
@@ -245,21 +276,14 @@ class MCCOMPO(I_OBJECT.OBJECT):
                # Il ne faut pas oublier de reaffecter le parent d'obj
                objet.reparent(self)
                self.mc_liste.remove(old_obj)
+               CONNECTOR.Emit(self,"supp",old_obj)
                self.mc_liste.insert(index,new_obj)
+               CONNECTOR.Emit(self,"add",new_obj)
                self.fin_modif()
                return new_obj
             else :
                # une liste d'objets de même type existe déjà
-               if not old_obj.ajout_possible():
-                  self.jdc.send_message("L'objet %s ne peut pas être répété" %objet.nom)
-                  self.fin_modif()
-                  return 0
-               if objet.isMCList():
-                  objet=objet.data[0]
-               old_obj.append(objet)
-               # Il ne faut pas oublier de reaffecter le parent d'obj
-               objet.reparent(self)
-               self.fin_modif()
+               old_obj.addentite(objet)
                return old_obj
 
   def ispermis(self,fils):
@@ -286,17 +310,6 @@ class MCCOMPO(I_OBJECT.OBJECT):
       else:
         if fils.parent.nom != self.nom : return 0
       return 1
-
-  def liste_mc_presents(self):
-    """ 
-         Retourne la liste des noms des mots-clés fils de self présents 
-         construite à partir de self.mc_liste 
-    """
-    l=[]
-    for v in self.mc_liste:
-      k=v.nom
-      l.append(k)
-    return l
 
   def delete_concept(self,sd):
     """ 
@@ -356,6 +369,40 @@ class MCCOMPO(I_OBJECT.OBJECT):
 	   l_mc.append(l)
      return l_mc
 
+  def deep_update_condition_bloc(self):
+     """
+        Parcourt l'arborescence des mcobject et realise l'update 
+        des blocs conditionnels par appel de la methode update_condition_bloc
+     """
+     #print "deep_update_condition_bloc",self
+     self.update_condition_bloc()
+     for mcobj in self.mc_liste:
+        if hasattr(mcobj,"deep_update_condition_bloc"):
+           mcobj.deep_update_condition_bloc()
+
+  def update_condition_bloc(self):
+     """
+        Realise l'update des blocs conditionnels fils de self
+     """
+     #print "update_condition_bloc",self
+     dict = self.cree_dict_condition(self.mc_liste,condition=1)
+     for k,v in self.definition.entites.items():
+        if v.label != 'BLOC' :continue
+        globs= self.jdc and self.jdc.condition_context or {}
+        bloc=self.get_child(k,restreint = 'oui')
+        presence=v.verif_presence(dict,globs)
+        if presence and not bloc:
+           # le bloc doit être présent
+           # mais le bloc n'est pas présent et il doit être créé
+           #print "AJOUT BLOC",k
+           pos=self.get_index_child(k)
+           self.addentite(k,pos)
+        if not presence and bloc:
+           # le bloc devrait être absent
+           # le bloc est présent : il faut l'enlever
+           #print "SUPPRESSION BLOC",k,bloc
+           self.suppentite(bloc)
+
   def verif_condition_bloc(self):
     """ 
         Evalue les conditions de tous les blocs fils possibles 
@@ -366,7 +413,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
     """
     liste_ajouts = []
     liste_retraits = []
-    dict = self.cree_dict_condition(self.mc_liste)
+    dict = self.cree_dict_condition(self.mc_liste,condition=1)
     for k,v in self.definition.entites.items():
       if v.label=='BLOC' :
         globs= self.jdc and self.jdc.condition_context or {}

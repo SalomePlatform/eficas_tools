@@ -109,7 +109,10 @@ class Node(treewidget.Node):
           Réalise la copie de l'objet passé en argument qui est nécessairement
           une commande
         """
+        parent=self.parent
+        #child = parent.item.append_child(objet_a_copier,self.item.getObject())
         child = self.append_brother(objet_a_copier,retour='oui')
+        #if child is None:return 0
         return child
 
     def doPaste_MCF(self,objet_a_copier):
@@ -178,18 +181,9 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
          return ""
 
   def additem(self,name,pos):
-      if isinstance(name,Objecttreeitem.ObjectTreeItem) :
-          mcent = self.object.addentite(name.getObject(),pos)
-      else :
-          mcent = self.object.addentite(name,pos)
-      self.expandable=1
-      if mcent == 0 :
-          # on ne peut ajouter l'élément de nom name
-          return 0
-      def setfunction(value, object=mcent):
-          object.setval(value)
-      item = self.make_objecttreeitem(self.appli,mcent.nom + " : ", mcent, setfunction)
-      return item
+      #print "compooper.additem",name,pos
+      mcent = self._object.addentite(name,pos)
+      return mcent
 
   def suppitem(self,item) :
       # item : item du MOCLE de l'ETAPE à supprimer
@@ -217,13 +211,68 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       return keys
 
   def GetSubList(self):
+      """
+         Reactualise la liste des items fils stockes dans self.sublist
+      """
+      if self.isactif():
+         liste=self.object.mc_liste
+      else:
+         liste=[]
+
+      sublist=[None]*len(liste)
+      # suppression des items lies aux objets disparus
+      for item in self.sublist:
+         old_obj=item.getObject()
+         if old_obj in liste:
+            pos=liste.index(old_obj)
+            sublist[pos]=item
+         else:
+            pass # objets supprimes ignores
+
+      # ajout des items lies aux nouveaux objets
+      pos=0
+      for obj in liste:
+         if sublist[pos] is None:
+            # nouvel objet : on cree un nouvel item
+            def setfunction(value, object=obj):
+                object.setval(value)
+            item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
+            sublist[pos]=item
+         pos=pos+1
+
+      self.sublist=sublist
+      return self.sublist
+
+  def GetSubList_BAK(self):
+      if self.isactif():
+         liste=self.object.mc_liste
+      else:
+         liste=[]
+
       sublist=[]
-      for obj in self.object.mc_liste:
-        def setfunction(value, object=obj):
-          object.setval(value)
-        item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
-        sublist.append(item)
-      return sublist
+      isublist=iter(self.sublist)
+      iliste=iter(liste)
+
+      while(1):
+         old_obj=obj=None
+         for item in isublist:
+            old_obj=item.getObject()
+            if old_obj in liste:break
+
+         for obj in iliste:
+            if obj is old_obj:break
+            # nouvel objet : on cree un nouvel item
+            def setfunction(value, object=obj):
+                object.setval(value)
+            it = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
+            sublist.append(it)
+
+         if old_obj is None and obj is None:break
+         if old_obj is obj:
+            sublist.append(item)
+
+      self.sublist=sublist
+      return self.sublist
 
   def isvalid(self):
       return self.object.isvalid()
@@ -234,8 +283,9 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       return 1
 
-  def verif_condition_bloc(self):
-      return self.object.verif_condition_bloc()
+  def update(self,item):
+      if item.sd and item.sd.nom:
+         self.nomme_sd(item.sd.nom)
 
   def nomme_sd(self,nom):
       """ Lance la méthode de nommage de la SD """
@@ -268,13 +318,43 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
                                              parent=self.object.parent)
       commande_comment.niveau = self.object.niveau
       commande_comment.jdc = commande_comment.parent = self.object.jdc
+
+      pos=self.object.parent.etapes.index(self.object)
+      self.object.parent.suppentite(self.object)
+      self.object.parent.addentite(commande_comment,pos)
+
       return commande_comment
+
+  def additem_BAK(self,name,pos):
+      mcent=self.addentite(name,pos)
+
+      self.expandable=1
+      if mcent == 0 :
+          # on ne peut ajouter l'élément de nom name
+          return 0
+      def setfunction(value, object=mcent):
+          object.setval(value)
+      item = self.make_objecttreeitem(self.appli,mcent.nom + " : ", mcent, setfunction)
+      return item
+
+  def GetSubList_BAK(self):
+      sublist=[]
+      for obj in self.object.mc_liste:
+        def setfunction(value, object=obj):
+          object.setval(value)
+        item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
+        sublist.append(item)
+      return sublist
+
+  def verif_condition_bloc_BAK(self):
+      return self.object.verif_condition_bloc()
 
   def replace_child(self,old_item,new_item):
      """
      Remplace old_item.getObject() par new_item.getObject() dans 
      les fils de self.object
      """
+     raise "OBSOLETE"
      old_itemobject=old_item.getObject()
      index = self.object.mc_liste.index(old_itemobject)
      self.object.init_modif()

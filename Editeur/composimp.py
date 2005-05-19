@@ -329,6 +329,12 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return valide
      
   def valide_liste_partielle(self,item,listecourante):
+      valeur=listecourante
+      valeur.append(item)
+      valeur = tuple(valeur)
+      return self.object.valid_valeur_partielle(valeur)
+
+  def valide_liste_partielle_BAK(self,item,listecourante):
       valeuravant=self.object.valeur
       valeur=listecourante
       valeur.append(item)
@@ -348,6 +354,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return validite 
 
   def valide_liste_complete (self,valeur):
+      return self.object.valid_valeur(valeur)
+
+  def valide_liste_complete_BAK (self,valeur):
       valeuravant=self.object.valeur
       retour=self.object.set_valeur(valeur)
       validite=0
@@ -383,7 +392,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def isvalid(self):
     valide=self.object.isvalid()
-    return self.object.isvalid()
+    return valide
 
   #--------------------------------------------------
   #
@@ -430,7 +439,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       """
       Affecte au MCS pointé par self l'objet de type CO et de nom nom_co
       """
-      return self.object.set_valeur_co(nom_co)
+      ret = self.object.set_valeur_co(nom_co)
+      #print "set_valeur_co",ret
+      return ret
       
   def get_sd_avant_du_bon_type(self):
       """
@@ -438,8 +449,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       le MCS pointé par self et du type requis par ce MCS
       """
       a=self.object.etape.parent.get_sd_avant_du_bon_type(self.object.etape,self.object.definition.type)
-      return self.object.etape.parent.get_sd_avant_du_bon_type(self.object.etape,
-                                                               self.object.definition.type)
+      return a
 
   #def verif(self):
   #    pass
@@ -555,6 +565,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
             selon le type de l objet attendu
           - traite les reels et les parametres 
       """ 
+      #print "eval_valeur_item",valeur
       if valeur==None or valeur == "" :
 	 return None,0
       validite=1
@@ -565,20 +576,26 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
              valeurretour,validite = valeur,1
       else :
              valeurretour,validite= self.object.eval_valeur(valeur)
+      #print "eval_valeur_item",valeurretour,validite
+
       if validite == 0:
 	 if type(valeur) == types.StringType and self.object.wait_TXM():
             essai_valeur="'" + valeur + "'"
             valeurretour,validite= self.object.eval_valeur(essai_valeur)
+
       if hasattr(valeurretour,'__class__'):
          #if valeurretour.__class__.__name__ in ('PARAMETRE','PARAMETRE_EVAL'):
          if valeurretour.__class__.__name__ in ('PARAMETRE',):
             validite=1
-      if self.wait_co():
-         try:
-            valeurretour=Accas.CO(valeur)
-         except:
-            valeurretour=None
-            validite=0
+
+      #if self.wait_co():
+         # CCAR : il ne faut pas essayer de creer un concept
+         # il faut simplement en chercher un existant ce qui a du etre fait par self.object.eval_valeur(valeur)
+         #try:
+            #valeurretour=Accas.CO(valeur)
+         #except:
+            #valeurretour=None
+            #validite=0
       # on est dans le cas où on a évalué et où on n'aurait pas du
       if self.object.wait_TXM() :
 	  if type(valeurretour) != types.StringType:

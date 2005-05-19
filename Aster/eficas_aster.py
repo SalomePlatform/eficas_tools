@@ -24,21 +24,9 @@
    Ce module sert à lancer EFICAS configuré pour Code_Aster
 """
 # Modules Python
-import sys
 
 # Modules Eficas
 import prefs
-if hasattr(prefs,'encoding'):
-   # Hack pour changer le codage par defaut des strings
-   import sys
-   reload(sys)
-   sys.setdefaultencoding(prefs.encoding)
-   del sys.setdefaultencoding
-   # Fin hack
-
-sys.path[:0]=[prefs.INSTALLDIR]
-
-import Editeur
 from Editeur import eficas_go
 
 eficas_go.lance_eficas()

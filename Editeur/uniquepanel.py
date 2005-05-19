@@ -84,14 +84,14 @@ class UNIQUE_Panel(newSIMPPanel):
           self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée : "+mess)
       elif self.node.item.isvalid() :
           self.parent.appli.affiche_infos('Valeur du mot-clé enregistrée')
-	  if self.node.item.get_position()=='global':
-              self.node.etape.verif_all()
-	  elif self.node.item.get_position()=='global_jdc':
-              self.node.racine.verif_all()
-	  else :
-              self.node.parent.verif()
-	  self.node.update()
-          self.node.parent.select()
+	  #if self.node.item.get_position()=='global':
+              #self.node.etape.verif_all()
+	  #elif self.node.item.get_position()=='global_jdc':
+              #self.node.racine.verif_all()
+	  #else :
+              #self.node.parent.verif()
+	  #self.node.update()
+          #self.node.parent.select()
       else :
           cr = self.node.item.get_cr()
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()

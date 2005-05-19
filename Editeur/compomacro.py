@@ -37,7 +37,7 @@ from widgets import showinfo,showerror
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.17 2005/04/18 10:20:36 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.18 2005/04/18 14:21:08 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -116,23 +116,6 @@ class MACROPanel(panels.OngletPanel):
     """ 
         Effectue le changement de fichier d'initialisation s'il est valide 
     """
-    if not hasattr(self.node.item.object,'fichier_ini'):
-       self.node.item.object.fichier_ini=None
-       self.node.item.object.fichier_text=None
-       self.node.item.object.fichier_err="Le fichier n'est pas defini"
-       self.node.item.object.contexte_fichier_init={}
-       self.node.item.object.recorded_units={}
-       self.node.item.object.fichier_unite="PasDefini"
-       import Extensions.jdc_include
-       self.node.item.object.JdC_aux=Extensions.jdc_include.JdC_include
-
-    old_fic = self.node.item.object.fichier_ini
-    old_text = self.node.item.object.fichier_text
-    old_err = self.node.item.object.fichier_err
-    old_context=self.node.item.object.contexte_fichier_init
-    old_units=self.node.item.object.recorded_units
-    old_etapes=self.node.item.object.etapes
-
     new_fic = self.entry.get()
     if not os.path.isfile(new_fic) :
       showinfo("Fichier introuvable","Le fichier que vous avez saisi\n"+
@@ -144,10 +127,10 @@ class MACROPanel(panels.OngletPanel):
     # Si probleme a la lecture-conversion on arrete le traitement
     if not text:
        return
-    #self.node.item.object.recorded_units={}
 
     try:
-      self.node.item.object.make_contexte_include(new_fic,text)
+      self.node.item.object.change_fichier_init(new_fic,text)
+      self.parent.appli.affiche_infos("Fichier %s modifié" %self.node.item.get_nom())
     except:
       # Erreurs lors de l'evaluation de text dans un JDC auxiliaire
       self.parent.appli.affiche_infos("Fichier invalide")
@@ -160,58 +143,14 @@ class MACROPanel(panels.OngletPanel):
       if reponse:
          # On retablit l'ancien fichier
          self.entry.delete(0,Tkinter.END)
-         self.node.item.object.fichier_ini=old_fic
-         self.node.item.object.fichier_text=old_text
-         self.node.item.object.fichier_err=old_err
-         self.node.item.object.contexte_fichier_init=old_context
-         self.node.item.object.recorded_units=old_units
-         self.node.item.object.etapes=old_etapes
+         self.node.item.object.restore_fichier_init()
          self.parent.appli.affiche_infos("Fichier invalide ... Ancien fichier restauré")
-         if old_fic:
-             self.entry.insert(0,self.node.item.object.fichier_ini)
+         fic=self.node.item.object.fichier_ini
+         if fic:
+             self.entry.insert(0,fic)
       else:
-         # On conserve la memoire du nouveau fichier
-         # mais on n'utilise pas les concepts crees par ce fichier
-         # on met l'etape en erreur : fichier_err=string.join(l)
-         self.node.item.object.init_modif()
-         self.node.item.object.fichier_ini=new_fic
-         self.node.item.object.fichier_text=text
-         self.node.item.object.fichier_err=string.join(l)
-         # On enregistre la modification de fichier
-         self.node.item.object.record_unite()  
-         #self.node.item.object.etapes=[]
-         self.node.item.object.g_context={}
-         # Le contexte du parent doit etre reinitialise car les concepts produits ont changé
-         self.node.item.object.parent.reset_context()
-
-         self.node.item.object.old_contexte_fichier_init=old_context
-         self.node.item.object.contexte_fichier_init={}
-         self.node.item.object.reevalue_sd_jdc()
-
-         self.node.item.object.fin_modif()
+         self.node.item.object.force_fichier_init()
          self.parent.appli.affiche_infos("Fichier invalide ... Nouveau fichier mémorisé")
-         self.node.update()
-      return
-
-    # L'evaluation de text dans un JDC auxiliaire s'est bien passé
-    # on peut poursuivre le traitement
-    self.node.item.object.init_modif() 
-    self.node.item.object.state="undetermined"
-    self.node.item.object.fichier_ini = new_fic
-    self.node.item.object.fichier_text=text
-    self.node.item.object.fichier_err=None
-    # On enregistre la modification de fichier
-    self.node.item.object.record_unite()  
-    # Le contexte du parent doit etre reinitialise car les concepts produits ont changé
-    self.node.item.object.parent.reset_context()
-
-    # Si des concepts ont disparu lors du changement de fichier, on demande leur suppression
-    self.node.item.object.old_contexte_fichier_init=old_context
-    self.node.item.object.reevalue_sd_jdc()
-
-    self.node.item.object.fin_modif()
-    self.parent.appli.affiche_infos("Fichier %s modifié" %self.node.item.get_nom())
-    self.node.update()
 
   def annule_fichier_init(self,event=None):
     """ Restaure dans self.entry le nom de fichier_init"""
@@ -242,26 +181,24 @@ class INCLUDETreeItem(MACROTreeItem):
 
   def __init__(self,appli, labeltext, object, setfunction):
     MACROTreeItem.__init__(self,appli, labeltext, object, setfunction)
-    self.views=[]
+
+  def iscopiable(self):
+      """
+      Retourne 1 si l'objet est copiable, 0 sinon
+      """
+      return 0
 
   def makeEdit(self,appli,node):
-    print "makeEdit",self.object,self.object.nom
-    print "makeEdit",self.object.jdc_aux,self.object.jdc_aux.nom
+    #print "makeEdit",self.object,self.object.nom
+    #print "makeEdit",self.object.jdc_aux,self.object.jdc_aux.nom
+    #print "makeEdit",self.object.jdc_aux.context_ini
     self.parent_node=node
     # On cree un nouvel onglet dans le bureau
     appli.bureau.ShowJDC(self.object.jdc_aux,self.object.jdc_aux.nom,
                              label_onglet=None,
                              JDCDISPLAY=macrodisplay.MACRODISPLAY)
     self.myjdc=appli.bureau.JDCDisplay_courant
-    self.object.jdc_aux.subscribe(self)
-
-  def notify(self,obj):
-    print "notify",self,obj
-    self.parent_node.update_valid()
-    # Il faudrait redessiner l'arbre de maniere optimale
-    # et pas seulement l'updater
-    for display in self.views:
-       display.tree.update()
+    self.myjdc.fichier=self.object.fichier_ini
 
   def makeView(self,appli,node):
     nom=self.object.nom
@@ -271,10 +208,18 @@ class INCLUDETreeItem(MACROTreeItem):
        else:
           nom=nom+' '+self.object.fichier_ini
     macdisp=macrodisplay.makeMacroDisplay(appli,self,nom)
-    self.views.append(macdisp)
 
-class INCLUDE_MATERIAUTreeItem(INCLUDETreeItem): pass
 class POURSUITETreeItem(INCLUDETreeItem): pass
+
+class INCLUDE_MATERIAUTreeItem(INCLUDETreeItem):
+  rmenu_specs=[("View","makeView"),
+              ]
+  def iscopiable(self):
+      """
+      Retourne 1 si l'objet est copiable, 0 sinon
+      """
+      return 1
+
 
 def treeitem(appli, labeltext, object, setfunction=None):
    """ Factory qui retourne l'item adapté au type de macro : 

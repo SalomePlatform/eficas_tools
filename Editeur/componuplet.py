@@ -31,7 +31,7 @@ import panels
 
 #
 __version__="$Name:  $"
-__Id__="$Id: componuplet.py,v 1.4 2003/10/16 14:31:22 eficas Exp $"
+__Id__="$Id: componuplet.py,v 1.5 2004/09/10 15:51:49 eficas Exp $"
 #
 
 myrepr = Repr()
@@ -96,8 +96,8 @@ class NUPLETPanel(panels.OngletPanel):
     #obj.set_valeur(val,evaluation='non')
     obj.set_valeur(val)
     self.parent.appli.affiche_infos(mess)
-    self.node.parent.verif()
-    self.node.update()
+    #self.node.parent.verif()
+    #self.node.update()
 
   def valid_valeur(self,e,obj=None,mess='Valeur du mot-cl\351 enregistr\351e'):
     """ 
@@ -125,8 +125,8 @@ class NUPLETPanel(panels.OngletPanel):
       e.widget.delete(0,Tkinter.END)
       e.widget.insert(0,anc_val)
           
-    self.node.parent.verif()
-    self.node.update()
+    #self.node.parent.verif()
+    #self.node.update()
 
   def gen_aide(self,obj):
     return ""
@@ -167,6 +167,7 @@ class NUPLETTreeItem(Objecttreeitem.ObjectTreeItem):
     raise "NUPLET"
 
   def verif_condition_bloc(self):
+    raise "OBSOLETE"
     return self.object.verif_condition_bloc()
 
 import Accas

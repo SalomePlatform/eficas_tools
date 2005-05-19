@@ -22,8 +22,10 @@ import os,traceback,string
 
 from Noyau.N_CR import CR
 from Noyau.N_Exception import AsException
+from Noyau import N_OBJECT
+from Ihm import I_OBJECT
 
-class COMMANDE_COMM:
+class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     """
     Cette classe sert à définir les objets de type Commande commentarisée
     """
@@ -191,13 +193,23 @@ class COMMANDE_COMM:
             #self.jdc.set_context()
             print 'erreurs fatales !!!'
             raise AsException("Erreurs fatales",string.join(J.cr.crfatal))
+        if not J.etapes :
+            # des erreurs ont été rencontrées
+            raise AsException("Impossible reconstruire commande\n",str(J.cr))
         #self.jdc.set_context()
+
         new_etape = J.etapes[0]
         if new_etape.sd :
             nom_sd = new_etape.sd.nom
         else:
             nom_sd = None
-        return (new_etape.copy(),nom_sd)
+        #new_etape=new_etape.copy()
+        #print "uncomment",new_etape.sd
+
+        pos=self.parent.etapes.index(self)
+        self.parent.addentite(new_etape,pos)
+        self.parent.suppentite(self)
+        return new_etape,nom_sd
 
     def active(self):
         """

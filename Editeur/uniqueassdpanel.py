@@ -63,13 +63,13 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
           self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée :"+mess)
       elif self.node.item.isvalid() :
           self.parent.appli.affiche_infos('Valeur du mot-clé enregistrée')
-          if self.node.item.get_position()=='global':
-              self.node.etape.verif_all()
-          elif self.node.item.get_position()=='global_jdc':
-              self.node.racine.verif_all()
-          else :
-              self.node.parent.verif()
-          self.node.update()
+          #if self.node.item.get_position()=='global':
+              #self.node.etape.verif_all()
+          #elif self.node.item.get_position()=='global_jdc':
+              #self.node.racine.verif_all()
+          #else :
+              #self.node.parent.verif()
+          #self.node.update()
       else :
           cr = self.node.item.get_cr()
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()

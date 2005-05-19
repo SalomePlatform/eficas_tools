@@ -73,7 +73,6 @@ class PythonGenerator(generator_python.PythonGenerator):
         """
             Méthode particulière pour les objets de type FORMULE
         """
-	print "coucou"
         l=[]
         nom = obj.get_nom()
         if nom == '' : nom = 'sansnom'

@@ -136,12 +136,19 @@ class ObjectTreeItem(TreeItem,Delegate):
     def __init__(self, appli, labeltext, object, setfunction=None):
         self.labeltext = labeltext
         self.appli = appli
+        # L'objet délegué est stocké dans l'attribut object
+        # L'objet associé à l'item est stocké dans l'attribut _object
+        # Il peut etre obtenu par appel à la méthode getObject
+        # Attention : le délégué peut etre différent de l'objet associé (MCLIST)
+        # Dans le cas d'une MCListe de longueur 1, l'objet associé est la MCListe
+        # et l'objet délégué est le MCFACT (object = _object.data[0])
         Delegate.__init__(self,object)
 	# On cache l'objet initial (pour destruction eventuelle
 	# ultérieure)
         self._object = object
         self.setfunction = setfunction
         self.expandable = 1
+        self.sublist=[]
         self.init()
 
     def init(self):
@@ -167,6 +174,13 @@ class ObjectTreeItem(TreeItem,Delegate):
         else:
             return 1
     
+    def update(self,item):
+        """
+          Met a jour l'item courant a partir d'un autre item passe en argument
+          Ne fait rien par defaut
+        """
+        pass
+
     def GetLabelText(self):
         """ Retourne 3 valeurs :
         - le texte à afficher dans le noeud représentant l'item
@@ -239,6 +253,41 @@ class ObjectTreeItem(TreeItem,Delegate):
         # l contient les anciens mots-clés + le nouveau dans l'ordre
         return l.index(nom_fils)
         
+    def append_child(self,name,pos=None):
+        """
+          Permet d'ajouter un item fils à self
+        """
+        if pos == 'first':
+            index = 0
+        elif pos == 'last':
+            index = len(self.liste_mc_presents())
+        elif type(pos) == types.IntType :
+            # la position est fixée 
+            index = pos
+        elif type(pos) == types.InstanceType:
+            # pos est un item. Il faut inserer name apres pos
+            index = self.get_index(pos) +1
+        elif type(name) == types.InstanceType:
+            index = self.get_index_child(name.nom)
+        else:
+            index = self.get_index_child(name)
+        return self.addobject(name,index)
+
+    def append_brother(self,name,pos='after'):
+        """
+        Permet d'ajouter un frère à self
+        par défaut on l'ajoute après self
+        """
+        index = self._object.parent.get_index(self.getObject())
+        if pos == 'before':
+            index = index
+        elif pos == 'after':
+            index = index +1
+        else:
+            print str(pos)," n'est pas un index valide pour append_brother"
+            return
+        return self.parent.addobject(name,index)
+
     def get_nom_etape(self):
         """Retourne le nom de self """
         return self.object.get_nom_etape()
@@ -412,6 +461,29 @@ class SequenceTreeItem(ObjectTreeItem):
             return 0
 
     def GetSubList(self):
+        isublist=iter(self.sublist)
+        liste=self._object.data
+        iliste=iter(liste)
+        self.sublist=[]
+
+        while(1):
+           old_obj=obj=None
+           for item in isublist:
+              old_obj=item.getObject()
+              if old_obj in liste:break
+
+           for obj in iliste:
+              if obj is old_obj:break
+              # nouvel objet : on cree un nouvel item
+              def setfunction(value, object=obj):
+                  object=value
+              it = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
+              self.sublist.append(it)
+           if old_obj is None and obj is None:break
+           if old_obj is obj: self.sublist.append(item)
+        return self.sublist
+
+    def GetSubList_BAK(self):
         sublist = []
         for obj in self._object.data:
             def setfunction(value, object=obj):

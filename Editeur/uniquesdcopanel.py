@@ -108,6 +108,7 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       """
       if self.parent.modified == 'n' : self.parent.init_modif()
       valeur = self.get_valeur()
+      #print "valid_valeur",valeur
 
       self.erase_valeur()
       anc_val = self.node.item.get_valeur()
@@ -136,19 +137,20 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
           self.reset_old_valeur(anc_val,mess=mess)
           return
-      if self.node.item.get_position()=='global':
-          self.node.etape.verif_all()
-      elif self.node.item.get_position()=='global_jdc':
-          self.node.racine.verif_all()
-      else :
-          self.node.parent.verif()
-      self.node.update()
+      #if self.node.item.get_position()=='global':
+          #self.node.etape.verif_all()
+      #elif self.node.item.get_position()=='global_jdc':
+          #self.node.racine.verif_all()
+      #else :
+          #self.node.parent.verif()
+      #self.node.update()
 
   def valid_nom_concept_co(self,event=None):
       """
       Lit le nom donné par l'utilisateur au concept de type CO qui doit être
       la valeur du MCS courant et stocke cette valeur
       """
+      #print "valid_nom_concept_co"
       if self.parent.modified == 'n' : self.parent.init_modif()
       anc_val = self.node.item.get_valeur()
       if anc_val != None:
@@ -159,6 +161,7 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
           # et le recalcul du contexte
           self.node.item.object.etape.parent.reset_context()
       nom_concept = self.entry_co.get()
+      #print "valid_nom_concept_co",nom_concept
       test,mess=self.node.item.set_valeur_co(nom_concept)
       if not test:
           # On n'a pas pu créer le concept
@@ -172,15 +175,15 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
           self.reset_old_valeur(anc_val,mess=mess)
           return
-      if self.node.item.get_position()=='global':
-          self.node.etape.verif_all()
-      elif self.node.item.get_position()=='global_jdc':
-          self.node.racine.verif_all()
-      else :
-          self.node.parent.verif()
-      if self.node.item.isvalid():
-          self.node.parent.select()
-      self.node.update()
+      #if self.node.item.get_position()=='global':
+          #self.node.etape.verif_all()
+      #elif self.node.item.get_position()=='global_jdc':
+          #self.node.racine.verif_all()
+      #else :
+          #self.node.parent.verif()
+      #if self.node.item.isvalid():
+          #self.node.parent.select()
+      #self.node.update()
 
   def ask_new_concept(self):
       """
@@ -211,12 +214,14 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       Affiche la valeur de l'objet pointé par self
       """
       valeur = self.node.item.get_valeur()
+      #print "display_valeur",valeur
       if valeur == None or valeur == '': 
          self.valeur_choisie.set('')
          return # pas de valeur à afficher ...
       # il faut configurer le bouton si la valeur est un objet CO
       # sinon afficher le nom du concept dans self.valeur_choisie
       if self.node.item.is_CO():
+          #print "display_valeur.is_CO"
           self.b_co.invoke('OUI')
           self.entry_co.insert(0,valeur.nom)
       else:
@@ -236,14 +241,14 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       self.parent.appli.affiche_infos(mess)
       # On met a jour le display dans le panneau
       self.display_valeur()
-      if self.node.item.get_position()=='global':
-          self.node.etape.verif_all()
-      elif self.node.item.get_position()=='global_jdc':
-          self.node.racine.verif_all()
-      else :
-          self.node.parent.verif()
+      #if self.node.item.get_position()=='global':
+          #self.node.etape.verif_all()
+      #elif self.node.item.get_position()=='global_jdc':
+          #self.node.racine.verif_all()
+      #else :
+          #self.node.parent.verif()
       if self.node.item.isvalid():
           self.node.parent.select()
-      self.node.update()
+      #self.node.update()
 
 

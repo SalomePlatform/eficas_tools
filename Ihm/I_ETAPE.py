@@ -37,6 +37,7 @@ from Noyau.N_Exception import AsException
 
 # Modules EFICAS
 import I_MCCOMPO
+import CONNECTOR
 
 class ETAPE(I_MCCOMPO.MCCOMPO):
 
@@ -70,7 +71,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       # La validité devra etre recalculée apres cette modification
       # mais dans l'appel à fin_modif pour préserver l'état modified
       # de tous les objets entre temps
-      print "init_modif",self,self.parent
+      #print "init_modif",self,self.parent
       self.state = 'modified'
       if self.parent:
         self.parent.init_modif()
@@ -81,9 +82,14 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           déclencher d'éventuels traitements post-modification
           ex : INCLUDE et POURSUITE
       """
-      print "fin_modif",self,self.parent
+      #print "fin_modif",self,self.parent
+      #if hasattr(self,'jdc_aux'):print "fin_modif",self.jdc_aux.context_ini
       if self.isvalid() :
+         #if hasattr(self,'jdc_aux'):print "fin_modif",self.jdc_aux.context_ini
          d=self.parent.get_contexte_apres(self)
+         #print d
+      #if hasattr(self,'jdc_aux'):print "fin_modif",self.jdc_aux.context_ini
+      CONNECTOR.Emit(self,"valid")
       if self.parent:
         self.parent.fin_modif()
 
@@ -211,11 +217,13 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
       if self.actif:return
       self.actif = 1
-      if not self.sd : return
-      try:
-        self.jdc.append_sdprod(self.sd)
-      except:
-        pass
+      if self.sd :
+        try:
+          self.jdc.append_sdprod(self.sd)
+        except:
+          pass
+      CONNECTOR.Emit(self,"add",None)
+      CONNECTOR.Emit(self,"valid")
 
    def inactive(self):
       """
@@ -224,9 +232,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           et de la liste des sd
       """
       self.actif = 0
-      if not self.sd : return
-      self.jdc.del_sdprod(self.sd)
-      self.jdc.delete_concept_after_etape(self,self.sd)
+      if self.sd :
+         self.jdc.del_sdprod(self.sd)
+         self.jdc.delete_concept_after_etape(self,self.sd)
+      CONNECTOR.Emit(self,"supp",None)
+      CONNECTOR.Emit(self,"valid")
 
    def control_sdprods(self,d):
       """
@@ -236,7 +246,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           deja definis dans le contexte
       """
       if type(self.definition.op_init) == types.FunctionType:
-        apply(self.definition.op_init,(self,d))
+        try:
+           apply(self.definition.op_init,(self,d))
+        except:
+           #traceback.print_exc()
+           pass
+
       if self.sd:
         if d.has_key(self.sd.nom):
            # Le concept est deja defini
@@ -261,6 +276,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             Une procedure n'en a aucun
             Une macro en a en général plus d'un
       """
+      #print "supprime_sdprods",self
       if not self.is_reentrant() :
         # l'étape n'est pas réentrante
         # le concept retourné par l'étape est à supprimer car il était 
@@ -334,6 +350,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
 	avant étape, sinon enlève la référence à ces concepts
      """
+     #print "verif_existence_sd",self.sd
      for motcle in self.mc_liste :
          motcle.verif_existence_sd()
      
@@ -370,6 +387,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       if self.parent :
          self.jdc = self.parent.get_jdc_root()
          self.id=   self.parent.register(self)
+         self.UserError=self.jdc.UserError
          if self.definition.niveau :
             # La définition est dans un niveau. En plus on
             # l'enregistre dans le niveau
@@ -384,4 +402,5 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
          self.jdc = self.parent =None
          self.id=None
          self.niveau=None
+         self.UserError="UserError"
 
