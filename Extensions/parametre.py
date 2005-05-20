@@ -179,6 +179,18 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     return retour
 
 
+  def __div__(self,other):
+    retour=None
+    try:
+      retour = eval(self.valeur) / other
+    except :
+      try :
+	retour = self.valeur / other
+      except :
+	print "******* Probleme : a la division"
+    return retour
+
+
   def interprete_valeur(self,val):
     """
     Essaie d'interpréter val (chaîne de caractères)comme :
@@ -261,6 +273,12 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     self.state = 'modified'
     if self.parent:
       self.parent.init_modif()
+
+  def get_jdc_root(self):
+    if self.parent:
+      return self.parent.get_jdc_root()
+    else:
+      return self
 
   def register(self):
     """
