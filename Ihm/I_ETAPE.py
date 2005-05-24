@@ -268,6 +268,18 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
            # Le concept n'est pas defini, on peut updater d
            d[self.sd.nom]=self.sd
 
+   def supprime_sdprod(self,sd):
+      """
+         Supprime le concept produit sd s'il est produit par l'etape
+      """
+      if sd is not self.sd:return
+      if self.sd != None :
+         self.init_modif()
+         self.parent.del_sdprod(sd)
+         self.sd=None
+         self.fin_modif()
+         self.parent.delete_concept(sd)
+
    def supprime_sdprods(self):
       """ 
             Fonction:
@@ -277,13 +289,13 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             Une macro en a en général plus d'un
       """
       #print "supprime_sdprods",self
-      if not self.is_reentrant() :
-        # l'étape n'est pas réentrante
-        # le concept retourné par l'étape est à supprimer car il était 
-        # créé par l'étape
-        if self.sd != None :
-          self.parent.del_sdprod(self.sd)
-          self.parent.delete_concept(self.sd)
+      if self.reuse is self.sd :return
+      # l'étape n'est pas réentrante
+      # le concept retourné par l'étape est à supprimer car il était 
+      # créé par l'étape
+      if self.sd != None :
+         self.parent.del_sdprod(self.sd)
+         self.parent.delete_concept(self.sd)
 
    def delete_concept(self,sd):
       """ 

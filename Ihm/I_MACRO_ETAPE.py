@@ -237,6 +237,25 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
         else:
            d[co.nom]=co
        
+  def supprime_sdprod(self,sd):
+      """
+         Supprime le concept produit sd s'il est produit par l'etape
+      """
+      if sd in self.sdprods:
+         self.init_modif()
+         self.parent.del_sdprod(sd)
+         self.sdprods.remove(sd)
+         self.fin_modif()
+         self.parent.delete_concept(sd)
+         return
+
+      if sd is not self.sd :return
+      if self.sd is not None :
+         self.init_modif()
+         self.parent.del_sdprod(sd)
+         self.sd=None
+         self.fin_modif()
+         self.parent.delete_concept(sd)
 
   def supprime_sdprods(self):
       """
@@ -246,7 +265,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           Une macro en a en général plus d'un
       """
       #print "supprime_sdprods"
-      if not self.is_reentrant() :
+      if self.reuse is not self.sd :
          # l'étape n'est pas réentrante
          # le concept retourné par l'étape est à supprimer car il était
          # créé par l'étape
@@ -285,7 +304,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       #print "replace_concept",old_sd,sd
       I_ETAPE.ETAPE.replace_concept(self,old_sd,sd)
       for etape in self.etapes:
-         etape.replace_concept(sd)
+         etape.replace_concept(old_sd,sd)
          
   def change_fichier_init(self,new_fic,text):
     """
@@ -353,22 +372,42 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     """
        Force le fichier init en erreur
     """
+    j_context=self.jdc_aux.get_contexte_avant(None)
+    # On remplit le dictionnaire des concepts produits inclus
+    # en retirant les concepts présents dans le  contexte initial
+    # On ajoute egalement le concept produit dans le sds_dict du parent
+    # sans verification car on est sur (verification integrée) que
+    # le nommage est possible
+    self.g_context.clear()
+    context_ini=self.jdc_aux.context_ini
+    for k,v in j_context.items():
+       if not context_ini.has_key(k) or context_ini[k] != v:
+           self.g_context[k]=v
+           self.parent.sds_dict[k]=v
+    # On recupere le contexte courant
+    self.current_context=self.jdc_aux.current_context
+    self.index_etape_courante=self.jdc_aux.index_etape_courante
+    self.contexte_fichier_init = j_context
+
     # On conserve la memoire du nouveau fichier
     # mais on n'utilise pas les concepts crees par ce fichier
     # on met l'etape en erreur : fichier_err=string.join(l)
     self.init_modif()
+    self.state="undetermined"
     # On enregistre la modification de fichier
     self.record_unite()
     #self.etapes=[]
-    self.g_context={}
+    #self.g_context={}
     # Le contexte du parent doit etre reinitialise car les concepts produits ont changé
     self.parent.reset_context()
 
     self.old_contexte_fichier_init=self.old_context
-    self.contexte_fichier_init={}
+    #self.contexte_fichier_init={}
     self.reevalue_sd_jdc()
-
     self.fin_modif()
+
+    self.jdc_aux.force_contexte(self.g_context)
+
 
   def make_contexte_include(self,fichier,text):
     """

@@ -90,6 +90,19 @@ class JDC_POURSUITE(JDC):
       self.verif_contexte(j_context)
       return j_context
 
+   def force_contexte(self,contexte):
+      for nom_sd,sd in contexte.items():
+        if not isinstance(sd,ASSD):continue
+        if self.jdc_pere.get_sd_apres_etape_avec_detruire(nom_sd,sd,
+                                                       etape=self.etape_include):
+           # Il existe un autre concept de meme nom produit par une etape apres self 
+           # on detruit ce concept pour pouvoir inserer les etapes du jdc_include
+           #print "force_contexte",sd.etape,sd.nom,sd.etape.nom
+           if sd.etape:
+              sd.etape.supprime_sdprod(sd)
+
+      return contexte
+
    def verif_contexte(self,context):
       """
          Cette methode verifie si le contexte passé en argument (context)
