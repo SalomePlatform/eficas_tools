@@ -53,8 +53,10 @@ class OPERPanel(panels.OngletPanel):
   def makeConceptPage_oper(self,page):
       """ Crée la page de saisie du nom du concept """
       if self.node.item.is_reentrant():
+          # commande obligatoirement reentrante
           self.makeConceptPage_reentrant(page)
       else:
+          # commande non reentrante ou facultativement reentrante
           self.makeConceptPage(page)
 
   def makeConceptPage_reentrant(self,page):

@@ -37,7 +37,7 @@ from widgets import showinfo,showerror
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.18 2005/04/18 14:21:08 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.19 2005/05/19 12:18:47 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -174,7 +174,7 @@ class MACROTreeItem(compooper.EtapeTreeItem):
   """
   panel=MACROPanel
 
-class INCLUDETreeItem(MACROTreeItem):
+class INCLUDETreeItemBase(MACROTreeItem):
   rmenu_specs=[("View","makeView"),
                ("Edit","makeEdit"),
               ]
@@ -209,9 +209,24 @@ class INCLUDETreeItem(MACROTreeItem):
           nom=nom+' '+self.object.fichier_ini
     macdisp=macrodisplay.makeMacroDisplay(appli,self,nom)
 
-class POURSUITETreeItem(INCLUDETreeItem): pass
+class INCLUDEPanel(MACROPanel):
+  def makeFichierPage(self,page):
+    """
+    Affiche la page d'onglet correspondant au changement du fichier INCLUDE
+    """
+    if self.node.item["UNITE"] is None:
+       # Le numero de l'INCLUDE n'est pas defini
+       titre = Tkinter.Label(page,text="Le numero de l'INCLUDE doit etre defini avec le mot cle UNITE" )
+       titre.place(relx=0.5,rely=0.5,anchor='center')
+    else:
+       MACROPanel.makeFichierPage(self,page)
 
-class INCLUDE_MATERIAUTreeItem(INCLUDETreeItem):
+class INCLUDETreeItem(INCLUDETreeItemBase):
+   panel=INCLUDEPanel
+
+class POURSUITETreeItem(INCLUDETreeItemBase): pass
+
+class INCLUDE_MATERIAUTreeItem(INCLUDETreeItemBase):
   rmenu_specs=[("View","makeView"),
               ]
   def iscopiable(self):
