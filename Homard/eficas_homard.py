@@ -28,12 +28,13 @@ import sys
 
 # Modules Eficas
 import prefs
-if hasattr(prefs,'encoding'):
+prefs.code="HOMARD"
+#if hasattr(prefs,'encoding'):
    # Hack pour changer le codage par defaut des strings
-   import sys
-   reload(sys)
-   sys.setdefaultencoding(prefs.encoding)
-   del sys.setdefaultencoding
+#   import sys
+#   reload(sys)
+#   sys.setdefaultencoding(prefs.encoding)
+#   del sys.setdefaultencoding
    # Fin hack
 
 sys.path[:0]=[prefs.INSTALLDIR]

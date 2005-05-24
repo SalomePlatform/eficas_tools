@@ -83,6 +83,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
       self.actif=1
       self.sdprods=[]
       self.make_register()
+      self.UserError="UserError"
 
    def make_register(self):
       """

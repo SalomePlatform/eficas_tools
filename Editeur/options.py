@@ -34,7 +34,7 @@ class OPTIONS:
    menu_defs=[
         ('Options',[
                    ("Affichage commandes",(("alphabétique",'&affichage_alpha'),("groupes",'&affichage_grp'))),
-                   ("Couleur",(("fond",'change_fond'),("barre",'change_barre'))),
+                   #("Couleur",(("fond",'change_fond'),("barre",'change_barre'))),
                    # ("Catalogue développeur",'choix_cata_developpeur'),
                    ]
         )
@@ -58,10 +58,9 @@ class OPTIONS:
       from tkColorChooser import askcolor
       #nouvelle=askcolor(self.appli.background)
       nouvelle=askcolor('grey')
-      print "yyyyyyyyyyyyyyyyyyyyy" 
 
    def change_barre(self):
-      print "yyyyyyyyyyyyyyyyyyyyy" 
+       pass
 
    def choix_cata_developpeur(self):
       """ 
