@@ -15,6 +15,7 @@ from uniqueassdpanel    import UNIQUE_ASSD_Panel
 from uniqueintopanel    import UNIQUE_INTO_Panel
 from uniquecomppanel    import UNIQUE_COMP_Panel
 from uniquebasepanel    import UNIQUE_BASE_Panel
+from uniqueassdpanel    import UNIQUE_ASSD_Panel_Reel
 
 from Noyau.N_CR import justify_text
 
@@ -75,6 +76,9 @@ class SALOME_UNIQUE_ASSD_Panel (UNIQUE_ASSD_Panel):
 class SALOME_UNIQUE_COMP_Panel (UNIQUE_COMP_Panel):
 	""
 
+class SALOME_UNIQUE_ASSD_Panel_Reel (UNIQUE_ASSD_Panel_Reel):
+	""
+
 # ------------------------------------------------------------------------------#
 # classe SALOME_PLUSIEURS_BASE_Panel
 #
@@ -112,7 +116,8 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
 
   def convertit_group_maille_from_salome(self,liste_in):
       newr=[]
-      try:
+      #try:
+      if [ 1 == 1 ]:
           print liste_in
 	  for entree in liste_in :
 	       travail=[]
@@ -126,7 +131,8 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
 		   dict_geom_numgroupe[entreeName]=r
                for i in r :
                    newr.append(i)
-      except:
+      #except:
+      else :
 	   print "pas de groupe de maille associé"
 	   showerror("Pas de groupe associé","Cet Objet ne peut pas être défini comme un ensemble de groupe de maille")
       return newr
@@ -318,12 +324,12 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
       self.ajout_valeurs = None
       self.b = Button(self.frame_choix,text='ajouter  selection',command=self.add_valeur_from_salome)
 
-      self.b.place(relx=0.05,rely=0.05)
+      self.b.place(relx=0.02,rely=0.05)
       self.entrygroupe = Entry(self.frame_choix,relief='sunken')
       self.entrygroupe.place(relx=0.50,rely=0.05)
 
       self.a = Button(self.frame_choix,text='enlever selection',command=self.sup_valeur_from_salome)
-      self.a.place(relx=0.05,rely=0.2)
+      self.a.place(relx=0.02,rely=0.2)
       self.sortie = Entry(self.frame_choix,relief='sunken')
       self.sortie.place(relx=0.50,rely=0.2)
 
@@ -551,6 +557,7 @@ dict_classes_salome = { SHELLPanel : SALOME_SHELLPanel,
 			  UNIQUE_INTO_Panel :  SALOME_UNIQUE_INTO_Panel,
 			  UNIQUE_SDCO_Panel : SALOME_UNIQUE_SDCO_Panel,
 			  UNIQUE_ASSD_Panel : SALOME_UNIQUE_ASSD_Panel,
+			  UNIQUE_ASSD_Panel_Reel : SALOME_UNIQUE_ASSD_Panel_Reel,
 			  UNIQUE_COMP_Panel : SALOME_UNIQUE_COMP_Panel,
 			  UNIQUE_BASE_Panel : SALOME_UNIQUE_BASE_Panel}
 

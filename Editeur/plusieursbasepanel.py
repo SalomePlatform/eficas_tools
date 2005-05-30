@@ -271,6 +271,8 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       if hasattr(self,'entry'):
          # Traitement d'une entree unique
          valeurentree = self.entry.get()
+	 if (valeurentree == None):
+	    return None,0
 	 if (valeurentree[0] != "(") and (valeurentree.find(',') < len(valeurentree)):
 	    valeurs=[]
 	    for v in valeurentree.split(','):

@@ -116,17 +116,12 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       if  self.appli.salome != 0 :
           import panelsSalome
 
-          self.clef_fonction="SALOME"
-          for i in range(0,len( genea )) :
-             self.clef_fonction=self.clef_fonction+"_"+ genea[i]
-
-          self.select_noeud_maille=0
-          if (self.clef_fonction.find("GROUP_NO") != -1)  :
-             if (self.clef_fonction.find("_GROUP_NO") == -1 ):
-                 self.select_noeud_maille=1
-          if (self.clef_fonction.find("GROUP_MA") != -1) :
-             if (self.clef_fonction.find("_GROUP_MA") == -1 ):
-                 self.select_noeud_maille=1
+	  self.select_noeud_maille=0
+	  self.clef_fonction="SALOME"
+	  for i in range(0,len( genea )) :
+	     self.clef_fonction=self.clef_fonction+"_"+ genea[i]
+	     if genea[i] == "GROUP_NO" or genea[i] == "GROUP_MA":
+	        self.select_noeud_maille=1
 
           recherche=panelsSalome.dict_classes_salome[self.panel]
           if hasattr(recherche,self.clef_fonction):
