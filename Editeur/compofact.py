@@ -146,6 +146,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
          return 0
 
   def GetSubList_BAK(self):
+    raise "OBSOLETE"
     sublist=[]
     for obj in self.object.mc_liste:
       def setfunction(value, object=obj):
@@ -155,6 +156,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
     return sublist
 
   def additem_BAK(self,name,pos):
+    raise "OBSOLETE"
     if isinstance(name,Objecttreeitem.ObjectTreeItem) :
         objet = self.object.addentite(name.getObject(),pos)
     else :
@@ -169,6 +171,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
     return item
 
   def verif_condition_bloc_BAK(self):
+      raise "OBSOLETE"
       return self.object.verif_condition_bloc()
 
 import Accas

@@ -38,6 +38,7 @@ from jdcdisplay import JDCDISPLAY
 from utils import extension_fichier,stripPath,save_in_file
 from widgets import Fenetre,Ask_Format_Fichier
 from fenetre_mc_inconnus import fenetre_mc_inconnus
+from Ihm import CONNECTOR
 
 import comploader
 
@@ -135,6 +136,7 @@ class BUREAU:
       self.JDC = self.JDCDisplay_courant.jdc
       #self.JDC.set_context()
       self.JDCName = self.JDC.nom
+      #print "selectJDC",numero_jdc,self.JDCDisplay_courant,self.JDCName
 
    def newJDC(self,event=None):
       """
@@ -176,14 +178,48 @@ class BUREAU:
       self.nb.selectpage(label_onglet)
       self.nb.setnaturalsize()
       texte = "Jeu de commandes :" + self.JDCName+" ouvert"
+      CONNECTOR.Connect(JDC,"close",self.onClose,(self.JDCDisplay_courant,))
       self.appli.affiche_infos(texte)
+
+   def onClose(self,jdcdisplay):
+      #print "onClose",jdcdisplay
+      CONNECTOR.Disconnect(jdcdisplay.jdc,"close",self.onClose,(jdcdisplay,))
+      self.closeJDCDISPLAY(jdcdisplay)
+
+   def closeJDCDISPLAY(self,jdc):
+      """
+        Ferme le jdcdisplay spécifié par l'argument jdc
+      """
+      if jdc is self.JDCDisplay_courant:
+         # on ferme le jdcdisplay courant
+         self.closeSelectedJDC()
+      else:
+         # on ferme un autre jdcdisplay que le courant
+         old_JDCDisplay=self.JDCDisplay_courant
+         old_page=self.nb.getcurselection()
+
+         self.JDCDisplay_courant=jdc
+         self.JDC=jdc.jdc
+         numero_jdc=self.liste_JDCDisplay.index(jdc)
+         self.nb.selectpage(numero_jdc)
+         #print numero_jdc
+      
+         self.closeSelectedJDC()
+         self.JDCDisplay_courant=old_JDCDisplay
+         self.JDC=old_JDCDisplay.jdc
+         self.nb.selectpage(old_page)
 
    def closeJDC (self,event=None) :
       """
+          Ferme le JDC associé au JDCDISPLAY selectionné
+      """
+      if self.JDCDisplay_courant :
+         self.JDCDisplay_courant.jdc.close()
+
+   def closeSelectedJDC (self) :
+      """
       Ferme le JDC courant et détruit l'onglet associé dans le notebook self.nb
       """
-      if self.JDCDisplay_courant == None:
-         return
       if self.JDCDisplay_courant.modified == 'o' :
           message = "Voulez-vous sauvegarder le jeu de commandes "+self.JDC.nom+" courant ?"
           reponse = askyesno(title="Sauvegarde du jdc courant",
@@ -302,8 +338,10 @@ class BUREAU:
       if txt_exception :
           # des exceptions ont été levées à la création du JDC 
           # --> on affiche les erreurs mais pas le JDC
+          self.JDC=J
           self.appli.affiche_infos("Erreur fatale au chargement de %s" %file)
-          showerror("Erreur fatale au chargement d'un fichier",txt_exception)
+          if self.appli.test == 0 :
+             showerror("Erreur fatale au chargement d'un fichier",txt_exception)
       else:
           self.ShowJDC(J,self.JDCName)
           self.appli.toolbar.active_boutons()
@@ -505,8 +543,7 @@ class BUREAU:
           Lance la suppression du noeud courant
       """
       if not self.JDCDisplay_courant : return
-      if self.JDCDisplay_courant.modified == 'n' : 
-         self.JDCDisplay_courant.init_modif()
+      self.JDCDisplay_courant.init_modif()
       self.JDCDisplay_courant.node_selected.delete()
 
    def visuJDC_py(self,event=None):
@@ -615,6 +652,7 @@ class BUREAU:
       """
       test = 1
       for JDCDisplay in liste :
+          self.JDCDisplay_courant=JDCDisplay
           self.JDC = JDCDisplay.jdc
           test = test * self.saveJDC(echo = 'non')
       return test

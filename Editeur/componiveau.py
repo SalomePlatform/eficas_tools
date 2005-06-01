@@ -48,10 +48,12 @@ class Node(treewidget.Node):
         on crée ou supprime les noeuds concernés
         (self est d'un niveau inférieur ou égal à l'ETAPE)
         """
+        raise "OBSOLETE"
         return 0
 
     def replace_enfant_BAK(self,item):
         """ Retourne le noeud fils à éventuellement remplacer """
+        raise "OBSOLETE"
         return None
 
 

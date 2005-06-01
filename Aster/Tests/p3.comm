@@ -1,7 +1,7 @@
-DEBUT()
-#import traceback
-#traceback.print_stack()
-print "=================================="
-print "coucou3"
-print "=================================="
+POURSUITE()
+print "+++++++++++++++++++++++++++++++++++"
+print "+++++++++COUCOU4+++++++++++++++++++"
+print "+++++++++++++++++++++++++++++++++++"
+INCLUDE(UNITE=17)
+INCLUDE(UNITE=11)
 FIN()

@@ -95,6 +95,7 @@ class EFICAS(appli.APPLI):
       else:
           texte="Le fichier %s contient une commande %s\n" %(fic_origine,'POURSUITE')
           texte = texte+'Donnez le nom du fichier dont vous \n voulez faire une poursuite'
+      if self.test == 1: raise Exception("Erreur: "+texte)
       w = Label(self.dialog.interior(),
                 text = texte)
       w.pack(padx = 10, pady = 10)

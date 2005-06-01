@@ -41,6 +41,13 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
       """
       return None
 
+   def supprime_sdprods(self):
+      """
+         Fonction: Lors d'une destruction d'etape, detruit tous les concepts produits
+            Une procedure n'en a aucun
+      """
+      return
+
    def delete_concept(self,sd):
       """
           Inputs :

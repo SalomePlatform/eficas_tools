@@ -86,6 +86,7 @@ class JDC_POURSUITE(JDC):
          self.g_context[sdnom]=sd
 
    def get_verif_contexte(self):
+      #print "get_verif_contexte"
       j_context=self.get_contexte_avant(None)
       self.verif_contexte(j_context)
       return j_context
@@ -116,8 +117,9 @@ class JDC_POURSUITE(JDC):
       #print "verif_contexte"
       for nom_sd,sd in context.items():
         if not isinstance(sd,ASSD):continue
-        if self.jdc_pere.get_sd_apres_etape_avec_detruire(nom_sd,sd,
-                                                       etape=self.etape_include):
+        autre_sd= self.jdc_pere.get_sd_apres_etape_avec_detruire(nom_sd,sd,
+                                                       etape=self.etape_include)
+        if sd and sd is not autre_sd:
            # Il existe un concept produit par une etape apres self 
            # => impossible d'inserer
            raise Exception("Impossible d'inclure le fichier. Un concept de nom " +
@@ -227,7 +229,14 @@ class JDC_POURSUITE(JDC):
            définie apres etape en tenant compte des concepts detruits
            Si avec vaut 'non' exclut etape de la recherche
       """
+      #print "jdc_include.get_sd_apres_etape_avec_detruire",nom_sd,sd,id(sd)
       autre_sd=JDC.get_sd_apres_etape_avec_detruire(self,nom_sd,sd,etape,avec)
+      #print autre_sd,id(autre_sd)
+      # si autre_sd vaut None le concept sd a ete detruit. On peut terminer
+      # la recherche en retournant None
+      # Si autre_sd ne vaut pas sd, le concept a ete redefini. On peut terminer
+      # la recherche en retournant le concept nouvellement defini
+      # Sinon, on poursuit la recherche dans les etapes du niveau superieur.
       if autre_sd is None or autre_sd is not sd :return autre_sd
       return self.etape_include.parent.get_sd_apres_etape_avec_detruire(nom_sd,sd,self.etape_include,'non')
 
@@ -262,8 +271,6 @@ class JDC_POURSUITE(JDC):
       JDC.replace_concept_after_etape(self,etape,old_sd,sd)
       # Nettoyage des etapes du parent
       self.etape_include.parent.replace_concept_after_etape(self.etape_include,old_sd,sd)
-
-
 
 class JDC_INCLUDE(JDC_POURSUITE):
    def active_etapes(self):

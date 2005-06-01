@@ -34,10 +34,11 @@ import convert
 from widgets import askopenfilename
 from widgets import Fenetre,FenetreYesNo
 from widgets import showinfo,showerror
+from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.19 2005/05/19 12:18:47 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.20 2005/05/24 10:34:16 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -77,13 +78,21 @@ class MACROPanel(panels.OngletPanel):
     dont a besoin la macro
     """
     titre = Tkinter.Label(page,text="La commande %s requiert un fichier " %self.node.item.get_nom())
-    titre.place(relx=0.5,rely=0.3,anchor='center')
-    Tkinter.Label(page,text="Fichier :").place(relx=0.1,rely=0.5,relwidth=0.2)
-    self.entry = Tkinter.Entry(page,relief='sunken',bg='white')
-    self.entry.place(relx=0.35,rely=0.5,relwidth=0.55)
-    Tkinter.Button(page,text='Valider',command = self.change_fichier_init).place(relx=0.3,rely=0.8)
-    Tkinter.Button(page,text='Browse',command = self.browse_fichier_init).place(relx=0.5,rely=0.8)
-    Tkinter.Button(page,text='Annuler',command = self.annule_fichier_init).place(relx=0.7,rely=0.8)
+    titre.place(relx=0.5,rely=0.2,anchor='center')
+    frameMain=Tkinter.Frame(page)
+    frameMain.place(relx=0.5,rely=0.4,anchor='center',relwidth=1.)
+    Tkinter.Label(frameMain,text="Fichier :").pack(side='left',padx=5)
+    self.entry = Tkinter.Entry(frameMain,relief='sunken',bg='white')
+    self.entry.pack(side='left',padx=5,fill='x',expand=1)
+    frameButtons=Tkinter.Frame(page)
+    but1=Tkinter.Button(frameButtons,text='Valider',command = self.change_fichier_init)
+    but2=Tkinter.Button(frameButtons,text='Browse',command = self.browse_fichier_init)
+    but3=Tkinter.Button(frameButtons,text='Annuler',command = self.annule_fichier_init)
+    but1.grid(row=0,column=0,padx=5,pady=5)
+    but2.grid(row=0,column=1,padx=5,pady=5)
+    but3.grid(row=0,column=2,padx=5,pady=5)
+    frameButtons.place(relx=0.5,rely=0.6,anchor='center')
+
     if hasattr(self.node.item.object,'fichier_ini'):
       if self.node.item.object.fichier_ini :
         self.entry.insert(0,self.node.item.object.fichier_ini)
@@ -192,6 +201,9 @@ class INCLUDETreeItemBase(MACROTreeItem):
     #print "makeEdit",self.object,self.object.nom
     #print "makeEdit",self.object.jdc_aux,self.object.jdc_aux.nom
     #print "makeEdit",self.object.jdc_aux.context_ini
+    if self.object.jdc_aux is None:
+         showerror("Include vide","L'include doit etre correctement initialisé avant d'etre édité")
+         return
     self.parent_node=node
     # On cree un nouvel onglet dans le bureau
     appli.bureau.ShowJDC(self.object.jdc_aux,self.object.jdc_aux.nom,
@@ -200,7 +212,14 @@ class INCLUDETreeItemBase(MACROTreeItem):
     self.myjdc=appli.bureau.JDCDisplay_courant
     self.myjdc.fichier=self.object.fichier_ini
 
+  def onClose(self):
+    #print "onClose",self
+    self.appli.bureau.closeJDCDISPLAY(self.myjdc)
+
   def makeView(self,appli,node):
+    if self.object.jdc_aux is None:
+         showerror("Include vide","L'include doit etre correctement initialisé avant d'etre édité")
+         return
     nom=self.object.nom
     if hasattr(self.object,'fichier_ini'):
        if self.object.fichier_ini is None:
@@ -208,6 +227,11 @@ class INCLUDETreeItemBase(MACROTreeItem):
        else:
           nom=nom+' '+self.object.fichier_ini
     macdisp=macrodisplay.makeMacroDisplay(appli,self,nom)
+    CONNECTOR.Connect(self.object.jdc_aux,"close",self.onCloseView,(macdisp,))
+
+  def onCloseView(self,macdisp):
+    #print "onCloseView",self,macdisp
+    macdisp.quit()
 
 class INCLUDEPanel(MACROPanel):
   def makeFichierPage(self,page):

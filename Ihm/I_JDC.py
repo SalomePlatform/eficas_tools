@@ -196,6 +196,12 @@ class JDC(I_OBJECT.OBJECT):
           self.editmode=0
           raise AsException("Impossible d ajouter la commande "+name)
 
+   def close(self):
+      #print "JDC.close",self
+      for etape in self.etapes:
+          if hasattr(etape,"close"):etape.close()
+      CONNECTOR.Emit(self,"close")
+
    def set_current_step(self):
       CONTEXT.unset_current_step()
       CONTEXT.set_current_step(self)
@@ -215,6 +221,7 @@ class JDC(I_OBJECT.OBJECT):
            définie apres etape en tenant compte des concepts detruits
            Si avec vaut 'non' exclut etape de la recherche
       """
+      #print "JDC.get_sd_apres_etape_avec_detruire",nom_sd,sd
       ietap=self.etapes.index(etape)
       if avec == 'non':ietap=ietap+1
       d={nom_sd:sd}
@@ -223,21 +230,27 @@ class JDC(I_OBJECT.OBJECT):
             e.update_context(d)
             autre_sd=d.get(nom_sd,None)
             if autre_sd is None:
-              # Le concept a ete detruit
+              # Le concept a ete detruit. On interrompt la recherche car il n'y a
+              # pas eu de redefinition du concept (il n'y a pas de conflit potentiel).
               return None
             if autre_sd is not sd :
-              # L'etape produit un concept de meme nom
+              # L'etape produit un concept different de meme nom. La situation n'est
+              # pas saine (sauf peut etre si reuse ???)
               if hasattr(e,'reuse') and e.reuse == autre_sd:
                  # Le concept etant reutilise, on interrompt la recherche. 
                  # On considere qu'il n'y a pas de nouveau concept defini
                  # meme si dans les etapes suivantes le concept est detruit
                  # et un concept de meme nom créé.
+                 # AVERIFIER : avec reuse le concept devrait etre le meme
+                 # le passage par ici est tres improbable
                  return None
               else:
-                 # Le concept est produit par l'etape
+                 # Le concept est produit par l'etape (Il y a conflit potentiel).
+                 # Le concept est redefini par une etape posterieure.
                  return autre_sd
-      # On n'a rien trouve. Pas de concept de nom nom_sd
-      return None
+      # Pas de destruction du concept ni de redefinition. On retourne le
+      # concept initial
+      return sd
 
    def get_sd_apres_etape(self,nom_sd,etape,avec='non'):
       """ 
@@ -324,6 +337,7 @@ class JDC(I_OBJECT.OBJECT):
         # Il faut la désenregistrer
         etape.niveau.unregister(etape)
       etape.supprime_sdprods()
+      etape.close()
       self.active_etapes()
 
       # Apres suppression de l'etape il faut controler que les etapes

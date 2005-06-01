@@ -145,7 +145,6 @@ class SplashScreen(Toplevel):
         self.progress = None
         self.destroy()
         if self.main:
-           self.main.update()
-           self.main.deiconify()
            centerwindow(self.main,parent='sans')
+           self.main.deiconify()
 

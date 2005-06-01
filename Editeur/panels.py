@@ -109,8 +109,8 @@ class Panel(Frame) :
           self.bouton_cata.place(relx=0.5,rely = 0.5,relheight = 0.8,anchor='center')
           self.bouton_doc.place(relx=0.75,rely = 0.5,relheight = 0.8,anchor='center')
       else:
-          self.bouton_sup.place(relx=0.25,rely = 0.5,relheight = 0.8,anchor='center')
-          self.bouton_doc.place(relx=0.5,rely = 0.5,relheight = 0.8,anchor='center')
+          self.bouton_sup.place(relx=0.3,rely = 0.5,relheight = 0.8,anchor='center')
+          self.bouton_doc.place(relx=0.7,rely = 0.5,relheight = 0.8,anchor='center')
 
   def show_catalogue(self):
       try:
@@ -202,7 +202,7 @@ class Panel(Frame) :
       Suppression du noeud courant
       """
       # On signale au parent du panel (le JDCDisplay) une modification 
-      if self.parent.modified == 'n' : self.parent.init_modif()
+      self.parent.init_modif()
       self.node.delete()
       
   def affiche(self):
@@ -482,6 +482,7 @@ class OngletPanel(Panel) :
       self.parent.appli.affiche_infos('')
     
   def get_liste_cmd_BAK(self):
+      raise "OBSOLETE"
       listeCmd = self.cata.listCmd()
       return listeCmd
 
@@ -526,8 +527,9 @@ class OngletPanel(Panel) :
     try :
         pos=self.node.parent.children.index(self.node)
         commande_comment = self.node.item.get_objet_commentarise()
+        # On signale au parent du panel (le JDCDisplay) une modification
+        self.parent.init_modif()
         self.node.parent.children[pos].select()
-        #self.parent.appli.bureau.JDCDisplay_courant.ReplaceObjectNode(self.node,commande_comment,None)
     except Exception,e:
         traceback.print_exc()
         widgets.showerror("TOO BAD",str(e))

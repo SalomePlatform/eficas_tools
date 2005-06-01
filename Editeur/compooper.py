@@ -246,6 +246,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       return self.sublist
 
   def GetSubList_BAK(self):
+      raise "OBSOLETE"
       if self.isactif():
          liste=self.object.mc_liste
       else:
@@ -328,6 +329,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       return commande_comment
 
   def additem_BAK(self,name,pos):
+      raise "OBSOLETE"
       mcent=self.addentite(name,pos)
 
       self.expandable=1
@@ -340,6 +342,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       return item
 
   def GetSubList_BAK(self):
+      raise "OBSOLETE"
       sublist=[]
       for obj in self.object.mc_liste:
         def setfunction(value, object=obj):
@@ -349,9 +352,10 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       return sublist
 
   def verif_condition_bloc_BAK(self):
+      raise "OBSOLETE"
       return self.object.verif_condition_bloc()
 
-  def replace_child(self,old_item,new_item):
+  def replace_child_BAK(self,old_item,new_item):
      """
      Remplace old_item.getObject() par new_item.getObject() dans 
      les fils de self.object

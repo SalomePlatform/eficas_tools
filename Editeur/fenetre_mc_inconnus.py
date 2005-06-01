@@ -36,6 +36,7 @@ class fenetre_mc_inconnus :
     def __init__(self,l_mc):
        self.l_mc = l_mc
        self.fenetre = Toplevel()
+       self.fenetre.withdraw()
        self.fenetre.geometry("400x400+0+0")
        self.fenetre.title("Mots-clés inconnus dans le fichier de commandes")
        self.init()
@@ -44,6 +45,7 @@ class fenetre_mc_inconnus :
        self.init_liste_mc()
        self.init_boutons()
        centerwindow(self.fenetre)
+       self.fenetre.deiconify()
 
     def init(self) :
        """

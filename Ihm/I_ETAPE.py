@@ -297,6 +297,9 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
          self.parent.del_sdprod(self.sd)
          self.parent.delete_concept(self.sd)
 
+   def close(self):
+      return
+
    def delete_concept(self,sd):
       """ 
           Inputs :

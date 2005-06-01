@@ -57,6 +57,7 @@ class Fenetre :
     def __init__(self,appli,titre="",texte=""):
         self.appli=appli
         self.fenetre = Toplevel()
+        self.fenetre.withdraw()
         self.fenetre.configure(width = 800,height=500)
         self.fenetre.protocol("WM_DELETE_WINDOW", self.quit)
         self.fenetre.title("Visualisation du "+titre)
@@ -88,6 +89,7 @@ class Fenetre :
         # affichage du texte
         self.affiche_texte(self.texte)
         centerwindow(self.fenetre)
+        self.fenetre.deiconify()
 
     def page_up(self,event):
         event.widget.yview_scroll(-1, "page")
@@ -883,6 +885,7 @@ class ListeChoix :
           #pass
 
     def get_liste_BAK(self):
+        raise "OBSOLETE"
         return self.liste
 
     # PN attention à la gestion des paramétres

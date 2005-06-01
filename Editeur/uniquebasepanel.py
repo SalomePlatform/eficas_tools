@@ -128,7 +128,11 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       Affiche la valeur de l'objet pointé par self
       """
       valeur = self.node.item.get_valeur()
-      if valeur == None or valeur == '' : return # pas de valeur à afficher ...
+      if valeur == None or valeur == '' : # pas de valeur à afficher ...
+         self.entry.delete(0,END)
+         self.entry.focus()
+         return
+
       valeur_texte=self.get_valeur_texte(valeur)
       if valeur_texte != "":
          valeur=valeur_texte

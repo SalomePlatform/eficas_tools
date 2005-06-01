@@ -352,7 +352,7 @@ class MCSIMP:
           return self.is_object_from(valeur,type_permis)
       else:
         print "Type non encore géré %s" %`type_permis`
-        #print self.nom,self.parent.nom,self.jdc.fichier
+        print self.nom,self.parent.nom,self.jdc.fichier
 
    def isinintervalle(self,valeur,cr='non'):
       """

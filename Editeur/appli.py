@@ -44,7 +44,7 @@ from widgets import Fenetre
 from Misc import MakeNomComplet
 import session
 
-VERSION="EFICAS v1.7"
+VERSION="EFICAS v1.8"
 
 class APPLI: 
   def __init__ (self,master,code=prefs.code,fichier=None,test=0) :
@@ -81,16 +81,19 @@ class APPLI:
       # PN : ajout d un attribut pour indiquer si 
       # l appli a ete lance depuis Salome
       self.salome=0
+
+      # Fermer le splash et deiconifier la fenetre principale si on n'est pas en test
       if (self.test == 0):
            splash.fini_splash()
            #self.affiche_FAQ()
 
-      cwd=os.getcwd()
       # Ouverture des fichiers de commandes donnes sur la ligne de commande
+      cwd=os.getcwd()
       for study in session.d_env.studies:
           os.chdir(cwd)
           d=session.get_unit(study,self)
           self.bureau.openJDC(study["comm"],d)
+
 
   def send_message(self,message):
       self.message=message

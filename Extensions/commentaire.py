@@ -190,3 +190,6 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       """sans objet """
       pass
 
+  def close(self):
+      pass
+

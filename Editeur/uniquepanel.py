@@ -68,10 +68,10 @@ class UNIQUE_Panel(newSIMPPanel):
       if self.parent.modified == 'n' : self.parent.init_modif()
       anc_val = self.node.item.get_valeur()
       valeurentree = self.get_valeur()
-      self.erase_valeur()
       valeur,validite=self.node.item.eval_valeur(valeurentree)
       if not validite :
              commentaire = "impossible d'évaluer : %s " %`valeurentree`
+             self.display_valeur()
              self.parent.appli.affiche_infos(commentaire)
              return
    
@@ -84,16 +84,9 @@ class UNIQUE_Panel(newSIMPPanel):
           self.parent.appli.affiche_infos("Valeur du mot-clé non autorisée : "+mess)
       elif self.node.item.isvalid() :
           self.parent.appli.affiche_infos('Valeur du mot-clé enregistrée')
-	  #if self.node.item.get_position()=='global':
-              #self.node.etape.verif_all()
-	  #elif self.node.item.get_position()=='global_jdc':
-              #self.node.racine.verif_all()
-	  #else :
-              #self.node.parent.verif()
-	  #self.node.update()
-          #self.node.parent.select()
       else :
           cr = self.node.item.get_cr()
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
           self.reset_old_valeur(anc_val,mess=mess)
 
+      self.display_valeur()

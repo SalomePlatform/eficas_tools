@@ -484,6 +484,7 @@ class SequenceTreeItem(ObjectTreeItem):
         return self.sublist
 
     def GetSubList_BAK(self):
+        raise "OBSOLETE"
         sublist = []
         for obj in self._object.data:
             def setfunction(value, object=obj):

@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.20 2005/04/13 14:59:31 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.21 2005/05/19 12:18:48 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -998,6 +998,7 @@ class Node :
 
     def delete_node_child_BAK(self,child):
         """ Supprime child des enfants de self et les id associés """
+        raise "OBSOLETE"
         child.efface()
         self.children.remove(child)
         self.canvas.update()
@@ -1007,6 +1008,7 @@ class Node :
             Supprime child des enfants de self, tous les id associés
             ET l'objet associé 
         """
+        raise "OBSOLETE"
         if self.item.suppitem(child.item):
             self.delete_node_child(child)
             return 1

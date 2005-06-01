@@ -170,11 +170,13 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
       return listeCmd
 
   def additem_BAK(self,name,pos):
+      raise "OBSOLETE"
       cmd=self.addentite(name,pos)
       item = self.make_objecttreeitem(self.appli,cmd.nom + " : ", cmd)
       return item
 
   def verif_condition_bloc_BAK(self):
+      raise "OBSOLETE"
       # retourne la liste des sous-items dont la condition est valide
       # sans objet pour le JDC
       return [],[]

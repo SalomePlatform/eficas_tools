@@ -437,6 +437,9 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       """sans objet """
       pass
 
+  def close(self):
+      pass
+
 
 
 class ITEM_PARAMETRE :
