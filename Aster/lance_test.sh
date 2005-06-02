@@ -17,15 +17,22 @@ do
 	    if  [ "$rc" != "0" ]
 	    then
  	    	cr=`./test_eficas.py $file` 
-		if [ "${cr}" != "" ]
+		if [ "${cr}" == "" ]
 		then
-			echo $file >> ./Tests_Batch/${version}/bad_${passe}
+		  echo $file >> ./Tests_Batch/${version}/bad_${passe}
 		else
+		  cr=` echo $cr | grep -v DEBUT | grep -v FIN`
+		  if [ "${cr}" != "" ]
+		  then
+			echo $file >> ./Tests_Batch/${version}/bad_${passe}
+		  else
 			echo $file >> ./Tests_Batch/${version}/ok_${passe}
+		  fi
 		fi
+	    else
+	      echo $file >> ./Tests_Batch/${version}/nt_${passe}
 	    fi
 	else
 	   echo $file >> ./Tests_Batch/${version}/nt_${passe}
 	fi 
-	read a
 done
