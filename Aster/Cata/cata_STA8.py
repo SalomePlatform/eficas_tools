@@ -29,7 +29,7 @@ from math import sqrt,pi
 import ops
 
 # pas d'import aster, Utilitai... pour ne pas gener eficas
-#from Utilitai.t_fonction import t_fonction,t_fonction_c,t_nappe
+from Utilitai.t_fonction import t_fonction,t_fonction_c,t_nappe
 
 try:
   import aster
@@ -537,12 +537,10 @@ class fonction_sdaster(fonction_class):
       représentation python de la fonction
       """
       if arg=='real' :
-        from Utilitai.t_fonction import t_fonction,t_fonction_c,t_nappe
         return t_fonction(self.Absc(),
                           self.Ordo(),
                           self.Parametres())
       elif arg=='complex' :
-        from Utilitai.t_fonction import t_fonction,t_fonction_c,t_nappe
         return t_fonction_c(self.Absc(),
                             self.Ordo(),
                             self.Parametres())
@@ -586,7 +584,6 @@ class fonction_c(fonction_class):
       Retourne un objet de la classe t_fonction ou t_fonction_c,
       représentation python de la fonction complexe
       """
-      from Utilitai.t_fonction import t_fonction,t_fonction_c,t_nappe
       if arg=='real' :
         return t_fonction(self.Absc(),
                           self.Ordo(),
@@ -665,7 +662,6 @@ class nappe_sdaster(fonction_class):
       vale=self.Valeurs()
       l_fonc=[]
       i=0
-      from Utilitai.t_fonction import t_fonction,t_fonction_c,t_nappe
       for pf in para[1] :
           para_f={'INTERPOL'    : pf['INTERPOL_FONC'],
                   'PROL_DROITE' : pf['PROL_DROITE_FONC'],
@@ -2314,7 +2310,7 @@ AFFE_CHAR_CINE_F=OPER(nom="AFFE_CHAR_CINE_F",op= 108,sd_prod=affe_char_cine_f_pr
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-#& MODIF COMMANDE  DATE 08/03/2005   AUTEUR LAMARCHE S.LAMARCHE 
+#& MODIF COMMANDE  DATE 24/05/2005   AUTEUR MABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -2652,7 +2648,7 @@ AFFE_CHAR_MECA=OPER(nom="AFFE_CHAR_MECA",op=   7,sd_prod=char_meca
            regles=(UN_PARMI('GROUP_MA_ESCL','MAILLE_ESCL'),),
            APPARIEMENT     =SIMP(statut='f',typ='TXM',defaut="MAIT_ESCL",
                                  into=("NON","NODAL","MAIT_ESCL","MAIT_ESCL_SYME")),
-           RECHERCHE       =SIMP(statut='f',typ='TXM',defaut="NOEUD_VOISIN",
+           RECHERCHE       =SIMP(statut='f',typ='TXM',defaut="NOEUD_BOUCLE",
                                  into=("NOEUD_BOUCLE","NOEUD_VOISIN")),
            LISSAGE         =SIMP(statut='f',typ='TXM',defaut="NON",
                                  into=("OUI","NON")),
@@ -3292,7 +3288,7 @@ AFFE_CHAR_MECA_C=OPER(nom="AFFE_CHAR_MECA_C",op=   7,sd_prod=char_meca,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-#& MODIF COMMANDE  DATE 28/02/2005   AUTEUR MABBAS M.ABBAS 
+#& MODIF COMMANDE  DATE 24/05/2005   AUTEUR MABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -3446,7 +3442,7 @@ AFFE_CHAR_MECA_F=OPER(nom="AFFE_CHAR_MECA_F",op=7,sd_prod=char_meca,
            regles=(UN_PARMI('GROUP_MA_ESCL','MAILLE_ESCL'),),
            APPARIEMENT     =SIMP(statut='f',typ='TXM',defaut="MAIT_ESCL",
                                  into=("NON","NODAL","MAIT_ESCL","MAIT_ESCL_SYME")),
-           RECHERCHE       =SIMP(statut='f',typ='TXM',defaut="NOEUD_VOISIN",into=("NOEUD_BOUCLE","NOEUD_VOISIN")),
+           RECHERCHE       =SIMP(statut='f',typ='TXM',defaut="NOEUD_BOUCLE",into=("NOEUD_BOUCLE","NOEUD_VOISIN")),
            LISSAGE         =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),                 
            NORMALE         =SIMP(statut='f',typ='TXM',defaut="MAIT",into=("MAIT","MAIT_ESCL")),
            METHODE         =SIMP(statut='f',typ='TXM',defaut="CONTRAINTE",    
@@ -5601,7 +5597,7 @@ CALC_FONC_INTERP=OPER(nom="CALC_FONC_INTERP",op= 134,sd_prod=calc_fonc_interp_pr
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ) ),
 )  ;
-#& MODIF COMMANDE  DATE 12/05/2005   AUTEUR DURAND C.DURAND 
+#& MODIF COMMANDE  DATE 24/05/2005   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -5771,6 +5767,7 @@ CALC_FONCTION=MACRO(nom="CALC_FONCTION",op=calc_fonction_ops,sd_prod=calc_foncti
          INTERPOL_FONC   =SIMP(statut='f',typ='TXM',max=2,into=("NON","LIN","LOG") ),
          PROL_DROITE_FONC=SIMP(statut='f',typ='TXM',into=("CONSTANT","LINEAIRE","EXCLU") ),
          PROL_GAUCHE_FONC=SIMP(statut='f',typ='TXM',into=("CONSTANT","LINEAIRE","EXCLU") ),
+         INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )
 #& MODIF COMMANDE  DATE 22/02/2005   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -14549,7 +14546,7 @@ IMPR_FONCTION=MACRO(nom="IMPR_FONCTION",op=impr_fonction_ops,sd_prod=None,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 22/02/2005   AUTEUR DURAND C.DURAND 
+#& MODIF COMMANDE  DATE 17/05/2005   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -14570,6 +14567,8 @@ IMPR_FONCTION=MACRO(nom="IMPR_FONCTION",op=impr_fonction_ops,sd_prod=None,
 IMPR_GENE=PROC(nom="IMPR_GENE",op= 157,
                fr="Calcul du dommage subi par une structure soumise à une sollicitation de type aléatoire",
             UIinfo={"groupes":("Impression",)},
+         FORMAT          =SIMP(statut='f',typ='TXM',defaut="RESULTAT",into=("RESULTAT",) ),
+         UNITE           =SIMP(statut='f',typ='I',defaut=8),  
          GENE            =FACT(statut='o',max='**',
            regles=(EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST','FREQ','NUME_MODE',
                           'LIST_INST','LIST_FREQ','TOUT_MODE','TOUT_INST','LIST_ORDRE'),
@@ -14582,8 +14581,6 @@ IMPR_GENE=PROC(nom="IMPR_GENE",op= 157,
                    EXCLUS('TOUT_PARA','NOM_PARA'),),
 #  faut-il faire des blocs selon le type de RESU_GENE                   
            RESU_GENE       =SIMP(statut='o',typ=(vect_asse_gene_r, tran_gene, mode_gene, harm_gene)),
-           FORMAT          =SIMP(statut='f',typ='TXM',defaut="RESULTAT",into=("RESULTAT",) ),
-           UNITE           =SIMP(statut='f',typ='I',defaut=8),  
            TOUT_ORDRE      =SIMP(statut='f',typ='TXM',into=("OUI",) ),
            NUME_ORDRE      =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
            LIST_ORDRE      =SIMP(statut='f',typ=listis_sdaster ),
@@ -15278,7 +15275,7 @@ INFO_EXEC_ASTER=OPER(nom="INFO_EXEC_ASTER",op=35,sd_prod=table_sdaster,
          TITRE          =SIMP(statut='f',typ='TXM',max='**'),
          INFO           =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 12/05/2005   AUTEUR DURAND C.DURAND 
+#& MODIF COMMANDE  DATE 24/05/2005   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2005  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -15362,6 +15359,7 @@ INFO_FONCTION=MACRO(nom="INFO_FONCTION",op=info_fonction_ops,sd_prod=info_foncti
             CRITERE       =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
             PRECISION     =SIMP(statut='f',typ='R',defaut= 1.E-3,val_min=0.E+0 ),
          ),     
+         INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION

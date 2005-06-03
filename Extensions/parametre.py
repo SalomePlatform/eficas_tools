@@ -100,19 +100,6 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       print "******* Probleme : a la soustraction"
       return None
 
-  def __mul__(self,a):
-    try :
-      return self.valeur*a.valeur
-    except :
-      print "******* Probleme : a la multiplication"
-      return None
-
-  def __rmul__(self,a):
-    try :
-      return self.valeur*a.valeur
-    except :
-      print "******* Probleme : a la multiplication"
-      return None
 
   def __mul__(self,a):
     try :
@@ -164,7 +151,14 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       try :
          retour = self.valeur * other
       except :
-         print "******* Probleme : a la multiplication"
+         try :
+	   retour = eval(self.valeur) * eval(other)
+	 except :
+	   try :
+	     retour = self.valeur * eval(other)
+	   except :
+	     print other
+             print "******* Probleme : a la multiplication _mul__"
     return retour
 
   def __rmul__ (self,other):
@@ -175,7 +169,10 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       try :
          retour = self.valeur * other
       except :
-         print "******* Probleme : a la multiplication"
+         try :
+	    retour = eval(self.valeur) * eval(other)
+	 except :
+            print "******* Probleme : a la multiplication __rmul__"
     return retour
 
 
@@ -190,6 +187,41 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 	print "******* Probleme : a la division"
     return retour
 
+
+  def cos(self):
+      try :
+      	retour=cos(self.valeur)
+        return retour
+      except:
+        print "pb pour cosinus"
+
+  def sin(self):
+      try :
+      	retour=sin(self.valeur)
+        return retour
+      except:
+        print "pb pour sinus"
+
+  def tan(self):
+      try :
+      	retour=tan(self.valeur)
+        return retour
+      except:
+        print "pb pour tangente"
+
+  def log(self):
+      try :
+      	retour=log(self.valeur)
+        return retour
+      except:
+        print "pb pour log"
+
+  def sqrt(self):
+      try :
+      	retour=sqrt(self.valeur)
+        return retour
+      except:
+        print "pb pour sqrt"
 
   def interprete_valeur(self,val):
     """
@@ -441,6 +473,17 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       pass
 
 
+class COMBI_PARAMETRE :
+  def __init__(self,chainevaleur,valeur):
+      self.chainevaleur=chainevaleur
+      self.valeur=valeur
+
+  def __repr__(self):
+      return self.chainevaleur
+
+  def isvalid(self):
+      if self.valeur and self.chainevaleur:
+         return 1
 
 class ITEM_PARAMETRE :
   def __init__(self,param_pere,item=None):
