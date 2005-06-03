@@ -21,8 +21,10 @@ do
 		then
 		  echo $file >> ./Tests_Batch/${version}/bad_${passe}
 		else
-		  cr=` echo $cr | grep -v DEBUT | grep -v FIN`
-		  if [ "${cr}" != "" ]
+		  nomfeuille=`basename $file`
+		  boncr="DEBUT CR validation : "${nomfeuille}" FIN CR validation :"${nomfeuille}
+		  cr=`echo $cr`
+		  if [ "${cr}" != "$boncr" ]
 		  then
 			echo $file >> ./Tests_Batch/${version}/bad_${passe}
 		  else
