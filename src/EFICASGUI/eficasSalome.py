@@ -10,7 +10,7 @@ sys._exit=sys.exit
 def exit(ier):
    print "appel de exit: ",ier
 
-sys.exit=exit
+#sys.exit=exit
 # Fin remplacement
 
 initialised=0

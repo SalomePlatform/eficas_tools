@@ -14,11 +14,12 @@ studyId=None
 
 import notifqt
 #import Tkinter
-#root=Tkinter.Tk()
 #root.withdraw()
 
 def g():
    print "lastWindowClosed()"
+   import Tkinter
+   root=Tkinter.Tk()
    root.destroy()
 
 qt.QObject.connect(qt.qApp,qt.SIGNAL("lastWindowClosed()"),g)
@@ -123,7 +124,7 @@ def runEficasFichier(ws):
          code = "ASTER" 
       else :
          boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_HOMARD",a[0])
-	 code = "HOMARD"
+   	 code = "HOMARD"
    eficasSalome.runEficas(ws,code,attr)
 
 # Partie applicative

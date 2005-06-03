@@ -10,11 +10,13 @@ sys.path[:0]=[os.path.join(eficas_root,'Aster'),
 
 # Modules Python
 import Tkinter
+import sys
 
 # Modules Eficas
 #import import_code
 from Editeur import splash
 from Editeur import eficas
+from Editeur import session
 
 
 def init(top,code="ASTER",fichier=None):
@@ -33,6 +35,9 @@ def init(top,code="ASTER",fichier=None):
         def contexte(self):
             self.salome=MaRef
 
-    print code
-    moi=MyEficas(top,code=code,fichier=fichier)
+    if fichier != None :
+    	options=session.parse(sys.argv+[fichier])
+    else :
+    	options=session.parse(sys.argv)
+    moi=MyEficas(top,code=code)
     moi.contexte()

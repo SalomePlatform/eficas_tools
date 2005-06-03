@@ -9,57 +9,12 @@
             <x>0</x>
             <y>0</y>
             <width>526</width>
-            <height>252</height>
+            <height>398</height>
         </rect>
     </property>
     <property name="caption">
         <string>Choix du Maillage sur lequel s appliquent les condtions aux limites</string>
     </property>
-    <widget class="QLabel">
-        <property name="name">
-            <cstring>TextLabel1</cstring>
-        </property>
-        <property name="geometry">
-            <rect>
-                <x>10</x>
-                <y>190</y>
-                <width>191</width>
-                <height>40</height>
-            </rect>
-        </property>
-        <property name="text">
-            <string>Nom du nouveau maillage</string>
-        </property>
-    </widget>
-    <widget class="QLabel">
-        <property name="name">
-            <cstring>TextLabel2</cstring>
-        </property>
-        <property name="geometry">
-            <rect>
-                <x>20</x>
-                <y>70</y>
-                <width>181</width>
-                <height>31</height>
-            </rect>
-        </property>
-        <property name="text">
-            <string>Maillage sélectionné</string>
-        </property>
-    </widget>
-    <widget class="QListBox">
-        <property name="name">
-            <cstring>Maillage</cstring>
-        </property>
-        <property name="geometry">
-            <rect>
-                <x>210</x>
-                <y>70</y>
-                <width>281</width>
-                <height>90</height>
-            </rect>
-        </property>
-    </widget>
     <widget class="QLabel">
         <property name="name">
             <cstring>TextLabel1_2</cstring>
@@ -92,6 +47,67 @@
             <string>TextLabel2</string>
         </property>
     </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel2_2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>50</y>
+                <width>181</width>
+                <height>31</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Shape selectionnée</string>
+        </property>
+    </widget>
+    <widget class="QListBox">
+        <property name="name">
+            <cstring>MainShape</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>50</y>
+                <width>281</width>
+                <height>90</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>160</y>
+                <width>181</width>
+                <height>31</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Maillage sélectionné</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>TextLabel1</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>10</x>
+                <y>280</y>
+                <width>191</width>
+                <height>40</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Nom du nouveau maillage</string>
+        </property>
+    </widget>
     <widget class="QLineEdit">
         <property name="name">
             <cstring>NouveauMesh</cstring>
@@ -99,9 +115,22 @@
         <property name="geometry">
             <rect>
                 <x>210</x>
-                <y>200</y>
+                <y>290</y>
                 <width>280</width>
                 <height>24</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QListBox">
+        <property name="name">
+            <cstring>Maillage</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>160</y>
+                <width>281</width>
+                <height>90</height>
             </rect>
         </property>
     </widget>
@@ -119,11 +148,15 @@
         <receiver>ChoixMaillage</receiver>
         <slot>NouveauMesh_returnPressed()</slot>
     </connection>
+    <connection>
+        <sender>MainShape</sender>
+        <signal>clicked(QListBoxItem*)</signal>
+        <receiver>ChoixMaillage</receiver>
+        <slot>Geometrie_clicked(QListBoxItem*)</slot>
+    </connection>
 </connections>
-<includes>
-    <include location="local" impldecl="in implementation">ChoixMaillage.ui.h</include>
-</includes>
 <slots>
+    <slot>Geometrie_clicked(QListBoxItem *)</slot>
     <slot>Maillage_clicked( QListBoxItem * )</slot>
     <slot>NouveauMesh_returnPressed()</slot>
 </slots>

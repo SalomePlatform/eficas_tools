@@ -1,6 +1,7 @@
 import salome
 import SALOMEDS
 import SMESH
+import GEOM
 import SalomePyQt
 import MonChoixMaillage
 
@@ -12,10 +13,12 @@ class CLinit:
        geom = salome.lcc.FindOrLoadComponent("FactoryServer", "GEOM")
        self.GroupOp  = geom.GetIGroupOperations(salome.myStudyId)
        self.smesh=None
+       self.geomcompID=None
        self._d = SalomePyQt.SalomePyQt().getDesktop()
-       self.get_maillages()
        self.correspondanceNomIOR = {}
+       self.correspondanceNomIORshape = {}
        self.name="CL"
+       print "fin init"
 
     def GetOrCreateCL(self,myShapeName):
        if not (dict_CL.has_key(myShapeName)):
@@ -24,6 +27,11 @@ class CLinit:
 
 
     def traiteCL(self):
+       print "traiteCL"
+       self.get_geoms()
+       print "self.get_geoms"
+       self.get_maillages()
+       print "self.get_maillages"
        # Récupere tous les Mesh
        if len(dict_CL) > 0:
           Choix=MonChoixMaillage.MonChoixMaillage(self,0,self._d)
@@ -48,14 +56,16 @@ class CLinit:
            anAttr = attrName._narrow(SALOMEDS.AttributeName)
            Name = anAttr.Value()
            #_CS_cbo: ajout de la determination de la dimension de la geometrie
-           type = self.getShapeType(GEOMShape)
+           #type = self.getShapeType(GEOMShape)
+	   type = SMESH.NODE
            Mesh.CreateGroupFromGEOM(type,Name,GEOMShape)           
        del dict_CL[GEOMIor]
            
 
-    def traiteNewMaillage(self,indiceIOR,NomMaillage):
-       GEOMIor = dict_CL.keys()[indiceIOR]
-       shape = salome.orb.string_to_object(GEOMIor)
+    def traiteNewMaillage(self,numero,indiceIOR,NomMaillage):
+       GEOMIor=dict_CL.keys()[numero]
+       GEOMShapeIor=self.correspondanceNomIORshape[str(indiceIOR)]
+       shape = salome.orb.string_to_object(GEOMShapeIor)
        if self.smesh == None :
            self.smesh = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
            self.smesh.SetCurrentStudy(salome.myStudy)
@@ -76,7 +86,8 @@ class CLinit:
            anAttr = attrName._narrow(SALOMEDS.AttributeName)
            Name = anAttr.Value()
            #_CS_cbo: ajout de la determination de la dimension de la geometrie
-           type = self.getShapeType(GEOMShape)
+           #type = self.getShapeType(GEOMShape)
+	   type = SMESH.NODE
            newMesh.CreateGroupFromGEOM(type,Name,GEOMShape)
        del dict_CL[GEOMIor]
 
@@ -91,8 +102,8 @@ class CLinit:
 # NodeorCell = 0 on traite des noeuds
 # NodeorCell = 1 on traite des mailles
 
-    def Possibles(self,numero):
-       GEOMIor = dict_CL.keys()[numero]
+    def Possibles(self,numero,GeomChoisie):
+       GEOMIor=self.correspondanceNomIORshape[str(GeomChoisie)]
        liste=[]
        if GEOMIor in self.Liste_maillages.keys():
         for MeshIor in self.Liste_maillages[GEOMIor]:
@@ -103,6 +114,26 @@ class CLinit:
 	   self.correspondanceNomIOR[Name] = MeshIor
            liste.append(Name)
        return liste
+
+
+    def MainShapes(self,numero):
+       GEOMIor = dict_CL.keys()[numero]
+       listeNoms=[]
+       for MainID in  self.Liste_geoms[GEOMIor]:
+           aSO = salome.myStudy.FindObjectID(MainID)
+	   if aSO==None:
+	      print "pb dans MainShapes"
+	      return listeNoms
+	   attrName  = aSO.FindAttribute("AttributeName")[1]
+	   anAttr = attrName._narrow(SALOMEDS.AttributeName)
+	   Name = anAttr.Value()
+	   listeNoms.append(Name)
+	   IORAttr = aSO.FindAttribute("AttributeIOR")[1]
+	   anAttr  = IORAttr._narrow(SALOMEDS.AttributeIOR)
+	   GEOMShapeIOR  = anAttr.Value()
+	   self.correspondanceNomIORshape[Name]=GEOMShapeIOR
+       return listeNoms
+
 
     def getShapeType(self,GEOMShape):
        """
@@ -139,8 +170,10 @@ class CLinit:
          self.smesh = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
 	 self.smesh.SetCurrentStudy(salome.myStudy)
        stringIOR=salome.orb.object_to_string(self.smesh)
+       print stringIOR
        SO_smesh=salome.myStudy.FindObjectIOR(stringIOR)
        if SO_smesh != None:
+         print salome.myStudy
          ChildIterator = salome.myStudy.NewChildIterator(SO_smesh)
 	 while ChildIterator.More() :
 	    aSObj = ChildIterator.Value()
@@ -165,6 +198,59 @@ class CLinit:
 		     self.Liste_maillages[GEOMShapeIOR].append(MeshIOR)
 		    else :
 		     self.Liste_maillages[GEOMShapeIOR]=[MeshIOR]
+
+    def get_geoms(self):
+       self.Liste_geoms={}
+       for GeomCLIOR in dict_CL.keys():
+          self.Liste_geoms[GeomCLIOR]=[]
+	  self.chercheMain(GeomCLIOR,GeomCLIOR)
+
+    def chercheMain(self,GEOMIor,GeomCLIOR):
+        print "debut chercheMain pour "
+	print GEOMIor
+	print GeomCLIOR
+
+
+        sobj = salome.myStudy.FindObjectIOR(GEOMIor)
+	if sobj == None :
+	   print "objet nul dans chercheMain"
+	   return
+
+	# On cherche les dépendances et
+	# on ajoute l objet lui-même à la liste
+        Listedep=salome.myStudy.FindDependances(sobj)
+	Listedep.append(sobj)
+
+        ListeAtraiter=[]
+	for sobj in Listedep :
+	   # tant que l objet est une reference
+	   # on cherche son pere
+	   current=sobj
+	   boo,iorso = sobj.FindAttribute("AttributeIOR")
+	   while ( boo==0 ) :
+	      current=current.GetFather()
+	      boo,iorso = current.FindAttribute("AttributeIOR")
+	   iorString = iorso.Value()
+           shapeobj=salome.orb.string_to_object(iorString)
+	   Shape=shapeobj._narrow(GEOM.GEOM_Object)
+	   if Shape != None :
+	      if self.geomcompID == None:
+	         self.geomcompID = current.GetFatherComponent().GetID()
+	      ListeAtraiter.append(current)
+
+	for sobj in ListeAtraiter:
+	   current=sobj
+	   while ( current.GetFather().GetID() != self.geomcompID):
+	      current=current.GetFather()
+	   MainID=current.GetID()
+	   if (MainID not in self.Liste_geoms[GeomCLIOR]):
+	      self.Liste_geoms[GeomCLIOR].append(MainID)
+	      Attr = current.FindAttribute("AttributeIOR")[1]
+	      if (Attr != None):
+	         MainIORAttr  = Attr._narrow(SALOMEDS.AttributeIOR)
+	         MainIor = MainIORAttr.Value()
+	         self.chercheMain(MainIor,GeomCLIOR)
+        print "fin chercheMain"
 
     def SetName(self,Entry, Name):
        SO = salome.myStudy.FindObjectID( Entry )
