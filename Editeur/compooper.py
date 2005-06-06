@@ -292,8 +292,13 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def nomme_sd(self,nom):
       """ Lance la méthode de nommage de la SD """
+      oldnom=""
+      if self.object.sd != None :
+         oldnom=self.object.sd.nom
       test,mess= self.object.nomme_sd(nom)
       if test:self.object.parent.reset_context()
+      if (test and self.appli.dict_reels.has_key(oldnom) ):
+              self.appli.dict_reels[nom]=self.appli.dict_reels[oldnom]
       return test,mess
 
   def is_reentrant(self):
