@@ -492,6 +492,8 @@ class JDC(I_OBJECT.OBJECT):
       """
       self.current_context={}
       self.index_etape_courante=0
+      for etape in self.etapes:
+          etape.reset_context()
 
    def del_sdprod(self,sd):
       """

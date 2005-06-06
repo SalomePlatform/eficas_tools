@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.21 2005/05/19 12:18:48 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.22 2005/06/01 15:18:16 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -230,15 +230,14 @@ class Node :
     def onValid(self):
         #print "onValid : l'item a changé de validité ",self.item,self.item.object,self.item.object.isvalid()
         self.update_node_valid()
-        self.update_label_texte()
-        self.update_texte()
+        self.update_node_label()
+        self.update_node_texte()
 
     def onAdd(self,objet):
         #print "onAdd : un objet a été ajouté aux fils de l'item ",self.item.object,objet
         self.expand_node()
         old_nodes=self.children
         self.update_nodes()
-        #print "onAdd:nodes",self.children
         self.redraw_children(old_nodes)
         self.force_select()
 
@@ -247,7 +246,6 @@ class Node :
         self.expand_node()
         old_nodes=self.children
         self.update_nodes()
-        #print "onSupp:nodes",self.children
         self.redraw_children(old_nodes)
         self.force_select()
 
@@ -257,8 +255,6 @@ class Node :
         inodes=iter(self.children)
         sublist=self.item._GetSubList()
         iliste=iter(sublist)
-        #print "update_nodes",self.children
-        #print "update_nodes",sublist
 
         while(1):
            old_item=item=None
@@ -405,9 +401,7 @@ class Node :
         tous les autres
         """
         #print "SELECT",self
-        #traceback.print_stack()
         if not self.children : self.build_children()
-        #if self.selected and self.tree.node_selected is self: return
         self.tree.deselectall()
         self.selected = 1
         self.tree.node_selected = self
@@ -700,25 +694,34 @@ class Node :
                     child.update_icone()
 
     def update_label_texte(self):
-        # nom,fonte et couleur de l'objet du noeud à afficher
-        labeltext,fonte,couleur = self.item.GetLabelText()
-        if labeltext    == ''   : labeltext = '   '
-        if fonte        == None : fonte = Fonte_Standard
-        if couleur      == None : couleur = 'black'
-        self.label.configure(text=labeltext,font=fonte)
+        """ Met a jour le label du noeud et celui de tous ses fils ouverts """
+        self.update_node_label()
         if self.state == 'expanded' :
             for child in self.children:
                 if child.displayed != 0 : child.update_label_texte()
 
     def update_texte(self):
         """ Met à jour les noms des SD et valeurs des mots-clés """
-        text = self.item.GetText()
-        if text == None : text = ''
-        self.text.configure(text=text)
+        self.update_node_texte()
         if self.state == 'expanded' :
             for child in self.children:
                 if child.displayed != 0 : child.update_texte()
         
+    def update_node_label(self):
+        """ Met a jour le label du noeud """
+        # nom,fonte et couleur de l'objet du noeud à afficher
+        labeltext,fonte,couleur = self.item.GetLabelText()
+        if labeltext    == ''   : labeltext = '   '
+        if fonte        == None : fonte = Fonte_Standard
+        if couleur      == None : couleur = 'black'
+        self.label.configure(text=labeltext,font=fonte)
+
+    def update_node_texte(self):
+        """ Met à jour les noms des SD et valeurs des mots-clés """
+        text = self.item.GetText()
+        if text == None : text = ''
+        self.text.configure(text=text)
+
     def update_node_valid(self) :
         """Cette methode remet a jour la validite du noeud (icone)
            Elle appelle isvalid
@@ -1022,7 +1025,6 @@ class Node :
         """
         index = self.parent.children.index(self) - 1 
         if index < 0 : index =0
-        #print index
 
         ret=self.parent.item.suppitem(self.item)
         if ret == 0:return
@@ -1081,7 +1083,6 @@ class Node :
 	Réalise la copie de l'objet passé en argument qui est nécessairement
 	une commande
 	"""
-        raise "OBSOLETE"
 	child = self.append_brother(objet_a_copier,retour='oui')
 	return child
 

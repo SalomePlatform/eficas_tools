@@ -820,6 +820,8 @@ class ListeChoix :
            if self.selection != None :
               self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
               self.selection = (mot,label,self.selection[2])
+           index = self.MCbox.index(labelsuivant)
+           self.MCbox.see(index)
            self.highlightitem(labelsuivant)
            self.arg_selected=motsuivant
            labelsuivant.focus_set()

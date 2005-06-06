@@ -265,5 +265,10 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     def control_sdprods(self,d):
       """sans objet pour les commandes commentarisées"""
       pass
+
     def close(self):
       pass
+
+    def reset_context(self):
+      pass
+

@@ -1,7 +1,10 @@
 Les macros INCLUDE, INCLUDE_MATERIAU et POURSUITE ont un fonctionnement spécial.
-Les concepts produits par ces macros sont obtenus par interpretation d'un fichier
-de commandes. Il n'est pas possible d'avoir une mise à jour complètement
-automatique d'un jeu de commandes qui contient une de ces macros.
+Les concepts produits par ces macros sont obtenus par une interpretation séparée
+du fichier de commandes correspondant. Les concepts produits sont ensuite inclus
+dans le contexte du jeu de commandes principal.
+La mise à jour du jeu de commandes et de ses includes et poursuites
+est presque complètement automatique. Cependant dans quelques cas particuliers
+le mécanisme de mise à jour peut être pris en défaut.
 
 Les principes retenus sont les suivants :
 
@@ -13,9 +16,7 @@ la macro -> menu View) le contenu de ces types de macros. Cette visualisation
 n'est pas mise à jour en cas de reactualisation de cette macro. Le bouton (icone
 loupe) permet de visualiser le source du fichier inclus.
 
-3- Il est possible de reactualiser la validite du jeu de commandes en demandant 
-un rapport de validation. Ceci declenche une reevaluation systematique des 
-fichiers inclus. Les fichiers inclus sont mémorisés en fonction de leur UNITE
+3- Les fichiers inclus sont mémorisés en fonction de leur UNITE
 pour les INCLUDE, du nom de matériau pour les INCLUDE_MATERIAU et comme poursuite
 pour une POURSUITE (il n'est pas possible d'avoir plus d'une POURSUITE par fichier).
 ATTENTION : comme on s'appuie sur l'UNITE pour memoriser les fichers inclus il est
@@ -23,13 +24,18 @@ conseillé d'utiliser des numéros d'UNITE différents sinon la reactualisation ser
 faite avec le meme fichier pour des INCLUDE différents.
 
 4- Pour changer les fichiers inclus, il faut passer par l'onglet FICHIER, modifier
-le nom du fichier et appuyer sur le bouton Valider. Tous les fichiers inclus par
-ce premier fichier seront systématiquement redemandés à l'utilisateur.
+le nom du fichier et appuyer sur le bouton Valider. Il est possible en passant par
+cet onglet de forcer la prise en compte d'un fichier include partiellement valide
+ce qui n'est pas possible lors de l'import initial.
 
 5- Le nom d'un fichier INCLUDE_MATERIAU est construit à partir des valeurs des mots-clés
 de la commande, il n'est donc jamais demandé explicitement à l'utilisateur.
 
-6- En cas de modification importante des fichiers inclus il est recommandé de demander
-la revalidation du jeu de commandes avec le menu Jeu de commandes -> rapport de validation.
-La remise à jour de la validité peut entrainer des resultats surprenants dans des cas particuliers
-d'INCLUDE enchainés contenant des commandes DETRUIRE.
+6- Il est possible d'editer un fichier include ou poursuite. Pour cela, il suffit d'utiliser
+l'entrée "Edit" du menu contextuel de l'étape en question (bouton droit de la souris).
+Le fichier include ou poursuite en cours d'édition apparaitra dans un onglet distinct.
+Les modifications dans un fichier include ou poursuite sont normalement propagées au fichier
+principal et aux autres includes et poursuites. Il est cependant possible que quelques cas
+tordus ne soient pas correctement traités. Dans le doute, une demande de rapport de validation
+peut permettre de réactualiser l'état des différents fichiers.
+

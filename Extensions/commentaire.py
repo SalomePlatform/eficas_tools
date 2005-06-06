@@ -193,3 +193,7 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
   def close(self):
       pass
 
+  def reset_context(self):
+      pass
+
+

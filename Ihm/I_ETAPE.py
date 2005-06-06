@@ -333,6 +333,9 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       for child in self.mc_liste :
         child.replace_concept(old_sd,sd)
 
+   def reset_context(self):
+      pass
+
    def get_noms_sd_oper_reentrant(self):
       """ 
           Retourne la liste des noms de concepts utilisés à l'intérieur de la commande

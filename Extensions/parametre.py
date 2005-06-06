@@ -472,6 +472,8 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
   def close(self):
       pass
 
+  def reset_context(self):
+      pass
 
 class COMBI_PARAMETRE :
   def __init__(self,chainevaleur,valeur):

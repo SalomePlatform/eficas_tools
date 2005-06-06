@@ -285,10 +285,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       self.g_context={}
 
   def close(self):
-      #print "MACRO_ETAPE.close",self
       if hasattr(self,"jdc_aux") and self.jdc_aux:
          # La macro a un jdc auxiliaire inclus. On demande sa fermeture
          self.jdc_aux.close()
+
+  def reset_context(self):
+      if hasattr(self,"jdc_aux") and self.jdc_aux:
+         # La macro a un jdc auxiliaire inclus. On demande la reinitialisation du contexte
+         self.jdc_aux.reset_context()
 
   def delete_concept(self,sd):
       """
