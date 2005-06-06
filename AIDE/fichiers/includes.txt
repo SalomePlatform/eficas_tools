@@ -12,8 +12,7 @@ Les principes retenus sont les suivants :
 commandes de ce fichier sont valides
 
 2- Il est possible de visualiser (bouton droit de la souris sur l'icone de
-la macro -> menu View) le contenu de ces types de macros. Cette visualisation
-n'est pas mise à jour en cas de reactualisation de cette macro. Le bouton (icone
+la macro -> menu View) le contenu de ces types de macros. Le bouton (icone
 loupe) permet de visualiser le source du fichier inclus.
 
 3- Les fichiers inclus sont mémorisés en fonction de leur UNITE
@@ -26,7 +25,9 @@ faite avec le meme fichier pour des INCLUDE différents.
 4- Pour changer les fichiers inclus, il faut passer par l'onglet FICHIER, modifier
 le nom du fichier et appuyer sur le bouton Valider. Il est possible en passant par
 cet onglet de forcer la prise en compte d'un fichier include partiellement valide
-ce qui n'est pas possible lors de l'import initial.
+ce qui n'est pas possible lors de l'import initial. Pour changer un fichier INCLUDE
+contenu dans un INCLUDE ou dans une POURSUITE, il faut éditer l'INCLUDE ou la POURSUITE
+englobante (voir 6.) et passer par l'onglet FICHIER.
 
 5- Le nom d'un fichier INCLUDE_MATERIAU est construit à partir des valeurs des mots-clés
 de la commande, il n'est donc jamais demandé explicitement à l'utilisateur.
