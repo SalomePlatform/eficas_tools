@@ -43,6 +43,7 @@ def main():
    copyfiles('../Misc',os.path.join(path_distrib,'Misc'),['*.py'])
    copyfiles('../Accas',os.path.join(path_distrib,'Accas'),['*.py'])
    copyfiles('Cata/Macro',os.path.join(path_distrib,'Aster','Cata','Macro'),['*.py'])
+   copyfiles('Cata/Utilitai',os.path.join(path_distrib,'Aster','Cata','Utilitai'),['*.py'])
    copyfiles('Cata/pre74',os.path.join(path_distrib,'Aster','Cata','pre74'),['*.py'])
    copyfiles('Cata/cataSTA5',os.path.join(path_distrib,'Aster','Cata','cataSTA5'),['*.py'])
    copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
@@ -109,7 +110,7 @@ def copyfiles(dir_origin,dir_cible,listfiles):
    if not os.path.isdir(dir_cible):make_dir(dir_cible)
    for glob_files in listfiles:
       for file in glob.glob(os.path.join(dir_origin,glob_files)):
-         shutil.copy(file,dir_cible)
+         if os.path.isfile(file):shutil.copy(file,dir_cible)
 
 def maketarball(dir_trav,dir_cible,nom_tar):
    prev=os.getcwd()
