@@ -42,14 +42,20 @@ def main():
    copyfiles('../Extensions',os.path.join(path_distrib,'Extensions'),['*.py'])
    copyfiles('../Misc',os.path.join(path_distrib,'Misc'),['*.py'])
    copyfiles('../Accas',os.path.join(path_distrib,'Accas'),['*.py'])
+# Packages globaux (pour toutes les versions sauf surcharge)
+   copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster','Cata'),['*.py', ])
    copyfiles('Cata/Macro',os.path.join(path_distrib,'Aster','Cata','Macro'),['*.py'])
    copyfiles('Cata/Utilitai',os.path.join(path_distrib,'Aster','Cata','Utilitai'),['*.py'])
    copyfiles('Cata/pre74',os.path.join(path_distrib,'Aster','Cata','pre74'),['*.py'])
+# version 5
    copyfiles('Cata/cataSTA5',os.path.join(path_distrib,'Aster','Cata','cataSTA5'),['*.py'])
+#version 6
    copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
    copyfiles('Cata/cataSTA6/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA6','Macro'),['*.py'])
+#version 7.3
    copyfiles('Cata/cataSTA73',os.path.join(path_distrib,'Aster','Cata','cataSTA73'),['*.py'])
    copyfiles('Cata/cataSTA73/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA73','Macro'),['*.py'])
+#version 7.4
    copyfiles('Cata/cataSTA74',os.path.join(path_distrib,'Aster','Cata','cataSTA74'),['*.py'])
    copyfiles('Cata/cataSTA74/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA74','Macro'),['*.py'])
    copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
@@ -68,11 +74,12 @@ def main():
 
    copyfiles(os.path.join(path_Noyau,'Noyau'),os.path.join(path_distrib,'Noyau'),['*.py'])
    copyfiles(os.path.join(path_Noyau,'Validation'),os.path.join(path_distrib,'Validation'),['*.py'])
-   copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster','Cata'),['*.py',
-                                                                                       ])
 
    copyfiles('../Tools',os.path.join(path_distrib,'Tools'),['*.py'])
    copyfiles('../Tools/foztools',os.path.join(path_distrib,'Tools','foztools'),['*.py'])
+   copyfiles('../Pmw',os.path.join(path_distrib,'Pmw'),['*.py'])
+   copyfiles('../Pmw/Pmw_1_2',os.path.join(path_distrib,'Pmw','Pmw_1_2'),['*.py'])
+   copyfiles('../Pmw/Pmw_1_2/lib',os.path.join(path_distrib,'Pmw','Pmw_1_2','lib'),['*.py','Pmw.def'])
    
    tarball= maketarball('dist',nom_distrib,nom_distrib)
    try:

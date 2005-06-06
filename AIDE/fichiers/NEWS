@@ -1,3 +1,8 @@
+Version 1.8 (6/2005):
+   Mise en synchronisation avec la version 8.1 de Code_Aster de mai 2005.
+   Les includes et poursuites peuvent etre édités. Introduction de la notation
+   scientifique pour les flottants.
+
 Version 1.7 (12/2004):
    Mise en synchronosation avec la version STA7.4 de Code_Aster de décembre 2004
    Les formules changent et deviennent des formules au sens python.
