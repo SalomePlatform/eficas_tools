@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 #@ MODIF reca_algo Macro  DATE 27/05/2003   AUTEUR PABHHHH N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 #@ MODIF reca_interp Macro  DATE 21/11/2003   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

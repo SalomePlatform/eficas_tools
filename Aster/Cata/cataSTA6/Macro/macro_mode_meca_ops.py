@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 #@ MODIF macro_mode_meca_ops Macro  DATE 11/09/2002   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

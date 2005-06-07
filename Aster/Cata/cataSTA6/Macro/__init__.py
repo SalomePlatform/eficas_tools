@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 #@ MODIF __init__ Macro  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
