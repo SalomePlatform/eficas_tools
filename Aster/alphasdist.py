@@ -44,7 +44,6 @@ def main():
    copyfiles('../Accas',os.path.join(path_distrib,'Accas'),['*.py'])
 # Packages globaux (pour toutes les versions sauf surcharge)
    copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster','Cata'),['*.py', ])
-   copyfiles('Cata/Macro',os.path.join(path_distrib,'Aster','Cata','Macro'),['*.py'])
    copyfiles('Cata/Utilitai',os.path.join(path_distrib,'Aster','Cata','Utilitai'),['*.py'])
    copyfiles('Cata/pre74',os.path.join(path_distrib,'Aster','Cata','pre74'),['*.py'])
 # version 5
@@ -58,6 +57,10 @@ def main():
 #version 7.4
    copyfiles('Cata/cataSTA74',os.path.join(path_distrib,'Aster','Cata','cataSTA74'),['*.py'])
    copyfiles('Cata/cataSTA74/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA74','Macro'),['*.py'])
+#version 8 
+   copyfiles('Cata/cataSTA8',os.path.join(path_distrib,'Aster','Cata','cataSTA8'),['*.py'])
+   copyfiles('Cata/cataSTA8/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA8','Macro'),['*.py'])
+
    copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
    copyfiles('../AIDE/fichiers',os.path.join(path_distrib,'AIDE','fichiers'),['*'])
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',

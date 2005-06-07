@@ -51,6 +51,7 @@ def main():
                                                             'editeur.ini',
                                                             'eficas_aster.py',
                                                            ])
+   copyfiles('Cata/Utilitai',os.path.join(path_distrib,'Aster','Cata','Utilitai'),['*.py'])
    copyfiles('Cata/pre74',os.path.join(path_distrib,'Aster','Cata','pre74'),['*.py'])
    copyfiles('Cata/cataSTA5',os.path.join(path_distrib,'Aster','Cata','cataSTA5'),['*.py'])
    copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
@@ -58,25 +59,26 @@ def main():
    copyfiles('Cata/cataSTA73/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA73','Macro'),['*.py'])
    copyfiles('Cata/cataSTA74',os.path.join(path_distrib,'Aster','Cata','cataSTA74'),['*.py'])
    copyfiles('Cata/cataSTA74/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA74','Macro'),['*.py'])
-
-
+   copyfiles('Cata/cataSTA8',os.path.join(path_distrib,'Aster','Cata','cataSTA8'),['*.py'])
 
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
    copyfiles('../convert/Parserv5',os.path.join(path_distrib,'convert','Parserv5'),['*.py'])
-
    copyfiles('../generator',os.path.join(path_distrib,'generator'),['*.py'])
-
    copyfiles('../Editeur/icons',os.path.join(path_distrib,'Editeur','icons'),['*.gif'])
 
    copyfiles(os.path.join(path_Noyau,'Noyau'),os.path.join(path_distrib,'Noyau'),['*.py'])
    copyfiles(os.path.join(path_Noyau,'Validation'),os.path.join(path_distrib,'Validation'),['*.py'])
-   copyfiles(os.path.join(path_Noyau,'Cata'),os.path.join(path_distrib,'Aster','Cata'),['*.py',
-                                                                                       ])
-   copyfiles(os.path.join(path_Noyau,'Macro'),os.path.join(path_distrib,'Aster','Cata','Macro'),['*.py'])
    copyfiles(os.path.join(path_Noyau,'Accas'),os.path.join(path_distrib,'Aster'),['properties.py'])
+   copyfiles(os.path.join(path_Noyau,'Cata'),os.path.join(path_distrib,'Aster','Cata'),['*.py',])
+   copyfiles(os.path.join(path_Noyau,'Macro'),os.path.join(path_distrib,'Aster','Cata','cataSTA8','Macro'),['*.py'])
+   os.system("mv "+path_distrib+"Aster/Cata/cata.py "+path_distrib+"/Aster/Cata/cataSTA8")
 
    copyfiles('../Tools',os.path.join(path_distrib,'Tools'),['*.py'])
    copyfiles('../Tools/foztools',os.path.join(path_distrib,'Tools','foztools'),['*.py'])
+   copyfiles('../Pmw',os.path.join(path_distrib,'Pmw'),['*.py'])
+   copyfiles('../Pmw/Pmw_1_2',os.path.join(path_distrib,'Pmw','Pmw_1_2'),['*.py'])
+   copyfiles('../Pmw/Pmw_1_2/lib',os.path.join(path_distrib,'Pmw','Pmw_1_2','lib'),['*.py','Pmw.def'])
+
    
    tarball= maketarball('dist',nom_distrib,nom_distrib)
    try:
@@ -115,6 +117,7 @@ def copyfiles(dir_origin,dir_cible,listfiles):
    for glob_files in listfiles:
       for file in glob.glob(os.path.join(dir_origin,glob_files)):
          shutil.copy(file,dir_cible)
+
 
 def maketarball(dir_trav,dir_cible,nom_tar):
    prev=os.getcwd()
