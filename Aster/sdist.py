@@ -55,11 +55,13 @@ def main():
    copyfiles('Cata/pre74',os.path.join(path_distrib,'Aster','Cata','pre74'),['*.py'])
    copyfiles('Cata/cataSTA5',os.path.join(path_distrib,'Aster','Cata','cataSTA5'),['*.py'])
    copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
+   copyfiles('Cata/cataSTA6/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA6','Macro'),['*.py'])
    copyfiles('Cata/cataSTA73',os.path.join(path_distrib,'Aster','Cata','cataSTA73'),['*.py'])
    copyfiles('Cata/cataSTA73/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA73','Macro'),['*.py'])
    copyfiles('Cata/cataSTA74',os.path.join(path_distrib,'Aster','Cata','cataSTA74'),['*.py'])
    copyfiles('Cata/cataSTA74/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA74','Macro'),['*.py'])
    copyfiles('Cata/cataSTA8',os.path.join(path_distrib,'Aster','Cata','cataSTA8'),['*.py'])
+   copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster'),['aster.py',])
 
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
    copyfiles('../convert/Parserv5',os.path.join(path_distrib,'convert','Parserv5'),['*.py'])

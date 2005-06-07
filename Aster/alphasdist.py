@@ -68,6 +68,7 @@ def main():
                                                             'properties.py',
                                                             'eficas_aster.py',
                                                            ])
+   copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster'),['aster.py',])
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
    copyfiles('../convert/Parserv5',os.path.join(path_distrib,'convert','Parserv5'),['*.py'])
 
