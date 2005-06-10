@@ -92,6 +92,10 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
   def GetText(self):
       return  "    "
 
+  def GetLabelText(self):
+      # None --> fonte et couleur par défaut
+      return self.object.nom,None,None
+
   def get_jdc(self):
     """
     Retourne l'objet pointé par self

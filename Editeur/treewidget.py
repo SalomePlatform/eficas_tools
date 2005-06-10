@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.22 2005/06/01 15:18:16 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.23 2005/06/06 09:33:06 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -755,6 +755,7 @@ class Node :
         self.racine.trace_ligne()
         self.racine.update_icone()
         self.racine.update_texte()
+        self.racine.update_label_texte()
         self.tree.resizescrollregion()
 
     def efface_node(self):

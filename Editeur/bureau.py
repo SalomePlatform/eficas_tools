@@ -138,9 +138,29 @@ class BUREAU:
       self.JDCName = self.JDC.nom
       #print "selectJDC",numero_jdc,self.JDCDisplay_courant,self.JDCName
 
-   def newJDC(self,event=None):
+   def newJDC_include(self,event=None):
       """
           Initialise un nouveau JDC vierge
+      """
+      import Extensions.jdc_include
+      JdC_aux=Extensions.jdc_include.JdC_include
+
+      self.appli.statusbar.reset_affichage_infos()
+
+      CONTEXT.unset_current_step()
+      J=JdC_aux(procedure="",appli=self.appli,
+                         cata=self.cata,cata_ord_dico=self.cata_ordonne_dico,
+                         rep_mat=self.appli.CONFIGURATION.rep_mat,
+                         )
+      J.analyse()
+      self.JDCName=J.nom
+      self.fileName=None
+      self.ShowJDC(J,self.JDCName)
+      self.appli.toolbar.active_boutons()
+
+   def newJDC(self,event=None):
+      """
+          Initialise un nouveau JDC include vierge
       """
       self.appli.statusbar.reset_affichage_infos()
 
@@ -477,6 +497,7 @@ class BUREAU:
                   self.JDCDisplay_courant.fichier = sauvegarde
                   self.JDCName = self.JDC.nom = stripPath(sauvegarde)
                   self.changeNomPage()
+                  CONNECTOR.Emit(self.JDC,"valid")
               return 1
       else :
           return 0
