@@ -25,6 +25,7 @@ import os,string
 
 # Modules Eficas
 from widgets import askopenfilename
+import panels
 
 # l'option affichage_commandes peut prendre les valeurs "groupes" ou "alphabetic"
 affichage_commandes="alphabetic"
@@ -49,10 +50,22 @@ class OPTIONS:
    def affichage_grp(self):
       global affichage_commandes
       affichage_commandes="groupes"
+      if hasattr(panels,'panneauCommande'):
+         panel=panels.panneauCommande
+	 parent=panel.parent
+	 if parent != None :
+	    parent.create_panel(parent.node_selected)
+	    parent.panel_courant.nb.selectpage("Commande")
 
    def affichage_alpha(self):
       global affichage_commandes
       affichage_commandes="alphabetic"
+      if hasattr(panels,'panneauCommande'):
+         panel=panels.panneauCommande
+	 parent=panel.parent
+	 if parent != None :
+	    parent.create_panel(parent.node_selected)
+	    parent.panel_courant.nb.selectpage("Commande")
 
    def change_fond(self):
       from tkColorChooser import askcolor

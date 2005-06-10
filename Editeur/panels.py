@@ -33,6 +33,7 @@ import options
 
 SEPARATEUR = '-'*30
 
+
 class Panel(Frame) :
   """
   Classe servant de classe mère à toutes celles représentant les
@@ -375,6 +376,8 @@ class OngletPanel(Panel) :
       bulle_aide="""Double-cliquez sur la commande que vous voulez ajouter au jeu de commandes"""
       Liste.MCbox.bind("<Button-3>", lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
       Liste.MCbox.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
+      global panneauCommande
+      panneauCommande=self
 
   def makeJDCPage(self,page):
       """
