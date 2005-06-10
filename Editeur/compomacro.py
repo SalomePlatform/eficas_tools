@@ -38,7 +38,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.20 2005/05/24 10:34:16 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.21 2005/06/01 15:18:15 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -201,7 +201,7 @@ class INCLUDETreeItemBase(MACROTreeItem):
     #print "makeEdit",self.object,self.object.nom
     #print "makeEdit",self.object.jdc_aux,self.object.jdc_aux.nom
     #print "makeEdit",self.object.jdc_aux.context_ini
-    if self.object.jdc_aux is None:
+    if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
          showerror("Include vide","L'include doit etre correctement initialisé avant d'etre édité")
          return
     self.parent_node=node
@@ -217,7 +217,7 @@ class INCLUDETreeItemBase(MACROTreeItem):
     self.appli.bureau.closeJDCDISPLAY(self.myjdc)
 
   def makeView(self,appli,node):
-    if self.object.jdc_aux is None:
+    if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
          showerror("Include vide","L'include doit etre correctement initialisé avant d'etre édité")
          return
     nom=self.object.nom
