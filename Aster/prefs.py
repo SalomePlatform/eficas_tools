@@ -63,6 +63,7 @@ appli_composants=['readercata','bureau',
 menu_defs={ 'bureau': [
               ('Fichier',[
                            ('Nouveau','newJDC','<Control-n>'),
+                           ('Nouvel INCLUDE','newJDC_include'),
                            ('Ouvrir','openJDC','<Control-o>'),
                            ('Enregistrer','saveJDC','<Control-e>'),
                            ('Enregistrer sous','saveasJDC','<Control-s>'),

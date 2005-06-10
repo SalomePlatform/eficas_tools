@@ -148,8 +148,15 @@ class BUREAU:
       self.appli.statusbar.reset_affichage_infos()
 
       CONTEXT.unset_current_step()
+      jaux=self.cata[0].JdC(procedure="",appli=self.appli,
+                         cata=self.cata,cata_ord_dico=self.cata_ordonne_dico,
+                         rep_mat=self.appli.CONFIGURATION.rep_mat,
+                         )
+      jaux.analyse()
+
       J=JdC_aux(procedure="",appli=self.appli,
                          cata=self.cata,cata_ord_dico=self.cata_ordonne_dico,
+                         jdc_pere=jaux,
                          rep_mat=self.appli.CONFIGURATION.rep_mat,
                          )
       J.analyse()

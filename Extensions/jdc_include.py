@@ -131,12 +131,16 @@ class JDC_POURSUITE(JDC):
       """
           Retourne la liste des commandes du catalogue
       """
+      if self.jdc_pere is None:
+         return JDC.get_liste_cmd(self)
       return self.jdc_pere.get_liste_cmd()
 
    def get_groups(self):
       """
           Retourne la liste des commandes du catalogue par groupes
       """
+      if self.jdc_pere is None:
+         return JDC.get_groups(self)
       return self.jdc_pere.get_groups()
 
    def init_modif(self):
@@ -151,7 +155,8 @@ class JDC_POURSUITE(JDC):
       """
       #print "jdc_include.init_modif",self,self.etape_include
       self.state = 'modified'
-      self.etape_include.init_modif()
+      if self.etape_include:
+         self.etape_include.init_modif()
 
    def fin_modif(self):
       """
@@ -160,7 +165,9 @@ class JDC_POURSUITE(JDC):
           ex : INCLUDE et POURSUITE
       """
       #print "jdc_include.fin_modif",self,self.etape_include
-
+      if not self.etape_include:
+         CONNECTOR.Emit(self,"valid")
+         return
       # Mise a jour du contexte en fin d'include
       # On suppose que toutes les modifications sont valides
       # On recupere le contexte final dans j_context
@@ -195,7 +202,8 @@ class JDC_POURSUITE(JDC):
          comme DETRUIRE ou les macros
          Si etape == None, on retourne le contexte en fin de JDC
       """
-      self.context_ini = self.etape_include.parent.get_contexte_avant(self.etape_include).copy()
+      if self.etape_include:
+         self.context_ini = self.etape_include.parent.get_contexte_avant(self.etape_include).copy()
       return JDC.get_contexte_avant(self,etape)
 
    #def get_sd_avant_etape(self,nom_sd,etape):
@@ -217,8 +225,9 @@ class JDC_POURSUITE(JDC):
            définie apres etape
            Si avec vaut 'non' exclut etape de la recherche
       """
-      sd=self.etape_include.parent.get_sd_apres_etape(nom_sd,self.etape_include,'non')
-      if sd:return sd
+      if self.etape_include:
+         sd=self.etape_include.parent.get_sd_apres_etape(nom_sd,self.etape_include,'non')
+         if sd:return sd
       return JDC.get_sd_apres_etape(self,nom_sd,etape,avec)
 
    def get_sd_apres_etape_avec_detruire(self,nom_sd,sd,etape,avec='non'):
@@ -250,7 +259,8 @@ class JDC_POURSUITE(JDC):
       # Nettoyage des etapes de l'include
       JDC.delete_concept(self,sd)
       # Nettoyage des etapes du parent
-      self.etape_include.parent.delete_concept_after_etape(self.etape_include,sd)
+      if self.etape_include:
+         self.etape_include.parent.delete_concept_after_etape(self.etape_include,sd)
 
    def delete_concept_after_etape(self,etape,sd):
       """
@@ -260,7 +270,8 @@ class JDC_POURSUITE(JDC):
       # Nettoyage des etapes de l'include
       JDC.delete_concept_after_etape(self,etape,sd)
       # Nettoyage des etapes du parent
-      self.etape_include.parent.delete_concept_after_etape(self.etape_include,sd)
+      if self.etape_include:
+         self.etape_include.parent.delete_concept_after_etape(self.etape_include,sd)
 
    def replace_concept_after_etape(self,etape,old_sd,sd):
       """
@@ -270,9 +281,18 @@ class JDC_POURSUITE(JDC):
       # Nettoyage des etapes de l'include
       JDC.replace_concept_after_etape(self,etape,old_sd,sd)
       # Nettoyage des etapes du parent
-      self.etape_include.parent.replace_concept_after_etape(self.etape_include,old_sd,sd)
+      if self.etape_include:
+         self.etape_include.parent.replace_concept_after_etape(self.etape_include,old_sd,sd)
 
 class JDC_INCLUDE(JDC_POURSUITE):
+   def get_liste_cmd(self):
+      """
+          Retourne la liste des commandes du catalogue
+      """
+      if self.jdc_pere is None:
+         return JDC.get_liste_cmd(self)
+      return [e for e in self.jdc_pere.get_liste_cmd() if e not in ("DEBUT","POURSUITE","FIN") ]
+
    def active_etapes(self):
       for e in self.etapes:
          e.active()
