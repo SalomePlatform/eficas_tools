@@ -85,6 +85,8 @@ def save_in_file(file,text):
       retourne 1 si OK 0 sinon
   """
   try :
+      import string
+      file=string.split(file,"/")[-1]
       f=open(file,'w')
       f.write(text)
       f.close()
