@@ -70,12 +70,17 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
                                          listbox_height = 6,
                                          selectioncommand=self.select_valeur_from_list,
                                          dblclickcommand=lambda s=self,c=self.valid_valeur : s.choose_valeur_from_list(c))
-      self.listbox.place(relx=0.5,rely=0.3,relheight=0.4,anchor='center')
+      if liste_noms_sd != [] :
+         self.listbox.place(relx=0.5,rely=0.3,relheight=0.4,anchor='center')
+         self.b_co = Pmw.OptionMenu(self.frame_valeur,labelpos='w',label_text = "Nouveau concept : ", items = ('NON','OUI'),menubutton_width=10)
+      else :
+         self.b_co = Pmw.OptionMenu(self.frame_valeur,labelpos='w',label_text = "Nouveau concept : ", items = ('OUI','OUI'),menubutton_width=10)
       # affichage du bouton 'Nouveau concept'
-      self.b_co = Pmw.OptionMenu(self.frame_valeur,labelpos='w',label_text = "Nouveau concept : ",
-                                 items = ('NON','OUI'),menubutton_width=10)
       self.b_co.configure(command = lambda e,s=self : s.ask_new_concept())
-      self.b_co.place(relx=0.05,rely=0.6,anchor='w')
+      if liste_noms_sd != [] :
+         self.b_co.place(relx=0.05,rely=0.6,anchor='w')
+      else :
+         self.b_co.place(relx=0.05,rely=0.3,anchor='w')
       self.label_co = Label(self.frame_valeur,text='Nom du nouveau concept :')
       self.entry_co = Entry(self.frame_valeur)
       self.entry_co.bind('<Return>',self.valid_nom_concept_co)
@@ -91,6 +96,8 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       self.aide.place(relx=0.5,rely=0.85,anchor='n')
       # affichage de la valeur courante
       self.display_valeur()
+      if liste_noms_sd == [] :
+          self.b_co.invoke('OUI')
       
   def get_bulle_aide(self):
       """

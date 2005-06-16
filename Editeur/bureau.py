@@ -78,6 +78,7 @@ class BUREAU:
    button_defs  =      (('New24',"newJDC","Création d'un nouveau fichier",'always'),
                         ('Open24',"openJDC","Ouverture d'un fichier existant",'always'),
                         ('Save24',"saveJDC","Sauvegarde du fichier courant",'always'),
+			('Fermer24',"closeJDC","Fermeture du fichier courant",'always'),
                         ('Zoom24',"visuJDC","Visualisation du fichier de commandes",'always'),
                         None,
                         ('Copy24',"copy","Copie l'objet courant",'jdc'),

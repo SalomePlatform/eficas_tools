@@ -263,7 +263,7 @@ class APPLI:
                if radio == None:radio=number_item
             else:
                command=getattr(appli_composant,method)
-               menu.add_command(label=label,command=command)
+               menu.add_command(label=label+" "+raccourci,command=command)
                if raccourci != "" :
                   self.top.bind(raccourci,command)
       # Si au moins un radiobouton existe on invoke le premier
