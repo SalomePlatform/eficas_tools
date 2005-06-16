@@ -112,6 +112,10 @@ class MCList:
   def liste_mc_presents(self):
     return []
 
+  def update_concept(self,sd):
+    for child in self.data :
+        child.update_concept(sd)
+
   def delete_concept(self,sd):
     """ 
         Inputs :

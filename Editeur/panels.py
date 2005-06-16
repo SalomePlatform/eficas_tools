@@ -56,6 +56,9 @@ class Panel(Frame) :
       """ appele a la destruction du panel """
       #print "PANEL DETRUIT"
 
+  def update_panel(self):
+      """Methode appele pour demander une mise a jour du panneau"""
+
   def destroy(self):
       Frame.destroy(self)
       self.panneau=None

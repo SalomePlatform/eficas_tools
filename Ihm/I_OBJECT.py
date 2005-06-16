@@ -137,3 +137,5 @@ class OBJECT:
      except:
         return ''
 
+  def update_concept(self,sd):
+     pass

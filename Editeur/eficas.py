@@ -72,7 +72,7 @@ class EFICAS(appli.APPLI):
         self._ulfile.setentry('')
         self.dialog.deactivate(result)
         self.ulfile = None
-        self.text=None
+        self.text=""
 
   def get_file(self,unite=None,fic_origine = ''):
       """ 

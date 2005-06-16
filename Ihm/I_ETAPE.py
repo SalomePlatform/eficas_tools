@@ -83,12 +83,14 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           ex : INCLUDE et POURSUITE
       """
       #print "fin_modif",self,self.parent
-      #if hasattr(self,'jdc_aux'):print "fin_modif",self.jdc_aux.context_ini
-      if self.isvalid() :
-         #if hasattr(self,'jdc_aux'):print "fin_modif",self.jdc_aux.context_ini
-         d=self.parent.get_contexte_apres(self)
-         #print d
-      #if hasattr(self,'jdc_aux'):print "fin_modif",self.jdc_aux.context_ini
+      if self.nom == "DETRUIRE":
+         #Il n'est pas conseillé de mettre des traitements dans fin_modif. Ceci est une
+         # exception qu'il faut supprimer à terme.
+         #une commande DETRUIRE a été modifiée. Il faut verifier les commandes
+         #suivantes
+         #ATTENTION: aux eventuelles recursions
+         self.parent.control_context_apres(self)
+
       CONNECTOR.Emit(self,"valid")
       if self.parent:
         self.parent.fin_modif()
@@ -153,6 +155,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       # mais est utilisé en mode non réentrant
       #
       if self.sd == None :
+          #Pas de concept produit preexistant
           if self.parent.get_sd_autour_etape(nom,self):
             # Un concept de ce nom existe dans le voisinage de l'etape courante
             # On retablit l'ancien concept reentrant s'il existait
@@ -166,14 +169,16 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             # Il est créé sans nom mais enregistré dans la liste des concepts existants
             try:
                self.get_sd_prod()
-               # Il suffit de changer son attribut nom pour le nommer
+               # Renommage du concept : Il suffit de changer son attribut nom pour le nommer
                self.sd.nom = nom
                self.sdnom=nom
+               self.parent.update_concept_after_etape(self,self.sd)
                self.fin_modif()
                return 1,"Nommage du concept effectué"
             except:
                return 0,"Nommage impossible"+str(sys.exc_info()[1])
       else :
+          #Un concept produit preexiste
           old_nom=self.sd.nom
           if string.find(old_nom,'sansnom') :
             # Dans le cas où old_nom == sansnom, isvalid retourne 0 alors que ...
@@ -182,8 +187,10 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             if self.parent.get_sd_autour_etape(nom,self):
               return 0,"Nommage du concept refuse : un concept de meme nom existe deja"
             else:
+              # Renommage du concept : Il suffit de changer son attribut nom pour le nommer
 	      self.sd.nom=nom
               self.sdnom=nom
+              self.parent.update_concept_after_etape(self,self.sd)
               self.fin_modif()
               return 1,"Nommage du concept effectué"
           if self.isvalid() :
@@ -193,8 +200,10 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             if self.parent.get_sd_autour_etape(nom,self):
               return 0,"Nommage du concept refuse : un concept de meme nom existe deja"
             else:
+              # Renommage du concept : Il suffit de changer son attribut nom pour le nommer
               self.sd.nom=nom
               self.sdnom=nom
+              self.parent.update_concept_after_etape(self,self.sd)
               self.fin_modif()
               return 1,"Nommage du concept effectué"
           else:
@@ -240,18 +249,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def control_sdprods(self,d):
       """
-          Cette methode doit updater le contexte fournit par
-          l'appelant en argument (d) en fonction de sa definition
-          tout en verifiant que ses concepts produits ne sont pas 
+          Cette methode doit verifier que ses concepts produits ne sont pas
           deja definis dans le contexte
+          Si c'est le cas, les concepts produits doivent etre supprimes
       """
-      if type(self.definition.op_init) == types.FunctionType:
-        try:
-           apply(self.definition.op_init,(self,d))
-        except:
-           #traceback.print_exc()
-           pass
-
+      #print "control_sdprods",d.keys(),self.sd and self.sd.nom,self.nom
       if self.sd:
         if d.has_key(self.sd.nom):
            # Le concept est deja defini
@@ -262,11 +264,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
               # Redefinition du concept, on l'annule
               #XXX on pourrait simplement annuler son nom pour conserver les objets
               # l'utilisateur n'aurait alors qu'a renommer le concept (faisable??)
-              self.sd=self.reuse=self.sdnom=None
               self.init_modif()
-        else:
-           # Le concept n'est pas defini, on peut updater d
-           d[self.sd.nom]=self.sd
+              sd=self.sd
+              self.sd=self.reuse=self.sdnom=None
+              #supprime les references a sd dans les etapes suivantes
+              self.parent.delete_concept_after_etape(self,sd)
+              self.fin_modif()
 
    def supprime_sdprod(self,sd):
       """
@@ -299,6 +302,10 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def close(self):
       return
+
+   def update_concept(self,sd):
+      for child in self.mc_liste :
+          child.update_concept(sd)
 
    def delete_concept(self,sd):
       """ 

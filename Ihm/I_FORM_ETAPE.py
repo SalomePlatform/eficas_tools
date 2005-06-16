@@ -329,6 +329,9 @@ class FORM_ETAPE(MACRO_ETAPE):
         if not self.sd : return
         self.jdc.del_fonction(self.sd)
 
+    def update_concept(self,sd):
+        return
+
     def delete_concept(self,sd):
         """ 
          Inputs :

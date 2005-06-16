@@ -94,11 +94,12 @@ class JDC_POURSUITE(JDC):
    def force_contexte(self,contexte):
       for nom_sd,sd in contexte.items():
         if not isinstance(sd,ASSD):continue
-        if self.jdc_pere.get_sd_apres_etape_avec_detruire(nom_sd,sd,
-                                                       etape=self.etape_include):
+        autre_sd= self.jdc_pere.get_sd_apres_etape_avec_detruire(nom_sd,sd,
+                                                       etape=self.etape_include)
+        if autre_sd is None:continue
+        if sd is not autre_sd:
            # Il existe un autre concept de meme nom produit par une etape apres self 
            # on detruit ce concept pour pouvoir inserer les etapes du jdc_include
-           #print "force_contexte",sd.etape,sd.nom,sd.etape.nom
            if sd.etape:
               sd.etape.supprime_sdprod(sd)
 
@@ -119,7 +120,8 @@ class JDC_POURSUITE(JDC):
         if not isinstance(sd,ASSD):continue
         autre_sd= self.jdc_pere.get_sd_apres_etape_avec_detruire(nom_sd,sd,
                                                        etape=self.etape_include)
-        if sd and sd is not autre_sd:
+        if autre_sd is None:continue
+        if sd is not autre_sd:
            # Il existe un concept produit par une etape apres self 
            # => impossible d'inserer
            raise Exception("Impossible d'inclure le fichier. Un concept de nom " +
@@ -165,27 +167,9 @@ class JDC_POURSUITE(JDC):
           ex : INCLUDE et POURSUITE
       """
       #print "jdc_include.fin_modif",self,self.etape_include
-      if not self.etape_include:
-         CONNECTOR.Emit(self,"valid")
-         return
-      # Mise a jour du contexte en fin d'include
-      # On suppose que toutes les modifications sont valides
-      # On recupere le contexte final dans j_context
-      j_context=self.get_contexte_avant(None) #get_verif_contexte ???
-      # On remplit le dictionnaire des concepts produits de l'etape macro INCLUDE
-      # sans y mettre les concepts présents dans le  contexte initial (context_ini)
-      # On ajoute egalement les concepts produits dans le sds_dict du parent
-      # sans verification car on est sur (verification integrée) que
-      # le nommage est possible
-      self.etape_include.g_context.clear()
-      for k,v in j_context.items():
-         if not self.context_ini.has_key(k) or self.context_ini[k] != v:
-            self.etape_include.g_context[k]=v
-            self.etape_include.parent.sds_dict[k]=v
-
       CONNECTOR.Emit(self,"valid")
-      self.etape_include.fin_modif()
-      #print "jdc_include.fin_modif.context_ini",self.context_ini
+      if self.etape_include:
+         self.etape_include.fin_modif()
 
    def supprime(self):
       """
@@ -202,22 +186,20 @@ class JDC_POURSUITE(JDC):
          comme DETRUIRE ou les macros
          Si etape == None, on retourne le contexte en fin de JDC
       """
+      #print "jdc_include.get_contexte_avant",etape,etape and etape.nom
       if self.etape_include:
-         self.context_ini = self.etape_include.parent.get_contexte_avant(self.etape_include).copy()
-      return JDC.get_contexte_avant(self,etape)
+         new_context=self.etape_include.parent.get_contexte_avant(self.etape_include).copy()
+         self.context_ini=new_context
+      d= JDC.get_contexte_avant(self,etape)
+      return d
 
-   #def get_sd_avant_etape(self,nom_sd,etape):
-      #sd=self.etape_include.parent.get_sd_avant_etape(nom_sd,self.etape_include)
-      #if sd:return sd
-      #return JDC.get_sd_avant_etape(self,nom_sd,etape)
-
-   #def get_sd_avant_du_bon_type(self,etape,types_permis):
-      #"""
-      #    Retourne la liste des concepts avant etape d'un type acceptable
-      #"""
-      #l1=self.etape_include.parent.get_sd_avant_du_bon_type(self.etape_include,types_permis)
-      #l2=JDC.get_sd_avant_du_bon_type(self,etape,types_permis)
-      #return l1+l2
+   def reset_context(self):
+      #print "jdc_include.reset_context",self,self.nom
+      if self.etape_include:
+         self.etape_include.parent.reset_context()
+         new_context=self.etape_include.parent.get_contexte_avant(self.etape_include).copy()
+         self.context_ini=new_context
+      JDC.reset_context(self)
 
    def get_sd_apres_etape(self,nom_sd,etape,avec='non'):
       """
@@ -240,7 +222,6 @@ class JDC_POURSUITE(JDC):
       """
       #print "jdc_include.get_sd_apres_etape_avec_detruire",nom_sd,sd,id(sd)
       autre_sd=JDC.get_sd_apres_etape_avec_detruire(self,nom_sd,sd,etape,avec)
-      #print autre_sd,id(autre_sd)
       # si autre_sd vaut None le concept sd a ete detruit. On peut terminer
       # la recherche en retournant None
       # Si autre_sd ne vaut pas sd, le concept a ete redefini. On peut terminer
@@ -273,6 +254,15 @@ class JDC_POURSUITE(JDC):
       if self.etape_include:
          self.etape_include.parent.delete_concept_after_etape(self.etape_include,sd)
 
+   def update_concept_after_etape(self,etape,sd):
+      """
+          Fonction : mettre a jour les etapes du JDC suite a une modification
+          du concept sd (principalement renommage)
+      """
+      JDC.update_concept_after_etape(self,etape,sd)
+      if self.etape_include:
+         self.etape_include.parent.update_concept_after_etape(self.etape_include,sd)
+
    def replace_concept_after_etape(self,etape,old_sd,sd):
       """
           Fonction : Mettre à jour les étapes du JDC qui sont après etape suite au
@@ -283,6 +273,27 @@ class JDC_POURSUITE(JDC):
       # Nettoyage des etapes du parent
       if self.etape_include:
          self.etape_include.parent.replace_concept_after_etape(self.etape_include,old_sd,sd)
+
+   def changefichier(self,fichier):
+      if self.etape_include:
+         self.etape_include.fichier_ini=fichier
+      self.fin_modif()
+
+   def control_context_apres(self,etape):
+      """
+         Cette méthode verifie que les etapes apres l'etape etape
+         ont bien des concepts produits acceptables (pas de conflit de
+         nom principalement)
+         Si des concepts produits ne sont pas acceptables ils sont supprimés.
+         Effectue les verifications sur les etapes du jdc mais aussi sur les
+         jdc parents s'ils existent.
+      """
+      #print "jdc_include.control_context_apres",self,etape
+      #Regularise les etapes du jdc apres l'etape etape
+      self.control_jdc_context_apres(etape)
+      if self.etape_include:
+         # il existe un jdc pere. On propage la regularisation
+         self.etape_include.parent.control_context_apres(self.etape_include)
 
 class JDC_INCLUDE(JDC_POURSUITE):
    def get_liste_cmd(self):

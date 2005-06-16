@@ -108,6 +108,7 @@ class MacroDisplay:
       if radio:menu.invoke(radio)
 
   def quit(self):
+    self.tree.supprime()
     self.fenetre.destroy()
 
 def makeMacroDisplay(appli,macroitem,nom_item):

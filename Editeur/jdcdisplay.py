@@ -121,6 +121,12 @@ class JDCDISPLAY:
       # Si au moins un radiobouton existe on invoke le premier
       if radio:menu.invoke(radio)
 
+   def select(self):
+      return
+
+   def unselect(self):
+      return
+
    def select_node(self,node):
       """
           Cette méthode est appelée à chaque fois qu'un noeud est sélectionné
@@ -128,14 +134,13 @@ class JDCDISPLAY:
           Elle permet l'affichage du panneau correspondant au noeud sélectionné
       """
       if node is not self.node_selected :
+         #ATTENTION: il faut affecter l'attribut node_selected avant d'appeler 
+         # create_panel pour eviter une recursion infinie entre create_panel, 
+         # Emit, onValid, select_node
+         self.node_selected = node
          self.create_panel(node)
-      self.node_selected = node
-      ## on conserve la trace du noeud sélectionné et de celui d'avant
-      #if self.node_selected :
-          #self.ancien_node = self.node_selected
-          #self.node_selected = node
-      #else:
-          #self.ancien_node = self.node_selected = node
+      elif self.panel_courant:
+         self.panel_courant.update_panel()
 
    def create_panel(self,node):
       """

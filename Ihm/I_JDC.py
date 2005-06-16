@@ -142,9 +142,7 @@ class JDC(I_OBJECT.OBJECT):
         # on est donc nécessairement en mode editeur ...
         objet = name
         # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
-        #if hasattr(objet,'sd'):print "addentite",objet.sd
         objet.reparent(self)
-        #if hasattr(objet,'sd'):print "addentite",objet.sd
         self.set_current_step()
         if isinstance(objet,ETAPE):
           if objet.nom_niveau_definition == 'JDC':
@@ -158,12 +156,10 @@ class JDC(I_OBJECT.OBJECT):
         self.etapes.insert(pos,objet)
 	# il faut vérifier que les concepts utilisés par objet existent bien
 	# à ce niveau d'arborescence
-        #if hasattr(objet,'sd'):print "addentite",objet.sd
 	objet.verif_existence_sd()
         self.active_etapes()
         self.editmode=0
         self.reset_context()
-        #print "addentite",self.etapes
         CONNECTOR.Emit(self,"add",objet)
         self.fin_modif()
         return objet
@@ -182,7 +178,6 @@ class JDC(I_OBJECT.OBJECT):
           self.editmode=0
           self.reset_context()
           self.active_etapes()
-          #print "addentite",self.etapes
           CONNECTOR.Emit(self,"add",e)
           self.fin_modif()
           return e
@@ -326,29 +321,68 @@ class JDC(I_OBJECT.OBJECT):
       """
       #print "suppentite",self
       self.init_modif()
-      # On memorise le contexte avant l'etape a supprimer
-      d=self.get_contexte_avant(etape)
       index_etape=self.etapes.index(etape)
-      #print "suppentite",index_etape,d
-
       self.etapes.remove(etape)
+
       if etape.niveau is not self:
         # Dans ce cas l'étape est enregistrée dans un niveau
         # Il faut la désenregistrer
         etape.niveau.unregister(etape)
+
       etape.supprime_sdprods()
       etape.close()
       self.active_etapes()
 
       # Apres suppression de l'etape il faut controler que les etapes
       # suivantes ne produisent pas des concepts DETRUITS dans op_init de etape
-      for e in self.etapes[index_etape:]:
-         e.control_sdprods(d)
+      if index_etape > 0: 
+         index_etape=index_etape-1
+         etape=self.etapes[index_etape]
+      else:
+         etape=None
+      self.control_context_apres(etape)
       
       self.reset_context()
       CONNECTOR.Emit(self,"supp",etape)
       self.fin_modif()
       return 1
+
+   def control_context_apres(self,etape):
+      """
+         Cette méthode verifie que les etapes apres l'etape etape
+         ont bien des concepts produits acceptables (pas de conflit de 
+         nom principalement)
+         Si des concepts produits ne sont pas acceptables ils sont supprimés.
+         Effectue les verifications sur les etapes du jdc mais aussi sur les
+         jdc parents s'ils existent.
+      """
+      #print "control_context_apres",self,etape
+      #Regularise les etapes du jdc apres l'etape etape
+      self.control_jdc_context_apres(etape)
+
+   def control_jdc_context_apres(self,etape):
+      """
+          Methode semblable a control_context_apres mais ne travaille
+          que sur les etapes et sous etapes du jdc
+      """
+      #print "control_jdc_context_apres",self,etape
+      if etape is None:
+         # on demarre de la premiere etape
+         index_etape=0
+      else:
+         index_etape=self.etapes.index(etape)+1
+
+      try:
+         etape=self.etapes[index_etape]
+      except:
+         #derniere etape du jdc : rien a faire
+         return
+
+      context=self.get_contexte_avant(etape)
+
+      for e in self.etapes[index_etape:]:
+          e.control_sdprods(context)
+          e.update_context(context)
 
    def analyse(self):
       self.compile()
@@ -490,10 +524,11 @@ class JDC(I_OBJECT.OBJECT):
           tenir compte des modifications de l'utilisateur : création
           de commandes, nommage de concepts, etc.
       """
+      #print "reset_context",self,self.nom
       self.current_context={}
       self.index_etape_courante=0
-      for etape in self.etapes:
-          etape.reset_context()
+   #   for etape in self.etapes:
+   #       etape.reset_context()
 
    def del_sdprod(self,sd):
       """
@@ -580,8 +615,22 @@ class JDC(I_OBJECT.OBJECT):
       for child in self.etapes[index:]:
         child.replace_concept(old_sd,sd)
 
+   def update_concept_after_etape(self,etape,sd):
+      """
+          Met à jour les étapes du JDC qui sont après etape en fonction
+          de la modification (principalement nommage) du concept sd
+      """
+      if etape is None:
+         #On traite toutes les etapes
+         index=0
+      else:
+         index = self.etapes.index(etape)+1
+      if index == len(self.etapes) :
+         return # etape est la dernière étape du jdc ...on ne fait rien !
+      for child in self.etapes[index:]:
+        child.update_concept(sd)
+
    def dump_state(self):
-      print "dump_state"
       print "JDC.state: ",self.state
       for etape in self.etapes :
          print etape.nom+".state: ",etape.state
@@ -603,6 +652,9 @@ class JDC(I_OBJECT.OBJECT):
       #print id(self.recorded_units),self.recorded_units
       #print self.recorded_units.get(None,(None,"",{}))[2]
       #print self.recorded_units.get(None,(None,"",{}))[2].get(None,(None,"",{}))
+
+   def changefichier(self,fichier):
+       self.fin_modif()
 
 #ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
    def register(self,etape):
@@ -676,4 +728,31 @@ class JDC(I_OBJECT.OBJECT):
         child.delete_concept(sd)
 
 #ATTENTION SURCHARGE : les methodes ci-dessous surchargent des methodes de Noyau et Validation : a reintegrer
+
+   def get_file(self,unite=None,fic_origine=''):
+      """
+          Retourne le nom du fichier correspondant à un numero d'unité
+          logique (entier) ainsi que le source contenu dans le fichier
+      """
+      if self.appli :
+         # Si le JDC est relié à une application maitre, on délègue la recherche
+         file,text= self.appli.get_file(unite,fic_origine)
+      else:
+         file = None
+         if unite != None:
+            if os.path.exists("fort."+str(unite)):
+               file= "fort."+str(unite)
+         if file == None :
+            raise AsException("Impossible de trouver le fichier correspondant"
+                               " a l unite %s" % unite)
+         if not os.path.exists(file):
+            raise AsException("%s n'est pas un fichier existant" % unite)
+         fproc=open(file,'r')
+         text=fproc.read()
+         fproc.close()
+      #if file == None : return None,None
+      text=string.replace(text,'\r\n','\n')
+      if file:
+         linecache.cache[file]=0,0,string.split(text,'\n'),file
+      return file,text
 

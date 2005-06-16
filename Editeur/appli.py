@@ -92,7 +92,7 @@ class APPLI:
       for study in session.d_env.studies:
           os.chdir(cwd)
           d=session.get_unit(study,self)
-          self.bureau.openJDC(study["comm"],d)
+          self.bureau.openJDC(file=study["comm"],units=d)
 
 
   def send_message(self,message):

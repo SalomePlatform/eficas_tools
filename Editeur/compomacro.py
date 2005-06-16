@@ -38,7 +38,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.21 2005/06/01 15:18:15 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.22 2005/06/10 13:47:49 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -164,7 +164,8 @@ class MACROPanel(panels.OngletPanel):
   def annule_fichier_init(self,event=None):
     """ Restaure dans self.entry le nom de fichier_init"""
     self.entry.delete(0,Tkinter.END)
-    self.entry.insert(0,self.node.item.object.fichier_ini)
+    if self.node.item.object.fichier_ini:
+       self.entry.insert(0,self.node.item.object.fichier_ini)
 
   def browse_fichier_init(self,event=None):
     """ 
@@ -176,6 +177,9 @@ class MACROPanel(panels.OngletPanel):
       self.entry.delete(0,Tkinter.END)
       self.entry.insert(0,file)
     
+  def update_panel(self):
+    if hasattr(self,"entry"):
+       self.annule_fichier_init()
     
 class MACROTreeItem(compooper.EtapeTreeItem):
   """ Cette classe hérite d'une grande partie des comportements
@@ -202,8 +206,8 @@ class INCLUDETreeItemBase(MACROTreeItem):
     #print "makeEdit",self.object.jdc_aux,self.object.jdc_aux.nom
     #print "makeEdit",self.object.jdc_aux.context_ini
     if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
-         showerror("Include vide","L'include doit etre correctement initialisé avant d'etre édité")
-         return
+       #L'include n'est pas initialise
+       self.object.build_include(None,"")
     self.parent_node=node
     # On cree un nouvel onglet dans le bureau
     appli.bureau.ShowJDC(self.object.jdc_aux,self.object.jdc_aux.nom,
@@ -218,7 +222,7 @@ class INCLUDETreeItemBase(MACROTreeItem):
 
   def makeView(self,appli,node):
     if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
-         showerror("Include vide","L'include doit etre correctement initialisé avant d'etre édité")
+         showerror("Include vide","L'include doit etre correctement initialisé pour etre visualisé")
          return
     nom=self.object.nom
     if hasattr(self.object,'fichier_ini'):
@@ -238,9 +242,8 @@ class INCLUDEPanel(MACROPanel):
     """
     Affiche la page d'onglet correspondant au changement du fichier INCLUDE
     """
-    if self.node.item["UNITE"] is None:
-       # Le numero de l'INCLUDE n'est pas defini
-       titre = Tkinter.Label(page,text="Le numero de l'INCLUDE doit etre defini avec le mot cle UNITE" )
+    if not hasattr(self.node.item.object,'fichier_ini'):
+       titre = Tkinter.Label(page,text="L'INCLUDE n'a pas de fichier associé\nIl faut d'abord choisir un numero d'unité " )
        titre.place(relx=0.5,rely=0.5,anchor='center')
     else:
        MACROPanel.makeFichierPage(self,page)
@@ -248,7 +251,33 @@ class INCLUDEPanel(MACROPanel):
 class INCLUDETreeItem(INCLUDETreeItemBase):
    panel=INCLUDEPanel
 
-class POURSUITETreeItem(INCLUDETreeItemBase): pass
+class POURSUITETreeItem(INCLUDETreeItemBase): 
+  def makeEdit(self,appli,node):
+    if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
+       #La poursuite n'est pas initialisee
+       text="""DEBUT()
+FIN()"""
+       self.object.build_poursuite(None,text)
+    self.parent_node=node
+    # On cree un nouvel onglet dans le bureau
+    appli.bureau.ShowJDC(self.object.jdc_aux,self.object.jdc_aux.nom,
+                             label_onglet=None,
+                             JDCDISPLAY=macrodisplay.MACRODISPLAY)
+    self.myjdc=appli.bureau.JDCDisplay_courant
+    self.myjdc.fichier=self.object.fichier_ini
+
+  def makeView(self,appli,node):
+    if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
+         showerror("Poursuite vide","Une POURSUITE doit etre correctement initialisée pour etre visualisée")
+         return
+    nom=self.object.nom
+    if hasattr(self.object,'fichier_ini'):
+       if self.object.fichier_ini is None:
+          nom=nom+' '+"Fichier non défini"
+       else:
+          nom=nom+' '+self.object.fichier_ini
+    macdisp=macrodisplay.makeMacroDisplay(appli,self,nom)
+    CONNECTOR.Connect(self.object.jdc_aux,"close",self.onCloseView,(macdisp,))
 
 class INCLUDE_MATERIAUTreeItem(INCLUDETreeItemBase):
   rmenu_specs=[("View","makeView"),

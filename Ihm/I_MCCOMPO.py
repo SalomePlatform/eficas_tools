@@ -311,6 +311,10 @@ class MCCOMPO(I_OBJECT.OBJECT):
         if fils.parent.nom != self.nom : return 0
       return 1
 
+  def update_concept(self,sd):
+    for child in self.mc_liste :
+        child.update_concept(sd)
+
   def delete_concept(self,sd):
     """ 
         Inputs :

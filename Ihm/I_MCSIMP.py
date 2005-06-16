@@ -313,6 +313,11 @@ class MCSIMP(I_OBJECT.OBJECT):
 	except:
 	  return None
 
+  def update_concept(self,sd):
+    if type(self.valeur) in (types.ListType,types.TupleType) :
+       if sd in self.valeur:self.fin_modif()
+    else:
+       if sd == self.valeur:self.fin_modif()
 
   def delete_concept(self,sd):
     """ 

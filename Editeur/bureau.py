@@ -132,10 +132,11 @@ class BUREAU:
       if len(self.liste_JDCDisplay) == 0 : return
       #if self.JDCDisplay_courant : self.JDCDisplay_courant.jdc.unset_context()
       numero_jdc = self.nb.index(self.nb.getcurselection())
+      self.JDCDisplay_courant.unselect()
       self.JDCDisplay_courant = self.liste_JDCDisplay[numero_jdc]
       self.JDC = self.JDCDisplay_courant.jdc
-      #self.JDC.set_context()
       self.JDCName = self.JDC.nom
+      self.JDCDisplay_courant.select()
       #print "selectJDC",numero_jdc,self.JDCDisplay_courant,self.JDCName
 
    def newJDC_include(self,event=None):
@@ -298,7 +299,7 @@ class BUREAU:
       texte_cr = str(cr)
       self.visu_texte_cr = Fenetre(self.appli,titre=titre,texte=texte_cr)
 
-   def openJDC(self,file=None,units=None):
+   def openJDC(self,event=None,file=None,units=None):
       """
           Demande à l'utilisateur quel JDC existant il veut ouvrir
       """
@@ -310,9 +311,6 @@ class BUREAU:
           filetypes = ( ("format "+self.appli.format_fichier.get(), ".py"),)
       if not hasattr(self,'initialdir'):
          self.initialdir = self.appli.CONFIGURATION.initialdir
-
-      if file.__class__.__name__ in  ('Event',):
-         file=None
 
       if not file :
           file = askopenfilename(title="Ouverture d'un fichier de commandes Aster",
@@ -378,7 +376,6 @@ class BUREAU:
           if not self.JDC.isvalid():
 	     self.appli.top.update()
 	     self.visuCR(mode='JDC')
-
 
    def GetLabelJDC(self,nb_jdc = 'absent'):
       """
@@ -503,8 +500,8 @@ class BUREAU:
                   # l'utilisateur a sauvegardé le JDC sous un autre nom
                   self.JDCDisplay_courant.fichier = sauvegarde
                   self.JDCName = self.JDC.nom = stripPath(sauvegarde)
+                  self.JDC.changefichier(sauvegarde)
                   self.changeNomPage()
-                  CONNECTOR.Emit(self.JDC,"valid")
               return 1
       else :
           return 0

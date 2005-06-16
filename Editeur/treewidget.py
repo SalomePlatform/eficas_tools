@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.23 2005/06/06 09:33:06 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.24 2005/06/10 14:59:37 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -100,6 +100,11 @@ class Tree :
         """ Update tous les éléments de l'arbre """
         for child in self.children:
             child.update()
+
+    def supprime(self):
+        """ supprime tous les éléments de l'arbre """
+        for child in self.children:
+            child.supprime()
 
     def update_valid(self) :
         """Cette methode a pour but de mettre a jour la validite du noeud
@@ -183,18 +188,6 @@ class Node :
         else:
            self.racine = self.parent.racine
            
-        # etape = noeud d'étape auquel appartient self
-        # = self si c'est lui-même
-        #if isinstance(self.parent,Tree) :
-            # on est  sur un noeud de JDC
-            #self.etape=None
-        #elif isinstance(self.parent.parent,Tree) :
-            # on est sur un noeud d'étape
-            #self.etape=self
-        #else :
-            # on est sur un noeud de mot-clé
-            #self.etape=self.parent.etape
-
     def reconnect(self):
         self.disconnect()
         self.connect()
@@ -232,6 +225,8 @@ class Node :
         self.update_node_valid()
         self.update_node_label()
         self.update_node_texte()
+        if self.selected and self.command:
+           self.command(self)
 
     def onAdd(self,objet):
         #print "onAdd : un objet a été ajouté aux fils de l'item ",self.item.object,objet
@@ -333,7 +328,7 @@ class Node :
 
            if node is new_node: # ancien noeud
               #print "noeud conserve",node
-              node.update_label_texte()
+              node.update_node_label()
               y=y+node.lasty-node.y +20
 
         self.racine.update_coords()
@@ -709,6 +704,7 @@ class Node :
         
     def update_node_label(self):
         """ Met a jour le label du noeud """
+        if self.displayed == 0 : return
         # nom,fonte et couleur de l'objet du noeud à afficher
         labeltext,fonte,couleur = self.item.GetLabelText()
         if labeltext    == ''   : labeltext = '   '
@@ -718,6 +714,7 @@ class Node :
 
     def update_node_texte(self):
         """ Met à jour les noms des SD et valeurs des mots-clés """
+        if self.displayed == 0 : return
         text = self.item.GetText()
         if text == None : text = ''
         self.text.configure(text=text)
@@ -726,6 +723,7 @@ class Node :
         """Cette methode remet a jour la validite du noeud (icone)
            Elle appelle isvalid
         """
+        if self.displayed == 0 : return
         if self.image_id != None :
             image = self.geticonimage()
             self.canvas.itemconfig(self.image_id,image=image)
