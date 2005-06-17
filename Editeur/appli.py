@@ -81,6 +81,7 @@ class APPLI:
       # PN : ajout d un attribut pour indiquer si 
       # l appli a ete lance depuis Salome
       self.salome=0
+      self.dir=None
 
       # Fermer le splash et deiconifier la fenetre principale si on n'est pas en test
       if (self.test == 0):
@@ -89,6 +90,7 @@ class APPLI:
 
       # Ouverture des fichiers de commandes donnes sur la ligne de commande
       cwd=os.getcwd()
+      self.dir=cwd
       for study in session.d_env.studies:
           os.chdir(cwd)
           d=session.get_unit(study,self)

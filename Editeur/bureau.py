@@ -447,7 +447,7 @@ class BUREAU:
           #PN  Fin Ajout --> Salome
           # le JDC a déjà un nom : on sauvegarde directement sans demander
           # un autre nom au développeur
-          if not save_in_file(self.JDCDisplay_courant.fichier,self.jdc_fini) :
+          if not save_in_file(self.JDCDisplay_courant.fichier,self.jdc_fini,self.appli.dir) :
               showinfo("Erreur","Problème à la sauvegarde du fichier :" + `self.JDCDisplay_courant.fichier`)
               return 0
           else :
@@ -489,7 +489,7 @@ class BUREAU:
 	     else :
 	        pass
           # PN fin ajout --> Salome
-          if not save_in_file(sauvegarde,self.jdc_fini) :
+          if not save_in_file(sauvegarde,self.jdc_fini,None) :
               showinfo("Erreur","Problème à la sauvegarde du fichier "+`sauvegarde`)
               return 0
           else :
