@@ -132,7 +132,7 @@ class Fenetre :
                                initialdir = self.appli.CONFIGURATION.initialdir,
                                title="Sauvegarde du "+self.titre)
         if file :
-            if not save_in_file(file,self.texte) :
+            if not save_in_file(file,self.texte,None) :
                 showerror("Sauvegarde impossible",
                        "Impossible de sauvegarder le texte dans le fichier spécifié\n"+
                           "Vérifiez les droits d'écriture")

@@ -80,6 +80,7 @@ def main():
    copyfiles('../Pmw',os.path.join(path_distrib,'Pmw'),['*.py'])
    copyfiles('../Pmw/Pmw_1_2',os.path.join(path_distrib,'Pmw','Pmw_1_2'),['*.py'])
    copyfiles('../Pmw/Pmw_1_2/lib',os.path.join(path_distrib,'Pmw','Pmw_1_2','lib'),['*.py','Pmw.def'])
+   copyfiles('Cata',os.path.join(path_distrib,'Aster','Cata'),['ops.py'])
 
    
    tarball= maketarball('dist',nom_distrib,nom_distrib)

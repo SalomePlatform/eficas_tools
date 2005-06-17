@@ -79,14 +79,16 @@ def read_file(file):
   except:
     return None
 
-def save_in_file(file,text):
+def save_in_file(file,text,dir=None):
   """
       crée le fichier file (ou l'écrase s'il existe) et écrit text dedans
       retourne 1 si OK 0 sinon
   """
   try :
       import string
-      file=string.split(file,"/")[-1]
+      #file=string.split(file,"/")[-1]
+      if dir != None:
+         os.chdir(dir)
       f=open(file,'w')
       f.write(text)
       f.close()
