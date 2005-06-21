@@ -27,11 +27,8 @@ class CLinit:
 
 
     def traiteCL(self):
-       print "traiteCL"
        self.get_geoms()
-       print "self.get_geoms"
        self.get_maillages()
-       print "self.get_maillages"
        # Récupere tous les Mesh
        if len(dict_CL) > 0:
           Choix=MonChoixMaillage.MonChoixMaillage(self,0,self._d)
@@ -56,8 +53,7 @@ class CLinit:
            anAttr = attrName._narrow(SALOMEDS.AttributeName)
            Name = anAttr.Value()
            #_CS_cbo: ajout de la determination de la dimension de la geometrie
-           #type = self.getShapeType(GEOMShape)
-	   type = SMESH.NODE
+           type = self.getShapeType(GEOMShape)
            Mesh.CreateGroupFromGEOM(type,Name,GEOMShape)           
        del dict_CL[GEOMIor]
            
@@ -86,8 +82,7 @@ class CLinit:
            anAttr = attrName._narrow(SALOMEDS.AttributeName)
            Name = anAttr.Value()
            #_CS_cbo: ajout de la determination de la dimension de la geometrie
-           #type = self.getShapeType(GEOMShape)
-	   type = SMESH.NODE
+           type = self.getShapeType(GEOMShape)
            newMesh.CreateGroupFromGEOM(type,Name,GEOMShape)
        del dict_CL[GEOMIor]
 
@@ -206,9 +201,6 @@ class CLinit:
 	  self.chercheMain(GeomCLIOR,GeomCLIOR)
 
     def chercheMain(self,GEOMIor,GeomCLIOR):
-        print "debut chercheMain pour "
-	print GEOMIor
-	print GeomCLIOR
 
 
         sobj = salome.myStudy.FindObjectIOR(GEOMIor)
@@ -250,7 +242,6 @@ class CLinit:
 	         MainIORAttr  = Attr._narrow(SALOMEDS.AttributeIOR)
 	         MainIor = MainIORAttr.Value()
 	         self.chercheMain(MainIor,GeomCLIOR)
-        print "fin chercheMain"
 
     def SetName(self,Entry, Name):
        SO = salome.myStudy.FindObjectID( Entry )
