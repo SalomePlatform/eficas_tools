@@ -242,15 +242,22 @@ class APPLI:
       radio=None
       for item in itemlist:
          number_item=number_item + 1
+	 raccourci_label=""
          if not item :
             menu.add_separator()
          else:
             if len(item)==3:
                raccourci=item[2]
+	       raccourci_label="   "+raccourci
                newitem=(item[0],item[1])
             else :
-	       raccourci=""
-               newitem=item
+	       if len(item)==4:
+                  raccourci=item[2]
+	          raccourci_label="   "+item[3]
+                  newitem=(item[0],item[1])
+	       else :
+	          raccourci=""
+                  newitem=item
             item=newitem
             label,method=item
             if type(method) == types.TupleType:
@@ -265,7 +272,7 @@ class APPLI:
                if radio == None:radio=number_item
             else:
                command=getattr(appli_composant,method)
-               menu.add_command(label=label+" "+raccourci,command=command)
+               menu.add_command(label=label+" "+raccourci_label,command=command)
                if raccourci != "" :
                   self.top.bind(raccourci,command)
       # Si au moins un radiobouton existe on invoke le premier
