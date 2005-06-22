@@ -62,27 +62,27 @@ appli_composants=['readercata','bureau',
 
 menu_defs={ 'bureau': [
               ('Fichier',[
-                           ('Nouveau','newJDC','<Control-n>','             Ctrl+N'),
+                           ('Nouveau','newJDC','<Control-n>','Ctrl+N'),
                            ('Nouvel INCLUDE','newJDC_include'),
-                           ('Ouvrir','openJDC','<Control-o>','                 Ctrl+O'),
-                           ('Enregistrer','saveJDC','<Control-e>','         Ctrl+E'),
+                           ('Ouvrir','openJDC','<Control-o>','Ctrl+O'),
+                           ('Enregistrer','saveJDC','<Control-e>','Ctrl+E'),
                            ('Enregistrer sous','saveasJDC','<Control-s>','Ctrl+S'),
                            None,
-                           ('Fermer','closeJDC','<Control-f>','                 Ctrl+F'),
-                           ('Quitter','exitEFICAS','<Control-q>','                 Ctrl+Q'),
+                           ('Fermer','closeJDC','<Control-f>','Ctrl+F'),
+                           ('Quitter','exitEFICAS','<Control-q>','Ctrl+Q'),
                          ]
               ),
               ('Edition',[
-                           ('Copier','copy','<Control-c>','       Ctrl+C'),
-                           ('Couper','cut','<Control-x>','      Ctrl+X'),
-                           ('Coller','paste','<Control-v>','        Ctrl+V'),
+                           ('Copier','copy','<Control-c>','Ctrl+C'),
+                           ('Couper','cut','<Control-x>','Ctrl+X'),
+                           ('Coller','paste','<Control-v>','Ctrl+V'),
                          ]
               ),
               ('Jeu de commandes',[
-               ('Rapport de validation','visuCRJDC','<Control-r>','        Ctrl+R'),
-               ('Fichier à plat','visu_a_plat','<Control-p>','                     Ctrl+P'),
-               ('Fichier format v6','visuJDC_py','<Control-t>','              Ctrl+T'),
-               ('Fichier source','visu_txt_brut_JDC','<Control-b>','                   Ctrl+B'),
+               ('Rapport de validation','visuCRJDC','<Control-r>','Ctrl+R'),
+               ('Fichier à plat','visu_a_plat','<Control-p>','Ctrl+P'),
+               ('Fichier format v6','visuJDC_py','<Control-t>','Ctrl+T'),
+               ('Fichier source','visu_txt_brut_JDC','<Control-b>','Ctrl+B'),
                ('Paramètres Eficas','affichage_fichier_ini'),
                ('Mots-clés inconnus','mc_inconnus'),
                                   ]
