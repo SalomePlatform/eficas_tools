@@ -74,7 +74,7 @@ def duplique_fichier(code,fichier=None,root=None):
           print jdc_formate
           jdc_fini = string.replace(jdc_formate,'\r\n','\n')
           print jdc_fini
-          utils.save_in_file(fileName+".comm",jdc_fini)
+          utils.save_in_file(fileName+".comm",jdc_fini,None)
 
 def convertir(texte):
     import re

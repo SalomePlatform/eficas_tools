@@ -448,47 +448,47 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
       self.SALOME_DONNEES_HOMARD_TRAITEMENT_FICHIER_MED_MAILLAGE_N()
 
 
-  def SALOME_LIRE_MAILLAGE_UNITE(self):
+#  def SALOME_LIRE_MAILLAGE_UNITE(self):
 
-      unite=self.node.item.get_valeur()
-      entrychaine=salome.sg.getAllSelected()
-      if entrychaine != '':
-	  self.entry2.delete(0,END)
+#      unite=self.node.item.get_valeur()
+#      entrychaine=salome.sg.getAllSelected()
+#      if entrychaine != '':
+#	  self.entry2.delete(0,END)
 
-          try:
-              SO = salome.myStudy.FindObjectID(entrychaine[0])
-          except:
-              boo = 0
-              SO = None
+#          try:
+#              SO = salome.myStudy.FindObjectID(entrychaine[0])
+#          except:
+#              boo = 0
+#              SO = None
 
-          if SO != None:
-	      myBuilder = salome.myStudy.NewBuilder()
-              boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeComment")
+#          if SO != None:
+#	      myBuilder = salome.myStudy.NewBuilder()
+#              boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeComment")
+#
+#          FileName=''
+#          if SO != None:
+#              myBuilder = salome.myStudy.NewBuilder()
+#              boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeFileType")
+#              if boo:
+#                 boo=0
+#                 val=FileAttr.Value()
+#                 if (val !="FICHIERMED"):
+#                     showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
+#                 else:
+#                     boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeExternalFileDef")
+#          if boo :
+#              FileName=FileAttr.Value()
+#          else:
+#              showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
 
-          FileName=''
-          if SO != None:
-              myBuilder = salome.myStudy.NewBuilder()
-              boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeFileType")
-              if boo:
-                 boo=0
-                 val=FileAttr.Value()
-                 if (val !="FICHIERMED"):
-                     showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
-                 else:
-                     boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeExternalFileDef")
-          if boo :
-              FileName=FileAttr.Value()
-          else:
-              showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
-
-          print "FileName = " , FileName
-          if FileName != '' :
-              self.entry2.insert(0,FileName)
-              typefic='D'
-              SALOME_UNIQUE_BASE_Panel.dict_fichier_unite[unite]=typefic+FileName
-          else :
-              print "il faut afficher une Fenetre d impossibilit\xe9"
-              showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
+#          print "FileName = " , FileName
+#          if FileName != '' :
+#              self.entry2.insert(0,FileName)
+#              typefic='D'
+#              SALOME_UNIQUE_BASE_Panel.dict_fichier_unite[unite]=typefic+FileName
+#          else :
+#              print "il faut afficher une Fenetre d impossibilit\xe9"
+#              showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
 
   def redistribue_selon_simp(self):
       genea = self.node.item.get_genealogie()
