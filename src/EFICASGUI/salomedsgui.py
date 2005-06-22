@@ -39,9 +39,21 @@ class guiDS:
     _father = None
     _component = None
 
-    def __init__(self):
+    def __init__(self,studyId=None):
         self._myStudyManager = salome.myStudyManager
-        self._myStudy = salome.myStudy
+        # Par défaut les réferences à l'étude sont celles fournies par
+        # le module salome.
+        if studyId is None:
+            self._myStudy = salome.myStudy
+            self._myBuilder = self._myStudy.NewBuilder()
+        else:
+            self.setCurrentStudy(studyId)
+
+    def setCurrentStudy(self,studyId):
+        """
+        Définit les références à l'étude et son builder associé
+        """
+        self._myStudy = self._myStudyManager.GetStudyByID(studyId)
         self._myBuilder = self._myStudy.NewBuilder()
 
     def enregistre(self,myModule):

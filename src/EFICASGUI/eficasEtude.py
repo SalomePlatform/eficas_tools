@@ -4,7 +4,7 @@
 # Author    : Pascale NOYRET, EDF
 # Project   : SALOME
 # Copyright : EDF 2003
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/eficasEtude.py,v 1.2 2005/01/06 11:12:12 salome Exp $
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/eficasEtude.py,v 1.3 2005/06/03 07:25:24 salome Exp $
 #=============================================================================
 
 import salome
@@ -18,25 +18,31 @@ aGuiDS=salomedsgui.guiDS()
 
 class Eficas_In_Study:
 
-      def __init__(self,code):
+      def __init__(self,code,studyId=None):
+          print "#######################################################"
+          print "#######################################################"
+          print "#######################################################"
+          print "_CS_GBO_ : Eficas_In_Study:init: studyId = ", studyId
+          print "#######################################################"
+          print "#######################################################"        
           import SMESH_utils
+          self.aGuiDS=salomedsgui.guiDS(studyId=studyId)
           self.enregistre()
 	  self.code=code
           self.liste_deja_la=[]
           
       def  enregistre(self):
-           self.fatherId=aGuiDS.enregistre("Eficas")
+           self.fatherId=self.aGuiDS.enregistre("Eficas")
            salome.sg.updateObjBrowser(0)
 
-      def  rangeInStudy(self,fichier, suf=""):
+      def rangeInStudy(self,fichier, suf=""):
 	   if fichier not in self.liste_deja_la :
 	        self.liste_deja_la.append(fichier)
                 Nom=re.split("/",fichier)[-1]
 
-
-                self.commId=aGuiDS.createItemInStudy(self.fatherId,Nom)
+                self.commId=self.aGuiDS.createItemInStudy(self.fatherId,Nom)
 		if self.commId != None:
-                   aGuiDS.setExternalFileAttribute(self.commId,"FICHIER_EFICAS_"+self.code+suf,fichier)
+                   self.aGuiDS.setExternalFileAttribute(self.commId,"FICHIER_EFICAS_"+self.code+suf,fichier)
                    salome.sg.updateObjBrowser(0)
 
       def creeConfigTxt(self,fichier,dico):

@@ -8,7 +8,7 @@ import SalomePyQt
 # Variable globale pour stocker le Workspace de Salome
 
 WORKSPACE=None
-studyId=None
+currentStudyId=None
 
 # -----------------------------------------------------------------------------
 
@@ -65,19 +65,26 @@ def OnGUIEvent(commandID) :
 # -----------------------------------------------------------------------------
 
 def setSettings():
-   print "setSettings"
-   print sgPyQt.getStudyId()
+   """
+   Cette méthode permet les initialisations. On définit en particulier
+   l'identifiant de l'étude courante.
+   """
+   global currentStudyId
+   currentStudyId = sgPyQt.getStudyId()
+   print "setSettings: currentStudyId = " + str(currentStudyId)
+   # _CS_gbo_ Voir si on peut utiliser directement sgPyQt.getStudyId()
+   # dans salomedsgui?
+
 
 # -----------------------------------------------------------------------------
 
 def activeStudyChanged(ID):
-   global studyId
+   global currentStudyId
    # ne marche pas car sg est supposé résider dans une etude
    # studyId=sg.getActiveStudyId()
-   studyId=ID
-   print "studyId: ",sg.getActiveStudyId()
-   print "On a changé d'étude active",studyId
-   print sgPyQt.getStudyId()
+   currentStudyId=ID
+   print "_CS_GBO_ : EFICASGUI.activeStudyChanged : currentStudyId = ", currentStudyId
+   print "_CS_GBO_ : EFICASGUI.activeStudyChanged : sgPyQt.getStudyId() = ", sgPyQt.getStudyId()
 
 def definePopup(theContext, theObject, theParent):
    print "EFICASGUI --- definePopup"
@@ -102,8 +109,7 @@ def customPopup(popup, theContext, theObject, theParent):
 import eficasSalome
 
 def runEficas(ws):
-   print "runEficas"
-   eficasSalome.runEficas(ws,"ASTER")
+   eficasSalome.runEficas(ws,"ASTER",studyId=currentStudyId)
    
 def runEficaspourHomard(ws):
    print "runEficas"
@@ -114,18 +120,24 @@ def runEficasHomard(ws):
    eficasSalome.runEficas(None,"HOMARD")
 
 def runEficasFichier(ws):
+   """
+   Lancement d'eficas à partir d'un fichier sélectionné dans l'arbre
+   d'étude. 
+   """
    print "runEficasFichier"
    attr=None
    code="ASTER"
    a=salome.sg.getAllSelected()
    if len(a) == 1:
+      aGuiDS.setCurrentStudy(currentStudyId)
       boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_ASTER",a[0])
       if boo :
          code = "ASTER" 
       else :
          boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_HOMARD",a[0])
    	 code = "HOMARD"
-   eficasSalome.runEficas(ws,code,attr)
+   
+   eficasSalome.runEficas(ws,code,attr,studyId=currentStudyId)
 
 # Partie applicative
 

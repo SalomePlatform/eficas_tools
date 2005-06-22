@@ -16,15 +16,17 @@ import sys
 #import import_code
 from Editeur import splash
 from Editeur import eficas
-from Editeur import session
+
+# _CS_gbo Mise en commentaire en attendant eficas 1.8
+#from Editeur import session
 
 
-def init(top,code="ASTER",fichier=None):
+def init(top,code="ASTER",fichier=None,studyId=None):
     splash.init_splash(top,code=code,titre="Lancement d'EFICAS pour %s" %code)
     splash._splash.configure(text="Chargement d'EFICAS en cours.\n Veuillez patienter ...")
     # Enregistrement dans l étude
     import eficasEtude
-    MaRef=eficasEtude.Eficas_In_Study(code)
+    MaRef=eficasEtude.Eficas_In_Study(code,studyId=studyId)
 
     #import eficas
     class MyEficas(eficas.EFICAS):
@@ -35,9 +37,11 @@ def init(top,code="ASTER",fichier=None):
         def contexte(self):
             self.salome=MaRef
 
-    if fichier != None :
-    	options=session.parse(sys.argv+[fichier])
-    else :
-    	options=session.parse(sys.argv)
+    # _CS_gbo Mise en commentaire en attendant eficas 1.8
+    # if fichier != None :
+    #	options=session.parse(sys.argv+[fichier])
+    #else :
+    #	options=session.parse(sys.argv)
+    
     moi=MyEficas(top,code=code)
     moi.contexte()
