@@ -17,9 +17,12 @@ import sys
 from Editeur import splash
 from Editeur import eficas
 
-# _CS_gbo Mise en commentaire en attendant eficas 1.8
-#from Editeur import session
-
+# _CS_gbo Gestion du versionning entre eficas 1.7 et 1.8 (différence
+# en ce qui concerne la session).
+try:
+    from Editeur import session
+except:
+    session=None
 
 def init(top,code="ASTER",fichier=None,studyId=None):
     splash.init_splash(top,code=code,titre="Lancement d'EFICAS pour %s" %code)
@@ -37,11 +40,12 @@ def init(top,code="ASTER",fichier=None,studyId=None):
         def contexte(self):
             self.salome=MaRef
 
-    # _CS_gbo Mise en commentaire en attendant eficas 1.8
-    # if fichier != None :
-    #	options=session.parse(sys.argv+[fichier])
-    #else :
-    #	options=session.parse(sys.argv)
+    # _CS_gbo Gestion du versionning 1.7 et 1.8
+    if session is not None:
+        if fichier != None :
+            options=session.parse(sys.argv+[fichier])
+        else :
+            options=session.parse(sys.argv)
     
     moi=MyEficas(top,code=code)
     moi.contexte()
