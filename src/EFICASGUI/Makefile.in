@@ -35,7 +35,6 @@ EXPORT_PYSCRIPTS = \
 dataEficas.py  \
 eficasEtude.py \
 EFICASGUI.py   \
-salomedsgui.py \
 SMESH_utils.py \
 eficasCL.py   \
 ChoixMaillage.py \
