@@ -275,6 +275,22 @@ CHECK_KERNEL
 
 echo
 echo ---------------------------------------------
+echo Testing Visu
+echo ---------------------------------------------
+echo
+
+CHECK_VISU
+
+echo
+echo ---------------------------------------------
+echo Testing Pal
+echo ---------------------------------------------
+echo
+
+CHECK_PAL
+
+echo
+echo ---------------------------------------------
 echo Summary
 echo ---------------------------------------------
 echo
@@ -291,6 +307,21 @@ done
 echo
 echo "Default ORB   : $DEFAULT_ORB"
 echo
+
+echo
+echo ---------------------------------------------
+echo RunTime Dependencies
+echo ---------------------------------------------
+echo
+variables="Visu_ok pal_ok"
+
+for var in $variables
+do
+   printf "   %10s : " `echo \$var | sed -e "s,_ok,,"`
+   eval echo \$$var
+done
+
+
 
 dnl generals files which could be included in every makefile
 
