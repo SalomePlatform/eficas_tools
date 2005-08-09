@@ -321,6 +321,9 @@ class JDC(I_OBJECT.OBJECT):
       """
       #print "suppentite",self
       self.init_modif()
+      #PN correction de bugs 
+      if etape not in self.etapes:
+         return 0
       index_etape=self.etapes.index(etape)
       self.etapes.remove(etape)
 
