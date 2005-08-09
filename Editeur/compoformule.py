@@ -81,8 +81,11 @@ class FORMULEPanel(panels.OngletPanel):
 
     # binding sur les entries
     self.entry_nom.bind("<Return>",self.verif_nom)
+    self.entry_nom.bind("<KP_Enter>",self.verif_nom)
     self.entry_arg.bind("<Return>",self.verif_arguments)
+    self.entry_arg.bind("<KP_Enter>",self.verif_arguments)
     self.entry_exp.bind("<Return>",self.verif_corps)
+    self.entry_exp.bind("<KP_Enter>",self.verif_corps)
     # affichage des entries
     self.entry_nom.place(relx=0.35,rely=0.10,relwidth=0.2)
     self.entry_arg.place(relx=0.35,rely=0.40,relwidth=0.4)

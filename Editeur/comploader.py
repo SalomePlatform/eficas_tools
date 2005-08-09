@@ -79,7 +79,10 @@ def gettreeitem(object):
               itemtype= composants[e]
               return itemtype
 
+    # Apres poum ??? Les lignes suivantes sont elles utiles ?
     # Si on n'a rien trouve dans les composants on utilise l'objet par defaut
+    print ObjectTreeItem
+    print itemtype
     itemtype=ObjectTreeItem
     return itemtype
 
@@ -90,5 +93,4 @@ def make_objecttreeitem(appli,labeltext, object, setfunction=None):
     """
     c = gettreeitem(object)
     return c(appli,labeltext, object, setfunction)
-
 

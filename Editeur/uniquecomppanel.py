@@ -71,6 +71,8 @@ class UNIQUE_COMP_Panel(UNIQUE_Panel):
       rb2.place(relx=0.05,rely = 0.6)
       self.entry1.component('entry').bind("<Return>",lambda e,s=self:s.entry2.component('entry').focus())
       self.entry2.component('entry').bind("<Return>",lambda e,c=self.valid_valeur:c())
+      self.entry1.component('entry').bind("<KP_Enter>",lambda e,s=self:s.entry2.component('entry').focus())
+      self.entry2.component('entry').bind("<KP_Enter>",lambda e,c=self.valid_valeur:c())
       self.entry1.place(relx=0.27,rely = 0.5,relwidth=0.35)
       self.entry2.place(relx=0.65,rely = 0.5,relwidth=0.35)
       self.entry1.focus()

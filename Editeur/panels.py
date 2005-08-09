@@ -310,6 +310,7 @@ class OngletPanel(Panel) :
       self._any = Entry(page,relief='sunken')
       self._any.place(relx=0.35,rely=0.4,relwidth=0.5)
       self._any.bind("<Return>",lambda e,s=self:s.execConcept())
+      self._any.bind("<KP_Enter>",lambda e,s=self:s.execConcept())
       self._any.insert(0,self.node.item.GetText())
       type_sd = self.node.item.get_type_sd_prod()
       if type_sd :

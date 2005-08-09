@@ -40,7 +40,7 @@ import definition_cata
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cataediteur.py,v 1.5 2004/09/10 15:51:48 eficas Exp $"
+__Id__="$Id: cataediteur.py,v 1.6 2004/09/20 09:24:13 eficas Exp $"
 #
 
 Fonte_Niveau = fontes.canvas_gras_italique
@@ -203,6 +203,7 @@ class OngletPanel(Panel) :
       self._any = Entry(page,relief='sunken')
       self._any.place(relx=0.35,rely=0.4,relwidth=0.5)
       self._any.bind("<Return>",lambda e,s=self:s.execConcept())
+      self._any.bind("<KP_Enter>",lambda e,s=self:s.execConcept())
       self._any.insert(0,self.node.item.GetText())
       type_sd = self.node.item.object.get_type_sd_prod()
       if type_sd :
@@ -379,6 +380,7 @@ class SIMPPanel(OngletPanel):
     self.e_nom = Entry(fr1)
     self.e_nom.place(relx=0.35,rely=0.3,relwidth=0.3,anchor='w')
     self.e_nom.bind("<Return>",lambda e,s=self : s.set_valeur_attribut('nom',None))
+    self.e_nom.bind("<KP_Enter>",lambda e,s=self : s.set_valeur_attribut('nom',None))
     self.e_nom.insert(0,self.get_valeur_attribut('nom'))
     # Statut
     Label(fr1,text='Statut : ').place(relx=0.05,rely=0.7,anchor='w')
@@ -419,6 +421,7 @@ class SIMPPanel(OngletPanel):
       if self.node.item.object.get_valeur_attribut('defaut') :
         self.e_defaut.insert(0,self.node.item.object.get_valeur_attribut('defaut'))
       self.e_defaut.bind("<Return>",lambda e,s=self : s.set_valeur_attribut('defaut',None))
+      self.e_defaut.bind("<KP_Enter>",lambda e,s=self : s.set_valeur_attribut('defaut',None))
     else :
       # dans le cas discret, la valeur par défaut doit être dans l'ensemble des valeurs possibles (into)
       liste = self.node.item.object.get_valeur_attribut('into')
@@ -534,6 +537,7 @@ class SIMPPanel(OngletPanel):
       self.e_val_min = Entry(fr3)
       self.e_val_min.place(relx=0.35,rely=0.5,relwidth=0.5,anchor='w')
       self.e_val_min.bind("<Return>",lambda e,s=self : s.set_valeur_attribut('val_min',None))
+      self.e_val_min.bind("<KP_Enter>",lambda e,s=self : s.set_valeur_attribut('val_min',None))
       self.set_valeur_attribut('val_min',self.get_valeur_attribut('val_min'))
       # val_max
       self.l_val_max = Label(fr3,text='Valeur maximale : ')
@@ -541,6 +545,7 @@ class SIMPPanel(OngletPanel):
       self.e_val_max = Entry(fr3)
       self.e_val_max.place(relx=0.35,rely=0.8,relwidth=0.5,anchor='w')
       self.e_val_max.bind("<Return>",lambda e,s=self : s.set_valeur_attribut('val_max',None))
+      self.e_val_max.bind("<KP_Enter>",lambda e,s=self : s.set_valeur_attribut('val_max',None))
       self.set_valeur_attribut('val_max',self.get_valeur_attribut('val_max'))
 
 # ------------------------------------------------------------------

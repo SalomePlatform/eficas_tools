@@ -67,6 +67,7 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       self.entry = Entry(self.frame_valeur,relief='sunken')
       self.entry.place(relx=0.28,rely=0.2,relwidth=0.6)
       self.entry.bind("<Return>",lambda e,c=self.valid_valeur:c())
+      self.entry.bind("<KP_Enter>",lambda e,c=self.valid_valeur:c())
       # aide associée au panneau
       self.frame_valeur.update()
       self.aide = Label(self.frame_valeur, 

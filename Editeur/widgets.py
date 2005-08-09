@@ -764,7 +764,9 @@ class ListeChoix :
           self.MCbox.insert(END,'\n')
           if self.optionReturn != None :
               label.bind("<Return>",lambda e,s=self,c=self.liste_commandes[2][1],x=objet,l=label : s.chooseitemsurligne(x,l,c))
+              label.bind("<KP_Enter>",lambda e,s=self,c=self.liste_commandes[2][1],x=objet,l=label : s.chooseitemsurligne(x,l,c))
           label.bind("<Key-Right>",lambda e,s=self,x=objet,l=label : s.selectNextItem(x,l))
+          label.bind("<Key-Left>" ,lambda e,s=self,x=objet,l=label  : s.selectPrevItem(x,l))
           if self.active == 'oui':
               label.bind(self.liste_commandes[0][0],lambda e,s=self,c=self.liste_commandes[0][1],x=objet,l=label : s.selectitem(x,l,c))
               label.bind(self.liste_commandes[1][0],lambda e,s=self,c=self.liste_commandes[1][1],x=objet,l=label : s.deselectitem(l,x,c))
@@ -814,6 +816,8 @@ class ListeChoix :
         try :
            index=self.liste.index(mot)
            indexsuivant=index+1
+	   if indexsuivant > len(self.liste) -1:
+	      indexsuivant=0
            motsuivant=self.liste[indexsuivant]
            labelsuivant=self.dico_labels[motsuivant]
            self.clear_marque()
@@ -825,6 +829,25 @@ class ListeChoix :
            self.highlightitem(labelsuivant)
            self.arg_selected=motsuivant
            labelsuivant.focus_set()
+        # PN il faut faire quelque chose pour être dans la fenetre
+        except:
+           pass
+           
+    def selectPrevItem(self,mot,label):
+        try :
+           index=self.liste.index(mot)
+           indexprec=index-1
+           motprec=self.liste[indexprec]
+           labelprec=self.dico_labels[motprec]
+           self.clear_marque()
+           if self.selection != None :
+              self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
+              self.selection = (mot,label,self.selection[2])
+           index = self.MCbox.index(labelprec)
+           self.MCbox.see(index)
+           self.highlightitem(labelprec)
+           self.arg_selected=motprec
+           labelprec.focus_set()
         # PN il faut faire quelque chose pour être dans la fenetre
         except:
            pass
@@ -843,6 +866,7 @@ class ListeChoix :
 
     def highlightitem(self,label) :
         """ Met l'item représenté par son label en surbrillance """
+        label.focus_set()
         label.configure(bg='#00008b',fg='white')
         
     def markitem(self,label):
@@ -1148,6 +1172,7 @@ class ListeChoixParGroupes(ListeChoix) :
                   label.bind("<Leave>",lambda e,s=self,c=null,x=cmd,l=label: s.deselectitem(l,x,c))
                   label.bind("<Double-Button-1>",lambda e,s=self,c=null,x=cmd,l=label: s.chooseitem(x,l,c))
                   label.bind("<Return>",lambda e,s=self,c=null,x=cmd,l=label: s.chooseitem(x,l,c))
+                  label.bind("<KP_Enter>",lambda e,s=self,c=null,x=cmd,l=label: s.chooseitem(x,l,c))
                   label.bind("<Key-Right>",lambda e,s=self,c=null,x=cmd,l=label,gr=grp: s.selectNextItem(x,l,c,gr,x))
                   label.bind("<Key-Down>",lambda e,s=self,c=null,x=cmd,l=label,gr=grp: s.selectNextItem(x,l,c,gr,x))
                   label.bind("<Key-Left>",lambda e,s=self,c=null,x=cmd,l=label,gr=grp: s.selectPrevItem(x,l,c,gr,x))
@@ -1163,6 +1188,8 @@ class ListeChoixParGroupes(ListeChoix) :
                          label.bind("<Double-Button-1>",lambda e,s=self,c=callback,x=cmd,l=label: s.chooseitem(x,l,c))
                       elif event == "<Return>":
                          label.bind("<Return>",lambda e,s=self,c=callback,x=cmd,l=label: s.chooseitem(x,l,c))
+                      elif event == "<KP_Enter>":
+                         label.bind("<KP_Enter>",lambda e,s=self,c=callback,x=cmd,l=label: s.chooseitem(x,l,c))
                       elif event == "<Key-Right>":
                          label.bind("<Key-Right>",lambda e,s=self,c=callback,x=cmd,l=label,gr=grp:s.selectNextItem(x,l,c,gr,x))
                       elif event == "<Key-Down>":

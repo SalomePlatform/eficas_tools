@@ -82,6 +82,8 @@ class PARAMPanel(panels.OngletPanel):
     # binding sur entry_nom
     self.entry_nom.bind("<Return>",lambda e,s=self : s.entry_val.focus())
     self.entry_val.bind("<Return>",lambda e,s=self : s.change_valeur())
+    self.entry_nom.bind("<KP_Enter>",lambda e,s=self : s.entry_val.focus())
+    self.entry_val.bind("<KP_Enter>",lambda e,s=self : s.change_valeur())
     # affichage des entries
     self.entry_nom.place(relx=0.35,rely=0.3,relwidth=0.3)
     self.entry_val.place(relx=0.35,rely=0.5,relwidth=0.5)

@@ -389,7 +389,7 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
   dict_fichier_unite={}
 
 
-  def SALOME_DONNEES_HOMARD_TRAITEMENT_FICHIER_MED_MAILLAGE_N(self):
+  def SALOME_DONNEES_HOMARD_FICHIER_MED_MAILLAGE_N(self):
       entrychaine=salome.sg.getAllSelected()
       if entrychaine != '':
           self.entry2.delete(0,END)
@@ -405,7 +405,7 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
               boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeFileType")
               if boo:
                  val=FileAttr.Value()
-                 if (val !="FICHIERMED"):
+                 if (val !="FICHIERMED" and val != "FICHIER_RESU_MED"):
                      boo=0
                      showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
                  else:
@@ -444,8 +444,8 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
           self.entry.insert(0,EntryName)
           self.valid_valeur()
 
-  def SALOME_DONNEES_HOMARD_TRAITEMENT_FICHIER_MED_MAILLAGE_NP1(self):
-      self.SALOME_DONNEES_HOMARD_TRAITEMENT_FICHIER_MED_MAILLAGE_N()
+  def SALOME_DONNEES_HOMARD_FICHIER_MED_MAILLAGE_NP1(self):
+      self.SALOME_DONNEES_HOMARD_FICHIER_MED_MAILLAGE_N()
 
 
 #  def SALOME_LIRE_MAILLAGE_UNITE(self):
@@ -519,6 +519,7 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
       self.entry = Entry(self.frame_valeur,relief='sunken')
       self.entry.place(relx=0.28,rely=0.5,relwidth=0.6)
       self.entry.bind("<Return>",lambda e,c=self.valid_valeur:c())
+      self.entry.bind("<KP_Enter>",lambda e,c=self.valid_valeur:c())
 
       # PN : Ajout d'un bouton pour selectionner  à partir de Salome  
       self.b = Button(self.frame_valeur,text='Relier selection',command=self.redistribue_selon_simp)

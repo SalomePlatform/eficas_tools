@@ -84,6 +84,7 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       self.label_co = Label(self.frame_valeur,text='Nom du nouveau concept :')
       self.entry_co = Entry(self.frame_valeur)
       self.entry_co.bind('<Return>',self.valid_nom_concept_co)
+      self.entry_co.bind('<KP_Enter>',self.valid_nom_concept_co)
       # affichage du label de la structure de donnée choisie
       self.l_resu = Label(self.frame_valeur,text='Structure de donnée choisie :')
       self.valeur_choisie = StringVar()

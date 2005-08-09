@@ -47,6 +47,12 @@ class TOOLBAR:
       b.bind("<Enter>",lambda e,s=self,but=b,t=texte : s.affiche_balloon(e,but,t,pos='right'))
       b.bind("<Leave>", self.efface_balloon)
 
+  def appelle_commande(self,e,b,c):
+      try :
+         c()
+      except :
+         pass
+
   def inactive_boutons(self):
       """
       Inactive les boutons de la liste self.l_boutons_a_activer
@@ -129,6 +135,7 @@ class TOOLBAR:
           b.pack(side='left')
           b.bind("<Enter>",lambda e,s=self,but=b,t=texte : s.affiche_balloon(e,but,t))
           b.bind("<Leave>", self.efface_balloon)
+          b.bind("<Return>", lambda e,s=self,but=b,c=commande:s.appelle_commande(e,but,c))
           if statut != 'always':
               self.l_boutons_a_activer.append(b)
 

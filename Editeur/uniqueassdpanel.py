@@ -118,6 +118,7 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
 	self.entry = Entry(self.frame_valeur,relief='sunken')
         self.entry.place(relx=0.28,rely=0.9,relwidth=0.6)
         self.entry.bind("<Return>",lambda e,c=self.valid_valeur_reel:c())
+        self.entry.bind("<KP_Enter>",lambda e,c=self.valid_valeur_reel:c())
 
 
 

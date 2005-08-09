@@ -58,6 +58,7 @@ class InterpWindow(Tkinter.Toplevel):
         self.text.pack( fill='both', expand = 1)
         self.text.bind( '<KeyPress>', self.clearMsg)
         self.text.bind( '<Return>', self.inputhandler)
+        self.text.bind( '<KP_Enter>', self.inputhandler)
         self.text.bind( '<Up>', self.uphistory)
         self.text.bind( '<Down>', self.downhistory)
         self.text.bind( '<Control-a>', self.goto_sol)

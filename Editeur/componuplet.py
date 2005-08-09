@@ -31,7 +31,7 @@ import panels
 
 #
 __version__="$Name:  $"
-__Id__="$Id: componuplet.py,v 1.5 2004/09/10 15:51:49 eficas Exp $"
+__Id__="$Id: componuplet.py,v 1.6 2005/05/19 12:18:47 eficas Exp $"
 #
 
 myrepr = Repr()
@@ -79,6 +79,8 @@ class NUPLETPanel(panels.OngletPanel):
         entry = Tkinter.Entry(frame_valeur,relief='sunken',width=10)
         entry.pack(side=Tkinter.LEFT,padx=1)
         entry.bind("<Return>",
+                lambda e,obj=obj,s=self:s.valid_valeur(e,obj=obj))
+        entry.bind("<KP_Enter>",
                 lambda e,obj=obj,s=self:s.valid_valeur(e,obj=obj))
         if i==0:entry.focus_set()
         #aide = Tkinter.Label(frame_valeur, text = aide)

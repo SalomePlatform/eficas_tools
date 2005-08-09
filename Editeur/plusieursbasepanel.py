@@ -255,6 +255,8 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
           rb2.place(relx=0.05,rely = 0.6)
           self.entry1.component('entry').bind("<Return>",lambda e,s=self:s.entry2.component('entry').focus)
           self.entry2.component('entry').bind("<Return>",lambda e,c=command:c())
+          self.entry1.component('entry').bind("<KP_Enter>",lambda e,s=self:s.entry2.component('entry').focus)
+          self.entry2.component('entry').bind("<KP_Enter>",lambda e,c=command:c())
           self.entry1.place(relx=0.27,rely = 0.5,relwidth=0.35)
           self.entry2.place(relx=0.65,rely = 0.5,relwidth=0.35)
           self.entry1.focus()
@@ -262,6 +264,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
           self.entry = Entry(frame,relief='sunken')
           self.entry.place(relx=0.28,rely=0.2,relwidth=0.6)
           self.entry.bind("<Return>",lambda e,c=command:c())
+          self.entry.bind("<KP_Enter>",lambda e,c=command:c())
           self.entry.focus()
 
   def get_valeur(self):

@@ -83,6 +83,8 @@ class PARAM_EVALPanel(panels.OngletPanel):
     # binding sur entry_nom
     self.entry_nom.bind("<Return>",lambda e,s=self : s.verif_nom())
     self.entry_val.bind("<Return>",lambda e,s=self : s.verif_eval())
+    self.entry_nom.bind("<KP_Enter>",lambda e,s=self : s.verif_nom())
+    self.entry_val.bind("<KP_Enter>",lambda e,s=self : s.verif_eval())
     # affichage des entries
     self.entry_nom.place(relx=0.35,rely=0.3,relwidth=0.3)
     self.entry_val.place(relx=0.35,rely=0.5,relwidth=0.5)
@@ -107,7 +109,7 @@ class PARAM_EVALPanel(panels.OngletPanel):
     self.bouton_val = Button(self.fr_but,text='Valider',command=self.change_valeur,width=14)
     self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur,width=14)
     self.bouton_val.bind("<Return>",lambda e,s=self : s.bouton_val.invoke())
-
+    self.bouton_val.bind("<KP_Enter>",lambda e,s=self : s.bouton_val.invoke())
     self.bouton_val.place(relx=0.25,rely=0.5,relheight=0.8,anchor='center')
     self.bouton_ann.place(relx=0.50,rely=0.5,relheight=0.8,anchor='center')
     self.bouton_sup.place(relx=0.75,rely=0.5,relheight=0.8,anchor='center')
