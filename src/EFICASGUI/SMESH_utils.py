@@ -4,7 +4,7 @@
 # Author    : Paul RASCLE, EDF
 # Project   : SALOME
 # Copyright : EDF 2003
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.4 2005/02/01 10:55:41 salome Exp $
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.5 2005/02/03 15:15:09 salome Exp $
 #=============================================================================
 
 from omniORB import CORBA
@@ -156,27 +156,29 @@ def getSMESHSubShapeIndexes(myStudy, entryList, typenoeudorcell = 0):
 
     refList = []
     iorStringMain = None
-    if len(entryList) > 0:
-        # PN : prévoir une boucle ???
-        # Pour etre sure que toutes les faces appartiennent à la meme strucute ??
-        iorStringMain = getShapeContenante(myStudy, entryList[0])
-
-    if iorStringMain == None:
-        # C'est le cas ou on a loade un fichier hdf et on est pas passe par geom
-        # par exemple ....
-        return refList
-    
     myCLinit=CLinit()
-    myCL=myCLinit.GetOrCreateCL(iorStringMain)
 
     if len(entryList) > 0:
-         for idShape in entryList:
-             refShape = singleEntryToName(myStudy,idShape)
-             if refShape != None:
-                  for Shape in refShape:
-                      refList.append(Shape)
-             IORShape = entryToIor(myStudy,idShape)
-             myCL.SetIdAsCL(orb.object_to_string(IORShape),typenoeudorcell)
+      for idShape in entryList:
+	try:
+           anObject=entryToIor(myStudy,idShape)
+           Shape=anObject._narrow(GEOM.GEOM_Object)
+           iorStringMain=orb.object_to_string(Shape)
+        except :
+           print "pb avec l IOR: pas un objet"
+
+        if iorStringMain == None:
+          # C'est le cas ou on a loade un fichier hdf et on est pas passe par geom
+          # par exemple ....
+          return refList
+    
+        myCL=myCLinit.GetOrCreateCL(iorStringMain)
+        refShape = singleEntryToName(myStudy,idShape)
+        if refShape != None:
+           for Shape in refShape:
+               refList.append(Shape)
+        IORShape = entryToIor(myStudy,idShape)
+        myCL.SetIdAsCL(orb.object_to_string(IORShape),typenoeudorcell)
             
     return refList
 
@@ -186,6 +188,11 @@ def getAsterGroupNo(myStudy,entryList):
     typenoeudorcell = 0
     subShapeIndexes = getSMESHSubShapeIndexes(myStudy, entryList,typenoeudorcell)
     labelGroupNo = []
+    if subShapeIndexes == None :
+       print "*************************************"
+       print "Pb au chargement de Geom --> pas d IOR"
+       print "*************************************"
+       return
     for val in subShapeIndexes:
         labelGroupNo.append(val)
     return labelGroupNo
@@ -196,9 +203,20 @@ def getAsterGroupMa(myStudy,entryList):
     typenoeudorcell = 1
     subShapeIndexes = getSMESHSubShapeIndexes(myStudy, entryList,typenoeudorcell)
     labelGroupMa = []
+    if subShapeIndexes == None :
+       print "*************************************"
+       print "Pb au chargement de Geom --> pas d IOR"
+       print "*************************************"
+       return
     for val in subShapeIndexes:
         labelGroupMa.append(val)
     return labelGroupMa
 
     #--------------------------------------------------------------------------
+
+def VisuGroupe(myStudy,GroupesListe):
+    import salomedsgui
+    aGuiDS=salomedsgui.guiDS()
+    aGuiDS.ClearSelection()
+    aGuiDS.DisplayByNameInGeom(GroupesListe)
 

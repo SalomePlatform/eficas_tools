@@ -4,6 +4,7 @@ import SMESH
 import GEOM
 import SalomePyQt
 import MonChoixMaillage
+import string
 
 Tag_RefOnShape = 1
 dict_CL={}
@@ -17,16 +18,21 @@ class CLinit:
        self._d = SalomePyQt.SalomePyQt().getDesktop()
        self.correspondanceNomIOR = {}
        self.correspondanceNomIORshape = {}
-       self.name="CL"
+       self.dict_listedep={}
        print "fin init"
 
+    def clean(self):
+        dict_CL={}
+
     def GetOrCreateCL(self,myShapeName):
+       print "GetOrCreateCL" , myShapeName
        if not (dict_CL.has_key(myShapeName)):
           dict_CL[myShapeName] = CL()
        return dict_CL[myShapeName]
 
 
     def traiteCL(self):
+       #print "Debut de TraiteCL"
        self.get_geoms()
        self.get_maillages()
        # Récupere tous les Mesh
@@ -165,10 +171,8 @@ class CLinit:
          self.smesh = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
 	 self.smesh.SetCurrentStudy(salome.myStudy)
        stringIOR=salome.orb.object_to_string(self.smesh)
-       print stringIOR
        SO_smesh=salome.myStudy.FindObjectIOR(stringIOR)
        if SO_smesh != None:
-         print salome.myStudy
          ChildIterator = salome.myStudy.NewChildIterator(SO_smesh)
 	 while ChildIterator.More() :
 	    aSObj = ChildIterator.Value()
@@ -201,20 +205,33 @@ class CLinit:
 	  self.chercheMain(GeomCLIOR,GeomCLIOR)
 
     def chercheMain(self,GEOMIor,GeomCLIOR):
-
-
         sobj = salome.myStudy.FindObjectIOR(GEOMIor)
+	#print "_______________________________________________________"
+	#print "Cherchemain", sobj.GetID() 
+	#print "_______________________________________________________"
 	if sobj == None :
 	   print "objet nul dans chercheMain"
 	   return
 
+        # Recherche du composant GEOM
+	if self.geomcompID == None:
+	   self.geomcompID = sobj.GetFatherComponent().GetID()
+
 	# On cherche les dépendances et
 	# on ajoute l objet lui-même à la liste
-        Listedep=salome.myStudy.FindDependances(sobj)
-	Listedep.append(sobj)
+	# Attention le FindDependance ne donne pas la liste des objets
+	# avec cette référence
+	# 
+
+        MonEntry= sobj.GetID()
+	if not(self.dict_listedep.has_key(MonEntry)) :
+           self.dict_listedep[MonEntry]=[]
+           self.ChercheRef(MonEntry,sobj.GetFatherComponent())
+	   #self.dict_listedep[MonEntry].append(sobj)
 
         ListeAtraiter=[]
-	for sobj in Listedep :
+	for sobj in self.dict_listedep[MonEntry] :
+	   
 	   # tant que l objet est une reference
 	   # on cherche son pere
 	   current=sobj
@@ -226,22 +243,42 @@ class CLinit:
            shapeobj=salome.orb.string_to_object(iorString)
 	   Shape=shapeobj._narrow(GEOM.GEOM_Object)
 	   if Shape != None :
-	      if self.geomcompID == None:
-	         self.geomcompID = current.GetFatherComponent().GetID()
 	      ListeAtraiter.append(current)
 
 	for sobj in ListeAtraiter:
 	   current=sobj
-	   while ( current.GetFather().GetID() != self.geomcompID):
+	   #while ( current.GetFather().GetID() != self.geomcompID):
+	   while ( current.GetID() != self.geomcompID):
+	      MainID=current.GetID()
 	      current=current.GetFather()
-	   MainID=current.GetID()
-	   if (MainID not in self.Liste_geoms[GeomCLIOR]):
-	      self.Liste_geoms[GeomCLIOR].append(MainID)
-	      Attr = current.FindAttribute("AttributeIOR")[1]
-	      if (Attr != None):
-	         MainIORAttr  = Attr._narrow(SALOMEDS.AttributeIOR)
-	         MainIor = MainIORAttr.Value()
-	         self.chercheMain(MainIor,GeomCLIOR)
+	      if (MainID not in self.Liste_geoms[GeomCLIOR]):
+	         self.Liste_geoms[GeomCLIOR].append(MainID)
+	         Attr = current.FindAttribute("AttributeIOR")[1]
+	         if (Attr != None):
+	            MainIORAttr  = Attr._narrow(SALOMEDS.AttributeIOR)
+	            MainIor = MainIORAttr.Value()
+	            self.chercheMain(MainIor,GeomCLIOR)
+
+    def  ChercheRef(self,entry,geomSobj):
+        #print "ChercheRef", entry,geomSobj.GetID()
+	aIter=salome.myStudy.NewChildIterator(geomSobj)
+	while aIter.More() :
+	    aIterSObj = aIter.Value()
+	    aIterID=aIterSObj.GetID()
+	    aIter.Next()
+
+	    bool,obj=aIterSObj.ReferencedObject()
+	    entrycomp=""
+	    if not bool :
+	      entrycomp=aIterID
+            else :
+	      # Attention bug sur ReferencedObject
+	      if aIterID.find(entry) != 0:
+	          entrycomp=obj.GetID()
+	    if entry == entrycomp :
+	      self.dict_listedep[entry].append(aIterSObj)
+	    self.ChercheRef(entry,aIterSObj)
+
 
     def SetName(self,Entry, Name):
        SO = salome.myStudy.FindObjectID( Entry )
