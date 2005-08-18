@@ -98,7 +98,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       # PN : pour ajouter les validators
       self.label = Label(self.frame_choix,text="Valeur :")
       self.make_entry(frame = self.frame_choix,command = self.add_valeur_plusieurs_base)
-      self.label.place(relx=0.05,rely=0.3)
+      self.label.place(relx=0.05,rely=0.2)
 
       # Création d'un bouton "Importer ..." et d'un bouton "Paramatres" sur le panel.
       bouton_valeurs_fichier = Button(self.frame_choix,
@@ -239,7 +239,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       commentaire=commentaire +"\n"+aideval
       return commentaire
 
-  def make_entry(self,frame,command):
+  def make_entry(self,frame,command,x=0.28,y=0.2):
       """
       Crée l'entry de saisie de la valeur souhaitée : distingue le
       cas d'un complexe attendu, d'une autre valeur quelconque
@@ -262,7 +262,8 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
           self.entry1.focus()
       else:
           self.entry = Entry(frame,relief='sunken')
-          self.entry.place(relx=0.28,rely=0.2,relwidth=0.6)
+          #self.entry.place(relx=0.28,rely=0.2,relwidth=0.6)
+	  self.entry.place(relx=0.28,rely=y,relwidth=0.6)
           self.entry.bind("<Return>",lambda e,c=command:c())
           self.entry.bind("<KP_Enter>",lambda e,c=command:c())
           self.entry.focus()
