@@ -74,12 +74,12 @@ class HomardGenerator(PythonGenerator):
       self.textehomard=[]
 
    def init_assoc(self):
-      self.lmots_clef_calcules = ('SuivFron','TypeBila','ModeHOMA','CCAssoci', 'CCNoChaI','HOMaiN__','HOMaiNP1')
+      self.lmots_clef_calcules = ('SuivFron','TypeBila','ModeHOMA','CCAssoci', 'CCNoChaI','HOMaiN__','HOMaiNP1','CCNumOrI', 'CCNumPTI')
       self.lmot_clef  = ('CCMaiN__', 'CCNoMN__', 'CCIndica', 'CCSolN__', 'CCFronti', 'CCNoMFro', 'CCMaiNP1', 
                          'CCNoMNP1', 'CCSolNP1', 'TypeRaff', 'TypeDera', 'NiveauMa', 'SeuilHau', 'SeuilHRe', 
 			 'SeuilHPE', 'NiveauMi', 'SeuilBas', 'SeuilBRe', 'SeuilBPE', 'ListeStd', 'NumeIter', 
 			 'Langue  ', 'CCGroFro', 'CCNoChaI', 'CCNumOrI', 'CCNumPTI', 'SuivFron', 'TypeBila', 
-			 'ModeHOMA', 'HOMaiN__', 'HOMaiNP1')
+			 'ModeHOMA', 'HOMaiN__', 'HOMaiNP1','CCCoChaI')
 
 # Bizarre demander a Gerald : 
 #		CVSolNP1
@@ -109,6 +109,7 @@ class HomardGenerator(PythonGenerator):
 #     self.assoc['CCNoChaI']='NOM_MED' (on doit aussi ajouter 'COMPOSANTE')
       self.assoc['CCNumOrI']='NUME_ORDRE'
       self.assoc['CCNumPTI']='NUME_PAS_TEMPS'
+      self.assoc['CCCoChaI']='COMPOSANTE'
      
       self.dico_mot_depend={}
      
@@ -237,3 +238,16 @@ class HomardGenerator(PythonGenerator):
 	     chaine=num+" "+num+".hom"
        return chaine
 
+   def CCNumOrI(self):
+       chaine=repr(1)
+       if self.dico_mot_clef.has_key('NUME_ORDRE'):
+          if self.dico_mot_clef['NUME_ORDRE'] != None :
+ 	    chaine=repr(self.dico_mot_clef['NUME_ORDRE'])
+       return chaine
+
+   def CCNumPTI(self):
+       chaine=repr(1)
+       if self.dico_mot_clef.has_key('NUME_PAS_TEMPS'):
+          if self.dico_mot_clef['NUME_PAS_TEMPS'] != None :
+ 	    chaine=repr(self.dico_mot_clef['NUME_PAS_TEMPS'])
+       return chaine
