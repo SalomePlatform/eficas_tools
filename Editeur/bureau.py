@@ -441,6 +441,7 @@ class BUREAU:
 	     	import eficasCL
 	     	MyCLinit=eficasCL.CLinit()
 	     	MyCLinit.traiteCL()
+		MyCLinit.clean()
 	     except :
 	     #else :
 	        pass
@@ -485,6 +486,7 @@ class BUREAU:
 	        import eficasCL
 	        MyCLinit=eficasCL.CLinit()
 	        MyCLinit.traiteCL()
+		MyCLinit.clean()
 	     #except :
 	     else :
 	        pass
