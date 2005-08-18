@@ -51,6 +51,8 @@ class Panel(Frame) :
       self.place(x=0,y=0,relheight=1,relwidth=1)
       self.creer_boutons()
       self.init()
+      global panneauCommande
+      panneauCommande=self
 
   def __del__(self):
       """ appele a la destruction du panel """

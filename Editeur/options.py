@@ -55,9 +55,15 @@ class OPTIONS:
 	 parent=panel.parent
 	 if parent != None :
 	    parent.create_panel(parent.node_selected)
-	    parent.panel_courant.nb.selectpage("Commande")
+	    # si on a un panel avec plusieurs onglets
+	    # on affiche Commande
+	    try :
+	      parent.panel_courant.nb.selectpage("Commande")
+	    except :
+	      pass
 
    def affichage_alpha(self):
+
       global affichage_commandes
       affichage_commandes="alphabetic"
       if hasattr(panels,'panneauCommande'):
@@ -65,7 +71,12 @@ class OPTIONS:
 	 parent=panel.parent
 	 if parent != None :
 	    parent.create_panel(parent.node_selected)
-	    parent.panel_courant.nb.selectpage("Commande")
+	    # si on a un panel avec plusieurs onglets
+	    # on affiche Commande
+	    try :
+	      parent.panel_courant.nb.selectpage("Commande")
+	    except :
+	      pass
 
    def change_fond(self):
       from tkColorChooser import askcolor
