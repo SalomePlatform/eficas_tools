@@ -129,8 +129,9 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
 	       else:
                    r=SMESH_utils.getAsterGroupMa(salome.myStudy,travail)
 		   dict_geom_numgroupe[entreeName]=r
-               for i in r :
-                   newr.append(i)
+	       if r != None :
+                   for i in r :
+                      newr.append(i)
       #except:
       else :
 	   print "pas de groupe de maille associé"
@@ -191,6 +192,10 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
       self.Liste_valeurs.put_liste(liste_valeurs)
       self.Liste_valeurs_salome.put_liste(liste_valeurs_salome)
       self.recalcule()
+
+  def visu_in_salome(self):
+      liste_valeurs = self.Liste_valeurs.get_liste()
+      entryname_list=SMESH_utils.VisuGroupe(salome.myStudy,liste_valeurs)
 
   def recalcule(self):
       liste_valeurs_salome=self.Liste_valeurs_salome.get_liste()
@@ -284,12 +289,10 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
 
       # création des frames internes
       self.frame_valeurs = Frame(self.frame1)
-      self.frame_valeurs.place(relx=0.02,rely=0.05,relwidth=0.35,relheight=0.95)
+      self.frame_valeurs.place(relx=0.0,rely=0.0,relwidth=0.35,relheight=0.95)
 
-      self.frame_boutons_fleches = Frame(self.frame_right)
-      self.frame_boutons_fleches.place(relx=0.,rely=0.2,relwidth=0.2,relheight=0.3)
       self.frame_choix = Frame(self.frame_right)
-      self.frame_choix.place(relx=0.2,rely=0.1,relwidth=0.85,relheight=0.9)
+      self.frame_choix.place(relx=0.0,rely=0.0,relwidth=1,relheight=0.9)
       self.frame_valeurs_salome = Frame(self.frame_right)
       self.frame_valeurs_salome.place(relx=0.02,rely=0.7,relwidth=0.9,relheight=0.3)
 
@@ -299,7 +302,7 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
       self.frame_aide.place(relx=0.6,rely=0.,relwidth=0.5,relheight=1)
 
       for fram in (self.frame1,self.frame2,self.frame_right,self.frame_valeurs,
-                 self.frame_boutons_fleches,self.frame_choix,self.frame_aide,self.frame_boutons):
+                 self.frame_choix,self.frame_aide,self.frame_boutons):
             fram.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
             fram.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
 
@@ -311,27 +314,27 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
 			              liste_commandes = liste_commandes_valeurs,
                                       titre="Valeur(s) actuelle(s)")
 
-      self.label = Label(self.frame_choix,text="Valeur :")
-      self.label.place(relx=0.05,rely=0.4)
     # PN : pour ajouter les validators
-      self.make_entry(frame = self.frame_choix,command = self.add_valeur_plusieurs_base)
+      self.make_entry(frame = self.frame_choix,command = self.add_valeur_plusieurs_base,y=0.55)
 
       bouton_valeurs_fichier = Button(self.frame_choix,
                                       text="Importer ...",
                                       command=self.select_in_file)
-      bouton_valeurs_fichier.place(relx=0.28,rely=0.55,relwidth=0.6)
+      bouton_valeurs_fichier.place(relx=0.28,rely=0.65,relwidth=0.6)
 
       self.ajout_valeurs = None
-      self.b = Button(self.frame_choix,text='ajouter  selection',command=self.add_valeur_from_salome)
+      self.b = Button(self.frame_choix,text='ajout select.',command=self.add_valeur_from_salome)
 
-      self.b.place(relx=0.02,rely=0.05)
+      self.b.place(relx=0.03,rely=0.05,relwidth=0.35)
       self.entrygroupe = Entry(self.frame_choix,relief='sunken')
-      self.entrygroupe.place(relx=0.50,rely=0.05)
+      self.entrygroupe.place(relx=0.4,rely=0.05,relwidth=0.6)
 
-      self.a = Button(self.frame_choix,text='enlever selection',command=self.sup_valeur_from_salome)
-      self.a.place(relx=0.02,rely=0.2)
+      self.a = Button(self.frame_choix,text='enlev. select.',command=self.sup_valeur_from_salome)
+      self.a.place(relx=0.03,rely=0.2,relwidth=0.35)
       self.sortie = Entry(self.frame_choix,relief='sunken')
-      self.sortie.place(relx=0.50,rely=0.2)
+      self.sortie.place(relx=0.4,rely=0.2,relwidth=0.6)
+      self.c = Button(self.frame_choix,text='Visualiser',command=self.visu_in_salome)
+      self.c.place(relx=0.03,rely=0.35,relwidth=0.35)
 
       l_salome_valeurs=self.node.item.get_salome_valeurs()
       self.Liste_valeurs_salome=ListeChoix(self,self.frame_valeurs_salome,l_salome_valeurs,
@@ -341,14 +344,14 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
 
 
       # boutons Ajouter et Supprimer
-      bouton_add = Button(self.frame_boutons_fleches,
+      bouton_add = Button(self.frame_choix,
                           image = images.get_image('arrow_left'),
                           command = self.add_valeur_plusieurs_base)
-      bouton_sup = Button(self.frame_boutons_fleches,
+      bouton_sup = Button(self.frame_choix,
                           image = images.get_image('arrow_right'),
                           command = self.sup_valeur_sans_into)
-      bouton_add.place(relx=0.3,rely=0.35)
-      bouton_sup.place(relx=0.3,rely=0.65)
+      bouton_add.place(relx=0.08,rely=0.55)
+      bouton_sup.place(relx=0.08,rely=0.65)
 
       # affichage de l'aide
       self.frame_aide.update()
