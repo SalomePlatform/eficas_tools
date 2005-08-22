@@ -35,7 +35,7 @@ if test "x$VISU_DIR" = "x" ; then
 # 
 fi
 
-if test -f ${VISU_DIR}/bin/salome/runSalome ; then
+if test -f ${VISU_DIR}/bin/salome/visu.py ; then
    Visu_ok=yes
    AC_MSG_RESULT(Using Visu module distribution in ${VISU_DIR})
 
