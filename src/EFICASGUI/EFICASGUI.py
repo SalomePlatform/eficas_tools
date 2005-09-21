@@ -9,6 +9,7 @@ import SalomePyQt
 
 WORKSPACE=None
 currentStudyId=None
+desktop=None
 
 # -----------------------------------------------------------------------------
 
@@ -28,7 +29,7 @@ qt.QObject.connect(qt.qApp,qt.SIGNAL("lastWindowClosed()"),g)
 
 import salome
 
-sg=salome.SalomeGUI()
+sg=salome.sg
 sgPyQt=SalomePyQt.SalomePyQt()
 import salomedsgui
 aGuiDS=salomedsgui.guiDS()
@@ -43,7 +44,7 @@ def setWorkSpace(workSpace):
    WORKSPACE=workSpace
    print "WORKSPACE: ",WORKSPACE
    # le desktop
-   d=sgPyQt.getDesktop()
+   desktop=sgPyQt.getDesktop()
 
    # creation d'une message box
    #qt.QMessageBox.information(d,"titre","message")
@@ -69,6 +70,8 @@ def setSettings():
    Cette méthode permet les initialisations. On définit en particulier
    l'identifiant de l'étude courante.
    """
+   # le desktop
+   desktop=sgPyQt.getDesktop()
    global currentStudyId
    currentStudyId = sgPyQt.getStudyId()
    print "setSettings: currentStudyId = " + str(currentStudyId)
@@ -79,6 +82,8 @@ def setSettings():
 # -----------------------------------------------------------------------------
 
 def activeStudyChanged(ID):
+   # le desktop
+   desktop=sgPyQt.getDesktop()
    global currentStudyId
    # ne marche pas car sg est supposé résider dans une etude
    # studyId=sg.getActiveStudyId()
@@ -146,6 +151,6 @@ dict_command={
                946:runEficaspourHomard,
                4041:runEficas,
                4046:runEficaspourHomard,
-	       9042:runEficasFichier,
+               9042:runEficasFichier,
              }
 
