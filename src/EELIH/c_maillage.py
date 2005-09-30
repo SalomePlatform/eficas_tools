@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from panelbase import *
- 
 
 class C_maillage:
     """
     controleur de la classe Maillage, traite les maillages correspondants à la géométrie
     sélectionnée ou crée un maillage avec le nom saisi
-    - maillage = référence sur le panneau maillage
     """
     def __init__(self, maillage):
         self.maillage = maillage

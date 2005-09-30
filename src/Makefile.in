@@ -4,7 +4,7 @@
 #  Author    : Paul RASCLE, EDF
 #  Project   : SALOME
 #  Copyright : EDF 2001
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/Makefile.in,v 1.2 2004/12/10 16:43:25 salome Exp $
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/Makefile.in,v 1.3 2005/08/03 10:06:01 salome Exp $
 #==============================================================================
 
 # source path
@@ -15,6 +15,6 @@ VPATH=.:@srcdir@
 
 @COMMENCE@
 
-SUBDIRS = EFICAS EFICASGUI 
+SUBDIRS = EFICAS EFICASGUI EELIH
 
 @MODULE@

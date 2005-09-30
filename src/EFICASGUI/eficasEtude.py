@@ -4,7 +4,7 @@
 # Author    : Pascale NOYRET, EDF
 # Project   : SALOME
 # Copyright : EDF 2003
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/eficasEtude.py,v 1.3 2005/06/03 07:25:24 salome Exp $
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/eficasEtude.py,v 1.4 2005/06/22 18:50:13 salome Exp $
 #=============================================================================
 
 import salome
@@ -44,6 +44,8 @@ class Eficas_In_Study:
 		if self.commId != None:
                    self.aGuiDS.setExternalFileAttribute(self.commId,"FICHIER_EFICAS_"+self.code+suf,fichier)
                    salome.sg.updateObjBrowser(0)
+           print "(((((((((((((((((((((((((((((((((((((("
+	   print "fin range in study"
 
       def creeConfigTxt(self,fichier,dico):
            sauvegarde = asksaveasfilename(title="fichier config.txt",
@@ -58,4 +60,6 @@ class Eficas_In_Study:
                 f.write(ligne)
            f.close()
            self.rangeInStudy(sauvegarde)
+	   print "==============================="
+	   print "fin crreConfigTxt"
            

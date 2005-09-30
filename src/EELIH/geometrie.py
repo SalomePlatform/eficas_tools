@@ -14,8 +14,6 @@ class Geometrie(PanelBase):
     """
     Hérite de la classe mère PanelBase
     Définit le panneau pour le choix de la géométrie sur laquelle on veut travailler
-    - pbSelection = bouton pour la sélection dans l'arbre d'étude Salome
-    - ln = lineedit pour l'affichage de la sélection
     """
     def __init__(self, parent, appli):
         # hérite de la classe mère des panneaux

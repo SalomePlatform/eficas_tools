@@ -114,7 +114,21 @@ def customPopup(popup, theContext, theObject, theParent):
 import eficasSalome
 
 def runEficas(ws):
+   print "--------------------------------------------------"
+   print currentStudyId
    eficasSalome.runEficas(ws,"ASTER",studyId=currentStudyId)
+   
+def runEELIH(ws,code="ASTER"):
+   # Enregistrement dans l étude
+   import eficasEtude
+   import appli
+   print "++++++++++++++++++++++++++++++++++++++++++++++++++++"
+   print currentStudyId
+   
+   MaRef=eficasEtude.Eficas_In_Study(code,studyId=currentStudyId)
+   # flag = E pour Eficas (enregistrement manuel du fichier de commandes)
+   flag = 'E'
+   moi=appli.Appli(MaRef, flag)
    
 def runEficaspourHomard(ws):
    print "runEficas"
@@ -148,8 +162,10 @@ def runEficasFichier(ws):
 
 dict_command={
                941:runEficas,
+	       943:runEELIH,
                946:runEficaspourHomard,
                4041:runEficas,
+	       4043:runEELIH,
                4046:runEficaspourHomard,
                9042:runEficasFichier,
              }

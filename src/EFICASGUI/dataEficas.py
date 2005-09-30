@@ -49,3 +49,20 @@ def init(top,code="ASTER",fichier=None,studyId=None):
     
     moi=MyEficas(top,code=code)
     moi.contexte()
+
+def initNovice(code="ASTER",fichier=None,studyId=None):
+    # Enregistrement dans l étude
+    import eficasEtude
+    MaRef=eficasEtude.Eficas_In_Study(code,studyId=studyId)
+
+    #import eficas
+    class MyEficas(appli.Appli):
+       #def exit(self, event=None):
+           #appli.Appli.exit(self, event=None)  
+
+       def contexte(self):
+            self.salome=MaRef
+
+    moi=MyEficas()
+    mainwindow.MainWindow(moi)
+    moi.contexte()    

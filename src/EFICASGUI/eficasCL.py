@@ -5,6 +5,7 @@ import GEOM
 import SalomePyQt
 import MonChoixMaillage
 import string
+import EFICASGUI
 
 Tag_RefOnShape = 1
 dict_CL={}
@@ -12,27 +13,25 @@ dict_CL={}
 class CLinit:
     def __init__(self):
        geom = salome.lcc.FindOrLoadComponent("FactoryServer", "GEOM")
-       self.GroupOp  = geom.GetIGroupOperations(salome.myStudyId)
+       #self.GroupOp  = geom.GetIGroupOperations(salome.myStudyId)
+       self.GroupOp  = geom.GetIGroupOperations(EFICASGUI.currentStudyId)
        self.smesh=None
        self.geomcompID=None
        self._d = SalomePyQt.SalomePyQt().getDesktop()
        self.correspondanceNomIOR = {}
        self.correspondanceNomIORshape = {}
        self.dict_listedep={}
-       print "fin init"
 
     def clean(self):
         dict_CL={}
 
     def GetOrCreateCL(self,myShapeName):
-       print "GetOrCreateCL" , myShapeName
        if not (dict_CL.has_key(myShapeName)):
           dict_CL[myShapeName] = CL()
        return dict_CL[myShapeName]
 
 
     def traiteCL(self):
-       #print "Debut de TraiteCL"
        self.get_geoms()
        self.get_maillages()
        # Récupere tous les Mesh
@@ -123,7 +122,6 @@ class CLinit:
        for MainID in  self.Liste_geoms[GEOMIor]:
            aSO = salome.myStudy.FindObjectID(MainID)
 	   if aSO==None:
-	      print "pb dans MainShapes"
 	      return listeNoms
 	   attrName  = aSO.FindAttribute("AttributeName")[1]
 	   anAttr = attrName._narrow(SALOMEDS.AttributeName)
@@ -133,6 +131,7 @@ class CLinit:
 	   anAttr  = IORAttr._narrow(SALOMEDS.AttributeIOR)
 	   GEOMShapeIOR  = anAttr.Value()
 	   self.correspondanceNomIORshape[Name]=GEOMShapeIOR
+	   
        return listeNoms
 
 
@@ -166,11 +165,15 @@ class CLinit:
        return type
 
     def get_maillages(self):
+       salome.myStudy = salome.myStudyManager.GetStudyByID( EFICASGUI.currentStudyId )
+
+       
        self.Liste_maillages={}
        if self.smesh == None :
          self.smesh = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
 	 self.smesh.SetCurrentStudy(salome.myStudy)
        stringIOR=salome.orb.object_to_string(self.smesh)
+       
        SO_smesh=salome.myStudy.FindObjectIOR(stringIOR)
        if SO_smesh != None:
          ChildIterator = salome.myStudy.NewChildIterator(SO_smesh)

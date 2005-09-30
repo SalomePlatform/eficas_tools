@@ -4,7 +4,7 @@
 # Author    : Paul RASCLE, EDF
 # Project   : SALOME
 # Copyright : EDF 2003
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.5 2005/02/03 15:15:09 salome Exp $
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.6 2005/08/18 09:05:55 salome Exp $
 #=============================================================================
 
 from omniORB import CORBA
@@ -35,6 +35,13 @@ def entryToIor(myStudy,entry):
         ior = orb.string_to_object(iorString)
     return ior
 
+def iorStringToIor(iorString):
+   """
+   retourne une référence ior de l'iorString passée en argument
+   """
+   ior = orb.string_to_object(iorString)
+   return ior
+
 def entryToIorString(myStudy,entry):
     """
     Retourne la sérialisation de l'ior de l'entry passée en
@@ -50,6 +57,7 @@ def entryToIorString(myStudy,entry):
         print "invalid entry: ",entry
         SO = None
     if SO != None:
+        
         boo,iorso = myBuilder.FindAttribute(SO,"AttributeIOR")
         if boo == 0:
             print "no IOR attribute on study object: ", entry
@@ -162,16 +170,19 @@ def getSMESHSubShapeIndexes(myStudy, entryList, typenoeudorcell = 0):
       for idShape in entryList:
 	try:
            anObject=entryToIor(myStudy,idShape)
-           Shape=anObject._narrow(GEOM.GEOM_Object)
+           if not anObject: # l'objet n'a pas encore chargé
+              strContainer, strComponentName = "FactoryServer", "GEOM"
+              myComponent = salome.lcc.FindOrLoadComponent( strContainer, strComponentName )
+              SCom=myStudy.FindComponent( strComponentName )
+              myBuilder = myStudy.NewBuilder()
+	      myBuilder.LoadWith( SCom , myComponent  )
+              anObject=entryToIor(myStudy,idShape)
+           
+	   Shape=anObject._narrow(GEOM.GEOM_Object)
            iorStringMain=orb.object_to_string(Shape)
         except :
            print "pb avec l IOR: pas un objet"
 
-        if iorStringMain == None:
-          # C'est le cas ou on a loade un fichier hdf et on est pas passe par geom
-          # par exemple ....
-          return refList
-    
         myCL=myCLinit.GetOrCreateCL(iorStringMain)
         refShape = singleEntryToName(myStudy,idShape)
         if refShape != None:
@@ -220,3 +231,33 @@ def VisuGroupe(myStudy,GroupesListe):
     aGuiDS.ClearSelection()
     aGuiDS.DisplayByNameInGeom(GroupesListe)
 
+def getSubGeometry(myStudy, list):
+   IORMainShape = entryToIorString(myStudy,list[1])
+	    
+   SO = myStudy.FindObjectIOR(IORMainShape)
+   childIt = myStudy.NewChildIterator(SO)
+   childIt.InitEx(1)
+   childListe = []
+   while childIt.More():
+      childSO = childIt.Value()
+      childListe.append(childSO.GetName())
+      childIt.Next()
+   return childListe
+	
+def getSubGeometryIorAndName(myStudy, list):
+   """
+   retourne un dictionnaire avec clé = IOR
+                                 valeur = name
+   """
+   dico = {}
+   IORMainShape = entryToIorString(myStudy,list[1])
+	    
+   SO = myStudy.FindObjectIOR(IORMainShape)
+   childIt = myStudy.NewChildIterator(SO)
+   childIt.InitEx(1)
+   while childIt.More():
+      childSO = childIt.Value()
+      if childSO.GetIOR() != '':
+         dico[childSO.GetIOR()] = childSO.GetName()
+      childIt.Next()
+   return dico

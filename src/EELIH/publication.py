@@ -132,8 +132,6 @@ class Publication(PanelBase):
           mesh = maillage.Maillage(self.appli.mw.ws, self.appli)
 	  self.listeMaillages.append(mesh)
           self.appli.mw.listePanels.append(mesh)
-	  #self.appli.mw.listePanels.insert(0, self.appli.mw.listePanels[0] + 1)
-          #del self.appli.mw.listePanels[1]
 	  
 	  self.updateGeomMaillage(mesh, i)
 
@@ -157,29 +155,17 @@ class Publication(PanelBase):
 	for iorSousGeom in self.appli.mw.geometrie.controleurGeom.dicoSousGeom.keys():
 	   GEOMIor.append(iorSousGeom)
            maillage.cl.GetOrCreateCL(iorSousGeom)
-           #self.appli.mw.maillage.cl.traiteCL()
 	maillage.cl.get_geoms()
 	maillage.cl.get_maillages()
-#        
+        
         maillage.cl.MainShapes(0)
-#       
+       
         listeMaillage = maillage.cl.Possibles(0, str(self.appli.etude.geometrie[0]))
         # insertion des maillages trouvés dans la listbox du panneau maillage
         # si aucun maillage on disable la listbox
         # sinon on disable le lineedit pour donner le nom d'un nouveau maillage
         if listeMaillage != []:
             maillage.lbMaillage.insertStrList(listeMaillage)
-            #maillage.lbMaillage.setEnabled(1)
-            #maillage.lblMaillage.setEnabled(1)
-            #maillage.lblNouveauMaillage.setEnabled(0)
-            #maillage.lnNouveauMaillage.setEnabled(0)
-        #else:
-            #maillage.lnNouveauMaillage.setEnabled(1)
-            #maillage.lblNouveauMaillage.setEnabled(1)
-            #maillage.lbMaillage.setEnabled(0)
-            #maillage.lblMaillage.setEnabled(0)
- 
-
 
 dict_geom_numgroupe = { }
 dict_geom_numface = { }
