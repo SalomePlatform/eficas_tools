@@ -281,11 +281,14 @@ class MCSIMP(I_OBJECT.OBJECT):
         Essaie d'évaluer new_valeur comme une SD, une déclaration Python 
         ou un EVAL: Retourne la valeur évaluée (ou None) et le test de réussite (1 ou 0)
     """
-    #print "eval_valeur",new_valeur
     sd = self.jdc.get_sd_avant_etape(new_valeur,self.etape)
     #sd = self.jdc.get_contexte_avant(self.etape).get(new_valeur,None)
+    #print sd
     if sd :
       return sd,1
+    lsd = self.jdc.cherche_list_avant(self.etape,new_valeur) 
+    if lsd :
+      return lsd,1
     else:
       d={}
       # On veut EVAL avec tous ses comportements. On utilise Accas. Perfs ??
