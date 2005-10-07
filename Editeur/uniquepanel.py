@@ -59,7 +59,7 @@ class UNIQUE_Panel(newSIMPPanel):
       return self.entry.get()
     
   
-  def valid_valeur(self):
+  def valid_valeur(self,valeurentree=None):
       """
       Teste si la valeur fournie par l'utilisateur est une valeur permise :
       - si oui, l'enregistre
@@ -67,7 +67,8 @@ class UNIQUE_Panel(newSIMPPanel):
       """
       if self.parent.modified == 'n' : self.parent.init_modif()
       anc_val = self.node.item.get_valeur()
-      valeurentree = self.get_valeur()
+      if valeurentree== None :
+         valeurentree = self.get_valeur()
       valeur,validite=self.node.item.eval_valeur(valeurentree)
       if not validite :
              commentaire = "impossible d'évaluer : %s " %`valeurentree`

@@ -60,28 +60,32 @@ class UNIQUE_COMP_Panel(UNIQUE_Panel):
       self.frame_valeur.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
       self.frame_valeur.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
       self.label = Label(self.frame_valeur,text='Valeur :')
-      self.label.place(relx=0.1,rely=0.5)
+      self.label.place(relx=0.1,rely=0.7)
       self.typ_cplx=StringVar()
       self.typ_cplx.set('RI')
       rb1 = Radiobutton(self.frame_valeur, text='RI',variable=self.typ_cplx,value='RI')
       rb2 = Radiobutton(self.frame_valeur, text='MP',variable=self.typ_cplx,value='MP')
+      rb1.place(relx=0.05,rely = 0.6)
+      rb2.place(relx=0.05,rely = 0.8)
       self.entry1 = Pmw.EntryField(self.frame_valeur,validate='real')
       self.entry2 = Pmw.EntryField(self.frame_valeur,validate='real')
-      rb1.place(relx=0.05,rely = 0.4)
-      rb2.place(relx=0.05,rely = 0.6)
+      self.entry3 = Pmw.EntryField(self.frame_valeur)
       self.entry1.component('entry').bind("<Return>",lambda e,s=self:s.entry2.component('entry').focus())
-      self.entry2.component('entry').bind("<Return>",lambda e,c=self.valid_valeur:c())
       self.entry1.component('entry').bind("<KP_Enter>",lambda e,s=self:s.entry2.component('entry').focus())
+      self.entry2.component('entry').bind("<Return>",lambda e,c=self.valid_valeur:c())
       self.entry2.component('entry').bind("<KP_Enter>",lambda e,c=self.valid_valeur:c())
-      self.entry1.place(relx=0.27,rely = 0.5,relwidth=0.35)
-      self.entry2.place(relx=0.65,rely = 0.5,relwidth=0.35)
+      self.entry3.component('entry').bind("<Return>",lambda e,c=self.valid_complexe:c())
+      self.entry3.component('entry').bind("<KP_Enter>",lambda e,c=self.valid_complexe:c())
+      self.entry1.place(relx=0.27,rely = 0.7,relwidth=0.35)
+      self.entry2.place(relx=0.65,rely = 0.7,relwidth=0.35)
+      self.entry3.place(relx=0.27,rely = 0.4,relwidth=0.60)
       self.entry1.focus()
       self.frame_valeur.update()
       self.aide = Label(self.frame_valeur,
                         text = aide,
                         wraplength=int(self.frame_valeur.winfo_width()*0.8),
 			justify='center')
-      self.aide.place(relx=0.5,rely=0.7,anchor='n')
+      self.aide.place(relx=0.5,rely=0.9,anchor='n')
       # affichage de la valeur du MCS
       self.display_valeur()
 
@@ -91,12 +95,20 @@ class UNIQUE_COMP_Panel(UNIQUE_Panel):
       """
       valeur = self.node.item.get_valeur()
       if valeur == None or valeur == '' : return # pas de valeur à afficher ...
-      typ_cplx,x1,x2=valeur
       self.entry1.delete(0,END)
       self.entry2.delete(0,END)
-      self.typ_cplx.set(typ_cplx)
-      self.entry1.setentry(x1)
-      self.entry2.setentry(x2)
+      self.entry3.delete(0,END)
+      if type(valeur) not in (types.ListType,types.TupleType) :
+         self.display_complexe
+      else:
+         typ_cplx,x1,x2=valeur
+         self.typ_cplx.set(typ_cplx)
+         self.entry1.setentry(x1)
+         self.entry2.setentry(x2)
+
+  def display_complexe(self):
+      valeur = self.node.item.get_valeur()
+      self.entry3.setentry(valeur)
 
   def get_bulle_aide(self):
       """
@@ -135,3 +147,6 @@ class UNIQUE_COMP_Panel(UNIQUE_Panel):
       self.entry1.delete(0,END)
       self.entry2.delete(0,END)
       
+  def valid_complexe(self):
+      valeurentree=self.entry3.get()
+      self.valid_valeur(valeurentree=valeurentree)
