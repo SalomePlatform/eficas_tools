@@ -55,6 +55,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       from plusieurspanel import PLUSIEURS_Panel
 
       #print "affect_panel : ",self.nom,self.is_list(),self.has_into(), self.get_into(None)
+      # Attention l ordre des if est important
 
       if self.wait_shell():
           # l'objet attend un shell
@@ -78,8 +79,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
                   self.panel = PLUSIEURS_ASSD_Panel
               else:
                   # on attend une liste de valeurs de types debase (entiers, réels,...)
-                  from plusieursbasepanel import PLUSIEURS_BASE_Panel
-                  self.panel = PLUSIEURS_BASE_Panel
+                  from plusieursbasepanel import PLUSIEURS_BASE_OR_UNELISTE_Panel
+                  self.panel = PLUSIEURS_BASE_OR_UNELISTE_Panel
           else:
               # on n'attend qu'une seule valeur mais de quel type ?
               if self.wait_co():
@@ -448,6 +449,12 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       a=self.object.etape.parent.get_sd_avant_du_bon_type(self.object.etape,self.object.definition.type)
       return a
 
+  def get_sd_avant_du_bon_type_pour_type_de_base(self):
+      a=self.object.jdc.get_sd_avant_du_bon_type_pour_type_de_base(self.object.etape,"LASSD")
+      return a
+
+
+
   #def verif(self):
   #    pass
 
@@ -518,6 +525,16 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       attend un objet de type ASSD ou dérivé, 0 sinon """
       return self.object.wait_assd()
     
+  def wait_assd_or_type_base(self) :
+      boo=0
+      if len(self.object.definition.type) > 1 :
+         if self.wait_reel() :
+	    boo = 1
+	 if 'I' in self.object.definition.type :
+	    boo = 1
+      return boo
+
+   
   def GetType(self):
       """ 
           Retourne le type de valeur attendu par l'objet représenté par l'item.
@@ -568,7 +585,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       validite=1
       if self.wait_reel():
              valeurinter = self.traite_reel(valeur)
-             valeurretour,validite= self.object.eval_valeur(valeurinter)
+	     if valeurinter != None :
+                valeurretour,validite= self.object.eval_valeur(valeurinter)
+             else:
+                valeurretour,validite= self.object.eval_valeur(valeur)
       elif self.wait_geom():
              valeurretour,validite = valeur,1
       else :

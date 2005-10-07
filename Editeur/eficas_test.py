@@ -57,13 +57,21 @@ def duplique_fichier(code,fichier=None,root=None):
     import utils
     import string
 
+    from Editeur import session
+    if fichier != None :
+       options=session.parse(sys.argv+[fichier])
+    else :
+       options=session.parse(sys.argv)
+
     appli=eficas.EFICAS(root,code=code,fichier = fichier,test=1)
     format='homard'
     if convert.plugins.has_key(format):
        p=convert.plugins[format]()
        p.readfile(fichier)
        text=p.convert('exec',appli)
+       print text
        text2=convertir(text)
+       print text2
        cata=appli.readercata.cata
        J=cata[0].JdC(procedure=text2,cata=cata)
        J.analyse()
@@ -71,6 +79,7 @@ def duplique_fichier(code,fichier=None,root=None):
        if generator.plugins.has_key(format):
           g=generator.plugins[format]()
           jdc_formate=g.gener(J,format='beautifie')
+	  print "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
           print jdc_formate
           jdc_fini = string.replace(jdc_formate,'\r\n','\n')
           print jdc_fini
