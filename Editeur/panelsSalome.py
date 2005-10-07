@@ -197,6 +197,10 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
       liste_valeurs = self.Liste_valeurs.get_liste()
       entryname_list=SMESH_utils.VisuGroupe(salome.myStudy,liste_valeurs)
 
+  def visu3D_in_salome(self):
+      liste_valeurs = self.Liste_valeurs.get_liste()
+      entryname_list=SMESH_utils.VisuGroupe(salome.myStudy,liste_valeurs)
+
   def recalcule(self):
       liste_valeurs_salome=self.Liste_valeurs_salome.get_liste()
       groups={}
@@ -335,6 +339,12 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
       self.sortie.place(relx=0.4,rely=0.2,relwidth=0.6)
       self.c = Button(self.frame_choix,text='Visualiser',command=self.visu_in_salome)
       self.c.place(relx=0.03,rely=0.35,relwidth=0.35)
+
+      self.genea =self.node.item.get_genealogie()
+      print self.genea
+      if "AFFE_CARA_ELEM" in self.genea :
+         self.d=Button(self.frame_choix,text='Visu 3D',command=self.visu3D_in_salome)
+         self.d.place(relx=0.47,rely=0.35,relwidth=0.35)
 
       l_salome_valeurs=self.node.item.get_salome_valeurs()
       self.Liste_valeurs_salome=ListeChoix(self,self.frame_valeurs_salome,l_salome_valeurs,
