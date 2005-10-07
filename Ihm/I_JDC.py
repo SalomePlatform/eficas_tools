@@ -27,6 +27,7 @@ import string,linecache
 # Modules Eficas
 import I_OBJECT
 from Noyau.N_ASSD import ASSD
+from Noyau.N_LASSD import LASSD
 from Noyau.N_ETAPE import ETAPE
 from Noyau.N_Exception import AsException
 from Extensions import commentaire,parametre,parametre_eval
@@ -66,6 +67,35 @@ class JDC(I_OBJECT.OBJECT):
            l.append(k)
       l.sort()
       return l
+
+   def get_sd_avant_du_bon_type_pour_type_de_base(self,etape,type):
+      """
+          Retourne la liste des concepts avant etape d'1 type de base acceptable
+	  Attention different de la routine précédente : 1 seul type passé en parametre
+	  Teste sur issubclass et par sur le type permis
+      """
+      d=self.get_contexte_avant(etape)
+      l=[]
+      try :
+         typeverif=self.cata[0].__dict__[type]
+      except :
+         return l
+      for k,v in d.items():
+        if issubclass(v.__class__,typeverif): 
+           l.append(k)
+      l.sort()
+      return l
+
+   def cherche_list_avant(self,etape,valeur):
+       d=self.get_contexte_avant(etape)
+       for k,v in d.items():
+          if issubclass(v.__class__,LASSD):
+	     if k == valeur :
+	        return k
+	# Attention pour enlever les . a la fin des pretendus reels
+	     if k == valeur[0:-1] :
+	        return v
+       return None
 
    def est_permis(self,v,types_permis):
       for type_ok in types_permis:
