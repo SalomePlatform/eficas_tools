@@ -670,7 +670,7 @@ class Formulaire:
 class ListeChoix :
     """ Cette classe est utilisée pour afficher une liste de choix passée en paramètre
         en passant les commandes à lancer suivant différents bindings """
-    def __init__(self,parent,page,liste,liste_commandes=[],liste_marques =[],active ='oui',filtre='non',titre='',optionReturn=None):
+    def __init__(self,parent,page,liste,liste_commandes=[],liste_marques =[],active ='oui',filtre='non',titre='',optionReturn=None, fonte_titre=fontes.standard_gras_souligne):
         self.parent = parent
         self.page = page
         self.liste = liste
@@ -683,6 +683,7 @@ class ListeChoix :
         self.titre = titre
         self.filtre = filtre
         self.optionReturn = optionReturn
+	self.fonte_titre=fonte_titre
         self.init()
 
     def init(self):        
@@ -697,10 +698,9 @@ class ListeChoix :
     def make_label_titre(self):
         """ Crée le label correspondant au titre """
         if self.titre == '' : return
-        fonte_titre = fontes.standard_gras_souligne
         self.label = Label(self.page,
                            text = self.titre,
-                           font = fonte_titre)
+                           font = self.fonte_titre)
         self.label.pack(side='top',pady=2)
         
     def make_entry_filtre(self):
