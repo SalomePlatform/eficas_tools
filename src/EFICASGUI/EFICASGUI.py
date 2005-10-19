@@ -35,6 +35,13 @@ import salomedsgui
 aGuiDS=salomedsgui.guiDS()
 print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 
+
+
+# -----------------------------------------------------------------------------
+# gestionnaire arbre d'étude
+from EficasStudy import study
+
+
 # -----------------------------------------------------------------------------
 
 def setWorkSpace(workSpace):
@@ -76,7 +83,8 @@ def setSettings():
    currentStudyId = sgPyQt.getStudyId()
    print "setSettings: currentStudyId = " + str(currentStudyId)
    # _CS_gbo_ Voir si on peut utiliser directement sgPyQt.getStudyId()
-   # dans salomedsgui?
+   # dans salomedsgui?   
+   study.setCurrentStudyID( currentStudyId )
 
 
 # -----------------------------------------------------------------------------
@@ -89,7 +97,9 @@ def activeStudyChanged(ID):
    # studyId=sg.getActiveStudyId()
    currentStudyId=ID
    print "_CS_GBO_ : EFICASGUI.activeStudyChanged : currentStudyId = ", currentStudyId
-   print "_CS_GBO_ : EFICASGUI.activeStudyChanged : sgPyQt.getStudyId() = ", sgPyQt.getStudyId()
+   print "_CS_GBO_ : EFICASGUI.activeStudyChanged : sgPyQt.getStudyId() = ", sgPyQt.getStudyId()   
+   study.setCurrentStudyID( ID )
+   
 
 def definePopup(theContext, theObject, theParent):
    print "EFICASGUI --- definePopup"
