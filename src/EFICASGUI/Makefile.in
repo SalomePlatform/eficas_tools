@@ -39,7 +39,9 @@ SMESH_utils.py \
 eficasCL.py   \
 ChoixMaillage.py \
 MonChoixMaillage.py \
-eficasSalome.py  
+eficasSalome.py \
+meshdialog.py \
+meshdialogImp.py
 
 # _CS_gbo_151104 Ajout pour compatibilité ascendante entre versions de Eficas
 EXPORT_PYSCRIPTS+=eficas_etude.py
