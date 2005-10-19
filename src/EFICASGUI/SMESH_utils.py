@@ -4,7 +4,7 @@
 # Author    : Paul RASCLE, EDF
 # Project   : SALOME
 # Copyright : EDF 2003
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.6 2005/08/18 09:05:55 salome Exp $
+#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/EFICASGUI/SMESH_utils.py,v 1.7 2005/09/30 17:41:46 salome Exp $
 #=============================================================================
 
 from omniORB import CORBA
@@ -196,6 +196,29 @@ def getSMESHSubShapeIndexes(myStudy, entryList, typenoeudorcell = 0):
     #--------------------------------------------------------------------------
 
 def getAsterGroupNo(myStudy,entryList):
+    ## CS_pbruno OK ici on a l'entry ( entryList ) d'un objet geom sur lequel on applique une condition au limite sur face
+    ## CS_pbruno begin : cette partie ( temporaire avt nettoyage du code ) rempli les information indispensable pour la boite de dialogue
+    
+    #print "CS_pbruno getAsterGroupNo (myStudy=%s,entryList=%s)"%(myStudy,entryList)
+    import meshdialogImp    
+    from EficasStudy import study
+
+    newShapeEntry = entryList[0]
+
+    #print 'CS_pbruno getAsterGroupNo : newShapeEntry', newShapeEntry
+    #print 'CS_pbruno getAsterGroupNo : mainShapeEntry', meshdialogImp.mainShapeEntry    
+    if not meshdialogImp.mainShapeEntry: #on détermine d'abord la géométrie principale
+        meshdialogImp.mainShapeEntry = study.getMainShapeEntry( newShapeEntry )        
+        
+    # toutes les nouvelles sous-géométries doivent appartenir à la même géométrie principale
+    if meshdialogImp.mainShapeEntry:
+        same= study.sameMainShape( meshdialogImp.mainShapeEntry, newShapeEntry )
+        if same:
+            meshdialogImp.groupeNoEntries.append( newShapeEntry )
+    #print 'CS_pbruno getAsterGroupNo : groupeNoEntries', str( meshdialogImp.groupeNoEntries )
+    ## CS_pbruno end
+    
+
     typenoeudorcell = 0
     subShapeIndexes = getSMESHSubShapeIndexes(myStudy, entryList,typenoeudorcell)
     labelGroupNo = []
@@ -211,6 +234,30 @@ def getAsterGroupNo(myStudy,entryList):
     #--------------------------------------------------------------------------
 
 def getAsterGroupMa(myStudy,entryList):
+    ## CS_pbruno OK ici on a l'entry ( entryList ) d'un objet geom sur lequel on applique une condition au limite sur face
+    ## CS_pbruno begin : cette partie ( temporaire avt nettoyage du code ) rempli les information indispensable pour la boite de dialogue
+    
+    #print "CS_pbruno getAsterGroupMa (myStudy=%s,entryList=%s)"%(myStudy,entryList)
+    import meshdialogImp    
+    from EficasStudy import study
+
+    newShapeEntry = entryList[0]
+
+    #print 'CS_pbruno getAsterGroupMa : newShapeEntry', newShapeEntry
+    #print 'CS_pbruno getAsterGroupMa : mainShapeEntry', meshdialogImp.mainShapeEntry
+    
+    if not meshdialogImp.mainShapeEntry: #on détermine d'abord la géométrie principale
+        meshdialogImp.mainShapeEntry = study.getMainShapeEntry( newShapeEntry )        
+        
+    # toutes les nouvelles sous-géométries doivent appartenir à la même géométrie principale
+    if meshdialogImp.mainShapeEntry:
+        same= study.sameMainShape( meshdialogImp.mainShapeEntry, newShapeEntry )
+        if same:
+            meshdialogImp.groupeMaEntries.append( newShapeEntry )
+    #print 'CS_pbruno getAsterGroupMa : groupeMaEntries', str( meshdialogImp.groupeMaEntries )
+    ## CS_pbruno end
+
+    
     typenoeudorcell = 1
     subShapeIndexes = getSMESHSubShapeIndexes(myStudy, entryList,typenoeudorcell)
     labelGroupMa = []

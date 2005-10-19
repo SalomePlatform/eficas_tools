@@ -3,9 +3,14 @@ import SALOMEDS
 import SMESH
 import GEOM
 import SalomePyQt
-import MonChoixMaillage
+##import MonChoixMaillage
 import string
 import EFICASGUI
+
+
+import meshdialogImp
+
+
 
 Tag_RefOnShape = 1
 dict_CL={}
@@ -36,7 +41,10 @@ class CLinit:
        self.get_maillages()
        # Récupere tous les Mesh
        if len(dict_CL) > 0:
-          Choix=MonChoixMaillage.MonChoixMaillage(self,0,self._d)
+          Dialog = meshdialogImp.MeshDialogImpl( self._d )
+          dict_CL.clear()
+          ##Choix=MonChoixMaillage.MonChoixMaillage(self,0,self._d)
+          
        salome.sg.updateObjBrowser(0)
        
     
