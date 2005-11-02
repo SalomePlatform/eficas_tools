@@ -36,14 +36,15 @@ aGuiDS=salomedsgui.guiDS()
 print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 
 
-
 # -----------------------------------------------------------------------------
 # gestionnaire arbre d'étude
 from EficasStudy import study
 
 
 # -----------------------------------------------------------------------------
-
+#Cette méthode est obsolète en V3
+#En V2, si on n'implémente pas cette méthode, le composant fonctionne
+#correctement. Un message "Attribute Error" apparait dans la trace.
 def setWorkSpace(workSpace):
    print "EficasGUI --- setWorkSpace"
    global WORKSPACE
@@ -63,10 +64,10 @@ def setWorkSpace(workSpace):
 # -----------------------------------------------------------------------------
 
 def OnGUIEvent(commandID) :
-   print "EficasGUI :: OnGUIEvent :::::::::::::::::::::::::::::::::commandID,WORKSPACE = ",commandID,WORKSPACE
+   print "EficasGUI :: OnGUIEvent :::::::::::::::::::::::::::::::::commandID = ",commandID
    if dict_command.has_key(commandID):
       print "OnGUIEvent ::::::::::  commande associée  : ",commandID      
-      dict_command[commandID](WORKSPACE)
+      dict_command[commandID]()
    else:
       print "Pas de commande associée a : ",commandID
 
@@ -85,6 +86,16 @@ def setSettings():
    # _CS_gbo_ Voir si on peut utiliser directement sgPyQt.getStudyId()
    # dans salomedsgui?   
    study.setCurrentStudyID( currentStudyId )
+
+def activate():
+   """
+   Cette méthode permet l'activation du module, s'il a été chargé mais pas encore
+   activé dans une étude précédente.
+   
+   Portage V3.
+   """
+   print "--------EFICASGUI:: activate"
+   setSettings()
 
 
 # -----------------------------------------------------------------------------
@@ -123,12 +134,12 @@ def customPopup(popup, theContext, theObject, theParent):
 
 import eficasSalome
 
-def runEficas(ws):
-   print "--------------------------------------------------"
+def runEficas():
+   print "-------------------------EFICASGUI::runEficas-------------------------"
    print currentStudyId
-   eficasSalome.runEficas(ws,"ASTER",studyId=currentStudyId)
+   eficasSalome.runEficas("ASTER",studyId=currentStudyId)
    
-def runEELIH(ws,code="ASTER"):
+def runEELIH(code="ASTER"):
    # Enregistrement dans l étude
    import eficasEtude
    import appli
@@ -140,15 +151,15 @@ def runEELIH(ws,code="ASTER"):
    flag = 'E'
    moi=appli.Appli(MaRef, flag)
    
-def runEficaspourHomard(ws):
+def runEficaspourHomard():
    print "runEficas"
-   eficasSalome.runEficas(ws,"HOMARD")
+   eficasSalome.runEficas("HOMARD")
     
-def runEficasHomard(ws):
+def runEficasHomard():
    print "runEficas"
-   eficasSalome.runEficas(None,"HOMARD")
+   eficasSalome.runEficas("HOMARD")
 
-def runEficasFichier(ws):
+def runEficasFichier():
    """
    Lancement d'eficas à partir d'un fichier sélectionné dans l'arbre
    d'étude. 
@@ -166,17 +177,17 @@ def runEficasFichier(ws):
          boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_HOMARD",a[0])
    	 code = "HOMARD"
    
-   eficasSalome.runEficas(ws,code,attr,studyId=currentStudyId)
+   eficasSalome.runEficas(code,attr,studyId=currentStudyId)
 
 # Partie applicative
 
 dict_command={
-               941:runEficas,
-	       943:runEELIH,
-               946:runEficaspourHomard,
-               4041:runEficas,
-	       4043:runEELIH,
-               4046:runEficaspourHomard,
-               9042:runEficasFichier,
+                941:runEficas,
+                943:runEELIH,
+                946:runEficaspourHomard,
+                4041:runEficas,
+                4043:runEELIH,
+                4046:runEficaspourHomard,
+                9042:runEficasFichier,
              }
 

@@ -18,8 +18,7 @@ import Tkinter
 root=Tkinter.Tk()
 root.withdraw()
 
-
-def runEficas(ws,code="ASTER",fichier=None,studyId=None):
+def runEficas(code="ASTER",fichier=None,studyId=None):
     global initialised
     if not initialised:
         t=Tkinter.Toplevel()
@@ -32,8 +31,7 @@ def runEficas(ws,code="ASTER",fichier=None,studyId=None):
         #initialised=1
 
 def runHomard() :
-    runEficas(None,"HOMARD")
+    runEficas("HOMARD")
 
 def runAster() :
-    runEficas(None,"ASTER")
-
+    runEficas("ASTER")
