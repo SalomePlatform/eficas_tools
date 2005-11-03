@@ -54,9 +54,8 @@ class Panel(Frame) :
       global panneauCommande
       panneauCommande=self
 
-  def __del__(self):
-      """ appele a la destruction du panel """
-      #print "PANEL DETRUIT"
+  #def __del__(self):
+  #    print "__del__",self
 
   def update_panel(self):
       """Methode appele pour demander une mise a jour du panneau"""
@@ -490,11 +489,6 @@ class OngletPanel(Panel) :
   def deselectMC(self,name):
       self.parent.appli.affiche_infos('')
     
-  def get_liste_cmd_BAK(self):
-      raise "OBSOLETE"
-      listeCmd = self.cata.listCmd()
-      return listeCmd
-
   def get_groups(self):
       jdc=self.node.item.object.get_jdc_root()
       return jdc.get_groups()

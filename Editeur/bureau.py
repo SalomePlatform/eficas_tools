@@ -22,7 +22,7 @@
    Ce module contient la classe BUREAU qui gere les JDC ouverts
 """
 # Modules Python
-import os,string
+import os,string,sys
 import traceback
 import Pmw
 from widgets import askopenfilename,asksaveasfilename
@@ -212,7 +212,6 @@ class BUREAU:
 
    def onClose(self,jdcdisplay):
       #print "onClose",jdcdisplay
-      CONNECTOR.Disconnect(jdcdisplay.jdc,"close",self.onClose,(jdcdisplay,))
       self.closeJDCDISPLAY(jdcdisplay)
 
    def closeJDCDISPLAY(self,jdc):
@@ -258,17 +257,20 @@ class BUREAU:
               if test == 0 :
                   self.appli.affiche_infos("Sauvegarde impossible")
                   return
+
+      CONNECTOR.Disconnect(self.JDCDisplay_courant.jdc,"close",self.onClose,(self.JDCDisplay_courant,))
+      self.JDCDisplay_courant.supprime()
       self.JDCDisplay_courant.jdc.supprime()
       self.liste_JDCDisplay.remove(self.JDCDisplay_courant)
+      # Active le mecanisme de selection du notebook (selectJDC)
       self.nb.delete(self.nb.getcurselection())
-      #XXX CCAR: pour le moment mis en commentaire
-      #self.JDC.unset_context()
-      self.JDC = None
+
       try:
           index = self.nb.index(self.nb.getcurselection())
           self.JDCDisplay_courant = self.liste_JDCDisplay[index]
           self.JDC = self.JDCDisplay_courant.jdc
       except:
+          self.JDC = None
           self.JDCDisplay_courant = None
           self.appli.toolbar.inactive_boutons()
 

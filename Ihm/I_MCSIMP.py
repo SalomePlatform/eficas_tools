@@ -262,17 +262,22 @@ class MCSIMP(I_OBJECT.OBJECT):
       self.isvalid()
       return validite
 
+  def update_condition_bloc(self):
+      """ Met a jour les blocs conditionnels dependant du mot cle simple self
+      """
+      if self.definition.position == 'global' : 
+         self.etape.deep_update_condition_bloc()
+      elif self.definition.position == 'global_jdc' :
+         self.jdc.deep_update_condition_bloc()
+      else:
+         self.parent.update_condition_bloc()
+
   def set_valeur(self,new_valeur,evaluation='oui'):
         #print "set_valeur",new_valeur
         self.init_modif()
         self.valeur = new_valeur
         self.val = new_valeur
-        if self.definition.position == 'global' : 
-           self.etape.deep_update_condition_bloc()
-        elif self.definition.position == 'global_jdc' :
-           self.jdc.deep_update_condition_bloc()
-        else:
-           self.parent.update_condition_bloc()
+        self.update_condition_bloc()
         self.fin_modif()
         return 1
 
@@ -457,6 +462,30 @@ class MCSIMP(I_OBJECT.OBJECT):
      """
      return self.definition.type
 
+  def delete_mc_global(self):
+      """ Retire self des declarations globales
+      """
+      if self.definition.position == 'global' : 
+         etape = self.get_etape()
+         if etape :
+            del etape.mc_globaux[self.nom]
+      elif self.definition.position == 'global_jdc' :
+         del self.jdc.mc_globaux[self.nom]
+
+  def update_mc_global(self):
+     """
+        Met a jour les mots cles globaux enregistrés dans l'étape parente
+        et dans le jdc parent.
+        Un mot cle simple peut etre global. 
+     """
+     if self.definition.position == 'global' :
+        etape = self.get_etape()
+        if etape :
+           etape.mc_globaux[self.nom]=self
+     elif self.definition.position == 'global_jdc' :
+        if self.jdc:
+           self.jdc.mc_globaux[self.nom]=self
+
 #--------------------------------------------------------------------------------
 # PN : ajout pour Salome des methodes suivantes (jusqu aux méthodes surchargees)
 #--------------------------------------------------------------------------------
@@ -567,3 +596,5 @@ class MCSIMP(I_OBJECT.OBJECT):
 
         self.set_valid(valid)
         return self.valid
+
+

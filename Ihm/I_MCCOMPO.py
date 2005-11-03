@@ -20,7 +20,7 @@
 # ======================================================================
 """
 """
-import string,types
+import string,types,sys
 from copy import copy
 import traceback
 
@@ -175,31 +175,18 @@ class MCCOMPO(I_OBJECT.OBJECT):
         Retourne 1 si la suppression a pu être effectuée,
         Retourne 0 dans le cas contraire
     """
-    self.init_modif()
     if not objet in self.mc_liste:
        # Impossible de supprimer objet. Il n'est pas dans mc_liste
-       self.fin_modif()
        return 0
 
-    try :
-      self.mc_liste.remove(objet)
-      CONNECTOR.Emit(self,"supp",objet)
-
-      if hasattr(objet.definition,'position'):
-         if objet.definition.position == 'global' :
-            self.delete_mc_global(objet)
-            self.etape.deep_update_condition_bloc()
-         elif objet.definition.position == 'global_jdc' :
-            self.delete_mc_global_jdc(objet)
-            self.jdc.deep_update_condition_bloc()
-      else:
-         self.update_condition_bloc()
-
-      self.fin_modif()
-      return 1
-    except:
-      self.fin_modif()
-      return 0
+    self.init_modif()
+    self.mc_liste.remove(objet)
+    CONNECTOR.Emit(self,"supp",objet)
+    objet.delete_mc_global()
+    objet.update_condition_bloc()
+    objet.supprime()
+    self.fin_modif()
+    return 1
 
   def isoblig(self):
       return 0
@@ -209,17 +196,11 @@ class MCCOMPO(I_OBJECT.OBJECT):
           Ajoute le mot-cle name à la liste des mots-cles de
           l'objet MCCOMPOSE
       """
-      #print "I_MCCOMPO.addentite",name,pos
       self.init_modif()
       if type(name)==types.StringType :
         # on est en mode création d'un motcle 
         if self.ispermis(name) == 0 : return 0
         objet=self.definition.entites[name](val=None,nom=name,parent=self)
-        if hasattr(objet.definition,'position'):
-          if objet.definition.position == 'global' :
-            self.append_mc_global(objet)
-          elif objet.definition.position == 'global_jdc' :
-            self.append_mc_global_jdc(objet)
       else :
         # dans ce cas on est en mode copie d'un motcle
         objet = name
@@ -237,20 +218,20 @@ class MCCOMPO(I_OBJECT.OBJECT):
 
       # On cherche s'il existe deja un mot cle de meme nom
       old_obj = self.get_child(objet.nom,restreint = 'oui')
-      #print "addentite",old_obj
-      #if old_obj:print "addentite",old_obj.isrepetable(),old_obj.isMCList(),old_obj.ajout_possible()
       if not old_obj :
-         #print self.mc_liste,objet
+         # on normalize l'objet
+         objet=objet.normalize()
          # Le mot cle n'existe pas encore. On l'ajoute a la position
 	 # demandee (pos)
          if pos == None :
            self.mc_liste.append(objet)
          else :
            self.mc_liste.insert(pos,objet)
-         #print self.mc_liste,objet
          # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
          objet.reparent(self)
          CONNECTOR.Emit(self,"add",objet)
+         objet.update_mc_global()
+         objet.update_condition_bloc()
          self.fin_modif()
          return objet
       else:
@@ -262,29 +243,10 @@ class MCCOMPO(I_OBJECT.OBJECT):
             self.fin_modif()
             return 0
          else:
-            if not old_obj.isMCList():
-               # un objet de même nom existe déjà mais ce n'est pas une MCList
-               # Il faut en créer une 
-               # L'objet existant (old_obj) est certainement un MCFACT 
-               # qui pointe vers un constructeur
-               # de MCList : definition.liste_instance
-               index = self.mc_liste.index(old_obj)
-               new_obj = old_obj.definition.list_instance()
-               new_obj.init(objet.nom,self)
-               new_obj.append(old_obj)
-               new_obj.append(objet)
-               # Il ne faut pas oublier de reaffecter le parent d'obj
-               objet.reparent(self)
-               self.mc_liste.remove(old_obj)
-               CONNECTOR.Emit(self,"supp",old_obj)
-               self.mc_liste.insert(index,new_obj)
-               CONNECTOR.Emit(self,"add",new_obj)
-               self.fin_modif()
-               return new_obj
-            else :
-               # une liste d'objets de même type existe déjà
-               old_obj.addentite(objet)
-               return old_obj
+            # une liste d'objets de même type existe déjà
+            old_obj.addentite(objet)
+            self.fin_modif()
+            return old_obj
 
   def ispermis(self,fils):
     """ 
@@ -340,22 +302,6 @@ class MCCOMPO(I_OBJECT.OBJECT):
     for child in self.mc_liste :
       child.replace_concept(old_sd,sd)
 
-  def delete_mc_global(self,mc):
-    """ 
-        Supprime le mot-clé mc de la liste des mots-clés globaux de l'étape 
-    """
-    etape = self.get_etape()
-    if etape :
-      nom = mc.nom
-      del etape.mc_globaux[nom]
-
-  def delete_mc_global_jdc(self,mc):
-    """ 
-        Supprime le mot-clé mc de la liste des mots-clés globaux du jdc 
-    """
-    nom = mc.nom
-    del self.jdc.mc_globaux[nom]
-
   def get_liste_mc_inconnus(self):
      """
      Retourne la liste des mots-clés inconnus dans self
@@ -378,8 +324,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
         Parcourt l'arborescence des mcobject et realise l'update 
         des blocs conditionnels par appel de la methode update_condition_bloc
      """
-     #print "deep_update_condition_bloc",self
-     self.update_condition_bloc()
+     self._update_condition_bloc()
      for mcobj in self.mc_liste:
         if hasattr(mcobj,"deep_update_condition_bloc"):
            mcobj.deep_update_condition_bloc()
@@ -387,8 +332,15 @@ class MCCOMPO(I_OBJECT.OBJECT):
   def update_condition_bloc(self):
      """
         Realise l'update des blocs conditionnels fils de self
+        et propage au parent
      """
-     #print "update_condition_bloc",self
+     self._update_condition_bloc()
+     if self.parent:self.parent.update_condition_bloc()
+
+  def _update_condition_bloc(self):
+     """
+        Realise l'update des blocs conditionnels fils de self
+     """
      dict = self.cree_dict_condition(self.mc_liste,condition=1)
      for k,v in self.definition.entites.items():
         if v.label != 'BLOC' :continue
@@ -440,3 +392,17 @@ class MCCOMPO(I_OBJECT.OBJECT):
      """
      for motcle in self.mc_liste :
          motcle.verif_existence_sd()
+
+  def update_mc_global(self):
+     """
+        Met a jour les mots cles globaux enregistrés dans l'étape parente 
+        et dans le jdc parent.
+        Un mot cle compose ne peut pas etre global. Il se contente de passer
+        la requete a ses fils.
+     """
+     for motcle in self.mc_liste :
+         motcle.update_mc_global()
+
+  def delete_mc_global(self):
+     for motcle in self.mc_liste :
+         motcle.delete_mc_global()

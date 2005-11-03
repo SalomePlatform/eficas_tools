@@ -28,6 +28,7 @@ from Tkinter import *
 import Pmw
 import os,sys,re,string
 import types,fnmatch
+import traceback
 from tkFileDialog import *
 from tkMessageBox import showinfo,askyesno,showerror,askretrycancel
 
@@ -670,7 +671,8 @@ class Formulaire:
 class ListeChoix :
     """ Cette classe est utilisée pour afficher une liste de choix passée en paramètre
         en passant les commandes à lancer suivant différents bindings """
-    def __init__(self,parent,page,liste,liste_commandes=[],liste_marques =[],active ='oui',filtre='non',titre='',optionReturn=None, fonte_titre=fontes.standard_gras_souligne):
+    def __init__(self,parent,page,liste,liste_commandes=[],liste_marques =[],active ='oui',filtre='non',titre='',
+                 optionReturn=None, fonte_titre=fontes.standard_gras_souligne):
         self.parent = parent
         self.page = page
         self.liste = liste
@@ -780,6 +782,10 @@ class ListeChoix :
 
         self.MCbox.config(state=DISABLED)
         self.selection = None
+        for event,callback in self.liste_commandes:
+            if event == "<Enter>":
+               self.selection=None,None,callback
+               break
 
     def clear_marque(self):
         try:
@@ -813,45 +819,24 @@ class ListeChoix :
            showerror(raison.split('\n')[0],raison)
         
     def selectNextItem(self,mot,label):
-        try :
-           index=self.liste.index(mot)
-           indexsuivant=index+1
-	   if indexsuivant > len(self.liste) -1:
-	      indexsuivant=0
-           motsuivant=self.liste[indexsuivant]
-           labelsuivant=self.dico_labels[motsuivant]
-           self.clear_marque()
-           if self.selection != None :
-              self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
-              self.selection = (mot,label,self.selection[2])
-           index = self.MCbox.index(labelsuivant)
-           self.MCbox.see(index)
-           self.highlightitem(labelsuivant)
-           self.arg_selected=motsuivant
-           labelsuivant.focus_set()
-        # PN il faut faire quelque chose pour être dans la fenetre
-        except:
-           pass
+        index=self.liste.index(mot)
+        indexsuivant=index+1
+	if indexsuivant > len(self.liste) -1:
+	   indexsuivant=0
+        motsuivant=self.liste[indexsuivant]
+        labelsuivant=self.dico_labels[motsuivant]
+        index = self.MCbox.index(labelsuivant)
+        self.MCbox.see(index)
+        self.selectitem(motsuivant,labelsuivant,self.selection[2],)
            
     def selectPrevItem(self,mot,label):
-        try :
-           index=self.liste.index(mot)
-           indexprec=index-1
-           motprec=self.liste[indexprec]
-           labelprec=self.dico_labels[motprec]
-           self.clear_marque()
-           if self.selection != None :
-              self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
-              self.selection = (mot,label,self.selection[2])
-           index = self.MCbox.index(labelprec)
-           self.MCbox.see(index)
-           self.highlightitem(labelprec)
-           self.arg_selected=motprec
-           labelprec.focus_set()
-        # PN il faut faire quelque chose pour être dans la fenetre
-        except:
-           pass
-           
+        index=self.liste.index(mot)
+        indexprec=index-1
+        motprec=self.liste[indexprec]
+        labelprec=self.dico_labels[motprec]
+        index = self.MCbox.index(labelprec)
+        self.MCbox.see(index)
+        self.selectitem(motprec,labelprec,self.selection[2],)
         
     def selectitem(self,mot,label,commande) :
         """ Met l'item sélectionné (représenté par son label) en surbrillance
@@ -862,7 +847,7 @@ class ListeChoix :
         self.highlightitem(label)
         self.selection = (mot,label,commande)
         self.arg_selected = mot
-        commande(mot)
+        if commande : commande(mot)
 
     def highlightitem(self,label) :
         """ Met l'item représenté par son label en surbrillance """
@@ -875,9 +860,9 @@ class ListeChoix :
         
     def deselectitem(self,label,mot='',commande=None) :
         """ Remet l'item (représenté par son label) en noir"""
-        label.configure(bg='gray95',fg='black')
+        if label:label.configure(bg='gray95',fg='black')
         self.arg_selected = ''
-        if commande != None : commande(mot)
+        if commande and mot : commande(mot)
 
     def cherche_selected_item(self):
         index=self.MCbox.index(self.selection[1])
@@ -898,11 +883,10 @@ class ListeChoix :
         FILTRE = string.upper(filtre)
         for arg in self.liste :
             if fnmatch.fnmatch(arg,filtre) or fnmatch.fnmatch(arg,FILTRE) :
-                self.highlightitem(self.dico_labels[arg])
-                index = self.MCbox.index(self.dico_labels[arg])
+                label=self.dico_labels[arg]
+                index = self.MCbox.index(label)
                 self.MCbox.see(index)
-                self.arg_selected = arg
-                self.dico_labels[self.arg_selected].focus_set()
+                self.selectitem(arg,label,self.selection[2])
                 break
 
         #try :
@@ -910,9 +894,6 @@ class ListeChoix :
         #except :
           #pass
 
-    def get_liste_BAK(self):
-        raise "OBSOLETE"
-        return self.liste
 
     # PN attention à la gestion des paramétres
     # cela retourne H = 1 , et ni H, ni 1
@@ -1116,7 +1097,7 @@ class ListeChoixParGroupes(ListeChoix) :
 
     """
     def __init__(self,parent,page,liste_groupes,dict_groupes,liste_commandes=[],liste_marques =[],
-                      active ='oui',filtre='non',titre='',optionReturn=None):
+                      active ='oui',filtre='non',titre='',optionReturn=None,fonte_titre=fontes.standard_gras_souligne):
         self.parent = parent
         self.page = page
         self.liste_groupes = liste_groupes
@@ -1130,6 +1111,7 @@ class ListeChoixParGroupes(ListeChoix) :
         self.titre = titre
         self.filtre = filtre
         self.optionReturn = optionReturn
+        self.fonte_titre=fonte_titre
         self.init()
 
     def affiche_liste(self):
@@ -1209,6 +1191,10 @@ class ListeChoixParGroupes(ListeChoix) :
 
         self.MCbox.config(state=DISABLED)
         self.selection = None
+        for event,callback in self.liste_commandes:
+            if event == "<Enter>":
+               self.selection=None,None,callback
+               break
 
     def selectPrevItem(self,mot,label,callback,group,cmd):
         g=self.liste_groupes.index(group)
@@ -1224,19 +1210,11 @@ class ListeChoixParGroupes(ListeChoix) :
            else:
               # debut des groupes. On ne fait rien
               return
-
         # On a trouve l'item precedent
-        self.clear_marque()
         labelsuivant=self.dico_labels[co]
-        if self.selection != None :
-           self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
-           self.selection = (co,labelsuivant,self.selection[2])
         index = self.MCbox.index(labelsuivant)
         self.MCbox.see(index)
-        self.arg_selected=co
-        self.highlightitem(labelsuivant)
-        labelsuivant.focus_set()
-        callback(co)
+        self.selectitem(co,labelsuivant,self.selection[2],)
 
     def selectNextItem(self,mot,label,callback,group,cmd):
         g=self.liste_groupes.index(group)
@@ -1253,17 +1231,10 @@ class ListeChoixParGroupes(ListeChoix) :
               # fin des groupes. On ne fait rien
               return
         # On a trouve l'item suivant
-        self.clear_marque()
         labelsuivant=self.dico_labels[co]
-        if self.selection != None :
-           self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
-           self.selection = (co,labelsuivant,self.selection[2])
         index = self.MCbox.index(labelsuivant)
         self.MCbox.see(index)
-        self.arg_selected=co
-        self.highlightitem(labelsuivant)
-        labelsuivant.focus_set()
-        callback(co)
+        self.selectitem(co,labelsuivant,self.selection[2],)
 
     def entry_changed(self,event=None):
         """ 
@@ -1280,23 +1251,21 @@ class ListeChoixParGroupes(ListeChoix) :
         #
         for grp in self.liste_groupes:
             if fnmatch.fnmatch(grp,filtre) or fnmatch.fnmatch(grp,FILTRE) :
-                self.highlightitem(self.dico_labels[grp])
-                index = self.MCbox.index(self.dico_labels[grp])
+                cmd=self.dict_groupes[grp][0]
+                label=self.dico_labels[cmd]
+                index = self.MCbox.index(label)
                 self.MCbox.see(index)
-                # On ne selectionne pas le groupe
-                #self.arg_selected = grp
-                self.dico_labels[grp].focus_set()
+                self.selectitem(cmd,label,self.selection[2])
                 # On a trouve un groupe on arrete la recherche
                 return
 
         for grp in self.liste_groupes:
            for cmd in self.dict_groupes[grp] :
               if fnmatch.fnmatch(cmd,filtre) or fnmatch.fnmatch(cmd,FILTRE) :
-                 self.highlightitem(self.dico_labels[cmd])
-                 index = self.MCbox.index(self.dico_labels[cmd])
+                 label=self.dico_labels[cmd]
+                 index = self.MCbox.index(label)
                  self.MCbox.see(index)
-                 self.arg_selected = cmd
-                 self.dico_labels[self.arg_selected].focus_set()
+                 self.selectitem(cmd,label,self.selection[2])
                  # On a trouve une commande  on arrete la recherche
                  return
 

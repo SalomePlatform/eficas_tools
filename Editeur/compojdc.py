@@ -60,17 +60,6 @@ class JDCPanel(panels.OngletPanel):
 
 import treewidget
 class Node(treewidget.Node):
-    def verif_all_children(self):
-        raise "OBSOLETE"
-        if not self.children : self.build_children()
-        for child in self.children :
-            child.verif_all_children()
-
-    def replace_enfant(self,item):
-        """ Retourne le noeud fils à éventuellement remplacer """
-        raise "OBSOLETE"
-        return None
-
     def doPaste_Commande(self,objet_a_copier):
         """
           Réalise la copie de l'objet passé en argument qui est nécessairement
@@ -173,19 +162,6 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
       listeCmd = self.object.niveau.definition.get_liste_cmd()
       return listeCmd
 
-  def additem_BAK(self,name,pos):
-      raise "OBSOLETE"
-      cmd=self.addentite(name,pos)
-      item = self.make_objecttreeitem(self.appli,cmd.nom + " : ", cmd)
-      return item
-
-  def verif_condition_bloc_BAK(self):
-      raise "OBSOLETE"
-      # retourne la liste des sous-items dont la condition est valide
-      # sans objet pour le JDC
-      return [],[]
-
-    
 import Accas
 treeitem =JDCTreeItem
 objet = Accas.JDC    

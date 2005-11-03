@@ -28,6 +28,7 @@ from copy import copy,deepcopy
 # import du chargeur de composants
 from comploader import gettreeitem,make_objecttreeitem
 import treewidget
+from Ihm import CONNECTOR
 
 myrepr = Repr()
 myrepr.maxstring = 100
@@ -156,6 +157,13 @@ class ObjectTreeItem(TreeItem,Delegate):
 
     def getObject(self):
         return self._object
+
+    def connect(self,channel,callable,args):
+        """ Connecte la fonction callable (avec arguments args) à l'item self sur le 
+            canal channel
+        """
+        CONNECTOR.Connect(self._object,channel,callable,args)
+        CONNECTOR.Connect(self.object, channel,callable,args)
 
     def copy(self):
         """
@@ -413,6 +421,9 @@ class ObjectTreeItem(TreeItem,Delegate):
         c = gettreeitem(object)
         return c(appli,labeltext, object, setfunction)
 
+    #def __del__(self):
+    #    print "__del__",self
+
 class AtomicObjectTreeItem(ObjectTreeItem):
     def IsExpandable(self):
         return 0
@@ -482,13 +493,3 @@ class SequenceTreeItem(ObjectTreeItem):
            if old_obj is None and obj is None:break
            if old_obj is obj: self.sublist.append(item)
         return self.sublist
-
-    def GetSubList_BAK(self):
-        raise "OBSOLETE"
-        sublist = []
-        for obj in self._object.data:
-            def setfunction(value, object=obj):
-                object = value
-            item = make_objecttreeitem(self.appli, obj.nom + ":", obj, setfunction)
-            sublist.append(item)
-        return sublist

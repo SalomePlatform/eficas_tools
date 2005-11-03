@@ -24,7 +24,7 @@
    les informations attachées au noeud de l'arbre sélectionné
 """
 # Modules Python
-import types
+import types,sys
 import traceback
 import Tkinter
 import Pmw
@@ -220,7 +220,7 @@ class JDCDISPLAY:
           showinfo("Copie impossible",
                    "Cette version d'EFICAS ne permet que la copie d'objets de type 'Commande' ou mot-clé facteur")
           return
-      self.edit="couper"
+      self.appli.edit="couper"
       self.appli.noeud_a_editer = self.node_selected
 
    def doCopy(self):
@@ -231,7 +231,7 @@ class JDCDISPLAY:
           showinfo("Copie impossible",
                    "La copie d'un tel objet n'est pas permise")
           return
-      self.edit="copier"
+      self.appli.edit="copier"
       self.appli.noeud_a_editer = self.node_selected
 
    def doPaste(self):
@@ -258,7 +258,7 @@ class JDCDISPLAY:
       self.init_modif()
       # suppression éventuelle du noeud sélectionné
       # si possible on renomme l objet comme le noeud couper
-      if self.edit == "couper":
+      if self.appli.edit == "couper":
          #nom = self.appli.noeud_a_editer.item.object.sd.nom
          item=self.appli.noeud_a_editer.item
          self.appli.noeud_a_editer.delete()
@@ -266,7 +266,7 @@ class JDCDISPLAY:
 	 #test,mess = child.item.nomme_sd(nom)
          child.select()
       # on rend la copie à nouveau possible en libérant le flag edit
-      self.edit="copier"
+      self.appli.edit="copier"
 
    def update(self):
       """Cette methode est utilisee par le JDC associe pour 
@@ -274,3 +274,12 @@ class JDCDISPLAY:
       """
       self.tree.update()
 
+   def supprime(self):
+      #print "supprime",self
+      self.select_node(None)
+      self.tree.supprime()
+      self.tree=None
+      self.pane.destroy()
+
+   #def __del__(self):
+   #   print "__del__",self

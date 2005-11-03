@@ -75,60 +75,6 @@ class Node(treewidget.Node):
         #print "doPaste_MCF",child
         return child
 
-    def replace_enfant(self,item):
-        """ Retourne le noeud fils à éventuellement remplacer """
-        raise "OBSOLETE"
-        if self.item.isMCList():return None
-        return self.get_node_fils(item.get_nom())
-
-    def verif_condition(self):
-        raise "OBSOLETE"
-        if self.item.isMCList():
-           self.children[-1].verif_condition()
-        else:
-           treewidget.Node.verif_condition(self)
-
-    def after_delete(self):
-        """ Dans le cas d'une MCList il faut vérifier qu'elle n'est pas vide
-            ou réduite à un seul élément suite à une destruction
-        """
-        raise "OBSOLETE"
-        # self représente une MCList
-        if len(self.item) == 0 :
-            # la liste est vide : il faut la supprimer
-            self.delete()
-        elif len(self.item) == 1:
-            # il ne reste plus qu'un élément dans la liste
-            noeud = self.children[0]
-            # maintenant l'item mclist gere tout seul ce
-            # changement
-            self.delete_node_child(noeud)
-            self.children=noeud.children or []
-            self.state=noeud.state
-        else :
-            return
-
-    def delete_child(self,child):
-        """
-            Supprime child des enfants de self, tous les id associés
-            ET l'objet associé
-        """
-        raise "OBSOLETE"
-        if self.item.isMCList():
-           if self.item.suppitem(child.item):
-              self.delete_node_child(child)
-              self.after_delete()
-              return 1
-           else :
-              return 0
-        else:
-           if self.item.suppitem(child.item):
-              self.delete_node_child(child)
-              return 1
-           else :
-              return 0
-
-
 class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
     """ La classe MCListTreeItem joue le role d'un adaptateur pour les objets
         du noyau Accas instances de la classe MCLIST.

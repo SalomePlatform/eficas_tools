@@ -330,39 +330,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       valeur = tuple(valeur)
       return self.object.valid_valeur_partielle(valeur)
 
-  def valide_liste_partielle_BAK(self,item,listecourante):
-      raise "OBSOLETE"
-      valeuravant=self.object.valeur
-      valeur=listecourante
-      valeur.append(item)
-      valeur = tuple(valeur)
-      retour=self.object.set_valeur(valeur)
-      validite=0
-      if self.object.isvalid():
-         validite=1
-      elif self.definition.validators :
-         validite=self.definition.validators.valide_liste_partielle(valeur)
-
-      if validite==0:
-         min,max=self.GetMinMax()
-         if len(valeur) < min :
-	    validite=1
-      retour=self.object.set_valeur(valeuravant)
-      return validite 
-
   def valide_liste_complete (self,valeur):
       return self.object.valid_valeur(valeur)
 
-  def valide_liste_complete_BAK (self,valeur):
-      raise "OBSOLETE"
-      valeuravant=self.object.valeur
-      retour=self.object.set_valeur(valeur)
-      validite=0
-      if self.object.isvalid():
-         validite=1
-      retour=self.object.set_valeur(valeuravant)
-      return validite
-     
   def info_erreur_item(self) :
       commentaire=""
       if self.definition.validators :

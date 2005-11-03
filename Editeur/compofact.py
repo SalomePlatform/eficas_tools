@@ -145,35 +145,6 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
          self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-clé')
          return 0
 
-  def GetSubList_BAK(self):
-    raise "OBSOLETE"
-    sublist=[]
-    for obj in self.object.mc_liste:
-      def setfunction(value, object=obj):
-        object.setval(value)
-      item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
-      sublist.append(item)
-    return sublist
-
-  def additem_BAK(self,name,pos):
-    raise "OBSOLETE"
-    if isinstance(name,Objecttreeitem.ObjectTreeItem) :
-        objet = self.object.addentite(name.getObject(),pos)
-    else :
-        objet = self.object.addentite(name,pos)
-    self.expandable = 1
-    if objet == 0 :
-        # on ne peut ajouter l'élément de nom name
-        return 0
-    def setfunction(value, object=objet):
-      object.setval(value)
-    item = self.make_objecttreeitem(self.appli,objet.nom + " : ", objet, setfunction)
-    return item
-
-  def verif_condition_bloc_BAK(self):
-      raise "OBSOLETE"
-      return self.object.verif_condition_bloc()
-
 import Accas
 objet = Accas.MCFACT
 treeitem = FACTTreeItem

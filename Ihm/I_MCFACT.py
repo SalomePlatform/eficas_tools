@@ -20,6 +20,7 @@
 # ======================================================================
 import CONNECTOR
 import I_MCCOMPO
+import Noyau
 
 class MCFACT(I_MCCOMPO.MCCOMPO):
   def isrepetable(self):
@@ -80,3 +81,15 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
     if parent:
        parent.fin_modif()
 
+  def normalize(self):
+    """ Retourne le MCFACT normalisé. Pour un MCFACT isolé, l'objet normalisé
+        est une MCLIST de longueur 1 qui contient ce MCFACT
+    """
+    new_obj = self.definition.list_instance()
+    new_obj.init(nom=self.nom,parent=None)
+    new_obj.append(self)
+    return new_obj
+
+  def supprime(self):
+    self.alt_parent=None
+    Noyau.N_MCFACT.MCFACT.supprime(self)

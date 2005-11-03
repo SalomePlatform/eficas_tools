@@ -31,7 +31,7 @@ import panels
 
 #
 __version__="$Name:  $"
-__Id__="$Id: componuplet.py,v 1.6 2005/05/19 12:18:47 eficas Exp $"
+__Id__="$Id: componuplet.py,v 1.7 2005/08/09 09:54:04 eficas Exp $"
 #
 
 myrepr = Repr()
@@ -167,10 +167,6 @@ class NUPLETTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def suppitem(self,item) :
     raise "NUPLET"
-
-  def verif_condition_bloc(self):
-    raise "OBSOLETE"
-    return self.object.verif_condition_bloc()
 
 import Accas
 treeitem=NUPLETTreeItem

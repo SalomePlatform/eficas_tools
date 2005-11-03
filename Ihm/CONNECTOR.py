@@ -37,6 +37,10 @@
 """
 import traceback
 from copy import copy
+import weakref
+
+class ConnectorError(Exception):
+    pass
 
 class CONNECTOR:
 
@@ -56,10 +60,13 @@ class CONNECTOR:
     else:
        receivers = channels[channel] = []
 
-    info = (function, args)
-    if info in receivers:
-       receivers.remove(info)
-    receivers.append(info)
+    for funct,fargs in receivers[:]:
+        if funct() is None:
+           receivers.remove((funct,fargs))
+        elif (function,args) == (funct(),fargs):
+           receivers.remove((funct,fargs))
+
+    receivers.append((ref(function),args))
     ###print "Connect",receivers
     
 
@@ -69,20 +76,27 @@ class CONNECTOR:
     except KeyError:
        raise ConnectorError, \
             'no receivers for channel %s of %s' % (channel, object)
-    try:
-       receivers.remove((function, args))
-    except ValueError:
-       raise ConnectorError,\
+
+    for funct,fargs in receivers[:]:
+        if funct() is None:
+           receivers.remove((funct,fargs))
+
+    for funct,fargs in receivers:
+        if (function,args) == (funct(),fargs):
+           receivers.remove((funct,fargs))
+           if not receivers:
+              # the list of receivers is empty now, remove the channel
+              channels = self.connections[id(object)]
+              del channels[channel]
+              if not channels:
+                 # the object has no more channels
+                 del self.connections[id(object)]
+           return
+
+    raise ConnectorError,\
           'receiver %s%s is not connected to channel %s of %s' \
           % (function, args, channel, object)
 
-    if not receivers:
-       # the list of receivers is empty now, remove the channel
-       channels = self.connections[id(object)]
-       del channels[channel]
-       if not channels:
-          # the object has no more channels
-          del self.connections[id(object)]
 
   def Emit(self, object, channel, *args):
     ###print "Emit",object, channel, args
@@ -93,11 +107,34 @@ class CONNECTOR:
     ###print "Emit",object, channel, receivers
     # Attention : copie pour eviter les pbs lies aux deconnexion reconnexion
     # pendant l'execution des emit
-    for func, fargs in copy(receivers):
+    for rfunc, fargs in copy(receivers):
        try:
-          apply(func, args + fargs)
+          func=rfunc()
+          if func:
+             apply(func, args + fargs)
+          else:
+             # Le receveur a disparu
+             if (rfunc,fargs) in receivers:receivers.remove((rfunc,fargs))
        except:
           traceback.print_exc()
+
+def ref(target,callback=None):
+   if hasattr(target,"im_self"):
+      return BoundMethodWeakref(target)
+   else:
+      return weakref.ref(target,callback)
+
+class BoundMethodWeakref(object):
+   def __init__(self,callable):
+       self.Self=weakref.ref(callable.im_self)
+       self.Func=weakref.ref(callable.im_func)
+
+   def __call__(self):
+       target=self.Self()
+       if not target:return None
+       func=self.Func()
+       if func:
+          return func.__get__(self.Self())
 
 _the_connector =CONNECTOR()
 Connect = _the_connector.Connect
@@ -108,9 +145,30 @@ if __name__ == "__main__":
    class A:pass
    class B:
      def add(self,a):
-       print "add",a
+       print "add",self,a
+     def __del__(self):
+       print "__del__",self
 
+   def f(a):
+     print f,a
+   print "a=A()"
    a=A()
+   print "b=B()"
    b=B()
+   print "c=B()"
+   c=B()
    Connect(a,"add",b.add,())
+   Connect(a,"add",b.add,())
+   Connect(a,"add",c.add,())
+   Connect(a,"add",f,())
    Emit(a,"add",1)
+   print "del b"
+   del b
+   Emit(a,"add",1)
+   print "del f"
+   del f
+   Emit(a,"add",1)
+   Disconnect(a,"add",c.add,())
+   Emit(a,"add",1)
+
+

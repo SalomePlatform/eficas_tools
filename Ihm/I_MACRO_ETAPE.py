@@ -26,6 +26,7 @@ import traceback,types,string
 
 # Modules Eficas
 import I_ETAPE
+import Noyau
 from Noyau.N_ASSD import ASSD
 
 # import rajoutés suite à l'ajout de Build_sd --> à résorber
@@ -65,6 +66,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          --> utilisée par ops.POURSUITE et INCLUDE
     """
     #print "get_contexte_jdc",self,self.nom
+    # On recupere l'etape courante
+    step=CONTEXT.get_current_step()
     try:
        # on essaie de créer un objet JDC auxiliaire avec un contexte initial
        # Attention get_contexte_avant retourne un dictionnaire qui contient
@@ -103,26 +106,26 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.etapes=j.etapes
        self.jdc_aux=j
     except:
-       # On force le contexte (etape courante) à self
+       # On retablit l'etape courante step
        CONTEXT.unset_current_step()
-       CONTEXT.set_current_step(self)
+       CONTEXT.set_current_step(step)
        return None
 
     if not j.cr.estvide():
        # Erreurs dans l'INCLUDE. On garde la memoire du fichier 
        # mais on n'insere pas les concepts
-       # On force le contexte (etape courante) à self
+       # On retablit l'etape courante step
        CONTEXT.unset_current_step()
-       CONTEXT.set_current_step(self)
+       CONTEXT.set_current_step(step)
        raise Exception("Impossible de relire le fichier\n"+str(j.cr))
 
     if not j.isvalid():
        # L'INCLUDE n'est pas valide.
        # on produit un rapport d'erreurs
-       # On force le contexte (etape courante) à self
        cr=j.report()
+       # On retablit l'etape courante step
        CONTEXT.unset_current_step()
-       CONTEXT.set_current_step(self)
+       CONTEXT.set_current_step(step)
        raise Exception("Le fichier include contient des erreurs\n"+str(cr))
 
     # Si aucune erreur rencontrée
@@ -130,8 +133,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     try:
        j_context=j.get_verif_contexte()
     except:
+       # On retablit l'etape courante step
        CONTEXT.unset_current_step()
-       CONTEXT.set_current_step(self)
+       CONTEXT.set_current_step(step)
        raise
 
     # On remplit le dictionnaire des concepts produits inclus
@@ -151,9 +155,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     self.index_etape_courante=j.index_etape_courante
     self.jdc_aux=j
 
-    # On rétablit le contexte (etape courante) à self
+    # On retablit l'etape courante step
     CONTEXT.unset_current_step()
-    CONTEXT.set_current_step(self)
+    CONTEXT.set_current_step(step)
 
     return j_context
 
@@ -285,6 +289,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       self.g_context={}
 
   def close(self):
+      #print "close",self
       if hasattr(self,"jdc_aux") and self.jdc_aux:
          # La macro a un jdc auxiliaire inclus. On demande sa fermeture
          self.jdc_aux.close()
@@ -663,6 +668,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       for co in self.sdprods:
         d[co.nom]=co
       #print "update_context.fin",d.keys()
+
+#ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
+  def supprime(self):
+      #print "supprime",self
+      if hasattr(self,"jdc_aux") and self.jdc_aux:
+         self.jdc_aux.supprime_aux()
+         self.jdc_aux=None
+      Noyau.N_MACRO_ETAPE.MACRO_ETAPE.supprime(self)
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
   def get_file(self,unite=None,fic_origine=''):

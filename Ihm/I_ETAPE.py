@@ -378,6 +378,23 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
      #print "verif_existence_sd",self.sd
      for motcle in self.mc_liste :
          motcle.verif_existence_sd()
+
+   def update_mc_global(self):
+     """
+        Met a jour les mots cles globaux enregistrés dans l'étape
+        et dans le jdc parent.
+        Une etape ne peut pas etre globale. Elle se contente de passer
+        la requete a ses fils apres avoir reinitialisé le dictionnaire 
+        des mots cles globaux.
+     """
+     self.mc_globaux={}
+     I_MCCOMPO.MCCOMPO.update_mc_global(self)
+
+   def update_condition_bloc(self):
+     """
+        Realise l'update des blocs conditionnels fils de self
+     """
+     self._update_condition_bloc()
      
 #ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
    def Build_sd(self,nom):

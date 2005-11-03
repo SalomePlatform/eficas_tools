@@ -71,9 +71,14 @@ class MCList:
       """
         Supprime le mot cle facteur obj de la MCLIST
       """
+      if obj not in self:
+         return 0
+
       self.init_modif()
       self.remove(obj)
       CONNECTOR.Emit(self,"supp",obj)
+      self.update_condition_bloc()
+      obj.supprime()
       self.fin_modif()
       return 1
 
@@ -107,6 +112,7 @@ class MCList:
          self.insert(pos,obj)
       CONNECTOR.Emit(self,"add",obj)
       self.fin_modif()
+      self.update_condition_bloc()
       return obj
 
   def liste_mc_presents(self):
@@ -169,10 +175,16 @@ class MCList:
         Parcourt l'arborescence des mcobject et realise l'update
         des blocs conditionnels par appel de la methode update_condition_bloc
      """
-    
      #print "deep_update_condition_bloc",self
      for mcfact in self.data :
          mcfact.deep_update_condition_bloc()
+
+  def update_condition_bloc(self):
+     """
+        Propage la mise a jour des conditions au parent.
+        Une liste ne fait pas de traitement sur les conditions
+     """
+     if self.parent: self.parent.update_condition_bloc()
 
   def verif_condition_bloc(self):
     """ 
@@ -244,3 +256,25 @@ class MCList:
      except:
         return ''
 
+  def normalize(self):
+     """
+        Retourne l'objet normalisé. Une liste est déjà normalisée
+     """
+     return self
+
+  def update_mc_global(self):
+     """
+        Met a jour les mots cles globaux enregistrés dans l'étape parente
+        et dans le jdc parent.
+        Une liste ne peut pas etre globale. Elle se contente de passer
+        la requete a ses fils.
+     """
+     for motcle in self.data :
+         motcle.update_mc_global()
+
+  def delete_mc_global(self):
+     for motcle in self.data :
+         motcle.delete_mc_global()
+
+  #def __del__(self):
+  #   print "__del__",self

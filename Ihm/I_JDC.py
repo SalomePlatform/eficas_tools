@@ -21,11 +21,12 @@
 """
 """
 # Modules Python
-import types,traceback
+import types,traceback,sys
 import string,linecache
 
 # Modules Eficas
 import I_OBJECT
+import Noyau
 from Noyau.N_ASSD import ASSD
 from Noyau.N_LASSD import LASSD
 from Noyau.N_ETAPE import ETAPE
@@ -187,6 +188,7 @@ class JDC(I_OBJECT.OBJECT):
 	# il faut vérifier que les concepts utilisés par objet existent bien
 	# à ce niveau d'arborescence
 	objet.verif_existence_sd()
+        objet.update_mc_global()
         self.active_etapes()
         self.editmode=0
         self.reset_context()
@@ -350,10 +352,11 @@ class JDC(I_OBJECT.OBJECT):
           Retourne 0 dans le cas contraire
       """
       #print "suppentite",self
-      self.init_modif()
       #PN correction de bugs 
       if etape not in self.etapes:
          return 0
+
+      self.init_modif()
       index_etape=self.etapes.index(etape)
       self.etapes.remove(etape)
 
@@ -364,6 +367,7 @@ class JDC(I_OBJECT.OBJECT):
 
       etape.supprime_sdprods()
       etape.close()
+      etape.supprime()
       self.active_etapes()
 
       # Apres suppression de l'etape il faut controler que les etapes

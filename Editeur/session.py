@@ -203,7 +203,7 @@ def print_d_env():
 
 def create_parser():
     # creation du parser des options de la ligne de commande
-    parser=optparse.OptionParser(usage="usage: %prog [options]",version="%prog 1.8")
+    parser=optparse.OptionParser(usage="usage: %prog [options]",version="%prog 1.9")
 
     parser.add_option("-j","--jdc",dest="comm",type='string',
                     action="callback",callback=check_comm,

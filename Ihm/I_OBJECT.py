@@ -139,3 +139,16 @@ class OBJECT:
 
   def update_concept(self,sd):
      pass
+
+  def normalize(self):
+     """ Retourne l'objet normalisé. En général self sauf si
+         pour etre inséré dans l'objet père il doit etre 
+         wrappé dans un autre objet (voir mot cle facteur).
+     """
+     return self
+
+  def delete_mc_global(self):
+     return
+
+  #def __del__(self):
+  #   print "__del__",self

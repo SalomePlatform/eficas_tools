@@ -34,11 +34,10 @@ import convert
 from widgets import askopenfilename
 from widgets import Fenetre,FenetreYesNo
 from widgets import showinfo,showerror
-from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.22 2005/06/10 13:47:49 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.23 2005/06/16 09:27:25 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -208,17 +207,10 @@ class INCLUDETreeItemBase(MACROTreeItem):
     if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
        #L'include n'est pas initialise
        self.object.build_include(None,"")
-    self.parent_node=node
     # On cree un nouvel onglet dans le bureau
     appli.bureau.ShowJDC(self.object.jdc_aux,self.object.jdc_aux.nom,
                              label_onglet=None,
                              JDCDISPLAY=macrodisplay.MACRODISPLAY)
-    self.myjdc=appli.bureau.JDCDisplay_courant
-    self.myjdc.fichier=self.object.fichier_ini
-
-  def onClose(self):
-    #print "onClose",self
-    self.appli.bureau.closeJDCDISPLAY(self.myjdc)
 
   def makeView(self,appli,node):
     if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
@@ -231,11 +223,6 @@ class INCLUDETreeItemBase(MACROTreeItem):
        else:
           nom=nom+' '+self.object.fichier_ini
     macdisp=macrodisplay.makeMacroDisplay(appli,self,nom)
-    CONNECTOR.Connect(self.object.jdc_aux,"close",self.onCloseView,(macdisp,))
-
-  def onCloseView(self,macdisp):
-    #print "onCloseView",self,macdisp
-    macdisp.quit()
 
 class INCLUDEPanel(MACROPanel):
   def makeFichierPage(self,page):
@@ -258,13 +245,10 @@ class POURSUITETreeItem(INCLUDETreeItemBase):
        text="""DEBUT()
 FIN()"""
        self.object.build_poursuite(None,text)
-    self.parent_node=node
     # On cree un nouvel onglet dans le bureau
     appli.bureau.ShowJDC(self.object.jdc_aux,self.object.jdc_aux.nom,
                              label_onglet=None,
                              JDCDISPLAY=macrodisplay.MACRODISPLAY)
-    self.myjdc=appli.bureau.JDCDisplay_courant
-    self.myjdc.fichier=self.object.fichier_ini
 
   def makeView(self,appli,node):
     if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
@@ -277,7 +261,6 @@ FIN()"""
        else:
           nom=nom+' '+self.object.fichier_ini
     macdisp=macrodisplay.makeMacroDisplay(appli,self,nom)
-    CONNECTOR.Connect(self.object.jdc_aux,"close",self.onCloseView,(macdisp,))
 
 class INCLUDE_MATERIAUTreeItem(INCLUDETreeItemBase):
   rmenu_specs=[("View","makeView"),

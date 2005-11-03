@@ -59,3 +59,14 @@ class TREEITEMINCANVAS:
    def update(self):
       """Cette methode est utilisee pour signaler une mise a jour des objets associes"""
       self.tree.update()
+
+   def supprime(self):
+      #print "supprime",self
+      self.tree.supprime()
+      self.tree=None
+      self.canvas.destroy()
+      self.canvas=None
+
+   #def __del__(self):
+   #   print "__del__",self
+

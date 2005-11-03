@@ -23,7 +23,7 @@
    des sous commandes d'une macro sous forme d'arbre
 """
 # Modules Python
-import types
+import types,sys
 import Tkinter,Pmw
 
 # Modules EFICAS
@@ -33,6 +33,7 @@ import Objecttreeitem
 import compojdc
 import treewidget
 from widgets import Fenetre
+from Ihm import CONNECTOR
 
 class MACRO2TreeItem(compojdc.JDCTreeItem):
       pass
@@ -61,9 +62,12 @@ class MacroDisplay:
     Pmw.Color.changecolor(self.canvas,background='gray95')
     self.mainPart.pack(padx=10,pady=10,fill = 'both', expand = 1)
     self.item=MACRO2TreeItem(self.appli,nom_jdc,self.jdc)
-    import treewidget
     self.tree = treewidget.Tree(self.appli,self.item,self.mainPart,command=None,rmenu=self.make_rmenu)
     self.tree.draw()
+    CONNECTOR.Connect(self.jdc,"close",self.onCloseView,())
+
+  def onCloseView(self):
+    self.quit()
 
   def visufile(self):
     Fenetre(self.appli,titre="Source du fichier inclus",texte=self.macroitem.object.fichier_text)
@@ -108,13 +112,20 @@ class MacroDisplay:
       if radio:menu.invoke(radio)
 
   def quit(self):
+    #print "quit",self
     self.tree.supprime()
+    self.tree=None
     self.fenetre.destroy()
+
+  #def __del__(self):
+  #  print "__del__",self
 
 def makeMacroDisplay(appli,macroitem,nom_item):
   return MacroDisplay(appli,macroitem,nom_item)
 
-class TREEITEMINCANVAS:
+import treeitemincanvas
+
+class TREEITEMINCANVAS(treeitemincanvas.TREEITEMINCANVAS):
    def __init__(self,object,nom="",parent=None,appli=None,sel=None,rmenu=None):
       #print "TREEITEMINCANVAS",object
       self.object=object
@@ -130,13 +141,6 @@ class TREEITEMINCANVAS:
             return
       self.tree=treewidget.Tree(self.appli,self.item,self.canvas,command=sel,rmenu=rmenu)
       self.tree.draw()
-
-   def mainloop(self):
-      self.parent.mainloop()
-
-   def update(self):
-      """Cette methode est utilisee pour signaler une mise a jour des objets associes"""
-      self.tree.update()
 
 import jdcdisplay
 

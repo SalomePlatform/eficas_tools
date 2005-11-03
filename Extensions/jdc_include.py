@@ -173,9 +173,16 @@ class JDC_POURSUITE(JDC):
 
    def supprime(self):
       """
-          On ne supprime rien pour un jdc auxiliaire d'include ou de poursuite
+          On ne supprime rien directement pour un jdc auxiliaire d'include ou de poursuite
+          Utiliser supprime_aux
       """
       pass
+
+   def supprime_aux(self):
+      #print "supprime_aux",self
+      JDC.supprime(self)
+      self.jdc_pere=None
+      self.etape_include=None
 
    def get_contexte_avant(self,etape):
       """

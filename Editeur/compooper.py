@@ -245,38 +245,6 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       self.sublist=sublist
       return self.sublist
 
-  def GetSubList_BAK(self):
-      raise "OBSOLETE"
-      if self.isactif():
-         liste=self.object.mc_liste
-      else:
-         liste=[]
-
-      sublist=[]
-      isublist=iter(self.sublist)
-      iliste=iter(liste)
-
-      while(1):
-         old_obj=obj=None
-         for item in isublist:
-            old_obj=item.getObject()
-            if old_obj in liste:break
-
-         for obj in iliste:
-            if obj is old_obj:break
-            # nouvel objet : on cree un nouvel item
-            def setfunction(value, object=obj):
-                object.setval(value)
-            it = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
-            sublist.append(it)
-
-         if old_obj is None and obj is None:break
-         if old_obj is obj:
-            sublist.append(item)
-
-      self.sublist=sublist
-      return self.sublist
-
   def isvalid(self):
       return self.object.isvalid()
 
@@ -333,46 +301,6 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
 
       return commande_comment
 
-  def additem_BAK(self,name,pos):
-      raise "OBSOLETE"
-      mcent=self.addentite(name,pos)
-
-      self.expandable=1
-      if mcent == 0 :
-          # on ne peut ajouter l'élément de nom name
-          return 0
-      def setfunction(value, object=mcent):
-          object.setval(value)
-      item = self.make_objecttreeitem(self.appli,mcent.nom + " : ", mcent, setfunction)
-      return item
-
-  def GetSubList_BAK(self):
-      raise "OBSOLETE"
-      sublist=[]
-      for obj in self.object.mc_liste:
-        def setfunction(value, object=obj):
-          object.setval(value)
-        item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
-        sublist.append(item)
-      return sublist
-
-  def verif_condition_bloc_BAK(self):
-      raise "OBSOLETE"
-      return self.object.verif_condition_bloc()
-
-  def replace_child_BAK(self,old_item,new_item):
-     """
-     Remplace old_item.getObject() par new_item.getObject() dans 
-     les fils de self.object
-     """
-     raise "OBSOLETE"
-     old_itemobject=old_item.getObject()
-     index = self.object.mc_liste.index(old_itemobject)
-     self.object.init_modif()
-     self.object.mc_liste.remove(old_itemobject)
-     self.object.mc_liste.insert(index,new_item.getObject())
-     self.object.fin_modif()
-     
 import Accas
 treeitem = EtapeTreeItem
 objet = Accas.ETAPE    

@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.24 2005/06/10 14:59:37 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.25 2005/06/16 09:27:25 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -38,13 +38,13 @@ class Tree :
         self.item = jdc_item
         self.scrolledcanvas = scrolledcanvas
         self.canvas = self.scrolledcanvas.component('canvas')
-        self.canvas.bind("<Key-Prior>", self.page_up)
-        self.canvas.bind("<Key-Next>", self.page_down)
-        self.canvas.bind("<Key-Up>", self.unit_up)
-        self.canvas.bind("<Key-Down>", self.unit_down)             
-        self.canvas.bind("<Key-Left>", self.mot_up)
-        self.canvas.bind("<Key-Right>", self.mot_down)
-        self.canvas.bind("<1>", self.canvas_select)             
+        self.id_up=self.canvas.bind("<Key-Prior>", self.page_up)
+        self.id_down=self.canvas.bind("<Key-Next>", self.page_down)
+        self.id_uup=self.canvas.bind("<Key-Up>", self.unit_up)
+        self.id_udown=self.canvas.bind("<Key-Down>", self.unit_down)             
+        self.id_um=self.canvas.bind("<Key-Left>", self.mot_up)
+        self.id_dm=self.canvas.bind("<Key-Right>", self.mot_down)
+        self.id_s=self.canvas.bind("<1>", self.canvas_select)             
         self.tree = self
         self.command = command
         self.rmenu=rmenu
@@ -103,8 +103,25 @@ class Tree :
 
     def supprime(self):
         """ supprime tous les éléments de l'arbre """
+        #print "supprime",self
+        self.canvas.unbind("<Key-Prior>",self.id_up)
+        self.canvas.unbind("<Key-Next>",self.id_down)
+        self.canvas.unbind("<Key-Up>",self.id_uup)
+        self.canvas.unbind("<Key-Down>",self.id_udown)             
+        self.canvas.unbind("<Key-Left>",self.id_um)
+        self.canvas.unbind("<Key-Right>",self.id_dm)
+        self.canvas.unbind("<1>",self.id_s)             
+        self.tree = None
+        self.racine = None
+        self.node_selected = None
+        self.item = None
+        self.scrolledcanvas = None
+        self.canvas = None
+        self.command = None
+        self.rmenu=None
         for child in self.children:
             child.supprime()
+        self.children=[]
 
     def update_valid(self) :
         """Cette methode a pour but de mettre a jour la validite du noeud
@@ -124,17 +141,6 @@ class Tree :
 
     def select_previous(self,event):
         self.node_selected.select_previous()
-
-    def full_creation(self,name,index):
-        raise "OBSOLETE"
-        # A changer lorsqu'il y aura plusieurs jdc ouverts en même temps
-        self.children[0].full_creation(name,index)
-
-    def verif_all(self):
-        raise "OBSOLETE"
-        traceback.print_stack()
-        for child in self.children :
-            self.verif_all_children()
 
     def see(self,items):
         x1, y1, x2, y2=apply(self.canvas.bbox, items)
@@ -160,12 +166,15 @@ class Tree :
             self.canvas.yview_scroll( -1, 'units')
             if old == self.canvas.canvasy(0):
                 break
+
+    #def __del__(self):
+    #   print "__del__",self
+
             
 class Node :
     def __init__(self,parent,item,command=None,rmenu=None):
         self.parent = parent
         self.item = item
-        self.connections=[]
         self.connect()
 
         self.command = command
@@ -188,31 +197,13 @@ class Node :
         else:
            self.racine = self.parent.racine
            
-    def reconnect(self):
-        self.disconnect()
-        self.connect()
-
     def connect(self):
-        self.connections.append(self.item._object)
-        CONNECTOR.Connect(self.item._object,"add",self.onAdd,())
-        CONNECTOR.Connect(self.item._object,"supp",self.onSupp,())
-        CONNECTOR.Connect(self.item._object,"valid",self.onValid,())
-        if self.item.object is not self.item._object:
-           CONNECTOR.Connect(self.item.object,"add",self.onAdd,())
-           CONNECTOR.Connect(self.item.object,"supp",self.onSupp,())
-           CONNECTOR.Connect(self.item.object,"valid",self.onValid,())
-           self.connections.append(self.item.object)
+        self.item.connect("add",self.onAdd,())
+        self.item.connect("supp",self.onSupp,())
+        self.item.connect("valid",self.onValid,())
 
-    def disconnect(self):
-        for c in self.connections:
-           CONNECTOR.Disconnect(c,"add",self.onAdd,())
-           CONNECTOR.Disconnect(c,"supp",self.onSupp,())
-           CONNECTOR.Disconnect(c,"valid",self.onValid,())
-        self.connections=[]
-
-    def __del__(self):
-        """ appele a la destruction du noeud """
-        #print "NOEUD DETRUIT",self,self.item.GetLabelText()[0]
+    #def __del__(self):
+    #    print "__del__",self
 
     def force_select(self):
         if self.selected:
@@ -269,26 +260,14 @@ class Node :
               newnodes.append(node)
 
         self.children=newnodes
-        self.reconnect()
+        self.connect()
 
     def supprime(self):
-        self.disconnect()
+        #print "supprime",self
         self.efface_node()
-
-        #self.label_id=None
-        #self.text_id=None
-        #self.label=None
-        #self.text=None
-        #self.image_id=None
-        #self.icone_id=None
-        #self.etape=None
-        ####self.parent=None
-        #self.command = None
-        #self.rmenu=None
-        #self.tree = None
-        #self.appli=None
-        #self.canvas = None
-
+        self.racine = None
+        self.command = None
+        self.rmenu=None
         if not self.children : return
         for child in self.children:
             child.supprime()
@@ -834,88 +813,6 @@ class Node :
     # Méthodes de création et destruction de noeuds
     # Certaines de ces méthodes peuvent être appelées depuis l'externe
     #------------------------------------------------------------------
-    def replace_node(self,node1,node2):
-        """ Remplace le noeud 1 par le noeud 2 dans la liste des enfants de self"""
-        raise "OBSOLETE"
-        index= self.children.index(node1)
-        self.delete_node_child(node1)
-        self.children.insert(index,node2)
-        
-    def replace_enfant(self,item):
-        """ Retourne le noeud fils à éventuellement remplacer """
-        raise "OBSOLETE"
-        return self.get_node_fils(item.get_nom())
-
-    def full_creation(self,name,pos=None):
-        """
-            Interface avec ACCAS : création de l'objet de nom name et
-            du noeud associé. Retourne le noeud fils ainsi créé
-        """
-        raise "OBSOLETE"
-        #print "full_creation",name,pos,self.item
-        item = self.item.additem(name,pos)
-        if item == None or item == 0:
-            # impossible d'ajouter le noeud de nom : name
-            return 0
-
-        enfant = self.replace_enfant(item)
-        if enfant :
-            # un fils de même nom existe déjà : on le remplace
-            child = item.itemNode(self,item,self.command,self.rmenu)
-            self.replace_node(enfant,child)
-        else :            
-            child = item.itemNode(self, item,self.command,self.rmenu)
-            if pos is None:
-                self.children.append(child)
-            else :
-                self.children.insert(pos,child)
-        return child
-
-    def append_brother_BAK(self,name,pos='after',retour='non'):
-        """
-        Permet d'ajouter un frère à self
-        par défaut on l'ajoute après self
-        Méthode externe
-        """
-        raise "OBSOLETE"
-        # on veut ajouter le frère de nom name directement avant ou après self
-        index = self.parent.children.index(self)
-        if pos == 'before':
-            index = index
-        elif pos == 'after':
-            index = index +1
-        else:
-            print str(pos)," n'est pas un index valide pour append_brother"
-            return
-        return self.parent.append_child(name,pos=index,retour=retour)
-    
-    def append_node_child(self,fils,pos=None,verif='oui'):
-        """
-        Fait appel à la création complète de fils et à la vérification
-        des conditions en fonction du contexte
-        Attention : fils peut être un nom ou déjà un object (cas d'une copie)
-        """
-        raise "OBSOLETE"
-        if not self.children : self.build_children()
-        if pos == None :
-            if type(fils) == types.InstanceType:
-                pos = self.item.get_index_child(fils.nom)
-            else:
-                pos = self.item.get_index_child(fils)
-        child = self.full_creation(fils,pos)
-        if child == 0 :
-            # on n'a pas pu créer le noeud fils
-            return 0
-        self.state = 'expanded'
-        child.displayed = 1
-        if child.item.isactif():
-           child.state = 'expanded'
-        if not child.children : child.build_children()
-        if verif == 'oui':
-           child.verif_condition()
-           self.verif_condition()
-        return child
-            
     def append_brother(self,name,pos='after',retour='non'):
         """
         Permet d'ajouter un objet frère à l'objet associé au noeud self
@@ -964,59 +861,6 @@ class Node :
         child.select()
         return child
 
-    def append_child_BAK(self,name,pos=None,verif='oui',retour='non'):
-        """
-        Permet d'ajouter un fils à self
-        on peut l'ajouter en fin de liste (défaut) ou en début
-        Méthode externe
-        """
-        raise "OBSOLETE"
-        if pos == 'first':
-            index = 0
-        elif pos == 'last':
-            index = len(self.children)
-        elif pos != None and type(pos) == types.IntType :
-            # on donne la position depuis l'extérieur
-            # (appel de append_child par append_brother par exemple)
-            index = pos
-        elif type(pos) == types.InstanceType:
-            # pos est un item. Il faut inserer name apres pos
-            index = self.item.get_index(pos) +1
-        else :
-            if type(name) == types.InstanceType:
-                index = self.item.get_index_child(name.nom)
-            else:
-                index = self.item.get_index_child(name)
-        nbold = self.get_nb_children()
-        self.state='expanded'
-        child = self.append_node_child(name,pos=index)
-        if child == 0 :
-            # on n'a pas pu créer le fils
-            return 0
-        nbnew = self.get_nb_children()
-        self.redraw(nbnew-nbold)
-        child.select()
-        if retour == 'oui': return child
-
-    def delete_node_child_BAK(self,child):
-        """ Supprime child des enfants de self et les id associés """
-        raise "OBSOLETE"
-        child.efface()
-        self.children.remove(child)
-        self.canvas.update()
-        
-    def delete_child_BAK(self,child):
-        """ 
-            Supprime child des enfants de self, tous les id associés
-            ET l'objet associé 
-        """
-        raise "OBSOLETE"
-        if self.item.suppitem(child.item):
-            self.delete_node_child(child)
-            return 1
-        else :
-            return 0
-                    
     def delete(self):
         """ 
             Méthode externe pour la destruction de l'objet associé au noeud
@@ -1025,132 +869,14 @@ class Node :
         index = self.parent.children.index(self) - 1 
         if index < 0 : index =0
 
-        ret=self.parent.item.suppitem(self.item)
+        parent=self.parent
+        ret=parent.item.suppitem(self.item)
         if ret == 0:return
 
-        brothers=self.parent.children
+        brothers=parent.children
         if brothers:
            toselect=brothers[index]
         else:
-           toselect=self.parent
+           toselect=parent
         toselect.select()
-
-    def delete_BAK(self):
-        """ Méthode externe pour la destruction du noeud ET de l'objet
-            Gère l'update du canvas"""
-        raise "OBSOLETE"
-        pere = self.parent
-        nbold = pere.get_nb_children()
-
-	if self.parent.children.index(self) > 0 :
-            index = self.parent.children.index(self) - 1 
-	else:
-	    index=0
-        if self.parent.delete_child(self):
-            if self.item.get_position() == 'global':
-                self.etape.verif_all()
-            elif self.item.get_position() == 'global_jdc':
-                self.racine.verif_all()
-            else:
-                self.parent.verif_condition()
-        else:
-            print 'Erreur dans la destruction de ',self.item.get_nom(),' dans delete'
-
-        nbnew = pere.get_nb_children()
-        pere.redraw(nbnew-nbold)
-
-        # Le noeud n'est pas au 1er niveau
-        if  pere.parent.parent != None:
-            pere.select()
-        else:
-            enfants = self.parent.children
-            try:
-              enfants[index].select()
-            except :
-	      try :
-	        enfants[index+1].select()
-	      except :
-	        # on est avant debut
-	        pass
-
-    def doPaste(self,node_selected):
-        self.appli.message="Vous ne pouvez copier que des commandes ou des mots-clés facteurs !"
-        return 0
-
-    def doPaste_Commande(self,objet_a_copier):
-        """
-	Réalise la copie de l'objet passé en argument qui est nécessairement
-	une commande
-	"""
-	child = self.append_brother(objet_a_copier,retour='oui')
-	return child
-
-    #--------------------------------------------------------------
-    # Méthodes de vérification du contexte et de validité du noeud
-    #--------------------------------------------------------------
-    def verif_all(self):
-        raise "OBSOLETE"
-        traceback.print_stack()
-        self.verif_all_children()
-            
-    def verif_all_children(self):
-        raise "OBSOLETE"
-        traceback.print_stack()
-        if not self.children : self.build_children()
-        self.verif()
-        for child in self.children :
-            child.verif_all_children()
-
-    def verif(self) :
-        """ 
-            Lance la vérification des conditions des blocs de self et le cas
-            échéant redessine self 
-        """
-        raise "OBSOLETE"
-        traceback.print_stack()
-        nbold = self.get_nb_children()
-        test = self.verif_condition()
-        nbnew = self.get_nb_children()
-        if test != 0 :
-            self.redraw(nbnew-nbold)
-
-    def verif_condition(self):
-        """
-        on lance la vérification des conditions de chaque bloc de self
-        on crée ou supprime les noeuds concernés
-        (self est d'un niveau inférieur ou égal à l'ETAPE)
-        """
-        raise "OBSOLETE"
-        traceback.print_stack()
-        test = 0
-        l_bloc_arajouter,l_bloc_aenlever = self.verif_condition_bloc()
-        if len(l_bloc_arajouter) > 0:
-            test = 1
-            for mc in l_bloc_arajouter:
-                self.append_node_child(mc,verif='non')
-        if len(l_bloc_aenlever) > 0:
-            test = 1
-            for mc in l_bloc_aenlever:
-                mocle = self.get_node_fils(mc)
-                self.delete_child(mocle)
-        l_mc_presents = self.item.get_liste_mc_presents()
-        l_mc_arajouter= self.verif_condition_regles(l_mc_presents)
-        if len(l_mc_arajouter) > 0:
-            test = 1
-            for mc in l_mc_arajouter:
-                self.append_node_child(mc,verif='non')
-        if len(l_mc_arajouter)+len(l_bloc_arajouter)+len(l_bloc_aenlever) != 0 :
-            self.verif_condition()
-        return test
-        
-    def verif_condition_bloc(self):
-        raise "OBSOLETE"
-        traceback.print_stack()
-        return self.item.verif_condition_bloc()
-
-    def verif_condition_regles(self,l_mc_presents):
-        raise "OBSOLETE"
-        traceback.print_stack()
-        return self.item.verif_condition_regles(l_mc_presents)
-    
 
