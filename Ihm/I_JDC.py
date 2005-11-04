@@ -21,7 +21,7 @@
 """
 """
 # Modules Python
-import types,traceback,sys
+import types,traceback,sys,os
 import string,linecache
 
 # Modules Eficas
