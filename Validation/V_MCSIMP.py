@@ -131,8 +131,7 @@ class MCSIMP:
       min=self.definition.min
       max=self.definition.max
 
-      #if type(self.valeur) == types.TupleType and not self.valeur[0] in ('RI','MP') or type(self.valeur) == types.ListType:
-      if type(self.valeur) == types.TupleType and not self.valeur[0] in ('RI','MP') or isinstance(self.valeur,list):
+      if type(self.valeur) == types.TupleType and not self.valeur[0] in ('RI','MP') or type(self.valeur) == types.ListType:
         length=len(self.valeur)
       else:
         if self.valeur == None :
@@ -163,8 +162,7 @@ class MCSIMP:
           self.cr.fatal("None n'est pas une valeur autorisée")
         return 0
 
-      #if type(valeur) == types.TupleType and not valeur[0] in ('RI','MP') or type(valeur) == types.ListType:
-      if type(valeur) == types.TupleType and not valeur[0] in ('RI','MP') or isinstance(valeur,list):
+      if type(valeur) == types.TupleType and not valeur[0] in ('RI','MP') or type(valeur) == types.ListType:
         # Ici on a identifié une liste de valeurs
         for val in valeur:
             if not self.verif_type(val=val,cr=cr) : return 0

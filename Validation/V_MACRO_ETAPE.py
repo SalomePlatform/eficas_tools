@@ -166,7 +166,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
           # Que faut il faire de l eventuel ancien sd ?
           self.sd = None
         else:
-          if self.sd != None: 
+          if self.sd: 
             # Un sd existe deja, on change son type
             self.sd.__class__=sd_prod
             self.typret=sd_prod
