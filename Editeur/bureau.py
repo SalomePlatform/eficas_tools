@@ -307,7 +307,7 @@ class BUREAU:
           Demande à l'utilisateur quel JDC existant il veut ouvrir
       """
       if self.code == 'ASTER':
-          filetypes = ( ("format "+self.appli.format_fichier.get(), ".comm"),("Tous",'*'))
+          filetypes = ( ("format "+self.appli.format_fichier.get(), ".com*"),("Tous",'*'))
       elif self.code == 'HOMARD' :
           filetypes = ( ("format "+self.appli.format_fichier.get(), ".py"),("Tous",'*'))
       else:
@@ -341,6 +341,7 @@ class BUREAU:
                     titre="compte-rendu d'erreurs, EFICAS ne sait pas convertir ce fichier",
                     texte = str(p.cr)).wait()
             return
+	 self.appli.listeFichiers.aOuvert(file)
       else:
          # Il n'existe pas c'est une erreur
          self.appli.affiche_infos("Type de fichier non reconnu")
@@ -438,14 +439,14 @@ class BUREAU:
 	     from panelsSalome import SALOME_UNIQUE_BASE_Panel
 	     if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
 		self.appli.salome.creeConfigTxt(self.appli.CONFIGURATION.initialdir,SALOME_UNIQUE_BASE_Panel.dict_fichier_unite)
-	     try :
-	     #if ( 1 == 1 ) :
+	     #try :
+	     if ( 1 == 1 ) :
 	     	import eficasCL
 	     	MyCLinit=eficasCL.CLinit()
 	     	MyCLinit.traiteCL()
 		MyCLinit.clean()
-	     except :
-	     #else :
+	     #except :
+	     else :
 	        pass
           #PN  Fin Ajout --> Salome
           # le JDC a déjà un nom : on sauvegarde directement sans demander

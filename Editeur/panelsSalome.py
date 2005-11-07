@@ -10,6 +10,7 @@ from shellpanel         import SHELLPanel
 from plusieursintopanel import PLUSIEURS_INTO_Panel
 from plusieursassdpanel import PLUSIEURS_ASSD_Panel
 from plusieursbasepanel import PLUSIEURS_BASE_Panel
+from plusieursbasepanel import PLUSIEURS_BASE_OR_UNELISTE_Panel
 from uniquesdcopanel    import UNIQUE_SDCO_Panel
 from uniqueassdpanel    import UNIQUE_ASSD_Panel
 from uniqueintopanel    import UNIQUE_INTO_Panel
@@ -89,9 +90,12 @@ class SALOME_UNIQUE_ASSD_Panel_Reel (UNIQUE_ASSD_Panel_Reel):
 #
 # ------------------------------------------------------------------------------#
 
+class SALOME_PLUSIEURS_BASE_OR_UNELISTE_Panel(PLUSIEURS_BASE_OR_UNELISTE_Panel):
+      ""	
+
+
+
 class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
-
-
   def convertit_group_no_from_salome(self,liste_in):
       newr=[]
       #try:
@@ -139,8 +143,8 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
       return newr
 
   def convertit_entrees_en_valeurs(self,entrychaine):
-      if SALOME_PLUSIEURS_BASE_Panel.__dict__.has_key(self.clef_fonction):
-           valeur=apply(SALOME_PLUSIEURS_BASE_Panel.__dict__[self.clef_fonction],(self,entrychaine))
+      if SALOME_PLUSIEURS_BASE_OR_UNELISTE_Panel.__dict__.has_key(self.clef_fonction):
+           valeur=apply(SALOME_PLUSIEURS_BASE_OR_UNELISTE_Panel.__dict__[self.clef_fonction],(self,entrychaine))
       else :
            if (self.clef_fonction.find("GROUP_NO") != -1) and (self.clef_fonction.find("GROUP_MA") != -1) :
               if (self.clef_fonction.find("GROUP_NO") < self.clef_fonction.find("GROUP_MA")) :
@@ -568,6 +572,7 @@ dict_classes_salome = { SHELLPanel : SALOME_SHELLPanel,
 			  PLUSIEURS_INTO_Panel : SALOME_PLUSIEURS_INTO_Panel,
 			  PLUSIEURS_ASSD_Panel : SALOME_PLUSIEURS_ASSD_Panel,
 			  PLUSIEURS_BASE_Panel : SALOME_PLUSIEURS_BASE_Panel,
+			  PLUSIEURS_BASE_OR_UNELISTE_Panel : SALOME_PLUSIEURS_BASE_OR_UNELISTE_Panel,
 			  UNIQUE_INTO_Panel :  SALOME_UNIQUE_INTO_Panel,
 			  UNIQUE_SDCO_Panel : SALOME_UNIQUE_SDCO_Panel,
 			  UNIQUE_ASSD_Panel : SALOME_UNIQUE_ASSD_Panel,

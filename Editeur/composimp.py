@@ -79,8 +79,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
                   self.panel = PLUSIEURS_ASSD_Panel
               else:
                   # on attend une liste de valeurs de types debase (entiers, réels,...)
-                  from plusieursbasepanel import PLUSIEURS_BASE_OR_UNELISTE_Panel
-                  self.panel = PLUSIEURS_BASE_OR_UNELISTE_Panel
+                  #from plusieursbasepanel import PLUSIEURS_BASE_OR_UNELISTE_Panel
+                  #self.panel = PLUSIEURS_BASE_OR_UNELISTE_Panel
+                  from plusieursbasepanel import PLUSIEURS_BASE_Panel
+                  self.panel = PLUSIEURS_BASE_Panel
           else:
               # on n'attend qu'une seule valeur mais de quel type ?
               if self.wait_co():

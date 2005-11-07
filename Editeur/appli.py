@@ -43,6 +43,7 @@ import properties
 from widgets import Fenetre
 from Misc import MakeNomComplet
 import session
+import listeFichiers
 
 VERSION="EFICAS v1.9"
 
@@ -77,6 +78,7 @@ class APPLI:
       self.cree_composants_graphiques()
       # Creation des autres composants graphiques dont le bureau (parametrable par prefs.py)
       self.load_appli_composants()		
+      self.listeFichiers=listeFichiers.listeFichiers(self)
 
       # PN : ajout d un attribut pour indiquer si 
       # l appli a ete lance depuis Salome

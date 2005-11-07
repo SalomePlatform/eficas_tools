@@ -59,94 +59,97 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       Crée la page de saisie d'une liste de valeurs à priori quelconques,
       cad qui ne sont  pas à choisir dans une liste prédéfinie
       """
-      print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
-      print "                                                  "
-      print "A priori on ne doit plus passer dans cette methode "
-      print "                                                  "
-      print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+      #print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+      #print "                                                  "
+      #print "A priori on ne doit plus passer dans cette methode "
+      #print "                                                  "
+      #print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
       # On récupère la bulle d'aide du panneau, l'objet, l'aide,min et max (cardinalité de la liste),
       # et la liste des valeurs déjà affectées à l'objet courant
-      #bulle_aide=self.get_bulle_aide()
-      #objet_mc = self.node.item.get_definition()
-      #aide = self.get_aide()
-      #aide = justify_text(texte=aide)
-      #min,max = self.node.item.GetMinMax()
-      #l_valeurs = self.node.item.GetListeValeurs()
+      bulle_aide=self.get_bulle_aide()
+      objet_mc = self.node.item.get_definition()
+      aide = self.get_aide()
+      aide = justify_text(texte=aide)
+      min,max = self.node.item.GetMinMax()
+      l_valeurs = self.node.item.GetListeValeurs()
 
       # création des frames globales
-      #self.frame1 = Frame(page,relief='groove',bd=2)
-      #self.frame2 = Frame(page)
-      #self.frame1.place(relx=0.,rely=0.,relwidth=1.,relheight=0.85)
-      #self.frame2.place(relx=0.,rely=0.85,relwidth=1,relheight=0.15)
-      #self.frame_right = Frame(self.frame1)
-      #self.frame_right.place(relx=0.35,rely=0.,relwidth=0.65,relheight=1.)
+      self.frame1 = Frame(page,relief='groove',bd=2)
+      self.frame2 = Frame(page)
+      self.frame1.place(relx=0.,rely=0.,relwidth=1.,relheight=0.85)
+      self.frame2.place(relx=0.,rely=0.85,relwidth=1,relheight=0.15)
+      self.frame_right = Frame(self.frame1)
+      self.frame_right.place(relx=0.35,rely=0.,relwidth=0.65,relheight=1.)
 
       # création des frames internes
-      #self.frame_valeurs = Frame(self.frame1)
-      #self.frame_valeurs.place(relx=0.02,rely=0.05,relwidth=0.35,relheight=0.95)
-      #self.frame_boutons_fleches = Frame(self.frame_right)
-      #self.frame_boutons_fleches.place(relx=0.,rely=0.2,relwidth=0.2,relheight=0.5)
-      #self.frame_choix = Frame(self.frame_right)
-      #self.frame_choix.place(relx=0.2,rely=0.2,relwidth=0.7,relheight=0.8)
-      #self.frame_aide = Frame(self.frame_right)
-      #self.frame_aide.place(relx=0.1,rely=0.8,relwidth=0.8,relheight=0.2)
-      #self.frame_boutons = Frame(self.frame2)
+      self.frame_valeurs = Frame(self.frame1)
+      self.frame_valeurs.place(relx=0.02,rely=0.05,relwidth=0.35,relheight=0.95)
+      self.frame_boutons_fleches = Frame(self.frame_right)
+      self.frame_boutons_fleches.place(relx=0.,rely=0.2,relwidth=0.2,relheight=0.5)
+      self.frame_choix = Frame(self.frame_right)
+      self.frame_choix.place(relx=0.2,rely=0.2,relwidth=0.7,relheight=0.8)
+      self.frame_aide = Frame(self.frame_right)
+      self.frame_aide.place(relx=0.1,rely=0.8,relwidth=0.8,relheight=0.2)
+      self.frame_boutons = Frame(self.frame2)
       #self.frame_boutons.place(relx=0.35,rely=0.,relwidth=0.3,relheight=1.)
-      #for fram in (self.frame1,self.frame2,self.frame_right,self.frame_valeurs,
-      #           self.frame_boutons_fleches,self.frame_choix,self.frame_aide,self.frame_boutons):
-      #    fram.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
-      #    fram.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
+      self.frame_boutons.place(relx=0.2,rely=0.,relwidth=1,relheight=1.)
+      for fram in (self.frame1,self.frame2,self.frame_right,self.frame_valeurs,
+                 self.frame_boutons_fleches,self.frame_choix,self.frame_aide,self.frame_boutons):
+          fram.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
+          fram.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
 
       # création des objets dans les frames
-      #liste_commandes_valeurs = (("<Button-1>",self.selectValeur),
-      #                           ("<Button-3>",self.deselectValeur),
-      #                           ("<Double-Button-1>",self.sup_valeur_sans_into))
-      #self.Liste_valeurs=ListeChoix(self,self.frame_valeurs,l_valeurs,liste_commandes = liste_commandes_valeurs,
-      #                                titre="Valeur(s) actuelle(s)")
+      liste_commandes_valeurs = (("<Button-1>",self.selectValeur),
+                                 ("<Button-3>",self.deselectValeur),
+                                 ("<Double-Button-1>",self.sup_valeur_sans_into))
+      self.Liste_valeurs=ListeChoix(self,self.frame_valeurs,l_valeurs,liste_commandes = liste_commandes_valeurs,
+                                      titre="Valeur(s) actuelle(s)")
 
       # Création de l'entry ou de la liste des SD
       # PN : pour ajouter les validators
-      #self.label = Label(self.frame_choix,text="Valeur :")
-      #self.make_entry(frame = self.frame_choix,command = self.add_valeur_plusieurs_base)
-      #self.label.place(relx=0.05,rely=0.2)
+      self.label = Label(self.frame_choix,text="Valeur :")
+      self.make_entry(frame = self.frame_choix,command = self.add_valeur_plusieurs_base)
+      self.label.place(relx=0.05,rely=0.2)
 
       # Création d'un bouton "Importer ..." et d'un bouton "Paramatres" sur le panel.
-      #bouton_valeurs_fichier = Button(self.frame_choix,
-      #                                text="Importer",
-      #                                command=self.select_in_file)
-      #bouton_valeurs_fichier.place(relx=0.28,rely=0.4,relwidth=0.6)
-      #bouton_parametres = Button(self.frame_choix, text="Parametres", command=self.affiche_parametre)
-      #bouton_parametres.place(relx=0.28,rely=0.6,relwidth=0.6)
-      #self.ajout_valeurs = None
+      bouton_valeurs_fichier = Button(self.frame_choix,
+                                      text="Importer",
+                                      command=self.select_in_file)
+      bouton_valeurs_fichier.place(relx=0.28,rely=0.4,relwidth=0.6)
+      bouton_parametres = Button(self.frame_choix, text="Parametres", command=self.affiche_parametre)
+      bouton_parametres.place(relx=0.28,rely=0.6,relwidth=0.6)
+      self.ajout_valeurs = None
 
       # boutons Ajouter et Supprimer
-      #bouton_add = Button(self.frame_boutons_fleches,
-      #                    image = images.get_image('arrow_left'),
-      #                    command = self.add_valeur_plusieurs_base)
-      #bouton_sup = Button(self.frame_boutons_fleches,
-      #                    image = images.get_image('arrow_right'),
-      #                    command = self.sup_valeur_sans_into)
-      #bouton_add.place(relx=0.3,rely=0.35)
-      #bouton_sup.place(relx=0.3,rely=0.65)
-      ## affichage de l'aide
-      #self.frame_aide.update()
-      #self.aide = Label(self.frame_aide,
-      #                  text = aide,
-      #                  justify='center',
-      #                  anchor='center',
-      #			wraplength=int(self.frame_aide.winfo_width()*0.8))
-      #self.aide.place(relx=0.5,rely=0.5,anchor='center',relwidth=1)
-      #self.Liste_valeurs.affiche_liste()
-      #if len(l_valeurs) > 0 :
-      #    liste_marque=l_valeurs[-1]
-      #    self.Liste_valeurs.surligne(liste_marque)
+      bouton_add = Button(self.frame_boutons_fleches,
+                          image = images.get_image('arrow_left'),
+                          command = self.add_valeur_plusieurs_base)
+      bouton_sup = Button(self.frame_boutons_fleches,
+                          image = images.get_image('arrow_right'),
+                          command = self.sup_valeur_sans_into)
+      bouton_add.place(relx=0.3,rely=0.35)
+      bouton_sup.place(relx=0.3,rely=0.65)
+      # affichage de l'aide
+      self.frame_aide.update()
+      self.aide = Label(self.frame_aide,
+                        text = aide,
+                        justify='center',
+                        anchor='center',
+      			wraplength=int(self.frame_aide.winfo_width()*0.8))
+      self.aide.place(relx=0.5,rely=0.5,anchor='center',relwidth=1)
+      self.Liste_valeurs.affiche_liste()
+      if len(l_valeurs) > 0 :
+          liste_marque=l_valeurs[-1]
+          self.Liste_valeurs.surligne(liste_marque)
       # boutons Accepter et Annuler
-      #bouton_accepter = Button(self.frame_boutons,
-      #                         text='Valider',
-      #                         command = lambda s=self,m=min,M=max : s.accepte_modifs_valeur(m,M))
-      #bouton_annuler = Button(self.frame_boutons,
-      #                        text = 'Annuler',
-      #                        command = self.annule_modifs_valeur)
+      bouton_accepter = Button(self.frame_boutons,
+                               text='Valider',
+                               command = lambda s=self,m=min,M=max : s.accepte_modifs_valeur(m,M))
+      bouton_annuler = Button(self.frame_boutons,
+                              text = 'Annuler',
+                              command = self.annule_modifs_valeur)
+      bouton_accepter.place(relx=0.2, rely=0.2,relwidth=0.25)
+      bouton_annuler.place(relx=0.5, rely=0.2,relwidth=0.25)
       #for but in (bouton_accepter,bouton_annuler):
       #    but.pack(side='left',padx=4)
 
@@ -269,15 +272,22 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       return commentaire
 
   def make_entry(self,frame,command,x=0.28,y=0.2):
+      self.entry = Entry(frame,relief='sunken')
+      self.entry.place(relx=0.28,rely=y,relwidth=0.6)
+      self.entry.bind("<Return>",lambda e,c=command:c())
+      self.entry.bind("<KP_Enter>",lambda e,c=command:c())
+      self.entry.focus()
+
+  #def make_entry(self,frame,command,x=0.28,y=0.2):
       """
       Crée l'entry de saisie de la valeur souhaitée : distingue le
       cas d'un complexe attendu, d'une autre valeur quelconque
       """
-      print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
-      print "                                                  "
-      print "A priori on ne doit plus passer dans cette methode "
-      print "                                                  "
-      print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+      #print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+      #print "                                                  "
+      #print "A priori on ne doit plus passer dans cette methode "
+      #print "                                                  "
+      #print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
       #if self.node.item.wait_complex():
       #    self.typ_cplx=StringVar()
       #    self.typ_cplx.set('RI')
@@ -472,7 +482,7 @@ class PLUSIEURS_BASE_OR_UNELISTE_Panel(PLUSIEURS_BASE_Panel,UNIQUE_ASSD_Panel):
       bouton_annuler = Button(self.frame2, text = 'Annuler',
                               command = self.annule_modifs_valeur)
       for but in (bouton_accepter,bouton_annuler):
-          but.pack(side='left',padx=4)
+          but.pack(side='left',padx=5)
 
       # création des objets dans les frames
       liste_commandes_valeurs = (("<Button-1>",self.selectValeur),
@@ -531,7 +541,7 @@ class PLUSIEURS_BASE_OR_UNELISTE_Panel(PLUSIEURS_BASE_Panel,UNIQUE_ASSD_Panel):
 		  'I'   : type(0),
 		  'C'   : type(a)}
 
-      # On enelve seulement ceux qu'on peut
+      # On enleve seulement ceux qu'on peut
       # Sur certaines listes, il est possible qu'on ne 
       # sache pas déterminer le type
       listefinale=[]
@@ -555,9 +565,3 @@ class PLUSIEURS_BASE_OR_UNELISTE_Panel(PLUSIEURS_BASE_Panel,UNIQUE_ASSD_Panel):
 	         listefinale.append(liste)
       return listefinale
 
-  def make_entry(self,frame,command,x=0.28,y=0.2):
-      self.entry = Entry(frame,relief='sunken')
-      self.entry.place(relx=0.28,rely=y,relwidth=0.6)
-      self.entry.bind("<Return>",lambda e,c=command:c())
-      self.entry.bind("<KP_Enter>",lambda e,c=command:c())
-      self.entry.focus()

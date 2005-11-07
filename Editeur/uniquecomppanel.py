@@ -99,7 +99,7 @@ class UNIQUE_COMP_Panel(UNIQUE_Panel):
       self.entry2.delete(0,END)
       self.entry3.delete(0,END)
       if type(valeur) not in (types.ListType,types.TupleType) :
-         self.display_complexe
+         self.display_complexe()
       else:
          typ_cplx,x1,x2=valeur
          self.typ_cplx.set(typ_cplx)
