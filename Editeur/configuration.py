@@ -148,9 +148,11 @@ class CONFIG:
           self.l_param.append(("Versions du code ",'cata','catalogues',os.path.join(self.rep_ini,'..','Cata/cata.py')))
       # attribut développeur
       if hasattr(self,'isdeveloppeur'):
-          self.l_param.append(("Etes-vous développeur ?",'YesNo','isdeveloppeur',self.isdeveloppeur))
+      #    self.l_param.append(("Etes-vous développeur ?",'YesNo','isdeveloppeur',self.isdeveloppeur))
+           self.l_param.append(("Niveau de message ",'YesNo','isdeveloppeur',self.isdeveloppeur,'Deboggage','Utilisation'))
       else:
-          self.l_param.append(("Etes-vous développeur ?",'YesNo','isdeveloppeur','NON'))
+      #    self.l_param.append(("Etes-vous développeur ?",'YesNo','isdeveloppeur','NON'))
+           self.l_param.append(("Niveau de message ",'YesNo','isdeveloppeur','NON','Deboggage','Utilisation'))
       # répertoire où sont contenus les catalogues développeurs
       if hasattr(self,'path_cata_dev') and hasattr(self,'isdeveloppeur') and self.isdeveloppeur == 'OUI':
           self.l_param.append(("Chemin d'accès aux catalogues développeurs",'rep','path_cata_dev',self.path_cata_dev))

@@ -37,6 +37,8 @@ class OPTIONS:
                    ("Affichage commandes",(("alphabétique",'&affichage_alpha'),("groupes",'&affichage_grp'))),
                    #("Couleur",(("fond",'change_fond'),("barre",'change_barre'))),
                    # ("Catalogue développeur",'choix_cata_developpeur'),
+		   ('Paramètres Eficas','affichage_fichier_ini'),
+		      
                    ]
         )
              ]
@@ -46,6 +48,7 @@ class OPTIONS:
    def __init__(self,appli,parent):
       self.appli=appli
       self.parent=parent
+
 
    def affichage_grp(self):
       global affichage_commandes
@@ -119,3 +122,6 @@ class OPTIONS:
               self.Retrouve_Ordre_Cata('personnel')
           pile_erreurs.efface()
 
+
+   def affichage_fichier_ini(self):
+       self.appli.bureau.affichage_fichier_ini()

@@ -543,7 +543,12 @@ class Formulaire:
             if len(item[0])>length_maxi : length_maxi = len(item[0])
         window = self.fenetre.interior()
         for item in self.items :
-            label,nature,nom_var,defaut = item
+	    if len(item) == 4 :
+               label,nature,nom_var,defaut = item
+	       chaine="Yes" 
+	       chaine2="No"
+	    else :
+               label,nature,nom_var,defaut,chaine,chaine2 = item
             # création de la frame
             fr_item = Frame(window,height=40,width=700)
             fr_item.pack(side='top',fill='x',expand=1)
@@ -562,8 +567,8 @@ class Formulaire:
                 setattr(self,'item_'+nom_var,var)
                 var.set(defaut)
                 # création du radiobouton
-                rb1 = Radiobutton(fr_item,text='OUI',variable=var,value='OUI')
-                rb2 = Radiobutton(fr_item,text='NON',variable=var,value='NON')
+                rb1 = Radiobutton(fr_item,text=chaine,variable=var,value='OUI')
+                rb2 = Radiobutton(fr_item,text=chaine2,variable=var,value='NON')
                 rb1.place(relx=0.65,rely=0.5,anchor='center')
                 rb2.place(relx=0.80,rely=0.5,anchor='center')
                 self.widgets.append((rb1,rb2))
