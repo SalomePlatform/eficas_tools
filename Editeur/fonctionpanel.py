@@ -79,7 +79,7 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
       self.frame_aide = Frame(self.frame_right)
       self.frame_aide.place(relx=0.1,rely=0.7,relwidth=0.8,relheight=0.3)
       self.frame_boutons = Frame(self.frame2)
-      self.frame_boutons.place(relx=0.35,rely=0.,relwidth=0.3,relheight=1.)
+      self.frame_boutons.place(relx=0.35,rely=0.,relwidth=0.5,relheight=1.)
       for fram in (self.frame1,self.frame2,self.frame_right,self.frame_valeurs,
                  self.frame_boutons_fleches,self.frame_choix,self.frame_aide,self.frame_boutons):
           fram.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
@@ -130,7 +130,7 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
                               text = 'Annuler',
                               command = self.annule_modifs_valeur)
       for but in (bouton_accepter,bouton_annuler):
-          but.pack(side='left',padx=5)
+          but.pack(side='left',padx=4)
 
 
   def afficheValeurListe(self,name):

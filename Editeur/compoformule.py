@@ -64,7 +64,8 @@ class FORMULEPanel(panels.OngletPanel):
     Crée la page qui permet d'afficher et d'éditer le texte de la FORMULE
     """
     self.frame_valeur = Frame(page)
-    self.frame_valeur.place(relwidth=0.9,relheight=0.9,relx=0.05,rely=0.05,anchor='nw')
+    self.frame_valeur.place(relwidth=0.95,relheight=0.95,relx=0.05,rely=0.05,anchor='nw')
+    #self.frame_valeur.place(relwidth=0.9,relheight=0.9,relx=0.05,rely=0.05,anchor='nw')
     # affichage du titre du panneau
     self.titre = StringVar()
     self.titre.set("FORMULE "+self.node.item.get_nom())
