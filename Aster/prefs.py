@@ -65,8 +65,8 @@ menu_defs={ 'bureau': [
                            ('Nouveau','newJDC','<Control-n>','Ctrl+N'),
                            ('Nouvel INCLUDE','newJDC_include'),
                            ('Ouvrir','openJDC','<Control-o>','Ctrl+O'),
-                           ('Enregistrer','saveJDC','<Control-e>','Ctrl+E'),
-                           ('Enregistrer sous','saveasJDC','<Control-s>','Ctrl+S'),
+                           ('Enregistrer','saveJDC','<Control-s>','Ctrl+S'),
+                           ('Enregistrer sous','saveasJDC','<Control-e>','Ctrl+E'),
                            None,
                            ('Fermer','closeJDC','<Control-f>','Ctrl+F'),
                            ('Quitter','exitEFICAS','<Control-q>','Ctrl+Q'),
@@ -80,11 +80,8 @@ menu_defs={ 'bureau': [
               ),
               ('Jeu de commandes',[
                ('Rapport de validation','visuCRJDC','<Control-r>','Ctrl+R'),
-               ('Fichier à plat','visu_a_plat','<Control-p>','Ctrl+P'),
-               ('Fichier format v6','visuJDC_py','<Control-t>','Ctrl+T'),
                ('Fichier source','visu_txt_brut_JDC','<Control-b>','Ctrl+B'),
-               ('Paramètres Eficas','affichage_fichier_ini'),
-               ('Mots-clés inconnus','mc_inconnus'),
+               #('Paramètres Eficas','affichage_fichier_ini'),
                                   ]
               ),
               ('Aide',[
