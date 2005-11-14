@@ -71,9 +71,9 @@ class PLUSIEURS_INTO_Panel(PLUSIEURS_Panel):
       self.frame_choix = Frame(page)
       self.frame_choix.place(relx=0.6,rely=0.05,relwidth=0.35,relheight=0.7)
       self.frame_boutons = Frame(page)
-      self.frame_boutons.place(relx=0.35,rely=0.87,relwidth=0.3,relheight=0.1)
+      self.frame_boutons.place(relx=0.35,rely=0.87,relwidth=1,relheight=0.1)
       self.frame_aide = Frame(page)
-      self.frame_aide.place(relx=0.1,rely=0.75,relwidth=0.9,relheight=0.1)
+      self.frame_aide.place(relx=0.1,rely=0.75,relwidth=1,relheight=0.15)
       liste_commandes_valeurs = (("<Button-1>",self.selectValeur),
                                  ("<Button-3>",self.deselectValeur),
                                  ("<Double-Button-1>",self.sup_valeur))
@@ -103,7 +103,7 @@ class PLUSIEURS_INTO_Panel(PLUSIEURS_Panel):
       bouton_add.place(relx=0.3,rely=0.35)
       bouton_sup.place(relx=0.3,rely=0.65)
       for but in (bouton_accepter,bouton_annuler):
-          but.pack(side='left',padx=5)
+          but.pack(side='left',padx=3)
       self.Liste_valeurs.affiche_liste()
       if len(l_valeurs) > 0 :
           liste_marque=l_valeurs[-1]
@@ -116,9 +116,9 @@ class PLUSIEURS_INTO_Panel(PLUSIEURS_Panel):
       self.aide = Label(self.frame_aide,
                         text = aide,
                         justify='center',
-                        anchor='center',
-			wraplength=int(self.frame_aide.winfo_width()*0.8))
-      self.aide.place(relx=0.5,rely=0.5,anchor='center',relwidth=1)
+                        anchor='center')
+			#wraplength=int(self.frame_aide.winfo_width()*0.8))
+      self.aide.place(relx=0.3,rely=0.5,anchor='center',relwidth=1)
 
   def get_aide(self):
       """

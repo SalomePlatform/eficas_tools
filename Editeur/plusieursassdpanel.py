@@ -69,7 +69,7 @@ class PLUSIEURS_ASSD_Panel(PLUSIEURS_Panel):
       self.frame_choix = Frame(page)
       self.frame_choix.place(relx=0.6,rely=0.05,relwidth=0.35,relheight=0.7)
       self.frame_boutons = Frame(page)
-      self.frame_boutons.place(relx=0.35,rely=0.87,relwidth=0.3,relheight=0.1)
+      self.frame_boutons.place(relx=0.35,rely=0.87,relwidth=0.5,relheight=0.1)
       liste_commandes_valeurs = (("<Button-1>",self.selectValeur),
                                  ("<Button-3>",self.deselectValeur),
                                  ("<Double-Button-1>",self.sup_valeur_sans_into))
@@ -99,7 +99,7 @@ class PLUSIEURS_ASSD_Panel(PLUSIEURS_Panel):
       bouton_add.place(relx=0.3,rely=0.35)
       bouton_sup.place(relx=0.3,rely=0.65)
       for but in (bouton_accepter,bouton_annuler):
-          but.pack(side='left',padx=5)
+          but.pack(side='left',padx=4)
       self.Liste_valeurs.affiche_liste()
       if len(l_valeurs) > 0 :
           liste_marque=l_valeurs[-1]
