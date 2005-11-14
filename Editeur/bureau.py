@@ -110,6 +110,7 @@ class BUREAU:
       comploader.charger_composants()
       self.cree_cataitem()
       self.text_reel=""
+      self.initialdir = self.appli.CONFIGURATION.initialdir
 
    def cree_cataitem(self):
       """
@@ -184,7 +185,7 @@ class BUREAU:
       self.ShowJDC(J,self.JDCName)
       self.appli.toolbar.active_boutons()
 
-   def ShowJDC(self,JDC,nom,label_onglet=None,JDCDISPLAY=JDCDISPLAY):
+   def ShowJDC(self,JDC,nom,label_onglet=None,JDCDISPLAY=JDCDISPLAY,enregistre="non"):
       """
           Lance l'affichage du JDC cad création du JDCDisplay
           Rajoute le JDCDisplay à la liste des JDCDisplay si label_onglet == None cad si on crée
@@ -203,7 +204,10 @@ class BUREAU:
       if new == 'oui':
           self.liste_JDCDisplay.append(self.JDCDisplay_courant)
       self.JDCDisplay_courant.modified='n'
-      self.JDCDisplay_courant.fichier=self.fileName
+      if enregistre != "non" :
+         self.JDCDisplay_courant.fichier=self.fileName
+      else :
+         self.initialdir = self.appli.CONFIGURATION.rep_user
       self.nb.selectpage(label_onglet)
       self.nb.setnaturalsize()
       texte = "Jeu de commandes :" + self.JDCName+" ouvert"
@@ -302,7 +306,7 @@ class BUREAU:
       texte_cr = str(cr)
       self.visu_texte_cr = Fenetre(self.appli,titre=titre,texte=texte_cr)
 
-   def openJDC(self,event=None,file=None,units=None):
+   def openJDC(self,event=None,file=None,units=None,enregistre="oui"):
       """
           Demande à l'utilisateur quel JDC existant il veut ouvrir
       """
@@ -341,7 +345,8 @@ class BUREAU:
                     titre="compte-rendu d'erreurs, EFICAS ne sait pas convertir ce fichier",
                     texte = str(p.cr)).wait()
             return
-	 self.appli.listeFichiers.aOuvert(file)
+	 if enregistre == "oui" :
+	    self.appli.listeFichiers.aOuvert(file)
       else:
          # Il n'existe pas c'est une erreur
          self.appli.affiche_infos("Type de fichier non reconnu")
@@ -372,7 +377,7 @@ class BUREAU:
           if self.appli.test == 0 :
              showerror("Erreur fatale au chargement d'un fichier",txt_exception)
       else:
-          self.ShowJDC(J,self.JDCName)
+          self.ShowJDC(J,self.JDCName,enregistre=enregistre)
           self.appli.toolbar.active_boutons()
 	  # si le JDC ne contient rien (vide), on retourne ici
 	  if len(self.JDC.etapes) == 0 : return
@@ -380,6 +385,7 @@ class BUREAU:
           if not self.JDC.isvalid():
 	     self.appli.top.update()
 	     self.visuCR(mode='JDC')
+      # On a ouvert un Patron
 
    def GetLabelJDC(self,nb_jdc = 'absent'):
       """
@@ -473,8 +479,9 @@ class BUREAU:
       sauvegarde = asksaveasfilename(title=titre,
                                      defaultextension=defext,
                                      filetypes = filtyp,
-                                     initialdir = self.appli.CONFIGURATION.initialdir)
-                                     #initialdir = self.appli.CONFIGURATION.rep_user)
+                                     initialdir = self.initialdir)
+                            #initialdir = self.appli.CONFIGURATION.initialdir)
+                            #initialdir = self.appli.CONFIGURATION.rep_user)
       if sauvegarde :
           # PN ajout --> Salome
           # Pour sauvegarde dans l etude si lancement depuis salome

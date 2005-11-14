@@ -44,6 +44,7 @@ from widgets import Fenetre
 from Misc import MakeNomComplet
 import session
 import listeFichiers
+import listePatrons
 
 VERSION="EFICAS v1.9"
 
@@ -79,6 +80,7 @@ class APPLI:
       # Creation des autres composants graphiques dont le bureau (parametrable par prefs.py)
       self.load_appli_composants()		
       self.listeFichiers=listeFichiers.listeFichiers(self)
+      self.listePatrons=listePatrons.listePatrons(self)
 
       # PN : ajout d un attribut pour indiquer si 
       # l appli a ete lance depuis Salome
@@ -246,7 +248,8 @@ class APPLI:
          number_item=number_item + 1
 	 raccourci_label=""
          if not item :
-            menu.add_separator()
+            #menu.add_separator()
+	    pass
          else:
             if len(item)==3:
                raccourci=item[2]
