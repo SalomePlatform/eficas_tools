@@ -62,7 +62,7 @@ class listeFichiers :
 	   self.premiere=0
 	   self.menuFichier.add_separator()
 	label=self.liste_Fichiers[index]
-        self.menuFichier.insert_command(9,label=label,command= lambda self=self, l=label:self.coucou (l));
+        self.menuFichier.insert_command(8,label=label,command= lambda self=self, l=label:self.coucou (l));
 	self.nbfich=self.nbfich+1
 
     def coucou(self,label):
