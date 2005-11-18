@@ -773,7 +773,9 @@ class ListeChoix :
               label.bind("<Return>",lambda e,s=self,c=self.liste_commandes[2][1],x=objet,l=label : s.chooseitemsurligne(x,l,c))
               label.bind("<KP_Enter>",lambda e,s=self,c=self.liste_commandes[2][1],x=objet,l=label : s.chooseitemsurligne(x,l,c))
           label.bind("<Key-Right>",lambda e,s=self,x=objet,l=label : s.selectNextItem(x,l))
+          label.bind("<Key-Down>",lambda e, s=self,x=objet,l=label : s.selectNextItem(x,l))
           label.bind("<Key-Left>" ,lambda e,s=self,x=objet,l=label  : s.selectPrevItem(x,l))
+          label.bind("<Key-Up>" ,lambda e,s=self,x=objet,l=label  : s.selectPrevItem(x,l))
           if self.active == 'oui':
               label.bind(self.liste_commandes[0][0],lambda e,s=self,c=self.liste_commandes[0][1],x=objet,l=label : s.selectitem(x,l,c))
               label.bind(self.liste_commandes[1][0],lambda e,s=self,c=self.liste_commandes[1][1],x=objet,l=label : s.deselectitem(l,x,c))
@@ -822,7 +824,7 @@ class ListeChoix :
         except AsException,e:
            raison=str(e)
            showerror(raison.split('\n')[0],raison)
-        
+
     def selectNextItem(self,mot,label):
         index=self.liste.index(mot)
         indexsuivant=index+1

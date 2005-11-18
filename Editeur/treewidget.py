@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.25 2005/06/16 09:27:25 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.26 2005/11/03 09:03:49 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -40,8 +40,8 @@ class Tree :
         self.canvas = self.scrolledcanvas.component('canvas')
         self.id_up=self.canvas.bind("<Key-Prior>", self.page_up)
         self.id_down=self.canvas.bind("<Key-Next>", self.page_down)
-        self.id_uup=self.canvas.bind("<Key-Up>", self.unit_up)
-        self.id_udown=self.canvas.bind("<Key-Down>", self.unit_down)             
+        #self.id_uup=self.canvas.bind("<Key-Up>", self.unit_up)
+        #self.id_udown=self.canvas.bind("<Key-Down>", self.unit_down)             
         self.id_um=self.canvas.bind("<Key-Left>", self.mot_up)
         self.id_dm=self.canvas.bind("<Key-Right>", self.mot_down)
         self.id_s=self.canvas.bind("<1>", self.canvas_select)             
@@ -59,10 +59,13 @@ class Tree :
 
     def page_up(self,event):
         event.widget.yview_scroll(-1, "page")
+
     def page_down(self,event):
         event.widget.yview_scroll(1, "page")
+	
     def unit_up(self,event):
         event.widget.yview_scroll(-1, "unit")
+
     def unit_down(self,event):
         event.widget.yview_scroll(1, "unit")              
 
@@ -70,7 +73,15 @@ class Tree :
         self.select_next(None)
         self.canvas.focus_set()
 
+    def mot_down_force(self):
+        self.select_next(None)
+        self.canvas.focus_set()
+
     def mot_up(self,event):
+        self.node_selected.select_mot_previous()
+        self.canvas.focus_set()
+
+    def mot_up_force(self):
         self.node_selected.select_mot_previous()
         self.canvas.focus_set()
 
@@ -412,31 +423,41 @@ class Node :
                     self.children[ind].select()
                 except:
                     self.children[0].select()
-              else :                
-                self.parent.select_next(index)
             except :
-                self.parent.select_next(index)
+		if self.parent is self.tree:
+		   pass
+		else :
+                   self.parent.select_next(index)
 
     def select_mot_previous(self):
         index = self.parent.children.index(self) - 1
         try :
-            if index > 0  :
+            if index > -1  :
                self.parent.children[index].select()
-            else :
+	    elif self.parent is self.tree:
+	       pass
+	    else :
                self.parent.select()
         except:
-            self.parent.select()
+	    if self.parent is self.tree:
+		   pass
+	    else :
+               self.parent.select_previous()
 
     def select_previous(self):
         """ on doit d'abord sélectionner(dans l'ordre) :
              - son frère aîné
              - son père
         """
-        index = self.parent.children.index(self) + 1
+        index = self.parent.children.index(self) - 1
         try :
             self.parent.children[index].select()
         except:
-            self.parent.select()
+            #self.parent.select()
+	    if self.parent is self.tree:
+		   pass
+	    else :
+               self.parent.select_previous()
 
     def popup(self,event=None):
         """

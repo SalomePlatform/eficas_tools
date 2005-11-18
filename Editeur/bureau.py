@@ -141,6 +141,7 @@ class BUREAU:
       self.JDCDisplay_courant.select()
       #print "selectJDC",numero_jdc,self.JDCDisplay_courant,self.JDCName
 
+
    def newJDC_include(self,event=None):
       """
           Initialise un nouveau JDC vierge
@@ -386,6 +387,16 @@ class BUREAU:
 	     self.appli.top.update()
 	     self.visuCR(mode='JDC')
       # On a ouvert un Patron
+      self.nb.bind_all("<F1>",lambda e,s=self:s.selectArbreDown())
+      self.nb.bind_all("<F2>",lambda e,s=self:s.selectArbreUp())
+
+   def selectArbreDown(self):
+       self.JDCDisplay_courant.tree.tree.canvas.focus_set()
+       self.JDCDisplay_courant.tree.tree.mot_down_force()
+
+   def selectArbreUp(self):
+       self.JDCDisplay_courant.tree.tree.canvas.focus_set()
+       self.JDCDisplay_courant.tree.tree.mot_up_force()
 
    def GetLabelJDC(self,nb_jdc = 'absent'):
       """

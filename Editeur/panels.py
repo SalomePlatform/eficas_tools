@@ -308,6 +308,7 @@ class OngletPanel(Panel) :
       """
       self.label = Label(page,text='Nom du concept :')
       self.label.place(relx=0.1,rely=0.4)
+      self.label.bind("<Return>",lambda e,s=self:s.execTutu())
       self._any = Entry(page,relief='sunken')
       self._any.place(relx=0.35,rely=0.4,relwidth=0.5)
       self._any.bind("<Return>",lambda e,s=self:s.execConcept())
@@ -325,6 +326,7 @@ class OngletPanel(Panel) :
       page.bind("<Button-3>", lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
       page.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
         
+
   def makeMoclesPage(self,page):
       """
       Crée la page qui affiche la liste des mots-clés que l'on peut
@@ -336,13 +338,15 @@ class OngletPanel(Panel) :
       liste_commandes = (("<Enter>",self.selectMC),
                          ("<Leave>",self.deselectMC),
                          ("<Double-Button-1>",self.defMC))
-      Liste = ListeChoix(self,page,liste_mc,liste_commandes = liste_commandes,titre = "Mots-clés permis")
+      Liste = ListeChoix(self,page,liste_mc,liste_commandes = liste_commandes,titre = "Mots-clés permis",optionReturn="oui")
       Liste.affiche_liste()
       # aide associée au panneau
       bulle_aide="""Double-cliquez sur le mot-clé que vous voulez ajouter à
       la commande en cours d'édition"""
       Liste.MCbox.bind("<Button-3>", lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
       Liste.MCbox.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
+      if len(liste_mc) > 0 :
+         Liste.surligne(liste_mc[0])
 
   def makeCommentairePage(self,page):
       label = Label(page,text = "Insérer un commentaire :")
@@ -458,8 +462,8 @@ class OngletPanel(Panel) :
       but_comment_apres = Button(self.frame_comment,
                                  text = "APRES "+self.node.item.get_nom(),
                                  command = self.ajout_commentaire)
-      but_comment_avant.place(relx=0.6,rely=0.3,anchor='w',relwidth=0.3)
-      but_comment_apres.place(relx=0.6,rely=0.7,anchor='w',relwidth=0.3)
+      but_comment_avant.place(relx=0.45,rely=0.3,anchor='w',relwidth=0.45)
+      but_comment_apres.place(relx=0.45,rely=0.7,anchor='w',relwidth=0.45)
       # remplissage de la frame paramètre
       Label(self.frame_param,text = "Insérer un paramètre :").place(relx=0.1,rely=0.5,anchor='w')
       but_param_avant = Button(self.frame_param,
@@ -468,8 +472,8 @@ class OngletPanel(Panel) :
       but_param_apres = Button(self.frame_param,
                                  text = "APRES "+self.node.item.get_nom(),
                                  command = self.ajout_parametre)
-      but_param_avant.place(relx=0.6,rely=0.3,anchor='w',relwidth=0.3)
-      but_param_apres.place(relx=0.6,rely=0.7,anchor='w',relwidth=0.3)
+      but_param_avant.place(relx=0.45,rely=0.3,anchor='w',relwidth=0.45)
+      but_param_apres.place(relx=0.45,rely=0.7,anchor='w',relwidth=0.45)
       # remplissage de la frame eval
       #Label(self.frame_eval,text="Insérer un paramètre EVAL :").place(relx=0.1,rely=0.5,anchor='w')
           #Label(self.frame_eval,text='Non encore disponible').place(relx=0.6,rely=0.5,anchor='w')
