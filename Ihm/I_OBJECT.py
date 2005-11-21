@@ -150,5 +150,8 @@ class OBJECT:
   def delete_mc_global(self):
      return
 
+  def update_mc_global(self):
+     return
+
   #def __del__(self):
   #   print "__del__",self

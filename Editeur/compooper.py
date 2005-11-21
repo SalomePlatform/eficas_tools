@@ -296,8 +296,9 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       commande_comment.jdc = commande_comment.parent = self.object.jdc
 
       pos=self.object.parent.etapes.index(self.object)
+      parent= self.object.parent
       self.object.parent.suppentite(self.object)
-      self.object.parent.addentite(commande_comment,pos)
+      parent.addentite(commande_comment,pos)
 
       return commande_comment
 
