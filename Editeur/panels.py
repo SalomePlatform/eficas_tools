@@ -400,7 +400,7 @@ class OngletPanel(Panel) :
          Liste = ListeChoix(self,page,liste_cmd,liste_commandes = liste_commandes,
                             filtre='oui',titre = "Commandes",optionReturn="oui")
       else:
-         liste_commandes=liste_commandes+(("<Return>",self.defCmd),)
+         liste_commandes=liste_commandes+(("<Return>",self.defCmdFirst),)
          liste_groupes,dict_groupes=self.get_groups()
          Liste = ListeChoixParGroupes(self,page,liste_groupes,dict_groupes,
                                       liste_commandes = liste_commandes,

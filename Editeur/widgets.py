@@ -789,6 +789,7 @@ class ListeChoix :
 
         self.MCbox.config(state=DISABLED)
         self.selection = None
+        self.dontselect=0
         for event,callback in self.liste_commandes:
             if event == "<Enter>":
                self.selection=None,None,callback
@@ -834,7 +835,8 @@ class ListeChoix :
         labelsuivant=self.dico_labels[motsuivant]
         index = self.MCbox.index(labelsuivant)
         self.MCbox.see(index)
-        self.selectitem(motsuivant,labelsuivant,self.selection[2],)
+        self.selectthis(motsuivant,labelsuivant,self.selection[2],)
+        self.dontselect=1
            
     def selectPrevItem(self,mot,label):
         index=self.liste.index(mot)
@@ -843,11 +845,10 @@ class ListeChoix :
         labelprec=self.dico_labels[motprec]
         index = self.MCbox.index(labelprec)
         self.MCbox.see(index)
-        self.selectitem(motprec,labelprec,self.selection[2],)
+        self.selectthis(motprec,labelprec,self.selection[2],)
+        self.dontselect=1
         
-    def selectitem(self,mot,label,commande) :
-        """ Met l'item sélectionné (représenté par son label) en surbrillance
-            et lance la commande associée au double-clic"""
+    def selectthis(self,mot,label,commande) :
 	self.clear_marque()
         if self.selection != None :
             self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
@@ -855,6 +856,14 @@ class ListeChoix :
         self.selection = (mot,label,commande)
         self.arg_selected = mot
         if commande : commande(mot)
+
+    def selectitem(self,mot,label,commande) :
+        """ Met l'item sélectionné (représenté par son label) en surbrillance
+            et lance la commande associée au double-clic"""
+        if self.dontselect:
+           self.dontselect=0
+           return
+        self.selectthis(mot,label,commande)
 
     def highlightitem(self,label) :
         """ Met l'item représenté par son label en surbrillance """
@@ -1198,6 +1207,7 @@ class ListeChoixParGroupes(ListeChoix) :
 
         self.MCbox.config(state=DISABLED)
         self.selection = None
+        self.dontselect=0
         for event,callback in self.liste_commandes:
             if event == "<Enter>":
                self.selection=None,None,callback
@@ -1221,7 +1231,8 @@ class ListeChoixParGroupes(ListeChoix) :
         labelsuivant=self.dico_labels[co]
         index = self.MCbox.index(labelsuivant)
         self.MCbox.see(index)
-        self.selectitem(co,labelsuivant,self.selection[2],)
+        self.selectthis(co,labelsuivant,self.selection[2],)
+        self.dontselect=1
 
     def selectNextItem(self,mot,label,callback,group,cmd):
         g=self.liste_groupes.index(group)
@@ -1241,7 +1252,8 @@ class ListeChoixParGroupes(ListeChoix) :
         labelsuivant=self.dico_labels[co]
         index = self.MCbox.index(labelsuivant)
         self.MCbox.see(index)
-        self.selectitem(co,labelsuivant,self.selection[2],)
+        self.selectthis(co,labelsuivant,self.selection[2],)
+        self.dontselect=1
 
     def entry_changed(self,event=None):
         """ 
