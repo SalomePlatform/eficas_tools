@@ -36,10 +36,6 @@ aGuiDS=salomedsgui.guiDS()
 print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 
 
-# -----------------------------------------------------------------------------
-# gestionnaire arbre d'étude
-from EficasStudy import study
-
 
 # -----------------------------------------------------------------------------
 #Cette méthode est obsolète en V3
@@ -84,8 +80,9 @@ def setSettings():
    currentStudyId = sgPyQt.getStudyId()
    print "setSettings: currentStudyId = " + str(currentStudyId)
    # _CS_gbo_ Voir si on peut utiliser directement sgPyQt.getStudyId()
-   # dans salomedsgui?   
-   study.setCurrentStudyID( currentStudyId )
+   # dans salomedsgui?
+   
+   palStudyManager.setCurrentStudyID( currentStudyId ) #CS_pbruno   
 
 def activate():
    """
@@ -108,8 +105,9 @@ def activeStudyChanged(ID):
    # studyId=sg.getActiveStudyId()
    currentStudyId=ID
    print "_CS_GBO_ : EFICASGUI.activeStudyChanged : currentStudyId = ", currentStudyId
-   print "_CS_GBO_ : EFICASGUI.activeStudyChanged : sgPyQt.getStudyId() = ", sgPyQt.getStudyId()   
-   study.setCurrentStudyID( ID )
+   print "_CS_GBO_ : EFICASGUI.activeStudyChanged : sgPyQt.getStudyId() = ", sgPyQt.getStudyId()
+   
+   palStudyManager.setCurrentStudyID( currentStudyId ) #CS_pbruno
    
 
 def definePopup(theContext, theObject, theParent):
@@ -136,28 +134,28 @@ import eficasSalome
 
 def runEficas():
    print "-------------------------EFICASGUI::runEficas-------------------------"
-   print currentStudyId
-   eficasSalome.runEficas("ASTER",studyId=currentStudyId)
+   print currentStudyId      
+   #eficasSalome.runEficas("ASTER",studyId=currentStudyId)   
+   #ws = sgPyQt.getMainFrame()   
+   desktop=sgPyQt.getDesktop()   
+   eficasSalome.runEficas( desktop, palStudyManager, "ASTER" )
    
-def runEELIH(code="ASTER"):
-   # Enregistrement dans l étude
-   import eficasEtude
-   import appli
-   print "++++++++++++++++++++++++++++++++++++++++++++++++++++"
-   print currentStudyId
-   
-   MaRef=eficasEtude.Eficas_In_Study(code,studyId=currentStudyId)
-   # flag = E pour Eficas (enregistrement manuel du fichier de commandes)
-   flag = 'E'
-   moi=appli.Appli(MaRef, flag)
-   
+
 def runEficaspourHomard():
    print "runEficas"
-   eficasSalome.runEficas("HOMARD")
+   #eficasSalome.runEficas("HOMARD")
+   desktop=sgPyQt.getDesktop()
+   eficasSalome.runEficas( desktop, palStudyManager, "HOMARD" ) 
+   
+   
     
 def runEficasHomard():
    print "runEficas"
-   eficasSalome.runEficas("HOMARD")
+   #eficasSalome.runEficas("HOMARD")
+   desktop=sgPyQt.getDesktop()
+   eficasSalome.runEficas( desktop, palStudyManager, "HOMARD" )
+   
+   
 
 def runEficasFichier():
    """
@@ -166,7 +164,7 @@ def runEficasFichier():
    """
    print "runEficasFichier"
    attr=None
-   code="ASTER"
+   code=None
    a=salome.sg.getAllSelected()
    if len(a) == 1:
       aGuiDS.setCurrentStudy(currentStudyId)
@@ -174,20 +172,25 @@ def runEficasFichier():
       if boo :
          code = "ASTER" 
       else :
-         boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_HOMARD",a[0])
-   	 code = "HOMARD"
+         boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_HOMARD",a[0])         
+         if boo:
+   	    code = "HOMARD"
+   if code:
+        #eficasSalome.runEficas(code,attr,studyId=currentStudyId)         
+        desktop=sgPyQt.getDesktop()   
+        eficasSalome.runEficas( desktop, palStudyManager, code, attr )
    
-   eficasSalome.runEficas(code,attr,studyId=currentStudyId)
 
 # Partie applicative
 
 dict_command={
-                941:runEficas,
-                943:runEELIH,
+                941:runEficas,                
                 946:runEficaspourHomard,
-                4041:runEficas,
-                4043:runEELIH,
+                4041:runEficas,                
                 4046:runEficaspourHomard,
                 9042:runEficasFichier,
              }
-
+             
+#CS_pbruno temporaire
+import studyManager #from PAL
+palStudyManager = studyManager.SalomeStudy()

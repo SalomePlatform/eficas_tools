@@ -32,24 +32,13 @@ LIB_SERVER_IDL =
 PO_FILES =  EFICAS_msg_en.po EFICAS_icons.po
 
 EXPORT_PYSCRIPTS = \
-dataEficas.py  \
-eficasEtude.py \
 EFICASGUI.py   \
-SMESH_utils.py \
-eficasCL.py   \
-ChoixMaillage.py \
-MonChoixMaillage.py \
 eficasSalome.py \
-meshdialog.py \
-meshdialogImp.py
+
 
 # _CS_gbo_151104 Ajout pour compatibilité ascendante entre versions de Eficas
 EXPORT_PYSCRIPTS+=eficas_etude.py
 
-PYUIC = pyuic
-
-%.py:%.ui
-	$(PYUIC) $< -o $@
 
 # additionnal information to compil and link file
 
