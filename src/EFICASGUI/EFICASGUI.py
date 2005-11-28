@@ -193,4 +193,5 @@ dict_command={
              
 #CS_pbruno temporaire
 import studyManager #from PAL
-palStudyManager = studyManager.SalomeStudy()
+#palStudyManager = studyManager.SalomeStudy()
+palStudyManager = studyManager.study

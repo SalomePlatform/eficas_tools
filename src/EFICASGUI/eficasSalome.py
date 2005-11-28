@@ -25,7 +25,7 @@ sys.path[:0]=[os.path.join( eficasConfig.eficasPath,'Aster'),
               os.path.join( eficasConfig.eficasPath,'Editeur'),
               eficasConfig.eficasPath,
              ]
-print 'sys.path', sys.path
+
 
 import Tkinter
 
@@ -43,7 +43,9 @@ import salome
 import meshGui
 import studyManager
 
-from qxembed import QXEmbed
+#from qxembed import QXEmbed
+
+import SalomePyQt
 
 
 
@@ -389,29 +391,27 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         
         
 #def runEficas( palStudyManager, code="ASTER", fichier=None, studyId=None):
-def runEficas( parent, palStudyManager, code="ASTER", fichier=None ):
+def runEficas( parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.study, code="ASTER", fichier=None ):
     global appli    
     if not appli: #une seul instance possible!                        
         appli = MyEficas( parent, palStudyManager, code = code, fichier = fichier )
         
     
-def runHomard() :
-    print 'CS_pbruno non implémentée'
-    """
-    parent          = 
-    palStudyManager = 
-    runEficas( parent, palStudyManager, code="HOMARD"):
-    """
+def runHomard( parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.study, code="HOMARD", fichier=None ):    
+    global appli    
+    if not appli: #une seul instance possible!                        
+        appli = MyEficas( parent, palStudyManager, code = code, fichier = fichier )
 
-def runAster() :
-    print 'CS_pbruno non implémentée'
-    """
-    parent          = 
-    palStudyManager = 
-    runEficas( parent, palStudyManager, code="ASTER"):
-    """
+        
+"""        
+def runAster(parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.study, code="ASTER", fichier=None ) :
+    global appli    
+    if not appli: #une seul instance possible!                        
+        appli = MyEficas( parent, palStudyManager, code = code, fichier = fichier )
+"""    
+
     
-
+     
 # Init globale du module
 root = Tkinter.Tk()
 root.withdraw()
