@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.27 2005/11/18 15:58:19 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.28 2005/11/29 11:14:15 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -339,13 +339,17 @@ class Node :
 
     def tag_move_nodes(self,y):
         """ Marque pour deplacement tous les noeuds au dela de l'ordonnée y """
+	#print "tag_move_nodes",y
         self.canvas.dtag(ALL,'move')
         # on marque tous les ids au dela de y
         x0, y0, x1, y1 = self.canvas.bbox(ALL)
+	if y > y1: # pas d'objet a deplacer
+	   return
         self.canvas.addtag_overlapping('move',x0,y,x1,y1)
 
     def move_nodes(self,y,dy):
         """ Déplace de l'incrément dy les noeuds au dela de l'ordonnée y """
+	#print "move_nodes",y,dy
 	self.tag_move_nodes(y)
         # on déplace tous les items de dy
         self.canvas.move('move',0,dy)
@@ -355,6 +359,7 @@ class Node :
             en y et au dela
             Retourne la position du premier des noeuds deplaces
         """
+	#print "draw_node",new_node,x,y
         self.tag_move_nodes(y)
         #if new_node.item.isactif():
            #new_node.state = 'expanded'
