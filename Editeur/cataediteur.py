@@ -40,7 +40,7 @@ import definition_cata
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cataediteur.py,v 1.6 2004/09/20 09:24:13 eficas Exp $"
+__Id__="$Id: cataediteur.py,v 1.7 2005/08/09 09:54:02 eficas Exp $"
 #
 
 Fonte_Niveau = fontes.canvas_gras_italique
@@ -857,8 +857,8 @@ class CataEditeur:
                                 hull_width = 800,
                                 hull_height = 500,
                                 orient = 'horizontal')
-    self.pane.add('canvas',min = 0.4, max = 0.6, size = 0.5)
-    self.pane.add('panel',min = 0.4, max = 0.6, size = 0.5)
+    self.pane.add('canvas',min = 0.4, max = 0.6, size = 0.45)
+    self.pane.add('panel',min = 0.4, max = 0.6, size = 0.55)
     self.pane.pack(expand =1, fill = 'both')
     self.scrolledcanvas = Pmw.ScrolledCanvas(self.pane.pane('canvas'),
                                              hull_width=1.,

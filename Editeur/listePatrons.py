@@ -5,13 +5,15 @@ import Tkinter
 # le dictionnaire sous menu est indexe parceque l'ordre des
 # recherches est important
 
-sous_menu={0:{"3D":"3D.comm"},1:{"pou":"pou.comm"},2:{"divers":"comm"}}
+sous_menu={0:{"3D":"3D.comm"},1:{"poutre":"pou.comm"},2:{"salome":"salome.comm"},3:{"divers":"comm"}}
 
 class listePatrons :
 
     def __init__(self,appli):
        self.appli=appli
        rep_ini=self.appli.CONFIGURATION.rep_ini
+       if self.appli.code != "ASTER" :
+          return
        self.rep_patrons=rep_ini+"/../Editeur/Patrons"
        self.liste={}
        self.traite_liste()

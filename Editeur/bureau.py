@@ -211,6 +211,9 @@ class BUREAU:
          self.initialdir = self.appli.CONFIGURATION.rep_user
       self.nb.selectpage(label_onglet)
       self.nb.setnaturalsize()
+      self.nb.bind_all("<Key-Next>",lambda e,s=self:s.selectArbreDown())
+      self.nb.bind_all("<Key-Prior>",lambda e,s=self:s.selectArbreUp())
+      self.nb.bind_all("<Insert>",lambda e,s=self:s.deplieReplieNode())
       texte = "Jeu de commandes :" + self.JDCName+" ouvert"
       CONNECTOR.Connect(JDC,"close",self.onClose,(self.JDCDisplay_courant,))
       self.appli.affiche_infos(texte)
@@ -386,9 +389,9 @@ class BUREAU:
           if not self.JDC.isvalid():
 	     self.appli.top.update()
 	     self.visuCR(mode='JDC')
-      # On a ouvert un Patron
-      self.nb.bind_all("<F1>",lambda e,s=self:s.selectArbreDown())
-      self.nb.bind_all("<F2>",lambda e,s=self:s.selectArbreUp())
+
+   def deplieReplieNode(self):
+       self.JDCDisplay_courant.tree.tree.deplieReplieNode()
 
    def selectArbreDown(self):
        self.JDCDisplay_courant.tree.tree.canvas.focus_set()
@@ -426,6 +429,7 @@ class BUREAU:
                             veut sauver le JDC
           Si echo = 'non' : muet (sauvegarde le JDC dans JDC.procedure)
       """
+      ok = 0
       if not hasattr(self,'JDC') : return 0
       format=self.appli.format_fichier.get()
       if generator.plugins.has_key(format):
@@ -446,37 +450,35 @@ class BUREAU:
       self.jdc_fini = string.replace(jdc_formate,'\r\n','\n')
 
       if echo =='oui' or self.JDCDisplay_courant.fichier == None:
-          return self.asknomsauvegardeJDC()
+	 ok = self.asknomsauvegardeJDC()
       elif self.JDCDisplay_courant.fichier != None :
-          #PN  Ajout --> Salome
-          # Pour sauvegarde dans l etude si lancement depuis salome
-          if self.appli.salome != 0:
-             import eficasEtude 
-             self.appli.salome.rangeInStudy(self.JDCDisplay_courant.fichier)
-	     from panelsSalome import SALOME_UNIQUE_BASE_Panel
-	     if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
-		self.appli.salome.creeConfigTxt(self.appli.CONFIGURATION.initialdir,SALOME_UNIQUE_BASE_Panel.dict_fichier_unite)
-	     #try :
-	     if ( 1 == 1 ) :
-	     	import eficasCL
-	     	MyCLinit=eficasCL.CLinit()
-	     	MyCLinit.traiteCL()
-		MyCLinit.clean()
-	     #except :
-	     else :
-	        pass
-          #PN  Fin Ajout --> Salome
-          # le JDC a déjà un nom : on sauvegarde directement sans demander
-          # un autre nom au développeur
-          if not save_in_file(self.JDCDisplay_courant.fichier,self.jdc_fini,self.appli.dir) :
+         # le JDC a déjà un nom : on sauvegarde directement sans demander
+         # un autre nom au développeur
+         if not save_in_file(self.JDCDisplay_courant.fichier,self.jdc_fini,self.appli.dir) :
               showinfo("Erreur","Problème à la sauvegarde du fichier :" + `self.JDCDisplay_courant.fichier`)
-              return 0
-          else :
+              #return 0
+	      ok = 0
+         else :
               if self.appli.format_fichier.get() == 'homard':
                   self.save_homard(self.JDCDisplay_courant.fichier,self.jdc_homard)
               self.JDCDisplay_courant.stop_modif()
               self.appli.affiche_infos("sauvegarde de "+`self.JDCDisplay_courant.fichier`+" effectuée")
-              return 1
+              ok = 1
+
+      if ok and hasattr( self.appli, 'salome'):
+         # eficas a été lancé à partir deSalome
+         #1)ajout dans l'arbre d'étude du nom du jdc
+	 ok, msg = self.appli.addJdcInSalome( self.JDCDisplay_courant.fichier )
+
+         #2)CS_pbruno ??
+	 from panelsSalome import SALOME_UNIQUE_BASE_Panel
+	 if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
+	    print 'CS_pbruno if len(SALOMchier_unite) > 0 :???????'
+	    self.appli.creeConfigTxt( self.appli.CONFIGURATION.initialdir, SALOME_UNIQUE_BASE_Panel.dict_fichier_unite )
+
+	 #3)création/mise à jours d'un maillage dans Salome
+	 self.appli.createOrUpdateMesh()
+      return ok
 
    def asknomsauvegardeJDC(self):
       """ Demande à l'utilsateur le nom sous lequel il veut sauvegarder le JDC courant """
@@ -494,24 +496,6 @@ class BUREAU:
                             #initialdir = self.appli.CONFIGURATION.initialdir)
                             #initialdir = self.appli.CONFIGURATION.rep_user)
       if sauvegarde :
-          # PN ajout --> Salome
-          # Pour sauvegarde dans l etude si lancement depuis salome
-          if self.appli.salome != 0:
-             import eficasEtude 
-             self.appli.salome.rangeInStudy(sauvegarde)
-	     from panelsSalome import SALOME_UNIQUE_BASE_Panel
-	     if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
-		self.appli.salome.creeConfigTxt(self.appli.CONFIGURATION.initialdir,SALOME_UNIQUE_BASE_Panel.dict_fichier_unite)
-	     #try :
-	     if ( 1 == 1 ):
-	        import eficasCL
-	        MyCLinit=eficasCL.CLinit()
-	        MyCLinit.traiteCL()
-		MyCLinit.clean()
-	     #except :
-	     else :
-	        pass
-          # PN fin ajout --> Salome
           if not save_in_file(sauvegarde,self.jdc_fini,None) :
               showinfo("Erreur","Problème à la sauvegarde du fichier "+`sauvegarde`)
               return 0
@@ -715,7 +699,7 @@ class BUREAU:
            f.close()
        except:
            print "Pb a la sauvegarde sous le format homard"
-       if self.appli.salome != 0:
+       if hasattr( self.appli, 'salome'):
            import eficasEtude
            self.appli.salome.rangeInStudy(file_homard,"_CONF")
 

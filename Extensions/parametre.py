@@ -34,8 +34,9 @@ from math import *
 from Noyau.N_CR import CR
 from Noyau import N_OBJECT
 from Ihm import I_OBJECT
+from param2 import *
 
-class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
+class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   """
      Cette classe permet de créer des objets de type PARAMETRE
      cad des affectations directes dans le jeu de commandes (ex: a=10.)
@@ -65,164 +66,164 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     param_item=ITEM_PARAMETRE(self,key)
     return param_item
 
-  def __neg__(self):
-    try:
-      return -1*self.valeur
-    except:
-      print "******* Probleme : pas de valeur négative"
-      return None
+#  def __neg__(self):
+#    try:
+#      return -1*self.valeur
+#    except:
+#      print "******* Probleme : pas de valeur négative"
+#      return None
     
-  def __add__(self,a):
-    try :
-      return self.valeur+a.valeur
-    except :
-      print "******* Probleme : a l addition"
-      return None
+#  def __add__(self,a):
+#    try :
+#      return self.valeur+a.valeur
+#    except :
+#      print "******* Probleme : a l addition"
+#      return None
 
-  def __radd__(self,a):
-    try :
-      return self.valeur+a.valeur
-    except :
-      print "******* Probleme : a l addition"
-      return None
+#  def __radd__(self,a):
+#    try :
+#      return self.valeur+a.valeur
+#    except :
+#      print "******* Probleme : a l addition"
+#      return None
 
-  def __sub__(self,a):
-    try :
-      return self.valeur  - a.valeur
-    except :
-      print "******* Probleme : a la soustraction"
-      return None
+#  def __sub__(self,a):
+#    try :
+#      return self.valeur  - a.valeur
+#    except :
+#      print "******* Probleme : a la soustraction"
+#      return None
 
-  def __rsub__(self,a):
-    try :
-      return a.valeur - self.valeur
-    except :
-      print "******* Probleme : a la soustraction"
-      return None
-
-
-  def __mul__(self,a):
-    try :
-      return self.valeur*a.valeur
-    except :
-      print "******* Probleme : a la multiplication"
-      return None
-
-  def __rmul__(self,a):
-    try :
-      return self.valeur*a.valeur
-    except :
-      print "******* Probleme : a la multiplication"
-      return None
-
-  def __add__(self,other):
-    try :
-      return self.valeur+other
-    except :
-      print "******* Probleme : a l addition"
-      return None
-
-  def __radd__(self,other):
-    try :
-      return self.valeur+other
-    except :
-      print "******* Probleme : a l addition"
-      return None
-
-  def __sub__(self,other):
-    try :
-      return self.valeur  - other
-    except :
-      print "******* Probleme : a la soustraction"
-      return None
-
-  def __rsub__(self,other):
-    try :
-      return other - self.valeur
-    except :
-      print "******* Probleme : a la soustraction"
-      return None
-
-  def  __mul__ (self,other):
-    retour=None
-    try :
-      retour = eval(self.valeur) * other
-    except :
-      try :
-         retour = self.valeur * other
-      except :
-         try :
-	   retour = eval(self.valeur) * eval(other)
-	 except :
-	   try :
-	     retour = self.valeur * eval(other)
-	   except :
-	     print other
-             print "******* Probleme : a la multiplication _mul__"
-    return retour
-
-  def __rmul__ (self,other):
-    retour=None
-    try :
-      retour = eval(self.valeur) * other
-    except :
-      try :
-         retour = self.valeur * other
-      except :
-         try :
-	    retour = eval(self.valeur) * eval(other)
-	 except :
-            print "******* Probleme : a la multiplication __rmul__"
-    return retour
+#  def __rsub__(self,a):
+#    try :
+#      return a.valeur - self.valeur
+#    except :
+#      print "******* Probleme : a la soustraction"
+#      return None
 
 
-  def __div__(self,other):
-    retour=None
-    try:
-      retour = eval(self.valeur) / other
-    except :
-      try :
-	retour = self.valeur / other
-      except :
-	print "******* Probleme : a la division"
-    return retour
+#  def __mul__(self,a):
+#    try :
+#      return self.valeur*a.valeur
+#    except :
+#      print "******* Probleme : a la multiplication"
+#      return None
 
+#  def __rmul__(self,a):
+#    try :
+#      return self.valeur*a.valeur
+#    except :
+#      print "******* Probleme : a la multiplication"
+#      return None
 
-  def cos(self):
-      try :
-      	retour=cos(self.valeur)
-        return retour
-      except:
-        print "pb pour cosinus"
+#  def __add__(self,other):
+#    try :
+#      return self.valeur+other
+#    except :
+#      print "******* Probleme : a l addition"
+#      return None
 
-  def sin(self):
-      try :
-      	retour=sin(self.valeur)
-        return retour
-      except:
-        print "pb pour sinus"
+#  def __radd__(self,other):
+#    try :
+#      return self.valeur+other
+#    except :
+#      print "******* Probleme : a l addition"
+#      return None
 
-  def tan(self):
-      try :
-      	retour=tan(self.valeur)
-        return retour
-      except:
-        print "pb pour tangente"
+#  def __sub__(self,other):
+#    try :
+#      return self.valeur  - other
+#    except :
+#      print "******* Probleme : a la soustraction"
+#      return None
 
-  def log(self):
-      try :
-      	retour=log(self.valeur)
-        return retour
-      except:
-        print "pb pour log"
+#  def __rsub__(self,other):
+#    try :
+#      return other - self.valeur
+#    except :
+#      print "******* Probleme : a la soustraction"
+#      return None
 
-  def sqrt(self):
-      try :
-      	retour=sqrt(self.valeur)
-        return retour
-      except:
-        print "pb pour sqrt"
-
+#  def  __mul__ (self,other):
+#    retour=None
+#    try :
+#      retour = eval(self.valeur) * other
+#    except :
+#      try :
+#         retour = self.valeur * other
+#      except :
+#         try :
+#	   retour = eval(self.valeur) * eval(other)
+#	 except :
+#	   try :
+#	     retour = self.valeur * eval(other)
+#	   except :
+#	     print other
+#             print "******* Probleme : a la multiplication _mul__"
+#    return retour
+#
+#  def __rmul__ (self,other):
+#    retour=None
+#    try :
+#      retour = eval(self.valeur) * other
+#    except :
+#      try :
+#         retour = self.valeur * other
+#      except :
+#         try :
+#	    retour = eval(self.valeur) * eval(other)
+#	 except :
+#            print "******* Probleme : a la multiplication __rmul__"
+#    return retour
+#
+#
+#  def __div__(self,other):
+#    retour=None
+#    try:
+#      retour = eval(self.valeur) / other
+#    except :
+#      try :
+#	retour = self.valeur / other
+#      except :
+#	print "******* Probleme : a la division"
+#    return retour
+#
+#
+#  def cos(self):
+#      try :
+#      	retour=cos(self.valeur)
+#        return retour
+#      except:
+#        print "pb pour cosinus"
+#
+#  def sin(self):
+#      try :
+#      	retour=sin(self.valeur)
+#        return retour
+#      except:
+#        print "pb pour sinus"
+#
+#  def tan(self):
+#      try :
+#      	retour=tan(self.valeur)
+#        return retour
+#      except:
+#        print "pb pour tangente"
+#
+#  def log(self):
+#      try :
+#      	retour=log(self.valeur)
+#        return retour
+#      except:
+#        print "pb pour log"
+#
+#  def sqrt(self):
+#      try :
+#      	retour=sqrt(self.valeur)
+#        return retour
+#      except:
+#        print "pb pour sqrt"
+#
   def interprete_valeur(self,val):
     """
     Essaie d'interpréter val (chaîne de caractères)comme :
@@ -474,6 +475,9 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
   def reset_context(self):
       pass
+
+  def eval(self):
+      return self.valeur
 
 class COMBI_PARAMETRE :
   def __init__(self,chainevaleur,valeur):

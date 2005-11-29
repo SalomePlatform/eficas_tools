@@ -305,6 +305,10 @@ class MCSIMP(I_OBJECT.OBJECT):
 	itparam=self.cherche_item_parametre(new_valeur)
 	if itparam:
 	     return itparam,1
+	try :
+	     object=eval(new_valeur.valeur,d)
+	except :
+	     pass
         if CONTEXT.debug : traceback.print_exc()
         return None,0
 
@@ -487,45 +491,6 @@ class MCSIMP(I_OBJECT.OBJECT):
            self.jdc.mc_globaux[self.nom]=self
 
 #--------------------------------------------------------------------------------
-# PN : ajout pour Salome des methodes suivantes (jusqu aux méthodes surchargees)
-#--------------------------------------------------------------------------------
-  def get_salome_valeurs(self):
-       l=[]
-       if not hasattr(self,'list_salome_valeurs'):
-           self.list_salome_valeurs=[]
-       if self.list_salome_valeurs != [] :
-           for val in self.list_salome_valeurs:
-                l.append(val)
-       return l
-
-  def put_salome_valeurs(self,list):
-       self.list_salome_valeurs=[]
-       for val in list:
-           self.list_salome_valeurs.append(val)
-
-  def add_salome_valeurs(self,val):
-      if not hasattr(self,'list_salome_valeurs'):
-           self.list_salome_valeurs=[]
-      try:
-           self.list_salome_valeurs.append(val)
-      except :
-           try:
-              for uneval in val :
-                  self.list_salome_valeurs.append(uneval)
-           except :
-              pass
-
-  def has_salome_valeurs(self):
-      if not hasattr(self,'list_salome_valeurs'):
-           self.list_salome_valeurs=[]
-      if self.list_salome_valeurs != []:
-           return true
-      else:
-           return false
-
-#--------------------------------------------------------------------------------
-# PN : fin ajout pour Salome 
-#--------------------------------------------------------------------------------
  
 #ATTENTION SURCHARGE : toutes les methodes ci apres sont des surcharges du Noyau et de Validation
 # Elles doivent etre reintegrees des que possible
@@ -598,3 +563,17 @@ class MCSIMP(I_OBJECT.OBJECT):
         return self.valid
 
 
+  def verif_typeihm(self,val,cr='non'):
+      try :
+         self.val.eval()
+	 return 1
+      except :
+	pass
+      return self.verif_type(val,cr)
+
+  def verif_typeliste(self,val,cr='non') :
+      verif=0
+      for v in val :
+	verif=verif+self.verif_typeihm(v,cr)
+      return verif
+								            

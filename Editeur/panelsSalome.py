@@ -21,11 +21,11 @@ from uniqueassdpanel    import UNIQUE_ASSD_Panel_Reel
 from Noyau.N_CR import justify_text
 
 import traceback
-import SalomePyQt
-import salome
+#import SalomePyQt
+import salome           # CS_pbruno à poubelliser
 import images
-import SMESH_utils
-sgQt=SalomePyQt.SalomePyQt()
+#import SMESH_utils
+#sgQt=SalomePyQt.SalomePyQt() 
 
 
 
@@ -96,6 +96,64 @@ class SALOME_PLUSIEURS_BASE_OR_UNELISTE_Panel(PLUSIEURS_BASE_OR_UNELISTE_Panel):
 
 
 class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
+
+  def __init__(self,parent,panneau,node):
+      PLUSIEURS_BASE_Panel.__init__( self, parent, panneau, node )
+      self.selected_valeur = None
+      
+  def add_valeur_plusieurs_base(self,name=None):
+      try: 
+        valeur,validite,commentaire=self.get_valeur()
+        #print 'add_valeur_plusieurs_base', name
+        #print 'valeur = %s, validite = %s,commentaire = %s'%( valeur,validite,commentaire )            
+        if not valeur: # sélection dans salome        
+            #print 'CS_pbruno selection SALOME'
+            strSelection = ''
+            
+            selection, msg = self.parent.appli.selectGroupFromSalome()
+            
+            #print 'CS_pbruno selection SALOME selection ->',selection
+            #print 'CS_pbruno selection SALOME msg ->',msg
+            
+            if selection:
+                for oneSelection in selection:
+                    strSelection +=str( oneSelection )
+                    strSelection +=','
+                            
+                strSelection = strSelection.rstrip(',')
+                #print 'CS_pbruno selection SALOME strSelection ->',strSelection
+                
+                self.display_valeur( strSelection )                
+                    
+        PLUSIEURS_BASE_Panel.add_valeur_plusieurs_base( self, name )
+        if msg:
+            self.parent.appli.affiche_infos(msg)
+        self.erase_valeur()
+      except:
+        print ' erreur  add_valeur_plusieurs_base' #CS_pbruno : afficher boite de dialogue ici ?          
+        
+  def makeValeurPage(self,page):
+      """
+      Crée la page de saisie d'une liste de valeurs à priori quelconques,
+      cad qui ne sont  pas à choisir dans une liste prédéfinie
+      """      
+      PLUSIEURS_BASE_Panel.makeValeurPage(self,page)
+      self.c = Button( self.frame_choix, text='Visualiser',command=self.displayInSalomeGeom )      
+      self.c.place( relx=0, rely=0.55,relwidth=0.55)
+      
+      #self.c.place(relx=0.08,rely=0.55,relwidth=0.35)
+      #self.c.place(relx=0.08,rely=0.55 )      
+      
+  def displayInSalomeGeom( self ):
+      if self.selected_valeur:        
+        ok, msgError = self.parent.appli.displayShape( self.selected_valeur )
+        if not ok:
+            self.parent.appli.affiche_infos(msgError)
+      
+      
+"""      
+class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):      
+
   def convertit_group_no_from_salome(self,liste_in):
       newr=[]
       #try:
@@ -144,19 +202,27 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
 
   def convertit_entrees_en_valeurs(self,entrychaine):
       if SALOME_PLUSIEURS_BASE_OR_UNELISTE_Panel.__dict__.has_key(self.clef_fonction):
-           valeur=apply(SALOME_PLUSIEURS_BASE_OR_UNELISTE_Panel.__dict__[self.clef_fonction],(self,entrychaine))
+           print 'CS_pbruno AAAAAAAAAAAAA'
+           valeur=apply(SALOME_PLUSIEURS_BASE_OR_UNELISTE_Panel.__dict__[self.clef_fonction],(self,entrychaine))           
       else :
            if (self.clef_fonction.find("GROUP_NO") != -1) and (self.clef_fonction.find("GROUP_MA") != -1) :
+              print 'CS_pbruno BBBBBBBBBBBBBBBBBBB'
               if (self.clef_fonction.find("GROUP_NO") < self.clef_fonction.find("GROUP_MA")) :
+                print 'CS_pbruno CCCCCCCCCCCCCCCCCCCCCCCCCC'
 		valeur=self.convertit_group_maille_from_salome(entrychaine)
 	      else :
+                print 'CS_pbruno DDDDDDDDDDDDDDDDDDDDDDDDD'
 		valeur=self.convertit_group_no_from_salome(entrychaine)  
 	   elif self.clef_fonction.find("GROUP_NO") != -1 :
+               print 'CS_pbruno EEEEEEEEEEEEEEEEEEEEEEEEE'
 	       valeur=self.convertit_group_no_from_salome(entrychaine)
 	   else :
+               print 'CS_pbruno FFFFFFFFFFFFFFFFFFFFFFFF'
 	       if self.clef_fonction.find("GROUP_MA") != -1 :
+                   print 'CS_pbruno GGGGGGGGGGGGGGGGGGGGGGGGGGG'
 		   valeur=self.convertit_group_maille_from_salome(entrychaine)
 	       else :
+                    print 'CS_pbruno HHHHHHHHHHHHHHHHHHHHHH'
 		    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 		    print "Pb pas de fonction de conversion de la valeur Salome en valeur Aster"
 		    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -165,9 +231,9 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
       return valeur
 
   def sup_valeur_from_salome(self,name=None):
-      """
+      #""
       Méthode qui sert à retirer de la liste des valeurs la valeur sélectionnée
-      """
+      #""
       liste_valeurs = self.Liste_valeurs.get_liste()
       liste_valeurs_salome=self.Liste_valeurs_salome.get_liste()
       entrychaine=salome.sg.getAllSelected()
@@ -215,8 +281,9 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
               if i not in liste_valeurs :
           	  liste_valeurs.append(i)
       self.Liste_valeurs.put_liste(liste_valeurs)
-
-  def add_valeur_from_salome(self,name=None):
+      
+  
+  def add_valeur_from_salome(self,name=None):       
        entrychaine=salome.sg.getAllSelected()
        self.sortie.delete(0,END)
        self.entrygroupe.delete(0,END)
@@ -272,12 +339,13 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
              print "impossible d'évaluer %s" %val
              self.parent.appli.affiche_infos("Valeur incorrecte : ajout à la liste refusé")
 
-   
+                
   def makeValeurPage(self,page):
-      """
+      #""
       Crée la page de saisie d'une liste de valeurs à priori quelconques,
       cad qui ne sont  pas à choisir dans une liste prédéfinie
-      """
+      #""
+      
       # On récupère la bulle d'aide du panneau, l'objet, l'aide,min et max (cardinalité de la liste),
       # et la liste des valeurs déjà affectées à l'objet courant
       bulle_aide=self.get_bulle_aide()
@@ -385,6 +453,7 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
       for but in (bouton_accepter,bouton_annuler):
           but.pack(side='left',padx=5)
 
+"""          
 
 
 # ------------------------------------------------------------------------------#

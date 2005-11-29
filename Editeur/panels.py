@@ -308,7 +308,6 @@ class OngletPanel(Panel) :
       """
       self.label = Label(page,text='Nom du concept :')
       self.label.place(relx=0.1,rely=0.4)
-      self.label.bind("<Return>",lambda e,s=self:s.execTutu())
       self._any = Entry(page,relief='sunken')
       self._any.place(relx=0.35,rely=0.4,relwidth=0.5)
       self._any.bind("<Return>",lambda e,s=self:s.execConcept())

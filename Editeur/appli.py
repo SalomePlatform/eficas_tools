@@ -81,10 +81,6 @@ class APPLI:
       self.load_appli_composants()		
       self.listeFichiers=listeFichiers.listeFichiers(self)
       self.listePatrons=listePatrons.listePatrons(self)
-
-      # PN : ajout d un attribut pour indiquer si 
-      # l appli a ete lance depuis Salome
-      self.salome=0
       self.dir=None
 
       # Fermer le splash et deiconifier la fenetre principale si on n'est pas en test

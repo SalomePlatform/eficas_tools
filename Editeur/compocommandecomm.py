@@ -68,10 +68,10 @@ class COMMANDE_COMMPanel(panels.OngletPanel):
     self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur,width=14)
     self.bouton_unc = Button(self.fr_but,text='Décommentariser',command=self.uncomment,width=14)
 
-    self.bouton_val.place(relx=0.20,rely=0.5,relheight=0.8,anchor='center')
-    self.bouton_ann.place(relx=0.40,rely=0.5,relheight=0.8,anchor='center')
-    self.bouton_sup.place(relx=0.60,rely=0.5,relheight=0.8,anchor='center')
-    self.bouton_unc.place(relx=0.80,rely=0.5,relheight=0.8,anchor='center')
+    self.bouton_val.place(relx=0.1,rely=0.5,relheight=1,relwidth=0.20,anchor='center')
+    self.bouton_ann.place(relx=0.30,rely=0.5,relheight=1,relwidth=0.20,anchor='center')
+    self.bouton_sup.place(relx=0.50,rely=0.5,relheight=1,relwidth=0.20,anchor='center')
+    self.bouton_unc.place(relx=0.75,rely=0.5,relheight=1,relwidth=0.25,anchor='center')
 
   def change_valeur(self):
     """

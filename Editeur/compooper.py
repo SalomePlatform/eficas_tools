@@ -37,9 +37,10 @@ class OPERPanel(panels.OngletPanel):
     nb.add('Commentaire',tab_text='Paramètre/Commentaire')
     panneau=Pmw.PanedWidget(nb.page("Mocles"),
                             orient='horizontal')
-    panneau.add('left',min=0.4,max=0.6,size=0.5)
-    panneau.add('right',min=0.4,max=0.6,size=0.5)
+    panneau.add('left',min=0.4,max=0.60,size=0.50)
+    panneau.add('right',min=0.4,max=0.60,size=0.50)
     panneau.pack(expand=1,fill='both')
+    panneau.setnaturalsize()
     self.makeCommandePage(nb.page("Commande"))
     self.makeConceptPage_oper(nb.page("Concept"))
     self.makeMoclesPage(panneau.pane('left'))
@@ -47,7 +48,7 @@ class OPERPanel(panels.OngletPanel):
     #self.makeCommentairePage(nb.page("Commentaire"))
     self.makeParamCommentPage_for_etape(nb.page("Commentaire"))
     nb.tab('Mocles').focus_set()
-    nb.setnaturalsize()
+    self.nb.setnaturalsize()
     self.affiche()
 
   def makeConceptPage_oper(self,page):
@@ -296,9 +297,9 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       commande_comment.jdc = commande_comment.parent = self.object.jdc
 
       pos=self.object.parent.etapes.index(self.object)
-      parent= self.object.parent
+      parent=self.object.parent
       self.object.parent.suppentite(self.object)
-      parent.addentite(commande_comment,pos)
+      addentite(commande_comment,pos)
 
       return commande_comment
 

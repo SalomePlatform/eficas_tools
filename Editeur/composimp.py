@@ -116,7 +116,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       #---------------------------------------------------------
       # PN ajout pour lancement de Salome
       #---------------------------------------------------------
-      if  self.appli.salome != 0 :
+      if hasattr( self.appli, 'salome' ):
           import panelsSalome
 
 	  self.select_noeud_maille=0

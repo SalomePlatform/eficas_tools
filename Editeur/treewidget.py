@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.26 2005/11/03 09:03:49 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.27 2005/11/18 15:58:19 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -38,10 +38,8 @@ class Tree :
         self.item = jdc_item
         self.scrolledcanvas = scrolledcanvas
         self.canvas = self.scrolledcanvas.component('canvas')
-        self.id_up=self.canvas.bind("<Key-Prior>", self.page_up)
-        self.id_down=self.canvas.bind("<Key-Next>", self.page_down)
-        #self.id_uup=self.canvas.bind("<Key-Up>", self.unit_up)
-        #self.id_udown=self.canvas.bind("<Key-Down>", self.unit_down)             
+        self.id_up=self.canvas.bind("<F1>", self.page_up)
+        self.id_down=self.canvas.bind("<F2>", self.page_down)
         self.id_um=self.canvas.bind("<Key-Left>", self.mot_up)
         self.id_dm=self.canvas.bind("<Key-Right>", self.mot_down)
         self.id_s=self.canvas.bind("<1>", self.canvas_select)             
@@ -82,8 +80,11 @@ class Tree :
         self.canvas.focus_set()
 
     def mot_up_force(self):
-        self.node_selected.select_mot_previous()
+        self.node_selected.select_mot_prev()
         self.canvas.focus_set()
+
+    def deplieReplieNode(self):
+        self.node_selected.deplieReplieNode()
 
     def build_children(self):
         """ Construit la liste des enfants de self """
@@ -117,8 +118,6 @@ class Tree :
         #print "supprime",self
         self.canvas.unbind("<Key-Prior>",self.id_up)
         self.canvas.unbind("<Key-Next>",self.id_down)
-        self.canvas.unbind("<Key-Up>",self.id_uup)
-        self.canvas.unbind("<Key-Down>",self.id_udown)             
         self.canvas.unbind("<Key-Left>",self.id_um)
         self.canvas.unbind("<Key-Right>",self.id_dm)
         self.canvas.unbind("<1>",self.id_s)             
@@ -187,7 +186,6 @@ class Node :
         self.parent = parent
         self.item = item
         self.connect()
-
         self.command = command
         self.rmenu=rmenu
         self.tree = self.parent.tree
@@ -429,6 +427,31 @@ class Node :
 		else :
                    self.parent.select_next(index)
 
+    def select_mot_prev(self):
+        index = self.parent.children.index(self) - 1
+	try :
+	   if index > -1  :
+	      self.parent.children[index].select()
+	      if self.parent.children[index].state=="expanded":
+		 print len(self.parent.children[index].children)
+		 if len(self.parent.children[index].children)!=0 :
+		    max=len(self.parent.children[index].children) - 1
+	            self.parent.children[index].children[max].select()
+		 else :
+	            self.parent.children[index].select()
+	      else :
+	         self.parent.children[index].select()
+	   elif self.parent is self.tree:
+	      pass
+	   else :
+              self.parent.select()
+        except:
+	    if self.parent is self.tree:
+		   pass
+	    else :
+               self.parent.select_previous()
+
+        
     def select_mot_previous(self):
         index = self.parent.children.index(self) - 1
         try :
@@ -622,7 +645,13 @@ class Node :
         for child in self.children:
             child.state='collapsed'
             child.collapse_children()
-            
+
+    def deplieReplieNode(self):           
+        if self.state == 'expanded':
+	   self.collapse()
+	else :
+	   self.expand_node()
+
     def collapse(self,event = None):
         """ Collapse self et descendants et retrace self """
         nb = self.get_nb_children()

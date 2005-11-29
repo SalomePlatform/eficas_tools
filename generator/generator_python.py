@@ -29,6 +29,7 @@ import types,string,re
 from Noyau import N_CR
 from Noyau.N_utils import repr_float
 import Accas
+import Extensions
 from Extensions.parametre import ITEM_PARAMETRE
 from Formatage import Formatage
 
@@ -493,13 +494,15 @@ class PythonGenerator:
             if hasattr(obj.etape,'sdprods') and val in obj.etape.sdprods :
                s = "CO('"+ self.generator(val) +"')"
             elif val.__class__.__name__ == 'CO':
-                s = "CO('"+ self.generator(val) +"')"
+               s = "CO('"+ self.generator(val) +"')"
             elif isinstance(val,Accas.PARAMETRE):
-                # il ne faut pas prendre la string que retourne gener
-                # mais seulement le nom dans le cas d'un paramètre
-                s = val.nom
+               # il ne faut pas prendre la string que retourne gener
+               # mais seulement le nom dans le cas d'un paramètre
+               s = val.nom
+            elif isinstance(val,Extensions.parametre.PARAMETRE):
+	       s = val.nom
             else:
-                s = self.generator(val)
+               s = self.generator(val)
          elif type(val) == types.FloatType :
             # Pour un flottant on utilise str 
             # ou la notation scientifique
@@ -513,7 +516,10 @@ class PythonGenerator:
               pass
          else :
             # Pour les autres types on utilise repr
-            s = `val`
+            if isinstance(val,Extensions.parametre.PARAMETRE):
+	       s = val.nom
+            else:
+               s = `val`
          s= s + ','
       return s
 

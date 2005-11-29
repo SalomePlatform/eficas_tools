@@ -83,7 +83,7 @@ class Fenetre :
         self.zone_texte.pack(side='top',fill='both',expand=1,padx=5,pady=10)
         self.zone_texte.configure(yscrollcommand=self.scroll_v.set)
         # définition des boutons
-        self.but_quit = Button(self.frame_boutons,text = "Fermer",command=self.quit)
+        self.but_quit = Button(self.frame_boutons,text = "Fermer",command=self.quit,default='active')
         self.but_save = Button(self.frame_boutons,text = "sauver",command = self.save)
         self.but_quit.place(relx=0.4,rely=0.5,anchor='center')
         self.but_save.place(relx=0.6,rely=0.5,anchor='center')
