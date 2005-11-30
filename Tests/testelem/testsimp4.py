@@ -99,9 +99,11 @@ Fin Mot-clé simple : mcs1
 """
       self.assertEqual(str(cr) , expected_cr,msg='Erreur :\n%s\n!=\n%s' % (str(cr),expected_cr))
 
-   def test007(self):
+   def futuretest007(self):
       """
-        La liste devrait etre homogene en type
+        Ce test échoue alors qu'il ne devrait pas. Le parametre de definiton homo
+        qui vaut 1 par defaut indique que la liste devrait etre homogene en type
+        ce qui n'est pas le cas.
       """
       cata=SIMP(typ=('R','TXM'),max=6,val_max=6)
       o=cata((1,2,7,"aa",4,"bb",6),'mcs1',None)

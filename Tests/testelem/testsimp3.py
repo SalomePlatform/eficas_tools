@@ -1,6 +1,6 @@
 # coding=utf-8
 from Accas import SIMP,ASSD
-from Extensions.formula import Variable,cos
+from Extensions.param2 import Variable,cos
 
 import unittest
 
