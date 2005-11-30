@@ -74,5 +74,13 @@ class Constant(Formula):
     def eval(self): return self._value
     def __str__(self): return str(self._value)
 
+class Variable(Formula):
+    def __init__(self,name,value):
+        self._name=name
+        self._value=value
+    def eval(self): return self._value
+    def __repr__(self): return "Variable('%s',%s)" % (self._name, self._value)
+    def __str__(self): return self._name
+
 def cos(f): return Unop('cos', f)
 def sin(f): return Unop('sin', f)
