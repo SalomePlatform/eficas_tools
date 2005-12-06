@@ -155,12 +155,12 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             if not self.mainShapeEntries.has_key( jdcID ):
                 self.mainShapeEntries[ jdcID ] = selectedMainShapeEntry
             if selectedMainShapeEntry == self.mainShapeEntries[ jdcID ]:
-                name = self.palStudyManager.getNameAttribute( selectedEntry )
+                name = self.palStudyManager.getName( selectedEntry )
                 self.subShapes[ selectedEntry ] = name
             else:
                 print 'CS_pbruno pas la même mainshape selectedEntry->',selectedEntry
                 if not self.mainShapeNames.has_key( jdcID ):
-                    self.mainShapeNames[ jdcID ] = self.palStudyManager.getNameAttribute( self.mainShapeEntries[ jdcID ] )
+                    self.mainShapeNames[ jdcID ] = self.palStudyManager.getName( self.mainShapeEntries[ jdcID ] )
                 msgError = msgSubShapeBadMainShape + self.mainShapeNames[ jdcID ]
 
         return name, msgError 
@@ -187,11 +187,11 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
                 if not self.mainShapeEntries.has_key( jdcID ):
                     self.mainShapeEntries[ jdcID ] = selectedMainShapeEntry
                 if selectedMainShapeEntry == self.mainShapeEntries[ jdcID ]:
-                    name = self.palStudyManager.getNameAttribute( selectedEntry  )  #ok test 2)
+                    name = self.palStudyManager.getName( selectedEntry  )  #ok test 2)
                 else:
                     print 'CS_pbruno pas la même mainshape selectedEntry ->',selectedEntry
                     if not self.mainShapeNames.has_key( jdcID ):
-                        self.mainShapeNames[ jdcID ] = self.palStudyManager.getNameAttribute( self.mainShapeEntries[ jdcID ] )
+                        self.mainShapeNames[ jdcID ] = self.palStudyManager.getName( self.mainShapeEntries[ jdcID ] )
                     msgError = msgMeshGroupBadMainShape + self.mainShapeNames[ jdcID ]                   
                                 
         return name, msgError 
@@ -391,20 +391,20 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         
         
 #def runEficas( palStudyManager, code="ASTER", fichier=None, studyId=None):
-def runEficas( parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.study, code="ASTER", fichier=None ):
+def runEficas( parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.palStudy, code="ASTER", fichier=None ):
     global appli    
     if not appli: #une seul instance possible!                        
         appli = MyEficas( parent, palStudyManager, code = code, fichier = fichier )
         
     
-def runHomard( parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.study, code="HOMARD", fichier=None ):    
+def runHomard( parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.palStudy, code="HOMARD", fichier=None ):    
     global appli    
     if not appli: #une seul instance possible!                        
         appli = MyEficas( parent, palStudyManager, code = code, fichier = fichier )
 
         
 """        
-def runAster(parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.study, code="ASTER", fichier=None ) :
+def runAster(parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.palStudy, code="ASTER", fichier=None ) :
     global appli    
     if not appli: #une seul instance possible!                        
         appli = MyEficas( parent, palStudyManager, code = code, fichier = fichier )
