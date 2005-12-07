@@ -34,6 +34,7 @@ class JDCPanel(panels.OngletPanel):
       self.bouton_com.pack_forget()
       self.makeJDCPage(panneau.pane('left'))
       self.makeReglesPage(panneau.pane('right'))
+      self.enlevebind()
     
   def makeReglesPage(self,page) :
     regles = []

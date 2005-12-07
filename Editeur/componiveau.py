@@ -39,6 +39,8 @@ class NIVEAUPanel(panels.OngletPanel):
         panneau.pack(expand=1,fill='both')
         self.bouton_com.pack_forget()
         self.makeJDCPage(panneau.pane('left'))
+	self.enlevebind()
+
 
 import treewidget
 class Node(treewidget.Node):pass

@@ -37,7 +37,7 @@ from widgets import showinfo,showerror
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.23 2005/06/16 09:27:25 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.24 2005/11/03 09:03:48 eficas Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -69,6 +69,8 @@ class MACROPanel(panels.OngletPanel):
     self.makeParamCommentPage_for_etape(nb.page("Commentaire"))
     nb.tab('Mocles').focus_set()
     nb.setnaturalsize()
+    self.enlevebind()
+    self.creebind()
     self.affiche()
 
   def makeFichierPage(self,page):

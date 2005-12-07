@@ -42,6 +42,7 @@ class COMMANDE_COMMPanel(panels.OngletPanel):
     panneau.pack(expand=1,fill='both')
     self.make_buttons()
     self.makeCOMMPage(panneau)
+    self.enlevebind()
 
   def makeCOMMPage(self,page):
     """

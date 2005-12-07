@@ -270,6 +270,8 @@ class OngletPanel(Panel) :
   """ Cette classe est virtuelle et doit être dérivée
       Elle contient les principales méthodes d'affichage des différents onglets"""
 
+  global panelbind
+
   def raisecmd(self,page):
       self.nb.page(page).focus_set()
       if page == 'Concept':
@@ -283,6 +285,32 @@ class OngletPanel(Panel) :
           except:
               pass
 
+  def creebind(self):
+       self.nb.bind_all("<F1>",lambda e,s=self,num=0:s.commande_up(num))
+       self.nb.bind_all("<F2>",lambda e,s=self,num=1:s.commande_up(num))
+       self.nb.bind_all("<F3>",lambda e,s=self,num=2:s.commande_up(num))
+       self.nb.bind_all("<F4>",lambda e,s=self,num=3:s.commande_up(num))
+       OngletPanel.panelbind=self.nb
+
+  def enlevebind(self):
+       if not hasattr(OngletPanel,"panelbind"):
+          return
+       if OngletPanel.panelbind == None:
+          return
+       OngletPanel.panelbind.unbind_all("<F1>")
+       OngletPanel.panelbind.unbind_all("<F2>")
+       OngletPanel.panelbind.unbind_all("<F3>")
+       OngletPanel.panelbind.unbind_all("<F4>")
+       OngletPanel.panelbind = None
+
+  def commande_up(self,num):
+      #print "commande_up de panels pour ", num
+      try :
+	OngletPanel.panelbind.selectpage(num)
+        pageNew=OngletPanel.panelbind.page(num)
+        pageNew.focus_set()
+      except :
+	pass
 
   def affiche(self):
       page=self.nb.getcurselection()
@@ -313,6 +341,8 @@ class OngletPanel(Panel) :
       self._any.bind("<Return>",lambda e,s=self:s.execConcept())
       self._any.bind("<KP_Enter>",lambda e,s=self:s.execConcept())
       self._any.insert(0,self.node.item.GetText())
+      self.but_ok=Button(page,text = "Valider",command=self.execConcept)
+      self.but_ok.place(relx=0.35,rely=0.8, relwidth=0.35)
       type_sd = self.node.item.get_type_sd_prod()
       if type_sd :
           txt = "L'opérateur courant retourne un objet de type %s" %type_sd

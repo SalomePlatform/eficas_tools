@@ -49,6 +49,8 @@ class OPERPanel(panels.OngletPanel):
     self.makeParamCommentPage_for_etape(nb.page("Commentaire"))
     nb.tab('Mocles').focus_set()
     self.nb.setnaturalsize()
+    self.enlevebind()
+    self.creebind()
     self.affiche()
 
   def makeConceptPage_oper(self,page):

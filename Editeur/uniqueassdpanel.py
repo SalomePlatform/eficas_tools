@@ -86,6 +86,7 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       aide=self.get_aide()
       aide= justify_text(texte=aide)
       liste_noms_sd = self.node.item.get_sd_avant_du_bon_type()
+
       # Remplissage du panneau
       self.valeur_choisie = StringVar()
       self.valeur_choisie.set('')
@@ -109,8 +110,10 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
                                          dblclickcommand=lambda s=self,c=self.valid_valeur : s.choose_valeur_from_list(c))
       self.listbox.place(relx=0.5,rely=0.3,relheight=0.4,anchor='center')
       Label(self.frame_valeur,text='Structure de donnée choisie :').place(relx=0.05,rely=0.6)
-      #self.label_valeur = Label(self.frame_valeur,textvariable=self.valeur_choisie)
       Label(self.frame_valeur,textvariable=self.valeur_choisie).place(relx=0.5,rely=0.6)
+      self.but_val = Button(self.frame_valeur,text = "Valider",command= self.Choisir)
+      self.but_val.place(relx=0.3,rely=0.8,relwidth=0.35)
+
       # affichage de la valeur courante
       self.display_valeur()
       if self.__class__.__name__ == 'UNIQUE_ASSD_Panel_Reel' :
@@ -168,6 +171,10 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       self.valeur_choisie.set(choix)
       apply(command,(),{})
 
+  def Choisir(self) :
+      #Appeler par le bouton Valider
+      self.choose_valeur_from_list(self.valid_valeur)
+      
   def get_valeur(self):
       """
       Retourne la valeur donnée par l'utilisateur au MCS

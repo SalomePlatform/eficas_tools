@@ -31,7 +31,7 @@ import panels
 
 #
 __version__="$Name:  $"
-__Id__="$Id: componuplet.py,v 1.7 2005/08/09 09:54:04 eficas Exp $"
+__Id__="$Id: componuplet.py,v 1.8 2005/11/03 09:03:48 eficas Exp $"
 #
 
 myrepr = Repr()
@@ -49,6 +49,8 @@ class NUPLETPanel(panels.OngletPanel):
       self.nb.pack(fill = 'both', expand = 1)
       self.nb.add("Valeurs",tab_text="Saisir valeurs")
       self.makeValeurPage(self.nb.page('Valeurs'))
+      self.enlevebind()
+      self.creebind()
       self.nb.setnaturalsize()
     
   def makeValeurPage(self,page):

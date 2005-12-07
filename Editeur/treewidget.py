@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.28 2005/11/29 11:14:15 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.29 2005/11/29 17:39:50 eficas Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -38,8 +38,8 @@ class Tree :
         self.item = jdc_item
         self.scrolledcanvas = scrolledcanvas
         self.canvas = self.scrolledcanvas.component('canvas')
-        self.id_up=self.canvas.bind("<F1>", self.page_up)
-        self.id_down=self.canvas.bind("<F2>", self.page_down)
+        self.id_up=self.canvas.bind("<F11>", self.page_up)
+        self.id_down=self.canvas.bind("<F12>", self.page_down)
         self.id_um=self.canvas.bind("<Key-Left>", self.mot_up)
         self.id_dm=self.canvas.bind("<Key-Right>", self.mot_down)
         self.id_s=self.canvas.bind("<1>", self.canvas_select)             

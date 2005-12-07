@@ -89,6 +89,7 @@ class Fenetre :
         self.but_save.place(relx=0.6,rely=0.5,anchor='center')
         # affichage du texte
         self.affiche_texte(self.texte)
+	self.zone_texte.config(state=DISABLED)
         centerwindow(self.fenetre)
         self.fenetre.deiconify()
 

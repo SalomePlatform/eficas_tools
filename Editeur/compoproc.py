@@ -29,8 +29,8 @@ import compooper
 class PROCPanel(panels.OngletPanel):
   def init(self):
     nb = Pmw.NoteBook(self,raisecommand=self.raisecmd)
-    nb.pack(fill = 'both', expand = 1)
     self.nb=nb
+    nb.pack(fill = 'both', expand = 1)
     nb.add('Mocles', tab_text='Ajouter mots-clés')
     nb.add('Commande', tab_text='Nouvelle Commande')
     nb.add('Commentaire',tab_text='Paramètre/Commentaire')
@@ -44,6 +44,8 @@ class PROCPanel(panels.OngletPanel):
     self.makeReglesPage(panneau.pane('right'))
     self.makeParamCommentPage_for_etape(nb.page("Commentaire"))
     nb.setnaturalsize()
+    self.enlevebind()
+    self.creebind()
     self.affiche()
 
 class ProcEtapeTreeItem(compooper.EtapeTreeItem):

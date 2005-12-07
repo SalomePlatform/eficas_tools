@@ -57,6 +57,8 @@ class FORMULEPanel(panels.OngletPanel):
     self.makeCommandePage(nb.page("Commande"))
     self.makeParamCommentPage_for_etape(nb.page("Commentaire"))
     nb.tab('Formule').focus_set()
+    self.enlevebind()
+    self.creebind()
     nb.setnaturalsize()
     
   def makeFormulePage(self,page):

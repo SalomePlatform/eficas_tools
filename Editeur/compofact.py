@@ -28,7 +28,6 @@ class FACTPanel(panels.OngletPanel) :
     nb.pack(fill = 'both', expand = 1) 
     self.nb=nb
     nb.add('Mocles', tab_text='Ajouter mots-clés')
-    #nb.add('Commentaire',tab_text='Insérer commentaire')
     panneau=Pmw.PanedWidget(nb.page("Mocles"),
                             orient='horizontal')
     panneau.add('left',min=0.4,max=0.6,size=0.5)
@@ -36,9 +35,10 @@ class FACTPanel(panels.OngletPanel) :
     panneau.pack(expand=1,fill='both')
     self.makeMoclesPage(panneau.pane('left'))
     self.makeReglesPage(panneau.pane('right'))
-    #self.makeCommentairePage(nb.page("Commentaire"))
     nb.tab('Mocles').focus_set()
     nb.setnaturalsize()
+    self.enlevebind()
+    self.creebind()
     self.affiche()
 
 import treewidget

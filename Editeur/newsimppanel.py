@@ -55,6 +55,8 @@ class newSIMPPanel(panels.OngletPanel):
       self.nb=nb
       nb.add('Valeur', tab_text='Saisir valeur')
       self.makeValeurPage(nb.page('Valeur'))
+      self.enlevebind()
+      self.creebind()
       nb.setnaturalsize()
       
 # ----------------------------------------------------------------------------------------
