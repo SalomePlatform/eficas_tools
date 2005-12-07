@@ -40,7 +40,7 @@ import definition_cata
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cataediteur.py,v 1.7 2005/08/09 09:54:02 eficas Exp $"
+__Id__="$Id: cataediteur.py,v 1.8 2005/11/29 11:14:14 eficas Exp $"
 #
 
 Fonte_Niveau = fontes.canvas_gras_italique
@@ -111,13 +111,10 @@ class Panel(Frame) :
       """ Permet d'ouvrir le fichier doc U de la commande au format pdf avec Acrobat Reader
         - Ne fonctionne pas sous UNIX (chemin d'accès Acrobat Reader)
         - indication du chemin d'accès aux fichiers pdf à revoir : trop statique"""
-      #cle_doc = self.node.item.get_docu()
       cle_doc = self.parent.appli.get_docu(self.node)
       if cle_doc == None : return
       cle_doc = string.replace(cle_doc,'.','')
-      #cle_doc = string.upper(cle_doc)
       commande = self.parent.appli.CONFIGURATION.exec_acrobat
-      #nom_fichier = cle_doc+".pdf"
       nom_fichier = cle_doc+".doc"
       rep_fichier = cle_doc[0:2]
       fichier = os.path.abspath(os.path.join(self.parent.appli.CONFIGURATION.path_doc,rep_fichier,nom_fichier))
@@ -348,7 +345,7 @@ class OPERPanel(OngletPanel):
     nb.tab('Mocles').focus_set()
     nb.setnaturalsize()
     self.affiche()
-   
+
 class SIMPPanel(OngletPanel):
   def init(self):
     nb = Pmw.NoteBook(self,raisecommand=self.raisecmd)
