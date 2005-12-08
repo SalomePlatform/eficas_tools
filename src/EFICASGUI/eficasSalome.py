@@ -1,3 +1,5 @@
+from Logger import ExtLogger
+
 import qt
 import notifqt
 # -----------------------------------------------------------------------------
@@ -17,6 +19,7 @@ def exit(ier):
 
 # Fin remplacement
 """
+
 
 import eficasConfig
 
@@ -61,6 +64,7 @@ msgErrorDisplayShape       = "Erreur dans l'affichage de la forme géométrique sé
 
 
 
+    
 
 #class MyEficas( Tkinter.Toplevel, eficas.EFICAS, QXEmbed ):
 class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
@@ -70,15 +74,13 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
     a)la création de groupes de mailles dans le composant SMESH de SALOME
     b)la visualisation d'éléments géométrique dans le coposant GEOM de SALOME par sélection dans EFICAS
     """
-    def __init__(self, parent, palStudyManager, code = None, fichier = None ):
+    def __init__(self, parent, code = None, fichier = None ):
         """
         Constructeur.
                 
         @type   parent: 
         @param  parent: widget Qt parent
-        
-        @type   palStudyManager: studyManager.SalomeStudy
-        @param  palStudyManager: gestionnaire d'étude SALOME
+                
         
         @type   code: string
         @param  code: catalogue à lancer ( ASTER, HOMARD ). optionnel ( défaut = ASTER ).
@@ -88,20 +90,25 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         """
         #QXEmbed.__init__( self, parent, "", qt.Qt.WDestructiveClose | qt.Qt.WStyle_Customize | qt.Qt.WStyle_StaysOnTop )        
         Tkinter.Toplevel.__init__( self )
+                        
+        if Editeur.__dict__.has_key( 'session' ):
+            print 'CS_pbruno has_key session'
+            from Editeur import session
+            eficasArg = sys.argv            
+            if fichier:
+                eficasArg += [ fichier ]            
+            session.parse( eficasArg )
+                        
         
         #----------------------------  initialisation EFICAS  -----------------  
         splash.init_splash( self, code = code, titre = "Lancement d'EFICAS pour %s" %code )
         splash._splash.configure( text="Chargement d'EFICAS en cours.\n Veuillez patienter ..." )
         # différence eficas 1.7 et 1.8
-        if Editeur.__dict__.has_key( 'session' ):
-            print 'CS_pbruno has_key session'
-            from Editeur import session
-            eficasArg = sys.argv
-            if fichier:
-                eficasArg += [ fichier ]
-            session.parse( eficasArg )            
+        
                
-        eficas.EFICAS.__init__( self,  self, code = code )
+        eficas.EFICAS.__init__( self, self, code = code )
+        
+        
         #----------------------------------------------------------------------
         
         
@@ -109,7 +116,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         #------  embarcation dans une fenêtre qt pour mise au premier plan  ---
         #embedded = QXEmbed( parent, "", qt.Qt.WDestructiveClose | qt.Qt.WStyle_Customize | qt.Qt.WStyle_StaysOnTop )        
         embedded = QXEmbed( parent, "" )
-        embedded.initialize()        
+        #embedded.initialize()        
         embedded.show()
         embedded.embedTk( self.winfo_id() )        
         size = embedded.sizeHint()
@@ -121,21 +128,44 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         
         #--------------- spécialisation EFICAS dans SALOME  -------------------                
         self.parent = parent        
-        self.salome = True                     #active les parties de code spécifique dans Salome
-        self.palStudyManager = palStudyManager # gestionnaire étude SALOME
+        self.salome = True      #active les parties de code spécifique dans Salome( pour le logiciel Eficas )
+        
         
         # donnée pour la création de groupe de maille
         self.mainShapeNames   = {} #dictionnaire pour gérer les multiples fichiers possibles ouverts par 
         self.mainShapeEntries = {} #eficas ( clé = identifiant du JDC ), une mainshape par fichier ouvert.    
         self.subShapes        = {} #dictionnaire des sous-géométrie de la géométrie principale ( clé = entry, valeur = name ) 
-        #----------------------------------------------------------------------
-    
+        #----------------------------------------------------------------------    
         
     def quit(self): 
         global appli        
         self.destroy()
-        appli = None                
+        appli = None
+        
+                    
+    def __studySync( self ):
+        """
+        IMPORTANT( à appeler préalablement à chaque appel du gestionnaire d'étude ) : spécifique au lancement de Eficas dans Salome,
+        permet au gestionnaire d'étude ( studyManager.palStudy ) de pointer sur la bonne étude.
+        
+        Un retour à False indique qu'il n'y a aucune étude active, dans ce cas ne faire aucune opération avec le gestionnaire d'étude( 
+        gros plantage sinon )
+        """                
+        activeStudyId = salome.sg.getActiveStudyId()
+        #print 50*'='
+        #print 'activeStudyId->',activeStudyId
+        #print 'salome.myStudyId->',salome.myStudyId
+        #print 50*'='
+        
+        if activeStudyId == 0: # pas d'étude active
+            return False
+        
+        if activeStudyId != salome.myStudyId:
+            studyManager.palStudy.setCurrentStudyID( activeStudyId )            
             
+        return True
+            
+                
         
 
     def __selectShape( self, jdcID, selectedEntry ):
@@ -149,18 +179,18 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         print 'CS_pbruno __selectShape'
         name, msgError = '',''        
                 
-        selectedMainShapeEntry = self.palStudyManager.getMainShapeEntry( selectedEntry )
+        selectedMainShapeEntry = studyManager.palStudy.getMainShapeEntry( selectedEntry )
         
         if selectedMainShapeEntry: #ok test1)        
             if not self.mainShapeEntries.has_key( jdcID ):
                 self.mainShapeEntries[ jdcID ] = selectedMainShapeEntry
             if selectedMainShapeEntry == self.mainShapeEntries[ jdcID ]:
-                name = self.palStudyManager.getName( selectedEntry )
+                name = studyManager.palStudy.getName( selectedEntry )
                 self.subShapes[ selectedEntry ] = name
             else:
                 print 'CS_pbruno pas la même mainshape selectedEntry->',selectedEntry
                 if not self.mainShapeNames.has_key( jdcID ):
-                    self.mainShapeNames[ jdcID ] = self.palStudyManager.getName( self.mainShapeEntries[ jdcID ] )
+                    self.mainShapeNames[ jdcID ] = studyManager.palStudy.getName( self.mainShapeEntries[ jdcID ] )
                 msgError = msgSubShapeBadMainShape + self.mainShapeNames[ jdcID ]
 
         return name, msgError 
@@ -176,22 +206,22 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         print 'CS_pbruno __selectMeshGroup'
         name, msgError = '',''
                 
-        selectedMeshEntry = self.palStudyManager.getMesh( selectedEntry )
+        selectedMeshEntry = studyManager.palStudy.getMesh( selectedEntry )
                 
         if selectedMeshEntry: # ok test 1)
             print 'CS_pbruno __selectMeshGroup selectedMeshEntry',selectedMeshEntry
-            selectedMainShapeEntry = self.palStudyManager.getShapeFromMesh( selectedMeshEntry )
+            selectedMainShapeEntry = studyManager.palStudy.getShapeFromMesh( selectedMeshEntry )
             
             if selectedMainShapeEntry: #test 2)
                 print 'CS_pbruno __selectMeshGroup selectedMainShapeEntry',selectedMainShapeEntry
                 if not self.mainShapeEntries.has_key( jdcID ):
                     self.mainShapeEntries[ jdcID ] = selectedMainShapeEntry
                 if selectedMainShapeEntry == self.mainShapeEntries[ jdcID ]:
-                    name = self.palStudyManager.getName( selectedEntry  )  #ok test 2)
+                    name = studyManager.palStudy.getName( selectedEntry  )  #ok test 2)
                 else:
                     print 'CS_pbruno pas la même mainshape selectedEntry ->',selectedEntry
                     if not self.mainShapeNames.has_key( jdcID ):
-                        self.mainShapeNames[ jdcID ] = self.palStudyManager.getName( self.mainShapeEntries[ jdcID ] )
+                        self.mainShapeNames[ jdcID ] = studyManager.palStudy.getName( self.mainShapeEntries[ jdcID ] )
                     msgError = msgMeshGroupBadMainShape + self.mainShapeNames[ jdcID ]                   
                                 
         return name, msgError 
@@ -204,7 +234,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         mise à jours de la liste self.subShapes à partir de la liste des noms de groupe fourni en entré
         """
         for name in groupeNames:
-            entries = self.palStudyManager.getEntriesFromName( studyManager.SGeom, name )
+            entries = studyManager.palStudy.getEntriesFromName( studyManager.SGeom, name )
             for entry in entries:
                 ok, msgError = self.__selectShape( jdcID, entry ) # filtre
                 if ok:
@@ -267,9 +297,11 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         
         Note: Appelé par EFICAS lorsqu'on clique sur le bouton ajouter à la liste du panel AFF_CHAR_MECA        
         """
-        print 'CS_pbruno selectGroupFromSalome'
         names, msg = [], ''
         try:
+            atLeastOneStudy = self.__studySync()
+            if not atLeastOneStudy:
+                return names, msg
             # récupère toutes les sélections de l'utilsateur dans l'arbre Salome
             entries = salome.sg.getAllSelected()
             print 'CS_pbruno entries->',entries
@@ -278,9 +310,9 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
                 print 'CS_pbruno len( entries ) >= 1:'
                 jdcID = self.bureau.nb.getcurselection()
                 for entry in entries:
-                    if self.palStudyManager.isMeshGroup( entry ): #sélection d'un groupe de maille
+                    if studyManager.palStudy.isMeshGroup( entry ): #sélection d'un groupe de maille
                         name, msg = self.__selectMeshGroup( jdcID, entry )
-                    elif self.palStudyManager.isShape( entry ): #sélection d'une sous-géométrie
+                    elif studyManager.palStudy.isShape( entry ): #sélection d'une sous-géométrie
                         name, msg = self.__selectShape( jdcID, entry )
                     else:
                         name, msg = '', msgUnAuthorizedSelecion
@@ -289,9 +321,9 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
                         
             if names and len( names ) < nbEntries:                        
                 msg = msgIncompleteSelection
-        except:
-            pass
-        salome.sg.EraseAll()
+            salome.sg.EraseAll()
+        except:            
+            logger.debug(50*'=')
         print 'CS_pbruno selectGroupFromSalome names = ',names        
         return names, msg                
         
@@ -300,23 +332,32 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         """
         Ajoute le Jeu De Commande ASTER ou HOMARD dans l'arbre d'étude Salome dans la rubrique EFICAS
         """
-        ok, msgError = False, ''
-                
-        if self.bureau.code == 'ASTER':
-            ok = self.palStudyManager.addEficasItem( jdcPath, studyManager.FICHIER_EFICAS_ASTER )
-        elif self.bureau.code == 'HOMARD':
-            ok = self.palStudyManager.addEficasItem( jdcPath, studyManager.FICHIER_EFICAS_HOMARD )
-            #ok = self.palStudyManager.addEficasItem( jdcPath, studyManager.FICHIER_EFICAS_HOMARD_CONF ) CS_pbruno ?????
-        if not ok:
-            msgError = msgErrorAddJdcInSalome
+        ok, msgError = False, ''        
+        try:
+            atLeastOneStudy = self.__studySync()
+            if not atLeastOneStudy:
+                return ok, msgError
+            if self.bureau.code == 'ASTER':
+                ok = studyManager.palStudy.addEficasItem( jdcPath, studyManager.FICHIER_EFICAS_ASTER )
+            elif self.bureau.code == 'HOMARD':
+                ok = studyManager.palStudy.addEficasItem( jdcPath, studyManager.FICHIER_EFICAS_HOMARD )
+                #ok = studyManager.palStudy.addEficasItem( jdcPath, studyManager.FICHIER_EFICAS_HOMARD_CONF ) CS_pbruno ?????
+            if not ok:
+                msgError = msgErrorAddJdcInSalome            
+        except:                    
+            logger.debug(50*'=')
         return ok, msgError        
         
                 
     def createOrUpdateMesh( self ):
-            """
+        """
             Ouverture d'une boite de dialogue : Creation de groupes de mailles dans un maillage existant ou un nouveau maillage.                         
             Note: Appelé par EFICAS à la sauvegarde du JDC.
-            """
+        """
+        try:            
+            atLeastOneStudy = self.__studySync()
+            if not atLeastOneStudy:
+                return
             
             jdcID   = self.bureau.nb.getcurselection()
             
@@ -336,31 +377,38 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             groupeNoEntries = []                            
             
             for entry, name in self.subShapes.items():
-                if name in groupeMaNames:                
+                if name in groupeMaNames:
                     groupeMaEntries.append( entry )
                 if name in groupeNoNames:                
                     groupeNoEntries.append( entry )
-                    
                     
             print 'CS_pbruno groupeMaEntries ->',groupeMaEntries 
             print 'CS_pbruno groupeNoEntries ->',groupeNoEntries
             if groupeMaEntries or groupeNoEntries:
                 print 'if groupeMaEntries or groupeNoEntries:'
-                diag = meshGui.MeshUpdateDialogImpl( self.mainShapeEntries[jdcID], groupeMaEntries, groupeNoEntries, self.palStudyManager,
+                diag = meshGui.MeshUpdateDialogImpl( self.mainShapeEntries[jdcID], groupeMaEntries, groupeNoEntries, studyManager.palStudy,
                                                      self.parent )
                 diag.show()
+        except:                    
+            logger.debug(50*'=')
         
                 
     def displayShape(  self, shapeName ):
         """
         visualisation géométrie de nom shapeName dans salome
         """
-        ok, msgError = False, ''        
-        salome.sg.EraseAll()
-        print 'displayShapestrGeomShape shapeName -> ', shapeName 
-        ok = self.palStudyManager.displayShapeByName( shapeName )
-        if not ok:
-            msgError = msgErrorDisplayShape
+        ok, msgError = False, ''
+        try:
+            atLeastOneStudy = self.__studySync()
+            if not atLeastOneStudy:
+                return ok, msgError
+            salome.sg.EraseAll()
+            print 'displayShapestrGeomShape shapeName -> ', shapeName 
+            ok = studyManager.palStudy.displayShapeByName( shapeName )
+            if not ok:
+                msgError = msgErrorDisplayShape
+        except:                    
+            logger.debug(50*'=')            
         return ok, msgError    
         
         
@@ -388,20 +436,24 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         
         
         
+#-------------------------------------------------------------------------------------------------------        
+#           Point d'entré lancement EFICAS
+#
+def runEficas( code="ASTER", fichier=None ):
+    global appli    
+    if not appli: #une seul instance possible!
+        appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier )
         
         
-#def runEficas( palStudyManager, code="ASTER", fichier=None, studyId=None):
-def runEficas( parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.palStudy, code="ASTER", fichier=None ):
+ 
+# pour compatibilité           
+def runHomard( code="HOMARD", fichier=None ):
     global appli    
     if not appli: #une seul instance possible!                        
-        appli = MyEficas( parent, palStudyManager, code = code, fichier = fichier )
+        appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier )
         
-    
-def runHomard( parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.palStudy, code="HOMARD", fichier=None ):    
-    global appli    
-    if not appli: #une seul instance possible!                        
-        appli = MyEficas( parent, palStudyManager, code = code, fichier = fichier )
 
+        
         
 """        
 def runAster(parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = studyManager.palStudy, code="ASTER", fichier=None ) :
@@ -416,11 +468,12 @@ def runAster(parent = SalomePyQt.SalomePyQt().getDesktop(), palStudyManager = st
 root = Tkinter.Tk()
 root.withdraw()
 
+
 appli = None
 
 
 
-
+logger=ExtLogger( "eficasSalome.py" )
 
 
 
