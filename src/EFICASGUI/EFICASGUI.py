@@ -112,13 +112,20 @@ def activeStudyChanged(ID):
    studyManager.palStudy.setCurrentStudyID( currentStudyId ) #CS_pbruno
    
 
-def definePopup(theContext, theObject, theParent):
+def definePopup(theContext, theObject, theParent):    
    print "EFICASGUI --- definePopup"
-   theContext = ""
+   theContext= ""
+   theObject = "100"
    theParent = "ObjectBrowser"
    a=salome.sg.getAllSelected()
-   if len(a) >0:
-       theObject="73"
+   print a
+    
+   selectedEntry = a[0]
+   aType, aValue = studyManager.palStudy.getTypeAndValue( selectedEntry )
+   
+   if aType == studyManager.FICHIER_EFICAS_ASTER or aType == studyManager.FICHIER_EFICAS_HOMARD:
+        theObject="73"    
+            
    return (theContext, theObject, theParent)
 
 
@@ -139,23 +146,23 @@ def runEficas():
    print currentStudyId      
    #eficasSalome.runEficas("ASTER",studyId=currentStudyId)   
    #ws = sgPyQt.getMainFrame()   
-   desktop=sgPyQt.getDesktop()   
-   eficasSalome.runEficas( desktop, studyManager.palStudy, "ASTER" )
+   #desktop=sgPyQt.getDesktop()   
+   eficasSalome.runEficas( "ASTER" )
    
 
 def runEficaspourHomard():
    print "runEficas"
    #eficasSalome.runEficas("HOMARD")
    desktop=sgPyQt.getDesktop()
-   eficasSalome.runEficas( desktop, studyManager.palStudy, "HOMARD" ) 
+   eficasSalome.runEficas( "HOMARD" ) 
    
    
     
 def runEficasHomard():
    print "runEficas"
    #eficasSalome.runEficas("HOMARD")
-   desktop=sgPyQt.getDesktop()
-   eficasSalome.runEficas( desktop, studyManager.palStudy, "HOMARD" )
+   #desktop=sgPyQt.getDesktop()
+   eficasSalome.runEficas( "HOMARD" )
    
    
 
@@ -182,8 +189,8 @@ def runEficasFichier():
         code     = "HOMARD"        
    if code:
         #eficasSalome.runEficas(code,attr,studyId=currentStudyId)         
-        desktop=sgPyQt.getDesktop()
-        eficasSalome.runEficas( desktop, studyManager.palStudy, code, fileName )
+        #desktop=sgPyQt.getDesktop()
+        eficasSalome.runEficas( code, fileName )
         
    
 
