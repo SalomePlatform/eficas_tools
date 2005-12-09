@@ -158,6 +158,7 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       Affecte à valeur choisie la sélection courante dans la liste des choix proposée
       """
       if len(self.listbox.get()) == 0 : return
+      if len(self.listbox.getcurselection()) == 0 : return
       choix = self.listbox.getcurselection()[0]
       self.valeur_choisie.set(choix)
 
