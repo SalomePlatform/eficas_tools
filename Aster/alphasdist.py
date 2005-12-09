@@ -76,6 +76,7 @@ def main():
    copyfiles('../generator',os.path.join(path_distrib,'generator'),['*.py'])
 
    copyfiles('../Editeur/icons',os.path.join(path_distrib,'Editeur','icons'),['*.gif'])
+   copyfiles('../Editeur/Patrons',os.path.join(path_distrib,'Editeur','Patrons'),['*.com*'])
 
    copyfiles(os.path.join(path_Noyau,'Noyau'),os.path.join(path_distrib,'Noyau'),['*.py'])
    copyfiles(os.path.join(path_Noyau,'Validation'),os.path.join(path_distrib,'Validation'),['*.py'])

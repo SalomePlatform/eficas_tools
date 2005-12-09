@@ -61,7 +61,7 @@ from A_ENSEMBLE import ENSEMBLE
 from A_A_CLASSER import A_CLASSER
 
 from A_ASSD import ASSD,assd
-from A_ASSD import LASSD
+#from A_ASSD import LASSD
 from A_ASSD import GEOM,geom
 # Pour le moment on laisse fonction (ceinture et bretelles)
 from A_ASSD import FONCTION, fonction

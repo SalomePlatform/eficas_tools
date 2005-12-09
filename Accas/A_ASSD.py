@@ -23,7 +23,7 @@ from Ihm import I_ASSD
 from Ihm import I_LASSD
 from Ihm import I_FONCTION
 from Noyau import N_ASSD 
-from Noyau import N_LASSD 
+#from Noyau import N_LASSD 
 from Noyau import N_GEOM 
 from Noyau import N_FONCTION 
 from Noyau import N_CO 
@@ -34,7 +34,8 @@ from Noyau import N_CO
 # dérivation
 
 class ASSD(N_ASSD.ASSD,I_ASSD.ASSD):pass
-class LASSD(I_LASSD.LASSD,N_LASSD.LASSD):pass
+#class LASSD(I_LASSD.LASSD,N_LASSD.LASSD):pass
+class LASSD(I_LASSD.LASSD):pass
 
 class assd(N_ASSD.assd,I_ASSD.ASSD,ASSD):pass
 

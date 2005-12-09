@@ -46,7 +46,7 @@ import session
 import listeFichiers
 import listePatrons
 
-VERSION="EFICAS v1.8.2"
+VERSION="EFICAS v1.9"
 
 class APPLI: 
   def __init__ (self,master,code=prefs.code,fichier=None,test=0) :

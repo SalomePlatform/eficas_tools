@@ -60,7 +60,6 @@ def main():
    copyfiles('Cata/cataSTA73/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA73','Macro'),['*.py'])
    copyfiles('Cata/cataSTA74',os.path.join(path_distrib,'Aster','Cata','cataSTA74'),['*.py'])
    copyfiles('Cata/cataSTA74/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA74','Macro'),['*.py'])
-   copyfiles('Cata/cataSTA8',os.path.join(path_distrib,'Aster','Cata','cataSTA8'),['*.py'])
    copyfiles('Cata/cataSTA81',os.path.join(path_distrib,'Aster','Cata','cataSTA81'),['*.py'])
    copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster'),['aster.py',])
 
@@ -68,12 +67,13 @@ def main():
    copyfiles('../convert/Parserv5',os.path.join(path_distrib,'convert','Parserv5'),['*.py'])
    copyfiles('../generator',os.path.join(path_distrib,'generator'),['*.py'])
    copyfiles('../Editeur/icons',os.path.join(path_distrib,'Editeur','icons'),['*.gif'])
+   copyfiles('../Editeur/Patrons',os.path.join(path_distrib,'Editeur','Patrons'),['*.com*'])
 
    copyfiles(os.path.join(path_Noyau,'Noyau'),os.path.join(path_distrib,'Noyau'),['*.py'])
    copyfiles(os.path.join(path_Noyau,'Validation'),os.path.join(path_distrib,'Validation'),['*.py'])
    copyfiles(os.path.join(path_Noyau,'Accas'),os.path.join(path_distrib,'Aster'),['properties.py'])
    copyfiles(os.path.join(path_Noyau,'Cata'),os.path.join(path_distrib,'Aster','Cata'),['*.py',])
-   copyfiles(os.path.join(path_Noyau,'Macro'),os.path.join(path_distrib,'Aster','Cata','cataSTA8','Macro'),['*.py'])
+   copyfiles(os.path.join(path_Noyau,'Macro'),os.path.join(path_distrib,'Aster','Cata','cataSTA81','Macro'),['*.py'])
    os.system("mv "+path_distrib+"/Aster/Cata/cata_STA8.py "+path_distrib+"/Aster/Cata/cataSTA8/cata.py")
 
    copyfiles('../Tools',os.path.join(path_distrib,'Tools'),['*.py'])

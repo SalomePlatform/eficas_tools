@@ -28,7 +28,7 @@ import string,linecache
 import I_OBJECT
 import Noyau
 from Noyau.N_ASSD import ASSD
-from Noyau.N_LASSD import LASSD
+#from Noyau.N_LASSD import LASSD
 from Noyau.N_ETAPE import ETAPE
 from Noyau.N_Exception import AsException
 from Extensions import commentaire,parametre,parametre_eval
