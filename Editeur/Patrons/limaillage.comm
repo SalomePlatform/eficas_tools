@@ -6,8 +6,6 @@ DEBUT(CODE=_F(NOM='VIDE',
 
 MA=LIRE_MAILLAGE();
 
-MO=AFFE_MODELE(MAILLAGE=MA,
-               AFFE=_F(PHENOMENE=None,),);
 
 FIN();
 #
