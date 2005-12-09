@@ -28,6 +28,9 @@ class JDC_CATA:
     self.l_noms_entites.sort()
     return self.l_noms_entites
 
+  def get_docu(self):
+    return
+
 #ATTENTION SURCHARGE: cette methode doit etre synchronisée avec celle du Noyau
   def enregistre(self,commande):
     """ 
