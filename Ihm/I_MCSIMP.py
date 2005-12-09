@@ -44,6 +44,7 @@ import Accas
 # fin attention
 
 from Extensions import parametre
+from Extensions import param2
 import I_OBJECT
 import CONNECTOR
 
@@ -524,8 +525,11 @@ class MCSIMP(I_OBJECT.OBJECT):
               self.cr.fatal("None n'est pas une valeur autorisée")
         else:
            # type,into ...
-	   if v.__class__.__name__ in ('PARAMETRE' , 'EVAL', 'ITEM_PARAMETRE','PARAMETRE_EVAL'):
-	      verif_type=1
+	   #PN ??? je n ose pas y toucher ???
+	   #if v.__class__.__name__ in ('PARAMETRE','EVAL', 'ITEM_PARAMETRE','PARAMETRE_EVAL'):
+	   if ((issubclass(v.__class__,param2.Formula)) or
+	        (v.__class__.__name__  in ('EVAL', 'ITEM_PARAMETRE','PARAMETRE_EVAL'))): 
+	      verif_type=self.verif_typeihm(v)
 	   else:
 	      verif_type=self.verif_type(val=v,cr=None)
 	      # cas des tuples avec un ITEM_PARAMETRE
@@ -533,13 +537,18 @@ class MCSIMP(I_OBJECT.OBJECT):
                  if type(v) == types.TupleType :
 	           new_val=[]
 	           for i in v:
-	             if i.__class__.__name__  not in ('PARAMETRE','EVAL', 'ITEM_PARAMETRE','PARAMETRE_EVAL'): 
+		     if ((issubclass(i.__class__,param2.Formula)) or
+	                 (i.__class__.__name__  in ('EVAL', 'ITEM_PARAMETRE','PARAMETRE_EVAL'))): 
+			  if self.verif_typeihm(val=i,cr=cr) == 0:
+			     verif_type = 0
+			     break
+		     else:
 		          new_val.append(i)
 		   if new_val != [] :
 		     verif_type=self.verif_type(val=new_val,cr=cr)
 		   else :
 		     # Cas d une liste de paramétre
-		     verif_type= 1
+		     verif_type=self.verif_typeliste(val=v,cr=cr)
 		 else:
 	             verif_type=self.verif_type(val=v,cr=cr)
            valid = verif_type*self.verif_into(cr=cr)*self.verif_card(cr=cr)
@@ -565,7 +574,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def verif_typeihm(self,val,cr='non'):
       try :
-         self.val.eval()
+         val.eval()
 	 return 1
       except :
 	pass

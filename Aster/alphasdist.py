@@ -47,19 +47,20 @@ def main():
    copyfiles('Cata/Utilitai',os.path.join(path_distrib,'Aster','Cata','Utilitai'),['*.py'])
    copyfiles('Cata/pre74',os.path.join(path_distrib,'Aster','Cata','pre74'),['*.py'])
 # version 5
-   copyfiles('Cata/cataSTA5',os.path.join(path_distrib,'Aster','Cata','cataSTA5'),['*.py'])
+# On enleve la V5 a la demande d AMA
+#   copyfiles('Cata/cataSTA5',os.path.join(path_distrib,'Aster','Cata','cataSTA5'),['*.py'])
 #version 6
    copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
    copyfiles('Cata/cataSTA6/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA6','Macro'),['*.py'])
 #version 7.3
-   copyfiles('Cata/cataSTA73',os.path.join(path_distrib,'Aster','Cata','cataSTA73'),['*.py'])
-   copyfiles('Cata/cataSTA73/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA73','Macro'),['*.py'])
+#   copyfiles('Cata/cataSTA73',os.path.join(path_distrib,'Aster','Cata','cataSTA73'),['*.py'])
+#   copyfiles('Cata/cataSTA73/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA73','Macro'),['*.py'])
 #version 7.4
    copyfiles('Cata/cataSTA74',os.path.join(path_distrib,'Aster','Cata','cataSTA74'),['*.py'])
    copyfiles('Cata/cataSTA74/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA74','Macro'),['*.py'])
 #version 8 
-   copyfiles('Cata/cataSTA8',os.path.join(path_distrib,'Aster','Cata','cataSTA8'),['*.py'])
-   copyfiles('Cata/cataSTA8/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA8','Macro'),['*.py'])
+   copyfiles('Cata/cataSTA81',os.path.join(path_distrib,'Aster','Cata','cataSTA81'),['*.py'])
+   copyfiles('Cata/cataSTA81/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA81,'Macro'),['*.py'])
 
    copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
    copyfiles('../AIDE/fichiers',os.path.join(path_distrib,'AIDE','fichiers'),['*'])

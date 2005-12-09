@@ -9,7 +9,8 @@ def mkf(value):
     else:
         raise TypeError, ("Can't make formula from", value)
 
-class Formula(object):
+#class Formula(object):
+class Formula:
     def __complex__(self): return complex(self.eval())
     def __int__(self): return int(self.eval())
     def __long__(self): return long(self.eval())
