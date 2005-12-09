@@ -34,6 +34,9 @@ from Noyau.N_Exception import AsException
 from Extensions import commentaire,parametre,parametre_eval
 import CONNECTOR
 
+class LASSD:
+   pass
+
 class JDC(I_OBJECT.OBJECT):
    """
    """
