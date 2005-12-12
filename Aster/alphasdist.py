@@ -55,9 +55,9 @@ def main():
 #version 7.3
 #   copyfiles('Cata/cataSTA73',os.path.join(path_distrib,'Aster','Cata','cataSTA73'),['*.py'])
 #   copyfiles('Cata/cataSTA73/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA73','Macro'),['*.py'])
-#version 7.4
-   copyfiles('Cata/cataSTA74',os.path.join(path_distrib,'Aster','Cata','cataSTA74'),['*.py'])
-   copyfiles('Cata/cataSTA74/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA74','Macro'),['*.py'])
+#version 7.6
+   copyfiles('Cata/cataSTA76',os.path.join(path_distrib,'Aster','Cata','cataSTA76'),['*.py'])
+   copyfiles('Cata/cataSTA76/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA76','Macro'),['*.py'])
 #version 8 
    copyfiles('Cata/cataSTA81',os.path.join(path_distrib,'Aster','Cata','cataSTA81'),['*.py'])
    copyfiles('Cata/cataSTA81/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA81,'Macro'),['*.py'])
