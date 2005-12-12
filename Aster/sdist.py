@@ -74,7 +74,7 @@ def main():
    copyfiles(os.path.join(path_Noyau,'Accas'),os.path.join(path_distrib,'Aster'),['properties.py'])
    copyfiles(os.path.join(path_Noyau,'Cata'),os.path.join(path_distrib,'Aster','Cata'),['*.py',])
    copyfiles(os.path.join(path_Noyau,'Macro'),os.path.join(path_distrib,'Aster','Cata','cataSTA81','Macro'),['*.py'])
-   os.system("mv "+path_distrib+"/Aster/Cata/cata_STA81.py "+path_distrib+"/Aster/Cata/cataSTA81/cata.py")
+   os.system("mv "+path_distrib+"/Aster/Cata/cata_STA8.py "+path_distrib+"/Aster/Cata/cataSTA81/cata.py")
 
    copyfiles('../Tools',os.path.join(path_distrib,'Tools'),['*.py'])
    copyfiles('../Tools/foztools',os.path.join(path_distrib,'Tools','foztools'),['*.py'])

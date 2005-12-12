@@ -1,4 +1,4 @@
-#& MODIF ENTETE  DATE 24/10/2005   AUTEUR CIBHHLV L.VIVAN 
+#& MODIF ENTETE  DATE 08/11/2005   AUTEUR CIBHHLV L.VIVAN 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -280,6 +280,7 @@ class carte_depl_f   (carte_sdaster):pass
 class carte_depl_r   (carte_sdaster):pass
 class carte_durt_r   (carte_sdaster):pass
 class carte_ener_r   (carte_sdaster):pass
+class carte_epsi_c   (carte_sdaster):pass
 class carte_epsi_r   (carte_sdaster):pass
 class carte_erreur   (carte_sdaster):pass
 class carte_flux_r   (carte_sdaster):pass
@@ -293,6 +294,7 @@ class carte_neut_f   (carte_sdaster):pass
 class carte_neut_r   (carte_sdaster):pass
 class carte_pres_f   (carte_sdaster):pass
 class carte_pres_r   (carte_sdaster):pass
+class carte_sief_c   (carte_sdaster):pass
 class carte_sief_r   (carte_sdaster):pass
 class carte_sour_r   (carte_sdaster):pass
 class carte_temp_f   (carte_sdaster):pass
@@ -414,6 +416,7 @@ class cham_no_depl_f   (cham_no_sdaster):pass
 class cham_no_depl_r   (cham_no_sdaster):pass
 class cham_no_durt_r   (cham_no_sdaster):pass
 class cham_no_ener_r   (cham_no_sdaster):pass
+class cham_no_epsi_c   (cham_no_sdaster):pass
 class cham_no_epsi_r   (cham_no_sdaster):pass
 class cham_no_erreur   (cham_no_sdaster):pass
 class cham_no_facy_r   (cham_no_sdaster):pass
@@ -429,6 +432,7 @@ class cham_no_neut_r   (cham_no_sdaster):pass
 class cham_no_pres_c   (cham_no_sdaster):pass
 class cham_no_pres_f   (cham_no_sdaster):pass
 class cham_no_pres_r   (cham_no_sdaster):pass
+class cham_no_sief_c   (cham_no_sdaster):pass
 class cham_no_sief_r   (cham_no_sdaster):pass
 class cham_no_sour_r   (cham_no_sdaster):pass
 class cham_no_spma_r   (cham_no_sdaster):pass
@@ -1113,7 +1117,6 @@ class vect_elem_pres_c(vect_elem):pass
 class vect_elem_pres_r(vect_elem):pass
 class vect_elem_temp_r(vect_elem):pass
 
-
 #& MODIF COMMUN  DATE 07/10/2005   AUTEUR CIBHHPD L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -1442,8 +1445,7 @@ def C_COMP_INCR() : return FACT(statut='f',min=1,max='**',  #COMMUN#
            RESO_INTE       =SIMP(statut='f',typ='TXM',defaut="IMPLICITE",
                                  into=("RUNGE_KUTTA_2","RUNGE_KUTTA_4","IMPLICITE")),
          ) ;
-
-#& MODIF COMMUN  DATE 11/07/2005   AUTEUR VABHHTS J.PELLET 
+#& MODIF COMMUN  DATE 18/07/2005   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -1556,7 +1558,6 @@ def C_NOM_CHAM_INTO() : return  ("ACCE",    #COMMUN#
                         "FVOL_2D",
                         "FVOL_3D",
                         "GRAD_NOEU_THETA",
-                        "HYDR_ELGA",
                         "HYDR_ELNO_ELGA",
                         "HYDR_NOEU_ELGA",
                         "INDI_LOCA_ELGA",
@@ -1629,7 +1630,6 @@ def C_NOM_CHAM_INTO() : return  ("ACCE",    #COMMUN#
                         "VITE_ABSOLU",
                         "VITE_VENT",
                         )
-
 #& MODIF COMMUN  DATE 27/06/2005   AUTEUR D6BHHJP J.P.LEFEBVRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -1777,7 +1777,6 @@ def C_NOM_GRANDEUR() : return  ( #COMMUN#
 "WEIBULL",
 "XCONTAC",
                                  )
-
 #& MODIF COMMUN  DATE 27/06/2005   AUTEUR D6BHHJP J.P.LEFEBVRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -1803,7 +1802,6 @@ def C_PARA_FONCTION() : return  ( #COMMUN#
                    "AMOR","ABSC","SIGM","HYDR","SECH","PORO","SAT",
                    "PGAZ","PCAP","VITE","ENDO","NORM","EPAIS",
                    "NEUT1","NEUT2",)
-
 #& MODIF COMMUN  DATE 27/06/2005   AUTEUR D6BHHJP J.P.LEFEBVRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -1830,7 +1828,6 @@ def C_TYPE_CHAM_INTO() : #COMMUN#
         for typ in ("ELEM","ELNO","ELGA","CART","NOEU") :
              l.append(typ+"_"+gd)
    return tuple(l)
-
 
 #& MODIF COMMANDE  DATE 09/05/2005   AUTEUR MJBHHPE J.L.FLEJOU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -2262,7 +2259,6 @@ AFFE_CARA_ELEM=OPER(nom="AFFE_CARA_ELEM",op=  19,sd_prod=cara_elem,
 
 
 ) ;
-
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -2322,7 +2318,6 @@ AFFE_CHAR_ACOU=OPER(nom="AFFE_CHAR_ACOU",op=  68,sd_prod=char_acou,
            DDL             =SIMP(statut='o',typ='TXM',max='**'),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 05/09/2005   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -2459,7 +2454,6 @@ AFFE_CHAR_CINE=OPER(nom="AFFE_CHAR_CINE",op= 101,sd_prod=affe_char_cine_prod
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 05/09/2005   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -2524,7 +2518,6 @@ AFFE_CHAR_CINE_F=OPER(nom="AFFE_CHAR_CINE_F",op= 108,sd_prod=affe_char_cine_f_pr
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 24/10/2005   AUTEUR KHAM M.KHAM 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -3483,7 +3476,6 @@ AFFE_CHAR_MECA=OPER(nom="AFFE_CHAR_MECA",op=   7,sd_prod=char_meca,
 )  ;
 
 
-
 #& MODIF COMMANDE  DATE 24/08/2005   AUTEUR MABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -3563,7 +3555,6 @@ AFFE_CHAR_MECA_C=OPER(nom="AFFE_CHAR_MECA_C",op=   7,sd_prod=char_meca,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 11/10/2005   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -4200,7 +4191,6 @@ AFFE_CHAR_MECA_F=OPER(nom="AFFE_CHAR_MECA_F",op=7,sd_prod=char_meca,
 )  ;
 
 
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -4234,7 +4224,6 @@ AFFE_CHAR_OPS011=OPER(nom="AFFE_CHAR_OPS011",op= 190,sd_prod=char_ther,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 11/10/2005   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -4439,7 +4428,6 @@ AFFE_CHAR_THER=OPER(nom="AFFE_CHAR_THER",op=34,sd_prod=char_ther
 
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 11/10/2005   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -4635,7 +4623,6 @@ AFFE_CHAR_THER_F=OPER(nom="AFFE_CHAR_THER_F",op=33,sd_prod=char_ther,
 
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 27/06/2005   AUTEUR D6BHHJP J.P.LEFEBVRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -4778,7 +4765,6 @@ AFFE_MATERIAU=OPER(nom="AFFE_MATERIAU",op=6,sd_prod=cham_mater,
            VALE_DEF        =SIMP(statut='c',typ='TXM',max=6,min=6,defaut=( 0.,    0.,    0.,    0.,    0.,    0.,   )),
          ),
 )  ;
-
 
 
 #& MODIF COMMANDE  DATE 16/08/2005   AUTEUR ROMEO R.FERNANDES 
@@ -4985,7 +4971,6 @@ AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele_sdaster,
 
          ),
 ) ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5019,7 +5004,6 @@ AIDE=PROC(nom="AIDE",op=42,
                                  into=("TOUT_TYPE","CREER","A_CREER",) ),
          ),
 ) ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5053,7 +5037,6 @@ ASSE_MAILLAGE=OPER(nom="ASSE_MAILLAGE",op= 105,sd_prod=maillage_sdaster,
                              ),
                            ),
 )  ;
-
 #& MODIF COMMANDE  DATE 18/04/2005   AUTEUR NICOLAS O.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5082,7 +5065,6 @@ ASSE_MATR_GENE=OPER(nom="ASSE_MATR_GENE",op= 128,sd_prod=matr_asse_gene_r,
            OPTION          =SIMP(statut='o',typ='TXM',into=("RIGI_GENE","MASS_GENE","AMOR_GENE") ),
            ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5118,7 +5100,6 @@ ASSE_MATRICE=OPER(nom="ASSE_MATRICE",op=12,sd_prod=asse_matrice_prod,
          CHAR_CINE       =SIMP(statut='f',typ=(char_cine_meca,char_cine_ther,char_cine_acou) ),
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5150,7 +5131,6 @@ ASSE_VECT_GENE=OPER(nom="ASSE_VECT_GENE",op= 140,sd_prod=vect_asse_gene_r,
            ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5184,7 +5164,6 @@ ASSE_VECTEUR=OPER(nom="ASSE_VECTEUR",op=13,sd_prod=asse_vecteur_prod,
          NUME_DDL        =SIMP(statut='o',typ=nume_ddl_sdaster ),
          INFO            =SIMP(statut='f',typ='I',into=(1,2,) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 30/06/2004   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5244,7 +5223,6 @@ CALC_AMOR_MODAL=OPER(nom="CALC_AMOR_MODAL",op= 172,sd_prod=listr8_sdaster,
            SEUIL           =SIMP(statut='f',typ='R',defaut= 0.3 ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5331,7 +5309,6 @@ CALC_CHAM_ELEM=OPER(nom="CALC_CHAM_ELEM",op=38,sd_prod=calc_cham_elem_prod,
          MODE_FOURIER    =SIMP(statut='f',typ='I',defaut= 0 ),
          ANGLE           =SIMP(statut='f',typ='I',defaut= 0),
 )  ;
-
 #& MODIF COMMANDE  DATE 24/01/2005   AUTEUR LEBOUVIE F.LEBOUVIER 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5366,7 +5343,6 @@ CALC_CHAR_CINE=OPER(nom="CALC_CHAR_CINE",op= 102,sd_prod=calc_char_cine_prod,
          INST            =SIMP(statut='f',typ='R',defaut= 0.E+0 ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5404,7 +5380,6 @@ CALC_CHAR_SEISME=OPER(nom="CALC_CHAR_SEISME",op=  92,sd_prod=calc_char_seisme_pr
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 11/07/2005   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -5955,7 +5930,6 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
      INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
      TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 ) ;
-
 #& MODIF COMMANDE  DATE 28/06/2005   AUTEUR F1BHHAJ J.ANGLES 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6036,7 +6010,6 @@ CALC_FATIGUE=OPER(nom="CALC_FATIGUE",op= 151,sd_prod=calc_fatigue_prod,reentrant
 
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6081,7 +6054,6 @@ CALC_FLUI_STRU=OPER(nom="CALC_FLUI_STRU",op= 144,sd_prod=melasflu_sdaster,
            DEFORMEE        =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON") ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6133,7 +6105,6 @@ CALC_FONC_INTERP=OPER(nom="CALC_FONC_INTERP",op= 134,sd_prod=calc_fonc_interp_pr
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 19/09/2005   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6288,7 +6259,6 @@ CALC_FONCTION=MACRO(nom="CALC_FONCTION",op=calc_fonction_ops,sd_prod=calc_foncti
          PROL_GAUCHE_FONC=SIMP(statut='f',typ='TXM',into=("CONSTANT","LINEAIRE","EXCLU") ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6362,7 +6332,6 @@ CALC_FORC_AJOU=OPER(nom="CALC_FORC_AJOU",op=199,sd_prod=vect_asse_gene_r,
                            ),
 
            ) ;
-
 #& MODIF COMMANDE  DATE 03/10/2005   AUTEUR GALENNE E.GALENNE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6501,7 +6470,6 @@ CALC_G_LOCAL_T=OPER(nom="CALC_G_LOCAL_T",op=77,sd_prod=tabl_calc_g_loca,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 03/10/2005   AUTEUR GALENNE E.GALENNE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6616,7 +6584,6 @@ CALC_G_THETA_T=OPER(nom="CALC_G_THETA_T",op=53,sd_prod=tabl_calc_g_th,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6648,7 +6615,6 @@ CALC_INTE_SPEC=OPER(nom="CALC_INTE_SPEC",op= 120,sd_prod=tabl_intsp,
          TITRE           =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6712,7 +6678,6 @@ CALC_MATR_AJOU=OPER(nom="CALC_MATR_AJOU",op= 152,sd_prod=matr_asse_gene_r,
            ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 28/01/2005   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6893,7 +6858,6 @@ CALC_MATR_ELEM=OPER(nom="CALC_MATR_ELEM",op=   9,sd_prod=calc_matr_elem_prod
            CHARGE            =SIMP(statut='o',typ=char_meca,validators=NoRepeat(),max='**' ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 24/10/2005   AUTEUR ADBHHVV V.CANO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6944,7 +6908,6 @@ CALC_META=OPER(nom="CALC_META",op=194,sd_prod=evol_ther,reentrant='o',
          OPTION          =SIMP(statut='f',typ='TXM'     
                              ,into=("META_ELNO_TEMP",) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7047,7 +7010,6 @@ CALC_NO=OPER(nom="CALC_NO",op= 106,sd_prod=calc_no_prod,reentrant='o',
          GROUP_NO_RESU   =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
          NOEUD_RESU      =SIMP(statut='f',typ=ma,validators=NoRepeat(),max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 07/10/2005   AUTEUR CIBHHPD L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7197,8 +7159,7 @@ CALC_PRECONT=MACRO(nom="CALC_PRECONT",op=calc_precont_ops,sd_prod=evol_noli,
 
          COMP_INCR       =C_COMP_INCR(),
   )  ;
-
-#& MODIF COMMANDE  DATE 21/06/2005   AUTEUR MCOURTOI M.COURTOIS 
+#& MODIF COMMANDE  DATE 14/11/2005   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2005  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -7220,8 +7181,17 @@ CALC_PRECONT=MACRO(nom="CALC_PRECONT",op=calc_precont_ops,sd_prod=evol_noli,
 
 # RESPONSABLE MCOURTOI M.COURTOIS
 
+def calc_table_prod(self, TABLE, **kargs):
+   """Typage du concept produit.
+   """
+   typ_table = AsType(TABLE)
+   if issubclass(typ_table, table_sdaster):
+      return typ_table
+   raise AsException("type de concept resultat non prevu")
+
 from Macro.calc_table_ops import calc_table_ops
-CALC_TABLE=MACRO(nom="CALC_TABLE",op=calc_table_ops,sd_prod=table_sdaster,
+
+CALC_TABLE=MACRO(nom="CALC_TABLE",op=calc_table_ops, sd_prod=calc_table_prod,
                      fr="Opérations sur une table",
                      reentrant='f',
    TABLE  = SIMP(statut='o',typ=table_sdaster),
@@ -7279,7 +7249,6 @@ CALC_TABLE=MACRO(nom="CALC_TABLE",op=calc_table_ops,sd_prod=table_sdaster,
       fr="Titre de la table produite"),
    INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7345,7 +7314,6 @@ CALC_THETA=OPER(nom="CALC_THETA",op=54,sd_prod=theta_geom,reentrant='n',
            FORMAT          =SIMP(statut='f',typ='TXM',defaut="EXCEL",into=("EXCEL","AGRAF") ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7422,7 +7390,6 @@ CALC_VECT_ELEM=OPER(nom="CALC_VECT_ELEM",op=8,sd_prod=calc_vect_elem_prod,reentr
            INST              =SIMP(statut='f',typ='R',defaut= 0.E+0 ),
          ),
 ) ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7491,7 +7458,6 @@ COMB_CHAM_ELEM=OPER(nom="COMB_CHAM_ELEM",op= 139,sd_prod=comb_cham_elem_prod,ree
       ANGL            =SIMP(statut='f',typ='R' ),
 )  ;
 
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7558,7 +7524,6 @@ COMB_CHAM_NO=OPER(nom="COMB_CHAM_NO",op=  30,sd_prod=comb_cham_no_prod
            ANGL            =SIMP(statut='o',typ='R' ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7586,7 +7551,6 @@ COMB_FOURIER=OPER(nom="COMB_FOURIER",op= 161,sd_prod=comb_fourier,
          NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=5,
                                into=("DEPL","REAC_NODA","SIEF_ELGA_DEPL","EPSI_ELNO_DEPL","SIGM_ELNO_DEPL") ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7649,7 +7613,6 @@ COMB_MATR_ASSE=OPER(nom="COMB_MATR_ASSE",op=  31,sd_prod=comb_matr_asse_prod,
          ),         
          SANS_CMP        =SIMP(statut='f',typ='TXM',into=("LAGR",) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 30/06/2004   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7764,8 +7727,7 @@ COMB_SISM_MODAL=OPER(nom="COMB_SISM_MODAL",op= 109,sd_prod=mode_stat,
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
-#& MODIF COMMANDE  DATE 04/10/2005   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 14/11/2005   AUTEUR DURAND C.DURAND 
 # RESPONSABLE VABHHTS J.PELLET
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7797,7 +7759,11 @@ def crea_champ_prod(TYPE_CHAM,**args):
   else :
      raise AsException("type de concept resultat_sdaster non prevu")
 
-  vv=eval(uu) ; return vv
+  try :
+     vv=eval(uu)
+  except :
+     raise AsException("type de concept champ non prevu : %s" % uu)
+  return vv
 
 
 CREA_CHAMP=OPER(nom="CREA_CHAMP",op= 195,sd_prod=crea_champ_prod,
@@ -7951,7 +7917,6 @@ CREA_CHAMP=OPER(nom="CREA_CHAMP",op= 195,sd_prod=crea_champ_prod,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2,) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 # RESPONSABLE MCOURTOI M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -8108,7 +8073,6 @@ CREA_MAILLAGE=OPER(nom="CREA_MAILLAGE",op= 167,sd_prod=maillage_sdaster,
 #
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 24/10/2005   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -8248,8 +8212,7 @@ CREA_RESU=OPER(nom="CREA_RESU",op=124,sd_prod=crea_resu_prod,reentrant='f',
          ),
 
 )  ;
-
-#& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 14/11/2005   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -8267,14 +8230,32 @@ CREA_RESU=OPER(nom="CREA_RESU",op=124,sd_prod=crea_resu_prod,reentrant='f',
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
+def dict_table_types():
+   """Extraction des types de table
+   """
+   from types import ClassType
+   # en attendant la résorption des 30 types de table !
+   d_table = {}
+   for k, v in globals().items():
+      if type(v) is ClassType and issubclass(v, table_sdaster):
+         d_table[k] = v
+   # traduction de type
+   d_table['table']          = d_table['table_sdaster']
+   d_table['tabl_inte_spec'] = d_table['tabl_intsp']
+   return d_table
+
+def into_table_types():
+   """Récupération de la liste des type de table.
+   """
+   return tuple([typ.upper() for typ in dict_table_types().keys()])
+
 def crea_table_prod(TYPE_TABLE,**args):
-  if TYPE_TABLE == "TABLE"          : return table_sdaster
-  if TYPE_TABLE == "TABL_CARA_GEOM" : return tabl_cara_geom
-  if TYPE_TABLE == "TABL_POST_RELE" : return tabl_post_rele
-  if TYPE_TABLE == "TABL_POST_USUR" : return tabl_post_usur
-  if TYPE_TABLE == "TABL_POST_ALEA" : return tabl_post_alea
-  if TYPE_TABLE == "TABL_INTE_SPEC" : return tabl_intsp
-  raise AsException("type de concept resultat non prevu")
+   """Typage du concept résultat
+   """
+   d_table = dict_table_types()
+   if TYPE_TABLE.lower() in d_table.keys():
+      return d_table[TYPE_TABLE.lower()]
+   raise AsException("type de concept resultat non prevu")
 
 CREA_TABLE=OPER(nom="CREA_TABLE",op=  36,sd_prod=crea_table_prod,
                 fr="Création d'une table à partir d'une fonction ou de deux listes",
@@ -8283,12 +8264,7 @@ CREA_TABLE=OPER(nom="CREA_TABLE",op=  36,sd_prod=crea_table_prod,
            regles=(EXCLUS('FONCTION','LISTE')),
 
            TYPE_TABLE=SIMP(statut='f',typ='TXM',defaut="TABLE",
-                           into=("TABLE",
-                                 "TABL_CARA_GEOM",
-                                 "TABL_POST_RELE",
-                                 "TABL_POST_USUR",
-                                 "TABL_POST_ALEA",
-                                 "TABL_INTE_SPEC" ) ),
+                           into=into_table_types(),),
            LISTE=FACT(statut='f',min=2,max='**',
                  fr="Creation d'une table a partir de listes",
                  regles=(UN_PARMI('LISTE_I','LISTE_R','LISTE_K')), 
@@ -8305,7 +8281,6 @@ CREA_TABLE=OPER(nom="CREA_TABLE",op=  36,sd_prod=crea_table_prod,
                         PARA=SIMP(statut='f',typ='TXM',min=2,max=2)),  
            TITRE=SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 
 
 
@@ -8391,7 +8366,6 @@ DEBUT=MACRO(nom="DEBUT",op=ops.build_debut ,repetable='n',
            BORNE           =SIMP(statut='f',typ='I',val_min=0,defaut=180)
          ),
  );
-
 #& MODIF COMMANDE  DATE 03/10/2005   AUTEUR NICOLAS O.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -8448,7 +8422,6 @@ DEFI_BASE_MODALE=OPER(nom="DEFI_BASE_MODALE",op=  99,sd_prod=base_modale,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -8526,7 +8499,6 @@ DEFI_CABLE_BP=MACRO(nom="DEFI_CABLE_BP",op=defi_cable_bp_ops,sd_prod=cabl_precon
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -8577,7 +8549,6 @@ DEFI_CABLE_OP=OPER(nom="DEFI_CABLE_OP",op= 180,sd_prod=cabl_precont,reentrant='n
            PRESENT           =SIMP(statut='o',typ='TXM',min=2,max=2,into=("OUI","NON") ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 # RESPONSABLE JMBHH01 J.M.PROIX
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -8638,7 +8609,6 @@ DEFI_COMPOR=OPER(nom="DEFI_COMPOR",op=59,sd_prod=compor_sdaster,
                                 
                                 );
                    
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -8665,7 +8635,6 @@ DEFI_CONSTANTE=OPER(nom="DEFI_CONSTANTE",op=   2,sd_prod=fonction_sdaster,
          VALE            =SIMP(statut='o',typ='R',),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -8698,7 +8667,6 @@ DEFI_COQU_MULT=OPER(nom="DEFI_COQU_MULT",op=56,sd_prod=mater_sdaster,reentrant='
            UNITE           =SIMP(statut='f',typ='I',defaut=8),  
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -8768,7 +8736,6 @@ DEFI_FICHIER=MACRO(nom="DEFI_FICHIER",op=ops.build_DEFI_FICHIER,sd_prod=DEFIC_pr
 
            INFO          =SIMP(statut='f',typ='I',into=(1,2) ),           
            )
-
 #& MODIF COMMANDE  DATE 11/10/2005   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -8826,7 +8793,6 @@ DEFI_FISS_XFEM=OPER(nom="DEFI_FISS_XFEM",op=  41,sd_prod=fiss_xfem,reentrant='f'
     ),
     INFO                  =SIMP(statut='f',typ='I',defaut= 1,into=(1,2,3,) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -8932,7 +8898,6 @@ DEFI_FLUI_STRU=OPER(nom="DEFI_FLUI_STRU",op= 143,sd_prod=type_flui_stru,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -9002,7 +8967,6 @@ DEFI_FONC_ELEC=OPER(nom="DEFI_FONC_ELEC",op=64,sd_prod=fonction_sdaster,reentran
          ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -9042,7 +9006,6 @@ DEFI_FONC_FLUI=OPER(nom="DEFI_FONC_FLUI",op= 142,sd_prod=fonction_sdaster,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -9099,7 +9062,6 @@ DEFI_FONCTION=OPER(nom="DEFI_FONCTION",op=3,sd_prod=defi_fonction_prod
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -9176,7 +9138,6 @@ DEFI_FOND_FISS=OPER(nom="DEFI_FOND_FISS",op=55,sd_prod=fond_fiss,reentrant='n',
            VECT_GRNO_EXTR  =SIMP(statut='f',typ=grno,validators=NoRepeat(),max=2),
            INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 04/07/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -9379,7 +9340,6 @@ regles=(UN_PARMI('TOUT','GROUP_MA','MAILLE','INTERSEC','UNION','DIFFE','OPTION')
          ALARME          =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
          INFO            =SIMP(statut='f',typ='I',into=( 1 , 2 ) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -9440,7 +9400,6 @@ DEFI_INTE_SPEC=OPER(nom="DEFI_INTE_SPEC",op= 115,sd_prod=tabl_intsp,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),               
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -9478,7 +9437,6 @@ DEFI_INTERF_DYNA=OPER(nom="DEFI_INTERF_DYNA",op=  98,sd_prod=interf_dyna_clas,
          FREQ            =SIMP(statut='f',typ='R',defaut= 1.),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -9515,7 +9473,6 @@ DEFI_LIST_ENTI=OPER(nom="DEFI_LIST_ENTI",op=22,sd_prod=listis_sdaster,
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -9553,7 +9510,6 @@ DEFI_LIST_REEL=OPER(nom="DEFI_LIST_REEL",op=24,sd_prod=listr8_sdaster,
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -9633,7 +9589,6 @@ DEFI_MAILLAGE=OPER(nom="DEFI_MAILLAGE",op=  88,sd_prod=maillage_sdaster,
            GROUP_NO_FIN    =SIMP(statut='f',typ=grno),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 04/10/2005   AUTEUR CIBHHPD L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -12504,7 +12459,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 
            INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -12554,7 +12508,6 @@ DEFI_MODELE_GENE=OPER(nom="DEFI_MODELE_GENE",op= 126,sd_prod=modele_gene,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -12599,7 +12552,6 @@ DEFI_NAPPE=OPER(nom="DEFI_NAPPE",op=   4,sd_prod=nappe_sdaster,
          VERIF           =SIMP(statut='f',typ='TXM',into=("CROISSANT",) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -12653,7 +12605,6 @@ DEFI_OBSTACLE=OPER(nom="DEFI_OBSTACLE",op=  73,sd_prod=obstacle_sdaster
          VALE            =SIMP(statut='f',typ='R',max='**'),
          VERIF           =SIMP(statut='f',typ='TXM',defaut="FERME"),
 )  ;
-
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -12686,7 +12637,6 @@ DEFI_PARA_SENSI=OPER(nom="DEFI_PARA_SENSI",op=   2,sd_prod=para_sensi,
                                ang="Value of the parameter"),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 30/08/2005   AUTEUR ASSIRE A.ASSIRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -12750,7 +12700,6 @@ DEFI_PART_FETI=MACRO(nom="DEFI_PART_FETI",op=defi_part_feti_ops,sd_prod=sd_feti_
 
          INFO            =SIMP(statut='f',typ='I',into=(1, 2), defaut=1),
 );
-
 #& MODIF COMMANDE  DATE 22/02/2005   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -12787,7 +12736,6 @@ DEFI_PART_OPS=OPER(nom="DEFI_PART_OPS",op=21,sd_prod=sd_feti_sdaster,
            CHARGE          =SIMP(statut='f',typ=(char_meca,char_cine_meca)),
          ),
 );
-
 #& MODIF COMMANDE  DATE 30/08/2005   AUTEUR ASSIRE A.ASSIRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -12848,7 +12796,6 @@ DEFI_PART_PA_OPS=OPER(nom="DEFI_PART_PA_OPS",op=29,sd_prod=sd_feti_sdaster,
          INFO            =SIMP(statut='f',typ='I',into=(1, 2), defaut=1),
 
 );
-
 #& MODIF COMMANDE  DATE 30/06/2004   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -12957,7 +12904,6 @@ DEFI_SPEC_TURB=OPER(nom="DEFI_SPEC_TURB",op= 145,sd_prod=spectre_sdaster,
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13034,7 +12980,6 @@ DEFI_SQUELETTE=OPER(nom="DEFI_SQUELETTE",op= 110,sd_prod=squelette,
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13066,7 +13011,6 @@ DEFI_TEXTURE=OPER(nom="DEFI_TEXTURE",op= 181,sd_prod=tabl_texture,reentrant='n',
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13110,7 +13054,6 @@ DEFI_THER_JOULE=OPER(nom="DEFI_THER_JOULE",op= 121,sd_prod=fonction_sdaster,reen
          ),
 )  ;
 
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13147,7 +13090,6 @@ DEFI_TRC=OPER(nom="DEFI_TRC",op=94,sd_prod=tabl_trc,reentrant='n',
            A              =SIMP(statut='f',typ='R'),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13173,7 +13115,6 @@ DEPL_INTERNE=OPER(nom="DEPL_INTERNE",op=89,sd_prod=cham_no_depl_r,reentrant='n',
          MAILLE          =SIMP(statut='o',typ=ma,),
          NOM_CAS         =SIMP(statut='f',typ='TXM',defaut=" "),
 )  ;
-
 #& MODIF COMMANDE  DATE 17/10/2005   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13208,7 +13149,6 @@ DETRUIRE=MACRO(nom="DETRUIRE",op=-7,
             ALARME        =SIMP(statut='f',typ='TXM',into=('OUI','NON'),defaut='OUI',),
             INFO          =SIMP(statut='f',typ='I',into=(1,2),defaut=2, ),           
 );
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13247,7 +13187,6 @@ DIST_LIGN_3D=OPER(nom="DIST_LIGN_3D",op= 133,sd_prod=fonction_sdaster,reentrant=
          POIN_FIXE       =SIMP(statut='f',typ='R',min=3,max=3),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13350,7 +13289,6 @@ DYNA_ALEA_MODAL=OPER(nom="DYNA_ALEA_MODAL",op= 131,sd_prod=tabl_intsp
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 12/09/2005   AUTEUR NICOLAS O.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13421,7 +13359,6 @@ DYNA_LINE_HARM=OPER(nom="DYNA_LINE_HARM",op=  60,sd_prod=dyna_line_harm_prod,
 # Rajouter test icompatibilite vect_asse et sensibilite
 # Peut-on aussi rajouter ici le test d incompatibilite charge complexe - derivation 
 #  presents dans le Fortran          
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13550,7 +13487,6 @@ DYNA_LINE_TRAN=OPER(nom="DYNA_LINE_TRAN",op=  48,sd_prod=dyna_trans,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 07/10/2005   AUTEUR CIBHHPD L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13904,7 +13840,6 @@ into=("DEPL","VITE","ACCE","SIEF_ELGA","VARI_ELGA","DEPL_ABSOLU","VITE_ABSOLU","
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -13934,7 +13869,6 @@ DYNA_SPEC_MODAL=OPER(nom="DYNA_SPEC_MODAL",op= 147,sd_prod=tabl_intsp,
          OPTION          =SIMP(statut='f',typ='TXM',defaut="TOUT",into=("TOUT","DIAG") ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 07/10/2005   AUTEUR CIBHHPD L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14233,7 +14167,6 @@ into=("DEPL","VITE","ACCE","SIEF_ELGA","VARI_ELGA","DEPL_ABSOLU","VITE_ABSOLU","
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14443,7 +14376,6 @@ DYNA_TRAN_MODAL=OPER(nom="DYNA_TRAN_MODAL",op=  74,sd_prod=tran_gene,
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
  )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14474,7 +14406,6 @@ ENGENDRE_TEST=PROC(nom="ENGENDRE_TEST",op=178,
          FORMAT_R        =SIMP(statut='f',typ='TXM',defaut="1PE12.5"),
          PREC_R          =SIMP(statut='f',typ='TXM',defaut="1.E-5"),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14501,7 +14432,6 @@ EXEC_LOGICIEL=PROC(nom="EXEC_LOGICIEL",op= 183,
            NOM_PARA        =SIMP(statut='f',typ='TXM' ),  
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 14/10/2005   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14557,7 +14487,6 @@ EXTR_MODE=OPER(nom="EXTR_MODE",op= 168,sd_prod=extr_mode_prod,
            CRIT_EXTR       =SIMP(statut='f',typ='TXM',defaut="MASS_EFFE_UN",into=("MASS_EFFE_UN","MASS_GENE") ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14628,7 +14557,6 @@ EXTR_RESU=OPER(nom="EXTR_RESU",op=176,sd_prod=extr_resu_prod,reentrant='f',
 
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14678,7 +14606,6 @@ EXTR_TABLE=OPER(nom="EXTR_TABLE",op=173,sd_prod=extr_table_prod,reentrant='n',
 
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14714,7 +14641,6 @@ FACT_GRAD=OPER(nom="FACT_GRAD",op=85,sd_prod=fact_grad_prod,
          NIVE_REMPLISSAGE=SIMP(statut='f',typ='I',defaut= 0 ),  
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14768,7 +14694,6 @@ FACT_LDLT=OPER(nom="FACT_LDLT",op=14,sd_prod=fact_ldlt_prod,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14799,7 +14724,6 @@ FIN=PROC(nom="FIN",op=9999,repetable='n',fr="Fin d'une étude, fin du travail eng
                                statut='f',typ='TXM',defaut="OUI",into=("OUI","NON",) ),
          UNITE           =SIMP(statut='f',typ='I',defaut=6),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14823,7 +14747,6 @@ FONC_FLUI_STRU=OPER(nom="FONC_FLUI_STRU",op= 169,sd_prod=fonction_sdaster,
             UIinfo={"groupes":("Fonction",)},
          TYPE_FLUI_STRU  =SIMP(statut='o',typ=(type_flui_stru) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14858,7 +14781,6 @@ FORMULE=FORM(nom="FORMULE",op_init=form_pyth_ops,op=-5,
          VALE     =SIMP(statut='f',typ='TXM'),
          NOM_PARA =SIMP(statut='o',typ='TXM',max='**'),
 );
-
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14896,7 +14818,6 @@ GENE_FONC_ALEA=OPER(nom="GENE_FONC_ALEA",op= 118,sd_prod=table_sdaster,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 11/07/2005   AUTEUR CAMBIER S.CAMBIER 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14947,7 +14868,6 @@ sd_prod=gene_matr_alea_prod,
    INIT_ALEA    =SIMP(statut='f',typ='I'),
 ) ;
    
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -14990,7 +14910,32 @@ GENE_VARI_ALEA=OPER(nom="GENE_VARI_ALEA",op=  28,sd_prod=table_sdaster,
    INIT_ALEA       =SIMP(statut='f',typ='I'),
 ) ;
    
-
+#& MODIF COMMANDE  DATE 23/08/2004   AUTEUR CIBHHLV L.VIVAN 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+# ======================================================================
+IMPR_CHARGE=PROC(nom="IMPR_CHARGE",op= 158,
+                 fr="Impression des charges mécaniques de type ddl imposés et relations linéaires entre les ddl",
+                 UIinfo={"groupes":("Fonction",)},
+         UNITE           =SIMP(statut='f',typ='I',defaut=30),  
+         FORMAT          =SIMP(statut='f',typ='TXM',defaut="IDEAS",into=("IDEAS",) ),
+         VERSION         =SIMP(statut='f',typ='I',defaut= 5,into=( 5 ,) ),
+         CHARGE          =SIMP(statut='o',typ=char_meca,validators=NoRepeat(),max='**', ),
+)  ;
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15034,7 +14979,6 @@ IMPR_CLASSI=PROC(nom="IMPR_CLASSI",op= 114,
          ),
          AMOR            =SIMP(statut='o',typ='R',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15067,7 +15011,6 @@ IMPR_CO=PROC(nom="IMPR_CO",op=17,
          CHAINE          =SIMP(statut='f',typ='TXM'),
          POSITION        =SIMP(statut='f',typ='I',defaut=1),
 )  ;
-
 #& MODIF COMMANDE  DATE 04/07/2005   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15366,7 +15309,6 @@ IMPR_FICO_HOMA=PROC(nom="IMPR_FICO_HOMA",op= 189, docu="U7.04.01-b",
          ),
 #
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15501,7 +15443,6 @@ IMPR_FONCTION=MACRO(nom="IMPR_FONCTION",op=impr_fonction_ops,sd_prod=None,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 12/09/2005   AUTEUR NICOLAS O.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15561,7 +15502,6 @@ IMPR_GENE=PROC(nom="IMPR_GENE",op= 157,
            INFO_GENE       =SIMP(statut='f',typ='TXM',into=("OUI","NON") ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15617,7 +15557,6 @@ IMPR_JEVEUX=PROC(nom="IMPR_JEVEUX",op=16,
          ),
          COMMENTAIRE     =SIMP(statut='f',typ='TXM' ),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15677,7 +15616,6 @@ IMPR_MACR_ELEM=PROC(nom="IMPR_MACR_ELEM",op= 160,
          ),
 
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15749,7 +15687,6 @@ IMPR_MATRICE=PROC(nom="IMPR_MATRICE",op= 159,
          ),
 # ======================================================================
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15796,7 +15733,6 @@ IMPR_MISS_3D=PROC(nom="IMPR_MISS_3D",op= 162,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 16/06/2004   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15843,7 +15779,6 @@ IMPR_OAR =PROC(nom="IMPR_OAR",op= 40,
            UNITE           =SIMP(statut='f',typ='I',defaut=38),  
            INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 ) ;
-
 #& MODIF COMMANDE  DATE 05/09/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -15996,7 +15931,6 @@ IMPR_RESU=PROC(nom="IMPR_RESU",op=39,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 ) ;
-
 #& MODIF COMMANDE  DATE 23/08/2004   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16037,7 +15971,6 @@ IMPR_STURM=PROC(nom="IMPR_STURM",op=32,fr="Calculer et imprimer le nombre de val
          PREC_SHIFT      =SIMP(statut='f',typ='R',defaut= 1.E-2 ),
          SEUIL_FREQ      =SIMP(statut='f',typ='R',defaut= 1.E-2 ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16145,7 +16078,6 @@ IMPR_TABLE=MACRO(nom="IMPR_TABLE",op=impr_table_ops,sd_prod=None,
    TITRE          =SIMP(statut='f',typ='TXM',max='**'),
    INFO           =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  
-
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16171,7 +16103,6 @@ INCLUDE=MACRO(nom="INCLUDE",op=ops.build_include,
          UNITE = SIMP(statut='o',typ='I'),
          INFO  = SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 );
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16210,7 +16141,6 @@ INCLUDE_MATERIAU=MACRO(nom="INCLUDE_MATERIAU",op=-14,
          UNITE_LONGUEUR  =SIMP(statut='f',typ='TXM',into=("M","MM"),defaut="M" ),  
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16248,7 +16178,6 @@ INFO_EXEC_ASTER=OPER(nom="INFO_EXEC_ASTER",op=35,sd_prod=table_sdaster,
          TITRE          =SIMP(statut='f',typ='TXM',max='**'),
          INFO           =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 24/05/2005   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16335,7 +16264,6 @@ INFO_FONCTION=MACRO(nom="INFO_FONCTION",op=info_fonction_ops,sd_prod=info_foncti
          ),     
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16418,7 +16346,6 @@ INTE_MAIL_2D=OPER(nom="INTE_MAIL_2D",op=50,sd_prod=courbe_sdaster,
          PRECISION       =SIMP(statut='f',typ='R',defaut=1.0E-3),  
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16458,7 +16385,6 @@ INTE_MAIL_3D=OPER(nom="INTE_MAIL_3D",op=96,sd_prod=surface_sdaster,
          PRECISION       =SIMP(statut='f',typ='R',defaut=1.0E-6),  
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16528,7 +16454,6 @@ LIRE_CHAMP=OPER(nom="LIRE_CHAMP",op= 192,sd_prod=lire_champ_prod,
                   ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16593,6 +16518,63 @@ LIRE_FONCTION=MACRO(nom="LIRE_FONCTION",op=lire_fonction_ops,sd_prod=lire_foncti
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
+#& MODIF COMMANDE  DATE 08/11/2005   AUTEUR ACBHHCD G.DEVESA 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2005  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+LIRE_FORC_MISS=OPER(nom="LIRE_FORC_MISS",op= 179,sd_prod=vect_asse_gene_c,
+                    fr="Création d un vecteur assemblé à partir de base modale",
+                    reentrant='n',
+            UIinfo={"groupes":("Matrices/vecteurs",)},           
+         BASE            =SIMP(statut='o',typ=base_modale ),
+         NUME_DDL_GENE   =SIMP(statut='o',typ=nume_ddl_gene ),
+         FREQ_EXTR       =SIMP(statut='o',typ='R',max=1),
+         NOM_CMP         =SIMP(statut='o',typ='TXM',into=("DX","DY","DZ") ),
+         NOM_CHAM        =SIMP(statut='f',typ='TXM',into=("DEPL","VITE","ACCE"),defaut="DEPL"),
+         UNITE_RESU_FORC =SIMP(statut='f',typ='I',defaut=30),
+)  ;
+
+#& MODIF COMMANDE  DATE 08/11/2005   AUTEUR ACBHHCD G.DEVESA 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2005  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+LIRE_IMPE_MISS=OPER(nom="LIRE_IMPE_MISS",op= 164,sd_prod=matr_asse_gene_c,
+                    fr="Création d une matrice assemblée à partir de base modale",
+                    reentrant='n',
+            UIinfo={"groupes":("Matrices/vecteurs",)},           
+         BASE            =SIMP(statut='o',typ=base_modale ),
+         NUME_DDL_GENE   =SIMP(statut='o',typ=nume_ddl_gene ),
+         FREQ_EXTR       =SIMP(statut='o',typ='R',max=1),
+         UNITE_RESU_IMPE =SIMP(statut='f',typ='I',defaut=30),
+)  ;
 
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -16631,7 +16613,6 @@ LIRE_INTE_SPEC=MACRO(nom="LIRE_INTE_SPEC",op=lire_inte_spec_ops,sd_prod=tabl_int
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16690,7 +16671,6 @@ LIRE_MAILLAGE=OPER(nom="LIRE_MAILLAGE",op=   1,sd_prod=maillage_sdaster,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 #
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16724,7 +16704,6 @@ LIRE_MISS_3D=OPER(nom="LIRE_MISS_3D",op= 163,sd_prod=lire_miss_3d_prod,
          TYPE_RESU       =SIMP(statut='f',typ='TXM',defaut="TRANS",into=("TRANS","HARMO") ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16765,7 +16744,6 @@ LIRE_PLEXUS=OPER(nom="LIRE_PLEXUS",op= 184,sd_prod=evol_char,
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 03/10/2005   AUTEUR NICOLAS O.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16939,7 +16917,6 @@ LIRE_RESU=OPER(nom="LIRE_RESU",op=150,sd_prod=lire_resu_prod,reentrant='n',
            ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -16986,7 +16963,6 @@ LIRE_TABLE=MACRO(nom="LIRE_TABLE",op=lire_table_ops,sd_prod=lire_table_prod,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          )  ;
 
-
 #& MODIF COMMANDE  DATE 12/09/2005   AUTEUR NICOLAS O.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -17017,8 +16993,7 @@ MAC_MODES=OPER(nom="MAC_MODES",op=  141,sd_prod=table_sdaster,
          TITRE      =SIMP(statut='f',typ='TXM',max='**'),
          INFO       =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
-#& MODIF COMMANDE  DATE 04/07/2005   AUTEUR GNICOLAS G.NICOLAS 
+#& MODIF COMMANDE  DATE 07/11/2005   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17067,8 +17042,8 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 #
 # 2. Version de HOMARD
 #
-         VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V7_5",
-                               into=("V7_5", "V7_N", "V7_N_PERSO"),
+         VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V7_7",
+                               into=("V7_7", "V7_N", "V7_N_PERSO", "V8_N"),
                            fr="Version de HOMARD",
                            ang="HOMARD release"),
 #
@@ -17097,7 +17072,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 # 5.1. Deux choix d'adaptation exclusifs :
 #
 # 5.1.
-#      A. Selon un indicateur d'erreur, avec trois variantes :
+#      A. Pilote par une consigne, avec trois variantes :
 #         . Raffinement et deraffinement
 #         . Raffinement seul
 #         . Deraffinement seul
@@ -17129,7 +17104,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                            fr="Maillage apres adaptation",
                            ang="Mesh after adaptation" ),
 #
-# 5.3. Pour de l'adaptation libre, il faut l'indicateur d'erreur
+# 5.3. Pour de l'adaptation libre, il faut un indicateur d'erreur et/ou des definitions de zones
 #
            b_indicateur_d_erreur   =BLOC( condition = " LIBRE != None " ,
                            fr="Choix de l'indicateur d'erreur",
@@ -17369,7 +17344,6 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                           ang="Overlapping checking." ),
 #
 )  ;
-
 #& MODIF COMMANDE  DATE 07/10/2005   AUTEUR CIBHHPD L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -17581,7 +17555,6 @@ MACR_ASCOUF_CALC=MACRO(nom="MACR_ASCOUF_CALC",op=macr_ascouf_calc_ops,sd_prod=ma
 
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -17730,7 +17703,6 @@ MACR_ASCOUF_MAIL=MACRO(nom="MACR_ASCOUF_MAIL",op=macr_ascouf_mail_ops,sd_prod=ma
 
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 07/10/2005   AUTEUR CIBHHPD L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -17954,7 +17926,6 @@ MACR_ASPIC_CALC=MACRO(nom="MACR_ASPIC_CALC",op=macr_aspic_calc_ops,sd_prod=macr_
 
          TITRE           =SIMP(statut='f',typ='TXM'),
 )
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18052,7 +18023,6 @@ MACR_ASPIC_MAIL=MACRO(nom="MACR_ASPIC_MAIL",op= macr_aspic_mail_ops,sd_prod=mail
 
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
-
 #& MODIF COMMANDE  DATE 07/10/2005   AUTEUR CIBHHPD L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18208,7 +18178,6 @@ MACR_CABRI_CALC=MACRO(nom="MACR_CABRI_CALC",
                       ),
                      );
 
-
 #& MODIF COMMANDE  DATE 07/02/2005   AUTEUR MABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18300,7 +18269,6 @@ MACR_CABRI_MAIL=MACRO(nom="MACR_CABRI_MAIL",
                                           ),
                      );
 
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18362,7 +18330,6 @@ MACR_CARA_POUTRE=MACRO(nom="MACR_CARA_POUTRE",op=macr_cara_poutre_ops,sd_prod=ta
                             fr="type de conditions aux limites sur le plancher supérieur" ),
                               ), 
                     )
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18425,7 +18392,6 @@ MACR_ECLA_PG=MACRO(nom="MACR_ECLA_PG",op=macr_ecla_pg_ops,sd_prod=macr_ecla_pg_p
              PRECISION       =SIMP(statut='f',typ='R',defaut= 1.0E-3),
              CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU",) ),
             )
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18457,7 +18423,6 @@ MACR_ELEM_DYNA=OPER(nom="MACR_ELEM_DYNA",op=  81,sd_prod=macr_elem_dyna,
          OPTION          =SIMP(statut='f',typ='TXM',defaut="CLASSIQUE",into=("CLASSIQUE","RITZ",
                           "DIAG_MASS") ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18506,7 +18471,6 @@ MACR_ELEM_STAT=OPER(nom="MACR_ELEM_STAT",op=86,sd_prod=macr_elem_stat,reentrant=
            INST            =SIMP(statut='f',typ='R',defaut=0.E+0),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18577,7 +18541,6 @@ MACR_FIAB_IMPR=MACRO(nom="MACR_FIAB_IMPR",op=macr_fiab_impr_ops,
          ),
 #
 );
-
 #& MODIF COMMANDE  DATE 04/10/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18957,8 +18920,7 @@ MACR_FIABILITE = MACRO ( nom="MACR_FIABILITE",op=macr_fiabilite_ops,
    ),
 #
 );
-
-#& MODIF COMMANDE  DATE 04/07/2005   AUTEUR GNICOLAS G.NICOLAS 
+#& MODIF COMMANDE  DATE 07/11/2005   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -18991,8 +18953,8 @@ MACR_INFO_MAIL=MACRO(nom="MACR_INFO_MAIL",op=macr_adap_mail_ops,
 #
 # 2. Version de HOMARD
 #
-         VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V7_5",
-                               into=("V7_5", "V7_N", "V7_N_PERSO"),
+         VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V7_7",
+                               into=("V7_7", "V7_N", "V7_N_PERSO", "V8_N"),
                            fr="Version de HOMARD",
                            ang="HOMARD release"),
 #
@@ -19062,7 +19024,6 @@ MACR_INFO_MAIL=MACRO(nom="MACR_INFO_MAIL",op=macr_adap_mail_ops,
                           ang="Overlapping checking." ),
 #
 )  ;
-
 #& MODIF COMMANDE  DATE 04/07/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19112,8 +19073,7 @@ MACR_LIGN_COUPE=MACRO(nom="MACR_LIGN_COUPE",op=macr_lign_coupe_ops,sd_prod=table
 )  ;
 
 
-
-#& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 08/11/2005   AUTEUR ASSIRE A.ASSIRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19153,9 +19113,10 @@ MACR_RECAL = MACRO(nom="MACR_RECAL",op=macr_recal_ops,
          PARA_DIFF_FINI  =SIMP(statut='f',typ='R',defaut=0.001),
          GRAPHIQUE       =FACT(statut='d',
            UNITE           =SIMP(statut='f',typ='I',defaut=90),
-           INTERACTIF      =SIMP(statut='f',typ='TXM',defaut='NON',into=("OUI","NON")),)
+           FORMAT          =SIMP(statut='f',typ='TXM',defaut='XMGRACE',into=("XMGRACE","GNUPLOT")),
+           INTERACTIF      =SIMP(statut='f',typ='TXM',defaut='NON',into=("OUI","NON")),),
+         INFO            =SIMP(statut='f',typ='I',defaut=1,into=( 1, 2 ) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19240,7 +19201,6 @@ MACRO_ELAS_MULT=MACRO(nom="MACRO_ELAS_MULT",op=macro_elas_mult_ops,sd_prod=macro
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2)),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19347,7 +19307,6 @@ MACRO_MATR_AJOU=MACRO(nom="MACRO_MATR_AJOU",op=macro_matr_ajou_ops,sd_prod=macro
          NOEUD_DOUBLE    =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
          AVEC_MODE_STAT  =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
 )
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19445,7 +19404,6 @@ MACRO_MATR_ASSE=MACRO(nom="MACRO_MATR_ASSE",op=macro_matr_asse_ops,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19483,7 +19441,6 @@ MACRO_MISS_3D=MACRO(nom="MACRO_MISS_3D",op=macro_miss_3d_ops,
          UNITE_MODELE_SOL=SIMP(statut='f',typ='I',defaut=27),  
          UNITE_RESU_IMPE =SIMP(statut='f',typ='I',defaut=30),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19575,7 +19532,6 @@ MACRO_MODE_MECA=MACRO(nom="MACRO_MODE_MECA",op=macro_mode_meca_ops,sd_prod=mode_
                                  into=("MASS_EFFE_UN","MASS_GENE",) ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 20/06/2005   AUTEUR BOYERE E.BOYERE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19629,7 +19585,6 @@ MACRO_PROJ_BASE=MACRO(nom="MACRO_PROJ_BASE",op=macro_proj_base_ops,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19655,7 +19610,6 @@ MAJ_CATA=PROC(nom="MAJ_CATA",op=20,
          ELEMENT         =FACT(statut='f',),
 
 )  ;
-
 #& MODIF COMMANDE  DATE 10/10/2005   AUTEUR BOITEAU O.BOITEAU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19754,7 +19708,6 @@ MECA_STATIQUE=OPER(nom="MECA_STATIQUE",op=46,sd_prod=evol_elas,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19819,7 +19772,6 @@ MEMO_NOM_SENSI=PROC(nom="MEMO_NOM_SENSI",op=129,
                        ang="Name of the one fonction"),
 
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19875,7 +19827,6 @@ MODE_ITER_CYCL=OPER(nom="MODE_ITER_CYCL",op=  80,sd_prod=mode_cycl,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19970,7 +19921,6 @@ MODE_ITER_INV=OPER(nom="MODE_ITER_INV",op=  44,sd_prod=mode_iter_inv_prod
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
          TITRE           =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20112,7 +20062,6 @@ MODE_ITER_SIMULT=OPER(nom="MODE_ITER_SIMULT",op=  45,sd_prod=mode_iter_simult_pr
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),        
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20182,7 +20131,6 @@ MODE_STATIQUE=OPER(nom="MODE_STATIQUE",op= 93,sd_prod=mode_stat_prod,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ,) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20216,7 +20164,6 @@ MODI_BASE_MODALE=OPER(nom="MODI_BASE_MODALE",op= 149,sd_prod=mode_meca,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20364,7 +20311,6 @@ MODI_MAILLAGE=OPER(nom="MODI_MAILLAGE",op= 154,sd_prod=maillage_sdaster,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 06/07/2005   AUTEUR GENIAUT S.GENIAUT 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20394,7 +20340,6 @@ MODI_MODELE_XFEM=OPER(nom="MODI_MODELE_XFEM",op= 113,sd_prod=modele_sdaster,docu
     INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2,)),
 
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20429,7 +20374,6 @@ MODI_OBSTACLE=OPER(nom="MODI_OBSTACLE",op=182,sd_prod=obstacle_sdaster,
          PERCEMENT       =SIMP(statut='f',typ='R',defaut=1),  
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
-
 #& MODIF COMMANDE  DATE 12/09/2005   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20513,7 +20457,6 @@ MODI_REPERE=OPER(nom="MODI_REPERE",op=191,sd_prod=modi_repere_prod,reentrant='n'
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20566,7 +20509,6 @@ NORM_MODE=OPER(nom="NORM_MODE",op=  37,sd_prod=norm_mode_prod,
          TITRE      =SIMP(statut='f',typ='TXM',max='**'),
          INFO       =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 01/04/2005   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20611,7 +20553,6 @@ NUME_DDL=OPER(nom="NUME_DDL",op=11,sd_prod=nume_ddl_sdaster,reentrant='n',
          ),
          INFO            =SIMP(statut='f',typ='I',into=(1,2)),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20646,7 +20587,6 @@ NUME_DDL_GENE=OPER(nom="NUME_DDL_GENE",op= 127,sd_prod=nume_ddl_gene,
                NB_VECT     =SIMP(statut='f',typ='I',defaut= 9999 ),
                              ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20673,7 +20613,6 @@ POST_CHAM_XFEM=OPER(nom="POST_CHAM_XFEM",op= 196,sd_prod=resultat_sdaster,
     RESULTAT = SIMP(statut='o',typ=resultat_sdaster),
     NOM_CHAM = SIMP(statut='o',typ='TXM',into=("DEPL","SIEF_ELGA"),)
 );                     
-
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20745,7 +20684,6 @@ POST_DYNA_ALEA=OPER(nom="POST_DYNA_ALEA",op= 132,sd_prod=tabl_post_alea,
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20788,7 +20726,6 @@ POST_DYNA_MODA_T=OPER(nom="POST_DYNA_MODA_T",op= 130,sd_prod=tabl_post_dyna,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21195,7 +21132,6 @@ POST_ELEM=OPER(nom="POST_ELEM",op=107,sd_prod=post_elem_prod,reentrant='f',
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 
  )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21231,7 +21167,6 @@ POST_FATI_ALEA=OPER(nom="POST_FATI_ALEA",op=170,sd_prod=tabl_post_f_alea,reentra
          MATER           =SIMP(statut='o',typ=mater_sdaster),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21310,7 +21245,6 @@ POST_FATIGUE=OPER(nom="POST_FATIGUE",op=136,sd_prod=tabl_post_fatig,reentrant='n
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21378,7 +21312,6 @@ POST_K1_K2_K3=OPER(nom="POST_K1_K2_K3",op=188,sd_prod=tabl_post_k,
                              fr="Vecteur normal au plan de fissure, orienté de la lèvre inférieure vers la lèvre supérieure"),  
          TITRE         =SIMP(statut='f',typ='TXM',max='**'),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21422,7 +21355,6 @@ POST_K_BETA=OPER(nom="POST_K_BETA",op=198,sd_prod=tabl_post_beta,
          ),
          TITRE         = SIMP(statut='f',typ='TXM',max='**'),  
 );
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21447,7 +21379,6 @@ POST_MAIL_XFEM=OPER(nom="POST_MAIL_XFEM",op= 187,sd_prod=maillage_sdaster,
     MODELE  = SIMP(statut='o',typ=modele_sdaster),
     TITRE   = SIMP(statut='f',typ='TXM',max='**'),
 );                     
-
 #& MODIF COMMANDE  DATE 21/03/2005   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21646,7 +21577,6 @@ POST_RCCM=OPER(nom="POST_RCCM",op= 165,sd_prod=tabl_post_rccm,
                                ),
                ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 # ======================================================================
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -21749,7 +21679,6 @@ POST_RELEVE_T=OPER(nom="POST_RELEVE_T",op=51,sd_prod=tabl_post_rele,reentrant='f
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21782,7 +21711,6 @@ POST_SIMPLIFIE=OPER(nom="POST_SIMPLIFIE",op=185,sd_prod=tabl_post_simpli,
            TEMP_ANALYSE    =SIMP(statut='f',typ='R'),  
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21902,7 +21830,6 @@ POST_USURE=OPER(nom="POST_USURE",op=153,sd_prod=tabl_post_usur,reentrant='f',
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21948,7 +21875,6 @@ POST_ZAC=OPER(nom="POST_ZAC",op= 175,sd_prod=mult_elas,reentrant='n',
          CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU")),
 
 )  ;
-
 #& MODIF COMMANDE  DATE 17/10/2005   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22028,7 +21954,6 @@ POURSUITE=MACRO(nom="POURSUITE",op=ops.build_poursuite,repetable='n',
            UNITE           =SIMP(statut='f',typ='I',defaut=15),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22053,7 +21978,6 @@ PRE_GIBI=PROC(nom="PRE_GIBI",op=49,
          UNITE_GIBI      =SIMP(statut='f',typ='I',defaut=19),  
          UNITE_MAILLAGE  =SIMP(statut='f',typ='I',defaut=20),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22079,7 +22003,6 @@ PRE_GMSH=PROC(nom="PRE_GMSH",op=47,
          UNITE_GMSH      =SIMP(statut='f',typ='I',defaut=19),  
          UNITE_MAILLAGE  =SIMP(statut='f',typ='I',defaut=20),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22105,7 +22028,6 @@ PRE_IDEAS=PROC(nom="PRE_IDEAS",op=47,
          UNITE_MAILLAGE  =SIMP(statut='f',typ='I',defaut=20),  
          CREA_GROUP_COUL =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON") ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22139,7 +22061,6 @@ PROD_MATR_CHAM=OPER(nom="PROD_MATR_CHAM",op= 156,sd_prod=prod_matr_cham_prod,
          CHAM_NO         =SIMP(statut='o',typ=(cham_no_depl_r,cham_no_depl_c,cham_no_temp_r,cham_no_pres_c ) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-
 #& MODIF COMMANDE  DATE 11/10/2005   AUTEUR VABHHTS J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22251,7 +22172,6 @@ PROJ_CHAMP=OPER(nom="PROJ_CHAMP",op= 166,sd_prod=proj_champ_prod,reentrant='f',
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22287,7 +22207,6 @@ PROJ_MATR_BASE=OPER(nom="PROJ_MATR_BASE",op=  71,sd_prod=matr_asse_gene_prod,
          MATR_ASSE       =SIMP(statut='f',typ=(matr_asse_depl_r,matr_asse_depl_c) ),
          MATR_ASSE_GENE  =SIMP(statut='f',typ=(matr_asse_gene_r,matr_asse_gene_c) ),
 )  ;
-
 
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -22350,7 +22269,6 @@ PROJ_MESU_MODAL=OPER(nom="PROJ_MESU_MODAL",op= 193,
              ),
 
           ); 
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22390,7 +22308,6 @@ PROJ_SPEC_BASE=OPER(nom="PROJ_SPEC_BASE",op= 146,sd_prod=tabl_intsp,reentrant='n
          ORIG_AXE        =SIMP(statut='f',typ='R',min=3,max=3 ),  
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22427,7 +22344,6 @@ PROJ_VECT_BASE=OPER(nom="PROJ_VECT_BASE",op=  72,sd_prod=vect_asse_gene_prod,
          VECT_ASSE       =SIMP(statut='f',typ=(cham_no_depl_r,cham_no_depl_c) ),
          VECT_ASSE_GENE  =SIMP(statut='f',typ=(vect_asse_gene_r,vect_asse_gene_c) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22474,7 +22390,6 @@ RECA_WEIBULL=OPER(nom="RECA_WEIBULL",op= 197,sd_prod=tabl_reca_weib,
          ITER_GLOB_MAXI  =SIMP(statut='f',typ='I',defaut= 10 ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ,) ),
                        )  ;
-
 #& MODIF COMMANDE  DATE 04/07/2005   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22707,7 +22622,6 @@ RECU_FONCTION=OPER(nom="RECU_FONCTION",op=90,sd_prod=recu_fonction_prod,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22737,7 +22651,6 @@ RECU_GENE=OPER(nom="RECU_GENE",op=  76,sd_prod=vect_asse_gene_r,reentrant='n',
          CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF" ,into=("ABSOLU","RELATIF") ),
          PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-3 ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22767,7 +22680,6 @@ RECU_TABLE=OPER(nom="RECU_TABLE",op= 174,sd_prod=table_sdaster,
          NOM_PARA        =SIMP(statut='f',typ='TXM',max='**'),  
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22805,7 +22717,6 @@ RESO_GRAD=OPER(nom="RESO_GRAD",op=  84,sd_prod=reso_grad_prod,
          RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1E-6 ),  
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22847,7 +22758,6 @@ RESO_LDLT=OPER(nom="RESO_LDLT",op=15,sd_prod=reso_ldlt_prod,reentrant='f',
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-
 #& MODIF COMMANDE  DATE 30/06/2004   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22920,7 +22830,6 @@ REST_BASE_PHYS=OPER(nom="REST_BASE_PHYS",op=  75,sd_prod=rest_base_phys_prod,
          SECTEUR         =SIMP(statut='f',typ='I',defaut= 1 ),  
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22965,8 +22874,7 @@ REST_SPEC_PHYS=OPER(nom="REST_SPEC_PHYS",op= 148,sd_prod=tabl_intsp,
                                into=("DIAG_TOUT","DIAG_DIAG","TOUT_TOUT","TOUT_DIAG") ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-
-#& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 08/11/2005   AUTEUR ASSIRE A.ASSIRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -22991,12 +22899,12 @@ STANLEY=MACRO(nom="STANLEY",op=stanley_ops,sd_prod=None,
                        reentrant='n',
               UIinfo={"groupes":("Outils métier",)},
                        fr="Outil de post-traitement interactif Stanley ",
-         RESULTAT        =SIMP(statut='f',typ=(evol_elas,evol_noli,evol_ther) ),
+         RESULTAT        =SIMP(statut='f',typ=(evol_elas,evol_noli,evol_ther,mode_meca,mode_stat,dyna_harmo,dyna_trans) ),
          MODELE          =SIMP(statut='f',typ=modele_sdaster),
          CHAM_MATER      =SIMP(statut='f',typ=cham_mater),
          CARA_ELEM       =SIMP(statut='f',typ=cara_elem),
+         DISPLAY         =SIMP(statut='f',typ='TXM'),
 )  ;
-
 #& MODIF COMMANDE  DATE 07/10/2005   AUTEUR CIBHHPD L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23319,7 +23227,6 @@ STAT_NON_LINE=OPER(nom="STAT_NON_LINE",op=70,sd_prod=evol_noli,
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
  )
 
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23362,7 +23269,6 @@ TEST_FICHIER=MACRO(nom="TEST_FICHIER", op=test_fichier_ops,
 
    INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23450,7 +23356,6 @@ TEST_FONCTION=PROC(nom="TEST_FONCTION",op= 135,
            ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 # RESPONSABLE VABHHTS J.PELLET
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -23620,7 +23525,6 @@ TEST_RESU=PROC(nom="TEST_RESU",op=23,
            VERSION         =SIMP(statut='f',typ='TXM' ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23681,7 +23585,6 @@ TEST_TABLE=PROC(nom="TEST_TABLE",op= 177,
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
          ),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23774,7 +23677,6 @@ THER_LINEAIRE=OPER(nom="THER_LINEAIRE",op=25,sd_prod=evol_ther,reentrant='f',
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',into=(1,2)),
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23890,7 +23792,6 @@ THER_NON_LINE=OPER(nom="THER_NON_LINE",op= 186,sd_prod=evol_ther,reentrant='f',
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 
 )  ;
-
 #& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23956,7 +23857,6 @@ THER_NON_LINE_MO=OPER(nom="THER_NON_LINE_MO",op= 171,sd_prod=evol_ther,
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-
 
 
 
