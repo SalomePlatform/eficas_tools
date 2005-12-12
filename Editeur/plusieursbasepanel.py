@@ -327,10 +327,10 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
 	    for v in valeurentree.split(','):
 	      vsimple,validite=self.node.item.eval_valeur(v)
 	      # Pn If ajoute  pour le panneau "double"
-	      if isinstance(vsimple,LASSD) : 
-		 commentaire = "impossible de mélanger reels et liste prédéfinie"
-		 validite = 0
-		 break 
+	      #if isinstance(vsimple,LASSD) : 
+	      #	 commentaire = "impossible de mélanger reels et liste prédéfinie"
+	      #  validite = 0
+	      #	 break 
 	      if validite :
 		 valeurs.append(vsimple)
 	      else:
