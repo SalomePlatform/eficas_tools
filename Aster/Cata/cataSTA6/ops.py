@@ -18,11 +18,6 @@
 # ======================================================================
 
 # Modules Python
-print "EEEEEEEEEEEEEEEEEEEEEEEEE"
-print "EEEEEEEEEEEEEEEEEEEEEEEEE"
-print "EEEEEEEEEEEEEEEEEEEEEEEEE"
-print "EEEEEEEEEEEEEEEEEEEEEEEEE"
-print "EEEEEEEEEEEEEEEEEEEEEEEEE"
 import types
 import string,linecache,os,traceback,re
 
