@@ -301,7 +301,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       pos=self.object.parent.etapes.index(self.object)
       parent=self.object.parent
       self.object.parent.suppentite(self.object)
-      addentite(commande_comment,pos)
+      parent.addentite(commande_comment,pos)
 
       return commande_comment
 
