@@ -61,7 +61,7 @@ def main():
    copyfiles('Cata/cataSTA76',os.path.join(path_distrib,'Aster','Cata','cataSTA76'),['*.py'])
    copyfiles('Cata/cataSTA76/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA76','Macro'),['*.py'])
    copyfiles('Cata/cataSTA81',os.path.join(path_distrib,'Aster','Cata','cataSTA81'),['*.py'])
-   copyfiles('Cata',os.path.join(path_distrib,'Aster','Cata',['*c_clefs_docu'])
+   copyfiles('Cata',os.path.join(path_distrib,'Aster','Cata'),['*c_clefs_docu'])
    copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster'),['aster.py',])
 
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
