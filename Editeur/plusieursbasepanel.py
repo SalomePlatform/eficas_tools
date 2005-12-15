@@ -141,6 +141,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       if len(l_valeurs) > 0 :
           liste_marque=l_valeurs[-1]
           self.Liste_valeurs.surligne(liste_marque)
+	  self.selectValeur(liste_marque)
       # boutons Accepter et Annuler
       bouton_accepter = Button(self.frame_boutons,
                                text='Valider',

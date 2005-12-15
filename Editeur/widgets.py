@@ -887,7 +887,10 @@ class ListeChoix :
         return lign
 
     def remove_selected_item(self):
-        index=self.MCbox.index(self.selection[1])
+	try :
+           index=self.MCbox.index(self.selection[1])
+	except :
+           index=self.MCbox.index(self.dico_labels[self.arg_selected] )
         lign,col=map(int,string.split(index,'.'))
         del self.liste[lign-1]
         self.affiche_liste()

@@ -139,7 +139,7 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
       """      
       PLUSIEURS_BASE_Panel.makeValeurPage(self,page)
       self.c = Button( self.frame_choix, text='Visualiser',command=self.displayInSalomeGeom )      
-      self.c.place( relx=0, rely=0.55,relwidth=0.55)
+      self.c.place( relx=0.3, rely=0.0,relwidth=0.55)
       
       #self.c.place(relx=0.08,rely=0.55,relwidth=0.35)
       #self.c.place(relx=0.08,rely=0.55 )      

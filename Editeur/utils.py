@@ -118,7 +118,8 @@ def init_rep_cata_dev(fic_cata,rep_goal):
   try :
     if not os.path.isdir(rep_goal) :
       os.mkdir(rep_goal)
-    texte_entete = get_entete_cata(fic_cata)
+    #texte_entete = get_entete_cata(fic_cata)
+    texte_entete=""
     # rep_goal doit contenir les catalogues du développeur sous la forme *.capy
     # il faut créer le catalogue développeur par concaténation de entete,declaration_concepts
     # et de tous ces fichiers
