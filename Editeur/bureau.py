@@ -667,6 +667,7 @@ class BUREAU:
             showerror("Impossible de visualiser le fichier initial",
                       "EFICAS ne peut visualiser le fichier initial.\nIl s'agit d'un nouveau JDC")
             return
+      os.chdir(self.appli.dir)
       f=open(self.JDCDisplay_courant.fichier,'r')
       texte=f.read()
       f.close()
