@@ -34,6 +34,7 @@ class STATUSBAR:
                                         text='',
                                         justify='left',
                                         relief='sunken',
+					height=2,
                                         bg='gray95')
       self.label.pack(side='left',expand=1,fill='both')
 

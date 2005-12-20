@@ -491,6 +491,13 @@ class MCSIMP(I_OBJECT.OBJECT):
         if self.jdc:
            self.jdc.mc_globaux[self.nom]=self
 
+  def nbrColonnes(self):
+     genea = self.get_genealogie()
+     if "VALE_C" in genea and "DEFI_FONCTION" in genea : return 3
+     if "VALE" in genea and "DEFI_FONCTION" in genea : return 2
+     print dir(self)
+     return 0
+
 #--------------------------------------------------------------------------------
  
 #ATTENTION SURCHARGE : toutes les methodes ci apres sont des surcharges du Noyau et de Validation

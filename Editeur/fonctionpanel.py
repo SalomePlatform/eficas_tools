@@ -177,6 +177,7 @@ class FONCTION_Panel(PLUSIEURS_BASE_Panel):
         if (self.nb_valeurs==3):
 	    val3=doublevaleur_entree.split(',')[2] 
             saisie=(val1,val2,val3)
+        self.entry.delete(0,END)
       except :
         commentaire = "%s n est pas un tuple de la forme (x,y)" %`doublevaleur_entree`
         if (self.nb_valeurs==3):
