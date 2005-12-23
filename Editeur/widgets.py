@@ -683,6 +683,8 @@ class ListeChoix :
         self.page = page
         self.liste = liste
         self.dico_labels={}
+        self.nBlabel = 0
+        self.dico_place={}
         self.selection = None
         self.liste_commandes = liste_commandes
         self.liste_marques = liste_marques
@@ -733,6 +735,8 @@ class ListeChoix :
         liste_labels=[]
         self.MCbox.config(state=NORMAL)
         self.MCbox.delete(1.0,END)
+        self.nBlabel = 0
+        self.dico_place={}
         for objet in self.liste :
           if type(objet) == types.InstanceType:
               try:
@@ -765,6 +769,8 @@ class ListeChoix :
                         text = mot,
                         fg = 'black',bg = 'gray95',justify = 'left')
           self.dico_labels[mot]=label
+          self.dico_place[mot]=self.nBlabel
+          self.nBlabel=self.nBlabel+1
           liste_labels.append(label)
           self.MCbox.window_create(END,
                                    window=label,
@@ -827,6 +833,24 @@ class ListeChoix :
            raison=str(e)
            showerror(raison.split('\n')[0],raison)
 
+    def afficheMot(self,mot):
+        """ Pour contourner le bug sur l index """
+        """ on commence par la methode dite normale """
+        """ puis par la methode de contournement """
+        """ puis rien du tout """
+        #try :
+        if ( 1 == 1 ):
+           try:
+             labelsuivant=self.dico_labels[motsuivant]
+             index = self.MCbox.index(labelsuivant)
+             self.MCbox.see(index)
+           except :
+             posmot=self.dico_place[mot]
+             totale=self.nBlabel + 0.0
+             self.MCbox.yview_moveto(posmot/totale)
+        else :
+             pass
+
     def selectNextItem(self,mot,label):
         index=self.liste.index(mot)
         indexsuivant=index+1
@@ -834,8 +858,9 @@ class ListeChoix :
 	   indexsuivant=0
         motsuivant=self.liste[indexsuivant]
         labelsuivant=self.dico_labels[motsuivant]
-        index = self.MCbox.index(labelsuivant)
-        self.MCbox.see(index)
+        #index = self.MCbox.index(labelsuivant)
+        #self.MCbox.see(index)
+        self.afficheMot(motsuivant)
         self.selectthis(motsuivant,labelsuivant,self.selection[2],)
         self.dontselect=1
            
@@ -844,8 +869,9 @@ class ListeChoix :
         indexprec=index-1
         motprec=self.liste[indexprec]
         labelprec=self.dico_labels[motprec]
-        index = self.MCbox.index(labelprec)
-        self.MCbox.see(index)
+        #index = self.MCbox.index(labelprec)
+        #self.MCbox.see(index)
+        self.afficheMot(motprec)
         self.selectthis(motprec,labelprec,self.selection[2],)
         self.dontselect=1
         
@@ -901,11 +927,13 @@ class ListeChoix :
         if self.arg_selected != '' : self.deselectitem(self.dico_labels[self.arg_selected])
         filtre = self.entry.get()+"*"
         FILTRE = string.upper(filtre)
+        self.dontselect=0
         for arg in self.liste :
             if fnmatch.fnmatch(arg,filtre) or fnmatch.fnmatch(arg,FILTRE) :
                 label=self.dico_labels[arg]
-                index = self.MCbox.index(label)
-                self.MCbox.see(index)
+                #index = self.MCbox.index(label)
+                #self.MCbox.see(index)
+                self.afficheMot(arg)
                 self.selectitem(arg,label,self.selection[2])
                 break
 
