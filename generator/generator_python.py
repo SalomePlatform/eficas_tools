@@ -488,6 +488,8 @@ class PythonGenerator:
             s = s + ','
          if len(obj.valeur) > 1:
             s = '(' + s + '),'
+	 if obj.nbrColonnes() :
+	    s=self.formatColonnes(obj.nbrColonnes(),s)
       else :
          val=obj.valeur
          if type(val) == types.InstanceType :
@@ -524,3 +526,19 @@ class PythonGenerator:
       return s
 
 
+   def formatColonnes(self,nbrColonnes,text):
+      try :
+      #if 1 == 1 :
+        liste=text.split(",")
+        indice=0
+	textformat=""
+        while ( indice < len(liste) -2  ) :
+          for l in range(nbrColonnes) :
+	    textformat=textformat+liste[indice]+","
+	    indice=indice+1
+	  textformat=textformat+"\n"
+	textformat=textformat+"),"
+      except :
+      #else :
+         textformat=text
+      return textformat
