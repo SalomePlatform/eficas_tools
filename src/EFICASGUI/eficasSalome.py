@@ -62,7 +62,21 @@ msgErrorAddJdcInSalome     = "Erreur dans l'export du fichier de commande dans l
 msgErrorDisplayShape       = "Erreur dans l'affichage de la forme géométrique sélectionnée"
 
 
+# couleur pour visualisation des géometrie CS_CBO
+COLORS = ( studyManager.RED, 
+         studyManager.GREEN,
+         studyManager.BLUE,
+         studyManager.SANDY,
+         studyManager.ORANGE,
+         studyManager.PURPLE,
+         studyManager.DARK_RED,
+         studyManager.DARK_GREEN,
+         studyManager.DARK_BLUE,
+         studyManager.YELLOW,
+         studyManager.PINK,
+         studyManager.CYAN )
 
+LEN_COLORS = len( COLORS )
 
     
 
@@ -136,6 +150,10 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         self.mainShapeEntries = {} #eficas ( clé = identifiant du JDC ), une mainshape par fichier ouvert.    
         self.subShapes        = {} #dictionnaire des sous-géométrie de la géométrie principale ( clé = entry, valeur = name ) 
         #----------------------------------------------------------------------    
+        
+        
+        self.icolor = 0  # compteur pour mémoriser la couleur courante
+        
         
     def quit(self): 
         global appli        
@@ -402,9 +420,14 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             atLeastOneStudy = self.__studySync()
             if not atLeastOneStudy:
                 return ok, msgError
-            salome.sg.EraseAll()
-            print 'displayShapestrGeomShape shapeName -> ', shapeName 
-            ok = studyManager.palStudy.displayShapeByName( shapeName )
+            
+                                     
+            #salome.sg.EraseAll()
+            print 'displayShapestrGeomShape shapeName -> ', shapeName             
+            current_color = COLORS[ self.icolor % LEN_COLORS ]
+            ok = studyManager.palStudy.displayShapeByName( shapeName, current_color )
+            self.icolor = self.icolor + 1 
+            
             if not ok:
                 msgError = msgErrorDisplayShape
         except:                    
