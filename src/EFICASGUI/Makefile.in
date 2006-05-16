@@ -40,12 +40,5 @@ eficasSalome.py \
 EXPORT_PYSCRIPTS+=eficas_etude.py
 
 
-# additionnal information to compil and link file
-
-CPPFLAGS += $(QT_INCLUDES) $(VTK_INCLUDES) $(OCC_INCLUDES) $(PYTHON_INCLUDES) $(SIP_INCLUDES)
-CPPFLAGS += -I$(top_builddir)/SALOME/src/SALOME_PYQT
-CXXFLAGS += 
-
-LDFLAGS += $(PYTHON_LIBS) $(PYQT_LIBS) -lSalomeGUI 
 
 @CONCLUDE@
