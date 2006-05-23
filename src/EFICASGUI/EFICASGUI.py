@@ -168,8 +168,8 @@ def runEficasHomard():
 
 def runEficasFichier():
    """
-   Lancement d'eficas à partir d'un fichier sélectionné dans l'arbre
-   d'étude par clique droit de la souris. 
+   Lancement d'eficas pour ASTER
+   si un fichier est sélectionné, il est ouvert dans eficas
    """
    print "runEficasFichier"
    fileName = None
@@ -177,29 +177,33 @@ def runEficasFichier():
    a=salome.sg.getAllSelected()
    if len(a) == 1:
       #studyManager.palStudy.setCurrentStudyID( currentStudyId )
-      #boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_ASTER",a[0])
+      #boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_ASTER",a[0])      
       selectedEntry = a[0]
       
       aType, aValue = studyManager.palStudy.getTypeAndValue( selectedEntry )
-      if aType == studyManager.FICHIER_EFICAS_ASTER:
+      if aType == studyManager.FICHIER_EFICAS_ASTER:        
         fileName = aValue
         code     = "ASTER"
-      elif aType == studyManager.FICHIER_EFICAS_HOMARD:
+      elif aType == studyManager.FICHIER_EFICAS_HOMARD:        
         fileName = aValue
-        code     = "HOMARD"        
+        code     = "HOMARD"
+   else:        
+        code = "ASTER"            
+        
    if code:
         #eficasSalome.runEficas(code,attr,studyId=currentStudyId)         
-        #desktop=sgPyQt.getDesktop()
+        #desktop=sgPyQt.getDesktop()        
         eficasSalome.runEficas( code, fileName )
         
+
    
 
 # Partie applicative
 
 dict_command={
-                941:runEficas,                
+                941:runEficasFichier,# runEficas,
                 946:runEficaspourHomard,
-                4041:runEficas,                
+                4041:runEficasFichier, #runEficas,
                 4046:runEficaspourHomard,
                 9042:runEficasFichier,
              }

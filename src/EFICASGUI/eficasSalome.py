@@ -108,9 +108,10 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         if Editeur.__dict__.has_key( 'session' ):
             print 'CS_pbruno has_key session'
             from Editeur import session
-            eficasArg = sys.argv            
+            eficasArg = []
+            eficasArg += sys.argv            
             if fichier:
-                eficasArg += [ fichier ]            
+                eficasArg += [ fichier ]
             session.parse( eficasArg )
                         
         
