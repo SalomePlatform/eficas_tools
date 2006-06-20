@@ -170,10 +170,10 @@ valeurs seront effectivement prises en compte."""
     args = self.node.item.get_args()
     if args:
         texte_args=""
-	for i in args :
-	    if texte_args != "" :
-	       texte_args = texte_args +","
-	    texte_args=texte_args + i
+        for i in args :
+            if texte_args != "" :
+               texte_args = texte_args +","
+            texte_args=texte_args + i
         self.entry_arg.insert(END,texte_args)
     corps = self.node.item.get_corps()
     if corps :
@@ -219,8 +219,8 @@ valeurs seront effectivement prises en compte."""
         """
         Lance la vérification du corps de formule présent dans entry_exp
         """
-	new_nom = self.entry_nom.get()
-	new_typ="REEL"
+        new_nom = self.entry_nom.get()
+        new_typ="REEL"
         new_arg = self.entry_arg.get()
         new_exp = self.entry_exp.get()
         if new_exp == '':
@@ -265,7 +265,7 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
       Ce nom dépend de la validité de l'objet
       """
       if self.object.isactif():
-	self.object.state="modified"
+        self.object.state="modified"
         if self.object.isvalid():
           return "ast-green-square"
         else:
@@ -308,17 +308,17 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
       """
       args=""
       for mot in self.object.mc_liste:
-	  if mot.nom == 'NOM_PARA':
-	     args=mot.valeur
-	     break
+          if mot.nom == 'NOM_PARA':
+             args=mot.valeur
+             break
       if args :
           if args[0] == "(" and args[-1] ==")":
-	     args=args[1:-1]
-	  # transforme en tuple si ce n est pas déjà le casa
-	  try :
-	     args=string.split(args,',')
-	  except :
-	     pass
+             args=args[1:-1]
+          # transforme en tuple si ce n est pas déjà le casa
+          try :
+             args=string.split(args,',')
+          except :
+             pass
       return args
 
     def get_corps(self):
@@ -327,9 +327,9 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
       """
       corps=""
       for mot in self.object.mc_liste:
-	  if mot.nom == 'VALE':
-	     corps=mot.valeur
-	     break
+          if mot.nom == 'VALE':
+             corps=mot.valeur
+             break
       return corps
 
 
@@ -376,14 +376,14 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
         """
         Lance la vérification de FORMULE passée en argument
         """
-	return self.object.verif_formule(formule=formule)
+        return self.object.verif_formule(formule=formule)
 
 
     def verif_formule_python(self,formule):
         """
         Lance la vérification de FORMULE passée en argument
         """
-	return self.object.verif_formule_python(formule=formule)
+        return self.object.verif_formule_python(formule=formule)
 
 import Accas
 treeitem =FORMULETreeItem

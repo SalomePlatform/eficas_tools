@@ -263,7 +263,7 @@ class JDCDISPLAY:
          item=self.appli.noeud_a_editer.item
          self.appli.noeud_a_editer.delete()
          child.item.update(item)
-	 #test,mess = child.item.nomme_sd(nom)
+         #test,mess = child.item.nomme_sd(nom)
          child.select()
       # on rend la copie à nouveau possible en libérant le flag edit
       self.appli.edit="copier"

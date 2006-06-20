@@ -94,7 +94,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
                   from uniqueassdpanel import UNIQUE_ASSD_Panel
                   from uniqueassdpanel import UNIQUE_ASSD_Panel_Reel
                   if 'R' in self.GetType():
-		     self.panel = UNIQUE_ASSD_Panel_Reel
+                     self.panel = UNIQUE_ASSD_Panel_Reel
                   else :
                      self.panel = UNIQUE_ASSD_Panel
               else:
@@ -105,7 +105,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
                       self.panel = UNIQUE_COMP_Panel
                   else:
                       # on attend un entier, un réel ou une string
-		      from uniquebasepanel import UNIQUE_BASE_Panel
+                      from uniquebasepanel import UNIQUE_BASE_Panel
                       self.panel = UNIQUE_BASE_Panel
       # cas particulier des fonctions
       genea = self.get_genealogie()
@@ -119,12 +119,12 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       if hasattr( self.appli, 'salome' ):
           import panelsSalome
 
-	  self.select_noeud_maille=0
-	  self.clef_fonction="SALOME"
-	  for i in range(0,len( genea )) :
-	     self.clef_fonction=self.clef_fonction+"_"+ genea[i]
-	     if genea[i] == "GROUP_NO" or genea[i] == "GROUP_MA":
-	        self.select_noeud_maille=1
+          self.select_noeud_maille=0
+          self.clef_fonction="SALOME"
+          for i in range(0,len( genea )) :
+             self.clef_fonction=self.clef_fonction+"_"+ genea[i]
+             if genea[i] == "GROUP_NO" or genea[i] == "GROUP_MA":
+                self.select_noeud_maille=1
 
           recherche=panelsSalome.dict_classes_salome[self.panel]
           if hasattr(recherche,self.clef_fonction):
@@ -140,9 +140,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   #
   #-----------------------------------------------
   # is_list
-  # get_into		a priori inutile --> commentee
+  # get_into                a priori inutile --> commentee
   # has_into
-  # wait_into		a priori inutile --> commentee
+  # wait_into                a priori inutile --> commentee
   # GetMinMax
   # GetMultiplicite
   # GetIntervalle
@@ -165,7 +165,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       min,max = self.GetMinMax()
       assert (min <= max)
       if max > 1 :
-		is_a_list=1
+                is_a_list=1
       # Dans le cas avec validateurs, pour que le mot cle soit considéré
       # comme acceptant une liste, il faut que max soit supérieur a 1
       # ET que la méthode is_list du validateur retourne 1. Dans les autres cas
@@ -197,14 +197,14 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
           Dans le cas sans validateur, l'information est donnée par l'attribut into
           de la definition du mot cle.
-	  Dans le cas avec validateurs, pour que le mot cle soit considéré
+          Dans le cas avec validateurs, pour que le mot cle soit considéré
           comme proposant un choix, il faut que into soit présent OU
           que la méthode has_into du validateur retourne 1. Dans les autres cas
           on retournera 0 (ne propose pas de choix)
       """
       has_an_into=0
       if self.definition.into:
-      	 has_an_into=1
+               has_an_into=1
       elif self.definition.validators :
          has_an_into= self.definition.validators.has_into()
       return has_an_into
@@ -259,45 +259,38 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
     
   def get_liste_possible(self,listeActuelle=[]):
       if hasattr(self.definition.validators,'into'):
-	 self.get_definition().into=self.definition.validators.into 
-      valeurspossibles = self.get_definition().into
-      # CCAR : Ne serait-il pas preferable d'appeler get_into ?
-      #valeurspossibles=self.get_into(listeActuelle)
+         valeurspossibles = self.definition.validators.into 
+      else:
+         valeurspossibles = self.get_definition().into
 
+      #On ne garde que les items valides
       listevalideitem=[]
       for item in valeurspossibles:
           encorevalide=self.valide_item(item)
           if encorevalide :
              listevalideitem.append(item)
-      # on ne verifie pas la liste des choix si max = 1 
-      # (sinon cela enleve tous les choix possibles)
-      min,max=self.GetMinMax()
-      if max != 1 : 
-         listevalideliste=[]
-         for item in listevalideitem:
-             listetravail=[]
-             for item2 in listeActuelle : listetravail.append(item2)
-             encorevalide=self.valide_liste_partielle(item,listetravail)
-             if encorevalide :
-                listevalideliste.append(item)
-      else :
-         listevalideliste=listevalideitem
+
+      #on ne garde que les choix possibles qui passent le test de valide_liste_partielle
+      listevalideliste=[]
+      for item in listevalideitem:
+          encorevalide=self.valide_liste_partielle(item,listeActuelle)
+          if encorevalide :
+              listevalideliste.append(item)
       return listevalideliste
 
   def get_liste_param_possible(self):
-  # 
       liste_param=[]
       for param in self.object.jdc.params:
-	  encorevalide=self.valide_item(param.valeur)
+          encorevalide=self.valide_item(param.valeur)
           if encorevalide:
-	     type_param=param.valeur.__class__.__name__
-	     for typ in self.definition.type:
-		 if typ=='R':
-		     liste_param.append(param)
-		 if typ=='I' and type_param=='int':
-		     liste_param.append(param)
-		 if typ=='TXM' and type_param=='str':
-		     liste_param.append(repr(param))
+             type_param=param.valeur.__class__.__name__
+             for typ in self.definition.type:
+                 if typ=='R':
+                     liste_param.append(param)
+                 if typ=='I' and type_param=='int':
+                     liste_param.append(param)
+                 if typ=='TXM' and type_param=='str':
+                     liste_param.append(repr(param))
       return liste_param
 
   #--------------------------------------------------
@@ -315,25 +308,28 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def valide_item(self,item):
       """
-	On fait un try except pour les erreurs de type (exple
-	on rentre 1 pour une chaine de caracteres
+        On fait un try except pour les erreurs de type (exple
+        on rentre 1 pour une chaine de caracteres
       """
       valide=1
       if self.definition.validators :
          try :
             valide=self.definition.validators.verif_item(item)
          except :
-	    valide = 0
+            valide = 0
       return valide
      
   def valide_liste_partielle(self,item,listecourante):
-      valeur=listecourante
+      #On protege la liste en entree en la copiant
+      valeur=listecourante[:]
       valeur.append(item)
-      valeur = tuple(valeur)
       return self.object.valid_valeur_partielle(valeur)
 
   def valide_liste_complete (self,valeur):
       return self.object.valid_valeur(valeur)
+
+  def valide_val (self,valeur):
+      return self.object.valid_val(valeur)
 
   def info_erreur_item(self) :
       commentaire=""
@@ -369,13 +365,13 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   # Autres ...
   #
   #---------------------------------------------------
-  # SetText 	a priori inutilisee --> commentee
+  # SetText         a priori inutilisee --> commentee
   # GetIconName
   # GetText
   # getval     a  priori inutilisee --> commentee
   # set_valeur_co
   # get_sd_avant_du_bon_type
-  # verif	a  priori inutilisee --> commentee
+  # verif        a  priori inutilisee --> commentee
   # delete_valeur_co
 
   #def SetText(self, text):
@@ -501,9 +497,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       boo=0
       if len(self.object.definition.type) > 1 :
          if self.wait_reel() :
-	    boo = 1
-	 if 'I' in self.object.definition.type :
-	    boo = 1
+            boo = 1
+         if 'I' in self.object.definition.type :
+            boo = 1
       return boo
 
    
@@ -524,6 +520,14 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   # traite_reel
 
   def eval_valeur(self,valeur):
+      """ Lance l'interprétation de 'valeur' (chaîne de caractères) comme valeur de self :
+             - retourne l'objet associé si on a pu interpréter (entier, réel, ASSD,...)
+             - retourne 'valeur' (chaîne de caractères) sinon
+      """
+      newvaleur=self.eval_val(valeur)
+      return newvaleur,1
+
+  def eval_valeur_BAK(self,valeur):
       """ Lance l'interprétation de 'valeur' (chaîne de caractères) comme valeur
       de l'objet pointé par self :
         - retourne l'objet associé si on a pu interpréter (entier, réel, ASSD,...)
@@ -538,26 +542,26 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
              newvaleur,validiteitem=self.eval_valeur_item(item)
              valeurretour.append(newvaleur)
              if validiteitem == 0:
-		validite=0
+                validite=0
       else :
          valeurretour,validite= self.eval_valeur_item(valeur)
       if validite == 0 :
-	 valeurretour = None
+         valeurretour = None
       return valeurretour,validite
 
   def eval_valeur_item(self,valeur):
       """ Lance l'interprétation de 'valeur' qui doit ne pas etre un tuple 
-	  - va retourner la valeur de retour et la validite
+          - va retourner la valeur de retour et la validite
             selon le type de l objet attendu
           - traite les reels et les parametres 
       """ 
       #print "eval_valeur_item",valeur
       if valeur==None or valeur == "" :
-	 return None,0
+         return None,0
       validite=1
       if self.wait_reel():
              valeurinter = self.traite_reel(valeur)
-	     if valeurinter != None :
+             if valeurinter != None :
                 valeurretour,validite= self.object.eval_valeur(valeurinter)
              else:
                 valeurretour,validite= self.object.eval_valeur(valeur)
@@ -568,7 +572,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       #print "eval_valeur_item",valeurretour,validite
 
       if validite == 0:
-	 if type(valeur) == types.StringType and self.object.wait_TXM():
+         if type(valeur) == types.StringType and self.object.wait_TXM():
             essai_valeur="'" + valeur + "'"
             valeurretour,validite= self.object.eval_valeur(essai_valeur)
 
@@ -587,7 +591,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
             #validite=0
       # on est dans le cas où on a évalué et où on n'aurait pas du
       if self.object.wait_TXM() :
-	  if type(valeurretour) != types.StringType:
+          if type(valeurretour) != types.StringType:
              valeurretour=str(valeur)
              validite=1
       return valeurretour,validite
@@ -612,8 +616,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def is_param(self,valeur) :
       for param in self.jdc.params:
-	  if (repr(param) == valeur):
-	     return 1
+          if (repr(param) == valeur):
+             return 1
       return 0
 
   def traite_reel(self,valeur):
@@ -633,16 +637,16 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       if string.find(valeur,'.') == -1 :
           # aucun '.' n'a été trouvé dans valeur --> on en rajoute un à la fin
           if (self.is_param(valeur)):
-	      return valeur
+              return valeur
           else:
-	      if string.find(valeur,'e') != -1:
-	         # Notation scientifique ?
-		 try :
-	            r=eval(valeur)
-		    return valeur
-		 except :
-		    return None
-	      else :
+              if string.find(valeur,'e') != -1:
+                 # Notation scientifique ?
+                 try :
+                    r=eval(valeur)
+                    return valeur
+                 except :
+                    return None
+              else :
                  return valeur+'.'
       else:
           return valeur

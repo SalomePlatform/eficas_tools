@@ -17,13 +17,12 @@ class TestMCSimpCase(unittest.TestCase):
       o=cata((1,2,'aa','bb',7,'cc'),'mcs1',None)
       cr=o.report()
       expected_cr="""Mot-clé simple : mcs1
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   ! 'aa' n'est pas d'un type autorisé !
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   ! Nombre d'arguments de (1, 2, 'aa', 'bb', 7, 'cc') incorrect pour mcs1 (min = 1, !
-   ! max = 5)                                                                        !
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! 'aa' n'est pas d'un type autorisé: ('I',) !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! Nombre d'arguments de (1, 2, 'aa', 'bb', 7, 'cc') incorrect (min = 1, max = 5) !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Fin Mot-clé simple : mcs1
 """
       self.assertEqual(str(cr) , expected_cr,msg='Erreur :\n%s\n!=\n%s' % (str(cr),expected_cr))
@@ -33,9 +32,9 @@ Fin Mot-clé simple : mcs1
       o=cata((1,2,'aa','bb',7,'cc'),'mcs1',None)
       cr=o.report()
       expected_cr="""Mot-clé simple : mcs1
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   ! 'aa' n'est pas d'un type autorisé !
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! 'aa' n'est pas d'un type autorisé: ('I',) !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Fin Mot-clé simple : mcs1
 """
       self.assertEqual(str(cr) , expected_cr,msg='Erreur :\n%s\n!=\n%s' % (str(cr),expected_cr))
@@ -45,9 +44,9 @@ Fin Mot-clé simple : mcs1
       o=cata((1,2,7,3,4,5,6),'mcs1',None)
       cr=o.report()
       expected_cr="""Mot-clé simple : mcs1
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   ! La valeur : 3  n'est pas permise pour le mot-clé : mcs1 !
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! La valeur : 3  ne fait pas partie des choix possibles (1, 2, 7) !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Fin Mot-clé simple : mcs1
 """
       self.assertEqual(str(cr) , expected_cr,msg='Erreur :\n%s\n!=\n%s' % (str(cr),expected_cr))
@@ -57,9 +56,9 @@ Fin Mot-clé simple : mcs1
       o=cata((1,2,7,3,4,5,6),'mcs1',None)
       cr=o.report()
       expected_cr="""Mot-clé simple : mcs1
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   ! La valeur : 7  du mot-clé  mcs1  est en dehors du domaine de validité [ 6 , 6 ] !
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! La valeur : 7 est en dehors du domaine de validité [ ** , 6 ] !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Fin Mot-clé simple : mcs1
 """
       self.assertEqual(str(cr) , expected_cr,msg='Erreur :\n%s\n!=\n%s' % (str(cr),expected_cr))
@@ -69,13 +68,12 @@ Fin Mot-clé simple : mcs1
       o=cata((1,2,7,3,4,5,6),'mcs1',None)
       cr=o.report()
       expected_cr="""Mot-clé simple : mcs1
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   ! La valeur : 7  du mot-clé  mcs1  est en dehors du domaine de validité [ 6 , 6 ] !
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   ! Nombre d'arguments de (1, 2, 7, 3, 4, 5, 6) incorrect pour mcs1 (min = 1, max = !
-   ! 6)                                                                              !
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! La valeur : 7 est en dehors du domaine de validité [ ** , 6 ] !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! Nombre d'arguments de (1, 2, 7, 3, 4, 5, 6) incorrect (min = 1, max = 6) !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Fin Mot-clé simple : mcs1
 """
       self.assertEqual(str(cr) , expected_cr,msg='Erreur :\n%s\n!=\n%s' % (str(cr),expected_cr))
@@ -85,16 +83,15 @@ Fin Mot-clé simple : mcs1
       o=cata((1,2,7,"aa",4,"bb",6),'mcs1',None)
       cr=o.report()
       expected_cr="""Mot-clé simple : mcs1
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   ! 'aa' n'est pas d'un type autorisé !
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   ! La valeur : 7  du mot-clé  mcs1  est en dehors du domaine de validité [ 6 , 6 ] !
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   ! Nombre d'arguments de (1, 2, 7, 'aa', 4, 'bb', 6) incorrect pour mcs1 (min = 1, !
-   ! max = 6)                                                                        !
-   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! 'aa' n'est pas d'un type autorisé: ('R',) !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! La valeur : 7 est en dehors du domaine de validité [ ** , 6 ] !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! Nombre d'arguments de (1, 2, 7, 'aa', 4, 'bb', 6) incorrect (min = 1, max = 6) !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Fin Mot-clé simple : mcs1
 """
       self.assertEqual(str(cr) , expected_cr,msg='Erreur :\n%s\n!=\n%s' % (str(cr),expected_cr))

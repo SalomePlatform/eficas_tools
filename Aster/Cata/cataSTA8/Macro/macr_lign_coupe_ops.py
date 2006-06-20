@@ -1,4 +1,4 @@
-#@ MODIF macr_lign_coupe_ops Macro  DATE 24/05/2005   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF macr_lign_coupe_ops Macro  DATE 09/05/2006   AUTEUR GALENNE E.GALENNE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -26,6 +26,7 @@
 def crea_mail_lig_coup(dimension,lignes,groups):
 
   import os,sys,copy
+  from Utilitai.Utmess     import UTMESS
 
 # construction du maillage au format Aster des segments de lignes de coupe
 
@@ -113,15 +114,17 @@ def crea_mail_lig_coup(dimension,lignes,groups):
 
 
 ########################################################################
-def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,MODELE,**args):
+def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,
+               MODELE,GROUP_MA,MAILLE,**args):
   """
      Ecriture de la macro MACR_LIGN_COUPE
   """
   import os,string,types
   from Accas import _F
   from Noyau.N_utils import AsType
-  import aster
+  import aster,math
   from Utilitai.UniteAster import UniteAster
+  from Utilitai.Utmess import UTMESS
   ier=0
 
   # On importe les definitions des commandes a utiliser dans la macro
@@ -131,9 +134,9 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,MODELE,
   PROJ_CHAMP     =self.get_cmd('PROJ_CHAMP')
   POST_RELEVE_T  =self.get_cmd('POST_RELEVE_T')
   CREA_TABLE     =self.get_cmd('CREA_TABLE')
+  MODI_REPERE    =self.get_cmd('MODI_REPERE')
 
   # La macro compte pour 1 dans la numerotation des commandes
-  #self.icmd=1
   self.set_icmd(1)
   
   nomresu=RESULTAT.nom
@@ -141,9 +144,7 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,MODELE,
   n_modele=string.strip(l_modele[0])
   if n_modele=='' :
      if MODELE==None:
-       ier=ier+1
-       self.cr.fatal("<F> <MACR_LIGN_COUPE> nom du modele absent dans le concept resultat "+nomresu)
-       return ier
+       UTMESS('F', "MACR_LIGN_COUPE", "nom du modele absent dans le concept resultat "+nomresu)
      else : n_modele=MODELE.nom
   l_mailla=aster.getvectjev(n_modele.ljust(8)+'.MODELE    .NOMA')
   n_mailla=string.strip(l_mailla[0])
@@ -160,9 +161,7 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,MODELE,
       elif m['GROUP_NO']!=None :
         ngrno=m['GROUP_NO'].ljust(8).upper()
         if ngrno not in collgrno.keys() :
-          ier=ier+1
-          self.cr.fatal("<F> <MACR_LIGN_COUPE> le group_no "+ngrno+" n est pas dans le maillage "+n_mailla)
-          return ier
+          UTMESS('F', "MACR_LIGN_COUPE", "le group_no "+ngrno+" n est pas dans le maillage "+n_mailla)
         grpn=collgrno[ngrno]
         l_coor_group=[ngrno,]
         for node in grpn:
@@ -170,9 +169,7 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,MODELE,
         groups.append(l_coor_group)
 
   if minidim!=dime:
-    ier=ier+1
-    self.cr.fatal("<F> <MACR_LIGN_COUPE> dimensions de maillage et de coordonnees incoherentes")
-    return ier
+    UTMESS('F', "MACR_LIGN_COUPE", "dimensions de maillage et de coordonnees incoherentes")
 
 
   # Création du maillage des NB_POINTS segments entre COOR_ORIG et COOR_EXTR
@@ -214,12 +211,124 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,MODELE,
                                 PHENOMENE='THERMIQUE',
                                 MODELISATION='PLAN',),);
 
+  motscles={}
+  motscles['VIS_A_VIS']=[]
+  if GROUP_MA != None :
+    motscles['VIS_A_VIS'].append(_F(GROUP_MA_1 = GROUP_MA,TOUT_2='OUI'),)     
+  if MAILLE != None :
+    motscles['VIS_A_VIS'].append(_F(MAILLE_1 = MAILLE,TOUT_2='OUI'),)     
+    
   __recou=PROJ_CHAMP(METHODE='ELEM',
                      RESULTAT=RESULTAT,
                      MODELE_1=self.jdc.current_context[n_modele],
                      MODELE_2=__mocou,
                      TYPE_CHAM='NOEU',
-                     NOM_CHAM=NOM_CHAM,);
+                     NOM_CHAM=NOM_CHAM, **motscles);     
+
+
+
+  # Expression des contraintes aux noeuds ou des déplacements dans le repere local
+  __remodr=__recou
+  if AsType(RESULTAT).__name__ in ('evol_elas','evol_noli') :
+   for m in LIGN_COUPE :
+      if m['VECT_Y'] !=None :
+        epsi=0.00000001
+        # --- determination des angles nautiques
+        cx1=m['COOR_EXTR'][0]-m['COOR_ORIG'][0]
+        cx2=m['COOR_EXTR'][1]-m['COOR_ORIG'][1]
+        cx3=0.
+        if dime == 3:
+          cx3=m['COOR_EXTR'][2]-m['COOR_ORIG'][2]
+        nvx=math.sqrt(cx1**2+cx2**2+cx3**2)
+        if abs(nvx) < epsi:
+            UTMESS('F', "MACR_LIGN_COUPE", "definition incorrecte de la ligne de coupe")
+        cx1=cx1/nvx
+        cx2=cx2/nvx
+        cx3=cx3/nvx
+        cy1=m['VECT_Y'][0]
+        cy2=m['VECT_Y'][1]
+        cy3=0.
+        if dime == 3:
+          cy3=m['VECT_Y'][2]
+        nvy=math.sqrt(cy1**2+cy2**2+cy3**2)
+        if abs(nvy) < epsi:
+            UTMESS('F', "MACR_LIGN_COUPE", "valeurs incorrectes pour VECT_Y")
+        cy1=cy1/nvy
+        cy2=cy2/nvy
+        cy3=cy3/nvy
+        if ((abs(cx1-cy1)<epsi and abs(cx2-cy2)<epsi and  abs(cx3-cy3)<epsi) or \
+           (abs(cx1+cy1)<epsi and abs(cx2+cy2)<epsi and  abs(cx3+cy3)<epsi)):
+            UTMESS('F', "MACR_LIGN_COUPE", "valeurs incorrectes pour VECT_Y: x colineaire a y")
+        if abs(cx1*cy1+cx2*cy2+cx3*cy3) > epsi  :
+          cz1=cx2*cy3-cx3*cy2
+          cz2=cx3*cy1-cx1*cy3
+          cz3=cx1*cy2-cx2*cy1
+          nvz=math.sqrt(cz1**2+cz2**2+cz3**2)
+          cz1=cz1/nvz
+          cz2=cz2/nvz
+          cz3=cz3/nvz
+          cy1=cz2*cx3-cz3*cx2
+          cy2=cz3*cx1-cz1*cx3
+          cy3=cz1*cx2-cz2*cx1
+          nvy=math.sqrt(cy1**2+cy2**2+cy3**2)
+          cy1=cy1/nvy
+          cy2=cy2/nvy
+          cy3=cy3/nvy
+          UTMESS('A','MACR_LIGN_COUPE','LE VECTEUR Y N EST PAS ORTHOGONAL A LA LIGNE DE COUPE'
+                  +'LE VECTEUR Y A ETE ORTHONORMALISE POUR VOUS')
+          UTMESS('A','MACR_LIGN_COUPE','VECT_Y=('+str(cy1)+','+str(cy2)+','+str(cy3)+')')
+        else:     
+          cz1=cx2*cy3-cx3*cy2
+          cz2=cx3*cy1-cx1*cy3
+          cz3=cx1*cy2-cx2*cy1
+        beta=0.
+        gamma=0.
+        if dime ==2:
+          alpha = math.atan2(cx2,cx1)
+        else:
+          if cx1**2 + cx2**2 > epsi :
+            alpha=math.atan2(cx2,cx1)
+            beta=math.asin(cx3)
+            gamma=math.atan2(cy3,cz3)
+          else:
+            alpha=math.atan2(cy1,cz1)
+            beta=math.asin(cx3)
+            gamma=0.
+        alpha=alpha*180/math.pi
+        beta=beta*180/math.pi
+        gamma=gamma*180/math.pi
+
+        # --- MODI_REPERE
+        motscles={}
+        motscles['MODI_CHAM']=[]
+        motscles['DEFI_REPERE']=[]
+        # MODI_CHAM
+        if NOM_CHAM == 'DEPL':
+           if dime == 2:
+              LCMP=['DX','DY']
+              TYPE_CHAM='VECT_2D'
+           elif dime ==3 :
+              LCMP=['DX','DY','DZ']
+              TYPE_CHAM='VECT_3D'
+           motscles['MODI_CHAM'].append(_F(NOM_CHAM=NOM_CHAM,NOM_CMP=LCMP,TYPE_CHAM=TYPE_CHAM),)
+        elif NOM_CHAM in ('SIGM_NOEU_DEPL','SIGM_NOEU_SIEF','SIGM_NOEU_ELGA','SIGM_NOEU_COQU'):
+           if dime == 2:
+              LCMP=['SIXX','SIYY','SIZZ','SIXY']
+              TYPE_CHAM='TENS_2D'
+           elif dime ==3 :
+              LCMP=['SIXX','SIYY','SIZZ','SIXY','SIXZ','SIYZ']
+              TYPE_CHAM='TENS_3D'
+           motscles['MODI_CHAM'].append(_F(NOM_CHAM=NOM_CHAM,NOM_CMP=LCMP,TYPE_CHAM=TYPE_CHAM),)
+        # DEFI_REPERE
+        ANGL_NAUT=[]
+        ANGL_NAUT.append(alpha)
+        if dime ==3:
+           ANGL_NAUT.append(beta)
+           ANGL_NAUT.append(gamma)
+        motscles['DEFI_REPERE'].append(_F(REPERE='UTILISATEUR',ANGL_NAUT=ANGL_NAUT),)
+        __remodr=MODI_REPERE(RESULTAT=__recou,**motscles)
+
+
 
   # Production d'une table pour toutes les lignes de coupe
 
@@ -236,7 +345,7 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,MODELE,
         if m['INTITULE'] !=None : intitl=m['INTITULE']
         else                    : intitl=groupe
       mcACTION.append( _F(INTITULE  = intitl,
-                          RESULTAT  = __recou,
+                          RESULTAT  = __remodr,
                           GROUP_NO  = groupe,
                           NOM_CHAM  = NOM_CHAM,
                           TOUT_CMP  = 'OUI',

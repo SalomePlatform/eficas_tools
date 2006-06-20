@@ -462,9 +462,9 @@ def define_tagtable():
                       ))
 
     # Sometimes, the user (e.g., me) writes:
-    #	'fred' = Table:
+    #        'fred' = Table:
     # instead of:
-    #	'fred' = Table is:
+    #        'fred' = Table is:
     # Unfortunately, without the "is", it would get too confusing whether
     # we actually wanted an if block...
     t_bad_tableblock = ('tableblock',Table,
@@ -475,9 +475,9 @@ def define_tagtable():
                          ))
 
     # Sometimes, the use (e.g., me again) write:
-    #	'fred' IsIn jim
+    #        'fred' IsIn jim
     # instead of:
-    #	'fred' = IsIn jim
+    #        'fred' = IsIn jim
     # Whilst I'm not entirely convinced that "=" is the best character
     # to use here, I think we do need something!
     t_bad_tuple = ('tuple',Table,
@@ -1517,12 +1517,12 @@ class TupleLine(ContentLine):
             left,right = dict["onfalse"]
             self.onfalse = self.text[left:right]
         else:
-            self.onfalse = None		# "MatchFail"
+            self.onfalse = None                # "MatchFail"
         if dict["ontrue"]:
             left,right = dict["ontrue"]
             self.ontrue = self.text[left:right]
         else:
-            self.ontrue = None 		# "next"
+            self.ontrue = None                 # "next"
 
     def only_in_block(self):
         """Return true if we can only occur inside a block."""
@@ -1653,12 +1653,12 @@ class TuplePlusLine(ContentLine):
             left,right = dict["onfalse"]
             self.onfalse = self.text[left:right]
         else:
-            self.onfalse = None		# "MatchFail"
+            self.onfalse = None                # "MatchFail"
         if dict["ontrue"]:
             left,right = dict["ontrue"]
             self.ontrue = self.text[left:right]
         else:
-            self.ontrue = None 		# "next"
+            self.ontrue = None                 # "next"
 
     def only_in_block(self):
         """Return true if we can only occur inside a block."""
@@ -1867,8 +1867,8 @@ class Block(ContentLine):
                       "SubTable is not allowed outside a block at line %d"%\
                       (self.lineno)
 
-        self.items    = []	# all lines within this block
-        self.business = []	# just those that are "our business"
+        self.items    = []        # all lines within this block
+        self.business = []        # just those that are "our business"
         self.label_dict = {}    # remember our labels and their locations
         self.next_index = 0     # 'business' line indices
         self.inner_indent = None

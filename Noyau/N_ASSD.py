@@ -1,4 +1,4 @@
-#@ MODIF N_ASSD Noyau  DATE 22/02/2005   AUTEUR DURAND C.DURAND 
+#@ MODIF N_ASSD Noyau  DATE 16/05/2006   AUTEUR DURAND C.DURAND 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -61,13 +61,6 @@ class ASSD:
    def __getitem__(self,key):
       return self.etape[key]
 
-   def is_object(valeur):
-      """
-          Indique si valeur est d'un type conforme à la classe (retourne 1) 
-          ou non conforme (retourne 0)
-      """
-      return 0
-
    def get_name(self):
       """
           Retourne le nom de self, éventuellement en le demandant au JDC
@@ -111,13 +104,17 @@ class ASSD:
           if key[0]=='_':del d[key]
       return d
 
+   def par_lot(self):
+      """
+           Retourne True si l'ASSD est créée en mode PAR_LOT='OUI'.
+      """
+      if not hasattr(self, 'jdc') or self.jdc == None:
+         val = None
+      else:
+         val = self.jdc.par_lot
+      return val == 'OUI'
+
 class assd(ASSD):
-   def is_object(valeur):
-      """
-          Indique si valeur est d'un type conforme à la classe (1) 
-          ou non conforme (0)
-          La classe assd est utilisée pour valider tout objet
-      """
-      return 1
-
-
+   def __convert__(cls,valeur):
+      return valeur
+   __convert__=classmethod(__convert__)

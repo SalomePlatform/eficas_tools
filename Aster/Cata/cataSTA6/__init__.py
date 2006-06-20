@@ -1,4 +1,7 @@
 import pre74
+from math import sin,cos,tan,asin,acos,atan2,atan,sinh,cosh,tanh,exp,log,log10
+from math import sqrt,pi
+
 from cata import *
 
 INCLUDE_MATERIAU.itemeditor=pre74.compomacro.INCLUDE_MATERIAUTreeItem

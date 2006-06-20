@@ -75,30 +75,26 @@ class PLUSIEURS_ASSD_Panel(PLUSIEURS_Panel):
                                  ("<Double-Button-1>",self.sup_valeur_sans_into))
       liste_commandes_choix = (("<Button-1>",self.selectChoix),
                                ("<Button-3>",self.deselectChoix),
-      #                         ("<Double-Button-1>",self.add_valeur_sans_into))
                                ("<Double-Button-1>",self.add_eval_valeur_sans_into))
       self.Liste_valeurs = ListeChoix(self,self.frame_valeurs,l_valeurs,liste_commandes = liste_commandes_valeurs,
                                       titre="Valeur(s) actuelle(s)")
       self.Liste_choix = ListeChoix(self,self.frame_choix,l_choix,liste_commandes = liste_commandes_choix,
                                     titre= "Valeurs possibles")
-      bouton_add = Button(self.frame_boutons_fleches,
-                          #text="<--",
+      self.bouton_add = Button(self.frame_boutons_fleches,
                           image = images.get_image('arrow_left'),
-      #                    command = self.add_valeur_sans_into)
                           command = self.add_eval_valeur_sans_into)
-      bouton_sup = Button(self.frame_boutons_fleches,
-                          #text="-->",
+      self.bouton_sup = Button(self.frame_boutons_fleches,
                           image = images.get_image('arrow_right'),
                           command = self.sup_valeur_sans_into)
-      bouton_accepter = Button(self.frame_boutons,
+      self.bouton_accepter = Button(self.frame_boutons,
                                text='Valider',
                                command = lambda s=self,m=min,M=max : s.accepte_modifs_valeur(m,M))
-      bouton_annuler = Button(self.frame_boutons,
+      self.bouton_annuler = Button(self.frame_boutons,
                               text = 'Annuler',
                               command = self.annule_modifs_valeur)
-      bouton_add.place(relx=0.3,rely=0.35)
-      bouton_sup.place(relx=0.3,rely=0.65)
-      for but in (bouton_accepter,bouton_annuler):
+      self.bouton_add.place(relx=0.3,rely=0.35)
+      self.bouton_sup.place(relx=0.3,rely=0.65)
+      for but in (self.bouton_accepter,self.bouton_annuler):
           but.pack(side='left',padx=4)
       self.Liste_valeurs.affiche_liste()
       if len(l_valeurs) > 0 :
@@ -111,7 +107,7 @@ class PLUSIEURS_ASSD_Panel(PLUSIEURS_Panel):
   
   def add_eval_valeur_sans_into(self,valeurentree=None):
       if valeurentree == None:
-	 valeurentree = self.get_valeur()
+         valeurentree = self.get_valeur()
       valeur,validite=self.node.item.eval_valeur(valeurentree)
       if not validite :
          commentaire = "impossible d'évaluer : %s " %`valeurentree`

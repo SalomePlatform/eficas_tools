@@ -1,4 +1,4 @@
-#@ MODIF reca_algo Macro  DATE 14/03/2005   AUTEUR DURAND C.DURAND 
+#@ MODIF reca_algo Macro  DATE 31/01/2006   AUTEUR MCOURTOI M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21,12 +21,13 @@
 
 
 import Numeric
-from Numeric import take
+from Numeric import take, size
 import copy,os
 import LinearAlgebra 
 from Cata.cata import INFO_EXEC_ASTER
 from Cata.cata import DETRUIRE
 from Accas import _F
+from Utilitai.Utmess     import UTMESS
 
 
 def calcul_gradient(A,erreur):
@@ -132,7 +133,7 @@ def temps_CPU(self,restant_old,temps_iter_old):
             temps_iter=(temps_iter_old + (restant_old-restant))/2.
          if ((temps_iter>0.96*restant)or(restant<0.)):
             err=1
-            self.cr.fatal("<F> <MACR_RECAL> Arret de MACR_RECAL par manque de temps CPU")
+            UTMESS('F', "MACR_RECAL", 'Arret de MACR_RECAL par manque de temps CPU')
    return restant,temps_iter,err
 
 
@@ -174,8 +175,15 @@ def Levenberg_bornes(self,val,Dim,val_init,borne_inf,borne_sup,A,erreur,l,ul_out
             dval[i]=borne_inf[i]-val[i]
             s[i]=-1.
       if (len(I)!=0):
-         # xi=-Q(I)-1.(d(I)+Q(I,Act).dval(Act))
-          xi=-LinearAlgebra.solve_linear_equations(take(take(Q,I),I,1),(take(d,I)+Numeric.dot(take(take(Q,I),Act,1),take(Dim.adim(dval),Act))))
+          # xi=-Q(I)-1.(d(I)+Q(I,Act).dval(Act))
+          t_QI = take(Q, I)
+          t_tQI_Act = take(t_QI, Act, 1)
+          t_adim_Act = take(Dim.adim(dval), Act)
+          if size(t_tQI_Act) > 0 and size(t_adim_Act) > 0:
+             smemb = take(d, I) + Numeric.dot(t_tQI_Act, t_adim_Act)
+          else:
+             smemb = take(d, I)
+          xi=-LinearAlgebra.solve_linear_equations(take(t_QI, I, 1), smemb)
           for i in Numeric.arange(len(I)):
              dval[I[i]]=xi[i]*val_init[I[i]]
       if (len(Act)!=0):
@@ -203,7 +211,7 @@ def Levenberg_bornes(self,val,Dim,val_init,borne_inf,borne_sup,A,erreur,l,ul_out
              res.write('\n\nval_ini= '+Numeric.array2string(val_init,array_output=1,separator=','))
              res.write('\n\nborne_inf= '+Numeric.array2string(borne_inf,array_output=1,separator=','))
              res.write('\n\nborne_sup= '+Numeric.array2string(borne_sup,array_output=1,separator=','))
-             self.cr.fatal("<F> <MACR_RECAL> Erreur dans l'algorithme de bornes de MACR_RECAL")
+             UTMESS('F', "MACR_RECAL", "Erreur dans l'algorithme de bornes de MACR_RECAL")
              return 
    newval=copy.copy(val+dval)
    return newval,s,l,Act

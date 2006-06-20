@@ -207,6 +207,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         #print "uncomment",new_etape.sd
 
         pos=self.parent.etapes.index(self)
+        # L'ordre d'appel est important : suppentite fait le menage des concepts dans les etapes suivantes
         self.parent.addentite(new_etape,pos)
         self.parent.suppentite(self)
         return new_etape,nom_sd
@@ -257,11 +258,11 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     def verif_existence_sd(self):
       """
          Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-	 avant étape, sinon enlève la référence à ces concepts
-	 --> sans objet pour les commandes commentarisées
+         avant étape, sinon enlève la référence à ces concepts
+         --> sans objet pour les commandes commentarisées
       """
       pass
-	
+        
     def control_sdprods(self,d):
       """sans objet pour les commandes commentarisées"""
       pass

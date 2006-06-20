@@ -1,4 +1,4 @@
-#@ MODIF macr_aspic_calc_ops Macro  DATE 08/02/2005   AUTEUR CIBHHLV L.VIVAN 
+#@ MODIF macr_aspic_calc_ops Macro  DATE 09/05/2006   AUTEUR REZETTE C.REZETTE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23,12 +23,13 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
                              FOND_FISS_1,FOND_FISS_2,CHARGE,RESU_THER,AFFE_MATERIAU,EQUILIBRE,
                              PRES_REP,ECHANGE,TORS_CORP,TORS_TUBU,COMP_INCR,COMP_ELAS,
                              THETA_3D,OPTION,SOLVEUR,CONVERGENCE,NEWTON,RECH_LINEAIRE,
-                             INCREMENT,PAS_AZIMUT,IMPRESSION,INFO,TITRE ,**args):          
+                             INCREMENT,PAS_AZIMUT,IMPRESSION,INFO,TITRE,BORNES ,**args):          
   """
      Ecriture de la macro MACR_ASPIC_CALC
   """
   from Accas import _F
   import types
+  from Utilitai.Utmess     import UTMESS
   ier=0
 #------------------------------------------------------------------
   # On recopie le mot cle affe_materiau pour le proteger
@@ -48,8 +49,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
   POST_RCCM        =self.get_cmd('POST_RCCM'       )
   DEFI_FOND_FISS   =self.get_cmd('DEFI_FOND_FISS'  )
   CALC_THETA       =self.get_cmd('CALC_THETA'      )
-  CALC_G_THETA_T   =self.get_cmd('CALC_G_THETA_T'  )
-  CALC_G_LOCAL_T   =self.get_cmd('CALC_G_LOCAL_T'  )
+  CALC_G           =self.get_cmd('CALC_G'          )
   IMPR_RESU        =self.get_cmd('IMPR_RESU'       )
 
   # La macro compte pour 1 dans la numerotation des commandes
@@ -77,63 +77,40 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
         i=i+1
         MRCCM=mate['MATER']
   if i>1 :
-     ier=ier+1
-     self.cr.fatal("""<E> <MACR_ASPIC_CALC> vous affectez plus d un materiau contenant l option rccm""")
-     return ier
+     UTMESS('E', "MACR_ASPIC_CALC", "vous affectez plus d un materiau contenant l option rccm")
 #
   if (TYPE_MAILLAGE[:4]=='SAIN') and (TUBULURE==None) :
-     ier=ier+1
-     self.cr.fatal("""<E> <MACR_ASPIC_CALC> pour les piquages sains, TUBULURE doit etre renseigne""")
-     return ier
+     UTMESS('E', "MACR_ASPIC_CALC", "pour les piquages sains, TUBULURE doit etre renseigne")
 #
   if EQUILIBRE['NOEUD'] not in ('P1_CORP','P2_CORP') :
-     ier=ier+1
-     self.cr.fatal("""<E> <MACR_ASPIC_CALC> EQUILIBRE[NOEUD] : on attend 'P1_CORP ' ou 'P2_CORP'""")
-     return ier
+     UTMESS('E', "MACR_ASPIC_CALC", "EQUILIBRE[NOEUD] : on attend P1_CORP ou P2_CORP")
 #
   if PRES_REP['EFFE_FOND']=='OUI' :
      if PRES_REP['NOEUD']==None :
-       ier=ier+1
-       self.cr.fatal("""<E> <MACR_ASPIC_CALC> il faut preciser un noeud pour EFFE_FOND""")
-       return ier
+       UTMESS('E', "MACR_ASPIC_CALC", "il faut preciser un noeud pour EFFE_FOND")
      if PRES_REP['NOEUD'] not in ('P1_CORP','P2_CORP') :
-       ier=ier+1
-       self.cr.fatal("""<E> <MACR_ASPIC_CALC> PRES_REP[NOEUD] : on attend 'P1_CORP' ou 'P2_CORP'""")
-       return ier
+       UTMESS('E', "MACR_ASPIC_CALC", "PRES_REP[NOEUD] : on attend P1_CORP ou P2_CORP")
      if PRES_REP['NOEUD']==EQUILIBRE['NOEUD'] :
-       ier=ier+1
-       self.cr.fatal("""<E> <MACR_ASPIC_CALC> on ne peut appliquer un EFFE_FOND sur PRES_REP[NOEUD] car ce noeud est bloque""")
-       return ier
+       UTMESS('E', "MACR_ASPIC_CALC", "on ne peut appliquer un EFFE_FOND sur PRES_REP[NOEUD] car ce noeud est bloque")
 #
   if TORS_CORP!=None :
      for tors in TORS_CORP :
          if tors['NOEUD'] not in ('P1_CORP','P2_CORP') :
-            ier=ier+1
-            self.cr.fatal("""<E> <MACR_ASPIC_CALC> TORS_CORP[NOEUD] : on attend 'P1_CORP' ou 'P2_CORP'""")
-            return ier
+            UTMESS('E', "MACR_ASPIC_CALC", "TORS_CORP[NOEUD] : on attend P1_CORP ou P2_CORP")
          if tors['NOEUD']==EQUILIBRE['NOEUD'] :
-           ier=ier+1
-           self.cr.fatal("""<E> <MACR_ASPIC_CALC> on ne peut appliquer un torseur sur TORS_CORP[NOEUD] car ce noeud est bloque""")
-           return ier
+            UTMESS('E', "MACR_ASPIC_CALC", "on ne peut appliquer un torseur sur TORS_CORP[NOEUD] car ce noeud est bloque")
 #
   if (TYPE_MAILLAGE[:4]=='SAIN') and (THETA_3D!=None) :
-     ier=ier+1
-     self.cr.fatal("""<E> <MACR_ASPIC_CALC> si TYPE_MAILLAGE SAIN : mecanique de la rupture impossible""")
-     return ier
+     UTMESS('E', "MACR_ASPIC_CALC", "si TYPE_MAILLAGE SAIN : mecanique de la rupture impossible")
 #
   if OPTION in ('CALC_G_MAX','CALC_G_MAX_LOCAL') :
     if BORNES==None :
-       ier=ier+1
-       self.cr.fatal("""<E> <MACR_ASPIC_CALC> mot-clef <BORNES> obligatoire avec cette option""")
-       return ier
+       UTMESS('E', "MACR_ASPIC_CALC", "mot-clef <BORNES> obligatoire avec cette option")
 #
   if IMPRESSION!=None :
     if IMPRESSION['FORMAT'] in ('IDEAS','CASTEM') :
       if IMPRESSION['NOM_CHAM']==None :
-        ier=ier+1
-        self.cr.fatal("""<E> <MACR_ASPIC_CALC> impression de resultats demandée sans preciser le nom des champs
-                                               cf. la documentation utilisateur : U4.PC.20.""")
-        return ier
+       UTMESS('E', "MACR_ASPIC_CALC", "impression de resultats demandée sans preciser le nom des champs cf. la documentation utilisateur : U4.PC.20.")
 #
 #------------------------------------------------------------------
 #
@@ -223,7 +200,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
          AEFOCO = 'EXCORP1'
          ATORCO = 'P1_CORP'
          LINTC  = 'L_INT_C1'
-  __conlim = AFFE_CHAR_MECA( MODELE   = modele ,
+  _conlim = AFFE_CHAR_MECA(  MODELE   = modele ,
                              LIAISON_ELEM  = ( _F( OPTION    ='3D_POU'  ,
                                                    GROUP_MA_1='EXCORP1',
                                                    GROUP_NO_2='P1_CORP'),
@@ -256,13 +233,13 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
                               _F(GROUP_MA    =AEFOCO,
                                  GROUP_MA_INT=LINTC,
                                  PRES        =PRES_REP['PRES']))
-  __chpres = AFFE_CHAR_MECA( MODELE   = modele ,**motscles)
+  _chpres = AFFE_CHAR_MECA( MODELE   = modele ,**motscles)
 #
 #     --- commande AFFE_CHAR_MECA ---
 #         chargement mecanique : torseur sur le corps
 #
   if TORS_CORP!=None:
-     __chtrc = [None]*6
+     _chtrc = [None]*6
      i=0
      for tors in TORS_CORP :
        mcsimp={}
@@ -273,7 +250,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
        if tors['MY']!=None : mcsimp['MY']=tors['MY']
        if tors['MZ']!=None : mcsimp['MZ']=tors['MZ']
        mcfact=_F(GROUP_NO=ATORCO,**mcsimp)
-       __chtrc[i] = AFFE_CHAR_MECA( MODELE       = modele ,
+       _chtrc[i] = AFFE_CHAR_MECA(  MODELE       = modele ,
                                     FORCE_NODALE = mcfact , )
        i=i+1
 #
@@ -281,7 +258,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 #         chargement mecanique : torseur sur la tubulure
 #
   if TORS_TUBU!=None:
-     __chtrt = [None]*6
+     _chtrt = [None]*6
      i=0
      for tors in TORS_TUBU :
        mcsimp={}
@@ -292,7 +269,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
        if tors['MY']!=None : mcsimp['MY']=tors['MY']
        if tors['MZ']!=None : mcsimp['MZ']=tors['MZ']
        mcfact=_F(GROUP_NO='P_TUBU  ',**mcsimp)
-       __chtrt[i] = AFFE_CHAR_MECA( MODELE       = modele ,
+       _chtrt[i] = AFFE_CHAR_MECA( MODELE       = modele ,
                                     FORCE_NODALE = mcfact , )
        i=i+1
 #
@@ -301,28 +278,28 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
   motscles={}
 #
   mcfex=[]  # mot clé facteur EXCIT
-  mcfex.append(_F(CHARGE=__conlim,))
+  mcfex.append(_F(CHARGE=_conlim,))
   if ECHANGE!=None :
      mcfex.append(_F(CHARGE=chmeth,))
   if PRES_REP['FONC_MULT']!=None :
-     mcfex.append(_F(CHARGE=__chpres,FONC_MULT=PRES_REP['FONC_MULT']))
+     mcfex.append(_F(CHARGE=_chpres,FONC_MULT=PRES_REP['FONC_MULT']))
   else :
-     mcfex.append(_F(CHARGE=__chpres,))
+     mcfex.append(_F(CHARGE=_chpres,))
   if TORS_CORP!=None:
      i=0
      for tors in TORS_CORP :
        if tors['FONC_MULT']!=None :
-          mcfex.append(_F(CHARGE=__chtrc[i],FONC_MULT=tors['FONC_MULT']))
+          mcfex.append(_F(CHARGE=_chtrc[i],FONC_MULT=tors['FONC_MULT']))
        else :
-          mcfex.append(_F(CHARGE=__chtrc[i],))
+          mcfex.append(_F(CHARGE=_chtrc[i],))
        i=i+1
   if TORS_TUBU!=None:
      i=0
      for tors in TORS_TUBU :
        if tors['FONC_MULT']!=None :
-          mcfex.append(_F(CHARGE=__chtrt[i],FONC_MULT=tors['FONC_MULT']))
+          mcfex.append(_F(CHARGE=_chtrt[i],FONC_MULT=tors['FONC_MULT']))
        else :
-          mcfex.append(_F(CHARGE=__chtrt[i],))
+          mcfex.append(_F(CHARGE=_chtrt[i],))
        i=i+1
   motscles['EXCIT'] =mcfex
 #
@@ -686,20 +663,20 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
                                                 R_INF   = tht3d['R_INF'],
                                                 R_SUP   = tht3d['R_SUP'], ) )
 #
-#          --- commande CALC_G_THETA_T ---
+#          --- commande CALC_G (3D GLOBAL) ---
 #
           montit = 'G_THETA AVEC R_INF = '+str(tht3d['R_INF'])+' ET R_SUP = '+str(tht3d['R_SUP'])
           motscles={}
           if COMP_ELAS!=None:  motscles['COMP_ELAS']=  _F(TOUT     = 'OUI',
                                                           RELATION = COMP_ELAS['RELATION'],)
           if COMP_INCR!=None:  motscles['COMP_INCR']=  _F(RELATION = COMP_INCR['RELATION'],)
-          print motscles
-          __gtheta = CALC_G_THETA_T( MODELE     = modele,
-                                     CHAM_MATER = affmat,
-                                     THETA      = __theta,
-                                     RESULTAT   = nomres,
-                                     TOUT_ORDRE = 'OUI',
-                                     TITRE      = montit,**motscles)
+          __gtheta = CALC_G ( MODELE     = modele,
+                              CHAM_MATER = affmat,
+                              THETA      = _F(THETA=__theta),
+                              OPTION     = 'CALC_G_GLOB',
+                              RESULTAT   = nomres,
+                              TOUT_ORDRE = 'OUI',
+                              TITRE      = montit,**motscles)
           IMPR_TABLE(TABLE = __gtheta, )
 #
 #           recherche du g max
@@ -711,35 +688,36 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
                 mcfact.append(_F( NUME_ORDRE = born['NUME_ORDRE'] ,
                                   VALE_MIN   = born['VALE_MIN'  ] ,
                                   VALE_MAX   = born['VALE_MAX'  ]   ) )
-              __gbil = CALC_G_THETA_T( MODELE     = modele,
-                                       CHAM_MATER = affmat,
-                                       THETA      = __theta,
-                                       RESULTAT   = nomres,
-                                       TOUT_ORDRE = 'OUI',
-                                       COMP_ELAS  =  _F(TOUT     = 'OUI',
-                                                        RELATION = COMP_ELAS['RELATION'],),
-                                       TITRE    = montit,
-                                       OPTION   = OPTION,
-                                       BORNES   = mcfact,)
+              __gbil = CALC_G( MODELE     = modele,
+                               CHAM_MATER = affmat,
+                               THETA      = _F(THETA=__theta),
+                               RESULTAT   = nomres,
+                               TOUT_ORDRE = 'OUI',
+                               COMP_ELAS  =  _F(TOUT     = 'OUI',
+                                                RELATION = COMP_ELAS['RELATION'],),
+                               TITRE    = montit,
+                               OPTION   = 'G_MAX_GLOB',
+                               BORNES   = mcfact,)
               IMPR_TABLE(TABLE = __gbil, )
 #
-#          --- commande CALC_G_LOCAL_T ---
+#          --- commande CALC_G (3D LOCAL) ---
 #
           montit = 'G_LOCAL AVEC R_INF = '+str(tht3d['R_INF'])+' ET R_SUP = '+str(tht3d['R_SUP'])
           motscles={}
           if COMP_ELAS!=None:  motscles['COMP_ELAS'    ]=  _F(TOUT     = 'OUI',
                                                               RELATION = COMP_ELAS['RELATION'],)
           if FERME:
-                               motscles['LISSAGE_THETA']= 'LAGRANGE'
-                               motscles['LISSAGE_G'    ]= 'LAGRANGE'
-          __glocal = CALC_G_LOCAL_T( MODELE     = modele,
-                                     CHAM_MATER = affmat,
-                                     FOND_FISS  = fond3d[j],
-                                     RESULTAT   = nomres,
-                                     TOUT_ORDRE = 'OUI',
-                                     R_INF      = tht3d['R_INF'],
-                                     R_SUP      = tht3d['R_SUP'],
-                                     TITRE      = montit,**motscles)
+                               motscles['LISSAGE']=_F(LISSAGE_THETA= 'LAGRANGE',
+                                                      LISSAGE_G= 'LAGRANGE',)
+          __glocal = CALC_G( MODELE     = modele,
+                             CHAM_MATER = affmat,
+                             THETA=_F( FOND_FISS  = fond3d[j],
+                                       R_INF      = tht3d['R_INF'],
+                                       R_SUP      = tht3d['R_SUP'],),
+                             RESULTAT   = nomres,
+                             TOUT_ORDRE = 'OUI',
+                             TITRE      = montit,**motscles)
+          IMPR_TABLE(TABLE = __glocal, )
 #
 #          recherche du g max local
 #
@@ -748,24 +726,24 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
               motscles={}
               mcfact=[]
               if FERME:
-                        motscles['LISSAGE_THETA']= 'LAGRANGE'
-                        motscles['LISSAGE_G'    ]= 'LAGRANGE'
+                motscles['LISSAGE']=_F(LISSAGE_THETA= 'LAGRANGE',
+                                       LISSAGE_G= 'LAGRANGE',)
               for born in BORNES :
                 mcfact.append(_F( NUME_ORDRE = born['NUME_ORDRE'] ,
                                   VALE_MIN   = born['VALE_MIN'  ] ,
                                   VALE_MAX   = born['VALE_MAX'  ]   ) )
               motscles['BORNES']=mcfact
-              __glbil = CALC_G_LOCAL_T( MODELE     = modele,
-                                        CHAM_MATER = affmat,
-                                        FOND_FISS  = fond3d[j],
-                                        RESULTAT   = nomres,
-                                        TOUT_ORDRE = 'OUI',
-                                        COMP_ELAS  =  _F(TOUT     = 'OUI',
-                                                         RELATION = COMP_ELAS['RELATION'],),
-                                        TITRE      = montit,
-                                        OPTION     = 'CALC_G_MAX',
-                                        R_INF      = tht3d['R_INF'],
-                                        R_SUP      = tht3d['R_SUP'],**motscles)
+              __glbil = CALC_G( MODELE     = modele,
+                                CHAM_MATER = affmat,
+                                THETA=_F( FOND_FISS  = fond3d[j],
+                                          R_INF      = tht3d['R_INF'],
+                                          R_SUP      = tht3d['R_SUP'],),
+                                RESULTAT   = nomres,
+                                TOUT_ORDRE = 'OUI',
+                                COMP_ELAS  =  _F(TOUT     = 'OUI',
+                                                 RELATION = COMP_ELAS['RELATION'],),
+                                TITRE      = montit,
+                                OPTION     = 'G_MAX',**motscles)
               IMPR_TABLE(TABLE = __glbil, )
 #
 #     --- commande IMPR_RESU  ---
@@ -781,13 +759,13 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
          else                                                                : ncham=[IMPRESSION['NOM_CHAM'],]
       if    len(ncham)==3       : motscles['NOM_CHAM'  ]=('DEPL','EQUI_ELNO_SIGM')
       elif (len(ncham)==1) and (ncham[0][:4]!='TEMP')  :
-                                  motscles['NOM_CHAM'  ]= ncham[0]['NOM_CHAM']
+                                  motscles['NOM_CHAM'  ]= ncham[0]
       elif (len(ncham)==2) and (ncham[0][:4]!='TEMP') and (ncham[1][:4]!='TEMP')  :
-                                  motscles['NOM_CHAM'  ]=(ncham[0]['NOM_CHAM'],ncham[1]['NOM_CHAM'])
+                                  motscles['NOM_CHAM'  ]=(ncham[0],ncham[1])
       elif (len(ncham)==2) and (ncham[0][:4]=='TEMP')  :
-                                  motscles['NOM_CHAM'  ]= ncham[1]['NOM_CHAM']
+                                  motscles['NOM_CHAM'  ]= ncham[1]
       elif (len(ncham)==2) and (ncham[1][:4]=='TEMP') :
-                                  motscles['NOM_CHAM'  ]= ncham[0]['NOM_CHAM']
+                                  motscles['NOM_CHAM'  ]= ncham[0]
       if   IMPRESSION['TOUT_ORDRE']!=None :
                                   motscles['TOUT_ORDRE']= IMPRESSION['TOUT_ORDRE']
       elif IMPRESSION['NUME_ORDRE']!=None :
@@ -804,11 +782,11 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
       if IMPRESSION['FORMAT'] in ('IDEAS','CASTEM') :
         if    len(ncham)==3       : motscles['NOM_CHAM'  ]=('TEMP',)
         elif (len(ncham)==1) and (ncham[0][:4]=='TEMP') :
-                                    motscles['NOM_CHAM'  ]= ncham[0]['NOM_CHAM']
+                                    motscles['NOM_CHAM'  ]= ncham[0]
         elif (len(ncham)==2) and (ncham[0][:4]=='TEMP') :
-                                    motscles['NOM_CHAM'  ]= ncham[0]['NOM_CHAM']
+                                    motscles['NOM_CHAM'  ]= ncham[0]
         elif (len(ncham)==2) and (ncham[1][:4]=='TEMP') :
-                                    motscles['NOM_CHAM'  ]= ncham[1]['NOM_CHAM']
+                                    motscles['NOM_CHAM'  ]= ncham[1]
         if   IMPRESSION['TOUT_ORDRE']!=None :
                                     motscles['TOUT_ORDRE']= IMPRESSION['TOUT_ORDRE']
         elif IMPRESSION['NUME_ORDRE']!=None :
@@ -819,7 +797,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
                                     motsclei['VERSION'   ]= IMPRESSION['VERSION']
       if IMPRESSION['FORMAT']=='CASTEM' :
                                     motsclei['NIVE_GIBI' ]= IMPRESSION['NIVE_GIBI']
-      mcfresu.append(_F(RESULTAT=nomres,**motscles))
+      mcfresu.append(_F(RESULTAT=resuth,**motscles))
     IMPR_RESU( MODELE = modele,
                RESU   = mcfresu,
                FORMAT=IMPRESSION['FORMAT'],**motsclei)

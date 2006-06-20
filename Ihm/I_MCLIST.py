@@ -241,7 +241,7 @@ class MCList:
   def verif_existence_sd(self):
      """
         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-	avant étape, sinon enlève la référence à ces concepts
+        avant étape, sinon enlève la référence à ces concepts
      """
      for motcle in self.data :
          motcle.verif_existence_sd()

@@ -50,6 +50,7 @@ def main():
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
                                                             'editeur.ini',
                                                             'eficas_aster.py',
+							    'style.py'
                                                            ])
    copyfiles('Cata/Utilitai',os.path.join(path_distrib,'Aster','Cata','Utilitai'),['*.py'])
    copyfiles('Cata/pre74',os.path.join(path_distrib,'Aster','Cata','pre74'),['*.py'])
@@ -58,9 +59,9 @@ def main():
    copyfiles('Cata/cataSTA6/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA6','Macro'),['*.py'])
    #copyfiles('Cata/cataSTA73',os.path.join(path_distrib,'Aster','Cata','cataSTA73'),['*.py'])
    #copyfiles('Cata/cataSTA73/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA73','Macro'),['*.py'])
-   copyfiles('Cata/cataSTA76',os.path.join(path_distrib,'Aster','Cata','cataSTA76'),['*.py'])
-   copyfiles('Cata/cataSTA76/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA76','Macro'),['*.py'])
-   copyfiles('Cata/cataSTA81',os.path.join(path_distrib,'Aster','Cata','cataSTA81'),['*.py'])
+   copyfiles('Cata/cataSTA7',os.path.join(path_distrib,'Aster','Cata','cataSTA7'),['*.py'])
+   copyfiles('Cata/cataSTA7/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA7','Macro'),['*.py'])
+   copyfiles('Cata/cataSTA8',os.path.join(path_distrib,'Aster','Cata','cataSTA8'),['*.py'])
    copyfiles('Cata',os.path.join(path_distrib,'Aster','Cata'),['*c_clefs_docu'])
    copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster'),['aster.py',])
 
@@ -74,8 +75,8 @@ def main():
    copyfiles(os.path.join(path_Noyau,'Validation'),os.path.join(path_distrib,'Validation'),['*.py'])
    copyfiles(os.path.join(path_Noyau,'Accas'),os.path.join(path_distrib,'Aster'),['properties.py'])
    copyfiles(os.path.join(path_Noyau,'Cata'),os.path.join(path_distrib,'Aster','Cata'),['*.py',])
-   copyfiles(os.path.join(path_Noyau,'Macro'),os.path.join(path_distrib,'Aster','Cata','cataSTA81','Macro'),['*.py'])
-   os.system("mv "+path_distrib+"/Aster/Cata/cata_STA8.py "+path_distrib+"/Aster/Cata/cataSTA81/cata.py")
+   copyfiles(os.path.join(path_Noyau,'Macro'),os.path.join(path_distrib,'Aster','Cata','cataSTA8','Macro'),['*.py'])
+   os.system("mv "+path_distrib+"/Aster/Cata/cata_STA8.py "+path_distrib+"/Aster/Cata/cataSTA8/cata.py")
 
    copyfiles('../Tools',os.path.join(path_distrib,'Tools'),['*.py'])
    copyfiles('../Tools/foztools',os.path.join(path_distrib,'Tools','foztools'),['*.py'])
@@ -90,6 +91,9 @@ def main():
       shutil.copy(tarball,dir_download)
    except:
       print "Repertoire de download inconnu : ",dir_download
+
+   shutil.copy('prefs.py.win',os.path.join(path_distrib,'Aster','prefs.py'))
+   shutil.copy('editeur.ini.win',os.path.join(path_distrib,'Aster','editeur.ini'))
 
    try:
       shutil.copytree(path_TextTools,os.path.join(path_distrib,'Tools','TextTools'))

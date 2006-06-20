@@ -3,6 +3,25 @@ from Accas import *
 
 import unittest
 
+class myparam:
+    def __init__(self,valeur):
+        self.valeur=valeur
+    def __adapt__(self,protocol):
+        return protocol.adapt(self.valeur)
+
+from Noyau.N_VALIDATOR import listProto,TypeProtocol,IntoProtocol
+class param:
+    def __init__(self,valeur):
+        self.valeur=valeur
+
+def hasvaleur(obj,protocol,**args):
+    return protocol.adapt(obj.valeur)
+
+listProto.register(param,hasvaleur)
+TypeProtocol.register(param,hasvaleur)
+IntoProtocol.register(param,hasvaleur)
+OrdList.register(param,hasvaleur)
+
 class TestValidCase(unittest.TestCase):
    def setUp(self):
        pass
@@ -40,6 +59,7 @@ class TestValidCase(unittest.TestCase):
               (("aaaa","axyz","bbbb","zzz"),1),
               ("aaaa",1),("aaaaa",1),
               ("axyzaa",0),("bbbbaaa",0),
+              (("aaaa",param("axyz"),"bbbb","zzz"),1),
              )
        self._test(cata,liste)
 
@@ -58,6 +78,17 @@ class TestValidCase(unittest.TestCase):
               ((3,1),0),
               ((1,3,2),0),
               ((1.,2.),0),
+              (myparam((1.,2.)),0),
+              (myparam((1,2)),1),
+              (myparam((1,2,3,4,5)),1),
+              (myparam((1,2,myparam(3),4,5)),1),
+              (myparam((1,2,myparam(6),4,5)),0),
+              (param((1.,2.)),0),
+              (param((1,2)),1),
+              (param((1,2,3,4,5)),1),
+              (param((1,2,myparam(3),4,5)),1),
+              (param((1,2,param(3),4,5)),1),
+              (param((1,2,param(6),4,5)),0),
              )
        self._test(cata,liste)
 
@@ -120,6 +151,10 @@ class TestValidCase(unittest.TestCase):
               (("aaaa","axyz","bbbb","zzz"),1),
               ("aaaa",1),("aaaaa",1),
               ("axyzaa",1),("bbbbaaa",1),
+              (("aaaa",param("aaaaa"),"axyzaa","bbbbaaa","zzz"),1),
+              (("aaaa",param("aaaa"),"axyzaa","bbbbaaa","zzz"),0),
+              (("aaaa",myparam("aaaaa"),"axyzaa","bbbbaaa","zzz"),1),
+              (("aaaa",myparam("aaaa"),"axyzaa","bbbbaaa","zzz"),0),
              )
        self._test(cata,liste)
 
@@ -137,6 +172,8 @@ class TestValidCase(unittest.TestCase):
        cata=SIMP(statut='o',typ='I',min=1,max=1,into =( 1,2,3),validators=PairVal())
        liste=(
               (2,1),(1,0),(3,0),(4,0),
+              (param(2),1),(param(3),0),
+              (myparam(2),1),(myparam(3),0),
              )
        self._test(cata,liste)
 

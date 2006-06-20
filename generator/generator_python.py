@@ -32,6 +32,7 @@ import Accas
 import Extensions
 from Extensions.parametre import ITEM_PARAMETRE
 from Formatage import Formatage
+from Extensions.param2 import Formula
 
 def entryPoint():
    """
@@ -149,6 +150,8 @@ class PythonGenerator:
          return self.generMCNUPLET(obj)
       elif isinstance(obj,ITEM_PARAMETRE):
          return self.generITEM_PARAMETRE(obj)
+      elif isinstance(obj,Formula):
+         return self.generFormula(obj)
       else:
          raise "Type d'objet non prévu",obj
 
@@ -237,17 +240,15 @@ class PythonGenerator:
    def generITEM_PARAMETRE(self,obj):
        return repr(obj) 
 
+   def generFormula(self,obj):
+       return repr(obj) 
+
    def generPARAMETRE(self,obj):
       """
          Cette méthode convertit un PARAMETRE
          en une liste de chaines de caractères à la syntaxe python
       """
-      if type(obj.valeur) == types.StringType:
-        # PN pour corriger le bug a='3+4' au lieu de a= 3+4
-        #return obj.nom + " = '" + obj.valeur + "';\n"
-        return obj.nom + " = " + obj.valeur + ";\n"
-      else:
-        return obj.nom + ' = ' + str(obj.valeur) + ';\n'
+      return repr(obj) + ";\n"
 
    def generETAPE_NIVEAU(self,obj):
       """
@@ -306,8 +307,8 @@ class PythonGenerator:
         if nom == '' : nom = 'sansnom'
         l.append(nom + ' = FORMULE(')
         for v in obj.mc_liste:
-	    text=self.generator(v)
-	    l.append(v.nom+'='+text)
+            text=self.generator(v)
+            l.append(v.nom+'='+text)
         l.append(');')
         return l
 
@@ -437,11 +438,21 @@ class PythonGenerator:
           liste=self.generator(v)
           for mocle in liste :
             l.append(mocle)
+        elif isinstance(v,Accas.MCFACT):
+          liste=self.generator(v)
         elif isinstance(v,Accas.MCList):
           liste=self.generator(v)
           liste[0]=v.nom+'='+liste[0]
-          for mocle in liste :
-            l.append(mocle)
+          # PN  essai de correction bug identation
+          if (hasattr(v,'data')) :
+            if (isinstance(v.data[0],Accas.MCFACT) and (len(v.data) == 1)):
+               l.append(liste)
+            else:
+               for mocle in liste :
+                 l.append(mocle)
+          else :
+             for mocle in liste :
+               l.append(mocle)
         else:
           data=self.generator(v)
           if type(data) == types.ListType:
@@ -451,6 +462,42 @@ class PythonGenerator:
           l.append(data)
       return l
 
+   def format_item(self,valeur,etape):
+      if type(valeur) == types.InstanceType :
+         if valeur.__class__.__name__ == 'CO' or hasattr(etape,'sdprods') and valeur in etape.sdprods :
+            s = "CO('"+ self.generator(valeur) +"')"
+         elif isinstance(valeur,Accas.PARAMETRE):
+            # il ne faut pas prendre la string que retourne gener
+            # mais seulement le nom dans le cas d'un paramètre
+            s = valeur.nom
+         else:
+            s = self.generator(valeur)
+      elif type(valeur) == types.FloatType :
+         # Pour un flottant on utilise str
+         # ou la notation scientifique
+         s = str(valeur)
+         try :
+            clefobj=obj.GetNomConcept()
+            if self.appli.dict_reels.has_key(clefobj):
+               if self.appli.dict_reels[clefobj].has_key(valeur):
+                  s=self.appli.dict_reels[clefobj][valeur]
+         except:
+            pass
+      elif type(valeur) == types.StringType :
+         if valeur.find('\n') == -1:
+            # pas de retour chariot, on utilise repr
+            s = repr(valeur)
+         elif valeur.find('"""') == -1:
+            # retour chariot mais pas de triple ", on formatte
+            s='"""'+valeur+'"""'
+         else:
+            s = repr(valeur)
+      else :
+         # Pour les autres types on utilise repr
+         s = repr(valeur)
+      return s
+
+
    def generMCSIMP(self,obj) :
       """
           Convertit un objet MCSIMP en une liste de chaines de caractères à la
@@ -459,70 +506,13 @@ class PythonGenerator:
       if type(obj.valeur) in (types.TupleType,types.ListType) :
          s = ''
          for val in obj.valeur :
-            if type(val) == types.InstanceType :
-               if hasattr(obj.etape,'sdprods') and val in obj.etape.sdprods :
-                  s = s + "CO('"+ self.generator(val) +"')"
-               elif val.__class__.__name__ == 'CO':
-                  s = s + "CO('"+ self.generator(val) +"')"
-               elif isinstance(val,Accas.PARAMETRE):
-                  # il ne faut pas prendre la string que retourne gener
-                  # mais seulement le nom dans le cas d'un paramètre
-                  s = s + val.nom
-               else:
-                  s = s + self.generator(val)
-            elif type(val) == types.FloatType :
-               # Pour un flottant on utilise str qui a une precision de
-               # "seulement" 12 chiffres : evite les flottants du genre 0.599999999999998
-               s2=str(val)
-               try :
-                 clefobj=obj.GetNomConcept()
-                 if self.appli.dict_reels.has_key(clefobj):
-                    if self.appli.dict_reels[clefobj].has_key(val):
-                       s2=self.appli.dict_reels[clefobj][val]
-               except:
-                  pass
-               s = s + s2
-            else :
-               # Pour les autres types on utilise repr
-               s = s + `val`
-            s = s + ','
+            s =s +self.format_item(val,obj.etape) + ','
          if len(obj.valeur) > 1:
             s = '(' + s + '),'
-	 if obj.nbrColonnes() :
-	    s=self.formatColonnes(obj.nbrColonnes(),s)
+         if obj.nbrColonnes() :
+            s=self.formatColonnes(obj.nbrColonnes(),s)
       else :
-         val=obj.valeur
-         if type(val) == types.InstanceType :
-            if hasattr(obj.etape,'sdprods') and val in obj.etape.sdprods :
-               s = "CO('"+ self.generator(val) +"')"
-            elif val.__class__.__name__ == 'CO':
-               s = "CO('"+ self.generator(val) +"')"
-            elif isinstance(val,Accas.PARAMETRE):
-               # il ne faut pas prendre la string que retourne gener
-               # mais seulement le nom dans le cas d'un paramètre
-               s = val.nom
-            elif isinstance(val,Extensions.parametre.PARAMETRE):
-	       s = val.nom
-            else:
-               s = self.generator(val)
-         elif type(val) == types.FloatType :
-            # Pour un flottant on utilise str 
-            # ou la notation scientifique
-            s = str(val)
-            try :
-              clefobj=obj.GetNomConcept()
-              if self.appli.dict_reels.has_key(clefobj):
-                 if self.appli.dict_reels[clefobj].has_key(val):
-                    s=self.appli.dict_reels[clefobj][val]
-            except:
-              pass
-         else :
-            # Pour les autres types on utilise repr
-            if isinstance(val,Extensions.parametre.PARAMETRE):
-	       s = val.nom
-            else:
-               s = `val`
-         s= s + ','
+         s=self.format_item(obj.valeur,obj.etape) + ','
       return s
 
 
@@ -531,13 +521,13 @@ class PythonGenerator:
       #if 1 == 1 :
         liste=text.split(",")
         indice=0
-	textformat=""
+        textformat=""
         while ( indice < len(liste) -2  ) :
           for l in range(nbrColonnes) :
-	    textformat=textformat+liste[indice]+","
-	    indice=indice+1
-	  textformat=textformat+"\n"
-	textformat=textformat+"),"
+            textformat=textformat+liste[indice]+","
+            indice=indice+1
+          textformat=textformat+"\n"
+        textformat=textformat+"),"
       except :
       #else :
          textformat=text

@@ -47,6 +47,7 @@ from Extensions import parametre
 from Extensions import param2
 import I_OBJECT
 import CONNECTOR
+from I_VALIDATOR import ValError,listProto
 
 class MCSIMP(I_OBJECT.OBJECT):
 
@@ -75,8 +76,6 @@ class MCSIMP(I_OBJECT.OBJECT):
       return None
     elif type(self.valeur) == types.FloatType : 
       # Traitement d'un flottant isolé
-      # txt = repr_float(self.valeur)
-      # Normalement str fait un travail correct
       txt = str(self.valeur)
       clefobj=self.GetNomConcept()
       if self.jdc.appli.dict_reels.has_key(clefobj):
@@ -85,38 +84,28 @@ class MCSIMP(I_OBJECT.OBJECT):
     elif type(self.valeur) in (types.ListType,types.TupleType) :
       # Traitement des listes
       txt='('
-      i=0
+      sep=''
       for val in self.valeur:
         if type(val) == types.FloatType : 
-           # CCAR : Normalement str fait un travail correct
-           #txt=txt + i*',' + repr_float(val)
            clefobj=self.GetNomConcept()
            if self.jdc.appli.dict_reels.has_key(clefobj):
               if self.jdc.appli.dict_reels[clefobj].has_key(val):
-                 txt=txt + i*',' +self.jdc.appli.dict_reels[clefobj][val]
+                 txt=txt + sep +self.jdc.appli.dict_reels[clefobj][val]
               else :
-                 txt=txt + i*',' + str(val)
+                 txt=txt + sep + str(val)
            else :
-              txt=txt + i*',' + str(val)
-        elif isinstance(val,ASSD): 
-           txt = txt + i*',' + val.get_name()
-    #PN
-    # ajout du elif
-        elif type(val) == types.InstanceType and val.__class__.__name__ in  ('PARAMETRE','PARAMETRE_EVAL'):
-      	   txt = txt + i*','+ str(val) 
+              txt=txt + sep + str(val)
         else: 
-           txt = txt + i*','+ myrepr.repr(val)
-        i=1
+           txt = txt + sep+ str(val)
+        if len(txt) > 200:
+            #ligne trop longue, on tronque
+            txt=txt+" ..."
+            break
+        sep=','
       txt=txt+')'
-    elif isinstance(self.valeur,ASSD): 
-      # Cas des ASSD
-      txt=self.getval()
-    elif type(self.valeur) == types.InstanceType and self.valeur.__class__.__name__ in  ('PARAMETRE','PARAMETRE_EVAL'):
-      # Cas des PARAMETRES
-      txt=str(self.valeur)
     else:
       # Traitement des autres cas
-      txt = myrepr.repr(self.valeur)
+      txt = str(self.valeur)
 
     # txt peut etre une longue chaine sur plusieurs lignes.
     # Il est possible de tronquer cette chaine au premier \n et 
@@ -218,49 +207,53 @@ class MCSIMP(I_OBJECT.OBJECT):
   def isoblig(self):
     return self.definition.statut=='o'
 
+  def valid_val(self,valeur):
+      """
+        Verifie que la valeur passee en argument (valeur) est valide
+        sans modifier la valeur courante 
+      """
+      lval=listProto.adapt(valeur)
+      if lval is None:
+         valid=0
+         mess="None n'est pas une valeur autorisée"
+      else:
+         try:
+            for val in lval:
+                self.typeProto.adapt(val)
+                self.intoProto.adapt(val)
+            self.cardProto.adapt(lval)
+            if self.definition.validators:
+                self.definition.validators.convert(lval)
+            valid,mess=1,""
+         except ValError,e:
+            mess=str(e)
+            valid=0
+      return valid,mess
+
   def valid_valeur(self,new_valeur):
       """
         Verifie que la valeur passee en argument (new_valeur) est valide
         sans modifier la valeur courante (evite d'utiliser set_valeur et est plus performant)
       """
-      old_valeur=self.valeur
-      old_val=self.val
-      self.valeur = new_valeur
-      self.val = new_valeur
-      self.state="modified"
-      validite=self.isvalid()
-      self.valeur = old_valeur
-      self.val = old_valeur
-      self.state="modified"
-      self.isvalid()
+      validite,mess=self.valid_val(new_valeur)
       return validite
 
   def valid_valeur_partielle(self,new_valeur):
       """
-        Verifie que la valeur passee en argument (new_valeur) est partiellement valide
-        sans modifier la valeur courante (evite d'utiliser set_valeur et est plus performant)
+        Verifie que la valeur passee en argument (new_valeur) est une liste partiellement valide
+        sans modifier la valeur courante du mot cle
       """
-      old_valeur=self.valeur
-      old_val=self.val
+      validite=1
+      try:
+          for val in new_valeur:
+              self.typeProto.adapt(val)
+              self.intoProto.adapt(val)
+              #on ne verifie pas la cardinalité
+              if self.definition.validators:
+                  validite=self.definition.validators.valide_liste_partielle(new_valeur)
+      except ValError,e:
+          validite=0
 
-      self.valeur = new_valeur
-      self.val = new_valeur
-      self.state="modified"
-      validite=0
-      if self.isvalid():
-         validite=1
-      elif self.definition.validators :
-         validite=self.definition.validators.valide_liste_partielle(new_valeur)
-
-      if validite==0:
-         min,max=self.get_min_max()
-         if len(new_valeur) < min :
-            validite=1
-
-      self.valeur = old_valeur
-      self.val = old_valeur
-      self.state="modified"
-      self.isvalid()
       return validite
 
   def update_condition_bloc(self):
@@ -290,7 +283,7 @@ class MCSIMP(I_OBJECT.OBJECT):
     sd = self.jdc.get_sd_avant_etape(new_valeur,self.etape)
     #sd = self.jdc.get_contexte_avant(self.etape).get(new_valeur,None)
     #print sd
-    if sd :
+    if sd is not None:
       return sd,1
     lsd = self.jdc.cherche_list_avant(self.etape,new_valeur) 
     if lsd :
@@ -303,28 +296,62 @@ class MCSIMP(I_OBJECT.OBJECT):
         objet = eval(new_valeur,d)
         return objet,1
       except Exception:
-	itparam=self.cherche_item_parametre(new_valeur)
-	if itparam:
-	     return itparam,1
-	try :
-	     object=eval(new_valeur.valeur,d)
-	except :
-	     pass
+        itparam=self.cherche_item_parametre(new_valeur)
+        if itparam:
+             return itparam,1
+        try :
+             object=eval(new_valeur.valeur,d)
+        except :
+             pass
         if CONTEXT.debug : traceback.print_exc()
         return None,0
 
+  def eval_val(self,new_valeur):
+    """
+       Tente d'evaluer new_valeur comme un objet du jdc (par appel a eval_val_item)
+       ou comme une liste de ces memes objets
+       Si new_valeur contient au moins un separateur (,), tente l'evaluation sur
+       la chaine splittee
+    """
+    if type(new_valeur) in (types.ListType,types.TupleType):
+       valeurretour=[]
+       for item in new_valeur :
+          valeurretour.append(self.eval_val_item(item))
+       return valeurretour
+    else:
+       valeur=self.eval_val_item(new_valeur)
+       return valeur
+
+  def eval_val_item(self,new_valeur):
+    """
+       Tente d'evaluer new_valeur comme un concept, un parametre, un objet Python
+       Si c'est impossible retourne new_valeur inchange
+       argument new_valeur : string (nom de concept, de parametre, expression ou simple chaine)
+    """
+    if self.etape and self.etape.parent:
+       valeur=self.etape.parent.eval_in_context(new_valeur,self.etape)
+       return valeur
+    else:
+       try :
+           valeur = eval(val)
+           return valeur
+       except:
+           #traceback.print_exc()
+           return new_valeur
+           pass
+
   def cherche_item_parametre (self,new_valeur):
         try:
-	  nomparam=new_valeur[0:new_valeur.find("[")]
-	  indice=new_valeur[new_valeur.find("[")+1:new_valeur.find("]")]
-	  for p in self.jdc.params:
-	     if p.nom == nomparam :
-	        if int(indice) < len(p.get_valeurs()):
-		   itparam=parametre.ITEM_PARAMETRE(p,int(indice))
-		   return itparam
-	  return None
-	except:
-	  return None
+          nomparam=new_valeur[0:new_valeur.find("[")]
+          indice=new_valeur[new_valeur.find("[")+1:new_valeur.find("]")]
+          for p in self.jdc.params:
+             if p.nom == nomparam :
+                if int(indice) < len(p.get_valeurs()):
+                   itparam=parametre.ITEM_PARAMETRE(p,int(indice))
+                   return itparam
+          return None
+        except:
+          return None
 
   def update_concept(self,sd):
     if type(self.valeur) in (types.ListType,types.TupleType) :
@@ -420,38 +447,41 @@ class MCSIMP(I_OBJECT.OBJECT):
       self.init_modif()
       self.valeur = new_objet
       self.val = new_objet
-      self.fin_modif()
-      step.reset_context()
       # On force l'enregistrement de new_objet en tant que concept produit 
       # de la macro en appelant get_type_produit avec force=1
       self.etape.get_type_produit(force=1)
+      self.fin_modif()
+      step.reset_context()
       #print "set_valeur_co",new_objet
       return 1,"Concept créé"
-	
+        
   def verif_existence_sd(self):
      """
         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-	avant étape, sinon enlève la référence à ces concepts
+        avant étape, sinon enlève la référence à ces concepts
      """
      #print "verif_existence_sd"
      # Attention : possible probleme avec include
+     # A priori il n'y a pas de raison de retirer les concepts non existants
+     # avant etape. En fait il s'agit uniquement eventuellement de ceux crees par une macro
      l_sd_avant_etape = self.jdc.get_contexte_avant(self.etape).values()  
      if type(self.valeur) in (types.TupleType,types.ListType) :
        l=[]
-       self.init_modif()
        for sd in self.valeur:
          if isinstance(sd,ASSD) :
-	    if sd in l_sd_avant_etape :
-	       l.append(sd)
-	 else:
-	    l.append(sd)
-       self.valeur=tuple(l)
-       self.fin_modif()
+            if sd in l_sd_avant_etape or self.etape.get_sdprods(sd.nom) is sd:
+               l.append(sd)
+         else:
+            l.append(sd)
+       if len(l) < len(self.valeur):
+          self.init_modif()
+          self.valeur=tuple(l)
+          self.fin_modif()
      else:
        if isinstance(self.valeur,ASSD) :
-	  if self.valeur not in l_sd_avant_etape :
+          if self.valeur not in l_sd_avant_etape and self.etape.get_sdprods(self.valeur.nom) is None:
              self.init_modif()
-	     self.valeur = None
+             self.valeur = None
              self.fin_modif()
  
   def get_min_max(self):
@@ -495,8 +525,32 @@ class MCSIMP(I_OBJECT.OBJECT):
      genea = self.get_genealogie()
      if "VALE_C" in genea and "DEFI_FONCTION" in genea : return 3
      if "VALE" in genea and "DEFI_FONCTION" in genea : return 2
-     print dir(self)
      return 0
+
+  def valide_item(self,item):
+      """Valide un item isolé. Cet item est candidat à l'ajout à la liste existante"""
+      valid=1
+      try:
+          #on verifie le type
+          self.typeProto.adapt(item)
+          #on verifie les choix possibles
+          self.intoProto.adapt(item)
+          #on ne verifie pas la cardinalité
+          if self.definition.validators:
+              valid=self.definition.validators.verif_item(item)
+      except ValError,e:
+          valid=0
+      return valid
+
+  def verif_type(self,item):
+      """Verifie le type d'un item de liste"""
+      try:
+          #on verifie le type
+          self.typeProto.adapt(item)
+          valid=1
+      except ValError,e:
+          valid=0
+      return valid
 
 #--------------------------------------------------------------------------------
  
@@ -504,92 +558,18 @@ class MCSIMP(I_OBJECT.OBJECT):
 # Elles doivent etre reintegrees des que possible
 
 
-  def isvalid(self,cr='non'):
-      """
-         Cette méthode retourne un indicateur de validité de l'objet de type MCSIMP
-
-           - 0 si l'objet est invalide
-           - 1 si l'objet est valide
-
-         Le paramètre cr permet de paramétrer le traitement. Si cr == 'oui'
-         la méthode construit également un comte-rendu de validation
-         dans self.cr qui doit avoir été créé préalablement.
-      """
-      if self.state == 'unchanged':
-        return self.valid
-      else:
-        valid = 1
-        v=self.valeur
-        #  verification presence
-        if self.isoblig() and v == None :
-          if cr == 'oui' :
-            self.cr.fatal(string.join(("Mot-clé : ",self.nom," obligatoire non valorisé")))
-          valid = 0
-
-        if v is None:
-           valid=0
-           if cr == 'oui' :
-              self.cr.fatal("None n'est pas une valeur autorisée")
-        else:
-           # type,into ...
-	   #PN ??? je n ose pas y toucher ???
-	   #if v.__class__.__name__ in ('PARAMETRE','EVAL', 'ITEM_PARAMETRE','PARAMETRE_EVAL'):
-	   if ((issubclass(v.__class__,param2.Formula)) or
-	        (v.__class__.__name__  in ('EVAL', 'ITEM_PARAMETRE','PARAMETRE_EVAL'))): 
-	      verif_type=self.verif_typeihm(v)
-	   else:
-	      verif_type=self.verif_type(val=v,cr=None)
-	      # cas des tuples avec un ITEM_PARAMETRE
-              if verif_type == 0:
-                 if type(v) == types.TupleType :
-	           new_val=[]
-	           for i in v:
-		     if ((issubclass(i.__class__,param2.Formula)) or
-	                 (i.__class__.__name__  in ('EVAL', 'ITEM_PARAMETRE','PARAMETRE_EVAL'))): 
-			  if self.verif_typeihm(val=i,cr=cr) == 0:
-			     verif_type = 0
-			     break
-		     else:
-		          new_val.append(i)
-		   if new_val != [] :
-		     verif_type=self.verif_type(val=new_val,cr=cr)
-		   else :
-		     # Cas d une liste de paramétre
-		     verif_type=self.verif_typeliste(val=v,cr=cr)
-		 else:
-	             verif_type=self.verif_type(val=v,cr=cr)
-           valid = verif_type*self.verif_into(cr=cr)*self.verif_card(cr=cr)
-           #
-           # On verifie les validateurs s'il y en a et si necessaire (valid == 1)
-           #
-           if valid and self.definition.validators and not self.definition.validators.verif(self.valeur):
-              if cr == 'oui' :
-                 self.cr.fatal(string.join(("Mot-clé : ",self.nom,"devrait avoir ",self.definition.validators.info())))
-              valid=0
-           # fin des validateurs
-           #
-	# cas d un item Parametre
-	if self.valeur.__class__.__name__ == 'ITEM_PARAMETRE':
-	   valid=self.valeur.isvalid()
-	   if valid == 0:
-              if cr == 'oui' :
-		 self.cr.fatal(string.join( repr (self.valeur), " a un indice incorrect"))
-
-        self.set_valid(valid)
-        return self.valid
-
-
   def verif_typeihm(self,val,cr='non'):
       try :
          val.eval()
-	 return 1
+         return 1
       except :
-	pass
+         traceback.print_exc()
+         pass
       return self.verif_type(val,cr)
 
   def verif_typeliste(self,val,cr='non') :
       verif=0
       for v in val :
-	verif=verif+self.verif_typeihm(v,cr)
+        verif=verif+self.verif_typeihm(v,cr)
       return verif
-								            
+

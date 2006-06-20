@@ -29,6 +29,7 @@
 # import de modules Python
 import string,types
 from math import *
+import traceback
 
 # import de modules Eficas
 from Noyau.N_CR import CR
@@ -48,182 +49,22 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   idracine = 'param'
 
   def __init__(self,nom,valeur=None):
-    # parent ne peut être qu'un objet de type JDC
-    self.dict_valeur=[]
-    self.valeur = self.interprete_valeur(valeur)
-    self.val=valeur
     self.nom = nom
     # La classe PARAMETRE n'a pas de définition : on utilise self pour
     # complétude
     self.definition=self
+    # parent ne peut être qu'un objet de type JDC
     self.jdc = self.parent = CONTEXT.get_current_step()
     self.niveau=self.parent.niveau
     self.actif=1
     self.state='undetermined'
     self.register()
+    self.dict_valeur=[]
+    #self.valeur = self.interprete_valeur(valeur)
+    #self.val=valeur
+    self.valeur = valeur
+    self.val=repr(valeur)
 
-  def __getitem__(self,key):
-    param_item=ITEM_PARAMETRE(self,key)
-    return param_item
-
-#  def __neg__(self):
-#    try:
-#      return -1*self.valeur
-#    except:
-#      print "******* Probleme : pas de valeur négative"
-#      return None
-    
-#  def __add__(self,a):
-#    try :
-#      return self.valeur+a.valeur
-#    except :
-#      print "******* Probleme : a l addition"
-#      return None
-
-#  def __radd__(self,a):
-#    try :
-#      return self.valeur+a.valeur
-#    except :
-#      print "******* Probleme : a l addition"
-#      return None
-
-#  def __sub__(self,a):
-#    try :
-#      return self.valeur  - a.valeur
-#    except :
-#      print "******* Probleme : a la soustraction"
-#      return None
-
-#  def __rsub__(self,a):
-#    try :
-#      return a.valeur - self.valeur
-#    except :
-#      print "******* Probleme : a la soustraction"
-#      return None
-
-
-#  def __mul__(self,a):
-#    try :
-#      return self.valeur*a.valeur
-#    except :
-#      print "******* Probleme : a la multiplication"
-#      return None
-
-#  def __rmul__(self,a):
-#    try :
-#      return self.valeur*a.valeur
-#    except :
-#      print "******* Probleme : a la multiplication"
-#      return None
-
-#  def __add__(self,other):
-#    try :
-#      return self.valeur+other
-#    except :
-#      print "******* Probleme : a l addition"
-#      return None
-
-#  def __radd__(self,other):
-#    try :
-#      return self.valeur+other
-#    except :
-#      print "******* Probleme : a l addition"
-#      return None
-
-#  def __sub__(self,other):
-#    try :
-#      return self.valeur  - other
-#    except :
-#      print "******* Probleme : a la soustraction"
-#      return None
-
-#  def __rsub__(self,other):
-#    try :
-#      return other - self.valeur
-#    except :
-#      print "******* Probleme : a la soustraction"
-#      return None
-
-#  def  __mul__ (self,other):
-#    retour=None
-#    try :
-#      retour = eval(self.valeur) * other
-#    except :
-#      try :
-#         retour = self.valeur * other
-#      except :
-#         try :
-#	   retour = eval(self.valeur) * eval(other)
-#	 except :
-#	   try :
-#	     retour = self.valeur * eval(other)
-#	   except :
-#	     print other
-#             print "******* Probleme : a la multiplication _mul__"
-#    return retour
-#
-#  def __rmul__ (self,other):
-#    retour=None
-#    try :
-#      retour = eval(self.valeur) * other
-#    except :
-#      try :
-#         retour = self.valeur * other
-#      except :
-#         try :
-#	    retour = eval(self.valeur) * eval(other)
-#	 except :
-#            print "******* Probleme : a la multiplication __rmul__"
-#    return retour
-#
-#
-#  def __div__(self,other):
-#    retour=None
-#    try:
-#      retour = eval(self.valeur) / other
-#    except :
-#      try :
-#	retour = self.valeur / other
-#      except :
-#	print "******* Probleme : a la division"
-#    return retour
-#
-#
-#  def cos(self):
-#      try :
-#      	retour=cos(self.valeur)
-#        return retour
-#      except:
-#        print "pb pour cosinus"
-#
-#  def sin(self):
-#      try :
-#      	retour=sin(self.valeur)
-#        return retour
-#      except:
-#        print "pb pour sinus"
-#
-#  def tan(self):
-#      try :
-#      	retour=tan(self.valeur)
-#        return retour
-#      except:
-#        print "pb pour tangente"
-#
-#  def log(self):
-#      try :
-#      	retour=log(self.valeur)
-#        return retour
-#      except:
-#        print "pb pour log"
-#
-#  def sqrt(self):
-#      try :
-#      	retour=sqrt(self.valeur)
-#        return retour
-#      except:
-#        print "pb pour sqrt"
-#
   def interprete_valeur(self,val):
     """
     Essaie d'interpréter val (chaîne de caractères)comme :
@@ -233,26 +74,21 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     - une liste d'items d'un type qui précède
     Retourne la valeur interprétée
     """
-    if not val : return None
+    #if not val : return None
     valeur = None
-    #  on vérifie si val est un entier
-    try :
-        valeur = string.atoi(val)       # on a un entier
-        return valeur
-    except :
-        pass
-    #  on vérifie si val est un réel
-    try:
-        valeur = string.atof(val)   # on a un réel
-        return valeur
-    except :
-        pass
-    # on vérifie si val est un tuple
-    try :
-        valeur = eval(val)
-    except:
-        pass
+
+    if type(val) == types.StringType:
+       # on tente l'evaluation dans un contexte fourni par le parent s'il existe
+       if self.parent:
+          valeur=self.parent.eval_in_context(val,self)
+       else:
+          try :
+              valeur = eval(val)
+          except:
+              #traceback.print_exc()
+              pass
     #PN je n ose pas modifier je rajoute
+    # refus des listes heterogenes : ne dvrait pas etre la
     if valeur != None :
         if type(valeur) == types.TupleType:
             l_new_val = []
@@ -269,17 +105,14 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
                         return val
                 l_new_val.append(v)
             return tuple(l_new_val)
-	# PN : commente le print
-        #else:
-            # on a réussi à évaluer val en autre chose qu'un tuple ...
-            #print "on a réussi à évaluer %s en autre chose qu'un tuple ..." %val
-            #print 'on trouve : ',str(valeur),' de type : ',type(valeur)
-    # on retourne val comme une string car on n'a pas su l'interpréter
+
     if valeur != None :
        if type(valeur).__name__ == 'list':
           self.dict_valeur=[]
           for i in range(len(valeur)):
-	      self.dict_valeur.append(valeur[i])
+             self.dict_valeur.append(valeur[i])
+       return valeur
+    # on retourne val comme une string car on n'a pas su l'interpréter
     return val
 
   def get_valeurs(self):
@@ -297,6 +130,14 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     self.valeur = self.interprete_valeur(new_valeur)
     self.init_modif()
+
+  def set_nom(self,new_nom):
+    """
+    Change le nom du parametre
+    """
+    self.init_modif()
+    self.nom=new_nom
+    self.fin_modif()
 
   def init_modif(self):
     """
@@ -361,6 +202,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     self.parent = None
     self.jdc = None
     self.definition=None
+    self.niveau=None
 
   def active(self):
     """
@@ -413,7 +255,17 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
         Donne un echo de self sous la forme nom = valeur
     """
-    return self.nom+' = '+str(self.valeur)
+    if type(self.valeur) == types.StringType:
+         if self.valeur.find('\n') == -1:
+            # pas de retour chariot, on utilise repr
+            return self.nom+' = '+ repr(self.valeur)
+         elif self.valeur.find('"""') == -1:
+            # retour chariot mais pas de triple ", on formatte
+            return self.nom+' = """'+self.valeur+'"""'
+         else:
+            return self.nom+' = '+ repr(self.valeur)
+    else:
+       return self.nom+' = '+ str(self.valeur)
 
   def __str__(self):
     """
@@ -477,7 +329,13 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
       pass
 
   def eval(self):
-      return self.valeur
+      if isinstance(self.valeur,Formula):
+         return self.valeur.eval()
+      else:
+         return self.valeur
+
+  def __adapt__(self,validator):
+      return validator.adapt(self.eval())
 
 class COMBI_PARAMETRE :
   def __init__(self,chainevaleur,valeur):
@@ -506,7 +364,7 @@ class ITEM_PARAMETRE :
       if self.item < 0:
          isvalid =  0
       try:
-	 longueur= len(self.param_pere.dict_valeur) - 1
+         longueur= len(self.param_pere.dict_valeur) - 1
       except:
          longueur=0
       if self.item > longueur :

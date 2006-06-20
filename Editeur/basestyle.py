@@ -22,5 +22,6 @@ class STYLE:
     standard12_gras_italique = ( "Helvetica",14,'bold','italic')
 
     standardcourier10 = ("Courier",14)
+    statusfont = ("Helvetica",16)
 
 style=STYLE()

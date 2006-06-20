@@ -85,10 +85,10 @@ class Formatage :
   def formate_etape(self,liste):
     """
         Enrichissement de la chaine de caracteres representant l'etape (attribut
-	texte_etape de l'objet Formatage).
+        texte_etape de l'objet Formatage).
         Les elements a ajouter sont dans l'argument liste de la methode.
-	L'objet "liste" à traiter a été produit par le module generator. En particulier
-	les parenthèses et les virgules ont été produites par ce module
+        L'objet "liste" à traiter a été produit par le module generator. En particulier
+        les parenthèses et les virgules ont été produites par ce module
     """
     l_patterns_fin_etape = ( ');' , ');\n' )
     l_patterns_fin_mcf   = ( ')'  , '),'   )
@@ -167,6 +167,19 @@ class Formatage :
           contenant un mot-clef simple.
           L'attribut self.texte_etape est modifié (complété) par le traitement
       """
+      #
+      # Ajout PN pour defi_fonction
+      if self.texte_etape.find("DEFI_FONCTION") > 1 :
+          if s_mcsimp.find("\n")  > 1:
+              txt=""; bool = 0; numident=1
+              for l in s_mcsimp.splitlines() :
+                 if bool == 0 :
+                    bool = 1
+                    numident=s_mcsimp.find("=")+2
+                    txt=l
+                 else :
+                    txt=txt+('\n'+self.indent_courant*' '+numident*' ')*ind+l
+              s_mcsimp = txt
       longueur = self.longueur(self.texte_etape)
       increment = len(('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp))
       #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)

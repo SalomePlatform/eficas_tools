@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -145,7 +146,7 @@ valeurs seront effectivement prises en compte."""
         """
         Lance la vérification du corps de formule présent dans entry_exp
         """
-	new_nom = self.entry_nom.get()
+        new_nom = self.entry_nom.get()
         new_typ = self.option_menu_typ.getcurselection()
         new_arg = self.entry_arg.get()
         new_exp = self.entry_exp.get()
@@ -215,7 +216,7 @@ class FORMULETreeItem(compoformule.FORMULETreeItem):
         """
         Lance la vérification de FORMULE passée en argument
         """
-	return self.object.verif_formule(formule=formule)
+        return self.object.verif_formule(formule=formule)
 
 import Accas
 treeitem =FORMULETreeItem

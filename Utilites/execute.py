@@ -6,9 +6,9 @@ Module exec
 """
 
 try :
-	from developpeur import DEVELOPPEUR
+        from developpeur import DEVELOPPEUR
 except :
-	DEVELOPPEUR=None
+        DEVELOPPEUR=None
 
 if DEVELOPPEUR :
 
@@ -16,7 +16,7 @@ if DEVELOPPEUR :
     import scrute
     import types
     import developpeur
-    developpeur.sortie.write( "import de "+__name__+" : $Id: execute.py,v 1.1 2003/03/06 14:36:11 eficas Exp $" )
+    developpeur.sortie.write( "import de "+__name__+" : $Id: execute.py,v 1.2.8.1 2006/03/10 15:09:54 eficas Exp $" )
     developpeur.sortie.write( "\n" )
     developpeur.sortie.flush()
 

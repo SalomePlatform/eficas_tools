@@ -11,7 +11,7 @@ from Accas import *
 JdC = JDC_CATA(code='HOMARD',
                execmodul=None,
                regles = (AU_MOINS_UN('DONNEES_HOMARD'),),
-			)
+                        )
 
 # Type le plus general
 #class entier  (ASSD):pass
@@ -114,23 +114,23 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
 #
          regles=( AU_MOINS_UN('TYPE_RAFFINEMENT_LIBRE','TYPE_RAFFINEMENT_UNIFORME'),
                   EXCLUS('TYPE_RAFFINEMENT_LIBRE','TYPE_RAFFINEMENT_UNIFORME'),),
-	   TYPE_RAFFINEMENT_LIBRE = FACT(statut='f',
-           	RAFFINEMENT      = SIMP(statut='o',typ='TXM',     
+           TYPE_RAFFINEMENT_LIBRE = FACT(statut='f',
+                   RAFFINEMENT      = SIMP(statut='o',typ='TXM',     
                                  position='global',
                                  fr="Choix du mode de raffinement.",
                                  ang="Choice of refinement mode.",
                                  into=("LIBRE","UNIFORME",) ),
-	        DERAFFINEMENT = SIMP(statut='o',typ='TXM',     
+                DERAFFINEMENT = SIMP(statut='o',typ='TXM',     
                                  position='global',
                                  fr="Choix du mode de deraffinement.",
                                  ang="Choice of unrefinement mode.",
                                  into=("LIBRE",), ),),
-	   TYPE_RAFFINEMENT_UNIFORME = FACT(statut='f',
-           	RAFFINEMENT      = SIMP(statut='o',typ='TXM',     
+           TYPE_RAFFINEMENT_UNIFORME = FACT(statut='f',
+                   RAFFINEMENT      = SIMP(statut='o',typ='TXM',     
                                  fr="Choix du mode de raffinement.",
                                  ang="Choice of refinement mode.",
                                  into=("NON","NON-CONFORME","NON-CONFORME-INDICATEUR") ),
-	        DERAFFINEMENT = SIMP(statut='o',typ='TXM',     
+                DERAFFINEMENT = SIMP(statut='o',typ='TXM',     
                                  fr="Choix du mode de deraffinement.",
                                  ang="Choice of unrefinement mode.",
                                  into=("UNIFORME","NON",), ),),

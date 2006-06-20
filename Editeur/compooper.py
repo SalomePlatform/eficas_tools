@@ -88,7 +88,7 @@ class OPERPanel(panels.OngletPanel):
           self.valeur_choisie.set(choix)
       except:
           traceback.print_exc()
-	  
+          
 
   def choose_valeur_from_list(self,command):
       try:
@@ -283,6 +283,15 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
           Cette méthode retourne un objet commentarisé
           représentatif de self.object
       """
+      # Format de fichier utilisé
+      format=self.appli.format_fichier.get()
+      return self.object.get_objet_commentarise(format)
+
+  def get_objet_commentarise_BAK(self):
+      """
+          Cette méthode retourne un objet commentarisé
+          représentatif de self.object
+      """
       import generator,string,Accas
       # Format de fichier utilisé
       format=self.appli.format_fichier.get()
@@ -304,6 +313,11 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       parent.addentite(commande_comment,pos)
 
       return commande_comment
+
+  def visu_3D(self,appli,node) :
+      import TroisDPal
+      troisD=TroisDPal.TroisDPilote(node.item,appli,node.parent)
+      troisD.envoievisu()
 
 import Accas
 treeitem = EtapeTreeItem

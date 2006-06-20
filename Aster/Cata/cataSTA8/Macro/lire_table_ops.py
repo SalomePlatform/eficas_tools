@@ -1,4 +1,4 @@
-#@ MODIF lire_table_ops Macro  DATE 24/05/2005   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF lire_table_ops Macro  DATE 03/01/2006   AUTEUR REZETTE C.REZETTE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -113,7 +113,7 @@ def lecture_table(texte,nume,separ):
 
 # ------------------------------------------------------------------------------
 def lire_table_ops(self,UNITE,FORMAT,NUME_TABLE,SEPARATEUR,
-                        TYPE_TABLE,PARA,TITRE,**args):   
+                        PARA,TITRE,**args):   
   """Méthode corps de la macro LIRE_TABLE
   """
   import os
@@ -122,6 +122,7 @@ def lire_table_ops(self,UNITE,FORMAT,NUME_TABLE,SEPARATEUR,
   from Utilitai.UniteAster import UniteAster
 
   ier=0
+  nompro='LIRE_TABLE'
   ### On importe les definitions des commandes a utiliser dans la macro
   CREA_TABLE  =self.get_cmd('CREA_TABLE')
 
@@ -142,8 +143,7 @@ def lire_table_ops(self,UNITE,FORMAT,NUME_TABLE,SEPARATEUR,
   if FORMAT=='ASTER':
     ier,message,titr_tab,list_para,tab_lue=lecture_table(texte,NUME_TABLE,SEPARATEUR)
     if ier!=0 :
-       self.cr.fatal(message)
-       return ier
+       UTMESS('F', nompro, message)
   else                : pass
 
   ### création de la table ASTER :
@@ -170,7 +170,7 @@ def lire_table_ops(self,UNITE,FORMAT,NUME_TABLE,SEPARATEUR,
   motscles={}
   motscles['LISTE']=mcfact
 
-  ut_tab=CREA_TABLE(TITRE=titr_tab,TYPE_TABLE=TYPE_TABLE, **motscles)
+  ut_tab=CREA_TABLE(TITRE=titr_tab,**motscles)
 
   # remet UNITE dans son état initial
   UL.EtatInit()

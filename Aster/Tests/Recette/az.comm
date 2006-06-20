@@ -1,7 +1,7 @@
 
 
 DEBUT();
-#Pas trouve		shellpanel
+#Pas trouve                shellpanel
 
 MAIL=LIRE_MAILLAGE();
 

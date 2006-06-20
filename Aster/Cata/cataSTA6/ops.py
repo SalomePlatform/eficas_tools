@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 #@ MODIF ops Cata  DATE 23/10/2002   AUTEUR DURAND C.DURAND 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

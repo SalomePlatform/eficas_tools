@@ -204,15 +204,15 @@ class MCCOMPO(I_OBJECT.OBJECT):
       else :
         # dans ce cas on est en mode copie d'un motcle
         objet = name
-	# Appel de la methode qui fait le menage dans les references
-	# sur les concepts produits (verification que les concepts existent
-	# dans le contexte de la commande courante).
-	objet.verif_existence_sd()
+        # Appel de la methode qui fait le menage dans les references
+        # sur les concepts produits (verification que les concepts existent
+        # dans le contexte de la commande courante).
+        objet.verif_existence_sd()
 
       # On verifie que l'ajout d'objet est autorise
       if self.ispermis(objet) == 0:
         self.jdc.send_message("L'objet %s ne peut être un fils de %s" %(objet.nom,
-	                                                                self.nom))
+                                                                        self.nom))
         self.fin_modif()
         return 0
 
@@ -222,7 +222,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
          # on normalize l'objet
          objet=objet.normalize()
          # Le mot cle n'existe pas encore. On l'ajoute a la position
-	 # demandee (pos)
+         # demandee (pos)
          if pos == None :
            self.mc_liste.append(objet)
          else :
@@ -309,14 +309,14 @@ class MCCOMPO(I_OBJECT.OBJECT):
      l_mc = []
      if self.reste_val != {}:
         for k,v in self.reste_val.items() :
-	    l_mc.append([self,k,v])
+            l_mc.append([self,k,v])
      for child in self.mc_liste :
         if child.isvalid() : continue
         l_child = child.get_liste_mc_inconnus()
         for mc in l_child:
-	   l = [self]
-	   l.extend(mc)
-	   l_mc.append(l)
+           l = [self]
+           l.extend(mc)
+           l_mc.append(l)
      return l_mc
 
   def deep_update_condition_bloc(self):
@@ -388,7 +388,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
   def verif_existence_sd(self):
      """
         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-	avant étape, sinon enlève la référence à ces concepts
+        avant étape, sinon enlève la référence à ces concepts
      """
      for motcle in self.mc_liste :
          motcle.verif_existence_sd()

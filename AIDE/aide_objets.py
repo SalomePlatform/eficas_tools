@@ -32,7 +32,7 @@ class ITEM_INDEX :
        l_items = self.t_item[2]
        if l_items :
           for item in l_items :
-	     o = ITEM_INDEX(item)
+             o = ITEM_INDEX(item)
              o.build()
              self.l_items.append(o)
 
@@ -65,12 +65,12 @@ class INDEX :
       exec txt in d
       items = d.get("items",None)
       if items :
-	 self.titre = items[0]
-	 self.fichier = items[1]
-	 l_items = items[2]
-	 for item in l_items :
+         self.titre = items[0]
+         self.fichier = items[1]
+         l_items = items[2]
+         for item in l_items :
             o = ITEM_INDEX(item)
-	    o.build()
+            o.build()
             self.l_items.append(o)
 
       

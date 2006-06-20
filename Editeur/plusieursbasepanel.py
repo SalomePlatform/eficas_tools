@@ -121,52 +121,50 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       self.ajout_valeurs = None
 
       # boutons Ajouter et Supprimer
-      bouton_add = Button(self.frame_boutons_fleches,
+      self.bouton_add = Button(self.frame_boutons_fleches,
                           image = images.get_image('arrow_left'),
                           command = self.add_valeur_plusieurs_base)
-      bouton_sup = Button(self.frame_boutons_fleches,
+      self.bouton_sup = Button(self.frame_boutons_fleches,
                           image = images.get_image('arrow_right'),
                           command = self.sup_valeur_sans_into)
-      bouton_add.place(relx=0.3,rely=0.35)
-      bouton_sup.place(relx=0.3,rely=0.65)
+      self.bouton_add.place(relx=0.3,rely=0.35)
+      self.bouton_sup.place(relx=0.3,rely=0.65)
       # affichage de l'aide
       self.frame_aide.update()
       self.aide = Label(self.frame_aide,
                         text = aide,
                         justify='center',
                         anchor='center',
-      			wraplength=int(self.frame_aide.winfo_width()*0.8))
+                              wraplength=int(self.frame_aide.winfo_width()*0.8))
       self.aide.place(relx=0.5,rely=0.5,anchor='center',relwidth=1)
       self.Liste_valeurs.affiche_liste()
       if len(l_valeurs) > 0 :
           liste_marque=l_valeurs[-1]
           self.Liste_valeurs.surligne(liste_marque)
-	  self.selectValeur(liste_marque)
+          self.selectValeur(liste_marque)
       # boutons Accepter et Annuler
-      bouton_accepter = Button(self.frame_boutons,
+      self.bouton_accepter = Button(self.frame_boutons,
                                text='Valider',
                                command = lambda s=self,m=min,M=max : s.accepte_modifs_valeur(m,M))
-      bouton_annuler = Button(self.frame_boutons,
+      self.bouton_annuler = Button(self.frame_boutons,
                               text = 'Annuler',
                               command = self.annule_modifs_valeur)
-      bouton_accepter.place(relx=0.2, rely=0.2,relwidth=0.25)
-      bouton_annuler.place(relx=0.5, rely=0.2,relwidth=0.25)
-      #for but in (bouton_accepter,bouton_annuler):
-      #    but.pack(side='left',padx=4)
+      self.bouton_accepter.place(relx=0.2, rely=0.2,relwidth=0.25)
+      self.bouton_annuler.place(relx=0.5, rely=0.2,relwidth=0.25)
 
   def affiche_parametre(self) :
       if self.node.item.get_liste_param_possible() != [ ]:
          txtparam=""
-	 for param in self.node.item.get_liste_param_possible():
-	    txtparam=txtparam+repr(param)+"\n"
-	 if txtparam=="":
-	    showerror("Aucun parametre ","Pas de parametre de ce type")
-	 else :
-	    try :
-	    	self.self.fenetreparam.destroy()
-	    except:
-	        pass
-	    self.fenetreparam=FenetreDeParametre( self, self.node.item, self.parent.appli, txtparam)
+         for param in self.node.item.get_liste_param_possible():
+            txtparam=txtparam+repr(param)+"\n"
+         if txtparam=="":
+            showerror("Aucun parametre ","Pas de parametre de ce type")
+         else :
+            try :
+                    self.self.fenetreparam.destroy()
+            except:
+                pass
+            self.fenetreparam=FenetreDeParametre( self, self.node.item, self.parent.appli, txtparam)
 
   def valid_valeur(self):
       self.add_valeur_plusieurs_base()
@@ -182,32 +180,32 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
 
       atraiter=[]
       if type(valeur)  in (types.ListType,types.TupleType) :
-	 indice = 0
+         indice = 0
          while (indice < len(valeur)):
-	    v=valeur[indice]
-	    if self.node.item.wait_complex :
-	       if (v== 'RI' or v == 'MP'):
-	          try :
-	             t=tuple([v,valeur[indice+1],valeur[indice+2]])
-		     atraiter.append(t)
-		     indice=indice+3
-		  except :
-		     validite=0
-		     commentaire = "Veuillez entrer le complexe sous forme aster ou sous forme python"
-		     self.parent.appli.affiche_infos(commentaire)
-		     return
-	       else :     # ce n'est pas un tuple à la mode aster
-	          atraiter.append(v)
-		  indice = indice + 1
+            v=valeur[indice]
+            if self.node.item.wait_complex :
+               if (v== 'RI' or v == 'MP'):
+                  try :
+                     t=tuple([v,valeur[indice+1],valeur[indice+2]])
+                     atraiter.append(t)
+                     indice=indice+3
+                  except :
+                     validite=0
+                     commentaire = "Veuillez entrer le complexe sous forme aster ou sous forme python"
+                     self.parent.appli.affiche_infos(commentaire)
+                     return
+               else :     # ce n'est pas un tuple à la mode aster
+                  atraiter.append(v)
+                  indice = indice + 1
             else:  # on n'attend pas un complexe
-	      atraiter.append(v)
-	      indice=indice+1
+              atraiter.append(v)
+              indice=indice+1
       else:
-	 atraiter.append(valeur)
+         atraiter.append(valeur)
          
       for valeur in atraiter :
          encorevalide=self.node.item.valide_item(valeur)
-	 # qdsjfkllllllllllllllllll
+         # qdsjfkllllllllllllllllll
          if encorevalide :
             listecourante=self.Liste_valeurs.get_liste()
             encorevalide=self.node.item.valide_liste_partielle(valeur,listecourante)
@@ -226,10 +224,10 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
           selection_texte = f.read()
           f.close()
           self.ajout_valeurs = FenetreDeSelection(self, 
-	                                          self.node.item,
-						  self.parent.appli,
-                                        	  titre="Sélection de valeurs",
-                                        	  texte=selection_texte)
+                                                  self.node.item,
+                                                  self.parent.appli,
+                                                  titre="Sélection de valeurs",
+                                                  texte=selection_texte)
       except:
           traceback.print_exc()
           showinfo("Erreur de fichier","impossible d'ouvir le fichier "+nom_fichier)
@@ -279,40 +277,6 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       self.entry.bind("<KP_Enter>",lambda e,c=command:c())
       self.entry.focus()
 
-  #def make_entry(self,frame,command,x=0.28,y=0.2):
-      """
-      Crée l'entry de saisie de la valeur souhaitée : distingue le
-      cas d'un complexe attendu, d'une autre valeur quelconque
-      """
-      #print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
-      #print "                                                  "
-      #print "A priori on ne doit plus passer dans cette methode "
-      #print "                                                  "
-      #print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
-      #if self.node.item.wait_complex():
-      #    self.typ_cplx=StringVar()
-      #    self.typ_cplx.set('RI')
-      #    rb1 = Radiobutton(frame, text='RI',variable=self.typ_cplx,value='RI')
-      #    rb2 = Radiobutton(frame, text='MP',variable=self.typ_cplx,value='MP')
-      #    self.entry1 = Pmw.EntryField(frame,validate='real')
-      #    self.entry2 = Pmw.EntryField(frame,validate='real')
-      #    rb1.place(relx=0.05,rely = 0.4)
-      #    rb2.place(relx=0.05,rely = 0.6)
-      #    self.entry1.component('entry').bind("<Return>",lambda e,s=self:s.entry2.component('entry').focus)
-      #    self.entry2.component('entry').bind("<Return>",lambda e,c=command:c())
-      #    self.entry1.component('entry').bind("<KP_Enter>",lambda e,s=self:s.entry2.component('entry').focus)
-      #    self.entry2.component('entry').bind("<KP_Enter>",lambda e,c=command:c())
-      #    self.entry1.place(relx=0.27,rely = 0.5,relwidth=0.35)
-      #    self.entry2.place(relx=0.65,rely = 0.5,relwidth=0.35)
-      #    self.entry1.focus()
-      #else:
-      #    self.entry = Entry(frame,relief='sunken')
-      #    self.entry.place(relx=0.28,rely=0.2,relwidth=0.6)
-      #	   self.entry.place(relx=0.28,rely=y,relwidth=0.6)
-      #    self.entry.bind("<Return>",lambda e,c=command:c())
-      #    self.entry.bind("<KP_Enter>",lambda e,c=command:c())
-      #    self.entry.focus()
-
   def get_valeur(self):
       """
       Retourne la valeur saisie par l'utilisateur dans self.entry
@@ -321,28 +285,43 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       if hasattr(self,'entry'):
          # Traitement d'une entree unique
          valeurentree = self.entry.get()
-	 if (valeurentree == None or valeurentree ==""):
-	    return None,0,""
-	 if (valeurentree[0] != "(") and (valeurentree.find(',') < len(valeurentree)):
-	    valeurs=[]
-	    for v in valeurentree.split(','):
-	      vsimple,validite=self.node.item.eval_valeur(v)
-	      # Pn If ajoute  pour le panneau "double"
-	      #if isinstance(vsimple,LASSD) : 
-	      #	 commentaire = "impossible de mélanger reels et liste prédéfinie"
-	      #  validite = 0
-	      #	 break 
-	      if validite :
-		 valeurs.append(vsimple)
-	      else:
-		 commentaire = "impossible d'évaluer : %s " %`valeurentree`
-		 break
-	    valeur=valeurs
-         else: 
-            valeur,validite=self.node.item.eval_valeur(valeurentree)
-         if not validite and commentaire == "":
-            commentaire = "impossible d'évaluer : %s " %`valeurentree`
+         if (valeurentree == None or valeurentree ==""):
+            return None,0,""
+
+         #On tente une evaluation globale
+         valeur,validite=self.node.item.eval_valeur(valeurentree)
+         if valeur == valeurentree:
+             #L'evaluation n'a rien donné : on a toujours la string
+             #on découpe la string sur le séparateur , si c'est possible
+             if valeurentree.find(',') != -1:
+                 valeur=[]
+                 for v in valeurentree.split(','):
+                     vsimple,validite=self.node.item.eval_valeur(v)
+                     valeur.append(vsimple)
+
          return valeur,validite,commentaire
+
+
+        # if (valeurentree[0] != "(") and (valeurentree.find(',') < len(valeurentree)):
+        #    valeurs=[]
+        #    for v in valeurentree.split(','):
+        #      vsimple,validite=self.node.item.eval_valeur(v)
+              # Pn If ajoute  pour le panneau "double"
+              #if isinstance(vsimple,LASSD) : 
+              #         commentaire = "impossible de mélanger reels et liste prédéfinie"
+              #  validite = 0
+              #         break 
+        #      if validite :
+        #         valeurs.append(vsimple)
+        #      else:
+        #         commentaire = "impossible d'évaluer : %s " %`valeurentree`
+        #         break
+        #    valeur=valeurs
+        # else: 
+        #    valeur,validite=self.node.item.eval_valeur(valeurentree)
+        # if not validite and commentaire == "":
+        #    commentaire = "impossible d'évaluer : %s " %`valeurentree`
+        # return valeur,validite,commentaire
       #else:
       #   # Traitement d'une entree de type complexe
       #   try:
@@ -456,11 +435,11 @@ class PLUSIEURS_BASE_OR_UNELISTE_Panel(PLUSIEURS_BASE_Panel,UNIQUE_ASSD_Panel):
       liste_noms_sd = self.tri(liste_noms_sd)
       self.listbox = Pmw.ScrolledListBox(self.frame_haut,
                         items=liste_noms_sd,
-		labelpos='n',
-		#label_text="Structures de données du type\n requis parl'objet courant :",
-		label_text="Listes du type\n requis parl'objet courant :",
-		listbox_height = 6,
-		dblclickcommand=lambda s=self,c=UNIQUE_ASSD_Panel.valid_valeur : s.choose_valeur_from_list(c))
+                labelpos='n',
+                #label_text="Structures de données du type\n requis parl'objet courant :",
+                label_text="Listes du type\n requis parl'objet courant :",
+                listbox_height = 6,
+                dblclickcommand=lambda s=self,c=UNIQUE_ASSD_Panel.valid_valeur : s.choose_valeur_from_list(c))
       self.listbox.place(relx=0.00,rely=0.00,relwidth=0.4)
 
       # On eneleve le label pour gagner de la place 
@@ -492,8 +471,8 @@ class PLUSIEURS_BASE_OR_UNELISTE_Panel(PLUSIEURS_BASE_Panel,UNIQUE_ASSD_Panel):
       self.Liste_valeurs = ListeChoix(self,self.frame_valeurs,l_valeurs,
                                       liste_commandes = liste_commandes_valeurs,
                                       titre="Valeur(s) non-prédéfinies(s)",
-				      fonte_titre=None
-				      )
+                                      fonte_titre=None
+                                      )
 
       for fram in (self.frame1,self.frame2,self.frame_bas,self.frame_haut,self.frame_valeurs,
                  self.frame_fleches,self.frame_choix):
@@ -539,8 +518,8 @@ class PLUSIEURS_BASE_OR_UNELISTE_Panel(PLUSIEURS_BASE_Panel,UNIQUE_ASSD_Panel):
       a=(3+8j)
       d_types = { 'TXM' : type('A'),
                   'R'   : type(3.),
-		  'I'   : type(0),
-		  'C'   : type(a)}
+                  'I'   : type(0),
+                  'C'   : type(a)}
 
       # On enleve seulement ceux qu'on peut
       # Sur certaines listes, il est possible qu'on ne 
@@ -550,19 +529,19 @@ class PLUSIEURS_BASE_OR_UNELISTE_Panel(PLUSIEURS_BASE_Panel,UNIQUE_ASSD_Panel):
       typecherche = None
       for t in typespossibles:
           if t in d_types.keys() :
-	     typecherche = d_types[t]
-	     break
+             typecherche = d_types[t]
+             break
       for liste in liste_noms_sd:
           valeur,validite=self.node.item.eval_valeur(liste)
-	  for mc in valeur.etape.mc_liste :
-	      try :
-	         if type(mc.valeur)  in (types.ListType,types.TupleType) :
-		    typeliste=type(mc.valeur[0])
-		 else :
-		    typeliste=type(mc.valeur)
-		 if type(mc.valeur[0]) == typecherche:
-	            listefinale.append(liste)
-	      except:
-	         listefinale.append(liste)
+          for mc in valeur.etape.mc_liste :
+              try :
+                 if type(mc.valeur)  in (types.ListType,types.TupleType) :
+                    typeliste=type(mc.valeur[0])
+                 else :
+                    typeliste=type(mc.valeur)
+                 if type(mc.valeur[0]) == typecherche:
+                    listefinale.append(liste)
+              except:
+                 listefinale.append(liste)
       return listefinale
 

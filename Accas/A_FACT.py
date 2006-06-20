@@ -30,3 +30,9 @@ class FACT(N_FACT.FACT,I_ENTITE.ENTITE):
       I_ENTITE.ENTITE.__init__(self)
       N_FACT.FACT.__init__(self,*tup,**args)
 
+from Noyau import N_OBJECT
+from Ihm import I_OBJECT
+
+class ErrorObj(I_OBJECT.ErrorObj,N_OBJECT.ErrorObj):pass
+N_OBJECT.ErrorObj=ErrorObj
+

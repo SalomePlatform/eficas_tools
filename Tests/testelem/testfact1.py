@@ -36,18 +36,20 @@ Fin Mot cle Facteur :mcs1
 
    def testType1(self):
       """Verification de type"""
-      self.assertRaises(AttributeError,self.cata,1,'mcs1',None)
+      #Ne leve plus d'exception
+      #self.assertRaises(AttributeError,self.cata,1,'mcs1',None)
       o=self.cata({'a':1.},'mcs1',None)
       cr=o.report()
       expected_cr="""Mot cle Facteur :mcs1
    Mot-clé simple : a
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      ! 1.0 n'est pas d'un type autorisé !
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 1.0 n'est pas d'un type autorisé: ('I',) !
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    Fin Mot-clé simple : a
 Fin Mot cle Facteur :mcs1
 """
-      self.assertEqual(str(cr) , expected_cr)
+      msg="le rapport d'erreur est incorrect.\n expected =\n%s\n got =\n%s " % (expected_cr,str(cr))
+      self.assertEqual(str(cr) , expected_cr,msg=msg)
 
    def test031(self):
        cata=FACT(min=2,max=3,a=SIMP(typ='I',statut='o'),)
@@ -84,6 +86,11 @@ Fin Mot cle Facteur :mcs1
              ({},1),
              ({'xx':{}},1),
              ({'xx':{'a':1}},1),
+             ({'xx':"error"},0),
+             ({'xx':("error","err2","err3")},0),
+             ({'xx':({'a':1},"err2","err3")},0),
+             ({'xx':("err1",{'a':1},"err3")},0),
+             ({'xx':("err1",{'a':1},"err3","err4")},0),
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcf',None)

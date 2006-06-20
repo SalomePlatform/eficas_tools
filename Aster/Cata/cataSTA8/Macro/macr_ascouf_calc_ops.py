@@ -1,4 +1,4 @@
-#@ MODIF macr_ascouf_calc_ops Macro  DATE 08/02/2005   AUTEUR CIBHHLV L.VIVAN 
+#@ MODIF macr_ascouf_calc_ops Macro  DATE 22/05/2006   AUTEUR MCOURTOI M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -32,6 +32,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
   import math
   import aster
   from math import pi,sin,cos,sqrt,atan2
+  from Utilitai.Utmess     import UTMESS
   ier=0
 # On recopie les mots cles affe_materiau et impr_table pour les proteger
   mc_AFFE_MATERIAU=AFFE_MATERIAU
@@ -49,10 +50,9 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
   IMPR_TABLE       =self.get_cmd('IMPR_TABLE'      )
   DEFI_FOND_FISS   =self.get_cmd('DEFI_FOND_FISS'  )
   CALC_THETA       =self.get_cmd('CALC_THETA'      )
-  CALC_G_THETA_T   =self.get_cmd('CALC_G_THETA_T'  )
-  CALC_G_LOCAL_T   =self.get_cmd('CALC_G_LOCAL_T'  )
-  POST_RCCM        =self.get_cmd('POST_RCCM'  )
-  POST_RELEVE_T    =self.get_cmd('POST_RELEVE_T'  )
+  CALC_G           =self.get_cmd('CALC_G'          )
+  POST_RCCM        =self.get_cmd('POST_RCCM'       )
+  POST_RELEVE_T    =self.get_cmd('POST_RELEVE_T'   )
 
   # La macro compte pour 1 dans la numerotation des commandes
   self.set_icmd(1)
@@ -63,18 +63,16 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
 #  
   if CL_BOL_P2_GV!=None :
     if TYPE_MAILLAGE=='SOUS_EPAIS_COUDE' :
-       print '<A> <MACR_ASCOUF_CALC> la condition aux limites sur bol a section conique'
-       print '                       est ignoree pour un coude avec sous-epaisseurs'
+       message=        ' la condition aux limites sur bol a section conique \n'
+       message=message+' est ignoree pour un coude avec sous-epaisseurs \n'
+       UTMESS('A', "MACR_ASCOUF_CALC", message)
     elif (TYPE_MAILLAGE[:4]!='FISS') and (CL_BOL_P2_GV['AZIMUT']!=None) :
-       ier=ier+1
-       self.cr.fatal("""<E> <MACR_ASCOUF_CALC> mot-cle AZIMUT non autorise dans le cas d''un coude sain""")
-       return ier
+       UTMESS('E', "MACR_ASCOUF_CALC", "mot-cle AZIMUT non autorise dans le cas d un coude sain")
 #
   if mc_IMPR_TABLE!=None :
     FLAG = 0
     if (mc_IMPR_TABLE['NOM_PARA']==None) and (mc_IMPR_TABLE['POSI_ANGUL']==None) and (mc_IMPR_TABLE['POSI_CURV_LONGI']==None) :
-       ier=ier+1
-       self.cr.fatal("""<E> <MACR_ASCOUF_CALC> POSI_ANGUL POSI_CURV_LONGI est obligatoire""")
+       UTMESS('E', "MACR_ASCOUF_CALC", "POSI_ANGUL POSI_CURV_LONGI est obligatoire")
        return ier
     if (mc_IMPR_TABLE['NOM_PARA']!=None) :
        impr_table_nom_para= mc_IMPR_TABLE['NOM_PARA']
@@ -83,11 +81,9 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
            FLAG = 1
            if (((impt['ANGLE']==None) and (impt['POSI_ANGUL']==None) and (impt['R_CINTR'        ]==None)) or
                ((impt['ANGLE']==None) and (impt['R_CINTR'   ]==None) and (impt['POSI_CURV_LONGI']==None))   )  :
-             ier=ier+1
-             self.cr.fatal("""<E> <MACR_ASCOUF_CALC> il faut renseigner : ANGLE, R_CINTR et POSI_ANGUL ou ANGLE, R_CINTR et POSI_CURV_LONGI""")
-             return ier
+             UTMESS('E', "MACR_ASCOUF_CALC", "il faut renseigner : ANGLE, R_CINTR et POSI_ANGUL ou ANGLE, R_CINTR et POSI_CURV_LONGI")
     if (mc_IMPR_TABLE['NOM_PARA']==None) : FLAG = 1
-    if not FLAG : print '<A> <MACR_ASCOUF_CALC> ANGL_COUDE et ANGL_SOUS_EPAI sont inutiles dans ce cas'
+    if not FLAG : UTMESS('A', "MACR_ASCOUF_CALC","ANGL_COUDE et ANGL_SOUS_EPAI sont inutiles dans ce cas")
 #
 #------------------------------------------------------------------
 #
@@ -226,7 +222,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
                                 COEF_MULT = COEFB1 ,
                                 COEF_IMPO = 0.0    , )
 
-  __conlim = AFFE_CHAR_MECA( MODELE   = modele ,**motscles)
+  _conlim = AFFE_CHAR_MECA( MODELE   = modele ,**motscles)
 #
 #     --- commande AFFE_CHAR_MECA ---
 #         chargement mecanique :  pres_rep, effet de fond 
@@ -244,13 +240,13 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
                                 GROUP_MA      = 'EXTUBE'  ,
                                 PRES          = PRES_REP['PRES'] ,)
 #
-    __chpres = AFFE_CHAR_MECA( MODELE   = modele ,**motscles)
+    _chpres = AFFE_CHAR_MECA( MODELE   = modele ,**motscles)
 #
 #     --- commande AFFE_CHAR_MECA ---
 #         chargement mecanique : torseur d efforts 
 #
   if TORS_P1!=None :
-    __chtor = [None]*6
+    _chtor = [None]*6
     i=0
     for tors in TORS_P1:
       mcsimp={}
@@ -261,8 +257,8 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
       if tors['MY']!=None : mcsimp['MY']=tors['MY']
       if tors['MZ']!=None : mcsimp['MZ']=tors['MZ']
       mcfact=_F(GROUP_NO='P1',**mcsimp)
-      __chtor[i] = AFFE_CHAR_MECA( MODELE       = modele ,
-                                   FORCE_NODALE = mcfact , )
+      _chtor[i] = AFFE_CHAR_MECA( MODELE       = modele ,
+                                  FORCE_NODALE = mcfact , )
       i=i+1
 #
 #     --- commande STAT_NON_LINE ---
@@ -270,21 +266,21 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
   motscles={}
 #
   mcfex=[]  # mot clé facteur EXCIT
-  mcfex.append(_F(CHARGE=__conlim,))
+  mcfex.append(_F(CHARGE=_conlim,))
   if ECHANGE!=None :
      mcfex.append(_F(CHARGE=chmeth,))
   if PRES_REP!=None:
     if PRES_REP['FONC_MULT']!=None :
-      mcfex.append(_F(CHARGE=__chpres,FONC_MULT=PRES_REP['FONC_MULT']))
+      mcfex.append(_F(CHARGE=_chpres,FONC_MULT=PRES_REP['FONC_MULT']))
     else :
-      mcfex.append(_F(CHARGE=__chpres,))
+      mcfex.append(_F(CHARGE=_chpres,))
   if TORS_P1!=None:
      i=0
      for tors in TORS_P1 :
        if tors['FONC_MULT']!=None :
-          mcfex.append(_F(CHARGE=__chtor[i],FONC_MULT=tors['FONC_MULT']))
+          mcfex.append(_F(CHARGE=_chtor[i],FONC_MULT=tors['FONC_MULT']))
        else :
-          mcfex.append(_F(CHARGE=__chtor[i],))
+          mcfex.append(_F(CHARGE=_chtor[i],))
        i=i+1
   motscles['EXCIT'] =mcfex
 #
@@ -620,7 +616,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
     fonfis=DEFI_FOND_FISS(MAILLAGE=MAILLAGE,
                           LEVRE_SUP=_F(GROUP_MA='FACE1'),
                           LEVRE_INF=_F(GROUP_MA='FACE2'),
-                          INFO=2,**motscles
+                          INFO=INFO,**motscles
                           );
     if THETA_3D!=None :
       for thet in THETA_3D:
@@ -634,12 +630,10 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
         motscles = {}
         if COMP_INCR!=None : motscles['COMP_INCR']=_F(RELATION=COMP_INCR['RELATION'])
         if COMP_ELAS!=None : motscles['COMP_ELAS']=_F(RELATION=COMP_ELAS['RELATION'])
-        _nogthe=CALC_G_THETA_T(
-                               RESULTAT   =nomres,
-                               TOUT_ORDRE ='OUI',
-                               THETA      =_nothet,
-                               **motscles
-                               );
+        _nogthe=CALC_G( RESULTAT   =nomres,
+                        OPTION='CALC_G_GLOB',
+                        TOUT_ORDRE ='OUI',
+                        THETA      =_F(THETA=_nothet),**motscles);
 #
         IMPR_TABLE(TABLE=_nogthe,);
 #
@@ -648,21 +642,20 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
         if COMP_INCR!=None : motscles['COMP_INCR']=_F(RELATION=COMP_INCR['RELATION'])
         if COMP_ELAS!=None : motscles['COMP_ELAS']=_F(RELATION=COMP_ELAS['RELATION'])
         if   TYPE_MAILLAGE =='FISS_COUDE' :
-                             motscles['LISSAGE_THETA']='LEGENDRE'
-                             motscles['LISSAGE_G']    ='LEGENDRE'
+                             motscles['LISSAGE']=_F(LISSAGE_THETA='LEGENDRE',
+                                                    LISSAGE_G='LEGENDRE',
+                                                    DEGRE=4,)
         elif TYPE_MAILLAGE =='FISS_AXIS_DEB' :
-                             motscles['LISSAGE_THETA']='LAGRANGE'
-                             motscles['LISSAGE_G']    ='LAGRANGE'
-        _nogloc=CALC_G_LOCAL_T(MODELE     =modele,
-                               RESULTAT   =nomres,
-                               TOUT_ORDRE ='OUI',
-                               CHAM_MATER =affmat,
-                               FOND_FISS  =fonfis,
-                               DEGRE      = 4,
-                               R_INF      = thet['R_INF'],
-                               R_SUP      = thet['R_SUP'],
-                               **motscles
-                               );
+                             motscles['LISSAGE']=_F(LISSAGE_THETA='LAGRANGE',
+                                                    LISSAGE_G='LAGRANGE',
+                                                    DEGRE=4,)
+        _nogloc=CALC_G (MODELE     =modele,
+                        RESULTAT   =nomres,
+                        TOUT_ORDRE ='OUI',
+                        CHAM_MATER =affmat,
+                        THETA=_F( FOND_FISS  =fonfis,
+                                  R_INF      = thet['R_INF'],
+                                  R_SUP      = thet['R_SUP'],),**motscles);
 
         IMPR_TABLE(TABLE=_nogloc,);
 #

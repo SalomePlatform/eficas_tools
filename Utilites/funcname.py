@@ -3,7 +3,7 @@ import re,types
 import sys
 
 sortie=sys.stderr
-sortie.write( "import de "+__name__+" : $Id: funcname.py,v 1.1 2003/03/06 14:36:11 eficas Exp $" )
+sortie.write( "import de "+__name__+" : $Id: funcname.py,v 1.2.8.1 2006/03/10 15:09:54 eficas Exp $" )
 sortie.write( "\n" )
 
 def get_nombre_de_blancs( str ) :
@@ -25,11 +25,11 @@ def get_classname( filename, lineno ) :
     ####print "RECHERCHE de la classe de "+filename+" ligne : ",lineno
     if lineno>0 :
         try :
-        	f=open( filename , 'r' )
-	except Exception,e :
-        	print ">>>>",str(e)
-		sys.stdout.flush()
-		sys.exit(17)
+                f=open( filename , 'r' )
+        except Exception,e :
+                print ">>>>",str(e)
+                sys.stdout.flush()
+                sys.exit(17)
 
         s = f.read()
         f.close()
@@ -48,10 +48,10 @@ def get_classname( filename, lineno ) :
             elif re.search( "^class ", line ) != None :
                 classname = re.sub( "^class  *" , "" , line )
                 classname = re.sub( " *[(:].*$" , "" , classname )
-	        current_func = ""
+                current_func = ""
             elif current_func != "" and re.search( "^[^ \t]", line ) != None :
-	        current_func = ""
-	        classname = ""
+                current_func = ""
+                classname = ""
             k = k+1
     if current_func == "" : current_func="__main__"
     return classname ,current_func
@@ -68,7 +68,7 @@ class FUNCNAME :
 
     def __init__ ( self , *args ) :
 
-	# le premier argument est optionnel (c'est un nom de fonction 
+        # le premier argument est optionnel (c'est un nom de fonction 
         # qu'on peut reconstituer avec le nom du fichier et le numéro de ligne.
         k=0
         self.name = None
@@ -78,11 +78,11 @@ class FUNCNAME :
 
         assert(args[k]!=None)
         assert(args[k]!="")
-        self.filename = args[k]	# recuperation du nom du fichier source
+        self.filename = args[k]        # recuperation du nom du fichier source
 
         k = k+1
         assert(args[k]>0)
-        self.lineno = args[k]	# recupération du numero de ligne
+        self.lineno = args[k]        # recupération du numero de ligne
 
         self.classname,funcname = get_classname( self.filename, self.lineno )
         if self.name == None : self.name = funcname
@@ -97,5 +97,5 @@ class FUNCNAME :
 
 
 if __name__ == "__main__" :
-	print  'FUNCNAME("","funcname.py", 68)='+str(FUNCNAME("","funcname.py", 63) )
-	print  'FUNCNAME("funcname.py", 68)='+str(FUNCNAME("funcname.py", 63) )
+        print  'FUNCNAME("","funcname.py", 68)='+str(FUNCNAME("","funcname.py", 63) )
+        print  'FUNCNAME("funcname.py", 68)='+str(FUNCNAME("funcname.py", 63) )

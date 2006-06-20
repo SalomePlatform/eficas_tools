@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -131,8 +132,8 @@ class FORM_ETAPE(MACRO_ETAPE):
         """
         if not corps :
             corps = self.corps
-	if not arguments :
-	    arguments = self.arguments
+        if not arguments :
+            arguments = self.arguments
         formule=(self.get_nom(),self.type_retourne,arguments,corps)
         # on récupère la liste des constantes et des autres fonctions prédéfinies
         # et qui peuvent être utilisées dans le corps de la formule courante
@@ -258,11 +259,11 @@ class FORM_ETAPE(MACRO_ETAPE):
          Inputs :
            - sd=concept detruit
          Fonction :
-         Mettre a jour les mots cles de l etape et eventuellement le concept produit si reuse
-         suite à la disparition du concept sd
-         Seuls les mots cles simples MCSIMP font un traitement autre que de transmettre aux fils,
-	 sauf les objets FORM_ETAPE qui doivent vérifier que le concept détruit n'est pas 
-	 utilisé dans le corps de la fonction
+            Mettre a jour les mots cles de l etape et eventuellement le concept produit si reuse
+            suite à la disparition du concept sd
+            Seuls les mots cles simples MCSIMP font un traitement autre que de transmettre aux fils,
+            sauf les objets FORM_ETAPE qui doivent vérifier que le concept détruit n'est pas 
+            utilisé dans le corps de la fonction
         """
         self.init_modif()
          
@@ -272,8 +273,8 @@ class FORM_ETAPE(MACRO_ETAPE):
            - old_sd=concept remplace
            - sd = nouveau concept
          Fonction :
-         Les objets FORM_ETAPE devraient vérifier que le concept remplacé n'est pas
-         utilisé dans le corps de la fonction
+            Les objets FORM_ETAPE devraient vérifier que le concept remplacé n'est pas
+            utilisé dans le corps de la fonction
         """
         self.init_modif()
 

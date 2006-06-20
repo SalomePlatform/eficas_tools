@@ -29,191 +29,135 @@ import traceback
 from widgets import showinfo,showerror,askretrycancel
 import utils
 
-class CONFIG:
-  def __init__(self,appli,rep_ini):
-      # si appli == None on est en mode commande (hors EFICAS)
-      self.appli = appli  
-      if self.appli:self.parent=appli.top
-      else:self.parent=None
-      self.rep_ini = rep_ini
-      self.rep_user = utils.get_rep_user()
-      self.lecture_parametres()
+class CONFIGbase:
 
-  def lecture_parametres(self):
-      """
-         Cette méthode teste l'existence du fichier editeur.ini au bon endroit et lance
-         son interprétation
-      """
-      fic_ini = os.path.join(self.rep_ini,'editeur.ini')
-      if not os.path.exists(fic_ini) or not os.path.isfile(fic_ini):
-        if self.appli :
-          showerror("Erreur","Impossible de trouver le fichier %s ! \n Prévenez la maintenance ..." %fic_ini)
-        else:
-          print "Impossible de trouver le fichier %s ! \n Prévenez la maintenance ..." %fic_ini
-        sys.exit(0)
-      self.fic_ini = fic_ini
-      self.init_liste_param()
+  #-----------------------------------
+  def __init__(self,appli):
+  #-----------------------------------
+
+  # Classe de base permettant de lire, afficher
+  # et sauvegarder les fichiers utilisateurs editeur.ini
+  # et style.py
+  # Classe Mere de : class CONFIG(CONFIGbase)
+  #                  class CONFIGStyle(CONFIGbase):
+
+      self.appli = appli  
+      if self.appli:
+         self.parent=appli.top
+      else:
+         self.parent=None
+      self.rep_user = utils.get_rep_user()
       self.lecture_fichier_ini_standard()
       self.lecture_fichier_ini_utilisateur()
-
+      self.init_liste_param()
+  
+ 
+  #--------------------------------------
   def lecture_fichier_ini_standard(self):
-      """
-      Relit les paramètres du fichier eficas.ini
-      """
-      txt = utils.read_file(self.fic_ini)
-      d={}
+  #--------------------------------------
+  # Verifie l'existence du fichier "standard"
+  # appelle la lecture de ce fichier
+      if not os.path.isfile(self.fic_ini):
+          print self.fic_ini
+          showerror("Erreur","Pas de fichier de configuration" + self.fic_ini+"\n")
+          print "Erreur à la lecture du fichier de configuration : %s" % self.fic_ini
+          sys.exit(0)
+      self.lecture_fichier(self.fic_ini)
+
+  #-----------------------------
+  def lecture_fichier(self,fic):
+  #------------------------------
+  # lit les paramètres du fichier eficas.ini ou style.py
+  # les transforme en attribut de l 'objet  
+  # utilisation du dictionnaire local pour récuperer style
+      txt = utils.read_file(fic)
+      from styles import style
+      d=locals()
       try:
          exec txt in d
       except:
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-         showerror("Erreur","Une erreur s'est produite dans la relecture du fichier de configuration : "
-                       + self.fic_ini+"\n"+string.join(l[2:]))
-         print "Erreur à la lecture du fichier de configuration : %s" % self.fic_ini 
-         print string.join(l[2:])
+         showerror("Erreur","Une erreur s'est produite lors de la lecture du fichier : " + fic + "\n")
+         print "Erreur à la lecture du fichier de configuration : %s" % fic
          sys.exit()
-      for attr in self.l_nom_param:
-          nom_attr,statut,defaut = attr
-          #valeur = d.get(nom_attr,None)
-          valeur = d.get(nom_attr,defaut)
-          if not valeur and statut=='o':
-              showerror("Erreur","Une erreur s'est produite dans la relecture du fichier de configuration : "
-                       + self.fic_ini+"\n EFICAS va vous demander les nouveaux paramètres")
-              return
-          setattr(self,nom_attr,valeur)
-      self.init_liste_param()
 
+      for k in d.keys() :
+          if  k in self.labels.keys()  :
+             setattr(self,k,d[k])
+      
+      for k in d['style'].__dict__.keys() :
+          setattr(self,k,d['style'].__dict__[k])
+   
+  #--------------------------------------
   def lecture_fichier_ini_utilisateur(self):
-      """
-      Surcharge les paramètres standards par les paramètres utilisateur s'ils existent
-      """
-      self.fic_ini_utilisateur = os.path.join(self.rep_user,'eficas.ini')
+  #--------------------------------------
+  # Surcharge les paramètres standards par les paramètres utilisateur s'ils existent
+      self.fic_ini_utilisateur = os.path.join(self.rep_user,self.fichier)
       if not os.path.isfile(self.fic_ini_utilisateur):
-          # pas de fichier de configuration utilisateur --> on passe
           return
-      txt = utils.read_file(self.fic_ini_utilisateur)
-      d={}
-      try:
-          exec txt in d
-      except :
-          showinfo("Erreur","Impossible d'interpréter le fichier de configuration utilisateur : %s" %self.fic_ini_utilisateur)
-          traceback.print_exc()
-          return
-      for attr in self.l_nom_param:
-          nom_attr,statut,defaut = attr
-          valeur = d.get(nom_attr,None)
-          if valeur :
-              setattr(self,nom_attr,valeur)
-      self.init_liste_param()
+      self.lecture_fichier(self.fic_ini_utilisateur)
 
-  def init_liste_param(self):
-      """
-      Génère la liste des paramètres
-      l_param est une liste de tuples où chaque tuple est de la forme :
-      (label,nature,nom_var,defaut)
-      """
-      self.l_param=[]
-      # répertoire initial pour OPEN/SAVE des fichiers de commande
-      # Par defaut, EFICAS utilise le repertoire utilisateur $HOME/Eficas_install
-      # Il est possible de specifier dans editeur.ini ou eficas.ini un autre chemin
-      # Ce peut etre un chemin absolu ou le repertoire courant (os.curdir)
-      if hasattr(self,'initialdir'):
-          self.l_param.append(("Répertoire initial pour Open/save des fichiers de commande",'rep','initialdir',self.initialdir))
-      else:
-          self.l_param.append(("Répertoire initial pour Open/save des fichiers de commande",'rep','initialdir',self.rep_user))
-      # répertoire de travail
-      if hasattr(self,'rep_travail'):
-          self.l_param.append(("Répertoire de travail",'rep','rep_travail',self.rep_travail))
-      else:
-          self.l_param.append(("Répertoire de travail",'rep','rep_travail',
-                               os.path.join(self.rep_user,'uaster','tmp_eficas')))
-      # répertoire des catalogues matériaux
-      if hasattr(self,'rep_mat'):
-          self.l_param.append(("Répertoire materiaux",'rep','rep_mat',self.rep_mat))
-      else:
-          self.l_param.append(("Répertoire materiaux",'rep','rep_mat','/aster/v4/materiau'))
-      # chemin d'accès exécutable acrobat reader
-      if hasattr(self,'exec_acrobat'):
-          self.l_param.append(("Ligne de commande Acrobat Reader",'file','exec_acrobat',self.exec_acrobat))
-      else:
-          self.l_param.append(("Ligne de commande Acrobat Reader",'file','exec_acrobat',self.rep_user))
-      # répertoire contenant la doc Aster
-      if hasattr(self,'path_doc'):
-          self.l_param.append(("Chemin d'accès à la doc Aster",'rep','path_doc',self.path_doc))
-      else:
-          self.l_param.append(("Chemin d'accès à la doc Aster",'rep','path_doc',self.rep_user))
-      # chemin(s) d'accès au(x) catalogue(s)
-      if hasattr(self,'catalogues'):
-          self.l_param.append(("Versions du code ",'cata','catalogues',self.catalogues))
-      else:
-          self.l_param.append(("Versions du code ",'cata','catalogues',os.path.join(self.rep_ini,'..','Cata/cata.py')))
-      # attribut développeur
-      if hasattr(self,'isdeveloppeur'):
-      #    self.l_param.append(("Etes-vous développeur ?",'YesNo','isdeveloppeur',self.isdeveloppeur))
-           self.l_param.append(("Niveau de message ",'YesNo','isdeveloppeur',self.isdeveloppeur,'Deboggage','Utilisation'))
-      else:
-      #    self.l_param.append(("Etes-vous développeur ?",'YesNo','isdeveloppeur','NON'))
-           self.l_param.append(("Niveau de message ",'YesNo','isdeveloppeur','NON','Deboggage','Utilisation'))
-      # répertoire où sont contenus les catalogues développeurs
-      if hasattr(self,'path_cata_dev') and hasattr(self,'isdeveloppeur') and self.isdeveloppeur == 'OUI':
-          self.l_param.append(("Chemin d'accès aux catalogues développeurs",'rep','path_cata_dev',self.path_cata_dev))
-      else:
-          self.l_param.append(("Chemin d'accès aux catalogues développeurs",'rep','path_cata_dev',
-                               os.path.join(self.rep_user,'cata')))
-      self.l_param = tuple(self.l_param)
-      self.l_nom_param=[]
-      statut='o'
-      for tup in self.l_param:
-          if tup[1] == 'YesNo':
-              # les paramètres suivant tup sont facultatifs ...
-              statut='f'
-          self.l_nom_param.append((tup[2],statut,tup[3])) # nom,statut,defaut
 
+  #--------------------------------------
   def affichage_fichier_ini(self):
+  #--------------------------------------
       """
       Affichage des valeurs des paramètres relus par Eficas
       """
       import widgets
       result = widgets.Formulaire(self.parent,
                                   obj_pere = self,
-                                  titre = "Paramètres nécessaires à la configuration d'EFICAS",
-                                  texte = "Voici les paramètres que requiert Eficas",
+                                  titre = self.titre,
+                                  texte = self.texte_ini,
                                   items = self.l_param,
                                   mode='display',
-                                  commande=('Modifier',self.creation_fichier_ini_si_possible))
+                                  commande=('Modifier',self.commande))
       if result.resultat :
-          print 'on sauvegarde les nouveaux paramètres :',result.resultat
+          #print 'on sauvegarde les nouveaux paramètres :',result.resultat
           self.save_param_ini(result.resultat)
 
+  #--------------------------------------
   def save_param_ini(self,dico):
-      """
-      Sauvegarde les nouveaux paramètres dans le fichier de configuration utilisateur
-      """
+  #--------------------------------------
+  # sauvegarde
+  # les nouveaux paramètres dans le fichier de configuration utilisateur
+  #
       f=open(self.fic_ini_utilisateur,'w+')
       for k,v in dico.items():
-         if k == 'catalogues' :
+         if self.types[k] in ('mot2','mot3','mot4'): 
+            v1=v[1:-1]
+            val=v1.split(",")
+            p = "(" 
+            listeval=""
+            for valeur in val:
+              listeval = listeval+ p + str(valeur) 
+              p=" , "
+            listeval = listeval + ")"
+            f.write(str(self.pref)+str(k) + '=' + str(listeval) + '\n') 
+         elif k == 'catalogues' :
             f.write(k + '\t=\t' + str(v) + '\n')
          else:
-            f.write(k + '\t=\t"' + str(v) + '"\n')
+            f.write(str(self.pref)+str(k) + '\t=\t"' + str(v) + '"\n')
       f.close()
       self.lecture_fichier_ini_utilisateur()
 
+  #-------------------------------------------
   def creation_fichier_ini_si_possible(self):
+  #-------------------------------------------
       return self.creation_fichier_ini(mode='ignorer_annuler')
 
+  #--------------------------------------------------------
   def creation_fichier_ini(self,mode='considerer_annuler'):
-      """
-      Récupération des valeurs des paramétres requis pour la création du fichier
-      eficas.ini
-      """
+  #---------------------------------------------------------
+  # Récupération des valeurs des paramétres requis pour la création du fichier
+  # eficas.ini
+  #
       import widgets
-      texte = "EFICAS a besoin de certains renseignements pour se configurer\n"+\
-              "Veuillez remplir TOUS les champs ci-dessous et appuyer sur 'Valider'\n"+\
-              "Si vous annulez, EFICAS ne se lancera pas !!"
       items = self.l_param
       result = widgets.Formulaire(self.parent,
                                   obj_pere = self,
                                   titre = "Saisie des données indispensables à la configuration d'EFICAS",
-                                  texte = texte,
+                                  texte = self.texte,
                                   items = items,
                                   mode='query')
       if not result.resultat :
@@ -230,7 +174,121 @@ class CONFIG:
           self.save_param_ini(result.resultat)
           return result.resultat
 
+  #--------------------------
+  def init_liste_param (self):
+  #--------------------------
+  # construit self.l_param 
+  # a partir de self.labels et des attributs 
+  # de l objet (mis a jour lors de la lecture du fichier)
+  # l_param est une liste de tuples où chaque tuple est de la forme :
+  #           (label,nature,nom_var,defaut)
+
+      self.l_param=[]
+      for k in self.labels.keys()  :
+          if hasattr(self,k) :
+             if k in self.YesNo.keys():
+                self.l_param.append((self.labels[k],self.types[k],k,self.__dict__[k],
+                                     self.YesNo[k][0],self.YesNo[k][1]))
+             else :
+                self.l_param.append((self.labels[k],self.types[k],k,self.__dict__[k]))
+      self.l_param = tuple(self.l_param)
+
+
+class CONFIG(CONFIGbase):
+  def __init__(self,appli,rep_ini):
+      self.texte = "EFICAS a besoin de certains renseignements pour se configurer\n"+\
+              "Veuillez remplir TOUS les champs ci-dessous et appuyer sur 'Valider'\n"+\
+              "Si vous annulez, EFICAS ne se lancera pas !!"
+      self.fichier="editeur.ini"
+      self.rep_ini = rep_ini
+      self.fic_ini = os.path.join(self.rep_ini,self.fichier)
+      self.titre = "Paramètres nécessaires à la configuration d'EFICAS"
+      self.texte_ini = "Voici les paramètres que requiert Eficas"
+      self.commande = self.creation_fichier_ini_si_possible
+      self.pref=""
+      self.labels={"initialdir"    : "Répertoire initial pour Open/Save des fichiers",
+                   "rep_travail"   : "Répertoire de travail",
+                   "rep_mat"       : "Répertoire materiaux",
+                   "path_doc"      : "Chemin d'accès à la doc Aster",
+                   "exec_acrobat"  : "Ligne de commande Acrobat Reader",
+                   "catalogues"    : "Versions du code ",
+                   "isdeveloppeur" : "Niveau de message ",
+                   "path_cata_dev" : "Chemin d'accès aux catalogues développeurs"}
+                   
+      self.types ={"initialdir":"rep", "rep_travail":"rep","rep_mat":"rep",
+                   "path_doc": "rep","exec_acrobat":"file","exec_acrobat":"file",
+                   "catalogues" :"cata","isdeveloppeur":"YesNo","path_cata_dev":"rep"}
+
+      self.YesNo={}
+      self.YesNo['isdeveloppeur']=('Deboggage','Utilisation')
+
+      # Valeurs par defaut
+      self.rep_user = utils.get_rep_user()
+      self.initialdir=self.rep_user
+      self.rep_travail=os.path.join(self.rep_user,'uaster','tmp_eficas')
+      self.rep_mat='/aster/v7/materiau'
+      self.path_doc=self.rep_user
+      self.exec_acrobat=self.rep_user
+      self.catalogues= os.path.join(self.rep_ini,'..','Cata/cata.py')
+      self.isdeveloppeur='NON'
+      self.path_cata_dev=os.path.join(self.rep_user,'cata')
+
+      CONFIGbase.__init__ (self,appli)
+
+
+class CONFIGStyle(CONFIGbase):
+  def __init__(self,appli,rep_ini):
+      self.texte = "Pour prendre en compte les modifications \n"+\
+                   "     RELANCER EFICAS"
+      self.fichier="style.py"
+      self.rep_ini = rep_ini
+      self.fic_ini = os.path.join(self.rep_ini,self.fichier)
+      self.titre = "Paramètres d affichage"
+      self.texte_ini = "Voici les paramètres configurables :  "
+      self.commande = self.creation_fichier_ini_si_possible
+      self.pref="style."
+      self.labels={"background":"couleur du fonds", 
+                   "foreground":"couleur de la police standard" ,
+                   "standard":" police et taille standard",
+                   "standard_italique":"police utilisée pour l'arbre ",
+                   "standard_gras_souligne":"police utilisée pour le gras souligné",
+                   "canvas_italique":"police italique",
+                   "standard_gras":"gras",
+                   #"canvas":"police",
+                   #"canvas_gras":"police gras",
+                   #"canvas_gras_italique":"police gras italique",
+                   #"standard12":"police 12",
+                   #"standard12_gras":"police 12 gras",
+                   #"standard12_gras_italique":"police 12 gras italique",
+                   #"standardcourier10":"courrier "
+                   "statusfont":"police utilisée dans la status Bar",
+                  }
+      self.types ={"background":"mot", 
+                   "foreground":"mot" ,
+                   "standard":"mot2",
+                   "standard_italique":"mot3",
+                   "standard_gras":"mot3",
+                   "standard_gras_souligne":"mot4",
+                   "canvas":"mot2",
+                   "canvas_italique":"mot3",
+                   "canvas_gras":"mot3",
+                   "canvas_gras_italique":"mot4",
+                   "standard12":"mot2",
+                   "standard12_gras":"mot3",
+                   "standard12_gras_italique":"mot4",
+                   "statusfont":"mot2",
+                   "standardcourier10":"mot2"}
+      self.YesNo={}
+      self.l_param=[]
+      CONFIGbase.__init__ (self,appli)
+
+  def affichage_style_ini(self):
+      self.affichage_fichier_ini()
+
 def make_config(appli,rep):
     return CONFIG(appli,rep)
+
+def make_config_style(appli,rep):
+    return CONFIGStyle(appli,rep)
 
 

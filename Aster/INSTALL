@@ -4,7 +4,7 @@
 
 Pour installer EFICAS a partir de la distribution : <nom_distrib>.tgz
 faire :
-	tar xzvf <nom_distrib>.tgz
+        tar xzvf <nom_distrib>.tgz
 
 ce qui a pour effet de créer un répertoire de nom <nom_distrib>.
 
@@ -23,7 +23,7 @@ les fichiers et catalogues compilés .pyc
 2- Utilisation d'Eficas
 
 Pour utiliser Eficas, aller dans le répertoire Aster et faire :
-	python eficas_aster.py
+        python eficas_aster.py
 
 
 

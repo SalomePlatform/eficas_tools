@@ -59,8 +59,8 @@ def main():
    copyfiles('Cata/cataSTA76',os.path.join(path_distrib,'Aster','Cata','cataSTA76'),['*.py'])
    copyfiles('Cata/cataSTA76/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA76','Macro'),['*.py'])
 #version 8 
-   copyfiles('Cata/cataSTA81',os.path.join(path_distrib,'Aster','Cata','cataSTA81'),['*.py'])
-   copyfiles('Cata/cataSTA81/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA81,'Macro'),['*.py'])
+   copyfiles('Cata/cataSTA8',os.path.join(path_distrib,'Aster','Cata','cataSTA8'),['*.py'])
+   copyfiles('Cata/cataSTA8/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA8,'Macro'),['*.py'])
 
    copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
    copyfiles('../AIDE/fichiers',os.path.join(path_distrib,'AIDE','fichiers'),['*'])
@@ -68,6 +68,7 @@ def main():
                                                             'editeur.ini',
                                                             'properties.py',
                                                             'eficas_aster.py',
+							    'style.py',
                                                            ])
    copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster'),['aster.py',])
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])

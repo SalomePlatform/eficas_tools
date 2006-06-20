@@ -1,6 +1,6 @@
 # coding=utf-8
 import cata1
-from cata1 import OP1,OP2,OP3,OP4,OP5,OP6
+from cata1 import OP1,OP2,OP3,OP4,OP5,OP6,OP7
 from Accas import AsException,ASSD,OPER,SIMP,FACT,BLOC,_F
 
 class concept(ASSD):pass
@@ -74,13 +74,13 @@ class TestOperCase(unittest.TestCase):
       OP10 = OPER(nom='OP10',op=10,sd_prod=concept,
                    a=SIMP(typ='I'),
                    c=SIMP(statut='o',typ='TXM',position='global',
-		           into=("TABLEAU","AGRAF"),
-			 ),
-	           b=FACT(statut='o',max='**',
-		   b_forme=BLOC(condition="c == 'TABLEAU'",
-		                d=SIMP(statut='f',typ='TXM'),
-				),
-			),
+                           into=("TABLEAU","AGRAF"),
+                         ),
+                   b=FACT(statut='o',max='**',
+                          b_forme=BLOC(condition="c == 'TABLEAU'",
+                                       d=SIMP(statut='f',typ='TXM'),
+                                      ),
+                         ),
                  )
 
       co1=OP10(a=1,c="TABLEAU",b=_F(d='rr'))
@@ -164,6 +164,15 @@ class TestOperCase(unittest.TestCase):
       co1.etape.supprime()
 
    def test15(self):
+      """ Test mot cle facteur incorrect
+      """
+      co1=OP7(FILTRE="coucou")
+      cr=co1.etape.report()
+      msg="erreur sur le test " +'\n'+str(cr)
+      self.assertEqual(co1.etape.isvalid(),0,msg=msg)
+      co1.etape.supprime()
+
+   def test16(self):
       OP10 = OPER(nom='OP10',op=10,sd_prod=concept,
                    a=SIMP(statut='o',typ='R',val_min=0,val_max=1,max=5),
                  )

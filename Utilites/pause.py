@@ -6,16 +6,16 @@ Module pause
     une attente.
 """
 try :
-	from developpeur import DEVELOPPEUR
+        from developpeur import DEVELOPPEUR
 except :
-	DEVELOPPEUR=None
+        DEVELOPPEUR=None
 
 def NULL( *l_args, **d_args  ) : pass
 
 if DEVELOPPEUR :
 
     import developpeur
-    developpeur.sortie.write( "import de "+__name__+" : $Id: pause.py,v 1.2 2003/03/06 14:36:12 eficas Exp $" )
+    developpeur.sortie.write( "import de "+__name__+" : $Id: pause.py,v 1.3.8.1 2006/03/10 15:09:56 eficas Exp $" )
     developpeur.sortie.write( "\n" )
 
     import sys

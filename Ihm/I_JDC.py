@@ -75,8 +75,8 @@ class JDC(I_OBJECT.OBJECT):
    def get_sd_avant_du_bon_type_pour_type_de_base(self,etape,type):
       """
           Retourne la liste des concepts avant etape d'1 type de base acceptable
-	  Attention different de la routine précédente : 1 seul type passé en parametre
-	  Teste sur issubclass et par sur le type permis
+          Attention different de la routine précédente : 1 seul type passé en parametre
+          Teste sur issubclass et par sur le type permis
       """
       d=self.get_contexte_avant(etape)
       l=[]
@@ -94,11 +94,11 @@ class JDC(I_OBJECT.OBJECT):
        d=self.get_contexte_avant(etape)
        for k,v in d.items():
           if issubclass(v.__class__,LASSD):
-	     if k == valeur :
-	        return k
-	# Attention pour enlever les . a la fin des pretendus reels
-	     if k == valeur[0:-1] :
-	        return v
+             if k == valeur :
+                return k
+        # Attention pour enlever les . a la fin des pretendus reels
+             if k == valeur[0:-1] :
+                return v
        return None
 
    def est_permis(self,v,types_permis):
@@ -188,9 +188,9 @@ class JDC(I_OBJECT.OBJECT):
             objet.parent.dict_niveaux[objet.nom_niveau_definition].register(objet)
             objet.niveau = objet.parent.dict_niveaux[objet.nom_niveau_definition]
         self.etapes.insert(pos,objet)
-	# il faut vérifier que les concepts utilisés par objet existent bien
-	# à ce niveau d'arborescence
-	objet.verif_existence_sd()
+        # il faut vérifier que les concepts utilisés par objet existent bien
+        # à ce niveau d'arborescence
+        objet.verif_existence_sd()
         objet.update_mc_global()
         self.active_etapes()
         self.editmode=0
@@ -527,9 +527,9 @@ class JDC(I_OBJECT.OBJECT):
      l_mc = []
      for etape in self.etapes :
          if etape.isactif() :
-	    if not etape.isvalid() :
-	       l = etape.get_liste_mc_inconnus()
-	       if l : l_mc.extend(l)
+            if not etape.isvalid() :
+               l = etape.get_liste_mc_inconnus()
+               if l : l_mc.extend(l)
      return l_mc    
 
    def get_genealogie(self):
@@ -696,6 +696,41 @@ class JDC(I_OBJECT.OBJECT):
    def changefichier(self,fichier):
        self.fin_modif()
 
+   def eval_in_context(self,valeur,etape):
+      """ Tente d'evaluer valeur dans le contexte courant de etape
+          Retourne le parametre valeur inchange si l'evaluation est impossible
+      """
+      #contexte initial du jdc
+      context=self.condition_context.copy()
+      #contexte courant des concepts. Il contient les parametres
+      context.update(self.get_contexte_avant(etape))
+      try :
+         objet = eval(valeur,context)
+         return objet
+      except:
+         #traceback.print_exc()
+         pass
+      return valeur
+
+#ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
+   def supprime(self):
+      #print "supprime",self
+      Noyau.N_JDC.JDC.supprime(self)
+   #   self.appli=None
+   #   self.g_context={}
+   #   self.const_context={}
+   #   self.sds=[]
+   #   self.sds_dict={}
+   #   self.mc_globaux={}
+   #   self.current_context={}
+   #   self.condition_context={}
+   #   self.etapes_niveaux=[]
+   #   self.niveau=None
+   #   self.params=[]
+   #   self.fonctions=[]
+   #   self._etape_context=None
+   #   self.etapes=[]
+       
 #ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
    def register(self,etape):
       """

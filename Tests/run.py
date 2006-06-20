@@ -1,13 +1,32 @@
+"""
+This program executes all unitest tests that are found in 
+    - directories with name test* or Test*
+    - files with name test* or Test*
+
+unitest tests are :
+    - functions and class with names test* or Test*
+    - methods with name test* or Test* from classes with name test* or Test*
+
+Typical uses are :
+   
+    - execute all tests with text output : python2.4 run.py 
+    - execute all tests with html output : python2.4 run.py --html
+    - execute some tests with text output : python2.4 run.py testelem
+    - execute one test with text output : python2.4 run.py testelem/testsimp1.py
+    - execute all tests with verbosity and html output : python2.4 run.py -v --html
+"""
+
 import sys,types,os
 import sre
 import unittest
 from optparse import OptionParser
 
-sys.path[:0]=[".."]
+import config
 
 testMatch = sre.compile(r'^[Tt]est')
 
 class TestSuite(unittest.TestSuite):
+    ignore=[]
     loader = unittest.defaultTestLoader
 
     def __init__(self, names=[]):
@@ -23,40 +42,54 @@ class TestSuite(unittest.TestSuite):
             mod = getattr(mod,comp)
         return mod
 
+    def importdir(self,rep,path):
+        init = os.path.abspath(os.path.join(path,'__init__.py'))
+        if os.path.isfile(init):
+           package=self._import(rep)
+           if package:
+              return TestPackageSuite(package)
+        else:
+           return TestDirectorySuite(path)
+
+    def importfile(self,item,path):
+        root, ext = os.path.splitext(item)
+        if ext != '.py':
+           return  
+        if root.find('/') >= 0:
+           dirname, file = os.path.split(path)
+           root, ext = os.path.splitext(file)
+           sys.path.insert(0,dirname)
+           mod=self._import(root)
+           sys.path.remove(dirname)
+        else:
+           mod=self._import(root)
+        return ModuleTestSuite(mod)
+
     def collectTests(self):
         if self.names:
            entries=self.names
         else:
            entries = [ item for item in os.listdir(os.getcwd())
                         if item.lower().find('test') >= 0 ]
+        self.path=os.getcwd()
+        return self._collectTests(entries)
 
+    def _collectTests(self,entries):
         tests=[]
         for item in entries:
-            path=os.path.abspath(os.path.join(os.getcwd(),item))
-            if os.path.isfile(item):
-                root, ext = os.path.splitext(item)
-                if ext == '.py':
-                    if root.find('/') >= 0:
-                       dirname, file = os.path.split(path)
-                       root, ext = os.path.splitext(file)
-                       sys.path.insert(0,dirname)
-                       mod=self._import(root)
-                       sys.path.remove(dirname)
-                    else:
-                       mod=self._import(root)
-                    tests.append(ModuleTestSuite(mod))
-            elif os.path.isdir(item):
-                init = os.path.abspath(os.path.join(item,'__init__.py'))
-                if os.path.isfile(init):
-                   package=self._import(item)
-                   if package:
-                      tests.append(TestPackageSuite(package))
-                else:
-                   tests.append(TestDirectorySuite(path))
+            if (item[0] == '.'
+                or item in self.ignore
+                or not testMatch.search(item)):
+                continue
+            path=os.path.abspath(os.path.join(self.path,item))
+            if os.path.isfile(path):
+               t=self.importfile(item,path)
+               if t:tests.append(t)
+            elif os.path.isdir(path):
+               tests.append(self.importdir(item,path))
         return tests
 
 class TestDirectorySuite(TestSuite):
-    ignore=[]
     def __init__(self,path):
         self.path=path
         super(TestDirectorySuite,self).__init__()
@@ -67,33 +100,7 @@ class TestDirectorySuite(TestSuite):
             sys.path.insert(0,self.path)
             entries = os.listdir(self.path)
             entries.sort()
-            for item in entries:
-                if (item[0] == '.'
-                    or item in self.ignore
-                    or not testMatch.search(item)):
-                    continue
-                item_path = os.path.abspath(os.path.join(self.path,item))
-                if os.path.isfile(item_path):
-                    root, ext = os.path.splitext(item)
-                    if ext != '.py':
-                        continue
-                    if root.find('/') >= 0:
-                       dirname, file = os.path.split(item_path)
-                       root, ext = os.path.splitext(file)
-                       sys.path.insert(0,dirname)
-                       mod=self._import(root)
-                       sys.path.remove(dirname)
-                    else:
-                       mod=self._import(root)
-                    tests.append(ModuleTestSuite(mod))
-                elif os.path.isdir(item_path):
-                    init = os.path.abspath(os.path.join(item_path,'__init__.py'))
-                    if os.path.isfile(init):
-                        package=self._import(item)
-                        if package:
-                           tests.append(TestPackageSuite(package))
-                    else:
-                        tests.append(TestDirectorySuite(item_path))
+            tests=self._collectTests(entries)
             sys.path.remove(self.path)
         return tests
 
@@ -103,37 +110,23 @@ class TestPackageSuite(TestDirectorySuite):
         path=os.path.abspath(os.path.dirname(self.package.__file__))
         super(TestPackageSuite,self).__init__(path)
 
-    def collectTests(self):
-        tests=[]
-        if self.path:
-            sys.path.insert(0,self.path)
-            entries = os.listdir(self.path)
-            entries.sort()
-            for item in entries:
-                if (item[0] == '.'
-                    or item in self.ignore
-                    or not testMatch.search(item)):
-                    continue
-                item_path = os.path.abspath(os.path.join(self.path,item))
-                if os.path.isfile(item_path):
-                    root, ext = os.path.splitext(item)
-                    if ext != '.py':
-                        continue
-                    name="%s.%s" % (self.package.__name__,root)
-                    mod=self._import(name)
-                    tests.append(ModuleTestSuite(mod))
-                elif os.path.isdir(item_path):
-                    init = os.path.abspath(os.path.join(item_path,'__init__.py'))
-                    if os.path.isfile(init):
-                        name="%s.%s" % (self.package.__name__,item)
-                        package=self._import(name)
-                        if package:
-                           tests.append(TestPackageSuite(package))
-                    else:
-                        tests.append(TestDirectorySuite(item_path))
-            sys.path.remove(self.path)
-        return tests
+    def importdir(self,item,path):
+        init = os.path.abspath(os.path.join(path,'__init__.py'))
+        if os.path.isfile(init):
+           name="%s.%s" % (self.package.__name__,item)
+           package=self._import(name)
+           if package:
+              return TestPackageSuite(package)
+        else:
+           return TestDirectorySuite(path)
 
+    def importfile(self,item,path):
+        root, ext = os.path.splitext(item)
+        if ext != '.py':
+           return
+        name="%s.%s" % (self.package.__name__,root)
+        mod=self._import(name)
+        return ModuleTestSuite(mod)
 
 class ModuleTestSuite(TestSuite):
 
@@ -167,13 +160,18 @@ class ModuleTestSuite(TestSuite):
           for test in func_tests ]
         return tests
 
+
 class TestProgram(unittest.TestProgram):
     USAGE="""
 """
-    def __init__(self,testRunner=None):
-        self.testRunner = testRunner
+    def __init__(self):
+        self.testRunner = None
         self.verbosity = 1
+        self.html=0
         self.parseArgs(sys.argv)
+        if self.html:
+           import HTMLTestRunner
+           self.testRunner = HTMLTestRunner.HTMLTestRunner(verbosity=self.verbosity)
         self.createTests()
         self.runTests()
 
@@ -182,9 +180,13 @@ class TestProgram(unittest.TestProgram):
         parser.add_option("-v","--verbose",action="count",
                           dest="verbosity",default=1,
                           help="Be more verbose. ")
+        parser.add_option("--html",action="store_true",
+                          dest="html",default=0,
+                          help="Produce HTML output ")
 
         options, args = parser.parse_args(argv)
         self.verbosity = options.verbosity
+        self.html=options.html
 
         if args:
             self.names = list(args)
@@ -194,9 +196,6 @@ class TestProgram(unittest.TestProgram):
     def createTests(self):
         self.test = TestSuite(self.names)
 
-
-main = TestProgram
-
 if __name__ == "__main__":
-    main()
+    TestProgram()
 

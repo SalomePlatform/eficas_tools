@@ -89,7 +89,7 @@ class Fenetre :
         self.but_save.place(relx=0.6,rely=0.5,anchor='center')
         # affichage du texte
         self.affiche_texte(self.texte)
-	self.zone_texte.config(state=DISABLED)
+        self.zone_texte.config(state=DISABLED)
         centerwindow(self.fenetre)
         self.fenetre.deiconify()
 
@@ -129,7 +129,7 @@ class Fenetre :
     def save(self):
         """ Permet de sauvegarder le texte dans un fichier dont on a demandé le nom
         à l'utilisateur """
-        file = asksaveasfilename(defaultextension = '.comm',
+        file = asksaveasfilename(parent=self.fenetre,defaultextension = '.comm',
                                #initialdir = self.appli.CONFIGURATION.rep_user,
                                initialdir = self.appli.CONFIGURATION.initialdir,
                                title="Sauvegarde du "+self.titre)
@@ -137,15 +137,15 @@ class Fenetre :
             if not save_in_file(file,self.texte,None) :
                 showerror("Sauvegarde impossible",
                        "Impossible de sauvegarder le texte dans le fichier spécifié\n"+
-                          "Vérifiez les droits d'écriture")
+                          "Vérifiez les droits d'écriture",parent=self.fenetre)
             else:
-                showinfo("Sauvegarde effectuée","Sauvegarde effectuée dans le fichier %s" %file)
+                showinfo("Sauvegarde effectuée","Sauvegarde effectuée dans le fichier %s" %file,parent=self.fenetre)
 
     def destroy(self):
         try :
-	   self.fenetre.destroy()
-	except :
-	   pass
+           self.fenetre.destroy()
+        except :
+           pass
 
 class FenetreYesNo(Fenetre):
     def __init__(self,appli,titre="",texte="",yes="Yes",no="No"):
@@ -197,7 +197,7 @@ class FenetreDeSelection(Fenetre):
     """
     def __init__(self,panel,item,appli,titre="",texte="",cardinal=1):
         Fenetre.__init__(self,appli,titre=titre,texte=texte)
-	self.frame_boutons.place_forget()
+        self.frame_boutons.place_forget()
         self.frame_texte.place_forget()
         self.frame_texte.place(relx=0,rely=0,relwidth=1,relheight=0.8)
         self.frame_boutons.place(relheight=0.2,relx=0,rely=0.8,relwidth=1.)
@@ -225,11 +225,11 @@ class FenetreDeSelection(Fenetre):
         # Replacement
         self.but_quit.place_forget()
         self.but_save.place_forget()
-	self.but_all  = Button(self.frame_boutons,text = "Tout Sélectionner", command=self.tout)
+        self.but_all  = Button(self.frame_boutons,text = "Tout Sélectionner", command=self.tout)
         self.but_save.place(relx=0.6,rely=0.6,anchor='center')
         self.but_quit.place(relx=0.8,rely=0.6,anchor='center')
         self.but_all.place(relx=0.7,rely=0.2,anchor='center')
-	self.choose_separateur('espace')
+        self.choose_separateur('espace')
      
 
     def get_separateurs_autorises(self):
@@ -249,20 +249,20 @@ class FenetreDeSelection(Fenetre):
         
     def tout(self):
         liste=[]
-	texte=self.texte.splitlines()
-	for l in texte :
-	    for mot in string.split(l,self.separateur):
-	       if mot != '' and mot != ' ' and mot != self.separateur :
-	          liste.append(mot)
-	self.traite_selection(liste)
+        texte=self.texte.splitlines()
+        for l in texte :
+            for mot in string.split(l,self.separateur):
+               if mot != '' and mot != ' ' and mot != self.separateur :
+                  liste.append(mot)
+        self.traite_selection(liste)
 
     def traite_selection(self,liste=None):
         """ Cette méthode effectue tous les traitements nécessaires pour vérifier
             et affecter la liste de valeurs à l'objet réprésenté par self.item
         """
         # Récupère la liste des chaines de caractères de la zone sélectionnée
-	message=""
-	if liste == None:
+        message=""
+        if liste == None:
            message,liste = self.recupere_liste()
         if self.test_probleme(message,"Sélectionnez des données") == 0:
             return
@@ -381,7 +381,7 @@ class FenetreDeSelection(Fenetre):
             éléments dans le type voulu en cas de succès, sinon retourne None.
         """
         liste_valeurs = []
-	message = ""
+        message = ""
         for chaine in liste:
             if f_conversion:
                 try:
@@ -441,17 +441,17 @@ class FenetreDeParametre(Fenetre) :
         self.affiche_texte(self.texte)
         self.zone_texte.config(state="disabled")
 
-	# définition des boutons
-	self.frame_boutons = Frame(self.fenetre)
-	self.frame_boutons.place(relheight=0.3,relx=0,rely=0.65,relwidth=1.)
-	self.label1 = Label(self.frame_boutons,text="surligner la")
-	self.label2 = Label(self.frame_boutons,text="ligne entière")
-	self.label1.place(relx=0.1,rely=0)
-	self.label2.place(relx=0.1,rely=0.5)
-	self.but_quit = Button(self.frame_boutons,text = "Fermer",command=self.quit)
-	self.but_save = Button(self.frame_boutons,text = "Choisir",command = self.Choisir)
-	self.but_save.place(relx=0.6,rely=0,relheight=1)
-	self.but_quit.place(relx=0.8,rely=0,relheight=1)
+        # définition des boutons
+        self.frame_boutons = Frame(self.fenetre)
+        self.frame_boutons.place(relheight=0.3,relx=0,rely=0.65,relwidth=1.)
+        self.label1 = Label(self.frame_boutons,text="surligner la")
+        self.label2 = Label(self.frame_boutons,text="ligne entière")
+        self.label1.place(relx=0.1,rely=0)
+        self.label2.place(relx=0.1,rely=0.5)
+        self.but_quit = Button(self.frame_boutons,text = "Fermer",command=self.quit)
+        self.but_save = Button(self.frame_boutons,text = "Choisir",command = self.Choisir)
+        self.but_save.place(relx=0.6,rely=0,relheight=1)
+        self.but_quit.place(relx=0.8,rely=0,relheight=1)
 
 
     def Choisir(self):
@@ -462,13 +462,13 @@ class FenetreDeParametre(Fenetre) :
                        "Selectionner un parametre")
         l_param = ""
         for param in selection.splitlines():
-	    nomparam=param[0:param.find("=")-1]
+            nomparam=param[0:param.find("=")-1]
             if nomparam != '' : 
-		l_param=l_param+nomparam+','
-	self.parent.entry.delete(0,Tkinter.END)
-	self.parent.entry.insert(0,l_param[0:-1])
-	self.parent.valid_valeur()
-	self.quit()
+                l_param=l_param+nomparam+','
+        self.parent.entry.delete(0,Tkinter.END)
+        self.parent.entry.insert(0,l_param[0:-1])
+        self.parent.valid_valeur()
+        self.quit()
 
 class Formulaire:
     """
@@ -476,6 +476,7 @@ class Formulaire:
     on affiche un formulaire à remplir par l'utilisateur
     """
     def __init__(self,fen_pere,obj_pere=None,titre="",texte="",items=(),mode='query',commande=None):
+        self.resultat=0
         if items in ((),[]) : return
         self.items = items
         self.titre = titre
@@ -501,6 +502,10 @@ class Formulaire:
         self.d_validateurs['rep']  = self.repvalidator
         self.d_validateurs['file'] = self.filevalidator
         self.d_validateurs['cata']= self.catavalidator
+        self.d_validateurs['mot']= self.motvalidator
+        self.d_validateurs['mot2']= self.mot2validator
+        self.d_validateurs['mot3']= self.mot3validator
+        self.d_validateurs['mot4']= self.mot4validator
         
     def init_fenetre(self):
         """
@@ -544,18 +549,19 @@ class Formulaire:
             if len(item[0])>length_maxi : length_maxi = len(item[0])
         window = self.fenetre.interior()
         for item in self.items :
-	    if len(item) == 4 :
+            if len(item) == 4 :
                label,nature,nom_var,defaut = item
-	       chaine="Yes" 
-	       chaine2="No"
-	    else :
+               chaine="Yes" 
+               chaine2="No"
+            else :
                label,nature,nom_var,defaut,chaine,chaine2 = item
+          
             # création de la frame
             fr_item = Frame(window,height=40,width=700)
             fr_item.pack(side='top',fill='x',expand=1)
             # création du label
             Label(fr_item,text = label).place(relx=0.05,rely=0.4)
-            if nature in ('rep','file','cata'):
+            if nature in ('rep','file','cata','mot','mot2','mot3','mot4'):
                 # création de l'entry
                 e_item = Entry(fr_item) 
                 e_item.place(relx=0.5,rely=0.4,relwidth=0.45)
@@ -607,6 +613,27 @@ class Formulaire:
 # --------------------------------------------------------------------------------
 #       Validateurs des noms de répertoire, de fichiers et de catalogues
 # -------------------------------------------------------------------------------
+
+    def motvalidator(self,text):
+        text2="("+text+")"
+        return self.motlongueurvalidator(text2,1) 
+
+    def mot2validator(self,text):
+        return self.motlongueurvalidator(text,2) 
+
+    def mot3validator(self,text):
+        return self.motlongueurvalidator(text,3) 
+
+    def mot4validator(self,text):
+        return self.motlongueurvalidator(text,4) 
+
+    def motlongueurvalidator(self,text,longueur):
+        try :
+          if ((text[0] != "(") or (text[-1] != ")")) : return 0
+          if len(text.split(",")) != longueur : return 0
+          return 1
+        except :
+          return 0
 
     def repvalidator(self,text):
         """
@@ -693,7 +720,7 @@ class ListeChoix :
         self.titre = titre
         self.filtre = filtre
         self.optionReturn = optionReturn
-	self.fonte_titre=fonte_titre
+        self.fonte_titre=fonte_titre
         self.init()
 
     def init(self):        
@@ -753,8 +780,8 @@ class ListeChoix :
               mot="("
               premier=1
               for val in objet:
-	         if (not premier):
-		   mot=mot+"," 
+                 if (not premier):
+                   mot=mot+"," 
                  else:
                    premier=0
                  valtexte = self.parent.get_valeur_texte(val)
@@ -806,15 +833,15 @@ class ListeChoix :
         try:
           self.dico_labels[self.arg_selected].configure(bg='gray95',fg='black')
           self.arg_selected = ''
-	except :
-	  pass
+        except :
+          pass
 
     def surligne(self,marque):
         try :
-	   self.highlightitem(self.dico_labels[marque])
+           self.highlightitem(self.dico_labels[marque])
            self.arg_selected = marque
-	except:
-	   pass
+        except:
+           pass
 
     def chooseitemsurligne(self,mot,label,commande):
         """ Active la méthode de choix passée en argument"""
@@ -834,32 +861,27 @@ class ListeChoix :
            showerror(raison.split('\n')[0],raison)
 
     def afficheMot(self,mot):
-        """ Pour contourner le bug sur l index """
-        """ on commence par la methode dite normale """
-        """ puis par la methode de contournement """
-        """ puis rien du tout """
-        #try :
-        if ( 1 == 1 ):
-           try:
-             labelsuivant=self.dico_labels[motsuivant]
+        """ Pour contourner le bug sur l index 
+            on commence par la methode dite normale     
+            puis par la methode de contournement     
+            puis rien du tout 
+        """
+        try:
+             labelsuivant=self.dico_labels[mot]
              index = self.MCbox.index(labelsuivant)
              self.MCbox.see(index)
-           except :
+        except :
              posmot=self.dico_place[mot]
              totale=self.nBlabel + 0.0
              self.MCbox.yview_moveto(posmot/totale)
-        else :
-             pass
 
     def selectNextItem(self,mot,label):
         index=self.liste.index(mot)
         indexsuivant=index+1
-	if indexsuivant > len(self.liste) -1:
-	   indexsuivant=0
+        if indexsuivant > len(self.liste) -1:
+           indexsuivant=0
         motsuivant=self.liste[indexsuivant]
         labelsuivant=self.dico_labels[motsuivant]
-        #index = self.MCbox.index(labelsuivant)
-        #self.MCbox.see(index)
         self.afficheMot(motsuivant)
         self.selectthis(motsuivant,labelsuivant,self.selection[2],)
         self.dontselect=1
@@ -869,14 +891,12 @@ class ListeChoix :
         indexprec=index-1
         motprec=self.liste[indexprec]
         labelprec=self.dico_labels[motprec]
-        #index = self.MCbox.index(labelprec)
-        #self.MCbox.see(index)
         self.afficheMot(motprec)
         self.selectthis(motprec,labelprec,self.selection[2],)
         self.dontselect=1
         
     def selectthis(self,mot,label,commande) :
-	self.clear_marque()
+        self.clear_marque()
         if self.selection != None :
             self.deselectitem(self.selection[1],self.selection[0],self.selection[2],)
         self.highlightitem(label)
@@ -913,9 +933,9 @@ class ListeChoix :
         return lign
 
     def remove_selected_item(self):
-	try :
+        try :
            index=self.MCbox.index(self.selection[1])
-	except :
+        except :
            index=self.MCbox.index(self.dico_labels[self.arg_selected] )
         lign,col=map(int,string.split(index,'.'))
         del self.liste[lign-1]
@@ -931,8 +951,6 @@ class ListeChoix :
         for arg in self.liste :
             if fnmatch.fnmatch(arg,filtre) or fnmatch.fnmatch(arg,FILTRE) :
                 label=self.dico_labels[arg]
-                #index = self.MCbox.index(label)
-                #self.MCbox.see(index)
                 self.afficheMot(arg)
                 self.selectitem(arg,label,self.selection[2])
                 break
@@ -952,7 +970,7 @@ class ListeChoix :
         for val in self.liste:
 #            try:
 #                v = eval(val)
-#    		l.append(v)
+#                    l.append(v)
 #            except:
                 l.append(val)
         return l

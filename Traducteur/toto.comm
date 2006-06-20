@@ -1,0 +1,74 @@
+DEBUT()
+
+MAIL=LIRE_MAILLAGE(   )
+
+#
+# DEFINITION DES GROUPES DE NOEUDS
+MAIL=DEFI_GROUP( reuse=MAIL,   MAILLAGE=MAIL,CREA_GROUP_NO=(
+                       _F(  GROUP_MA = 'ENCAST'),
+                       _F(  GROUP_MA = 'CONT_PR'),
+                       _F(  GROUP_MA = ( 'B',  'SECT_MED', )))
+                   )
+
+MAIL=DEFI_GROUP( CREA_GROUP_NO=[
+                       _F(  GROUP_MA = 'ENCAST',INFO=2),
+                       _F(  GROUP_MA = 'CONT_PR'),
+                       _F(  GROUP_MA = ( 'B',  'SECT_MED', ))]
+                   )
+#
+# DEFINITION DU MODELE
+MODELE=AFFE_MODELE(    MAILLAGE=MAIL,
+                         AFFE=_F(  TOUT = 'OUI',
+                       PHENOMENE = 'MECANIQUE',
+                       MODELISATION = 'AXIS_FOURIER')  )
+
+#
+# DEFINITION DU MATERIAU
+ACIER=DEFI_MATERIAU(    ELAS= _F( E = 2.1E11,  NU = 0.3,
+                                 ALPHA = 1.E-5,  RHO = 7800.) #comment
+                                 #comment
+                      )
+
+#
+# ATTRIBUTION DU MATERIAU
+CHMAT=AFFE_MATERIAU(    MAILLAGE =MAIL,
+                          AFFE=_F(  TOUT = 'OUI',
+                                 MATER = ACIER)  )
+CHMAT2=AFFE_MATERIAU(    MAILLAGE =MAIL,
+                          AFFE=(_F(  TOUT = 'OUI', MATER = ACIER),
+                                _F(  TOUT = 'OUI', MATER = ACIER),
+                                _F(  TOUT = 'OUI', MATER = ACIER),
+                                )
+                    )
+STAT_NONLINE(SOLVEUR=_F(METHOD="FRONT",
+                        PREC=1.E-3))
+STAT_NONLINE(SOLV=_F(METHOD="FRONT",
+                        PREC=1.E-3),
+             AFFE=(_F(  TOUT = 'OUI', MATER = ACIER),
+                   _F(  TOUT = 'OUI', MATER = ACIER),
+                   _F(  TOUT = 'OUI', MATER = ACIER),
+                  )
+            )
+
+MA=LIRE_MAILLAGE(UNITE=20,INFO=2,TEXT="""aaaa(
+bbb""")
+"""
+MOO=AFFE_MODELE()
+"""
+MO=AFFE_MODELE(MAILLAGE=MA,
+                INFO=2,
+                )
+#LIRE_MAILLAGE()
+MA2=LIRE_MAILLAGE(UNITE=21)
+MA3 = LIRE_MAILLAGE ( #comment ( ]
+                        UNITE=23,
+                     )
+MA4 = LIRE_MAILLAGE ( #commentaire commande
+                   UNITE
+                   =
+                   24
+                   ,INFO=2 #commentaire mocle INFO
+                   ) #commentaire fin commande
+M5=LIRE_MAILLAGE (     #comment commande
+)
+a[2*(i+1)]=LIRE_MAILLAGE(UNITE=21)

@@ -55,7 +55,7 @@ class EFICAS(appli.APPLI):
       
   def browse(self,result):
       if result == 'Browse':
-        self.ulfile = askopenfilename(title="Choix fichier :")
+        self.ulfile = askopenfilename(parent=self.dialog.component('hull'),title="Choix fichier :")
         self._ulfile.setentry(self.ulfile)
       elif result == 'OK':
         self.ulfile = self._ulfile.get()

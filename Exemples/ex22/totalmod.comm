@@ -1468,7 +1468,7 @@ e_gre     = DEFI_FONCTION ( NOM_PARA    : 'TEMP'
                              VALE        : ( 0. 1.
                                              5. 2.   )
                           );
-  	  
+            
 e_grm     = DEFI_FONCTION ( NOM_PARA    : 'TEMP'
                              PROL_DROIT  : 'CONSTANT'
                              PROL_GAUCHE : 'CONSTANT'
@@ -1496,14 +1496,14 @@ al_gre    = DEFI_FONCTION ( NOM_PARA    : 'TEMP'
                              VALE        : ( 0. 1.
                                              5. 2.  )
                           );
-			  
+                          
 al_grm    = DEFI_FONCTION ( NOM_PARA    : 'TEMP'
                              PROL_DROIT  : 'CONSTANT'
                              PROL_GAUCHE : 'CONSTANT'
                              VALE        : ( 0. 1.
                                              5. 2.  )
                           ); 
-			                                                      			  
+                                                                                                        
 % Tube guide
 
 e_tu     = DEFI_FONCTION ( NOM_PARA    : 'TEMP'
@@ -1540,7 +1540,7 @@ e_cr     = DEFI_FONCTION (  NOM_PARA    : 'TEMP'
                                             5. 2.
                                           )
                           );
-			  
+                          
 nu_cr    = DEFI_FONCTION (  NOM_PARA    : 'TEMP'
                             PROL_DROIT  : 'CONSTANT'
                             PROL_GAUCHE : 'CONSTANT'
@@ -1566,7 +1566,7 @@ mt_gre1  = DEFI_MATERIAU ( ELAS_FO : ( E     : e_gre
                                         NU    : nu_gre
                                         ALPHA : al_gre
                                         RHO   : 7800. )
-			                   GRAN_IRRA:( FLUX_L   :fluxax1
+                                           GRAN_IRRA:( FLUX_L   :fluxax1
                                         FLUX_TN  :fluxrd1
                                         FONC_MULT:flux_f1
                                         A        : 0.
@@ -1575,7 +1575,7 @@ mt_gre1  = DEFI_MATERIAU ( ELAS_FO : ( E     : e_gre
                                         UN_SUR_K : 0.
                                         UN_SUR_M : 0.
                                         QSR_K    : 1.  )
-                          );	       
+                          );               
                           
 % Grilles de melange       
  
@@ -1622,12 +1622,12 @@ mt_tu1  = DEFI_MATERIAU ( ELAS_FO : ( E         : e_tu
                                         FONC_MULT: flux_f1
                                         A        : 0.
                                         S        : 1.)
-			                  LEMAITRE : ( N        : 0.
+                                          LEMAITRE : ( N        : 0.
                                         UN_SUR_K : 0.
                                         UN_SUR_M : 0.
-                                        QSR_K    : 2.)		
+                                        QSR_K    : 2.)                
                            
-	  	                     );
+                                       );
 
 %
 %           AFFECTATION DES MATERIAUX A CHAUD - CYCLE  

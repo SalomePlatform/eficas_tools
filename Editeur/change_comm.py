@@ -81,8 +81,8 @@ class DUP :
          p.readfile(fichier)
          text=p.convert('exec',self)
          if not p.cr.estvide(): 
-	    print ("Erreur à la conversion")
-	    print str(p.cr)
+            print ("Erreur à la conversion")
+            print str(p.cr)
             return
 
       # On se met dans le repertoire ou se trouve le fichier de commandes
@@ -110,26 +110,26 @@ class DUP :
    def modifieJDC(self,texte):
          if texte == None or texte == "" : return
          format="python"
-	 lignes=string.split(texte,";")
-	 textedecoup=""
-	 for l in lignes :
-	    textedecoup=textedecoup+l+'\n'
+         lignes=string.split(texte,";")
+         textedecoup=""
+         for l in lignes :
+            textedecoup=textedecoup+l+'\n'
          if convert.plugins.has_key(format):
             p=convert.plugins[format]()
             p.settext(textedecoup)
             text=p.convert('exec',self)
-	    print text
+            print text
          if not p.cr.estvide(): 
-	    print ("Erreur à la conversion")
-	    print str(p.cr)
+            print ("Erreur à la conversion")
+            print str(p.cr)
             return
          self.J2=self.cata[0].JdC(procedure=text,appli=self,
                          cata=self.cata,
-			 cata_ord_dico=self.readercata.cata_ordonne_dico,
+                         cata_ord_dico=self.readercata.cata_ordonne_dico,
                          nom = self.JDCName+"2",
                          rep_mat=self.CONFIGURATION.rep_mat,
                          )
-	 self.J2.definition.code = "MODIF"
+         self.J2.definition.code = "MODIF"
          self.J2.analyse()
      
 
@@ -155,7 +155,7 @@ class DUP :
       self.jdc_fini = string.replace(jdc_formate,'\r\n','\n')
 
       if not save_in_file(fichierSortie,self.jdc_fini) :
-	 self.affiche_infos("Problème à la sauvegarde du fichier")
+         self.affiche_infos("Problème à la sauvegarde du fichier")
          return 0
       else :
          self.affiche_infos("sauvegarde effectuée")

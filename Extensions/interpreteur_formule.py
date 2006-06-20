@@ -454,17 +454,17 @@ class Interpreteur_Formule:
                 texte = reste
                 return operateur,reste
         elif texte[0] == '-':
-	    # Il faut pouvoir trapper les expressions du type exp(-(x+1)) ...
-	    try :
-	       args,reste = self.cherche_args(texte[1:])
-	    except InterpreteurException,e:
+            # Il faut pouvoir trapper les expressions du type exp(-(x+1)) ...
+            try :
+               args,reste = self.cherche_args(texte[1:])
+            except InterpreteurException,e:
                 raise InterpreteurException,str(e)
-	    if not args :
-	       # Il ne s'agit pas de '-' comme opérateur unaire --> on retourne None
-	       return None,texte
-	    else:
-	       identificateur = '-'
-	       args = self.split_args(identificateur,args,self.d_fonctions_unaires[identificateur])
+            if not args :
+               # Il ne s'agit pas de '-' comme opérateur unaire --> on retourne None
+               return None,texte
+            else:
+               identificateur = '-'
+               args = self.split_args(identificateur,args,self.d_fonctions_unaires[identificateur])
                formule_operateur = (identificateur,'',self.t_formule[2],args)
                operateur = Interpreteur_Formule(formule = formule_operateur,
                                                  constantes = self.new_constantes,

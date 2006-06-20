@@ -68,7 +68,7 @@ menu_defs={ 'bureau': [
                            ('Enregistrer','saveJDC','<Control-s>','Ctrl+S'),
                            ('Enregistrer sous','saveasJDC','<Control-e>','Ctrl+E'),
                            None,
-                           ('Fermer','closeJDC','<Control-f>','Ctrl+F'),
+                           ('Fermer','closeJDC','<Control-w>','Ctrl+W'),
                            ('Quitter','exitEFICAS','<Control-q>','Ctrl+Q'),
                          ]
               ),
@@ -91,7 +91,10 @@ menu_defs={ 'bureau': [
              ]
            }
 
-userprefs=os.path.expanduser("~/Eficas_install/prefs.py")
+if os.name == 'nt':
+   userprefs = os.sep.join( [ os.environ['HOMEDRIVE'], os.environ['HOMEPATH'], 'Eficas_install', 'prefs.py' ])
+else :
+   userprefs=os.path.expanduser("~/Eficas_install/prefs.py")
 if os.path.isfile(userprefs):
    try:
       execfile(userprefs)

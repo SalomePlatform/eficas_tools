@@ -39,7 +39,7 @@ class AIDE_GUI:
          self.fenetre = fenetre
       else:
          self.fenetre = fenetre.master
-	 fenetre.destroy()
+         fenetre.destroy()
       self.fenetre.title(self.objet.titre)
       self.fenetre.geometry("700x700+50+50")
       self.fenetre.resizable(1,1)
@@ -47,7 +47,7 @@ class AIDE_GUI:
       #self.fenetre.maxsize(900,800)
       self.fenetre.protocol("WM_DELETE_WINDOW",self.quit)
       self.fenetre.update()
-      	 
+               
    def init_frames(self):
       """
       Initialise les frames principales de l'appli
@@ -79,10 +79,10 @@ class AIDE_GUI:
       self.scroll_h.grid(row=1,column=0,rowspan=2,sticky='nesw')
       self.canvas = Canvas(self.frame1,
                            bg='white',
-			   relief='sunken',
-			   scrollregion=(0,0,1000,1000),
-			   yscrollcommand=self.scroll_v.set,
-			   xscrollcommand=self.scroll_h.set)
+                           relief='sunken',
+                           scrollregion=(0,0,1000,1000),
+                           yscrollcommand=self.scroll_v.set,
+                           xscrollcommand=self.scroll_h.set)
       self.canvas.grid(row=0,column=0,sticky='nesw')
       self.scroll_v.configure(command=self.canvas.yview)
       self.scroll_h.configure(command=self.canvas.xview)
@@ -104,8 +104,8 @@ class AIDE_GUI:
       bbox = self.canvas.bbox(titre)
       bordure = self.canvas.create_rectangle(bbox[0]-5,bbox[1]-5,bbox[2]+5,bbox[3]+5,
                                              outline = 'black',
-					     fill = 'grey75')
-      self.canvas.lower(bordure)				     
+                                             fill = 'grey75')
+      self.canvas.lower(bordure)                                     
       self.y_courant += 100
       # Construction des items
       for item in self.objet.l_items :
@@ -113,12 +113,12 @@ class AIDE_GUI:
       # Affichage du texte dans le fichier associé (s'il existe)
       if self.objet.fichier :
          try:
-	    texte=open(self.objet.fichier,'r').read()
+            texte=open(self.objet.fichier,'r').read()
          except:
             texte="Fichier %s inaccessible" % self.objet.fichier
-	 self.canvas.create_text(10,self.y_courant+20,
-	                         text=texte,
-				 anchor='nw')
+         self.canvas.create_text(10,self.y_courant+20,
+                                 text=texte,
+                                 anchor='nw')
       # Configuration dynamique des boutons
       self.config_boutons()
       #
@@ -139,9 +139,9 @@ class AIDE_GUI:
       """
       l = Label(self.canvas,
                 text=item.titre,
-		foreground = 'blue',
-		background='white',
-		font="Helvetica 12 bold")
+                foreground = 'blue',
+                background='white',
+                font="Helvetica 12 bold")
       l.bind("<Button-1>",lambda e,s=self,o=item : s.update_objet(o))
       l.bind("<Enter>",lambda e,s=self,o=l : s.select_label(o))
       l.bind("<Leave>",lambda e,s=self,o=l : s.deselect_label(o))

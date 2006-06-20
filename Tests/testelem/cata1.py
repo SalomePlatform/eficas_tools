@@ -73,4 +73,9 @@ OP6=OPER(nom='OP6',op=6,sd_prod=op6_prod,
                          )
         )
 
+OP7=OPER(nom='OP7',op=7,sd_prod=concept,
+            FILTRE  =FACT(statut='o',min=01,max='**',
+                          MODE  =SIMP(statut='o',typ=(concept,concept2) ),
+                         )
+        )
 

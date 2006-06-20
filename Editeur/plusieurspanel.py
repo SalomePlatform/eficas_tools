@@ -55,6 +55,8 @@ class PLUSIEURS_Panel(newSIMPPanel):
          l1_valeurs = self.Liste_valeurs.get_liste()
       else:
          l1_valeurs = liste
+
+      #nettoyage de la liste
       l_valeurs=[]
       for  val in l1_valeurs :
         if val != '' and val != None :
@@ -88,27 +90,17 @@ class PLUSIEURS_Panel(newSIMPPanel):
           
   def add_valeur_sans_into(self,name=None,encorevalide=1):
       """
-      Lit ce que l'utilisateur a saisi dans self.entry et cherche à
-      l'évaluer :
+      Tente d'ajouter la valeur fournie (name) à la liste courante :
         - si la valeur est acceptable, elle est ajoutée dans la liste des valeurs
         - sinon elle est refusée
+
       encorevalide vaut 1 si le validateur trouve l item et la liste correctes
                         0 si le validateur trouve la valeur de l item incorrecte
                        -1 si le validateur trouve la liste incorrecte
       """
-
+      valeur = name
       commentaire="Valeur incorrecte : ajout à la liste refusé"
       testvalide=1
-
-      # Lecture de la zone de saisie et evaluation si nécessaire
-      if name != None :
-         valeur = name
-      else:
-         valeurentree = self.get_valeur()
-         if valeurentree == '': valeur=None
-         valeurentree,testvalide=self.node.item.eval_valeur(valeur)
-         if (not testvalide) :
-            commentaire = "impossible d'évaluer : %s " %`valeurentree`
 
       # Pas de traitement des valeurs nulles ( a priori clic involontaire
       if (valeur == None or valeur =="") :
@@ -118,17 +110,14 @@ class PLUSIEURS_Panel(newSIMPPanel):
       else :
           testtype = self.node.item.object.verif_type(valeur)
           if not testtype :
-	    if valeur.__class__.__name__ in ( 'PARAMETRE', 'ITEM_PARAMETRE') :
-	       testtype = 1
-	    else :
                commentaire ="Type de la valeur incorrecte"
                encorevalide=-2
-		
+                
       if (encorevalide ==0) :
          commentaire=self.node.item.info_erreur_item()
       if (encorevalide == -1) :
          commentaire=self.node.item.info_erreur_liste()
-	 # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
+         # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
          min,max = self.node.item.GetMinMax()
          if len(self.Liste_valeurs.get_liste()) >= max : 
             commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
@@ -156,7 +145,6 @@ class PLUSIEURS_Panel(newSIMPPanel):
          else :
             commentaire ="Type de la valeur incorrecte"
 
-      #self.erase_valeur()
       self.parent.appli.affiche_infos(commentaire)
 
   def sup_valeur_sans_into(self,name=None):

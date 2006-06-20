@@ -63,6 +63,8 @@ class PARAMPanel(panels.OngletPanel):
     nb.tab('Parametre').focus_set()
     nb.setnaturalsize()
     self.make_buttons()
+    self.enlevebind()
+    self.creebind()
     
   def makeParametrePage(self,page):
     """
@@ -198,7 +200,8 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       Retourne la valeur de l'objet PARAMETRE cad son texte
       """
-      return self.object.valeur or ''
+      if self.object.valeur is None: return ''
+      else: return self.object.valeur 
 
     def get_nom(self):
       """
@@ -216,7 +219,8 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       Renomme le paramètre
       """
-      self.object.set_attribut('nom',new_nom)
+      self.object.set_nom(new_nom)
+      #self.object.set_attribut('nom',new_nom)
 
     def get_fr(self):
       """

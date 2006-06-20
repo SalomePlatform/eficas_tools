@@ -183,3 +183,22 @@ def debut(self,PAR_LOT):
 
 DEBUT=MACRO(nom='DEBUT',op=debut,sd_prod=debut_sdprod,PAR_LOT=SIMP(typ='TXM',defaut='OUI'))
 
+class entier   (ASSD):
+   def __init__(self,valeur=None,**args):
+      ASSD.__init__(self,**args)
+      self.valeur=valeur
+
+   def __adapt__(self,validator):
+      if validator.name == "list":
+          #validateur liste,cardinalité
+          return (self,)
+      elif validator.name == "type":
+          #validateur type
+          return validator.adapt(self.valeur or 0)
+      else:
+          #validateur into et valid
+          return self
+
+   def __repr__(self):
+      return "<concept entier>"
+

@@ -15,7 +15,7 @@ DEVELOPPEUR=None
 
 import os
 def hostname() :
-	return os.uname()[1]
+        return os.uname()[1]
 group_eficas=108
 group_salome=107
 
@@ -29,7 +29,7 @@ if test_devel :
         DEVELOPPEUR=d_dev[ os.getuid() ]
         import sys
         sortie=sys.stderr
-        sortie.write( "import de "+__name__+" : $Id: developpeur.py,v 1.1 2003/03/06 14:36:11 eficas Exp $" )
+        sortie.write( "import de "+__name__+" : $Id: developpeur.py,v 1.2.8.1 2006/03/10 15:09:53 eficas Exp $" )
         sortie.write( "\n" )
 
 

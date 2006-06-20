@@ -11,7 +11,7 @@ from Accas import *
 JdC = JDC_CATA(code='HOMARD',
                execmodul=None,
                regles = (AU_MOINS_UN('DONNEES_HOMARD'),),
-			)
+                        )
 
 # Type le plus general
 class entier  (ASSD):pass
@@ -46,13 +46,13 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
 # 2. Les fichiers en entree/sortie
 #
          FICHIERS = FACT(statut='o',
-		NOM_MED_MAILLAGE_N = SIMP(statut='o' ,typ='TXM',
-			 fr="Nom du fichier contenant le maillage à adapter",
-			 ang="File name including the in-mesh"),
-		NOM_MED_MAILLAGE_NP1 = SIMP(statut='o' ,typ='TXM',
+                NOM_MED_MAILLAGE_N = SIMP(statut='o' ,typ='TXM',
+                         fr="Nom du fichier contenant le maillage à adapter",
+                         ang="File name including the in-mesh"),
+                NOM_MED_MAILLAGE_NP1 = SIMP(statut='o' ,typ='TXM',
                          fr="Nom du fichier qui contiendra le maillage adapté",
                          ang="File name for resulting out-mesh"),
-	        INFORMATION =  SIMP(statut='o' ,typ='TXM',
+                INFORMATION =  SIMP(statut='o' ,typ='TXM',
                          fr="Nom du fichier contenant les informations de sortie",
                          ang="Log File"),
                      ),
@@ -203,9 +203,9 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
                                                  ang="Groups which define the boundary" ),
                                ) ,
          fichier_frontiere=BLOC ( condition = "NOM_MED_MAILLAGE_FRONTIERE != None" ,
-			  FIC_FRON = SIMP(statut='f',typ='TXM',
-			                 fr="Nom du fichier MED contenant le maillage frontiere",
-			                 ang="MED File including the boundary mesh" ),
+                          FIC_FRON = SIMP(statut='f',typ='TXM',
+                                         fr="Nom du fichier MED contenant le maillage frontiere",
+                                         ang="MED File including the boundary mesh" ),
                                ), 
 #
          ),

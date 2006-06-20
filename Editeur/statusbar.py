@@ -25,8 +25,9 @@ import Tkinter
 import types
 
 class STATUSBAR:
-   def __init__(self,parent):
+   def __init__(self,parent,police):
       self.parent=parent
+      self.police=police
       self.frame = Tkinter.Frame(parent,bd=1, relief=Tkinter.RAISED)
       self.frame.pack(side=Tkinter.BOTTOM, fill=Tkinter.X)
       self.label = Tkinter.Label (self.frame,
@@ -34,7 +35,7 @@ class STATUSBAR:
                                         text='',
                                         justify='left',
                                         relief='sunken',
-					height=2,
+                                        height=3,
                                         bg='gray95')
       self.label.pack(side='left',expand=1,fill='both')
 
@@ -43,7 +44,7 @@ class STATUSBAR:
           texte_infos=texte[0:150]
       else :
           texte_infos=texte
-      self.label.configure(text=texte_infos)
+      self.label.configure(text=texte_infos,font=self.police)
 
    def reset_affichage_infos(self):
       """ Efface tout message présent dans le panneau en bas d'EFICAS """

@@ -1,4 +1,4 @@
-#@ MODIF N_ETAPE Noyau  DATE 22/02/2005   AUTEUR DURAND C.DURAND 
+#@ MODIF N_ETAPE Noyau  DATE 10/05/2006   AUTEUR MCOURTOI M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -117,7 +117,6 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
            le nommage du concept.
 
       """
-      if not self.isactif():return
       self.sdnom=nom
       try:
          if self.parent:
@@ -356,6 +355,8 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
      self.etape=self
      for mocle in self.mc_liste:
         mocle.reparent(self)
+     if self.sd and self.reuse == None :
+        self.sd.jdc=self.jdc
 
    def get_cmd(self,nomcmd):
       """
@@ -393,3 +394,11 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
              new_sd.nom = self.sd.nom
        new_etape.copy_intern(self)
        return new_etape
+
+   def reset_jdc(self,new_jdc):
+       """
+          Reinitialise le nommage du concept de l'etape lors d'un changement de jdc
+       """
+       if self.sd and self.reuse == None :
+           self.parent.NommerSdprod(self.sd,self.sd.nom)
+

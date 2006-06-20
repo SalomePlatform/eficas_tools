@@ -6,16 +6,16 @@ Module appels
 """
 
 try :
-	from developpeur import DEVELOPPEUR
+        from developpeur import DEVELOPPEUR
 except :
-	DEVELOPPEUR=None
+        DEVELOPPEUR=None
 
 def NULL( *l_args, **d_args  ) : pass
 
 if DEVELOPPEUR :
 
     import developpeur
-    developpeur.sortie.write( "import de "+__name__+" : $Id: appels.py,v 1.2 2003/03/06 14:36:11 eficas Exp $" )
+    developpeur.sortie.write( "import de "+__name__+" : $Id: appels.py,v 1.3.8.1 2006/03/10 15:09:53 eficas Exp $" )
     developpeur.sortie.write( "\n" )
 
     import sys
@@ -77,7 +77,7 @@ if DEVELOPPEUR :
             for e in trace[2:-1] :
                 fic,numero,fonc,inst = e
                 position=fic+":"+str(numero)+":"
-    	    if len(position)>lmax : lmax=len(position)
+                if len(position)>lmax : lmax=len(position)
             lmax += 1 # Pour eloigner les informations du nom du fichier
     
             for e in trace[1:-1] :
@@ -110,7 +110,7 @@ if DEVELOPPEUR :
         return
 
 else :
-	APPELS = NULL
+        APPELS = NULL
 
 
 

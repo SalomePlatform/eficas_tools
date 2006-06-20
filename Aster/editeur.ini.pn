@@ -1,0 +1,54 @@
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+#
+#
+# ======================================================================
+
+import os
+
+import prefs
+
+rep_cata = os.path.join(prefs.REPINI,'Cata')
+rep_homard = os.path.join(prefs.REPINI,'../Homard')
+rep_Pmw = os.path.join(prefs.REPINI,'../Pmw')
+
+# Accès à la documentation Aster
+path_doc              = os.path.join(rep_cata,'..','Doc')
+exec_acrobat    =       "/usr/bin/acroread"
+# Utilisateur/Développeur
+isdeveloppeur   =       "NON"
+path_cata_dev   =       "/tmp/cata"
+# Répertoire temporaire
+rep_travail     =   "/tmp"
+# Répertoire initial
+initialdir=os.curdir
+
+# Choix des catalogues
+rep_mat="//home/noyret/Install_Eficas/materiau"
+
+catalogues = (
+              #('ASTER','v5',os.path.join(rep_cata,'cataSTA5'),'asterv5'),
+              #('ASTER','v6',os.path.join(rep_cata,'cataSTA6'),'python6'),
+              #('ASTER','v73',os.path.join(rep_cata,'cataSTA73'),'python','defaut'),
+              #('ASTER','v74',os.path.join(rep_cata,'cataSTA74'),'python'),
+              ('ASTER','v7.6',os.path.join(rep_cata,'cataSTA76'),'python'),
+              #('ASTER','v8',os.path.join(rep_cata,'cataSTA8'),'python','defaut'),
+              ('ASTER','v8.3',os.path.join(rep_cata,'cataSTA8'),'python','defaut'),
+              #('ASTER','v75',os.path.join(rep_cata,'cataSTA75'),'python','defaut'),
+              ('HOMARD','v1',os.path.join(rep_homard,'homard_cata_V73.py'),'homard'),
+             )
+

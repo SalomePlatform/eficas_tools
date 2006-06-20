@@ -103,9 +103,6 @@ class PythonParser:
          self.cr.fatal("Impossible ouvrir fichier %s" % filename)
          return
    
-   def settext(self,texte) :
-      self.text=texte
-
    def convert(self,outformat,appli=None):
       if outformat == 'exec':
          try:
@@ -114,10 +111,8 @@ class PythonParser:
             # Erreur lors de la conversion
             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],
                                          sys.exc_info()[2])
-            self.cr.exception("Impossible de convertir le fichier python \
-                               qui doit contenir des erreurs.\n \
-                               On retourne le fichier non converti \n \
-                               Prévenir la maintenance. \n" + string.join(l))
+            self.cr.exception("Impossible de convertir le fichier python qui doit contenir des erreurs.\n"
+                               "On retourne le fichier non converti. Prévenir la maintenance.\n\n" + string.join(l))
             # On retourne néanmoins le source initial non converti (au cas où)
             return self.text
       elif outformat == 'execnoparseur':

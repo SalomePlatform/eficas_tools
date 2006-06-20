@@ -27,13 +27,13 @@ Module MakeNomComplet
 """
 
 try :
-	from developpeur import DEVELOPPEUR
+        from developpeur import DEVELOPPEUR
 except :
-	DEVELOPPEUR=None
+        DEVELOPPEUR=None
 
 if DEVELOPPEUR :
     import developpeur
-    developpeur.sortie.write( "import de "+__name__+" : $Id: MakeNomComplet.py,v 1.2 2003/03/07 14:30:48 eficas Exp $" )
+    developpeur.sortie.write( "import de "+__name__+" : $Id: MakeNomComplet.py,v 1.3.8.1 2006/03/10 15:10:44 eficas Exp $" )
     developpeur.sortie.write( "\n" )
 
 
@@ -132,12 +132,12 @@ if __name__ == "__main__" :
 
 
     try :
-    	print basename( "/toto/main.py" )
-    	print "ERREUR"
+        print basename( "/toto/main.py" )
+        print "ERREUR"
         sys.exit(5)
     except Exception,e :
         print str(e)
-    	print "OKAY"
+        print "OKAY"
         pass
     print "FIN NORMALE DE "+__name__
     sys.exit(0)

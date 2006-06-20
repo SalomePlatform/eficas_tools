@@ -72,8 +72,8 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       self.frame_valeur.update()
       self.aide = Label(self.frame_valeur, 
                         text = aide,
-			wraplength=int(self.frame_valeur.winfo_width()*0.8),
-			justify='center')
+                        wraplength=int(self.frame_valeur.winfo_width()*0.8),
+                        justify='center')
       self.aide.place(relx=0.5,rely=0.7,anchor='n')
       # bouton parametre
       bouton_parametres = Button(self.frame_valeur, text="Parametres", command=self.affiche_parametre)
@@ -83,23 +83,23 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
 
   def affiche_parametre(self) :
      if self.node.item.get_liste_param_possible() != [ ]:
-	txtparam=""
-	for param in self.node.item.get_liste_param_possible():
-	   txtparam=txtparam+repr(param)+"\n"
-	if txtparam=="":
-	   showerror("Aucun parametre ","Pas de parametre de ce type")
-	else :
-	   try :
-	   	self.fenetreparam.destroy()
-	   except :
-	        pass
-	   self.fenetreparam=FenetreDeParametre( self, self.node.item, self.parent.appli, txtparam)
+        txtparam=""
+        for param in self.node.item.get_liste_param_possible():
+           txtparam=txtparam+repr(param)+"\n"
+        if txtparam=="":
+           showerror("Aucun parametre ","Pas de parametre de ce type")
+        else :
+           try :
+                   self.fenetreparam.destroy()
+           except :
+                pass
+           self.fenetreparam=FenetreDeParametre( self, self.node.item, self.parent.appli, txtparam)
 
   def destroy(self):
       try :
-      	self.fenetreparam.destroy()
+              self.fenetreparam.destroy()
       except :
-	pass
+        pass
       Widget.destroy(self)
 
   def get_aide(self):

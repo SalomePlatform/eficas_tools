@@ -1,5 +1,6 @@
 # coding=utf-8
-from Accas import SIMP,ASSD
+import types
+from Accas import SIMP,ASSD,geom,assd
 class maillage(ASSD):pass
 class maillage_sdaster(ASSD):pass
 
@@ -239,5 +240,50 @@ Fin Mot-clé simple : mcs1
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
            self.assertEqual(o.isvalid(),valid,
-	        "erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+                "erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
            if valid: self.assertEqual(o.get_valeur(),valeur)
+
+   def test014(self):
+       cata=SIMP(typ=geom,statut='o')
+       liste=((1,1),
+              ("aaaa",1),
+            )
+       for valeur,valid in liste:
+           o=cata(valeur,'mcs',None)
+           self.assertEqual(o.isvalid(),valid,
+                "erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.get_valeur(),valeur)
+
+   def test015(self):
+       cata=SIMP(typ=assd,statut='o')
+       liste=((1,1),
+              ("aaaa",1),
+            )
+       for valeur,valid in liste:
+           o=cata(valeur,'mcs',None)
+           self.assertEqual(o.isvalid(),valid,
+                "erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.get_valeur(),valeur)
+
+   def test016(self):
+       class LongStr:
+         def __init__(self,min,max):
+            self.min=min
+            self.max=max
+         def __convert__(self,valeur):
+            if type(valeur) == types.StringType:
+               if self.min < len(valeur) < self.max:return valeur
+            return None
+
+       cata=SIMP(typ=LongStr(5,8),statut='o')
+       liste=(("aaaaaa",1),
+              ("aaaaaaa",1),
+              ("aaaaaaaaaaaaaaa",0),
+              ("aa",0),
+             )
+       for valeur,valid in liste:
+           o=cata(valeur,'mcs',None)
+           self.assertEqual(o.isvalid(),valid,
+                     "erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.get_valeur(),valeur)
+

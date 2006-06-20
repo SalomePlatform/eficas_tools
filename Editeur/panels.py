@@ -81,9 +81,9 @@ class Panel(Frame) :
       # On termine la suppression de facon brutale (objets Tk et non Tk)
       for k in self.__dict__.keys():
          # il est plus prudent de ne pas détruire le lien sur le Node
-	 # si on voulait mettre l'attribut node à None, il faudrait
-	 # que tous les appels à node.parent.select() apparaissent après
-	 # toutes les autres actions liées au panel (node.item.isglobal(), ...)
+         # si on voulait mettre l'attribut node à None, il faudrait
+         # que tous les appels à node.parent.select() apparaissent après
+         # toutes les autres actions liées au panel (node.item.isglobal(), ...)
          if k != 'node' : setattr(self,k,None)
 
   def creer_boutons(self):
@@ -297,29 +297,32 @@ class OngletPanel(Panel) :
           return
        if OngletPanel.panelbind == None:
           return
-       OngletPanel.panelbind.unbind_all("<F1>")
-       OngletPanel.panelbind.unbind_all("<F2>")
-       OngletPanel.panelbind.unbind_all("<F3>")
-       OngletPanel.panelbind.unbind_all("<F4>")
+       try:
+           OngletPanel.panelbind.unbind_all("<F1>")
+           OngletPanel.panelbind.unbind_all("<F2>")
+           OngletPanel.panelbind.unbind_all("<F3>")
+           OngletPanel.panelbind.unbind_all("<F4>")
+       except:
+           pass
        OngletPanel.panelbind = None
 
   def commande_up(self,num):
       #print "commande_up de panels pour ", num
       try :
-	OngletPanel.panelbind.selectpage(num)
+        OngletPanel.panelbind.selectpage(num)
         pageNew=OngletPanel.panelbind.page(num)
         pageNew.focus_set()
       except :
-	pass
+        pass
 
   def affiche(self):
       page=self.nb.getcurselection()
       self.nb.page(page).focus_set()
       if page == 'Concept':
           try:
-#	      _any est un pointeur sur entry
-#	      component est une methode de pmw 
-#	      a priori, jamais ok
+#              _any est un pointeur sur entry
+#              component est une methode de pmw 
+#              a priori, jamais ok
               self._any.component('entry').focus_set()
           except:
               pass
@@ -376,6 +379,7 @@ class OngletPanel(Panel) :
       Liste.MCbox.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
       if len(liste_mc) > 0 :
          Liste.surligne(liste_mc[0])
+      self.Liste=Liste
 
   def makeCommentairePage(self,page):
       label = Label(page,text = "Insérer un commentaire :")
@@ -414,6 +418,7 @@ class OngletPanel(Panel) :
       bulle_aide="""Double-cliquez sur la commande que vous voulez ajouter au jeu de commandes"""
       Liste.MCbox.bind("<Button-3>", lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
       Liste.MCbox.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
+      self.liste_command=Liste
       global panneauCommande
       panneauCommande=self
 
@@ -477,11 +482,9 @@ class OngletPanel(Panel) :
       # les frame ...
       self.frame_comment = Frame(page,bd=1,relief='raised')
       self.frame_param   = Frame(page,bd=1,relief='raised')
-      #self.frame_eval    = Frame(page,bd=1,relief='raised')
       self.frame_boutons = Frame(page,bd=1,relief='raised')
       self.frame_comment.place(relx=0,rely=0,relwidth=1,relheight=0.40)
       self.frame_param.place(relx=0,rely=0.40,relwidth=1,relheight=0.40)
-      #self.frame_eval.place(relx=0,rely=0.56,relwidth=1,relheight=0.28)
       self.frame_boutons.place(relx=0,rely=0.84,relwidth=1,relheight=0.16)
       # remplissage de la frame commentaire
       Label(self.frame_comment,text = "Insérer un commentaire :").place(relx=0.1,rely=0.5,anchor='w')
@@ -503,17 +506,6 @@ class OngletPanel(Panel) :
                                  command = self.ajout_parametre)
       but_param_avant.place(relx=0.45,rely=0.3,anchor='w',relwidth=0.45)
       but_param_apres.place(relx=0.45,rely=0.7,anchor='w',relwidth=0.45)
-      # remplissage de la frame eval
-      #Label(self.frame_eval,text="Insérer un paramètre EVAL :").place(relx=0.1,rely=0.5,anchor='w')
-          #Label(self.frame_eval,text='Non encore disponible').place(relx=0.6,rely=0.5,anchor='w')
-      #but_eval_avant = Button(self.frame_eval,
-      #                        text = "AVANT "+self.node.item.get_nom(),
-      #                        command = lambda s=self :s.ajout_parametre_eval(ind = 'before'))
-      #but_eval_apres = Button(self.frame_eval,
-      #                        text = "APRES "+self.node.item.get_nom(),
-      #                        command = self.ajout_parametre_eval)
-      #but_eval_avant.place(relx=0.6,rely=0.3,anchor='w',relwidth=0.3)
-      #but_eval_apres.place(relx=0.6,rely=0.7,anchor='w',relwidth=0.3)      
       # remplissage de la frame boutons
       Button(self.frame_boutons,
              text="Commentariser toute la commande",

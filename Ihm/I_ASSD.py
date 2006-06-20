@@ -19,6 +19,39 @@
 #
 # ======================================================================
 
+#from I_VALIDATOR import ValidException
+from Noyau.N_VALIDATOR import ValError
+
 class ASSD:
    def __repr__(self):
       return "concept %s de type %s" % (self.get_name(),self.__class__.__name__)
+
+   def __str__(self):
+      return self.get_name() or "<None>"
+
+   #def __del__(self):
+   #   print "__del__",self
+
+class assd(ASSD):
+   def __convert__(cls,valeur):
+      return valeur
+   __convert__=classmethod(__convert__)
+
+class GEOM(ASSD):
+   def __convert__(cls,valeur):
+      return valeur
+   __convert__=classmethod(__convert__)
+
+class geom(GEOM):pass
+
+class CO(ASSD):
+   def __convert__(cls,valeur):
+      if hasattr(valeur,'_etape') :
+         # valeur est un concept CO qui a ete transforme par type_sdprod
+         if valeur.etape == valeur._etape:
+             # le concept est bien produit par l'etape
+             return valeur
+      raise ValError("Pas un concept CO")
+      #raise ValidException("Pas un concept CO")
+   __convert__=classmethod(__convert__)
+

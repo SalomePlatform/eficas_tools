@@ -37,8 +37,9 @@ class OPTIONS:
                    ("Affichage commandes",(("alphabétique",'&affichage_alpha'),("groupes",'&affichage_grp'))),
                    #("Couleur",(("fond",'change_fond'),("barre",'change_barre'))),
                    # ("Catalogue développeur",'choix_cata_developpeur'),
-		   ('Paramètres Eficas','affichage_fichier_ini'),
-		      
+                   ('Paramètres Eficas','affichage_fichier_ini'),
+                   ('Paramètres Affichage','affichage_style_ini'),
+                      
                    ]
         )
              ]
@@ -55,15 +56,15 @@ class OPTIONS:
       affichage_commandes="groupes"
       if hasattr(panels,'panneauCommande'):
          panel=panels.panneauCommande
-	 parent=panel.parent
-	 if parent != None :
-	    parent.create_panel(parent.node_selected)
-	    # si on a un panel avec plusieurs onglets
-	    # on affiche Commande
-	    try :
-	      parent.panel_courant.nb.selectpage("Commande")
-	    except :
-	      pass
+         parent=panel.parent
+         if parent != None :
+            parent.create_panel(parent.node_selected)
+            # si on a un panel avec plusieurs onglets
+            # on affiche Commande
+            try :
+              parent.panel_courant.nb.selectpage("Commande")
+            except :
+              pass
 
    def affichage_alpha(self):
 
@@ -71,15 +72,15 @@ class OPTIONS:
       affichage_commandes="alphabetic"
       if hasattr(panels,'panneauCommande'):
          panel=panels.panneauCommande
-	 parent=panel.parent
-	 if parent != None :
-	    parent.create_panel(parent.node_selected)
-	    # si on a un panel avec plusieurs onglets
-	    # on affiche Commande
-	    try :
-	      parent.panel_courant.nb.selectpage("Commande")
-	    except :
-	      pass
+         parent=panel.parent
+         if parent != None :
+            parent.create_panel(parent.node_selected)
+            # si on a un panel avec plusieurs onglets
+            # on affiche Commande
+            try :
+              parent.panel_courant.nb.selectpage("Commande")
+            except :
+              pass
 
    def change_fond(self):
       from tkColorChooser import askcolor
@@ -124,4 +125,8 @@ class OPTIONS:
 
 
    def affichage_fichier_ini(self):
-       self.appli.bureau.affichage_fichier_ini()
+       self.appli.CONFIGURATION.affichage_fichier_ini()
+
+
+   def affichage_style_ini(self):
+       self.appli.CONFIGStyle.affichage_style_ini()

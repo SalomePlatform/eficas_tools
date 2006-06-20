@@ -70,13 +70,16 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
                                          listbox_height = 6,
                                          selectioncommand=self.select_valeur_from_list,
                                          dblclickcommand=lambda s=self,c=self.valid_valeur : s.choose_valeur_from_list(c))
+      self.listbox.component("listbox").bind("<Return>",lambda e,s=self,c=self.valid_valeur : s.choose_valeur_from_list(c))
       if liste_noms_sd != [] :
          self.listbox.place(relx=0.5,rely=0.3,relheight=0.4,anchor='center')
-         self.b_co = Pmw.OptionMenu(self.frame_valeur,labelpos='w',label_text = "Nouveau concept : ", items = ('NON','OUI'),menubutton_width=10)
+         self.b_co = Pmw.OptionMenu(self.frame_valeur,labelpos='w',label_text = "Nouveau concept : ", items = ('NON','OUI'),
+                                         menubutton_width=10)
       else :
-         self.b_co = Pmw.OptionMenu(self.frame_valeur,labelpos='w',label_text = "Nouveau concept : ", items = ('OUI','OUI'),menubutton_width=10)
+         self.b_co = Pmw.OptionMenu(self.frame_valeur,labelpos='w',label_text = "Nouveau concept : ", items = ('OUI',),
+                                         menubutton_width=10)
       # affichage du bouton 'Nouveau concept'
-      self.b_co.configure(command = lambda e,s=self : s.ask_new_concept())
+      self.b_co.configure(command = self.ask_new_concept)
       if liste_noms_sd != [] :
          self.b_co.place(relx=0.05,rely=0.6,anchor='w')
       else :
@@ -92,8 +95,8 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       self.frame_valeur.update()
       self.aide = Label(self.frame_valeur,
                         text = aide,
-			wraplength=int(self.frame_valeur.winfo_width()*0.8),
-			justify='center')
+                        wraplength=int(self.frame_valeur.winfo_width()*0.8),
+                        justify='center')
       self.aide.place(relx=0.5,rely=0.85,anchor='n')
       # affichage de la valeur courante
       self.display_valeur()
@@ -145,13 +148,6 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
           self.reset_old_valeur(anc_val,mess=mess)
           return
-      #if self.node.item.get_position()=='global':
-          #self.node.etape.verif_all()
-      #elif self.node.item.get_position()=='global_jdc':
-          #self.node.racine.verif_all()
-      #else :
-          #self.node.parent.verif()
-      #self.node.update()
 
   def valid_nom_concept_co(self,event=None):
       """
@@ -183,17 +179,8 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
           mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
           self.reset_old_valeur(anc_val,mess=mess)
           return
-      #if self.node.item.get_position()=='global':
-          #self.node.etape.verif_all()
-      #elif self.node.item.get_position()=='global_jdc':
-          #self.node.racine.verif_all()
-      #else :
-          #self.node.parent.verif()
-      #if self.node.item.isvalid():
-          #self.node.parent.select()
-      #self.node.update()
 
-  def ask_new_concept(self):
+  def ask_new_concept(self,tag):
       """
       Crée une entry dans le panneau d'un MCS qui attend un concept OU un CO() afin de
       permettre à l'utilisateur de donner le nom du nouveau concept
@@ -249,14 +236,7 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
       self.parent.appli.affiche_infos(mess)
       # On met a jour le display dans le panneau
       self.display_valeur()
-      #if self.node.item.get_position()=='global':
-          #self.node.etape.verif_all()
-      #elif self.node.item.get_position()=='global_jdc':
-          #self.node.racine.verif_all()
-      #else :
-          #self.node.parent.verif()
       if self.node.item.isvalid():
           self.node.parent.select()
-      #self.node.update()
 
 

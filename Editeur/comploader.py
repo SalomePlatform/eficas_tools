@@ -58,41 +58,28 @@ def gettreeitem(object):
       Cette classe item dépend bien sûr de la nature de object, d'où
       l'interrogation du dictionnaire composants
     """
+    # Si la definition de l'objet a un attribut itemeditor, il indique 
+    # la classe a utiliser pour l'item
+    try:
+       return object.definition.itemeditor
+    except:
+       pass
 
-
-    if type(object) == types.InstanceType:
-       # Si la definition de l'objet a un attribut itemeditor, il indique 
-       # la classe a utiliser pour l'item
-       try:
-          return object.definition.itemeditor
-       except:
-          pass
-
-       # On cherche ensuite dans les composants (plugins)
-       try:
-           itemtype= composants[object.__class__]
-           return itemtype
-       except:
-           pass
-
-       try :
-           for e in composants.keys():
-              if isinstance(object,e):
-                 itemtype= composants[e]
-                 return itemtype
-       except :
-           pass
+    # On cherche ensuite dans les composants (plugins)
+    try:
+       itemtype= composants[object.__class__]
+       return itemtype
+    except:
+       pass
 
     # Puis une eventuelle classe heritee (aleatoire car sans ordre)
     for e in composants.keys():
-       if isinstance(object,e):
-          itemtype= composants[e]
-          return itemtype
+        if e and isinstance(object,e):
+           itemtype= composants[e]
+           return itemtype
 
-    # Apres poum ??? Les lignes suivantes sont elles utiles ?
     # Si on n'a rien trouve dans les composants on utilise l'objet par defaut
-    print itemtype
-    itemtype=ObjectTreeItem
+    itemtype=composants[None]
     return itemtype
 
 def make_objecttreeitem(appli,labeltext, object, setfunction=None):

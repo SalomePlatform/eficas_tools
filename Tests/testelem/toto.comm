@@ -1,0 +1,3 @@
+DEBUT()
+MA=LIRE_MAILLAGE()
+FIN()

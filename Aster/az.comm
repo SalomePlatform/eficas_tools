@@ -5,22 +5,22 @@ P1 = 9.8;
 
 P2 = 8.8;
 
-P3 = 7;
+P9 = (7, 8, 9, 10);
 
-P5 = P3*P1;
+P5 = (P9 * P1);
 
-_param_6 = P1-3;
+_param_6 = (P1 - 3);
 
-P4 = [2,3,4];
+P5 = 3;
 
-#Pas trouve		shellpanel
+#Pas trouve                shellpanel
 
-MAILLA2=LIRE_MAILLAGE(UNITE=P4[1],);
+MAILLA2=LIRE_MAILLAGE(UNITE=P9[1],);
 
 aaa = FORMULE(VALE='a+z',
               NOM_PARA=('a','z',),);
 
-MAIL=LIRE_MAILLAGE(UNITE=P3,);
+MAIL=LIRE_MAILLAGE(UNITE=P9,);
 # 'LIRE_MAILLAGE', 'UNITE'            --> uniquebasepanel
 
 az = FORMULE(VALE='aaaaa',
@@ -59,10 +59,14 @@ CARA=AFFE_CARA_ELEM(MODELE=MOD,
 # 'AFFE_MODELE', 'AFFE', 'b_mecanique'--> plusieursintopanel
 
 F1=DEFI_FONCTION(NOM_PARA='DX',
-                 VALE=(5.0,3.0,P4[1],P3,),);
+                 VALE=(5.0,3.0,
+                       P9,),
+                       ),);
 
 F3=DEFI_FONCTION(NOM_PARA='DRX',
-                 VALE_C=(5.0,7.0,9.0,9.0,8.0,7.0,),);
+                 VALE_C=(5.0,7.0,9.0,
+                         9.0,8.0,7.0,
+                         ),);
 # 'DEFI_FONCTION', 'VALE'             --> fonctionpanel  
 
 MATER2=DEFI_MATERIAU(ELAS=_F(E=100000000000.0,

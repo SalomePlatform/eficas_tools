@@ -26,7 +26,7 @@ from repr import Repr
 from copy import copy,deepcopy
 
 # import du chargeur de composants
-from comploader import gettreeitem,make_objecttreeitem
+from comploader import make_objecttreeitem
 import treewidget
 from Ihm import CONNECTOR
 
@@ -144,8 +144,8 @@ class ObjectTreeItem(TreeItem,Delegate):
         # Dans le cas d'une MCListe de longueur 1, l'objet associé est la MCListe
         # et l'objet délégué est le MCFACT (object = _object.data[0])
         Delegate.__init__(self,object)
-	# On cache l'objet initial (pour destruction eventuelle
-	# ultérieure)
+        # On cache l'objet initial (pour destruction eventuelle
+        # ultérieure)
         self._object = object
         self.setfunction = setfunction
         self.expandable = 1
@@ -247,6 +247,14 @@ class ObjectTreeItem(TreeItem,Delegate):
         return self.object.get_genealogie()
 
     def get_index_child(self,nom_fils):
+        """
+        Retourne l'index dans la liste des fils de self du nouveau fils de nom nom_fils
+        Nécessaire pour savoir à quelle position dans la liste des fils il faut ajouter
+        le nouveau mot-clé
+        """
+        return self.object.get_index_child(nom_fils)
+
+    def get_index_child_old(self,nom_fils):
         """
         Retourne l'index dans la liste des fils de self du nouveau fils de nom nom_fils
         Nécessaire pour savoir à quelle position dans la liste des fils il faut ajouter
@@ -357,7 +365,10 @@ class ObjectTreeItem(TreeItem,Delegate):
 
     def get_fr(self):
         """ Retourne le fr de l'objet pointé par self """
-        return self.object.get_fr()
+        try:
+            return self.object.get_fr()
+        except:
+            return ""
 
     def get_docu(self):
         """ Retourne la clé de doc de l'objet pointé par self """
@@ -418,8 +429,7 @@ class ObjectTreeItem(TreeItem,Delegate):
            Cette methode, globale pour les objets de type item, permet de construire et de retourner un objet
            de type item associé à l'object passé en argument.
         """
-        c = gettreeitem(object)
-        return c(appli,labeltext, object, setfunction)
+        return make_objecttreeitem(appli,labeltext,object,setfunction)
 
     #def __del__(self):
     #    print "__del__",self

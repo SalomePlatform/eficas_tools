@@ -94,9 +94,9 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       if (min == 1 and min == max and len(liste_noms_sd)==1 ):
           if self.valeur_choisie.get() != liste_noms_sd[0]:
             if ('R' not in self.node.item.get_type()) :
-	        self.valeur_choisie.set(liste_noms_sd[0])
+                self.valeur_choisie.set(liste_noms_sd[0])
                 self.valid_valeur_automatique()
-	 
+         
       self.frame_valeur = Frame(page)
       self.frame_valeur.pack(fill='both',expand=1)
       self.frame_valeur.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
@@ -118,7 +118,7 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       self.display_valeur()
       if self.__class__.__name__ == 'UNIQUE_ASSD_Panel_Reel' :
         Label(self.frame_valeur,text='Valeur Réelle').place(relx=0.1,rely=0.9)
-	self.entry = Entry(self.frame_valeur,relief='sunken')
+        self.entry = Entry(self.frame_valeur,relief='sunken')
         self.entry.place(relx=0.28,rely=0.9,relwidth=0.6)
         self.entry.bind("<Return>",lambda e,c=self.valid_valeur_reel:c())
         self.entry.bind("<KP_Enter>",lambda e,c=self.valid_valeur_reel:c())
@@ -137,15 +137,15 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       """
       mc = self.node.item.get_definition()
       try :
-      	type = mc.type[0].__name__  
+              type = mc.type[0].__name__  
       except :
         type = str(mc.type[0])
       if len(mc.type)>1 :
           for typ in mc.type[1:] :
-	      try :
-	        l=typ.__name__
-	      except:
-	        l=str(typ)
+              try :
+                l=typ.__name__
+              except:
+                l=str(typ)
               type = type + ' ou '+l
       commentaire="Un objet de type "+type+" est attendu"
       aideval=self.node.item.aide()
@@ -161,6 +161,7 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       if len(self.listbox.getcurselection()) == 0 : return
       choix = self.listbox.getcurselection()[0]
       self.valeur_choisie.set(choix)
+      self.listbox.component("listbox").focus_set()
 
   def choose_valeur_from_list(self,command):
       """
@@ -168,6 +169,7 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       Exécute command
       """
       if len(self.listbox.get()) == 0 : return
+      if len(self.listbox.getcurselection()) == 0 : return
       choix = self.listbox.getcurselection()[0]
       self.valeur_choisie.set(choix)
       apply(command,(),{})
@@ -188,7 +190,7 @@ class UNIQUE_ASSD_Panel(UNIQUE_Panel):
       """
       valeur = self.node.item.get_valeur()
       if valeur == None or valeur == '' : return # pas de valeur à afficher ...
-      self.valeur_choisie.set(valeur.nom)
+      self.valeur_choisie.set(getattr(valeur,"nom","unknown"))
 
   def erase_valeur(self):
       pass

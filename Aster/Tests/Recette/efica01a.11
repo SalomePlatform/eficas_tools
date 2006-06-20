@@ -1,7 +1,7 @@
 DEPL2 = FORMULE(NOM_PARA='INST',VALE='sin(OMEGAA*INST)/(OMEGAA**xx)')
 DEPLACE2=CALC_FONC_INTERP( FONCTION=DEPL2,
                            LIST_PARA=L_INST,
-			   NOM_PARA='INST',
+                           NOM_PARA='INST',
                            PROL_DROITE='LINEAIRE',
                            PROL_GAUCHE='LINEAIRE',
                            NOM_RESU='DEPL'       )

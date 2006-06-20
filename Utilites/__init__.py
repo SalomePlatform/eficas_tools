@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    $Id: __init__.py,v 1.4 2003/03/06 14:36:11 eficas Exp $
+    $Id: __init__.py,v 1.5.8.1 2006/03/10 15:09:52 eficas Exp $
 
     Le package UTILITES contient les fonctions permettant
     d'instrumenter un script :
@@ -13,9 +13,9 @@
 ##__all__ = [ "ici" , "message" , "scrute" , "pause" , "appels" ]
 
 try :
-	from developpeur import *
+        from developpeur import *
 except :
-	pass
+        pass
 from ici import *
 from execute import *
 from pause import *

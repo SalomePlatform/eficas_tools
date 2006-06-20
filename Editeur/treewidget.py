@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.29 2005/11/29 17:39:50 eficas Exp $"
+__Id__="$Id: treewidget.py,v 1.30.6.3 2006/05/29 07:12:38 cchris Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -60,7 +60,7 @@ class Tree :
 
     def page_down(self,event):
         event.widget.yview_scroll(1, "page")
-	
+   
     def unit_up(self,event):
         event.widget.yview_scroll(-1, "unit")
 
@@ -116,8 +116,8 @@ class Tree :
     def supprime(self):
         """ supprime tous les éléments de l'arbre """
         #print "supprime",self
-        self.canvas.unbind("<Key-Prior>",self.id_up)
-        self.canvas.unbind("<Key-Next>",self.id_down)
+        self.canvas.unbind("<F11>",self.id_up)
+        self.canvas.unbind("<F12>",self.id_down)
         self.canvas.unbind("<Key-Left>",self.id_um)
         self.canvas.unbind("<Key-Right>",self.id_dm)
         self.canvas.unbind("<1>",self.id_s)             
@@ -339,18 +339,18 @@ class Node :
 
     def tag_move_nodes(self,y):
         """ Marque pour deplacement tous les noeuds au dela de l'ordonnée y """
-	#print "tag_move_nodes",y
+        #print "tag_move_nodes",y
         self.canvas.dtag(ALL,'move')
         # on marque tous les ids au dela de y
         x0, y0, x1, y1 = self.canvas.bbox(ALL)
-	if y > y1: # pas d'objet a deplacer
-	   return
+        if y > y1: # pas d'objet a deplacer
+           return
         self.canvas.addtag_overlapping('move',x0,y,x1,y1)
 
     def move_nodes(self,y,dy):
         """ Déplace de l'incrément dy les noeuds au dela de l'ordonnée y """
-	#print "move_nodes",y,dy
-	self.tag_move_nodes(y)
+        #print "move_nodes",y,dy
+        self.tag_move_nodes(y)
         # on déplace tous les items de dy
         self.canvas.move('move',0,dy)
 
@@ -359,7 +359,7 @@ class Node :
             en y et au dela
             Retourne la position du premier des noeuds deplaces
         """
-	#print "draw_node",new_node,x,y
+        #print "draw_node",new_node,x,y
         self.tag_move_nodes(y)
         #if new_node.item.isactif():
            #new_node.state = 'expanded'
@@ -403,18 +403,18 @@ class Node :
         if self.displayed == 1 : self.dehighlight()
             
     def make_visible(self):
-        """ Rend l'objet self visible cad déplace le scroll pour que self soit dans
-            la fenêtre de visu
+        """ Rend l'objet self visible cad déplace le scroll pour que self 
+            soit dans la fenêtre de visu
         """
         lchild=self.last_child()
         self.tree.see((self.image_id,lchild.image_id))
         
     def select_next(self,ind=0):
         """ on doit chercher à sélectionner dans l'ordre:
-                - son premier fils s'il est affiché
-                - son frère cadet s'il existe
-                - son oncle (benjamin de son père)
-                - ... appel récursif ...
+            - son premier fils s'il est affiché
+            - son frère cadet s'il existe
+            - son oncle (benjamin de son père)
+            - ... appel récursif ...
         """
         if self.state=='expanded' and len(self.children) > ind:
             self.children[ind].select()
@@ -427,33 +427,33 @@ class Node :
                 except:
                     self.children[0].select()
             except :
-		if self.parent is self.tree:
-		   pass
-		else :
-                   self.parent.select_next(index)
+              if self.parent is self.tree:
+                pass
+              else :
+                self.parent.select_next(index)
 
     def select_mot_prev(self):
         index = self.parent.children.index(self) - 1
-	try :
-	   if index > -1  :
-	      self.parent.children[index].select()
-	      if self.parent.children[index].state=="expanded":
-		 print len(self.parent.children[index].children)
-		 if len(self.parent.children[index].children)!=0 :
-		    max=len(self.parent.children[index].children) - 1
-	            self.parent.children[index].children[max].select()
-		 else :
-	            self.parent.children[index].select()
-	      else :
-	         self.parent.children[index].select()
-	   elif self.parent is self.tree:
-	      pass
-	   else :
+        try :
+           if index > -1  :
+              self.parent.children[index].select()
+              if self.parent.children[index].state=="expanded":
+                 print len(self.parent.children[index].children)
+                 if len(self.parent.children[index].children)!=0 :
+                    max=len(self.parent.children[index].children) - 1
+                    self.parent.children[index].children[max].select()
+                 else :
+                    self.parent.children[index].select()
+              else :
+                 self.parent.children[index].select()
+           elif self.parent is self.tree:
+              pass
+           else :
               self.parent.select()
         except:
-	    if self.parent is self.tree:
-		   pass
-	    else :
+            if self.parent is self.tree:
+               pass
+            else :
                self.parent.select_previous()
 
         
@@ -462,14 +462,14 @@ class Node :
         try :
             if index > -1  :
                self.parent.children[index].select()
-	    elif self.parent is self.tree:
-	       pass
-	    else :
+            elif self.parent is self.tree:
+               pass
+            else :
                self.parent.select()
         except:
-	    if self.parent is self.tree:
-		   pass
-	    else :
+            if self.parent is self.tree:
+               pass
+            else :
                self.parent.select_previous()
 
     def select_previous(self):
@@ -482,9 +482,9 @@ class Node :
             self.parent.children[index].select()
         except:
             #self.parent.select()
-	    if self.parent is self.tree:
-		   pass
-	    else :
+            if self.parent is self.tree:
+               pass
+            else :
                self.parent.select_previous()
 
     def popup(self,event=None):
@@ -626,6 +626,11 @@ class Node :
         """ Met en surbrillance self"""
         if hasattr(self,'label'):
             self.label.configure(fg='white',bg='#00008b')
+        if (hasattr(self.item,'get_nom') and hasattr( self.appli, 'salome')) :
+            if self.item.get_nom() == "AFFE_CARA_ELEM":
+               self.item.rmenu_specs=[("View3D", "visu_3D")]
+               self.tree.rmenu
+              
             
     def dehighlight(self,event=None):
         """ Rétablit l'affichage normal de self"""
@@ -653,9 +658,9 @@ class Node :
 
     def deplieReplieNode(self):           
         if self.state == 'expanded':
-	   self.collapse()
-	else :
-	   self.expand_node()
+           self.collapse()
+        else :
+           self.expand_node()
 
     def collapse(self,event = None):
         """ Collapse self et descendants et retrace self """
@@ -812,7 +817,7 @@ class Node :
         self.icone_id=None
         self.label=None
         self.text=None
-	self.displayed=0
+        self.displayed=0
 
     def efface(self):
         """ Efface du canvas les id associés à self : cad les siens et ceux
@@ -831,7 +836,7 @@ class Node :
         try:
             self.canvas.addtag_overlapping('move',bbox1[0],self.y +10,bbox1[2],bbox1[3])
         except:
-	    print "Erreur dans move :"
+            print "Erreur dans move :"
             print self
             print self.item
             print self.item.getObject()
@@ -854,7 +859,7 @@ class Node :
             try:
                 child.trace_ligne()
             except:
-	        print "Erreur dans trace_ligne :"
+                print "Erreur dans trace_ligne :"
                 print child
                 print child.item.getObject()
 

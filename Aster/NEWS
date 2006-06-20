@@ -1,6 +1,17 @@
+Version 1.10 (6/2006):
+   Mise en synchronisation avec la version 8.3 de Code_Aster de juin 2006.
+
+Version 1.9 (12/2005):
+   Mise en synchronisation avec la version 8.2 de Code_Aster de decembre 2005.
+
+Version 1.8 (6/2005):
+   Mise en synchronisation avec la version 8.1 de Code_Aster de mai 2005.
+   Les includes et poursuites peuvent etre édités. Introduction de la notation
+   scientifique pour les flottants.
+
 Version 1.7 : (12/2004)
-   Mise en synchronisation avec la version STA7 de Code_Aster (7.4) et avec les nouvelles formules
-   (plus proches de python). 
+   Mise en synchronisation avec la version STA7 de Code_Aster (7.4).
+   Les formules changent et deviennent des formules au sens python.
    Disparition des PARAMETRE-EVAL
    Les touches raccourcis (CtrlC par exple) sont activées et paramétrables dans prefs.py.
 

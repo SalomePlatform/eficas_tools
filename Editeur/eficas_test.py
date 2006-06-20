@@ -79,10 +79,7 @@ def duplique_fichier(code,fichier=None,root=None):
        if generator.plugins.has_key(format):
           g=generator.plugins[format]()
           jdc_formate=g.gener(J,format='beautifie')
-	  print "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
-          print jdc_formate
           jdc_fini = string.replace(jdc_formate,'\r\n','\n')
-          print jdc_fini
           utils.save_in_file(fileName+".comm",jdc_fini,None)
 
 def convertir(texte):

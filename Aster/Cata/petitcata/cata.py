@@ -31,7 +31,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata.py,v 1.1 2004/11/19 09:06:23 eficas Exp $"
+__Id__="$Id: cata.py,v 1.2.6.1 2006/05/24 16:44:25 cchris Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
@@ -397,7 +397,6 @@ class vect_elem_temp_r(vect_elem):pass
 DEBUT=MACRO(nom="DEBUT",op=ops.build_debut ,docu="U4.11.01-g",repetable='n',
             UIinfo={"groupes":("Gestion du travail",)},
            fr="Ouverture d une étude. Allocation des ressources mémoire et disque",
-          sd_prod=ops.DEBUT,
 
          PAR_LOT         =SIMP(fr="mode de traitement des commandes",statut='f',typ='TXM',
                            into=("OUI","NON"),defaut="OUI"),
@@ -506,6 +505,10 @@ TESTS_VALID=OPER(nom="TESTS_VALID",op=19,sd_prod=cara_elem,
   OrdList=SIMP(statut='o',typ='I',max='**',validators=OrdList("croissant")),
   OrdList2=SIMP(statut='o',typ='I',into=(1,2,3,4,5,6),max='**',validators=OrdList("croissant")),
   TypeVal=SIMP(statut='o',typ='I',validators=TypeVal(1)),
+  Compul=SIMP(statut='o',typ='I',max=5,validators=Compulsory((1,2))),
+  CompulInto=SIMP(statut='o',typ='I',max=5,into=(1,2,3,4,5),validators=Compulsory((1,2))),
+  Norep=SIMP(statut='o',typ='I',max=5,validators=NoRepeat()),
+  NorepInto=SIMP(statut='o',typ='I',max=5,into=(1,2,3,4,5),validators=NoRepeat()),
 ) ;
 
 PLS_BASE_NOREPEAT=OPER(nom="PLS_BASE_NOREPEAT",op=19,sd_prod=cara_pout,

@@ -1,4 +1,4 @@
-#@ MODIF calc_precont_ops Macro  DATE 07/03/2005   AUTEUR DURAND C.DURAND 
+#@ MODIF calc_precont_ops Macro  DATE 05/09/2005   AUTEUR DURAND C.DURAND 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -37,6 +37,7 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
   import types
   from Accas import _F
   from Noyau.N_utils import AsType
+  from Utilitai.Utmess     import UTMESS
   ier=0
 
   # On importe les definitions des commandes a utiliser dans la macro
@@ -53,7 +54,7 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
   AFFE_MATERIAU    = self.get_cmd('AFFE_MATERIAU')
 
   # La macro compte pour 1 dans la numerotation des commandes
-  self.icmd=1
+  self.set_icmd(1)
 
   # Le concept sortant (de type evol_noli) est nomme RES dans 
   # le contexte de la macro
@@ -109,9 +110,7 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
 
   # Teste si INST_INIT est bien plus petit que INST_FIN
   if __TMAX <= __TMIN:
-    ier=ier+1
-    self.cr.fatal("""<F> <CALC_PRECONT> ERREUR : INST_FIN PLUS PETIT QUE INST_INIT""")
-    return ier
+    UTMESS('F','CALC_PRECONT','INST_FIN PLUS PETIT QUE INST_INIT')
 
   # Cree la liste d'instant __L2 allant de __TMIN a __TMAX et contenant 
   # un instant supplementaire __TINT

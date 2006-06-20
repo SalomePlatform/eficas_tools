@@ -79,7 +79,7 @@ class PythonGenerator(generator_python.PythonGenerator):
         l.append(nom + ' = FORMULE(')
         for v in obj.mc_liste:
             text=self.generator(v)
-    	    l.append(v.nom+'='+text)
+            l.append(v.nom+'='+text)
         l.append(');')
         return l
 

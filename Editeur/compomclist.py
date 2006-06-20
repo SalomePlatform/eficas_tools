@@ -21,6 +21,8 @@
 import types
 from Tkinter import *
 import Pmw
+
+from Noyau.N_OBJECT import ErrorObj
 import Objecttreeitem
 import panels
 import traceback
@@ -44,7 +46,9 @@ class MCLISTPanel(panels.Panel):
         self.node.parent.append_child(self.node.item.get_nom())
 
 import compofact
+import compoerror
 import treewidget
+
 class Node(treewidget.Node):
     def doPaste(self,node_selected):
         objet_a_copier = self.item.get_copie_objet()
@@ -78,11 +82,11 @@ class Node(treewidget.Node):
 class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
     """ La classe MCListTreeItem joue le role d'un adaptateur pour les objets
         du noyau Accas instances de la classe MCLIST.
-	Elle adapte ces objets pour leur permettre d'etre intégrés en tant que
-	noeuds dans un arbre graphique (voir treewidget.py et ObjectTreeItem.py).
-	Cette classe délègue les appels de méthode et les accès
-	aux attributs à l'objet du noyau soit manuellement soit 
-	automatiquement (voir classe Delegate et attribut object).
+        Elle adapte ces objets pour leur permettre d'etre intégrés en tant que
+        noeuds dans un arbre graphique (voir treewidget.py et ObjectTreeItem.py).
+        Cette classe délègue les appels de méthode et les accès
+        aux attributs à l'objet du noyau soit manuellement soit 
+        automatiquement (voir classe Delegate et attribut object).
     """
     itemNode=Node
 
@@ -92,10 +96,10 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
         self.updateDelegate()
 
     def updateDelegate(self):
-	if len(self._object) > 1:
-	   self.setdelegate(self._object)
-	else:
-	   self.setdelegate(self._object.data[0])
+        if len(self._object) > 1:
+           self.setdelegate(self._object)
+        else:
+           self.setdelegate(self._object.data[0])
 
     def panel(self,jdcdisplay,pane,node):
         """ Retourne une instance de l'objet panneau associe a l'item (self)
@@ -103,22 +107,24 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
             FACTPanel.
             Si la liste est plus longue on utilise le panneau MCLISTPanel.
         """
-	if len(self._object) > 1:
+        if len(self._object) > 1:
            return MCLISTPanel(jdcdisplay,pane,node)
-	else:
-	   return compofact.FACTPanel(jdcdisplay,pane,node)
+        elif isinstance(self._object.data[0],ErrorObj):
+           return compoerror.ERRORPanel(jdcdisplay,pane,node)
+        else:
+           return compofact.FACTPanel(jdcdisplay,pane,node)
 
     def IsExpandable(self):
-	if len(self._object) > 1:
-	   return Objecttreeitem.SequenceTreeItem.IsExpandable(self)
-	else:
-	   return compofact.FACTTreeItem.IsExpandable(self)
+        if len(self._object) > 1:
+           return Objecttreeitem.SequenceTreeItem.IsExpandable(self)
+        else:
+           return compofact.FACTTreeItem.IsExpandable(self)
 
     def GetSubList(self):
         self.updateDelegate()
-	if len(self._object) <= 1:
+        if len(self._object) <= 1:
            self._object.data[0].alt_parent=self._object
-	   return compofact.FACTTreeItem.GetSubList(self)
+           return compofact.FACTTreeItem.GetSubList(self)
 
         liste=self._object.data
         sublist=[None]*len(liste)
@@ -162,29 +168,29 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
         return self.object.get_docu()    
 
     def iscopiable(self):
-	if len(self._object) > 1:
-	   return Objecttreeitem.SequenceTreeItem.iscopiable(self)
-	else:
-	   return compofact.FACTTreeItem.iscopiable(self)
+        if len(self._object) > 1:
+           return Objecttreeitem.SequenceTreeItem.iscopiable(self)
+        else:
+           return compofact.FACTTreeItem.iscopiable(self)
 
     def isMCFact(self):
         """
         Retourne 1 si l'objet pointé par self est un MCFact, 0 sinon
         """
-	return len(self._object) <= 1
+        return len(self._object) <= 1
 
     def isMCList(self):
         """
         Retourne 1 si l'objet pointé par self est une MCList, 0 sinon
         """
-	return len(self._object) > 1
-	
+        return len(self._object) > 1
+        
     def get_copie_objet(self):
         return self._object.data[0].copy()
 
     def additem(self,obj,pos):
         #print "compomclist.additem",obj,pos
-	if len(self._object) <= 1:
+        if len(self._object) <= 1:
            return compofact.FACTTreeItem.additem(self,obj,pos)
 
         o= self.object.addentite(obj,pos)
@@ -192,15 +198,15 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
 
     def suppitem(self,item):
         """
-	Retire un objet MCFACT de la MCList (self.object) 
-	"""
+        Retire un objet MCFACT de la MCList (self.object) 
+        """
         #print "compomclist.suppitem",item
         obj=item.getObject()
-	if len(self._object) <= 1:
-	   return compofact.FACTTreeItem.suppitem(self,item)
+        if len(self._object) <= 1:
+           return compofact.FACTTreeItem.suppitem(self,item)
 
         if self.object.suppentite(obj):
-	   if len(self._object) == 1: self.updateDelegate()
+           if len(self._object) == 1: self.updateDelegate()
            message = "Mot-clé " + obj.nom + " supprimé"
            self.appli.affiche_infos(message)
            return 1
@@ -208,7 +214,7 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
            self.appli.affiche_infos('Impossible de supprimer ce mot-clé')
            return 0
 
-	    
+            
 import Accas
 objet = Accas.MCList    
 

@@ -23,13 +23,13 @@ class TestCase(unittest.TestCase):
       OP10 = OPER(nom='OP10',op=10,sd_prod=concept,
                    a=SIMP(typ='I'),
                    c=SIMP(statut='o',typ='TXM',position='global',
-		           into=("TABLEAU","AGRAF"),
-			 ),
-	           b=FACT(statut='o',max='**',
-		   b_forme=BLOC(condition="c == 'TABLEAU'",
-		                d=SIMP(statut='f',typ='TXM'),
-				),
-			),
+                          into=("TABLEAU","AGRAF"),
+                         ),
+                   b=FACT(statut='o',max='**',
+                          b_forme=BLOC(condition="c == 'TABLEAU'",
+                                       d=SIMP(statut='f',typ='TXM'),
+                                      ),
+                         ),
                  )
       co1=OP10(a=1,c="TABLEAU",b=_F(d='rr'))
       msg=co1.etape.report()
@@ -41,15 +41,15 @@ class TestCase(unittest.TestCase):
       OP10 = OPER(nom='OP10',op=10,sd_prod=concept,
                    a=SIMP(typ='I'),
                    c=SIMP(statut='o',typ='TXM',position='global_jdc',
-		           into=("TABLEAU","AGRAF"),
-			 ),
+                          into=("TABLEAU","AGRAF"),
+                         ),
                  )
       OP11 = OPER(nom='OP11',op=10,sd_prod=concept,
-	           b=FACT(statut='o',max='**',
-		   b_forme=BLOC(condition="c == 'TABLEAU'",
-		                d=SIMP(statut='f',typ='TXM'),
-				),
-			),
+                  b=FACT(statut='o',max='**',
+                         b_forme=BLOC(condition="c == 'TABLEAU'",
+                                      d=SIMP(statut='f',typ='TXM'),
+                                     ),
+                        ),
                  )
       co1=OP10(a=1,c="TABLEAU",)
       co2=OP11(b=_F(d='rr'))

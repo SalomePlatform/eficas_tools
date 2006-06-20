@@ -18,6 +18,7 @@
 #
 #
 # ======================================================================
+import string
 from I_ASSD import ASSD
 
 class FONCTION(ASSD):
@@ -41,5 +42,29 @@ class FONCTION(ASSD):
 # modification de C Durand sur la gestion des formules dans le superviseur
 # On conserve l'ancienne classe fonction (ceinture et bretelles)
 class fonction(FONCTION) : pass
-class formule(FONCTION) : pass
+
+from Extensions import param2
+class formule(FONCTION) : 
+   def __call__(self,*val):
+      if len(val) != len(self.nompar):
+         raise TypeError(" %s() takes exactly %d argument (%d given)" % (self.nom,len(self.nompar),len(val)))
+      return param2.Unop2(self.nom,self.real_call,val)
+
+   def real_call(self,*val):
+      if hasattr(self.parent,'contexte_fichier_init'):
+                        context=self.parent.contexte_fichier_init
+      else            : context={}
+      i=0
+      for param in self.nompar :
+         context[param]=val[i]
+         i=i+1
+      try :
+       res=eval(self.expression,self.jdc.const_context, context)
+      except :
+       print 75*'!'
+       print '! '+string.ljust('Erreur evaluation formule '+self.nom,72)+'!'
+       print 75*'!'
+       raise
+      return res
+
 

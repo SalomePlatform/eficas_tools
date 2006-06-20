@@ -1,4 +1,4 @@
-#@ MODIF calc_fonction_ops Macro  DATE 31/05/2005   AUTEUR DURAND C.DURAND 
+#@ MODIF calc_fonction_ops Macro  DATE 02/05/2006   AUTEUR MCOURTOI M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -28,7 +28,7 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
                       ENVELOPPE,ASSE,CORR_ACCE,PUISSANCE,INVERSE,
                       NOM_PARA,NOM_RESU,INTERPOL,PROL_DROITE,
                       PROL_GAUCHE,NOM_PARA_FONC,INTERPOL_FONC,PROL_DROITE_FONC,
-                      PROL_GAUCHE_FONC,**args):
+                      PROL_GAUCHE_FONC,INFO,**args):
   """
      Ecriture de la macro CALC_FONCTION
   """
@@ -38,6 +38,7 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
   import copy
   from math import pi
   from Utilitai.t_fonction import t_fonction,t_fonction_c,t_nappe
+  from Utilitai import liss_enveloppe
   from Accas import _F
   from Cata.cata import nappe_sdaster,fonction_sdaster,fonction_c
   from Utilitai.Utmess import UTMESS
@@ -48,6 +49,7 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
   
   ### On importe les definitions des commandes a utiliser dans la macro
   DEFI_FONCTION  = self.get_cmd('DEFI_FONCTION')
+  IMPR_FONCTION  = self.get_cmd('IMPR_FONCTION')
   DEFI_NAPPE     = self.get_cmd('DEFI_NAPPE')
   
   ### Comptage commandes + déclaration concept sortant
@@ -127,14 +129,22 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
 
      __ex=list_fonc[0]
      if COMB_C[0]['COEF_R']!=None: __ex=__ex*complex(COMB_C[0]['COEF_R'])
-     if COMB_C[0]['COEF_C']!=None: __ex=__ex*tocomplex(COMB_C[0]['COEF_C'])
+     if COMB_C[0]['COEF_C']!=None:
+         if type(COMB_C[0]['COEF_C']) in EnumType        : __ex=__ex*tocomplex(COMB_C[0]['COEF_C'])
+         else                                            : __ex=__ex*COMB_C[0]['COEF_C']
      i=1
      for item in list_fonc[1:] :
         if COMB_C[i]['COEF_R']!=None: coef=complex(COMB_C[i]['COEF_R'])
-        if COMB_C[i]['COEF_C']!=None: coef=tocomplex(COMB_C[i]['COEF_C'])
+        if COMB_C[i]['COEF_C']!=None:
+            if type(COMB_C[i]['COEF_C']) in EnumType        : coef=tocomplex(COMB_C[i]['COEF_C'])
+            else                                            : coef=COMB_C[i]['COEF_C']
         item=item*coef
         __ex=__ex+item
         i=i+1
+  ### mot clé LIST_PARA uniquement présent si COMB ou COMB_C
+  if (COMB != None) or (COMB_C != None) :
+    if (args['LIST_PARA'] != None) :
+        __ex=__ex.evalfonc(args['LIST_PARA'].Valeurs())
   ###
   if (PUISSANCE   != None): 
      __ff=PUISSANCE['FONCTION'].convert()
@@ -274,7 +284,15 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
        l_fonc.append(t_fonction(l_freq,spectr[iamor,ideb,:]/SPEC_OSCI['NORME'],para_fonc))
      __ex=t_nappe(vale_para,l_fonc,para)
   ###
-  if (LISS_ENVELOP!= None): return
+  if (LISS_ENVELOP!= None):
+     __ff=LISS_ENVELOP['NAPPE'].convert()
+     sp_nappe=liss_enveloppe.nappe(listFreq=__ff.l_fonc[0].vale_x, listeTable=[f.vale_y for f in __ff.l_fonc], listAmor=__ff.vale_para, entete="")
+     sp_lisse=liss_enveloppe.lissage(nappe=sp_nappe,fmin=LISS_ENVELOP['FREQ_MIN'],fmax=LISS_ENVELOP['FREQ_MAX'],elarg=LISS_ENVELOP['ELARG'],tole_liss=LISS_ENVELOP['TOLE_LISS'])
+     para_fonc=__ff.l_fonc[0].para
+     l_fonc=[]
+     for val in sp_lisse.listTable : 
+       l_fonc.append(t_fonction(sp_lisse.listFreq,val,para_fonc))
+     __ex=t_nappe(vale_para=sp_lisse.listAmor,l_fonc=l_fonc,para=__ff.para)
 
   ### creation de la fonction produite par appel à DEFI_FONCTION
   ### on récupère les paramètres issus du calcul de __ex
@@ -307,5 +325,9 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
      if NOM_PARA_FONC !=None : para['NOM_PARA_FONC']   =INTERPOL
      if INTERPOL_FONC !=None : para['INTERPOL']   =INTERPOL
      C_out=DEFI_NAPPE(PARA=__ex.vale_para.tolist(),DEFI_FONCTION=def_fonc,**para)
+  if INFO > 1:
+     IMPR_FONCTION(FORMAT='TABLEAU',
+                   UNITE=6,
+                   COURBE=_F(FONCTION=C_out),)
   return ier
 

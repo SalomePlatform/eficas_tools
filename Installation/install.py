@@ -496,7 +496,7 @@ class Config(Tkinter.Toplevel):
                 self.install_running = 0
                 return
         except :
-	    traceback.print_exc()
+            traceback.print_exc()
             self.install_running = 0
             self.afficher_fatale("Impossible de copier certains fichiers")
 
@@ -784,7 +784,7 @@ class Config(Tkinter.Toplevel):
         cata = """catalogues = (('ASTER','v6',rep_cata + 'cata_STA6.py','python','defaut'),)\n"""
         f.write(cata)
         f.close()
-	
+        
 
     def move_files(self):
         """

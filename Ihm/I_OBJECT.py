@@ -155,3 +155,6 @@ class OBJECT:
 
   #def __del__(self):
   #   print "__del__",self
+
+class ErrorObj(OBJECT):pass
+

@@ -1,14 +1,14 @@
 
 
-	=================================================
-		Procédure d'installation d'EFICAS
-	=================================================
+        =================================================
+                Procédure d'installation d'EFICAS
+        =================================================
 
 Pré-requis :
 ------------
 
-	- Python 2.1 ou supérieur avec Tkinter
-	- PMW 8.0.5 ou supérieur
+        - Python 2.1 ou supérieur avec Tkinter
+        - PMW 8.0.5 ou supérieur
 
 Installation :
 --------------
@@ -17,14 +17,14 @@ Installation :
 
 2°) Décompressez ce fichier comme suit :
 
-	gunzip eficas.tar.gz
-	tar xvf eficas.tar
+        gunzip eficas.tar.gz
+        tar xvf eficas.tar
 
 3°) Vous devriez désormais voir 4 éléments :
 
-	- 1 fichier README_install
-	- 1 fichier install.py
-	- 1 fichier code_aster.gif
-	- 1 répertoire /Eficas
+        - 1 fichier README_install
+        - 1 fichier install.py
+        - 1 fichier code_aster.gif
+        - 1 répertoire /Eficas
 
 4°) Reportez-vous au fichier README_install pour la suite des actions à entreprendre.

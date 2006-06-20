@@ -71,7 +71,7 @@ class UNIQUE_INTO_Panel(UNIQUE_Panel):
                          ("<Double-Button-1>",self.record_valeur))
       self.Liste_choix = ListeChoix(self,self.frame,l_choix,
                                     liste_commandes = liste_commandes,
-                                    titre="Valeurs possibles")
+                                    titre="Valeurs possibles",optionReturn="oui")
       self.Liste_choix.affiche_liste()
 
   def get_bulle_aide(self):

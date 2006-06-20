@@ -125,8 +125,10 @@ class READERCATA:
       self.update_barre()
       if self.appli.test == 0 :
          splash._splash.configure(text = "Fin import_cata: %d s" % time.clock())
-      if not self.cata : showerror("Import du catalogue","Impossible d'importer le catalogue %s" %self.fic_cata)
-
+      if not self.cata : 
+          showerror("Import du catalogue","Impossible d'importer le catalogue %s" %self.fic_cata)
+          self.appli.quit()
+          sys.exit(1)
       #
       # analyse du catalogue (ordre des mots-clés)
       #

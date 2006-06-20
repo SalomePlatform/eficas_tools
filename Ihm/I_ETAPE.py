@@ -38,6 +38,7 @@ from Noyau.N_Exception import AsException
 # Modules EFICAS
 import I_MCCOMPO
 import CONNECTOR
+from Extensions import commande_comm
 
 class ETAPE(I_MCCOMPO.MCCOMPO):
 
@@ -90,6 +91,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
          #suivantes
          #ATTENTION: aux eventuelles recursions
          self.parent.control_context_apres(self)
+         pass
 
       CONNECTOR.Emit(self,"valid")
       if self.parent:
@@ -121,7 +123,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       # Cas particulier des opérateurs obligatoirement réentrants
       #
       if self.definition.reentrant == 'o':
-	self.sd = self.reuse = self.jdc.get_sd_avant_etape(nom,self)
+        self.sd = self.reuse = self.jdc.get_sd_avant_etape(nom,self)
         if self.sd != None :
           self.sdnom=self.sd.nom
           self.fin_modif()
@@ -135,21 +137,21 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       if self.definition.reentrant == 'f' :
         sd = self.jdc.get_sd_avant_etape(nom,self)
         if sd != None :
-	  # FR : il faut tester que la sd trouvée est du bon type !!!!!!!!!!!!!!!!!
-	  if isinstance(sd,self.get_type_produit()) :
+          # FR : il faut tester que la sd trouvée est du bon type !!!!!!!!!!!!!!!!!
+          if isinstance(sd,self.get_type_produit()) :
              self.sd = self.reuse = sd
              self.sdnom = sd.nom
              self.fin_modif()
              return 1,"Opérateur facultativement réentrant et concept existant trouvé"
-	  else:
-	     return 0,"Concept déjà existant et de mauvais type"
+          else:
+             return 0,"Concept déjà existant et de mauvais type"
         else :
           # il faut enlever le lien vers une SD existante car si on passe ici
-	  # cela signifie que l'opérateur n'est pas utilisé en mode réentrant.
-	  # Si on ne fait pas cela, on risque de modifier une SD produite par un autre opérateur
-	  if self.reuse :
+          # cela signifie que l'opérateur n'est pas utilisé en mode réentrant.
+          # Si on ne fait pas cela, on risque de modifier une SD produite par un autre opérateur
+          if self.reuse :
              old_reuse=self.reuse
-	     self.sd = self.reuse = self.sdnom = None
+             self.sd = self.reuse = self.sdnom = None
       #
       # On est dans le cas ou l'opérateur n'est pas réentrant ou est facultativement reentrant
       # mais est utilisé en mode non réentrant
@@ -182,13 +184,13 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           old_nom=self.sd.nom
           if string.find(old_nom,'sansnom') :
             # Dans le cas où old_nom == sansnom, isvalid retourne 0 alors que ...
-	    # par contre si le concept existe et qu'il s'appelle sansnom c'est que l'étape est valide
-	    # on peut donc le nommer sans test préalable
+            # par contre si le concept existe et qu'il s'appelle sansnom c'est que l'étape est valide
+            # on peut donc le nommer sans test préalable
             if self.parent.get_sd_autour_etape(nom,self):
               return 0,"Nommage du concept refuse : un concept de meme nom existe deja"
             else:
               # Renommage du concept : Il suffit de changer son attribut nom pour le nommer
-	      self.sd.nom=nom
+              self.sd.nom=nom
               self.sdnom=nom
               self.parent.update_concept_after_etape(self,self.sd)
               self.fin_modif()
@@ -226,6 +228,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
       if self.actif:return
       self.actif = 1
+      self.init_modif()
       if self.sd :
         try:
           self.jdc.append_sdprod(self.sd)
@@ -241,6 +244,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           et de la liste des sd
       """
       self.actif = 0
+      self.init_modif()
       if self.sd :
          self.jdc.del_sdprod(self.sd)
          self.jdc.delete_concept_after_etape(self,self.sd)
@@ -373,7 +377,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def verif_existence_sd(self):
      """
         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-	avant étape, sinon enlève la référence à ces concepts
+        avant étape, sinon enlève la référence à ces concepts
      """
      #print "verif_existence_sd",self.sd
      for motcle in self.mc_liste :
@@ -395,6 +399,30 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
         Realise l'update des blocs conditionnels fils de self
      """
      self._update_condition_bloc()
+
+   def get_objet_commentarise(self,format):
+      """
+          Cette méthode retourne un objet commande commentarisée
+          representant la commande self
+      """
+      import generator
+      g=generator.plugins[format]()
+      texte_commande = g.gener(self,format='beautifie')
+      # Il faut enlever la première ligne vide de texte_commande que
+      # rajoute le generator
+      rebut,texte_commande = string.split(texte_commande,'\n',1)
+      # on construit l'objet COMMANDE_COMM repésentatif de self mais non
+      # enregistré dans le jdc (pas ajouté dans jdc.etapes)
+      parent=self.parent
+      pos=self.parent.etapes.index(self)
+      commande_comment = commande_comm.COMMANDE_COMM(texte=texte_commande,
+                                                     reg='non',
+                                                     parent=parent)
+      self.parent.suppentite(self)
+      parent.addentite(commande_comment,pos)
+
+      return commande_comment
+
      
 #ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
    def Build_sd(self,nom):

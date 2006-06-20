@@ -28,6 +28,7 @@ import traceback,types,string
 import I_ETAPE
 import Noyau
 from Noyau.N_ASSD import ASSD
+import convert
 
 # import rajoutés suite à l'ajout de Build_sd --> à résorber
 import Noyau, Validation.V_MACRO_ETAPE
@@ -58,9 +59,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def get_contexte_jdc(self,fichier,text):
     """ 
-         Interprète text comme un texte de jdc et retourne le 
-         contexte final
-         cad le dictionnaire des sd disponibles à la dernière étape
+         Interprète text comme un texte de jdc et retourne le contexte final.
+
+         Le contexte final est le dictionnaire des sd disponibles à la dernière étape.
          Si text n'est pas un texte de jdc valide, retourne None
          ou leve une exception
          --> utilisée par ops.POURSUITE et INCLUDE
@@ -90,7 +91,22 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # de prendre cette precaution mais ce n'est pas vrai partout.
        old_recorded_units=self.recorded_units.copy()
 
+       # on supprime l'ancien jdc_aux s'il existe
+       if hasattr(self,'jdc_aux') and self.jdc_aux:
+          self.jdc_aux.supprime_aux()
+
        if fichier is None:fichier="SansNom"
+
+       # Il faut convertir le texte inclus en fonction du format
+       # sauf les INCLUDE_MATERIAU
+       if self.nom != "INCLUDE_MATERIAU":
+          format=self.jdc.appli.format_fichier.get()
+          if convert.plugins.has_key(format):
+              # Le convertisseur existe on l'utilise
+              p=convert.plugins[format]()
+              p.text=text
+              text=p.convert('exec',self)
+
        j=self.JdC_aux( procedure=text, nom=fichier,
                                 appli=self.jdc.appli,
                                 cata=self.jdc.cata,
@@ -106,6 +122,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.etapes=j.etapes
        self.jdc_aux=j
     except:
+       traceback.print_exc()
        # On retablit l'etape courante step
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(step)
@@ -132,6 +149,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     # On recupere le contexte de l'include verifie
     try:
        j_context=j.get_verif_contexte()
+       #print j_context.keys()
+       #print j.g_context.keys()
     except:
        # On retablit l'etape courante step
        CONTEXT.unset_current_step()
@@ -488,10 +507,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def make_contexte_include(self,fichier,text):
     """
-        Cette méthode sert à créer un contexte en interprétant un texte source
-        Python
+        Cette méthode sert à créer un contexte en interprétant un texte source Python.
     """
-    #print "make_contexte_include"
+    #print "make_contexte_include",fichier
     # on récupère le contexte d'un nouveau jdc dans lequel on interprete text
     contexte = self.get_contexte_jdc(fichier,text)
     if contexte == None :
@@ -670,12 +688,26 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       #print "update_context.fin",d.keys()
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
+  def copy(self):
+      etape=Noyau.N_MACRO_ETAPE.MACRO_ETAPE.copy(self)
+      if hasattr(etape,"etapes") :etape.etapes=[]
+      if hasattr(etape,"jdc_aux") : 
+         etape.jdc_aux=None
+         del etape.fichier_ini
+      return etape
+
   def supprime(self):
       #print "supprime",self
       if hasattr(self,"jdc_aux") and self.jdc_aux:
          self.jdc_aux.supprime_aux()
          self.jdc_aux=None
       Noyau.N_MACRO_ETAPE.MACRO_ETAPE.supprime(self)
+  #    self.contexte_fichier_init={}
+  #    self.old_contexte_fichier_init={}
+  #    self.g_context={}
+  #    self.current_context={}
+  #    self.etapes=[]
+  #    self.mc_liste=[]
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
   def get_file(self,unite=None,fic_origine=''):
@@ -758,33 +790,39 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
         en interprétant un texte source Python
         Elle est appelee par la fonction sd_prd d'INCLUDE_MATERIAU
     """
+    #print "make_contexte",fichier
     # On supprime l'attribut mat qui bloque l'evaluation du source de l'INCLUDE_MATERIAU
     # car on ne s'appuie pas sur lui dans EFICAS mais sur l'attribut fichier_ini
     if hasattr(self,'mat'):del self.mat
-    self.fichier_ini =fichier
-    self.fichier_unite =fichier
-    self.fichier_text=text
-    self.fichier_err=None 
-    self.contexte_fichier_init={}
-    # On specifie la classe a utiliser pour le JDC auxiliaire
-    try:
-      import Extensions.jdc_include
-    except:
-      traceback.print_exc()
-      raise
-    self.JdC_aux=Extensions.jdc_include.JdC_include
-    try:
-       self.make_contexte_include(self.fichier_ini ,self.fichier_text)
-       #self.parent.record_unit(self.fichier_unite,self)
-    except:
-       l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
-       self.fichier_err = string.join(l)
-       #self.parent.record_unit(self.fichier_unite,self)
-       self.g_context={}
-       self.etapes=[]
-       self.jdc_aux=None
+    if not hasattr(self,'fichier_ini') or self.fichier_ini != fichier or self.fichier_mater != self.nom_mater: 
+       # le fichier est nouveau ou change
+       self.fichier_ini =fichier
+       self.fichier_unite =fichier
+       self.fichier_mater=self.nom_mater
+       self.fichier_text=text
+       self.fichier_err=None 
        self.contexte_fichier_init={}
-       raise
+       # On specifie la classe a utiliser pour le JDC auxiliaire
+       try:
+         import Extensions.jdc_include
+         self.JdC_aux=Extensions.jdc_include.JdC_include
+       except:
+         traceback.print_exc()
+         raise
+       try:
+          self.make_contexte_include(self.fichier_ini ,self.fichier_text)
+       except:
+          l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+          self.fichier_err = string.join(l)
+          self.g_context={}
+          self.etapes=[]
+          self.jdc_aux=None
+          self.contexte_fichier_init={}
+          raise
+    else:
+       # le fichier est le meme on ne le reevalue pas
+       # et on leve une exception si une erreur a été enregistrée
+       if self.fichier_err is not None: raise Exception(self.fichier_err)
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
   def update_sdprod(self,cr='non'):

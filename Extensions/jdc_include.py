@@ -183,6 +183,10 @@ class JDC_POURSUITE(JDC):
       JDC.supprime(self)
       self.jdc_pere=None
       self.etape_include=None
+   #   self.cata_ordonne_dico={}
+      self.appli=None
+   #   self.context_ini={}
+   #   self.procedure=None
 
    def get_contexte_avant(self,etape):
       """
@@ -299,6 +303,7 @@ class JDC_POURSUITE(JDC):
       #Regularise les etapes du jdc apres l'etape etape
       self.control_jdc_context_apres(etape)
       if self.etape_include:
+         #print "CONTROL_INCLUDE:",self.etape_include,self.etape_include.nom
          # il existe un jdc pere. On propage la regularisation
          self.etape_include.parent.control_context_apres(self.etape_include)
 

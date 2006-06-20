@@ -78,7 +78,7 @@ class BUREAU:
    button_defs  =      (('New24',"newJDC","Création d'un nouveau fichier",'always'),
                         ('Open24',"openJDC","Ouverture d'un fichier existant",'always'),
                         ('Save24',"saveJDC","Sauvegarde du fichier courant",'always'),
-			('Fermer24',"closeJDC","Fermeture du fichier courant",'always'),
+                        ('Fermer24',"closeJDC","Fermeture du fichier courant",'always'),
                         ('Zoom24',"visuJDC","Visualisation du fichier de commandes",'always'),
                         None,
                         ('Copy24',"copy","Copie l'objet courant",'jdc'),
@@ -144,7 +144,7 @@ class BUREAU:
 
    def newJDC_include(self,event=None):
       """
-          Initialise un nouveau JDC vierge
+          Initialise un nouveau JDC include vierge
       """
       import Extensions.jdc_include
       JdC_aux=Extensions.jdc_include.JdC_include
@@ -168,10 +168,11 @@ class BUREAU:
       self.fileName=None
       self.ShowJDC(J,self.JDCName)
       self.appli.toolbar.active_boutons()
+      return J
 
    def newJDC(self,event=None):
       """
-          Initialise un nouveau JDC include vierge
+          Initialise un nouveau JDC vierge
       """
       self.appli.statusbar.reset_affichage_infos()
 
@@ -185,6 +186,7 @@ class BUREAU:
       self.fileName=None
       self.ShowJDC(J,self.JDCName)
       self.appli.toolbar.active_boutons()
+      return J
 
    def ShowJDC(self,JDC,nom,label_onglet=None,JDCDISPLAY=JDCDISPLAY,enregistre="non"):
       """
@@ -349,8 +351,8 @@ class BUREAU:
                     titre="compte-rendu d'erreurs, EFICAS ne sait pas convertir ce fichier",
                     texte = str(p.cr)).wait()
             return
-	 if enregistre == "oui" :
-	    self.appli.listeFichiers.aOuvert(file)
+         if enregistre == "oui" :
+            self.appli.listeFichiers.aOuvert(file)
       else:
          # Il n'existe pas c'est une erreur
          self.appli.affiche_infos("Type de fichier non reconnu")
@@ -383,12 +385,13 @@ class BUREAU:
       else:
           self.ShowJDC(J,self.JDCName,enregistre=enregistre)
           self.appli.toolbar.active_boutons()
-	  # si le JDC ne contient rien (vide), on retourne ici
-	  if len(self.JDC.etapes) == 0 : return
-	  # dans le cas où le JDC est invalide, on affiche son CR
+          # si le JDC ne contient rien (vide), on retourne ici
+          if len(self.JDC.etapes) == 0 : return
+          # dans le cas où le JDC est invalide, on affiche son CR
           if not self.JDC.isvalid():
-	     self.appli.top.update()
-	     self.visuCR(mode='JDC')
+             self.appli.top.update()
+             self.visuCR(mode='JDC')
+      return J
 
    def deplieReplieNode(self):
        self.JDCDisplay_courant.tree.tree.deplieReplieNode()
@@ -450,14 +453,14 @@ class BUREAU:
       self.jdc_fini = string.replace(jdc_formate,'\r\n','\n')
 
       if echo =='oui' or self.JDCDisplay_courant.fichier == None:
-	 ok = self.asknomsauvegardeJDC()
+         ok = self.asknomsauvegardeJDC()
       elif self.JDCDisplay_courant.fichier != None :
          # le JDC a déjà un nom : on sauvegarde directement sans demander
          # un autre nom au développeur
          if not save_in_file(self.JDCDisplay_courant.fichier,self.jdc_fini,self.appli.dir) :
               showinfo("Erreur","Problème à la sauvegarde du fichier :" + `self.JDCDisplay_courant.fichier`)
               #return 0
-	      ok = 0
+              ok = 0
          else :
               if self.appli.format_fichier.get() == 'homard':
                   self.save_homard(self.JDCDisplay_courant.fichier,self.jdc_homard)
@@ -468,16 +471,16 @@ class BUREAU:
       if ok and hasattr( self.appli, 'salome'):
          # eficas a été lancé à partir deSalome
          #1)ajout dans l'arbre d'étude du nom du jdc
-	 ok, msg = self.appli.addJdcInSalome( self.JDCDisplay_courant.fichier )
+         ok, msg = self.appli.addJdcInSalome( self.JDCDisplay_courant.fichier )
 
          #2)CS_pbruno ??
-	 from panelsSalome import SALOME_UNIQUE_BASE_Panel
-	 if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
-	    print 'CS_pbruno if len(SALOMchier_unite) > 0 :???????'
-	    self.appli.creeConfigTxt( self.appli.CONFIGURATION.initialdir, SALOME_UNIQUE_BASE_Panel.dict_fichier_unite )
+         from panelsSalome import SALOME_UNIQUE_BASE_Panel
+         if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
+            print 'CS_pbruno if len(SALOMchier_unite) > 0 :???????'
+            self.appli.creeConfigTxt( self.appli.CONFIGURATION.initialdir, SALOME_UNIQUE_BASE_Panel.dict_fichier_unite )
 
-	 #3)création/mise à jours d'un maillage dans Salome
-	 self.appli.createOrUpdateMesh()
+         #3)création/mise à jours d'un maillage dans Salome
+         self.appli.createOrUpdateMesh()
       return ok
 
    def asknomsauvegardeJDC(self):
@@ -705,7 +708,7 @@ class BUREAU:
            self.appli.salome.rangeInStudy(file_homard,"_CONF")
 
 # ---------------------------------------------------------------------------
-#     			Méthodes liées aux mots-clés inconnus
+#                             Méthodes liées aux mots-clés inconnus
 # ---------------------------------------------------------------------------
 
    def mc_inconnus(self):

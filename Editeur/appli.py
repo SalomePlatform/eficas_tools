@@ -26,6 +26,7 @@
 """
 # Modules Python
 import os
+import string
 import sys
 import types
 import Pmw
@@ -40,13 +41,17 @@ from styles import style
 import fontes
 import tooltip
 import properties
+import convert,generator
+import comploader
+from utils import extension_fichier,stripPath
+
 from widgets import Fenetre
 from Misc import MakeNomComplet
 import session
 import listeFichiers
 import listePatrons
 
-VERSION="EFICAS v1.9"
+VERSION="EFICAS v1.10"
 
 class APPLI: 
   def __init__ (self,master,code=prefs.code,fichier=None,test=0) :
@@ -78,7 +83,7 @@ class APPLI:
       # Creation de la menubar, toolbar, messagebar
       self.cree_composants_graphiques()
       # Creation des autres composants graphiques dont le bureau (parametrable par prefs.py)
-      self.load_appli_composants()		
+      self.load_appli_composants()                
       self.listeFichiers=listeFichiers.listeFichiers(self)
       self.listePatrons=listePatrons.listePatrons(self)
       self.dir=None
@@ -114,6 +119,7 @@ class APPLI:
          splash._splash.configure(text = "Chargement des paramètres utilisateur")
       import configuration
       self.CONFIGURATION = configuration.make_config(self,prefs.REPINI)
+      self.CONFIGStyle = configuration.make_config_style(self,prefs.REPINI)
 
   def cree_composants_graphiques(self):
       """
@@ -134,7 +140,7 @@ class APPLI:
       if (self.test == 0):
          splash._splash.configure(text = "Chargement de la statusbar")
       import statusbar
-      self.statusbar=statusbar.STATUSBAR(self.top)
+      self.statusbar=statusbar.STATUSBAR(self.top,styles.style.statusfont)
 
   def load_appli_composants(self):
       """
@@ -185,7 +191,7 @@ class APPLI:
         root.option_add('*background', style.background)
         root.option_add('*foreground', style.foreground)
         root.option_add('*EntryField.Entry.background', style.entry_background)
-	root.option_add('*Entry*background', style.entry_background)
+        root.option_add('*Entry*background', style.entry_background)
         root.option_add('*Listbox*background', style.list_background)
         root.option_add('*Listbox*selectBackground', style.list_select_background)
         root.option_add('*Listbox*selectForeground', style.list_select_foreground)
@@ -242,22 +248,22 @@ class APPLI:
       radio=None
       for item in itemlist:
          number_item=number_item + 1
-	 raccourci_label=""
+         raccourci_label=""
          if not item :
             #menu.add_separator()
-	    pass
+            pass
          else:
             if len(item)==3:
                raccourci=item[2]
-	       raccourci_label="   "+raccourci
+               raccourci_label="   "+raccourci
                newitem=(item[0],item[1])
             else :
-	       if len(item)==4:
+               if len(item)==4:
                   raccourci=item[2]
-	          raccourci_label="   "+item[3]
+                  raccourci_label="   "+item[3]
                   newitem=(item[0],item[1])
-	       else :
-	          raccourci=""
+               else :
+                  raccourci=""
                   newitem=item
             item=newitem
             label,method=item
@@ -294,3 +300,134 @@ class APPLI:
       f.wait()
 
 
+class valeur:
+   def __init__(self,v=None):
+      self.v=v
+   def set(self,v):
+      self.v=v
+   def get(self):
+      return self.v
+
+class STANDALONE(APPLI):
+   def __init__ (self,code=prefs.code,fichier=None,version='v8.2') :
+      self.code=code
+      self.top=None
+      self.format_fichier=valeur()
+
+      self.dict_reels={}
+      self.liste_simp_reel=[]
+      # L'attribut test doit valoir 1 si on ne veut pas creer les fenetres
+      self.test=1
+
+      # Lecture des parametres de configuration (fichier global editeur.ini
+      # et utilisateur eficas.ini)
+      self.lecture_parametres()
+
+      self.message=''
+      # Avant la creation du bureau qui lit le catalogue
+      self.version_code=version
+      import readercata
+      self.readercata=readercata.READERCATA(self,None)
+
+      self.dir=None
+
+   def affiche_infos(self,message):
+      return
+
+   def get_text_JDC(self,JDC,format):
+      if generator.plugins.has_key(format):
+         # Le generateur existe on l'utilise
+         g=generator.plugins[format]()
+         jdc_formate=g.gener(JDC,format='beautifie')
+         return jdc_formate
+      else:
+         # Il n'existe pas c'est une erreur
+         return
+
+   def newJDC(self):
+      CONTEXT.unset_current_step()
+      J=self.readercata.cata[0].JdC(procedure="",
+                                    appli=self,
+                                    cata=self.readercata.cata,
+                                    cata_ord_dico=self.readercata.cata_ordonne_dico,
+                                    rep_mat=self.CONFIGURATION.rep_mat,
+                                   )
+      J.analyse()
+      return J
+
+   def openJDC(self,file):
+      self.fileName = file
+      e=extension_fichier(file)
+      self.JDCName=stripPath(file)
+      self.initialdir = os.path.dirname(os.path.abspath(file))
+      format=self.format_fichier.get()
+      # Il faut convertir le contenu du fichier en fonction du format
+      if convert.plugins.has_key(format):
+         # Le convertisseur existe on l'utilise
+         p=convert.plugins[format]()
+         p.readfile(file)
+         text=p.convert('exec',self)
+         if not p.cr.estvide():
+             raise ValueError(str(p.cr))
+
+      # On se met dans le repertoire ou se trouve le fichier de commandes
+      # pour trouver les eventuels fichiers include ou autres
+      # localises a cote du fichier de commandes
+      os.chdir(self.initialdir)
+      CONTEXT.unset_current_step()
+      J=self.readercata.cata[0].JdC(procedure=text,
+                                    appli=self,
+                                    cata=self.readercata.cata,
+                                    cata_ord_dico=self.readercata.cata_ordonne_dico,
+                                    nom=self.JDCName,
+                                    rep_mat=self.CONFIGURATION.rep_mat,
+                                   )
+      J.analyse()
+      txt= J.cr.get_mess_exception()
+      if txt:raise ValueError(txt)
+      return J
+
+   def openTXT(self,text):
+      self.JDCName="TEXT"
+      CONTEXT.unset_current_step()
+      J=self.readercata.cata[0].JdC(procedure=text,
+                                    appli=self,
+                                    cata=self.readercata.cata,
+                                    cata_ord_dico=self.readercata.cata_ordonne_dico,
+                                    nom=self.JDCName,
+                                    rep_mat=self.CONFIGURATION.rep_mat,
+                                   )
+      J.analyse()
+      txt= J.cr.get_mess_exception()
+      if txt:raise ValueError(txt)
+      return J
+
+   def create_item(self,obj):
+      return comploader.make_objecttreeitem(self,getattr(obj,"nom","item"),obj)
+
+   def get_file(self,unite=None,fic_origine = ''):
+      """
+          Retourne le nom du fichier correspondant a l unite logique unite (entier)
+          ou d'un fichier poursuite
+      """
+      f,ext=os.path.splitext(fic_origine)
+      if unite :
+          #include
+          finclude=f+".%d" % unite
+      else:
+          #poursuite
+          n=ext[-1]
+          if n == '0':
+             ext=".comm"
+          else: 
+             ext=".com%d" % (string.atoi(n)-1)
+             if ext == '.com0' and not os.path.isfile(f+".com0"):
+                ext=".comm"
+          finclude=f+ext
+      ff=open(finclude)
+      text=ff.read()
+      ff.close()
+      return finclude,text
+
+   def affiche_alerte(self,titre,message):
+      print titre+ "\n\n" + message

@@ -11,7 +11,7 @@ from Accas import *
 JdC = JDC_CATA(code='HOMARD',
                execmodul=None,
                regles = (AU_MOINS_UN('DONNEES_HOMARD'),),
-			)
+                        )
 
 # Type le plus general
 class entier  (ASSD):pass
@@ -138,7 +138,7 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
            regles=( UN_PARMI('TYPE_RAFFINEMENT_LIBRE','TYPE_DERAFFINEMENT_UNIFORME','TYPE_RAFFINEMENT_UNIFORME','INFORMATION'),
 ###                    EXCLUS('TYPE_RAFFINEMENT_LIBRE','INFORMATION'),
 ###                    EXCLUS('TYPE_RAFFINEMENT_UNIFORME','INFORMATION'),
-		    ),
+                    ),
 #
           TYPE_RAFFINEMENT_LIBRE = FACT(statut='f',
                            RAFFINEMENT   = SIMP (statut='o',typ='TXM',
@@ -151,12 +151,12 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
                                            ang="Choice of unrefinement mode.",
                                            into=("NON","LIBRE",),),
 
-                           b_adaptation 	      = bloc_adaptation(),
-           		   b_indicateur_d_erreur      = indicateur_d_erreur(),
-           		   b_critere_de_raffinement   = critere_de_raffinement(),
-           		   b_critere_de_deraffinement = critere_de_deraffinement(),
-                           b_niveau_minimum 	      = niveau_minimum(),
-                           b_niveau_maximum 	      = niveau_maximum(),
+                           b_adaptation               = bloc_adaptation(),
+                              b_indicateur_d_erreur      = indicateur_d_erreur(),
+                              b_critere_de_raffinement   = critere_de_raffinement(),
+                              b_critere_de_deraffinement = critere_de_deraffinement(),
+                           b_niveau_minimum               = niveau_minimum(),
+                           b_niveau_maximum               = niveau_maximum(),
 
                                    ),
 
@@ -165,18 +165,18 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
                            RAFFINEMENT   = SIMP (statut='o',typ='TXM',
                                            fr="Choix du mode de raffinement.",
                                            ang="Choice of refinement mode.",
-					   defaut="UNIFORME",
+                                           defaut="UNIFORME",
                                            into=("UNIFORME",),),
 
                            DERAFFINEMENT = SIMP(statut='o',typ='TXM',
                                            fr="Choix du mode de deraffinement.",
                                            ang="Choice of unrefinement mode.",
-					   defaut="NON",
+                                           defaut="NON",
                                            into=("NON",),),
 
-                           b_adaptation 	      = bloc_adaptation(),
-                           b_niveau_minimum 	      = niveau_minimum(),
-                           b_niveau_maximum 	      = niveau_maximum(),
+                           b_adaptation               = bloc_adaptation(),
+                           b_niveau_minimum               = niveau_minimum(),
+                           b_niveau_maximum               = niveau_maximum(),
 
                                        ),
 
@@ -185,18 +185,18 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
                            RAFFINEMENT   = SIMP (statut='o',typ='TXM',
                                            fr="Choix du mode de raffinement.",
                                            ang="Choice of refinement mode.",
-					   defaut="NON",
+                                           defaut="NON",
                                            into=("NON",),),
 
                            DERAFFINEMENT = SIMP(statut='o',typ='TXM',
                                            fr="Choix du mode de deraffinement.",
                                            ang="Choice of unrefinement mode.",
-					   defaut="UNIFORME",
+                                           defaut="UNIFORME",
                                            into=("UNIFORME",),),
 
-                           b_adaptation 	      = bloc_adaptation(),
-                           b_niveau_minimum 	      = niveau_minimum(),
-                           b_niveau_maximum 	      = niveau_maximum(),
+                           b_adaptation               = bloc_adaptation(),
+                           b_niveau_minimum               = niveau_minimum(),
+                           b_niveau_maximum               = niveau_maximum(),
                                        ),
 #
            INFORMATION     =SIMP(statut='f',typ='TXM',
@@ -259,9 +259,9 @@ DONNEES_HOMARD=PROC(nom="DONNEES_HOMARD",op= 189, docu="U7.04.01-b",
                                                  ang="Groups which define the boundary" ),
                                ) ,
          fichier_frontiere=BLOC ( condition = "NOM_MED_MAILLAGE_FRONTIERE != None" ,
-			  FIC_FRON = SIMP(statut='f',typ='TXM',
-			                 fr="Nom du fichier MED contenant le maillage frontiere",
-			                 ang="MED File including the boundary mesh" ),
+                          FIC_FRON = SIMP(statut='f',typ='TXM',
+                                         fr="Nom du fichier MED contenant le maillage frontiere",
+                                         ang="MED File including the boundary mesh" ),
                                ), 
 #
 #

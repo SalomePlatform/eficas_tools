@@ -92,7 +92,7 @@ class UNIQUE_COMP_Panel(UNIQUE_Panel):
       self.aide = Label(self.frame_valeur,
                         text = aide,
                         wraplength=int(self.frame_valeur.winfo_width()*0.8),
-			justify='center')
+                        justify='center')
       self.aide.place(relx=0.5,rely=0.9,anchor='n')
       # affichage de la valeur du MCS
       self.display_valeur()
@@ -155,7 +155,7 @@ class UNIQUE_COMP_Panel(UNIQUE_Panel):
          l.append(string.atof(self.entry1.get()))
          l.append(string.atof(self.entry2.get()))
       except :
-	 return None
+         return None
       return `tuple(l)`
 
   def erase_valeur(self):

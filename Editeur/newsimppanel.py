@@ -74,18 +74,11 @@ class newSIMPPanel(panels.OngletPanel):
       if self.parent.modified == 'n' : self.parent.init_modif()
       self.node.item.set_valeur(name)
       self.parent.appli.affiche_infos(mess)
-      #if self.node.item.get_position()=='global':
-           #self.node.etape.verif_all()
-      #elif self.node.item.get_position()=='global_jdc':
-           #self.node.racine.verif_all()
-      #else :
-           #self.node.parent.verif()
-      #self.node.update()
 
   def record_valeur(self,name=None,mess='Valeur du mot-clé enregistrée'):
       """
           Enregistre  val comme valeur de self.node.item.object  
-	  en evaluant l item et en le validant 
+          en evaluant l item et en le validant 
           Si name n'est pas renseigné, la valeur 
       """
       if self.parent.modified == 'n' : self.parent.init_modif()
@@ -98,30 +91,16 @@ class newSIMPPanel(panels.OngletPanel):
           if valeurentree == '': valeurentree=None
           valeur,validite=self.node.item.eval_valeur(valeurentree)
           if not validite :
-          	valeur= self.entry.get()
-                commentaire = "impossible d'évaluer : %s " %`valeurentree`
-          	self.parent.appli.affiche_infos(commentaire)
-		
+                  valeur= self.entry.get()
+                  commentaire = "impossible d'évaluer : %s " %`valeurentree`
+                  self.parent.appli.affiche_infos(commentaire)
+                
       if validite : 
-         if self.node.item.is_list() :
-            validite=self.node.item.valide_liste_complete(valeur)
-            commentaire=self.node.item.info_erreur_liste()
-         else :
-	    validite=self.node.item.valide_item(valeur)
-            commentaire=self.node.item.info_erreur_item()
+          validite,commentaire=self.node.item.valide_val(valeur)
  
       if validite :
           self.node.item.set_valeur(valeur)
           self.parent.appli.affiche_infos(mess)
-          #if self.node.item.get_position()=='global':
-              #self.node.etape.verif_all()
-          #elif self.node.item.get_position()=='global_jdc':
-              #self.node.racine.verif_all()
-          #else :
-              #self.node.parent.verif()
-          #self.node.update()
-          #if self.node.item.isvalid():
-          #    self.node.parent.select()
       else :
           self.parent.appli.affiche_infos(commentaire)
 
@@ -200,7 +179,7 @@ class newSIMPPanel(panels.OngletPanel):
                   if not self.parent.appli.dict_reels.has_key(clefobj):
                      self.parent.appli.dict_reels[clefobj] = {}
                   self.parent.appli.dict_reels[clefobj][clef]=texte_valeur
-		  self.parent.appli.dict_reels[clefobj]
+                  self.parent.appli.dict_reels[clefobj]
                   self.node.item.object.fin_modif()
       except:
         pass

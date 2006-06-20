@@ -54,17 +54,17 @@ class FORM_ETAPE(MACRO_ETAPE):
         if len(self.mc_liste) == 0:
             # pas de fils pour self --> la FORMULE est incomplète
             return None,None,None
-	type_retourne="REEL"
+        type_retourne="REEL"
         if len(self.mc_liste) > 0:
            child = self.mc_liste[0] # child est un MCSIMP 
            corps = child.getval()
-	else:
-	   corps = None
+        else:
+           corps = None
         if len(self.mc_liste) > 1:
-	   child = self.mc_liste[1]
+           child = self.mc_liste[1]
            l_args= child.getval()
-	else :
-	   l_args=None
+        else :
+           l_args=None
         return type_retourne,l_args,corps
 
     def get_nom(self):
@@ -113,7 +113,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         #for argument in l_arguments:
         #    argument = string.strip(argument)
         #    try:
-	#	nom=argument
+        #        nom=argument
         #        typ,nom = string.split(argument,':')
         #        #pas de vérification sur le nom de l'argument
         #        #vérification du type de l'argument
@@ -137,8 +137,8 @@ class FORM_ETAPE(MACRO_ETAPE):
         """
         if not corps :
             corps = self.corps
-	if not arguments :
-	    arguments = self.arguments
+        if not arguments :
+            arguments = self.arguments
         formule=(self.get_nom(),self.type_retourne,arguments,corps)
         # on récupère la liste des constantes et des autres fonctions prédéfinies
         # et qui peuvent être utilisées dans le corps de la formule courante
@@ -167,8 +167,8 @@ class FORM_ETAPE(MACRO_ETAPE):
             return 0,"Pas de nom donné à la FORMULE"
         if len(nom) > 8 :
             return 0,"Un nom de FORMULE ne peut dépasser 8 caractères"
-	if nom[0] > "0" and nom[0] < "9" :
-	    return 0,"Un nom de FORMULE ne peut pas commencer par un chiffre"
+        if nom[0] > "0" and nom[0] < "9" :
+            return 0,"Un nom de FORMULE ne peut pas commencer par un chiffre"
         sd = self.parent.get_sd_autour_etape(nom,self)
         if sd :
             return 0,"Un concept de nom %s existe déjà !" %nom
@@ -220,10 +220,10 @@ class FORM_ETAPE(MACRO_ETAPE):
 
     def verif_formule_python(self,formule=None):
         """
-	Pour l instant ne fait qu un compile python
-	il serait possible d ajouter des tests sur les arguments
-	ou le type retourne mais ...
-	"""
+        Pour l instant ne fait qu un compile python
+        il serait possible d ajouter des tests sur les arguments
+        ou le type retourne mais ...
+        """
         if not formule :
             formule = (None,None,None,None)
         test_nom,erreur_nom = self.verif_nom(formule[0])
@@ -232,14 +232,14 @@ class FORM_ETAPE(MACRO_ETAPE):
         else:
             args = None
         test_arguments,erreur_arguments = self.verif_arguments(args)
-	corps=formule[3]
-	erreur_formule= ''
-	test_formule=1
-	try :
-	    compile(corps,'<string>','eval')
-	except :
-	    erreur_formule= "le corps de la formule n'est pas une formule python valide"
-	    test_formule=0
+        corps=formule[3]
+        erreur_formule= ''
+        test_formule=1
+        try :
+            compile(corps,'<string>','eval')
+        except :
+            erreur_formule= "le corps de la formule n'est pas une formule python valide"
+            test_formule=0
         erreur = ''
         test = test_nom*test_arguments*test_formule
         if not test :
@@ -279,33 +279,33 @@ class FORM_ETAPE(MACRO_ETAPE):
         self.build_mc()
         self.mc_liste=[]
         if len(formule) < 4 :
-	   return O
+           return O
         arguments=formule[3]
-	if arguments[0] == '(' :
-	   arguments=[1,-1 ]
-	if arguments[-1] == '(' :
-	   arguments=[0,-2 ]
-	self.arguments=tuple(arguments.split(','))
+        if arguments[0] == '(' :
+           arguments=arguments[1:]
+        if arguments[-1] == ')' :
+           arguments=arguments[:-1]
+        self.arguments=tuple(arguments.split(','))
 
-	i=1
-	for k,v in self.definition.entites.items():
-	    child=self.definition.entites[k](None,nom=k,parent=self)
-	    new_valeur=formule[i+1]
-	    if i+1 == 3 :
-	       child.valeur = self.arguments
-	    else :
-	       child.valeur = new_valeur
-	    child.state = 'modified'
-	    self.mc_liste.append(child)
-	    i=i+1
-	   
+        i=1
+        for k,v in self.definition.entites.items():
+            child=self.definition.entites[k](None,nom=k,parent=self)
+            new_valeur=formule[i+1]
+            if i+1 == 3 :
+               child.valeur = self.arguments
+            else :
+               child.valeur = new_valeur
+            child.state = 'modified'
+            self.mc_liste.append(child)
+            i=i+1
+           
         self.corps = formule[2]
         self.type_retourne = formule[1]
-	sd = self.get_sd_prod()
+        sd = self.get_sd_prod()
         if sd:
             sd.nom = formule[0]
         self.init_modif()
-	return 1
+        return 1
 
     def active(self):
         """
@@ -313,6 +313,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         Il faut ajouter la formule au contexte global du JDC
         """
         self.actif = 1
+        self.init_modif()
         nom = self.get_nom()
         if nom == '' : return
         try:
@@ -326,6 +327,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         Il faut supprimer la formule du contexte global du JDC
         """
         self.actif = 0
+        self.init_modif()
         if not self.sd : return
         self.jdc.del_fonction(self.sd)
 
@@ -340,8 +342,8 @@ class FORM_ETAPE(MACRO_ETAPE):
          Mettre a jour les mots cles de l etape et eventuellement le concept produit si reuse
          suite à la disparition du concept sd
          Seuls les mots cles simples MCSIMP font un traitement autre que de transmettre aux fils,
-	 sauf les objets FORM_ETAPE qui doivent vérifier que le concept détruit n'est pas 
-	 utilisé dans le corps de la fonction
+         sauf les objets FORM_ETAPE qui doivent vérifier que le concept détruit n'est pas 
+         utilisé dans le corps de la fonction
         """
         self.init_modif()
          

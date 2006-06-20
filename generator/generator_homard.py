@@ -77,12 +77,12 @@ class HomardGenerator(PythonGenerator):
       self.lmots_clef_calcules = ('SuivFron','TypeBila','ModeHOMA','CCAssoci', 'CCNoChaI','HOMaiN__','HOMaiNP1','CCNumOrI', 'CCNumPTI')
       self.lmot_clef  = ('CCMaiN__', 'CCNoMN__', 'CCIndica', 'CCSolN__', 'CCFronti', 'CCNoMFro', 'CCMaiNP1', 
                          'CCNoMNP1', 'CCSolNP1', 'TypeRaff', 'TypeDera', 'NiveauMa', 'SeuilHau', 'SeuilHRe', 
-			 'SeuilHPE', 'NiveauMi', 'SeuilBas', 'SeuilBRe', 'SeuilBPE', 'ListeStd', 'NumeIter', 
-			 'Langue  ', 'CCGroFro', 'CCNoChaI', 'CCNumOrI', 'CCNumPTI', 'SuivFron', 'TypeBila', 
-			 'ModeHOMA', 'HOMaiN__', 'HOMaiNP1','CCCoChaI')
+                         'SeuilHPE', 'NiveauMi', 'SeuilBas', 'SeuilBRe', 'SeuilBPE', 'ListeStd', 'NumeIter', 
+                         'Langue  ', 'CCGroFro', 'CCNoChaI', 'CCNumOrI', 'CCNumPTI', 'SuivFron', 'TypeBila', 
+                         'ModeHOMA', 'HOMaiN__', 'HOMaiNP1','CCCoChaI')
 
 # Bizarre demander a Gerald : 
-#		CVSolNP1
+#                CVSolNP1
       self.assoc['CCMaiN__']='FICHIER_MED_MAILLAGE_N'
       self.assoc['CCNoMN__']='NOM_MED_MAILLAGE_N'
       self.assoc['CCIndica']='FICHIER_MED_MAILLAGE_N'
@@ -137,15 +137,15 @@ class HomardGenerator(PythonGenerator):
        b_eval = 0
        a_eval=self.dico_mot_depend[mot]
        try :
-	  b_eval=eval(self.dico_mot_depend[mot])
+          b_eval=eval(self.dico_mot_depend[mot])
        except :
-	  for l in a_eval.split(" or "):
+          for l in a_eval.split(" or "):
               try:
-		 b_eval=eval(l)
-	         if not (b_eval == 0 ):
-		     break
+                 b_eval=eval(l)
+                 if not (b_eval == 0 ):
+                     break
               except :
-		 pass
+                 pass
        return b_eval
 
 
@@ -154,28 +154,28 @@ class HomardGenerator(PythonGenerator):
       self.textehomard=[]
       for mot in self.lmot_clef:
 
-#	  on verifie d'abord que le mot clef doit bien être calculé
+#          on verifie d'abord que le mot clef doit bien être calculé
           if self.dico_mot_depend.has_key(mot) :
              if self.cherche_dependance(mot) == 0 :
-	      	continue
+                      continue
 
           if mot not in self.lmots_clef_calcules :
-	     clef_eficas=self.assoc[mot]
+             clef_eficas=self.assoc[mot]
              if self.dico_mot_clef.has_key(clef_eficas):
-		val=self.dico_mot_clef[clef_eficas]
+                val=self.dico_mot_clef[clef_eficas]
                 if val != None:
-		   try :
-		    ligne=mot+' '+val
-		   except:
-		    ligne=mot+' '+repr(val)
-		   ligne.rjust(32)
+                   try :
+                    ligne=mot+' '+val
+                   except:
+                    ligne=mot+' '+repr(val)
+                   ligne.rjust(32)
                    self.textehomard.append(ligne)
           else:
              val=apply(HomardGenerator.__dict__[mot],(self,))
              if val != None:
                 mot.rjust(8)
-	        ligne=mot+' '+val
-	        ligne.rjust(32)
+                ligne=mot+' '+val
+                ligne.rjust(32)
                 self.textehomard.append(ligne)
 
    def get_homard(self):
@@ -183,9 +183,9 @@ class HomardGenerator(PythonGenerator):
 
    def SuivFron(self):
         val="non"
-	if self.dico_mot_clef.has_key('NOM_MED_MAILLAGE_FRONTIERE'):
-	   if self.dico_mot_clef['NOM_MED_MAILLAGE_FRONTIERE'] != None:
-		val="oui"
+        if self.dico_mot_clef.has_key('NOM_MED_MAILLAGE_FRONTIERE'):
+           if self.dico_mot_clef['NOM_MED_MAILLAGE_FRONTIERE'] != None:
+                val="oui"
         return val
 
    def TypeBila(self):
@@ -193,30 +193,30 @@ class HomardGenerator(PythonGenerator):
         retour=None
         dict_val={'NOMBRE':7,'INTERPENETRATION':3,'QUALITE':5,'CONNEXITE':11,'TAILLE':13}
         for mot in ('NOMBRE','QUALITE','INTERPENETRATION','CONNEXITE','TAILLE'):
-	    if self.dico_mot_clef.has_key(mot):
-	       if (self.dico_mot_clef[mot] == "OUI"):
-		  inttypeBilan=inttypeBilan*dict_val[mot]
+            if self.dico_mot_clef.has_key(mot):
+               if (self.dico_mot_clef[mot] == "OUI"):
+                  inttypeBilan=inttypeBilan*dict_val[mot]
                   retour = repr(inttypeBilan)
-	return retour
+        return retour
 
 
    def ModeHOMA(self):
         intModeHOMA=1
-	if self.dico_mot_clef.has_key('INFORMATION'):
-	   if self.dico_mot_clef['INFORMATION'] == "OUI":
-	      intModeHOMA=2
+        if self.dico_mot_clef.has_key('INFORMATION'):
+           if self.dico_mot_clef['INFORMATION'] == "OUI":
+              intModeHOMA=2
         return repr(intModeHOMA)
-	   
+           
    def CCAssoci(self):
         return 'MED' 
 
    def CCNoChaI(self):
-	if not (self.dico_mot_clef.has_key('NOM_MED')):
-	   return None
-	if (self.dico_mot_clef['NOM_MED']== None):
-	   return None
-	if not (self.dico_mot_clef.has_key('COMPOSANTE')):
-	   return None
+        if not (self.dico_mot_clef.has_key('NOM_MED')):
+           return None
+        if (self.dico_mot_clef['NOM_MED']== None):
+           return None
+        if not (self.dico_mot_clef.has_key('COMPOSANTE')):
+           return None
         if (self.dico_mot_clef['COMPOSANTE']== None):
            return None
         chaine=self.dico_mot_clef['COMPOSANTE']+' '+self.dico_mot_clef['NOM_MED']
@@ -225,29 +225,29 @@ class HomardGenerator(PythonGenerator):
    def HOMaiN__(self):
        chaine=None
        if self.dico_mot_clef.has_key('NITER'):
-	  if self.dico_mot_clef['NITER'] != None :
+          if self.dico_mot_clef['NITER'] != None :
              num="M"+repr(self.dico_mot_clef['NITER'])
-	     chaine=num+" "+num+".hom"
+             chaine=num+" "+num+".hom"
        return chaine
 
    def HOMaiNP1(self):
        chaine=None
        if self.dico_mot_clef.has_key('NITER'):
-	  if self.dico_mot_clef['NITER'] != None :
+          if self.dico_mot_clef['NITER'] != None :
              num="M"+repr(self.dico_mot_clef['NITER']+1)
-	     chaine=num+" "+num+".hom"
+             chaine=num+" "+num+".hom"
        return chaine
 
    def CCNumOrI(self):
        chaine=repr(1)
        if self.dico_mot_clef.has_key('NUME_ORDRE'):
           if self.dico_mot_clef['NUME_ORDRE'] != None :
- 	    chaine=repr(self.dico_mot_clef['NUME_ORDRE'])
+             chaine=repr(self.dico_mot_clef['NUME_ORDRE'])
        return chaine
 
    def CCNumPTI(self):
        chaine=repr(1)
        if self.dico_mot_clef.has_key('NUME_PAS_TEMPS'):
           if self.dico_mot_clef['NUME_PAS_TEMPS'] != None :
- 	    chaine=repr(self.dico_mot_clef['NUME_PAS_TEMPS'])
+             chaine=repr(self.dico_mot_clef['NUME_PAS_TEMPS'])
        return chaine
