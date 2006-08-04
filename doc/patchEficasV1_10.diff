@@ -1,0 +1,26 @@
+diff -Naur EficasV1_10AsterSTA8.orig/Editeur/panelsSalome.py EficasV1_10AsterSTA8/Editeur/panelsSalome.py
+--- EficasV1_10AsterSTA8.orig/Editeur/panelsSalome.py	2006-06-20 16:41:50.000000000 +0200
++++ EficasV1_10AsterSTA8/Editeur/panelsSalome.py	2006-07-18 17:44:45.000000000 +0200
+@@ -100,12 +100,20 @@
+       try: 
+         valeur,validite,commentaire=self.get_valeur()
+         #print 'add_valeur_plusieurs_base', name
+-        #print 'valeur = %s, validite = %s,commentaire = %s'%( valeur,validite,commentaire )            
++        #print 'valeur = %s, validite = %s,commentaire = %s'%( valeur,validite,commentaire )
+         if not valeur: # sélection dans salome        
+             #print 'CS_pbruno selection SALOME'
+             strSelection = ''
+             
+-            selection, msg = self.parent.appli.selectGroupFromSalome()
++            genea  = self.node.item.get_genealogie()            
++            kwType = None
++            for e in genea:
++                if "GROUP_NO" in e:
++                    kwType = "GROUP_NO"
++                if "GROUP_MA" in e:
++                    kwType = "GROUP_MA"            
++                
++            selection, msg = self.parent.appli.selectGroupFromSalome( kwType )
+             
+             #print 'CS_pbruno selection SALOME selection ->',selection
+             #print 'CS_pbruno selection SALOME msg ->',msg

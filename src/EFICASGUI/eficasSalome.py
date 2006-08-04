@@ -3,7 +3,7 @@ from Logger import ExtLogger
 import qt
 import notifqt
 # -----------------------------------------------------------------------------
-import sys, os
+import sys, os, re
 
 
 
@@ -50,16 +50,25 @@ import studyManager
 
 import SalomePyQt
 
+from SelectMainShapeDiag_ui import SelectMainShapeDiag
+
 
 
 # message utilisateur
 msgWarning                 = "Attention"
+msgMainShapeSelection      = "On travaille sur la géométrie principale : "
 msgSubShapeBadMainShape    = "La sélection géométrique SALOME ne correspond pas à une sous-géométrie de la géométrie principale : "
 msgMeshGroupBadMainShape   = "Le groupe de maillage sélectionné dans SALOME ne référence pas la bonne géométrie principale : "
 msgIncompleteSelection     = "Tous les éléments de la sélection SALOME n'ont pu étre ajoutée"
 msgUnAuthorizedSelecion    = "Sélection SALOME non authorisé. Autorisé : sous-géométrie, groupe de maille"
 msgErrorAddJdcInSalome     = "Erreur dans l'export du fichier de commande dans l'arbre d'étude Salome"
 msgErrorDisplayShape       = "Erreur dans l'affichage de la forme géométrique sélectionnée"
+msgErrorNeedSubShape       = "Sélection d'un élément sous géométrique seulement"
+
+
+msgErrorGroupMaSelection    = "Sélection GROUP_MA ne peut pas prendre un point ou un noeud"
+msgWarningGroupNoSelection  = "Attention, GROUP_NO devrait prendre un point ou un noeud"
+
 
 
 # couleur pour visualisation des géometrie CS_CBO
@@ -78,7 +87,37 @@ COLORS = ( studyManager.RED,
 
 LEN_COLORS = len( COLORS )
 
+
+
+class SelectMainShapeDiagImpl( SelectMainShapeDiag ):
+    def __init__( self, mainShapeEntries, parent = None,name = None,modal = 1,fl = 0 ):
+        SelectMainShapeDiag.__init__( self,parent,name,modal,fl )
+        
+        self.mainShapes = {} # ( entry, value )
+        for entry in mainShapeEntries:
+            name = studyManager.palStudy.getName( entry )
+            self.mainShapes[entry] = name
+            
+        self.lbMainShapes.clear()
+        for entry,name in self.mainShapes.items():
+            self.lbMainShapes.insertItem( name )
+        self.lbMainShapes.setCurrentItem( 0 )
+
+                                    
+    def getUserSelection( self ):
+        mainShapeEntry = None
+        
+        item = self.lbMainShapes.selectedItem()
+        mainShapeName = str( item.text() )        
+        
+        for entry, name in self.mainShapes.items():
+            if mainShapeName == name:
+                mainShapeEntry = entry
+                break                
+            
+        return mainShapeEntry 
     
+
 
 #class MyEficas( Tkinter.Toplevel, eficas.EFICAS, QXEmbed ):
 class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
@@ -88,7 +127,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
     a)la création de groupes de mailles dans le composant SMESH de SALOME
     b)la visualisation d'éléments géométrique dans le coposant GEOM de SALOME par sélection dans EFICAS
     """
-    def __init__(self, parent, code = None, fichier = None ):
+    def __init__( self, parent, code = None, fichier = None, module = studyManager.SEficas ):
         """
         Constructeur.
                 
@@ -144,6 +183,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         #--------------- spécialisation EFICAS dans SALOME  -------------------                
         self.parent = parent        
         self.salome = True      #active les parties de code spécifique dans Salome( pour le logiciel Eficas )
+        self.module = module    #indique sous quel module dans l'arbre d'étude ajouter le JDC.
         
         
         # donnée pour la création de groupe de maille
@@ -183,67 +223,130 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             studyManager.palStudy.setCurrentStudyID( activeStudyId )            
             
         return True
-            
-                
         
+            
+    def __selectMainShape( self, groupeMaNamesIn, groupeNoNamesIn ):
+        """
+        Sélection intéractive de la main shape
+        """
+        groupeMaNamesOut, groupeNoNamesOut = [], []
+        selectedMainShape  =  None
+        mainShapes = {}
+        mainShapeEntries = []
 
-    def __selectShape( self, jdcID, selectedEntry ):
+        # liste des main shape possibles
+        for groups in ( groupeMaNamesIn, groupeNoNamesIn ):
+            for subShapeName in groups:
+                entries = studyManager.palStudy.getEntriesFromName( studyManager.SGeom, subShapeName )
+                for entry in entries:
+                    mainShapeEntry = studyManager.palStudy.getMainShapeEntry( entry )
+                    if mainShapeEntry != entry:
+                        mainShapes[ subShapeName ] = mainShapeEntry
+                        mainShapeEntries += [ mainShapeEntry ]
+                                
+        if mainShapes:
+            diag = SelectMainShapeDiagImpl( mainShapeEntries, self.parent  )
+    
+            if diag.exec_loop() == qt.QDialog.Accepted:
+                selectedMainShape = diag.getUserSelection()                
+                print 'main shape user selection ->',selectedMainShape
+                
+                # filtre sur la main shape sélectionnée
+                for name in groupeMaNamesIn:
+                    try:
+                        if mainShapes[ name ] == selectedMainShape:
+                            groupeMaNamesOut += [ name ]
+                    except:
+                        pass                                                        
+                                                
+                for name in groupeNoNamesIn:
+                    try:
+                        if mainShapes[ name ] == selectedMainShape:
+                            groupeNoNamesOut += [ name ]
+                    except:
+                        pass         
+        
+        return groupeMaNamesOut, groupeNoNamesOut
+
+
+
+    def __selectShape( self, jdcID, selectedEntry, kwType = None ):
         """
         sélection sous-géométrie dans Salome:
-        -test1) si c'est un élément géométrique.
+        -test1) si c'est un élément sous-géométrique .
         -test2) si appartient à la géométrie principale.
         
         met à jours la liste self.subShapes si test ok
-        """
-        print 'CS_pbruno __selectShape'
-        name, msgError = '',''        
-                
+        """        
+        name, msgError = '',''
+        
         selectedMainShapeEntry = studyManager.palStudy.getMainShapeEntry( selectedEntry )
         
-        if selectedMainShapeEntry: #ok test1)        
+        if selectedMainShapeEntry and selectedMainShapeEntry != selectedEntry: #ok test1)
+            
+            tGeo = studyManager.palStudy.getRealShapeType( selectedEntry )
+            if kwType == "GROUP_NO" and tGeo != studyManager.VERTEX:                
+                msgError = msgWarningGroupNoSelection
+            elif kwType == "GROUP_MA" and tGeo == studyManager.VERTEX:
+                name, msgError = '', msgErrorGroupMaSelection                
+                return name, msgError            
+                            
             if not self.mainShapeEntries.has_key( jdcID ):
                 self.mainShapeEntries[ jdcID ] = selectedMainShapeEntry
+                name = studyManager.palStudy.getName( selectedMainShapeEntry )
+                msgError = msgMainShapeSelection + name
             if selectedMainShapeEntry == self.mainShapeEntries[ jdcID ]:
                 name = studyManager.palStudy.getName( selectedEntry )
-                self.subShapes[ selectedEntry ] = name
-            else:
-                print 'CS_pbruno pas la même mainshape selectedEntry->',selectedEntry
+                self.subShapes[ selectedEntry ] = name                
+            else:                
                 if not self.mainShapeNames.has_key( jdcID ):
                     self.mainShapeNames[ jdcID ] = studyManager.palStudy.getName( self.mainShapeEntries[ jdcID ] )
-                msgError = msgSubShapeBadMainShape + self.mainShapeNames[ jdcID ]
+                msgError = msgSubShapeBadMainShape + self.mainShapeNames[ jdcID ]                
+        else:
+            name, msgError = '', msgErrorNeedSubShape
 
         return name, msgError 
         
         
         
-    def __selectMeshGroup( self, jdcID, selectedEntry ):
+    def __selectMeshGroup( self, jdcID, selectedEntry, kwType = None ):
         """
         sélection groupe de maille dans Salome:
         -test 1) si c'est un groupe de maille 
         -test 2) si le maillage fait référence à la géométrie principale 
-        """
-        print 'CS_pbruno __selectMeshGroup'
-        name, msgError = '',''
+        """        
+        name, msgError = '',''                
                 
         selectedMeshEntry = studyManager.palStudy.getMesh( selectedEntry )
                 
-        if selectedMeshEntry: # ok test 1)
-            print 'CS_pbruno __selectMeshGroup selectedMeshEntry',selectedMeshEntry
+        if selectedMeshEntry: # ok test 1)            
+            tGroup = studyManager.palStudy.getGroupType( selectedEntry )
+            if kwType == "GROUP_NO" and tGroup != studyManager.NodeGroups:                
+                msgError = msgWarningGroupNoSelection
+            elif kwType == "GROUP_MA" and tGroup == studyManager.NodeGroups:
+                name, msgError = '', msgErrorGroupMaSelection                
+                return name, msgError                        
+                        
             selectedMainShapeEntry = studyManager.palStudy.getShapeFromMesh( selectedMeshEntry )
             
-            if selectedMainShapeEntry: #test 2)
-                print 'CS_pbruno __selectMeshGroup selectedMainShapeEntry',selectedMainShapeEntry
+            if selectedMainShapeEntry: #test 2)                
                 if not self.mainShapeEntries.has_key( jdcID ):
                     self.mainShapeEntries[ jdcID ] = selectedMainShapeEntry
+                    name = studyManager.palStudy.getName( selectedMainShapeEntry )
+                    msgError = msgMainShapeSelection + name                    
                 if selectedMainShapeEntry == self.mainShapeEntries[ jdcID ]:
                     name = studyManager.palStudy.getName( selectedEntry  )  #ok test 2)
-                else:
-                    print 'CS_pbruno pas la même mainshape selectedEntry ->',selectedEntry
+                else:                    
                     if not self.mainShapeNames.has_key( jdcID ):
-                        self.mainShapeNames[ jdcID ] = studyManager.palStudy.getName( self.mainShapeEntries[ jdcID ] )
-                    msgError = msgMeshGroupBadMainShape + self.mainShapeNames[ jdcID ]                   
-                                
-        return name, msgError 
+                        self.mainShapeNames[ jdcID ] = studyManager.palStudy.getName(
+                                                            self.mainShapeEntries[ jdcID ] )
+                    msgError = msgMeshGroupBadMainShape + self.mainShapeNames[ jdcID ]
+            else:
+                # on authorise quand même les groupes de maillage ne faisant 
+                # pas référence à une géométrie principale (dixit CS_CBO )
+                name = studyManager.palStudy.getName( selectedEntry )
+                                          
+        return name, msgError
         
         
     
@@ -253,12 +356,12 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         mise à jours de la liste self.subShapes à partir de la liste des noms de groupe fourni en entré
         """
         for name in groupeNames:
-            entries = studyManager.palStudy.getEntriesFromName( studyManager.SGeom, name )
+            entries = studyManager.palStudy.getEntriesFromName( studyManager.SGeom, name )            
             for entry in entries:
-                ok, msgError = self.__selectShape( jdcID, entry ) # filtre
-                if ok:
-                    self.subShapes[ entry ] = name
-                    
+                if not self.subShapes.has_key( entry ):                    
+                    ok, msgError = self.__selectShape( jdcID, entry ) # filtre
+                    if ok:
+                        self.subShapes[ entry ] = name                    
         
     def __getAllGroupeMa(self, item ):
         """
@@ -268,20 +371,18 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         try:
             itemName  = item.get_nom()
             #print 'CS_pbruno itemName',itemName             
-            if itemName == 'GROUP_MA':
+            if 'GROUP_MA' in itemName:
                 itemValue = item.get_valeur()
-                print 'CS_pbruno trouvé! GROUP_MA->', itemValue
                 if type( itemValue ) == str:
                     groupMa += ( itemValue , )
                 elif type( itemValue ) == tuple:
                     groupMa += itemValue                
             else:
-                children = item.GetSubList()
+                children = item._GetSubList()
                 for child in children:            
                     groupMa +=  self.__getAllGroupeMa( child )
-        except: # à cause de GetSubList()...
-            pass
-        print 'CS_pbruno groupMa',groupMa
+        except:
+            pass        
         return groupMa                
         
    
@@ -291,25 +392,24 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         """
         groupNo = ()                
         try:
-            itemName  = item.get_nom()
-            print 'CS_pbruno itemName',itemName            
-            if itemName == 'GROUP_NO':
-                itemValue = item.get_valeur()
-                print 'CS_pbruno trouvé! GROUP_NO->', itemValue
+            itemName  = item.get_nom()            
+            if 'GROUP_NO' in itemName:
+                itemValue = item.get_valeur()                
                 if type( itemValue ) == str:
                     groupNo += ( itemValue , )
                 elif type( itemValue ) == tuple:
                     groupNo += itemValue
             else:
-                children = item.GetSubList()
+                children = item._GetSubList()
                 for child in children:            
                     groupNo += self.__getAllGroupeNo( child )
-        except: # à cause de GetSubList()...
+        except:
             pass 
         return groupNo
+
         
     #-----------------------  LISTE DES NOUVEAUX CAS D'UTILISATIONS -----------
-    def selectGroupFromSalome( self ):
+    def selectGroupFromSalome( self, kwType ):
         """
         Sélection d'élément(s) d'une géométrie ( sub-shape ) ou d'élément(s) de maillage ( groupe de maille) à partir de l'arbre salome
         retourne ( la liste des noms des groupes, message d'erreur )
@@ -317,7 +417,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         Note: Appelé par EFICAS lorsqu'on clique sur le bouton ajouter à la liste du panel AFF_CHAR_MECA        
         """
         names, msg = [], ''
-        try:
+        try:            
             atLeastOneStudy = self.__studySync()
             if not atLeastOneStudy:
                 return names, msg
@@ -327,12 +427,13 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             nbEntries = len( entries )
             if nbEntries >= 1:
                 print 'CS_pbruno len( entries ) >= 1:'
-                jdcID = self.bureau.nb.getcurselection()
+#                 jdcID = self.bureau.nb.getcurselection()
+                jdcID = self.bureau.JDCDisplay_courant                
                 for entry in entries:
                     if studyManager.palStudy.isMeshGroup( entry ): #sélection d'un groupe de maille
-                        name, msg = self.__selectMeshGroup( jdcID, entry )
+                        name, msg = self.__selectMeshGroup( jdcID, entry, kwType )
                     elif studyManager.palStudy.isShape( entry ): #sélection d'une sous-géométrie
-                        name, msg = self.__selectShape( jdcID, entry )
+                        name, msg = self.__selectShape( jdcID, entry, kwType )
                     else:
                         name, msg = '', msgUnAuthorizedSelecion
                     if name:
@@ -351,18 +452,39 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         """
         Ajoute le Jeu De Commande ASTER ou HOMARD dans l'arbre d'étude Salome dans la rubrique EFICAS
         """
-        ok, msgError = False, ''        
-        try:
+        ok, msgError = False, msgErrorAddJdcInSalome
+        try:            
             atLeastOneStudy = self.__studySync()
             if not atLeastOneStudy:
                 return ok, msgError
-            if self.bureau.code == 'ASTER':
-                ok = studyManager.palStudy.addEficasItem( jdcPath, studyManager.FICHIER_EFICAS_ASTER )
-            elif self.bureau.code == 'HOMARD':
-                ok = studyManager.palStudy.addEficasItem( jdcPath, studyManager.FICHIER_EFICAS_HOMARD )
-                #ok = studyManager.palStudy.addEficasItem( jdcPath, studyManager.FICHIER_EFICAS_HOMARD_CONF ) CS_pbruno ?????
-            if not ok:
-                msgError = msgErrorAddJdcInSalome            
+                        
+            fileType = { 'ASTER':  studyManager.FICHIER_EFICAS_ASTER,
+                        'HOMARD': studyManager.FICHIER_EFICAS_HOMARD }
+                        
+            folderName = {  'ASTER':  'AsterFiles',
+                            'HOMARD': 'HomardFiles' }                                    
+                        
+            moduleEntry = studyManager.palStudy.addComponent(self.module)
+            itemName    = re.split("/",jdcPath)[-1]
+            
+            fatherEntry = studyManager.palStudy.addItem(
+                                    moduleEntry,
+                                    itemName = folderName[self.bureau.code],
+                                    itemIcon = "ICON_COMM_FOLDER",
+                                    itemType = studyManager.ASTER_FILE_FOLDER,
+                                    bDoublonCheck = True  )
+                                                                        
+            commEntry = studyManager.palStudy.addItem( fatherEntry ,
+                                                        itemName = itemName,
+                                                        itemType = fileType[ self.bureau.code ],
+                                                        itemValue = jdcPath,
+                                                        itemComment = str( jdcPath ),
+                                                        itemIcon    = "ICON_COMM_FILE",
+                                                        bDoublonCheck = True )
+            studyManager.palStudy.refresh()                                                       
+            print 'addJdcInSalome commEntry->', commEntry            
+            if commEntry:
+                ok, msgError = True, ''        
         except:                    
             logger.debug(50*'=')
         return ok, msgError        
@@ -378,36 +500,51 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             if not atLeastOneStudy:
                 return
             
-            jdcID   = self.bureau.nb.getcurselection()
+#             jdcID = self.bureau.nb.getcurselection()
+            jdcID = self.bureau.JDCDisplay_courant
             
             groupeMaNames = self.__getAllGroupeMa( self.bureau.JDCDisplay_courant.tree.item )
-            groupeNoNames = self.__getAllGroupeNo( self.bureau.JDCDisplay_courant.tree.item )            
+            groupeNoNames = self.__getAllGroupeNo( self.bureau.JDCDisplay_courant.tree.item )
+            
+            # on elimine les doublons de la liste
+            groupeMaNames = dict.fromkeys(groupeMaNames).keys()
+            groupeNoNames = dict.fromkeys(groupeNoNames).keys()
             
             print 'CS_pbruno createOrUpdateMesh groupeMaNames', groupeMaNames
             print 'CS_pbruno createOrUpdateMesh groupeNoNames', groupeNoNames
                         
             # mise à jours de la liste des sous-géométrie ( self.subShapes )
-            self.__updateSubShapes( jdcID, groupeMaNames )
-            self.__updateSubShapes( jdcID, groupeNoNames )
-            
-            
-            # recupération des identifiants( entries ) associés aux noms des groupes        
-            groupeMaEntries = []
-            groupeNoEntries = []                            
-            
-            for entry, name in self.subShapes.items():
-                if name in groupeMaNames:
-                    groupeMaEntries.append( entry )
-                if name in groupeNoNames:                
-                    groupeNoEntries.append( entry )
-                    
-            print 'CS_pbruno groupeMaEntries ->',groupeMaEntries 
-            print 'CS_pbruno groupeNoEntries ->',groupeNoEntries
-            if groupeMaEntries or groupeNoEntries:
-                print 'if groupeMaEntries or groupeNoEntries:'
-                diag = meshGui.MeshUpdateDialogImpl( self.mainShapeEntries[jdcID], groupeMaEntries, groupeNoEntries, studyManager.palStudy,
-                                                     self.parent )
-                diag.show()
+            if not self.mainShapeEntries.has_key( jdcID ):
+                # l'utilisateur n'a sélectionné aucune sous-géométrie et donc pas de géométrie principale
+                groupeMaNames, groupeNoNames  = self.__selectMainShape( groupeMaNames, groupeNoNames )
+                
+            if groupeMaNames or groupeNoNames:                                                
+                print 'CS_pbruno createOrUpdateMesh groupeMaNames', groupeMaNames
+                print 'CS_pbruno createOrUpdateMesh groupeNoNames', groupeNoNames            
+                self.__updateSubShapes( jdcID, groupeMaNames + groupeNoNames )
+    
+                # recupération des identifiants( entries ) associés aux noms des groupes        
+                groupeMaEntries = []
+                groupeNoEntries = []                            
+                
+                for entry, name in self.subShapes.items():
+                    if name in groupeMaNames:
+                        groupeMaEntries.append( entry )
+                    if name in groupeNoNames:                
+                        groupeNoEntries.append( entry )    
+
+                if groupeMaEntries or groupeNoEntries:                    
+                    diag = meshGui.MeshUpdateDialogImpl(
+                                self.mainShapeEntries[jdcID],
+                                groupeMaEntries,
+                                groupeNoEntries,
+                                studyManager.palStudy,
+                                self.parent )
+                    diag.show()
+                
+            self.subShapes.clear()
+            self.mainShapeNames.clear()
+            self.mainShapeEntries.clear()                
         except:                    
             logger.debug(50*'=')
         
@@ -463,10 +600,10 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
 #-------------------------------------------------------------------------------------------------------        
 #           Point d'entré lancement EFICAS
 #
-def runEficas( code="ASTER", fichier=None ):
+def runEficas( code="ASTER", fichier=None, module = studyManager.SEficas ):
     global appli    
-    if not appli: #une seul instance possible!
-        appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier )
+    if not appli: #une seul instance possible!        
+        appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier, module = module )
         
         
  
@@ -502,38 +639,3 @@ logger=ExtLogger( "eficasSalome.py" )
 
 
 
-"""
-        #embedded.showMaximized()
-        #embedded.embed( appli.winfo_id() )        
-        
-        embedded.setWFlags( qt.Qt.WStyle_Customize | qt.Qt.WStyle_StaysOnTop )
-        embedded.setFocus()
-        
-        if embedded.hasFocus () :
-            print 'hasfocus'
-        else:
-            print 'pas  focus'
-            
-            
-        if embedded.isFocusEnabled():
-            print 'isFocusEnabled()'
-        else:
-            print 'not isFocusEnabled()'
-        
-        focusP = embedded.focusPolicy()
-        
-        if focusP == qt.QWidget.TabFocus:
-            print 'qt.QWidgetTabFocus' 
-        elif focusP == qt.QWidget.ClickFocus:
-            print 'qt.ClickFocus'
-        elif focusP == qt.QWidget.StrongFocus:
-            print 'qt.StrongFocus' 
-        elif focusP == qt.QWidget.WheelFocus:
-            print 'qt.WheelFocus'
-        elif focusP == qt.QWidget.NoFocus:
-            print 'qt.NoFocus'
-        else:
-            print 'bizarre'
-        
-        embedded.grabKeyboard()
-        """
