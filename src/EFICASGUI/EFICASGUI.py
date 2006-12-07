@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
     Interface PyQt
 """
@@ -106,14 +108,11 @@ def activeStudyChanged(ID):
    # ne marche pas car sg est supposé résider dans une etude
    # studyId=sg.getActiveStudyId()
    currentStudyId=ID
-   print "_CS_GBO_ : EFICASGUI.activeStudyChanged : currentStudyId = ", currentStudyId
-   print "_CS_GBO_ : EFICASGUI.activeStudyChanged : sgPyQt.getStudyId() = ", sgPyQt.getStudyId()
    
    studyManager.palStudy.setCurrentStudyID( currentStudyId ) #CS_pbruno
    
 
 def definePopup(theContext, theObject, theParent):    
-   print "EFICASGUI --- definePopup"
    theContext= ""
    theObject = "100"
    theParent = "ObjectBrowser"
@@ -187,6 +186,9 @@ def runEficasFichier():
       elif aType == studyManager.FICHIER_EFICAS_HOMARD:        
         fileName = aValue
         code     = "HOMARD"
+      else:
+        fileName=None
+        code = "ASTER"
    else:        
         code = "ASTER"            
         

@@ -1,0 +1,21 @@
+
+
+DEBUT();
+
+maillage=LIRE_MAILLAGE();
+
+modele=AFFE_MODELE(MAILLAGE=maillage,
+                   AFFE=_F(TOUT='OUI',
+                           PHENOMENE='MECANIQUE',
+                           MODELISATION='POU_D_E',),);
+P1 = 3;
+
+
+Affe=AFFE_CARA_ELEM(MODELE=modele,
+                    POUTRE=_F(GROUP_MA='element1D',
+                              SECTION='RECTANGLE',
+                              VARI_SECT='AFFINE',
+                              CARA=('HY','HZ1','HZ2'),
+                              VALE=(0.1,0.1,0.2),),);
+
+FIN();

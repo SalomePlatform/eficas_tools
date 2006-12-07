@@ -1,0 +1,3 @@
+self.monObjetVisu.Start()
+self.monObjetVisu.VisuPoutreCercle( element1D  ,  PLEIN  ,  HOMOTHETIQUE  ,  3.0  ,  2.0  ,  0  ,  0 )
+self.monObjetVisu.Visualise()

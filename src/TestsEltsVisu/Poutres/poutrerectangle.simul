@@ -1,0 +1,3 @@
+self.monObjetVisu.Start()
+self.monObjetVisu.VisuPoutreGenerale( "poutregenerale1 , poutregenerale2" )
+self.monObjetVisu.Visualise()

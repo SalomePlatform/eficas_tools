@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from Logger import ExtLogger
 
 import qt
@@ -44,6 +46,8 @@ from Editeur import splash
 
 import salome
 import meshGui
+import visuDriver
+import PALGUI_API
 import studyManager
 
 #from qxembed import QXEmbed
@@ -198,9 +202,14 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         
     def quit(self): 
         global appli        
-        self.destroy()
         appli = None
-        
+        self.destroy()
+
+    def destroy(self):
+        global appli
+        appli = None
+        print "hhhhhhhhhhhhhhhhhhhhh"
+        Tkinter.Toplevel.destroy(self)
                     
     def __studySync( self ):
         """
@@ -408,8 +417,8 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         return groupNo
 
         
-    #-----------------------  LISTE DES NOUVEAUX CAS D'UTILISATIONS -----------
-    def selectGroupFromSalome( self, kwType ):
+    #-----------------------  LISTE DES NOUVEAUX CAS D'UTILISATIONS -----------    
+    def selectGroupFromSalome( self, kwType = None):
         """
         Sélection d'élément(s) d'une géométrie ( sub-shape ) ou d'élément(s) de maillage ( groupe de maille) à partir de l'arbre salome
         retourne ( la liste des noms des groupes, message d'erreur )
@@ -423,10 +432,8 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
                 return names, msg
             # récupère toutes les sélections de l'utilsateur dans l'arbre Salome
             entries = salome.sg.getAllSelected()
-            print 'CS_pbruno entries->',entries
             nbEntries = len( entries )
             if nbEntries >= 1:
-                print 'CS_pbruno len( entries ) >= 1:'
 #                 jdcID = self.bureau.nb.getcurselection()
                 jdcID = self.bureau.JDCDisplay_courant                
                 for entry in entries:
@@ -444,7 +451,6 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             salome.sg.EraseAll()
         except:            
             logger.debug(50*'=')
-        print 'CS_pbruno selectGroupFromSalome names = ',names        
         return names, msg                
         
         
@@ -591,11 +597,38 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
 	   print "fin crreConfigTxt"    
         """
         pass #CS_pbruno à implémenter
+           
+           
+    def buildCabriGeom( self, name, **param ):
+        """
+        visualisation dans GEOM d'une géométrie CABRI
+        """
+        import cabri        
+        qt.QApplication.setOverrideCursor( qt.QCursor.waitCursor )
+        cabri.tetra( name, **param )
+        qt.QApplication.restoreOverrideCursor()
         
         
-    
-        
-        
+#-------------------------------------------------------------------------------------------------------
+#    Pilotage de la Visu des elements de structures
+#
+
+    def envoievisu(self,liste_commandes):
+        #try:
+        if ( 1 == 1 ):
+            atLeastOneStudy = self.__studySync()
+            if not atLeastOneStudy:
+                return
+            monDriver=visuDriver.visuDriver(studyManager.palStudy,liste_commandes)
+            monId = monDriver.analyse()
+            PALGUI_API.displaySE(monId)
+
+        else:
+        #except:
+            print "boum dans envoievisu"
+
+
+           
         
 #-------------------------------------------------------------------------------------------------------        
 #           Point d'entré lancement EFICAS

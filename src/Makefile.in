@@ -4,7 +4,7 @@
 #  Author    : Paul RASCLE, EDF
 #  Project   : SALOME
 #  Copyright : EDF 2001
-#  $Header: /home/salome/PlateFormePAL/Bases_CVS_EDF/Modules_EDF/EFICAS_SRC/src/Makefile.in,v 1.5 2005/10/19 14:05:41 salome Exp $
+#  $Header: /nepal/cvs/PAL/EFICAS_SRC/src/Makefile.in,v 1.6 2005-11-28 12:55:04 salome Exp $
 #==============================================================================
 
 # source path

@@ -1,0 +1,3 @@
+self.monObjetVisu.Start()
+self.monObjetVisu.VisuBarreRectangle( element1D  ,  PLEIN  ,  3.0  ,  3.0  ,  0  ,  0  )
+self.monObjetVisu.Visualise()

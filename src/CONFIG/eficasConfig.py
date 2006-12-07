@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
+
 import os
-
-
-
 
 # répertoire du logiciel Eficas
 eficasPath = ''
