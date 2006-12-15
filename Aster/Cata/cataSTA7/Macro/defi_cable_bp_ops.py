@@ -1,4 +1,4 @@
-#@ MODIF defi_cable_bp_ops Macro  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF defi_cable_bp_ops Macro  DATE 14/11/2006   AUTEUR VIVAN L.VIVAN 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -54,7 +54,7 @@ def defi_cable_bp_ops(self,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM,GROUP_MA_BETON,
      Ecriture de la macro DEFI_CABLE_BP
   """
   from Accas import _F
-  import aster,string
+  import aster,string, types
   ier=0
 
   # On importe les definitions des commandes a utiliser dans la macro
@@ -151,7 +151,12 @@ def defi_cable_bp_ops(self,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM,GROUP_MA_BETON,
 
         if i.has_key('GROUP_MA') == 1: 
           __CAB = i['GROUP_MA']
-          motscle2= {'CREA_GROUP_NO': [{'LONGUEUR': LONGUEUR, 'RAYON': RAYON, 'OPTION': 'TUNNEL', 'GROUP_MA': [ GROUP_MA_BETON, __CAB ], 'GROUP_MA_AXE': __CAB, 'NOM': __NOM1}]}
+
+          if type(GROUP_MA_BETON) in [types.TupleType, types.ListType]: gma = list(GROUP_MA_BETON)
+          else:                                                         gma = [ GROUP_MA_BETON ]
+          gma.insert(0, __CAB)
+
+          motscle2= {'CREA_GROUP_NO': [{'LONGUEUR': LONGUEUR, 'RAYON': RAYON, 'OPTION': 'TUNNEL', 'GROUP_MA': gma, 'GROUP_MA_AXE': __CAB, 'NOM': __NOM1}]}
         if i.has_key('MAILLE') == 1: 
           print ' '
           print '  # ---------------------------------------------------------------------------'
@@ -187,7 +192,13 @@ def defi_cable_bp_ops(self,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM,GROUP_MA_BETON,
 
         if i.has_key('GROUP_MA') == 1: 
           __CAB = i['GROUP_MA']
-          motscle2= {'CREA_GROUP_NO': [{'LONGUEUR': LONGUEUR, 'RAYON': RAYON, 'OPTION': 'TUNNEL', 'GROUP_MA': [ GROUP_MA_BETON, __CAB ], 'GROUP_MA_AXE': __CAB, 'NOM': __NOM2}]}
+
+          if type(GROUP_MA_BETON) in [types.TupleType, types.ListType]: gma = list(GROUP_MA_BETON)
+          else:                                                         gma = [ GROUP_MA_BETON ]
+          gma.insert(0, __CAB)
+
+          motscle2= {'CREA_GROUP_NO': [{'LONGUEUR': LONGUEUR, 'RAYON': RAYON, 'OPTION': 'TUNNEL', 'GROUP_MA': gma, 'GROUP_MA_AXE': __CAB, 'NOM': __NOM2}]}
+
         if i.has_key('MAILLE') == 1: 
           print ' '
           print '  # ---------------------------------------------------------------------------'

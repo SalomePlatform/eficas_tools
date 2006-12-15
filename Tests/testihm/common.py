@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from tkMessageBox import showinfo
 root=None
 jdcdisplay=None
 
@@ -179,6 +180,8 @@ def set_complexe(valeur,panel):
 
 def add_valeur_into(valeur,panel):
     label=panel.Liste_choix.dico_labels[valeur]
+    panel.Liste_choix.afficheMot(valeur)
+    root.update()
     label.event_generate("<1>")
     panel.bouton_add.invoke()
     root.update()

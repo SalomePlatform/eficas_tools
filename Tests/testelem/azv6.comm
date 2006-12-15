@@ -56,13 +56,11 @@ CARA=AFFE_CARA_ELEM(MODELE=MOD,
 # 'AFFE_MODELE', 'AFFE', 'PHENOMENE'  --> uniqueintopanel
 # 'AFFE_MODELE', 'AFFE', 'b_mecanique'--> plusieursintopanel
 
-F1=DEFI_FONCTION(NOM_PARA='DX',
-                 VALE=(5.0,3.0,
+F1=DEFI_FONCTION(NOM_PARA='DX',VALE=(5.0,3.0,
                        P4[1],P3,
                        ),);
 
-F3=DEFI_FONCTION(NOM_PARA='DRX',
-                 VALE_C=(5.0,7.0,9.0,
+F3=DEFI_FONCTION(NOM_PARA='DRX',VALE_C=(5.0,7.0,9.0,
                          9.0,8.0,7.0,
                          ),);
 # 'DEFI_FONCTION', 'VALE'             --> fonctionpanel  

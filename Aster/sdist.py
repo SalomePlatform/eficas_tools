@@ -37,6 +37,7 @@ def main():
    copyfiles('.',path_distrib,['LICENSE.TERMS','INSTALL','NEWS'])
 
    copyfiles('../Editeur',os.path.join(path_distrib,'Editeur'),['*.py','faqs.txt'])
+   copyfiles('../Traducteur',os.path.join(path_distrib,'Traducteur'),['*.py'])
    copyfiles('../Ihm',os.path.join(path_distrib,'Ihm'),['*.py'])
    copyfiles('../Extensions',os.path.join(path_distrib,'Extensions'),['*.py'])
    copyfiles('../Misc',os.path.join(path_distrib,'Misc'),['*.py'])
@@ -50,6 +51,7 @@ def main():
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
                                                             'editeur.ini',
                                                             'eficas_aster.py',
+							    'test_eficas.py',
 							    'style.py'
                                                            ])
    copyfiles('Cata/Utilitai',os.path.join(path_distrib,'Aster','Cata','Utilitai'),['*.py'])
@@ -74,7 +76,7 @@ def main():
    copyfiles(os.path.join(path_Noyau,'Noyau'),os.path.join(path_distrib,'Noyau'),['*.py'])
    copyfiles(os.path.join(path_Noyau,'Validation'),os.path.join(path_distrib,'Validation'),['*.py'])
    copyfiles(os.path.join(path_Noyau,'Accas'),os.path.join(path_distrib,'Aster'),['properties.py'])
-   copyfiles(os.path.join(path_Noyau,'Cata'),os.path.join(path_distrib,'Aster','Cata'),['*.py',])
+   copyfiles(os.path.join(path_Noyau,'Cata'),os.path.join(path_distrib,'Aster','Cata'),['__init__.py',])
    copyfiles(os.path.join(path_Noyau,'Macro'),os.path.join(path_distrib,'Aster','Cata','cataSTA8','Macro'),['*.py'])
    os.system("mv "+path_distrib+"/Aster/Cata/cata_STA8.py "+path_distrib+"/Aster/Cata/cataSTA8/cata.py")
 
@@ -83,7 +85,7 @@ def main():
    copyfiles('../Pmw',os.path.join(path_distrib,'Pmw'),['*.py'])
    copyfiles('../Pmw/Pmw_1_2',os.path.join(path_distrib,'Pmw','Pmw_1_2'),['*.py'])
    copyfiles('../Pmw/Pmw_1_2/lib',os.path.join(path_distrib,'Pmw','Pmw_1_2','lib'),['*.py','Pmw.def'])
-   copyfiles('Cata',os.path.join(path_distrib,'Aster','Cata'),['ops.py'])
+   #copyfiles('Cata',os.path.join(path_distrib,'Aster','Cata'),['ops.py'])
 
    
    tarball= maketarball('dist',nom_distrib,nom_distrib)

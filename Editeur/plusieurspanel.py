@@ -108,9 +108,9 @@ class PLUSIEURS_Panel(newSIMPPanel):
           encorevalide = -2 
           testtype=0
       else :
-          testtype = self.node.item.object.verif_type(valeur)
+          testtype,comment = self.node.item.object.verif_type(valeur)
           if not testtype :
-               commentaire ="Type de la valeur incorrecte"
+               commentaire =comment
                encorevalide=-2
                 
       if (encorevalide ==0) :

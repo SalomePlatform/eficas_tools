@@ -59,11 +59,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       Crée la page de saisie d'une liste de valeurs à priori quelconques,
       cad qui ne sont  pas à choisir dans une liste prédéfinie
       """
-      #print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
-      #print "                                                  "
-      #print "A priori on ne doit plus passer dans cette methode "
-      #print "                                                  "
-      #print "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+      #print "Methode Utilisée par Salome"
       # On récupère la bulle d'aide du panneau, l'objet, l'aide,min et max (cardinalité de la liste),
       # et la liste des valeurs déjà affectées à l'objet courant
       bulle_aide=self.get_bulle_aide()
@@ -91,7 +87,6 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       self.frame_aide = Frame(self.frame_right)
       self.frame_aide.place(relx=0.1,rely=0.8,relwidth=0.8,relheight=0.2)
       self.frame_boutons = Frame(self.frame2)
-      #self.frame_boutons.place(relx=0.35,rely=0.,relwidth=0.3,relheight=1.)
       self.frame_boutons.place(relx=0.2,rely=0.,relwidth=1,relheight=1.)
       for fram in (self.frame1,self.frame2,self.frame_right,self.frame_valeurs,
                  self.frame_boutons_fleches,self.frame_choix,self.frame_aide,self.frame_boutons):
@@ -288,7 +283,8 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
          if (valeurentree == None or valeurentree ==""):
             return None,0,""
 
-         #On tente une evaluation globale
+         #On tente une evaluation globale (ne fait pas de vérification de validité
+         #seulement une transformation de la chaine en objet équivalent)
          valeur,validite=self.node.item.eval_valeur(valeurentree)
          if valeur == valeurentree:
              #L'evaluation n'a rien donné : on a toujours la string

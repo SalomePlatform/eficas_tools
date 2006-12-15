@@ -34,8 +34,8 @@ except:
   pass
 
 #
-__version__="$Name: BR_dev_mars_06 $"
-__Id__="$Id: cata.py,v 1.1.2.1 2006/06/20 12:13:41 pnoyret Exp $"
+__version__="$Name:  $"
+__Id__="$Id: cata.py,v 1.2.4.1 2006/12/14 17:22:47 pnoyret Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
@@ -4109,15 +4109,20 @@ ASSE_MATRICE=OPER(nom="ASSE_MATRICE",op=12,sd_prod=asse_matrice_prod,
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
 # ======================================================================
-ASSE_VECT_GENE=OPER(nom="ASSE_VECT_GENE",op= 140,sd_prod=vect_asse_gene,
-                    fr="Assemblage de vecteurs de chargement en coordonnées généralisées",
-                    reentrant='n',
+# RESPONSABLE VABHHTS J.PELLET
+def asse_vecteur_prod(VECT_ELEM,**args):
+  if AsType(VECT_ELEM) == vect_elem_depl_r : return cham_no_depl_r
+  if AsType(VECT_ELEM) == vect_elem_temp_r : return cham_no_temp_r
+  if AsType(VECT_ELEM) == vect_elem_pres_r : return cham_no_pres_r
+  if AsType(VECT_ELEM) == vect_elem_pres_c : return cham_no_pres_c
+  raise AsException("type de concept resultat non prevu ")
+
+ASSE_VECTEUR=OPER(nom="ASSE_VECTEUR",op=13,sd_prod=asse_vecteur_prod,
+                  fr="Assemblage d un second membre",reentrant='n',
             UIinfo={"groupes":("Matrices/vecteurs",)},
-         NUME_DDL_GENE   =SIMP(statut='o',typ=nume_ddl_gene ),
-         CHAR_SOUS_STRUC =FACT(statut='o',max='**',
-           SOUS_STRUC      =SIMP(statut='o',typ='TXM' ),
-           VECT_ASSE       =SIMP(statut='o',typ=cham_no_depl_r ),
-         ),
+         VECT_ELEM       =SIMP(statut='o',typ=vect_elem,max='**'),
+         NUME_DDL        =SIMP(statut='o',typ=nume_ddl_sdaster ),
+         INFO            =SIMP(statut='f',typ='I',into=(1,2,) ),
 )  ;
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -4137,20 +4142,15 @@ ASSE_VECT_GENE=OPER(nom="ASSE_VECT_GENE",op= 140,sd_prod=vect_asse_gene,
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
 # ======================================================================
-# RESPONSABLE VABHHTS J.PELLET
-def asse_vecteur_prod(VECT_ELEM,**args):
-  if AsType(VECT_ELEM) == vect_elem_depl_r : return cham_no_depl_r
-  if AsType(VECT_ELEM) == vect_elem_temp_r : return cham_no_temp_r
-  if AsType(VECT_ELEM) == vect_elem_pres_r : return cham_no_pres_r
-  if AsType(VECT_ELEM) == vect_elem_pres_c : return cham_no_pres_c
-  raise AsException("type de concept resultat non prevu ")
-
-ASSE_VECTEUR=OPER(nom="ASSE_VECTEUR",op=13,sd_prod=asse_vecteur_prod,
-                  fr="Assemblage d un second membre",reentrant='n',
+ASSE_VECT_GENE=OPER(nom="ASSE_VECT_GENE",op= 140,sd_prod=vect_asse_gene,
+                    fr="Assemblage de vecteurs de chargement en coordonnées généralisées",
+                    reentrant='n',
             UIinfo={"groupes":("Matrices/vecteurs",)},
-         VECT_ELEM       =SIMP(statut='o',typ=vect_elem,max='**'),
-         NUME_DDL        =SIMP(statut='o',typ=nume_ddl_sdaster ),
-         INFO            =SIMP(statut='f',typ='I',into=(1,2,) ),
+         NUME_DDL_GENE   =SIMP(statut='o',typ=nume_ddl_gene ),
+         CHAR_SOUS_STRUC =FACT(statut='o',max='**',
+           SOUS_STRUC      =SIMP(statut='o',typ='TXM' ),
+           VECT_ASSE       =SIMP(statut='o',typ=cham_no_depl_r ),
+         ),
 )  ;
 #& MODIF COMMANDE  DATE 30/06/2004   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -5054,7 +5054,7 @@ CALC_FONC_INTERP=OPER(nom="CALC_FONC_INTERP",op= 134,sd_prod=calc_fonc_interp_pr
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ) ),
 )  ;
-#& MODIF COMMANDE  DATE 10/10/2005   AUTEUR MCOURTOI M.COURTOIS 
+#& MODIF COMMANDE  DATE 09/11/2006   AUTEUR CIBHHLV L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -5188,7 +5188,7 @@ CALC_FONCTION=OPER(nom="CALC_FONCTION",op=  91,sd_prod=calc_fonction_prod
            AMOR_REDUIT     =SIMP(statut='f',typ='R',max='**'),
            LIST_FREQ       =SIMP(statut='f',typ=listr8_sdaster ),
            FREQ            =SIMP(statut='f',typ='R',max='**'),
-           NORME           =SIMP(statut='o',typ='R',defaut= 9.81E+0,fr="Valeur de la norme du spectre d oscillateur" ),
+           NORME           =SIMP(statut='o',typ='R',fr="Valeur de la norme du spectre d oscillateur" ),
            NATURE          =SIMP(statut='f',typ='TXM',defaut="ACCE",into=("DEPL","VITE","ACCE") ),
            NATURE_FONC     =SIMP(statut='f',typ='TXM',defaut="ACCE",into=("DEPL","VITE","ACCE") ),
          ),
@@ -8143,6 +8143,42 @@ regles=(UN_PARMI('TOUT','GROUP_MA','MAILLE','INTERSEC','UNION','DIFFE','OPTION')
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
 # ======================================================================
+DEFI_INTERF_DYNA=OPER(nom="DEFI_INTERF_DYNA",op=  98,sd_prod=interf_dyna_clas,
+                      reentrant='n',
+            UIinfo={"groupes":("Matrices/vecteurs",)},
+         NUME_DDL        =SIMP(statut='o',typ=nume_ddl_sdaster ),
+         INTERFACE       =FACT(statut='o',max='**',
+           regles=(ENSEMBLE('NOM','TYPE'),
+#  erreur doc U sur la condition qui suit
+                   UN_PARMI('NOEUD','GROUP_NO'),),
+           NOM             =SIMP(statut='f',typ='TXM' ),
+           TYPE            =SIMP(statut='f',typ='TXM',into=("MNEAL","CRAIGB","CB_HARMO","AUCUN") ),
+           NOEUD           =SIMP(statut='f',typ=no,max='**'),
+           GROUP_NO        =SIMP(statut='f',typ=grno,max='**'),
+           DDL_ACTIF       =SIMP(statut='f',typ='TXM',max='**'),
+           MASQUE          =SIMP(statut='f',typ='TXM',max='**'),
+         ),
+         FREQ            =SIMP(statut='f',typ='R',defaut= 1.),
+         INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
+)  ;
+#& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
+# (AT YOUR OPTION) ANY LATER VERSION.                                 
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+# ======================================================================
 DEFI_INTE_SPEC=OPER(nom="DEFI_INTE_SPEC",op= 115,sd_prod=tabl_intsp,
                     reentrant='n',
             UIinfo={"groupes":("Fonction",)},
@@ -8184,42 +8220,6 @@ DEFI_INTE_SPEC=OPER(nom="DEFI_INTE_SPEC",op= 115,sd_prod=tabl_intsp,
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),               
-)  ;
-#& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
-# (AT YOUR OPTION) ANY LATER VERSION.                                 
-#
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
-#
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
-# ======================================================================
-DEFI_INTERF_DYNA=OPER(nom="DEFI_INTERF_DYNA",op=  98,sd_prod=interf_dyna_clas,
-                      reentrant='n',
-            UIinfo={"groupes":("Matrices/vecteurs",)},
-         NUME_DDL        =SIMP(statut='o',typ=nume_ddl_sdaster ),
-         INTERFACE       =FACT(statut='o',max='**',
-           regles=(ENSEMBLE('NOM','TYPE'),
-#  erreur doc U sur la condition qui suit
-                   UN_PARMI('NOEUD','GROUP_NO'),),
-           NOM             =SIMP(statut='f',typ='TXM' ),
-           TYPE            =SIMP(statut='f',typ='TXM',into=("MNEAL","CRAIGB","CB_HARMO","AUCUN") ),
-           NOEUD           =SIMP(statut='f',typ=no,max='**'),
-           GROUP_NO        =SIMP(statut='f',typ=grno,max='**'),
-           DDL_ACTIF       =SIMP(statut='f',typ='TXM',max='**'),
-           MASQUE          =SIMP(statut='f',typ='TXM',max='**'),
-         ),
-         FREQ            =SIMP(statut='f',typ='R',defaut= 1.),
-         INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -15247,7 +15247,7 @@ LIRE_TABLE=MACRO(nom="LIRE_TABLE",op=lire_table_ops,sd_prod=lire_table_prod,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          )  ;
 
-#& MODIF COMMANDE  DATE 03/11/2004   AUTEUR MCOURTOI M.COURTOIS 
+#& MODIF COMMANDE  DATE 05/12/2006   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -15296,8 +15296,8 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 #
 # 2. Version de HOMARD
 #
-         VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V7_1",
-                               into=("V7_1", "V7_N", "V7_N_PERSO"),
+         VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V7_9",
+                               into=("V7_9", "V7_N", "V7_N_PERSO"),
                            fr="Version de HOMARD",
                            ang="HOMARD release"),
 #
@@ -16687,76 +16687,6 @@ MACR_ELEM_STAT=OPER(nom="MACR_ELEM_STAT",op=86,sd_prod=macr_elem_stat,reentrant=
            INST            =SIMP(statut='f',typ='R',defaut=0.E+0),
          ),
 )  ;
-#& MODIF COMMANDE  DATE 07/10/2004   AUTEUR GNICOLAS G.NICOLAS 
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
-# ======================================================================
-# RESPONSABLE GNICOLAS G.NICOLAS
-
-from Macro.macr_fiab_impr_ops import macr_fiab_impr_ops
-
-MACR_FIAB_IMPR=MACRO(nom="MACR_FIAB_IMPR",op=macr_fiab_impr_ops,
-                     docu="U7.04.41",
-                     fr="Imprimer les valeurs à transmettre au logiciel de fiabilité.",
-                     ang="Print values for the fiability software",
-#
-# 1. Le niveau d'information
-#
-   INFO           = SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
-#
-# 2. Impression de la valeur de la cible
-#
-# 2.1. ==> La table contenant la valeur à imprimer
-#
-   TABLE_CIBLE = SIMP(statut='o',typ=table_sdaster,
-                 fr="Table contenant la valeur cible.",
-                 ang="Table which includes the target value."),
-#
-# 2.2. ==> Le nom du paramètre associé à la valeur cible dans cette table
-#
-   NOM_PARA_CIBLE = SIMP(statut='o',typ='TXM',
-                    fr="Nom du paramètre associé à la valeur cible.",
-                    ang="Name of the parameter connected to the target value."),
-#
-# 3. Impressions des valeurs des éventuels gradients
-#
-   GRADIENTS = FACT(statut='f',min=1,max='**',
-#
-# 3.1. ==> La table contenant la valeur à imprimer
-#
-       TABLE = SIMP(statut='o',typ=table_sdaster,
-                    fr="Table contenant le gradient.",
-                    ang="Table which includes the gradient."),
-#
-# 3.2. ==> Le paramètre sensible
-#
-       PARA_SENSI = SIMP(statut='o',typ=(para_sensi,theta_geom),
-                       fr="Paramètre sensible associé au gradient.",
-                       ang="Sensitivity parameter connected to the gradient."),
-#
-# 3.3. ==> Le nom du paramètre associé au gradient dans cette table
-#
-       NOM_PARA = SIMP(statut='o',typ='TXM',
-                       fr="Nom du paramètre associé au gradient.",
-                       ang="Name of the parameter connected to the gradient."),
-#
-         ),
-#
-);
 #& MODIF COMMANDE  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -17136,7 +17066,77 @@ MACR_FIABILITE = MACRO ( nom="MACR_FIABILITE",op=macr_fiabilite_ops,
    ),
 #
 );
-#& MODIF COMMANDE  DATE 03/11/2004   AUTEUR MCOURTOI M.COURTOIS 
+#& MODIF COMMANDE  DATE 07/10/2004   AUTEUR GNICOLAS G.NICOLAS 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE GNICOLAS G.NICOLAS
+
+from Macro.macr_fiab_impr_ops import macr_fiab_impr_ops
+
+MACR_FIAB_IMPR=MACRO(nom="MACR_FIAB_IMPR",op=macr_fiab_impr_ops,
+                     docu="U7.04.41",
+                     fr="Imprimer les valeurs à transmettre au logiciel de fiabilité.",
+                     ang="Print values for the fiability software",
+#
+# 1. Le niveau d'information
+#
+   INFO           = SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
+#
+# 2. Impression de la valeur de la cible
+#
+# 2.1. ==> La table contenant la valeur à imprimer
+#
+   TABLE_CIBLE = SIMP(statut='o',typ=table_sdaster,
+                 fr="Table contenant la valeur cible.",
+                 ang="Table which includes the target value."),
+#
+# 2.2. ==> Le nom du paramètre associé à la valeur cible dans cette table
+#
+   NOM_PARA_CIBLE = SIMP(statut='o',typ='TXM',
+                    fr="Nom du paramètre associé à la valeur cible.",
+                    ang="Name of the parameter connected to the target value."),
+#
+# 3. Impressions des valeurs des éventuels gradients
+#
+   GRADIENTS = FACT(statut='f',min=1,max='**',
+#
+# 3.1. ==> La table contenant la valeur à imprimer
+#
+       TABLE = SIMP(statut='o',typ=table_sdaster,
+                    fr="Table contenant le gradient.",
+                    ang="Table which includes the gradient."),
+#
+# 3.2. ==> Le paramètre sensible
+#
+       PARA_SENSI = SIMP(statut='o',typ=(para_sensi,theta_geom),
+                       fr="Paramètre sensible associé au gradient.",
+                       ang="Sensitivity parameter connected to the gradient."),
+#
+# 3.3. ==> Le nom du paramètre associé au gradient dans cette table
+#
+       NOM_PARA = SIMP(statut='o',typ='TXM',
+                       fr="Nom du paramètre associé au gradient.",
+                       ang="Name of the parameter connected to the gradient."),
+#
+         ),
+#
+);
+#& MODIF COMMANDE  DATE 05/12/2006   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17169,8 +17169,8 @@ MACR_INFO_MAIL=MACRO(nom="MACR_INFO_MAIL",op=macr_adap_mail_ops,
 #
 # 2. Version de HOMARD
 #
-         VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V7_1",
-                               into=("V7_1", "V7_N", "V7_N_PERSO"),
+         VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V7_9",
+                               into=("V7_9", "V7_N", "V7_N_PERSO"),
                            fr="Version de HOMARD",
                            ang="HOMARD release"),
 #
@@ -17287,47 +17287,6 @@ MACR_LIGN_COUPE=MACRO(nom="MACR_LIGN_COUPE",op=macr_lign_coupe_ops,sd_prod=macr_
            COOR_EXTR       =SIMP(statut='o',typ='R',min=2,max=3),  
            TABLE           =SIMP(statut='o',typ=(table_sdaster,CO)), 
          ),
-)  ;
-#& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
-# ======================================================================
-   
-from Macro.macr_recal_ops import macr_recal_ops
-
-def macr_recal_prod(self,**args ):
-  return listr8_sdaster
-
-MACR_RECAL = MACRO(nom="MACR_RECAL",op=macr_recal_ops,
-            UIinfo={"groupes":("Résultats et champs",)},
-                      sd_prod=macr_recal_prod,
-                      fr="Réalise le recalage de modèles Aster",
-         UNITE_ESCL      =SIMP(statut='o',typ='I'),
-         RESU_EXP        =SIMP(statut='o',typ=assd,max='**'),
-         POIDS           =SIMP(statut='f',typ=assd,max='**'),
-         RESU_CALC       =SIMP(statut='o',typ=assd,max='**'),
-         LIST_PARA       =SIMP(statut='o',typ=assd,max='**'),
-         ITER_MAXI       =SIMP(statut='f',typ='I',defaut=10),
-         RESI_GLOB_RELA  =SIMP(statut='f',typ='R',defaut=1.E-3),
-         UNITE_RESU      =SIMP(statut='f',typ='I',defaut=91),
-         PARA_DIFF_FINI  =SIMP(statut='f',typ='R',defaut=0.001),
-         GRAPHIQUE       =FACT(statut='d',
-           UNITE           =SIMP(statut='f',typ='I',defaut=90),
-           INTERACTIF      =SIMP(statut='f',typ='TXM',defaut='NON',into=("OUI","NON")),)
 )  ;
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -17784,6 +17743,47 @@ MACRO_PROJ_BASE=MACRO(nom="MACRO_PROJ_BASE",op=macro_proj_base_ops,
            VECT_ASSE_GENE  =SIMP(statut='f',typ=vect_asse_gene),
          ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
+)  ;
+#& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+   
+from Macro.macr_recal_ops import macr_recal_ops
+
+def macr_recal_prod(self,**args ):
+  return listr8_sdaster
+
+MACR_RECAL = MACRO(nom="MACR_RECAL",op=macr_recal_ops,
+            UIinfo={"groupes":("Résultats et champs",)},
+                      sd_prod=macr_recal_prod,
+                      fr="Réalise le recalage de modèles Aster",
+         UNITE_ESCL      =SIMP(statut='o',typ='I'),
+         RESU_EXP        =SIMP(statut='o',typ=assd,max='**'),
+         POIDS           =SIMP(statut='f',typ=assd,max='**'),
+         RESU_CALC       =SIMP(statut='o',typ=assd,max='**'),
+         LIST_PARA       =SIMP(statut='o',typ=assd,max='**'),
+         ITER_MAXI       =SIMP(statut='f',typ='I',defaut=10),
+         RESI_GLOB_RELA  =SIMP(statut='f',typ='R',defaut=1.E-3),
+         UNITE_RESU      =SIMP(statut='f',typ='I',defaut=91),
+         PARA_DIFF_FINI  =SIMP(statut='f',typ='R',defaut=0.001),
+         GRAPHIQUE       =FACT(statut='d',
+           UNITE           =SIMP(statut='f',typ='I',defaut=90),
+           INTERACTIF      =SIMP(statut='f',typ='TXM',defaut='NON',into=("OUI","NON")),)
 )  ;
 #& MODIF COMMANDE  DATE 10/06/2004   AUTEUR REZETTE C.REZETTE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION

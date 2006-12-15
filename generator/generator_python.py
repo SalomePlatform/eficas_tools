@@ -112,6 +112,7 @@ class PythonGenerator:
          place (dépend des gouts !!!)
       """
       # ATTENTION a l'ordre des tests : il peut avoir de l'importance (héritage)
+      premier=1
       if isinstance(obj,Accas.PROC_ETAPE):
          return self.generPROC_ETAPE(obj)
       # Attention doit etre placé avant MACRO (raison : héritage)
@@ -134,7 +135,7 @@ class PythonGenerator:
       elif isinstance(obj,Accas.ETAPE_NIVEAU):
          return self.generETAPE_NIVEAU(obj)
       elif isinstance(obj,Accas.COMMENTAIRE):
-         return self.generCOMMENTAIRE(obj)
+         return self.generCOMMENTAIRE(obj,premier)
       # Attention doit etre placé avant PARAMETRE (raison : héritage)
       elif isinstance(obj,Accas.PARAMETRE_EVAL):
          return self.generPARAMETRE_EVAL(obj)
@@ -154,6 +155,7 @@ class PythonGenerator:
          return self.generFormula(obj)
       else:
          raise "Type d'objet non prévu",obj
+      premier=0
 
    def generJDC(self,obj):
       """
@@ -208,7 +210,7 @@ class PythonGenerator:
       """
       return 'EVAL("""'+ obj.valeur +'""")'
 
-   def generCOMMENTAIRE(self,obj):
+   def generCOMMENTAIRE(self,obj,premier=0):
       """
          Cette méthode convertit un COMMENTAIRE
          en une liste de chaines de caractères à la syntaxe python
@@ -220,11 +222,17 @@ class PythonGenerator:
       sans_saut = re.sub("\n$","",obj.valeur)
       l_lignes = string.split(sans_saut,'\n')
       txt=''
+      i=1
       for ligne in l_lignes:
         txt = txt + '#'+ligne+'\n'
 
       # suppression du dernier saut de ligne
       txt = re.sub("\n$","",txt)
+      # on ajoute un saut de ligne avant
+      pattern=re.compile(" ?\#")
+      m=pattern.match(txt)
+      if m and not premier:
+         txt="\n"+txt
       return txt
 
    def generPARAMETRE_EVAL(self,obj):
@@ -241,7 +249,8 @@ class PythonGenerator:
        return repr(obj) 
 
    def generFormula(self,obj):
-       return repr(obj) 
+       #return repr(obj) 
+       return str(obj) 
 
    def generPARAMETRE(self,obj):
       """
@@ -476,13 +485,10 @@ class PythonGenerator:
          # Pour un flottant on utilise str
          # ou la notation scientifique
          s = str(valeur)
-         try :
-            clefobj=obj.GetNomConcept()
-            if self.appli.dict_reels.has_key(clefobj):
-               if self.appli.dict_reels[clefobj].has_key(valeur):
-                  s=self.appli.dict_reels[clefobj][valeur]
-         except:
-            pass
+         clefobj=etape.get_sdname()
+         if self.appli.dict_reels.has_key(clefobj):
+           if self.appli.dict_reels[clefobj].has_key(valeur):
+             s=self.appli.dict_reels[clefobj][valeur]
       elif type(valeur) == types.StringType :
          if valeur.find('\n') == -1:
             # pas de retour chariot, on utilise repr

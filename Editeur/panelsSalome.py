@@ -94,30 +94,29 @@ class SALOME_PLUSIEURS_BASE_Panel(PLUSIEURS_BASE_Panel):
 
   def __init__(self,parent,panneau,node):
       PLUSIEURS_BASE_Panel.__init__( self, parent, panneau, node )
-      self.selected_valeur = None
+      #self.selected_valeur = None
       
   def add_valeur_plusieurs_base(self,name=None):
       try: 
         valeur,validite,commentaire=self.get_valeur()
-        #print 'add_valeur_plusieurs_base', name
-        #print 'valeur = %s, validite = %s,commentaire = %s'%( valeur,validite,commentaire )            
         if not valeur: # sélection dans salome        
-            #print 'CS_pbruno selection SALOME'
             strSelection = ''
             
-            selection, msg = self.parent.appli.selectGroupFromSalome()
-            
-            #print 'CS_pbruno selection SALOME selection ->',selection
-            #print 'CS_pbruno selection SALOME msg ->',msg
-            
+            genea=self.node.item.get_genealogie()
+            kwType = None
+            for e in genea:
+                if "GROUP_NO" in e:
+                    kwType = "GROUP_NO"
+                if "GROUP_MA" in e:
+                    kwType = "GROUP_MA"            
+                
+            selection, msg = self.parent.appli.selectGroupFromSalome(kwType)
             if selection:
                 for oneSelection in selection:
                     strSelection +=str( oneSelection )
                     strSelection +=','
                             
                 strSelection = strSelection.rstrip(',')
-                #print 'CS_pbruno selection SALOME strSelection ->',strSelection
-                
                 self.display_valeur( strSelection )                
                     
         PLUSIEURS_BASE_Panel.add_valeur_plusieurs_base( self, name )
@@ -191,9 +190,10 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
               else:
                  showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
           if FileName != '' :
-              self.entry2.insert(0,FileName)
               self.entry.delete(0,END)
+              self.entry2.delete(0,END)
               self.entry.insert(0,FileName)
+              self.entry2.insert(0,FileName)
               self.valid_valeur()
 
 
@@ -215,113 +215,56 @@ class SALOME_UNIQUE_BASE_Panel(UNIQUE_BASE_Panel):
                 EntryName=AtName.Value()
 
       if EntryName != '':
-          self.entry2.insert(0,EntryName)
           self.entry.delete(0,END)
+          self.entry2.delete(0,END)
           self.entry.insert(0,EntryName)
+          self.entry2.insert(0,EntryName)
           self.valid_valeur()
 
   def SALOME_DONNEES_HOMARD_FICHIER_MED_MAILLAGE_NP1(self):
       self.SALOME_DONNEES_HOMARD_FICHIER_MED_MAILLAGE_N()
 
-
-#  def SALOME_LIRE_MAILLAGE_UNITE(self):
-
-#      unite=self.node.item.get_valeur()
-#      entrychaine=salome.sg.getAllSelected()
-#      if entrychaine != '':
-#          self.entry2.delete(0,END)
-
-#          try:
-#              SO = salome.myStudy.FindObjectID(entrychaine[0])
-#          except:
-#              boo = 0
-#              SO = None
-
-#          if SO != None:
-#              myBuilder = salome.myStudy.NewBuilder()
-#              boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeComment")
-#
-#          FileName=''
-#          if SO != None:
-#              myBuilder = salome.myStudy.NewBuilder()
-#              boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeFileType")
-#              if boo:
-#                 boo=0
-#                 val=FileAttr.Value()
-#                 if (val !="FICHIERMED"):
-#                     showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
-#                 else:
-#                     boo,FileAttr = myBuilder.FindAttribute(SO,"AttributeExternalFileDef")
-#          if boo :
-#              FileName=FileAttr.Value()
-#          else:
-#              showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
-
-#          print "FileName = " , FileName
-#          if FileName != '' :
-#              self.entry2.insert(0,FileName)
-#              typefic='D'
-#              SALOME_UNIQUE_BASE_Panel.dict_fichier_unite[unite]=typefic+FileName
-#          else :
-#              print "il faut afficher une Fenetre d impossibilit\xe9"
-#              showerror("Pas de Fichier MED","Cet Objet n a pas de fichier MED Associ\xe9")
+  def SALOME_DEFI_GROUP_CREA_GROUP_MA_GROUP_MA(self):
+      #try: 
+      if ( 1 == 1 ) :
+        selection, msg = self.parent.appli.selectGroupFromSalome()
+        if selection:
+           strSelection =str( selection )
+           UNIQUE_BASE_Panel.valid_valeur(self,strSelection)
+        if msg:
+            self.parent.appli.affiche_infos(msg)
+        self.erase_valeur()
+      #except:
+      else :
+        print ' erreur  '
+        
 
   def redistribue_selon_simp(self):
       genea = self.node.item.get_genealogie()
       commande="SALOME"
       for i in range(0,len( genea )) :
         commande=commande+"_"+ genea[i]
-      (SALOME_UNIQUE_BASE_Panel.__dict__[commande])(self)
+      # --------------------------------------------------------------
+      # on verifie que la methode n est pas particularise
+      # sinon on appelle SALOME_DEFI_GROUP_CREA_GROUP_MA_GROUP_MA qui
+      # sert comme methode par defaut 
+      # --------------------------------------------------------------
+      try :
+        SALOME_UNIQUE_BASE_Panel.__dict__[commande](self)
+      except :
+         SALOME_UNIQUE_BASE_Panel.SALOME_DEFI_GROUP_CREA_GROUP_MA_GROUP_MA(self)
+
 
 
   def makeValeurPage(self,page):
       """
-      Génère la page de saisie de la valeur du mot-clé simple courant qui doit être de type
-      de base cad entier, réel, string ou complexe
-      """
-      # Récupération de l'aide associée au panneau, de l'aide destinée à l'utilisateur,
-      # et de la liste des SD du bon type (constituant la liste des choix)
-      bulle_aide=self.get_bulle_aide()
-      aide=self.get_aide()
-      aide= justify_text(texte=aide)
-      liste_noms_sd = self.node.item.get_sd_avant_du_bon_type()
-      # Remplissage du panneau
-      self.frame_valeur = Frame(page)
-      self.frame_valeur.pack(fill='both',expand=1)
-      self.frame_valeur.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
-      self.frame_valeur.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
-      self.label = Label(self.frame_valeur,text='Valeur :')
-      self.label.place(relx=0.1,rely=0.5)
-      self.entry = Entry(self.frame_valeur,relief='sunken')
-      self.entry.place(relx=0.28,rely=0.5,relwidth=0.6)
-      self.entry.bind("<Return>",lambda e,c=self.valid_valeur:c())
-      self.entry.bind("<KP_Enter>",lambda e,c=self.valid_valeur:c())
-
-      # PN : Ajout d'un bouton pour selectionner  à partir de Salome  
+      Crée la page de saisie d'une valeur à priori quelconque,
+      cad qui ne sont  pas à choisir dans une liste prédéfinie
+      Ajout d'un bouton pour selectionner  à partir de Salome  
+      """      
+      UNIQUE_BASE_Panel.makeValeurPage(self,page)
       self.b = Button(self.frame_valeur,text='Relier selection',command=self.redistribue_selon_simp)
-      self.b.place(relx=0.05,rely=0.1)
-      unite=self.node.item.get_valeur()
-      self.entry2 = Entry(self.frame_valeur,relief='sunken')
-      self.entry2.place(relx=0.3,rely=0.1)
-      self.entry2.configure(width = 250)
-
-      if SALOME_UNIQUE_BASE_Panel.dict_fichier_unite.has_key(unite):
-         associe=SALOME_UNIQUE_BASE_Panel.dict_fichier_unite[unite][1:]
-         self.entry2.delete(0,END)
-         if associe != "" :
-             self.entry2.insert(0,associe)
-      else:
-         self.entry2.delete(0,END)
-
-      # aide associée au panneau
-      self.frame_valeur.update()
-      self.aide = Label(self.frame_valeur,
-                        text = aide,
-                        wraplength=int(self.frame_valeur.winfo_width()*0.8),
-                        justify='center')
-      self.aide.place(relx=0.5,rely=0.7,anchor='n')
-      # affichage de la valeur du MCS
-      self.display_valeur()
+      self.b.place(relx=0.28,rely=0.4,relwidth=0.4)
 
 #---------------------------------------------------------------------------------------
 # Correspondances entre les classes eficas et les classes salome_eficas 

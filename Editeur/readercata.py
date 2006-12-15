@@ -174,6 +174,11 @@ class READERCATA:
               self.cata = (self.cata,)
       else:
           self.cata = (self.cata,)
+      titreSuite=" avec le catalogue " + os.path.basename(self.fic_cata)
+      titre=self.appli.titre+titreSuite
+      if self.appli.top:
+        self.appli.top.title(titre)
+      self.appli.titre=titre
 
    def import_cata(self,cata):
       """ 

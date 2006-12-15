@@ -35,7 +35,7 @@ class MENUBAR:
    try:
       from prefs import labels
    except:
-      labels= ('Fichier','Edition','Jeu de commandes','Catalogue','Browsers','Options','Aide')
+      labels= ('Fichier','Edition','Jeu de commandes','Catalogue','Options','Aide','Traducteur')
 
    def init(self):
       self.menudict={}

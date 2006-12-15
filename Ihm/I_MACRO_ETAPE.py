@@ -26,9 +26,13 @@ import traceback,types,string
 
 # Modules Eficas
 import I_ETAPE
+import I_ENTITE
+import I_OBJECT
 import Noyau
 from Noyau.N_ASSD import ASSD
+from Noyau import N__F
 import convert
+from Extensions import param2
 
 # import rajoutés suite à l'ajout de Build_sd --> à résorber
 import Noyau, Validation.V_MACRO_ETAPE
@@ -41,6 +45,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def __init__(self):
       self.typret=None
+      #indique si le jeu de commande inclus a pu etre analysé par convert
+      #pour etre editable (0=NON, 1=OUI)
+      self.text_converted=1
+      self.text_error=""
       self.recorded_units={}
 
   def get_sdprods(self,nom_sd):
@@ -99,13 +107,22 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
        # Il faut convertir le texte inclus en fonction du format
        # sauf les INCLUDE_MATERIAU
+       self.text_converted=0
+       self.text_error=""
        if self.nom != "INCLUDE_MATERIAU":
           format=self.jdc.appli.format_fichier.get()
           if convert.plugins.has_key(format):
               # Le convertisseur existe on l'utilise
               p=convert.plugins[format]()
               p.text=text
-              text=p.convert('exec',self)
+              text=p.convert('exec',self.jdc.appli)
+              #Si le fichier ne peut pas etre converti, le cr n'est pas vide
+              #et le texte est retourné tel que
+              if not p.cr.estvide(): 
+                  self.text_converted=0
+                  self.text_error=str(p.cr)
+              else:
+                  self.text_converted=1
 
        j=self.JdC_aux( procedure=text, nom=fichier,
                                 appli=self.jdc.appli,
@@ -132,6 +149,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # Erreurs dans l'INCLUDE. On garde la memoire du fichier 
        # mais on n'insere pas les concepts
        # On retablit l'etape courante step
+       #print j.cr
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(step)
        raise Exception("Impossible de relire le fichier\n"+str(j.cr))
@@ -140,6 +158,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # L'INCLUDE n'est pas valide.
        # on produit un rapport d'erreurs
        cr=j.report()
+       #print cr
        # On retablit l'etape courante step
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(step)
@@ -157,6 +176,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        CONTEXT.set_current_step(step)
        raise
 
+    # Si on est arrivé ici, le texte du fichier inclus (INCLUDE, POURSUITE, ...)
+    # est valide et insérable dans le JDC
+
     # On remplit le dictionnaire des concepts produits inclus
     # en retirant les concepts présents dans le  contexte initial
     # On ajoute egalement le concept produit dans le sds_dict du parent
@@ -168,6 +190,20 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
            self.g_context[k]=v
            self.parent.sds_dict[k]=v
 
+    #Ce traitement n'est réalisé que dans les cas suivants:
+    #     - si convert n'a pas pu convertir le jeu de commandes
+    #     - et ce n'est pas un INCLUDE_MATERIAU
+    #On collecte les variables Python qui ne sont pas dans le contexte initial
+    #et dans le contexte validé et on en fait un pseudo-parametre (Variable)
+    if self.text_converted == 0 and self.nom != "INCLUDE_MATERIAU":
+        for k,v in j.g_context.items():
+            if k in context_ini:continue
+            if k in j_context:continue
+            if isinstance(v,ASSD):continue
+            if isinstance(v,I_ENTITE.ENTITE):continue
+            if isinstance(v,I_OBJECT.OBJECT):continue
+            if callable(v):continue
+            self.g_context[k]=param2.Variable(k,v)
 
     # On recupere le contexte courant
     self.current_context=j.current_context
@@ -788,7 +824,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     """
         Cette méthode sert à créer un contexte pour INCLUDE_MATERIAU
         en interprétant un texte source Python
-        Elle est appelee par la fonction sd_prd d'INCLUDE_MATERIAU
+        Elle est appelee par la fonction sd_prod d'INCLUDE_MATERIAU
     """
     #print "make_contexte",fichier
     # On supprime l'attribut mat qui bloque l'evaluation du source de l'INCLUDE_MATERIAU
@@ -807,14 +843,22 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          import Extensions.jdc_include
          self.JdC_aux=Extensions.jdc_include.JdC_include
        except:
-         traceback.print_exc()
          raise
        try:
           self.make_contexte_include(self.fichier_ini ,self.fichier_text)
+          if not self.g_context.has_key(self.nom_mater):
+             #Pour permettre de lire un jeu de commandes avec des INCLUDE_MATERIAU errones
+             self.g_context[self.nom_mater]=None
+             if self.parent: self.parent.g_context[self.nom_mater]=None
        except:
           l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
           self.fichier_err = string.join(l)
           self.g_context={}
+          #Pour permettre de lire un jeu de commandes avec des INCLUDE_MATERIAU errones
+          if self.parent:
+              self.parent.g_context[self.nom_mater]=None
+          self.g_context[self.nom_mater]=None
+          #-------------
           self.etapes=[]
           self.jdc_aux=None
           self.contexte_fichier_init={}

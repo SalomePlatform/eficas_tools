@@ -539,6 +539,7 @@ class MCSIMP(I_OBJECT.OBJECT):
           if self.definition.validators:
               valid=self.definition.validators.verif_item(item)
       except ValError,e:
+          #traceback.print_exc()
           valid=0
       return valid
 
@@ -547,10 +548,18 @@ class MCSIMP(I_OBJECT.OBJECT):
       try:
           #on verifie le type
           self.typeProto.adapt(item)
+          #on verifie les choix possibles
+          self.intoProto.adapt(item)
+          #on ne verifie pas la cardinalité mais on verifie les validateurs
+          if self.definition.validators:
+              valid=self.definition.validators.verif_item(item)
+          comment=""
           valid=1
       except ValError,e:
+          #traceback.print_exc()
+          comment=str(e)
           valid=0
-      return valid
+      return valid,comment
 
 #--------------------------------------------------------------------------------
  

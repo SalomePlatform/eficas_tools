@@ -34,11 +34,13 @@ import prefs
 import convert
 import generator
 import AIDE
+import os
 from jdcdisplay import JDCDISPLAY
 from utils import extension_fichier,stripPath,save_in_file
-from widgets import Fenetre,Ask_Format_Fichier
+from widgets import Fenetre,Ask_Format_Fichier,FenetreSurLigneWarning
 from fenetre_mc_inconnus import fenetre_mc_inconnus
 from Ihm import CONNECTOR
+from Traducteur import traduitV7V8 
 
 import comploader
 
@@ -68,6 +70,10 @@ class BUREAU:
                                    ('Paramètres Eficas','affichage_fichier_ini'),
                                    ('Mots-clés inconnus','mc_inconnus'),
                                   ]
+              ),
+              ('Traduction',[
+                             ('Traduction v7 en v8','TraduitFichier','<Control-t>','Ctrl+T')
+                            ]
               ),
               ('Aide',[
                         ('Aide EFICAS','aideEFICAS'),
@@ -293,6 +299,7 @@ class BUREAU:
       """
       if mode == 'JDC':
           if not hasattr(self,'JDC') : return
+          if self.JDC == None : return
           titre="rapport de validation du jeu de commandes courant"
           cr = self.JDC.report()
           #self.update_jdc_courant()
@@ -723,4 +730,36 @@ class BUREAU:
 
    def update_jdc_courant(self):
       self.JDCDisplay_courant.update()
+
+   def TraduitFichier(self):
+      directory = self.appli.CONFIGURATION.rep_user
+      FichieraTraduire = askopenfilename(title="Nom du  Fichier à Traduire",
+                                 defaultextension=".comm",
+                                 initialdir = directory 
+                                 )
+      if (FichieraTraduire == "" or FichieraTraduire == () ) : return
+      i=FichieraTraduire.rfind(".")
+      Feuille=FichieraTraduire[0:i]
+      FichierTraduit=Feuille+"v8.comm"
+      os.system("rm -rf /tmp/convert.log")
+      Pmw.showbusycursor()
+      traduitV7V8.traduc(FichieraTraduire,FichierTraduit)
+      Pmw.hidebusycursor()
+      Entete="Fichier Traduit : "+FichierTraduit +"\n\n"
+      titre = "conversion de "+ FichieraTraduire
+
+      if  os.stat("/tmp/convert.log")[6] != 0L :
+          f=open('/tmp/convert.log')
+          texte_cr= f.read()
+          f.close()
+      else :
+          texte_cr = Entete  + "Pas d information de conversion \n"
+          commande="diff "+FichieraTraduire+" "+FichierTraduit+" >/dev/null"
+          try :
+            if os.system(commande) == 0 :
+               texte_cr = texte_cr + "Pas de difference entre le fichier V7 et le fichier traduit"
+          except :
+               pass
+
+      cptrendu = FenetreSurLigneWarning(self.appli,titre=titre,texte=texte_cr)
 

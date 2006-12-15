@@ -27,6 +27,7 @@
    que le jeu de commandes inclus est valide et compatible
    avec le contexte avant et apres l'insertion
 """
+import string
 from Accas import JDC,ASSD,AsException,JDC_CATA
 from Ihm import CONNECTOR
 
@@ -53,6 +54,9 @@ class JDC_POURSUITE(JDC):
       if recorded_units is not None:self.recorded_units=recorded_units
       if old_recorded_units is not None:self.old_recorded_units=old_recorded_units
 
+   def o_register(self,sd):
+      return self.jdc_pere.o_register(sd)
+
    def NommerSdprod(self,sd,sdnom,restrict='non'):
       """
           Nomme la SD apres avoir verifie que le nommage est possible : nom
@@ -64,6 +68,28 @@ class JDC_POURSUITE(JDC):
       #print "NommerSdprod",sd,sdnom,restrict
       if self.prefix_include:
           if sdnom != self.prefix_include:sdnom=self.prefix_include+sdnom
+
+      if sdnom != '' and sdnom[0] == '_':
+        # Si le nom du concept commence par le caractere _ on lui attribue
+        # un identificateur automatique comme dans JEVEUX (voir gcncon)
+        # 
+        # nom commencant par __ : il s'agit de concepts qui seront detruits
+        # nom commencant par _ : il s'agit de concepts intermediaires qui seront gardes
+        # ATTENTION : il faut traiter différemment les concepts dont le nom
+        # commence par _ mais qui sont des concepts nommés automatiquement par
+        # une éventuelle sous macro.
+        if sdnom[1] in string.digits:
+          # Ce concept provient probablement d'une sous macro (cas improbable)
+          #pas de renommage
+          pass
+        elif sdnom[1] == '_':
+          #cas d'un concept à ne pas conserver apres execution de la commande
+          sdnom=sd.id[2:]
+          pass
+        else:
+          sdnom=sd.id[2:]
+          pass
+
       o=self.sds_dict.get(sdnom,None)
       if isinstance(o,ASSD):
          raise AsException("Nom de concept deja defini : %s" % sdnom)

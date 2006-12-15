@@ -2,9 +2,15 @@
 
 import logging
 logger=logging.getLogger()
-hdlr=logging.FileHandler('convert.log','w')
-#formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-formatter = logging.Formatter('%(levelname)s: %(message)s')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr) 
-logger.setLevel(logging.INFO)
+
+def initialise() :
+    hdlr=logging.FileHandler('/tmp/convert.log','w')
+    formatter = logging.Formatter('%(levelname)s: %(message)s')
+    hdlr.setFormatter(formatter)
+    logger.addHandler(hdlr) 
+    logger.setLevel(logging.INFO)
+    return hdlr
+
+
+def ferme (hdlr) :
+    logger.removeHandler(hdlr)

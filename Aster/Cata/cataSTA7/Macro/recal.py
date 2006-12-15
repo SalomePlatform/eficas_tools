@@ -1,4 +1,4 @@
-#@ MODIF recal Macro  DATE 11/07/2005   AUTEUR PABHHHH N.TARDIEU 
+#@ MODIF recal Macro  DATE 05/07/2006   AUTEUR CIBHHPD L.SALMONA 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -254,6 +254,21 @@ def compare__dim_rep__dim_RESU_EXP(REPONSES,RESU_EXP):
       txt="\nVous avez entré " +str(len(REPONSES))+ " réponses et "+str(len(RESU_EXP))+ " expériences ; On doit avoir autant de réponses que de résultats expérimentaux"
    return txt
 
+def verif_RESU_EXP(RESU_EXP):
+   # RESU_EXP doit etre une liste de tableaux Numeric de taille Nx2
+   # pour éviter l'arret du programme
+   txt=""
+   for index,resu in enumerate(RESU_EXP):
+      if (isinstance(resu,Numeric.ArrayType)):
+         if (len(Numeric.shape(resu)) != 2):                                                                                                                                                                               
+            txt="\nLa courbe experimentale no " +str(index+1)+ " n'est pas un tableau de N lignes et 2 colonnes."                                             
+         else:
+            if (Numeric.shape(resu)[1] != 2):                                                                                                                                                                               
+               txt="\nLa courbe experimentale no " +str(index+1)+ " n'est pas un tableau de N lignes et 2 colonnes."                                             
+      else:
+         txt="\nLa courbe experimentale no " +str(index+1)+ " n'est pas un tableau Numeric."                                             
+   return txt
+
 def compare__dim_poids__dim_RESU_EXP(POIDS,RESU_EXP):
    # POIDS et Y sont deux arguments qui doivent avoir la meme dimension
    # pour éviter l'arret du programme
@@ -348,6 +363,8 @@ def gestion(UL,PARAMETRES,REPONSES,RESU_EXP,POIDS,GRAPHIQUE,UNITE_RESU):
    #et   que    la dimension d'une sous liste de REPONSES   = 3
    texte = texte + erreur_dimension(PARAMETRES,REPONSES)
 
+   #on verifie le type et la dimension des résultats expérimentaux
+   texte = texte + verif_RESU_EXP(RESU_EXP)
    #on verifie que l'on a autant de réponses que de résultats expérimentaux
    texte = texte + compare__dim_rep__dim_RESU_EXP(REPONSES,RESU_EXP)
    #on verifie que l'on a autant de poids que de résultats expérimentaux

@@ -37,7 +37,7 @@ from widgets import showinfo,showerror
 
 #
 __version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.24 2005/11/03 09:03:48 eficas Exp $"
+__Id__="$Id: compomacro.py,v 1.25.10.1 2006/11/15 17:59:30 cchris Exp $"
 #
 
 class MACROPanel(panels.OngletPanel):
@@ -206,9 +206,17 @@ class INCLUDETreeItemBase(MACROTreeItem):
     #print "makeEdit",self.object,self.object.nom
     #print "makeEdit",self.object.jdc_aux,self.object.jdc_aux.nom
     #print "makeEdit",self.object.jdc_aux.context_ini
+    if self.object.text_converted == 0:
+        # Le texte du fichier inclus n'a pas pu etre converti par le module convert
+        msg="Le fichier de commande n'a pas pu etre converti pour etre editable par Eficas\n\n"
+        msg=msg+self.object.text_error
+        Fenetre(self,titre="Include non editable",texte=msg,wrap='none')
+        return
+
     if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
        #L'include n'est pas initialise
        self.object.build_include(None,"")
+
     # On cree un nouvel onglet dans le bureau
     appli.bureau.ShowJDC(self.object.jdc_aux,self.object.jdc_aux.nom,
                              label_onglet=None,
@@ -216,8 +224,10 @@ class INCLUDETreeItemBase(MACROTreeItem):
 
   def makeView(self,appli,node):
     if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
-         showerror("Include vide","L'include doit etre correctement initialisé pour etre visualisé")
+         showerror("Include vide",
+                 "L'include doit etre correctement initialisé pour etre visualisé")
          return
+
     nom=self.object.nom
     if hasattr(self.object,'fichier_ini'):
        if self.object.fichier_ini is None:
@@ -242,11 +252,19 @@ class INCLUDETreeItem(INCLUDETreeItemBase):
 
 class POURSUITETreeItem(INCLUDETreeItemBase): 
   def makeEdit(self,appli,node):
+    if self.object.text_converted == 0:
+        # Le texte du fichier inclus n'a pas pu etre converti par le module convert
+        msg="Le fichier de commande n'a pas pu etre converti pour etre editable par Eficas\n\n"
+        msg=msg+self.object.text_error
+        Fenetre(self,titre="Poursuite non editable",texte=msg,wrap='none')
+        return
+
     if not hasattr(self.object,"jdc_aux") or self.object.jdc_aux is None:
        #La poursuite n'est pas initialisee
        text="""DEBUT()
 FIN()"""
        self.object.build_poursuite(None,text)
+
     # On cree un nouvel onglet dans le bureau
     appli.bureau.ShowJDC(self.object.jdc_aux,self.object.jdc_aux.nom,
                              label_onglet=None,

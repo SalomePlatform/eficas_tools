@@ -66,6 +66,8 @@ class UNIQUE_INTO_Panel(UNIQUE_Panel):
       self.label.pack(side='top')
       self.frame = Frame(page)
       self.frame.place(relx=0.33,rely=0.2,relwidth=0.33,relheight=0.6)
+
+
       liste_commandes = (("<Button-1>",self.selectChoix),
                          ("<Button-3>",self.deselectChoix),
                          ("<Double-Button-1>",self.record_valeur))
@@ -73,6 +75,15 @@ class UNIQUE_INTO_Panel(UNIQUE_Panel):
                                     liste_commandes = liste_commandes,
                                     titre="Valeurs possibles",optionReturn="oui")
       self.Liste_choix.affiche_liste()
+      self.bouton_val = Button(self.frame_valeur,
+                               text = "Valider",
+                               command=self.record_valeur_ligne,
+                               width=14)
+      self.bouton_val.place(relx=0.33,rely=0.85)
+
+  def record_valeur_ligne(self):
+      valeur=self.Liste_choix.arg_selected
+      self.record_valeur(valeur)
 
   def get_bulle_aide(self):
       """

@@ -78,6 +78,7 @@ class Formatage :
         self.indent=[]
         self.texte_etape = etape
       self.jdc_fini = self.jdc_fini + '\n' + self.texte_etape
+    #on enleve la premiere ligne si elle est blanche :
     return self.jdc_fini
   
   
@@ -170,6 +171,7 @@ class Formatage :
       #
       # Ajout PN pour defi_fonction
       if self.texte_etape.find("DEFI_FONCTION") > 1 :
+          bool_fonction=1
           if s_mcsimp.find("\n")  > 1:
               txt=""; bool = 0; numident=1
               for l in s_mcsimp.splitlines() :
@@ -180,10 +182,14 @@ class Formatage :
                  else :
                     txt=txt+('\n'+self.indent_courant*' '+numident*' ')*ind+l
               s_mcsimp = txt
+      else : 
+          bool_fonction=0
       longueur = self.longueur(self.texte_etape)
       increment = len(('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp))
       #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
-      if ((1-ind)*longueur+increment)  <= self.l_max :
+      if (bool_fonction == 1 ) :
+          self.texte_etape = self.texte_etape +s_mcsimp
+      elif ( ((1-ind)*longueur+increment) <= self.l_max ) :
           self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
       else :
           # il faut couper ...
@@ -215,7 +221,8 @@ class Formatage :
       s=texte + label
       longueur = len(increment + label)
 
-      if '(' not in valeur:
+      if ('(' not in valeur) or (valeur[0:3]=='"""'):
+#      if ('(' not in valeur):
         # il s'agit d'une vraie chaîne de caractères
         val = len(valeur)
         texte = (self.l_max-2-val)*' '+valeur

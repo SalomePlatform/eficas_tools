@@ -16,7 +16,7 @@ from Editeur import eficas
 from Editeur import images
 from common import *
 
-version='v8.3'
+version='v8'
 
 class TestCase(unittest.TestCase):
     def setUp(self):

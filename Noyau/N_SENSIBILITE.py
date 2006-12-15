@@ -161,6 +161,9 @@ class DERIVABLE(REGLE):
          concept = [concept,]
       l_ps = obj["SENSIBILITE"]
       for co in concept:
+         if co is None:
+            text="Pas de sensibilité sur objet None"
+            return text,0
          if not l_ps:
             # pas de sensibilité
             if hasattr(co,"sensi") and not co.sensi.get('nominal'):

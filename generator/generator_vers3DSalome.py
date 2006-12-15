@@ -26,6 +26,7 @@
 """
 import traceback
 import types,string,re
+import math
 
 from Noyau import N_CR
 from Noyau.N_utils import repr_float
@@ -169,8 +170,8 @@ class vers3DSalomeGenerator(PythonGenerator):
 
    def SECTION(self,obj):
       assert (self.commande != "" )
-      if self.commande == "VisuCable" : 
-         self.dict_attributs["R"]=obj.val
+      if self.commande == "VisuCable" :
+         self.dict_attributs["R"]= math.sqrt(obj.val/math.pi).eval()
       elif (self.commande !="VisuGrille")  :
          self.commande=self.commande+self.dict_suite_com[obj.valeur]
 

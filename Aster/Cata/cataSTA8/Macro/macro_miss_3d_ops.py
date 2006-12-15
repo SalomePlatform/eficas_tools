@@ -1,4 +1,4 @@
-#@ MODIF macro_miss_3d_ops Macro  DATE 20/03/2006   AUTEUR ACBHHCD G.DEVESA 
+#@ MODIF macro_miss_3d_ops Macro  DATE 31/10/2006   AUTEUR ACBHHCD G.DEVESA 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -44,9 +44,24 @@ def macro_miss_3d_ops(self,UNITE_IMPR_ASTER,UNITE_OPTI_MISS,
 
   import aster 
   loc_fic=aster.repout()
-  miss3d=loc_fic+'miss3d'
-  #miss3d='/home/acbhhcd/MISS3D/V6.4/miss3d.csh'
+  tv = aster.__version__.split('.')
+  if len(tv) < 3:
+      tv.extend(['x']*(3-len(tv)))
+  elif len(tv) > 3:
+      tv = tv[:3]
+  vers = '%2s.%2s.%2s' % tuple(tv)
 
+  # if vers > ' 8. 3.11':
+  #    miss3d='/aster/logiciels/MISS3D/NEW/miss3d.csh'
+  # else:
+  #    miss3d=loc_fic+'miss3d'
+     
+  miss3d=loc_fic+'miss3d'
+  
+  if VERSION=='V1_2':
+     if PARAMETRE != None and PARAMETRE['TYPE']=='BINAIRE':
+        raise AsException("MACRO_MISS_3D/PARAMETRE : type incompatible avec version")
+        
   if OPTION['TOUT']!=None:
       MODUL2='COMPLET'
   elif OPTION['MODULE']=='MISS_IMPE':
@@ -65,7 +80,7 @@ def macro_miss_3d_ops(self,UNITE_IMPR_ASTER,UNITE_OPTI_MISS,
   prfor = 'fort.'+str(UNITE_RESU_FORC)
   
   l_para = ['FREQ_MIN','FREQ_MAX','FREQ_PAS','Z0','RFIC','SURF',
-            'FICH_RESU_IMPE','FICH_RESU_FORC','DREF','ALGO',
+            'FICH_RESU_IMPE','FICH_RESU_FORC','TYPE','DREF','ALGO',
             'OFFSET_MAX','OFFSET_NB','SPEC_MAX','SPEC_NB','ISSF',
             'FICH_POST_TRAI','CONTR_NB','CONTR_LISTE','LFREQ_NB',
             'LFREQ_LISTE']
@@ -78,47 +93,48 @@ def macro_miss_3d_ops(self,UNITE_IMPR_ASTER,UNITE_OPTI_MISS,
   
   dpara = {}
   for cle in l_para:
-    if cle in ('SURF', 'ISSF'):
+    if cle in ('SURF', 'ISSF', ):
       dpara[cle] = 'NON'
     else:
       dpara[cle] = '0'
     if PARAMETRE != None and PARAMETRE[cle] != None:
       if type(PARAMETRE[cle]) in (TupleType, ListType):
-        dpara[cle] = ' '.join([str(s) for s in PARAMETRE[cle]])
+        dpara[cle] = repr(' '.join([str(s) for s in PARAMETRE[cle]]))
       else:
         dpara[cle] = str(PARAMETRE[cle])
   
   EXEC_LOGICIEL(
                 LOGICIEL=miss3d,
-                ARGUMENT=(_F(NOM_PARA=MODUL2),
-                          _F(NOM_PARA=ETUDE),
-                          _F(NOM_PARA=BASE),
-                          _F(NOM_PARA=paste),
-                          _F(NOM_PARA=popti),
-                          _F(NOM_PARA=pdsol),
-                          _F(NOM_PARA=primp),
-                          _F(NOM_PARA=VERSION),
-                          _F(NOM_PARA=dpara['FREQ_MIN']), 
-                          _F(NOM_PARA=dpara['FREQ_MAX']),
-                          _F(NOM_PARA=dpara['FREQ_PAS']),
-                          _F(NOM_PARA=dpara['Z0']), 
-                          _F(NOM_PARA=dpara['SURF']), 
-                          _F(NOM_PARA=dpara['RFIC']),
-                          _F(NOM_PARA=dpara['FICH_RESU_IMPE']),
-                          _F(NOM_PARA=dpara['FICH_RESU_FORC']),
-                          _F(NOM_PARA=dpara['DREF']), 
-                          _F(NOM_PARA=dpara['ALGO']),
-                          _F(NOM_PARA=dpara['OFFSET_MAX']),
-                          _F(NOM_PARA=dpara['OFFSET_NB']),
-                          _F(NOM_PARA=dpara['SPEC_MAX']),
-                          _F(NOM_PARA=dpara['SPEC_NB']),
-                          _F(NOM_PARA=dpara['ISSF']),
-                          _F(NOM_PARA=dpara['FICH_POST_TRAI']),
-                          _F(NOM_PARA=dpara['CONTR_NB']),
-                          _F(NOM_PARA=dpara['CONTR_LISTE']),
-                          _F(NOM_PARA=dpara['LFREQ_NB']),
-                          _F(NOM_PARA=dpara['LFREQ_LISTE']),
-                          _F(NOM_PARA=prfor),
+                ARGUMENT=(MODUL2,
+                          ETUDE,
+                          BASE,
+                          paste,
+                          popti,
+                          pdsol,
+                          primp,
+                          VERSION,
+                          dpara['FREQ_MIN'], 
+                          dpara['FREQ_MAX'],
+                          dpara['FREQ_PAS'],
+                          dpara['Z0'], 
+                          dpara['SURF'], 
+                          dpara['RFIC'],
+                          dpara['FICH_RESU_IMPE'],
+                          dpara['FICH_RESU_FORC'],
+                          dpara['DREF'], 
+                          dpara['ALGO'],
+                          dpara['OFFSET_MAX'],
+                          dpara['OFFSET_NB'],
+                          dpara['SPEC_MAX'],
+                          dpara['SPEC_NB'],
+                          dpara['ISSF'],
+                          dpara['FICH_POST_TRAI'],
+                          dpara['CONTR_NB'],
+                          dpara['CONTR_LISTE'],
+                          dpara['LFREQ_NB'],
+                          dpara['LFREQ_LISTE'],
+                          dpara['TYPE'], 
+                          prfor,
                          ),
                 )
 

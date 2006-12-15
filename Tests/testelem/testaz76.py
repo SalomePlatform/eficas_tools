@@ -35,7 +35,7 @@ class TestCase(unittest.TestCase):
    def test000(self):
       """ Test de construction du fichier de commandes az.comm de zero"""
 
-      app=appli.STANDALONE(version='v7.6')
+      app=appli.STANDALONE(version='v7')
       j=app.newJDC()
 # commande DEBUT
       co=j.addentite("DEBUT",0)
@@ -322,7 +322,7 @@ class TestCase(unittest.TestCase):
    def test001(self):
       """ Test de construction d'un fichier de commandes avec DEFI_LIST_REEL, fonction et parametre de zero"""
 
-      app=appli.STANDALONE(version='v7.6')
+      app=appli.STANDALONE(version='v7')
       j=app.newJDC()
 # commande DEBUT
       co=j.addentite("DEBUT",0)

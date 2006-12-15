@@ -26,14 +26,15 @@ class TestCase(unittest.TestCase):
    app=None
    def setUp(self):
       if self.app == None:
-         self.app=appli.STANDALONE(version='v8.3')
+         self.app=appli.STANDALONE(version='v8')
       pass
 
    def tearDown(self):
       CONTEXT.unset_current_step()
 
    i=0
-   for f in glob.glob(os.path.join(prefs.INSTALLDIR,"Tests/testcomm/*.comm")):
+   files="Tests/testcomm/*.comm"
+   for f in glob.glob(os.path.join(prefs.INSTALLDIR,files)):
       for o in ('3','2','1','0','m'):
        f=f[:-1]+o
        if os.path.isfile(f):break

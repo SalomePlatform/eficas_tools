@@ -87,7 +87,7 @@ class UNIQUE_Panel(newSIMPPanel):
           self.parent.appli.affiche_infos('Valeur du mot-clé enregistrée')
       else :
           cr = self.node.item.get_cr()
-          mess = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
+          mess = "Valeur du mot-clé non autorisée "+cr.get_mess_fatal()
           self.reset_old_valeur(anc_val,mess=mess)
 
       self.display_valeur()

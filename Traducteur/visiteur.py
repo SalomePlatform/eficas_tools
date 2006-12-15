@@ -6,7 +6,8 @@ from compiler import visitor
 class MatchFinder:
     """Visiteur de base : gestion des matches """
     def reset(self,line):
-        self.matches = []
+        self.matches=[]
+        self._matches = []
         self.words = re.split("(\w+)", line) # every other one is a non word
         self.positions = []
         i = 0
@@ -25,7 +26,7 @@ class MatchFinder:
 
     def appendMatch(self,name):
         idx = self.getNextIndexOfWord(name)
-        self.matches.append((idx, name))
+        self._matches.append((idx, name))
 
     def getNextIndexOfWord(self,name):
         return self.positions[self.words.index(name)]
@@ -36,28 +37,31 @@ class KeywordFinder(MatchFinder):
 
     def visitKeyword(self,node):
         idx = self.getNextIndexOfWord(node.name)
-        #self.appendMatch(node.name)
         self.popWordsUpTo(node.name)
-        prevmatches=self.matches
-        self.matches = []
+        prevmatches=self._matches
+        self._matches = []
         for child in node.getChildNodes():
             self.visit(child)
-        prevmatches.append((idx, node.name,self.matches))
-        self.matches=prevmatches
+        prevmatches.append((idx, node.name,self._matches))
+        self._matches=prevmatches
+        #on ne garde que les matches du niveau Keyword le plus haut
+        self.matches=self._matches
 
     def visitTuple(self,node):
         matchlist=[]
         for child in node.getChildNodes():
-            self.matches = []
+            self._matches = []
             self.visit(child)
-            if self.matches:
-                #Pour eviter les tuples et listes ordinaires, on ne garde que les visites fructueuses
-                matchlist.append(self.matches)
-        self.matches=matchlist
+            if self._matches:
+                # Pour eviter les tuples et listes ordinaires, 
+                # on ne garde que les visites fructueuses
+                matchlist.append(self._matches)
+        self._matches=matchlist
 
     visitList=visitTuple
 
     def visitName(self,node):
         self.popWordsUpTo(node.name)
+
     def visitAssName(self,node):
         self.popWordsUpTo(node.name)

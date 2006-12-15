@@ -63,7 +63,8 @@ pattern_comment   = re.compile(r"^\s*#.*")
 #fin de ligne ; suivi d'un nombre quelconque de blancs (pas multiligne)
 pattern_fin   = re.compile(r"; *$")
 #pattern pour supprimer les blancs, tabulations et fins de ligne
-pattern_blancs = re.compile(r"[\s\n]")
+pattern_blancs = re.compile(r"[ \t\r\f\v]")
+#pattern_blancs = re.compile(r"[\s\n]")
 number_kw_pattern=re.compile(r"""
 (
     #groupe nombre decimal
@@ -84,14 +85,16 @@ number_kw_pattern=re.compile(r"""
     #argument keyword
     [a-zA-Z_]\w*=
 )
-""",re.VERBOSE)
+""",re.VERBOSE|re.MULTILINE)
 
 def construit_genea(texte,liste_mc):
     """Retourne un dictionnaire dont les cles sont des reels et les valeurs sont leurs representations textuelles.
        Realise un filtrage sur les reels :
          - Ne garde que les reels pour lesquels str ne donne pas une bonne representation.
          - Ne garde que les reels derriere un argument keyword dont le nom est dans liste_mc
-    >>> s = 'a=+21.3e-5*85,b=-.1234,c=81.6   , d= -8 , e=_F(x=342.67,y=-1), f=+1.1, g=(1.3,-5,1.54E-3)'
+    >>> s = '''a=+21.3e-5*85,b=-.1234,c=81.6   , d= -8 , e=_F(x=342.67,y=-1), f=+1.1, g=(1.3,-5,1.54E-3),
+    ... #POMPE_PRIMA._BOUCLE_N._2_ELEMENT_NUMERO:0239
+    ... h=_F(x=34.6,y=-1)'''
     >>> construit_genea(s,['a','x'])
     {0.000213: '21.3e-5'}
     """
@@ -419,7 +422,9 @@ class PARSEUR_PYTHON:
             if commande_courante :
                 #on a une commande en cours. On l'enrichit ou on la termine
                 commande_courante.append_text(ligne)
-                if not linecontinueRE.search(line) and (hangingBraces == emptyHangingBraces) and not hangingComments:
+                if not linecontinueRE.search(line) \
+                   and (hangingBraces == emptyHangingBraces) \
+                   and not hangingComments:
                     #la commande est terminée 
                     #print "fin de commande"
                     self.analyse_reel(commande_courante.texte)
@@ -431,7 +436,9 @@ class PARSEUR_PYTHON:
             if affectation_courante != None :
                 #poursuite d'une affectation
                 affectation_courante.append_text(ligne)
-                if not linecontinueRE.search(line) and (hangingBraces == emptyHangingBraces) and not hangingComments:
+                if not linecontinueRE.search(line) \
+                   and (hangingBraces == emptyHangingBraces) \
+                   and not hangingComments:
                     #L'affectation est terminée
                     affectation_courante=None
                 #on passe à la ligne suivante
@@ -469,7 +476,9 @@ class PARSEUR_PYTHON:
 
                 affectation_courante = AFFECTATION(self)
                 affectation_courante.append_text(text)
-                if not linecontinueRE.search(line) and (hangingBraces == emptyHangingBraces) and not hangingComments:
+                if not linecontinueRE.search(line) \
+                   and (hangingBraces == emptyHangingBraces) \
+                   and not hangingComments:
                     #L'affectation est terminée
                     affectation_courante=None
                 #on passe à la ligne suivante
@@ -481,7 +490,9 @@ class PARSEUR_PYTHON:
                 commande_courante = COMMANDE(self)
                 commande_courante.append_text(ligne)
                 #si la commande est complète, on la termine
-                if not linecontinueRE.search(line) and (hangingBraces == emptyHangingBraces) and not hangingComments:
+                if not linecontinueRE.search(line) \
+                   and (hangingBraces == emptyHangingBraces) \
+                   and not hangingComments:
                     #la commande est terminée 
                     #print "fin de commande"
                     self.analyse_reel(commande_courante.texte)
@@ -613,6 +624,12 @@ class PARSEUR_PYTHON:
             #Impossible de convertir le texte, on le retourne tel que
             txt=self.texte
         return txt
+
+def test():
+  import parseur_python
+  import doctest
+  doctest.testmod(parseur_python)
+
 
 if __name__ == "__main__" :
     import time

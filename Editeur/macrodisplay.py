@@ -49,7 +49,7 @@ class MacroDisplay:
     self.nom_jdc=nom_jdc
     self.appli=appli
     self.barre=Tkinter.Frame(self.fenetre,relief="ridge",bd=2)
-    self.barre.pack(expand=1,fill=Tkinter.X)
+    self.barre.pack(expand=0,fill=Tkinter.X)
     if self.macroitem.object.fichier_text is not None:
       b=Tkinter.Button(self.barre,image=images.get_image("Zoom24"),command=self.visufile)
       b.pack(side='left')

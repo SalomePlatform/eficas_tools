@@ -1,4 +1,4 @@
-#@ MODIF macr_aspic_mail_ops Macro  DATE 22/05/2006   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF macr_aspic_mail_ops Macro  DATE 25/09/2006   AUTEUR GALENNE E.GALENNE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -216,14 +216,26 @@ def write_file_dgib_ASPID2(nomFichierDATG,UNITD, EPT1, DET1, D1, D2, EPT2, DET2,
            YN0 = 0.0
            ZN0 = ZA0 + A*CALPHA 
            XN = XN0 * CTHETA 
-           YN = XN0 * STHETA
+           YN = XN0 * STHETA           
            SGAMN = YN / ZN0
            ZN = ZN0 * sqrt(1.0 - pow(SGAMN,2))
            D0N0 = sqrt( pow((XA0 - XN0),2) + pow((ZA0 - ZN0),2) )
            DN = sqrt( pow((XA - XN),2) + pow((YA - YN),2) + pow((ZA - ZN),2) )       
            RAPP = D0N0 / DN
            ECART = (RAPP - 1.0) * D0N0
+           # Correction necessaire dans le cas theta grand (cf. AL9679)
+           if ( abs(STHETA) > 0.8) :
+              DXY = sqrt(pow(XD,2) + pow(YD,2) ) 
+              XN = XN * DXY/XD0
+              YN = YN * DXY/XD0
+              SGAMN = YN / ZN0
+              ZN = ZN0 * sqrt(1.0 - pow(SGAMN,2))
+              D0N0 = sqrt( pow((XA0 - XN0),2) + pow((ZA0 - ZN0),2) )
+              DN = sqrt( pow((XA - XN),2) + pow((YA - YN),2) + pow((ZA - ZN),2) )       
+              RAPP = D0N0 / DN
+              ECART = (ECART + (RAPP - 1.0) * D0N0)/2
            A = A + ECART
+
 
   elif (ITYPSO == 2) :
 # PIQUAGE TYPE 2
@@ -418,9 +430,9 @@ def macr_aspic_mail_ops(self,EXEC_MAILLAGE,TYPE_ELEM,RAFF_MAIL,TUBULURE,
   LIRE_MAILLAGE =self.get_cmd('LIRE_MAILLAGE')
   DEFI_GROUP    =self.get_cmd('DEFI_GROUP')
   MODI_MAILLAGE =self.get_cmd('MODI_MAILLAGE')
-  AFFE_MODELE   =self.get_cmd('AFFE_MODELE')
   CREA_MAILLAGE =self.get_cmd('CREA_MAILLAGE')
   IMPR_RESU     =self.get_cmd('IMPR_RESU')
+  DEFI_FICHIER  =self.get_cmd('DEFI_FICHIER')
 
 # La macro compte pour 1 dans la numerotation des commandes
   self.set_icmd(1)
@@ -665,10 +677,12 @@ def macr_aspic_mail_ops(self,EXEC_MAILLAGE,TYPE_ELEM,RAFF_MAIL,TUBULURE,
                                      THETA, A, C, EPS, RC0, RC1, RC2, RC3,
                                      ALP,BETA, NS, NC, NT, POSI ,NDT,NSDT,TFISS,
                                      ZETA,ITYPSO,DPENE, NIVMAG,loc_datg)
-#
+# 
+  DEFI_FICHIER(ACTION='LIBERER',UNITE=19)
+  DEFI_FICHIER(ACTION='LIBERER',UNITE=20)
   EXEC_LOGICIEL( LOGICIEL = logiel ,
-                 ARGUMENT = ( _F(NOM_PARA=nomFichierDATG),
-                              _F(NOM_PARA=nomFichierGIBI), ), )
+                 ARGUMENT = (nomFichierDATG,
+                             nomFichierGIBI), )
 #
   PRE_GIBI()
 #
@@ -743,12 +757,7 @@ def macr_aspic_mail_ops(self,EXEC_MAILLAGE,TYPE_ELEM,RAFF_MAIL,TUBULURE,
                                         X_MAX     = XMAX  , )
                          )
 #
-  __MODELE=AFFE_MODELE( MAILLAGE=__MAPROV,
-                        AFFE=_F( GROUP_MA     = ('EQUERRE','PEAUINT','EXCORP1','EXCORP2','EXTUBU'),
-                                 PHENOMENE    = 'MECANIQUE'  ,
-                                 MODELISATION = '3D'         , )
-                         )
-#
+
   motscles={}
   if TFISS=='DEB_INT' :
      motscles['ORIE_PEAU_3D']=_F(GROUP_MA=('PEAUINT','EXCORP1','EXCORP2','EXTUBU','LEVRTUBU','LEVRCORP'),)
@@ -756,7 +765,6 @@ def macr_aspic_mail_ops(self,EXEC_MAILLAGE,TYPE_ELEM,RAFF_MAIL,TUBULURE,
      motscles['ORIE_PEAU_3D']=_F(GROUP_MA=('PEAUINT','EXCORP1','EXCORP2','EXTUBU',),)
   __MAPROV=MODI_MAILLAGE(reuse   =__MAPROV,
                          MAILLAGE=__MAPROV,
-                         MODELE  =__MODELE,
                          **motscles
                          )
 #

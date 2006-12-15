@@ -2,13 +2,16 @@
 
 import compiler
 import types
-from parseur import Keyword,FactNode,lastparen,lastparen2
-from visiteur import KeywordFinder,visitor
-from utils import indexToCoordinates
+from parseur  import Keyword, FactNode, lastparen, lastparen2,maskStringsAndComments
+from visiteur import KeywordFinder, visitor
+from utils    import indexToCoordinates
+import traceback
 
 debug=0
 
+#------------------------
 def parseFact(match,c,kw):
+#------------------------
     submatch=match[2]
     lastpar=match[0]+lastparen(c.src[match[0]:])
     if type(submatch[0][0]) ==types.IntType:
@@ -61,21 +64,32 @@ def parseFact(match,c,kw):
             no.addChild(Keyword(e[1],lineno,colno,endline,endcol))
 
 
+#-----------------------
 def parseKeywords(root):
-    """A partir d'un arbre contenant des commandes, ajoute les noeuds fils correspondant aux mocles
-       de la commande
+#-----------------------
+    """A partir d'un arbre contenant des commandes, ajoute les noeuds 
+       fils correspondant aux mocles de la commande
     """
+    #print "parseKeywords"
+    #traceback.print_stack(limit=5)
+
     matchFinder=KeywordFinder()
 
     for c in root.childNodes:
-        ast=compiler.parse(c.src)
+        maskedsrc=maskStringsAndComments(c.src)
+        #on supprime seulement les blancs du debut pour pouvoir compiler
+        #meme si la commande est sur plusieurs lignes seul le debut compte
+        ast=compiler.parse(c.src.lstrip())
         #print ast
-        matchFinder.reset(c.src)
+        #Ne pas supprimer les blancs du debut pour avoir les bons numeros de colonne
+        matchFinder.reset(maskedsrc)
         visitor.walk(ast, matchFinder)
         #print matchFinder.matches
         if len(matchFinder.matches) > 1:
-            #plusieurs mocles trouvés : un mocle commence au début du keyword (matchFinder.matches[i][0])
-            # et finit juste avant le keyword suivant (matchFinder.matches[i+1][0]])
+            # plusieurs mocles trouvés : 
+            # un mocle commence au début du keyword (matchFinder.matches[i][0])
+            # et finit juste avant le keyword suivant 
+            # (matchFinder.matches[i+1][0]])
             for i in range(len(matchFinder.matches)-1):
                 if debug:print "texte:",c.src[matchFinder.matches[i][0]:matchFinder.matches[i+1][0]]
                 x,y=indexToCoordinates(c.src,matchFinder.matches[i][0])
@@ -90,8 +104,12 @@ def parseKeywords(root):
                 submatch= matchFinder.matches[i][2]
                 if submatch:
                     parseFact(matchFinder.matches[i],c,kw)
-            #dernier mocle : il commence au debut du dernier keyword (matchFinder.matches[i+1][0]) et
-            #finit avant la parenthese fermante de la commande (c.lastparen)
+
+            # dernier mocle : 
+            #   il commence au debut du dernier keyword 
+            #   (matchFinder.matches[i+1][0]) et
+            #   finit avant la parenthese fermante de la commande (c.lastparen)
+
             if debug:print "texte:",c.src[matchFinder.matches[i+1][0]:c.lastparen]
             x,y=indexToCoordinates(c.src,matchFinder.matches[i+1][0])
             lineno=y+c.lineno
@@ -107,8 +125,10 @@ def parseKeywords(root):
                 parseFact(matchFinder.matches[i+1],c,kw)
 
         elif len(matchFinder.matches) == 1:
-            #un seul mocle trouve : il commence au début du keyword (matchFinder.matches[0][0]) et 
-            #finit juste avant la parenthese fermante de la commande (c.lastparen)
+            #un seul mocle trouve : 
+            # il commence au début du keyword (matchFinder.matches[0][0]) et 
+            # finit juste avant la parenthese fermante de la 
+            # commande (c.lastparen)
             if debug:print "texte:",c.src[matchFinder.matches[0][0]:c.lastparen]
             x,y=indexToCoordinates(c.src,matchFinder.matches[0][0])
             lineno=y+c.lineno

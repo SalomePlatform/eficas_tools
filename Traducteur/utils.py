@@ -9,8 +9,9 @@ def indexToCoordinates(src, index):
     x = index-startOfLineIdx
     return x, y
 
-def linetodict(line):
-    """Transforme une ligne (string) en un dictionnaire de mots repérés par le numéro de la colonne"""
+def lineToDict(line):
+    """Transforme une ligne (string) en un dictionnaire de mots 
+        repérés par le numéro de la colonne"""
 
     words = re.split("(\w+)", line)
     h = {};i = 0
@@ -19,7 +20,7 @@ def linetodict(line):
         i+=len(word)
     return h
 
-def dicttoline(d):
+def DictToLine(d):
     """Transformation inverse: à partir d'un dictionnaire retourne une ligne"""
     cols = d.keys()
     cols.sort()

@@ -123,8 +123,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           self.clef_fonction="SALOME"
           for i in range(0,len( genea )) :
              self.clef_fonction=self.clef_fonction+"_"+ genea[i]
-             if genea[i] == "GROUP_NO" or genea[i] == "GROUP_MA":
-                self.select_noeud_maille=1
+             #if genea[i] == "GROUP_NO" or genea[i] == "GROUP_MA":
+          if "GROUP_NO" in genea[len(genea)-1] or "GROUP_MA" in genea[len(genea)-1]:
+             self.select_noeud_maille=1
 
           recherche=panelsSalome.dict_classes_salome[self.panel]
           if hasattr(recherche,self.clef_fonction):
@@ -308,16 +309,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def valide_item(self,item):
       """
-        On fait un try except pour les erreurs de type (exple
-        on rentre 1 pour une chaine de caracteres
+        La validation est réalisée directement par l'objet
       """
-      valide=1
-      if self.definition.validators :
-         try :
-            valide=self.definition.validators.verif_item(item)
-         except :
-            valide = 0
-      return valide
+      return self.object.valide_item(item)
      
   def valide_liste_partielle(self,item,listecourante):
       #On protege la liste en entree en la copiant
@@ -354,7 +348,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           Retourne 1 si la valeur est dans l'intervalle permis par
           l'objet représenté par l'item.
       """
-      return self.object.isinintervalle(valeur)
+      return self.valide_item(valeur)
 
   def isvalid(self):
     valide=self.object.isvalid()

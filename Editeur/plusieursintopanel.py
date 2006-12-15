@@ -108,6 +108,7 @@ class PLUSIEURS_INTO_Panel(PLUSIEURS_Panel):
       if len(l_valeurs) > 0 :
           liste_marque=l_valeurs[-1]
           self.Liste_valeurs.surligne(liste_marque)
+          self.selectValeur(l_valeurs[-1])
       self.Liste_choix.affiche_liste()
       for fram in (self.frame_valeurs,self.frame_boutons_fleches,self.frame_choix,self.frame_boutons):
           fram.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))

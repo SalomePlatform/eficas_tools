@@ -1,4 +1,4 @@
-#@ MODIF macro_matr_asse_ops Macro  DATE 05/07/2005   AUTEUR DURAND C.DURAND 
+#@ MODIF macro_matr_asse_ops Macro  DATE 05/07/2006   AUTEUR CIBHHPD L.SALMONA 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -17,8 +17,6 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
-
-
 
 def macro_matr_asse_ops(self,MODELE,CHAM_MATER,CARA_ELEM,MATR_ASSE,
                         SOLVEUR,NUME_DDL,CHARGE,INST,**args):
@@ -104,6 +102,10 @@ def macro_matr_asse_ops(self,MODELE,CHAM_MATER,CARA_ELEM,MATR_ASSE,
 
 
     motscles={'OPTION':option}
+    if option == 'RIGI_MECA_HYST':
+       if (not lrigel):
+          UTMESS('F', "MACRO_MATR_ASSE", "POUR CALCULER RIGI_MECA_HYST, IL FAUT AVOIR CALCULE RIGI_MECA AUPARAVANT (DANS LE MEME APPEL)")
+       motscles['RIGI_MECA']   =rigel
     if option == 'AMOR_MECA':
        if (not lrigel or not lmasel):
           ier=ier+1

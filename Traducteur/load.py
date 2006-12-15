@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
 import parseur
 from mocles import parseKeywords
 
@@ -19,7 +20,7 @@ class JDC:
     def init(self,src,atraiter):
     #---------------------------
     # construction de self.lines
-        self.root=parseur.parser(src,atraiter)
+        self.root=parseur.Parser(src,atraiter)
         self.lines=src.splitlines(1)
 
     def parseKeywords(self):
@@ -57,8 +58,7 @@ class JDC:
         Lmilieu=[ligne,]
         Lfin=self.lines[numero:]
         self.lines=Ldebut+Lmilieu+Lfin
-        src=self.getSource()
-        self.reset(src) 
+
 
     def splitLine(self,numeroLigne,numeroColonne) :
     #----------------------------------------------
@@ -77,8 +77,6 @@ class JDC:
         Lmilieu=[LigneSplitDebut,LigneSplitFin]
 
         self.lines=Ldebut+Lmilieu+Lfin
-        src=self.getSource()
-        self.reset(src)
 
     def joinLineandNext(self,numeroLigne) :
     #--------------------------------------
@@ -100,8 +98,16 @@ class JDC:
         Lmilieu=[ligneMilieuDeb+ligneMilieuFin,]
 
         self.lines=Ldebut+Lmilieu+Lfin
-        src=self.getSource()
-        self.reset(src)
+
+    def supLignes(self,debut,fin):
+    #------------------------
+        Ldebut=self.lines[0:debut-1]
+        Lfin=self.lines[fin:]
+        self.lines=Ldebut+Lfin
+
+    def remplaceLine(self,numeroLigne,nouveauTexte) :
+    #------------------------------------------------
+        self.lines[numeroLigne]=nouveauTexte
 
 def getJDC(filename,atraiter):
 #---------------------------_

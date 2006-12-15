@@ -55,11 +55,12 @@ def askyesno(title=None, message=None, **options):
 class Fenetre :
     """ Cette classe permet de créer une fenêtre Toplevel dans laquelle
         on peut afficher un texte et qui permet de le sauver"""
-    def __init__(self,appli,titre="",texte=""):
+    def __init__(self,appli,titre="",texte="",wrap=WORD,width=100,height=30):
         self.appli=appli
+        if self.appli.test==1 : return
         self.fenetre = Toplevel()
         self.fenetre.withdraw()
-        self.fenetre.configure(width = 800,height=500)
+        #self.fenetre.configure(width = 800,height=500)
         self.fenetre.protocol("WM_DELETE_WINDOW", self.quit)
         self.fenetre.title("Visualisation du "+titre)
         self.texte = string.replace(texte,'\r\n','\n')
@@ -68,10 +69,11 @@ class Fenetre :
         # définition des frames
         self.frame_texte = Frame(self.fenetre)
         self.frame_boutons = Frame(self.fenetre)
-        self.frame_texte.place(relx=0,rely=0,relwidth=1,relheight=0.9)
-        self.frame_boutons.place(relheight=0.1,relx=0,rely=0.9,relwidth=1.)
+        #self.frame_texte.place(relx=0,rely=0,relwidth=1,relheight=0.9)
+        #self.frame_boutons.place(relheight=0.1,relx=0,rely=0.9,relwidth=1.)
         # définition de la zone texte et du scrollbar
-        self.zone_texte = Text(self.frame_texte,font=fonte)
+        self.zone_texte = Text(self.frame_texte,font=fonte,wrap=wrap,
+                               height=height,width=width)
         self.zone_texte.bind("<Key-Prior>", self.page_up)
         self.zone_texte.bind("<Key-Next>", self.page_down)
         self.zone_texte.bind("<Key-Up>", self.unit_up)
@@ -83,10 +85,18 @@ class Fenetre :
         self.zone_texte.pack(side='top',fill='both',expand=1,padx=5,pady=10)
         self.zone_texte.configure(yscrollcommand=self.scroll_v.set)
         # définition des boutons
-        self.but_quit = Button(self.frame_boutons,text = "Fermer",command=self.quit,default='active')
-        self.but_save = Button(self.frame_boutons,text = "sauver",command = self.save)
-        self.but_quit.place(relx=0.4,rely=0.5,anchor='center')
-        self.but_save.place(relx=0.6,rely=0.5,anchor='center')
+        self.but_quit = Button(self.frame_boutons,text = "Fermer",command=self.quit,
+                                default='active')
+        self.but_save = Button(self.frame_boutons,text = "Sauver",command = self.save)
+        #self.but_quit.place(relx=0.4,rely=0.5,anchor='center')
+        #self.but_save.place(relx=0.6,rely=0.5,anchor='center')
+        self.but_quit.pack(side='left',padx=25, pady=5)
+        self.but_save.pack(side='right',padx=25, pady=5)
+        self.frame_texte.pack(side='top',fill='both',expand=1)
+        self.frame_boutons.pack(side='bottom')
+        self.zone_texte.focus_set()
+        self.fenetre.bind('<Return>',self.quit) #dismiss window
+
         # affichage du texte
         self.affiche_texte(self.texte)
         self.zone_texte.config(state=DISABLED)
@@ -95,20 +105,25 @@ class Fenetre :
 
     def page_up(self,event):
         event.widget.yview_scroll(-1, "page")
+        return "break" #Pour eviter la propagation de l'evenement a la fenetre principale
     def page_down(self,event):
         event.widget.yview_scroll(1, "page")
+        return "break" #Pour eviter la propagation de l'evenement a la fenetre principale
     def unit_up(self,event):
         event.widget.yview_scroll(-1, "unit")
+        return "break" #Pour eviter la propagation de l'evenement a la fenetre principale
     def unit_down(self,event):
         event.widget.yview_scroll(1, "unit")
+        return "break" #Pour eviter la propagation de l'evenement a la fenetre principale
 
     def wait(self):
         self.fenetre.grab_set()
         self.zone_texte.focus_set()
         self.fenetre.wait_window(self.fenetre)
 
-    def quit(self):
+    def quit(self,event=None):
         self.fenetre.destroy()
+        return "break" #Pour eviter la propagation de l'evenement a la fenetre principale
 
     def efface_scroll(self):
         """ Efface le scroll lorsqu'il n'est pas nécessaire : ne marche pas"""
@@ -146,6 +161,27 @@ class Fenetre :
            self.fenetre.destroy()
         except :
            pass
+
+class FenetreSurLigneWarning(Fenetre):
+
+    def affiche_texte(self,texte):
+        """ Affiche le texte dans la fenêtre """
+        ligne=0
+        if texte != "" :
+           texte_cr=texte.splitlines()
+           for l in texte_cr:
+                ligne=ligne+1
+                l=l+"\n"
+                self.zone_texte.insert(END,l)
+                if l.find("INFO") < 0 : 
+                   self.zone_texte.tag_add( "Rouge", str(ligne)+".0", "end-1c" )
+                   self.zone_texte.tag_config("Rouge", foreground='red')
+           try:
+                self.fenetre.update_idletasks()
+                x0,y0,x1,y1 = self.zone_texte.bbox(END)
+                if (y1-y0) < 300 : self.efface_scroll()
+           except:
+                pass
 
 class FenetreYesNo(Fenetre):
     def __init__(self,appli,titre="",texte="",yes="Yes",no="No"):
@@ -305,7 +341,7 @@ class FenetreDeSelection(Fenetre):
             et retourne 0, sinon retourne 1 sans rien afficher.
         """
         if message != "":
-            showinfo("Problème",message)
+            showinfo("Problème",message,parent=self.fenetre)
             self.fenetre.tkraise()
             self.appli.affiche_infos(message_eficas)
             return 0
@@ -394,16 +430,14 @@ class FenetreDeSelection(Fenetre):
         return message,liste_valeurs
 
     def verif_valeurs(self, liste_valeurs):
-        """ Cette méthode teste tous les éléments de la liste, et retourne 1 si chaque
-            élément est dans le domaine voulu.
+        """ Cette méthode teste la validité de tous les éléments de la liste,
+            retourne un message vide s'ils sont valides
+            ou un message non vide au premier élément non valide rencontré
         """
         message = ""
         for valeur in liste_valeurs:
-            test = self.item.IsInIntervalle(valeur)
-            if test == 0:
-                intervalle = str(self.item.GetIntervalle()[0])+","+str(self.item.GetIntervalle()[1])
-                message = "La valeur "+str(valeur)+" n'est pas dans l'intervalle ["+intervalle+"]"
-                return message
+            test,message = self.item.object.verif_type(valeur)
+            if test == 0: return message
         return message
 
     def ajouter_valeurs(self, liste_valeurs):

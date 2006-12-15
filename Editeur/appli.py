@@ -51,7 +51,7 @@ import session
 import listeFichiers
 import listePatrons
 
-VERSION="EFICAS v1.10"
+VERSION="EFICAS v1.11"
 
 class APPLI: 
   def __init__ (self,master,code=prefs.code,fichier=None,test=0) :
@@ -61,6 +61,7 @@ class APPLI:
       self.top.minsize(900,500)
       self.top.geometry("900x500")
       self.top.title(VERSION + ' pour '+self.code)
+      self.titre=VERSION + ' pour '+self.code
       self.top.withdraw()
       self.initializeTk(master)
       Pmw.initialise(master)
@@ -318,6 +319,7 @@ class STANDALONE(APPLI):
       self.liste_simp_reel=[]
       # L'attribut test doit valoir 1 si on ne veut pas creer les fenetres
       self.test=1
+      self.titre="STANDALONE POUR TEST"
 
       # Lecture des parametres de configuration (fichier global editeur.ini
       # et utilisateur eficas.ini)

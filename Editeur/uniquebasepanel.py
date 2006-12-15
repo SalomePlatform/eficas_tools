@@ -74,12 +74,17 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
                         text = aide,
                         wraplength=int(self.frame_valeur.winfo_width()*0.8),
                         justify='center')
-      self.aide.place(relx=0.5,rely=0.7,anchor='n')
+      self.aide.place(relx=0.5,rely=0.9,anchor='n')
       # bouton parametre
       bouton_parametres = Button(self.frame_valeur, text="Parametres", command=self.affiche_parametre)
       bouton_parametres.place(relx=0.28,rely=0.5,relwidth=0.4)
+      bouton_val = Button(self.frame_valeur, text="Valider", command=self.valide)
+      bouton_val.place(relx=0.28,rely=0.6,relwidth=0.4)
       # affichage de la valeur du MCS
       self.display_valeur()
+
+  def valide(self):
+      self.valid_valeur()
 
   def affiche_parametre(self) :
      if self.node.item.get_liste_param_possible() != [ ]:

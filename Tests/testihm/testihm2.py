@@ -23,7 +23,7 @@ class TestCase(unittest.TestCase):
         images.update_cache()
         # Analyse des arguments de la ligne de commande
         options=session.parse([])
-        options.cata="v8.3"
+        options.cata="v8"
         pass
 
     def tearDown(self):

@@ -50,9 +50,9 @@ lang='fr'
 encoding='iso-8859-1'
 
 labels= ('Fichier','Edition','Jeu de commandes',
-#               'Catalogue','Browsers',
                 'Options',
                 'Aide',
+                 'Traduction',
            )
 
 appli_composants=['readercata','bureau',
@@ -83,6 +83,10 @@ menu_defs={ 'bureau': [
                ('Fichier source','visu_txt_brut_JDC','<Control-b>','Ctrl+B'),
                #('Paramètres Eficas','affichage_fichier_ini'),
                                   ]
+              ),
+              ('Traduction',[
+               ('Traduction v7 en v8','TraduitFichier','<Control-t>','Ctrl+T'),
+                            ]
               ),
               ('Aide',[
                         ('Aide EFICAS','aideEFICAS','<Control-a>','Ctrl+A'),
