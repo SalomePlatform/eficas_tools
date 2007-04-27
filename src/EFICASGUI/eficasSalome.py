@@ -54,7 +54,9 @@ import studyManager
 
 import SalomePyQt
 
+
 from SelectMainShapeDiag_ui import SelectMainShapeDiag
+from SelectMeshDiag_ui import SelectMeshDiag
 
 
 
@@ -67,11 +69,13 @@ msgIncompleteSelection     = "Tous les éléments de la sélection SALOME n'ont pu 
 msgUnAuthorizedSelecion    = "Sélection SALOME non authorisé. Autorisé : sous-géométrie, groupe de maille"
 msgErrorAddJdcInSalome     = "Erreur dans l'export du fichier de commande dans l'arbre d'étude Salome"
 msgErrorDisplayShape       = "Erreur dans l'affichage de la forme géométrique sélectionnée"
+msgErrorDisplayMeshGroup   = "Erreur dans l'affichage du groupe de maillage sélectionné"
 msgErrorNeedSubShape       = "Sélection d'un élément sous géométrique seulement"
 
 
 msgErrorGroupMaSelection    = "Sélection GROUP_MA ne peut pas prendre un point ou un noeud"
 msgWarningGroupNoSelection  = "Attention, GROUP_NO devrait prendre un point ou un noeud"
+
 
 
 
@@ -90,6 +94,7 @@ COLORS = ( studyManager.RED,
          studyManager.CYAN )
 
 LEN_COLORS = len( COLORS )
+
 
 
 
@@ -120,7 +125,39 @@ class SelectMainShapeDiagImpl( SelectMainShapeDiag ):
                 break                
             
         return mainShapeEntry 
-    
+
+        
+class SelectMeshDiagImpl( SelectMeshDiag ):
+    def __init__( self, meshGroupEntries, parent = None,name = None,modal = 1,fl = 0 ):
+        SelectMeshDiag.__init__( self,parent,name,modal,fl )
+        
+        self.meshes = {} # ( entry, value )         
+        
+        for meshGroupEntry in meshGroupEntries:
+            meshEntry = studyManager.palStudy.getMesh(meshGroupEntry)
+            meshName  = studyManager.palStudy.getName(meshEntry)            
+            self.meshes[meshEntry] = meshName 
+                        
+        self.lbMeshes.clear()
+        for entry,name in self.meshes .items():
+            self.lbMeshes.insertItem( name )
+        self.lbMeshes.setCurrentItem( 0 )        
+                                    
+    def getUserSelection( self ):
+        selMeshEntry, keep = None, False
+        
+        item = self.lbMeshes.selectedItem()
+        meshName = str( item.text() )        
+        for entry, name in self.meshes.items():
+            if meshName == name:
+                selMeshEntry = entry
+                break
+            
+        keep = self.cbAgain.isChecked()
+            
+        return selMeshEntry, keep         
+
+
 
 
 #class MyEficas( Tkinter.Toplevel, eficas.EFICAS, QXEmbed ):
@@ -196,6 +233,9 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         self.subShapes        = {} #dictionnaire des sous-géométrie de la géométrie principale ( clé = entry, valeur = name ) 
         #----------------------------------------------------------------------    
         
+        # visualisation groupes de mailles
+        self.workingMesh = {} #dictionnaire clé = identifiant JDC / valeur = entry Mesh
+        #----------------------------------------------------------------------        
         
         self.icolor = 0  # compteur pour mémoriser la couleur courante
         
@@ -233,8 +273,86 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             
         return True
         
+    def __createOCCView( self ):
+        """
+        Création vue Occ
+        """        
+        #salome.salome_init()
+        import iparameters
+        ipar = iparameters.IParameters(salome.myStudy.GetCommonParameters("Interface Applicative", 1))
+
+        #Set up visual properties:
+        ipar.setProperty("AP_ACTIVE_VIEW", "OCCViewer_0_0")
+        ipar.setProperty("AP_WORKSTACK_INFO", "(splitter orientation=0 sizes=1045 (views active='OCCViewer_0_0' 'OCCViewer_0_0'))")
+        ipar.setProperty("AP_SAVEPOINT_NAME", "GUI state: 1")
+        #Set up lists:
+        # fill list AP_VIEWERS_LIST
+        ipar.append("AP_VIEWERS_LIST", "OCCViewer_1")
+        # fill list OCCViewer_1
+        ipar.append("OCCViewer_1", "OCC scene:1 - viewer:1")
+        ipar.append("OCCViewer_1", "1.000000000000e+00*0.000000000000e+00*0.000000000000e+00*5.773502588272e-01*-5.773502588272e-01*5.773502588272e-01*0.000000000000e+00*0.000000000000e+00*0.000000000000e+00*0.000000000000e+00*2.886751294136e+02*-2.886751294136e+02*2.886751294136e+02")
+
+        if salome.sg.hasDesktop():
+            salome.sg.updateObjBrowser(1)
+            iparameters.getSession().restoreVisualState(1)
+        
+                        
+    def __selectWorkingMesh( self, meshGroupEntries ):
+        """
+        Sélection intéractive du maillage sur lequel on travail
+        """
+        selMeshEntry, keep = None, False
+        diag = SelectMeshDiagImpl( meshGroupEntries, self.parent  )
+    
+        if diag.exec_loop() == qt.QDialog.Accepted:
+            selMeshEntry, keep = diag.getUserSelection()
+        return selMeshEntry, keep    
             
-    def __selectMainShape( self, groupeMaNamesIn, groupeNoNamesIn ):
+#    def __selectMainShape( self, groupeMaNamesIn, groupeNoNamesIn ):
+#        """
+#        Sélection intéractive de la main shape
+#        """
+#        groupeMaNamesOut, groupeNoNamesOut = [], []
+#        selectedMainShape  =  None
+#        mainShapes = {}
+#        mainShapeEntries = []
+#
+#        # liste des main shape possibles
+#        for groups in ( groupeMaNamesIn, groupeNoNamesIn ):
+#            for subShapeName in groups:
+#                entries = studyManager.palStudy.getEntriesFromName( studyManager.SGeom, subShapeName )
+#                for entry in entries:
+#                    mainShapeEntry = studyManager.palStudy.getMainShapeEntry( entry )
+#                    if mainShapeEntry != entry:
+#                        mainShapes[ subShapeName ] = mainShapeEntry
+#                        mainShapeEntries += [ mainShapeEntry ]
+#                                
+#        if mainShapes:
+#            diag = SelectMainShapeDiagImpl( mainShapeEntries, self.parent  )
+#    
+#            if diag.exec_loop() == qt.QDialog.Accepted:
+#                selectedMainShape = diag.getUserSelection()                
+#                print 'main shape user selection ->',selectedMainShape
+#                
+#                # filtre sur la main shape sélectionnée
+#                for name in groupeMaNamesIn:
+#                    try:
+#                        if mainShapes[ name ] == selectedMainShape:
+#                            groupeMaNamesOut += [ name ]
+#                    except:
+#                        pass                                                        
+#                                                
+#                for name in groupeNoNamesIn:
+#                    try:
+#                        if mainShapes[ name ] == selectedMainShape:
+#                            groupeNoNamesOut += [ name ]
+#                    except:
+#                        pass         
+#        
+#        return groupeMaNamesOut, groupeNoNamesOut
+#
+
+    def __selectMainShape( self, groupeMaNamesIn, groupeNoNamesIn, jdcID ):
         """
         Sélection intéractive de la main shape
         """
@@ -250,32 +368,38 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
                 for entry in entries:
                     mainShapeEntry = studyManager.palStudy.getMainShapeEntry( entry )
                     if mainShapeEntry != entry:
-                        mainShapes[ subShapeName ] = mainShapeEntry
+                        if mainShapes.has_key(subShapeName):
+                            mainShapes[ subShapeName ].append( mainShapeEntry )
+                        else:
+                            mainShapes[ subShapeName ] = [ mainShapeEntry ]
                         mainShapeEntries += [ mainShapeEntry ]
-                                
+        
         if mainShapes:
             diag = SelectMainShapeDiagImpl( mainShapeEntries, self.parent  )
     
             if diag.exec_loop() == qt.QDialog.Accepted:
                 selectedMainShape = diag.getUserSelection()                
                 print 'main shape user selection ->',selectedMainShape
+                # added by _CS_cbo issue REX
+                self.mainShapeEntries[ jdcID ] = selectedMainShape
                 
                 # filtre sur la main shape sélectionnée
                 for name in groupeMaNamesIn:
                     try:
-                        if mainShapes[ name ] == selectedMainShape:
+                        if selectedMainShape in mainShapes[ name ] :
                             groupeMaNamesOut += [ name ]
                     except:
-                        pass                                                        
-                                                
+                        pass
+                
                 for name in groupeNoNamesIn:
                     try:
-                        if mainShapes[ name ] == selectedMainShape:
+                        if selectedMainShape in mainShapes[ name ] :
                             groupeNoNamesOut += [ name ]
                     except:
-                        pass         
-        
+                        pass
+                        
         return groupeMaNamesOut, groupeNoNamesOut
+
 
 
 
@@ -522,7 +646,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             # mise à jours de la liste des sous-géométrie ( self.subShapes )
             if not self.mainShapeEntries.has_key( jdcID ):
                 # l'utilisateur n'a sélectionné aucune sous-géométrie et donc pas de géométrie principale
-                groupeMaNames, groupeNoNames  = self.__selectMainShape( groupeMaNames, groupeNoNames )
+                groupeMaNames, groupeNoNames  = self.__selectMainShape( groupeMaNames, groupeNoNames, jdcID )
                 
             if groupeMaNames or groupeNoNames:                                                
                 print 'CS_pbruno createOrUpdateMesh groupeMaNames', groupeMaNames
@@ -555,27 +679,91 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             logger.debug(50*'=')
         
                 
+    def displayMeshGroups(self, meshGroupName):
+        """
+        visualisation group de maille de nom meshGroupName dans salome
+        """
+        ok, msgError = False, ''
+        try:
+            sg = salome.ImportComponentGUI('SMESH')
+            currentjdcID = self.bureau.nb.getcurselection()
+            meshGroupEntries = []
+            selMeshEntry = None
+            selMeshGroupEntry = None
+            
+            # liste des groupes de maille de nom meshGroupName
+            listSO = studyManager.palStudy._myStudy.FindObjectByName(meshGroupName, "SMESH")
+            for SObjet in listSO:
+                groupEntry = SObjet.GetID()                
+                meshGroupEntries += [groupEntry]                    
+            
+            # choix d'un maillage
+            if not self.workingMesh.has_key(currentjdcID): # aucun maillage de défini par défaut encore
+                #selMeshEntry = "0:1:3:5" #CS_pbruno todo : choix maillage + test si c un maillage
+                selMeshEntry, keep = self.__selectWorkingMesh(meshGroupEntries)
+                if keep:
+                    self.workingMesh[currentjdcID] = selMeshEntry
+            else: # déja un de défini par défaut
+                selMeshEntry = self.workingMesh[currentjdcID]
+                    
+            # le groupe de maille est il ds ce maillage?
+            lselMeshEntry = len(selMeshEntry)            
+            for groupEntry in meshGroupEntries:                
+                if selMeshEntry == groupEntry[0:lselMeshEntry]:
+                    selMeshGroupEntry = groupEntry
+                    break
+                
+            # si oui, on l'affiche ds la vue VTK
+            if selMeshGroupEntry:
+                #CS_pbruno: marche QUE si le module SMESH est activé
+                myComponent = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
+                SCom        = studyManager.palStudy._myStudy.FindComponent("SMESH")
+                studyManager.palStudy._myBuilder.LoadWith( SCom , myComponent  )                             
+                sg.CreateAndDisplayActor(selMeshGroupEntry)
+                salome.sg.Display(selMeshGroupEntry)
+                salome.sg.FitAll()                
+                ok = True                
+        except:
+            msgError = msgErrorDisplayMeshGroup
+            logger.debug(50*'=')
+        return ok, msgError
+
+            
     def displayShape(  self, shapeName ):
         """
         visualisation géométrie de nom shapeName dans salome
         """
         ok, msgError = False, ''
         try:
+            import VISU            
+            import visu_gui
+            currentViewType = None            
+            m = visu_gui.myVisu.GetViewManager()
+            v = m.GetCurrentView()
+            if v:
+                currentViewType = v.GetType()
+            
             atLeastOneStudy = self.__studySync()
             if not atLeastOneStudy:
-                return ok, msgError
-            
+                return ok, msgError            
                                      
             #salome.sg.EraseAll()
-            print 'displayShapestrGeomShape shapeName -> ', shapeName             
-            current_color = COLORS[ self.icolor % LEN_COLORS ]
-            ok = studyManager.palStudy.displayShapeByName( shapeName, current_color )
-            self.icolor = self.icolor + 1 
+            print 'displayShapestrGeomShape shapeName -> ', shapeName
             
-            if not ok:
-                msgError = msgErrorDisplayShape
-        except:                    
-            logger.debug(50*'=')            
+            if currentViewType == VISU.TVIEW3D: # maillage
+                print 'Vue courante = VTK : affichage groupe de maille'                
+                ok, msgError = self.displayMeshGroups(shapeName)
+            else: #geometrie
+                print 'Vue courante = OCC : affichage element geometrique'
+                self.__createOCCView()
+                current_color = COLORS[ self.icolor % LEN_COLORS ]                
+                ok = studyManager.palStudy.displayShapeByName( shapeName, current_color )
+                salome.sg.FitAll()
+                self.icolor = self.icolor + 1             
+                if not ok:
+                    msgError = msgErrorDisplayShape
+        except:            
+            logger.debug(50*'=')
         return ok, msgError    
         
         
@@ -609,6 +797,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         qt.QApplication.restoreOverrideCursor()
         
         
+
 #-------------------------------------------------------------------------------------------------------
 #    Pilotage de la Visu des elements de structures
 #
@@ -628,7 +817,6 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             print "boum dans envoievisu"
 
 
-           
         
 #-------------------------------------------------------------------------------------------------------        
 #           Point d'entré lancement EFICAS
