@@ -136,6 +136,20 @@ def customPopup(popup, theContext, theObject, theParent):
    popup.removeItem(99003)
 
 
+def windows():
+    """
+    This method is called when GUI module is being created
+    and initialized.
+    Should return a map of the SALOME dockable windows id's
+    needed to be opened when module is activated.
+    """
+    print "ASTERGUI::windows"
+    from qt import Qt
+    winMap = {}
+    winMap[ SalomePyQt.WT_ObjectBrowser ] = Qt.DockLeft
+    winMap[ SalomePyQt.WT_PyConsole ]     = Qt.DockBottom
+    return winMap   
+
 # -----------------------------------------------------------------------------
 
 import eficasSalome
