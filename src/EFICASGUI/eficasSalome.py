@@ -5,7 +5,7 @@ from Logger import ExtLogger
 import qt
 import notifqt
 # -----------------------------------------------------------------------------
-import sys, os, re
+import sys, os, re,types
 
 
 
@@ -248,7 +248,6 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
     def destroy(self):
         global appli
         appli = None
-        print "hhhhhhhhhhhhhhhhhhhhh"
         Tkinter.Toplevel.destroy(self)
                     
     def __studySync( self ):
@@ -272,6 +271,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             studyManager.palStudy.setCurrentStudyID( activeStudyId )            
             
         return True
+
         
     def __createOCCView( self ):
         """
@@ -279,12 +279,25 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         """        
         #salome.salome_init()
         import iparameters
-        ipar = iparameters.IParameters(salome.myStudy.GetCommonParameters("Interface Applicative", 1))
+
+        # On détermine le nombre de GUI states déjà présents dans l'arbre d'étude
+	GUIStateID = 1
+
+	ipar = iparameters.IParameters(salome.myStudy.GetCommonParameters("Interface Applicative", GUIStateID))
+	properties = ipar.getProperties()
+
+	while properties != []:
+           GUIStateID += 1
+	   ipar = iparameters.IParameters(salome.myStudy.GetCommonParameters("Interface Applicative", GUIStateID))
+	   properties = ipar.getProperties()
+   
+        print "GUIStateID: ", GUIStateID
 
         #Set up visual properties:
         ipar.setProperty("AP_ACTIVE_VIEW", "OCCViewer_0_0")
         ipar.setProperty("AP_WORKSTACK_INFO", "(splitter orientation=0 sizes=1045 (views active='OCCViewer_0_0' 'OCCViewer_0_0'))")
-        ipar.setProperty("AP_SAVEPOINT_NAME", "GUI state: 1")
+        ipar.setProperty("AP_SAVEPOINT_NAME", "GUI state: %i"%(GUIStateID))
+
         #Set up lists:
         # fill list AP_VIEWERS_LIST
         ipar.append("AP_VIEWERS_LIST", "OCCViewer_1")
@@ -294,7 +307,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
 
         if salome.sg.hasDesktop():
             salome.sg.updateObjBrowser(1)
-            iparameters.getSession().restoreVisualState(1)
+            iparameters.getSession().restoreVisualState(GUIStateID)
         
                         
     def __selectWorkingMesh( self, meshGroupEntries ):
@@ -503,19 +516,32 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         groupMa = ()                
         try:
             itemName  = item.get_nom()
-            #print 'CS_pbruno itemName',itemName             
             if 'GROUP_MA' in itemName:
+                #print 'CS_pbruno itemName',itemName             
                 itemValue = item.get_valeur()
                 if type( itemValue ) == str:
                     groupMa += ( itemValue , )
                 elif type( itemValue ) == tuple:
                     groupMa += itemValue                
+		elif type( itemValue ) == list:
+		    groupMa += tuple(itemValue)
+	        elif type( itemValue ) == types.InstanceType and itemValue.has_key('GROUP_MA'):
+                    # pour créer le groupe de mailles dans DEFI_GROUP> CREA_GROUP_MA> GROUP_MA
+		    groupMa += ( itemValue['GROUP_MA'], )
             else:
                 children = item._GetSubList()
                 for child in children:            
                     groupMa +=  self.__getAllGroupeMa( child )
         except:
-            pass        
+	# traitement des MCLIST Pour CREA_GROUP_MA
+            try:
+                itemName  = item.get_nom()
+                if 'GROUP_MA' in itemName:
+	            children = item._GetSubList()
+	            for child in children:
+	                groupMa +=  self.__getAllGroupeMa( child )
+            except:
+	        pass
         return groupMa                
         
    
@@ -532,12 +558,25 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
                     groupNo += ( itemValue , )
                 elif type( itemValue ) == tuple:
                     groupNo += itemValue
+		elif type( itemValue ) == list:
+		    groupNo += tuple(itemValue)
+	        elif type( itemValue ) == types.InstanceType and itemValue.has_key('GROUP_NO'):
+                    # pour créer le groupe de Noeuds dans DEFI_GROUP> CREA_GROUP_NO> GROUP_NO
+		    groupNo += ( itemValue['GROUP_NO'], )
             else:
                 children = item._GetSubList()
                 for child in children:            
                     groupNo += self.__getAllGroupeNo( child )
         except:
-            pass 
+	# traitement des MCLIST Pour CREA_GROUP_NO dans DEFI_GROUP
+            try:
+                itemName  = item.get_nom()
+                if 'GROUP_NO' in itemName:
+	            children = item._GetSubList()
+	            for child in children:
+	                groupNo +=  self.__getAllGroupeNo( child )
+            except:
+	        pass
         return groupNo
 
         
@@ -693,36 +732,44 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             
             # liste des groupes de maille de nom meshGroupName
             listSO = studyManager.palStudy._myStudy.FindObjectByName(meshGroupName, "SMESH")
-            for SObjet in listSO:
-                groupEntry = SObjet.GetID()                
-                meshGroupEntries += [groupEntry]                    
+            print "liste des groupes de maille de nom %s: "%(meshGroupName), listSO
             
-            # choix d'un maillage
-            if not self.workingMesh.has_key(currentjdcID): # aucun maillage de défini par défaut encore
-                #selMeshEntry = "0:1:3:5" #CS_pbruno todo : choix maillage + test si c un maillage
-                selMeshEntry, keep = self.__selectWorkingMesh(meshGroupEntries)
-                if keep:
-                    self.workingMesh[currentjdcID] = selMeshEntry
-            else: # déja un de défini par défaut
-                selMeshEntry = self.workingMesh[currentjdcID]
-                    
-            # le groupe de maille est il ds ce maillage?
-            lselMeshEntry = len(selMeshEntry)            
-            for groupEntry in meshGroupEntries:                
-                if selMeshEntry == groupEntry[0:lselMeshEntry]:
-                    selMeshGroupEntry = groupEntry
-                    break
+            if len(listSO)>0:
+                for SObjet in listSO:
+                    groupEntry = SObjet.GetID()                
+                    meshGroupEntries += [groupEntry]                    
                 
-            # si oui, on l'affiche ds la vue VTK
-            if selMeshGroupEntry:
-                #CS_pbruno: marche QUE si le module SMESH est activé
-                myComponent = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
-                SCom        = studyManager.palStudy._myStudy.FindComponent("SMESH")
-                studyManager.palStudy._myBuilder.LoadWith( SCom , myComponent  )                             
-                sg.CreateAndDisplayActor(selMeshGroupEntry)
-                salome.sg.Display(selMeshGroupEntry)
-                salome.sg.FitAll()                
-                ok = True                
+                if len(meshGroupEntries)>1:
+                
+                    # choix d'un maillage
+                    if not self.workingMesh.has_key(currentjdcID): # aucun maillage de défini par défaut encore
+                        #selMeshEntry = "0:1:3:5" #CS_pbruno todo : choix maillage + test si c un maillage
+                        selMeshEntry, keep = self.__selectWorkingMesh(meshGroupEntries)
+                        if keep:
+                            self.workingMesh[currentjdcID] = selMeshEntry
+                    else: # déja un de défini par défaut
+                        selMeshEntry = self.workingMesh[currentjdcID]
+                            
+                    # le groupe de maille est il ds ce maillage?
+                    lselMeshEntry = len(selMeshEntry)            
+                    for groupEntry in meshGroupEntries:                
+                        if selMeshEntry == groupEntry[0:lselMeshEntry]:
+                            selMeshGroupEntry = groupEntry
+                            break
+    
+                else:
+                    selMeshGroupEntry = meshGroupEntries[0]
+                    
+                # on affiche le groupe ds la vue VTK
+                if selMeshGroupEntry:
+                    #CS_pbruno: marche QUE si le module SMESH est activé
+                    myComponent = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
+                    SCom        = studyManager.palStudy._myStudy.FindComponent("SMESH")
+                    studyManager.palStudy._myBuilder.LoadWith( SCom , myComponent  )                             
+                    sg.CreateAndDisplayActor(selMeshGroupEntry)
+                    salome.sg.Display(selMeshGroupEntry)
+                    salome.sg.FitAll()                
+                    ok = True                
         except:
             msgError = msgErrorDisplayMeshGroup
             logger.debug(50*'=')
@@ -755,7 +802,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
                 ok, msgError = self.displayMeshGroups(shapeName)
             else: #geometrie
                 print 'Vue courante = OCC : affichage element geometrique'
-                self.__createOCCView()
+                #self.__createOCCView()
                 current_color = COLORS[ self.icolor % LEN_COLORS ]                
                 ok = studyManager.palStudy.displayShapeByName( shapeName, current_color )
                 salome.sg.FitAll()
