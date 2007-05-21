@@ -281,15 +281,15 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         import iparameters
 
         # On détermine le nombre de GUI states déjà présents dans l'arbre d'étude
-	GUIStateID = 1
+        GUIStateID = 1
 
-	ipar = iparameters.IParameters(salome.myStudy.GetCommonParameters("Interface Applicative", GUIStateID))
-	properties = ipar.getProperties()
+        ipar = iparameters.IParameters(salome.myStudy.GetCommonParameters("Interface Applicative", GUIStateID))
+        properties = ipar.getProperties()
 
-	while properties != []:
-           GUIStateID += 1
-	   ipar = iparameters.IParameters(salome.myStudy.GetCommonParameters("Interface Applicative", GUIStateID))
-	   properties = ipar.getProperties()
+        while properties != []:
+            GUIStateID += 1
+            ipar = iparameters.IParameters(salome.myStudy.GetCommonParameters("Interface Applicative", GUIStateID))
+            properties = ipar.getProperties()
    
         print "GUIStateID: ", GUIStateID
 
@@ -321,49 +321,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             selMeshEntry, keep = diag.getUserSelection()
         return selMeshEntry, keep    
             
-#    def __selectMainShape( self, groupeMaNamesIn, groupeNoNamesIn ):
-#        """
-#        Sélection intéractive de la main shape
-#        """
-#        groupeMaNamesOut, groupeNoNamesOut = [], []
-#        selectedMainShape  =  None
-#        mainShapes = {}
-#        mainShapeEntries = []
-#
-#        # liste des main shape possibles
-#        for groups in ( groupeMaNamesIn, groupeNoNamesIn ):
-#            for subShapeName in groups:
-#                entries = studyManager.palStudy.getEntriesFromName( studyManager.SGeom, subShapeName )
-#                for entry in entries:
-#                    mainShapeEntry = studyManager.palStudy.getMainShapeEntry( entry )
-#                    if mainShapeEntry != entry:
-#                        mainShapes[ subShapeName ] = mainShapeEntry
-#                        mainShapeEntries += [ mainShapeEntry ]
-#                                
-#        if mainShapes:
-#            diag = SelectMainShapeDiagImpl( mainShapeEntries, self.parent  )
-#    
-#            if diag.exec_loop() == qt.QDialog.Accepted:
-#                selectedMainShape = diag.getUserSelection()                
-#                print 'main shape user selection ->',selectedMainShape
-#                
-#                # filtre sur la main shape sélectionnée
-#                for name in groupeMaNamesIn:
-#                    try:
-#                        if mainShapes[ name ] == selectedMainShape:
-#                            groupeMaNamesOut += [ name ]
-#                    except:
-#                        pass                                                        
-#                                                
-#                for name in groupeNoNamesIn:
-#                    try:
-#                        if mainShapes[ name ] == selectedMainShape:
-#                            groupeNoNamesOut += [ name ]
-#                    except:
-#                        pass         
-#        
-#        return groupeMaNamesOut, groupeNoNamesOut
-#
+
 
     def __selectMainShape( self, groupeMaNamesIn, groupeNoNamesIn, jdcID ):
         """
@@ -385,31 +343,36 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
                             mainShapes[ subShapeName ].append( mainShapeEntry )
                         else:
                             mainShapes[ subShapeName ] = [ mainShapeEntry ]
-                        mainShapeEntries += [ mainShapeEntry ]
+                        if not mainShapeEntry in mainShapeEntries:
+                            mainShapeEntries += [ mainShapeEntry ]
         
         if mainShapes:
-            diag = SelectMainShapeDiagImpl( mainShapeEntries, self.parent  )
-    
-            if diag.exec_loop() == qt.QDialog.Accepted:
-                selectedMainShape = diag.getUserSelection()                
-                print 'main shape user selection ->',selectedMainShape
-                # added by _CS_cbo issue REX
-                self.mainShapeEntries[ jdcID ] = selectedMainShape
-                
-                # filtre sur la main shape sélectionnée
-                for name in groupeMaNamesIn:
-                    try:
-                        if selectedMainShape in mainShapes[ name ] :
-                            groupeMaNamesOut += [ name ]
-                    except:
-                        pass
-                
-                for name in groupeNoNamesIn:
-                    try:
-                        if selectedMainShape in mainShapes[ name ] :
-                            groupeNoNamesOut += [ name ]
-                    except:
-                        pass
+            if len(mainShapeEntries)>1:
+                diag = SelectMainShapeDiagImpl( mainShapeEntries, self.parent  )
+        
+                if diag.exec_loop() == qt.QDialog.Accepted:
+                    selectedMainShape = diag.getUserSelection()                
+                    print 'main shape user selection ->',selectedMainShape
+
+            else:
+                selectedMainShape = mainShapeEntries[0]
+            
+            self.mainShapeEntries[ jdcID ] = selectedMainShape
+                    
+            # filtre sur la main shape sélectionnée
+            for name in groupeMaNamesIn:
+                try:
+                    if selectedMainShape in mainShapes[ name ] :
+                        groupeMaNamesOut += [ name ]
+                except:
+                    pass
+            
+            for name in groupeNoNamesIn:
+                try:
+                    if selectedMainShape in mainShapes[ name ] :
+                        groupeNoNamesOut += [ name ]
+                except:
+                    pass
                         
         return groupeMaNamesOut, groupeNoNamesOut
 
