@@ -14,7 +14,7 @@
 """
 
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 import cata
 from cata import JdC
@@ -39,3 +39,4 @@ print j.cr
 
 cr=j.report()
 print cr
+assert j.isvalid() == 0

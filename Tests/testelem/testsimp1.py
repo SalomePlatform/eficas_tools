@@ -245,7 +245,7 @@ Fin Mot-clé simple : mcs1
 
    def test014(self):
        cata=SIMP(typ=geom,statut='o')
-       liste=((1,1),
+       liste=((1,0),
               ("aaaa",1),
             )
        for valeur,valid in liste:

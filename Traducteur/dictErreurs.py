@@ -27,6 +27,7 @@ dict_erreurs={
               "DEFI_MATERIAU_COMP_THM_LIQU_SATU_GAT" : "le materiau LIQU_SATU_GAT a ete supprime",
               "DEFI_MATERIAU_COMP_THM_LIQU_NSAT_GAT" : "le materiau LIQU_NSAT_GAT a ete supprime",
               "DEFI_MATERIAU_GLRC" : "le materiau GLRC a ete remplace par GLRC_DAMAGE",
+              "DEFI_MATERIAU_GLRC_FO" : "le materiau GLRC_FO a ete remplace par GLRC_DAMAGE",
               "DEFI_MATERIAU_OHNO" : "le materiau OHNO a ete remplace par TAHERI",
               "DEFI_MATERIAU_OHNO_FO" : "le materiau OHNO a ete remplace par TAHERI",
               "CALC_CHAM_ELEM":"reecrire la partie SOUR_ELGA_ELEC",
@@ -48,7 +49,6 @@ dict_erreurs={
               "DYNA_NON_LINE_INCREMENT_SUBD_PAS":"Si SUBD_PAS=1 il n'y a pas subdivision : le mot est clef est ote du DYNA_NON_LINE",
               "CALC_PRECONT_SUBD_PAS":"Si SUBD_PAS=1 il n'y a pas subdivision : le mot est clef est ote du CALC_PRECONT",
               "TEST_RESU_UNITE":"suppression du mot clef UNITE dans TEST_RESU",
-              "AFFE_MODELE_AFFE":"suppression de AFFE (ancien mot clef APPUI_REP)",
               "POST_SIMPLIFIE":"commande POST_SIMPLIFIE supprimee",
               "POST_DYNA_ALEA_GAUSS":"la methode GAUSS a ete supprimee de POST_DYNA_ALEA",
               "POST_DYNA_ALEA_VANMARCKE":"la methode VANMARCKE a ete supprimee de POST_DYNA_ALEA",
@@ -60,7 +60,7 @@ dict_erreurs={
               "CREA_RESU_NOM_CHAM_VALEUR":"HYDR_ELGA est remplace par HYDR_ELNO_ELGA et HYDR_NOEU_ELGA",
               "COMB_CHAM_NO":"COMB_CHAM_NO est remplace par CREA_CHAMP",
               "COMB_CHAM_ELEM":"COMB_CHAM_ELEM est remplace par CREA_CHAMP",
-              "IMPR_OAR":"IMPR_OAR doit etre traduit manuellement",
+              "IMPR_OAR":"IMPR_OAR demande un traitement manuel",
               "IMPR_FICO_HOMARD":"IMPR_FICO_HOMARD a ete integre dans MACR_ADPA_MAIL",
              }
 

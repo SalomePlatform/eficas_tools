@@ -22,14 +22,14 @@
    Module de chargement des composants et de mapping des objets du noyau
    Accas vers les items d'EFICAS
 
-   - composants : dictionnaire de stockage des relations entre types
-     d'objet du noyau et types d'item
-   - charger_composants() : fonction de chargement des composants. Retourne
-     le dictionnaire composants.
-   - gettreeitem(object) -> type d'item : fonction qui retourne un type
-     d'item correspondant au type de l'objet noyau fourni.
-   - make_objecttreeitem(appli,labeltext, object, setfunction=None) -> item : fonction qui retourne un item
-     correspondant à l'objet noyau fourni.
+     - composants : dictionnaire de stockage des relations entre types
+       d'objet du noyau et types d'item
+     - charger_composants() : fonction de chargement des composants. Retourne
+       le dictionnaire composants.
+     - gettreeitem(object) -> type d'item : fonction qui retourne un type
+       d'item correspondant au type de l'objet noyau fourni.
+     - make_objecttreeitem(appli,labeltext, object, setfunction=None) -> item : fonction qui retourne un item
+       correspondant à l'objet noyau fourni.
 """
 # import généraux
 import os,glob,types

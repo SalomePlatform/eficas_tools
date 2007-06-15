@@ -54,7 +54,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       from uniquepanel import UNIQUE_Panel
       from plusieurspanel import PLUSIEURS_Panel
 
-      #print "affect_panel : ",self.nom,self.is_list(),self.has_into(), self.get_into(None)
+      #print "affect_panel : ",self.nom,self.is_list(),self.has_into()
       # Attention l ordre des if est important
 
       if self.wait_shell():

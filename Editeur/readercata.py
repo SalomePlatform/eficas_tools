@@ -43,6 +43,7 @@ from utils import init_rep_cata_dev
 #import catabrowser
 import autre_analyse_cata
 import uiinfo
+import re
 
 class READERCATA:
 
@@ -104,6 +105,20 @@ class READERCATA:
       if self.fic_cata == None :
           print "Pas de catalogue pour code %s, version %s" %(self.code,self.version_code)
           sys.exit(0)
+
+      # Determinination du repertoire materiau
+      v_codeSansPoint=self.version_code
+      v_codeSansPoint=re.sub("\.","",v_codeSansPoint)
+      chaine="rep_mat_"+v_codeSansPoint
+      if hasattr(self.appli.CONFIGURATION,chaine):
+          a=getattr(self.appli.CONFIGURATION,chaine)
+      else :
+          try :
+             a=self.appli.CONFIGURATION.dRepMat[self.version_code]
+          except :
+             print "Probleme avec le repertoire materiau"
+             a='.'
+      self.appli.CONFIGURATION.rep_mat=a 
 
       # détermination de fic_cata_c et fic_cata_p
       self.fic_cata_c = self.fic_cata + 'c'
@@ -180,6 +195,7 @@ class READERCATA:
         self.appli.top.title(titre)
       self.appli.titre=titre
 
+       
    def import_cata(self,cata):
       """ 
           Réalise l'import du catalogue dont le chemin d'accès est donné par cata

@@ -9,6 +9,9 @@ REPINI=os.path.dirname(os.path.abspath(__file__))
 # Obligatoire
 INSTALLDIR=os.path.join(REPINI,'..')
 
+# la variable code donne le nom du code a selectionner
+code="MINICODE"
+
 # CODE_PATH sert à localiser Noyau et Validation éventuellement
 # non contenus dans la distribution EFICAS
 # Par défaut on utilise les modules de INSTALLDIR

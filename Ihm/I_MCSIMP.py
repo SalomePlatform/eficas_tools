@@ -145,7 +145,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         qui n'existe pas encore (type CO()), 0 sinon
     """
     for typ in self.definition.type:
-      if type(typ) == types.ClassType :
+      if type(typ) == types.ClassType or isinstance(typ,type):
         if issubclass(typ,CO) :
            return 1
     return 0
@@ -156,7 +156,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         ou dérivé, 0 sinon
     """
     for typ in self.definition.type:
-      if type(typ) == types.ClassType :
+      if type(typ) == types.ClassType or isinstance(typ,type):
         if issubclass(typ,ASSD) and not issubclass(typ,GEOM):
           return 1
     return 0
@@ -168,7 +168,7 @@ class MCSIMP(I_OBJECT.OBJECT):
          Retourne 0 dans le cas contraire
     """
     for typ in self.definition.type:
-      if type(typ) == types.ClassType :
+      if type(typ) == types.ClassType or isinstance(typ,type):
         if typ.__name__ in ("GEOM","ASSD","geom","assd") or issubclass(typ,GEOM) :
           return 1
     return 0
@@ -179,7 +179,7 @@ class MCSIMP(I_OBJECT.OBJECT):
          Retourne 0 dans le cas contraire
     """
     for typ in self.definition.type:
-      if type(typ) == types.ClassType :
+      if type(typ) == types.ClassType or isinstance(typ,type):
         if issubclass(typ,GEOM) : return 1
     return 0
 

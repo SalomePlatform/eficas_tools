@@ -8,7 +8,7 @@
 
 """
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 from Accas import SIMP,FACT
 from parse import MyConfParser
@@ -30,3 +30,4 @@ else:
 o=cata(p.getdict(),'mcf1',None)
 print o
 print o.report()
+assert o.isvalid() == 0

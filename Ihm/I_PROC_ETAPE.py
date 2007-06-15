@@ -44,31 +44,31 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
    def supprime_sdprods(self):
       """
          Fonction: Lors d'une destruction d'etape, detruit tous les concepts produits
-            Une procedure n'en a aucun
+         Une procedure n'en a aucun
       """
       return
 
    def delete_concept(self,sd):
       """
-          Inputs :
-             - sd=concept detruit
-          Fonction :
-          Mettre a jour les mots cles de l etape 
+          Fonction : Mettre a jour les mots cles de l etape 
           suite à la disparition du concept sd
           Seuls les mots cles simples MCSIMP font un traitement autre
           que de transmettre aux fils
+
+          Inputs :
+             - sd=concept detruit
       """
       for child in self.mc_liste :
         child.delete_concept(sd)
 
    def replace_concept(self,old_sd,sd):
       """
+          Fonction : Mettre a jour les mots cles de l etape
+          suite au remplacement du concept old_sd
+
           Inputs :
              - old_sd=concept remplacé
              - sd=nouveau concept
-          Fonction :
-          Mettre a jour les mots cles de l etape
-          suite au remplacement du concept old_sd
       """
       for child in self.mc_liste :
         child.replace_concept(old_sd,sd)

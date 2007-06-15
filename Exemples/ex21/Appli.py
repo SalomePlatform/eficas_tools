@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import Tkinter
 import Pmw
+from Editeur import comploader
 
 class CONFIG:
    isdeveloppeur='NON'
@@ -30,9 +31,11 @@ class Appli:
       self.CONFIGURATION=CONFIG()
       self.root=Tkinter.Tk()
       Pmw.initialise(self.root)
+      comploader.charger_composants()
       self.init()
 
    def init(self):
+      self.dict_reels={}
       self.statusbar=STATUSBAR(self.root)
 
    def affiche_infos(self,message):

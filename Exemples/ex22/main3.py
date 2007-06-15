@@ -3,10 +3,9 @@
 """
 
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster/Cata','../../Aster']
 
-from Cata import cata_STA5
-cata=cata_STA5
+from cataSTA5 import cata
 
 import convert
 c=convert.plugins['python']()

@@ -5,11 +5,11 @@
 import sys
 sys.path[:0]=['../..']
 
-from Accas import SIMP,FACT,OPER,JDC_CATA
+from Accas import SIMP,FACT,OPER,JDC_CATA,ASSD
 
 # Construction objet de définition
 
-class concept:
+class concept(ASSD):
    def __init__(self,etape):
       self.etape=etape
    def is_object(valeur):

@@ -15,14 +15,14 @@
    de ces objets.
 """
 
-import sys
-sys.path[:0]=['../..']
+import sys,traceback
+sys.path[:0]=['../..','../../Aster']
 
-from Accas import SIMP,FACT,OPER
+from Accas import SIMP,FACT,OPER,ASSD
 
 # Construction objet de définition
 
-class concept:
+class concept(ASSD):
    def __init__(self,etape):
       self.etape=etape
    def is_object(sd):
@@ -52,12 +52,17 @@ if cr.estvide():
 else:
    print cr
 
+class definition:
+  code="BIDON"
+
 class context:
    def __init__(self):
       self.etapes=[]
+      self.definition=definition()
       self.mc_globaux={}
       self.cata_ordonne_dico=None
       self.par_lot="OUI"
+      self.UserError="UserError"
 
    def register(self,etape):
       self.etapes.append(etape)
@@ -67,7 +72,11 @@ class context:
       return self
 
    def create_sdprod(self,etape,nomsd):
-      sd= etape.get_sd_prod()
+      try:
+         sd= etape.get_sd_prod()
+      except:
+         traceback.print_exc()
+         raise
       if sd != None and etape.reuse == None:
          # ATTENTION : On ne nomme la SD que dans le cas de non reutilisation d un concept
          sd.nom=nomsd
@@ -88,6 +97,7 @@ if cr.estvide():
 else:
    print "L'objet ETAPE  n'est pas valide " 
    print cr
+assert co1.etape.isvalid()==1
 
 # Test avec reutilisation de concept
 co=OP1(reuse=co1,a=1,b=sd)
@@ -99,3 +109,4 @@ else:
    print "L'objet ETAPE  n'est pas valide "
    print cr
 
+assert e.isvalid()==0

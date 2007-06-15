@@ -1,4 +1,5 @@
 from Accas import SIMP,FACT,OPER,ASSD,AsException,AsType,CO,MACRO
+import Noyau
 
 
 class CATA:
@@ -10,15 +11,15 @@ class CATA:
 
 cata=CATA()
 
-class concept(ASSD):pass
+class concept(ASSD,Noyau.AsBase):pass
 
 OP1 = OPER(nom='OP1',op=1,sd_prod=concept,
            a=SIMP(typ='I'),
            c=SIMP(typ='I',position='global'),
           )
 
-class concept2(ASSD):pass
-class concept3(ASSD):pass
+class concept2(ASSD,Noyau.AsBase):pass
+class concept3(ASSD,Noyau.AsBase):pass
 
 def op2_prod(self,MATR,**args):
    self.type_sdprod(MATR,concept2)

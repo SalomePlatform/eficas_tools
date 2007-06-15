@@ -7,7 +7,7 @@
    - sa vérification (report)
 """
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 import Accas
 from Accas import SIMP,FACT
@@ -23,3 +23,4 @@ else:
 o=a({'b':1},'mcf1',None)
 print o
 print o.report()
+assert o.isvalid() ==1

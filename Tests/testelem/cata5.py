@@ -1,10 +1,11 @@
 # -*- coding: iso-8859-15 -*-
 from Accas import SIMP,FACT,OPER,ASSD,AsException,AsType,CO,MACRO,JDC_CATA
+import Noyau
 JdC=JDC_CATA(code="ASTER")
 
-class concept(ASSD):pass
-class concept2(ASSD):pass
-class concept3(ASSD):pass
+class concept(ASSD,Noyau.AsBase):pass
+class concept2(ASSD,Noyau.AsBase):pass
+class concept3(ASSD,Noyau.AsBase):pass
 class concept4(concept2):pass
 
 def OP_ops(self,MATR,**args):

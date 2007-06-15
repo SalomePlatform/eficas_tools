@@ -7,25 +7,21 @@ DEBUT();
 #CYCLE 1
 # LECTURE DU MAILLAGE ET DEFINITIONS DES PROPRIETES ELEMENTS FINIS
 
-
 PRE_GIBI();
 #
-
 
 MA1=LIRE_MAILLAGE();
 #
 
-
 MA1=DEFI_GROUP(reuse =MA1,
+               MAILLAGE=MA1,
                CREA_GROUP_NO=_F(GROUP_MA=('FIXATI','APPUI','LIAS_1','LIAS_2','EBGUIDE','MAINTIEN','MAIN_SUP','EMBO_SUP','TUB_GUID',
-                                           'GRILLES','EMBO_INF','PIEDS','CRAYONS',),),
-               MAILLAGE=MA1,);
+                                           'GRILLES','EMBO_INF','PIEDS','CRAYONS',),),);
 #
 # AFFECTATION DU MODELE
-#
 
-
-MO1=AFFE_MODELE(AFFE=(_F(GROUP_MA='CRAYONS',
+MO1=AFFE_MODELE(MAILLAGE=MA1,
+                AFFE=(_F(GROUP_MA='CRAYONS',
                          PHENOMENE='MECANIQUE',
                          MODELISATION='POU_D_E',),
                       _F(GROUP_MA='TUB_GUID',
@@ -48,282 +44,262 @@ MO1=AFFE_MODELE(AFFE=(_F(GROUP_MA='CRAYONS',
                          MODELISATION='DIS_TR',),
                       _F(GROUP_MA='MAINTIEN',
                          PHENOMENE='MECANIQUE',
-                         MODELISATION='POU_D_E',),),
-                MAILLAGE=MA1,);
+                         MODELISATION='POU_D_E',),),);
 #
 # AFFECTATION DES CARACTERISTIQUES GEOMETRIQUES ELEMENTAIRES
-#
-
 
 CARA1=AFFE_CARA_ELEM(MODELE=MO1,
-                     COQUE=(_F(ANGL_REP=90.0,
+                     POUTRE=(_F(GROUP_MA='CRAY',
+                                SECTION='CERCLE',
+                                CARA=('R','EP',),
+                                VALE=(3.0,3.0,),),
+                             _F(GROUP_MA='GUID',
+                                SECTION='CERCLE',
+                                CARA=('R','EP',),
+                                VALE=(3.0,3.0,),),
+                             _F(GROUP_MA='RETRE',
+                                SECTION='CERCLE',
+                                CARA=('R','EP',),
+                                VALE=(3.0,3.0,),),
+                             _F(GROUP_MA='GRIL_I',
+                                SECTION='RECTANGLE',
+                                CARA=('HY','HZ',),
+                                VALE=(3.0,3.0,),),
+                             _F(GROUP_MA='GRIL_E',
+                                SECTION='RECTANGLE',
+                                CARA=('HY','HZ',),
+                                VALE=(3.0,3.0,),),
+                             _F(GROUP_MA=('MAINTI_Y','MAINTI_Z',),
+                                SECTION='RECTANGLE',
+                                CARA=('HY','HZ',),
+                                VALE=(3.0,3.0,),),
+                             _F(GROUP_MA='PI_PLE',
+                                SECTION='GENERALE',
+                                CARA=('A','IZ','IY','JX',),
+                                VALE=(1.0,2.0,3.0,4.0,),),
+                             _F(GROUP_MA='PI_TRO',
+                                SECTION='GENERALE',
+                                CARA=('A','IZ','IY','JX',),
+                                VALE=(1.0,2.0,3.0,4.0,),),),
+                     ORIENTATION=(_F(GROUP_MA=('GRIL_I','GRIL_E',),
+                                     VALE=(1.0,0.0,0.0,),
+                                     CARA='VECT_Y',),
+                                  _F(GROUP_MA='MAINTI_Y',
+                                     VALE=(0.0,1.0,0.0,),
+                                     CARA='VECT_Y',),
+                                  _F(GROUP_MA='MAINTI_Z',
+                                     VALE=(0.0,0.0,1.0,),
+                                     CARA='VECT_Y',),
+                                  _F(GROUP_MA=('PI_PLE','PI_TRO',),
+                                     VALE=(0.0,1.0,0.0,),
+                                     CARA='VECT_Y',),
+                                  _F(GROUP_MA=('ELASTI','RIGID',),
+                                     VALE=(1.0,0.0,0.0,),
+                                     CARA='VECT_Y',),),
+                     DISCRET=(_F(GROUP_MA='ELASTI',
+                                 CARA='K_TR_D_L',
+                                 VALE=(1.0,2.0,3.0,4.0,5.0,6.0,),
+                                 REPERE='LOCAL',),
+                              _F(GROUP_MA='RIGID',
+                                 CARA='K_TR_D_L',
+                                 VALE=(1.0,2.0,3.0,4.0,5.0,6.0,),
+                                 REPERE='LOCAL',),),
+                     COQUE=(_F(EPAIS=2.0,
                                GROUP_MA='EBOINF',
-                               EPAIS=2.0,),
-                            _F(ANGL_REP=90.0,
+                               ANGL_REP=90.0,),
+                            _F(EPAIS=3.0,
                                GROUP_MA='EBOSUP',
-                               EPAIS=3.0,),),
-                     DISCRET=(_F(VALE=(1.0,2.0,3.0,4.0,5.0,6.0,),
-                                 REPERE='LOCAL',
-                                 CARA='K_TR_D_L',
-                                 GROUP_MA='ELASTI',),
-                              _F(VALE=(1.0,2.0,3.0,4.0,5.0,6.0,),
-                                 REPERE='LOCAL',
-                                 CARA='K_TR_D_L',
-                                 GROUP_MA='RIGID',),),
-                     ORIENTATION=(_F(VALE=(1.0,0.0,0.0,),
-                                     CARA='VECT_Y',
-                                     GROUP_MA=('GRIL_I','GRIL_E',),),
-                                  _F(VALE=(0.0,1.0,0.0,),
-                                     CARA='VECT_Y',
-                                     GROUP_MA='MAINTI_Y',),
-                                  _F(VALE=(0.0,0.0,1.0,),
-                                     CARA='VECT_Y',
-                                     GROUP_MA='MAINTI_Z',),
-                                  _F(VALE=(0.0,1.0,0.0,),
-                                     CARA='VECT_Y',
-                                     GROUP_MA=('PI_PLE','PI_TRO',),),
-                                  _F(VALE=(1.0,0.0,0.0,),
-                                     CARA='VECT_Y',
-                                     GROUP_MA=('ELASTI','RIGID',),),),
-                     POUTRE=(_F(SECTION='CERCLE',
-                                GROUP_MA='CRAY',
-                                VALE=(3.0,3.0,),
-                                CARA=('R','EP',),),
-                             _F(SECTION='CERCLE',
-                                GROUP_MA='GUID',
-                                VALE=(3.0,3.0,),
-                                CARA=('R','EP',),),
-                             _F(SECTION='CERCLE',
-                                GROUP_MA='RETRE',
-                                VALE=(3.0,3.0,),
-                                CARA=('R','EP',),),
-                             _F(SECTION='RECTANGLE',
-                                GROUP_MA='GRIL_I',
-                                VALE=(3.0,3.0,),
-                                CARA=('HY','HZ',),),
-                             _F(SECTION='RECTANGLE',
-                                GROUP_MA='GRIL_E',
-                                VALE=(3.0,3.0,),
-                                CARA=('HY','HZ',),),
-                             _F(SECTION='RECTANGLE',
-                                GROUP_MA=('MAINTI_Y','MAINTI_Z',),
-                                VALE=(3.0,3.0,),
-                                CARA=('HY','HZ',),),
-                             _F(SECTION='GENERALE',
-                                GROUP_MA='PI_PLE',
-                                VALE=(1.0,2.0,3.0,4.0,),
-                                CARA=('A','IZ','IY','JX',),),
-                             _F(SECTION='GENERALE',
-                                GROUP_MA='PI_TRO',
-                                VALE=(1.0,2.0,3.0,4.0,),
-                                CARA=('A','IZ','IY','JX',),),),);
+                               ANGL_REP=90.0,),),);
 #
 # DEFINITION DES CHARGES ET CONDITIONS LIMITES
 # DEFINITION DES TEMPERATURES NODALES EVOLUTIVES
-#
 
+F_TP1_1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                            5.0,4.0,
+                            ),NOM_PARA='X',PROL_GAUCHE='CONSTANT',NOM_RESU='TEMP',);
 
-F_TP1_1=DEFI_FONCTION(NOM_RESU='TEMP',
-                      PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='X',
-                      VALE=(0.0,1.0,5.0,4.0,),
-                      PROL_DROIT='CONSTANT',);
+F_TP2_1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                            5.0,4.0,
+                            ),NOM_PARA='X',PROL_GAUCHE='CONSTANT',NOM_RESU='TEMP',);
 
-F_TP2_1=DEFI_FONCTION(NOM_RESU='TEMP',
-                      PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='X',
-                      VALE=(0.0,1.0,5.0,4.0,),
-                      PROL_DROIT='CONSTANT',);
+F_TP3_1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                            5.0,4.0,
+                            ),NOM_PARA='X',PROL_GAUCHE='CONSTANT',NOM_RESU='TEMP',);
 
-F_TP3_1=DEFI_FONCTION(NOM_RESU='TEMP',
-                      PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='X',
-                      VALE=(0.0,1.0,5.0,4.0,),
-                      PROL_DROIT='CONSTANT',);
-
-CHTEM1_1=AFFE_CHAM_NO(GRANDEUR='TEMP_F',
-                      AFFE=(_F(FONCTION=F_TP1_1,
+CHTEM1_1=AFFE_CHAM_NO(MAILLAGE=MA1,
+                      GRANDEUR='TEMP_F',
+                      AFFE=(_F(NOM_CMP='TEMP',
                                GROUP_NO=('MAINTIEN','PIEDS','TUB_GUID','GRILLES','CRAYONS',),
-                               NOM_CMP='TEMP',),
-                            _F(FONCTION=(F_TP1_1,F_TP1_1,F_TP1_1,),
+                               FONCTION=F_TP1_1,),
+                            _F(NOM_CMP=('TEMP_INF','TEMP','TEMP_SUP',),
                                GROUP_NO=('EMBO_SUP','EMBO_INF',),
-                               NOM_CMP=('TEMP_INF','TEMP','TEMP_SUP',),),),
-                      MAILLAGE=MA1,);
+                               FONCTION=(F_TP1_1,F_TP1_1,F_TP1_1,),),),);
 
-CHTEM2_1=AFFE_CHAM_NO(GRANDEUR='TEMP_F',
-                      AFFE=(_F(FONCTION=F_TP2_1,
+CHTEM2_1=AFFE_CHAM_NO(MAILLAGE=MA1,
+                      GRANDEUR='TEMP_F',
+                      AFFE=(_F(NOM_CMP='TEMP',
                                GROUP_NO=('MAINTIEN','PIEDS','TUB_GUID','GRILLES','CRAYONS',),
-                               NOM_CMP='TEMP',),
-                            _F(FONCTION=(F_TP2_1,F_TP2_1,F_TP2_1,),
+                               FONCTION=F_TP2_1,),
+                            _F(NOM_CMP=('TEMP_INF','TEMP','TEMP_SUP',),
                                GROUP_NO=('EMBO_SUP','EMBO_INF',),
-                               NOM_CMP=('TEMP_INF','TEMP','TEMP_SUP',),),),
-                      MAILLAGE=MA1,);
+                               FONCTION=(F_TP2_1,F_TP2_1,F_TP2_1,),),),);
 
-CHTEM3_1=AFFE_CHAM_NO(GRANDEUR='TEMP_F',
-                      AFFE=(_F(FONCTION=F_TP3_1,
+CHTEM3_1=AFFE_CHAM_NO(MAILLAGE=MA1,
+                      GRANDEUR='TEMP_F',
+                      AFFE=(_F(NOM_CMP='TEMP',
                                GROUP_NO=('MAINTIEN','PIEDS','TUB_GUID','GRILLES',),
-                               NOM_CMP='TEMP',),
-                            _F(FONCTION=(F_TP3_1,F_TP3_1,F_TP3_1,),
+                               FONCTION=F_TP3_1,),
+                            _F(NOM_CMP=('TEMP_INF','TEMP','TEMP_SUP',),
                                GROUP_NO=('EMBO_SUP','EMBO_INF',),
-                               NOM_CMP=('TEMP_INF','TEMP','TEMP_SUP',),),
-                            _F(FONCTION=F_TP3_1,
+                               FONCTION=(F_TP3_1,F_TP3_1,F_TP3_1,),),
+                            _F(NOM_CMP='TEMP',
                                GROUP_NO='CRAYONS',
-                               NOM_CMP='TEMP',),),
-                      MAILLAGE=MA1,);
+                               FONCTION=F_TP3_1,),),);
 
-CHTH_1=CREA_RESU(NOM_CHAM='TEMP',
-                 CHAM_GD=(_F(INST=0.0,
-                             CHAM_NO=CHTEM1_1,),
-                          _F(INST=1000.0,
-                             CHAM_NO=CHTEM1_1,),
-                          _F(INST=2000.0,
-                             CHAM_NO=CHTEM2_1,),
-                          _F(INST=3000.0,
-                             CHAM_NO=CHTEM3_1,),
-                          _F(INST=4000.0,
-                             CHAM_NO=CHTEM3_1,),
-                          _F(INST=5000.0,
-                             CHAM_NO=CHTEM2_1,),
-                          _F(INST=6000.0,
-                             CHAM_NO=CHTEM1_1,),
-                          _F(INST=7000.0,
-                             CHAM_NO=CHTEM1_1,),),
-                 TYPE_RESU='EVOL_THER',);
+CHTH_1=CREA_RESU(TYPE_RESU='EVOL_THER',
+                 NOM_CHAM='TEMP',
+                 CHAM_GD=(_F(CHAM_NO=CHTEM1_1,
+                             INST=0.0,),
+                          _F(CHAM_NO=CHTEM1_1,
+                             INST=1000.0,),
+                          _F(CHAM_NO=CHTEM2_1,
+                             INST=2000.0,),
+                          _F(CHAM_NO=CHTEM3_1,
+                             INST=3000.0,),
+                          _F(CHAM_NO=CHTEM3_1,
+                             INST=4000.0,),
+                          _F(CHAM_NO=CHTEM2_1,
+                             INST=5000.0,),
+                          _F(CHAM_NO=CHTEM1_1,
+                             INST=6000.0,),
+                          _F(CHAM_NO=CHTEM1_1,
+                             INST=7000.0,),),);
 # CHARGEMENT: CHARGES THERMO-MECANIQUES
 # ----------------------------------------
 
-
-THERM_1=AFFE_CHAR_MECA(MODELE=MO1,
-                       TEMP_CALCULEE=CHTH_1,);
+THERM_1=AFFE_CHAR_MECA(TEMP_CALCULEE=CHTH_1,
+                       MODELE=MO1,);
 # DEFINITION DES CONDITIONS LIMITES
 #            DES CONDITIONS DE CONTACT
 #
 # CHARGEMENT: PESANTEUR
-#
 
-
-PESANT_1=AFFE_CHAR_MECA(MODELE=MO1,
-                        PESANTEUR=(9.8100000000000005,-1.0,0.0,0.0,),);
+PESANT_1=AFFE_CHAR_MECA(PESANTEUR=(9.81,-1.0,0.0,0.0,),
+                        MODELE=MO1,);
 #
 # CONDITIONS AUX LIMITES
-#
-
 
 CL_PER_1=AFFE_CHAR_MECA(MODELE=MO1,
-                        DDL_IMPO=(_F(DZ=0.0,
-                                     DX=0.0,
-                                     DY=0.0,
+                        DDL_IMPO=(_F(DRY=0.0,
+                                     DRX=0.0,
+                                     DRZ=0.0,
                                      GROUP_NO='FIXATI',
-                                     DRZ=0.0,
-                                     DRX=0.0,
-                                     DRY=0.0,),
-                                  _F(DX=0.0,
-                                     GROUP_NO='APPUI',),
-                                  _F(DZ=0.0,
                                      DY=0.0,
-                                     GROUP_NO='EBGUIDE',
-                                     DRZ=0.0,
+                                     DZ=0.0,
+                                     DX=0.0,),
+                                  _F(GROUP_NO='APPUI',
+                                     DX=0.0,),
+                                  _F(DRY=0.0,
                                      DRX=0.0,
-                                     DRY=0.0,),
-                                  _F(GROUP_NO=('LIAS_1','LIAS_2',),
-                                     DRX=0.0,),),
-                        LIAISON_GROUP=(_F(COEF_MULT_1=1.0,
+                                     DRZ=0.0,
+                                     GROUP_NO='EBGUIDE',
+                                     DY=0.0,
+                                     DZ=0.0,),
+                                  _F(DRX=0.0,
+                                     GROUP_NO=('LIAS_1','LIAS_2',),),),
+                        LIAISON_GROUP=(_F(GROUP_NO_1='LIAS_1',
+                                          GROUP_NO_2='LIAS_2',
+                                          DDL_2='DX',
+                                          COEF_IMPO=0.0,
+                                          COEF_MULT_2=-1.0,
                                           DDL_1='DX',
-                                          COEF_MULT_2=-1.0,
-                                          COEF_IMPO=0.0,
-                                          GROUP_NO_1='LIAS_1',
+                                          COEF_MULT_1=1.0,),
+                                       _F(GROUP_NO_1='LIAS_1',
                                           GROUP_NO_2='LIAS_2',
-                                          DDL_2='DX',),
-                                       _F(COEF_MULT_1=1.0,
+                                          DDL_2='DY',
+                                          COEF_IMPO=0.0,
+                                          COEF_MULT_2=-1.0,
                                           DDL_1='DY',
-                                          COEF_MULT_2=-1.0,
-                                          COEF_IMPO=0.0,
-                                          GROUP_NO_1='LIAS_1',
+                                          COEF_MULT_1=1.0,),
+                                       _F(GROUP_NO_1='LIAS_1',
                                           GROUP_NO_2='LIAS_2',
-                                          DDL_2='DY',),
-                                       _F(COEF_MULT_1=1.0,
+                                          DDL_2='DZ',
+                                          COEF_IMPO=0.0,
+                                          COEF_MULT_2=-1.0,
                                           DDL_1='DZ',
-                                          COEF_MULT_2=-1.0,
-                                          COEF_IMPO=0.0,
-                                          GROUP_NO_1='LIAS_1',
+                                          COEF_MULT_1=1.0,),
+                                       _F(GROUP_NO_1='LIAS_1',
                                           GROUP_NO_2='LIAS_2',
-                                          DDL_2='DZ',),
-                                       _F(COEF_MULT_1=1.0,
+                                          DDL_2='DRY',
+                                          COEF_IMPO=0.0,
+                                          COEF_MULT_2=-1.0,
                                           DDL_1='DRY',
-                                          COEF_MULT_2=-1.0,
-                                          COEF_IMPO=0.0,
-                                          GROUP_NO_1='LIAS_1',
+                                          COEF_MULT_1=1.0,),
+                                       _F(GROUP_NO_1='LIAS_1',
                                           GROUP_NO_2='LIAS_2',
-                                          DDL_2='DRY',),
-                                       _F(COEF_MULT_1=1.0,
+                                          DDL_2='DRZ',
+                                          COEF_IMPO=0.0,
+                                          COEF_MULT_2=-1.0,
                                           DDL_1='DRZ',
-                                          COEF_MULT_2=-1.0,
-                                          COEF_IMPO=0.0,
-                                          GROUP_NO_1='LIAS_1',
-                                          GROUP_NO_2='LIAS_2',
-                                          DDL_2='DRZ',),),);
+                                          COEF_MULT_1=1.0,),),);
 #
 
-
-CL_CTC=AFFE_CHAR_MECA(INFO=1,
-                      MODELE=MO1,
-                      CONTACT=_F(GROUP_MA_1='EBOINF',
+CL_CTC=AFFE_CHAR_MECA(MODELE=MO1,
+                      INFO=1,
+                      CONTACT=_F(APPARIEMENT='NODAL',
                                  VECT_NORM_2=(-1.0,0.0,0.0,),
-                                 APPARIEMENT='NODAL',
+                                 GROUP_MA_1='EBOINF',
                                  GROUP_MA_2='MCRBAS',),);
 #                            
 # DEPLACEMENT DU SYSTEME DE MAINTIEN
-#
 
-
-CLDI_F1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='INST',
-                      VALE=
-                      (0.0,0.0,1000.0,0.10000000000000001,2000.0,0.20000000000000001,3000.0,
-                             0.20000000000000001,4000.0,0.20000000000000001,5000.0,0.20000000000000001,6000.0,
-                             0.10000000000000001,7000.0,0.10000000000000001,),
-                      PROL_DROIT='CONSTANT',);
+CLDI_F1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                            1000.0,0.1,
+                            2000.0,0.2,
+                            3000.0,0.2,
+                            4000.0,0.2,
+                            5000.0,0.2,
+                            6000.0,0.1,
+                            7000.0,0.1,
+                            ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
 CL_DI_1=AFFE_CHAR_MECA(MODELE=MO1,
-                       DDL_IMPO=_F(DX=-1.0,
-                                   GROUP_NO='MAIN_SUP',),);
+                       DDL_IMPO=_F(GROUP_NO='MAIN_SUP',
+                                   DX=-1.0,),);
 # DEFINITION DES FORCES EXTERIEURES
 #
 # FONCTION MULTIPLICATIVE DE LA FORCE HYDRODYNAMIQUE NORMEE
-#
 
-
-HYDR_F1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='INST',
-                      VALE=
-                      (0.0,0.0,1000.0,0.10000000000000001,2000.0,0.20000000000000001,3000.0,
-                             0.20000000000000001,4000.0,0.20000000000000001,5000.0,0.20000000000000001,6000.0,
-                             0.10000000000000001,7000.0,0.10000000000000001,),
-                      PROL_DROIT='CONSTANT',);
+HYDR_F1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                            1000.0,0.1,
+                            2000.0,0.2,
+                            3000.0,0.2,
+                            4000.0,0.2,
+                            5000.0,0.2,
+                            6000.0,0.1,
+                            7000.0,0.1,
+                            ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 #
 # PROFIL DES FORCES HYDRODYNAMIQUES TUBES GUIDES A FROID
-#
 
-
-HYFRTU_1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='X',
-                       VALE=(0.0,1.0,5.0,2.0,),
-                       PROL_DROIT='CONSTANT',);
+HYFRTU_1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                             5.0,2.0,
+                             ),NOM_PARA='X',PROL_GAUCHE='CONSTANT',);
 #
 # PROFIL DES FORCES HYDRODYNAMIQUES CRAYON A FROID
-#
 
-
-HYFRCR_1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='X',
-                       VALE=(0.0,1.0,5.0,2.0,),
-                       PROL_DROIT='CONSTANT',);
+HYFRCR_1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                             5.0,2.0,
+                             ),NOM_PARA='X',PROL_GAUCHE='CONSTANT',);
 #
 # CHARGEMENT : FORCES HYDRODYNAMIQUES 
-#
 
-
-HYDR_1=AFFE_CHAR_MECA(FORCE_POUTRE=(_F(GROUP_MA='GRIL10',
+HYDR_1=AFFE_CHAR_MECA(MODELE=MO1,
+                      FORCE_COQUE=(_F(FX=10.0,
+                                      GROUP_MA='EBOSUP',),
+                                   _F(FX=10.0,
+                                      GROUP_MA='EBOINF',),),
+                      FORCE_POUTRE=(_F(GROUP_MA='GRIL10',
                                        FX=10.0,),
                                     _F(GROUP_MA='GRIL1',
                                        FX=10.0,),
@@ -342,63 +318,53 @@ HYDR_1=AFFE_CHAR_MECA(FORCE_POUTRE=(_F(GROUP_MA='GRIL10',
                                     _F(GROUP_MA='GRIL8',
                                        FX=10.0,),
                                     _F(GROUP_MA='GRIL9',
-                                       FX=10.0,),),
-                      MODELE=MO1,
-                      FORCE_COQUE=(_F(FX=10.0,
-                                      GROUP_MA='EBOSUP',),
-                                   _F(FX=10.0,
-                                      GROUP_MA='EBOINF',),),);
+                                       FX=10.0,),),);
 
-TOTO_1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                     NOM_PARA='X',
-                     VALE=(0.0,10.0,5.0,10.0,),
-                     PROL_DROIT='CONSTANT',);
+TOTO_1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,10.0,
+                           5.0,10.0,
+                           ),NOM_PARA='X',PROL_GAUCHE='CONSTANT',);
 #                         
 
-
-FOHYDR_1=AFFE_CHAR_MECA_F(FORCE_POUTRE=(_F(GROUP_MA='GUID',
+FOHYDR_1=AFFE_CHAR_MECA_F(MODELE=MO1,
+                          FORCE_POUTRE=(_F(GROUP_MA='GUID',
                                            FX=TOTO_1,),
                                         _F(GROUP_MA='CRAY',
-                                           FX=TOTO_1,),),
-                          MODELE=MO1,);
+                                           FX=TOTO_1,),),);
 #
 # PROFIL DES FORCES D'ARCHIMEDE TUBE GUIDE 
-#
 
-
-ARFRTU_1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='X',
-                       VALE=(0.0,10.0,5.0,10.0,),
-                       PROL_DROIT='CONSTANT',);
+ARFRTU_1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,10.0,
+                             5.0,10.0,
+                             ),NOM_PARA='X',PROL_GAUCHE='CONSTANT',);
 #
 # PROFIL DES FORCES D'ARCHIMEDE CRAYON 
-#
 
-
-ARFRCR_1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='X',
-                       VALE=(0.0,10.0,5.0,10.0,),
-                       PROL_DROIT='CONSTANT',);
+ARFRCR_1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,10.0,
+                             5.0,10.0,
+                             ),NOM_PARA='X',PROL_GAUCHE='CONSTANT',);
 #
 # FONCTION MULTIPLICATIVE DE LA FORCE D'ARCHIMEDE
-#
 
-
-ARCH_F1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='INST',
-                      VALE=
-                      (0.0,0.0,1000.0,0.10000000000000001,2000.0,0.20000000000000001,3000.0,
-                             0.20000000000000001,4000.0,0.20000000000000001,5000.0,0.20000000000000001,6000.0,
-                             0.10000000000000001,7000.0,0.10000000000000001,),
-                      PROL_DROIT='CONSTANT',);
+ARCH_F1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                            1000.0,0.1,
+                            2000.0,0.2,
+                            3000.0,0.2,
+                            4000.0,0.2,
+                            5000.0,0.2,
+                            6000.0,0.1,
+                            7000.0,0.1,
+                            ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 #
 #
 # CHARGEMENT : FORCES D'ARCHIMEDE 
 # ----------------------------------------
-#
 
-
-ARCH_1=AFFE_CHAR_MECA(FORCE_POUTRE=(_F(GROUP_MA='MAINTIEN',
+ARCH_1=AFFE_CHAR_MECA(MODELE=MO1,
+                      FORCE_COQUE=(_F(FX=10.0,
+                                      GROUP_MA='EBOSUP',),
+                                   _F(FX=10.0,
+                                      GROUP_MA='EBOINF',),),
+                      FORCE_POUTRE=(_F(GROUP_MA='MAINTIEN',
                                        FX=10.0,),
                                     _F(GROUP_MA='GRIL10',
                                        FX=10.0,),
@@ -419,18 +385,13 @@ ARCH_1=AFFE_CHAR_MECA(FORCE_POUTRE=(_F(GROUP_MA='MAINTIEN',
                                     _F(GROUP_MA='GRIL8',
                                        FX=10.0,),
                                     _F(GROUP_MA='GRIL9',
-                                       FX=10.0,),),
-                      MODELE=MO1,
-                      FORCE_COQUE=(_F(FX=10.0,
-                                      GROUP_MA='EBOSUP',),
-                                   _F(FX=10.0,
-                                      GROUP_MA='EBOINF',),),);
+                                       FX=10.0,),),);
 
-FOARCH_1=AFFE_CHAR_MECA_F(FORCE_POUTRE=(_F(GROUP_MA='GUID',
+FOARCH_1=AFFE_CHAR_MECA_F(MODELE=MO1,
+                          FORCE_POUTRE=(_F(GROUP_MA='GUID',
                                            FX=ARCH_F1,),
                                         _F(GROUP_MA='CRAY',
-                                           FX=ARCH_F1,),),
-                          MODELE=MO1,);
+                                           FX=ARCH_F1,),),);
 #
 # 
 # FORCE DE SERRAGE DE LA LIAISON GRILLE - CRAYON 
@@ -440,358 +401,473 @@ FOARCH_1=AFFE_CHAR_MECA_F(FORCE_POUTRE=(_F(GROUP_MA='GUID',
 #
 #
 # DEFINITION DE LA LISTE D'INSTANTS
-#
 
-
-L_FRIG=DEFI_LIST_REEL(INTERVALLE=_F(JUSQU_A=1000.0,
-                                    NOMBRE=100,),
-                      DEBUT=0.0,);
+L_FRIG=DEFI_LIST_REEL(DEBUT=0.0,
+                      INTERVALLE=_F(NOMBRE=100,
+                                    JUSQU_A=1000.0,),);
 #
 # INRTERPRETATION DES FONCTIONS
-#
 
+F1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                       43200.0,0.0,
+                       ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
-F1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                 NOM_PARA='INST',
-                 VALE=(0.0,0.0,43200.0,0.0,),
-                 PROL_DROIT='CONSTANT',);
+F2=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                       43200.0,0.0,
+                       ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
-F2=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                 NOM_PARA='INST',
-                 VALE=(0.0,0.0,43200.0,0.0,),
-                 PROL_DROIT='CONSTANT',);
+F3=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                       43200.0,0.0,
+                       ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
-F3=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                 NOM_PARA='INST',
-                 VALE=(0.0,0.0,43200.0,0.0,),
-                 PROL_DROIT='CONSTANT',);
+F4=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                       43200.0,0.0,
+                       ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
-F4=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                 NOM_PARA='INST',
-                 VALE=(0.0,0.0,43200.0,0.0,),
-                 PROL_DROIT='CONSTANT',);
+F5=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                       43200.0,0.0,
+                       ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
-F5=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                 NOM_PARA='INST',
-                 VALE=(0.0,0.0,43200.0,0.0,),
-                 PROL_DROIT='CONSTANT',);
+F6=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                       43200.0,0.0,
+                       ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
-F6=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                 NOM_PARA='INST',
-                 VALE=(0.0,0.0,43200.0,0.0,),
-                 PROL_DROIT='CONSTANT',);
+F7=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                       43200.0,0.0,
+                       ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
-F7=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                 NOM_PARA='INST',
-                 VALE=(0.0,0.0,43200.0,0.0,),
-                 PROL_DROIT='CONSTANT',);
+F8=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                       43200.0,0.0,
+                       ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
-F8=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                 NOM_PARA='INST',
-                 VALE=(0.0,0.0,43200.0,0.0,),
-                 PROL_DROIT='CONSTANT',);
+F9=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                       43200.0,0.0,
+                       ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
-F9=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                 NOM_PARA='INST',
-                 VALE=(0.0,0.0,43200.0,0.0,),
-                 PROL_DROIT='CONSTANT',);
+F10=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                        43200.0,0.0,
+                        ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 
-F10=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                  NOM_PARA='INST',
-                  VALE=(0.0,0.0,43200.0,0.0,),
-                  PROL_DROIT='CONSTANT',);
-
-FRIG1=CALC_FONC_INTERP(FONCTION=F1,
+FRIG1=CALC_FONC_INTERP(LIST_PARA=L_FRIG,
                        PROL_DROIT='CONSTANT',
-                       INTERPOL='LIN',
                        PROL_GAUCHE='CONSTANT',
-                       LIST_PARA=L_FRIG,);
+                       INTERPOL='LIN',
+                       FONCTION=F1,);
 
-FRIG2=CALC_FONC_INTERP(FONCTION=F2,
+FRIG2=CALC_FONC_INTERP(LIST_PARA=L_FRIG,
                        PROL_DROIT='CONSTANT',
-                       INTERPOL='LIN',
                        PROL_GAUCHE='CONSTANT',
-                       LIST_PARA=L_FRIG,);
+                       INTERPOL='LIN',
+                       FONCTION=F2,);
 
-FRIG3=CALC_FONC_INTERP(FONCTION=F3,
+FRIG3=CALC_FONC_INTERP(LIST_PARA=L_FRIG,
                        PROL_DROIT='CONSTANT',
-                       INTERPOL='LIN',
                        PROL_GAUCHE='CONSTANT',
-                       LIST_PARA=L_FRIG,);
+                       INTERPOL='LIN',
+                       FONCTION=F3,);
 
-FRIG4=CALC_FONC_INTERP(FONCTION=F4,
+FRIG4=CALC_FONC_INTERP(LIST_PARA=L_FRIG,
                        PROL_DROIT='CONSTANT',
-                       INTERPOL='LIN',
                        PROL_GAUCHE='CONSTANT',
-                       LIST_PARA=L_FRIG,);
+                       INTERPOL='LIN',
+                       FONCTION=F4,);
 
-FRIG5=CALC_FONC_INTERP(FONCTION=F5,
+FRIG5=CALC_FONC_INTERP(LIST_PARA=L_FRIG,
                        PROL_DROIT='CONSTANT',
-                       INTERPOL='LIN',
                        PROL_GAUCHE='CONSTANT',
-                       LIST_PARA=L_FRIG,);
+                       INTERPOL='LIN',
+                       FONCTION=F5,);
 
-FRIG6=CALC_FONC_INTERP(FONCTION=F6,
+FRIG6=CALC_FONC_INTERP(LIST_PARA=L_FRIG,
                        PROL_DROIT='CONSTANT',
-                       INTERPOL='LIN',
                        PROL_GAUCHE='CONSTANT',
-                       LIST_PARA=L_FRIG,);
+                       INTERPOL='LIN',
+                       FONCTION=F6,);
 
-FRIG7=CALC_FONC_INTERP(FONCTION=F7,
+FRIG7=CALC_FONC_INTERP(LIST_PARA=L_FRIG,
                        PROL_DROIT='CONSTANT',
-                       INTERPOL='LIN',
                        PROL_GAUCHE='CONSTANT',
-                       LIST_PARA=L_FRIG,);
+                       INTERPOL='LIN',
+                       FONCTION=F7,);
 
-FRIG8=CALC_FONC_INTERP(FONCTION=F8,
+FRIG8=CALC_FONC_INTERP(LIST_PARA=L_FRIG,
                        PROL_DROIT='CONSTANT',
-                       INTERPOL='LIN',
                        PROL_GAUCHE='CONSTANT',
-                       LIST_PARA=L_FRIG,);
+                       INTERPOL='LIN',
+                       FONCTION=F8,);
 
-FRIG9=CALC_FONC_INTERP(FONCTION=F9,
+FRIG9=CALC_FONC_INTERP(LIST_PARA=L_FRIG,
                        PROL_DROIT='CONSTANT',
-                       INTERPOL='LIN',
                        PROL_GAUCHE='CONSTANT',
-                       LIST_PARA=L_FRIG,);
+                       INTERPOL='LIN',
+                       FONCTION=F9,);
 
-FRIG10=CALC_FONC_INTERP(FONCTION=F10,
+FRIG10=CALC_FONC_INTERP(LIST_PARA=L_FRIG,
                         PROL_DROIT='CONSTANT',
-                        INTERPOL='LIN',
                         PROL_GAUCHE='CONSTANT',
-                        LIST_PARA=L_FRIG,);
+                        INTERPOL='LIN',
+                        FONCTION=F10,);
 #
 # DEFINITION DU FLUX NEUTRONIQUE RADIAL
 
-
-FLUX_F1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='INST',
-                      VALE=
-                      (0.0,0.0,43200.0,0.0,974520.0,453280.0,2638800.0,2077850.0,4087800.0,3512790.0,
-                             5428440.0,4856770.0,7245000.0,6676270.0,8853480.0,8279770.0,10460900.0,9872610.0,12202900.0,
-                             11586900.0,13944600.0,13295200.0,14143700.0,13490200.0,15563200.0,14875300.0,17236100.0,
-                             16506900.0,17948200.0,17199200.0,18190100.0,17433400.0,18193700.0,17435200.0,18197300.0,
-                             17435200.0,18200900.0,17435200.0,),
-                      PROL_DROIT='CONSTANT',);
+FLUX_F1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,0.0,
+                            43200.0,0.0,
+                            974520.0,453280.0,
+                            2638800.0,2077850.0,
+                            4087800.0,3512790.0,
+                            5428440.0,4856770.0,
+                            7245000.0,6676270.0,
+                            8853480.0,8279770.0,
+                            10460900.0,9872610.0,
+                            12202900.0,11586900.0,
+                            13944600.0,13295200.0,
+                            14143700.0,13490200.0,
+                            15563200.0,14875300.0,
+                            17236100.0,16506900.0,
+                            17948200.0,17199200.0,
+                            18190100.0,17433400.0,
+                            18193700.0,17435200.0,
+                            18197300.0,17435200.0,
+                            18200900.0,17435200.0,
+                            ),NOM_PARA='INST',PROL_GAUCHE='CONSTANT',);
 # DEFINITION DU FLUX AXIAL POUR LE CYCLE 1
 
-
-FLUXAX1=LIRE_FONCTION(PROL_GAUCHE='CONSTANT',
+FLUXAX1=LIRE_FONCTION(PROL_DROIT='CONSTANT',
                       UNITE=60,
-                      PROL_DROIT='CONSTANT',);
+                      PROL_GAUCHE='CONSTANT',);
 
-FLY_1_1=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='Y',
-                      VALE=
-                      (-0.1008,3.8032834757835002e-07,-0.088200000000000001,3.8083689458688999e-07,
-                             -0.075600000000000001,3.8296082621083001e-07,-0.063,3.858400997151e-07,-0.0504,
-                             3.8946100427349999e-07,-0.0378,3.9259455128205e-07,-0.0252,3.9258457977207998e-07,-0.0126,
-                             3.9294106125356001e-07,0.0,3.9399554843304999e-07,0.0126,3.9293233618234e-07,0.0252,
-                             3.9256712962963002e-07,0.0378,3.9256712962963002e-07,0.0504,3.8942610398860001e-07,0.063,
-                             3.8579522792023001e-07,0.075600000000000001,3.8290972222222002e-07,0.088200000000000001,
-                             3.8077706552707e-07,0.1008,3.8026103988603998e-07,),
-                      PROL_DROIT='CONSTANT',);
+FLY_1_1=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,3.80328347578e-07,
+                            -0.0882,3.80836894587e-07,
+                            -0.0756,3.82960826211e-07,
+                            -0.063,3.85840099715e-07,
+                            -0.0504,3.89461004273e-07,
+                            -0.0378,3.92594551282e-07,
+                            -0.0252,3.92584579772e-07,
+                            -0.0126,3.92941061254e-07,
+                            0.0,3.93995548433e-07,
+                            0.0126,3.92932336182e-07,
+                            0.0252,3.9256712963e-07,
+                            0.0378,3.9256712963e-07,
+                            0.0504,3.89426103989e-07,
+                            0.063,3.8579522792e-07,
+                            0.0756,3.82909722222e-07,
+                            0.0882,3.80777065527e-07,
+                            0.1008,3.80261039886e-07,
+                            ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_2=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='Y',
-                      VALE=
-                      (-0.1008,4.3595566239316001e-07,-0.088200000000000001,4.3866542022792e-07,
-                             -0.075600000000000001,4.4331463675214e-07,-0.063,4.4911556267806002e-07,-0.0504,
-                             4.5750658831909e-07,-0.0378,4.6647222222221997e-07,-0.0252,4.6002938034188002e-07,-0.0126,
-                             4.6004309116809001e-07,0.0,4.6686235754985997e-07,0.0126,4.6003311965811999e-07,0.0252,
-                             4.6000943732193999e-07,0.0378,4.6643981481481001e-07,0.0504,4.5746420940171002e-07,0.063,
-                             4.4906445868945999e-07,0.075600000000000001,4.4325356125356e-07,0.088200000000000001,
-                             4.3859686609687001e-07,0.1008,4.3587838319088001e-07,),
-                      PROL_DROIT='CONSTANT',);
+FLY_1_2=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,4.35955662393e-07,
+                            -0.0882,4.38665420228e-07,
+                            -0.0756,4.43314636752e-07,
+                            -0.063,4.49115562678e-07,
+                            -0.0504,4.57506588319e-07,
+                            -0.0378,4.66472222222e-07,
+                            -0.0252,4.60029380342e-07,
+                            -0.0126,4.60043091168e-07,
+                            0.0,4.6686235755e-07,
+                            0.0126,4.60033119658e-07,
+                            0.0252,4.60009437322e-07,
+                            0.0378,4.66439814815e-07,
+                            0.0504,4.57464209402e-07,
+                            0.063,4.49064458689e-07,
+                            0.0756,4.43253561254e-07,
+                            0.0882,4.38596866097e-07,
+                            0.1008,4.35878383191e-07,
+                            ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_3=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='Y',
-                      VALE=
-                      (-0.1008,4.9431891025640996e-07,-0.088200000000000001,5.0005128205127998e-07,
-                             -0.075600000000000001,5.1337197293447004e-07,-0.063,5.2915313390313001e-07,-0.0504,
-                             5.3788069800570004e-07,-0.0378,5.3504629629630004e-07,-0.0252,5.3221189458688998e-07,-0.0126,
-                             5.3136431623932e-07,0.0,5.3135870726495999e-07,0.0126,5.3135309829059998e-07,0.0252,
-                             5.3218696581197002e-07,0.0378,5.3500827991452996e-07,0.0504,5.3782959401709e-07,0.063,
-                             5.2909205840456002e-07,0.075600000000000001,5.1330217236466999e-07,0.088200000000000001,
-                             4.9997150997151001e-07,0.1008,4.9423165954416005e-07,),
-                      PROL_DROIT='CONSTANT',);
+FLY_1_3=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,4.94318910256e-07,
+                            -0.0882,5.00051282051e-07,
+                            -0.0756,5.13371972934e-07,
+                            -0.063,5.29153133903e-07,
+                            -0.0504,5.37880698006e-07,
+                            -0.0378,5.35046296296e-07,
+                            -0.0252,5.32211894587e-07,
+                            -0.0126,5.31364316239e-07,
+                            0.0,5.31358707265e-07,
+                            0.0126,5.31353098291e-07,
+                            0.0252,5.32186965812e-07,
+                            0.0378,5.35008279915e-07,
+                            0.0504,5.37829594017e-07,
+                            0.063,5.29092058405e-07,
+                            0.0756,5.13302172365e-07,
+                            0.0882,4.99971509972e-07,
+                            0.1008,4.94231659544e-07,
+                            ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_4=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='Y',
-                      VALE=
-                      (-0.1008,5.5489957264956999e-07,-0.088200000000000001,5.6477884615384998e-07,
-                             -0.075600000000000001,5.9007781339030998e-07,-0.063,5.9726415598291003e-07,-0.0504,
-                             6.0445049857550001e-07,-0.0378,5.9840776353275996e-07,-0.0252,5.8440651709402002e-07,-0.0126,
-                             5.8263906695157003e-07,0.0,5.9153240740741004e-07,0.0126,5.8262660256409999e-07,0.0252,
-                             5.8438034188033999e-07,0.0378,5.9836663105413e-07,0.0504,6.0439316239316004e-07,0.063,
-                             5.9719497863248e-07,0.075600000000000001,5.8999679487179001e-07,0.088200000000000001,
-                             5.6469159544159996e-07,0.1008,5.5480110398860005e-07,),
-                      PROL_DROIT='CONSTANT',);
+FLY_1_4=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,5.5489957265e-07,
+                            -0.0882,5.64778846154e-07,
+                            -0.0756,5.9007781339e-07,
+                            -0.063,5.97264155983e-07,
+                            -0.0504,6.04450498576e-07,
+                            -0.0378,5.98407763533e-07,
+                            -0.0252,5.84406517094e-07,
+                            -0.0126,5.82639066952e-07,
+                            0.0,5.91532407407e-07,
+                            0.0126,5.82626602564e-07,
+                            0.0252,5.8438034188e-07,
+                            0.0378,5.98366631054e-07,
+                            0.0504,6.04393162393e-07,
+                            0.063,5.97194978632e-07,
+                            0.0756,5.89996794872e-07,
+                            0.0882,5.64691595442e-07,
+                            0.1008,5.54801103989e-07,
+                            ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_5=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='Y',
-                      VALE=
-                      (-0.1008,6.1267200854701004e-07,-0.088200000000000001,6.2962357549858005e-07,
-                             -0.075600000000000001,6.5655413105413e-07,-0.063,6.6164583333332999e-07,-0.0504,
-                             6.5190242165241998e-07,-0.0378,6.5212678062678005e-07,-0.0252,6.3746616809116999e-07,-0.0126,
-                             6.3547435897436004e-07,0.0,6.4509686609687001e-07,0.0126,6.3546064814814995e-07,0.0252,
-                             6.3743625356125e-07,0.0378,6.5207941595442004e-07,0.0504,6.5183885327634997e-07,0.063,
-                             6.6156980056979999e-07,0.075600000000000001,6.5646563390312997e-07,0.088200000000000001,
-                             6.2952386039885999e-07,0.1008,6.1256356837606998e-07,),
-                      PROL_DROIT='CONSTANT',);
+FLY_1_5=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,6.12672008547e-07,
+                            -0.0882,6.29623575499e-07,
+                            -0.0756,6.56554131054e-07,
+                            -0.063,6.61645833333e-07,
+                            -0.0504,6.51902421652e-07,
+                            -0.0378,6.52126780627e-07,
+                            -0.0252,6.37466168091e-07,
+                            -0.0126,6.35474358974e-07,
+                            0.0,6.45096866097e-07,
+                            0.0126,6.35460648148e-07,
+                            0.0252,6.37436253561e-07,
+                            0.0378,6.52079415954e-07,
+                            0.0504,6.51838853276e-07,
+                            0.063,6.6156980057e-07,
+                            0.0756,6.56465633903e-07,
+                            0.0882,6.29523860399e-07,
+                            0.1008,6.12563568376e-07,
+                            ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_6=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='Y',
-                      VALE=
-                      (-0.1008,6.5755128205127996e-07,-0.088200000000000001,6.8336253561253996e-07,
-                             -0.075600000000000001,6.9012072649573003e-07,-0.063,6.9687891737892e-07,-0.0504,
-                             6.9362571225071001e-07,-0.0378,6.9074768518518997e-07,-0.0252,6.8786965811965998e-07,-0.0126,
-                             6.8586413817664004e-07,0.0,6.8585603632478996e-07,0.0126,6.8584793447293003e-07,0.0252,
-                             6.8783600427350001e-07,0.0378,6.9069720441594996e-07,0.0504,6.9355840455840002e-07,0.063,
-                             6.9679789886040002e-07,0.075600000000000001,6.9002412749288002e-07,0.088200000000000001,
-                             6.8325035612536003e-07,0.1008,6.5743162393161998e-07,),
-                      PROL_DROIT='CONSTANT',);
+FLY_1_6=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,6.57551282051e-07,
+                            -0.0882,6.83362535613e-07,
+                            -0.0756,6.90120726496e-07,
+                            -0.063,6.96878917379e-07,
+                            -0.0504,6.93625712251e-07,
+                            -0.0378,6.90747685185e-07,
+                            -0.0252,6.8786965812e-07,
+                            -0.0126,6.85864138177e-07,
+                            0.0,6.85856036325e-07,
+                            0.0126,6.85847934473e-07,
+                            0.0252,6.87836004274e-07,
+                            0.0378,6.90697204416e-07,
+                            0.0504,6.93558404558e-07,
+                            0.063,6.9679789886e-07,
+                            0.0756,6.90024127493e-07,
+                            0.0882,6.83250356125e-07,
+                            0.1008,6.57431623932e-07,
+                            ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_7=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='Y',
-                      VALE=
-                      (-0.1008,6.9684526353276003e-07,-0.088200000000000001,7.1406606125356005e-07,
-                             -0.075600000000000001,7.3236502849003e-07,-0.063,7.2076442307691997e-07,-0.0504,
-                             7.1793500712250995e-07,-0.0378,7.2835648148147998e-07,-0.0252,7.1444747150996998e-07,-0.0126,
-                             7.1130893874644005e-07,0.0,7.2107727920227996e-07,0.0126,7.1129398148148005e-07,0.0252,
-                             7.1441257122506995e-07,0.0378,7.2830288461537998e-07,0.0504,7.1786396011395999e-07,0.063,
-                             7.2067841880341996e-07,0.075600000000000001,7.3226157407406997e-07,0.088200000000000001,
-                             7.1395138888889005e-07,0.1008,6.9671812678063005e-07,),
-                      PROL_DROIT='CONSTANT',);
+FLY_1_7=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,6.96845263533e-07,
+                            -0.0882,7.14066061254e-07,
+                            -0.0756,7.3236502849e-07,
+                            -0.063,7.20764423077e-07,
+                            -0.0504,7.17935007123e-07,
+                            -0.0378,7.28356481481e-07,
+                            -0.0252,7.1444747151e-07,
+                            -0.0126,7.11308938746e-07,
+                            0.0,7.21077279202e-07,
+                            0.0126,7.11293981481e-07,
+                            0.0252,7.14412571225e-07,
+                            0.0378,7.28302884615e-07,
+                            0.0504,7.17863960114e-07,
+                            0.063,7.20678418803e-07,
+                            0.0756,7.32261574074e-07,
+                            0.0882,7.13951388889e-07,
+                            0.1008,6.96718126781e-07,
+                            ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_8=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='Y',
-                      VALE=
-                      (-0.1008,7.3679362535612996e-07,-0.088200000000000001,7.5423130341880005e-07,
-                             -0.075600000000000001,7.7215633903134002e-07,-0.063,7.5865740740741005e-07,-0.0504,
-                             7.5547774216523998e-07,-0.0378,7.6662464387464e-07,-0.0252,7.5088461538461995e-07,-0.0126,
-                             7.4313924501423998e-07,0.0,7.486323005698e-07,0.0126,7.4312054843304996e-07,0.0252,
-                             7.5084722222222e-07,0.0378,7.6656730769230998e-07,0.0504,7.5540170940170999e-07,0.063,
-                             7.5856267806267997e-07,0.075600000000000001,7.7204415954415998e-07,0.088200000000000001,
-                             7.5410790598291005e-07,0.1008,7.3665776353275997e-07,),
-                      PROL_DROIT='CONSTANT',);
+FLY_1_8=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,7.36793625356e-07,
+                            -0.0882,7.54231303419e-07,
+                            -0.0756,7.72156339031e-07,
+                            -0.063,7.58657407407e-07,
+                            -0.0504,7.55477742165e-07,
+                            -0.0378,7.66624643875e-07,
+                            -0.0252,7.50884615385e-07,
+                            -0.0126,7.43139245014e-07,
+                            0.0,7.4863230057e-07,
+                            0.0126,7.43120548433e-07,
+                            0.0252,7.50847222222e-07,
+                            0.0378,7.66567307692e-07,
+                            0.0504,7.55401709402e-07,
+                            0.063,7.58562678063e-07,
+                            0.0756,7.72044159544e-07,
+                            0.0882,7.54107905983e-07,
+                            0.1008,7.36657763533e-07,
+                            ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_9=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                      NOM_PARA='Y',
-                      VALE=
-                      (-0.1008,7.7370940170939995e-07,-0.088200000000000001,8.0144764957264998e-07,
-                             -0.075600000000000001,8.0374358974358997e-07,-0.063,8.0603952991452995e-07,-0.0504,
-                             8.0238372507123005e-07,-0.0378,7.9936672008546997e-07,-0.0252,7.9634971509971995e-07,-0.0126,
-                             7.8317361111111004e-07,0.0,7.8316426282051005e-07,0.0126,7.8315491452990996e-07,0.0252,
-                             7.9631107549857995e-07,0.0378,7.9930689102564003e-07,0.0504,8.0230270655270996e-07,0.063,
-                             8.0593856837607005e-07,0.075600000000000001,8.0362580128205003e-07,0.088200000000000001,
-                             8.0131303418803e-07,0.1008,7.7356356837607e-07,),
-                      PROL_DROIT='CONSTANT',);
+FLY_1_9=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,7.73709401709e-07,
+                            -0.0882,8.01447649573e-07,
+                            -0.0756,8.03743589744e-07,
+                            -0.063,8.06039529915e-07,
+                            -0.0504,8.02383725071e-07,
+                            -0.0378,7.99366720085e-07,
+                            -0.0252,7.963497151e-07,
+                            -0.0126,7.83173611111e-07,
+                            0.0,7.83164262821e-07,
+                            0.0126,7.8315491453e-07,
+                            0.0252,7.96311075499e-07,
+                            0.0378,7.99306891026e-07,
+                            0.0504,8.02302706553e-07,
+                            0.063,8.05938568376e-07,
+                            0.0756,8.03625801282e-07,
+                            0.0882,8.01313034188e-07,
+                            0.1008,7.73563568376e-07,
+                            ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_10=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='Y',
-                       VALE=
-                       (-0.1008,7.9424198717948999e-07,-0.088200000000000001,8.1225925925926001e-07,
-                              -0.075600000000000001,8.3075516381766e-07,-0.063,8.1540651709402001e-07,-0.0504,
-                              8.1131071937321997e-07,-0.0378,8.2297489316238996e-07,-0.0252,8.0577403846154003e-07,-0.0126,
-                              7.9717236467236002e-07,0.0,8.0284615384615001e-07,0.0126,7.9715117521368004e-07,0.0252,
-                              8.0573165954416005e-07,0.0378,8.2291257122506995e-07,0.0504,8.1122845441594998e-07,0.063,
-                              8.1530306267805998e-07,0.075600000000000001,8.3063051994301999e-07,0.088200000000000001,
-                              8.1211841168090999e-07,0.1008,7.9408742877492998e-07,),
-                       PROL_DROIT='CONSTANT',);
+FLY_1_10=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,7.94241987179e-07,
+                             -0.0882,8.12259259259e-07,
+                             -0.0756,8.30755163818e-07,
+                             -0.063,8.15406517094e-07,
+                             -0.0504,8.11310719373e-07,
+                             -0.0378,8.22974893162e-07,
+                             -0.0252,8.05774038462e-07,
+                             -0.0126,7.97172364672e-07,
+                             0.0,8.02846153846e-07,
+                             0.0126,7.97151175214e-07,
+                             0.0252,8.05731659544e-07,
+                             0.0378,8.22912571225e-07,
+                             0.0504,8.11228454416e-07,
+                             0.063,8.15303062678e-07,
+                             0.0756,8.30630519943e-07,
+                             0.0882,8.12118411681e-07,
+                             0.1008,7.94087428775e-07,
+                             ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_11=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='Y',
-                       VALE=
-                       (-0.1008,8.1647845441594995e-07,-0.088200000000000001,8.3510648148147996e-07,
-                              -0.075600000000000001,8.5487873931623998e-07,-0.063,8.3969088319087998e-07,-0.0504,
-                              8.3502920227919995e-07,-0.0378,8.4651014957265e-07,-0.0252,8.2973931623932002e-07,-0.0126,
-                              8.2549269943020005e-07,0.0,8.3637909544160002e-07,0.0126,8.2547275641026002e-07,0.0252,
-                              8.2969319800569997e-07,0.0378,8.4644408831909002e-07,0.0504,8.3493945868945997e-07,0.063,
-                              8.3957995014244996e-07,0.075600000000000001,8.5474786324785998e-07,0.088200000000000001,
-                              8.3495690883191003e-07,0.1008,8.1631641737892005e-07,),
-                       PROL_DROIT='CONSTANT',);
+FLY_1_11=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,8.16478454416e-07,
+                             -0.0882,8.35106481481e-07,
+                             -0.0756,8.54878739316e-07,
+                             -0.063,8.39690883191e-07,
+                             -0.0504,8.35029202279e-07,
+                             -0.0378,8.46510149573e-07,
+                             -0.0252,8.29739316239e-07,
+                             -0.0126,8.2549269943e-07,
+                             0.0,8.36379095442e-07,
+                             0.0126,8.2547275641e-07,
+                             0.0252,8.29693198006e-07,
+                             0.0378,8.46444088319e-07,
+                             0.0504,8.34939458689e-07,
+                             0.063,8.39579950142e-07,
+                             0.0756,8.54747863248e-07,
+                             0.0882,8.34956908832e-07,
+                             0.1008,8.16316417379e-07,
+                             ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_12=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='Y',
-                       VALE=
-                       (-0.1008,8.3948272792023003e-07,-0.088200000000000001,8.7002546296295996e-07,
-                              -0.075600000000000001,8.7608564814814997e-07,-0.063,8.8214583333333004e-07,-0.0504,
-                              8.7589245014244996e-07,-0.0378,8.7128872863248004e-07,-0.0252,8.6668500712251001e-07,-0.0126,
-                              8.6321616809117001e-07,0.0,8.6320432692307996e-07,0.0126,8.6319248575499001e-07,0.0252,
-                              8.6663764245014005e-07,0.0378,8.7121705840456005e-07,0.0504,8.7579647435896998e-07,0.063,
-                              8.8202617521368001e-07,0.075600000000000001,8.7594667022791999e-07,0.088200000000000001,
-                              8.6986716524217003e-07,0.1008,8.3931196581196996e-07,),
-                       PROL_DROIT='CONSTANT',);
+FLY_1_12=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,8.3948272792e-07,
+                             -0.0882,8.70025462963e-07,
+                             -0.0756,8.76085648148e-07,
+                             -0.063,8.82145833333e-07,
+                             -0.0504,8.75892450142e-07,
+                             -0.0378,8.71288728632e-07,
+                             -0.0252,8.66685007123e-07,
+                             -0.0126,8.63216168091e-07,
+                             0.0,8.63204326923e-07,
+                             0.0126,8.63192485755e-07,
+                             0.0252,8.6663764245e-07,
+                             0.0378,8.71217058405e-07,
+                             0.0504,8.75796474359e-07,
+                             0.063,8.82026175214e-07,
+                             0.0756,8.75946670228e-07,
+                             0.0882,8.69867165242e-07,
+                             0.1008,8.39311965812e-07,
+                             ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_13=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='Y',
-                       VALE=
-                       (-0.1008,8.5508315527066002e-07,-0.088200000000000001,8.7546616809116998e-07,
-                              -0.075600000000000001,9.0944533475783005e-07,-0.063,9.1292663817663998e-07,-0.0504,
-                              8.9653721509972004e-07,-0.0378,8.9547275641025999e-07,-0.0252,8.7405644586895003e-07,-0.0126,
-                              8.7004789886040001e-07,0.0,8.8226549145299002e-07,0.0126,8.7002546296295996e-07,0.0252,
-                              8.7400534188033999e-07,0.0378,8.9539672364672004e-07,0.0504,8.9643376068376001e-07,0.063,
-                              9.1279825498575999e-07,0.075600000000000001,9.0929576210826002e-07,0.088200000000000001,
-                              8.7530288461538001e-07,0.1008,8.5490491452990995e-07,),
-                       PROL_DROIT='CONSTANT',);
+FLY_1_13=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,8.55083155271e-07,
+                             -0.0882,8.75466168091e-07,
+                             -0.0756,9.09445334758e-07,
+                             -0.063,9.12926638177e-07,
+                             -0.0504,8.965372151e-07,
+                             -0.0378,8.9547275641e-07,
+                             -0.0252,8.74056445869e-07,
+                             -0.0126,8.7004789886e-07,
+                             0.0,8.82265491453e-07,
+                             0.0126,8.70025462963e-07,
+                             0.0252,8.7400534188e-07,
+                             0.0378,8.95396723647e-07,
+                             0.0504,8.96433760684e-07,
+                             0.063,9.12798254986e-07,
+                             0.0756,9.09295762108e-07,
+                             0.0882,8.75302884615e-07,
+                             0.1008,8.5490491453e-07,
+                             ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_14=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='Y',
-                       VALE=
-                       (-0.1008,8.5798237179486999e-07,-0.088200000000000001,8.6880893874644002e-07,
-                              -0.075600000000000001,9.0299750712251001e-07,-0.063,9.0948646723646997e-07,-0.0504,
-                              9.1597542735043003e-07,-0.0378,9.0500302706552995e-07,-0.0252,8.8214084757835001e-07,-0.0126,
-                              8.7779825498574995e-07,0.0,8.8993732193732e-07,0.0126,8.7777207977207998e-07,0.0252,
-                              8.8208974358973997e-07,0.0378,9.0492325498575998e-07,0.0504,9.1586574074073996e-07,0.063,
-                              9.0935434472933995e-07,0.075600000000000001,9.0284294871795e-07,0.088200000000000001,
-                              8.6864066951567002e-07,0.1008,8.5779665242165003e-07,),
-                       PROL_DROIT='CONSTANT',);
+FLY_1_14=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,8.57982371795e-07,
+                             -0.0882,8.68808938746e-07,
+                             -0.0756,9.02997507123e-07,
+                             -0.063,9.09486467236e-07,
+                             -0.0504,9.1597542735e-07,
+                             -0.0378,9.05003027066e-07,
+                             -0.0252,8.82140847578e-07,
+                             -0.0126,8.77798254986e-07,
+                             0.0,8.89937321937e-07,
+                             0.0126,8.77772079772e-07,
+                             0.0252,8.8208974359e-07,
+                             0.0378,9.04923254986e-07,
+                             0.0504,9.15865740741e-07,
+                             0.063,9.09354344729e-07,
+                             0.0756,9.02842948718e-07,
+                             0.0882,8.68640669516e-07,
+                             0.1008,8.57796652422e-07,
+                             ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_15=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='Y',
-                       VALE=
-                       (-0.1008,8.5773557692308004e-07,-0.088200000000000001,8.6180893874644003e-07,
-                              -0.075600000000000001,8.7862838319088002e-07,-0.063,8.9924074074074004e-07,-0.0504,
-                              9.0872489316239005e-07,-0.0378,9.0174545940170996e-07,-0.0252,8.9476602564102997e-07,-0.0126,
-                              8.9122364672365005e-07,0.0,8.9120993589743996e-07,0.0126,8.9119622507122997e-07,0.0252,
-                              8.9471118233617996e-07,0.0378,9.0166132478632003e-07,0.0504,9.0861146723646996e-07,0.063,
-                              8.9910363247862999e-07,0.075600000000000001,8.7847257834757996e-07,0.088200000000000001,
-                              8.6163693019942995e-07,0.1008,8.5754362535613004e-07,),
-                       PROL_DROIT='CONSTANT',);
+FLY_1_15=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,8.57735576923e-07,
+                             -0.0882,8.61808938746e-07,
+                             -0.0756,8.78628383191e-07,
+                             -0.063,8.99240740741e-07,
+                             -0.0504,9.08724893162e-07,
+                             -0.0378,9.01745459402e-07,
+                             -0.0252,8.94766025641e-07,
+                             -0.0126,8.91223646724e-07,
+                             0.0,8.91209935897e-07,
+                             0.0126,8.91196225071e-07,
+                             0.0252,8.94711182336e-07,
+                             0.0378,9.01661324786e-07,
+                             0.0504,9.08611467236e-07,
+                             0.063,8.99103632479e-07,
+                             0.0756,8.78472578348e-07,
+                             0.0882,8.61636930199e-07,
+                             0.1008,8.57543625356e-07,
+                             ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_16=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='Y',
-                       VALE=
-                       (-0.1008,8.5903935185184999e-07,-0.088200000000000001,8.5690046296295998e-07,
-                              -0.075600000000000001,8.5831018518518999e-07,-0.063,8.6167307692307999e-07,-0.0504,
-                              8.7125320512820998e-07,-0.0378,8.8563586182335997e-07,-0.0252,8.7089298433048003e-07,-0.0126,
-                              8.6842877492877004e-07,0.0,8.7942111823362e-07,0.0126,8.6840135327634996e-07,0.0252,
-                              8.7083814102563997e-07,0.0378,8.8554985754985996e-07,0.0504,8.7113977920228004e-07,0.063,
-                              8.6153846153846001e-07,0.075600000000000001,8.5815313390312996e-07,0.088200000000000001,
-                              8.5672471509971999e-07,0.1008,8.5884116809116995e-07,),
-                       PROL_DROIT='CONSTANT',);
+FLY_1_16=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,8.59039351852e-07,
+                             -0.0882,8.56900462963e-07,
+                             -0.0756,8.58310185185e-07,
+                             -0.063,8.61673076923e-07,
+                             -0.0504,8.71253205128e-07,
+                             -0.0378,8.85635861823e-07,
+                             -0.0252,8.7089298433e-07,
+                             -0.0126,8.68428774929e-07,
+                             0.0,8.79421118234e-07,
+                             0.0126,8.68401353276e-07,
+                             0.0252,8.70838141026e-07,
+                             0.0378,8.8554985755e-07,
+                             0.0504,8.71139779202e-07,
+                             0.063,8.61538461538e-07,
+                             0.0756,8.58153133903e-07,
+                             0.0882,8.567247151e-07,
+                             0.1008,8.58841168091e-07,
+                             ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLY_1_17=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                       NOM_PARA='Y',
-                       VALE=
-                       (-0.1008,8.6388675213674999e-07,-0.088200000000000001,8.5563782051281999e-07,
-                              -0.075600000000000001,8.5087019230768996e-07,-0.063,8.4755965099714995e-07,-0.0504,
-                              8.4761698717949003e-07,-0.0378,8.5133636039885996e-07,-0.0252,8.4844088319088001e-07,-0.0126,
-                              8.4633689458689002e-07,0.0,8.4644658119657999e-07,0.0126,8.4630947293447004e-07,0.0252,
-                              8.4838479344729004e-07,0.0378,8.512516025641e-07,0.0504,8.4750480769231e-07,0.063,
-                              8.4742378917379002e-07,0.075600000000000001,8.5071064814815003e-07,0.088200000000000001,
-                              8.5545584045584e-07,0.1008,8.6368108974359e-07,),
-                       PROL_DROIT='CONSTANT',);
+FLY_1_17=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(-0.1008,8.63886752137e-07,
+                             -0.0882,8.55637820513e-07,
+                             -0.0756,8.50870192308e-07,
+                             -0.063,8.47559650997e-07,
+                             -0.0504,8.47616987179e-07,
+                             -0.0378,8.51336360399e-07,
+                             -0.0252,8.48440883191e-07,
+                             -0.0126,8.46336894587e-07,
+                             0.0,8.46446581197e-07,
+                             0.0126,8.46309472934e-07,
+                             0.0252,8.48384793447e-07,
+                             0.0378,8.51251602564e-07,
+                             0.0504,8.47504807692e-07,
+                             0.063,8.47423789174e-07,
+                             0.0756,8.50710648148e-07,
+                             0.0882,8.55455840456e-07,
+                             0.1008,8.63681089744e-07,
+                             ),NOM_PARA='Y',PROL_GAUCHE='CONSTANT',);
 
-FLUXRD1=DEFI_NAPPE(FONCTION=(FLY_1_1,FLY_1_2,FLY_1_3,FLY_1_4,FLY_1_5,FLY_1_6,FLY_1_7,FLY_1_8,FLY_1_9,FLY_1_10,FLY_1_11,FLY_1_12,
-                              FLY_1_13,FLY_1_14,FLY_1_15,FLY_1_16,FLY_1_17,),
+FLUXRD1=DEFI_NAPPE(PROL_DROIT='CONSTANT',
                    PARA=
-                   (-0.1008,-0.088200000000000001,-0.075600000000000001,-0.063,-0.0504,-0.0378,-0.0252,
-                          -0.0126,0.0,0.0126,0.0252,0.0378,0.0504,0.063,0.075600000000000001,0.088200000000000001,0.1008,),
-                   PROL_GAUCHE='CONSTANT',
+                   (-0.1008,-0.0882,-0.0756,-0.063,-0.0504,-0.0378,-0.0252,-0.0126,0.0,0.0126,0.0252,
+                          0.0378,0.0504,0.063,0.0756,0.0882,0.1008,),
                    NOM_PARA='Z',
-                   PROL_DROIT='CONSTANT',);
+                   PROL_GAUCHE='CONSTANT',
+                   FONCTION=
+                   (FLY_1_1,FLY_1_2,FLY_1_3,FLY_1_4,FLY_1_5,FLY_1_6,FLY_1_7,FLY_1_8,FLY_1_9,FLY_1_10,
+                              FLY_1_11,FLY_1_12,FLY_1_13,FLY_1_14,FLY_1_15,FLY_1_16,FLY_1_17,),);
 #
 # DEFINITION DES MATERIAUX ET AFFECTATIONS
 #
@@ -802,508 +878,467 @@ FLUXRD1=DEFI_NAPPE(FONCTION=(FLY_1_1,FLY_1_2,FLY_1_3,FLY_1_4,FLY_1_5,FLY_1_6,FLY
 #
 # EMBOUT SUPERIEUR
 
+E_ES=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(100.0,2.0,
+                         300.0,3.0,
+                         ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-E_ES=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                   NOM_PARA='TEMP',
-                   VALE=(100.0,2.0,300.0,3.0,),
-                   PROL_DROIT='CONSTANT',);
+NU_ES=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(100.0,2.0,
+                          300.0,3.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-NU_ES=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(100.0,2.0,300.0,3.0,),
-                    PROL_DROIT='CONSTANT',);
+AL_ES=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(100.0,2.0,
+                          300.0,3.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-AL_ES=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(100.0,2.0,300.0,3.0,),
-                    PROL_DROIT='CONSTANT',);
-
-MT_ES=DEFI_MATERIAU(ELAS_FO=_F(NU=NU_ES,
-                               ALPHA=AL_ES,
+MT_ES=DEFI_MATERIAU(ELAS_FO=_F(E=E_ES,
                                RHO=7800.0,
-                               E=E_ES,),);
+                               ALPHA=AL_ES,
+                               NU=NU_ES,),);
 # EMBOUT INFERIEUR
 
+E_EI=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(100.0,2.0,
+                         300.0,3.0,
+                         ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-E_EI=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                   NOM_PARA='TEMP',
-                   VALE=(100.0,2.0,300.0,3.0,),
-                   PROL_DROIT='CONSTANT',);
+NU_EI=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(100.0,2.0,
+                          300.0,3.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-NU_EI=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(100.0,2.0,300.0,3.0,),
-                    PROL_DROIT='CONSTANT',);
+AL_EI=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(100.0,2.0,
+                          300.0,3.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-AL_EI=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(100.0,2.0,300.0,3.0,),
-                    PROL_DROIT='CONSTANT',);
-
-MT_EI=DEFI_MATERIAU(ELAS_FO=_F(NU=NU_EI,
-                               ALPHA=AL_EI,
+MT_EI=DEFI_MATERIAU(ELAS_FO=_F(E=E_EI,
                                RHO=12.0,
-                               E=E_EI,),);
+                               ALPHA=AL_EI,
+                               NU=NU_EI,),);
 
-MT_RIG=DEFI_MATERIAU(ELAS=_F(NU=0.0,
-                             ALPHA=0.0,
+MT_RIG=DEFI_MATERIAU(ELAS=_F(E=1.0,
                              RHO=0.0,
-                             E=1.0,),);
+                             ALPHA=0.0,
+                             NU=0.0,),);
 # FONCTION COUPLE EN FONCTION DE DRZ POUR LA LIAISON GRILLE/CRAYON
 
-
-FOTRAC=DEFI_FONCTION(PROL_GAUCHE='LINEAIRE',
-                     NOM_PARA='DRZ',
-                     VALE=(1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,),
-                     PROL_DROIT='LINEAIRE',);
+FOTRAC=DEFI_FONCTION(PROL_DROIT='LINEAIRE',VALE=(1.0,1.0,
+                           0.0,0.0,
+                           0.0,0.0,
+                           0.0,0.0,
+                           ),NOM_PARA='DRZ',PROL_GAUCHE='LINEAIRE',);
 
 MT_RE1=DEFI_MATERIAU(DIS_CONTACT=_F(EFFO_N_INIT=-35.0,
-                                    RELA_MZ=FOTRAC,
                                     RIGI_N_FO=FRIG1,
-                                    COULOMB=1.0,),
-                     ELAS=_F(NU=0.0,
-                             ALPHA=0.0,
+                                    COULOMB=1.0,
+                                    RELA_MZ=FOTRAC,),
+                     ELAS=_F(E=1.0,
                              RHO=0.0,
-                             E=1.0,),);
+                             ALPHA=0.0,
+                             NU=0.0,),);
 
 MT_RE2=DEFI_MATERIAU(DIS_CONTACT=_F(EFFO_N_INIT=-35.0,
-                                    RELA_MZ=FOTRAC,
                                     RIGI_N_FO=FRIG2,
-                                    COULOMB=1.0,),
-                     ELAS=_F(NU=0.0,
-                             ALPHA=0.0,
+                                    COULOMB=1.0,
+                                    RELA_MZ=FOTRAC,),
+                     ELAS=_F(E=1.0,
                              RHO=0.0,
-                             E=1.0,),);
+                             ALPHA=0.0,
+                             NU=0.0,),);
 
 MT_RE3=DEFI_MATERIAU(DIS_CONTACT=_F(EFFO_N_INIT=-35.0,
-                                    RELA_MZ=FOTRAC,
                                     RIGI_N_FO=FRIG3,
-                                    COULOMB=1.0,),
-                     ELAS=_F(NU=0.0,
-                             ALPHA=0.0,
+                                    COULOMB=1.0,
+                                    RELA_MZ=FOTRAC,),
+                     ELAS=_F(E=1.0,
                              RHO=0.0,
-                             E=1.0,),);
+                             ALPHA=0.0,
+                             NU=0.0,),);
 
 MT_RE4=DEFI_MATERIAU(DIS_CONTACT=_F(EFFO_N_INIT=-35.0,
-                                    RELA_MZ=FOTRAC,
                                     RIGI_N_FO=FRIG4,
-                                    COULOMB=1.0,),
-                     ELAS=_F(NU=0.0,
-                             ALPHA=0.0,
+                                    COULOMB=1.0,
+                                    RELA_MZ=FOTRAC,),
+                     ELAS=_F(E=1.0,
                              RHO=0.0,
-                             E=1.0,),);
+                             ALPHA=0.0,
+                             NU=0.0,),);
 
 MT_RE5=DEFI_MATERIAU(DIS_CONTACT=_F(EFFO_N_INIT=-35.0,
-                                    RELA_MZ=FOTRAC,
                                     RIGI_N_FO=FRIG5,
-                                    COULOMB=1.0,),
-                     ELAS=_F(NU=0.0,
-                             ALPHA=0.0,
+                                    COULOMB=1.0,
+                                    RELA_MZ=FOTRAC,),
+                     ELAS=_F(E=1.0,
                              RHO=0.0,
-                             E=1.0,),);
+                             ALPHA=0.0,
+                             NU=0.0,),);
 
 MT_RE6=DEFI_MATERIAU(DIS_CONTACT=_F(EFFO_N_INIT=-35.0,
-                                    RELA_MZ=FOTRAC,
                                     RIGI_N_FO=FRIG6,
-                                    COULOMB=1.0,),
-                     ELAS=_F(NU=0.0,
-                             ALPHA=0.0,
+                                    COULOMB=1.0,
+                                    RELA_MZ=FOTRAC,),
+                     ELAS=_F(E=1.0,
                              RHO=0.0,
-                             E=1.0,),);
+                             ALPHA=0.0,
+                             NU=0.0,),);
 
 MT_RE7=DEFI_MATERIAU(DIS_CONTACT=_F(EFFO_N_INIT=-35.0,
-                                    RELA_MZ=FOTRAC,
                                     RIGI_N_FO=FRIG7,
-                                    COULOMB=1.0,),
-                     ELAS=_F(NU=0.0,
-                             ALPHA=0.0,
+                                    COULOMB=1.0,
+                                    RELA_MZ=FOTRAC,),
+                     ELAS=_F(E=1.0,
                              RHO=0.0,
-                             E=1.0,),);
+                             ALPHA=0.0,
+                             NU=0.0,),);
 
 MT_RE8=DEFI_MATERIAU(DIS_CONTACT=_F(EFFO_N_INIT=-35.0,
-                                    RELA_MZ=FOTRAC,
                                     RIGI_N_FO=FRIG8,
-                                    COULOMB=1.0,),
-                     ELAS=_F(NU=0.0,
-                             ALPHA=0.0,
+                                    COULOMB=1.0,
+                                    RELA_MZ=FOTRAC,),
+                     ELAS=_F(E=1.0,
                              RHO=0.0,
-                             E=1.0,),);
+                             ALPHA=0.0,
+                             NU=0.0,),);
 
 MT_RE9=DEFI_MATERIAU(DIS_CONTACT=_F(EFFO_N_INIT=-35.0,
-                                    RELA_MZ=FOTRAC,
                                     RIGI_N_FO=FRIG9,
-                                    COULOMB=1.0,),
-                     ELAS=_F(NU=0.0,
-                             ALPHA=0.0,
+                                    COULOMB=1.0,
+                                    RELA_MZ=FOTRAC,),
+                     ELAS=_F(E=1.0,
                              RHO=0.0,
-                             E=1.0,),);
+                             ALPHA=0.0,
+                             NU=0.0,),);
 
 MT_RE10=DEFI_MATERIAU(DIS_CONTACT=_F(EFFO_N_INIT=-35.0,
-                                     RELA_MZ=FOTRAC,
                                      RIGI_N_FO=FRIG10,
-                                     COULOMB=1.0,),
-                      ELAS=_F(NU=0.0,
-                              ALPHA=0.0,
+                                     COULOMB=1.0,
+                                     RELA_MZ=FOTRAC,),
+                      ELAS=_F(E=1.0,
                               RHO=0.0,
-                              E=1.0,),);
+                              ALPHA=0.0,
+                              NU=0.0,),);
 # SYSTEME DE MAINTIEN
 
+E_MA=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                         5.0,2.0,
+                         ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-E_MA=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                   NOM_PARA='TEMP',
-                   VALE=(0.0,1.0,5.0,2.0,),
-                   PROL_DROIT='CONSTANT',);
+NU_MA=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                          5.0,2.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-NU_MA=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(0.0,1.0,5.0,2.0,),
-                    PROL_DROIT='CONSTANT',);
+AL_MA=DEFI_CONSTANTE(VALE=0.3,);
 
-AL_MA=DEFI_CONSTANTE(VALE=0.29999999999999999,);
+SY_MA=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                          5.0,2.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-SY_MA=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(0.0,1.0,5.0,2.0,),
-                    PROL_DROIT='CONSTANT',);
+DS_MA=DEFI_CONSTANTE(VALE=0.3,);
 
-DS_MA=DEFI_CONSTANTE(VALE=0.29999999999999999,);
+NP_MA=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                          5.0,2.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-NP_MA=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(0.0,1.0,5.0,2.0,),
-                    PROL_DROIT='CONSTANT',);
+MEY_MA=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                           5.0,2.0,
+                           ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-MEY_MA=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                     NOM_PARA='TEMP',
-                     VALE=(0.0,1.0,5.0,2.0,),
-                     PROL_DROIT='CONSTANT',);
+MPY_MA=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                           5.0,2.0,
+                           ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-MPY_MA=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                     NOM_PARA='TEMP',
-                     VALE=(0.0,1.0,5.0,2.0,),
-                     PROL_DROIT='CONSTANT',);
+MEZ_MA=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                           5.0,2.0,
+                           ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-MEZ_MA=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                     NOM_PARA='TEMP',
-                     VALE=(0.0,1.0,5.0,2.0,),
-                     PROL_DROIT='CONSTANT',);
+MPZ_MA=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                           5.0,2.0,
+                           ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-MPZ_MA=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                     NOM_PARA='TEMP',
-                     VALE=(0.0,1.0,5.0,2.0,),
-                     PROL_DROIT='CONSTANT',);
+CAY_MA=DEFI_CONSTANTE(VALE=0.3,);
 
-CAY_MA=DEFI_CONSTANTE(VALE=0.29999999999999999,);
+CBY_MA=DEFI_CONSTANTE(VALE=0.3,);
 
-CBY_MA=DEFI_CONSTANTE(VALE=0.29999999999999999,);
+CAZ_MA=DEFI_CONSTANTE(VALE=0.3,);
 
-CAZ_MA=DEFI_CONSTANTE(VALE=0.29999999999999999,);
+CBZ_MA=DEFI_CONSTANTE(VALE=0.3,);
 
-CBZ_MA=DEFI_CONSTANTE(VALE=0.29999999999999999,);
+MPX_MA=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                           5.0,2.0,
+                           ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-MPX_MA=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                     NOM_PARA='TEMP',
-                     VALE=(0.0,1.0,5.0,2.0,),
-                     PROL_DROIT='CONSTANT',);
-
-MT_MA=DEFI_MATERIAU(VMIS_POUTRE_FO=_F(MEZ=MEZ_MA,
-                                      MPX=MPX_MA,
-                                      MPZ=MPZ_MA,
-                                      CBY=CBY_MA,
+MT_MA=DEFI_MATERIAU(ELAS_FO=_F(E=E_MA,
+                               RHO=7800.0,
+                               ALPHA=AL_MA,
+                               NU=NU_MA,),
+                    ECRO_LINE_FO=_F(SY=SY_MA,
+                                    D_SIGM_EPSI=DS_MA,),
+                    VMIS_POUTRE_FO=_F(CAZ=CAZ_MA,
+                                      CAY=CAY_MA,
+                                      MEY=MEY_MA,
                                       NP=NP_MA,
                                       CBZ=CBZ_MA,
-                                      MEY=MEY_MA,
-                                      CAY=CAY_MA,
-                                      CAZ=CAZ_MA,
-                                      MPY=MPY_MA,),
-                    ECRO_LINE_FO=_F(D_SIGM_EPSI=DS_MA,
-                                    SY=SY_MA,),
-                    ELAS_FO=_F(NU=NU_MA,
-                               ALPHA=AL_MA,
-                               RHO=7800.0,
-                               E=E_MA,),);
+                                      CBY=CBY_MA,
+                                      MPZ=MPZ_MA,
+                                      MPY=MPY_MA,
+                                      MPX=MPX_MA,
+                                      MEZ=MEZ_MA,),);
 #
 #           **** DEFINITION DES MATERIAUX AVEC FLUX NEUTRONIQUE ****
 #
 #
 # GRILLE
 
+E_GRE=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                          5.0,2.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-E_GRE=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(0.0,1.0,5.0,2.0,),
-                    PROL_DROIT='CONSTANT',);
+E_GRM=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                          5.0,2.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-E_GRM=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(0.0,1.0,5.0,2.0,),
-                    PROL_DROIT='CONSTANT',);
+NU_GRE=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                           5.0,2.0,
+                           ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-NU_GRE=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                     NOM_PARA='TEMP',
-                     VALE=(0.0,1.0,5.0,2.0,),
-                     PROL_DROIT='CONSTANT',);
+NU_GRM=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                           5.0,2.0,
+                           ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-NU_GRM=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                     NOM_PARA='TEMP',
-                     VALE=(0.0,1.0,5.0,2.0,),
-                     PROL_DROIT='CONSTANT',);
+AL_GRE=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                           5.0,2.0,
+                           ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-AL_GRE=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                     NOM_PARA='TEMP',
-                     VALE=(0.0,1.0,5.0,2.0,),
-                     PROL_DROIT='CONSTANT',);
-
-AL_GRM=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                     NOM_PARA='TEMP',
-                     VALE=(0.0,1.0,5.0,2.0,),
-                     PROL_DROIT='CONSTANT',);
+AL_GRM=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                           5.0,2.0,
+                           ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 # TUBE GUIDE
 
+E_TU=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                         5.0,2.0,
+                         ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-E_TU=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                   NOM_PARA='TEMP',
-                   VALE=(0.0,1.0,5.0,2.0,),
-                   PROL_DROIT='CONSTANT',);
+NU_TU=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                          5.0,2.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-NU_TU=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(0.0,1.0,5.0,2.0,),
-                    PROL_DROIT='CONSTANT',);
-
-AL_TU=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(0.0,1.0,5.0,2.0,),
-                    PROL_DROIT='CONSTANT',);
+AL_TU=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                          5.0,2.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 # CRAYON
 
+E_CR=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                         5.0,2.0,
+                         ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-E_CR=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                   NOM_PARA='TEMP',
-                   VALE=(0.0,1.0,5.0,2.0,),
-                   PROL_DROIT='CONSTANT',);
+NU_CR=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                          5.0,2.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 
-NU_CR=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(0.0,1.0,5.0,2.0,),
-                    PROL_DROIT='CONSTANT',);
-
-AL_CR=DEFI_FONCTION(PROL_GAUCHE='CONSTANT',
-                    NOM_PARA='TEMP',
-                    VALE=(0.0,1.0,5.0,2.0,),
-                    PROL_DROIT='CONSTANT',);
+AL_CR=DEFI_FONCTION(PROL_DROIT='CONSTANT',VALE=(0.0,1.0,
+                          5.0,2.0,
+                          ),NOM_PARA='TEMP',PROL_GAUCHE='CONSTANT',);
 # GRANDISSEMENT DES GRILLES
 # GRILLES EXTREMES 1 ET 10
 
-
-MT_GRE1=DEFI_MATERIAU(GRAN_IRRA=_F(FONC_MULT=FLUX_F1,
-                                   FLUX_L=FLUXAX1,
-                                   FLUX_TN=FLUXRD1,
-                                   S=1.0,
-                                   A=0.0,),
-                      LEMAITRE=_F(N=0.0,
-                                  UN_SUR_M=0.0,
+MT_GRE1=DEFI_MATERIAU(LEMAITRE=_F(UN_SUR_K=0.0,
                                   QSR_K=1.0,
-                                  UN_SUR_K=0.0,),
-                      ELAS_FO=_F(NU=NU_GRE,
-                                 ALPHA=AL_GRE,
+                                  UN_SUR_M=0.0,
+                                  N=0.0,),
+                      ELAS_FO=_F(E=E_GRE,
                                  RHO=7800.0,
-                                 E=E_GRE,),);
+                                 ALPHA=AL_GRE,
+                                 NU=NU_GRE,),
+                      GRAN_IRRA=_F(A=0.0,
+                                   FLUX_L=FLUXAX1,
+                                   FONC_MULT=FLUX_F1,
+                                   S=1.0,
+                                   FLUX_TN=FLUXRD1,),);
 # GRILLES DE MELANGE       
 
-
-MT_GRM1=DEFI_MATERIAU(GRAN_IRRA=_F(FONC_MULT=FLUX_F1,
-                                   FLUX_L=FLUXAX1,
-                                   FLUX_TN=FLUXRD1,
-                                   S=1.0,
-                                   A=0.0,),
-                      LEMAITRE=_F(N=0.0,
-                                  UN_SUR_M=0.0,
+MT_GRM1=DEFI_MATERIAU(LEMAITRE=_F(UN_SUR_K=0.0,
                                   QSR_K=2.0,
-                                  UN_SUR_K=0.0,),
-                      ELAS_FO=_F(NU=NU_GRM,
-                                 ALPHA=AL_GRM,
+                                  UN_SUR_M=0.0,
+                                  N=0.0,),
+                      ELAS_FO=_F(E=E_GRM,
                                  RHO=7800.0,
-                                 E=E_GRM,),);
+                                 ALPHA=AL_GRM,
+                                 NU=NU_GRM,),
+                      GRAN_IRRA=_F(A=0.0,
+                                   FLUX_L=FLUXAX1,
+                                   FONC_MULT=FLUX_F1,
+                                   S=1.0,
+                                   FLUX_TN=FLUXRD1,),);
 # DEFINITION DES MATERIAUX VISCOPLASTIQUES ( TUBES ET CRAYONS )
 
-
-MT_TU1=DEFI_MATERIAU(GRAN_IRRA=_F(FONC_MULT=FLUX_F1,
-                                  FLUX_L=FLUXAX1,
-                                  FLUX_TN=FLUXRD1,
-                                  S=1.0,
-                                  A=0.0,),
-                     LEMAITRE=_F(N=0.0,
-                                 UN_SUR_M=0.0,
+MT_TU1=DEFI_MATERIAU(LEMAITRE=_F(UN_SUR_K=0.0,
                                  QSR_K=2.0,
-                                 UN_SUR_K=0.0,),
-                     ELAS_FO=_F(NU=NU_TU,
+                                 UN_SUR_M=0.0,
+                                 N=0.0,),
+                     ELAS_FO=_F(E=E_TU,
+                                RHO=7800.0,
                                 ALPHA=AL_TU,
-                                RHO=7800.0,
-                                E=E_TU,),);
-
-MT_CR1=DEFI_MATERIAU(GRAN_IRRA=_F(FONC_MULT=FLUX_F1,
+                                NU=NU_TU,),
+                     GRAN_IRRA=_F(A=0.0,
                                   FLUX_L=FLUXAX1,
-                                  FLUX_TN=FLUXRD1,
+                                  FONC_MULT=FLUX_F1,
                                   S=1.0,
-                                  A=0.0,),
-                     LEMAITRE=_F(N=0.0,
-                                 UN_SUR_M=0.0,
+                                  FLUX_TN=FLUXRD1,),);
+
+MT_CR1=DEFI_MATERIAU(LEMAITRE=_F(UN_SUR_K=0.0,
                                  QSR_K=2.0,
-                                 UN_SUR_K=0.0,),
-                     ELAS_FO=_F(NU=NU_CR,
-                                ALPHA=AL_CR,
+                                 UN_SUR_M=0.0,
+                                 N=0.0,),
+                     ELAS_FO=_F(E=E_CR,
                                 RHO=7800.0,
-                                E=E_CR,),);
+                                ALPHA=AL_CR,
+                                NU=NU_CR,),
+                     GRAN_IRRA=_F(A=0.0,
+                                  FLUX_L=FLUXAX1,
+                                  FONC_MULT=FLUX_F1,
+                                  S=1.0,
+                                  FLUX_TN=FLUXRD1,),);
 #
 #           AFFECTATION DES MATERIAUX A CHAUD - CYCLE  
 #
+
+A_MAT_1=AFFE_MATERIAU(MAILLAGE=MA1,
+                      AFFE=(_F(GROUP_MA=('MAINTI_Y','MAINTI_Z',),
+                               TEMP_REF=100.0,
+                               MATER=MT_MA,),
+                            _F(GROUP_MA='GRIL_I',
+                               TEMP_REF=100.0,
+                               MATER=MT_GRM1,),
+                            _F(GROUP_MA='GRIL_E',
+                               TEMP_REF=100.0,
+                               MATER=MT_GRE1,),
+                            _F(GROUP_MA='CRAY',
+                               TEMP_REF=100.0,
+                               MATER=MT_CR1,),
+                            _F(GROUP_MA='GUID',
+                               TEMP_REF=100.0,
+                               MATER=MT_TU1,),
+                            _F(GROUP_MA='EBOINF',
+                               TEMP_REF=100.0,
+                               MATER=MT_EI,),
+                            _F(GROUP_MA=('PI_PLE','PI_TRO',),
+                               TEMP_REF=100.0,
+                               MATER=MT_EI,),
+                            _F(GROUP_MA='EBOSUP',
+                               TEMP_REF=100.0,
+                               MATER=MT_ES,),
+                            _F(GROUP_MA='RIGID',
+                               TEMP_REF=100.0,
+                               MATER=MT_RIG,),
+                            _F(GROUP_MA='ELA1',
+                               TEMP_REF=100.0,
+                               MATER=MT_RE1,),
+                            _F(GROUP_MA='ELA2',
+                               TEMP_REF=100.0,
+                               MATER=MT_RE2,),
+                            _F(GROUP_MA='ELA3',
+                               TEMP_REF=100.0,
+                               MATER=MT_RE3,),
+                            _F(GROUP_MA='ELA4',
+                               TEMP_REF=100.0,
+                               MATER=MT_RE4,),
+                            _F(GROUP_MA='ELA5',
+                               TEMP_REF=100.0,
+                               MATER=MT_RE5,),
+                            _F(GROUP_MA='ELA6',
+                               TEMP_REF=100.0,
+                               MATER=MT_RE6,),
+                            _F(GROUP_MA='ELA7',
+                               TEMP_REF=100.0,
+                               MATER=MT_RE7,),
+                            _F(GROUP_MA='ELA8',
+                               TEMP_REF=100.0,
+                               MATER=MT_RE8,),
+                            _F(GROUP_MA='ELA9',
+                               TEMP_REF=100.0,
+                               MATER=MT_RE9,),
+                            _F(GROUP_MA='ELA10',
+                               TEMP_REF=100.0,
+                               MATER=MT_RE10,),),);
 #
 
+L_INST_1=DEFI_LIST_REEL(DEBUT=0.0,
+                        INTERVALLE=(_F(NOMBRE=1,
+                                       JUSQU_A=0.5,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=1000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=2000.0,),
+                                    _F(NOMBRE=5,
+                                       JUSQU_A=3000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=4000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=5000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=6000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=7000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=8000.0,),),);
 
-A_MAT_1=AFFE_MATERIAU(AFFE=(_F(TEMP_REF=100.0,
-                               MATER=MT_MA,
-                               GROUP_MA=('MAINTI_Y','MAINTI_Z',),),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_GRM1,
-                               GROUP_MA='GRIL_I',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_GRE1,
-                               GROUP_MA='GRIL_E',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_CR1,
-                               GROUP_MA='CRAY',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_TU1,
-                               GROUP_MA='GUID',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_EI,
-                               GROUP_MA='EBOINF',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_EI,
-                               GROUP_MA=('PI_PLE','PI_TRO',),),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_ES,
-                               GROUP_MA='EBOSUP',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RIG,
-                               GROUP_MA='RIGID',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RE1,
-                               GROUP_MA='ELA1',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RE2,
-                               GROUP_MA='ELA2',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RE3,
-                               GROUP_MA='ELA3',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RE4,
-                               GROUP_MA='ELA4',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RE5,
-                               GROUP_MA='ELA5',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RE6,
-                               GROUP_MA='ELA6',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RE7,
-                               GROUP_MA='ELA7',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RE8,
-                               GROUP_MA='ELA8',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RE9,
-                               GROUP_MA='ELA9',),
-                            _F(TEMP_REF=100.0,
-                               MATER=MT_RE10,
-                               GROUP_MA='ELA10',),),
-                      MAILLAGE=MA1,);
-#
-
-
-L_INST_1=DEFI_LIST_REEL(INTERVALLE=(_F(JUSQU_A=0.5,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=1000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=2000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=3000.0,
-                                       NOMBRE=5,),
-                                    _F(JUSQU_A=4000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=5000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=6000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=7000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=8000.0,
-                                       NOMBRE=1,),),
-                        DEBUT=0.0,);
-
-L_ARCH_1=DEFI_LIST_REEL(INTERVALLE=(_F(JUSQU_A=0.5,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=1000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=2000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=3000.0,
-                                       NOMBRE=5,),
-                                    _F(JUSQU_A=4000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=5000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=6000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=7000.0,
-                                       NOMBRE=1,),
-                                    _F(JUSQU_A=8000.0,
-                                       NOMBRE=1,),),
-                        DEBUT=0.0,);
+L_ARCH_1=DEFI_LIST_REEL(DEBUT=0.0,
+                        INTERVALLE=(_F(NOMBRE=1,
+                                       JUSQU_A=0.5,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=1000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=2000.0,),
+                                    _F(NOMBRE=5,
+                                       JUSQU_A=3000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=4000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=5000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=6000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=7000.0,),
+                                    _F(NOMBRE=1,
+                                       JUSQU_A=8000.0,),),);
 #
 # CALCUL PHASE I A V DU CYCLE 1
-#
 
-
-RESU=STAT_NON_LINE(CHAM_MATER=A_MAT_1,
-                   MODELE=MO1,
-                   ARCHIVAGE=_F(LIST_INST=L_ARCH_1,),
-                   CONVERGENCE=_F(ITER_GLOB_MAXI=50,
-                                  ITER_INTE_MAXI=500,
-                                  RESI_GLOB_RELA=1.E-4,
-                                  ARRET='OUI',),
-                   COMP_INCR=(_F(RELATION='VMIS_POU_LINE',
-                                 GROUP_MA='MAINTIEN',),
-                              _F(RELATION='ASSE_COMBU',
-                                 GROUP_MA=('CRAYONS','TUB_GUID',),),
-                              _F(RELATION='DIS_CONTACT',
-                                 GROUP_MA='LI_GR_CR',),
-                              _F(COQUE_NCOU=1,
-                                 RELATION='ELAS',
-                                 GROUP_MA=('EMBO_INF','EMBO_SUP','PIEDS','GRILLES','LI_GR_GU',),),),
-                   INCREMENT=_F(NUME_INST_FIN=20,
-                                LIST_INST=L_INST_1,),
+RESU=STAT_NON_LINE(PARM_THETA=0.5,
                    CARA_ELEM=CARA1,
-                   RECH_LINEAIRE=_F(ITER_LINE_MAXI=3,),
-                   NEWTON=_F(REAC_ITER=1,
-                             MATRICE='TANGENTE',),
-                   SOLVEUR=_F(METHODE='MULT_FRONT',
-                              RENUM='MD',),
-                   EXCIT=(_F(FONC_MULT=ARCH_F1,
-                             CHARGE=ARCH_1,),
-                          _F(FONC_MULT=ARCH_F1,
-                             CHARGE=FOARCH_1,),
-                          _F(FONC_MULT=HYDR_F1,
-                             CHARGE=HYDR_1,),
-                          _F(FONC_MULT=HYDR_F1,
-                             CHARGE=FOHYDR_1,),
-                          _F(FONC_MULT=CLDI_F1,
-                             CHARGE=CL_DI_1,),
+                   MODELE=MO1,
+                   CHAM_MATER=A_MAT_1,
+                   EXCIT=(_F(CHARGE=ARCH_1,
+                             FONC_MULT=ARCH_F1,),
+                          _F(CHARGE=FOARCH_1,
+                             FONC_MULT=ARCH_F1,),
+                          _F(CHARGE=HYDR_1,
+                             FONC_MULT=HYDR_F1,),
+                          _F(CHARGE=FOHYDR_1,
+                             FONC_MULT=HYDR_F1,),
+                          _F(CHARGE=CL_DI_1,
+                             FONC_MULT=CLDI_F1,),
                           _F(CHARGE=CL_PER_1,),
                           _F(CHARGE=CL_CTC,),
                           _F(CHARGE=PESANT_1,),
                           _F(CHARGE=THERM_1,),),
-                   PARM_THETA=0.5,);
+                   SOLVEUR=_F(METHODE='MULT_FRONT',
+                              RENUM='MD',),
+                   NEWTON=_F(MATRICE='TANGENTE',
+                             REAC_ITER=1,),
+                   RECH_LINEAIRE=_F(ITER_LINE_MAXI=3,),
+                   INCREMENT=_F(LIST_INST=L_INST_1,
+                                NUME_INST_FIN=20,),
+                   COMP_INCR=(_F(GROUP_MA='MAINTIEN',
+                                 RELATION='VMIS_POU_LINE',),
+                              _F(GROUP_MA=('CRAYONS','TUB_GUID',),
+                                 RELATION='ASSE_COMBU',),
+                              _F(GROUP_MA='LI_GR_CR',
+                                 RELATION='DIS_CONTACT',),
+                              _F(GROUP_MA=('EMBO_INF','EMBO_SUP','PIEDS','GRILLES','LI_GR_GU',),
+                                 RELATION='ELAS',
+                                 COQUE_NCOU=1,),),
+                   CONVERGENCE=_F(ARRET='OUI',
+                                  RESI_GLOB_RELA=0.0001,
+                                  ITER_INTE_MAXI=500,
+                                  ITER_GLOB_MAXI=50,),
+                   ARCHIVAGE=_F(LIST_INST=L_ARCH_1,),);
 
 FIN();

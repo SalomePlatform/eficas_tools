@@ -410,7 +410,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       texte_commande = g.gener(self,format='beautifie')
       # Il faut enlever la première ligne vide de texte_commande que
       # rajoute le generator
-      rebut,texte_commande = string.split(texte_commande,'\n',1)
+      #rebut,texte_commande = string.split(texte_commande,'\n',1)
       # on construit l'objet COMMANDE_COMM repésentatif de self mais non
       # enregistré dans le jdc (pas ajouté dans jdc.etapes)
       parent=self.parent

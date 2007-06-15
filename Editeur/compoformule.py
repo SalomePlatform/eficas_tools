@@ -66,20 +66,25 @@ class FORMULEPanel(panels.OngletPanel):
     Crée la page qui permet d'afficher et d'éditer le texte de la FORMULE
     """
     self.frame_valeur = Frame(page)
-    self.frame_valeur.place(relwidth=0.95,relheight=0.95,relx=0.05,rely=0.05,anchor='nw')
+    self.frame_valeur.pack(fill='both',expand=1)
+    #self.frame_valeur.place(relwidth=0.95,relheight=0.95,relx=0.05,rely=0.05,anchor='nw')
     #self.frame_valeur.place(relwidth=0.9,relheight=0.9,relx=0.05,rely=0.05,anchor='nw')
     # affichage du titre du panneau
     self.titre = StringVar()
     self.titre.set("FORMULE "+self.node.item.get_nom())
 
     self.entry_nom = Entry(self.frame_valeur)
-    Label(self.frame_valeur,textvariable=self.titre,font=Fonte_TITRE).place(relx=0.5,rely=0.,anchor='n')
+    #Label(self.frame_valeur,textvariable=self.titre,font=Fonte_TITRE).place(relx=0.5,rely=0.,anchor='n')
+    Label(self.frame_valeur,textvariable=self.titre,font=Fonte_TITRE).grid(row=0,columnspan=2,padx=5,pady=5)
     # création des labels et entries associés aux nom, type retourné, arguments et corps de la FORMULE
     
-    Label(self.frame_valeur,text= 'Nom de la formule : ').place(relx=0.,rely=0.1)
-    Label(self.frame_valeur,text= 'Arguments : ').place(relx=0.,rely=0.40)
+    #Label(self.frame_valeur,text= 'Nom de la formule : ').place(relx=0.,rely=0.1)
+    Label(self.frame_valeur,text= 'Nom de la formule : ').grid(row=1,sticky=W,padx=5,pady=5)
+    #Label(self.frame_valeur,text= 'Arguments : ').place(relx=0.,rely=0.40)
+    Label(self.frame_valeur,text= 'Arguments : ').grid(row=2,sticky=W,padx=5,pady=5)
     self.entry_arg = Entry(self.frame_valeur)
-    Label(self.frame_valeur,text= 'Expression : ').place(relx=0.,rely=0.65)
+    #Label(self.frame_valeur,text= 'Expression : ').place(relx=0.,rely=0.65)
+    Label(self.frame_valeur,text= 'Expression : ').grid(row=4,sticky=W,padx=5,pady=5)
     self.entry_exp = Entry(self.frame_valeur)
 
     # binding sur les entries
@@ -90,22 +95,28 @@ class FORMULEPanel(panels.OngletPanel):
     self.entry_exp.bind("<Return>",self.verif_corps)
     self.entry_exp.bind("<KP_Enter>",self.verif_corps)
     # affichage des entries
-    self.entry_nom.place(relx=0.35,rely=0.10,relwidth=0.2)
-    self.entry_arg.place(relx=0.35,rely=0.40,relwidth=0.4)
+    #self.entry_nom.place(relx=0.35,rely=0.10,relwidth=0.2)
+    self.entry_nom.grid(row=1,column=1,sticky=W,padx=5,pady=5)
+    #self.entry_arg.place(relx=0.35,rely=0.40,relwidth=0.4)
+    self.entry_arg.grid(row=2,column=1,sticky=W,padx=5,pady=5)
 
     # affichage d'une phrase d'aide pour les arguments
     aide = """Entrer les arguments sous la forme
 de VARIABLES séparées par des virgules (,)
 Exemple X,Y,Z """
-    Label(self.frame_valeur,text=aide, justify="l").place(relx=0.5,rely=0.47,anchor='n') 
+    #Label(self.frame_valeur,text=aide, justify="l").place(relx=0.5,rely=0.47,anchor='n') 
+    Label(self.frame_valeur,text=aide, justify="l").grid(row=3,columnspan=2,padx=5,pady=5)
 
-    self.entry_exp.place(relx=0.35,rely=0.65,relwidth=0.60)
+    #self.entry_exp.place(relx=0.35,rely=0.65,relwidth=0.60)
+    self.entry_exp.grid(row=4,column=1,sticky=W,padx=5,pady=5)
     # affichage d'une phrase d'aide pour l'expression
     aide = """Un retour de chariot dans une zone de saisie vous permet de vérifier si
 la valeur que vous avez entrée est valide.
 Ce n'est qu'après avoir appuyé sur le bouton Valider que les nouvelles
 valeurs seront effectivement prises en compte."""
-    Label(self.frame_valeur,text=aide).place(relx=0.5,rely=0.75,anchor='n')
+    #Label(self.frame_valeur,text=aide).place(relx=0.5,rely=0.75,anchor='n')
+    Label(self.frame_valeur,text=aide).grid(row=5,columnspan=2,padx=5,pady=5)
+    self.frame_valeur.columnconfigure(1,weight=1)
 
     # affichage des nom, type retourné, arguments et corps de la FORMULE
     self.display_valeur()
@@ -118,15 +129,25 @@ valeurs seront effectivement prises en compte."""
     """
     Crée les boutons du panneau
     """
-    self.bouton_sup.place_forget()
-    self.bouton_doc.place_forget()
-    self.bouton_val = Button(self.fr_but,text='Valider',command=self.change_valeur,width=14)
-    self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur,width=14)
+    #self.bouton_sup.place_forget()
+    #self.bouton_doc.place_forget()
+    #self.bouton_val = Button(self.fr_but,text='Valider',command=self.change_valeur,width=14)
+    #self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur,width=14)
 
-    self.bouton_val.place(relx=0.15,rely=0.5,relheight=0.8,anchor='center')
-    self.bouton_ann.place(relx=0.40,rely=0.5,relheight=0.8,anchor='center')
-    self.bouton_sup.place(relx=0.65,rely=0.5,relheight=0.8,anchor='center')
-    self.bouton_doc.place(relx=0.90,rely=0.5,relheight=0.8,anchor='center')
+    #self.bouton_val.place(relx=0.15,rely=0.5,relheight=0.8,anchor='center')
+    #self.bouton_ann.place(relx=0.40,rely=0.5,relheight=0.8,anchor='center')
+    #self.bouton_sup.place(relx=0.65,rely=0.5,relheight=0.8,anchor='center')
+    #self.bouton_doc.place(relx=0.90,rely=0.5,relheight=0.8,anchor='center')
+
+    self.bouton_sup.pack_forget()
+    self.bouton_doc.pack_forget()
+    self.bouton_val = Button(self.fr_but,text='Valider',command=self.change_valeur)
+    self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur)
+
+    self.bouton_val.pack(side='left',padx=5, pady=5)
+    self.bouton_ann.pack(side='left',padx=5, pady=5)
+    self.bouton_sup.pack(side='left',padx=5, pady=5)
+    self.bouton_doc.pack(side='right',padx=5, pady=5)
 
   def change_valeur(self):
     """

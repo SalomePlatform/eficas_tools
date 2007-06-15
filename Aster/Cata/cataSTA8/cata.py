@@ -34,7 +34,7 @@ except:
   pass
 
 __version__="$Name:  $"
-__Id__="$Id: cata.py,v 1.2.4.3 2006/12/14 17:30:02 pnoyret Exp $"
+__Id__="$Id: cata.py,v 1.3.8.6 2007-06-14 16:18:24 pnoyret Exp $"
 
 EnumTypes = (ListType, TupleType)
 
@@ -1873,7 +1873,7 @@ def C_TYPE_CHAM_INTO() : #COMMUN#
              l.append(typ+"_"+gd)
    return tuple(l)
 
-#& MODIF COMMANDE  DATE 19/09/2006   AUTEUR A3BHHAE H.ANDRIAMBOLOLONA 
+#& MODIF COMMANDE  DATE 09/05/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -1995,7 +1995,8 @@ AFFE_CARA_ELEM=OPER(nom="AFFE_CARA_ELEM",op=  19,sd_prod=cara_elem,
 #============================================================================
          COQUE           =FACT(statut='f',max='**',
            regles=(UN_PARMI('MAILLE','GROUP_MA' ),
-                   PRESENT_PRESENT( 'EXCENTREMENT','INER_ROTA' ),),
+                   PRESENT_PRESENT( 'EXCENTREMENT','INER_ROTA' ),
+                   EXCLUS('ANGL_REP','VECTEUR'),),
            MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
            GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
            EPAIS           =SIMP(statut='o',typ='R' ),
@@ -7428,7 +7429,7 @@ CALC_TABLE=MACRO(nom="CALC_TABLE",op=calc_table_ops, sd_prod=calc_table_prod,
                 fr="Titre de la table produite"),
    INFO  = SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )
-#& MODIF COMMANDE  DATE 21/02/2006   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 08/03/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -7471,7 +7472,7 @@ CALC_THETA=OPER(nom="CALC_THETA",op=54,sd_prod=theta_geom,reentrant='n',
            R_SUP_FO        =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                          ),
          b_theta_3d     =BLOC(condition="THETA_3D != None",
-           FOND_FISS       =SIMP(statut='f',typ=fond_fiss),),
+           FOND_FISS       =SIMP(statut='o',typ=fond_fiss),),
          DIRE_THETA      =SIMP(statut='f',typ=cham_no_sdaster ),
          DIRECTION       =SIMP(statut='f',typ='R',max='**'),
          THETA_2D        =FACT(statut='f',max='**',
@@ -7596,7 +7597,7 @@ COMB_FOURIER=OPER(nom="COMB_FOURIER",op= 161,sd_prod=comb_fourier,
          NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=6,
              into=("DEPL","REAC_NODA","SIEF_ELGA_DEPL","EPSI_ELNO_DEPL","SIGM_ELNO_DEPL","TEMP","FLUX_ELNO_TEMP"),),
 ) ;
-#& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 05/02/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -7651,8 +7652,8 @@ COMB_MATR_ASSE=OPER(nom="COMB_MATR_ASSE",op=  31,sd_prod=comb_matr_asse_prod,
          ),
          CALC_AMOR_GENE   =FACT(statut='f',
            regles=(UN_PARMI('AMOR_REDUIT','LIST_AMOR' ),),
-           MASS_GENE    = SIMP(statut='f', typ=matr_asse_gene_r),
-           RIGI_GENE    = SIMP(statut='f', typ=matr_asse_gene_r),
+           MASS_GENE    = SIMP(statut='o', typ=matr_asse_gene_r),
+           RIGI_GENE    = SIMP(statut='o', typ=matr_asse_gene_r),
            AMOR_REDUIT  = SIMP(statut='f',typ='R',max='**'),
            LIST_AMOR    = SIMP(statut='f',typ=listr8_sdaster ),
          ),         
@@ -8460,7 +8461,7 @@ DEFI_BASE_MODALE=OPER(nom="DEFI_BASE_MODALE",op=  99,sd_prod=base_modale,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-#& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 04/04/2007   AUTEUR VIVAN L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -8487,7 +8488,6 @@ from Macro.defi_cable_bp_ops import defi_cable_bp_ops
 #
 # USAGE :
 # Entrée :
-#  - MAILLAGE
 #  - MODELE
 #  - CABLE
 #  - CHAM_MATER
@@ -8509,8 +8509,6 @@ from Macro.defi_cable_bp_ops import defi_cable_bp_ops
 DEFI_CABLE_BP=MACRO(nom="DEFI_CABLE_BP",op=defi_cable_bp_ops,sd_prod=cabl_precont,
                    fr="Calculer les profils initiaux de tension le long des cables de précontrainte d'une structure en béton",
                    reentrant='n',UIinfo={"groupe":("Modélisation",)},
-         regles=(ENSEMBLE('MAILLAGE','CONE'),),
-         MAILLAGE        =SIMP(statut='f',typ=maillage_sdaster),
          MODELE          =SIMP(statut='o',typ=modele_sdaster ),
          CHAM_MATER      =SIMP(statut='o',typ=cham_mater ),
          CARA_ELEM       =SIMP(statut='o',typ=cara_elem ),
@@ -9103,7 +9101,7 @@ DEFI_FONCTION=OPER(nom="DEFI_FONCTION",op=3,sd_prod=defi_fonction_prod
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/05/2006   AUTEUR GALENNE E.GALENNE 
+#& MODIF COMMANDE  DATE 08/03/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -9172,8 +9170,8 @@ DEFI_FOND_FISS=OPER(nom="DEFI_FOND_FISS",op=55,sd_prod=fond_fiss,reentrant='n',
              MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
              NOEUD_ORIG      =SIMP(statut='f',typ=no,),
              GROUP_NO_ORIG   =SIMP(statut='f',typ=grno,),
-             MAILLE_ORIG     =SIMP(statut='f',typ=ma,),
-             GROUP_MA_ORIG   =SIMP(statut='f',typ=ma,),
+             NOEUD_EXTR      =SIMP(statut='f',typ=no,),
+             GROUP_NO_EXTR   =SIMP(statut='f',typ=grno,),
            ),
            FOND_SUP       =FACT(statut='f',
              GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'), 
@@ -9182,8 +9180,8 @@ DEFI_FOND_FISS=OPER(nom="DEFI_FOND_FISS",op=55,sd_prod=fond_fiss,reentrant='n',
              MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
              NOEUD_ORIG      =SIMP(statut='f',typ=no,),
              GROUP_NO_ORIG   =SIMP(statut='f',typ=grno,),
-             MAILLE_ORIG     =SIMP(statut='f',typ=ma,),
-             GROUP_MA_ORIG   =SIMP(statut='f',typ=ma,),
+             NOEUD_EXTR      =SIMP(statut='f',typ=no,),
+             GROUP_NO_EXTR   =SIMP(statut='f',typ=grno,),
            ),
            LEVRE_SUP       =FACT(statut='f',
              regles=(UN_PARMI('GROUP_MA','MAILLE'),),
@@ -13210,7 +13208,7 @@ DYNA_LINE_TRAN=OPER(nom="DYNA_LINE_TRAN",op=  48,sd_prod=dyna_trans,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 10/10/2006   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 06/06/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -13473,11 +13471,16 @@ DYNA_NON_LINE=OPER(nom="DYNA_NON_LINE",op= 70,sd_prod=evol_noli,reentrant='f',
                          ),
          CONVERGENCE     =FACT(statut='d',
            regles=(PRESENT_ABSENT('RESI_REFE_RELA','RESI_GLOB_MAXI','RESI_GLOB_RELA'),),
-           SIGM_REFE       =SIMP(statut='f',typ='R'),
-           EPSI_REFE       =SIMP(statut='f',typ='R'),
-           FLUX_THER_REFE  =SIMP(statut='f',typ='R'),
-           FLUX_HYD1_REFE  =SIMP(statut='f',typ='R'),
-           FLUX_HYD2_REFE  =SIMP(statut='f',typ='R'),
+           b_refe_rela    =BLOC(condition = "RESI_REFE_RELA != None",
+             regles=(AU_MOINS_UN('SIGM_REFE','EPSI_REFE','FLUX_THER_REFE',
+                                  'FLUX_HYD1_REFE','FLUX_HYD2_REFE'),),
+              SIGM_REFE       =SIMP(statut='f',typ='R'),
+              EPSI_REFE       =SIMP(statut='f',typ='R'),
+              FLUX_THER_REFE  =SIMP(statut='f',typ='R'),
+              FLUX_HYD1_REFE  =SIMP(statut='f',typ='R'),
+              FLUX_HYD2_REFE  =SIMP(statut='f',typ='R'),
+           ),
+
            RESI_REFE_RELA  =SIMP(statut='f',typ='R'),
            RESI_GLOB_MAXI  =SIMP(statut='f',typ='R'),
            RESI_GLOB_RELA  =SIMP(statut='f',typ='R'),
@@ -13651,7 +13654,7 @@ DYNA_SPEC_MODAL=OPER(nom="DYNA_SPEC_MODAL",op= 147,sd_prod=table_fonction,
          OPTION          =SIMP(statut='f',typ='TXM',defaut="TOUT",into=("TOUT","DIAG") ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 27/11/2006   AUTEUR PELLET J.PELLET 
+#& MODIF COMMANDE  DATE 06/06/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -13880,11 +13883,17 @@ DYNA_TRAN_EXPLI=OPER(nom="DYNA_TRAN_EXPLI",op= 70,sd_prod=evol_noli,reentrant='f
                          ),
          CONVERGENCE     =FACT(statut='d',
            regles=(PRESENT_ABSENT('RESI_REFE_RELA','RESI_GLOB_MAXI','RESI_GLOB_RELA'),),
-           SIGM_REFE       =SIMP(statut='f',typ='R'),
-           EPSI_REFE       =SIMP(statut='f',typ='R'),
-           FLUX_THER_REFE  =SIMP(statut='f',typ='R'),
-           FLUX_HYD1_REFE  =SIMP(statut='f',typ='R'),
-           FLUX_HYD2_REFE  =SIMP(statut='f',typ='R'),
+           b_refe_rela    =BLOC(condition = "RESI_REFE_RELA != None",
+             regles=(AU_MOINS_UN('SIGM_REFE','EPSI_REFE','FLUX_THER_REFE',
+                                  'FLUX_HYD1_REFE','FLUX_HYD2_REFE'),),
+              SIGM_REFE       =SIMP(statut='f',typ='R'),
+              EPSI_REFE       =SIMP(statut='f',typ='R'),
+              FLUX_THER_REFE  =SIMP(statut='f',typ='R'),
+              FLUX_HYD1_REFE  =SIMP(statut='f',typ='R'),
+              FLUX_HYD2_REFE  =SIMP(statut='f',typ='R'),
+             ),
+ 
+ 
            RESI_REFE_RELA  =SIMP(statut='f',typ='R'),
            RESI_GLOB_MAXI  =SIMP(statut='f',typ='R'),
            RESI_GLOB_RELA  =SIMP(statut='f',typ='R'),
@@ -14872,7 +14881,7 @@ IMPR_CO=PROC(nom="IMPR_CO",op=17,
          POSITION        =SIMP(statut='f',typ='I',defaut=1),
          TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
 )  ;
-#& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 09/05/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -14944,10 +14953,11 @@ IMPR_FONCTION=MACRO(nom="IMPR_FONCTION",op=impr_fonction_ops,sd_prod=None,
                                  fr="Valeurs des ordonnées"),
            ),
 
-           # le bloc n'est pas activé (vide) car position n'est pas pris en compte
-           b_forme         =BLOC(condition = "FORMAT != 'TABLEAU'",
-                                 fr="Données de mise en forme de la fonction (cf. doc)",
-           ),
+           # mots-clés utilisant uniquement aux formats autres que TABLEAU
+           # mais ce serait trop pénible de devoir les supprimer quand on change de format
+           # donc on ne les met pas dans un bloc
+           # "pseudo" bloc mise en forme :
+
               LEGENDE         =SIMP(statut='f',typ='TXM',
                                     fr="Légende associée à la fonction" ),
               STYLE           =SIMP(statut='f',typ='I',val_min=0,
@@ -14958,7 +14968,8 @@ IMPR_FONCTION=MACRO(nom="IMPR_FONCTION",op=impr_fonction_ops,sd_prod=None,
                                     fr="Type du marqueur associé à la fonction",),
               FREQ_MARQUEUR   =SIMP(statut='f',typ='I',defaut=0,
                                     fr="Fréquence d impression du marqueur associé à la fonction", ),
-           # fin bloc b_forme
+           # fin bloc mise en forme
+
            TRI             =SIMP(statut='f',typ='TXM',defaut="N",
                                  fr="Choix du tri effectué sur les abscisses ou sur les ordonnées",
                                  into=("N","X","Y","XY","YX") ),
@@ -15120,7 +15131,7 @@ IMPR_JEVEUX=PROC(nom="IMPR_JEVEUX",op=16,
          ),
          COMMENTAIRE     =SIMP(statut='f',typ='TXM' ),  
 )  ;
-#& MODIF COMMANDE  DATE 22/06/2005   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 06/06/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -15165,6 +15176,7 @@ IMPR_MACR_ELEM=PROC(nom="IMPR_MACR_ELEM",op= 160,
            GROUP_MA_FLU_STR=SIMP(statut='f',typ=grma,max='**'),
            GROUP_MA_FLU_SOL=SIMP(statut='f',typ=grma,max='**'),
            GROUP_MA_SOL_SOL=SIMP(statut='f',typ=grma,max='**'),
+           FORMAT_R        =SIMP(statut='f',typ='TXM',defaut="1PE12.5",into=("1PE12.5","1PE16.9") ),
            IMPR_MODE_MECA  =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
            IMPR_MODE_STAT  =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
          ),
@@ -15366,7 +15378,7 @@ IMPR_OAR =MACRO(nom="IMPR_OAR",op= impr_oar_ops, sd_prod=None,
    UNITE = SIMP(statut='f',typ='I',defaut=38),
    AJOUT = SIMP(statut='f', typ='TXM', defaut='NON', into=('OUI', 'NON')),
    );
-#& MODIF COMMANDE  DATE 06/11/2006   AUTEUR MCOURTOI M.COURTOIS 
+#& MODIF COMMANDE  DATE 09/05/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -15428,9 +15440,12 @@ IMPR_RESU=PROC(nom="IMPR_RESU",op=39,
            regles=(AU_MOINS_UN('CHAM_GD','RESULTAT','MAILLAGE'),
                    EXCLUS('CHAM_GD','RESULTAT'),),
            MAILLAGE        =SIMP(statut='f',typ=(maillage_sdaster,squelette)),
-           INFO_MAILLAGE   =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON") ),
            CHAM_GD         =SIMP(statut='f',typ=cham_gd_sdaster),
            RESULTAT        =SIMP(statut='f',typ=resultat_sdaster),# CO() sd a creer !!!
+
+           b_info_med  =BLOC(condition="FORMAT=='MED'",
+             INFO_MAILLAGE   =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON") ),
+           ),
 
            b_sensibilite   =BLOC(condition="RESULTAT != None",
                                  fr="Définition des paramètres de sensibilité",
@@ -19175,7 +19190,7 @@ MACRO_MATR_ASSE=MACRO(nom="MACRO_MATR_ASSE",op=macro_matr_asse_ops,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
-#& MODIF COMMANDE  DATE 19/09/2006   AUTEUR ACBHHCD G.DEVESA 
+#& MODIF COMMANDE  DATE 06/06/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19206,7 +19221,7 @@ MACRO_MISS_3D=MACRO(nom="MACRO_MISS_3D",op=macro_miss_3d_ops,
          ),
          PROJET          =SIMP(statut='o',typ='TXM'),  
          REPERTOIRE      =SIMP(statut='f',typ='TXM'),
-         VERSION         =SIMP(statut='f',typ='TXM',into=("V1_2","V1_3",),defaut="V1_2"),
+         VERSION         =SIMP(statut='f',typ='TXM',into=("V1_3","V1_4",),defaut="V1_3"),
          UNITE_IMPR_ASTER=SIMP(statut='f',typ='I',defaut=25),  
          UNITE_OPTI_MISS =SIMP(statut='f',typ='I',defaut=26),  
          UNITE_MODELE_SOL=SIMP(statut='f',typ='I',defaut=27),  
@@ -19449,7 +19464,7 @@ MACR_RECAL = MACRO(nom="MACR_RECAL",op=macr_recal_ops,
 
          INFO            =SIMP(statut='f',typ='I',defaut=2,into=( 1, 2 ) ),
 );
-#& MODIF COMMANDE  DATE 07/11/2006   AUTEUR DURAND C.DURAND 
+#& MODIF COMMANDE  DATE 09/01/2007   AUTEUR VIVAN L.VIVAN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -19487,7 +19502,7 @@ MACR_SPECTRE=MACRO(nom="MACR_SPECTRE",op=macr_spectre_ops,sd_prod=table_sdaster,
            LIST_INST     =SIMP(statut='f',typ=listr8_sdaster ),
            LIST_FREQ     =SIMP(statut='f',typ=listr8_sdaster ),
            FREQ          =SIMP(statut='f',typ='R',max='**'),
-           NORME         =SIMP(statut='f',typ='R',defaut=9.81),  
+           NORME         =SIMP(statut='o',typ='R'),  
            RESU          =FACT(statut='o',max='**',
                 regles=(UN_PARMI('RESU_GENE','RESULTAT'),),
                 RESU_GENE     =SIMP(statut='f',typ=tran_gene),
@@ -22421,7 +22436,7 @@ PROJ_MESU_MODAL=OPER(nom="PROJ_MESU_MODAL",op= 193,
              ),
 
           ); 
-#& MODIF COMMANDE  DATE 10/10/2006   AUTEUR MCOURTOI M.COURTOIS 
+#& MODIF COMMANDE  DATE 06/06/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -22442,16 +22457,15 @@ PROJ_MESU_MODAL=OPER(nom="PROJ_MESU_MODAL",op= 193,
 PROJ_SPEC_BASE=OPER(nom="PROJ_SPEC_BASE",op= 146,sd_prod=table_fonction,reentrant='n',
             UIinfo={"groupes":("Matrices/vecteurs",)},
             fr="Projecter un ou plusieurs spectres de turbulence sur une (ou plusieurs) base(s) modale(s) ",
-      regles=(UN_PARMI('BASE_ELAS_FLUI','MODE_MECA','CHAM_NO'),
-              ENSEMBLE('FREQ_INIT','FREQ_FIN','NB_POIN'),),
+      regles=(UN_PARMI('BASE_ELAS_FLUI','MODE_MECA','CHAM_NO'),),
          SPEC_TURB       =SIMP(statut='o',typ=spectre_sdaster,validators=NoRepeat(),max='**' ),
          TOUT_CMP        =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
          BASE_ELAS_FLUI  =SIMP(statut='f',typ=melasflu_sdaster ),
          MODE_MECA       =SIMP(statut='f',typ=mode_meca ),
          CHAM_NO         =SIMP(statut='f',typ=cham_no_sdaster),
-         FREQ_INIT       =SIMP(statut='f',typ='R',val_min=0.E+0 ),  
-         FREQ_FIN        =SIMP(statut='f',typ='R',val_min=0.E+0 ),  
-         NB_POIN         =SIMP(statut='f',typ='I' ),  
+         FREQ_INIT       =SIMP(statut='o',typ='R',val_min=0.E+0 ),  
+         FREQ_FIN        =SIMP(statut='o',typ='R',val_min=0.E+0 ),  
+         NB_POIN         =SIMP(statut='o',typ='I' ),  
          OPTION          =SIMP(statut='f',typ='TXM',defaut="TOUT",into=("TOUT","DIAG")),
          GROUP_MA        =SIMP(statut='f',typ=grma),
 #  Quel est le type attendu derriere  MODELE_INTERFACE         
@@ -23216,7 +23230,7 @@ STANLEY=MACRO(nom="STANLEY",op=stanley_ops,sd_prod=None,
                                fr="Unité logique définissant le fichier (fort.N) dans lequel on écrit les md5"),
 
 )  ;
-#& MODIF COMMANDE  DATE 10/10/2006   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 06/06/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -23409,11 +23423,16 @@ STAT_NON_LINE=OPER(nom="STAT_NON_LINE",op=70,sd_prod=evol_noli,
                          ),
          CONVERGENCE     =FACT(statut='d',
            regles=(PRESENT_ABSENT('RESI_REFE_RELA','RESI_GLOB_MAXI','RESI_GLOB_RELA'),),
-           SIGM_REFE       =SIMP(statut='f',typ='R'),
-           EPSI_REFE       =SIMP(statut='f',typ='R'),
-           FLUX_THER_REFE  =SIMP(statut='f',typ='R'),
-           FLUX_HYD1_REFE  =SIMP(statut='f',typ='R'),
-           FLUX_HYD2_REFE  =SIMP(statut='f',typ='R'),
+           b_refe_rela    =BLOC(condition = "RESI_REFE_RELA != None",
+             regles=(AU_MOINS_UN('SIGM_REFE','EPSI_REFE','FLUX_THER_REFE',
+                                  'FLUX_HYD1_REFE','FLUX_HYD2_REFE'),),
+              SIGM_REFE       =SIMP(statut='f',typ='R'),
+              EPSI_REFE       =SIMP(statut='f',typ='R'),
+              FLUX_THER_REFE  =SIMP(statut='f',typ='R'),
+              FLUX_HYD1_REFE  =SIMP(statut='f',typ='R'),
+              FLUX_HYD2_REFE  =SIMP(statut='f',typ='R'),
+           ),
+
            RESI_REFE_RELA  =SIMP(statut='f',typ='R'),
            RESI_GLOB_MAXI  =SIMP(statut='f',typ='R'),
            RESI_GLOB_RELA  =SIMP(statut='f',typ='R'),
@@ -23898,7 +23917,7 @@ TEST_RESU=PROC(nom="TEST_RESU",op=23,
            VERSION         =SIMP(statut='f',typ='TXM' ),
          ),
 )  ;
-#& MODIF COMMANDE  DATE 10/10/2006   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMANDE  DATE 09/05/2007   AUTEUR SALMONA L.SALMONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -23950,7 +23969,7 @@ TEST_TABLE=PROC(nom="TEST_TABLE",op= 177,
          VALE_C          =SIMP(statut='f',typ='C',max='**' ),
          VALE_ABS        =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON") ),
          CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
-         PRECISION       =SIMP(statut='f',typ='R',defaut= 1.2E-3 ),
+         PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-3 ),
          REFERENCE       =SIMP(statut='f',typ='TXM',
                                into=("ANALYTIQUE","SOURCE_EXTERNE","NON_REGRESSION","AUTRE_ASTER") ),
          b_version       =BLOC(condition = "REFERENCE == 'NON_REGRESSION'",

@@ -23,7 +23,7 @@
     liste de chaines de caractères dans une syntaxe représentative d'un
     jeu de commandes en un texte présentable
 """
-import types,string
+import types,string,re
 
 class Formatage :
   """ 
@@ -62,6 +62,8 @@ class Formatage :
        self.l_max = 72
 
   def formate_jdc(self):
+    comment=re.compile("\n#")
+    commentaireavant=0
     for etape in self.l_jdc:
       self.count = self.count+1
       self.texte_etape = ''
@@ -77,8 +79,26 @@ class Formatage :
         # L'etape est deja sous forme de chaine de caracteres
         self.indent=[]
         self.texte_etape = etape
-      self.jdc_fini = self.jdc_fini + '\n' + self.texte_etape
-    #on enleve la premiere ligne si elle est blanche :
+
+      m=comment.match(self.texte_etape)
+      # si ce n est pas la premiere ligne
+      if self.jdc_fini != ""  : 
+        # si il n y avait pas de commentaire avant on met un saut de ligne
+        if commentaireavant == 0 :
+           self.jdc_fini = self.jdc_fini + '\n' + self.texte_etape
+        else :
+           self.jdc_fini = self.jdc_fini + self.texte_etape
+      # si c est la premiere ligne
+      else :
+        # on ne met pas de saut de ligne avant la premiere ligne 
+        # si c est un commentaire on enleve le saut de ligne precedent
+        if m : self.texte_etape=self.texte_etape[1:]
+        self.jdc_fini = self.texte_etape
+      if m : 
+        commentaireavant=1 
+      else :
+        commentaireavant=0 
+
     return self.jdc_fini
   
   

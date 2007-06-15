@@ -129,93 +129,9 @@ IMPR_MATRICE(   MATR_ASSE=_F(  MATRICE = MATRES,
                                GRAIN = 'VALEUR',
                                OPTION = 'LIGNE'))
 
-VECRES=COMB_CHAM_NO(    COMB_C=_F( CHAM_NO = VECTASS,
-                                      COEF_C = ('RI',0.,-3141.5926,))
-                            )
-
 MATRES=FACT_LDLT( reuse=MATRES,  MATR_ASSE=MATRES )
 
-VECRES=RESO_LDLT( reuse=VECRES,  MATR_FACT=MATRES,
-                             CHAM_NO=VECRES
-                        )
 
-TEST_RESU(CHAM_NO=(
-             _F( CHAM_GD = VECRES,
-              NOEUD = 'NO1',   NOM_CMP = 'PRES', VALE_C = ('RI',-6.2426,0.,)),
-             _F( CHAM_GD = VECRES,
-              NOEUD = 'NO780', NOM_CMP = 'PRES', VALE_C = ('RI',-6.2426,0.,)),
-             _F( CHAM_GD = VECRES,
-              NOEUD = 'NO751', NOM_CMP = 'PRES', VALE_C = ('RI',6.02368,1.6387,)),
-             _F( CHAM_GD = VECRES,
-              NOEUD = 'NO763', NOM_CMP = 'PRES', VALE_C = ('RI',6.02368,1.6387,)))
-             )
-
-CHNODBEL=CALC_CHAM_ELEM(      MODELE=GUIDE,
-                              CHAM_MATER=CHAMPMAT,
-                               PRES=VECRES,
-                                  OPTION='PRES_ELNO_DBEL'
-                            )
-
-TEST_RESU(CHAM_ELEM=(
-             _F( CHAM_GD = CHNODBEL,
-              MAILLE = 'MA1',
-              NOEUD = 'NO1',   NOM_CMP = 'DB',  VALE = 109.9),
-             _F( CHAM_GD = CHNODBEL,
-              MAILLE = 'MA1',
-              NOEUD = 'NO780', NOM_CMP = 'DB',  VALE = 109.9),
-             _F( CHAM_GD = CHNODBEL,
-              MAILLE = 'MA57',
-              NOEUD = 'NO751', NOM_CMP = 'DB',  VALE = 109.9),
-             _F( CHAM_GD = CHNODBEL,
-              MAILLE = 'MA57',
-              NOEUD = 'NO763', NOM_CMP = 'DB',  VALE = 109.9))
-             )
-
-#
-
-PREEL=CALC_CHAM_ELEM(      MODELE=GUIDE,
-                              CHAM_MATER=CHAMPMAT,
-                               PRES=VECRES,
-                                  OPTION='PRES_ELNO_REEL'
-                            )
-
-TEST_RESU(CHAM_ELEM=(
-             _F( CHAM_GD = PREEL,
-              MAILLE = 'MA1',
-              NOEUD = 'NO1',   NOM_CMP = 'PRES', VALE = -6.2426),
-             _F( CHAM_GD = PREEL,
-              MAILLE = 'MA1',
-              NOEUD = 'NO780', NOM_CMP = 'PRES', VALE = -6.2426),
-             _F( CHAM_GD = PREEL,
-              MAILLE = 'MA57',
-              NOEUD = 'NO751', NOM_CMP = 'PRES', VALE = 6.02368),
-             _F( CHAM_GD = PREEL,
-              MAILLE = 'MA57',
-              NOEUD = 'NO763', NOM_CMP = 'PRES', VALE = 6.02368))
-             )
-
-PIMAG=CALC_CHAM_ELEM(      MODELE=GUIDE,
-                              CHAM_MATER=CHAMPMAT,
-                               PRES=VECRES,
-                                  OPTION='PRES_ELNO_IMAG'
-                            )
-
-TEST_RESU(CHAM_ELEM=(
-           _F( CHAM_GD = PIMAG,
-            MAILLE = 'MA1',
-            NOEUD = 'NO1',   NOM_CMP = 'PRES', VALE = 0.,
-            CRITERE = 'ABSOLU'),
-           _F( CHAM_GD = PIMAG,
-            MAILLE = 'MA1',
-            NOEUD = 'NO780', NOM_CMP = 'PRES', VALE = 0.,
-            CRITERE = 'ABSOLU'),
-           _F( CHAM_GD = PIMAG,
-            MAILLE = 'MA57',
-            NOEUD = 'NO751', NOM_CMP = 'PRES', VALE = 1.6387, PRECISION = 3.3E-3),
-           _F( CHAM_GD = PIMAG,
-            MAILLE = 'MA57',
-            NOEUD = 'NO763', NOM_CMP = 'PRES', VALE = 1.6387, PRECISION = 3.3E-3))
-             )
 
 #-----------------------CALCUL HARMONIQUE-------------------------------
 

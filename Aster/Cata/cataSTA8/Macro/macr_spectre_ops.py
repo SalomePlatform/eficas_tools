@@ -21,7 +21,10 @@
 from Accas import _F
 import aster
 import string
-from Utilitai.Utmess import UTMESS
+try :
+   from Utilitai.Utmess import UTMESS
+except :
+   pass
 def macr_spectre_ops(self,MAILLAGE,PLANCHER,NOM_CHAM,CALCUL,RESU,IMPRESSION=None,
                      FREQ=None,LIST_FREQ=None,LIST_INST=None,AMOR_SPEC=None,**args):
   """

@@ -435,9 +435,10 @@ class BUREAU:
       """ 
           Sauvegarde le JDC courant.
           Retourne 1 si la sauvegarde s'est bien faite, 0 sinon.
-          Si echo = 'oui' : interactif (l'utilisateur donne le nom sous lequel il 
+
+            - Si echo = 'oui' : interactif (l'utilisateur donne le nom sous lequel il 
                             veut sauver le JDC
-          Si echo = 'non' : muet (sauvegarde le JDC dans JDC.procedure)
+            - Si echo = 'non' : muet (sauvegarde le JDC dans JDC.procedure)
       """
       ok = 0
       if not hasattr(self,'JDC') : return 0
@@ -592,7 +593,7 @@ class BUREAU:
    def visuJDC_py(self,event=None):
       """ 
           Méthode permettant d'afficher dans une fenêtre à part l'écho au 
-            format python du jdc courant 
+          format python du jdc courant 
       """
       if not hasattr(self,'JDC') : return
       jdc_fini = self.get_text_JDC('python')
@@ -604,7 +605,7 @@ class BUREAU:
    def visuJDC(self):
       """ 
           Méthode permettant d'afficher dans une fenêtre à part l'écho au 
-            format .comm ou .py du jdc courant 
+          format .comm ou .py du jdc courant 
       """
       if not hasattr(self,'JDC') : return
       titre = 'fichier '+ self.JDCName + ' à la syntaxe '+ self.code
@@ -741,19 +742,21 @@ class BUREAU:
       i=FichieraTraduire.rfind(".")
       Feuille=FichieraTraduire[0:i]
       FichierTraduit=Feuille+"v8.comm"
-      os.system("rm -rf /tmp/convert.log")
+      log=self.initialdir+"/convert.log"
+      os.system("rm -rf "+log)
+      os.system("rm -rf "+FichierTraduit)
       Pmw.showbusycursor()
-      traduitV7V8.traduc(FichieraTraduire,FichierTraduit)
+      traduitV7V8.traduc(FichieraTraduire,FichierTraduit,log)
       Pmw.hidebusycursor()
       Entete="Fichier Traduit : "+FichierTraduit +"\n\n"
       titre = "conversion de "+ FichieraTraduire
 
-      if  os.stat("/tmp/convert.log")[6] != 0L :
-          f=open('/tmp/convert.log')
+      if  os.stat(log)[6] != 0L :
+          f=open(log)
           texte_cr= f.read()
           f.close()
       else :
-          texte_cr = Entete  + "Pas d information de conversion \n"
+          texte_cr = Entete  
           commande="diff "+FichieraTraduire+" "+FichierTraduit+" >/dev/null"
           try :
             if os.system(commande) == 0 :

@@ -3,9 +3,9 @@
 """
 
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster/Cata','../../Aster']
 
-from Cata import cata
+from cataSTA6 import cata
 
 f=open('titi.comm','r')
 text=f.read()

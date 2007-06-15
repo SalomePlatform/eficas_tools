@@ -114,7 +114,7 @@ class AsterParser:
             self.out = parseur_python.PARSEUR_PYTHON(self.out).get_texte()
          except:
             self.cr.fatal("Erreur dans la deuxième phase d interpretation de %s" % self.filename)
-            tracebak.print_exc()
+            traceback.print_exc()
             return ""
          self.oldtext=self.text
       return self.out

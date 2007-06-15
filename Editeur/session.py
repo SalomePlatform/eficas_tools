@@ -47,6 +47,7 @@ except:
 import os,traceback
 import ConfigParser
 import prefs
+import re
 
 # Les valeurs decodees par optparse sont mises dans un objet dictionnaire-like.
 # On l'utilise comme environnement de session.
@@ -111,8 +112,8 @@ def check_include(option, opt_str, value, parser):
 def check_jdc(config,jdc,parser,fich):
     """
         Fonction : analyse une section de fichier .ini pour en extraire
-                   les informations sur les fichiers poursuite et includes
-                   définis dans cette section
+        les informations sur les fichiers poursuite et includes
+        définis dans cette section
 
         parser : objet analyseur de la ligne de commande
         fich : nom du fichier .ini en cours d'analyse
@@ -247,6 +248,14 @@ def parse(args):
          if os.path.isfile(file):
             options.comm.append(file)
             options.studies.append({"comm":file})
+         elif len(args)==1 and re.search('.comm',file):
+            try :
+                f=open(file,'w')
+                f.close()
+            except :
+                parser.error("incorrect number of arguments")
+            options.comm.append(file)
+            options.studies.append({"comm":file})
          else:
             parser.error("incorrect number of arguments")
 
@@ -258,11 +267,13 @@ def parse(args):
 def get_unit(d_study,appli):
     """
        Fonction : construit et retourne un dictionnaire contenant les informations
-                  sur les fichiers poursuite et includes sous la forme adaptée
-                  pour EFICAS
+       sur les fichiers poursuite et includes sous la forme adaptée
+       pour EFICAS ::
+
                   [None : nom_fichier, texte_source, unites_associees,           # poursuite
                    numero_include : nom_fichier, texte_source, unites_associees, # include
                     ...] 
+
        d_study : dictionnaire de l'etude
        appli : objet application EFICAS (permet d'acceder aux services comme get_source)
     """

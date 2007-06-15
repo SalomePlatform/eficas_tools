@@ -1,12 +1,10 @@
 
+# -*- coding: utf-8 -*-
 
-SD1=DEFI_SONDE(Z=1,
+SD1=DEFI_SONDE(Y=3,
                X=2,
-               Y=3,);
+               Z=1,);
 #
-#
-#
-
 _param_1 = 1;
 
 _param_2 = 2;
@@ -14,89 +12,90 @@ _param_2 = 2;
 _param_4 = EVAL("""23""");
 
 
-SD2=DEFI_SONDE(Z=1,
+SD2=DEFI_SONDE(Y=3,
                X=2,
-               Y=3,);
+               Z=1,);
 
-SD3=DEFI_SONDE(Z=3,
+SD3=DEFI_SONDE(Y=5,
                X=4,
-               Y=5,);
+               Z=3,);
 
-SD4=DEFI_SONDE(Z=12,
+SD4=DEFI_SONDE(Y=10,
                X=11,
-               Y=10,);
+               Z=12,);
 
-SD5=DEFI_SONDE(Z=21,
+SD5=DEFI_SONDE(Y=21,
                X=21,
-               Y=21,);
+               Z=21,);
 
-temperature=DEFI_SCALA(RESTITUE=_F(NOMVAR='temperature',
-                                   ILISVR=1,
-                                   ICHRVR=1,
-                                   IHISVR=SD1,),
-                       MODELE=_F(SIGMAS=0.90000000000000002,
-                                 SCAMAX=1000,
-                                 VALREF=300.0,
+temperature=DEFI_SCALA(MODELE=_F(IVISLS=1,
+                                 VISLS0=0.05,
                                  SCAMIN=270,
-                                 VISLS0=0.050000000000000003,
-                                 IVISLS=1,),
-                       NUMERIC=_F(IMLIGR=1,
-                                  CLIMGR=1.7,
-                                  EPSRGR=1.E-4,
-                                  NITMAX=1000,
-                                  IDIRCL=0,
-                                  IDIFF=1,
-                                  NSWRGR=2,
+                                 VALREF=300.0,
+                                 SCAMAX=1000,
+                                 SIGMAS=0.9,),
+                       NUMERIC=_F(ICONV=1,
+                                  EPSILO=1e-05,
                                   NSWRSM=10,
-                                  EPSILO=1.0000000000000001E-05,
+                                  NSWRGR=2,
+                                  IDIFF=1,
+                                  IDIRCL=0,
+                                  NITMAX=1000,
                                   ISTAT=1,
-                                  ICONV=1,
-                                  BLENCV=0.5,
-                                  ISCHCV=1,),);
+                                  EPSRGR=0.0001,
+                                  CLIMGR=1.7,
+                                  IMLIGR=1,
+                                  ISCHCV=1,
+                                  BLENCV=0.5,),
+                       RESTITUE=_F(IHISVR=SD1,
+                                   ICHRVR=1,
+                                   ILISVR=1,
+                                   NOMVAR='temperature',),);
 
-cb=DEFI_SCALA(RESTITUE=_F(NOMVAR='bore',),
-              MODELE=_F(VALREF=1000.0,
-                        VISLS0=0.29999999999999999,),
+cb=DEFI_SCALA(MODELE=_F(VISLS0=0.3,
+                        VALREF=1000.0,),
               NUMERIC=_F(ICONV=1,
-                         BLENCV=0,),);
+                         BLENCV=0,),
+              RESTITUE=_F(NOMVAR='bore',),);
 
-CALCUL_SATURNE(ENVELOPPE=_F(IFOENV=2,
-                            FICEVI='Enveloppe_vers_solveur          ',
-                            IMPEVI=83,
-                            IMPEVO=84,
-                            FICEVO='Solveur_vers_enveloppe          ',),
-               CONSTANTES_PHYSIQUES=_F(FLUIDE=_F(VISCL0=0.10000000000000001,
-                                                 P0=1.E4,
-                                                 RO0=1000.0,),
-                                       GRAVITE=_F(GX=0,
-                                                  GY=0,
-                                                  GZ=0,),),
-               HISTORIQUE_PONCTUEL=_F(FICHIERS_HISTORIQUES=_F(EXTHIS='histo',
-                                                              EMPHIS='./',),
-                                      NTHSAV=20,
-                                      NTHIST=1,),
-               OPTIONS_TURBULENCE=_F(ISCALT=temperature,
-                                     IGRAKE=0,),
+CALCUL_SATURNE(NomsBibliotheque=('bib1',
+                                 'bib2',),
+               GESTION_CALCUL=_F(NTPABS=100,
+                                 ISUITE=0,
+                                 TTPABS=10.5,
+                                 NTMABS=1000,),
                VARIABLES=_F(IWARNI=3,
                             NTLIST=2,
-                            MASVOL1=_F(NOMVAR='Masse_vol1',
-                                       ILISVR=1,
+                            MASVOL1=_F(IHISVR=SD2,
                                        ICHRVR=0,
-                                       IHISVR=SD2,),),
-               MARCHE_TEMPS=_F(IDTVAR=2,
-                               DTREF=1.E-3,
+                                       ILISVR=1,
+                                       NOMVAR='Masse_vol1',),),
+               OPTIONS_TURBULENCE=_F(IGRAKE=0,
+                                     ISCALT=temperature,),
+               MARCHE_TEMPS=_F(DTREF=0.001,
+                               IDTVAR=2,
                                XCFMAX=0.5,),
-               FICHIERS_CALCUL=_F(SUITE_AVAL=_F(FICAVA='sui_amo',
-                                                IMPAVA=70,
-                                                IFOAVA=1,),
-                                  FICHIER_STOP=_F(FICSTP='ficstop',
-                                                  IMPSTP=82,),),
-               GESTION_CALCUL=_F(NTMABS=1000,
-                                 TTPABS=10.5,
-                                 ISUITE=0,
-                                 NTPABS=100,),
-               OPTIONS_EQUATIONS=_F(),
-               POST_PROC_ENSIGHT=_F(IFOENS=1,
+               POST_PROC_ENSIGHT=_F(ITCHR=10,
                                     NTCHR=3,
-                                    ITCHR=10,),
-               );
+                                    IFOENS=1,),
+               OPTIONS_EQUATIONS=_F(),
+               FICHIERS_CALCUL=_F(FICHIER_STOP=_F(IMPSTP=82,
+                                                  FICSTP='ficstop',),
+                                  SUITE_AVAL=_F(IFOAVA=1,
+                                                IMPAVA=70,
+                                                FICAVA='sui_amo',),),
+               HISTORIQUE_PONCTUEL=_F(NTHIST=1,
+                                      NTHSAV=20,
+                                      FICHIERS_HISTORIQUES=_F(EMPHIS='./',
+                                                              EXTHIS='histo',),),
+               CONSTANTES_PHYSIQUES=_F(GRAVITE=_F(GZ=0,
+                                                  GY=0,
+                                                  GX=0,),
+                                       FLUIDE=_F(RO0=1000.0,
+                                                 P0=10000.0,
+                                                 VISCL0=0.1,),),
+               ENVELOPPE=_F(IFOENV=2,
+                            IMPEVO=84,
+                            FICEVO='Solveur_vers_enveloppe          ',
+                            FICEVI='Enveloppe_vers_solveur          ',
+                            IMPEVI=83,),);

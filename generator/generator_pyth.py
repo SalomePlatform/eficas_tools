@@ -27,7 +27,7 @@ import traceback
 import types,string
 
 from Noyau import N_CR
-from Accas import MCSIMP,MCFACT
+from Accas import MCSIMP,MCFACT,MCList
 
 def entryPoint():
    """
@@ -86,15 +86,28 @@ class PythGenerator:
          Les mots-clés multiples ne sont pas traités
       """
       s=''
+      if isinstance(obj,MCList):
+        if len(obj.data) > 1:
+          raise "Pas supporté"
+        else:
+          obj=obj.data[0]
+
       for mocle in obj.mc_liste:
-         if isinstance(mocle,MCFACT):
-            valeur=self.generMCFACT(mocle)
+        if isinstance(mocle,MCList):
+          if len(mocle.data) > 1:
+            raise "Pas supporté"
+          else:
+            valeur=self.generMCFACT(mocle.data[0])
             s=s+"%s = %s\n" % (mocle.nom,valeur)
-         elif isinstance(v,MCSIMP):
-            valeur = self.generMCSIMP(mocle)
-            s=s+"%s = %s\n" % (mocle.nom,valeur)
-         else:
-            self.cr.fatal("Entite inconnue ou interdite : "+`mocle`)
+        elif isinstance(mocle,MCFACT):
+          valeur=self.generMCFACT(mocle)
+          s=s+"%s = %s\n" % (mocle.nom,valeur)
+        elif isinstance(v,MCSIMP):
+          valeur = self.generMCSIMP(mocle)
+          s=s+"%s = %s\n" % (mocle.nom,valeur)
+        else:
+          self.cr.fatal("Entite inconnue ou interdite : "+`mocle`)
+
       self.text=s
       return self.text
 

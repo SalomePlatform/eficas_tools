@@ -51,15 +51,27 @@ import session
 import listeFichiers
 import listePatrons
 
-VERSION="EFICAS v1.11"
+VERSION="EFICAS v1.12"
 
 class APPLI: 
   def __init__ (self,master,code=prefs.code,fichier=None,test=0) :
       self.code=code
       self.top=master
       self.top.protocol("WM_DELETE_WINDOW",self.exitEFICAS)
-      self.top.minsize(900,500)
-      self.top.geometry("900x500")
+
+      #dimensionnement de la fenetre principale
+      #aspect ratio de l'ecran
+      aspect=float(self.top.winfo_screenwidth())/float(self.top.winfo_screenheight())
+      #resolution (pixels par point). On utilise le fait qu'on a "normalement" 72 points par inch
+      resolution= self.top.winfo_screenwidth()/(self.top.winfo_screenmmwidth()/25.4*72)
+      DDY=max(20,resolution*(fontes.standard[1]+4)) #largeur d'un caractere fonte standard en pixel
+      x=int(45*DDY) #largeur d'ouverture de 45 caracteres de fonte standard 
+      y=int(25*DDY) #hauteur d'ouverture de 25 caracteres de fonte standard
+      minx=x*8/10 #largeur min (80 pour cent de largeur)
+      miny=y*8/10 #hauteur min (80 pour cent de hauteur)
+      self.top.minsize(minx,miny)
+      self.top.geometry('%dx%d' % (x,y))
+
       self.top.title(VERSION + ' pour '+self.code)
       self.titre=VERSION + ' pour '+self.code
       self.top.withdraw()

@@ -1,24 +1,20 @@
-# -*- coding: utf-8 -*-
 
+# -*- coding: utf-8 -*-
 
 SD1=DEFI_SONDE(X=2,
                Y=3,
                Z=1,);
 #
-
-#
-
 _param_1 = 1;
 
-_param_2 = 2 ;
+_param_2 = 2;
 
-_param_4 = EVAL("""23""")
+_param_4 = EVAL("""23""");
 
 
-
-##SD2=DEFI_SONDE(X=2,
-##               Y=3,
-##               Z=1,);
+SD2=DEFI_SONDE(X=2,
+               Y=3,
+               Z=1,);
 
 SD3=DEFI_SONDE(X=4,
                Y=5,
@@ -62,7 +58,9 @@ cb=DEFI_SCALA(NUMERIC=_F(ICONV=1,
               MODELE=_F(VALREF=1000.0,
                         VISLS0=0.29999999999999999,),);
 
-CALCUL_SATURNE(ENVELOPPE=_F(IFOENV=2,
+CALCUL_SATURNE(NomsBibliotheque=('bib1',
+                                 'bib2',),
+               ENVELOPPE=_F(IFOENV=2,
                             IMPEVI=83,
                             FICEVI='Enveloppe_vers_solveur          ',
                             IMPEVO=84,
@@ -81,7 +79,7 @@ CALCUL_SATURNE(ENVELOPPE=_F(IFOENV=2,
                                       NTHSAV=20,),
                OPTIONS_TURBULENCE=_F(IGRAKE=0,
                                      ISCALT=temperature,),
-               MARCHE_TEMPS=_F(DTREF=1.E-3,
+               MARCHE_TEMPS=_F(DTREF=0.001,
                                IDTVAR=2,
                                XCFMAX=0.5,),
                OPTIONS_EQUATIONS=_F(),
@@ -99,6 +97,5 @@ CALCUL_SATURNE(ENVELOPPE=_F(IFOENV=2,
                                                   GY=0,
                                                   GZ=0,),
                                        FLUIDE=_F(RO0=1000.0,
-                                                 VISCL0=0.10000000000000001,
-                                                 P0=1.E4,),),
-               );
+                                                 VISCL0=0.1,
+                                                 P0=10000.0,),),);

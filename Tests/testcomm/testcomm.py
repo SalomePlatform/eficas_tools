@@ -33,8 +33,8 @@ class TestCase(unittest.TestCase):
       CONTEXT.unset_current_step()
 
    i=0
-   files="Tests/testcomm/*.comm"
-   for f in glob.glob(os.path.join(prefs.INSTALLDIR,files)):
+   files= os.path.join(os.path.dirname(__file__),"*.comm")
+   for f in glob.glob(files):
       for o in ('3','2','1','0','m'):
        f=f[:-1]+o
        if os.path.isfile(f):break

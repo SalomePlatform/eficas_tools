@@ -42,12 +42,14 @@ class CONFIGbase:
   #                  class CONFIGStyle(CONFIGbase):
 
       self.appli = appli  
+      self.dRepMat={}
       if self.appli:
          self.parent=appli.top
       else:
          self.parent=None
       self.rep_user = utils.get_rep_user()
       self.lecture_fichier_ini_standard()
+      self.lecture_catalogues_standard()
       self.lecture_fichier_ini_utilisateur()
       self.init_liste_param()
   
@@ -84,10 +86,13 @@ class CONFIGbase:
       for k in d.keys() :
           if  k in self.labels.keys()  :
              setattr(self,k,d[k])
+    # Glut horrible pour les repertoires materiau...
+          elif k[0:9]=="rep_mat_v" :
+             setattr(self,k,d[k])
       
       for k in d['style'].__dict__.keys() :
           setattr(self,k,d['style'].__dict__[k])
-   
+
   #--------------------------------------
   def lecture_fichier_ini_utilisateur(self):
   #--------------------------------------
@@ -97,6 +102,15 @@ class CONFIGbase:
           return
       self.lecture_fichier(self.fic_ini_utilisateur)
 
+  #--------------------------------------
+  def lecture_catalogues_standard(self):
+  #--------------------------------------
+      # repertoires Materiau
+      if hasattr(self,"catalogues") :
+         for ligne in self.catalogues :
+            version=ligne[1]
+            cata=ligne[2]
+            self.dRepMat[version]=os.path.join(cata,'materiau')
 
   #--------------------------------------
   def affichage_fichier_ini(self):
@@ -226,7 +240,7 @@ class CONFIG(CONFIGbase):
       self.rep_user = utils.get_rep_user()
       self.initialdir=self.rep_user
       self.rep_travail=os.path.join(self.rep_user,'uaster','tmp_eficas')
-      self.rep_mat='/aster/v7/materiau'
+      self.rep_mat=""
       self.path_doc=self.rep_user
       self.exec_acrobat=self.rep_user
       self.catalogues= os.path.join(self.rep_ini,'..','Cata/cata.py')

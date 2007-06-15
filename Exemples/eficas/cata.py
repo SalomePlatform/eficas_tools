@@ -7,6 +7,12 @@ from Accas import OPER,MACRO,JDC_CATA,FORM,PROC
 from Accas import AU_MOINS_UN,UN_PARMI,PRESENT_PRESENT,EXCLUS,ENSEMBLE,PRESENT_ABSENT
 from Accas import EVAL
 
+#compatibilite avec V9
+import Noyau
+class ASSD(ASSD,Noyau.AsBase):pass
+class GEOM(GEOM,Noyau.AsBase):pass
+#fin compatibilite
+
 # Type le plus general
 class entier  (ASSD):pass
 class reel    (ASSD):pass
@@ -2092,7 +2098,7 @@ DYNA_TRAN_MODAL=OPER(nom="DYNA_TRAN_MODAL",op=  74,sd_prod=tran_gene,
              NOEUD           =SIMP(statut='f',typ=no,max='**'),
              GROUP_NO        =SIMP(statut='f',typ=grno,max='**'),
            ),
-           CORR_STAT       =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON") ),
+           CORR_STAT       =SIMP(statut='f',typ='TXM',into=("OUI","NON") ),
            D_FONC_DT       =SIMP(statut='f',typ=fonction ),
            D_FONC_DT2      =SIMP(statut='f',typ=fonction ),
          ),

@@ -35,7 +35,7 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata.py,v 1.2.4.1 2006/12/14 17:22:47 pnoyret Exp $"
+__Id__="$Id: cata.py,v 1.3.8.6 2007-06-15 13:57:36 cchris Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
@@ -47,6 +47,17 @@ class entier   (ASSD):
    def __init__(self,valeur=None,**args):
       ASSD.__init__(self,**args)
       self.valeur=valeur
+   def __adapt__(self,validator):
+      if validator.name == "list":
+          #validateur liste,cardinalité
+          return (self,)
+      elif validator.name == "type":
+          #validateur type
+          return validator.adapt(self.valeur or 0)
+      else:
+          #validateur into et valid
+          return self
+
 
 # Type geometriques
 class no  (GEOM):pass

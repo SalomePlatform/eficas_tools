@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
-sys.path[:0]=['../..','../../..']
+sys.path[:0]=['../..','../../Aster']
 
 from Accas import SIMP,FACT
 
@@ -27,10 +27,12 @@ if not p.cr.estvide():
 o=cata(eval(s),'mcf1',None)
 print o
 print o.report()
+assert o.isvalid() == 1
 
 o=cata(p.convert('dict'),'mcf2',None)
 print o
 print o.report()
+assert o.isvalid() == 1
 
 p=convert.plugins['pyth']()
 p.readfile('toto.pyth')
@@ -42,3 +44,4 @@ if not p.cr.estvide():
 o=cata(d,'mcf3',None)
 print o
 print o.report()
+assert o.isvalid() == 0

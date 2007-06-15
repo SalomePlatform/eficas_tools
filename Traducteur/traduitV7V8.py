@@ -20,7 +20,6 @@ from changeValeur import *
 from movemocle    import *
 from dictErreurs  import GenereErreurPourCommande
 
-# Demander a emmanuel pour affe_char_ther et test_resu
 import calcG
 
 atraiter=( "IMPR_GENE","CALC_FONCTION", "DEFI_MATERIAU","STAT_NON_LINE",
@@ -34,16 +33,16 @@ atraiter=( "IMPR_GENE","CALC_FONCTION", "DEFI_MATERIAU","STAT_NON_LINE",
           "POST_SIMPLIFIE","AFFE_MATERIAU","DEFI_MAILLAGE","DEPL_INTERNE",
           "POST_DYNA_ALEA","RECU_FONCTION","DYNA_TRAN_MODAL","DEFI_INTERF_DYNA",
           "CALC_PRECONT","DEFI_TEXTURE","TEST_RESU","COMB_CHAM_NO","COMB_CHAM_ELEM",
-          "CALC_FATIGUE","IMPR_OAR",
+          "CALC_FATIGUE","IMPR_OAR", "AFFE_CHAR_MECA_F",
            "MACR_ASCOUF_CALC","MACR_ASPIC_CALC","MACR_CABRI_CALC",
-           "MACR_ADAP_MAIL","IMPR_FICO_HOMARD"
+           "MACR_ADAP_MAIL","IMPR_FICO_HOMARD","DEFI_PART_FETI",
         )
 
 #atraiter=( "MACR_ADAP_MAIL",)
 
-def traduc(infile,outfile):
+def traduc(infile,outfile,flog=None):
 
-    hdlr=log.initialise()
+    hdlr=log.initialise(flog)
     jdc=getJDC(infile,atraiter)
     root=jdc.root
 
@@ -59,6 +58,7 @@ def traduc(infile,outfile):
     ####################### traitement CALC_FONCTION #######################
     removeMotCleSiRegle(jdc,"CALC_FONCTION","NOM_PARA",((("MAX"),"existeMCFParmi"),))
     renameCommandeSiRegle(jdc,"CALC_FONCTION","INFO_FONCTION", ((("RMS","MAX","NOCI_SEISME","NORME","ECART-TYPE"),"existeMCFParmi"),))
+    renameMotCleInFact(jdc,"CALC_FONCTION","LISS_ENVELOP","FONCTION","NAPPE")
 
     ####################### traitement IMPR_GENE     #######################
     moveMotCleFromFactToFather(jdc,"IMPR_GENE","GENE","UNITE")
@@ -111,6 +111,7 @@ def traduc(infile,outfile):
     renameMotCleAvecErreur(jdc,"DEFI_MATERIAU","OHNO","TAHERI")
     renameMotCleAvecErreur(jdc,"DEFI_MATERIAU","OHNO_FO","TAHERI_FO")
     renameMotCleAvecErreur(jdc,"DEFI_MATERIAU","GLRC","GLRC_DAMAGE")
+    renameMotCleAvecErreur(jdc,"DEFI_MATERIAU","GLRC_FO","GLRC_DAMAGE")
 
     renameMotCleInFact(jdc,"DEFI_MATERIAU","GRAN_IRRA","A","GRAN_A")
     renameMotCleInFact(jdc,"DEFI_MATERIAU","GRAN_IRRA","B","GRAN_B")
@@ -158,10 +159,16 @@ def traduc(infile,outfile):
     ####################### traitement AFFE_CHAR_MECA (CONTACT)   #######################
     renameMotCleInFact(jdc,"AFFE_CHAR_MECA","CONTACT","COEF_MULT_ESCL","COEF_MULT")
     renameMotCleInFact(jdc,"AFFE_CHAR_MECA","CONTACT","NOM_CHAM","NOM_CMP")
-    renameMotCleInFact(jdc,"AFFE_CHAR_MECA","CONTACT","NOM_CHAM","NOM_CMP")
-    renameMotCleInFact(jdc,"AFFE_CHAR_MECA","CONTACT","GROUP_MA_ESCL","GROUP_MA")
+    renameMotCleInFactSiRegle(jdc,"AFFE_CHAR_MECA","CONTACT","GROUP_MA_ESCL","GROUP_MA",((("CONTACT","NOM_CMP"),"existeMCsousMCF"),))
     renameMotCleSiRegle(jdc,"AFFE_CHAR_MECA","CONTACT","LIAISON_UNILATER",((("CONTACT","NOM_CMP"),"existeMCsousMCF"),))
     removeMotCleInFact(jdc,"AFFE_CHAR_MECA","LIAISON_UNILATER","APPARIEMENT")
+
+    ####################### traitement AFFE_CHAR_MECA_F (CONTACT)   #######################
+    renameMotCleInFact(jdc,"AFFE_CHAR_MECA_F","CONTACT","COEF_MULT_ESCL","COEF_MULT")
+    renameMotCleInFact(jdc,"AFFE_CHAR_MECA_F","CONTACT","NOM_CHAM","NOM_CMP")
+    renameMotCleInFactSiRegle(jdc,"AFFE_CHAR_MECA_F","CONTACT","GROUP_MA_ESCL","GROUP_MA",((("CONTACT","NOM_CMP"),"existeMCsousMCF"),))
+    renameMotCleSiRegle(jdc,"AFFE_CHAR_MECA_F","CONTACT","LIAISON_UNILATER",((("CONTACT","NOM_CMP"),"existeMCsousMCF"),))
+    removeMotCleInFact(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER","APPARIEMENT")
 
     ####################### traitement CALC_G   #######################
     chercheOperInsereFacteurSiRegle(jdc,"CALC_G_LOCAL_T","LISSAGE",((("LISSAGE_G","LISSAGE_THETA","DEGRE"),"existeMCFParmi"),))
@@ -335,7 +342,7 @@ def traduc(infile,outfile):
     ####################### traitement COMB_CHAM_NO #######################
     renameMotCleInFact(jdc,"COMB_CHAM_NO","COMB_C","CHAM_NO","CHAM_GD")
     chercheOperInsereFacteur(jdc,"COMB_CHAM_NO","TYPE_CHAM='xxx',",estunFacteur=0,erreur=1)
-    chercheOperInsereFacteur(jdc,"COMB_CHAM_NO","MODELE='xxx',",estunFacteur=0,erreur=1)
+    chercheOperInsereFacteur(jdc,"COMB_CHAM_NO","MODELE=xxx,",estunFacteur=0,erreur=1)
     chercheOperInsereFacteur(jdc,"COMB_CHAM_NO","OPERATION='ASSE',",estunFacteur=0,erreur=1)
     renameMotCle(jdc,"COMB_CHAM_NO","COMB_C","ASSE")
     AjouteMotClefDansFacteur(jdc,"COMB_CHAM_NO","ASSE","CUMUL='NON',")
@@ -372,6 +379,8 @@ def traduc(infile,outfile):
     dfatigue={"MATAKE":"MATAKE_MODI_AC", "DOMM_MAXI":"MATAKE_MODI_AV", "FATEMI_SOCIE":"FATESOCI_MODI_AV"}
     ChangementValeur(jdc,"CALC_FATIGUE","CRITERE",dfatigue)
 
+    ####################### traitement DEFI_PART_FETI #######################
+    removeMotCleSiRegle(jdc,"DEFI_PART_FETI","MAILLAGE", ((("MODELE",),"existeMCFParmi"),(("MAILLAGE",),"existeMCFParmi")))
 
     ####################### traitement MACR_ADAP_MAIL #######################
     moveMotCleFromFactToFather(jdc,"MACR_ADAP_MAIL","ADAPTATION","MAILLAGE_N")

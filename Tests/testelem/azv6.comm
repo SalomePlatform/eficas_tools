@@ -1,5 +1,4 @@
 
-
 DEBUT();
 P1 = 9.8;
 
@@ -13,6 +12,7 @@ P6 = (P1 - 3);
 
 P4 = [2, 3, 4];
 
+
 #Pas trouve   shellpanel
 
 MAILLA2=LIRE_MAILLAGE(UNITE=P4[1],);
@@ -20,6 +20,7 @@ MAILLA2=LIRE_MAILLAGE(UNITE=P4[1],);
 aaa = FORMULE(REEL='(a+z) = (a,z)',);
 
 MAIL=LIRE_MAILLAGE(UNITE=P3,);
+
 # 'LIRE_MAILLAGE', 'UNITE'            --> uniquebasepanel
 
 az = FORMULE(REEL='(aaaaa) = (ae,inst)',);
@@ -51,6 +52,7 @@ CARA=AFFE_CARA_ELEM(MODELE=MOD,
                               SECTION='CERCLE',
                               CARA='R',
                               VALE=(3.0,P6,),),);
+
 # 'AFFE_MODELE', 'MAILLAGE'           --> uniqueassdpanel
 #  AFFE_MODELE', 'AFFE', 'GROUP_MA'   --> plusieursbasepanel 
 # 'AFFE_MODELE', 'AFFE', 'PHENOMENE'  --> uniqueintopanel
@@ -63,6 +65,7 @@ F1=DEFI_FONCTION(NOM_PARA='DX',VALE=(5.0,3.0,
 F3=DEFI_FONCTION(NOM_PARA='DRX',VALE_C=(5.0,7.0,9.0,
                          9.0,8.0,7.0,
                          ),);
+
 # 'DEFI_FONCTION', 'VALE'             --> fonctionpanel  
 
 MATER2=DEFI_MATERIAU(ELAS=_F(E=100000000000.0,
@@ -90,17 +93,20 @@ TH1=THER_LINEAIRE(MODELE=AFFE1,
                   CHAM_MATER=CHMAT2,
                   EXCIT=_F(CHARGE=AAAZ,),
                   SENSIBILITE=(PS1,PS2,),);
+
 # 'THER_LINEAIRE', 'SENSIBILITE'       --> plusieursassdpanel
 
 ACA1=AFFE_CHAR_ACOU(MODELE=AFFE1,
                     PRES_IMPO=_F(TOUT='OUI',
                                  PRES=('RI',3.0,3.0,),),);
+
 # 'AFFE_CHAR_ACOU', 'PRES_IMPO', 'PRES' --> uniquecomppanel
 
 MACRO_MATR_ASSE(MODELE=AFFE1,
                 NUME_DDL=CO('DDL1'),
                 MATR_ASSE=_F(MATRICE=CO('MAT1'),
                              OPTION='RIGI_THER',),);
+
 # 'MACRO_MATR_ASSE', 'MATR_ASSE', 'MATRICE'  --> uniquesdcopanel
 
 FIN();

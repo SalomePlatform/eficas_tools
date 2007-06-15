@@ -27,9 +27,9 @@ import pickle
 # Modules Eficas
 import Accas
 from Accas import ASSD
-from Utilitai.Utmess import UTMESS
 
 try:
+   from Utilitai.Utmess import UTMESS
    import aster
    # Si le module aster est présent, on le connecte
    # au JDC

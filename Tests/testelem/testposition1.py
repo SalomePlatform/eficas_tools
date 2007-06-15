@@ -3,7 +3,9 @@ import os
 import cata3
 from Accas import AsException,ASSD,OPER,SIMP,FACT,BLOC,_F
 
-class concept(ASSD):pass
+import Noyau
+
+class concept(ASSD,Noyau.AsBase):pass
 
 import unittest
 

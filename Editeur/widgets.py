@@ -173,7 +173,7 @@ class FenetreSurLigneWarning(Fenetre):
                 ligne=ligne+1
                 l=l+"\n"
                 self.zone_texte.insert(END,l)
-                if l.find("INFO") < 0 : 
+                if (l.find("WARNING") > -1) or (l.find("ERROR") > -1) : 
                    self.zone_texte.tag_add( "Rouge", str(ligne)+".0", "end-1c" )
                    self.zone_texte.tag_config("Rouge", foreground='red')
            try:
@@ -744,8 +744,10 @@ class ListeChoix :
         self.page = page
         self.liste = liste
         self.dico_labels={}
+        self.dico_mots={}
         self.nBlabel = 0
         self.dico_place={}
+	self.dico_mots={}
         self.selection = None
         self.liste_commandes = liste_commandes
         self.liste_marques = liste_marques
@@ -831,6 +833,7 @@ class ListeChoix :
                         fg = 'black',bg = 'gray95',justify = 'left')
           self.dico_labels[mot]=label
           self.dico_place[mot]=self.nBlabel
+	  self.dico_mots[label]=mot
           self.nBlabel=self.nBlabel+1
           liste_labels.append(label)
           self.MCbox.window_create(END,
@@ -962,16 +965,23 @@ class ListeChoix :
         if commande and mot : commande(mot)
 
     def cherche_selected_item(self):
-        index=self.MCbox.index(self.selection[1])
-        lign,col=map(int,string.split(index,'.'))
+        try :
+           index=self.MCbox.index(self.selection[1])
+           lign,col=map(int,string.split(index,'.'))
+        except :
+	   label=self.dico_labels[self.arg_selected]
+           mot=self.dico_mots[label] 
+           lign=self.dico_place[mot]+1
         return lign
 
     def remove_selected_item(self):
         try :
            index=self.MCbox.index(self.selection[1])
+           lign,col=map(int,string.split(index,'.'))
         except :
-           index=self.MCbox.index(self.dico_labels[self.arg_selected] )
-        lign,col=map(int,string.split(index,'.'))
+	   label=self.dico_labels[self.arg_selected]
+           mot=self.dico_mots[label] 
+           lign=self.dico_place[mot]+1
         del self.liste[lign-1]
         self.affiche_liste()
 
@@ -1217,6 +1227,7 @@ class ListeChoixParGroupes(ListeChoix) :
     def affiche_liste(self):
         """ Affiche la liste dans la fenêtre"""
         liste_labels=[]
+	self.dico_mots={}
         self.MCbox.config(state=NORMAL)
         self.MCbox.delete(1.0,END)
         for grp in self.liste_groupes:
@@ -1241,6 +1252,7 @@ class ListeChoixParGroupes(ListeChoix) :
                         fg = 'black',bg = 'gray95',justify = 'left')
               # On stocke la relation entre le nom de la commande et le label
               self.dico_labels[cmd]=label
+	      self.dico_mots[label]=cmd
               self.MCbox.window_create(END,
                                    window=label,
                                    stretch = 1)

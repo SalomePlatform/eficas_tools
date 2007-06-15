@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#@ MODIF __init__ Cata  DATE 27/03/2002   AUTEUR DURAND C.DURAND 
+#@ MODIF __init__ Cata  DATE 20/09/2004   AUTEUR DURAND C.DURAND
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -17,4 +17,3 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
 # ======================================================================
-#

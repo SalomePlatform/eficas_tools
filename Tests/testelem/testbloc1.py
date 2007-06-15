@@ -1,5 +1,8 @@
 # coding=utf-8
 from Accas import SIMP,FACT,BLOC,UN_PARMI,OPER,ASSD,MACRO,_F
+import Noyau
+
+class concept(ASSD,Noyau.AsBase):pass
 
 import unittest
 
@@ -12,7 +15,6 @@ class CATA:
 
 cata=CATA()
 
-class concept(ASSD):pass
 
 OP1 = OPER(nom='OP1',op=1, sd_prod=concept, 
       WWWW=SIMP(statut='o',typ='TXM', position='global'),

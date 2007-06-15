@@ -25,7 +25,7 @@ def add_mcsimp(obj,nom,valeur):
 def cdiff(text1,text2):
     return " ".join(difflib.context_diff(text1.splitlines(1),text2.splitlines(1)))
 
-version='v8'
+version='v9'
 
 class TestCase(unittest.TestCase):
    def setUp(self):

@@ -8,7 +8,7 @@
 """
 
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 from Accas import AU_MOINS_UN
 
@@ -27,6 +27,7 @@ if valid:
    print "Le dictionnaire %s est conforme à la règle" % d
 else:
    print "Le dictionnaire %s n'est pas conforme à la règle" % d
+assert valid==0
 
 d={'sect3':{'a':1},'sect2':{'c':3}}
 text,valid= cata.verif(d)
@@ -34,3 +35,4 @@ if valid:
    print "Le dictionnaire %s est conforme à la règle" % d
 else:
    print "Le dictionnaire %s n'est pas conforme à la règle" % d
+assert valid==1

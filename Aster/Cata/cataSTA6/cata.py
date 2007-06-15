@@ -30,13 +30,20 @@ except:
 
 #
 __version__="$Name:  $"
-__Id__="$Id: cata.py,v 1.4.6.1 2006/05/29 07:04:57 cchris Exp $"
+__Id__="$Id: cata.py,v 1.5.12.2 2007-05-29 17:08:48 cchris Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,
                regles = (AU_MOINS_UN('DEBUT','POURSUITE'),
                          AU_MOINS_UN('FIN'),
                          A_CLASSER(('DEBUT','POURSUITE'),'FIN')))
+
+#compatibilite avec V9
+import Noyau
+class ASSD(ASSD,Noyau.AsBase):pass
+class GEOM(GEOM,Noyau.AsBase):pass
+#fin compatibilite
+
 # Type le plus general
 class entier  (ASSD):pass
 class reel    (ASSD):pass

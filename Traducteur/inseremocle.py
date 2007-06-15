@@ -58,7 +58,11 @@ def insereMotCleDansFacteur(jdc,facteur,texte):
     indice = -1
     while texte[indice] == " " : 
        indice = indice -1
-    if texte[indice] != "," : texte=texte+","
+    if texte[indice] != "," : 
+       texte=texte+","
+    if (texte.find("#") > -1) and (texte.find("#") < texte.find(",")) :
+          texte=texte+"\n,"
+          
     texteinfo=texte
     texte=texte+"\n"
   

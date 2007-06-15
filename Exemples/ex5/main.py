@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
-sys.path[:0]=['../..','../../..']
+sys.path[:0]=['../..','../../Aster']
 
 from Accas import SIMP,FACT
 
@@ -53,3 +53,4 @@ if not p.cr.estvide():
 o=cata(d,'mcf3',None)
 print o
 print o.report()
+assert o.isvalid() == 0

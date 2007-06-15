@@ -16,9 +16,9 @@
 """
 
 import sys
-sys.path[:0]=['../..','../../..']
+sys.path[:0]=['../..','../../Aster/Cata','../../Aster']
 
-from Cata import cata
+from cataSTA6 import cata
 
 cr=cata.JdC.report()
 print cr

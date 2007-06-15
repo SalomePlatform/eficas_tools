@@ -112,7 +112,6 @@ class PythonGenerator:
          place (dépend des gouts !!!)
       """
       # ATTENTION a l'ordre des tests : il peut avoir de l'importance (héritage)
-      premier=1
       if isinstance(obj,Accas.PROC_ETAPE):
          return self.generPROC_ETAPE(obj)
       # Attention doit etre placé avant MACRO (raison : héritage)
@@ -135,7 +134,7 @@ class PythonGenerator:
       elif isinstance(obj,Accas.ETAPE_NIVEAU):
          return self.generETAPE_NIVEAU(obj)
       elif isinstance(obj,Accas.COMMENTAIRE):
-         return self.generCOMMENTAIRE(obj,premier)
+         return self.generCOMMENTAIRE(obj)
       # Attention doit etre placé avant PARAMETRE (raison : héritage)
       elif isinstance(obj,Accas.PARAMETRE_EVAL):
          return self.generPARAMETRE_EVAL(obj)
@@ -155,7 +154,6 @@ class PythonGenerator:
          return self.generFormula(obj)
       else:
          raise "Type d'objet non prévu",obj
-      premier=0
 
    def generJDC(self,obj):
       """
@@ -210,7 +208,7 @@ class PythonGenerator:
       """
       return 'EVAL("""'+ obj.valeur +'""")'
 
-   def generCOMMENTAIRE(self,obj,premier=0):
+   def generCOMMENTAIRE(self,obj):
       """
          Cette méthode convertit un COMMENTAIRE
          en une liste de chaines de caractères à la syntaxe python
@@ -227,11 +225,11 @@ class PythonGenerator:
         txt = txt + '#'+ligne+'\n'
 
       # suppression du dernier saut de ligne
-      txt = re.sub("\n$","",txt)
+      #txt = re.sub("\n$","",txt)
       # on ajoute un saut de ligne avant
       pattern=re.compile(" ?\#")
       m=pattern.match(txt)
-      if m and not premier:
+      if m:
          txt="\n"+txt
       return txt
 
@@ -471,22 +469,14 @@ class PythonGenerator:
           l.append(data)
       return l
 
+
    def format_item(self,valeur,etape):
-      if type(valeur) == types.InstanceType :
-         if valeur.__class__.__name__ == 'CO' or hasattr(etape,'sdprods') and valeur in etape.sdprods :
-            s = "CO('"+ self.generator(valeur) +"')"
-         elif isinstance(valeur,Accas.PARAMETRE):
-            # il ne faut pas prendre la string que retourne gener
-            # mais seulement le nom dans le cas d'un paramètre
-            s = valeur.nom
-         else:
-            s = self.generator(valeur)
-      elif type(valeur) == types.FloatType :
+      if type(valeur) == types.FloatType :
          # Pour un flottant on utilise str
          # ou la notation scientifique
          s = str(valeur)
          clefobj=etape.get_sdname()
-         if self.appli.dict_reels.has_key(clefobj):
+         if self.appli and self.appli.dict_reels.has_key(clefobj):
            if self.appli.dict_reels[clefobj].has_key(valeur):
              s=self.appli.dict_reels[clefobj][valeur]
       elif type(valeur) == types.StringType :
@@ -498,11 +488,30 @@ class PythonGenerator:
             s='"""'+valeur+'"""'
          else:
             s = repr(valeur)
+      elif isinstance(valeur,Accas.CO) or hasattr(etape,'sdprods') and valeur in etape.sdprods:
+         s = "CO('"+ self.generator(valeur) +"')"
+      elif isinstance(valeur,Accas.ASSD):
+         s = self.generator(valeur)
+      elif isinstance(valeur,Accas.PARAMETRE):
+         # il ne faut pas prendre la string que retourne gener
+         # mais seulement le nom dans le cas d'un paramètre
+         s = valeur.nom
+
+      #elif type(valeur) == types.InstanceType or isinstance(valeur,object):
+      #   if valeur.__class__.__name__ == 'CO' or hasattr(etape,'sdprods') and valeur in etape.sdprods :
+      #      s = "CO('"+ self.generator(valeur) +"')"
+      #   elif isinstance(valeur,Accas.PARAMETRE):
+            # il ne faut pas prendre la string que retourne gener
+            # mais seulement le nom dans le cas d'un paramètre
+      #      s = valeur.nom
+      #   else:
+      #      print valeur
+      #      s = self.generator(valeur)
+
       else :
          # Pour les autres types on utilise repr
          s = repr(valeur)
       return s
-
 
    def generMCSIMP(self,obj) :
       """

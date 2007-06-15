@@ -7,7 +7,7 @@
 """
 
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 def main():
    from Accas import SIMP,FACT,BLOC
@@ -16,7 +16,7 @@ def main():
    # Construction objet de définition
 
    cata= FACT(mcf1=FACT(a=SIMP(typ='I'),b=SIMP(typ='I')),
-              mcf2=FACT(c=SIMP(typ='I'),d=SIMP(typ='I')),
+              mcf2=FACT(max=3,c=SIMP(typ='I'),d=SIMP(typ='I')),
               a    =SIMP(typ='I'),
               bloc1=BLOC(condition="a==1",
                           c=SIMP(typ='I'),

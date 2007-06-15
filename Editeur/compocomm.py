@@ -68,15 +68,23 @@ class COMMPanel(panels.OngletPanel):
     """
     Crée les boutons du panneau
     """
-    self.bouton_sup.place_forget()
-    self.bouton_doc.place_forget()
-    self.bouton_val = Button(self.fr_but,text='Valider',command=self.change_valeur,width=14)
-    self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur,width=14)
+    #self.bouton_sup.place_forget()
+    #self.bouton_doc.place_forget()
+    #self.bouton_val = Button(self.fr_but,text='Valider',command=self.change_valeur,width=14)
+    #self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur,width=14)
 
-    self.bouton_val.place(relx=0.25,rely=0.5,relheight=0.8,anchor='center')
-    self.bouton_ann.place(relx=0.50,rely=0.5,relheight=0.8,anchor='center')
-    self.bouton_sup.place(relx=0.75,rely=0.5,relheight=0.8,anchor='center')
+    #self.bouton_val.place(relx=0.25,rely=0.5,relheight=0.8,anchor='center')
+    #self.bouton_ann.place(relx=0.50,rely=0.5,relheight=0.8,anchor='center')
+    #self.bouton_sup.place(relx=0.75,rely=0.5,relheight=0.8,anchor='center')
 
+    self.bouton_sup.pack_forget()
+    self.bouton_doc.pack_forget()
+    self.bouton_val = Button(self.fr_but,text='Valider',command=self.change_valeur)
+    self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur)
+
+    self.bouton_val.pack(side='left',padx=5, pady=5)
+    self.bouton_ann.pack(side='left',padx=5, pady=5)
+    self.bouton_sup.pack(side='right',padx=5, pady=5)
 
   def change_valeur(self):
     """

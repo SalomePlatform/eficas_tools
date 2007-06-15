@@ -12,7 +12,7 @@
 
 """
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 import Accas
 from Accas import SIMP
@@ -20,8 +20,7 @@ from Accas import SIMP
 a=SIMP(typ='I')
 print a.report()
 o=a(1,'mcs1')
-print o
-print o.isvalid()
+assert o.isvalid() == 1
 
 a=SIMP(typ='I',statut='o')
 cr=a.report()
@@ -31,3 +30,4 @@ else:
    print cr
 o=a(None,'mcs1')
 print o.report()
+assert o.isvalid() == 0

@@ -1,5 +1,8 @@
 import sys
 import prefs
-#ASTERDIR="/local/chris/ASTER/instals/STA8.2/astest"
-ASTERDIR="/local/chris/ASTER/instals/astests/V8.3.21"
+ASTERDIR={
+          "v7":"/local/chris/ASTER/instals/STA7/astest",
+          "v8":"/local/chris/ASTER/instals/STA8/astest",
+          "v9":"/local/chris/ASTER/instals/NEW9/astest",
+          }
 

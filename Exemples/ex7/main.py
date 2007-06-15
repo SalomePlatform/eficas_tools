@@ -16,7 +16,7 @@
 """
 
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 from Accas import SIMP,FACT
 from Accas import AU_MOINS_UN
@@ -50,6 +50,7 @@ if cr.estvide():
 else:
    print "L'objet MCFACT basé sur le dictionnaire %s n'est pas valide " % d
    print cr
+assert o.isvalid() == 0
 
 d={'sect1':{'a':1},'sect3':{'c':3}}
 o=cata(d,'mcf1',None)
@@ -59,3 +60,4 @@ if cr.estvide():
 else:
    print "L'objet MCFACT basé sur le dictionnaire %s n'est pas valide " % d
    print cr
+assert o.isvalid() == 1

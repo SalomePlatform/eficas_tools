@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.30.6.3 2006/05/29 07:12:38 cchris Exp $"
+__Id__="$Id: treewidget.py,v 1.31.12.1 2007-04-26 07:56:07 cchris Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -38,6 +38,9 @@ class Tree :
         self.item = jdc_item
         self.scrolledcanvas = scrolledcanvas
         self.canvas = self.scrolledcanvas.component('canvas')
+        #resolution
+        resolution= self.canvas.winfo_screenwidth()/(self.canvas.winfo_screenmmwidth()/25.4*72)
+        self.DDY=max(20,resolution*(Fonte_Standard[1]+4))
         self.id_up=self.canvas.bind("<F11>", self.page_up)
         self.id_down=self.canvas.bind("<F12>", self.page_down)
         self.id_um=self.canvas.bind("<Key-Left>", self.mot_up)
@@ -180,7 +183,7 @@ class Tree :
     #def __del__(self):
     #   print "__del__",self
 
-            
+ 
 class Node :
     def __init__(self,parent,item,command=None,rmenu=None):
         self.parent = parent
@@ -285,7 +288,7 @@ class Node :
     def redraw_children(self,old_nodes):
         #print "redraw_children",old_nodes
         #print self.children
-        y = self.y + 20
+        y = self.y + self.tree.DDY
         x = self.x + 15
         supp_nodes=[]
 
@@ -300,7 +303,7 @@ class Node :
               #print "ancien noeud",node
               if node in self.children:break # ancien noeud toujours present
               #print "noeud supprime",node,node.item.GetLabelText()[0]
-              dy=node.y-node.lasty -20
+              dy=node.y-node.lasty -self.tree.DDY
               #print "deplacer noeuds",y,dy
               node.move_nodes(y,dy)
               node.supprime()
@@ -317,7 +320,7 @@ class Node :
            if node is new_node: # ancien noeud
               #print "noeud conserve",node
               node.update_node_label()
-              y=y+node.lasty-node.y +20
+              y=y+node.lasty-node.y +self.tree.DDY
 
         self.racine.update_coords()
         self.canvas.delete('line')
@@ -365,10 +368,10 @@ class Node :
            #new_node.state = 'expanded'
         new_node.state = 'expanded'
         new_node.draw(x,y)
-        dy=(new_node.get_nb_children()+1)*20
+        dy=(new_node.get_nb_children()+1)*self.tree.DDY
         #print "deplacer noeuds",y,dy
         self.canvas.move('move',0,dy)
-        return new_node.lasty+20
+        return new_node.lasty+self.tree.DDY
 
     def build_children(self):
         """ Construit la liste des enfants de self """
@@ -575,12 +578,12 @@ class Node :
    
     def drawchildren(self):
         """ Dessine les enfants de self """
-        y = self.y + 20
+        y = self.y + self.tree.DDY
         x = self.x + 15
         for child in self.children:
             child.draw(x,y)
             nb = child.get_nb_children()
-            y = y + 20*(nb+1)
+            y = y + self.tree.DDY*(nb+1)
         self.trace_ligne()
 
     def drawtext(self):
@@ -688,7 +691,7 @@ class Node :
         """ Redessine self :  nb est le décalage à introduire
             en dessous de self pour le redessiner """
         # nb = nombre d'items de décalage
-        self.move(20*nb)
+        self.move(self.tree.DDY*nb)
         # on efface self et on le redessine
         self.efface()
         self.draw(self.x,self.y)

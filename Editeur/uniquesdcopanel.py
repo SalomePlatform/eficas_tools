@@ -98,6 +98,10 @@ class UNIQUE_SDCO_Panel(UNIQUE_ASSD_Panel):
                         wraplength=int(self.frame_valeur.winfo_width()*0.8),
                         justify='center')
       self.aide.place(relx=0.5,rely=0.85,anchor='n')
+
+      self.but_val = Button(self.fr_but,text = "Valider",command= self.valid_nom_concept_co)
+      self.but_val.pack(side='right',padx=5, pady=5)
+
       # affichage de la valeur courante
       self.display_valeur()
       if liste_noms_sd == [] :

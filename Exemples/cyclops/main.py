@@ -10,7 +10,7 @@
 """
 
 import sys
-sys.path[:0]=['../..','../../..']
+sys.path[:0]=['../..','../../Aster']
 
 from Accas import SIMP,FACT,BLOC
 from Accas import AU_MOINS_UN

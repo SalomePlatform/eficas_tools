@@ -71,15 +71,19 @@ class PARAMPanel(panels.OngletPanel):
     Crée la page qui permet d'afficher et d'éditer le texte du PARAMETRE
     """
     self.frame_valeur = Frame(page)
-    self.frame_valeur.place(relwidth=0.9,relheight=0.9,relx=0.05,rely=0.05,anchor='nw')
+    #self.frame_valeur.place(relwidth=0.9,relheight=0.9,relx=0.05,rely=0.05,anchor='nw')
+    self.frame_valeur.pack(expand=1)
     # affichage du titre du panneau
     self.titre = StringVar()
     self.titre.set("PARAMETRE "+self.node.item.get_nom())
-    Label(self.frame_valeur,textvariable=self.titre,font=Fonte_TITRE).place(relx=0.5,rely=0.1,anchor='n')
+    #Label(self.frame_valeur,textvariable=self.titre,font=Fonte_TITRE).place(relx=0.5,rely=0.1,anchor='n')
+    Label(self.frame_valeur,textvariable=self.titre,font=Fonte_TITRE).grid(row=0,columnspan=2,padx=5,pady=5)
     # création des labels et entries associés aux nom et valeur du paramètre
-    Label(self.frame_valeur,text= 'Nom du paramètre : ').place(relx=0.,rely=0.3)
+    #Label(self.frame_valeur,text= 'Nom du paramètre : ').place(relx=0.,rely=0.3)
+    Label(self.frame_valeur,text= 'Nom du paramètre : ').grid(row=1,sticky=W,padx=5,pady=5)
     self.entry_nom = Entry(self.frame_valeur)
-    Label(self.frame_valeur,text= 'Valeur du paramètre : ').place(relx=0.,rely=0.5)
+    #Label(self.frame_valeur,text= 'Valeur du paramètre : ').place(relx=0.,rely=0.5)
+    Label(self.frame_valeur,text= 'Valeur du paramètre : ').grid(row=2,sticky=W,padx=5,pady=5)
     self.entry_val = Entry(self.frame_valeur)
     # binding sur entry_nom
     self.entry_nom.bind("<Return>",lambda e,s=self : s.entry_val.focus())
@@ -87,8 +91,10 @@ class PARAMPanel(panels.OngletPanel):
     self.entry_nom.bind("<KP_Enter>",lambda e,s=self : s.entry_val.focus())
     self.entry_val.bind("<KP_Enter>",lambda e,s=self : s.change_valeur())
     # affichage des entries
-    self.entry_nom.place(relx=0.35,rely=0.3,relwidth=0.3)
-    self.entry_val.place(relx=0.35,rely=0.5,relwidth=0.5)
+    #self.entry_nom.place(relx=0.35,rely=0.3,relwidth=0.3)
+    self.entry_nom.grid(row=1,column=1,sticky=W,padx=5,pady=5)
+    #self.entry_val.place(relx=0.35,rely=0.5,relwidth=0.5)
+    self.entry_val.grid(row=2,column=1,sticky=W,padx=5,pady=5)
     # affichage d'une phrase d'aide
     aide = """
     Un retour de chariot dans une zone de saisie vous permet de vérifier si
@@ -96,7 +102,9 @@ class PARAMPanel(panels.OngletPanel):
     Ce n'est qu'après avoir appuyé sur le bouton Valider que les nouvelles
     valeurs seront effectivement prises en compte
     """
-    Label(self.frame_valeur,text=aide).place(relx=0.5,rely=0.65,anchor='n')
+    #Label(self.frame_valeur,text=aide).place(relx=0.5,rely=0.65,anchor='n')
+    Label(self.frame_valeur,text=aide).grid(row=3,columnspan=2,padx=5,pady=5)
+    self.frame_valeur.columnconfigure(1,weight=1)
     # affichage des nom et valeur du paramètre
     self.display_valeur()
     self.entry_nom.focus()
@@ -105,14 +113,21 @@ class PARAMPanel(panels.OngletPanel):
     """
     Crée les boutons du panneau
     """
-    self.bouton_sup.place_forget()
-    self.bouton_doc.place_forget()
-    self.bouton_val = Button(self.fr_but,text='Valider',command=self.change_valeur,width=14)
-    self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur,width=14)
+    #self.bouton_sup.place_forget()
+    #self.bouton_doc.place_forget()
+    #self.bouton_val = Button(self.fr_but,text='Valider',command=self.change_valeur,width=14)
+    #self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur,width=14)
+    #self.bouton_val.place(relx=0.25,rely=0.5,relheight=0.8,anchor='center')
+    #self.bouton_ann.place(relx=0.50,rely=0.5,relheight=0.8,anchor='center')
+    #self.bouton_sup.place(relx=0.75,rely=0.5,relheight=0.8,anchor='center')
 
-    self.bouton_val.place(relx=0.25,rely=0.5,relheight=0.8,anchor='center')
-    self.bouton_ann.place(relx=0.50,rely=0.5,relheight=0.8,anchor='center')
-    self.bouton_sup.place(relx=0.75,rely=0.5,relheight=0.8,anchor='center')
+    self.bouton_sup.pack_forget()
+    self.bouton_doc.pack_forget()
+    self.bouton_val = Button(self.fr_but,text='Valider',command=self.change_valeur)
+    self.bouton_ann = Button(self.fr_but,text='Annuler',command=self.display_valeur)
+    self.bouton_val.pack(side='left',padx=5, pady=5)
+    self.bouton_ann.pack(side='left',padx=5, pady=5)
+    self.bouton_sup.pack(side='right',padx=5, pady=5)
 
   def change_valeur(self):
     """

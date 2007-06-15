@@ -88,15 +88,19 @@ number_kw_pattern=re.compile(r"""
 """,re.VERBOSE|re.MULTILINE)
 
 def construit_genea(texte,liste_mc):
-    """Retourne un dictionnaire dont les cles sont des reels et les valeurs sont leurs representations textuelles.
+    """
+       Retourne un dictionnaire dont les cles sont des reels et les valeurs sont leurs representations textuelles.
+
        Realise un filtrage sur les reels :
+
          - Ne garde que les reels pour lesquels str ne donne pas une bonne representation.
          - Ne garde que les reels derriere un argument keyword dont le nom est dans liste_mc
-    >>> s = '''a=+21.3e-5*85,b=-.1234,c=81.6   , d= -8 , e=_F(x=342.67,y=-1), f=+1.1, g=(1.3,-5,1.54E-3),
-    ... #POMPE_PRIMA._BOUCLE_N._2_ELEMENT_NUMERO:0239
-    ... h=_F(x=34.6,y=-1)'''
-    >>> construit_genea(s,['a','x'])
-    {0.000213: '21.3e-5'}
+
+       >>> s = '''a=+21.3e-5*85,b=-.1234,c=81.6   , d= -8 , e=_F(x=342.67,y=-1), f=+1.1, g=(1.3,-5,1.54E-3),
+       ... #POMPE_PRIMA._BOUCLE_N._2_ELEMENT_NUMERO:0239
+       ... h=_F(x=34.6,y=-1)'''
+       >>> construit_genea(s,['a','x'])
+       {0.000213: '21.3e-5'}
     """
     d={}
     mot=""
@@ -605,7 +609,10 @@ class PARSEUR_PYTHON:
            #index=epure1.find("=")
            #epure2=epure1[index+1:len(epure1)].replace("_F(","(")
            #dict_reel_concept=self.construit_genea(epure2)
-           dict_reel_concept=construit_genea(epure2,self.appli.liste_simp_reel)
+           if self.appli:
+             dict_reel_concept=construit_genea(epure2,self.appli.liste_simp_reel)
+           else:
+             dict_reel_concept={}
         if nomConcept !=None :
            if len(dict_reel_concept) != 0:
               self.appli.dict_reels[nomConcept]=dict_reel_concept
@@ -639,6 +646,7 @@ if __name__ == "__main__" :
     fichier = '/local/chris/ASTER/instals/STA8.2/astest/forma12c.comm'
     fichier = 'titi.comm'
     fichier = '../Aster/sdls300a.comm'
+    fichier = '../Aster/az.comm'
     texte = open(fichier,'r').read()
     class appli:
        dict_reels={}

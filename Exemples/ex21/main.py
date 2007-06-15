@@ -3,28 +3,24 @@
    Construction d'un item JDC
 """
 
-import prefs
-
 import sys
-sys.path[:0]=['../..','../../Editeur','../../Aster' ]
+sys.path[:0]=['../..','../../Aster/Cata','../../Aster']
 
-from Cata import cata_STA6
-cata=cata_STA6
-
-from analyse_catalogue import analyse_catalogue
-
-from Appli import Appli
-import jdcdisplay
+from cataSTA6 import cata
+from Editeur.autre_analyse_cata import analyse_catalogue
 
 f=open('ahlv100a.comm','r')
 text=f.read()
 f.close()
 
-fic_cata="../../Aster/Cata/cata_STA6.py"
-cata_ordonne = analyse_catalogue(None,fic_cata)
+from Appli import Appli
+from Editeur import jdcdisplay
 
-j=cata.JdC(procedure=text,cata=cata,nom="ahlv100a",
-            cata_ord_dico=cata_ordonne.entites)
+a=Appli()
+
+cata_ordonne,list_simp_reel = analyse_catalogue(cata)
+j=cata.JdC(procedure=text,appli=a,cata=cata,nom="ahlv100a",
+                cata_ord_dico=cata_ordonne)
 
 j.compile()
 if not j.cr.estvide():
@@ -36,7 +32,6 @@ if not j.cr.estvide():
    print j.cr
    sys.exit()
 
-a=Appli()
 
 d=jdcdisplay.JDCDISPLAY(j,"ahlv100a",appli=a,parent=a.root)
 

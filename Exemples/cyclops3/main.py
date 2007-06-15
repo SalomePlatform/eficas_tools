@@ -7,7 +7,7 @@
 """
 
 import sys
-sys.path[:0]=['../..','../../..']
+sys.path[:0]=['../..','../../Aster']
 
 import cata
 from cata import JdC

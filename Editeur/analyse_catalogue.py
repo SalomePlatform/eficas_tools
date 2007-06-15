@@ -24,7 +24,7 @@ import re,string,cPickle,os
 from Noyau.N_CR import CR
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.4.8.1 2006/03/10 14:38:20 eficas Exp $"
+__Id__="$Id: analyse_catalogue.py,v 1.5.12.1 2007-04-26 07:56:07 cchris Exp $"
 __version__="$Name:  $"
 #
 l_noms_commandes = ['OPER','PROC','MACRO','FORM']
@@ -186,9 +186,8 @@ class CATALOGUE_CATA:
                         f=open(self.fichier,'r')
                         self.texte_complet=f.read()
                         f.close()
-                except e:
+                except :
                         print "Impossible d'ouvrir le fichier :",self.fichier
-                        print e
                         self.cr.fatal("Impossible d'ouvrir le fichier :%s" %self.fichier)
 
         def constr_list_txt_cmd(self,text):

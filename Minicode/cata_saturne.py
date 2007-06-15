@@ -8,12 +8,8 @@ from Accas import *
 
 import ops
 
-JdC = JDC_CATA(code='ASTER',
+JdC = JDC_CATA(code='SATURNE',
                execmodul=None,
-               regles = (AU_MOINS_UN('DEBUT','POURSUITE'),
-                         AU_MOINS_UN('FIN'),
-                         A_CLASSER(('DEBUT','POURSUITE'),'FIN')
-                        )
               )
 
 # P. RASCLE MMN

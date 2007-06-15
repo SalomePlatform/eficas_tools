@@ -6,6 +6,8 @@ from Editeur import appli
 
 from config import ASTERDIR
 
+version="v8"
+
 def cdiff(text1,text2):
     return " ".join(difflib.context_diff(text1.splitlines(1),text2.splitlines(1)))
 
@@ -15,14 +17,14 @@ def make_tests(files):
 
        def setUp(self):
           if self.app == None:
-             self.app=appli.STANDALONE(version='v8')
+             self.app=appli.STANDALONE(version=version)
           pass
 
        def tearDown(self):
           CONTEXT.unset_current_step()
 
        i=0
-       for f in glob.glob(os.path.join(ASTERDIR,files)):
+       for f in glob.glob(os.path.join(ASTERDIR[version],files)):
           ff=open(f)
           text=ff.read()
           ff.close()

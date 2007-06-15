@@ -92,30 +92,29 @@ class Panel(Frame) :
       (à droite sous les onglets )
       """
       self.fr_but = Frame(self,height=30)
-      self.fr_but.pack(side='bottom',fill='x')
-      self.bouton_com = Button(self.fr_but,
-                               text = 'Commentariser',
-                               command = self.ajout_commentaire,
-                               width=14)
-      self.bouton_sup = Button(self.fr_but,
-                               text = "Supprimer",
-                               command=self.supprimer,
-                               width=14)
-      self.bouton_doc = Button(self.fr_but,
-                               text="Documentation",
-                               command=self.visu_doc,
-                               width=14)
-      self.bouton_cata = Button(self.fr_but,
-                                text = "Catalogue",
-                                command = self.show_catalogue,
-                                width=14)
+      self.fr_but.pack(side='bottom')
+      #self.fr_but.pack(side='bottom',fill='x')
+      #self.bouton_com = Button(self.fr_but, text = 'Commentariser', command = self.ajout_commentaire, width=14)
+      #self.bouton_sup = Button(self.fr_but, text = "Supprimer", command=self.supprimer, width=14)
+      #self.bouton_doc = Button(self.fr_but, text="Documentation", command=self.visu_doc, width=14)
+      #self.bouton_cata = Button(self.fr_but, text = "Catalogue", command = self.show_catalogue, width=14)
+      self.bouton_com = Button(self.fr_but, text = 'Commentariser', command = self.ajout_commentaire)
+      self.bouton_sup = Button(self.fr_but, text = "Supprimer", command=self.supprimer)
+      self.bouton_doc = Button(self.fr_but, text="Documentation", command=self.visu_doc)
+      self.bouton_cata = Button(self.fr_but, text = "Catalogue", command = self.show_catalogue)
+
       if self.parent.appli.CONFIGURATION.isdeveloppeur == 'OUI':
-          self.bouton_sup.place(relx=0.25,rely = 0.5,relheight = 0.8,anchor='center')
-          self.bouton_cata.place(relx=0.5,rely = 0.5,relheight = 0.8,anchor='center')
-          self.bouton_doc.place(relx=0.75,rely = 0.5,relheight = 0.8,anchor='center')
+          self.bouton_sup.pack(side='left',padx=5, pady=5)
+          self.bouton_cata.pack(side='left',padx=5, pady=5)
+          self.bouton_doc.pack(side='right',padx=5, pady=5)
+          #self.bouton_sup.place(relx=0.25,rely = 0.5,relheight = 0.8,anchor='center')
+          #self.bouton_cata.place(relx=0.5,rely = 0.5,relheight = 0.8,anchor='center')
+          #self.bouton_doc.place(relx=0.75,rely = 0.5,relheight = 0.8,anchor='center')
       else:
-          self.bouton_sup.place(relx=0.3,rely = 0.5,relheight = 0.8,anchor='center')
-          self.bouton_doc.place(relx=0.7,rely = 0.5,relheight = 0.8,anchor='center')
+          self.bouton_sup.pack(side='left',padx=5, pady=5)
+          self.bouton_doc.pack(side='right',padx=5, pady=5)
+          #self.bouton_sup.place(relx=0.3,rely = 0.5,relheight = 0.8,anchor='center')
+          #self.bouton_doc.place(relx=0.7,rely = 0.5,relheight = 0.8,anchor='center')
 
   def show_catalogue(self):
       try:

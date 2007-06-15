@@ -9,7 +9,7 @@
 """
 
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 import cata
 from cata import JdC
@@ -37,4 +37,3 @@ if not j.cr.estvide():
    print j.cr
    sys.exit()
 
-j.Build()

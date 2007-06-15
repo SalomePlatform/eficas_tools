@@ -63,7 +63,7 @@ class JDC(I_OBJECT.OBJECT):
       d=self.get_contexte_avant(etape)
       l=[]
       for k,v in d.items():
-        if type(v) != types.InstanceType : continue
+        if type(v) != types.InstanceType and not isinstance(v,object): continue
         # On considère que seul assd indique un type quelconque pas CO
         elif self.assd in types_permis :
            l.append(k)
@@ -113,7 +113,7 @@ class JDC(I_OBJECT.OBJECT):
              return 1
           elif type_ok == 'TXM' and v.__class__.__name__ == 'chaine' : 
              return 1
-          elif type(type_ok) != types.ClassType : 
+          elif type(type_ok) != types.ClassType and not isinstance(type_ok,type): 
              continue
           elif v.__class__ == type_ok or issubclass(v.__class__,type_ok):
              return 1

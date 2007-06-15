@@ -28,7 +28,7 @@ import traceback
 import types,string
 
 from Noyau import N_CR
-from Accas import MCSIMP,MCFACT
+from Accas import MCSIMP,MCFACT,MCList
 
 def entryPoint():
    """
@@ -83,13 +83,25 @@ class IniGenerator:
       """
       liste_mcfact=[]
       sect_defaut=''
+      if isinstance(obj,MCList):
+        if len(obj.data) > 1:
+          raise "Pas supporté"
+        else:
+          obj=obj.data[0]
+
       for mocle in obj.mc_liste:
-         if isinstance(mocle,MCFACT):
-            liste_mcfact.append(self.generMCFACT(mocle))
-         elif isinstance(mocle,MCSIMP):
-            sect_defaut=sect_defaut+self.generMCSIMP(mocle)
-         else:
-            self.cr.fatal("Entite inconnue ou interdite : "+`mocle`)
+        if isinstance(mocle,MCList):
+          if len(mocle.data) > 1:
+            raise "Pas supporté"
+          else:
+            liste_mcfact.append(self.generMCFACT(mocle.data[0]))
+        elif isinstance(mocle,MCFACT):
+          liste_mcfact.append(self.generMCFACT(mocle))
+        elif isinstance(mocle,MCSIMP):
+          sect_defaut=sect_defaut+self.generMCSIMP(mocle)
+        else:
+          self.cr.fatal("Entite inconnue ou interdite : "+`mocle`)
+
       self.text=''
       if sect_defaut != '':
          self.text="[DEFAULT]\n"+sect_defaut

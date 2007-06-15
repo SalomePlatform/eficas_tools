@@ -23,7 +23,10 @@ import os.path
 from math import sqrt,cos,sin,pi,tan,log,fabs,ceil,fmod,floor
 import aster
 import string
-from Utilitai.Utmess     import UTMESS
+try :
+    from Utilitai.Utmess     import UTMESS
+except :
+    pass
 
 # ------------------------------------------------------------------------------
 def ASCFON(RC,RM,EP,ORIEN,AZIM,AXEC,POS,Y):

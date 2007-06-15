@@ -56,7 +56,9 @@ class GEOM(ASSD):
       return self.nom
 
    def __convert__(cls,valeur):
-      return valeur
+      if isinstance(valeur, (str,unicode)):
+        return valeur
+      raise ValueError, 'On attend une chaine de caractères'
    __convert__=classmethod(__convert__)
 
 class geom(GEOM):pass

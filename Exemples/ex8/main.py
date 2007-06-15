@@ -15,7 +15,7 @@
 """
 
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 from Accas import SIMP,FACT,BLOC
 
@@ -48,4 +48,5 @@ for d in ({'a':1},
    else:
       print "L'objet MCBLOC basé sur le dictionnaire %s n'est pas valide " % d
       print cr
+   assert o.isvalid() == 1
 

@@ -16,7 +16,7 @@
 """
 
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 from Accas import SIMP,FACT
 
@@ -34,11 +34,11 @@ else:
    print cr
 
 
-for d in ({'mcf1':{'a':1}},
-          {'mcf1':{'a':1,'b':2}},
-          {'mcf1':{'a':1,'b':2},'mcf2':{'c':3}},
-          {'mcf1':{'a':1,'b':2},'mcf2':({'c':3},{'c':5})},
-         ):
+for d,valid in (({'mcf1':{'a':1}},1),
+                ({'mcf1':{'a':1,'b':2}},1),
+                ({'mcf1':{'a':1,'b':2},'mcf2':{'c':3}},1),
+                ({'mcf1':{'a':1,'b':2},'mcf2':({'c':3},{'c':5})},0),
+               ):
    # Création de l'objet MCFACT de nom mcf1
    o=cata(d,'mcf1',None)
    # Vérification objet MCFACT
@@ -48,4 +48,5 @@ for d in ({'mcf1':{'a':1}},
    else:
       print "L'objet MCFACT basé sur le dictionnaire %s n'est pas valide " % d
       print cr
+   assert o.isvalid() == valid, d
 

@@ -5,9 +5,10 @@
 """
 
 import sys
-sys.path[:0]=['../..','../../..']
+sys.path[:0]=['../..','../../Aster']
 
-from Accas import SIMP,FACT,OPER
+from Accas import SIMP,FACT,OPER,JDC_CATA
+JdC=JDC_CATA(code="ASTER")
 
 # Construction objet de définition
 
@@ -39,6 +40,7 @@ class context:
       self.mc_globaux={}
       self.cata_ordonne_dico=None
       self.par_lot="OUI"
+      self.UserError="UserError"
 
    def register(self,etape):
       self.etapes.append(etape)

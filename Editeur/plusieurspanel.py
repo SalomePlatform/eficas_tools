@@ -94,9 +94,11 @@ class PLUSIEURS_Panel(newSIMPPanel):
         - si la valeur est acceptable, elle est ajoutée dans la liste des valeurs
         - sinon elle est refusée
 
-      encorevalide vaut 1 si le validateur trouve l item et la liste correctes
-                        0 si le validateur trouve la valeur de l item incorrecte
-                       -1 si le validateur trouve la liste incorrecte
+      encorevalide peut prendre les valeurs suivantes :
+
+                   - valeur 1 si le validateur trouve l item et la liste correctes
+                   - valeur 0 si le validateur trouve la valeur de l item incorrecte
+                   - valeur -1 si le validateur trouve la liste incorrecte
       """
       valeur = name
       commentaire="Valeur incorrecte : ajout à la liste refusé"

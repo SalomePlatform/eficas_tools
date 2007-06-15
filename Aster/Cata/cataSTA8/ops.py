@@ -27,7 +27,6 @@ import pickle
 # Modules Eficas
 import Accas
 from Accas import ASSD
-from Utilitai.Utmess import UTMESS
 
 try:
    import aster
@@ -35,6 +34,7 @@ try:
    # au JDC
    import Build.B_CODE
    Build.B_CODE.CODE.codex=aster
+   from Utilitai.Utmess import UTMESS
 except:
    pass
 

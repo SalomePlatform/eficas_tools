@@ -30,6 +30,7 @@ class Formula:
     def __float__(self): return float(self.eval())
     def __pos__(self): return self  # positive
     def __neg__(self): return Unop('-', self)
+    def __abs__(self): return Unop('abs', self)
     def __add__(self, other): return Binop('+', self, other)
     def __radd__(self, other): return Binop('+', other, self)
     def __sub__(self, other): return Binop('-', self, other)
@@ -76,6 +77,7 @@ class Binop(Formula):
 
 class Unop(Formula):
     opmap = { '-': lambda x: -x,
+              'abs': lambda x: abs(x),
              }
     def __init__(self, op, arg):
         self._op = op

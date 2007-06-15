@@ -16,7 +16,7 @@
 """
 
 import sys
-sys.path[:0]=['../..']
+sys.path[:0]=['../..','../../Aster']
 
 import cata
 import cata1
@@ -48,6 +48,7 @@ if not j.cr.estvide():
    sys.exit()
 
 cr=j.report()
+assert j.isvalid() == 0
 if not j.cr.estvide():
    print j.cr
    sys.exit()

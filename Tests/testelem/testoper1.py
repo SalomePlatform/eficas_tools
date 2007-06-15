@@ -3,7 +3,9 @@ import cata1
 from cata1 import OP1,OP2,OP3,OP4,OP5,OP6,OP7
 from Accas import AsException,ASSD,OPER,SIMP,FACT,BLOC,_F
 
-class concept(ASSD):pass
+import Noyau
+
+class concept(ASSD,Noyau.AsBase):pass
 
 import unittest
 

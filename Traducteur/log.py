@@ -1,10 +1,24 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import os
 logger=logging.getLogger()
 
-def initialise() :
-    hdlr=logging.FileHandler('/tmp/convert.log','w')
+def initialise(flog=None):
+    if flog == None : 
+          MonHome=os.environ['HOME']
+          MaDir=MonHome+"/Eficas_install"
+          try :
+            os.mkdir(MaDir)
+          except :
+            pass
+          try :
+            os.listdir(MaDir)
+            flog=MaDir+"/convert.log"
+          except :
+            flog='/tmp/convert.log'
+
+    hdlr=logging.FileHandler(flog,'w')
     formatter = logging.Formatter('%(levelname)s: %(message)s')
     hdlr.setFormatter(formatter)
     logger.addHandler(hdlr) 

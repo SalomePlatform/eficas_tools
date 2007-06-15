@@ -200,7 +200,6 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
          
       for valeur in atraiter :
          encorevalide=self.node.item.valide_item(valeur)
-         # qdsjfkllllllllllllllllll
          if encorevalide :
             listecourante=self.Liste_valeurs.get_liste()
             encorevalide=self.node.item.valide_liste_partielle(valeur,listecourante)

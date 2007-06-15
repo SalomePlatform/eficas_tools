@@ -1,4 +1,4 @@
-#@ MODIF macr_lign_coupe_ops Macro  DATE 27/06/2006   AUTEUR THOMASSO D.THOMASSON 
+#@ MODIF macr_lign_coupe_ops Macro  DATE 09/05/2007   AUTEUR SALMONA L.SALMONA 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -231,9 +231,22 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,
 
   # Expression des contraintes aux noeuds ou des déplacements dans le repere local
   __remodr=__recou
+  icham=0
+  ioc2=0
+  mcACTION=[]
   if AsType(RESULTAT).__name__ in ('evol_elas','evol_noli') :
-   for m in LIGN_COUPE :
+   if  NOM_CHAM in ('DEPL','SIEF_ELNO_ELGA','SIGM_NOEU_DEPL','SIGM_NOEU_SIEF','SIGM_NOEU_ELGA','SIGM_NOEU_COQU'):icham=1
+  # Gestion du calcul en repère local - VECT_Y
+   rep_local=0
+   if m['NB_POINTS'] !=None :
       if m['VECT_Y'] !=None :
+         if icham: rep_local=1
+         else :
+           UTMESS('A','MACR_LIGN_COUPE','LE CHAMP '+NOM_CHAM+' N EST PAS TRAITE PAR MACR_LIGNE_COUPE EN REPERE LOCAL.'
+                   +'LE CALCUL EST EFFECTUE EN REPERE GLOBAL.')
+
+   for m in LIGN_COUPE :
+      if rep_local:
         epsi=0.00000001
         # --- determination des angles nautiques
         cx1=m['COOR_EXTR'][0]-m['COOR_ORIG'][0]
@@ -299,7 +312,6 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,
         alpha=alpha*180/math.pi
         beta=beta*180/math.pi
         gamma=gamma*180/math.pi
-
         # --- MODI_REPERE
         motscles={}
         motscles['MODI_CHAM']=[]
@@ -313,7 +325,7 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,
               LCMP=['DX','DY','DZ']
               TYPE_CHAM='VECT_3D'
            motscles['MODI_CHAM'].append(_F(NOM_CHAM=NOM_CHAM,NOM_CMP=LCMP,TYPE_CHAM=TYPE_CHAM),)
-        elif NOM_CHAM in ('SIGM_NOEU_DEPL','SIGM_NOEU_SIEF','SIGM_NOEU_ELGA','SIGM_NOEU_COQU'):
+        elif NOM_CHAM in ('SIGM_NOEU_DEPL','SIEF_ELNO_ELGA','SIGM_NOEU_SIEF','SIGM_NOEU_ELGA','SIGM_NOEU_COQU'):
            if dime == 2:
               LCMP=['SIXX','SIYY','SIZZ','SIXY']
               TYPE_CHAM='TENS_2D'
@@ -321,6 +333,7 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,
               LCMP=['SIXX','SIYY','SIZZ','SIXY','SIXZ','SIYZ']
               TYPE_CHAM='TENS_3D'
            motscles['MODI_CHAM'].append(_F(NOM_CHAM=NOM_CHAM,NOM_CMP=LCMP,TYPE_CHAM=TYPE_CHAM),)
+
         # DEFI_REPERE
         ANGL_NAUT=[]
         ANGL_NAUT.append(alpha)
@@ -330,29 +343,62 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,
         motscles['DEFI_REPERE'].append(_F(REPERE='UTILISATEUR',ANGL_NAUT=ANGL_NAUT),)
         __remodr=MODI_REPERE(RESULTAT=__recou,**motscles)
 
+        if m['NB_POINTS'] !=None :
+          ioc2=ioc2+1
+          groupe='LICOU'+str(ioc2)
+          if m['INTITULE'] !=None : intitl=m['INTITULE']
+          else                    : intitl='l.coupe'+str(ioc2)
+        elif m['GROUP_NO']!=None :
+          groupe=m['GROUP_NO'].ljust(8).upper()
+          if m['INTITULE'] !=None : intitl=m['INTITULE']
+          else                    : intitl=groupe
+        mcACTION.append( _F(INTITULE  = intitl,
+                            RESULTAT  = __remodr,
+                            GROUP_NO  = groupe,
+                            NOM_CHAM  = NOM_CHAM,
+                            TOUT_CMP  = 'OUI',
+                            OPERATION = 'EXTRACTION', )           )
+
+      else:
 
 
   # Production d'une table pour toutes les lignes de coupe
-
-  ioc2=0
-  mcACTION=[]
-  for m in LIGN_COUPE :
-      if m['NB_POINTS'] !=None :
-        ioc2=ioc2+1
-        groupe='LICOU'+str(ioc2)
-        if m['INTITULE'] !=None : intitl=m['INTITULE']
-        else                    : intitl='l.coupe'+str(ioc2)
-      elif m['GROUP_NO']!=None :
-        groupe=m['GROUP_NO'].ljust(8).upper()
-        if m['INTITULE'] !=None : intitl=m['INTITULE']
-        else                    : intitl=groupe
-      mcACTION.append( _F(INTITULE  = intitl,
-                          RESULTAT  = __remodr,
-                          GROUP_NO  = groupe,
-                          NOM_CHAM  = NOM_CHAM,
-                          TOUT_CMP  = 'OUI',
-                          OPERATION = 'EXTRACTION', )           )
-
+        for m in LIGN_COUPE :
+             if m['NB_POINTS'] !=None :
+              ioc2=ioc2+1
+              groupe='LICOU'+str(ioc2)
+              if m['INTITULE'] !=None : intitl=m['INTITULE']
+              else                    : intitl='l.coupe'+str(ioc2)
+             elif m['GROUP_NO']!=None :
+              groupe=m['GROUP_NO'].ljust(8).upper()
+              if m['INTITULE'] !=None : intitl=m['INTITULE']
+              else                    : intitl=groupe
+             mcACTION.append( _F(INTITULE  = intitl,
+                                RESULTAT  = __recou,
+                                GROUP_NO  = groupe,
+                                NOM_CHAM  = NOM_CHAM,
+                                TOUT_CMP  = 'OUI',
+                                OPERATION = 'EXTRACTION', )           )
+ 
+  elif AsType(RESULTAT).__name__ in ('evol_ther',) :
+     for m in LIGN_COUPE :
+        if m['NB_POINTS'] !=None :
+          ioc2=ioc2+1
+          groupe='LICOU'+str(ioc2)
+          if m['INTITULE'] !=None : intitl=m['INTITULE']
+          else                    : intitl='l.coupe'+str(ioc2)
+        elif m['GROUP_NO']!=None :
+          groupe=m['GROUP_NO'].ljust(8).upper()
+          if m['INTITULE'] !=None : intitl=m['INTITULE']
+          else                    : intitl=groupe
+        mcACTION.append( _F(INTITULE  = intitl,
+                            RESULTAT  = __recou,
+                            GROUP_NO  = groupe,
+                            NOM_CHAM  = NOM_CHAM,
+                            TOUT_CMP  = 'OUI',
+                            OPERATION = 'EXTRACTION', )           )
+ 
+ 
   __tabitm=POST_RELEVE_T(ACTION=mcACTION,);
 
   # on repasse par les tables python pour supprimer les paramètres inutiles
@@ -360,19 +406,11 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,
 
   self.DeclareOut('nomres',self.sd)
   dictab=__tabitm.EXTR_TABLE()
-  listpara=dictab.para
-  listpara.remove('NOEUD')
-  listpara.remove('RESU')
 
-  coltab=[]
-  for key in listpara :
-      val=dictab[key].values()[key]
-      if   type(val[0])==types.IntType :
-         coltab.append(_F(PARA=key,LISTE_I=val))
-      elif type(val[0])==types.FloatType :
-         coltab.append(_F(PARA=key,LISTE_R=val))
-      elif type(val[0])==types.StringType :
-         coltab.append(_F(PARA=key,LISTE_K=val,TYPE_K='K16'))
-  nomres=CREA_TABLE(LISTE=coltab)
+  del dictab['NOEUD']
+  del dictab['RESU']
+  dprod = dictab.dict_CREA_TABLE()
+
+  nomres=CREA_TABLE(**dprod)
 
   return ier

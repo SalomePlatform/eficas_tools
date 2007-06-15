@@ -33,7 +33,7 @@ from Noyau import N_CO
 # pour faire en sorte que isinstance(o,ASSD) marche encore après 
 # dérivation
 
-class ASSD(N_ASSD.ASSD,I_ASSD.ASSD):pass
+class ASSD(I_ASSD.ASSD,N_ASSD.ASSD):pass
 #class LASSD(I_LASSD.LASSD,N_LASSD.LASSD):pass
 class LASSD(I_LASSD.LASSD):pass
 

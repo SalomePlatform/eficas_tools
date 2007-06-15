@@ -200,5 +200,17 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
      except:
         return ''
 
+   def cree_dict_valeurs(self,liste=[],condition=0):
+     dico={}
+     return dico
+
+   def update_condition_bloc(self):
+     """
+       Realise l'update des blocs conditionnels fils de self
+       et propage au parent (rien a faire pour nuplet)
+     """
+
+
+
 
 
