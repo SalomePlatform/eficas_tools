@@ -801,7 +801,8 @@ class ListeChoix :
         self.nBlabel = 0
         self.dico_place={}
         for objet in self.liste :
-          if type(objet) == types.InstanceType:
+          if type(objet) == types.InstanceType or isinstance(objet,object):
+             #instance ancienne mode ou nouvelle mode
               try:
                   mot = objet.nom
               except:

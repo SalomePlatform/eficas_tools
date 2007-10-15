@@ -29,6 +29,7 @@ from Noyau.N_MCSIMP import MCSIMP
 from Noyau.N_MCFACT import MCFACT
 from Noyau.N_MCBLOC import MCBLOC
 import I_OBJECT
+import Validation
 
 import CONNECTOR
 
@@ -406,3 +407,8 @@ class MCCOMPO(I_OBJECT.OBJECT):
   def delete_mc_global(self):
      for motcle in self.mc_liste :
          motcle.delete_mc_global()
+
+  def init_modif_up(self):
+    Validation.V_MCCOMPO.MCCOMPO.init_modif_up(self)
+    CONNECTOR.Emit(self,"valid")
+

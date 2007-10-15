@@ -33,6 +33,7 @@ from Noyau.N_ETAPE import ETAPE
 from Noyau.N_Exception import AsException
 from Extensions import commentaire,parametre,parametre_eval
 import CONNECTOR
+import Validation
 
 class LASSD:
    pass
@@ -831,3 +832,10 @@ class JDC(I_OBJECT.OBJECT):
          linecache.cache[file]=0,0,string.split(text,'\n'),file
       return file,text
 
+   def isvalid(self,cr='non'):
+     if hasattr(self,'valid'): old_valid=self.valid
+     else:old_valid=0
+     valid=Validation.V_JDC.JDC.isvalid(self,cr)
+     if valid != old_valid:
+       CONNECTOR.Emit(self,"valid")
+     return valid

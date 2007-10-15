@@ -27,6 +27,8 @@ myrepr.maxstring = 100
 myrepr.maxother = 100
 
 from Noyau.N_utils import repr_float
+import Validation
+import CONNECTOR
 
 # Attention : les classes ASSD,.... peuvent etre surchargées
 # dans le package Accas. Il faut donc prendre des précautions si
@@ -582,3 +584,6 @@ class MCSIMP(I_OBJECT.OBJECT):
         verif=verif+self.verif_typeihm(v,cr)
       return verif
 
+  def init_modif_up(self):
+    Validation.V_MCSIMP.MCSIMP.init_modif_up(self)
+    CONNECTOR.Emit(self,"valid")

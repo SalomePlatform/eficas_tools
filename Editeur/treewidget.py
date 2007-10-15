@@ -28,7 +28,7 @@ from Ihm import CONNECTOR
 
 #
 __version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.31.12.1 2007-04-26 07:56:07 cchris Exp $"
+__Id__="$Id: treewidget.py,v 1.32.2.1 2007-06-15 16:23:33 cchris Exp $"
 #
 
 Fonte_Standard = fontes.standard
@@ -188,13 +188,13 @@ class Node :
     def __init__(self,parent,item,command=None,rmenu=None):
         self.parent = parent
         self.item = item
-        self.connect()
         self.command = command
         self.rmenu=rmenu
         self.tree = self.parent.tree
         self.appli = self.parent.appli
         self.canvas = self.parent.canvas
         self.init()
+        self.connect()
 
     def init(self):
         self.state='collapsed'
@@ -541,7 +541,6 @@ class Node :
         self.x = x
         self.y = y
         self.lasty = y
-        self.displayed = 1
         self.id=[]
         # choix de l'icone à afficher : + ou -
         if self.item.IsExpandable():
@@ -570,6 +569,7 @@ class Node :
             self.image_id = None
         # affichage du texte : nom de l'objet (ETAPE ou MOT-CLE) et sa valeur
         self.drawtext()
+        self.displayed = 1
         if self.state == 'expanded' :
             if not self.children : self.build_children()
             if len(self.children) > 0:

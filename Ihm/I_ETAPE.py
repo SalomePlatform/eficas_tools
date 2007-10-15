@@ -33,6 +33,7 @@ import traceback
 import Noyau
 from Noyau import N_Exception
 from Noyau.N_Exception import AsException
+import Validation
 # fin import à résorber
 
 # Modules EFICAS
@@ -473,4 +474,10 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
          self.id=None
          self.niveau=None
          self.UserError="UserError"
+
+   def report(self):
+     cr= Validation.V_ETAPE.ETAPE.report(self)
+     #rafraichissement de la validité de l'etape (probleme avec l'ordre dans les macros : etape puis mots cles)
+     self.isvalid()
+     return cr
 
