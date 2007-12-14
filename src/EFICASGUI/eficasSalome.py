@@ -27,6 +27,7 @@ import eficasConfig
 
 sys.path[:0]=[os.path.join( eficasConfig.eficasPath,'Aster'),
               os.path.join( eficasConfig.eficasPath,'Homard'),
+              os.path.join( eficasConfig.eficasPath,'InterfaceTK'),
               os.path.join( eficasConfig.eficasPath,'Editeur'),
               eficasConfig.eficasPath,
              ]
@@ -41,8 +42,12 @@ HOMARD = "HOMARD"
 
 
 import Editeur    
-from Editeur import eficas
-from Editeur import splash
+try :
+   from Editeur import eficas
+   from Editeur import splash
+except :
+   from InterfaceTK import eficas
+   from InterfaceTK import splash
 
 import salome
 import meshGui
@@ -195,16 +200,16 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             session.parse( eficasArg )
                         
         
-        #----------------------------  initialisation EFICAS  -----------------  
+        #----------------------------------------  initialisation EFICAS  --------------------------  
         splash.init_splash( self, code = code, titre = "Lancement d'EFICAS pour %s" %code )
         splash._splash.configure( text="Chargement d'EFICAS en cours.\n Veuillez patienter ..." )
         # différence eficas 1.7 et 1.8
         
                
-        eficas.EFICAS.__init__( self, self, code = code )
+        eficas.EFICAS.__init__( self, self, code = code , salome = 1)
         
         
-        #----------------------------------------------------------------------
+        #---------------------------------------------------------------------------------------------
         
         
         """
@@ -218,7 +223,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         print 'CS_pbruno size (%s, %s )'%( size.width(), size.height () )
         embedded.resize( size.width(), size.height () )
         embedded.setWFlags(  qt.Qt.WDestructiveClose | qt.Qt.WStyle_Customize | qt.Qt.WStyle_StaysOnTop )
-        #----------------------------------------------------------------------
+        #---------------------------------------------------------------------------------------------
         """
         
         #--------------- spécialisation EFICAS dans SALOME  -------------------                
