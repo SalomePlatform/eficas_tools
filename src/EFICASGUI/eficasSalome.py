@@ -191,7 +191,6 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         Tkinter.Toplevel.__init__( self )
                         
         if Editeur.__dict__.has_key( 'session' ):
-            print 'CS_pbruno has_key session'
             from Editeur import session
             eficasArg = []
             eficasArg += sys.argv            
@@ -205,8 +204,18 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         splash._splash.configure( text="Chargement d'EFICAS en cours.\n Veuillez patienter ..." )
         # différence eficas 1.7 et 1.8
         
+        # compatibilite 1.12
+        V112=0
+        try :
+          from Editeur import appli
+          V112=1
+        except :
+          pass
                
-        eficas.EFICAS.__init__( self, self, code = code , salome = 1)
+        if V112 :
+            eficas.EFICAS.__init__( self, self, code = code )
+        else :
+            eficas.EFICAS.__init__( self, self, code = code , salome = 1)
         
         
         #---------------------------------------------------------------------------------------------
@@ -264,10 +273,6 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         gros plantage sinon )
         """                
         activeStudyId = salome.sg.getActiveStudyId()
-        #print 50*'='
-        #print 'activeStudyId->',activeStudyId
-        #print 'salome.myStudyId->',salome.myStudyId
-        #print 50*'='
         
         if activeStudyId == 0: # pas d'étude active
             return False
