@@ -173,7 +173,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
     a)la création de groupes de mailles dans le composant SMESH de SALOME
     b)la visualisation d'éléments géométrique dans le coposant GEOM de SALOME par sélection dans EFICAS
     """
-    def __init__( self, parent, code = None, fichier = None, module = studyManager.SEficas ):
+    def __init__( self, parent, code = None, fichier = None, module = studyManager.SEficas, version=None):
         """
         Constructeur.
                 
@@ -196,6 +196,8 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
             eficasArg += sys.argv            
             if fichier:
                 eficasArg += [ fichier ]
+            if version:
+                eficasArg += [ "-c", version ]
             session.parse( eficasArg )
                         
         
@@ -229,7 +231,7 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
         embedded.show()
         embedded.embedTk( self.winfo_id() )        
         size = embedded.sizeHint()
-        print 'CS_pbruno size (%s, %s )'%( size.width(), size.height () )
+        #print 'CS_pbruno size (%s, %s )'%( size.width(), size.height () )
         embedded.resize( size.width(), size.height () )
         embedded.setWFlags(  qt.Qt.WDestructiveClose | qt.Qt.WStyle_Customize | qt.Qt.WStyle_StaysOnTop )
         #---------------------------------------------------------------------------------------------
@@ -839,16 +841,16 @@ class MyEficas( Tkinter.Toplevel, eficas.EFICAS ):
 
         
 #-------------------------------------------------------------------------------------------------------        
-#           Point d'entré lancement EFICAS
+#           Point d'entree lancement EFICAS
 #
-def runEficas( code="ASTER", fichier=None, module = studyManager.SEficas ):
+def runEficas( code="ASTER", fichier=None, module = studyManager.SEficas, version=None ):
     global appli    
     if not appli: #une seul instance possible!        
-        appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier, module = module )
+        appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier, module = module, version=version )
         
         
  
-# pour compatibilité           
+# pour compatibilitee           
 def runHomard( code="HOMARD", fichier=None ):
     global appli    
     if not appli: #une seul instance possible!                        

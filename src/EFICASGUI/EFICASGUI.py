@@ -46,11 +46,11 @@ print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 #En V2, si on n'implémente pas cette méthode, le composant fonctionne
 #correctement. Un message "Attribute Error" apparait dans la trace.
 def setWorkSpace(workSpace):
-   print "EficasGUI --- setWorkSpace"
+   #print "EficasGUI --- setWorkSpace"
    global WORKSPACE
-   print workSpace
+   #print workSpace
    WORKSPACE=workSpace
-   print "WORKSPACE: ",WORKSPACE
+   #print "WORKSPACE: ",WORKSPACE
    # le desktop
    desktop=sgPyQt.getDesktop()
 
@@ -59,7 +59,7 @@ def setWorkSpace(workSpace):
 
    # recuperation du workspace
    ws=sgPyQt.getMainFrame()
-   print ws
+   #print ws
 
 # -----------------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ def setSettings():
    desktop=sgPyQt.getDesktop()
    global currentStudyId
    currentStudyId = sgPyQt.getStudyId()
-   print "setSettings: currentStudyId = " + str(currentStudyId)
+   #print "setSettings: currentStudyId = " + str(currentStudyId)
    # _CS_gbo_ Voir si on peut utiliser directement sgPyQt.getStudyId()
    # dans salomedsgui?
    
@@ -117,7 +117,7 @@ def definePopup(theContext, theObject, theParent):
    theObject = "100"
    theParent = "ObjectBrowser"
    a=salome.sg.getAllSelected()
-   print a
+   #print a
     
    selectedEntry = a[0]
    aType, aValue = studyManager.palStudy.getTypeAndValue( selectedEntry )
@@ -179,12 +179,11 @@ def runEficasHomard():
    
    
 
-def runEficasFichier():
+def runEficasFichier(version=None):
    """
    Lancement d'eficas pour ASTER
    si un fichier est sélectionné, il est ouvert dans eficas
    """
-   print "runEficasFichier"
    fileName = None
    code     = None
    a=salome.sg.getAllSelected()
@@ -209,10 +208,17 @@ def runEficasFichier():
    if code:
         #eficasSalome.runEficas(code,attr,studyId=currentStudyId)         
         #desktop=sgPyQt.getDesktop()        
-        eficasSalome.runEficas( code, fileName )
+        if version :
+            eficasSalome.runEficas( code, fileName, version=version)
+        else :
+            eficasSalome.runEficas( code, fileName)
         
 
+def runEficasFichierV8():
+    runEficasFichier(version="v8.5")
    
+def runEficasFichierV9():
+    runEficasFichier(version="v9.1")
 
 # Partie applicative
 
@@ -222,6 +228,8 @@ dict_command={
                 4041:runEficasFichier, #runEficas,
                 4046:runEficaspourHomard,
                 9042:runEficasFichier,
+                9043:runEficasFichierV8,
+                9044:runEficasFichierV9,
              }
              
 
