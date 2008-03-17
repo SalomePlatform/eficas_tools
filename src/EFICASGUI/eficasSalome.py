@@ -51,9 +51,13 @@ except :
 
 import salome
 import meshGui
-import visuDriver
+#__MEM__GBO import visuDriver
 import PALGUI_API
 import studyManager
+
+# __MEM__GBO L'import de visuDriver doit OBLIGATOIREMENT etre fait apres
+# l'import du studyManager pour que les initialisations se passent correctement
+import visuDriver
 
 #from qxembed import QXEmbed
 
