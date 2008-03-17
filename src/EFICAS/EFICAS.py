@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import EFICAS_ORB__POA
 
 import SALOMEDS__POA

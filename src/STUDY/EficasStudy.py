@@ -3,8 +3,14 @@ import salomedsgui
 import salome
 
 import SALOMEDS
-import GEOM
-import SMESH
+try :
+    import SMESH
+except :
+    pass
+try :
+    import SMESH
+except :
+    pass
 
 from Logger import Logger
 logger=Logger( "EficasStudy" )
@@ -258,8 +264,8 @@ class SalomeStudy(   salomedsgui.guiDS ):
             import sys
             type        = sys.exc_info()[0]
             value       = sys.exc_info()[1]            
-            print '>>>>CS_Pbruno StudyTree.getMainShapeEntry( entry = %s ) ' %entry
-            print 'type        = %s ,             value       = %s '%( type, value )
+            #print '>>>>CS_Pbruno StudyTree.getMainShapeEntry( entry = %s ) ' %entry
+            #print 'type        = %s ,             value       = %s '%( type, value )
             result = None
            
         return result
@@ -289,8 +295,8 @@ class SalomeStudy(   salomedsgui.guiDS ):
             import sys
             type        = sys.exc_info()[0]
             value       = sys.exc_info()[1]            
-            print '>>>>CS_Pbruno StudyTree.sameMainShape(  shapeEntry1 = %s , shapeEntry2 = %s )'%( shapeEntry1, shapeEntry2 )
-            print 'type        = %s ,             value       = %s '%( type, value )
+            #print '>>>>CS_Pbruno StudyTree.sameMainShape(  shapeEntry1 = %s , shapeEntry2 = %s )'%( shapeEntry1, shapeEntry2 )
+            #print 'type        = %s ,             value       = %s '%( type, value )
             result = None
            
         return result

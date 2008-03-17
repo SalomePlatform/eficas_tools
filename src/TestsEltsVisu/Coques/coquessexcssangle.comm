@@ -1,0 +1,19 @@
+
+
+DEBUT();
+
+maillage=LIRE_MAILLAGE();
+
+modele=AFFE_MODELE(MAILLAGE=maillage,
+                   AFFE=_F(TOUT='OUI',
+                           PHENOMENE='MECANIQUE',
+                           MODELISATION='DKT',),);
+P1 = 3;
+
+
+Affe=AFFE_CARA_ELEM(MODELE=modele,
+                    COQUE=_F(GROUP_MA='element2D',
+                             EPAIS=3.0,
+                             INER_ROTA='OUI',),);
+
+FIN();

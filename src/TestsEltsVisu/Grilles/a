@@ -1,0 +1,6 @@
+echo "self.monObjetVisu.Visualise()" > grilleanglerep.simul
+echo "self.monObjetVisu.Visualise()" > grilleanglerepssexc.simul
+echo "self.monObjetVisu.Visualise()" > grilleaxe.simul
+echo "self.monObjetVisu.Visualise()" > grilleaxessexc.simul
+echo "self.monObjetVisu.Visualise()" > grille.simul
+echo "self.monObjetVisu.Visualise()" > grillessexc.simul

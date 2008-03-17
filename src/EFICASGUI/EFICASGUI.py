@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
     Interface PyQt
 """
@@ -44,11 +46,11 @@ print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 #En V2, si on n'implémente pas cette méthode, le composant fonctionne
 #correctement. Un message "Attribute Error" apparait dans la trace.
 def setWorkSpace(workSpace):
-   print "EficasGUI --- setWorkSpace"
+   #print "EficasGUI --- setWorkSpace"
    global WORKSPACE
-   print workSpace
+   #print workSpace
    WORKSPACE=workSpace
-   print "WORKSPACE: ",WORKSPACE
+   #print "WORKSPACE: ",WORKSPACE
    # le desktop
    desktop=sgPyQt.getDesktop()
 
@@ -57,7 +59,7 @@ def setWorkSpace(workSpace):
 
    # recuperation du workspace
    ws=sgPyQt.getMainFrame()
-   print ws
+   #print ws
 
 # -----------------------------------------------------------------------------
 
@@ -80,7 +82,7 @@ def setSettings():
    desktop=sgPyQt.getDesktop()
    global currentStudyId
    currentStudyId = sgPyQt.getStudyId()
-   print "setSettings: currentStudyId = " + str(currentStudyId)
+   #print "setSettings: currentStudyId = " + str(currentStudyId)
    # _CS_gbo_ Voir si on peut utiliser directement sgPyQt.getStudyId()
    # dans salomedsgui?
    
@@ -106,24 +108,22 @@ def activeStudyChanged(ID):
    # ne marche pas car sg est supposé résider dans une etude
    # studyId=sg.getActiveStudyId()
    currentStudyId=ID
-   print "_CS_GBO_ : EFICASGUI.activeStudyChanged : currentStudyId = ", currentStudyId
-   print "_CS_GBO_ : EFICASGUI.activeStudyChanged : sgPyQt.getStudyId() = ", sgPyQt.getStudyId()
    
    studyManager.palStudy.setCurrentStudyID( currentStudyId ) #CS_pbruno
    
 
 def definePopup(theContext, theObject, theParent):    
-   print "EFICASGUI --- definePopup"
    theContext= ""
    theObject = "100"
    theParent = "ObjectBrowser"
    a=salome.sg.getAllSelected()
-   print a
+   #print a
     
    selectedEntry = a[0]
    aType, aValue = studyManager.palStudy.getTypeAndValue( selectedEntry )
    
-   if aType == studyManager.FICHIER_EFICAS_ASTER or aType == studyManager.FICHIER_EFICAS_HOMARD:
+   if aType == studyManager.FICHIER_EFICAS_ASTER or aType == studyManager.FICHIER_EFICAS_HOMARD \
+      or aType == studyManager.FICHIER_EFICAS_HOMARD:
         theObject="73"    
             
    return (theContext, theObject, theParent)
@@ -136,6 +136,20 @@ def customPopup(popup, theContext, theObject, theParent):
    popup.removeItem(99002)
    popup.removeItem(99003)
 
+
+def windows():
+    """
+    This method is called when GUI module is being created
+    and initialized.
+    Should return a map of the SALOME dockable windows id's
+    needed to be opened when module is activated.
+    """
+    print "ASTERGUI::windows"
+    from qt import Qt
+    winMap = {}
+    winMap[ SalomePyQt.WT_ObjectBrowser ] = Qt.DockLeft
+    winMap[ SalomePyQt.WT_PyConsole ]     = Qt.DockBottom
+    return winMap   
 
 # -----------------------------------------------------------------------------
 
@@ -156,22 +170,18 @@ def runEficaspourHomard():
    desktop=sgPyQt.getDesktop()
    eficasSalome.runEficas( "HOMARD" ) 
    
-   
-    
-def runEficasHomard():
-   print "runEficas"
-   #eficasSalome.runEficas("HOMARD")
-   #desktop=sgPyQt.getDesktop()
-   eficasSalome.runEficas( "HOMARD" )
+def runEficaspourOpenturns():
+   print "runEficas Pour Openturns"
+   desktop=sgPyQt.getDesktop()
+   eficasSalome.runEficas( "OPENTURNS" ) 
    
    
 
-def runEficasFichier():
+def runEficasFichier(version=None):
    """
    Lancement d'eficas pour ASTER
    si un fichier est sélectionné, il est ouvert dans eficas
    """
-   print "runEficasFichier"
    fileName = None
    code     = None
    a=salome.sg.getAllSelected()
@@ -187,25 +197,42 @@ def runEficasFichier():
       elif aType == studyManager.FICHIER_EFICAS_HOMARD:        
         fileName = aValue
         code     = "HOMARD"
+      elif aType == studyManager.FICHIER_EFICAS_OPENTURNS:        
+        fileName = aValue
+        code     = "OPENTURNS"
+      else:
+        fileName=None
+        code = "ASTER"
    else:        
         code = "ASTER"            
         
    if code:
         #eficasSalome.runEficas(code,attr,studyId=currentStudyId)         
         #desktop=sgPyQt.getDesktop()        
-        eficasSalome.runEficas( code, fileName )
+        if version :
+            eficasSalome.runEficas( code, fileName, version=version)
+        else :
+            eficasSalome.runEficas( code, fileName)
         
 
+def runEficasFichierV8():
+    runEficasFichier(version="v8.5")
    
+def runEficasFichierV9():
+    runEficasFichier(version="v9.1")
 
 # Partie applicative
 
 dict_command={
                 941:runEficasFichier,# runEficas,
                 946:runEficaspourHomard,
+                946:runEficaspourOpenturns,
                 4041:runEficasFichier, #runEficas,
                 4046:runEficaspourHomard,
+                4047:runEficaspourOpenturns,
                 9042:runEficasFichier,
+                9043:runEficasFichierV8,
+                9044:runEficasFichierV9,
              }
              
 

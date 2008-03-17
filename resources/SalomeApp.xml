@@ -7,6 +7,6 @@
   </section>
   <section name="resources">
     <!-- Module resources -->
-    <parameter name="EFICAS" value="${EFICAS_ROOT_DIR}/share/salome/resources"/>
+    <parameter name="EFICAS" value="${EFICAS_ROOT_DIR}/share/salome/resources/eficas"/>
   </section>
 </document>

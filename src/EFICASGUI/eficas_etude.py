@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # CE FICHIER EST CREE UNIQUEMENT POUR ASSURER LA COMPATIBILITE
 # ASCENDANTE DES VERSIONS DE EFICAS. NE PAS EDITER, MODIFIER eficasEtude.
