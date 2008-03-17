@@ -291,3 +291,26 @@ AC_OUTPUT_COMMANDS([ \
 ])
 
 ## do not delete this line
+
+ln -fs ${KERNEL_ROOT_DIR}/salome_adm ${ROOT_SRCDIR}
+
+AC_OUTPUT([ \
+	./salome_adm/unix/SALOMEconfig.h \
+	./salome_adm/unix/F77config.h \
+	./salome_adm/unix/sstream \
+	./salome_adm/unix/depend \
+	./adm_local/unix/make_omniorb \
+	./salome_adm/unix/envScript \
+	./adm_local/unix/make_commence \
+	./salome_adm/unix/make_conclude \
+	./salome_adm/unix/make_module \
+	./Makefile \
+	./doc/Makefile \
+	./idl/Makefile \
+	./src/Makefile \
+	./src/CONFIG/Makefile \
+	./src/EFICAS/Makefile \
+	./src/EFICASGUI/Makefile \
+	./src/STUDY/Makefile \
+])
+
