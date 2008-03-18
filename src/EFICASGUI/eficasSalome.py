@@ -51,12 +51,12 @@ except :
 
 import salome
 import meshGui
-#__MEM__GBO import visuDriver
 import PALGUI_API
 import studyManager
 
-# __MEM__GBO L'import de visuDriver doit OBLIGATOIREMENT etre fait apres
-# l'import du studyManager pour que les initialisations se passent correctement
+# __MEM_GBO: on préfère importer visuDriver après studyManager car le premier dépend du second.
+# Cependant, le problème est résolu à sa source: le fichier visuDriver importe le studyManager.
+# Ainsi, il n'est plus nécessaire de se préoccuper explicitement de l'ordre des import.  
 import visuDriver
 
 #from qxembed import QXEmbed
