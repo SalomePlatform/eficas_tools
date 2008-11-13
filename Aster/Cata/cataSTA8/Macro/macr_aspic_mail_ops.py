@@ -1,4 +1,4 @@
-#@ MODIF macr_aspic_mail_ops Macro  DATE 25/09/2006   AUTEUR GALENNE E.GALENNE 
+#@ MODIF macr_aspic_mail_ops Macro  DATE 07/05/2008   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -485,9 +485,10 @@ def macr_aspic_mail_ops(self,EXEC_MAILLAGE,TYPE_ELEM,RAFF_MAIL,TUBULURE,
   VAL4  = 3.0 * sqrt( RMT    * EPT2 )
   LZMAX = max ( VAL1 , VAL2, VAL3, VAL4 )
   ZMAXC = LZMAX + ( DEC/2.0 ) + D1 + D2
-  LOK = ( abs(ZMAX-ZMAXC) <= EPSI * abs(ZMAXC) )
+  LOK = ( (ZMAX-ZMAXC) >= -1.* EPSI * abs(ZMAXC) )
   if not LOK :
-    message=         ' erreur donnees \n'
+    message= "La valeur de Z_MAX (cote maximale de la tubulure) est inférieure à la longueur\n" 
+    message=message+ " d'amortissement calculée :          \n"
     message=message+ ' Z_MAX FOURNIE   :  %.2f \n'%ZMAX
     message=message+ ' Z_MAX CALCULEE  :  %.2f \n'%ZMAXC
     UTMESS('F', "MACR_ASPIC_MAIL", message)
@@ -496,7 +497,7 @@ def macr_aspic_mail_ops(self,EXEC_MAILLAGE,TYPE_ELEM,RAFF_MAIL,TUBULURE,
   VAL2  = 3.0 * sqrt( RMC    * EPC )
   LXMAX = max( VAL1 , VAL2 )
   XMAXC = LXMAX + ( DET1 / 2.0 )
-  LOK = ( abs(XMAX-XMAXC) <= EPSI * abs(XMAXC) )
+  LOK = ( (XMAX-XMAXC) >= -1.* EPSI * abs(XMAXC) )
   if not LOK :
     message=         ' erreur donnees \n'
     message=message+ ' Z_MAX FOURNIE   :  %.2f \n'%ZMAX

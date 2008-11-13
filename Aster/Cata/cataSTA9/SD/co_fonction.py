@@ -1,27 +1,28 @@
-#@ MODIF co_fonction SD  DATE 30/05/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF co_fonction SD  DATE 22/04/2008   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 
 import Accas
 from SD import *
-from sd_fonction import sd_fonction
+from sd_fonction import sd_fonction_aster
 
+import os
 import Numeric
 from math import pi
 
@@ -42,7 +43,7 @@ class fonction_class(ASSD):
         objev = '%-19s.PROL' % self.get_name()
         prol = aster.getvectjev(objev)
         if prol == None:
-           UTMESS('F', 'fonction.Parametres', "Objet '%s' inexistant" % objev)
+           UTMESS('F', 'SDVERI_2', valk=[objev])
         dico={
          'INTERPOL'    : [prol[1][0:3],prol[1][4:7]],
          'NOM_PARA'    : prol[2][0:16].strip(),
@@ -74,11 +75,12 @@ class fonction_class(ASSD):
       from Utilitai.Graph import Graph
       gr=Graph()
       gr.AjoutCourbe(Val=self.Valeurs(),
-            Lab=[self.Parametres()['NOM_PARA'],self.Parametres()['NOM_RESU']])
+            Lab=[self.Parametres()['NOM_PARA'],self.Parametres()['NOM_RESU']],
+            Leg=os.linesep.join(self.TITR.get()) )
       gr.Trace(FORMAT=FORMAT,**kargs)
 
 # -----------------------------------------------------------------------------
-class fonction_sdaster(fonction_class, sd_fonction):
+class fonction_sdaster(fonction_class, sd_fonction_aster):
    def convert(self,arg='real'):
       """
       Retourne un objet de la classe t_fonction
@@ -104,7 +106,7 @@ class fonction_sdaster(fonction_class, sd_fonction):
         vale = '%-19s.VALE' % self.get_name()
         lbl = aster.getvectjev(vale)
         if lbl == None:
-           UTMESS('F', 'fonction.Valeurs', "Objet '%s' inexistant" % vale)
+          UTMESS('F', 'SDVERI_2', valk=[vale])
         lbl = list(lbl)
         dim = len(lbl)/2
         lx = lbl[0:dim]
@@ -143,7 +145,7 @@ class para_sensi(fonction_sdaster):
    pass
 
 # -----------------------------------------------------------------------------
-class fonction_c(fonction_class, sd_fonction):
+class fonction_c(fonction_class, sd_fonction_aster):
    def convert(self,arg='real'):
       """
       Retourne un objet de la classe t_fonction ou t_fonction_c,
@@ -187,7 +189,7 @@ class fonction_c(fonction_class, sd_fonction):
          vale = '%-19s.VALE' % self.get_name()
          lbl = aster.getvectjev(vale)
          if lbl == None:
-            UTMESS('F', 'fonction.Valeurs', "Objet '%s' inexistant" % vale)
+           UTMESS('F', 'SDVERI_2', valk=[vale])
          lbl = list(lbl)
          dim=len(lbl)/3
          lx=lbl[0:dim]
@@ -221,9 +223,11 @@ class fonction_c(fonction_class, sd_fonction):
       if self.par_lot() :
          raise Accas.AsException("Erreur dans fonction_c.Trace en PAR_LOT='OUI'")
       from Utilitai.Graph import Graph
+      para = self.Parametres()
       gr=Graph()
       gr.AjoutCourbe(Val=self.Valeurs(),
-       Lab=[self.Parametres()['NOM_PARA'],self.Parametres()['NOM_RESU'],'IMAG'])
+         Lab=[para['NOM_PARA'], '%s_R' % para['NOM_RESU'], '%s_I' % para['NOM_RESU']],
+         Leg=os.linesep.join(self.TITR.get()) )
       gr.Trace(FORMAT=FORMAT,**kargs)
    def __call__(self,val):
       ### Pour EFICAS : substitution de l'instance de classe
@@ -231,11 +235,11 @@ class fonction_c(fonction_class, sd_fonction):
       if isinstance(val, ASSD):
          val=val.valeur
       ###
-      __ff=self.convert()
+      __ff=self.convert(arg='complex')
       return __ff(val)
 
 # -----------------------------------------------------------------------------
-class nappe_sdaster(fonction_class, sd_fonction):
+class nappe_sdaster(fonction_class, sd_fonction_aster):
    def convert(self):
       """
       Retourne un objet de la classe t_nappe, représentation python de la nappe
@@ -271,7 +275,7 @@ class nappe_sdaster(fonction_class, sd_fonction):
       # les cles de dicv sont 1,...,N (indice du parametre)
       lpar=aster.getvectjev(nsd+'.PARA')
       if lpar == None:
-         UTMESS('F', 'fonction.Valeurs', "Objet '%s' inexistant" % (nsd+'.PARA'))
+         UTMESS('F', 'SDVERI_2', valk=[nsd+'.PARA'])
       lval=[]
       for k in range(len(dicv)):
          lbl=dicv[k+1]
@@ -292,22 +296,22 @@ class nappe_sdaster(fonction_class, sd_fonction):
       objev = '%-19s.PROL' % self.get_name()
       prol=aster.getvectjev(objev)
       if prol == None:
-         UTMESS('F', 'fonction.Parametres', "Objet '%s' inexistant" % objev)
+         UTMESS('F', 'SDVERI_2', valk=[objev])
       dico={
          'INTERPOL'      : [prol[1][0:3],prol[1][4:7]],
          'NOM_PARA'      : prol[2][0:16].strip(),
          'NOM_RESU'      : prol[3][0:16].strip(),
          'PROL_DROITE'   : TypeProl[prol[4][1]],
          'PROL_GAUCHE'   : TypeProl[prol[4][0]],
-         'NOM_PARA_FONC' : prol[5][0:4].strip(),
+         'NOM_PARA_FONC' : prol[6][0:4].strip(),
       }
       lparf=[]
-      nbf=(len(prol)-6)/2
+      nbf=(len(prol)-7)/2
       for i in range(nbf):
          dicf={
-            'INTERPOL_FONC'    : [prol[6+i*2][0:3],prol[6+i*2][4:7]],
-            'PROL_DROITE_FONC' : TypeProl[prol[7+i*2][1]],
-            'PROL_GAUCHE_FONC' : TypeProl[prol[7+i*2][0]],
+            'INTERPOL_FONC'    : [prol[7+i*2][0:3],prol[7+i*2][4:7]],
+            'PROL_DROITE_FONC' : TypeProl[prol[8+i*2][1]],
+            'PROL_GAUCHE_FONC' : TypeProl[prol[8+i*2][0]],
          }
          lparf.append(dicf)
       return [dico,lparf]
@@ -323,5 +327,7 @@ class nappe_sdaster(fonction_class, sd_fonction):
       lv=self.Valeurs()[1]
       dp=self.Parametres()[0]
       for lx,ly in lv:
-         gr.AjoutCourbe(Val=[lx,ly], Lab=[dp['NOM_PARA_FONC'],dp['NOM_RESU']])
+         gr.AjoutCourbe(Val=[lx,ly], Lab=[dp['NOM_PARA_FONC'],dp['NOM_RESU']],
+            Leg=os.linesep.join(self.TITR.get()) )
       gr.Trace(FORMAT=FORMAT,**kargs)
+

@@ -37,6 +37,9 @@ def main():
    copyfiles('.',path_distrib,['LICENSE.TERMS','INSTALL','NEWS'])
 
    copyfiles('../Editeur',os.path.join(path_distrib,'Editeur'),['*.py','faqs.txt'])
+   copyfiles('../InterfaceTK',os.path.join(path_distrib,'InterfaceTK'),['*.py','faqs.txt'])
+   copyfiles('../InterfaceQT',os.path.join(path_distrib,'InterfaceQT'),['*.py'])
+   copyfiles('../Ui',os.path.join(path_distrib,'Ui'),['*.ui','makefile'])
    copyfiles('../Traducteur',os.path.join(path_distrib,'Traducteur'),['*.py'])
    copyfiles('../Ihm',os.path.join(path_distrib,'Ihm'),['*.py'])
    copyfiles('../Extensions',os.path.join(path_distrib,'Extensions'),['*.py'])
@@ -50,9 +53,11 @@ def main():
    # Code_Aster
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
                                                             'editeur.ini',
+                                                            'editeur_salome.ini',
                                                             'eficas_aster.py',
 							    'test_eficas.py',
-							    'style.py'
+							    'style.py',
+                                                            '__init__.py'
                                                            ])
 
    # Les Catalogues, Macros, Materiaux et SD
@@ -86,6 +91,7 @@ def main():
    copyfiles('../generator',os.path.join(path_distrib,'generator'),['*.py'])
    copyfiles('../Editeur/icons',os.path.join(path_distrib,'Editeur','icons'),['*.gif'])
    copyfiles('../Editeur/Patrons',os.path.join(path_distrib,'Editeur','Patrons'),['*.com*'])
+   copyfiles('../Editeur/Patrons/ASTER',os.path.join(path_distrib,'Editeur','Patrons','ASTER'),['*.com*'])
 
    copyfiles(os.path.join(path_Noyau,'Noyau'),os.path.join(path_distrib,'Noyau'),['*.py'])
    copyfiles(os.path.join(path_Noyau,'Validation'),os.path.join(path_distrib,'Validation'),['*.py'])

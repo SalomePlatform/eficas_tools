@@ -6,7 +6,7 @@ import difflib
 import compare
 
 import prefs
-from Editeur import appli
+from InterfaceTK import appli
 
 def add_param(j,pos,nom,valeur):
     co=j.addentite("PARAMETRE",pos)
@@ -378,9 +378,9 @@ class TestCase(unittest.TestCase):
       ! Concept retourné non défini !
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Mot-clé simple : VALE
-         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-         ! 'sin(1.,2)' n'est pas d'un type autorisé: ('R',) !
-         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         ! 'sin(1.,2)' (de type <type 'str'>) n'est pas d'un type autorisé: ('R',) !
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Fin Mot-clé simple : VALE
    Fin Etape : DEFI_LIST_REEL
    Etape : DEFI_LIST_REEL    ligne : ...
@@ -388,9 +388,9 @@ class TestCase(unittest.TestCase):
       ! Concept retourné non défini !
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Mot-clé simple : VALE
-         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-         ! 'aaa(1.)' n'est pas d'un type autorisé: ('R',) !
-         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         ! 'aaa(1.)' (de type <type 'str'>) n'est pas d'un type autorisé: ('R',) !
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Fin Mot-clé simple : VALE
    Fin Etape : DEFI_LIST_REEL
 FIN CR validation :SansNom

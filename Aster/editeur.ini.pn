@@ -20,15 +20,14 @@
 
 import os
 
-import prefs
+from Aster import prefs
 
 rep_cata = os.path.join(prefs.REPINI,'Cata')
-rep_homard = os.path.join(prefs.REPINI,'../Homard')
 rep_Pmw = os.path.join(prefs.REPINI,'../Pmw')
 
 # Accès à la documentation Aster
 path_doc              = os.path.join(rep_cata,'..','Doc')
-exec_acrobat    =       "/usr/bin/acroread"
+exec_acrobat    =       "acroread"
 # Utilisateur/Développeur
 isdeveloppeur   =       "NON"
 path_cata_dev   =       "/tmp/cata"
@@ -38,17 +37,11 @@ rep_travail     =   "/tmp"
 initialdir=os.curdir
 
 # Choix des catalogues
-rep_mat="//home/noyret/Install_Eficas/materiau"
+rep_mat=os.path.join(rep_cata,'..','materiau')
 
 catalogues = (
-              #('ASTER','v5',os.path.join(rep_cata,'cataSTA5'),'asterv5'),
-              #('ASTER','v6',os.path.join(rep_cata,'cataSTA6'),'python6'),
-              #('ASTER','v73',os.path.join(rep_cata,'cataSTA73'),'python','defaut'),
-              #('ASTER','v74',os.path.join(rep_cata,'cataSTA74'),'python'),
-              ('ASTER','v7.6',os.path.join(rep_cata,'cataSTA76'),'python'),
-              #('ASTER','v8',os.path.join(rep_cata,'cataSTA8'),'python','defaut'),
-              ('ASTER','v8.3',os.path.join(rep_cata,'cataSTA8'),'python','defaut'),
-              #('ASTER','v75',os.path.join(rep_cata,'cataSTA75'),'python','defaut'),
-              ('HOMARD','v1',os.path.join(rep_homard,'homard_cata_V73.py'),'homard'),
+#              ('ASTER','v7.8',os.path.join(rep_cata,'cataSTA7'),'python'),
+#              ('ASTER','v8.5',os.path.join(rep_cata,'cataSTA8'),'python'),
+              ('ASTER','v9.1',os.path.join(rep_cata,'cataSTA9'),'python','defaut'),
              )
 

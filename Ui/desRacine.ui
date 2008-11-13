@@ -1,0 +1,320 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>DRac</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>DRac</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>509</width>
+            <height>513</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>505</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>DMacro</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>textLabel1_4</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>291</width>
+                    <height>21</height>
+                </size>
+            </property>
+            <property name="text">
+                <string>&lt;b&gt;&lt;u&gt;Commandes :&lt;/u&gt;&lt;/b&gt;</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="2" rowspan="2" colspan="2">
+            <property name="name">
+                <cstring>textLabel1_4_2</cstring>
+            </property>
+            <property name="text">
+                <string>&lt;p align="center"&gt;&lt;b&gt;&lt;u&gt;Régles :&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;</string>
+            </property>
+        </widget>
+        <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>buttonGroup1</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>0</width>
+                    <height>60</height>
+                </size>
+            </property>
+            <property name="title">
+                <string>Affichage</string>
+            </property>
+            <widget class="QRadioButton">
+                <property name="name">
+                    <cstring>RBGroupe</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>10</x>
+                        <y>20</y>
+                        <width>90</width>
+                        <height>20</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>par groupe</string>
+                </property>
+            </widget>
+            <widget class="QRadioButton">
+                <property name="name">
+                    <cstring>RBalpha</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>110</x>
+                        <y>20</y>
+                        <width>120</width>
+                        <height>20</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>alphabétique</string>
+                </property>
+                <property name="checked">
+                    <bool>true</bool>
+                </property>
+            </widget>
+        </widget>
+        <widget class="QPushButton" row="3" column="3">
+            <property name="name">
+                <cstring>bHelp</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>160</width>
+                    <height>30</height>
+                </size>
+            </property>
+            <property name="text">
+                <string>&amp;Documentation</string>
+            </property>
+            <property name="accel">
+                <string>Alt+D</string>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>affichage documentation aster</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="3" column="0">
+            <property name="name">
+                <cstring>bSup</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>160</width>
+                    <height>30</height>
+                </size>
+            </property>
+            <property name="text">
+                <string>&amp;Supprimer</string>
+            </property>
+            <property name="accel">
+                <string>Alt+S</string>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>suppression du mot clef</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="3" column="1" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>bOk</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>160</width>
+                    <height>30</height>
+                </size>
+            </property>
+            <property name="text">
+                <string>&amp;Valider</string>
+            </property>
+            <property name="accel">
+                <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+            <property name="default">
+                <bool>true</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>validation de la saisie</string>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget" row="2" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>layout2</cstring>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QToolButton" row="0" column="2">
+                    <property name="name">
+                        <cstring>BNext</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>60</width>
+                            <height>30</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>Suivant</string>
+                    </property>
+                    <property name="iconSet">
+                        <iconset></iconset>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>affiche la prochaine occurence</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>LEFiltre</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>30</height>
+                        </size>
+                    </property>
+                </widget>
+                <widget class="QListBox" row="0" column="3" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>LBRegles</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>240</width>
+                            <height>350</height>
+                        </size>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textLabel6</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>40</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>Filtre</string>
+                    </property>
+                </widget>
+                <widget class="QListBox" row="1" column="0" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>LBNouvCommande</cstring>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>LBNouvCommande</sender>
+        <signal>doubleClicked(QListBoxItem*)</signal>
+        <receiver>DRac</receiver>
+        <slot>LBNouvCommandeClicked()</slot>
+    </connection>
+    <connection>
+        <sender>LEFiltre</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>DRac</receiver>
+        <slot>LEFiltreTextChanged()</slot>
+    </connection>
+    <connection>
+        <sender>LEFiltre</sender>
+        <signal>returnPressed()</signal>
+        <receiver>DRac</receiver>
+        <slot>LEfiltreReturnPressed()</slot>
+    </connection>
+    <connection>
+        <sender>bSup</sender>
+        <signal>pressed()</signal>
+        <receiver>DRac</receiver>
+        <slot>BSupPressed()</slot>
+    </connection>
+    <connection>
+        <sender>bOk</sender>
+        <signal>clicked()</signal>
+        <receiver>DRac</receiver>
+        <slot>BOkPressed()</slot>
+    </connection>
+    <connection>
+        <sender>RBalpha</sender>
+        <signal>clicked()</signal>
+        <receiver>DRac</receiver>
+        <slot>BuildTabCommand()</slot>
+    </connection>
+    <connection>
+        <sender>RBGroupe</sender>
+        <signal>clicked()</signal>
+        <receiver>DRac</receiver>
+        <slot>BuildTabCommand()</slot>
+    </connection>
+    <connection>
+        <sender>BNext</sender>
+        <signal>clicked()</signal>
+        <receiver>DRac</receiver>
+        <slot>BNextPressed()</slot>
+    </connection>
+    <connection>
+        <sender>bHelp</sender>
+        <signal>clicked()</signal>
+        <receiver>DRac</receiver>
+        <slot>ViewDoc()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>LEFiltre</tabstop>
+    <tabstop>LBNouvCommande</tabstop>
+    <tabstop>RBalpha</tabstop>
+    <tabstop>bSup</tabstop>
+    <tabstop>bOk</tabstop>
+    <tabstop>bHelp</tabstop>
+    <tabstop>LBRegles</tabstop>
+</tabstops>
+<slots>
+    <slot>LBNouvCommandeClicked()</slot>
+    <slot>LEFiltreTextChanged()</slot>
+    <slot>LEfiltreReturnPressed()</slot>
+    <slot>BSupPressed()</slot>
+    <slot>BOkPressed()</slot>
+    <slot>BuildTabCommand()</slot>
+    <slot>BNextPressed()</slot>
+    <slot>ViewDoc()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

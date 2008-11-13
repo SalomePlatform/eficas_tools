@@ -1,4 +1,4 @@
-#@ MODIF macr_lign_coupe_ops Macro  DATE 22/05/2007   AUTEUR GALENNE E.GALENNE 
+#@ MODIF macr_lign_coupe_ops Macro  DATE 07/04/2008   AUTEUR GALENNE E.GALENNE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21,16 +21,17 @@
 ########################################################################
 # script PYTHON de creation du résultat local
 
-def crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,resin,mail,nomgrma):
+def crea_resu_local(self,dime,NOM_CHAM,m,resin,mail,nomgrma):
 
-  from Utilitai.Utmess     import UTMESS
+  from Utilitai.Utmess     import  UTMESS
   from math import pi,sqrt,atan2,asin
   import os,string,types
   import aster
   from Accas import _F
+  MODI_REPERE = self.get_cmd('MODI_REPERE')
 
   epsi=0.00000001
-  
+
   if NOM_CHAM == 'DEPL':
        if dime == 2:
           LCMP=['DX','DY']
@@ -48,7 +49,7 @@ def crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,resin,mail,nomgrma):
 
 
   if m['TYPE']=='SEGMENT' and m['REPERE'] != 'CYLINDRIQUE' :
-  
+
     if m['REPERE'] == 'LOCAL':
       # --- determination des angles nautiques
       cx1=m['COOR_EXTR'][0]-m['COOR_ORIG'][0]
@@ -58,7 +59,7 @@ def crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,resin,mail,nomgrma):
         cx3=m['COOR_EXTR'][2]-m['COOR_ORIG'][2]
       nvx=sqrt(cx1**2+cx2**2+cx3**2)
       if abs(nvx) < epsi:
-         UTMESS('F', "MACR_LIGN_COUPE", "definition incorrecte de la ligne de coupe")
+         UTMESS('F','POST0_1')
       cx1=cx1/nvx
       cx2=cx2/nvx
       cx3=cx3/nvx
@@ -69,13 +70,13 @@ def crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,resin,mail,nomgrma):
         cy3=m['VECT_Y'][2]
       nvy=sqrt(cy1**2+cy2**2+cy3**2)
       if abs(nvy) < epsi:
-         UTMESS('F', "MACR_LIGN_COUPE", "valeurs incorrectes pour VECT_Y")
+         UTMESS('F','POST0_2')
       cy1=cy1/nvy
       cy2=cy2/nvy
       cy3=cy3/nvy
       if ((abs(cx1-cy1)<epsi and abs(cx2-cy2)<epsi and  abs(cx3-cy3)<epsi) or \
          (abs(cx1+cy1)<epsi and abs(cx2+cy2)<epsi and  abs(cx3+cy3)<epsi)):
-         UTMESS('F', "MACR_LIGN_COUPE", "valeurs incorrectes pour VECT_Y: x colineaire a y")
+         UTMESS('F','POST0_3')
       if abs(cx1*cy1+cx2*cy2+cx3*cy3) > epsi  :
         cz1=cx2*cy3-cx3*cy2
         cz2=cx3*cy1-cx1*cy3
@@ -91,10 +92,8 @@ def crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,resin,mail,nomgrma):
         cy1=cy1/nvy
         cy2=cy2/nvy
         cy3=cy3/nvy
-        UTMESS('A','MACR_LIGN_COUPE','LE VECTEUR Y N EST PAS ORTHOGONAL A LA LIGNE DE COUPE'
-              +'LE VECTEUR Y A ETE ORTHONORMALISE POUR VOUS')
-        UTMESS('A','MACR_LIGN_COUPE','VECT_Y=('+str(cy1)+','+str(cy2)+','+str(cy3)+')')
-      else:     
+        UTMESS('A','POST0_4',valr=[cy1,cy2,cy3])
+      else:
         cz1=cx2*cy3-cx3*cy2
         cz2=cx3*cy1-cx1*cy3
         cz3=cx1*cy2-cx2*cy1
@@ -131,8 +130,8 @@ def crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,resin,mail,nomgrma):
        ANGL_NAUT.append(gamma)
     motscles['DEFI_REPERE'].append(_F(REPERE='UTILISATEUR',ANGL_NAUT=ANGL_NAUT),)
     __remodr=MODI_REPERE(RESULTAT=resin,**motscles)
-    
-    
+
+
   if m['TYPE']=='ARC':
     if m['REPERE'] == 'CYLINDRIQUE' :
       motscles={}
@@ -153,21 +152,21 @@ def crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,resin,mail,nomgrma):
         motscles['DEFI_REPERE'].append(_F(REPERE='CYLINDRIQUE',ORIGINE=ORIGINE,),)
       __remodr=MODI_REPERE(RESULTAT=resin,**motscles)
     else :
-         UTMESS("F","MACR_LIGN_COUPE","LE TYPE "+m['TYPE']+" N'EST PAS COHERENT AVEC LE CHOIX DU REPERE ( REPERE "+m['REPERE']+" ).")
+      UTMESS('F','POST0_5',valk=[m['TYPE'],m['REPERE']])
 
 
 
   if m['TYPE'][:5]=='GROUP' or m['TYPE']=='SEGMENT':
-  
+
     if m['TYPE'][:5]=='GROUP' and m['REPERE'] == 'LOCAL':
-     # determination du repère local (v1,v2,v3)    
+     # determination du repère local (v1,v2,v3)
      # ---------------------------------------
       noma=mail.nom
       collgrma=aster.getcolljev(noma.ljust(8)+'.GROUPEMA')
       collcnx =aster.getcolljev(noma.ljust(8)+'.CONNEX')
       coord   =aster.getvectjev(noma.ljust(8)+'.COORDO    .VALE')
       cnom    =aster.getvectjev(noma.ljust(8)+'.NOMNOE')
-      
+
       numa=collgrma[nomgrma.ljust(8)]
       dictu={}
 #     initialisations
@@ -188,7 +187,7 @@ def crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,resin,mail,nomgrma):
         vectu1.append(uy)
         vectu2.append(ux)
         vectu2.append(uy)
-        if dime ==3 : 
+        if dime ==3 :
           uz=coord[3*(n2-1)+2]-coord[3*(n1-1)+2]
           vectu1.append(uz)
           vectu2.append(uz)
@@ -288,7 +287,7 @@ def crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,resin,mail,nomgrma):
           __resu[j]=MODI_REPERE(RESULTAT=__resu[j-1],**motscles)
       __remodr=__resu[j]
 
-  
+
     motscles={}
     motscles['MODI_CHAM']=[]
     motscles['DEFI_REPERE']=[]
@@ -318,7 +317,7 @@ def crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,resin,mail,nomgrma):
 # script PYTHON de creation des noeuds d'une ligne de coupe 'arc'
 
 def crea_noeu_lig_coup(dimension,pt1,pt2,anglj,dnor):
-  from Utilitai.Utmess     import UTMESS
+  from Utilitai.Utmess     import  UTMESS
   from math import pi,sin,cos,sqrt
 
   a=pt1[0]-pt2[0]
@@ -328,7 +327,7 @@ def crea_noeu_lig_coup(dimension,pt1,pt2,anglj,dnor):
   if dimension==2:
     r=sqrt(a**2+b**2)
     if abs(r)<eps:
-      UTMESS('F', "MACR_LIGN_COUPE", "definition incorrecte de COOR_ORIG et CENTRE") 
+      UTMESS('F','POST0_6')
     x=pt2[0]+a*cos(anglr)-b*sin(anglr)
     y=pt2[1]+b*cos(anglr)+a*sin(anglr)
     return x,y
@@ -336,13 +335,13 @@ def crea_noeu_lig_coup(dimension,pt1,pt2,anglj,dnor):
     c=pt1[2]-pt2[2]
     r=sqrt(a**2+b**2+c**2)
     if abs(r)<eps:
-      UTMESS('F', "MACR_LIGN_COUPE", "definition incorrecte de COOR_ORIG et CENTRE") 
+      UTMESS('F','POST0_6')
     d1=dnor[0]
     d2=dnor[1]
     d3=dnor[2]
     d=sqrt(d1**2+d2**2+d3**2)
     if abs(r)<eps:
-      UTMESS('F', "MACR_LIGN_COUPE", "definition incorrecte de DNOR") 
+      UTMESS('F','POST0_7')
     x=pt2[0]+a*cos(anglr)+sin(anglr)*(c*d2-b*d3)/d
     y=pt2[1]+b*cos(anglr)+sin(anglr)*(a*d3-c*d1)/d
     z=pt2[2]+c*cos(anglr)+sin(anglr)*(b*d1-a*d2)/d
@@ -351,7 +350,7 @@ def crea_noeu_lig_coup(dimension,pt1,pt2,anglj,dnor):
 # determination de la distance min entre 2 points consécutifs de la ligne de coupe
 
 def dist_min_deux_points(mail):
-  from math import sqrt  
+  from math import sqrt
   import aster
   nno=aster.getvectjev(mail.nom.ljust(8)+'.DIME')[0]
   l_coor1=[]
@@ -363,13 +362,91 @@ def dist_min_deux_points(mail):
     if i == 0 : dist=d
     else      : dist=min(d,dist)
   return dist
+
+########################################################################
+# verification que les points de la ligne de coupe sont dans la matiere
+def crea_grp_matiere(self,groupe,newgrp,m,__remodr,NOM_CHAM,__macou):
+
+  import aster
+  from Accas import _F
+  from Utilitai.Utmess import  UTMESS
+  import os
+  from sets import Set
+  POST_RELEVE_T = self.get_cmd('POST_RELEVE_T')
+  DEFI_GROUP    = self.get_cmd('DEFI_GROUP')
+
+  motscles={}
+  if m['NOM_CMP']!=None:
+     motscles['NOM_CMP']=m['NOM_CMP']
+  else:
+     motscles['TOUT_CMP']='OUI'
+  motscles['OPERATION']='EXTRACTION'
+
+  __tab=POST_RELEVE_T(ACTION=_F(  INTITULE=newgrp,
+                           RESULTAT  = __remodr,
+                           NOM_CHAM=NOM_CHAM,
+                           GROUP_NO  = groupe,**motscles ))
+
+  # dictb=table initiale (contenant éventuellement des noeuds hors matière)
+  dictb=__tab.EXTR_TABLE()
+  # listenoe_b=liste ordonnee des noeuds de la ligne de coupe (avec doublons)
+  listenoe_b = dictb.NOEUD.values()
+  # lno_b2=liste des noeuds de la ligne de coupe après élimination des doublons
+  # (attention, on perd l'ordre des noeuds)
+  lno_b2 = Set(listenoe_b)
+
+  # dictc=table (extraite de dictb) contenant uniquement des noeuds dans la matière
+  if m['NOM_CMP']!=None:
+     dictc=getattr(dictb,m['NOM_CMP'][0]).NON_VIDE()
+     lno_c2 = Set(dictc.NOEUD.values())
+  else:# TOUT_CMP='OUI'
+     # on garde uniquement les composantes pour conserver les noeuds où il y a des valeurs
+     a_suppr = Set(['INTITULE', 'RESU', 'NOM_CHAM', 'NUME_ORDRE', 'INST', 'ABSC_CURV', 'COOR_X', 'COOR_Y', 'COOR_Z'])
+     new_para = Set(dictb.para)
+     new_para.difference_update(a_suppr)
+
+     lno_c2 = Set()
+     for comp in new_para.difference(['NOEUD']):
+        dictc = getattr(dictb, comp).NON_VIDE()
+        lno_c2.update(dictc.NOEUD.values())
+
+  # on réordonne la liste des noeuds de lno_c2 (selon leur position dans listenoe_b) => l_matiere
+  # l_horsmat=liste des noeuds hors matière
+  l_matiere = [j for j in listenoe_b if j in lno_c2]
+  nderm=l_matiere.index(l_matiere[len(l_matiere)-1])
+  l_horsmat = [j for j in listenoe_b if j not in lno_c2]
+
+  # si on est en présence de noeuds hors matière,
+  # on emet une alarme pour informer l'utilisateur
+  if len(l_horsmat) > 0:
+
+       nderh=l_horsmat.index(l_horsmat[len(l_horsmat)-1])
+       cnom = list(__macou.NOMNOE.get())
+       l_coor = __macou.COORDO.VALE.get()
+       indent=os.linesep+' '*12
+       l_surlig = []
+       l_horslig = []
+       for j in l_matiere[:nderm+1]:
+          nuno=cnom.index(j.ljust(8))
+          text_coordo = '(%f, %f, %f)' % tuple(l_coor[3*nuno:3*nuno+3])
+          l_surlig.append(text_coordo)
+       for j in l_horsmat[:nderh+1]:
+          nuno=cnom.index(j.ljust(8))
+          text_coordo = '(%f, %f, %f)' % tuple(l_coor[3*nuno:3*nuno+3])
+          l_horslig.append(text_coordo)
+       UTMESS('A','POST0_8',valk=[indent.join(l_surlig),indent.join(l_horslig)])
+
+  __macou=DEFI_GROUP( reuse =__macou , MAILLAGE=__macou ,
+                   CREA_GROUP_NO=_F(NOM=newgrp,NOEUD=l_matiere[:nderm+1]),)
+
+  return
 ########################################################################
 # script PYTHON de creation d un maillage de ligne de coupe
 
 def crea_mail_lig_coup(dimension,lignes,groups,arcs):
 
   import os,sys,copy
-  from Utilitai.Utmess     import UTMESS
+  from Utilitai.Utmess     import  UTMESS
 
 # construction du maillage au format Aster des segments de lignes de coupe
 
@@ -525,7 +602,7 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
   from Noyau.N_utils import AsType
   import aster,math
   from Utilitai.UniteAster import UniteAster
-  from Utilitai.Utmess import UTMESS
+  from Utilitai.Utmess import  UTMESS
   ier=0
 
   # On importe les definitions des commandes a utiliser dans la macro
@@ -535,7 +612,6 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
   PROJ_CHAMP     =self.get_cmd('PROJ_CHAMP')
   POST_RELEVE_T  =self.get_cmd('POST_RELEVE_T')
   CREA_TABLE     =self.get_cmd('CREA_TABLE')
-  MODI_REPERE    =self.get_cmd('MODI_REPERE')
   CREA_RESU      =self.get_cmd('CREA_RESU')
   CREA_MAILLAGE  =self.get_cmd('CREA_MAILLAGE')
 
@@ -563,13 +639,13 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
     n_modele=string.strip(l_modele[0])
     if n_modele=='' :
       if MODELE==None:
-        UTMESS('F', "MACR_LIGN_COUPE", "nom du modele absent dans le concept resultat "+nomresu)
+        UTMESS('F','POST0_9',valk=nomresu)
       else : n_modele=MODELE.nom
 
   elif CHAM_GD != None:
     mcORDR['TOUT_ORDRE']='OUI'
     if MODELE==None:
-      UTMESS('F', "MACR_LIGN_COUPE", "veuillez renseigner le MODELE si vous utilisez un CHAM_GD ")
+      UTMESS('F','POST0_10')
     else : n_modele=MODELE.nom
     # récupération de la grandeur du champ
     n_cham=CHAM_GD.nom
@@ -591,7 +667,7 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
                        NOM_CHAM=NOM_CHAM, TYPE_RESU=TYPE_RESU,
                        AFFE=_F(CHAM_GD=CHAM_GD,INST=0.),)
     RESULTAT=__resuch
-  l_mailla=aster.getvectjev(n_modele.ljust(8)+'.MODELE    .NOMA')
+  l_mailla=aster.getvectjev(n_modele.ljust(8)+'.MODELE    .LGRF')
   n_mailla=string.strip(l_mailla[0])
   dime=aster.getvectjev(n_mailla.ljust(8)+'.DIME')[5]
   collgrma=aster.getcolljev(n_mailla.ljust(8)+'.GROUPEMA')
@@ -609,22 +685,22 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
          lignes.append((m['COOR_ORIG'],m['COOR_EXTR'],m['NB_POINTS']))
          minidim=min(minidim,len(m['COOR_ORIG']),len(m['COOR_EXTR']))
          if minidim!=dime:
-            UTMESS('F', "MACR_LIGN_COUPE", "dimensions de maillage et de coordonnees incoherentes")
+           UTMESS('F','POST0_11')
       elif m['TYPE'] =='ARC' :
          minidim=min(minidim,len(m['COOR_ORIG']),len(m['CENTRE']))
          if minidim!=dime:
-            UTMESS('F', "MACR_LIGN_COUPE", "dimensions de maillage et de coordonnees incoherentes")
+           UTMESS('F','POST0_11')
          if dime==2:
            arcs.append((m['COOR_ORIG'],m['CENTRE'],m['NB_POINTS'],m['ANGLE'],))
          elif dime==3:
            if str(m['DNOR'])=='None':
-              UTMESS('F', "MACR_LIGN_COUPE", "le mot-clé 'DNOR' est obligatoire en 3D pour le type 'ARC'")
+              UTMESS('F','POST0_12')
            arcs.append((m['COOR_ORIG'],m['CENTRE'],m['NB_POINTS'],m['ANGLE'],m['DNOR']))
       elif m['TYPE']=='GROUP_NO':
         ngrno=m['GROUP_NO'].ljust(8).upper()
-        collgrno=aster.getcolljev(n_mailla.ljust(8)+'.GROUPENO')  
+        collgrno=aster.getcolljev(n_mailla.ljust(8)+'.GROUPENO')
         if ngrno not in collgrno.keys() :
-          UTMESS('F', "MACR_LIGN_COUPE", "le group_no "+ngrno+" n est pas dans le maillage "+n_mailla)
+          UTMESS('F','POST0_13',valk=[ngrno,n_mailla])
         grpn=collgrno[ngrno]
         l_coor_group=[ngrno,]
         for node in grpn:
@@ -633,28 +709,25 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
       elif m['TYPE']=='GROUP_MA':
         ngrma=m['GROUP_MA'].ljust(8).upper()
         if ngrma not in collgrma.keys() :
-          UTMESS('F', "MACR_LIGN_COUPE", "le group_ma "+ngrma+" n est pas dans le maillage "+n_mailla)
+          UTMESS('F','POST0_14',valk=[ngrma,n_mailla])
         grpm=collgrma[ngrma]
         for ma in grpm:
           if ltyma[typma[ma-1]-1][:3] != 'SEG' :
              nomma=aster.getvectjev(n_mailla.ljust(8)+'.NOMMAI')
-             UTMESS('F', "MACR_LIGN_COUPE", "le group_ma "+ngrma+" contient la maille "+
-                    nomma[ma-1]+"qui n'est pas de type SEG.")
+             UTMESS('F','POST0_15',valk=[ngrma,nomma[ma-1]])
         __mailla=CREA_MAILLAGE(MAILLAGE= m['MAILLAGE'],)
         __mailla=DEFI_GROUP( reuse=__mailla,MAILLAGE= __mailla,
                             CREA_GROUP_NO=_F(OPTION='NOEUD_ORDO',NOM=str(m['GROUP_MA']),GROUP_MA=m['GROUP_MA']),)
-        collgrno=aster.getcolljev(__mailla.nom.ljust(8)+'.GROUPENO')  
+        collgrno=aster.getcolljev(__mailla.nom.ljust(8)+'.GROUPENO')
         grpn=collgrno[str(m['GROUP_MA']).ljust(8)]
         l_coor_group=[ngrma,]
         for node in grpn:
           l_coor_group.append(aster.getvectjev(n_mailla.ljust(8)+'.COORDO    .VALE',3*(node-1),3))
         groups.append(l_coor_group)
 
-  
-  if arcs!=[] and (lignes!=[] or groups!=[]) :
-    message = 'On ne peut pas combiner des lignes de coupes de type ARC avec des lignes de coupes SEGMENT ou GROUP_NO. \n'
-    UTMESS('F','MACR_LIGN_COUPE',message)
 
+  if arcs!=[] and (lignes!=[] or groups!=[]) :
+    UTMESS('F','POST0_16')
 
   # Création du maillage des NB_POINTS segments entre COOR_ORIG et COOR_EXTR
   # ainsi que des segments reliant les noeuds issus des group_no demandés
@@ -671,10 +744,10 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
 
   # Lecture du maillage de seg2 contenant toutes les lignes de coupe
   __macou=LIRE_MAILLAGE(UNITE=UNITE_MAILLAGE,);
-  
+
   # distance min entre 2 points de la ligne de coupe (utile pour PROJ_CHAMP)
   dmin=dist_min_deux_points(__macou)
-  
+
   motscles={}
   iocc=1
   motscles['CREA_GROUP_NO']=[]
@@ -704,16 +777,16 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
   if args['VIS_A_VIS']!=None:
     for v in args['VIS_A_VIS']:
       if v['GROUP_MA_1']!=None:
-         motscles['VIS_A_VIS'].append(_F(GROUP_MA_1 = v['GROUP_MA_1'],TOUT_2='OUI'),) 
+         motscles['VIS_A_VIS'].append(_F(GROUP_MA_1 = v['GROUP_MA_1'],TOUT_2='OUI'),)
       elif v['MAILLE_1']!=None:
-         motscles['VIS_A_VIS'].append(_F(MAILLE_1 = v['MAILLE_1'],TOUT_2='OUI'),)  
+         motscles['VIS_A_VIS'].append(_F(MAILLE_1 = v['MAILLE_1'],TOUT_2='OUI'),)
 
   if n_modele in self.get_global_contexte().keys() : MODELE_1=self.get_global_contexte()[n_modele]
   else                                             : MODELE_1=self.jdc.current_context[n_modele]
   __recou=PROJ_CHAMP(METHODE='ELEM',
                      RESULTAT=RESULTAT,
                      MODELE_1=MODELE_1,
-                     DISTANCE_MAX=dmin*0.001,
+                     DISTANCE_MAX=m['DISTANCE_MAX'],
                      MODELE_2=__mocou,
                      TYPE_CHAM='NOEU',
                      NOM_CHAM=NOM_CHAM, **motscles);
@@ -723,11 +796,11 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
   ioc2=0
   mcACTION=[]
   angtab=[]
-  
+
   if AsType(RESULTAT).__name__ in ('evol_elas','evol_noli') :
-  
+
    if  NOM_CHAM in ('DEPL','SIEF_ELNO_ELGA','SIGM_NOEU_DEPL','SIGM_NOEU_SIEF','SIGM_NOEU_ELGA','SIGM_NOEU_COQU','SIGM_ELNO_DEPL'):icham=1
- 
+
    for m in LIGN_COUPE :
 
      motscles={}
@@ -752,10 +825,13 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
      if m['TYPE'] in ('GROUP_NO','GROUP_MA'):
          groupe=m[m['TYPE']].ljust(8).upper()
          nomgrma=groupe
-     else: 
+     else:
          ioc2=ioc2+1
          groupe='LICOU'+str(ioc2)
          nomgrma=' '
+         newgrp='LICOF'+str(ioc2)
+         crea_grp_matiere(self,groupe,newgrp,m,__remodr,NOM_CHAM,__macou)
+         groupe=newgrp
 
      # on definit l'intitulé
      if m['INTITULE'] !=None                    : intitl=m['INTITULE']
@@ -775,16 +851,14 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
                             GROUP_NO  = groupe,
                             NOM_CHAM  = NOM_CHAM,**motscles ),)
           else:
-            __remodr=crea_resu_local(dime,MODI_REPERE,NOM_CHAM,m,__recou,__macou,nomgrma)
+            __remodr=crea_resu_local(self,dime,NOM_CHAM,m,__recou,__macou,nomgrma)
             mcACTION.append( _F(INTITULE  = intitl,
                             RESULTAT  = __remodr,
                             GROUP_NO  = groupe,
                             NOM_CHAM  = NOM_CHAM,**motscles ),)
 
         else:
-          UTMESS('A','MACR_LIGN_COUPE','LE CHAMP '+NOM_CHAM+' N EST PAS TRAITE PAR MACR_LIGNE_COUPE EN REPERE '+m['REPERE']+'.'
-                     +'LE CALCUL EST EFFECTUE EN REPERE GLOBAL.') 
-
+          UTMESS('A','POST0_17',valk=[NOM_CHAM,m['REPERE']])
           mcACTION.append( _F(INTITULE  = intitl,
                             RESULTAT  = __recou,
                             GROUP_NO  = groupe,
@@ -792,13 +866,13 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
 
      # Expression des contraintes aux noeuds ou des déplacements dans le repere global
      else:
-  
+
           mcACTION.append( _F(INTITULE  = intitl,
                             RESULTAT  = __recou,
                             GROUP_NO  = groupe,
                             NOM_CHAM  = NOM_CHAM,**motscles ),)
 
-  
+
   elif AsType(RESULTAT).__name__ in ('evol_ther',) :
 
      for m in LIGN_COUPE :
@@ -824,6 +898,9 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
         if m['TYPE'] not in ('GROUP_NO','GROUP_MA') :
           ioc2=ioc2+1
           groupe='LICOU'+str(ioc2)
+          newgrp='LICOF'+str(ioc2)
+          crea_grp_matiere(self,groupe,newgrp,m,__remodr,NOM_CHAM,__macou)
+          groupe=newgrp
           if m['INTITULE'] !=None : intitl=m['INTITULE']
           else                    : intitl='l.coupe'+str(ioc2)
         else:
@@ -834,7 +911,7 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
                             RESULTAT  = __recou,
                             GROUP_NO  = groupe,
                             NOM_CHAM  = NOM_CHAM, **motscles ),)
- 
+
   __tabitm=POST_RELEVE_T(ACTION=mcACTION,);
 
   # on repasse par les tables python pour supprimer les paramètres inutiles

@@ -1,21 +1,21 @@
-#@ MODIF macr_aspic_calc_ops Macro  DATE 09/05/2007   AUTEUR REZETTE C.REZETTE 
+#@ MODIF macr_aspic_calc_ops Macro  DATE 14/04/2008   AUTEUR GALENNE E.GALENNE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 
 
@@ -23,13 +23,13 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
                              FOND_FISS_1,FOND_FISS_2,CHARGE,RESU_THER,AFFE_MATERIAU,EQUILIBRE,
                              PRES_REP,ECHANGE,TORS_CORP,TORS_TUBU,COMP_INCR,COMP_ELAS,
                              THETA_3D,OPTION,SOLVEUR,CONVERGENCE,NEWTON,RECH_LINEAIRE,
-                             INCREMENT,PAS_AZIMUT,IMPRESSION,INFO,TITRE,BORNES ,**args):          
+                             INCREMENT,PAS_AZIMUT,IMPRESSION,INFO,TITRE,BORNES ,**args):
   """
      Ecriture de la macro MACR_ASPIC_CALC
   """
   from Accas import _F
   import types
-  from Utilitai.Utmess     import UTMESS
+  from Utilitai.Utmess     import  UTMESS
   ier=0
 #------------------------------------------------------------------
   # On recopie le mot cle affe_materiau pour le proteger
@@ -54,7 +54,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 
   # La macro compte pour 1 dans la numerotation des commandes
   self.set_icmd(1)
- 
+
 #------------------------------------------------------------------
 # data
   GRMAIL= ('EQUERRE','PEAUINT','EXCORP1','EXCORP2','EXTUBU','LEVRTUBU','LEVRCORP')
@@ -77,40 +77,40 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
         i=i+1
         MRCCM=mate['MATER']
   if i>1 :
-     UTMESS('E', "MACR_ASPIC_CALC", "vous affectez plus d un materiau contenant l option rccm")
+     UTMESS('E','ASPIC0_1')
 #
   if (TYPE_MAILLAGE[:4]=='SAIN') and (TUBULURE==None) :
-     UTMESS('E', "MACR_ASPIC_CALC", "pour les piquages sains, TUBULURE doit etre renseigne")
+     UTMESS('E','ASPIC0_2')
 #
   if EQUILIBRE['NOEUD'] not in ('P1_CORP','P2_CORP') :
-     UTMESS('E', "MACR_ASPIC_CALC", "EQUILIBRE[NOEUD] : on attend P1_CORP ou P2_CORP")
+     UTMESS('E','ASPIC0_3')
 #
   if PRES_REP['EFFE_FOND']=='OUI' :
      if PRES_REP['NOEUD']==None :
-       UTMESS('E', "MACR_ASPIC_CALC", "il faut preciser un noeud pour EFFE_FOND")
+       UTMESS('E','ASPIC0_4')
      if PRES_REP['NOEUD'] not in ('P1_CORP','P2_CORP') :
-       UTMESS('E', "MACR_ASPIC_CALC", "PRES_REP[NOEUD] : on attend P1_CORP ou P2_CORP")
+       UTMESS('E','ASPIC0_5')
      if PRES_REP['NOEUD']==EQUILIBRE['NOEUD'] :
-       UTMESS('E', "MACR_ASPIC_CALC", "on ne peut appliquer un EFFE_FOND sur PRES_REP[NOEUD] car ce noeud est bloque")
+       UTMESS('E','ASPIC0_6')
 #
   if TORS_CORP!=None :
      for tors in TORS_CORP :
          if tors['NOEUD'] not in ('P1_CORP','P2_CORP') :
-            UTMESS('E', "MACR_ASPIC_CALC", "TORS_CORP[NOEUD] : on attend P1_CORP ou P2_CORP")
+            UTMESS('E','ASPIC0_7')
          if tors['NOEUD']==EQUILIBRE['NOEUD'] :
-            UTMESS('E', "MACR_ASPIC_CALC", "on ne peut appliquer un torseur sur TORS_CORP[NOEUD] car ce noeud est bloque")
+            UTMESS('E','ASPIC0_8')
 #
   if (TYPE_MAILLAGE[:4]=='SAIN') and (THETA_3D!=None) :
-     UTMESS('E', "MACR_ASPIC_CALC", "si TYPE_MAILLAGE SAIN : mecanique de la rupture impossible")
+     UTMESS('E','ASPIC0_9')
 #
   if OPTION in ('CALC_G_MAX','CALC_G_MAX_LOCAL') :
     if BORNES==None :
-       UTMESS('E', "MACR_ASPIC_CALC", "mot-clef <BORNES> obligatoire avec cette option")
+       UTMESS('E','ASPIC0_10')
 #
   if IMPRESSION!=None :
     if IMPRESSION['FORMAT'] in ('IDEAS','CASTEM') :
       if IMPRESSION['NOM_CHAM']==None :
-       UTMESS('E', "MACR_ASPIC_CALC", "impression de resultats demandée sans preciser le nom des champs cf. la documentation utilisateur : U4.PC.20.")
+       UTMESS('E','ASPIC0_11')
 #
 #------------------------------------------------------------------
 #
@@ -137,8 +137,8 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 #
   mcfact=[]
   for mater in mc_AFFE_MATERIAU :
-     if mater['TOUT']!=None : mcfact.append(_F(TOUT    =mater['TOUT'    ],MATER=mater['MATER'],TEMP_REF=mater['TEMP_REF']))
-     else                   : mcfact.append(_F(GROUP_MA=mater['GROUP_MA'],MATER=mater['MATER'],TEMP_REF=mater['TEMP_REF']))
+     if mater['TOUT']!=None : mcfact.append(_F(TOUT    =mater['TOUT'    ],MATER=mater['MATER']))
+     else                   : mcfact.append(_F(GROUP_MA=mater['GROUP_MA'],MATER=mater['MATER']))
   __affmat = AFFE_MATERIAU( MAILLAGE = MAILLAGE ,
                           MODELE   = modele ,
                           AFFE     = mcfact    )
@@ -173,12 +173,12 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 #
      if RESU_THER!=None : self.DeclareOut('resuth',RESU_THER)
      mcsimp={}
-     if INCREMENT['NUME_INST_INIT']!=None : mcsimp['NUME_INIT']=INCREMENT['NUME_INST_INIT']
-     if INCREMENT['NUME_INST_FIN' ]!=None : mcsimp['NUME_FIN' ]=INCREMENT['NUME_INST_FIN' ]
+     if INCREMENT['NUME_INST_INIT']!=None : mcsimp['NUME_INST_INIT']=INCREMENT['NUME_INST_INIT']
+     if INCREMENT['NUME_INST_FIN' ]!=None : mcsimp['NUME_INST_FIN' ]=INCREMENT['NUME_INST_FIN' ]
      mcfact=_F(LIST_INST=INCREMENT['LIST_INST'],**mcsimp)
      resuth = THER_LINEAIRE( MODELE     = __modthe ,
                              CHAM_MATER = __affmat ,
-                             TEMP_INIT  = _F(STATIONNAIRE='OUI',),
+                             ETAT_INIT  = _F(STATIONNAIRE='OUI',),
                              EXCIT      = _F(CHARGE=__chther,),
                              INCREMENT  = mcfact, )
 #
@@ -190,12 +190,12 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
   mcfact=[]
   mcfac2=[]
   for mater in mc_AFFE_MATERIAU :
-     if mater['TOUT']!=None : 
+     if mater['TOUT']!=None :
        mcfact.append(_F(TOUT    =mater['TOUT'    ],MATER=mater['MATER'],))
        if indther==1:
          mcfac2.append(_F(NOM_VARC='TEMP',TOUT='OUI',
                         EVOL=resuth,NOM_CHAM='TEMP',VALE_REF=mater['TEMP_REF']),)
-     else: 
+     else:
        mcfact.append(_F(GROUP_MA=mater['GROUP_MA'],MATER=mater['MATER'],))
        if indther==1:
          mcfac2.append(_F(NOM_VARC='TEMP',GROUP_MA=mater['GROUP_MA'],
@@ -237,14 +237,14 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
                                                    DRZ       = 0.0 , ) )
 #
 #     --- commande AFFE_CHAR_MECA ---
-#         chargement mecanique : pres_rep, effet de fond 
+#         chargement mecanique : pres_rep, effet de fond
 #
   motscles={}
   if (PRES_REP['PRES_LEVRE']=='OUI') and (TYPE_MAILLAGE[-4:]=='_DEB') :
       motscles['PRES_REP'  ]= _F(GROUP_MA=APPRES,   PRES=PRES_REP['PRES'])
   else :
       motscles['PRES_REP'  ]= _F(GROUP_MA=APPRES[0],PRES=PRES_REP['PRES'])
-  if  PRES_REP['EFFE_FOND' ]!=None :
+  if  PRES_REP['EFFE_FOND' ]=='OUI' :
       motscles['EFFE_FOND' ]=(_F(GROUP_MA    ='EXTUBU  ',
                                  GROUP_MA_INT='L_INT_TU',
                                  PRES        =PRES_REP['PRES']),
@@ -290,6 +290,24 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
        _chtrt[i] = AFFE_CHAR_MECA( MODELE       = modele ,
                                     FORCE_NODALE = mcfact , )
        i=i+1
+
+#
+#     --- commande AFFE_CHAR_MECA ---
+#         chargement mecanique :  verif contact levres
+#
+  if TYPE_MAILLAGE[:4]=='FISS' :
+    if TYPE_MAILLAGE in ('FISS_LONG_NONDEB','FISS_AXIS_NONDEB') :
+       mcfond = ('FOND_SUP','FOND_INF')
+    else :
+       mcfond = ('FONDFISS')
+    _chcont = AFFE_CHAR_MECA( MODELE   = modele ,
+                               CONTACT =_F(GROUP_MA_MAIT = 'LEVRCORP',
+                                           GROUP_MA_ESCL = 'LEVRTUBU',
+                                           METHODE='VERIF',
+                                           TOLE_INTERP = -1.e-6,
+                                           GROUP_MA_FOND=mcfond,),)
+
+
 #
 #     --- commande STAT_NON_LINE ---
 #
@@ -317,6 +335,8 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
        else :
           mcfex.append(_F(CHARGE=_chtrt[i],))
        i=i+1
+  if TYPE_MAILLAGE[:4]=='FISS' :
+     mcfex.append(_F(CHARGE=_chcont,))
   motscles['EXCIT'] =mcfex
 #
   mcfci=[]  # mot clé facteur COMP_INCR :obligatoire pour les noeuds discrets
@@ -588,9 +608,11 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
           NOMMA.append('MAIL_ORI')
     elif TYPE_MAILLAGE in ('FISS_LONG_NONDEB','FISS_AXIS_NONDEB') :
        NBFIS = 2
-       NOMGRO.append(('P_FON1' ,'P_FIS1' ),)
-       NOMGRE.append(('P_FON2' ,'P_FIS2' ),)
+#       NOMGRO.append(('P_FON1' ,'P_FIS1' ),)
+#       NOMGRE.append(('P_FON2' ,'P_FIS2' ),)
+       NOMGRO.append(('PS_FON1','PS_FIS1'),)
        NOMGRO.append(('PI_FON1','PI_FIS1'),)
+       NOMGRE.append(('PS_FON2','PS_FIS2'),)
        NOMGRE.append(('PI_FON2','PI_FIS2'),)
        TABMA8.append('FOND_SUP')
        TABMA8.append('FOND_INF')
@@ -640,6 +662,32 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
                                           OPERATION  ='EXTRACTION',))
         IMPR_TABLE(TABLE = __rthfis2, )
 #
+#   --- post traitement fissure :  interpénétration des lèvres ----
+#
+
+    if TYPE_MAILLAGE[:4]=='FISS' :
+      __tcont=POST_RELEVE_T( ACTION=_F(  INTITULE = 'Contact levres',
+                                GROUP_NO = 'LEVRTUBU',
+                                RESULTAT = nomres,
+                                TOUT_ORDRE = 'OUI',
+                                NOM_CHAM = 'VALE_CONT',
+                                NOM_CMP = 'CONT',
+                                OPERATION = 'EXTRACTION'))
+      tcont=__tcont.EXTR_TABLE()
+#      print tcont
+      numo = tcont['NUME_ORDRE'].values()['NUME_ORDRE']
+      numo=dict([(i,0) for i in numo]).keys()
+      nbinst = len(numo)
+      for i in range(1,nbinst+1) :
+        tabi = tcont.NUME_ORDRE==i
+        nbtot = len(tabi)
+        cont_actif=tabi.CONT>0.
+        nb_no_cont = len(cont_actif)
+        if nb_no_cont > 0 :
+           UTMESS('A','ASPIC0_22',vali=[i,nbtot,nb_no_cont])
+
+
+#
 #        boucle sur le nombre de fond de fissure
 #
     fond3d = [None]*2
@@ -668,7 +716,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
                                 LEVRE_SUP = _F(GROUP_MA='LEVRCORP',),
                                 LEVRE_INF = _F(GROUP_MA='LEVRTUBU',),**motscles)
       if THETA_3D!=None:
-        for tht3d in THETA_3D : 
+        for tht3d in THETA_3D :
 #
 #          --- commande CALC_THETA ---
 #

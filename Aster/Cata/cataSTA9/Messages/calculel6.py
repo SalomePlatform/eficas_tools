@@ -1,4 +1,4 @@
-#@ MODIF calculel6 Messages  DATE 23/05/2007   AUTEUR PELLET J.PELLET 
+#@ MODIF calculel6 Messages  DATE 18/03/2008   AUTEUR PELLET J.PELLET 
 # -*- coding: iso-8859-1 -*-
 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -23,108 +23,42 @@ def _(x) : return x
 
 cata_msg={
 
+1: _("""
+Erreur utilisateur (dans la commande AFFE_MATERIAU) :
+  Dans le CHAM_MATER %(k1)s, vous avez affecté le matériau %(k2)s.
+  Dans ce matériau, il existe un coefficient de dilatation (ELAS/ALPHA)
+  qui est une fonction de la température.
+  Pour pouvoir utiliser cette fonction, il est nécessaire de transformer
+  cette fonction (changement de repère : TEMP_DEF_ALPHA -> TEMP_REF).
+  Pour cela, l'utilisateur doit fournir une température de référence.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Solution :
+  Vérifier que les mailles affectées par le matériau %(k2)s sont bien
+  toutes affectées par une température de référence
+  (AFFE/TEMP_REF ou AFFE_VARC/NOM_VARC='TEMP',VALE_REF).
+"""),
 
 
 
 10: _("""
-  option inconnue %(k1)s
+  Option inconnue %(k1)s
 """),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 13: _("""
- interpolation deformations  anelastiques : evol_noli: %(k1)s instant: %(r1)f
- icoret: %(i1)d
+ interpolation déformations anélastiques :
+ evol_noli: %(k1)s
+ instant  : %(r1)f
+ icoret   : %(i1)d
 """),
-
-
-
-
-
-
-
 
 15: _("""
   l'element diagonal u( %(i1)d , %(i2)d ) de la factorisation est nul. %(k1)s
- la solution et les estimations d' erreurs ne peuvent etre calculees. %(k2)s
-"""),
-
-16: _("""
- interpolation temperature:evol_ther: %(k1)s nom symbolique: %(k2)s
- instant: %(r1)f
- icoret: %(i1)d
+  la solution et les estimations d' erreurs ne peuvent etre calculees. %(k2)s
 """),
 
 17: _("""
  recherche nbre de cmp: erreur:  %(k1)s grandeur numero  %(i1)d  de nom  %(k2)s
 """),
-
-
-
-
-
-
-
-
-
-
-
-
 
 20: _("""
  recherche nbre de cmp: erreur: grandeur ligne numero  %(i1)d  de nom  %(k1)s
@@ -142,18 +76,6 @@ cata_msg={
  recherche nbre d entiers codes  %(k1)s grandeur numero  %(i1)d  de nom  %(k2)s
 """),
 
-
-
-
-
-
-
-
-
-
-
-
-
 25: _("""
  recherche nbre d entiers codes grandeur ligne numero  %(i1)d  de nom  %(k1)s
  grandeur colonne numero  %(i2)d de nom  %(k2)s
@@ -164,91 +86,27 @@ cata_msg={
  recherche nbre d entiers codes grandeur %(i1)d a un code inconnu:  %(i2)d
 """),
 
-27: _("""
- acces impossible  champ :  %(k1)s , nume_ordre :  %(i1)d
-"""),
-
-28: _("""
- acces impossible au mode propre champ :  %(k1)s , nume_ordre :  %(i1)d
-"""),
-
-
-
-
-
-
-
-
-34: _("""
- famille non disponible    type de maille  %(k1)s
-    famille d'integration  %(i1)d
-"""),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-41: _("""
- famille non disponible    type de maille  %(k1)s
-"""),
 
 42: _("""
- ! prise en compte de l'erreur !
- ! sur cl de type echange_paroi n'a ! %(i1)d
- ! pas ete encore implantee          ! %(i2)d
+ La prise en compte de l'erreur sur une condition aux limites
+ de type ECHANGE_PAROI n'a pas été encore implantée
 """),
 
 43: _("""
- ! le mot cle excit contient !! plusieurs occurences de type flux lineaire ! %(i1)d
- !   seule la derniere sera prise en compte   ! %(i2)d
-"""),
-
-44: _("""
- ! le mot cle excit contient !! plusieurs occurences de type echange    ! %(i1)d
- ! seule la derniere sera prise en compte  ! %(i2)d
-"""),
-
-45: _("""
- ! le mot cle excit contient !! plusieurs occurences de type source     ! %(i1)d
- ! seule la derniere sera prise en compte  ! %(i2)d
+ le mot cle EXCIT contient plusieurs occurences de type %(k1)s
+ seule la dernière sera prise en compte
 """),
 
 46: _("""
- ! champ temperature !! vide pour numero ordre ! %(i1)d
+ champ de température vide pour le numéro d'ordre : %(i1)d
 """),
 
 47: _("""
- ! champ flux_elno_temp !! vide pour numero ordre ! %(i1)d
+ champ FLUX_ELNO_TEMP vide pour numéro d'ordre :  %(i1)d
 """),
 
 49: _("""
- erreurs donnees composante inconnue  %(k1)s  pour la grandeur  %(k2)s
+ erreurs données composante inconnue  %(k1)s  pour la grandeur  %(k2)s
 """),
 
 50: _("""
@@ -262,10 +120,12 @@ cata_msg={
 """),
 
 52: _("""
+ Erreur Utilisateur :
 
- variables internes initiales   non coherentes (nb sous-points) avec le comportement  pour la maille  nomail
-  nb sous-points "k-1" :  %(i1)d
-  nb sous-points "k" :  %(i2)d
+ Variables internes initiales non cohérentes (nb sous-points) avec le comportement choisi.
+ Pour la maille : %(k1)s
+ nb sous-points "k-1" :  %(i1)d
+ nb sous-points "k"   :  %(i2)d
 """),
 
 53: _("""
@@ -276,37 +136,31 @@ cata_msg={
 """),
 
 54: _("""
- Utilisation d'un mot clé obsolète : AFFE_CHAR_MECA/TEMP_CALCULEE
+ Problème d'utilisation du parallélisme :
+   Les fonctionnalités de parallélisme utilisées ici (calculs distribués) conduisent à créer
+   des structures de données "incomplètes" (i.e. partiellement calculées sur chaque processeur).
 
- L'une des charges contient un chargement thermique (TEMP_CALCULEE).
- L'utilisation de la température comme variable de commande en mécanique doit
- maintenant se faire en utilisant AFFE_MATERIAU/AFFE_VARC/NOM_VARC='TEMP'.
+   Malheureusement, dans la suite des traitements, le code a besoin que les structures de données soient
+   "complètes". On est donc obligé d'arreter le calcul.
 
- Néanmoins, jusqu'à la version 9.1 (incluse), les 2 syntaxes sont acceptées.
-
- Conseil :
- Déplacer le chargement thermique de AFFE_CHAR_MECA/TEMP_CALCULEE vers
- AFFE_MATERIAU/AFFE_VARC
+ Conseils pour l'utilisateur :
+   1) Il faut émettre une demande d'évolution du code pour que le calcul demandé aille à son terme.
+   2) En attendant, il ne faut pas utiliser la "distribution" des structures de donnée.
+      Aujourd'hui, cela veut dire : "ne pas utiliser le solveur MUMPS distribué".
 """),
 
-55: _("""
- Erreur d'utilisation (préparation des variables de commande) :
- Le CHAM_MATER %(k1)s contient des variables de commandes (AFFE_VARC).
- Une des charges contient un chargement thermique (TEMP_CALCULEE).
 
- Conseil :
- Déplacer le chargement thermique de AFFE_CHAR_MECA/TEMP_CALCULEE vers
- AFFE_MATERIAU/AFFE_VARC
-"""),
+
+
+
 
 56: _("""
  Erreur d'utilisation (rcmaco/alfint) :
- Le CHAM_MATER %(k1)s contient des variables de commandes (AFFE_MATERIAU/AFFE_VARC).
- Un des matériaux du CHAM_MATER contient un coefficient de dilation ALPHA=f(TEMP).
- Mais la température n'est pas fournie sous AFFE_MATERIAU/AFFE_VARC
+ Un des matériaux du CHAM_MATER %(k1)s contient un coefficient de dilation ALPHA=f(TEMP).
+ Mais la température de référence n'est pas fournie sous AFFE_MATERIAU/AFFE_VARC/VALE_REF
 
  Conseil :
- Renseignez le chargement thermique à l'aide de AFFE_MATERIAU/AFFE_VARC/NOM_VARC='TEMP'
+ Renseignez la température de référence à l'aide de AFFE_MATERIAU/AFFE_VARC/NOM_VARC='TEMP' + VALE_REF
 """),
 
 57: _("""
@@ -356,9 +210,10 @@ cata_msg={
 
 62: _("""
  Erreur de programmation (fointa) :
-    Pour l'interpolation de la fonction %(k1)s,
+    Pour l'interpolation de la fonction %(k1)s sur la maille %(k3)s,
     il manque le paramètre %(k2)s
 """),
+
 
 63: _("""
  Erreur lors de l'interpolation (fointa) de la fonction %(k1)s :
@@ -396,5 +251,71 @@ cata_msg={
    Vérifier les occurences de AFFE_MATERIAU/AFFE_VARC pour la maille concernée.
 """),
 
+68: _("""
+ la liste des composantes fournies à NOCART est incorrecte.
+ composantes dans catalogue:
+"""),
+
+69: _("""
+   %(k1)s
+"""),
+
+70: _("""
+ composantes dans EDITGD:
+"""),
+
+71: _("""
+   %(k1)s
+"""),
+
+72: _("""
+
+"""),
+
+73: _("""
+ ! jacobien negatif en 3d !
+"""),
+
+74: _("""
+ élément  :  %(i1)d
+ jacobien :  %(r1)f
+ attention le calcul d'erreur est faux si la maille n est pas correctement orientée
+"""),
+
+75: _("""
+ Probleme de parallélisation des calculs élémentaires avec FETI. Imcompatiblité
+ entre LIGRELs dans la routine CALCUL.
+--> Risques & conseils :
+ Essayer de passer en séquentiel ou de changer de solveur linéaire.
+"""),
+
+76: _("""
+ Problème de parallélisation des calculs élémentaires avec FETI. Imcompatiblité
+ LIGREL/numéro de maille dans la routine CALCUL.
+--> Risques & conseils :
+ Essayer de passer en séquentiel ou de changer de solveur linéaire.
+"""),
+
+77: _("""
+ problème lors de l'affectation du champ: %(k1)s
+ des valeurs n'ont pas ete recopiées dans le CHAM_ELEM final (perte d'information ?)
+ ce problème peut être du a l'utilisation du mot cle TOUT='OUI'.
+ on peut vérifier le champ produit avec info=2
+
+"""),
+
+78: _("""
+ Lois de comportement différentes pour la maille %(k3)s :
+ - loi de comportement extraite de la SD Résultat   : %(k1)s
+ - loi de comportement fournie à l'opérateur CALC_G : %(k2)s
+
+--> Risques & conseils :
+On doit généralement utiliser la meme loi de comportement entre le calcul et le
+post-traitement. On peut utiliser deux comportements différents, mais alors
+l'utilisateur doit etre vigilant sur l'interprétation des résultats(cf.U2.05.01).
+Si plusieurs comportements sont définis sur la structure, le comportement à
+indiquer dans CALC_G est celui du matériau dans lequel la fissure se développe.
+Dans ce cas, ce message d'alarme est quand meme émis mais le résultat est bien cohérent.
+"""),
 
 }

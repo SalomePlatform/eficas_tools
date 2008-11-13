@@ -2,7 +2,7 @@ import os,glob,sys
 import unittest
 import difflib
 
-from Editeur import appli
+from InterfaceTK import appli
 
 from config import ASTERDIR
 

@@ -1,14 +1,14 @@
 #unalias do
 #set -x
-version=NEW82
-passe=2
+version=NEW9
+passe=1
 rm -rf ./Batch/${version}/ok_${passe}
 rm -rf ./Batch/${version}/bad_${passe} 
 rm -rf ./Batch/${version}/badfile_${passe}
 rm -rf ./Batch/${version}/nt_${passe}
 for file in `cat ./Batch/${version}/aTester`
 do
-        #echo $file
+        echo $file
         grep "VISU_EFICAS='NON'" $file > /dev/null 2>/dev/null
         rc=$?
         if [ "$rc" != "0" ]

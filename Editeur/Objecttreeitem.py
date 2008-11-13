@@ -27,7 +27,6 @@ from copy import copy,deepcopy
 
 # import du chargeur de composants
 from comploader import make_objecttreeitem
-import treewidget
 from Ihm import CONNECTOR
 
 myrepr = Repr()
@@ -51,7 +50,7 @@ class TreeItem:
     # ou treeOrNode est le noeud parent, item est l'item associé
     # command est une fonction python appelée sur sélection graphique
     # du noeud et rmenu est une fonction python appelée sur click droit sur le noeud
-    itemNode=treewidget.Node
+    itemNode=None
 
     def __init__(self):
         """Constructor.  Do whatever you need to do."""
@@ -130,7 +129,7 @@ class Delegate:
     def cachereport(self):
         keys = self.__cache.keys()
         keys.sort()
-        print keys
+        #print keys
 
 
 class ObjectTreeItem(TreeItem,Delegate):

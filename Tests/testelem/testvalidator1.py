@@ -66,7 +66,7 @@ class TestValidCase(unittest.TestCase):
    def test003(self):
        cata=SIMP(statut='o',typ='I',validators=TypeVal(1))
        liste=(
-               (1,1),(1.,0),(1.25,0),
+               (1,1),(1.1,0),(1.25,0),
                (('RI',0.,1.),0),
              )
        self._test(cata,liste)
@@ -77,7 +77,7 @@ class TestValidCase(unittest.TestCase):
               (1,1),((1,3),1),
               ((3,1),0),
               ((1,3,2),0),
-              ((1.,2.),0),
+              ((1.1,2.),0),
               (myparam((1.,2.)),0),
               (myparam((1,2)),1),
               (myparam((1,2,3,4,5)),1),
@@ -108,7 +108,7 @@ class TestValidCase(unittest.TestCase):
               ((100,50,60,701),0),
               ((3,1),0),
               ((1,3,2),0),
-              ((1.,2.),0),
+              ((1.1,2.),0),
              )
        self._test(cata,liste)
 

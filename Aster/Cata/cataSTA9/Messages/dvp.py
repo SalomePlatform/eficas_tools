@@ -1,4 +1,4 @@
-#@ MODIF dvp Messages  DATE 20/02/2007   AUTEUR LEBOUVIER F.LEBOUVIER 
+#@ MODIF dvp Messages  DATE 10/12/2007   AUTEUR REZETTE C.REZETTE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -39,6 +39,31 @@ cata_msg={
 
 2 : _("""
    Erreur numérique (floating point exception).
+"""),
+
+3 : _("""
+   Erreur de programmation : Nom de grandeur inattendu : %(k1)s
+   Routine : %(k2)s
+"""),
+
+4 : _("""
+   On ne sait pas traiter ce type d'élément : %(k1)s
+"""),
+
+
+97 : _("""
+   Erreur signalée dans la bibliothèque MED
+     nom de l'utilitaire : %(k1)s
+             code retour : %(i1)d
+"""),
+
+
+98 : _("""
+   Erreur lors du traitement du contact.
+"""),
+
+99 : _("""
+   Le calcul de l'option %(k1)s n'est pas prévue avec Arlequin.
 """),
 
 }

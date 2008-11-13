@@ -1,4 +1,4 @@
-#@ MODIF supervis Messages  DATE 07/06/2007   AUTEUR PELLET J.PELLET 
+#@ MODIF supervis Messages  DATE 19/05/2008   AUTEUR LEFEBVRE J-P.LEFEBVRE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22,25 +22,33 @@ def _(x) : return x
 
 cata_msg={
 
+1 : _("""
+ L'utilisation du mot-clé PAR_LOT='NON' permet d'accéder en lecture et en écriture
+ au contenu des concepts Aster. De ce fait, votre étude est exclue du périmètre
+ qualifié de Code_Aster puisque toutes ses étapes ne peuvent être certifiées.
 
-
-
-
+ Conseils :
+   - Il n'y a pas particulièrement de risque de résultat faux... sauf si votre
+     programmation l'introduit.
+   - Distinguez le calcul lui-même (qui doit sans doute passer en PAR_LOT='OUI')
+     des post-traitements (qui nécessiteraient le mode PAR_LOT='NON') qui peuvent
+     être réalisés en POURSUITE.
+"""),
 
 2: _("""
  Arret sur erreur(s) utilisateur
 """),
 
 3: _("""
- Erreur programmeur : JEMARQ/JEDEMA non apparies.
+ Erreur programmeur : JEMARQ/JEDEMA non appariés.
 """),
 
 4: _("""
- Commande n  %(k1)s  :  "%(k2)s"  :   %(k3)s  erreur(s) detectee(s)
+ Commande n  %(k1)s  :  "%(k2)s"  :   %(k3)s  erreur(s) détectée(s)
 """),
 
 5: _("""
- Erreur(s) à l'exécution de "%(k1)s" : arret immediat du programme.
+ Erreur(s) à l'exécution de "%(k1)s" : arret immédiat du programme.
 """),
 
 6: _("""
@@ -48,11 +56,12 @@ cata_msg={
 """),
 
 7: _("""
- Le concept " %(k1)s " est inconnu. Il n'est ni parmi les créés, ni parmi ceux à créer.
+ Le concept " %(k1)s " est inconnu.
+ Il n'est ni parmi les créés, ni parmi ceux à créer.
 """),
 
 8: _("""
- Un nom de concept intermediaire doit commencer par '.' ou '_' et non :  %(k1)s
+ Un nom de concept intermédiaire doit commencer par '.' ou '_' et non :  %(k1)s
 """),
 
 9: _("""
@@ -60,15 +69,31 @@ cata_msg={
 """),
 
 10: _("""
-   - le concept  "%(k1)s" est detruit des bases de donnees.
+   - le concept  "%(k1)s" est détruit des bases de données.
 """),
 
 11: _("""
- Impossible d'allouer la mémoire jeveux demandée
+ Impossible d'allouer la mémoire JEVEUX demandée : %(i1)d Moctets.
+
+ En général, cette erreur se produit car la mémoire utilisée hors du fortran
+ (jeveux) est importante.
+
+ Causes possibles :
+   - le calcul produit de gros objets Python dans une macro-commande ou
+     dans le jeu de commande lui-même,
+   - le calcul appelle un solveur (MUMPS par exemple) ou un outil externe
+     qui a besoin de mémoire hors jeveux,
+   - utilisation de jeveux dynamique,
+   - ...
+
+ Solution :
+   - distinguer la mémoire limite du calcul (case "Mémoire totale" de astk)
+     de la mémoire réservée à jeveux (case "dont Aster"), le reste étant
+     disponible pour les allocations dynamiques.
 """),
 
 12: _("""
- Exécution de jeveux en mode debug
+ Exécution de JEVEUX en mode DEBUG
 """),
 
 13: _("""
@@ -107,10 +132,6 @@ cata_msg={
   Erreur(s) fatale(s) lors de la lecture des catalogues
 """),
 
-22: _("""
-L'argument du mot cle "NOM" sous le mot clé facteur "CODE" est tronqué à 8 caractères. Le nom de code est donc "%(k1)s".
-"""),
-
 23: _("""
  Debug JXVERI demandé
 """),
@@ -121,6 +142,8 @@ L'argument du mot cle "NOM" sous le mot clé facteur "CODE" est tronqué à 8 carac
 
 25: _("""
  Mémoire gestion : "COMPACTE"
+ Ce mode de gestion peut augmenter sensiblement le temps système de certaines commandes,
+ les lectures/écritures sur les bases Jeveux étant beaucoup plus fréquentes
 """),
 
 26: _("""
@@ -136,7 +159,7 @@ L'argument du mot cle "NOM" sous le mot clé facteur "CODE" est tronqué à 8 carac
 """),
 
 29: _("""
- Trop de noms definis dans la liste argument de "FICHIER"
+ Trop de noms définis dans la liste argument de "FICHIER"
 """),
 
 30: _("""
@@ -152,7 +175,7 @@ L'argument du mot cle "NOM" sous le mot clé facteur "CODE" est tronqué à 8 carac
 """),
 
 33: _("""
- Erreur fatale  **** appel a commande "superviseur".
+ Erreur fatale  **** appel à commande "superviseur".
 """),
 
 34: _("""
@@ -166,11 +189,6 @@ L'argument du mot cle "NOM" sous le mot clé facteur "CODE" est tronqué à 8 carac
 36: _("""
  Le concept de nom '%(k1)s' n'existe pas
 """),
-
-
-
-
-
 
 38: _("""
  Il n'y a plus de temps pour continuer
@@ -189,8 +207,6 @@ L'argument du mot cle "NOM" sous le mot clé facteur "CODE" est tronqué à 8 carac
 Le message d'alarme '%(k1)s' a été émis %(i1)d fois, il ne sera plus affiché.
 """),
 
-
-
 43: _("""
  Debug SDVERI suspendu
 """),
@@ -202,8 +218,6 @@ Le message d'alarme '%(k1)s' a été émis %(i1)d fois, il ne sera plus affiché.
 45: _("""
  Debug JEVEUX suspendu
 """),
-
-
 
 47: _("""
  Debug JXVERI suspendu
@@ -218,48 +232,194 @@ Le message d'alarme '%(k1)s' a été émis %(i1)d fois, il ne sera plus affiché.
 """),
 
 50: _("""
- la commande a un numero non appelable dans cette version.
- le numero errone est  %(i1)d 
+ la commande a un numéro non appelable dans cette version.
+ le numero erroné est  %(i1)d
 """),
 
-
-
-
-
-
-
-
 52: _("""
- fin de lecture (duree  %(r1)f  s.) %(k1)s 
+ fin de lecture (durée  %(r1)f  s.) %(k1)s
 """),
 
 53: _("""
- vous ne pouvez utiliser plus de  %(i1)d 
- niveaux de profondeur pour des appels par la  procedure %(k1)s 
+ vous ne pouvez utiliser plus de  %(i1)d
+ niveaux de profondeur pour des appels par la procédure %(k1)s
 """),
 
-
-
-
-
-
-55 : _("""
+55: _("""
  Appels récursifs de messages d'erreur ou d'alarme.
 """),
 
-56 : _("""
+56: _("""
  Incohérence entre le catalogue et le corps de la macro.
 """),
 
-57 : _("""
+57: _("""
    Impossible d'importer '%(k1)s' dans Messages.
    Le fichier %(k1)s.py n'existe pas dans le répertoire 'Messages'
    ou bien la syntaxe du fichier est incorrecte.
-   
+
    Merci de signaler cette anomalie.
-   
+
    Traceback :
    %(k2)s
+"""),
+
+60: _("""
+ la procédure a un numéro non appelable dans cette version.
+ le numero errone est  %(i1)d
+"""),
+
+61: _("""
+  La commande a un numéro non appelable dans cette version
+  Le numéro erroné est : %(i1)d
+"""),
+
+62: _("""
+  Les messages d'erreurs précédent concerne la commande :
+"""),
+
+63: _("""
+     ARRET PAR MANQUE DE TEMPS CPU
+     Les commandes suivantes sont ignorees, on passe directement dans FIN
+     La base globale est sauvegardee
+     Temps consomme de la reserve CPU        :  %(r1).2f s\n
+"""),
+
+64: _("""
+  Valeur initiale du temps CPU maximum =   %(i1)d secondes
+  Valeur du temps CPU maximum passé aux commandes =   %(i2)d secondes
+  Réserve CPU prévue = %(i3)d secondes
+"""),
+
+65: _("""
+   %(k1)s   %(k2)s   %(k3)s   %(k4)s
+"""),
+
+66: _("""
+   %(k1)s   %(k2)s   %(k3)s   %(k4)s   %(k5)s
+"""),
+
+67: _("""
+ Passage numéro %(i1)d
+"""),
+
+68: _("""
+ information sur les concepts devant etre créés.
+"""),
+
+69: _("""
+   %(k1)s   %(k2)s   %(k3)s   %(k4)s
+"""),
+
+70: _("""
+   %(k1)s   %(k2)s   %(k3)s   %(k4)s   %(k5)s
+"""),
+
+71: _("""
+ rappel sur les executions précédentes
+   - il a ete executé %(i1)d procédures et opérateurs.
+"""),
+
+72: _("""
+   - l'execution précédente s'est terminée correctement.
+"""),
+
+73: _("""
+
+   - l'execution précédente s'est terminée en erreur dans la procédure %(k1)s.
+"""),
+
+74: _("""
+
+   - l'execution précédente s'est terminée en erreur dans l'opérateur %(k1)s.
+"""),
+
+75: _("""
+     le concept %(k1)s de type %(k2)s  est peut-etre errone.
+"""),
+
+76: _("""
+   - l'execution precedente s'est terminee prematurement dans l'operateur %(k1)s.
+"""),
+
+77: _("""
+     le concept %(k1)s de type %(k2)s  a ete néanmoims validé par l'opérateur
+"""),
+
+78: _("""
+     Message attache au concept  %(k1)s
+"""),
+
+79: _("""
+     Pas de message attache au concept %(k1)s
+"""),
+
+80: _("""
+
+"""),
+
+81: _("""
+ %(k1)s nom symbolique inconnu
+  - nombre de valeurs attendues %(i1)d
+  - valeurs attendues : %(k1)s, %(k2)s,...
+"""),
+
+82: _("""
+ L'argument du mot cle "CAS"  est errone.
+ Valeur lue %(k1)s
+ nombre de valeurs attendues %(i1)d
+ valeurs attendues : %(k1)s,%(k2)s, ...
+"""),
+
+83: _("""
+
+ le nombre d'enregistrements (nmax_enre) et leurs longueurs (long_enre) conduisent a un
+fichier
+ dont la taille maximale en octets (%(i1)d) est superieure a limite autorisee :  %(i2)d
+
+"""),
+
+84: _("""
+ Nom symbolique errone pour un fichier de sortie
+ Valeur lue %(k1)s
+ - nombre de valeurs attendues %(i2)d
+ - valeurs attendues           %(k2)s, %(k3)s
+
+"""),
+
+85: _("""
+ information sur les concepts existants.
+"""),
+
+86: _("""
+ Erreur a la relecture du fichier pick.1 : aucun objet sauvegardé ne sera récupéré.
+"""),
+
+87: _("""
+Types incompatibles entre glob.1 et pick.1 pour le concept de nom %(k1)s.
+"""),
+
+88: _("""
+Concept de nom %(k1)s et de type %(k2)s introuvable dans la base globale"
+"""),
+
+# on ne veut pas émettre d'alarme mais que le message se voit, donc on fait la mise en forme ici !
+89 : _("""
+   !-----------------------------------------------------------------------!
+   !   Liste des alarmes émises lors de l'exécution du calcul.             !
+   !                                                                       !
+   !   Les alarmes que vous avez choisies d'ignorer sont précédées de (*). !
+   !   Nombre d'occurrences pour chacune des alarmes :                     !
+"""),
+        
+90 : _("""   !      %(k1)3s %(k2)-20s émise %(i1)4d fois                         !
+"""),
+
+91 : _("""   !-----------------------------------------------------------------------!
+
+"""),
+
+92 : _("""   !          aucune alarme                                                !
 """),
 
 }

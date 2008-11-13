@@ -6,7 +6,7 @@ import difflib
 import compare
 
 import prefs
-from Editeur import appli
+from InterfaceTK import appli
 
 def add_param(j,pos,nom,valeur):
     co=j.addentite("PARAMETRE",pos)
@@ -35,7 +35,7 @@ class TestCase(unittest.TestCase):
    def test000(self):
       """ Test de construction du fichier de commandes az.comm de zero"""
 
-      app=appli.STANDALONE(version='v7')
+      app=appli.STANDALONE(version='v9')
       j=app.newJDC()
 # commande DEBUT
       co=j.addentite("DEBUT",0)
@@ -322,7 +322,7 @@ class TestCase(unittest.TestCase):
    def test001(self):
       """ Test de construction d'un fichier de commandes avec DEFI_LIST_REEL, fonction et parametre de zero"""
 
-      app=appli.STANDALONE(version='v7')
+      app=appli.STANDALONE(version='v9')
       j=app.newJDC()
 # commande DEBUT
       co=j.addentite("DEBUT",0)
@@ -378,9 +378,9 @@ class TestCase(unittest.TestCase):
       ! Concept retourné non défini !
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Mot-clé simple : VALE
-         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-         ! 'sin(1.,2)' n'est pas d'un type autorisé: ('R',) !
-         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         ! 'sin(1.,2)' (de type <type 'str'>) n'est pas d'un type autorisé: ('R',) !
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Fin Mot-clé simple : VALE
    Fin Etape : DEFI_LIST_REEL
    Etape : DEFI_LIST_REEL    ligne : ...
@@ -388,9 +388,9 @@ class TestCase(unittest.TestCase):
       ! Concept retourné non défini !
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Mot-clé simple : VALE
-         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-         ! 'aaa(1.)' n'est pas d'un type autorisé: ('R',) !
-         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         ! 'aaa(1.)' (de type <type 'str'>) n'est pas d'un type autorisé: ('R',) !
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Fin Mot-clé simple : VALE
    Fin Etape : DEFI_LIST_REEL
 FIN CR validation :SansNom

@@ -1,4 +1,4 @@
-#@ MODIF utilifor Messages  DATE 20/02/2007   AUTEUR LEBOUVIER F.LEBOUVIER 
+#@ MODIF utilifor Messages  DATE 18/09/2007   AUTEUR DURAND C.DURAND 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22,36 +22,17 @@ def _(x) : return x
 
 cata_msg={
 
-1: _("""
- number of terms .le. 0
-"""),
-
-2: _("""
- nombre de termes .gt. 1000
-"""),
-
-3: _("""
- x en dehors de l'intervalle (-1,+1)
-"""),
-
 4: _("""
- x trop grand 
-"""),
-
-5: _("""
- nombre de coefficients inferieur a 1
-"""),
-
-6: _("""
- serie de chebyshev trop courte pour la precision
+ X trop grand 
 """),
 
 7: _("""
- probleme dans la resolution du systeme sous contraint vsrsrr
+ problème dans la résolution du système sous contraint VSRSRR
 """),
 
 8: _("""
- la programmation prevoit que les entiers sont codes sur plus de 32 bits. ce qui n'est pas le cas sur votre machine
+ la programmation prévoit que les entiers sont codés sur plus de 32 bits
+ ce qui n'est pas le cas sur votre machine
 """),
 
 9: _("""

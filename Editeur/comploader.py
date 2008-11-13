@@ -38,17 +38,24 @@ import os,glob,types
 # Ce dictionnaire est renseigné par la méthode charger_composants 
 composants = {}
 
-def charger_composants():
+def charger_composants(Ihm="TK"):
     """
         Cette fonction a pour but de charger tous les modules composants graphiques
         (fichiers compo*.py dans le même répertoire que ce module )
         et de remplir le dictionnaire composants utilisé par make_objecttreeitem
     """
-    repertoire=os.path.dirname(__file__)
+    reper=os.path.dirname(__file__)
+    if Ihm == "TK" :
+       repertoire=reper+"/../InterfaceTK"
+       package="InterfaceTK"
+    else :
+       repertoire=reper+"/../InterfaceQT"
+       package="InterfaceQT"
     listfich=glob.glob(os.path.join(repertoire, "compo*.py"))
     for fichier in listfich:
         m= os.path.basename(fichier)[:-3]
-        module=__import__(m,globals(),locals())
+        module=__import__(package,globals(),locals(),[m])
+        module = getattr(module, m)
         composants[module.objet]=module.treeitem
     return composants
 

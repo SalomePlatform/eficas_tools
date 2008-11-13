@@ -1,4 +1,4 @@
-#@ MODIF macr_ascouf_calc_ops Macro  DATE 23/05/2007   AUTEUR PELLET J.PELLET 
+#@ MODIF macr_ascouf_calc_ops Macro  DATE 14/04/2008   AUTEUR GALENNE E.GALENNE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -32,7 +32,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
   import math
   import aster
   from math import pi,sin,cos,sqrt,atan2
-  from Utilitai.Utmess     import UTMESS
+  from Utilitai.Utmess     import  UTMESS
   ier=0
 # On recopie les mots cles affe_materiau et impr_table pour les proteger
   mc_AFFE_MATERIAU=AFFE_MATERIAU
@@ -65,14 +65,14 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
     if TYPE_MAILLAGE=='SOUS_EPAIS_COUDE' :
        message=        ' la condition aux limites sur bol a section conique \n'
        message=message+' est ignoree pour un coude avec sous-epaisseurs \n'
-       UTMESS('A', "MACR_ASCOUF_CALC", message)
+       UTMESS('A','ASCOUF0_1')
     elif (TYPE_MAILLAGE[:4]!='FISS') and (CL_BOL_P2_GV['AZIMUT']!=None) :
-       UTMESS('E', "MACR_ASCOUF_CALC", "mot-cle AZIMUT non autorise dans le cas d un coude sain")
-#
+       UTMESS('E','ASCOUF0_2')
+ #
   if mc_IMPR_TABLE!=None :
     FLAG = 0
     if (mc_IMPR_TABLE['NOM_PARA']==None) and (mc_IMPR_TABLE['POSI_ANGUL']==None) and (mc_IMPR_TABLE['POSI_CURV_LONGI']==None) :
-       UTMESS('E', "MACR_ASCOUF_CALC", "POSI_ANGUL POSI_CURV_LONGI est obligatoire")
+       UTMESS('E','ASCOUF0_3')
        return ier
     if (mc_IMPR_TABLE['NOM_PARA']!=None) :
        impr_table_nom_para= mc_IMPR_TABLE['NOM_PARA']
@@ -81,9 +81,9 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
            FLAG = 1
            if (((impt['ANGLE']==None) and (impt['POSI_ANGUL']==None) and (impt['R_CINTR'        ]==None)) or
                ((impt['ANGLE']==None) and (impt['R_CINTR'   ]==None) and (impt['POSI_CURV_LONGI']==None))   )  :
-             UTMESS('E', "MACR_ASCOUF_CALC", "il faut renseigner : ANGLE, R_CINTR et POSI_ANGUL ou ANGLE, R_CINTR et POSI_CURV_LONGI")
+             UTMESS('E','ASCOUF0_4')
     if (mc_IMPR_TABLE['NOM_PARA']==None) : FLAG = 1
-    if not FLAG : UTMESS('A', "MACR_ASCOUF_CALC","ANGL_COUDE et ANGL_SOUS_EPAI sont inutiles dans ce cas")
+    if not FLAG : UTMESS('A','ASCOUF0_5')
 #
 #------------------------------------------------------------------
 #
@@ -91,7 +91,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
 #
   self.DeclareOut('modele',MODELE)
   mcfact=[]
-  if (PRES_REP!=None) and (PRES_REP['PRES_LEVRE']=='OUI') and (TYPE_MAILLAGE[:4]=='FISS') :
+  if (TYPE_MAILLAGE[:4]=='FISS') :
      mcfact.append(_F(GROUP_MA=GRMAIL     ,PHENOMENE='MECANIQUE',MODELISATION='3D'    ))
   else:
      mcfact.append(_F(GROUP_MA=GRMAIL[:5] ,PHENOMENE='MECANIQUE',MODELISATION='3D'    ))
@@ -114,7 +114,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
   mcfact=[]
   for mater in mc_AFFE_MATERIAU :
      if mater['TOUT']!=None :
-       mcfact.append(_F(TOUT    =mater['TOUT'    ],MATER=mater['MATER'],TEMP_REF=mater['TEMP_REF']))
+       mcfact.append(_F(TOUT    =mater['TOUT'    ],MATER=mater['MATER']))
        rccmat = mater['MATER']
      else                   :
        mcfact.append(_F(GROUP_MA=mater['GROUP_MA'],MATER=mater['MATER']))
@@ -164,12 +164,12 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
 #
      if RESU_THER!=None : self.DeclareOut('resuth',RESU_THER)
      mcsimp={}
-     if INCREMENT['NUME_INST_INIT']!=None : mcsimp['NUME_INIT']=INCREMENT['NUME_INST_INIT']
-     if INCREMENT['NUME_INST_FIN' ]!=None : mcsimp['NUME_FIN' ]=INCREMENT['NUME_INST_FIN' ]
+     if INCREMENT['NUME_INST_INIT']!=None : mcsimp['NUME_INST_INIT']=INCREMENT['NUME_INST_INIT']
+     if INCREMENT['NUME_INST_FIN' ]!=None : mcsimp['NUME_INST_FIN' ]=INCREMENT['NUME_INST_FIN' ]
      mcfact=_F(LIST_INST=INCREMENT['LIST_INST'],**mcsimp)
      resuth = THER_LINEAIRE( MODELE     = __modthe ,
                              CHAM_MATER = __affmat ,
-                             TEMP_INIT  = _F(STATIONNAIRE='OUI',),
+                             ETAT_INIT  = _F(STATIONNAIRE='OUI',),
                              EXCIT      = _F(CHARGE=__chther,),
                              INCREMENT  = mcfact, )
 #
@@ -283,7 +283,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
     else :
       motscles['PRES_REP']=_F( GROUP_MA  = 'PEAUINT',
                                PRES      = PRES_REP['PRES'] ,)
-    if PRES_REP['EFFE_FOND_P1']!=None :
+    if PRES_REP['EFFE_FOND_P1']!='NON' :
       motscles['EFFE_FOND']=_F( GROUP_MA_INT  = 'BORDTU'  ,
                                 GROUP_MA      = 'EXTUBE'  ,
                                 PRES          = PRES_REP['PRES'] ,)
@@ -309,6 +309,17 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
                                   FORCE_NODALE = mcfact , )
       i=i+1
 #
+#     --- commande AFFE_CHAR_MECA ---
+#         chargement mecanique :  verif contact levres
+#
+  if TYPE_MAILLAGE in ('FISS_COUDE','FISS_AXIS_DEB'):
+    _chcont = AFFE_CHAR_MECA( MODELE   = modele ,
+                               CONTACT =_F(GROUP_MA_MAIT = 'FACE1',
+                                           GROUP_MA_ESCL = 'FACE2',
+                                           METHODE='VERIF',
+                                           GROUP_MA_FOND='FONDFISS',
+                                           TOLE_INTERP = -1.E-6,),)
+#
 #     --- commande STAT_NON_LINE ---
 #
   motscles={}
@@ -328,6 +339,8 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
        else :
           mcfex.append(_F(CHARGE=_chtor[i],))
        i=i+1
+  if TYPE_MAILLAGE in ('FISS_COUDE','FISS_AXIS_DEB'):
+    mcfex.append(_F(CHARGE=_chcont,))
   motscles['EXCIT'] =mcfex
 #
   mcfci=[]  # mot clé facteur COMP_INCR :obligatoire pour les noeuds discrets
@@ -646,6 +659,27 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
                     PAGINATION = 'INTITULE');
 #
   if TYPE_MAILLAGE in ('FISS_COUDE','FISS_AXIS_DEB'):
+#
+#   --- post traitement fissure :  interpénétration des lèvres ----
+#
+    __tcont=POST_RELEVE_T( ACTION=_F(  INTITULE = 'Contact levres',
+                                GROUP_NO = 'FACE2',
+                                RESULTAT = nomres,
+                                TOUT_ORDRE = 'OUI',
+                                NOM_CHAM = 'VALE_CONT',
+                                NOM_CMP = 'CONT',
+                                OPERATION = 'EXTRACTION'))
+    tcont=__tcont.EXTR_TABLE()
+    numo = tcont['NUME_ORDRE'].values()['NUME_ORDRE']
+    numo=dict([(i,0) for i in numo]).keys()
+    nbinst = len(numo)
+    for i in range(1,nbinst+1) :
+      tabi = tcont.NUME_ORDRE==i
+      nbtot = len(tabi)
+      cont_actif=tabi.CONT>0.
+      nb_no_cont = len(cont_actif)
+      if nb_no_cont > 0 :
+         UTMESS('A','ASCOUF0_58',vali=[i,nbtot,nb_no_cont])
 #
 #   --- post traitement fissure :  calcul de g ----
 #

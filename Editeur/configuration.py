@@ -22,12 +22,11 @@
     Ce module sert pour charger les paramètres de configuration d'EFICAS
 """
 # Modules Python
-import os,sys,string,types
+import os, sys, string, types, re
 import traceback
 
 # Modules Eficas
-from widgets import showinfo,showerror,askretrycancel
-import utils
+from Editeur import utils
 
 class CONFIGbase:
 
@@ -42,6 +41,7 @@ class CONFIGbase:
   #                  class CONFIGStyle(CONFIGbase):
 
       self.appli = appli  
+      self.salome = appli.salome
       self.dRepMat={}
       if self.appli:
          self.parent=appli.top
@@ -52,16 +52,16 @@ class CONFIGbase:
       self.lecture_catalogues_standard()
       self.lecture_fichier_ini_utilisateur()
       self.init_liste_param()
-  
- 
+
   #--------------------------------------
   def lecture_fichier_ini_standard(self):
   #--------------------------------------
   # Verifie l'existence du fichier "standard"
   # appelle la lecture de ce fichier
       if not os.path.isfile(self.fic_ini):
-          print self.fic_ini
-          showerror("Erreur","Pas de fichier de configuration" + self.fic_ini+"\n")
+          if self.appli.ihm=="TK" :
+              from widgets import showerror
+              showerror("Erreur","Pas de fichier de configuration" + self.fic_ini+"\n")
           print "Erreur à la lecture du fichier de configuration : %s" % self.fic_ini
           sys.exit(0)
       self.lecture_fichier(self.fic_ini)
@@ -73,13 +73,15 @@ class CONFIGbase:
   # les transforme en attribut de l 'objet  
   # utilisation du dictionnaire local pour récuperer style
       txt = utils.read_file(fic)
-      from styles import style
+      from InterfaceTK.styles import style
       d=locals()
       try:
          exec txt in d
       except:
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-         showerror("Erreur","Une erreur s'est produite lors de la lecture du fichier : " + fic + "\n")
+         if self.appli.ihm=="TK" :
+              from widgets import showerror
+              showerror("Erreur","Une erreur s'est produite lors de la lecture du fichier : " + fic + "\n")
          print "Erreur à la lecture du fichier de configuration : %s" % fic
          sys.exit()
 
@@ -92,6 +94,15 @@ class CONFIGbase:
       
       for k in d['style'].__dict__.keys() :
           setattr(self,k,d['style'].__dict__[k])
+
+      if hasattr(self,"catalogues") :
+         for ligne in self.catalogues :
+            version=ligne[1]
+            codeSansPoint=re.sub("\.","",version)
+            chaine="rep_mat_"+codeSansPoint
+            if hasattr(self,chaine):
+               rep_mat=getattr(self,chaine)
+               self.dRepMat[version]=str(rep_mat)
 
   #--------------------------------------
   def lecture_fichier_ini_utilisateur(self):
@@ -176,7 +187,10 @@ class CONFIGbase:
                                   mode='query')
       if not result.resultat :
           if mode == 'considerer_annuler':
-             test = askretrycancel("Erreur","Données incorrectes !")
+             test=0
+             if self.appli.ihm=="TK" :
+                from widgets import showerror,askretrycancel
+                test = askretrycancel("Erreur","Données incorrectes !")
              if not test:
                  # XXX On sort d'EFICAS, je suppose
                  self.appli.exitEFICAS()
@@ -213,13 +227,17 @@ class CONFIG(CONFIGbase):
       self.texte = "EFICAS a besoin de certains renseignements pour se configurer\n"+\
               "Veuillez remplir TOUS les champs ci-dessous et appuyer sur 'Valider'\n"+\
               "Si vous annulez, EFICAS ne se lancera pas !!"
-      self.fichier="editeur.ini"
+      self.salome=appli.salome
+      self.code=appli.code
+      if self.salome == 0 :
+         self.fichier="editeur.ini"
+      else :
+         self.fichier="editeur_salome.ini"
       self.rep_ini = rep_ini
       self.fic_ini = os.path.join(self.rep_ini,self.fichier)
       self.titre = "Paramètres nécessaires à la configuration d'EFICAS"
       self.texte_ini = "Voici les paramètres que requiert Eficas"
       self.commande = self.creation_fichier_ini_si_possible
-      self.pref=""
       self.labels={"initialdir"    : "Répertoire initial pour Open/Save des fichiers",
                    "rep_travail"   : "Répertoire de travail",
                    "rep_mat"       : "Répertoire materiaux",
@@ -228,10 +246,14 @@ class CONFIG(CONFIGbase):
                    "catalogues"    : "Versions du code ",
                    "isdeveloppeur" : "Niveau de message ",
                    "path_cata_dev" : "Chemin d'accès aux catalogues développeurs"}
+
+      if self.code == "OPENTURNS" :
+         self.labels["DTDDirectory"]="Chemin d'accès au wraper"
                    
       self.types ={"initialdir":"rep", "rep_travail":"rep","rep_mat":"rep",
                    "path_doc": "rep","exec_acrobat":"file","exec_acrobat":"file",
-                   "catalogues" :"cata","isdeveloppeur":"YesNo","path_cata_dev":"rep"}
+                   "catalogues" :"cata","isdeveloppeur":"YesNo","path_cata_dev":"rep",
+		   "DTDDirectory":"rep"}
 
       self.YesNo={}
       self.YesNo['isdeveloppeur']=('Deboggage','Utilisation')
@@ -246,12 +268,46 @@ class CONFIG(CONFIGbase):
       self.catalogues= os.path.join(self.rep_ini,'..','Cata/cata.py')
       self.isdeveloppeur='NON'
       self.path_cata_dev=os.path.join(self.rep_user,'cata')
-
       CONFIGbase.__init__ (self,appli)
+      self.pref=""
+
+  #--------------------------------------
+  def save_params(self):
+  #--------------------------------------
+  # sauvegarde
+  # les nouveaux paramètres dans le fichier de configuration utilisateur
+  #
+      l_param=('exec_acrobat', 'rep_ini','catalogues','rep_travail','rep_mat','path_doc')
+      texte=""
+      for clef in l_param :
+          if hasattr(self,clef):
+             valeur=getattr(self,clef)
+             texte= texte + clef+"	= " + repr(valeur) +"\n"
+
+
+      # recuperation des repertoires materiaux
+      try :
+          for item in self.catalogues :
+              try :
+                  (code,version,cata,format,defaut)=item
+              except :
+                  (code,version,cata,format)=item
+              codeSansPoint=re.sub("\.","",version)
+              chaine="rep_mat_"+codeSansPoint
+              if hasattr(self,chaine):
+                 valeur=getattr(self,chaine)
+                 texte= texte + chaine+"	= '" + str(valeur) +"'\n"
+      except :
+             pass
+
+      f=open(self.fic_ini_utilisateur,'w+')
+      f.write(texte) 
+      f.close()
 
 
 class CONFIGStyle(CONFIGbase):
   def __init__(self,appli,rep_ini):
+      self.salome=appli.salome
       self.texte = "Pour prendre en compte les modifications \n"+\
                    "     RELANCER EFICAS"
       self.fichier="style.py"
@@ -260,7 +316,6 @@ class CONFIGStyle(CONFIGbase):
       self.titre = "Paramètres d affichage"
       self.texte_ini = "Voici les paramètres configurables :  "
       self.commande = self.creation_fichier_ini_si_possible
-      self.pref="style."
       self.labels={"background":"couleur du fonds", 
                    "foreground":"couleur de la police standard" ,
                    "standard":" police et taille standard",
@@ -295,6 +350,7 @@ class CONFIGStyle(CONFIGbase):
       self.YesNo={}
       self.l_param=[]
       CONFIGbase.__init__ (self,appli)
+      self.pref="style."
 
   def affichage_style_ini(self):
       self.affichage_fichier_ini()

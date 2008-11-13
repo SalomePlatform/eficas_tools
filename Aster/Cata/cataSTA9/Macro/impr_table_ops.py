@@ -1,4 +1,4 @@
-#@ MODIF impr_table_ops Macro  DATE 16/05/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF impr_table_ops Macro  DATE 06/05/2008   AUTEUR CNGUYEN C.NGUYEN 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -22,9 +22,7 @@
 
 import os.path
 import re
-
-from types import ListType, TupleType, StringTypes
-EnumTypes=(ListType, TupleType)
+from sets import Set
 
 
 # ------------------------------------------------------------------------------
@@ -37,7 +35,7 @@ def impr_table_ops(self, FORMAT, TABLE, INFO, **args):
    import aster
    from Accas import _F
    from Cata.cata import table_jeveux
-   from Utilitai.Utmess  import UTMESS
+   from Utilitai.Utmess  import  UTMESS
    from Utilitai.UniteAster import UniteAster
    ier=0
    # La macro compte pour 1 dans la numerotation des commandes
@@ -60,8 +58,7 @@ def impr_table_ops(self, FORMAT, TABLE, INFO, **args):
       nomfich=UL.Nom(args['UNITE'])
    if nomfich and os.path.exists(nomfich) and os.stat(nomfich).st_size<>0:
       if FORMAT=='XMGRACE':
-         UTMESS('A',macro,'Le fichier '+nomfich+' existe déjà, on écrit ' \
-                'à la suite.')
+         UTMESS('A','TABLE0_6',valk=nomfich)
 
    # 0.2. Création des dictionnaires des FILTRES
    Filtre=[]
@@ -79,7 +76,7 @@ def impr_table_ops(self, FORMAT, TABLE, INFO, **args):
    ltab=[]
    if args['SENSIBILITE']:
       lps=args['SENSIBILITE']
-      if not type(lps) in EnumTypes:
+      if not type(lps) in (list, tuple):
          lps=[lps,]
       for ps in lps:
          ncomp = self.jdc.memo_sensi.get_nocomp(TABLE.nom, ps.nom)
@@ -98,7 +95,7 @@ def impr_table_ops(self, FORMAT, TABLE, INFO, **args):
    nom_para=ltab[0][0].para
    if args['NOM_PARA']:
       nom_para=args['NOM_PARA']
-   if not type(nom_para) in EnumTypes:
+   if not type(nom_para) in (list, tuple):
       nom_para=[nom_para,]
 
    # 0.4.2. Traiter le cas des UL réservées
@@ -142,7 +139,7 @@ def impr_table_ops(self, FORMAT, TABLE, INFO, **args):
       # vérification des paramètres
       for p in nom_para:
          if not p in tab.para:
-            UTMESS('A', 'IMPR_TABLE', 'Paramètre absent de la table : %s' % p)
+           UTMESS('A','TABLE0_7',valk=p)
       
       # sélection des paramètres et suppression des colonnes vides
       timp = tab[nom_para]
@@ -161,55 +158,72 @@ def impr_table_ops(self, FORMAT, TABLE, INFO, **args):
          'FICHIER'   : nomfich,
       }
 
-      # 4.1. au format AGRAF
-      if FORMAT=='AGRAF':
+      # 4.1. au format TABLEAU
+      if FORMAT=='TABLEAU':
+         # surcharge par les formats de l'utilisateur
+         kargs['dform']={
+            'csep'   : args['SEPARATEUR'],
+            'ccom'   : args['COMMENTAIRE'],
+            'ccpara' : args['COMM_PARA'],
+            'cdeb'   : args['DEBUT_LIGNE'],
+            'cfin'   : args['FIN_LIGNE'],
+         }
+      
+      # 4.2. au format AGRAF
+      elif FORMAT=='AGRAF':
          kargs['dform']={ 'formR' : '%12.5E' }
          kfonc['FORMAT']='TABLEAU'
       
-      # 4.2. au format XMGRACE et dérivés
+      # 4.3. au format XMGRACE et dérivés
       elif FORMAT=='XMGRACE':
          kargs['dform']={ 'formR' : '%.8g' }
          kargs['PILOTE']=args['PILOTE']
          kfonc['PILOTE']=args['PILOTE']
 
-      # 4.3. format spécifié dans les arguments
+      # 4.4. format spécifié dans les arguments
       if args['FORMAT_R']:
          kargs['dform'].update({ 'formR' : fmtF2PY(args['FORMAT_R']) })
 
-      # 4.4. regroupement par paramètre : PAGINATION
+      # 4.5. regroupement par paramètre : PAGINATION
       if args['PAGINATION']:
          l_ppag=args['PAGINATION']
-         if not type(l_ppag) in EnumTypes:
+         if not type(l_ppag) in (list, tuple):
             l_ppag=[l_ppag,]
          kargs['PAGINATION'] = [p for p in l_ppag if p in nom_para]
          l_para_err          = [p for p in l_ppag if not p in nom_para]
          if len(l_para_err)>0:
-            UTMESS('A', 'IMPR_TABLE', 'Paramètres absents de la table (ou de '\
-                   'NOM_PARA) : %s' % ', '.join(l_para_err))
+             UTMESS('A','TABLE0_8',valk=l_para_err)
 
       timp.Impr(**kargs)
 
       # ----- 5. IMPR_FONCTION='OUI'
-      if args['IMPR_FONCTION'] and args['IMPR_FONCTION']=='OUI':
+      if args['IMPR_FONCTION'] == 'OUI':
          # cherche parmi les cellules celles qui contiennent un nom de fonction
-         dfon={}
-         for row in timp['FONCTION', 'FONCTION_C']:
-            for par,cell in row.items():
-               if type(cell) in StringTypes:
-                if aster.getvectjev(cell.strip().ljust(19)+'.PROL')<>None:
-                  dfon[cell.strip().ljust(19)]=par
-         # impression des fonctions trouvées
-         for f,par in dfon.items():
-            __fonc=RECU_FONCTION(
-               TABLE=sdtab,
-               FILTRE=_F(
-                  NOM_PARA=par,
-                  VALE_K=f,
-               ),
-               NOM_PARA_TABL=par,
-            )
-            __fonc.Trace(**kfonc)
-            DETRUIRE(CONCEPT=_F(NOM=('__fonc',),), ALARME='NON', INFO=1,)
+         dfon = []
+         p_extr = Set(['FONCTION', 'FONCTION_C'])
+         p_extr.intersection_update(timp.para)
+         if len(p_extr) > 0:
+            # on réduit timp aux colonnes FONCTION et FONCTION_C
+            textr = timp.__getitem__(list(p_extr))
+            for row in textr:
+               for par,cell in row.items():
+                  if type(cell) in (str, unicode):
+                     cell = cell.strip()
+                     if aster.getvectjev('%-19s.PROL' % cell) != None:
+                        dfon.append(['%-19s' % cell, par])
+            # impression des fonctions trouvées
+            for f,par in dfon:
+               __fonc=RECU_FONCTION(
+                  TABLE=sdtab,
+                  FILTRE=_F(
+                     NOM_PARA=par,
+                     VALE_K=f,
+                  ),
+                  NOM_PARA_TABL=par,
+                  TITRE = 'Fonction %s' % f,
+               )
+               __fonc.Trace(**kfonc)
+               DETRUIRE(CONCEPT=_F(NOM=('__fonc',),), ALARME='NON', INFO=1,)
 
    # 99. Traiter le cas des UL réservées
    UL.EtatInit()

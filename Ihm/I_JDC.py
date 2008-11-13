@@ -140,6 +140,7 @@ class JDC(I_OBJECT.OBJECT):
         objet.nom = "_comm_"+`ind`
         if pos == None : pos = 0
         self.etapes.insert(pos,objet)
+        self.reset_context()
         self.editmode=0
         self.active_etapes()
         CONNECTOR.Emit(self,"add",objet)
@@ -152,8 +153,8 @@ class JDC(I_OBJECT.OBJECT):
         objet = parametre.PARAMETRE(nom=nom_param)
         if pos == None : pos = 0
         self.etapes.insert(pos,objet)
-        self.editmode=0
         self.reset_context()
+        self.editmode=0
         self.active_etapes()
         CONNECTOR.Emit(self,"add",objet)
         self.fin_modif()
@@ -165,8 +166,8 @@ class JDC(I_OBJECT.OBJECT):
         objet = parametre_eval.PARAMETRE_EVAL(nom=nom_param)
         if pos == None : pos = 0
         self.etapes.insert(pos,objet)
-        self.editmode=0
         self.reset_context()
+        self.editmode=0
         self.active_etapes()
         CONNECTOR.Emit(self,"add",objet)
         self.fin_modif()
@@ -189,13 +190,13 @@ class JDC(I_OBJECT.OBJECT):
             objet.parent.dict_niveaux[objet.nom_niveau_definition].register(objet)
             objet.niveau = objet.parent.dict_niveaux[objet.nom_niveau_definition]
         self.etapes.insert(pos,objet)
+        self.reset_context()
         # il faut vérifier que les concepts utilisés par objet existent bien
         # à ce niveau d'arborescence
         objet.verif_existence_sd()
         objet.update_mc_global()
-        self.active_etapes()
         self.editmode=0
-        self.reset_context()
+        self.active_etapes()
         CONNECTOR.Emit(self,"add",objet)
         self.fin_modif()
         return objet
@@ -211,8 +212,8 @@ class JDC(I_OBJECT.OBJECT):
           if pos == None : pos = 0
           self.etapes.insert(pos,e)
           self.reset_current_step()
-          self.editmode=0
           self.reset_context()
+          self.editmode=0
           self.active_etapes()
           CONNECTOR.Emit(self,"add",e)
           self.fin_modif()
@@ -568,6 +569,11 @@ class JDC(I_OBJECT.OBJECT):
       #print "reset_context",self,self.nom
       self.current_context={}
       self.index_etape_courante=0
+      ind={}
+      for i,etape in enumerate(self.etapes):
+        ind[etape]=i
+      self.index_etapes=ind
+
    #   for etape in self.etapes:
    #       etape.reset_context()
 
@@ -752,6 +758,7 @@ class JDC(I_OBJECT.OBJECT):
       """
       if not self.editmode:
          self.etapes.append(etape)
+         self.index_etapes[etape] = len(self.etapes) - 1
       else:
          pass
       return self.g_register(etape)

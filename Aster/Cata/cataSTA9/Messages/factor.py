@@ -1,4 +1,4 @@
-#@ MODIF factor Messages  DATE 09/05/2007   AUTEUR PELLET J.PELLET 
+#@ MODIF factor Messages  DATE 11/02/2008   AUTEUR PELLET J.PELLET 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -103,20 +103,27 @@ Conseil :
   Il s'agit peut-etre d'un manque de conditions aux limites,
   ou au contraire, de redondances entre de trop nombreuses conditions.
 """),
-
+#-----------------------------------------------------------------------------------------------
+50: _("""
+ Solveur MUMPS :
+   -> Vous avez demandé comme renuméroteur RENUM = '%(k1)s', or MUMPS en a
+      utilisé un autre.
+   -> Risque & Conseil :
+      Il se peut que votre version de MUMPS n'ait pas été compilée avec
+      le support de ce renuméroteur. Dans le doute, RENUM='AUTO' permet
+      de laisser MUMPS faire le meilleur choix.
+ """),
 #-----------------------------------------------------------------------------------------------
 51: _("""
 Solveur MUMPS interdit ici.
 Causes possibles :
-  - contact/frottement discret
-  - STAT_NON_LINE / FLAMBEMENT
+  - frottement pénalisé ou lagrangien (si MUMPS distribué parallèle)
 """),
 
 #-----------------------------------------------------------------------------------------------
 52: _("""
 Solveurs LDLT et MULT_FRONT seuls permis ici.
 Causes possibles :
-  - contact/frottement discret
   - STAT_NON_LINE / FLAMBEMENT
 """),
 
@@ -132,20 +139,17 @@ Remarque : on a le droit de dépasser la valeur 100.
 #-----------------------------------------------------------------------------------------------
 54: _("""
 Solveur MUMPS :
-  Mumps manque de mémoire lors de la factorisation de la matrice.
+  Le solveur Mumps manque de mémoire lors de la factorisation de la matrice.
+
 Solution :
-  Il faut augmenter la mémoire donnée à Mumps.
-  Pour cela, il faut diminuer le pourcentage de mémoire donné à JEVEUX.
-  C'est à dire diminuer la valeur du paramètre "mem_aster" du menu "Options" d'ASTK.
-Remarque :
-  On peut par exemple choisir mem_aster=50 ce qui correspond à un partage
-  équitable (50/50) de la mémoire entre JEVEUX et Mumps.
+  Il faut augmenter la mémoire accessible à Mumps (et autres programmes hors fortran d'Aster).
+  Pour cela, il faut diminuer la mémoire donnée à JEVEUX (ASTK : case "dont Aster (Mo)").
 """),
 
 #-----------------------------------------------------------------------------------------------
 55: _("""
 Solveur MUMPS :
-  Problème dans le solveur MUMPS.
+  Problème ou alarme dans le solveur MUMPS.
   Le code retour de mumps (INFOG(1)) est : %(i1)d
 Solution :
   Consulter le manuel d'utilisation de Mumps.
@@ -174,9 +178,9 @@ Solution :
 #-----------------------------------------------------------------------------------------------
 58: _("""
 Solveur MUMPS :
-  La matrice est singulière.
+  La matrice est numériquement singulière.
 Solution :
-  On peut essayer d'aller plus loin en précisant : STOP_SINGULIER='NON'
+  Peut être un problème de modélisation (blocages redondants...)
 """),
 
 #-----------------------------------------------------------------------------------------------
@@ -208,5 +212,24 @@ Erreur Programmeur lors de la résolution d'un système linéaire :
 """),
 
 #-----------------------------------------------------------------------------------------------
+62: _("""
+Alarme Solveur MUMPS :
+  La procédure de raffinement itératif aurait besoin de plus que les %(i1)d d'itérations
+  imposées en dur dans l'appel MUMPS par Code_Aster.
+Solution :
+  On peut essayer de corriger l'affectation de XMPSK%ICNTL(10) dans AMUMPR/C.F.
+  Contactez l'assistance.
+"""),
+
+#-----------------------------------------------------------------------------------------------
+63: _("""
+Information Solveur MUMPS :
+  Déséquilibrage de charge maximum supérieur à %(r1)g %% sur au moins une des 6 étapes profilées.
+Conseils: Pour optimiser l'équilibrage de votre calcul, vous pouvez essayer
+        - d'enlever du modèle les mailles qui ne participent pas au calcul,
+        - utiliser l'option 'DISTRIBUE_SD' au lieu de 'DISTRIBUE_MAILLE' ou 'CENTRALISE',
+        - diminuer le nombre de processeurs utilisés.
+"""),
+
 #-----------------------------------------------------------------------------------------------
 }

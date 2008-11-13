@@ -1,8 +1,8 @@
-#@ MODIF table0 Messages  DATE 20/02/2007   AUTEUR LEBOUVIER F.LEBOUVIER 
+#@ MODIF table0 Messages  DATE 25/02/2008   AUTEUR ZENTNER I.ZENTNER 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -20,10 +20,62 @@
 
 def _(x) : return x
 
-cata_msg={
+cata_msg = {
 
-1: _("""
+1 : _("""
 Erreur dans les données. Le paramètre %(k1)s n'existe pas dans la table.
+"""),
+
+2 : _("""
+Paramètre %(k1)s inexistant dans la table %(k2)s.
+"""),
+
+3 : _("""
+Opération RENOMME. Erreur : %(k1)s
+"""),
+
+4 : _("""
+Paramètre %(k1)s inexistant dans la table %(k2)s.
+"""),
+
+5 : _("""
+Paramètre %(k1)s inexistant dans la table %(k2)s.
+"""),
+
+6 : _("""
+Le fichier %(k1)s existe déjà, on écrit à la suite.
+"""),
+
+7 : _("""
+Paramètre absent de la table : %(k1)s.
+"""),
+
+8 : _("""
+Paramètres absents de la table (ou de NOM_PARA) : %(k1)s.
+"""),
+
+10 : _("""
+NUME_TABLE=%(i1)d incorrect : il n'y a que %(i2)d blocs de tables dans le fichier.
+"""),
+
+11 : _("""
+Nombre de champs incorrect ligne %(i1)d.
+"""),
+
+12 : _("""
+On attend %(i1)d paramètres.
+"""),
+
+13 : _("""
+On a lu %(i1)d champs dans le fichier.
+"""),
+
+14 : ("""
+Les listes NOM_PARA et VALE doivent avoir le meme cardinal.
+"""),
+
+15 : ("""
+Les listes DEFA et PARA_NOCI doivent avoir le meme cardinal.
 """),
 
 }

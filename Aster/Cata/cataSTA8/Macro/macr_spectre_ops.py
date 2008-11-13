@@ -1,4 +1,4 @@
-#@ MODIF macr_spectre_ops Macro  DATE 14/11/2006   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF macr_spectre_ops Macro  DATE 21/11/2007   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19,12 +19,15 @@
 # ======================================================================
 
 from Accas import _F
-import aster
 import string
-try :
-   from Utilitai.Utmess import UTMESS
-except :
+
+# protection pour eficas
+try:
+   import aster
+   from Utilitai.Utmess import UTMESS  
+except:
    pass
+
 def macr_spectre_ops(self,MAILLAGE,PLANCHER,NOM_CHAM,CALCUL,RESU,IMPRESSION=None,
                      FREQ=None,LIST_FREQ=None,LIST_INST=None,AMOR_SPEC=None,**args):
   """

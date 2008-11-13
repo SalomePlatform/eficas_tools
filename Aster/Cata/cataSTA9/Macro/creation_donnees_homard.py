@@ -1,4 +1,4 @@
-#@ MODIF creation_donnees_homard Macro  DATE 04/04/2007   AUTEUR ABBAS M.ABBAS 
+#@ MODIF creation_donnees_homard Macro  DATE 11/12/2007   AUTEUR GNICOLAS G.NICOLAS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -17,11 +17,11 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
-# RESPONSABLE ABBAS M.ABBAS
+# RESPONSABLE GNICOLAS G.NICOLAS
 """
 Cette classe crée le fichier de configuration permettant de lancer HOMARD depuis Code_Aster.
 """
-__revision__ = "V1.2"
+__revision__ = "V1.3"
 __all__ = [ ]
  
 import os
@@ -30,13 +30,13 @@ from types import ListType, TupleType
 EnumTypes = (ListType, TupleType)
 
 try:
-  from Utilitai.Utmess import UTMESS
+  from Utilitai.Utmess import   UTMESS
 except ImportError:
-  def UTMESS(code, sprg, texte) :
+  def UTMESS(code, idmess, valk=(), vali=(), valr=()):
     """Clone de utmess si on ne reussit pas à le charger
     """
-    fmt = '\n <%s> <%s> %s\n\n'
-    print fmt % (code, sprg, texte)
+    fmt = '\n <%s> <%s> %s %s %s\n\n'
+    print fmt % (code, idmess, valk, vali, valr)
 
 # ------------------------------------------------------------------------------
 class creation_donnees_homard:
@@ -75,7 +75,7 @@ class creation_donnees_homard:
       self.ModeHOMA = d_aux[nom_macro][1]
       self.mode_homard_texte = d_aux[nom_macro][2]
     else :
-      UTMESS("F", nom_macro, "Cette macro commande est inconnue.")
+      UTMESS("F",'HOMARD0_1')
 #
 # 2. Données générales de cette initialisation
 #
@@ -285,7 +285,7 @@ class creation_donnees_homard:
       break
 #
     if message_erreur is not None :
-      UTMESS("F", self.nom_macro, message_erreur)
+      UTMESS("F",'HOMARD0_2',valk=message_erreur)
 #
     return self.fic_homard_niter, self.fic_homard_niterp1
 # ------------------------------------------------------------------------------
@@ -302,13 +302,12 @@ class creation_donnees_homard:
         os.remove (nomfic)
       except os.error, codret_partiel :
         print "Probleme au remove, erreur numéro ", codret_partiel[0], ":", codret_partiel[1]
-        UTMESS("F", self.nom_macro, "Impossible de tuer le fichier "+nomfic)
+        UTMESS("F",'HOMARD0_3',valk=nomfic)
 #
     fichier = open (nomfic,"w")
     self.fichier = fichier
 #
     return fichier, nomfic
-# ------------------------------------------------------------------------------
   def ecrire_ligne_configuration_0 (self, commentaire) :
     """Ecrit une ligne de commentaires du fichier de configuration
    Arguments :
@@ -444,6 +443,23 @@ class creation_donnees_homard:
         for aux in self.niveau :
           self.ecrire_ligne_configuration_2(aux[0], aux[1])
 #
+#     5.5. L'usage de l'indicateur
+#
+        if self.mots_cles.has_key("TYPE_OPER_INDICA") :
+          if self.mots_cles["TYPE_OPER_INDICA"] is not None :
+            self.ecrire_ligne_configuration_2("CCModeFI", self.mots_cles["TYPE_OPER_INDICA"])
+#
+#     5.6. Les éventuels groupes de filtrage du raffinement/deraffinement
+#
+        for cle in ( "GROUP_MA", "GROUP_NO" ) :
+          if self.mots_cles.has_key(cle) :
+            if self.mots_cles[cle] is not None :
+              if not type(self.mots_cles[cle]) in EnumTypes :
+                self.ecrire_ligne_configuration_2("CCGroAda", self.mots_cles[cle])
+              else :
+                for group in self.mots_cles[cle] :
+                  self.ecrire_ligne_configuration_2("CCGroAda", group)
+#
 #     6. Les éventuels champs à mettre à jour
 #
       if self.dico_configuration.has_key("Champs") :
@@ -468,12 +484,12 @@ class creation_donnees_homard:
         self.ecrire_ligne_configuration_2("SuivFron", "oui")
         self.ecrire_ligne_configuration_2("CCFronti", self.dico_configuration["Fichier_ASTER_vers_HOMARD"])
         self.ecrire_ligne_configuration_2("CCNoMFro", self.dico_configuration["NOM_MED_MAILLAGE_FRONTIERE"])
-        if self.mots_cles.has_key("GROUP_MA") :
-          if self.mots_cles["GROUP_MA"] is not None :
-            if not type(self.mots_cles["GROUP_MA"]) in EnumTypes :
-              self.ecrire_ligne_configuration_2("CCGroFro", self.mots_cles["GROUP_MA"])
+        if self.mots_cles.has_key("GROUP_MA_FRONT") :
+          if self.mots_cles["GROUP_MA_FRONT"] is not None :
+            if not type(self.mots_cles["GROUP_MA_FRONT"]) in EnumTypes :
+              self.ecrire_ligne_configuration_2("CCGroFro", self.mots_cles["GROUP_MA_FRONT"])
             else :
-              for group_ma in self.mots_cles["GROUP_MA"] :
+              for group_ma in self.mots_cles["GROUP_MA_FRONT"] :
                 self.ecrire_ligne_configuration_2("CCGroFro", group_ma)
 #
 #     8. L'éventuel maillage annexe
@@ -508,7 +524,7 @@ class creation_donnees_homard:
 #
     if message_erreur is not None :
       message_erreur = "Ecriture de "+nomfic_global+". "+message_erreur
-      UTMESS("F", self.nom_macro, message_erreur)
+      UTMESS("F",'HOMARD0_2',valk=message_erreur)
 #
     return
 # ------------------------------------------------------------------------------
@@ -536,6 +552,6 @@ class creation_donnees_homard:
       break
 #
     if message_erreur is not None :
-      UTMESS("F", self.nom_macro, message_erreur)
+      UTMESS("F",'HOMARD0_2',valk=message_erreur)
 #
     return nomfic_global

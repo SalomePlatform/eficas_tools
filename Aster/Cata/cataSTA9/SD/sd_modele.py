@@ -1,4 +1,4 @@
-#@ MODIF sd_modele SD  DATE 09/05/2007   AUTEUR PELLET J.PELLET 
+#@ MODIF sd_modele SD  DATE 06/05/2008   AUTEUR PELLET J.PELLET 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20,38 +20,12 @@
 
 from SD import *
 
-from SD.sd_ligrel import sd_ligrel
-from SD.sd_fiss_xfem import sd_fiss_xfem, sd_xfem_com1
+from SD.sd_ligrel    import sd_ligrel
+from SD.sd_maillage  import sd_maillage
 from SD.sd_prof_chno import sd_prof_chno
-
-
-class sd_modele_XFEM(AsBase):
-#-----------------------------
-    nomj = SDNom(fin=8)
-    # Questions aux responsables XFEM :
-    #   - faut-il garder FISS et NFIS ?
-    #   - Est-il normal de modifier les sd_fiss_xfem dans MODI_MODELE_XFEM ?
-
-    CONT   = AsVI()
-    SDCONT = AsVK24()
-    FISS   = AsVK8()
-    NFIS   = AsVI(lonmax=1,)  # nombre de fissures
-    com1   = sd_xfem_com1(SDNom(nomj=''))
-
-    glute_XFEM = Facultatif(sd_prof_chno(SDNom(nomj='.PRCHN00000'))) # fiche 10833
-
-
-    if 0 :
-        # Questions aux responsables XFEM :
-        #   - faut-il garder FISS et NFIS ?
-        #   - Est-il normal de modifier les sd_fiss_xfem dans MODI_MODELE_XFEM ?
-        # indirection vers FISS_XFEM car MODI_MODELE_XFEM modifie FISS_XFEM
-        # (Damijan va corriger cela avec la multi-fissuration)
-        # ATTENTION : Ce bout de programme suppose que FISS est de longueur 1 ce qui contradictoire avec la multi-fissuration)
-        def check_modele_i_FISS(self, checker):
-            if not self.FISS.get() : return
-            nom=self.FISS.get()[0]
-            sd2=sd_fiss_xfem(nom) ; sd2.check(checker)
+from SD.sd_carte     import sd_carte
+from SD.sd_xfem      import sd_modele_xfem
+from SD.sd_l_table   import sd_l_table
 
 
 
@@ -60,13 +34,29 @@ class sd_modele(AsBase):
     nomj = SDNom(fin=8)
 
     MODELE = sd_ligrel()
-    NOEUD_UTIL = AsVI()
     NOEUD = Facultatif(AsVI())
     MAILLE = Facultatif(AsVI())
 
-    # Si modèle avec sous-structures statiques :
-    SSSA = Facultatif(AsVI())
+    # une sd_modele peut avoir une "sd_l_table" contenant des grandeurs caractéristiques de l'étude :
+    lt = Facultatif(sd_l_table(SDNom(nomj='')))
 
-    # Si modèle "XFEM" :
-    xfem = Facultatif(sd_modele_XFEM(SDNom(nomj='')))
+    # Si le modèle vient de MODI_MODELE_XFEM :
+    xfem = Facultatif(sd_modele_xfem(SDNom(nomj='')))
+
+
+    def check_existence(self,checker) :
+        exi_liel=self.MODELE.LIEL.exists
+        exi_maille=self.MAILLE.exists
+        exi_noeud=self.NOEUD.exists
+
+        # si .LIEL => .MAILLE et .NOEUD
+        if exi_liel :
+            assert exi_maille
+            assert exi_noeud
+
+
+    def check_maillage(self,checker) :
+        # on est obligé de checker le maillage pour permettre la creation de la sd_voisinage
+        lgrf=self.MODELE.LGRF.get_stripped()
+        sd2 = sd_maillage(lgrf[0]); sd2.check(checker)
 

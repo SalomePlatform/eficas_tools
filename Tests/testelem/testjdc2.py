@@ -27,9 +27,10 @@ co1=OP5(MATR=co0)
       expected="""DEBUT CR validation : bidon
    Etape : OP5    ligne : 5    fichier : 'bidon'
       Mot-clé simple : MATR
-         !!!!!!...
-         ! ... n'est pas d'un type autorisé... !
-         !!!!!!...
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         ! concept co0 de type concept (de type <class 'cata5.concept'>) n'est pas d'un !
+         ! type autorisé: (<class 'Accas.A_ASSD.CO'>,)                                  !
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Fin Mot-clé simple : MATR
    Fin Etape : OP5
 FIN CR validation :bidon
@@ -46,9 +47,10 @@ co2=OP2(MATR=co0)
       expected="""DEBUT CR validation : bidon
    Etape : OP2    ligne : 5    fichier : 'bidon'
       Mot-clé simple : MATR
-         !!!!...
-         ! ... n'est pas d'un type autorisé... !
-         !!!!...
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         ! concept co0 de type concept (de type <class 'cata5.concept'>) n'est pas d'un !
+         ! type autorisé: (<class 'Accas.A_ASSD.CO'>, <class 'cata5.concept2'>)         !
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Fin Mot-clé simple : MATR
    Fin Etape : OP2
 FIN CR validation :bidon
@@ -78,9 +80,10 @@ co2=OP10(MATR=CO("xx"))
       expected="""DEBUT CR validation : bidon
    Etape : OP10    ligne : 2    fichier : 'bidon'
       Mot-clé simple : MATR
-         !!!!...
-         ! ... n'est pas d'un type autorisé... !
-         !!!!...
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         ! concept xx de type CO (de type <class 'Accas.A_ASSD.CO'>) n'est pas d'un type !
+         ! autorisé: (<class 'cata5.concept2'>,)                                         !
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Fin Mot-clé simple : MATR
    Fin Etape : OP10
 FIN CR validation :bidon
@@ -101,9 +104,10 @@ co2=OP22(MATR=xx)
       expected="""DEBUT CR validation : bidon
    Etape : OP22    ligne : 3    fichier : 'bidon'
       Mot-clé simple : MATR
-         !!!!!!!!...
-         ! ... n'est pas d'un type autorisé... !
-         !!!!!!!...
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         ! concept xx de type concept4 (de type <class 'cata5.concept4'>) n'est pas d'un !
+         ! type autorisé: (<class 'Accas.A_ASSD.CO'>,)                                   !
+         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Fin Mot-clé simple : MATR
    Fin Etape : OP22
 FIN CR validation :bidon

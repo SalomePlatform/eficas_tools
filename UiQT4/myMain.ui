@@ -1,0 +1,272 @@
+<ui version="4.0" >
+ <class>Eficas</class>
+ <widget class="QMainWindow" name="Eficas" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1406</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>68</y>
+     <width>1406</width>
+     <height>510</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1406</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFichier" >
+    <property name="title" >
+     <string>&amp;Fichier</string>
+    </property>
+    <addaction name="action_Nouveau" />
+    <addaction name="actionNouvel_Include" />
+    <addaction name="action_Ouvrir" />
+    <addaction name="separator" />
+    <addaction name="actionEnregistrer" />
+    <addaction name="actionEnregistrer_sous" />
+    <addaction name="actionFermer" />
+    <addaction name="actionFermer_tout" />
+    <addaction name="separator" />
+    <addaction name="actionQuitter" />
+   </widget>
+   <widget class="QMenu" name="menuEdition" >
+    <property name="title" >
+     <string>Edition</string>
+    </property>
+    <addaction name="actionCouper" />
+    <addaction name="actionCopier" />
+    <addaction name="actionColler" />
+   </widget>
+   <widget class="QMenu" name="menuJdC" >
+    <property name="title" >
+     <string>JdC</string>
+    </property>
+    <addaction name="actionRapport_de_Validation" />
+    <addaction name="actionFichier_Source" />
+    <addaction name="actionFichier_Resultat" />
+   </widget>
+   <widget class="QMenu" name="menu_Aide" >
+    <property name="title" >
+     <string>&amp;Aide</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuOptions" >
+    <property name="title" >
+     <string>Options</string>
+    </property>
+    <addaction name="actionParametres_Eficas" />
+    <addaction name="actionLecteur_Pdf" />
+   </widget>
+   <widget class="QMenu" name="menuTraduction" >
+    <property name="title" >
+     <string>Traduction</string>
+    </property>
+    <addaction name="actionTraduitV7V8" />
+    <addaction name="actionTraduitV8V9" />
+   </widget>
+   <widget class="QMenu" name="menuPatrons" >
+    <property name="title" >
+     <string>Patrons</string>
+    </property>
+   </widget>
+   <addaction name="menuFichier" />
+   <addaction name="menuEdition" />
+   <addaction name="menuJdC" />
+   <addaction name="menu_Aide" />
+   <addaction name="menuOptions" />
+   <addaction name="menuTraduction" />
+   <addaction name="menuPatrons" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>578</y>
+     <width>1406</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="toolBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>29</y>
+     <width>1406</width>
+     <height>39</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_Nouveau" />
+   <addaction name="action_Ouvrir" />
+   <addaction name="actionEnregistrer" />
+   <addaction name="separator" />
+   <addaction name="actionCouper" />
+   <addaction name="actionCopier" />
+   <addaction name="actionColler" />
+  </widget>
+  <action name="action_Nouveau" >
+   <property name="icon" >
+    <iconset>
+     <normaloff>icons/New24.gif</normaloff>icons/New24.gif</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Nouveau</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionNouvel_Include" >
+   <property name="text" >
+    <string>Nouvel Include</string>
+   </property>
+  </action>
+  <action name="action_Ouvrir" >
+   <property name="icon" >
+    <iconset>
+     <normaloff>icons/Open24.gif</normaloff>icons/Open24.gif</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Ouvrir</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionEnregistrer" >
+   <property name="icon" >
+    <iconset>
+     <normaloff>icons/Save24.gif</normaloff>icons/Save24.gif</iconset>
+   </property>
+   <property name="text" >
+    <string>Enregistrer</string>
+   </property>
+   <property name="shortcut" >
+    <string>Shift+E</string>
+   </property>
+  </action>
+  <action name="actionEnregistrer_sous" >
+   <property name="text" >
+    <string>Enregistrer sous</string>
+   </property>
+  </action>
+  <action name="actionFermer" >
+   <property name="text" >
+    <string>Fermer </string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionFermer_tout" >
+   <property name="text" >
+    <string>Fermer tout</string>
+   </property>
+  </action>
+  <action name="actionCopier" >
+   <property name="text" >
+    <string>Copier</string>
+   </property>
+  </action>
+  <action name="actionCouper" >
+   <property name="icon" >
+    <iconset>
+     <normaloff>icons/Cut24.gif</normaloff>icons/Cut24.gif</iconset>
+   </property>
+   <property name="text" >
+    <string>Couper</string>
+   </property>
+  </action>
+  <action name="actionColler" >
+   <property name="text" >
+    <string>Coller</string>
+   </property>
+  </action>
+  <action name="actionCopier" >
+   <property name="icon" >
+    <iconset>
+     <normaloff>icons/Copy24.gif</normaloff>icons/Copy24.gif</iconset>
+   </property>
+   <property name="text" >
+    <string>Copier</string>
+   </property>
+  </action>
+  <action name="actionColler" >
+   <property name="icon" >
+    <iconset>
+     <normaloff>icons/Paste24.gif</normaloff>icons/Paste24.gif</iconset>
+   </property>
+   <property name="text" >
+    <string>Coller</string>
+   </property>
+  </action>
+  <action name="actionQuitter" >
+   <property name="text" >
+    <string>Quitter</string>
+   </property>
+  </action>
+  <action name="actionRapport_de_Validation" >
+   <property name="text" >
+    <string>Rapport de Validation</string>
+   </property>
+  </action>
+  <action name="actionFichier_Source" >
+   <property name="text" >
+    <string>Fichier Source</string>
+   </property>
+  </action>
+  <action name="actionFichier_Resultat" >
+   <property name="text" >
+    <string>Fichier Résultat</string>
+   </property>
+  </action>
+  <action name="actionParametres_Eficas" >
+   <property name="text" >
+    <string>Parametres Eficas</string>
+   </property>
+  </action>
+  <action name="actionLecteur_Pdf" >
+   <property name="text" >
+    <string>Lecteur Pdf</string>
+   </property>
+  </action>
+  <action name="actionTraduitV7V8" >
+   <property name="text" >
+    <string>TraduitV7V8</string>
+   </property>
+  </action>
+  <action name="actionTraduitV8V9" >
+   <property name="text" >
+    <string>TraduitV8V9</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

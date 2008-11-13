@@ -1,4 +1,4 @@
-#@ MODIF N_JDC Noyau  DATE 30/05/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_JDC Noyau  DATE 01/04/2008   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -34,6 +34,30 @@ import N_OBJECT
 import N_CR
 from N_Exception import AsException
 from N_ASSD import ASSD
+
+
+
+
+MemoryErrorMsg = """MemoryError :
+
+En général, cette erreur se produit car la mémoire utilisée hors du fortran
+(jeveux) est importante.
+
+Causes possibles :
+   - le calcul produit de gros objets Python dans une macro-commande ou
+     dans le jeu de commande lui-même,
+   - le calcul appelle un solveur (MUMPS par exemple) ou un outil externe
+     qui a besoin de mémoire hors jeveux,
+   - utilisation de jeveux dynamique,
+   - ...
+
+Solution :
+   - distinguer la mémoire limite du calcul (case "Mémoire totale" de astk)
+     de la mémoire réservée à jeveux (case "dont Aster"), le reste étant
+     disponible pour les allocations dynamiques.
+"""
+
+
 
 class JDC(N_OBJECT.OBJECT):
    """
@@ -92,12 +116,15 @@ NONE = None
       #
       self.cr = self.CR(debut = "CR phase d'initialisation", 
                         fin = "fin CR phase d'initialisation")
-      self.g_context={}
+      # on met le jdc lui-meme dans le context global pour l'avoir sous
+      # l'etiquette "jdc" dans le fichier de commandes
+      self.g_context={ 'jdc' : self }
       # Liste pour stocker tous les concepts produits dans le JDC
       self.sds=[]
       # Dictionnaire pour stocker tous les concepts du JDC (acces rapide par le nom)
       self.sds_dict={}
       self.etapes=[]
+      self.index_etapes = {}
       self.mc_globaux={}
       self.current_context={}
       self.condition_context={}
@@ -112,13 +139,25 @@ NONE = None
          compte-rendu self.cr
       """
       try:
-        if self.appli != None : 
-           self.appli.affiche_infos('Compilation du fichier de commandes en cours ...')
-        self.proc_compile=compile(self.procedure,self.nom,'exec')
-      except SyntaxError,e:
-        if CONTEXT.debug : traceback.print_exc()
-        l=traceback.format_exception_only(SyntaxError,e)
-        self.cr.exception("Compilation impossible : "+string.join(l))
+         if self.appli != None : 
+            self.appli.affiche_infos('Compilation du fichier de commandes en cours ...')
+         self.proc_compile=compile(self.procedure,self.nom,'exec')
+      except SyntaxError, e:
+         if CONTEXT.debug : traceback.print_exc()
+         l=traceback.format_exception_only(SyntaxError,e)
+         self.cr.exception("Compilation impossible : "+string.join(l))
+      except MemoryError, e:
+         self.cr.exception(MemoryErrorMsg)
+      except SystemError, e:
+         erreurs_connues = """
+Causes possibles :
+ - offset too large : liste trop longue derrière un mot-clé.
+   Solution : liste = (valeurs, ..., )
+              MOT_CLE = *liste,
+"""
+         l=traceback.format_exception_only(SystemError,e)
+         l.append(erreurs_connues)
+         self.cr.exception("Compilation impossible : " + ''.join(l))
       return
 
    def exec_compile(self):
@@ -178,7 +217,12 @@ NONE = None
         # une erreur a ete identifiee
         if CONTEXT.debug :
           traceback.print_exc()
-        self.cr.exception(str(e))
+        # l'exception a été récupérée avant (où, comment ?),
+        # donc on cherche dans le texte
+        txt = str(e)
+        if txt.find('MemoryError') >= 0:
+           txt = MemoryErrorMsg
+        self.cr.exception(txt)
         CONTEXT.unset_current_step()
 
       except NameError,e:
@@ -241,6 +285,7 @@ NONE = None
          et retourne un numéro d'enregistrement
       """
       self.etapes.append(etape)
+      self.index_etapes[etape] = len(self.etapes) - 1
       return self.g_register(etape)
 
    def o_register(self,sd):
@@ -418,7 +463,7 @@ NONE = None
       # Si on insère des commandes (par ex, dans EFICAS), il faut préalablement
       # remettre ce pointeur à 0
       if etape:
-         index_etape=self.etapes.index(etape)
+         index_etape = self.index_etapes[etape]
       else:
          index_etape=len(self.etapes)
       if index_etape >= self.index_etape_courante:
@@ -429,7 +474,8 @@ NONE = None
          liste_etapes=self.etapes[self.index_etape_courante:index_etape]
       else:
          d=self.current_context={}
-         if self.context_ini:d.update(self.context_ini)
+         if self.context_ini:
+            d.update(self.context_ini)
          liste_etapes=self.etapes
 
       for e in liste_etapes:
@@ -459,5 +505,6 @@ NONE = None
           et remet à jour la parenté de l'étape et des concepts
        """
        self.etapes.append(etape)
+       self.index_etapes[etape] = len(self.etapes) - 1
        etape.reparent(self)
        etape.reset_jdc(self)

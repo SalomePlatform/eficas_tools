@@ -36,6 +36,7 @@ from Noyau.N_CR import CR
 from Noyau import N_OBJECT
 from Ihm import I_OBJECT
 from param2 import *
+from Ihm import CONNECTOR
 
 class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   """
@@ -214,6 +215,8 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
         self.jdc.append_param(self)
     except:
         pass
+    CONNECTOR.Emit(self,"add",None)
+    CONNECTOR.Emit(self,"valid")
 
   def inactive(self):
     """
@@ -223,6 +226,8 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     self.actif = 0
     self.jdc.del_param(self)
     self.jdc.delete_concept_after_etape(self,self)
+    CONNECTOR.Emit(self,"supp",None)
+    CONNECTOR.Emit(self,"valid")
 
   def isactif(self):
     """

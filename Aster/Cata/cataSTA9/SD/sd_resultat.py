@@ -1,4 +1,4 @@
-#@ MODIF sd_resultat SD  DATE 09/05/2007   AUTEUR PELLET J.PELLET 
+#@ MODIF sd_resultat SD  DATE 22/10/2007   AUTEUR PELLET J.PELLET 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -27,7 +27,6 @@ from SD.sd_l_charges import sd_l_charges
 from SD.sd_char_contact import sd_char_contact
 from sets import Set
 from SD.sd_util import *
-import aster
 
 
 class sd_resultat(sd_titre):
@@ -48,12 +47,6 @@ class sd_resultat(sd_titre):
     # existence de la SD :
     def exists(self):
         return self.ORDR.exists
-
-
-    # glute XFEM :
-    def check_glute_XFEM(self, checker):
-        sd2 = sd_char_contact('&&OP0070.DEFIC')
-        sd2.check(checker)
 
 
     # indirection vers les champs de .TACH :

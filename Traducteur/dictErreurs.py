@@ -6,6 +6,7 @@ import sets
 jdcSet=sets.Set()
 
 dict_erreurs={
+#STA8.4
               "DIST_LIGN_3D": "la commande DIST_LIGN_3D a ete supprimee",
               "DEFI_THER_JOULE": "la commande DIST_LIGN_3D a ete supprimee",
               "DIST_LIGN_3D": "la commande DIST_LIGN_3D a ete supprimee",
@@ -62,6 +63,18 @@ dict_erreurs={
               "COMB_CHAM_ELEM":"COMB_CHAM_ELEM est remplace par CREA_CHAMP",
               "IMPR_OAR":"IMPR_OAR demande un traitement manuel",
               "IMPR_FICO_HOMARD":"IMPR_FICO_HOMARD a ete integre dans MACR_ADPA_MAIL",
+# STA9.2
+              "POST_RCCM_SITUATION_NUME_PASSAGE":"Utilisation de NUME_PASSAGE pour le type TUYAUTERIE impossible en 9.2. On ne traite pour le moment que les chemins de passage simples.",
+              "DEFI_MATERIAU_BAZANT_FD" : "le materiau BAZANT_FD a ete supprime",
+              "DEFI_MATERIAU_APPUI_ELAS" : "le materiau APPUI_ELAS a ete supprime",
+              "DEFI_MATERIAU_PORO_JOINT" : "le materiau PORO_JOINT a ete supprime",
+              "DEFI_MATERIAU_ZIRC_CYRA2" : "le materiau ZIRC_CYRA2 a ete supprime",
+              "DEFI_MATERIAU_ZIRC_EPRI" : "le materiau ZIRC_EPRI a ete supprime",
+              "IMPR_MATRICE_MATR_ELEM_FORMAT=RESULTAT" : "IMPR_MATRICE au format RESULTAT a ete supprime",
+              "IMPR_MATRICE_MATR_ASSE_FORMAT=RESULTAT" : "IMPR_MATRICE au format RESULTAT a ete supprime",
+              "CALC_G_OPTION=G_LAGR" : "l'OPTION G_LAGR de CALC_G a ete supprimee",
+              "CALC_G_OPTION=G_LAGR_GLOB" : "l'OPTION G_LAGR_GLOB de CALC_G a ete supprimee",
+              "CALC_MATR_ELEM_THETA" : "l'OPTION RIGI_MECA_LAGR de CALC_MATR_ELEM a ete supprimee",
              }
 
 def EcritErreur(listeGena,ligne=None) :

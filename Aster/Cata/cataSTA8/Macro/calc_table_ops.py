@@ -1,4 +1,4 @@
-#@ MODIF calc_table_ops Macro  DATE 10/10/2006   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF calc_table_ops Macro  DATE 04/03/2008   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -74,14 +74,14 @@ def calc_table_ops(self, TABLE, ACTION, INFO, **args):
       # format pour l'impression des filtres
       form_filtre = '\nFILTRE -> NOM_PARA: %-16s CRIT_COMP: %-4s VALE: %s'
       if occ['OPERATION'] == 'FILTRE':
-         col = getattr(tab, occ['NOM_PARA'])
          # peu importe le type, c'est la meme méthode d'appel
          opts = [occ[k] for k in ('VALE','VALE_I','VALE_C','VALE_K') if occ.has_key(k)]
          kargs = {}
          for k in ('CRITERE','PRECISION'):
             if occ.has_key(k):
                kargs[k] = occ[k]
-         tab = tab & ( getattr(col, occ['CRIT_COMP'])(*opts,**kargs) )
+         col = getattr(tab, occ['NOM_PARA'])
+         tab = getattr(col, occ['CRIT_COMP'])(*opts,**kargs) 
          # trace l'operation dans le titre
          #if FORMAT in ('TABLEAU','ASTER'):
          tab.titr += form_filtre % (occ['NOM_PARA'], occ['CRIT_COMP'], \

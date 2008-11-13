@@ -1,8 +1,8 @@
-#@ MODIF algorith11 Messages  DATE 30/04/2007   AUTEUR ABBAS M.ABBAS 
+#@ MODIF algorith11 Messages  DATE 18/03/2008   AUTEUR CNGUYEN C.NGUYEN 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -20,373 +20,253 @@
 
 def _(x) : return x
 
-cata_msg={
+cata_msg = {
 
-1: _("""
- le sup de kmod0 est nul. on prend le sup de kmod.
+1 : _("""
+ le sup de KMOD0 est nul
+ on prend le sup de KMOD
 """),
 
-2: _("""
- le sup de kmod est nul.
+2 : _("""
+ le sup de KMOD est nul.
 """),
 
-3: _("""
- la variable amor est nulle
+3 : _("""
+ la variable AMOR est nulle
 """),
 
-4: _("""
+4 : _("""
  erreur de dimension (dvlp)
 """),
 
-5: _("""
+5 : _("""
  force normale nulle.
 """),
 
-6: _("""
+6 : _("""
  somme des "impacts-ecrouissage" < somme des "glissement"
 """),
 
-7: _("""
- "nom_cas" n'est pas une variable d'acces d'un resultat de type "evol_ther".
+7 : _("""
+ "NOM_CAS" n'est pas une variable d'accès d'un résultat de type "EVOL_THER".
 """),
 
-8: _("""
- "nume_mode" n'est pas une variable d'acces d'un resultat de type "evol_ther".
+8 : _("""
+ "NUME_MODE" n'est pas une variable d'accès d'un résultat de type "EVOL_THER".
 """),
 
-9: _("""
- "nume_mode" n'est pas une variable d'acces d'un resultat de type "mult_elas".
+9 : _("""
+ "NUME_MODE" n'est pas une variable d'accès d'un résultat de type "MULT_ELAS".
 """),
 
-10: _("""
- "inst" n'est pas une variable d'acces d'un resultat de type "mult_elas".
+10 : _("""
+ "INST" n'est pas une variable d'accès d'un resultat de type "MULT_ELAS".
 """),
 
-11: _("""
- "nom_cas" n'est pas une variable d'acces d'un resultat de type "fourier_elas".
+11 : _("""
+ "NOM_CAS" n'est pas une variable d'accès d'un resultat de type "FOURIER_ELAS".
 """),
 
-12: _("""
- "inst" n'est pas une variable d'acces d'un resultat de type "fourier_elas".
+12 : _("""
+ "INST" n'est pas une variable d'accès d'un resultat de type "FOURIER_ELAS".
 """),
 
-13: _("""
- "nom_cas" n'est pas une variable d'acces d'un resultat de type "fourier_ther".
+13 : _("""
+ "NOM_CAS" n'est pas une variable d'accès d'un resultat de type "FOURIER_THER".
 """),
 
-14: _("""
- "inst" n'est pas une variable d'acces d'un resultat de type "fourier_ther".
+14 : _("""
+ "INST" n'est pas une variable d'accès d'un resultat de type "FOURIER_THER".
 """),
 
-15: _("""
- "resu_init" est obligatoire
+15 : _("""
+ "RESU_INIT" est obligatoire
 """),
 
-16: _("""
- "maillage_init" est obligatoire
+16 : _("""
+ "MAILLAGE_INIT" est obligatoire
 """),
 
-17: _("""
+17 : _("""
  "resu_final" est obligatoire
 """),
 
-18: _("""
+18 : _("""
  "maillage_final" est obligatoire
 """),
 
-19: _("""
- 3 valeurs pour "tran"
+20 : _("""
+ TYPCAL invalide :  %(k1)s 
 """),
 
-20: _("""
- typcal invalide :  %(k1)s 
+24 : _("""
+ absence de potentiel permanent
 """),
 
-24: _("""
- absence de potentiel permanent. on  arrete tout.
+25 : _("""
+ le modele fluide n'est pas thermique
 """),
 
-25: _("""
- le modele fluide n est pas thermique!!!. on  arrete tout.
+26 : _("""
+ le modele interface n'est pas thermique
 """),
 
-26: _("""
- le modele interface n est pas thermique!!!. on  arrete tout.
+27 : _("""
+ modèle fluide incompatible avec le calcul de masse ajoutée
+ seules les modelisations PLAN ou 3D ou AXIS sont utilisées
 """),
 
-27: _("""
- modele fluide incompatible avec le calcul de masse ajoutee. seules les modelisations plan ou 3d ou axis sont utilisees.
+
+
+
+29 : _("""
+ le nombre d'amortissement modaux est différent du nombre de modes dynamiques
 """),
 
-28: _("""
- on ne trouve pas de champ de temperature chtn
+30 : _("""
+ il n y a pas le meme nombre de modes retenus
+ dans l'excitation modale et dans la base modale
 """),
 
-29: _("""
- le nombre d'amortissement modaux est different du nombre de modes dynamiques
-"""),
-
-30: _("""
- il n y a pas le meme nombre de modes retenus dans l'excitation modale et dans la base modale
-"""),
-
-31: _("""
+31 : _("""
  il faut autant d'indices en i et j
 """),
 
-32: _("""
- avec sour_press et sour_force il faut deux points/ddls d'application
+32 : _("""
+ avec SOUR_PRESS et SOUR_FORCE, il faut deux points/ddls d'application
 """),
 
-33: _("""
- mauvais accord entre nombre d'appuis et nombre de valeur dans le mot-clef: nume_ordre_i
+33 : _("""
+ mauvais accord entre le nombre d'appuis et le nombre de valeur dans le mot-clé: NUME_ORDRE_I
 """),
 
-34: _("""
- il faut autant de nom de composante que de nom de noeud
+34 : _("""
+ il faut autant de noms de composante que de noms de noeud
 """),
 
-35: _("""
-  vous avez oublie de preciser le mode statique
+35 : _("""
+  vous avez oublié de préciser le mode statique
 """),
 
-36: _("""
-  mode statique non- necessaire
+36 : _("""
+  mode statique non- nécessaire
 """),
 
-37: _("""
- la frequence mini doit etre etre plus faible que la frequence max
+37 : _("""
+ la fréquence min doit etre plus faible que la fréquence max
 """),
 
-38: _("""
- trop de points dans la liste.
+73 : _("""
+ le parametre materiau taille limite d10 n'est pas defini
 """),
 
-39: _("""
- segment nul
+74 : _("""
+ échec de la recherche de zéro (NITER)
 """),
 
-40: _("""
- la base locale semble fausse
+75 : _("""
+ échec de la recherche de zéro (bornes)
 """),
 
-41: _("""
- la discretisation du fond de fissure est grossiere par rapport a la courbure du fond de fissure. possibilite de resultats faux. il faudrait raffiner le maillage autour du fond de fissure.
+76 : _("""
+ La valeur de F(XMIN) doit être négative.
 """),
 
-42: _("""
- nombre de points d'intersection impossible.
+77 : _("""
+ f=0 : augmenter ITER_INTE_MAXI
 """),
 
-43: _("""
- probleme de dimension :ni 2d, ni 3d
+79 : _("""
+ pas d'interpolation possible
 """),
 
-
-45: _("""
- inter douteuse
-"""),
-
-46: _("""
- trop de points d intersection
-"""),
-
-47: _("""
- probleme de decoupage a 3 pts
-"""),
-
-48: _("""
- probleme de decoupage a 4 pts
-"""),
-
-49: _("""
- uniquement c_plan/d_plan disponible  en xfem
-"""),
-
-51: _("""
- mailles manquantes
-"""),
-
-52: _("""
- point de fond_fiss sans maille de surfface rattachee.
-"""),
-
-53: _("""
- pb dans orientation des normales a fond_fiss. verifier la continuite des mailles de fond_fiss
-"""),
-
-54: _("""
- segment de fond_fiss sans maille de surface rattachee.
-"""),
-
-55: _("""
- augmenter nxmafi
-"""),
-
-56: _("""
-  -> Lors de l'enregistrement du champ d'archivage du contact, il s'est avéré
-     que les valeurs de contact au noeud %(k1)s différents selon la maille sur
-     laquelle se trouve ce noeud.
-  -> Risque & Conseil :
-     Ce message est normal si le contact est activé sur la fissure.
-"""),
-
-
-
-
-
-
-
-61: _("""
-  -> Lors de l'orientation des points du fond de fissure, le point du fond de
-     fissure initial (PFON_INI) est trop loin du fond de fissure.
-  -> Risque & Conseil :
-     Le point initial qui en résulte amène surement à une orientation du fond
-     de fissure erronée.
-     Veuillez redéfinir le point du fond de fissure initial (mot clé PFON_INI).
-
-"""),
-
-62: _("""
- pfon_ini = pt_origine
-"""),
-
-63: _("""
- probleme dans l orientation du fond de fissure : pt_origin mal choisi.
-"""),
-
-64: _("""
- tous les points du fond de fissure sont des points de bord. assurez-vous du bon choix des parametres d'orientation de fissure et de pfon_ini.
-"""),
-
-65: _("""
- pfon_ini semble etre un point de fin de fissure selon l'orientation choisie. assurez-vous du bon choix de pfon_ini.
-"""),
-
-66: _("""
- la methode "upwind" est en cours d'implementation.
-"""),
-
-67: _("""
- les aretes de la maille  %(k1)s  ( %(k2)s ) ont  %(k3)s  points d'intersection avec l'isozero de  %(k4)s  !!!
-"""),
-
-68: _("""
- probleme pour  recuperer ar_min dans la table "cara_geom"
-"""),
-
-69: _("""
- armin negatif ou nul
-"""),
-
-70: _("""
- augmenter nxptff
-"""),
-
-71: _("""
- le critere de modification de l'enrichissement heaviside servant a eviter les pivots nuls a abouti a un cas de figure qui semble bizarre. normalement, on doit avoir un hexaedre coupe dans un coin (3 points d'intersection), or la, on a un  %(k1)s avec  %(k2)s  points d'intersetion.
-"""),
-
-72: _("""
- aucune arete sur laquelle lsn s annule
-"""),
-
-73: _("""
- taille limite d10 non defini
-"""),
-
-74: _("""
- echec de la recherche de zero (niter)
-"""),
-
-75: _("""
- echec de la recherche de zero (bornes)
-"""),
-
-76: _("""
- f(xmin) non negative
-"""),
-
-77: _("""
- f=0 : augmenter iter_inte_maxi
-"""),
-
-78: _("""
- polynome non resolu
-"""),
-
-79: _("""
- pas d'interpolation possible.
-"""),
-
-81: _("""
+81 : _("""
  STOP_SINGULIER=DECOUPE nécessite la subdivision automatique du pas de temps (SUBD_PAS).
 """),
-82: _("""
- nmvpir erreur dir grandissement. Angle ALPHA %(k1)s. Angle BETA %(k2)s.
+
+82 : _("""
+ NMVPIR erreur direction grandissement
+ Angle ALPHA %(k1)s
+ Angle BETA  %(k2)s
 """),
-83: _("""
+
+83 : _("""
  Arret par manque de temps CPU.
 """),
 
-85: _("""
- On veut affecter un comportement %(k1)s avec la relation %(k2)s sur une maille deja affectee par un autre comportement %(k3)s %(k4)s
+85 : _("""
+ On veut affecter un comportement %(k1)s avec la relation %(k2)s
+ sur une maille deja affectée par un autre comportement %(k3)s %(k4)s
 """),
-86: _("""
+
+86 : _("""
  Perturbation trop petite, calcul impossible
 """),
-87: _("""
- *** Champ déjà existant ***
+
+87 : _("""
+ Champ déjà existant
  Le champ %(k1)s à l'instant %(r1)g est remplacé par le champ %(k2)s à l'instant %(r2)g avec la précision %(r3)g.
 """),
 
-88: _("""
- &arret debordement assemblage:ligne 
+88 : _("""
+ arret débordement assemblage : ligne 
 """),
 
-90: _("""
- &arret debordement assemblage:colonne 
+90 : _("""
+ arret débordement assemblage : colonne 
 """),
 
-92: _("""
- arret nombre de sous-structure invalide il en faut au minimum: %(i1)d 
- vous en avez defini: %(i2)d 
+92 : _("""
+ arret nombre de sous-structures invalide : 
+ il en faut au minimum : %(i1)d 
+ vous en avez défini   : %(i2)d 
 """),
 
-93: _("""
- arret nombre de nom de sous-structure invalide il en faut exactement: %(i1)d 
- vous en avez defini: %(i2)d 
+93 : _("""
+ arret nombre de nom de sous-structures invalide :
+ il en faut exactement : %(i1)d 
+ vous en avez défini   : %(i2)d 
 """),
 
-94: _("""
- nombre de macr_elem invalide sous_structure %(k1)s vous en avez defini: %(i1)d 
- il en faut exactement: %(i2)d 
+94 : _("""
+ nombre de MACR_ELEM invalide :
+ sous_structure %(k1)s
+ il en faut exactement : %(i2)d 
+ vous en avez défini   : %(i1)d 
 """),
 
-95: _("""
- nombre d'angles nautiques invalide sous_structure %(k1)s 
- vous en avez defini: %(i1)d 
- il en faut exactement:  %(i2)d 
+95 : _("""
+ nombre d'angles nautiques invalide
+ sous_structure %(k1)s 
+ il en faut exactement :  %(i2)d 
+ vous en avez défini   : %(i1)d 
 """),
 
-96: _("""
- nombre de translation invalide sous_structure %(k1)s vous en avez defini: %(i1)d 
- il en faut exactement:  %(i2)d 
+96 : _("""
+ nombre de translations invalide
+ sous_structure %(k1)s
+ il en faut exactement :  %(i2)d 
+ vous en avez defini   : %(i1)d 
 """),
 
-97: _("""
- nombre de liaison definies invalide vous en avez defini: %(i1)d 
- il en faut au minimum: %(i2)d 
+97 : _("""
+ nombre de liaison definies invalide
+ il en faut au minimum : %(i2)d 
+ vous en avez defini   : %(i1)d 
 """),
 
-98: _("""
- nombre de mot-cle invalide numero liaison: %(i1)d mot-cle: %(k1)s 
- vous en avez defini: %(i2)d 
- il en faut exactement: %(i3)d 
+98 : _("""
+ nombre de mot-clés invalide
+ numéro liaison: %(i1)d
+ mot-clé       : %(k1)s 
+ il en faut exactement : %(i3)d 
+ vous en avez defini   : %(i2)d 
 """),
 
-99: _("""
- sous-structure indefinie numero liaison: %(i1)d nom sous-structure: %(k1)s 
+99 : _("""
+ sous-structure indéfinie
+ numéro liaison: %(i1)d
+ nom sous-structure: %(k1)s 
 """),
 
 }

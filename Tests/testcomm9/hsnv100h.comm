@@ -38,7 +38,7 @@ INCLUDE_MATERIAU(TYPE_MODELE='REF',
                  )
 
 CHMAT=AFFE_MATERIAU(  MAILLAGE=MAIL,AFFE=(
-                       _F(  TOUT='OUI',TEMP_REF=25, MATER = MONMAT),
+                       _F(  TOUT='OUI', MATER = MONMAT),
                ),)
 
 #

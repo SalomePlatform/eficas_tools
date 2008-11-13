@@ -34,20 +34,38 @@ INSTALLDIR=os.path.join(REPINI,'..')
 # Par défaut on utilise les modules de INSTALLDIR
 # Peut valoir None (defaut)
 CODE_PATH = None
-#CODE_PATH = os.path.join(REPINI,'../../Superv')
 
 # la variable code donne le nom du code a selectionner
 code="ASTER" 
-
-# ICONDIR sert à localiser le répertoire contenant les icones
-# Par défaut on utilise le répertoire icons dans Editeur
-ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')
 
 # lang indique la langue utilisée pour les chaines d'aide : fr ou ang
 lang='fr'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'
+
+
+EditeurDir=INSTALLDIR+"/Editeur"
+sys.path[:0]=[INSTALLDIR]
+
+ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')
+
+# Preference
+if os.name == 'nt':
+   userprefs = os.sep.join( [ os.environ['HOMEDRIVE'], os.environ['HOMEPATH'], 'Eficas_install', 'prefs.py' ])
+else :
+   userprefs=os.path.expanduser("~/Eficas_install/prefs.py")
+
+if os.path.isfile(userprefs):
+   try:
+      execfile(userprefs)
+   except:
+      pass
+
+
+#-------------------------------------------------------------------
+# Partie pour TK
+#-------------------------------------------------------------------
 
 labels= ('Fichier','Edition','Jeu de commandes',
                 'Options',
@@ -56,7 +74,6 @@ labels= ('Fichier','Edition','Jeu de commandes',
            )
 
 appli_composants=['readercata','bureau',
-#                  'browser',
                    'options',
            ]
 
@@ -94,15 +111,3 @@ menu_defs={ 'bureau': [
               ),
              ]
            }
-
-if os.name == 'nt':
-   userprefs = os.sep.join( [ os.environ['HOMEDRIVE'], os.environ['HOMEPATH'], 'Eficas_install', 'prefs.py' ])
-else :
-   userprefs=os.path.expanduser("~/Eficas_install/prefs.py")
-if os.path.isfile(userprefs):
-   try:
-      execfile(userprefs)
-   except:
-      pass
-
-sys.path[:0]=[INSTALLDIR]

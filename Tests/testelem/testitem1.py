@@ -3,9 +3,11 @@ import unittest
 import difflib
 
 import prefs
-from Editeur import appli
+from InterfaceTK import appli
+#from Editeur import appli
 from Editeur import comploader
 from Editeur import Objecttreeitem
+
 
 def add_param(j,pos,nom,valeur):
     co=j.addentite("PARAMETRE",pos)

@@ -38,8 +38,8 @@ if hasattr(prefs,'encoding'):
 
 sys.path[:0]=[prefs.INSTALLDIR]
 
-import Editeur
-from Editeur import eficas_test
+import InterfaceTK
+from InterfaceTK import eficas_test
 
 if len(sys.argv) > 1 :
     # on veut ouvrir un fichier directement au lancement d'Eficas

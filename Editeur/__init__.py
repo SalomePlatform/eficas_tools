@@ -18,3 +18,7 @@
 #
 #
 # ======================================================================
+"""
+    Ce package contient les fonctionnalités COMMUNES nécessaires
+    aux deux éditeurs graphiques QT et TK
+"""

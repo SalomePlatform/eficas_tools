@@ -1,4 +1,4 @@
-#@ MODIF cataelem Messages  DATE 30/04/2007   AUTEUR ABBAS M.ABBAS 
+#@ MODIF cataelem Messages  DATE 18/09/2007   AUTEUR DURAND C.DURAND 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23,31 +23,38 @@ def _(x) : return x
 cata_msg={
 
 1: _("""
- l option :  %(k1)s  est probablement composee (viellot)
+ l option :  %(k1)s  est probablement composée (vieillot)
 """),
 
 2: _("""
- l option :  %(k1)s  a plusieurs parametres de memes noms.
+ l option :  %(k1)s  a plusieurs paramètres de memes noms.
 """),
 
 3: _("""
- mode local incorrect  pour le parametre:  %(k1)s  pour l option:  %(k2)s  pour le type:  %(k3)s 
+ mode local incorrect
+ pour le paramètre:  %(k1)s
+ pour l'option    :  %(k2)s
+ pour le type     :  %(k3)s 
 """),
 
 4: _("""
- le parametre :  %(k1)s  pour l option :  %(k2)s  existe pour le type :  %(k3)s mais n existe pas dans l option.
+ le paramètre :  %(k1)s  pour l'option :  %(k2)s
+ existe pour le type :  %(k3)s mais n'existe pas dans l'option.
 """),
 
 5: _("""
- le parametre :  %(k1)s  pour l option :  %(k2)s  et pour le type_element :  %(k3)s n est pas associe a la bonne grandeur.
+ le paramètre :  %(k1)s  pour l'option :  %(k2)s  et pour le TYPE_ELEMENT :  %(k3)s
+ n'est pas associe à la bonne grandeur.
 """),
 
 6: _("""
- le parametre :  %(k1)s  pour l option :  %(k2)s  et pour le type_element :  %(k3)s n a pas le bon nombre de noeuds.
+ le paramètre :  %(k1)s  pour l'option :  %(k2)s  et pour le TYPE_ELEMENT :  %(k3)s
+ n'a pas le bon nombre de noeuds.
 """),
 
 7: _("""
- le parametre :  %(k1)s  pour l option :  %(k2)s  et pour le type_element :  %(k3)s  n est pas du bon type:  %(k4)s 
+ le paramètre :  %(k1)s  pour l option :  %(k2)s  et pour le TYPE_ELEMENT :  %(k3)s 
+ n'est pas du bon type:  %(k4)s 
 """),
 
 8: _("""
@@ -55,50 +62,13 @@ cata_msg={
 """),
 
 9: _("""
- erreurs de coherence dans les catalogues d elements finis.
-"""),
-
-10: _("""
- nb_ec > 1
-"""),
-
-11: _("""
- stop 6
-"""),
-
-12: _("""
- stop 7
-"""),
-
-13: _("""
- stop 8
-"""),
-
-14: _("""
- stop 9
-"""),
-
-15: _("""
- stop a
-"""),
-
-16: _("""
- stop b
-"""),
-
-17: _("""
- stop c
-"""),
-
-18: _("""
- stop d
+ erreurs de cohérence dans les catalogues d'élements finis.
 """),
 
 20: _("""
  Erreur lors de l'accès à la composante %(i1)d dans le champ de nom %(k1)s et de type %(k2)s.
  Les arguments sont hors bornes ou la composante est déjà affectée (écrasement).
- Contactez les développeurs.
+ Contactez le support.
 """),
-
 
 }

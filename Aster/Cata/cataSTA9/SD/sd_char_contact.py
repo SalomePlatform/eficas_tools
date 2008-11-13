@@ -1,4 +1,4 @@
-#@ MODIF sd_char_contact SD  DATE 09/05/2007   AUTEUR PELLET J.PELLET 
+#@ MODIF sd_char_contact SD  DATE 01/04/2008   AUTEUR ABBAS M.ABBAS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19,18 +19,38 @@
 # ======================================================================
 
 from SD import *
+from SD.sd_champ import sd_champ
+from SD.sd_xfem import sd_modele_xfem, sd_contact_xfem
 
 class sd_char_contact(AsBase):
     nomj      =SDNom(fin=16)
+
+    FORMCO    = Facultatif(AsVI())
+
+    def exists(self):
+        # retourne True si la SD semble exister.
+        return self.FORMCO.exists
+
+
+    def formulation_xfem(self):
+        if not self.exists() : return False
+        iform = self.FORMCO.get()[0]
+        return iform == 3
+
+    def contact_xfem_actif(self):
+        if not self.formulation_xfem() : return False
+        return self.XNBASC.exists
 
     BAMACO    = Facultatif(AsVI())
     BANOCO    = Facultatif(AsVI())
     CARACF    = Facultatif(AsVR())
     COMAFO    = Facultatif(AsVR())
+    JEUSUR    = Facultatif(AsVR())
     CONVCO    = Facultatif(AsVI())
-    DIRCO     = Facultatif(AsVR())
+    DIRNOR    = Facultatif(AsVR())
+    DIRAPP    = Facultatif(AsVR())
     ECPDON    = Facultatif(AsVI())
-    FORMCO    = Facultatif(AsVI())
+    CARFRO    = Facultatif(AsVR())
     FROTE     = Facultatif(AsVR())
     JEUCON    = Facultatif(AsVR())
     JEUCOQ    = Facultatif(AsVR())
@@ -60,16 +80,66 @@ class sd_char_contact(AsBase):
     PNOMACO   = Facultatif(AsVI())
     PRANOCO   = Facultatif(AsVI())
     PSSNOCO   = Facultatif(AsVI())
+    PSANOFR   = Facultatif(AsVI())
     PSUMACO   = Facultatif(AsVI())
     PSUNOCO   = Facultatif(AsVI())
     PZONECO   = Facultatif(AsVI())
     RANOCO    = Facultatif(AsVI())
     SANSNQ    = Facultatif(AsVI())
     SSNOCO    = Facultatif(AsVI())
+    SANOFR    = Facultatif(AsVI())
     SYMECO    = Facultatif(AsVI())
     TABFIN    = Facultatif(AsVR())
     TANDEF    = Facultatif(AsVR())
     TANPOU    = Facultatif(AsVR())
     TOLECO    = Facultatif(AsVR())
-    XFEM      = Facultatif(AsVI())
+    xfem      = Facultatif(AsVI())
     XFIMAI    = Facultatif(AsVK8())
+    XNBASC    = Facultatif(AsVK24())
+    XNRELL    = Facultatif(AsVK24())
+    TANINI    = Facultatif(AsVR())
+    NORMCO    = Facultatif(AsVR())
+    TANGCO    = Facultatif(AsVR())  
+    EXCLFR    = Facultatif(AsVR())  
+    MODELX    = Facultatif(AsVK8(lonmax=1,))
+
+    # si contact xfem :
+    xfem      = Facultatif(sd_contact_xfem(SDNom(nomj='')))
+
+
+    # indirection vers les champs de .XNBASC :
+    # Question à Mickael :
+    #   la fonction suivante ne serait-elle pas mieux placée dans la classe sd_contact_xfem ?
+    def check_char_contact_xfem_XNBASC(self, checker):
+        if not self.contact_xfem_actif() : return
+        lnom  = self.XNBASC.get()
+        nbnom = self.XNBASC.lonuti
+        for k in range(nbnom) :
+            nom = lnom[k]
+            if not nom.strip(): continue
+            sd2 = sd_champ(nom)
+            sd2.check(checker)
+
+
+    # indirection vers les champs de .XNRELL :
+    # On ne vérifie rien pour l'instant
+    # Question à Mickael :
+    #   la fonction suivante ne serait-elle pas mieux placée dans la classe sd_contact_xfem ?
+    def check_char_contact_xfem_XNRELL(self, checker):
+        if not self.contact_xfem_actif() : return
+        lnom  = self.XNRELL.get()
+        nbnom = self.XNRELL.lonuti
+        for k in range(nbnom) :
+            nom = lnom[k]
+            oo  = AsObject(SDNom(nomj=nom,debut=0),genr='V', xous='S', type=Parmi('I','R'))
+            oo.check(checker)
+
+
+    # Verification MODELE xfem
+    def check_char_contact_xfem_MODELX(self, checker):
+        if not self.contact_xfem_actif() : return
+        nom = self.MODELX.get()[0]
+        sd2 = sd_modele_xfem(nom)
+        sd2.check(checker)
+
+

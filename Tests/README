@@ -13,3 +13,6 @@ par test ou Test.
 
 Quelques tests dont le nom commence par futuretest ne sont pas exécutés. Ils identifient 
 des limites actuelles d'Accas.
+
+Certains tests doivent etre exécutés séparément à cause d'un problème d'import de catalogue.
+En particulier, les tests d'ihm (testihm*.py) entrent dans cette catégorie.

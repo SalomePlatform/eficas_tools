@@ -1,4 +1,4 @@
-#@ MODIF impr_oar_ops Macro  DATE 07/11/2006   AUTEUR DURAND C.DURAND 
+#@ MODIF impr_oar_ops Macro  DATE 21/11/2007   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18,14 +18,15 @@
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
 
-import aster
-try :
+# protection pour eficas
+try:
+   import aster
    from Utilitai.Utmess import UTMESS
    from Utilitai.Table import Table
    from Utilitai.partition import MAIL_PY
-except :
+except:
    pass
-
+   
 def buildTabString(tabLevel):
    """
       Construit une chaine de tabulation

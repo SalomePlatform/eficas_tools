@@ -1,8 +1,8 @@
-#@ MODIF algorith3 Messages  DATE 15/05/2007   AUTEUR GNICOLAS G.NICOLAS 
+#@ MODIF algorith3 Messages  DATE 21/04/2008   AUTEUR GREFFET N.GREFFET 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -20,46 +20,25 @@
 
 def _(x) : return x
 
-cata_msg={
+cata_msg = {
 
-1: _("""
- certains pas de temps de la liste (liste_inst) sont plus petits que le pas de temps minimal renseigne (subd_pas_mini)
+7 : _("""
+ Etant donné la présence du mot clé AMOR_ALPHA et / ou AMOR_BETA, 
+ on va assembler la matrice d'amortissement globale de Rayleigh, 
+ même si ces coefficients sont tous les deux nuls.
+ Cette opération engendre un surcoût de calcul.
 """),
 
-2: _("""
- il faut donner subd_niveau et/ou subd_pas_mini
+8 : _("""
+ élément non traité
 """),
 
-3: _("""
- le nombre de subdivisions du pas de temps doit etre plus grand que 1 (subd_pas)
+9 : _("""
+ utiliser la formulation en déplacement avec un schéma NEWMARK, HHT ou THETA_METHODE,
+ ou la formulation en accéleration avec un schéma DIFF_CENT ou TCHAMWA.
 """),
 
-4: _("""
- option inconnue < %(k1)s > incoherence catalogue
-"""),
-
-5: _("""
- methode de subdivision inconnue < %(k1)s > incoherence catalogue
-"""),
-
-6: _("""
- valeur de subd_iter_igno incoherent avec iter_glob_maxi. augmentez iter_glob_maxi
-"""),
-
-7: _("""
- valeur de subd_iter_fin incoherent avec iter_glob_maxi. augmentez iter_glob_maxi
-"""),
-
-8: _("""
- element non traite
-"""),
-
-9: _("""
- utiliser la formulation en deplacement avec un schema newmark, hht ou theta_methode,
- ou la formulation en acceleration avec un schema diff_cent ou tchamwa.
-"""),
-
-10: _("""
+10 : _("""
   -> Contact avec DYNA_TRAN_MODAL : Il y a interpénétration d'une valeur supérieure à (DIST_MAIT + DIST_ESCL).
   -> Risque & Conseil :
      DIST_MAIT et DIST_ESCL permettent de tenir compte d'une épaisseur de matériau non représentée dans le maillage
@@ -69,342 +48,256 @@ cata_msg={
      générer des erreurs dans l'orientation des forces de contact.
 """),
 
-11: _("""
- methode a pas adaptatif  la donnee du pas est obligatoire 
+11 : _("""
+ méthode à pas adaptatif : la donnée du pas est obligatoire 
 """),
 
-12: _("""
- methode a pas adaptatif le pas ne peut pas etre nul  
+12 : _("""
+ méthode à pas adaptatif : le pas ne peut pas etre nul  
 """),
 
-13: _("""
- les matrices de masse elementaires doivent obligatoirement avoir ete calculees avec l'option mass_meca_diag
+13 : _("""
+ les matrices de masse élémentaires doivent obligatoirement avoir été calculées
+ avec l'option MASS_MECA_DIAG
 """),
 
-14: _("""
+14 : _("""
  on archive au moins un champ.
 """),
 
-15: _("""
- champ " %(k1)s " deja existant
-"""),
-
-16: _("""
+16 : _("""
 A l'instant %(r1)f, l'erreur vaut %(r2)f
 Cette erreur est supérieure à 1.
 Le pas de temps vaut %(r3)f
 On arrete de le réduire, car le nombre de réductions a atteint %(i1)d, qui est le maximum possible.
 """),
 
-17: _("""
- methode adapt pas de temps minimal atteint
+17 : _("""
+ méthode à pas adaptatif : pas de temps minimal atteint
 """),
 
-18: _("""
- methode des differences centrees:  la donnee du pas est obligatoire 
+18 : _("""
+ methode des différences centrees:  la donnee du pas est obligatoire 
 """),
 
-19: _("""
- methode des differences centrees:  le pas ne peut pas etre nul  
+19 : _("""
+ methode des différences centrees:  le pas ne peut pas etre nul  
 """),
 
-20: _("""
- le chargement de type dirichlet necessite la resolution par le schema de newmark
+20 : _("""
+ le chargement de type dirichlet nécessite la résolution par le schema de NEWMARK
 """),
 
-21: _("""
+21 : _("""
 Nombre de pas de calcul : %(i1)d
 Nombre d'itérations     : %(i2)d
 """),
 
-23: _("""
- vous calculez une impedance absorbante
+23 : _("""
+ vous calculez une impédance absorbante
 """),
 
-24: _("""
- on n'a pas pu trouve le dernier instant sauve.
+24 : _("""
+ on n'a pas pu trouver le dernier instant sauvé.
 """),
 
-25: _("""
- le champ "depl" n'est pas trouve dans le concept dyna_trans  %(k1)s 
+25 : _("""
+ le champ "DEPL" n'est pas trouvé dans le concept DYNA_TRANS  %(k1)s 
 """),
 
-26: _("""
- le champ "vite" n'est pas trouve dans le concept dyna_trans  %(k1)s 
+26 : _("""
+ le champ "VITE" n'est pas trouvé dans le concept DYNA_TRANS  %(k1)s 
 """),
 
-27: _("""
+27 : _("""
  le champ "acce" n'est pas trouve dans le concept dyna_trans  %(k1)s 
 """),
 
-28: _("""
- deplacements initiaux nuls.
+28 : _("""
+ déplacements initiaux nuls.
 """),
 
-29: _("""
+29 : _("""
  vitesses initiales nulles.
 """),
 
-30: _("""
- nume_init: on n'a pas trouver le nume_init dans le resultat  %(k1)s 
+30 : _("""
+ NUME_INIT: on n'a pas trouvé le NUME_INIT dans le résultat  %(k1)s 
 """),
 
-31: _("""
- methode de newmark ou wilson: la donnee de list_inst ou fonc_inst est obligatoire 
+31 : _("""
+ methode de NEWMARK ou WILSON: la donnée de LIST_INST ou FONC_INST est obligatoire 
 """),
 
-32: _("""
- fonc_inst: on attend une fonction.
+32 : _("""
+ FONC_INST: on attend une fonction.
 """),
 
-33: _("""
- fonc_inst: il faut une fonction a pas constant.
+33 : _("""
+ fonc_inst: il faut une fonction à pas constant.
 """),
 
-34: _("""
- fonc_inst: temps de reprise superieur a la fonction.
+34 : _("""
+ fonc_inst: temps de reprise supérieur à la fonction.
 """),
 
-35: _("""
- on n'a pas pu trouver le dernier instant sauve.
+36 : _("""
+ NUME_INIT: on n'a pas trouvé le NUME_INIT dans le résultat  %(k1)s 
 """),
 
-36: _("""
- nume_init: on n'a pas trouve le nume_init dans le resultat  %(k1)s 
+37 : _("""
+ incohérence sur H, ALPHA, ELAS
 """),
 
-37: _("""
- incoherence sur h, alpha, elas
+40 : _("""
+ le nom_cham  %(k1)s n'appartient pas à la sd
 """),
 
-40: _("""
- le nom_cham  %(k1)s n'appartient pas a la sd
+41 : _("""
+ erreur(s) dans les données
 """),
 
-41: _("""
- erreur(s) dans les donnees
+42 : _("""
+ critère inconnu :  %(k1)s 
 """),
 
-42: _("""
- critere inconnu :  %(k1)s 
+43 :_("""
+ <DPMAT2> PLAS=2
 """),
 
-45: _("""
- le champ absolu n'est accessible qu'en presence de modes statiques
+55 : _("""
+ ITER_INTE_MAXI insuffisant
 """),
 
-
-
-
-
-
-
-
-47: _("""
- debordement tableau
+56 : _("""
+ la durée du transitoire est limitée par les possibilités de la transformée de Fourier rapide 
 """),
 
-48: _("""
- pas de list_inst dans increment !?!?!
+57 : _("""
+ la durée de la simulation temporelle est insuffisante pour le passage du transitoire
 """),
 
-49: _("""
- il faut definir "list_arch" ou "list_inst" ou "inst" ou "pas_obse" au premier mot cle facteur "observation"
+58 : _("""
+ changement de signe de la vitesse --> on prend VITG0(I)
 """),
 
-50: _("""
- seule la valeur de "list_arch" ou "list_inst" ou "inst" ou "pas_obse" du premier mot cle facteur "observation" est prise en compte
-"""),
-
-51: _("""
- pas de modeilisation c_plan pour la plasticite a gradient
-"""),
-
-52: _("""
- pas de modelisation c_plan pour rousselier a gradient
-"""),
-
-53: _("""
- comportement non prevu pour un algo de lagrangien augmente
-"""),
-
-54: _("""
- le modele explose - decouper votre pas de temps
-"""),
-
-55: _("""
- iter_inte_maxi insuffisant
-"""),
-
-56: _("""
- duree du transitoire limitee par les possibilites de la transformee de fourier rapide 
-"""),
-
-57: _("""
- duree de la simulation temporelle insuffisante pour passage du transitoire
-"""),
-
-58: _("""
- changement de signe de la vitesse --> on prend vitg0(i)
-"""),
-
-59: _("""
+59 : _("""
  la matrice est triangulaire superieur-inversion indice
 """),
 
-60: _("""
- pivot nul.
+60 : _("""
+ la matrice interspectrale possède un pivot nul.
 """),
 
-61: _("""
- option non prevue !
+61 : _("""
+ option non prévue !
 """),
 
-62: _("""
- pb 1 test spectre fi par arpack !
+62 : _("""
+ pb 1 test spectre fi par ARPACK
 """),
 
-63: _("""
- pb 2 test spectre fi par arpack !
+63 : _("""
+ pb 2 test spectre fi par ARPACK
 """),
 
-64: _("""
- valeur de stogi incoherente !
+64 : _("""
+ valeur de STOGI incoherente
 """),
 
-65: _("""
- en parallele stogi=oui obligatoire pour l'instant !
+65 : _("""
+ en parallèle STOGI=OUI obligatoire pour l'instant
 """),
 
-66: _("""
- option de calcul incoherente !
+66 : _("""
+ option de calcul incohérente
 """),
 
-67: _("""
- pb division par zerodans la construction du beta !
+67 : _("""
+ pb division par zéro dans la construction du BETA
 """),
 
-68: _("""
- incoherence 1 .lili et .flin !
+72 : _("""
+ donnée erronnée, multiplicité nulle
 """),
 
-69: _("""
- incoherence 2 .lili et .flin !
+76 : _("""
+ le type de concept: TABLE_SDASTER doit etre associé au mot clé NUME_VITE_FLUI
 """),
 
-70: _("""
- incoherence 3 .lili et .flin !
+78 : _("""
+ pas de discrétisation de l'interspectre non constant.
 """),
 
-71: _("""
- incoherence .lili et .fel3 !
+79 : _("""
+ discrétisations differentes selon les fonctions de l'interspectre
 """),
 
-72: _("""
- donnee erronnee, multiplicite nulle !
+80 : _("""
+ "NB_POIN" n est pas une puissance de 2
+ on prend la puissance de 2 supérieure
 """),
 
-73: _("""
- erreur log negatif ou nul
+81 : _("""
+ coefficient de dispersion trop grand
+ consulter la documentation d'utilisation
 """),
 
-74: _("""
- erreur_gamdev : alpha < 1
+82 : _("""
+ matrice moyenne non définie positive
 """),
 
-75: _("""
-  unif < 0 
-"""),
-
-76: _("""
- le type de concept: table_sdaster doit etre associe au mot cle nume_vite_flui
-"""),
-
-77: _("""
- y a un bug 4
-"""),
-
-78: _("""
- pas de discretisation de l'interspectre non constant.
-"""),
-
-79: _("""
- discretisations differentesselon les fonctions de l'interspectre
-"""),
-
-80: _("""
- "nb_poin" n est pas une puissance de 2,on prend la puissance de 2 superieure
-"""),
-
-81: _("""
- coefficient de dispersion trop grand, cf. doc. u
-"""),
-
-82: _("""
- matrice moyenne non definie positive
-"""),
-
-83: _("""
+83 : _("""
  le pas tend vers 0 ...
 """),
 
-84: _("""
- erreur dans la recuperation du nume.prno .
+86 : _("""
+ pas d'interpolation possible pour les fréquences.
 """),
 
-86: _("""
- pas d'interpolation possible pour  les frequences.
+87 : _("""
+ derivée de F nulle
 """),
 
-87: _("""
- derivee de f nulle
+88 : _("""
+ GM négatif
 """),
 
-88: _("""
- gm negatif
+89 : _("""
+ valeurs propres non ordonnées :
+ %(k1)s  %(k2)s  %(k3)s 
 """),
 
-89: _("""
- valeurs propres non//                              ordonnees %(k1)s  %(k2)s  %(k3)s 
+90 : _("""
+ coefficients paraboliques pas compatibles
 """),
 
-90: _("""
- coef paraboliques pas compatibles
+92 : _("""
+ modelisations C_PLAN et 1D pas autorisées
 """),
 
-91: _("""
- coef paraboliques pas compatibles 2
-"""),
-
-92: _("""
- modelisations c_plan et 1d pas autorisees
-"""),
-
-93: _("""
+93 : _("""
  zero elongation for hyperelastic material
 """),
 
-94: _("""
- t1*c33-t3*c33 is zero for hyperelastic material
+94 : _("""
+ T1*C33-T3*C33 is zero for hyperelastic material
 """),
 
-95: _("""
+95 : _("""
  error of elongation for hyperelastic material
 """),
 
-96: _("""
+96 : _("""
  no material data for hyperelastic
 """),
 
-97: _("""
+97 : _("""
  model not supported for hyperelastic material
 """),
 
-98: _("""
+98 : _("""
  check your poisson ratio
 """),
 
-99: _("""
- erreur numero colonne (dvlp)
-"""),
 }

@@ -1,5 +1,4 @@
 
-
 DEBUT();
 
 MA=LIRE_MAILLAGE();
@@ -10,10 +9,10 @@ kk=DEFI_MATERIAU(ELAS=_F(E=56.24,
 uu=DEFI_MATERIAU(ELAS=_F(E=56.24,
                          NU=0.3,),);
 
-sansnom=DEFI_MATERIAU(ELAS=_F(E=56.24,
-                           NU=0.3,),);
+zezea=DEFI_MATERIAU(ELAS=_F(E=56.24,
+                            NU=0.3,),);
 
-sansnom=DEFI_MATERIAU(ELAS=_F(E=56.24,
+SD_5=DEFI_MATERIAU(ELAS=_F(E=56.24,
                            NU=0.3,),);
 
 FIN();

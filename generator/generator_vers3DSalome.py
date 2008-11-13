@@ -35,7 +35,7 @@ import Extensions
 from Extensions.parametre import ITEM_PARAMETRE
 from Formatage import Formatage
 from generator_python import PythonGenerator
-from Editeur.widgets import showerror
+#from Editeur.widgets import showerror
 
 def entryPoint():
    """
@@ -119,7 +119,7 @@ class vers3DSalomeGenerator(PythonGenerator):
       """
       """
       if obj.isvalid() == 0 :
-         showerror("Element non valide","Salome ne sait pas traiter les élements non valides")
+         #showerror("Element non valide","Salome ne sait pas traiter les élements non valides")
          return
       for v in obj.mc_liste:
          liste=self.generator(v)
@@ -150,7 +150,8 @@ class vers3DSalomeGenerator(PythonGenerator):
       if self.boolGpMa == 1:
          self.list_commandes.append((self.commande,self.dict_attributs)) 
       else :
-         showerror("Elements ne portant pas sur un Groupe de Maille","Salome ne sait pas montrer ce type d' element")
+         #showerror("Elements ne portant pas sur un Groupe de Maille","Salome ne sait pas montrer ce type d' element")
+         pass
 
    def generMCList(self,obj):
       """

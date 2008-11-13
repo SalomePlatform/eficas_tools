@@ -1,4 +1,4 @@
-#@ MODIF modelisa3 Messages  DATE 30/04/2007   AUTEUR ABBAS M.ABBAS 
+#@ MODIF modelisa3 Messages  DATE 01/04/2008   AUTEUR ABBAS M.ABBAS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -70,7 +70,12 @@ cata_msg={
 """),
 
 12: _("""
-  les listes de noeuds a mettre de vis-a-vis n'ont pas le meme nombre de noeuds
+  Mot clé LIAISON_GROUP : les mots clés %(k1)s et %(k2)s à mettre 
+  en vis-à-vis n'ont pas le meme nombre de noeuds.
+  
+   - Nombre de noeuds présent sous le mot clé %(k1)s: %(i1)d
+   - Nombre de noeuds présent sous le mot clé %(k2)s: %(i2)d
+
 """),
 
 13: _("""
@@ -155,17 +160,6 @@ Suggestion :
  l'angle forme par le vecteur normal courant a 1 face et le vecteur normal moyenne, au noeud  %(k1)s , est superieur a 10 degres et vaut  %(k2)s  degres.
 """),
 
-32: _("""
- que des sections circulaires !
-"""),
-
-33: _("""
- pb pour recuperer "r1" pour la maille  %(k1)s 
-"""),
-
-34: _("""
- pb pour recuperer "r2" pour la maille  %(k1)s 
-"""),
 
 35: _("""
  probleme pour determiner le rang de la composante <n> de la grandeur <sief_r>

@@ -1,21 +1,21 @@
-#@ MODIF asojb Noyau  DATE 04/06/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF asojb Noyau  DATE 07/04/2008   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 
 """
@@ -29,7 +29,7 @@ import traceback,sys
 # pour utilisation dans eficas
 try:
    import aster
-   from Utilitai.Utmess import U2MESS as UTMESS
+   from Utilitai.Utmess import UTMESS
 except:
    pass
 
@@ -56,6 +56,11 @@ class AsBase(Type):
         if checker is None:
             checker = CheckLog()
 
+        # vérif déjà faite ? (en tenant compte du type)
+        if checker.checkedAsBase(self):
+            return checker
+        checker.visitAsBase( self )
+
         # vérifie les enfants :
         optional = checker.optional
         checker.optional = checker.optional or self.optional
@@ -70,9 +75,10 @@ class AsBase(Type):
                     try :
                         v( checker )
                     except :
-                        UTMESS("E", 'SDVERI_45')
+                        UTMESS("E", 'SDVERI_45')  # AJACOT NON
                         print 40*'-'
                         traceback.print_exc(file=sys.stdout)
+                        print self
 
         checker.optional = optional
         return checker
@@ -108,8 +114,21 @@ class AsBase(Type):
                 l.append( indent + line )
         return "\n".join( l )
 
-    def __repr__(self):
+    def short_repr(self):
         return "<%s(%x,%r)>" % (self.__class__.__name__, id(self), self.nomj() )
+
+    def long_repr(self):
+        if not hasattr(self, "par_lot") or self.par_lot():
+           # hors Aster ou en par_lot='oui'
+           return self.short_repr()
+        else:
+           from Cata.cata import IMPR_CO, _F
+           IMPR_CO(CONCEPT=_F(NOM=self.nom), UNITE=6)
+           return ''
+
+    def __repr__(self):
+        # par défaut, on fait court !
+        return self.short_repr()
 
 
 # -----------------------------------------------------------------------------
@@ -152,14 +171,22 @@ class JeveuxIntAttr(JeveuxAttr):
     def __get__(self, obj, klass):
         if obj is None:
             return self
-        return aster.jeveux_getattr( obj.nomj(), self.name )[0]
+        nomj = obj.nomj()
+        if aster.jeveux_exists( nomj ):
+            return aster.jeveux_getattr( nomj, self.name )[0]
+        else :
+            return None
 
 # -----------------------------------------------------------------------------
 class JeveuxStrAttr(JeveuxAttr):
     def __get__(self, obj, klass):
         if obj is None:
             return self
-        return aster.jeveux_getattr( obj.nomj(), self.name )[1].strip()
+        nomj = obj.nomj()
+        if aster.jeveux_exists( nomj ):
+            return aster.jeveux_getattr( nomj, self.name )[1].strip()
+        else :
+            return None
 
 # -----------------------------------------------------------------------------
 class OJB(AsBase):
@@ -206,7 +233,7 @@ class OJB(AsBase):
         """Fonction utilitaire, renvoie une liste de chaines 'strippées'"""
         data = self.get()
         if data is not None:
-            return [ x.strip() for x in self.get() ]
+            return [ x.strip() for x in data ]
         else:
             return []
 
@@ -221,9 +248,9 @@ class OJB(AsBase):
         if checker is None:
             checker = CheckLog()
         # l'objet a déjà été vérifié, on ne fait rien
-        if self.nomj() in checker.names.keys():
-            return checker
-        checker.visit( self )
+        if checker.checkedOJB(self):
+           return checker
+        checker.visitOJB( self )
         if self.exists:
             self.foreachattr( lambda k,v,obj,c: v.check(k, obj, c),
                               self, checker )
@@ -248,6 +275,16 @@ def Facultatif( ojb ):
 class OJBVect(OJB):
     lonmax = JeveuxIntAttr("LONMAX")
     lonuti = JeveuxIntAttr("LONUTI")
+    _xous = "S"
+    _genr = "V"
+
+# -----------------------------------------------------------------------------
+class OJBPtnom(OJB):
+    nommax = JeveuxIntAttr("NOMMAX")
+    nomuti = JeveuxIntAttr("NOMUTI")
+    _xous = "S"
+    _genr = "N"
+    _type = "K"
 
 # -----------------------------------------------------------------------------
 class OJBCollec(OJB):
@@ -299,5 +336,7 @@ class AsVK80(OJBVect):
     _ltyp = 80
 
 # Pour compatibilite
-AsColl = OJBCollec
 AsObject = OJB
+AsColl   = OJBCollec
+AsPn     = OJBPtnom
+AsVect   = OJBVect

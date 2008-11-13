@@ -26,10 +26,9 @@ import generator
 
 class TroisDPilote:
 
-   def __init__(self,node,appli,parent):
+   def __init__(self,node,appli):
       self.node=node
       self.appli=appli
-      self.parent=parent
 
    def envoievisu(self):
       """ 

@@ -1,0 +1,130 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>DSelVal</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>DSelVal</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>413</width>
+            <height>497</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Sélection de valeurs</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QTextBrowser" row="0" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>TBtext</cstring>
+            </property>
+        </widget>
+        <widget class="QButtonGroup" row="1" column="0" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>BGSeparateur</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>180</width>
+                    <height>100</height>
+                </size>
+            </property>
+            <property name="title">
+                <string>Séparateur</string>
+            </property>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>layout1</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>17</x>
+                        <y>20</y>
+                        <width>150</width>
+                        <height>74</height>
+                    </rect>
+                </property>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QRadioButton" row="2" column="0">
+                        <property name="name">
+                            <cstring>BpointVirgule</cstring>
+                        </property>
+                        <property name="text">
+                            <string>point-virgule</string>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton" row="0" column="0">
+                        <property name="name">
+                            <cstring>Bespace</cstring>
+                        </property>
+                        <property name="text">
+                            <string>espace</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton" row="1" column="0">
+                        <property name="name">
+                            <cstring>Bvirgule</cstring>
+                        </property>
+                        <property name="text">
+                            <string>virgule</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+        </widget>
+        <widget class="QPushButton" row="2" column="1">
+            <property name="name">
+                <cstring>BImportTout</cstring>
+            </property>
+            <property name="text">
+                <string>Importer Tout</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="1" column="1">
+            <property name="name">
+                <cstring>BImportSel</cstring>
+            </property>
+            <property name="text">
+                <string>Ajouter Selection</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>BGSeparateur</sender>
+        <signal>clicked(int)</signal>
+        <receiver>DSelVal</receiver>
+        <slot>SeparateurSelect()</slot>
+    </connection>
+    <connection>
+        <sender>BImportSel</sender>
+        <signal>clicked()</signal>
+        <receiver>DSelVal</receiver>
+        <slot>BImportSelPressed()</slot>
+    </connection>
+    <connection>
+        <sender>BImportTout</sender>
+        <signal>clicked()</signal>
+        <receiver>DSelVal</receiver>
+        <slot>BImportToutPressed()</slot>
+    </connection>
+</connections>
+<slots>
+    <slot>SeparateurSelect()</slot>
+    <slot>BImportSelPressed()</slot>
+    <slot>BImportToutPressed()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -5,7 +5,7 @@ INCLUDE_MATERIAU(   NOM_AFNOR='18MND5',      TYPE_MODELE='REF',
                      NOM_MATER='MAT3',       INFO=1               )
 
 CHMAT3=AFFE_MATERIAU(  MAILLAGE=MAILLA3,
-                       AFFE=_F(  TOUT='OUI', MATER = MAT3, TEMP_REF = 20.))
+                       AFFE=_F(  TOUT='OUI', MATER = MAT3))
 
 riginor = 2.88E7 
 

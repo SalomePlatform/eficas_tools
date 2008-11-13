@@ -1,4 +1,4 @@
-#@ MODIF N_VALIDATOR Noyau  DATE 16/05/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_VALIDATOR Noyau  DATE 09/10/2007   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -80,7 +80,7 @@ class ListProtocol(Protocol):
     """Verificateur de protocole liste : convertit un objet quelconque en liste pour validation ultérieure"""
     def default(self,obj):
         if type(obj) == types.TupleType :
-            if obj[0] in ('RI','MP'):
+            if len(obj) > 0 and obj[0] in ('RI','MP'):
                 #il s'agit d'un complexe ancienne mode. La cardinalite vaut 1
                 return (obj,)
             else:
@@ -134,7 +134,7 @@ class TypeProtocol(PProtocol):
             else:
                 print "Type non encore géré %s" %`type_permis`
 
-        raise ValError("%s n'est pas d'un type autorisé: %s" % (repr(obj),typ))
+        raise ValError("%s (de type %s) n'est pas d'un type autorisé: %s" % (repr(obj),type(obj),typ))
 
     def is_complexe(self,valeur):
         """ Retourne 1 si valeur est un complexe, 0 sinon """

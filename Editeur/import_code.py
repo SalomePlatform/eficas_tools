@@ -24,6 +24,7 @@
 """
 import sys
 import prefs
+
 # Ce chemin permet d'importer les modules Noyau et Validation
 # représentant le code utilisé (si fourni)
 if prefs.CODE_PATH:

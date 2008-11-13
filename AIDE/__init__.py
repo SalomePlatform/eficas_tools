@@ -19,3 +19,9 @@ def go2(fichier=None,master=None):
     o = aide_gui.AIDE_GUI(index,master=master)
     o.build()
     return o
+
+def go3(fichier=None,parent=None):
+    if not fichier :
+       pathDoc=os.path.join(os.path.dirname(__file__),"fichiers")
+    viewer.HTMLQTViewer(parent,pathDoc)
+

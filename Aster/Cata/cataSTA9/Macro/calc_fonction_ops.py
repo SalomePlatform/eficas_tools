@@ -1,4 +1,4 @@
-#@ MODIF calc_fonction_ops Macro  DATE 30/05/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF calc_fonction_ops Macro  DATE 16/10/2007   AUTEUR REZETTE C.REZETTE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20,6 +20,7 @@
 
 import copy
 import traceback
+import os
 from math import pi
 
 
@@ -32,7 +33,7 @@ def tocomplex(arg):
 # -----------------------------------------------------------------------------
 def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
                       SPEC_OSCI,ABS,COMB,COMB_C,COMPOSE,EXTRACTION,
-                      ENVELOPPE,ASSE,CORR_ACCE,PUISSANCE,INVERSE,
+                      ENVELOPPE,FRACTILE,ASSE,CORR_ACCE,PUISSANCE,INVERSE,
                       NOM_PARA,NOM_RESU,INTERPOL,PROL_DROITE,
                       PROL_GAUCHE,NOM_PARA_FONC,INTERPOL_FONC,PROL_DROITE_FONC,
                       PROL_GAUCHE_FONC,INFO,**args):
@@ -41,11 +42,11 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
    """
    ier=0
    from Utilitai.t_fonction import t_fonction, t_fonction_c, t_nappe, homo_support_nappe, \
-            FonctionError, ParametreError, InterpolationError, ProlongementError
+            FonctionError, ParametreError, InterpolationError, ProlongementError, enveloppe, fractile
    from Utilitai import liss_enveloppe
    from Accas import _F
    from Cata.cata import nappe_sdaster,fonction_sdaster,fonction_c
-   from Utilitai.Utmess import UTMESS, U2MESS
+   from Utilitai.Utmess import  UTMESS
    from Numeric import alltrue,less,array,reshape,cos,sin,exp,sqrt
    from Numeric import choose,zeros,Float
    import aster_fonctions
@@ -184,16 +185,40 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
                __ff=list_fonc[0].l_fonc[i]
                for nap in list_fonc[1:] :
                   ctxt.f = nap.l_fonc[i].nom
-                  __ff=__ff.enveloppe(nap.l_fonc[i], ENVELOPPE['CRITERE'])
+                  __ff=enveloppe([__ff,nap.l_fonc[i]], ENVELOPPE['CRITERE'])
                l_fonc_f.append(__ff)
             __ex=t_nappe(vale_para,l_fonc_f,para)
          elif isinstance(self.sd,fonction_sdaster):
             for f in l_env:
                list_fonc.append(f.convert())
+            ctxt.f = [f.nom for f in list_fonc]
+            __ex = enveloppe(list_fonc, ENVELOPPE['CRITERE'])
+      ###
+      if (FRACTILE   != None):
+         list_fonc=[]
+         l_frac=FRACTILE['FONCTION']
+         if type(l_frac) not in EnumTypes:
+            l_frac=(l_frac,)
+         if isinstance(self.sd,nappe_sdaster):
+            for f in l_frac:
+               list_fonc.append(f.convert())
+            ctxt.f = [f.nom for f in list_fonc]
+            list_fonc = homo_support_nappe(list_fonc)
+            vale_para=list_fonc[0].vale_para
+            para     =list_fonc[0].para
+            l_fonc_f =[]
+            for i in range(len(vale_para)):
+               ctxt.f = [nap.l_fonc[i].nom for nap in list_fonc]
+               __ff=fractile([nap.l_fonc[i] for nap in list_fonc], FRACTILE['FRACT'])
+               l_fonc_f.append(__ff)
+            __ex=t_nappe(vale_para,l_fonc_f,para)
+         elif isinstance(self.sd,fonction_sdaster):
+            for f in l_frac:
+               list_fonc.append(f.convert())
             __ex=list_fonc[0]
             for f in list_fonc[1:]:
                ctxt.f = [__ex.nom, f.nom]
-               __ex = __ex.enveloppe(f, ENVELOPPE['CRITERE'])
+               __ex = fractile(list_fonc, FRACTILE['FRACT'])
       ###
       if (CORR_ACCE   != None):
          __ex=CORR_ACCE['FONCTION'].convert()
@@ -230,7 +255,7 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
       if (SPEC_OSCI   != None):
          if SPEC_OSCI['AMOR_REDUIT']==None:
             l_amor=[0.02, 0.05, 0.1]
-            UTMESS('I','CALC_FONCTION',' : génération par défaut de 3 amortissements :'+str(l_amor))
+            UTMESS('I','FONCT0_31',valr=l_amor)
          else:
             if type(SPEC_OSCI['AMOR_REDUIT']) not in EnumTypes :
                l_amor=[SPEC_OSCI['AMOR_REDUIT'],]
@@ -257,7 +282,7 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
             texte=[]
             for i in range(len(l_freq)/5) :
                texte.append(' %f %f %f %f %f' %tuple(l_freq[i*5:i*5+5]))
-            UTMESS('I','CALC_FONCTION',' : génération par défaut de 150 fréquences :\n'+'\n'.join(texte))
+            UTMESS('I','FONCT0_32',valk=os.linesep.join(texte))
          elif SPEC_OSCI['LIST_FREQ']!=None:
             l_freq=SPEC_OSCI['LIST_FREQ'].Valeurs()
          elif SPEC_OSCI['FREQ']!=None:
@@ -265,18 +290,18 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
                l_freq=[SPEC_OSCI['FREQ'],]
             else:
                l_freq= SPEC_OSCI['FREQ']
+         if min(l_freq)<1.E-10 :
+            UTMESS('S','FONCT0_43')
          if abs(SPEC_OSCI['NORME'])<1.E-10 :
-            UTMESS('S','CALC_FONCTION',' : SPEC_OSCI, la norme ne peut etre nulle')
+            UTMESS('S','FONCT0_33')
          if SPEC_OSCI['NATURE_FONC']!='ACCE' :
-            UTMESS('S','CALC_FONCTION',' : SPEC_OSCI, le type de la fonction doit etre ACCE')
+            UTMESS('S','FONCT0_34')
          if SPEC_OSCI['METHODE']!='NIGAM' :
-            UTMESS('S','CALC_FONCTION',' : SPEC_OSCI, seule la méthode NIGAM est codée')
+            UTMESS('S','FONCT0_35')
          eps=1.e-6
          for amor in l_amor :
             if amor>(1-eps) :
-               UTMESS('S','CALC_FONCTION',' : SPEC_OSCI, la méthode choisie '\
-                        'suppose des amortissements sous-critiques, amor<1.')
-      
+              UTMESS('S','FONCT0_36')
          __ff=SPEC_OSCI['FONCTION'].convert()
          ctxt.f = __ff.nom
          
@@ -318,13 +343,13 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
          __ex=t_nappe(vale_para=sp_lisse.listAmor,l_fonc=l_fonc,para=__ff.para)
 
    except InterpolationError, msg:
-      U2MESS('F', 'FONCT0_27', valk=(ctxt.f, str(msg)))
+      UTMESS('F', 'FONCT0_27', valk=(ctxt.f, str(msg)))
    except ParametreError, msg:
-      U2MESS('F', 'FONCT0_28', valk=(ctxt.f, str(msg)))
+      UTMESS('F', 'FONCT0_28', valk=(ctxt.f, str(msg)))
    except ProlongementError, msg:
-      U2MESS('F', 'FONCT0_29', valk=(ctxt.f, str(msg)))
+      UTMESS('F', 'FONCT0_29', valk=(ctxt.f, str(msg)))
    except FonctionError, msg:
-      U2MESS('F', 'FONCT0_30', valk=(ctxt.f, str(msg), traceback.format_exc()))
+      UTMESS('F', 'FONCT0_30', valk=(ctxt.f, str(msg), traceback.format_exc()))
   
    ### creation de la fonction produite par appel à DEFI_FONCTION
    ### on récupère les paramètres issus du calcul de __ex

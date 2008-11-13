@@ -1,0 +1,44 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>DLisParam</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>DLisParam</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>413</width>
+            <height>394</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Sélection de paramétres</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QListBox" row="0" column="0">
+            <property name="name">
+                <cstring>LBParam</cstring>
+            </property>
+            <property name="selectionMode">
+                <enum>Single</enum>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>LBParam</sender>
+        <signal>clicked(QListBoxItem*)</signal>
+        <receiver>DLisParam</receiver>
+        <slot>LBParamItemPressed()</slot>
+    </connection>
+</connections>
+<slots>
+    <slot>LBParamItemPressed()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

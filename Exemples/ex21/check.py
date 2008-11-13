@@ -5,7 +5,7 @@
 """
 
 import sys
-sys.path[:0]=['../..','../../Editeur','../../..']
+sys.path[:0]=['../..','../../..']
 
 from Accas import *
 #from Cata.cata import *

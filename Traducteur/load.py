@@ -6,7 +6,6 @@ import parseur
 from mocles import parseKeywords
 
 
-JDCdict={}
 
 class JDC:
     """Cet objet conserve toutes les informations relatives à un fichier de commandes .comm"""
@@ -112,12 +111,9 @@ class JDC:
 def getJDC(filename,atraiter):
 #---------------------------_
 # lit le JDC
-    jdc=JDCdict.get(filename)
-    if not jdc: 
-        f=open(filename)
-        src=f.read()
-        f.close()
-        jdc=JDC(filename,src,atraiter)
-        JDCdict[filename]=jdc
+    f=open(filename)
+    src=f.read()
+    f.close()
+    jdc=JDC(filename,src,atraiter)
     return jdc
 

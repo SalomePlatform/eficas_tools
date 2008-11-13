@@ -1,0 +1,484 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>DComm</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>DComm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>505</width>
+            <height>483</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>505</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>DComm</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLabel" row="1" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>Commentaire</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="2" column="1">
+            <property name="name">
+                <cstring>bOk</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>0</width>
+                    <height>30</height>
+                </size>
+            </property>
+            <property name="text">
+                <string>&amp;Valider</string>
+            </property>
+            <property name="accel">
+                <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+            <property name="default">
+                <bool>true</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>validation de la saisie</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="2" column="0">
+            <property name="name">
+                <cstring>bSup</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>0</width>
+                    <height>30</height>
+                </size>
+            </property>
+            <property name="text">
+                <string>&amp;Supprimer</string>
+            </property>
+            <property name="accel">
+                <string>Alt+S</string>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>suppression du mot clef</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="2" column="2">
+            <property name="name">
+                <cstring>bHelp</cstring>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>0</width>
+                    <height>30</height>
+                </size>
+            </property>
+            <property name="text">
+                <string>&amp;Documentation</string>
+            </property>
+            <property name="accel">
+                <string>Alt+D</string>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>affichage documentation aster</string>
+            </property>
+        </widget>
+        <widget class="QTabWidget" row="0" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>TWChoix</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>MotClef</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Ajouter Mot-Clef</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>0</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>&lt;h3&gt;&lt;p align="center"&gt;&lt;u&gt;&lt;b&gt;Mots Clefs Permis&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;/h3&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QListBox" row="1" column="1">
+                        <property name="name">
+                            <cstring>LBRegles</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QListBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>LBMCPermis</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>0</height>
+                            </size>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="1">
+                        <property name="name">
+                            <cstring>textLabel1_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;h3&gt;&lt;p align="center"&gt;&lt;u&gt;&lt;b&gt;Règles&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;/h3&gt;</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>Concept</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Nommer Concept</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QGroupBox" row="0" column="0">
+                        <property name="name">
+                            <cstring>groupBox1</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Concept</string>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>textLabel1_3</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>80</x>
+                                    <y>50</y>
+                                    <width>130</width>
+                                    <height>31</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>&lt;u&gt;Nom du concept :&lt;/u&gt;</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>textLabel1_3_2</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>80</x>
+                                    <y>170</y>
+                                    <width>150</width>
+                                    <height>31</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>&lt;u&gt;Type du concept :&lt;/u&gt;</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LENomConcept</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>80</x>
+                                    <y>110</y>
+                                    <width>310</width>
+                                    <height>30</height>
+                                </rect>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>textLabel3</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>10</x>
+                                    <y>200</y>
+                                    <width>290</width>
+                                    <height>31</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>L'opérateur retourne un concept de type :</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>typeConcept</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>310</x>
+                                    <y>200</y>
+                                    <width>130</width>
+                                    <height>31</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>TypeDuConcept</string>
+                            </property>
+                        </widget>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>Commande</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Nouvelle Commande</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QButtonGroup" row="0" column="3" rowspan="2" colspan="1">
+                        <property name="name">
+                            <cstring>buttonGroup1</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Affichage</string>
+                        </property>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>RBalpha</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>20</x>
+                                    <y>20</y>
+                                    <width>120</width>
+                                    <height>20</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>alphabétique</string>
+                            </property>
+                            <property name="checked">
+                                <bool>true</bool>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>RBGroupe</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>20</x>
+                                    <y>40</y>
+                                    <width>110</width>
+                                    <height>20</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>par groupe</string>
+                            </property>
+                        </widget>
+                    </widget>
+                    <widget class="QListBox" row="2" column="0" rowspan="1" colspan="4">
+                        <property name="name">
+                            <cstring>LBNouvCommande</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>textLabel1_4</cstring>
+                        </property>
+                        <property name="maximumSize">
+                            <size>
+                                <width>32767</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>&lt;b&gt;&lt;u&gt;Commandes :&lt;/u&gt;&lt;/b&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="0" rowspan="1" colspan="4">
+                        <property name="name">
+                            <cstring>textLabel4</cstring>
+                        </property>
+                        <property name="text">
+                            <string>La commande choisie sera ajoutée APRES la commande courante</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>textLabel6</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>40</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>Filtre</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="1" column="1">
+                        <property name="name">
+                            <cstring>LEFiltre</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </widget>
+                    <widget class="QToolButton" row="1" column="2">
+                        <property name="name">
+                            <cstring>BNext</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>70</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>Suivant</string>
+                        </property>
+                        <property name="iconSet">
+                            <iconset></iconset>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>affiche la prochaine occurence</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>LBNouvCommande</sender>
+        <signal>doubleClicked(QListBoxItem*)</signal>
+        <receiver>DComm</receiver>
+        <slot>LBNouvCommandeClicked()</slot>
+    </connection>
+    <connection>
+        <sender>LEFiltre</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>DComm</receiver>
+        <slot>LEFiltreTextChanged()</slot>
+    </connection>
+    <connection>
+        <sender>LEFiltre</sender>
+        <signal>returnPressed()</signal>
+        <receiver>DComm</receiver>
+        <slot>LEfiltreReturnPressed()</slot>
+    </connection>
+    <connection>
+        <sender>bSup</sender>
+        <signal>pressed()</signal>
+        <receiver>DComm</receiver>
+        <slot>BSupPressed()</slot>
+    </connection>
+    <connection>
+        <sender>bOk</sender>
+        <signal>clicked()</signal>
+        <receiver>DComm</receiver>
+        <slot>BOkPressed()</slot>
+    </connection>
+    <connection>
+        <sender>LENomConcept</sender>
+        <signal>returnPressed()</signal>
+        <receiver>DComm</receiver>
+        <slot>LENomConceptReturnPressed()</slot>
+    </connection>
+    <connection>
+        <sender>RBGroupe</sender>
+        <signal>clicked()</signal>
+        <receiver>DComm</receiver>
+        <slot>BuildTabCommand()</slot>
+    </connection>
+    <connection>
+        <sender>RBalpha</sender>
+        <signal>clicked()</signal>
+        <receiver>DComm</receiver>
+        <slot>BuildTabCommand()</slot>
+    </connection>
+    <connection>
+        <sender>bHelp</sender>
+        <signal>clicked()</signal>
+        <receiver>DComm</receiver>
+        <slot>ViewDoc()</slot>
+    </connection>
+    <connection>
+        <sender>BNext</sender>
+        <signal>pressed()</signal>
+        <receiver>DComm</receiver>
+        <slot>BNextPressed()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>LEFiltre</tabstop>
+    <tabstop>LBRegles</tabstop>
+    <tabstop>LENomConcept</tabstop>
+    <tabstop>TWChoix</tabstop>
+    <tabstop>LBMCPermis</tabstop>
+    <tabstop>RBalpha</tabstop>
+    <tabstop>LBNouvCommande</tabstop>
+    <tabstop>bOk</tabstop>
+    <tabstop>bSup</tabstop>
+    <tabstop>bHelp</tabstop>
+</tabstops>
+<slots>
+    <slot>LBNouvCommandeClicked()</slot>
+    <slot>LEFiltreTextChanged()</slot>
+    <slot>LEfiltreReturnPressed()</slot>
+    <slot>BSupPressed()</slot>
+    <slot>LENomConceptReturnPressed()</slot>
+    <slot>BOkPressed()</slot>
+    <slot>BuildTabCommand()</slot>
+    <slot>ViewDoc()</slot>
+    <slot>BNextPressed()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

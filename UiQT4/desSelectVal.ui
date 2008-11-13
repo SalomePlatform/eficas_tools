@@ -1,0 +1,111 @@
+<ui version="4.0" >
+ <class>DSelVal</class>
+ <widget class="QWidget" name="DSelVal" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>469</width>
+    <height>624</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Sélection de valeurs</string>
+  </property>
+  <widget class="QTextEdit" name="TBtext" >
+   <property name="geometry" >
+    <rect>
+     <x>9</x>
+     <y>9</y>
+     <width>451</width>
+     <height>476</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BImportSel" >
+   <property name="geometry" >
+    <rect>
+     <x>220</x>
+     <y>520</y>
+     <width>208</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Ajouter Selection</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BImportTout" >
+   <property name="geometry" >
+    <rect>
+     <x>220</x>
+     <y>560</y>
+     <width>208</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Importer Tout</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="BGSeparateur" >
+   <property name="geometry" >
+    <rect>
+     <x>20</x>
+     <y>500</y>
+     <width>188</width>
+     <height>103</height>
+    </rect>
+   </property>
+   <property name="title" >
+    <string>Separateur</string>
+   </property>
+   <widget class="QRadioButton" name="Bespace" >
+    <property name="geometry" >
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>148</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>espace</string>
+    </property>
+    <property name="checked" >
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="Bvirgule" >
+    <property name="geometry" >
+     <rect>
+      <x>20</x>
+      <y>40</y>
+      <width>148</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>virgule</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="BpointVirgule" >
+    <property name="geometry" >
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>148</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>point-virgule</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <resources/>
+ <connections/>
+</ui>

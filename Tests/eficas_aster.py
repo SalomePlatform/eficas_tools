@@ -27,6 +27,6 @@
 
 # Modules Eficas
 import prefs
-from Editeur import eficas_go
+from InterfaceTK import eficas_go
 
 eficas_go.lance_eficas()

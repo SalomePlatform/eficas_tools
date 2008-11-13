@@ -1,4 +1,4 @@
-#@ MODIF calc_table_ops Macro  DATE 16/05/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF calc_table_ops Macro  DATE 19/02/2008   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -31,7 +31,7 @@ def calc_table_ops(self, TABLE, ACTION, INFO, **args):
    macro = 'CALC_TABLE'
    from Accas                 import _F
    from Cata.cata             import table_sdaster, table_fonction, table_jeveux
-   from Utilitai.Utmess       import UTMESS
+   from Utilitai.Utmess       import  UTMESS
    from Utilitai              import transpose
    from Utilitai.Table        import Table, merge
 
@@ -73,14 +73,16 @@ def calc_table_ops(self, TABLE, ACTION, INFO, **args):
       # format pour l'impression des filtres
       form_filtre = '\nFILTRE -> NOM_PARA: %-16s CRIT_COMP: %-4s VALE: %s'
       if occ['OPERATION'] == 'FILTRE':
-         col = getattr(tab, occ['NOM_PARA'])
          # peu importe le type, c'est la meme méthode d'appel
          opts = [occ[k] for k in ('VALE','VALE_I','VALE_C','VALE_K') if occ.has_key(k)]
          kargs = {}
          for k in ('CRITERE','PRECISION'):
             if occ.has_key(k):
                kargs[k] = occ[k]
-         tab = tab & ( getattr(col, occ['CRIT_COMP'])(*opts,**kargs) )
+
+         col = getattr(tab, occ['NOM_PARA'])
+         tab = getattr(col, occ['CRIT_COMP'])(*opts,**kargs)
+
          # trace l'operation dans le titre
          #if FORMAT in ('TABLEAU','ASTER'):
          tab.titr += form_filtre % (occ['NOM_PARA'], occ['CRIT_COMP'], \
@@ -94,7 +96,7 @@ def calc_table_ops(self, TABLE, ACTION, INFO, **args):
             lpar = [lpar]
          for p in lpar:
             if not p in tab.para:
-               UTMESS('F', macro, 'Paramètre %s inexistant dans la table %s' % (p, TABLE.nom))
+              UTMESS('F','TABLE0_2',valk=[p,TABLE.nom])
          tab = tab[occ['NOM_PARA']]
 
       #----------------------------------------------
@@ -103,7 +105,7 @@ def calc_table_ops(self, TABLE, ACTION, INFO, **args):
          try:
             tab.Renomme(*occ['NOM_PARA'])
          except KeyError, msg:
-            UTMESS('F', macro, msg)
+            UTMESS('F','TABLE0_3',valk=msg)
 
       #----------------------------------------------
       # 4. Traitement du TRI
@@ -121,9 +123,9 @@ def calc_table_ops(self, TABLE, ACTION, INFO, **args):
                lpar = [lpar]
             for p in lpar:
                if not p in tab.para:
-                  UTMESS('F', macro, 'Paramètre %s inexistant dans la table %s' % (p, TABLE.nom))
+                  UTMESS('F','TABLE0_4',valk=[p, TABLE.nom])
                if not p in tab2.para:
-                  UTMESS('F', macro, 'Paramètre %s inexistant dans la table %s' % (p, occ['TABLE'].nom))
+                  UTMESS('F','TABLE0_5',valk=[p,occ['TABLE'].nom] )
             opts.append(lpar)
          tab = merge(*opts)
    
@@ -136,6 +138,15 @@ def calc_table_ops(self, TABLE, ACTION, INFO, **args):
             vectval = getattr(tab, occ['NOM_PARA']).values()
             aster.affiche('MESSAGE', 'Ajout de la colonne %s : %s' % (occ['NOM_PARA']+repr(vectval))+'\n')
 
+      #----------------------------------------------
+      # 6. Traitement de AJOUT
+      if occ['OPERATION'] == 'AJOUT':
+         if len(occ['NOM_PARA']) != len(occ['VALE']):
+            UTMESS('F', 'TABLE0_14')
+         dnew = dict(zip(occ['NOM_PARA'], occ['VALE']))
+         # ajout de la ligne avec vérification des types
+         tab.append(dnew)
+   
    #----------------------------------------------
    # 99. Création de la table_sdaster résultat
    # cas réentrant : il faut détruire l'ancienne table_sdaster
@@ -164,3 +175,4 @@ def calc_table_ops(self, TABLE, ACTION, INFO, **args):
                        **dprod)
    
    return ier
+

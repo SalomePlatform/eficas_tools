@@ -1,4 +1,4 @@
-#@ MODIF macro_elas_mult_ops Macro  DATE 07/11/2006   AUTEUR CIBHHLV L.VIVAN 
+#@ MODIF macro_elas_mult_ops Macro  DATE 22/10/2007   AUTEUR PELLET J.PELLET 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -37,10 +37,10 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
   CALC_MATR_ELEM  =self.get_cmd('CALC_MATR_ELEM')
   NUME_DDL        =self.get_cmd('NUME_DDL')
   ASSE_MATRICE    =self.get_cmd('ASSE_MATRICE')
-  FACT_LDLT       =self.get_cmd('FACT_LDLT')
+  FACTORISER      =self.get_cmd('FACTORISER')
   CALC_VECT_ELEM  =self.get_cmd('CALC_VECT_ELEM')
   ASSE_VECTEUR    =self.get_cmd('ASSE_VECTEUR')
-  RESO_LDLT       =self.get_cmd('RESO_LDLT')
+  RESOUDRE        =self.get_cmd('RESOUDRE')
   CREA_RESU       =self.get_cmd('CREA_RESU')
   CALC_ELEM       =self.get_cmd('CALC_ELEM')
   CALC_NO         =self.get_cmd('CALC_NO')
@@ -62,7 +62,7 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
         ifour=1                 # mot clé MODE_FOURIER présent sous CAS_CHARGE
         tyresu = 'FOURIER_ELAS'
   if ielas==1 and ifour==1:
-     UTMESS('F', "MACRO_ELAS_MULT", "On ne peut avoir a la fois NOM_CAS et MODE_FOURIER")
+     UTMESS('F','ELASMULT0_1')
 
   if (numeddl in self.sdprods) or (numeddl==None):
     # Si le concept numeddl est dans self.sdprods ou n est pas nommé
@@ -100,7 +100,7 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
 
      __nomras=ASSE_MATRICE(MATR_ELEM=__nomrig,NUME_DDL=num)
 
-     __nomraf=FACT_LDLT(MATR_ASSE=__nomras,NPREC=SOLVEUR['NPREC'],STOP_SINGULIER=SOLVEUR['STOP_SINGULIER'])
+     __nomraf=FACTORISER(MATR_ASSE=__nomras,NPREC=SOLVEUR['NPREC'],STOP_SINGULIER=SOLVEUR['STOP_SINGULIER'])
 
 #####################################################################
 # boucle sur les items de CAS_CHARGE
@@ -126,7 +126,7 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
 
         __nomras=ASSE_MATRICE(MATR_ELEM=__nomrig,NUME_DDL=num)
 
-        __nomraf=FACT_LDLT(MATR_ASSE=__nomras,NPREC=SOLVEUR['NPREC'],STOP_SINGULIER=SOLVEUR['STOP_SINGULIER'])
+        __nomraf=FACTORISER(MATR_ASSE=__nomras,NPREC=SOLVEUR['NPREC'],STOP_SINGULIER=SOLVEUR['STOP_SINGULIER'])
 
 
      if m['VECT_ASSE']==None :
@@ -142,7 +142,7 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
         __nomasv=m['VECT_ASSE']
 
 
-     __nomchn=RESO_LDLT(MATR_FACT=__nomraf,CHAM_NO=__nomasv,TITRE=m['SOUS_TITRE'])
+     __nomchn=RESOUDRE(MATR=__nomraf,CHAM_NO=__nomasv,TITRE=m['SOUS_TITRE'])
      nomchn.append(__nomchn)
 
 # fin de la boucle sur les items de CAS_CHARGE
@@ -234,11 +234,13 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
               motscles['NUME_MODE']=m['MODE_FOURIER']
            motscles['EXCIT']=[]
            if   m['CHAR_MECA'] :
-              for chargt in m['CHAR_MECA'] : motscles['EXCIT'].append(_F(CHARGE=chargt))
+              for chargt in m['CHAR_MECA']   : motscles['EXCIT'].append(_F(CHARGE=chargt))
            elif m['CHAR_CINE'] :
-              for chargt in m['CHAR_CINE'] : motscles['EXCIT'].append(_F(CHARGE=chargt))
-           if   CHAR_MECA_GLOBAL:            motscles['EXCIT'].append(_F(CHARGE=CHAR_MECA_GLOBAL))
-           elif CHAR_CINE_GLOBAL:            motscles['EXCIT'].append(_F(CHARGE=CHAR_CINE_GLOBAL))
+              for chargt in m['CHAR_CINE']   : motscles['EXCIT'].append(_F(CHARGE=chargt))
+           if   CHAR_MECA_GLOBAL:
+              for chargt in CHAR_MECA_GLOBAL : motscles['EXCIT'].append(_F(CHARGE=chargt))
+           elif CHAR_CINE_GLOBAL:
+              for chargt in CHAR_CINE_GLOBAL : motscles['EXCIT'].append(_F(CHARGE=chargt))
            CALC_ELEM(reuse=nomres,
                      RESULTAT=nomres,
                      MODELE=MODELE,
@@ -256,11 +258,13 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
               motscles['NUME_MODE']=m['MODE_FOURIER']
            motscles['EXCIT']=[]
            if   m['CHAR_MECA'] :
-              for chargt in m['CHAR_MECA'] : motscles['EXCIT'].append(_F(CHARGE=chargt))
+              for chargt in m['CHAR_MECA']   : motscles['EXCIT'].append(_F(CHARGE=chargt))
            elif m['CHAR_CINE'] :
-              for chargt in m['CHAR_CINE'] : motscles['EXCIT'].append(_F(CHARGE=chargt))
-           if   CHAR_MECA_GLOBAL:            motscles['EXCIT'].append(_F(CHARGE=CHAR_MECA_GLOBAL))
-           elif CHAR_CINE_GLOBAL:            motscles['EXCIT'].append(_F(CHARGE=CHAR_CINE_GLOBAL))
+              for chargt in m['CHAR_CINE']   : motscles['EXCIT'].append(_F(CHARGE=chargt))
+           if   CHAR_MECA_GLOBAL:
+              for chargt in CHAR_MECA_GLOBAL : motscles['EXCIT'].append(_F(CHARGE=chargt))
+           elif CHAR_CINE_GLOBAL:
+              for chargt in CHAR_CINE_GLOBAL : motscles['EXCIT'].append(_F(CHARGE=chargt))
            CALC_NO(reuse=nomres,
                    RESULTAT=nomres,
                    MODELE=MODELE,

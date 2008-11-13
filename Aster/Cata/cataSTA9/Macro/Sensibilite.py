@@ -1,8 +1,8 @@
-#@ MODIF Sensibilite Macro  DATE 16/05/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF Sensibilite Macro  DATE 19/11/2007   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -24,14 +24,22 @@ Module traite de la gestion des concepts sensibles :
    - corps de la macro MEMO_NOM_SENSI
 """
 
-# proctection eficas
+# protection pour eficas
 try:
    import aster
-   from Utilitai.Utmess import U2MESS as UTMESS
+   from Utilitai.Utmess import  UTMESS
 except:
    pass
 
 _VIDE_ = '????????'
+
+#-------------------------------------------------------------------------------
+def _force_list(obj):
+   """Impose le type list."""
+   if obj is not None and not type(obj) in (list, tuple):
+      obj = (obj,)
+   return obj
+
 
 #-------------------------------------------------------------------------------
 class MEMORISATION_SENSIBILITE:
@@ -43,6 +51,8 @@ class MEMORISATION_SENSIBILITE:
       self._debug = debug
       # dictionnaire de correspondance : ('nom concept', 'nom parasensi') : 'nom compose'
       self._corr = {}
+      # idem que _corr mais, pour les commandes principales, on stocke sd elle-meme
+      self._cosd = {}
       self._nsnp = {}   # l'inverse
       # dictionnaire donnant les 3 tuples de mots-clés, valeurs, mots-clés facteurs
       self._mcle = {}
@@ -64,15 +74,22 @@ class MEMORISATION_SENSIBILITE:
       key = self.key(nosimp, nopase)
       if self._corr.has_key(key):
          UTMESS('F', 'SENSIBILITE_90', valk=(nosimp, nopase))
-      limocl = limocl or ()
-      livale = livale or ()
-      limofa = limofa or ()
+      limocl = _force_list(limocl) or ()
+      livale = _force_list(livale) or ()
+      limofa = _force_list(limofa) or ()
       if not (len(limocl) == len(livale) == len(limofa)):
          UTMESS('F', 'SENSIBILITE_97')
       
       if nocomp is None:
          nocomp = aster.get_nom_concept_unique('S')
+      # on ne conserve que le nom (au moins pour le moment)
+      if type(nocomp) != str:
+         sd = nocomp
+         nocomp = nocomp.nom
+      else:
+         sd = None
       self._corr[key] = nocomp
+      self._cosd[nocomp] = sd
       self._nsnp[nocomp] = key
       self._mcle[key] = (limocl, livale, limofa)
       
@@ -153,6 +170,12 @@ class MEMORISATION_SENSIBILITE:
       return tuple(res)
 
 
+   def get_nom_sd_princ(self):
+      """Retourne la liste des noms des sd dérivées produites par les commandes principales.
+      """
+      return tuple(self._cosd.keys())
+
+
    def delete(self, nosimp, nopase):
       """On récupère les mots-clés associés à un couple ('nom concept', 'nom parasensi')
       """
@@ -160,6 +183,7 @@ class MEMORISATION_SENSIBILITE:
       nocomp = self.get_nocomp(nosimp, nopase)
       if nocomp != _VIDE_:
          del self._corr[key]
+         del self._cosd[nocomp]
          del self._mcle[key]
          del self._nsnp[nocomp]
 
@@ -174,20 +198,29 @@ def memo_nom_sensi_ops(self, NOM, **args):
    Faut-il traiter les mots-clés NOM_ZERO et NOM_UN ?
    Il me semble que NOM_COMPOSE est toujours présent : obligatoire
    """
+   import aster
+   
    ier=0
    # La macro compte pour 1 dans la numerotation des commandes
    self.set_icmd(1)
+   
+   dNOM = NOM[0].cree_dict_valeurs(NOM[0].mc_liste)
+   
+   nosimp = dNOM['NOM_SD']
+   nopase = dNOM['PARA_SENSI'].nom
+   nocomp = dNOM['NOM_COMPOSE']
+   
+   self.jdc.memo_sensi.set(nosimp, nopase, nocomp,
+                           dNOM['MOT_CLE'], dNOM['VALEUR'], dNOM['MOT_FACT'],
+                           verbose=True)
 
-   # boucle sur les occurrences du mot-clé facteur NOM
-   for occ in NOM:
-      dNOM = occ.cree_dict_valeurs(occ.mc_liste)
-      
-      nosimp = dNOM['NOM_SD']
-      nopase = dNOM['PARA_SENSI'].nom
-      nocomp = dNOM['NOM_COMPOSE']
-      
-      self.jdc.memo_sensi.set(nosimp, nopase, nocomp,
-                              dNOM['MOT_CLE'], dNOM['VALEUR'], dNOM['MOT_FACT'],
-                              verbose=True)
-
+   # s'il faut déclarer le concept dérivé dans le jdc
+   if dNOM['TYPE_SD_DERIV']:
+      self.DeclareOut('nocomp', dNOM['NOM_COMPOSE'])
+      # enregistrement dans le tableau des concepts jeveux
+      icmdt = aster.co_register_jev(dNOM['NOM_COMPOSE'].nom, dNOM['TYPE_SD_DERIV'].upper(), 'MEMO_NOM_SENSI')
+   
    return ier
+ 
+ 
+ 

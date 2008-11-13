@@ -1,0 +1,336 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>DUnBase</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>DUnBase</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>482</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>350</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>DUnIn</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabuniqueinto</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>Widget8</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Saisir Valeur</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLayoutWidget" row="1" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>layout2</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&lt;b&gt;&lt;u&gt;&lt;p align="center"&gt;Valeur: &lt;/p&gt;&lt;/u&gt;&lt;/b&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QLineEdit">
+                                <property name="name">
+                                    <cstring>lineEditVal</cstring>
+                                </property>
+                                <property name="minimumSize">
+                                    <size>
+                                        <width>290</width>
+                                        <height>50</height>
+                                    </size>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <spacer row="0" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>288</width>
+                                <height>21</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QPushButton" row="0" column="2">
+                        <property name="name">
+                            <cstring>bParametres</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>0</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>140</width>
+                                <height>30</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>Parametres</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="5" column="0">
+                        <property name="name">
+                            <cstring>bSup</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>30</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Supprimer</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+S</string>
+                        </property>
+                        <property name="autoDefault">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>suppression du mot clef</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="5" column="1">
+                        <property name="name">
+                            <cstring>bOk</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>30</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Valider</string>
+                        </property>
+                        <property name="accel">
+                            <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+                        </property>
+                        <property name="autoDefault">
+                            <bool>true</bool>
+                        </property>
+                        <property name="default">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>validation de la saisie</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="5" column="2">
+                        <property name="name">
+                            <cstring>bHelp</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>30</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Documentation</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+D</string>
+                        </property>
+                        <property name="autoDefault">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>affichage documentation aster</string>
+                        </property>
+                    </widget>
+                    <spacer row="2" column="1">
+                        <property name="name">
+                            <cstring>spacer4</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>41</width>
+                                <height>112</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="4" column="1">
+                        <property name="name">
+                            <cstring>spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>21</width>
+                                <height>112</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLabel" row="3" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>Commentaire</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>430</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="2" column="2">
+                        <property name="name">
+                            <cstring>BView2D</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>110</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>Visualiser</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="2" column="0">
+                        <property name="name">
+                            <cstring>BSalome</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>50</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                        <property name="iconSet">
+                            <iconset>image0</iconset>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<images>
+    <image name="image0">
+        <data format="PNG" length="198">89504e470d0a1a0a0000000d49484452000000140000001408060000008d891d0d0000008d49444154388db5d3db0d80200c05d05be33a8ee24c8699188581ea87c6c4d25628d8840f5e27175002636a2d73b91fc0b569153917c3a07ef0ae9ccaabbf1f5bb5a6edc80c028334200602008165c23828302fa977dd36c6a067a778143fa185f95be66176c220a68303580d0e627ac201cc04a3d8552c1ac03995ab27e75a9a3e1847ddef3072ecef5fafb34ecb0165f7826b457b0000000049454e44ae426082</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>bHelp</sender>
+        <signal>clicked()</signal>
+        <receiver>DUnBase</receiver>
+        <slot>ViewDoc()</slot>
+    </connection>
+    <connection>
+        <sender>bOk</sender>
+        <signal>clicked()</signal>
+        <receiver>DUnBase</receiver>
+        <slot>BOk2Pressed()</slot>
+    </connection>
+    <connection>
+        <sender>bSup</sender>
+        <signal>clicked()</signal>
+        <receiver>DUnBase</receiver>
+        <slot>BSupPressed()</slot>
+    </connection>
+    <connection>
+        <sender>lineEditVal</sender>
+        <signal>returnPressed()</signal>
+        <receiver>DUnBase</receiver>
+        <slot>LEValeurPressed()</slot>
+    </connection>
+    <connection>
+        <sender>bParametres</sender>
+        <signal>pressed()</signal>
+        <receiver>DUnBase</receiver>
+        <slot>BParametresPressed()</slot>
+    </connection>
+    <connection>
+        <sender>BSalome</sender>
+        <signal>pressed()</signal>
+        <receiver>DUnBase</receiver>
+        <slot>BSalomePressed()</slot>
+    </connection>
+    <connection>
+        <sender>BView2D</sender>
+        <signal>clicked()</signal>
+        <receiver>DUnBase</receiver>
+        <slot>BView2DPressed()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>lineEditVal</tabstop>
+    <tabstop>tabuniqueinto</tabstop>
+    <tabstop>bParametres</tabstop>
+    <tabstop>bSup</tabstop>
+    <tabstop>bOk</tabstop>
+    <tabstop>bHelp</tabstop>
+    <tabstop>BView2D</tabstop>
+    <tabstop>BSalome</tabstop>
+</tabstops>
+<slots>
+    <slot>BSupPressed()</slot>
+    <slot>ViewDoc()</slot>
+    <slot>BOk2Pressed()</slot>
+    <slot>BParametresPressed()</slot>
+    <slot>LEValeurPressed()</slot>
+    <slot>BSalomePressed()</slot>
+    <slot>BView2DPressed()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

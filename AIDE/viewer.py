@@ -4,6 +4,12 @@ import Tkinter
 import ScrolledText
 import formatter
 import htmllib
+try :
+    from aideQT import Aide
+    from qt import *
+except :
+    class Aide:
+       pass
 
 class TkWriter(formatter.DumbWriter):
    def __init__(self, text,viewer):
@@ -207,6 +213,25 @@ class HTMLViewer:
           self.fenetre.destroy()
        except:
           pass
+
+
+class HTMLQTViewer(Aide):
+   def __init__(self,parent,pathDoc):
+      Aide.__init__(self,parent=parent,fl=Qt.WType_Dialog)
+      self.pathDoc=pathDoc
+      self.parent=parent
+      self.url=None
+      self.home=None
+      self.historique=Historique()
+      self.TB1init()
+      self.TB1.setSource("index.html")
+      self.show()
+ 
+   def TB1init(self):
+      self.TB1.mimeSourceFactory().addFilePath(QString(self.pathDoc));
+
+   def PBIndexPushed(self):
+      self.TB1.setSource("index.html")
 
 if __name__ == "__main__":
     v=HTMLViewer(None)

@@ -1,0 +1,303 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>DUnComp</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>DUnComp</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>484</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>350</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>DUnComp</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabuniqueinto</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>Widget8</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Saisir Valeur</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLayoutWidget" row="0" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>layout3</cstring>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel1</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&lt;font size="+2"&gt;Complexe de la forme : a+bj&lt;/font&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QLineEdit">
+                                <property name="name">
+                                    <cstring>LEcomp</cstring>
+                                </property>
+                                <property name="minimumSize">
+                                    <size>
+                                        <width>390</width>
+                                        <height>40</height>
+                                    </size>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <widget class="QLabel" row="5" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>Commentaire</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;font size="+2"&gt;Un complexe est attendu&lt;/font&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="3" column="0">
+                        <property name="name">
+                            <cstring>LEReel</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>190</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="3" column="1">
+                        <property name="name">
+                            <cstring>LEImag</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>190</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </widget>
+                    <widget class="QButtonGroup" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>buttonGroup1</cstring>
+                        </property>
+                        <property name="title">
+                            <string>OU</string>
+                        </property>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>RBRI</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>20</x>
+                                    <y>40</y>
+                                    <width>335</width>
+                                    <height>20</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>RI   : Réel	                                             Imaginaire</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>RBMP</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>20</x>
+                                    <y>20</y>
+                                    <width>335</width>
+                                    <height>20</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>MP	: Module	                                         Phase</string>
+                            </property>
+                        </widget>
+                    </widget>
+                    <spacer row="1" column="0">
+                        <property name="name">
+                            <cstring>spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>41</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="4" column="0">
+                        <property name="name">
+                            <cstring>spacer4</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>41</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLayoutWidget" row="6" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>layout2</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>bSup</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Supprimer</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+S</string>
+                                </property>
+                                <property name="autoDefault">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>suppression du mot clef</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>bOk</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Valider</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+                                </property>
+                                <property name="autoDefault">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="default">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>validation de la saisie</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>bHelp</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Documentation</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+D</string>
+                                </property>
+                                <property name="autoDefault">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>affichage documentation aster</string>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>bHelp</sender>
+        <signal>clicked()</signal>
+        <receiver>DUnComp</receiver>
+        <slot>ViewDoc()</slot>
+    </connection>
+    <connection>
+        <sender>bOk</sender>
+        <signal>clicked()</signal>
+        <receiver>DUnComp</receiver>
+        <slot>BOkPressed()</slot>
+    </connection>
+    <connection>
+        <sender>bSup</sender>
+        <signal>clicked()</signal>
+        <receiver>DUnComp</receiver>
+        <slot>BSupPressed()</slot>
+    </connection>
+    <connection>
+        <sender>LEImag</sender>
+        <signal>returnPressed()</signal>
+        <receiver>DUnComp</receiver>
+        <slot>LEImagRPressed()</slot>
+    </connection>
+    <connection>
+        <sender>LEReel</sender>
+        <signal>returnPressed()</signal>
+        <receiver>DUnComp</receiver>
+        <slot>LEReelRPressed()</slot>
+    </connection>
+    <connection>
+        <sender>LEcomp</sender>
+        <signal>returnPressed()</signal>
+        <receiver>DUnComp</receiver>
+        <slot>LEcompRPressed()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>LEcomp</tabstop>
+    <tabstop>LEReel</tabstop>
+    <tabstop>LEImag</tabstop>
+    <tabstop>tabuniqueinto</tabstop>
+    <tabstop>RBRI</tabstop>
+    <tabstop>RBMP</tabstop>
+    <tabstop>bSup</tabstop>
+    <tabstop>bOk</tabstop>
+    <tabstop>bHelp</tabstop>
+</tabstops>
+<slots>
+    <slot>BSupPressed()</slot>
+    <slot>ViewDoc()</slot>
+    <slot>BOkPressed()</slot>
+    <slot>LEImagRPressed()</slot>
+    <slot>LEReelRPressed()</slot>
+    <slot>LEcompRPressed()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

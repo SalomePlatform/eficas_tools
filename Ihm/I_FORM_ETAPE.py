@@ -110,21 +110,6 @@ class FORM_ETAPE(MACRO_ETAPE):
         test = 1
         arguments = arguments[1:-1] # on enlève les parenthèses ouvrante et fermante
         l_arguments = string.split(arguments,',')
-        #for argument in l_arguments:
-        #    argument = string.strip(argument)
-        #    try:
-        #        nom=argument
-        #        typ,nom = string.split(argument,':')
-        #        #pas de vérification sur le nom de l'argument
-        #        #vérification du type de l'argument
-        #        typ = string.strip(typ)
-        #        if typ not in self.l_types_autorises :
-        #            test = 0
-        #            erreur = erreur + "Le type "+typ+" n'est pas un type permis pour "+nom+'\n'
-        #    except:
-        #        # l'argument ne respecte pas la syntaxe : typ_arg : nom_arg
-        #        test = 0
-        #        erreur = erreur+"Syntaxe argument non valide : "+argument+'\n'
         return test,erreur
 
     def verif_corps(self,corps=None,arguments=None):
@@ -279,7 +264,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         self.build_mc()
         self.mc_liste=[]
         if len(formule) < 4 :
-           return O
+           return 0
         arguments=formule[3]
         if arguments[0] == '(' :
            arguments=arguments[1:]
@@ -287,17 +272,18 @@ class FORM_ETAPE(MACRO_ETAPE):
            arguments=arguments[:-1]
         self.arguments=tuple(arguments.split(','))
 
-        i=1
+        mocles={"NOM_PARA":self.arguments}
+        if formule[1] == "REEL":
+          mocles["VALE"]=formule[2]
+        if formule[1] == "COMPLEXE":
+          mocles["VALE_C"]=formule[2]
+
         for k,v in self.definition.entites.items():
+            if not mocles.has_key(k):continue
             child=self.definition.entites[k](None,nom=k,parent=self)
-            new_valeur=formule[i+1]
-            if i+1 == 3 :
-               child.valeur = self.arguments
-            else :
-               child.valeur = new_valeur
+            child.valeur=mocles[k]
             child.state = 'modified'
             self.mc_liste.append(child)
-            i=i+1
            
         self.corps = formule[2]
         self.type_retourne = formule[1]

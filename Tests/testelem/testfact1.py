@@ -38,13 +38,13 @@ Fin Mot cle Facteur :mcs1
       """Verification de type"""
       #Ne leve plus d'exception
       #self.assertRaises(AttributeError,self.cata,1,'mcs1',None)
-      o=self.cata({'a':1.},'mcs1',None)
+      o=self.cata({'a':1.2},'mcs1',None)
       cr=o.report()
       expected_cr="""Mot cle Facteur :mcs1
    Mot-clé simple : a
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      ! 1.0 n'est pas d'un type autorisé: ('I',) !
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! 1.2 (de type <type 'float'>) n'est pas d'un type autorisé: ('I',) !
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    Fin Mot-clé simple : a
 Fin Mot cle Facteur :mcs1
 """

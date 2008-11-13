@@ -6,6 +6,10 @@ jdcdisplay=None
 
 class UnKnownNode(Exception):pass
 
+def pause():
+  if 1:
+    showinfo("Pause","Pause")
+
 def init_common(r,j):
     global root,jdcdisplay
     root=r
@@ -57,7 +61,6 @@ def create_command(nom,panel):
     label=panel.liste_command.dico_labels[nom]
     label.event_generate("<Enter>")
     label.event_generate("<Return>")
-    #root.event_generate("<Return>")
     root.update()
     panel=jdcdisplay.panel_courant
     return panel

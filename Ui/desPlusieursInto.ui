@@ -1,0 +1,346 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>DPlusInto</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>DPlusInto</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>482</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>350</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>DUnIn</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabuniqueinto</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>Widget8</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Saisir Valeur</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;u&gt;&lt;font size="+1"&gt;Valeur(s) actuelle(s)&lt;/font&gt;&lt;/u&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="3" column="0">
+                        <property name="name">
+                            <cstring>bSup</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>130</width>
+                                <height>30</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Supprimer</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+S</string>
+                        </property>
+                        <property name="autoDefault">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>suppression du mot clef</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="3" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>bOk</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>130</width>
+                                <height>30</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Valider</string>
+                        </property>
+                        <property name="accel">
+                            <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+                        </property>
+                        <property name="autoDefault">
+                            <bool>true</bool>
+                        </property>
+                        <property name="default">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>validation de la saisie</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="3" column="3">
+                        <property name="name">
+                            <cstring>bHelp</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>1</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>150</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>130</width>
+                                <height>30</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Documentation</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+D</string>
+                        </property>
+                        <property name="autoDefault">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>affichage documentation aster</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="0" rowspan="1" colspan="4">
+                        <property name="name">
+                            <cstring>Commentaire</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget" row="1" column="0" rowspan="1" colspan="4">
+                        <property name="name">
+                            <cstring>layout8</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QListBox">
+                                <property name="name">
+                                    <cstring>LBValeurs</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout5</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <spacer>
+                                        <property name="name">
+                                            <cstring>spacer2</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Vertical</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>21</width>
+                                                <height>44</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <widget class="QLayoutWidget">
+                                        <property name="name">
+                                            <cstring>layout2</cstring>
+                                        </property>
+                                        <vbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <widget class="QToolButton">
+                                                <property name="name">
+                                                    <cstring>BSup1Val</cstring>
+                                                </property>
+                                                <property name="minimumSize">
+                                                    <size>
+                                                        <width>40</width>
+                                                        <height>31</height>
+                                                    </size>
+                                                </property>
+                                                <property name="maximumSize">
+                                                    <size>
+                                                        <width>40</width>
+                                                        <height>31</height>
+                                                    </size>
+                                                </property>
+                                                <property name="text">
+                                                    <string></string>
+                                                </property>
+                                                <property name="iconSet">
+                                                    <iconset>image0</iconset>
+                                                </property>
+                                                <property name="toolTip" stdset="0">
+                                                    <string>enleve l occurence selectionnee</string>
+                                                </property>
+                                            </widget>
+                                            <widget class="QToolButton">
+                                                <property name="name">
+                                                    <cstring>BAjout1Val</cstring>
+                                                </property>
+                                                <property name="minimumSize">
+                                                    <size>
+                                                        <width>40</width>
+                                                        <height>31</height>
+                                                    </size>
+                                                </property>
+                                                <property name="maximumSize">
+                                                    <size>
+                                                        <width>40</width>
+                                                        <height>31</height>
+                                                    </size>
+                                                </property>
+                                                <property name="text">
+                                                    <string></string>
+                                                </property>
+                                                <property name="iconSet">
+                                                    <iconset>image1</iconset>
+                                                </property>
+                                                <property name="toolTip" stdset="0">
+                                                    <string>ajoute la valeur saisie sous l occurence selectionnée (en fin de liste si il n y a pas de selection)</string>
+                                                </property>
+                                            </widget>
+                                            <spacer>
+                                                <property name="name">
+                                                    <cstring>spacer3</cstring>
+                                                </property>
+                                                <property name="orientation">
+                                                    <enum>Vertical</enum>
+                                                </property>
+                                                <property name="sizeType">
+                                                    <enum>Expanding</enum>
+                                                </property>
+                                                <property name="sizeHint">
+                                                    <size>
+                                                        <width>21</width>
+                                                        <height>176</height>
+                                                    </size>
+                                                </property>
+                                            </spacer>
+                                        </vbox>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                            <widget class="QListBox">
+                                <property name="name">
+                                    <cstring>listBoxVal</cstring>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLabel" row="0" column="2" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>textLabel1_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&lt;u&gt;&lt;font size="+1"&gt;Valeur(s) possibles(s)&lt;/font&gt;&lt;/u&gt;</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<images>
+    <image name="image0">
+        <data format="PNG" length="264">89504e470d0a1a0a0000000d49484452000000210000000e0806000000a11e758c000000cf49444154388dd594db0ec3200c43edfdf8d897bb0f345b480845d51eb64888f412e76001c00f046fd6e99bba77200480924a1032c92efbd8c7d5cabcc025400099e957849568fe7f06c0ded1deb32b4a1ec4ea824b9e74097165bd01f85527f78a7201e0a3129f345a017c543bafdc983d0f7109d15a331b471f47072c17494a82338f6178203a8817e67306b1f08b07ba03e602c9b831077e37e0209e67e3386710977b17de80c185ad38695a51d522c82ce77912e2fed8be83762092f52b1820dd11bb10e565b53a5a3bbaff130713d66fa6981857060000000049454e44ae426082</data>
+    </image>
+    <image name="image1">
+        <data format="PNG" length="256">89504e470d0a1a0a0000000d49484452000000210000000e0806000000a11e758c000000c749444154388dcd94590ec3200c4471d57bc73df9f407d331b159a228aa254448bc3cc68152fec0e4420ceeceb912e08a0239838848f5df02c99c11f86004300119054ae868c56ac206c06b4b109111c802874f3a52a587757123897e4039c46b50d8865b07f5400a450053330893cf8674a30028d492deef04626b559dfe48ac842b1a6daae6850155033b99c5009f70ceda111aab413b6f6a70d118e008e6fd8bc51d5d00a0f614556d1ff9b9be4952aabc3721f8f8b6f624c557ef8947afedf48c5e60b8dfbeb81d6dab9aff99270000000049454e44ae426082</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>bHelp</sender>
+        <signal>clicked()</signal>
+        <receiver>DPlusInto</receiver>
+        <slot>ViewDoc()</slot>
+    </connection>
+    <connection>
+        <sender>bOk</sender>
+        <signal>clicked()</signal>
+        <receiver>DPlusInto</receiver>
+        <slot>BOkPourListePressed()</slot>
+    </connection>
+    <connection>
+        <sender>bSup</sender>
+        <signal>clicked()</signal>
+        <receiver>DPlusInto</receiver>
+        <slot>BSupPressed()</slot>
+    </connection>
+    <connection>
+        <sender>LBValeurs</sender>
+        <signal>doubleClicked(QListBoxItem*)</signal>
+        <receiver>DPlusInto</receiver>
+        <slot>Sup1Valeur()</slot>
+    </connection>
+    <connection>
+        <sender>BAjout1Val</sender>
+        <signal>clicked()</signal>
+        <receiver>DPlusInto</receiver>
+        <slot>Ajout1Valeur()</slot>
+    </connection>
+    <connection>
+        <sender>BSup1Val</sender>
+        <signal>clicked()</signal>
+        <receiver>DPlusInto</receiver>
+        <slot>Sup1Valeur()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>listBoxVal</tabstop>
+    <tabstop>tabuniqueinto</tabstop>
+    <tabstop>bSup</tabstop>
+    <tabstop>bOk</tabstop>
+    <tabstop>bHelp</tabstop>
+    <tabstop>LBValeurs</tabstop>
+</tabstops>
+<slots>
+    <slot>BSupPressed()</slot>
+    <slot>ViewDoc()</slot>
+    <slot>BOkPourListePressed()</slot>
+    <slot>Ajout1Valeur()</slot>
+    <slot>Sup1Valeur()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

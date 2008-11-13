@@ -1,4 +1,4 @@
-#@ MODIF macro_matr_asse_ops Macro  DATE 12/06/2006   AUTEUR CIBHHLV L.VIVAN 
+#@ MODIF macro_matr_asse_ops Macro  DATE 18/03/2008   AUTEUR BOYERE E.BOYERE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21,15 +21,16 @@
 
 
 def macro_matr_asse_ops(self,MODELE,CHAM_MATER,CARA_ELEM,MATR_ASSE,
-                        SOLVEUR,NUME_DDL,CHARGE,CHAR_CINE,INST,**args):
+                        SOLVEUR,NUME_DDL,CHARGE,CHAR_CINE,INST,INFO,**args):
   """
      Ecriture de la macro MACRO_MATR_ASSE
   """
   ier=0
-  from Utilitai.Utmess     import UTMESS
+  from Utilitai.Utmess     import  UTMESS
 
   # On met le mot cle NUME_DDL dans une variable locale pour le proteger
   numeddl=NUME_DDL
+  info=INFO
   # On importe les definitions des commandes a utiliser dans la macro
   # Le nom de la variable doit etre obligatoirement le nom de la commande
   CALC_MATR_ELEM=self.get_cmd('CALC_MATR_ELEM')
@@ -38,39 +39,9 @@ def macro_matr_asse_ops(self,MODELE,CHAM_MATER,CARA_ELEM,MATR_ASSE,
   # La macro compte pour 1 dans la numerotation des commandes
   self.set_icmd(1)
 
-  if SOLVEUR:
-    methode=SOLVEUR['METHODE']
-    if methode=='LDLT':
-      if SOLVEUR['RENUM']:
-         renum=SOLVEUR['RENUM']
-      else:
-         renum='RCMK'
-      if renum not in ('SANS','RCMK'):
-        UTMESS('F', "MACRO_MATR_ASSE", "Avec methode LDLT, RENUM doit etre SANS ou RCMK")
-    elif methode=='MULT_FRONT':
-      if SOLVEUR['RENUM']:
-         renum=SOLVEUR['RENUM']
-      else:
-         renum='MDA'
-      if renum not in ('MDA','MD','METIS'):
-        UTMESS('F', "MACRO_MATR_ASSE", "Avec methode MULT_FRONT, RENUM doit etre MDA, MD ou RCMK")
-    elif methode=='MUMPS':
-      if SOLVEUR['RENUM']:
-         renum=SOLVEUR['RENUM']
-      else:
-         renum='SANS'
-      if renum not in ('SANS',):
-        UTMESS('F', "MACRO_MATR_ASSE", "Avec methode MUMPS, RENUM doit etre SANS")
-    elif methode=='GCPC':
-      if SOLVEUR['RENUM']:
-         renum=SOLVEUR['RENUM']
-      else:
-         renum='SANS'
-      if renum not in ('SANS','RCMK'):
-        UTMESS('F', "MACRO_MATR_ASSE", "Avec methode GCPC, RENUM doit etre SANS ou RCMK")
-  else:
-    methode='MULT_FRONT'
-    renum  ='MDA'
+  # Les mots cles simples sous SOLVEUR sont par defaut MULT_FRONT/METIS
+  methode=SOLVEUR['METHODE']
+  renum=SOLVEUR['RENUM']
 
   if numeddl in self.sdprods:
     # Si le concept numeddl est dans self.sdprods
@@ -100,17 +71,17 @@ def macro_matr_asse_ops(self,MODELE,CHAM_MATER,CARA_ELEM,MATR_ASSE,
     option=m['OPTION']
     if iocc == 1 and lnume == 1 and option not in ('RIGI_MECA','RIGI_MECA_LAGR',
                                                    'RIGI_THER','RIGI_ACOU')      :
-      UTMESS('F', "MACRO_MATR_ASSE", "UNE DES OPTIONS DOIT ETRE RIGI_MECA OU RIGI_THER OU RIGI_ACOU OU RIGI_MECA_LAGR")
+      UTMESS('F','MATRICE0_9')
 
 
     motscles={'OPTION':option}
     if option == 'RIGI_MECA_HYST':
        if (not lrigel):
-          UTMESS('F', "MACRO_MATR_ASSE", "POUR CALCULER RIGI_MECA_HYST, IL FAUT AVOIR CALCULE RIGI_MECA AUPARAVANT (DANS LE MEME APPEL)")
+          UTMESS('F','MATRICE0_10')
        motscles['RIGI_MECA']   =rigel
     if option == 'AMOR_MECA':
        if (not lrigel or not lmasel):
-          UTMESS('F', "MACRO_MATR_ASSE", "POUR CALCULER AMOR_MECA, IL FAUT AVOIR CALCULE RIGI_MECA ET MASS_MECA AUPARAVANT (DANS LE MEME APPEL)")
+          UTMESS('F','MATRICE0_11')
        if CHAM_MATER != None:
           motscles['RIGI_MECA']   =rigel
           motscles['MASS_MECA']   =masel
@@ -144,7 +115,7 @@ def macro_matr_asse_ops(self,MODELE,CHAM_MATER,CARA_ELEM,MATR_ASSE,
     if lnume and option in ('RIGI_MECA','RIGI_THER','RIGI_ACOU','RIGI_MECA_LAGR'):
       self.DeclareOut('num',numeddl)
       # On peut passer des mots cles egaux a None. Ils sont ignores
-      num=NUME_DDL(MATR_RIGI=_a,METHODE=methode,RENUM=renum)
+      num=NUME_DDL(MATR_RIGI=_a,METHODE=methode,RENUM=renum,INFO=info)
     else:
       num=numeddl
 

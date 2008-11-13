@@ -5,7 +5,8 @@ import difflib
 import compare
 
 import prefs
-from Editeur import appli
+from InterfaceTK import appli
+#from Editeur import appli
 from Accas import AsException
 
 def add_param(j,pos,nom,valeur):

@@ -1,4 +1,4 @@
-#@ MODIF __init__ Cata  DATE 20/09/2004   AUTEUR DURAND C.DURAND
+#@ MODIF __init__ Cata  DATE 20/09/2004   AUTEUR DURAND C.DURAND 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

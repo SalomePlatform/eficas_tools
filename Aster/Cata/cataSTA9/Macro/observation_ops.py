@@ -1,21 +1,21 @@
-#@ MODIF observation_ops Macro  DATE 05/06/2007   AUTEUR BODEL C.BODEL 
+#@ MODIF observation_ops Macro  DATE 26/03/2008   AUTEUR BODEL C.BODEL 
 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 
 
@@ -66,14 +66,14 @@ def observation_ops(self,
 
     # La macro n'est pas encoire capable de traiter les resultats dyna_harmo
     if isinstance(RESULTAT, dyna_harmo):
-        UTMESS('E',UTILITAI7_8)
+        UTMESS('E','UTILITAI7_8')
 
-  
-#***********************************************  
+
+#***********************************************
 #  PHASE DE PROJECTION
-#*********************************************** 
+#***********************************************
 
-    if PROJECTION == 'OUI' :   
+    if PROJECTION == 'OUI' :
         __proj=PROJ_CHAMP(RESULTAT = RESULTAT,
                           MODELE_1 = MODELE_1,
                           MODELE_2 = MODELE_2,
@@ -86,9 +86,7 @@ def observation_ops(self,
         __proj = RESULTAT
 
 
-                             
-    
-#***********************************************  
+#***********************************************
 #  PHASE DE CHANGEMENT DE REPERE
 #***********************************************
 # Le changement de repere se fait dans les routines exterieures crea_normale et crea_repere
@@ -110,24 +108,34 @@ def observation_ops(self,
 
     # cham_mater et cara_elem pour le resultat a projeter
     jdc = CONTEXT.get_current_step().jdc
-    nom_cara_elem = aster.getvectjev( RESULTAT.nom.ljust(19) + '.CARA        ' )
-    nom_cara_elem = nom_cara_elem[0].strip() 
-    cara_elem = jdc.sds_dict[nom_cara_elem]
-    nom_cham_mater = aster.getvectjev( RESULTAT.nom.ljust(19) + '.MATE        ' )
-    nom_cham_mater = nom_cham_mater[0].strip()
-    cham_mater = jdc.sds_dict[nom_cham_mater]
+    nom_cara_elem = aster.getvectjev( RESULTAT.nom.ljust(19) +
+                                      '.CARA        ' )[0].strip()
+    if len(nom_cara_elem) > 0 :
+##        nom_cara_elem = nom_cara_elem[0].strip()
+        cara_elem = jdc.sds_dict[nom_cara_elem]
+    else:
+        cara_elem = None
+    
+    nom_cham_mater = aster.getvectjev( RESULTAT.nom.ljust(19) +
+                                       '.MATE        ' )[0].strip()
+    if len(nom_cham_mater) > 0 :
+##        nom_cham_mater = nom_cham_mater[0].strip()
+        cham_mater = jdc.sds_dict[nom_cham_mater]
+    else:
+        cham_mater = None
 
     # recuperation du maillage associe au modele experimental
-    _maillag = aster.getvectjev( MODELE_2.nom.ljust(8) + '.MODELE    .NOMA        ' )
+    _maillag = aster.getvectjev( MODELE_2.nom.ljust(8) + '.MODELE    .LGRF        ' )
     maillage = _maillag[0].strip()
     jdc = CONTEXT.get_current_step().jdc
     mayaexp = jdc.sds_dict[maillage]
-    
-    _maillag = aster.getvectjev( MODELE_1.nom.ljust(8) + '.MODELE    .NOMA        ' )
+
+    _maillag = aster.getvectjev( MODELE_1.nom.ljust(8) + '.MODELE    .LGRF        ' )
     maillage = _maillag[0].strip()
     jdc = CONTEXT.get_current_step().jdc
     mayanum = jdc.sds_dict[maillage]
-   
+
+
     if MODIF_REPERE != None :
         for modi_rep in MODIF_REPERE :
             type_cham = modi_rep['TYPE_CHAM']
@@ -135,10 +143,10 @@ def observation_ops(self,
             mcfact1 = { 'NOM_CMP'   : nom_cmp,
                         'TYPE_CHAM' : type_cham,
                         'NOM_CHAM'  : NOM_CHAM }
-            
+
             mcfact2 = { }
             modi_rep = modi_rep.val
-            
+
             if modi_rep['REPERE'] == 'NORMALE' :
                 # Cas ou l'utilisateur choisit de creer les reperes locaux
                 # selon la normale. On fait un changement de repere local
@@ -147,11 +155,10 @@ def observation_ops(self,
                     if modi_rep.has_key(option):
                         vect = { option : modi_rep[option] }
                 if len(vect) != 1 :
-                    U2MESS('E',UTILITAI7_9)  
-                chnorm    = crea_normale(self, MODELE_1, MODELE_2,
-                                         cham_mater, cara_elem, NUME_DDL)
-                           
+                    UTMESS('E','UTILITAI7_9')
 
+                chnorm = crea_normale(self, MODELE_1, MODELE_2, NUME_DDL,
+                                                      cham_mater, cara_elem)
                 chnormx = chnorm.EXTR_COMP('DX',[],1)
                 ind_noeuds = chnormx.noeud
                 nom_allno = [mayaexp.NOMNOE.get()[k-1] for k in ind_noeuds]
@@ -161,7 +168,7 @@ def observation_ops(self,
                 for typ in ['NOEUD','GROUP_NO','MAILLE','GROUP_MA','TOUT']:
                     if modi_rep.has_key(typ) :
                         list_no_exp = find_no(mayaexp, {typ : modi_rep[typ]})
-                
+
                 # boucle sur les noeuds pour modifier les reperes.
                 __bid = [None]*(len(list_no_exp) + 1)
                 __bid[0] = __proj
@@ -180,21 +187,21 @@ def observation_ops(self,
                                               CRITERE     = 'RELATIF',
                                               **args)
                     k = k + 1
-                    
+
                 __proj = __bid[-1:][0]
 
-                
+
             else:
                 for typ in ['NOEUD','GROUP_NO','MAILLE','GROUP_MA','TOUT']:
                     if modi_rep.has_key(typ) :
-                        mcfact1.update({typ : modi_rep[typ]})        
+                        mcfact1.update({typ : modi_rep[typ]})
                 if modi_rep['REPERE'] == 'CYLINDRIQUE' :
                     origine = modi_rep['ORIGINE']
                     axe_z   = modi_rep['AXE_Z']
                     mcfact2.update({ 'REPERE'  : 'CYLINDRIQUE',
                                      'ORIGINE' : origine,
                                      'AXE_Z'   : axe_z })
-                    
+
                 elif modi_rep['REPERE'] == 'UTILISATEUR' :
                     angl_naut = modi_rep['ANGL_NAUT']
                     mcfact2.update({ 'REPERE'    : 'UTILISATEUR',
@@ -205,11 +212,11 @@ def observation_ops(self,
                                      CRITERE     = 'RELATIF',
                                      **args)
                 __proj = __bid
-                    
+
 
     else: # pas de modif de repere demandee
         pass
-            
+
 
 #*************************************************
 # Phase de selection des DDL de mesure
@@ -221,10 +228,10 @@ def observation_ops(self,
 
     if FILTRE != None:
         nb_fi = len(FILTRE)
+        liste = []
 
         for ind in num_ordr:
             filtres = []
-            liste = []
             __chamex = CREA_CHAMP(TYPE_CHAM  = 'NOEU_DEPL_R',
                                   OPERATION  = 'EXTR',
                                   RESULTAT   = __proj,
@@ -248,14 +255,17 @@ def observation_ops(self,
                                        ASSE      = filtres
                                        );
 
+
             mcfact2 = {'CHAM_GD'    : __cham[ind-1],
                        'MODELE'     : MODELE_2,
-                       'CHAM_MATER' : cham_mater,
-                       'CARA_ELEM'  : cara_elem,
                        'NOM_CAS'    : str(ind)}
+            if cham_mater is not None:
+                mcfact2['CHAM_MATER'] = cham_mater
+            if cara_elem is not None:
+                mcfact2['CARA_ELEM'] = cara_elem
 
             liste.append(mcfact2)
-            DETRUIRE( CONCEPT= _F( NOM = __chamex ))
+            DETRUIRE( CONCEPT= _F( NOM = __chamex ), INFO=1)
 
 
         self.DeclareOut( 'RESU', self.sd)
@@ -266,13 +276,13 @@ def observation_ops(self,
                               NOM_CHAM  = 'DEPL',
                               AFFE      = liste,
                              );
-            
+
         if isinstance( RESULTAT, mode_meca):
             # Fabrication de la base modale resultat. On doit tricher un peu (encore!!), en
             # faisant un defi_base_modale dans lequel on met zero modes du concept RESULTAT
             # TODO : permettre la creation directement d'un resu de type mode_meca avec
             # CREA_RESU
-            RESBID = CREA_RESU( OPERATION = 'AFFE',
+            _RESBID = CREA_RESU( OPERATION = 'AFFE',
                                 TYPE_RESU = 'MULT_ELAS',
                                 NOM_CHAM  = 'DEPL',
                                 AFFE      = liste,
@@ -281,7 +291,7 @@ def observation_ops(self,
             RESU = DEFI_BASE_MODALE( RITZ = (
                                              _F( MODE_MECA = RESULTAT,
                                                  NMAX_MODE = 0,),
-                                             _F( MULT_ELAS = RESBID),
+                                             _F( MULT_ELAS = _RESBID),
                                             ),
                                      NUME_REF=NUME_DDL
                                    );
@@ -301,22 +311,21 @@ def observation_ops(self,
 # RECUPERATION DES NORMALES
 #**********************************************
 
-def crea_normale(self, modele_1, modele_2, cham_mater, cara_el, nume_ddl):
-
+def crea_normale(self, modele_1, modele_2,
+                 nume_ddl, cham_mater=None, cara_elem=None):
     """Cree un champ de vecteurs normaux sur le maillage experimental, par
        projection du champ de normales cree sur le maillage numerique
     """
-    
     import Numeric
     PROJ_CHAMP  = self.get_cmd('PROJ_CHAMP')
     CREA_CHAMP  = self.get_cmd('CREA_CHAMP')
     CREA_RESU   = self.get_cmd('CREA_RESU')
     DEFI_GROUP  = self.get_cmd('DEFI_GROUP')
     import aster
-    from Accas import _F    
+    from Accas import _F
     # recherche du maillage associe au modele numerique
     nom_modele_num = modele_1.nom
-    _maillag = aster.getvectjev( nom_modele_num.ljust(8) + '.MODELE    .NOMA        ' )
+    _maillag = aster.getvectjev( nom_modele_num.ljust(8) + '.MODELE    .LGRF        ' )
     maillage = _maillag[0].strip()
     jdc = CONTEXT.get_current_step().jdc
     mayanum = jdc.sds_dict[maillage]
@@ -324,16 +333,22 @@ def crea_normale(self, modele_1, modele_2, cham_mater, cara_el, nume_ddl):
 
     DEFI_GROUP( reuse = mayanum,
                 MAILLAGE      = mayanum,
-                CREA_GROUP_MA = _F( NOM  = '&&TOUMAIL',
+                CREA_GROUP_MA = _F( NOM  = '&&TOUMAI',
                                     TOUT = 'OUI' )
                );
-    
+
     __norm1 = CREA_CHAMP( MODELE    = modele_1,
                           OPERATION = 'NORMALE',
                           TYPE_CHAM = 'NOEU_GEOM_R',
-                          GROUP_MA  = '&&TOUMAIL',
+                          GROUP_MA  = '&&TOUMAI',
                          );
-    
+
+    DEFI_GROUP( reuse = mayanum,
+                MAILLAGE      = mayanum,
+                DETR_GROUP_MA = _F( NOM  = '&&TOUMAI' )
+               );
+
+
     __norm2 = CREA_CHAMP( OPERATION = 'ASSE',
                           TYPE_CHAM = 'NOEU_DEPL_R',
                           MODELE    = modele_1,
@@ -344,16 +359,19 @@ def crea_normale(self, modele_1, modele_2, cham_mater, cara_el, nume_ddl):
                                          )
                          );
 
+    affe_dct = {'CHAM_GD' : __norm2,
+                'INST' : 1,
+                'MODELE' : modele_1}
+    if cham_mater is not None:
+        affe_dct["CHAM_MATER"] = cham_mater
+    if cara_elem is not None:
+        affe_dct["CARA_ELEM"] = cara_elem
+    
     __norm3 = CREA_RESU( OPERATION = 'AFFE',
                          TYPE_RESU = 'EVOL_ELAS',
                          NOM_CHAM  = 'DEPL',
-                         AFFE      = _F( CHAM_GD    = __norm2,
-                                         INST       = 1,
-                                         MODELE     = modele_1,
-                                         CHAM_MATER = cham_mater,
-                                         CARA_ELEM  = cara_el
-                                         )
-                         );
+                         AFFE      = _F(**affe_dct)
+                       );
 
 
     __norm4 = PROJ_CHAMP( RESULTAT   = __norm3,
@@ -372,7 +390,7 @@ def crea_normale(self, modele_1, modele_2, cham_mater, cara_el, nume_ddl):
                           TYPE_CHAM  = 'NOEU_DEPL_R',
                           );
 
-        
+
     return __norm5
 
 
@@ -429,12 +447,12 @@ def crea_repere(chnorm, ind_no, vect):
         pass
     elif nom_para == 'CONDITION_Y':
         pass
- 
+
     # 3) Calcul de l'angle nautique associe au repere local
     angl_naut = anglnaut(reploc)
 
     return angl_naut
-        
+
 #*****************************************************************************
 # Aller chercher une liste de noeuds pour un mot cle 'NOEUD', 'GROUP_NO'
 # 'MAILLE' ou 'GROUP_MA'
@@ -457,7 +475,7 @@ def find_no(maya,mcsimp):
         mcsimp['GROUP_NO'] = [mcsimp['GROUP_NO']]
     if mcsimp.has_key('GROUP_MA') and type(mcsimp['GROUP_MA']) != tuple :
         mcsimp['GROUP_MA'] = [mcsimp['GROUP_MA']]
-    
+
     if mcsimp.has_key('NOEUD') :
         list_no = list(mcsimp['NOEUD'])
     elif mcsimp.has_key('GROUP_NO') :
@@ -478,7 +496,8 @@ def find_no(maya,mcsimp):
         for group in mcsimp['GROUP_MA'] :
             list_ma.append(maya.GROUPEMA.get()[group.ljust(8)])
         for mail in list_ma :
-            ind_ma = maya.NOMMAI.get().index(mail.ljust(8))
+            tmp = list(maya.NOMMAI.get())
+            ind_ma = tmp.index(mail.ljust(8))
             for ind_no in maya.CONNEX[ind_ma] :
                 nomnoe = maya.NOMNOE.get()[ind_no]
                 if nomnoe not in list_no :
@@ -498,7 +517,7 @@ def cross_product(a, b):
     For a dimension of 2,
     the z-component of the equivalent three-dimensional cross product is
     returned.
-    
+
     For backward compatibility with Numeric <= 23
     """
     from Numeric import asarray, array
@@ -591,6 +610,6 @@ def anglnaut(P):
 ##                                 -sin(B) = reploc[2][0]
 ##                            cos(B)sin(G) = reploc[2][1]
 ##                            cos(B)cos(G) = reploc[2][2]
-             
-        
-                        
+
+
+

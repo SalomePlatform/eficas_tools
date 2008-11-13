@@ -1,4 +1,4 @@
-#@ MODIF sd_mater SD  DATE 09/05/2007   AUTEUR PELLET J.PELLET 
+#@ MODIF sd_mater SD  DATE 06/05/2008   AUTEUR MARKOVIC D.MARKOVIC 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -21,27 +21,67 @@
 from SD import *
 
 from SD.sd_fonction import sd_fonction
-from SD.sd_compor1 import sd_compor1
 
-class sd_mater_RDEP(AsBase):
+
+
+class sd_mater_XDEP(AsBase):
 #---------------------------
     # on dirait une fonction, mais c'est plutot la concaténation de plusieurs fonctions
-    nomj = SDNom(fin=8)
-    PROL = AsVK16()
+    nomj = SDNom(fin=19)
+    PROL = AsVK24()
     VALE = AsVR()
+
+
+class sd_compor1(AsBase):
+#-----------------------
+    nomj = SDNom(fin=19)
+    VALC = AsVC(SDNom(), )
+    VALK = AsVK8(SDNom(), )
+    VALR = AsVR(SDNom(), )
+
+
+    # parfois, THER_NL crée une sd_fonction pour BETA
+    def check_compor1_i_VALK(self, checker):
+        nom= self.nomj().strip()
+        if nom[8:16]=='.THER_NL' :
+            valk=list(self.VALK.get_stripped())
+            if valk :
+                nbk2=self.VALK.lonuti
+                nbr=self.VALR.lonuti
+                nbc=self.VALC.lonuti
+                nbk=nbk2-nbr-nbc
+                k2=valk.index('BETA')
+                k=k2-nbr-nbc
+                nomfon=valk[nbr+nbc+nbk/2+k]
+                sd2=sd_fonction(nomfon) ; sd2.check(checker)
+        if nom[8:16]=='.GLRC_DA' :
+            valk=list(self.VALK.get_stripped())
+            if valk :
+                nbk2=self.VALK.lonuti
+                nbr=self.VALR.lonuti
+                nbc=self.VALC.lonuti
+                nbk=nbk2-nbr-nbc
+                for fon in ('FMEX1'  ,'FMEX2'  ,'FMEY1'  ,'FMEY2' , 
+                            'DFMEX1' ,'DFMEX2' ,'DFMEY1' ,'DFMEY2',
+                            'DDFMEX1','DDFMEX2','DDFMEY1','DDFMEY2'):
+                    k2=valk.index(fon)
+                    k=k2-nbr-nbc
+                    nomfon=valk[nbr+nbc+nbk/2+k]
+                    sd2=sd_fonction(nomfon) ; sd2.check(checker)
 
 
 class sd_mater(AsBase):
 #----------------------
     nomj = SDNom(fin=8)
     NOMRC = AsVK16(SDNom(nomj='.MATERIAU.NOMRC'), )
-    rdep = Facultatif(sd_mater_RDEP(SDNom(nomj='.&&RDEP')))
+    rdep = Facultatif(sd_mater_XDEP(SDNom(nomj='.&&RDEP')))  # à documenter
+    mzp  = Facultatif(sd_mater_XDEP(SDNom(nomj='.&&MZP' )))  # à documenter
 
     # existence possible de la SD :
     def exists(self):
         return self.NOMRC.exists
 
-    # indirection vers les COMPOR1 de NOMRC :
+    # indirection vers les sd_compor1 de NOMRC :
     def check_mater_i_NOMRC(self, checker):
         lnom = self.NOMRC.get()
         if not lnom: return
@@ -50,6 +90,6 @@ class sd_mater(AsBase):
             nomc1=self.nomj()[:8]+'.'+nom
             comp1 = sd_compor1(nomc1)
 
-            # parfois, comp1 est vide. AJACOT_PB : ssls115g/DEFI_COQU_MULT
+            # parfois, comp1 est vide : ssls115g/DEFI_COQU_MULT
             if comp1.VALK.get() : comp1.check(checker)
 

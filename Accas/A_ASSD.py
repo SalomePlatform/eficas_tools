@@ -49,6 +49,8 @@ class formule(I_FONCTION.formule,N_FONCTION.formule,ASSD):
       N_FONCTION.formule.__init__(self,etape=etape,sd=sd,reg=reg)
       I_FONCTION.formule.__init__(self,etape=etape,sd=sd,reg=reg)
 
+class formule_c(formule):pass
+
 # On conserve fonction (ceinture et bretelles)
 # fonction n'existe plus dans N_FONCTION on le remplace par formule
 class fonction(N_FONCTION.formule,I_FONCTION.fonction,ASSD):

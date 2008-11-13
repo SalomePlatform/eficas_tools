@@ -38,17 +38,39 @@ class Formula:
     def __mul__(self, other): return Binop('*', self, other)
     def __rmul__(self, other): return Binop('*', other, self)
     def __div__(self, other): return Binop('/', self, other)
-    def __truediv__(self, other): return Binop('/', self, other)
     def __rdiv__(self, other): return Binop('/', other, self)
+    def __truediv__(self, other): return Binop('/', self, other)
+    def __rtruediv__(self, other): return Binop('/', other, self)
+    def __floordiv__(self, other): return Binop('//', self, other)
+    def __rfloordiv__(self, other): return Binop('//', other, self)
     def __pow__(self, other): return Binop('**', self, other)
     def __rpow__(self, other): return Binop('**', other, self)
     def __getitem__(self,i):return Binop('[]',self,i)
+    def __cmp__( self, other ): return self.eval().__cmp__(other)
+    def __eq__(  self, other ): return self.eval() == other
+    def __ne__(  self, other ): return self.eval() != other
+    def __lt__(  self, other ): return self.eval() < other
+    def __le__(  self, other ): return self.eval() <= other
+    def __gt__(  self, other ): return self.eval() > other
+    def __ge__(  self, other ): return self.eval() >= other
+    def __hash__(self):return id(self)
+
+def _div(a,b):
+  if isinstance(a,(int,long)) and isinstance(b,(int,long)):
+    if a%b:
+      return a/b
+    else:
+      return a//b
+  else:
+    return a/b
+
 
 class Binop(Formula):
     opmap = { '+': lambda a, b: a + b,
               '*': lambda a, b: a * b,
               '-': lambda a, b: a - b,
-              '/': lambda a, b: a / b,
+              '/': _div,
+              '//': lambda a, b: a // b,
               '**': lambda a, b: a ** b,
               '[]': lambda a, b: a[b] ,
             }

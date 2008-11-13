@@ -1,4 +1,4 @@
-#@ MODIF ops Cata  DATE 16/05/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF ops Cata  DATE 02/06/2008   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -38,13 +38,13 @@ try:
    Build.B_CODE.CODE.codex=aster
    
    from Utilitai.Utmess   import UTMESS
-   from Utilitai.as_timer import ASTER_TIMER
-   from Macro.Sensibilite import MEMORISATION_SENSIBILITE
+   from Build.B_SENSIBILITE_MEMO_NOM_SENSI import MEMORISATION_SENSIBILITE
+   from Execution.E_Global import MessageLog
 except:
    aster_exists = False
 
 
-def commun_DEBUT_POURSUITE(jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG):
+def commun_DEBUT_POURSUITE(jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM):
    """Fonction sdprod partie commune à DEBUT et POURSUITE.
    (on stocke un entier au lieu du logique)
    """
@@ -57,13 +57,22 @@ def commun_DEBUT_POURSUITE(jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG):
    if CODE != None:
       jdc.fico = CODE['NOM']
    if aster_exists:
-      jdc.timer = ASTER_TIMER(format='aster')
       # en POURSUITE, ne pas écraser la mémorisation existante.
       if not hasattr(jdc, 'memo_sensi'):
          jdc.memo_sensi = MEMORISATION_SENSIBILITE()
+         jdc.memo_sensi.reparent(jdc)
+
+      if hasattr(jdc, 'msg_init') and jdc.msg_init == 1:
+         # messages d'alarmes désactivés
+         if IGNORE_ALARM:
+            if not type(IGNORE_ALARM) in (list, tuple):
+               IGNORE_ALARM = [IGNORE_ALARM]
+            for idmess in IGNORE_ALARM:
+               MessageLog.disable_alarm(idmess)
+      jdc.msg_init = True
 
 
-def DEBUT(self,PAR_LOT,IMPR_MACRO,CODE,DEBUG,**args):
+def DEBUT(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, **args):
    """
        Fonction sdprod de la macro DEBUT
    """
@@ -71,7 +80,7 @@ def DEBUT(self,PAR_LOT,IMPR_MACRO,CODE,DEBUG,**args):
    if self.jdc is not self.parent :
       raise Accas.AsException("La commande DEBUT ne peut exister qu'au niveau jdc")
 
-   commun_DEBUT_POURSUITE(self.jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG)
+   commun_DEBUT_POURSUITE(self.jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM)
 
 
 def build_debut(self,**args):
@@ -94,7 +103,7 @@ def build_debut(self,**args):
    self.definition.op=None
    return ier
 
-def POURSUITE(self,PAR_LOT,IMPR_MACRO,CODE,DEBUG,**args):
+def POURSUITE(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, **args):
    """
        Fonction sdprod de la macro POURSUITE
    """
@@ -102,7 +111,7 @@ def POURSUITE(self,PAR_LOT,IMPR_MACRO,CODE,DEBUG,**args):
    if self.jdc is not self.parent :
       raise Accas.AsException("La commande POURSUITE ne peut exister qu'au niveau jdc")
 
-   commun_DEBUT_POURSUITE(self.jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG)
+   commun_DEBUT_POURSUITE(self.jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM)
    
    if (self.codex and os.path.isfile("glob.1") or os.path.isfile("bhdf.1")):
      # Le module d'execution est accessible et glob.1 est present
@@ -150,10 +159,10 @@ def POURSUITE(self,PAR_LOT,IMPR_MACRO,CODE,DEBUG,**args):
      # On supprime du pickle_context les concepts valant None, ca peut 
      # etre le cas des concepts non executés, placés après FIN.
      pickle_context=get_pickled_context()
-     self.jdc.restore_pickled_attrs(pickle_context)
      if pickle_context==None :
-        UTMESS('F','Poursuite',"Erreur a la relecture du fichier pick.1 : aucun objet sauvegardé ne sera récupéré")
+        UTMESS('F','SUPERVIS_86')
         return
+     self.jdc.restore_pickled_attrs(pickle_context)
      from Cata.cata  import ASSD,entier
      from Noyau.N_CO import CO
      for elem in pickle_context.keys():
@@ -162,18 +171,21 @@ def POURSUITE(self,PAR_LOT,IMPR_MACRO,CODE,DEBUG,**args):
             # on rattache chaque assd au nouveau jdc courant (en poursuite)
             pickle_context[elem].jdc=self.jdc
             pickle_context[elem].parent=self.jdc
+            # pour que sds_dict soit cohérent avec g_context
+            self.jdc.sds_dict[elem] = pickle_context[elem]
+            assert elem == pickle_context[elem].nom
             # rétablir le parent pour les attributs de la SD
             pickle_context[elem].reparent_sd()
             if elem in self.g_context.keys():
                poursu_class=self.g_context[elem].__class__
                if poursu_class!=pickle_class :
-                  UTMESS('F','Poursuite',"Types incompatibles entre glob.1 et pick.1 pour concept de nom "+elem)
+                  UTMESS('F','SUPERVIS_87',valk=[elem])
                   return
             elif isinstance(pickle_context[elem],ASSD) and pickle_class not in (CO,entier) : 
             # on n'a pas trouvé le concept dans la base et sa classe est ASSD : ce n'est pas normal
             # sauf dans le cas de CO : il n'a alors pas été typé et c'est normal qu'il soit absent de la base
             # meme situation pour le type 'entier' produit uniquement par DEFI_FICHIER
-               UTMESS('F','Poursuite',"Concept de nom "+elem+" et de type "+str(pickle_class)+" introuvable dans la base globale")
+               UTMESS('F','SUPERVIS_88',valk=[elem,str(pickle_class)])
                return
          if pickle_context[elem]==None : del pickle_context[elem]
      self.g_context.update(pickle_context)
@@ -194,14 +206,14 @@ def get_pickled_context():
        les objets python qui auraient été sauvegardés, sous forme pickled, lors d'une 
        précédente étude. Un fichier pick.1 doit etre présent dans le répertoire de travail
     """
-    if os.path.isfile("pick.1"):
-       file="pick.1"
-    else: return None
+    fpick = 'pick.1'
+    if not os.path.isfile(fpick):
+       return None
    
     # Le fichier pick.1 est présent. On essaie de récupérer les objets python sauvegardés
     context={}
     try:
-       file=open(file,'r')
+       file=open(fpick,'r')
        # Le contexte sauvegardé a été picklé en une seule fois. Il est seulement
        # possible de le récupérer en bloc. Si cette opération echoue, on ne récupère
        # aucun objet.
@@ -209,7 +221,7 @@ def get_pickled_context():
        file.close()
     except:
        # En cas d'erreur on ignore le contenu du fichier
-       # traceback.print_exc()
+       traceback.print_exc()
        return None
 
     return context
@@ -224,7 +236,8 @@ def POURSUITE_context(self,d):
    # On ajoute directement les concepts dans le contexte du jdc
    # XXX est ce que les concepts ne sont pas ajoutés plusieurs fois ??
    for v in self.g_context.values():
-      if isinstance(v,ASSD) : self.jdc.sds.append(v)
+      if isinstance(v,ASSD) :
+         self.jdc.sds.append(v)
 
 def build_poursuite(self,**args):
    """
@@ -276,49 +289,42 @@ def detruire(self,d):
    """
        Cette fonction est la fonction op_init de la PROC DETRUIRE
    """
+   if hasattr(self,"executed") and self.executed == 1:
+      return
    if self["CONCEPT"]!=None:
-     sd=[]
-     for mc in self["CONCEPT"]:
-       mcs=mc["NOM"]
-       if mcs is None:continue
-       if type(mcs) == types.ListType or type(mcs) == types.TupleType:
-         for e in mcs:
-           if isinstance(e,ASSD):
-             sd.append(e)
-             e=e.nom
-       # traitement particulier pour les listes de concepts, on va mettre à None
-       # le terme de l'indice demandé dans la liste :
-       # nomconcept_i est supprimé, nomconcept[i]=None
-           indice=e[e.rfind('_')+1:]
-           concept_racine=e[:e.rfind('_')]
-           if indice!='' and d.has_key(concept_racine) and type(d[concept_racine])==types.ListType:
-              try               :
-                                  indici=int(indice)
-                                  d[concept_racine][indici]=None
-              except ValueError : pass
-       # pour tous les concepts :
-           if d.has_key(e):del d[e]
-           if self.jdc.sds_dict.has_key(e):del self.jdc.sds_dict[e]
-       else:
-         if isinstance(mcs,ASSD):
-           sd.append(mcs)
-           mcs=mcs.nom
-       # traitement particulier pour les listes de concepts, on va mettre à None
-       # le terme de l'indice demandé dans la liste :
-       # nomconcept_i est supprimé, nomconcept[i]=None
-         indice=mcs[mcs.rfind('_')+1:]
-         concept_racine=mcs[:mcs.rfind('_')]
-         if indice!='' and d.has_key(concept_racine) and type(d[concept_racine])==types.ListType:
-            try               :
-                                indici=int(indice)
-                                d[concept_racine][indici]=None
-            except ValueError : pass
-       # pour tous les concepts :
-         if d.has_key(mcs):del d[mcs]
-         if self.jdc.sds_dict.has_key(mcs):del self.jdc.sds_dict[mcs]
-     for s in sd:
-       # On signale au parent que le concept s n'existe plus apres l'étape self 
-       self.parent.delete_concept_after_etape(self,s)
+      sd = []
+      for mc in self["CONCEPT"]:
+         mcs = mc["NOM"]
+         if mcs is None:
+            continue
+         if type(mcs) not in (list, tuple):
+            mcs = [mcs]
+       
+         for co in mcs:
+            if isinstance(co, ASSD):
+               sd.append(co)
+               co = co.nom
+            # traitement particulier pour les listes de concepts, on va mettre à None
+            # le terme de l'indice demandé dans la liste :
+            # nomconcept_i est supprimé, nomconcept[i]=None
+            i = co.rfind('_')
+            if i > 0 and not co.endswith('_'):
+               concept_racine = co[:i]
+               if d.has_key(concept_racine) and type(d[concept_racine]) is list:
+                  try:
+                     num = int(co[i+1:])
+                     d[concept_racine][num] = None
+                  except (ValueError, IndexError):
+                     # cas : RESU_aaa ou (RESU_8 avec RESU[8] non initialisé)
+                     pass
+            # pour tous les concepts :
+            if d.has_key(co):
+               del d[co]
+            if self.jdc.sds_dict.has_key(co):
+               del self.jdc.sds_dict[co]
+      for s in sd:
+         # On signale au parent que le concept s n'existe plus apres l'étape self 
+         self.parent.delete_concept_after_etape(self,s)
 
 def subst_materiau(text,NOM_MATER,EXTRACTION,UNITE_LONGUEUR):
    """

@@ -1,8 +1,8 @@
-#@ MODIF calculel Messages  DATE 06/04/2007   AUTEUR PELLET J.PELLET 
+#@ MODIF calculel Messages  DATE 19/05/2008   AUTEUR PELLET J.PELLET 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -20,403 +20,249 @@
 
 def _(x) : return x
 
-cata_msg={
+cata_msg = {
 
-1: _("""
- trop de parametres.
+2 : _("""
+Erreur Utilisateur :
+ Quand on utilise AFFE_CHAR_CINE/EVOL_IMPO, c'est le champ de l'evol_xxx correspondant
+ au 1er instant qui impose sa "loi" : tous les ddls de ce champ seront imposés pour tous
+ les instants du calcul.
+
+ Malheureusement, on ne trouve pas un ddl dans l'evol_xxx %(k1)s :
+   instant : %(r1)f  noeud : %(i1)d  cmp : %(k2)s
+
+Risques & conseils :
+ Assurez-vous que l'évolution imposée %(k1)s concerne les memes ddls pour tous les instants.
 """),
 
-2: _("""
- stop 1
-"""),
-
-3: _("""
+3 : _("""
  la grandeur :  %(k1)s  n existe pas dans le catalogue des grandeurs.
 """),
 
-4: _("""
+4 : _("""
  incoherence des maillages : %(k1)s  et  %(k2)s
 """),
 
-5: _("""
- stop 1a
+5 : _("""
+ Erreur de programmation (ou d'utilisation ?) :
+   Le changement de discrétisation : %(k1)s n'est pas encore programmé.
+ Risques et conseils :
+   Il y a peut-etre une demande d'évolution à émettre ...
 """),
 
-6: _("""
- stop 1b
+6 : _("""
+ Erreur d'utilisation :
+   On n'arrive pas à construire correctement le champ contenant le nombre de sous-points
+   des éléments finis (coques multi-couches, tuyaux, poutre multi-fibres, ...)  du modèle %(k1)s.
+
+ Risques & conseils :
+   Cette erreur intervient lorsque l'on ne définit pas TOUTES les caractéristiques élémentaires
+   dans le meme AFFE_CARA_ELEM.
+   Pour les commandes de calcul, il ne faut qu'un seul MODELE et qu'un seul CARA_ELEM.
 """),
 
-7: _("""
- stop 1c
+8 : _("""
+ sur la maille %(k1)s le calcul est thermo mécanique. Or il manque la température de référence.
+ On ne peut donc pas calculer de déformation thermique.
 """),
 
+9 : _("""
+ Erreur d'utilisation dans AFFE_CHAR_CINE :
+   Aucun des ddls que l'on souhaite bloquer n'appartient au modèle.
+   La charge cinématique produite est donc vide.
 
-9: _("""
- stop 4
+ Risques & Conseils :
+   Vérifier le nom des ddls portés par les noeuds des éléments de votre modèle.
 """),
 
-10: _("""
- stop 5
-"""),
-
-11: _("""
+11 : _("""
  le mode_local:  %(k1)s  ne doit pas etre vecteur ou matrice.
 """),
 
-12: _("""
+12 : _("""
  le mode_local:  %(k1)s  ne doit pas etre "diff__".
 """),
 
-13: _("""
- stop
-"""),
-
-14: _("""
+14 : _("""
   incompatibilite des type_champ ("elga"/"elno")  pour l option :  %(k1)s  entre les 2 type_elem :  %(k2)s  et  %(k3)s
 """),
 
+15 : _("""
+ sur la maille %(k1)s le calcul est thermo mécanique. Or il manque le parametre matériau
+ %(k2)s . On ne peut donc pas calculer de déformation thermique.
+"""),
 
-
-
-
-
-16: _("""
+16 : _("""
  type de maille indisponible
 """),
 
-17: _("""
+17 : _("""
  type de champ inconnu
 """),
 
-18: _("""
- la partie reelle et imaginaire du champ a assembler ne sont pas du meme type (l un est un cham_no et l autre un cham_elem
+18 : _("""
+ les parties réelle et imaginaire du champ à assembler ne sont pas du même type
+ l'un est un CHAM_NO et l'autre un CHAM_ELEM
 """),
 
-19: _("""
- champ incompatible
-"""),
-
-20: _("""
+20 : _("""
  le champ de grandeur  %(k1)s  ne respecte pas le format xxxx_r
 """),
 
-21: _("""
- les champs reel et imaginaire a assembler ne contiennent pas la meme grandeur
+21 : _("""
+ les champs réel et imaginaire à assembler ne contiennent pas la même grandeur
 """),
 
-22: _("""
- probleme dans le catalogue des grandeurs simples, la grandeur %(k1)s  ne possede pas le meme nombre de champ que son homologue complexe %(k2)s
+22 : _("""
+ problème dans le catalogue des grandeurs simples
+ la grandeur %(k1)s  ne possède pas le même nombre de champs que son homologue complexe %(k2)s
 """),
 
-23: _("""
- probleme dans le catalogue des grandeurs simples, la grandeur  %(k1)s  ne possede pas les memes champs que son homologue complexe  %(k2)s
+23 : _("""
+ problème dans le catalogue des grandeurs simples
+ la grandeur  %(k1)s  ne possède pas les mêmes champs que son homologue complexe  %(k2)s
 """),
 
-24: _("""
- les champs a assembler n ont pas la meme longueur
+24 : _("""
+ les champs à assembler n'ont pas la même longueur
 """),
 
-25: _("""
- type de champ incorrect
+27 : _("""
+ CHAM_ELEM à combiner incompatible
 """),
 
-26: _("""
- longueurs des cham_elem incompatibles
-"""),
-
-27: _("""
- cham_elem a combiner incompatible
-"""),
-
-28: _("""
-  %(k1)s  indisponible
-"""),
-
-29: _("""
+29 : _("""
  option inconnue au catalogue :  %(k1)s
 """),
 
-30: _("""
+30 : _("""
   -> Le TYPE_ELEMENT %(k1)s  ne sait pas encore calculer l'OPTION:  %(k2)s.
      On ne calcule donc rien sur les éléments de ce type.
 
   -> Risque & Conseil :
      Vérifiez que l'option incomplètement calculée est bien une option de post-traitement
      et que le déficit de calcul n'entraine pas de résultats faux.
-
 """),
 
-32: _("""
- dvp : Valeur interdite
+31 : _("""
+  la température n'est pas correctement renseignée
 """),
 
-34: _("""
- le calcul de l'option :  %(k1)s  n'est possible pour aucun des types d'elements  du ligrel.
+34 : _("""
+ le calcul de l'option :  %(k1)s
+ n'est possible pour aucun des types d'éléments du LIGREL.
 """),
 
-35: _("""
- erreur programmeur : trop de champs "in"
-"""),
-
-36: _("""
- On ne sait pas faire.
-"""),
-
-37: _("""
+37 : _("""
  Erreur dans la lecture des CHAR_CINE ou dans les CHAR_CINE
 """),
 
-38: _("""
- la carte concerne aussi des mailles tardives qui sont oubliees.
+38 : _("""
+ la carte concerne aussi des mailles tardives qui sont oubliées
 """),
 
-39: _("""
- type scalaire inconnu
-"""),
-
-40: _("""
- Erreur Programmeur : type_scalaire: %(k1)s  non autorisé (I/R/C),
-"""),
-
-41: _("""
- Erreur Programmeur : type_scalaire: %(k1)s  non autorisé (I/R/C/K8/K16/K24),
-"""),
-
-42: _("""
+42 : _("""
  Erreur Programmeur:
- Incoherence fortran/catalogue type_element:  %(k1)s  option:  %(k2)s
- La routine texxxx.f correspondant au calcul élémentaire ci-dessus est bugguée :
+ Incohérence fortran/catalogue
+ TYPE_ELEMENT :  %(k1)s
+ OPTION       :  %(k2)s
+ La routine texxxx.f correspondant au calcul élémentaire ci-dessus est bugguée
  Elle écrit en dehors de la zone allouée au paramètre (OUT) %(k3)s.
 
 """),
 
-43: _("""
- Arret du aux erreurs precedentes.
+47 : _("""
+  le CHAM_ELEM:  %(k1)s  n'existe pas.
 """),
 
-44: _("""
- Code interdit:  %(k1)s
+48 : _("""
+ le CHAM_ELEM: %(k1)s  n'a pas le même nombre de composantes dynamiques sur tous ses éléments.
 """),
 
-45: _("""
- Erreur Programmeur :
- Transformation non programmée : émettre une fiche d'évolution
+49 : _("""
+ le CHAM_ELEM : %(k1)s a des sous-points.
 """),
 
-46: _("""
- a faire ...  : émettre une fiche d'évolution
+52 : _("""
+ La composante: %(k1)s  n'appartient pas à la grandeur: %(k2)s
+ Champ : %(k4)s
 """),
 
-47: _("""
-  le cham_elem:  %(k1)s  n'existe pas.
+53 : _("""
+ Option : %(k1)s  inexistante dans les catalogues.
+ Champ : %(k4)s
 """),
 
-48: _("""
- le cham_elem: %(k1)s  n'a pas le meme nombre de cmps dynamiques sur tous ses elements.
+54 : _("""
+ Le paramètre:  %(k1)s  de l'option:  %(k2)s  n'est pas connu des TYPE_ELEM du LIGREL:  %(k3)s
+ Champ : %(k4)s
 """),
 
-49: _("""
- le cham_elem : %(k1)s  a des sous-points.
+55 : _("""
+ Erreur utilisateur :
+   On cherche à créer un CHAM_ELEM mais sur certains points, on ne trouve pas la composante : %(k1)s
+   Champ : %(k4)s
+ Risques & conseils :
+   Si la commande que vous exécutez comporte le mot clé PROL_ZERO='OUI', vous devriez peut-etre l'utiliser.
 """),
 
-50: _("""
- type de verif. inconnu.
+56 : _("""
+ Le LIGREL contient des mailles tardives
+ Champ : %(k4)s
 """),
 
-51: _("""
- argument prol0 invalide.
+57 : _("""
+ Nombres de points différents pour la maille:  %(k1)s
+ CHAM_ELEM de :  %(k2)s
+ Champ : %(k4)s
 """),
 
-52: _("""
- la cmp: %(k1)s  n'appartient pas a la grandeur: %(k2)s
+58 : _("""
+ Il manque la composante : %(k1)s  sur la maille : %(k2)s
+ Champ : %(k4)s
 """),
 
-53: _("""
- option : %(k1)s  inexistante dans les catalogues.
-"""),
-
-54: _("""
- le parametre:  %(k1)s  de l'option:  %(k2)s  n'est pas connu des type_elem du ligrel:  %(k3)s
-"""),
-
-55: _("""
- il manque la cmp: %(k1)s
-"""),
-
-56: _("""
- le ligrel contient des mailles tardives,
-"""),
-
-57: _("""
- nombres de points differents pour la maille:  %(k1)s  cham_elem de:  %(k2)s
-"""),
-
-58: _("""
- il manque la cmp: %(k1)s  sur la maille: %(k2)s
-"""),
-
-59: _("""
- champ 1 inexistant
-"""),
-
-60: _("""
- Matrice noeud->gauss nécessaire
-"""),
-
-61: _("""
- Erreur Programmeur :
- Argument cesmod obligatoire
-"""),
-
-62: _("""
- champ inexistant
-"""),
-
-63: _("""
- on ne traite que des champs "ELNO"
-"""),
-
-64: _("""
- le nombre de sous-points ne peut etre >1
-"""),
-
-65: _("""
- des reels ou des complexes svp !
-"""),
-
-66: _("""
- TYPCES invalide
-"""),
-
-67: _("""
+67 : _("""
  grandeur:  %(k1)s  inconnue au catalogue.
 """),
 
-68: _("""
- numero de maille invalide:  %(k1)s  (<1 ou >nbma)
+68 : _("""
+ numéro de maille invalide     :  %(k1)s  (<1 ou >nbma)
 """),
 
-69: _("""
- numero de point invalide:  %(k1)s  (<1 ou >nbpt) pour la maille:  %(k2)s
+69 : _("""
+ numéro de point invalide      :  %(k1)s  (<1 ou >nbpt)
+ pour la maille                :  %(k2)s
 """),
 
-70: _("""
- numero de sous_point invalide:  %(k1)s  (<1 ou >nbspt) pour la maille:  %(k2)s  et pour le point:  %(k3)s
+70 : _("""
+ numéro de sous_point invalide :  %(k1)s  (<1 ou >nbspt)
+ pour la maille                :  %(k2)s
+ pour le point                 :  %(k3)s
 """),
 
-71: _("""
- numero de cmp invalide:  %(k1)s  (<1 ou >nbcmp) pour la maille:  %(k2)s  pour le point:  %(k3)s  et pour le sous_point:  %(k4)s
+71 : _("""
+ numéro de composante invalide :  %(k1)s  (<1 ou >nbcmp)
+ pour la maille                :  %(k2)s
+ pour le point                 :  %(k3)s
+ pour le sous-point            :  %(k4)s
 """),
 
-72: _("""
- nbchs >0 svp
+91 : _("""
+ incohérence des familles de points de Gauss pour la maille  %(k1)s
+ ( %(k2)s / %(k3)s )
 """),
 
-73: _("""
- maillages differents.
+92 : _("""
+ type scalaire du CHAM_NO :  %(k1)s  non réel.
 """),
 
-74: _("""
- grandeurs differentes.
+93 : _("""
+ type scalaire du NUME_DDL :  %(k1)s  non réel.
 """),
 
-75: _("""
- types differents (CART/ELNO/ELGA).
+99 : _("""
+ melange de CHAM_ELEM_S et CHAM_NO_S
 """),
 
-76: _("""
- nombre de points differents.
-"""),
-
-77: _("""
- nombre de sous-points differents.
-"""),
-
-78: _("""
- cumul interdit sur ce type non-numerique
-"""),
-
-79: _("""
- i/r/k8/k16 svp
-"""),
-
-80: _("""
- trop de cmps (997)
-"""),
-
-81: _("""
- maillages differents
-"""),
-
-82: _("""
- nbcmp doit etre >=0
-"""),
-
-83: _("""
- nbma doit etre >=0
-"""),
-
-84: _("""
- stop nomgd
-"""),
-
-85: _("""
- stop nbpt
-"""),
-
-86: _("""
- stop nbsp
-"""),
-
-87: _("""
- stop iad2
-"""),
-
-88: _("""
- caractere illicite.
-"""),
-
-89: _("""
- on ne sait pas encore traiter les resuelem
-"""),
-
-90: _("""
- type de champ interdit: %(k1)s
-"""),
-
-91: _("""
- incoherence des familles de points de gauss pour la maille  %(k1)s  ( %(k2)s / %(k3)s )
-"""),
-
-92: _("""
- type scalaire du cham_no :  %(k1)s  non reel.
-"""),
-
-93: _("""
- type scalaire du nume_ddl :  %(k1)s  non reel.
-"""),
-
-94: _("""
- si ncorr=0, les grandeurs doivent etre identiques : %(k1)s , %(k2)s
-"""),
-
-95: _("""
-  ncorr doit etre pair.
-"""),
-
-96: _("""
- gauss -> noeud a faire ...
-"""),
-
-97: _("""
- il faut modele
-"""),
-
-98: _("""
- non programme: %(k1)s
-"""),
-
-99: _("""
- melange de cham_elem_s et cham_no_s
-"""),
 }

@@ -1,4 +1,4 @@
-#@ MODIF macr_lign_coupe_ops Macro  DATE 09/05/2007   AUTEUR SALMONA L.SALMONA 
+#@ MODIF macr_lign_coupe_ops Macro  DATE 01/04/2008   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -363,7 +363,6 @@ def macr_lign_coupe_ops(self,RESULTAT,UNITE_MAILLAGE,LIGN_COUPE,NOM_CHAM,
 
 
   # Production d'une table pour toutes les lignes de coupe
-        for m in LIGN_COUPE :
              if m['NB_POINTS'] !=None :
               ioc2=ioc2+1
               groupe='LICOU'+str(ioc2)

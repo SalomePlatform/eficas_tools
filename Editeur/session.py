@@ -46,7 +46,6 @@ except:
 
 import os,traceback
 import ConfigParser
-import prefs
 import re
 
 # Les valeurs decodees par optparse sont mises dans un objet dictionnaire-like.
@@ -204,7 +203,8 @@ def print_d_env():
 
 def create_parser():
     # creation du parser des options de la ligne de commande
-    parser=optparse.OptionParser(usage="usage: %prog [options]",version="%prog 1.9")
+    import prefs
+    parser=optparse.OptionParser(usage="usage: %prog [options]",version="%prog 1.13")
 
     parser.add_option("-j","--jdc",dest="comm",type='string',
                     action="callback",callback=check_comm,

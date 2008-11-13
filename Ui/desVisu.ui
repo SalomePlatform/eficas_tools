@@ -1,0 +1,30 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>DVisu</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>DVisu</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>501</width>
+            <height>394</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Visualisation Include Materiau</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QTextBrowser" row="0" column="0">
+            <property name="name">
+                <cstring>TB</cstring>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

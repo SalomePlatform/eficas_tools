@@ -1,4 +1,4 @@
-#@ MODIF macro_expans_ops Macro  DATE 22/12/2006   AUTEUR BODEL C.BODEL 
+#@ MODIF macro_expans_ops Macro  DATE 26/03/2008   AUTEUR BODEL C.BODEL 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19,11 +19,13 @@
 # ======================================================================
 
 
+# MODIF : 24/07/2007. BODEL : suppression du mc NUME_DDL. Le nume_ddl par
+# defaut pour PROJ_CHAMP est celui du modèle expérimental.
 
 def macro_expans_ops( self,
                       MODELE_CALCUL,
                       MODELE_MESURE,
-                      NUME_DDL,
+                      NUME_DDL=None,
                       RESU_NX=None,
                       RESU_EX=None,
                       RESU_ET=None,
@@ -40,6 +42,7 @@ def macro_expans_ops( self,
     from types import ListType, TupleType
     ier = 0
 
+    import aster
     EXTR_MODE = self.get_cmd('EXTR_MODE')
     PROJ_MESU_MODAL = self.get_cmd('PROJ_MESU_MODAL')
     REST_BASE_PHYS = self.get_cmd('REST_BASE_PHYS')
@@ -108,8 +111,8 @@ def macro_expans_ops( self,
         paras = ('FREQ')
     else:
         paras = None
-        UTMESS('A',  'MACRO_OBSERV',
-             "LE MODELE MEDURE DOIT ETRE UN CONCEPT DE TYPE DYNA_HARMO OU MODE_MECA")
+        #"LE MODELE MEDURE DOIT ETRE UN CONCEPT DE TYPE DYNA_HARMO OU MODE_MECA")
+        UTMESS('A','MEIDEE0_1')
             
     
     try:
@@ -136,18 +139,27 @@ def macro_expans_ops( self,
                               NOM_CHAM    = NOM_CHAM);
 
 
-
     
     # Restriction des modes mesures etendus sur le maillage capteur
     # -------------------------------------------------------------
     self.DeclareOut( "RESU_RD", RESU_RD )
+    refd1 = aster.getvectjev(RESU_EXP.nom.ljust(19)+".REFD")
+    refd2 = aster.getvectjev(RESU_EX.nom.ljust(19)+".REFD")
+
+    if RESU_EX.REFD.get():
+        tmp = RESU_EX.REFD.get()[3]
+        nume = self.jdc.sds_dict[tmp.strip()]
+    elif NUME_DDL:
+        nume = NUME_DDL
+    else:
+        UTMESS('A','MEIDEE0_5')
     RESU_RD = PROJ_CHAMP( METHODE    = 'ELEM',
                           RESULTAT   = RESU_ET,
                           MODELE_1   = MOD_CALCUL,
                           MODELE_2   = MOD_MESURE,
                           NOM_CHAM   = NOM_CHAM,
                           TOUT_ORDRE = 'OUI',
-                          NUME_DDL   = NUME_DDL,
+                          NUME_DDL   = nume,
                           VIS_A_VIS  =_F( TOUT_1='OUI',
                                           TOUT_2='OUI',),
                           NOM_PARA   = paras,

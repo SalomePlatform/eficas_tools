@@ -110,7 +110,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.text_converted=0
        self.text_error=""
        if self.nom != "INCLUDE_MATERIAU":
-          format=self.jdc.appli.format_fichier.get()
+          if self.parent.appli.ihm == "QT" :
+              format=self.jdc.appli.format_fichier
+          else :
+              format=self.jdc.appli.format_fichier.get()
           if convert.plugins.has_key(format):
               # Le convertisseur existe on l'utilise
               p=convert.plugins[format]()
@@ -767,7 +770,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       #print "make_include",unite
       # On supprime l'attribut unite qui bloque l'evaluation du source de l'INCLUDE
       # car on ne s'appuie pas sur lui dans EFICAS mais sur l'attribut fichier_ini
-      del self.unite
       # Si unite n'a pas de valeur, l'etape est forcement invalide. On peut retourner None
       if not unite : return
 

@@ -71,6 +71,7 @@ from A_ASSD import GEOM,geom
 # Pour le moment on laisse fonction (ceinture et bretelles)
 from A_ASSD import FONCTION, fonction
 from A_ASSD import formule
+from A_ASSD import formule_c
 from A_ASSD import CO
 
 from Noyau.N__F import _F

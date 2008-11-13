@@ -1,4 +1,4 @@
-#@ MODIF macr_spectre_ops Macro  DATE 14/11/2006   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF macr_spectre_ops Macro  DATE 19/11/2007   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19,12 +19,14 @@
 # ======================================================================
 
 from Accas import _F
-try :
-   import aster
-   from Utilitai.Utmess import UTMESS
-except :
-   pass
 import string
+
+try:
+   import aster
+   from Utilitai.Utmess import  UTMESS
+except:
+   pass
+
 def macr_spectre_ops(self,MAILLAGE,PLANCHER,NOM_CHAM,CALCUL,RESU,IMPRESSION=None,
                      FREQ=None,LIST_FREQ=None,LIST_INST=None,AMOR_SPEC=None,**args):
   """
@@ -108,7 +110,7 @@ def macr_spectre_ops(self,MAILLAGE,PLANCHER,NOM_CHAM,CALCUL,RESU,IMPRESSION=None
                   motscles={}
                   if resu['RESU_GENE']!=None :
                      if CALCUL=='ABSOLU' :
-                        UTMESS('F', macro, 'Pas de calcul absolu avec tran_gene')
+                        UTMESS('F','SPECTRAL0_8')
                      motscles['RESU_GENE'] = resu['RESU_GENE']
 
                   if resu['RESULTAT' ]!=None :

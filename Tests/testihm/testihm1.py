@@ -9,11 +9,11 @@ import Tkinter
 
 # Modules Eficas
 import prefs
-from Editeur import eficas_go
-from Editeur import splash
 from Editeur import session
-from Editeur import eficas
-from Editeur import images
+from InterfaceTK import eficas_go
+from InterfaceTK import splash
+from InterfaceTK import eficas
+from InterfaceTK import images
 from common import *
 
 version='v8'
