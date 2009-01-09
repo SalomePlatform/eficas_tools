@@ -16,8 +16,6 @@ desktop=None
 # -----------------------------------------------------------------------------
 
 import notifqt
-#import Tkinter
-#root.withdraw()
 
 def g():
    print "lastWindowClosed()"
@@ -46,16 +44,10 @@ print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 #En V2, si on n'implémente pas cette méthode, le composant fonctionne
 #correctement. Un message "Attribute Error" apparait dans la trace.
 def setWorkSpace(workSpace):
-   #print "EficasGUI --- setWorkSpace"
    global WORKSPACE
-   #print workSpace
    WORKSPACE=workSpace
-   #print "WORKSPACE: ",WORKSPACE
    # le desktop
    desktop=sgPyQt.getDesktop()
-
-   # creation d'une message box
-   #qt.QMessageBox.information(d,"titre","message")
 
    # recuperation du workspace
    ws=sgPyQt.getMainFrame()
@@ -158,15 +150,11 @@ import eficasSalome
 def runEficas():
    print "-------------------------EFICASGUI::runEficas-------------------------"
    print currentStudyId      
-   #eficasSalome.runEficas("ASTER",studyId=currentStudyId)   
-   #ws = sgPyQt.getMainFrame()   
-   #desktop=sgPyQt.getDesktop()   
    eficasSalome.runEficas( "ASTER" )
    
 
 def runEficaspourHomard():
    print "runEficas"
-   #eficasSalome.runEficas("HOMARD")
    desktop=sgPyQt.getDesktop()
    eficasSalome.runEficas( "HOMARD" ) 
    
@@ -186,8 +174,6 @@ def runEficasFichier(version=None):
    code     = None
    a=salome.sg.getAllSelected()
    if len(a) == 1:
-      #studyManager.palStudy.setCurrentStudyID( currentStudyId )
-      #boo,attr=aGuiDS.getExternalFileAttribute("FICHIER_EFICAS_ASTER",a[0])      
       selectedEntry = a[0]
       
       aType, aValue = studyManager.palStudy.getTypeAndValue( selectedEntry )
@@ -231,10 +217,7 @@ dict_command={
                 4046:runEficaspourHomard,
                 4047:runEficaspourOpenturns,
                 9042:runEficasFichier,
-                9043:runEficasFichierV8,
+                9043:runEficasFichier,
                 9044:runEficasFichierV9,
              }
              
-
-
-

@@ -374,23 +374,23 @@ class SalomeStudy(   salomedsgui.guiDS ):
             if self.isMainShape(  mainShapeEntry ):
                 mainShapeSO = salome.IDToSObject( mainShapeEntry )
                 SObjectList = self._myStudy.FindDependances( mainShapeSO )
-                print '####  mainShapeSO=%s , SObjectList  = %s'%( mainShapeSO, SObjectList )
+                #print '####  mainShapeSO=%s , SObjectList  = %s'%( mainShapeSO, SObjectList )
                 if SObjectList: #Ok, il y a des objet référençant la mainShape
                     for SObject in SObjectList: # Recherche du type de chacun des objets
                         SFatherComponent = SObject.GetFatherComponent()
-                        print '####  SFatherComponent = %s'%SFatherComponent 
+                        #print '####  SFatherComponent = %s'%SFatherComponent 
                         if SFatherComponent.GetName() == SMesh: #Ok, l'objet est un objet du composant 'Mesh'
                             SFather = SObject.GetFather()
-                            print '####  SFather= %s'%SFather
+                            #print '####  SFather= %s'%SFather
                             ##CorbaObject = SFather.GetObject()
                             FatherEntry = SFather.GetID()
                             CorbaObject  = self.__getCORBAObject(  FatherEntry )
-                            print '####  CorbaObject = %s'%CorbaObject 
+                            #print '####  CorbaObject = %s'%CorbaObject 
                             MeshObject = CorbaObject ._narrow( SMESH.SMESH_Mesh )
-                            print '####  MeshObject = %s'%MeshObject 
+                            #print '####  MeshObject = %s'%MeshObject 
                             if MeshObject : #Ok, l'objet est un objet 'maillage'
                                 MeshObjectEntry = self.__getEntry( MeshObject )
-                                print '####  MeshObjectEntry = %s'%MeshObjectEntry 
+                                #print '####  MeshObjectEntry = %s'%MeshObjectEntry 
                                 if MeshObjectEntry:
                                     result.append( MeshObjectEntry )  # On l'ajoute ds la liste résultat!
             else: # c'est pas une mainShape !

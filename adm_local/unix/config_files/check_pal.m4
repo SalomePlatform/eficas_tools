@@ -27,7 +27,7 @@ if test "x$PAL_DIR" = "x" ; then
    fi
 fi
 
-if test -f ${PAL_DIR}/bin/salome/runAppli ; then
+if test -f ${PAL_DIR}/bin/salome/testAppli ; then
    pal_ok=yes
    AC_MSG_RESULT(Using Pal module distribution in ${PAL_DIR})
 
