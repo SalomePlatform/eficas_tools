@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
+print "EFICAS.__init__: 1"
 import EFICAS_ORB__POA
-
 import SALOMEDS__POA
-
 import SALOME_ComponentPy
 
+print "EFICAS.__init__: 2"
 
 
 

@@ -3,7 +3,9 @@
 """
     Interface PyQt
 """
-import qt
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+
 import libSALOME_Swig
 import SalomePyQt
 
@@ -15,15 +17,7 @@ desktop=None
 
 # -----------------------------------------------------------------------------
 
-import notifqt
 
-def g():
-   print "lastWindowClosed()"
-   import Tkinter
-   root=Tkinter.Tk()
-   root.destroy()
-
-qt.QObject.connect(qt.qApp,qt.SIGNAL("lastWindowClosed()"),g)
 
 # -----------------------------------------------------------------------------
 
@@ -43,15 +37,15 @@ print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 #Cette méthode est obsolète en V3
 #En V2, si on n'implémente pas cette méthode, le composant fonctionne
 #correctement. Un message "Attribute Error" apparait dans la trace.
-def setWorkSpace(workSpace):
-   global WORKSPACE
-   WORKSPACE=workSpace
+#def setWorkSpace(workSpace):
+#   global WORKSPACE
+#   WORKSPACE=workSpace
    # le desktop
-   desktop=sgPyQt.getDesktop()
+#   desktop=sgPyQt.getDesktop()
 
    # recuperation du workspace
-   ws=sgPyQt.getMainFrame()
-   #print ws
+#   ws=sgPyQt.getMainFrame()
+#   #print ws
 
 # -----------------------------------------------------------------------------
 
@@ -123,25 +117,12 @@ def definePopup(theContext, theObject, theParent):
 
 def customPopup(popup, theContext, theObject, theParent):
    print "EFICASGUI --- customPopup"
-   popup.removeItem(99000)
-   popup.removeItem(99001)
-   popup.removeItem(99002)
-   popup.removeItem(99003)
+#   popup.removeItem(99000)
+#   popup.removeItem(99001)
+#   popup.removeItem(99002)
+#   popup.removeItem(99003)
 
 
-def windows():
-    """
-    This method is called when GUI module is being created
-    and initialized.
-    Should return a map of the SALOME dockable windows id's
-    needed to be opened when module is activated.
-    """
-    print "ASTERGUI::windows"
-    from qt import Qt
-    winMap = {}
-    winMap[ SalomePyQt.WT_ObjectBrowser ] = Qt.DockLeft
-    winMap[ SalomePyQt.WT_PyConsole ]     = Qt.DockBottom
-    return winMap   
 
 # -----------------------------------------------------------------------------
 
@@ -161,7 +142,7 @@ def runEficaspourHomard():
 def runEficaspourOpenturns():
    print "runEficas Pour Openturns"
    desktop=sgPyQt.getDesktop()
-   eficasSalome.runEficas( "OPENTURNS" ) 
+   eficasSalome.runEficas( "OPENTURNS_STUDY" ) 
    
    
 
@@ -207,6 +188,7 @@ def runEficasFichierV8():
 def runEficasFichierV9():
     runEficasFichier(version="v9.1")
 
+print "hhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
 # Partie applicative
 
 dict_command={

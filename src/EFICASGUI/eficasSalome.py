@@ -24,23 +24,14 @@ def exit(ier):
 
 import eficasConfig
 
-# __GBO__ lignes de path ajoutées pour accéder aux packages python du
-# logiciel Eficas. Le package Aster est ajouté explicitement pour
-# accéder au module prefs.py. A FAIRE: il convient plutôt de packager
-# Eficas pour que le chargement de prefs puisse se faire sans cette
-# adaptation (ex: faire un prefs.py chapeau qui aiguille entre les
-# prefs spécifiques Aster ou Openturn).
+# __GBO__ lignes de path ajoutees pour acceder aux packages python du
+# logiciel Eficas. Le package Aster est ajoute explicitement pour
+# acceder au module prefs.py. A
 sys.path[:0]=[eficasConfig.eficasPath,
-              os.path.join( eficasConfig.eficasPath,'Aster')
-              ]
-              
-#sys.path[:0]=[os.path.join( eficasConfig.eficasPath,'Aster'),
-#              os.path.join( eficasConfig.eficasPath,'Homard'),
-#              # __GBO__ os.path.join( eficasConfig.eficasPath,'InterfaceQT'),
-#              os.path.join( eficasConfig.eficasPath,'Openturns'),
-#              os.path.join( eficasConfig.eficasPath,'Editeur'),
-#              eficasConfig.eficasPath,
-#             ]
+              os.path.join( eficasConfig.eficasPath,'Editeur'),
+              os.path.join( eficasConfig.eficasPath,'UiQT4'),
+              eficasConfig.eficasPath,
+             ]
 
 
 
@@ -52,48 +43,41 @@ OPENTURNS = "OPENTURNS"
 
 
 import Editeur    
-import qt
-from InterfaceQT import qtEficas
+from InterfaceQT4 import qtEficas
 
 import salome
-import meshGui
-import PALGUI_API
+#import meshGui
+#import PALGUI_API
 
-# __MEM_GBO: Pour mémoire, on préfère importer visuDriver après
-# studyManager car le premier dépend du second. Cependant, le problème
-# est résolu à sa source: le fichier visuDriver importe le
-# studyManager. Ainsi, il n'est plus nécessaire de se préoccuper
-# explicitement de l'ordre des import.
 import studyManager
 import visuDriver
-
 import SalomePyQt
 
-from SelectMainShapeDiag_ui import SelectMainShapeDiag
-from SelectMeshDiag_ui import SelectMeshDiag
+#from SelectMainShapeDiag_ui import SelectMainShapeDiag
+#from SelectMeshDiag_ui import SelectMeshDiag
 
 
 
 # message utilisateur
 msgWarning                 = "Attention"
-msgMainShapeSelection      = "On travaille sur la géométrie principale : "
-msgSubShapeBadMainShape    = "La sélection géométrique SALOME ne correspond pas à une sous-géométrie de la géométrie principale : "
-msgMeshGroupBadMainShape   = "Le groupe de maillage sélectionné dans SALOME ne référence pas la bonne géométrie principale : "
-msgIncompleteSelection     = "Tous les éléments de la sélection SALOME n'ont pu étre ajoutée"
-msgUnAuthorizedSelecion    = "Sélection SALOME non authorisé. Autorisé : sous-géométrie, groupe de maille"
-msgErrorAddJdcInSalome     = "Erreur dans l'export du fichier de commande dans l'arbre d'étude Salome"
-msgErrorDisplayShape       = "Erreur dans l'affichage de la forme géométrique sélectionnée"
-msgErrorDisplayMeshGroup   = "Erreur dans l'affichage du groupe de maillage sélectionné"
-msgErrorNeedSubShape       = "Sélection d'un élément sous géométrique seulement"
+msgMainShapeSelection      = "On travaille sur la geometrie principale : "
+msgSubShapeBadMainShape    = "La selection geometrique SALOME ne correspond pas a une sous-geometrie de la geometrie principale : "
+msgMeshGroupBadMainShape   = "Le groupe de maillage selectionne dans SALOME ne reference pas la bonne geometrie principale : "
+msgIncompleteSelection     = "Tous les elements de la selection SALOME n'ont pu etre ajoutee"
+msgUnAuthorizedSelecion    = "Selection SALOME non authorise. Autorise : sous-geometrie, groupe de maille"
+msgErrorAddJdcInSalome     = "Erreur dans l'export du fichier de commande dans l'arbre d'etude Salome"
+msgErrorDisplayShape       = "Erreur dans l'affichage de la forme geometrique selectionnee"
+msgErrorDisplayMeshGroup   = "Erreur dans l'affichage du groupe de maillage selectionne"
+msgErrorNeedSubShape       = "Selection d'un element sous geometrique seulement"
 
 
-msgErrorGroupMaSelection    = "Sélection GROUP_MA ne peut pas prendre un point ou un noeud"
+msgErrorGroupMaSelection    = "Selection GROUP_MA ne peut pas prendre un point ou un noeud"
 msgWarningGroupNoSelection  = "Attention, GROUP_NO devrait prendre un point ou un noeud"
 
 
 
 
-# couleur pour visualisation des géometrie CS_CBO
+# couleur pour visualisation des geometrie CS_CBO
 COLORS = ( studyManager.RED, 
          studyManager.GREEN,
          studyManager.BLUE,
@@ -112,89 +96,89 @@ LEN_COLORS = len( COLORS )
 
 
 
-class SelectMainShapeDiagImpl( SelectMainShapeDiag ):
-    def __init__( self, mainShapeEntries, parent = None,name = None,modal = 1,fl = 0 ):
-        SelectMainShapeDiag.__init__( self,parent,name,modal,fl )
-        
-        self.mainShapes = {} # ( entry, value )
-        for entry in mainShapeEntries:
-            name = studyManager.palStudy.getName( entry )
-            self.mainShapes[entry] = name
-            
-        self.lbMainShapes.clear()
-        for entry,name in self.mainShapes.items():
-            self.lbMainShapes.insertItem( name )
-        self.lbMainShapes.setCurrentItem( 0 )
-
-                                    
-    def getUserSelection( self ):
-        mainShapeEntry = None
-        
-        item = self.lbMainShapes.selectedItem()
-        mainShapeName = str( item.text() )        
-        
-        for entry, name in self.mainShapes.items():
-            if mainShapeName == name:
-                mainShapeEntry = entry
-                break                
-            
-        return mainShapeEntry 
-
-        
-class SelectMeshDiagImpl( SelectMeshDiag ):
-    def __init__( self, meshGroupEntries, parent = None,name = None,modal = 1,fl = 0 ):
-        SelectMeshDiag.__init__( self,parent,name,modal,fl )
-        
-        self.meshes = {} # ( entry, value )         
-        
-        for meshGroupEntry in meshGroupEntries:
-            meshEntry = studyManager.palStudy.getMesh(meshGroupEntry)
-            meshName  = studyManager.palStudy.getName(meshEntry)            
-            self.meshes[meshEntry] = meshName 
-                        
-        self.lbMeshes.clear()
-        for entry,name in self.meshes .items():
-            self.lbMeshes.insertItem( name )
-        self.lbMeshes.setCurrentItem( 0 )        
-                                    
-    def getUserSelection( self ):
-        selMeshEntry, keep = None, False
-        
-        item = self.lbMeshes.selectedItem()
-        meshName = str( item.text() )        
-        for entry, name in self.meshes.items():
-            if meshName == name:
-                selMeshEntry = entry
-                break
-            
-        keep = self.cbAgain.isChecked()
-            
-        return selMeshEntry, keep         
-
-
-
+#class SelectMainShapeDiagImpl( SelectMainShapeDiag ):
+#    def __init__( self, mainShapeEntries, parent = None,name = None,modal = 1,fl = 0 ):
+#        SelectMainShapeDiag.__init__( self,parent,name,modal,fl )
+#        
+#        self.mainShapes = {} # ( entry, value )
+#        for entry in mainShapeEntries:
+#            name = studyManager.palStudy.getName( entry )
+#            self.mainShapes[entry] = name
+#            
+#        self.lbMainShapes.clear()
+#        for entry,name in self.mainShapes.items():
+#            self.lbMainShapes.insertItem( name )
+#        self.lbMainShapes.setCurrentItem( 0 )
+#
+#                                    
+#    def getUserSelection( self ):
+#        mainShapeEntry = None
+#        
+#        item = self.lbMainShapes.selectedItem()
+#        mainShapeName = str( item.text() )        
+#        
+#        for entry, name in self.mainShapes.items():
+#            if mainShapeName == name:
+#                mainShapeEntry = entry
+#                break                
+#            
+#        return mainShapeEntry 
+#
+#        
+#class SelectMeshDiagImpl( SelectMeshDiag ):
+#    def __init__( self, meshGroupEntries, parent = None,name = None,modal = 1,fl = 0 ):
+#        SelectMeshDiag.__init__( self,parent,name,modal,fl )
+#        
+#        self.meshes = {} # ( entry, value )         
+#        
+#        for meshGroupEntry in meshGroupEntries:
+#            meshEntry = studyManager.palStudy.getMesh(meshGroupEntry)
+#            meshName  = studyManager.palStudy.getName(meshEntry)            
+#            self.meshes[meshEntry] = meshName 
+#                        
+#        self.lbMeshes.clear()
+#        for entry,name in self.meshes .items():
+#            self.lbMeshes.insertItem( name )
+#        self.lbMeshes.setCurrentItem( 0 )        
+#                                    
+#    def getUserSelection( self ):
+#        selMeshEntry, keep = None, False
+#        
+#        item = self.lbMeshes.selectedItem()
+#        meshName = str( item.text() )        
+#        for entry, name in self.meshes.items():
+#            if meshName == name:
+#                selMeshEntry = entry
+#                break
+#            
+#        keep = self.cbAgain.isChecked()
+#            
+#        return selMeshEntry, keep         
+#
+#
+#
 class MyEficas( qtEficas.Appli ):
     """
     Classe de lancement du logiciel EFICAS dans SALOME.
-    Cette classe spécialise le logiciel Eficas par l'ajout de:        
-    a)la création de groupes de mailles dans le composant SMESH de SALOME
-    b)la visualisation d'éléments géométrique dans le coposant GEOM de SALOME par sélection dans EFICAS
+    Cette classe specialise le logiciel Eficas par l'ajout de:        
+    a)la creation de groupes de mailles dans le composant SMESH de SALOME
+    b)la visualisation d'elements geometrique dans le coposant GEOM de SALOME par selection dans EFICAS
     """
-    def __init__( self, parent, code = None, fichier = None, module = studyManager.SEficas, version=None):
+    def __init__( self, parent, code = "ASTER", fichier = None, module = studyManager.SEficas, version=None):
         """
         Constructeur.
-                
         @type   parent: 
         @param  parent: widget Qt parent
-                
-        
         @type   code: string
-        @param  code: catalogue à lancer ( ASTER, HOMARD OPENTURNS ). optionnel ( défaut = ASTER ).
-        
+        @param  code: catalogue a lancer ( ASTER, HOMARD OPENTURNS ). optionnel ( defaut = ASTER ).
         @type   fichier: string
-        @param  fichier: chemin absolu du fichier eficas à ouvrir à dès le lancement. optionnel
+        @param  fichier: chemin absolu du fichier eficas a ouvrir a das le lancement. optionnel
         """
-                        
+
+        pathCode=code[0]+code[1:].lower()
+        sys.path[:0]=[os.path.join(eficasConfig.eficasPath,pathCode)]
+        
+        print sys.path
         if Editeur.__dict__.has_key( 'session' ):
             from Editeur import session
             eficasArg = []
@@ -210,23 +194,23 @@ class MyEficas( qtEficas.Appli ):
                         
         qtEficas.Appli.__init__( self,code=code,salome=1,parent=parent)
         
-        #--------------- spécialisation EFICAS dans SALOME  -------------------                
+        #--------------- specialisation EFICAS dans SALOME  -------------------                
         self.parent = parent        
-        self.salome = True      #active les parties de code spécifique dans Salome( pour le logiciel Eficas )
-        self.module = module    #indique sous quel module dans l'arbre d'étude ajouter le JDC.
+        self.salome = True      #active les parties de code specifique dans Salome( pour le logiciel Eficas )
+        self.module = module    #indique sous quel module dans l'arbre d'etude ajouter le JDC.
         
         
-        # donnée pour la création de groupe de maille
-        self.mainShapeNames   = {} #dictionnaire pour gérer les multiples fichiers possibles ouverts par 
-        self.mainShapeEntries = {} #eficas ( clé = identifiant du JDC ), une mainshape par fichier ouvert.    
-        self.subShapes        = {} #dictionnaire des sous-géométrie de la géométrie principale ( clé = entry, valeur = name ) 
+        # donnee pour la creation de groupe de maille
+        self.mainShapeNames   = {} #dictionnaire pour gerer les multiples fichiers possibles ouverts par 
+        self.mainShapeEntries = {} #eficas ( cle = identifiant du JDC ), une mainshape par fichier ouvert.    
+        self.subShapes        = {} #dictionnaire des sous-geometrie de la geometrie principale ( cle = entry, valeur = name ) 
         #----------------------------------------------------------------------    
         
         # visualisation groupes de mailles
-        self.workingMesh = {} #dictionnaire clé = identifiant JDC / valeur = entry Mesh
+        self.workingMesh = {} #dictionnaire cle = identifiant JDC / valeur = entry Mesh
         #----------------------------------------------------------------------        
         
-        self.icolor = 0  # compteur pour mémoriser la couleur courante
+        self.icolor = 0  # compteur pour memoriser la couleur courante
         self.show()
         
         
@@ -240,15 +224,15 @@ class MyEficas( qtEficas.Appli ):
      
     def __studySync( self ):
         """
-        IMPORTANT( à appeler préalablement à chaque appel du gestionnaire d'étude ) : spécifique au lancement de Eficas dans Salome,
-        permet au gestionnaire d'étude ( studyManager.palStudy ) de pointer sur la bonne étude.
+        IMPORTANT( a appeler prealablement a chaque appel du gestionnaire d'etude ) : specifique au lancement de Eficas dans Salome,
+        permet au gestionnaire d'etude ( studyManager.palStudy ) de pointer sur la bonne etude.
         
-        Un retour à False indique qu'il n'y a aucune étude active, dans ce cas ne faire aucune opération avec le gestionnaire d'étude( 
+        Un retour a False indique qu'il n'y a aucune etude active, dans ce cas ne faire aucune operation avec le gestionnaire d'etude( 
         gros plantage sinon )
         """                
         activeStudyId = salome.sg.getActiveStudyId()
         
-        if activeStudyId == 0: # pas d'étude active
+        if activeStudyId == 0: # pas d'etude active
             return False
         
         if activeStudyId != salome.myStudyId:
@@ -259,12 +243,12 @@ class MyEficas( qtEficas.Appli ):
         
     def __createOCCView( self ):
         """
-        Création vue Occ
+        Creation vue Occ
         """        
         #salome.salome_init()
         import iparameters
 
-        # On détermine le nombre de GUI states déjà présents dans l'arbre d'étude
+        # On determine le nombre de GUI states deja presents dans l'arbre d'etude
         GUIStateID = 1
 
         ipar = iparameters.IParameters(salome.myStudy.GetCommonParameters("Interface Applicative", GUIStateID))
@@ -296,7 +280,7 @@ class MyEficas( qtEficas.Appli ):
                         
     def __selectWorkingMesh( self, meshGroupEntries ):
         """
-        Sélection intéractive du maillage sur lequel on travail
+        Selection interactive du maillage sur lequel on travail
         """
         selMeshEntry, keep = None, False
         diag = SelectMeshDiagImpl( meshGroupEntries, self.parent  )
@@ -309,7 +293,7 @@ class MyEficas( qtEficas.Appli ):
 
     def __selectMainShape( self, groupeMaNamesIn, groupeNoNamesIn, editor ):
         """
-        Sélection intéractive de la main shape
+        Selection interactive de la main shape
         """
         groupeMaNamesOut, groupeNoNamesOut = [], []
         selectedMainShape  =  None
@@ -343,7 +327,7 @@ class MyEficas( qtEficas.Appli ):
             
             self.mainShapeEntries[ editor ] = selectedMainShape
                     
-            # filtre sur la main shape sélectionnée
+            # filtre sur la main shape selectionnee
             for name in groupeMaNamesIn:
                 try:
                     if selectedMainShape in mainShapes[ name ] :
@@ -365,11 +349,11 @@ class MyEficas( qtEficas.Appli ):
 
     def __selectShape( self, editor, selectedEntry, kwType = None ):
         """
-        sélection sous-géométrie dans Salome:
-        -test1) si c'est un élément sous-géométrique .
-        -test2) si appartient à la géométrie principale.
+        selection sous-geometrie dans Salome:
+        -test1) si c'est un element sous-geometrique .
+        -test2) si appartient a la geometrie principale.
         
-        met à jours la liste self.subShapes si test ok
+        met a jours la liste self.subShapes si test ok
         """        
         name, msgError = '',''
         
@@ -404,9 +388,9 @@ class MyEficas( qtEficas.Appli ):
         
     def __selectMeshGroup( self, editor, selectedEntry, kwType = None ):
         """
-        sélection groupe de maille dans Salome:
+        selection groupe de maille dans Salome:
         -test 1) si c'est un groupe de maille 
-        -test 2) si le maillage fait référence à la géométrie principale 
+        -test 2) si le maillage fait reference a la geometrie principale 
         """        
         name, msgError = '',''                
                 
@@ -435,8 +419,8 @@ class MyEficas( qtEficas.Appli ):
                                                             self.mainShapeEntries[ editor ] )
                     msgError = msgMeshGroupBadMainShape + self.mainShapeNames[ editor ]
             else:
-                # on authorise quand même les groupes de maillage ne faisant 
-                # pas référence à une géométrie principale (dixit CS_CBO )
+                # on authorise quand meme les groupes de maillage ne faisant 
+                # pas reference a une geometrie principale (dixit CS_CBO )
                 name = studyManager.palStudy.getName( selectedEntry )
                                           
         return name, msgError
@@ -446,7 +430,7 @@ class MyEficas( qtEficas.Appli ):
         
     def __updateSubShapes( self, editor, groupeNames ):
         """
-        mise à jours de la liste self.subShapes à partir de la liste des noms de groupe fourni en entré
+        mise a jours de la liste self.subShapes a partir de la liste des noms de groupe fourni en entre
         """
         for name in groupeNames:
             entries = studyManager.palStudy.getEntriesFromName( studyManager.SGeom, name )            
@@ -458,7 +442,7 @@ class MyEficas( qtEficas.Appli ):
         
     def __getAllGroupeMa(self, item ):
         """
-        Récupère tous les GROUPE_MA dans le JDC courant
+        Recupere tous les GROUPE_MA dans le JDC courant
         """
         groupMa = ()                
         try:
@@ -473,7 +457,7 @@ class MyEficas( qtEficas.Appli ):
 		elif type( itemValue ) == list:
 		    groupMa += tuple(itemValue)
 	        elif type( itemValue ) == types.InstanceType and itemValue.has_key('GROUP_MA'):
-                    # pour créer le groupe de mailles dans DEFI_GROUP> CREA_GROUP_MA> GROUP_MA
+                    # pour creer le groupe de mailles dans DEFI_GROUP> CREA_GROUP_MA> GROUP_MA
 		    groupMa += ( itemValue['GROUP_MA'], )
                 else :
                    # sert pour DEFI_GROUP_MA / UNION
@@ -507,7 +491,7 @@ class MyEficas( qtEficas.Appli ):
    
     def __getAllGroupeNo(self, item ):
         """
-        Récupère tous les GROUPE_NO dans le JDC courant
+        Recupere tous les GROUPE_NO dans le JDC courant
         """
         groupNo = ()                
         try:
@@ -521,7 +505,7 @@ class MyEficas( qtEficas.Appli ):
 		elif type( itemValue ) == list:
 		    groupNo += tuple(itemValue)
 	        elif type( itemValue ) == types.InstanceType and itemValue.has_key('GROUP_NO'):
-                    # pour créer le groupe de Noeuds dans DEFI_GROUP> CREA_GROUP_NO> GROUP_NO
+                    # pour creer le groupe de Noeuds dans DEFI_GROUP> CREA_GROUP_NO> GROUP_NO
 		    groupNo += ( itemValue['GROUP_NO'], )
             else:
                 children = item._GetSubList()
@@ -543,10 +527,10 @@ class MyEficas( qtEficas.Appli ):
     #-----------------------  LISTE DES NOUVEAUX CAS D'UTILISATIONS -----------    
     def selectGroupFromSalome( self, kwType = None, editor=None):
         """
-        Sélection d'élément(s) d'une géométrie ( sub-shape ) ou d'élément(s) de maillage ( groupe de maille) à partir de l'arbre salome
+        Selection d'element(s) d'une geometrie ( sub-shape ) ou d'element(s) de maillage ( groupe de maille) à partir de l'arbre salome
         retourne ( la liste des noms des groupes, message d'erreur )
         
-        Note: Appelé par EFICAS lorsqu'on clique sur le bouton ajouter à la liste du panel AFF_CHAR_MECA        
+        Note: Appele par EFICAS lorsqu'on clique sur le bouton ajouter à la liste du panel AFF_CHAR_MECA        
         """
         names, msg = [], ''
         try:            
@@ -554,14 +538,14 @@ class MyEficas( qtEficas.Appli ):
             atLeastOneStudy = self.__studySync()
             if not atLeastOneStudy:
                 return names, msg
-            # récupère toutes les sélections de l'utilsateur dans l'arbre Salome
+            # recupere toutes les selections de l'utilsateur dans l'arbre Salome
             entries = salome.sg.getAllSelected()
             nbEntries = len( entries )
             if nbEntries >= 1:
                 for entry in entries:
-                    if studyManager.palStudy.isMeshGroup( entry ): #sélection d'un groupe de maille
+                    if studyManager.palStudy.isMeshGroup( entry ): #selection d'un groupe de maille
                         name, msg = self.__selectMeshGroup( editor, entry, kwType )
-                    elif studyManager.palStudy.isShape( entry ): #sélection d'une sous-géométrie
+                    elif studyManager.palStudy.isShape( entry ): #selection d'une sous-geometrie
                         name, msg = self.__selectShape( editor, entry, kwType )
                     else:
                         name, msg = '', msgUnAuthorizedSelecion
@@ -577,7 +561,7 @@ class MyEficas( qtEficas.Appli ):
         
     def addJdcInSalome(  self, jdcPath ):
         """
-        Ajoute le Jeu De Commande ASTER ou HOMARD dans l'arbre d'étude Salome dans la rubrique EFICAS
+        Ajoute le Jeu De Commande ASTER ou HOMARD dans l'arbre d'etude Salome dans la rubrique EFICAS
         """
         ok, msgError = False, msgErrorAddJdcInSalome
         #try:            
@@ -588,16 +572,19 @@ class MyEficas( qtEficas.Appli ):
                         
             fileType = { 'ASTER'    : studyManager.FICHIER_EFICAS_ASTER,
                          'HOMARD'   : studyManager.FICHIER_EFICAS_HOMARD ,
-                         'OPENTURNS': studyManager.FICHIER_EFICAS_OPENTURNS}
+                         'OPENTURNS': studyManager.FICHIER_EFICAS_OPENTURNS,
+                         'OPENTURNS_STUDY': studyManager.FICHIER_EFICAS_OPENTURNS,
+                         'OPENTURNS_WRAPPER': studyManager.FICHIER_EFICAS_OPENTURNS}
                         
             folderName = {  'ASTER'    :  'AsterFiles',
                             'HOMARD'   : 'HomardFiles' ,
-                            'OPENTURNS': 'OpenturnsFiles'}                                    
+                            'OPENTURNS_STUDY': 'OpenturnsFiles',                                    
+                            'OPENTURNS_WRAPPER': 'OpenturnsFiles'}                                    
 
             folderType = { 'ASTER':     studyManager.ASTER_FILE_FOLDER,
                            'HOMARD':    studyManager.ASTER_FILE_FOLDER,
-                           'OPENTURNS': studyManager.OPENTURNS_FILE_FOLDER
-                         }
+                           'OPENTURNS_STUDY': studyManager.OPENTURNS_FILE_FOLDER,
+                           'OPENTURNS_WRAPPER': studyManager.OPENTURNS_FILE_FOLDER }
 
                         
             moduleEntry = studyManager.palStudy.addComponent(self.module)
@@ -629,7 +616,7 @@ class MyEficas( qtEficas.Appli ):
     def createOrUpdateMesh( self, editor ):
         """
             Ouverture d'une boite de dialogue : Creation de groupes de mailles dans un maillage existant ou un nouveau maillage.                         
-            Note: Appelé par EFICAS à la sauvegarde du JDC.
+            Note: Appele par EFICAS à la sauvegarde du JDC.
         """
         try:            
             atLeastOneStudy = self.__studySync()
@@ -645,9 +632,9 @@ class MyEficas( qtEficas.Appli ):
             
             #print 'CS_pbruno createOrUpdateMesh groupeNoNames', groupeNoNames
                         
-            # mise à jours de la liste des sous-géométrie ( self.subShapes )
+            # mise à jours de la liste des sous-geometrie ( self.subShapes )
             if not self.mainShapeEntries.has_key( editor ):
-                # l'utilisateur n'a sélectionné aucune sous-géométrie et donc pas de géométrie principale
+                # l'utilisateur n'a selectionne aucune sous-geometrie et donc pas de geometrie principale
                 groupeMaNames, groupeNoNames  = self.__selectMainShape( groupeMaNames, groupeNoNames, editor )
                 
             if groupeMaNames or groupeNoNames:                                                
@@ -655,7 +642,7 @@ class MyEficas( qtEficas.Appli ):
                 print 'CS_pbruno createOrUpdateMesh groupeNoNames', groupeNoNames            
                 self.__updateSubShapes( editor, groupeMaNames + groupeNoNames )
     
-                # recupération des identifiants( entries ) associés aux noms des groupes        
+                # recuperation des identifiants( entries ) associes aux noms des groupes        
                 groupeMaEntries = []
                 groupeNoEntries = []                            
                 
@@ -705,12 +692,12 @@ class MyEficas( qtEficas.Appli ):
                 if len(meshGroupEntries)>1:
                 
                     # choix d'un maillage
-                    if not self.workingMesh.has_key(currentjdcID): # aucun maillage de défini par défaut encore
+                    if not self.workingMesh.has_key(currentjdcID): # aucun maillage de defini par defaut encore
                         #selMeshEntry = "0:1:3:5" #CS_pbruno todo : choix maillage + test si c un maillage
                         selMeshEntry, keep = self.__selectWorkingMesh(meshGroupEntries)
                         if keep:
                             self.workingMesh[currentjdcID] = selMeshEntry
-                    else: # déja un de défini par défaut
+                    else: # deja un de defini par defaut
                         selMeshEntry = self.workingMesh[currentjdcID]
                             
                     # le groupe de maille est il ds ce maillage?
@@ -725,7 +712,7 @@ class MyEficas( qtEficas.Appli ):
                     
                 # on affiche le groupe ds la vue VTK
                 if selMeshGroupEntry:
-                    #CS_pbruno: marche QUE si le module SMESH est activé
+                    #CS_pbruno: marche QUE si le module SMESH est active
                     myComponent = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
                     SCom        = studyManager.palStudy._myStudy.FindComponent("SMESH")
                     studyManager.palStudy._myBuilder.LoadWith( SCom , myComponent  )                             
@@ -741,7 +728,7 @@ class MyEficas( qtEficas.Appli ):
             
     def displayShape(  self, shapeName ):
         """
-        visualisation géométrie de nom shapeName dans salome
+        visualisation geometrie de nom shapeName dans salome
         """
         ok, msgError = False, ''
         try:
@@ -792,12 +779,12 @@ class MyEficas( qtEficas.Appli ):
            self.rangeInStudy(sauvegarde)
 	   print "==============================="
         """
-        pass #CS_pbruno à implémenter
+        pass #CS_pbruno a implementer
            
            
     def buildCabriGeom( self, name, **param ):
         """
-        visualisation dans GEOM d'une géométrie CABRI
+        visualisation dans GEOM d'une geometrie CABRI
         """
         import cabri        
         qt.QApplication.setOverrideCursor( qt.QCursor.waitCursor )
