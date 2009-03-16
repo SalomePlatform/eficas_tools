@@ -139,10 +139,15 @@ def runEficaspourHomard():
    desktop=sgPyQt.getDesktop()
    eficasSalome.runEficas( "HOMARD" ) 
    
-def runEficaspourOpenturns():
-   print "runEficas Pour Openturns"
+def runEficaspourOpenturnsStudy():
+   print "runEficas Pour Openturns Study"
    desktop=sgPyQt.getDesktop()
    eficasSalome.runEficas( "OPENTURNS_STUDY" ) 
+   
+def runEficaspourOpenturnsWrapper():
+   print "runEficas Pour Openturns Wrapper"
+   desktop=sgPyQt.getDesktop()
+   eficasSalome.runEficas( "OPENTURNS_WRAPPER" ) 
    
    
 
@@ -193,11 +198,13 @@ print "hhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
 
 dict_command={
                 941:runEficasFichier,# runEficas,
-                946:runEficaspourHomard,
-                946:runEficaspourOpenturns,
+                #946:runEficaspourHomard,
+                947:runEficaspourOpenturnsStudy,
+                948:runEficaspourOpenturnsWrapper,
                 4041:runEficasFichier, #runEficas,
                 4046:runEficaspourHomard,
-                4047:runEficaspourOpenturns,
+                4047:runEficaspourOpenturnsStudy,
+                4048:runEficaspourOpenturnsWrapper,
                 9042:runEficasFichier,
                 9043:runEficasFichier,
                 9044:runEficasFichierV9,

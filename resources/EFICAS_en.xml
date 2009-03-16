@@ -16,7 +16,8 @@
     <menubar>
       <menu-item label-id="EFICAS" item-id="90" pos-id="3">
         <popup-item item-id="941" label-id="Eficas pour Code_Aster" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande ASTER avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-        <popup-item item-id="946" label-id="Eficas pour Openturns Study" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande Openturns Study avec Eficas" accel-id="" toggle-id="" execute-action=""/>
+        <popup-item item-id="947" label-id="Eficas pour Openturns Study" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande Openturns Study avec Eficas" accel-id="" toggle-id="" execute-action=""/>
+        <popup-item item-id="948" label-id="Eficas pour Openturns Wrapper" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande Openturns Wrapper avec Eficas" accel-id="" toggle-id="" execute-action=""/>
   <!-- 	<popup-item item-id="942" label-id="Eficas pour Homard" icon-id="eficashomard.png" tooltip-id="Editer un jeu de commande HOMARD avec Eficas" accel-id="" toggle-id="" execute-action=""/> -->
       </menu-item>
     </menubar>
@@ -26,6 +27,8 @@
     <toolbar label-id="Eficas">
         <toolbutton-item item-id="4041" label-id="Eficas pour Code_Aster" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande ASTER avec Eficas" accel-id="" toggle-id="" execute-action=""/>
    <!--     <toolbutton-item item-id="4046" label-id="Eficas pour Homard" icon-id="eficashomard.png" tooltip-id="Editer un jeu de commande HOMARD avec Eficas" accel-id="" toggle-id="" execute-action=""/> -->
+   <toolbutton-item item-id="4047" label-id="Eficas pour Openturns Study" icon-id="eficasaster.png" tooltip-id="Editer un jeu de commande Openturns Study avec Eficas" accel-id="" toggle-id="" execute-action=""/>
+   <toolbutton-item item-id="4048" label-id="Eficas pour Openturns Wrapper" icon-id="eficasaster.png" tooltip-id="Editer un jeu de commande Openturns Wrapper avec Eficas" accel-id="" toggle-id="" execute-action=""/>
     </toolbar>
 
   <!-- ### POPUP MENU ###  -->
