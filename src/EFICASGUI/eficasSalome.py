@@ -215,9 +215,9 @@ class MyEficas( qtEficas.Appli ):
         
         
     def closeEvent(self,event):
-        import InterfaceQT.readercata
-        if hasattr(InterfaceQT.readercata,'reader') :
-           del InterfaceQT.readercata.reader
+        import InterfaceQT4.readercata
+        if hasattr(InterfaceQT4.readercata,'reader') :
+           del InterfaceQT4.readercata.reader
         global appli
         appli = None
         event.accept()
