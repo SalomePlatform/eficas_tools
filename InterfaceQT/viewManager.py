@@ -2482,10 +2482,13 @@ class MyTabview(Tabview):
         else:
             # None will cause open dialog to start with cwd
             try :
-               userDir=os.path.expanduser("~/Eficas_install/")
-               return userDir
-            except :
-               return ""        
+               userDir=self.appli.CONFIGURATION.savedir
+            except  :
+               try :
+                  userDir=os.path.expanduser("~")
+               except :
+                  userDir=""
+            return userDir
 
 
     def handleEditorOpened(self):

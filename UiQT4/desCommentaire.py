@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'desCommentaire.ui'
 #
-# Created: Wed Jul 23 12:00:45 2008
+# Created: Tue Nov 18 17:37:24 2008
 #      by: PyQt4 UI code generator 4.4.2
 #
 # WARNING! All changes made in this file will be lost!

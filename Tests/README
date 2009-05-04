@@ -16,3 +16,22 @@ des limites actuelles d'Accas.
 
 Certains tests doivent etre exécutés séparément à cause d'un problème d'import de catalogue.
 En particulier, les tests d'ihm (testihm*.py) entrent dans cette catégorie.
+
+Par ordre de complexité :
+
+  - testelem7
+  - testelem
+
+  - testcomm7
+  - testcomm9
+  - testcomm
+
+  - testastest
+  - testastest9
+
+  - testihm9
+  - testihm
+  - testihm7
+
+Les tests suffixés 7 ou 9 sont spécifiques d'une version d'ASTER
+

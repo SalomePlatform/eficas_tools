@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'desChoixCata.ui'
 #
-# Created: Wed Jul 16 16:27:33 2008
+# Created: Tue Nov 18 17:37:24 2008
 #      by: PyQt4 UI code generator 4.4.2
 #
 # WARNING! All changes made in this file will be lost!

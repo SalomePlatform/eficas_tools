@@ -52,8 +52,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         l_valeurs=[]
         if (len(liste)% self.nbValeurs != 0):
             message="La cardinalité n'est pas correcte, la dernière valeur est ignorée"
-            #self.Commentaire.setText(QString(commentaire)) 
-            self.editor.affiche_infos(commentaire)
+            self.editor.affiche_infos(message)
         for i in range(len(liste)/ self.nbValeurs) :
             if (self.nbValeurs==2):
               t=(liste[i*self.nbValeurs], liste[i*self.nbValeurs+1])
@@ -66,12 +65,22 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         self.LBValeurs.clear()
         listeValeurs=self.node.item.GetListeValeurs()
         for valeur in self.DecoupeListeValeurs(listeValeurs):
-            self.LBValeurs.insertItem(str(valeur))
+            if type(valeur) == types.TupleType:
+               TupleEnTexte="("
+               for val in valeur :
+                      TupleEnTexte = TupleEnTexte + str(self.politique.GetValeurTexte(val)) +", "
+               TupleEnTexte = TupleEnTexte[0:-2] +")"
+               self.LBValeurs.insertItem(TupleEnTexte)
+            else :
+                  self.LBValeurs.insertItem(QString(str(valeur)))
 
   def  Ajout1Valeur(self,liste=[]):
         # Pour être appele a partir du Panel Importer (donc plusieurs fois par AjouterNValeur)
         if liste == [] :
-           liste,validite=SaisieValeur.TraiteLEValeur(self)
+           liste,validite,texteBrut=SaisieValeur.TraiteLEValeur(self)
+           if validite :
+              for val in texteBrut.split(',') :
+                  self.politique.AjoutDsDictReel(val)
         else :
            validite=1
         if validite == 0 : return
@@ -90,12 +99,12 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         index=self.LBValeurs.currentItem() +1
         indexListe=index*self.nbValeurs
         if index == 0 : 
-           index = -1
+           index = len(self.listeValeursCourantes)
            indexListe=len(self.listeValeursCourantes)
         listeVal=[]
         for valeur in self.listeValeursCourantes :
                 listeVal.append(valeur)
-        validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,index,listeVal)
+        validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,index+1,listeVal)
         self.Commentaire.setText(comm2)
         if not validite :
                 self.editor.affiche_infos(comm)
@@ -104,7 +113,14 @@ class MonFonctionPanel(MonPlusieursBasePanel):
            l1=self.listeValeursCourantes[:indexListe]
            l3=self.listeValeursCourantes[indexListe:]
            for valeur in self.DecoupeListeValeurs(listeRetour):
-               self.LBValeurs.insertItem(QString(str(valeur)),index)
+               if type(valeur) == types.TupleType:
+                  TupleEnTexte="("
+                  for val in valeur :
+                      TupleEnTexte = TupleEnTexte + str(self.politique.GetValeurTexte(val)) +", "
+                  TupleEnTexte = TupleEnTexte[0:-2] +")"
+                  self.LBValeurs.insertItem(TupleEnTexte,index)
+               else :
+                  self.LBValeurs.insertItem(QString(str(valeur)),index)
                index=index+1
            self.listeValeursCourantes=l1+listeRetour+l3
 

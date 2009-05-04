@@ -59,7 +59,7 @@ class Validation  :
   def SetValeurTexte(self,texteValeur) :
          try :
                   if "R" in self.node.item.object.definition.type:
-                     if texteValeur[0] != "'":
+                     if str(texteValeur)[0] != "'":
                         clef=eval(texteValeur)
                         if str(clef) != str(texteValeur) :
                            self.node.item.object.init_modif()
@@ -70,6 +70,23 @@ class Validation  :
                            self.parent.dict_reels[clefobj]
                            self.node.item.object.fin_modif()
          except:
+            pass
+
+  def AjoutDsDictReel(self,texteValeur):
+         try :
+         #if 1 :
+                  if "R" in self.node.item.object.definition.type:
+                     if str(texteValeur)[0] != "'":
+                        clef=eval(texteValeur)
+                        if str(clef) != str(texteValeur) :
+                           clefobj=self.node.item.object.GetNomConcept()
+                           if not self.parent.dict_reels.has_key(clefobj):
+                              self.parent.dict_reels[clefobj] = {}
+                           self.parent.dict_reels[clefobj][clef]=texteValeur
+                           self.parent.dict_reels[clefobj]
+         except:
+         #else:
+            #print "pb ds try de AjoutDsDictReel"
             pass
 
   def GetValeurTexte(self,valeur) :
@@ -106,9 +123,9 @@ class PolitiqueUnique(Validation) :
          return validite, commentaire 
 
  
-#------------------------
-class PolitiquePlusieurs:
-#------------------------
+#-------------------------------------
+class PolitiquePlusieurs (Validation):
+#-------------------------------------
   """
   classe servant pour les entrees ne demandant qu un mot clef
   """
@@ -127,11 +144,10 @@ class PolitiquePlusieurs:
          if not( type(listevaleur)  in (types.ListType,types.TupleType)) :
             listevaleur=tuple(listevaleur)
          for valeur in listevaleur :
+             valeurScientifique=valeur
              # On teste le type de la valeur
              valide=self.node.item.valide_item(valeur)
              if not valide :
-                #print self.__class__
-                #if not testtype :
                 try :
                    valeur,valide=self.node.item.eval_valeur(valeur)
                    valide,commentaire = self.node.item.object.verif_type(valeur)
@@ -153,8 +169,10 @@ class PolitiquePlusieurs:
                    commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
                    return valide,commentaire,commentaire2,listeRetour
                 if len(listecourante) + 1 > min :
+                   commentaire=""
                    return valide,commentaire,commentaire2,listeRetour
              # On ajoute la valeur testee a la liste courante et a la liste acceptee
+             self.AjoutDsDictReel(valeurScientifique)
              listecourante.insert(index,valeur)
              index=index+1
              listeRetour.append(valeur)

@@ -18,6 +18,7 @@
 #
 # ======================================================================
 
+print "INTERFACEQT4"
 import types,sys,os
 import traceback
 from PyQt4 import *
@@ -30,14 +31,12 @@ import convert,generator
 from Editeur     import session
 from Editeur     import comploader
 from Editeur     import Objecttreeitem
-#import panelsQT
 import browser
 import readercata
 import qtCommun
 
-import prefs
 
-VERSION_EFICAS  = "EFICAS v1.14"
+VERSION_EFICAS  = "EFICAS v1.15"
 
 
 class JDCEditor(QSplitter):
@@ -46,11 +45,10 @@ class JDCEditor(QSplitter):
        Editeur de jdc
     """        
 
-    def __init__ (self,fichier = None, jdc = None, QWParent=None, units = None, include=0 ,appli=None, vm=None):          
+    def __init__ (self,appli,fichier = None, jdc = None, QWParent=None, units = None, include=0 , vm=None):          
     #----------------------------------------------------------------------------------------------------------#
 
-        #print "debut JDCEditor __init__"
-        print "fichier", fichier,"jdc",jdc,"units",units,"include",include
+        #print "fichier", fichier,"jdc",jdc,"units",units,"include",include
         QSplitter.__init__(self, QWParent)
 	self.appliEficas = appli
 	self.appli       = appli  #---- attendu par IHM
@@ -63,21 +61,20 @@ class JDCEditor(QSplitter):
         VERSION_CODE    = session.d_env.cata
         if appli != None :
            self.salome =  self.appliEficas.salome
+           self.format =  self.appliEficas.format_fichier
         else :
            self.salome=0
+           print "dans JDC pas d appli ????????"
 
-        self.code = prefs.code
+        self.code = self.appliEficas.CONFIGURATION.code
         self.version_code = VERSION_CODE
         self.titre=VERSION_EFICAS + ' pour '+ self.code
 
         self.dict_reels={}
         self.liste_simp_reel=[]        
-        self.format_fichier='python' # par defaut
-	self.jdc_openturn_xml=""
-	self.jdc_openturn_std=""
         self.ihm="QT"
         
-        from Editeur import configuration
+        import configuration
         self.CONFIGURATION = self.appliEficas.CONFIGURATION
         self.CONFIGStyle =   self.appliEficas.CONFIGStyle
 
@@ -167,7 +164,6 @@ class JDCEditor(QSplitter):
         """
         import Extensions.jdc_include
         JdC_aux=Extensions.jdc_include.JdC_include
-        print JdC_aux
         CONTEXT.unset_current_step()        
 
         jaux=self.readercata.cata[0].JdC( procedure="",
@@ -206,17 +202,20 @@ class JDCEditor(QSplitter):
         
         jdcName=os.path.basename(fn)
         # Il faut convertir le contenu du fichier en fonction du format
-        if convert.plugins.has_key( self.format_fichier ):
+        if convert.plugins.has_key( self.appliEficas.format_fichier ):
              # Le convertisseur existe on l'utilise
              appli = self 
-             p=convert.plugins[self.format_fichier]()
+             p=convert.plugins[self.appliEficas.format_fichier]()
              p.readfile(fn)         
              text=p.convert('exec',appli)
              if not p.cr.estvide():                 
                 self.affiche_infos("Erreur à la conversion")
+        else :
+            self.affiche_infos("Type de fichier non reconnu")
+            QMessageBox.critical( self, "Type de fichier non reconnu","EFICAS ne sait pas ouvrir ce type de fichier")            
+            return None
         
         CONTEXT.unset_current_step()
-        ##   os.chdir(self.initialdir)
         jdc=self.readercata.cata[0].JdC(procedure=text,
                                     appli=self,
                                     cata=self.readercata.cata,
@@ -236,10 +235,11 @@ class JDCEditor(QSplitter):
            self.lastModified = 1
         return jdc
         
+
     #-----------------------#
     def get_source(self,file):
     #-----------------------#
-        format=self.format_fichier
+        format=self.appliEficas.format_fichier
 
         # Il faut convertir le contenu du fichier en fonction du format
         if convert.plugins.has_key(format):
@@ -267,7 +267,7 @@ class JDCEditor(QSplitter):
     #-----------------------#
     def viewJdcSource(self):        
     #-----------------------#
-        format = self.format_fichier
+        format = self.appliEficas.format_fichier
         f=open(self.fichier,'r')
         texteSource=f.read()
         f.close()
@@ -276,7 +276,7 @@ class JDCEditor(QSplitter):
     #-----------------------#
     def viewJdcPy(self):        
     #-----------------------#
-        format = self.format_fichier
+        format = self.appliEficas.format_fichier
         strSource = str( self.get_text_JDC(format) )       
         self._viewText(strSource, "JDC_RESULTAT")
                  
@@ -299,6 +299,16 @@ class JDCEditor(QSplitter):
     #------------------------------#
     def affiche_infos(self,message):
     #------------------------------#
+        if self.salome :
+	   if not hasattr(self.appliEficas,'MessageLabel') :
+              self.appliEficas.leLayout=QDockWindow(self.appliEficas)
+	      self.appliEficas.MessageLabel = QLabel(self.appliEficas.leLayout,"MessageLabel")
+	      self.appliEficas.MessageLabel.setAlignment(Qt.AlignBottom)
+              self.appliEficas.leLayout.setWidget(self.appliEficas.MessageLabel)
+              self.appliEficas.moveDockWindow(self.appliEficas.leLayout,Qt.DockBottom)
+	   self.appliEficas.MessageLabel.setText(message)
+	   self.appliEficas.MessageLabel.show()
+	   self.appliEficas.leLayout.show()
         if self.sb:
             self.sb.showMessage(message)#,2000)
 
@@ -368,8 +378,7 @@ class JDCEditor(QSplitter):
       Ne permet que la copie d'objets de type Commande ou MCF
       """
       self.chercheNoeudSelectionne()
-      print "noeud a copier", self.node_selected.item.GetLabelText()[0]
-      print "noued apres " ,self.QWParent.noeud_a_editer.item.GetLabelText()[0]
+      index_noeud_a_couper=self.QWParent.noeud_a_editer.treeParent.children.index(self.QWParent.noeud_a_editer)
       if self.QWParent.noeud_a_editer == None :
           QMessageBox.information( self, 
                       "Copie impossible",
@@ -398,10 +407,13 @@ class JDCEditor(QSplitter):
       # si possible on renomme l objet comme le noeud couper
 
       if self.QWParent.edit == "couper":
-         #nom = self.QWParent.noeud_a_editer.item.object.sd.nom
-         print self.QWParent.noeud_a_editer.item.object.sd.nom
+         print self.QWParent.noeud_a_editer.child
+         index_ajoute=child.treeParent.children.index(child)
+         if index_ajoute <= index_noeud_a_couper :
+            index_noeud_a_couper=index_noeud_a_couper + 1
          item=self.QWParent.noeud_a_editer.item
-         self.QWParent.noeud_a_editer.delete()
+         noeud_a_supprimer=self.QWParent.noeud_a_editer.treeParent.children[index_noeud_a_couper]
+         noeud_a_supprimer.delete()
          child.item.update(item)
          #test,mess = child.item.nomme_sd(nom)
          child.select()
@@ -413,10 +425,25 @@ class JDCEditor(QSplitter):
     def getFileName(self):
     #---------------------#
       return self.fichier
-      
+
     #---------------------------#
+    def get_file_variable(self) :
+    #---------------------------#
+     titre = "Choix d'un fichier XML"
+     texte = "Le fichier contient une commande INCLUDE\n"
+     texte = texte+'Donnez le nom du fichier XML qui contient la description des variables'
+     QMessageBox.information( self, titre,texte)
+                                        
+     fichier = QFileDialog.getOpenFileName(self.appliEficas,
+                   self.appliEficas.trUtf8('Ouvrir Fichier'),
+                   self.appliEficas.CONFIGURATION.savedir,
+                   self.appliEficas.trUtf8('Wrapper Files (*.xml);;''All Files (*)'))
+     print fichier
+     return  fichier
+      
+    #----------------------------------#
     def writeFile(self, fn, txt = None):
-    #------------------------------#
+    #----------------------------------#
         """
         Public slot to write the text to a file.
         
@@ -427,14 +454,13 @@ class JDCEditor(QSplitter):
         fn = unicode(fn)
 
         if txt == None :
-            txt = self.get_text_JDC(self.format_fichier)
+            txt = self.get_text_JDC(self.appliEficas.format_fichier)
             eol = '\n'        
             if len(txt) >= len(eol):
                if txt[-len(eol):] != eol:
                   txt += eol
             else:
                 txt += eol        
-
         try:
             f = open(fn, 'wb')
             f.write(txt)
@@ -446,37 +472,24 @@ class JDCEditor(QSplitter):
                     .arg(unicode(fn)).arg(str(why)))
             return 0
 
-#    #------------------------------------ 
-#    def writeFilesOpenturns(self,fn) :
-#    #------------------------------------ 
-#	base=fn[:fn.rfind(".")]
-#	fileXML=base + '.xml'
-#	fileSTD=base + '_std.py'
-#        self.writeFile(fileXML,self.jdc_openturn_xml)
-#        self.writeFile(fileSTD,self.jdc_openturn_std)
-#
-#
     #-----------------------------#
     def get_text_JDC(self,format):
     #-----------------------------#
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
-         g=generator.plugins[format]()
-         jdc_formate=g.gener(self.jdc,format='beautifie')
-	 if format == "openturns" :
-	    self.jdc_openturn_xml=g.getOpenturnsXML()
-	    self.jdc_openturn_std=g.getOpenturnsSTD()
-         if not g.cr.estvide():            
+         self.generator=generator.plugins[format]()
+         jdc_formate=self.generator.gener(self.jdc,format='beautifie')
+         if not self.generator.cr.estvide():            
             self.affiche_infos("Erreur à la generation")
             QMessageBox.critical( self, "Erreur a la generation","EFICAS ne sait pas convertir ce JDC")
-            return
+            return ""
          else:
             return jdc_formate
       else:         
          # Il n'existe pas c'est une erreur
          self.affiche_infos("Format %s non reconnu" % format)
-         QMessageBox.critical( self, "Format %s non reconnu" % format,"EFICAS ne sait pas convertir le JDC en format %s "% format)
-         return
+         QMessageBox.critical( self, "Format "+format+" non reconnu","EFICAS ne sait pas convertir le JDC selon le format "+format)
+         return ""
       
       
     #-----------------------------------------#
@@ -496,8 +509,7 @@ class JDCEditor(QSplitter):
         newName = None
         if self.fichier is None or saveas:
           if path is None: 
-             #PN --> modifier selon les prefs
-             path="/tmp"
+             path=self.CONFIGURATION.savedir
           selectedFilter = QString('')
           fn = QFileDialog.getSaveFileName( self,
                self.trUtf8("sauvegarde"), path,
@@ -533,8 +545,22 @@ class JDCEditor(QSplitter):
                 self.appliEficas.addToRecentList(newName)
                 self.tree.racine.item.getObject().nom=os.path.basename(newName)
                 self.tree.racine.update_node_label()
-#	    if self.code == "OPENTURNS" :
-#	       self.writeFilesOpenturns(fn)
+               
+            try : 
+            #if 1 :
+               fileXML = fn[:fn.rfind(".")] + '.xml'
+               self.generator.writeOpenturnsXML( fileXML )
+            except :
+            #else :
+               pass
+               
+            #PNPNPNPN A ecrire
+            try : 
+               fileSTD = fn[:fn.rfind(".")] + '.py'
+               self.generator.writeOpenturnsSTD( fileSTD )
+            except :
+               pass
+
 #            if self.salome : 
 #               self.QWParent.appli.addJdcInSalome( self.fichier)
 #               if self.code == 'ASTER':
@@ -579,8 +605,8 @@ class JDCEditor(QSplitter):
             texte = texte+'Donnez le nom du fichier dont vous \n voulez faire une poursuite'
                                         
         QMessageBox.information( self, titre,texte)
-        #PN --> les prefs
-        fn = QFileDialog.getOpenFileName( self, titre)
+        path=self.CONFIGURATION.savedir
+        fn = QFileDialog.getOpenFileName( self, titre,path)
         
         if fn.isNull(): 
         # ce retour est impose par le get_file d'I_JDC
@@ -596,8 +622,10 @@ class JDCEditor(QSplitter):
             # Une erreur a été rencontrée
             jdcText = ''
         return ulfile, jdcText
+
         
 if __name__=='__main__':    
+    import prefs # dans main
     if hasattr(prefs,'encoding'):
        # Hack pour changer le codage par defaut des strings
        import sys
@@ -616,7 +644,7 @@ if __name__=='__main__':
 #    code=options.code
 #        
     app = QApplication(sys.argv)    
-    mw = JDCEditor('azAster.comm')
+    mw = JDCEditor(None,'azAster.comm')
     app.setMainWidget(mw)
     app.connect(app, SIGNAL("lastWindowClosed()"), app, SLOT("quit()"))
     mw.show()

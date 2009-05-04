@@ -42,7 +42,7 @@ from monChoixCata import MonChoixCata
 
 from qt import *
 
-version="14"
+version="15"
 
 class READERCATA:
 
@@ -51,6 +51,7 @@ class READERCATA:
       self.parent=parent
       self.code=self.appli.code
       self.appli.format_fichier='python'
+      self.appli.appliEficas.format_fichier='python'
       self.version_code=self.appli.version_code
       self.version_cata=None
       self.fic_cata=None
@@ -81,10 +82,12 @@ class READERCATA:
              if self.version_code == cata[1]:
                 self.fic_cata = cata[2]
                 self.appli.format_fichier=cata[3]
+                self.appli.appliEficas.format_fichier=cata[3]
       elif len(liste_cata_possibles)==1:
           self.fic_cata = liste_cata_possibles[0][2]
           self.version_code = liste_cata_possibles[0][1]
           self.appli.format_fichier=liste_cata_possibles[0][3] 
+          self.appli.appliEficas.format_fichier=liste_cata_possibles[0][3] 
           lab=QString("Eficas V1.") 
           lab+=QString(version) 
           lab+=QString(" pour ")
@@ -326,6 +329,7 @@ class READERCATA:
           self.fic_cata = self.dico_catalogues[self.version_cata][2]
           self.version_code = self.version_cata
           self.appli.format_fichier = self.dico_catalogues[self.version_cata][3]
+          self.appli.appliEficas.format_fichier = self.dico_catalogues[self.version_cata][3]
           lab+=self.version_cata
           self.appli.parent.ui.setCaption(lab)
           #qApp.mainWidget().setCaption(lab)

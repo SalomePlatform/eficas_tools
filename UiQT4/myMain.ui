@@ -168,12 +168,15 @@
     <string>Enregistrer</string>
    </property>
    <property name="shortcut" >
-    <string>Shift+E</string>
+    <string>Ctrl+E</string>
    </property>
   </action>
   <action name="actionEnregistrer_sous" >
    <property name="text" >
     <string>Enregistrer sous</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+E</string>
    </property>
   </action>
   <action name="actionFermer" >
@@ -189,11 +192,6 @@
     <string>Fermer tout</string>
    </property>
   </action>
-  <action name="actionCopier" >
-   <property name="text" >
-    <string>Copier</string>
-   </property>
-  </action>
   <action name="actionCouper" >
    <property name="icon" >
     <iconset>
@@ -202,10 +200,8 @@
    <property name="text" >
     <string>Couper</string>
    </property>
-  </action>
-  <action name="actionColler" >
-   <property name="text" >
-    <string>Coller</string>
+   <property name="shortcut" >
+    <string>Ctrl+X</string>
    </property>
   </action>
   <action name="actionCopier" >
@@ -216,6 +212,9 @@
    <property name="text" >
     <string>Copier</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionColler" >
    <property name="icon" >
@@ -225,10 +224,16 @@
    <property name="text" >
     <string>Coller</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+V</string>
+   </property>
   </action>
   <action name="actionQuitter" >
    <property name="text" >
     <string>Quitter</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionRapport_de_Validation" >

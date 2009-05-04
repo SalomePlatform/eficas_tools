@@ -25,7 +25,6 @@ import traceback
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
-import prefsQT
 
 # Import des panels
 
@@ -281,6 +280,7 @@ class ViewText(Ui_dView,QDialog):
     """
     def __init__(self,parent):
         QDialog.__init__(self,parent)
+        self.parent=parent
         self.setupUi(self)
 
         self.resize( QSize(600,507).expandedTo(self.minimumSizeHint()) )
@@ -292,25 +292,10 @@ class ViewText(Ui_dView,QDialog):
         
     def saveFile(self):
         #recuperation du nom du fichier
+        userDir=os.path.expanduser("~/.Eficas_install/")
         fn = QFileDialog.getSaveFileName(None,
                 self.trUtf8("Save File"),
-                self.trUtf8("/tmp"))
-        #if not fn.isNull():                
-        #   print "hhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjjjkkkkkkkkkkkkk"
-        #   if QFileInfo(fn).exists():
-        #      abort = QMessageBox.warning(self,
-        #                self.trUtf8("Save File"),
-        #                self.trUtf8("The file <b>%1</b> already exists.")
-        #                    .arg(fn),
-        #                self.trUtf8("&Overwrite"),
-        #                self.trUtf8("&Abort"))
-        #      if abort:
-        #         return
-        #   fn = unicode(QDir.convertSeparators(fn))                
-        #else:
-        #   return
-
-        #ecriture du fichier
+                self.trUtf8(userDir))
         if fn.isNull() : return
         try:
            f = open(fn, 'wb')

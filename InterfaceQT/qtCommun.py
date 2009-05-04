@@ -311,7 +311,7 @@ class ViewText(QDialog):
         
     def saveFile(self):
         #recuperation du nom du fichier
-        fn = QFileDialog.getSaveFileName(None,
+        fn = QFileDialog.getSaveFileName("",
                 self.trUtf8("All Files (*)"), self, None,
                 self.trUtf8("Save File"), '', 0)                
         if not fn.isNull():                

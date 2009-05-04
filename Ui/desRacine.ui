@@ -8,15 +8,9 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>509</width>
+            <width>523</width>
             <height>513</height>
         </rect>
-    </property>
-    <property name="minimumSize">
-        <size>
-            <width>505</width>
-            <height>0</height>
-        </size>
     </property>
     <property name="caption">
         <string>DMacro</string>
@@ -28,12 +22,6 @@
         <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>textLabel1_4</cstring>
-            </property>
-            <property name="minimumSize">
-                <size>
-                    <width>291</width>
-                    <height>21</height>
-                </size>
             </property>
             <property name="text">
                 <string>&lt;b&gt;&lt;u&gt;Commandes :&lt;/u&gt;&lt;/b&gt;</string>
@@ -51,38 +39,16 @@
             <property name="name">
                 <cstring>buttonGroup1</cstring>
             </property>
-            <property name="minimumSize">
-                <size>
-                    <width>0</width>
-                    <height>60</height>
-                </size>
-            </property>
             <property name="title">
                 <string>Affichage</string>
             </property>
-            <widget class="QRadioButton">
-                <property name="name">
-                    <cstring>RBGroupe</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>10</x>
-                        <y>20</y>
-                        <width>90</width>
-                        <height>20</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>par groupe</string>
-                </property>
-            </widget>
             <widget class="QRadioButton">
                 <property name="name">
                     <cstring>RBalpha</cstring>
                 </property>
                 <property name="geometry">
                     <rect>
-                        <x>110</x>
+                        <x>120</x>
                         <y>20</y>
                         <width>120</width>
                         <height>20</height>
@@ -95,16 +61,26 @@
                     <bool>true</bool>
                 </property>
             </widget>
+            <widget class="QRadioButton">
+                <property name="name">
+                    <cstring>RBGroupe</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>10</x>
+                        <y>20</y>
+                        <width>100</width>
+                        <height>20</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>par groupe</string>
+                </property>
+            </widget>
         </widget>
         <widget class="QPushButton" row="3" column="3">
             <property name="name">
                 <cstring>bHelp</cstring>
-            </property>
-            <property name="minimumSize">
-                <size>
-                    <width>160</width>
-                    <height>30</height>
-                </size>
             </property>
             <property name="text">
                 <string>&amp;Documentation</string>
@@ -123,12 +99,6 @@
             <property name="name">
                 <cstring>bSup</cstring>
             </property>
-            <property name="minimumSize">
-                <size>
-                    <width>160</width>
-                    <height>30</height>
-                </size>
-            </property>
             <property name="text">
                 <string>&amp;Supprimer</string>
             </property>
@@ -145,12 +115,6 @@
         <widget class="QPushButton" row="3" column="1" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>bOk</cstring>
-            </property>
-            <property name="minimumSize">
-                <size>
-                    <width>160</width>
-                    <height>30</height>
-                </size>
             </property>
             <property name="text">
                 <string>&amp;Valider</string>
@@ -180,12 +144,6 @@
                     <property name="name">
                         <cstring>BNext</cstring>
                     </property>
-                    <property name="minimumSize">
-                        <size>
-                            <width>60</width>
-                            <height>30</height>
-                        </size>
-                    </property>
                     <property name="text">
                         <string>Suivant</string>
                     </property>
@@ -200,33 +158,15 @@
                     <property name="name">
                         <cstring>LEFiltre</cstring>
                     </property>
-                    <property name="minimumSize">
-                        <size>
-                            <width>0</width>
-                            <height>30</height>
-                        </size>
-                    </property>
                 </widget>
                 <widget class="QListBox" row="0" column="3" rowspan="2" colspan="1">
                     <property name="name">
                         <cstring>LBRegles</cstring>
                     </property>
-                    <property name="minimumSize">
-                        <size>
-                            <width>240</width>
-                            <height>350</height>
-                        </size>
-                    </property>
                 </widget>
                 <widget class="QLabel" row="0" column="0">
                     <property name="name">
                         <cstring>textLabel6</cstring>
-                    </property>
-                    <property name="minimumSize">
-                        <size>
-                            <width>40</width>
-                            <height>0</height>
-                        </size>
                     </property>
                     <property name="text">
                         <string>Filtre</string>

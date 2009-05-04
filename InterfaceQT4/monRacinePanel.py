@@ -107,8 +107,6 @@ class MonRacinePanel(DRac,QTPanelTBW2):
       name=str(self.LBNouvCommande.currentItem().text())
       if name==QString(" "): return
       if name.find("GROUPE :")==0 : return
-      print self.editor
-      print self.editor.__class__
       self.editor.init_modif()
       print self.node.__class__
       new_node = self.node.append_child(name,'first')

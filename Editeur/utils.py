@@ -54,7 +54,7 @@ def get_rep_user():
     except:
       rep_user_eficas = os.path.join('C:','Eficas_install')
   else :
-    rep_user_eficas = os.path.join(os.environ['HOME'],'Eficas_install')
+    rep_user_eficas= os.path.join(os.environ['HOME'],'.Eficas_install')
   if os.path.exists(rep_user_eficas):
     if os.path.isfile(rep_user_eficas) :
       print "Un fichier de nom %s existe déjà : impossible de créer un répertoire de même nom" %rep_user_eficas

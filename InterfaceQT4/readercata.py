@@ -31,20 +31,19 @@ import cPickle
 import re
 
 # Modules Eficas
-import prefs
 from Noyau.N_CR import CR
 from Editeur.utils  import init_rep_cata_dev
 
-from Editeur    import analyse_catalogue
-from Editeur    import autre_analyse_cata
-from Editeur    import uiinfo
+import analyse_catalogue
+import autre_analyse_cata
+import uiinfo
 from monChoixCata import MonChoixCata
 
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
-version="14"
+VERSION_EFICAS="Eficas V1.15"
 
 class READERCATA:
 
@@ -52,7 +51,7 @@ class READERCATA:
       self.QWParent=QWParent
       self.appliEficas=self.QWParent.appliEficas
       self.code=self.QWParent.code
-      self.QWParent.format_fichier='python'
+      self.appliEficas.format_fichier='python'
       self.version_code=self.QWParent.version_code
       self.version_cata=None
       self.fic_cata=None
@@ -85,9 +84,9 @@ class READERCATA:
       elif len(liste_cata_possibles)==1:
           self.fic_cata = liste_cata_possibles[0][2]
           self.version_code = liste_cata_possibles[0][1]
-          self.QWParent.format_fichier=liste_cata_possibles[0][3] 
+          self.appliEficas.format_fichier=liste_cata_possibles[0][3] 
           lab=QString("Eficas V1.") 
-          lab+=QString(version) 
+          lab+=QString(VERSION_EFICAS) 
           lab+=QString(" pour ")
           lab+=QString(self.code) 
           lab+=QString(" avec le catalogue ")
@@ -136,29 +135,8 @@ class READERCATA:
       # traitement des clefs documentaires
       #
       self.traite_clefs_documentaires()
-
-      # chargement et analyse des catalogues développeur (le cas échéant)
-      #
-      if self.appliEficas.CONFIGURATION.isdeveloppeur == 'OUI' :
-          init_rep_cata_dev(self.fic_cata,self.appliEficas.CONFIGURATION.path_cata_dev)
-          fic_cata_dev = os.path.join(self.appliEficas.CONFIGURATION.path_cata_dev,'cata_developpeur.py')
-          if os.path.isfile(fic_cata_dev):
-              # il y a bien un catalogue développeur : il faut récupérer le module_object associé ...
-              test = self.compile_cata(fic_cata_dev,fic_cata_dev+'c')
-              if not test :
-                  showinfo("Compilation catalogue développeur",
-                           "Erreur dans la compilation du catalogue développeur")
-                  self.cata = (self.cata,)
-              else:
-                  self.cata_dev =self.import_cata(fic_cata_dev)
-                  #self.Retrouve_Ordre_Cata_Developpeur()
-                  self.Retrouve_Ordre_Cata_Developpeur_autre()
-                  self.cata = (self.cata,self.cata_dev)
-          else:
-              self.cata = (self.cata,)
-      else:
-          self.cata = (self.cata,)
-      titre="Eficas V1.14 avec le catalogue " + os.path.basename(self.fic_cata)
+      self.cata=(self.cata,)
+      titre=VERSION_EFICAS + " avec le catalogue " + os.path.basename(self.fic_cata)
       if self.appliEficas.top:
         self.appliEficas.setWindowTitle(titre)
       self.appliEficas.titre=titre
@@ -181,7 +159,7 @@ class READERCATA:
 
    def import_cata(self,cata):
       """ 
-          Réalise l'import du catalogue dont le chemin d'acca¨s est donné par cata
+          Réalise l'import du catalogue dont le chemin d'acces est donné par cata
       """
       nom_cata = os.path.splitext(os.path.basename(cata))[0]
       rep_cata = os.path.dirname(cata)
@@ -223,34 +201,6 @@ class READERCATA:
           self.Get_Ordre_Cata(mode='cata')
       self.appliEficas.affiche_infos("Catalogue standard chargé")
 
-   def Retrouve_Ordre_Cata_Developpeur(self):
-      """ 
-          Retrouve l'ordre des mots-clés dans le catalogue, cad :
-          - si ce dernier a été modifié, relance l'analyse du catalogue pour déterminer
-            l'ordre des mots-clés dans le catalogue
-          - s'il n'a pas été modifié, relie le fichier pickle 
-      """
-      if self.code != 'ASTER' : return
-      fic_cata = os.path.join(self.appliEficas.CONFIGURATION.path_cata_dev,'cata_developpeur.py')
-      message="Chargement catalogue développeur présent dans :\n %s..." % self.appliEficas.CONFIGURATION.path_cata_dev
-      cata_dev_ordonne = analyse_cata.analyse_catalogue(self,self.fic_cata)
-      self.cata_dev_ordonne_cr = cata_dev_ordonne.cr
-      cata_dev_ordonne_dico = cata_dev_ordonne.entites
-      self.cata_ordonne_dico.update(cata_dev_ordonne_dico)
-      self.appliEficas.affiche_infos(" catalogue(s) développeur(s) chargé(s)" )
-
-   def Retrouve_Ordre_Cata_Developpeur_autre(self):
-      """
-          Retrouve l'ordre des mots-clés dans le catalogue, cad :
-          - si ce dernier a été modifié, relance l'analyse du catalogue pour déterminer
-            l'ordre des mots-clés dans le catalogue
-          - s'il n'a pas été modifié, relie le fichier pickle
-      """
-      if self.code != 'ASTER' : return
-      message="Chargement catalogue développeur présent dans :\n %s..." % self.appliEficas.CONFIGURATION.path_cata_dev
-      cata_dev_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyse_catalogue(self.cata)
-      self.cata_ordonne_dico.update(cata_dev_ordonne_dico)
-      self.appliEficas.affiche_infos(" catalogue(s) développeur(s) chargé(s)" )
 
    def Get_Ordre_Cata(self,mode='pickle'):
       """ 

@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>529</width>
+            <width>537</width>
             <height>493</height>
         </rect>
     </property>
@@ -126,150 +126,233 @@
                 <attribute name="title">
                     <string>Définition Formule</string>
                 </attribute>
-                <grid>
+                <widget class="QLabel">
                     <property name="name">
-                        <cstring>unnamed</cstring>
+                        <cstring>textLabel1</cstring>
                     </property>
-                    <widget class="QLabel" row="0" column="0">
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>11</y>
+                            <width>242</width>
+                            <height>40</height>
+                        </rect>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>&lt;h3&gt;&lt;p align="center"&gt;&lt;u&gt;&lt;b&gt;Nom de la formule&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;/h3&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout6</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>103</y>
+                            <width>489</width>
+                            <height>44</height>
+                        </rect>
+                    </property>
+                    <hbox>
                         <property name="name">
-                            <cstring>textLabel1</cstring>
+                            <cstring>unnamed</cstring>
                         </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>0</width>
-                                <height>0</height>
-                            </size>
-                        </property>
-                        <property name="text">
-                            <string>&lt;h3&gt;&lt;p align="center"&gt;&lt;u&gt;&lt;b&gt;Nom de la formule&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;/h3&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="6" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>textLabel1_3</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Retour-Chariot permet de vérifier que l'expression est valide.</string>
-                        </property>
-                    </widget>
-                    <widget class="QLayoutWidget" row="2" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>layout6</cstring>
-                        </property>
-                        <hbox>
+                        <widget class="QLineEdit">
                             <property name="name">
-                                <cstring>unnamed</cstring>
+                                <cstring>LENomFormule</cstring>
                             </property>
-                            <widget class="QLineEdit">
+                            <property name="minimumSize">
+                                <size>
+                                    <width>0</width>
+                                    <height>40</height>
+                                </size>
+                            </property>
+                        </widget>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout4</cstring>
+                            </property>
+                            <hbox>
                                 <property name="name">
-                                    <cstring>LENomFormule</cstring>
+                                    <cstring>unnamed</cstring>
                                 </property>
-                                <property name="minimumSize">
-                                    <size>
-                                        <width>0</width>
-                                        <height>40</height>
-                                    </size>
-                                </property>
-                            </widget>
-                            <widget class="QLayoutWidget">
-                                <property name="name">
-                                    <cstring>layout4</cstring>
-                                </property>
-                                <hbox>
+                                <widget class="QLabel">
                                     <property name="name">
-                                        <cstring>unnamed</cstring>
+                                        <cstring>textLabel1_6</cstring>
                                     </property>
-                                    <widget class="QLabel">
-                                        <property name="name">
-                                            <cstring>textLabel1_6</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>&lt;h1&gt;&lt;b&gt;(&lt;/b&gt;&lt;/h1&gt;</string>
-                                        </property>
-                                    </widget>
-                                    <widget class="QLineEdit">
-                                        <property name="name">
-                                            <cstring>LENomsArgs</cstring>
-                                        </property>
-                                        <property name="minimumSize">
-                                            <size>
-                                                <width>230</width>
-                                                <height>40</height>
-                                            </size>
-                                        </property>
-                                    </widget>
-                                    <widget class="QLabel">
-                                        <property name="name">
-                                            <cstring>textLabel1_6_2</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>&lt;h1&gt;&lt;b&gt;)&lt;/b&gt;&lt;/h1&gt;</string>
-                                        </property>
-                                    </widget>
-                                </hbox>
-                            </widget>
-                        </hbox>
-                    </widget>
-                    <widget class="QLabel" row="1" column="1">
-                        <property name="name">
-                            <cstring>textLabel2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>variables séparées par des ","
+                                    <property name="text">
+                                        <string>&lt;h1&gt;&lt;b&gt;(&lt;/b&gt;&lt;/h1&gt;</string>
+                                    </property>
+                                </widget>
+                                <widget class="QLineEdit">
+                                    <property name="name">
+                                        <cstring>LENomsArgs</cstring>
+                                    </property>
+                                    <property name="minimumSize">
+                                        <size>
+                                            <width>230</width>
+                                            <height>40</height>
+                                        </size>
+                                    </property>
+                                </widget>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>textLabel1_6_2</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>&lt;h1&gt;&lt;b&gt;)&lt;/b&gt;&lt;/h1&gt;</string>
+                                    </property>
+                                </widget>
+                            </hbox>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>259</x>
+                            <y>57</y>
+                            <width>241</width>
+                            <height>40</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>variables séparées par des ","
           par ex. : x,y,z</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="7" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>textLabel1_3_2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Ce n'est qu'après avoir appuyé sur le bouton Valider que les nouvelles
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel2_2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>153</y>
+                            <width>489</width>
+                            <height>39</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>&lt;font size="+4" face="Helvetica"&gt;&lt;b&gt;=&lt;/b&gt;&lt;/font&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1_5</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>198</y>
+                            <width>489</width>
+                            <height>40</height>
+                        </rect>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>&lt;h3&gt;&lt;p align="center"&gt;&lt;u&gt;&lt;b&gt;Expression&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;/h3&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>LECorpsFormule</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>244</y>
+                            <width>489</width>
+                            <height>30</height>
+                        </rect>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>30</height>
+                        </size>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1_2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>259</x>
+                            <y>11</y>
+                            <width>241</width>
+                            <height>40</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>&lt;h3&gt;&lt;p align="center"&gt;&lt;u&gt;&lt;b&gt;Arguments&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;/h3&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1_3_2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>326</y>
+                            <width>470</width>
+                            <height>40</height>
+                        </rect>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>Ce n'est qu'après avoir appuyé sur le bouton Valider que les nouvelles
 valeurs seront effectivement prises en compte</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="3" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>textLabel2_2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&lt;font size="+4" face="Helvetica"&gt;&lt;b&gt;=&lt;/b&gt;&lt;/font&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="4" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>textLabel1_5</cstring>
-                        </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>0</width>
-                                <height>0</height>
-                            </size>
-                        </property>
-                        <property name="text">
-                            <string>&lt;h3&gt;&lt;p align="center"&gt;&lt;u&gt;&lt;b&gt;Expression&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;/h3&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QLineEdit" row="5" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>LECorpsFormule</cstring>
-                        </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>0</width>
-                                <height>30</height>
-                            </size>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="0" column="1">
-                        <property name="name">
-                            <cstring>textLabel1_2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&lt;h3&gt;&lt;p align="center"&gt;&lt;u&gt;&lt;b&gt;Arguments&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;/h3&gt;</string>
-                        </property>
-                    </widget>
-                </grid>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1_3</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>280</y>
+                            <width>460</width>
+                            <height>40</height>
+                        </rect>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>2</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>Retour-Chariot permet de vérifier que l'expression est valide.</string>
+                    </property>
+                </widget>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -278,36 +361,142 @@ valeurs seront effectivement prises en compte</string>
                 <attribute name="title">
                     <string>Nouvelle Commande</string>
                 </attribute>
-                <grid>
+                <widget class="QLabel">
                     <property name="name">
-                        <cstring>unnamed</cstring>
+                        <cstring>textLabel6</cstring>
                     </property>
-                    <widget class="QLabel" row="3" column="0" rowspan="1" colspan="4">
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>59</y>
+                            <width>40</width>
+                            <height>40</height>
+                        </rect>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>40</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>Filtre</string>
+                    </property>
+                </widget>
+                <widget class="QToolButton">
+                    <property name="name">
+                        <cstring>BNext</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>249</x>
+                            <y>59</y>
+                            <width>60</width>
+                            <height>40</height>
+                        </rect>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>60</width>
+                            <height>40</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>Suivant</string>
+                    </property>
+                    <property name="iconSet">
+                        <iconset></iconset>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>affiche la prochaine occurence</string>
+                    </property>
+                </widget>
+                <widget class="QListBox">
+                    <property name="name">
+                        <cstring>LBNouvCommande</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>105</y>
+                            <width>490</width>
+                            <height>234</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>LEFiltre</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>57</x>
+                            <y>59</y>
+                            <width>180</width>
+                            <height>40</height>
+                        </rect>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>20</width>
+                            <height>40</height>
+                        </size>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1_4</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>11</y>
+                            <width>260</width>
+                            <height>42</height>
+                        </rect>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>2</hsizetype>
+                            <vsizetype>2</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>&lt;b&gt;&lt;u&gt;Commandes :&lt;/u&gt;&lt;/b&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QButtonGroup">
+                    <property name="name">
+                        <cstring>buttonGroup1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>315</x>
+                            <y>11</y>
+                            <width>180</width>
+                            <height>86</height>
+                        </rect>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="title">
+                        <string>Affichage</string>
+                    </property>
+                    <grid>
                         <property name="name">
-                            <cstring>textLabel4</cstring>
+                            <cstring>unnamed</cstring>
                         </property>
-                        <property name="text">
-                            <string>&lt;p align="left"&gt;La commande choisie sera ajoutée APRES la commande courante&lt;/p&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QButtonGroup" row="0" column="3" rowspan="2" colspan="1">
-                        <property name="name">
-                            <cstring>buttonGroup1</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Affichage</string>
-                        </property>
-                        <widget class="QLayoutWidget">
+                        <widget class="QLayoutWidget" row="0" column="0">
                             <property name="name">
                                 <cstring>layout1</cstring>
-                            </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>20</x>
-                                    <y>20</y>
-                                    <width>113</width>
-                                    <height>48</height>
-                                </rect>
                             </property>
                             <vbox>
                                 <property name="name">
@@ -334,66 +523,32 @@ valeurs seront effectivement prises en compte</string>
                                 </widget>
                             </vbox>
                         </widget>
-                    </widget>
-                    <widget class="QListBox" row="2" column="0" rowspan="1" colspan="4">
-                        <property name="name">
-                            <cstring>LBNouvCommande</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
-                        <property name="name">
-                            <cstring>textLabel1_4</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&lt;b&gt;&lt;u&gt;Commandes :&lt;/u&gt;&lt;/b&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="1" column="0">
-                        <property name="name">
-                            <cstring>textLabel6</cstring>
-                        </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>40</width>
-                                <height>0</height>
-                            </size>
-                        </property>
-                        <property name="text">
-                            <string>Filtre</string>
-                        </property>
-                    </widget>
-                    <widget class="QLineEdit" row="1" column="1">
-                        <property name="name">
-                            <cstring>LEFiltre</cstring>
-                        </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>160</width>
-                                <height>40</height>
-                            </size>
-                        </property>
-                    </widget>
-                    <widget class="QToolButton" row="1" column="2">
-                        <property name="name">
-                            <cstring>BNext</cstring>
-                        </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>60</width>
-                                <height>40</height>
-                            </size>
-                        </property>
-                        <property name="text">
-                            <string>Suivant</string>
-                        </property>
-                        <property name="iconSet">
-                            <iconset></iconset>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>affiche la prochaine occurence</string>
-                        </property>
-                    </widget>
-                </grid>
+                    </grid>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel4</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>340</y>
+                            <width>480</width>
+                            <height>21</height>
+                        </rect>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>&lt;p align="left"&gt;La commande choisie sera ajoutée APRES la commande courante&lt;/p&gt;</string>
+                    </property>
+                </widget>
             </widget>
         </widget>
     </grid>

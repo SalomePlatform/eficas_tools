@@ -24,7 +24,7 @@ import re,string,cPickle,os
 from Noyau.N_CR import CR
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.6.6.1.4.1 2008-10-10 13:22:15 pnoyret Exp $"
+__Id__="$Id: analyse_catalogue.py,v 1.7.4.1 2008-11-13 10:35:11 cchris Exp $"
 __version__="$Name:  $"
 #
 l_noms_commandes = ['OPER','PROC','MACRO','FORM']

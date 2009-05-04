@@ -1,11 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 
 import os, sys
-REPINI=os.path.dirname(os.path.abspath(__file__))
-INSTALLDIR=os.path.join(REPINI,'..')
-sys.path.append(INSTALLDIR)
-sys.path.append(INSTALLDIR+"/UiQT4")
-sys.path.append(INSTALLDIR+"/InterfaceQT4")
 
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
@@ -13,9 +8,9 @@ from PyQt4.QtAssistant import *
 from myMain import Ui_Eficas
 from viewManager import MyTabview
 
-from Editeur import configuration
 from Editeur import session
 
+dirCode={"ASTER":"Aster","OPENTURNS_WRAPPER":"Openturns_Wrapper"}
 
 
 class Appli(Ui_Eficas,QMainWindow):    
@@ -29,11 +24,18 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ihm="QT"
         self.code=code
         self.salome=salome
+        self.format_fichier="python"	#par defaut
 	self.top = self #(pour CONFIGURATION)
 
-        self.initPrefs()
+        import prefs
+        self.REPINI=prefs.REPINI
+        import configuration
         self.CONFIGURATION = configuration.make_config(self,prefs.REPINI)
         self.CONFIGStyle = configuration.make_config_style(self,prefs.REPINI)
+        if hasattr(prefs,'encoding'):
+           import sys
+           reload(sys)
+           sys.setdefaultencoding(prefs.encoding)
 
         QMainWindow.__init__(self)
         Ui_Eficas.__init__(self)
@@ -44,19 +46,17 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
         #self.monAssistant=QAssistantClient(QString(""), self.viewmanager)
-        
         #if self.salome :
         #   from Editeur import session
         #   self.ouvreFichiers()
-        from Editeur import session
-        self.ouvreFichiers()
-
-        self.ficPatrons={}
-        self.initPatrons()
 
         self.recent =  QStringList()
+        self.ficPatrons={}
+        self.initPatrons()
         self.ficRecents={}
         self.initRecents()
+
+        self.ouvreFichiers()
         
     def OPENTURNS(self) :
         self.MenuBar.removeItem(5)
@@ -130,8 +130,7 @@ class Appli(Ui_Eficas,QMainWindow):
                idx=idx+1
 
     def initRecents(self):
-       #try :
-       if 1 :
+       try :
            rep=self.CONFIGURATION.rep_user
            monFichier=rep+"/listefichiers_"+self.code
            index=0
@@ -142,8 +141,7 @@ class Appli(Ui_Eficas,QMainWindow):
                  l=(ligne.split("\n"))[0]
                  self.recent.append(l)
               index=index+1
-       #except : pass
-       else :
+       except :
            pass
 
        try    : f.close()
@@ -227,7 +225,7 @@ class Appli(Ui_Eficas,QMainWindow):
         
     def handleOpenPatrons(self):
         idx=self.sender()
-        fichier=REPINI+"/../Editeur/Patrons/"+self.code+"/"+self.ficPatrons[idx]
+        fichier=self.REPINI+"/../Editeur/Patrons/"+self.code+"/"+self.ficPatrons[idx]
         self.viewmanager.handleOpen(fichier=fichier, patron = 1)
 
     def handleOpenRecent(self):
@@ -289,23 +287,6 @@ class Appli(Ui_Eficas,QMainWindow):
     def NewInclude(self):
         self.viewmanager.newIncludeEditor()
 
-    def initPrefs(self):
-        if code == "ASTER" : 
-           from Aster import prefs
-           import sys
-           sys.path.append(INSTALLDIR+"/Aster")
-	else :
-	   import prefs 
-           #try :
-           if 1 :
-             apply(Appli.__dict__[code],(self,))
-           #except :
-           else:
-             pass
-        if hasattr(prefs,'encoding'):
-           import sys
-           reload(sys)
-           sys.setdefaultencoding(prefs.encoding)
 
 if __name__=='__main__':
 

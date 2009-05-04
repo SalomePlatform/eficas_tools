@@ -42,6 +42,7 @@ from fenetre_mc_inconnus import fenetre_mc_inconnus
 from Ihm import CONNECTOR
 try :
    from Traducteur import traduitV7V8 
+   from Traducteur import traduitV8V9 
 except :
    pass
 
@@ -122,7 +123,7 @@ class BUREAU:
       self.charger_composants()
       self.cree_cataitem()
       self.text_reel=""
-      self.initialdir = self.appli.CONFIGURATION.initialdir
+      self.savedir = self.appli.CONFIGURATION.savedir
 
    def charger_composants(self):
       comploader.charger_composants()
@@ -225,7 +226,7 @@ class BUREAU:
       if enregistre != "non" :
          self.JDCDisplay_courant.fichier=self.fileName
       else :
-         self.initialdir = self.appli.CONFIGURATION.rep_user
+         self.savedir = self.appli.CONFIGURATION.rep_user
       self.nb.selectpage(label_onglet)
       self.nb.setnaturalsize()
       self.nb.bind_all("<Key-Next>",lambda e,s=self:s.selectArbreDown())
@@ -340,19 +341,19 @@ class BUREAU:
           filetypes = ( ("format "+self.appli.format_fichier.get(), ".com*"),("Tous",'*'))
       else:
           filetypes = ( ("format "+self.appli.format_fichier.get(), ".py"),)
-      if not hasattr(self,'initialdir'):
-         self.initialdir = self.appli.CONFIGURATION.initialdir
+      if not hasattr(self,'savedir'):
+         self.savedir = self.appli.CONFIGURATION.savedir
 
       if not file :
           file = askopenfilename(title="Ouverture d'un fichier de commandes Aster",
                                  defaultextension=".comm",
                                  filetypes = filetypes,
-                                 initialdir = self.initialdir)
+                                 initialdir = self.savedir)
       if file :
           self.fileName = file
           e=extension_fichier(file)
           self.JDCName=stripPath(file)
-          self.initialdir = os.path.dirname(os.path.abspath(file))
+          self.savedir = os.path.dirname(os.path.abspath(file))
       else :
           return
 
@@ -380,7 +381,7 @@ class BUREAU:
       # On se met dans le repertoire ou se trouve le fichier de commandes
       # pour trouver les eventuels fichiers include ou autres
       # localises a cote du fichier de commandes
-      os.chdir(self.initialdir)
+      os.chdir(self.savedir)
       CONTEXT.unset_current_step()
       J=self.cata[0].JdC(procedure=text,appli=self.appli,
                          cata=self.cata,cata_ord_dico=self.cata_ordonne_dico,
@@ -504,7 +505,7 @@ class BUREAU:
          from panelsSalome import SALOME_UNIQUE_BASE_Panel
          if len(SALOME_UNIQUE_BASE_Panel.dict_fichier_unite) > 0 :
             print 'CS_pbruno if len(SALOMchier_unite) > 0 :???????'
-            self.appli.creeConfigTxt( self.appli.CONFIGURATION.initialdir, SALOME_UNIQUE_BASE_Panel.dict_fichier_unite )
+            self.appli.creeConfigTxt( self.appli.CONFIGURATION.savedir, SALOME_UNIQUE_BASE_Panel.dict_fichier_unite )
 
          #3)creation/mise a jours d'un maillage dans Salome
 	 if self.code == 'ASTER':
@@ -523,9 +524,7 @@ class BUREAU:
       sauvegarde = asksaveasfilename(title=titre,
                                      defaultextension=defext,
                                      filetypes = filtyp,
-                                     initialdir = self.initialdir)
-                            #initialdir = self.appli.CONFIGURATION.initialdir)
-                            #initialdir = self.appli.CONFIGURATION.rep_user)
+                                     initialdir = self.savedir)
       if sauvegarde :
           if not save_in_file(sauvegarde,self.jdc_fini,None) :
               showinfo("Erreur","Probleme a la sauvegarde du fichier "+`sauvegarde`)
@@ -781,21 +780,29 @@ class BUREAU:
    def update_jdc_courant(self):
       self.JDCDisplay_courant.update()
 
-   def TraduitFichier(self,event=None):
-      directory = self.appli.CONFIGURATION.rep_user
+   def TraduitFichier7(self,event=None):
+       self.TraduitFichier(7)
+
+   def TraduitFichier8(self,event=None):
+       self.TraduitFichier(8)
+
+   def TraduitFichier(self,version):
       FichieraTraduire = askopenfilename(title="Nom du  Fichier a Traduire",
                                  defaultextension=".comm",
-                                 initialdir = directory 
+                                 initialdir = self.savedir 
                                  )
       if (FichieraTraduire == "" or FichieraTraduire == () ) : return
       i=FichieraTraduire.rfind(".")
       Feuille=FichieraTraduire[0:i]
       FichierTraduit=Feuille+"v8.comm"
-      log=self.initialdir+"/convert.log"
+      log=self.savedir+"/convert.log"
       os.system("rm -rf "+log)
       os.system("rm -rf "+FichierTraduit)
       Pmw.showbusycursor()
-      traduitV7V8.traduc(FichieraTraduire,FichierTraduit,log)
+      if version == 7 :
+         traduitV7V8.traduc(FichieraTraduire,FichierTraduit,log)
+      else :
+         traduitV8V9.traduc(FichieraTraduire,FichierTraduit,log)
       Pmw.hidebusycursor()
       Entete="Fichier Traduit : "+FichierTraduit +"\n\n"
       titre = "conversion de "+ FichieraTraduire

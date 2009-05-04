@@ -149,13 +149,13 @@ class Options(desOptions):
        if res == 1 : return 
 
        appli=self.configuration.appli
-       rep_ini=self.configuration.rep_ini
+       repIni=self.configuration.REPINI
        fic_ini_util=self.configuration.fic_ini_utilisateur
        old_fic_ini_util=fic_ini_util+"_old"
        commande="mv "+fic_ini_util+" "+old_fic_ini_util
        os.system(commande)
-       from Editeur import configuration
-       configNew=configuration.CONFIG(appli,rep_ini)
+       import configuration
+       configNew=configuration.CONFIG(appli,repIni)
        self.configuration=configNew
        appli.CONFIGURATION=configNew
        self.configuration.save_params()

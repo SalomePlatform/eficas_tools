@@ -113,6 +113,27 @@ class existe :
       if bool == None : bool = 0
       return bool
 
+#-------------
+class nexistepas :
+#--------------
+   def __init__(self,list_arg):
+      self.genea=list_arg
+
+   def cherche_mot(self,niveau,commande):
+      if commande == None            : return 0
+      if niveau   == len(self.genea) : return 1
+      texte=self.genea[niveau]
+      for c in commande.childNodes :
+          if c.name == texte : 
+             niveau = niveau+1
+             return self.cherche_mot(niveau,c)
+      return None
+
+   def verif(self,commande):
+      bool=self.cherche_mot(0,commande)
+      if bool : return 0
+      return 1
+
 #-------------------------------
 class MCsousMCFaPourValeur :
 #------------------------------
@@ -156,5 +177,5 @@ class MCaPourValeur :
          bool=1
       return bool
 
-dictionnaire_regle={"existe":existe,"existeMCFParmi":existeMCFParmi,"existeMCsousMCF":existeMCsousMCF,"nexistepasMCsousMCF":nexistepasMCsousMCF,"MCsousMCFaPourValeur":MCsousMCFaPourValeur,"MCaPourValeur":MCaPourValeur}
+dictionnaire_regle={"existe":existe,"nexistepas":nexistepas,"existeMCFParmi":existeMCFParmi,"existeMCsousMCF":existeMCsousMCF,"nexistepasMCsousMCF":nexistepasMCsousMCF,"MCsousMCFaPourValeur":MCsousMCFaPourValeur,"MCaPourValeur":MCaPourValeur}
 SansRegle=pasDeRegle()

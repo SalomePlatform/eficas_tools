@@ -45,11 +45,14 @@ class SaisieValeur:
                self.listBoxASSD.setCurrentItem(0)
 
 
-  def BuildLBValeurs(self):
+  def BuildLBValeurs(self,politique=None):
         self.LBValeurs.clear()
         listeValeurs=self.node.item.GetListeValeurs()
         for valeur in listeValeurs:
-            self.LBValeurs.insertItem(str(valeur))
+            if politique :
+              self.LBValeurs.insertItem(str(self.politique.GetValeurTexte(valeur)))
+            else :
+              self.LBValeurs.insertItem(str(valeur))
         if listeValeurs != None and listeValeurs != [] :
             self.LBValeurs.setCurrentItem(len(listeValeurs) - 1)
        
@@ -116,7 +119,7 @@ class SaisieValeur:
            valeurBrute=str(self.LEValeur.text())
         else :
            valeurBrute=valeurTraitee
-        if valeurBrute == str("") : return 1, listeValeurs
+        if valeurBrute == str("") : return  listeValeurs,1,valeurBrute
         try :
            valeur=eval(valeurBrute,{})        
         except :
@@ -134,7 +137,7 @@ class SaisieValeur:
                     except :
                        commentaire = "Veuillez entrer le complexe sous forme aster ou sous forme python"
                        self.editor.affiche_infos(commentaire)
-                       return listeValeurs,0
+                       return listeValeurs,0,valeurBrute
                        
 
                  else :     # ce n'est pas un tuple à la mode aster
@@ -150,7 +153,7 @@ class SaisieValeur:
         else:
           listeValeurs.append(valeur)
 
-        return listeValeurs,1
+        return listeValeurs,1,valeurBrute
 
 
 class SaisieSDCO :

@@ -41,7 +41,7 @@ class MonIncludePanel(MonMacroPanel):
         MonMacroPanel.__init__(self,node,parent,name,fl)
         #Version TK ??
         #if not hasattr(self.node.item.object,'fichier_ini'):
-        if not hasattr(self.node.item.object,'fichier_unite'):
+        if not hasattr(self.node.item.object,'fichier_ini'):
            self.ajoutPageBad()
         else:
            self.ajoutPageOk()
@@ -68,7 +68,7 @@ class MonIncludePanel(MonMacroPanel):
 
         self.BChangeFile = QPushButton(self.TabPage,"BChangeFile")
         self.BChangeFile.setGeometry(QRect(290,350,161,41))
-        self.BChangeFile.setSizePolicy(QSizePolicy(0,0,0,0,self.BChangeFile.sizePolicy().hasHeightForWidth()))
+        #self.BChangeFile.setSizePolicy(QSizePolicy(0,0,0,0,self.BChangeFile.sizePolicy().hasHeightForWidth()))
         self.BChangeFile.setText(self._DMacro__tr("Autre Fichier"))
 
         self.connect(self.BBrowse,SIGNAL("clicked()"),self.BBrowsePressed)

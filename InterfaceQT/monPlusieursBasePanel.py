@@ -51,7 +51,6 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   def detruitBouton(self):
         mc = self.node.item.get_definition()
         type = mc.type[0]
-        print self.editor.salome
         if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
            self.BSalome.close()
            self.BView2D.close()
@@ -61,7 +60,7 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
 
   def BuildLBValeurs(self):
        # redefinit en raison de l heritage par monFonctionPanel
-        SaisieValeur.BuildLBValeurs(self)
+        SaisieValeur.BuildLBValeurs(self,politique=self.politique)
 
   def BOkPourListePressed(self):
         if self.listeValeursCourantes == [] :
@@ -92,9 +91,11 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
           
 
   def Ajout1Valeur(self,valeur=None):
-        liste,validite=SaisieValeur.TraiteLEValeur(self,valeur)
+        liste,validite,texteBrut=SaisieValeur.TraiteLEValeur(self,valeur)
         if validite == 0 : return
         if liste ==[]    : return
+        for val in texteBrut.split(',') :
+             self.politique.AjoutDsDictReel(val)
 
         index=self.LBValeurs.currentItem() + 1
         listeVal=[]
@@ -110,11 +111,13 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
            l3=self.listeValeursCourantes[index:]
            for valeur in listeRetour:
                self.LBValeurs.insertItem(QString(str(valeur)),index)
+               self.LBValeurs.setCurrentItem(index)
                index=index+1
            self.listeValeursCourantes=l1+listeRetour+l3
+        self.editor.modified=1
 
   def BImportPressed(self):
-        init=QString( self.editor.CONFIGURATION.rep_user)
+        init=QString( self.editor.CONFIGURATION.savedir)
         fn = QFileDialog.getOpenFileName(init, self.trUtf8('All Files (*)',))
         if fn == None : return
         if fn == "" : return

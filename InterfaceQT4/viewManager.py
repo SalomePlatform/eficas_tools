@@ -44,16 +44,16 @@ class MyTabview:
        if fichier is None:
             fichier = QFileDialog.getOpenFileName(self.appliEficas,
                         self.appliEficas.trUtf8('Ouvrir Fichier'),
-                        self.getOpenStartDir(),
+                        self.appliEficas.CONFIGURATION.savedir,
                         self.appliEficas.trUtf8('JDC Files (*.comm);;''All Files (*)'))
             if fichier.isNull(): return
-       from utilitaires import normabspath
-       fichier = normabspath(unicode(fichier))
+       fichier = os.path.abspath(unicode(fichier))
+       self.appliEficas.addToRecentList(fichier)
        maPage=self.getEditor( fichier,units=units)
 
    def handleClose(self,doitSauverRecent = 1):
-       print "passage dans handleClose"
-       print self.dict_editors
+       #print "passage dans handleClose"
+       #print self.dict_editors
        if doitSauverRecent : self.appliEficas.sauveRecents()
        index=self.myQtab.currentIndex()
        if index < 0 : return
@@ -165,8 +165,7 @@ class MyTabview:
        indexEditor=0
        for indexEditor in self.dict_editors.keys():
            editor=self.dict_editors[indexEditor]
-           from utilitaires import samepath
-           if samepath(fichier, editor.getFileName()):
+           if self.samepath(fichier, editor.getFileName()):
               abort = QMessageBox.warning(self.appliEficas,
                         self.appliEficas.trUtf8("Fichier"),
                         self.appliEficas.trUtf8("Le fichier <b>%1</b> est deja ouvert.").arg(fichier),
@@ -176,8 +175,8 @@ class MyTabview:
               double=editor
        else :
             from editor import JDCEditor
-            editor = JDCEditor(fichier, jdc, self.myQtab,units=units,appli=self.appliEficas,vm = self,include=include)
-            if double != None :
+            editor = JDCEditor(self.appliEficas,fichier, jdc, self.myQtab,units=units,vm = self,include=include)
+            if double != None : 
                self.doubles[editor]=double
             if editor.jdc: # le fichier est bien un jdc
                 self.editors.append(editor)
@@ -216,6 +215,14 @@ class MyTabview:
             return userDir
         except :
             return ""
+
+   def samepath(self,f1, f2):
+    """
+    compare two paths.
+    """
+    if f1 is None or f2 is None: return 0
+    if os.path.normcase(os.path.normpath(f1)) == os.path.normcase(os.path.normpath(f2)) : return 1
+    return 0
 
 
    def checkDirty(self, editor):

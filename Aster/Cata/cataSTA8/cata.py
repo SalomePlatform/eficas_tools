@@ -35,7 +35,7 @@ except:
   pass
 
 __version__="$Name:  $"
-__Id__="$Id: cata.py,v 1.4.6.1.4.1 2008-10-10 13:28:49 pnoyret Exp $"
+__Id__="$Id: cata.py,v 1.5.4.3 2008-12-08 13:50:34 pnoyret Exp $"
 
 EnumTypes = (ListType, TupleType)
 
@@ -20103,7 +20103,7 @@ MODI_BASE_MODALE=OPER(nom="MODI_BASE_MODALE",op= 149,sd_prod=mode_meca,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 10/07/2006   AUTEUR LEBOUVIE F.LEBOUVIER 
+#& MODIF COMMANDE  DATE 01/10/2008   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -20195,13 +20195,13 @@ MODI_MAILLAGE=OPER(nom="MODI_MAILLAGE",op= 154,sd_prod=maillage_sdaster,
            GROUP_MA        =SIMP(statut='o',typ=grma,validators=NoRepeat(),max='**'),
          ),
          ORIE_NORM_COQUE =FACT(statut='f',max='**',
-           regles=(EXCLUS('NOEUD','GROUP_NO'),
-                   PRESENT_PRESENT('NOEUD','VECT_NORM'),
-                   PRESENT_PRESENT('GROUP_NO','VECT_NORM'),),
            GROUP_MA        =SIMP(statut='o',typ=grma,validators=NoRepeat(),max='**'),
            VECT_NORM       =SIMP(statut='f',typ='R',max=3),
-           NOEUD           =SIMP(statut='f',typ=no),
-           GROUP_NO        =SIMP(statut='f',typ=grno),
+           b_vect_norm     =BLOC(condition = "VECT_NORM != None",
+             regles=UN_PARMI('NOEUD','GROUP_NO'),
+             NOEUD           =SIMP(statut='f',typ=no),
+             GROUP_NO        =SIMP(statut='f',typ=grno),
+           ),
          ),
          PLAQ_TUBE       =FACT(statut='f',
            DEXT            =SIMP(statut='o',typ='R' ),
@@ -20227,7 +20227,7 @@ MODI_MAILLAGE=OPER(nom="MODI_MAILLAGE",op= 154,sd_prod=maillage_sdaster,
            VECT_X          =SIMP(statut='o',typ='R',min=2,max=3),
            VECT_Y          =SIMP(statut='f',typ='R',min=2,max=3),
          ),
-         ECHELLE         =SIMP(statut='f',typ='R',),        
+         ECHELLE         =SIMP(statut='f',typ='R',),
          TRANSLATION     =SIMP(statut='f',typ='R',min=2,max=3),
          ROTATION        =FACT(statut='f',max='**',
            POIN_1           =SIMP(statut='o',typ='R',min=2,max=3),

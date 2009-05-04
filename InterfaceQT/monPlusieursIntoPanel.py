@@ -91,6 +91,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
            l3=self.listeValeursCourantes[index:]
            for valeur in listeRetour:
                self.LBValeurs.insertItem(QString(str(valeur)),index)
+               self.LBValeurs.setCurrentItem(index)
                index=index+1
            self.listeValeursCourantes=l1+listeRetour+l3
         SaisieValeur.RemplitPanel(self,self.listeValeursCourantes)

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'desPlusieursInto.ui'
 #
-# Created: Fri Sep 26 11:16:49 2008
+# Created: Tue Nov 18 17:37:25 2008
 #      by: PyQt4 UI code generator 4.4.2
 #
 # WARNING! All changes made in this file will be lost!

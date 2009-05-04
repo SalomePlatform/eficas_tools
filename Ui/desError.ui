@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>482</width>
+            <width>538</width>
             <height>480</height>
         </rect>
     </property>
@@ -28,6 +28,14 @@
         <widget class="QLabel" row="0" column="0">
             <property name="name">
                 <cstring>textLabel1_3</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>2</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
             </property>
             <property name="text">
                 <string>&lt;font size="+4"&gt;&lt;p align="center"&gt;Le noeud sélectionné ne correspond pas à un objet actif.&lt;/p&gt;&lt;/font&gt;</string>

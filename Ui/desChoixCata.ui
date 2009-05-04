@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>547</width>
+            <width>523</width>
             <height>172</height>
         </rect>
     </property>
@@ -94,6 +94,28 @@
                 <string>2</string>
             </property>
         </widget>
+        <widget class="QLabel" row="1" column="0">
+            <property name="name">
+                <cstring>textLabel1_2</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>2</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>30</width>
+                    <height>60</height>
+                </size>
+            </property>
+            <property name="text">
+                <string>&lt;font size="+1"&gt;Veuillez choisir celle avec laquelle vous souhaitez travailler&lt;/font&gt;</string>
+            </property>
+        </widget>
         <widget class="QComboBox" row="1" column="1">
             <property name="name">
                 <cstring>CBChoixCata</cstring>
@@ -101,19 +123,13 @@
             <property name="enabled">
                 <bool>true</bool>
             </property>
-        </widget>
-        <widget class="QLabel" row="1" column="0">
-            <property name="name">
-                <cstring>textLabel1_2</cstring>
-            </property>
-            <property name="minimumSize">
-                <size>
-                    <width>380</width>
-                    <height>60</height>
-                </size>
-            </property>
-            <property name="text">
-                <string>&lt;font size="+1"&gt;Veuillez choisir celle avec laquelle vous souhaitez travailler&lt;/font&gt;</string>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
             </property>
         </widget>
     </grid>

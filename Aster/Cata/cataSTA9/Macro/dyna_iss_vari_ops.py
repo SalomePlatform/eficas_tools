@@ -1,4 +1,4 @@
-#@ MODIF dyna_iss_vari_ops Macro  DATE 21/04/2008   AUTEUR ZENTNER I.ZENTNER 
+#@ MODIF dyna_iss_vari_ops Macro  DATE 05/09/2008   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

@@ -83,7 +83,6 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
         self.TWChoix.setCurrentIndex(2)
 
   def BBrowsePressed(self):
-      print self.node.makeEdit
       self.node.makeEdit()
 
   def BOkIncPressed (self):
@@ -103,6 +102,8 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
         if not text:
            return
 
+        self.editor.init_modif()
+
         try :
            self.node.item.object.change_fichier_init(nomFichier,text)
            commentaire = "Fichier modifie  : " + self.node.item.get_nom()
@@ -121,7 +122,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
        """
          Methode pour convertir le fichier file dans le format courant
        """
-       format=self.editor.format_fichier
+       format=self.editor.format
        text=None
        if convert.plugins.has_key(format):
           # Le convertisseur existe on l'utilise
@@ -136,9 +137,10 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
 
 
   def BChangeFilePressed(self):
-      userDir=os.path.expanduser("~/Eficas_install/")
+      userDir=self.node.appliEficas.CONFIGURATION.savedir
       fn = QFileDialog.getOpenFileName(self.node.appliEficas,
                 self.node.appliEficas.trUtf8('Fichier Include'),
+                userDir,
                 self.node.appliEficas.trUtf8('All Files (*);;''JDC Files (*.comm);;'))
 
       if fn.isNull():

@@ -40,6 +40,7 @@ class MonRacinePanel(DRac,QTPanelTBW2):
         DRac.__init__(self,parent,name,fl)
         QTPanel.__init__(self,node,parent)
         QTPanelTBW2.__init__(self,node,parent,racine=1)
+        self.setMinimumSize(0,0)
 
   def BSupPressed(self):
       QTPanel.BSupPressed(self)

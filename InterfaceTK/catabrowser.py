@@ -36,8 +36,8 @@ from Accas import OPER,PROC,MACRO,FORM
 from Accas import FACT,BLOC,SIMP
 
 #
-__version__="$Name: V1_14 $"
-__Id__="$Id: catabrowser.py,v 1.1.4.3.4.1 2008-10-10 13:46:35 pnoyret Exp $"
+__version__="$Name:  $"
+__Id__="$Id: catabrowser.py,v 1.2.4.1 2008-11-13 10:35:11 cchris Exp $"
 #
 class Tableau:
   incr = 10

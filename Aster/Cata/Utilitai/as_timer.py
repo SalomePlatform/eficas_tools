@@ -22,7 +22,7 @@
    Definition of ASTER_TIMER class.
 """
 
-__revision__ = "$Id: as_timer.py,v 1.2.6.1 2007-10-22 12:23:38 pnoyret Exp $"
+__revision__ = "$Id: as_timer.py,v 1.3.4.1 2008-11-13 10:35:09 cchris Exp $"
 
 # ----- differ messages translation
 def _(mesg):

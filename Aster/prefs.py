@@ -24,6 +24,7 @@ import os,sys
 # REPINI sert à localiser le fichier editeur.ini
 # Obligatoire
 REPINI=os.path.dirname(os.path.abspath(__file__))
+repIni=REPINI
 
 # INSTALLDIR sert à localiser l'installation d'Eficas
 # Obligatoire
@@ -54,7 +55,7 @@ ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')
 if os.name == 'nt':
    userprefs = os.sep.join( [ os.environ['HOMEDRIVE'], os.environ['HOMEPATH'], 'Eficas_install', 'prefs.py' ])
 else :
-   userprefs=os.path.expanduser("~/Eficas_install/prefs.py")
+   userprefs=os.path.expanduser("~/.Eficas_install/prefs.py")
 
 if os.path.isfile(userprefs):
    try:
@@ -102,7 +103,8 @@ menu_defs={ 'bureau': [
                                   ]
               ),
               ('Traduction',[
-               ('Traduction v7 en v8','TraduitFichier','<Control-t>','Ctrl+T'),
+               ('Traduction v7 en v8','TraduitFichier7'),
+               ('Traduction v8 en v9','TraduitFichier8','<Control-t>','Ctrl+T'),
                             ]
               ),
               ('Aide',[

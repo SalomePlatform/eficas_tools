@@ -22,8 +22,6 @@
 import string,types,os
 
 # Modules Eficas
-import prefs 
-
 from PyQt4 import *
 from PyQt4.QtGui import *
 

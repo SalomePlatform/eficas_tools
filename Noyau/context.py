@@ -32,6 +32,7 @@ def set_current_step(step):
    global _root
    if _root : raise "Impossible d'affecter _root. Il devrait valoir None"
    _root=step
+   #print "dans set_current_step", step
 
 def get_current_step():
    """

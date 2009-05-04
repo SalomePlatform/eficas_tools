@@ -10,8 +10,6 @@ from Editeur import Objecttreeitem
 import browser
 from Noyau.N_CR   import justify_text
     
-import prefs
-
 class Node(browser.JDCNode):    
     def getPanel(self):
         """        

@@ -51,7 +51,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
         return child
 
     def view3D(self) :
-        import TroisDPal
+        from Editeur import TroisDPal
         troisD=TroisDPal.TroisDPilote(self.item,self.editor.parent.appliEficas)
         troisD.envoievisu()
 

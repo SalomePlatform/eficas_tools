@@ -21,17 +21,15 @@
 # Modules Python
 import string,types,os
 
-# Modules Eficas
-import prefs 
-
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+
+# Modules Eficas
 from monPlusieursIntoPanel import MonPlusieursIntoPanel
 from monPlusieursIntoPanel import DPlusInto
 from qtCommun              import QTPanel
 from politiquesValidation  import PolitiquePlusieurs
-# Import des panels
 
 class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
   """

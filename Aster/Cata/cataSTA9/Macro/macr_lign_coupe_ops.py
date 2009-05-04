@@ -1,4 +1,4 @@
-#@ MODIF macr_lign_coupe_ops Macro  DATE 07/04/2008   AUTEUR GALENNE E.GALENNE 
+#@ MODIF macr_lign_coupe_ops Macro  DATE 07/10/2008   AUTEUR PELLET J.PELLET 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -602,7 +602,7 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
   from Noyau.N_utils import AsType
   import aster,math
   from Utilitai.UniteAster import UniteAster
-  from Utilitai.Utmess import  UTMESS
+  from Utilitai.Utmess import  UTMESS, MasquerAlarme, RetablirAlarme
   ier=0
 
   # On importe les definitions des commandes a utiliser dans la macro
@@ -617,6 +617,11 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
 
   # La macro compte pour 1 dans la numerotation des commandes
   self.set_icmd(1)
+
+  #
+  MasquerAlarme('CALCULEL2_63')
+  MasquerAlarme('CALCULEL2_64')
+  MasquerAlarme('MODELISA5_53')
 
   mcORDR={}
 
@@ -635,8 +640,8 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
       mcORDR['TOUT_ORDRE']='OUI'
 
     nomresu=RESULTAT.nom
-    l_modele=aster.getvectjev(nomresu.ljust(19)+'.MODL')
-    n_modele=string.strip(l_modele[0])
+    iret,ibid,n_modele = aster.dismoi('F','MODELE',nomresu,'RESULTAT')
+    n_modele=n_modele.strip()
     if n_modele=='' :
       if MODELE==None:
         UTMESS('F','POST0_9',valk=nomresu)
@@ -943,4 +948,7 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
 
   nomres=CREA_TABLE(**dprod)
 
+  RetablirAlarme('CALCULEL2_63')
+  RetablirAlarme('CALCULEL2_64')
+  RetablirAlarme('MODELISA5_53')
   return ier

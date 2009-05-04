@@ -24,38 +24,25 @@
 """
 # Modules Python
 import sys
-from qt import *
+from PyQt4.QtGui import *
 
-# Modules Eficas
-import prefs
-if hasattr(prefs,'encoding'):
-   # Hack pour changer le codage par defaut des strings
-   import sys
-   reload(sys)
-   sys.setdefaultencoding(prefs.encoding)
-   del sys.setdefaultencoding
-   # Fin hack
-
-from Editeur import import_code
-from Editeur import session
+from Editeur  import import_code
+from Editeur  import session
+from qtEficas import Appli
 
 def lance_eficas(code=None,fichier=None):
     """
         Lance l'appli EFICAS
     """
     # Analyse des arguments de la ligne de commande
-    if code !=None : prefs.code=code
-    import qtEficas
     options=session.parse(sys.argv)
     code=options.code
 
     app = QApplication(sys.argv)
-    mw = qtEficas.Appli(code=code)
-    app.setMainWidget(mw)
-    app.connect(app, SIGNAL("lastWindowClosed()"), app, SLOT("quit()"))
-    mw.show()
-    mw.ouvreFichiers()
-    res = app.exec_loop()
-    sys.exit(res)
+    Eficas=Appli(code=code)
+    Eficas.show()
 
+
+    res=app.exec_()
+    sys.exit(res)
 

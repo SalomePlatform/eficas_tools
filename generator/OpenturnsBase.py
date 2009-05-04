@@ -30,15 +30,17 @@ class Generateur :
   ListeVariables : chaque variable est decrite par un dictionnaire ; cette liste les regroupe
   DictLois : dictionnaires des lois
   '''
-  def __init__ (self, DictMCVal, ListeVariables, DictLois ) :
+  def __init__ (self, appli, DictMCVal = {}, ListeVariables = [], DictLois = {}, DictVariables = {} ) :
   #---------------------------------------------------------#
     self.ListeVariables = ListeVariables
     self.ListeVariablesIn = []
     self.DictLois = DictLois
+    self.DictVariables = DictVariables
     self.DictMCVal = DictMCVal
     self.DictTypeVar = {}
     self.nbVarIn = 0
     self.creeInfoVar()
+    self.appli = appli
     #
     # On charge eventuellement le Solver par defaut
     # et les valeurs par defaut du Solver (dans l init)
@@ -61,7 +63,7 @@ class Generateur :
 	monSTDGenerateur=gener( self.DictMCVal, self.ListeVariablesIn, self.DictLois )
     except :
         from OpenturnsSTD import STDGenerateur
-        monSTDGenerateur = STDGenerateur( self.DictMCVal, self.ListeVariablesIn, self.DictLois )
+        monSTDGenerateur = STDGenerateur( self.appli, self.DictMCVal, self.ListeVariablesIn, self.DictLois )
     return monSTDGenerateur
       
   def getXMLGenerateur(self) :
@@ -71,7 +73,7 @@ class Generateur :
 	monXMLGenerateur=gener( self.DictMCVal, self.ListeVariables, self.DictLois )
     except :
         from OpenturnsXML import XMLGenerateur
-        monXMLGenerateur = XMLGenerateur( self.DictMCVal, self.ListeVariables, self.DictLois )
+        monXMLGenerateur = XMLGenerateur( self.appli, self.DictMCVal, self.DictVariables )
     return monXMLGenerateur
       
   def creeInfoVar (self) :

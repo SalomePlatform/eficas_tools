@@ -5,92 +5,53 @@
 """
 Ce module contient le generateur XML pour Openturns
 """
+import sys
+print sys.path
+import openturns
 
-#  Les variables
-#---------------------
+# Dictionnaires de conversion des valeurs lues dans EFICAS
+# en valeurs reconnues par Open TURNS
+# Les clefs 'None' sont les valeurs par defaut
 
-# OrdreVariable contient l'ordre des MC pour definir une variable en XML
-# dictMCXML a pour cle le nom du MC dans la commande,
-# Il contient aussi une liste donnant les informations suivantes
-# 	0 : debut de ligne
-#	1 : fin de ligne
-#	2 : code : 0 : facultatif, 1 : obligatoire 
-# Type est sur la meme ligne que Name
+VariableTypeByName = {
+  "in"  : openturns.WrapperDataVariableType.IN,
+  "out" : openturns.WrapperDataVariableType.OUT,
+  None  :  openturns.WrapperDataVariableType.IN,
+  }
 
-OrdreVariable = ( 'Name', 'Type', 'Comment', 'Unit', 'Regexp', 'Format' )
-dictMCXML = { "Name"    : ( '        <variable id="',  '" ',           1 ), 
-              "Type"    : ( 'type ="'               ,  '">\n',         1 ),
-              "Comment"	: ( '          <comment>'   ,  '</comment>\n', 0 ),
-              "Unit"	: ( '          <unit>'      ,  '</unit>\n',    0 ),
-              "Regexp"	: ( '          <regexp>'    ,  '</regexp>\n',  0 ),
-              "Format"	: ( '          <format>'    ,  '</format>\n',  0 ),
-              }
+FileTypeByName = {
+  "in"  : openturns.WrapperDataFileType.IN,
+  "out" : openturns.WrapperDataFileType.OUT,
+  None  : openturns.WrapperDataFileType.IN,
+  }
 
+SymbolProvidedByName = {
+  "no"  : openturns.WrapperSymbolProvided.NO,
+  "yes" : openturns.WrapperSymbolProvided.YES,
+  None  : openturns.WrapperSymbolProvided.NO,
+  }
 
-#  Les fonctions du wrapper
-#--------------------------------
-# OrdreLibrary contient l'ordre des MC pour definir la partie library en XML
-# dictLibXML a pour cle le nom du MC dans la commande,
-# Il contient aussi une liste donnant les informations suivantes :
-# 	0 : debut de ligne
-#	1 : milieu de ligne si le MC est present
-#	2 : milieu de ligne si le MC n est pas present
-#	3 : fin de ligne
-#   4 : code :  0 : facultatif, 1 : obligatoire sans defaut
+WrapperStateByName = {
+  "shared"   : openturns.WrapperState.SHARED,
+  "specific" : openturns.WrapperState.SPECIFIC,
+  None       : openturns.WrapperState.SPECIFIC,
+  }
 
-OrdreLibrary = ( 'FunctionName', 'GradientName', 'HessianName' )
-dictLibXML = { "FunctionName" : ( '\n\n      <!-- The function that we try to execute through the wrapper -->',
-                                  '\n      <function provided="yes">',
-                                  '\n      <function provided="no">',
-                                    '</function>',
-                                  1,
-                                  ),
-               "GradientName" : ( '\n\n      <!-- The gradient of the function -->',
-                                  '\n      <gradient provided="yes">',
-                                  '\n      <gradient provided="no">',
-                                  '</gradient>',
-                                  0,
-                                  ),
-               "HessianName"  : ( '\n\n      <!-- The hessian of the function wrapper -->',
-                                  '\n      <hessian provided="yes">',
-                                  '\n      <hessian provided="no">' ,
-                                  '</hessian>\n\n',
-                                  0,
-                                  ),
-               }
+WrapperModeByName = {
+  "static-link"  : openturns.WrapperMode.STATICLINK,
+  "dynamic-link" : openturns.WrapperMode.DYNAMICLINK,
+  "fork"         : openturns.WrapperMode.FORK,
+  None           : openturns.WrapperMode.FORK,
+  }
 
-#  Les communications du wrapper
-#--------------------------------
-# OrdreWrapMode contient l'ordre des MC pour definir la partie WrapMode en XML
-# dictWrMXML a pour cle le nom du MC dans la commande,
-# Il contient aussi une liste donnant les informations suivantes
-# 	0 : debut de ligne
-#	1 : fin de ligne
-#	2 : code : 0 : facultatif, 1 : obligatoire sans defaut, 2 : obligatoire avec defaut
-#	3 : valeur par defaut eventuelle
-OrdreWrapMode = ( 'WrapCouplingMode', 'State', 'InDataTransfer', 'OutDataTransfer' )
-dictWrMXML = { "WrapCouplingMode" : ( '\n    <wrap-mode type="'        , '"'     ,  1 ),
-               "State"            : ( ' state="'                       , '">\n'  ,  2,  'shared">\n' ),
-	       "InDataTransfer"   : ( '      <in-data-transfer mode="' , '" />\n',  0 ),
-	       "OutDataTransfer"  : ( '      <out-data-transfer mode="', '" />\n',  0 ),
-               }
-
-# Les fichiers d'echange du wrapper
-#-----------------------------------------
-# OrdreExchangeFile contient l'ordre des MC pour definir la partie OrdreExchangeFile en XML
-# dictFilXML a pour cle le nom du MC dans la commande,
-# Il contient aussi une liste donnant les informations suivantes
-# 	0 : debut de ligne
-#	1 : fin de ligne
-#	2 : code : 0 : facultatif, 1 : obligatoire sans defaut
-OrdreExchangeFile = ( 'Id', 'Type', 'Name', 'Path', 'Subst' )
-dictFilXML = { "Id"    : ( '\n      <file id="', '">'       ),
-	       "Type"  : ( ' type="'           , '">'       ),
-	       "Name"  : ( '\n        <name>'  , '</name>'  ),
-	       "Path"  : ( '\n        <path>'  , '</path>'  ),
-	       "Subst" : ( '\n        <subst>' , '</subst>' ),
-               }
-
+WrapperDataTransferByName = {
+  "files"     : openturns.WrapperDataTransfer.FILES,
+  "pipe"      : openturns.WrapperDataTransfer.PIPE,
+  "arguments" : openturns.WrapperDataTransfer.ARGUMENTS,
+  "socket"    : openturns.WrapperDataTransfer.SOCKET,
+  "CORBA"     : openturns.WrapperDataTransfer.CORBA,
+  None        : openturns.WrapperDataTransfer.FILES,
+  }
 
 #==========================
 # La classe de creation XML 
@@ -101,164 +62,144 @@ class XMLGenerateur :
   '''
   Generation du fichier XML
   '''
-  def __init__ (self, DictMCVal, ListeVariables, DictLois ) :
-  #---------------------------------------------------------#
-    self.ListeFiles = []
+  def __init__ (self, appli, DictMCVal, DictVariables ) :
     self.DictMCVal = DictMCVal
-    self.ListeVariables = ListeVariables
-    self.DictLois = DictLois 
+    self.DictVariables = DictVariables
+    self.appli = appli
 
   def CreeXML (self) :
-  #------------------#
     '''
     Pilotage general de la creation du fichier XML
     '''
-    self.texte  = self.CreeEntete()
-    self.texte += self.CreeWrapperAndPath()
-    self.texte += self.CreeVariables()
-    self.texte += self.CreeLibrary()
-    self.texte += self.CreeFile()
-    self.texte += self.CreeWrapMode()
-    self.texte += self.CreeCommande()
-    return self.texte
+    data = openturns.WrapperData()
+    data.setLibraryPath( self.GetMCVal('WrapperPath','') )
+    data.setVariableList( self.VariableList() )
+    data.setFunctionDescription( self.FunctionDefinition() )
+    data.setGradientDescription( self.GradientDefinition() )
+    data.setHessianDescription(  self.HessianDefinition()  )
+    data.setFileList( self.FileList() )
+    data.setParameters( self.Parameters() )
+    
+    wrapper=openturns.WrapperFile()
+    wrapper.setWrapperData( data )
+    
+    return wrapper
 
 
-  def CreeEntete (self) :
-  #---------------------#
+  def VariableList (self) :
     '''
-    La variable DTDDirectory doit etre dans DictMCVal
+    Ecrit la liste des variables
     '''
-    #PN a faire : recuperer DTDDirectory dans editeur.ini
-    texte = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n"
-    if self.DictMCVal.has_key("DTDDirectory")  :
-      aux = os.path.join(self.DictMCVal["DTDDirectory"], "wrapper.dtd")
-      texte += "<!DOCTYPE wrapper SYSTEM \"" + aux + "\">\n"
-    texte += '\n<wrapper>\n'
-    texte += '\n  <library>\n\n'
-    return texte
+    varList = openturns.WrapperDataVariableList()
+    for var in self.DictVariables.keys() :
+      varList.add( self.Variable( var, self.DictVariables[var] ) )
+    return varList
+
+  def Variable (self, var, dictVar) :
+    '''
+    Ecrit le parametrage d une variable
+    '''
+    variable = openturns.WrapperDataVariable()
+    variable.id_ = var
+    if dictVar[ 'Type' ] in VariableTypeByName.keys() :
+      variable.type_ = VariableTypeByName[ dictVar[ 'Type' ] ]
+    if dictVar.has_key('Comment')   : variable.comment_ = dictVar[ 'Comment' ]
+    if dictVar.has_key('Unit')      : variable.unit_    = dictVar[ 'Unit'    ]
+    if dictVar.has_key('Regexp')    : variable.regexp_  = dictVar[ 'Regexp'  ]
+    if dictVar.has_key('Format')    : variable.format_  = dictVar[ 'Format'  ]
+    return variable
+
+  def FunctionDefinition (self) :
+    '''
+    Ecrit la description de la Fonction
+    '''
+    func = openturns.WrapperFunctionDescription()
+    func.name_ = self.GetMCVal( 'FunctionName', '' )
+    if (len(func.name_) != 0) : func.provided_ = SymbolProvidedByName[ 'yes' ]
+    return func
+  
+  def GradientDefinition (self) :
+    '''
+    Ecrit la description du Gradient
+    '''
+    grad = openturns.WrapperFunctionDescription()
+    grad.name_ = self.GetMCVal( 'GradientName', '' )
+    if (len(grad.name_) != 0) : grad.provided_ = SymbolProvidedByName[ 'yes' ]
+    return grad
+  
+  def HessianDefinition (self) :
+    '''
+    Ecrit la description de la Hessienne
+    '''
+    hess = openturns.WrapperFunctionDescription()
+    hess.name_ = self.GetMCVal( 'HessianName', '' )
+    if (len(hess.name_) != 0) : hess.provided_ = SymbolProvidedByName[ 'yes' ]
+    return hess
+  
 
 
-  def CreeWrapperAndPath (self) :
-  #-----------------------------#
-    texte  = '    <!-- The path of the shared object -->\n'
-    texte += '    <path>'
-    if self.DictMCVal.has_key("WrapperPath") :
-      texte += self.DictMCVal["WrapperPath"]
+  def FileList (self) :
+    '''
+    Ecrit la liste des fichiers
+    '''
+    fileList = openturns.WrapperDataFileList()
+    for dictFile in self.GetMCVal('Files', []) :
+      fileList.add( self.File( dictFile ) )
+    return fileList
+
+  def File (self, dictFile ) :
+    '''
+    Ecrit le parametrage d un fichier
+    '''
+    fich = openturns.WrapperDataFile()
+    fich.id_ = dictFile[ 'Id' ]
+    if dictFile[ 'Type' ] in FileTypeByName.keys() :
+      fich.type_ = FileTypeByName[ dictFile[ 'Type' ] ]
+    if dictFile.has_key('Name')   : fich.name_  = dictFile[ 'Name' ]
+    if dictFile.has_key('Path')   : fich.path_  = dictFile[ 'Path' ]
+    if dictFile.has_key('Subst')  :
+      import string
+      fich.subst_ = string.join( dictFile[ 'Subst' ], ',' )
+    return fich
+
+  def Parameters (self) :
+    '''
+    Ecrit les parametres de couplage au code externe
+    '''
+    parameters = openturns.WrapperParameter()
+    parameters.mode_  = WrapperModeByName[ self.GetMCVal('WrapCouplingMode') ]
+    parameters.state_ = WrapperStateByName[ self.GetMCVal('State') ]
+    parameters.in_    = WrapperDataTransferByName[ self.GetMCVal('InDataTransfer') ]
+    parameters.out_   = WrapperDataTransferByName[ self.GetMCVal('OutDataTransfer') ]
+    return parameters
+  
+
+
+
+  # ---------------------------------------------------------------------------------
+
+
+  def GetTag (self, tag) :
+    '''
+    Recupere la chaine associee au tag dans la table dictTagsXML.
+    Leve une exception si le tag n est pas trouve
+    '''
+    if ( dictTagsXML.has_key(tag) ) :
+      return dictTagsXML[tag]
     else :
-      print "*********************************************"
-      print "*          ERREUR GENERATION XML            *"
-      print "*       champ WrapperPath non rempli        *"
-      print "*********************************************"
-    texte += '</path>\n\n\n'
-
-    return texte
-
-
-  def CreeVariables (self) :
-  #------------------------#
-    texte  ='    <!-- This section describes all exchanges data between the wrapper and the platform -->\n'
-    texte +='    <description>\n\n'
-    texte +='      <!-- Those variables are substituted in the files above -->\n'
-    texte +='      <!-- The order of variables is the order of the arguments of the function -->\n\n'
-    texte += '      <variable-list>'
-
-    numvar = 0
-    for DictVariable in self.ListeVariables :
-      texte += "\n        <!-- The definition of variable # "+  str(numvar) + " -->\n"
-      for MC in OrdreVariable :
-        if DictVariable.has_key(MC) :
-          texte += dictMCXML[MC][0] + DictVariable[MC] + dictMCXML[MC][1]
-        else :
-          if dictMCXML[MC][2] :
-            print "**************************************************"
-            print "*            ERREUR GENERATION XML               *"
-            print "*  champ obligatoire non rempli pour variable    *"
-            print "**************************************************"
-      texte += '        </variable>\n'
-      numvar += 1
-    texte += '\n      </variable-list>\n'
-    texte += '      <!-- End of variable description -->\n'
-    return texte
-
-  def CreeLibrary (self) :
-  #----------------------#
+      raise KeyError, "Tag '%s' is undefined. This is an internal bug. Report bug to developers" % tag 
+    pass
+  
+  def GetMCVal (self, MC, default = None, mandatory = False) :
     '''
-    Librairies
+    Recupere la chaine associee au MC dans la table DictMCVal.
+    Leve une exception si le MC n est pas trouve et mandatory vaut True
     '''
-    texte = ""
-    for MC in OrdreLibrary :
-      texte += dictLibXML[MC][0]
-      if self.DictMCVal.has_key(MC) :
-        texte += dictLibXML[MC][1] + self.DictMCVal[MC] + dictLibXML[MC][3]
-      else :
-        texte += dictLibXML[MC][2] + dictLibXML[MC][3]
-        if dictLibXML[MC][4] :
-          print "**************************************************"
-          print "*            ERREUR GENERATION XML               *"
-          print "*  champ obligatoire non rempli pour wrapper     *"
-          print "**************************************************"
-    texte += '    </description>\n\n'
-    texte += '  </library>\n'
-    return texte
-
-  def CreeFile (self) :
-  #-------------------#
-    '''
-    Fichiers
-    '''
-    texte  = '\n  <external-code>\n'
-    texte += '\n    <!-- Those data are external to the platform (input files, etc.)-->\n'
-    texte += '    <data>\n'
-
-    if self.DictMCVal.has_key("exchange_file") :
-       for dico in self.DictMCVal["exchange_file"] :
-          texte += "\n      <!-- The definition of file  -->"
-          for MC in OrdreExchangeFile :
-              if dico.has_key(MC) :
-                 texte += dictFilXML[MC][0] + dico[MC] + dictFilXML[MC][1]
-          texte += "\n      </file>\n"
-    texte += '\n    </data>\n'
-    return texte
-
-  def CreeWrapMode (self) :
-  #-----------------------#
-    '''
-    WrapMode
-    '''
-    texte = '\n    <!-- Transfert data mode through Wrapper -->'
-
-    for MC in OrdreWrapMode :
-      if self.DictMCVal.has_key(MC) :
-        texte += dictWrMXML[MC][0] + self.DictMCVal[MC] + dictWrMXML[MC][1]
-      else :
-        if dictWrMXML[MC][2] == 2 :
-          texte += dictWrMXML[MC][0] + dictWrMXML[MC][3]
-        elif dictWrMXML[MC][2] == 1 :
-          print "**************************************************"
-          print "*            ERREUR GENERATION XML               *"
-          print "*  champ obligatoire non rempli pour external    *"
-          print "**************************************************"
-    texte += '    </wrap-mode>\n\n'
-    return texte
-
-  def CreeCommande (self) :
-  #-----------------------#
-    '''
-    La commande
-    On lui passera en argument les options supplementaires eventuelles
-    '''
-    texte  = '    <!-- Command -->\n'
-    texte += '    <command>'
-    if self.DictMCVal.has_key("Command") :
-      texte += self.DictMCVal["Command"]
-      if self.DictMCVal.has_key("ArguCommande") :
-         for argument in self.DictMCVal[ArguCommande] :
-             texte += " " + argument
-	 texte += "\n"
+    if ( self.DictMCVal.has_key(MC) and self.DictMCVal[MC] != None ) :
+      return self.DictMCVal[MC]
     else :
-      texte += '# no command'
-    texte +='</command>\n'
-    texte +='\n  </external-code>\n'
-    texte +='\n</wrapper>\n'
-    return texte
-
+      if ( mandatory ) :
+        raise KeyError, "Keyword '%s' is mandatory" % MC
+      else :
+        return default
+    pass

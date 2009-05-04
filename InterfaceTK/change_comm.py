@@ -46,7 +46,7 @@ class DUP :
 
        self.top=None
        self.test=2
-       from Editeur import configuration
+       import configuration
        self.CONFIGURATION=configuration.make_config(self,prefs.REPINI)
 
        self.load_readercata()
@@ -69,7 +69,7 @@ class DUP :
           self.fichier = fichier
           e=extension_fichier(fichier)
           self.JDCName=stripPath(fichier)
-          self.initialdir = os.path.dirname(os.path.abspath(fichier))
+          self.savedir = os.path.dirname(os.path.abspath(fichier))
       else :
           return
 
@@ -88,7 +88,7 @@ class DUP :
       # On se met dans le repertoire ou se trouve le fichier de commandes
       # pour trouver les eventuels fichiers include ou autres
       # localises a cote du fichier de commandes
-      os.chdir(self.initialdir)
+      os.chdir(self.savedir)
       CONTEXT.unset_current_step()
       J=self.cata[0].JdC(procedure=text,appli=self,
                          cata=self.cata,cata_ord_dico=self.readercata.cata_ordonne_dico,

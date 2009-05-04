@@ -22,7 +22,7 @@ class JDCTree( QListView ):
         self.addColumn(self.trUtf8('Commande'))
         self.addColumn(self.trUtf8('Concept/Valeur'))
                 
-        self.setMinimumSize(QSize(400,500))
+        #self.setMinimumSize(QSize(400,500))
         self.connect(self,SIGNAL('contextMenuRequested(QListViewItem *, const QPoint &, int)'),
                      self.handleContextMenu)
 

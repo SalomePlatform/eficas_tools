@@ -2,7 +2,8 @@ import os
 import re
 
 sous_menus={"ASTER" : {0:{"3D":"3D.comm"},1:{"poutre":"pou.comm"},2:{"salome":"salome.comm"},3:{"divers":"comm"}},
-	    "OPENTURNS" : {0:{"Anne":"Anne.comm"}}
+	    "OPENTURNS_STUDY" : {0:{"Anne":"Std.comm"}},
+            "OPENTURNS_WRAPPER" : {0:{"Anne":"wrapper_exemple.comm"}}
            }
 
 class listePatrons :
@@ -16,6 +17,7 @@ class listePatrons :
        self.traite_liste()
 
     def traite_liste(self):
+        if not (os.path.exists(self.rep_patrons)) : return
         for file in os.listdir(self.rep_patrons):
             for i in range(len(self.sous_menu)):
                 clef=self.sous_menu[i].keys()[0]

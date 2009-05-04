@@ -3,15 +3,13 @@
 import os, sys
 REPINI=os.path.dirname(os.path.abspath(__file__))
 INSTALLDIR=os.path.join(REPINI,'..')
-sys.path.append(INSTALLDIR)
-sys.path.append(INSTALLDIR+"/Ui")
-sys.path.append(INSTALLDIR+"/InterfaceQT")
+from Editeur import import_code
 
 from qt import *
 from myMain import Eficas
 from viewManager import MyTabview
 
-from Editeur import configuration
+import configuration
 from Editeur import session
 
 import utilIcons
@@ -132,7 +130,7 @@ class Appli(Eficas):
         titre = "version "
         monVisu=DVisu(parent=self.viewmanager,fl=Qt.WType_Dialog)
         monVisu.setCaption(titre)
-        monVisu.TB.setText("Eficas V1.14")
+        monVisu.TB.setText("Eficas V1.15")
         monVisu.adjustSize()
         monVisu.show()
 

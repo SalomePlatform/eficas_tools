@@ -29,7 +29,9 @@ from PyQt4.QtCore import *
 class JDCTree( QTreeWidget ):
     def __init__( self, jdc_item, QWParent):        
         QListView.__init__( self, QWParent )
+        print QWParent.__class__
         
+        print "je suis dans JDCTree et voilà ", jdc_item
         self.item          = jdc_item
         self.tree          = self        
         self.editor	   = QWParent

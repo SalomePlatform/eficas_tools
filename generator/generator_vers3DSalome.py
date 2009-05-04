@@ -128,12 +128,16 @@ class vers3DSalomeGenerator(PythonGenerator):
    def generMCSIMP(self,obj) :
       """
       """
-      #print "MCSIMP : ", obj.nom
       if obj.nom in dir(self) :
          suite = self.__class__.__dict__[obj.nom](self,obj)
       else :
          clef=self.dict_traduit[obj.nom]
-         self.dict_attributs[clef]=obj.val
+         # Traitement des parametres
+         try :
+             self.dict_attributs[clef]=obj.val.eval()
+         except :
+             self.dict_attributs[clef]=obj.val
+
 
    def generMCFACT(self,obj):
       """
@@ -142,15 +146,13 @@ class vers3DSalomeGenerator(PythonGenerator):
       """
       self.init_ligne()
       self.commande=self.dict_deb_com[obj.nom]
-      print self.commande
       for v in obj.mc_liste:
          self.generator(v)
-      #print self.commande
-      #print self.dict_attributs
       if self.boolGpMa == 1:
          self.list_commandes.append((self.commande,self.dict_attributs)) 
       else :
          #showerror("Elements ne portant pas sur un Groupe de Maille","Salome ne sait pas montrer ce type d' element")
+         print ("Elements ne portant pas sur un Groupe de Maille","Salome ne sait pas montrer ce type d' element")
          pass
 
    def generMCList(self,obj):

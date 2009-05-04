@@ -65,6 +65,7 @@ dict_erreurs={
               "IMPR_FICO_HOMARD":"IMPR_FICO_HOMARD a ete integre dans MACR_ADPA_MAIL",
 # STA9.2
               "POST_RCCM_SITUATION_NUME_PASSAGE":"Utilisation de NUME_PASSAGE pour le type TUYAUTERIE impossible en 9.2. On ne traite pour le moment que les chemins de passage simples.",
+              "POST_RCCM_SITUATION_NB_CYCL_SEISME":"POST_RCCM : maintenant les SITUATIONS sismiques ont leur propre mot clef facteur SEISME, attention, traduction incomplete",
               "DEFI_MATERIAU_BAZANT_FD" : "le materiau BAZANT_FD a ete supprime",
               "DEFI_MATERIAU_APPUI_ELAS" : "le materiau APPUI_ELAS a ete supprime",
               "DEFI_MATERIAU_PORO_JOINT" : "le materiau PORO_JOINT a ete supprime",
@@ -75,6 +76,9 @@ dict_erreurs={
               "CALC_G_OPTION=G_LAGR" : "l'OPTION G_LAGR de CALC_G a ete supprimee",
               "CALC_G_OPTION=G_LAGR_GLOB" : "l'OPTION G_LAGR_GLOB de CALC_G a ete supprimee",
               "CALC_MATR_ELEM_THETA" : "l'OPTION RIGI_MECA_LAGR de CALC_MATR_ELEM a ete supprimee",
+              "TEST_FICHIER_NB_CHIFFRE" : "le fonctionnement de TEST_FICHIER a change entre la V8 et la V9, consultez la doc, en particulier pour entrer la bonne valeur de NB_VALE",
+              "DYNA_NON_LINE_PILOTAGE" : "le PILOTAGE n'est pas actif dans DYNA_NON_LINE ",
+              "DYNA_NON_LINE_RECH_LINEAIRE" : "la RECH_LINEAIRE n'est pas active dans DYNA_NON_LINE ",
              }
 
 def EcritErreur(listeGena,ligne=None) :

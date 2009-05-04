@@ -1,4 +1,4 @@
-#@ MODIF post_k1_k2_k3_ops Macro  DATE 13/05/2008   AUTEUR GALENNE E.GALENNE 
+#@ MODIF post_k1_k2_k3_ops Macro  DATE 17/11/2008   AUTEUR PROIX J-M.PROIX 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -50,6 +50,50 @@ def moy(t):
     for value in t :
       m += value
     return (m/len(t))
+
+def InterpolFondFiss(s0, Coorfo) :
+# Interpolation des points du fond de fissure (xfem)
+# s0     = abscisse curviligne du point considere 
+# Coorfo = Coordonnees du fond (extrait de la sd fiss_xfem)
+# en sortie : xyza = Coordonnees du point et abscisse
+   n = len(Coorfo) / 4
+   if ( s0 < Coorfo[3] )  :
+     xyz =  [Coorfo[0],Coorfo[1],Coorfo[2]]
+     return xyz
+   if ( s0 > Coorfo[-1]  ) :
+     xyz =  [Coorfo[-4],Coorfo[-3],Coorfo[-2]]
+     return xyz
+   i = 1
+   while s0 > Coorfo[4*i+3]:
+      i = i+1
+   xyz = [0.]*4
+   xyz[0] = (s0-Coorfo[4*(i-1)+3]) * (Coorfo[4*i+0]-Coorfo[4*(i-1)+0]) / (Coorfo[4*i+3]-Coorfo[4*(i-1)+3]) + Coorfo[4*(i-1)+0]
+   xyz[1] = (s0-Coorfo[4*(i-1)+3]) * (Coorfo[4*i+1]-Coorfo[4*(i-1)+1]) / (Coorfo[4*i+3]-Coorfo[4*(i-1)+3]) + Coorfo[4*(i-1)+1]
+   xyz[2] = (s0-Coorfo[4*(i-1)+3]) * (Coorfo[4*i+2]-Coorfo[4*(i-1)+2]) / (Coorfo[4*i+3]-Coorfo[4*(i-1)+3]) + Coorfo[4*(i-1)+2]
+   xyz[3] = s0
+   return xyz
+
+def InterpolBaseFiss(s0, Basefo, Coorfo) :
+# Interpolation de la base locale en fond de fissure
+# s0     = abscisse curviligne du point considere     
+# Basefo = base locale du fond (VNx,VNy,VNz,VPx,VPy,VPz)
+# Coorfo = Coordonnees et abscisses du fond (extrait de la sd fiss_xfem)
+# en sortie : VPVNi = base locale au point considere (6 coordonnes)
+   n = len(Coorfo) / 4
+   if ( s0 < Coorfo[3] )  :
+     VPVNi =  Basefo[0:6]
+     return VPVNi
+   if ( s0 > Coorfo[-1]  ) :
+     VPVNi = [Basefo[i] for i in range(-6,0)] 
+     return VPVNi
+   i = 1
+   while s0 > Coorfo[4*i+3]:
+      i = i+1
+   VPVNi = [0.]*6
+   for k in range(6) :
+      VPVNi[k] = (s0-Coorfo[4*(i-1)+3]) * (Basefo[6*i+k]-Basefo[6*(i-1)+k]) / (Coorfo[4*i+3]-Coorfo[4*(i-1)+3]) + Basefo[6*(i-1)+k]
+   return VPVNi
+    
      
 def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
                    TABL_DEPL_SUP,TABL_DEPL_INF,ABSC_CURV_MAXI,PREC_VIS_A_VIS,
@@ -255,6 +299,7 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
         Lnofon = Lnf1
         Nbnofo = Nbf1
         ListmaS = FOND_FISS.LEVRESUP___MAIL.get()
+        if ListmaS==None :  UTMESS('F','RUPTURE0_19')
         if SYME_CHAR=='SANS':
           ListmaI = FOND_FISS.LEVREINF___MAIL.get()
         __NCOFON=POST_RELEVE_T(ACTION=_F(INTITULE='Tab pour coordonnees noeuds du fond',
@@ -351,9 +396,10 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
         if NB_NOEUD_COUPE < 3 : 
           UTMESS('A','RUPTURE0_17')
           NB_NOEUD_COUPE = 5
-        MOD = aster.getvectjev(string.ljust(RESULTAT.nom,19)+'.MODL        ')
-        if MOD==None : UTMESS('F','RUPTURE0_18')
-        MODEL = self.jdc.sds_dict[MOD[0].rstrip()]
+        iret,ibid,n_modele = aster.dismoi('F','MODELE',RESULTAT.nom,'RESULTAT')
+        n_modele=n_modele.rstrip()
+        if len(n_modele)==0 : UTMESS('F','RUPTURE0_18')
+        MODEL = self.jdc.sds_dict[n_modele]
         dmax  = PREC_VIS_A_VIS * ABSC_CURV_MAXI
         for i in range(Nbf1):
           Porig = array(d_coorf[Lnf1[i]] )
@@ -511,9 +557,10 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
      DTAN_EXTR = args['DTAN_EXTR']
      dmax  = PREC_VIS_A_VIS * ABSC_CURV_MAXI
 #Projection du resultat sur le maillage lineaire initial     
-     MOD = aster.getvectjev(string.ljust(RESULTAT.nom,19)+'.MODL        ')
-     if MOD==None : UTMESS('F','RUPTURE0_18')
-     MODEL = self.jdc.sds_dict[MOD[0].rstrip()]
+     iret,ibid,n_modele = aster.dismoi('F','MODELE',RESULTAT.nom,'RESULTAT')
+     n_modele=n_modele.rstrip()
+     if len(n_modele)==0 : UTMESS('F','RUPTURE0_18')
+     MODEL = self.jdc.sds_dict[n_modele]
      xcont = MODEL.xfem.XFEM_CONT.get()
      if xcont[0] == 0 :
        __RESX = RESULTAT
@@ -529,12 +576,40 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
                      MODELE_2=__MODLINE, );   
 #Recuperation des coordonnees des points du fond de fissure (x,y,z,absc_curv)
      Listfo = FISSURE.FONDFISS.get()
-     Nbfond = len(Listfo)/4
+     Basefo = FISSURE.BASEFOND.get()
+     NB_POINT_FOND = args['NB_POINT_FOND']
+#Traitement du cas fond multiple
+     Fissmult = FISSURE.FONDMULT.get()
+     Nbfiss = len(Fissmult)/2
+     Numfiss = args['NUME_FOND']
+     if  Numfiss <= Nbfiss and Nbfiss > 1 :
+       Ptinit = Fissmult[2*(Numfiss-1)]
+       Ptfin = Fissmult[2*(Numfiss-1)+1]
+       Listfo2 = Listfo[((Ptinit-1)*4):(Ptfin*4)]
+       Listfo = Listfo2
+       Basefo2 = Basefo[((Ptinit-1)*(2*ndim)):(Ptfin*(2*ndim))]
+       Basefo = Basefo2
+     elif  Numfiss > Nbfiss :
+       UTMESS('F','RUPTURE1_38',vali=[Nbfiss,Numfiss])
+####     
+     
+     if NB_POINT_FOND != None and MODELISATION=='3D' :
+       Nbfond = NB_POINT_FOND
+       absmax = Listfo[-1]
+       Coorfo = [None]*4*Nbfond
+       Vpropa = [None]*3*Nbfond
+       for i in range(0,Nbfond) :
+         absci = i*absmax/(Nbfond-1)
+         Coorfo[(4*i):(4*(i+1))] = InterpolFondFiss(absci, Listfo)
+         Vpropa[(6*i):(6*(i+1))] = InterpolBaseFiss(absci,Basefo, Listfo)
+     else :
+       Coorfo = Listfo
+       Vpropa = Basefo
+       Nbfond = len(Coorfo)/4
 # Calcul de la direction de propagation en chaque point du fond
      VP = [None]*Nbfond
      VN = [None]*Nbfond
      absfon = [0,]
-     Vpropa = FISSURE.BASEFOND.get()
 # Cas fissure non necessairement plane     
      if VECT_K1 == None :
        i = 0
@@ -550,9 +625,7 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
            VN[0] = array([Vpropa[0],Vpropa[1],Vpropa[2]])
            VP[0] = array([Vpropa[3+0],Vpropa[3+1],Vpropa[3+2]])
          for i in range(1,Nbfond-1):
-           Pfon1 = array([Listfo[4*(i-1)],Listfo[4*(i-1)+1],Listfo[4*(i-1)+2]])
-           Pfon2 = array([Listfo[4*i],Listfo[4*i+1],Listfo[4*i+2]])
-           absf = sqrt(dot(transpose(Pfon1-Pfon2),Pfon1-Pfon2)) + absfon[i-1]
+           absf = Coorfo[4*i+3]
            absfon.append(absf)
            VN[i] = array([Vpropa[6*i],Vpropa[6*i+1],Vpropa[6*i+2]])
            VP[i] = array([Vpropa[3+6*i],Vpropa[3+6*i+1],Vpropa[3+6*i+2]])
@@ -560,9 +633,7 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
            if abs(verif) < 0.98:
              UTMESS('A','RUPTURE1_35',vali=[i-1,i])
          i = Nbfond-1
-         Pfon1 = array([Listfo[4*(i-1)],Listfo[4*(i-1)+1],Listfo[4*(i-1)+2]])
-         Pfon2 = array([Listfo[4*i],Listfo[4*i+1],Listfo[4*i+2]])
-         absf = sqrt(dot(transpose(Pfon1-Pfon2),Pfon1-Pfon2)) + absfon[i-1]
+         absf =  Coorfo[4*i+3]
          absfon.append(absf)
          if DTAN_EXTR != None :
            VP[i] = array(DTAN_EXTR)
@@ -596,8 +667,8 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
            if abs(verif) > 0.01:
              UTMESS('A','RUPTURE1_36')
          else :
-           Pfon2 = array([Listfo[4*i],Listfo[4*i+1],Listfo[4*i+2]])
-           Pfon3 = array([Listfo[4*(i+1)],Listfo[4*(i+1)+1],Listfo[4*(i+1)+2]])
+           Pfon2 = array([Coorfo[4*i],Coorfo[4*i+1],Coorfo[4*i+2]])
+           Pfon3 = array([Coorfo[4*(i+1)],Coorfo[4*(i+1)+1],Coorfo[4*(i+1)+2]])
            VT = (Pfon3 - Pfon2)/sqrt(dot(transpose(Pfon3-Pfon2),Pfon3-Pfon2))
            VP[0] = array(cross_product(VT,v1))
            VNi = array([Vpropa[3],Vpropa[4],Vpropa[5]])
@@ -606,10 +677,10 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
              vv =[VNi[0],VNi[1],VNi[2],VN[i][0],VN[i][1],VN[i][2],]
              UTMESS('A','RUPTURE0_32',vali=[i],valr=vv)
          for i in range(1,Nbfond-1):
-           Pfon1 = array([Listfo[4*(i-1)],Listfo[4*(i-1)+1],Listfo[4*(i-1)+2]])
-           Pfon2 = array([Listfo[4*i],Listfo[4*i+1],Listfo[4*i+2]])
-           Pfon3 = array([Listfo[4*(i+1)],Listfo[4*(i+1)+1],Listfo[4*(i+1)+2]])
-           absf = sqrt(dot(transpose(Pfon1-Pfon2),Pfon1-Pfon2)) + absfon[i-1]
+           Pfon1 = array([Coorfo[4*(i-1)],Coorfo[4*(i-1)+1],Coorfo[4*(i-1)+2]])
+           Pfon2 = array([Coorfo[4*i],Coorfo[4*i+1],Coorfo[4*i+2]])
+           Pfon3 = array([Coorfo[4*(i+1)],Coorfo[4*(i+1)+1],Coorfo[4*(i+1)+2]])
+           absf =  Coorfo[4*i+3]
            absfon.append(absf)
            VT = (Pfon3 - Pfon2)/sqrt(dot(transpose(Pfon3-Pfon2),Pfon3-Pfon2))
            VT = VT+(Pfon2 - Pfon1)/sqrt(dot(transpose(Pfon2-Pfon1),Pfon2-Pfon1))
@@ -621,9 +692,9 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
              vv =[VNi[0],VNi[1],VNi[2],VN[i][0],VN[i][1],VN[i][2],]
              UTMESS('A','RUPTURE0_32',vali=[i],valr=vv)
          i = Nbfond-1
-         Pfon1 = array([Listfo[4*(i-1)],Listfo[4*(i-1)+1],Listfo[4*(i-1)+2]])
-         Pfon2 = array([Listfo[4*i],Listfo[4*i+1],Listfo[4*i+2]])
-         absf = sqrt(dot(transpose(Pfon1-Pfon2),Pfon1-Pfon2)) + absfon[i-1]
+         Pfon1 = array([Coorfo[4*(i-1)],Coorfo[4*(i-1)+1],Coorfo[4*(i-1)+2]])
+         Pfon2 = array([Coorfo[4*i],Coorfo[4*i+1],Coorfo[4*i+2]])
+         absf =  Coorfo[4*i+3]
          absfon.append(absf)
          if DTAN_EXTR != None :
            VP[i] = array(DTAN_EXTR)
@@ -652,7 +723,7 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
 #Sens de la tangente   
      if MODELISATION=='3D' : i = Nbfond/2
      else : i = 0
-     Po =  array([Listfo[4*i],Listfo[4*i+1],Listfo[4*i+2]])
+     Po =  array([Coorfo[4*i],Coorfo[4*i+1],Coorfo[4*i+2]])
      Porig = Po + ABSC_CURV_MAXI*VP[i]
      Pextr = Po - ABSC_CURV_MAXI*VP[i]
      __Tabg = MACR_LIGN_COUPE(RESULTAT=__RESX,NOM_CHAM='DEPL',
@@ -660,7 +731,9 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
                                   TYPE='SEGMENT',COOR_EXTR=(Pextr[0],Pextr[1],Pextr[2]),
                                   DISTANCE_MAX=dmax),);
      tmp=__Tabg.EXTR_TABLE()
+#     a sam
      test = getattr(tmp,'H1X').values()
+#     test = getattr(tmp,'E1X').values()
      if test==[None]*3 : 
         UTMESS('F','RUPTURE0_33')
      if test[0]!=None :
@@ -669,21 +742,24 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
        sens = -1
      DETRUIRE(CONCEPT=_F(NOM=__Tabg),INFO=1) 
 # Extraction des sauts sur la fissure          
-     TSaut = [None]*Nbfond    
      NB_NOEUD_COUPE = args['NB_NOEUD_COUPE']
      if NB_NOEUD_COUPE < 3 : 
        UTMESS('A','RUPTURE0_34')
        NB_NOEUD_COUPE = 5
+     mcfact=[]
      for i in range(Nbfond):
-        Porig = array([Listfo[4*i],Listfo[4*i+1],Listfo[4*i+2]])
+        Porig = array([Coorfo[4*i],Coorfo[4*i+1],Coorfo[4*i+2]])
         if i==0 and DTAN_ORIG!=None : Pextr = Porig - ABSC_CURV_MAXI*VP[i]
         elif i==(Nbfond-1) and DTAN_EXTR!=None : Pextr = Porig - ABSC_CURV_MAXI*VP[i]
         else : Pextr = Porig + ABSC_CURV_MAXI*VP[i]*sens
-        TSaut[i] = MACR_LIGN_COUPE(RESULTAT=__RESX,NOM_CHAM='DEPL',
-                         LIGN_COUPE=_F(NB_POINTS=NB_NOEUD_COUPE,COOR_ORIG=(Porig[0],Porig[1],Porig[2],),
-                                        TYPE='SEGMENT',COOR_EXTR=(Pextr[0],Pextr[1],Pextr[2]),
-                                        DISTANCE_MAX=dmax),);
+        mcfact.append(_F(NB_POINTS=NB_NOEUD_COUPE,COOR_ORIG=(Porig[0],Porig[1],Porig[2],),
+                          TYPE='SEGMENT',COOR_EXTR=(Pextr[0],Pextr[1],Pextr[2]),
+                          DISTANCE_MAX=dmax),)
+     TSo = MACR_LIGN_COUPE(RESULTAT=__RESX,NOM_CHAM='DEPL',
+                         LIGN_COUPE=mcfact);
 
+     TTSo = TSo.EXTR_TABLE()
+     DETRUIRE(CONCEPT=_F(NOM=TSo),INFO=1) 
      Nbnofo = Nbfond
      if xcont[0] != 0 :  
        DETRUIRE(CONCEPT=_F(NOM=__MODLINE),INFO=1) 
@@ -749,8 +825,7 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
             Ls = [string.ljust(Lnosup[ino][i],8) for i in range(len(Lnosup[ino]))]
             tabsup=tabsup.NOEUD==Ls
       elif FISSURE :
-         tabsup = TSaut[ino].EXTR_TABLE()
-         DETRUIRE(CONCEPT=_F(NOM=TSaut[ino]),INFO=1)
+         tabsup = TTSo.INTITULE=='l.coupe%i'%(ino+1)
       else :
          tabsup=TABL_DEPL_SUP.EXTR_TABLE()
          veri_tab(tabsup,TABL_DEPL_SUP.nom,ndim)
@@ -839,7 +914,7 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
       for iord in range(len(l_inst)) :
         inst=l_inst[iord]
         if INFO==2 and inst!=None:
-            texte="#================================================================================\n"
+            texte="#=================================================================================\n"
             texte=texte+"==> INSTANT: %f"%inst
             aster.affiche('MESSAGE',texte)
         if inst!=None:
@@ -958,8 +1033,6 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
         if  FISSURE : 
            H1 = getattr(tabsupi,'H1X').values()
            nbval = len(H1)
-           if H1[-1]==None : 
-             UTMESS('F','RUPTURE0_33')
            H1 = complete(H1)
            E1 = getattr(tabsupi,'E1X').values()
            E1 = complete(E1)
@@ -976,13 +1049,6 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
            dzs = 2*(H1 + sqrt(abscs)*E1)
            abscs=array(abscs[:nbval])
 
-#     --- TESTS NOMBRE DE NOEUDS---
-        if nbval<3 :
-           UTMESS('F+','RUPTURE0_46')
-           if FOND_FISS :
-               UTMESS('F+','RUPTURE0_47',valk=Lnofon[ino])
-           UTMESS('F','RUPTURE0_25')
-           
 #   ---------- CALCUL PROP. MATERIAU AVEC TEMPERATURE -----------  
         if Tempe3D :
            tempeno=tabtemp.NOEUD==Lnofon[ino]
@@ -998,8 +1064,23 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
            coefg  = (1. - nu**2) / e
            coefg3 = (1. + nu)  / e
 
+#     --- TESTS NOMBRE DE NOEUDS---
+        if nbval<3 :
+           UTMESS('A+','RUPTURE0_46')
+           if FOND_FISS :
+               UTMESS('A+','RUPTURE0_47',valk=Lnofon[ino])
+           if FISSURE :
+               UTMESS('A+','RUPTURE0_99',vali=ino)
+           UTMESS('A','RUPTURE0_25')
+           kg1 = [0.]*8
+           kg2 =[0.]*8
+           kg3 =[0.]*8
+         
+        else :  
+#     SI NBVAL >= 3 : 
+
 #     ------------------------------------------------------------------
-#                           CHANGEMENT DE REPERE
+#                    CHANGEMENT DE REPERE
 #     ------------------------------------------------------------------
 #
 #       1 : VECTEUR NORMAL AU PLAN DE LA FISSURE
@@ -1007,139 +1088,139 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
 #       2 : VECTEUR NORMAL AU FOND DE FISSURE EN M
 #       3 : VECTEUR TANGENT AU FOND DE FISSURE EN M
 #
-        if FISSURE :
-           v2 = VP[ino]
-           v1 = VN[ino]
-        elif SYME_CHAR=='SANS' :
-           vo =  array([( coxs[-1]+coxi[-1] )/2.,( coys[-1]+coyi[-1] )/2.,( cozs[-1]+cozi[-1] )/2.])
-           ve =  array([( coxs[0 ]+coxi[0 ] )/2.,( coys[0 ]+coyi[0 ] )/2.,( cozs[0 ]+cozi[0 ] )/2.])
-           v2 =  ve-vo
-        else :
-           vo = array([ coxs[-1], coys[-1], cozs[-1]])
-           ve = array([ coxs[0], coys[0], cozs[0]])
-           v2 =  ve-vo
-        if not FISSURE :  v1 =  array(VECT_K1)
-        v2 =  v2/sqrt(v2[0]**2+v2[1]**2+v2[2]**2)
-        v1p = sum(v2*v1)
-        if SYME_CHAR=='SANS' : v1  = v1-v1p*v2
-        else : v2  = v2-v1p*v1 
-        v1  = v1/sqrt(v1[0]**2+v1[1]**2+v1[2]**2)
-        v2 =  v2/sqrt(v2[0]**2+v2[1]**2+v2[2]**2)
-        v3  = array([v1[1]*v2[2]-v2[1]*v1[2],v1[2]*v2[0]-v2[2]*v1[0],v1[0]*v2[1]-v2[0]*v1[1]])
-        pgl  = asarray([v1,v2,v3])
-        dpls = asarray([dxs,dys,dzs])
-        dpls = matrixmultiply(pgl,dpls)
-        if SYME_CHAR!='SANS' and abs(dpls[0][0]) > 1.e-10 :
-          UTMESS('A','RUPTURE0_49',valk=[Lnofon[ino],SYME_CHAR])
-        if FISSURE :
-           saut=dpls
-        elif SYME_CHAR=='SANS' :
-           dpli = asarray([dxi,dyi,dzi])
-           dpli = matrixmultiply(pgl,dpli)
-           saut=(dpls-dpli)
-        else :
-           dpli = [multiply(dpls[0],-1.),dpls[1],dpls[2]]
-           saut=(dpls-dpli)
-        if INFO==2 :
-          mcfact=[]
-          mcfact.append(_F(PARA='ABSC_CURV'  ,LISTE_R=abscs.tolist() ))
-          if not FISSURE :
-            mcfact.append(_F(PARA='DEPL_SUP_1',LISTE_R=dpls[0].tolist() ))
-            mcfact.append(_F(PARA='DEPL_INF_1',LISTE_R=dpli[0].tolist() ))
-          mcfact.append(_F(PARA='SAUT_1'    ,LISTE_R=saut[0].tolist() ))
-          if not FISSURE :
-            mcfact.append(_F(PARA='DEPL_SUP_2',LISTE_R=dpls[1].tolist() ))
-            mcfact.append(_F(PARA='DEPL_INF_2',LISTE_R=dpli[1].tolist() ))
-          mcfact.append(_F(PARA='SAUT_2'    ,LISTE_R=saut[1].tolist() ))
-          if ndim==3 :
-            if not FISSURE :
-              mcfact.append(_F(PARA='DEPL_SUP_3',LISTE_R=dpls[2].tolist() ))
-              mcfact.append(_F(PARA='DEPL_INF_3',LISTE_R=dpli[2].tolist() ))
-            mcfact.append(_F(PARA='SAUT_3'    ,LISTE_R=saut[2].tolist() ))
-          __resu0=CREA_TABLE(LISTE=mcfact,TITRE='--> SAUTS')
-          aster.affiche('MESSAGE',__resu0.EXTR_TABLE().__repr__())
-          DETRUIRE(CONCEPT=_F(NOM=__resu0),INFO=1)
+         if FISSURE :
+            v2 = VP[ino]
+            v1 = VN[ino]
+         elif SYME_CHAR=='SANS' :
+            vo =  array([( coxs[-1]+coxi[-1] )/2.,( coys[-1]+coyi[-1] )/2.,( cozs[-1]+cozi[-1] )/2.])
+            ve =  array([( coxs[0 ]+coxi[0 ] )/2.,( coys[0 ]+coyi[0 ] )/2.,( cozs[0 ]+cozi[0 ] )/2.])
+            v2 =  ve-vo
+         else :
+            vo = array([ coxs[-1], coys[-1], cozs[-1]])
+            ve = array([ coxs[0], coys[0], cozs[0]])
+            v2 =  ve-vo
+         if not FISSURE :  v1 =  array(VECT_K1)
+         v2 =  v2/sqrt(v2[0]**2+v2[1]**2+v2[2]**2)
+         v1p = sum(v2*v1)
+         if SYME_CHAR=='SANS' : v1  = v1-v1p*v2
+         else : v2  = v2-v1p*v1 
+         v1  = v1/sqrt(v1[0]**2+v1[1]**2+v1[2]**2)
+         v2 =  v2/sqrt(v2[0]**2+v2[1]**2+v2[2]**2)
+         v3  = array([v1[1]*v2[2]-v2[1]*v1[2],v1[2]*v2[0]-v2[2]*v1[0],v1[0]*v2[1]-v2[0]*v1[1]])
+         pgl  = asarray([v1,v2,v3])
+         dpls = asarray([dxs,dys,dzs])
+         dpls = matrixmultiply(pgl,dpls)
+         if SYME_CHAR!='SANS' and abs(dpls[0][0]) > 1.e-10 :
+           UTMESS('A','RUPTURE0_49',valk=[Lnofon[ino],SYME_CHAR])
+         if FISSURE :
+            saut=dpls
+         elif SYME_CHAR=='SANS' :
+            dpli = asarray([dxi,dyi,dzi])
+            dpli = matrixmultiply(pgl,dpli)
+            saut=(dpls-dpli)
+         else :
+            dpli = [multiply(dpls[0],-1.),dpls[1],dpls[2]]
+            saut=(dpls-dpli)
+         if INFO==2 :
+           mcfact=[]
+           mcfact.append(_F(PARA='ABSC_CURV'  ,LISTE_R=abscs.tolist() ))
+           if not FISSURE :
+             mcfact.append(_F(PARA='DEPL_SUP_1',LISTE_R=dpls[0].tolist() ))
+             mcfact.append(_F(PARA='DEPL_INF_1',LISTE_R=dpli[0].tolist() ))
+           mcfact.append(_F(PARA='SAUT_1'    ,LISTE_R=saut[0].tolist() ))
+           if not FISSURE :
+             mcfact.append(_F(PARA='DEPL_SUP_2',LISTE_R=dpls[1].tolist() ))
+             mcfact.append(_F(PARA='DEPL_INF_2',LISTE_R=dpli[1].tolist() ))
+           mcfact.append(_F(PARA='SAUT_2'    ,LISTE_R=saut[1].tolist() ))
+           if ndim==3 :
+             if not FISSURE :
+               mcfact.append(_F(PARA='DEPL_SUP_3',LISTE_R=dpls[2].tolist() ))
+               mcfact.append(_F(PARA='DEPL_INF_3',LISTE_R=dpli[2].tolist() ))
+             mcfact.append(_F(PARA='SAUT_3'    ,LISTE_R=saut[2].tolist() ))
+           __resu0=CREA_TABLE(LISTE=mcfact,TITRE='--> SAUTS')
+           aster.affiche('MESSAGE',__resu0.EXTR_TABLE().__repr__())
+           DETRUIRE(CONCEPT=_F(NOM=__resu0),INFO=1)
 #     ------------------------------------------------------------------
 #                           CALCUL DES K1, K2, K3
 #     ------------------------------------------------------------------
-        isig=sign(transpose(resize(saut[:,-1],(nbval-1,3))))
-        isig=sign(isig+0.001)
-        saut=saut*array([[coefd]*nbval,[coefd]*nbval,[coefd3]*nbval])
-        saut=saut**2
-        ksig = isig[:,1]
-        ksig = array([ksig,ksig])
-        ksig = transpose(ksig)
-        kgsig=resize(ksig,(1,6))[0]
+         isig=sign(transpose(resize(saut[:,-1],(nbval-1,3))))
+         isig=sign(isig+0.001)
+         saut=saut*array([[coefd]*nbval,[coefd]*nbval,[coefd3]*nbval])
+         saut=saut**2
+         ksig = isig[:,1]
+         ksig = array([ksig,ksig])
+         ksig = transpose(ksig)
+         kgsig=resize(ksig,(1,6))[0]
 #     ------------------------------------------------------------------
 #                           --- METHODE 1 ---
 #     ------------------------------------------------------------------
-        x1 = abscs[1:-1]
-        x2 = abscs[2:  ]
-        y1 = saut[:,1:-1]/x1
-        y2 = saut[:,2:  ]/x2
-        k  = abs(y1-x1*(y2-y1)/(x2-x1))
-        g  = coefg*(k[0]+k[1])+coefg3*k[2]
-        kg1 = [max(k[0]),min(k[0]),max(k[1]),min(k[1]),max(k[2]),min(k[2])]
-        kg1 = sqrt(kg1)*kgsig
-        kg1=Numeric.concatenate([kg1,[max(g),min(g)]])
-        vk  = sqrt(k)*isig[:,:-1]
-        if INFO==2 :
-          mcfact=[]
-          mcfact.append(_F(PARA='ABSC_CURV_1' ,LISTE_R=x1.tolist() ))
-          mcfact.append(_F(PARA='ABSC_CURV_2' ,LISTE_R=x2.tolist() ))
-          mcfact.append(_F(PARA='K1'          ,LISTE_R=vk[0].tolist() ))
-          mcfact.append(_F(PARA='K2'          ,LISTE_R=vk[1].tolist() ))
-          if ndim==3 :
-            mcfact.append(_F(PARA='K3'        ,LISTE_R=vk[2].tolist() ))
-          mcfact.append(_F(PARA='G'           ,LISTE_R=g.tolist() ))
-          __resu1=CREA_TABLE(LISTE=mcfact,TITRE='--> METHODE 1')
-          aster.affiche('MESSAGE',__resu1.EXTR_TABLE().__repr__())
-          DETRUIRE(CONCEPT=_F(NOM=__resu1),INFO=1)
+         x1 = abscs[1:-1]
+         x2 = abscs[2:  ]
+         y1 = saut[:,1:-1]/x1
+         y2 = saut[:,2:  ]/x2
+         k  = abs(y1-x1*(y2-y1)/(x2-x1))
+         g  = coefg*(k[0]+k[1])+coefg3*k[2]
+         kg1 = [max(k[0]),min(k[0]),max(k[1]),min(k[1]),max(k[2]),min(k[2])]
+         kg1 = sqrt(kg1)*kgsig
+         kg1=Numeric.concatenate([kg1,[max(g),min(g)]])
+         vk  = sqrt(k)*isig[:,:-1]
+         if INFO==2 :
+           mcfact=[]
+           mcfact.append(_F(PARA='ABSC_CURV_1' ,LISTE_R=x1.tolist() ))
+           mcfact.append(_F(PARA='ABSC_CURV_2' ,LISTE_R=x2.tolist() ))
+           mcfact.append(_F(PARA='K1'          ,LISTE_R=vk[0].tolist() ))
+           mcfact.append(_F(PARA='K2'          ,LISTE_R=vk[1].tolist() ))
+           if ndim==3 :
+             mcfact.append(_F(PARA='K3'        ,LISTE_R=vk[2].tolist() ))
+           mcfact.append(_F(PARA='G'           ,LISTE_R=g.tolist() ))
+           __resu1=CREA_TABLE(LISTE=mcfact,TITRE='--> METHODE 1')
+           aster.affiche('MESSAGE',__resu1.EXTR_TABLE().__repr__())
+           DETRUIRE(CONCEPT=_F(NOM=__resu1),INFO=1)
 #     ------------------------------------------------------------------
 #                           --- METHODE 2 ---
 #     ------------------------------------------------------------------
-        x1 = abscs[1: ]
-        y1 = saut[:,1:]
-        k  = abs(y1/x1)
-        g  = coefg*(k[0]+k[1])+coefg3*k[2]
-        kg2= [max(k[0]),min(k[0]),max(k[1]),min(k[1]),max(k[2]),min(k[2])]
-        kg2 = sqrt(kg2)*kgsig
-        kg2=Numeric.concatenate([kg2,[max(g),min(g)]])
-        vk = sqrt(k)*isig
-        if INFO==2 :
-          mcfact=[]
-          mcfact.append(_F(PARA='ABSC_CURV' ,LISTE_R=x1.tolist() ))
-          mcfact.append(_F(PARA='K1'        ,LISTE_R=vk[0].tolist() ))
-          mcfact.append(_F(PARA='K2'        ,LISTE_R=vk[1].tolist() ))
-          if ndim==3 :
-            mcfact.append(_F(PARA='K3'      ,LISTE_R=vk[2].tolist() ))
-          mcfact.append(_F(PARA='G'         ,LISTE_R=g.tolist() ))
-          __resu2=CREA_TABLE(LISTE=mcfact,TITRE='--> METHODE 2')
-          aster.affiche('MESSAGE',__resu2.EXTR_TABLE().__repr__())
-          DETRUIRE(CONCEPT=_F(NOM=__resu2),INFO=1)
+         x1 = abscs[1: ]
+         y1 = saut[:,1:]
+         k  = abs(y1/x1)
+         g  = coefg*(k[0]+k[1])+coefg3*k[2]
+         kg2= [max(k[0]),min(k[0]),max(k[1]),min(k[1]),max(k[2]),min(k[2])]
+         kg2 = sqrt(kg2)*kgsig
+         kg2=Numeric.concatenate([kg2,[max(g),min(g)]])
+         vk = sqrt(k)*isig
+         if INFO==2 :
+           mcfact=[]
+           mcfact.append(_F(PARA='ABSC_CURV' ,LISTE_R=x1.tolist() ))
+           mcfact.append(_F(PARA='K1'        ,LISTE_R=vk[0].tolist() ))
+           mcfact.append(_F(PARA='K2'        ,LISTE_R=vk[1].tolist() ))
+           if ndim==3 :
+             mcfact.append(_F(PARA='K3'      ,LISTE_R=vk[2].tolist() ))
+           mcfact.append(_F(PARA='G'         ,LISTE_R=g.tolist() ))
+           __resu2=CREA_TABLE(LISTE=mcfact,TITRE='--> METHODE 2')
+           aster.affiche('MESSAGE',__resu2.EXTR_TABLE().__repr__())
+           DETRUIRE(CONCEPT=_F(NOM=__resu2),INFO=1)
 #     ------------------------------------------------------------------
 #                           --- METHODE 3 ---
 #     ------------------------------------------------------------------
-        x1 = abscs[:-1]
-        x2 = abscs[1: ]
-        y1 = saut[:,:-1]
-        y2 = saut[:,1: ]
-        k  = (sqrt(y2)*sqrt(x2)+sqrt(y1)*sqrt(x1))*(x2-x1)
-        k  = Numeric.sum(transpose(k))
-        de = abscs[-1]
-        vk = (k/de**2)*isig[:,0]
-        g  = coefg*(vk[0]**2+vk[1]**2)+coefg3*vk[2]**2
-        kg3=Numeric.concatenate([[vk[0]]*2,[vk[1]]*2,[vk[2]]*2,[g]*2])
-        if INFO==2 :
-          mcfact=[]
-          mcfact.append(_F(PARA='K1'        ,LISTE_R=vk[0] ))
-          mcfact.append(_F(PARA='K2'        ,LISTE_R=vk[1] ))
-          if ndim==3 :
-            mcfact.append(_F(PARA='K3'      ,LISTE_R=vk[2] ))
-          mcfact.append(_F(PARA='G'         ,LISTE_R=g ))
-          __resu3=CREA_TABLE(LISTE=mcfact,TITRE='--> METHODE 3')
-          aster.affiche('MESSAGE',__resu3.EXTR_TABLE().__repr__())
-          DETRUIRE(CONCEPT=_F(NOM=__resu3),INFO=1)
+         x1 = abscs[:-1]
+         x2 = abscs[1: ]
+         y1 = saut[:,:-1]
+         y2 = saut[:,1: ]
+         k  = (sqrt(y2)*sqrt(x2)+sqrt(y1)*sqrt(x1))*(x2-x1)
+         k  = Numeric.sum(transpose(k))
+         de = abscs[-1]
+         vk = (k/de**2)*isig[:,0]
+         g  = coefg*(vk[0]**2+vk[1]**2)+coefg3*vk[2]**2
+         kg3=Numeric.concatenate([[vk[0]]*2,[vk[1]]*2,[vk[2]]*2,[g]*2])
+         if INFO==2 :
+           mcfact=[]
+           mcfact.append(_F(PARA='K1'        ,LISTE_R=vk[0] ))
+           mcfact.append(_F(PARA='K2'        ,LISTE_R=vk[1] ))
+           if ndim==3 :
+             mcfact.append(_F(PARA='K3'      ,LISTE_R=vk[2] ))
+           mcfact.append(_F(PARA='G'         ,LISTE_R=g ))
+           __resu3=CREA_TABLE(LISTE=mcfact,TITRE='--> METHODE 3')
+           aster.affiche('MESSAGE',__resu3.EXTR_TABLE().__repr__())
+           DETRUIRE(CONCEPT=_F(NOM=__resu3),INFO=1)
 #     ------------------------------------------------------------------
 #                           CREATION DE LA TABLE 
 #     ------------------------------------------------------------------

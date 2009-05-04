@@ -111,7 +111,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.text_error=""
        if self.nom != "INCLUDE_MATERIAU":
           if self.parent.appli.ihm == "QT" :
-              format=self.jdc.appli.format_fichier
+              format=self.parent.appli.appliEficas.format_fichier
           else :
               format=self.jdc.appli.format_fichier.get()
           if convert.plugins.has_key(format):
@@ -126,6 +126,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
                   self.text_error=str(p.cr)
               else:
                   self.text_converted=1
+
 
        j=self.JdC_aux( procedure=text, nom=fichier,
                                 appli=self.jdc.appli,
@@ -758,6 +759,91 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          f,text=None,None
       return f,text
 
+
+  def make_include2(self,fichier=None):
+      # gestion de l unicite SVP
+      unite=999
+      if hasattr(self,'fichier_ini') : return
+      #print "je passe le if"
+      if fichier == None :
+         fichier=str(self.jdc.appli.get_file_variable())
+         #print fichier
+         if fichier  == str("") : 
+           self.fichier_ini="badfile"
+           self.fichier_text=""
+	   self.fichier_err="Le fichier INCLUDE n est pas defini"
+           self.parent.record_unit(999,self)
+           try :
+              MCFils=self.get_child('FICHIER')
+              MCFils.set_valeur(None)
+           except :
+              pass
+           raise Exception(self.fichier_err)
+
+         # On memorise le fichier retourne
+      self.fichier_ini  = fichier
+      self.fichier_text = ""
+      self.contexte_fichier_init={}
+      self.fichier_unite=999
+      self.fichier_err=None
+      try :
+         from openturns import WrapperFile
+         monWrapper=WrapperFile(fichier)
+         data=monWrapper.getWrapperData()
+         maVariableListe=data.getVariableList()
+         nbVariables=maVariableListe.getSize()
+         for i in range(nbVariables) :
+             nom=maVariableListe[i].id_
+             type=maVariableListe[i].type_
+             if type :
+               ligneTexte=nom+"=VARI(type='IN',);\n"
+             else :
+              ligneTexte=nom+"=VARI(type='OUT',);\n"
+             self.fichier_text = self.fichier_text + ligneTexte
+      except:
+         self.make_incl2_except()
+         raise
+
+      try:
+         import Extensions.jdc_include
+      except:
+         traceback.print_exc()
+         self.make_incl2_except()
+         raise
+      self.JdC_aux=Extensions.jdc_include.JdC_include
+      
+      try:
+         self.make_contexte_include(self.fichier_ini ,self.fichier_text)
+         self.parent.record_unit(unite,self)
+         try :
+            MCFils=self.get_child('FICHIER')
+            MCFils.set_valeur(fichier)
+         except :
+            pass
+      except:
+         self.make_incl2_except()
+         raise
+
+  def make_incl2_except(self):
+         #print "make_incl2_except"
+         l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+         if self.jdc.appli:
+             self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
+                                            message="Le contenu de ce fichier ne sera pas pris en compte\n"+string.join(l)
+                                           )
+         self.parent.record_unit(unite,self)
+         self.g_context={}
+         self.etapes=[]
+         self.jdc_aux=None
+         self.fichier_err = string.join(l)
+         self.contexte_fichier_init={}
+         try :
+            MCFils=self.get_child('FICHIER')
+            MCFils.set_valeur(None)
+         except :
+            pass
+
+
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
   def make_include(self,unite=None):
       """
@@ -798,7 +884,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          try:
            self.make_contexte_include(self.fichier_ini ,self.fichier_text)
            self.parent.record_unit(unite,self)
-           #print "make_include.context_ini",self.jdc_aux.context_ini
          except:
            l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
            if self.jdc.appli:

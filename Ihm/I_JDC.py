@@ -723,20 +723,20 @@ class JDC(I_OBJECT.OBJECT):
    def supprime(self):
       #print "supprime",self
       Noyau.N_JDC.JDC.supprime(self)
-   #   self.appli=None
-   #   self.g_context={}
-   #   self.const_context={}
-   #   self.sds=[]
-   #   self.sds_dict={}
-   #   self.mc_globaux={}
-   #   self.current_context={}
-   #   self.condition_context={}
-   #   self.etapes_niveaux=[]
-   #   self.niveau=None
-   #   self.params=[]
-   #   self.fonctions=[]
-   #   self._etape_context=None
-   #   self.etapes=[]
+      self.appli=None
+      self.g_context={}
+      self.const_context={}
+      self.sds=[]
+      self.sds_dict={}
+      self.mc_globaux={}
+      self.current_context={}
+      self.condition_context={}
+      self.etapes_niveaux=[]
+      self.niveau=None
+      self.params=[]
+      self.fonctions=[]
+      self._etape_context=None
+      self.etapes=[]
        
 #ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
    def register(self,etape):

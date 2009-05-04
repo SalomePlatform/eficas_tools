@@ -207,7 +207,7 @@ class TestValidCase(unittest.TestCase):
    def test016(self):
        """Test du validateur ET : pas de doublon ET valeur paire """
        cata=SIMP(statut='o',typ='I',min=1,max=6,validators=[NoRepeat(),PairVal()])
-       liste=( ((2,),1),(None,0),((1,3,5),0),
+       liste=( (2,1),(None,0),((1,3,5),0),
                ((2,4,6),1),
                ((1,3,5),0),
                ((2,4,4),0),

@@ -1,4 +1,4 @@
-#@ MODIF ops Cata  DATE 02/06/2008   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF ops Cata  DATE 01/12/2008   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -60,7 +60,7 @@ def commun_DEBUT_POURSUITE(jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM):
       # en POURSUITE, ne pas écraser la mémorisation existante.
       if not hasattr(jdc, 'memo_sensi'):
          jdc.memo_sensi = MEMORISATION_SENSIBILITE()
-         jdc.memo_sensi.reparent(jdc)
+      jdc.memo_sensi.reparent(jdc)
 
       if hasattr(jdc, 'msg_init') and jdc.msg_init == 1:
          # messages d'alarmes désactivés
@@ -69,6 +69,12 @@ def commun_DEBUT_POURSUITE(jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM):
                IGNORE_ALARM = [IGNORE_ALARM]
             for idmess in IGNORE_ALARM:
                MessageLog.disable_alarm(idmess)
+               
+      # en POURSUITE, conserver le catalogue de comportement picklé
+      if not hasattr(jdc, 'catalc'):
+         from Comportement import catalc
+         jdc.catalc = catalc
+
       jdc.msg_init = True
 
 
@@ -171,6 +177,8 @@ def POURSUITE(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, **args):
             # on rattache chaque assd au nouveau jdc courant (en poursuite)
             pickle_context[elem].jdc=self.jdc
             pickle_context[elem].parent=self.jdc
+            # le marquer comme 'executed'
+            pickle_context[elem].executed = 1
             # pour que sds_dict soit cohérent avec g_context
             self.jdc.sds_dict[elem] = pickle_context[elem]
             assert elem == pickle_context[elem].nom

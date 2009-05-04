@@ -18,7 +18,7 @@ import readercata
 import prefs
 import qtCommun
 
-VERSION_EFICAS  = "EFICAS v1.14"
+VERSION_EFICAS  = "EFICAS v1.15"
 
 
 # -------------------------- #
@@ -52,7 +52,7 @@ class JDCEditor(QSplitter):
 	self.jdc_openturn_std=""
         self.ihm="QT"
         
-        from Editeur import configuration
+        import configuration
         self.CONFIGURATION = self.appliEficas.CONFIGURATION
         self.CONFIGStyle = self.appliEficas.CONFIGStyle
         self.test=0
@@ -267,15 +267,15 @@ class JDCEditor(QSplitter):
         if unite :
             titre = "Choix unite %d " %unite
             texte = "Le fichier %s contient une commande INCLUDE \n" % fic_origine
-            texte = texte+'Donnez le nom du fichier correspondant\n à l unité logique %d' % unite
+            texte = texte+'Donnez le nom du fichier correspondant à l unité logique %d' % unite
             labeltexte = 'Fichier pour unite %d :' % unite
         else:
             titre = "Choix d'un fichier de poursuite"
             texte = "Le fichier %s contient une commande %s\n" %(fic_origine,'POURSUITE')
-            texte = texte+'Donnez le nom du fichier dont vous \n voulez faire une poursuite'
+            texte = texte+'Donnez le nom du fichier dont vous  voulez faire une poursuite'
                                         
         QMessageBox.information( self, titre,texte)
-        fn = QFileDialog.getOpenFileName( None, "", self, None, titre )
+        fn = QFileDialog.getOpenFileName( self.CONFIGURATION.savedir,"", self, titre, "" )
         
         if fn.isNull():
             return
@@ -644,25 +644,25 @@ class JDCEditor(QSplitter):
         if saveas or self.fileName is None:
             if path is None and self.fileName is not None:
                 path = os.path.dirname(unicode(self.fileName))
-            selectedFilter = QString('')
+            else :
+                path=self.CONFIGURATION.savedir
             fn = QFileDialog.getSaveFileName(path,
-                self.trUtf8("JDC (*.comm);;"
-                    "All Files (*)"), self, None,
-                self.trUtf8("Save File"), selectedFilter, 0)
-                
+                self.trUtf8("JDC (*.comm);;" "All Files (*)"),self, None,
+                self.trUtf8("Save File"), '', 0)
+
             if not fn.isNull():
                 ext = QFileInfo(fn).extension()
                 if ext.isEmpty():
-                    ex = selectedFilter.section('(*',1,1).section(')',0,0)
-                    if not ex.isEmpty():
-                        fn.append(ex)
+                    ex =  ".comm"
+                    fn.append(ex)
                 if QFileInfo(fn).exists():
-                    abort = QMessageBox.warning(self,
+                    abort = QMessageBox.warning(
+			self,
                         self.trUtf8("Save File"),
-                        self.trUtf8("The file <b>%1</b> already exists.")
-                            .arg(fn),
+                        self.trUtf8("The file <b>%1</b> already exists.").arg(fn),
                         self.trUtf8("&Overwrite"),
-                        self.trUtf8("&Abort"), None, 1)
+                        self.trUtf8("&Abort") )
+                    print abort
                     if abort:
                         return (0, None)
                 fn = unicode(QDir.convertSeparators(fn))

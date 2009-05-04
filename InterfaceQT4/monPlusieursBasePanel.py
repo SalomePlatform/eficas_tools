@@ -156,10 +156,10 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
 	   self.editor.affiche_infos("Valeurs Ajoutées")
 
   def BImportPressed(self):
-        init=QString( self.editor.CONFIGURATION.rep_user)
+        init=QString( self.editor.CONFIGURATION.savedir)
         fn = QFileDialog.getOpenFileName(self.node.appliEficas, 
                                          self.node.appliEficas.trUtf8('Fichier de données'), 
-                                         QString(),
+                                         init,
                                          self.trUtf8('All Files (*)',))
         if fn == None : return
         if fn == "" : return

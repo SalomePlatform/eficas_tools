@@ -55,6 +55,8 @@ def main():
                                                             'editeur.ini',
                                                             'editeur_salome.ini',
                                                             'eficas_aster.py',
+                                                            'qtEficas_aster.py',
+                                                            'configuration.py',
 							    'test_eficas.py',
 							    'style.py',
                                                             '__init__.py'

@@ -146,7 +146,7 @@ class Fenetre :
         à l'utilisateur """
         file = asksaveasfilename(parent=self.fenetre,defaultextension = '.comm',
                                #initialdir = self.appli.CONFIGURATION.rep_user,
-                               initialdir = self.appli.CONFIGURATION.initialdir,
+                               initialdir = self.appli.CONFIGURATION.savedir,
                                title="Sauvegarde du "+self.titre)
         if file :
             if not save_in_file(file,self.texte,None) :

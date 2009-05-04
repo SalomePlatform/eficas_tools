@@ -39,8 +39,8 @@ from Accas import ASSD,GEOM
 import definition_cata
 
 #
-__version__="$Name: V1_14 $"
-__Id__="$Id: cataediteur.py,v 1.1.4.3.4.1 2008-10-10 13:47:11 pnoyret Exp $"
+__version__="$Name:  $"
+__Id__="$Id: cataediteur.py,v 1.2.4.1 2008-11-13 10:35:11 cchris Exp $"
 #
 
 Fonte_Niveau = fontes.canvas_gras_italique

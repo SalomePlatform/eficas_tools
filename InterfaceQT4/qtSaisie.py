@@ -44,7 +44,7 @@ class SaisieValeur:
        
        if (min == 1 and min == max and len(listeNomsSD)==1 and (l==[] or l==None)):
             if ('R' not in self.node.item.get_type()) :
-               self.listBoxASSD.setCurrentItem(0)
+               self.listBoxASSD.setCurrentRow(0)
 
 
   def BuildLBValeurs(self):

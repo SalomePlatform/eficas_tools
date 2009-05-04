@@ -55,7 +55,7 @@ import listePatronsTK
 REPTK=os.path.dirname(os.path.abspath(__file__))
 sys.path[:0]=[REPTK]
 
-VERSION="EFICAS v1.14"
+VERSION="EFICAS v1.15"
 
 class APPLI: 
   def __init__ (self,master,code=prefs.code,fichier=None,test=0,ihm="TK",salome=0) :
@@ -137,7 +137,7 @@ class APPLI:
       """
       if (self.test == 0):
          splash._splash.configure(text = "Chargement des paramètres utilisateur")
-      from Editeur import configuration
+      import configuration
       self.CONFIGURATION = configuration.make_config(self,prefs.REPINI)
       self.CONFIGStyle = configuration.make_config_style(self,prefs.REPINI)
 

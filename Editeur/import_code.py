@@ -23,15 +23,29 @@
     les imports de modules Python
 """
 import sys
+import os
+
 import prefs
+
+INSTALLDIR=prefs.INSTALLDIR
+sys.path.append(INSTALLDIR)
+sys.path.append(INSTALLDIR+"/Ui")
+sys.path.append(INSTALLDIR+"/InterfaceQT")
+sys.path.append(INSTALLDIR+"/Editeur")
 
 # Ce chemin permet d'importer les modules Noyau et Validation
 # représentant le code utilisé (si fourni)
-if prefs.CODE_PATH:
-   sys.path[:0]=[prefs.CODE_PATH]
-   import Noyau,Validation
-   del sys.path[0]
-
 # Ensuite on utilise les packages de l'intallation
+if hasattr(prefs,'CODE_PATH'):
+   if prefs.CODE_PATH:
+      sys.path[:0]=[prefs.CODE_PATH]
+      import Noyau,Validation
+      del sys.path[0]
 sys.path[:0]=[prefs.INSTALLDIR]
+
+# Ensuite on surcharge eventuellement
+#if hasattr(prefs,'CODE_PATH_SURCHARGE'):
+#   if prefs.CODE_PATH_SURCHARGE:
+#       sys.path.insert(0,prefs.CODE_PATH_SURCHARGE)
+
 import Accas

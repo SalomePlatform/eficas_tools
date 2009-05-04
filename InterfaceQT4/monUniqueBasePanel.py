@@ -80,7 +80,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
   def detruitBouton(self):
         mc = self.node.item.get_definition()
         type = mc.type[0]
-        if not('grma' in repr(type)) or not(self.editor.salome) :
+        #if not('grma' in repr(type)) or not(self.editor.salome) :
+        if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
            self.BSalome.close()
            self.BView2D.close()
 
@@ -111,12 +112,18 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def BOk2Pressed(self):
         SaisieValeur.BOk2Pressed(self)
+        if self.node.item.parent.nom == "FICXML" : 
+		self.node.item.parent.change_fichier="1"
+                self.node.item.parent.build_include(None,"")
 
   def BSupPressed(self):
         QTPanel.BSupPressed(self)
 
   def LEValeurPressed(self):
         SaisieValeur.LEValeurPressed(self)
+        if self.node.item.parent.nom == "FICXML" : 
+		self.node.item.parent.change_fichier="1"
+                self.node.item.parent.build_include(None,"")
 
   def BParametresPressed(self):
         QTPanel.BParametresPressed(self)
