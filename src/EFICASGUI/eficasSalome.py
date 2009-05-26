@@ -40,6 +40,7 @@ sys.path[:0]=[eficasConfig.eficasPath,
 ASTER  = "ASTER"
 HOMARD = "HOMARD"
 OPENTURNS = "OPENTURNS"
+SEP = "SEP"
 
 
 import Editeur    
@@ -571,6 +572,7 @@ class MyEficas( qtEficas.Appli ):
                 return ok, msgError
                         
             fileType = { 'ASTER'    : studyManager.FICHIER_EFICAS_ASTER,
+                         'SEP'       : studyManager.FICHIER_EFICAS_OM ,
                          'HOMARD'   : studyManager.FICHIER_EFICAS_HOMARD ,
                          'OPENTURNS': studyManager.FICHIER_EFICAS_OPENTURNS,
                          'OPENTURNS_STUDY': studyManager.FICHIER_EFICAS_OPENTURNS,
@@ -578,11 +580,13 @@ class MyEficas( qtEficas.Appli ):
                         
             folderName = {  'ASTER'    :  'AsterFiles',
                             'HOMARD'   : 'HomardFiles' ,
+                            'SEP'       : 'OMFiles' ,
                             'OPENTURNS_STUDY': 'OpenturnsFiles',                                    
                             'OPENTURNS_WRAPPER': 'OpenturnsFiles'}                                    
 
             folderType = { 'ASTER':     studyManager.ASTER_FILE_FOLDER,
                            'HOMARD':    studyManager.ASTER_FILE_FOLDER,
+                           'SEP':        studyManager.OM_FILE_FOLDER,
                            'OPENTURNS_STUDY': studyManager.OPENTURNS_FILE_FOLDER,
                            'OPENTURNS_WRAPPER': studyManager.OPENTURNS_FILE_FOLDER }
 

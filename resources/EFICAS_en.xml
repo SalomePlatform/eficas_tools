@@ -16,9 +16,9 @@
     <menubar>
       <menu-item label-id="EFICAS" item-id="90" pos-id="3">
         <popup-item item-id="941" label-id="Eficas pour Code_Aster" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande ASTER avec Eficas" accel-id="" toggle-id="" execute-action=""/>
+        <popup-item item-id="942" label-id="Eficas pour Outils Metier" icon-id="eficasOM.png" tooltip-id="Editer un jeu de commande ASTER avec Eficas" accel-id="" toggle-id="" execute-action=""/>
         <popup-item item-id="947" label-id="Eficas pour Openturns Study" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande Openturns Study avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-        <popup-item item-id="948" label-id="Eficas pour Openturns Wrapper" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande Openturns Wrapper avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-  <!-- 	<popup-item item-id="942" label-id="Eficas pour Homard" icon-id="eficashomard.png" tooltip-id="Editer un jeu de commande HOMARD avec Eficas" accel-id="" toggle-id="" execute-action=""/> -->
+        <popup-item item-id="948" label-id="Eficas pour Openturns Wrapper" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande Openturns Study avec Eficas" accel-id="" toggle-id="" execute-action=""/>
       </menu-item>
     </menubar>
 
@@ -26,16 +26,19 @@
 
     <toolbar label-id="Eficas">
         <toolbutton-item item-id="4041" label-id="Eficas pour Code_Aster" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande ASTER avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-   <!--     <toolbutton-item item-id="4046" label-id="Eficas pour Homard" icon-id="eficashomard.png" tooltip-id="Editer un jeu de commande HOMARD avec Eficas" accel-id="" toggle-id="" execute-action=""/> -->
-   <toolbutton-item item-id="4047" label-id="Eficas pour Openturns Study" icon-id="eficasaster.png" tooltip-id="Editer un jeu de commande Openturns Study avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-   <toolbutton-item item-id="4048" label-id="Eficas pour Openturns Wrapper" icon-id="eficasaster.png" tooltip-id="Editer un jeu de commande Openturns Wrapper avec Eficas" accel-id="" toggle-id="" execute-action=""/>
+       <toolbutton-item item-id="4042" label-id="Eficas pour Openturns Outils Metier"eficaster.png" icon-id="" tooltip-id="Editer un jeu de commande Outils Metier" avec Eficas" accel-id="" toggle-id="" execute-action=""/> 
+       <toolbutton-item item-id="4047" label-id="Eficas pour Openturns Study"" icon-id="" tooltip-id="Editer un jeu de commande Openturns Study" avec Eficas" accel-id="" toggle-id="" execute-action=""/> 
+       <toolbutton-item item-id="4048" label-id="Eficas pour Openturns Wrapper"" icon-id="" tooltip-id="Editer un jeu de commande Openturns Wrapper" avec Eficas" accel-id="" toggle-id="" execute-action=""/> 
     </toolbar>
 
   <!-- ### POPUP MENU ###  -->
      <popupmenu label-id="" context-id="" parent-id="ObjectBrowser" object-id="73">
-	<popup-item item-id="9043" pos-id="" label-id="Ouvrir avec Eficas pour Aster V8" icon-id="" tooltip-id="Editer avec Eficas" execute-action=""/>
-	<popup-item item-id="9044" pos-id="" label-id="Ouvrir avec Eficas pour Aster V9" icon-id="" tooltip-id="Editer avec Eficas" execute-action=""/>
+	<popup-item item-id="9041" pos-id="" label-id="Ouvrir avec Eficas pour Aster " icon-id="" tooltip-id="Editer avec Eficas" execute-action=""/>
+	<popup-item item-id="9042" pos-id="" label-id="Ouvrir avec Eficas pour Outils Metier " icon-id="" tooltip-id="Editer avec Eficas" execute-action=""/>
+	<popup-item item-id="9047" pos-id="" label-id="Ouvrir avec Eficas pour Openturns Study " icon-id="" tooltip-id="Editer avec Eficas" execute-action=""/>
+	<popup-item item-id="9048" pos-id="" label-id="Ouvrir avec Eficas pour Openturns Wrapper " icon-id="" tooltip-id="Editer avec Eficas" execute-action=""/>
     </popupmenu>
 
   </desktop>	
+
 </application>

@@ -149,6 +149,11 @@ def runEficaspourOpenturnsWrapper():
    desktop=sgPyQt.getDesktop()
    eficasSalome.runEficas( "OPENTURNS_WRAPPER" ) 
    
+def runEficaspourOM():
+   print "runEficas Pour Outils Metier"
+   desktop=sgPyQt.getDesktop()
+   eficasSalome.runEficas( "SEP" )
+   
    
 
 def runEficasFichier(version=None):
@@ -187,26 +192,23 @@ def runEficasFichier(version=None):
             eficasSalome.runEficas( code, fileName)
         
 
-def runEficasFichierV8():
-    runEficasFichier(version="v8.5")
-   
-def runEficasFichierV9():
-    runEficasFichier(version="v9.1")
-
 print "hhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
 # Partie applicative
 
 dict_command={
                 941:runEficasFichier,# runEficas,
-                #946:runEficaspourHomard,
+                942:runEficaspourOM,# runEficas,
                 947:runEficaspourOpenturnsStudy,
                 948:runEficaspourOpenturnsWrapper,
+
                 4041:runEficasFichier, #runEficas,
-                4046:runEficaspourHomard,
+                4042:runEficaspourOM,# runEficas,
                 4047:runEficaspourOpenturnsStudy,
                 4048:runEficaspourOpenturnsWrapper,
-                9042:runEficasFichier,
-                9043:runEficasFichier,
-                9044:runEficasFichierV9,
+
+                9041:runEficasFichier,
+                9042:runEficaspourOM,# runEficas,
+                9047:runEficaspourOpenturnsStudy,
+                9048:runEficaspourOpenturnsWrapper,
              }
              
