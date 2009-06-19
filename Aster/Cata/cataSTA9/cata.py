@@ -23,11 +23,6 @@
 from __future__ import division
 
 __version__ = "$Name:  $"
-<<<<<<< cata.py
-__Id__ = "$Id: cata.py,v 1.5 2009-06-19 08:36:49 pnoyret Exp $"
-=======
-__Id__ = "$Id: cata.py,v 1.3.4.5 2009-06-02 15:18:51 pnoyret Exp $"
->>>>>>> 1.3.4.5
 
 import Accas
 from Accas import *
