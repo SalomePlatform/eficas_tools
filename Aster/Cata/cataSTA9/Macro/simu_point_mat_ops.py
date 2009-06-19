@@ -1,4 +1,4 @@
-#@ MODIF simu_point_mat_ops Macro  DATE 07/10/2008   AUTEUR GENIAUT S.GENIAUT 
+#@ MODIF simu_point_mat_ops Macro  DATE 22/12/2008   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -126,12 +126,12 @@ def simu_point_mat_ops(self, COMP_INCR, MATER, INCREMENT, NEWTON,CONVERGENCE,REC
        FIN
      """
   
-  UL = UniteAster()
-  umail = UL.Libre(action='ASSOCIER', nom='simu.mail' )
-  
   fi_mail = open('simu.mail','w')
   fi_mail.write(texte_ma)
   fi_mail.close()
+  
+  UL = UniteAster()
+  umail = UL.Libre(action='ASSOCIER', nom='simu.mail' )
   
   __MA  =  LIRE_MAILLAGE(UNITE=umail)
   UL.EtatInit()

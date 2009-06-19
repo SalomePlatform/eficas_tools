@@ -35,7 +35,7 @@ except:
   pass
 
 __version__="$Name:  $"
-__Id__="$Id: cata.py,v 1.5.4.3 2008-12-08 13:50:34 pnoyret Exp $"
+__Id__="$Id: cata.py,v 1.5.4.4 2009-06-02 14:17:48 pnoyret Exp $"
 
 EnumTypes = (ListType, TupleType)
 

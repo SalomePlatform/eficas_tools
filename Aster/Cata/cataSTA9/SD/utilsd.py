@@ -23,7 +23,7 @@
    Utilitaire sur le catalogue des structures de données.
 """
 
-__revision__ = "$Id: utilsd.py,v 1.3.4.2 2008-11-28 16:53:33 pnoyret Exp $"
+__revision__ = "$Id: utilsd.py,v 1.3.4.3 2009-04-30 14:38:01 pnoyret Exp $"
 
 import sys
 import os

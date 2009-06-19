@@ -1,4 +1,4 @@
-#@ MODIF macr_ascouf_calc_ops Macro  DATE 14/04/2008   AUTEUR GALENNE E.GALENNE 
+#@ MODIF macr_ascouf_calc_ops Macro  DATE 24/03/2009   AUTEUR GALENNE E.GALENNE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20,7 +20,7 @@
 
 
 def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM,
-                              FOND_FISS,CHARGE,RESU_THER,AFFE_MATERIAU,
+                              FOND_FISS,RESU_THER,AFFE_MATERIAU,
                               PRES_REP,ECHANGE,TORS_P1,COMP_INCR,COMP_ELAS,
                               SOLVEUR,CONVERGENCE,NEWTON,RECH_LINEAIRE,
                               INCREMENT,THETA_3D,IMPR_TABLE,IMPRESSION,INFO,TITRE ,**args):

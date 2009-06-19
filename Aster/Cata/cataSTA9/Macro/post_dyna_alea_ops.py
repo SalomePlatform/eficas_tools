@@ -1,4 +1,4 @@
-#@ MODIF post_dyna_alea_ops Macro  DATE 06/10/2008   AUTEUR ZENTNER I.ZENTNER 
+#@ MODIF post_dyna_alea_ops Macro  DATE 22/12/2008   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -383,10 +383,11 @@ def post_dyna_alea_ops(self,INTE_SPEC, FRAGILITE,TITRE,INFO,**args):
 
            val_mom={}
            for i_mom in l_moments :
-               trapz     = Numeric.zeros(len(fvaly),Numeric.Float)
+               n         = len(fvaly)
+               trapz     = Numeric.zeros(n,Numeric.Float)
                trapz[0]  = 0.
                valy      = fvaly*(2*pi*fvalx)**i_mom
-               trapz[1:] = (valy[1:]+valy[:-1])/2*(fvalx[1:]-fvalx[:-1])
+               trapz[1:n] = (valy[1:n]+valy[:-1])/2*(fvalx[1:n]-fvalx[:-1])
                prim_y    = Numeric.cumsum(trapz)
                val_mom[i_mom] = prim_y[-1]
            for i_mom in l_moments :
