@@ -43,6 +43,14 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         MonPlusieursBasePanel.__init__(self,node,parent,name,fl)
 
   def SetNbValeurs(self):
+        self.nbValeurs = 1
+        if self.node.item.wait_tuple()== 1 :
+           for a in self.node.item.definition.type :
+               try :
+                   self.nbValeurs = a.ntuple
+                   break
+               except :
+                   pass
         genea=self.node.item.get_genealogie()
         if "VALE" in genea:
             self.nbValeurs=2
@@ -56,29 +64,34 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         if (len(liste)% self.nbValeurs != 0):
             message="La cardinalité n'est pas correcte, la dernière valeur est ignorée"
             #self.Commentaire.setText(QString(commentaire)) 
-            self.editor.affiche_infos(commentaire)
-        for i in range(len(liste)/ self.nbValeurs) :
-            if (self.nbValeurs==2):
-              t=(liste[i*self.nbValeurs], liste[i*self.nbValeurs+1])
-            else:
-              t=(liste[i*self.nbValeurs], liste[i*self.nbValeurs+1], liste[i*self.nbValeurs+2])
+            self.editor.affiche_infos(message)
+        i=0
+        while ( i < (len(liste) - self.nbValeurs + 1)) :
+            t=tuple(liste[i:i+self.nbValeurs])
             l_valeurs.append(t)
+            i=i+self.nbValeurs
         return l_valeurs
 
   def BuildLBValeurs(self):
         self.LBValeurs.clear()
         listeValeurs=self.node.item.GetListeValeurs()
-        for valeur in self.DecoupeListeValeurs(listeValeurs):
-               if (self.nbValeurs==2):
-                    str_valeur=str(valeur[0])+","+str(valeur[1])
-               else:
-                    str_valeur=str(valeur[0])+","+str(valeur[1])+","+str(valeur[2])
-               self.LBValeurs.addItem(str_valeur)
+        if self.node.item.wait_tuple()== 1 :
+	      listeATraiter=listeValeurs
+        else : 
+              listeATraiter=self.DecoupeListeValeurs(listeValeurs)
+        for valeur in listeATraiter:
+            str_valeur=str(valeur)
+            self.LBValeurs.addItem(str_valeur)
 
   def  Ajout1Valeur(self,liste=[]):
         # Pour être appele a partir du Panel Importer (donc plusieurs fois par AjouterNValeur)
         if liste == [] :
-           liste,validite=SaisieValeur.TraiteLEValeur(self)
+           if self.node.item.wait_tuple()== 1 :
+              liste=SaisieValeur.TraiteLEValeurTuple(self)
+              if liste == [''] : return
+              validite=1
+           else :
+              liste,validite=SaisieValeur.TraiteLEValeur(self)
         else :
            validite=1
         if validite == 0 : return
@@ -93,6 +106,9 @@ class MonFonctionPanel(MonPlusieursBasePanel):
             self.editor.affiche_infos(commentaire)
             return
 
+        if self.node.item.wait_tuple()== 1 :
+              liste2=tuple(liste)
+              liste=liste2
         index=self.LBValeurs.currentRow()
         if ((self.LBValeurs.isItemSelected(self.LBValeurs.item(index )) == 0) and (index > 0 )):
            index=0
@@ -104,7 +120,11 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         listeVal=[]
         for valeur in self.listeValeursCourantes :
                 listeVal.append(valeur)
-        validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,index,listeVal)
+        if self.node.item.wait_tuple()== 1 :
+             indexListe = index
+             validite,comm,comm2,listeRetour=self.politique.AjoutTuple(liste,index,listeVal)
+        else :
+             validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,index,listeVal)
         self.Commentaire.setText(comm2)
         if not validite :
                 self.editor.affiche_infos(comm)
@@ -112,11 +132,12 @@ class MonFonctionPanel(MonPlusieursBasePanel):
            self.LEValeur.setText(QString(""))
            l1=self.listeValeursCourantes[:indexListe]
            l3=self.listeValeursCourantes[indexListe:]
-           for valeur in  self.DecoupeListeValeurs(listeRetour) :
-               if (self.nbValeurs==2):
-                    str_valeur=str(valeur[0])+","+str(valeur[1])
-               else:
-                    str_valeur=str(valeur[0])+","+str(valeur[1])+","+str(valeur[2])
+           if self.node.item.wait_tuple()== 1 :
+	      listeATraiter=listeRetour
+           else : 
+              listeATraiter=self.DecoupeListeValeurs(listeRetour)
+           for valeur in  listeATraiter :
+               str_valeur=str(valeur)
                self.LBValeurs.insertItem(index,str_valeur)
                item=self.LBValeurs.item(index)
                item.setSelected(1)
@@ -135,21 +156,24 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         for vals in listeDecoupee :
             self.Ajout1Valeur(vals)
            
-
   def Sup1Valeur(self):
         index=self.LBValeurs.currentRow()
         if index == None : return
         self.LBValeurs.takeItem(index)
         listeVal=[]
+        indexInterdit=[]
+        for i in range(self.nbValeurs):
+            indexAOter=index*self.nbValeurs + i
+            indexInterdit.append(indexAOter)
+        if self.node.item.wait_tuple()== 1 :
+           indexInterdit=[index]
+
         i=0
         for valeur in self.listeValeursCourantes :
-                if self.nbValeurs == 2 :
-                   if (i != index*2 and i != index*2+1 ) : listeVal.append(valeur)
-                elif self.nbValeurs == 3 :
-                   if (i != index*3 and i != index*3+1 and i != index*3 +2) : listeVal.append(valeur)
-                else :
-                   print "aiiiiiiiiiiiiiiiiiieeee"
-                i = i+1
+            if not (i in indexInterdit) : 
+                listeVal.append(valeur)
+            i = i+1
         self.listeValeursCourantes=listeVal
         listeValeurs=self.listeValeursCourantes
 
+      

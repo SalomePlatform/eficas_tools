@@ -5,12 +5,14 @@ import traceback
 
 import compofact
 import browser
+import typeNode
+
 from Editeur     import Objecttreeitem
 from Noyau.N_OBJECT import ErrorObj
 #import compoerror
 
 
-class Node(browser.JDCNode):
+class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
     def getPanel(self):
         """        
         """    
@@ -25,6 +27,10 @@ class Node(browser.JDCNode):
            return MonMCFactPanel(self,parent=self.editor)
         else :
            print "MCList"
+
+    def createPopUpMenu(self):
+        typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
+
 
     def doPaste(self,node_selected):
         objet_a_copier = self.item.get_copie_objet()

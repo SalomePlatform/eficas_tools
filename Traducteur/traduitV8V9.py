@@ -9,6 +9,7 @@ Typical use is:
 
 import log
 import optparse
+import sys
 
 from load   import getJDC
 from mocles import parseKeywords
@@ -18,12 +19,45 @@ from renamemocle  import *
 from inseremocle  import *
 from changeValeur import *
 from movemocle    import *
-from dictErreurs  import GenereErreurPourCommande
+from dictErreurs  import GenereErreurPourCommande,GenereErreurMotCleInFact
 
 import calcG
 
 
-atraiter=( "DEFI_MAILLAGE","CALC_VECT_ELEM","DYNA_TRAN_EXPLI","DYNA_NON_LINE","STAT_NON_LINE","FACT_LDLT","FACT_GRAD","RESO_LDLT","RESO_GRAD","DYNA_TRAN_MODAL","NORM_MODE","MACRO_MODE_MECA","POST_RCCM","THER_NON_LINE","THER_LINEAIRE","THER_NON_LINE_MO","DEFI_CABLE_BP","GENE_VARI_ALEA","DEFI_MATERIAU","IMPR_MATRICE","CALC_G","CALC_MATR_ELEM","MACR_ADAP_MAIL","MACR_INFO_MAIL","REST_BASE_PHYS","COMB_SISM_MODAL","TEST_FICHIER","MACR_ELEM_DYNA","CREA_CHAMP","AFFE_CHAR_MECA","AFE_CHAR_MECA_F")
+atraiter=( "DEFI_MAILLAGE","CALC_VECT_ELEM","DYNA_TRAN_EXPLI","DYNA_NON_LINE","STAT_NON_LINE","FACT_LDLT","FACT_GRAD","RESO_LDLT","RESO_GRAD","DYNA_TRAN_MODAL","NORM_MODE","MACRO_MODE_MECA","POST_RCCM","THER_NON_LINE","THER_NON_LINE_MO","THER_LINEAIRE","THER_NON_LINE_MO","DEFI_CABLE_BP","GENE_VARI_ALEA","DEFI_MATERIAU","IMPR_MATRICE","CALC_G","CALC_MATR_ELEM","MACR_ADAP_MAIL","MACR_INFO_MAIL","REST_BASE_PHYS","COMB_SISM_MODAL","TEST_FICHIER","MACR_ELEM_DYNA","CREA_CHAMP","AFFE_CHAR_MECA","AFE_CHAR_MECA_F","MODI_MAILLAGE","DEFI_FISS_XFEM","AFFE_MODELE","POST_MAIL_XFEM","CALC_NO","LIRE_CHAMP","AFFE_MATERIAU","MACR_ASCOUF_CALC","MACR_ASPIC_CALC","CALC_PRECONT","LIRE_INTE_SPEC","MACR_CARA_POUTRE","MACR_LIGN_COUPE")
+
+dict_erreurs={
+# STA9
+              "POST_RCCM_SITUATION_NUME_PASSAGE":"Utilisation de NUME_PASSAGE pour le type TUYAUTERIE impossible en 9.2. On ne traite pour le moment que les chemins de passage simples.",
+              "POST_RCCM_SITUATION_NB_CYCL_SEISME":"POST_RCCM : maintenant les SITUATIONS sismiques ont leur propre mot clef facteur SEISME, attention, traduction incomplete",
+              "DEFI_MATERIAU_BAZANT_FD" : "le materiau BAZANT_FD a ete supprime",
+              "DEFI_MATERIAU_APPUI_ELAS" : "le materiau APPUI_ELAS a ete supprime",
+              "DEFI_MATERIAU_PORO_JOINT" : "le materiau PORO_JOINT a ete supprime",
+              "DEFI_MATERIAU_ZIRC_CYRA2" : "le materiau ZIRC_CYRA2 a ete supprime",
+              "DEFI_MATERIAU_ZIRC_EPRI" : "le materiau ZIRC_EPRI a ete supprime",
+              "IMPR_MATRICE_MATR_ELEM_FORMAT=RESULTAT" : "IMPR_MATRICE au format RESULTAT a ete supprime",
+              "IMPR_MATRICE_MATR_ASSE_FORMAT=RESULTAT" : "IMPR_MATRICE au format RESULTAT a ete supprime",
+              "CALC_G_OPTION=G_LAGR" : "l'OPTION G_LAGR de CALC_G a ete supprimee",
+              "CALC_G_OPTION=G_LAGR_GLOB" : "l'OPTION G_LAGR_GLOB de CALC_G a ete supprimee",
+              "CALC_MATR_ELEM_THETA" : "l'OPTION RIGI_MECA_LAGR de CALC_MATR_ELEM a ete supprimee",
+              "TEST_FICHIER_NB_CHIFFRE" : "le fonctionnement de TEST_FICHIER a change entre la V8 et la V9, consultez la doc, en particulier pour entrer la bonne valeur de NB_VALE",
+              "DYNA_NON_LINE_PILOTAGE" : "le PILOTAGE n'est pas actif dans DYNA_NON_LINE ",
+              "DYNA_NON_LINE_RECH_LINEAIRE" : "la RECH_LINEAIRE n'est pas active dans DYNA_NON_LINE ",
+              "DEFI_FISS_XFEM_CONTACT" : "en v9, le contact pour XFEM est defini dans un AFFE_CHAR_MECA(CONTACT=_F) en propre",
+              "POST_MAIL_XFEM" : "dans POST_MAIL_XFEM il faut entrer le MODELE et le MAILLAGE_SAIN",
+              "AFFE_MATERIAU_AFFE_TEMP_REF" : "Passage aux variables de commande : definir un materiau dependant de la temperature 'AFFE_MATERIAU(AFFE_VARC=_F(...))' et supprimer TEMP_CALCULEE dans les chargements",
+              "STAT_NON_LINE_LAGR_NON_LOCAL" : "Le solveur NON_LOCAL a ete supprime",
+              "STAT_NON_LINE_SOLV_NON_LOCAL" : "Le solveur NON_LOCAL a ete supprime",
+              "STAT_NON_LINE_ETAT_INIT_VARI_NON_LOCAL" : "Le solveur NON_LOCAL a ete supprime",
+              "DYNA_NON_LINE_LAGR_NON_LOCAL" : "Le solveur NON_LOCAL a ete supprime",
+              "DYNA_NON_LINE_SOLV_NON_LOCAL" : "Le solveur NON_LOCAL a ete supprime",
+              "DYNA_NON_LINE_ETAT_INIT_VARI_NON_LOCAL" : "Le solveur NON_LOCAL a ete supprime",
+              "CALC_PRECONT_LAGR_NON_LOCAL" : "Le solveur NON_LOCAL a ete supprime",
+              "CALC_PRECONT_SOLV_NON_LOCAL" : "Le solveur NON_LOCAL a ete supprime",
+              "CALC_PRECONT_ETAT_INIT_VARI_NON_LOCAL" : "Le solveur NON_LOCAL a ete supprime",
+             }
+
+sys.dict_erreurs=dict_erreurs
 
 def traduc(infile,outfile,flog=None):
 
@@ -35,7 +69,7 @@ def traduc(infile,outfile,flog=None):
     parseKeywords(root)
     
     ####################### traitement erreurs ########################
-    GenereErreurPourCommande(jdc,("POST_RCCM","DEFI_MATERIAU","TEST_FICHIER","DYNA_NON_LINE"))
+    GenereErreurPourCommande(jdc,("POST_RCCM","DEFI_MATERIAU","TEST_FICHIER","DYNA_NON_LINE","DEFI_FISS_XFEM","POST_MAIL_XFEM"))
 
     ####################### traitement Sous-Structuration  #######################
     renameMotCleInFact(jdc,"DEFI_MAILLAGE","DEFI_SUPER_MAILLE","MACR_ELEM_STAT","MACR_ELEM")
@@ -48,10 +82,21 @@ def traduc(infile,outfile,flog=None):
     removeMotCle(jdc,"MACR_ELEM_DYNA","OPTION")
     #########################################################################
 
-    ####################### traitement Resolution lineaire ######################
+    ####################### traitement MODI_MAILLAGE #######################
+    renameMotCle(jdc,"MODI_MAILLAGE","ORIE_SHB8","ORIE_SHB")
+    #########################################################################
+
+    ####################### traitement XFEM #######################
+    dXFEM={"3D_XFEM":"3D", "C_PLAN_X":"C_PLAN", "D_PLAN_X":"D_PLAN"}
+    ChangementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",dXFEM)
+    renameMotCleInFact(jdc,"DEFI_FISS_XFEM","ORIE_FOND","PT_ORIGIN","POINT_ORIG")
+    removeMotCleAvecErreur(jdc,"DEFI_FISS_XFEM","CONTACT")
+    #########################################################################
+
+    ####################### traitement Resolution lineaire #####################
     renameMotCle(jdc,"RESO_LDLT","MATR_FACT","MATR")
     renameMotCle(jdc,"RESO_GRAD","MATR_ASSE","MATR")
-    renameMotCle(jdc,"RESO_GRAD","MATR_FACT","MATR_FACT")
+    renameMotCle(jdc,"RESO_GRAD","MATR_FACT","MATR_PREC")
     renameOper(jdc,"RESO_LDLT","RESOUDRE")
     renameOper(jdc,"RESO_GRAD","RESOUDRE")
     renameOper(jdc,"FACT_LDLT","FACTORISER")
@@ -84,6 +129,9 @@ def traduc(infile,outfile,flog=None):
     renameMotCle(jdc,"THER_NON_LINE","TEMP_INIT","ETAT_INIT",)
     renameMotCleInFact(jdc,"THER_NON_LINE","INCREMENT","NUME_INIT","NUME_INST_INIT")
     renameMotCleInFact(jdc,"THER_NON_LINE","INCREMENT","NUME_FIN","NUME_INST_FIN")
+
+    renameMotCleInFact(jdc,"THER_NON_LINE_MO","TEMP_INIT","NUME_INIT","NUME_ORDRE")
+    renameMotCle(jdc,"THER_NON_LINE_MO","TEMP_INIT","ETAT_INIT",)
     #########################################################################
 
     ####################### traitement THER_LINEAIRE ############################
@@ -91,6 +139,7 @@ def traduc(infile,outfile,flog=None):
     renameMotCle(jdc,"THER_LINEAIRE","TEMP_INIT","ETAT_INIT",)
     renameMotCleInFact(jdc,"THER_LINEAIRE","INCREMENT","NUME_INIT","NUME_INST_INIT")
     renameMotCleInFact(jdc,"THER_LINEAIRE","INCREMENT","NUME_FIN","NUME_INST_FIN")
+    renameMotCleInFact(jdc,"THER_LINEAIRE","ARCHIVAGE","LIST_ARCH","LIST_INST")
     #########################################################################
 
     ####################### traitement THER_NON_LINE ############################
@@ -122,8 +171,8 @@ def traduc(infile,outfile,flog=None):
     moveMotCleFromFactToFact(jdc,"DEFI_MATERIAU","CAM_CLAY","PA","BARCELONE")
     renameMotCleInFact(jdc,"DEFI_MATERIAU","CAM_CLAY","PA","KCAM")
     # CAM_CLAY
-    AjouteMotClefDansFacteur(jdc,"DEFI_MATERIAU","CAM_CLAY","MU=xxx",)
-    AjouteMotClefDansFacteurSiRegle(jdc,"DEFI_MATERIAU","CAM_CLAY","PTRAC=XXX",((("CAM_CLAY","KCAM"),"existeMCsousMCF"),))
+#    AjouteMotClefDansFacteur(jdc,"DEFI_MATERIAU","CAM_CLAY","MU=xxx",)
+#    AjouteMotClefDansFacteurSiRegle(jdc,"DEFI_MATERIAU","CAM_CLAY","PTRAC=XXX",((("CAM_CLAY","KCAM"),"existeMCsousMCF"),))
     # VENDOCHAB
     renameMotCleInFact(jdc,"DEFI_MATERIAU","VENDOCHAB","S_VP","S")
     renameMotCleInFact(jdc,"DEFI_MATERIAU","VENDOCHAB","N_VP","N")
@@ -147,7 +196,7 @@ def traduc(infile,outfile,flog=None):
     #########################################################################
 
     ####################### traitement MACR_ADAP/INFO_MAIL ######################
-    dadap_mail={"V8_11":"V9_5", "V8_N":"V9_N", "V8_N_PERSO":"V9_N_PERSO"}
+    dadap_mail={ "V8_5":"V9_5", "V8_N":"V9_N", "V8_N_PERSO":"V9_N_PERSO"}
     ChangementValeur(jdc,"MACR_ADAP_MAIL","VERSION_HOMARD",dadap_mail)
     ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",dadap_mail)
     #########################################################################
@@ -238,7 +287,7 @@ def traduc(infile,outfile,flog=None):
     ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION",dDis_Choc)
     renameMotCleInFact(jdc,"STAT_NON_LINE","COMP_INCR","DIS_CONTACT","DIS_CHOC")
     renameMotCleInFact(jdc,"DYNA_NON_LINE","COMP_INCR","DIS_CONTACT","DIS_CHOC")
-    dGrilles={"DIS_GRICRA":"GRILLE_CRAYONS"}
+    dGrilles={"GRILLE_CRAYONS":"DIS_GRICRA"}
     ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION",dGrilles)
     ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION",dGrilles)
 
@@ -251,11 +300,102 @@ def traduc(infile,outfile,flog=None):
     dAppariement={"MAIT_ESCL_SYME":"MAIT_ESCL"}
     ChangementValeurDsMCF(jdc,"AFFE_CHAR_MECA","CONTACT","APPARIEMENT",dAppariement)
 
+    AjouteMotClefDansFacteurSiRegle(jdc,"AFFE_CHAR_MECA","CONTACT","TYPE_APPA='FIXE'",((("CONTACT","DIRE_APPA",),"existeMCsousMCF"),))
     #########################################################################
 
     ####################### traitement CREA_CHAMP ######################
     chercheOperInsereFacteurSiRegle(jdc,"CREA_CHAMP","PRECISION=1.E-3,", ((("PRECISION",),"nexistepas"),(("CRITERE",),"existe"),),0)
+    dTypeChamp={"ELEM_ERREUR":"ELEM_ERRE_R"}
+    ChangementValeur(jdc,"CREA_CHAMP","TYPE_CHAM",dTypeChamp)
     #########################################################################
+
+    ####################### traitement CALC_NO ######################
+    chercheOperInsereFacteurSiRegle(jdc,"CALC_NO","PRECISION=1.E-3,", ((("PRECISION",),"nexistepas"),(("CRITERE",),"existe"),),0)
+    #########################################################################
+
+    ######### traitement variables de commandes TEMP_CALCULEE/TEMP_REF ##############
+    GenereErreurMotCleInFact(jdc,"AFFE_MATERIAU","AFFE","TEMP_REF")
+    ################################################################################
+
+    ################# traitement LIRE_CHAMP  #######################################
+#    dTypeChamp={"ELEM_ERREUR":"ELEM_ERRE_R"}
+    ChangementValeur(jdc,"LIRE_CHAMP","TYPE_CHAM",dTypeChamp)
+    ################################################################################
+
+
+    ######### traitement SUIVI_DDL #################################################
+# en pre-traitement il faudrait une methode qui separe tous les mots clefs facteurs en les dupliquant
+# par exemple ici mettre autant de mots clefs facteurs SUIVI_DDL qu'il a de _F
+    AjouteMotClefDansFacteur(jdc,"STAT_NON_LINE","SUIVI_DDL","SUIVI_DDL='OUI'")
+    renameMotCle(jdc,"STAT_NON_LINE","SUIVI_DDL","OBSERVATION")
+# en post-traitement il faudrait une methode qui fusionne tous les mots clefs facteurs en double
+# par exemple ici les OBSERVATION
+    ################################################################################
+
+
+    ######### traitement EVOLUTION in STAT/DYNA_NON_LINE ###########################
+    removeMotCleInFact(jdc,"STAT_NON_LINE","INCREMENT","EVOLUTION")
+    removeMotCleInFact(jdc,"DYNA_NON_LINE","INCREMENT","EVOLUTION")
+    ################################################################################
+
+    ######### traitement du MODELE GRILLE ##############################################
+    dGrille={"GRILLE":"GRILLE_EXCENTRE"}
+    ChangementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",dGrille)
+    ################################################################################
+
+    ######### traitement de MACR_ASPIC/ASCOUF_CALC GRILLE ##########################
+    removeMotCle(jdc,"MACR_ASCOUF_CALC","CHARGE")
+    removeMotCle(jdc,"MACR_ASPIC_CALC","CHARGE")
+    ################################################################################
+
+
+    ############ suppression de NON_LOCAL ##########################################
+    removeMotCleAvecErreur(jdc,"STAT_NON_LINE","LAGR_NON_LOCAL")
+    removeMotCleAvecErreur(jdc,"STAT_NON_LINE","SOLV_NON_LOCAL")
+    removeMotCleInFact(jdc,"STAT_NON_LINE","ETAT_INIT","VARI_NON_LOCAL",erreur=1)
+
+    removeMotCleAvecErreur(jdc,"DYNA_NON_LINE","LAGR_NON_LOCAL")
+    removeMotCleAvecErreur(jdc,"DYNA_NON_LINE","SOLV_NON_LOCAL")
+    removeMotCleInFact(jdc,"DYNA_NON_LINE","ETAT_INIT","VARI_NON_LOCAL",erreur=1)
+
+    removeMotCleAvecErreur(jdc,"CALC_PRECONT","LAGR_NON_LOCAL")
+    removeMotCleAvecErreur(jdc,"CALC_PRECONT","SOLV_NON_LOCAL")
+    removeMotCleInFact(jdc,"CALC_PRECONT","ETAT_INIT","VARI_NON_LOCAL",erreur=1)
+    ################################################################################
+
+    ######### traitement de LIRE_INTE_SPEC #########################################
+    renameMotCle(jdc,"LIRE_INTE_SPEC","FORMAT","FORMAT_C")
+    ################################################################################
+
+    ######### traitement de MACR_CARA_POUTRE  ######################################
+    chercheOperInsereFacteurSiRegle(jdc,"MACR_CARA_POUTRE","FORMAT='ASTER'", ((("UNITE_MAILLAGE",),"existe"),),0)
+    renameMotCle(jdc,"MACR_CARA_POUTRE","UNITE_MAILLAGE","UNITE")
+    ################################################################################
+
+    ######### traitement de MACR_LIGN_COUPE  ######################################
+# il y a un probleme s'il y a plusieurs mots clefs facteurs LIGN_COUPE : la regle ne marche qu'une fois par commande
+    AjouteMotClefDansFacteurSiRegle(jdc,"MACR_LIGN_COUPE","LIGN_COUPE","REPERE='LOCAL'", ((("LIGN_COUPE","VECT_Y",),"existeMCsousMCF"),),0)
+# autre probleme : s'il y a plusieurs mots clefs facteurs le traducteur peut, dans l'insertion, se tromper de mot clef facteur
+    AjouteMotClefDansFacteurSiRegle(jdc,"MACR_LIGN_COUPE","LIGN_COUPE","TYPE='GROUP_NO'", ((("LIGN_COUPE","GROUP_NO",),"existeMCsousMCF"),),0)
+    AjouteMotClefDansFacteurSiRegle(jdc,"MACR_LIGN_COUPE","LIGN_COUPE","TYPE='GROUP_MA'", ((("LIGN_COUPE","GROUP_MA",),"existeMCsousMCF"),),0)
+    ################################################################################
+
+    ####################### traitement DRUCKER_PRAGER #######################
+    dPRAGER={"DRUCKER_PRAGER":"DRUCK_PRAGER",}
+    ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION",dPRAGER)
+    ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION",dPRAGER)
+    ChangementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_INCR","RELATION",dPRAGER)
+    ChangementValeurDsMCF(jdc,"CALC_PRECONT","COMP_INCR","RELATION",dPRAGER)
+    #########################################################################
+
+    ####################### traitement RELATION_KIT #######################
+    dKIT={"ELAS_THER":"ELAS",}
+    ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION_KIT",dKIT)
+    ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION_KIT",dKIT)
+    ChangementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_INCR","RELATION_KIT",dKIT)
+    ChangementValeurDsMCF(jdc,"CALC_PRECONT","COMP_INCR","RELATION_KIT",dKIT)
+    #########################################################################
+
 
     f=open(outfile,'w')
     f.write(jdc.getSource())

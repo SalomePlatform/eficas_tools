@@ -49,7 +49,7 @@ WrapperDataTransferByName = {
   "pipe"      : openturns.WrapperDataTransfer.PIPE,
   "arguments" : openturns.WrapperDataTransfer.ARGUMENTS,
   "socket"    : openturns.WrapperDataTransfer.SOCKET,
-  "CORBA"     : openturns.WrapperDataTransfer.CORBA,
+  "corba"     : openturns.WrapperDataTransfer.CORBA,
   None        : openturns.WrapperDataTransfer.FILES,
   }
 
@@ -79,6 +79,7 @@ class XMLGenerateur :
     data.setHessianDescription(  self.HessianDefinition()  )
     data.setFileList( self.FileList() )
     data.setParameters( self.Parameters() )
+    data.setFrameworkData( self.FrameworkData() )
     
     wrapper=openturns.WrapperFile()
     wrapper.setWrapperData( data )
@@ -86,12 +87,19 @@ class XMLGenerateur :
     return wrapper
 
 
+  class __variable_ordering:
+    def __init__ (self, dictVar) :
+      self.dictVar = dictVar
+      
+    def __call__(self, a, b):
+      return self.dictVar[a]['numOrdre'] - self.dictVar[b]['numOrdre']
+  
   def VariableList (self) :
     '''
     Ecrit la liste des variables
     '''
     varList = openturns.WrapperDataVariableList()
-    for var in self.DictVariables.keys() :
+    for var in sorted( self.DictVariables.keys(), self.__variable_ordering( self.DictVariables ) ) :
       varList.add( self.Variable( var, self.DictVariables[var] ) )
     return varList
 
@@ -173,7 +181,14 @@ class XMLGenerateur :
     parameters.out_   = WrapperDataTransferByName[ self.GetMCVal('OutDataTransfer') ]
     return parameters
   
-
+  def FrameworkData (self) :
+    '''
+    Ecrit les donnees liees a l utilisation d un framework englobant
+    '''
+    framework = openturns.WrapperFrameworkData()
+    #framework.studycase_ = "12:23:34"
+    framework.componentname_ = self.GetMCVal('SolverComponentName')
+    return framework
 
 
   # ---------------------------------------------------------------------------------

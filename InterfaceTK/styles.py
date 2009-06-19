@@ -8,7 +8,7 @@ inistylefile=os.path.join(prefs.REPINI,"style.py")
 if os.path.isfile(inistylefile):
    execfile(inistylefile)
 
-userstylefile=os.path.expanduser("~/Eficas_install/style.py")
+userstylefile=os.path.expanduser("~/.Eficas_install/style.py")
 if os.path.isfile(userstylefile):
    execfile(userstylefile)
 

@@ -65,10 +65,10 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         valeurTexte=self.politique.GetValeurTexte(valeur)
         if valeurTexte != None:
            try :
-               str=QString("").setNum(valeurTexte)
+               maString=QString("").setNum(valeurTexte)
            except :
-               str=QString(valeurTexte)
-           self.lineEditVal.setText(str)
+               maString=str(valeurTexte)
+           self.lineEditVal.setText(maString)
 
 
   def InitCommentaire(self):

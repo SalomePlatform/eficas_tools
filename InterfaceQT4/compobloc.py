@@ -6,14 +6,19 @@ from Editeur     import Objecttreeitem
 
 import compofact
 import browser
+import typeNode
 
 
-class Node(browser.JDCNode):
+class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
     def getPanel(self):
         """        
         """    
         from monMCFactPanel import MonMCFactPanel
         return MonMCFactPanel(self,parent=self.editor)
+
+    def createPopUpMenu(self):
+        typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
+
 
 
 class BLOCTreeItem(compofact.FACTTreeItem):

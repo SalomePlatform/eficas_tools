@@ -35,6 +35,7 @@ from Noyau.N_CR import CR
 from Editeur.utils  import init_rep_cata_dev
 
 import analyse_catalogue
+import analyse_catalogue_initial
 import autre_analyse_cata
 import uiinfo
 from monChoixCata import MonChoixCata
@@ -43,7 +44,7 @@ from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
-VERSION_EFICAS="Eficas V1.15"
+VERSION_EFICAS="Eficas V1.16"
 
 class READERCATA:
 
@@ -52,6 +53,10 @@ class READERCATA:
       self.appliEficas=self.QWParent.appliEficas
       self.code=self.QWParent.code
       self.appliEficas.format_fichier='python'
+      if hasattr(self.appliEficas,'mode_nouv_commande'):
+	 self.mode_nouv_commande=self.appliEficas.mode_nouv_commande
+      else :
+         self.mode_nouv_commande='alpha'
       self.version_code=self.QWParent.version_code
       self.version_cata=None
       self.fic_cata=None
@@ -63,7 +68,6 @@ class READERCATA:
           Ouvre le catalogue standard du code courant, cad le catalogue présent
           dans le répertoire Cata 
       """
-      message1 = "Compilation des fichiers Eficas \n\n Veuillez patienter ..."
 
       liste_cata_possibles=[]
       for catalogue in self.appliEficas.CONFIGURATION.catalogues:
@@ -92,7 +96,7 @@ class READERCATA:
           lab+=QString(" avec le catalogue ")
           lab+=self.version_code
           try :
-          # souci pour les includes
+          # souci pour les includes et sans Ihm
               self.appliEficas.setWindowTitle(lab)
           except :
               pass
@@ -125,6 +129,10 @@ class READERCATA:
       # remplacé par Retrouve_Ordre_Cata_Standard_autre qui utilise une numerotation
       # des mots clés a la création
       self.Retrouve_Ordre_Cata_Standard_autre()
+      if self.mode_nouv_commande== "initial" :
+         self.Retrouve_Ordre_Cata_Standard()
+      else:
+         self.Commandes_Ordre_Catalogue=[]
 
       #
       # analyse des données liées a  l'IHM : UIinfo
@@ -183,52 +191,11 @@ class READERCATA:
    def Retrouve_Ordre_Cata_Standard(self):
       """ 
           Retrouve l'ordre des mots-clés dans le catalogue, cad :
-           - si ce dernier a été modifié, relance l'analyse du catalogue pour déterminer
-               l'ordre des mots-clés dans le catalogue
-           - s'il n'a pas été modifié, relie le fichier pickle 
+          Attention s appuie sur les commentaires
       """
-      time1 = os.path.getmtime(self.fic_cata)
-      try :
-          time2 = os.path.getmtime(self.fic_cata_p)
-      except:
-          time2 = 0
-      if time2 > time1 :
-          # l'objet catalogue n'a pas été modifié depuis le dernier "pickle"
-          self.Get_Ordre_Cata()
-      else :
-          # le catalogue a été modifié depuis le dernier "pickle" :
-          # il faut retrouver l'ordre du catalogue et refaire pickle
-          self.Get_Ordre_Cata(mode='cata')
-      self.appliEficas.affiche_infos("Catalogue standard chargé")
-
-
-   def Get_Ordre_Cata(self,mode='pickle'):
-      """ 
-          Retrouve l'ordre du catalogue :
-            - mode='pickle ': tente de relire le fichier pickle et sinon lance l'analyse du catalogue
-            - mode='cata'   : force l'analyse du catalogue directement sans relire le pickle
-      """
-      if mode == 'pickle' :
-          try:
-              f = open(self.fic_cata_p)
-              u = cPickle.Unpickler(f)
-              self.cata_ordonne_dico = u.load()
-              f.close()
-          except :
-              # on peut ne pas arriver a  relire le fichier pickle s'il a été altéré
-              # ou (le plus probable) s'il a été créé sous un autre OS
-              self.Get_Ordre_Cata(mode='cata')
-      elif mode == 'cata':
-          cata_ordonne = analyse_catalogue.analyse_catalogue(self,self.fic_cata)
-          self.cata_ordonne_cr = cata_ordonne.cr
-          self.cata_ordonne_dico = cata_ordonne.entites
-          f = open(self.fic_cata_p,'w+')
-          p = cPickle.Pickler(f)
-          p.dump(self.cata_ordonne_dico)
-          f.close()
-      else :
-          raise Exception("Appel a  un mode inconnu de Get_Ordre_Cata : %s" % mode)
-          return
+      nom_cata = os.path.splitext(os.path.basename(self.fic_cata))[0]
+      rep_cata = os.path.dirname(self.fic_cata)
+      self.Commandes_Ordre_Catalogue = analyse_catalogue_initial.analyse_catalogue(self.fic_cata)
 
    def ask_choix_catalogue(self):
       """
@@ -246,8 +213,7 @@ class READERCATA:
       liste_choix = self.dico_catalogues.keys()
       liste_choix.sort()
 
-      lab=QString("Eficas V1.") 
-      lab+=QString(version) 
+      lab=QString(VERSION_EFICAS)
       lab+=QString(" pour ")
       lab+=QString(self.code) 
       lab+=QString(" avec le catalogue ")
@@ -262,8 +228,7 @@ class READERCATA:
       widgetChoix=MonChoixCata(liste_choix,self, self.appliEficas, "", True )
       ret=widgetChoix.exec_()
       
-      lab=QString("Eficas V1.") 
-      lab+=QString(version) 
+      lab=QString(VERSION_EFICAS)
       lab+=QString(" pour ")
       lab+=QString(self.code) 
       lab+=QString(" avec le catalogue ")
@@ -278,46 +243,6 @@ class READERCATA:
       else :
           sys.exit(0)
 
-
-   def compile_cata(self,cata,catac):
-      """ 
-           Teste si le catalogue a bien besoin d'etre recompilé et si oui, le compile et
-           affiche un message dans le splash . Retourne 1 si la compilation s'est bien déroulée,
-           0 sinon.
-      """
-      time1 = os.path.getmtime(cata)
-      try:
-          time2 = os.path.getmtime(catac)
-      except:
-          time2 = 0
-      if time1 > time2:
-          try:
-              # le catalogue doit etre recompilé avant d'etre importé
-              if self.QWParent.test == 0 :
-                 splash._splash.configure(text="Compilation du catalogue\nCela peut prendre plusieurs secondes ...")
-              py_compile.compile(cata)
-          except:
-              return 0
-      return 1
-
-
-
-   def visuCRCATA(self):
-      """
-      Méthode permettant l'affichage du rapport de validation
-      """
-      cr = CR( debut = "Début rapport de validation du catalogue",
-               fin = "Fin rapport de validation du catalogue")
-      titre="rapport de validation du catalogue"
-      if hasattr(self,'cata_ordonne_cr') :
-          cr.add(self.cata_ordonne_cr)
-      if hasattr(self,'cata_dev_ordonne_cr') :
-          cr.add(self.cata_dev_ordonne_cr)
-      for cata in self.cata:
-          if hasattr(cata,'JdC'):
-              cr.add(cata.JdC.report())
-      texte_cr = str(cr)
-      self.visu_texte_cr = Fenetre(self.appliEficas,titre=titre,texte=texte_cr)
 
 
    def traite_clefs_documentaires(self):

@@ -42,7 +42,27 @@ def lance_eficas(code=None,fichier=None):
     Eficas=Appli(code=code)
     Eficas.show()
 
-
     res=app.exec_()
     sys.exit(res)
 
+
+def lance_eficas_ssIhm(code=None,fichier=None):
+    """
+        Lance l'appli EFICAS pour trouver les noms des groupes
+    """
+    # Analyse des arguments de la ligne de commande
+    options=session.parse(sys.argv)
+    code=options.code
+
+    app = QApplication(sys.argv)
+    Eficas=Appli(code=code)
+
+    from ssIhm  import QWParentSSIhm
+    parent=QWParentSSIhm(code,Eficas,'v9.4')
+
+    from readercata import READERCATA
+    readercata = READERCATA( parent, Eficas )
+   
+    from editor import JDCEditor
+    monEditeur=JDCEditor(Eficas,fichier)
+    print monEditeur.cherche_Groupes()

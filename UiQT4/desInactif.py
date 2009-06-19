@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'desInactif.ui'
 #
-# Created: Tue Nov 18 17:37:24 2008
-#      by: PyQt4 UI code generator 4.4.2
+# Created: Thu Mar 12 12:15:36 2009
+#      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,26 +12,33 @@ from PyQt4 import QtCore, QtGui
 class Ui_DInactif(object):
     def setupUi(self, DInactif):
         DInactif.setObjectName("DInactif")
-        DInactif.resize(452,480)
-        DInactif.setMinimumSize(QtCore.QSize(350,0))
+        DInactif.resize(452, 480)
+        DInactif.setMinimumSize(QtCore.QSize(350, 0))
         self.gridLayout = QtGui.QGridLayout(DInactif)
         self.gridLayout.setObjectName("gridLayout")
         self.textLabel1_3 = QtGui.QLabel(DInactif)
+        self.textLabel1_3.setMinimumSize(QtCore.QSize(0, 0))
         self.textLabel1_3.setWordWrap(False)
         self.textLabel1_3.setObjectName("textLabel1_3")
-        self.gridLayout.addWidget(self.textLabel1_3,0,0,1,3)
+        self.gridLayout.addWidget(self.textLabel1_3, 0, 0, 1, 3)
         self.textLabel1 = QtGui.QLabel(DInactif)
         self.textLabel1.setWordWrap(False)
         self.textLabel1.setObjectName("textLabel1")
-        self.gridLayout.addWidget(self.textLabel1,1,0,1,3)
-        spacerItem = QtGui.QSpacerItem(167,146,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem,2,0,1,1)
+        self.gridLayout.addWidget(self.textLabel1, 1, 0, 1, 3)
+        spacerItem = QtGui.QSpacerItem(167, 146, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem, 2, 0, 1, 1)
         self.bSup = QtGui.QPushButton(DInactif)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.bSup.sizePolicy().hasHeightForWidth())
+        self.bSup.setSizePolicy(sizePolicy)
+        self.bSup.setMinimumSize(QtCore.QSize(170, 40))
         self.bSup.setAutoDefault(True)
         self.bSup.setObjectName("bSup")
-        self.gridLayout.addWidget(self.bSup,2,1,1,1)
-        spacerItem1 = QtGui.QSpacerItem(166,146,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem1,2,2,1,1)
+        self.gridLayout.addWidget(self.bSup, 2, 1, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(166, 146, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem1, 2, 2, 1, 1)
 
         self.retranslateUi(DInactif)
         QtCore.QMetaObject.connectSlotsByName(DInactif)

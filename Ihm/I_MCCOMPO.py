@@ -407,6 +407,10 @@ class MCCOMPO(I_OBJECT.OBJECT):
   def delete_mc_global(self):
      for motcle in self.mc_liste :
          motcle.delete_mc_global()
+     try :
+         motcle.update_mc_global()
+     except :
+	pass
 
   def init_modif_up(self):
     Validation.V_MCCOMPO.MCCOMPO.init_modif_up(self)

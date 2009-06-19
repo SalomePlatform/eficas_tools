@@ -33,7 +33,7 @@ from tkFileDialog import *
 from tkMessageBox import showinfo,askyesno,showerror,askretrycancel
 
 import fontes
-import prefs
+
 from Editeur.utils import save_in_file
 from centerwindow import centerwindow
 
@@ -707,7 +707,6 @@ class Formulaire:
             self.resultat = apply(self.command[1],(),{})
             self.fenetre.destroy()
         else :
-            print "Nom de bouton inconnu"
             self.quit()
 
     def fini(self):

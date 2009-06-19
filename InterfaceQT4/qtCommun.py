@@ -43,44 +43,10 @@ class QTPanel:
         self.editor    = parent
         self.node      = node
         
-  def BSupPressed(self):
-        self.editor.init_modif()
-        self.node.delete()
-        
-  def ViewDoc(self) :
-      cle_doc = self.node.item.get_docu()
-      if cle_doc == None :
-         QMessageBox.information( self.editor, "Documentation Vide", \
-                                  "Aucune documentation Aster n'est associée à ce noeud")
-         return
-      cle_doc = string.replace(cle_doc,'.','')
-      cle_doc = string.replace(cle_doc,'-','')
-      commande = self.editor.appliEficas.CONFIGURATION.exec_acrobat
-      try :
-         f=open(commande,"rb")
-      except :
-         texte="impossible de trouver la commande  " + commande
-         QMessageBox.information( self.editor, "Lecteur PDF", texte)
-         return
-      nom_fichier = cle_doc+".pdf"
-      fichier = os.path.abspath(os.path.join(self.editor.CONFIGURATION.path_doc,
-                                       nom_fichier))
-      try :
-         f=open(fichier,"rb")
-      except :
-         texte="impossible d'ouvrir " + fichier
-         QMessageBox.information( self.editor, "Documentation Vide", texte)
-         return
-      if os.name == 'nt':
-          os.spawnv(os.P_NOWAIT,commande,(commande,fichier,))
-      elif os.name == 'posix':
-          script ="#!/usr/bin/sh \n%s %s&" %(commande,fichier)
-          pid = os.system(script)
-
   def BOkPressed(self):
         """ Impossible d utiliser les vrais labels avec designer ?? """
         label=self.TWChoix.tabText(self.TWChoix.currentIndex())
-        #print label
+        print label
         if label==QString("Nouvelle Commande"):
            self.DefCmd()
         if label==QString("Nommer Concept"):
@@ -171,18 +137,33 @@ class QTPanelTBW2(QTPanel):
         self.node      = node
         self.BuildLBNouvCommande()
         self.NbRecherches = 0
-        if racine == 1 : self.AppelleBuildLBRegles()
+        if racine == 1 :
+           self.AppelleBuildLBRegles()
+        else :
+           self.connect(self.TWChoix, SIGNAL("currentChanged(QWidget *)"), self.handleCurrentChanged)
+
+
+  def handleCurrentChanged(self):
+        try :
+           self.LEFiltre.setFocus()
+        except :
+           pass
 
       
   def BuildLBNouvCommande(self):
         self.LBNouvCommande.clear()
 
         jdc=self.node.item.object.get_jdc_root()
-        if self.RBalpha.isChecked():
+        if self.editor.mode_nouv_commande == "alpha":
+           self.RBalpha.setChecked(True)
+           self.RBGroupe.setChecked(False)
            listeCmd = jdc.get_liste_cmd()
            for aCmd in listeCmd:
               self.LBNouvCommande.addItem( aCmd )
-        else :
+        elif self.editor.mode_nouv_commande== "groupe" :
+           self.RBGroupe.setChecked(True)
+           self.RBalpha.setChecked(False)
+
            listeGroupes,dictGroupes=jdc.get_groups()
            for grp in listeGroupes:
               if grp == "CACHE":continue
@@ -193,12 +174,24 @@ class QTPanelTBW2(QTPanel):
               for aCmd in listeCmd:
                  self.LBNouvCommande.addItem( aCmd)
               self.LBNouvCommande.addItem( " " )
+        elif self.editor.mode_nouv_commande== "initial" :
+           listeCmd =  self.editor.Commandes_Ordre_Catalogue
+           listeCmd2=jdc.get_liste_cmd()
+           if len(listeCmd) != len(listeCmd2):
+               listeCmd	= listeCmd2
+           for aCmd in listeCmd:
+              self.LBNouvCommande.addItem( aCmd )
         #QObject.connect( self.LBNouvCommande, SIGNAL("itemClicked(QListWidgetItem*)"),self.DefCmd )
         QObject.connect( self.LBNouvCommande, SIGNAL("itemDoubleClicked(QListWidgetItem*)"),self.DefCmd )
 
+  def BuildLBNouvCommandChanged(self) :
+        if self.RBalpha.isChecked():
+           self.editor.mode_nouv_commande="alpha"
+        else :
+           self.editor.mode_nouv_commande="groupe"
+        self.BuildLBNouvCommande()
+
   def DefCmd(self):
-        if (self.editor.focusWidget())!=self.LBNouvCommande :
-            return 
         if self.LBNouvCommande.currentItem()== 0 : return
         if self.LBNouvCommande.currentItem()== None : return
         name=str(self.LBNouvCommande.currentItem().text())
@@ -283,7 +276,7 @@ class ViewText(Ui_dView,QDialog):
         self.parent=parent
         self.setupUi(self)
 
-        self.resize( QSize(600,507).expandedTo(self.minimumSizeHint()) )
+        self.resize( QSize(600,600).expandedTo(self.minimumSizeHint()) )
         self.connect( self.bclose,SIGNAL("clicked()"), self, SLOT("close()") )
         self.connect( self.bsave,SIGNAL("clicked()"), self.saveFile )
         

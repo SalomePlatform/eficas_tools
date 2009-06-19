@@ -63,18 +63,13 @@ class MonUniqueSDCOPanel(DUnSDCO,QTPanel,SaisieSDCO):
         self.connecterSignaux()
 
   def connecterSignaux(self) :
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
-        self.connect(self.bSup,SIGNAL("clicked()"),self.BSupPressed)
         self.connect(self.LESDCO,SIGNAL("returnPressed()"),self.LESDCOReturnPressed)
-
 
 
   def BOkPressed(self):
         SaisieSDCO.LESDCOReturnPressed(self)
 
-  def BSupPressed(self):
-        QTPanel.BSupPressed(self)
 
   def BOuiPressed(self):
         self.Commentaire.setText("Aucun Objet de ce type n'est defini")
@@ -87,6 +82,4 @@ class MonUniqueSDCOPanel(DUnSDCO,QTPanel,SaisieSDCO):
         """
         SaisieSDCO.LESDCOReturnPressed(self)
 
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
 

@@ -76,8 +76,6 @@ class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
 	self.editor.affiche_infos("Valeur Acceptée")
 	pass
 
-  def BSupPressed(self):
-        QTPanel.BSupPressed(self)
 
   def Sup1Valeur(self):
         indexCourant=self.LBValeurs.currentRow()

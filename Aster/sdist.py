@@ -66,8 +66,8 @@ def main():
    # copyfiles('Cata/Utilitai',os.path.join(path_distrib,'Aster','Cata','Utilitai'),['*.py'])
    # copyfiles('Cata/pre74',os.path.join(path_distrib,'Aster','Cata','pre74'),['*.py'])
 
-   copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
-   copyfiles('Cata/cataSTA6/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA6','Macro'),['*.py'])
+   #copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
+   #copyfiles('Cata/cataSTA6/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA6','Macro'),['*.py'])
 
    copyfiles('Cata/cataSTA7',os.path.join(path_distrib,'Aster','Cata','cataSTA7'),['*.py'])
    copyfiles('Cata/cataSTA7/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA7','Macro'),['*.py'])
@@ -83,7 +83,7 @@ def main():
    copyfiles('Cata/cataSTA9/materiau',os.path.join(path_distrib,'Aster','Cata','cataSTA9/materiau'),['README.py'])
    copyfiles('Cata/cataSTA9/SD',os.path.join(path_distrib,'Aster','Cata','cataSTA9/SD'),['*.py'])
 
-   copyfiles('Cata',os.path.join(path_distrib,'Aster','Cata'),['*c_clefs_docu'])
+   copyfiles('Cata',os.path.join(path_distrib,'Aster','Cata'),['*9c_clefs_docu'])
    copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster'),['aster.py',])
 
    #				______________________

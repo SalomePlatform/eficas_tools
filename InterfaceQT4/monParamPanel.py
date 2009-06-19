@@ -64,11 +64,9 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)
         self.connect(self.LEFiltre,SIGNAL("textChanged(const QString&)"),self.LEFiltreTextChanged)
         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEfiltreReturnPressed)
-        self.connect(self.bSup,SIGNAL("pressed()"),self.BSupPressed)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
-        self.connect(self.RBGroupe,SIGNAL("clicked()"),self.BuildTabCommand)
-        self.connect(self.RBalpha,SIGNAL("clicked()"),self.BuildTabCommand)
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
+        self.connect(self.RBGroupe,SIGNAL("clicked()"),self.BuildTabCommandChanged)
+        self.connect(self.RBalpha,SIGNAL("clicked()"),self.BuildTabCommandChanged)
         self.connect(self.BNext,SIGNAL("pressed()"),self.BNextPressed)
         self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.BOkPressed)
 
@@ -96,12 +94,9 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         self.node.item.set_nom(nom)
         self.node.item.set_valeur(val)
         self.node.update_texte()
-        self.node.update_valid()
         self.editor.init_modif()
         self.InitLEs()
 
-  def BSupPressed(self):
-        QTPanel.BSupPressed(self)
 
   def LEValeurPressed(self):
         self.Commentaire.setText(QString(""))
@@ -144,8 +139,8 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
            commentaire="Les noms de parametre doivent commencer par une lettre ou un souligne"
            return None,commentaire
 
-  def BuildTabCommand(self):
-      QTPanelTBW2.BuildLBNouvCommande(self)
+  def BuildTabCommandChanged(self):
+      QTPanelTBW2.BuildLBNouvCommandChanged(self)
 
   def LEFiltreTextChanged(self):
       QTPanelTBW2.LEFiltreTextChanged(self)
@@ -166,7 +161,4 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
 
   def BOkPressed(self):
       QTPanel.BOkPressed(self)
-
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
 

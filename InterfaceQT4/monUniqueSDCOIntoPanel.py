@@ -88,10 +88,3 @@ class MonUniqueSDCOIntoPanel(DUnSDCOInto,QTPanel,SaisieSDCO):
 
   def BOkPressed(self):
         self.LESDCOReturnPressed()
-
-  def BSupPressed(self):
-        QTPanel.BSupPressed(self)
-
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
-

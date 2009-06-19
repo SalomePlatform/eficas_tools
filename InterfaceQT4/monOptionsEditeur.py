@@ -34,7 +34,6 @@ class Options(desOptions):
        self.connect(self.Bok,SIGNAL("clicked()"),self.BokClicked)
        self.connect(self.LEVersionSup,SIGNAL("returnPressed()"),self.SupVersion)
        self.connect(self.PBajout,SIGNAL("clicked()"),self.AjoutVersion)
-       self.connect(self.PBSup,SIGNAL("clicked()"),self.SupVersion)
        self.connect(self.PBQuit,SIGNAL("clicked()"),self.close)
        self.connect(self.LERepDoc,SIGNAL("textChanged(const QString&)"),self.ChangePathDoc)
 
@@ -154,7 +153,10 @@ class Options(desOptions):
        old_fic_ini_util=fic_ini_util+"_old"
        commande="mv "+fic_ini_util+" "+old_fic_ini_util
        os.system(commande)
-       import configuration
+       import prefs
+       nameConf='configuration_'+prefs.code
+       configuration=__import__(nameConf)
+
        configNew=configuration.CONFIG(appli,repIni)
        self.configuration=configNew
        appli.CONFIGURATION=configNew

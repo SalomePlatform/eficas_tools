@@ -14,6 +14,7 @@ import typeNode
 
 class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):         
     def getPanel(self):
+      print "MACRONode MACRONode"
       from   monMacroPanel import MonMacroPanel
       return MonMacroPanel (self,parent=self.editor )
     

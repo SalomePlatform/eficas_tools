@@ -63,9 +63,7 @@ class MonUniqueIntoPanel(DUnIn,QTPanel,SaisieValeur):
 
   def connecterSignaux(self) :
         self.connect(self.listBoxVal, SIGNAL("itemDoubleClicked(QListWidgetItem*)" ), self.ClicValeur )
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
-        self.connect(self.bSup,SIGNAL("clicked()"),self.BSupPressed)
 
   def ClicValeur(self):
         SaisieValeur.ClicValeur(self)
@@ -73,10 +71,4 @@ class MonUniqueIntoPanel(DUnIn,QTPanel,SaisieValeur):
 
   def BOkPressed(self):
         SaisieValeur.BOkPressed(self)
-
-  def BSupPressed(self):
-        QTPanel.BSupPressed(self)
-
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
 

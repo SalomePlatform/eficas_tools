@@ -23,17 +23,22 @@ from PyQt4 import *
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
 import browser
+import typeNode
+
 
 from Editeur import Objecttreeitem
 
 
-class Node(browser.JDCNode):
+class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
     def getPanel(self):
         """
         """
         from monMCFactPanel import MonMCFactPanel
         return MonMCFactPanel(self,parent=self.editor)
         
+    def createPopUpMenu(self):
+        typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
+
     def doPaste(self,node_selected):
         objetACopier = self.item.get_copie_objet()
         child=node_selected.doPasteMCF(objetACopier)

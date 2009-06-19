@@ -10,8 +10,6 @@ from viewManager import MyTabview
 
 from Editeur import session
 
-dirCode={"ASTER":"Aster","OPENTURNS_WRAPPER":"Openturns_Wrapper"}
-
 
 class Appli(Ui_Eficas,QMainWindow):    
     """
@@ -26,20 +24,30 @@ class Appli(Ui_Eficas,QMainWindow):
         self.salome=salome
         self.format_fichier="python"	#par defaut
 	self.top = self #(pour CONFIGURATION)
+        self.QWParent=None #(Pour lancement sans IHM)
 
         import prefs
-        self.REPINI=prefs.REPINI
-        import configuration
-        self.CONFIGURATION = configuration.make_config(self,prefs.REPINI)
-        self.CONFIGStyle = configuration.make_config_style(self,prefs.REPINI)
-        if hasattr(prefs,'encoding'):
+        if salome :
+           import sys
+        prefs.code=code
+        name='prefs_'+prefs.code
+        prefsCode=__import__(name)
+        nameConf='configuration_'+prefs.code
+        configuration=__import__(nameConf)
+
+        self.REPINI=prefsCode.REPINI
+        self.RepIcon=prefsCode.INSTALLDIR+"/Editeur/icons"
+        self.CONFIGURATION = configuration.make_config(self,prefsCode.REPINI)
+        self.CONFIGStyle = configuration.make_config_style(self,prefsCode.REPINI)
+        if hasattr(prefsCode,'encoding'):
            import sys
            reload(sys)
-           sys.setdefaultencoding(prefs.encoding)
+           sys.setdefaultencoding(prefsCode.encoding)
 
         QMainWindow.__init__(self)
         Ui_Eficas.__init__(self)
         self.setupUi(self)
+        self.ajoutIcones()
         self.viewmanager = MyTabview(self) 
         self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
         self.connecterSignaux() 
@@ -62,6 +70,21 @@ class Appli(Ui_Eficas,QMainWindow):
         self.MenuBar.removeItem(5)
         self.MenuBar.removeItem(6)
         self.MenuBar.removeItem(7)
+
+    def ajoutIcones(self) :
+        # Pour pallier les soucis de repertoire d icone
+        icon = QIcon(self.RepIcon+"/New24.png")
+        self.action_Nouveau.setIcon(icon)
+        icon1 = QIcon(self.RepIcon+"/Open24.png")
+        self.action_Ouvrir.setIcon(icon1)
+        icon2 = QIcon(self.RepIcon+"/Save24.png")
+        self.actionEnregistrer.setIcon(icon2)
+        icon3 = QIcon(self.RepIcon+"/Cut24.png")
+        self.actionCouper.setIcon(icon3)
+        icon4 = QIcon(self.RepIcon+"/Copy24.png")
+        self.actionCopier.setIcon(icon4)
+        icon5 = QIcon(self.RepIcon+"/Paste24.png")
+        self.actionColler.setIcon(icon5)
 
 
     def connecterSignaux(self) :
@@ -292,12 +315,12 @@ if __name__=='__main__':
 
     # Modules Eficas
     sys.path.append(INSTALLDIR+"/Aster")
-    from Aster import prefs
-    if hasattr(prefs,'encoding'):
+    from Aster import prefsCode
+    if hasattr(prefsCode,'encoding'):
        # Hack pour changer le codage par defaut des strings
        import sys
        reload(sys)
-       sys.setdefaultencoding(prefs.encoding)
+       sys.setdefaultencoding(prefsCode.encoding)
        del sys.setdefaultencoding
        # Fin hack
 

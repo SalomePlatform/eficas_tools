@@ -44,50 +44,6 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2" >
-    <widget class="QPushButton" name="bHelp" >
-     <property name="minimumSize" >
-      <size>
-       <width>0</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="toolTip" >
-      <string>affichage documentation aster</string>
-     </property>
-     <property name="text" >
-      <string>&amp;Documentation</string>
-     </property>
-     <property name="shortcut" >
-      <string>Alt+D</string>
-     </property>
-     <property name="autoDefault" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" >
-    <widget class="QPushButton" name="bSup" >
-     <property name="minimumSize" >
-      <size>
-       <width>0</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="toolTip" >
-      <string>suppression du mot clef</string>
-     </property>
-     <property name="text" >
-      <string>&amp;Supprimer</string>
-     </property>
-     <property name="shortcut" >
-      <string>Alt+S</string>
-     </property>
-     <property name="autoDefault" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0" colspan="3" >
     <widget class="QLabel" name="Commentaire" >
      <property name="text" >
@@ -101,17 +57,9 @@
    <item row="0" column="0" colspan="3" >
     <widget class="QTabWidget" name="TWChoix" >
      <property name="currentIndex" >
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="MotClef" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>499</width>
-        <height>400</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Ajouter Mot-Clef</string>
       </attribute>
@@ -158,14 +106,6 @@
       </layout>
      </widget>
      <widget class="QWidget" name="Commande" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>499</width>
-        <height>400</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Nouvelle Commande</string>
       </attribute>
@@ -255,14 +195,6 @@
       </layout>
      </widget>
      <widget class="QWidget" name="maPageOk" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>499</width>
-        <height>400</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Fichier Include</string>
       </attribute>
@@ -344,14 +276,6 @@
       </widget>
      </widget>
      <widget class="QWidget" name="maPageBad" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>499</width>
-        <height>400</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Fichier Inc</string>
       </attribute>
@@ -382,8 +306,6 @@ p, li { white-space: pre-wrap; }
  <tabstops>
   <tabstop>LEFiltre</tabstop>
   <tabstop>LENomFichier</tabstop>
-  <tabstop>bHelp</tabstop>
-  <tabstop>bSup</tabstop>
   <tabstop>bOk</tabstop>
   <tabstop>TWChoix</tabstop>
   <tabstop>LBMCPermis</tabstop>

@@ -42,7 +42,7 @@ from monChoixCata import MonChoixCata
 
 from qt import *
 
-version="15"
+version="16"
 
 class READERCATA:
 

@@ -120,8 +120,6 @@ class PolitiquePlusieurs:
          commentaire="Nouvelle valeur acceptée"
          commentaire2=""
          valide=1
-         if listevaleur==None: return
-         if listevaleur=="": return
          if not( type(listevaleur)  in (types.ListType,types.TupleType)) :
             listevaleur=tuple(listevaleur)
          for valeur in listevaleur :
@@ -157,4 +155,36 @@ class PolitiquePlusieurs:
              index=index+1
              listeRetour.append(valeur)
 
+         return valide,commentaire,commentaire2,listeRetour
+
+  def AjoutTuple(self,valeurTuple,index,listecourante):
+         listeRetour=[]
+         commentaire="Nouvelle valeur acceptée"
+         commentaire2=""
+         valide=1
+         if valeurTuple==None: return
+         if valeurTuple==['']: return
+         # On teste le type de la valeur
+         valide=self.node.item.valide_item(valeurTuple)
+         if not valide :
+            try :
+                valeur,valide=self.node.item.eval_valeur(valeurTuple)
+                valide = self.node.item.valide_item(valeur)
+            except :
+                pass
+         if not valide:
+            commentaire="Valeur "+str(valeurTuple)+ " incorrecte : ajout à la liste refusé"
+            commentaire2=self.node.item.info_erreur_item()
+            return valide,commentaire,commentaire2,listeRetour
+
+         # On valide la liste obtenue
+         encorevalide=self.node.item.valide_liste_partielle(valeurTuple,listecourante)
+         if not encorevalide :
+            commentaire2=self.node.item.info_erreur_liste()
+            # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
+            min,max = self.node.item.GetMinMax()
+            if len(listecourante) + 1 >= max :
+               commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
+               return valide,commentaire,commentaire2,listeRetour
+         listeRetour.append(valeurTuple)
          return valide,commentaire,commentaire2,listeRetour

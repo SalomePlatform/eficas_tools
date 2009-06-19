@@ -46,6 +46,7 @@ class DRac(Ui_DRac,QWidget):
        self.setupUi(self)
 
 
+
 # Import des panels
 
 class MonRacinePanel(DRac,QTPanelTBW2):
@@ -66,27 +67,19 @@ class MonRacinePanel(DRac,QTPanelTBW2):
         self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)
         self.connect(self.LEFiltre,SIGNAL("textChanged(const QString&)"),self.LEFiltreTextChanged)
         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEfiltreReturnPressed)
-        self.connect(self.bSup,SIGNAL("pressed()"),self.BSupPressed)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
-        self.connect(self.RBalpha,SIGNAL("clicked()"),self.BuildTabCommand)
-        self.connect(self.RBGroupe,SIGNAL("clicked()"),self.BuildTabCommand)
+        self.connect(self.RBalpha,SIGNAL("clicked()"),self.BuildTabCommandChanged)
+        self.connect(self.RBGroupe,SIGNAL("clicked()"),self.BuildTabCommandChanged)
         self.connect(self.BNext,SIGNAL("clicked()"),self.BNextPressed)
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
-
-  def BSupPressed(self):
-      QTPanel.BSupPressed(self)
 
   def BOkPressed(self):
       self.DefCmd()
 
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
-
   def BNextPressed(self):
       QTPanelTBW2.BNextPressed(self)
 
-  def BuildTabCommand(self):
-      QTPanelTBW2.BuildLBNouvCommande(self)
+  def BuildTabCommandChanged(self):
+      QTPanelTBW2.BuildLBNouvCommandChanged(self)
 
   def LEFiltreTextChanged(self):
       QTPanelTBW2.LEFiltreTextChanged(self)

@@ -1,162 +1,115 @@
-<ui version="4.0" stdsetdef="1" >
-  <author></author>
-  <comment></comment>
-  <exportmacro></exportmacro>
-  <class>DUnSDCO</class>
-  <widget class="QWidget" name="DUnSDCO" >
-    <property name="geometry" >
-      <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>461</width>
-        <height>480</height>
-      </rect>
-    </property>
-    <property name="minimumSize" >
-      <size>
-        <width>350</width>
-        <height>0</height>
-      </size>
-    </property>
-    <property name="windowTitle" >
-      <string>DUnIn</string>
-    </property>
-    <layout class="QGridLayout" >
-      <item row="0" column="0" >
-        <widget class="QTabWidget" name="tabuniqueinto" >
-          <widget class="QWidget" name="Widget8" >
-            <attribute name="title" >
-              <string>Saisir Valeur</string>
-            </attribute>
-            <layout class="QGridLayout" >
-              <item row="4" column="0" >
-                <widget class="QPushButton" name="bSup" >
-                  <property name="minimumSize" >
-                    <size>
-                      <width>0</width>
-                      <height>30</height>
-                    </size>
-                  </property>
-                  <property name="text" >
-                    <string>&amp;Supprimer</string>
-                  </property>
-                  <property name="shortcut" >
-                    <string>Alt+S</string>
-                  </property>
-                  <property name="autoDefault" >
-                    <bool>true</bool>
-                  </property>
-                  <property name="toolTip" stdset="0" >
-                    <string>suppression du mot clef</string>
-                  </property>
-                </widget>
-              </item>
-              <item row="4" column="1" >
-                <widget class="QPushButton" name="bOk" >
-                  <property name="minimumSize" >
-                    <size>
-                      <width>0</width>
-                      <height>30</height>
-                    </size>
-                  </property>
-                  <property name="text" >
-                    <string>&amp;Valider</string>
-                  </property>
-                  <property name="shortcut" >
-                    <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
-                  </property>
-                  <property name="autoDefault" >
-                    <bool>true</bool>
-                  </property>
-                  <property name="default" >
-                    <bool>true</bool>
-                  </property>
-                  <property name="toolTip" stdset="0" >
-                    <string>validation de la saisie</string>
-                  </property>
-                </widget>
-              </item>
-              <item row="4" column="2" >
-                <widget class="QPushButton" name="bHelp" >
-                  <property name="minimumSize" >
-                    <size>
-                      <width>0</width>
-                      <height>30</height>
-                    </size>
-                  </property>
-                  <property name="text" >
-                    <string>&amp;Documentation</string>
-                  </property>
-                  <property name="shortcut" >
-                    <string>Alt+D</string>
-                  </property>
-                  <property name="autoDefault" >
-                    <bool>true</bool>
-                  </property>
-                  <property name="toolTip" stdset="0" >
-                    <string>affichage documentation aster</string>
-                  </property>
-                </widget>
-              </item>
-              <item rowspan="1" row="3" column="0" colspan="3" >
-                <widget class="QLabel" name="Commentaire" >
-                  <property name="minimumSize" >
-                    <size>
-                      <width>311</width>
-                      <height>30</height>
-                    </size>
-                  </property>
-                  <property name="text" >
-                    <string/>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item rowspan="1" row="0" column="0" colspan="3" >
-                <widget class="QLabel" name="textLabel2_2" >
-                  <property name="text" >
-                    <string>&lt;h1>&lt;font size="+2">Nom du nouveau concept : &lt;/font>&lt;/h1></string>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-              <item rowspan="1" row="1" column="0" colspan="3" >
-                <widget class="QLineEdit" name="LESDCO" >
-                  <property name="minimumSize" >
-                    <size>
-                      <width>300</width>
-                      <height>40</height>
-                    </size>
-                  </property>
-                </widget>
-              </item>
-              <item rowspan="1" row="2" column="0" colspan="3" >
-                <widget class="QLabel" name="textLabel2" >
-                  <property name="text" >
-                    <string>&lt;font size="+1">Un objet de type CO est attendu&lt;/font></string>
-                  </property>
-                  <property name="wordWrap" >
-                    <bool>false</bool>
-                  </property>
-                </widget>
-              </item>
-            </layout>
-          </widget>
+<ui version="4.0" >
+ <class>DUnSDCO</class>
+ <widget class="QWidget" name="DUnSDCO" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>461</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="minimumSize" >
+   <size>
+    <width>350</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle" >
+   <string>DUnIn</string>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" >
+    <widget class="QTabWidget" name="tabuniqueinto" >
+     <widget class="QWidget" name="Widget8" >
+      <attribute name="title" >
+       <string>Saisir Valeur</string>
+      </attribute>
+      <layout class="QGridLayout" >
+       <item row="4" column="1" >
+        <widget class="QPushButton" name="bOk" >
+         <property name="minimumSize" >
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="toolTip" >
+          <string>validation de la saisie</string>
+         </property>
+         <property name="text" >
+          <string>&amp;Valider</string>
+         </property>
+         <property name="shortcut" >
+          <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+         </property>
+         <property name="autoDefault" >
+          <bool>true</bool>
+         </property>
+         <property name="default" >
+          <bool>true</bool>
+         </property>
         </widget>
-      </item>
-    </layout>
-  </widget>
-  <layoutdefault spacing="6" margin="11" />
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
-  <tabstops>
-    <tabstop>LESDCO</tabstop>
-    <tabstop>tabuniqueinto</tabstop>
-    <tabstop>bSup</tabstop>
-    <tabstop>bOk</tabstop>
-    <tabstop>bHelp</tabstop>
-  </tabstops>
+       </item>
+       <item row="3" column="0" colspan="3" >
+        <widget class="QLabel" name="Commentaire" >
+         <property name="minimumSize" >
+          <size>
+           <width>311</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string/>
+         </property>
+         <property name="wordWrap" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="3" >
+        <widget class="QLabel" name="textLabel2_2" >
+         <property name="text" >
+          <string>&lt;h1>&lt;font size="+2">Nom du nouveau concept : &lt;/font>&lt;/h1></string>
+         </property>
+         <property name="wordWrap" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="3" >
+        <widget class="QLineEdit" name="LESDCO" >
+         <property name="minimumSize" >
+          <size>
+           <width>300</width>
+           <height>40</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="3" >
+        <widget class="QLabel" name="textLabel2" >
+         <property name="text" >
+          <string>&lt;font size="+1">Un objet de type CO est attendu&lt;/font></string>
+         </property>
+         <property name="wordWrap" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <tabstops>
+  <tabstop>LESDCO</tabstop>
+  <tabstop>tabuniqueinto</tabstop>
+  <tabstop>bOk</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
 </ui>

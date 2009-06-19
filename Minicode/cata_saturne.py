@@ -3,6 +3,7 @@
 
 import Accas
 from Accas import *
+import types
 
 #CONTEXT.debug=1
 
@@ -1753,3 +1754,38 @@ RETOUR=PROC(nom="RETOUR",op= -2,docu="U4.13.02-e",
             fr="Retour au fichier de commandes appelant",
 ) ;
 
+class LongStr:
+  def __init__(self,min,max):
+    self.min=min
+    self.max=max
+  def __convert__(self,valeur):
+    if type(valeur) == types.StringType:
+      if self.min <= len(valeur) <= self.max:
+        return valeur
+    return None
+  def info(self):
+    return "Chaine de longueur comprise entre %s et %s" % (self.min,self.max)
+  __repr__=info
+  __str__=info
+
+class Tuple:
+  def __init__(self,ntuple):
+    self.ntuple=ntuple
+
+  def __convert__(self,valeur):
+    if type(valeur) == types.StringType:
+      return None
+    if len(valeur) != self.ntuple:
+      return None
+    return valeur
+
+  def info(self):
+    return "Tuple de %s elements" % self.ntuple
+  __repr__=info
+  __str__=info
+
+CCAR=PROC(nom="CCAR",op=15,MCS=SIMP(typ=Tuple(3),statut='o',min=1,max=5),
+                     MCS1=SIMP(typ=(Tuple(2),LongStr(3,8)),statut='o',min=3,max=8),
+                     MCS2=SIMP(typ=Tuple(2),statut='o',min=3,max=8),
+                     MCS3=SIMP(typ='R',statut='o',min=3,max=8),
+         )

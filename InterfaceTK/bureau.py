@@ -461,6 +461,7 @@ class BUREAU:
          jdc_formate=g.gener(self.JDC,format='beautifie')
          if format == 'homard':
             self.jdc_homard=g.get_homard()
+            #print "hhhhhhhh"
 	 elif format == 'openturns' :
 	    self.jdc_openturn_xml=g.getOpenturnsXML()
 	    self.jdc_openturn_std=g.getOpenturnsSTD()
@@ -664,11 +665,11 @@ class BUREAU:
       try:
           cle_doc = self.JDCDisplay_courant.node_selected.item.get_docu()
           if cle_doc == None : return
-          cle_doc = string.replace(cle_doc,'.','')
-          cle_doc = string.replace(cle_doc,'-','')
           commande = self.appli.CONFIGURATION.exec_acrobat
-          nom_fichier = cle_doc+".pdf"
-          fichier = os.path.abspath(os.path.join(self.appli.CONFIGURATION.path_doc,nom_fichier))
+          fichier = os.path.abspath(os.path.join(self.appli.CONFIGURATION.path_doc,cle_doc))
+          if os.path.isfile(fichier) == 0:
+              showerror("Pas de Documentation", "Eficas ne trouve pas de fichier documentation associe a cette commande")
+              return
           if os.name == 'nt':
               os.spawnv(os.P_NOWAIT,commande,(commande,fichier,))
           elif os.name == 'posix':
@@ -794,14 +795,17 @@ class BUREAU:
       if (FichieraTraduire == "" or FichieraTraduire == () ) : return
       i=FichieraTraduire.rfind(".")
       Feuille=FichieraTraduire[0:i]
-      FichierTraduit=Feuille+"v8.comm"
       log=self.savedir+"/convert.log"
-      os.system("rm -rf "+log)
-      os.system("rm -rf "+FichierTraduit)
       Pmw.showbusycursor()
+      FichierTraduit=""
+      os.system("rm -rf "+log)
       if version == 7 :
+         FichierTraduit=Feuille+"v8.comm"
+         os.system("rm -rf "+FichierTraduit)
          traduitV7V8.traduc(FichieraTraduire,FichierTraduit,log)
       else :
+         FichierTraduit=Feuille+"v9.comm"
+         os.system("rm -rf "+FichierTraduit)
          traduitV8V9.traduc(FichieraTraduire,FichierTraduit,log)
       Pmw.hidebusycursor()
       Entete="Fichier Traduit : "+FichierTraduit +"\n\n"
@@ -816,7 +820,7 @@ class BUREAU:
           commande="diff "+FichieraTraduire+" "+FichierTraduit+" >/dev/null"
           try :
             if os.system(commande) == 0 :
-               texte_cr = texte_cr + "Pas de difference entre le fichier V7 et le fichier traduit"
+               texte_cr = texte_cr + "Pas de difference entre le fichier initial et le fichier traduit"
           except :
                pass
 

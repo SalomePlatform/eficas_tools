@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'desVisu.ui'
 #
-# Created: Tue Nov 18 17:37:26 2008
-#      by: PyQt4 UI code generator 4.4.2
+# Created: Tue Jan 27 12:25:38 2009
+#      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,12 +12,12 @@ from PyQt4 import QtCore, QtGui
 class Ui_DVisu(object):
     def setupUi(self, DVisu):
         DVisu.setObjectName("DVisu")
-        DVisu.resize(501,394)
+        DVisu.resize(501, 394)
         self.gridlayout = QtGui.QGridLayout(DVisu)
         self.gridlayout.setObjectName("gridlayout")
         self.TB = QtGui.QTextBrowser(DVisu)
         self.TB.setObjectName("TB")
-        self.gridlayout.addWidget(self.TB,0,0,1,1)
+        self.gridlayout.addWidget(self.TB, 0, 0, 1, 1)
 
         self.retranslateUi(DVisu)
 

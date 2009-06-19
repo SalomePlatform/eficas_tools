@@ -27,6 +27,7 @@ from PyQt4.QtCore import *
 from qtCommun import QTPanel
 
 
+
 class DMCListAjout(Ui_DMCListAjout,QDialog):
    def __init__(self,parent ,modal ) :
        QDialog.__init__(self,parent)
@@ -61,17 +62,10 @@ class MonMCListAjoutPanel(DMCListAjout,QTPanel):
         self.connecterSignaux()
 
   def connecterSignaux(self):
-        self.connect(self.bOk,SIGNAL("clicked()"),self.BAjoutClicked)
         self.connect(self.bAjout,SIGNAL("clicked()"),self.BAjoutClicked)
-        self.connect(self.bSup,SIGNAL("clicked()"),self.BSupPressed)
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
 
-  def BSupPressed(self):
-      QTPanel.BSupPressed(self)
 
   def BAjoutClicked(self):
         self.node.treeParent.append_child(self.node.item.get_nom())
 
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
 

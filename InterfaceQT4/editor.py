@@ -36,7 +36,7 @@ import readercata
 import qtCommun
 
 
-VERSION_EFICAS  = "EFICAS v1.15"
+VERSION_EFICAS  = "EFICAS v1.16"
 
 
 class JDCEditor(QSplitter):
@@ -74,7 +74,9 @@ class JDCEditor(QSplitter):
         self.liste_simp_reel=[]        
         self.ihm="QT"
         
-        import configuration
+        import prefs
+        nameConf='configuration_'+prefs.code
+        configuration=__import__(nameConf)
         self.CONFIGURATION = self.appliEficas.CONFIGURATION
         self.CONFIGStyle =   self.appliEficas.CONFIGStyle
 
@@ -93,10 +95,12 @@ class JDCEditor(QSplitter):
         if not hasattr( readercata, 'reader' ) :
             readercata.reader = readercata.READERCATA( self, self.appliEficas )
         self.readercata = readercata.reader
+        self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
         
         #------- construction du jdc --------------
 
         jdc_item = None
+        self.mode_nouv_commande=self.readercata.mode_nouv_commande
                         
         nouveau=0
         if self.fichier is not None:        #  fichier jdc fourni
@@ -299,16 +303,18 @@ class JDCEditor(QSplitter):
     #------------------------------#
     def affiche_infos(self,message):
     #------------------------------#
-        if self.salome :
-	   if not hasattr(self.appliEficas,'MessageLabel') :
-              self.appliEficas.leLayout=QDockWindow(self.appliEficas)
-	      self.appliEficas.MessageLabel = QLabel(self.appliEficas.leLayout,"MessageLabel")
-	      self.appliEficas.MessageLabel.setAlignment(Qt.AlignBottom)
-              self.appliEficas.leLayout.setWidget(self.appliEficas.MessageLabel)
-              self.appliEficas.moveDockWindow(self.appliEficas.leLayout,Qt.DockBottom)
-	   self.appliEficas.MessageLabel.setText(message)
-	   self.appliEficas.MessageLabel.show()
-	   self.appliEficas.leLayout.show()
+        #PN --> devenu inutile avec QT4
+        #if self.salome :
+	#   if not hasattr(self.appliEficas,'MessageLabel') :
+        #      self.appliEficas.leLayout=QDockWidget(self.appliEficas)
+	#      self.appliEficas.MessageLabel = QLabel("MessageLabel",self.appliEficas.leLayout)
+	#      self.appliEficas.MessageLabel.setAlignment(Qt.AlignBottom)
+        #      self.appliEficas.leLayout.setAllowedAreas(Qt.BottomDockWidgetArea)
+        #      self.appliEficas.leLayout.setWidget(self.appliEficas.MessageLabel)
+        #      #self.appliEficas.moveDockWindow(self.appliEficas.leLayout,Qt.DockBottom)
+	#   self.appliEficas.MessageLabel.setText(message)
+	#   self.appliEficas.MessageLabel.show()
+	#   self.appliEficas.leLayout.show()
         if self.sb:
             self.sb.showMessage(message)#,2000)
 
@@ -493,6 +499,12 @@ class JDCEditor(QSplitter):
       
       
     #-----------------------------------------#
+    def cherche_Groupes(self):
+        liste=self.get_text_JDC("GroupMA")
+        return liste
+    #-----------------------------------------#
+
+    #-----------------------------------------#
     def saveFile(self, path = None, saveas= 0):
     #-----------------------------------------#
         """
@@ -561,8 +573,28 @@ class JDCEditor(QSplitter):
             except :
                pass
 
-#            if self.salome : 
-#               self.QWParent.appli.addJdcInSalome( self.fichier)
+            try : 
+            #if 1 :
+               self.generator.writeCuve2DG()
+            #else :
+            except :
+               pass
+
+		
+            try : 
+            #if 1 :
+               self.tubePy=self.generator.getTubePy()
+               fileTube = '/tmp/tube.py'
+               if self.tubePy != '' :
+                  f=open(fileTube,'w')
+                  f.write(self.tubePy)
+                  f.close()
+            except :
+            #else :
+               pass
+
+            if self.salome : 
+               self.appliEficas.addJdcInSalome( self.fichier)
 #               if self.code == 'ASTER':
 #                  self.QWParent.appli.createOrUpdateMesh(self)
 #               #PN ; TODO
@@ -626,7 +658,10 @@ class JDCEditor(QSplitter):
         
 if __name__=='__main__':    
     import prefs # dans main
-    if hasattr(prefs,'encoding'):
+    name='prefs_'+prefs.code
+    prefsCode=__import__(name)
+
+    if hasattr(prefsCode,'encoding'):
        # Hack pour changer le codage par defaut des strings
        import sys
        reload(sys)

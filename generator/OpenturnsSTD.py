@@ -18,7 +18,7 @@ class StudyFileGenerationError:
   def __str__(self):
     return "'%s'" % self.st
 
-raise StudyFileGenerationError, "The study file was not generated"
+raise StudyFileGenerationError, "The study file was not generated. Check analysis type."
 """
 
 headerSTD = """#! /usr/bin/env python
@@ -32,11 +32,16 @@ import math
 
 # Chargement du module Open TURNS
 from openturns import *
-from openturns_viewer import ViewImage,StopViewer,WaitForViewer
+from openturns.viewer import ViewImage,StopViewer,WaitForViewer
+
+results = {}
 
 """
 
 footerSTD = """
+
+# Flush des messages en attente
+Log.Flush()
 
 # Terminaison du fichier
 #sys.exit( 0 )
@@ -55,9 +60,9 @@ class STDGenerateur :
     self.DictMCVal = DictMCVal
     self.ListeVariables = ListeVariables
     self.DictLois = DictLois
-    print "DictMCVal=", DictMCVal
-    print "ListeVariables=", ListeVariables
-    print "DictLois=", DictLois
+    #print "DictMCVal=", DictMCVal
+    #print "ListeVariables=", ListeVariables
+    #print "DictLois=", DictLois
     self.texteSTD = defaultSTD
     self.OpenTURNS_path = appli.CONFIGURATION.OpenTURNS_path
 
@@ -97,6 +102,13 @@ class STDGenerateur :
     self.variable = {
       "n" : "n",
       "p" : "p",
+      "wrapper" : "wrapper",
+      "wrapperdata" : "wrapperdata",
+      "frameworkdata" : "frameworkdata",
+      "framework" : "framework",
+      "studyid" : "studyid",
+      "studycase" : "studycase",
+      "componentname" : "componentname",
       "model" : "model",
       "scaledVector" : "scaledVector",
       "translationVector" : "translationVector",
@@ -105,8 +117,8 @@ class STDGenerateur :
       "myExperimentPlane" : "myExperimentPlane",
       "inputSample" : "inputSample",
       "outputSample" : "outputSample",
-      "minValue" : "minValue",
-      "maxValue" : "maxValue",
+      "minValue" : 'results["minValue"]',
+      "maxValue" : 'results["maxValue"]',
       "flags" : "flags",
       "inSize" : "inSize",
       "distribution" : "distribution",
@@ -116,50 +128,50 @@ class STDGenerateur :
       "inputRandomVector" : "inputRandomVector",
       "outputRandomVector" : "outputRandomVector",
       "myQuadraticCumul" : "myQuadraticCumul",
-      "meanFirstOrder" : "meanFirstOrder",
-      "meanSecondOrder" : "meanSecondOrder",
-      "standardDeviationFirstOrder" : "standardDeviationFirstOrder",
-      "importanceFactors" : "importanceFactors",
+      "meanFirstOrder" : 'results["meanFirstOrder"]',
+      "meanSecondOrder" : 'results["meanSecondOrder"]',
+      "standardDeviationFirstOrder" : 'results["standardDeviationFirstOrder"]',
+      "importanceFactors" : 'results["importanceFactors"]',
       "importanceFactorsGraph" : "importanceFactorsGraph",
       "importanceFactorsDrawing" : "importanceFactorsDrawing",
-      "empiricalMean" : "empiricalMean",
-      "empiricalStandardDeviation" : "empiricalStandardDeviation",
-      "empiricalQuantile" : "empiricalQuantile",
+      "empiricalMean" : 'results["empiricalMean"]',
+      "empiricalStandardDeviation" : 'results["empiricalStandardDeviation"]',
+      "empiricalQuantile" : 'results["empiricalQuantile"]',
       "alpha" : "alpha",
       "beta" : "beta",
-      "PCCcoefficient" : "PCCcoefficient",
-      "PRCCcoefficient" : "PRCCcoefficient",
-      "SRCcoefficient" : "SRCcoefficient",
-      "SRRCcoefficient" : "SRRCcoefficient",
+      "PCCcoefficient" : 'results["PCCcoefficient"]',
+      "PRCCcoefficient" : 'results["PRCCcoefficient"]',
+      "SRCcoefficient" : 'results["SRCcoefficient"]',
+      "SRRCcoefficient" : 'results["SRRCcoefficient"]',
       "kernel" : "kernel",
       "kernelSmoothedDist" : "kernelSmoothedDist",
       "kernelSmoothedPDF" : "kernelSmoothedPDF",
       "myEvent" : "myEvent",
       "myAlgo" : "myAlgo",
       "myResult" : "myResult",
-      "probability" : "probability",
-      "standardDeviation" : "standardDeviation",
+      "probability" : 'results["probability"]',
+      "standardDeviation" : 'results["standardDeviation"]',
       "level" : "level",
       "length" : "length",
-      "coefficientOfVariation" : "coefficientOfVariation",
+      "coefficientOfVariation" : 'results["coefficientOfVariation"]',
       "convergenceGraph" : "convergenceGraph",
-      "iterations" : "iterations",
+      "iterations" : 'results["iterations"]',
       "myOptimizer" : "myOptimizer",
       "specificParameters" : "specificParameters",
       "startingPoint" : "startingPoint",
-      "hasoferReliabilityIndex" : "hasoferReliabilityIndex",
-      "standardSpaceDesignPoint" : "standardSpaceDesignPoint",
-      "physicalSpaceDesignPoint" : "physicalSpaceDesignPoint",
-      "eventProbabilitySensitivity" : "eventProbabilitySensitivity",
-      "hasoferReliabilityIndexSensitivity" : "hasoferReliabilityIndexSensitivity",
+      "hasoferReliabilityIndex" : 'results["hasoferReliabilityIndex"]',
+      "standardSpaceDesignPoint" : 'results["standardSpaceDesignPoint"]',
+      "physicalSpaceDesignPoint" : 'results["physicalSpaceDesignPoint"]',
+      "eventProbabilitySensitivity" : 'results["eventProbabilitySensitivity"]',
+      "hasoferReliabilityIndexSensitivity" : 'results["hasoferReliabilityIndexSensitivity"]',
       "eventProbabilitySensitivityGraph" : "eventProbabilitySensitivityGraph",
       "hasoferReliabilityIndexSensitivityGraph" : "hasoferReliabilityIndexSensitivityGraph",
-      "modelEvaluationCalls" : "modelEvaluationCalls",
-      "modelGradientCalls" : "modelGradientCalls",
-      "modelHessianCalls" : "modelHessianCalls",
-      "tvedtApproximation" : "tvedtApproximation",
-      "hohenBichlerApproximation" : "hohenBichlerApproximation",
-      "breitungApproximation" : "breitungApproximation",
+      "modelEvaluationCalls" : 'results["modelEvaluationCalls"]',
+      "modelGradientCalls" : 'results["modelGradientCalls"]',
+      "modelHessianCalls" : 'results["modelHessianCalls"]',
+      "tvedtApproximation" : 'results["tvedtApproximation"]',
+      "hohenBichlerApproximation" : 'results["hohenBichlerApproximation"]',
+      "breitungApproximation" : 'results["breitungApproximation"]',
       }
 
     # Ce dictionnaire fait la correspondance entre le mot-clef du catalogue et le flag de la bibliotheque
@@ -247,10 +259,21 @@ class STDGenerateur :
     fonction = None
     if ( self.DictMCVal.has_key( 'FileName' ) ):
       name =  self.DictMCVal[ 'FileName' ]
-      fonction = name[name.rfind('/')+1:name.rfind('.xml')]
+      #fonction = name[name.rfind('/')+1:name.rfind('.xml')]
       
     txt  = "# Charge le modele physique\n"
-    txt += "%s = NumericalMathFunction( '%s' )\n" % (self.variable["model"], fonction)
+    txt  = "%s = WrapperFile( '%s' )\n" % (self.variable["wrapper"], name)
+
+    txt += "if globals().has_key('%s'):\n" % self.variable["framework"]
+    txt += "  %s = %s.getWrapperData()\n" % (self.variable["wrapperdata"], self.variable["wrapper"])
+    txt += "  %s = %s.getFrameworkData()\n" % (self.variable["frameworkdata"], self.variable["wrapperdata"])
+    txt += "  %s.studyid_ = %s['%s']\n"  % (self.variable["frameworkdata"], self.variable["framework"], self.variable["studyid"])
+    txt += "  %s.studycase_ = %s['%s']\n"  % (self.variable["frameworkdata"], self.variable["framework"], self.variable["studycase"])
+    txt += "  %s.componentname_ = %s['%s']\n"  % (self.variable["frameworkdata"], self.variable["framework"], self.variable["componentname"])
+    txt += "  %s.setFrameworkData( %s )\n" % (self.variable["wrapperdata"], self.variable["frameworkdata"])
+    txt += "  %s.setWrapperData( %s )\n" % (self.variable["wrapper"], self.variable["wrapperdata"])
+    
+    txt += "%s = NumericalMathFunction( %s )\n" % (self.variable["model"], self.variable["wrapper"],)
     txt += "%s = %s.getInputNumericalPointDimension()\n" % (self.variable["n"], self.variable["model"])
     txt += "\n"
     return txt
@@ -1056,7 +1079,9 @@ class STDGenerateur :
     '''
     Definition de la loi Histogram
     '''
-    txt = "** Histogram not defined yet **"
+    arg1 = loi[ 'First' ]
+    arg2 = loi[ 'Values'  ]
+    txt = "Histogram( %g, %s )" % (arg1, arg2)
     return txt
 
   def Logistic (self, loi, i, collection):

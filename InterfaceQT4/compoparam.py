@@ -23,6 +23,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodePartiel.createPopUpMenu(self)
+        self.menu.removeAction(self.Documentation)
 
 
 

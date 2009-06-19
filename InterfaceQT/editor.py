@@ -18,7 +18,7 @@ import readercata
 import prefs
 import qtCommun
 
-VERSION_EFICAS  = "EFICAS v1.15"
+VERSION_EFICAS  = "EFICAS v1.16"
 
 
 # -------------------------- #
@@ -137,6 +137,8 @@ class JDCEditor(QSplitter):
             self.connect(self.tree,SIGNAL('selectionChanged(QListViewItem *)'),self.updatePanel)
       
         sh = self.sizeHint()
+        if sh.width() < 300:
+            sh.setWidth(300)
         if sh.height() < 300:
             sh.setHeight(300)
         self.resize(sh)
@@ -658,10 +660,10 @@ class JDCEditor(QSplitter):
                 if QFileInfo(fn).exists():
                     abort = QMessageBox.warning(
 			self,
-                        self.trUtf8("Save File"),
-                        self.trUtf8("The file <b>%1</b> already exists.").arg(fn),
-                        self.trUtf8("&Overwrite"),
-                        self.trUtf8("&Abort") )
+                        self.trUtf8("Sauvegarde Fichier"),
+                        self.trUtf8("Le fichier <b>%1</b> existe deja.").arg(fn),
+                        self.trUtf8("&Remplacer"),
+                        self.trUtf8("&Abandonner") )
                     print abort
                     if abort:
                         return (0, None)

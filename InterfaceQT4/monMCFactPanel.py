@@ -60,16 +60,9 @@ class MonMCFactPanel(DMCFact,QTPanelTBW1):
         self.connecterSignaux()
 
   def connecterSignaux(self):
-        self.connect(self.bSup,SIGNAL("pressed()"),self.BSupPressed)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
-
-  def BSupPressed(self):
-      QTPanel.BSupPressed(self)
 
   def BOkPressed(self):
       QTPanel.BOkPressed(self)
 
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
 

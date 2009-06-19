@@ -5,7 +5,14 @@ from Extensions  import commentaire
 import browser
 
 class Node(browser.JDCNode):
-      pass
+
+    def getPanel(self):
+        from monRacinePanel import MonRacinePanel
+        return MonRacinePanel(self,parent=self.editor)
+
+
+    def createPopUpMenu(self):
+      typeNode.PopUpMenuNode.createPopUpMenu(self)
 
 class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
   itemNode=Node
@@ -22,11 +29,7 @@ class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
         - la fonte dans laquelle afficher ce texte
         - la couleur du texte
       """
-      if self.isactif():
-          fonte = Fonte_Niveau
-      else :
-          fonte = Fonte_Niveau_inactif
-      return self.labeltext,fonte,'#00008b'
+      return self.labeltext,None,None
     
   def GetIconName(self):
       if self.isactif():

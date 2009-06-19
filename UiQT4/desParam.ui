@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>505</width>
-    <height>483</height>
+    <width>682</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="minimumSize" >
@@ -18,42 +18,18 @@
   <property name="windowTitle" >
    <string>DComm</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="1" column="0" colspan="3" >
-    <widget class="QLabel" name="Commentaire" >
-     <property name="frameShape" >
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow" >
-      <enum>QFrame::Plain</enum>
-     </property>
-     <property name="text" >
-      <string/>
-     </property>
-     <property name="wordWrap" >
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="3" >
+  <layout class="QGridLayout" name="gridLayout_3" >
+   <item row="0" column="0" >
     <widget class="QTabWidget" name="TWChoix" >
      <property name="currentIndex" >
       <number>0</number>
      </property>
      <widget class="QWidget" name="Valeur_Parametre" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>483</width>
-        <height>372</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Valeur Parametre</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_3" >
-       <item row="0" column="1" >
+      <layout class="QGridLayout" name="gridLayout_5" >
+       <item row="0" column="0" colspan="2" >
         <widget class="QLabel" name="textLabel2_2_2" >
          <property name="text" >
           <string>&lt;u>&lt;b>&lt;p align="center">Parametre&lt;/p>&lt;/b>&lt;/u></string>
@@ -118,6 +94,38 @@ appuyé sur  le bouton Valider.</string>
         </widget>
        </item>
        <item row="4" column="0" colspan="2" >
+        <spacer name="verticalSpacer" >
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>460</width>
+           <height>139</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="5" column="0" colspan="2" >
+        <widget class="QLabel" name="Commentaire" >
+         <property name="minimumSize" >
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>465</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="2" >
         <widget class="QLabel" name="Commentaire_2" >
          <property name="text" >
           <string/>
@@ -130,92 +138,131 @@ appuyé sur  le bouton Valider.</string>
       </layout>
      </widget>
      <widget class="QWidget" name="Commande" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>483</width>
-        <height>372</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Nouvelle Commande</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2" >
-       <item row="0" column="0" colspan="3" >
-        <widget class="QLabel" name="textLabel1_4" >
-         <property name="text" >
-          <string>&lt;b>&lt;u>Commandes :&lt;/u>&lt;/b></string>
-         </property>
-         <property name="wordWrap" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item rowspan="2" row="0" column="3" >
-        <widget class="QGroupBox" name="groupBox" >
-         <property name="title" >
-          <string>Affichage</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout" >
-          <item row="1" column="0" >
-           <widget class="QRadioButton" name="RBGroupe" >
-            <property name="text" >
-             <string>par groupe</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" >
-           <widget class="QRadioButton" name="RBalpha" >
-            <property name="text" >
-             <string>alphabétique</string>
-            </property>
-            <property name="checked" >
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
+      <layout class="QGridLayout" name="gridLayout_4" >
+       <item row="0" column="0" >
+        <layout class="QGridLayout" name="gridLayout_2" >
+         <item row="0" column="0" colspan="2" >
+          <widget class="QLabel" name="textLabel1_4" >
+           <property name="text" >
+            <string>&lt;b>&lt;u>Commandes :&lt;/u>&lt;/b></string>
+           </property>
+           <property name="wordWrap" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item rowspan="2" row="0" column="4" >
+          <widget class="QGroupBox" name="groupBox" >
+           <property name="minimumSize" >
+            <size>
+             <width>171</width>
+             <height>71</height>
+            </size>
+           </property>
+           <property name="title" >
+            <string>Affichage</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout" >
+            <item row="0" column="0" >
+             <widget class="QRadioButton" name="RBalpha" >
+              <property name="minimumSize" >
+               <size>
+                <width>149</width>
+                <height>16</height>
+               </size>
+              </property>
+              <property name="maximumSize" >
+               <size>
+                <width>149</width>
+                <height>16</height>
+               </size>
+              </property>
+              <property name="text" >
+               <string>alphabétique</string>
+              </property>
+              <property name="checked" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" >
+             <widget class="QRadioButton" name="RBGroupe" >
+              <property name="text" >
+               <string>par groupe</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="textLabel6" >
+           <property name="minimumSize" >
+            <size>
+             <width>91</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Filtre</string>
+           </property>
+           <property name="wordWrap" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" >
+          <widget class="QLineEdit" name="LEFiltre" >
+           <property name="minimumSize" >
+            <size>
+             <width>231</width>
+             <height>30</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2" >
+          <widget class="QPushButton" name="BNext" >
+           <property name="minimumSize" >
+            <size>
+             <width>90</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Suivant</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3" >
+          <spacer name="horizontalSpacer_4" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>108</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
        <item row="1" column="0" >
-        <widget class="QLabel" name="textLabel6" >
-         <property name="minimumSize" >
-          <size>
-           <width>50</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="text" >
-          <string>Filtre</string>
-         </property>
-         <property name="wordWrap" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1" >
-        <widget class="QLineEdit" name="LEFiltre" >
-         <property name="minimumSize" >
-          <size>
-           <width>160</width>
-           <height>30</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2" >
-        <widget class="QPushButton" name="BNext" >
-         <property name="text" >
-          <string>Suivant</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="4" >
         <widget class="QListWidget" name="LBNouvCommande" />
        </item>
-       <item row="3" column="0" colspan="4" >
+       <item row="2" column="0" >
         <widget class="QLabel" name="textLabel4" >
+         <property name="maximumSize" >
+          <size>
+           <width>721</width>
+           <height>20</height>
+          </size>
+         </property>
          <property name="text" >
           <string>La commande choisie sera ajoutée APRES la commande courante</string>
          </property>
@@ -228,74 +275,66 @@ appuyé sur  le bouton Valider.</string>
      </widget>
     </widget>
    </item>
-   <item row="2" column="1" >
-    <widget class="QPushButton" name="bOk" >
-     <property name="minimumSize" >
-      <size>
-       <width>0</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="toolTip" >
-      <string>validation de la saisie</string>
-     </property>
-     <property name="text" >
-      <string>&amp;Valider</string>
-     </property>
-     <property name="shortcut" >
-      <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
-     </property>
-     <property name="autoDefault" >
-      <bool>true</bool>
-     </property>
-     <property name="default" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" >
-    <widget class="QPushButton" name="bSup" >
-     <property name="minimumSize" >
-      <size>
-       <width>0</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="toolTip" >
-      <string>suppression du mot clef</string>
-     </property>
-     <property name="text" >
-      <string>&amp;Supprimer</string>
-     </property>
-     <property name="shortcut" >
-      <string>Alt+S</string>
-     </property>
-     <property name="autoDefault" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2" >
-    <widget class="QPushButton" name="bHelp" >
-     <property name="minimumSize" >
-      <size>
-       <width>0</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="toolTip" >
-      <string>affichage documentation aster</string>
-     </property>
-     <property name="text" >
-      <string>&amp;Documentation</string>
-     </property>
-     <property name="shortcut" >
-      <string>Alt+D</string>
-     </property>
-     <property name="autoDefault" >
-      <bool>true</bool>
-     </property>
-    </widget>
+   <item row="1" column="0" >
+    <layout class="QHBoxLayout" name="horizontalLayout" >
+     <item>
+      <spacer name="horizontalSpacer" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>158</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bOk" >
+       <property name="minimumSize" >
+        <size>
+         <width>160</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>160</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="toolTip" >
+        <string>validation de la saisie</string>
+       </property>
+       <property name="text" >
+        <string>&amp;Valider</string>
+       </property>
+       <property name="shortcut" >
+        <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+       </property>
+       <property name="autoDefault" >
+        <bool>true</bool>
+       </property>
+       <property name="default" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>148</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -309,8 +348,6 @@ appuyé sur  le bouton Valider.</string>
   <tabstop>LBNouvCommande</tabstop>
   <tabstop>RBalpha</tabstop>
   <tabstop>bOk</tabstop>
-  <tabstop>bSup</tabstop>
-  <tabstop>bHelp</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -19,74 +19,31 @@
 #
 # ======================================================================
 
-import os
+import os, sys
+# Les variables pouvant positionnees sont :
+print "import des prefs de Homard"
 
-# REPINI sert à localiser le fichier editeur.ini
-# Obligatoire
+code = "Homard"
+
+# REPINI sert à localiser le fichier 
+# initialdir sert comme directory initial des QFileDialog
+# positionnee a repin au debut mise a jour dans configuration
 REPINI=os.path.dirname(os.path.abspath(__file__))
+initialdir=REPINI 
 
 # INSTALLDIR sert à localiser l'installation d'Eficas
-# Obligatoire
 INSTALLDIR=os.path.join(REPINI,'..')
+sys.path[:0]=[INSTALLDIR]
 
-# CODE_PATH sert à localiser Noyau et Validation éventuellement
-# non contenus dans la distribution EFICAS
-# Par défaut on utilise les modules de INSTALLDIR
-# Peut valoir None (defaut)
-CODE_PATH = None
-#CODE_PATH = os.path.join(REPINI,'../../Superv')
-
-# ICONDIR sert à localiser le répertoire contenant les icones
-# Par défaut on utilise le répertoire icons dans Editeur
-ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')
-
-# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
-lang='fr'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
+# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
+lang='fr'
 encoding='iso-8859-1'
 
-labels= ('Fichier','Edition','Jeu de commandes',
-#               'Catalogue','Browsers',
-                'Options',
-                'Aide',
-           )
+# Acces a la documentation
+rep_cata        = INSTALLDIR
+path_doc        = os.path.join(rep_cata,'Doc')
+exec_acrobat    = "/usr/bin/xpdf"
 
-appli_composants=['readercata','bureau',
-#                  'browser',
-                   'options',
-           ]
-
-menu_defs={ 'bureau': [
-              ('Fichier',[
-                           ('Nouveau','newJDC','<Control-n>'),
-                           ('Ouvrir','openJDC','<Control-o>'),
-                           ('Enregistrer','saveJDC','<Control-e>'),
-                           ('Enregistrer sous','saveasJDC','<Control-s>'),
-                           None,
-                           ('Fermer','closeJDC','<Control-f>'),
-                           ('Quitter','exitEFICAS','<Control-q>'),
-                         ]
-              ),
-              ('Edition',[
-                           ('Copier','copy','<Control-c>'),
-                           ('Couper','cut','<Control-x>'),
-                           ('Coller','paste','<Control-v>'),
-                         ]
-              ),
-              ('Jeu de commandes',[
-                                   ('Rapport de validation','visuCRJDC','<Control-r>'),
-                                   ('Fichier à plat','visu_a_plat','<Control-p>'),
-                                   ('Fichier format v6','visuJDC_py'),
-                                   ('Fichier source','visu_txt_brut_JDC','<Control-b>'),
-                                   ('Paramètres Eficas','affichage_fichier_ini'),
-                                   ('Mots-clés inconnus','mc_inconnus'),
-                                  ]
-              ),
-              ('Aide',[
-                        ('Aide EFICAS','aideEFICAS','<Control-a>'),
-                      ]
-              ),
-             ]
-           }
 

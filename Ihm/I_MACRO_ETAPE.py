@@ -774,7 +774,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 	   self.fichier_err="Le fichier INCLUDE n est pas defini"
            self.parent.record_unit(999,self)
            try :
-              MCFils=self.get_child('FICHIER')
+              MCFils=self.get_child('FileName')
               MCFils.set_valeur(None)
            except :
               pass
@@ -796,9 +796,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
              nom=maVariableListe[i].id_
              type=maVariableListe[i].type_
              if type :
-               ligneTexte=nom+"=VARI(type='IN',);\n"
+               ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='in',R=%d);\n" % (nom, nom, i)
              else :
-              ligneTexte=nom+"=VARI(type='OUT',);\n"
+               ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='out',R=%d);\n" % (nom, nom, i)
              self.fichier_text = self.fichier_text + ligneTexte
       except:
          self.make_incl2_except()
@@ -816,7 +816,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.make_contexte_include(self.fichier_ini ,self.fichier_text)
          self.parent.record_unit(unite,self)
          try :
-            MCFils=self.get_child('FICHIER')
+            MCFils=self.get_child('FileName')
             MCFils.set_valeur(fichier)
          except :
             pass
@@ -838,7 +838,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.fichier_err = string.join(l)
          self.contexte_fichier_init={}
          try :
-            MCFils=self.get_child('FICHIER')
+            MCFils=self.get_child('FileName')
             MCFils.set_valeur(None)
          except :
             pass

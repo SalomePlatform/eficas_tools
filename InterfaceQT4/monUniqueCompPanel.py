@@ -64,9 +64,7 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
         self.connecterSignaux()
 
   def connecterSignaux(self):
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
-        self.connect(self.bSup,SIGNAL("clicked()"),self.BSupPressed)
         self.connect(self.LEImag,SIGNAL("returnPressed()"),self.LEImagRPressed)
         self.connect(self.LEReel,SIGNAL("returnPressed()"),self.LEReelRPressed)
         self.connect(self.LEcomp,SIGNAL("returnPressed()"),self.LEcompRPressed)
@@ -180,10 +178,4 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
         commentaire=commentaire +"\n"+ aideval
         self.Commentaire.setText(QString(commentaire))
 
-
-  def BSupPressed(self):
-        QTPanel.BSupPressed(self)
-
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
 

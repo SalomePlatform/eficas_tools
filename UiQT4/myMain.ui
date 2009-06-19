@@ -5,29 +5,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1406</width>
-    <height>600</height>
+    <width>1383</width>
+    <height>811</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>68</y>
-     <width>1406</width>
-     <height>510</height>
-    </rect>
-   </property>
-  </widget>
+  <widget class="QWidget" name="centralwidget" />
   <widget class="QMenuBar" name="menubar" >
    <property name="geometry" >
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1406</width>
+     <width>1383</width>
      <height>29</height>
     </rect>
    </property>
@@ -94,25 +85,8 @@
    <addaction name="menuTraduction" />
    <addaction name="menuPatrons" />
   </widget>
-  <widget class="QStatusBar" name="statusbar" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>578</y>
-     <width>1406</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
+  <widget class="QStatusBar" name="statusbar" />
   <widget class="QToolBar" name="toolBar" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>29</y>
-     <width>1406</width>
-     <height>39</height>
-    </rect>
-   </property>
    <property name="windowTitle" >
     <string>toolBar</string>
    </property>
@@ -133,7 +107,7 @@
   <action name="action_Nouveau" >
    <property name="icon" >
     <iconset>
-     <normaloff>icons/New24.gif</normaloff>icons/New24.gif</iconset>
+     <normaloff>../Editeur/icons/New24.png</normaloff>../Editeur/icons/New24.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Nouveau</string>
@@ -150,7 +124,7 @@
   <action name="action_Ouvrir" >
    <property name="icon" >
     <iconset>
-     <normaloff>icons/Open24.gif</normaloff>icons/Open24.gif</iconset>
+     <normaloff>../Editeur/icons/Open24.png</normaloff>../Editeur/icons/Open24.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Ouvrir</string>
@@ -162,7 +136,7 @@
   <action name="actionEnregistrer" >
    <property name="icon" >
     <iconset>
-     <normaloff>icons/Save24.gif</normaloff>icons/Save24.gif</iconset>
+     <normaloff>../Editeur/icons/Save24.png</normaloff>../Editeur/icons/Save24.png</iconset>
    </property>
    <property name="text" >
     <string>Enregistrer</string>
@@ -195,7 +169,7 @@
   <action name="actionCouper" >
    <property name="icon" >
     <iconset>
-     <normaloff>icons/Cut24.gif</normaloff>icons/Cut24.gif</iconset>
+     <normaloff>../Editeur/icons/Cut24.png</normaloff>../Editeur/icons/Cut24.png</iconset>
    </property>
    <property name="text" >
     <string>Couper</string>
@@ -207,7 +181,7 @@
   <action name="actionCopier" >
    <property name="icon" >
     <iconset>
-     <normaloff>icons/Copy24.gif</normaloff>icons/Copy24.gif</iconset>
+     <normaloff>../Editeur/icons/Copy24.png</normaloff>../Editeur/icons/Copy24.png</iconset>
    </property>
    <property name="text" >
     <string>Copier</string>
@@ -219,7 +193,7 @@
   <action name="actionColler" >
    <property name="icon" >
     <iconset>
-     <normaloff>icons/Paste24.gif</normaloff>icons/Paste24.gif</iconset>
+     <normaloff>../Editeur/icons/Paste24.png</normaloff>../Editeur/icons/Paste24.png</iconset>
    </property>
    <property name="text" >
     <string>Coller</string>

@@ -87,20 +87,6 @@ class OpenturnsGenerator(PythonGenerator):
          self.dictTempo[obj.nom]=obj.valeur
       return s
 
-#   def generMCFACT(self,obj):
-#      # Il n est pas possible d utiliser obj.valeur qui n est pas 
-#      # a jour pour les nouvelles variables ou les modifications 
-#      if obj.nom in ( "Variables", "Files", ) :
-#         self.TraiteMCSIMP=0
-#         self.dictTempo={}
-#      s=PythonGenerator.generMCFACT(self,obj)
-#      if obj.nom in ( "Variables", ) :
-#         self.listeVariables.append(self.dictTempo)
-#         self.dictTempo={}
-#      else :
-#         self.listeFichiers.append(self.dictTempo)
-#      self.TraiteMCSIMP=1
-#      return s
 
    def generETAPE(self,obj):
       print "IDM: generETAPE dans generator_openturns_study.py"

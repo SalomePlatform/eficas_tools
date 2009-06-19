@@ -56,6 +56,7 @@ class MonSelectVal(DSelVal):
         self.connect(self.BImportTout,SIGNAL("clicked()"),self.BImportToutPressed)
 
   def readVal(self):
+        if self.file == "" : return
         f = open(self.file, "rb")
         self.texte = f.read()
         f.close()
@@ -92,6 +93,7 @@ class MonSelectVal(DSelVal):
         liste1=self.textTraite.split(self.separateur)
         liste=[]
         for val in liste1 :
+          if val != '' and val != ' ' and val != self.separateur :
             val=str(val)
             try :
               val=eval(val,{})

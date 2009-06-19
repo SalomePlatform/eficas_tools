@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'desListeParam.ui'
 #
-# Created: Tue Nov 18 17:37:24 2008
-#      by: PyQt4 UI code generator 4.4.2
+# Created: Tue Jan 27 12:25:36 2009
+#      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,12 +12,12 @@ from PyQt4 import QtCore, QtGui
 class Ui_DLisParam(object):
     def setupUi(self, DLisParam):
         DLisParam.setObjectName("DLisParam")
-        DLisParam.resize(413,394)
+        DLisParam.resize(413, 394)
         self.gridlayout = QtGui.QGridLayout(DLisParam)
         self.gridlayout.setObjectName("gridlayout")
         self.LBParam = QtGui.QListWidget(DLisParam)
         self.LBParam.setObjectName("LBParam")
-        self.gridlayout.addWidget(self.LBParam,0,0,1,1)
+        self.gridlayout.addWidget(self.LBParam, 0, 0, 1, 1)
 
         self.retranslateUi(DLisParam)
 

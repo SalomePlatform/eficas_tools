@@ -73,32 +73,32 @@ class MyTabview:
 
    def handleCloseAll(self):
        self.appliEficas.sauveRecents()
-       print "passage dans CloseAll"
+       #print "passage dans CloseAll"
        print "self.dict_editors", self.dict_editors
        while len(self.dict_editors) > 0 :
              self.myQtab.setCurrentIndex(0)
              self.handleClose(0)
         
    def handleEditCopy(self):
-       print "passage dans handleEditCopy"
+       #print "passage dans handleEditCopy"
        index=self.myQtab.currentIndex()
        editor=self.dict_editors[index]
        editor.handleEditCopy()
 
    def handleEditCut(self):
-       print "passage dans handleEditCut"
+       #print "passage dans handleEditCut"
        index=self.myQtab.currentIndex()
        editor=self.dict_editors[index]
        editor.handleEditCut()
 
    def handleEditPaste(self):
-       print "passage dans handleEditPaste"
+       #print "passage dans handleEditPaste"
        index=self.myQtab.currentIndex()
        editor=self.dict_editors[index]
        editor.handleEditPaste()
 
    def newEditor(self,include=0):
-       print "passage dans newEditor"
+       #print "passage dans newEditor"
        maPage=self.getEditor()
 
    def newIncludeEditor(self):

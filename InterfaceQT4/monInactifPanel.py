@@ -29,9 +29,9 @@ class PanelInactif( QTPanel, Ui_DInactif,QDialog ):
            parent.addWidget(parent.partieDroite)
            parent.leLayout.widgetActive=self
         self.setupUi(self)
-                
-        self.connect(self.bSup,SIGNAL("clicked()"),self.BSupPressed)
+        self.connect(self.bSup,SIGNAL("clicked()"),self.BSupPressed)              
 
     def BSupPressed(self):
-       QTPanel.BSupPressed(self)
+        self.editor.init_modif()
+        self.node.delete()
         

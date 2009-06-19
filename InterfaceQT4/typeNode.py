@@ -4,21 +4,11 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 #---------------------------#
-class PopUpMenuNodePartiel :
+class PopUpMenuNodeMinimal :
 #---------------------------#
     def createPopUpMenu(self):
         self.createActions()
-
         self.menu = QMenu(self.tree)
-        #ss-menu Comment:
-        self.commentMenu=self.menu.addMenu('Commentaire')
-        self.commentMenu.addAction(self.CommApres)
-        self.commentMenu.addAction(self.CommAvant)
-        #ss-menu Parameters:
-        self.paramMenu =self.menu.addMenu('Parametre') 
-        self.paramMenu.addAction(self.ParamApres)
-        self.paramMenu.addAction(self.ParamAvant)
-
         #items du menu
         self.menu.addAction(self.Supprime)
     
@@ -40,10 +30,45 @@ class PopUpMenuNodePartiel :
         self.Supprime = QAction('Supprimer',self.tree)
         self.tree.connect(self.Supprime,SIGNAL("activated()"),self.supprimeNoeud)
         self.Supprime.setStatusTip("supprime le mot clef ")
+        self.Documentation = QAction('Documentation',self.tree)
+        self.tree.connect(self.Documentation,SIGNAL("activated()"),self.viewDoc)
+        self.Documentation.setStatusTip("documentation sur la commande ")
 
     def supprimeNoeud(self):
         item= self.tree.currentItem()
         item.delete()
+
+    def viewDoc(self):
+        self.node=self.tree.currentItem()
+        cle_doc = self.node.item.get_docu()
+        if cle_doc == None :
+            QMessageBox.information( self.editor, "Documentation Vide", \
+                                    "Aucune documentation Aster n'est associée à ce noeud")
+        return
+        #cle_doc = string.replace(cle_doc,'.','')
+        #cle_doc = string.replace(cle_doc,'-','')
+        #print dir(self)
+        commande = self.editor.appliEficas.CONFIGURATION.exec_acrobat
+        try :
+            f=open(commande,"rb")
+        except :
+             texte="impossible de trouver la commande  " + commande
+             QMessageBox.information( self.editor, "Lecteur PDF", texte)
+             return
+        nom_fichier = cle_doc+".pdf"
+        fichier = os.path.abspath(os.path.join(self.editor.CONFIGURATION.path_doc,
+                                       nom_fichier))
+        try :
+           f=open(fichier,"rb")
+        except :
+           texte="impossible d'ouvrir " + fichier
+           QMessageBox.information( self.editor, "Documentation Vide", texte)
+           return
+        if os.name == 'nt':
+           os.spawnv(os.P_NOWAIT,commande,(commande,fichier,))
+        elif os.name == 'posix':
+            script ="#!/usr/bin/sh \n%s %s&" %(commande,fichier)
+            pid = os.system(script)
 
     def addParametersApres(self):
         item= self.tree.currentItem()
@@ -60,6 +85,22 @@ class PopUpMenuNodePartiel :
     def addCommAvant(self):
         item= self.tree.currentItem()
         item.addComment(False)
+
+#--------------------------------------------#
+class PopUpMenuNodePartiel (PopUpMenuNodeMinimal):
+#---------------------------------------------#
+    def createPopUpMenu(self):
+        PopUpMenuNodeMinimal.createPopUpMenu(self)
+        #ss-menu Comment:
+        self.commentMenu=self.menu.addMenu('Commentaire')
+        self.commentMenu.addAction(self.CommApres)
+        self.commentMenu.addAction(self.CommAvant)
+        #ss-menu Parameters:
+        self.paramMenu =self.menu.addMenu('Parametre') 
+        self.paramMenu.addAction(self.ParamApres)
+        self.paramMenu.addAction(self.ParamAvant)
+        self.menu.addAction(self.Documentation)
+
 
 #-----------------------------------------#
 class PopUpMenuNode(PopUpMenuNodePartiel) :

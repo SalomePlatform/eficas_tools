@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'desError.ui'
 #
-# Created: Tue Nov 18 17:37:24 2008
-#      by: PyQt4 UI code generator 4.4.2
+# Created: Tue Jan 27 12:25:36 2009
+#      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,24 +12,24 @@ from PyQt4 import QtCore, QtGui
 class Ui_DError(object):
     def setupUi(self, DError):
         DError.setObjectName("DError")
-        DError.resize(482,480)
-        DError.setMinimumSize(QtCore.QSize(350,0))
+        DError.resize(482, 480)
+        DError.setMinimumSize(QtCore.QSize(350, 0))
         self.gridLayout = QtGui.QGridLayout(DError)
         self.gridLayout.setObjectName("gridLayout")
         self.textBrowser = QtGui.QTextBrowser(DError)
         self.textBrowser.setObjectName("textBrowser")
-        self.gridLayout.addWidget(self.textBrowser,0,0,1,1)
+        self.gridLayout.addWidget(self.textBrowser, 0, 0, 1, 1)
         self.hboxlayout = QtGui.QHBoxLayout()
         self.hboxlayout.setObjectName("hboxlayout")
-        spacerItem = QtGui.QSpacerItem(171,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        spacerItem = QtGui.QSpacerItem(171, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.hboxlayout.addItem(spacerItem)
         self.bSup = QtGui.QPushButton(DError)
         self.bSup.setAutoDefault(True)
         self.bSup.setObjectName("bSup")
         self.hboxlayout.addWidget(self.bSup)
-        spacerItem1 = QtGui.QSpacerItem(171,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
+        spacerItem1 = QtGui.QSpacerItem(171, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.hboxlayout.addItem(spacerItem1)
-        self.gridLayout.addLayout(self.hboxlayout,1,0,1,1)
+        self.gridLayout.addLayout(self.hboxlayout, 1, 0, 1, 1)
 
         self.retranslateUi(DError)
         QtCore.QMetaObject.connectSlotsByName(DError)

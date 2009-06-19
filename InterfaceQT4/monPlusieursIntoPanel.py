@@ -66,9 +66,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   def connecterSignaux(self) :
         self.connect(self.listBoxVal, SIGNAL("itemDoubleClicked(QListWidgetItem*)" ), self.Ajout1Valeur )
         self.connect(self.LBValeurs,SIGNAL("itemDoubleClicked(QListWidgetItem*)"),self.Sup1Valeur)
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPourListePressed)
-        self.connect(self.bSup,SIGNAL("clicked()"),self.BSupPressed)
         self.connect(self.BAjout1Val,SIGNAL("clicked()"),self.Ajout1Valeur)
         self.connect(self.BSup1Val,SIGNAL("clicked()"),self.Sup1Valeur)
 
@@ -80,11 +78,6 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
         self.node.item.set_valeur(self.listeValeursCourantes)
 	self.editor.affiche_infos("Valeur Acceptée")
 
-  def BSupPressed(self):
-        QTPanel.BSupPressed(self)
-
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
 
   def Sup1Valeur(self):
         indexCourant=self.LBValeurs.currentRow()

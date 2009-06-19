@@ -33,6 +33,7 @@ from politiquesValidation import PolitiqueUnique
 class DUnBase(Ui_DUnBase,QDialog):
    def __init__(self,parent ,modal ) :
        QDialog.__init__(self,parent)
+       self.appliEficas=parent.appliEficas
        if hasattr(parent,"leLayout"):
           parent.leLayout.removeWidget(parent.leLayout.widgetActive)
           parent.leLayout.widgetActive.close()
@@ -66,19 +67,18 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         self.connecterSignaux()
 
   def connecterSignaux(self) :
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOk2Pressed)
-        self.connect(self.bSup,SIGNAL("clicked()"),self.BSupPressed)
         self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
         self.connect(self.bParametres,SIGNAL("pressed()"),self.BParametresPressed)
         self.connect(self.BSalome,SIGNAL("pressed()"),self.BSalomePressed)
         self.connect(self.BView2D,SIGNAL("clicked()"),self.BView2DPressed)
+        self.connect(self.BFichier,SIGNAL("clicked()"),self.BFichierPressed)
 
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
 
   def detruitBouton(self):
         mc = self.node.item.get_definition()
+        if self.node.item.get_nom() != "FileName" :
+           self.BFichier.close()
         type = mc.type[0]
         #if not('grma' in repr(type)) or not(self.editor.salome) :
         if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
@@ -112,16 +112,22 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def BOk2Pressed(self):
         SaisieValeur.BOk2Pressed(self)
-        if self.node.item.parent.nom == "FICXML" : 
+        if self.node.item.parent.nom == "MODEL" : 
 		self.node.item.parent.change_fichier="1"
                 self.node.item.parent.build_include(None,"")
 
-  def BSupPressed(self):
-        QTPanel.BSupPressed(self)
+  def BFichierPressed(self):
+      fichier = QFileDialog.getOpenFileName(self.appliEficas,
+                        self.appliEficas.trUtf8('Ouvrir Fichier'),
+                        self.appliEficas.CONFIGURATION.savedir,
+                        self.appliEficas.trUtf8('Wrapper Files (*.xml);;''All Files (*)'))
+      if not(fichier.isNull()):
+         self.lineEditVal.setText(fichier)
 
+         
   def LEValeurPressed(self):
         SaisieValeur.LEValeurPressed(self)
-        if self.node.item.parent.nom == "FICXML" : 
+        if self.node.item.parent.nom == "MODEL" : 
 		self.node.item.parent.change_fichier="1"
                 self.node.item.parent.build_include(None,"")
 

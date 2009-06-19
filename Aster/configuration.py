@@ -181,7 +181,7 @@ class CONFIGbase:
       items = self.l_param
       result = widgets.Formulaire(self.parent,
                                   obj_pere = self,
-                                  titre = "Saisie des données indispensables à la configuration d'EFICAS",
+                                  titre = "Saisie des donnees indispensables a la configuration d'EFICAS",
                                   texte = self.texte,
                                   items = items,
                                   mode='query')
@@ -240,7 +240,7 @@ class CONFIG(CONFIGbase):
       self.repIni = repIni
       self.rep_ini = repIni
       self.fic_ini = os.path.join(self.repIni,self.fichier)
-      self.titre = "Paramètres nécessaires à la configuration d'EFICAS"
+      self.titre = 'Parametres necessaires a la configuration d\'EFICAS'
       self.texte_ini = "Voici les paramètres que requiert Eficas"
       self.commande = self.creation_fichier_ini_si_possible
       self.labels={"savedir"       : "Répertoire initial pour Open/Save des fichiers",
@@ -318,7 +318,7 @@ class CONFIGStyle(CONFIGbase):
       self.repIni = repIni
       self.rep_ini = repIni
       self.fic_ini = os.path.join(self.repIni,self.fichier)
-      self.titre = "Paramètres d affichage"
+      self.titre = "Parametres d affichage"
       self.texte_ini = "Voici les paramètres configurables :  "
       self.commande = self.creation_fichier_ini_si_possible
       self.labels={"background":"couleur du fonds", 
@@ -328,14 +328,6 @@ class CONFIGStyle(CONFIGbase):
                    "standard_gras_souligne":"police utilisée pour le gras souligné",
                    "canvas_italique":"police italique",
                    "standard_gras":"gras",
-                   #"canvas":"police",
-                   #"canvas_gras":"police gras",
-                   #"canvas_gras_italique":"police gras italique",
-                   #"standard12":"police 12",
-                   #"standard12_gras":"police 12 gras",
-                   #"standard12_gras_italique":"police 12 gras italique",
-                   #"standardcourier10":"courrier "
-                   "statusfont":"police utilisée dans la status Bar",
                   }
       self.types ={"background":"mot", 
                    "foreground":"mot" ,

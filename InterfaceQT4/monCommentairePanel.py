@@ -48,6 +48,7 @@ class DComment(Ui_DComment,QDialog):
        self.setupUi(self)
 
 
+
 # Import des panels
 
 class MonCommentairePanel(DComment,QTPanelTBW2,QTPanel):
@@ -68,11 +69,9 @@ class MonCommentairePanel(DComment,QTPanelTBW2,QTPanel):
         self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)
         self.connect(self.LEFiltre,SIGNAL("textChanged(const QString&)"),self.LEFiltreTextChanged)
         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEfiltreReturnPressed)
-        self.connect(self.bSup,SIGNAL("pressed()"),self.BSupPressed)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
-        self.connect(self.RBGroupe,SIGNAL("clicked()"),self.BuildTabCommand)
-        self.connect(self.RBalpha,SIGNAL("clicked()"),self.BuildTabCommand)
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
+        self.connect(self.RBGroupe,SIGNAL("clicked()"),self.BuildTabCommandChanged)
+        self.connect(self.RBalpha,SIGNAL("clicked()"),self.BuildTabCommandChanged)
         self.connect(self.BNext,SIGNAL("pressed()"),self.BNextPressed)
         self.connect(self.textCommentaire,SIGNAL("textChanged()"),self.TexteCommentaireEntre)
 
@@ -85,9 +84,6 @@ class MonCommentairePanel(DComment,QTPanelTBW2,QTPanel):
         self.editor.init_modif()
         self.node.item.set_valeur(texte)
         self.node.onValid()
-
-  def BuildTabCommand(self):
-      QTPanelTBW2.BuildLBNouvCommande(self)
 
   def LEFiltreTextChanged(self):
       QTPanelTBW2.LEFiltreTextChanged(self)
@@ -104,6 +100,6 @@ class MonCommentairePanel(DComment,QTPanelTBW2,QTPanel):
   def BOkPressed(self):
       QTPanel.BOkPressed(self)
 
-  def ViewDoc(self):
-      QTPanel.ViewDoc(self)
+  def BuildTabCommandChanged(self):
+      QTPanelTBW2.BuildLBNouvCommandChanged(self)
 

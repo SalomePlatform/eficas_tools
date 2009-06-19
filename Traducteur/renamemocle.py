@@ -100,7 +100,7 @@ def renameMotCleInFact(jdc,command,fact,mocle,new_name, ensemble=regles.SansRegl
                     if erreur :
                        EcritErreur((command,fact,mocle),c.lineno)
                     else :
-                       logging.info("Renommage de: %s, %s, %s, en %s",n.name,n.lineno,n.colno,new_name)
+                       logging.info("Renommage de: %s, ligne %s, en %s",n.name,n.lineno,new_name)
 
     if boolChange : jdc.reset(jdc.getSource())
 
@@ -128,7 +128,7 @@ def renameCommande(jdc,command,new_name,ensemble=regles.SansRegle):
         if ensemble.verif(c) == 0 : continue
         boolChange=1
         if debug:print "Renommage de:",c.name,new_name ,c.lineno,c.colno
-        logging.info("Renommage de: %s en ligne %d en %s",c.name,c.lineno,new_name)
+        logging.info("Renommage de: %s ligne %d en %s",c.name,c.lineno,new_name)
         s=jdc.getLines()[c.lineno-1]
         jdc.getLines()[c.lineno-1]=s[:c.colno]+new_name+s[c.colno+len(command):]
 

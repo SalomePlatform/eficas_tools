@@ -52,8 +52,8 @@ class QTPanel:
          QMessageBox.information( self.editor, "Documentation Vide", \
                                   "Aucune documentation Aster n'est associée à ce noeud")
          return
-      cle_doc = string.replace(cle_doc,'.','')
-      cle_doc = string.replace(cle_doc,'-','')
+      #cle_doc = string.replace(cle_doc,'.','')
+      #cle_doc = string.replace(cle_doc,'-','')
       commande = self.editor.appliEficas.CONFIGURATION.exec_acrobat
       try :
          f=open(commande,"rb")
@@ -61,7 +61,7 @@ class QTPanel:
          texte="impossible de trouver la commande  " + commande
          QMessageBox.information( self.editor, "Lecteur PDF", texte)
          return
-      nom_fichier = cle_doc+".pdf"
+      nom_fichier = cle_doc
       fichier = os.path.abspath(os.path.join(self.editor.CONFIGURATION.path_doc,
                                        nom_fichier))
       try :
@@ -173,9 +173,26 @@ class QTPanelTBW2(QTPanel):
         self.editor    = parent
         self.node      = node
         self.BuildLBNouvCommande()
-        if racine == 1 : self.AppelleBuildLBRegles()
+        self.LEFiltre.setFocus()
+        if racine == 1 : 
+           self.AppelleBuildLBRegles()
+        else :
+           self.connect(self.TWChoix, SIGNAL("currentChanged(QWidget *)"), self.handleCurrentChanged)
 
       
+  def handleCurrentChanged(self):
+        label=self.TWChoix.tabLabel(self.TWChoix.currentPage())
+        if label==QString("Nouvelle Commande"):
+           try :
+               self.LEFiltre.setFocus()
+           except :
+               pass
+        if label==QString("Nommer Concept"):
+           try :
+               self.LENomConcept.setFocus()
+           except :
+               pass
+
   def BuildLBNouvCommande(self):
         self.LBNouvCommande.clear()
         try :
@@ -260,6 +277,7 @@ class QTPanelTBW3(QTPanel):
         self.typeConcept.setText(type_sd)
         self.LENomConcept.setText("")
         self.LENomConcept.setText(nomConcept)
+        self.LENomConcept.setFocus()
         
 
 
@@ -317,11 +335,11 @@ class ViewText(QDialog):
         if not fn.isNull():                
            if QFileInfo(fn).exists():
               abort = QMessageBox.warning(self,
-                        self.trUtf8("Save File"),
-                        self.trUtf8("The file <b>%1</b> already exists.")
+                        self.trUtf8("Sauvegarde Fichier"),
+                        self.trUtf8("Le fichier <b>%1</b> existe.")
                             .arg(fn),
-                        self.trUtf8("&Overwrite"),
-                        self.trUtf8("&Abort"), None, 1)
+                        self.trUtf8("&Remplacer"),
+                        self.trUtf8("&Abandonner"), None, 1)
               if abort:
                  return
            fn = unicode(QDir.convertSeparators(fn))                

@@ -109,6 +109,18 @@ class SaisieValeur:
             self.editor.affiche_infos(commentaire)
 
 
+  def TraiteLEValeurTuple(self) :
+        listeValeurs=[]
+        valeurBrute=str(self.LEValeur.text())
+        listeValeursSplit=valeurBrute.split(',')
+        for val in listeValeursSplit :
+            try :
+               valeur=eval(val,{})        
+            except :
+               valeur=val
+            listeValeurs.append(valeur)
+        return listeValeurs
+
   def TraiteLEValeur(self,valeurTraitee=None) :
         # lit la chaine entree dans le line edit
         # et la tranforme en chaine de valeurs

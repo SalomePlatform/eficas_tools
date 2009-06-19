@@ -22,6 +22,7 @@
 import string,re
 import types,sys,os
 import traceback
+import typeNode
 from PyQt4 import *
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
@@ -29,9 +30,7 @@ from PyQt4.QtCore import *
 class JDCTree( QTreeWidget ):
     def __init__( self, jdc_item, QWParent):        
         QListView.__init__( self, QWParent )
-        print QWParent.__class__
         
-        print "je suis dans JDCTree et voilà ", jdc_item
         self.item          = jdc_item
         self.tree          = self        
         self.editor	   = QWParent
@@ -42,8 +41,7 @@ class JDCTree( QTreeWidget ):
         mesLabels << self.trUtf8('Commande                   ') << self.trUtf8('Concept/Valeur           ')
         self.setHeaderLabels(mesLabels)
                 
-        self.setMinimumSize(QSize(600,500))
-        print self
+        self.setMinimumSize(QSize(600,505))
         self.setColumnWidth(0,300)
 
         self.connect(self, SIGNAL("itemClicked ( QTreeWidgetItem * ,int) "), self.handleOnItem)
@@ -101,7 +99,8 @@ class JDCNode(QTreeWidgetItem):
         mesColonnes <<  name << value
         QTreeWidgetItem.__init__(self,treeParent,mesColonnes)
 
-        monIcone = QIcon("/home/noyret/Install_Eficas/EficasV1/InterfaceQT4/icons/" +self.item.GetIconName() + ".gif")
+        RepIcon=QString(self.appliEficas.RepIcon)
+        monIcone = QIcon(RepIcon+"/" +self.item.GetIconName() + ".png")
         self.setIcon(0,monIcone)
         self.children = []
         self.build_children()
@@ -111,6 +110,7 @@ class JDCNode(QTreeWidgetItem):
         self.item.connect("valid",self.onValid,())
         self.item.connect("supp" ,self.onAdd,())
         self.item.connect("add"  ,self.onSupp,())
+
 
     def build_children(self,posInsertion=10000):
         """ Construit la liste des enfants de self """
@@ -134,6 +134,7 @@ class JDCNode(QTreeWidgetItem):
             ind=ind+1
 
     def affichePanneau(self) :
+        print self
         if self.item.isactif():
 	    panel=self.getPanel()
         else:
@@ -312,7 +313,8 @@ class JDCNode(QTreeWidgetItem):
            Elle appelle isvalid
         """
         #print 'NODE update_node_valid', self.item.GetLabelText()
-        monIcone = QIcon("/home/noyret/Install_Eficas/EficasV1/InterfaceQT4/icons/" +self.item.GetIconName() + ".gif")
+        RepIcon=QString(self.appliEficas.RepIcon)
+        monIcone = QIcon(RepIcon+"/" +self.item.GetIconName() + ".png")
         self.setIcon(0,monIcone)
 
     def update_node_label(self):
@@ -339,16 +341,6 @@ class JDCNode(QTreeWidgetItem):
             for child in self.children:
                 if child.isHidden() == false : child.update_texte()
         
-#    def update_valid(self) :
-#        """Cette methode a pour but de mettre a jour la validite du noeud
-#           et de propager la demande de mise a jour a son Parent
-#        """
-#        #print "NODE update_valid", self.item.GetLabelText()
-#        self.update_node_valid()
-#        try :
-#          self.treeParent.update_valid()            
-#        except:
-#          pass
  
     def doPasteCommande(self,objet_a_copier):
         """

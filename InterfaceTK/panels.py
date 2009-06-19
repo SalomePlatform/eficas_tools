@@ -26,7 +26,7 @@ import time
 import traceback
 
 import widgets
-from widgets import ListeChoix
+from widgets import ListeChoix, showerror
 from widgets import ListeChoixParGroupes
 import prefs
 import options
@@ -184,12 +184,15 @@ class Panel(Frame) :
         - indication du chemin d'accès aux fichiers pdf à revoir : trop statique"""
       cle_doc = self.node.item.get_docu()
       if cle_doc == None : return
-      cle_doc = string.replace(cle_doc,'.','')
-      cle_doc = string.replace(cle_doc,'-','')
+      #cle_doc = string.replace(cle_doc,'.','')
+      #cle_doc = string.replace(cle_doc,'-','')
       commande = self.parent.appli.CONFIGURATION.exec_acrobat
-      nom_fichier = cle_doc+".pdf"
+      nom_fichier = cle_doc
       fichier = os.path.abspath(os.path.join(self.parent.appli.CONFIGURATION.path_doc,
                                        nom_fichier))
+      if os.path.isfile(fichier) == 0:
+           showerror("Pas de Documentation", "Eficas ne trouve pas de fichier documentation associe a cette commande")
+           return
       if os.name == 'nt':
           os.spawnv(os.P_NOWAIT,commande,(commande,fichier,))
       elif os.name == 'posix':

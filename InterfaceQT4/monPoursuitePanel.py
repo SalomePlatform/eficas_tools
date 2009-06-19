@@ -25,6 +25,8 @@ import os,traceback,sys
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+import convert
+
 
 from monMacroPanel import MonMacroPanel
 
@@ -45,46 +47,106 @@ class MonPoursuitePanel(MonMacroPanel):
 
   def ajoutPageOk(self) :
         self.TabPage = QtGui.QWidget()
-        self.TabPage.setGeometry(QtCore.QRect(0,0,499,433))
         self.TabPage.setObjectName("TabPage")
-        self.gridLayout_2 = QtGui.QGridLayout(self.TabPage)
-        self.gridLayout_2.setObjectName("gridLayout_2")
         self.textLabel1_3 = QtGui.QLabel(self.TabPage)
+        self.textLabel1_3.setGeometry(QtCore.QRect(9, 9, 481, 19))
         self.textLabel1_3.setWordWrap(False)
         self.textLabel1_3.setObjectName("textLabel1_3")
-        self.gridLayout_2.addWidget(self.textLabel1_3,0,0,1,1)
         self.LENomFichier = QtGui.QLineEdit(self.TabPage)
-        self.LENomFichier.setMinimumSize(QtCore.QSize(470,40))
+        self.LENomFichier.setGeometry(QtCore.QRect(9, 33, 481, 40))
+        self.LENomFichier.setMinimumSize(QtCore.QSize(470, 40))
         self.LENomFichier.setObjectName("LENomFichier")
-        self.gridLayout_2.addWidget(self.LENomFichier,1,0,1,1)
-        spacerItem = QtGui.QSpacerItem(21,190,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridLayout_2.addItem(spacerItem,2,0,1,1)
-        self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setObjectName("hboxlayout")
-        spacerItem1 = QtGui.QSpacerItem(331,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.hboxlayout.addItem(spacerItem1)
+        self.BFichier = QtGui.QPushButton(self.TabPage)
+        self.BFichier.setGeometry(QtCore.QRect(330, 170, 140, 50))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.BFichier.sizePolicy().hasHeightForWidth())
+        self.BFichier.setSizePolicy(sizePolicy)
+        self.BFichier.setMinimumSize(QtCore.QSize(140, 50))
+        self.BFichier.setObjectName("BFichier")
         self.BBrowse = QtGui.QPushButton(self.TabPage)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Fixed)
+        self.BBrowse.setGeometry(QtCore.QRect(330, 110, 140, 50))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.BBrowse.sizePolicy().hasHeightForWidth())
         self.BBrowse.setSizePolicy(sizePolicy)
-        self.BBrowse.setMinimumSize(QtCore.QSize(140,50))
+        self.BBrowse.setMinimumSize(QtCore.QSize(140, 50))
         self.BBrowse.setObjectName("BBrowse")
-        self.hboxlayout.addWidget(self.BBrowse)
-        self.gridLayout_2.addLayout(self.hboxlayout,3,0,1,1)
-        spacerItem2 = QtGui.QSpacerItem(21,87,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridLayout_2.addItem(spacerItem2,4,0,1,1)
-        self.TWChoix.addTab(self.TabPage,"")
-        self.textLabel1_3.setText(QtGui.QApplication.translate("DPour", "<font size=\"+1\">La commande POURSUITE requiert un nom de Fichier :</font>", None, QtGui.QApplication.UnicodeUTF8))
+        self.TWChoix.addTab(self.TabPage, "")
+        self.gridlayout.addWidget(self.TWChoix, 0, 0, 1, 3)
+
+        self.BFichier.setText(QtGui.QApplication.translate("DPour", "Autre Fichier", None, QtGui.QApplication.UnicodeUTF8))
         self.BBrowse.setText(QtGui.QApplication.translate("DPour", "Edit", None, QtGui.QApplication.UnicodeUTF8))
         self.TWChoix.setTabText(self.TWChoix.indexOf(self.TabPage), QtGui.QApplication.translate("DPour", "Fichier Poursuite", None, QtGui.QApplication.UnicodeUTF8))
 
-        self.LENomFichier.setText(self.node.item.object.jdc_aux.nom)
+        if hasattr(self.node.item.object,"fichier_ini"):
+           self.LENomFichier.setText(self.node.item.object.fichier_ini)
+
         self.connect(self.BBrowse,SIGNAL("clicked()"),self.BBrowsePressed)
+        self.connect(self.BFichier,SIGNAL("clicked()"),self.BFichierPressed)
+        self.connect(self.LENomFichier,SIGNAL("returnPressed()"),self.LENomFichReturnPressed)
+
 
 
   def BBrowsePressed(self):
-      self.node.makeEdit()
+      if hasattr(self.node.item,'object'):
+         self.node.makeEdit()
 
+  def BFichierPressed(self):
+      fichier = QFileDialog.getOpenFileName(self.appliEficas,
+                        self.appliEficas.trUtf8('Ouvrir Fichier'),
+                        self.appliEficas.CONFIGURATION.savedir,
+                        self.appliEficas.trUtf8('JDC Files (*.comm);;''All Files (*)'))
+      if not(fichier.isNull()):
+        self.LENomFichier.setText(fichier)
+      self.LENomFichReturnPressed()
+
+  def LENomFichReturnPressed(self):
+        nomFichier=str(self.LENomFichier.text())
+        if not os.path.isfile(nomFichier) :
+           commentaire = "Fichier introuvable"
+           self.Commentaire.setText(QString(commentaire))
+           self.editor.affiche_infos(commentaire)
+           return
+
+        text=self.convert_file(nomFichier)
+
+        # Si probleme a la lecture-conversion on arrete le traitement
+        if not text:
+           return
+
+        try :
+           self.node.item.object.change_fichier_init(nomFichier,text)
+           commentaire = "Fichier modifie  : " + self.node.item.get_nom()
+           self.Commentaire.setText(QString(commentaire))
+        except: 
+           l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+           QMessageBox.critical( self, "Erreur fatale au chargement du fichier Include", l[0])
+           commentaire = "Fichier invalide" 
+           self.Commentaire.setText(QString(commentaire))
+           self.editor.affiche_infos(commentaire)
+           return
+
+
+  def convert_file(self,file):
+       """
+         Methode pour convertir le fichier file dans le format courant
+       """
+       try :
+          format=self.editor.format_fichier
+       except :
+          format="python"
+       text=None
+       if convert.plugins.has_key(format):
+          # Le convertisseur existe on l'utilise
+          p=convert.plugins[format]()
+          p.readfile(file)
+          text=p.convert('execnoparseur')
+       else :
+            commentaire = "Impossible de lire le fichier : Format inconnu"
+            self.Commentaire.setText(QString(commentaire))
+            self.editor.affiche_infos(commentaire)
+       return text
 

@@ -66,27 +66,21 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         self.connecterSignaux()
 
   def connecterSignaux(self) :
-        self.connect(self.bHelp,SIGNAL("clicked()"),self.ViewDoc)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPourListePressed)
-        self.connect(self.bSup,SIGNAL("clicked()"),self.BSupPressed)
         self.connect(self.bParam,SIGNAL("clicked()"),self.BParametresPressed)
         self.connect(self.bImport,SIGNAL("clicked()"),self.BImportPressed)
         self.connect(self.BAjout1Val,SIGNAL("clicked()"),self.Ajout1Valeur)
         self.connect(self.BSup1Val,SIGNAL("clicked()"),self.Sup1Valeur)
         self.connect(self.LEValeur,SIGNAL("returnPressed()"),self.LEValeurPressed)
         self.connect(self.BSalome,SIGNAL("clicked()"),self.BSalomePressed)
-        self.connect(self.BView2D,SIGNAL("clicked()"),self.BView2DPressed)
 
   def detruitBouton(self):
         mc = self.node.item.get_definition()
         type = mc.type[0]
-        print self.editor.salome
         if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
            self.BSalome.close()
            self.BView2D.close()
 
-  def ViewDoc(self):
-        QTPanel.ViewDoc(self)
 
   def BuildLBValeurs(self):
        # redefinit en raison de l heritage par monFonctionPanel
@@ -95,13 +89,11 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   def BOkPourListePressed(self):
         self.editor.init_modif()
         if self.listeValeursCourantes == [] :
-           self.editor.affiche_infos("Pas de validation d un groupe vide")
+           self.editor.affiche_infos("Aucune Valeur")
            return
         self.node.item.set_valeur(self.listeValeursCourantes)
 	self.editor.affiche_infos("Valeur Acceptée")
 
-  def BSupPressed(self):
-        QTPanel.BSupPressed(self)
 
   def BParametresPressed(self):
         QTPanel.BParametresPressed(self)
@@ -154,6 +146,11 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
                index=index+1
            self.listeValeursCourantes=l1+listeRetour+l3
 	   self.editor.affiche_infos("Valeurs Ajoutées")
+
+  def AjoutNValeur(self,liste) :
+      for val in liste :
+        print val
+	self.Ajout1Valeur(val)
 
   def BImportPressed(self):
         init=QString( self.editor.CONFIGURATION.savedir)

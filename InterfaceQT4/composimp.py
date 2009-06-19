@@ -4,26 +4,20 @@ import string,types,os
 
 from copy import copy,deepcopy
 import traceback
+import typeNode
 
 # Modules Eficas
 from Editeur import Objecttreeitem
 import browser
 from Noyau.N_CR   import justify_text
     
-class Node(browser.JDCNode):    
+class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):    
     def getPanel(self):
         """        
         """
         klass = None 
         
         # Attention l ordre des if est important        
-        if self.item.wait_shell():
-            # l'objet attend un shell
-            # a priori jamais
-            print "Pb : Panneau Shell attendu"
-            print "Pb : Prevenir la maintenance"
-            klass = None #CS_pbruno todo
-            return None
 
         # l'objet prend sa (ses) valeur(s) dans un ensemble discret de valeurs
         if self.item.has_into():
@@ -39,7 +33,10 @@ class Node(browser.JDCNode):
             # on attend une liste de valeurs 
             if self.item.is_list() :
                 # on attend une liste de SD
-                if self.item.wait_assd():
+                if self.item.wait_tuple() :
+                    from monFonctionPanel import MonFonctionPanel
+                    klass = MonFonctionPanel
+                elif self.item.wait_assd():
                     from monPlusieursASSDPanel import MonPlusieursASSDPanel 
                     klass = MonPlusieursASSDPanel
                 else:
@@ -84,10 +81,14 @@ class Node(browser.JDCNode):
                 from monFonctionPanel import MonFonctionPanel
                 klass = MonFonctionPanel
 
+        print klass
         if not klass:
             return None
         return klass( self, self.editor )
         
+    def createPopUpMenu(self):
+        typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
+
         
     
 class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
@@ -389,7 +390,6 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   # wait_geom
   # wait_complex
   # wait_reel
-  # wait_shell
   # wait_assd
   # GetType
 
@@ -424,13 +424,13 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       else:
           return 0
         
-  def wait_shell(self):
+  def wait_tuple(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un shell, 0 sinon """
-      if 'shell' in self.object.definition.type:
-          return 1
-      else:
-          return 0
+      for ss_type in self.object.definition.type:
+          if repr(ss_type).find('Tuple') != -1 :
+             return 1
+      return 0
 
   def wait_assd(self):
       """Méthode booléenne qui retourne 1 si l'objet pointé par self

@@ -41,6 +41,7 @@ class MonRacinePanel(DRac,QTPanelTBW2):
         QTPanel.__init__(self,node,parent)
         QTPanelTBW2.__init__(self,node,parent,racine=1)
         self.setMinimumSize(0,0)
+        self.LEFiltre.setFocus()
 
   def BSupPressed(self):
       QTPanel.BSupPressed(self)
