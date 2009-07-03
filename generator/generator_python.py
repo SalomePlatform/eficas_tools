@@ -518,12 +518,21 @@ class PythonGenerator:
           Convertit un objet MCSIMP en une liste de chaines de caractères à la
           syntaxe python
       """
+      waitTuple=0
       if type(obj.valeur) in (types.TupleType,types.ListType) :
          s = ''
-         for val in obj.valeur :
-            s =s +self.format_item(val,obj.etape) + ','
-         if len(obj.valeur) > 1:
-            s = '(' + s + '),'
+         for ss_type in obj.definition.type:
+          if repr(ss_type).find('Tuple') != -1 :
+             waitTuple=1
+             break
+
+         if waitTuple :
+            s = str(obj.valeur) +','
+         else :
+            for val in obj.valeur :
+               s =s +self.format_item(val,obj.etape) + ','
+            if len(obj.valeur) > 1:
+               s = '(' + s + '),'
          if obj.nbrColonnes() :
             s=self.formatColonnes(obj.nbrColonnes(),s)
       else :
@@ -547,5 +556,3 @@ class PythonGenerator:
       #else :
          textformat=text
       return textformat
-
-

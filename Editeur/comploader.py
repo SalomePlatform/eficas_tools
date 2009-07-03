@@ -49,8 +49,10 @@ def charger_composants(Ihm="TK"):
        repertoire=reper+"/../InterfaceTK"
        package="InterfaceTK"
     else :
-       repertoire=reper+"/../InterfaceQT"
-       package="InterfaceQT"
+       repertoire=reper+"/../InterfaceQT4"
+       package="InterfaceQT4"
+       #repertoire=reper+"/../InterfaceQT"
+       #package="InterfaceQT"
     listfich=glob.glob(os.path.join(repertoire, "compo*.py"))
     for fichier in listfich:
         m= os.path.basename(fichier)[:-3]

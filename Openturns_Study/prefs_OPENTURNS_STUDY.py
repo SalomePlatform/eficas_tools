@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20,17 +19,34 @@
 #
 # ======================================================================
 
-"""
-   Ce module sert à lancer EFICAS configuré pour Code_Aster
-"""
-# Modules Python
+import os, sys
+# Les variables pouvant positionnees sont :
+print "import des prefs de OPENTURNS_STUDY"
 
-# Modules Eficas
-import prefs
-name='prefs_'+prefs.code
-__import__(name)
+# REPINI sert à localiser le fichier 
+# initialdir sert comme directory initial des QFileDialog
+# positionnee a repin au debut mise a jour dans configuration
+REPINI=os.path.dirname(os.path.abspath(__file__))
+initialdir=REPINI 
 
-import sys
-from InterfaceQT4 import eficas_go
+# INSTALLDIR sert à localiser l'installation d'Eficas
+INSTALLDIR=os.path.join(REPINI,'..')
 
-eficas_go.lance_eficas(code=prefs.code)
+
+# Codage des strings qui accepte les accents (en remplacement de 'ascii')
+# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
+lang='fr'
+encoding='iso-8859-1'
+
+# Acces a la documentation
+rep_cata        = INSTALLDIR
+path_doc        = os.path.join(rep_cata,'Doc')
+exec_acrobat    = "/usr/bin/xpdf"
+
+
+# OpenTURNS Python module
+OpenTURNS_path="/opt/OpenTURNS/install/lib/python2.4/site-packages"
+# Choix des catalogues
+sys.path[:0]=[INSTALLDIR]
+sys.path.append( OpenTURNS_path )
+

@@ -25,11 +25,15 @@ class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
     
   def GetLabelText(self):
       """ Retourne 3 valeurs :
-        - le texte à afficher dans le noeud représentant l'item
+        - le texte a  afficher dans le noeud représentant l'item
         - la fonte dans laquelle afficher ce texte
         - la couleur du texte
       """
-      return self.labeltext,None,None
+      if self.isactif():
+          fonte = Fonte_Niveau
+      else :
+          fonte = Fonte_Niveau_inactif
+      return self.labeltext,fonte,None
     
   def GetIconName(self):
       if self.isactif():

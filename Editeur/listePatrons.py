@@ -6,7 +6,8 @@ sous_menus={"ASTER" : {0:{"3D":"3D.comm"},1:{"poutre":"pou.comm"},2:{"salome":"s
             "OPENTURNS_WRAPPER" : {0:{"Anne":"wrapper_exemple.comm"}},
 	    "HOMARD" : {},
 	    "CUVE2DG" : {},
-            'SEP' : {}
+            'SEP' : {},
+            'SIK' : {}
            }
 
 class listePatrons :

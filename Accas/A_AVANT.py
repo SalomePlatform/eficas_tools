@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -19,18 +18,12 @@
 #
 #
 # ======================================================================
+from Noyau import N_REGLE
+from Ihm import I_REGLE, I_AVANT
 
-"""
-   Ce module sert à lancer EFICAS configuré pour Code_Aster
-"""
-# Modules Python
-
-# Modules Eficas
-import prefs
-name='prefs_'+prefs.code
-__import__(name)
-
-import sys
-from InterfaceQT4 import eficas_go
-
-eficas_go.lance_eficas(code=prefs.code)
+class AVANT(I_AVANT.I_AVANT,I_REGLE.REGLE,N_REGLE.REGLE):
+   """
+       La classe utilise l'initialiseur de REGLE. Il n'est pas 
+       nécessaire d'expliciter son initialiseur car 
+       I_AVANT.I_AVANT n'en a pas 
+   """

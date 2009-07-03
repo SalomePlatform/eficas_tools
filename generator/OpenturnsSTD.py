@@ -56,12 +56,14 @@ class STDGenerateur :
   '''
   Generation du fichier python
   '''
-  def __init__ (self, appli, DictMCVal, ListeVariables, DictLois ) :
+  def __init__ (self, appli, DictMCVal, ListeVariablesIn, ListeVariablesOut, DictLois ) :
     self.DictMCVal = DictMCVal
-    self.ListeVariables = ListeVariables
+    self.ListeVariablesIn = ListeVariablesIn
+    self.ListeVariablesOut = ListeVariablesOut
     self.DictLois = DictLois
     #print "DictMCVal=", DictMCVal
-    #print "ListeVariables=", ListeVariables
+    print "ListeVariablesIn=", ListeVariablesIn
+    print "ListeVariablesOut=", ListeVariablesOut
     #print "DictLois=", DictLois
     self.texteSTD = defaultSTD
     self.OpenTURNS_path = appli.CONFIGURATION.OpenTURNS_path
@@ -83,7 +85,7 @@ class STDGenerateur :
       "Threshold Exceedence" :
       ( "ThresholdExceedence",
         { "Simulation" : "Simulation",
-          "Analytical" : "Analytical",
+          "FORM_SORM" : "Analytical",
           "MonteCarlo" : "MonteCarlo",
           "LHS" : "LHS",
           "ImportanceSampling" : "ImportanceSampling",
@@ -125,6 +127,7 @@ class STDGenerateur :
       "marginal" : "marginal",
       "collection" : "collection",
       "copula" : "copula",
+      "description" : "description",
       "inputRandomVector" : "inputRandomVector",
       "outputRandomVector" : "outputRandomVector",
       "myQuadraticCumul" : "myQuadraticCumul",
@@ -145,7 +148,10 @@ class STDGenerateur :
       "SRRCcoefficient" : 'results["SRRCcoefficient"]',
       "kernel" : "kernel",
       "kernelSmoothedDist" : "kernelSmoothedDist",
-      "kernelSmoothedPDF" : "kernelSmoothedPDF",
+      "kernelSmoothedPDFDrawing" : "kernelSmoothedPDFDrawing",
+      "kernelSmoothedGraph" : "kernelSmoothedGraph",
+      "meanVector" : "meanVector",
+      "importanceDensity" : "importanceDensity",
       "myEvent" : "myEvent",
       "myAlgo" : "myAlgo",
       "myResult" : "myResult",
@@ -155,7 +161,8 @@ class STDGenerateur :
       "length" : "length",
       "coefficientOfVariation" : 'results["coefficientOfVariation"]',
       "convergenceGraph" : "convergenceGraph",
-      "iterations" : 'results["iterations"]',
+      "convergenceDrawing" : "convergenceDrawing",
+      "simulationNumbers" : 'results["simulationNumbers"]',
       "myOptimizer" : "myOptimizer",
       "specificParameters" : "specificParameters",
       "startingPoint" : "startingPoint",
@@ -165,7 +172,9 @@ class STDGenerateur :
       "eventProbabilitySensitivity" : 'results["eventProbabilitySensitivity"]',
       "hasoferReliabilityIndexSensitivity" : 'results["hasoferReliabilityIndexSensitivity"]',
       "eventProbabilitySensitivityGraph" : "eventProbabilitySensitivityGraph",
+      "eventProbabilitySensitivityDrawing" : "eventProbabilitySensitivityDrawing",
       "hasoferReliabilityIndexSensitivityGraph" : "hasoferReliabilityIndexSensitivityGraph",
+      "hasoferReliabilityIndexSensitivityDrawing" : "hasoferReliabilityIndexSensitivityDrawing",
       "modelEvaluationCalls" : 'results["modelEvaluationCalls"]',
       "modelGradientCalls" : 'results["modelGradientCalls"]',
       "modelHessianCalls" : 'results["modelHessianCalls"]',
@@ -231,8 +240,6 @@ class STDGenerateur :
     Produit le fichier study correspondant a une analyse Min/Max
     '''
     txt  = self.Header()
-    txt += "# Etude 'Min/Max'\n"
-
     txt += self.Model()
     
     Methode = None
@@ -246,7 +253,6 @@ class STDGenerateur :
     if ( Traitement is not None ):
       txt += apply( STDGenerateur.__dict__[ Traitement ], (self,) )
 
-    txt += self.MinMaxComputation()
     txt += self.MinMaxResult()
     
     txt += self.Footer()
@@ -264,6 +270,7 @@ class STDGenerateur :
     txt  = "# Charge le modele physique\n"
     txt  = "%s = WrapperFile( '%s' )\n" % (self.variable["wrapper"], name)
 
+    txt += "# Ces lignes sont utiles pour le fonctionnement du script sous Salome\n"
     txt += "if globals().has_key('%s'):\n" % self.variable["framework"]
     txt += "  %s = %s.getWrapperData()\n" % (self.variable["wrapperdata"], self.variable["wrapper"])
     txt += "  %s = %s.getFrameworkData()\n" % (self.variable["frameworkdata"], self.variable["wrapperdata"])
@@ -272,6 +279,7 @@ class STDGenerateur :
     txt += "  %s.componentname_ = %s['%s']\n"  % (self.variable["frameworkdata"], self.variable["framework"], self.variable["componentname"])
     txt += "  %s.setFrameworkData( %s )\n" % (self.variable["wrapperdata"], self.variable["frameworkdata"])
     txt += "  %s.setWrapperData( %s )\n" % (self.variable["wrapper"], self.variable["wrapperdata"])
+    txt += "# Fin des lignes pour Salome\n"
     
     txt += "%s = NumericalMathFunction( %s )\n" % (self.variable["model"], self.variable["wrapper"],)
     txt += "%s = %s.getInputNumericalPointDimension()\n" % (self.variable["n"], self.variable["model"])
@@ -289,6 +297,10 @@ class STDGenerateur :
     txt += self.TranslationVector()
     txt += "%s = %s\n" % (self.variable["inputSample"], self.variable["myExperimentPlane"])
     txt += "\n"
+    txt += "# Etude 'Min/Max'\n"
+    txt += "# Calcul\n"
+    txt += "%s = %s( %s )\n" % (self.variable["outputSample"], self.variable["model"], self.variable["inputSample"])
+    txt += "\n"
     return txt
 
   def MinMaxRandomSampling (self):
@@ -296,15 +308,18 @@ class STDGenerateur :
     Etude par echantillonage aleatoire
     '''
     size = 0
-    if ( self.DictMCVal.has_key( 'PointsNumber' ) ):
-      size =  self.DictMCVal[ 'PointsNumber' ]
+    if ( self.DictMCVal.has_key( 'SimulationsNumber' ) ):
+      size =  self.DictMCVal[ 'SimulationsNumber' ]
 
     txt  = "# Etude par echantillonage aleatoire\n"
     txt += self.InputDistribution()
     txt += self.InputRandomVector()
-    txt += "%s = %d\n" % (self.variable["inSize"], size)
-    txt += "%s = %s.getNumericalSample( %s )\n" % (self.variable["inputSample"], self.variable["inputRandomVector"], self.variable["inSize"])
     txt += "\n"
+    txt += "# Etude 'Min/Max'\n"
+    txt += "# Calcul\n"
+    txt += "%s = %d\n" % (self.variable["inSize"], size)
+    txt += "%s = RandomVector( %s, %s )\n" % (self.variable["outputRandomVector"], self.variable["model"], self.variable["inputRandomVector"])
+    txt += "%s = %s.getNumericalSample( %s )\n" % (self.variable["outputSample"], self.variable["outputRandomVector"], self.variable["inSize"])
     return txt
 
   def InputDistribution (self):
@@ -312,11 +327,12 @@ class STDGenerateur :
     Cree la loi jointe des variables d entree
     '''
     txt  = "# Definit la loi jointe des variables d'entree\n"
-    txt += "%s = DistributionCollection( %d )\n" % (self.variable["collection"], len( self.ListeVariables ))
+    txt += "%s = DistributionCollection( %s )\n" % (self.variable["collection"], self.variable["n"])
+    txt += "%s = Description( %s )\n" % (self.variable["description"], self.variable["n"])
     txt += "\n"
 
     dictVariables = {}
-    for variable in self.ListeVariables:
+    for variable in self.ListeVariablesIn:
       nomVar = variable['ModelVariable'].get_name()
       dictVariables[ nomVar ] = variable['Distribution']
 
@@ -330,23 +346,26 @@ class STDGenerateur :
         marginale = "%s_%d" % (self.variable["marginal"], i)
         txt += "# Definit la loi marginale de la composante %d\n" % i
         txt += "%s = %s\n" % (marginale, apply( STDGenerateur.__dict__[ loi[ 'Kind' ] ], (self, loi, i, self.variable["collection"]) ))
+        txt += "%s.setName( '%s' )\n" % (marginale, conceptloi.get_name())
+        txt += "%s[ %d ] = '%s'\n" % (self.variable["description"], i, variable)
         txt += "%s[ %d ] = Distribution( %s )\n" % (self.variable["collection"], i, marginale)
         txt += "\n"
         i += 1
 
-    txt += self.Copula( len( self.ListeVariables ) )
+    txt += self.Copula()
 
     txt += "# Definit la loi jointe\n"
     txt += "%s = ComposedDistribution( %s, Copula( %s ) )\n" % (self.variable["distribution"], self.variable["collection"], self.variable["copula"])
+    txt += "%s.setDescription( %s )\n" % (self.variable["distribution"], self.variable["description"])
     txt += "\n"
     return txt
 
-  def Copula (self, dimension):
+  def Copula (self):
     '''
     Cree la copule de la loi jointe
     '''
     txt  = "# Definit la copule de la loi jointe\n"
-    txt += "%s = IndependentCopula( %d )\n" % (self.variable["copula"], dimension)
+    txt += "%s = IndependentCopula( %s )\n" % (self.variable["copula"], self.variable["n"])
     txt += "\n"
     return txt
 
@@ -363,8 +382,13 @@ class STDGenerateur :
     '''
     Cree le vector aleatoire de sortie
     '''
+    nomVar = "output"
+    for variable in self.ListeVariablesOut:
+      nomVar = variable['ModelVariable'].get_name()
+
     txt  = "# Definit le vecteur aleatoire de sortie\n"
     txt += "%s = RandomVector( %s, %s )\n" % (self.variable["outputRandomVector"], self.variable["model"], self.variable["inputRandomVector"])
+    txt += "%s.setName( '%s' )\n" % (self.variable["outputRandomVector"], nomVar)
     txt += "\n"
     return txt
 
@@ -432,25 +456,16 @@ class STDGenerateur :
     txt += "\n"
     return txt
 
-  def MinMaxComputation (self):
-    '''
-    Realise le calcul deterministe
-    '''
-    txt  = "# Calcul\n"
-    txt += "%s = %s( %s )\n" % (self.variable["outputSample"], self.variable["model"], self.variable["inputSample"])
-    txt += "\n"
-    return txt
-
   def MinMaxResult (self):
     '''
     Produit les resultats de l etude
     '''
     txt  = "# Resultats\n"
     txt += "%s = %s.getMin()\n" % (self.variable["minValue"], self.variable["outputSample"])
-    txt += "print '%s = ', %s\n" % (self.variable["minValue"], self.variable["minValue"])
+    txt += "print '%s = ', %s\n" % ("minValue", self.variable["minValue"])
     txt += "\n"
     txt += "%s = %s.getMax()\n" % (self.variable["maxValue"], self.variable["outputSample"])
-    txt += "print '%s = ', %s\n" % (self.variable["maxValue"], self.variable["maxValue"])
+    txt += "print '%s = ', %s\n" % ("maxValue", self.variable["maxValue"])
     txt += "\n"
     return txt
 
@@ -459,8 +474,6 @@ class STDGenerateur :
     Produit le fichier study correspondant a une analyse d incertitude en valeur centrale
     '''
     txt  = self.Header()
-    txt += "# Etude 'Central Uncertainty'\n"
-
     txt += self.Model()
     txt += self.InputDistribution()
     txt += self.InputRandomVector()
@@ -475,6 +488,7 @@ class STDGenerateur :
       Traitement =  subDict[ Methode ]
 
     if ( Traitement is not None ):
+      txt += "# Etude 'Central Uncertainty'\n"
       txt += apply( STDGenerateur.__dict__[ Traitement ], (self,) )
 
     txt += self.Footer()
@@ -493,13 +507,13 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'MeanFirstOrder' ) ):
       if ( self.DictMCVal[ 'MeanFirstOrder' ] == "yes" ):
         txt += "%s = %s.getMeanFirstOrder()\n" % (self.variable["meanFirstOrder"], self.variable["myQuadraticCumul"])
-        txt += "print '%s = ', %s\n" % (self.variable["meanFirstOrder"], self.variable["meanFirstOrder"])
+        txt += "print '%s = ', %s\n" % ("meanFirstOrder", self.variable["meanFirstOrder"])
         txt += "\n"
        
     if ( self.DictMCVal.has_key( 'MeanSecondOrder' ) ):
       if ( self.DictMCVal[ 'MeanSecondOrder' ] == "yes" ):
         txt += "%s = %s.getMeanSecondOrder()\n" % (self.variable["meanSecondOrder"], self.variable["myQuadraticCumul"])
-        txt += "print '%s = ', %s\n" % (self.variable["meanSecondOrder"], self.variable["meanSecondOrder"])
+        txt += "print '%s = ', %s\n" % ("meanSecondOrder", self.variable["meanSecondOrder"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'StandardDeviationFirstOrder' ) ):
@@ -508,21 +522,19 @@ class STDGenerateur :
         txt += "dim = %s.getDimension()\n" % self.variable["standardDeviationFirstOrder"]
         txt += "for i in range( dim ):\n"
         txt += "  %s[ i, i ] = math.sqrt( %s[ i, i ] )\n" % (self.variable["standardDeviationFirstOrder"], self.variable["standardDeviationFirstOrder"])
-        txt += "print '%s = ', %s\n" % (self.variable["standardDeviationFirstOrder"], self.variable["standardDeviationFirstOrder"])
+        txt += "print '%s = ', %s\n" % ("standardDeviationFirstOrder", self.variable["standardDeviationFirstOrder"])
         txt += "\n"
 
-    if ( self.DictMCVal.has_key( 'NumericalResults' ) ):
-      if ( self.DictMCVal[ 'NumericalResults' ] == "yes" ):
-        txt += "if ( %s.getDimension() == 1):\n" % self.variable["outputRandomVector"]
-        txt += "  %s = %s.getImportanceFactors()\n" % (self.variable["importanceFactors"], self.variable["myQuadraticCumul"])
-        txt += "  print '%s = ', %s\n" % (self.variable["importanceFactors"], self.variable["importanceFactors"])
+    if ( self.DictMCVal.has_key( 'ImportanceFactor' ) ):
+      if ( self.DictMCVal[ 'ImportanceFactor' ] == "yes" ):
+        txt += "%s = %s.getImportanceFactors()\n" % (self.variable["importanceFactors"], self.variable["myQuadraticCumul"])
+        txt += "for i in range(%s.getDimension()):\n" % self.variable["importanceFactors"]
+        txt += "  print %s.getDescription()[i], ':', %s[i]*100., '%%'\n" % (self.variable["distribution"], self.variable["importanceFactors"])
         txt += "\n"
-
-    if ( self.DictMCVal.has_key( 'GraphicalResults' ) ):
-      if ( self.DictMCVal[ 'GraphicalResults' ] == "yes" ):
         txt += "%s = %s.drawImportanceFactors()\n" % (self.variable["importanceFactorsGraph"], self.variable["myQuadraticCumul"])
-        txt += "Show( %s )\n"  % self.variable["importanceFactorsGraph"]
-        txt += "%s.draw( '%s' )\n" % (self.variable["importanceFactorsGraph"], self.variable["importanceFactorsDrawing"])
+        txt += "#Show( %s )\n"  % self.variable["importanceFactorsGraph"]
+        txt += "%s = '%s'\n" % (self.variable["importanceFactorsDrawing"], self.DictMCVal[ 'ImportanceFactorDrawingFilename' ])
+        txt += "%s.draw( %s )\n" % (self.variable["importanceFactorsGraph"], self.variable["importanceFactorsDrawing"])
         txt += "ViewImage( %s.getBitmap() )\n"  % self.variable["importanceFactorsGraph"]
         txt += "print 'bitmap =', %s.getBitmap()\n"  % self.variable["importanceFactorsGraph"]
         txt += "print 'postscript =', %s.getPostscript()\n"  % self.variable["importanceFactorsGraph"]
@@ -536,18 +548,19 @@ class STDGenerateur :
     Etude par echantillonage aleatoire
     '''
     size = 0
-    if ( self.DictMCVal.has_key( 'PointsNumber' ) ):
-      size =  self.DictMCVal[ 'PointsNumber' ]
+    if ( self.DictMCVal.has_key( 'SimulationsNumber' ) ):
+      size =  self.DictMCVal[ 'SimulationsNumber' ]
 
     txt  = "# Echantillonnage aleatoire de la variable de sortie\n"
     txt += "%s = %d\n" % (self.variable["inSize"], size)
-    txt += "%s = %s.getNumericalSample( %s )\n" % (self.variable["outputSample"], self.variable["outputRandomVector"], self.variable["inSize"])
+    txt += "%s = %s.getNumericalSample( %s )\n" % (self.variable["inputSample"], self.variable["inputRandomVector"], self.variable["inSize"])
+    txt += "%s = %s( %s )\n" % (self.variable["outputSample"], self.variable["model"], self.variable["inputSample"])
     txt += "\n"
 
     if ( self.DictMCVal.has_key( 'EmpiricalMean' ) ):
       if ( self.DictMCVal[ 'EmpiricalMean' ] == "yes" ):
         txt += "%s = %s.computeMean()\n" % (self.variable["empiricalMean"], self.variable["outputSample"])
-        txt += "print '%s =', %s\n" % (self.variable["empiricalMean"], self.variable["empiricalMean"])
+        txt += "print '%s =', %s\n" % ("empiricalMean", self.variable["empiricalMean"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'EmpiricalStandardDeviation' ) ):
@@ -556,27 +569,37 @@ class STDGenerateur :
         txt += "dim = %s.getDimension()\n" % self.variable["empiricalStandardDeviation"]
         txt += "for i in range( dim ):\n"
         txt += "  %s[ i, i ] = math.sqrt( %s[ i, i ] )\n" % (self.variable["empiricalStandardDeviation"], self.variable["empiricalStandardDeviation"])
-        txt += "print '%s = ', %s\n" % (self.variable["empiricalStandardDeviation"], self.variable["empiricalStandardDeviation"])
+        txt += "print '%s = ', %s\n" % ("empiricalStandardDeviation", self.variable["empiricalStandardDeviation"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'EmpiricalQuantile_Order' ) ):
       ordre = self.DictMCVal[ 'EmpiricalQuantile_Order' ]
       txt += "%s = %s.computeQuantile( %s )\n" % (self.variable["empiricalQuantile"], self.variable["outputSample"], ordre)
-      txt += "print '%s =', %s\n" % (self.variable["empiricalQuantile"], self.variable["empiricalQuantile"])
+      txt += "print '%s ( %s ) =', %s\n" % ("empiricalQuantile", ordre, self.variable["empiricalQuantile"])
       txt += "\n"
    
-    if ( self.DictMCVal.has_key( 'AnalysedCorrelations' ) ):
-      if ( self.DictMCVal[ 'AnalysedCorrelations' ] == "yes" ):
-        txt += "# Ou est le %s ?\n" % self.variable["inputSample"]
-        txt += "#if ( ( %s.getDimension() == 1 ) and ( %s.getDimension() == 1 ) ):\n" % (self.variable["inputSample"], self.variable["outputSample"])
-        txt += "#  %s = CorrelationAnalysis.PCC( %s, %s )\n" % (self.variable["PCCcoefficient"], self.variable["inputSample"], self.variable["outputSample"])
-        txt += "#  print '%s = ', %s\n" % (self.variable["PCCcoefficient"], self.variable["PCCcoefficient"])
-        txt += "#  %s = CorrelationAnalysis.PRCC( %s, %s )\n" % (self.variable["PRCCcoefficient"], self.variable["inputSample"], self.variable["outputSample"])
-        txt += "#  print '%s = ', %s\n" % (self.variable["PRCCcoefficient"], self.variable["PRCCcoefficient"])
-        txt += "#  %s = CorrelationAnalysis.SRC( %s, %s )\n" % (self.variable["SRCcoefficient"], self.variable["inputSample"], self.variable["outputSample"])
-        txt += "#  print '%s = ', %s\n" % (self.variable["SRCcoefficient"], self.variable["SRCcoefficient"])
-        txt += "#  %s = CorrelationAnalysis.SRRC( %s, %s )\n" % (self.variable["SRRCcoefficient"], self.variable["inputSample"], self.variable["outputSample"])
-        txt += "#  print '%s = ', %s\n" % (self.variable["SRRCcoefficient"], self.variable["SRRCcoefficient"])
+    if ( self.DictMCVal.has_key( 'CorrelationAnalysis' ) ):
+      if ( self.DictMCVal[ 'CorrelationAnalysis' ] == "yes" ):
+        txt += "if ( %s.getDimension() == 1 ):\n" % self.variable["outputSample"]
+        txt += "  %s = CorrelationAnalysis.PCC( %s, %s )\n" % (self.variable["PCCcoefficient"], self.variable["inputSample"], self.variable["outputSample"])
+        txt += "  print 'PCC Coefficients:'\n"
+        txt += "  for i in range( %s ):\n" % self.variable["n"]
+        txt += "    print %s.getDescription()[i], ':', %s[i]\n" % (self.variable["distribution"], self.variable["PCCcoefficient"])
+        txt += "\n"
+        txt += "  %s = CorrelationAnalysis.PRCC( %s, %s )\n" % (self.variable["PRCCcoefficient"], self.variable["inputSample"], self.variable["outputSample"])
+        txt += "  print 'PRCC Coefficients:'\n"
+        txt += "  for i in range( %s ):\n" % self.variable["n"]
+        txt += "    print %s.getDescription()[i], ':', %s[i]\n" % (self.variable["distribution"], self.variable["PRCCcoefficient"])
+        txt += "\n"
+        txt += "  %s = CorrelationAnalysis.SRC( %s, %s )\n" % (self.variable["SRCcoefficient"], self.variable["inputSample"], self.variable["outputSample"])
+        txt += "  print 'SRC Coefficients:'\n"
+        txt += "  for i in range( %s ):\n" % self.variable["n"]
+        txt += "    print %s.getDescription()[i], ':', %s[i]\n" % (self.variable["distribution"], self.variable["SRCcoefficient"])
+        txt += "\n"
+        txt += "  %s = CorrelationAnalysis.SRRC( %s, %s )\n" % (self.variable["SRRCcoefficient"], self.variable["inputSample"], self.variable["outputSample"])
+        txt += "  print 'SRRC Coefficients:'\n"
+        txt += "  for i in range( %s ):\n" % self.variable["n"]
+        txt += "    print %s.getDescription()[i], ':', %s[i]\n" % (self.variable["distribution"], self.variable["SRRCcoefficient"])
         txt += "\n"
    
     if ( self.DictMCVal.has_key( 'KernelSmoothing' ) ):
@@ -584,9 +607,15 @@ class STDGenerateur :
         txt += "# Kernel Smoohing\n"
         txt += "%s = KernelSmoothing()\n" % self.variable["kernel"]
         txt += "if ( %s.getDimension() == 1 ):\n" % self.variable["outputSample"]
+        txt += "  %s.setName( 'Output' )\n" % self.variable["outputSample"]
         txt += "  %s = %s.buildImplementation( %s, 'TRUE')\n" % (self.variable["kernelSmoothedDist"], self.variable["kernel"], self.variable["outputSample"])
-        txt += "  %s = %s.drawPDF()\n" % (self.variable["kernelSmoothedPDF"], self.variable["kernelSmoothedDist"])
-        txt += "  Show( %s )\n" % self.variable["kernelSmoothedPDF"]
+        txt += "  %s = %s.drawPDF()\n" % (self.variable["kernelSmoothedGraph"], self.variable["kernelSmoothedDist"])
+        txt += "  #Show( %s )\n" % self.variable["kernelSmoothedGraph"]
+        txt += "  %s = '%s'\n" % (self.variable["kernelSmoothedPDFDrawing"], self.DictMCVal[ 'KernelSmoothingDrawingFilename' ])
+        txt += "  %s.draw( %s )\n" % (self.variable["kernelSmoothedGraph"], self.variable["kernelSmoothedPDFDrawing"])
+        txt += "  ViewImage( %s.getBitmap() )\n"  % self.variable["kernelSmoothedGraph"]
+        txt += "  print 'bitmap =', %s.getBitmap()\n"  % self.variable["kernelSmoothedGraph"]
+        txt += "  print 'postscript =', %s.getPostscript()\n"  % self.variable["kernelSmoothedGraph"]
         txt += "\n"
    
     return txt
@@ -641,7 +670,7 @@ class STDGenerateur :
 
     blockSize = None
     if ( self.DictMCVal.has_key( 'BlockSize' ) ):
-      maxOuterSampling = self.DictMCVal[ 'BlockSize' ]
+      blockSize = self.DictMCVal[ 'BlockSize' ]
       txt += "%s.setBlockSize( %s )\n" % (self.variable["myAlgo"], blockSize)
 
     maxCoefficientOfVariation = None
@@ -658,13 +687,13 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'Probability' ) ):
       if ( self.DictMCVal[ 'Probability' ] == "yes" ):
         txt += "%s = %s.getProbabilityEstimate()\n" % (self.variable["probability"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["probability"], self.variable["probability"])
+        txt += "print '%s =', %s\n" % ("probability", self.variable["probability"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'StandardDeviation' ) ):
       if ( self.DictMCVal[ 'StandardDeviation' ] == "yes" ):
         txt += "%s = math.sqrt( %s.getProbabilityEstimate() )\n" % (self.variable["standardDeviation"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["standardDeviation"], self.variable["standardDeviation"])
+        txt += "print '%s =', %s\n" % ("standardDeviation", self.variable["standardDeviation"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'ConfidenceInterval' ) and self.DictMCVal.has_key( 'Probability' ) ):
@@ -677,19 +706,23 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'VariationCoefficient' ) ):
       if ( self.DictMCVal[ 'VariationCoefficient' ] == "yes" ):
         txt += "%s = %s.getCoefficientOfVariation()\n" % (self.variable["coefficientOfVariation"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["coefficientOfVariation"], self.variable["coefficientOfVariation"])
+        txt += "print '%s =', %s\n" % ("coefficientOfVariation", self.variable["coefficientOfVariation"])
         txt += "\n"
 
-    if ( self.DictMCVal.has_key( 'IterationNumber' ) ):
-      if ( self.DictMCVal[ 'IterationNumber' ] == "yes" ):
-        txt += "%s = %s.getOuterSampling()\n" % (self.variable["iterations"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["iterations"], self.variable["iterations"])
+    if ( self.DictMCVal.has_key( 'SimulationsNumber' ) ):
+      if ( self.DictMCVal[ 'SimulationsNumber' ] == "yes" ):
+        txt += "%s = %s.getOuterSampling()\n" % (self.variable["simulationNumbers"], self.variable["myResult"])
+        txt += "print '%s =', %s\n" % ("simulationNumbers", self.variable["simulationNumbers"])
         txt += "\n"
 
-    if ( self.DictMCVal.has_key( 'ConvergenceGraph' ) ):
-      if ( self.DictMCVal[ 'ConvergenceGraph' ] == "yes" ):
-        txt += "%s = %s.drawProbabilityConvergence()\n" % (self.variable["convergenceGraph"], self.variable["myAlgo"])
-        txt += "Show( %s )\n" % self.variable["convergenceGraph"]
+    if ( self.DictMCVal.has_key( 'ConvergenceGraph' ) and self.DictMCVal.has_key( 'ConfidenceInterval' ) ):
+      if ( ( self.DictMCVal[ 'ConvergenceGraph' ] == "yes" ) and ( self.DictMCVal[ 'ConfidenceInterval' ] == "yes" ) ):
+        txt += "%s = %s\n" % (self.variable["alpha"], self.DictMCVal[ 'Level' ])
+        txt += "%s = %s.drawProbabilityConvergence( %s )\n" % (self.variable["convergenceGraph"], self.variable["myAlgo"], self.variable["alpha"])
+        txt += "#Show( %s )\n" % self.variable["convergenceGraph"]
+        txt += "%s = '%s'\n" % (self.variable["convergenceDrawing"], self.DictMCVal[ 'ConvergenceDrawingFilename' ])
+        txt += "%s.draw( %s )\n" % (self.variable["convergenceGraph"], self.variable["convergenceDrawing"])
+        txt += "ViewImage( %s.getBitmap() )\n" % self.variable["convergenceGraph"]
         txt += "\n"
 
     return txt
@@ -736,10 +769,10 @@ class STDGenerateur :
     '''
     txt = ""
     
-    iterations = None
+    simulationNumbers = None
     if ( self.DictMCVal.has_key( 'MaximumIterationsNumber' ) ):
-      iterations = self.DictMCVal[ 'MaximumIterationsNumber' ]
-      txt += "%s.setMaximumIterationsNumber( %s )\n" % (self.variable["myOptimizer"], iterations)
+      simulationNumbers = self.DictMCVal[ 'MaximumIterationsNumber' ]
+      txt += "%s.setMaximumIterationsNumber( %s )\n" % (self.variable["myOptimizer"], simulationNumbers)
 
     absoluteError = None
     if ( self.DictMCVal.has_key( 'MaximumAbsoluteError' ) ):
@@ -800,69 +833,84 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'HasoferReliabilityIndex' ) ):
       if ( self.DictMCVal[ 'HasoferReliabilityIndex' ] == "yes" ):
         txt += "%s = %s.getHasoferReliabilityIndex()\n" % (self.variable["hasoferReliabilityIndex"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["hasoferReliabilityIndex"], self.variable["hasoferReliabilityIndex"])
+        txt += "print '%s =', %s\n" % ("hasoferReliabilityIndex", self.variable["hasoferReliabilityIndex"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'DesignPoint' ) ):
       if ( self.DictMCVal[ 'DesignPoint' ] == "yes" ):
         txt += "%s = %s.getStandardSpaceDesignPoint()\n" % (self.variable["standardSpaceDesignPoint"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["standardSpaceDesignPoint"], self.variable["standardSpaceDesignPoint"])
+        txt += "print '%s =', %s\n" % ("standardSpaceDesignPoint", self.variable["standardSpaceDesignPoint"])
         txt += "%s = %s.getPhysicalSpaceDesignPoint()\n" % (self.variable["physicalSpaceDesignPoint"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["physicalSpaceDesignPoint"], self.variable["physicalSpaceDesignPoint"])
+        txt += "print '%s =', %s\n" % ("physicalSpaceDesignPoint", self.variable["physicalSpaceDesignPoint"])
         txt += "\n"
 
-    if ( self.DictMCVal.has_key( 'ImportanceFactorNumericalResults' ) ):
-      if ( self.DictMCVal[ 'ImportanceFactorNumericalResults' ] == "yes" ):
+    if ( self.DictMCVal.has_key( 'ImportanceFactor' ) ):
+      if ( self.DictMCVal[ 'ImportanceFactor' ] == "yes" ):
         txt += "%s = %s.getImportanceFactors()\n" % (self.variable["importanceFactors"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["importanceFactors"], self.variable["importanceFactors"])
+        txt += "for i in range(%s.getDimension()):\n" % self.variable["importanceFactors"]
+        txt += "  print %s.getDescription()[i], ':', %s[i]*100., '%%'\n" % (self.variable["distribution"], self.variable["importanceFactors"])
         txt += "\n"
-
-    if ( self.DictMCVal.has_key( 'ImportanceFactorGraphicalResults' ) ):
-      if ( self.DictMCVal[ 'ImportanceFactorGraphicalResults' ] == "yes" ):
         txt += "%s = %s.drawImportanceFactors()\n" % (self.variable["importanceFactorsGraph"], self.variable["myResult"])
-        txt += "Show( %s )\n"  % self.variable["importanceFactorsGraph"]
+        txt += "#Show( %s )\n"  % self.variable["importanceFactorsGraph"]
+        txt += "%s = '%s'\n" % (self.variable["importanceFactorsDrawing"], self.DictMCVal[ 'ImportanceFactorDrawingFilename' ])
+        txt += "%s.draw( %s )\n" % (self.variable["importanceFactorsGraph"], self.variable["importanceFactorsDrawing"])
+        txt += "ViewImage( %s.getBitmap() )\n"  % self.variable["importanceFactorsGraph"]
+        txt += "print 'bitmap =', %s.getBitmap()\n"  % self.variable["importanceFactorsGraph"]
+        txt += "print 'postscript =', %s.getPostscript()\n"  % self.variable["importanceFactorsGraph"]
         txt += "\n"
 
-    if ( self.DictMCVal.has_key( 'FORMEventProbabilitySensitivityNumericalResults' ) ):
-      if ( self.DictMCVal[ 'FORMEventProbabilitySensitivityNumericalResults' ] == "yes" ):
+    if ( self.DictMCVal.has_key( 'FORMEventProbabilitySensitivity' ) ):
+      if ( self.DictMCVal[ 'FORMEventProbabilitySensitivity' ] == "yes" ):
         txt += "%s = %s.getEventProbabilitySensitivity()\n" % (self.variable["eventProbabilitySensitivity"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["eventProbabilitySensitivity"], self.variable["eventProbabilitySensitivity"])
+        txt += "print 'FORM Event Probability Sensitivity:'\n"
+        txt += "for i in range( %s ):\n" % self.variable["n"]
+        txt += "  print %s.getDescription()[i], ':'\n" % self.variable["distribution"]
+        txt += "  for j in range( %s[i].getDimension() ):\n" % self.variable["eventProbabilitySensitivity"]
+        txt += "    print '  ', %s[i].getDescription()[j], ':', %s[i][j]\n" % (self.variable["eventProbabilitySensitivity"], self.variable["eventProbabilitySensitivity"])
+        txt += "\n"
+        txt += "%s = %s.drawEventProbabilitySensitivity()[0]\n" % (self.variable["eventProbabilitySensitivityGraph"], self.variable["myResult"])
+        txt += "#Show( %s )\n" % self.variable["eventProbabilitySensitivityGraph"]
+        txt += "%s = '%s'\n" % (self.variable["eventProbabilitySensitivityDrawing"], self.DictMCVal[ 'FORMEventProbabilitySensitivityDrawingFilename' ])
+        txt += "%s.draw( %s )\n" % (self.variable["ieventProbabilitySensitivityGraph"], self.variable["eventProbabilitySensitivityDrawing"])
+        txt += "ViewImage( %s.getBitmap() )\n"  % self.variable["eventProbabilitySensitivityGraph"]
+        txt += "print 'bitmap =', %s.getBitmap()\n"  % self.variable["eventProbabilitySensitivityGraph"]
+        txt += "print 'postscript =', %s.getPostscript()\n"  % self.variable["eventProbabilitySensitivityGraph"]
         txt += "\n"
 
-    if ( self.DictMCVal.has_key( 'FORMEventProbabilitySensitivityGraphicalResults' ) ):
-      if ( self.DictMCVal[ 'FORMEventProbabilitySensitivityGraphicalResults' ] == "yes" ):
-        txt += "%s = %s.drawEventProbabilitySensitivity()\n" % (self.variable["eventProbabilitySensitivityGraph"], self.variable["myResult"])
-        txt += "Show( %s[0] )\n" % self.variable["eventProbabilitySensitivityGraph"]
-        txt += "\n"
-
-    if ( self.DictMCVal.has_key( 'HasoferReliabilityIndexSensitivityNumericalResults' ) ):
-      if ( self.DictMCVal[ 'HasoferReliabilityIndexSensitivityNumericalResults' ] == "yes" ):
+    if ( self.DictMCVal.has_key( 'HasoferReliabilityIndexSensitivity' ) ):
+      if ( self.DictMCVal[ 'HasoferReliabilityIndexSensitivity' ] == "yes" ):
         txt += "%s = %s.getHasoferReliabilityIndexSensitivity()\n" % (self.variable["hasoferReliabilityIndexSensitivity"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["hasoferReliabilityIndexSensitivity"], self.variable["hasoferReliabilityIndexSensitivity"])
+        txt += "print 'Hasofer Reliability Index Sensitivity:'\n"
+        txt += "for i in range( %s ):\n" % self.variable["n"]
+        txt += "  print %s.getDescription()[i], ':'\n" % self.variable["distribution"]
+        txt += "  for j in range( %s[i].getDimension() ):\n" % self.variable["hasoferReliabilityIndexSensitivity"]
+        txt += "    print '  ', %s[i].getDescription()[j], ':', %s[i][j]\n" % (self.variable["hasoferReliabilityIndexSensitivity"], self.variable["hasoferReliabilityIndexSensitivity"])
         txt += "\n"
-
-    if ( self.DictMCVal.has_key( 'HasoferReliabilityIndexSensitivityGraphicalResults' ) ):
-      if ( self.DictMCVal[ 'HasoferReliabilityIndexSensitivityGraphicalResults' ] == "yes" ):
-        txt += "%s = %s.drawHasoferReliabilityIndexSensitivity()\n" % (self.variable["hasoferReliabilityIndexSensitivityGraph"], self.variable["myResult"])
-        txt += "Show( %s[0] )\n" % self.variable["hasoferReliabilityIndexSensitivityGraph"]
+        txt += "%s = %s.drawHasoferReliabilityIndexSensitivity()[0]\n" % (self.variable["hasoferReliabilityIndexSensitivityGraph"], self.variable["myResult"])
+        txt += "#Show( %s )\n" % self.variable["hasoferReliabilityIndexSensitivityGraph"]
+        txt += "%s = '%s'\n" % (self.variable["hasoferReliabilityIndexSensitivityDrawing"], self.DictMCVal[ 'HasoferReliabilityIndexSensitivityDrawingFilename' ])
+        txt += "%s.draw( %s )\n" % (self.variable["hasoferReliabilityIndexSensitivityGraph"], self.variable["hasoferReliabilityIndexSensitivityDrawing"])
+        txt += "ViewImage( %s.getBitmap() )\n"  % self.variable["hasoferReliabilityIndexSensitivityGraph"]
+        txt += "print 'bitmap =', %s.getBitmap()\n"  % self.variable["hasoferReliabilityIndexSensitivityGraph"]
+        txt += "print 'postscript =', %s.getPostscript()\n"  % self.variable["hasoferReliabilityIndexSensitivityGraph"]
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'TvedtApproximation' ) ):
       if ( self.DictMCVal[ 'TvedtApproximation' ] == "yes" ):
         txt += "%s = %s.getEventProbabilityTvedt()\n" % (self.variable["tvedtApproximation"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["tvedtApproximation"], self.variable["tvedtApproximation"])
+        txt += "print '%s =', %s\n" % ("tvedtApproximation", self.variable["tvedtApproximation"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'HohenBichlerApproximation' ) ):
       if ( self.DictMCVal[ 'HohenBichlerApproximation' ] == "yes" ):
         txt += "%s = %s.getEventProbabilityHohenBichler()\n" % (self.variable["hohenBichlerApproximation"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["hohenBichlerApproximation"], self.variable["tvedtApproximation"])
+        txt += "print '%s =', %s\n" % ("hohenBichlerApproximation", self.variable["tvedtApproximation"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'BreitungApproximation' ) ):
       if ( self.DictMCVal[ 'BreitungApproximation' ] == "yes" ):
         txt += "%s = %s.getEventProbabilityBreitung()\n" % (self.variable["breitungApproximation"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % (self.variable["breitungApproximation"], self.variable["breitungApproximation"])
+        txt += "print '%s =', %s\n" % ("breitungApproximation", self.variable["breitungApproximation"])
         txt += "\n"
 
 
@@ -897,6 +945,7 @@ class STDGenerateur :
     
     txt  = "# Evenement de defaillance\n"
     txt += "%s = Event( %s, ComparisonOperator( %s() ), %s )\n" % (self.variable["myEvent"], self.variable["outputRandomVector"], operator, threshold)
+    txt += "%s.setName( '%s' )\n" % (self.variable["myEvent"], "myEvent")
     txt += "\n"
     return txt
     
@@ -924,8 +973,23 @@ class STDGenerateur :
     '''
     Methode de tirage d importance
     '''
+    dimension = 0
+    if ( self.DictMCVal.has_key( 'MeanVector' ) ):
+      meanVector =  self.DictMCVal[ 'MeanVector' ]
+      dimension = len( meanVector )
+        
     txt  = "# Simulation par Tirage d'importance\n"
-    txt += "%s = ImportanceSampling( %s )\n"  % (self.variable["myAlgo"], self.variable["myEvent"])
+    txt += "# Densite d'importance\n"
+    txt += "%s = NumericalPoint( %s )\n" % (self.variable["meanVector"], self.variable["n"])
+    for i in range(dimension):
+      txt += "%s[%d] = %g\n" % (self.variable["meanVector"], i, meanVector[i])
+      
+    if ( self.DictMCVal.has_key( 'Correlation' ) ):
+      if ( self.DictMCVal[ 'Correlation' ] in ( 'Independent', ) ):
+        txt += "%s = Normal( %s, CovarianceMatrix( IdentityMatrix( %s ) ) )\n" % (self.variable["importanceDensity"], self.variable["meanVector"], self.variable["n"])
+      elif ( self.DictMCVal[ 'Correlation' ] in ( 'Linear', ) ):
+        txt += "# Linear correlation not yet implemented\n"
+    txt += "%s = ImportanceSampling( %s, Distribution( %s ) )\n"  % (self.variable["myAlgo"], self.variable["myEvent"], self.variable["importanceDensity"])
     txt += "\n"
 
     return txt
@@ -954,9 +1018,10 @@ class STDGenerateur :
     '''
     Do the computation
     '''
+    txt = ""
     if ( self.DictMCVal.has_key( 'FunctionCallsNumber' ) ):
       if ( self.DictMCVal[ 'FunctionCallsNumber' ] == "yes" ):
-        txt  = "%s = %s.getEvaluationCallsNumber()\n" % (self.variable["modelEvaluationCalls"], self.variable["model"])
+        txt += "%s = %s.getEvaluationCallsNumber()\n" % (self.variable["modelEvaluationCalls"], self.variable["model"])
         txt += "%s = %s.getGradientCallsNumber()\n" % (self.variable["modelGradientCalls"], self.variable["model"])
         txt += "%s = %s.getHessianCallsNumber()\n" % (self.variable["modelHessianCalls"], self.variable["model"])
         txt += "\n"
@@ -972,9 +1037,9 @@ class STDGenerateur :
         txt += "%s = %s.getGradientCallsNumber() - %s\n" % (self.variable["modelGradientCalls"], self.variable["model"], self.variable["modelGradientCalls"])
         txt += "%s = %s.getHessianCallsNumber() - %s\n" % (self.variable["modelHessianCalls"], self.variable["model"], self.variable["modelHessianCalls"])
         txt += "\n"
-        txt += "print '%s =', %s\n" % (self.variable["modelEvaluationCalls"], self.variable["modelEvaluationCalls"])
-        txt += "print '%s =', %s\n" % (self.variable["modelGradientCalls"], self.variable["modelGradientCalls"])
-        txt += "print '%s =', %s\n" % (self.variable["modelHessianCalls"], self.variable["modelHessianCalls"])
+        txt += "print '%s =', %s\n" % ("modelEvaluationCalls", self.variable["modelEvaluationCalls"])
+        txt += "print '%s =', %s\n" % ("modelGradientCalls", self.variable["modelGradientCalls"])
+        txt += "print '%s =', %s\n" % ("modelHessianCalls", self.variable["modelHessianCalls"])
         txt += "\n"
 
     return txt
@@ -1062,8 +1127,8 @@ class STDGenerateur :
     Definition de la loi Gumbel
     '''
     settings = {
-      "AlphaBeta" : "Gamma.ALPHABETA",
-      "MuSigma" : "Gamma.MUSIGMA",
+      "AlphaBeta" : "Gumbel.ALPHABETA",
+      "MuSigma" : "Gumbel.MUSIGMA",
     }
     if loi[ 'Settings' ] == 'AlphaBeta' :
       arg1 = loi[ 'Alpha' ]
@@ -1072,7 +1137,7 @@ class STDGenerateur :
       arg1 = loi[ 'Mu'    ]
       arg2 = loi[ 'Sigma' ]
       
-    txt = "Gamma( %g, %g, %s )" % (arg1, arg2, settings[ loi[ 'Settings' ] ])
+    txt = "Gumbel( %g, %g, %s )" % (arg1, arg2, settings[ loi[ 'Settings' ] ])
     return txt
 
   def Histogram (self, loi, i, collection):
@@ -1082,6 +1147,15 @@ class STDGenerateur :
     arg1 = loi[ 'First' ]
     arg2 = loi[ 'Values'  ]
     txt = "Histogram( %g, %s )" % (arg1, arg2)
+    return txt
+
+  def Laplace (self, loi, i, collection):
+    '''
+    Definition de la loi Laplace
+    '''
+    arg1 = loi[ 'Lambda' ]
+    arg2 = loi[ 'Mu'     ]
+    txt = "Laplace( %g, %g )" % (arg1, arg2)
     return txt
 
   def Logistic (self, loi, i, collection):
@@ -1125,6 +1199,16 @@ class STDGenerateur :
     txt = "MultiNomial( NumericalPoint( %s ) , %d)" % (arg1, arg2)
     return txt
 
+  def NonCentralStudent (self, loi, i, collection):
+    '''
+    Definition de la loi NonCentralStudent
+    '''
+    arg1 = loi[ 'Nu'    ]
+    arg2 = loi[ 'Delta' ]
+    arg3 = loi[ 'Gamma' ]
+    txt = "NonCentralStudent( %g, %g )" % (arg1, arg2, arg3)
+    return txt
+
   def Normal (self, loi, i, collection):
     '''
     Definition de la loi Normal
@@ -1147,9 +1231,18 @@ class STDGenerateur :
 
   def Poisson (self, loi, i, collection):
     '''
-    Definition de la loi 
+    Definition de la loi Poisson
     '''
     txt = "Poisson( %g )" % loi[ 'Lambda' ]
+    return txt
+
+  def Rayleigh (self, loi, i, collection):
+    '''
+    Definition de la loi Rayleigh
+    '''
+    arg1 = loi[ 'Sigma' ]
+    arg2 = loi[ 'Gamma' ]
+    txt = "Rayleigh( %g, %g )" % (arg1, arg2)
     return txt
 
   def Student (self, loi, i, collection):
@@ -1158,7 +1251,8 @@ class STDGenerateur :
     '''
     arg1 = loi[ 'Mu' ]
     arg2 = loi[ 'Nu' ]
-    txt = "Student( %g, %g )" % (arg1, arg2)
+    arg3 = loi[ 'Sigma' ]
+    txt = "Student( %g, %g, %g )" % (arg1, arg2, arg3)
     return txt
 
   def Triangular (self, loi, i, collection):
@@ -1203,6 +1297,6 @@ class STDGenerateur :
       arg2 = loi[ 'Sigma' ]
       
     arg3 = loi[ 'Gamma' ]
-    txt = "Weibull( %g, %g, %s )" % (arg1, arg2, arg3, settings[ loi[ 'Settings' ] ])
+    txt = "Weibull( %g, %g, %g, %s )" % (arg1, arg2, arg3, settings[ loi[ 'Settings' ] ])
     return txt
 

@@ -103,7 +103,9 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
       mc = self.node.item.get_definition()
       d_aides = { 'TXM' : "Une chaîne de caractères est attendue",
                   'R'   : "Un réel est attendu",
-                  'I'   : "Un entier est attendu"}
+                  'I'   : "Un entier est attendu",
+                  'Matrice' : 'Une Matrice est attendue',
+                  'Fichier' : 'Un fichier est attendu'}
       type = mc.type[0]
       commentaire=d_aides.get(type,"Type de base inconnu")
       aideval=self.node.item.aide()

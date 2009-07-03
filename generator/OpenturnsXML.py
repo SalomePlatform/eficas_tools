@@ -186,8 +186,11 @@ class XMLGenerateur :
     Ecrit les donnees liees a l utilisation d un framework englobant
     '''
     framework = openturns.WrapperFrameworkData()
-    #framework.studycase_ = "12:23:34"
-    framework.componentname_ = self.GetMCVal('SolverComponentName')
+#   framework.studycase_ = "12:23:34"
+#   framework.componentname_ = self.GetMCVal('SolverComponentName', 'UNDEFINED')
+    CN = self.GetMCVal('SolverComponentName', 'UNDEFINED')
+    print 'CN = ', CN
+    framework.componentname_ = CN
     return framework
 
 

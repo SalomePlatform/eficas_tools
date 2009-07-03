@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'aideQT.ui'
 #
-# Created: Tue Jan 27 12:25:38 2009
+# Created: Fri Jun 19 11:40:14 2009
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
