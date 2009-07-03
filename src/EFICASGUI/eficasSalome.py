@@ -33,6 +33,7 @@ sys.path[:0]=[eficasConfig.eficasPath,
               eficasConfig.eficasPath,
              ]
 
+print sys.path
 
 
 
@@ -47,15 +48,10 @@ import Editeur
 from InterfaceQT4 import qtEficas
 
 import salome
-#import meshGui
-#import PALGUI_API
 
 import studyManager
 import visuDriver
 import SalomePyQt
-
-#from SelectMainShapeDiag_ui import SelectMainShapeDiag
-#from SelectMeshDiag_ui import SelectMeshDiag
 
 
 
@@ -179,7 +175,6 @@ class MyEficas( qtEficas.Appli ):
         pathCode=code[0]+code[1:].lower()
         sys.path[:0]=[os.path.join(eficasConfig.eficasPath,pathCode)]
         
-        print sys.path
         if Editeur.__dict__.has_key( 'session' ):
             from Editeur import session
             eficasArg = []
@@ -573,19 +568,16 @@ class MyEficas( qtEficas.Appli ):
                         
             fileType = { 'ASTER'    : studyManager.FICHIER_EFICAS_ASTER,
                          'SEP'       : studyManager.FICHIER_EFICAS_OM ,
-                         'HOMARD'   : studyManager.FICHIER_EFICAS_HOMARD ,
                          'OPENTURNS': studyManager.FICHIER_EFICAS_OPENTURNS,
                          'OPENTURNS_STUDY': studyManager.FICHIER_EFICAS_OPENTURNS,
                          'OPENTURNS_WRAPPER': studyManager.FICHIER_EFICAS_OPENTURNS}
                         
             folderName = {  'ASTER'    :  'AsterFiles',
-                            'HOMARD'   : 'HomardFiles' ,
                             'SEP'       : 'OMFiles' ,
                             'OPENTURNS_STUDY': 'OpenturnsFiles',                                    
                             'OPENTURNS_WRAPPER': 'OpenturnsFiles'}                                    
 
             folderType = { 'ASTER':     studyManager.ASTER_FILE_FOLDER,
-                           'HOMARD':    studyManager.ASTER_FILE_FOLDER,
                            'SEP':        studyManager.OM_FILE_FOLDER,
                            'OPENTURNS_STUDY': studyManager.OPENTURNS_FILE_FOLDER,
                            'OPENTURNS_WRAPPER': studyManager.OPENTURNS_FILE_FOLDER }

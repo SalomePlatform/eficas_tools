@@ -108,8 +108,7 @@ def definePopup(theContext, theObject, theParent):
    selectedEntry = a[0]
    aType, aValue = studyManager.palStudy.getTypeAndValue( selectedEntry )
    
-   if aType == studyManager.FICHIER_EFICAS_ASTER or aType == studyManager.FICHIER_EFICAS_HOMARD \
-      or aType == studyManager.FICHIER_EFICAS_HOMARD:
+   if aType == studyManager.FICHIER_EFICAS_ASTER :
         theObject="73"    
             
    return (theContext, theObject, theParent)
@@ -117,9 +116,6 @@ def definePopup(theContext, theObject, theParent):
 
 def customPopup(popup, theContext, theObject, theParent):
    print "EFICASGUI --- customPopup"
-#   popup.removeItem(99000)
-#   popup.removeItem(99001)
-#   popup.removeItem(99002)
 #   popup.removeItem(99003)
 
 
@@ -134,10 +130,6 @@ def runEficas():
    eficasSalome.runEficas( "ASTER" )
    
 
-def runEficaspourHomard():
-   print "runEficas"
-   desktop=sgPyQt.getDesktop()
-   eficasSalome.runEficas( "HOMARD" ) 
    
 def runEficaspourOpenturnsStudy():
    print "runEficas Pour Openturns Study"
@@ -171,9 +163,9 @@ def runEficasFichier(version=None):
       if aType == studyManager.FICHIER_EFICAS_ASTER:        
         fileName = aValue
         code     = "ASTER"
-      elif aType == studyManager.FICHIER_EFICAS_HOMARD:        
+      elif aType == studyManager.FICHIER_EFICAS_OM:        
         fileName = aValue
-        code     = "HOMARD"
+        code     = "SEP"
       elif aType == studyManager.FICHIER_EFICAS_OPENTURNS:        
         fileName = aValue
         code     = "OPENTURNS"
