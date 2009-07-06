@@ -45,6 +45,12 @@ class DPlusBase (Ui_DPlusBase,QDialog):
           parent.addWidget(parent.partieDroite)
           parent.leLayout.widgetActive=self
        self.setupUi(self)
+       icon = QIcon(self.RepIcon+"arrow_left.png")
+       self.BAjout1Val.setIcon(icon)
+       icon2 = QIcon(self.RepIcon+"arrow_right.png")
+       self.BSup1Val.setIcon(icon2)
+       icon3 = QIcon(self.RepIcon+"image240.png")
+       self.BSalome.setIcon(icon3)
 
 # Import des panels
 
@@ -194,8 +200,9 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
             if "GROUP_MA" in e: kwType = "GROUP_MA"
 
         #print "BkwType",kwType
-        #print "editor", self.editor
-        selection, commentaire = self.editor.parent.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
+        print "editor", self.editor
+        print "appliEficas", self.editor.appliEficas
+        selection, commentaire = self.editor.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
         if commentaire !="" :
             self.Commentaire.setText(QString(commentaire))
         monTexte=""

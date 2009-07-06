@@ -34,6 +34,7 @@ class DUnBase(Ui_DUnBase,QDialog):
    def __init__(self,parent ,modal ) :
        QDialog.__init__(self,parent)
        self.appliEficas=parent.appliEficas
+       self.RepIcon=self.appliEficas.RepIcon
        if hasattr(parent,"leLayout"):
           parent.leLayout.removeWidget(parent.leLayout.widgetActive)
           parent.leLayout.widgetActive.close()
@@ -46,6 +47,9 @@ class DUnBase(Ui_DUnBase,QDialog):
           parent.addWidget(parent.partieDroite)
           parent.leLayout.widgetActive=self
        self.setupUi(self)
+       icon = QIcon(self.RepIcon+"image240.png")
+       self.BSalome.setIcon(icon)
+
 
 # Import des panels
 

@@ -45,6 +45,11 @@ class DPlusInto(Ui_DPlusInto,QDialog):
           parent.addWidget(parent.partieDroite)
           parent.leLayout.widgetActive=self
        self.setupUi(self)
+       icon = QIcon(self.RepIcon+"arrow_left.png")
+       self.BAjout1Val.setIcon(icon)
+       icon2 = QIcon(self.RepIcon+"arrow_right.png")
+       self.BSup1Val.setIcon(icon2)
+
 
 class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   """
