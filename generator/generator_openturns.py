@@ -78,7 +78,7 @@ class OpenturnsGenerator(PythonGenerator):
        """
        s=PythonGenerator.generMCSIMP(self,obj)
        if self.TraiteMCSIMP == 1 : 
-          self.dictMCVal[obj.nom]=obj.val
+          self.dictMCVal[obj.nom]=obj.valeur
        else :
           self.dictTempo[obj.nom]=obj.valeur
        return s
