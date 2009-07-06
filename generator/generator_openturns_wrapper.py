@@ -84,7 +84,7 @@ class OpenturnsGenerator(PythonGenerator):
        """
        s=PythonGenerator.generMCSIMP(self,obj)
        if self.traiteMCSIMP == 1 : 
-          self.dictMCVal[obj.nom]=obj.val
+          self.dictMCVal[obj.nom]=obj.valeur
        else :
           self.dictTempo[obj.nom]=obj.valeur
        return s
@@ -109,7 +109,6 @@ class OpenturnsGenerator(PythonGenerator):
    def generMCFACT(self,obj):
        # Il n est pas possible d utiliser obj.valeur qui n est pas 
        # a jour pour les nouvelles variables ou les modifications 
-       #print "generMCFACT" , obj.nom
        if obj.nom in ( "Files", ) :
           self.traiteMCSIMP=0
 	  self.dictTempo={}
@@ -119,7 +118,7 @@ class OpenturnsGenerator(PythonGenerator):
        return s
 
    def genereXML(self):
-       #print "IDM: genereXML dans generator_openturns_wrapper.py"
+       print "IDM: genereXML dans generator_openturns_wrapper.py"
        #print "appli.CONFIGURATION=",self.appli.CONFIGURATION.__dict__
        if self.listeFichiers != [] :
           self.dictMCVal["Files"]=self.listeFichiers
