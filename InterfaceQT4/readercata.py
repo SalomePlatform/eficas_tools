@@ -79,6 +79,7 @@ class READERCATA:
           self.appliEficas.close()
           sys.exit(1)
 
+
       if self.version_code is not None:
           # La version a ete fixee
           for cata in liste_cata_possibles:

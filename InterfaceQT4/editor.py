@@ -18,7 +18,6 @@
 #
 # ======================================================================
 
-print "INTERFACEQT4"
 import types,sys,os
 import traceback
 from PyQt4 import *
