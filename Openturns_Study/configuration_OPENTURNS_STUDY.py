@@ -52,6 +52,7 @@ class CONFIG:
       self.repIni = repIni
      
       self.fic_prefs ="prefs.py"
+      self.prefsUser ="prefs.py"
 
       if self.appli: 
          self.parent=appli.top
@@ -86,6 +87,7 @@ class CONFIG:
       import prefs
       name='prefs_'+prefs.code
       prefsCode=__import__(name)
+      self.prefsUser=name+".py"
       for k in self.labels :
          try :
             valeur=getattr(prefsCode,k)
@@ -98,7 +100,7 @@ class CONFIG:
   def lecture_fichier_ini_utilisateur(self):
   #--------------------------------------
   # Surcharge les paramètres standards par les paramètres utilisateur s'ils existent
-      self.fic_ini_utilisateur = os.path.join(self.rep_user,self.fic_prefs)
+      self.fic_ini_utilisateur = os.path.join(self.rep_user,self.prefsUser)
       #if not os.path.isfile(self.fic_ini_utilisateur+".py"):
       if not os.path.isfile(self.fic_ini_utilisateur):
 	 return
@@ -119,6 +121,10 @@ class CONFIG:
          except :
             pass
 
+      try :
+      	sys.path.append( self.OpenTURNS_path )
+      except :
+        pass
 
 
   #--------------------------------------

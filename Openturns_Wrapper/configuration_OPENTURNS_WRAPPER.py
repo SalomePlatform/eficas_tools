@@ -51,9 +51,11 @@ class CONFIG:
       self.salome  = appli.salome
       self.repIni = repIni
       self.fic_prefs ="prefs.py"
+      self.prefsUser ="prefs.py"
 
       if self.appli: 
          self.parent=appli.top
+	 self.appli.mode_nouv_commande='initial'
       else: 	     self.parent=None
 
 
@@ -85,9 +87,10 @@ class CONFIG:
       import prefs
       name='prefs_'+prefs.code
       prefsCode=__import__(name)
+      self.prefsUser=name+".py"
       for k in self.labels :
          try :
-            valeur=getattr(prefs,k)
+            valeur=getattr(prefsCode,k)
             setattr(self,k,valeur)
          except :
             pass
@@ -97,7 +100,7 @@ class CONFIG:
   def lecture_fichier_ini_utilisateur(self):
   #--------------------------------------
   # Surcharge les paramètres standards par les paramètres utilisateur s'ils existent
-      self.fic_ini_utilisateur = os.path.join(self.rep_user,self.fic_prefs)
+      self.fic_ini_utilisateur = os.path.join(self.rep_user,self.prefsUser)
       #if not os.path.isfile(self.fic_ini_utilisateur+".py"):
       if not os.path.isfile(self.fic_ini_utilisateur):
 	 return
@@ -117,6 +120,12 @@ class CONFIG:
             setattr(self,k,d[k])
          except :
             pass
+
+      try :
+	 sys.path.append( self.OpenTURNS_path )
+      except :
+	 pass
+
 
 
 
