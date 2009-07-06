@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'desPlusieursBase.ui'
 #
-# Created: Fri Jun 19 11:40:12 2009
+# Created: Mon Jul  6 14:08:51 2009
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -32,9 +32,7 @@ class Ui_DPlusBase(object):
         self.LBValeurs.setMinimumSize(QtCore.QSize(200, 0))
         self.LBValeurs.setObjectName("LBValeurs")
         self.verticalLayout_2.addWidget(self.LBValeurs)
-        self.gridLayout_2.addLayout(self.verticalLayout_2, 0, 0, 1, 1)
-        self.verticalLayout_5 = QtGui.QVBoxLayout()
-        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.gridLayout_2.addLayout(self.verticalLayout_2, 0, 0, 7, 1)
         self.gridLayout = QtGui.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
         self.horizontalLayout = QtGui.QHBoxLayout()
@@ -77,7 +75,7 @@ class Ui_DPlusBase(object):
         self.BSup1Val.setSizePolicy(sizePolicy)
         self.BSup1Val.setMinimumSize(QtCore.QSize(40, 30))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../../EficasV1/Editeur/icons/arrow_right.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("../Editeur/icons/arrow_right.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.BSup1Val.setIcon(icon1)
         self.BSup1Val.setObjectName("BSup1Val")
         self.gridLayout.addWidget(self.BSup1Val, 2, 0, 1, 1)
@@ -97,11 +95,9 @@ class Ui_DPlusBase(object):
         self.BView2D.setMinimumSize(QtCore.QSize(120, 30))
         self.BView2D.setObjectName("BView2D")
         self.gridLayout.addWidget(self.BView2D, 2, 2, 1, 1)
-        self.verticalLayout_5.addLayout(self.gridLayout)
+        self.gridLayout_2.addLayout(self.gridLayout, 0, 1, 1, 1)
         spacerItem1 = QtGui.QSpacerItem(20, 158, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.verticalLayout_5.addItem(spacerItem1)
-        self.verticalLayout_4 = QtGui.QVBoxLayout()
-        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.gridLayout_2.addItem(spacerItem1, 1, 1, 1, 1)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         spacerItem2 = QtGui.QSpacerItem(150, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
@@ -121,18 +117,15 @@ class Ui_DPlusBase(object):
         self.bImport.setObjectName("bImport")
         self.verticalLayout.addWidget(self.bImport)
         self.horizontalLayout_2.addLayout(self.verticalLayout)
-        self.verticalLayout_4.addLayout(self.horizontalLayout_2)
-        self.verticalLayout_3 = QtGui.QVBoxLayout()
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        spacerItem3 = QtGui.QSpacerItem(265, 48, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.verticalLayout_3.addItem(spacerItem3)
+        self.gridLayout_2.addLayout(self.horizontalLayout_2, 2, 1, 1, 1)
+        spacerItem3 = QtGui.QSpacerItem(289, 100, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridLayout_2.addItem(spacerItem3, 3, 1, 1, 1)
         self.Commentaire = QtGui.QLabel(self.Widget8)
-        self.Commentaire.setMinimumSize(QtCore.QSize(251, 21))
+        self.Commentaire.setMinimumSize(QtCore.QSize(298, 61))
         self.Commentaire.setObjectName("Commentaire")
-        self.verticalLayout_3.addWidget(self.Commentaire)
+        self.gridLayout_2.addWidget(self.Commentaire, 4, 1, 1, 1)
         spacerItem4 = QtGui.QSpacerItem(265, 48, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.verticalLayout_3.addItem(spacerItem4)
-        self.verticalLayout_4.addLayout(self.verticalLayout_3)
+        self.gridLayout_2.addItem(spacerItem4, 5, 1, 1, 1)
         self.horizontalLayout_3 = QtGui.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         spacerItem5 = QtGui.QSpacerItem(118, 27, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
@@ -144,9 +137,7 @@ class Ui_DPlusBase(object):
         self.bOk.setDefault(False)
         self.bOk.setObjectName("bOk")
         self.horizontalLayout_3.addWidget(self.bOk)
-        self.verticalLayout_4.addLayout(self.horizontalLayout_3)
-        self.verticalLayout_5.addLayout(self.verticalLayout_4)
-        self.gridLayout_2.addLayout(self.verticalLayout_5, 0, 1, 1, 1)
+        self.gridLayout_2.addLayout(self.horizontalLayout_3, 6, 1, 1, 1)
         self.tabuniqueinto.addTab(self.Widget8, "")
         self.gridLayout_4.addWidget(self.tabuniqueinto, 0, 0, 1, 1)
 

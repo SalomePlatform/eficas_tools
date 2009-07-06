@@ -33,6 +33,7 @@ from politiquesValidation import PolitiquePlusieurs
 class DPlusInto(Ui_DPlusInto,QDialog):
    def __init__(self,parent ,modal ) :
        QDialog.__init__(self,parent)
+       self.RepIcon=parent.appliEficas.RepIcon
        if hasattr(parent,"leLayout"):
           parent.leLayout.removeWidget(parent.leLayout.widgetActive)
           parent.leLayout.widgetActive.close()
@@ -45,9 +46,9 @@ class DPlusInto(Ui_DPlusInto,QDialog):
           parent.addWidget(parent.partieDroite)
           parent.leLayout.widgetActive=self
        self.setupUi(self)
-       icon = QIcon(self.RepIcon+"arrow_left.png")
+       icon = QIcon(self.RepIcon+"/arrow_left.png")
        self.BAjout1Val.setIcon(icon)
-       icon2 = QIcon(self.RepIcon+"arrow_right.png")
+       icon2 = QIcon(self.RepIcon+"/arrow_right.png")
        self.BSup1Val.setIcon(icon2)
 
 

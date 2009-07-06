@@ -45,12 +45,11 @@ class DPlusBase (Ui_DPlusBase,QDialog):
           parent.addWidget(parent.partieDroite)
           parent.leLayout.widgetActive=self
        self.setupUi(self)
-       icon = QIcon(self.RepIcon+"arrow_left.png")
+       self.RepIcon=parent.appliEficas.RepIcon
+       icon = QIcon(self.RepIcon+"/arrow_left.png")
        self.BAjout1Val.setIcon(icon)
-       icon2 = QIcon(self.RepIcon+"arrow_right.png")
+       icon2 = QIcon(self.RepIcon+"/arrow_right.png")
        self.BSup1Val.setIcon(icon2)
-       icon3 = QIcon(self.RepIcon+"image240.png")
-       self.BSalome.setIcon(icon3)
 
 # Import des panels
 
@@ -81,6 +80,8 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         self.connect(self.BSalome,SIGNAL("clicked()"),self.BSalomePressed)
 
   def detruitBouton(self):
+        icon3 = QIcon(self.RepIcon+"/image240.png")
+        self.BSalome.setIcon(icon3)
         mc = self.node.item.get_definition()
         type = mc.type[0]
         if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
