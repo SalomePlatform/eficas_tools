@@ -35,9 +35,9 @@ JdC = JDC_CATA ( code = 'OPENTURNS_STUDY',
                  regles = ( AU_MOINS_UN ( 'CRITERIA' ),
                             AU_MOINS_UN ( 'MODEL' ),
                             AVANT ( ('DISTRIBUTION', 'MODEL'), 'VARIABLE' ),
-#                            A_CLASSER ( 'VARIABLE',                'CORRELATION' ),
-#                            A_CLASSER ( 'VARIABLE',                'CRITERIA' ),
-#                            A_CLASSER ( 'CORRELATION',             'CRITERIA' ),
+                            AVANT ( 'VARIABLE',                'CORRELATION' ),
+                            AVANT ( 'VARIABLE',                'CRITERIA' ),
+                            AVANT ( 'CORRELATION',             'CRITERIA' ),
                             ),
                  ) # Fin JDC_CATA
 
