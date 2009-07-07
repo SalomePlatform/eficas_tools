@@ -583,7 +583,7 @@ class JDCEditor(QSplitter):
             try : 
             #if 1 :
                self.tubePy=self.generator.getTubePy()
-               fileTube = '/tmp/tube.py'
+               fileTube = fn[:fn.rfind(".")] + '.py'
                if self.tubePy != '' :
                   f=open(fileTube,'w')
                   f.write(self.tubePy)
