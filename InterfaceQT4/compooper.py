@@ -67,8 +67,39 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
     def viewPng(self) :
         from monPixmap import MonLabelPixmap
         fichier=self.appliEficas.getName()
-        widgetPng=MonLabelPixmap(self.appliEficas,fichier)
-        ret=widgetPng.exec_()
+        try:
+        #if 1:
+            import generator
+            g = generator.plugins[self.appliEficas.format_fichier]()
+            print dir(self.item)
+            g.gener(self.item.object, format='beautifie')
+            stdGener = g.getGenerateur()
+            print g
+            print g.__class__
+            print dir(stdGener)
+            if len(g.dictMCLois) != 1:
+                QMessageBox.warning(
+                    None,
+                    self.appliEficas.trUtf8("Erreur interne"),
+                    self.appliEficas.trUtf8("La PDF de la loi ne peut pas etre affichee."),
+                    self.appliEficas.trUtf8("&Annuler"))
+                return
+            loi = g.dictMCLois.keys()[0]
+            nomLoi = loi.get_name()
+            script = stdGener.GraphiquePDF(loi, fichier)
+            print script
+            d = {}
+            exec script in d
+        except:
+        #else:
+            QMessageBox.warning(
+                None,
+                self.appliEficas.trUtf8("Erreur interne"),
+                self.appliEficas.trUtf8("La PDF de la loi ne peut pas etre affichee."),
+                self.appliEficas.trUtf8("&Annuler"))
+        widgetPng=MonLabelPixmap(self.appliEficas,fichier,nomLoi)
+        #ret=widgetPng.exec_()
+        widgetPng.show()
 
 class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   """ La classe EtapeTreeItem est un adaptateur des objets ETAPE du noyau

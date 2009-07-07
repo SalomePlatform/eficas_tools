@@ -313,7 +313,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def getName(self):
         self.indice=self.indice+1
-        texte="/tmp/tempo"+str(self.indice)
+        texte="tempo"+str(self.indice)
         return texte
         
 

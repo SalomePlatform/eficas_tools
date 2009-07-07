@@ -36,16 +36,18 @@ class MonLabelPixmap(Ui_LabelPixmap,QtGui.QDialog):
   à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
   discrètes
   """
-  def __init__(self, QWparent , fichier = "/home/noyret/ast-red-ball.png"):
+  def __init__(self, QWparent , fichier, name):
       QtGui.QDialog.__init__(self,QWparent)
-      self.setModal(True)
+      self.fichier = fichier
+      self.setModal(False)
       self.setupUi(self)
+      self.setWindowTitle("PDF de la loi '%s'" % name)
       self.labelPix.setPixmap(QPixmap(fichier));
       
 
   def on_buttonCancel_clicked(self):
       QDialog.reject(self)
 
-  def on_buttonOk_clicked(self):
-      QDialog.accept(self)
-
+  def closeEvent(self,event):
+    import os
+    os.system("rm -f %s" % self.fichier)

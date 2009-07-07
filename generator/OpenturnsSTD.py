@@ -32,10 +32,13 @@ import math
 
 # Chargement du module Open TURNS
 from openturns import *
-from openturns.viewer import ViewImage,StopViewer,WaitForViewer
 
 results = {}
 
+"""
+
+viewerSTD = """
+from openturns.viewer import ViewImage,StopViewer,WaitForViewer
 """
 
 footerSTD = """
@@ -216,6 +219,7 @@ class STDGenerateur :
     Imprime l entete commun a tous les fichiers
     '''
     txt  = headerSTD % self.OpenTURNS_path
+    txt += viewerSTD
     txt += "# Definit le niveau d'affichage de la log\n"
     txt += "%s = Log.NONE\n" % self.variable["flags"]
     for flag in self.logFlags.keys():

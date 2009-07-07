@@ -117,8 +117,7 @@ class OpenturnsGenerator(PythonGenerator):
    def genereSTD(self):
       print "IDM: genereSTD dans generator_openturns_study.py"
       print "IDM: self.listeVariables=", self.listeVariables
-      MonBaseGenerateur=Generateur(self.appli,self.dictMCVal, self.listeVariables, self.dictMCLois)
-      MonGenerateur=MonBaseGenerateur.getSTDGenerateur()
+      MonGenerateur=self.getGenerateur()
       #try :
       if 1== 1 :
          self.texteSTD=MonGenerateur.CreeSTD()
@@ -131,4 +130,11 @@ class OpenturnsGenerator(PythonGenerator):
       f.write( self.texteSTD )
       f.close()
 
-
+   def getGenerateur (self):
+      print "IDM: getGenerateur dans generator_openturns_study.py"
+      print "IDM: self.dictMCVal=", self.dictMCVal
+      print "IDM: self.listeVariables=", self.listeVariables
+      print "IDM: self.dictMCLois=", self.dictMCLois
+      MonBaseGenerateur=Generateur(self.appli,self.dictMCVal, self.listeVariables, self.dictMCLois)
+      MonGenerateur=MonBaseGenerateur.getSTDGenerateur()
+      return MonGenerateur
