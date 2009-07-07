@@ -14,3 +14,6 @@ PY_FILES = desChoixCata.py desCommande.py desCommentaire.py desError.py desFormu
 	${PYUIC} -x -o $@ $<
 
 all : $(PY_FILES)
+clean :
+	-rm -rf $(PY_FILES) *.pyc
+

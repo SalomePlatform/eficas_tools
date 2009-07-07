@@ -25,6 +25,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.format_fichier="python"	#par defaut
 	self.top = self #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
+        self.indice=0
 
         import prefs
         if salome :
@@ -310,6 +311,11 @@ class Appli(Ui_Eficas,QMainWindow):
     def NewInclude(self):
         self.viewmanager.newIncludeEditor()
 
+    def getName(self):
+        self.indice=self.indice+1
+        texte="/tmp/tempo"+str(self.indice)
+        return texte
+        
 
 if __name__=='__main__':
 
