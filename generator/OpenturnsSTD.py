@@ -345,7 +345,7 @@ class STDGenerateur :
       if loi.has_key( 'Kind' ):
         marginale = "%s_%d" % (self.variable["marginal"], i)
         txt += "# Definit la loi marginale de la composante %d\n" % i
-        txt += "%s = %s\n" % (marginale, apply( STDGenerateur.__dict__[ loi[ 'Kind' ] ], (self, loi, i, self.variable["collection"]) ))
+        txt += "%s = %s\n" % (marginale, apply( STDGenerateur.__dict__[ loi[ 'Kind' ] ], (self, loi) ))
         txt += "%s.setName( '%s' )\n" % (marginale, conceptloi.get_name())
         txt += "%s[ %d ] = '%s'\n" % (self.variable["description"], i, variable)
         txt += "%s[ %d ] = Distribution( %s )\n" % (self.variable["collection"], i, marginale)
@@ -871,7 +871,7 @@ class STDGenerateur :
         txt += "%s = %s.drawEventProbabilitySensitivity()[0]\n" % (self.variable["eventProbabilitySensitivityGraph"], self.variable["myResult"])
         txt += "#Show( %s )\n" % self.variable["eventProbabilitySensitivityGraph"]
         txt += "%s = '%s'\n" % (self.variable["eventProbabilitySensitivityDrawing"], self.DictMCVal[ 'FORMEventProbabilitySensitivityDrawingFilename' ])
-        txt += "%s.draw( %s )\n" % (self.variable["ieventProbabilitySensitivityGraph"], self.variable["eventProbabilitySensitivityDrawing"])
+        txt += "%s.draw( %s )\n" % (self.variable["eventProbabilitySensitivityGraph"], self.variable["eventProbabilitySensitivityDrawing"])
         txt += "ViewImage( %s.getBitmap() )\n"  % self.variable["eventProbabilitySensitivityGraph"]
         txt += "print 'bitmap =', %s.getBitmap()\n"  % self.variable["eventProbabilitySensitivityGraph"]
         txt += "print 'postscript =', %s.getPostscript()\n"  % self.variable["eventProbabilitySensitivityGraph"]
@@ -1067,7 +1067,7 @@ class STDGenerateur :
     txt += "\n"
     return txt
 
-  def Beta (self, loi, i, collection):
+  def Beta (self, loi):
     '''
     Definition de la loi Beta
     '''
@@ -1087,7 +1087,7 @@ class STDGenerateur :
     txt = "Beta( %g, %g, %g, %g, %s )" % (arg1, arg2, arg3, arg4, settings[ loi[ 'Settings' ] ])
     return txt
   
-  def Exponential (self, loi, i, collection):
+  def Exponential (self, loi):
     '''
     Definition de la loi Exponential
     '''
@@ -1096,7 +1096,7 @@ class STDGenerateur :
     txt = "Exponential( %g, %g )" % (arg1, arg2)
     return txt
   
-  def Gamma (self, loi, i, collection):
+  def Gamma (self, loi):
     '''
     Definition de la loi Gamma
     '''
@@ -1115,14 +1115,14 @@ class STDGenerateur :
     txt = "Gamma( %g, %g, %g, %s )" % (arg1, arg2, arg3, settings[ loi[ 'Settings' ] ])
     return txt
 
-  def Geometric (self, loi, i, collection):
+  def Geometric (self, loi):
     '''
     Definition de la loi Geometric
     '''
     txt = "Geometric( %g )" % loi[ 'P' ]
     return txt
 
-  def Gumbel (self, loi, i, collection):
+  def Gumbel (self, loi):
     '''
     Definition de la loi Gumbel
     '''
@@ -1140,7 +1140,7 @@ class STDGenerateur :
     txt = "Gumbel( %g, %g, %s )" % (arg1, arg2, settings[ loi[ 'Settings' ] ])
     return txt
 
-  def Histogram (self, loi, i, collection):
+  def Histogram (self, loi):
     '''
     Definition de la loi Histogram
     '''
@@ -1149,7 +1149,7 @@ class STDGenerateur :
     txt = "Histogram( %g, %s )" % (arg1, arg2)
     return txt
 
-  def Laplace (self, loi, i, collection):
+  def Laplace (self, loi):
     '''
     Definition de la loi Laplace
     '''
@@ -1158,7 +1158,7 @@ class STDGenerateur :
     txt = "Laplace( %g, %g )" % (arg1, arg2)
     return txt
 
-  def Logistic (self, loi, i, collection):
+  def Logistic (self, loi):
     '''
     Definition de la loi Logistic
     '''
@@ -1167,7 +1167,7 @@ class STDGenerateur :
     txt = "Logistic( %g, %g )" % (arg1, arg2)
     return txt
 
-  def LogNormal (self, loi, i, collection):
+  def LogNormal (self, loi):
     '''
     Definition de la loi LogNormal
     '''
@@ -1190,7 +1190,7 @@ class STDGenerateur :
     txt = "LogNormal( %g, %g, %g, %s )" % (arg1, arg2, arg3, settings[ loi[ 'Settings' ] ])
     return txt
 
-  def MultiNomial (self, loi, i, collection):
+  def MultiNomial (self, loi):
     '''
     Definition de la loi MultiNomial
     '''
@@ -1199,7 +1199,7 @@ class STDGenerateur :
     txt = "MultiNomial( NumericalPoint( %s ) , %d)" % (arg1, arg2)
     return txt
 
-  def NonCentralStudent (self, loi, i, collection):
+  def NonCentralStudent (self, loi):
     '''
     Definition de la loi NonCentralStudent
     '''
@@ -1209,7 +1209,7 @@ class STDGenerateur :
     txt = "NonCentralStudent( %g, %g )" % (arg1, arg2, arg3)
     return txt
 
-  def Normal (self, loi, i, collection):
+  def Normal (self, loi):
     '''
     Definition de la loi Normal
     '''
@@ -1218,7 +1218,7 @@ class STDGenerateur :
     txt = "Normal( %g, %g )" % (arg1, arg2)
     return txt
 
-  def TruncatedNormal (self, loi, i, collection):
+  def TruncatedNormal (self, loi):
     '''
     Definition de la loi TruncatedNormal
     '''
@@ -1229,14 +1229,14 @@ class STDGenerateur :
     txt = "TruncatedNormal( %g, %g, %g, %g )" % (arg1, arg2, arg3, arg4)
     return txt
 
-  def Poisson (self, loi, i, collection):
+  def Poisson (self, loi):
     '''
     Definition de la loi Poisson
     '''
     txt = "Poisson( %g )" % loi[ 'Lambda' ]
     return txt
 
-  def Rayleigh (self, loi, i, collection):
+  def Rayleigh (self, loi):
     '''
     Definition de la loi Rayleigh
     '''
@@ -1245,7 +1245,7 @@ class STDGenerateur :
     txt = "Rayleigh( %g, %g )" % (arg1, arg2)
     return txt
 
-  def Student (self, loi, i, collection):
+  def Student (self, loi):
     '''
     Definition de la loi Student
     '''
@@ -1255,7 +1255,7 @@ class STDGenerateur :
     txt = "Student( %g, %g, %g )" % (arg1, arg2, arg3)
     return txt
 
-  def Triangular (self, loi, i, collection):
+  def Triangular (self, loi):
     '''
     Definition de la loi Triangular
     '''
@@ -1265,7 +1265,7 @@ class STDGenerateur :
     txt = "Triangular( %g, %g, %g )" % (arg1, arg2, arg3)
     return txt
 
-  def Uniform (self, loi, i, collection):
+  def Uniform (self, loi):
     '''
     Definition de la loi Uniform
     '''
@@ -1274,14 +1274,14 @@ class STDGenerateur :
     txt = "Uniform( %g, %g )" % (arg1, arg2)
     return txt
 
-  def UserDefined (self, loi, i, collection):
+  def UserDefined (self, loi):
     '''
     Definition de la loi UserDefined
     '''
     txt = "** UserDefined not defined yet **"
     return txt
 
-  def Weibull (self, loi, i, collection):
+  def Weibull (self, loi):
     '''
     Definition de la loi Weibull
     '''
@@ -1300,3 +1300,16 @@ class STDGenerateur :
     txt = "Weibull( %g, %g, %g, %s )" % (arg1, arg2, arg3, settings[ loi[ 'Settings' ] ])
     return txt
 
+
+
+  def GraphiquePDF (self, loi, fichier):
+    '''
+    Produit une image PNG representant la PDF de la loi
+    '''
+    txt  = headerSTD
+    txt += "dist = %s\n" % apply( STDGenerateur.__dict__[ loi[ 'Kind' ] ], (self, loi) )
+    txt += "graph = dist.drawPDF()\n"
+    txt += "graph.draw( '%s' )\n" % fichier
+    txt += footerSTD
+    return txt
+  

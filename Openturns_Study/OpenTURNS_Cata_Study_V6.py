@@ -34,7 +34,7 @@ JdC = JDC_CATA ( code = 'OPENTURNS_STUDY',
                  execmodul = None,
                  regles = ( AU_MOINS_UN ( 'CRITERIA' ),
                             AU_MOINS_UN ( 'MODEL' ),
-#                            A_CLASSER ( ('DISTRIBUTION', 'MODEL'), 'VARIABLE' ),
+                            AVANT ( ('DISTRIBUTION', 'MODEL'), 'VARIABLE' ),
 #                            A_CLASSER ( 'VARIABLE',                'CORRELATION' ),
 #                            A_CLASSER ( 'VARIABLE',                'CRITERIA' ),
 #                            A_CLASSER ( 'CORRELATION',             'CRITERIA' ),
@@ -99,104 +99,14 @@ LOG = PROC ( nom = "LOG",
                  ),
                
 ) # Fin PROC LOG
+# Ordre Catalogue LOG
 
 
 
-
-#================================
-# 0. Definition du modele physique
-#================================
-
-
-DETERMINISTICVARIABLE = OPER ( nom = "DETERMINISTICVARIABLE",
-            sd_prod = variable,
-            op = None,
-            fr = "Variable deterministe",
-            ang = "Deterministic variable",
-            
-  N = SIMP ( statut = 'o',
-             typ = "TXM",
-             fr = "Nom",
-             ang = "Name",
-             ),
-            
-  T = SIMP ( statut = 'o',
-             defaut = "in",
-             into = ( "in" , "out", ),
-             typ = "TXM",
-             fr = "Type",
-             ang = "Type",
-             ),
-            
-  R = SIMP ( statut = 'o',
-             defaut = 0,
-             typ = "I",
-             fr = "Rang",
-             ang = "Rank",
-             ),
-            
-) # Fin OPER DETERMINISTICVARIABLE
-
-
-
-import opsOT
-MODEL = MACRO ( nom = "MODEL",
-                op = None,
-                UIinfo = { "groupes" : ( "Gestion du travail", ) },
-                fr = "Chargement du wrapper du modele physique",
-                ang = "Physical model wrapper load",
-                sd_prod = opsOT.INCLUDE,
-                op_init = opsOT.INCLUDE_context,
-                fichier_ini = 1,
-               
-  FileName = SIMP ( statut = "o",
-                    typ = "TXM",
-                    fr = "Nom du modele physique",
-                    ang = "Physical model identifier",
-                    ),
-               
-) # Fin PROC MODEL
-
-
-
-
-VARIABLE = PROC ( nom = "VARIABLE",
-                  op = None,
-                  docu = "",
-                  fr = "Variable probabiliste",
-                  ang = "Probabilistic variable",
-
-  ModelVariable = SIMP ( statut = "o",
-                         typ = ( variable, ),
-                         ),
-
-  Distribution = SIMP ( statut = "o",
-                        typ = ( loi, ),
-                        ),
-                  
-) # Fin PROC VARIABLE
-
-
-CORRELATION = PROC ( nom = 'CORRELATION',
-                     op = None,
-                     docu = "",
-                     fr = "Correlation entre variables",
-                     ang = "Variable correlation",
-
-  Copula = SIMP ( statut = "o",
-                  typ = "TXM",
-                  into = ( "Independent", ),
-                  defaut = "Independent",
-                  fr = "Type de la copule",
-                  ang = "Copula kind",
-                  ),
-
-
-) # Fin PROC CORRELATION
 
 
 #================================
-# 1. Definition des LOIS
+# Definition des LOIS
 #================================
 
 # Nota : les variables de type OPER doivent etre en majuscules !
@@ -887,15 +797,111 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
     ), # Fin BLOC WEIBULL
 
 ) # Fin OPER DISTRIBUTION
+# Ordre Catalogue DISTRIBUTION
 
 
+
+#================================
+# Definition du modele physique
+#================================
+
+
+DETERMINISTICVARIABLE = OPER ( nom = "DETERMINISTICVARIABLE",
+            sd_prod = variable,
+            op = None,
+            fr = "Variable deterministe",
+            ang = "Deterministic variable",
+            
+  N = SIMP ( statut = 'o',
+             typ = "TXM",
+             fr = "Nom",
+             ang = "Name",
+             ),
+            
+  T = SIMP ( statut = 'o',
+             defaut = "in",
+             into = ( "in" , "out", ),
+             typ = "TXM",
+             fr = "Type",
+             ang = "Type",
+             ),
+            
+  R = SIMP ( statut = 'o',
+             defaut = 0,
+             typ = "I",
+             fr = "Rang",
+             ang = "Rank",
+             ),
+            
+) # Fin OPER DETERMINISTICVARIABLE
+# Ordre Catalogue DETERMINISTICVARIABLE
+
+
+
+import opsOT
+MODEL = MACRO ( nom = "MODEL",
+                op = None,
+                UIinfo = { "groupes" : ( "Gestion du travail", ) },
+                fr = "Chargement du wrapper du modele physique",
+                ang = "Physical model wrapper load",
+                sd_prod = opsOT.INCLUDE,
+                op_init = opsOT.INCLUDE_context,
+                fichier_ini = 1,
+               
+  FileName = SIMP ( statut = "o",
+                    typ = "TXM",
+                    fr = "Nom du modele physique",
+                    ang = "Physical model identifier",
+                    ),
+               
+) # Fin PROC MODEL
+# Ordre Catalogue MODEL
+
+
+
+
+VARIABLE = PROC ( nom = "VARIABLE",
+                  op = None,
+                  docu = "",
+                  fr = "Variable probabiliste",
+                  ang = "Probabilistic variable",
+
+  ModelVariable = SIMP ( statut = "o",
+                         typ = ( variable, ),
+                         ),
+
+  Distribution = SIMP ( statut = "o",
+                        typ = ( loi, ),
+                        ),
+                  
+) # Fin PROC VARIABLE
+# Ordre Catalogue VARIABLE
+
+
+CORRELATION = PROC ( nom = 'CORRELATION',
+                     op = None,
+                     docu = "",
+                     fr = "Correlation entre variables",
+                     ang = "Variable correlation",
+
+  Copula = SIMP ( statut = "o",
+                  typ = "TXM",
+                  into = ( "Independent", ),
+                  defaut = "Independent",
+                  fr = "Type de la copule",
+                  ang = "Copula kind",
+                  ),
+
+
+) # Fin PROC CORRELATION
+# Ordre Catalogue CORRELATION
 
 
 
 
 
 #================================
-# 3. Definition de l'etude
+# Definition de l'etude
 #================================
 
 # Nota : les variables de type PROC doivent etre en majuscules !
@@ -1667,6 +1673,7 @@ CRITERIA = PROC ( nom = "CRITERIA",
 
 
 ) # Fin PROC CRITERIA
+# Ordre Catalogue CRITERIA
 
 
 
