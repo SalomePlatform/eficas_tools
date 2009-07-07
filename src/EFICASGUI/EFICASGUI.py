@@ -184,7 +184,6 @@ def runEficasFichier(version=None):
             eficasSalome.runEficas( code, fileName)
         
 
-print "hhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
 # Partie applicative
 
 dict_command={
