@@ -69,6 +69,8 @@ class JDCTree( QTreeWidget ):
         if item.menu == None:
            item.createPopUpMenu()
         if item.menu != None:
+           if item.item.get_nom() == "DISTRIBUTION" and item.item.isvalid() :
+              item.Graphe.setEnabled(1)
            item.menu.exec_(coord)            
             
     def handleOnItem(self,item,int):

@@ -59,9 +59,10 @@ class MyTabview:
        if index < 0 : return
        self.checkDirty(self.dict_editors[index])
        index=self.myQtab.currentIndex()
-       while index < len(self.dict_editors) -1 :
-             self.dict_editors[index]=self.dict_editors[index+1]
-             index = index + 1
+       idx=index
+       while idx < len(self.dict_editors) -1 :
+             self.dict_editors[idx]=self.dict_editors[idx+1]
+             idx = idx + 1
        del self.dict_editors[len (self.dict_editors) -1]
        try :
            del self.doubles[self.dict_editors[index]]
