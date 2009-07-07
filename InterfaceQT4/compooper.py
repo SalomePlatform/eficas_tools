@@ -21,6 +21,15 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
         typeNode.PopUpMenuNode.createPopUpMenu(self)
         if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome: 
            self.menu.insertItem( 'View3D', self.view3D )
+        if  self.item.get_nom() == "DISTRIBUTION" :
+           self.Graphe = QAction('Graphique',self.tree)
+           self.tree.connect(self.Graphe,SIGNAL("activated()"),self.viewPng)
+           self.Graphe.setStatusTip("affiche la distribution ")
+           self.menu.addAction(self.Graphe)
+           if self.item.isvalid() :
+	      self.Graphe.setEnabled(1)
+           else:
+	      self.Graphe.setEnabled(0)
 
     def doPaste(self,node_selected):
         """
@@ -55,6 +64,11 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
         troisD=TroisDPal.TroisDPilote(self.item,self.editor.parent.appliEficas)
         troisD.envoievisu()
 
+    def viewPng(self) :
+        from monPixmap import MonLabelPixmap
+        fichier=self.appliEficas.getName()
+        widgetPng=MonLabelPixmap(self.appliEficas,fichier)
+        ret=widgetPng.exec_()
 
 class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   """ La classe EtapeTreeItem est un adaptateur des objets ETAPE du noyau
