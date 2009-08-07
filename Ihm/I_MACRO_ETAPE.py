@@ -764,7 +764,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # gestion de l unicite SVP
       unite=999
       if hasattr(self,'fichier_ini') : return
-      #print "je passe le if"
       if fichier == None :
          fichier=str(self.jdc.appli.get_file_variable())
          #print fichier
@@ -825,13 +824,12 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          raise
 
   def make_incl2_except(self):
-         #print "make_incl2_except"
          l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
          if self.jdc.appli:
              self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
                                             message="Le contenu de ce fichier ne sera pas pris en compte\n"+string.join(l)
                                            )
-         self.parent.record_unit(unite,self)
+         #self.parent.record_unit(unite,self)
          self.g_context={}
          self.etapes=[]
          self.jdc_aux=None
