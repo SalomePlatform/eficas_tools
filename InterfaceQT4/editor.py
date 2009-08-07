@@ -435,7 +435,7 @@ class JDCEditor(QSplitter):
     def get_file_variable(self) :
     #---------------------------#
      titre = "Choix d'un fichier XML"
-     texte = "Le fichier contient une commande INCLUDE\n"
+     texte = "Le fichier contient une commande MODEL\n"
      texte = texte+'Donnez le nom du fichier XML qui contient la description des variables'
      QMessageBox.information( self, titre,texte)
                                         

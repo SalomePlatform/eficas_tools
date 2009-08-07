@@ -83,6 +83,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         mc = self.node.item.get_definition()
         if self.node.item.get_nom() != "FileName" :
            self.BFichier.close()
+        else :
+	   self.bParametres.close()
         type = mc.type[0]
         #if not('grma' in repr(type)) or not(self.editor.salome) :
         if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
@@ -118,9 +120,6 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def BOk2Pressed(self):
         SaisieValeur.BOk2Pressed(self)
-        if self.node.item.parent.nom == "MODEL" : 
-		self.node.item.parent.change_fichier="1"
-                self.node.item.parent.build_include(None,"")
 
   def BFichierPressed(self):
       fichier = QFileDialog.getOpenFileName(self.appliEficas,
@@ -134,8 +133,9 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
   def LEValeurPressed(self):
         SaisieValeur.LEValeurPressed(self)
         if self.node.item.parent.nom == "MODEL" : 
-		self.node.item.parent.change_fichier="1"
-                self.node.item.parent.build_include(None,"")
+           if self.node.item.isvalid():
+		   self.node.item.parent.change_fichier="1"
+                   self.node.item.parent.build_include(None,"")
 
   def BParametresPressed(self):
         QTPanel.BParametresPressed(self)
