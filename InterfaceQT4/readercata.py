@@ -44,13 +44,14 @@ from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
-VERSION_EFICAS="Eficas V1.16"
 
 class READERCATA:
 
    def __init__(self,QWParent, appliEficas):
       self.QWParent=QWParent
       self.appliEficas=self.QWParent.appliEficas
+      print self.appliEficas
+      self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
       self.code=self.QWParent.code
       self.appliEficas.format_fichier='python'
       if hasattr(self.appliEficas,'mode_nouv_commande'):
@@ -91,7 +92,7 @@ class READERCATA:
           self.version_code = liste_cata_possibles[0][1]
           self.appliEficas.format_fichier=liste_cata_possibles[0][3] 
           lab=QString("Eficas V1.") 
-          lab+=QString(VERSION_EFICAS) 
+          lab+=QString(self.VERSION_EFICAS) 
           lab+=QString(" pour ")
           lab+=QString(self.code) 
           lab+=QString(" avec le catalogue ")
@@ -145,7 +146,7 @@ class READERCATA:
       #
       self.traite_clefs_documentaires()
       self.cata=(self.cata,)
-      titre=VERSION_EFICAS + " avec le catalogue " + os.path.basename(self.fic_cata)
+      titre=self.VERSION_EFICAS + " avec le catalogue " + os.path.basename(self.fic_cata)
       if self.appliEficas.top:
         self.appliEficas.setWindowTitle(titre)
       self.appliEficas.titre=titre
@@ -214,7 +215,7 @@ class READERCATA:
       liste_choix = self.dico_catalogues.keys()
       liste_choix.sort()
 
-      lab=QString(VERSION_EFICAS)
+      lab=QString(self.VERSION_EFICAS)
       lab+=QString(" pour ")
       lab+=QString(self.code) 
       lab+=QString(" avec le catalogue ")
@@ -229,7 +230,7 @@ class READERCATA:
       widgetChoix=MonChoixCata(liste_choix,self, self.appliEficas, "", True )
       ret=widgetChoix.exec_()
       
-      lab=QString(VERSION_EFICAS)
+      lab=QString(self.VERSION_EFICAS)
       lab+=QString(" pour ")
       lab+=QString(self.code) 
       lab+=QString(" avec le catalogue ")

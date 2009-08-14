@@ -1,5 +1,6 @@
 from PyQt4 import *
 from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 import os
 
 
@@ -10,7 +11,11 @@ def traduction(directPath,editor,version):
     if version == "V8V9" : 
        from Traducteur import traduitV8V9 
        suffixe="v9.comm"
-    fn = QFileDialog.getOpenFileName( QString(directPath) , "")
+    fn = QFileDialog.getOpenFileName( 
+   			editor.appliEficas,
+                        editor.appliEficas.trUtf8('Traduire Fichier'),
+			QString(directPath) ,
+                        editor.appliEficas.trUtf8('JDC Files (*.comm);;''All Files (*)'))
 
     FichieraTraduire=str(fn)
     if (FichieraTraduire == "" or FichieraTraduire == () ) : return
@@ -43,10 +48,10 @@ def traduction(directPath,editor,version):
        except :
          pass
 
-    from desVisu import DVisu
+    from monVisu import DVisu
     titre = "conversion de "+ FichieraTraduire
-    monVisu=DVisu(parent=editor,fl=Qt.WType_Dialog)
-    monVisu.setCaption(titre)
-    monVisu.TB.setText(texte)
-    monVisu.show()
+    monVisuDialg=DVisu(parent=editor.appliEficas,fl=0)
+    monVisuDialg.setWindowTitle(titre)
+    monVisuDialg.TB.setText(texte)
+    monVisuDialg.show()
 

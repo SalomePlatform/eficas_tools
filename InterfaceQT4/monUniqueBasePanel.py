@@ -67,6 +67,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         self.InitCommentaire()
         self.detruitBouton()
         self.connecterSignaux()
+        self.lineEditVal.setFocus()
 
   def connecterSignaux(self) :
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOk2Pressed)

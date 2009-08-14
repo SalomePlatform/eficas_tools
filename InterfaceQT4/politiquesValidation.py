@@ -62,10 +62,14 @@ class Validation  :
                         if str(clef) != str(texteValeur) :
                            self.node.item.object.init_modif()
                            clefobj=self.node.item.object.GetNomConcept()
-                           if not self.parent.dict_reels.has_key(clefobj):
-                              self.parent.dict_reels[clefobj] = {}
-                           self.parent.dict_reels[clefobj][clef]=texteValeur
-                           self.parent.dict_reels[clefobj]
+                           if not self.parent.appliEficas.dict_reels.has_key(clefobj):
+                              self.parent.appliEficas.dict_reels[clefobj] = {}
+                           self.parent.appliEficas.dict_reels[clefobj][clef]=texteValeur
+                           self.parent.appliEficas.dict_reels[clefobj]
+                           if clefobj=="" : 
+                              if not self.parent.appliEficas.dict_reels.has_key(self.node.item.object.etape) :
+                                 self.parent.appliEficas.dict_reels[self.node.item.object.etape] = {}
+                              self.parent.appliEficas.dict_reels[self.node.item.object.etape][clef]=texteValeur
                            self.node.item.object.fin_modif()
          except:
             pass
@@ -74,10 +78,41 @@ class Validation  :
          valeurTexte=valeur
          if "R" in self.node.item.object.definition.type:
                   clefobj=self.node.item.object.GetNomConcept()
-                  if self.parent.dict_reels.has_key(clefobj):
-                     if self.parent.dict_reels[clefobj].has_key(valeur):
-                        valeurTexte=self.parent.dict_reels[clefobj][valeur]
+                  if self.parent.appliEficas.dict_reels.has_key(clefobj):
+                     if self.parent.appliEficas.dict_reels[clefobj].has_key(valeur):
+                        valeurTexte=self.parent.appliEficas.dict_reels[clefobj][valeur]
          return valeurTexte
+
+  def AjoutDsDictReel(self,texteValeur):
+         try :
+            if "R" in self.node.item.object.definition.type:
+                if str(texteValeur)[0] != "'":
+                   clef=eval(texteValeur)
+                   if str(clef) != str(texteValeur) :
+                      clefobj=self.node.item.object.GetNomConcept()
+                      if not self.parent.appliEficas.dict_reels.has_key(clefobj):
+                          self.parent.appliEficas.dict_reels[clefobj] = {}
+                      self.parent.appliEficas.dict_reels[clefobj][clef]=texteValeur
+                      if clefobj=="" : 
+                         if not self.parent.appliEficas.dict_reels.has_key(self.node.item.object.etape) :
+                            self.parent.appliEficas.dict_reels[self.node.item.object.etape] = {}
+                         self.parent.appliEficas.dict_reels[self.node.item.object.etape][clef]=texteValeur
+                          
+         except:
+          #else :
+            #print "pb ds try de AjoutDsDictReel"
+            pass
+
+  def AjoutDsDictReelEtape(self):
+      print self.parent.appliEficas.dict_reels
+      print self.node.item.object
+      try:
+         if self.parent.appliEficas.dict_reels.has_key(self.node.item.object) :
+            self.parent.appliEficas.dict_reels[self.node.item.sdnom]=self.parent.appliEficas.dict_reels[self.node.item.object]
+            del self.parent.appliEficas.dict_reels[self.node.item.object]
+      except :
+         pass
+
 
 #------------------------------------
 class PolitiqueUnique(Validation) :
@@ -104,9 +139,9 @@ class PolitiqueUnique(Validation) :
          return validite, commentaire 
 
  
-#------------------------
-class PolitiquePlusieurs:
-#------------------------
+#--------------------------------------
+class PolitiquePlusieurs(Validation):
+#--------------------------------------
   """
   classe servant pour les entrees ne demandant qu un mot clef
   """
@@ -120,14 +155,15 @@ class PolitiquePlusieurs:
          commentaire="Nouvelle valeur acceptée"
          commentaire2=""
          valide=1
+         if listevaleur==None: return
+         if listevaleur=="": return
          if not( type(listevaleur)  in (types.ListType,types.TupleType)) :
             listevaleur=tuple(listevaleur)
          for valeur in listevaleur :
              # On teste le type de la valeur
+             valeurScientifique=valeur
              valide=self.node.item.valide_item(valeur)
              if not valide :
-                #print self.__class__
-                #if not testtype :
                 try :
                    valeur,valide=self.node.item.eval_valeur(valeur)
                    valide,commentaire = self.node.item.object.verif_type(valeur)
@@ -149,8 +185,10 @@ class PolitiquePlusieurs:
                    commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
                    return valide,commentaire,commentaire2,listeRetour
                 if len(listecourante) + 1 > min :
+                   commentaire=""
                    return valide,commentaire,commentaire2,listeRetour
              # On ajoute la valeur testee a la liste courante et a la liste acceptee
+             self.AjoutDsDictReel(valeurScientifique)
              listecourante.insert(index,valeur)
              index=index+1
              listeRetour.append(valeur)

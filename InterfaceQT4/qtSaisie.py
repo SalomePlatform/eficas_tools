@@ -62,7 +62,8 @@ class SaisieValeur:
         for valeur in lChoix :
             self.listBoxVal.addItem( str(valeur) ) 
         if len(lChoix) == 1 :
-            self.listBoxVal.setCurrentRow(1)
+            self.listBoxVal.setCurrentRow(0)
+            self.listBoxVal.item(0).setSelected(1)
 
   def ClicASSD(self):
          if self.listBoxASSD.currentItem()== None : return

@@ -18,31 +18,30 @@
 #
 #
 # ======================================================================
-"""
-"""
-from Tkinter import Menu
+# Modules Python
+# Modules Eficas
 
-class MENUBAR:
-   def __init__(self,appli,parent):
-      # L'attribut appli pointe vers l'objet application qui détient la menubar et les autres composants
-      self.appli=appli
-      # L'attribut parent pointe vers l'objet graphique parent de la menubar
-      self.parent=parent
-      self.menubar=Menu(self.parent)
-      self.parent.configure(menu=self.menubar)
-      self.init()
+from desVisu import Ui_DVisu
+from PyQt4  import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 
-   try:
-      import prefs
-      name='prefs_'+prefs.code
-      from prefsCode import labels
-   except:
-      labels= ('Fichier','Edition','Jeu de commandes','Catalogue','Options','Aide','Traduction')
+# Import des panels
 
-   def init(self):
-      self.menudict={}
-      for label in self.labels:
-         menu=Menu(self.menubar,tearoff=0)
-         self.menudict[label]=menu
-         self.menubar.add_cascade(label=label,menu=menu)
+class DVisu(Ui_DVisu ,QtGui.QDialog):
+  """
+  Classe définissant le panel associé aux mots-clés qui demandent
+  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrètes
+  """
+  def __init__(self,parent = None , name = None,fl = 0):
+      QtGui.QDialog.__init__(self,parent)
+      self.setModal(True)
+      self.setupUi(self)
+
+  def on_buttonCancel_clicked(self):
+      QDialog.reject(self)
+
+  def on_buttonOk_clicked(self):
+      QDialog.accept(self)
 

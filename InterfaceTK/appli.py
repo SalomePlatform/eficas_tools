@@ -36,6 +36,8 @@ from widgets import showerror
 # Modules Eficas
 import splash
 import prefs
+name='prefs_'+prefs.code
+prefsCode=__import__(name)
 import styles
 from styles import style
 import fontes
@@ -64,6 +66,7 @@ class APPLI:
       self.salome=salome
       self.top=master
       self.top.protocol("WM_DELETE_WINDOW",self.exitEFICAS)
+      self.appliEficas=self
 
       #dimensionnement de la fenetre principale
       #aspect ratio de l'ecran
@@ -138,8 +141,8 @@ class APPLI:
       if (self.test == 0):
          splash._splash.configure(text = "Chargement des paramètres utilisateur")
       import configuration
-      self.CONFIGURATION = configuration.make_config(self,prefs.REPINI)
-      self.CONFIGStyle = configuration.make_config_style(self,prefs.REPINI)
+      self.CONFIGURATION = configuration.make_config(self,prefsCode.REPINI)
+      self.CONFIGStyle = configuration.make_config_style(self,prefsCode.REPINI)
 
   def cree_composants_graphiques(self):
       """

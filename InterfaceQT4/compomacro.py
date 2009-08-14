@@ -123,9 +123,10 @@ class MATERIAUNode(MACRONode):
       texte = f.read()
       f.close()
       from desVisu import DVisu
-      monVisu=DVisu(parent=self.editor,fl=Qt.WType_Dialog)
-      monVisu.TB.setText(texte)
-      monVisu.show()
+      monVisuDialg=DVisu(parent=self.editor.appliEficas,fl=0)
+      monVisuDialg.TB.setText(texte)
+      monVisuDialg.show()
+
 
 class INCLUDE_MATERIAUTreeItem(INCLUDETreeItemBase):
     itemNode=MATERIAUNode

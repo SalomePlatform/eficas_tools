@@ -29,6 +29,8 @@ import widgets
 from widgets import ListeChoix, showerror
 from widgets import ListeChoixParGroupes
 import prefs
+name='prefs_'+prefs.code
+prefsCode=__import__(name)
 import options
 
 SEPARATEUR = '-'*30
@@ -217,7 +219,7 @@ class Panel(Frame) :
       texte_infos = ''
       for e in cmd.entites.keys() :
           if e == name :
-              texte_infos=getattr(cmd.entites[e],prefs.lang)
+              texte_infos=getattr(cmd.entites[e],prefsCode.lang)
               break
       if texte_infos == '' : texte_infos="Pas d'infos disponibles"
       self.parent.appli.affiche_infos(texte_infos)
@@ -234,7 +236,7 @@ class Panel(Frame) :
   def selectCmd(self,name):
       """ On retrouve la commande sous le curseur pour affichage du fr """
       if name != 'COMMENTAIRE' and name != SEPARATEUR:
-          texte_infos=getattr(self.parent.jdc.get_cmd(name),prefs.lang)
+          texte_infos=getattr(self.parent.jdc.get_cmd(name),prefsCode.lang)
           self.parent.appli.affiche_infos(texte_infos)
           
   def defCmd(self,name):

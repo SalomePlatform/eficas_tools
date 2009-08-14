@@ -19,8 +19,11 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         
         # Attention l ordre des if est important        
 
+        if self.item.wait_matrice ():
+	        from monMatricePanel import MonMatricePanel
+                klass=MonMatricePanel
         # l'objet prend sa (ses) valeur(s) dans un ensemble discret de valeurs
-        if self.item.has_into():
+        elif self.item.has_into():
             if self.item.is_list() :
                 from monPlusieursIntoPanel import MonPlusieursIntoPanel
                 klass = MonPlusieursIntoPanel
@@ -139,20 +142,6 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
          is_a_list= self.definition.validators.is_list() * is_a_list
       return is_a_list 
 
-  #def get_into(self,liste_courante=None):
-  #    """
-  #        Cette méthode retourne la liste de choix proposée par le mot cle. Si le mot cle ne propose
-  #        pas de liste de choix, la méthode retourne None.
-  #        L'argument d'entrée liste_courante, s'il est différent de None, donne la liste des choix déja
-  #        effectués par l'utilisateur. Dans ce cas, la méthode get_into doit calculer la liste des choix
-  #        en en tenant compte.
-  #        Cette méthode part du principe que la relation entre into du mot clé et les validateurs est
-  #        une relation de type ET (AndVal).
-  #    """
-  #    if not self.object.definition.validators :
-  #       return self.object.definition.into
-  #    else:
-  #       return self.object.definition.validators.get_into(liste_courante,self.definition.into)
 
   def has_into(self):
       """
@@ -426,9 +415,17 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
         
   def wait_tuple(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self
-      attend un shell, 0 sinon """
+      attend un Tuple, 0 sinon """
       for ss_type in self.object.definition.type:
           if repr(ss_type).find('Tuple') != -1 :
+             return 1
+      return 0
+
+  def wait_matrice(self):
+      """ Méthode booléenne qui retourne 1 si l'objet pointé par self
+      attend un Tuple, 0 sinon """
+      for ss_type in self.object.definition.type:
+          if repr(ss_type).find('Matrice') != -1 :
              return 1
       return 0
 

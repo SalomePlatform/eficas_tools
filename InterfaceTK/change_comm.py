@@ -30,6 +30,8 @@ import os
 from Editeur import import_code
 from Editeur import session
 import prefs
+name='prefs_'+prefs.code
+prefsCode=__import__(name)
 import convert
 import generator
 import string
@@ -47,7 +49,7 @@ class DUP :
        self.top=None
        self.test=2
        import configuration
-       self.CONFIGURATION=configuration.make_config(self,prefs.REPINI)
+       self.CONFIGURATION=configuration.make_config(self,prefsCode.REPINI)
 
        self.load_readercata()
        self.cata=self.readercata.cata

@@ -77,24 +77,32 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         listeValeurs=self.node.item.GetListeValeurs()
         if self.node.item.wait_tuple()== 1 :
 	      listeATraiter=listeValeurs
+              for valeur in listeATraiter:
+                  str_valeur=str(valeur)
+                  self.LBValeurs.addItem(str_valeur)
         else : 
-              listeATraiter=self.DecoupeListeValeurs(listeValeurs)
-        for valeur in listeATraiter:
-            str_valeur=str(valeur)
-            self.LBValeurs.addItem(str_valeur)
+	      for valeur in self.DecoupeListeValeurs(listeValeurs):
+                   if type(valeur) == types.TupleType:
+                       TupleEnTexte="("
+                       for val in valeur :
+                           TupleEnTexte = TupleEnTexte + str(self.politique.GetValeurTexte(val)) +", "
+                       TupleEnTexte = TupleEnTexte[0:-2] +")"
+                       print TupleEnTexte
+                       self.LBValeurs.addItem(TupleEnTexte)
+                   else :
+                       self.LBValeurs.addItem(QString(str(valeur)))
+
 
   def  Ajout1Valeur(self,liste=[]):
         # Pour être appele a partir du Panel Importer (donc plusieurs fois par AjouterNValeur)
+        validite=1
         if liste == [] :
            if self.node.item.wait_tuple()== 1 :
               liste=SaisieValeur.TraiteLEValeurTuple(self)
               if liste == [''] : return
-              validite=1
            else :
               liste,validite=SaisieValeur.TraiteLEValeur(self)
-        else :
-           validite=1
-        if validite == 0 : return
+              if validite == 0 : return
         if liste ==[]    : return
 
         if len(liste) != self.nbValeurs :
@@ -109,14 +117,15 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         if self.node.item.wait_tuple()== 1 :
               liste2=tuple(liste)
               liste=liste2
+
         index=self.LBValeurs.currentRow()
         if ((self.LBValeurs.isItemSelected(self.LBValeurs.item(index )) == 0) and (index > 0 )):
            index=0
         else :
            index=self.LBValeurs.currentRow() + 1
         indexListe=index*self.nbValeurs
-        if index == 0 : 
-           indexListe=len(self.listeValeursCourantes)
+        if index == 0 : indexListe=len(self.listeValeursCourantes)
+
         listeVal=[]
         for valeur in self.listeValeursCourantes :
                 listeVal.append(valeur)
@@ -137,7 +146,13 @@ class MonFonctionPanel(MonPlusieursBasePanel):
            else : 
               listeATraiter=self.DecoupeListeValeurs(listeRetour)
            for valeur in  listeATraiter :
-               str_valeur=str(valeur)
+               if type(valeur) == types.TupleType:
+                  TupleEnTexte="("
+                  for val in valeur :
+                      TupleEnTexte = TupleEnTexte + str(self.politique.GetValeurTexte(val)) +", "
+                  str_valeur = TupleEnTexte[0:-2] +")"
+               else :
+                  str_valeur=str(valeur)
                self.LBValeurs.insertItem(index,str_valeur)
                item=self.LBValeurs.item(index)
                item.setSelected(1)

@@ -61,7 +61,8 @@ class MonRacinePanel(DRac,QTPanelTBW2):
         self.connecterSignaux()
         QTPanel.__init__(self,node,parent)
         QTPanelTBW2.__init__(self,node,parent,racine=1)
-        self.a=0
+        self.LEFiltre.setFocus()
+
 
   def connecterSignaux(self):
         self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)

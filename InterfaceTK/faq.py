@@ -29,6 +29,8 @@ from Tkinter import END
 
 # Modules Eficas
 import prefs
+name='prefs_'+prefs.code
+prefsCode=__import__(name)
 import fontes
 
 class FAQ:
@@ -38,7 +40,7 @@ class FAQ:
                                buttons=('Lu',),
                                title="FAQs et limitations d'EFICAS",
                                command = self.lu_FAQ)
-      txt = open(os.path.join(prefs.INSTALLDIR,'Editeur','faqs.txt'),'r').read()
+      txt = open(os.path.join(prefsCode.INSTALLDIR,'Editeur','faqs.txt'),'r').read()
       Texte = Pmw.ScrolledText(self.Dialog.interior(),
                                text_font=fontes.standard)
       Texte.insert(END,txt)

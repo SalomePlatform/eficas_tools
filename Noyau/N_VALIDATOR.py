@@ -126,6 +126,10 @@ class TypeProtocol(PProtocol):
                 if type(obj)==types.StringType:return obj
             elif type(type_permis) == types.ClassType or isinstance(type_permis,type):
                 if self.is_object_from(obj,type_permis):return obj
+            elif type_permis == 'Fichier' :
+                 import os
+                 if os.path.isfile(obj):return obj
+                 else : raise ValError("%s n'est pas un fichier valide" % repr(obj))
             elif type(type_permis) == types.InstanceType or isinstance(type_permis,object):
                 try:
                     if type_permis.__convert__(obj) : return obj

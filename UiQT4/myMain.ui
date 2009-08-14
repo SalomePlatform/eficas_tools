@@ -57,6 +57,8 @@
     <property name="title" >
      <string>&amp;Aide</string>
     </property>
+    <addaction name="actionEficas" />
+    <addaction name="actionVersion" />
    </widget>
    <widget class="QMenu" name="menuOptions" >
     <property name="title" >
@@ -243,6 +245,16 @@
   <action name="actionTraduitV8V9" >
    <property name="text" >
     <string>TraduitV8V9</string>
+   </property>
+  </action>
+  <action name="actionEficas" >
+   <property name="text" >
+    <string>Eficas</string>
+   </property>
+  </action>
+  <action name="actionVersion" >
+   <property name="text" >
+    <string>Version</string>
    </property>
   </action>
  </widget>

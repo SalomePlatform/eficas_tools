@@ -80,9 +80,9 @@ class MCSIMP(I_OBJECT.OBJECT):
       # Traitement d'un flottant isolé
       txt = str(self.valeur)
       clefobj=self.GetNomConcept()
-      if self.jdc.appli.dict_reels.has_key(clefobj):
-        if self.jdc.appli.dict_reels[clefobj].has_key(self.valeur):
-           txt=self.jdc.appli.dict_reels[clefobj][self.valeur]
+      if self.jdc.appli.appliEficas.dict_reels.has_key(clefobj):
+        if self.jdc.appli.appliEficas.dict_reels[clefobj].has_key(self.valeur):
+           txt=self.jdc.appli.appliEficas.dict_reels[clefobj][self.valeur]
     elif type(self.valeur) in (types.ListType,types.TupleType) :
       # Traitement des listes
       txt='('
@@ -90,9 +90,9 @@ class MCSIMP(I_OBJECT.OBJECT):
       for val in self.valeur:
         if type(val) == types.FloatType : 
            clefobj=self.GetNomConcept()
-           if self.jdc.appli.dict_reels.has_key(clefobj):
-              if self.jdc.appli.dict_reels[clefobj].has_key(val):
-                 txt=txt + sep +self.jdc.appli.dict_reels[clefobj][val]
+           if self.jdc.appli.appliEficas.dict_reels.has_key(clefobj):
+              if self.jdc.appli.appliEficas.dict_reels[clefobj].has_key(val):
+                 txt=txt + sep +self.jdc.appli.appliEficas.dict_reels[clefobj][val]
               else :
                  txt=txt + sep + str(val)
            else :
@@ -123,9 +123,9 @@ class MCSIMP(I_OBJECT.OBJECT):
     val=self.valeur
     if type(val) == types.FloatType : 
       clefobj=self.GetNomConcept()
-      if self.jdc.appli.dict_reels.has_key(clefobj):
-        if self.jdc.appli.dict_reels[clefobj].has_key(val):
-           return self.jdc.appli.dict_reels[clefobj][val]
+      if self.jdc.appli.appliEficas.dict_reels.has_key(clefobj):
+        if self.jdc.appli.appliEficas.appliEficas.dict_reels[clefobj].has_key(val):
+           return self.jdc.appli.appliEficas.dict_reels[clefobj][val]
     if type(val) != types.TupleType :
       try:
         return val.get_name()

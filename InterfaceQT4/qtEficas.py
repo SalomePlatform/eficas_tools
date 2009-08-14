@@ -19,6 +19,8 @@ class Appli(Ui_Eficas,QMainWindow):
         """
         Constructor
         """
+        print self
+        self.VERSION_EFICAS="Eficas QT4 V1.17"
         self.ihm="QT"
         self.code=code
         self.salome=salome
@@ -26,6 +28,7 @@ class Appli(Ui_Eficas,QMainWindow):
 	self.top = self #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
         self.indice=0
+        self.dict_reels={}
 
         import prefs
         if salome :
@@ -38,6 +41,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.REPINI=prefsCode.REPINI
         self.RepIcon=prefsCode.INSTALLDIR+"/Editeur/icons"
+        self.INSTALLDIR=prefsCode.INSTALLDIR
         self.CONFIGURATION = configuration.make_config(self,prefsCode.REPINI)
         self.CONFIGStyle = configuration.make_config_style(self,prefsCode.REPINI)
         if hasattr(prefsCode,'encoding'):
@@ -54,7 +58,6 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connecterSignaux() 
 
 
-        #self.monAssistant=QAssistantClient(QString(""), self.viewmanager)
         #if self.salome :
         #   from Editeur import session
         #   self.ouvreFichiers()
@@ -66,6 +69,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.initRecents()
 
         self.ouvreFichiers()
+        self.setWindowTitle(self.VERSION_EFICAS)
         
     def OPENTURNS(self) :
         self.MenuBar.removeItem(5)
@@ -100,6 +104,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionFermer_tout,SIGNAL("activated()"),self.fileCloseAll)
         self.connect(self.actionQuitter,SIGNAL("activated()"),self.fileExit)
 
+        self.connect(self.actionEficas,SIGNAL("activated()"),self.aidePPal)
+        self.connect(self.actionVersion,SIGNAL("activated()"),self.version)
+
         self.connect(self.actionCouper,SIGNAL("activated()"),self.editCut)
         self.connect(self.actionCopier,SIGNAL("activated()"),self.editCopy)
         self.connect(self.actionColler,SIGNAL("activated()"),self.editPaste)
@@ -116,8 +123,6 @@ class Appli(Ui_Eficas,QMainWindow):
 
         #self.connect(self.helpIndexAction,SIGNAL("activated()"),self.helpIndex)
         #self.connect(self.helpContentsAction,SIGNAL("activated()"),self.helpContents)
-        #self.connect(self.helpAboutAction,SIGNAL("activated()"),self.helpAbout)
-        #self.connect(self.aidenew_itemAction,SIGNAL("activated()"),self.helpAbout)
                              
 
     def ouvreFichiers(self) :
@@ -211,18 +216,22 @@ class Appli(Ui_Eficas,QMainWindow):
         traduction(self.CONFIGURATION.rep_user,self.viewmanager,"V8V9")
 
     def version(self) :
-        from desVisu import DVisu
+        from monVisu import DVisu
         titre = "version "
-        monVisu=DVisu(parent=self.viewmanager)
-        monVisu.setCaption(titre)
-        monVisu.TB.setText("Eficas V1.13")
-        monVisu.adjustSize()
-        monVisu.show()
+        monVisuDialg=DVisu(parent=self,fl=0)
+        monVisuDialg.setWindowTitle(titre)
+        monVisuDialg.TB.setText(self.VERSION_EFICAS +QString(" pour ") + self.code)
+        monVisuDialg.adjustSize()
+        monVisuDialg.show()
 
     def aidePPal(self) :
-        maD=INSTALLDIR+"/AIDE/fichiers"
-        docsPath = QDir(maD).absPath()
-        self.monAssistant.showPage( QString("%1/index.html").arg(docsPath) )
+        maD=self.INSTALLDIR+"/Aide"
+        docsPath = QDir(maD).absolutePath()
+        monAssistant=QAssistantClient(QString(""), self)
+        arguments=QStringList()
+        arguments << "-profile" <<docsPath+QDir.separator()+QString("eficas_")+QString(self.code)+QString(".adp");
+        monAssistant.setArguments(arguments);
+        monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
 
     def optionEditeur(self) :
         from monOptionsEditeur import Options
@@ -280,11 +289,12 @@ class Appli(Ui_Eficas,QMainWindow):
         
     def fileExit(self):
         # On peut sortir sur Abort
-        self.viewmanager.handleCloseAll()
-        if self.salome :
-           self.close()
-        else :
-           qApp.closeAllWindows()
+        res=self.viewmanager.handleCloseAll()
+        if (res != 2) : 
+           if self.salome :
+              self.close()
+           else :
+              qApp.closeAllWindows()
         
     def editCopy(self):
         self.viewmanager.handleEditCopy()
@@ -304,9 +314,6 @@ class Appli(Ui_Eficas,QMainWindow):
     def visuJdcPy(self):
         self.viewmanager.handleViewJdcPy()
 
-    def helpAbout(self):
-        import AIDE
-        AIDE.go3(parent=self)
 
     def NewInclude(self):
         self.viewmanager.newIncludeEditor()

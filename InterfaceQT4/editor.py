@@ -35,7 +35,6 @@ import readercata
 import qtCommun
 
 
-VERSION_EFICAS  = "EFICAS v1.16"
 
 
 class JDCEditor(QSplitter):
@@ -67,7 +66,7 @@ class JDCEditor(QSplitter):
 
         self.code = self.appliEficas.CONFIGURATION.code
         self.version_code = VERSION_CODE
-        self.titre=VERSION_EFICAS + ' pour '+ self.code
+        self.titre=self.appliEficas.VERSION_EFICAS + ' pour '+ self.code
 
         self.dict_reels={}
         self.liste_simp_reel=[]        
@@ -207,10 +206,10 @@ class JDCEditor(QSplitter):
         # Il faut convertir le contenu du fichier en fonction du format
         if convert.plugins.has_key( self.appliEficas.format_fichier ):
              # Le convertisseur existe on l'utilise
-             appli = self 
+             #appli = self 
              p=convert.plugins[self.appliEficas.format_fichier]()
              p.readfile(fn)         
-             text=p.convert('exec',appli)
+             text=p.convert('exec',self.appliEficas)
              if not p.cr.estvide():                 
                 self.affiche_infos("Erreur à la conversion")
         else :

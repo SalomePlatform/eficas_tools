@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 import prefs
+name='prefs_'+prefs.code
+prefsCode=__import__(name)
 import basestyle
 from basestyle import STYLE,style
 
-inistylefile=os.path.join(prefs.REPINI,"style.py")
+inistylefile=os.path.join(prefsCode.REPINI,"style.py")
 if os.path.isfile(inistylefile):
    execfile(inistylefile)
 

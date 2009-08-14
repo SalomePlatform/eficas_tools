@@ -28,11 +28,13 @@ import Tkinter
 
 # Modules Eficas
 import prefs
-if hasattr(prefs,'encoding'):
+name='prefs_'+prefs.code
+prefsCode=__import__(name)
+if hasattr(prefsCode,'encoding'):
    # Hack pour changer le codage par defaut des strings
    import sys
    reload(sys)
-   sys.setdefaultencoding(prefs.encoding)
+   sys.setdefaultencoding(prefsCode.encoding)
    del sys.setdefaultencoding
    # Fin hack
 

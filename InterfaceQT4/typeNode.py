@@ -100,6 +100,8 @@ class PopUpMenuNodePartiel (PopUpMenuNodeMinimal):
         self.paramMenu.addAction(self.ParamApres)
         self.paramMenu.addAction(self.ParamAvant)
         self.menu.addAction(self.Documentation)
+        self.menu.removeAction(self.Supprime)
+        self.menu.addAction(self.Supprime)
 
 
 #-----------------------------------------#
@@ -111,6 +113,8 @@ class PopUpMenuNode(PopUpMenuNodePartiel) :
         self.tree.connect(self.Commente,SIGNAL("activated()"),self.Commenter)
         self.Commente.setStatusTip("commente le noeud ")
         self.commentMenu.addAction(self.Commente)
+        self.menu.removeAction(self.Supprime)
+        self.menu.addAction(self.Supprime)
 
     def Commenter(self):
         item= self.tree.currentItem()

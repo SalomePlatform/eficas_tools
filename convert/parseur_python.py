@@ -613,6 +613,7 @@ class PARSEUR_PYTHON:
              dict_reel_concept=construit_genea(epure2,self.appli.liste_simp_reel)
            else:
              dict_reel_concept={}
+        if nomConpet='sansnom' : nomConcept=''
         if nomConcept !=None :
            if len(dict_reel_concept) != 0:
               self.appli.dict_reels[nomConcept]=dict_reel_concept
@@ -623,10 +624,12 @@ class PARSEUR_PYTHON:
         """
         self.appli=appli
         try:
+        #if 1:
             if not self.l_objets : self.analyse()
             txt=''
             for obj in self.l_objets:
                 txt = txt+str(obj)
+        #else :
         except ParserException:
             #Impossible de convertir le texte, on le retourne tel que
             txt=self.texte

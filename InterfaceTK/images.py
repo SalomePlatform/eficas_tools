@@ -42,7 +42,9 @@ if __name__ == '__main__':
 
 try:
    import prefs
-   ICONDIR=prefs.ICONDIR
+   name='prefs_'+prefs.code
+   prefsCode=__import__(name)
+   ICONDIR=prefsCode.ICONDIR
 except:
    # Par defaut on utilise le repertoire local icons
    ICONDIR=os.path.join(os.path.abspath(os.path.dirname(__file__)),'/Editeur/icons')

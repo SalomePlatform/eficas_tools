@@ -73,6 +73,16 @@ class JDC(I_OBJECT.OBJECT):
       l.sort()
       return l
 
+   def get_variables_avant(self,etape):
+      # voir le sort avec IDM 
+      d=self.get_contexte_avant(etape)
+      l=[]
+      for k,v in d.items():
+          if str(type(v)).find('variable') > -1 :
+	      l.append(k)
+      l.sort()
+      return l
+
    def get_sd_avant_du_bon_type_pour_type_de_base(self,etape,type):
       """
           Retourne la liste des concepts avant etape d'1 type de base acceptable

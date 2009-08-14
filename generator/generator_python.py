@@ -476,9 +476,9 @@ class PythonGenerator:
          # ou la notation scientifique
          s = str(valeur)
          clefobj=etape.get_sdname()
-         if self.appli and self.appli.dict_reels.has_key(clefobj):
-           if self.appli.dict_reels[clefobj].has_key(valeur):
-             s=self.appli.dict_reels[clefobj][valeur]
+         if self.appli.appliEficas and self.appli.appliEficas.dict_reels.has_key(clefobj):
+           if self.appli.appliEficas.dict_reels[clefobj].has_key(valeur):
+             s=self.appli.appliEficas.dict_reels[clefobj][valeur]
       elif type(valeur) == types.StringType :
          if valeur.find('\n') == -1:
             # pas de retour chariot, on utilise repr

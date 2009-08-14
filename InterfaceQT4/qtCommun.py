@@ -136,6 +136,7 @@ class QTPanelTBW2(QTPanel):
         self.editor    = parent
         self.node      = node
         self.BuildLBNouvCommande()
+        self.LEFiltre.setFocus()
         self.NbRecherches = 0
         if racine == 1 :
            self.AppelleBuildLBRegles()
@@ -145,9 +146,9 @@ class QTPanelTBW2(QTPanel):
 
   def handleCurrentChanged(self):
         try :
-           self.LEFiltre.setFocus()
+            self.LEFiltre.setFocus()
         except :
-           pass
+            pass
 
       
   def BuildLBNouvCommande(self):
@@ -262,6 +263,10 @@ class QTPanelTBW3(QTPanel):
         if nom == '' : return                  # si pas de nom, on ressort sans rien faire
         self.editor.init_modif()
         test,mess = self.node.item.nomme_sd(nom)
+        #Notation scientifique
+        from politiquesValidation import Validation
+        validation=Validation(self.node,self.editor)
+        validation.AjoutDsDictReelEtape()
         self.editor.affiche_infos(mess)
 
 # ------------------------------- #
