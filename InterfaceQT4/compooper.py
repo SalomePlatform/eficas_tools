@@ -92,6 +92,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
             exec script in d
         except:
         #else:
+            traceback.print_exc()
             QMessageBox.warning(
                 None,
                 self.appliEficas.trUtf8("Erreur interne"),

@@ -25,7 +25,7 @@ headerSTD = """#! /usr/bin/env python
 
 # Chargement du module systeme
 import sys
-sys.path.append( '%s' )
+sys.path[:0]=['%s']
 
 # Chargement du module math
 import math
@@ -1310,7 +1310,7 @@ class STDGenerateur :
     '''
     Produit une image PNG representant la PDF de la loi
     '''
-    txt  = headerSTD
+    txt  = headerSTD % self.OpenTURNS_path
     txt += "dist = %s\n" % apply( STDGenerateur.__dict__[ loi[ 'Kind' ] ], (self, loi) )
     txt += "graph = dist.drawPDF()\n"
     txt += "graph.draw( '%s' )\n" % fichier

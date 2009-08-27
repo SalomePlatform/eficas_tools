@@ -45,8 +45,7 @@ exec_acrobat    = "/usr/bin/xpdf"
 
 
 # OpenTURNS Python module
-OpenTURNS_path="/opt/OpenTURNS/install/lib/python2.4/site-packages"
+OpenTURNS_path="/local00/home/dutka/OpenTURNS/merge/trunk/build/install/lib/python2.4/site-packages"
 # Choix des catalogues
-sys.path[:0]=[INSTALLDIR]
-sys.path.append( OpenTURNS_path )
+sys.path[:0]=[INSTALLDIR, OpenTURNS_path]
 
