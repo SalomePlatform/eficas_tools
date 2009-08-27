@@ -32,9 +32,7 @@ from PyQt4.QtCore import *
 
 class MonLabelPixmap(Ui_LabelPixmap,QtGui.QDialog):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  classe servant a afficher le PDF d une loi pour Openturns
   """
   def __init__(self, QWparent , fichier, name):
       QtGui.QDialog.__init__(self,QWparent)

@@ -613,7 +613,8 @@ class PARSEUR_PYTHON:
              dict_reel_concept=construit_genea(epure2,self.appli.liste_simp_reel)
            else:
              dict_reel_concept={}
-        if nomConpet='sansnom' : nomConcept=''
+        if nomConcept == "sansnom" :
+           nomConcept = ""
         if nomConcept !=None :
            if len(dict_reel_concept) != 0:
               self.appli.dict_reels[nomConcept]=dict_reel_concept
