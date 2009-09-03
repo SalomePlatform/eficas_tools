@@ -766,11 +766,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       if hasattr(self,'fichier_ini') : return
       if fichier == None :
          fichier=str(self.jdc.appli.get_file_variable())
-         #print fichier
          if fichier  == str("") : 
            self.fichier_ini="badfile"
            self.fichier_text=""
-	   self.fichier_err="Le fichier INCLUDE n est pas defini"
+	   self.fichier_err="Le fichier n est pas defini"
            self.parent.record_unit(999,self)
            try :
               MCFils=self.get_child('FileName')
@@ -821,7 +820,16 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
             pass
       except:
          self.make_incl2_except()
-         raise
+      # recalcul validite pour la matrice eventuelle
+      for e in self.jdc.etapes:
+          if e.nom=="CORRELATION":
+             e.state="changed"
+             try :
+               MCFils=e.get_child('LaCopule')
+               MCFils.state="changed"
+             except :
+               pass
+             e.isvalid()
 
   def make_incl2_except(self):
          l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])

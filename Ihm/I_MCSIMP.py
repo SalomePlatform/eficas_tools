@@ -53,6 +53,15 @@ from I_VALIDATOR import ValError,listProto
 
 class MCSIMP(I_OBJECT.OBJECT):
 
+  def isvalid(self,cr='non'):
+      if self.state == 'unchanged':
+        return self.valid
+      for type_permis in self.definition.type:
+          if type_permis.__class__.__name__ == 'Matrice' :
+             self.monType=type_permis
+             return self.valideMatrice(cr=cr)
+      return Validation.V_MCSIMP.MCSIMP.isvalid(self,cr=cr)
+
   def GetNomConcept(self):
       p=self
       while p.parent :
@@ -368,8 +377,8 @@ class MCSIMP(I_OBJECT.OBJECT):
         Fonction :
         Met a jour la valeur du mot cle simple suite à la disparition 
         du concept sd
+        Attention aux matrices
     """
-    #print "delete_concept",sd
     if type(self.valeur) == types.TupleType :
       if sd in self.valeur:
         self.init_modif()
@@ -387,6 +396,14 @@ class MCSIMP(I_OBJECT.OBJECT):
         self.valeur=None
         self.val=None
         self.fin_modif()
+    # Glut Horrible pour les matrices ???
+    if sd.__class__.__name__== "variable":
+       for type_permis in self.definition.type:
+            if type(type_permis) == types.InstanceType:
+               if type_permis.__class__.__name__ == 'Matrice' :
+                   self.state="changed"
+                   self.isvalid()
+                  
 
   def replace_concept(self,old_sd,sd):
     """
@@ -563,6 +580,34 @@ class MCSIMP(I_OBJECT.OBJECT):
           valid=0
       return valid,comment
 
+  def valideMatrice(self,cr):
+       if self.monType.methodeCalculTaille != None :
+           apply (MCSIMP.__dict__[self.monType.methodeCalculTaille],(self,))
+       #try :
+       if 1 :
+           ok=0
+           if len(self.valeur) == self.monType.nbLigs:
+              ok=1
+              for i in range(len(self.valeur)):
+                  if len(self.valeur[i])!= self.monType.nbCols:
+                     ok=0
+           if ok: 
+              self.set_valid(1)
+              return 1 
+       #except :
+       else :
+            pass
+       if cr == 'oui' :
+          self.cr.fatal("La matrice n est pas une matrice "+str(self.monType.nbLigs)+","+str(self.monType.nbCols))
+       self.set_valid(0)
+       return 0
+
+  def NbDeVariables(self):
+       listeVariables=self.jdc.get_variables()
+       self.monType.nbLigs=len(listeVariables)
+       self.monType.nbCols=len(listeVariables)
+      
+      
 #--------------------------------------------------------------------------------
  
 #ATTENTION SURCHARGE : toutes les methodes ci apres sont des surcharges du Noyau et de Validation

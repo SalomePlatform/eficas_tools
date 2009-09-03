@@ -73,13 +73,18 @@ class JDC(I_OBJECT.OBJECT):
       l.sort()
       return l
 
-   def get_variables_avant(self,etape):
+   def get_variables(self):
       # voir le sort avec IDM 
-      d=self.get_contexte_avant(etape)
+      #d=self.get_contexte_avant(etape)
+      #l=[]
+      #for k,v in d.items():
+      #    if str(type(v)).find('variable') > -1 :
+      #	      l.append(k)
+      #l.sort()
       l=[]
-      for k,v in d.items():
+      for k,v in self.sds_dict.items():
           if str(type(v)).find('variable') > -1 :
-	      l.append(k)
+              l.append(k)
       l.sort()
       return l
 
@@ -657,9 +662,10 @@ class JDC(I_OBJECT.OBJECT):
           Seuls les mots cles simples MCSIMP font un traitement autre
           que de transmettre aux fils
       """
-      #print "delete_concept",self,sd
       for etape in self.etapes :
         etape.delete_concept(sd)
+        #PN PN PN pour les matrices ????
+        #self.get_variables_avant(etape)
 
    def replace_concept_after_etape(self,etape,old_sd,sd):
       """

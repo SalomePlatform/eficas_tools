@@ -48,6 +48,7 @@ class CONFIGbase:
       else:
          self.parent=None
       self.rep_user = utils.get_rep_user()
+      if not os.path.isdir(self.rep_user) : os.mkdir(self.rep_user)
       self.lecture_fichier_ini_standard()
       self.lecture_catalogues_standard()
       self.lecture_fichier_ini_utilisateur()
