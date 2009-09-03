@@ -201,8 +201,6 @@ class QTPanelTBW2(QTPanel):
         if name.find("GROUPE :")==0 :
 	   return
         self.editor.init_modif()
-        print self.node
-        print name
         new_node = self.node.append_brother(name,'after')
 
 

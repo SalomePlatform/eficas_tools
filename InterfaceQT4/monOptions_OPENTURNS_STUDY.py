@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import os, re
+import os, re, sys
 
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
 
-from OptionsEditeur import Ui_desOptions
+from OptionsOT import Ui_desOptions
 
 
 class desOptions(Ui_desOptions,QDialog):
@@ -16,12 +16,10 @@ class desOptions(Ui_desOptions,QDialog):
 
 class Options(desOptions):
    def __init__(self,parent = None,modal = 0,configuration=None):
-       #print "Options"
        desOptions.__init__(self,parent,modal)
        self.configuration=configuration
        self.viewMan=parent
        self.dVersion={}
-       self.dRepMat={}
        self.dRepCat={}
        self.connecterSignaux()
        self.initAll()
@@ -30,12 +28,15 @@ class Options(desOptions):
        self.connect(self.CBVersions,SIGNAL("activated(int)"),self.VersionChoisie)
        self.connect(self.Bdefaut,SIGNAL("clicked()"),self.BdefautChecked)
        self.connect(self.LEVersionAjout,SIGNAL("returnPressed()"),self.AjoutVersion)
-       self.connect(self.LERepDoc,SIGNAL("returnPressed()"),self.ChangePathDoc)
-       self.connect(self.Bok,SIGNAL("clicked()"),self.BokClicked)
-       self.connect(self.LEVersionSup,SIGNAL("returnPressed()"),self.SupVersion)
        self.connect(self.PBajout,SIGNAL("clicked()"),self.AjoutVersion)
+       self.connect(self.LEVersionSup,SIGNAL("returnPressed()"),self.SupVersion)
+       self.connect(self.PBSup,SIGNAL("clicked()"),self.SupVersion)
+       self.connect(self.LERepDoc,SIGNAL("returnPressed()"),self.ChangePathDoc)
+       self.connect(self.LERepOT,SIGNAL("returnPressed()"),self.ChangePathOT)
+       self.connect(self.LERepCata,SIGNAL("returnPressed()"),self.BokClicked)
+       self.connect(self.LESaveDir,SIGNAL("returnPressed()"),self.ChangeSaveDir)
+       self.connect(self.Bok,SIGNAL("clicked()"),self.BokClicked)
        self.connect(self.PBQuit,SIGNAL("clicked()"),self.close)
-       self.connect(self.LERepDoc,SIGNAL("textChanged(const QString&)"),self.ChangePathDoc)
 
 
    def initAll(self):
@@ -48,38 +49,37 @@ class Options(desOptions):
            self.dVersion[version]=(item)
            self.dRepCat[version]=str(cata)
            self.CBVersions.addItem(QString(version))
-
-           codeSansPoint=re.sub("\.","",version)
-           chaine="rep_mat_"+codeSansPoint
-           if hasattr(self.configuration,chaine):
-              rep_mat=getattr(self.configuration,chaine)
-              self.dRepMat[version]=str(rep_mat)
-           else :
-              self.dRepMat[version]=""
-       self.LERepMat.setText(self.dRepMat[version])
        self.LERepCata.setText(self.dRepCat[version])
+
        if hasattr(self.configuration,"path_doc"):
           self.LERepDoc.setText(self.configuration.path_doc)
+       if hasattr(self.configuration,"OpenTURNS_path"):
+          self.LERepOT.setText(self.configuration.OpenTURNS_path)
+       if hasattr(self.configuration,"savedir"):
+          self.LESaveDir.setText(self.configuration.savedir)
+
 
         
    def VersionChoisie(self):
        version=str(self.CBVersions.currentText())
-       if self.dRepMat.has_key(version):
-          self.LERepMat.setText(self.dRepMat[version])
        if self.dRepCat.has_key(version):
           self.LERepCata.setText(self.dRepCat[version])
 
    def BokClicked(self):
        version=str(self.CBVersions.currentText())
        if self.LERepCata.text() == "" :
-          QMessageBox.critical( self, "Champ non rempli","Le champs Catalogue  doit etre rempli" )
+          QMessageBox.critical( self, "Champ non rempli","Le champ Catalogue  doit etre rempli" )
           return
-
-       self.dRepMat[version]=self.LERepMat.text()
-       if str(self.dRepMat[version] != "") != "" :
-          codeSansPoint=re.sub("\.","",version)
-          chaine="rep_mat_"+codeSansPoint
-          setattr(self.configuration,chaine,self.dRepMat[version])
+       if not os.path.isfile(self.LERepCata.text()) :
+          res = QMessageBox.warning( None,
+                 self.trUtf8("Fichier Catalogue "),
+                 self.trUtf8("Le Fichier  n existe pas. Voulez-vous supprimer cette version ?"),
+                 self.trUtf8("&Oui"),
+                 self.trUtf8("&Non"))
+          if res == 0 :
+             self.LEVersionSup.setText(version)
+             self.SupVersion()
+             return
 
        self.dRepCat[version]=str(self.LERepCata.text())
        if version in self.dVersion.keys():
@@ -87,7 +87,9 @@ class Options(desOptions):
           item[2]=self.dRepCat[version]
           self.dVersion[version]=tuple(item)
        else :
-          self.dVersion[version]=('ASTER',version,self.dRepCat[version],'python')
+          import prefs
+          code=prefs.code
+          self.dVersion[version]=(code,version,self.dRepCat[version],code.lower())
           
        lItem=[]
        for version in self.dVersion.keys() :
@@ -99,7 +101,6 @@ class Options(desOptions):
        version=self.LEVersionAjout.text()
        if str(version) == "" : return
        self.CBVersions.addItem(version)
-       self.LERepMat.setText("")
        self.LERepCata.setText("")
        self.LEVersionAjout.setText("")
        self.CBVersions.setCurrentIndex(self.CBVersions.count()-1)
@@ -115,10 +116,14 @@ class Options(desOptions):
            i=i+1
        try :
           del self.dVersion[version]
-          del self.dRepMat[version]
           del self.dRepCat[version]
        except :
           self.LEVersionSup.setText("")
+          try :
+             self.CBVersions.setCurrentIndex(self.CBVersions.count()-1)
+             self.VersionChoisie()
+          except :
+             pass
           return
        codeSansPoint=re.sub("\.","",version)
        chaine="rep_mat_"+codeSansPoint
@@ -129,7 +134,6 @@ class Options(desOptions):
        lItem=[]
        for version in self.dVersion.keys() :
            lItem.append(self.dVersion[version])
-       self.LERepMat.setText("")
        self.LERepCata.setText("")
        self.configuration.catalogues=lItem
        self.configuration.save_params()
@@ -138,22 +142,23 @@ class Options(desOptions):
 
 
    def BdefautChecked(self):
-       res = QMessageBox.warning(
-                 None,
+       res = QMessageBox.warning( None,
                  self.trUtf8("Restauration des parametres par defaut "),
                  self.trUtf8("Votre fichier editeur sera ecrase."),
                  self.trUtf8("&Ok"),
                  self.trUtf8("&Abandonner"))
-       self.Bdefaut.setState(QButton.Off)
+       self.Bdefaut.setCheckState(Qt.Unchecked)
        if res == 1 : return 
 
        appli=self.configuration.appli
-       repIni=self.configuration.REPINI
        fic_ini_util=self.configuration.fic_ini_utilisateur
        old_fic_ini_util=fic_ini_util+"_old"
        commande="mv "+fic_ini_util+" "+old_fic_ini_util
        os.system(commande)
        import prefs
+       name='prefs_'+prefs.code
+       prefsCode=__import__(name)
+       repIni=prefsCode.REPINI
        nameConf='configuration_'+prefs.code
        configuration=__import__(nameConf)
 
@@ -162,11 +167,54 @@ class Options(desOptions):
        appli.CONFIGURATION=configNew
        self.configuration.save_params()
        self.dVersion={}
-       self.dRepMat={}
        self.dRepCat={}
        self.initAll()
 
    def ChangePathDoc(self):
+       if self.LERepDoc.text()=="" : return
+       if not os.path.isdir(self.LERepDoc.text()) :
+          res = QMessageBox.warning( None,
+                 self.trUtf8("Repertoire de Documentation "),
+                 self.trUtf8("Le Repertoire  n existe pas."),
+                 self.trUtf8("&Ok"),
+                 self.trUtf8("&Abandonner"))
+          if res == 1 :
+             if hasattr(self.configuration,"path_doc"):
+                self.LERepDoc.setText(self.configuration.path_doc)
+             return
+
        self.configuration.path_doc=str(self.LERepDoc.text())
+       self.configuration.save_params()
+
+   def ChangePathOT(self):
+       if not os.path.isdir(self.LERepOT.text()) :
+          res = QMessageBox.warning( None,
+                 self.trUtf8("Repertoire Open TURNS "),
+                 self.trUtf8("Le Repertoire  n existe pas."),
+                 self.trUtf8("&Ok"),
+                 self.trUtf8("&Abandonner"))
+          if res == 1 :
+             if hasattr(self.configuration,"OpenTURNS_path"):
+                self.LERepOT.setText(self.configuration.OpenTURNS_path)
+             return
+
+       if hasattr(self.configuration,"OpenTURNS_path"):
+          sys.path.remove(self.configuration.OpenTURNS_path)
+       self.configuration.OpenTURNS_path=str(self.LERepOT.text())
+       self.configuration.save_params()
+       if self.configuration.OpenTURNS_path == "" : return
+       sys.path[:0]=[self.configuration.OpenTURNS_path]
+
+   def ChangeSaveDir(self):
+       if not os.path.isdir(self.LESaveDir.text()) :
+          res = QMessageBox.warning( None,
+                 self.trUtf8("Repertoire Open TURNS "),
+                 self.trUtf8("Le Repertoire  n existe pas."),
+                 self.trUtf8("&Ok"),
+                 self.trUtf8("&Abandonner"))
+          if res == 1 :
+             if hasattr(self.configuration,"savedir"):
+                self.LESaveDir.setText(self.configuration.savedir)
+       self.configuration.savedir=str(self.LESaveDir.text())
        self.configuration.save_params()
 

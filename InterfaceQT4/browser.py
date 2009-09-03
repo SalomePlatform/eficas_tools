@@ -136,7 +136,6 @@ class JDCNode(QTreeWidgetItem):
             ind=ind+1
 
     def affichePanneau(self) :
-        print self
         if self.item.isactif():
 	    panel=self.getPanel()
         else:

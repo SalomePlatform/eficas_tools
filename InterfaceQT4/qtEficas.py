@@ -19,7 +19,6 @@ class Appli(Ui_Eficas,QMainWindow):
         """
         Constructor
         """
-        print self
         self.VERSION_EFICAS="Eficas QT4 V1.17"
         self.ihm="QT"
         self.code=code
@@ -234,8 +233,15 @@ class Appli(Ui_Eficas,QMainWindow):
         monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
 
     def optionEditeur(self) :
-        from monOptionsEditeur import Options
-        monOption=Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
+        name='monOptions_'+self.code
+        try :
+        #if 1 :
+           optionCode=__import__(name)
+        except :
+        #else :
+           QMessageBox.critical( self, "Parametrage", "Pas de possibilite de personnalisation de la configuration ")
+           return
+        monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
         monOption.show()
         
     def optionPdf(self) :

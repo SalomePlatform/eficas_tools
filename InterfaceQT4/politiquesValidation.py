@@ -104,8 +104,6 @@ class Validation  :
             pass
 
   def AjoutDsDictReelEtape(self):
-      print self.parent.appliEficas.dict_reels
-      print self.node.item.object
       try:
          if self.parent.appliEficas.dict_reels.has_key(self.node.item.object) :
             self.parent.appliEficas.dict_reels[self.node.item.sdnom]=self.parent.appliEficas.dict_reels[self.node.item.object]

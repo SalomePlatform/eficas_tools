@@ -50,7 +50,6 @@ class READERCATA:
    def __init__(self,QWParent, appliEficas):
       self.QWParent=QWParent
       self.appliEficas=self.QWParent.appliEficas
-      print self.appliEficas
       self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
       self.code=self.QWParent.code
       self.appliEficas.format_fichier='python'

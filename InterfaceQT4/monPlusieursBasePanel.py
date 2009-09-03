@@ -156,7 +156,6 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
 
   def AjoutNValeur(self,liste) :
       for val in liste :
-        print val
 	self.Ajout1Valeur(val)
 
   def BImportPressed(self):
@@ -201,8 +200,6 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
             if "GROUP_MA" in e: kwType = "GROUP_MA"
 
         #print "BkwType",kwType
-        print "editor", self.editor
-        print "appliEficas", self.editor.appliEficas
         selection, commentaire = self.editor.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
         if commentaire !="" :
             self.Commentaire.setText(QString(commentaire))
