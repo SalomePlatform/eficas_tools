@@ -348,7 +348,6 @@ class JDCNode(QTreeWidgetItem):
           Réalise la copie de l'objet passé en argument qui est nécessairement
           une commande
         """
-        print "objet_a_copier = ", objet_a_copier.item.GetLabelText()
         child = self.append_brother(objet_a_copier)
         return child
 

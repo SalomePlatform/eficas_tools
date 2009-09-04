@@ -510,10 +510,6 @@ class JDC(I_OBJECT.OBJECT):
         nb=nb+len(niv.etapes)
       return nb
 
-   def send_message(self,message):
-      if self.appli:
-         self.appli.send_message(message)
-
    def init_modif(self):
       """
       Méthode appelée au moment où une modification va être faite afin de 

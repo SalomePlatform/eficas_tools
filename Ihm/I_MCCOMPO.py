@@ -212,7 +212,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
 
       # On verifie que l'ajout d'objet est autorise
       if self.ispermis(objet) == 0:
-        self.jdc.send_message("L'objet %s ne peut être un fils de %s" %(objet.nom,
+        self.jdc.appli.affiche_alerte("L'objet %s ne peut être un fils de %s" %(objet.nom,
                                                                         self.nom))
         self.fin_modif()
         return 0
@@ -240,7 +240,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
          # on cree une liste d'objets. Dans le cas contraire,
          # on emet un message d'erreur.
          if not old_obj.isrepetable():
-            self.jdc.send_message("L'objet %s ne peut pas être répété" %objet.nom)
+            self.jdc.appli.affiche_alerte("L'objet %s ne peut pas être répété" %objet.nom)
             self.fin_modif()
             return 0
          else:

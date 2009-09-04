@@ -54,6 +54,9 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         debComm=self.item.GetText()
         self.setText(1,debComm)
 
+    def doPaste(self,node_selected):
+        return None
+
     
 class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
     itemNode=Node    

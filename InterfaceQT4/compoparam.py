@@ -25,6 +25,9 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         typeNode.PopUpMenuNodePartiel.createPopUpMenu(self)
         self.menu.removeAction(self.Documentation)
 
+    def doPaste(self,node_selected):
+        return None
+
 
 
 class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):

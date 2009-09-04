@@ -89,6 +89,7 @@ class JDCEditor(QSplitter):
         self.isReadOnly = False
         self.tree = None
         self.node_selected = None
+        self.message=''
         
         if not hasattr( readercata, 'reader' ) :
             readercata.reader = readercata.READERCATA( self, self.appliEficas )
@@ -301,18 +302,6 @@ class JDCEditor(QSplitter):
     #------------------------------#
     def affiche_infos(self,message):
     #------------------------------#
-        #PN --> devenu inutile avec QT4
-        #if self.salome :
-	#   if not hasattr(self.appliEficas,'MessageLabel') :
-        #      self.appliEficas.leLayout=QDockWidget(self.appliEficas)
-	#      self.appliEficas.MessageLabel = QLabel("MessageLabel",self.appliEficas.leLayout)
-	#      self.appliEficas.MessageLabel.setAlignment(Qt.AlignBottom)
-        #      self.appliEficas.leLayout.setAllowedAreas(Qt.BottomDockWidgetArea)
-        #      self.appliEficas.leLayout.setWidget(self.appliEficas.MessageLabel)
-        #      #self.appliEficas.moveDockWindow(self.appliEficas.leLayout,Qt.DockBottom)
-	#   self.appliEficas.MessageLabel.setText(message)
-	#   self.appliEficas.MessageLabel.show()
-	#   self.appliEficas.leLayout.show()
         if self.sb:
             self.sb.showMessage(message)#,2000)
 
@@ -346,12 +335,6 @@ class JDCEditor(QSplitter):
           return
       self.node_selected=self.tree.selectedItems()[0]
       if copie == 0 : return
-      if not self.node_selected.item.iscopiable():
-          QMessageBox.information( self, 
-                      "Copie impossible",
-                      "Cette version d'EFICAS ne permet pas la copie de cet Objet")
-          self.node_selected=None
-          return
     
     
     #---------------------#
@@ -382,11 +365,12 @@ class JDCEditor(QSplitter):
       Ne permet que la copie d'objets de type Commande ou MCF
       """
       self.chercheNoeudSelectionne()
-      index_noeud_a_couper=self.QWParent.noeud_a_editer.treeParent.children.index(self.QWParent.noeud_a_editer)
-      if self.QWParent.noeud_a_editer == None :
+      try :
+          index_noeud_a_couper=self.QWParent.noeud_a_editer.treeParent.children.index(self.QWParent.noeud_a_editer)
+      except :
           QMessageBox.information( self, 
                       "Copie impossible",
-                      "Aucun Objet n a ete copie ou colle ")
+                      "Aucun Objet n a ete copie ou coupe ")
           return
       try:
          child=self.QWParent.noeud_a_editer.doPaste(self.node_selected)
@@ -396,12 +380,10 @@ class JDCEditor(QSplitter):
                      "Copie impossible",         
                      "L'action de coller apres un tel objet n'est pas permise")
          return
-    
      
-      if child == 0:
-          if self.message != '':             
-             QMessageBox.critical( self, "Copie refusee", self.message)
-             self.message = ''
+      if child == 0 or child == None:
+          QMessageBox.critical( self, "Copie refusee", "Copie refusee pour ce type d objet", self.message)
+          self.message = ''
           self.affiche_infos("Copie refusée")
           return
     
@@ -411,7 +393,6 @@ class JDCEditor(QSplitter):
       # si possible on renomme l objet comme le noeud couper
 
       if self.QWParent.edit == "couper":
-         print self.QWParent.noeud_a_editer.child
          index_ajoute=child.treeParent.children.index(child)
          if index_ajoute <= index_noeud_a_couper :
             index_noeud_a_couper=index_noeud_a_couper + 1
@@ -442,7 +423,6 @@ class JDCEditor(QSplitter):
                    self.appliEficas.trUtf8('Ouvrir Fichier'),
                    self.appliEficas.CONFIGURATION.savedir,
                    self.appliEficas.trUtf8('Wrapper Files (*.xml);;''All Files (*)'))
-     print fichier
      return  fichier
       
     #----------------------------------#

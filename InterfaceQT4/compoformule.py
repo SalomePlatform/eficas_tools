@@ -23,6 +23,16 @@ class FormuleNode(browser.JDCNode,typeNode.PopUpMenuNode):
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
 
+
+    def doPaste(self,node_selected):
+        """
+            Déclenche la copie de l'objet item avec pour cible
+            l'objet passé en argument : node_selected
+        """
+        objet_a_copier = self.item.get_copie_objet()
+        child=node_selected.doPasteCommande(objet_a_copier)
+        return child
+
             
 class FORMULETreeItem(compooper.EtapeTreeItem):
     """
