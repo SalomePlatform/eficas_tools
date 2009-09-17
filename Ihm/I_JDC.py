@@ -73,19 +73,16 @@ class JDC(I_OBJECT.OBJECT):
       l.sort()
       return l
 
-   def get_variables(self):
-      # voir le sort avec IDM 
-      #d=self.get_contexte_avant(etape)
-      #l=[]
-      #for k,v in d.items():
-      #    if str(type(v)).find('variable') > -1 :
-      #	      l.append(k)
-      #l.sort()
+   def get_variables(self,etape):
+      etapeStop=etape
       l=[]
-      for k,v in self.sds_dict.items():
-          if str(type(v)).find('variable') > -1 :
-              l.append(k)
-      l.sort()
+      for etapeTraitee in self.etapes :
+          if etapeTraitee==etapeStop:
+             break
+          if etapeTraitee.nom == 'VARIABLE' :
+             variable=etapeTraitee.get_mocle('ModelVariable')
+             if variable != None :
+                l.append(variable.nom)
       return l
 
    def get_sd_avant_du_bon_type_pour_type_de_base(self,etape,type):
