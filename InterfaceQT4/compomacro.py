@@ -14,13 +14,18 @@ import typeNode
 
 class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):         
     def getPanel(self):
-      print "MACRONode MACRONode"
       from   monMacroPanel import MonMacroPanel
       return MonMacroPanel (self,parent=self.editor )
     
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
         
+    #def doPaste(self,node_selected):
+    #    print 'je suis la'
+    #    objetACopier = self.item.get_copie_objet()
+    #    child=self.append_brother(objetACopier)
+    #    return child
+
     
 class MACROTreeItem(compooper.EtapeTreeItem):
 #  """ Cette classe hérite d'une grande partie des comportements

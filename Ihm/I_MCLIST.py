@@ -92,7 +92,7 @@ class MCList:
          raise "traitement non prevu"
 
       if not self.ajout_possible():
-         self.jdc.appli.affiche_alerte("L'objet %s ne peut pas être ajouté" % obj.nom)
+         self.jdc.appli.affiche_alerte("Erreur","L'objet %s ne peut pas être ajouté" % obj.nom)
          return None
 
       if self.nom != obj.nom:

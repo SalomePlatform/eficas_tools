@@ -84,7 +84,7 @@ class Validation  :
          return valeurTexte
 
   def AjoutDsDictReel(self,texteValeur):
-         try :
+         #try :
             if "R" in self.node.item.object.definition.type:
                 if str(texteValeur)[0] != "'":
                    clef=eval(texteValeur)
@@ -98,10 +98,10 @@ class Validation  :
                             self.parent.appliEficas.dict_reels[self.node.item.object.etape] = {}
                          self.parent.appliEficas.dict_reels[self.node.item.object.etape][clef]=texteValeur
                           
-         except:
+         #except:
           #else :
             #print "pb ds try de AjoutDsDictReel"
-            pass
+         #   pass
 
   def AjoutDsDictReelEtape(self):
       try:

@@ -338,11 +338,19 @@ class JDCEditor(QSplitter):
     
     
     #---------------------#
+    def handleSupprimer(self):
+    #---------------------#
+      #print "handleSupprimer"
+      self.chercheNoeudSelectionne()
+      self.node_selected.delete()
+    
+    #---------------------#
     def handleEditCut(self):
     #---------------------#
       """
       Stocke dans Eficas.noeud_a_editer le noeud à couper
       """
+      #print "handleEditCut"
       self.chercheNoeudSelectionne()
       self.QWParent.edit="couper"
       self.QWParent.noeud_a_editer = self.node_selected      
@@ -353,6 +361,7 @@ class JDCEditor(QSplitter):
       """
       Stocke dans Eficas.noeud_a_editer le noeud a copier
       """
+      #print "handleEditCut"
       self.chercheNoeudSelectionne()
       self.QWParent.edit="copier"
       self.QWParent.noeud_a_editer = self.node_selected
@@ -364,6 +373,7 @@ class JDCEditor(QSplitter):
       Lance la copie de l'objet place dans self.QWParent.noeud_a_editer
       Ne permet que la copie d'objets de type Commande ou MCF
       """
+      #print "handleEditPaste"
       self.chercheNoeudSelectionne()
       try :
           index_noeud_a_couper=self.QWParent.noeud_a_editer.treeParent.children.index(self.QWParent.noeud_a_editer)
@@ -377,12 +387,14 @@ class JDCEditor(QSplitter):
       except:
          traceback.print_exc()
          QMessageBox.information( self, 
-                     "Copie impossible",         
-                     "L'action de coller apres un tel objet n'est pas permise")
+                     "Copie refusee",         
+                     "Copie refusee pour ce type d objet a cet endroit")
+         self.message = ''
+         self.affiche_infos("Copie refusée")
          return
      
       if child == 0 or child == None:
-          QMessageBox.critical( self, "Copie refusee", "Copie refusee pour ce type d objet", self.message)
+          QMessageBox.critical( self, "Copie refusee",'Copie refusee pour ce type d objet')
           self.message = ''
           self.affiche_infos("Copie refusée")
           return
@@ -478,8 +490,8 @@ class JDCEditor(QSplitter):
       
     #-----------------------------------------#
     def cherche_Groupes(self):
-        liste=self.get_text_JDC("GroupMA")
-        return liste
+        listeMA,listeNO=self.get_text_JDC("GroupMA")
+        return listeMA,listeNO
     #-----------------------------------------#
 
     #-----------------------------------------#

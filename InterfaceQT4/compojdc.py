@@ -11,13 +11,6 @@ class Node(browser.JDCNode):
         from monRacinePanel import MonRacinePanel
         return MonRacinePanel(self,parent=self.editor)
 
-    def doPasteCommande(self,objet_a_copier):
-        """
-          Réalise la copie de l'objet passé en argument qui est nécessairement
-          une commande
-        """
-        child = self.append_child(objet_a_copier,pos='first',retour='oui')
-        return child
 
 
 class JDCTreeItem(Objecttreeitem.ObjectTreeItem):

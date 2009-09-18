@@ -116,7 +116,7 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
   def  NbDeVariables(self):
        jdc=self.node.item.object.jdc
        etape=self.node.item.object.etape
-       self.listeVariables=jdc.get_variables()
+       self.listeVariables=jdc.get_variables(etape)
        if self.listeVariables == [] :
            QMessageBox.critical( self, "Mauvaise Commande ", "Aucune variable connue")
            return
@@ -141,7 +141,7 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
 
   def  initialValeur(self):
       liste=self.node.item.get_valeur()
-      if (len(liste)) != self.nbLigs :
+      if (len(liste)) != self.nbLigs  :
          QMessageBox.critical( self, "Mauvaise dimension de matrice", "le nombre de ligne n est pas egal a " + str(self.nbLigs))
       for i in range(self.nbLigs):
           inter=liste[i]

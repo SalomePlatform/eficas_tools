@@ -59,6 +59,7 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         QTPanelTBW2.__init__(self,node,parent)
         self.InitLEs()
         self.connecterSignaux()
+        self.lineEditNom.setFocus()
 
   def connecterSignaux(self) :
         self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)

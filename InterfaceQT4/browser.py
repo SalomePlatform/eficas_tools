@@ -43,6 +43,7 @@ class JDCTree( QTreeWidget ):
                 
         self.setMinimumSize(QSize(600,505))
         self.setColumnWidth(0,300)
+        self.itemCourrant=None
 
         self.connect(self, SIGNAL("itemClicked ( QTreeWidgetItem * ,int) "), self.handleOnItem)
         self.racine=self.item.itemNode(self,self.item)
@@ -75,6 +76,7 @@ class JDCTree( QTreeWidget ):
             
     def handleOnItem(self,item,int):
         item.affichePanneau()
+        self.itemCourrant=item
         try :
            fr = item.item.get_fr()
            if self.editor:
@@ -110,8 +112,8 @@ class JDCNode(QTreeWidgetItem):
         self.existeMenu=1
 
         self.item.connect("valid",self.onValid,())
-        self.item.connect("supp" ,self.onAdd,())
-        self.item.connect("add"  ,self.onSupp,())
+        self.item.connect("supp" ,self.onSupp,())
+        self.item.connect("add"  ,self.onAdd,())
 
 
     def build_children(self,posInsertion=10000):
@@ -265,7 +267,6 @@ class JDCNode(QTreeWidgetItem):
         obj=self.item.additem(name,index) #CS_pbruno emet le signal 'add'
         if obj is None:obj=0
         if obj == 0:return 0
-        self.build_children(index)
         child=self.children[index]
         child.affichePanneau() 
         return child
@@ -274,6 +275,7 @@ class JDCNode(QTreeWidgetItem):
         """ 
             Methode externe pour la destruction de l'objet associe au noeud
         """
+        print "je passe la"
         self.editor.init_modif()
         index = self.treeParent.children.index(self) - 1 
         if index < 0 : index =0
@@ -293,6 +295,9 @@ class JDCNode(QTreeWidgetItem):
 #        
 #    #------------------------------------------------------------------
     def onValid(self):        
+        #print "NODE  onValid", self.item.GetLabelText()
+        #import traceback
+        #print traceback.print_stack()
         self.editor.init_modif()
         self.update_node_valid()
         self.update_node_label()
@@ -300,11 +305,13 @@ class JDCNode(QTreeWidgetItem):
 
     def onAdd(self,object):
         #print "NODE  onAdd", self.item.GetLabelText()
+        #import traceback
+        #print traceback.print_stack()
         self.editor.init_modif()
         self.update_nodes()
  
     def onSupp(self,object):
-        #print "NODE onSupp", self.item.GetLabelText()
+        print "NODE onSupp", self.item.GetLabelText()
         self.editor.init_modif()
         self.update_nodes()
  
@@ -331,8 +338,19 @@ class JDCNode(QTreeWidgetItem):
         self.setText(1, value)
 
     def update_nodes(self):
-        #print 'NODE update_nodes', self.item.GetLabelText()
+        print 'NODE update_nodes', self.item.GetLabelText()
         self.build_children()
+
+    def update_valid(self) :
+        """Cette methode a pour but de mettre a jour la validite du noeud
+           et de propager la demande de mise a jour a son parent
+        """
+        print "NODE update_valid", self.item.GetLabelText()
+        self.update_node_valid()
+        try :
+          self.treeParent.update_valid()
+        except:
+          pass
             
     def update_texte(self):
         """ Met a jour les noms des SD et valeurs des mots-cles """
@@ -342,13 +360,27 @@ class JDCNode(QTreeWidgetItem):
             for child in self.children:
                 if child.isHidden() == false : child.update_texte()
         
- 
+
+    def doPaste(self,node_selected):
+        """
+            Déclenche la copie de l'objet item avec pour cible
+            l'objet passé en argument : node_selected
+        """
+        #print 'je passe dans doPaste'
+        objet_a_copier = self.item.get_copie_objet()
+        child=node_selected.doPasteCommande(objet_a_copier)
+        return child
+
     def doPasteCommande(self,objet_a_copier):
         """
           Réalise la copie de l'objet passé en argument qui est nécessairement
           une commande
         """
-        child = self.append_brother(objet_a_copier)
+        #print 'je passe dans doPasteCommande'
+        try :
+          child = self.append_brother(objet_a_copier)
+        except :
+           pass
         return child
 
     def doPasteMCF(self,objet_a_copier):
@@ -356,8 +388,10 @@ class JDCNode(QTreeWidgetItem):
            Réalise la copie de l'objet passé en argument (objet_a_copier)
            Il s'agit forcément d'un mot clé facteur
         """
-        child = self.append_child(objet_a_copier,pos='first')
+        #print 'je passe dans doPasteMCF'
+        child = self.append_child(objet_a_copier,pos='first',retour='oui')
         return child
+
 
 if __name__=='__main__':
     from PyQt4 import *

@@ -32,36 +32,34 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
 
-    def doPaste(self,node_selected):
-        objet_a_copier = self.item.get_copie_objet()
-        child=node_selected.doPasteMCF(objet_a_copier)
+    #def doPaste(self,node_selected):
+    #    objet_a_copier = self.item.get_copie_objet()
+    #    child=node_selected.doPasteMCF(objet_a_copier)
         #print "doPaste",child
-        return child
+    #    return child
 
-    def doPasteMCF(self,objet_a_copier):
-        child=None
+    #def doPasteMCF(self,objet_a_copier):
+    #    child=None
         # le noeud courant est une MCList
-        if self.item.isMCList() :
-          child = self.append_child(objet_a_copier,pos='first',retour='oui')
+    #    if self.item.isMCList() :
+    #      child = self.append_child(objet_a_copier,pos='first',retour='oui')
 
         # le noeud courant est un MCFACT
-        elif self.item.isMCFact() :
+    #    elif self.item.isMCFact() :
           # le noeud selectionne est un MCFACT dans une MCList
-          if self.parent.item.isMCList():
-             child = self.parent.append_child(objet_a_copier,
-                                              pos=self.item,
-                                              retour='oui')
+    #      if self.parent.item.isMCList():
+    #         child = self.parent.append_child(objet_a_copier, pos=self.item, retour='oui')
 
           # le noeud MCFACT selectionne n'est pas dans une MCList
-          else:
-             child = self.parent.append_child(objet_a_copier,retour='oui')
+    #      else:
+    #         child = self.parent.append_child(objet_a_copier,retour='oui')
 
-        else:
-          QMessageBox.information( self, "Copie impossible",
-                   "Vous ne pouvez coller le mot-clé facteur copié à ce niveau de l'arborescence !")          
-          self.editor.affiche_infos("Copie refusée")
+    #    else:
+    #      QMessageBox.information( self, "Copie impossible",
+    #               "Vous ne pouvez coller le mot-clé facteur copié à ce niveau de l'arborescence !")          
+    #      self.editor.affiche_infos("Copie refusée")
 
-        return child
+    #    return child
 
 class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
     """ La classe MCListTreeItem joue le role d'un adaptateur pour les objets

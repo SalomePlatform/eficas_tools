@@ -39,17 +39,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
-    def doPaste(self,node_selected):
-        objetACopier = self.item.get_copie_objet()
-        child=node_selected.doPasteMCF(objetACopier)
-        return child
-
-    def doPasteMCF(self,objetACopier):
-        child = self.parent.append_child(objetACopier,
-                                              pos=self.item,
-                                              retour='oui')
-        return child
-
 
 class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
   itemNode=Node

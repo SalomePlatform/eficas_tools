@@ -46,7 +46,6 @@ class QTPanel:
   def BOkPressed(self):
         """ Impossible d utiliser les vrais labels avec designer ?? """
         label=self.TWChoix.tabText(self.TWChoix.currentIndex())
-        print label
         if label==QString("Nouvelle Commande"):
            self.DefCmd()
         if label==QString("Nommer Concept"):
@@ -115,6 +114,8 @@ class QTPanelTBW1(QTPanel):
         liste_mc=self.node.item.get_liste_mc_ordonnee(genea,jdc.cata_ordonne_dico)
         for aMc in liste_mc:
            self.LBMCPermis.addItem( aMc)
+        if len(liste_mc) !=0:
+           self.LBMCPermis.setCurrentItem(self.LBMCPermis.item(0))
 
 
   def DefMC(self,item):
@@ -140,15 +141,29 @@ class QTPanelTBW2(QTPanel):
         self.NbRecherches = 0
         if racine == 1 :
            self.AppelleBuildLBRegles()
+           self.LEFiltre.setFocus()
         else :
            self.connect(self.TWChoix, SIGNAL("currentChanged(QWidget *)"), self.handleCurrentChanged)
+            
 
 
   def handleCurrentChanged(self):
         try :
+          label=self.TWChoix.tabText(self.TWChoix.currentIndex())
+          if label==QString("Nouvelle Commande"):
             self.LEFiltre.setFocus()
+          if label==QString("Nommer Concept"):
+           self.LENomConcept.setFocus()
+          if label==QString("Définition Formule"):
+           self.LENomFormule.setFocus()
+          if label==QString("Valeur Parametre"):
+           self.lineEditNom.setFocus()
+          if label==QString("Fichier Include"):
+           self.LENomFichier.setFocus()
+          if label==QString("Ajouter Mot-Clef"):
+           self.LBMCPermis.setCurrentItem(self.LBMCPermis.item(0))
         except :
-            pass
+          pass
 
       
   def BuildLBNouvCommande(self):
@@ -191,6 +206,7 @@ class QTPanelTBW2(QTPanel):
         else :
            self.editor.mode_nouv_commande="groupe"
         self.BuildLBNouvCommande()
+        self.LEFiltre.setFocus()
 
   def DefCmd(self):
         if self.LBNouvCommande.currentItem()== 0 : return
@@ -251,6 +267,7 @@ class QTPanelTBW3(QTPanel):
         self.typeConcept.setText(type_sd)
         self.LENomConcept.setText("")
         self.LENomConcept.setText(nomConcept)
+        self.LENomConcept.setFocus()
         
   def LENomConceptReturnPressed(self):
         """

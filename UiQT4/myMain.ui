@@ -44,6 +44,7 @@
     <addaction name="actionCouper" />
     <addaction name="actionCopier" />
     <addaction name="actionColler" />
+    <addaction name="actionSupprimer" />
    </widget>
    <widget class="QMenu" name="menuJdC" >
     <property name="title" >
@@ -255,6 +256,11 @@
   <action name="actionVersion" >
    <property name="text" >
     <string>Version</string>
+   </property>
+  </action>
+  <action name="actionSupprimer" >
+   <property name="text" >
+    <string>Supprimer</string>
    </property>
   </action>
  </widget>

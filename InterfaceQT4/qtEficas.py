@@ -109,6 +109,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionCouper,SIGNAL("activated()"),self.editCut)
         self.connect(self.actionCopier,SIGNAL("activated()"),self.editCopy)
         self.connect(self.actionColler,SIGNAL("activated()"),self.editPaste)
+        self.connect(self.actionSupprimer,SIGNAL("activated()"),self.supprimer)
 
         self.connect(self.actionRapport_de_Validation,SIGNAL("activated()"),self.jdcRapport)
         self.connect(self.actionFichier_Source,SIGNAL("activated()"),self.jdcFichierSource)
@@ -310,6 +311,9 @@ class Appli(Ui_Eficas,QMainWindow):
     
     def editPaste(self):
         self.viewmanager.handleEditPaste()
+        
+    def supprimer(self):
+        self.viewmanager.handleSupprimer()
         
     def jdcFichierSource(self):
         self.viewmanager.handleViewJdcFichierSource()

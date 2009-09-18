@@ -123,6 +123,9 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
           
 
   def Ajout1Valeur(self,valeur=None):
+        if valeur == None :
+           valeur=str(self.LEValeur.text())
+
         liste,validite=SaisieValeur.TraiteLEValeur(self,valeur)
         if validite == 0 : return
         if liste ==[]    : return
@@ -146,7 +149,8 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
            l1=self.listeValeursCourantes[:index]
            l3=self.listeValeursCourantes[index:]
            for valeur in listeRetour:
-               self.LBValeurs.insertItem(index,QString(str(valeur)))
+               val=self.politique.GetValeurTexte(valeur)
+               self.LBValeurs.insertItem(index,val)
                item=self.LBValeurs.item(index)
                item.setSelected(1)
                self.LBValeurs.setCurrentItem(item)
@@ -161,7 +165,8 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   def BImportPressed(self):
         init=QString( self.editor.CONFIGURATION.savedir)
         fn = QFileDialog.getOpenFileName(self.node.appliEficas, 
-                                         self.node.appliEficas.trUtf8('Fichier de données'), 
+                                         #self.node.appliEficas.trUtf8('Fichier de données'), 
+                                         QApplication.translate('Eficas','Fichier de donnees',None, QApplication.UnicodeUTF8),
                                          init,
                                          self.trUtf8('All Files (*)',))
         if fn == None : return

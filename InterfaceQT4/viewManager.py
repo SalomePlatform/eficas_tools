@@ -98,6 +98,11 @@ class MyTabview:
        editor=self.dict_editors[index]
        editor.handleEditPaste()
 
+   def handleSupprimer(self):
+       index=self.myQtab.currentIndex()
+       editor=self.dict_editors[index]
+       editor.handleSupprimer()
+
    def newEditor(self,include=0):
        maPage=self.getEditor()
 

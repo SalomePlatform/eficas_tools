@@ -80,9 +80,9 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
            self.LEReel.setText(str(x1))
            self.LEImag.setText(str(x2))
            if typ_cplx == "RI" :
-              self.RBRI.setDown(1)
+              self.RBRI.setChecked(1)
            else :
-              self.RBMP.setDown(1)
+              self.RBMP.setChecked(1)
       
 
   def LEcompRPressed(self) :

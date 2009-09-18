@@ -20,7 +20,14 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
     def createPopUpMenu(self):
         typeNode.PopUpMenuNode.createPopUpMenu(self)
         if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome: 
-           self.menu.insertItem( 'View3D', self.view3D )
+           self.ViewElt = QAction('View3D',self.tree)
+           self.tree.connect(self.ViewElt,SIGNAL("activated()"),self.view3D)
+           self.ViewElt.setStatusTip("affiche dans Geom les elements de structure")
+           self.menu.addAction(self.ViewElt)
+           if self.item.isvalid() :
+	      self.ViewElt.setEnabled(1)
+           else:
+	      self.ViewElt.setEnabled(0)
         if  self.item.get_nom() == "DISTRIBUTION" :
            self.Graphe = QAction('Graphique',self.tree)
            self.tree.connect(self.Graphe,SIGNAL("activated()"),self.viewPng)
@@ -31,37 +38,9 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
            else:
 	      self.Graphe.setEnabled(0)
 
-    def doPaste(self,node_selected):
-        """
-            Déclenche la copie de l'objet item avec pour cible
-            l'objet passé en argument : node_selected
-        """
-        objet_a_copier = self.item.get_copie_objet()
-        child=node_selected.doPasteCommande(objet_a_copier)
-        return child
-
-    def doPasteCommande(self,objet_a_copier):
-        """
-          Réalise la copie de l'objet passé en argument qui est nécessairement
-          une commande
-        """
-        parent=self.parent
-        #child = parent.item.append_child(objet_a_copier,self.item.getObject())
-        child = self.append_brother(objet_a_copier)
-        #if child is None:return 0
-        return child
-
-    def doPasteMCF(self,objet_a_copier):
-        """
-           Réalise la copie de l'objet passé en argument (objet_a_copier)
-           Il s'agit forcément d'un mot clé facteur
-        """
-        child = self.append_child(objet_a_copier,pos='first',retour='oui')
-        return child
-
     def view3D(self) :
         from Editeur import TroisDPal
-        troisD=TroisDPal.TroisDPilote(self.item,self.editor.parent.appliEficas)
+        troisD=TroisDPal.TroisDPilote(self.item,self.editor.appliEficas)
         troisD.envoievisu()
 
     def viewPng(self) :

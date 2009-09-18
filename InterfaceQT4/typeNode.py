@@ -44,7 +44,7 @@ class PopUpMenuNodeMinimal :
         if cle_doc == None :
             QMessageBox.information( self.editor, "Documentation Vide", \
                                     "Aucune documentation Aster n'est associée à ce noeud")
-        return
+            return
         #cle_doc = string.replace(cle_doc,'.','')
         #cle_doc = string.replace(cle_doc,'-','')
         #print dir(self)
@@ -55,7 +55,8 @@ class PopUpMenuNodeMinimal :
              texte="impossible de trouver la commande  " + commande
              QMessageBox.information( self.editor, "Lecteur PDF", texte)
              return
-        nom_fichier = cle_doc+".pdf"
+        nom_fichier = cle_doc
+        import os
         fichier = os.path.abspath(os.path.join(self.editor.CONFIGURATION.path_doc,
                                        nom_fichier))
         try :

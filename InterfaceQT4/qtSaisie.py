@@ -51,7 +51,11 @@ class SaisieValeur:
         self.LBValeurs.clear()
         listeValeurs=self.node.item.GetListeValeurs()
         for valeur in listeValeurs:
-            self.LBValeurs.addItem(str(valeur))
+            try :
+               val=self.politique.GetValeurTexte(valeur)
+            except :
+               val=valeur
+            self.LBValeurs.addItem(val)
         if listeValeurs != None and listeValeurs != [] :
             self.LBValeurs.setCurrentRow(len(listeValeurs) - 1)
        
@@ -64,6 +68,7 @@ class SaisieValeur:
         if len(lChoix) == 1 :
             self.listBoxVal.setCurrentRow(0)
             self.listBoxVal.item(0).setSelected(1)
+            self.bOk.setFocus()
 
   def ClicASSD(self):
          if self.listBoxASSD.currentItem()== None : return
@@ -165,7 +170,7 @@ class SaisieValeur:
         elif type(valeur) == types.StringType:
              listeValeurs=valeur.split(',')
         else:
-          listeValeurs.append(valeur)
+          listeValeurs.append(valeurBrute)
 
         return listeValeurs,1
 

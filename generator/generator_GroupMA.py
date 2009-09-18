@@ -51,15 +51,18 @@ class GroupMAGenerator(PythonGenerator):
 
    def __init__(self):
       PythonGenerator.__init__(self)
-      self.liste=[]
+      self.listeMA=[]
+      self.listeNO=[]
 
    def gener(self,obj,format='brut'):
       self.liste=[]
       self.text=PythonGenerator.gener(self,obj,'brut')
-      return self.liste
+      return self.listeMA,self.listeNO
 
    def generMCSIMP(self,obj) :
-       if 'grma' in repr(obj.definition.type) or 'grno' in repr(obj.definition.type) :
-         self.liste.append(obj.valeur)
+       if 'grma' in repr(obj.definition.type) :
+         self.listeMA.append(obj.valeur)
+       if 'grno' in repr(obj.definition.type) :
+         self.listeNO.append(obj.valeur)
        s=PythonGenerator.generMCSIMP(self,obj)
        return s

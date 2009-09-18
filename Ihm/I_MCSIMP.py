@@ -583,8 +583,8 @@ class MCSIMP(I_OBJECT.OBJECT):
   def valideMatrice(self,cr):
        if self.monType.methodeCalculTaille != None :
            apply (MCSIMP.__dict__[self.monType.methodeCalculTaille],(self,))
-       #try :
-       if 1 :
+       try :
+       #if 1 :
            ok=0
            if len(self.valeur) == self.monType.nbLigs:
               ok=1
@@ -594,8 +594,8 @@ class MCSIMP(I_OBJECT.OBJECT):
            if ok: 
               self.set_valid(1)
               return 1 
-       #except :
-       else :
+       except :
+       #else :
             pass
        if cr == 'oui' :
           self.cr.fatal("La matrice n est pas une matrice "+str(self.monType.nbLigs)+","+str(self.monType.nbCols))
@@ -603,7 +603,7 @@ class MCSIMP(I_OBJECT.OBJECT):
        return 0
 
   def NbDeVariables(self):
-       listeVariables=self.jdc.get_variables()
+       listeVariables=self.jdc.get_variables(self.etape)
        self.monType.nbLigs=len(listeVariables)
        self.monType.nbCols=len(listeVariables)
       

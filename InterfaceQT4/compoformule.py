@@ -24,16 +24,6 @@ class FormuleNode(browser.JDCNode,typeNode.PopUpMenuNode):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
 
 
-    def doPaste(self,node_selected):
-        """
-            Déclenche la copie de l'objet item avec pour cible
-            l'objet passé en argument : node_selected
-        """
-        objet_a_copier = self.item.get_copie_objet()
-        child=node_selected.doPasteCommande(objet_a_copier)
-        return child
-
-            
 class FORMULETreeItem(compooper.EtapeTreeItem):
     """
     Classe servant a définir l'item porté par le noeud de l'arbre d'EFICAS
@@ -63,7 +53,6 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
       Ce nom dépend de la validité de l'objet
       """
       if self.object.isactif():
-        self.object.state="modified"
         if self.object.isvalid():
           return "ast-green-square"
         else:
