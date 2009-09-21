@@ -52,6 +52,7 @@ class Appli(Ui_Eficas,QMainWindow):
         Ui_Eficas.__init__(self)
         self.setupUi(self)
         self.ajoutIcones()
+        if code=='ASTER' : self.ASTER()
         self.viewmanager = MyTabview(self) 
         self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
         self.connecterSignaux() 
@@ -70,10 +71,21 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ouvreFichiers()
         self.setWindowTitle(self.VERSION_EFICAS)
         
-    def OPENTURNS(self) :
-        self.MenuBar.removeItem(5)
-        self.MenuBar.removeItem(6)
-        self.MenuBar.removeItem(7)
+    def ASTER(self) :
+        self.menuTraduction = self.menubar.addMenu("menuTraduction")
+        self.actionTraduitV7V8 = QAction(self)
+        self.actionTraduitV7V8.setObjectName("actionTraduitV7V8")
+        self.actionTraduitV8V9 = QAction(self)
+        self.actionTraduitV8V9.setObjectName("actionTraduitV8V9")
+        self.menuTraduction.addAction(self.actionTraduitV7V8)
+        self.menuTraduction.addAction(self.actionTraduitV8V9)
+        self.menuTraduction.setTitle(QApplication.translate("Eficas", "Traduction", None, QApplication.UnicodeUTF8))
+        self.actionTraduitV7V8.setText(QApplication.translate("Eficas","TraduitV7V8", None, QApplication.UnicodeUTF8))
+        self.actionTraduitV8V9.setText(QApplication.translate("Eficas","TraduitV8V9", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionTraduitV7V8,SIGNAL("activated()"),self.traductionV7V8)
+        self.connect(self.actionTraduitV8V9,SIGNAL("activated()"),self.traductionV8V9)
+
+
 
     def ajoutIcones(self) :
         # Pour pallier les soucis de repertoire d icone
@@ -117,9 +129,6 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.connect(self.actionParametres_Eficas,SIGNAL("activated()"),self.optionEditeur)
         self.connect(self.actionLecteur_Pdf,SIGNAL("activated()"),self.optionPdf)
-
-        self.connect(self.actionTraduitV7V8,SIGNAL("activated()"),self.traductionV7V8)
-        self.connect(self.actionTraduitV8V9,SIGNAL("activated()"),self.traductionV8V9)
 
         #self.connect(self.helpIndexAction,SIGNAL("activated()"),self.helpIndex)
         #self.connect(self.helpContentsAction,SIGNAL("activated()"),self.helpContents)
@@ -275,6 +284,7 @@ class Appli(Ui_Eficas,QMainWindow):
         
     def handleClearRecent(self):
         self.recent = QStringList()
+        self.sauveRecents()
         
     def fileNew(self):        
         self.viewmanager.newEditor()        

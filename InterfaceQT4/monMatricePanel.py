@@ -120,13 +120,8 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
        if self.listeVariables == [] :
            QMessageBox.critical( self, "Mauvaise Commande ", "Aucune variable connue")
            return
-       header=QStringList()
-       for var in self.listeVariables :
-	   header << var
        self.TBMatrice.setColumnCount(len(self.listeVariables))
        self.TBMatrice.setRowCount(len(self.listeVariables))
-       self.TBMatrice.setVerticalHeaderLabels(header)
-       self.TBMatrice.setHorizontalHeaderLabels(header)
        self.nbLigs=len(self.listeVariables)
        self.nbCols=len(self.listeVariables)
 
@@ -134,24 +129,35 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
        for row in range(self.nbLigs):
 	   for column in range(self.nbCols):
 	       if row == column :
-	          initialFloat=0
-               else :
 	          initialFloat=1
+               else :
+	          initialFloat=0
                self.TBMatrice.setItem(row,column,QTableWidgetItem(str(initialFloat)))
+       header=QStringList()
+       for var in self.listeVariables :
+	   header << var
+       self.TBMatrice.setVerticalHeaderLabels(header)
+       self.TBMatrice.setHorizontalHeaderLabels(header)
 
   def  initialValeur(self):
       liste=self.node.item.get_valeur()
-      if (len(liste)) != self.nbLigs  :
+      if (len(liste)) != self.nbLigs +1  :
          QMessageBox.critical( self, "Mauvaise dimension de matrice", "le nombre de ligne n est pas egal a " + str(self.nbLigs))
       for i in range(self.nbLigs):
-          inter=liste[i]
+          inter=liste[i+1]
           if (len(inter)) != self.nbCols :
              QMessageBox.critical( self, "Mauvaise dimension de matrice", "le nombre de colonne n est pas egal a " + str(self.nbCols))
           for j in range(self.nbCols):
-              self.TBMatrice.setItem(i,j,QTableWidgetItem(str(liste[i][j])))
+              self.TBMatrice.setItem(i,j,QTableWidgetItem(str(liste[i+1][j])))
+      header=QStringList()
+      for var in liste[0]:
+	   header << var
+      self.TBMatrice.setVerticalHeaderLabels(header)
+      self.TBMatrice.setHorizontalHeaderLabels(header)
               
   def acceptVal(self):
       liste=[]
+      liste.append(self.listeVariables)
       if self.TBMatrice.rowCount() != self.nbLigs :
          QMessageBox.critical( self, "Mauvaise dimension de matrice", "le nombre de ligne n est pas egal a " + str(self.nbLigs))
       if self.TBMatrice.columnCount() != self.nbCols :
@@ -166,4 +172,5 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
                  QMessageBox.critical( self, "Mauvaise Valeur", "l element " + str(i) + "," +str(j) +"n est pas correct")
               listeCol.append(val)
           liste.append(listeCol)
+      # on ajoute l ordre des variables aux valeurs
       self.node.item.set_valeur(liste)

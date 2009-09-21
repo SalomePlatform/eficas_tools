@@ -140,9 +140,9 @@ class APPLI:
       """
       if (self.test == 0):
          splash._splash.configure(text = "Chargement des paramètres utilisateur")
-      import configuration
-      self.CONFIGURATION = configuration.make_config(self,prefsCode.REPINI)
-      self.CONFIGStyle = configuration.make_config_style(self,prefsCode.REPINI)
+      import configuration_ASTER
+      self.CONFIGURATION = configuration_ASTER.make_config(self,prefsCode.REPINI)
+      self.CONFIGStyle = configuration_ASTER.make_config_style(self,prefsCode.REPINI)
 
   def cree_composants_graphiques(self):
       """

@@ -581,14 +581,15 @@ class MCSIMP(I_OBJECT.OBJECT):
       return valid,comment
 
   def valideMatrice(self,cr):
+       #Attention, la matrice contient comme dernier tuple l ordre des variables
        if self.monType.methodeCalculTaille != None :
            apply (MCSIMP.__dict__[self.monType.methodeCalculTaille],(self,))
        try :
        #if 1 :
            ok=0
-           if len(self.valeur) == self.monType.nbLigs:
+           if len(self.valeur) == self.monType.nbLigs +1:
               ok=1
-              for i in range(len(self.valeur)):
+              for i in range(len(self.valeur) -1):
                   if len(self.valeur[i])!= self.monType.nbCols:
                      ok=0
            if ok: 

@@ -68,13 +68,6 @@
     <addaction name="actionParametres_Eficas" />
     <addaction name="actionLecteur_Pdf" />
    </widget>
-   <widget class="QMenu" name="menuTraduction" >
-    <property name="title" >
-     <string>Traduction</string>
-    </property>
-    <addaction name="actionTraduitV7V8" />
-    <addaction name="actionTraduitV8V9" />
-   </widget>
    <widget class="QMenu" name="menuPatrons" >
     <property name="title" >
      <string>Patrons</string>
@@ -85,7 +78,6 @@
    <addaction name="menuJdC" />
    <addaction name="menu_Aide" />
    <addaction name="menuOptions" />
-   <addaction name="menuTraduction" />
    <addaction name="menuPatrons" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
@@ -236,16 +228,6 @@
   <action name="actionLecteur_Pdf" >
    <property name="text" >
     <string>Lecteur Pdf</string>
-   </property>
-  </action>
-  <action name="actionTraduitV7V8" >
-   <property name="text" >
-    <string>TraduitV7V8</string>
-   </property>
-  </action>
-  <action name="actionTraduitV8V9" >
-   <property name="text" >
-    <string>TraduitV8V9</string>
    </property>
   </action>
   <action name="actionEficas" >

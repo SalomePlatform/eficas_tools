@@ -48,8 +48,9 @@ class DUP :
 
        self.top=None
        self.test=2
-       import configuration
-       self.CONFIGURATION=configuration.make_config(self,prefsCode.REPINI)
+       import configuration_ASTER
+
+       self.CONFIGURATION=configuration_ASTER.make_config(self,prefsCode.REPINI)
 
        self.load_readercata()
        self.cata=self.readercata.cata
