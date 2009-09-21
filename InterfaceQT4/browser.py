@@ -275,10 +275,11 @@ class JDCNode(QTreeWidgetItem):
         """ 
             Methode externe pour la destruction de l'objet associe au noeud
         """
-        print "je passe la"
         self.editor.init_modif()
         index = self.treeParent.children.index(self) - 1 
         if index < 0 : index =0
+        if self.item.nom == "VARIABLE" :
+            self.item.jdc.set_Copules_recalcule_etat()
 
         ret=self.treeParent.item.suppitem(self.item)
         if ret == 0:return
@@ -295,23 +296,20 @@ class JDCNode(QTreeWidgetItem):
 #        
 #    #------------------------------------------------------------------
     def onValid(self):        
-        #print "NODE  onValid", self.item.GetLabelText()
-        #import traceback
-        #print traceback.print_stack()
+        if self.item.nom == "VARIABLE" and self.item.isvalid():
+           self.item.jdc.recalcule_etat_correlation()
         self.editor.init_modif()
         self.update_node_valid()
         self.update_node_label()
         self.update_node_texte()
 
     def onAdd(self,object):
-        #print "NODE  onAdd", self.item.GetLabelText()
         #import traceback
         #print traceback.print_stack()
         self.editor.init_modif()
         self.update_nodes()
  
     def onSupp(self,object):
-        print "NODE onSupp", self.item.GetLabelText()
         self.editor.init_modif()
         self.update_nodes()
  

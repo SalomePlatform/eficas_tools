@@ -141,12 +141,15 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
 
   def  initialValeur(self):
       liste=self.node.item.get_valeur()
+      dejaAffiche=0
       if (len(liste)) != self.nbLigs +1  :
          QMessageBox.critical( self, "Mauvaise dimension de matrice", "le nombre de ligne n est pas egal a " + str(self.nbLigs))
+         dejaAffiche=1
       for i in range(self.nbLigs):
           inter=liste[i+1]
-          if (len(inter)) != self.nbCols :
+          if (len(inter)) != self.nbCols and (dejaAffiche == 0 ) :
              QMessageBox.critical( self, "Mauvaise dimension de matrice", "le nombre de colonne n est pas egal a " + str(self.nbCols))
+             dejaAffiche=1
           for j in range(self.nbCols):
               self.TBMatrice.setItem(i,j,QTableWidgetItem(str(liste[i+1][j])))
       header=QStringList()

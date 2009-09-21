@@ -85,6 +85,25 @@ class JDC(I_OBJECT.OBJECT):
                 l.append(variable.nom)
       return l
 
+   def set_Copules_recalcule_etat(self):
+      for etapeTraitee in self.etapes :
+          if etapeTraitee.nom == 'CORRELATION' :
+             copule=etapeTraitee.get_child('LaCopule')
+             if copule !=None :
+                copule.state='arecalculer'
+     
+   def recalcule_etat_correlation(self):
+      for etapeTraitee in self.etapes :
+          if etapeTraitee.nom == 'CORRELATION' :
+             copule=etapeTraitee.get_child('LaCopule')
+             if copule !=None :
+                copule.state='arecalculer'
+                copule.isvalid()
+                etapeTraitee.state='arecalculer'
+             if etapeTraitee.state=='arecalculer':
+                etapeTraitee.isvalid()
+                
+        
    def get_sd_avant_du_bon_type_pour_type_de_base(self,etape,type):
       """
           Retourne la liste des concepts avant etape d'1 type de base acceptable
