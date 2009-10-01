@@ -825,7 +825,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           if e.nom=="CORRELATION":
              e.state="changed"
              try :
-               MCFils=e.get_child('LaCopule')
+               MCFils=e.get_child('Copula')
                MCFils.state="changed"
              except :
                pass

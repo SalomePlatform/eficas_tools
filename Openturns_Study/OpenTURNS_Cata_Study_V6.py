@@ -28,6 +28,28 @@ class Tuple:
   __repr__=info
   __str__=info
 
+class Matrice:
+  def __init__(self,nbLigs=None,nbCols=None,methodeCalculTaille=None,formatSortie="ligne",valSup=None,valMin=None,structure=None):
+      self.nbLigs=nbLigs
+      self.nbCols=nbCols
+      self.methodeCalculTaille=methodeCalculTaille
+      self.formatSortie=formatSortie
+      self.valSup=valSup
+      self.valMin=valMin
+      self.structure=structure
+
+  def __convert__(self,valeur):
+    # Attention ne verifie pas grand chose
+    if type(valeur) != types.ListType :
+      return None
+    return valeur
+
+  def info(self):
+      return "Matrice %s x %s" % (self.nbLigs, self.nbCols)
+
+      __repr__=info
+      __str__=info
+
 
 #CONTEXT.debug = 1
 JdC = JDC_CATA ( code = 'OPENTURNS_STUDY',
@@ -885,12 +907,26 @@ CORRELATION = PROC ( nom = 'CORRELATION',
                      ang = "Variable correlation",
 
   Copula = SIMP ( statut = "o",
-                  typ = "TXM",
-                  into = ( "Independent", ),
+                  typ = 'TXM',
+                  into = ( "Independent", "Normal" ),
                   defaut = "Independent",
                   fr = "Type de la copule",
                   ang = "Copula kind",
                   ),
+
+  Matrix = BLOC ( condition = "Copula in ( 'Normal', )",
+                  
+    CorrelationMatrix = SIMP ( statut = "o",
+                               typ = Matrice(nbLigs=None,
+                                             nbCols=None,
+                                             methodeCalculTaille='NbDeVariables',
+                                             valSup=1,
+                                             valMin=-1,
+                                             structure="symetrique"),
+                               fr = "Matrice de correlation entre les variables d'entree",
+                               ang = "Correlation matrix for input variables",
+                               ),
+  ), # Fin BLOC Matrix
 
 
 ) # Fin PROC CORRELATION
