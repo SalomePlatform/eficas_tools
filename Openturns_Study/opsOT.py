@@ -15,7 +15,6 @@ def INCLUDE_context(self,d):
        Fonction op_init pour macro INCLUDE
    """
    for k,v in self.g_context.items():
-      print "IDM: ops.py k=%s v=%s" % (k,v)
       d[k]=v
 
 
