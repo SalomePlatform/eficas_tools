@@ -150,7 +150,7 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
            l3=self.listeValeursCourantes[index:]
            for valeur in listeRetour:
                val=self.politique.GetValeurTexte(valeur)
-               self.LBValeurs.insertItem(index,val)
+               self.LBValeurs.insertItem(index,QString(str(val)))
                item=self.LBValeurs.item(index)
                item.setSelected(1)
                self.LBValeurs.setCurrentItem(item)
