@@ -26,26 +26,12 @@ import salome
 sg=salome.sg
 sgPyQt=SalomePyQt.SalomePyQt()
 
-
-import studyManager
+from pal.studyedit import StudyEditor
+monEditor=StudyEditor()
 
 print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 
 
-
-# -----------------------------------------------------------------------------
-#Cette méthode est obsolète en V3
-#En V2, si on n'implémente pas cette méthode, le composant fonctionne
-#correctement. Un message "Attribute Error" apparait dans la trace.
-#def setWorkSpace(workSpace):
-#   global WORKSPACE
-#   WORKSPACE=workSpace
-   # le desktop
-#   desktop=sgPyQt.getDesktop()
-
-   # recuperation du workspace
-#   ws=sgPyQt.getMainFrame()
-#   #print ws
 
 # -----------------------------------------------------------------------------
 
@@ -68,11 +54,6 @@ def setSettings():
    desktop=sgPyQt.getDesktop()
    global currentStudyId
    currentStudyId = sgPyQt.getStudyId()
-   #print "setSettings: currentStudyId = " + str(currentStudyId)
-   # _CS_gbo_ Voir si on peut utiliser directement sgPyQt.getStudyId()
-   # dans salomedsgui?
-   
-   studyManager.palStudy.setCurrentStudyID( currentStudyId ) #CS_pbruno   
 
 def activate():
    """
@@ -91,11 +72,8 @@ def activeStudyChanged(ID):
    # le desktop
    desktop=sgPyQt.getDesktop()
    global currentStudyId
-   # ne marche pas car sg est supposé résider dans une etude
-   # studyId=sg.getActiveStudyId()
    currentStudyId=ID
    
-   studyManager.palStudy.setCurrentStudyID( currentStudyId ) #CS_pbruno
    
 
 def definePopup(theContext, theObject, theParent):    
@@ -103,18 +81,25 @@ def definePopup(theContext, theObject, theParent):
    theObject = "100"
    theParent = "ObjectBrowser"
    a=salome.sg.getAllSelected()
-   #print a
     
    selectedEntry = a[0]
-   aType, aValue = studyManager.palStudy.getTypeAndValue( selectedEntry )
-   
-   if aType == studyManager.FICHIER_EFICAS_ASTER :
+   mySO = monEditor.study.FindObjectID(selectedEntry);
+   aType = monEditor.getFileType(mySO)
+   if aType == "FICHIER_EFICAS_ASTER" :
         theObject="73"    
             
    return (theContext, theObject, theParent)
 
 
 def customPopup(popup, theContext, theObject, theParent):
+   print "EFICASGUI --- customPopup TODO"
+   print "EFICASGUI --- customPopup"
+   print "EFICASGUI --- customPopup"
+   print "EFICASGUI --- customPopup"
+   print "EFICASGUI --- customPopup"
+   print "EFICASGUI --- customPopup"
+   print "EFICASGUI --- customPopup"
+   print "EFICASGUI --- customPopup"
    print "EFICASGUI --- customPopup"
 #   popup.removeItem(99003)
 
@@ -159,14 +144,16 @@ def runEficasFichier(version=None):
    if len(a) == 1:
       selectedEntry = a[0]
       
-      aType, aValue = studyManager.palStudy.getTypeAndValue( selectedEntry )
-      if aType == studyManager.FICHIER_EFICAS_ASTER:        
+      mySO = monEditor.study.FindObjectID(selectedEntry);
+      aType = monEditor.getFileType(mySO)
+      aValue = monEditor.getFileName(mySO)
+      if aType == "FICHIER_EFICAS_ASTER":        
         fileName = aValue
         code     = "ASTER"
-      elif aType == studyManager.FICHIER_EFICAS_OM:        
+      elif aType == "FICHIER_EFICAS_SEP":        
         fileName = aValue
         code     = "SEP"
-      elif aType == studyManager.FICHIER_EFICAS_OPENTURNS:        
+      elif aType == "FICHIER_EFICAS_OPENTURNS":        
         fileName = aValue
         code     = "OPENTURNS"
       else:

@@ -12,7 +12,7 @@ try :
 except :
     pass
 
-from Logger import Logger
+from pal.logger import Logger
 logger=Logger( "EficasStudy" )
 
 
