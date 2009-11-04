@@ -83,17 +83,8 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           Méthode appelée une fois qu'une modification a été faite afin de 
           déclencher d'éventuels traitements post-modification
           ex : INCLUDE et POURSUITE
+          Ne pas mettre de traitement qui risque d'induire des recursions (soit a peu pres rien)
       """
-      #print "fin_modif",self,self.parent
-      if self.nom == "DETRUIRE":
-         #Il n'est pas conseillé de mettre des traitements dans fin_modif. Ceci est une
-         # exception qu'il faut supprimer à terme.
-         #une commande DETRUIRE a été modifiée. Il faut verifier les commandes
-         #suivantes
-         #ATTENTION: aux eventuelles recursions
-         self.parent.control_context_apres(self)
-         pass
-
       CONNECTOR.Emit(self,"valid")
       if self.parent:
         self.parent.fin_modif()
@@ -423,6 +414,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       parent.addentite(commande_comment,pos)
 
       return commande_comment
+
+   def modified(self):
+      """Le contenu de l'etape (mots cles, ...) a ete modifie"""
+      if self.nom=="DETRUIRE":
+        self.parent.control_context_apres(self)
 
      
 #ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau

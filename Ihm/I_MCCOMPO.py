@@ -186,6 +186,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
     objet.delete_mc_global()
     objet.update_condition_bloc()
     objet.supprime()
+    self.etape.modified()
     self.fin_modif()
     return 1
 

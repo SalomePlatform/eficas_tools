@@ -130,6 +130,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     Remplace la valeur de self par new_valeur interprétée
     """
     self.valeur = self.interprete_valeur(new_valeur)
+    self.parent.update_concept_after_etape(self,self)
     self.init_modif()
 
   def set_nom(self,new_nom):
@@ -249,6 +250,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     paramètres du JDC
     """
     self.jdc.delete_param(self)
+    self.parent.delete_concept(self)
 
   def update_context(self,d):
     """

@@ -79,6 +79,7 @@ class MCList:
       CONNECTOR.Emit(self,"supp",obj)
       self.update_condition_bloc()
       obj.supprime()
+      self.etape.modified()
       self.fin_modif()
       return 1
 

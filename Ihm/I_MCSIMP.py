@@ -283,6 +283,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         self.valeur = new_valeur
         self.val = new_valeur
         self.update_condition_bloc()
+        self.etape.modified()
         self.fin_modif()
         return 1
 
@@ -366,9 +367,13 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def update_concept(self,sd):
     if type(self.valeur) in (types.ListType,types.TupleType) :
-       if sd in self.valeur:self.fin_modif()
+       if sd in self.valeur:
+         self.init_modif()
+         self.fin_modif()
     else:
-       if sd == self.valeur:self.fin_modif()
+       if sd == self.valeur:
+         self.init_modif()
+         self.fin_modif()
 
   def delete_concept(self,sd):
     """ 
