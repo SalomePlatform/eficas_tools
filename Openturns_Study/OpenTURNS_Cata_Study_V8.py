@@ -411,8 +411,8 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
                                        max = '**',
-                                       fr = "Liste de couples : largeur de classe, probabilité associée",
-                                       ang = "Class bandwidth, associated probability couple list",
+                                       fr = "Liste de couples : largeur de classe, hauteur de classe",
+                                       ang = "Class bandwidth, class height couple list",
                                        validators=VerifTypeTuple(('R','R')),
                                        ),
 
@@ -1305,14 +1305,6 @@ CRITERIA = PROC ( nom = "CRITERIA",
                                                 ang = "Mean vector",
                                                 ),
 
-                            Correlation = SIMP ( statut = "o",
-                                                 typ = 'TXM',
-                                                 into = ( 'Independent', 'Linear' ),
-                                                 defaut = 'Independent',
-                                                 max = 1,
-                                                 fr = "Le type de correlation entre les variables",
-                                                 ang = "Correlation between variables",
-                                                 ),
 
                ), # Fin BLOC ImportanceSamplingSettings
 

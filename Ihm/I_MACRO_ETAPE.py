@@ -794,9 +794,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
              nom=maVariableListe[i].id_
              type=maVariableListe[i].type_
              if type :
-               ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='in',R=%d);\n" % (nom, nom, i)
-             else :
                ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='out',R=%d);\n" % (nom, nom, i)
+             else :
+               ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='in',R=%d);\n" % (nom, nom, i)
              self.fichier_text = self.fichier_text + ligneTexte
       except:
          self.make_incl2_except()

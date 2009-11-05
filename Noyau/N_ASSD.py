@@ -59,7 +59,7 @@ class ASSD(object):
       # permet de savoir si le concept a été calculé (1) ou non (0)
       self.executed = 0
       # initialise la partie "sd"
-      super(ASSD, self).__init__(nomj='?&?&?&?&')
+      super(ASSD, self).__init__() # Python 2.6
       
    def __getitem__(self,key):
       return self.etape[key]

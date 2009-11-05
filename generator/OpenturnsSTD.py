@@ -130,6 +130,9 @@ class STDGenerateur :
       "marginal" : "marginal",
       "collection" : "collection",
       "copula" : "copula",
+      "correlation" : "correlation",
+      "R" : "R",
+      "vars" : "vars",
       "description" : "description",
       "inputRandomVector" : "inputRandomVector",
       "outputRandomVector" : "outputRandomVector",
@@ -273,10 +276,10 @@ class STDGenerateur :
       
     txt  = "# Charge le modele physique\n"
     txt  = "%s = WrapperFile( '%s' )\n" % (self.variable["wrapper"], name)
+    txt += "%s = %s.getWrapperData()\n" % (self.variable["wrapperdata"], self.variable["wrapper"])
 
     txt += "# Ces lignes sont utiles pour le fonctionnement du script sous Salome\n"
     txt += "if globals().has_key('%s'):\n" % self.variable["framework"]
-    txt += "  %s = %s.getWrapperData()\n" % (self.variable["wrapperdata"], self.variable["wrapper"])
     txt += "  %s = %s.getFrameworkData()\n" % (self.variable["frameworkdata"], self.variable["wrapperdata"])
     txt += "  %s.studyid_ = %s['%s']\n"  % (self.variable["frameworkdata"], self.variable["framework"], self.variable["studyid"])
     txt += "  %s.studycase_ = %s['%s']\n"  % (self.variable["frameworkdata"], self.variable["framework"], self.variable["studycase"])
@@ -369,7 +372,21 @@ class STDGenerateur :
     Cree la copule de la loi jointe
     '''
     txt  = "# Definit la copule de la loi jointe\n"
-    txt += "%s = IndependentCopula( %s )\n" % (self.variable["copula"], self.variable["n"])
+
+    if ( self.DictMCVal.has_key( 'Copula' ) ):
+      if ( self.DictMCVal[ 'Copula' ] in ( 'Independent', ) ):
+        txt += "%s = IndependentCopula( %s )\n" % (self.variable["copula"], self.variable["n"])
+      elif ( self.DictMCVal[ 'Copula' ] in ( 'Normal', ) ):
+        varList   = self.DictMCVal[ 'CorrelationMatrix' ][0]
+        dimension = len(varList)
+        txt += "%s = {}\n" % self.variable["correlation"]
+        for i in range( dimension ):
+          txt += "%s['%s'] = {}\n" % (self.variable["correlation"], varList[i])
+          for j in range ( dimension ):
+            txt += "%s['%s']['%s'] = %g\n" % (self.variable["correlation"], varList[i], varList[j], self.DictMCVal[ 'CorrelationMatrix' ][i+1][j])
+        txt += "%s = getCorrelationMatrixFromMap( %s.getVariableList(), %s )\n" % (self.variable["R"], self.variable["wrapperdata"], self.variable["correlation"])
+        txt += "%s = NormalCopula( %s )\n" % (self.variable["copula"], self.variable["R"])
+
     txt += "\n"
     return txt
 
@@ -511,13 +528,13 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'MeanFirstOrder' ) ):
       if ( self.DictMCVal[ 'MeanFirstOrder' ] == "yes" ):
         txt += "%s = %s.getMeanFirstOrder()\n" % (self.variable["meanFirstOrder"], self.variable["myQuadraticCumul"])
-        txt += "print '%s = ', %s\n" % ("meanFirstOrder", self.variable["meanFirstOrder"])
+        txt += "print '%s = ', %s\n" % ("mean First Order", self.variable["meanFirstOrder"])
         txt += "\n"
        
     if ( self.DictMCVal.has_key( 'MeanSecondOrder' ) ):
       if ( self.DictMCVal[ 'MeanSecondOrder' ] == "yes" ):
         txt += "%s = %s.getMeanSecondOrder()\n" % (self.variable["meanSecondOrder"], self.variable["myQuadraticCumul"])
-        txt += "print '%s = ', %s\n" % ("meanSecondOrder", self.variable["meanSecondOrder"])
+        txt += "print '%s = ', %s\n" % ("mean Second Order", self.variable["meanSecondOrder"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'StandardDeviationFirstOrder' ) ):
@@ -526,7 +543,7 @@ class STDGenerateur :
         txt += "dim = %s.getDimension()\n" % self.variable["standardDeviationFirstOrder"]
         txt += "for i in range( dim ):\n"
         txt += "  %s[ i, i ] = math.sqrt( %s[ i, i ] )\n" % (self.variable["standardDeviationFirstOrder"], self.variable["standardDeviationFirstOrder"])
-        txt += "print '%s = ', %s\n" % ("standardDeviationFirstOrder", self.variable["standardDeviationFirstOrder"])
+        txt += "  print '%s = ', %s[ i, i ]\n" % ("standard Deviation First Order", self.variable["standardDeviationFirstOrder"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'ImportanceFactor' ) ):
@@ -564,7 +581,7 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'EmpiricalMean' ) ):
       if ( self.DictMCVal[ 'EmpiricalMean' ] == "yes" ):
         txt += "%s = %s.computeMean()\n" % (self.variable["empiricalMean"], self.variable["outputSample"])
-        txt += "print '%s =', %s\n" % ("empiricalMean", self.variable["empiricalMean"])
+        txt += "print '%s =', %s[0]\n" % ("empirical Mean", self.variable["empiricalMean"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'EmpiricalStandardDeviation' ) ):
@@ -573,13 +590,13 @@ class STDGenerateur :
         txt += "dim = %s.getDimension()\n" % self.variable["empiricalStandardDeviation"]
         txt += "for i in range( dim ):\n"
         txt += "  %s[ i, i ] = math.sqrt( %s[ i, i ] )\n" % (self.variable["empiricalStandardDeviation"], self.variable["empiricalStandardDeviation"])
-        txt += "print '%s = ', %s\n" % ("empiricalStandardDeviation", self.variable["empiricalStandardDeviation"])
+        txt += "  print '%s = ', %s[ i, i ]\n" % ("empirical Standard Deviation", self.variable["empiricalStandardDeviation"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'EmpiricalQuantile_Order' ) ):
       ordre = self.DictMCVal[ 'EmpiricalQuantile_Order' ]
       txt += "%s = %s.computeQuantile( %s )\n" % (self.variable["empiricalQuantile"], self.variable["outputSample"], ordre)
-      txt += "print '%s ( %s ) =', %s\n" % ("empiricalQuantile", ordre, self.variable["empiricalQuantile"])
+      txt += "print '%s ( %s ) =', %s\n" % ("empirical Quantile", ordre, self.variable["empiricalQuantile"])
       txt += "\n"
    
     if ( self.DictMCVal.has_key( 'CorrelationAnalysis' ) ):
@@ -697,7 +714,7 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'StandardDeviation' ) ):
       if ( self.DictMCVal[ 'StandardDeviation' ] == "yes" ):
         txt += "%s = math.sqrt( %s.getProbabilityEstimate() )\n" % (self.variable["standardDeviation"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % ("standardDeviation", self.variable["standardDeviation"])
+        txt += "print '%s =', %s\n" % ("standard Deviation", self.variable["standardDeviation"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'ConfidenceInterval' ) and self.DictMCVal.has_key( 'Probability' ) ):
@@ -710,13 +727,13 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'VariationCoefficient' ) ):
       if ( self.DictMCVal[ 'VariationCoefficient' ] == "yes" ):
         txt += "%s = %s.getCoefficientOfVariation()\n" % (self.variable["coefficientOfVariation"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % ("coefficientOfVariation", self.variable["coefficientOfVariation"])
+        txt += "print '%s =', %s\n" % ("coefficient of Variation", self.variable["coefficientOfVariation"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'SimulationsNumber' ) ):
       if ( self.DictMCVal[ 'SimulationsNumber' ] == "yes" ):
         txt += "%s = %s.getOuterSampling()\n" % (self.variable["simulationNumbers"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % ("simulationNumbers", self.variable["simulationNumbers"])
+        txt += "print '%s =', %s\n" % ("simulation Numbers", self.variable["simulationNumbers"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'ConvergenceGraph' ) and self.DictMCVal.has_key( 'ConfidenceInterval' ) ):
@@ -837,19 +854,20 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'HasoferReliabilityIndex' ) ):
       if ( self.DictMCVal[ 'HasoferReliabilityIndex' ] == "yes" ):
         txt += "%s = %s.getHasoferReliabilityIndex()\n" % (self.variable["hasoferReliabilityIndex"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % ("hasoferReliabilityIndex", self.variable["hasoferReliabilityIndex"])
+        txt += "print '%s =', %s\n" % ("hasofer Reliability Index", self.variable["hasoferReliabilityIndex"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'DesignPoint' ) ):
       if ( self.DictMCVal[ 'DesignPoint' ] == "yes" ):
         txt += "%s = %s.getStandardSpaceDesignPoint()\n" % (self.variable["standardSpaceDesignPoint"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % ("standardSpaceDesignPoint", self.variable["standardSpaceDesignPoint"])
+        txt += "print '%s =', %s\n" % ("standard Space Design Point", self.variable["standardSpaceDesignPoint"])
         txt += "%s = %s.getPhysicalSpaceDesignPoint()\n" % (self.variable["physicalSpaceDesignPoint"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % ("physicalSpaceDesignPoint", self.variable["physicalSpaceDesignPoint"])
+        txt += "print '%s =', %s\n" % ("physical Space Design Point", self.variable["physicalSpaceDesignPoint"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'ImportanceFactor' ) ):
       if ( self.DictMCVal[ 'ImportanceFactor' ] == "yes" ):
+        txt += "print 'Importance Factors:'\n"
         txt += "%s = %s.getImportanceFactors()\n" % (self.variable["importanceFactors"], self.variable["myResult"])
         txt += "for i in range(%s.getDimension()):\n" % self.variable["importanceFactors"]
         txt += "  print %s.getDescription()[i], ':', %s[i]*100., '%%'\n" % (self.variable["distribution"], self.variable["importanceFactors"])
@@ -902,19 +920,19 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'TvedtApproximation' ) ):
       if ( self.DictMCVal[ 'TvedtApproximation' ] == "yes" ):
         txt += "%s = %s.getEventProbabilityTvedt()\n" % (self.variable["tvedtApproximation"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % ("tvedtApproximation", self.variable["tvedtApproximation"])
+        txt += "print '%s =', %s\n" % ("Tvedt Approximation", self.variable["tvedtApproximation"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'HohenBichlerApproximation' ) ):
       if ( self.DictMCVal[ 'HohenBichlerApproximation' ] == "yes" ):
         txt += "%s = %s.getEventProbabilityHohenBichler()\n" % (self.variable["hohenBichlerApproximation"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % ("hohenBichlerApproximation", self.variable["tvedtApproximation"])
+        txt += "print '%s =', %s\n" % ("HohenBichler Approximation", self.variable["tvedtApproximation"])
         txt += "\n"
 
     if ( self.DictMCVal.has_key( 'BreitungApproximation' ) ):
       if ( self.DictMCVal[ 'BreitungApproximation' ] == "yes" ):
         txt += "%s = %s.getEventProbabilityBreitung()\n" % (self.variable["breitungApproximation"], self.variable["myResult"])
-        txt += "print '%s =', %s\n" % ("breitungApproximation", self.variable["breitungApproximation"])
+        txt += "print '%s =', %s\n" % ("Breitung Approximation", self.variable["breitungApproximation"])
         txt += "\n"
 
 
@@ -988,11 +1006,7 @@ class STDGenerateur :
     for i in range(dimension):
       txt += "%s[%d] = %g\n" % (self.variable["meanVector"], i, meanVector[i])
       
-    if ( self.DictMCVal.has_key( 'Correlation' ) ):
-      if ( self.DictMCVal[ 'Correlation' ] in ( 'Independent', ) ):
-        txt += "%s = Normal( %s, CovarianceMatrix( IdentityMatrix( %s ) ) )\n" % (self.variable["importanceDensity"], self.variable["meanVector"], self.variable["n"])
-      elif ( self.DictMCVal[ 'Correlation' ] in ( 'Linear', ) ):
-        txt += "# Linear correlation not yet implemented\n"
+    txt += "%s = Normal( %s, CovarianceMatrix( IdentityMatrix( %s ) ) )\n" % (self.variable["importanceDensity"], self.variable["meanVector"], self.variable["n"])
     txt += "%s = ImportanceSampling( %s, Distribution( %s ) )\n"  % (self.variable["myAlgo"], self.variable["myEvent"], self.variable["importanceDensity"])
     txt += "\n"
 
@@ -1041,9 +1055,9 @@ class STDGenerateur :
         txt += "%s = %s.getGradientCallsNumber() - %s\n" % (self.variable["modelGradientCalls"], self.variable["model"], self.variable["modelGradientCalls"])
         txt += "%s = %s.getHessianCallsNumber() - %s\n" % (self.variable["modelHessianCalls"], self.variable["model"], self.variable["modelHessianCalls"])
         txt += "\n"
-        txt += "print '%s =', %s\n" % ("modelEvaluationCalls", self.variable["modelEvaluationCalls"])
-        txt += "print '%s =', %s\n" % ("modelGradientCalls", self.variable["modelGradientCalls"])
-        txt += "print '%s =', %s\n" % ("modelHessianCalls", self.variable["modelHessianCalls"])
+        txt += "print '%s =', %s\n" % ("model Evaluation Calls", self.variable["modelEvaluationCalls"])
+        txt += "print '%s =', %s\n" % ("model Gradient Calls", self.variable["modelGradientCalls"])
+        txt += "print '%s =', %s\n" % ("model Hessian Calls", self.variable["modelHessianCalls"])
         txt += "\n"
 
     return txt
