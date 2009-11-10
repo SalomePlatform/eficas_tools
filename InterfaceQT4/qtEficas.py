@@ -28,6 +28,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.QWParent=None #(Pour lancement sans IHM)
         self.indice=0
         self.dict_reels={}
+        self.OTunite=700
+        print "appliiiiiiiiiiiiiiiiii" , self
 
         import prefs
         if salome :
