@@ -26,6 +26,7 @@ print "passage dans la surcharge de configuration pour OTW"
 import os, sys, string, types, re
 import traceback
 from PyQt4.QtGui  import *
+from utils import read_file
 
 # Modules Eficas
 from Editeur import utils
@@ -49,26 +50,25 @@ class CONFIG:
       self.appli   = appli  
       self.code    = appli.code
       self.salome  = appli.salome
-      self.repIni = repIni
+      self.repIni  = repIni
      
-      self.fic_prefs ="prefs.py"
-      self.prefsUser ="prefs.py"
-
       if self.appli: 
          self.parent=appli.top
          self.appli.mode_nouv_commande='initial'
       else: 	     self.parent=None
 
 
-      self.labels=("OpenTURNS_path","rep_user","INSTALLDIR","path_doc","exec_acrobat","rep_cata","initialdir","savedir")
-
       # Valeurs par defaut
       self.rep_user     = os.path.join(os.environ['HOME'],'.Eficas_Openturns')
+      if not os.path.isdir(self.rep_user) : os.mkdir(self.rep_user)
       self.initialdir   = self.rep_user
       self.path_doc     = self.rep_user
       self.savedir      = self.rep_user
       self.exec_acrobat = self.rep_user
  
+      self.labels_user=('exec_acrobat', 'catalogues','savedir','path_doc','OpenTURNS_path')
+      self.labels_eficas=("OpenTURNS_path","rep_user","INSTALLDIR","path_doc","exec_acrobat","rep_cata","initialdir","savedir","catalogues")
+
       #Lecture des fichiers utilisateurs
       self.lecture_fichier_ini_standard()
       self.lecture_fichier_ini_utilisateur()
@@ -79,21 +79,18 @@ class CONFIG:
   #--------------------------------------
   # Verifie l'existence du fichier "standard"
   # appelle la lecture de ce fichier
-      self.fic_ini = os.path.join(self.repIni,self.fic_prefs)
-      if not os.path.isfile(self.fic_ini):
-          QMessageBox.critical( None, "Import du fichier de Configuration", 
-				"Erreur à la lecture du fichier de configuration "+self.fic_ini+".py" )
-          sys.exit(0)
       import prefs
       name='prefs_'+prefs.code
       prefsCode=__import__(name)
       self.prefsUser=name+".py"
-      for k in self.labels :
+      for k in self.labels_eficas :
          try :
             valeur=getattr(prefsCode,k)
             setattr(self,k,valeur)
          except :
             pass
+      if hasattr(self,'OpenTURNS_path') :
+         oldPath=self.OpenTURNS_path
               
 
   #--------------------------------------
@@ -101,10 +98,8 @@ class CONFIG:
   #--------------------------------------
   # Surcharge les paramètres standards par les paramètres utilisateur s'ils existent
       self.fic_ini_utilisateur = os.path.join(self.rep_user,self.prefsUser)
-      #if not os.path.isfile(self.fic_ini_utilisateur+".py"):
-      if not os.path.isfile(self.fic_ini_utilisateur):
-	 return
-      from utils import read_file
+      if not os.path.isfile(self.fic_ini_utilisateur): return
+
       txt = utils.read_file(self.fic_ini_utilisateur)
       from styles import style
       d=locals()
@@ -115,36 +110,35 @@ class CONFIG:
          QMessageBox.critical( None, "Import du fichier de Configuration", 
 			"Erreur à la lecture du fichier de configuration " + self.fic_ini_utilisateur )
          sys.exit(0)
-      for k in self.labels :
+      for k in self.labels_user :
          try :
             setattr(self,k,d[k])
          except :
             pass
 
-      try :
-      	sys.path.append( self.OpenTURNS_path )
-      except :
-        pass
+      if hasattr(self,'OpenTURNS_path') :
+         if hasattr(self,'oldPath'):
+            if self.OpenTURNS_path != self.oldPath:
+               sys.path.remove(self.oldPath)
+               sys.path[:0]=[self.OpenTURNS_path]
+         else :
+               sys.path[:0]=[self.OpenTURNS_path]
 
 
   #--------------------------------------
   def lecture_catalogues(self):
   #--------------------------------------
-      rep_mat=" " # Compatbilite Aster
-      fic_cata  ="catalogues_openturns.ini"
-      fic_ini = os.path.join(self.repIni,fic_cata)
-      fic_user= os.path.join(self.rep_user,fic_cata)
-      if  os.path.isfile(fic_user):
-          fichier = fic_user
-      else  :
-          fichier = fic_ini
-          if not os.path.isfile(fic_ini) :
-             QMessageBox.critical( None, "Erreur a l'import du fichier des Catalogues", 
-			"Le fichier de configuration des catalogues "+fic_ini+" n a pas été trouvé" )
-             sys.exit(0)
+      rep_mat=" " # Compatibilite Aster
+      if hasattr(self,"catalogues") :
+         return
+ 
+      fic_ini = os.path.join(self.repIni,"catalogues_openturns.ini")
+      if not os.path.isfile(fic_ini) :
+         QMessageBox.critical( None, "Erreur a l'import du fichier des Catalogues", 
+	            "Le fichier de configuration des catalogues "+fic_ini+" n a pas été trouvé" )
+         sys.exit(0)
 
-      from utils import read_file
-      txt = utils.read_file(fichier)
+      txt = utils.read_file(fic_ini)
       d=locals()
       try:
          exec txt in d
@@ -152,7 +146,7 @@ class CONFIG:
       except :
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
          QMessageBox.critical( None, "Import du fichier de Configuration", 
-			"Erreur à la lecture du fichier de configuration " + fichier )
+			"Erreur à la lecture du fichier de configuration " + fic_ini )
          sys.exit(0)
 
 
@@ -163,33 +157,15 @@ class CONFIG:
   # sauvegarde
   # les nouveaux paramètres dans le fichier de configuration utilisateur
   #
-       print "a ecrire PNPNPN"
-#      l_param=('exec_acrobat', 'repIni','catalogues','rep_travail','rep_mat','path_doc')
-#      texte=""
-#      for clef in l_param :
-#          if hasattr(self,clef):
-#             valeur=getattr(self,clef)
-#             texte= texte + clef+"	= " + repr(valeur) +"\n"
-#
-#
-#      # recuperation des repertoires materiaux
-#      try :
-#          for item in self.catalogues :
-#              try :
-#                  (code,version,cata,format,defaut)=item
-#              except :
-#                  (code,version,cata,format)=item
-#              codeSansPoint=re.sub("\.","",version)
-#              chaine="rep_mat_"+codeSansPoint
-#              if hasattr(self,chaine):
-#                 valeur=getattr(self,chaine)
-#                 texte= texte + chaine+"	= '" + str(valeur) +"'\n"
-#      except :
-#             pass
-#
-#      f=open(self.fic_ini_utilisateur,'w+')
-#      f.write(texte) 
-#      f.close()
+      texte=""
+      for clef in self.labels_user :
+          if hasattr(self,clef):
+             valeur=getattr(self,clef)
+             texte= texte + clef+"	= " + repr(valeur) +"\n"
+      f=open(self.fic_ini_utilisateur,'w+')
+      print self.fic_ini_utilisateur
+      f.write(texte) 
+      f.close()
 #
 
 

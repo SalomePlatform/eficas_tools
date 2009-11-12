@@ -55,7 +55,7 @@ class SaisieValeur:
                val=self.politique.GetValeurTexte(valeur)
             except :
                val=valeur
-            self.LBValeurs.addItem(val)
+            self.LBValeurs.addItem(str(val))
         if listeValeurs != None and listeValeurs != [] :
             self.LBValeurs.setCurrentRow(len(listeValeurs) - 1)
        
