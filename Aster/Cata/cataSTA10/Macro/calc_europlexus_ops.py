@@ -1,4 +1,4 @@
-#@ MODIF calc_europlexus_ops Macro  DATE 18/11/2009   AUTEUR MACOCCO K.MACOCCO 
+#@ MODIF calc_europlexus_ops Macro  DATE 16/11/2009   AUTEUR ASSIRE A.ASSIRE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -36,7 +36,6 @@ import os
 import Numeric as N
 import math 
 import copy
-import sets
 
 # Protection pour Eficas
 try:
@@ -113,6 +112,7 @@ def calc_europlexus_ops(self,MODELE,CARA_ELEM,CHAM_MATER,EXCIT,FONC_PARASOL=None
   # Pour masquer certaines alarmes
   from Utilitai.Utmess import UTMESS, MasquerAlarme, RetablirAlarme
   MasquerAlarme('MED_1')
+  MasquerAlarme('MED_54')
 
   # Ligne de commande d'Europlexus
   if args.has_key('LOGICIEL'): EXEC = args['LOGICIEL']
@@ -167,6 +167,7 @@ def calc_europlexus_ops(self,MODELE,CARA_ELEM,CHAM_MATER,EXCIT,FONC_PARASOL=None
 
   # Pour la gestion des alarmes
   RetablirAlarme('MED_1')
+  RetablirAlarme('MED_54')
 
   return ier
 
@@ -766,8 +767,8 @@ class EUROPLEXUS:
       # crea_maillage a faire de facon centraliser pour RIGI_PARASOL et le POST-TRAITEMENT ailleurs
       courbe_fact = self.COURBE
       if courbe_fact is None: courbe_fact = []
-      lnoeuds=sets.Set([])
-      lmailles=sets.Set([])
+      lnoeuds=set()
+      lmailles=set()
       dicma=[]
       for courbe in courbe_fact :
         if courbe['GROUP_NO'] != None :
@@ -1395,8 +1396,8 @@ class EUROPLEXUS:
       epx[MODULE].append(2*' ' + "FICH ALIT 11  %s %s" %(cle_freq,vale_freq))
 
       # Liste les noeuds a postraiter
-      lnoeuds=sets.Set([])
-      lmailles=sets.Set([])
+      lnoeuds=set()
+      lmailles=set()
       for courbe in courbe_fact :
         if courbe['GROUP_NO'] != None :
             noeuds = courbe['GROUP_NO']

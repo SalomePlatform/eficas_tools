@@ -1,4 +1,4 @@
-#@ MODIF post_gp_ops Macro  DATE 18/11/2009   AUTEUR MACOCCO K.MACOCCO 
+#@ MODIF post_gp_ops Macro  DATE 16/11/2009   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18,9 +18,7 @@
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
 
-from types import ListType, TupleType
-EnumTypes = (ListType, TupleType)
-from sets import Set
+EnumTypes = (list, tuple)
 
 # -----------------------------------------------------------------------------
 def post_gp_ops(self, **args):
@@ -31,10 +29,10 @@ def post_gp_ops(self, **args):
    macro = 'POST_GP'
    ier=0
    from Accas import _F
-   from Utilitai.Utmess     import UTMESS
-   from Utilitai.Table      import Table, merge, Colonne
-   from Utilitai.t_fonction import t_fonction
-   from Cata.cata import evol_noli
+   from Utilitai.Utmess       import UTMESS
+   from Utilitai.Table        import Table, merge, Colonne
+   from Cata_Utils.t_fonction import t_fonction
+   from Cata.cata             import evol_noli
    import aster
    
    # ----- On importe les definitions des commandes a utiliser dans la macro
@@ -46,9 +44,7 @@ def post_gp_ops(self, **args):
    DEFI_LIST_ENTI= self.get_cmd('DEFI_LIST_ENTI')
    CALC_ELEM     = self.get_cmd('CALC_ELEM')
    RECU_FONCTION = self.get_cmd('RECU_FONCTION')
-   DETRUIRE      = self.get_cmd('DETRUIRE')
    DEFI_GROUP    = self.get_cmd('DEFI_GROUP')
-   IMPR_CO       = self.get_cmd('IMPR_CO')
    FIN           = self.get_cmd('FIN')
    
    # ----- Comptage, commandes + déclaration concept sortant
@@ -88,9 +84,12 @@ def post_gp_ops(self, **args):
    __MAIL = aster.getvectjev( self['MODELE'].nom.ljust(8) + '.MODELE    .LGRF        ' )
    nom_maillage = __MAIL[0].strip()
    
-   jdc = CONTEXT.get_current_step().jdc
-   maya = jdc.sds_dict[nom_maillage]
+   maya = self.get_concept(nom_maillage)
    
+   # Excitation 
+   args={}                    
+   if self['EXCIT']:args={'EXCIT'   : self['EXCIT'].List_F()}
+
    # 1. ----- calcul de G-theta
    
    # Cas 2D
@@ -115,11 +114,11 @@ def post_gp_ops(self, **args):
                                           R_SUP=dMC['R_SUP']),)
    
          __gtheta = CALC_G(THETA=_F(THETA=__theta),
-                           EXCIT=self['EXCIT'].List_F(),
                            RESULTAT=self['RESULTAT'],
                            TOUT_ORDRE='OUI',
                            SYME_CHAR=self['SYME_CHAR'],
-                           COMP_ELAS=self['COMP_ELAS'].List_F(),)
+                           COMP_ELAS=self['COMP_ELAS'].List_F(),
+                           **args)
    
          tab = __gtheta.EXTR_TABLE()
          
@@ -148,13 +147,12 @@ def post_gp_ops(self, **args):
                                     MODULE=1.0,
                                     FOND_FISS=self['FOND_FISS'],
                                     **dpar_theta),
-                           EXCIT=self['EXCIT'].List_F(),
                            RESULTAT=self['RESULTAT'],
                            TOUT_ORDRE='OUI',
                            SYME_CHAR=self['SYME_CHAR'],
                            COMP_ELAS=self['COMP_ELAS'].List_F(),
-                           LISSAGE=self['LISSAGE'].List_F()
-                           )
+                           LISSAGE=self['LISSAGE'].List_F(),
+                           **args)
 
  
          tab = __gtheta.EXTR_TABLE()
@@ -205,9 +203,11 @@ def post_gp_ops(self, **args):
    # liste des tables tb_Gpmax repartie aux noeuds
    l_tb_Gpmax_noeuds = []
       
+   # Charges 
+   args={}
+   if self['EXCIT']:args={'CHARGE': [charg['CHARGE'] for charg in self['EXCIT']]}
    for i in range(0,nb_tranches):
       l_copo = l_copo_tot[i*nbcop:(i+1)*nbcop]   
-      l_charg = [charg['CHARGE'] for charg in self['EXCIT']]
       
       if info >= 2 and not is_2D:
          print "<I> Calcul de la tranche %i"%(i+1)
@@ -245,10 +245,10 @@ def post_gp_ops(self, **args):
             
             E_el[kk] = POST_ELEM(MODELE=self['MODELE'],
                                  RESULTAT=self['RESULTAT'],
-                                 CHARGE=l_charg,
                                  TOUT_ORDRE='OUI',
                                  ENER_ELAS=_F(MAILLE=elem),
-                                 TITRE='Energie élastique',)
+                                 TITRE='Energie élastique',
+                                 **args)
             
             T_el[kk] = E_el[kk].EXTR_TABLE()
             
@@ -274,16 +274,14 @@ def post_gp_ops(self, **args):
             # pour chaque noeud de l'element on recupere sa trace
             for noeud in list_no:
                
-               VM=RECU_FONCTION(RESULTAT=resu2,
+               __VM=RECU_FONCTION(RESULTAT=resu2,
                                     TOUT_INST='OUI',
                                     NOM_CHAM='EQUI_ELNO_SIGM',
                                     NOM_CMP='VMIS_SG',
                                     MAILLE=elem,
                                     NOEUD=noeud);
    
-               T_noeuds[noeud]=VM.Ordo()
-               
-               DETRUIRE(CONCEPT=(_F(NOM=VM)))
+               T_noeuds[noeud]=__VM.Ordo()
                
             T_noeuds.fromfunction('VM_MAIL', moyenne, list_no)
             
@@ -364,10 +362,10 @@ def post_gp_ops(self, **args):
       
          __ener = POST_ELEM(MODELE=self['MODELE'],
                                  RESULTAT=self['RESULTAT'],
-                                 CHARGE=l_charg,
                                  TOUT_ORDRE='OUI',
                                  ENER_ELAS=_F(GROUP_MA=l_copo),
-                                 TITRE='Energie élastique',)
+                                 TITRE='Energie élastique',
+                                 **args)
       
          t_enel = __ener.EXTR_TABLE()
    
@@ -380,7 +378,7 @@ def post_gp_ops(self, **args):
       
       t_enel['ICOP'] = l_icop
    
-      l_numord = list(Set(t_enel.NUME_ORDRE.values()))
+      l_numord = list(set(t_enel.NUME_ORDRE.values()))
       l_numord.sort()
 
       if self['PAS_ENTAILLE'] is not None:

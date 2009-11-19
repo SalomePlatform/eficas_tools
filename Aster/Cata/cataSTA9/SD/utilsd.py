@@ -23,6 +23,7 @@
    Utilitaire sur le catalogue des structures de données.
 """
 
+__revision__ = "$Id: $"
 
 import sys
 import os
