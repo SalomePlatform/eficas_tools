@@ -52,6 +52,7 @@ def main():
    copyfiles('../Editeur',os.path.join(path_distrib,'AIDE','fichiers'),['faqs.txt'])
    # Code_Aster
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
+                                                            'prefs_ASTER.py',
                                                             'editeur.ini',
                                                             'editeur_salome.ini',
                                                             'eficas_aster.py',
