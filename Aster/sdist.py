@@ -39,7 +39,7 @@ def main():
    copyfiles('../Editeur',os.path.join(path_distrib,'Editeur'),['*.py','faqs.txt'])
    copyfiles('../InterfaceTK',os.path.join(path_distrib,'InterfaceTK'),['*.py','faqs.txt'])
    copyfiles('../InterfaceQT4',os.path.join(path_distrib,'InterfaceQT4'),['*.py'])
-   copyfiles('../UiQT4',os.path.join(path_distrib,'Ui'),['*.ui','makefile'])
+   copyfiles('../UiQT4',os.path.join(path_distrib,'UiQT4'),['*.ui','makefile'])
    copyfiles('../Traducteur',os.path.join(path_distrib,'Traducteur'),['*.py'])
    copyfiles('../Ihm',os.path.join(path_distrib,'Ihm'),['*.py'])
    copyfiles('../Extensions',os.path.join(path_distrib,'Extensions'),['*.py'])
