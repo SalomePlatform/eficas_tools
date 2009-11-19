@@ -22,7 +22,7 @@
 import os,shutil,glob,sys
 import types
 
-version="$Name: BR_dev_V1_17 $"[7:-2] or 'Test1_4'
+version="$Name:  $"[7:-2] or 'Test1_4'
 # ==========Path du noyau fourni par Aster====================
 path_Noyau="../../AccasAster"
 # ============================================================
@@ -38,8 +38,8 @@ def main():
 
    copyfiles('../Editeur',os.path.join(path_distrib,'Editeur'),['*.py','faqs.txt'])
    copyfiles('../InterfaceTK',os.path.join(path_distrib,'InterfaceTK'),['*.py','faqs.txt'])
-   copyfiles('../InterfaceQT',os.path.join(path_distrib,'InterfaceQT'),['*.py'])
-   copyfiles('../Ui',os.path.join(path_distrib,'Ui'),['*.ui','makefile'])
+   copyfiles('../InterfaceQT4',os.path.join(path_distrib,'InterfaceQT4'),['*.py'])
+   copyfiles('../UiQT4',os.path.join(path_distrib,'Ui'),['*.ui','makefile'])
    copyfiles('../Traducteur',os.path.join(path_distrib,'Traducteur'),['*.py'])
    copyfiles('../Ihm',os.path.join(path_distrib,'Ihm'),['*.py'])
    copyfiles('../Extensions',os.path.join(path_distrib,'Extensions'),['*.py'])
