@@ -22,7 +22,7 @@
 import os,shutil,glob,sys
 import types
 
-version="$Name:  $"[7:-2] or 'Test1_4'
+version="$Name: BR_dev_V1_17 $"[7:-2] or 'Test1_4'
 # ==========Path du noyau fourni par Aster====================
 path_Noyau="../../AccasAster"
 # ============================================================
@@ -69,9 +69,9 @@ def main():
    #copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
    #copyfiles('Cata/cataSTA6/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA6','Macro'),['*.py'])
 
-   copyfiles('Cata/cataSTA7',os.path.join(path_distrib,'Aster','Cata','cataSTA7'),['*.py'])
-   copyfiles('Cata/cataSTA7/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA7','Macro'),['*.py'])
-   copyfiles('Cata/cataSTA7/materiau',os.path.join(path_distrib,'Aster','Cata','cataSTA7/materiau'),['README.py'])
+   #copyfiles('Cata/cataSTA7',os.path.join(path_distrib,'Aster','Cata','cataSTA7'),['*.py'])
+   #copyfiles('Cata/cataSTA7/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA7','Macro'),['*.py'])
+   #copyfiles('Cata/cataSTA7/materiau',os.path.join(path_distrib,'Aster','Cata','cataSTA7/materiau'),['README.py'])
 
    copyfiles('Cata/cataSTA8',os.path.join(path_distrib,'Aster','Cata','cataSTA8'),['*.py'])
    copyfiles('Cata/cataSTA8/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA8/Macro'),['*.py'])
@@ -79,9 +79,13 @@ def main():
 
    copyfiles('Cata/cataSTA9',os.path.join(path_distrib,'Aster','Cata','cataSTA9'),['*.py'])
    copyfiles('Cata/cataSTA9/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA9/Macro'),['*.py'])
-   #copyfiles('Cata/cataSTA9/Messages',os.path.join(path_distrib,'Aster','Cata','cataSTA9/Messages'),['*.py'])
    copyfiles('Cata/cataSTA9/materiau',os.path.join(path_distrib,'Aster','Cata','cataSTA9/materiau'),['README.py'])
    copyfiles('Cata/cataSTA9/SD',os.path.join(path_distrib,'Aster','Cata','cataSTA9/SD'),['*.py'])
+
+   copyfiles('Cata/cataSTA10',os.path.join(path_distrib,'Aster','Cata','cataSTA10'),['*.py'])
+   copyfiles('Cata/cataSTA10/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA10/Macro'),['*.py'])
+   #copyfiles('Cata/cataSTA10/materiau',os.path.join(path_distrib,'Aster','Cata','cataSTA10/materiau'),['README.py'])
+   copyfiles('Cata/cataSTA10/SD',os.path.join(path_distrib,'Aster','Cata','cataSTA10/SD'),['*.py'])
 
    copyfiles('Cata',os.path.join(path_distrib,'Aster','Cata'),['*9c_clefs_docu'])
    copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster'),['aster.py',])
