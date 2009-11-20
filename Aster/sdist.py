@@ -48,8 +48,9 @@ def main():
    # AIDE
    copyfiles('../Aide',os.path.join(path_distrib,'Aide'),['*_ASTER.adp'])
    copyfiles('../Aide/fichiers_ASTER',os.path.join(path_distrib,'Aide','fichiers_ASTER'),['*'])
-   #copyfiles('.',os.path.join(path_distrib,'AIDE','fichiers'),['INSTALL','NEWS'])
-   #copyfiles('../Editeur',os.path.join(path_distrib,'AIDE','fichiers'),['faqs.txt'])
+   #pour Aster TK
+   copyfiles('.',os.path.join(path_distrib,'AIDE','fichiers'),['INSTALL','NEWS'])
+   copyfiles('../Editeur',os.path.join(path_distrib,'AIDE','fichiers'),['faqs.txt'])
    # Code_Aster
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
                                                             'prefs_ASTER.py',
@@ -97,7 +98,7 @@ def main():
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
    copyfiles('../convert/Parserv5',os.path.join(path_distrib,'convert','Parserv5'),['*.py'])
    copyfiles('../generator',os.path.join(path_distrib,'generator'),['*.py'])
-   copyfiles('../Editeur/icons',os.path.join(path_distrib,'Editeur','icons'),['*.gif'])
+   copyfiles('../Editeur/icons',os.path.join(path_distrib,'Editeur','icons'),['*.gif','*.png'])
    copyfiles('../Editeur/Patrons',os.path.join(path_distrib,'Editeur','Patrons'),['*.com*'])
    copyfiles('../Editeur/Patrons/ASTER',os.path.join(path_distrib,'Editeur','Patrons','ASTER'),['*.com*'])
 
