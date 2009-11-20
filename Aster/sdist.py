@@ -49,6 +49,8 @@ def main():
    copyfiles('../Aide',os.path.join(path_distrib,'Aide'),['*_ASTER.adp'])
    copyfiles('../Aide/fichiers_ASTER',os.path.join(path_distrib,'Aide','fichiers_ASTER'),['*'])
    #pour Aster TK
+   copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
+   copyfiles('../AIDE/fichiers',os.path.join(path_distrib,'AIDE','fichiers'),['*'])
    copyfiles('.',os.path.join(path_distrib,'AIDE','fichiers'),['INSTALL','NEWS'])
    copyfiles('../Editeur',os.path.join(path_distrib,'AIDE','fichiers'),['faqs.txt'])
    # Code_Aster
