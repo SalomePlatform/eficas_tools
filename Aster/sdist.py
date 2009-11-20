@@ -26,7 +26,7 @@ version="$Name:  $"[7:-2] or 'Test1_4'
 # ==========Path du noyau fourni par Aster====================
 path_Noyau="../../AccasAster"
 # ============================================================
-nom_distrib="Eficas"+version+"AsterSTA9"
+nom_distrib="Eficas"+version
 path_distrib=os.path.join("dist",nom_distrib)
 path_TextTools="/home/eficas/pkg/mxTools/egenix2.0.2pourWindows/mx/TextTools"
 dir_download= "/home/eficas/WWW/telechargement/eficas"
@@ -46,10 +46,10 @@ def main():
    copyfiles('../Misc',os.path.join(path_distrib,'Misc'),['*.py'])
    copyfiles('../Accas',os.path.join(path_distrib,'Accas'),['*.py'])
    # AIDE
-   copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
-   copyfiles('../AIDE/fichiers',os.path.join(path_distrib,'AIDE','fichiers'),['*'])
-   copyfiles('.',os.path.join(path_distrib,'AIDE','fichiers'),['INSTALL','NEWS'])
-   copyfiles('../Editeur',os.path.join(path_distrib,'AIDE','fichiers'),['faqs.txt'])
+   copyfiles('../Aide',os.path.join(path_distrib,'Aide'),['*_ASTER.adp'])
+   copyfiles('../Aide/fichiers_ASTER',os.path.join(path_distrib,'AIDE','fichiers_ASTER'),['*'])
+   #copyfiles('.',os.path.join(path_distrib,'AIDE','fichiers'),['INSTALL','NEWS'])
+   #copyfiles('../Editeur',os.path.join(path_distrib,'AIDE','fichiers'),['faqs.txt'])
    # Code_Aster
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
                                                             'prefs_ASTER.py',
@@ -58,6 +58,7 @@ def main():
                                                             'eficas_aster.py',
                                                             'qtEficas_aster.py',
                                                             'configuration.py',
+                                                            'configuration_ASTER.py',
 							    'test_eficas.py',
 							    'style.py',
                                                             '__init__.py'

@@ -1,7 +1,9 @@
 Version 1.17 (12/2009):
 <BR>
-   Mise en synchronisation avec la version 9.1 de Code_Aster de mai 2007.
-   Version en QT
+   Mise en synchronisation avec la version 10.0 de Code_Aster de décembre 2009.
+<BR>
+   Version en QT4
+<BR>
    La version TK est figee
 <BR> <BR>
 
