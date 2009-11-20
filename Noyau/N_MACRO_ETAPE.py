@@ -1,5 +1,6 @@
-#@ MODIF N_MACRO_ETAPE Noyau  DATE 28/11/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_MACRO_ETAPE Noyau  DATE 16/11/2009   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
+# RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -61,32 +62,33 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
               avec l'argument args.
 
       """
-      self.definition=oper
-      self.reuse=reuse
-      self.valeur=args
+      self.definition = oper
+      self.reuse = reuse
+      self.valeur = args
       self.nettoiargs()
-      self.parent=CONTEXT.get_current_step()
+      self.parent = CONTEXT.get_current_step()
       self.etape = self
-      self.nom=oper.nom
-      self.idracine=oper.label
-      self.appel=N_utils.callee_where()
-      self.mc_globaux={}
-      self.g_context={}
+      self.nom = oper.nom
+      self.idracine = oper.label
+      self.appel = N_utils.callee_where()
+      self.mc_globaux = {}
+      self.g_context = {}
       # Contexte courant
-      self.current_context={}
-      self.index_etape_courante=0
-      self.etapes=[]
-      self.index_etapes={}
-      self.sds=[]
+      self.current_context = {}
+      self.macro_const_context = {}
+      self.index_etape_courante = 0
+      self.etapes = []
+      self.index_etapes = {}
+      self.sds = []
       #  Dans le cas d'une macro écrite en Python, l'attribut Outputs est un 
       #  dictionnaire qui contient les concepts produits de sortie 
       #  (nom : ASSD) déclarés dans la fonction sd_prod
-      self.Outputs={}
-      self.sd=None
-      self.actif=1
-      self.sdprods=[]
+      self.Outputs = {}
+      self.sd = None
+      self.actif = 1
+      self.sdprods = []
       self.make_register()
-      self.UserError="UserError"
+      self.UserError = "UserError"
 
    def make_register(self):
       """
@@ -637,6 +639,25 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" %(t,co
       d.update(self.g_context)
       return d
 
+   def get_contexte_courant(self, etape_fille_du_jdc=None):
+      """
+         Retourne le contexte tel qu'il est au moment de l'exécution de
+         l'étape courante.
+      """
+      ctx = self.parent.get_contexte_courant(self)
+      # on peut mettre None car toujours en PAR_LOT='NON', donc la dernière
+      ctx.update( self.get_contexte_avant(None) )
+      return ctx
+
+   def get_concept(self, nomsd):
+      """
+          Méthode pour recuperer un concept à partir de son nom
+          dans le contexte du jdc connu avant l'exécution de la macro courante.
+      """
+      # chercher dans self.get_contexte_avant, puis si non trouve
+      # self.parent.get_concept est peut-etre plus performant
+      return self.get_contexte_courant().get(nomsd.strip(), None)
+
    def copy(self):
       """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
           et sans sd
@@ -690,3 +711,23 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" %(t,co
            concept.jdc=self.jdc
        for e in self.etapes:
            e.reparent(self)
+
+   def update_const_context(self, d):
+      """
+         Met à jour le contexte des constantes pour l'évaluation de
+         formules dans la macro.
+      """
+      # Dans le jdc, const_context est mis à jour par exec_compile
+      # Dans la macro, on n'a pas le code à compiler pour récupèrer les
+      # constantes locales à la macro. On demande donc explicitement de
+      # définir les constantes "locales".
+      self.macro_const_context.update(d)
+
+   def sd_accessible(self):
+      """On peut acceder aux "valeurs" (jeveux) des ASSD dans
+      les macro-commandes qui sont localement en PAR_LOT="NON"
+      sauf pour INCLUDE et INCLUDE_MATERIAU.
+      """
+      if CONTEXT.debug: print ' `- MACRO sd_accessible :', self.nom
+      return self.parent.sd_accessible() or not self.nom.startswith('INCLUDE')
+

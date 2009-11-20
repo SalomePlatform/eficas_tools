@@ -47,7 +47,7 @@ def main():
    copyfiles('../Accas',os.path.join(path_distrib,'Accas'),['*.py'])
    # AIDE
    copyfiles('../Aide',os.path.join(path_distrib,'Aide'),['*_ASTER.adp'])
-   copyfiles('../Aide/fichiers_ASTER',os.path.join(path_distrib,'AIDE','fichiers_ASTER'),['*'])
+   copyfiles('../Aide/fichiers_ASTER',os.path.join(path_distrib,'Aide','fichiers_ASTER'),['*'])
    #copyfiles('.',os.path.join(path_distrib,'AIDE','fichiers'),['INSTALL','NEWS'])
    #copyfiles('../Editeur',os.path.join(path_distrib,'AIDE','fichiers'),['faqs.txt'])
    # Code_Aster
