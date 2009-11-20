@@ -1,6 +1,5 @@
-#@ MODIF asojb Noyau  DATE 21/09/2009   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF asojb Noyau  DATE 07/10/2008   AUTEUR PELLET J.PELLET 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -77,7 +76,7 @@ class AsBase(Type):
                         v( checker )
                     except :
                         mess=60*'-'+'\n'
-                        mess=mess+'Erreur SDVERI (Attention : vérification incomplète)'+'\n'
+                        mess=mess+'Erreur SDVERI_45 (Attention : vérification incomplète)'+'\n'
                         mess=mess.join(traceback.format_tb(sys.exc_traceback))
                         checker.err(self,mess)
 
@@ -119,7 +118,7 @@ class AsBase(Type):
         return "<%s(%x,%r)>" % (self.__class__.__name__, id(self), self.nomj() )
 
     def long_repr(self):
-        if not hasattr(self, "accessible") or not self.accessible():
+        if not hasattr(self, "par_lot") or self.par_lot():
            # hors Aster ou en par_lot='oui'
            return self.short_repr()
         else:
@@ -298,10 +297,6 @@ class OJBCollec(OJB):
 # -----------------------------------------------------------------------------
 class AsVI(OJBVect):
     _type = "I"
-
-# -----------------------------------------------------------------------------
-class AsVS(OJBVect):
-    _type = "S"
 
 # -----------------------------------------------------------------------------
 class AsVR(OJBVect):
