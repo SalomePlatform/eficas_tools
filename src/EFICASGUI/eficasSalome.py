@@ -22,13 +22,13 @@ import Editeur
 from InterfaceQT4 import qtEficas
 
 import salome
-import visuDriver
+#import visuDriver
 import SalomePyQt
 
 
-from pal.studyedit import StudyEditor
-monEditor=StudyEditor()
-
+from pal.studyedit import getStudyEditor
+monEditor = getStudyEditor()
+from pal.structelem import StructuralElementManager
 
 
 # couleur pour visualisation des geometries 
@@ -433,12 +433,16 @@ class MyEficas( qtEficas.Appli ):
             if not atLeastOneStudy:
                 return
             logger.debug(10*'#'+":envoievisu: creating a visuDriver instance")
-            monDriver=visuDriver.visuDriver(studyManager.palStudy,liste_commandes)
+            structElemManager = StructuralElementManager()
+            elem = structElemManager.createElement(liste_commandes)
+            elem.display()
+            salome.sg.updateObjBrowser(True)
+            #monDriver=visuDriver.visuDriver(studyManager.palStudy,liste_commandes)
 
-            logger.debug(10*'#'+":envoievisu: analyse visu commandes using the visuDriver "+str(monDriver))
-            monId = monDriver.analyse()
-            logger.debug(10*'#'+":envoievisu: display the structural elements using PALGUI")
-            PALGUI_API.displaySE(monId)
+            #logger.debug(10*'#'+":envoievisu: analyse visu commandes using the visuDriver "+str(monDriver))
+            #monId = monDriver.analyse()
+            #logger.debug(10*'#'+":envoievisu: display the structural elements using PALGUI")
+            #PALGUI_API.displaySE(monId)
         except:
             traceback.print_exc()
             logger.debug(10*'#'+":pb dans envoievisu")
