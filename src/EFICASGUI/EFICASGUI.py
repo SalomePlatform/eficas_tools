@@ -36,7 +36,6 @@ print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 # -----------------------------------------------------------------------------
 
 def OnGUIEvent(commandID) :
-   print "EficasGUI :: OnGUIEvent :::::::::::::::::::::::::::::::::commandID = ",commandID
    if dict_command.has_key(commandID):
       print "OnGUIEvent ::::::::::  commande associée  : ",commandID      
       dict_command[commandID]()
@@ -62,7 +61,6 @@ def activate():
    
    Portage V3.
    """
-   print "--------EFICASGUI:: activate"
    setSettings()
 
 
@@ -76,31 +74,36 @@ def activeStudyChanged(ID):
    
    
 
-def definePopup(theContext, theObject, theParent):    
-   theContext= ""
-   theObject = "100"
-   theParent = "ObjectBrowser"
-   a=salome.sg.getAllSelected()
+#def definePopup(theContext, theObject, theParent):    
+#   print "EFICASGUI --- definePopup"
+#   print "EFICASGUI --- definePopup"
+#   theContext= ""
+#   theObject = "100"
+#   theParent = "ObjectBrowser"
+#   a=salome.sg.getAllSelected()
     
-   selectedEntry = a[0]
-   mySO = monEditor.study.FindObjectID(selectedEntry);
-   aType = monEditor.getFileType(mySO)
-   if aType == "FICHIER_EFICAS_ASTER" :
-        theObject="73"    
-            
-   return (theContext, theObject, theParent)
+#   selectedEntry = a[0]
+#   mySO = monEditor.study.FindObjectID(selectedEntry);
+#   aType = monEditor.getFileType(mySO)
+#   print aType
+#   return (theContext, theObject, theParent)
 
 
-def customPopup(popup, theContext, theObject, theParent):
-   print "EFICASGUI --- customPopup TODO"
-   print "EFICASGUI --- customPopup"
-   print "EFICASGUI --- customPopup"
-   print "EFICASGUI --- customPopup"
-   print "EFICASGUI --- customPopup"
-   print "EFICASGUI --- customPopup"
-   print "EFICASGUI --- customPopup"
-   print "EFICASGUI --- customPopup"
-   print "EFICASGUI --- customPopup"
+#def customPopup(popup, theContext, theObject, theParent):
+#   a=salome.sg.getAllSelected()
+
+#   selectedEntry = a[0]
+#   mySO = monEditor.study.FindObjectID(selectedEntry);
+#   aType = monEditor.getFileType(mySO)
+
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
 #   popup.removeItem(99003)
 
 
@@ -114,7 +117,6 @@ def runEficas():
    print currentStudyId      
    eficasSalome.runEficas( "ASTER" )
    
-
    
 def runEficaspourOpenturnsStudy():
    print "runEficas Pour Openturns Study"
@@ -147,24 +149,16 @@ def runEficasFichier(version=None):
       mySO = monEditor.study.FindObjectID(selectedEntry);
       aType = monEditor.getFileType(mySO)
       aValue = monEditor.getFileName(mySO)
-      if aType == "FICHIER_EFICAS_ASTER":        
+      if aType !=  None :
         fileName = aValue
-        code     = "ASTER"
-      elif aType == "FICHIER_EFICAS_SEP":        
-        fileName = aValue
-        code     = "SEP"
-      elif aType == "FICHIER_EFICAS_OPENTURNS":        
-        fileName = aValue
-        code     = "OPENTURNS"
-      else:
-        fileName=None
-        code = "ASTER"
+        code     = aType[15:]
    else:        
-        code = "ASTER"            
+      QMessageBox.critical(None, "Selection Invalide",
+             "Selectionner un seul fichier SVP") 
+      return;
+ 
         
    if code:
-        #eficasSalome.runEficas(code,attr,studyId=currentStudyId)         
-        #desktop=sgPyQt.getDesktop()        
         if version :
             eficasSalome.runEficas( code, fileName, version=version)
         else :
@@ -174,19 +168,16 @@ def runEficasFichier(version=None):
 # Partie applicative
 
 dict_command={
-                941:runEficasFichier,# runEficas,
+                941:runEficas,# runEficas,
                 942:runEficaspourOM,# runEficas,
                 947:runEficaspourOpenturnsStudy,
                 948:runEficaspourOpenturnsWrapper,
 
-                4041:runEficasFichier, #runEficas,
+                4041:runEficas, #runEficas,
                 4042:runEficaspourOM,# runEficas,
                 4047:runEficaspourOpenturnsStudy,
                 4048:runEficaspourOpenturnsWrapper,
 
                 9041:runEficasFichier,
-                9042:runEficaspourOM,# runEficas,
-                9047:runEficaspourOpenturnsStudy,
-                9048:runEficaspourOpenturnsWrapper,
              }
              
