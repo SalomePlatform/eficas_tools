@@ -311,8 +311,49 @@ class MyEficas( qtEficas.Appli ):
         print "------------------------------ name :", name
         return name,msgError
 
+
+    def displayMeshGroups(self, meshGroupName):
+        """
+        visualisation group de maille de nom meshGroupName dans salome
+        """
+        ok, msgError = False, ''
+        try:
+        #if 1 :
+            sg = salome.ImportComponentGUI('SMESH')
+            meshGroupEntries = []
+            selMeshEntry = None
+            selMeshGroupEntry = None
+            
+            # liste des groupes de maille de nom meshGroupName
+            listSO = monEditor.study.FindObjectByName(meshGroupName, "SMESH")
+            print listSO
+            print "liste des groupes de maille de nom %s: "%(meshGroupName), listSO
+            
+            if len(listSO)>1:
+               return 0,'Plusieurs objets  portent ce nom'
+            if len(listSO) ==0 :
+               return 0,'Aucun objet ne porte ce nom'
+            SObjet=listSO[0]
+            groupEntry = SObjet.GetID()                
+            myComponent = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
+            SCom        = monEditor.study.FindComponent("SMESH")
+            myBuilder   = monEditor.study.NewBuilder()
+            myBuilder.LoadWith( SCom , myComponent  )                             
+            sg.CreateAndDisplayActor(groupEntry)
+            #color = COLORS[ self.icolor % LEN_COLORS ]                
+            #self.icolor = self.icolor + 1
+            #sg.SetColor(groupEntry, color[0], color[1], color[2])
+            salome.sg.Display(groupEntry)
+            salome.sg.FitAll()                
+            ok = True                
+
+        except:
+        #else :
+            msgError = "Impossible d afficher "+shapeName
+            logger.debug(50*'=')
+        return ok, msgError
+
 # ___________________________ Methodes appelees par EFICAS  __________________________________
-        
     #----------------------------------------------------------------
     def selectGroupFromSalome( self, kwType = None, editor=None):
     #----------------------------------------------------------------
@@ -368,8 +409,8 @@ class MyEficas( qtEficas.Appli ):
             fileType = { 'ASTER'    : "FICHIER_EFICAS_ASTER",
                          'SEP'      : "FICHIER_EFICAS_SEP",
                          'OPENTURNS': "FICHIER_EFICAS_OPENTURNS",
-                         'OPENTURNS_STUDY': "FICHIER_EFICAS_OPENTURNS",
-                         'OPENTURNS_WRAPPER': "FICHIER_EFICAS_OPENTURNS",
+                         'OPENTURNS_STUDY': "FICHIER_EFICAS_OPENTURNS_STUDY",
+                         'OPENTURNS_WRAPPER': "FICHIER_EFICAS_OPENTURNS_WRAPPER",
                         }
                         
             folderName = {  'ASTER'    :  'AsterFiles',
@@ -408,6 +449,46 @@ class MyEficas( qtEficas.Appli ):
         #    logger.debug(50*'=' Erreur au AddJDC)
         return ok, msgError        
         
+           
+    #---------------------------------------
+    def displayShape(  self, shapeName ):
+    #---------------------------------------
+        """
+        visualisation de nom shapeName dans salome
+        """
+        ok, msgError = False, ''
+        try:
+            import VISU            
+            import visu_gui
+            currentViewType = None            
+            m = visu_gui.myVisu.GetViewManager()
+            v = m.GetCurrentView()
+            print v
+            if v:
+                currentViewType = v.GetType()
+            atLeastOneStudy = monEditor.study
+            if not atLeastOneStudy:
+                return ok, msgError
+                                     
+            #salome.sg.EraseAll()
+            print 'displayShapestrGeomShape shapeName -> ', shapeName
+            print currentViewType
+            
+            if currentViewType == VISU.TVIEW3D: # maillage
+                print 'Vue courante = VTK : affichage groupe de maille'                
+                ok, msgError = self.displayMeshGroups(shapeName)
+            else: #geometrie
+                current_color = COLORS[ self.icolor % LEN_COLORS ]                
+                from pal.geomstudytools import GeomStudyTools
+                myGeomTools=GeomStudyTools(monEditor)
+                ok = myGeomTools.displayShapeByName( shapeName, current_color )
+                salome.sg.FitAll()
+                self.icolor = self.icolor + 1             
+                if not ok:
+                    msgError = "Impossible d afficher "+shapeName
+        except:            
+            logger.debug(50*'=')
+        return ok, msgError    
                 
            
 #    def buildCabriGeom( self, name, **param ):
@@ -437,12 +518,6 @@ class MyEficas( qtEficas.Appli ):
             elem = structElemManager.createElement(liste_commandes)
             elem.display()
             salome.sg.updateObjBrowser(True)
-            #monDriver=visuDriver.visuDriver(studyManager.palStudy,liste_commandes)
-
-            #logger.debug(10*'#'+":envoievisu: analyse visu commandes using the visuDriver "+str(monDriver))
-            #monId = monDriver.analyse()
-            #logger.debug(10*'#'+":envoievisu: display the structural elements using PALGUI")
-            #PALGUI_API.displaySE(monId)
         except:
             traceback.print_exc()
             logger.debug(10*'#'+":pb dans envoievisu")
