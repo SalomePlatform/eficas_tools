@@ -45,6 +45,7 @@ class DPlusBase (Ui_DPlusBase,QDialog):
           parent.addWidget(parent.partieDroite)
           parent.leLayout.widgetActive=self
        self.setupUi(self)
+       self.appliEficas=parent.appliEficas
        self.RepIcon=parent.appliEficas.RepIcon
        icon = QIcon(self.RepIcon+"/arrow_left.png")
        self.BAjout1Val.setIcon(icon)
@@ -78,6 +79,8 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         self.connect(self.BSup1Val,SIGNAL("clicked()"),self.Sup1Valeur)
         self.connect(self.LEValeur,SIGNAL("returnPressed()"),self.LEValeurPressed)
         self.connect(self.BSalome,SIGNAL("clicked()"),self.BSalomePressed)
+        self.connect(self.BView2D,SIGNAL("clicked()"),self.BView2DPressed)
+
 
   def detruitBouton(self):
         icon3 = QIcon(self.RepIcon+"/image240.png")
@@ -119,6 +122,7 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         for valeur in self.listeValeursCourantes :
                 if i != index : listeVal.append(valeur)
                 i = i+1
+        self.LBValeurs.setCurrentItem(self.LBValeurs.item(index -1))
         self.listeValeursCourantes=listeVal
           
 
@@ -205,7 +209,7 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
             if "GROUP_MA" in e: kwType = "GROUP_MA"
 
         #print "BkwType",kwType
-        selection, commentaire = self.editor.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
+        selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
         if commentaire !="" :
             self.Commentaire.setText(QString(commentaire))
         monTexte=""
@@ -218,11 +222,12 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   def BView2DPressed(self):
         valeur=self.LEValeur.text()
         if valeur == QString("") :
-           valeur=self.LBValeurs.currentText()
+           if self.LBValeurs.currentItem() != None :
+              valeur=self.LBValeurs.currentItem().text()
         if valeur == QString("") : return
         valeur = str(valeur)
         if valeur :
-           ok, msgError = self.editor.parent.appliEficas.displayShape(valeur)
+           ok, msgError = self.appliEficas.displayShape(valeur)
            if not ok:
-              self.editor.parent.appli.affiche_infos(msgError)
+              self.editor.affiche_infos(msgError)
 

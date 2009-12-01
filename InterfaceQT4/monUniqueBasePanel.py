@@ -87,7 +87,6 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         else :
 	   self.bParametres.close()
         type = mc.type[0]
-        #if not('grma' in repr(type)) or not(self.editor.salome) :
         if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
            self.BSalome.close()
            self.BView2D.close()
@@ -151,7 +150,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
             if "GROUP_NO" in e: kwType = "GROUP_NO"
             if "GROUP_MA" in e: kwType = "GROUP_MA"
 
-        selection, commentaire = self.editor.parent.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
+        selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
         if commentaire !="" :
             self.Commentaire.setText(QString(commentaire))
         monTexte=""
@@ -159,14 +158,14 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         for geomElt in selection:
             monTexte=geomElt+","
         monTexte= monTexte[0:-1]
-        self.LEValeur.setText(QString(monTexte))
+        self.lineEditVal.setText(QString(monTexte))
 
   def BView2DPressed(self):
-        valeur=self.LEValeur.text()
+        valeur=self.lineEditVal.text()
         if valeur == QString("") : return
         valeur = str(valeur)
         if valeur :
-           ok, msgError = self.editor.parent.appliEficas.displayShape(valeur)
+           ok, msgError = self.appliEficas.displayShape(valeur)
            if not ok:
-              self.editor.parent.appli.affiche_infos(msgError)
+              self.appliEficas.affiche_infos(msgError)
 

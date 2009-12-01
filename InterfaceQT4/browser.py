@@ -336,14 +336,14 @@ class JDCNode(QTreeWidgetItem):
         self.setText(1, value)
 
     def update_nodes(self):
-        print 'NODE update_nodes', self.item.GetLabelText()
+        #print 'NODE update_nodes', self.item.GetLabelText()
         self.build_children()
 
     def update_valid(self) :
         """Cette methode a pour but de mettre a jour la validite du noeud
            et de propager la demande de mise a jour a son parent
         """
-        print "NODE update_valid", self.item.GetLabelText()
+        #print "NODE update_valid", self.item.GetLabelText()
         self.update_node_valid()
         try :
           self.treeParent.update_valid()

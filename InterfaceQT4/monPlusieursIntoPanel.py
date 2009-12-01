@@ -96,6 +96,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
         for valeur in self.listeValeursCourantes :
                 if i != indexCourant : listeVal.append(valeur)
                 i = i+1
+        self.LBValeurs.setCurrentItem(self.LBValeurs.item(index -1))
         self.listeValeursCourantes=listeVal
         SaisieValeur.RemplitPanel(self,self.listeValeursCourantes)
           
