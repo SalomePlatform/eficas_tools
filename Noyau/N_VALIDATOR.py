@@ -1,6 +1,5 @@
-#@ MODIF N_VALIDATOR Noyau  DATE 07/09/2009   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_VALIDATOR Noyau  DATE 09/10/2007   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -127,6 +126,10 @@ class TypeProtocol(PProtocol):
                 if type(obj)==types.StringType:return obj
             elif type(type_permis) == types.ClassType or isinstance(type_permis,type):
                 if self.is_object_from(obj,type_permis):return obj
+            elif type_permis == 'Fichier' :
+                 import os
+                 if os.path.isfile(obj):return obj
+                 else : raise ValError("%s n'est pas un fichier valide" % repr(obj))
             elif type(type_permis) == types.InstanceType or isinstance(type_permis,object):
                 try:
                     if type_permis.__convert__(obj) : return obj
@@ -1213,4 +1216,60 @@ class InstanceVal(ListVal):
       def verif_item(self,valeur):
           if not isinstance(valeur,self.aClass): return 0
           return 1
+
+class VerifTypeTuple(Valid,ListVal) :
+      def __init__(self,typeDesTuples):
+          self.typeDesTuples=typeDesTuples
+          Valid.__init__(self)
+          self.cata_info=""
+
+      def info(self):
+          return ": verifie les types dans un tuple"
+
+      def info_erreur_liste(self):
+          return "Les types entres  ne sont pas permis"
+
+      def default(self,valeur):
+          #if valeur in self.liste : raise ValError("%s est un doublon" % valeur)
+          return valeur
+
+      def is_list(self) :
+          return 1
+
+      def convert_item(self,valeur):
+          if len(valeur) != len(self.typeDesTuples):
+             raise ValError("%s devrait etre de type  %s " %(valeur,self.typeDesTuples))
+          for i in range(len(valeur)) :
+              ok=self.verifType(valeur[i],self.typeDesTuples[i])
+              if ok!=1 : 
+                 raise ValError("%s devrait etre de type  %s " %(valeur,self.typeDesTuples))
+          return valeur
+
+      def verif_item(self,valeur):
+          try :
+		if len(valeur) != len(self.typeDesTuples): return 0
+                for i in range(len(valeur)) :
+                    ok=self.verifType(valeur[i],self.typeDesTuples[i])
+                    if ok!=1 : return 0
+          except :
+                return 0
+          return 1
+
+      def verifType(self,valeur,type_permis):
+          if type_permis == 'R':
+             if type(valeur) in (types.IntType,types.FloatType,types.LongType):return 1
+          elif type_permis == 'I':
+             if type(valeur) in (types.IntType,types.LongType):return 1
+          elif type_permis == 'C':
+             if self.is_complexe(valeur):return 1
+          elif type_permis == 'TXM':
+             if type(valeur)==types.StringType:return 1
+          return 0
+
+      def verif(self,valeur):
+          if type(valeur) in (types.ListType,types.TupleType):
+             liste=list(valeur)
+             for val in liste:
+                if self.verif_item(val)!=1 : return 0
+             return 1
 
