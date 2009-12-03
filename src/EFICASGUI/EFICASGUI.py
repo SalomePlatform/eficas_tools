@@ -26,8 +26,7 @@ import salome
 sg=salome.sg
 sgPyQt=SalomePyQt.SalomePyQt()
 
-from pal.studyedit import StudyEditor
-monEditor=StudyEditor()
+from pal.studyedit import getStudyEditor
 
 print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 
@@ -37,17 +36,17 @@ print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 
 def OnGUIEvent(commandID) :
    if dict_command.has_key(commandID):
-      print "OnGUIEvent ::::::::::  commande associée  : ",commandID      
+      print "OnGUIEvent ::::::::::  commande associÃ©e  : ",commandID      
       dict_command[commandID]()
    else:
-      print "Pas de commande associée a : ",commandID
+      print "Pas de commande associÃ©e a : ",commandID
 
 # -----------------------------------------------------------------------------
 
 def setSettings():
    """
-   Cette méthode permet les initialisations. On définit en particulier
-   l'identifiant de l'étude courante.
+   Cette mÃ©thode permet les initialisations. On dÃ©finit en particulier
+   l'identifiant de l'Ã©tude courante.
    """
    # le desktop
    desktop=sgPyQt.getDesktop()
@@ -56,8 +55,8 @@ def setSettings():
 
 def activate():
    """
-   Cette méthode permet l'activation du module, s'il a été chargé mais pas encore
-   activé dans une étude précédente.
+   Cette mÃ©thode permet l'activation du module, s'il a Ã©tÃ© chargÃ© mais pas encore
+   activÃ© dans une Ã©tude prÃ©cÃ©dente.
    
    Portage V3.
    """
@@ -138,7 +137,7 @@ def runEficaspourOM():
 def runEficasFichier(version=None):
    """
    Lancement d'eficas pour ASTER
-   si un fichier est sélectionné, il est ouvert dans eficas
+   si un fichier est sÃ©lectionnÃ©, il est ouvert dans eficas
    """
    fileName = None
    code     = None
@@ -146,9 +145,10 @@ def runEficasFichier(version=None):
    if len(a) == 1:
       selectedEntry = a[0]
       
-      mySO = monEditor.study.FindObjectID(selectedEntry);
-      aType = monEditor.getFileType(mySO)
-      aValue = monEditor.getFileName(mySO)
+      editor = getStudyEditor()
+      mySO = editor.study.FindObjectID(selectedEntry);
+      aType = editor.getFileType(mySO)
+      aValue = editor.getFileName(mySO)
       if aType !=  None :
         fileName = aValue
         code     = aType[15:]

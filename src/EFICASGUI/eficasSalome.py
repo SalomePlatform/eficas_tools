@@ -27,7 +27,6 @@ import SalomePyQt
 
 
 from pal.studyedit import getStudyEditor
-monEditor = getStudyEditor()
 from pal.structelem import StructuralElementManager
 
 
@@ -76,7 +75,8 @@ class MyEficas( qtEficas.Appli ):
         self.parent = parent        
         self.salome = True      #active les parties de code specifique dans Salome( pour le logiciel Eficas )
         self.module = module    #indique sous quel module dans l'arbre d'etude ajouter le JDC.
-        
+        self.editor = getStudyEditor()    # Editeur de l'arbre d'etude
+
         
         # donnee pour la creation de groupe de maille
         self.mainShapeNames   = {} #dictionnaire pour gerer les multiples fichiers possibles ouverts par 
@@ -103,13 +103,13 @@ class MyEficas( qtEficas.Appli ):
     def getCORBAObjectInComponent( self,  entry, composant ):
     #----------------------------------------------------------------
        object = None
-       mySO = monEditor.study.FindObjectID(entry)
+       mySO = self.editor.study.FindObjectID(entry)
        if mySO:
           object = mySO.GetObject()
           if not object:
              myComponent = salome.lcc.FindOrLoadComponent("FactoryServer", composant)
-             SCom        = monEditor.study.FindComponent( composant )
-             monEditor.builder.LoadWith( SCom , myComponent  )
+             SCom        = self.editor.study.FindComponent( composant )
+             self.editor.builder.LoadWith( SCom , myComponent  )
              object      = mySO.GetObject()
        if not object :
              logger.debug("selectedEntry: An error occurs")
@@ -182,8 +182,8 @@ class MyEficas( qtEficas.Appli ):
     #-----------------------------------------------------------------
         tgeo =  shape.GetShapeType() 
         geomEngine = salome.lcc.FindOrLoadComponent( "FactoryServer", "GEOM" )
-        print dir(monEditor.study)
-        groupIMeasureOp = geomEngine.GetIMeasureOperations(monEditor.study._get_StudyId())
+        print dir(self.editor.study)
+        groupIMeasureOp = geomEngine.GetIMeasureOperations(self.editor.study._get_StudyId())
         if tgeo != "COMPOUND" : return tgeo
 
         strInfo =  groupIMeasureOp.WhatIs( shape )
@@ -211,7 +211,7 @@ class MyEficas( qtEficas.Appli ):
         -test2) si appartient a la geometrie principale.
         """
         name, msgError = '',''
-        mySO = monEditor.study.FindObjectID(entry)
+        mySO = self.editor.study.FindObjectID(entry)
         if mySO == None :
            return name, msgError
         object = mySO.GetObject()
@@ -256,9 +256,9 @@ class MyEficas( qtEficas.Appli ):
         """
         name, msgError = '',''
 
-        mySO=monEditor.study.FindObjectID(selectedEntry )
+        mySO=self.editor.study.FindObjectID(selectedEntry )
         from pal.smeshstudytools import SMeshStudyTools
-        monSMeshStudyTools=SMeshStudyTools(monEditor)
+        monSMeshStudyTools=SMeshStudyTools(self.editor)
         meshSO = monSMeshStudyTools.getMeshFromGroup(mySO)
         if meshSO == None : return name, msgError    
 
@@ -287,7 +287,7 @@ class MyEficas( qtEficas.Appli ):
              if shape:
                 ior = salome.orb.object_to_string( shape )
                 if ior:
-                   sObject   = monEditor.study.FindObjectIOR(  ior )
+                   sObject   = self.editor.study.FindObjectIOR(  ior )
                    mainShapeID = sObject.GetID()
              else :
                 mainShapeID=0
@@ -325,7 +325,7 @@ class MyEficas( qtEficas.Appli ):
             selMeshGroupEntry = None
             
             # liste des groupes de maille de nom meshGroupName
-            listSO = monEditor.study.FindObjectByName(meshGroupName, "SMESH")
+            listSO = self.editor.study.FindObjectByName(meshGroupName, "SMESH")
             print listSO
             print "liste des groupes de maille de nom %s: "%(meshGroupName), listSO
             
@@ -336,8 +336,8 @@ class MyEficas( qtEficas.Appli ):
             SObjet=listSO[0]
             groupEntry = SObjet.GetID()                
             myComponent = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
-            SCom        = monEditor.study.FindComponent("SMESH")
-            myBuilder   = monEditor.study.NewBuilder()
+            SCom        = self.editor.study.FindComponent("SMESH")
+            myBuilder   = self.editor.study.NewBuilder()
             myBuilder.LoadWith( SCom , myComponent  )                             
             sg.CreateAndDisplayActor(groupEntry)
             #color = COLORS[ self.icolor % LEN_COLORS ]                
@@ -366,7 +366,7 @@ class MyEficas( qtEficas.Appli ):
         names, msg = [], ''
         try:            
             self.editor=editor
-            atLeastOneStudy = monEditor.study
+            atLeastOneStudy = self.editor.study
             if not atLeastOneStudy:
                 return names, msg
 
@@ -402,7 +402,7 @@ class MyEficas( qtEficas.Appli ):
         ok = False
         #try:            
         if 1:
-            atLeastOneStudy = monEditor.study
+            atLeastOneStudy = self.editor.study
             if not atLeastOneStudy:
                 return ok, msgError
                         
@@ -424,16 +424,16 @@ class MyEficas( qtEficas.Appli ):
                            'OPENTURNS_WRAPPER': "OPENTURNS_FILE_FOLDER"}
 
                         
-            moduleEntry = monEditor.findOrCreateComponent(self.module)
+            moduleEntry = self.editor.findOrCreateComponent(self.module)
             itemName    = re.split("/",jdcPath)[-1]
             
-            fatherEntry = monEditor.findOrCreateItem(
+            fatherEntry = self.editor.findOrCreateItem(
                                     moduleEntry,
                                     name = folderName[self.code],
                                     #icon = "ICON_COMM_FOLDER",
                                     fileType = folderType[self.code])
                                                                         
-            commEntry = monEditor.findOrCreateItem( fatherEntry ,
+            commEntry = self.editor.findOrCreateItem( fatherEntry ,
                                            name = itemName,
                                            fileType = fileType[ self.code ],
                                            fileName = jdcPath,
@@ -466,7 +466,7 @@ class MyEficas( qtEficas.Appli ):
             print v
             if v:
                 currentViewType = v.GetType()
-            atLeastOneStudy = monEditor.study
+            atLeastOneStudy = self.editor.study
             if not atLeastOneStudy:
                 return ok, msgError
                                      
@@ -479,8 +479,8 @@ class MyEficas( qtEficas.Appli ):
                 ok, msgError = self.displayMeshGroups(shapeName)
             else: #geometrie
                 current_color = COLORS[ self.icolor % LEN_COLORS ]                
-                from pal.geomstudytools import GeomStudyTools
-                myGeomTools=GeomStudyTools(monEditor)
+                from pal.geomtools import GeomStudyTools
+                myGeomTools=GeomStudyTools(self.editor)
                 ok = myGeomTools.displayShapeByName( shapeName, current_color )
                 salome.sg.FitAll()
                 self.icolor = self.icolor + 1             
@@ -510,7 +510,7 @@ class MyEficas( qtEficas.Appli ):
     def envoievisu(self,liste_commandes):
         import traceback
         try:
-            atLeastOneStudy = monEditor.study
+            atLeastOneStudy = self.editor.study
             if not atLeastOneStudy:
                 return
             logger.debug(10*'#'+":envoievisu: creating a visuDriver instance")
