@@ -514,7 +514,7 @@ class MyEficas( qtEficas.Appli ):
             if not atLeastOneStudy:
                 return
             logger.debug(10*'#'+":envoievisu: creating a visuDriver instance")
-            structElemManager = StructuralElementManager()
+            structElemManager = StructuralElementManager(self.editor.studyId, self)
             elem = structElemManager.createElement(liste_commandes)
             elem.display()
             salome.sg.updateObjBrowser(True)
