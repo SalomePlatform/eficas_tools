@@ -365,7 +365,6 @@ class MyEficas( qtEficas.Appli ):
         """
         names, msg = [], ''
         try:            
-            self.editor=editor
             atLeastOneStudy = self.editor.study
             if not atLeastOneStudy:
                 return names, msg
@@ -458,9 +457,10 @@ class MyEficas( qtEficas.Appli ):
         """
         ok, msgError = False, ''
         try:
-            import VISU            
+            import VISU
             import visu_gui
-            currentViewType = None            
+            currentViewType = None
+            visu_gui.myVisu.SetCurrentStudy(self.editor.study)
             m = visu_gui.myVisu.GetViewManager()
             v = m.GetCurrentView()
             print v
