@@ -22,12 +22,11 @@ import Editeur
 from InterfaceQT4 import qtEficas
 
 import salome
-#import visuDriver
 import SalomePyQt
 
 
 from pal.studyedit import getStudyEditor
-from pal.structelem import StructuralElementManager
+from pal.structelem import StructuralElementManager, InvalidParameterError
 
 
 # couleur pour visualisation des geometries 
@@ -513,15 +512,21 @@ class MyEficas( qtEficas.Appli ):
             atLeastOneStudy = self.editor.study
             if not atLeastOneStudy:
                 return
-            logger.debug(10*'#'+":envoievisu: creating a visuDriver instance")
-            structElemManager = StructuralElementManager(self.editor.studyId, self)
+            logger.debug(10*'#'+":envoievisu: creating a StructuralElementManager instance")
+            structElemManager = StructuralElementManager()
             elem = structElemManager.createElement(liste_commandes)
             elem.display()
             salome.sg.updateObjBrowser(True)
+        except InvalidParameterError, err:
+            from PyQt4.QtGui import QMessageBox
+            trStr = self.tr("Invalid parameter for group %(group)s: %(expr)s must be "
+                            "greater than %(minval)g (actual value is %(value)g)")
+            msg = str(trStr) % {"group": err.groupName, "expr": err.expression,
+                                "minval": err.minValue, "value": err.value}
+            QMessageBox.warning(self, self.tr("Error"), msg)
         except:
             traceback.print_exc()
             logger.debug(10*'#'+":pb dans envoievisu")
-
 
         
 #-------------------------------------------------------------------------------------------------------        
