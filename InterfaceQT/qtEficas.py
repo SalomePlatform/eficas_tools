@@ -130,7 +130,7 @@ class Appli(Eficas):
         titre = "version "
         monVisu=DVisu(parent=self.viewmanager,fl=Qt.WType_Dialog)
         monVisu.setCaption(titre)
-        monVisu.TB.setText("Eficas V1.16")
+        monVisu.TB.setText("Eficas V1.17")
         monVisu.adjustSize()
         monVisu.show()
 

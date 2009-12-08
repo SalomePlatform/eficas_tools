@@ -18,7 +18,7 @@ import readercata
 import prefs
 import qtCommun
 
-VERSION_EFICAS  = "EFICAS v1.16"
+VERSION_EFICAS  = "EFICAS v1.17"
 
 
 # -------------------------- #
