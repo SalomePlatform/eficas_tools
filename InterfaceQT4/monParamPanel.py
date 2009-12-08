@@ -65,11 +65,11 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)
         self.connect(self.LEFiltre,SIGNAL("textChanged(const QString&)"),self.LEFiltreTextChanged)
         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEfiltreReturnPressed)
-        self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
+        self.connect(self.bOk,SIGNAL("clicked()"),self.BOkParamPressed)
         self.connect(self.RBGroupe,SIGNAL("clicked()"),self.BuildTabCommandChanged)
         self.connect(self.RBalpha,SIGNAL("clicked()"),self.BuildTabCommandChanged)
         self.connect(self.BNext,SIGNAL("pressed()"),self.BNextPressed)
-        self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.BOkPressed)
+        self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.BOkParamPressed)
 
   def InitLEs(self):
         nom=self.node.item.get_nom()
@@ -95,6 +95,7 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         self.node.item.set_nom(nom)
         self.node.item.set_valeur(val)
         self.node.update_texte()
+        self.node.update_node_valid()
         self.editor.init_modif()
         self.InitLEs()
 

@@ -382,6 +382,7 @@ class JDCEditor(QSplitter):
                       "Copie impossible",
                       "Aucun Objet n a ete copie ou coupe ")
           return
+      child=0
       try:
          child=self.QWParent.noeud_a_editer.doPaste(self.node_selected)
       except:
