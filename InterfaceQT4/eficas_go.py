@@ -30,7 +30,7 @@ from Editeur  import import_code
 from Editeur  import session
 from qtEficas import Appli
 
-def lance_eficas(code=None,fichier=None):
+def lance_eficas(code=None,fichier=None,choix="non"):
     """
         Lance l'appli EFICAS
     """
@@ -39,7 +39,7 @@ def lance_eficas(code=None,fichier=None):
     code=options.code
 
     app = QApplication(sys.argv)
-    Eficas=Appli(code=code)
+    Eficas=Appli(code=code,choix=choix)
     Eficas.show()
 
     res=app.exec_()

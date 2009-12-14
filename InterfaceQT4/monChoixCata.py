@@ -38,7 +38,7 @@ class MonChoixCata(Ui_DChoixCata,QtGui.QDialog):
   """
   def __init__(self,listeCata,readercata, QWparent , name = None,fl = 0):
       #print "MonChoixCata"
-      QtGui.QDialog.__init__(self,QWparent)
+      QtGui.QDialog.__init__(self)
       self.setModal(True)
       self.setupUi(self)
       self.listeCata=listeCata
