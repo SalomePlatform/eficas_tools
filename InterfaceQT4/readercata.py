@@ -77,7 +77,8 @@ class READERCATA:
       if len(liste_cata_possibles)==0:          
           QMessageBox.critical( self.QWParent, "Import du catalogue","Pas de catalogue defini pour le code %s" % self.code)
           self.appliEficas.close()
-          sys.exit(1)
+          if self.appliEficas.salome == 0 :
+             sys.exit(1)
 
 
       if self.version_code is not None:
@@ -108,7 +109,8 @@ class READERCATA:
 
       if self.fic_cata == None :
           print "Pas de catalogue pour code %s, version %s" %(self.code,self.version_code)
-          sys.exit(0)
+          if self.appliEficas.salome == 0 :
+             sys.exit(1)
 
       self.determineMater()
 
@@ -122,7 +124,8 @@ class READERCATA:
       if not self.cata :          
           QMessageBox.critical( self.QWParent, "Import du catalogue","Impossible d'importer le catalogue %s" %self.fic_cata)
 	  self.appliEficas.close()
-          sys.exit(1)
+          if self.appliEficas.salome == 0 :
+             sys.exit(1)
       #
       # analyse du catalogue (ordre des mots-clés)
       #
@@ -223,7 +226,8 @@ class READERCATA:
       if len(liste_choix) == 0:          
           QMessageBox.critical( self.QWParent, "", "Aucun catalogue déclaré pour %s" %self.code)
 	  self.appliEficas.close()
-          sys.exit(1)
+          if self.appliEficas.salome == 0 :
+             sys.exit(1)
           
       # création d'une boite de dialogue modale
       widgetChoix=MonChoixCata(liste_choix,self, self.appliEficas, "", True )
@@ -242,8 +246,9 @@ class READERCATA:
           self.appliEficas.setWindowTitle(lab)
           #qApp.mainWidget().setCaption(lab)
       else :
-          sys.exit(0)
-
+	  self.appliEficas.close()
+          if self.appliEficas.salome == 0 :
+             sys.exit(0)
 
 
    def traite_clefs_documentaires(self):

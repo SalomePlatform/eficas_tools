@@ -82,7 +82,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         icon = QIcon(self.RepIcon+"/image240.png")
         self.BSalome.setIcon(icon)
         mc = self.node.item.get_definition()
-        if self.node.item.get_nom() != "FileName" :
+        if ( (self.node.item.get_nom() != "FileName" ) and ( mc.type[0]!="Fichier")) :
            self.BFichier.close()
         else :
 	   self.bParametres.close()

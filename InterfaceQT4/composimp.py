@@ -84,7 +84,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                 from monFonctionPanel import MonFonctionPanel
                 klass = MonFonctionPanel
 
-        print klass
         if not klass:
             return None
         return klass( self, self.editor )
@@ -231,6 +230,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def get_liste_param_possible(self):
       liste_param=[]
+      print self.object.jdc.params
       for param in self.object.jdc.params:
           encorevalide=self.valide_item(param.valeur)
           if encorevalide:

@@ -56,5 +56,10 @@ class MonListeParamPanel(DLisParam):
             self.dictListe[QString(repr(param))] = param
 
   def LBParamItemPressed(self):
+        print self.LBParam.selectedItems()
         i=self.LBParam.selectedItems()[0].text()
         self.panel.Ajout1Valeur(self.dictListe[i])
+
+  def on_BOk_clicked(self):
+        self.LBParamItemPressed()
+        self.close()

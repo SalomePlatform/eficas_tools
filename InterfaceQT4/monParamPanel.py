@@ -104,14 +104,21 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         self.Commentaire.setText(QString(""))
         commentaire="Valeur incorrecte"
         qtVal=self.lineEditVal.text()
+        valString=str(self.lineEditVal.text())
+        if (valString.find(' ') > -1) or (valString.find(',') > -1) :
+           commentaire="Valeur incorrecte"
+           self.Commentaire.setText(QString(commentaire))
+           return None
         boul=2
         try :
             val,boul=QString.toInt(qtVal)
+            if boul : valString=val
         except :
             pass
         if boul == 0 :
             try :
                 val,boul=QString.toDouble(qtVal)
+                if boul : valString=val
             except :
                 pass
         if boul == 0 :
@@ -121,12 +128,7 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
             except :
                 pass
         if boul: commentaire="Valeur correcte"
-        valString=str(self.lineEditVal.text())
         self.Commentaire.setText(QString(commentaire))
-        if (valString.find(' ') > -1) or (valString.find(',') > -1) :
-           commentaire="Valeur incorrecte"
-           self.Commentaire.setText(QString(commentaire))
-           return None
         self.Commentaire.setText(QString(commentaire))
         return valString
 
