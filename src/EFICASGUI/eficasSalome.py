@@ -122,11 +122,11 @@ class MyEficas( qtEficas.Appli ):
        import SMESH
        try:
          monObjet =self.getCORBAObjectInComponent(entry,"SMESH") 
-         print monObjet
+         #print monObjet
          if monObjet != None :                                    # selection d'un groupe de SMESH
             if  monObjet._narrow(SMESH.SMESH_GroupBase):
                 result = True 
-         print result
+         #print result
        except :
          logger.debug(' isMeshGroup pb avec ( entry = %s ) ' %entry )          
        return result
@@ -181,7 +181,7 @@ class MyEficas( qtEficas.Appli ):
     #-----------------------------------------------------------------
         tgeo =  shape.GetShapeType() 
         geomEngine = salome.lcc.FindOrLoadComponent( "FactoryServer", "GEOM" )
-        print dir(self.editor.study)
+        #print dir(self.editor.study)
         groupIMeasureOp = geomEngine.GetIMeasureOperations(self.editor.study._get_StudyId())
         if tgeo != "COMPOUND" : return tgeo
 
@@ -233,7 +233,7 @@ class MyEficas( qtEficas.Appli ):
 
         mainShapeEntry = self.getMainShapeEntry( entry )
         if self.mainShapeNames.has_key( editor ):
-          print "------------- self.mainShapeNames[editor]" , self.mainShapeNames[editor]
+          #print "------------- self.mainShapeNames[editor]" , self.mainShapeNames[editor]
           if self.mainShapeNames[editor] == mainShapeEntry:
              name=mySO.GetName()
           else :
@@ -294,9 +294,9 @@ class MyEficas( qtEficas.Appli ):
              return name, "Type d objet non permis"    
 
         # on cherche si la shape associee est la bonne
-        print "------------- mainShapeID" , mainShapeID
+        #print "------------- mainShapeID" , mainShapeID
         if self.mainShapeNames.has_key( editor ):
-          print "------------- self.mainShapeNames[editor]" , self.mainShapeNames[editor]
+          #print "------------- self.mainShapeNames[editor]" , self.mainShapeNames[editor]
           if self.mainShapeNames[editor] == mainShapeID:
              name=mySO.GetName()
           else :
@@ -305,9 +305,9 @@ class MyEficas( qtEficas.Appli ):
           self.mainShapeNames[editor] = mainShapeID
           name=mySO.GetName()
 
-        print "------------------------------ name :", name
-        print "------------------------------ name :", name
-        print "------------------------------ name :", name
+        #print "------------------------------ name :", name
+        #print "------------------------------ name :", name
+        #print "------------------------------ name :", name
         return name,msgError
 
 
@@ -325,8 +325,8 @@ class MyEficas( qtEficas.Appli ):
             
             # liste des groupes de maille de nom meshGroupName
             listSO = self.editor.study.FindObjectByName(meshGroupName, "SMESH")
-            print listSO
-            print "liste des groupes de maille de nom %s: "%(meshGroupName), listSO
+            #print listSO
+            #print "liste des groupes de maille de nom %s: "%(meshGroupName), listSO
             
             if len(listSO)>1:
                return 0,'Plusieurs objets  portent ce nom'
@@ -384,9 +384,9 @@ class MyEficas( qtEficas.Appli ):
                         
         except:            
             logger.debug("selectGroupFromSalome: An error occurs")
-        print "=================== selectGroupFromSalome ", names, msg
-        print "=================== selectGroupFromSalome ", names, msg
-        print "=================== selectGroupFromSalome ", names, msg
+        #print "=================== selectGroupFromSalome ", names, msg
+        #print "=================== selectGroupFromSalome ", names, msg
+        #print "=================== selectGroupFromSalome ", names, msg
         return names, msg                
         
     #---------------------------------------------
@@ -440,7 +440,7 @@ class MyEficas( qtEficas.Appli ):
 
             salome.sg.updateObjBrowser(1)
 
-            print 'addJdcInSalome commEntry->', commEntry            
+            #print 'addJdcInSalome commEntry->', commEntry            
             if commEntry:
                 ok, msgError = True, ''        
         #except:                    
@@ -462,7 +462,7 @@ class MyEficas( qtEficas.Appli ):
             visu_gui.myVisu.SetCurrentStudy(self.editor.study)
             m = visu_gui.myVisu.GetViewManager()
             v = m.GetCurrentView()
-            print v
+            #print v
             if v:
                 currentViewType = v.GetType()
             atLeastOneStudy = self.editor.study
@@ -470,11 +470,11 @@ class MyEficas( qtEficas.Appli ):
                 return ok, msgError
                                      
             #salome.sg.EraseAll()
-            print 'displayShapestrGeomShape shapeName -> ', shapeName
-            print currentViewType
+            #print 'displayShapestrGeomShape shapeName -> ', shapeName
+            #print currentViewType
             
             if currentViewType == VISU.TVIEW3D: # maillage
-                print 'Vue courante = VTK : affichage groupe de maille'                
+                #print 'Vue courante = VTK : affichage groupe de maille'                
                 ok, msgError = self.displayMeshGroups(shapeName)
             else: #geometrie
                 current_color = COLORS[ self.icolor % LEN_COLORS ]                

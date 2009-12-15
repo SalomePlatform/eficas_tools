@@ -1,5 +1,4 @@
 
-
 DEBUT();
 
 maillage=LIRE_MAILLAGE();
@@ -13,9 +12,9 @@ P1 = 3;
 
 Affe=AFFE_CARA_ELEM(MODELE=modele,
                     COQUE=_F(GROUP_MA='element2D',
-                             EPAIS=3.0,
-                             ANGL_REP=(0.0,90.0,),
-                             EXCENTREMENT=-0.3,
+                             EPAIS=10,
+                             ANGL_REP=(0.,90.0,),
+                             EXCENTREMENT=30,
                              INER_ROTA='OUI',),);
 
 FIN();
