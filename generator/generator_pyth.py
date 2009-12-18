@@ -77,7 +77,7 @@ class PythGenerator:
       fp.write(self.text)
       fp.close()
 
-   def gener(self,obj,format='standard'):
+   def gener(self,obj,format='standard',config=None):
       """
          Tous les mots-clés simples du niveau haut sont transformés en variables 
 

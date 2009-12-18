@@ -63,7 +63,7 @@ class OpenturnsGenerator(PythonGenerator):
        self.dictTempo={}
        self.TraiteMCSIMP=1
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
        #print "IDM: gener dans generator_openturns.py"
        self.initDico()
        self.text=PythonGenerator.gener(self,obj,format)

@@ -7,6 +7,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtAssistant import *
 from myMain import Ui_Eficas
 from viewManager import MyTabview
+from monChoixMap import MonChoixMap
 
 from Editeur import session
 
@@ -15,7 +16,7 @@ class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code="ASTER",salome=0,parent=None):
+    def __init__(self,code="ASTER",salome=0,parent=None,choix="non"):
         """
         Constructor
         """
@@ -30,17 +31,19 @@ class Appli(Ui_Eficas,QMainWindow):
         self.dict_reels={}
 
         import prefs
-        if salome :
-           import sys
         prefs.code=code
         name='prefs_'+prefs.code
         prefsCode=__import__(name)
-        nameConf='configuration_'+prefs.code
-        configuration=__import__(nameConf)
-
         self.REPINI=prefsCode.REPINI
         self.RepIcon=prefsCode.INSTALLDIR+"/Editeur/icons"
         self.INSTALLDIR=prefsCode.INSTALLDIR
+
+        if choix == "oui" : self.choisitCodeMap()
+        if salome :
+           import sys
+        nameConf='configuration_'+prefs.code
+        configuration=__import__(nameConf)
+
         self.CONFIGURATION = configuration.make_config(self,prefsCode.REPINI)
         self.CONFIGStyle = configuration.make_config_style(self,prefsCode.REPINI)
         if hasattr(prefsCode,'encoding'):
@@ -343,6 +346,9 @@ class Appli(Ui_Eficas,QMainWindow):
         texte="tempo"+str(self.indice)
         return texte
         
+    def choisitCodeMap(self):
+        widgetChoix=MonChoixMap(self,True)
+        ret=widgetChoix.exec_()
 
 if __name__=='__main__':
 

@@ -118,7 +118,7 @@ class HomardGenerator(PythonGenerator):
       self.dico_mot_depend['CCSolN__'] ='self.dico_mot_clef.has_key("NITER")'
       self.dico_mot_depend['CCSolNP1'] ='self.dico_mot_clef.has_key("NITER")'
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
       self.text=PythonGenerator.gener(self,obj,format)
       self.genereConfiguration()
       return self.text

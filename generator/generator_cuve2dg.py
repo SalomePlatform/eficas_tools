@@ -593,7 +593,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "SurfaceEchange_FluideStructure_mess" : "TRANSITOIRE",
          }
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
       self.text=''
       self.textCuve=''
       self.dico_mot={}

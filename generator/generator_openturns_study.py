@@ -68,7 +68,7 @@ class OpenturnsGenerator(PythonGenerator):
       sys.exit(1)
       """
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
       print "IDM: gener dans generator_openturns_study.py"
       self.initDico()
       self.text=PythonGenerator.gener(self,obj,format)

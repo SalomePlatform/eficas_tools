@@ -52,7 +52,7 @@ class SEPGenerator(PythonGenerator):
    # Les extensions de fichier permis?
    extensions=('.comm',)
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
       self.initDico()
       # Cette instruction génère le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)

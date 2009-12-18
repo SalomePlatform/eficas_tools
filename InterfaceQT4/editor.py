@@ -475,7 +475,7 @@ class JDCEditor(QSplitter):
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
-         jdc_formate=self.generator.gener(self.jdc,format='beautifie')
+         jdc_formate=self.generator.gener(self.jdc,format='beautifie',configuration=self.appliEficas.CONFIGURATION)
          if not self.generator.cr.estvide():            
             self.affiche_infos("Erreur à la generation")
             QMessageBox.critical( self, "Erreur a la generation","EFICAS ne sait pas convertir ce JDC")
@@ -550,14 +550,11 @@ class JDCEditor(QSplitter):
                 self.tree.racine.update_node_label()
                
             try : 
-            #if 1 :
                fileXML = fn[:fn.rfind(".")] + '.xml'
                self.generator.writeOpenturnsXML( fileXML )
             except :
-            #else :
                pass
                
-            #PNPNPNPN A ecrire
             try : 
                fileSTD = fn[:fn.rfind(".")] + '.py'
                self.generator.writeOpenturnsSTD( fileSTD )

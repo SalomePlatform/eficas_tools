@@ -69,7 +69,7 @@ class OpenturnsGenerator(PythonGenerator):
        """
        self.wrapperXML=None
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
        #print "IDM: gener dans generator_openturns_wrapper.py"
        self.initDico()
        self.text=PythonGenerator.gener(self,obj,format)
