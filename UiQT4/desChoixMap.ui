@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DChoixMap</class>
+ <widget class="QWidget" name="DChoixMap">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="Pb1">
+   <property name="geometry">
+    <rect>
+     <x>-8</x>
+     <y>20</y>
+     <width>121</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>redwood.png</normaloff>redwood.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>150</width>
+     <height>150</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Pb2">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>20</y>
+     <width>121</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>brisbane.png</normaloff>brisbane.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>150</width>
+     <height>160</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Pb3">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>20</y>
+     <width>131</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>berlin.png</normaloff>berlin.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>150</width>
+     <height>150</height>
+    </size>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
