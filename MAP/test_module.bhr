@@ -1,0 +1,29 @@
+OPTIONS
+3D BENHUR SCALE
+I - Morphologie (MESSALA)
+1) dimension du VER cubique [m] (entree)
+50.0
+2) fraction volumique seuil écrétant le fuseau (entree)
+.11
+3) fichier decrivant le fuseau granulaire descendant (entree)
+-
+4) fichier decrivant la position et la taille des boules (sortie)
+/local00/bin/MAP/modules/test_module/pygmee_v1/benhur_input.txt
+5) fichier CAO de la morphologie (sortie)
+-
+6) facteur de correction de fraction volumique (entree)
+1.0
+ 
+II - Maillage (BENHUR)
+1) fichier entree décrivant le maillage support (entree)
+/local00/bin/MAP/modules/test_module/benhur/regular_mesh_3D_10.msh
+2) fichier sortie du maillage  (sortie)
+test_module_10.msh
+3) fichier commentaire sur les statistiques décrivant le maillage (sortie)
+test_module_10.log
+4) fichier BMP décrivant une coupe binarisée du VER (sortie)
+test_module_10.bmp
+5) fichier TXT donnant la level set du contour aux noeuds (sortie)
+test_module_10_levelset.txt
+
+
