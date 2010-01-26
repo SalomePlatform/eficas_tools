@@ -108,6 +108,7 @@ class MyEficas( qtEficas.Appli ):
           if not object:
              myComponent = salome.lcc.FindOrLoadComponent("FactoryServer", composant)
              SCom        = self.editor.study.FindComponent( composant )
+             print myComponent , SCom
              self.editor.builder.LoadWith( SCom , myComponent  )
              object      = mySO.GetObject()
        if not object :
@@ -225,10 +226,11 @@ class MyEficas( qtEficas.Appli ):
         tGeo=self.ChercheType(shape)
         if not tGeo :
            return name, msgError
-        if kwType == "GROUP_NO" and tGeo != "VERTEX":
-            msgError = msgWarningGroupNoSelection
-        elif kwType == "GROUP_MA" and tGeo == "VERTEX":
-            name, msgError = '', msgErrorGroupMaSelection
+        if kwType == "GROUP_NO" and str(tGeo) != "VERTEX":
+            name,msgError = '',"la selection n est pas un Vertex"
+            return name, msgError
+        elif kwType == "GROUP_MA" and str(tGeo) == "VERTEX":
+            name, msgError = '', "la selection n est pas un groupe de maille"
             return name, msgError
 
         mainShapeEntry = self.getMainShapeEntry( entry )
