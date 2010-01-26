@@ -144,6 +144,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         SaisieValeur.LEValeurPressed(self,valeur)
 
   def BSalomePressed(self):
+        self.Commentaire.setText(QString(""))
         genea=self.node.item.get_genealogie()
         kwType = None
         for e in genea:

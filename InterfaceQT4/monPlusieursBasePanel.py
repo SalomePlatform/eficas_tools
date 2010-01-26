@@ -202,6 +202,8 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
 
   def BSalomePressed(self):
 
+        self.LEValeur.setText(QString(""))
+        self.Commentaire.setText(QString(""))
         genea=self.node.item.get_genealogie()
         kwType = None
         for e in genea:
