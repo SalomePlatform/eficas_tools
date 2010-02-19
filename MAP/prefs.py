@@ -1,1 +1,1 @@
-code='Map'
+code='MAP'

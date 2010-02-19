@@ -61,7 +61,7 @@ class PerfectGenerator(PythonGenerator):
         '''
         '''
         import sys
-        sys.path.append("/home/noyret/PERFECT/perfect_platform")
+        sys.path.append("/local/noyret/PERFECT/perfect_platform")
         print "avant import"
         import PDM 
         import PMM
@@ -150,7 +150,7 @@ class PerfectGenerator(PythonGenerator):
         print ">>> Defining study '%s'" % ("my new study")
         from PSM import PerfectStudy
         a_study = PerfectStudy.PerfectStudy()
-        a_study.set_study({'date': '12/11/09', 'description': 'no description', 'filename': '/home/noyret/PerfectStudy/studies/my_new_new_study.prf', 'name': 'my new study', 'author': 'gadjanor'})
+        a_study.set_study({'date': '12/11/09', 'description': 'no description', 'filename': '/local/noyret/PerfectStudy/studies/my_new_new_study.prf', 'name': 'my new study', 'author': 'gadjanor'})
         
         # 3rd: write the study chain
         print ">>> Setting the study chain"
@@ -159,7 +159,7 @@ class PerfectGenerator(PythonGenerator):
         # 4th: list and write all input data needed
         print ">>> Defining the list of input data"
         specter_path = PerfectFile()
-        specter_path.path = '/home/noyret/PERFECT/perfect_platform/tools/bin/specter.exe_64'
+        specter_path.path = '/local/noyret/PERFECT/perfect_platform/tools/bin/specter.exe_64'
         specter_path.format = ''
         
         neutron_spectrum = NeutronSpectrum()
@@ -253,10 +253,10 @@ class PerfectGenerator(PythonGenerator):
             globals(), locals(), ['perfect_filtre']
         )
         setattr(parser_module, 'current_study', a_study)
-        template_py_file = '/home/noyret/PERFECT/perfect_platform/PSM/script_tmpl.py'
+        template_py_file = '/local/noyret/PERFECT/perfect_platform/PSM/script_tmpl.py'
         this_params = parser_module.analyse( template_py_file )
         print "this_params ", this_params
-        parser_module.perf_filter( this_params, "/home/noyret/new_script_eficas.py" )
+        parser_module.perf_filter( this_params, "/local/noyret/new_script_eficas.py" )
         print "fin parser_module"
 
         

@@ -104,6 +104,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionCopier.setIcon(icon4)
         icon5 = QIcon(self.RepIcon+"/Paste24.png")
         self.actionColler.setIcon(icon5)
+        icon6 = QIcon(self.RepIcon+"/compute.png")
+        self.actionExecution.setIcon(icon6)
 
 
     def connecterSignaux(self) :
@@ -114,6 +116,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.action_Ouvrir,SIGNAL("activated()"),self.fileOpen)
         self.connect(self.actionEnregistrer,SIGNAL("activated()"),self.fileSave)
         self.connect(self.actionEnregistrer_sous,SIGNAL("activated()"),self.fileSaveAs)
+        self.connect(self.actionEnregistrer_Python,SIGNAL("activated()"),self.SaveRun)
         self.connect(self.actionFermer,SIGNAL("activated()"),self.fileClose)
         self.connect(self.actionFermer_tout,SIGNAL("activated()"),self.fileCloseAll)
         self.connect(self.actionQuitter,SIGNAL("activated()"),self.fileExit)
@@ -124,6 +127,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionCouper,SIGNAL("activated()"),self.editCut)
         self.connect(self.actionCopier,SIGNAL("activated()"),self.editCopy)
         self.connect(self.actionColler,SIGNAL("activated()"),self.editPaste)
+        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
         self.connect(self.actionSupprimer,SIGNAL("activated()"),self.supprimer)
 
         self.connect(self.actionRapport_de_Validation,SIGNAL("activated()"),self.jdcRapport)
@@ -324,6 +328,12 @@ class Appli(Ui_Eficas,QMainWindow):
     
     def editPaste(self):
         self.viewmanager.handleEditPaste()
+        
+    def run(self):
+        self.viewmanager.run()
+        
+    def SaveRun(self):
+        self.viewmanager.run()
         
     def supprimer(self):
         self.viewmanager.handleSupprimer()

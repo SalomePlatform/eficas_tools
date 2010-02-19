@@ -39,11 +39,12 @@ PYGMEE= PROC(nom="PYGMEE",op=None,
 
                   b_forme=BLOC( condition = "FORME == 'fichier'",
                      FORMAT  = SIMP(statut = "o", typ='TXM', defaut="croissant", into=("croissant","decroissant")),
-                     FICHIER = SIMP ( statut = "o", typ = "Fichier", defaut="/local00/bin/MAP/modules/test_module/pygmee_v1/fuseau_1.txt"),
+                     FICHIER = SIMP ( statut = "o", typ = "Fichier", defaut="/local/noyret/MAP/modules/polymers/s_poly_st_1/inclusion_size_distribution.txt"),
                               ),
 
                   b_manuel=BLOC( condition = "FORME == 'manuel'",
-                     LFUSEAU = SIMP ( statut = "o", typ=Tuple(2),validators=VerifTypeTuple(('R','R')), max="**",) ,),),
+#                     LFUSEAU = SIMP ( statut = "o", typ=Tuple(2),validators=VerifTypeTuple(('R','R')), max="**",) ,),),
+                     LFUSEAU = SIMP ( statut = "o", typ=Tuple(2), max="**",) ,),),
 
 
               TAILLE=SIMP(statut = "o",fr="taille du VER", typ='R', defaut=50.),
@@ -63,5 +64,11 @@ ASTER= PROC(nom="ASTER",op=None,
 
               CONDUCTIVITE_M=SIMP(statut = "o",fr="conductivite de la matrice", typ='R', defaut=1.0 , val_min =0.),
               CONDUCTIVITE_I=SIMP(statut = "o",fr="conductivite des inclusions", typ='R', defaut=1.0, val_min =0.),
-              LANCEMENT=SIMP(statut = "o",fr="lancement de Code_Aster", typ='TXM', defaut="non", into=("oui","non")),
+              LANCEMENT=SIMP(statut = "o",fr="lancement de Code_Aster", typ='TXM', defaut="oui", into=("oui","non")),
+)
+
+GMSH= PROC(nom="GMSH",op=None,
+              fr='post-traitement',
+
+              LANCEMENT=SIMP(statut = "o",fr="lancement de GMSH", typ='TXM', defaut="oui", into=("oui","non")),
 )

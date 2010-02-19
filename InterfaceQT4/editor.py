@@ -487,9 +487,63 @@ class JDCEditor(QSplitter):
          self.affiche_infos("Format %s non reconnu" % format)
          QMessageBox.critical( self, "Format "+format+" non reconnu","EFICAS ne sait pas convertir le JDC selon le format "+format)
          return ""
+
+    #------------#
+    def run(self):
+    #------------#
+      format=self.appliEficas.format_fichier
+      self.textePython=""
+      if generator.plugins.has_key(format):
+         # Le generateur existe on l'utilise
+         self.generator=generator.plugins[format]()
+         self.dicoRun=self.generator.generRUN(self.jdc,format='beautifie',configuration=self.appliEficas.CONFIGURATION)
+         if not self.generator.cr.estvide():            
+            self.affiche_infos("Erreur à la generation")
+            QMessageBox.critical( self, "Erreur a la generation","EFICAS ne sait pas convertir ce JDC")
+            return ""
+         for code in self.dicoRun.keys():
+              txt= apply(JDCEditor.__dict__[code],(self,))
+              if txt !="" :
+                 self.textePython=self.textePython+txt
+      os.system(self.textePython)
+
+    def PYGMEE(self) :
+       if self.dicoRun['PYGMEE']== "" : return ""
+       monFichier=self.CONFIGURATION.PATH_PYGMEE+"/pygmee_input.txt"
+       if  os.path.isfile(monFichier) :
+           print "je detruis pygmee_input.txt"
+           commande="rm -rf " + monFichier
+           os.system (commande)
+       f=open(monFichier,'wb')
+       f.write(self.dicoRun['PYGMEE'])
+       f.close()
+
+       commande=""
+       commande="cd "+self.CONFIGURATION.PATH_PYGMEE+";"
+       commande=commande + "python "+self.CONFIGURATION.PATH_PYGMEE+"/pygmee_v1.py\n"
+       return commande
+
+    def BENHUR(self) :
+       if self.dicoRun['BENHUR']== "" : return ""
+
+       # verifier que le fichier nom_fichier_fuseau existe
+       nom_BHR_Files=self.CONFIGURATION.PATH_BENHUR+"/BHR_files.txt"
+       nom_fichier_bhr=self.dicoRun['BENHUR'][0]
+       f=open(nom_fichier_bhr,'wb')
+       f.write(self.dicoRun['BENHUR'][1])
+       f.close
+       f=open(nom_BHR_Files,'wb')
+       f.write(nom_fichier_bhr)
+       f.write('\n\n\n\n')
+       f.close
+
+       commande="cd "+self.CONFIGURATION.PATH_BENHUR+"\n\n"
+       commande=commande + "./benhur\n"
+       return commande
+
       
       
-    #-----------------------------------------#
+    #-----------------------------------------#e
     def cherche_Groupes(self):
         listeMA,listeNO=self.get_text_JDC("GroupMA")
         return listeMA,listeNO
