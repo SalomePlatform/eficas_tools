@@ -98,7 +98,7 @@ class XMLGenerateur :
     '''
     Ecrit la liste des variables
     '''
-    varList = openturns.WrapperDataVariableList()
+    varList = openturns.WrapperDataVariableCollection()
     for var in sorted( self.DictVariables.keys(), self.__variable_ordering( self.DictVariables ) ) :
       varList.add( self.Variable( var, self.DictVariables[var] ) )
     return varList
@@ -150,7 +150,7 @@ class XMLGenerateur :
     '''
     Ecrit la liste des fichiers
     '''
-    fileList = openturns.WrapperDataFileList()
+    fileList = openturns.WrapperDataFileCollection()
     for dictFile in self.GetMCVal('Files', []) :
       fileList.add( self.File( dictFile ) )
     return fileList
