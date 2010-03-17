@@ -23,8 +23,8 @@ import re,string,os
 
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.7.4.1 2008-11-13 10:35:11 cchris Exp $"
-__version__="$Name: BR_dev_V1_15 $"
+__Id__="$Id: analyse_catalogue_initial.py,v 1.1.2.1 2009-07-03 08:55:41 pnoyret Exp $"
+__version__="$Name:  $"
 #
 
                 
@@ -59,7 +59,7 @@ def analyse_catalogue(nom_cata):
 
 
 if __name__ == "__main__" :
-	monCata="/home/noyret/Install_Eficas/EficasQT4/Openturns_StudyOpenTURNS_Cata_Study_V4.py"
+	monCata="/local/noyret/Install_Eficas/EficasQT4/Openturns_StudyOpenTURNS_Cata_Study_V4.py"
         analyse_catalogue(monCata)
 
 
