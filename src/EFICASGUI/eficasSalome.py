@@ -408,6 +408,7 @@ class MyEficas( qtEficas.Appli ):
                         
             fileType = { 'ASTER'    : "FICHIER_EFICAS_ASTER",
                          'SEP'      : "FICHIER_EFICAS_SEP",
+                         'MAP'      : "FICHIER_EFICAS_MAP",
                          'OPENTURNS': "FICHIER_EFICAS_OPENTURNS",
                          'OPENTURNS_STUDY': "FICHIER_EFICAS_OPENTURNS_STUDY",
                          'OPENTURNS_WRAPPER': "FICHIER_EFICAS_OPENTURNS_WRAPPER",
@@ -415,11 +416,13 @@ class MyEficas( qtEficas.Appli ):
                         
             folderName = {  'ASTER'    :  'AsterFiles',
                             'SEP'       : 'OMFiles' ,
+                            'MAP'       : 'MapFiles' ,
                             'OPENTURNS_STUDY': 'OpenturnsFiles',                                    
                             'OPENTURNS_WRAPPER': 'OpenturnsFiles'}                                    
 
             folderType = { 'ASTER':    "ASTER_FILE_FOLDER",
                            'SEP':      "SEP_FILE_FOLDER",
+                           'MAP':      "MAP_FILE_FOLDER",
                            'OPENTURNS_STUDY':"OPENTURNS_FILE_FOLDER",
                            'OPENTURNS_WRAPPER': "OPENTURNS_FILE_FOLDER"}
 

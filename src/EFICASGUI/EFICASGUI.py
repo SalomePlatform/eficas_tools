@@ -132,6 +132,11 @@ def runEficaspourOM():
    desktop=sgPyQt.getDesktop()
    eficasSalome.runEficas( "SEP" )
    
+def runEficaspourMap():
+   print "runEficas Pour Map "
+   desktop=sgPyQt.getDesktop()
+   eficasSalome.runEficas( "MAP" )
+   
    
 
 def runEficasFichier(version=None):
@@ -172,11 +177,13 @@ dict_command={
                 942:runEficaspourOM,# runEficas,
                 947:runEficaspourOpenturnsStudy,
                 948:runEficaspourOpenturnsWrapper,
+                949:runEficaspourMap,
 
                 4041:runEficas, #runEficas,
                 4042:runEficaspourOM,# runEficas,
                 4047:runEficaspourOpenturnsStudy,
                 4048:runEficaspourOpenturnsWrapper,
+                4049:runEficaspourMap,
 
                 9041:runEficasFichier,
              }
