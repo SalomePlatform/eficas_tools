@@ -475,7 +475,7 @@ class JDCEditor(QSplitter):
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
-         jdc_formate=self.generator.gener(self.jdc,format='beautifie',configuration=self.appliEficas.CONFIGURATION)
+         jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
          if not self.generator.cr.estvide():            
             self.affiche_infos("Erreur à la generation")
             QMessageBox.critical( self, "Erreur a la generation","EFICAS ne sait pas convertir ce JDC")
@@ -488,15 +488,15 @@ class JDCEditor(QSplitter):
          QMessageBox.critical( self, "Format "+format+" non reconnu","EFICAS ne sait pas convertir le JDC selon le format "+format)
          return ""
 
-    #------------#
-    def run(self):
-    #------------#
+    #-------------------------#
+    def run(self,exec="oui"):
+    #-------------------------#
       format=self.appliEficas.format_fichier
       self.textePython=""
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
-         self.dicoRun=self.generator.generRUN(self.jdc,format='beautifie',configuration=self.appliEficas.CONFIGURATION)
+         self.dicoRun=self.generator.generRUN(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
          if not self.generator.cr.estvide():            
             self.affiche_infos("Erreur à la generation")
             QMessageBox.critical( self, "Erreur a la generation","EFICAS ne sait pas convertir ce JDC")
@@ -505,7 +505,15 @@ class JDCEditor(QSplitter):
               txt= apply(JDCEditor.__dict__[code],(self,))
               if txt !="" :
                  self.textePython=self.textePython+txt
-      os.system(self.textePython)
+      if exec="oui" :
+         os.system(self.textePython)
+      else
+         return self.textePython
+    
+    def saveRun(self):
+        texte=self.run(exec="non")
+        print texte
+      
 
     def PYGMEE(self) :
        if self.dicoRun['PYGMEE']== "" : return ""

@@ -77,6 +77,12 @@ class MyTabview:
        editor=self.dict_editors[index]
        editor.run()
 
+   def saveRun(self):
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       editor=self.dict_editors[index]
+       editor.saveRun()
+
    def handleCloseAll(self):
        res=0
        self.appliEficas.sauveRecents()

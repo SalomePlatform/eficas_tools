@@ -36,7 +36,6 @@
     <addaction name="actionFermer_tout" />
     <addaction name="separator" />
     <addaction name="actionQuitter" />
-    <addaction name="actionEnregistrer_Python" />
    </widget>
    <widget class="QMenu" name="menuEdition" >
     <property name="title" >
@@ -54,7 +53,6 @@
     <addaction name="actionRapport_de_Validation" />
     <addaction name="actionFichier_Source" />
     <addaction name="actionFichier_Resultat" />
-    <addaction name="actionExecution" />
    </widget>
    <widget class="QMenu" name="menu_Aide" >
     <property name="title" >
@@ -100,7 +98,6 @@
    <addaction name="actionCouper" />
    <addaction name="actionCopier" />
    <addaction name="actionColler" />
-   <addaction name="actionExecution" />
   </widget>
   <action name="action_Nouveau" >
    <property name="icon" >
@@ -255,25 +252,6 @@
   <action name="actionSupprimer" >
    <property name="text" >
     <string>Supprimer</string>
-   </property>
-  </action>
-  <action name="actionExecution" >
-   <property name="icon" >
-    <iconset>
-     <normaloff>compute.png</normaloff>compute.png</iconset>
-   </property>
-   <property name="text" >
-    <string>Execution</string>
-   </property>
-  </action>
-  <action name="actionSauve_Python" >
-   <property name="text" >
-    <string>Sauve Python</string>
-   </property>
-  </action>
-  <action name="actionEnregistrer_Python" >
-   <property name="text" >
-    <string>Enregistrer Python</string>
    </property>
   </action>
  </widget>

@@ -32,6 +32,8 @@ from generator_python import PythonGenerator
 # PYGMEEDict contient une equivalence entre le catalogue Map et les lignes generees
 # comme entete (commentaire ?) dans le fichier d'input de pygmee
 #
+
+CONFIGliste=('NAME_SCHEME', 'PATH_ASTER', 'PATH_BENHUR', 'PATH_MODULE', 'PATH_PYGMEE', 'PATH_STUDY', 'REPINI')
 PYGMEEDict={
        "_PYGMEE_FUSEAU1_b_forme_FICHIER"  : "#fuseau 1 (entree de lecfus) format : diametre DCE croissant / fraction cumulee decroisant ",
        "FUSEAU2" :  "#fuseau 2 (entree de lecfus) format : diametre DCE croissant / fraction cumulee decroisant",
@@ -84,26 +86,15 @@ class MapGenerator(PythonGenerator):
    # Les extensions de fichier permis?
    extensions=('.comm',)
 
-   def gener(self,obj,format='brut',configuration=None):
-      self.PATH_PYGMEE=configuration.PATH_PYGMEE
-      self.PATH_BENHUR=configuration.PATH_BENHUR
-      self.PATH_ASTER=configuration.PATH_ASTER
-      self.PATH_MODULE=configuration.PATH_MODULE
-      self.NAME_SCHEME=configuration.NAME_SCHEME
-      self.PATH_STUDY=configuration.PATH_STUDY
+   def gener(self,obj,format='brut',config=None):
+      self.config=config
       self.dictMCVal={}
       self.listeTemp=[]
       self.text=PythonGenerator.gener(self,obj,format)
       self.generePythonMap()
       return self.text
 
-   def generRUN(self,obj,format='brut',configuration=None):
-      self.PATH_PYGMEE=configuration.PATH_PYGMEE
-      self.PATH_BENHUR=configuration.PATH_BENHUR
-      self.PATH_ASTER=configuration.PATH_ASTER
-      self.PATH_MODULE=configuration.PATH_MODULE
-      self.NAME_SCHEME=configuration.NAME_SCHEME
-      self.PATH_STUDY=configuration.PATH_STUDY
+   def generRUN(self,obj,format='brut',config=None):
       self.dictMCVal={}
       self.listeTemp=[]
       self.text=PythonGenerator.gener(self,obj,format)
@@ -161,6 +152,7 @@ class MapGenerator(PythonGenerator):
               txt=txt+str(dicoPygmee[mot])+"\n"
 
        if ('_PYGMEE_LANCEMENT' in dicoPygmee.keys()) and  dicoPygmee['_PYGMEE_LANCEMENT'] == 'oui':
+          print txt
           return txt
        else :
           return ""
@@ -168,69 +160,46 @@ class MapGenerator(PythonGenerator):
    def BENHUR(self) :
        print "Generation de BENHUR"
        dicoBenhur=self.dictMCVal["BENHUR"]
-       finesse=str(dicoBenhur['_BENHUR_FINESSE'])
-       
-       nom_fichier_BHR=self.PATH_STUDY+"/"+self.NAME_SCHEME+"_benhur_"+finesse+".bhr"
-
        if ("PYGMEE" in self.dictMCVal.keys()) and '_PYGMEE_TAILLE' in self.dictMCVal['PYGMEE']:
-           taille_VER=self.dictMCVal["PYGMEE"]['_PYGMEE_TAILLE']
+           dicoBenhur["_PYGMEE_TAILLE"]=self.dictMCVal["PYGMEE"]['_PYGMEE_TAILLE']
        else :
-           taille_VER=0
+           dicoBenhur["_PYGMEE_TAILLE"]=0
            print "Attention la variable Taille_VER non definie"
+       
+       nom_fichier_BHR=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_benhur_"+str(dicoBenhur["_BENHUR_FINESSE"])+".bhr"
 
-       nom_etude=self.PATH_STUDY+"/"+self.NAME_SCHEME+"_benhur_"+finesse
-       nom_GMSH_in=self.PATH_BENHUR+"/regular_mesh_3D_"+finesse+".msh"
-       nom_GMSH_out=nom_etude+".msh"
-       nom_GMSH_in="regular_mesh_3D_"+finesse+".msh"
-       nom_GMSH_out=nom_etude+".msh"
-       nom_LOG=nom_etude+".log"
-       nom_BMP=nom_etude+".bmp"
-       nom_LEVELSET=nom_etude+"_levelset.txt"
-       nom_GMSH_out=nom_etude+".msh"
-       nom_LOG=nom_etude+".log"
-       nom_BMP=nom_etude+".bmp"
-       nom_LEVELSET=nom_etude+"_levelset.txt"
-       nom_fichier_fuseau=self.PATH_PYGMEE+"/benhur_input.txt"
-
-
-       txt="OPTIONS\n"
-       txt=txt+"3D BENHUR SCALE\n"
-       txt=txt+"I - Morphologie (MESSALA)\n"
-       txt=txt+"1) dimension du VER cubique [m] (entree)\n"
-       txt=txt+str(taille_VER)
-       txt=txt+"\n2) fraction volumique seuil écrétant le fuseau (entree)\n"
-       txt=txt+".11\n"
-       txt=txt+"3) fichier decrivant le fuseau granulaire descendant (entree)\n"
-       txt=txt+"-\n"
-       txt=txt+"4) fichier decrivant la position et la taille des boules (sortie)\n"
-       txt=txt+nom_fichier_fuseau
-       txt=txt+"\n5) fichier CAO de la morphologie (sortie)\n"
-       txt=txt+"-\n"
-       txt=txt+"6) facteur de correction de fraction volumique (entree)\n"
-       txt=txt+"1.0\n"
-       txt=txt+" \n"
-       txt=txt+"II - Maillage (BENHUR)\n"
-       txt=txt+"1) fichier entree décrivant le maillage support (entree)\n"
-       txt=txt+nom_GMSH_in
-       txt=txt+"\n2) fichier sortie du maillage  (sortie)\n"
-       txt=txt+nom_GMSH_out
-       txt=txt+"\n3) fichier commentaire sur les statistiques décrivant le maillage (sortie)\n"
-       txt=txt+nom_LOG
-       txt=txt+"\n4) fichier BMP décrivant une coupe binarisée du VER (sortie)\n"
-       txt=txt+nom_BMP
-       txt=txt+"\n5) fichier TXT donnant la level set du contour aux noeuds (sortie)\n"
-       txt=txt+nom_LEVELSET
-       txt=txt+"\n\n\n"
-
+       #Lecture du fichier a trous
+       f = file(self.config.REPINI+"/benhur_pygmee.txt","r")
+       chaine = f.read()  
+       f.close()   
+       chaine2=self.remplaceCONFIG(chaine)
+       chaine=self.remplaceDICO(chaine2,dicoBenhur)
        if ('_BENHUR_LANCEMENT' in dicoBenhur.keys()) and  dicoBenhur['_BENHUR_LANCEMENT'] == 'oui':
-           return(nom_fichier_BHR,txt)
+           return(nom_fichier_BHR,chaine)
        else:
           return ""
+
+   def  remplaceCONFIG(self,chaine) :
+       for mot in CONFIGliste :
+           rplact="%_"+mot+"%"
+           result=chaine.replace(rplact,self.config.__dict__[mot])
+           chaine=result
+       return chaine
+
+   def  remplaceDICO(self,chaine,dico) :
+       for mot in dico.keys() :
+           rplact="%"+mot+"%"
+           result=chaine.replace(rplact,str(dico[mot]))
+           print rplact 
+           print str(dico[mot])
+           chaine=result
+       return chaine
+
 
    def ASTER(self) :
       print "Generation de ASTER"
       dicoAster=self.dictMCVal["ASTER"]
-      nom_racine=self.PATH_MODULE+"/"+self.NAME_SCHEME+"/"+self.NAME_SCHEME
+      nom_racine=self.config.PATH_MODULE+"/"+self.config.NAME_SCHEME+"/"+self.config.NAME_SCHEME
       nom_mat=nom_racine+"_aster.mat"
       lambda_matrice=self.dictMCVal["ASTER"]['_ASTER_CONDUCTIVITE_M']
       lambda_inclusions=self.dictMCVal["ASTER"]['_ASTER_CONDUCTIVITE_I']
@@ -243,8 +212,9 @@ class MapGenerator(PythonGenerator):
          f.write("\n")
       f.close()
       if ('_ASTER_LANCEMENT' in dicoAster.keys()) and  dicoAster['_ASTER_LANCEMENT'] == 'oui':
-         commande="cd "+self.PATH_MODULE+";"
-         commande=commande + self.PATH_ASTER + "/as_run "+self.PATH_MODULE+"/"+self.NAME_SCHEME+"/"+self.NAME_SCHEME+"_aster.export"
+         commande="cd "+self.config.PATH_MODULE+";"
+         commande=commande + self.config.PATH_ASTER + "/as_run "+self.config.PATH_MODULE
+         commande=commande + "/"+self.config.NAME_SCHEME+"/"+self.config.NAME_SCHEME+"_aster.export"
          print commande
          os.system(commande)
       else:
@@ -254,8 +224,8 @@ class MapGenerator(PythonGenerator):
       print "Generation de GMSH"
       dicoGmsh=self.dictMCVal["GMSH"]
       if ('_GMSH_LANCEMENT' in dicoGmsh.keys()) and  dicoGmsh['_GMSH_LANCEMENT'] == 'oui':
-         commande="cd "+self.PATH_MODULE+";"
-         commande=commande + "gmsh "+self.PATH_MODULE+"/"+self.NAME_SCHEME+"/"+self.NAME_SCHEME+"_aster.resu.msh"
+         commande="cd "+self.config.PATH_MODULE+";"
+         commande=commande + "gmsh "+self.config.PATH_MODULE+"/"+self.config.NAME_SCHEME+"/"+self.config.NAME_SCHEME+"_aster.resu.msh"
          print commande
          os.system(commande)
       else:

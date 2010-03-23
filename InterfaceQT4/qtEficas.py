@@ -55,7 +55,9 @@ class Appli(Ui_Eficas,QMainWindow):
         Ui_Eficas.__init__(self)
         self.setupUi(self)
         self.ajoutIcones()
-        if code=='ASTER' : self.ASTER()
+        if code in Appli.__dict__.keys():
+          listeTexte=apply(Appli.__dict__[code],(self,))
+
         self.viewmanager = MyTabview(self) 
         self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
         self.connecterSignaux() 
@@ -89,6 +91,20 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionTraduitV8V9,SIGNAL("activated()"),self.traductionV8V9)
 
 
+    def MAP(self): 
+        self.actionExecution = QAction(self)
+        icon6 = QIcon(self.RepIcon+"/compute.png")
+        self.actionExecution.setIcon(icon6)
+        self.actionExecution.setObjectName("actionExecution")
+        self.menuJdC.addAction(self.actionExecution)
+        self.toolBar.addAction(self.actionExecution)
+        self.actionExecution.setText(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+        self.actionEnregistrer_Python = QAction(self)
+        self.actionEnregistrer_Python.setObjectName("actionEnregistrer_Python")
+        self.menuFichier.addAction(self.actionEnregistrer_Python)
+        self.actionEnregistrer_Python.setText(QApplication.translate("Eficas", "Sauve Python", None,QApplication.UnicodeUTF8))
+        self.connect(self.actionEnregistrer_Python,SIGNAL("activated()"),self.saveRun)
 
     def ajoutIcones(self) :
         # Pour pallier les soucis de repertoire d icone
@@ -104,8 +120,6 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionCopier.setIcon(icon4)
         icon5 = QIcon(self.RepIcon+"/Paste24.png")
         self.actionColler.setIcon(icon5)
-        icon6 = QIcon(self.RepIcon+"/compute.png")
-        self.actionExecution.setIcon(icon6)
 
 
     def connecterSignaux(self) :
@@ -116,7 +130,6 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.action_Ouvrir,SIGNAL("activated()"),self.fileOpen)
         self.connect(self.actionEnregistrer,SIGNAL("activated()"),self.fileSave)
         self.connect(self.actionEnregistrer_sous,SIGNAL("activated()"),self.fileSaveAs)
-        self.connect(self.actionEnregistrer_Python,SIGNAL("activated()"),self.SaveRun)
         self.connect(self.actionFermer,SIGNAL("activated()"),self.fileClose)
         self.connect(self.actionFermer_tout,SIGNAL("activated()"),self.fileCloseAll)
         self.connect(self.actionQuitter,SIGNAL("activated()"),self.fileExit)
@@ -127,7 +140,6 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionCouper,SIGNAL("activated()"),self.editCut)
         self.connect(self.actionCopier,SIGNAL("activated()"),self.editCopy)
         self.connect(self.actionColler,SIGNAL("activated()"),self.editPaste)
-        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
         self.connect(self.actionSupprimer,SIGNAL("activated()"),self.supprimer)
 
         self.connect(self.actionRapport_de_Validation,SIGNAL("activated()"),self.jdcRapport)
@@ -332,8 +344,8 @@ class Appli(Ui_Eficas,QMainWindow):
     def run(self):
         self.viewmanager.run()
         
-    def SaveRun(self):
-        self.viewmanager.run()
+    def saveRun(self):
+        self.viewmanager.saveRun()
         
     def supprimer(self):
         self.viewmanager.handleSupprimer()
