@@ -19,33 +19,16 @@
 #
 # ======================================================================
 
-import os, sys
-# Les variables pouvant positionnees sont :
-print "import des prefs de OPENTURNS"
+# Installation des fichiers d'aide : Aster
+if (WITH_ASTER)
+  install ( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/Aide
+	    FILES_MATCHING PATTERN *.txt PATTERN *.html
+            PATTERN CMakeLists.txt EXCLUDE
+            PATTERN CVS EXCLUDE
+	  )
+endif (WITH_ASTER)
 
-# REPINI sert à localiser le fichier 
-# initialdir sert comme directory initial des QFileDialog
-# positionnee a repin au debut mise a jour dans configuration
-REPINI=os.path.dirname(os.path.abspath(__file__))
-initialdir=REPINI 
-
-# INSTALLDIR sert à localiser l'installation d'Eficas
-INSTALLDIR=os.path.join(REPINI,'..')
-
-
-# Codage des strings qui accepte les accents (en remplacement de 'ascii')
-# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
-lang='fr'
-encoding='iso-8859-1'
-
-# Acces a la documentation
-rep_cata        = INSTALLDIR
-path_doc        = os.path.join(rep_cata,'Doc')
-exec_acrobat    = "/usr/bin/xpdf"
-savedir         = os.environ['HOME']
-
-
-# OpenTURNS Python module
-OpenTURNS_path="/local00/home/dutka/OpenTURNS/trunk-cmake/build-autotools/install/lib/python2.4/site-packages"
-# Choix des catalogues
-sys.path[:0]=[INSTALLDIR, OpenTURNS_path]
+### Local Variables:
+### mode: cmake
+### End:

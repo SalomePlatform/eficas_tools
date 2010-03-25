@@ -19,33 +19,34 @@
 #
 # ======================================================================
 
-import os, sys
-# Les variables pouvant positionnees sont :
-print "import des prefs de OPENTURNS"
+install ( FILES __init__.py generator_python.py Formatage.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+        )
 
-# REPINI sert à localiser le fichier 
-# initialdir sert comme directory initial des QFileDialog
-# positionnee a repin au debut mise a jour dans configuration
-REPINI=os.path.dirname(os.path.abspath(__file__))
-initialdir=REPINI 
+# Installation des fichiers : Open TURNS
+if (WITH_OPENTURNS)
+  install ( FILES generator_openturns.py generator_openturns_study.py generator_openturns_wrapper.py
+                  OpenturnsBase.py OpenturnsSTD.py OpenturnsXML.py
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+          )
+endif (WITH_OPENTURNS)
 
-# INSTALLDIR sert à localiser l'installation d'Eficas
-INSTALLDIR=os.path.join(REPINI,'..')
+# Installation des fichiers : Aster
+if (WITH_ASTER)
+  install ( FILES generator_asterv5.py
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+          )
+endif (WITH_ASTER)
+
+# Installation des fichiers : MAP
+if (WITH_MAP)
+  install ( FILES generator_map.py
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+          )
+endif (WITH_MAP)
 
 
-# Codage des strings qui accepte les accents (en remplacement de 'ascii')
-# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
-lang='fr'
-encoding='iso-8859-1'
 
-# Acces a la documentation
-rep_cata        = INSTALLDIR
-path_doc        = os.path.join(rep_cata,'Doc')
-exec_acrobat    = "/usr/bin/xpdf"
-savedir         = os.environ['HOME']
-
-
-# OpenTURNS Python module
-OpenTURNS_path="/local00/home/dutka/OpenTURNS/trunk-cmake/build-autotools/install/lib/python2.4/site-packages"
-# Choix des catalogues
-sys.path[:0]=[INSTALLDIR, OpenTURNS_path]
+### Local Variables:
+### mode: cmake
+### End:

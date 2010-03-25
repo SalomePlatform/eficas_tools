@@ -46,6 +46,6 @@ savedir         = os.environ['HOME']
 
 
 # OpenTURNS Python module
-OpenTURNS_path="/local00/home/dutka/OpenTURNS/merge/trunk/build/install/lib/python2.4/site-packages"
+OpenTURNS_path="/local00/home/dutka/OpenTURNS/trunk-cmake/build-autotools/install/lib/python2.4/site-packages"
 # Choix des catalogues
 sys.path[:0]=[INSTALLDIR, OpenTURNS_path]
