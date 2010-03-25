@@ -488,9 +488,9 @@ class JDCEditor(QSplitter):
          QMessageBox.critical( self, "Format "+format+" non reconnu","EFICAS ne sait pas convertir le JDC selon le format "+format)
          return ""
 
-    #-------------------------#
-    def run(self,exec="oui"):
-    #-------------------------#
+    #-----------------------------#
+    def run(self,execution="oui"):
+    #-----------------------------#
       format=self.appliEficas.format_fichier
       self.textePython=""
       if generator.plugins.has_key(format):
@@ -505,13 +505,13 @@ class JDCEditor(QSplitter):
               txt= apply(JDCEditor.__dict__[code],(self,))
               if txt !="" :
                  self.textePython=self.textePython+txt
-      if exec="oui" :
+      if execution=="oui" :
          os.system(self.textePython)
-      else
+      else:
          return self.textePython
     
     def saveRun(self):
-        texte=self.run(exec="non")
+        texte=self.run(execution="non")
         print texte
       
 
