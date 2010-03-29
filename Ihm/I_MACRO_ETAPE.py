@@ -784,6 +784,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       self.contexte_fichier_init={}
       self.fichier_unite=999
       self.fichier_err=None
+      nbVariableOut=0
       try :
          from openturns import WrapperFile
          monWrapper=WrapperFile(fichier)
@@ -794,12 +795,20 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
              nom=maVariableListe[i].id_
              type=maVariableListe[i].type_
              if type :
-               ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='out',R=%d);\n" % (nom, nom, i)
+               #ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='out',R=%d);\n" % (nom, nom, i)
+               ligneTexte=""
+               nbVariableOut=nbVariableOut+1
+               self.jdc.state="changed"
              else :
                ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='in',R=%d);\n" % (nom, nom, i)
              self.fichier_text = self.fichier_text + ligneTexte
       except:
          self.make_incl2_except()
+         raise
+
+      if nbVariableOut != 1 :
+         print nbVariableOut ,"nbVariableOut"
+         self.make_incl2_except(mess="le fichier doit contenir une unique variable de sortie")
          raise
 
       try:
@@ -821,22 +830,32 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       except:
          self.make_incl2_except()
       # recalcul validite pour la matrice eventuelle
+
+      self.jdc.state="changed"
+      self.jdc.isvalid()
+      print "self.jdc " , self.jdc.state
       for e in self.jdc.etapes:
+          print "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+          e.state="changed"
           if e.nom=="CORRELATION":
              e.state="changed"
              try :
-               MCFils=e.get_child('Copula')
+               MCFils=e.get_child('CorrelationMatrix')
                MCFils.state="changed"
              except :
                pass
              e.isvalid()
 
-  def make_incl2_except(self):
+  def make_incl2_except(self,mess=None):
          l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
          if self.jdc.appli:
-             self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
+             if mess == None :
+                     self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
                                             message="Le contenu de ce fichier ne sera pas pris en compte\n"+string.join(l)
                                            )
+             else :
+                     self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
+                                            message=mess )
          #self.parent.record_unit(unite,self)
          self.g_context={}
          self.etapes=[]
