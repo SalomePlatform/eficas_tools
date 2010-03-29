@@ -54,7 +54,7 @@ class GroupMAGenerator(PythonGenerator):
       self.listeMA=[]
       self.listeNO=[]
 
-   def gener(self,obj,format='brut',configuration=None):
+   def gener(self,obj,format='brut',config=None):
       self.liste=[]
       self.text=PythonGenerator.gener(self,obj,'brut',config=None)
       return self.listeMA,self.listeNO
