@@ -278,8 +278,10 @@ class JDCNode(QTreeWidgetItem):
         self.editor.init_modif()
         index = self.treeParent.children.index(self) - 1 
         if index < 0 : index =0
+        recalcule=0
         if self.item.nom == "VARIABLE" :
-            self.item.jdc.set_Copules_recalcule_etat()
+           recalcule=1
+           jdc=self.item.jdc
 
         ret=self.treeParent.item.suppitem(self.item)
         if ret == 0:return
@@ -290,6 +292,8 @@ class JDCNode(QTreeWidgetItem):
            toselect=brothers[index]
         else:
            toselect=self.treeParent
+        if recalcule :
+           jdc.recalcule_etat_correlation()
         toselect.select()
         toselect.affichePanneau()
 
