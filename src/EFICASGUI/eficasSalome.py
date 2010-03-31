@@ -53,7 +53,11 @@ class MyEficas( qtEficas.Appli ):
         @param  fichier: chemin absolu du fichier eficas a ouvrir a das le lancement. optionnel
         """
 
-        pathCode=code[0]+code[1:].lower()
+        #bidouille pour OpenTurns
+        if code.find('_') > 0 :
+          pathCode="Openturns_"+code[10]+code[11:].lower()
+        else:
+          pathCode=code[0]+code[1:].lower()
         sys.path[:0]=[os.path.join(eficasConfig.eficasPath,pathCode)]
         
         if Editeur.__dict__.has_key( 'session' ):
