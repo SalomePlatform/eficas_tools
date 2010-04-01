@@ -14,7 +14,7 @@
 <h3>
 Limitations of the EFICAS GUI<BR>
 </h3>
-EFICAS version 1.17 has the following limitations : 
+EFICAS version 2.0 has the following limitations : 
 <ul>
  <li> on models : <ul>
  <li>- the calculus fucntion f has to have a scalar output variable, which means that f : R^n --> R;</li>
