@@ -32,7 +32,7 @@ install ( FILES qtEficas_map.py
 		Map1_Cata_V1.py
 		benhur_pygmee.txt
 		test_module.bhr
-	  DESTINATION ${CMAKE_INSTALL_PREFIX}/MAP
+	  DESTINATION ${CMAKE_INSTALL_PREFIX}/Map
         )
 
 

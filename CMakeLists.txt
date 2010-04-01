@@ -163,7 +163,7 @@ endif (WITH_ASTER)
 
 # Installation des fichiers : MAP
 if (WITH_MAP)
-  add_subdirectory ( MAP )
+  add_subdirectory ( Map )
 endif (WITH_MAP)
 
 # Installation des fichiers : Sep
