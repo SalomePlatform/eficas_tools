@@ -24,6 +24,7 @@ install (
           FILES
                  configuration_ASTER.py __init__.py prefs_ASTER.py prefs.py 
                  properties.py qtEficas_aster.py qtGroup.py style.py
+                 editeur_salome.ini editeur.ini
                  LICENSE.TERMS
           DESTINATION ${CMAKE_INSTALL_PREFIX}/Aster
 	)
