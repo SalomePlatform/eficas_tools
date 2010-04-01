@@ -19,7 +19,7 @@
 #
 # ======================================================================
 
-install ( FILES __init__.py generator_python.py Formatage.py
+install ( FILES __init__.py generator_python.py Formatage.py generator_aplat.py
           DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
         )
 
@@ -33,7 +33,7 @@ endif (WITH_OPENTURNS)
 
 # Installation des fichiers : Aster
 if (WITH_ASTER)
-  install ( FILES generator_asterv5.py
+  install ( FILES generator_asterv5.py generator_GroupMA.py generator_vers3DSalome.py
             DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
           )
 endif (WITH_ASTER)
@@ -45,6 +45,13 @@ if (WITH_MAP)
           )
 endif (WITH_MAP)
 
+
+# Installation des fichiers : SEP
+if (WITH_SEP)
+  install ( FILES generator_SEP.py tube.py
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+          )
+endif (WITH_SEP)
 
 
 ### Local Variables:

@@ -20,12 +20,46 @@
 # ======================================================================
 
 # Installation de tous les fichiers Python du repertoire et des sous-repertoires (sauf CVS)
-install ( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-          DESTINATION ${CMAKE_INSTALL_PREFIX}
-	  FILES_MATCHING PATTERN *.py
-          PATTERN CVS EXCLUDE
+install ( FILES browser.py compobase.py compobloc.py compocommandecomm.py compocomm.py
+                compoerror.py compofact.py compoformule.py compojdc.py compomacro.py
+                compomclist.py componiveau.py componuplet.py compooper.py compoparam.py
+                compoproc.py composimp.py editor.py eficas_go.py 
+                __init__.py monChoixCata.py monCommandePanel.py
+                monCommentairePanel.py monFonctionPanel.py monFormulePanel.py
+                monInactifPanel.py monIncludePanel.py monListeParamPanel.py
+                monMacroPanel.py monMatricePanel.py monMCFactPanel.py
+                monMCListAjoutPanel.py monOptionsPdf.py monParamPanel.py monPixmap.py
+                monPlusieursASSDPanel.py monPlusieursBasePanel.py monPlusieursIntoPanel.py
+                monPoursuitePanel.py monRacinePanel.py monSelectVal.py
+                monUniqueASSDPanel.py monUniqueBasePanel.py monUniqueCompPanel.py monUniqueIntoPanel.py
+                monUniqueSDCOIntoPanel.py monUniqueSDCOPanel.py monVisu.py
+                politiquesValidation.py qtCommun.py qtEficas.py
+                qtSaisie.py readercata.py typeNode.py utilIcons.py viewManager.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
 	)
 
+# Installation des fichiers : OpenTURNS
+if (WITH_OPENTURNS)
+  install ( FILES monOptions_OPENTURNS_STUDY.py monOptions_OPENTURNS_WRAPPER.py
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
+          )
+endif (WITH_OPENTURNS)
+
+# Installation des fichiers : Aster
+if (WITH_ASTER)
+  install ( FILES gereTraduction.py monOptions_ASTER.py ssIhm.py
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
+          )
+endif (WITH_ASTER)
+
+# Installatiion des fichiers : MAP
+if (WITH_MAP)
+  install ( FILES monChoixMap.py 
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
+          )
+endif (WITH_MAP)
+
+#monOptions_CUVE2DG.py
 
 ### Local Variables:
 ### mode: cmake

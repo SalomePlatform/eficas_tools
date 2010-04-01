@@ -88,17 +88,24 @@ class JDC(I_OBJECT.OBJECT):
    def set_Copules_recalcule_etat(self):
       for etapeTraitee in self.etapes :
           if etapeTraitee.nom == 'CORRELATION' :
-             copule=etapeTraitee.get_child('Copula')
-             if copule !=None :
-                copule.state='arecalculer'
+             Matrix=etapeTraitee.get_child('Matrix')
+             if Matrix !=None :
+                Correlation=etapeTraitee.get_child('CorrelationMatrix')
+                if Correlation !=None :
+                   Correlation.state='arecalculer'
+                Matrix.state='arecalculer'
      
    def recalcule_etat_correlation(self):
       for etapeTraitee in self.etapes :
           if etapeTraitee.nom == 'CORRELATION' :
-             copule=etapeTraitee.get_child('Copula')
-             if copule !=None :
-                copule.state='arecalculer'
-                copule.isvalid()
+             Matrix=etapeTraitee.get_child('Matrix')
+             if Matrix !=None :
+                Matrix.state='arecalculer'
+                Correlation=Matrix.get_child('CorrelationMatrix')
+                if Correlation !=None :
+                   Correlation.state='arecalculer'
+                   Correlation.isvalid()
+                Matrix.isvalid()
                 etapeTraitee.state='arecalculer'
              if etapeTraitee.state=='arecalculer':
                 etapeTraitee.isvalid()

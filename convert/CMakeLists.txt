@@ -49,6 +49,12 @@ if (WITH_MAP)
           )
 endif (WITH_MAP)
 
+# Installation des fichiers : SEP
+if (WITH_SEP)
+  install ( FILES convert_SEP.py
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
+          )
+endif (WITH_SEP)
 
 ### Local Variables:
 ### mode: cmake

@@ -58,7 +58,10 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
        if self.node.item.get_valeur()== None:
           self.initialSsValeur()
        else :
-          self.initialValeur()
+          try :
+             self.initialValeur()
+          except :
+             self.initialSsValeur()
 
   def initVal(self):
       self.nomVariables={}

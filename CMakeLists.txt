@@ -78,14 +78,24 @@ endif (NOT PYUIC4)
 
 # Definition des options de CMake
 option ( WITH_ALL_PACKAGES "Install all package files" OFF )
+option ( WITH_SALOME_MECA  "Install OT, Aster and SEP files" OFF )
 option ( WITH_OPENTURNS    "Install Open TURNS files"  OFF )
 option ( WITH_ASTER        "Install Aster files"       OFF )
 option ( WITH_MAP          "Install MAP files"         OFF )
+option ( WITH_SEP          "Install SEP files"         OFF )
 
 set ( _OPTIONLIST
   WITH_OPENTURNS 
   WITH_ASTER
   WITH_MAP
+  WITH_SEP
+  WITH_SALOME_MECA
+  )
+
+set ( _SALOME_MECA_LIST)
+  WITH_OPENTURNS 
+  WITH_ASTER
+  WITH_SEP
   )
 
 if (WITH_ALL_PACKAGES)
@@ -93,6 +103,12 @@ if (WITH_ALL_PACKAGES)
     set ( ${_opt} ON )
   endforeach ( _opt )
 endif (WITH_ALL_PACKAGES)
+
+if (WITH_SALOME_MECA)
+  foreach ( _opt ${_SALOME_MECA_LIST} )
+    set ( ${_opt} ON )
+  endforeach ( _opt )
+endif (WITH_SALOME_MECA)
 
 # Verification: au moins une option doit etre selectionnee
 set ( _VALIDOPT FALSE )
@@ -141,15 +157,19 @@ if (WITH_OPENTURNS)
 endif (WITH_OPENTURNS)
 
 # Installation des fichiers : Aster
-#if (WITH_ASTER)
-#  add_subdirectory ( Aster )
-#endif (WITH_ASTER)
+if (WITH_ASTER)
+  add_subdirectory ( Aster )
+endif (WITH_ASTER)
 
 # Installation des fichiers : MAP
 if (WITH_MAP)
   add_subdirectory ( MAP )
 endif (WITH_MAP)
 
+# Installation des fichiers : Sep
+if (WITH_SEP)
+  add_subdirectory ( Sep )
+endif (WITH_SEP)
 
 ### Local Variables:
 ### mode: cmake
