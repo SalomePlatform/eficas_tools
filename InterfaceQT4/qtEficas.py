@@ -7,7 +7,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtAssistant import *
 from myMain import Ui_Eficas
 from viewManager import MyTabview
-from monChoixMap import MonChoixMap
 
 from Editeur import session
 
@@ -369,6 +368,7 @@ class Appli(Ui_Eficas,QMainWindow):
         return texte
         
     def choisitCodeMap(self):
+        from monChoixMap import MonChoixMap
         widgetChoix=MonChoixMap(self,True)
         ret=widgetChoix.exec_()
 
