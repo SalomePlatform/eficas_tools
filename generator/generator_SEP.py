@@ -93,7 +93,7 @@ class SEPGenerator(PythonGenerator):
       """
       Les paramètres sont transcrits sous la forme d'un dictionnaire nom=valeur.
       """
-      from Sous_epaisseur import properties
+      from Sep import properties
       self.texteTubePy="# -*- coding: utf-8 -*-\n"
       self.texteTubePy+="# ======================================================================================\n"
       self.texteTubePy+="# FICHIER GENERE PAR EFICAS - OUTIL MÉTIER SOUS-EPAISSEUR - "

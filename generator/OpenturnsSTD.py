@@ -373,19 +373,21 @@ class STDGenerateur :
     '''
     txt  = "# Definit la copule de la loi jointe\n"
 
-    if ( self.DictMCVal.has_key( 'Copula' ) ):
-      if ( self.DictMCVal[ 'Copula' ] in ( 'Independent', ) ):
-        txt += "%s = IndependentCopula( %s )\n" % (self.variable["copula"], self.variable["n"])
-      elif ( self.DictMCVal[ 'Copula' ] in ( 'Normal', ) ):
-        varList   = self.DictMCVal[ 'CorrelationMatrix' ][0]
-        dimension = len(varList)
-        txt += "%s = {}\n" % self.variable["correlation"]
-        for i in range( dimension ):
-          txt += "%s['%s'] = {}\n" % (self.variable["correlation"], varList[i])
-          for j in range ( dimension ):
-            txt += "%s['%s']['%s'] = %g\n" % (self.variable["correlation"], varList[i], varList[j], self.DictMCVal[ 'CorrelationMatrix' ][i+1][j])
-        txt += "%s = getCorrelationMatrixFromMap( %s.getVariableList(), %s )\n" % (self.variable["R"], self.variable["wrapperdata"], self.variable["correlation"])
-        txt += "%s = NormalCopula( %s )\n" % (self.variable["copula"], self.variable["R"])
+    if ( not self.DictMCVal.has_key( 'Copula' ) ):
+      self.DictMCVal[ 'Copula' ] = 'Independent'
+
+    if ( self.DictMCVal[ 'Copula' ] in ( 'Independent', ) ):
+      txt += "%s = IndependentCopula( %s )\n" % (self.variable["copula"], self.variable["n"])
+    elif ( self.DictMCVal[ 'Copula' ] in ( 'Normal', ) ):
+      varList   = self.DictMCVal[ 'CorrelationMatrix' ][0]
+      dimension = len(varList)
+      txt += "%s = {}\n" % self.variable["correlation"]
+      for i in range( dimension ):
+        txt += "%s['%s'] = {}\n" % (self.variable["correlation"], varList[i])
+        for j in range ( dimension ):
+          txt += "%s['%s']['%s'] = %g\n" % (self.variable["correlation"], varList[i], varList[j], self.DictMCVal[ 'CorrelationMatrix' ][i+1][j])
+      txt += "%s = getCorrelationMatrixFromMap( %s.getVariableList(), %s )\n" % (self.variable["R"], self.variable["wrapperdata"], self.variable["correlation"])
+      txt += "%s = NormalCopula( %s )\n" % (self.variable["copula"], self.variable["R"])
 
     txt += "\n"
     return txt

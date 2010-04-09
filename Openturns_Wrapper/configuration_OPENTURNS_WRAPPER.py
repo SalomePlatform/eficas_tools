@@ -59,7 +59,9 @@ class CONFIG:
       else: 	     self.parent=None
 
 
-      self.labels=("OpenTURNS_path","rep_user","INSTALLDIR","path_doc","exec_acrobat","rep_cata","initialdir","savedir")
+      self.labels_user=('exec_acrobat', 'catalogues','savedir','path_doc','OpenTURNS_path')
+      self.labels_eficas=("OpenTURNS_path","rep_user","INSTALLDIR","path_doc","exec_acrobat","rep_cata","initialdir","savedir","catalogues")
+      #self.labels=("OpenTURNS_path","rep_user","INSTALLDIR","path_doc","exec_acrobat","rep_cata","initialdir","savedir")
 
       # Valeurs par defaut
       self.rep_user     = os.path.join(os.environ['HOME'],'.Eficas_Openturns')
@@ -88,7 +90,7 @@ class CONFIG:
       name='prefs_'+prefs.code
       prefsCode=__import__(name)
       self.prefsUser=name+".py"
-      for k in self.labels :
+      for k in self.labels_eficas :
          try :
             valeur=getattr(prefsCode,k)
             setattr(self,k,valeur)
@@ -115,7 +117,7 @@ class CONFIG:
          QMessageBox.critical( None, "Import du fichier de Configuration", 
 			"Erreur à la lecture du fichier de configuration " + self.fic_ini_utilisateur )
          sys.exit(0)
-      for k in self.labels :
+      for k in self.labels_user :
          try :
             setattr(self,k,d[k])
          except :
@@ -167,7 +169,16 @@ class CONFIG:
   # sauvegarde
   # les nouveaux paramètres dans le fichier de configuration utilisateur
   #
-       print "a ecrire PNPNPN"
+      texte=""
+      for clef in self.labels_user :
+          if hasattr(self,clef):
+             valeur=getattr(self,clef)
+             texte= texte + clef+"	= " + repr(valeur) +"\n"
+      f=open(self.fic_ini_utilisateur,'w+')
+      print self.fic_ini_utilisateur
+      f.write(texte) 
+      f.close()
+#       print "a ecrire PNPNPN"
 #      l_param=('exec_acrobat', 'repIni','catalogues','rep_travail','rep_mat','path_doc')
 #      texte=""
 #      for clef in l_param :
