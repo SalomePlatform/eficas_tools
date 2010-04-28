@@ -11,27 +11,8 @@
 
   <desktop>
 
-  <!-- ### MENUBAR ###  -->
-
-    <menubar>
-      <menu-item label-id="EFICAS" item-id="90" pos-id="3">
-        <popup-item item-id="941" label-id="Eficas pour Code_Aster" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande ASTER avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-        <popup-item item-id="942" label-id="Eficas pour Outils Metier" icon-id="eficasOM.png" tooltip-id="Editer un jeu de commande ASTER avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-        <popup-item item-id="945" label-id="Eficas pour Map" icon-id="plus.png" tooltip-id="Editer un jeu de commande Openturns Study avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-        <popup-item item-id="947" label-id="Eficas pour Openturns Study" icon-id="eficasotstd.png" tooltip-id="Editer un jeu de commande Openturns Study avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-        <popup-item item-id="948" label-id="Eficas pour Openturns Wrapper" icon-id="eficasotwrp.png" tooltip-id="Editer un jeu de commande Openturns Study avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-      </menu-item>
-    </menubar>
-
-  <!-- ### TOOLBAR ###  -->
-
-    <toolbar label-id="Eficas">
-        <toolbutton-item item-id="4041" label-id="Eficas pour Code_Aster" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande ASTER avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-       <toolbutton-item item-id="4042" label-id="Eficas pour Openturns Outils Metier" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande Outils Metier avec Eficas" accel-id="" toggle-id="" execute-action=""/> 
-       <toolbutton-item item-id="4047" label-id="Eficas pour Openturns Study" icon-id="eficasotstd.png" tooltip-id="Editer un jeu de commande Openturns Study avec Eficas" accel-id="" toggle-id="" execute-action=""/> 
-       <toolbutton-item item-id="4048" label-id="Eficas pour Openturns Wrapper" icon-id="eficasotwrp.png" tooltip-id="Editer un jeu de commande Openturns Wrapper avec Eficas" accel-id="" toggle-id="" execute-action=""/> 
-       <toolbutton-item item-id="4049" label-id="Eficas pour Map" icon-id="plus.png" tooltip-id="Editer un jeu de commande Map avec Eficas" accel-id="" toggle-id="" execute-action=""/> 
-    </toolbar>
+  <!-- Menubar and toolbar are now created dynamically depending on the catalogs installed with Eficas.
+       Check file EFICASGUI.py for more details. -->
 
   <!-- ### POPUP MENU ###  -->
      <popupmenu label-id="Popup for Viewer" context-id="" parent-id="ObjectBrowser" object-id="" pos_id="1">
