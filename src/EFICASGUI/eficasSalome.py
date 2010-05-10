@@ -433,7 +433,8 @@ class MyEficas( qtEficas.Appli ):
                            'OPENTURNS_WRAPPER': "OPENTURNS_FILE_FOLDER"}
 
                         
-            moduleEntry = self.editor.findOrCreateComponent(self.module)
+            moduleEntry = self.editor.findOrCreateComponent(self.module,
+                                                            loadEngine = False)
             itemName    = re.split("/",jdcPath)[-1]
             
             fatherEntry = self.editor.findOrCreateItem(
