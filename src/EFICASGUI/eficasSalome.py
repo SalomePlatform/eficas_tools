@@ -2,6 +2,7 @@
 #_____________________________________
 
 import sys, os, re,types
+from PyQt4.QtGui import QMessageBox
 
 from pal.logger import ExtLogger
 logger=ExtLogger( "EFICAS_SRC.EFICASGUI.eficasSalome.py" )
@@ -406,8 +407,7 @@ class MyEficas( qtEficas.Appli ):
         """
         msgError    = "Erreur dans l'export du fichier de commande dans l'arbre d'etude Salome"
         ok = False
-        #try:            
-        if 1:
+        try:            
             atLeastOneStudy = self.editor.study
             if not atLeastOneStudy:
                 return ok, msgError
@@ -455,8 +455,12 @@ class MyEficas( qtEficas.Appli ):
             #print 'addJdcInSalome commEntry->', commEntry            
             if commEntry:
                 ok, msgError = True, ''        
-        #except:                    
-        #    logger.debug(50*'=' Erreur au AddJDC)
+        except Exception, exc:
+            msgError = "Can't add Eficas file to Salome study tree"
+            logger.exception(msgError)
+            QMessageBox.warning(self, self.tr("Warning"),
+                                self.tr("%s. Reason:\n%s\n\nSee logs for "
+                                        "more details." % (msgError, exc)))
         return ok, msgError        
         
            
