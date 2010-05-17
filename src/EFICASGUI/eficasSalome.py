@@ -45,7 +45,8 @@ class MyEficas( qtEficas.Appli ):
     a)la creation de groupes de mailles dans le composant SMESH de SALOME
     b)la visualisation d'elements geometrique dans le coposant GEOM de SALOME par selection dans EFICAS
     """
-    def __init__( self, parent, code = "ASTER", fichier = None, module = "Eficas", version=None):
+    def __init__( self, parent, code = "ASTER", fichier = None, module = "EFICAS",
+                  componentName = "Eficas", version = None):
         """
         Constructeur.
         @type   parent: 
@@ -81,6 +82,7 @@ class MyEficas( qtEficas.Appli ):
         self.parent = parent        
         self.salome = True      #active les parties de code specifique dans Salome( pour le logiciel Eficas )
         self.module = module    #indique sous quel module dans l'arbre d'etude ajouter le JDC.
+        self.componentName = componentName
         self.editor = getStudyEditor()    # Editeur de l'arbre d'etude
 
         
@@ -433,8 +435,7 @@ class MyEficas( qtEficas.Appli ):
                            'OPENTURNS_WRAPPER': "OPENTURNS_FILE_FOLDER"}
 
                         
-            moduleEntry = self.editor.findOrCreateComponent(self.module,
-                                                            loadEngine = False)
+            moduleEntry = self.editor.findOrCreateComponent(self.module, self.componentName)
             itemName    = re.split("/",jdcPath)[-1]
             
             fatherEntry = self.editor.findOrCreateItem(
@@ -548,7 +549,7 @@ class MyEficas( qtEficas.Appli ):
 #-------------------------------------------------------------------------------------------------------        
 #           Point d'entree lancement EFICAS
 #
-def runEficas( code="ASTER", fichier=None, module = "Eficas", version=None ):
+def runEficas( code="ASTER", fichier=None, module = "EFICAS", componentName = "Eficas", version=None ):
     logger.debug(10*'#'+":runEficas: START")
     global appli    
     logger.debug(10*'#'+":runEficas: code="+str(code))
@@ -557,7 +558,8 @@ def runEficas( code="ASTER", fichier=None, module = "Eficas", version=None ):
     logger.debug(10*'#'+":runEficas: version="+str(version))
 
     if not appli: #une seul instance possible!        
-        appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier, module = module, version=version )
+        appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier,
+                          module = module, componentName = componentName, version=version )
     logger.debug(10*'#'+":runEficas: END")
 
         
