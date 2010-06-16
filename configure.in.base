@@ -148,14 +148,6 @@ CHECK_SALOME_GUI
 
 echo
 echo ---------------------------------------------
-echo testing msg2qm
-echo ---------------------------------------------
-echo
-
-CHECK_MSG2QM
-
-echo
-echo ---------------------------------------------
 echo Testing Pal
 echo ---------------------------------------------
 echo
@@ -176,7 +168,7 @@ echo ---------------------------------------------
 echo
 
 echo Configure
-variables="python_ok threads_ok OpenGL_ok qt_ok omniORB_ok Kernel_ok  SalomeGUI_ok msg2qm_ok"
+variables="python_ok threads_ok OpenGL_ok qt_ok omniORB_ok Kernel_ok  SalomeGUI_ok"
 
 for var in $variables
 do
