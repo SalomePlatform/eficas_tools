@@ -28,14 +28,9 @@ LIB_CLIENT_IDL =
 
 LIB_SERVER_IDL = 
 
-# .po files to transform in .qm
-PO_FILES =  EFICAS_msg_en.po EFICAS_icons.po
-
 EXPORT_PYSCRIPTS = \
 colors.py\
 cabri.py\
-SelectMeshDiag_ui.py\
-SelectMainShapeDiag_ui.py\
 EFICASGUI.py   \
 eficasSalome.py \
 
@@ -43,11 +38,6 @@ eficasSalome.py \
 # _CS_gbo_151104 Ajout pour compatibilité ascendante entre versions de Eficas
 # PN On l enleve
 #EXPORT_PYSCRIPTS+=eficas_etude.py
-
-# On utilise le pyuic trouvé par le configure plutôt que celui se trouvant dans l'environnement
-PYUIC = pyuic
-%.py:%.ui
-	$(PYUIC) $< -o $@
 
 
 @CONCLUDE@
