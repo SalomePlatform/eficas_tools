@@ -551,14 +551,16 @@ class MyEficas( qtEficas.Appli ):
 #
 def runEficas( code="ASTER", fichier=None, module = "EFICAS", componentName = "Eficas", version=None ):
     logger.debug(10*'#'+":runEficas: START")
-    global appli    
+    #global appli    
     logger.debug(10*'#'+":runEficas: code="+str(code))
     logger.debug(10*'#'+":runEficas: fichier="+str(fichier))
     logger.debug(10*'#'+":runEficas: module="+str(module))
     logger.debug(10*'#'+":runEficas: version="+str(version))
 
-    if not appli: #une seul instance possible!        
-        appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier,
+    #if not appli: #une seul instance possible!        
+    appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier,
+    #if not appli: #une seul instance possible!        
+    #    appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier,
                           module = module, componentName = componentName, version=version )
     logger.debug(10*'#'+":runEficas: END")
 
