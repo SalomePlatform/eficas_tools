@@ -96,14 +96,16 @@ class MyEficas( qtEficas.Appli ):
         self.show()
         
         
-    def closeEvent(self,event):
-        import InterfaceQT4.readercata
-        if hasattr(InterfaceQT4.readercata,'reader') :
-           del InterfaceQT4.readercata.reader
-        global appli
-        appli = None
-        event.accept()
+    #def closeEvent(self,event):
+        #import InterfaceQT4.readercata
+        #if hasattr(InterfaceQT4.readercata,'reader') :
+        #   del InterfaceQT4.readercata.reader
+        #global appli
+        #appli = None
+        #event.accept()
      
+    #    print "_______________________________"
+    #    return 1
  
 # ___________________________ Methodes de l ex Pal __________________________________
 
@@ -559,15 +561,10 @@ def runEficas( code="ASTER", fichier=None, module = "EFICAS", componentName = "E
 
     #if not appli: #une seul instance possible!        
     appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier,
+                       module = module, componentName = componentName, version=version )
     #if not appli: #une seul instance possible!        
     #    appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier,
-                          module = module, componentName = componentName, version=version )
+    #                      module = module, componentName = componentName, version=version )
     logger.debug(10*'#'+":runEficas: END")
 
         
-        
-
-appli = None
-
-
-
