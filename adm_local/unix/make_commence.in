@@ -71,10 +71,6 @@ PYQT_LIBS = @PYQT_LIBS@
 OGL_INCLUDES=@OGL_INCLUDES@
 OGL_LIBS=@OGL_LIBS@
 
-# VTK
-VTK_INCLUDES=@VTK_INCLUDES@
-VTK_LIBS=@VTK_LIBS@
-
 # OpenCasCade
 
 OCC_INCLUDES=@CAS_CPPFLAGS@
@@ -220,8 +216,7 @@ ac_cxx_namespaces.m4              check_omniorb.m4   pyembed.m4         \
 check_cas.m4                      check_boost.m4     check_swig.m4
 
 ACLOCAL_GUI = \
-check_vtk.m4	                  check_opengl.m4    check_qt.m4        \
-check_GUI.m4
+check_GUI.m4	                  check_opengl.m4    check_qt.m4
 
 $(top_srcdir)/aclocal.m4: $(ACLOCAL_SRC:%=@KERNEL_ROOT_DIR@/salome_adm/unix/config_files/%) \
                           $(ACLOCAL_SRC_DEPREC:%=@KERNEL_ROOT_DIR@/salome_adm/unix/config_files/DEPRECATED/%) \
