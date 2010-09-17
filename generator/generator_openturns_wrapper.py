@@ -69,7 +69,7 @@ class OpenturnsGenerator(PythonGenerator):
        """
        self.wrapperXML=None
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
        #print "IDM: gener dans generator_openturns_wrapper.py"
        self.initDico()
        self.text=PythonGenerator.gener(self,obj,format)
@@ -83,10 +83,14 @@ class OpenturnsGenerator(PythonGenerator):
        Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
        """
        s=PythonGenerator.generMCSIMP(self,obj)
-       if self.traiteMCSIMP == 1 : 
-          self.dictMCVal[obj.nom]=obj.val
+       if not( type(obj.valeur) in (list, tuple)) and (obj.get_min_max()[1] != 1):
+          valeur=(obj.valeur,)
        else :
-          self.dictTempo[obj.nom]=obj.valeur
+          valeur=obj.valeur
+       if self.traiteMCSIMP == 1 : 
+          self.dictMCVal[obj.nom]=valeur
+       else :
+          self.dictTempo[obj.nom]=valeur
        return s
 
    def generETAPE(self,obj):
@@ -109,7 +113,6 @@ class OpenturnsGenerator(PythonGenerator):
    def generMCFACT(self,obj):
        # Il n est pas possible d utiliser obj.valeur qui n est pas 
        # a jour pour les nouvelles variables ou les modifications 
-       #print "generMCFACT" , obj.nom
        if obj.nom in ( "Files", ) :
           self.traiteMCSIMP=0
 	  self.dictTempo={}
@@ -119,7 +122,7 @@ class OpenturnsGenerator(PythonGenerator):
        return s
 
    def genereXML(self):
-       #print "IDM: genereXML dans generator_openturns_wrapper.py"
+       print "IDM: genereXML dans generator_openturns_wrapper.py"
        #print "appli.CONFIGURATION=",self.appli.CONFIGURATION.__dict__
        if self.listeFichiers != [] :
           self.dictMCVal["Files"]=self.listeFichiers

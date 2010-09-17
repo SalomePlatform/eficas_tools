@@ -33,9 +33,9 @@ from politiquesValidation  import PolitiquePlusieurs
 
 class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonPlusieursASSDPanel"
@@ -70,10 +70,10 @@ class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
 
   def BOkPourListePressed(self):
         if self.listeValeursCourantes == [] :
-	   self.editor.affiche_infos("Pas de Validation d un groupe vide")
+	   self.editor.affiche_infos("Pas de Validation d un groupe vide",Qt.red)
            return
         self.node.item.set_valeur(self.listeValeursCourantes)
-	self.editor.affiche_infos("Valeur Acceptée")
+	self.editor.affiche_infos("Valeur AcceptÃ©e")
 	pass
 
 
@@ -113,7 +113,7 @@ class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
         validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,index,listeVal) 
 	self.Commentaire.setText(comm2)
         if not validite :
-		self.editor.affiche_infos(comm)
+		self.editor.affiche_infos(comm,Qt.red)
         else:
            l1=self.listeValeursCourantes[:index]
            l3=self.listeValeursCourantes[index:]

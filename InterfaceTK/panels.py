@@ -29,6 +29,8 @@ import widgets
 from widgets import ListeChoix, showerror
 from widgets import ListeChoixParGroupes
 import prefs
+name='prefs_'+prefs.code
+prefsCode=__import__(name)
 import options
 
 SEPARATEUR = '-'*30
@@ -217,7 +219,7 @@ class Panel(Frame) :
       texte_infos = ''
       for e in cmd.entites.keys() :
           if e == name :
-              texte_infos=getattr(cmd.entites[e],prefs.lang)
+              texte_infos=getattr(cmd.entites[e],prefsCode.lang)
               break
       if texte_infos == '' : texte_infos="Pas d'infos disponibles"
       self.parent.appli.affiche_infos(texte_infos)
@@ -234,7 +236,7 @@ class Panel(Frame) :
   def selectCmd(self,name):
       """ On retrouve la commande sous le curseur pour affichage du fr """
       if name != 'COMMENTAIRE' and name != SEPARATEUR:
-          texte_infos=getattr(self.parent.jdc.get_cmd(name),prefs.lang)
+          texte_infos=getattr(self.parent.jdc.get_cmd(name),prefsCode.lang)
           self.parent.appli.affiche_infos(texte_infos)
           
   def defCmd(self,name):
@@ -334,27 +336,28 @@ class OngletPanel(Panel) :
       """
       Crée la page de saisie du nom du concept
       """
-      self.label = Label(page,text='Nom du concept :')
-      self.label.place(relx=0.1,rely=0.4)
+      self.label = Label(page,text='Nom du concept :',justify=LEFT)
+      self.label.grid(row=0,sticky=W,padx=5,pady=10)
       self._any = Entry(page,relief='sunken')
-      self._any.place(relx=0.35,rely=0.4,relwidth=0.5)
+      self._any.grid(row=0,column=1,padx=5,pady=10)
       self._any.bind("<Return>",lambda e,s=self:s.execConcept())
       self._any.bind("<KP_Enter>",lambda e,s=self:s.execConcept())
       self._any.insert(0,self.node.item.GetText())
       self.but_ok=Button(page,text = "Valider",command=self.execConcept)
-      self.but_ok.place(relx=0.35,rely=0.8, relwidth=0.35)
       type_sd = self.node.item.get_type_sd_prod()
+      row=1
       if type_sd :
-          txt = "L'opérateur courant retourne un objet de type %s" %type_sd
+          txt = "L'opérateur courant retourne un objet de type:\n%s" %type_sd
           self.label = Label(page, text = txt)
-          self.label.place(relx=0.5,rely=0.55,anchor='n')
+          self.label.grid(row=1,columnspan=2,padx=5,pady=10,sticky=W)
+          row=2
+      self.but_ok.grid(row=row,columnspan=2,padx=5,pady=10)
       self._any.focus()
       # aide associée au panneau
       bulle_aide="""Tapez dans la zone de saisie le nom que vous voulez donner
       au concept retounré par l'opérateur courant et pressez <Return> pour valider"""
       page.bind("<Button-3>", lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
       page.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
-        
 
   def makeMoclesPage(self,page):
       """
@@ -480,33 +483,33 @@ class OngletPanel(Panel) :
       self.frame_comment = Frame(page,bd=1,relief='raised')
       self.frame_param   = Frame(page,bd=1,relief='raised')
       self.frame_boutons = Frame(page,bd=1,relief='raised')
-      self.frame_comment.place(relx=0,rely=0,relwidth=1,relheight=0.40)
-      self.frame_param.place(relx=0,rely=0.40,relwidth=1,relheight=0.40)
-      self.frame_boutons.place(relx=0,rely=0.84,relwidth=1,relheight=0.16)
       # remplissage de la frame commentaire
-      Label(self.frame_comment,text = "Insérer un commentaire :").place(relx=0.1,rely=0.5,anchor='w')
+      Label(self.frame_comment,text = "Insérer un commentaire :",justify=LEFT).grid(row=0,rowspan=2,sticky=W,padx=5, pady=5)
       but_comment_avant = Button(self.frame_comment,
                                  text = "AVANT "+self.node.item.get_nom(),
                                  command = lambda s=self :s.ajout_commentaire(ind = 'before'))
       but_comment_apres = Button(self.frame_comment,
                                  text = "APRES "+self.node.item.get_nom(),
                                  command = self.ajout_commentaire)
-      but_comment_avant.place(relx=0.45,rely=0.3,anchor='w',relwidth=0.45)
-      but_comment_apres.place(relx=0.45,rely=0.7,anchor='w',relwidth=0.45)
+      but_comment_avant.grid(row=0,column=1,padx=5, pady=5)
+      but_comment_apres.grid(row=1,column=1,padx=5, pady=5)
+      self.frame_comment.pack(side='top',fill='both',padx=5, pady=5)
       # remplissage de la frame paramètre
-      Label(self.frame_param,text = "Insérer un paramètre :").place(relx=0.1,rely=0.5,anchor='w')
+      Label(self.frame_param,text = "Insérer un paramètre :",justify=LEFT).grid(row=0,rowspan=2,sticky=W,padx=5, pady=5)
       but_param_avant = Button(self.frame_param,
                                  text = "AVANT "+self.node.item.get_nom(),
                                  command = lambda s=self :s.ajout_parametre(ind = 'before'))
       but_param_apres = Button(self.frame_param,
                                  text = "APRES "+self.node.item.get_nom(),
                                  command = self.ajout_parametre)
-      but_param_avant.place(relx=0.45,rely=0.3,anchor='w',relwidth=0.45)
-      but_param_apres.place(relx=0.45,rely=0.7,anchor='w',relwidth=0.45)
+      but_param_avant.grid(row=0,column=1,padx=5, pady=5)
+      but_param_apres.grid(row=1,column=1,padx=5, pady=5)
+      self.frame_param.pack(side='top',fill='both',padx=5, pady=5)
       # remplissage de la frame boutons
       Button(self.frame_boutons,
              text="Commentariser toute la commande",
-             command = self.comment_commande).place(relx=0.5,rely=0.5,anchor='center')
+             command = self.comment_commande).pack(side='top',padx=5, pady=5)
+      self.frame_boutons.pack(side='top',fill='both',padx=5, pady=5)
     
   def deselectMC(self,name):
       self.parent.appli.affiche_infos('')

@@ -27,6 +27,9 @@
 
 # Modules Eficas
 import prefs
+name='prefs_'+prefs.code
+__import__(name)
+
 from InterfaceTK import eficas_go
 
 eficas_go.lance_eficas(code=prefs.code)

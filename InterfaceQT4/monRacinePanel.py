@@ -61,7 +61,8 @@ class MonRacinePanel(DRac,QTPanelTBW2):
         self.connecterSignaux()
         QTPanel.__init__(self,node,parent)
         QTPanelTBW2.__init__(self,node,parent,racine=1)
-        self.a=0
+        self.LEFiltre.setFocus()
+
 
   def connecterSignaux(self):
         self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)
@@ -101,5 +102,4 @@ class MonRacinePanel(DRac,QTPanelTBW2):
       if name==QString(" "): return
       if name.find("GROUPE :")==0 : return
       self.editor.init_modif()
-      print self.node.__class__
       new_node = self.node.append_child(name,'first')

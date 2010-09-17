@@ -67,7 +67,7 @@ class vers3DSalomeGenerator(PythonGenerator):
                             "BARRE", "CABLE", "CARA", "COQUE", "EPAIS", 
                             "EXCENTREMENT", "GROUP_MA", "ORIENTATION", 
                             "POUTRE", "SECTION", "VALE", "VARI_SECT",
-                            "GRILLE", "ANGL_REP",
+                            "GRILLE", "ANGL_REP", "VECTEUR",
                              "b_constant", "b_homothetique", 
                             "b_rectangle", "b_affine", "b_cercle" )
       self.dict_deb_com={"POUTRE":"VisuPoutre", "CABLE" : "VisuCable",
@@ -77,7 +77,7 @@ class vers3DSalomeGenerator(PythonGenerator):
       self.dict_suite_com={"RECTANGLE":"Rectangle","GENERALE":"Generale",
                            "CERCLE":"Cercle"}
 
-      self.dict_traduit={"VARI_SECT":"extrusion","EXCENTREMENT":"Excentre","EPAIS":"Epais"}
+      self.dict_traduit={"VARI_SECT":"extrusion","EXCENTREMENT":"Excentre","EPAIS":"Epais","VECTEUR":"Vecteur"}
 
       self.init_ligne() 
 
@@ -89,12 +89,13 @@ class vers3DSalomeGenerator(PythonGenerator):
       self.commande = ""
       self.dict_attributs = {} 
 
-   def gener(self,node):
+   def gener(self,node,config=None):
       """
       """
       self.node=node
       self.list_commandes=[];
       self.generator(self.node.object)
+      #print self.list_commandes
       return self.list_commandes
 
    def generator(self,obj):
@@ -223,4 +224,3 @@ class vers3DSalomeGenerator(PythonGenerator):
       self.dict_attributs["axeX"]=alpha
       self.dict_attributs["axeY"]=beta
       self.dict_attributs["axeZ"]=gamma
-

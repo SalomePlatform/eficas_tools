@@ -186,7 +186,8 @@ class HTMLViewer:
       if ext == ".html":
          parser=HTMLParser(fmt)
       else:
-         parser=DumbParser(fmt)
+         #parser=DumbParser(fmt)
+         parser=HTMLParser(fmt)
       parser.feed(data)
       parser.close()
       self.text.config(state="disabled")

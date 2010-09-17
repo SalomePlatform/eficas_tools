@@ -34,9 +34,9 @@ from politiquesValidation import PolitiqueUnique
 
 class MonUniqueSDCOIntoPanel(DUnSDCOInto,QTPanel,SaisieSDCO):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonUniqueSDCOIntoPanel"
@@ -68,9 +68,9 @@ class MonUniqueSDCOIntoPanel(DUnSDCOInto,QTPanel,SaisieSDCO):
         valeur,validite=self.node.item.eval_valeur(nomConcept)
         test = self.node.item.set_valeur(valeur)
         if not test :
-          commentaire = "impossible d'évaluer : %s " %`valeur`
+          commentaire = "impossible d'Ã©valuer : %s " %`valeur`
         elif validite:
-          commentaire = "Valeur du mot-clé enregistrée"
+          commentaire = "Valeur du mot-clÃ© enregistrÃ©e"
           if test_CO:
              # il faut egalement propager la destruction de l'ancien concept
              self.node.item.delete_valeur_co(valeur=anc_val)
@@ -79,8 +79,8 @@ class MonUniqueSDCOIntoPanel(DUnSDCOInto,QTPanel,SaisieSDCO):
         else :
           commentaire = self.node.item.get_cr()
           self.reset_old_valeur(anc_val,mess=mess)
-          self.editor.affiche_infos(commentaire)
-        self.Commentaire.setText(commentaire)
+          self.editor.affiche_infos(commentaire,Qt.red)
+        self.Commentaire.setText(QString.FromUtf8(commentaire))
 
   def LESDCOReturnPressed(self) :
         self.LBSDCO.clearSelection()

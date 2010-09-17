@@ -59,16 +59,17 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         QTPanelTBW2.__init__(self,node,parent)
         self.InitLEs()
         self.connecterSignaux()
+        self.lineEditNom.setFocus()
 
   def connecterSignaux(self) :
         self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)
         self.connect(self.LEFiltre,SIGNAL("textChanged(const QString&)"),self.LEFiltreTextChanged)
         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEfiltreReturnPressed)
-        self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
+        self.connect(self.bOk,SIGNAL("clicked()"),self.BOkParamPressed)
         self.connect(self.RBGroupe,SIGNAL("clicked()"),self.BuildTabCommandChanged)
         self.connect(self.RBalpha,SIGNAL("clicked()"),self.BuildTabCommandChanged)
         self.connect(self.BNext,SIGNAL("pressed()"),self.BNextPressed)
-        self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.BOkPressed)
+        self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.BOkParamPressed)
 
   def InitLEs(self):
         nom=self.node.item.get_nom()
@@ -87,13 +88,14 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
            if commentaire == None :
               commentaire="Entrer un nom de parametre"
            self.Commentaire.setText(QString(commentaire))
-           self.editor.affiche_infos(commentaire)
+           self.editor.affiche_infos(commentaire,Qt.red)
            return
-        if not val :
+        if str(val) == "" :
            return
         self.node.item.set_nom(nom)
         self.node.item.set_valeur(val)
         self.node.update_texte()
+        self.node.update_node_valid()
         self.editor.init_modif()
         self.InitLEs()
 
@@ -102,14 +104,22 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         self.Commentaire.setText(QString(""))
         commentaire="Valeur incorrecte"
         qtVal=self.lineEditVal.text()
+        valString=str(self.lineEditVal.text())
+        if (valString.find(' ') > -1) or (valString.find(',') > -1) :
+           commentaire="Valeur incorrecte"
+           self.Commentaire.setText(QString(commentaire))
+           self.editor.affiche_infos(commentaire,Qt.red)
+           return None
         boul=2
         try :
             val,boul=QString.toInt(qtVal)
+            if boul : valString=val
         except :
             pass
         if boul == 0 :
             try :
                 val,boul=QString.toDouble(qtVal)
+                if boul : valString=val
             except :
                 pass
         if boul == 0 :
@@ -119,13 +129,8 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
             except :
                 pass
         if boul: commentaire="Valeur correcte"
-        valString=str(self.lineEditVal.text())
         self.Commentaire.setText(QString(commentaire))
-        if (valString.find(' ') > -1) or (valString.find(',') > -1) :
-           commentaire="Valeur incorrecte"
-           self.Commentaire.setText(QString(commentaire))
-           return None
-        self.Commentaire.setText(QString(commentaire))
+        self.editor.affiche_infos(commentaire)
         return valString
 
   def LENomPressed(self):

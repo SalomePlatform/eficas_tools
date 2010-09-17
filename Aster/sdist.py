@@ -26,7 +26,7 @@ version="$Name:  $"[7:-2] or 'Test1_4'
 # ==========Path du noyau fourni par Aster====================
 path_Noyau="../../AccasAster"
 # ============================================================
-nom_distrib="Eficas"+version+"AsterSTA9"
+nom_distrib="Eficas"+version
 path_distrib=os.path.join("dist",nom_distrib)
 path_TextTools="/home/eficas/pkg/mxTools/egenix2.0.2pourWindows/mx/TextTools"
 dir_download= "/home/eficas/WWW/telechargement/eficas"
@@ -38,25 +38,30 @@ def main():
 
    copyfiles('../Editeur',os.path.join(path_distrib,'Editeur'),['*.py','faqs.txt'])
    copyfiles('../InterfaceTK',os.path.join(path_distrib,'InterfaceTK'),['*.py','faqs.txt'])
-   copyfiles('../InterfaceQT',os.path.join(path_distrib,'InterfaceQT'),['*.py'])
-   copyfiles('../Ui',os.path.join(path_distrib,'Ui'),['*.ui','makefile'])
+   copyfiles('../InterfaceQT4',os.path.join(path_distrib,'InterfaceQT4'),['*.py'])
+   copyfiles('../UiQT4',os.path.join(path_distrib,'UiQT4'),['*.ui','makefile'])
    copyfiles('../Traducteur',os.path.join(path_distrib,'Traducteur'),['*.py'])
    copyfiles('../Ihm',os.path.join(path_distrib,'Ihm'),['*.py'])
    copyfiles('../Extensions',os.path.join(path_distrib,'Extensions'),['*.py'])
    copyfiles('../Misc',os.path.join(path_distrib,'Misc'),['*.py'])
    copyfiles('../Accas',os.path.join(path_distrib,'Accas'),['*.py'])
    # AIDE
+   copyfiles('../Aide',os.path.join(path_distrib,'Aide'),['*_ASTER.adp'])
+   copyfiles('../Aide/fichiers_ASTER',os.path.join(path_distrib,'Aide','fichiers_ASTER'),['*'])
+   #pour Aster TK
    copyfiles('../AIDE',os.path.join(path_distrib,'AIDE'),['*.py'])
    copyfiles('../AIDE/fichiers',os.path.join(path_distrib,'AIDE','fichiers'),['*'])
    copyfiles('.',os.path.join(path_distrib,'AIDE','fichiers'),['INSTALL','NEWS'])
    copyfiles('../Editeur',os.path.join(path_distrib,'AIDE','fichiers'),['faqs.txt'])
    # Code_Aster
    copyfiles('../Aster',os.path.join(path_distrib,'Aster'),['prefs.py',
+                                                            'prefs_ASTER.py',
                                                             'editeur.ini',
                                                             'editeur_salome.ini',
                                                             'eficas_aster.py',
                                                             'qtEficas_aster.py',
                                                             'configuration.py',
+                                                            'configuration_ASTER.py',
 							    'test_eficas.py',
 							    'style.py',
                                                             '__init__.py'
@@ -69,9 +74,9 @@ def main():
    #copyfiles('Cata/cataSTA6',os.path.join(path_distrib,'Aster','Cata','cataSTA6'),['*.py'])
    #copyfiles('Cata/cataSTA6/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA6','Macro'),['*.py'])
 
-   copyfiles('Cata/cataSTA7',os.path.join(path_distrib,'Aster','Cata','cataSTA7'),['*.py'])
-   copyfiles('Cata/cataSTA7/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA7','Macro'),['*.py'])
-   copyfiles('Cata/cataSTA7/materiau',os.path.join(path_distrib,'Aster','Cata','cataSTA7/materiau'),['README.py'])
+   #copyfiles('Cata/cataSTA7',os.path.join(path_distrib,'Aster','Cata','cataSTA7'),['*.py'])
+   #copyfiles('Cata/cataSTA7/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA7','Macro'),['*.py'])
+   #copyfiles('Cata/cataSTA7/materiau',os.path.join(path_distrib,'Aster','Cata','cataSTA7/materiau'),['README.py'])
 
    copyfiles('Cata/cataSTA8',os.path.join(path_distrib,'Aster','Cata','cataSTA8'),['*.py'])
    copyfiles('Cata/cataSTA8/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA8/Macro'),['*.py'])
@@ -79,9 +84,13 @@ def main():
 
    copyfiles('Cata/cataSTA9',os.path.join(path_distrib,'Aster','Cata','cataSTA9'),['*.py'])
    copyfiles('Cata/cataSTA9/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA9/Macro'),['*.py'])
-   #copyfiles('Cata/cataSTA9/Messages',os.path.join(path_distrib,'Aster','Cata','cataSTA9/Messages'),['*.py'])
    copyfiles('Cata/cataSTA9/materiau',os.path.join(path_distrib,'Aster','Cata','cataSTA9/materiau'),['README.py'])
    copyfiles('Cata/cataSTA9/SD',os.path.join(path_distrib,'Aster','Cata','cataSTA9/SD'),['*.py'])
+
+   copyfiles('Cata/cataSTA10',os.path.join(path_distrib,'Aster','Cata','cataSTA10'),['*.py'])
+   copyfiles('Cata/cataSTA10/Macro',os.path.join(path_distrib,'Aster','Cata','cataSTA10/Macro'),['*.py'])
+   #copyfiles('Cata/cataSTA10/materiau',os.path.join(path_distrib,'Aster','Cata','cataSTA10/materiau'),['README.py'])
+   copyfiles('Cata/cataSTA10/SD',os.path.join(path_distrib,'Aster','Cata','cataSTA10/SD'),['*.py'])
 
    copyfiles('Cata',os.path.join(path_distrib,'Aster','Cata'),['*9c_clefs_docu'])
    copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster'),['aster.py',])
@@ -91,7 +100,7 @@ def main():
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
    copyfiles('../convert/Parserv5',os.path.join(path_distrib,'convert','Parserv5'),['*.py'])
    copyfiles('../generator',os.path.join(path_distrib,'generator'),['*.py'])
-   copyfiles('../Editeur/icons',os.path.join(path_distrib,'Editeur','icons'),['*.gif'])
+   copyfiles('../Editeur/icons',os.path.join(path_distrib,'Editeur','icons'),['*.gif','*.png'])
    copyfiles('../Editeur/Patrons',os.path.join(path_distrib,'Editeur','Patrons'),['*.com*'])
    copyfiles('../Editeur/Patrons/ASTER',os.path.join(path_distrib,'Editeur','Patrons','ASTER'),['*.com*'])
 

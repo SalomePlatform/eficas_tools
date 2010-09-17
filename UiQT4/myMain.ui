@@ -19,7 +19,7 @@
      <x>0</x>
      <y>0</y>
      <width>1383</width>
-     <height>29</height>
+     <height>32</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFichier" >
@@ -44,6 +44,7 @@
     <addaction name="actionCouper" />
     <addaction name="actionCopier" />
     <addaction name="actionColler" />
+    <addaction name="actionSupprimer" />
    </widget>
    <widget class="QMenu" name="menuJdC" >
     <property name="title" >
@@ -57,6 +58,8 @@
     <property name="title" >
      <string>&amp;Aide</string>
     </property>
+    <addaction name="actionEficas" />
+    <addaction name="actionVersion" />
    </widget>
    <widget class="QMenu" name="menuOptions" >
     <property name="title" >
@@ -64,13 +67,6 @@
     </property>
     <addaction name="actionParametres_Eficas" />
     <addaction name="actionLecteur_Pdf" />
-   </widget>
-   <widget class="QMenu" name="menuTraduction" >
-    <property name="title" >
-     <string>Traduction</string>
-    </property>
-    <addaction name="actionTraduitV7V8" />
-    <addaction name="actionTraduitV8V9" />
    </widget>
    <widget class="QMenu" name="menuPatrons" >
     <property name="title" >
@@ -82,7 +78,6 @@
    <addaction name="menuJdC" />
    <addaction name="menu_Aide" />
    <addaction name="menuOptions" />
-   <addaction name="menuTraduction" />
    <addaction name="menuPatrons" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
@@ -177,6 +172,9 @@
    <property name="shortcut" >
     <string>Ctrl+X</string>
    </property>
+   <property name="shortcutContext" >
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionCopier" >
    <property name="icon" >
@@ -189,6 +187,9 @@
    <property name="shortcut" >
     <string>Ctrl+C</string>
    </property>
+   <property name="shortcutContext" >
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionColler" >
    <property name="icon" >
@@ -200,6 +201,9 @@
    </property>
    <property name="shortcut" >
     <string>Ctrl+V</string>
+   </property>
+   <property name="shortcutContext" >
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionQuitter" >
@@ -235,14 +239,19 @@
     <string>Lecteur Pdf</string>
    </property>
   </action>
-  <action name="actionTraduitV7V8" >
+  <action name="actionEficas" >
    <property name="text" >
-    <string>TraduitV7V8</string>
+    <string>Eficas</string>
    </property>
   </action>
-  <action name="actionTraduitV8V9" >
+  <action name="actionVersion" >
    <property name="text" >
-    <string>TraduitV8V9</string>
+    <string>Version</string>
+   </property>
+  </action>
+  <action name="actionSupprimer" >
+   <property name="text" >
+    <string>Supprimer</string>
    </property>
   </action>
  </widget>

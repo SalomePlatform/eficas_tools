@@ -8,9 +8,13 @@ PY_FILES = desChoixCata.py desCommande.py desCommentaire.py desError.py desFormu
 	desPlusieursBase.py desPlusieursInto.py desPoursuite.py desRacine.py desSelectVal.py \
 	desUniqueASSD.py desUniqueBase.py desUniqueComp.py desUniqueInto.py desUniqueSDCOInto.py \
 	desUniqueSDCO.py desVisu.py  aideQT.py OptionsEditeur.py OptionsPdf.py myMain.py \
-	desViewTexte.py
+	desViewTexte.py desPixmap.py desMatrice.py OptionsOT.py OptionsCuve.py desChoixMap.py \
+        OptionsMAP.py
 
 %.py:%.ui
 	${PYUIC} -x -o $@ $<
 
 all : $(PY_FILES)
+clean :
+	-rm -rf $(PY_FILES) *.pyc
+

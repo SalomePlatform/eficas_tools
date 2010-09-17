@@ -75,7 +75,7 @@ class IniGenerator:
       fp.write(self.text)
       fp.close()
 
-   def gener(self,obj):
+   def gener(self,obj,config=None):
       """
          Tous les mots-clés simples du niveau haut sont mis dans la section DEFAUT
          Tous les mots-clés facteurs sont convertis en sections

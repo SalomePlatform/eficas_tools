@@ -51,9 +51,9 @@ class DFormule(Ui_DFormule,QDialog):
 
 class MonFormulePanel(DFormule,QTPanelTBW2):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonFormulePanel"
@@ -111,20 +111,21 @@ class MonFormulePanel(DFormule,QTPanelTBW2):
       test,erreur = self.node.item.verif_nom(nomFormule)
       if test :
          commentaire=nomFormule+" est un nom valide pour une FORMULE"
+         self.editor.affiche_infos(commentaire) 
       else :
          commentaire=nomFormule+" n'est pas un nom valide pour une FORMULE"
-      self.editor.affiche_infos(commentaire) 
+         self.editor.affiche_infos(commentaire,Qt.red) 
 
   def argsSaisis(self):
       arguments = str(self.LENomsArgs.text())
       if arguments == '' : return
-
       test,erreur = self.node.item.verif_arguments(arguments)
       if test:
          commentaire="Argument(s) valide(s) pour une FORMULE"
+         self.editor.affiche_infos(commentaire) 
       else:
          commentaire="Argument(s) invalide(s) pour une FORMULE"
-      self.editor.affiche_infos(commentaire) 
+         self.editor.affiche_infos(commentaire,Qt.red) 
 
   def FormuleSaisie(self):
       nomFormule = str(self.LENomFormule.text())
@@ -135,9 +136,10 @@ class MonFormulePanel(DFormule,QTPanelTBW2):
 
       if test:
          commentaire="Corps de FORMULE valide"
+         self.editor.affiche_infos(commentaire) 
       else:
          commentaire="Corps de FORMULE invalide"
-      self.editor.affiche_infos(commentaire) 
+         self.editor.affiche_infos(commentaire,Qt.red) 
 
 
   def BOkPressedFormule(self):
@@ -146,19 +148,19 @@ class MonFormulePanel(DFormule,QTPanelTBW2):
       nomFormule = str(self.LENomFormule.text())
       test,erreur = self.node.item.verif_nom(nomFormule)
       if not test :
-         self.editor.affiche_infos(erreur)
+         self.editor.affiche_infos(erreur,Qt.red)
          return
 
       arguments  = str(self.LENomsArgs.text())
       test,erreur = self.node.item.verif_arguments(arguments)
       if not test :
-         self.editor.affiche_infos(erreur)
+         self.editor.affiche_infos(erreur,Qt.red)
          return
 
       expression = str(self.LECorpsFormule.text())
       test,erreur = self.node.item.verif_formule_python((nomFormule,"REEL",arguments,expression))
       if not test :
-         self.editor.affiche_infos(erreur)
+         self.editor.affiche_infos(erreur,Qt.red)
          return
 
       test=self.node.item.object.update_formule_python(formule=(nomFormule,"REEL",arguments,expression))
@@ -169,8 +171,9 @@ class MonFormulePanel(DFormule,QTPanelTBW2):
          #self.node.update_node()
          self.node.onValid()
          self.node.update_valid()
-         commentaire = "Formule modifiée"
+         commentaire = "Formule modifiÃ©e"
+         self.editor.affiche_infos(commentaire)
       else:
          commentaire ="Formule incorrecte : " + erreur 
+         self.editor.affiche_infos(commentaire,Qt.red)
       self.editor.init_modif()
-      self.editor.affiche_infos(commentaire)

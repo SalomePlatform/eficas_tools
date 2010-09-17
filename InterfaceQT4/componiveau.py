@@ -25,11 +25,15 @@ class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
     
   def GetLabelText(self):
       """ Retourne 3 valeurs :
-        - le texte à afficher dans le noeud représentant l'item
+        - le texte a  afficher dans le noeud représentant l'item
         - la fonte dans laquelle afficher ce texte
         - la couleur du texte
       """
-      return self.labeltext,None,None
+      if self.isactif():
+          fonte = Fonte_Niveau
+      else :
+          fonte = Fonte_Niveau_inactif
+      return self.labeltext,fonte,None
     
   def GetIconName(self):
       if self.isactif():
@@ -84,7 +88,7 @@ class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
        self.appli.affiche_infos(message)
        return 1
     else:
-       self.appli.affiche_infos("Pb interne : impossible de supprimer cet objet")
+       self.appli.affiche_infos("Pb interne : impossible de supprimer cet objet",Qt.red)
        return 0
 
   def GetText(self):

@@ -54,9 +54,9 @@ class DInc(Ui_DInc1,QDialog):
 
 class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonIncludePanel"
@@ -92,8 +92,8 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
         nomFichier=str(self.LENomFichier.text())
         if not os.path.isfile(nomFichier) :
            commentaire = "Fichier introuvable"
-           self.Commentaire.setText(QString(commentaire))
-           self.editor.affiche_infos(commentaire)
+           self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
+           self.editor.affiche_infos(commentaire,Qt.red)
            return
 
         text=self.convert_file(nomFichier)
@@ -107,14 +107,14 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
         try :
            self.node.item.object.change_fichier_init(nomFichier,text)
            commentaire = "Fichier modifie  : " + self.node.item.get_nom()
-           self.Commentaire.setText(QString(commentaire))
+           self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
            self.editor.affiche_infos(commentaire)
         except: 
            l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
            QMessageBox.critical( self, "Erreur fatale au chargement du fichier Include", l[0])
            commentaire = "Fichier invalide" 
-           self.Commentaire.setText(QString(commentaire))
-           self.editor.affiche_infos(commentaire)
+           self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
+           self.editor.affiche_infos(commentaire,Qt.red)
            return
 
 
@@ -130,9 +130,9 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
           p.readfile(file)
           text=p.convert('execnoparseur')
        else :
-            commentaire = "Impossible de lire le fichier : Format inconnu"
-            self.Commentaire.setText(QString(commentaire))
-            self.editor.affiche_infos(commentaire)
+           commentaire = "Impossible de lire le fichier : Format inconnu"
+           self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
+           self.editor.affiche_infos(commentaire,Qt.red)
        return text
 
 
@@ -147,6 +147,8 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
          return
 
       fn = os.path.abspath((unicode(fn)))
+      ulfile = os.path.abspath(unicode(fn))
+      self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
       self.LENomFichier.setText(fn)
       self.LENomFichReturnPressed()
 

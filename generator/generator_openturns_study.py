@@ -68,7 +68,7 @@ class OpenturnsGenerator(PythonGenerator):
       sys.exit(1)
       """
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
       print "IDM: gener dans generator_openturns_study.py"
       self.initDico()
       self.text=PythonGenerator.gener(self,obj,format)
@@ -82,7 +82,7 @@ class OpenturnsGenerator(PythonGenerator):
       """
       s=PythonGenerator.generMCSIMP(self,obj)
       if self.TraiteMCSIMP == 1 : 
-         self.dictMCVal[obj.nom]=obj.val
+         self.dictMCVal[obj.nom]=obj.valeur
       else :
          self.dictTempo[obj.nom]=obj.valeur
       return s
@@ -117,8 +117,7 @@ class OpenturnsGenerator(PythonGenerator):
    def genereSTD(self):
       print "IDM: genereSTD dans generator_openturns_study.py"
       print "IDM: self.listeVariables=", self.listeVariables
-      MonBaseGenerateur=Generateur(self.appli,self.dictMCVal, self.listeVariables, self.dictMCLois)
-      MonGenerateur=MonBaseGenerateur.getSTDGenerateur()
+      MonGenerateur=self.getGenerateur()
       #try :
       if 1== 1 :
          self.texteSTD=MonGenerateur.CreeSTD()
@@ -131,4 +130,11 @@ class OpenturnsGenerator(PythonGenerator):
       f.write( self.texteSTD )
       f.close()
 
-
+   def getGenerateur (self):
+      print "IDM: getGenerateur dans generator_openturns_study.py"
+      print "IDM: self.dictMCVal=", self.dictMCVal
+      print "IDM: self.listeVariables=", self.listeVariables
+      print "IDM: self.dictMCLois=", self.dictMCLois
+      MonBaseGenerateur=Generateur(self.appli,self.dictMCVal, self.listeVariables, self.dictMCLois)
+      MonGenerateur=MonBaseGenerateur.getSTDGenerateur()
+      return MonGenerateur

@@ -1,5 +1,6 @@
-#@ MODIF N_JDC Noyau  DATE 01/04/2008   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_JDC Noyau  DATE 16/11/2009   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
+# RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -194,7 +195,7 @@ Causes possibles :
                if isinstance(sd,ASSD):self.sds_dict[sdnom]=sd
 
          if self.appli != None : 
-            self.appli.affiche_infos('Interprétation du fichier de commandes en cours ...')
+            self.appli.affiche_infos('Interpretation du fichier de commandes en cours ...')
          # On sauve le contexte pour garder la memoire des constantes
          # En mode edition (EFICAS) ou lors des verifications le contexte 
          # est recalculé
@@ -489,6 +490,34 @@ Causes possibles :
    def get_global_contexte(self):
       return self.g_context.copy()
 
+
+   def get_contexte_courant(self, etape_courante=None):
+      """
+         Retourne le contexte tel qu'il est (ou 'sera' si on est en phase
+         de construction) au moment de l'exécution de l'étape courante.
+      """
+      if etape_courante is None:
+         etape_courante = CONTEXT.get_current_step()
+      return self.get_contexte_avant(etape_courante)
+
+
+   def get_concept(self, nomsd):
+      """
+          Méthode pour recuperer un concept à partir de son nom
+      """
+      return self.get_contexte_courant().get(nomsd.strip(), None)
+
+   def del_concept(self, nomsd):
+      """
+         Méthode pour supprimer la référence d'un concept dans le sds_dict.
+         Ne détruire pas le concept (différent de supprime).
+      """
+      try:
+         del self.sds_dict[nomsd.strip()]
+      except:
+         pass
+
+
    def get_cmd(self,nomcmd):
       """
           Méthode pour recuperer la definition d'une commande
@@ -508,3 +537,10 @@ Causes possibles :
        self.index_etapes[etape] = len(self.etapes) - 1
        etape.reparent(self)
        etape.reset_jdc(self)
+
+   def sd_accessible(self):
+      """On peut acceder aux "valeurs" (jeveux) des ASSD si le JDC est en PAR_LOT="NON".
+      """
+      if CONTEXT.debug: print ' `- JDC sd_accessible : PAR_LOT =', self.par_lot
+      return self.par_lot == 'NON'
+

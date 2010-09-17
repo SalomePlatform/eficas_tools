@@ -32,9 +32,9 @@ from PyQt4.QtCore import *
 
 class MonFonctionPanel(MonPlusieursBasePanel):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonFonctionPanel"
@@ -62,9 +62,9 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         #decoupe la liste des valeurs en n ( les x puis les y)
         l_valeurs=[]
         if (len(liste)% self.nbValeurs != 0):
-            message="La cardinalité n'est pas correcte, la dernière valeur est ignorée"
+            message="La cardinalitÃ© n'est pas correcte, la derniÃ¨re valeur est ignorÃ©e"
             #self.Commentaire.setText(QString(commentaire)) 
-            self.editor.affiche_infos(message)
+            self.editor.affiche_infos(message,Qt.red)
         i=0
         while ( i < (len(liste) - self.nbValeurs + 1)) :
             t=tuple(liste[i:i+self.nbValeurs])
@@ -77,24 +77,32 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         listeValeurs=self.node.item.GetListeValeurs()
         if self.node.item.wait_tuple()== 1 :
 	      listeATraiter=listeValeurs
+              for valeur in listeATraiter:
+                  str_valeur=str(valeur)
+                  self.LBValeurs.addItem(str_valeur)
         else : 
-              listeATraiter=self.DecoupeListeValeurs(listeValeurs)
-        for valeur in listeATraiter:
-            str_valeur=str(valeur)
-            self.LBValeurs.addItem(str_valeur)
+	      for valeur in self.DecoupeListeValeurs(listeValeurs):
+                   if type(valeur) == types.TupleType:
+                       TupleEnTexte="("
+                       for val in valeur :
+                           TupleEnTexte = TupleEnTexte + str(self.politique.GetValeurTexte(val)) +", "
+                       TupleEnTexte = TupleEnTexte[0:-2] +")"
+                       print TupleEnTexte
+                       self.LBValeurs.addItem(TupleEnTexte)
+                   else :
+                       self.LBValeurs.addItem(QString(str(valeur)))
+
 
   def  Ajout1Valeur(self,liste=[]):
-        # Pour être appele a partir du Panel Importer (donc plusieurs fois par AjouterNValeur)
+        # Pour Ãªtre appele a partir du Panel Importer (donc plusieurs fois par AjouterNValeur)
+        validite=1
         if liste == [] :
            if self.node.item.wait_tuple()== 1 :
               liste=SaisieValeur.TraiteLEValeurTuple(self)
               if liste == [''] : return
-              validite=1
            else :
               liste,validite=SaisieValeur.TraiteLEValeur(self)
-        else :
-           validite=1
-        if validite == 0 : return
+              if validite == 0 : return
         if liste ==[]    : return
 
         if len(liste) != self.nbValeurs :
@@ -103,20 +111,21 @@ class MonFonctionPanel(MonPlusieursBasePanel):
             commentaire += QString(str(self.nbValeurs)) 
             commentaire += QString(" valeurs")
 	    self.LEValeur.setText(QString(str(liste)))
-            self.editor.affiche_infos(commentaire)
+            self.editor.affiche_infos(commentaire,Qt.red)
             return
 
         if self.node.item.wait_tuple()== 1 :
               liste2=tuple(liste)
               liste=liste2
+
         index=self.LBValeurs.currentRow()
         if ((self.LBValeurs.isItemSelected(self.LBValeurs.item(index )) == 0) and (index > 0 )):
            index=0
         else :
            index=self.LBValeurs.currentRow() + 1
         indexListe=index*self.nbValeurs
-        if index == 0 : 
-           indexListe=len(self.listeValeursCourantes)
+        if index == 0 : indexListe=len(self.listeValeursCourantes)
+
         listeVal=[]
         for valeur in self.listeValeursCourantes :
                 listeVal.append(valeur)
@@ -125,9 +134,9 @@ class MonFonctionPanel(MonPlusieursBasePanel):
              validite,comm,comm2,listeRetour=self.politique.AjoutTuple(liste,index,listeVal)
         else :
              validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,index,listeVal)
-        self.Commentaire.setText(comm2)
+        self.Commentaire.setText(QString.fromUtf8(QString(comm2)))
         if not validite :
-                self.editor.affiche_infos(comm)
+                self.editor.affiche_infos(comm,Qt.red)
         else:
            self.LEValeur.setText(QString(""))
            l1=self.listeValeursCourantes[:indexListe]
@@ -137,7 +146,13 @@ class MonFonctionPanel(MonPlusieursBasePanel):
            else : 
               listeATraiter=self.DecoupeListeValeurs(listeRetour)
            for valeur in  listeATraiter :
-               str_valeur=str(valeur)
+               if type(valeur) == types.TupleType:
+                  TupleEnTexte="("
+                  for val in valeur :
+                      TupleEnTexte = TupleEnTexte + str(self.politique.GetValeurTexte(val)) +", "
+                  str_valeur = TupleEnTexte[0:-2] +")"
+               else :
+                  str_valeur=str(valeur)
                self.LBValeurs.insertItem(index,str_valeur)
                item=self.LBValeurs.item(index)
                item.setSelected(1)
@@ -150,7 +165,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         if len(liste)%self.nbValeurs != 0 :
            texte="Nombre de valeur incorrecte"
            #self.Commentaire.setText(texte)
-           self.editor.affiche_infos(texte)
+           self.editor.affiche_infos(texte,Qt.red)
            return
         listeDecoupee=self.DecoupeListeValeurs(liste)
         for vals in listeDecoupee :

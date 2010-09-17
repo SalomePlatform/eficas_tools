@@ -1,5 +1,6 @@
-#@ MODIF context Noyau  DATE 14/09/2004   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF context Noyau  DATE 07/09/2009   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
+# RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -32,7 +33,6 @@ def set_current_step(step):
    global _root
    if _root : raise "Impossible d'affecter _root. Il devrait valoir None"
    _root=step
-   #print "dans set_current_step", step
 
 def get_current_step():
    """

@@ -31,6 +31,8 @@ from widgets import showinfo,askyesno,showerror
 # Modules Eficas
 import splash
 import prefs
+name='prefs_'+prefs.code
+prefsCode=__import__(name)
 import convert
 import generator
 import AIDE
@@ -102,11 +104,11 @@ class BUREAU:
                         ('Help24',"view_doc","Documentation de l'objet courant",'jdc')
                        )
    try:
-      menu_defs=prefs.menu_defs['bureau']
+      menu_defs=prefsCode.menu_defs['bureau']
    except:
       pass
    try:
-      button_defs=prefs.button_defs['bureau']
+      button_defs=prefsCode.button_defs['bureau']
    except:
       pass
 

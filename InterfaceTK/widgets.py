@@ -69,8 +69,6 @@ class Fenetre :
         # définition des frames
         self.frame_texte = Frame(self.fenetre)
         self.frame_boutons = Frame(self.fenetre)
-        #self.frame_texte.place(relx=0,rely=0,relwidth=1,relheight=0.9)
-        #self.frame_boutons.place(relheight=0.1,relx=0,rely=0.9,relwidth=1.)
         # définition de la zone texte et du scrollbar
         self.zone_texte = Text(self.frame_texte,font=fonte,wrap=wrap,
                                height=height,width=width)
@@ -88,12 +86,10 @@ class Fenetre :
         self.but_quit = Button(self.frame_boutons,text = "Fermer",command=self.quit,
                                 default='active')
         self.but_save = Button(self.frame_boutons,text = "Sauver",command = self.save)
-        #self.but_quit.place(relx=0.4,rely=0.5,anchor='center')
-        #self.but_save.place(relx=0.6,rely=0.5,anchor='center')
         self.but_quit.pack(side='left',padx=25, pady=5)
         self.but_save.pack(side='right',padx=25, pady=5)
-        self.frame_texte.pack(side='top',fill='both',expand=1)
-        self.frame_boutons.pack(side='bottom')
+        self.frame_boutons.pack(side='bottom',padx=5,pady=5)
+        self.frame_texte.pack(side='top',fill='both',expand=1,padx=5,pady=5)
         self.zone_texte.focus_set()
         self.fenetre.bind('<Return>',self.quit) #dismiss window
 
@@ -134,12 +130,10 @@ class Fenetre :
         """ Affiche le texte dans la fenêtre """
         if texte != "" :
             self.zone_texte.insert(END,texte)
-            try:
-                self.fenetre.update_idletasks()
-                x0,y0,x1,y1 = self.zone_texte.bbox(END)
-                if (y1-y0) < 300 : self.efface_scroll()
-            except:
-                pass
+            self.fenetre.update_idletasks()
+            curline = int(self.zone_texte.index("insert").split('.')[0])
+            if curline < int(self.zone_texte["height"]):
+              self.efface_scroll()
 
     def save(self):
         """ Permet de sauvegarder le texte dans un fichier dont on a demandé le nom
@@ -187,7 +181,6 @@ class FenetreYesNo(Fenetre):
     def __init__(self,appli,titre="",texte="",yes="Yes",no="No"):
         self.appli=appli
         self.fenetre = Toplevel()
-        self.fenetre.configure(width = 800,height=500)
         self.fenetre.protocol("WM_DELETE_WINDOW", self.quit)
         self.fenetre.title(titre)
         self.texte = string.replace(texte,'\r\n','\n')
@@ -196,8 +189,6 @@ class FenetreYesNo(Fenetre):
         # définition des frames
         self.frame_texte = Frame(self.fenetre)
         self.frame_boutons = Frame(self.fenetre)
-        self.frame_boutons.place(relx=0,rely=0,    relwidth=1.,relheight=0.1)
-        self.frame_texte.place(  relx=0,rely=0.1,  relwidth=1, relheight=0.9)
         # définition de la zone texte et du scrollbar
         self.zone_texte = Text(self.frame_texte,font=fonte)
         self.zone_texte.bind("<Key-Prior>", self.page_up)
@@ -213,10 +204,12 @@ class FenetreYesNo(Fenetre):
         # définition des boutons
         self.but_yes = Button(self.frame_boutons,text = yes,command=self.yes)
         self.but_no = Button(self.frame_boutons,text = no,command = self.no)
-        self.but_yes.place(relx=0.4,rely=0.5,anchor='center')
-        self.but_no.place(relx=0.6,rely=0.5,anchor='center')
+        self.but_yes.pack(side="left",padx=5,pady=5)
+        self.but_no.pack(side="left",padx=5,pady=5)
+        self.frame_boutons.pack(side="top",padx=5,pady=5)
         # affichage du texte
         self.affiche_texte(self.texte)
+        self.frame_texte.pack(side="top",fill='both',padx=5,pady=5,expand=1)
         centerwindow(self.fenetre)
 
     def yes(self):
@@ -232,15 +225,10 @@ class FenetreDeSelection(Fenetre):
         Cette classe est utilisée pour affecter une liste de valeurs à un mot-clé.
     """
     def __init__(self,panel,item,appli,titre="",texte="",cardinal=1):
-        Fenetre.__init__(self,appli,titre=titre,texte=texte)
-        self.frame_boutons.place_forget()
-        self.frame_texte.place_forget()
-        self.frame_texte.place(relx=0,rely=0,relwidth=1,relheight=0.8)
-        self.frame_boutons.place(relheight=0.2,relx=0,rely=0.8,relwidth=1.)
+        Fenetre.__init__(self,appli,titre=titre,texte=texte,width=20,height=15)
 
         self.cardinal=cardinal
-        self.fenetre.configure(width = 320,height=400)
-        centerwindow(self.fenetre)
+        #self.fenetre.configure(width = 320,height=400)
         self.panel = panel
         self.item = item
         self.fenetre.title(titre)
@@ -256,16 +244,17 @@ class FenetreDeSelection(Fenetre):
                                       selectioncommand = self.choose_separateur,
                                       scrolledlist_items = l_separateurs_autorises)
         self.choix_sep.component('entry').configure(width=6)
-        self.choix_sep.place(relx=0.01,rely=0.5,anchor='w')
-        self.choix_sep.selectitem(self.separateur)
+        self.choix_sep.grid(row=0,rowspan=2,padx=5,pady=5)
+        #self.choix_sep.selectitem(self.separateur)
         # Replacement
-        self.but_quit.place_forget()
-        self.but_save.place_forget()
+        self.but_quit.pack_forget()
+        self.but_save.pack_forget()
         self.but_all  = Button(self.frame_boutons,text = "Tout Sélectionner", command=self.tout)
-        self.but_save.place(relx=0.6,rely=0.6,anchor='center')
-        self.but_quit.place(relx=0.8,rely=0.6,anchor='center')
-        self.but_all.place(relx=0.7,rely=0.2,anchor='center')
+        self.but_save.grid(row=1,column=1,padx=5,pady=5)
+        self.but_quit.grid(row=1,column=2,padx=5,pady=5)
+        self.but_all.grid(row=0,column=1,columnspan=2,padx=5,pady=5)
         self.choose_separateur('espace')
+        centerwindow(self.fenetre)
      
 
     def get_separateurs_autorises(self):
@@ -451,7 +440,7 @@ class FenetreDeParametre(Fenetre) :
         self.parent=parent
         self.appli=appli
         self.fenetre = Toplevel()
-        self.fenetre.configure(width = 250,height=100)
+        #self.fenetre.configure(width = 250,height=100)
         self.fenetre.protocol("WM_DELETE_WINDOW", self.quit)
         self.fenetre.title("Parametres")
         self.titre = "Parametres"
@@ -460,9 +449,8 @@ class FenetreDeParametre(Fenetre) :
 
         # définition des frames
         self.frame_texte = Frame(self.fenetre)
-        self.frame_texte.place(relx=0,rely=0,relwidth=1,relheight=0.7)
         # définition de la zone texte et du scrollbar
-        self.zone_texte = Text(self.frame_texte,font=fonte)
+        self.zone_texte = Text(self.frame_texte,font=fonte,width=40)
         self.zone_texte.bind("<Key-Prior>", self.page_up)
         self.zone_texte.bind("<Key-Next>", self.page_down)
         self.zone_texte.bind("<Key-Up>", self.unit_up)
@@ -477,15 +465,14 @@ class FenetreDeParametre(Fenetre) :
 
         # définition des boutons
         self.frame_boutons = Frame(self.fenetre)
-        self.frame_boutons.place(relheight=0.3,relx=0,rely=0.65,relwidth=1.)
-        self.label1 = Label(self.frame_boutons,text="surligner la")
-        self.label2 = Label(self.frame_boutons,text="ligne entière")
-        self.label1.place(relx=0.1,rely=0)
-        self.label2.place(relx=0.1,rely=0.5)
+        self.label1 = Label(self.frame_boutons,text="surligner la\nligne entière",justify=LEFT)
         self.but_quit = Button(self.frame_boutons,text = "Fermer",command=self.quit)
         self.but_save = Button(self.frame_boutons,text = "Choisir",command = self.Choisir)
-        self.but_save.place(relx=0.6,rely=0,relheight=1)
-        self.but_quit.place(relx=0.8,rely=0,relheight=1)
+        self.but_quit.pack(side='right',padx=5, pady=5)
+        self.but_save.pack(side='right',padx=5, pady=5)
+        self.label1.pack(side='right',padx=5, pady=5)
+        self.frame_boutons.pack(side='bottom')
+        self.frame_texte.pack(side='top',expand=1,fill='both')
 
 
     def Choisir(self):
@@ -497,12 +484,22 @@ class FenetreDeParametre(Fenetre) :
         l_param = ""
         for param in selection.splitlines():
             nomparam=param[0:param.find("=")-1]
-            if nomparam != '' : 
+            if nomparam != '' :
                 l_param=l_param+nomparam+','
         self.parent.entry.delete(0,Tkinter.END)
         self.parent.entry.insert(0,l_param[0:-1])
         self.parent.valid_valeur()
         self.quit()
+
+    def affiche_texte(self,texte):
+        """ Affiche le texte dans la fenêtre """
+        if texte != "" :
+            self.zone_texte.insert(END,texte)
+            self.fenetre.update_idletasks()
+            curline = int(self.zone_texte.index("insert").split('.')[0])
+            if curline < int(self.zone_texte["height"]):
+              self.zone_texte["height"]=curline
+              self.efface_scroll()
 
 class Formulaire:
     """
@@ -1228,7 +1225,7 @@ class ListeChoixParGroupes(ListeChoix) :
     def affiche_liste(self):
         """ Affiche la liste dans la fenêtre"""
         liste_labels=[]
-	self.dico_mots={}
+        self.dico_mots={}
         self.MCbox.config(state=NORMAL)
         self.MCbox.delete(1.0,END)
         for grp in self.liste_groupes:
@@ -1384,4 +1381,12 @@ class ListeChoixParGroupes(ListeChoix) :
                  self.selectitem(cmd,label,self.selection[2])
                  # On a trouve une commande  on arrete la recherche
                  return
+
+if __name__ == "__main__":
+  root=Tkinter.Tk()
+  f=FenetreDeParametre(root,None,None,"\n".join(["coucouxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=2"]*15))
+  #f=FenetreYesNo(None,titre="Le titre",texte="\n".join(["Le textexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"]*35),yes="Yes",no="No")
+
+
+  root.mainloop()
 

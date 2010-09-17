@@ -63,7 +63,7 @@ class OpenturnsGenerator(PythonGenerator):
        self.dictTempo={}
        self.TraiteMCSIMP=1
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
        #print "IDM: gener dans generator_openturns.py"
        self.initDico()
        self.text=PythonGenerator.gener(self,obj,format)
@@ -78,7 +78,7 @@ class OpenturnsGenerator(PythonGenerator):
        """
        s=PythonGenerator.generMCSIMP(self,obj)
        if self.TraiteMCSIMP == 1 : 
-          self.dictMCVal[obj.nom]=obj.val
+          self.dictMCVal[obj.nom]=obj.valeur
        else :
           self.dictTempo[obj.nom]=obj.valeur
        return s

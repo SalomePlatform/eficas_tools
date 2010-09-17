@@ -79,6 +79,7 @@ class MCList:
       CONNECTOR.Emit(self,"supp",obj)
       self.update_condition_bloc()
       obj.supprime()
+      self.etape.modified()
       self.fin_modif()
       return 1
 
@@ -92,7 +93,7 @@ class MCList:
          raise "traitement non prevu"
 
       if not self.ajout_possible():
-         self.jdc.send_message("L'objet %s ne peut pas être ajouté" % obj.nom)
+         self.jdc.appli.affiche_alerte("Erreur","L'objet %s ne peut pas être ajouté" % obj.nom)
          return None
 
       if self.nom != obj.nom:

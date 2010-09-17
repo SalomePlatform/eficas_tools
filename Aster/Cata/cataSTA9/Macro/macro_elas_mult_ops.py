@@ -1,27 +1,27 @@
-#@ MODIF macro_elas_mult_ops Macro  DATE 22/10/2007   AUTEUR PELLET J.PELLET 
+#@ MODIF macro_elas_mult_ops Macro  DATE 03/02/2010   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 
 
 
 def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
-                        CHAR_MECA_GLOBAL,CHAR_CINE_GLOBAL,LIAISON_DISCRET,
+                        CHAR_MECA_GLOBAL,LIAISON_DISCRET,
                         CAS_CHARGE,SOLVEUR,**args):
   """
      Ecriture de la macro MACRO_ELAS_MULT
@@ -49,7 +49,7 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
 
   # Le concept sortant (de type mult_elas ou fourier_elas) est nommé
   # 'nomres' dans le contexte de la macro
-  
+
   self.DeclareOut('nomres',self.sd)
 
   ielas = 0
@@ -75,11 +75,10 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
   if ielas==1 :
      motscles={}
      if   CHAR_MECA_GLOBAL: motscles['CHARGE']    =CHAR_MECA_GLOBAL
-     elif CHAR_CINE_GLOBAL: motscles['CHARGE']    =CHAR_CINE_GLOBAL
      if   CHAM_MATER      : motscles['CHAM_MATER']=CHAM_MATER
      if   CARA_ELEM       : motscles['CARA_ELEM'] =CARA_ELEM
      __nomrig=CALC_MATR_ELEM(OPTION='RIGI_MECA',MODELE=MODELE,**motscles)
-  
+
      if lnume:
        # On peut passer des mots cles egaux a None. Ils sont ignores
        motscles={}
@@ -106,14 +105,24 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
 # boucle sur les items de CAS_CHARGE
 
   nomchn=[]
+  lcharg=[]
   iocc=0
   for m in CAS_CHARGE:
      iocc=iocc+1
 
+     # calcul de lcharg : liste des listes de char_meca (mots clé CHAR_MECA et CHAR_MECA_GLOBAL)
+     xx1=m['CHAR_MECA']
+     if type(xx1) != type((1,)) : xx1=(xx1,)
+     xx2=CHAR_MECA_GLOBAL
+     if type(xx2) != type((1,)) : xx2=(xx2,)
+     lchar1=[]
+     for chargt in (xx1+xx2) :
+        if chargt : lchar1.append(chargt)
+     lcharg.append(lchar1)
+
      if ifour:
         motscles={}
         if   CHAR_MECA_GLOBAL: motscles['CHARGE']       =CHAR_MECA_GLOBAL
-        elif CHAR_CINE_GLOBAL: motscles['CHARGE']       =CHAR_CINE_GLOBAL
         if   CHAM_MATER      : motscles['CHAM_MATER']   =CHAM_MATER
         if   CARA_ELEM       : motscles['CARA_ELEM']    =CARA_ELEM
         motscles['MODE_FOURIER'] =m['MODE_FOURIER']
@@ -134,8 +143,7 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
         if   CHAM_MATER      : motscles['CHAM_MATER']   =CHAM_MATER
         if   CARA_ELEM       : motscles['CARA_ELEM']    =CARA_ELEM
         if   ifour           : motscles['MODE_FOURIER'] =m['MODE_FOURIER']
-        if   m['CHAR_MECA']  : motscles['CHARGE']       =m['CHAR_MECA']
-        elif m['CHAR_CINE']  : motscles['CHARGE']       =m['CHAR_CINE']
+        if   len(lchar1) > 0 : motscles['CHARGE']       =lchar1
         __nomvel=CALC_VECT_ELEM(OPTION='CHAR_MECA',**motscles)
         __nomasv=ASSE_VECTEUR(VECT_ELEM=__nomvel,NUME_DDL=num)
      else :
@@ -154,7 +162,7 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
   if CHAM_MATER : motscle2['CHAM_MATER']=CHAM_MATER
   if CARA_ELEM  : motscle2['CARA_ELEM']=CARA_ELEM
   if CHAM_MATER or CARA_ELEM :
-    if ielas : 
+    if ielas :
        motscles['AFFE']=[]
        for m in CAS_CHARGE:
           motscles['AFFE'].append(_F(MODELE=MODELE,
@@ -172,7 +180,7 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
                                      **motscle2) )
           iocc=iocc+1
   else:
-    if ielas : 
+    if ielas :
        motscles['AFFE']=[]
        for m in CAS_CHARGE:
           motscles['AFFE'].append(_F(MODELE=MODELE,
@@ -196,6 +204,7 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
 
   iocc=0
   for m in CAS_CHARGE:
+     lchar1=lcharg[iocc]
      iocc=iocc+1
 
      if m['OPTION']:
@@ -233,17 +242,9 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
            else:
               motscles['NUME_MODE']=m['MODE_FOURIER']
            motscles['EXCIT']=[]
-           if   m['CHAR_MECA'] :
-              for chargt in m['CHAR_MECA']   : motscles['EXCIT'].append(_F(CHARGE=chargt))
-           elif m['CHAR_CINE'] :
-              for chargt in m['CHAR_CINE']   : motscles['EXCIT'].append(_F(CHARGE=chargt))
-           if   CHAR_MECA_GLOBAL:
-              for chargt in CHAR_MECA_GLOBAL : motscles['EXCIT'].append(_F(CHARGE=chargt))
-           elif CHAR_CINE_GLOBAL:
-              for chargt in CHAR_CINE_GLOBAL : motscles['EXCIT'].append(_F(CHARGE=chargt))
+           for chargt in lchar1   : motscles['EXCIT'].append(_F(CHARGE=chargt))
            CALC_ELEM(reuse=nomres,
                      RESULTAT=nomres,
-                     MODELE=MODELE,
                      REPE_COQUE=_F(NIVE_COUCHE=m['NIVE_COUCHE'],
                                    NUME_COUCHE=m['NUME_COUCHE'],),
                      OPTION=tuple(liste_el),
@@ -257,17 +258,9 @@ def macro_elas_mult_ops(self,MODELE,CHAM_MATER,CARA_ELEM,NUME_DDL,
            else:
               motscles['NUME_MODE']=m['MODE_FOURIER']
            motscles['EXCIT']=[]
-           if   m['CHAR_MECA'] :
-              for chargt in m['CHAR_MECA']   : motscles['EXCIT'].append(_F(CHARGE=chargt))
-           elif m['CHAR_CINE'] :
-              for chargt in m['CHAR_CINE']   : motscles['EXCIT'].append(_F(CHARGE=chargt))
-           if   CHAR_MECA_GLOBAL:
-              for chargt in CHAR_MECA_GLOBAL : motscles['EXCIT'].append(_F(CHARGE=chargt))
-           elif CHAR_CINE_GLOBAL:
-              for chargt in CHAR_CINE_GLOBAL : motscles['EXCIT'].append(_F(CHARGE=chargt))
+           for chargt in lchar1   : motscles['EXCIT'].append(_F(CHARGE=chargt))
            CALC_NO(reuse=nomres,
                    RESULTAT=nomres,
-                   MODELE=MODELE,
                    OPTION=tuple(liste_no),
                    **motscles)
 

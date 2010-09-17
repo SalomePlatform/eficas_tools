@@ -41,8 +41,13 @@ class JDCTree( QTreeWidget ):
         mesLabels << self.trUtf8('Commande                   ') << self.trUtf8('Concept/Valeur           ')
         self.setHeaderLabels(mesLabels)
                 
-        self.setMinimumSize(QSize(600,505))
-        self.setColumnWidth(0,300)
+        #self.setMinimumSize(QSize(600,505))
+        try :
+           self.setColumnWidth(0,300)
+        except :
+            QMessageBox.critical(self.editor,'probleme d environnement', "L environnement doit etre en QT4")
+            sys.exit(0)
+        self.itemCourrant=None
 
         self.connect(self, SIGNAL("itemClicked ( QTreeWidgetItem * ,int) "), self.handleOnItem)
         self.racine=self.item.itemNode(self,self.item)
@@ -69,16 +74,21 @@ class JDCTree( QTreeWidget ):
         if item.menu == None:
            item.createPopUpMenu()
         if item.menu != None:
+           if item.item.get_nom() == "DISTRIBUTION" and item.item.isvalid() :
+              item.Graphe.setEnabled(1)
            item.menu.exec_(coord)            
             
     def handleOnItem(self,item,int):
-        item.affichePanneau()
-        try :
+        self.itemCourrant=item
+        #try :
+        if 1 :
            fr = item.item.get_fr()
            if self.editor:
-              self.editor.affiche_infos(fr)
-        except:
+              self.editor.affiche_infos(QString.toUtf8(QString(fr)))
+        #except:
+        else:
             pass
+        item.affichePanneau()
 
 
 # type de noeud
@@ -108,8 +118,9 @@ class JDCNode(QTreeWidgetItem):
         self.existeMenu=1
 
         self.item.connect("valid",self.onValid,())
-        self.item.connect("supp" ,self.onAdd,())
-        self.item.connect("add"  ,self.onSupp,())
+        self.item.connect("supp" ,self.onSupp,())
+        self.item.connect("add"  ,self.onAdd,())
+        self.state=""
 
 
     def build_children(self,posInsertion=10000):
@@ -134,7 +145,6 @@ class JDCNode(QTreeWidgetItem):
             ind=ind+1
 
     def affichePanneau(self) :
-        print self
         if self.item.isactif():
 	    panel=self.getPanel()
         else:
@@ -264,7 +274,6 @@ class JDCNode(QTreeWidgetItem):
         obj=self.item.additem(name,index) #CS_pbruno emet le signal 'add'
         if obj is None:obj=0
         if obj == 0:return 0
-        self.build_children(index)
         child=self.children[index]
         child.affichePanneau() 
         return child
@@ -276,6 +285,10 @@ class JDCNode(QTreeWidgetItem):
         self.editor.init_modif()
         index = self.treeParent.children.index(self) - 1 
         if index < 0 : index =0
+        recalcule=0
+        if self.item.nom == "VARIABLE" :
+           recalcule=1
+           jdc=self.item.jdc
 
         ret=self.treeParent.item.suppitem(self.item)
         if ret == 0:return
@@ -286,27 +299,31 @@ class JDCNode(QTreeWidgetItem):
            toselect=brothers[index]
         else:
            toselect=self.treeParent
+        if recalcule :
+           jdc.recalcule_etat_correlation()
         toselect.select()
         toselect.affichePanneau()
 
 #        
 #    #------------------------------------------------------------------
     def onValid(self):        
+        if self.item.nom == "VARIABLE" and self.item.isvalid():
+           self.item.jdc.recalcule_etat_correlation()
+        if hasattr(self.item,'forceRecalcul'):
+           self.forceRecalculChildren(self.item.forceRecalcul)
         self.editor.init_modif()
         self.update_node_valid()
         self.update_node_label()
         self.update_node_texte()
 
     def onAdd(self,object):
-        #print "NODE  onAdd", self.item.GetLabelText()
         self.editor.init_modif()
         self.update_nodes()
  
     def onSupp(self,object):
-        #print "NODE onSupp", self.item.GetLabelText()
+        #print "onSupp"
         self.editor.init_modif()
         self.update_nodes()
- 
 
     def update_node_valid(self):
         """Cette methode remet a jour la validite du noeud (icone)
@@ -332,6 +349,17 @@ class JDCNode(QTreeWidgetItem):
     def update_nodes(self):
         #print 'NODE update_nodes', self.item.GetLabelText()
         self.build_children()
+
+    def update_valid(self) :
+        """Cette methode a pour but de mettre a jour la validite du noeud
+           et de propager la demande de mise a jour a son parent
+        """
+        #print "NODE update_valid", self.item.GetLabelText()
+        self.update_node_valid()
+        try :
+          self.treeParent.update_valid()
+        except:
+          pass
             
     def update_texte(self):
         """ Met a jour les noms des SD et valeurs des mots-cles """
@@ -340,15 +368,40 @@ class JDCNode(QTreeWidgetItem):
         if self.isExpanded() :
             for child in self.children:
                 if child.isHidden() == false : child.update_texte()
+
+
+    def forceRecalculChildren(self,niveau):
+        if self.state=='recalcule' : 
+           self.state=""
+           return
+        self.state='recalcule'
+        if hasattr(self.item,'object'):
+           self.item.object.state="modified"
+        for child in self.children:
+           if niveau > 0 : child.forceRecalculChildren(niveau - 1)
+              
         
- 
+
+    def doPaste(self,node_selected):
+        """
+            Déclenche la copie de l'objet item avec pour cible
+            l'objet passé en argument : node_selected
+        """
+        #print 'je passe dans doPaste'
+        objet_a_copier = self.item.get_copie_objet()
+        child=node_selected.doPasteCommande(objet_a_copier)
+        return child
+
     def doPasteCommande(self,objet_a_copier):
         """
           Réalise la copie de l'objet passé en argument qui est nécessairement
           une commande
         """
-        print "objet_a_copier = ", objet_a_copier.item.GetLabelText()
-        child = self.append_brother(objet_a_copier)
+        #print 'je passe dans doPasteCommande'
+        try :
+          child = self.append_brother(objet_a_copier)
+        except :
+           pass
         return child
 
     def doPasteMCF(self,objet_a_copier):
@@ -356,8 +409,10 @@ class JDCNode(QTreeWidgetItem):
            Réalise la copie de l'objet passé en argument (objet_a_copier)
            Il s'agit forcément d'un mot clé facteur
         """
-        child = self.append_child(objet_a_copier,pos='first')
+        #print 'je passe dans doPasteMCF'
+        child = self.append_child(objet_a_copier,pos='first',retour='oui')
         return child
+
 
 if __name__=='__main__':
     from PyQt4 import *

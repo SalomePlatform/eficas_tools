@@ -65,6 +65,7 @@ from A_PRESENT_ABSENT import PRESENT_ABSENT
 from A_EXCLUS import EXCLUS
 from A_ENSEMBLE import ENSEMBLE
 from A_A_CLASSER import A_CLASSER
+from A_AVANT import AVANT
 
 from A_ASSD import ASSD,assd
 from A_ASSD import GEOM,geom
@@ -83,7 +84,7 @@ from A_VALIDATOR import OrVal,AndVal
 from A_VALIDATOR import OrdList,NoRepeat,LongStr,Compulsory
 from A_VALIDATOR import RangeVal, EnumVal, TypeVal, PairVal
 from A_VALIDATOR import CardVal, InstanceVal
-#from A_VALIDATOR import VerifTypeTuple
+from A_VALIDATOR import VerifTypeTuple, VerifExiste
 
 # On remplace la factory des validateurs initialement dans Noyau par celle
 # de A_VALIDATOR

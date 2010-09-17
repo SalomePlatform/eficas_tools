@@ -15,45 +15,59 @@ class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code="ASTER",salome=0,parent=None):
+    def __init__(self,code="ASTER",salome=0,parent=None,ssCode=None):
         """
         Constructor
         """
+        self.VERSION_EFICAS="Eficas QT4 V2.0"
+
         self.ihm="QT"
         self.code=code
+        self.ssCode=ssCode
         self.salome=salome
-        self.format_fichier="python"	#par defaut
 	self.top = self #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
+        self.indice=0
+        self.dict_reels={}
 
         import prefs
-        if salome :
-           import sys
         prefs.code=code
         name='prefs_'+prefs.code
         prefsCode=__import__(name)
-        nameConf='configuration_'+prefs.code
-        configuration=__import__(nameConf)
-
         self.REPINI=prefsCode.REPINI
         self.RepIcon=prefsCode.INSTALLDIR+"/Editeur/icons"
+        self.INSTALLDIR=prefsCode.INSTALLDIR
+        if ssCode != None :
+           self.format_fichier= ssCode	#par defaut
+           prefsCode.NAME_SCHEME=ssCode
+        else :
+           self.format_fichier="python"	#par defaut
+
+        if salome :
+           import sys
+        nameConf='configuration_'+prefs.code
+        configuration=__import__(nameConf)
         self.CONFIGURATION = configuration.make_config(self,prefsCode.REPINI)
-        self.CONFIGStyle = configuration.make_config_style(self,prefsCode.REPINI)
+        self.CONFIGStyle = None
+        if hasattr(configuration,'make_config_style'):
+           self.CONFIGStyle = configuration.make_config_style(self,prefsCode.REPINI)
         if hasattr(prefsCode,'encoding'):
            import sys
            reload(sys)
            sys.setdefaultencoding(prefsCode.encoding)
 
-        QMainWindow.__init__(self)
+        QMainWindow.__init__(self,parent)
         Ui_Eficas.__init__(self)
         self.setupUi(self)
         self.ajoutIcones()
+        if code in Appli.__dict__.keys():
+          listeTexte=apply(Appli.__dict__[code],(self,))
+
         self.viewmanager = MyTabview(self) 
         self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
         self.connecterSignaux() 
 
 
-        #self.monAssistant=QAssistantClient(QString(""), self.viewmanager)
         #if self.salome :
         #   from Editeur import session
         #   self.ouvreFichiers()
@@ -65,11 +79,56 @@ class Appli(Ui_Eficas,QMainWindow):
         self.initRecents()
 
         self.ouvreFichiers()
+        self.setWindowTitle(self.VERSION_EFICAS)
         
-    def OPENTURNS(self) :
-        self.MenuBar.removeItem(5)
-        self.MenuBar.removeItem(6)
-        self.MenuBar.removeItem(7)
+    def ASTER(self) :
+        self.menuTraduction = self.menubar.addMenu("menuTraduction")
+        self.actionTraduitV7V8 = QAction(self)
+        self.actionTraduitV7V8.setObjectName("actionTraduitV7V8")
+        self.actionTraduitV8V9 = QAction(self)
+        self.actionTraduitV8V9.setObjectName("actionTraduitV8V9")
+        self.menuTraduction.addAction(self.actionTraduitV7V8)
+        self.menuTraduction.addAction(self.actionTraduitV8V9)
+        self.menuTraduction.setTitle(QApplication.translate("Eficas", "Traduction", None, QApplication.UnicodeUTF8))
+        self.actionTraduitV7V8.setText(QApplication.translate("Eficas","TraduitV7V8", None, QApplication.UnicodeUTF8))
+        self.actionTraduitV8V9.setText(QApplication.translate("Eficas","TraduitV8V9", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionTraduitV7V8,SIGNAL("activated()"),self.traductionV7V8)
+        self.connect(self.actionTraduitV8V9,SIGNAL("activated()"),self.traductionV8V9)
+
+
+    def Map(self): 
+        self.MAP()
+
+    def MAP(self): 
+        self.actionExecution = QAction(self)
+        icon6 = QIcon(self.RepIcon+"/compute.png")
+        self.actionExecution.setIcon(icon6)
+        self.actionExecution.setObjectName("actionExecution")
+        self.menuJdC.addAction(self.actionExecution)
+        self.toolBar.addAction(self.actionExecution)
+        self.actionExecution.setText(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+
+        self.actionEnregistrer_Python = QAction(self)
+        self.actionEnregistrer_Python.setObjectName("actionEnregistrer_Python")
+        self.menuFichier.addAction(self.actionEnregistrer_Python)
+        self.actionEnregistrer_Python.setText(QApplication.translate("Eficas", "Sauve Python", None,QApplication.UnicodeUTF8))
+        self.connect(self.actionEnregistrer_Python,SIGNAL("activated()"),self.saveRun)
+
+        self.actionEnregistrerYACS = QAction(self)
+        self.actionEnregistrerYACS.setObjectName("actionEnregistrerYACS")
+        self.menuFichier.addAction(self.actionEnregistrerYACS)
+        self.actionEnregistrerYACS.setText(QApplication.translate("Eficas", "Sauve Schema YACS", None,QApplication.UnicodeUTF8))
+        self.connect(self.actionEnregistrerYACS,SIGNAL("activated()"),self.saveYACS)
+
+        self.actionExecutionYACS = QAction(self)
+        icon7 = QIcon(self.RepIcon+"/application.gif")
+        self.actionExecutionYACS.setIcon(icon7)
+        self.actionExecutionYACS.setObjectName("actionExecutionYACS")
+        self.menuJdC.addAction(self.actionExecutionYACS)
+        self.toolBar.addAction(self.actionExecutionYACS)
+        self.actionExecutionYACS.setText(QApplication.translate("Eficas", "Execution YACS", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionExecutionYACS,SIGNAL("activated()"),self.runYACS)
 
     def ajoutIcones(self) :
         # Pour pallier les soucis de repertoire d icone
@@ -99,9 +158,13 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionFermer_tout,SIGNAL("activated()"),self.fileCloseAll)
         self.connect(self.actionQuitter,SIGNAL("activated()"),self.fileExit)
 
+        self.connect(self.actionEficas,SIGNAL("activated()"),self.aidePPal)
+        self.connect(self.actionVersion,SIGNAL("activated()"),self.version)
+
         self.connect(self.actionCouper,SIGNAL("activated()"),self.editCut)
         self.connect(self.actionCopier,SIGNAL("activated()"),self.editCopy)
         self.connect(self.actionColler,SIGNAL("activated()"),self.editPaste)
+        self.connect(self.actionSupprimer,SIGNAL("activated()"),self.supprimer)
 
         self.connect(self.actionRapport_de_Validation,SIGNAL("activated()"),self.jdcRapport)
         self.connect(self.actionFichier_Source,SIGNAL("activated()"),self.jdcFichierSource)
@@ -110,13 +173,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionParametres_Eficas,SIGNAL("activated()"),self.optionEditeur)
         self.connect(self.actionLecteur_Pdf,SIGNAL("activated()"),self.optionPdf)
 
-        self.connect(self.actionTraduitV7V8,SIGNAL("activated()"),self.traductionV7V8)
-        self.connect(self.actionTraduitV8V9,SIGNAL("activated()"),self.traductionV8V9)
-
         #self.connect(self.helpIndexAction,SIGNAL("activated()"),self.helpIndex)
         #self.connect(self.helpContentsAction,SIGNAL("activated()"),self.helpContents)
-        #self.connect(self.helpAboutAction,SIGNAL("activated()"),self.helpAbout)
-        #self.connect(self.aidenew_itemAction,SIGNAL("activated()"),self.helpAbout)
                              
 
     def ouvreFichiers(self) :
@@ -139,7 +197,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
         
     def initPatrons(self) :
-    # Mise à jour du menu des fichiers recemment ouverts
+    # Mise Ã  jour du menu des fichiers recemment ouverts
         from Editeur import listePatrons
         self.listePatrons = listePatrons.listePatrons(self.code)
         idx = 0
@@ -203,29 +261,40 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def traductionV7V8(self):
         from gereTraduction import traduction
-        traduction(self.CONFIGURATION.rep_user,self.viewmanager,"V7V8")
+        traduction(self.CONFIGURATION.rep_ini,self.viewmanager,"V7V8")
 
     def traductionV8V9(self):
         from gereTraduction import traduction
-        traduction(self.CONFIGURATION.rep_user,self.viewmanager,"V8V9")
+        traduction(self.CONFIGURATION.rep_ini,self.viewmanager,"V8V9")
 
     def version(self) :
-        from desVisu import DVisu
+        from monVisu import DVisu
         titre = "version "
-        monVisu=DVisu(parent=self.viewmanager)
-        monVisu.setCaption(titre)
-        monVisu.TB.setText("Eficas V1.13")
-        monVisu.adjustSize()
-        monVisu.show()
+        monVisuDialg=DVisu(parent=self,fl=0)
+        monVisuDialg.setWindowTitle(titre)
+        monVisuDialg.TB.setText(self.VERSION_EFICAS +QString(" pour ") + self.code)
+        monVisuDialg.adjustSize()
+        monVisuDialg.show()
 
     def aidePPal(self) :
-        maD=INSTALLDIR+"/AIDE/fichiers"
-        docsPath = QDir(maD).absPath()
-        self.monAssistant.showPage( QString("%1/index.html").arg(docsPath) )
+        maD=self.INSTALLDIR+"/Aide"
+        docsPath = QDir(maD).absolutePath()
+        monAssistant=QAssistantClient(QString(""), self)
+        arguments=QStringList()
+        arguments << "-profile" <<docsPath+QDir.separator()+QString("eficas_")+QString(self.code)+QString(".adp");
+        monAssistant.setArguments(arguments);
+        monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
 
     def optionEditeur(self) :
-        from monOptionsEditeur import Options
-        monOption=Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
+        name='monOptions_'+self.code
+        try :
+        #if 1 :
+           optionCode=__import__(name)
+        except :
+        #else :
+           QMessageBox.critical( self, "Parametrage", "Pas de possibilite de personnalisation de la configuration ")
+           return
+        monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
         monOption.show()
         
     def optionPdf(self) :
@@ -258,6 +327,7 @@ class Appli(Ui_Eficas,QMainWindow):
         
     def handleClearRecent(self):
         self.recent = QStringList()
+        self.sauveRecents()
         
     def fileNew(self):        
         self.viewmanager.newEditor()        
@@ -279,11 +349,12 @@ class Appli(Ui_Eficas,QMainWindow):
         
     def fileExit(self):
         # On peut sortir sur Abort
-        self.viewmanager.handleCloseAll()
-        if self.salome :
-           self.close()
-        else :
-           qApp.closeAllWindows()
+        res=self.viewmanager.handleCloseAll()
+        if (res != 2) : 
+           if self.salome :
+              self.close()
+           else :
+              qApp.closeAllWindows()
         
     def editCopy(self):
         self.viewmanager.handleEditCopy()
@@ -294,6 +365,21 @@ class Appli(Ui_Eficas,QMainWindow):
     def editPaste(self):
         self.viewmanager.handleEditPaste()
         
+    def run(self):
+        self.viewmanager.run()
+        
+    def saveRun(self):
+        self.viewmanager.saveRun()
+        
+    def runYACS(self):
+        self.viewmanager.runYACS()
+        
+    def saveYACS(self):
+        self.viewmanager.saveYACS()
+        
+    def supprimer(self):
+        self.viewmanager.handleSupprimer()
+        
     def jdcFichierSource(self):
         self.viewmanager.handleViewJdcFichierSource()
         
@@ -303,13 +389,15 @@ class Appli(Ui_Eficas,QMainWindow):
     def visuJdcPy(self):
         self.viewmanager.handleViewJdcPy()
 
-    def helpAbout(self):
-        import AIDE
-        AIDE.go3(parent=self)
 
     def NewInclude(self):
         self.viewmanager.newIncludeEditor()
 
+    def getName(self):
+        self.indice=self.indice+1
+        texte="tempo"+str(self.indice)
+        return texte
+        
 
 if __name__=='__main__':
 

@@ -1,4 +1,4 @@
-#@ MODIF calc_europlexus_ops Macro  DATE 28/04/2009   AUTEUR ASSIRE A.ASSIRE 
+#@ MODIF calc_europlexus_ops Macro  DATE 18/11/2009   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -2315,7 +2315,8 @@ class EUROPLEXUS:
   def lancer_calcul(self,fichier_med='auto'):
 
      fichier_epx = self.nom_fichiers['COMMANDE']
-     EXEC_LOGICIEL(LOGICIEL='cd %s ; %s %s ; iret=$? ; cd %s ; exit $iret' % (self.pwd + self.REPE, self.EXEC, fichier_epx, self.pwd),
+     EXEC_LOGICIEL(LOGICIEL='cd %s ; unset TMPDIR ; %s -usetmpdir %s ; iret=$? ; cd %s ; echo "Code_Retour Europlexus : $iret" ; exit 0' % (self.pwd + self.REPE, self.EXEC, fichier_epx, self.pwd),
+                   CODE_RETOUR_MAXI=-1,
                    INFO=2)
 
 

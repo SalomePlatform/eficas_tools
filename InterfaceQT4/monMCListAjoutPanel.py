@@ -64,7 +64,6 @@ class MonMCListAjoutPanel(DMCListAjout,QTPanel):
   def connecterSignaux(self):
         self.connect(self.bAjout,SIGNAL("clicked()"),self.BAjoutClicked)
 
-
   def BAjoutClicked(self):
         self.node.treeParent.append_child(self.node.item.get_nom())
 

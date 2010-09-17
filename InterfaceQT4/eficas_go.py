@@ -30,7 +30,7 @@ from Editeur  import import_code
 from Editeur  import session
 from qtEficas import Appli
 
-def lance_eficas(code=None,fichier=None):
+def lance_eficas(code=None,fichier=None,ssCode=None):
     """
         Lance l'appli EFICAS
     """
@@ -39,14 +39,14 @@ def lance_eficas(code=None,fichier=None):
     code=options.code
 
     app = QApplication(sys.argv)
-    Eficas=Appli(code=code)
+    Eficas=Appli(code=code,ssCode=ssCode)
     Eficas.show()
 
     res=app.exec_()
     sys.exit(res)
 
 
-def lance_eficas_ssIhm(code=None,fichier=None):
+def lance_eficas_ssIhm(code=None,fichier=None,version='v9.5'):
     """
         Lance l'appli EFICAS pour trouver les noms des groupes
     """
@@ -58,11 +58,16 @@ def lance_eficas_ssIhm(code=None,fichier=None):
     Eficas=Appli(code=code)
 
     from ssIhm  import QWParentSSIhm
-    parent=QWParentSSIhm(code,Eficas,'v9.4')
+    parent=QWParentSSIhm(code,Eficas,version)
 
-    from readercata import READERCATA
-    readercata = READERCATA( parent, Eficas )
-   
+    import readercata
+    #if not hasattr( readercata, 'reader' ) :
+    #   readercata.reader = readercata.READERCATA( parent, Eficas )
+    if not hasattr ( Eficas, 'readercata'):
+           monreadercata  = readercata.READERCATA( parent, Eficas )
+           Eficas.readercata=monreadercata
+
+
     from editor import JDCEditor
     monEditeur=JDCEditor(Eficas,fichier)
     print monEditeur.cherche_Groupes()

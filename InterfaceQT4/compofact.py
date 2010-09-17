@@ -39,17 +39,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
-    def doPaste(self,node_selected):
-        objetACopier = self.item.get_copie_objet()
-        child=node_selected.doPasteMCF(objetACopier)
-        return child
-
-    def doPasteMCF(self,objetACopier):
-        child = self.parent.append_child(objetACopier,
-                                              pos=self.item,
-                                              retour='oui')
-        return child
-
 
 class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
   itemNode=Node
@@ -62,11 +51,11 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def GetLabelText(self):
       """ Retourne 3 valeurs :
-        - le texte ‡ afficher dans le noeud reprÈsentant l'item
+        - le texte √† afficher dans le noeud repr√©sentant l'item
         - la fonte dans laquelle afficher ce texte
         - la couleur du texte
       """
-      # None --> fonte et couleur par dÈfaut
+      # None --> fonte et couleur par d√©faut
       return self.object.getlabeltext(),None,None
 
   def isvalid(self):
@@ -128,15 +117,15 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       itemobject=item.getObject()
       if itemobject.isoblig() :
-         self.appli.affiche_infos('Impossible de supprimer un mot-clÈ obligatoire ')
+         self.appli.affiche_infos('Impossible de supprimer un mot-cl√© obligatoire ',Qt.red)
          return 0
 
       if self.object.suppentite(itemobject):
-         message = "Mot-clÈ " + itemobject.nom + " supprimÈ"
+         message = "Mot-cl√© " + itemobject.nom + " supprim√©"
          self.appli.affiche_infos(message)
          return 1
       else:
-         self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-clÈ')
+         self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-cl√©',Qt.red)
          return 0
 
 import Accas

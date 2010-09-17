@@ -1,4 +1,4 @@
-#@ MODIF ops Cata  DATE 01/12/2008   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF ops Cata  DATE 06/10/2009   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23,6 +23,7 @@
 import types
 import string,linecache,os,traceback,re
 import pickle
+import re
 
 # Modules Eficas
 import Accas
@@ -50,7 +51,7 @@ def commun_DEBUT_POURSUITE(jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM):
    """
    jdc.par_lot    = PAR_LOT
    jdc.impr_macro = int(IMPR_MACRO == 'OUI')
-   jdc.jxveri     = int(DEBUG != None and DEBUG['JXVERI'] == 'OUI')
+   jdc.jxveri     = int(CODE != None or (DEBUG != None and DEBUG['JXVERI'] == 'OUI'))
    jdc.sdveri     = int(DEBUG != None and DEBUG['SDVERI'] == 'OUI')
    jdc.fico       = None
    jdc.sd_checker = CheckLog()
@@ -62,7 +63,8 @@ def commun_DEBUT_POURSUITE(jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM):
          jdc.memo_sensi = MEMORISATION_SENSIBILITE()
       jdc.memo_sensi.reparent(jdc)
 
-      if hasattr(jdc, 'msg_init') and jdc.msg_init == 1:
+      # ne faire qu'une fois
+      if not hasattr(jdc, 'msg_init'):
          # messages d'alarmes désactivés
          if IGNORE_ALARM:
             if not type(IGNORE_ALARM) in (list, tuple):
@@ -181,7 +183,11 @@ def POURSUITE(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, **args):
             pickle_context[elem].executed = 1
             # pour que sds_dict soit cohérent avec g_context
             self.jdc.sds_dict[elem] = pickle_context[elem]
-            assert elem == pickle_context[elem].nom
+            if elem != pickle_context[elem].nom:
+               name = re.sub('_([0-9]+)$', '[\\1]', pickle_context[elem].nom)
+               UTMESS('A', 'SUPERVIS_93', valk=(elem, name))
+               del pickle_context[elem]
+               continue
             # rétablir le parent pour les attributs de la SD
             pickle_context[elem].reparent_sd()
             if elem in self.g_context.keys():
@@ -297,8 +303,9 @@ def detruire(self,d):
    """
        Cette fonction est la fonction op_init de la PROC DETRUIRE
    """
-   if hasattr(self,"executed") and self.executed == 1:
-      return
+#XXX introduit par issue11484, commenté par issue13713
+#   if hasattr(self,"executed") and self.executed == 1:
+#      return
    if self["CONCEPT"]!=None:
       sd = []
       for mc in self["CONCEPT"]:

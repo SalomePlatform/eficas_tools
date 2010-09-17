@@ -45,14 +45,20 @@ class DPlusBase (Ui_DPlusBase,QDialog):
           parent.addWidget(parent.partieDroite)
           parent.leLayout.widgetActive=self
        self.setupUi(self)
+       self.appliEficas=parent.appliEficas
+       self.RepIcon=parent.appliEficas.RepIcon
+       icon = QIcon(self.RepIcon+"/arrow_left.png")
+       self.BAjout1Val.setIcon(icon)
+       icon2 = QIcon(self.RepIcon+"/arrow_right.png")
+       self.BSup1Val.setIcon(icon2)
 
 # Import des panels
 
 class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonPlusieursBasePanel"
@@ -73,8 +79,12 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         self.connect(self.BSup1Val,SIGNAL("clicked()"),self.Sup1Valeur)
         self.connect(self.LEValeur,SIGNAL("returnPressed()"),self.LEValeurPressed)
         self.connect(self.BSalome,SIGNAL("clicked()"),self.BSalomePressed)
+        self.connect(self.BView2D,SIGNAL("clicked()"),self.BView2DPressed)
+
 
   def detruitBouton(self):
+        icon3 = QIcon(self.RepIcon+"/image240.png")
+        self.BSalome.setIcon(icon3)
         mc = self.node.item.get_definition()
         type = mc.type[0]
         if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
@@ -89,10 +99,10 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   def BOkPourListePressed(self):
         self.editor.init_modif()
         if self.listeValeursCourantes == [] :
-           self.editor.affiche_infos("Aucune Valeur")
+           self.editor.affiche_infos("Aucune Valeur",Qt.red)
            return
         self.node.item.set_valeur(self.listeValeursCourantes)
-	self.editor.affiche_infos("Valeur Acceptée")
+	self.editor.affiche_infos("Valeur AcceptÃ©e")
 
 
   def BParametresPressed(self):
@@ -112,10 +122,14 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         for valeur in self.listeValeursCourantes :
                 if i != index : listeVal.append(valeur)
                 i = i+1
+        self.LBValeurs.setCurrentItem(self.LBValeurs.item(index -1))
         self.listeValeursCourantes=listeVal
           
 
   def Ajout1Valeur(self,valeur=None):
+        if valeur == None :
+           valeur=str(self.LEValeur.text())
+
         liste,validite=SaisieValeur.TraiteLEValeur(self,valeur)
         if validite == 0 : return
         if liste ==[]    : return
@@ -133,41 +147,45 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,index,listeVal) 
 	self.Commentaire.setText(comm2)
         if not validite :
-		self.editor.affiche_infos(comm)
+		self.editor.affiche_infos(comm,Qt.red)
         else:
            self.LEValeur.setText(QString(""))
            l1=self.listeValeursCourantes[:index]
            l3=self.listeValeursCourantes[index:]
            for valeur in listeRetour:
-               self.LBValeurs.insertItem(index,QString(str(valeur)))
+               val=self.politique.GetValeurTexte(valeur)
+               self.LBValeurs.insertItem(index,QString(str(val)))
                item=self.LBValeurs.item(index)
                item.setSelected(1)
                self.LBValeurs.setCurrentItem(item)
                index=index+1
            self.listeValeursCourantes=l1+listeRetour+l3
-	   self.editor.affiche_infos("Valeurs Ajoutées")
+	   self.editor.affiche_infos("Valeurs AjoutÃ©es")
 
   def AjoutNValeur(self,liste) :
       for val in liste :
-        print val
 	self.Ajout1Valeur(val)
 
   def BImportPressed(self):
         init=QString( self.editor.CONFIGURATION.savedir)
         fn = QFileDialog.getOpenFileName(self.node.appliEficas, 
-                                         self.node.appliEficas.trUtf8('Fichier de données'), 
+                                         #self.node.appliEficas.trUtf8('Fichier de donnÃ©es'), 
+                                        QApplication.translate('Eficas','Fichier de donnees',None, QApplication.UnicodeUTF8),
                                          init,
                                          self.trUtf8('All Files (*)',))
         if fn == None : return
         if fn == "" : return
+        ulfile = os.path.abspath(unicode(fn))
+        self.editor.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+
         from monSelectVal import MonSelectVal
         MonSelectVal(file=fn,parent=self).show()
 
   def InitCommentaire(self):
         commentaire=""
         mc = self.node.item.get_definition()
-        d_aides = { 'TXM' : 'chaînes de caractères',
-                  'R'   : 'réels',
+        d_aides = { 'TXM' : 'chaÃ®nes de caractÃ¨res',
+                  'R'   : 'rÃ©els',
                   'I'   : 'entiers',
                   'C'   : 'complexes'}
         type = mc.type[0]
@@ -182,11 +200,13 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
            else :
                commentaire="Entrez entre "+str(mc.min)+" et  "+str(mc.max) +" " + d_aides[type]
         aideval=self.node.item.aide()
-        commentaire=commentaire + "\n" + aideval
-        self.Commentaire.setText(QString(commentaire))
+        commentaire=commentaire + "\n" + QString.toUtf8(QString(aideval))
+        self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
 
   def BSalomePressed(self):
 
+        self.LEValeur.setText(QString(""))
+        self.Commentaire.setText(QString(""))
         genea=self.node.item.get_genealogie()
         kwType = None
         for e in genea:
@@ -194,10 +214,9 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
             if "GROUP_MA" in e: kwType = "GROUP_MA"
 
         #print "BkwType",kwType
-        #print "editor", self.editor
-        selection, commentaire = self.editor.parent.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
+        selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
         if commentaire !="" :
-            self.Commentaire.setText(QString(commentaire))
+            self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
         monTexte=""
         if selection == [] : return
         for geomElt in selection: 
@@ -208,11 +227,12 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   def BView2DPressed(self):
         valeur=self.LEValeur.text()
         if valeur == QString("") :
-           valeur=self.LBValeurs.currentText()
+           if self.LBValeurs.currentItem() != None :
+              valeur=self.LBValeurs.currentItem().text()
         if valeur == QString("") : return
         valeur = str(valeur)
         if valeur :
-           ok, msgError = self.editor.parent.appliEficas.displayShape(valeur)
+           ok, msgError = self.appliEficas.displayShape(valeur)
            if not ok:
-              self.editor.parent.appli.affiche_infos(msgError)
+              self.editor.affiche_infos(msgError,Qt.red)
 

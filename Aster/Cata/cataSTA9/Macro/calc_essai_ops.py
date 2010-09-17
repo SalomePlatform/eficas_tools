@@ -1,4 +1,4 @@
-#@ MODIF calc_essai_ops Macro  DATE 21/10/2008   AUTEUR NISTOR I.NISTOR 
+#@ MODIF calc_essai_ops Macro  DATE 09/02/2010   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -29,17 +29,11 @@
 
 def calc_essai_ops( self,
                     INTERACTIF          = None,
-                    UNITE_FIMEN         = None,
-                    UNITE_RESU          = None,
                     EXPANSION           = None,
-                    MEIDEE_FLUDELA      = None,
-                    MEIDEE_TURBULENT    = None,
                     IDENTIFICATION      = None,
                     MODIFSTRUCT         = None,
                     GROUP_NO_CAPTEURS   = None,
                     GROUP_NO_EXTERIEUR  = None,
-                    RESU_FLUDELA        = None,
-                    RESU_TURBULENT      = None,
                     RESU_IDENTIFICATION = None,
                     RESU_MODIFSTRU      = None,
                     **args):
@@ -74,37 +68,16 @@ def calc_essai_ops( self,
                           "ComptTable" : 0,
                           "TablesOut"  : table_fonction}
 
-    if not RESU_FLUDELA:
-        RESU_FLUDELA = []
-    else:
-        for res in RESU_FLUDELA:
-            table.append(res['TABLE'])
-    out_fludela = {"DeclareOut" : self.DeclareOut,
-                   "TypeTables" : 'TABLE',
-                   "ComptTable" : 0,
-                   "TablesOut" : table}
-
-    if not RESU_TURBULENT:
-        RESU_TURBULENT = []
-    else:
-        for res in RESU_TURBULENT:
-            table.append(res['FONCTION'])
-    out_meideeturb = {"DeclareOut" : self.DeclareOut,
-                      "FoncOut" : table}
-        
     
     # Mode interactif : ouverture d'une fenetre Tk
     if INTERACTIF == "OUI":
         create_interactive_window(self,
-                                  UNITE_FIMEN,
-                                  UNITE_RESU,
-                                  out_fludela,
-                                  out_meideeturb,
                                   out_identification,
                                   out_modifstru)
     else:
         from Meidee.meidee_calcul import MessageBox
         from Meidee.meidee_test import TestMeidee
+        UNITE_RESU=7
         mess = MessageBox(UNITE_RESU)
         mess.disp_mess("Mode non intéractif")
         
@@ -113,14 +86,10 @@ def calc_essai_ops( self,
         # importation des concepts aster existants de la memoire jeveux
         TestMeidee(self,
                    mess,
-                   out_fludela,
-                   out_meideeturb,
                    out_identification,
                    out_modifstru,
                    objects,
                    EXPANSION,
-                   MEIDEE_FLUDELA,
-                   MEIDEE_TURBULENT,
                    IDENTIFICATION,
                    MODIFSTRUCT,
                    GROUP_NO_CAPTEURS,
@@ -162,8 +131,6 @@ def create_tab_mess_widgets(tk, UNITE_RESU):
     
     tabs = TabbedWindow(tabsw, ["Expansion de modeles",
                                 "Modification structurale",
-                                "MEIDEE mono-modal fludela",
-                                "MEIDEE mono-modal turbulent",
                                 "Identification de chargement",
                                 "Parametres de visualisation"])
 
@@ -215,10 +182,6 @@ class FermetureCallback:
 
 
 def create_interactive_window(macro,
-                              UNITE_FIMEN,
-                              UNITE_RESU,
-                              out_fludela,
-                              out_meideeturb,
                               out_identification,
                               out_modifstru):
     """Construit la fenêtre interactive comprenant une table pour 
@@ -228,8 +191,6 @@ def create_interactive_window(macro,
     from Meidee.meidee_cata import MeideeObjects
     from Meidee.meidee_correlation import InterfaceCorrelation
     from Meidee.meidee_modifstruct import InterfaceModifStruct
-    from Meidee.meidee_fludela import InterfaceFludela, InterfaceTurbMonomod
-    from Meidee.meidee_turbulent import InterfaceTurbulent
     from Meidee.meidee_parametres import InterfaceParametres
     
     # fenetre principale
@@ -249,15 +210,10 @@ def create_interactive_window(macro,
     iface = InterfaceCorrelation(main, objects, macro, mess, param_visu)
     imodifstruct = InterfaceModifStruct(main, objects, macro,
                                         mess, out_modifstru, param_visu)
-    fludelamonomod = InterfaceFludela(main, objects,
-                                      get_fimen_files(UNITE_FIMEN), mess, out_fludela, param_visu)
-    turbmonomod = InterfaceTurbMonomod(main, objects,get_fimen_files(UNITE_FIMEN) ,mess, out_meideeturb, param_visu)
     turbulent = InterfaceTurbulent(main, objects, mess, out_identification, param_visu)
     
     tabs.set_tab("Expansion de modeles", iface.main)
     tabs.set_tab("Modification structurale", imodifstruct.main)
-    tabs.set_tab("MEIDEE mono-modal fludela", fludelamonomod )
-    tabs.set_tab("MEIDEE mono-modal turbulent", turbmonomod )
     tabs.set_tab("Identification de chargement", turbulent)
     tabs.set_tab("Parametres de visualisation", param_visu)
     

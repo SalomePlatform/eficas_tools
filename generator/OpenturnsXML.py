@@ -98,7 +98,7 @@ class XMLGenerateur :
     '''
     Ecrit la liste des variables
     '''
-    varList = openturns.WrapperDataVariableList()
+    varList = openturns.WrapperDataVariableCollection()
     for var in sorted( self.DictVariables.keys(), self.__variable_ordering( self.DictVariables ) ) :
       varList.add( self.Variable( var, self.DictVariables[var] ) )
     return varList
@@ -150,7 +150,7 @@ class XMLGenerateur :
     '''
     Ecrit la liste des fichiers
     '''
-    fileList = openturns.WrapperDataFileList()
+    fileList = openturns.WrapperDataFileCollection()
     for dictFile in self.GetMCVal('Files', []) :
       fileList.add( self.File( dictFile ) )
     return fileList
@@ -176,6 +176,10 @@ class XMLGenerateur :
     '''
     parameters = openturns.WrapperParameter()
     parameters.mode_  = WrapperModeByName[ self.GetMCVal('WrapCouplingMode') ]
+    if (parameters.mode_ == openturns.WrapperMode.FORK ):
+      parameters.command_ = self.GetMCVal('Command')
+      userPrefix = self.GetMCVal('UserPrefix', None)
+      if userPrefix != None : parameters.userPrefix_ = userPrefix
     parameters.state_ = WrapperStateByName[ self.GetMCVal('State') ]
     parameters.in_    = WrapperDataTransferByName[ self.GetMCVal('InDataTransfer') ]
     parameters.out_   = WrapperDataTransferByName[ self.GetMCVal('OutDataTransfer') ]
@@ -186,8 +190,11 @@ class XMLGenerateur :
     Ecrit les donnees liees a l utilisation d un framework englobant
     '''
     framework = openturns.WrapperFrameworkData()
-    #framework.studycase_ = "12:23:34"
-    framework.componentname_ = self.GetMCVal('SolverComponentName')
+#   framework.studycase_ = "12:23:34"
+#   framework.componentname_ = self.GetMCVal('SolverComponentName', 'UNDEFINED')
+    CN = self.GetMCVal('SolverComponentName', 'UNDEFINED')
+    print 'CN = ', CN
+    framework.componentname_ = CN
     return framework
 
 

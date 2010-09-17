@@ -6,7 +6,8 @@ import viewer
 
 def go(fichier=None,master=None):
     if not fichier :
-       fichier=os.path.join(os.path.dirname(__file__),"fichiers","index.html")
+       fichier=os.path.join(os.path.dirname(__file__),"../Aide/fichiers_ASTER","index.html")
+       print fichier
     o=viewer.HTMLViewer(master)
     o.display(fichier)
     return o

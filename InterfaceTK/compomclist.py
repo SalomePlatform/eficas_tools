@@ -207,7 +207,7 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
 
         if self.object.suppentite(obj):
            if len(self._object) == 1: self.updateDelegate()
-           message = "Mot-clé " + obj.nom + " supprimé"
+           message = "Mot-clef " + obj.nom + " supprime"
            self.appli.affiche_infos(message)
            return 1
         else:

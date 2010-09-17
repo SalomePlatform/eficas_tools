@@ -28,7 +28,7 @@ from PyQt4.QtCore import *
 
 class SaisieValeur:
   """
-  Classe contenant les méthodes communes aux  panels
+  Classe contenant les mÃ©thodes communes aux  panels
   permettant de choisir des valeurs 
   """
   def __init__(self):
@@ -50,24 +50,46 @@ class SaisieValeur:
   def BuildLBValeurs(self):
         self.LBValeurs.clear()
         listeValeurs=self.node.item.GetListeValeurs()
+        #print self.node.item.definition.validators
         for valeur in listeValeurs:
-            self.LBValeurs.addItem(str(valeur))
+            try :
+               val=self.politique.GetValeurTexte(valeur)
+            except :
+               val=valeur
+            self.LBValeurs.addItem(str(val))
         if listeValeurs != None and listeValeurs != [] :
             self.LBValeurs.setCurrentRow(len(listeValeurs) - 1)
        
 
   def RemplitPanel(self,listeDejaLa=[]):
         self.listBoxVal.clear()
+        # Traitement particulier pour le validator VerifExistence
+        # dont les valeurs possibles peuvent changer : into variable
+        if hasattr(self.node.item.definition.validators,'set_MCSimp'):
+            obj=self.node.item.getObject()
+            self.node.item.definition.validators.set_MCSimp(obj)
+            if self.node.item.isvalid() == 0 : 
+               liste=[]
+               for item in listeDejaLa:
+                   if self.node.item.definition.validators.verif_item(item)==1:
+                      liste.append(item)
+                   self.node.item.set_valeur(liste)
+                   self.BuildLBValeurs()
+                   self.listeValeursCourantes=liste
+                   self.editor.affiche_infos("Attention, valeurs modifiees", Qt.red)
+               listeDejaLa=liste
         lChoix=self.node.item.get_liste_possible(listeDejaLa)
         for valeur in lChoix :
             self.listBoxVal.addItem( str(valeur) ) 
         if len(lChoix) == 1 :
-            self.listBoxVal.setCurrentRow(1)
+            self.listBoxVal.setCurrentRow(0)
+            self.listBoxVal.item(0).setSelected(1)
+            self.bOk.setFocus()
 
   def ClicASSD(self):
          if self.listBoxASSD.currentItem()== None : return
          valeurQstring=self.listBoxASSD.currentItem().text()
-         commentaire = QString("Valeur selectionnée : ") 
+         commentaire = QString("Valeur selectionnÃ©e : ") 
          commentaire.append(valeurQstring)
          self.Commentaire.setText(commentaire)
          valeur=str(valeurQstring)
@@ -85,14 +107,14 @@ class SaisieValeur:
 
   def BOkPressed(self):
          if self.listBoxVal.currentItem()==None :
-            commentaire = "Pas de valeur selectionnée" 
+            commentaire = "Pas de valeur selectionnÃ©e" 
             self.Commentaire.setText(QString(commentaire))
          else :
             self.ClicValeur()       
 
   def BOk2Pressed(self):
          if str(self.lineEditVal.text())== "" :
-            commentaire = "Pas de valeur entrée " 
+            commentaire = "Pas de valeur entrÃ©e " 
             self.Commentaire.setText(QString(commentaire))
          else :
             self.LEValeurPressed()       
@@ -154,7 +176,7 @@ class SaisieValeur:
                        return listeValeurs,0
                        
 
-                 else :     # ce n'est pas un tuple à la mode aster
+                 else :     # ce n'est pas un tuple Ã  la mode aster
                     listeValeurs.append(v)
                     indice = indice + 1
 
@@ -164,7 +186,7 @@ class SaisieValeur:
         elif type(valeur) == types.StringType:
              listeValeurs=valeur.split(',')
         else:
-          listeValeurs.append(valeur)
+          listeValeurs.append(valeurBrute)
 
         return listeValeurs,1
 
@@ -175,7 +197,7 @@ class SaisieSDCO :
 
   def LESDCOReturnPressed(self):
         """
-           Lit le nom donné par l'utilisateur au concept de type CO qui doit être
+           Lit le nom donnÃ© par l'utilisateur au concept de type CO qui doit Ãªtre
            la valeur du MCS courant et stocke cette valeur
         """
         self.editor.init_modif()
@@ -192,10 +214,10 @@ class SaisieSDCO :
 
         test,commentaire=self.node.item.set_valeur_co(nomConcept)
         if test:
-           commentaire="Valeur du mot-clé enregistree"
+           commentaire="Valeur du mot-clÃ© enregistree"
            self.node.update_node_valid()
         else :
            cr = self.node.item.get_cr()
-           commentaire = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
+           commentaire = "Valeur du mot-clÃ© non autorisÃ©e :"+cr.get_mess_fatal()
            self.node.item.set_valeur_co(anc_val)
-        self.Commentaire.setText(QString(commentaire))
+        self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))

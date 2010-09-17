@@ -80,9 +80,9 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
            self.LEReel.setText(str(x1))
            self.LEImag.setText(str(x2))
            if typ_cplx == "RI" :
-              self.RBRI.setDown(1)
+              self.RBRI.setChecked(1)
            else :
-              self.RBMP.setDown(1)
+              self.RBMP.setChecked(1)
       
 
   def LEcompRPressed(self) :
@@ -95,13 +95,14 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
           v=eval(valeur,d)
         except :
           commentaire="expression invalide"
-          self.editor.affiche_infos(commentaire)
+          self.editor.affiche_infos(commentaire,Qt.red)
           return
         try :
           i=v.imag
+          self.editor.affiche_infos(commentaire)
         except :
           commentaire="expression n est pas de la forme a+bj"
-        self.editor.affiche_infos(commentaire)
+          self.editor.affiche_infos(commentaire,Qt.red)
           
   def LEReelRPressed(self):
         self.LEcomp.clear()
@@ -109,9 +110,10 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
         valeur = str(self.LEReel.text())
         try :
           a=string.atof(valeur)
+          self.editor.affiche_infos(commentaire)
         except :
           commentaire="expression invalide"
-        self.editor.affiche_infos(commentaire)
+          self.editor.affiche_infos(commentaire,Qt.red)
 
   def LEImagRPressed(self):
         self.LEcomp.clear()
@@ -119,9 +121,10 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
         valeur = str(self.LEImag.text())
         try :
           a=string.atof(valeur)
+          self.editor.affiche_infos(commentaire)
         except :
           commentaire="expression invalide"
-        self.editor.affiche_infos(commentaire)
+          self.editor.affiche_infos(commentaire,Qt.red)
 
   def BOkPressed(self):
         if self.LEcomp.text()== "" : 
@@ -129,7 +132,7 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
         else :
            if self.LEReel.text() != "" or self.LEImag.text() != "" :
               commentaire="entrer une seule valeur SVP"
-              self.editor.affiche_infos(commentaire)
+              self.editor.affiche_infos(commentaire,Qt.red)
               return
            valeur=  self.getValeurComp()
         self.politique.RecordValeur(valeur)
@@ -145,7 +148,7 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
          l.append("RI")
       else :
          commentaire="saisir le type de complexe"
-         self.editor.affiche_infos(commentaire)
+         self.editor.affiche_infos(commentaire,Qt.red)
          return None
       try :
          l.append(string.atof(str(self.LEReel.text())))
@@ -162,20 +165,20 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
           v=eval(valeur,d)
         except :
           commentaire="expression invalide"
-          self.editor.affiche_infos(commentaire)
+          self.editor.affiche_infos(commentaire,Qt.red)
           return None
         try :
           i=v.imag
         except :
           commentaire="expression n est pas de la forme a+bj"
-          self.editor.affiche_infos(commentaire)
+          self.editor.affiche_infos(commentaire,Qt.red)
           return None
         return v
 
   def InitCommentaire(self):
         commentaire='Un complexe est attendu'
         aideval=self.node.item.aide()
-        commentaire=commentaire +"\n"+ aideval
-        self.Commentaire.setText(QString(commentaire))
+        commentaire=commentaire +"\n"+ QString.toUtf8(QString(aideval))
+        self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
 
 

@@ -251,7 +251,7 @@ class Formatage :
       elif ',' in valeur:
         # il s'agit d'une liste de tuple
         # c est trop complique on ne splitte pas
-        if valeur[0:2]=='((' : 
+        if valeur[0:2]=='((' or valeur[0:2]=='[(': 
            s=s+valeur
            return s
         # il s'agit d'une liste

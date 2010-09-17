@@ -1,4 +1,4 @@
-#@ MODIF post_gp_ops Macro  DATE 15/04/2008   AUTEUR MACOCCO K.MACOCCO 
+#@ MODIF post_gp_ops Macro  DATE 18/11/2009   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -538,11 +538,6 @@ def post_gp_ops(self, **args):
          'YOUNG' : CallRCVALE(TEMP, 'E', MATER),
          'NU'    : CallRCVALE(TEMP, 'NU', MATER),
       }
-      if is_2D:
-         dict_constantes['R'] = self['RAYON_AXIS']
-      else:
-         dict_constantes['R'] = ep_tranche
-         
       
       # 3.3. ----- calcul de Kj(G)
       l_tabi = []
@@ -554,8 +549,7 @@ def post_gp_ops(self, **args):
          if is_2D:
             # fusion avec TEMP, E et nu
             tab = merge(tab, t_relev, 'NUME_ORDRE')
-            tab.fromfunction(new_para, fKj, ('G', 'YOUNG', 'NU'),
-                           { 'R' : self['RAYON_AXIS'] })
+            tab.fromfunction(new_para, fKj, ('G', 'YOUNG', 'NU'))
             # renomme G en G_i
             tab.Renomme('G', 'G_%d' % (k + 1))
          else:
@@ -797,11 +791,10 @@ def CallRCVALE(TEMP, para, MATER):
    return valres
 
 # -----------------------------------------------------------------------------
-def fKj(G, YOUNG, NU, R=1):
+def fKj(G, YOUNG, NU):
    """Calcul de Kj à partir de G (formule d'Irwin)
-      R n'intervient pas en 3D
    """
-   Kj=(abs(G / R * YOUNG / (1.0 - NU**2)))**0.5
+   Kj=(abs(G * YOUNG / (1.0 - NU**2)))**0.5
    return Kj
 
 # -----------------------------------------------------------------------------

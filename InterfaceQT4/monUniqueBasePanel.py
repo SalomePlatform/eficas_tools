@@ -34,6 +34,7 @@ class DUnBase(Ui_DUnBase,QDialog):
    def __init__(self,parent ,modal ) :
        QDialog.__init__(self,parent)
        self.appliEficas=parent.appliEficas
+       self.RepIcon=parent.appliEficas.RepIcon
        if hasattr(parent,"leLayout"):
           parent.leLayout.removeWidget(parent.leLayout.widgetActive)
           parent.leLayout.widgetActive.close()
@@ -47,13 +48,14 @@ class DUnBase(Ui_DUnBase,QDialog):
           parent.leLayout.widgetActive=self
        self.setupUi(self)
 
+
 # Import des panels
 
 class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonUniqueBasePanel"
@@ -65,6 +67,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         self.InitCommentaire()
         self.detruitBouton()
         self.connecterSignaux()
+        self.lineEditVal.setFocus()
 
   def connecterSignaux(self) :
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOk2Pressed)
@@ -76,13 +79,22 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
 
   def detruitBouton(self):
+        icon = QIcon(self.RepIcon+"/image240.png")
+        self.BSalome.setIcon(icon)
         mc = self.node.item.get_definition()
-        if self.node.item.get_nom() != "FileName" :
+        #if ( (self.node.item.get_nom() != "FileName" ) and ( mc.type[0]!="Fichier")) :
+        if ( mc.type[0]!="Fichier") :
            self.BFichier.close()
+        else :
+	   self.bParametres.close()
         type = mc.type[0]
-        #if not('grma' in repr(type)) or not(self.editor.salome) :
-        if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
+        # TODO: Use type properties instead of hard-coded "grno" and "grma" type check
+        enable_salome_selection = self.editor.salome and \
+            (('grma' in repr(type)) or ('grno' in repr(type)) or
+             (hasattr(type, "enable_salome_selection") and type.enable_salome_selection))
+        if not enable_salome_selection:
            self.BSalome.close()
+        if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
            self.BView2D.close()
 
   def InitLineEditVal(self):
@@ -101,35 +113,53 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def InitCommentaire(self):
       mc = self.node.item.get_definition()
-      d_aides = { 'TXM' : "Une chaîne de caractères est attendue",
-                  'R'   : "Un réel est attendu",
-                  'I'   : "Un entier est attendu"}
-      type = mc.type[0]
-      commentaire=d_aides.get(type,"Type de base inconnu")
+      d_aides = { 'TXM' : "Une chaÃ®ne de caractÃ¨res est attendue",
+                  'R'   : "Un rÃ©el est attendu",
+                  'I'   : "Un entier est attendu",
+                  'Matrice' : 'Une Matrice est attendue',
+                  'Fichier' : 'Un fichier est attendu'}
+      mctype = mc.type[0]
+
+      if type(mctype) == types.ClassType:
+         commentaire = getattr(mctype, 'help_message', "Type de base inconnu")
+      else:
+         commentaire = d_aides.get(mctype, "Type de base inconnu")
       aideval=self.node.item.aide()
-      commentaire=commentaire +"\n"+ aideval
-      self.Commentaire.setText(QString(commentaire))
+      commentaire=commentaire +"\n"+ QString.toUtf8(QString(aideval))
+      self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
 
   def BOk2Pressed(self):
         SaisieValeur.BOk2Pressed(self)
-        if self.node.item.parent.nom == "MODEL" : 
-		self.node.item.parent.change_fichier="1"
-                self.node.item.parent.build_include(None,"")
 
   def BFichierPressed(self):
-      fichier = QFileDialog.getOpenFileName(self.appliEficas,
-                        self.appliEficas.trUtf8('Ouvrir Fichier'),
-                        self.appliEficas.CONFIGURATION.savedir,
-                        self.appliEficas.trUtf8('Wrapper Files (*.xml);;''All Files (*)'))
+      type = self.node.item.get_definition().type
+      if len(type) > 1:
+          filters = type[1]
+      else:
+          filters = QString()
+      if len(type) > 2 and type[2] == "Sauvegarde":
+          fichier = QFileDialog.getSaveFileName(self.appliEficas,
+                              self.appliEficas.trUtf8('Sauvegarder Fichier'),
+                              self.appliEficas.CONFIGURATION.savedir,
+                              filters)
+      else:
+          fichier = QFileDialog.getOpenFileName(self.appliEficas,
+                              self.appliEficas.trUtf8('Ouvrir Fichier'),
+                              self.appliEficas.CONFIGURATION.savedir,
+                              filters)
+
       if not(fichier.isNull()):
+         ulfile = os.path.abspath(unicode(fichier))
+         self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)
 
-         
+          
   def LEValeurPressed(self):
         SaisieValeur.LEValeurPressed(self)
         if self.node.item.parent.nom == "MODEL" : 
-		self.node.item.parent.change_fichier="1"
-                self.node.item.parent.build_include(None,"")
+           if self.node.item.isvalid():
+		   self.node.item.parent.change_fichier="1"
+                   self.node.item.parent.build_include(None,"")
 
   def BParametresPressed(self):
         QTPanel.BParametresPressed(self)
@@ -138,13 +168,14 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         SaisieValeur.LEValeurPressed(self,valeur)
 
   def BSalomePressed(self):
+        self.Commentaire.setText(QString(""))
         genea=self.node.item.get_genealogie()
         kwType = None
         for e in genea:
             if "GROUP_NO" in e: kwType = "GROUP_NO"
             if "GROUP_MA" in e: kwType = "GROUP_MA"
 
-        selection, commentaire = self.editor.parent.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
+        selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
         if commentaire !="" :
             self.Commentaire.setText(QString(commentaire))
         monTexte=""
@@ -152,14 +183,14 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         for geomElt in selection:
             monTexte=geomElt+","
         monTexte= monTexte[0:-1]
-        self.LEValeur.setText(QString(monTexte))
+        self.lineEditVal.setText(QString(monTexte))
 
   def BView2DPressed(self):
-        valeur=self.LEValeur.text()
+        valeur=self.lineEditVal.text()
         if valeur == QString("") : return
         valeur = str(valeur)
         if valeur :
-           ok, msgError = self.editor.parent.appliEficas.displayShape(valeur)
+           ok, msgError = self.appliEficas.displayShape(valeur)
            if not ok:
-              self.editor.parent.appli.affiche_infos(msgError)
+              self.appliEficas.affiche_infos(msgError,Qt.red)
 

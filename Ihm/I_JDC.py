@@ -73,6 +73,44 @@ class JDC(I_OBJECT.OBJECT):
       l.sort()
       return l
 
+   def get_variables(self,etape):
+      etapeStop=etape
+      l=[]
+      for etapeTraitee in self.etapes :
+          if etapeTraitee==etapeStop:
+             break
+          if etapeTraitee.nom == 'VARIABLE' :
+             variable=etapeTraitee.get_mocle('ModelVariable')
+             if variable != None :
+                l.append(variable.nom)
+      return l
+
+   def set_Copules_recalcule_etat(self):
+      for etapeTraitee in self.etapes :
+          if etapeTraitee.nom == 'CORRELATION' :
+             Matrix=etapeTraitee.get_child('Matrix')
+             if Matrix !=None :
+                Correlation=etapeTraitee.get_child('CorrelationMatrix')
+                if Correlation !=None :
+                   Correlation.state='arecalculer'
+                Matrix.state='arecalculer'
+     
+   def recalcule_etat_correlation(self):
+      for etapeTraitee in self.etapes :
+          if etapeTraitee.nom == 'CORRELATION' :
+             Matrix=etapeTraitee.get_child('Matrix')
+             if Matrix !=None :
+                Matrix.state='arecalculer'
+                Correlation=Matrix.get_child('CorrelationMatrix')
+                if Correlation !=None :
+                   Correlation.state='arecalculer'
+                   Correlation.isvalid()
+                Matrix.isvalid()
+                etapeTraitee.state='arecalculer'
+             if etapeTraitee.state=='arecalculer':
+                etapeTraitee.isvalid()
+                
+        
    def get_sd_avant_du_bon_type_pour_type_de_base(self,etape,type):
       """
           Retourne la liste des concepts avant etape d'1 type de base acceptable
@@ -495,10 +533,6 @@ class JDC(I_OBJECT.OBJECT):
         nb=nb+len(niv.etapes)
       return nb
 
-   def send_message(self,message):
-      if self.appli:
-         self.appli.send_message(message)
-
    def init_modif(self):
       """
       Méthode appelée au moment où une modification va être faite afin de 
@@ -647,9 +681,10 @@ class JDC(I_OBJECT.OBJECT):
           Seuls les mots cles simples MCSIMP font un traitement autre
           que de transmettre aux fils
       """
-      #print "delete_concept",self,sd
       for etape in self.etapes :
         etape.delete_concept(sd)
+        #PN PN PN pour les matrices ????
+        #self.get_variables_avant(etape)
 
    def replace_concept_after_etape(self,etape,old_sd,sd):
       """

@@ -138,7 +138,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
          return 0
 
       if self.object.suppentite(itemobject):
-         message = "Mot-clé " + itemobject.nom + " supprimé"
+         message = "Mot-clef " + itemobject.nom + " supprime"
          self.appli.affiche_infos(message)
          return 1
       else:

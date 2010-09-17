@@ -28,7 +28,6 @@ import traceback
 
 # Modules Eficas
 from Editeur import Objecttreeitem
-import prefs
 import panels
 import images
 from widgets import FenetreDeParametre
@@ -63,10 +62,8 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
       self.frame_valeur.bind("<Button-3>",lambda e,s=self,a=bulle_aide : s.parent.appli.affiche_aide(e,a))
       self.frame_valeur.bind("<ButtonRelease-3>",self.parent.appli.efface_aide)
       self.label = Label(self.frame_valeur,text='Valeur :')
-      #self.label.place(relx=0.1,rely=0.2)
       self.label.grid(row=0,padx=5,pady=5)
       self.entry = Entry(self.frame_valeur,relief='sunken')
-      #self.entry.place(relx=0.28,rely=0.2,relwidth=0.6)
       self.entry.grid(row=0,column=1,padx=5,pady=5)
       self.entry.bind("<Return>",lambda e,c=self.valid_valeur:c())
       self.entry.bind("<KP_Enter>",lambda e,c=self.valid_valeur:c())
@@ -76,14 +73,11 @@ class UNIQUE_BASE_Panel(UNIQUE_Panel):
                         text = aide,
                         wraplength=int(self.frame_valeur.winfo_width()*0.8),
                         justify='center')
-      #self.aide.place(relx=0.5,rely=0.9,anchor='n')
       self.aide.grid(row=4,columnspan=2,padx=5,pady=5)
       # bouton parametre
       bouton_parametres = Button(self.frame_valeur, text="Parametres", command=self.affiche_parametre)
-      #bouton_parametres.place(relx=0.28,rely=0.5,relwidth=0.4)
       bouton_parametres.grid(row=2,columnspan=2,padx=5,pady=5)
       bouton_val = Button(self.frame_valeur, text="Valider", command=self.valide)
-      #bouton_val.place(relx=0.28,rely=0.6,relwidth=0.4)
       bouton_val.grid(row=3,columnspan=2,padx=5,pady=5)
       # affichage de la valeur du MCS
       self.display_valeur()

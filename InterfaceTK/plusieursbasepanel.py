@@ -27,7 +27,6 @@ import traceback
 
 # Modules Eficas
 from Editeur import Objecttreeitem
-import prefs
 import panels
 import images
 from widgets import showinfo
@@ -106,7 +105,7 @@ class PLUSIEURS_BASE_Panel(PLUSIEURS_Panel):
       self.make_entry(frame = self.frame_choix,command = self.add_valeur_plusieurs_base)
       self.label.place(relx=0.05,rely=0.2)
 
-      # Création d'un bouton "Importer ..." et d'un bouton "Paramatres" sur le panel.
+      # Création d'un bouton "Importer ..." et d'un bouton "Parametres" sur le panel.
       bouton_valeurs_fichier = Button(self.frame_choix,
                                       text="Importer",
                                       command=self.select_in_file)

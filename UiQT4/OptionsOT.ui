@@ -1,0 +1,406 @@
+<ui version="4.0" >
+ <class>desOptions</class>
+ <widget class="QDialog" name="desOptions" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>657</width>
+    <height>794</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Option TURNS</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="0" column="0" >
+    <widget class="QGroupBox" name="groupBox1" >
+     <property name="minimumSize" >
+      <size>
+       <width>635</width>
+       <height>252</height>
+      </size>
+     </property>
+     <property name="maximumSize" >
+      <size>
+       <width>16777215</width>
+       <height>252</height>
+      </size>
+     </property>
+     <property name="title" >
+      <string>Configurer une Version</string>
+     </property>
+     <widget class="QComboBox" name="CBVersions" >
+      <property name="geometry" >
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>121</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>121</width>
+        <height>40</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Bok" >
+      <property name="geometry" >
+       <rect>
+        <x>500</x>
+        <y>30</y>
+        <width>121</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>90</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>121</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="text" >
+       <string>Valider</string>
+      </property>
+      <property name="autoDefault" >
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="PBajout" >
+      <property name="geometry" >
+       <rect>
+        <x>10</x>
+        <y>200</y>
+        <width>106</width>
+        <height>43</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>101</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="text" >
+       <string>Ajouter
+Version :</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="LEVersionAjout" >
+      <property name="geometry" >
+       <rect>
+        <x>122</x>
+        <y>200</y>
+        <width>154</width>
+        <height>43</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>101</width>
+        <height>41</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="PBSup" >
+      <property name="geometry" >
+       <rect>
+        <x>360</x>
+        <y>200</y>
+        <width>106</width>
+        <height>43</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>101</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="text" >
+       <string>Supprimer
+Version :</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="LEVersionSup" >
+      <property name="geometry" >
+       <rect>
+        <x>470</x>
+        <y>200</y>
+        <width>155</width>
+        <height>43</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>0</width>
+        <height>41</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QWidget" name="layoutWidget" >
+      <property name="geometry" >
+       <rect>
+        <x>7</x>
+        <y>100</y>
+        <width>621</width>
+        <height>65</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout" >
+       <item>
+        <widget class="QLabel" name="textLabel1_3" >
+         <property name="text" >
+          <string>Fichier catalogue (chemin complet) :</string>
+         </property>
+         <property name="wordWrap" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="LERepCata" >
+         <property name="minimumSize" >
+          <size>
+           <width>501</width>
+           <height>41</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <widget class="QGroupBox" name="groupBox2" >
+     <property name="minimumSize" >
+      <size>
+       <width>548</width>
+       <height>90</height>
+      </size>
+     </property>
+     <property name="title" >
+      <string>Configurer la bibliothèque Open TURNS</string>
+     </property>
+     <widget class="QLabel" name="textLabel1_2" >
+      <property name="geometry" >
+       <rect>
+        <x>11</x>
+        <y>28</y>
+        <width>617</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>Répertoire d'installation d'Open TURNS :</string>
+      </property>
+      <property name="wordWrap" >
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="LERepOT" >
+      <property name="geometry" >
+       <rect>
+        <x>11</x>
+        <y>50</y>
+        <width>617</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>520</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="text" >
+       <string/>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item row="2" column="0" >
+    <widget class="QGroupBox" name="groupBox3" >
+     <property name="minimumSize" >
+      <size>
+       <width>548</width>
+       <height>90</height>
+      </size>
+     </property>
+     <property name="title" >
+      <string>Doc</string>
+     </property>
+     <widget class="QLabel" name="textLabel1" >
+      <property name="geometry" >
+       <rect>
+        <x>11</x>
+        <y>28</y>
+        <width>617</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>613</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>16777215</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="text" >
+       <string>Répertoire d'accès à la documentation :</string>
+      </property>
+      <property name="wordWrap" >
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="LERepDoc" >
+      <property name="geometry" >
+       <rect>
+        <x>11</x>
+        <y>74</y>
+        <width>617</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>520</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="text" >
+       <string/>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item row="3" column="0" >
+    <widget class="QGroupBox" name="groupBox3_2" >
+     <property name="minimumSize" >
+      <size>
+       <width>548</width>
+       <height>90</height>
+      </size>
+     </property>
+     <property name="title" >
+      <string>Espace de travail</string>
+     </property>
+     <widget class="QLabel" name="textLabel1_4" >
+      <property name="geometry" >
+       <rect>
+        <x>11</x>
+        <y>28</y>
+        <width>617</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>613</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>16777215</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="text" >
+       <string>Répertoire de sauvegarde par défaut :</string>
+      </property>
+      <property name="wordWrap" >
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="LESaveDir" >
+      <property name="geometry" >
+       <rect>
+        <x>11</x>
+        <y>74</y>
+        <width>617</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="minimumSize" >
+       <size>
+        <width>520</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="text" >
+       <string/>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item row="4" column="0" >
+    <widget class="QSplitter" name="splitter_3" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QCheckBox" name="Bdefaut" >
+      <property name="minimumSize" >
+       <size>
+        <width>340</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="maximumSize" >
+       <size>
+        <width>16777215</width>
+        <height>41</height>
+       </size>
+      </property>
+      <property name="font" >
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text" >
+       <string>Réinitialiser avec les valeurs par defaut</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="PBQuit" >
+      <property name="minimumSize" >
+       <size>
+        <width>151</width>
+        <height>31</height>
+       </size>
+      </property>
+      <property name="text" >
+       <string>Quitter</string>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <resources/>
+ <connections/>
+</ui>

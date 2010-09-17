@@ -46,7 +46,6 @@ class QTPanel:
   def BOkPressed(self):
         """ Impossible d utiliser les vrais labels avec designer ?? """
         label=self.TWChoix.tabText(self.TWChoix.currentIndex())
-        print label
         if label==QString("Nouvelle Commande"):
            self.DefCmd()
         if label==QString("Nommer Concept"):
@@ -115,6 +114,8 @@ class QTPanelTBW1(QTPanel):
         liste_mc=self.node.item.get_liste_mc_ordonnee(genea,jdc.cata_ordonne_dico)
         for aMc in liste_mc:
            self.LBMCPermis.addItem( aMc)
+        if len(liste_mc) !=0:
+           self.LBMCPermis.setCurrentItem(self.LBMCPermis.item(0))
 
 
   def DefMC(self,item):
@@ -136,18 +137,33 @@ class QTPanelTBW2(QTPanel):
         self.editor    = parent
         self.node      = node
         self.BuildLBNouvCommande()
+        self.LEFiltre.setFocus()
         self.NbRecherches = 0
         if racine == 1 :
            self.AppelleBuildLBRegles()
+           self.LEFiltre.setFocus()
         else :
            self.connect(self.TWChoix, SIGNAL("currentChanged(QWidget *)"), self.handleCurrentChanged)
+            
 
 
   def handleCurrentChanged(self):
         try :
-           self.LEFiltre.setFocus()
+          label=self.TWChoix.tabText(self.TWChoix.currentIndex())
+          if label==QString("Nouvelle Commande"):
+            self.LEFiltre.setFocus()
+          if label==QString("Nommer Concept"):
+           self.LENomConcept.setFocus()
+          if label==QString("Définition Formule"):
+           self.LENomFormule.setFocus()
+          if label==QString("Valeur Parametre"):
+           self.lineEditNom.setFocus()
+          if label==QString("Fichier Include"):
+           self.LENomFichier.setFocus()
+          if label==QString("Ajouter Mot-Clef"):
+           self.LBMCPermis.setCurrentItem(self.LBMCPermis.item(0))
         except :
-           pass
+          pass
 
       
   def BuildLBNouvCommande(self):
@@ -190,6 +206,7 @@ class QTPanelTBW2(QTPanel):
         else :
            self.editor.mode_nouv_commande="groupe"
         self.BuildLBNouvCommande()
+        self.LEFiltre.setFocus()
 
   def DefCmd(self):
         if self.LBNouvCommande.currentItem()== 0 : return
@@ -200,8 +217,6 @@ class QTPanelTBW2(QTPanel):
         if name.find("GROUPE :")==0 :
 	   return
         self.editor.init_modif()
-        print self.node
-        print name
         new_node = self.node.append_brother(name,'after')
 
 
@@ -252,7 +267,36 @@ class QTPanelTBW3(QTPanel):
         self.typeConcept.setText(type_sd)
         self.LENomConcept.setText("")
         self.LENomConcept.setText(nomConcept)
+        self.LENomConcept.setFocus()
+        if self.node.item.is_reentrant():
+           self.makeConceptPage_reentrant()
+        else :
+           self.listBoxASSD.close()
+
+  def makeConceptPage_reentrant(self):
+        self.bOk.close()
+        self.LENomConcept.close()
+        self.Label2.close()
+        self.Label3.close()
+        self.typeConcept.close()
+        self.LENomConcept.close()
+        self.Label1.setText(QtGui.QApplication.translate("DUnASSD", "<font size=\"+1\"><p align=\"center\">Structures de données à enrichir\n"
+" par l\'operateur courant :</p></font>", None, QtGui.QApplication.CodecForTr))
+        listeNomsSD = self.node.item.get_noms_sd_oper_reentrant()
+        for aSD in listeNomsSD:
+            self.listBoxASSD.addItem( aSD)
+        QObject.connect(self.listBoxASSD, SIGNAL("itemDoubleClicked(QListWidgetItem*)" ), self.ClicASSD )
+
         
+  def ClicASSD(self):
+        if self.listBoxASSD.currentItem()== None : return
+        val=self.listBoxASSD.currentItem().text()
+        nom=str(val)
+        nom = string.strip(nom)
+        test,mess = self.node.item.nomme_sd(nom)
+        if (test== 0):
+           self.editor.affiche_infos(mess,Qt.red)
+
   def LENomConceptReturnPressed(self):
         """
         Nomme le concept SD retourne par l'etape
@@ -262,6 +306,10 @@ class QTPanelTBW3(QTPanel):
         if nom == '' : return                  # si pas de nom, on ressort sans rien faire
         self.editor.init_modif()
         test,mess = self.node.item.nomme_sd(nom)
+        #Notation scientifique
+        from politiquesValidation import Validation
+        validation=Validation(self.node,self.editor)
+        validation.AjoutDsDictReelEtape()
         self.editor.affiche_infos(mess)
 
 # ------------------------------- #
@@ -285,11 +333,12 @@ class ViewText(Ui_dView,QDialog):
         
     def saveFile(self):
         #recuperation du nom du fichier
-        userDir=os.path.expanduser("~/.Eficas_install/")
         fn = QFileDialog.getSaveFileName(None,
                 self.trUtf8("Save File"),
-                self.trUtf8(userDir))
+                self.appliEficas.CONFIGURATION.savedir)
         if fn.isNull() : return
+        ulfile = os.path.abspath(unicode(fn))
+        self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
         try:
            f = open(fn, 'wb')
            f.write(str(self.view.toPlainText()))

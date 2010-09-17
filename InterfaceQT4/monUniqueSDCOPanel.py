@@ -49,9 +49,9 @@ class DUnSDCO(Ui_DUnSDCO,QDialog):
 
 class MonUniqueSDCOPanel(DUnSDCO,QTPanel,SaisieSDCO):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonUniquesSDCOPanel"
@@ -77,7 +77,7 @@ class MonUniqueSDCOPanel(DUnSDCO,QTPanel,SaisieSDCO):
 
   def LESDCOReturnPressed(self):
         """
-           Lit le nom donné par l'utilisateur au concept de type CO qui doit être
+           Lit le nom donnÃ© par l'utilisateur au concept de type CO qui doit Ãªtre
            la valeur du MCS courant et stocke cette valeur
         """
         SaisieSDCO.LESDCOReturnPressed(self)

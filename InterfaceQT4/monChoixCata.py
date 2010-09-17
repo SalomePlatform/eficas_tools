@@ -32,30 +32,22 @@ from PyQt4.QtCore import *
 
 class MonChoixCata(Ui_DChoixCata,QtGui.QDialog):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
-  def __init__(self,listeCata,readercata, QWparent , name = None,fl = 0):
-      #print "MonChoixCata"
-      QtGui.QDialog.__init__(self,QWparent)
+  def __init__(self, QWparent, listeCata, title = None):
+      QtGui.QDialog.__init__(self, QWparent)
       self.setModal(True)
       self.setupUi(self)
-      self.listeCata=listeCata
-      self.readercata=readercata
-      for cata in self.listeCata :
-		self.CBChoixCata.insertItem(0,cata)
-      lab  = QString(repr(len(listeCata)))
-      lab += QString(" versions du catalogue sont disponibles")
-      self.TLNb.setText(lab)
-      self.CBChoixCata.setCurrentIndex(0)
-      self.readercata.version_cata=self.CBChoixCata.currentText()
+      self.CBChoixCata.addItems(listeCata)
+      self.TLNb.setText(QString("%d versions du catalogue sont disponibles" %
+                                len(listeCata)))
+      if title is not None:
+          self.setWindowTitle(QString.fromUtf8(title))
 
   def on_buttonCancel_clicked(self):
       QDialog.reject(self)
-
-  def on_CBChoixCata_activated(self):
-      self.readercata.version_cata=self.CBChoixCata.currentText()
 
   def on_buttonOk_clicked(self):
       QDialog.accept(self)

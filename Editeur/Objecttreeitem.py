@@ -474,7 +474,7 @@ class SequenceTreeItem(ObjectTreeItem):
         try :
             self._object.remove(item.getObject())
             # la liste peut être retournée vide !
-            message = "Mot-clé " + item.getObject().nom + " supprimé"
+            message = "Mot-clef " + item.getObject().nom + " supprime"
             self.appli.affiche_infos(message)
             return 1
         except:

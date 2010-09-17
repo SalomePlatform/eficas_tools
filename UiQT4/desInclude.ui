@@ -57,7 +57,7 @@
    <item row="0" column="0" colspan="3" >
     <widget class="QTabWidget" name="TWChoix" >
      <property name="currentIndex" >
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="MotClef" >
       <attribute name="title" >
@@ -202,7 +202,7 @@
        <property name="geometry" >
         <rect>
          <x>30</x>
-         <y>40</y>
+         <y>10</y>
          <width>440</width>
          <height>41</height>
         </rect>
@@ -217,8 +217,8 @@
       <widget class="QLineEdit" name="LENomFichier" >
        <property name="geometry" >
         <rect>
-         <x>18</x>
-         <y>117</y>
+         <x>20</x>
+         <y>50</y>
          <width>450</width>
          <height>40</height>
         </rect>
@@ -239,8 +239,8 @@
       <widget class="QPushButton" name="BBrowse" >
        <property name="geometry" >
         <rect>
-         <x>280</x>
-         <y>240</y>
+         <x>20</x>
+         <y>110</y>
          <width>161</width>
          <height>41</height>
         </rect>
@@ -258,8 +258,8 @@
       <widget class="QPushButton" name="BChangeFile" >
        <property name="geometry" >
         <rect>
-         <x>280</x>
-         <y>290</y>
+         <x>20</x>
+         <y>160</y>
          <width>161</width>
          <height>41</height>
         </rect>
@@ -300,6 +300,9 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
   </layout>
+  <zorder>bOk</zorder>
+  <zorder>Commentaire</zorder>
+  <zorder>TWChoix</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>

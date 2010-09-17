@@ -27,7 +27,6 @@ import traceback
 
 # Modules Eficas
 from Editeur import Objecttreeitem
-import prefs
 import panels
 import images
 from widgets import ListeChoix

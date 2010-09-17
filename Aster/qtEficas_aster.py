@@ -27,7 +27,10 @@
 
 # Modules Eficas
 import prefs
-#from InterfaceQT4 import eficas_go
-from InterfaceQT import eficas_go
+name='prefs_'+prefs.code
+__import__(name)
+
+import sys
+from InterfaceQT4 import eficas_go
 
 eficas_go.lance_eficas(code=prefs.code)

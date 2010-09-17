@@ -2,6 +2,13 @@
 EFICAS est constitué de plusieurs packages Python qui sont
 décrits rapidement ci-dessous.
 
+UiQT4:
+   est le répertoire de l'interface graphique QT4 d'Eficas.
+   Celle-ci doit impérativement être construite avant
+   toute utilisation d'Eficas. Pour cela:
+
+   make -C UiQT4
+
 Noyau:
    est le package de base d'Eficas et du superviseur Aster.
    Il contient les foonctionnalités nécessaires à la création des
@@ -75,5 +82,13 @@ Minicode:
    Les catalogues se trouvent dans le répertoire.
    Pour executer, aller dans le répertoire et taper ./eficas_mini.py
 
-
+OpenTURNS:
+   deux répertoires Study et Wrapper contiennent des scripts pour
+   produire les études d'incertitudes (en python) et les fichiers de
+   description des wrappers.
+   Dans chaque répertoire, un fichier prefs_OPENTURNS_(STUDY|WRAPPER).py 
+   doit être modifié pour signaler à Eficas où se trouve le module
+   python d'Open TURNS (variable OpenTURNS_path).
+   Pour executer, aller dans le répertoire et taper ./qtEficas_openturns_study.py
+   ou bien ./qtEficas_openturns_wrapper.py
 

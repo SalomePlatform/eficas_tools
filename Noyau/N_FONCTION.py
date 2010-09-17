@@ -1,5 +1,6 @@
-#@ MODIF N_FONCTION Noyau  DATE 18/12/2007   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_FONCTION Noyau  DATE 10/11/2009   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
+# RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -37,9 +38,11 @@ class formule(ASSD,AsBase):
       self.expression=None
 
    def __call__(self,*val):
-      if hasattr(self.parent,'contexte_fichier_init'):
-                        context=self.parent.contexte_fichier_init
-      else            : context={}
+      context = {}
+      # cas de INCLUDE (ou POURSUITE dans Eficas)
+      context.update(getattr(self.parent, 'contexte_fichier_init', {}))
+      # récupération des constantes locales en cas de MACRO
+      context.update(getattr(self.parent, 'macro_const_context', {}))
       i=0
       for param in self.nompar : 
          context[param]=val[i]
@@ -92,7 +95,7 @@ class formule(ASSD,AsBase):
       """
       from SD.sd_fonction  import sd_formule
       from Utilitai.Utmess import UTMESS
-      if not self.par_lot():
+      if self.accessible():
         TypeProl={'E':'EXCLU', 'L':'LINEAIRE', 'C':'CONSTANT', 'I':'INTERPRE' }
         sd = sd_formule(self.get_name())
         prol = sd.PROL.get()

@@ -390,7 +390,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        Tente de changer le fichier include. Le precedent include est conservé
        dans old_xxx
     """
-    #print "change_fichier_init",new_fic
+    print "change_fichier_init",new_fic
     if not hasattr(self,'fichier_ini'):
        self.fichier_ini=None
        self.fichier_text=None
@@ -403,11 +403,15 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.JdC_aux=Extensions.jdc_include.JdC_include
 
     self.old_fic = self.fichier_ini
+    print self.old_fic
     self.old_text = self.fichier_text
+    print self.old_text
     self.old_err = self.fichier_err
     self.old_context=self.contexte_fichier_init
+    print self.old_context
     self.old_units=self.recorded_units
     self.old_etapes=self.etapes
+    print self.old_etapes
     self.old_jdc_aux=self.jdc_aux
 
     self.fichier_ini = new_fic
@@ -763,15 +767,20 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
   def make_include2(self,fichier=None):
       # gestion de l unicite SVP
       unite=999
+
       if hasattr(self,'fichier_ini') : return
-      #print "je passe le if"
+      reevalue=0
+      if hasattr(self,'old_context_fichier_init' ):
+         reevalue=1
+         for concept in self.old_context_fichier_init.values():
+             self.jdc.delete_concept(concept)
+
       if fichier == None :
          fichier=str(self.jdc.appli.get_file_variable())
-         #print fichier
          if fichier  == str("") : 
            self.fichier_ini="badfile"
            self.fichier_text=""
-	   self.fichier_err="Le fichier INCLUDE n est pas defini"
+	   self.fichier_err="Le fichier n est pas defini"
            self.parent.record_unit(999,self)
            try :
               MCFils=self.get_child('FileName')
@@ -780,12 +789,12 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
               pass
            raise Exception(self.fichier_err)
 
-         # On memorise le fichier retourne
       self.fichier_ini  = fichier
       self.fichier_text = ""
       self.contexte_fichier_init={}
       self.fichier_unite=999
       self.fichier_err=None
+      nbVariableOut=0
       try :
          from openturns import WrapperFile
          monWrapper=WrapperFile(fichier)
@@ -796,24 +805,32 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
              nom=maVariableListe[i].id_
              type=maVariableListe[i].type_
              if type :
-               ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='in',R=%d);\n" % (nom, nom, i)
+               #ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='out',R=%d);\n" % (nom, nom, i)
+               ligneTexte=""
+               nbVariableOut=nbVariableOut+1
              else :
-               ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='out',R=%d);\n" % (nom, nom, i)
+               ligneTexte="%s=DETERMINISTICVARIABLE(N='%s',T='in',R=%d);\n" % (nom, nom, i)
              self.fichier_text = self.fichier_text + ligneTexte
       except:
          self.make_incl2_except()
          raise
 
+      if nbVariableOut != 1 :
+         print nbVariableOut ,"nbVariableOut"
+         self.make_incl2_except(mess="le fichier doit contenir une unique variable de sortie")
+         raise
+
       try:
          import Extensions.jdc_include
+         self.JdC_aux=Extensions.jdc_include.JdC_include
       except:
          traceback.print_exc()
          self.make_incl2_except()
          raise
-      self.JdC_aux=Extensions.jdc_include.JdC_include
       
       try:
          self.make_contexte_include(self.fichier_ini ,self.fichier_text)
+         self.old_context_fichier_init=self.contexte_fichier_init
          self.parent.record_unit(unite,self)
          try :
             MCFils=self.get_child('FileName')
@@ -822,16 +839,39 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
             pass
       except:
          self.make_incl2_except()
-         raise
 
-  def make_incl2_except(self):
-         #print "make_incl2_except"
+      # recalcul validite pour la matrice eventuelle
+      if reevalue :
+         for e in self.jdc.etapes:
+           if e.nom == "VARIABLE" :
+              e.state="modified"
+              try :
+                 mc=e.get_child('ModelVariable') 
+                 mc.state="modified"
+              except :
+                 pass
+           if e.nom == "CORRELATION" :
+              e.state="modified"
+              try :
+                 mc=e.get_child('Matrix') 
+                 mc.state="modified"
+                 mcFeuille=mc.get_child('CorrelationMatrix')
+                 mcFeuille.state="modified"
+              except :
+                 pass
+              e.isvalid()
+
+  def make_incl2_except(self,mess=None):
          l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
          if self.jdc.appli:
-             self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
+             if mess == None :
+                     self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
                                             message="Le contenu de ce fichier ne sera pas pris en compte\n"+string.join(l)
                                            )
-         self.parent.record_unit(unite,self)
+             else :
+                     self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
+                                            message=mess )
+         #self.parent.record_unit(unite,self)
          self.g_context={}
          self.etapes=[]
          self.jdc_aux=None

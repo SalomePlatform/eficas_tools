@@ -38,7 +38,10 @@ from widgets import Fenetre
 class EFICAS(appli.APPLI):
 
   try:
-     from prefs import appli_composants
+     import prefs
+     name='prefs_'+prefs.code
+     prefsCode=__import__(name)
+     from prefsCode import appli_composants
   except:
      appli_composants=['readercata','bureau','browser','options']
 

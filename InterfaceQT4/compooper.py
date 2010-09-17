@@ -20,41 +20,64 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
     def createPopUpMenu(self):
         typeNode.PopUpMenuNode.createPopUpMenu(self)
         if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome: 
-           self.menu.insertItem( 'View3D', self.view3D )
-
-    def doPaste(self,node_selected):
-        """
-            Déclenche la copie de l'objet item avec pour cible
-            l'objet passé en argument : node_selected
-        """
-        objet_a_copier = self.item.get_copie_objet()
-        child=node_selected.doPasteCommande(objet_a_copier)
-        return child
-
-    def doPasteCommande(self,objet_a_copier):
-        """
-          Réalise la copie de l'objet passé en argument qui est nécessairement
-          une commande
-        """
-        parent=self.parent
-        #child = parent.item.append_child(objet_a_copier,self.item.getObject())
-        child = self.append_brother(objet_a_copier)
-        #if child is None:return 0
-        return child
-
-    def doPasteMCF(self,objet_a_copier):
-        """
-           Réalise la copie de l'objet passé en argument (objet_a_copier)
-           Il s'agit forcément d'un mot clé facteur
-        """
-        child = self.append_child(objet_a_copier,pos='first',retour='oui')
-        return child
+           self.ViewElt = QAction('View3D',self.tree)
+           self.tree.connect(self.ViewElt,SIGNAL("activated()"),self.view3D)
+           self.ViewElt.setStatusTip("affiche dans Geom les elements de structure")
+           self.menu.addAction(self.ViewElt)
+           if self.item.isvalid() :
+	      self.ViewElt.setEnabled(1)
+           else:
+	      self.ViewElt.setEnabled(0)
+        if  self.item.get_nom() == "DISTRIBUTION" :
+           self.Graphe = QAction('Graphique',self.tree)
+           self.tree.connect(self.Graphe,SIGNAL("activated()"),self.viewPng)
+           self.Graphe.setStatusTip("affiche la distribution ")
+           self.menu.addAction(self.Graphe)
+           if self.item.isvalid() :
+	      self.Graphe.setEnabled(1)
+           else:
+	      self.Graphe.setEnabled(0)
 
     def view3D(self) :
         from Editeur import TroisDPal
-        troisD=TroisDPal.TroisDPilote(self.item,self.editor.parent.appliEficas)
+        troisD=TroisDPal.TroisDPilote(self.item,self.editor.appliEficas)
         troisD.envoievisu()
 
+    def viewPng(self) :
+        from monPixmap import MonLabelPixmap
+        fichier=self.appliEficas.getName()
+        try :
+	    os.remove(fichier)
+        except :
+	    pass     
+        #try:
+        if 1:
+            import generator
+            g = generator.plugins[self.appliEficas.format_fichier]()
+            g.gener(self.item.object, format='beautifie')
+            stdGener = g.getGenerateur()
+            if len(g.dictMCLois) != 1:
+                QMessageBox.warning(
+                    None,
+                    self.appliEficas.trUtf8("Erreur interne"),
+                    self.appliEficas.trUtf8("La PDF de la loi ne peut pas etre affichee."),
+                    self.appliEficas.trUtf8("&Annuler"))
+                return
+            loi = g.dictMCLois.keys()[0]
+            nomLoi = loi.get_name()
+            script = stdGener.GraphiquePDF(loi, fichier)
+            #print script
+            d = {}
+            exec script in d
+            widgetPng=MonLabelPixmap(self.appliEficas,fichier,nomLoi)
+            widgetPng.show()
+        #except:
+        else:
+            QMessageBox.warning(
+                None,
+                self.appliEficas.trUtf8("Erreur interne"),
+                self.appliEficas.trUtf8("La PDF de la loi ne peut pas etre affichee."),
+                self.appliEficas.trUtf8("&Annuler"))
 
 class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   """ La classe EtapeTreeItem est un adaptateur des objets ETAPE du noyau
@@ -135,14 +158,14 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       # item.getObject() = MCSIMP, MCFACT, MCBLOC ou MCList 
       itemobject=item.getObject()
       if itemobject.isoblig() :
-          self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ')
+          self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ',Qt.red)
           return 0
       if self.object.suppentite(itemobject):
-          message = "Mot-clé " + itemobject.nom + " supprimé"
+          message = "Mot-clef " + itemobject.nom + " supprime"
           self.appli.affiche_infos(message)
           return 1
       else :
-          self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-clé')
+          self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-clé',Qt.red)
           return 0
 
   def GetText(self):
@@ -224,7 +247,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
           représentatif de self.object
       """
       # Format de fichier utilisé
-      format=self.appli.format_fichier
+      format=self.appli.appliEficas.format_fichier
       return self.object.get_objet_commentarise(format)
 
   def get_objet_commentarise_BAK(self):
@@ -234,7 +257,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       import generator,string,Accas
       # Format de fichier utilisé
-      format=self.appli.format_fichier
+      format=self.appli.appliEficas.format_fichier
       g=generator.plugins[format]()
       texte_commande = g.gener(self.object,format='beautifie')
       # Il faut enlever la premiere ligne vide de texte_commande que 

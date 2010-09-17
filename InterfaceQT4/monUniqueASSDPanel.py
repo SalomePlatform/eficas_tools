@@ -89,5 +89,5 @@ class MonUniqueASSDPanel(DUnASSD,QTPanel,SaisieValeur):
             type = type + ' ou '+l
       commentaire="Un objet de type "+type+" est attendu"
       aideval=self.node.item.aide()
-      commentaire=commentaire +"\n"+ aideval
-      self.Commentaire.setText(QString(commentaire))
+      commentaire=commentaire +"\n"+ QString.toUtf8(QString(aideval))
+      self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))

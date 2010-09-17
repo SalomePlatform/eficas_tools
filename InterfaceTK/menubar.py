@@ -33,7 +33,9 @@ class MENUBAR:
       self.init()
 
    try:
-      from prefs import labels
+      import prefs
+      name='prefs_'+prefs.code
+      from prefsCode import labels
    except:
       labels= ('Fichier','Edition','Jeu de commandes','Catalogue','Options','Aide','Traduction')
 

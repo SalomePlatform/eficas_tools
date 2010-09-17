@@ -96,8 +96,8 @@ class MonSelectVal(DSelVal):
           if val != '' and val != ' ' and val != self.separateur :
             val=str(val)
             try :
-              val=eval(val,{})
+               val2=eval(val,{})
+               liste.append(val)
             except :
               pass
-            liste.append(val)
         self.FonctPanel.AjoutNValeur(liste) 

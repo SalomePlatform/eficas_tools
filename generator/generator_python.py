@@ -83,7 +83,7 @@ class PythonGenerator:
       fp.write(self.text)
       fp.close()
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
       """
           Retourne une représentation du JDC obj sous une
           forme qui est paramétrée par format.
@@ -153,7 +153,7 @@ class PythonGenerator:
       elif isinstance(obj,Formula):
          return self.generFormula(obj)
       else:
-         raise "Type d'objet non prévu",obj
+         raise "Type d'objet non prevu",obj
 
    def generJDC(self,obj):
       """
@@ -476,9 +476,9 @@ class PythonGenerator:
          # ou la notation scientifique
          s = str(valeur)
          clefobj=etape.get_sdname()
-         if self.appli and self.appli.dict_reels.has_key(clefobj):
-           if self.appli.dict_reels[clefobj].has_key(valeur):
-             s=self.appli.dict_reels[clefobj][valeur]
+         if self.appli.appliEficas and self.appli.appliEficas.dict_reels.has_key(clefobj):
+           if self.appli.appliEficas.dict_reels[clefobj].has_key(valeur):
+             s=self.appli.appliEficas.dict_reels[clefobj][valeur]
       elif type(valeur) == types.StringType :
          if valeur.find('\n') == -1:
             # pas de retour chariot, on utilise repr
@@ -518,12 +518,21 @@ class PythonGenerator:
           Convertit un objet MCSIMP en une liste de chaines de caractères à la
           syntaxe python
       """
+      waitTuple=0
       if type(obj.valeur) in (types.TupleType,types.ListType) :
          s = ''
-         for val in obj.valeur :
-            s =s +self.format_item(val,obj.etape) + ','
-         if len(obj.valeur) > 1:
-            s = '(' + s + '),'
+         for ss_type in obj.definition.type:
+          if repr(ss_type).find('Tuple') != -1 :
+             waitTuple=1
+             break
+
+         if waitTuple :
+            s = str(obj.valeur) +','
+         else :
+            for val in obj.valeur :
+               s =s +self.format_item(val,obj.etape) + ','
+            if len(obj.valeur) > 1:
+               s = '(' + s + '),'
          if obj.nbrColonnes() :
             s=self.formatColonnes(obj.nbrColonnes(),s)
       else :
@@ -547,5 +556,3 @@ class PythonGenerator:
       #else :
          textformat=text
       return textformat
-
-

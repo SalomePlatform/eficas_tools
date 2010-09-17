@@ -1,4 +1,4 @@
-#@ MODIF propa_fiss_ops Macro  DATE 20/10/2008   AUTEUR GALENNE E.GALENNE 
+#@ MODIF propa_fiss_ops Macro  DATE 18/05/2010   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -114,6 +114,7 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
   # On importe les definitions des commandes a utiliser dans la macro
   ASSE_MAILLAGE         =self.get_cmd('ASSE_MAILLAGE'  )
   LIRE_MAILLAGE    =self.get_cmd('LIRE_MAILLAGE'  )
+  DEFI_FICHIER = self.get_cmd('DEFI_FICHIER'  )
   CREA_TABLE    =self.get_cmd('CREA_TABLE'  )
   CALC_TABLE    =self.get_cmd('CALC_TABLE'  )
   PROPA_XFEM = self.get_cmd('PROPA_XFEM'  )
@@ -483,9 +484,11 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
 # Sauvegarde (maillage xfem et maillage concatene)
     MA_XFEM2 = args['MA_XFEM2']
     if MA_XFEM2 != None : self.DeclareOut('ma_xfem2',MA_XFEM2)
-    __MA = mm.ToAster(unite=39)
+
+    unit = mm.ToAster()
+    DEFI_FICHIER(UNITE=unit, ACTION="LIBERER")
     self.DeclareOut('ma_xfem2',MA_XFEM2)
-    ma_xfem2=LIRE_MAILLAGE(UNITE=39);
+    ma_xfem2=LIRE_MAILLAGE(UNITE=unit);
 
     MA_TOT2 = args['MA_TOT2']
     if MA_TOT2 != None : self.DeclareOut('ma_tot',MA_TOT2)
@@ -639,9 +642,10 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
 # Sauvegarde (maillage xfem et maillage concatene)
     MA_XFEM2 = args['MA_XFEM2']
     if MA_XFEM2 != None : self.DeclareOut('ma_xfem2',MA_XFEM2)
-    __MA = mm.ToAster(unite=39)
+    unit = mm.ToAster()
+    DEFI_FICHIER(UNITE=unit, ACTION="LIBERER")
     self.DeclareOut('ma_xfem2',MA_XFEM2)
-    ma_xfem2=LIRE_MAILLAGE(UNITE=39);
+    ma_xfem2=LIRE_MAILLAGE(UNITE=unit);
 
     MA_TOT2 = args['MA_TOT2']
     if MA_TOT2 != None : self.DeclareOut('ma_tot',MA_TOT2)

@@ -30,14 +30,14 @@ from Noyau.N_utils import repr_float
 import Validation
 import CONNECTOR
 
-# Attention : les classes ASSD,.... peuvent etre surchargées
-# dans le package Accas. Il faut donc prendre des précautions si
+# Attention : les classes ASSD,.... peuvent etre surchargÃ©es
+# dans le package Accas. Il faut donc prendre des prÃ©cautions si
 # on utilise les classes du Noyau pour faire des tests (isxxxx, ...)
-# Si on veut créer des objets comme des CO avec les classes du noyau
+# Si on veut crÃ©er des objets comme des CO avec les classes du noyau
 # ils n'auront pas les conportements des autres packages (pb!!!)
-# Il vaut mieux les importer d'Accas mais problème d'import circulaire,
-# on ne peut pas les importer au début.
-# On fait donc un import local quand c'est nécessaire (peut occasionner
+# Il vaut mieux les importer d'Accas mais problÃ¨me d'import circulaire,
+# on ne peut pas les importer au dÃ©but.
+# On fait donc un import local quand c'est nÃ©cessaire (peut occasionner
 # des pbs de prformance).
 from Noyau.N_ASSD import ASSD,assd
 from Noyau.N_GEOM import GEOM,geom
@@ -52,6 +52,15 @@ import CONNECTOR
 from I_VALIDATOR import ValError,listProto
 
 class MCSIMP(I_OBJECT.OBJECT):
+
+  def isvalid(self,cr='non'):
+      if self.state == 'unchanged':
+        return self.valid
+      for type_permis in self.definition.type:
+          if hasattr(type_permis, "__class__") and type_permis.__class__.__name__ == 'Matrice':
+             self.monType=type_permis
+             return self.valideMatrice(cr=cr)
+      return Validation.V_MCSIMP.MCSIMP.isvalid(self,cr=cr)
 
   def GetNomConcept(self):
       p=self
@@ -70,19 +79,19 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def GetText(self):
     """
-        Retourne le texte à afficher dans l'arbre représentant la valeur de l'objet
-        pointé par self
+        Retourne le texte Ã  afficher dans l'arbre reprÃ©sentant la valeur de l'objet
+        pointÃ© par self
     """
 
     if self.valeur == None : 
       return None
     elif type(self.valeur) == types.FloatType : 
-      # Traitement d'un flottant isolé
+      # Traitement d'un flottant isolÃ©
       txt = str(self.valeur)
       clefobj=self.GetNomConcept()
-      if self.jdc.appli.dict_reels.has_key(clefobj):
-        if self.jdc.appli.dict_reels[clefobj].has_key(self.valeur):
-           txt=self.jdc.appli.dict_reels[clefobj][self.valeur]
+      if self.jdc.appli.appliEficas.dict_reels.has_key(clefobj):
+        if self.jdc.appli.appliEficas.dict_reels[clefobj].has_key(self.valeur):
+           txt=self.jdc.appli.appliEficas.dict_reels[clefobj][self.valeur]
     elif type(self.valeur) in (types.ListType,types.TupleType) :
       # Traitement des listes
       txt='('
@@ -90,9 +99,9 @@ class MCSIMP(I_OBJECT.OBJECT):
       for val in self.valeur:
         if type(val) == types.FloatType : 
            clefobj=self.GetNomConcept()
-           if self.jdc.appli.dict_reels.has_key(clefobj):
-              if self.jdc.appli.dict_reels[clefobj].has_key(val):
-                 txt=txt + sep +self.jdc.appli.dict_reels[clefobj][val]
+           if self.jdc.appli.appliEficas.dict_reels.has_key(clefobj):
+              if self.jdc.appli.appliEficas.dict_reels[clefobj].has_key(val):
+                 txt=txt + sep +self.jdc.appli.appliEficas.dict_reels[clefobj][val]
               else :
                  txt=txt + sep + str(val)
            else :
@@ -118,14 +127,14 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def getval(self):
     """ 
-       Retourne une chaîne de caractère représentant la valeur de self 
+       Retourne une chaÃ®ne de caractÃ¨re reprÃ©sentant la valeur de self 
     """
     val=self.valeur
     if type(val) == types.FloatType : 
       clefobj=self.GetNomConcept()
-      if self.jdc.appli.dict_reels.has_key(clefobj):
-        if self.jdc.appli.dict_reels[clefobj].has_key(val):
-           return self.jdc.appli.dict_reels[clefobj][val]
+      if self.jdc.appli.appliEficas.dict_reels.has_key(clefobj):
+        if self.jdc.appli.appliEficas.appliEficas.dict_reels[clefobj].has_key(val):
+           return self.jdc.appli.appliEficas.dict_reels[clefobj][val]
     if type(val) != types.TupleType :
       try:
         return val.get_name()
@@ -143,7 +152,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def wait_co(self):
     """
-        Méthode booléenne qui retourne 1 si l'objet attend un objet ASSD 
+        MÃ©thode boolÃ©enne qui retourne 1 si l'objet attend un objet ASSD 
         qui n'existe pas encore (type CO()), 0 sinon
     """
     for typ in self.definition.type:
@@ -154,8 +163,8 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def wait_assd(self):
     """ 
-        Méthode booléenne qui retourne 1 si le MCS attend un objet de type ASSD 
-        ou dérivé, 0 sinon
+        MÃ©thode boolÃ©enne qui retourne 1 si le MCS attend un objet de type ASSD 
+        ou dÃ©rivÃ©, 0 sinon
     """
     for typ in self.definition.type:
       if type(typ) == types.ClassType or isinstance(typ,type):
@@ -165,7 +174,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def wait_assd_or_geom(self):
     """ 
-         Retourne 1 si le mot-clé simple attend un objet de type
+         Retourne 1 si le mot-clÃ© simple attend un objet de type
          assd, ASSD, geom ou GEOM
          Retourne 0 dans le cas contraire
     """
@@ -177,7 +186,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def wait_geom(self):
     """ 
-         Retourne 1 si le mot-clé simple attend un objet de type GEOM
+         Retourne 1 si le mot-clÃ© simple attend un objet de type GEOM
          Retourne 0 dans le cas contraire
     """
     for typ in self.definition.type:
@@ -187,7 +196,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def wait_TXM(self):
     """ 
-         Retourne 1 si le mot-clé simple attend un objet de type TXM
+         Retourne 1 si le mot-clÃ© simple attend un objet de type TXM
          Retourne 0 dans le cas contraire
     """
     for typ in self.definition.type:
@@ -217,7 +226,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       lval=listProto.adapt(valeur)
       if lval is None:
          valid=0
-         mess="None n'est pas une valeur autorisée"
+         mess="None n'est pas une valeur autorisÃ©e"
       else:
          try:
             for val in lval:
@@ -250,7 +259,7 @@ class MCSIMP(I_OBJECT.OBJECT):
           for val in new_valeur:
               self.typeProto.adapt(val)
               self.intoProto.adapt(val)
-              #on ne verifie pas la cardinalité
+              #on ne verifie pas la cardinalitÃ©
               if self.definition.validators:
                   validite=self.definition.validators.valide_liste_partielle(new_valeur)
       except ValError,e:
@@ -274,13 +283,14 @@ class MCSIMP(I_OBJECT.OBJECT):
         self.valeur = new_valeur
         self.val = new_valeur
         self.update_condition_bloc()
+        self.etape.modified()
         self.fin_modif()
         return 1
 
   def eval_valeur(self,new_valeur):
     """
-        Essaie d'évaluer new_valeur comme une SD, une déclaration Python 
-        ou un EVAL: Retourne la valeur évaluée (ou None) et le test de réussite (1 ou 0)
+        Essaie d'Ã©valuer new_valeur comme une SD, une dÃ©claration Python 
+        ou un EVAL: Retourne la valeur Ã©valuÃ©e (ou None) et le test de rÃ©ussite (1 ou 0)
     """
     sd = self.jdc.get_sd_avant_etape(new_valeur,self.etape)
     #sd = self.jdc.get_contexte_avant(self.etape).get(new_valeur,None)
@@ -357,19 +367,23 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def update_concept(self,sd):
     if type(self.valeur) in (types.ListType,types.TupleType) :
-       if sd in self.valeur:self.fin_modif()
+       if sd in self.valeur:
+         self.init_modif()
+         self.fin_modif()
     else:
-       if sd == self.valeur:self.fin_modif()
+       if sd == self.valeur:
+         self.init_modif()
+         self.fin_modif()
 
   def delete_concept(self,sd):
     """ 
         Inputs :
            - sd=concept detruit
         Fonction :
-        Met a jour la valeur du mot cle simple suite à la disparition 
+        Met a jour la valeur du mot cle simple suite Ã  la disparition 
         du concept sd
+        Attention aux matrices
     """
-    #print "delete_concept",sd
     if type(self.valeur) == types.TupleType :
       if sd in self.valeur:
         self.init_modif()
@@ -387,11 +401,19 @@ class MCSIMP(I_OBJECT.OBJECT):
         self.valeur=None
         self.val=None
         self.fin_modif()
+    # Glut Horrible pour les matrices ???
+    if sd.__class__.__name__== "variable":
+       for type_permis in self.definition.type:
+            if type(type_permis) == types.InstanceType:
+               if type_permis.__class__.__name__ == 'Matrice' :
+                   self.state="changed"
+                   self.isvalid()
+                  
 
   def replace_concept(self,old_sd,sd):
     """
         Inputs :
-           - old_sd=concept remplacé
+           - old_sd=concept remplacÃ©
            - sd=nouveau concept
         Fonction :
         Met a jour la valeur du mot cle simple suite au remplacement 
@@ -420,25 +442,25 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def set_valeur_co(self,nom_co):
       """
-          Affecte à self l'objet de type CO et de nom nom_co
+          Affecte Ã  self l'objet de type CO et de nom nom_co
       """
       #print "set_valeur_co",nom_co
       step=self.etape.parent
       if nom_co == None or nom_co == '':
          new_objet=None
       else:
-         # Avant de créer un concept il faut s'assurer du contexte : step 
+         # Avant de crÃ©er un concept il faut s'assurer du contexte : step 
          # courant
          sd= step.get_sd_autour_etape(nom_co,self.etape,avec='oui')
          if sd:
-            # Si un concept du meme nom existe deja dans la portée de l'étape
-            # on ne crée pas le concept
+            # Si un concept du meme nom existe deja dans la portÃ©e de l'Ã©tape
+            # on ne crÃ©e pas le concept
             return 0,"un concept de meme nom existe deja"
-         # Il n'existe pas de concept de meme nom. On peut donc le créer 
-         # Il faut néanmoins que la méthode NommerSdProd de step gère les 
+         # Il n'existe pas de concept de meme nom. On peut donc le crÃ©er 
+         # Il faut nÃ©anmoins que la mÃ©thode NommerSdProd de step gÃ¨re les 
          # contextes en mode editeur
-         # Normalement la méthode  du Noyau doit etre surchargée
-         # On déclare l'étape du mot clé comme etape courante pour NommerSdprod
+         # Normalement la mÃ©thode  du Noyau doit etre surchargÃ©e
+         # On dÃ©clare l'Ã©tape du mot clÃ© comme etape courante pour NommerSdprod
          cs= CONTEXT.get_current_step()
          CONTEXT.unset_current_step()
          CONTEXT.set_current_step(step)
@@ -455,12 +477,12 @@ class MCSIMP(I_OBJECT.OBJECT):
       self.fin_modif()
       step.reset_context()
       #print "set_valeur_co",new_objet
-      return 1,"Concept créé"
+      return 1,"Concept crÃ©Ã©"
         
   def verif_existence_sd(self):
      """
-        Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-        avant étape, sinon enlève la référence à ces concepts
+        VÃ©rifie que les structures de donnÃ©es utilisÃ©es dans self existent bien dans le contexte
+        avant Ã©tape, sinon enlÃ¨ve la rÃ©fÃ©rence Ã  ces concepts
      """
      #print "verif_existence_sd"
      # Attention : possible probleme avec include
@@ -495,7 +517,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def get_type(self):
      """
-     Retourne le type attendu par le mot-clé simple
+     Retourne le type attendu par le mot-clÃ© simple
      """
      return self.definition.type
 
@@ -511,7 +533,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def update_mc_global(self):
      """
-        Met a jour les mots cles globaux enregistrés dans l'étape parente
+        Met a jour les mots cles globaux enregistrÃ©s dans l'Ã©tape parente
         et dans le jdc parent.
         Un mot cle simple peut etre global. 
      """
@@ -530,14 +552,14 @@ class MCSIMP(I_OBJECT.OBJECT):
      return 0
 
   def valide_item(self,item):
-      """Valide un item isolé. Cet item est candidat à l'ajout à la liste existante"""
+      """Valide un item isolÃ©. Cet item est candidat Ã  l'ajout Ã  la liste existante"""
       valid=1
       try:
           #on verifie le type
           self.typeProto.adapt(item)
           #on verifie les choix possibles
           self.intoProto.adapt(item)
-          #on ne verifie pas la cardinalité
+          #on ne verifie pas la cardinalitÃ©
           if self.definition.validators:
               valid=self.definition.validators.verif_item(item)
       except ValError,e:
@@ -552,7 +574,7 @@ class MCSIMP(I_OBJECT.OBJECT):
           self.typeProto.adapt(item)
           #on verifie les choix possibles
           self.intoProto.adapt(item)
-          #on ne verifie pas la cardinalité mais on verifie les validateurs
+          #on ne verifie pas la cardinalitÃ© mais on verifie les validateurs
           if self.definition.validators:
               valid=self.definition.validators.verif_item(item)
           comment=""
@@ -563,6 +585,35 @@ class MCSIMP(I_OBJECT.OBJECT):
           valid=0
       return valid,comment
 
+  def valideMatrice(self,cr):
+       #Attention, la matrice contient comme dernier tuple l ordre des variables
+       if self.monType.methodeCalculTaille != None :
+           apply (MCSIMP.__dict__[self.monType.methodeCalculTaille],(self,))
+       try :
+       #if 1 :
+           ok=0
+           if len(self.valeur) == self.monType.nbLigs +1:
+              ok=1
+              for i in range(len(self.valeur) -1):
+                  if len(self.valeur[i])!= self.monType.nbCols:
+                     ok=0
+           if ok: 
+              self.set_valid(1)
+              return 1 
+       except :
+       #else :
+            pass
+       if cr == 'oui' :
+          self.cr.fatal("La matrice n est pas une matrice "+str(self.monType.nbLigs)+","+str(self.monType.nbCols))
+       self.set_valid(0)
+       return 0
+
+  def NbDeVariables(self):
+       listeVariables=self.jdc.get_variables(self.etape)
+       self.monType.nbLigs=len(listeVariables)
+       self.monType.nbCols=len(listeVariables)
+      
+      
 #--------------------------------------------------------------------------------
  
 #ATTENTION SURCHARGE : toutes les methodes ci apres sont des surcharges du Noyau et de Validation

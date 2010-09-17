@@ -33,6 +33,7 @@ from politiquesValidation import PolitiquePlusieurs
 class DPlusInto(Ui_DPlusInto,QDialog):
    def __init__(self,parent ,modal ) :
        QDialog.__init__(self,parent)
+       self.RepIcon=parent.appliEficas.RepIcon
        if hasattr(parent,"leLayout"):
           parent.leLayout.removeWidget(parent.leLayout.widgetActive)
           parent.leLayout.widgetActive.close()
@@ -45,22 +46,27 @@ class DPlusInto(Ui_DPlusInto,QDialog):
           parent.addWidget(parent.partieDroite)
           parent.leLayout.widgetActive=self
        self.setupUi(self)
+       icon = QIcon(self.RepIcon+"/arrow_left.png")
+       self.BAjout1Val.setIcon(icon)
+       icon2 = QIcon(self.RepIcon+"/arrow_right.png")
+       self.BSup1Val.setIcon(icon2)
+
 
 class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonPlusieursIntoPanel"
         QTPanel.__init__(self,node,parent)
         DPlusInto.__init__(self,parent,fl)
         self.politique=PolitiquePlusieurs(node,parent)
+        self.InitCommentaire()
         SaisieValeur.BuildLBValeurs(self)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         SaisieValeur.RemplitPanel(self,self.listeValeursCourantes)
-        self.InitCommentaire()
         self.connecterSignaux()
 
   def connecterSignaux(self) :
@@ -73,10 +79,14 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
 
   def BOkPourListePressed(self):
         if self.listeValeursCourantes == [] :
-           self.editor.affiche_infos("Pas de validation d un groupe vide")
+           self.editor.affiche_infos("Pas de validation d un groupe vide",Qt.red)
            return
+        if hasattr(self.node.item.definition.validators,'verifie_liste'):
+            if self.node.item.definition.validators.verifie_liste(self.listeValeursCourantes) == 0 :
+               self.editor.affiche_infos("les valeurs ne sont pas correctes",Qt.red)
+               return
         self.node.item.set_valeur(self.listeValeursCourantes)
-	self.editor.affiche_infos("Valeur Acceptée")
+	self.editor.affiche_infos("Valeur AcceptÃ©e")
 
 
   def Sup1Valeur(self):
@@ -90,6 +100,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
         for valeur in self.listeValeursCourantes :
                 if i != indexCourant : listeVal.append(valeur)
                 i = i+1
+        self.LBValeurs.setCurrentItem(self.LBValeurs.item(indexCourant -1))
         self.listeValeursCourantes=listeVal
         SaisieValeur.RemplitPanel(self,self.listeValeursCourantes)
           
@@ -111,7 +122,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
         validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,index,listeVal) 
 	self.Commentaire.setText(comm2)
         if not validite :
-		self.editor.affiche_infos(comm)
+		self.editor.affiche_infos(comm,Qt.red)
         else:
            l1=self.listeValeursCourantes[:index]
            l3=self.listeValeursCourantes[index:]
@@ -127,8 +138,8 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   def InitCommentaire(self):
         commentaire=""
         mc = self.node.item.get_definition()
-        d_aides = { 'TXM' : 'chaînes de caractères',
-                  'R'   : 'réels',
+        d_aides = { 'TXM' : 'chaÃ®nes de caractÃ¨res',
+                  'R'   : 'rÃ©els',
                   'I'   : 'entiers',
                   'C'   : 'complexes'}
         type = mc.type[0]
@@ -143,6 +154,6 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
            else :
                commentaire="Entrez entre "+str(mc.min)+" et "+str(mc.max)+" "+d_aides[type]
         aideval=self.node.item.aide()
-        commentaire=commentaire + "\n" + aideval
-        self.Commentaire.setText(QString(commentaire))
+        commentaire=commentaire + "\n" + QString.toUtf8(QString(aideval))
+        self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
 

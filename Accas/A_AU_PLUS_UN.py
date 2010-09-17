@@ -20,8 +20,9 @@
 
 from Noyau import N_REGLE
 from Validation import V_AU_PLUS_UN
+from Ihm import I_REGLE
 
-class AU_PLUS_UN(V_AU_PLUS_UN.AU_PLUS_UN,N_REGLE.REGLE):
+class AU_PLUS_UN(V_AU_PLUS_UN.AU_PLUS_UN,I_REGLE.REGLE,N_REGLE.REGLE):
    """
        La classe utilise l'initialiseur de REGLE. Il n'est pas
        nécessaire d'expliciter son initialiseur car

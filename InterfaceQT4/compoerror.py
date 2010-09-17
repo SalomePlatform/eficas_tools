@@ -19,7 +19,6 @@
 #
 # ======================================================================
 # Modules Python
-from Tkinter import Label,Button
 
 #Modules Eficas
 from Noyau.N_OBJECT import ErrorObj

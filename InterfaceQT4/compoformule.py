@@ -23,7 +23,7 @@ class FormuleNode(browser.JDCNode,typeNode.PopUpMenuNode):
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
 
-            
+
 class FORMULETreeItem(compooper.EtapeTreeItem):
     """
     Classe servant a définir l'item porté par le noeud de l'arbre d'EFICAS
@@ -53,7 +53,6 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
       Ce nom dépend de la validité de l'objet
       """
       if self.object.isactif():
-        self.object.state="modified"
         if self.object.isvalid():
           return "ast-green-square"
         else:

@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
 import math
-import Numeric
 import types
+
+try:
+  import Numeric
+except:
+  import numpy
+  Numeric = numpy
 
 def mkf(value):
     if type(value) in (type(1), type(1L), type(1.5), type(1j),type("hh")) :

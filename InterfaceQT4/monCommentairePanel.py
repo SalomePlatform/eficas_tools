@@ -64,6 +64,7 @@ class MonCommentairePanel(DComment,QTPanelTBW2,QTPanel):
         QTPanelTBW2.__init__(self,node,parent)
         self.RemplitPanel()
         self.connecterSignaux()
+        self.textCommentaire.setFocus()
 
   def connecterSignaux(self) :
         self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)

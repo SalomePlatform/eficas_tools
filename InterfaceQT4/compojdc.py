@@ -11,13 +11,6 @@ class Node(browser.JDCNode):
         from monRacinePanel import MonRacinePanel
         return MonRacinePanel(self,parent=self.editor)
 
-    def doPasteCommande(self,objet_a_copier):
-        """
-          RÈalise la copie de l'objet passÈ en argument qui est nÈcessairement
-          une commande
-        """
-        child = self.append_child(objet_a_copier,pos='first',retour='oui')
-        return child
 
 
 class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
@@ -30,12 +23,12 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
       return  "    "
 
   def GetLabelText(self):
-      # None --> fonte et couleur par dÈfaut
+      # None --> fonte et couleur par d√©faut
       return self.object.nom,None,None
 
   def get_jdc(self):
     """
-    Retourne l'objet pointÈ par self
+    Retourne l'objet point√© par self
     """
     return self.object
   
@@ -56,20 +49,20 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
       return cmd
 
   def suppitem(self,item) :
-    # item             = item de l'ETAPE ‡ supprimer du JDC
+    # item             = item de l'ETAPE √† supprimer du JDC
     # item.getObject() = ETAPE ou COMMENTAIRE
     # self.object      = JDC
 
     itemobject=item.getObject()
     if self.object.suppentite(itemobject):
        if itemobject.nature == "COMMENTAIRE" :
-          message = "Commentaire supprimÈ"
+          message = "Commentaire supprim√©"
        else :
-          message = "Commande " + itemobject.nom + " supprimÈe"
+          message = "Commande " + itemobject.nom + " supprim√©e"
        self.appli.affiche_infos(message)
        return 1
     else:
-       self.appli.affiche_infos("Pb interne : impossible de supprimer cet objet")
+       self.appli.affiche_infos("Pb interne : impossible de supprimer cet objet",Qt.red)
        return 0
 
   def GetSubList(self):
@@ -103,7 +96,7 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
     return self.sublist
 
   def get_l_noms_etapes(self):
-      """ Retourne la liste des noms des Ètapes de self.object"""
+      """ Retourne la liste des noms des √©tapes de self.object"""
       return self.object.get_l_noms_etapes()
 
   def get_liste_cmd(self):

@@ -34,11 +34,13 @@ class Generateur :
   #---------------------------------------------------------#
     self.ListeVariables = ListeVariables
     self.ListeVariablesIn = []
+    self.ListeVariablesOut = []
     self.DictLois = DictLois
     self.DictVariables = DictVariables
     self.DictMCVal = DictMCVal
     self.DictTypeVar = {}
     self.nbVarIn = 0
+    self.nbVarOut = 0
     self.creeInfoVar()
     self.appli = appli
     #
@@ -60,10 +62,10 @@ class Generateur :
   #--------------------------#
     try :
 	gener = self.module.__dict__["MonSTDGenerateur"]
-	monSTDGenerateur=gener( self.DictMCVal, self.ListeVariablesIn, self.DictLois )
+	monSTDGenerateur=gener( self.DictMCVal, self.ListeVariablesIn, self.ListeVariablesOut, self.DictLois )
     except :
         from OpenturnsSTD import STDGenerateur
-        monSTDGenerateur = STDGenerateur( self.appli, self.DictMCVal, self.ListeVariablesIn, self.DictLois )
+        monSTDGenerateur = STDGenerateur( self.appli, self.DictMCVal, self.ListeVariablesIn, self.ListeVariablesOut, self.DictLois )
     return monSTDGenerateur
       
   def getXMLGenerateur(self) :
@@ -89,6 +91,11 @@ class Generateur :
       if DictVariable["Type"] == "in" : 
          self.nbVarIn = self.nbVarIn + 1
          self.ListeVariablesIn.append( DictVariable )
+         print "OpenturnsBase.py: new input variable = ", DictVariable
+      else:
+         self.nbVarOut = self.nbVarOut + 1
+         self.ListeVariablesOut.append( DictVariable )
+         print "OpenturnsBase.py: new output variable = ", DictVariable
       liste.append( DictVariable )
       num = num + 1
     self.ListeVariables = liste
