@@ -1,4 +1,4 @@
-#@ MODIF recal Macro  DATE 29/08/2006   AUTEUR MCOURTOI M.COURTOIS 
+#@ MODIF recal Macro  DATE 29/09/2010   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
