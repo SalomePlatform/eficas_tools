@@ -29,8 +29,7 @@ import types,string,re,os
 from generator_map import MapGenerator
 
 import sys
-from prefs_MAP import PATH_MAP
-sys.path.append(os.path.join(PATH_MAP,'classes/python/'))
+sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'classes/python/'))
 from class_MAP_parameters import *
 
 #____________________________________________________________________________________
