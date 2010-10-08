@@ -2,6 +2,7 @@
 #_____________________________________
 
 import sys, os, re,types
+from PyQt4.QtGui import QMessageBox
 
 from pal.logger import ExtLogger
 logger=ExtLogger( "EFICAS_SRC.EFICASGUI.eficasSalome.py" )
@@ -11,9 +12,11 @@ import eficasConfig
 # lignes de path ajoutees pour acceder aux packages python du
 # logiciel Eficas. Le package Aster est ajoute explicitement pour
 # acceder au module prefs.py. A
+# ajout de InterfaceQT4 pour permettre l acces a la fenetre Option
 sys.path[:0]=[eficasConfig.eficasPath,
               os.path.join( eficasConfig.eficasPath,'Editeur'),
               os.path.join( eficasConfig.eficasPath,'UiQT4'),
+              os.path.join( eficasConfig.eficasPath,'InterfaceQT4'),
               eficasConfig.eficasPath,
              ]
 
@@ -42,7 +45,8 @@ class MyEficas( qtEficas.Appli ):
     a)la creation de groupes de mailles dans le composant SMESH de SALOME
     b)la visualisation d'elements geometrique dans le coposant GEOM de SALOME par selection dans EFICAS
     """
-    def __init__( self, parent, code = "ASTER", fichier = None, module = "Eficas", version=None):
+    def __init__( self, parent, code = "ASTER", fichier = None, module = "EFICAS",
+                  version = None, componentName = "Eficas"):
         """
         Constructeur.
         @type   parent: 
@@ -78,6 +82,7 @@ class MyEficas( qtEficas.Appli ):
         self.parent = parent        
         self.salome = True      #active les parties de code specifique dans Salome( pour le logiciel Eficas )
         self.module = module    #indique sous quel module dans l'arbre d'etude ajouter le JDC.
+        self.componentName = componentName
         self.editor = getStudyEditor()    # Editeur de l'arbre d'etude
 
         
@@ -92,7 +97,6 @@ class MyEficas( qtEficas.Appli ):
         
         
     def closeEvent(self,event):
-        import InterfaceQT4.readercata
         if hasattr(self,'readercata') :
            del self.readercata
         global appli
@@ -404,8 +408,7 @@ class MyEficas( qtEficas.Appli ):
         """
         msgError    = "Erreur dans l'export du fichier de commande dans l'arbre d'etude Salome"
         ok = False
-        #try:            
-        if 1:
+        try:            
             atLeastOneStudy = self.editor.study
             if not atLeastOneStudy:
                 return ok, msgError
@@ -431,7 +434,7 @@ class MyEficas( qtEficas.Appli ):
                            'OPENTURNS_WRAPPER': "OPENTURNS_FILE_FOLDER"}
 
                         
-            moduleEntry = self.editor.findOrCreateComponent(self.module)
+            moduleEntry = self.editor.findOrCreateComponent(self.module, self.componentName)
             itemName    = re.split("/",jdcPath)[-1]
             
             fatherEntry = self.editor.findOrCreateItem(
@@ -452,8 +455,12 @@ class MyEficas( qtEficas.Appli ):
             #print 'addJdcInSalome commEntry->', commEntry            
             if commEntry:
                 ok, msgError = True, ''        
-        #except:                    
-        #    logger.debug(50*'=' Erreur au AddJDC)
+        except Exception, exc:
+            msgError = "Can't add Eficas file to Salome study tree"
+            logger.exception(msgError)
+            QMessageBox.warning(self, self.tr("Warning"),
+                                self.tr("%s. Reason:\n%s\n\nSee logs for "
+                                        "more details." % (msgError, exc)))
         return ok, msgError        
         
            
@@ -541,22 +548,20 @@ class MyEficas( qtEficas.Appli ):
 #-------------------------------------------------------------------------------------------------------        
 #           Point d'entree lancement EFICAS
 #
-def runEficas( code="ASTER", fichier=None, module = "Eficas", version=None ):
+def runEficas( code="ASTER", fichier=None, module = "EFICAS", version=None, componentName = "Eficas"):
     logger.debug(10*'#'+":runEficas: START")
-    global appli    
+    #global appli    
     logger.debug(10*'#'+":runEficas: code="+str(code))
     logger.debug(10*'#'+":runEficas: fichier="+str(fichier))
     logger.debug(10*'#'+":runEficas: module="+str(module))
     logger.debug(10*'#'+":runEficas: version="+str(version))
 
-    if not appli: #une seul instance possible!        
-        appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier, module = module, version=version )
+    #if not appli: #une seul instance possible!        
+    appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier,
+                       module = module, version = version, componentName = componentName )
+    #if not appli: #une seul instance possible!        
+    #    appli = MyEficas( SalomePyQt.SalomePyQt().getDesktop(), code = code, fichier = fichier,
+    #                      module = module, componentName = componentName, version=version )
     logger.debug(10*'#'+":runEficas: END")
 
         
-        
-
-appli = None
-
-
-
