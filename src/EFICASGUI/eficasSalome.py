@@ -230,10 +230,10 @@ class MyEficas( qtEficas.Appli ):
         tGeo=self.ChercheType(shape)
         if not tGeo :
            return name, msgError
-        #if kwType == "GROUP_NO" and str(tGeo) != "VERTEX":
-        #    name,msgError = '',"la selection n est pas un Vertex"
-        #    return name, msgError
-        if kwType == "GROUP_MA" and str(tGeo) == "VERTEX":
+        if kwType == "GROUP_NO" and str(tGeo) != "VERTEX":
+            name,msgError = '',"la selection n est pas un Vertex"
+            return name, msgError
+        elif kwType == "GROUP_MA" and str(tGeo) == "VERTEX":
             name, msgError = '', "la selection n est pas un groupe de maille"
             return name, msgError
 
@@ -279,7 +279,6 @@ class MyEficas( qtEficas.Appli ):
 
         if kwType == "GROUP_NO" and tGroup != SMESH.NODE:
              msgError = "GROUP_NO attend un groupe de noeud"
-             return name, msgError
         elif kwType == "GROUP_MA" and tGroup == SMESH.NODE:
              msgError = "GROUP_MA attend un point goupe de maille"
              return name, msgError
