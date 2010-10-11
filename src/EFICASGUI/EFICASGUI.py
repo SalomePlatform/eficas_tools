@@ -11,7 +11,7 @@ from PyQt4.QtCore import *
 import salome
 import SalomePyQt
 
-from pal.studyedit import getStudyEditor
+from salome.kernel.studyedit import getStudyEditor
 
 sgPyQt=SalomePyQt.SalomePyQt()
 

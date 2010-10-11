@@ -4,8 +4,8 @@
 import sys, os, re,types
 from PyQt4.QtGui import QMessageBox
 
-from pal.logger import ExtLogger
-logger=ExtLogger( "EFICAS_SRC.EFICASGUI.eficasSalome.py" )
+from salome.kernel.logger import Logger
+logger = Logger( "EFICAS_SRC.EFICASGUI.eficasSalome.py" )
 
 import eficasConfig 
 # eficasConfig definit le EFICAS_ROOT
@@ -28,8 +28,8 @@ import salome
 import SalomePyQt
 
 
-from pal.studyedit import getStudyEditor
-from pal.structelem import StructuralElementManager, InvalidParameterError
+from salome.kernel.studyedit import getStudyEditor
+from salome.geom.structelem import StructuralElementManager, InvalidParameterError
 
 
 # couleur pour visualisation des geometries 
@@ -266,7 +266,7 @@ class MyEficas( qtEficas.Appli ):
         name, msgError = '',''
 
         mySO=self.editor.study.FindObjectID(selectedEntry )
-        from pal.smeshstudytools import SMeshStudyTools
+        from salome.smesh.smeshstudytools import SMeshStudyTools
         monSMeshStudyTools=SMeshStudyTools(self.editor)
         meshSO = monSMeshStudyTools.getMeshFromGroup(mySO)
         if meshSO == None : return name, msgError    
@@ -457,7 +457,7 @@ class MyEficas( qtEficas.Appli ):
                 ok, msgError = True, ''        
         except Exception, exc:
             msgError = "Can't add Eficas file to Salome study tree"
-            logger.exception(msgError)
+            logger.debug(msgError, exc_info = True)
             QMessageBox.warning(self, self.tr("Warning"),
                                 self.tr("%s. Reason:\n%s\n\nSee logs for "
                                         "more details." % (msgError, exc)))
@@ -494,7 +494,7 @@ class MyEficas( qtEficas.Appli ):
                 ok, msgError = self.displayMeshGroups(shapeName)
             else: #geometrie
                 current_color = COLORS[ self.icolor % LEN_COLORS ]                
-                from pal.geomtools import GeomStudyTools
+                from salome.geom.geomtools import GeomStudyTools
                 myGeomTools=GeomStudyTools(self.editor)
                 ok = myGeomTools.displayShapeByName( shapeName, current_color )
                 salome.sg.FitAll()
