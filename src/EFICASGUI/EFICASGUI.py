@@ -63,7 +63,7 @@ class GUIcontext:
                                     "Eficas pour Outils Metier",
                                     "Editer un jeu de commande Outils Metier avec Eficas",
                                     "eficasOM.png")
-        self.addActionConditionally("Map/prefs.py", GUIcontext.MAP_ID,
+        self.addActionConditionally("MAP/prefs.py", GUIcontext.MAP_ID,
                                     "Eficas pour Map",
                                     "Editer un jeu de commande Map avec Eficas",
                                     "plus.png")
