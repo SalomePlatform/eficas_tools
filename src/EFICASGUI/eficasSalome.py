@@ -471,26 +471,16 @@ class MyEficas( qtEficas.Appli ):
         visualisation de nom shapeName dans salome
         """
         ok, msgError = False, ''
-        try:
-            import VISU
-            import visu_gui
-            currentViewType = None
-            visu_gui.myVisu.SetCurrentStudy(self.editor.study)
-            m = visu_gui.myVisu.GetViewManager()
-            v = m.GetCurrentView()
-            #print v
-            if v:
-                currentViewType = v.GetType()
-            atLeastOneStudy = self.editor.study
-            if not atLeastOneStudy:
-                return ok, msgError
+        #try:
+        if 1 :
+            import SalomePyQt
+            sgPyQt = SalomePyQt.SalomePyQt()
+            myActiveView=sgPyQt.getActiveView() 
+            if myActiveView < 0 :
+               return ok, 'pas de vue courante'
                                      
-            #salome.sg.EraseAll()
-            #print 'displayShapestrGeomShape shapeName -> ', shapeName
-            #print currentViewType
-            
-            if currentViewType == VISU.TVIEW3D: # maillage
-                #print 'Vue courante = VTK : affichage groupe de maille'                
+            currentViewType=sgPyQt.getViewType(myActiveView)
+            if str(currentViewType) != "OCCViewer" : # maillage
                 ok, msgError = self.displayMeshGroups(shapeName)
             else: #geometrie
                 current_color = COLORS[ self.icolor % LEN_COLORS ]                
@@ -501,7 +491,8 @@ class MyEficas( qtEficas.Appli ):
                 self.icolor = self.icolor + 1             
                 if not ok:
                     msgError = "Impossible d afficher "+shapeName
-        except:            
+        #except:            
+        else :
             logger.debug(50*'=')
         return ok, msgError    
                 
