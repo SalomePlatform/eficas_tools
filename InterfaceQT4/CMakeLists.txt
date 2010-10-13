@@ -35,6 +35,7 @@ install ( FILES browser.py compobase.py compobloc.py compocommandecomm.py compoc
                 monUniqueSDCOIntoPanel.py monUniqueSDCOPanel.py monVisu.py
                 politiquesValidation.py qtCommun.py qtEficas.py
                 qtSaisie.py readercata.py typeNode.py utilIcons.py viewManager.py
+                configuration.py
           DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
 	)
 

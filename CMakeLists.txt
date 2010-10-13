@@ -83,6 +83,7 @@ option ( WITH_OPENTURNS    "Install Open TURNS files"  OFF )
 option ( WITH_ASTER        "Install Aster files"       OFF )
 option ( WITH_MAP          "Install MAP files"         OFF )
 option ( WITH_SEP          "Install SEP files"         OFF )
+option ( IN_SALOME_CONTEXT "Configure Eficas for use in Salome" OFF )
 
 set ( _OPTIONLIST
   WITH_OPENTURNS 
@@ -97,6 +98,7 @@ set ( _SALOME_MECA_LIST
   WITH_OPENTURNS 
   WITH_ASTER
   WITH_SEP
+  IN_SALOME_CONTEXT
   )
 
 if (WITH_ALL_PACKAGES)
@@ -126,7 +128,11 @@ endif ( NOT ${_VALIDOPT} )
 
 # Detection des prerequis lies aux options
 if (WITH_OPENTURNS)
-  find_package ( OpenTURNS REQUIRED )
+  if (IN_SALOME_CONTEXT)
+    SET(OpenTURNS_PYTHON_MODULE_DIR "")
+  else (IN_SALOME_CONTEXT)
+    find_package ( OpenTURNS REQUIRED )
+  endif (IN_SALOME_CONTEXT)
 endif (WITH_OPENTURNS)
 
 #if (WITH_ASTER)

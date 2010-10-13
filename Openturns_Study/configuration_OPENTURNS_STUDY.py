@@ -19,7 +19,7 @@
 #
 # ======================================================================
 """
-    Ce module sert pour charger les paramètres de configuration d'EFICAS
+    Ce module sert pour charger les paramÃ¨tres de configuration d'EFICAS
 """
 # Modules Python
 import configuration
@@ -38,8 +38,8 @@ class CONFIG(configuration.CONFIG_BASE):
       self.labels_user=['exec_acrobat', 'catalogues','savedir','path_doc','OpenTURNS_path']
       self.labels_eficas=["OpenTURNS_path","rep_user","INSTALLDIR","path_doc","exec_acrobat"]
       self.labels_eficas=self.labels_eficas+["rep_cata","initialdir","savedir","catalogues"]
-      self.setValeurs()
       self.cataFile="catalogues_openturns.ini"
+      self.setValeurs()
 
   #---------------------------------------
   def lecture_fichier_ini_standard(self):

@@ -22,11 +22,11 @@
 # Question : Que faire des fichiers sdistOTqt.py et style.py
 
 configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/prefs_OPENTURNS_STUDY.py.in
-                 ${CMAKE_CURRENT_SOURCE_DIR}/prefs_OPENTURNS_STUDY.py
+                 ${CMAKE_CURRENT_BINARY_DIR}/prefs_OPENTURNS_STUDY.py
 		 @ONLY )
 
 install ( FILES qtEficas_openturns_study.py
-                ${CMAKE_CURRENT_SOURCE_DIR}/prefs_OPENTURNS_STUDY.py
+                ${CMAKE_CURRENT_BINARY_DIR}/prefs_OPENTURNS_STUDY.py
 		prefs.py
 		configuration_OPENTURNS_STUDY.py
 		opsOT.py

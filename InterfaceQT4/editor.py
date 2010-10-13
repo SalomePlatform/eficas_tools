@@ -238,7 +238,7 @@ class JDCEditor(QSplitter):
                 self.affiche_infos("Erreur à la conversion",Qt.red)
         else :
             self.affiche_infos("Type de fichier non reconnu",Qt.red)
-            QMessageBox.critical( self, "Type de fichier non reconnu","EFICAS ne sait pas ouvrir ce type de fichier")            
+            QMessageBox.critical( self, "Type de fichier non reconnu","EFICAS ne sait pas ouvrir le type de fichier %s" % self.appliEficas.format_fichier_in)            
             return None
         
         CONTEXT.unset_current_step()
