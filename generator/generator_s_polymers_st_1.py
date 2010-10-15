@@ -29,9 +29,11 @@ import types,string,re,os
 from generator_map import MapGenerator
 
 import sys
-sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'classes/python/'))
-from class_MAP_parameters import *
-
+try :
+   sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'classes/python/'))
+   from class_MAP_parameters import *
+except :
+   pass
 #____________________________________________________________________________________
 # PYGMEEDict contient une equivalence entre le catalogue Map et les lignes generees
 # comme entete (commentaire ?) dans le fichier d'input de pygmee
