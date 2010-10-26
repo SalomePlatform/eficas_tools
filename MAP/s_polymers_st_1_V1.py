@@ -5,7 +5,7 @@
 ## --------------------------------------------------
 #
 from Accas import *
-from prefs_Map import PATH_MODULE
+from prefs_MAP import PATH_MODULE
 class Tuple:
   def __init__(self,ntuple):
     self.ntuple=ntuple

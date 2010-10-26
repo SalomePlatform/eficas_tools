@@ -132,6 +132,8 @@ class s_poly_st_1Generator(MapGenerator):
          return ""
 
    def METHODE(self,execution) :
+      self.config.PATH_STUDY=self.config.PATH_MAP+"/studies/demonstrateur_s_polymers_st_1"
+      print "self.config.PATH_STUDY has been forced to :", self.config.PATH_STUDY
       self.dicoMETHODE=self.dictMCVal["METHODE"]
       print "_____________________"
       print self.dicoMETHODE
@@ -146,6 +148,7 @@ class s_poly_st_1Generator(MapGenerator):
          self.inclusion_name=self.config.PATH_STUDY+"/pygmee_v2_test_1.inclusions"
          self.rve_name=self.config.PATH_STUDY+"/pygmee_v2_test_1.rve"
          pygmee_v2_input=self.config.PATH_STUDY+"/pygmee_v2.input"
+         print "pygmee_v2_input =", pygmee_v2_input
          parameter=MAP_parameters()
          parameter.add_component(composant)
          parameter.add_parameter(composant, 'rve_size', self.size)
@@ -169,10 +172,11 @@ class s_poly_st_1Generator(MapGenerator):
          self.contrast=float(self.dicoMATERIAUX['_MATERIAUX_CONDUCTIVITE_I']/self.dicoMATERIAUX['_MATERIAUX_CONDUCTIVITE_M'])
          choix=self.dicoMETHODE['_METHODE_CHOIX']
 
+         finesse=int(self.dicoDISCRETISATION['_DISCRETISATION_FINESSE'])
+
          if (choix=="FD+grid") :
             commande+= "echo 'execution de FDVGRID';\n"
             commande+= "cd "+self.config.PATH_FDVGRID+";\n"
-            finesse=int(self.dicoDISCRETISATION['_DISCRETISATION_FINESSE'])
             if (finesse<32):
                finesse=32
             commande+= "echo "+str(self.size)+" > "+"rve.input"+";\n"
@@ -183,6 +187,83 @@ class s_poly_st_1Generator(MapGenerator):
             
          if (choix=="FEM+mesh") :
             print "option Code_Aster"
+            commande+= "echo 'execution de BENHUR';\n"
+
+            #Lecture du fichier a trous
+            print "name_SCHEME =", self.config.NAME_SCHEME
+            monFichierInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/benhur_template.txt"
+            monFichierOutput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_benhur_"+str(finesse)+".bhr"
+
+            f = file(monFichierInput)
+            string_0 = f.read()  
+            f.close()
+            # find and replace with CONFIG idctionnary
+            string_1=self.remplaceCONFIG(string_0,CONFIGliste)
+            dicoBenhur=dict()
+            dicoBenhur["_RVE_SIZE"]=self.size
+            dicoBenhur["_MESH_SIZE"]=finesse
+            dicoBenhur["_INCLUSION_FILE"]=self.inclusion_name
+            # find and replace with BENHUR idctionnary
+            string_2=self.remplaceDICO(string_1,dicoBenhur)
+            # write into ouput file
+            f=open(monFichierOutput,'wb')
+            f.write(string_2)
+            f.close()
+            # launch of BENHUR on the previous file
+            commande=commande + "cd "+self.config.PATH_BENHUR+"/bin;\n"
+            #commande=commande + "./benhur -i "+monFichierOutput+";\n"
+            commande=commande + "echo 'fin execution de BENHUR';\n"
+       
+            commande+= "echo 'execution de CODE_ASTER';\n"
+            monFichierCommInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/s_polymers_st_1_aster_template.comm"
+            monFichierExportInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/s_polymers_st_1_aster_template.export"
+
+            monFichierCommOutput=self.config.PATH_STUDY+"/s_polymers_st_1_aster.comm"
+            monFichierExportOutput=self.config.PATH_STUDY+"/s_polymers_st_1_aster.export"
+            # Lecture du fichier a trous a pour le fichier export
+            f = file(monFichierExportInput)
+            string_0 = f.read()  
+            f.close()
+            # find and replace with CONFIG dictionnary
+            string_1=self.remplaceCONFIG(string_0,CONFIGliste)            
+            # find and replace with CODE_ASTER dictionnary
+            dicoAster=dict()
+            dicoAster["_MESH_SIZE"]=finesse
+            dicoAster["_ASTER_VERSION"]="STA10"
+            dicoAster["_NAME_STUDY"]="s_polymers_st_1"
+            string_2=self.remplaceDICO(string_1,dicoAster)
+            # write into output file
+            f=open(monFichierExportOutput,'wb')
+            f.write(string_2)
+            f.close()
+
+            # Lecture du fichier a trous a pour le fichier comm
+            f = file(monFichierCommInput)
+            string_0 = f.read()  
+            f.close()
+            # find and replace with CONFIG dictionnary
+            string_1=self.remplaceCONFIG(string_0,CONFIGliste)       
+            # find and replace with CODE_ASTER dictionnary
+            dicoAster=dict()
+            dicoAster["_RVE_SIZE"]=self.size
+            dicoAster["_CONDUCTIVITE_I"]=self.dicoMATERIAUX["_MATERIAUX_CONDUCTIVITE_I"]
+            dicoAster["_CONDUCTIVITE_M"]=self.dicoMATERIAUX["_MATERIAUX_CONDUCTIVITE_M"]
+            string_2=self.remplaceDICO(string_1,dicoAster)
+            # write into output file
+            f=open(monFichierCommOutput,'wb')
+            f.write(string_2)
+            f.close()
+
+            # launch of CODE_ASTER on the study
+            commande="cd "+self.config.PATH_STUDY+";"
+            commande=commande + self.config.PATH_ASTER + "/as_run "+monFichierExportOutput +";\n"
+            commande=commande + "echo 'fin execution de CODE_ASTER';\n"
+            
+            print commande
+            
+            return commande
+
+            
       print "METHODE Ok"
       print "_____________________\n"
       return commande
