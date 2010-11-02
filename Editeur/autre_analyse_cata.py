@@ -55,9 +55,18 @@ def traite_entite(entite,liste_simp_reel):
       else:
          traite_reel(v,liste_simp_reel)
          traite_entite(v,liste_simp_reel)
+         traite_cache(v)
       l.append((v._no,k))
    l.sort()
    entite.ordre_mc=[ item for index, item in l ]
+
+def traite_cache(objet):
+    if objet.cache == 0 :return
+    if hasattr(objet.pere,"mcOblig"):
+      objet.pere.mcOblig[objet.equiv]=objet.defaut
+    else :
+      objet.pere.mcOblig={}
+      objet.pere.mcOblig[objet.equiv]=objet.defaut
 
 def traite_reel(objet,liste_simp_reel):
     if objet.__class__.__name__ == "SIMP":
