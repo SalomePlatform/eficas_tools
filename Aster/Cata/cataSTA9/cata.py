@@ -23,7 +23,7 @@
 from __future__ import division
 
 __version__ = "$Name:  $"
-__Id__ = "$Id: cata.py,v 1.7.4.2 2010-06-03 08:50:35 pnoyret Exp $"
+__Id__ = "$Id: cata_aster_v6.py,v 1.12 2001/01/16 15:55:05 iliade Exp $"
 
 import Accas
 from Accas import *
@@ -15133,7 +15133,7 @@ FONC_FLUI_STRU=OPER(nom="FONC_FLUI_STRU",op= 169,sd_prod=fonction_sdaster,
             UIinfo={"groupes":("Fonction",)},
          TYPE_FLUI_STRU  =SIMP(statut='o',typ=(type_flui_stru) ),
 )  ;
-#& MODIF COMMANDE  DATE 21/04/2008   AUTEUR LEFEBVRE J-P.LEFEBVRE 
+#& MODIF COMMANDE  DATE 02/08/2010   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -15158,12 +15158,15 @@ def formule_prod(self,VALE,VALE_C,**args):
    elif VALE_C != None:
       return formule_c
 
-def form_pyth_ops(self,d):
-   NOM_PARA=self.etape['NOM_PARA']
+def form_pyth_ops(self, d):
+   NOM_PARA = self.etape['NOM_PARA']
    VALE    =self.etape['VALE']
    VALE_C  =self.etape['VALE_C']
    if type(NOM_PARA) not in (list, tuple):
       NOM_PARA = [NOM_PARA,]
+   for para in NOM_PARA:
+       if para.strip() != para:
+           raise AsException("nom de paramètre invalide (contient des blancs) : %s" % repr(para))
    if self.sd == None:
       return
    if VALE     != None :
