@@ -46,7 +46,7 @@ def lance_eficas(code=None,fichier=None,ssCode=None):
     sys.exit(res)
 
 
-def lance_eficas_ssIhm(code=None,fichier=None,version='v9.5'):
+def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
     """
         Lance l'appli EFICAS pour trouver les noms des groupes
     """
@@ -55,14 +55,12 @@ def lance_eficas_ssIhm(code=None,fichier=None,version='v9.5'):
     code=options.code
 
     app = QApplication(sys.argv)
-    Eficas=Appli(code=code)
+    Eficas=Appli(code=code,ssCode=ssCode)
 
     from ssIhm  import QWParentSSIhm
     parent=QWParentSSIhm(code,Eficas,version)
 
     import readercata
-    #if not hasattr( readercata, 'reader' ) :
-    #   readercata.reader = readercata.READERCATA( parent, Eficas )
     if not hasattr ( Eficas, 'readercata'):
            monreadercata  = readercata.READERCATA( parent, Eficas )
            Eficas.readercata=monreadercata
@@ -71,3 +69,29 @@ def lance_eficas_ssIhm(code=None,fichier=None,version='v9.5'):
     from editor import JDCEditor
     monEditeur=JDCEditor(Eficas,fichier)
     print monEditeur.cherche_Groupes()
+
+def lance_MapToSh(code=None,fichier=None,ssCode='s_polymers_st_1_V1'):
+    """
+        Lance l'appli EFICAS pour trouver les noms des groupes
+    """
+    # Analyse des arguments de la ligne de commande
+     
+    options=session.parse(sys.argv)
+    code=options.code
+    fichier=options.comm[0]
+
+    app = QApplication(sys.argv)
+    Eficas=Appli(code=code,ssCode=ssCode)
+
+    from ssIhm  import QWParentSSIhm
+    parent=QWParentSSIhm(code,Eficas,None,ssCode)
+
+    import readercata
+    if not hasattr ( Eficas, 'readercata'):
+           monreadercata  = readercata.READERCATA( parent, Eficas )
+           Eficas.readercata=monreadercata
+
+    from editor import JDCEditor
+    monEditeur=JDCEditor(Eficas,fichier)
+    texte=monEditeur.run("non")
+    print texte

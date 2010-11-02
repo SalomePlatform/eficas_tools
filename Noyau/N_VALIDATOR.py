@@ -1,4 +1,4 @@
-#@ MODIF N_VALIDATOR Noyau  DATE 11/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_VALIDATOR Noyau  DATE 11/10/2010   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 # RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -803,7 +803,6 @@ class AndVal(Valid):
           return chaine
 
       def verif(self,valeur):
-          print "je suis dans le verif du AndVal"
           for validator in self.validators:
               v=validator.verif(valeur)
               if not v :
@@ -1262,12 +1261,14 @@ class VerifTypeTuple(Valid,ListVal) :
 
       def verif_item(self,valeur):
           try :
-		if len(valeur) != len(self.typeDesTuples): return 0
-                for i in range(len(valeur)) :
-                    ok=self.verifType(valeur[i],self.typeDesTuples[i])
-                    if ok!=1 : return 0
-          except :
+             if len(valeur) != len(self.typeDesTuples):
                 return 0
+             for i in range(len(valeur)) :
+                ok=self.verifType(valeur[i],self.typeDesTuples[i])
+                if ok!=1:
+                   return 0
+          except :
+             return 0
           return 1
 
       def verifType(self,valeur,type_permis):

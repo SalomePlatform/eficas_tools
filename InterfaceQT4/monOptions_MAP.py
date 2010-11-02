@@ -74,7 +74,7 @@ class Options(desOptions):
                 self.LERepAster.setText(self.configuration.PATH_MAP)
              return
        self.configuration.PATH_MAP=str(self.LERepMAP.text())
-       self.configuration.PATH_PYGMEE=self.configuration.PATH_MAP+"/components/pygmee_v1"
+       self.configuration.PATH_PYGMEE=self.configuration.PATH_MAP+"/components/pygmee_v2"
        self.configuration.PATH_BENHUR=self.configuration.PATH_MAP+"/components/benhur"
        self.configuration.PATH_FDVGRID=self.configuration.PATH_MAP+"components/fdvgrid/ther2d/bin"
        self.configuration.PATH_MODULE=self.configuration.PATH_MODULE+"components/fdvgrid/ther2d/bin"
