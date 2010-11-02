@@ -1,4 +1,4 @@
-#@ MODIF simu_point_mat_ops Macro  DATE 11/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF simu_point_mat_ops Macro  DATE 05/07/2010   AUTEUR PROIX J-M.PROIX 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -138,6 +138,22 @@ def simu_point_mat_ops(self, MATER, INCREMENT,SIGM_IMPOSE,EPSI_IMPOSE,SIGM_INIT,
           if args['NB_VARI_TABLE'] != None:  
              motscles['NB_VARI_TABLE']  = args['NB_VARI_TABLE']
  
+       if args.has_key('MATR_C1'):
+          if args['MATR_C1'] != None:  
+          #   motscles['MATR_C1']  = MATR_C1.List_F()
+             motscles['MATR_C1']  = args['MATR_C1'].List_F()
+ 
+       if args.has_key('MATR_C2'):
+          if args['MATR_C2'] != None:  
+             motscles['MATR_C2']  = args['MATR_C2'].List_F()
+ 
+       if args.has_key('VECT_IMPO'):
+          if args['VECT_IMPO'] != None:  
+             motscles['VECT_IMPO']  = args['VECT_IMPO'].List_F()
+ 
+       if   ARCHIVAGE   :
+         motscles['ARCHIVAGE']   = ARCHIVAGE.List_F()
+
        self.DeclareOut('REPONSE',self.sd)
        __REP1 = CALC_POINT_MAT(INFO=INFO,MATER=MATER,ANGLE=ANGLE,**motscles)
  

@@ -1,4 +1,4 @@
-#@ MODIF sd_xfem SD  DATE 11/01/2010   AUTEUR COLOMBO D.COLOMBO 
+#@ MODIF sd_xfem SD  DATE 28/09/2010   AUTEUR MASSIN P.MASSIN 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -35,6 +35,7 @@ class sd_fiss_xfem(AsBase):
     nomj = SDNom(fin=8)
 
     INFO   = AsVK16(lonmax=2,)   # info discontinuite
+    MODELE = AsVK8(lonmax=1,)
 
 # I.1) objets relatifs aux level sets
 
@@ -59,7 +60,6 @@ class sd_fiss_xfem(AsBase):
     MAILFISS_HEAV  = Facultatif(AsVI(SDNom(nomj='.MAILFISS  .HEAV')))
     MAILFISS_HECT  = Facultatif(AsVI(SDNom(nomj='.MAILFISS  .HECT')))
     MAILFISS_INDIC = AsVI(SDNom(nomj='.MAILFISS .INDIC'), lonmax=6, )
-    LISNOH         = Facultatif(AsVI())
 
 # I.3) objets relatifs a la propagation
 
@@ -75,7 +75,6 @@ class sd_fiss_xfem(AsBase):
     LISCO  = Facultatif(AsVR(SDNom(nomj='.LISCO')))
     LISEQ  = Facultatif(AsVI(SDNom(nomj='.LISEQ')))
     LISRL  = Facultatif(AsVI(SDNom(nomj='.LISRL')))
-    LISUP  = Facultatif(AsVI(SDNom(nomj='.LISUP')))    
 
 
 # 1.5) verifications d'existence :
@@ -101,7 +100,9 @@ class sd_modele_xfem(AsBase):
     TOPOSE_HEA  = sd_cham_elem(SDNom(nomj='.TOPOSE.HEA'))
     TOPOSE_LON  = sd_cham_elem(SDNom(nomj='.TOPOSE.LON'))
     TOPOSE_AIN  = sd_cham_elem(SDNom(nomj='.TOPOSE.AIN'))
+    TOPOSE_PMI  = sd_cham_elem(SDNom(nomj='.TOPOSE.PMI'))
     TOPOSE_CRI  = Facultatif(sd_cham_elem(SDNom(nomj='.TOPOSE.CRI')))
+    
 
 # II.2) objets relatifs aux facettes de contact
 
@@ -118,10 +119,13 @@ class sd_modele_xfem(AsBase):
 
 # II.3) objets concatenes relatifs aux level sets
 
-    LNNO   = sd_cham_no()
-    LTNO   = sd_cham_no()
-    BASLOC = sd_cham_no()
-    STNO   = sd_cham_no()
+    LNNO   = sd_cham_elem(SDNom(nomj='.LNNO'))
+    LTNO   = sd_cham_elem(SDNom(nomj='.LTNO'))
+    BASLOC = sd_cham_elem(SDNom(nomj='.BASLOC'))
+    STNO   = sd_cham_elem(SDNom(nomj='.STNO'))
+    FISSNO = sd_cham_elem(SDNom(nomj='.FISSNO'))
+    NOXFEM = sd_cham_no()
+    LISNOH = Facultatif(AsVI())
 
 # II.4) autres objets
 

@@ -1,4 +1,4 @@
-#@ MODIF calc_miss_ops Macro  DATE 29/09/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF sd_nume_elim SD  DATE 21/06/2010   AUTEUR CORUS M.CORUS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -17,35 +17,14 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
-# RESPONSABLE COURTOIS M.COURTOIS
 
-import os
+from SD import *
 
+from SD.sd_prof_vgen import sd_prof_vgen
+class sd_nume_elim(sd_prof_vgen):
+    nomj = SDNom(fin=19)
+    BASE = AsVR(SDNom(debut=19),)
+    TAIL = AsVI(SDNom(debut=19),)
+    NOMS = AsVK8(SDNom(debut=19),)
 
-def calc_miss_ops(self, OPTION, **kwargs):
-    """Macro CALC_MISS :
-    Préparation des données et exécution d'un calcul MISS3D
-    """
-    import aster
-    from Utilitai.Utmess  import UTMESS
-    from Miss.miss_utils  import MISS_PARAMETER
-    from Miss.miss_calcul import CalculMissFactory
-    
-    ier = 0
-    # La macro compte pour 1 dans la numerotation des commandes
-    self.set_icmd(1)
-
-    # conteneur des paramètres du calcul
-    param = MISS_PARAMETER(initial_dir=os.getcwd(), **kwargs)
-    
-    # création de l'objet CALCUL_MISS_xxx
-    option_calcul = OPTION["MODULE"]
-    calcul = CalculMissFactory(option_calcul, self, param)
-
-    try:
-        calcul.prepare_donnees()
-        calcul.execute()
-        calcul.post_traitement()
-    except aster.error, err:
-        UTMESS('F', err.id_message, valk=err.valk, vali=err.vali, valr=err.valr)
 
