@@ -20,6 +20,8 @@
 # ======================================================================
 
 
+import types
+
 class AU_PLUS_UN:
    """
       La règle vérifie que l'on trouve 1 (au plus) des mots-clés
@@ -39,12 +41,25 @@ class AU_PLUS_UN:
       """
       #  on compte le nombre de mots cles presents
       text =''
-      count=0
+      count = 0
       args = self.liste_to_dico(args)
       for mc in self.mcs:
-        if args.has_key(mc):count=count+1
+        if args.has_key(mc):count=count+args[mc]
       if count > 1:
           text = "- Il ne faut qu'un mot-clé (au plus) parmi : "+`self.mcs`+'\n'
           return text,0
       return text,1
 
+   def liste_to_dico(self,args) :
+      if type(args) == types.DictionaryType:
+        return args
+      elif type(args) == types.ListType:
+        dico={}
+        for arg in args :
+          if dico.has_key(arg):
+           dico[arg]=dico[arg]+1
+          else :
+           dico[arg]=1
+        return dico
+      else :
+        raise "Erreur ce n'est ni un dictionnaire ni une liste",args
