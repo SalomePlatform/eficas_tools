@@ -103,15 +103,30 @@ class QTPanelTBW1(QTPanel):
   def __init__(self,node, parent = None):
         self.editor    = parent
         self.node      = node
+        self.alpha     = 0
         self.BuildLBMCPermis()
         self.AppelleBuildLBRegles()
+        if hasattr(self,'BAlpha'):
+           self.connect(self.BAlpha,SIGNAL("clicked()"),self.BAlphaPressed)
 
+  def BAlphaPressed (self):
+        if self.alpha == 0 :
+           self.alpha=1
+           self.BAlpha.setText("Catalogue")
+        else :
+           self.alpha=0
+           self.BAlpha.setText("Alphabetique")
+        self.BuildLBMCPermis()
+
+           
   def BuildLBMCPermis(self):
         self.LBMCPermis.clear()
         QObject.connect(self.LBMCPermis,SIGNAL("itemDoubleClicked(QListWidgetItem*)"),self.DefMC)
         jdc = self.node.item.get_jdc()
         genea =self.node.item.get_genealogie()
         liste_mc=self.node.item.get_liste_mc_ordonnee(genea,jdc.cata_ordonne_dico)
+        if self.alpha == 1 :
+           liste_mc.sort()
         for aMc in liste_mc:
            self.LBMCPermis.addItem( aMc)
         if len(liste_mc) !=0:

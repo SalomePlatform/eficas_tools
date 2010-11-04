@@ -76,9 +76,9 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPourListePressed)
         self.connect(self.BAjout1Val,SIGNAL("clicked()"),self.Ajout1Valeur)
         self.connect(self.BSup1Val,SIGNAL("clicked()"),self.Sup1Valeur)
-        self.connect(self.BAlpha,SIGNAL("clicked()"),self.Tri)
+        self.connect(self.BAlpha,SIGNAL("clicked()"),self.BAlphaPressed)
 
-  def Tri(self):
+  def BAlphaPressed(self):
       if self.alpha==1 :
          self.alpha=0
          self.BAlpha.setText(QApplication.translate("DPlusInto", "Alpha", None, QApplication.UnicodeUTF8))
