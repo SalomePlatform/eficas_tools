@@ -67,6 +67,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
         SaisieValeur.BuildLBValeurs(self)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         SaisieValeur.RemplitPanel(self,self.listeValeursCourantes)
+        self.alpha=0
         self.connecterSignaux()
 
   def connecterSignaux(self) :
@@ -75,7 +76,16 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPourListePressed)
         self.connect(self.BAjout1Val,SIGNAL("clicked()"),self.Ajout1Valeur)
         self.connect(self.BSup1Val,SIGNAL("clicked()"),self.Sup1Valeur)
+        self.connect(self.BAlpha,SIGNAL("clicked()"),self.Tri)
 
+  def Tri(self):
+      if self.alpha==1 :
+         self.alpha=0
+         self.BAlpha.setText(QApplication.translate("DPlusInto", "Alpha", None, QApplication.UnicodeUTF8))
+      else :
+         self.alpha=1
+         self.BAlpha.setText(QApplication.translate("DPlusInto", "Catalogue", None, QApplication.UnicodeUTF8))
+      SaisieValeur.RemplitPanel(self,self.listeValeursCourantes, self.alpha)
 
   def BOkPourListePressed(self):
         if self.listeValeursCourantes == [] :

@@ -173,8 +173,8 @@
            </property>
            <property name="sizeHint" stdset="0" >
             <size>
-             <width>40</width>
-             <height>20</height>
+             <width>148</width>
+             <height>27</height>
             </size>
            </property>
           </spacer>
@@ -211,11 +211,18 @@
            </property>
            <property name="sizeHint" stdset="0" >
             <size>
-             <width>40</width>
-             <height>20</height>
+             <width>58</width>
+             <height>27</height>
             </size>
            </property>
           </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="BAlpha" >
+           <property name="text" >
+            <string>Alpha</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

@@ -32,7 +32,7 @@ class SaisieValeur:
   permettant de choisir des valeurs 
   """
   def __init__(self):
-        pass
+       pass
 
   def InitListBoxASSD(self):
        listeNomsSD = self.node.item.get_sd_avant_du_bon_type()
@@ -61,7 +61,7 @@ class SaisieValeur:
             self.LBValeurs.setCurrentRow(len(listeValeurs) - 1)
        
 
-  def RemplitPanel(self,listeDejaLa=[]):
+  def RemplitPanel(self,listeDejaLa=[],alpha=0):
         self.listBoxVal.clear()
         # Traitement particulier pour le validator VerifExistence
         # dont les valeurs possibles peuvent changer : into variable
@@ -79,12 +79,18 @@ class SaisieValeur:
                    self.editor.affiche_infos("Attention, valeurs modifiees", Qt.red)
                listeDejaLa=liste
         lChoix=self.node.item.get_liste_possible(listeDejaLa)
+        if ((len(lChoix) < 10 ) and (hasattr (self,'BAlpha'))) :
+            self.BAlpha.close()
+        if alpha==1 :
+            lChoix.sort()
         for valeur in lChoix :
             self.listBoxVal.addItem( str(valeur) ) 
         if len(lChoix) == 1 :
             self.listBoxVal.setCurrentRow(0)
             self.listBoxVal.item(0).setSelected(1)
             self.bOk.setFocus()
+            
+        
 
   def ClicASSD(self):
          if self.listBoxASSD.currentItem()== None : return
