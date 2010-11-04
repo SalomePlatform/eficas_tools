@@ -179,7 +179,7 @@ endif (WITH_TK)
 
 # Installation des fichiers : MAP
 if (WITH_MAP)
-  add_subdirectory ( Map )
+  add_subdirectory ( MAP )
 endif (WITH_MAP)
 
 # Installation des fichiers : Sep
