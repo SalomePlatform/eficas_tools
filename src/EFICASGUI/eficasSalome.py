@@ -58,10 +58,9 @@ class MyEficas( qtEficas.Appli ):
         """
 
         #bidouille pour OpenTurns
-        if code.find('_') > 0 :
-          pathCode="Openturns_"+code[10]+code[11:].lower()
-        else:
-          pathCode=code[0]+code[1:].lower()
+        dictPathCode={'ASTER':'Aster','OPENTURNS_STUDY':'Openturns_Study',
+                      'OPENTURNS_WRAPPER':'Openturns_Wrapper','MAP':'MAP'}
+        pathCode=dictPathCode[code]
         sys.path[:0]=[os.path.join(eficasConfig.eficasPath,pathCode)]
         
         if Editeur.__dict__.has_key( 'session' ):
