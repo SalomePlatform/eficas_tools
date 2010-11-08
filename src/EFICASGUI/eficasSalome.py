@@ -59,7 +59,7 @@ class MyEficas( qtEficas.Appli ):
 
         #bidouille pour OpenTurns
         dictPathCode={'ASTER':'Aster','OPENTURNS_STUDY':'Openturns_Study',
-                      'OPENTURNS_WRAPPER':'Openturns_Wrapper','MAP':'MAP'}
+                      'OPENTURNS_WRAPPER':'Openturns_Wrapper','MAP':'MAP','SEP':'Sep'}
         pathCode=dictPathCode[code]
         sys.path[:0]=[os.path.join(eficasConfig.eficasPath,pathCode)]
         
