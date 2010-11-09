@@ -160,7 +160,6 @@ class PolitiquePlusieurs(Validation):
              # On teste le type de la valeur
              valeurScientifique=valeur
              valide=self.node.item.valide_item(valeur)
-             print valeur
              if not valide :
                 try :
                    valeur,valide=self.node.item.eval_valeur(valeur)

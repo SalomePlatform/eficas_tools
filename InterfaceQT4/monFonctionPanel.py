@@ -87,7 +87,6 @@ class MonFonctionPanel(MonPlusieursBasePanel):
                        for val in valeur :
                            TupleEnTexte = TupleEnTexte + str(self.politique.GetValeurTexte(val)) +", "
                        TupleEnTexte = TupleEnTexte[0:-2] +")"
-                       print TupleEnTexte
                        self.LBValeurs.addItem(TupleEnTexte)
                    else :
                        self.LBValeurs.addItem(QString(str(valeur)))

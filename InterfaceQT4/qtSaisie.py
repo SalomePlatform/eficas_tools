@@ -90,7 +90,6 @@ class SaisieValeur:
             self.listBoxVal.item(0).setSelected(1)
             self.bOk.setFocus()
             
-        
 
   def ClicASSD(self):
          if self.listBoxASSD.currentItem()== None : return
