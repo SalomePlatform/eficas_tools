@@ -220,7 +220,7 @@
          <item>
           <widget class="QPushButton" name="BAlpha" >
            <property name="text" >
-            <string>Alpha</string>
+            <string>Tri Alpha</string>
            </property>
           </widget>
          </item>
