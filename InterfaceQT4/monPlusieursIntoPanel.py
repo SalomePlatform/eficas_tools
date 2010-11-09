@@ -81,10 +81,10 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   def BAlphaPressed(self):
       if self.alpha==1 :
          self.alpha=0
-         self.BAlpha.setText(QApplication.translate("DPlusInto", "Alpha", None, QApplication.UnicodeUTF8))
+         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Alpha",None,QApplication.UnicodeUTF8))
       else :
          self.alpha=1
-         self.BAlpha.setText(QApplication.translate("DPlusInto", "Catalogue", None, QApplication.UnicodeUTF8))
+         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Cata",None,QApplication.UnicodeUTF8))
       SaisieValeur.RemplitPanel(self,self.listeValeursCourantes, self.alpha)
 
   def BOkPourListePressed(self):
