@@ -342,10 +342,10 @@ class Appli(Ui_Eficas,QMainWindow):
         self.viewmanager.saveAsCurrentEditor()
         
     def fileClose(self):
-        self.viewmanager.handleClose()
+        self.viewmanager.handleClose(texte='&Fermer')
         
     def fileCloseAll(self):
-        self.viewmanager.handleCloseAll()
+        self.viewmanager.handleCloseAll(texte='&Fermer')
         
     def fileExit(self):
         # On peut sortir sur Abort

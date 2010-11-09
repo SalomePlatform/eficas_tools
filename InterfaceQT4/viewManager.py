@@ -53,11 +53,11 @@ class MyTabview:
        self.appliEficas.addToRecentList(fichier)
        maPage=self.getEditor( fichier,units=units)
 
-   def handleClose(self,doitSauverRecent = 1):
+   def handleClose(self,doitSauverRecent = 1,texte='&Quitter'):
        if doitSauverRecent : self.appliEficas.sauveRecents()
        index=self.myQtab.currentIndex()
        if index < 0 : return
-       res=self.checkDirty(self.dict_editors[index])
+       res=self.checkDirty(self.dict_editors[index],texte)
        if res == 2 : return 2             # l utilisateur a annule
        index=self.myQtab.currentIndex()
        idx=index
@@ -97,12 +97,12 @@ class MyTabview:
        editor=self.dict_editors[index]
        editor.saveYACS()
 
-   def handleCloseAll(self):
+   def handleCloseAll(self,texte='Quitter'):
        res=0
        self.appliEficas.sauveRecents()
        while len(self.dict_editors) > 0 :
              self.myQtab.setCurrentIndex(0)
-             res=self.handleClose(0)
+             res=self.handleClose(0,texte)
              if res==2 : return res   # l utilsateur a annule
        return res
         
@@ -259,7 +259,7 @@ class MyTabview:
     return 0
 
 
-   def checkDirty(self, editor):
+   def checkDirty(self, editor,texte):
         """
         Private method to check dirty status and open a message window.
         
@@ -272,7 +272,7 @@ class MyTabview:
                      None,
                      self.appliEficas.trUtf8("Fichier Duplique"),
                      self.appliEficas.trUtf8("Le fichier ne sera pas sauvegarde."),
-                     self.appliEficas.trUtf8("&Quitter"), 
+                     Eficas.trUtf8(texte), 
                      self.appliEficas.trUtf8("&Annuler"))
             if res == 0 : return 1
             return 0
@@ -284,7 +284,7 @@ class MyTabview:
                 self.appliEficas.trUtf8("Fichier Modifie"),
                 self.appliEficas.trUtf8("Le fichier <b>%1</b> n a pas ete sauvegarde.") .arg(fn),
                 self.appliEficas.trUtf8("&Sauvegarder"),
-                self.appliEficas.trUtf8("&Quitter "),
+                self.appliEficas.trUtf8(texte),
                 self.appliEficas.trUtf8("&Annuler") )
             if res == 0:
                 (ok, newName) = editor.saveFile()

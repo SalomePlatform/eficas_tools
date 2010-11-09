@@ -42,7 +42,16 @@ class QTPanel:
   def __init__(self,node, parent = None):
         self.editor    = parent
         self.node      = node
-        
+        if hasattr(self,'TWChoix'):
+           self.connect(self.TWChoix, SIGNAL("currentChanged(QWidget *)"), self.GestionBALpha)
+
+  def GestionBALpha(self,fenetre):
+        if self.TWChoix.currentIndex()!=0:
+           self.BAlpha.hide()
+        else :
+           self.BAlpha.setVisible(True)
+           self.BuildLBMCPermis()
+
   def BOkPressed(self):
         """ Impossible d utiliser les vrais labels avec designer ?? """
         label=self.TWChoix.tabText(self.TWChoix.currentIndex())
@@ -112,10 +121,10 @@ class QTPanelTBW1(QTPanel):
   def BAlphaPressed (self):
         if self.alpha == 0 :
            self.alpha=1
-           self.BAlpha.setText("Catalogue")
+           self.BAlpha.setText("Tri Cata")
         else :
            self.alpha=0
-           self.BAlpha.setText("Alphabetique")
+           self.BAlpha.setText("Tri Alpha")
         self.BuildLBMCPermis()
 
            
@@ -125,6 +134,8 @@ class QTPanelTBW1(QTPanel):
         jdc = self.node.item.get_jdc()
         genea =self.node.item.get_genealogie()
         liste_mc=self.node.item.get_liste_mc_ordonnee(genea,jdc.cata_ordonne_dico)
+        if ((len(liste_mc) < 10) and (hasattr(self,'BAlpha'))):
+           self.BAlpha.hide()
         if self.alpha == 1 :
            liste_mc.sort()
         for aMc in liste_mc:
