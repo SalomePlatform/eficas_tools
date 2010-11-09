@@ -153,9 +153,6 @@ class MyTabview:
    def saveCurrentEditor(self):
        index=self.myQtab.currentIndex()
        if index < 0 : return
-       print self
-       print index
-       print self.dict_editors
        editor=self.dict_editors[index]
        if editor in self.doubles.keys() :
            QMessageBox.warning(
