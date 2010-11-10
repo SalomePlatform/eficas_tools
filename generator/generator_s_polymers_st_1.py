@@ -184,6 +184,7 @@ class s_poly_st_1Generator(MapGenerator):
             commande+= "echo "+str(self.contrast)+" > "+"contrast.input"+";\n"         
             commande+= "./fdvgrid 3D 1.0 0.0 0.0 v t "+str(finesse)+" cross 1e-6 "+";\n"
             commande+= "echo 'fin execution de FDVGRID';\n"
+            print "commande issue du generator :", commande
             
          if (choix=="FEM+mesh") :
             print "option Code_Aster"
@@ -211,7 +212,7 @@ class s_poly_st_1Generator(MapGenerator):
             f.close()
             # launch of BENHUR on the previous file
             commande=commande + "cd "+self.config.PATH_BENHUR+"/bin;\n"
-            #commande=commande + "./benhur -i "+monFichierOutput+";\n"
+            commande=commande + "./benhur -i "+monFichierOutput+";\n"
             commande=commande + "echo 'fin execution de BENHUR';\n"
        
             commande+= "echo 'execution de CODE_ASTER';\n"
@@ -255,16 +256,17 @@ class s_poly_st_1Generator(MapGenerator):
             f.close()
 
             # launch of CODE_ASTER on the study
-            commande="cd "+self.config.PATH_STUDY+";"
+            commande=commande + "cd "+self.config.PATH_STUDY+";"
             commande=commande + self.config.PATH_ASTER + "/as_run "+monFichierExportOutput +";\n"
             commande=commande + "echo 'fin execution de CODE_ASTER';\n"
+       
+            commande+= "echo 'execution de GMSH';\n"
+            commande+= "gmsh "+self.config.PATH_STUDY+"/s_polymers_st_1_aster.resu.msh;\n"
+            commande+= "echo 'fin execution de GMSH';\n"
             
             print commande
             
-            return commande
-
-            
-      print "METHODE Ok"
+      print "METHODE Ok - 20101105"
       print "_____________________\n"
       return commande
 

@@ -10,10 +10,6 @@
 
 # nbre de classes (de 0% a 100% d'inclusions)
 nb_classes=11
-# specifier le repertoire dans lequel on trouve "entree_schema.dat", "entree_cl.dat" et dans lequel on ecrit "sortie_resultats.dat"
-racine="%_PATH_MODULE%/s_poly_st_1/"
-# nb_classes lignes de float : les lambda donnes par le schema pour la fraction d'incl de chaque classe (de 0% incl a 100% incl tous les N% selon nb_classes)
-fic_entree_schema   =racine+"s_poly_st_1_aster.mat"
 
 # cote cube
 L=%_RVE_SIZE%
@@ -30,7 +26,7 @@ nb_classes=11
 lambda_t = [0.0]*nb_classes
 print("'\n")
 for i in range(0,nb_classes):
-	alpha=float((i-1)/(nb_classes-1))
+	alpha=float((i)/(nb_classes-1))
 	lambda_t[i]=(1-alpha)*%_CONDUCTIVITE_M%+(alpha)*%_CONDUCTIVITE_I%
 
 DEBUT(PAR_LOT='OUI',); # 'OUI' evite l'alarme
