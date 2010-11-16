@@ -33,7 +33,7 @@ class CONFIG(configuration.CONFIG_BASE):
   #-----------------------------------
   def __init__(self,appli,repIni):
   #-----------------------------------
-
+      self.ssCode=appli.ssCode
       configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_MAP')
       self.INSTALLDIR =os.path.dirname(__file__)
 
@@ -48,7 +48,16 @@ class CONFIG(configuration.CONFIG_BASE):
 
       self.cataFile="catalogues_MAP.ini"
       self.setValeurs()
-
+  
+  def make_ssCode(self,ssCode):
+      if ssCode == None : return
+      try :
+        name='prefs_'+ssCode
+        prefs_ssCode=__import__(name)
+        prefs_ssCode.ajout(self)
+      except :
+       pass
+       
 
 def make_config(appli,rep):
     return CONFIG(appli,rep)

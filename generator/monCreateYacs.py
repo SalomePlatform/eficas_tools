@@ -44,7 +44,7 @@ class CreeSchemaYacs :
      def write_yacs_proc(self,proc, yacs_schema_filename):
          proc.saveSchema(yacs_schema_filename)
 
-class s_poly_st_1(CreeSchemaYacs) :
+class s_polymers_st_1(CreeSchemaYacs) :
 
      def BENHURYACS(self,proc,dico):
          monFichierInput=self.config.PATH_BENHUR+"/BHR_files.txt"
@@ -82,6 +82,14 @@ class s_poly_st_1(CreeSchemaYacs) :
          if self.nodeAvant != None :
             proc.edAddCFLink(self.nodeAvant,self.asterNode)
          self.nodeAvant=self.asterNode
+
+     def FDVGRIDYACS(self,proc,dico):
+         print "iiiii"
+
+     def METHODEYACS(self,proc,dico)
+         self.PYGMEEYACS(proc,dico)
+         if (self.CHOIX=="FD+grid") : self.FDVGRIDYACS(proc,dico)
+
 
 dictKlass={'s_poly_st_1':s_poly_st_1}
 def getSchema(config):

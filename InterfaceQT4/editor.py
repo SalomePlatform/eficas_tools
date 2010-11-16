@@ -285,7 +285,7 @@ class JDCEditor(QSplitter):
     #----------------------------------------------#
     def _viewText(self, txt, caption = "FILE_VIEWER"):    
     #----------------------------------------------#
-        w = qtCommun.ViewText( self.QWParent )
+        w = qtCommun.ViewText( self.QWParent, editor=self )
         w.setWindowTitle( caption )
         w.setText(txt)
         w.show()

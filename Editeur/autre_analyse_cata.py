@@ -63,11 +63,13 @@ def traite_entite(entite,liste_simp_reel):
 def traite_cache(objet):
     if not hasattr(objet, "cache"): return
     if objet.cache == 0 :return
+    clef=objet.nom
+    if objet.equiv != None : clef=objet.equiv
     if hasattr(objet.pere,"mcOblig"):
-      objet.pere.mcOblig[objet.equiv]=objet.defaut
+      objet.pere.mcOblig[clef]=objet.defaut
     else :
       objet.pere.mcOblig={}
-      objet.pere.mcOblig[objet.equiv]=objet.defaut
+      objet.pere.mcOblig[clef]=objet.defaut
 
 def traite_reel(objet,liste_simp_reel):
     if objet.__class__.__name__ == "SIMP":

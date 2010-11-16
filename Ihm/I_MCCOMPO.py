@@ -60,6 +60,14 @@ class MCCOMPO(I_OBJECT.OBJECT):
     for arg in liste:
         objet_cata = dico[arg]
         dico=objet_cata.entites
+        l=[]
+        specifique=0
+        for obj in dico.keys() :
+            if not(hasattr(dico[obj],'cache')) or dico[obj].cache==0 :
+               l.append(obj)
+            else :
+               specifique=1
+        if specifique == 1 : return l    
     return objet_cata.ordre_mc
 
   def filtre_liste_mc(self,liste_brute):

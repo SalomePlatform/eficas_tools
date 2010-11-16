@@ -27,12 +27,17 @@ import traceback
 import types,string,re,os
 
 from generator_python import PythonGenerator
+try :
+   sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'classes/python/'))
+   from class_MAP_parameters import *
+except :
+   pass
+
 
 
 def entryPoint():
    """
       Retourne les informations necessaires pour le chargeur de plugins
-
       Ces informations sont retournees dans un dictionnaire
    """
    return {
@@ -121,25 +126,30 @@ class MapGenerator(PythonGenerator):
              self.texteExecution=self.texteExecution+texteCode
 
    def generPROC_ETAPE(self,obj):
-      clefDico=obj.nom
       self.DictTemp={}
       s=PythonGenerator.generPROC_ETAPE(self,obj)
       dico={}
       dico[obj.nom]=self.DictTemp
       self.listeCODE.append(dico)
+      if hasattr(obj.definition,"mcOblig") :
+         for clef in obj.definition.mcOblig.keys():
+             setattr(self,clef,obj.definition.mcOblig[clef])
       return s
 
 
    def generMCSIMP(self,obj) :
       """
       Convertit un objet MCSIMP en texte python
-      Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
       """
       s=PythonGenerator.generMCSIMP(self,obj)
       clef=""
       for i in obj.get_genealogie() :
            clef=clef+"_"+i
       self.DictTemp[clef]=obj.valeur
+      if hasattr(obj.definition,'equiv') and obj.definition.equiv!= None:
+         setattr(self,obj.definition.equiv,obj.valeur)
+      else :
+         setattr(self,obj.nom,obj.valeur)
       return s
 
 
@@ -149,6 +159,7 @@ class MapGenerator(PythonGenerator):
            result=chaine.replace(rplact,self.config.__dict__[mot])
            chaine=result
        return chaine
+
 
    def  remplaceDICO(self,chaine,dico) :
        for mot in dico.keys() :

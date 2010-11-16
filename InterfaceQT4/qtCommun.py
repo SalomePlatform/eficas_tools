@@ -345,9 +345,9 @@ class ViewText(Ui_dView,QDialog):
     """
     Classe permettant la visualisation de texte
     """
-    def __init__(self,parent):
+    def __init__(self,parent,editor=None):
         QDialog.__init__(self,parent)
-        self.parent=parent
+        self.editor=editor
         self.setupUi(self)
 
         self.resize( QSize(600,600).expandedTo(self.minimumSizeHint()) )
@@ -361,10 +361,10 @@ class ViewText(Ui_dView,QDialog):
         #recuperation du nom du fichier
         fn = QFileDialog.getSaveFileName(None,
                 self.trUtf8("Save File"),
-                self.appliEficas.CONFIGURATION.savedir)
+                self.editor.appliEficas.CONFIGURATION.savedir)
         if fn.isNull() : return
         ulfile = os.path.abspath(unicode(fn))
-        self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+        self.editor.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
         try:
            f = open(fn, 'wb')
            f.write(str(self.view.toPlainText()))

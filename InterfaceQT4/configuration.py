@@ -72,6 +72,8 @@ class CONFIG_BASE:
  
       #Lecture des fichiers utilisateurs
       self.lecture_fichier_ini_standard()
+      if hasattr(self,'make_ssCode'):
+         self.make_ssCode(self.ssCode)
       self.lecture_fichier_ini_utilisateur()
       self.lecture_catalogues()
 
@@ -90,15 +92,13 @@ class CONFIG_BASE:
             setattr(self,k,valeur)
          except :
             pass
-      if hasattr(self,'map_path') :
-         oldPath=self.map_path
-              
 
   #--------------------------------------
   def lecture_fichier_ini_utilisateur(self):
   #--------------------------------------
   # Surcharge les paramètres standards par les paramètres utilisateur s'ils existent
       self.fic_ini_utilisateur = os.path.join(self.rep_user,self.prefsUser)
+      print self.fic_ini_utilisateur
       if not os.path.isfile(self.fic_ini_utilisateur): return
 
       txt = utils.read_file(self.fic_ini_utilisateur)
