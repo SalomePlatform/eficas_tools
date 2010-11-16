@@ -94,11 +94,12 @@ class MapGenerator(PythonGenerator):
       self.initialise(config)
       text=PythonGenerator.gener(self,obj,format)
       import sys
-      sys.path.append('/local/noyret/Salome_5.1.3/Install/YACS/lib/python2.5/site-packages/salome/')
+      sys.path.append(os.path.join(os.getenv("YACS_ROOT_DIR"),"lib/python2.4/site-packages/salome/"))
+      print sys.path
       self.verifie()
       import monCreateYacs
       self.monSchema=monCreateYacs.getSchema(config)
-      self.proc=self.monSchema.createProc()
+      self.proc=self.monSchema.createProc(self)
       for elt in self.listeCODE:
           code=elt.keys()[0]
           dico=elt[code]
@@ -107,7 +108,9 @@ class MapGenerator(PythonGenerator):
              if hasattr(self.monSchema, codeYACS): 
                 fct=getattr(self.monSchema, codeYACS)
                 fct(self.proc,dico)
+      nomFichier="/local00/bin/MAP/studies/demonstrateur_s_polymers_st_1/test_20101116.xml"
       self.monSchema.write_yacs_proc(self.proc,str(nomFichier))
+      print "le fichier xml est : ",nomFichier
 
    def generePythonMap(self,execution) :
       '''

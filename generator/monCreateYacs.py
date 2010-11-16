@@ -24,9 +24,11 @@ class CreeSchemaYacs :
 
      def addCatalog(self):
         try:
-           monCataFile= os.environ["EFICAS_ROOT_DIR"]
-           monCataFile=monCataFile+"/share/salome/resources/eficas/cata"
-           monCataFile=monCataFile+self.ssCode+".xml"
+           # modifs CTL+PN 20101116 for today
+           #monCataFile= os.environ["EFICAS_ROOT_DIR"]
+           #monCataFile=monCataFile+"/share/salome/resources/eficas/cata"
+           #monCataFile=monCataFile+self.ssCode+".xml"
+           monCataFile="/local00/bin/EficasV1/MAP/cata_s_polymers_st_1.xml"
            print monCataFile
            self.monCata = self.runtime.loadCatalog("proc",monCataFile)
         except:
@@ -34,7 +36,8 @@ class CreeSchemaYacs :
            traceback.print_exc()
            sys.exit(1)
 
-     def createProc(self):
+     def createProc(self, generator):
+        self.generator=generator
         proc = self.runtime.createProc("proc")
         proc.setTypeCode("pyobj", self.runtime.getTypeCode("pyobj"))
         t_pyobj  = proc.getTypeCode("pyobj")
@@ -59,10 +62,16 @@ class s_polymers_st_1(CreeSchemaYacs) :
 
      def PYGMEEYACS(self,proc,dico):
          monFichierInput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"/pygmee_input.txt"
-         factoryNode = self.monCata._nodeMap["pygmee"]
-         self.pygmeeNode = factoryNode.cloneNode("pygmee")
-         self.pygmeeNode.getInputPort("pathPygmee").edInitPy(self.config.PATH_PYGMEE)
-         self. pygmeeNode.getInputPort("fileInput").edInitPy(monFichierInput)
+         factoryNode = self.monCata._nodeMap["pygmee_v2"]
+         self.pygmeeNode = factoryNode.cloneNode("pygmee_v2")
+         self.pygmeeNode.getInputPort("rve_size").edInitPy(self.generator.size)
+         self.pygmeeNode.getInputPort("phase_number").edInitPy(1)
+         self.pygmeeNode.getInputPort("sieve_curve_in").edInitPy(self.generator.sieve_in)
+         self.pygmeeNode.getInputPort("sieve_curve_out").edInitPy(self.generator.sieve_out)
+         self.pygmeeNode.getInputPort("repulsion_distance").edInitPy(self.generator.distance)
+         self.pygmeeNode.getInputPort("study_name").edInitPy("s_polymers_st_1_20101116")
+         self.pygmeeNode.getInputPort("file_result_inclusions").edInitPy(self.generator.inclusion_name)
+         self.pygmeeNode.getInputPort("file_result_rve").edInitPy(self.generator.rve_name)
          proc.edAddChild(self.pygmeeNode)
          if self.nodeAvant != None :
             proc.edAddCFLink(self.nodeAvant,self.pygmeeNode)
@@ -86,19 +95,19 @@ class s_polymers_st_1(CreeSchemaYacs) :
      def FDVGRIDYACS(self,proc,dico):
          print "iiiii"
 
-     def METHODEYACS(self,proc,dico)
+     def METHODEYACS(self,proc,dico):
          self.PYGMEEYACS(proc,dico)
-         if (self.CHOIX=="FD+grid") : self.FDVGRIDYACS(proc,dico)
+         if (self.generator.CHOIX=="FD+grid") : self.FDVGRIDYACS(proc,dico)
 
 
-dictKlass={'s_poly_st_1':s_poly_st_1}
+dictKlass={'s_polymers_st_1':s_polymers_st_1}
 def getSchema(config):
      schema=config.appli.ssCode
      return dictKlass[schema](config)
 
 
 if __name__ == "__main__":
-     monCreator=getSchema('s_poly_st_1')
+     monCreator=getSchema('s_polymers_st_1')
      proc=monCreator.createProc()
      monCreator.ajoutPygmee(proc)
      monCreator.ajoutBenhur(proc)
