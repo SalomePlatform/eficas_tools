@@ -107,11 +107,11 @@ class s_poly_st_1Generator(MapGenerator):
       pygmee_v2_input=self.config.PATH_STUDY+"/pygmee_v2.input"
       parameter=MAP_parameters()
       parameter.add_component(composant)
-      parameter.add_parameter(composant, 'rve_size', self.size)
+      parameter.add_parameter(composant, 'rve_size', self.rve_size)
       parameter.add_parameter(composant, 'phase_number', 1)
-      parameter.add_parameter(composant, 'sieve_curve_in', self.sieve_in)
-      parameter.add_parameter(composant, 'sieve_curve_out',  self.sieve_out)
-      parameter.add_parameter(composant, 'repulsion_distance', self.distance)
+      parameter.add_parameter(composant, 'sieve_curve_in', self.sieve_curve_in)
+      parameter.add_parameter(composant, 'sieve_curve_out',  self.sieve_curve_out)
+      parameter.add_parameter(composant, 'repulsion_distance', self.repulsion_distance)
       parameter.add_parameter(composant, 'study_name', "study")
       parameter.add_parameter(composant, 'file_result_inclusions', self.inclusion_name)
       parameter.add_parameter(composant, 'file_result_rve', self.rve_name)
@@ -128,10 +128,10 @@ class s_poly_st_1Generator(MapGenerator):
 
    def FDVGRID(self):
       if ( self.FINESSE < 32): self.FINESSE=32
-      self.contrast=float(self.CONDUCTIVITE_I/self.CONDUCTIVITE_M)
+      self.contrast=float(self.lambda_I/self.lambda_M)
       commande= "echo 'execution de FDVGRID';\n"
       commande+= "cd "+self.config.PATH_FDVGRID+";\n"
-      commande+= "echo "+ str(self.size)+" > "+"rve.input"+";\n"
+      commande+= "echo "+ str(self.rve_size)+" > "+"rve.input"+";\n"
       commande+= "cp " +str(self.config.PATH_STUDY+"/pygmee_v2_test_1.inclusions")+" "+"inclusions.input"+";\n"
       commande+= "echo "+str(self.contrast)+" > "+"contrast.input"+";\n"         
       commande+= "./fdvgrid 3D 1.0 0.0 0.0 v t "+str(self.FINESSE)+" cross 1e-6 "+";\n"

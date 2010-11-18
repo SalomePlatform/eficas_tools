@@ -64,12 +64,12 @@ class s_polymers_st_1(CreeSchemaYacs) :
          monFichierInput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"/pygmee_input.txt"
          factoryNode = self.monCata._nodeMap["pygmee_v2"]
          self.pygmeeNode = factoryNode.cloneNode("pygmee_v2")
-         self.pygmeeNode.getInputPort("rve_size").edInitPy(self.generator.size)
+         self.pygmeeNode.getInputPort("rve_size").edInitPy(self.generator.rve_size)
          self.pygmeeNode.getInputPort("phase_number").edInitPy(1)
-         self.pygmeeNode.getInputPort("sieve_curve_in").edInitPy(self.generator.sieve_in)
-         self.pygmeeNode.getInputPort("sieve_curve_out").edInitPy(self.generator.sieve_out)
-         self.pygmeeNode.getInputPort("repulsion_distance").edInitPy(self.generator.distance)
-         self.pygmeeNode.getInputPort("study_name").edInitPy("s_polymers_st_1_20101116")
+         self.pygmeeNode.getInputPort("sieve_curve_in").edInitPy(self.generator.sieve_curve_in)
+         self.pygmeeNode.getInputPort("sieve_curve_out").edInitPy(self.generator.sieve_curve_out)
+         self.pygmeeNode.getInputPort("repulsion_distance").edInitPy(self.generator.repulsion_distance)
+         self.pygmeeNode.getInputPort("study_name").edInitPy("s_polymers_st_1_20101117")
          self.pygmeeNode.getInputPort("file_result_inclusions").edInitPy(self.generator.inclusion_name)
          self.pygmeeNode.getInputPort("file_result_rve").edInitPy(self.generator.rve_name)
          proc.edAddChild(self.pygmeeNode)

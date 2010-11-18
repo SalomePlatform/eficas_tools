@@ -25,6 +25,8 @@
 """
 import traceback
 import types,string,re,os
+import time
+from datetime import date
 
 from generator_python import PythonGenerator
 try :
@@ -108,7 +110,12 @@ class MapGenerator(PythonGenerator):
              if hasattr(self.monSchema, codeYACS): 
                 fct=getattr(self.monSchema, codeYACS)
                 fct(self.proc,dico)
-      nomFichier="/local00/bin/MAP/studies/demonstrateur_s_polymers_st_1/test_20101116.xml"
+                
+      today = str(date.today())
+      today = today.replace('-', '')
+      today+="-"+time.strftime("%H%M%S", time.localtime())
+
+      nomFichier=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_"+today+".xml"
       self.monSchema.write_yacs_proc(self.proc,str(nomFichier))
       print "le fichier xml est : ",nomFichier
 
