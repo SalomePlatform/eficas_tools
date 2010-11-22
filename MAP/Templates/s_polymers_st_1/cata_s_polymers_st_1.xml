@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<proc name="s_polymers_st_1">
+   <property name="DefaultStudyID" value="1"/>
+   <type name="string" kind="string"/>
+   <struct name="Engines/dataref">
+      <member name="ref" type="string"/>
+   </struct>
+   <type name="bool" kind="bool"/>
+   <sequence name="boolvec" content="bool"/>
+   <type name="double" kind="double"/>
+   <sequence name="dblevec" content="double"/>
+   <objref name="file" id="file"/>
+   <type name="int" kind="int"/>
+   <sequence name="intvec" content="int"/>
+   <objref name="pyobj" id="python:obj:1.0"/>
+   <sequence name="stringvec" content="string"/>
+   <container name="DefaultContainer">
+      <property name="container_name" value="FactoryServer"/>
+      <property name="hostname" value="localhost"/>
+   </container>
+   <inline name="pygmee_v2">
+      <script><code><![CDATA[import sys
+import os
+
+sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'../EficasV1/MAP/Templates/s_polymers_st_1'))
+
+print sys.path
+from s_polymers_st_1_YACS_nodes import *
+
+component_pygmee_v2(rve_size, phase_number, sieve_curve_in, sieve_curve_out, repulsion_distance, study_name, study_path, file_result_inclusions, file_result_rve)
+    
+#print "pygmee_v2 for YACS - BEGIN"
+#composant="pygmee_v2"
+#parameter=MAP_parameters()
+#parameter.add_component(composant)
+#parameter.add_parameter(composant, 'rve_size', rve_size)
+#parameter.add_parameter(composant, 'phase_number', phase_number)
+#parameter.add_parameter(composant, 'sieve_curve_in', sieve_curve_in)
+#parameter.add_parameter(composant, 'sieve_curve_out',  sieve_curve_out)
+#parameter.add_parameter(composant, 'repulsion_distance', repulsion_distance)
+#parameter.add_parameter(composant, 'study_name', study_name)
+#parameter.add_parameter(composant, 'file_result_inclusions', file_result_inclusions)
+#parameter.add_parameter(composant, 'file_result_rve', file_result_rve)
+#
+#pygmee_v2_input = study_path+"/pygmee_v2_for_YACS.input"
+#
+#commande=parameter.write_for_shell(pygmee_v2_input)
+#os.system(commande)
+#
+#commande= "cd /local00/bin/MAP/components/pygmee_v2/src;"
+#commande+= "python pygmee_v2.py -i "+pygmee_v2_input+";\n"
+#os.system(commande)
+
+result_inclusions = file_result_inclusions
+result_rve = file_result_rve
+]]></code></script>
+      <inport name="phase_number" type="int"/>
+      <inport name="sieve_curve_in" type="string"/>
+      <inport name="sieve_curve_out" type="string"/>
+      <inport name="repulsion_distance" type="double"/>
+      <inport name="file_result_inclusions" type="string"/>
+      <inport name="file_result_rve" type="string"/>
+      <inport name="rve_size" type="double"/>
+      <inport name="study_name" type="string"/>
+      <inport name="study_path" type="string"/>
+      <outport name="result_inclusions" type="string"/>
+      <outport name="result_rve" type="string"/>
+   </inline>
+   <inline name="init">
+      <script><code><![CDATA[phase_number=1
+rve_size=50.0
+study_path="/local00/bin/MAP/studies/demonstrateur_s_polymers_st_1/"
+sieve_curve_in=study_path+"inclusion_size_distribution.txt"
+sieve_curve_out=study_path+"pygmee_v2_test_YACS.sieve_out"
+repulsion_distance=0.1
+study_name="test YACS"
+file_result_inclusions=study_path+"inclusions.txt"
+file_result_rve=study_path+"rve.txt"
+finesse=32
+lambda_I=100.
+lambda_M=1.
+benhur_template="/local00/bin/EficaV1/MAP/templates/s_polymers_st_1/benhur_template.txt"
+]]></code></script>
+      <outport name="phase_number" type="int"/>
+      <outport name="sieve_curve_in" type="string"/>
+      <outport name="sieve_curve_out" type="string"/>
+      <outport name="repulsion_distance" type="double"/>
+      <outport name="file_result_inclusions" type="string"/>
+      <outport name="file_result_rve" type="string"/>
+      <outport name="rve_size" type="double"/>
+      <outport name="finesse" type="int"/>
+      <outport name="lambda_I" type="double"/>
+      <outport name="lambda_M" type="double"/>
+      <outport name="study_name" type="string"/>
+      <outport name="study_path" type="string"/>
+      <outport name="benhur_template" type="string"/>
+   </inline>
+   <inline name="fdvgrid">
+      <script><code><![CDATA[import sys
+import os
+
+sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'../EficasV1/MAP/Templates/s_polymers_st_1'))
+
+from s_polymers_st_1_YACS_nodes import *
+
+lambda_x=component_fdvgrid(lambda_I, lambda_M, rve_size, file_inclusions, finesse)
+]]></code></script>
+      <inport name="file_inclusions" type="string"/>
+      <inport name="rve_size" type="double"/>
+      <inport name="finesse" type="int"/>
+      <inport name="lambda_I" type="double"/>
+      <inport name="lambda_M" type="double"/>
+      <inport name="study_name" type="string"/>
+      <inport name="study_path" type="string"/>
+      <outport name="lambda_x" type="double"/>
+   </inline>
+   <inline name="benhur">
+      <script><code><![CDATA[import os, sys
+
+print "benhur for YACS - BEGIN"
+print "benhur for YACS - END"
+
+]]></code></script>
+      <inport name="rve_size" type="double"/>
+      <inport name="finesse" type="double"/>
+      <inport name="file_inclusions" type="string"/>
+      <inport name="study_name" type="string"/>
+      <inport name="study_path" type="string"/>
+      <inport name="benhur_template" type="string"/>
+   </inline>
+   <control> <fromnode>pygmee_v2</fromnode> <tonode>benhur</tonode> </control>
+   <control> <fromnode>pygmee_v2</fromnode> <tonode>fdvgrid</tonode> </control>
+   <control> <fromnode>init</fromnode> <tonode>benhur</tonode> </control>
+   <control> <fromnode>init</fromnode> <tonode>fdvgrid</tonode> </control>
+   <control> <fromnode>init</fromnode> <tonode>pygmee_v2</tonode> </control>
+   <datalink control="false">
+      <fromnode>pygmee_v2</fromnode> <fromport>result_inclusions</fromport>
+      <tonode>benhur</tonode> <toport>file_inclusions</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>pygmee_v2</fromnode> <fromport>result_inclusions</fromport>
+      <tonode>fdvgrid</tonode> <toport>file_inclusions</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>phase_number</fromport>
+      <tonode>pygmee_v2</tonode> <toport>phase_number</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>sieve_curve_in</fromport>
+      <tonode>pygmee_v2</tonode> <toport>sieve_curve_in</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>sieve_curve_out</fromport>
+      <tonode>pygmee_v2</tonode> <toport>sieve_curve_out</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>repulsion_distance</fromport>
+      <tonode>pygmee_v2</tonode> <toport>repulsion_distance</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>file_result_inclusions</fromport>
+      <tonode>pygmee_v2</tonode> <toport>file_result_inclusions</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>file_result_rve</fromport>
+      <tonode>pygmee_v2</tonode> <toport>file_result_rve</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>rve_size</fromport>
+      <tonode>benhur</tonode> <toport>rve_size</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>rve_size</fromport>
+      <tonode>fdvgrid</tonode> <toport>rve_size</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>rve_size</fromport>
+      <tonode>pygmee_v2</tonode> <toport>rve_size</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>finesse</fromport>
+      <tonode>benhur</tonode> <toport>finesse</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>finesse</fromport>
+      <tonode>fdvgrid</tonode> <toport>finesse</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>lambda_I</fromport>
+      <tonode>fdvgrid</tonode> <toport>lambda_I</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>lambda_M</fromport>
+      <tonode>fdvgrid</tonode> <toport>lambda_M</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>study_name</fromport>
+      <tonode>fdvgrid</tonode> <toport>study_name</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>study_name</fromport>
+      <tonode>pygmee_v2</tonode> <toport>study_name</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>study_name</fromport>
+      <tonode>benhur</tonode> <toport>study_name</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>study_path</fromport>
+      <tonode>fdvgrid</tonode> <toport>study_path</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>study_path</fromport>
+      <tonode>pygmee_v2</tonode> <toport>study_path</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>study_path</fromport>
+      <tonode>benhur</tonode> <toport>study_path</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>benhur_template</fromport>
+      <tonode>benhur</tonode> <toport>benhur_template</toport>
+   </datalink>
+   <parameter>
+      <tonode>benhur</tonode><toport>file_inclusions</toport>
+      <value><string></string></value>
+   </parameter>
+   <presentation name="init" x="9" y="328" width="273.5" height="458"/>
+   <presentation name="benhur" x="848.961" y="95.838" width="223" height="255"/>
+   <presentation name="fdvgrid" x="888.902" y="551.141" width="227.5" height="284"/>
+   <presentation name="pygmee_v2" x="415.186" y="179.5" width="249.5" height="342"/>
+   <presentation name="__ROOT__" x="0" y="0" width="1125.9" height="844.141"/>
+</proc>
