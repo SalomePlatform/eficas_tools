@@ -28,28 +28,6 @@ print sys.path
 from s_polymers_st_1_YACS_nodes import *
 
 component_pygmee_v2(rve_size, phase_number, sieve_curve_in, sieve_curve_out, repulsion_distance, study_name, study_path, file_result_inclusions, file_result_rve)
-    
-#print "pygmee_v2 for YACS - BEGIN"
-#composant="pygmee_v2"
-#parameter=MAP_parameters()
-#parameter.add_component(composant)
-#parameter.add_parameter(composant, 'rve_size', rve_size)
-#parameter.add_parameter(composant, 'phase_number', phase_number)
-#parameter.add_parameter(composant, 'sieve_curve_in', sieve_curve_in)
-#parameter.add_parameter(composant, 'sieve_curve_out',  sieve_curve_out)
-#parameter.add_parameter(composant, 'repulsion_distance', repulsion_distance)
-#parameter.add_parameter(composant, 'study_name', study_name)
-#parameter.add_parameter(composant, 'file_result_inclusions', file_result_inclusions)
-#parameter.add_parameter(composant, 'file_result_rve', file_result_rve)
-#
-#pygmee_v2_input = study_path+"/pygmee_v2_for_YACS.input"
-#
-#commande=parameter.write_for_shell(pygmee_v2_input)
-#os.system(commande)
-#
-#commande= "cd /local00/bin/MAP/components/pygmee_v2/src;"
-#commande+= "python pygmee_v2.py -i "+pygmee_v2_input+";\n"
-#os.system(commande)
 
 result_inclusions = file_result_inclusions
 result_rve = file_result_rve
