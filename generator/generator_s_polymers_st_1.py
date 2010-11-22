@@ -67,170 +67,60 @@ class s_poly_st_1Generator(MapGenerator):
        if len(liste) != len(set(liste)):
            raise AsException("il n'est pas prevu d avoir deux fois le meme code dans ce schema")
 
-   def ASTER(self,execution) :
-      print "Generation de ASTER"
-      dicoAster=self.dictMCVal["ASTER"]
-      nom_racine=self.config.PATH_MODULE+"/"+self.config.NAME_SCHEME+"/"+self.config.NAME_SCHEME
-      nom_fichier_ASTER=nom_racine+"_aster.comm"
+# I - YACS functions
+   def PYGMEEYACS(self, SchemaYacs, proc):
+      monFichierInput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"/pygmee_input.txt"
+      factoryNode = SchemaYacs.monCata._nodeMap["pygmee_v2"]
+      SchemaYacs.pygmeeNode = factoryNode.cloneNode("pygmee_v2")
+      SchemaYacs.pygmeeNode.getInputPort("phase_number").edInitPy(1)
+      SchemaYacs.pygmeeNode.getInputPort("sieve_curve_in").edInitPy(self.sieve_curve_in)
+      SchemaYacs.pygmeeNode.getInputPort("sieve_curve_out").edInitPy(self.sieve_curve_out)
+      SchemaYacs.pygmeeNode.getInputPort("repulsion_distance").edInitPy(self.repulsion_distance)
+      SchemaYacs.pygmeeNode.getInputPort("file_result_inclusions").edInitPy(self.inclusion_name)
+      SchemaYacs.pygmeeNode.getInputPort("file_result_rve").edInitPy(self.rve_name)
+      SchemaYacs.pygmeeNode.getInputPort("rve_size").edInitPy(self.rve_size)
+      SchemaYacs.pygmeeNode.getInputPort("study_name").edInitPy(self.study_name)
+      SchemaYacs.pygmeeNode.getInputPort("study_path").edInitPy(self.study_path)
+      proc.edAddChild(SchemaYacs.pygmeeNode)
+      if SchemaYacs.nodeAvant != None :
+         proc.edAddCFLink(SchemaYacs.nodeAvant,SchemaYacs.pygmeeNode)
+      SchemaYacs.nodeAvant=SchemaYacs.pygmeeNode
+      print "PYGMEEYACS node Ok"
 
-      #Lecture du fichier a trous
-      f = file(self.config.repIni+"/s_poly_st_1_aster_template.comm","r")
-      chaine = f.read()  
-      f.close()   
-      chaine2=self.remplaceDICO(chaine,self.dictPYGMEE)
-      chaine=self.remplaceDICO(chaine2,dicoAster)
+   def FDVGRIDYACS(self, SchemaYacs, proc):
+      factoryNode = SchemaYacs.monCata._nodeMap["fdvgrid"]
+      SchemaYacs.fdvgridNode = factoryNode.cloneNode("fdvgrid")
 
-      f=open(nom_fichier_ASTER,'wb')
-      f.write(chaine)
-      f.close()
+      SchemaYacs.fdvgridNode.getInputPort("rve_size").edInitPy(self.rve_size)
+      SchemaYacs.fdvgridNode.getInputPort("lambda_I").edInitPy(self.lambda_I)
+      SchemaYacs.fdvgridNode.getInputPort("lambda_M").edInitPy(self.lambda_M)
+      SchemaYacs.fdvgridNode.getInputPort("finesse").edInitPy(self.finesse)
+      SchemaYacs.fdvgridNode.getInputPort("study_name").edInitPy(self.study_name)
+      SchemaYacs.fdvgridNode.getInputPort("study_path").edInitPy(self.study_path)
+         
+      proc.edAddChild(SchemaYacs.fdvgridNode)
+      pout=SchemaYacs.pygmeeNode.getOutputPort("result_inclusions")
+      pin=SchemaYacs.fdvgridNode.getInputPort("file_inclusions")
+      proc.edAddLink(pout,pin)
+         
+      if SchemaYacs.nodeAvant != None :
+         proc.edAddCFLink(SchemaYacs.nodeAvant,SchemaYacs.fdvgridNode)
+      SchemaYacs.nodeAvant=SchemaYacs.fdvgridNode
+      print "FDVGRIDYACS node Ok"
 
-      if ('_ASTER_LANCEMENT' in dicoAster.keys()) and  dicoAster['_ASTER_LANCEMENT'] == 'oui':
-         commande="cd "+self.config.PATH_MODULE+";"
-         commande=commande + self.config.PATH_ASTER + "/as_run "+self.config.PATH_MODULE
-         commande=commande + "/"+self.config.NAME_SCHEME+"/"+self.config.NAME_SCHEME+"_aster.export"
-         os.system(commande)
-      else:
-         return ""
+   def METHODEYACS(self, SchemaYacs, proc):
+      self.PYGMEEYACS(SchemaYacs, proc)
+      if (self.CHOIX=="FD+grid") : self.FDVGRIDYACS(SchemaYacs,proc)
 
-   def GMSH(self,execution) :
-      dicoGmsh=self.dictMCVal["GMSH"]
-      if ('_GMSH_LANCEMENT' in dicoGmsh.keys()) and  dicoGmsh['_GMSH_LANCEMENT'] == 'oui':
-         commande="cd "+self.config.PATH_MODULE+";"
-         commande=commande + "gmsh "+self.config.PATH_MODULE+"/"+self.config.NAME_SCHEME+"/"+self.config.NAME_SCHEME+"_aster.resu.msh"
-         print commande
-         os.system(commande)
-      else:
-         return ""
-
-   def PYGMEE(self) :
-      composant="pygmee_v2"
-      pygmee_v2_input=self.config.PATH_STUDY+"/pygmee_v2.input"
-      parameter=MAP_parameters()
-      parameter.add_component(composant)
-      parameter.add_parameter(composant, 'rve_size', self.rve_size)
-      parameter.add_parameter(composant, 'phase_number', 1)
-      parameter.add_parameter(composant, 'sieve_curve_in', self.sieve_curve_in)
-      parameter.add_parameter(composant, 'sieve_curve_out',  self.sieve_curve_out)
-      parameter.add_parameter(composant, 'repulsion_distance', self.repulsion_distance)
-      parameter.add_parameter(composant, 'study_name', "study")
-      parameter.add_parameter(composant, 'file_result_inclusions', self.inclusion_name)
-      parameter.add_parameter(composant, 'file_result_rve', self.rve_name)
-      commande_python=parameter.write_for_shell(pygmee_v2_input)
-
-      commande="echo 'parametres de PYGMEE v2';\n"
-      commande+= commande_python
-      commande+= "echo 'execution de PYGMEE v2';\n"
-      commande+= "cd "+self.config.PATH_PYGMEE+"/src;\n"
-      commande+= "python pygmee_v2.py -i "+pygmee_v2_input+";\n"
-      commande+= "echo 'fin execution de PYGMEE v2';\n"
-      return commande
-
-
-   def FDVGRID(self):
-      if ( self.FINESSE < 32): self.FINESSE=32
-      self.contrast=float(self.lambda_I/self.lambda_M)
-      commande= "echo 'execution de FDVGRID';\n"
-      commande+= "cd "+self.config.PATH_FDVGRID+";\n"
-      commande+= "echo "+ str(self.rve_size)+" > "+"rve.input"+";\n"
-      commande+= "cp " +str(self.config.PATH_STUDY+"/pygmee_v2_test_1.inclusions")+" "+"inclusions.input"+";\n"
-      commande+= "echo "+str(self.contrast)+" > "+"contrast.input"+";\n"         
-      commande+= "./fdvgrid 3D 1.0 0.0 0.0 v t "+str(self.FINESSE)+" cross 1e-6 "+";\n"
-      commande+= "echo 'fin execution de FDVGRID';\n"
-      print "commande issue du generator :", commande
-      return commande
-
-   def METHODE(self,execution) :
-      #if (self.LANCEMENT =='oui') :
-      # if (self.LANCEMENT =='non' : return ""
-
-      commande=self.PYGMEE()
-      if (self.CHOIX=="FD+grid") : commande+= self.FDVGRID()
-      return commande
-            
-         #if (choix=="FEM+mesh") :
-         #   print "option Code_Aster"
-         #   commande+= "echo 'execution de BENHUR';\n"
-
-            #Lecture du fichier a trous
-         #   print "name_SCHEME =", self.config.NAME_SCHEME
-         #   monFichierInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/benhur_template.txt"
-         #   monFichierOutput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_benhur_"+str(finesse)+".bhr"
-
-         #   f = file(monFichierInput)
-         #   string_0 = f.read()  
-         #   f.close()
-            # find and replace with CONFIG idctionnary
-         #   string_1=self.remplaceCONFIG(string_0,CONFIGliste)
-         #   dicoBenhur=dict()
-         #   dicoBenhur["_RVE_SIZE"]=self.size
-         #   dicoBenhur["_MESH_SIZE"]=finesse
-         #   dicoBenhur["_INCLUSION_FILE"]=self.inclusion_name
-            # find and replace with BENHUR dictionnary
-         #   string_2=self.remplaceDICO(string_1,dicoBenhur)
-            # write into ouput file
-         #   f=open(monFichierOutput,'wb')
-         #   f.write(string_2)
-         #   f.close()
-            # launch of BENHUR on the previous file
-         #   commande=commande + "cd "+self.config.PATH_BENHUR+"/bin;\n"
-         #   commande=commande + "./benhur -i "+monFichierOutput+";\n"
-         #   commande=commande + "echo 'fin execution de BENHUR';\n"
-       
-         #   commande+= "echo 'execution de CODE_ASTER';\n"
-         #   monFichierCommInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/s_polymers_st_1_aster_template.comm"
-         #   monFichierExportInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/s_polymers_st_1_aster_template.export"
-
-         #   monFichierCommOutput=self.config.PATH_STUDY+"/s_polymers_st_1_aster.comm"
-         #   monFichierExportOutput=self.config.PATH_STUDY+"/s_polymers_st_1_aster.export"
-         #   # Lecture du fichier a trous a pour le fichier export
-         #   f = file(monFichierExportInput)
-         #   string_0 = f.read()  
-         #   f.close()
-            # find and replace with CONFIG dictionnary
-         #   string_1=self.remplaceCONFIG(string_0,CONFIGliste)            
-            # find and replace with CODE_ASTER dictionnary
-         #   dicoAster=dict()
-         #   dicoAster["_MESH_SIZE"]=finesse
-         #   dicoAster["_ASTER_VERSION"]="STA10"
-         #   dicoAster["_NAME_STUDY"]="s_polymers_st_1"
-         #   string_2=self.remplaceDICO(string_1,dicoAster)
-            # write into output file
-         #   f=open(monFichierExportOutput,'wb')
-         #   f.write(string_2)
-         #   f.close()
-
-            # Lecture du fichier a trous a pour le fichier comm
-         #   f = file(monFichierCommInput)
-         #   string_0 = f.read()  
-         #   f.close()
-         #   # find and replace with CONFIG dictionnary
-         #   string_1=self.remplaceCONFIG(string_0,CONFIGliste)       
-            # find and replace with CODE_ASTER dictionnary
-         #   dicoAster=dict()
-         #   dicoAster["_RVE_SIZE"]=self.size
-         #   dicoAster["_CONDUCTIVITE_I"]=self.dicoMATERIAUX["_MATERIAUX_CONDUCTIVITE_I"]
-         #   dicoAster["_CONDUCTIVITE_M"]=self.dicoMATERIAUX["_MATERIAUX_CONDUCTIVITE_M"]
-         #   string_2=self.remplaceDICO(string_1,dicoAster)
-         #   # write into output file
-         #   f=open(monFichierCommOutput,'wb')
-         #   f.write(string_2)
-         #   f.close()
-
-            # launch of CODE_ASTER on the study
-         #   commande=commande + "cd "+self.config.PATH_STUDY+";"
-         #   commande=commande + self.config.PATH_ASTER + "/as_run "+monFichierExportOutput +";\n"
-         #   commande=commande + "echo 'fin execution de CODE_ASTER';\n"
-       
-         #   commande+= "echo 'execution de GMSH';\n"
-         #   commande+= "gmsh "+self.config.PATH_STUDY+"/s_polymers_st_1_aster.resu.msh;\n"
-         #   commande+= "echo 'fin execution de GMSH';\n"
-         #   
-         #   print commande
-            
-      #print "METHODE Ok - 20101105"
-      #print "_____________________\n"
-      #return commande
-
+# II - shell functions
+   def ETUDE(self,execution) :
+      self.dicoETUDE=self.dictMCVal["ETUDE"]
+      print "_____________________"
+      print self.dicoETUDE
+      print "ETUDE Ok"
+      print "_____________________\n"
+      return ""
+   
    def MATERIAUX(self,execution) :
       self.dicoMATERIAUX=self.dictMCVal["MATERIAUX"]
       print "_____________________"
@@ -246,3 +136,122 @@ class s_poly_st_1Generator(MapGenerator):
       print "DISCRETISATION Ok"
       print "_____________________\n"
       return ""
+
+   def METHODE(self,execution) :
+      self.dicoMETHODE=self.dictMCVal["METHODE"]
+      print "_____________________"
+      print self.dicoMETHODE
+      print "METHODE Ok"
+      print "_____________________\n"
+
+      if (self.LANCEMENT =='oui') :
+         pass
+      if (self.LANCEMENT =='non') :
+         return ""
+
+      commande=self.PYGMEE()
+      if (self.CHOIX=="FD+grid") :
+          print "option fdvgrid"
+          commande+= self.FDVGRID()
+          return commande
+      if (choix=="FEM+mesh") :
+          print "option Code_Aster"
+          commande+= self.BENHUR()
+          commande+= self.ASTER()
+          commande+= self.GMSH()
+          return commande
+
+# III - code and component functions
+   def PYGMEE(self) :
+      commande_python="import os,sys;\n"
+      commande_python+="sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'), '../EficasV1/MAP/Templates/s_polymers_st_1'));\n"
+      commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
+      commande_python+="component_pygmee_v2("+str(self.rve_size)+",1,"+str(self.sieve_curve_in)+","+str(self.sieve_curve_out)+","+str(self.repulsion_distance)+","+str(self.study_name)+","+str(self.study_path)+","+str(self.inclusion_name)+","+str(self.rve_name)+");\n"
+      return 'python -c "'+commande_python+'"\n'
+
+   def FDVGRID(self):
+      commande_python="import os,sys;\n"
+      commande_python+="sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'), '../EficasV1/MAP/Templates/s_polymers_st_1'));\n"
+      commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
+      commande_python+="lambda_x=component_fdvgrid("+str(self.lambda_I)+","+str(self.lambda_M)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"',"+str(self.finesse)+");\n"
+      return 'python -c "'+commande_python+'"\n'
+
+   def BENHUR(self):
+      commande="echo 'execution de BENHUR';\n"
+      #Lecture du fichier a trous
+      print "name_SCHEME =", self.config.NAME_SCHEME
+      monFichierInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/benhur_template.txt"
+      monFichierOutput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_benhur_"+str(finesse)+".bhr"
+
+      f = file(monFichierInput)
+      string_0 = f.read()  
+      f.close()
+      # find and replace with CONFIG idctionnary
+      string_1=self.remplaceCONFIG(string_0,CONFIGliste)
+      dicoBenhur=dict()
+      dicoBenhur["_RVE_SIZE"]=self.size
+      dicoBenhur["_MESH_SIZE"]=finesse
+      dicoBenhur["_INCLUSION_FILE"]=self.inclusion_name
+      # find and replace with BENHUR dictionnary
+      string_2=self.remplaceDICO(string_1,dicoBenhur)
+      # write into ouput file
+      f=open(monFichierOutput,'wb')
+      f.write(string_2)
+      f.close()
+      # launch of BENHUR on the previous file
+      commande=commande + "cd "+self.config.PATH_BENHUR+"/bin;\n"
+      commande=commande + "./benhur -i "+monFichierOutput+";\n"
+      commande=commande + "echo 'fin execution de BENHUR';\n"
+      return commande
+
+   def ASTER(self,execution) :
+      commande="echo 'execution de CODE_ASTER';\n"
+      monFichierCommInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/s_polymers_st_1_aster_template.comm"
+      monFichierExportInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/s_polymers_st_1_aster_template.export"
+
+      monFichierCommOutput=self.config.PATH_STUDY+"/s_polymers_st_1_aster.comm"
+      monFichierExportOutput=self.config.PATH_STUDY+"/s_polymers_st_1_aster.export"
+      # Lecture du fichier a trous a pour le fichier export
+      f = file(monFichierExportInput)
+      string_0 = f.read()  
+      f.close()
+      # find and replace with CONFIG dictionnary
+      string_1=self.remplaceCONFIG(string_0,CONFIGliste)            
+      # find and replace with CODE_ASTER dictionnary
+      dicoAster=dict()
+      dicoAster["_MESH_SIZE"]=finesse
+      dicoAster["_ASTER_VERSION"]="STA10"
+      dicoAster["_NAME_STUDY"]="s_polymers_st_1"
+      string_2=self.remplaceDICO(string_1,dicoAster)
+      # write into output file
+      f=open(monFichierExportOutput,'wb')
+      f.write(string_2)
+      f.close()
+
+      # Lecture du fichier a trous a pour le fichier comm
+      f = file(monFichierCommInput)
+      string_0 = f.read()  
+      f.close()
+      # find and replace with CONFIG dictionnary
+      string_1=self.remplaceCONFIG(string_0,CONFIGliste)       
+      # find and replace with CODE_ASTER dictionnary
+      dicoAster=dict()
+      dicoAster["_RVE_SIZE"]=self.size
+      dicoAster["_CONDUCTIVITE_I"]=self.dicoMATERIAUX["_MATERIAUX_CONDUCTIVITE_I"]
+      dicoAster["_CONDUCTIVITE_M"]=self.dicoMATERIAUX["_MATERIAUX_CONDUCTIVITE_M"]
+      string_2=self.remplaceDICO(string_1,dicoAster)
+      # write into output file
+      f=open(monFichierCommOutput,'wb')
+      f.write(string_2)
+      f.close()
+      # launch of CODE_ASTER on the study
+      commande=commande + "cd "+self.config.PATH_STUDY+";"
+      commande=commande + self.config.PATH_ASTER + "/as_run "+monFichierExportOutput +";\n"
+      commande=commande + "echo 'fin execution de CODE_ASTER';\n"
+      return commande
+
+   def GMSH(self,execution) :
+      commande="echo 'execution de GMSH';\n"
+      commande+= "gmsh "+self.config.PATH_STUDY+"/s_polymers_st_1_aster.resu.msh;\n"
+      commande+= "echo 'fin execution de GMSH';\n"
+      return commande

@@ -34,6 +34,12 @@ JdC = JDC_CATA ( code = 'MAP',
                        )# Fin JDC_CATA
 #
 
+ETUDE= PROC(nom="ETUDE",op=None,
+              fr="determination du nom et du repertoire de l'etude)",
+              study_name=SIMP(statut = "f",fr="", typ='TXM',defaut="s_polymers_st_1_for_YACS"),
+              study_path=SIMP(statut = "f",fr="", typ='TXM',defaut=PATH_STUDY),
+              )
+
 METHODE= PROC(nom="METHODE",op=None,
               fr='choix de la methode de calcul (maillage ou grille cartesienne)',
               CHOIX=SIMP(statut = "o",fr="elements finis sur maillage ou differences finies sur grilles", 
@@ -51,11 +57,10 @@ MATERIAUX= PROC(nom="MATERIAUX",op=None,
               lambda_I=SIMP(statut = "o",fr="conductivite des inclusions", typ='R', defaut=10.0, val_min =0.),
               inclusion_name=SIMP(statut = "f",fr="", typ='TXM',defaut=PATH_STUDY+"/pygmee_v2_test_1.inclusions",cache=1),
               rve_name=SIMP(statut = "f",fr="", typ='TXM',defaut=PATH_STUDY+"/pygmee_v2_test_1.rve",cache=1),
-#              sieve_curve_in=SIMP(statut = "f",fr="", typ='TXM',defaut=PATH_PYGMEE+"/tests/pygmee_v2_test_1.sieve_in",cache=1),
-              sieve_curve_out=SIMP(statut = "f",fr="", typ='TXM',defaut=PATH_STUDY+"pygmee_v2.sieve_out",cache=1),
+              sieve_curve_out=SIMP(statut = "f",fr="", typ='TXM',defaut=PATH_STUDY+"/pygmee_v2.sieve_out",cache=1),
 )
 
 DISCRETISATION= PROC(nom="DISCRETISATION",op=None,
               fr='definition du nombre d''elements sur le cote du VER',
-              FINESSE=SIMP(statut = "o",fr="nombre d'elements sur le cote", typ='I', defaut=10 , into=(10,12,20,32,64,128),),
+              finesse=SIMP(statut = "o",fr="nombre d'elements sur le cote", typ='I', defaut=10 , into=(10,12,20,32,64,128),),
 )

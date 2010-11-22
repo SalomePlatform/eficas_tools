@@ -97,7 +97,6 @@ class MapGenerator(PythonGenerator):
       text=PythonGenerator.gener(self,obj,format)
       import sys
       sys.path.append(os.path.join(os.getenv("YACS_ROOT_DIR"),"lib/python2.4/site-packages/salome/"))
-      print sys.path
       self.verifie()
       import monCreateYacs
       self.monSchema=monCreateYacs.getSchema(config)
@@ -115,9 +114,10 @@ class MapGenerator(PythonGenerator):
       today = today.replace('-', '')
       today+="-"+time.strftime("%H%M%S", time.localtime())
 
+      print "PATH_STUDY =", config.PATH_STUDY
       nomFichier=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_"+today+".xml"
       self.monSchema.write_yacs_proc(self.proc,str(nomFichier))
-      print "le fichier xml est : ",nomFichier
+      print "YACS xml output : ",nomFichier
 
    def generePythonMap(self,execution) :
       '''
