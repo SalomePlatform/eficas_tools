@@ -108,9 +108,29 @@ class s_poly_st_1Generator(MapGenerator):
       SchemaYacs.nodeAvant=SchemaYacs.fdvgridNode
       print "FDVGRIDYACS node Ok"
 
+   def BENHURYACS(self, SchemaYacs, proc):
+      factoryNode = SchemaYacs.monCata._nodeMap["benhur"]
+      SchemaYacs.benhurNode = factoryNode.cloneNode("benhur")
+
+      SchemaYacs.benhurNode.getInputPort("rve_size").edInitPy(self.rve_size)
+      SchemaYacs.benhurNode.getInputPort("finesse").edInitPy(self.finesse)
+      SchemaYacs.benhurNode.getInputPort("study_name").edInitPy(self.study_name)
+      SchemaYacs.benhurNode.getInputPort("study_path").edInitPy(self.study_path)
+         
+      proc.edAddChild(SchemaYacs.benhurNode)
+      pout=SchemaYacs.pygmeeNode.getOutputPort("result_inclusions")
+      pin=SchemaYacs.benhurNode.getInputPort("file_inclusions")
+      proc.edAddLink(pout,pin)
+         
+      if SchemaYacs.nodeAvant != None :
+         proc.edAddCFLink(SchemaYacs.nodeAvant,SchemaYacs.benhurNode)
+      SchemaYacs.nodeAvant=SchemaYacs.benhurNode
+      print "BENHURYACS node Ok"
+
    def METHODEYACS(self, SchemaYacs, proc):
       self.PYGMEEYACS(SchemaYacs, proc)
       if (self.CHOIX=="FD+grid") : self.FDVGRIDYACS(SchemaYacs,proc)
+      if (self.CHOIX=="FEM+mesh") : self.BENHURYACS(SchemaYacs,proc)
 
 # II - shell functions
    def ETUDE(self,execution) :
@@ -154,7 +174,7 @@ class s_poly_st_1Generator(MapGenerator):
           print "option fdvgrid"
           commande+= self.FDVGRID()
           return commande
-      if (choix=="FEM+mesh") :
+      elif (self.CHOIX=="FEM+mesh") :
           print "option Code_Aster"
           commande+= self.BENHUR()
           commande+= self.ASTER()
@@ -177,34 +197,40 @@ class s_poly_st_1Generator(MapGenerator):
       return 'python -c "'+commande_python+'"\n'
 
    def BENHUR(self):
-      commande="echo 'execution de BENHUR';\n"
-      #Lecture du fichier a trous
-      print "name_SCHEME =", self.config.NAME_SCHEME
-      monFichierInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/benhur_template.txt"
-      monFichierOutput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_benhur_"+str(finesse)+".bhr"
+      commande_python="import os,sys;\n"
+      commande_python+="sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'), '../EficasV1/MAP/Templates/s_polymers_st_1'));\n"
+      commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
+      commande_python+="component_benhur("+str(self.finesse)+","+str(self.rve_size)+","+str(self.inclusion_name)+",'"+str(self.study_name)+"',"+str(self.study_path)+");\n"
+      return 'python -c "'+commande_python+'"\n'
+   
+##       commande="echo 'execution de BENHUR';\n"
+##       #Lecture du fichier a trous
+##       print "name_SCHEME =", self.config.NAME_SCHEME
+##       monFichierInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/benhur_template.txt"
+##       monFichierOutput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_benhur_"+str(finesse)+".bhr"
 
-      f = file(monFichierInput)
-      string_0 = f.read()  
-      f.close()
-      # find and replace with CONFIG idctionnary
-      string_1=self.remplaceCONFIG(string_0,CONFIGliste)
-      dicoBenhur=dict()
-      dicoBenhur["_RVE_SIZE"]=self.size
-      dicoBenhur["_MESH_SIZE"]=finesse
-      dicoBenhur["_INCLUSION_FILE"]=self.inclusion_name
-      # find and replace with BENHUR dictionnary
-      string_2=self.remplaceDICO(string_1,dicoBenhur)
-      # write into ouput file
-      f=open(monFichierOutput,'wb')
-      f.write(string_2)
-      f.close()
-      # launch of BENHUR on the previous file
-      commande=commande + "cd "+self.config.PATH_BENHUR+"/bin;\n"
-      commande=commande + "./benhur -i "+monFichierOutput+";\n"
-      commande=commande + "echo 'fin execution de BENHUR';\n"
-      return commande
+##       f = file(monFichierInput)
+##       string_0 = f.read()  
+##       f.close()
+##       # find and replace with CONFIG idctionnary
+##       string_1=self.remplaceCONFIG(string_0,CONFIGliste)
+##       dicoBenhur=dict()
+##       dicoBenhur["_RVE_SIZE"]=self.size
+##       dicoBenhur["_MESH_SIZE"]=finesse
+##       dicoBenhur["_INCLUSION_FILE"]=self.inclusion_name
+##       # find and replace with BENHUR dictionnary
+##       string_2=self.remplaceDICO(string_1,dicoBenhur)
+##       # write into ouput file
+##       f=open(monFichierOutput,'wb')
+##       f.write(string_2)
+##       f.close()
+##       # launch of BENHUR on the previous file
+##       commande=commande + "cd "+self.config.PATH_BENHUR+"/bin;\n"
+##       commande=commande + "./benhur -i "+monFichierOutput+";\n"
+##       commande=commande + "echo 'fin execution de BENHUR';\n"
+##       return commande
 
-   def ASTER(self,execution) :
+   def ASTER(self) :
       commande="echo 'execution de CODE_ASTER';\n"
       monFichierCommInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/s_polymers_st_1_aster_template.comm"
       monFichierExportInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/s_polymers_st_1_aster_template.export"
@@ -219,7 +245,7 @@ class s_poly_st_1Generator(MapGenerator):
       string_1=self.remplaceCONFIG(string_0,CONFIGliste)            
       # find and replace with CODE_ASTER dictionnary
       dicoAster=dict()
-      dicoAster["_MESH_SIZE"]=finesse
+      dicoAster["_MESH_SIZE"]=self.finesse
       dicoAster["_ASTER_VERSION"]="STA10"
       dicoAster["_NAME_STUDY"]="s_polymers_st_1"
       string_2=self.remplaceDICO(string_1,dicoAster)
@@ -236,9 +262,9 @@ class s_poly_st_1Generator(MapGenerator):
       string_1=self.remplaceCONFIG(string_0,CONFIGliste)       
       # find and replace with CODE_ASTER dictionnary
       dicoAster=dict()
-      dicoAster["_RVE_SIZE"]=self.size
-      dicoAster["_CONDUCTIVITE_I"]=self.dicoMATERIAUX["_MATERIAUX_CONDUCTIVITE_I"]
-      dicoAster["_CONDUCTIVITE_M"]=self.dicoMATERIAUX["_MATERIAUX_CONDUCTIVITE_M"]
+      dicoAster["_RVE_SIZE"]=self.rve_size
+      dicoAster["_CONDUCTIVITE_I"]=self.lambda_I
+      dicoAster["_CONDUCTIVITE_M"]=self.lambda_M
       string_2=self.remplaceDICO(string_1,dicoAster)
       # write into output file
       f=open(monFichierCommOutput,'wb')
@@ -250,7 +276,7 @@ class s_poly_st_1Generator(MapGenerator):
       commande=commande + "echo 'fin execution de CODE_ASTER';\n"
       return commande
 
-   def GMSH(self,execution) :
+   def GMSH(self) :
       commande="echo 'execution de GMSH';\n"
       commande+= "gmsh "+self.config.PATH_STUDY+"/s_polymers_st_1_aster.resu.msh;\n"
       commande+= "echo 'fin execution de GMSH';\n"

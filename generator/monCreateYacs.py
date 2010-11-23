@@ -47,20 +47,6 @@ class CreeSchemaYacs :
          proc.saveSchema(yacs_schema_filename)
 
 class s_polymers_st_1(CreeSchemaYacs) :
-
-     # CTL 20101121 : obsolete, has been transfered to genarator_s_polymers_st_1
-     #                for better genericity
-##      def BENHURYACS(self,proc,dico):
-##          monFichierInput=self.config.PATH_BENHUR+"/BHR_files.txt"
-##          factoryNode = self.monCata._nodeMap["benhur"]
-##          self.benhurNode = factoryNode.cloneNode("benhur")
-##          self.benhurNode.getInputPort("fileInput").edInitPy(monFichierInput)
-##          self.benhurNode.getInputPort("pathBenhur").edInitPy(self.config.PATH_BENHUR)
-##          proc.edAddChild(self.benhurNode)
-##          if self.nodeAvant != None :
-##             proc.edAddCFLink(self.nodeAvant,self.benhurNode)
-##          self.nodeAvant=self.benhurNode
-
      # CTL 20101121 : obsolete, has been transfered to genarator_s_polymers_st_1
      #                for better genericity
 ##      def ASTERYACS(self,proc,dico):

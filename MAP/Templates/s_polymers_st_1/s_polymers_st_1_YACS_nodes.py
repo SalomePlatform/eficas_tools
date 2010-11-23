@@ -68,3 +68,46 @@ def component_fdvgrid(lambda_I, lambda_M, rve_size, file_inclusions, finesse):
 
     print "fdvgrid for YACS - END"
     return lambda_x
+
+def remplaceDICO(chaine,dico) :
+    for mot in dico.keys() :
+       rplact="%"+mot+"%"
+       result=chaine.replace(rplact,str(dico[mot]))
+       chaine=result
+    return chaine
+
+def component_benhur(finesse, rve_size, inclusion_name, study_name, study_path):
+    print "benhur for YACS - BEGIN"
+
+    Template_path=os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/')
+    monFichierInput=Template_path+"benhur_template.txt"
+    monFichierOutput=Template_path+"s_polymers_st_1_benhur_"+str(finesse)+".bhr"
+
+
+    benhur_path=os.path.join(os.getenv('MAP_DIRECTORY'), 'components/benhur/')
+
+    f = file(monFichierInput)
+    string_0 = f.read()  
+    f.close()
+    # find and replace with BENHUR dictionnary
+    dicoBenhur=dict()
+    dicoBenhur["_RVE_SIZE"]=rve_size
+    dicoBenhur["_MESH_SIZE"]=finesse
+    dicoBenhur["_INCLUSION_FILE"]=inclusion_name
+    dicoBenhur["_PATH_STUDY"]=study_path
+    dicoBenhur["_NAME_SCHEME"]=study_name
+    dicoBenhur["_PATH_BENHUR"]=benhur_path
+    string_1=remplaceDICO(string_0,dicoBenhur)
+    # write into ouput file
+    f=open(monFichierOutput,'wb')
+    f.write(string_1)
+    f.close()
+    # launch of BENHUR on the previous file
+    benhur_path=os.path.join(os.getenv('MAP_DIRECTORY'),'components/benhur/')
+    commande="cd "+benhur_path+"/bin;\n"
+    commande+="./benhur -i "+monFichierOutput+";\n"
+    os.system(commande)
+    print "benhur_input", string_1
+    print "benhur_command", commande
+
+    print "benhur for YACS - END"
