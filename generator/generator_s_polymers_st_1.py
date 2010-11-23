@@ -166,7 +166,7 @@ class s_poly_st_1Generator(MapGenerator):
       commande_python="import os,sys;\n"
       commande_python+="sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'), '../EficasV1/MAP/Templates/s_polymers_st_1'));\n"
       commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
-      commande_python+="component_pygmee_v2("+str(self.rve_size)+",1,"+str(self.sieve_curve_in)+","+str(self.sieve_curve_out)+","+str(self.repulsion_distance)+","+str(self.study_name)+","+str(self.study_path)+","+str(self.inclusion_name)+","+str(self.rve_name)+");\n"
+      commande_python+="volume_fraction=component_pygmee_v2("+str(self.rve_size)+",1,"+str(self.sieve_curve_in)+","+str(self.sieve_curve_out)+","+str(self.repulsion_distance)+","+str(self.study_name)+","+str(self.study_path)+","+str(self.inclusion_name)+","+str(self.rve_name)+");\n"
       return 'python -c "'+commande_python+'"\n'
 
    def FDVGRID(self):

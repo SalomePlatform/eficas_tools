@@ -30,8 +30,15 @@ def component_pygmee_v2(rve_size, phase_number, sieve_curve_in, sieve_curve_out,
     commande+= "python pygmee_v2.py -i "+pygmee_v2_input+";\n"
     os.system(commande)
 
+    fd = open(file_result_rve, 'r')
+    line=fd.readline()
+    line=fd.readline()
+    volume_fraction=float(line)
+    print "volume_fraction =", volume_fraction
+    fd.close()    
+
     print "pygmee_v2 for YACS - END"
-    return
+    return volume_fraction
 
 def component_fdvgrid(lambda_I, lambda_M, rve_size, file_inclusions, finesse):
     print "fdvgrid for YACS - BEGIN"

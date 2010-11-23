@@ -27,7 +27,7 @@ sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'../EficasV1/MAP/Templat
 print sys.path
 from s_polymers_st_1_YACS_nodes import *
 
-component_pygmee_v2(rve_size, phase_number, sieve_curve_in, sieve_curve_out, repulsion_distance, study_name, study_path, file_result_inclusions, file_result_rve)
+volume_fraction=component_pygmee_v2(rve_size, phase_number, sieve_curve_in, sieve_curve_out, repulsion_distance, study_name, study_path, file_result_inclusions, file_result_rve)
 
 result_inclusions = file_result_inclusions
 result_rve = file_result_rve
@@ -106,18 +106,18 @@ print "benhur for YACS - END"
       <inport name="study_path" type="string"/>
       <inport name="benhur_template" type="string"/>
    </inline>
-   <control> <fromnode>pygmee_v2</fromnode> <tonode>benhur</tonode> </control>
    <control> <fromnode>pygmee_v2</fromnode> <tonode>fdvgrid</tonode> </control>
-   <control> <fromnode>init</fromnode> <tonode>benhur</tonode> </control>
-   <control> <fromnode>init</fromnode> <tonode>fdvgrid</tonode> </control>
+   <control> <fromnode>pygmee_v2</fromnode> <tonode>benhur</tonode> </control>
    <control> <fromnode>init</fromnode> <tonode>pygmee_v2</tonode> </control>
-   <datalink control="false">
-      <fromnode>pygmee_v2</fromnode> <fromport>result_inclusions</fromport>
-      <tonode>benhur</tonode> <toport>file_inclusions</toport>
-   </datalink>
+   <control> <fromnode>init</fromnode> <tonode>fdvgrid</tonode> </control>
+   <control> <fromnode>init</fromnode> <tonode>benhur</tonode> </control>
    <datalink control="false">
       <fromnode>pygmee_v2</fromnode> <fromport>result_inclusions</fromport>
       <tonode>fdvgrid</tonode> <toport>file_inclusions</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>pygmee_v2</fromnode> <fromport>result_inclusions</fromport>
+      <tonode>benhur</tonode> <toport>file_inclusions</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>phase_number</fromport>
@@ -173,11 +173,11 @@ print "benhur for YACS - END"
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>study_name</fromport>
-      <tonode>fdvgrid</tonode> <toport>study_name</toport>
+      <tonode>pygmee_v2</tonode> <toport>study_name</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>study_name</fromport>
-      <tonode>pygmee_v2</tonode> <toport>study_name</toport>
+      <tonode>fdvgrid</tonode> <toport>study_name</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>study_name</fromport>
@@ -185,7 +185,7 @@ print "benhur for YACS - END"
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>study_path</fromport>
-      <tonode>fdvgrid</tonode> <toport>study_path</toport>
+      <tonode>benhur</tonode> <toport>study_path</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>study_path</fromport>
@@ -193,7 +193,7 @@ print "benhur for YACS - END"
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>study_path</fromport>
-      <tonode>benhur</tonode> <toport>study_path</toport>
+      <tonode>fdvgrid</tonode> <toport>study_path</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>benhur_template</fromport>
@@ -203,9 +203,9 @@ print "benhur for YACS - END"
       <tonode>benhur</tonode><toport>file_inclusions</toport>
       <value><string></string></value>
    </parameter>
+   <presentation name="pygmee_v2" x="415.186" y="179.5" width="249.5" height="342"/>
+   <presentation name="fdvgrid" x="888.902" y="551.141" width="227.5" height="284"/>
    <presentation name="init" x="9" y="328" width="273.5" height="458"/>
    <presentation name="benhur" x="848.961" y="95.838" width="223" height="255"/>
-   <presentation name="fdvgrid" x="888.902" y="551.141" width="227.5" height="284"/>
-   <presentation name="pygmee_v2" x="415.186" y="179.5" width="249.5" height="342"/>
    <presentation name="__ROOT__" x="0" y="0" width="1125.9" height="844.141"/>
 </proc>
