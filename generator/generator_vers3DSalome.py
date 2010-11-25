@@ -39,14 +39,14 @@ from generator_python import PythonGenerator
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
+       Retourne les informations nÃ©cessaires pour le chargeur de plugins
 
-       Ces informations sont retournées dans un dictionnaire
+       Ces informations sont retournÃ©es dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'vers3DSalome',
-        # La factory pour créer une instance du plugin
+        # La factory pour crÃ©er une instance du plugin
           'factory' : vers3DSalomeGenerator,
           }
 
@@ -120,7 +120,7 @@ class vers3DSalomeGenerator(PythonGenerator):
       """
       """
       if obj.isvalid() == 0 :
-         #showerror("Element non valide","Salome ne sait pas traiter les élements non valides")
+         #showerror("Element non valide","Salome ne sait pas traiter les elements non valides")
          return
       for v in obj.mc_liste:
          liste=self.generator(v)
@@ -142,7 +142,7 @@ class vers3DSalomeGenerator(PythonGenerator):
 
    def generMCFACT(self,obj):
       """
-          Convertit un objet MCFACT en une liste de chaines de caractères à la
+          Convertit un objet MCFACT en une liste de chaines de caractÃ¨res Ã  la
           syntaxe python
       """
       self.init_ligne()
@@ -193,6 +193,8 @@ class vers3DSalomeGenerator(PythonGenerator):
        for k in range(len(atraiter)) :
            clef=self.clefs[k]
            val =atraiter[k] 
+           if isinstance(val, (types.TupleType, types.ListType)) and len(val) == 1:
+               val = val[0]
            if isinstance (val, Extensions.parametre.PARAMETRE):
               val=val.valeur
               print val.__class__
