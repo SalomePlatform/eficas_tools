@@ -79,10 +79,11 @@ def remplaceDICO(chaine,dico) :
 def component_benhur(finesse, rve_size, inclusion_name, study_name, study_path):
     print "benhur for YACS - BEGIN"
 
+    finesse=int(finesse)
+
     Template_path=os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/')
     monFichierInput=Template_path+"benhur_template.txt"
     monFichierOutput=Template_path+"s_polymers_st_1_benhur_"+str(finesse)+".bhr"
-
 
     benhur_path=os.path.join(os.getenv('MAP_DIRECTORY'), 'components/benhur/')
 
@@ -107,7 +108,78 @@ def component_benhur(finesse, rve_size, inclusion_name, study_name, study_path):
     commande="cd "+benhur_path+"/bin;\n"
     commande+="./benhur -i "+monFichierOutput+";\n"
     os.system(commande)
-    print "benhur_input", string_1
-    print "benhur_command", commande
+
+    result_mesh=study_path+'/'+study_name+'_benhur_'+str(finesse)+'.msh'
+    result_log=study_path+'/'+study_name+'_benhur_'+str(finesse)+'.log'
+
+    print 'result_mesh =', result_mesh
+    print 'result_log =', result_log
 
     print "benhur for YACS - END"
+
+    return (result_mesh, result_log)
+
+def component_aster_s_polymers_st_1(rve_size, finesse, lambda_I, lambda_M, study_name, study_path, aster_path):
+    print "aster_s_polymers_st_1 for YACS - BEGIN"
+
+    finesse=int(finesse)
+    
+    Template_path=os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/')
+    monFichierCommInput=Template_path+"s_polymers_st_1_aster_template.comm"
+    monFichierExportInput=Template_path+"s_polymers_st_1_aster_template.export"
+
+    monFichierCommOutput=study_path+"/s_polymers_st_1_aster.comm"
+    monFichierExportOutput=study_path+"/s_polymers_st_1_aster.export"
+    # Lecture du fichier a trous a pour le fichier export
+    f = file(monFichierExportInput)
+    string_0 = f.read()  
+    f.close()         
+    # find and replace with CODE_ASTER dictionnary
+    dicoAster=dict()
+    dicoAster["_MESH_SIZE"]=str(finesse)
+    dicoAster["_ASTER_VERSION"]="STA10"
+    dicoAster["_NAME_STUDY"]="s_polymers_st_1"
+    dicoAster["_PATH_STUDY"]=study_path
+    dicoAster["_CONDUCTIVITE_I"]=str(lambda_I)
+    dicoAster["_CONDUCTIVITE_M"]=str(lambda_M)
+    string_1=remplaceDICO(string_0,dicoAster)
+    # write into output file
+    f=open(monFichierExportOutput,'wb')
+    f.write(string_1)
+    f.close()
+
+    # Lecture du fichier a trous a pour le fichier comm
+    f = file(monFichierCommInput)
+    string_0 = f.read()  
+    f.close()   
+    # find and replace with CODE_ASTER dictionnary
+    # find and replace with CODE_ASTER dictionnary
+    dicoAster=dict()
+    dicoAster["_RVE_SIZE"]=str(rve_size)
+    dicoAster["_CONDUCTIVITE_I"]=str(lambda_I)
+    dicoAster["_CONDUCTIVITE_M"]=str(lambda_M)
+    string_1=remplaceDICO(string_0,dicoAster)
+    # write into output file
+    f=open(monFichierCommOutput,'wb')
+    f.write(string_1)
+    f.close()
+    
+    # launch of CODE_ASTER on the study
+    commande="cd "+study_path+";"
+    commande+=commande + aster_path + "/as_run "+monFichierExportOutput +";\n"
+    os.system(commande)
+    
+    print "aster_s_polymers_st_1 for YACS - END"
+
+    result_gmsh=study_path+"/s_polymers_st_1_aster.resu.msh"
+
+    return result_gmsh
+
+def component_gmsh_post(result_gmsh):
+    print "gmsh_post for YACS - BEGIN"
+    commande="gmsh "+result_gmsh+";"
+    os.system(commande)
+    
+    print "gmsh_post for YACS - END"
+
+    return

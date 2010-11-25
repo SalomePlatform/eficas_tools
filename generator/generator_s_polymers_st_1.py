@@ -127,10 +127,51 @@ class s_poly_st_1Generator(MapGenerator):
       SchemaYacs.nodeAvant=SchemaYacs.benhurNode
       print "BENHURYACS node Ok"
 
+   def ASTERYACS(self, SchemaYacs, proc):
+      factoryNode = SchemaYacs.monCata._nodeMap["aster_s_polymers_st_1"]
+      SchemaYacs.aster_s_polymers_st_1Node = factoryNode.cloneNode("aster_s_polymers_st_1")
+
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("lambda_I").edInitPy(self.lambda_I)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("lambda_M").edInitPy(self.lambda_M)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("study_name").edInitPy(self.study_name)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("study_path").edInitPy(self.study_path)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("rve_size").edInitPy(self.rve_size)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("finesse").edInitPy(self.finesse)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("aster_path").edInitPy(self.config.PATH_ASTER)
+      
+      proc.edAddChild(SchemaYacs.aster_s_polymers_st_1Node)
+      pout=SchemaYacs.benhurNode.getOutputPort("result_mesh")
+      pin=SchemaYacs.aster_s_polymers_st_1Node.getInputPort("mesh")
+      proc.edAddLink(pout,pin)
+         
+      if SchemaYacs.nodeAvant != None :
+         proc.edAddCFLink(SchemaYacs.nodeAvant,SchemaYacs.aster_s_polymers_st_1Node)
+      SchemaYacs.nodeAvant=SchemaYacs.aster_s_polymers_st_1Node
+      print "ASTERYACS node Ok"
+
+      
+   def GMSHYACS(self, SchemaYacs, proc):
+      factoryNode = SchemaYacs.monCata._nodeMap["gmsh_post"]
+      SchemaYacs.gmsh_postNode = factoryNode.cloneNode("gmsh_post")
+      
+      proc.edAddChild(SchemaYacs.gmsh_postNode)
+      pout=SchemaYacs.aster_s_polymers_st_1Node.getOutputPort("result_gmsh")
+      pin=SchemaYacs.gmsh_postNode.getInputPort("result_gmsh")
+      proc.edAddLink(pout,pin)
+         
+      if SchemaYacs.nodeAvant != None :
+         proc.edAddCFLink(SchemaYacs.nodeAvant,SchemaYacs.gmsh_postNode)
+      SchemaYacs.nodeAvant=SchemaYacs.gmsh_postNode
+      print "GMSHYACS node Ok"
+
    def METHODEYACS(self, SchemaYacs, proc):
       self.PYGMEEYACS(SchemaYacs, proc)
-      if (self.CHOIX=="FD+grid") : self.FDVGRIDYACS(SchemaYacs,proc)
-      if (self.CHOIX=="FEM+mesh") : self.BENHURYACS(SchemaYacs,proc)
+      if (self.CHOIX=="FD+grid") :
+         self.FDVGRIDYACS(SchemaYacs,proc)
+      if (self.CHOIX=="FEM+mesh") :
+         self.BENHURYACS(SchemaYacs,proc)
+         self.ASTERYACS(SchemaYacs,proc)
+         self.GMSHYACS(SchemaYacs,proc)
 
 # II - shell functions
    def ETUDE(self,execution) :
@@ -177,107 +218,47 @@ class s_poly_st_1Generator(MapGenerator):
       elif (self.CHOIX=="FEM+mesh") :
           print "option Code_Aster"
           commande+= self.BENHUR()
-          commande+= self.ASTER()
+          commande+= self.ASTER_s_polymers_st_1()
           commande+= self.GMSH()
           return commande
 
 # III - code and component functions
    def PYGMEE(self) :
       commande_python="import os,sys;\n"
-      commande_python+="sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'), '../EficasV1/MAP/Templates/s_polymers_st_1'));\n"
+      commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
       commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
       commande_python+="volume_fraction=component_pygmee_v2("+str(self.rve_size)+",1,"+str(self.sieve_curve_in)+","+str(self.sieve_curve_out)+","+str(self.repulsion_distance)+","+str(self.study_name)+","+str(self.study_path)+","+str(self.inclusion_name)+","+str(self.rve_name)+");\n"
       return 'python -c "'+commande_python+'"\n'
 
    def FDVGRID(self):
       commande_python="import os,sys;\n"
-      commande_python+="sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'), '../EficasV1/MAP/Templates/s_polymers_st_1'));\n"
+      commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
       commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
       commande_python+="lambda_x=component_fdvgrid("+str(self.lambda_I)+","+str(self.lambda_M)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"',"+str(self.finesse)+");\n"
       return 'python -c "'+commande_python+'"\n'
 
    def BENHUR(self):
       commande_python="import os,sys;\n"
-      commande_python+="sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'), '../EficasV1/MAP/Templates/s_polymers_st_1'));\n"
+      commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
       commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
-      commande_python+="component_benhur("+str(self.finesse)+","+str(self.rve_size)+","+str(self.inclusion_name)+",'"+str(self.study_name)+"',"+str(self.study_path)+");\n"
+      commande_python+="component_benhur("+str(self.finesse)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"','"+str(self.study_name)+"','"+str(self.study_path)+"');\n"
       return 'python -c "'+commande_python+'"\n'
-   
-##       commande="echo 'execution de BENHUR';\n"
-##       #Lecture du fichier a trous
-##       print "name_SCHEME =", self.config.NAME_SCHEME
-##       monFichierInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/benhur_template.txt"
-##       monFichierOutput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_benhur_"+str(finesse)+".bhr"
 
-##       f = file(monFichierInput)
-##       string_0 = f.read()  
-##       f.close()
-##       # find and replace with CONFIG idctionnary
-##       string_1=self.remplaceCONFIG(string_0,CONFIGliste)
-##       dicoBenhur=dict()
-##       dicoBenhur["_RVE_SIZE"]=self.size
-##       dicoBenhur["_MESH_SIZE"]=finesse
-##       dicoBenhur["_INCLUSION_FILE"]=self.inclusion_name
-##       # find and replace with BENHUR dictionnary
-##       string_2=self.remplaceDICO(string_1,dicoBenhur)
-##       # write into ouput file
-##       f=open(monFichierOutput,'wb')
-##       f.write(string_2)
-##       f.close()
-##       # launch of BENHUR on the previous file
-##       commande=commande + "cd "+self.config.PATH_BENHUR+"/bin;\n"
-##       commande=commande + "./benhur -i "+monFichierOutput+";\n"
-##       commande=commande + "echo 'fin execution de BENHUR';\n"
-##       return commande
-
-   def ASTER(self) :
-      commande="echo 'execution de CODE_ASTER';\n"
-      monFichierCommInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/s_polymers_st_1_aster_template.comm"
-      monFichierExportInput=self.config.INSTALLDIR+"/MAP/Templates/"+self.config.NAME_SCHEME+"/s_polymers_st_1_aster_template.export"
-
-      monFichierCommOutput=self.config.PATH_STUDY+"/s_polymers_st_1_aster.comm"
-      monFichierExportOutput=self.config.PATH_STUDY+"/s_polymers_st_1_aster.export"
-      # Lecture du fichier a trous a pour le fichier export
-      f = file(monFichierExportInput)
-      string_0 = f.read()  
-      f.close()
-      # find and replace with CONFIG dictionnary
-      string_1=self.remplaceCONFIG(string_0,CONFIGliste)            
-      # find and replace with CODE_ASTER dictionnary
-      dicoAster=dict()
-      dicoAster["_MESH_SIZE"]=self.finesse
-      dicoAster["_ASTER_VERSION"]="STA10"
-      dicoAster["_NAME_STUDY"]="s_polymers_st_1"
-      string_2=self.remplaceDICO(string_1,dicoAster)
-      # write into output file
-      f=open(monFichierExportOutput,'wb')
-      f.write(string_2)
-      f.close()
-
-      # Lecture du fichier a trous a pour le fichier comm
-      f = file(monFichierCommInput)
-      string_0 = f.read()  
-      f.close()
-      # find and replace with CONFIG dictionnary
-      string_1=self.remplaceCONFIG(string_0,CONFIGliste)       
-      # find and replace with CODE_ASTER dictionnary
-      dicoAster=dict()
-      dicoAster["_RVE_SIZE"]=self.rve_size
-      dicoAster["_CONDUCTIVITE_I"]=self.lambda_I
-      dicoAster["_CONDUCTIVITE_M"]=self.lambda_M
-      string_2=self.remplaceDICO(string_1,dicoAster)
-      # write into output file
-      f=open(monFichierCommOutput,'wb')
-      f.write(string_2)
-      f.close()
-      # launch of CODE_ASTER on the study
-      commande=commande + "cd "+self.config.PATH_STUDY+";"
-      commande=commande + self.config.PATH_ASTER + "/as_run "+monFichierExportOutput +";\n"
-      commande=commande + "echo 'fin execution de CODE_ASTER';\n"
-      return commande
+   def ASTER_s_polymers_st_1(self) :
+      commande_python="import os,sys;\n"
+      commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
+      commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
+      commande_python+="component_aster_s_polymers_st_1("+str(self.rve_size)+","+str(self.finesse)+","+str(self.lambda_I)+","+str(self.lambda_M)+",'"+str(self.study_name)+"','"+str(self.study_path)+"','"+self.config.PATH_ASTER+"');\n"
+      return 'python -c "'+commande_python+'"\n'
 
    def GMSH(self) :
-      commande="echo 'execution de GMSH';\n"
-      commande+= "gmsh "+self.config.PATH_STUDY+"/s_polymers_st_1_aster.resu.msh;\n"
-      commande+= "echo 'fin execution de GMSH';\n"
-      return commande
+      commande_python="import os,sys;\n"
+      commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
+      commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
+      commande_python+="component_gmsh_post('"+str(self.study_path+"/s_polymers_st_1_aster.resu.msh")+"');\n"
+      return 'python -c "'+commande_python+'"\n'
+
+##       commande="echo 'execution de GMSH';\n"
+##       commande+= "gmsh "+self.config.PATH_STUDY+"/s_polymers_st_1_aster.resu.msh;\n"
+##       commande+= "echo 'fin execution de GMSH';\n"
+##       return commande

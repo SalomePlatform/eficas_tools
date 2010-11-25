@@ -22,7 +22,7 @@
       <script><code><![CDATA[import sys
 import os
 
-sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'../EficasV1/MAP/Templates/s_polymers_st_1'))
+sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'),'MAP/Templates/s_polymers_st_1'))
 
 print sys.path
 from s_polymers_st_1_YACS_nodes import *
@@ -74,7 +74,7 @@ lambda_M=1.
       <script><code><![CDATA[import sys
 import os
 
-sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'../EficasV1/MAP/Templates/s_polymers_st_1'))
+sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'),'MAP/Templates/s_polymers_st_1'))
 
 from s_polymers_st_1_YACS_nodes import *
 
@@ -93,11 +93,12 @@ lambda_x=component_fdvgrid(lambda_I, lambda_M, rve_size, file_inclusions, finess
       <script><code><![CDATA[import sys
 import os
 
-sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'../EficasV1/MAP/Templates/s_polymers_st_1'))
+
+sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'),'MAP/Templates/s_polymers_st_1'))
 
 from s_polymers_st_1_YACS_nodes import *
 
-component_benhur(finesse, rve_size, file_inclusions, study_name, study_path)
+(result_mesh, result_log)=component_benhur(finesse, rve_size, file_inclusions, study_name, study_path)
 
 ]]></code></script>
       <inport name="rve_size" type="double"/>
@@ -105,30 +106,73 @@ component_benhur(finesse, rve_size, file_inclusions, study_name, study_path)
       <inport name="file_inclusions" type="string"/>
       <inport name="study_name" type="string"/>
       <inport name="study_path" type="string"/>
+      <outport name="result_mesh" type="string"/>
+      <outport name="result_log" type="string"/>
    </inline>
    <inline name="env">
       <script><code><![CDATA[study_path="/local00/bin/MAP/studies/demonstrateur_s_polymers_st_1/"
 study_name="test YACS"
+aster_path="/local00/aster/bin/"
 ]]></code></script>
       <outport name="study_name" type="string"/>
       <outport name="study_path" type="string"/>
+      <outport name="aster_path" type="string"/>
    </inline>
-   <control> <fromnode>pygmee_v2</fromnode> <tonode>benhur</tonode> </control>
+   <inline name="aster_s_polymers_st_1">
+      <script><code><![CDATA[import sys
+import os
+
+
+sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'),'MAP/Templates/s_polymers_st_1'))
+
+from s_polymers_st_1_YACS_nodes import *
+
+result_gmsh=component_aster_s_polymers_st_1(rve_size, finesse, lambda_I, lambda_M, study_name, study_path, aster_path)
+
+]]></code></script>
+      <inport name="lambda_I" type="double"/>
+      <inport name="lambda_M" type="double"/>
+      <inport name="study_name" type="string"/>
+      <inport name="study_path" type="string"/>
+      <inport name="rve_size" type="double"/>
+      <inport name="finesse" type="int"/>
+      <inport name="mesh" type="string"/>
+      <inport name="aster_path" type="string"/>
+      <outport name="result_gmsh" type="string"/>
+   </inline>
+   <inline name="gmsh_post">
+      <script><code><![CDATA[import sys
+import os
+
+
+sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'),'MAP/Templates/s_polymers_st_1'))
+
+from s_polymers_st_1_YACS_nodes import *
+
+component_gmsh_post(result_gmsh)
+]]></code></script>
+      <inport name="result_gmsh" type="string"/>
+   </inline>
    <control> <fromnode>pygmee_v2</fromnode> <tonode>fdvgrid</tonode> </control>
-   <control> <fromnode>init</fromnode> <tonode>benhur</tonode> </control>
+   <control> <fromnode>pygmee_v2</fromnode> <tonode>benhur</tonode> </control>
    <control> <fromnode>init</fromnode> <tonode>fdvgrid</tonode> </control>
+   <control> <fromnode>init</fromnode> <tonode>aster_s_polymers_st_1</tonode> </control>
+   <control> <fromnode>init</fromnode> <tonode>benhur</tonode> </control>
    <control> <fromnode>init</fromnode> <tonode>pygmee_v2</tonode> </control>
-   <control> <fromnode>env</fromnode> <tonode>init</tonode> </control>
-   <control> <fromnode>env</fromnode> <tonode>benhur</tonode> </control>
+   <control> <fromnode>benhur</fromnode> <tonode>aster_s_polymers_st_1</tonode> </control>
    <control> <fromnode>env</fromnode> <tonode>fdvgrid</tonode> </control>
+   <control> <fromnode>env</fromnode> <tonode>aster_s_polymers_st_1</tonode> </control>
+   <control> <fromnode>env</fromnode> <tonode>benhur</tonode> </control>
+   <control> <fromnode>env</fromnode> <tonode>init</tonode> </control>
    <control> <fromnode>env</fromnode> <tonode>pygmee_v2</tonode> </control>
-   <datalink control="false">
-      <fromnode>pygmee_v2</fromnode> <fromport>result_inclusions</fromport>
-      <tonode>benhur</tonode> <toport>file_inclusions</toport>
-   </datalink>
+   <control> <fromnode>aster_s_polymers_st_1</fromnode> <tonode>gmsh_post</tonode> </control>
    <datalink control="false">
       <fromnode>pygmee_v2</fromnode> <fromport>result_inclusions</fromport>
       <tonode>fdvgrid</tonode> <toport>file_inclusions</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>pygmee_v2</fromnode> <fromport>result_inclusions</fromport>
+      <tonode>benhur</tonode> <toport>file_inclusions</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>phase_number</fromport>
@@ -156,6 +200,10 @@ study_name="test YACS"
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>rve_size</fromport>
+      <tonode>fdvgrid</tonode> <toport>rve_size</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>rve_size</fromport>
       <tonode>benhur</tonode> <toport>rve_size</toport>
    </datalink>
    <datalink control="false">
@@ -164,7 +212,11 @@ study_name="test YACS"
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>rve_size</fromport>
-      <tonode>fdvgrid</tonode> <toport>rve_size</toport>
+      <tonode>aster_s_polymers_st_1</tonode> <toport>rve_size</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>finesse</fromport>
+      <tonode>benhur</tonode> <toport>finesse</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>finesse</fromport>
@@ -172,15 +224,31 @@ study_name="test YACS"
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>finesse</fromport>
-      <tonode>benhur</tonode> <toport>finesse</toport>
+      <tonode>aster_s_polymers_st_1</tonode> <toport>finesse</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>lambda_I</fromport>
       <tonode>fdvgrid</tonode> <toport>lambda_I</toport>
    </datalink>
    <datalink control="false">
+      <fromnode>init</fromnode> <fromport>lambda_I</fromport>
+      <tonode>aster_s_polymers_st_1</tonode> <toport>lambda_I</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>lambda_M</fromport>
+      <tonode>aster_s_polymers_st_1</tonode> <toport>lambda_M</toport>
+   </datalink>
+   <datalink control="false">
       <fromnode>init</fromnode> <fromport>lambda_M</fromport>
       <tonode>fdvgrid</tonode> <toport>lambda_M</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>benhur</fromnode> <fromport>result_mesh</fromport>
+      <tonode>aster_s_polymers_st_1</tonode> <toport>mesh</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>env</fromnode> <fromport>study_name</fromport>
+      <tonode>pygmee_v2</tonode> <toport>study_name</toport>
    </datalink>
    <datalink control="false">
       <fromnode>env</fromnode> <fromport>study_name</fromport>
@@ -192,7 +260,7 @@ study_name="test YACS"
    </datalink>
    <datalink control="false">
       <fromnode>env</fromnode> <fromport>study_name</fromport>
-      <tonode>pygmee_v2</tonode> <toport>study_name</toport>
+      <tonode>aster_s_polymers_st_1</tonode> <toport>study_name</toport>
    </datalink>
    <datalink control="false">
       <fromnode>env</fromnode> <fromport>study_name</fromport>
@@ -200,11 +268,11 @@ study_name="test YACS"
    </datalink>
    <datalink control="false">
       <fromnode>env</fromnode> <fromport>study_path</fromport>
-      <tonode>fdvgrid</tonode> <toport>study_path</toport>
+      <tonode>benhur</tonode> <toport>study_path</toport>
    </datalink>
    <datalink control="false">
       <fromnode>env</fromnode> <fromport>study_path</fromport>
-      <tonode>benhur</tonode> <toport>study_path</toport>
+      <tonode>aster_s_polymers_st_1</tonode> <toport>study_path</toport>
    </datalink>
    <datalink control="false">
       <fromnode>env</fromnode> <fromport>study_path</fromport>
@@ -214,14 +282,28 @@ study_name="test YACS"
       <fromnode>env</fromnode> <fromport>study_path</fromport>
       <tonode>pygmee_v2</tonode> <toport>study_path</toport>
    </datalink>
+   <datalink control="false">
+      <fromnode>env</fromnode> <fromport>study_path</fromport>
+      <tonode>fdvgrid</tonode> <toport>study_path</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>env</fromnode> <fromport>aster_path</fromport>
+      <tonode>aster_s_polymers_st_1</tonode> <toport>aster_path</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>aster_s_polymers_st_1</fromnode> <fromport>result_gmsh</fromport>
+      <tonode>gmsh_post</tonode> <toport>result_gmsh</toport>
+   </datalink>
    <parameter>
       <tonode>benhur</tonode><toport>file_inclusions</toport>
       <value><string></string></value>
    </parameter>
-   <presentation name="env" x="518.009" y="574.447" width="227.5" height="139"/>
-   <presentation name="init" x="9" y="422.773" width="273.5" height="371"/>
-   <presentation name="benhur" x="948.69" y="94.3462" width="223" height="226"/>
-   <presentation name="fdvgrid" x="888.902" y="551.141" width="227.5" height="284"/>
-   <presentation name="pygmee_v2" x="390.897" y="87.3212" width="249.5" height="342"/>
-   <presentation name="__ROOT__" x="0" y="0" width="1181.19" height="844.141"/>
+   <presentation name="fdvgrid" x="869" y="80.25" width="227.5" height="284"/>
+   <presentation name="aster_s_polymers_st_1" x="1133" y="271.75" width="227.5" height="313"/>
+   <presentation name="env" x="9" y="301.25" width="227.5" height="168"/>
+   <presentation name="benhur" x="869" y="510.25" width="227.5" height="226"/>
+   <presentation name="init" x="273" y="199.75" width="273.5" height="371"/>
+   <presentation name="gmsh_post" x="1397.25" y="373.25" width="223" height="110"/>
+   <presentation name="pygmee_v2" x="583" y="470.25" width="249.5" height="342"/>
+   <presentation name="__ROOT__" x="0" y="0" width="1629.75" height="821.25"/>
 </proc>
