@@ -1,13 +1,26 @@
-## -*- coding: utf-8 -*-
+#)# -*- coding: utf-8 -*-
 #
 ## --------------------------------------------------
 ## debut entete
 ## --------------------------------------------------
 #
 from Accas import *
+import os
+import sys
+
 from prefs_MAP import PATH_MODULE
 from prefs_MAP import PATH_STUDY
 from prefs_MAP import PATH_PYGMEE
+
+try :
+   fichUtilisateur=os.path.join(os.environ['HOME'],'.Eficas_MAP/prefs_MAP.py')
+   f=open(fichUtilisateur)
+   txt=f.read()
+   f.close()
+   exec txt in locals()
+except :
+   pass
+
 
 class Tuple:
   def __init__(self,ntuple):
@@ -36,8 +49,8 @@ JdC = JDC_CATA ( code = 'MAP',
 
 ETUDE= PROC(nom="ETUDE",op=None,
               fr="determination du nom et du repertoire de l'etude)",
-              study_name=SIMP(statut = "f",fr="", typ='TXM',defaut="s_polymers_st_1_for_YACS"),
-              study_path=SIMP(statut = "f",fr="", typ='TXM',defaut=PATH_STUDY),
+              study_name=SIMP(statut = "o",fr="", typ='TXM',defaut="s_polymers_st_1_for_YACS"),
+              study_path=SIMP(statut = "o",fr="", typ='TXM',defaut=PATH_STUDY),
               )
 
 METHODE= PROC(nom="METHODE",op=None,

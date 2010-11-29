@@ -26,7 +26,7 @@ def component_pygmee_v2(rve_size, phase_number, sieve_curve_in, sieve_curve_out,
     commande=parameter.write_for_shell(pygmee_v2_input)
     os.system(commande)
 
-    commande= "cd /local00/bin/MAP/components/pygmee_v2/src;"
+    commande= "cd /local/noyret/MAP/components/pygmee_v2/src;"
     commande+= "python pygmee_v2.py -i "+pygmee_v2_input+";\n"
     os.system(commande)
 
@@ -52,7 +52,7 @@ def component_fdvgrid(lambda_I, lambda_M, rve_size, file_inclusions, finesse):
         
     if (finesse < 32): finesse=32
 
-    fdvgrid_path="/local00/bin/MAP/components/fdvgrid/bin"
+    fdvgrid_path="/local/noyret/MAP/components/fdvgrid/bin"
     commande= "cd "+fdvgrid_path+";\n"
     commande+= "echo "+ str(rve_size)+" > "+"rve.input"+";\n"
     commande+= "cp " + file_inclusions+" "+"inclusions.input"+";\n"

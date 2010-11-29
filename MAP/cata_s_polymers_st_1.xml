@@ -38,12 +38,12 @@ parameter.add_parameter(composant, 'study_name', study_name)
 parameter.add_parameter(composant, 'file_result_inclusions', file_result_inclusions)
 parameter.add_parameter(composant, 'file_result_rve', file_result_rve)
 
-pygmee_v2_input = "/local00/bin/MAP/studies/demonstrateur_s_polymers_st_1/pygmee_v2_for_YACS_20101116.input"
+pygmee_v2_input = "/local/noyret/MAP/studies/demonstrateur_s_polymers_st_1/pygmee_v2_for_YACS_20101116.input"
 
 commande=parameter.write_for_shell(pygmee_v2_input)
 os.system(commande)
 
-commande= "cd /local00/bin/MAP/components/pygmee_v2/src;"
+commande= "cd /local/noyret/MAP/components/pygmee_v2/src;"
 commande+= "python pygmee_v2.py -i "+pygmee_v2_input+";\n"
 os.system(commande)
 

@@ -31,13 +31,13 @@ initialdir=REPINI
 
 # INSTALLDIR sert à localiser l'installation d'Eficas
 INSTALLDIR=os.path.join(REPINI,'..')
-#PATH_MAP="/local/noyret/MAP/"
-PATH_MAP="/local00/bin/MAP/"
+PATH_MAP="/local/noyret/MAP/"
+#PATH_MAP="/local00/bin/MAP/"
 PATH_PYGMEE=PATH_MAP+"/components/pygmee_v2"
 PATH_BENHUR=PATH_MAP+"/components/benhur"
 PATH_FDVGRID=PATH_MAP+"components/fdvgrid/ther2d/bin"
-PATH_MODULE=PATH_MAP+"/modules/polymers"
 PATH_STUDY=PATH_MAP+"/studies/demonstrateur_s_polymers_st_1"
+PATH_MODULE=PATH_MAP+"/module"
 #PATH_ASTER="/local/noyret/bin/Aster10/bin"
 PATH_ASTER="/local00/aster"
 PATH_GMSH="/usr/bin"

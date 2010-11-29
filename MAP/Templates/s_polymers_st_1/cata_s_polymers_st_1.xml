@@ -22,7 +22,11 @@
       <script><code><![CDATA[import sys
 import os
 
+<<<<<<< cata_s_polymers_st_1.xml
+sys.path.append(os.path.join('/local/noyret/Install_Eficas/EficasV1/MAP/Templates/s_polymers_st_1'))
+=======
 sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'),'MAP/Templates/s_polymers_st_1'))
+>>>>>>> 1.1.2.5
 
 print sys.path
 from s_polymers_st_1_YACS_nodes import *
@@ -48,6 +52,10 @@ result_rve = file_result_rve
    <inline name="init">
       <script><code><![CDATA[phase_number=1
 rve_size=50.0
+<<<<<<< cata_s_polymers_st_1.xml
+study_path="/local/noyret/MAP/studies/demonstrateur_s_polymers_st_1/"
+=======
+>>>>>>> 1.1.2.5
 sieve_curve_in=study_path+"inclusion_size_distribution.txt"
 sieve_curve_out=study_path+"pygmee_v2_test_YACS.sieve_out"
 repulsion_distance=0.1
@@ -56,6 +64,10 @@ file_result_rve=study_path+"rve.txt"
 finesse=10
 lambda_I=100.
 lambda_M=1.
+<<<<<<< cata_s_polymers_st_1.xml
+benhur_template="/local/noyret/EficasV1/MAP/templates/s_polymers_st_1/benhur_template.txt"
+=======
+>>>>>>> 1.1.2.5
 ]]></code></script>
       <inport name="study_name" type="string"/>
       <inport name="study_path" type="string"/>
@@ -74,7 +86,11 @@ lambda_M=1.
       <script><code><![CDATA[import sys
 import os
 
+<<<<<<< cata_s_polymers_st_1.xml
+sys.path.append(os.path.join('/local/noyret/Install_Eficas/EficasV1/MAP/Templates/s_polymers_st_1'))
+=======
 sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'),'MAP/Templates/s_polymers_st_1'))
+>>>>>>> 1.1.2.5
 
 from s_polymers_st_1_YACS_nodes import *
 
