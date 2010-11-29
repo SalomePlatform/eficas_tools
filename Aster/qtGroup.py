@@ -32,4 +32,4 @@ __import__(name)
 
 from InterfaceQT4 import eficas_go
 
-eficas_go.lance_eficas_ssIhm(code=prefs.code,fichier="/local/noyret/Eficas_Aster/cable.comm",version='v10.0')
+eficas_go.lance_eficas_ssIhm(code=prefs.code,fichier="/local/noyret/Eficas_Aster/cable.comm",version='v10.2')

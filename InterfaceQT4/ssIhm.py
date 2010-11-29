@@ -21,7 +21,7 @@
 #    permet de lancer  EFICAS en n affichant rien
 
 class QWParentSSIhm:
-   def __init__(self,code,appliEficas,version_code,ssCode):
+   def __init__(self,code,appliEficas,version_code,ssCode=None):
         self.ihm="QT"
         self.code=code
         self.version_code=version_code
