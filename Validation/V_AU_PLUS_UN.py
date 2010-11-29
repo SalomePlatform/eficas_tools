@@ -1,4 +1,4 @@
-#@ MODIF V_AU_PLUS_UN Validation  DATE 07/09/2009   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF V_AU_PLUS_UN Validation  DATE 09/11/2010   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 # RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -20,8 +20,6 @@
 # ======================================================================
 
 
-import types
-
 class AU_PLUS_UN:
    """
       La règle vérifie que l'on trouve 1 (au plus) des mots-clés
@@ -31,7 +29,7 @@ class AU_PLUS_UN:
       d'une liste de noms de mots-clés ou d'un dictionnaire dont
       les clés sont des noms de mots-clés.
    """
-   def verif(self,args):
+   def verif(self, args):
       """
           La méthode verif vérifie que l'on trouve 1 (au plus) des mos-clés
           de la liste self.mcs parmi les éléments de args
@@ -40,26 +38,23 @@ class AU_PLUS_UN:
           sont soit les éléments de la liste soit les clés du dictionnaire.
       """
       #  on compte le nombre de mots cles presents
-      text =''
+      text = ''
       count = 0
       args = self.liste_to_dico(args)
       for mc in self.mcs:
-        if args.has_key(mc):count=count+args[mc]
+         count = count + args.get(mc, 0)
       if count > 1:
-          text = "- Il ne faut qu'un mot-clé (au plus) parmi : "+`self.mcs`+'\n'
-          return text,0
-      return text,1
+         text = "- Il ne faut qu'un mot-clé (au plus) parmi : "+`self.mcs`+'\n'
+         return text, 0
+      return text, 1
 
-   def liste_to_dico(self,args) :
-      if type(args) == types.DictionaryType:
-        return args
-      elif type(args) == types.ListType:
-        dico={}
-        for arg in args :
-          if dico.has_key(arg):
-           dico[arg]=dico[arg]+1
-          else :
-           dico[arg]=1
-        return dico
+   def liste_to_dico(self, args) :
+      if type(args) is dict:
+         return args
+      elif type(args) in (list, tuple):
+         dico={}
+         for arg in args:
+            dico[arg] = dico.get(arg, 0) + 1
+         return dico
       else :
-        raise "Erreur ce n'est ni un dictionnaire ni une liste",args
+         raise "Erreur ce n'est ni un dictionnaire ni une liste", args
