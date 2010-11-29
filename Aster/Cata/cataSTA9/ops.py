@@ -1,4 +1,4 @@
-#@ MODIF ops Cata  DATE 06/10/2009   AUTEUR MACOCCO K.MACOCCO 
+#@ MODIF ops Cata  DATE 12/11/2010   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -212,6 +212,8 @@ def POURSUITE(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, **args):
      # POURSUITE
      if hasattr(self,'fichier_init'):
         return
+     if aster_exists:
+        UTMESS('F','SUPERVIS_94')
      self.make_poursuite()
 
 def get_pickled_context():
