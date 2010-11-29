@@ -107,7 +107,7 @@
    <item row="2" column="0" >
     <widget class="QPushButton" name="BAlpha" >
      <property name="text" >
-      <string>Alphabetique</string>
+      <string>Tri Alpha</string>
      </property>
     </widget>
    </item>
