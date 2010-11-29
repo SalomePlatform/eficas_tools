@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
+
+import sys, os
+sys.path.append(os.path.join(os.getenv('YACS_ROOT_DIR'),'lib/python2.5/site-packages/salome/'))
+
 import pilot
 import SALOMERuntime
 import loader
 import logging
 import traceback
-import sys, os
 
 class CreeSchemaYacs :
      def __init__(self,config):
