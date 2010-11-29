@@ -533,6 +533,12 @@ class JDCEditor(QSplitter):
     def runYACS(self,execution="oui",nomFichier=None):
     #------------------------------------------------#
       format=self.appliEficas.format_fichier
+      if (not self.jdc.isvalid()) :
+         QMessageBox.warning(self,
+             self.trUtf8("Sauvegarde YACS impossible"),
+             self.trUtf8("Le Schema n est pas encore valide."),
+                       self.trUtf8("&OK"),)
+         return
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
