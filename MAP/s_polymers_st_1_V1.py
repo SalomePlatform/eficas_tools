@@ -8,9 +8,7 @@ from Accas import *
 import os
 import sys
 
-from prefs_MAP import PATH_MODULE
 from prefs_MAP import PATH_STUDY
-from prefs_MAP import PATH_PYGMEE
 
 try :
    fichUtilisateur=os.path.join(os.environ['HOME'],'.Eficas_MAP/prefs_MAP.py')
