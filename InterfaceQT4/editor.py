@@ -586,7 +586,6 @@ class JDCEditor(QSplitter):
         fn = unicode(QDir.convertSeparators(fn))
 
         texte=self.runYACS(execution="non",nomFichier=fn)
-        #self.writeFile( fn, txt = texte)
       
     #-----------------------------------------#
     def cherche_Groupes(self):
