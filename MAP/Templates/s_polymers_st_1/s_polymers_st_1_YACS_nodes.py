@@ -7,9 +7,13 @@ try :
 except :
    pass
 
-def component_pygmee_v2(rve_size, phase_number, sieve_curve_in, sieve_curve_out, repulsion_distance, study_name, study_path, file_result_inclusions, file_result_rve):
+class component_pygmee_v2:
+
+   def __init__(self,rve_size, phase_number, sieve_curve_in, sieve_curve_out, repulsion_distance, 
+                 study_name, study_path, file_result_inclusions, file_result_rve):
     print "pygmee_v2 for YACS - BEGIN"
     composant="pygmee_v2"
+    pygmee_v2_input = study_path+"/pygmee_v2_for_YACS.input"
     parameter=MAP_parameters()
     parameter.add_component(composant)
     parameter.add_parameter(composant, 'rve_size', rve_size)
@@ -20,26 +24,25 @@ def component_pygmee_v2(rve_size, phase_number, sieve_curve_in, sieve_curve_out,
     parameter.add_parameter(composant, 'study_name', study_name)
     parameter.add_parameter(composant, 'file_result_inclusions', file_result_inclusions)
     parameter.add_parameter(composant, 'file_result_rve', file_result_rve)
+    parameter.write_for_shell(pygmee_v2_input)
 
-    pygmee_v2_input = study_path+"/pygmee_v2_for_YACS.input"
-
-    commande=parameter.write_for_shell(pygmee_v2_input)
-    os.system(commande)
-
-    commande= "cd /local/noyret/MAP/components/pygmee_v2/src;"
+    commponent_dir= os.path.join(os.getenv('MAP_DIRECTORY'),'components/pygmee_v2/src')
+    commande= "cd "+ commponent_dir +";"
     commande+= "python pygmee_v2.py -i "+pygmee_v2_input+";\n"
     os.system(commande)
 
     fd = open(file_result_rve, 'r')
     line=fd.readline()
-    line=fd.readline()
-    volume_fraction=float(line)
-    print "volume_fraction =", volume_fraction
+    self.volume_fraction=float(line)
+    print "volume_fraction =",self.volume_fraction
     fd.close()    
 
     print "pygmee_v2 for YACS - END"
-    return volume_fraction
 
+   def __call__(self,rve_size, phase_number, sieve_curve_in, sieve_curve_out, repulsion_distance, 
+                 study_name, study_path, file_result_inclusions, file_result_rve):
+        
+    return self.volume_fraction
 def component_fdvgrid(lambda_I, lambda_M, rve_size, file_inclusions, finesse):
     print "fdvgrid for YACS - BEGIN"
     
