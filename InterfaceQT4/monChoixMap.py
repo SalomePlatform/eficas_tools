@@ -35,7 +35,7 @@ labels = {
 "s_scc_st_1"    : "Analyse morphologique et mécanique d'une couche d'oxydes",
 "s_scc_st_2"    : "Analyse statistique de données locales et expérimentales \nou numériques",
 "s_scc_st_3"     : "taux de couverture des joints de grains par des précipités",
-"s_poly_st_1"   : "Estimation numérique 3D de la diffusion effective des gaz dans les polymères chargés",
+"s_polymers_st_1"   : "Estimation numérique 3D de la diffusion effective des gaz dans les polymères chargés",
 
          }
 
@@ -47,7 +47,7 @@ dico={"oxides" : {"irradiation"            : "s_oxides_st_1",
                "taux de couverture"    : "s_scc_st_3"},
       "concrete" : {},
       "polycristals" : {},
-      "polymers" : {"numerique 3D" : "s_poly_st_1"},
+      "polymers" : {"numerique 3D" : "s_polymers_st_1"},
       "micro" : {},
       "seal" : {},
       "mox" : {},
