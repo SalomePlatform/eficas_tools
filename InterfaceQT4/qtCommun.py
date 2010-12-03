@@ -47,7 +47,8 @@ class QTPanel:
 
   def GestionBALpha(self,fenetre):
         if self.TWChoix.currentIndex()!=0:
-           self.BAlpha.hide()
+           if hasattr(self,'BAlpha'): #pour include materiau
+              self.BAlpha.hide()
         else :
            self.BAlpha.setVisible(True)
            self.BuildLBMCPermis()
