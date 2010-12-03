@@ -19,7 +19,7 @@ class Appli(Ui_Eficas,QMainWindow):
         """
         Constructor
         """
-        self.VERSION_EFICAS="Eficas QT4 V2.0"
+        self.VERSION_EFICAS="Eficas QT4 V2.1"
 
         self.ihm="QT"
         self.code=code
@@ -106,7 +106,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionExecution.setObjectName("actionExecution")
         self.menuJdC.addAction(self.actionExecution)
         self.toolBar.addAction(self.actionExecution)
-        self.actionExecution.setText(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.actionExecution.setText(QApplication.translate("Eficas", "Execution Python", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
 
         self.actionEnregistrer_Python = QAction(self)
@@ -279,19 +279,21 @@ class Appli(Ui_Eficas,QMainWindow):
     def aidePPal(self) :
         maD=self.INSTALLDIR+"/Aide"
         docsPath = QDir(maD).absolutePath()
-        monAssistant=QAssistantClient(QString(""), self)
-        arguments=QStringList()
-        arguments << "-profile" <<docsPath+QDir.separator()+QString("eficas_")+QString(self.code)+QString(".adp");
-        monAssistant.setArguments(arguments);
-        monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
+        try :
+          monAssistant=QAssistantClient(QString(""), self)
+          arguments=QStringList()
+          arguments << "-profile" <<docsPath+QDir.separator()+QString("eficas_")+QString(self.code)+QString(".adp");
+          monAssistant.setArguments(arguments);
+          monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
+        except:
+           QMessageBox.warning( self, "Aide Indisponible", "QT Assistant n est pas installe ")
+
 
     def optionEditeur(self) :
         name='monOptions_'+self.code
         try :
-        #if 1 :
            optionCode=__import__(name)
         except :
-        #else :
            QMessageBox.critical( self, "Parametrage", "Pas de possibilite de personnalisation de la configuration ")
            return
         monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
