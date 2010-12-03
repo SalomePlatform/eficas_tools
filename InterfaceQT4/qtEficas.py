@@ -96,15 +96,17 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionTraduitV8V9,SIGNAL("activated()"),self.traductionV8V9)
 
 
-    def Map(self): 
-        self.MAP()
 
     def MAP(self): 
+        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.menuExecution.setObjectName("menuExecution")
+        self.menuJdC.setTitle(QApplication.translate("Eficas", "Rapports", None, QApplication.UnicodeUTF8))
+
         self.actionExecution = QAction(self)
         icon6 = QIcon(self.RepIcon+"/compute.png")
         self.actionExecution.setIcon(icon6)
         self.actionExecution.setObjectName("actionExecution")
-        self.menuJdC.addAction(self.actionExecution)
+        self.menuExecution.addAction(self.actionExecution)
         self.toolBar.addAction(self.actionExecution)
         self.actionExecution.setText(QApplication.translate("Eficas", "Execution Python", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
@@ -125,7 +127,7 @@ class Appli(Ui_Eficas,QMainWindow):
         icon7 = QIcon(self.RepIcon+"/application.gif")
         self.actionExecutionYACS.setIcon(icon7)
         self.actionExecutionYACS.setObjectName("actionExecutionYACS")
-        self.menuJdC.addAction(self.actionExecutionYACS)
+        self.menuExecution.addAction(self.actionExecutionYACS)
         self.toolBar.addAction(self.actionExecutionYACS)
         self.actionExecutionYACS.setText(QApplication.translate("Eficas", "Execution YACS", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecutionYACS,SIGNAL("activated()"),self.runYACS)
