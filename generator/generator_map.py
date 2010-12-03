@@ -68,36 +68,39 @@ class MapGenerator(PythonGenerator):
          os.makedirs(self.nom_racine)
       self.listeCODE=[]
       self.text=""
-      self.textCode=""
-      self.texteExecution=""
-      self.ssCode=self.config.appli.ssCode
 
-   def verifie(self):
-      print 'verification generique'
+      self.ssCode=self.config.appli.ssCode
+      self.INSTALLDIR=self.config.appli.INSTALLDIR
+      self.ssCodeDir=os.path.join(self.INSTALLDIR,'MAP/Templates',self.ssCode)
+      print self.ssCodeDir
+      self.texteExecution="import os,sys\n"
+      self.texteExecution+="sys.path.append('"+self.ssCodeDir+"')\n"
+      self.texteExecution+="from s_polymers_st_1_YACS_nodes import *\n"
 
    def gener(self,obj,format='brut',config=None):
-      print 'generation dans generator_map'
       self.initialise(config)
       text=PythonGenerator.gener(self,obj,format)
-      self.verifie()
-      self.generePythonMap("non")
       return text
 
    def generRUN(self,obj,format='brut',config=None,):
       print 'generRUN dans generator_map'
       self.initialise(config)
       text=PythonGenerator.gener(self,obj,format)
-      self.verifie()
-      self.generePythonMap("oui") 
+      for elt in self.listeCODE:
+          code=elt.keys()[0]
+          if code in self.__class__.__dict__.keys():
+             texteCode=apply(self.__class__.__dict__[code],(self,))
+             self.texteExecution += texteCode
       return self.texteExecution
 
 
    def generRUNYACS(self,obj,format='brut',config=None,nomFichier=None):
       self.initialise(config)
       text=PythonGenerator.gener(self,obj,format)
+      #self.generePythonMap("non")
+
       import sys
       sys.path.append(os.path.join(os.getenv("YACS_ROOT_DIR"),"lib/python2.4/site-packages/salome/"))
-      self.verifie()
       import monCreateYacs
       self.monSchema=monCreateYacs.getSchema(config)
       self.proc=self.monSchema.createProc(self)

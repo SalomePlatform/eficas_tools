@@ -49,24 +49,10 @@ class CreeSchemaYacs :
      def write_yacs_proc(self,proc, yacs_schema_filename):
          proc.saveSchema(yacs_schema_filename)
 
+# pour l instant on garde cette classe 
+# pour pouvoir specialiser si necessaire
+# pour d autres schema
 class s_polymers_st_1(CreeSchemaYacs) :
-     # CTL 20101121 : obsolete, has been transfered to genarator_s_polymers_st_1
-     #                for better genericity
-##      def ASTERYACS(self,proc,dico):
-##          factoryNode = self.monCata._nodeMap["asterRun"]
-##          self.asterNode = factoryNode.cloneNode("asterRun")
-##          nom_racine=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"/"
-##          monFichierExport=nom_racine+"s_poly_st_1_aster.export"
-##          monFichierMed=nom_racine+"s_poly_st_1_aster.resu.med"
-##          self.asterNode.getInputPort("pathAster").edInitPy(self.config.PATH_ASTER+"/bin")
-##          self.asterNode.getInputPort("fileExport").edInitPy(monFichierExport)
-##          self.asterNode.getInputPort("fileMed").edInitPy(monFichierMed)
-
-##          proc.edAddChild(self.asterNode)
-##          if self.nodeAvant != None :
-##             proc.edAddCFLink(self.nodeAvant,self.asterNode)
-##          self.nodeAvant=self.asterNode
-
      def METHODEYACS(self,proc,dico):
          self.generator.METHODEYACS(self,proc)
          

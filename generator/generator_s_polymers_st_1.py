@@ -60,14 +60,11 @@ class s_poly_st_1Generator(MapGenerator):
 
    """
    
-   def verifie(self):
-       liste=[]
-       for i in self.listeCODE:
-           liste.append(i.keys()[0])
-       if len(liste) != len(set(liste)):
-           raise AsException("il n'est pas prevu d avoir deux fois le meme code dans ce schema")
 
-# I - YACS functions
+#_________________________________
+#  - YACS functions
+#_________________________________
+
    def PYGMEEYACS(self, SchemaYacs, proc):
       monFichierInput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"/pygmee_input.txt"
       factoryNode = SchemaYacs.monCata._nodeMap["pygmee_v2"]
@@ -173,78 +170,42 @@ class s_poly_st_1Generator(MapGenerator):
          self.ASTERYACS(SchemaYacs,proc)
          self.GMSHYACS(SchemaYacs,proc)
 
-# II - shell functions
-   def ETUDE(self,execution) :
-      self.dicoETUDE=self.dictMCVal["ETUDE"]
-      print "_____________________"
-      print self.dicoETUDE
-      print "ETUDE Ok"
-      print "_____________________\n"
-      return ""
-   
-   def MATERIAUX(self,execution) :
-      self.dicoMATERIAUX=self.dictMCVal["MATERIAUX"]
-      print "_____________________"
-      print self.dicoMATERIAUX
-      print "MATERIAUX Ok"
-      print "_____________________\n"
-      return ""
+#_________________________________
+#  - shell functions
+#_________________________________
 
-   def DISCRETISATION(self,execution) :
-      self.dicoDISCRETISATION=self.dictMCVal["DISCRETISATION"]
-      print "_____________________"
-      print self.dicoDISCRETISATION
-      print "DISCRETISATION Ok"
-      print "_____________________\n"
-      return ""
-
-   def METHODE(self,execution) :
-      self.dicoMETHODE=self.dictMCVal["METHODE"]
-      print "_____________________"
-      print self.dicoMETHODE
-      print "METHODE Ok"
-      print "_____________________\n"
-
-      if (self.LANCEMENT =='oui') :
-         pass
-      if (self.LANCEMENT =='non') :
-         return ""
-
+   def METHODE(self) :
       commande=self.PYGMEE()
-      if (self.CHOIX=="FD+grid") :
-          print "option fdvgrid"
-          commande+= self.FDVGRID()
-          return commande
-      elif (self.CHOIX=="FEM+mesh") :
-          print "option Code_Aster"
-          commande+= self.BENHUR()
-          commande+= self.ASTER_s_polymers_st_1()
-          commande+= self.GMSH()
-          return commande
+      #if (self.CHOIX=="FD+grid") :
+      #    print "option fdvgrid"
+      #    commande+= self.FDVGRID()
+      #elif (self.CHOIX=="FEM+mesh") :
+      #    print "option Code_Aster"
+      #    commande+= self.BENHUR()
+      #    commande+= self.ASTER_s_polymers_st_1()
+      #    commande+= self.GMSH()
+      return commande
 
-# III - code and component functions
+#_________________________________
+#  - code and component functions
+#_________________________________
+
    def PYGMEE(self) :
-      commande_python="import os,sys;\n"
-      commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
-      commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
-      commande_python+="volume_fraction=component_pygmee_v2("+str(self.rve_size)+",1,"+str(self.sieve_curve_in)+","+str(self.sieve_curve_out)+","+str(self.repulsion_distance)+","+str(self.study_name)+","+str(self.study_path)+","+str(self.inclusion_name)+","+str(self.rve_name)+");\n"
-      return 'python -c "'+commande_python+'"\n'
+      commande="volume_fraction=component_pygmee_v2("+str(self.rve_size)+",1,'"+str(self.sieve_curve_in)+"','"+str(self.sieve_curve_out)+"',"+str(self.repulsion_distance)+",'"+str(self.study_name)+"','"+str(self.study_path)+"','"+str(self.inclusion_name)+"','"+str(self.rve_name)+"')\n"
+      return commande
 
    def FDVGRID(self):
-      commande_python="import os,sys;\n"
-      commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
-      commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
-      commande_python+="lambda_x=component_fdvgrid("+str(self.lambda_I)+","+str(self.lambda_M)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"',"+str(self.finesse)+");\n"
+      return " "
+      commande_python+="lambda_x=component_fdvgrid("+str(self.lambda_I)+","+str(self.lambda_M)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"',"+str(self.finesse)+")\n"
       return 'python -c "'+commande_python+'"\n'
 
    def BENHUR(self):
-      commande_python="import os,sys;\n"
-      commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
-      commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
+      return " "
       commande_python+="component_benhur("+str(self.finesse)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"','"+str(self.study_name)+"','"+str(self.study_path)+"');\n"
       return 'python -c "'+commande_python+'"\n'
 
    def ASTER_s_polymers_st_1(self) :
+      return " "
       commande_python="import os,sys;\n"
       commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
       commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
@@ -252,13 +213,10 @@ class s_poly_st_1Generator(MapGenerator):
       return 'python -c "'+commande_python+'"\n'
 
    def GMSH(self) :
+      return " "
       commande_python="import os,sys;\n"
       commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
       commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
       commande_python+="component_gmsh_post('"+str(self.study_path+"/s_polymers_st_1_aster.resu.msh")+"');\n"
       return 'python -c "'+commande_python+'"\n'
 
-##       commande="echo 'execution de GMSH';\n"
-##       commande+= "gmsh "+self.config.PATH_STUDY+"/s_polymers_st_1_aster.resu.msh;\n"
-##       commande+= "echo 'fin execution de GMSH';\n"
-##       return commande
