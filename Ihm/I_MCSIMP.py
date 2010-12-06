@@ -53,8 +53,6 @@ from I_VALIDATOR import ValError,listProto
 
 class MCSIMP(I_OBJECT.OBJECT):
 
-  def __init__(self) :
-      pass
 
   def isvalid(self,cr='non'):
       if self.state == 'unchanged':
