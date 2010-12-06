@@ -57,7 +57,7 @@ import listePatronsTK
 REPTK=os.path.dirname(os.path.abspath(__file__))
 sys.path[:0]=[REPTK]
 
-VERSION="EFICAS v1.17"
+VERSION="EFICAS v2.1"
 
 class APPLI: 
   def __init__ (self,master,code=prefs.code,fichier=None,test=0,ihm="TK",salome=0) :
