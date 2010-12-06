@@ -24,8 +24,8 @@ import re,string,cPickle,os
 from Noyau.N_CR import CR
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.7.4.1 2008-11-13 10:35:11 cchris Exp $"
-__version__="$Name:  $"
+__Id__="$Id: analyse_catalogue.py,v 1.9 2009-06-19 08:36:49 pnoyret Exp $"
+__version__="$Name: V2_1_1_beta $"
 #
 l_noms_commandes = ['OPER','PROC','MACRO','FORM']
 l_noms_composes=['FACT','BLOC','NUPL','FORM']
