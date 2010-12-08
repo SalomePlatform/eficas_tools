@@ -176,14 +176,12 @@ class s_poly_st_1Generator(MapGenerator):
 
    def METHODE(self) :
       commande=self.PYGMEE()
-      #if (self.CHOIX=="FD+grid") :
-      #    print "option fdvgrid"
-      #    commande+= self.FDVGRID()
-      #elif (self.CHOIX=="FEM+mesh") :
-      #    print "option Code_Aster"
-      #    commande+= self.BENHUR()
-      #    commande+= self.ASTER_s_polymers_st_1()
-      #    commande+= self.GMSH()
+      if (self.CHOIX=="FD+grid") :
+          commande+= self.FDVGRID()
+      elif (self.CHOIX=="FEM+mesh") :
+          commande+= self.BENHUR()
+          commande+= self.ASTER_s_polymers_st_1()
+          commande+= self.GMSH()
       return commande
 
 #_________________________________
@@ -195,28 +193,18 @@ class s_poly_st_1Generator(MapGenerator):
       return commande
 
    def FDVGRID(self):
-      return " "
-      commande_python+="lambda_x=component_fdvgrid("+str(self.lambda_I)+","+str(self.lambda_M)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"',"+str(self.finesse)+")\n"
-      return 'python -c "'+commande_python+'"\n'
+      commande="lambda_x=component_fdvgrid("+str(self.lambda_I)+","+str(self.lambda_M)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"',"+str(self.finesse)+")\n"
+      return commande
 
    def BENHUR(self):
-      return " "
-      commande_python+="component_benhur("+str(self.finesse)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"','"+str(self.study_name)+"','"+str(self.study_path)+"');\n"
-      return 'python -c "'+commande_python+'"\n'
+      commande="component_benhur("+str(self.finesse)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"','"+str(self.study_name)+"','"+str(self.study_path)+"');\n"
+      return commande
 
    def ASTER_s_polymers_st_1(self) :
-      return " "
-      commande_python="import os,sys;\n"
-      commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
-      commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
-      commande_python+="component_aster_s_polymers_st_1("+str(self.rve_size)+","+str(self.finesse)+","+str(self.lambda_I)+","+str(self.lambda_M)+",'"+str(self.study_name)+"','"+str(self.study_path)+"','"+self.config.PATH_ASTER+"');\n"
-      return 'python -c "'+commande_python+'"\n'
+      commande="component_aster_s_polymers_st_1("+str(self.rve_size)+","+str(self.finesse)+","+str(self.lambda_I)+","+str(self.lambda_M)+",'"+str(self.study_name)+"','"+str(self.study_path)+"','"+self.config.PATH_ASTER+"');\n"
+      return commande
 
    def GMSH(self) :
-      return " "
-      commande_python="import os,sys;\n"
-      commande_python+="sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/'));\n"
-      commande_python+="from s_polymers_st_1_YACS_nodes import *;\n"
-      commande_python+="component_gmsh_post('"+str(self.study_path+"/s_polymers_st_1_aster.resu.msh")+"');\n"
-      return 'python -c "'+commande_python+'"\n'
+      commande="component_gmsh_post('"+str(self.study_path+"/s_polymers_st_1_aster.resu.msh")+"');\n"
+      return commande
 

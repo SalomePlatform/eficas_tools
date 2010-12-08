@@ -134,7 +134,7 @@ class component_aster_s_polymers_st_1 (component_template):
                  path_study, aster_path):
     #------------------------------------------------------------------------------
        print "aster_s_polymers_st_1 for YACS - BEGIN"
-       aster_version="STA10"
+       aster_version="STA10.1"
        template_path=os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/')
 
        # Gestion du .comm

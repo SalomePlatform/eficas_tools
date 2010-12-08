@@ -547,11 +547,11 @@ class JDCEditor(QSplitter):
         path=self.CONFIGURATION.savedir
         fn = QFileDialog.getSaveFileName( self,
              self.trUtf8("sauvegarde"), path,
-             self.trUtf8("JDC (*.sh);;" "All Files (*)"),None,
+             self.trUtf8("Run (*.py);;" "All Files (*)"),None,
              QFileDialog.DontConfirmOverwrite)
         if fn.isNull(): return 
         ext = QFileInfo(fn).suffix()
-        if ext.isEmpty(): fn.append(".xml")
+        if ext.isEmpty(): fn.append(".py")
 
         if QFileInfo(fn).exists():
                 abort = QMessageBox.warning(self,
@@ -570,7 +570,7 @@ class JDCEditor(QSplitter):
         path=self.CONFIGURATION.savedir
         fn = QFileDialog.getSaveFileName( self,
              self.trUtf8("sauvegarde"), path,
-             self.trUtf8("JDC (*.xml);;" "All Files (*)"),None,
+             self.trUtf8("Schema YACS (*.xml);;" "All Files (*)"),None,
              QFileDialog.DontConfirmOverwrite)
         if fn.isNull(): return 
         ext = QFileInfo(fn).suffix()

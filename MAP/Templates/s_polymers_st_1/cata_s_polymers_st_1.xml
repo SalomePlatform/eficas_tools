@@ -20,10 +20,10 @@
    </container>
    <inline name="pygmee_v2">
       <script><code><![CDATA[import sys
-import os
+#import os
 
-sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'),'MAP/Templates/s_polymers_st_1'))
-print sys.path
+#sys.path.append(os.path.join(os.getenv('EFICAS_ROOT'),'MAP/Templates/s_polymers_st_1'))
+#print sys.path
 from s_polymers_st_1_YACS_nodes import *
 
 volume_fraction=component_pygmee_v2(rve_size, phase_number, sieve_curve_in, sieve_curve_out, repulsion_distance, study_name, study_path, file_result_inclusions, file_result_rve)
@@ -156,16 +156,16 @@ component_gmsh_post(result_gmsh)
    </inline>
    <control> <fromnode>pygmee_v2</fromnode> <tonode>fdvgrid</tonode> </control>
    <control> <fromnode>pygmee_v2</fromnode> <tonode>benhur</tonode> </control>
-   <control> <fromnode>init</fromnode> <tonode>fdvgrid</tonode> </control>
-   <control> <fromnode>init</fromnode> <tonode>aster_s_polymers_st_1</tonode> </control>
-   <control> <fromnode>init</fromnode> <tonode>benhur</tonode> </control>
    <control> <fromnode>init</fromnode> <tonode>pygmee_v2</tonode> </control>
+   <control> <fromnode>init</fromnode> <tonode>fdvgrid</tonode> </control>
+   <control> <fromnode>init</fromnode> <tonode>benhur</tonode> </control>
+   <control> <fromnode>init</fromnode> <tonode>aster_s_polymers_st_1</tonode> </control>
    <control> <fromnode>benhur</fromnode> <tonode>aster_s_polymers_st_1</tonode> </control>
-   <control> <fromnode>env</fromnode> <tonode>fdvgrid</tonode> </control>
-   <control> <fromnode>env</fromnode> <tonode>aster_s_polymers_st_1</tonode> </control>
-   <control> <fromnode>env</fromnode> <tonode>benhur</tonode> </control>
-   <control> <fromnode>env</fromnode> <tonode>init</tonode> </control>
    <control> <fromnode>env</fromnode> <tonode>pygmee_v2</tonode> </control>
+   <control> <fromnode>env</fromnode> <tonode>init</tonode> </control>
+   <control> <fromnode>env</fromnode> <tonode>fdvgrid</tonode> </control>
+   <control> <fromnode>env</fromnode> <tonode>benhur</tonode> </control>
+   <control> <fromnode>env</fromnode> <tonode>aster_s_polymers_st_1</tonode> </control>
    <control> <fromnode>aster_s_polymers_st_1</fromnode> <tonode>gmsh_post</tonode> </control>
    <datalink control="false">
       <fromnode>pygmee_v2</fromnode> <fromport>result_inclusions</fromport>
@@ -201,6 +201,10 @@ component_gmsh_post(result_gmsh)
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>rve_size</fromport>
+      <tonode>pygmee_v2</tonode> <toport>rve_size</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>init</fromnode> <fromport>rve_size</fromport>
       <tonode>fdvgrid</tonode> <toport>rve_size</toport>
    </datalink>
    <datalink control="false">
@@ -209,19 +213,15 @@ component_gmsh_post(result_gmsh)
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>rve_size</fromport>
-      <tonode>pygmee_v2</tonode> <toport>rve_size</toport>
-   </datalink>
-   <datalink control="false">
-      <fromnode>init</fromnode> <fromport>rve_size</fromport>
       <tonode>aster_s_polymers_st_1</tonode> <toport>rve_size</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>finesse</fromport>
-      <tonode>benhur</tonode> <toport>finesse</toport>
+      <tonode>fdvgrid</tonode> <toport>finesse</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>finesse</fromport>
-      <tonode>fdvgrid</tonode> <toport>finesse</toport>
+      <tonode>benhur</tonode> <toport>finesse</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>finesse</fromport>
@@ -237,11 +237,11 @@ component_gmsh_post(result_gmsh)
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>lambda_M</fromport>
-      <tonode>aster_s_polymers_st_1</tonode> <toport>lambda_M</toport>
+      <tonode>fdvgrid</tonode> <toport>lambda_M</toport>
    </datalink>
    <datalink control="false">
       <fromnode>init</fromnode> <fromport>lambda_M</fromport>
-      <tonode>fdvgrid</tonode> <toport>lambda_M</toport>
+      <tonode>aster_s_polymers_st_1</tonode> <toport>lambda_M</toport>
    </datalink>
    <datalink control="false">
       <fromnode>benhur</fromnode> <fromport>result_mesh</fromport>
@@ -250,6 +250,10 @@ component_gmsh_post(result_gmsh)
    <datalink control="false">
       <fromnode>env</fromnode> <fromport>study_name</fromport>
       <tonode>pygmee_v2</tonode> <toport>study_name</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>env</fromnode> <fromport>study_name</fromport>
+      <tonode>init</tonode> <toport>study_name</toport>
    </datalink>
    <datalink control="false">
       <fromnode>env</fromnode> <fromport>study_name</fromport>
@@ -264,18 +268,6 @@ component_gmsh_post(result_gmsh)
       <tonode>aster_s_polymers_st_1</tonode> <toport>study_name</toport>
    </datalink>
    <datalink control="false">
-      <fromnode>env</fromnode> <fromport>study_name</fromport>
-      <tonode>init</tonode> <toport>study_name</toport>
-   </datalink>
-   <datalink control="false">
-      <fromnode>env</fromnode> <fromport>study_path</fromport>
-      <tonode>benhur</tonode> <toport>study_path</toport>
-   </datalink>
-   <datalink control="false">
-      <fromnode>env</fromnode> <fromport>study_path</fromport>
-      <tonode>aster_s_polymers_st_1</tonode> <toport>study_path</toport>
-   </datalink>
-   <datalink control="false">
       <fromnode>env</fromnode> <fromport>study_path</fromport>
       <tonode>init</tonode> <toport>study_path</toport>
    </datalink>
@@ -286,6 +278,14 @@ component_gmsh_post(result_gmsh)
    <datalink control="false">
       <fromnode>env</fromnode> <fromport>study_path</fromport>
       <tonode>fdvgrid</tonode> <toport>study_path</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>env</fromnode> <fromport>study_path</fromport>
+      <tonode>benhur</tonode> <toport>study_path</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>env</fromnode> <fromport>study_path</fromport>
+      <tonode>aster_s_polymers_st_1</tonode> <toport>study_path</toport>
    </datalink>
    <datalink control="false">
       <fromnode>env</fromnode> <fromport>aster_path</fromport>
@@ -299,12 +299,12 @@ component_gmsh_post(result_gmsh)
       <tonode>benhur</tonode><toport>file_inclusions</toport>
       <value><string></string></value>
    </parameter>
-   <presentation name="fdvgrid" x="869" y="80.25" width="227.5" height="284"/>
-   <presentation name="aster_s_polymers_st_1" x="1133" y="271.75" width="227.5" height="313"/>
-   <presentation name="env" x="9" y="301.25" width="227.5" height="168"/>
-   <presentation name="benhur" x="869" y="510.25" width="227.5" height="226"/>
-   <presentation name="init" x="273" y="199.75" width="273.5" height="371"/>
-   <presentation name="gmsh_post" x="1397.25" y="373.25" width="223" height="110"/>
-   <presentation name="pygmee_v2" x="583" y="470.25" width="249.5" height="342"/>
-   <presentation name="__ROOT__" x="0" y="0" width="1629.75" height="821.25"/>
+   <presentation name="pygmee_v2" x="583" y="470.25" width="158" height="279" expanded="1" expx="0" expy="0" expWidth="158" expHeight="279" shownState="0"/>
+   <presentation name="init" x="273" y="199.75" width="158" height="306" expanded="1" expx="0" expy="0" expWidth="158" expHeight="306" shownState="0"/>
+   <presentation name="fdvgrid" x="869" y="80.25" width="158" height="225" expanded="1" expx="0" expy="0" expWidth="158" expHeight="225" shownState="0"/>
+   <presentation name="benhur" x="869" y="510.25" width="158" height="171" expanded="1" expx="0" expy="0" expWidth="158" expHeight="171" shownState="0"/>
+   <presentation name="env" x="9" y="301.25" width="158" height="117" expanded="1" expx="0" expy="0" expWidth="158" expHeight="117" shownState="0"/>
+   <presentation name="aster_s_polymers_st_1" x="1133" y="271.75" width="158" height="252" expanded="1" expx="0" expy="0" expWidth="158" expHeight="252" shownState="0"/>
+   <presentation name="gmsh_post" x="1397.25" y="373.25" width="158" height="63" expanded="1" expx="0" expy="0" expWidth="158" expHeight="63" shownState="0"/>
+   <presentation name="__ROOT__" x="0" y="0" width="1559.25" height="753.25" expanded="1" expx="0" expy="0" expWidth="1559.25" expHeight="753.25" shownState="0"/>
 </proc>
