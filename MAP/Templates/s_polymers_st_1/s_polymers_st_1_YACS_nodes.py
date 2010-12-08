@@ -80,7 +80,7 @@ class component_fdvgrid:
       contrast=lambda_I/lambda_M
       if (finesse < 32): finesse=32
 
-      component_dir=os.path.join(os.getenv('MAP_DIRECTORY'),'components/fdvgrid/bin')
+      fdvgrid_path=os.path.join(os.getenv('MAP_DIRECTORY'),'components/fdvgrid/bin')
       commande = "cd "+fdvgrid_path+";\n"
       commande+= "cp " + file_inclusions+" "+"inclusions.input"+";\n"
       commande+= "./fdvgrid 3D 1.0 0.0 0.0 v t "+str(finesse)+" cross 1e-6 "+";\n"
@@ -103,11 +103,11 @@ class component_benhur(component_template) :
     #------------------------------------------------------------------------------
        print "benhur for YACS - BEGIN"
 
-       Template_path=os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/')
+       template_path=os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/')
        path_benhur=os.path.join(os.getenv('MAP_DIRECTORY'), 'components/benhur/')
 
-       templateInput  = Template_path+"benhur_template.txt"
-       monFichierOutput = Template_path+"s_polymers_st_1_benhur_"+str(mesh_size)+".bhr"
+       templateInput  = template_path+"benhur_template.txt"
+       monFichierOutput = template_path+"s_polymers_st_1_benhur_"+str(mesh_size)+".bhr"
        lVar=('mesh_size','rve_size','inclusion_file','path_study','name_scheme','path_benhur')
        self.creeFichierTemplate(templateInput, monFichierOutput, lVar, locals())
 
@@ -135,25 +135,25 @@ class component_aster_s_polymers_st_1 (component_template):
     #------------------------------------------------------------------------------
        print "aster_s_polymers_st_1 for YACS - BEGIN"
        aster_version="STA10"
-       Template_path=os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/')
+       template_path=os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/')
 
        # Gestion du .comm
        lVarC=('rve_size','conductivite_i','conductivite_m')
-       templateCommInput=Template_path+"s_polymers_st_1_aster_template.comm"
-       monFichierCommOutput=study_path+"/s_polymers_st_1_aster.comm"
+       templateCommInput=template_path+"s_polymers_st_1_aster_template.comm"
+       monFichierCommOutput=path_study+"/s_polymers_st_1_aster.comm"
        self.creeFichierTemplate(templateCommInput, monFichierCommOutput, lVarC, locals())
 
        # Gestion du .export
        lVarE=('mesh_size','aster_version','name_study','path_study')
-       templateExportInput=Template_path+"s_polymers_st_1_aster_template.export"
-       monFichierExportOutput=study_path+"/s_polymers_st_1_aster.export"
+       templateExportInput=template_path+"s_polymers_st_1_aster_template.export"
+       monFichierExportOutput=path_study+"/s_polymers_st_1_aster.export"
        self.creeFichierTemplate(templateExportInput, monFichierExportOutput, lVarE, locals())
     
        # launch of CODE_ASTER on the study
-       commande="cd "+study_path+";"
+       commande="cd "+path_study+";"
        commande+=commande + aster_path + "/as_run "+monFichierExportOutput +";\n"
        os.system(commande)
-       self.result_gmsh=study_path+"/s_polymers_st_1_aster.resu.msh"
+       self.result_gmsh=path_study+"/s_polymers_st_1_aster.resu.msh"
        print "aster_s_polymers_st_1 for YACS - END"
     
     def __call__(self,rve_size, mesh_size, conductivite_i, conductivite_m, name_study, 
