@@ -153,7 +153,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
       self.LENomFichReturnPressed()
 
   def connecterSignaux(self):
-        self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)
+        self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListWidgetItem*)"),self.LBNouvCommandeClicked)
         self.connect(self.LEFiltre,SIGNAL("textChanged(const QString&)"),self.LEFiltreTextChanged)
         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEfiltreReturnPressed)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)

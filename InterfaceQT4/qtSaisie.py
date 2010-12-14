@@ -38,7 +38,7 @@ class SaisieValeur:
        listeNomsSD = self.node.item.get_sd_avant_du_bon_type()
        for aSD in listeNomsSD:
             self.listBoxASSD.addItem( aSD)
-            QObject.connect(self.listBoxASSD, SIGNAL("doubleClicked(QListBoxItem*)" ), self.ClicASSD )
+            QObject.connect(self.listBoxASSD, SIGNAL("doubleClicked(QListWidgetItem*)" ), self.ClicASSD )
        min,max =  self.node.item.GetMinMax()
        l= self.node.item.GetListeValeurs()
        

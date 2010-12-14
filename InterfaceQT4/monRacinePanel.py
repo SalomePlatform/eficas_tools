@@ -51,9 +51,9 @@ class DRac(Ui_DRac,QWidget):
 
 class MonRacinePanel(DRac,QTPanelTBW2):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe dÃ©finissant le panel associÃ© aux mots-clÃ©s qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonRacinePanel"
@@ -65,7 +65,7 @@ class MonRacinePanel(DRac,QTPanelTBW2):
 
 
   def connecterSignaux(self):
-        self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)
+        self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListWidgetItem*)"),self.LBNouvCommandeClicked)
         self.connect(self.LEFiltre,SIGNAL("textChanged(const QString&)"),self.LEFiltreTextChanged)
         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEfiltreReturnPressed)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)

@@ -62,7 +62,7 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         self.lineEditNom.setFocus()
 
   def connecterSignaux(self) :
-        self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)
+        self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListWidgetItem*)"),self.LBNouvCommandeClicked)
         self.connect(self.LEFiltre,SIGNAL("textChanged(const QString&)"),self.LEFiltreTextChanged)
         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEfiltreReturnPressed)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkParamPressed)
