@@ -83,7 +83,6 @@ class MapGenerator(PythonGenerator):
       return text
 
    def generRUN(self,obj,format='brut',config=None,):
-      print 'generRUN dans generator_map'
       self.initialise(config)
       text=PythonGenerator.gener(self,obj,format)
       for elt in self.listeCODE:
@@ -113,14 +112,8 @@ class MapGenerator(PythonGenerator):
                 fct=getattr(self.monSchema, codeYACS)
                 fct(self.proc,dico)
                 
-      today = str(date.today())
-      today = today.replace('-', '')
-      today+="-"+time.strftime("%H%M%S", time.localtime())
-
-      print "PATH_STUDY =", config.PATH_STUDY
-      nomFichier=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_"+today+".xml"
+      print str(nomFichier)
       self.monSchema.write_yacs_proc(self.proc,str(nomFichier))
-      print "YACS xml output : ",nomFichier
 
    def generePythonMap(self,execution) :
       '''

@@ -23,6 +23,9 @@ import traceback
 from PyQt4 import *
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
+import time
+from datetime import date
+
 
 # Modules Eficas
 
@@ -525,7 +528,7 @@ class JDCEditor(QSplitter):
          self.generator=generator.plugins[format]()
          self.textePython =self.generator.generRUN(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
       if execution=="oui" :
-         os.system(self.textePython)
+         exec self.textePython
       else:
          return self.textePython
 
@@ -540,52 +543,72 @@ class JDCEditor(QSplitter):
       if execution=="oui" :
          print "il faut faire le run dans Salome"
     
-    #-----------------------------#
-    def saveRun(self):
-    #-----------------------------#
-        texte=self.run(execution="non")
-        path=self.CONFIGURATION.savedir
-        fn = QFileDialog.getSaveFileName( self,
+    
+    #-----------------------------------------------------#
+    def determineNomFichier(self,path,extension):
+    #-----------------------------------------------------#
+      if DictExtensions.has_key(self.appli.code) :
+         chaine1="JDC (*"+DictExtensions[self.appli.code]+");;"
+         extensions= self.trUtf8(chaine1+ "All Files (*)")
+      else :
+         extensions= self.trUtf8("JDC (*.comm);;" "All Files (*)")
+
+      if self.appli.code == "MAP" :
+         extensions = extensions + ";;Schema Yacs (*.xml);; Run (*.py);;"
+
+      fn = QFileDialog.getSaveFileName( self,
              self.trUtf8("sauvegarde"), path,
-             self.trUtf8("Run (*.py);;" "All Files (*)"),None,
+             extensions,None,
              QFileDialog.DontConfirmOverwrite)
-        if fn.isNull(): return 
-        ext = QFileInfo(fn).suffix()
-        if ext.isEmpty(): fn.append(".py")
+      print fn
+      if fn.isNull(): return (0, None)
+      ext = QFileInfo(fn).suffix()
+      if ext.isEmpty(): fn.append(extension)
 
-        if QFileInfo(fn).exists():
-                abort = QMessageBox.warning(self,
-                       self.trUtf8("Sauvegarde du Fichier"),
-                       self.trUtf8("Le fichier <b>%1</b> existe deja.").arg(fn),
-                       self.trUtf8("&Ecraser"),
-                       self.trUtf8("&Abandonner"))
-                if abort == 1 :  return
+      if QFileInfo(fn).exists():
+           abort = QMessageBox.warning(self,
+                   self.trUtf8("Sauvegarde du Fichier"),
+                   self.trUtf8("Le fichier <b>%1</b> existe deja.").arg(fn),
+                   self.trUtf8("&Ecraser"),
+                   self.trUtf8("&Abandonner"))
+           if abort == 1 :  return (0, "")
+      return (1,fn)
 
-        fn = unicode(QDir.convertSeparators(fn))
-        self.writeFile( fn, txt = texte)
+    def saveRun(self):
+    #-----------------#
+        texte=self.run(execution="non")
+        extension=".py"
+
+        if hasattr(self,'fichierRun'):
+           self.writeFile( self.fichierRun, txt = texte)
+           return
+
+        if self.fichier == None :
+           path=self.CONFIGURATION.savedir
+        else :
+          path=QFileInfo(self.fichier).absolutePath()+"/"+QFileInfo(self.fichier).baseName()+".py"
+        bOK, fn=self.determineNomFichier(path,extension)
+        if fn == "" : return
+        self.fichierRun = unicode(QDir.convertSeparators(fn))
+        self.writeFile( self.fichierRun, txt = texte)
     
     #-----------------------------#
     def saveYACS(self):
     #-----------------------------#
-        path=self.CONFIGURATION.savedir
-        fn = QFileDialog.getSaveFileName( self,
-             self.trUtf8("sauvegarde"), path,
-             self.trUtf8("Schema YACS (*.xml);;" "All Files (*)"),None,
-             QFileDialog.DontConfirmOverwrite)
-        if fn.isNull(): return 
-        ext = QFileInfo(fn).suffix()
-        if ext.isEmpty(): fn.append(".xml")
+        if hasattr(self,'fichierYACS'):
+           self.runYACS(execution="non",nomFichier=self.fichierYACS)
+           return
 
-        if QFileInfo(fn).exists():
-                abort = QMessageBox.warning(self,
-                       self.trUtf8("Sauvegarde du Fichier"),
-                       self.trUtf8("Le fichier <b>%1</b> existe deja.").arg(fn),
-                       self.trUtf8("&Ecraser"),
-                       self.trUtf8("&Abandonner"))
-                if abort == 1 :  return
-        fn = unicode(QDir.convertSeparators(fn))
+        today = str(date.today())
+        today = today.replace('-', '')
+        today+="-"+time.strftime("%H%M%S", time.localtime())
+        path=self.CONFIGURATION.PATH_STUDY+"/"+self.CONFIGURATION.NAME_SCHEME+"_"+today+".xml"
+        extension=".xml"
 
-        texte=self.runYACS(execution="non",nomFichier=fn)
+        bOK, fn=self.determineNomFichier(path,extension)
+        if fn == "" : return
+        self.runYACS(execution="non",nomFichier=fn)
+
       
     #-----------------------------------------#
     def cherche_Groupes(self):
@@ -607,88 +630,46 @@ class JDCEditor(QSplitter):
         if not self.modified and not saveas:
             return (0, None)      # do nothing if text wasn't changed
             
+        extension='.py'
+        if DictExtensions.has_key(self.appli.code) :
+           extension=DictExtensions[self.appli.code]
+        else :
+           extension='.comm'
+
         newName = None
+        fn = self.fichier
         if self.fichier is None or saveas:
           if path is None: 
              path=self.CONFIGURATION.savedir
-          selectedFilter = QString('')
-          if DictExtensions.has_key(self.appli.code) :
-               chaine1="JDC (*"+DictExtensions[self.appli.code]+");;"
-               extensions= self.trUtf8(chaine1+ "All Files (*)")
-          else :
-               extensions= self.trUtf8("JDC (*.comm);;" "All Files (*)")
-          fn = QFileDialog.getSaveFileName( self,
-               self.trUtf8("sauvegarde"), path,
-               extensions,None,
-               QFileDialog.DontConfirmOverwrite)
+          bOK, fn=self.determineNomFichier(path,extension)
           if fn.isNull(): return (0, None)
+
           ulfile = os.path.abspath(unicode(fn))
           self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
-
-          ext = QFileInfo(fn).suffix()
-          if ext.isEmpty():
-             if DictExtensions.has_key(self.appli.code) :
-                fn.append(DictExtensions[self.appli.code])
-             else :
-                fn.append(".comm")
-
-          if QFileInfo(fn).exists():
-                abort = QMessageBox.warning(self,
-                       self.trUtf8("Sauvegarde du Fichier"),
-                       self.trUtf8("Le fichier <b>%1</b> existe deja.").arg(fn),
-                       self.trUtf8("&Ecraser"),
-                       self.trUtf8("&Abandonner"))
-                if abort == 1 :  return (0, None)
-
           fn = unicode(QDir.convertSeparators(fn))
           newName = fn
 
-        else:
-            fn = self.fichier
-        
-        if self.writeFile(fn):
-            self.fichier = fn
-            self.modified  = False                        
-            if self.fileInfo is None or saveas:
-                self.fileInfo = QFileInfo(self.fichier)
-                self.fileInfo.setCaching(0)
-            self.lastModified = self.fileInfo.lastModified()
-            if newName is not None:
-                self.appliEficas.addToRecentList(newName)
-                self.tree.racine.item.getObject().nom=os.path.basename(newName)
-                self.tree.racine.update_node_label()
+        if not (self.writeFile(fn)): return (0, None)
+        self.fichier = fn
+        self.modified  = False                        
+        if self.fileInfo is None or saveas:
+           self.fileInfo = QFileInfo(self.fichier)
+           self.fileInfo.setCaching(0)
+        self.lastModified = self.fileInfo.lastModified()
+        if newName is not None:
+           self.appliEficas.addToRecentList(newName)
+           self.tree.racine.item.getObject().nom=os.path.basename(newName)
+           self.tree.racine.update_node_label()
                
-            if self.jdc.isvalid() != 0 :
-               try : 
-                  fileXML = fn[:fn.rfind(".")] + '.xml'
-                  self.generator.writeOpenturnsXML( fileXML )
-               except :
-                  pass
-               
-               try : 
-                  fileSTD = fn[:fn.rfind(".")] + '.py'
-                  self.generator.writeOpenturnsSTD( fileSTD )
-               except :
-                  pass
+        if self.jdc.isvalid() != 0 :
+           try:
+              self.generator.writeDefault(fn)
+           except:
+              pass
 
-               try:
-                 self.generator.writeDefault(fn)
-               except:
-                 pass
-
-               try : 
-                  fileCuve2DG = fn[:fn.rfind(".")] + '.don'
-                  self.generator.writeCuve2DG(fileCuve2DG)
-               except :
-                  pass
-
-
-            if self.salome : 
+        if self.salome : 
                self.appliEficas.addJdcInSalome( self.fichier)
-
-            return (1, self.fichier)
-        else:
-            return (0, None)
+        return (1, self.fichier)
 #
     #---------------------------------#
     def saveFileAs(self, path = None):

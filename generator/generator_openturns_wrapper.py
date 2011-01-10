@@ -129,13 +129,14 @@ class OpenturnsGenerator(PythonGenerator):
        print "dictMCVal", self.dictMCVal, "dictVariables", self.dictVariables
        MonBaseGenerateur=Generateur(self.appli,self.dictMCVal, [], {} ,self.dictVariables)
        MonGenerateur=MonBaseGenerateur.getXMLGenerateur()
-       #try :
-       if 1== 1 :
+       try :
+       #if 1== 1 :
           self.wrapperXML=MonGenerateur.CreeXML()
-       #except :
-       else :
+       except :
+       #else :
 	  self.wrapperXML=None
 
-   def writeOpenturnsXML(self, filename):
-      self.wrapperXML.writeFile( str(filename) )
+   def writeDefault(self, filename):
+      fileXML = fn[:fn.rfind(".")] + '.xml'
+      self.wrapperXML.writeFile( fileXML )
 
