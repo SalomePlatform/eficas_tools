@@ -127,7 +127,7 @@ class OpenturnsGenerator(PythonGenerator):
 
    def writeDefault(self, fn):
       fileSTD = fn[:fn.rfind(".")] + '.py'
-      f = open( str(filename), 'wb')
+      f = open( str(fileSTD), 'wb')
       f.write( self.texteSTD )
       f.close()
 

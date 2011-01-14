@@ -661,11 +661,8 @@ class JDCEditor(QSplitter):
            self.tree.racine.item.getObject().nom=os.path.basename(newName)
            self.tree.racine.update_node_label()
                
-        if self.jdc.isvalid() != 0 :
-           try:
-              self.generator.writeDefault(fn)
-           except:
-              pass
+        if self.jdc.isvalid() != 0 and hasattr(self.generator, "writeDefault"):
+            self.generator.writeDefault(fn)
 
         if self.salome : 
                self.appliEficas.addJdcInSalome( self.fichier)

@@ -137,6 +137,5 @@ class OpenturnsGenerator(PythonGenerator):
 	  self.wrapperXML=None
 
    def writeDefault(self, filename):
-      fileXML = fn[:fn.rfind(".")] + '.xml'
-      self.wrapperXML.writeFile( fileXML )
-
+      fileXML = filename[:filename.rfind(".")] + '.xml'
+      self.wrapperXML.writeFile( str(fileXML) )
