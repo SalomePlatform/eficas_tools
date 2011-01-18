@@ -48,7 +48,7 @@ class component_pygmee_v2:
       parameter.add_parameter(composant, 'study_name', study_name)
       parameter.add_parameter(composant, 'file_result_inclusions', file_result_inclusions)
       parameter.add_parameter(composant, 'file_result_rve', file_result_rve)
-      parameter.write_for_shell(pygmee_v2_input)
+      parameter.write(pygmee_v2_input)
 
       commponent_dir= os.path.join(os.getenv('MAP_DIRECTORY'),'components/pygmee_v2/src')
       commande= "cd "+ commponent_dir +";"
@@ -74,19 +74,37 @@ class component_pygmee_v2:
 class component_fdvgrid:
 #-----------------------
 
-   def  __init__(self,lambda_I, lambda_M, rve_size, file_inclusions, finesse):
+   def  __init__(self,lambda_I, lambda_M, rve_size, file_inclusions, finesse, path_study):
       print "fdvgrid for YACS - BEGIN"
     
       contrast=lambda_I/lambda_M
       if (finesse < 32): finesse=32
 
       fdvgrid_path=os.path.join(os.getenv('MAP_DIRECTORY'),'components/fdvgrid/bin')
-      commande = "cd "+fdvgrid_path+";\n"
-      commande+= "cp " + file_inclusions+" "+"inclusions.input"+";\n"
-      commande+= "./fdvgrid 3D 1.0 0.0 0.0 v t "+str(finesse)+" cross 1e-6 "+";\n"
+
+      lambda_output=path_study+'/lambda_x.output'
+      string='[fdvgrid]\n'
+      file_inclusions
+      string+='        microstructure_file="'+file_inclusions+'";\n'
+      string+='        rve_size='+str(rve_size)+';\n'
+      string+='        grid_size='+str(finesse)+';\n'
+      string+='        contrast='+str(contrast)+';\n'
+      string+='        method_type="v";\n'
+      string+='        BC_type="t";\n'
+      string+='        lambda_output="'+lambda_output+'"\n'                                  
+
+
+      fdvgrid_input=path_study+'/fdvgrid.input'
+      fd = open(fdvgrid_input, 'w')
+      fd.write(string)
+      fd.close()
+
+      commande= "cd "+fdvgrid_path+";\n"
+      commande+= "./fdvgrid "+fdvgrid_input
+      
       os.system(commande)
 
-      fd = open(fdvgrid_path+"/"+"lambda_x.output", 'r')
+      fd = open(lambda_output, 'r')
       line=fd.readline()
       self.lambda_x=float(line)
       fd.close()
@@ -123,7 +141,7 @@ class component_benhur(component_template) :
 
     def __call__(self, mesh_size, rve_size, inclusion_file, name_scheme, path_study):
     #------------------------------------------------------------------------------
-       return (self,result_mesh, self.result_log)
+       return (self.result_mesh, self.result_log)
 
 
 #----------------------------------------------------------
@@ -134,7 +152,7 @@ class component_aster_s_polymers_st_1 (component_template):
                  path_study, aster_path):
     #------------------------------------------------------------------------------
        print "aster_s_polymers_st_1 for YACS - BEGIN"
-       aster_version="STA10.1"
+       aster_version="STA10"
        template_path=os.path.join(os.getenv('EFICAS_ROOT'), 'MAP/Templates/s_polymers_st_1/')
 
        # Gestion du .comm
