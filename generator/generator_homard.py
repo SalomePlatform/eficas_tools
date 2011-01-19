@@ -37,14 +37,14 @@ from generator_python import PythonGenerator
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
+       Retourne les informations necessaires pour le chargeur de plugins
 
-       Ces informations sont retournées dans un dictionnaire
+       Ces informations sont retournees dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'homard',
-        # La factory pour créer une instance du plugin
+        # La factory pour creer une instance du plugin
           'factory' : HomardGenerator,
           }
 
@@ -56,7 +56,7 @@ class HomardGenerator(PythonGenerator):
        un texte au format homard 
 
    """
-   # Les extensions de fichier préconisées
+   # Les extensions de fichier preconisï¿½es
    extensions=('.comm',)
 
    def __init__(self,cr=None):
@@ -66,7 +66,7 @@ class HomardGenerator(PythonGenerator):
       else:
          self.cr=N_CR.CR(debut='CR generateur format homard pour homard',
                          fin='fin CR format homard pour homard')
-      # Le texte au format homard est stocké dans l'attribut text
+      # Le texte au format homard est stockï¿½ dans l'attribut text
       self.dico_mot_clef={}
       self.assoc={}
       self.init_assoc()
@@ -125,7 +125,7 @@ class HomardGenerator(PythonGenerator):
 
    def generMCSIMP(self,obj) :
       """
-          Convertit un objet MCSIMP en une liste de chaines de caractères à la
+          Convertit un objet MCSIMP en une liste de chaines de caractï¿½res ï¿½ la
           syntaxe homard
       """
       s=PythonGenerator.generMCSIMP(self,obj)
@@ -154,7 +154,7 @@ class HomardGenerator(PythonGenerator):
       self.textehomard=[]
       for mot in self.lmot_clef:
 
-#          on verifie d'abord que le mot clef doit bien être calculé
+#          on verifie d'abord que le mot clef doit bien etre calcule
           if self.dico_mot_depend.has_key(mot) :
              if self.cherche_dependance(mot) == 0 :
                       continue
