@@ -72,10 +72,10 @@ class MapGenerator(PythonGenerator):
       self.ssCode=self.config.appli.ssCode
       self.INSTALLDIR=self.config.appli.INSTALLDIR
       self.ssCodeDir=os.path.join(self.INSTALLDIR,'MAP/Templates',self.ssCode)
-      print self.ssCodeDir
+      self.fichierYacs=self.ssCode+"YACS_nodes"
       self.texteExecution="import os,sys\n"
       self.texteExecution+="sys.path.append('"+self.ssCodeDir+"')\n"
-      self.texteExecution+="from s_polymers_st_1_YACS_nodes import *\n"
+      self.texteExecution+="from " + self.fichierYacs +" import *\n"
 
    def gener(self,obj,format='brut',config=None):
       self.initialise(config)

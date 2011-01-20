@@ -193,7 +193,7 @@ class s_poly_st_1Generator(MapGenerator):
       return commande
 
    def FDVGRID(self):
-      commande="lambda_x=component_fdvgrid("+str(self.lambda_I)+","+str(self.lambda_M)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"',"+str(self.finesse)+")\n"
+      commande="lambda_x=component_fdvgrid("+str(self.lambda_I)+","+str(self.lambda_M)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"',"+str(self.finesse)+",'"+str(self.study_path)+"')\n"
       return commande
 
    def BENHUR(self):
