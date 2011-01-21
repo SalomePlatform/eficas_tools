@@ -72,7 +72,7 @@ class MapGenerator(PythonGenerator):
       self.ssCode=self.config.appli.ssCode
       self.INSTALLDIR=self.config.appli.INSTALLDIR
       self.ssCodeDir=os.path.join(self.INSTALLDIR,'MAP/Templates',self.ssCode)
-      self.fichierYacs=self.ssCode+"YACS_nodes"
+      self.fichierYacs=self.ssCode+"_YACS_nodes"
       self.texteExecution="import os,sys\n"
       self.texteExecution+="sys.path.append('"+self.ssCodeDir+"')\n"
       self.texteExecution+="from " + self.fichierYacs +" import *\n"
@@ -87,6 +87,7 @@ class MapGenerator(PythonGenerator):
       text=PythonGenerator.gener(self,obj,format)
       for elt in self.listeCODE:
           code=elt.keys()[0]
+          self.dico=elt[code]
           if code in self.__class__.__dict__.keys():
              texteCode=apply(self.__class__.__dict__[code],(self,))
              self.texteExecution += texteCode
@@ -148,10 +149,10 @@ class MapGenerator(PythonGenerator):
       Convertit un objet MCSIMP en texte python
       """
       s=PythonGenerator.generMCSIMP(self,obj)
-      clef=""
-      for i in obj.get_genealogie() :
-           clef=clef+"_"+i
-      self.DictTemp[clef]=obj.valeur
+      #clef=""
+      #for i in obj.get_genealogie() :
+      #     clef=clef+"_"+i
+      self.DictTemp[obj.nom]=obj.valeur
       if hasattr(obj.definition,'equiv') and obj.definition.equiv!= None:
          setattr(self,obj.definition.equiv,obj.valeur)
       else :

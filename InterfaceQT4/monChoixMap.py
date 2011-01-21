@@ -36,7 +36,8 @@ labels = {
 "s_scc_st_2"    : "Analyse statistique de données locales et expérimentales \nou numériques",
 "s_scc_st_3"     : "taux de couverture des joints de grains par des précipités",
 "s_polymers_st_1"   : "Estimation numérique 3D de la diffusion effective des gaz dans les polymères chargés",
-
+"s_rpv2"   : "Essai Pascale",
+"s_DIC"   : "Essai Felix",
          }
 
 dico={"oxides" : {"irradiation"            : "s_oxides_st_1",
@@ -46,13 +47,15 @@ dico={"oxides" : {"irradiation"            : "s_oxides_st_1",
                "analyse statistique"   : "s_scc_st_2",
                "taux de couverture"    : "s_scc_st_3"},
       "concrete" : {},
-      "polycristals" : {},
+      "polycristals" : {"essai Pascale" : "s_rpv2",},
       "polymers" : {"numerique 3D" : "s_polymers_st_1"},
       "micro" : {},
       "seal" : {},
       "mox" : {},
       "nano" : {},
-      "insulator" : {}}
+      "insulator" : {},
+      "images" : {"Felix" : "s_DIC"}
+}
     
 # Import des panels
 
@@ -96,6 +99,7 @@ class MonChoixMap(Ui_ChoixMap,QtGui.QDialog):
         self.groupModules.addButton(self.RBM8)
         self.groupModules.addButton(self.RBM9)
         self.groupModules.addButton(self.RBM10)
+        self.groupModules.addButton(self.RBM11)
         self.groupScheme=QButtonGroup(self.groupBoxScheme)
         self.connect(self.groupModules,SIGNAL("buttonClicked (QAbstractButton*)"),self.modifieModule)
         self.connect(self.groupScheme,SIGNAL("buttonClicked (QAbstractButton*)"),self.choisitSchema)

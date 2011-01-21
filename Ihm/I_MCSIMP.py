@@ -564,7 +564,7 @@ class MCSIMP(I_OBJECT.OBJECT):
           if self.definition.validators:
               valid=self.definition.validators.verif_item(item)
       except ValError,e:
-          #traceback.print_exc()
+          traceback.print_exc()
           valid=0
       return valid
 

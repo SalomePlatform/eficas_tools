@@ -90,7 +90,7 @@
      <x>390</x>
      <y>20</y>
      <width>261</width>
-     <height>311</height>
+     <height>331</height>
     </rect>
    </property>
    <property name="title" >
@@ -103,7 +103,7 @@
      <x>110</x>
      <y>20</y>
      <width>261</width>
-     <height>311</height>
+     <height>331</height>
     </rect>
    </property>
    <property name="title" >
@@ -177,6 +177,13 @@
      <widget class="QRadioButton" name="RBM10" >
       <property name="text" >
        <string>insulator</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="RBM11" >
+      <property name="text" >
+       <string>images</string>
       </property>
      </widget>
     </item>

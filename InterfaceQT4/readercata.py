@@ -87,10 +87,15 @@ class READERCATA:
       # TODO: Remove this filter. Normally, CONFIGURATION should only define the catalogs for this code anyway.
       # Non pas pour Map qui a une notion de sscode
       for catalogue in all_cata_list:
+          print catalogue.code
+          print catalogue.file_format
           if catalogue.code == self.code :
              if (self.ssCode == None) or (self.ssCode == catalogue.file_format):
                  liste_cata_possibles.append(catalogue)
 
+      print "___________"
+      print self.ssCode
+      print self.code
       if len(liste_cata_possibles)==0:          
           QMessageBox.critical( self.QWParent, "Import du catalogue","Pas de catalogue defini pour le code %s" % self.code)
           self.appliEficas.close()
