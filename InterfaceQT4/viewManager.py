@@ -165,6 +165,7 @@ class MyTabview:
        if ok :
            fileName=os.path.basename(unicode(newName))
            self.myQtab.setTabText(index,fileName)
+       return ok
 
    def saveAsCurrentEditor(self):
        index=self.myQtab.currentIndex()
