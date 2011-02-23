@@ -41,17 +41,22 @@ class MyTabview:
         
 
    def handleOpen(self,fichier=None,patron=0,units=None):
+       result = None
        if fichier is None:
             fichier = QFileDialog.getOpenFileName(self.appliEficas,
                         self.appliEficas.trUtf8('Ouvrir Fichier'),
                         self.appliEficas.CONFIGURATION.savedir,
                         self.appliEficas.trUtf8('JDC Files (*.comm);;''All Files (*)'))
-            if fichier.isNull(): return
+            if fichier.isNull(): 
+              return result
        fichier = os.path.abspath(unicode(fichier))
        ulfile = os.path.abspath(unicode(fichier))
        self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
        self.appliEficas.addToRecentList(fichier)
        maPage=self.getEditor( fichier,units=units)
+       if maPage:
+         result = maPage
+       return result
 
    def handleClose(self,doitSauverRecent = 1,texte='&Quitter'):
        if doitSauverRecent : self.appliEficas.sauveRecents()
