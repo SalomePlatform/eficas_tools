@@ -275,10 +275,10 @@ class MyTabview:
                      None,
                      self.appliEficas.trUtf8("Fichier Duplique"),
                      self.appliEficas.trUtf8("Le fichier ne sera pas sauvegarde."),
-                     Eficas.trUtf8(texte), 
+                     self.appliEficas.trUtf8(texte), 
                      self.appliEficas.trUtf8("&Annuler"))
             if res == 0 : return 1
-            return 0
+            return 2
         if editor.modified:
             fn = editor.getFileName()
             if fn is None:
