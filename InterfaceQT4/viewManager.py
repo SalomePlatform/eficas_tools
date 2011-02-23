@@ -178,7 +178,7 @@ class MyTabview:
        if editor in self.doubles.keys():
           if oldName != newName :
              del self.doubles[editor]
-
+       return ok
 
    def displayJDC(self,jdc,fn=None):
         """
