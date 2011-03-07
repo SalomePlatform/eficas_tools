@@ -55,3 +55,37 @@ def GenereErreurMotCleInFact(jdc,command,fact,mocle):
  		    else :
                        EcritErreur((command,fact,mocle,),c.lineno)
 
+def GenereErreurMCF(jdc,command,fact):
+    for c in jdc.root.childNodes:
+        if c.name != command:continue
+        for mc in c.childNodes:
+            if mc.name != fact:
+                continue
+            else : 
+                EcritErreur((command,fact,),c.lineno)
+
+def GenereErreurValeur(jdc,command,fact,list_valeur):
+    for c in jdc.root.childNodes:
+        if c.name != command:continue
+        for mc in c.childNodes:
+            if mc.name != fact:continue
+            texte=mc.getText(jdc)
+            for valeur in list_valeur:
+               trouve=texte.find(valeur)
+               if trouve > -1 :  
+                  logging.warning("%s doit etre supprimee ou modifiee dans %s : ligne %d",valeur,c.name,mc.lineno)
+
+def GenereErreurValeurDsMCF(jdc,command,fact,mocle,list_valeur):
+    for c in jdc.root.childNodes:
+        if c.name != command:continue
+        for mc in c.childNodes:
+            if mc.name != fact:continue
+            l=mc.childNodes[:]
+            for ll in l:
+                for n in ll.childNodes:
+                    if n.name != mocle:continue
+                    texte=n.getText(jdc)
+                    for valeur in list_valeur:
+                        trouve=texte.find(valeur)
+                        if trouve > -1 :  
+                           logging.warning("%s doit etre supprimee ou modifiee dans %s : ligne %d",valeur,c.name,n.lineno)

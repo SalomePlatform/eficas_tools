@@ -158,6 +158,31 @@ class MCsousMCFaPourValeur :
                if (TexteMC.find(self.Val) < 0 ): continue
                bool=1
       return bool
+#-----------------------------
+class MCsousMCFaPourValeurDansListe :
+#----------------------------
+   def __init__(self,list_arg):
+      assert (len(list_arg)==4)
+      self.genea=list_arg[0:-2]
+      self.MCF=list_arg[0]
+      self.MC=list_arg[1]
+      self.LVal=list_arg[2]
+      self.Jdc=list_arg[3]
+
+   def verif(self,commande):
+      bool=0
+      for mcf in commande.childNodes :
+         if mcf.name != self.MCF : continue 
+         l=mcf.childNodes[:]
+         l.reverse()
+         for ll in l:
+            for mc in ll.childNodes:
+               if mc.name != self.MC : continue
+               TexteMC=mc.getText(self.Jdc)
+               for Val in self.LVal:
+                   if (TexteMC.find(Val) < 0 ): continue
+                   bool=1
+      return bool      
 
 #-------------------------------
 class MCaPourValeur :
@@ -177,5 +202,5 @@ class MCaPourValeur :
          bool=1
       return bool
 
-dictionnaire_regle={"existe":existe,"nexistepas":nexistepas,"existeMCFParmi":existeMCFParmi,"existeMCsousMCF":existeMCsousMCF,"nexistepasMCsousMCF":nexistepasMCsousMCF,"MCsousMCFaPourValeur":MCsousMCFaPourValeur,"MCaPourValeur":MCaPourValeur}
+dictionnaire_regle={"existe":existe,"nexistepas":nexistepas,"existeMCFParmi":existeMCFParmi,"existeMCsousMCF":existeMCsousMCF,"nexistepasMCsousMCF":nexistepasMCsousMCF,"MCsousMCFaPourValeur":MCsousMCFaPourValeur,"MCsousMCFaPourValeurDansListe":MCsousMCFaPourValeurDansListe,"MCaPourValeur":MCaPourValeur}
 SansRegle=pasDeRegle()

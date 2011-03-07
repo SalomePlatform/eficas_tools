@@ -64,7 +64,7 @@ def removeCommande(jdc,command,ensemble=regles.SansRegle,erreur=0):
         boolChange=1
         if erreur : EcritErreur((command,),c.lineno)
         jdc.supLignes(c.lineno,c.endline)
-        logging.warning("Suppression de: %s ligne %s",c.name,c.lineno)
+        logging.warning("Suppression de %s ligne %s",c.name,c.lineno)
     if boolChange : jdc.reset(jdc.getSource())
 
 #-------------------------------------------------------------
@@ -78,7 +78,7 @@ def removeCommandeSiRegleAvecErreur(jdc,command,liste_regles):
 def removeMC(jdc,c,mc):
 #---------------------------------
     if debug : print "Suppression de:",c.name,mc.name,mc.lineno,mc.colno,mc.endline,mc.endcol
-    logging.info("Suppression de: %s, %s, ligne %d",c.name,mc.name,mc.lineno)
+    logging.info("Suppression de %s dans %s ligne %d",mc.name,c.name,mc.lineno)
 
     if mc.endline > mc.lineno:
         if debug:print "mocle sur plusieurs lignes--%s--" % jdc.getLines()[mc.lineno-1][mc.colno:]

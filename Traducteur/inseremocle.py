@@ -32,7 +32,7 @@ def insereMotCleDansCommande(jdc,command,texte):
     if numcol > 0 :
        jdc.splitLine(command.lineno,numcol)
     indice = -1
-    while texte[indice] == " " : 
+    while texte[indice] == " " or texte[indice] == "\n": 
        indice = indice -1
     if texte[indice] != "," : texte=texte+","
     texteinfo=texte
@@ -204,6 +204,14 @@ def chercheOperInsereFacteurSiRegle(jdc,nomcommande,nouveau,liste_regles, estunF
     if nomcommande  not in jdcSet : return
     mesRegles=regles.ensembleRegles(liste_regles)
     chercheOperInsereFacteur(jdc,nomcommande,nouveau,mesRegles,estunFacteur)
+
+#----------------------------------------------------------------------------------------
+def chercheOperInsereMotCleSiRegle(jdc,nomcommande,nouveau,liste_regles, estunFacteur=0):
+#----------------------------------------------------------------------------------------
+    if nomcommande  not in jdcSet : return
+    mesRegles=regles.ensembleRegles(liste_regles)
+    chercheOperInsereFacteur(jdc,nomcommande,nouveau,mesRegles,estunFacteur)
+
     
 #---------------------------------------------------------------------------------------------------------
 def chercheOperInsereFacteurSiRegleAvecAvertissement(jdc,nomcommande,nouveau,liste_regles, estunFacteur=1):
