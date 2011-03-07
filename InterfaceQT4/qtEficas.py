@@ -87,13 +87,18 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionTraduitV7V8.setObjectName("actionTraduitV7V8")
         self.actionTraduitV8V9 = QAction(self)
         self.actionTraduitV8V9.setObjectName("actionTraduitV8V9")
+        self.actionTraduitV9V10 = QAction(self)
+        self.actionTraduitV9V10.setObjectName("actionTraduitV9V10")
         self.menuTraduction.addAction(self.actionTraduitV7V8)
         self.menuTraduction.addAction(self.actionTraduitV8V9)
+        self.menuTraduction.addAction(self.actionTraduitV9V10)
         self.menuTraduction.setTitle(QApplication.translate("Eficas", "Traduction", None, QApplication.UnicodeUTF8))
         self.actionTraduitV7V8.setText(QApplication.translate("Eficas","TraduitV7V8", None, QApplication.UnicodeUTF8))
         self.actionTraduitV8V9.setText(QApplication.translate("Eficas","TraduitV8V9", None, QApplication.UnicodeUTF8))
+        self.actionTraduitV9V10.setText(QApplication.translate("Eficas","TraduitV9V10", None, QApplication.UnicodeUTF8))
         self.connect(self.actionTraduitV7V8,SIGNAL("activated()"),self.traductionV7V8)
         self.connect(self.actionTraduitV8V9,SIGNAL("activated()"),self.traductionV8V9)
+        self.connect(self.actionTraduitV9V10,SIGNAL("activated()"),self.traductionV9V10)
 
 
 
@@ -269,6 +274,10 @@ class Appli(Ui_Eficas,QMainWindow):
         from gereTraduction import traduction
         traduction(self.CONFIGURATION.rep_ini,self.viewmanager,"V8V9")
 
+    def traductionV9V10(self):
+        from gereTraduction import traduction
+        traduction(self.CONFIGURATION.rep_ini,self.viewmanager,"V9V10")
+
     def version(self) :
         from monVisu import DVisu
         titre = "version "
@@ -340,10 +349,10 @@ class Appli(Ui_Eficas,QMainWindow):
         self.viewmanager.handleOpen()        
         
     def fileSave(self):
-        return self.viewmanager.saveCurrentEditor()
+        self.viewmanager.saveCurrentEditor()
         
     def fileSaveAs(self):
-        return self.viewmanager.saveAsCurrentEditor()
+        self.viewmanager.saveAsCurrentEditor()
         
     def fileClose(self):
         self.viewmanager.handleClose(texte='&Fermer')
