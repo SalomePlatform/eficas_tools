@@ -349,10 +349,10 @@ class Appli(Ui_Eficas,QMainWindow):
         self.viewmanager.handleOpen()        
         
     def fileSave(self):
-        self.viewmanager.saveCurrentEditor()
+        return self.viewmanager.saveCurrentEditor()
         
     def fileSaveAs(self):
-        self.viewmanager.saveAsCurrentEditor()
+        return self.viewmanager.saveAsCurrentEditor()
         
     def fileClose(self):
         self.viewmanager.handleClose(texte='&Fermer')
