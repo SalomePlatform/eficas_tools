@@ -135,6 +135,30 @@ def removeMotCleInFactSiRegleAvecErreur(jdc,command,fact,mocle,liste_regles):
     removeMotCleInFact(jdc,command,fact,mocle,mesRegles,erreur)
 
 
+#----------------------------------------------------------------------
+def removeMotCleInFactCourantSiRegle(jdc,command,fact,mocle,liste_regles,erreur=0):
+#----------------------------------------------------------------------
+    if command not in jdcSet : return
+    ensemble=regles.ensembleRegles(liste_regles)
+    commands= jdc.root.childNodes[:]
+    commands.reverse()
+    boolChange=0
+    for c in commands:
+        if c.name != command:continue
+        for mc in c.childNodes:
+            if mc.name != fact:continue
+            l=mc.childNodes[:]
+            l.reverse()
+            for ll in l:
+                if ensemble.verif(ll) == 0 : continue
+                for n in ll.childNodes:
+                    if n.name != mocle:continue
+                    if erreur : EcritErreur((command,fact,mocle),c.lineno)
+                    boolChange=1
+                    removeMC(jdc,c,n)
+
+    if boolChange : jdc.reset(jdc.getSource())
+    
 #------------------------------------------
 def fusionne(jdc,numLigne):
 #------------------------------------------

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import string
-from parseur import FactNode
+#from parseur import FactNode
 debug=0
 
 
@@ -79,7 +79,23 @@ class existeMCsousMCF :
                if mc.name != self.MC : continue
                bool=1
       return bool
-      
+
+#----------------------
+class existeMCsousMCFcourant :
+#----------------------
+   def __init__(self,list_arg):
+      self.liste=list_arg;
+      self.MC=self.liste[0]
+
+   def verif(self,mcf):
+      bool=0
+      l=mcf.childNodes[:]
+      l.reverse()
+      for mc in l:
+         if mc.name != self.MC : continue
+         bool=1
+      return bool
+
 #-----------------------------------------
 class nexistepasMCsousMCF(existeMCsousMCF):
 #-----------------------------------------
@@ -89,6 +105,18 @@ class nexistepasMCsousMCF(existeMCsousMCF):
 
    def verif(self,commande):
        bool=existeMCsousMCF.verif(self,commande)
+       if bool : return 0
+       return 1
+
+#-----------------------------------------
+class nexistepasMCsousMCFcourant(existeMCsousMCFcourant):
+#-----------------------------------------
+   def __init__(self,list_arg):
+       existeMCsousMCFcourant.__init__(self,list_arg)
+      
+
+   def verif(self,commande):
+       bool=existeMCsousMCFcourant.verif(self,commande)
        if bool : return 0
        return 1
 
@@ -158,6 +186,29 @@ class MCsousMCFaPourValeur :
                if (TexteMC.find(self.Val) < 0 ): continue
                bool=1
       return bool
+
+#-------------------------------
+class MCsousMCFcourantaPourValeur :
+#------------------------------
+   def __init__(self,list_arg):
+      assert (len(list_arg)==3)
+      self.genea=list_arg[0:-1]
+      self.MC=list_arg[0]
+      self.Val=list_arg[1]
+      self.Jdc=list_arg[2]
+
+   def verif(self,mcf):
+      bool=0       
+      l=mcf.childNodes[:]
+      l.reverse()
+      for mc in l:
+        if mc.name != self.MC : continue
+        TexteMC=mc.getText(self.Jdc)
+        if (TexteMC.find(self.Val) < 0 ): continue
+        bool=1
+      return bool
+
+
 #-----------------------------
 class MCsousMCFaPourValeurDansListe :
 #----------------------------
@@ -184,6 +235,28 @@ class MCsousMCFaPourValeurDansListe :
                    bool=1
       return bool      
 
+#-----------------------------
+class MCsousMCFcourantaPourValeurDansListe :
+#----------------------------
+   def __init__(self,list_arg):
+      assert (len(list_arg)==3)
+      self.genea=list_arg[0:-1]
+      self.MC=list_arg[0]
+      self.LVal=list_arg[1]
+      self.Jdc=list_arg[2]
+
+   def verif(self,mcf):
+      bool=0      
+      l=mcf.childNodes[:]
+      l.reverse()
+      for mc in l:
+        if mc.name != self.MC : continue
+        TexteMC=mc.getText(self.Jdc)
+        for Val in self.LVal:
+           if (TexteMC.find(Val) < 0 ): continue
+           bool=1
+      return bool   
+  
 #-------------------------------
 class MCaPourValeur :
 #------------------------------
@@ -202,5 +275,5 @@ class MCaPourValeur :
          bool=1
       return bool
 
-dictionnaire_regle={"existe":existe,"nexistepas":nexistepas,"existeMCFParmi":existeMCFParmi,"existeMCsousMCF":existeMCsousMCF,"nexistepasMCsousMCF":nexistepasMCsousMCF,"MCsousMCFaPourValeur":MCsousMCFaPourValeur,"MCsousMCFaPourValeurDansListe":MCsousMCFaPourValeurDansListe,"MCaPourValeur":MCaPourValeur}
+dictionnaire_regle={"existe":existe,"nexistepas":nexistepas,"existeMCFParmi":existeMCFParmi,"existeMCsousMCF":existeMCsousMCF,"nexistepasMCsousMCF":nexistepasMCsousMCF,"MCsousMCFaPourValeur":MCsousMCFaPourValeur,"MCsousMCFaPourValeurDansListe":MCsousMCFaPourValeurDansListe,"MCaPourValeur":MCaPourValeur,"existeMCsousMCFcourant":existeMCsousMCFcourant,"nexistepasMCsousMCFcourant":nexistepasMCsousMCFcourant,"MCsousMCFcourantaPourValeur":MCsousMCFcourantaPourValeur,"MCsousMCFcourantaPourValeurDansListe":MCsousMCFcourantaPourValeurDansListe}
 SansRegle=pasDeRegle()
