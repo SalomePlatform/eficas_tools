@@ -58,6 +58,7 @@ from A_MCSIMP import MCSIMP
 
 # Les règles
 from A_AU_MOINS_UN import AU_MOINS_UN
+from A_MEME_NOMBRE import MEME_NOMBRE
 from A_AU_PLUS_UN import AU_PLUS_UN
 from A_UN_PARMI import UN_PARMI
 from A_PRESENT_PRESENT import PRESENT_PRESENT
