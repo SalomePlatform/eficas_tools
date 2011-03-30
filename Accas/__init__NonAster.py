@@ -81,7 +81,7 @@ from Noyau.N__F import _F
 from Noyau.N_Exception import AsException
 from Noyau.N_utils import AsType
 
-from A_VALIDATOR import OrVal,AndVal
+from A_VALIDATOR import OrVal,AndVal,OnlyStr
 from A_VALIDATOR import OrdList,NoRepeat,LongStr,Compulsory
 from A_VALIDATOR import RangeVal, EnumVal, TypeVal, PairVal
 from A_VALIDATOR import CardVal, InstanceVal

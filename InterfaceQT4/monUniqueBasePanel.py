@@ -83,7 +83,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         self.BSalome.setIcon(icon)
         mc = self.node.item.get_definition()
         #if ( (self.node.item.get_nom() != "FileName" ) and ( mc.type[0]!="Fichier")) :
-        if ( mc.type[0]!="Fichier") :
+        if mc.type[0]!="Fichier" and mc.type[0]!="FichierNoAbs":
            self.BFichier.close()
         else :
 	   self.bParametres.close()
@@ -117,7 +117,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
                   'R'   : "Un réel est attendu",
                   'I'   : "Un entier est attendu",
                   'Matrice' : 'Une Matrice est attendue',
-                  'Fichier' : 'Un fichier est attendu'}
+                  'Fichier' : 'Un fichier est attendu',
+                  'FichierNoAbs' : 'Un fichier est attendu'}
       mctype = mc.type[0]
 
       if type(mctype) == types.ClassType:
