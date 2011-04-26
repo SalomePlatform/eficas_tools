@@ -24,6 +24,27 @@
 """
 # Modules Python
 import sys
+
+# Test PyQt version
+min_version_number_str = "4.4.2"
+min_version_number = 0x040402
+version_number_str = "0"
+version_number = 0
+try:
+    from PyQt4 import pyqtconfig
+    conf = pyqtconfig.Configuration()
+    version_number_str = conf.pyqt_version_str
+    version_number = conf.pyqt_version
+except:
+    sys.stderr.write("Error: PyQt4 not found (Eficas needs PyQt4 version %s or greater to run).\n" %
+                     min_version_number_str)
+    sys.exit(1)
+if version_number < min_version_number:
+    sys.stderr.write("Error: Eficas needs PyQt4 version %s or greater to run "
+                     "(installed version is %s).\n" %
+                     (min_version_number_str, version_number_str))
+    sys.exit(1)
+
 from PyQt4.QtGui import *
 
 from Editeur  import import_code
