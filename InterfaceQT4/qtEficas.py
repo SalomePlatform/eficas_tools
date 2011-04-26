@@ -19,7 +19,7 @@ class Appli(Ui_Eficas,QMainWindow):
         """
         Constructor
         """
-        self.VERSION_EFICAS="Eficas QT4 V2.1"
+        self.VERSION_EFICAS="Eficas QT4 V6.3.0"
 
         self.ihm="QT"
         self.code=code
