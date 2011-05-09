@@ -21,7 +21,7 @@
 # ======================================================================
 
 """
-   Ce module sert à lancer EFICAS configuré pour Code_Aster
+   Ce module sert Ã  lancer EFICAS configurÃ© pour Code_Aster
 """
 # Modules Python
 import sys
@@ -36,7 +36,8 @@ if hasattr(prefs,'encoding'):
    del sys.setdefaultencoding
    # Fin hack
 
-sys.path[:0]=[prefs.INSTALLDIR]
+import prefs_ASTER
+sys.path[:0]=[prefs_ASTER.INSTALLDIR]
 
 import InterfaceTK
 from InterfaceTK import eficas_test
