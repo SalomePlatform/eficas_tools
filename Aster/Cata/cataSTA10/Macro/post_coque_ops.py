@@ -1,8 +1,8 @@
-#@ MODIF post_coque_ops Macro  DATE 11/10/2010   AUTEUR DESROCHES X.DESROCHES 
+#@ MODIF post_coque_ops Macro  DATE 02/02/2011   AUTEUR PELLET J.PELLET 
 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -60,9 +60,9 @@ def post_coque_ops(self,RESULTAT,COOR_POINT,CHAM,NUME_ORDRE,INST,
       if not INST in dico2['INST'] :
           UTMESS('F','POST0_20',valr=INST)
     else :
-      if not NUME_ORDRE in dico['SIEF_ELNO_ELGA'] :
+      if not NUME_ORDRE in dico['SIEF_ELNO'] :
         if NUME_ORDRE in dico['DEPL'] :        
-          CALC_ELEM(RESULTAT=RESULTAT,reuse=RESULTAT,OPTION='SIEF_ELNO_ELGA',
+          CALC_ELEM(RESULTAT=RESULTAT,reuse=RESULTAT,OPTION='SIEF_ELNO',
                     NUME_ORDRE=NUME_ORDRE)
         else :
           UTMESS('F','POST0_19',vali=NUME_ORDRE)
@@ -72,36 +72,36 @@ def post_coque_ops(self,RESULTAT,COOR_POINT,CHAM,NUME_ORDRE,INST,
     if CHAM=='DEFORMATION':
       if NUME_ORDRE:
         __ressup=CALC_ELEM(RESULTAT=RESULTAT,
-                  OPTION='EPSI_ELNO_DEPL',REPE_COQUE=_F(NIVE_COUCHE='SUP'),
+                  OPTION='EPSI_ELNO',REPE_COQUE=_F(NIVE_COUCHE='SUP'),
                   NUME_ORDRE=NUME_ORDRE)
         __resinf=CALC_ELEM(RESULTAT=RESULTAT,
-                  OPTION='EPSI_ELNO_DEPL',REPE_COQUE=_F(NIVE_COUCHE='INF'),
+                  OPTION='EPSI_ELNO',REPE_COQUE=_F(NIVE_COUCHE='INF'),
                   NUME_ORDRE=NUME_ORDRE)
         __epssup=CREA_CHAMP(RESULTAT=__ressup,TYPE_CHAM='ELNO_EPSI_R',
-                  OPERATION='EXTR',NOM_CHAM='EPSI_ELNO_DEPL',
+                  OPERATION='EXTR',NOM_CHAM='EPSI_ELNO',
                   NUME_ORDRE=NUME_ORDRE)
         __epsinf=CREA_CHAMP(RESULTAT=__resinf,TYPE_CHAM='ELNO_EPSI_R',
-                  OPERATION='EXTR',NOM_CHAM='EPSI_ELNO_DEPL',
+                  OPERATION='EXTR',NOM_CHAM='EPSI_ELNO',
                   NUME_ORDRE=NUME_ORDRE)
       else :
         __ressup=CALC_ELEM(RESULTAT=RESULTAT,
-                  OPTION='EPSI_ELNO_DEPL',REPE_COQUE=_F(NIVE_COUCHE='SUP'),
+                  OPTION='EPSI_ELNO',REPE_COQUE=_F(NIVE_COUCHE='SUP'),
                   INST=INST)
         __resinf=CALC_ELEM(RESULTAT=RESULTAT,
-                  OPTION='EPSI_ELNO_DEPL',REPE_COQUE=_F(NIVE_COUCHE='INF'),
+                  OPTION='EPSI_ELNO',REPE_COQUE=_F(NIVE_COUCHE='INF'),
                   INST=INST)
         __epssup=CREA_CHAMP(RESULTAT=__ressup,TYPE_CHAM='ELNO_EPSI_R',
-                  OPERATION='EXTR',NOM_CHAM='EPSI_ELNO_DEPL',
+                  OPERATION='EXTR',NOM_CHAM='EPSI_ELNO',
                   INST=INST)
         __epsinf=CREA_CHAMP(RESULTAT=__resinf,TYPE_CHAM='ELNO_EPSI_R',
-                  OPERATION='EXTR',NOM_CHAM='EPSI_ELNO_DEPL',
+                  OPERATION='EXTR',NOM_CHAM='EPSI_ELNO',
                   INST=INST)
 
                                                                      
     # Appel MACR_LIGN_COUPE :
     motscles={}
-    if   CHAM=='EFFORT'      : motscles['NOM_CHAM']   ='SIEF_ELNO_ELGA'
-    if   CHAM=='DEFORMATION' : motscles['NOM_CHAM']   ='EPSI_ELNO_DEPL'
+    if   CHAM=='EFFORT'      : motscles['NOM_CHAM']   ='SIEF_ELNO'
+    if   CHAM=='DEFORMATION' : motscles['NOM_CHAM']   ='EPSI_ELNO'
 
     if CHAM=='EFFORT' :
       motscles['LIGN_COUPE']=[]

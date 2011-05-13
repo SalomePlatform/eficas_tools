@@ -1,8 +1,8 @@
-#@ MODIF calc_precont_ops Macro  DATE 23/03/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF calc_precont_ops Macro  DATE 21/03/2011   AUTEUR MICHEL S.MICHEL 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -23,8 +23,8 @@
 
 def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
                                 CABLE_BP,CABLE_BP_INACTIF,
-                                COMP_INCR,ETAT_INIT,NEWTON,RECH_LINEAIRE,
-                                CONVERGENCE,INCREMENT,SOLVEUR,
+                                COMP_INCR,ETAT_INIT,METHODE,
+                                RECH_LINEAIRE,CONVERGENCE,INCREMENT,SOLVEUR,
                                 INFO,TITRE,**args):
 
 
@@ -69,12 +69,24 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
   # 1.1 Recuperation de la liste d'instants, de l'instant initial et final
   #     Creation de la nouvelle liste d'instants
   # ----------------------------------------------------------
-
   dIncrement=INCREMENT[0].cree_dict_valeurs(INCREMENT[0].mc_liste)
-
   __prec = dIncrement['PRECISION']
+
+
+#  import pdb ; pdb.set_trace()
+
   __L0   = dIncrement['LIST_INST']
-  __L1   = __L0.Valeurs()
+  from SD.co_listr8 import listr8_sdaster
+  from SD.co_list_inst import list_inst
+
+  if   type(__L0) == listr8_sdaster:
+  #cas où liste definie par DEFI_LIST_REEL 
+     __L1   = __L0.Valeurs()
+  elif type(__L0) == list_inst:
+  # cas où liste definie par DEFI_LIST_INST
+     tmp = __L0.get_name().ljust(8) + '.LIST.' + 'DITR'.ljust(18)
+     __L1 = aster.getvectjev(tmp)
+
 
   # Traitement de l'etat initial
   if ETAT_INIT:
@@ -135,10 +147,18 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
 
   # 1.2 Recuperation des parametres pour STAT_NON_LINE
   # -------------------------------------------------------
+  motscle4={}
+  motscle5={}
 
-  dNewton=NEWTON[0].cree_dict_valeurs(NEWTON[0].mc_liste)
-  for i in dNewton.keys():
-      if dNewton[i]==None : del dNewton[i]
+  if METHODE=='IMPL_EX':
+     motscle4['IMPL_EX']=args['IMPL_EX'].List_F() 
+     motscle5['IMPL_EX']=args['IMPL_EX'].List_F() 
+  else:
+     motscle4['NEWTON']=args['NEWTON'].List_F()
+     motscle5['NEWTON']=args['NEWTON'].List_F()
+#     for j in dNewton.keys():
+#       if dNewton[j]==None : del dNewton[j]
+       
 
   dConvergence=CONVERGENCE[0].cree_dict_valeurs(CONVERGENCE[0].mc_liste)
   for i in dConvergence.keys():
@@ -351,7 +371,7 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
 
   __EV1 = CALC_NO( reuse    = __EV1,
                    RESULTAT = __EV1,
-                   GROUP_MA = __GROUP_MA_A,
+                  # GROUP_MA = __GROUP_MA_A,
                    OPTION = 'FORC_NODA' )
 
   __REA = CREA_CHAMP (
@@ -394,7 +414,7 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
   dExcit1.append(_F(CHARGE = _F_CA,
                     FONC_MULT=__FCT ),)
 
-  motscle4={}
+  
   if self.reuse:
     motscle4['reuse'] = self.reuse
 
@@ -405,14 +425,14 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
                      COMP_INCR=dComp_incr0,
                      INCREMENT=dIncrement,
                      ETAT_INIT = dEtatInit,
-                     NEWTON =dNewton,
+                     METHODE=METHODE,
                      CONVERGENCE=dConvergence,
                      RECH_LINEAIRE = dRech_lin,
                      SOLVEUR = dSolveur,
                      ARCHIVAGE = _F(INST = __TINT),
                      INFO     =INFO,
                      TITRE = TITRE,
-                     EXCIT = dExcit1,
+                     EXCIT = dExcit1,  
                      **motscle4)
 
   # Recuperation du dernier numero d'ordre pour pouvoir  l'écraser dans RES
@@ -437,15 +457,19 @@ def calc_precont_ops(self,reuse,MODELE,CHAM_MATER,CARA_ELEM,EXCIT,
                      COMP_INCR=dComp_incr1,
                      INCREMENT=_F(LIST_INST = __LST,
                                   PRECISION = __prec),
-                     NEWTON =dNewton,
+                     METHODE=METHODE,
+#                     NEWTON =dNewton,
+#                     IMPL_EX=dImplex,
+    
                      RECH_LINEAIRE = dRech_lin,
                      CONVERGENCE=dConvergence,
                      SOLVEUR = dSolveur,
-                     ARCHIVAGE = _F(NUME_INIT = __no,
+                     ARCHIVAGE = _F(
                                     DETR_NUME_SUIV = 'OUI' ),
                      INFO  =INFO,
                      TITRE = TITRE,
                      EXCIT =dExcit2,
+                     **motscle5 
                      )
 
   return ier

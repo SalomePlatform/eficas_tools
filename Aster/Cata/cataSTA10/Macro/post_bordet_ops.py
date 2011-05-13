@@ -1,21 +1,21 @@
-#@ MODIF post_bordet_ops Macro  DATE 09/08/2010   AUTEUR BARGELLINI R.BARGELLINI 
+#@ MODIF post_bordet_ops Macro  DATE 23/02/2011   AUTEUR BARGELLI R.BARGELLINI 
 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2010  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 
 #definition des fonctions python pour les passer en formule plus tard
@@ -33,11 +33,11 @@ def post_bordet_ops(self,
 TOUT,
 GROUP_MA,
 INST,
+PRECISION,
+CRITERE,
 NUME_ORDRE,
 PROBA_NUCL,
 RESULTAT,
-MODELE,
-CHAM_MATER,
 PARAM,
 TEMP,
 COEF_MULT,**args):
@@ -52,7 +52,7 @@ COEF_MULT,**args):
  # La macro compte pour 1 dans la numerotation des commandes
  #
    self.set_icmd(1)
- # 
+ #
  # On importe les definitions des commandes a utiliser dans la macro
  #
    CREA_CHAMP = self.get_cmd('CREA_CHAMP')
@@ -61,13 +61,32 @@ COEF_MULT,**args):
    CREA_TABLE  = self.get_cmd('CREA_TABLE')
    FORMULE     =self.get_cmd('FORMULE')
    CALC_TABLE  =self.get_cmd('CALC_TABLE')
- #  
+ # 
  # Definition du concept sortant dans le contexte de la macro
  #
  
    self.DeclareOut('tabout', self.sd)
 
  #
+ #Recuperation du champ materiau compris dans le resultat
+ #
+   iret,ibid,__nom_cham_mater = aster.dismoi('F','CHAM_MATER',RESULTAT.nom,'RESULTAT')
+#   if (len(__nom_cham_mater) == 0) or (len(__nom_cham_mater) > 1)  :
+   if (__nom_cham_mater.strip() == "#PLUSIEURS") or (__nom_cham_mater.strip() == "#AUCUN") :
+        print 'ON EST LA'
+        UTMESS('F','RUPTURE1_58')
+   else :
+        __cham_mater = self.get_concept(__nom_cham_mater.strip())
+#
+#Recuperation du modele a partir du resultat
+   iret,ibid,__n_modele = aster.dismoi('F','MODELE',RESULTAT.nom,'RESULTAT')
+   __n_modele=__n_modele.rstrip()
+   if len(__n_modele)==0 or __n_modele=="#PLUSIEURS":
+      UTMESS('F','RUPTURE1_58')
+   __model = self.get_concept(__n_modele)
+# 
+ 
+# 
  # Creation du dictionnaire des parametres materiau de l'utilisateur
  #
    __DPARAM=PARAM[0].cree_dict_valeurs(PARAM[0].mc_liste)
@@ -78,7 +97,7 @@ COEF_MULT,**args):
  #
  #Dimension du modele
  #
-   iret,ndim,rbid = aster.dismoi('F','DIM_GEOM',self['MODELE'].nom,'MODELE')
+   iret,ndim,rbid = aster.dismoi('F','DIM_GEOM',__model.nom,'MODELE')
    
    if (iret==1) or (ndim==23): UTMESS('F','RUPTURE1_57')
    
@@ -98,8 +117,8 @@ COEF_MULT,**args):
  #
 
  #Volume point de gauss
-   __VOL_PG=CALC_CHAM_ELEM(MODELE=self['MODELE'],
-                      CHAM_MATER=self['CHAM_MATER'],
+   __VOL_PG=CALC_CHAM_ELEM(MODELE=__model,
+                      CHAM_MATER=__cham_mater,
                       TOUT='OUI',
                       OPTION='COOR_ELGA',);
    if GROUP_MA:
@@ -110,8 +129,8 @@ COEF_MULT,**args):
 #contrainte principale max
    __RESU=CALC_ELEM(
             RESULTAT=self['RESULTAT'],
-            OPTION='EQUI_ELGA_SIGM',
-            NOM_CMP='PRIN3',);
+            OPTION='SIEQ_ELGA');
+#            NOM_CMP='PRIN3',);
 #deformation plastique
    __RESU=CALC_ELEM(
             reuse=__RESU,
@@ -127,14 +146,23 @@ COEF_MULT,**args):
 #On va travailler en ordre ; si l'utilisateur entre un instant, on va le transformer en ordre
    __entree_instant=None
    if INST :
+      if CRITERE=='ABSOLU':
+         __prec=PRECISION
+      elif CRITERE=='RELATIF':
+         __prec=PRECISION*INST
       __entree_instant=True
-      __instant=INST
+      __n=0
+      __trouv=None
+      while (__n<len(__list_inst) and not __trouv):
+       if (__list_inst[__n]+__prec>=INST) and (__list_inst[__n]-__prec<=INST):
+           __instant=__list_inst[__n]
+           __trouv=True
+       __n=__n+1
+      if not __trouv:
+       UTMESS('F','RUPTURE1_53',valr=INST,valk='utilise pour le calcul de Bordet')
    if __entree_instant==True:
-      if __instant not in __list_inst :
-         UTMESS('F','RUPTURE1_53',valr=__instant,valk='utilise pour le calcul de Bordet')
-      elif __instant in __list_inst :
-         index_ordre=__list_inst.index(__instant)
-         nume_ordre=__list_ordre[index_ordre]
+          index_ordre=__list_inst.index(__instant)
+          nume_ordre=__list_ordre[index_ordre]
    elif NUME_ORDRE:
       nume_ordre=NUME_ORDRE
       if nume_ordre not in __list_ordre :
@@ -153,7 +181,7 @@ COEF_MULT,**args):
    __EQ_PT=[[None] for i in range(nume_ordre+1)]
    __EQ_PT2=[[None] for i in range(nume_ordre+1)]
    __PR_BAR=[[None]for i in range(nume_ordre+1)]
-   __DEP=[[None] for i in range(nume_ordre+1)]   
+   __DEP=[[None] for i in range(nume_ordre+1)]
    __BORDTO=0.#valeur sans l'exposant final, que l'on va sommer sur les instants
    __BORDTI=0.#valeur sans l'exposant final, sommee sur les instants
    __BORDTT=[0. for i in range(nume_ordre+1)]#valeur avec l'exposant, que l'on stocke dans la table a chaque instant
@@ -178,7 +206,7 @@ COEF_MULT,**args):
    elif __list_ordre[0]!=0:
       __fin_ordre=nume_ordre
    for ordre in range(__list_ordre[0],__fin_ordre):
-#   
+# 
 #Temperature a extraire : soit une fonction du temps, soit un reel
 #
       if type(TEMP)==fonction_sdaster:
@@ -195,7 +223,7 @@ COEF_MULT,**args):
                 RESULTAT=__RESU,
                 OPERATION='EXTR',
                 NUME_ORDRE=ordre,
-                NOM_CHAM='EQUI_ELGA_SIGM',);
+                NOM_CHAM='SIEQ_ELGA',);
 
       __EPSP[ordre]=CREA_CHAMP(TYPE_CHAM='ELGA_EPSI_R',
                 RESULTAT=__RESU,
@@ -204,7 +232,7 @@ COEF_MULT,**args):
                 NOM_CHAM='EPSP_ELGA',);
 #
 #On recupere la valeur des champs au niveau des groupes qui nous interessent
-#    
+#
               
       if GROUP_MA:
          __PRIN[ordre]=__S_TOT[ordre].EXTR_COMP('PRIN_3',[GROUP_MA],0).valeurs;

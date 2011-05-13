@@ -1,28 +1,28 @@
-#@ MODIF post_k1_k2_k3_ops Macro  DATE 12/10/2010   AUTEUR GENIAUT S.GENIAUT 
+#@ MODIF post_k1_k2_k3_ops Macro  DATE 04/05/2011   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 
 
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 #                 FONCTIONS UTILITAIRES
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def veri_tab(tab,nom,ndim) :
    from Utilitai.Utmess     import  UTMESS
@@ -38,7 +38,8 @@ def veri_tab(tab,nom,ndim) :
           label='COOR_Z'
           UTMESS('F','RUPTURE0_2',valk=[label,nom])
 
-#--------------------------------------------------------------------------------------------------------------- 
+
+#---------------------------------------------------------------------------------------------------------------
 
 # def cross_product(a,b):
 #     cross = [0]*3
@@ -46,14 +47,14 @@ def veri_tab(tab,nom,ndim) :
 #     cross[1] = a[2]*b[0]-a[0]*b[2]
 #     cross[2] = a[0]*b[1]-a[1]*b[0]
 #     return cross
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def normalize(v):
     import numpy as NP
     norm = NP.sqrt(v[0]**2+v[1]**2+v[2]**2)
     return v/norm
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def complete(Tab):
     n = len(Tab)
@@ -62,7 +63,7 @@ def complete(Tab):
     return Tab
 
  
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 # sam : la methode average(t) ne repond-elle pas au besoin ?
 def moy(t):
     m = 0
@@ -70,7 +71,7 @@ def moy(t):
       m += value
     return (m/len(t))
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def InterpolFondFiss(s0, Coorfo) :
 # Interpolation des points du fond de fissure (xfem)
@@ -94,7 +95,7 @@ def InterpolFondFiss(s0, Coorfo) :
    xyz[3] = s0
    return xyz
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def InterpolBaseFiss(s0, Basefo, Coorfo) :
 # Interpolation de la base locale en fond de fissure
@@ -117,7 +118,7 @@ def InterpolBaseFiss(s0, Basefo, Coorfo) :
       VPVNi[k] = (s0-Coorfo[4*(i-1)+3]) * (Basefo[6*i+k]-Basefo[6*(i-1)+k]) / (Coorfo[4*i+3]-Coorfo[4*(i-1)+3]) + Basefo[6*(i-1)+k]
    return VPVNi
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def verif_type_fond_fiss(ndim,FOND_FISS) :
    from Utilitai.Utmess     import  UTMESS
@@ -127,7 +128,7 @@ def verif_type_fond_fiss(ndim,FOND_FISS) :
       if Typ[0].rstrip() != 'SEG2' and Typ[0].rstrip() != 'SEG3' :
          UTMESS('F','RUPTURE0_12')
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def get_noeud_fond_fiss(FOND_FISS) :
    """ retourne la liste des noeuds de FOND_FISS"""
@@ -141,7 +142,7 @@ def get_noeud_fond_fiss(FOND_FISS) :
    Lnoff = map(S.rstrip,Lnoff)
    return Lnoff
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def get_noeud_a_calculer(Lnoff,ndim,FOND_FISS,MAILLAGE,EnumTypes,args) :
       """ retourne la liste des noeuds de FOND_FISS a calculer"""
@@ -225,7 +226,7 @@ def get_noeud_a_calculer(Lnoff,ndim,FOND_FISS,MAILLAGE,EnumTypes,args) :
       
       return Lnocal
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def get_coor_libre(self,Lnoff,RESULTAT,ndim):
          """ retourne les coordonnes des noeuds de FOND_FISS en dictionnaire"""
@@ -260,14 +261,18 @@ def get_coor_libre(self,Lnoff,RESULTAT,ndim):
          l_coorf = [(i[0],i[1:]) for i in l_coorf]
          return dict(l_coorf) 
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
-def get_Plev(self,MAILLAGE,ListmaS,RESULTAT):
+def get_Plev(self,ListmaS,RESULTAT):
          """ retourne les coordonnes d'un point quelconque des levres pr determination sens de propagation"""
          import numpy as NP
          from Accas import _F
+         import aster
          POST_RELEVE_T    = self.get_cmd('POST_RELEVE_T')
          DETRUIRE         = self.get_cmd('DETRUIRE')
+
+         iret,ibid,nom_ma = aster.dismoi('F','NOM_MAILLA',RESULTAT.nom,'RESULTAT')
+         MAILLAGE = self.get_concept(nom_ma.strip())
 
          cmail=MAILLAGE.NOMMAI.get()
          for i in range(len(cmail)) :
@@ -295,7 +300,7 @@ def get_Plev(self,MAILLAGE,ListmaS,RESULTAT):
          zl=moy(tcoorl['COOR_Z'].values()['COOR_Z'][:nbt])
          return NP.array([xl, yl, zl])
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def get_normale(VECT_K1,Nnoff,ndim,DTANOR,DTANEX,d_coorf,Lnoff,Plev) :
       """ retourne les normales (direct de propa) en chaque point du fond,
@@ -350,20 +355,19 @@ def get_normale(VECT_K1,Nnoff,ndim,DTANOR,DTANEX,d_coorf,Lnoff,Plev) :
          sens = NP.sign(NP.dot(NP.transpose(VN),VLori))
       return (dicVN, dicoF, sens)
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def get_tab_dep(self,Lnocal,Nnocal,Nnoff,d_coorf,Lnoff,DTANOR,DTANEX,ABSC_CURV_MAXI,dicVN,sens,RESULTAT,MODEL,
                 ListmaS,ListmaI,NB_NOEUD_COUPE,dmax,SYME_CHAR) :
       """ retourne les tables des deplacements sup et inf pour les noeuds perpendiculaires pour
-      chaque point du fond de fissure"""
+      tous les points du fond de fissure"""
 
       from Accas import _F
       import numpy as NP
 
       MACR_LIGN_COUPE  = self.get_cmd('MACR_LIGN_COUPE')
       
-      TlibS = [None]*Nnocal
-      TlibI = [None]*Nnocal
+      mcfact=[]
       for i in xrange(Nnocal):
          Porig = NP.array(d_coorf[Lnocal[i]] )
          if Lnocal[i]==Lnoff[0] and DTANOR : 
@@ -373,30 +377,28 @@ def get_tab_dep(self,Lnocal,Nnocal,Nnoff,d_coorf,Lnoff,DTANOR,DTANEX,ABSC_CURV_M
          else :
             Pextr = Porig - ABSC_CURV_MAXI*dicVN[Lnocal[i]]*sens
 
-         TlibS[i] = MACR_LIGN_COUPE(RESULTAT=RESULTAT,
-                                    NOM_CHAM='DEPL',
-                                    MODELE=MODEL, 
-                                    VIS_A_VIS=_F(MAILLE_1 = ListmaS),
-                                    LIGN_COUPE=_F(NB_POINTS=NB_NOEUD_COUPE,
-                                                  COOR_ORIG=(Porig[0],Porig[1],Porig[2],),
-                                                  TYPE='SEGMENT', 
-                                                  COOR_EXTR=(Pextr[0],Pextr[1],Pextr[2]),
-                                                  DISTANCE_MAX=dmax),);
+         mcfact.append(_F(NB_POINTS=NB_NOEUD_COUPE,
+                          COOR_ORIG=(Porig[0],Porig[1],Porig[2],),
+                          TYPE='SEGMENT',
+                          COOR_EXTR=(Pextr[0],Pextr[1],Pextr[2]),
+                          DISTANCE_MAX=dmax),)
 
+      __TlibS = MACR_LIGN_COUPE(RESULTAT=RESULTAT,
+                              NOM_CHAM='DEPL',
+                              MODELE=MODEL, 
+                              VIS_A_VIS=_F(MAILLE_1 = ListmaS),
+                              LIGN_COUPE=mcfact)
 
-         if SYME_CHAR=='SANS':
-            TlibI[i] = MACR_LIGN_COUPE(RESULTAT=RESULTAT,
-                                       NOM_CHAM='DEPL',
-                                       MODELE=MODEL,
-                                       VIS_A_VIS=_F(MAILLE_1 = ListmaI),
-                                       LIGN_COUPE=_F(NB_POINTS=NB_NOEUD_COUPE,
-                                                     COOR_ORIG=(Porig[0],Porig[1],Porig[2],),
-                                                     TYPE='SEGMENT',
-                                                     COOR_EXTR=(Pextr[0],Pextr[1],Pextr[2]),
-                                                     DISTANCE_MAX=dmax),);
-      return (TlibS,TlibI)
+      if SYME_CHAR=='SANS':
+         __TlibI = MACR_LIGN_COUPE(RESULTAT=RESULTAT,
+                                 NOM_CHAM='DEPL',
+                                 MODELE=MODEL,
+                                 VIS_A_VIS=_F(MAILLE_1 = ListmaI),
+                                 LIGN_COUPE=mcfact)
 
-#--------------------------------------------------------------------------------------------------------------- 
+      return (__TlibS.EXTR_TABLE(),__TlibI.EXTR_TABLE())
+
+#---------------------------------------------------------------------------------------------------------------
 
 def get_dico_levres(lev,FOND_FISS,ndim,Lnoff,Nnoff):
       "retourne ???"""
@@ -418,7 +420,7 @@ def get_dico_levres(lev,FOND_FISS,ndim,Lnoff,Nnoff):
       Nnorm = [(i[0],i[1][0:]) for i in Nnorm]
       return dict(Nnorm)
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def get_coor_regle(self,RESULTAT,ndim,Lnoff,Lnocal,dicoS,SYME_CHAR,dicoI,TABL_DEPL_SUP,TABL_DEPL_INF):
       """retourne le dictionnaires des coordonnees des noeuds des lèvres pour les maillages regles"""
@@ -478,7 +480,7 @@ def get_coor_regle(self,RESULTAT,ndim,Lnoff,Lnocal,dicoS,SYME_CHAR,dicoI,TABL_DE
       l_coor = [(i[0],i[1:]) for i in l_coor]     
       return dict(l_coor)
  
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def get_absfon(Lnoff,Nnoff,d_coor):
       """ retourne le dictionnaire des Abscisses curvilignes du fond"""
@@ -491,7 +493,7 @@ def get_absfon(Lnoff,Nnoff,d_coor):
          absfon.append(absf)
       return dict([(Lnoff[i],absfon[i]) for i in xrange(Nnoff)])
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def get_noeuds_perp_regle(Lnocal,d_coor,dicoS,dicoI,Lnoff,PREC_VIS_A_VIS,ABSC_CURV_MAXI,SYME_CHAR,rmprec,precn):
       """retourne la liste des noeuds du fond (encore ?), la liste des listes des noeuds perpendiculaires"""
@@ -563,7 +565,7 @@ def get_noeuds_perp_regle(Lnocal,d_coor,dicoS,dicoI,Lnoff,PREC_VIS_A_VIS,ABSC_CU
 
       return (Lnofon, Lnosup, Lnoinf) 
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def verif_resxfem(self,RESULTAT) :
       """ verifie que le resultat est bien compatible avec X-FEM et renvoie xcont et MODEL"""
@@ -579,32 +581,40 @@ def verif_resxfem(self,RESULTAT) :
       xcont = MODEL.xfem.XFEM_CONT.get()
       return (xcont,MODEL)
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
-def get_resxfem(self,xcont,RESULTAT,MAILLAGE,MODELISATION,MODEL) :
+def get_resxfem(self,xcont,RESULTAT,MODELISATION,MODEL) :
       """ retourne le resultat """
       from Accas import _F
+      import aster
 
       AFFE_MODELE      = self.get_cmd('AFFE_MODELE')
       PROJ_CHAMP       = self.get_cmd('PROJ_CHAMP')
       DETRUIRE         = self.get_cmd('DETRUIRE')
+      CREA_MAILLAGE    = self.get_cmd('CREA_MAILLAGE')
 
+      iret,ibid,nom_ma = aster.dismoi('F','NOM_MAILLA',RESULTAT.nom,'RESULTAT')
       if xcont[0] == 0 :
          __RESX = RESULTAT
 
 #     XFEM + contact : il faut reprojeter sur le maillage lineaire
       elif xcont[0] != 0 :
-         __MODLINE=AFFE_MODELE(MAILLAGE=MAILLAGE,
+         MAILL1 = self.get_concept(nom_ma.strip())
+         MAILL2 = CREA_MAILLAGE(MAILLAGE = MAILL1,
+                               QUAD_LINE =_F(TOUT = 'OUI',),);
+
+         __MODLINE=AFFE_MODELE(MAILLAGE=MAILL2,
                                AFFE=(_F(TOUT='OUI',
                                         PHENOMENE='MECANIQUE',
-                                        MODELISATION=MODELISATION,),),);        
+                                        MODELISATION=MODELISATION,),),); 
 
-         __RESX=PROJ_CHAMP(METHODE='COLOCATION',
+         __RESX=PROJ_CHAMP(METHODE='COLLOCATION',
                            TYPE_CHAM='NOEU',
                            NOM_CHAM='DEPL',
                            RESULTAT=RESULTAT,
                            MODELE_1=MODEL,
                            MODELE_2=__MODLINE, );   
+
 
 #        Rq : on ne peut pas détruire __MODLINE ici car on en a besoin lors du MACR_LIGN_COUP qui suivra
       
@@ -897,8 +907,7 @@ def get_tab(self,lev,ino,Tlib,Lno,TTSo,FOND_FISS,FISSURE,TYPE_MAILLAGE,RESULTAT,
 
          if FOND_FISS : 
             if TYPE_MAILLAGE =='LIBRE':
-               tab=Tlib[ino].EXTR_TABLE()
-               DETRUIRE(CONCEPT=_F(NOM=Tlib[ino]),INFO=1)
+               tab = Tlib.INTITULE=='l.coupe%i'%(ino+1)
             elif RESULTAT :
                if ndim == 2:
                   nomcmp= ('DX','DY')
@@ -1449,6 +1458,100 @@ def get_meth3(self,abscs,coefg,coefg3,kgsig,isig,saut2,INFO,ndim) :
 
 #---------------------------------------------------------------------------------------------------------------
 
+def get_erreur(self,ndim,__tabi) :
+
+      """retourne l'erreur selon les méthodes. 
+      En FEM/X-FEM, on ne retient que le K_MAX de la méthode 1."""
+      from Accas import _F
+      import aster
+      import string
+      import numpy as NP
+
+      CREA_TABLE    = self.get_cmd('CREA_TABLE')
+      CALC_TABLE    = self.get_cmd('CALC_TABLE')
+      DETRUIRE      = self.get_cmd('DETRUIRE')
+      FORMULE       = self.get_cmd('FORMULE')
+
+      labels = ['K1_MAX', 'K1_MIN', 'K2_MAX', 'K2_MIN', 'K3_MAX', 'K3_MIN']
+      index = 2
+      if ndim == 3:
+         index = 3
+      py_tab = __tabi.EXTR_TABLE()
+
+      nlines = len(py_tab.values()[py_tab.values().keys()[0]])
+      err = NP.zeros((index, nlines/3))
+      kmax = [0.] * index
+      kmin = [0.] * index
+      for i in range(nlines/3):
+         for j in range(index):
+            kmax[j] = max(__tabi[labels[  2*j], 3*i+1], __tabi[labels[  2*j], 3*i+2], __tabi[labels[  2*j], 3*i+3])
+            kmin[j] = min(__tabi[labels[2*j+1], 3*i+1], __tabi[labels[2*j+1], 3*i+2], __tabi[labels[2*j+1], 3*i+3])
+         kmaxmax = max(kmax)
+         if NP.fabs(kmaxmax) > 1e-15:
+            for j in range(index):
+               err[j,i] = (kmax[j] - kmin[j]) / kmaxmax
+
+      # filter method 1 line
+      imeth = 1
+      __tabi = CALC_TABLE(TABLE=__tabi,
+                          reuse=__tabi,
+                          ACTION=_F(OPERATION='FILTRE',
+                                    CRIT_COMP='EQ',
+                                    VALE = imeth,
+                                    NOM_PARA='METHODE')
+                          )
+
+      # rename k parameters
+      __tabi = CALC_TABLE(TABLE=__tabi,
+                          reuse=__tabi,
+                          ACTION=(_F(OPERATION='RENOMME',NOM_PARA=('K1_MAX','K1')),
+                                  _F(OPERATION='RENOMME',NOM_PARA=('K2_MAX','K2')),
+                                  _F(OPERATION='RENOMME',NOM_PARA=('G_MAX','G')))
+                        )
+      if ndim == 3:
+        __tabi = CALC_TABLE(TABLE=__tabi,
+                            reuse=__tabi,
+                            ACTION=_F(OPERATION='RENOMME',NOM_PARA=('K3_MAX','K3'))
+                            )
+
+      # create error
+      if ndim != 3:
+         tab_int = CREA_TABLE(LISTE=(_F(LISTE_R=(tuple(__tabi.EXTR_TABLE().values()['G_MIN'])), PARA='G_MIN'),
+                                     _F(LISTE_R=(tuple(err[0].tolist())), PARA='ERR_K1'),
+                                     _F(LISTE_R=(tuple(err[1].tolist())), PARA='ERR_K2')))
+      else:
+         tab_int = CREA_TABLE(LISTE=(_F(LISTE_R=(tuple(__tabi.EXTR_TABLE().values()['G_MIN'])), PARA='G_MIN'),
+                                     _F(LISTE_R=(tuple(err[0].tolist())), PARA='ERR_K1'),
+                                     _F(LISTE_R=(tuple(err[1].tolist())), PARA='ERR_K2'),
+                                     _F(LISTE_R=(tuple(err[2].tolist())), PARA='ERR_K3')))
+
+      # add error
+      __tabi = CALC_TABLE(TABLE=__tabi,reuse=__tabi,ACTION=(_F(OPERATION='COMB',NOM_PARA='G_MIN',TABLE=tab_int)),INFO=1)
+      DETRUIRE(CONCEPT=(_F(NOM=tab_int)),INFO=1)
+
+      # remove kj_min + sort data
+      params = ()
+      if ('INST' in __tabi.EXTR_TABLE().para) : params = ('INST',)
+      if ('NOEUD_FOND' in __tabi.EXTR_TABLE().para) :
+          params =  params + ('NOEUD_FOND',)
+      elif ('PT_FOND' in __tabi.EXTR_TABLE().para) :
+          params =  params + ('PT_FOND',)
+
+      if ('ABSC_CURV' in __tabi.EXTR_TABLE().para) :
+          params = params + ('ABSC_CURV',)
+
+      params = params + ('K1', 'ERR_K1', 'K2', 'ERR_K2',)
+      if ndim == 3: params = params + ('K3', 'ERR_K3', 'G',)
+      else: params = params + ('G',)
+
+      __tabi = CALC_TABLE(TABLE=__tabi,
+                          reuse=__tabi,ACTION=(_F(OPERATION='EXTR',NOM_PARA=tuple(params))),
+                          TITRE="CALCUL DES FACTEURS D'INTENSITE DES CONTRAINTES PAR LA METHODE POST_K1_K2_K3")
+
+      return __tabi
+
+#---------------------------------------------------------------------------------------------------------------
+
 def get_tabout(self,kg,TITRE,FOND_FISS,MODELISATION,FISSURE,ndim,ino,inst,iord,
                Lnofon,dicoF,absfon,Nnoff,tabout) :
 
@@ -1460,7 +1563,7 @@ def get_tabout(self,kg,TITRE,FOND_FISS,MODELISATION,FISSURE,ndim,ino,inst,iord,
       CREA_TABLE    = self.get_cmd('CREA_TABLE')
       DETRUIRE      = self.get_cmd('DETRUIRE')
       CALC_TABLE    = self.get_cmd('CALC_TABLE')
-
+      
 
       mcfact=[]
 
@@ -1496,19 +1599,22 @@ def get_tabout(self,kg,TITRE,FOND_FISS,MODELISATION,FISSURE,ndim,ino,inst,iord,
 
       if  (ino==0 and iord==0) and inst==None :
          tabout=CREA_TABLE(LISTE=mcfact,TITRE = titre)
+         get_erreur(self,ndim,tabout)
       elif iord==0 and ino==0 and inst!=None :
          mcfact=[_F(PARA='INST'  ,LISTE_R=[inst,]*3      )]+mcfact
          tabout=CREA_TABLE(LISTE=mcfact,TITRE = titre)
+         get_erreur(self,ndim,tabout)
       else :
          if inst!=None :
             mcfact=[_F(PARA='INST'  ,LISTE_R=[inst,]*3     )]+mcfact
          __tabi=CREA_TABLE(LISTE=mcfact,)
-         npara = ['K1_MAX','METHODE']
+         npara = ['K1']
          if inst!=None :
             npara.append('INST')
          if FOND_FISS and MODELISATION=='3D' :
             npara.append('NOEUD_FOND')
 
+         get_erreur(self,ndim,__tabi)
          tabout=CALC_TABLE(reuse = tabout,
                            TABLE = tabout,
                            TITRE = titre,
@@ -1520,9 +1626,9 @@ def get_tabout(self,kg,TITRE,FOND_FISS,MODELISATION,FISSURE,ndim,ino,inst,iord,
 
 
 
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 #                 CORPS DE LA MACRO POST_K1_K2_K3
-#--------------------------------------------------------------------------------------------------------------- 
+#---------------------------------------------------------------------------------------------------------------
 
 def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
                    TABL_DEPL_SUP,TABL_DEPL_INF,ABSC_CURV_MAXI,PREC_VIS_A_VIS,
@@ -1567,7 +1673,6 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
    MACR_LIGN_COUPE  = self.get_cmd('MACR_LIGN_COUPE')
    AFFE_MODELE      = self.get_cmd('AFFE_MODELE')
    PROJ_CHAMP       = self.get_cmd('PROJ_CHAMP')
-     
 #   ------------------------------------------------------------------
 #                         CARACTERISTIQUES MATERIAUX
 #   ------------------------------------------------------------------
@@ -1658,7 +1763,12 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
 
    if FOND_FISS : 
 
-      MAILLAGE = args['MAILLAGE']
+      if RESULTAT :
+        iret,ibid,nom_ma = aster.dismoi('F','NOM_MAILLA',RESULTAT.nom,'RESULTAT')
+        MAILLAGE = self.get_concept(nom_ma.strip())
+      else:
+        MAILLAGE = args['MAILLAGE']
+
       NB_NOEUD_COUPE = args['NB_NOEUD_COUPE']
 
 #     Verification du type des mailles de FOND_FISS
@@ -1701,7 +1811,7 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
          d_coorf = get_coor_libre(self,Lnoff,RESULTAT,ndim)
 
 #        Coordonnee d un pt quelconque des levres pour determination sens de propagation
-         Plev = get_Plev(self,MAILLAGE,ListmaS,RESULTAT)
+         Plev = get_Plev(self,ListmaS,RESULTAT)
 
 #        Calcul des normales a chaque noeud du fond
          if ndim == 3 :
@@ -1720,7 +1830,7 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
          MODEL = self.get_concept(n_modele)
          dmax  = PREC_VIS_A_VIS * ABSC_CURV_MAXI
 
-         (TlibS,TlibI) = get_tab_dep(self,Lnocal,Nnocal,Nnoff,d_coorf,Lnoff,DTANOR,DTANEX,ABSC_CURV_MAXI,dicVN,sens,RESULTAT,MODEL,
+         (__TlibS,__TlibI) = get_tab_dep(self,Lnocal,Nnocal,Nnoff,d_coorf,Lnoff,DTANOR,DTANEX,ABSC_CURV_MAXI,dicVN,sens,RESULTAT,MODEL,
                                      ListmaS,ListmaI,NB_NOEUD_COUPE,dmax,SYME_CHAR)
 
 
@@ -1757,7 +1867,12 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
 
    elif FISSURE :
 
-      MAILLAGE = args['MAILLAGE']
+      if RESULTAT :
+        iret,ibid,nom_ma = aster.dismoi('F','NOM_MAILLA',RESULTAT.nom,'RESULTAT')
+        MAILLAGE = self.get_concept(nom_ma.strip())
+      else:
+        MAILLAGE = args['MAILLAGE']
+
       DTAN_ORIG = args['DTAN_ORIG']
       DTAN_EXTR = args['DTAN_EXTR']
       dmax  = PREC_VIS_A_VIS * ABSC_CURV_MAXI
@@ -1768,7 +1883,7 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
          UTMESS('F','RUPTURE0_4')
 
 #     Recuperation du resultat
-      __RESX = get_resxfem(self,xcont,RESULTAT,MAILLAGE,MODELISATION,MODEL)
+      __RESX = get_resxfem(self,xcont,RESULTAT,MODELISATION,MODEL)
 
 #     Recuperation des coordonnees des points du fond de fissure (x,y,z,absc_curv)
       (Coorfo, Vpropa, Nnoff) = get_coor_xfem(args,FISSURE,ndim)
@@ -1808,8 +1923,8 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
    #  creation des objets vides s'ils n'existent pas
    #  de maniere a pouvoir les passer en argument des fonctions
    #  c'est pas terrible : il faudrait harmoniser les noms entre les différents cas
-   if 'TlibS'  not in locals() : TlibS  = []
-   if 'TlibI'  not in locals() : TlibI  = []
+   if '__TlibS'  not in locals() : __TlibS  = []
+   if '__TlibI'  not in locals() : __TlibI  = []
    if 'Lnosup' not in locals() : Lnosup = []
    if 'Lnoinf' not in locals() : Lnoinf = []
    if 'TTSo'   not in locals() : TTSo   = []
@@ -1847,9 +1962,9 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
       affiche_traitement(FOND_FISS,INFO,FISSURE,Lnofon,ino)
 
 #     table 'depsup' et 'depinf'
-      tabsup = get_tab(self,'sup',ino,TlibS,Lnosup,TTSo,
+      tabsup = get_tab(self,'sup',ino,__TlibS,Lnosup,TTSo,
                        FOND_FISS,FISSURE,TYPE_MAILLAGE,RESULTAT,SYME_CHAR,TABL_DEPL_SUP,ndim)
-      tabinf = get_tab(self,'inf',ino,TlibI,Lnoinf,TTSo,
+      tabinf = get_tab(self,'inf',ino,__TlibI,Lnoinf,TTSo,
                        FOND_FISS,FISSURE,TYPE_MAILLAGE,RESULTAT,SYME_CHAR,TABL_DEPL_INF,ndim)
 
 #     les instants de post-traitement : creation de l_inst
@@ -1925,9 +2040,8 @@ def post_k1_k2_k3_ops(self,MODELISATION,FOND_FISS,FISSURE,MATER,RESULTAT,
       tabout=CALC_TABLE(reuse=tabout,
                         TABLE=tabout,
                         ACTION=_F(OPERATION = 'TRI',
-                                  NOM_PARA=('INST','ABSC_CURV','METHODE'),
+                                  NOM_PARA=('INST','ABSC_CURV'),
                                   ORDRE='CROISSANT'))
-
 
    return ier
  

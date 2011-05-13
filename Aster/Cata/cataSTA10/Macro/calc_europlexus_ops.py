@@ -1,8 +1,8 @@
-#@ MODIF calc_europlexus_ops Macro  DATE 11/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF calc_europlexus_ops Macro  DATE 15/02/2011   AUTEUR ASSIRE A.ASSIRE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -113,10 +113,13 @@ def calc_europlexus_ops(self,MODELE,CARA_ELEM,CHAM_MATER,EXCIT,FONC_PARASOL=None
   from Utilitai.Utmess import UTMESS, MasquerAlarme, RetablirAlarme
   MasquerAlarme('MED_1')
   MasquerAlarme('MED_54')
+  MasquerAlarme('MED_77')
+  MasquerAlarme('MED_37')
+
 
   # Ligne de commande d'Europlexus
   if args.has_key('LOGICIEL'): EXEC = args['LOGICIEL']
-  else: EXEC = '/home/europlex/EPXD/EUROPLEXUS_GESTION/runepx_d'
+  else: EXEC = '/home/europlex/EPXD/bin/europlexus'
   if debug: print 'args_keys : %s'%args.keys()
   if args.has_key('PAS_NBRE_COURBE') :
      if debug: print 'PAS NBRE COURBE = ok (%s)'%args['PAS_NBRE_COURBE']
@@ -168,6 +171,8 @@ def calc_europlexus_ops(self,MODELE,CARA_ELEM,CHAM_MATER,EXCIT,FONC_PARASOL=None
   # Pour la gestion des alarmes
   RetablirAlarme('MED_1')
   RetablirAlarme('MED_54')
+  RetablirAlarme('MED_77')
+  RetablirAlarme('MED_37')
 
   return ier
 
@@ -1815,7 +1820,7 @@ class EUROPLEXUS:
     
     # Dictionnaire permettant de traduire le champ epx en med au nom asscie dans aster
 # AA    epx2aster = {'CONTRAINTE':'SIEF_ELGA','ECROUISSAGE':'VARI_ELGA'}
-    epx2aster = {'CONTRAINTE':'SIEF_ELGA','DEFORMATION':'EPSI_ELGA_DEPL','ECROUISSAGE':'VARI_ELGA'}
+    epx2aster = {'CONTRAINTE':'SIEF_ELGA','DEFORMATION':'EPSI_ELGA','ECROUISSAGE':'VARI_ELGA'}
 
 # AA : desactive pour le moment
 #     # Enrichir la liste format_med par les champs aux pts de gauss
@@ -1842,6 +1847,8 @@ class EUROPLEXUS:
     fort = 'fort.%i' %unite
     if os.path.isfile(fort) : os.remove(fort)
 
+    if not os.path.isfile(fichier_med): UTMESS('F','PLEXUS_14')   
+
     os.symlink(fichier_med,fort)
 
     # Regeneration des mots-cles EXCIT passés en argument de la macro
@@ -1850,6 +1857,7 @@ class EUROPLEXUS:
        dExcit.append(j.cree_dict_valeurs(j.mc_liste))
        for i in dExcit[-1].keys():
           if dExcit[-1][i]==None : del dExcit[-1][i]
+
     resu = LIRE_RESU(TYPE_RESU='EVOL_NOLI',
 #                  VERI_ELGA='NON',
                   FORMAT='MED',
@@ -2299,7 +2307,7 @@ class EUROPLEXUS:
         # resu = CREA_RESU(reuse=resu,
             # OPERATION = 'AFFE',
             # TYPE_RESU = 'EVOL_NOLI',
-            # NOM_CHAM  = 'EPSI_ELGA_DEPL',
+            # NOM_CHAM  = 'EPSI_ELGA',
             # AFFE = dicAffe2)
         resu = CREA_RESU(reuse=resu,
             OPERATION = 'AFFE',
@@ -2316,7 +2324,11 @@ class EUROPLEXUS:
   def lancer_calcul(self,fichier_med='auto'):
 
      fichier_epx = self.nom_fichiers['COMMANDE']
-     EXEC_LOGICIEL(LOGICIEL='cd %s ; unset TMPDIR ; %s -usetmpdir %s ; iret=$? ; cd %s ; echo "Code_Retour Europlexus : $iret" ; exit 0' % (self.pwd + self.REPE, self.EXEC, fichier_epx, self.pwd),
+#     EXEC_LOGICIEL(LOGICIEL='cd %s ; unset TMPDIR ; %s -usetmpdir %s ; iret=$? ; cd %s ; echo "Code_Retour Europlexus : $iret" ; exit 0' % (self.pwd + self.REPE, self.EXEC, fichier_epx, self.pwd),
+#                   CODE_RETOUR_MAXI=-1,
+#                   INFO=2)
+
+     EXEC_LOGICIEL(LOGICIEL='cd %s ; unset TMPDIR ; unset PMI_RANK ; %s %s ; iret=$? ; cd %s ; echo "Code_Retour Europlexus : $iret" ; exit 0' % (self.pwd + self.REPE, self.EXEC, fichier_epx, self.pwd),
                    CODE_RETOUR_MAXI=-1,
                    INFO=2)
 

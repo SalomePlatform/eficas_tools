@@ -508,8 +508,10 @@ def traduc(infile,outfile,flog=None):
     renameMotCle(jdc,"MACR_ADAP_MAIL","TYPE_VALEUR_INDICA","USAGE_CMP")
     AjouteMotClefDansFacteurCourantSiRegle(jdc,"MACR_ADAP_MAIL","ZONE","TYPE='BOITE'",((("RAYON",),"nexistepasMCsousMCFcourant"),))
     AjouteMotClefDansFacteurCourantSiRegle(jdc,"MACR_ADAP_MAIL","ZONE","TYPE='SPHERE'",((("RAYON",),"existeMCsousMCFcourant"),))
-    ChangementValeur(jdc,"MACR_ADAP_MAIL","VERSION_HOMARD",{"V9_5":"V9_9"})
-    ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V9_5":"V9_9"})
+    ChangementValeur(jdc,"MACR_ADAP_MAIL","VERSION_HOMARD",{"V9_5":"V10_1"})
+    ChangementValeur(jdc,"MACR_ADAP_MAIL","VERSION_HOMARD",{"V9_N":"V10_1_N"})
+    ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V9_5":"V10_1"})
+    ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V9_N":"V10_1_N"})
 
     ###################### traitement de POST_CHAM_XFEM  #################
     removeMotCle(jdc,"POST_CHAM_XFEM","MODELE",pasDeRegle(),0)
@@ -593,7 +595,7 @@ def traduc(infile,outfile,flog=None):
              "VARI_NOEU_ELGA":"VARI_NOEU","VARI_ELNO_ELGA":"VARI_ELNO",
              "INDI_LOCA_ELGA":"INDL_ELGA"}
     #"FORC_NODA":"FORC_NOEU","REAC_NODA":"REAC_NOEU"
-    ChangementValeurDsMCF(jdc,"AFFE_MATERIAU","AFFE_VAR_C","NOM_CHAM",dOPTION)
+    ChangementValeurDsMCF(jdc,"AFFE_MATERIAU","AFFE_VARC","NOM_CHAM",dOPTION)
     ChangementValeur(jdc,"COMB_FOURIER","NOM_CHAM",dOPTION)
     ChangementValeur(jdc,"CREA_CHAMP","NOM_CHAM",dOPTION)
     ChangementValeur(jdc,"CREA_RESU","NOM_CHAM",dOPTION)
@@ -637,7 +639,7 @@ def traduc(infile,outfile,flog=None):
     # Options ambigue :  PRES_ELNO_DBEL --> prac_elno/prme_elno, ERRE* --> ERME_ELNO ou ERTH_ELNO selon PHENOMENE
     # En commentaires les commandes non concernees par rOPTION
     
-    GenereErreurValeurDsMCF(jdc,"AFFE_MATERIAU","AFFE_VAR_C","NOM_CHAM",rOPTION)
+    GenereErreurValeurDsMCF(jdc,"AFFE_MATERIAU","AFFE_VARC","NOM_CHAM",rOPTION)
     #GenereErreurValeur(jdc,"COMB_FOURIER","NOM_CHAM",rOPTION)
     GenereErreurValeur(jdc,"CREA_CHAMP","NOM_CHAM",rOPTION)
     GenereErreurValeur(jdc,"CREA_RESU","NOM_CHAM",rOPTION)
@@ -686,6 +688,9 @@ def traduc(infile,outfile,flog=None):
     removeMotCle(jdc,"CALC_MISS","UNITE_OPTI_MISS",pasDeRegle())
     removeMotCle(jdc,"CALC_MISS","UNITE_MODELE_SOL",pasDeRegle())
     removeMotCle(jdc,"CALC_MISS","OPTION",pasDeRegle(),1)
+    ChangementValeur(jdc,"CALC_MISS","VERSION",{"V1_4":"V6.5"})
+    ChangementValeur(jdc,"CALC_MISS","VERSION",{"V1_5":"V6.6"})
+    ChangementValeur(jdc,"CALC_MISS","VERSION",{"V1_3":"V6.5"})
 
     macr=""
     interf=""

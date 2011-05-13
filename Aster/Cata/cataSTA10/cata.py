@@ -1,8 +1,8 @@
-#& MODIF ENTETE  DATE 14/06/2010   AUTEUR COURTOIS M.COURTOIS 
+#& MODIF ENTETE  DATE 08/03/2011   AUTEUR MASSIN P.MASSIN 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -135,6 +135,7 @@ from SD.co_listr8 import listr8_sdaster
 # maillage :
 from SD.co_maillage  import maillage_sdaster
 from SD.co_squelette import squelette
+from SD.co_grille    import grille_sdaster
 
 # -----------------------------------------------------------------------------
 # champs
@@ -218,10 +219,165 @@ from SD.co_vect_elem import vect_elem, \
                             vect_elem_pres_r, vect_elem_pres_c, \
                             vect_elem_temp_r
 
-#& MODIF COMMUN  DATE 24/08/2010   AUTEUR COURTOIS M.COURTOIS 
+
+# -----------------------------------------------------------------------------
+# corresp_2_mailla :
+from SD.co_corresp_2_mailla import corresp_2_mailla
+
+#& MODIF COMMUN  DATE 21/12/2010   AUTEUR ABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2010  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE ABBAS M.ABBAS
+
+def C_AFFICHAGE() : return FACT(statut='f',max=1,
+        INFO_RESIDU = SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+        UNITE       = SIMP(statut='f',typ='I',val_min=1),
+       );
+#& MODIF COMMUN  DATE 21/02/2011   AUTEUR ABBAS M.ABBAS 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE ABBAS M.ABBAS
+def C_ARCHIVAGE() : return FACT(statut='d',max=1,
+    regles         = (EXCLUS('PAS_ARCH','LIST_INST','INST'),),
+    LIST_INST      = SIMP(statut='f',typ=(listr8_sdaster) ),
+    INST           = SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
+    PAS_ARCH       = SIMP(statut='f',typ='I' ),
+    CRITERE        = SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
+           b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+              PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
+           b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+              PRECISION       =SIMP(statut='o',typ='R',),),
+    DETR_NUME_SUIV = SIMP(statut='f',typ='TXM',into=("OUI",)),
+    CHAM_EXCLU     = SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',),
+);
+#& MODIF COMMUN  DATE 07/12/2010   AUTEUR GENIAUT S.GENIAUT 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2010  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE GENIAUT S.GENIAUT
+def C_COMP_ELAS( COMMAND ) :  #COMMUN#
+    
+    assert COMMAND in ('MACR_ASCOUF_CALC','MACR_ASPIC_CALC','CALC_G','POST_GP',
+                       'CALC_POINT_MAT','SIMU_POINT_MAT', 'DYNA_NON_LINE','STAT_NON_LINE','CALCUL',)
+    
+    kwargs = {}
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+#                            RELATION
+# ----------------------------------------------------------------------------------------------------------------------------------
+    # commandes pour lesquelles on ne peut pas choisir une relation de type 1d
+    if COMMAND in ('CALC_G','POST_GP','CALC_POINT_MAT','SIMU_POINT_MAT' ):
+        kwargs['RELATION'] = SIMP(statut='o',typ='TXM',defaut="ELAS",
+                                 into=("ELAS","ELAS_VMIS_LINE","ELAS_VMIS_TRAC","ELAS_VMIS_PUIS","ELAS_HYPER"))
+
+    # commandes pour lesquelles tout type de relation est possible
+    elif COMMAND in ('DYNA_NON_LINE','STAT_NON_LINE','CALCUL',):
+        kwargs['RELATION'] = SIMP(statut='o',typ='TXM',defaut="ELAS",
+                                 into=("ELAS","ELAS_VMIS_LINE","ELAS_VMIS_TRAC",
+                                       "ELAS_VMIS_PUIS","ELAS_HYPER","ELAS_POUTRE_GR","CABLE"))
+
+     # cas particulier de MACR_ASCOUF/ASPIC_CALC : on limite volontairement le choix pour ne pas perturber l'utilisateur
+     # mais theoriquement, toutes les lois disponibles pour CALC_G le sont aussi pour MACR_ASCOUF/ASPIC_CALC
+    elif COMMAND in ('MACR_ASCOUF_CALC','MACR_ASPIC_CALC'):
+        kwargs['RELATION'] = SIMP(statut='o',typ='TXM',into=("ELAS","ELAS_VMIS_TRAC"))
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+#                            DEFORMATION
+# ----------------------------------------------------------------------------------------------------------------------------------
+
+    # commandes pour lesquelles on ne peut pas choisir les grandes deformations
+    if COMMAND in ('CALC_POINT_MAT','MACR_ASCOUF_CALC','MACR_ASPIC_CALC'):
+        kwargs['DEFORMATION'] =SIMP(statut='f',typ='TXM',defaut="PETIT" ,into=("PETIT",))
+
+    # commandes pour lesquelles on peut choisir tout type de deformation
+    elif COMMAND in ('DYNA_NON_LINE','STAT_NON_LINE','CALCUL','POST_GP','CALC_G','SIMU_POINT_MAT', ):
+        kwargs['DEFORMATION'] =SIMP(statut='f',typ='TXM',defaut="PETIT" ,into=("PETIT","GROT_GDEP",))
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+#                            INTEGRATION (RESI_INTE_RELA, ITER_INTE_MAXI, ALGO_INTE)
+# ----------------------------------------------------------------------------------------------------------------------------------
+
+    kwargs['RESI_INTE_RELA']    =SIMP(statut='f',typ='R',defaut= 1.0E-6)
+    kwargs['ITER_INTE_MAXI']    =SIMP(statut='f',typ='I',defaut= 10 )
+    kwargs['ALGO_INTE']         =SIMP(statut='f',typ='TXM',into=("ANALYTIQUE", "SECANTE",))
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+#                            LOCALISATION
+# ----------------------------------------------------------------------------------------------------------------------------------
+
+    # commandes pour lesquelles la localisation n'a pas de sens
+    # 'CALC_POINT_MAT','SIMU_POINT_MAT' 
+
+    # commandes pour lesquelles la localisation est automatique
+    # 'MACR_ASCOUF_CALC','MACR_ASPIC_CALC'
+
+    # commandes pour lesquelles on peut choisir la localisation
+    if COMMAND in ('DYNA_NON_LINE','STAT_NON_LINE','CALC_G','POST_GP','CALCUL'):
+        kwargs['regles'] = (PRESENT_ABSENT('TOUT','GROUP_MA','MAILLE'),)
+        kwargs['TOUT'] =SIMP(statut='f',typ='TXM',into=("OUI",) )
+        kwargs['GROUP_MA']  =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**')
+        kwargs['MAILLE']    =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**')
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+#                            DIVERS
+# ----------------------------------------------------------------------------------------------------------------------------------
+
+    if COMMAND == 'CALC_G':
+        kwargs['CALCUL_CONTRAINTE'] =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") )
+
+
+    mcfact = FACT(statut='f',max='**', **kwargs)
+
+    return mcfact
+#& MODIF COMMUN  DATE 08/02/2011   AUTEUR PROIX J-M.PROIX 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -328,7 +484,7 @@ def C_COMP_INCR() : return FACT(statut='f',min=1,max='**',  #COMMUN#
                                  ),
 
            DEFORMATION       =SIMP(statut='f',typ='TXM',defaut="PETIT",
-                                   into=("PETIT","PETIT_REAC","GROT_GDEP","SIMO_MIEHE","GDEF_HYPO_ELAS","GREEN_REAC")),
+                                   into=("PETIT","PETIT_REAC","GROT_GDEP","SIMO_MIEHE","GDEF_HYPO_ELAS","GREEN_REAC","GDEF_LOG")),
            ALGO_C_PLAN       =SIMP(statut='f',typ='TXM',defaut="ANALYTIQUE",into=("DEBORST","ANALYTIQUE",)),
            RESI_DEBO_MAXI    =SIMP(statut='f',typ='R',fr="Critère d'arret absolu pour assurer la condition de contraintes planes",),
 
@@ -340,15 +496,17 @@ def C_COMP_INCR() : return FACT(statut='f',min=1,max='**',  #COMMUN#
            ALGO_1D           =SIMP(statut='f',typ='TXM',defaut="ANALYTIQUE",into=("DEBORST","ANALYTIQUE",)),
            ITER_MAXI_DEBORST =SIMP(statut='f',typ='I',defaut= 1),
            RESI_INTE_RELA    =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           ITER_INTE_MAXI    =SIMP(statut='f',typ='I',defaut= 10 ),
+           ITER_INTE_MAXI    =SIMP(statut='f',typ='I',defaut= 20 ),
 
            b_redec_local      = BLOC(condition = "DEFORMATION in ('PETIT','PETIT_REAC','GROT_GDEP')",
                                      fr="Nombre de redécoupages internes du pas de temps",
                ITER_INTE_PAS   =SIMP(statut='f',typ='I',defaut= 0 ),
                                      ),
 
-           RESO_INTE         =SIMP(statut='f',typ='TXM',defaut="IMPLICITE",
-                                   into=("RUNGE_KUTTA_2","RUNGE_KUTTA_4","IMPLICITE","IMPLICITE_RELI")),
+           ALGO_INTE         =SIMP(statut='f',typ='TXM',into=("ANALYTIQUE", "SECANTE", "DEKKER", "NEWTON_1D","BRENT", 
+                                                              "NEWTON", "NEWTON_RELI", "NEWTON_PERT", "RUNGE_KUTTA",
+                                                              "SPECIFIQUE", "SANS_OBJET")),
+
            TYPE_MATR_TANG    =SIMP(statut='f',typ='TXM',into=("PERTURBATION","VERIFICATION","TANGENTE_SECANTE")),
 
            b_perturb         =BLOC(condition = " (TYPE_MATR_TANG != None) and (TYPE_MATR_TANG != 'TANGENTE_SECANTE') ",
@@ -372,7 +530,7 @@ def C_COMP_INCR() : return FACT(statut='f',min=1,max='**',  #COMMUN#
            MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
 
          ) ;
-#& MODIF COMMUN  DATE 12/04/2010   AUTEUR MICHEL S.MICHEL 
+#& MODIF COMMUN  DATE 06/12/2010   AUTEUR ABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -390,7 +548,7 @@ def C_COMP_INCR() : return FACT(statut='f',min=1,max='**',  #COMMUN#
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
-# RESPONSABLE REZETTE C.REZETTE
+# RESPONSABLE ABBAS M.ABBAS
 def C_CONVERGENCE() : return FACT(statut='d',
            regles=(PRESENT_ABSENT('RESI_REFE_RELA','RESI_GLOB_MAXI','RESI_GLOB_RELA','RESI_COMP_RELA'),),
            b_refe_rela    =BLOC(condition = "RESI_REFE_RELA != None",
@@ -447,7 +605,7 @@ def C_IMPL_EX() : return FACT(statut='d',
            REAC_INCR       =SIMP(statut='f',typ='I',defaut= 1),
            PREDICTION      =SIMP(statut='f',typ='TXM',defaut="TANGENTE"),
          );
-#& MODIF COMMUN  DATE 20/07/2009   AUTEUR GENIAUT S.GENIAUT 
+#& MODIF COMMUN  DATE 06/12/2010   AUTEUR ABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -465,7 +623,7 @@ def C_IMPL_EX() : return FACT(statut='d',
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
-# RESPONSABLE REZETTE C.REZETTE
+# RESPONSABLE ABBAS M.ABBAS
 def C_INCREMENT() : return FACT(statut='o',
            regles=(EXCLUS('NUME_INST_INIT','INST_INIT'),
                    EXCLUS('NUME_INST_FIN','INST_FIN'),),
@@ -479,7 +637,7 @@ def C_INCREMENT() : return FACT(statut='o',
                                  ang="Time adaptation for unstationary HM models"),
            PRECISION       =SIMP(statut='f',typ='R',defaut=1.0E-6 ),
          );
-#& MODIF COMMUN  DATE 07/07/2009   AUTEUR REZETTE C.REZETTE 
+#& MODIF COMMUN  DATE 06/12/2010   AUTEUR ABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -497,7 +655,7 @@ def C_INCREMENT() : return FACT(statut='o',
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
-# RESPONSABLE REZETTE C.REZETTE
+# RESPONSABLE ABBAS M.ABBAS
 def C_NEWTON() : return FACT(statut='d',
            REAC_INCR       =SIMP(statut='f',typ='I',defaut= 1,val_min=0),
            PREDICTION      =SIMP(statut='f',typ='TXM',into=("DEPL_CALCULE","TANGENTE","ELASTIQUE","EXTRAPOL") ),
@@ -507,10 +665,10 @@ def C_NEWTON() : return FACT(statut='d',
            REAC_ITER_ELAS  =SIMP(statut='f',typ='I',defaut=0,val_min=0),
            EVOL_NOLI       =SIMP(statut='f',typ=evol_noli),
          );
-#& MODIF COMMUN  DATE 19/10/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMUN  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -528,198 +686,209 @@ def C_NEWTON() : return FACT(statut='d',
 # RESPONSABLE VABHHTS J.PELLET
 # ce fichier contient la liste des "into" possibles pour le mot cle NOM_CHAM
 # c'est a dire les noms de champs des SD RESULTAT (DATA de la routine RSCRSD)
-def C_NOM_CHAM_INTO() : return  ("ACCE",    #COMMUN#
+
+def C_NOM_CHAM_INTO( typ_cham=None ) : #COMMUN# 
+  import types
+# Liste de tout les champs
+  l_tout_cham = [
+                        "ACCE",
                         "ACCE_ABSOLU",
                         "ALPH0_ELGA_EPSP",
                         "ALPHP_ELGA_ALPH0",
                         "COMPORTEMENT",
                         "COMPORTHER",
-                        "CRIT_ELNO_RUPT",
-                        "DCHA_ELGA_SIGM",
-                        "DCHA_ELNO_SIGM",
-                        "DCHA_NOEU_SIGM",
-                        "DEDE_ELNO_DLDE",
-                        "DEDE_NOEU_DLDE",
-                        "DEGE_ELNO_DEPL",
-                        "DEGE_NOEU_DEPL",
+                        "CRIT_ELNO",
+                        "DEDE_ELNO",
+                        "DEDE_NOEU",
+                        "DEGE_ELNO",
+                        "DEGE_NOEU",
                         "DEPL",
                         "DEPL_ABSOLU",
-                        "DESI_ELNO_DLSI",
-                        "DESI_NOEU_DLSI",
-                        "DETE_ELNO_DLTE",
-                        "DETE_NOEU_DLTE",
+                        "DERA_ELGA",
+                        "DERA_ELNO",
+                        "DERA_NOEU",
+                        "DESI_ELNO",
+                        "DESI_NOEU",
+                        "DETE_ELNO",
+                        "DETE_NOEU",
                         "DISS_ELGA",
-                        "DISS_ELNO_ELGA",
-                        "DURT_ELGA_META",
-                        "DURT_ELNO_META",
-                        "DURT_NOEU_META",
-                        "ECIN_ELEM_DEPL",
-                        "EFGE_ELNO_CART",
-                        "EFGE_ELNO_DEPL",
-                        "EFGE_NOEU_CART",
-                        "EFGE_NOEU_DEPL",
+                        "DISS_ELNO",
+                        "DISS_NOEU",
+                        "DURT_ELNO",
+                        "DURT_NOEU",
+                        "ECIN_ELEM",
+                        "EFCA_ELNO",
+                        "EFCA_NOEU",
+                        "EFGE_ELNO",
+                        "EFGE_NOEU",
                         "ENDO_ELGA",
-                        "ENDO_ELNO_ELGA",
-                        "ENDO_ELNO_SIGA",
-                        "ENDO_ELNO_SINO",
-                        "ENDO_NOEU_SINO",
+                        "ENDO_ELNO",
+                        "ENDO_NOEU",
                         "ENEL_ELGA",
-                        "ENEL_ELNO_ELGA",
-                        "ENEL_NOEU_ELGA",
-                        "EPEQ_ELNO_TUYO",
-                        "EPVC_ELGA",
-                        "EPVC_ELNO",
+                        "ENEL_ELNO",
+                        "ENEL_NOEU",
+                        "EPEQ_ELGA",
+                        "EPEQ_ELNO",
+                        "EPEQ_NOEU",
                         "EPFD_ELGA",
                         "EPFD_ELNO",
+                        "EPFD_NOEU",
                         "EPFP_ELGA",
                         "EPFP_ELNO",
-                        "EPME_ELGA_DEPL",
-                        "EPME_ELNO_DEPL",
-                        "EPMG_ELGA_DEPL",
-                        "EPMG_ELNO_DEPL",
-                        "EPMG_NOEU_DEPL",
-                        "EPOT_ELEM_DEPL",
+                        "EPFP_NOEU",
+                        "EPME_ELGA",
+                        "EPME_ELNO",
+                        "EPMG_ELGA",
+                        "EPMG_ELNO",
+                        "EPMG_NOEU",
+                        "EPMQ_ELGA",
+                        "EPMQ_ELNO",
+                        "EPMQ_NOEU",
+                        "EPOT_ELEM",
                         "EPSA_ELNO",
                         "EPSA_NOEU",
-                        "EPSG_ELGA_DEPL",
-                        "EPSG_ELNO_DEPL",
-                        "EPSG_NOEU_DEPL",
-                        "EPSI_ELGA_DEPL",
-                        "EPSI_ELNO_DEPL",
-                        "EPSI_ELNO_TUYO",
-                        "EPSI_NOEU_DEPL",
+                        "EPSG_ELGA",
+                        "EPSG_ELNO",
+                        "EPSG_NOEU",
+                        "EPSI_ELGA",
+                        "EPSI_ELNO",
+                        "EPSI_NOEU",
                         "EPSP_ELGA",
                         "EPSP_ELNO",
                         "EPSP_NOEU",
-                        "EQUI_ELGA_EPME",
-                        "EQUI_ELGA_EPSI",
-                        "EQUI_ELGA_SIGM",
-                        "EQUI_ELNO_EPME",
-                        "EQUI_ELNO_EPSI",
-                        "EQUI_ELNO_SIGM",
-                        "EQUI_NOEU_EPME",
-                        "EQUI_NOEU_EPSI",
-                        "EQUI_NOEU_SIGM",
-                        "ERRE_ELEM_SIGM",
-                        "ERRE_ELEM_TEMP",
-                        "ERRE_ELNO_ELEM",
-                        "ERRE_NOEU_ELEM",
-                        "ERZ1_ELEM_SIGM",
-                        "ERZ2_ELEM_SIGM",
-                        "FERRAILLAGE",
-                        "QIRE_ELEM_SIGM",
-                        "QIRE_ELNO_ELEM",
-                        "QIRE_NOEU_ELEM",
-                        "QIZ1_ELEM_SIGM",
-                        "QIZ2_ELEM_SIGM",
-                        "SING_ELEM",
-                        "SING_ELNO_ELEM",
+                        "EPTQ_ELNO",
+                        "EPTU_ELNO",
+                        "EPVC_ELGA",
+                        "EPVC_ELNO",
+                        "EPVC_NOEU",
+                        "ERME_ELEM",
+                        "ERME_ELNO",
+                        "ERME_NOEU",
+                        "ERTH_ELEM",
+                        "ERTH_ELNO",
+                        "ERTH_NOEU",
+                        "ERZ1_ELEM",
+                        "ERZ2_ELEM",
                         "ETOT_ELEM",
                         "ETOT_ELGA",
-                        "ETOT_ELNO_ELGA",
-                        "EXTR_ELGA_VARI",
-                        "EXTR_ELNO_VARI",
-                        "EXTR_NOEU_VARI",
+                        "ETOT_ELNO",
+                        "FERRAILLAGE",
                         "FLHN_ELGA",
-                        "FLUX_ELGA_TEMP",
-                        "FLUX_ELNO_TEMP",
-                        "FLUX_NOEU_TEMP",
+                        "FLUX_ELGA",
+                        "FLUX_ELNO",
+                        "FLUX_NOEU",
                         "FORC_NODA",
                         "FSUR_2D",
                         "FSUR_3D",
                         "FVOL_2D",
                         "FVOL_3D",
                         "GRAD_NOEU_THETA",
-                        "HYDR_ELNO_ELGA",
-                        "HYDR_NOEU_ELGA",
-                        "INDI_LOCA_ELGA",
-                        "INTE_ELNO_ACTI",
-                        "INTE_ELNO_REAC",
-                        "INTE_NOEU_ACTI",
-                        "INTE_NOEU_REAC",
+                        "HYDR_ELNO",
+                        "HYDR_NOEU",
+                        "INDL_ELGA",
+                        "INTE_ELNO",
+                        "INTE_NOEU",
                         "IRRA",
                         "LANL_ELGA",
                         "META_ELGA_TEMP",
-                        "META_ELNO_TEMP",
-                        "META_NOEU_TEMP",
+                        "META_ELNO",
+                        "META_NOEU",
                         "MODE_FLAMB",
-                        "PMPB_ELGA_SIEF",
-                        "PMPB_ELNO_SIEF",
-                        "PMPB_NOEU_SIEF",
+                        "PMPB_ELGA",
+                        "PMPB_ELNO",
+                        "PMPB_NOEU",
+                        "PRAC_ELNO",
+                        "PRAC_NOEU",
                         "PRES",
-                        "PRES_DBEL_DEPL",
-                        "PRES_ELNO_DBEL",
-                        "PRES_ELNO_IMAG",
-                        "PRES_ELNO_REEL",
-                        "PRES_NOEU_DBEL",
-                        "PRES_NOEU_IMAG",
-                        "PRES_NOEU_REEL",
-                        "PROJ_ELEM_SIGM",
-                        "RADI_ELGA_SIGM",
-                        "RADI_ELNO_SIGM",
-                        "RADI_NOEU_SIGM",
+                        "PRME_ELNO",
+                        "QIRE_ELEM",
+                        "QIRE_ELNO",
+                        "QIRE_NOEU",
+                        "QIZ1_ELEM",
+                        "QIZ2_ELEM",
                         "REAC_NODA",
+                        "SICA_ELNO",
+                        "SICA_NOEU",
+                        "SICO_ELNO",
+                        "SICO_NOEU",
                         "SIEF_ELGA",
-                        "SIEF_ELGA_DEPL",
                         "SIEF_ELNO",
-                        "SIEF_ELNO_ELGA",
                         "SIEF_NOEU",
-                        "SIEF_NOEU_ELGA",
                         "SIEF_SENO_SEGA",
-                        "SIEQ_ELNO_TUYO",
-                        "SIGM_ELNO_CART",
-                        "SIGM_ELNO_COQU",
-                        "SIGM_ELNO_DEPL",
-                        "SIGM_ELNO_SIEF",
-                        "SIGM_ELNO_TUYO",
-                        "SIGM_NOEU_CART",
-                        "SIGM_NOEU_COQU",
-                        "SIGM_NOEU_DEPL",
-                        "SIGM_NOEU_SIEF",
-                        "SIGM_NOZ1_ELGA",
-                        "SIGM_NOZ2_ELGA",
-                        "SIPO_ELNO_DEPL",
-                        "SIPO_ELNO_SIEF",
-                        "SIPO_NOEU_DEPL",
-                        "SIPO_NOEU_SIEF",
-                        "SOUR_ELGA_ELEC",
+                        "SIEQ_ELGA",
+                        "SIEQ_ELNO",
+                        "SIEQ_NOEU",
+                        "SIGM_ELNO",
+                        "SIGM_NOEU",
+                        "SING_ELEM",
+                        "SING_ELNO",
+                        "SIPM_ELNO",
+                        "SIPO_ELNO",
+                        "SIPO_NOEU",
+                        "SIRO_ELEM",
+                        "SITQ_ELNO",
+                        "SITU_ELNO",
+                        "SIZ1_ELGA",
+                        "SIZ2_ELGA",
+                        "SOUR_ELGA",
+                        "SPMX_ELGA",
                         "TEMP",
                         "THETA",
+                        "VACO_ELNO",
+                        "VAEX_ELGA",
+                        "VAEX_ELNO",
+                        "VAEX_NOEU",
                         "VALE_CONT",
-                        "VALE_NCOU_MAXI",
                         "VARC_ELGA",
                         "VARI_ELGA",
                         "VARI_ELNO",
-                        "VARI_ELNO_COQU",
-                        "VARI_ELNO_ELGA",
-                        "VARI_ELNO_TUYO",
                         "VARI_NOEU",
-                        "VARI_NOEU_ELGA",
+                        "VATU_ELNO",
                         "VITE",
                         "VITE_ABSOLU",
                         "VITE_VENT",
-                        )
-#& MODIF COMMUN  DATE 14/12/2009   AUTEUR ANDRIAM H.ANDRIAMBOLOLONA 
+                        ]
+#
+# Si aucun argument n'est passe, on utilise tous les types de champs possibles
+  if ( typ_cham is None ) :
+    l_ncham = l_tout_cham
+#
+# Sinon, on n'utilise que les champs dont le type est passe en argument
+  else :
+    l_typ_cham = []
+    if (type(typ_cham) == types.StringType) :
+      l_typ_cham.append(typ_cham)
+    else :
+      l_typ_cham = typ_cham
+    l_ncham = []
+    for typ in l_typ_cham :
+     for cham in l_tout_cham :
+       if (cham.find(typ) != -1) :
+        if (cham.split('_')[1] == typ):
+           l_ncham.append(cham)
+
+  return tuple(l_ncham)
+#& MODIF COMMUN  DATE 04/04/2011   AUTEUR PELLET J.PELLET 
 # RESPONSABLE DESROCHES X.DESROCHES
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2005  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 # ce fichier contient la liste des  noms des grandeurs de CODE_ASTER
-def C_NOM_GRANDEUR() : return  ( #COMMUN# 
+def C_NOM_GRANDEUR() : return  ( #COMMUN#
 "ABSC_R",
 "ADRSJEVE",
 "ADRSJEVN",
@@ -757,8 +926,9 @@ def C_NOM_GRANDEUR() : return  ( #COMMUN#
 "DEPL_F",
 "DEPL_R",
 "DISS_R",
-"DOMMAG",
+"DOMA_R",
 "DURT_R",
+"ENDO_R",
 "ENER_R",
 "EPSI_C",
 "EPSI_F",
@@ -766,6 +936,7 @@ def C_NOM_GRANDEUR() : return  ( #COMMUN#
 "ERRE_R",
 "FACY_R",
 "FELECR",
+"FER2_R",
 "FISS_R",
 "FLAPLA",
 "FLUN_F",
@@ -786,7 +957,7 @@ def C_NOM_GRANDEUR() : return  ( #COMMUN#
 "IMPE_C",
 "IMPE_F",
 "IMPE_R",
-"IND_LOCA",
+"INDL_R",
 "INFC_R",
 "INST_R",
 "INTE_R",
@@ -848,6 +1019,88 @@ def C_NOM_GRANDEUR() : return  ( #COMMUN#
 "WEIBULL",
 "XCONTAC",
                                  )
+#& MODIF COMMUN  DATE 17/01/2011   AUTEUR ABBAS M.ABBAS 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE ABBAS M.ABBAS
+
+def C_OBSERVATION() : return FACT(statut='f',max=99,
+
+           NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=1,
+                                   into=("VALE_CONT","FORC_NODA",
+                                         "DEPL","VITE","ACCE","TEMP",
+                                         "SIEF_ELGA","VARI_ELGA",                                        
+                                         "DEPL_ABSOLU","VITE_ABSOLU","ACCE_ABSOLU",)),
+          
+           EVAL_CHAM       =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=1,defaut='VALE',
+                                   into=("MIN","MAX","MOY","VALE",),),
+                                         
+           NOM_CMP         =SIMP(statut='o',typ='TXM',max=20),
+           EVAL_CMP        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=1,defaut='VALE',
+                                   into=("VALE","FORMULE",),),
+                                   
+           b_formule       =BLOC(condition="(EVAL_CMP=='FORMULE')",
+                                   FORMULE = SIMP(statut='o',typ=formule,max=1),
+                                ),
+                                                 
+           b_cham_no       =BLOC(condition="(NOM_CHAM=='DEPL') or \
+                                            (NOM_CHAM=='VITE') or \
+                                            (NOM_CHAM=='ACCE') or \
+                                            (NOM_CHAM=='TEMP') or \
+                                            (NOM_CHAM=='FORC_NODA') or \
+                                            (NOM_CHAM=='VALE_CONT') or \
+                                            (NOM_CHAM=='DEPL_ABSOLU') or \
+                                            (NOM_CHAM=='VITE_ABSOLU') or \
+                                            (NOM_CHAM=='ACCE_ABSOLU')",
+                                 regles   =(UN_PARMI('NOEUD','GROUP_NO','GROUP_MA','MAILLE','TOUT')),
+                                 TOUT            =SIMP(statut='d',typ='TXM',into=("OUI",) ),
+                                 NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+                                 GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+                                 MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
+                                 GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),          
+                                ),          
+
+                                          
+           b_cham_elga     =BLOC(condition="(NOM_CHAM=='SIEF_ELGA') or \
+                                            (NOM_CHAM=='VARI_ELGA')",
+                                 regles          =(UN_PARMI('GROUP_MA','MAILLE','TOUT')), 
+                                 TOUT            =SIMP(statut='d',typ='TXM',into=("OUI",) ),          
+                                 MAILLE          =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
+                                 GROUP_MA        =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max='**'), 
+                                 EVAL_ELGA       =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=1,defaut='VALE',
+                                                        into=("MIN","MAX","VALE",),), 
+                                 b_elga_vale     =BLOC(condition="(EVAL_ELGA=='VALE')",                     
+                                   POINT           =SIMP(statut='o',typ='I'  ,validators=NoRepeat(),max='**'), 
+                                   SOUS_POINT      =SIMP(statut='f',typ='I'  ,validators=NoRepeat(),max='**'),  
+                                 ),  
+                                ),
+             
+           INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
+           LIST_INST       =SIMP(statut='f',typ=listr8_sdaster),
+           PAS_OBSE        =SIMP(statut='f',typ='I'),
+           CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
+           b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+              PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
+           b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+              PRECISION       =SIMP(statut='o',typ='R',),),
+       
+       
+       );
 #& MODIF COMMUN  DATE 29/03/2007   AUTEUR GRANET S.GRANET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -873,7 +1126,48 @@ def C_PARA_FONCTION() : return  ( #COMMUN#
                    "AMOR","ABSC","SIGM","HYDR","SECH","PORO","SAT",
                    "PGAZ","PCAP","PLIQ","PVAP","PAD","VITE","ENDO",
                    "NORM","EPAIS","NEUT1","NEUT2",)
-#& MODIF COMMUN  DATE 05/10/2010   AUTEUR ABBAS M.ABBAS 
+#& MODIF COMMUN  DATE 01/02/2011   AUTEUR MASSIN P.MASSIN 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE ABBAS M.ABBAS
+def C_PILOTAGE() : return FACT(statut='f',
+           regles=(EXCLUS('NOEUD','GROUP_NO'),PRESENT_ABSENT('TOUT','GROUP_MA','MAILLE'),),
+           TYPE    =SIMP(statut='o',typ='TXM',into=("DDL_IMPO","LONG_ARC","PRED_ELAS","DEFORMATION",
+                                                    "ANA_LIM","SAUT_IMPO","SAUT_LONG_ARC") ),
+           COEF_MULT       =SIMP(statut='f',typ='R',defaut= 1.0E+0),
+           EVOL_PARA       =SIMP(statut='f',typ='TXM',defaut="SANS", into=("SANS","CROISSANT","DECROISSANT") ),
+           ETA_PILO_MAX    =SIMP(statut='f',typ='R'),
+           ETA_PILO_MIN    =SIMP(statut='f',typ='R'),
+           ETA_PILO_R_MAX  =SIMP(statut='f',typ='R'),
+           ETA_PILO_R_MIN  =SIMP(statut='f',typ='R'),
+           PROJ_BORNES     =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
+           SELECTION       =SIMP(statut='f',typ='TXM',defaut="NORM_INCR_DEPL", into=("RESIDU","ANGL_INCR_DEPL","NORM_INCR_DEPL") ),
+           TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+           GROUP_MA        =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max='**'),
+           FISSURE         =SIMP(statut='f',typ=fiss_xfem ,validators=NoRepeat(),max='**'),
+           MAILLE          =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
+           NOEUD           =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
+           GROUP_NO        =SIMP(statut='f',typ=grno ,validators=NoRepeat(),max='**'),
+           NOM_CMP         =SIMP(statut='f',typ='TXM',max='**'),
+           DIRE_PILO       =SIMP(statut='f',typ='TXM',max='**'),
+         );
+
+#& MODIF COMMUN  DATE 06/12/2010   AUTEUR ABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -891,7 +1185,7 @@ def C_PARA_FONCTION() : return  ( #COMMUN#
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
-# RESPONSABLE REZETTE C.REZETTE
+# RESPONSABLE ABBAS M.ABBAS
 def C_RECH_LINEAIRE() : return FACT(statut='f',
            METHODE         =SIMP(statut='f',typ='TXM',defaut="CORDE",into=("CORDE","MIXTE","PILOTAGE") ),
            RESI_LINE_RELA  =SIMP(statut='f',typ='R',defaut= 1.0E-1 ),
@@ -902,10 +1196,10 @@ def C_RECH_LINEAIRE() : return FACT(statut='f',
            RHO_MAX         =SIMP(statut='f',typ='R',defaut=1.0E+1),
            RHO_EXCL        =SIMP(statut='f',typ='R',defaut=0.9E-2,val_min=0.),
          );
-#& MODIF COMMUN  DATE 10/08/2010   AUTEUR MEUNIER S.MEUNIER 
+#& MODIF COMMUN  DATE 28/02/2011   AUTEUR BARGELLI R.BARGELLINI 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -939,6 +1233,7 @@ def C_RELATION() : return (             "ELAS",            #COMMUN#
                                         "CZM_LIN_REG",
                                         "CZM_OUV_MIX",
                                         "CZM_TAC_MIX",
+                                        "CZM_TRA_MIX",
                                         "DIS_BILI_ELAS",
                                         "DIS_CHOC",
                                         "DIS_ECRO_CINE",
@@ -950,6 +1245,7 @@ def C_RELATION() : return (             "ELAS",            #COMMUN#
                                         "DRUCK_PRAG_N_A",
                                         "ELAS_GONF",
                                         "ELAS_HYPER",
+                                        "ENDO_CARRE",
                                         "ENDO_FRAGILE",
                                         "ENDO_HETEROGENE",
                                         "ENDO_ISOT_BETON",
@@ -969,13 +1265,11 @@ def C_RELATION() : return (             "ELAS",            #COMMUN#
                                         "HOEK_BROWN_EFF",
                                         "HOEK_BROWN_TOT",
                                         "HUJEUX",
-                                        "IMPLEX_FRAG",
-                                        "IMPLEX_ISOT_BETO",
-                                        "IMPLEX_ISOT_LINE",
                                         "IRRAD3M",
                                         "JOINT_BA",
                                         "JOINT_BANDIS",
                                         "JOINT_MECA_RUPT",
+                                        "JOINT_MECA_FROT",
                                         "KIT_DDI",
                                         "KIT_HH",
                                         "KIT_H",
@@ -1029,6 +1323,7 @@ def C_RELATION() : return (             "ELAS",            #COMMUN#
                                         "RUPT_FRAG",
                                         "SANS",
                                         "VENDOCHAB",
+                                        "VISC_ENDO_LEMA",
                                         "VISCOCHAB",
                                         "VISC_CIN1_CHAB",
                                         "VISC_CIN2_CHAB",
@@ -1053,10 +1348,10 @@ def C_RELATION() : return (             "ELAS",            #COMMUN#
                                         "ZMAT",
                                         "UMAT",
                                      )
-#& MODIF COMMUN  DATE 20/09/2010   AUTEUR TARDIEU N.TARDIEU 
+#& MODIF COMMUN  DATE 08/02/2011   AUTEUR TARDIEU N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -1096,7 +1391,7 @@ def C_SOLVEUR() : return FACT(statut='d',
                RENUM               =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
                ),
              b_simple        =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                ),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1.E-6 ),
              NMAX_ITER       =SIMP(statut='f',typ='I',defaut= 0 ),
@@ -1106,11 +1401,12 @@ def C_SOLVEUR() : return FACT(statut='d',
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),             
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),            
              FILTRAGE_MATRICE =SIMP(statut='f',typ='R',defaut=-1.0,),
              MIXER_PRECISION =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              MATR_DISTRIBUEE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
@@ -1144,7 +1440,7 @@ def C_SOLVEUR() : return FACT(statut='d',
                RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
              ),
              b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
              b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'", 
@@ -1157,6 +1453,79 @@ def C_SOLVEUR() : return FACT(statut='d',
 # --------------------------------------------------------------------------------------------------------------------------------
            SYME            =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON") ),
          );
+#& MODIF COMMUN  DATE 17/01/2011   AUTEUR ABBAS M.ABBAS 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE ABBAS M.ABBAS
+
+def C_SUIVI_DDL() : return FACT(statut='f',max=4,
+
+           NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=1,
+                                   into=("DEPL","VITE","ACCE",
+                                         "FORC_NODA",
+                                         "SIEF_ELGA","VARI_ELGA",                                        
+                                         "DEPL_ABSOLU","VITE_ABSOLU","ACCE_ABSOLU",)),
+          
+           EVAL_CHAM       =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=1,defaut='VALE',
+                                   into=("MIN","MAX","MOY","VALE",),),
+                                         
+           NOM_CMP         =SIMP(statut='o',typ='TXM',max=20),
+           EVAL_CMP        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=1,defaut='VALE',
+                                   into=("VALE","FORMULE",),),
+                                   
+           b_formule       =BLOC(condition="(EVAL_CMP=='FORMULE')",
+                                   FORMULE = SIMP(statut='o',typ=formule,max=1),
+                                ),                 
+           
+           b_cham_no       =BLOC(condition="(NOM_CHAM=='DEPL') or \
+                                            (NOM_CHAM=='VITE') or \
+                                            (NOM_CHAM=='ACCE') or \
+                                            (NOM_CHAM=='FORC_NODA') or \
+                                            (NOM_CHAM=='VALE_CONT') or \
+                                            (NOM_CHAM=='DEPL_ABSOLU') or \
+                                            (NOM_CHAM=='VITE_ABSOLU') or \
+                                            (NOM_CHAM=='ACCE_ABSOLU')",                                 
+                                 regles   =(UN_PARMI('NOEUD','GROUP_NO','GROUP_MA','MAILLE','TOUT')),
+                                 TOUT            =SIMP(statut='d',typ='TXM',into=("OUI",) ),
+                                 NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+                                 GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+                                 MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
+                                 GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),   
+                                ), 
+                                          
+           b_cham_elga     =BLOC(condition="(NOM_CHAM=='SIEF_ELGA') or \
+                                            (NOM_CHAM=='VARI_ELGA')",
+                                 regles          =(UN_PARMI('GROUP_MA','MAILLE','TOUT')), 
+                                 TOUT            =SIMP(statut='d',typ='TXM',into=("OUI",) ),          
+                                 MAILLE          =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
+                                 GROUP_MA        =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max='**'), 
+                                 EVAL_ELGA       =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=1,defaut='VALE',
+                                                        into=("MIN","MAX","VALE",),), 
+                                 b_elga_vale     =BLOC(condition="(EVAL_ELGA=='VALE')",                     
+                                   POINT           =SIMP(statut='o',typ='I'  ,validators=NoRepeat(),max='**'), 
+                                   SOUS_POINT      =SIMP(statut='f',typ='I'  ,validators=NoRepeat(),max='**'),  
+                                 ),  
+                                ), 
+             
+           TITRE           =  SIMP(statut='f',typ='TXM',max=3),     
+       
+       
+       );
 #& MODIF COMMUN  DATE 09/11/2010   AUTEUR GNICOLAS G.NICOLAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -1195,10 +1564,10 @@ def C_TYPE_CHAM_INTO( type_cham=None ) : #COMMUN#
 #
   return tuple(l)
 
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 04/05/2011   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -1220,7 +1589,8 @@ AFFE_CARA_ELEM=OPER(nom="AFFE_CARA_ELEM",op=  19,sd_prod=cara_elem,
    UIinfo ={"groupes":("Modélisation",)},
    regles = (AU_MOINS_UN('POUTRE','BARRE','COQUE','CABLE','DISCRET','DISCRET_2D','MASSIF',
                          'GRILLE','MULTIFIBRE','RIGI_PARASOL'),
-             PRESENT_PRESENT('MULTIFIBRE','GEOM_FIBRE'),),
+             PRESENT_PRESENT('MULTIFIBRE','GEOM_FIBRE'),
+             EXCLUS('DISCRET','DISCRET_2D'),),
    MODELE = SIMP(statut='o',typ=modele_sdaster ),
    INFO   = SIMP(statut='f',typ='I', defaut= 1 ,into=(1,2) ),
    VERIF  = SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',into=("MAILLE","NOEUD") ),
@@ -1745,19 +2115,26 @@ AFFE_CARA_ELEM=OPER(nom="AFFE_CARA_ELEM",op=  19,sd_prod=cara_elem,
       regles               = (UN_PARMI('COEF_GROUP','FONC_GROUP'),
                               UN_PARMI('COOR_CENTRE','NOEUD_CENTRE','GROUP_NO_CENTRE'),
                               EXCLUS('GROUP_MA_POI1','GROUP_MA_SEG2'),),
-      GROUP_MA             = SIMP(statut='o',typ=ma,validators=NoRepeat(),max='**',
+      GROUP_MA             = SIMP(statut='o',typ=grma,validators=NoRepeat(),max='**',
          fr="Surface servant à répartir les caractéristiques des discrets"),
-      GROUP_MA_POI1        = SIMP(statut='f',typ=ma,validators=NoRepeat(),max=1,
+      GROUP_MA_POI1        = SIMP(statut='f',typ=grma,validators=NoRepeat(),max=1,
          fr="Mailles de type point correspondant aux discrets"),
-      GROUP_MA_SEG2        = SIMP(statut='f',typ=ma,validators=NoRepeat(),max=1,
+      GROUP_MA_SEG2        = SIMP(statut='f',typ=grma,validators=NoRepeat(),max=1,
          fr="Mailles de type seg2 correspondant aux discrets"),
       FONC_GROUP           = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule) ),
       COEF_GROUP           = SIMP(statut='f',typ='R',max='**'),
       REPERE               = SIMP(statut='f',typ='TXM',into=("LOCAL","GLOBAL") ),
       CARA                 = SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=2,
                                  into=("K_TR_D_N","K_T_D_N","K_TR_D_L","K_T_D_L",
-                                       "A_TR_D_N","A_T_D_N","A_TR_D_L","A_T_D_L") ),
-      VALE                 = SIMP(statut='o',typ='R',max='**'),
+                                       "A_TR_D_N","A_T_D_N","A_TR_D_L","A_T_D_L"),
+                                 fr="Choix des types de discrets du tapis de ressorts." ),
+      b_cara= BLOC(condition =""" (CARA in ["K_TR_D_N","K_T_D_N","K_TR_D_L","K_T_D_L",
+                                            "A_TR_D_N","A_T_D_N","A_TR_D_L","A_T_D_L"]) or \
+                                  (len(CARA)==2 and CARA[0][2:]==CARA[1][2:]) """,
+                   fr="Valeurs pour les discrets du tapis de ressorts.",
+         VALE = SIMP(statut='o',typ='R',max='**',
+              fr="Valeurs pour les discrets du tapis de ressorts.",),
+      ),
       GROUP_NO_CENTRE      = SIMP(statut='f',typ=grno),
       NOEUD_CENTRE         = SIMP(statut='f',typ=no),
       COOR_CENTRE          = SIMP(statut='f',typ='R',min=2,max=3),
@@ -1767,8 +2144,8 @@ AFFE_CARA_ELEM=OPER(nom="AFFE_CARA_ELEM",op=  19,sd_prod=cara_elem,
 
 #============================================================================
    RIGI_MISS_3D         = FACT(statut='f',max='**',
-      GROUP_MA_POI1        = SIMP(statut='o',typ=ma,max=1),
-      GROUP_MA_SEG2        = SIMP(statut='f',typ=ma,max=1),
+      GROUP_MA_POI1        = SIMP(statut='o',typ=grma,max=1),
+      GROUP_MA_SEG2        = SIMP(statut='f',typ=grma,max=1),
       FREQ_EXTR            = SIMP(statut='o',typ='R',max=1),
       UNITE_RESU_IMPE      = SIMP(statut='f',typ='I',defaut=30),
    ),
@@ -1846,10 +2223,10 @@ AFFE_CHAR_ACOU=OPER(nom="AFFE_CHAR_ACOU",op=  68,sd_prod=char_acou,
            DDL             =SIMP(statut='o',typ='TXM',max='**'),
          ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 01/03/2011   AUTEUR PELLET J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -1881,13 +2258,13 @@ def affe_char_cine_prod(MECA_IMPO,THER_IMPO,ACOU_IMPO,EVOL_IMPO,**args):
 
 
 AFFE_CHAR_CINE=OPER(nom="AFFE_CHAR_CINE",op= 101,sd_prod=affe_char_cine_prod
-                    ,fr="Affectation de conditions aux limites cinématiques constantes pour un traitement sans dualisation",
+                    ,fr="Affectation de conditions aux limites cinématiques (U=U0) pour un traitement sans dualisation",
                      reentrant='n',
             UIinfo={"groupes":("Chargements","Mécanique",)},
          regles=(UN_PARMI('MECA_IMPO','THER_IMPO','ACOU_IMPO','EVOL_IMPO'),
                  ),
          MODELE          =SIMP(statut='o',typ=modele_sdaster ),
-         EVOL_IMPO  =SIMP(statut='f',typ=(evol_noli,evol_elas,evol_ther),fr="Pour imposer tous les ddls d'un evol_xxx"),
+
          MECA_IMPO       =FACT(statut='f',max='**',
            regles=(UN_PARMI('TOUT','GROUP_MA','MAILLE','GROUP_NO','NOEUD'),
                    AU_MOINS_UN('DX','DY','DZ','DRX','DRY','DRZ','GRX','PRES','PHI',
@@ -1985,6 +2362,7 @@ AFFE_CHAR_CINE=OPER(nom="AFFE_CHAR_CINE",op= 101,sd_prod=affe_char_cine_prod
              PRES33          =SIMP(statut='f',typ='R' ),
              LH1             =SIMP(statut='f',typ='R' ),
          ),
+
          THER_IMPO       =FACT(statut='f',max='**',
            regles=(UN_PARMI('TOUT','GROUP_MA','MAILLE','GROUP_NO','NOEUD'),
                    AU_MOINS_UN('TEMP','TEMP_INF','TEMP_SUP'),),
@@ -1997,6 +2375,7 @@ AFFE_CHAR_CINE=OPER(nom="AFFE_CHAR_CINE",op= 101,sd_prod=affe_char_cine_prod
            TEMP            =SIMP(statut='f',typ='R' ),
            TEMP_INF        =SIMP(statut='f',typ='R' ),
          ),
+
          ACOU_IMPO       =FACT(statut='f',max='**',
            regles=(UN_PARMI('TOUT','GROUP_MA','MAILLE','GROUP_NO','NOEUD'),),
            TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
@@ -2006,6 +2385,12 @@ AFFE_CHAR_CINE=OPER(nom="AFFE_CHAR_CINE",op= 101,sd_prod=affe_char_cine_prod
            NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
            PRES            =SIMP(statut='o',typ='C' ),
          ),
+
+         EVOL_IMPO  =SIMP(statut='f',typ=(evol_noli,evol_elas,evol_ther),fr="Pour imposer les ddls d'un evol_xxx"),
+         b_evol_impo = BLOC ( condition = "EVOL_IMPO != None",
+           NOM_CMP         =SIMP(statut='f',typ='TXM',max='**',), # pour n'imposer que certaines CMPS (par défaut : toutes)
+         ),
+
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
@@ -2151,10 +2536,10 @@ AFFE_CHAR_CINE_F=OPER(nom="AFFE_CHAR_CINE_F",op= 101,sd_prod=affe_char_cine_f_pr
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-#& MODIF COMMANDE  DATE 08/11/2010   AUTEUR DESROCHES X.DESROCHES 
+#& MODIF COMMANDE  DATE 04/05/2011   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -2182,7 +2567,7 @@ AFFE_CHAR_MECA=OPER(nom="AFFE_CHAR_MECA",op=   7,sd_prod=char_meca,
                              'LIAISON_GROUP','LIAISON_UNIF','FLUX_THM_REP','LIAISON_SOLIDE',
                              'LIAISON_ELEM','ONDE_FLUI','LIAISON_CHAMNO','VECT_ASSE','LIAISON_COQUE',
                              'LIAISON_MAIL','LIAISON_CYCL','FORCE_TUYAU',
-                             'EFFE_FOND','EVOL_CHAR','ARLEQUIN','DDL_POUTRE',),
+                             'EFFE_FOND','EVOL_CHAR','DDL_POUTRE',),
                          ),
          VERI_NORM       =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
          MODELE          =SIMP(statut='o',typ=(modele_sdaster) ),
@@ -2218,7 +2603,7 @@ AFFE_CHAR_MECA=OPER(nom="AFFE_CHAR_MECA",op=   7,sd_prod=char_meca,
                                  'UO3','VO2','VO3','WO2','WO3','UI4','UI5','VI4','VI5','WI4',
                                  'WI5','UO4','UO5','VO4','VO5','WO4','WO5','UI6','UO6','VI6',
                                  'VO6','WI6','WO6','WO','WI1','WO1','GONF','LIAISON',
-                                 'H1X','H1Y','H1Z','H2X','H2Y','H2Z','E1X','E1Y','E1Z','E2X','E2Y','E2Z',
+                                 'H1X','H1Y','H1Z','H2X','H2Y','H2Z','H3X','H3Y','H3Z','E1X','E1Y','E1Z','E2X','E2Y','E2Z',
                                  'E3X','E3Y','E3Z','E4X','E4Y','E4Z','LAGS_C','V11','V12','V13','V21','V22',
                                  'V23','V31','V32','V33','PRES11','PRES12','PRES13','PRES21','PRES22','PRES23',
                                  'PRES31','PRES32','PRES33',),),
@@ -2279,7 +2664,10 @@ AFFE_CHAR_MECA=OPER(nom="AFFE_CHAR_MECA",op=   7,sd_prod=char_meca,
              H1Z             =SIMP(statut='f',typ='R' ),
              H2X             =SIMP(statut='f',typ='R' ),
              H2Y             =SIMP(statut='f',typ='R' ),
-             H2Z             =SIMP(statut='f',typ='R' ),           
+             H2Z             =SIMP(statut='f',typ='R' ),
+             H3X             =SIMP(statut='f',typ='R' ),
+             H3Y             =SIMP(statut='f',typ='R' ),
+             H3Z             =SIMP(statut='f',typ='R' ),
              E1X             =SIMP(statut='f',typ='R' ),
              E1Y             =SIMP(statut='f',typ='R' ),
              E1Z             =SIMP(statut='f',typ='R' ),
@@ -2433,7 +2821,7 @@ AFFE_CHAR_MECA=OPER(nom="AFFE_CHAR_MECA",op=   7,sd_prod=char_meca,
                MAILLE_2        =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
                GROUP_NO_1      =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
                NOEUD_1         =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-               GROUP_NO_2      =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+               GROUP_NO_2      =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
                NOEUD_2         =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
 
              SANS_NOEUD      =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
@@ -2693,21 +3081,6 @@ AFFE_CHAR_MECA=OPER(nom="AFFE_CHAR_MECA",op=   7,sd_prod=char_meca,
              KYY             =SIMP(statut='f',typ='R' ),
              KXY             =SIMP(statut='f',typ='R' ),
            ),
-
-         ARLEQUIN        =FACT(statut='f',min=1,max='**',
-           fr="Définit les paramètres de la méthode Arlequin",
-           GROUP_MA_1     =SIMP(statut='o',typ=grma,max='**'),
-           GROUP_MA_2     =SIMP(statut='o',typ=grma,max='**'),
-           GROUP_MA_COLL  =SIMP(statut='f',typ=grma,max='**'),
-           CARA_ELEM      =SIMP(statut='f',typ=cara_elem ),
-           COND_LIM       =SIMP(statut='f',typ=char_meca ),
-           COLLAGE        =SIMP(statut='f',typ='TXM',defaut="GROSSIER",into=("GROSSIER","FIN","GROUP_MA_1","GROUP_MA_2"),),
-           regles         =(UN_PARMI('POIDS_1','POIDS_2','POIDS_GROSSIER','POIDS_FIN',),),
-           POIDS_1        =SIMP(statut='f',typ='R'),
-           POIDS_2        =SIMP(statut='f',typ='R'),
-           POIDS_GROSSIER =SIMP(statut='f',typ='R'),
-           UNITE_GMSH     =SIMP(statut='f',typ='I',defaut=0,max=1),
-           POIDS_FIN      =SIMP(statut='f',typ='R'),),
 
         FORCE_POUTRE    =FACT(statut='f',max='**',
              fr="Applique des forces linéiques sur des éléments de type poutre",
@@ -3874,10 +4247,10 @@ AFFE_CHAR_THER_F=OPER(nom="AFFE_CHAR_THER_F",op=34,sd_prod=char_ther,
 
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -3938,13 +4311,18 @@ AFFE_MATERIAU=OPER(nom="AFFE_MATERIAU",op=6,sd_prod=cham_mater,
           GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
           MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
 
-          NOM_VARC        =SIMP(statut='o',typ='TXM', into=("TEMP","CORR","IRRA","HYDR","SECH","M_ACIER","M_ZIRC",
-                                                            "EPSA","NEUT1","NEUT2")),
+          NOM_VARC        =SIMP(statut='o',typ='TXM', 
+#                                     champ dans la doc   into=("TEMP","CORR","IRRA","HYDR_ELNO","META_ELNO","NEUT")
+#                                     champ dans rscrsd   into=("IRRA","TEMP","HYDR_ELNO","HYDR_NOEU","EPSA_ELNO","META_ELNO")
+                                                            ),
           CHAMP_GD        =SIMP(statut='f',typ=cham_gd_sdaster,),
           EVOL            =SIMP(statut='f',typ=evol_sdaster,),
 
           B_EVOL          =BLOC(condition="EVOL!=None",
-              NOM_CHAM      =SIMP(statut='f',typ='TXM'),
+              NOM_CHAM      =SIMP(statut='f',typ='TXM',into=("TEMP","CORR","IRRA","NEUT"
+                                                             "HYDR_ELNO","HYDR_NOEU",
+                                                             "META_ELNO","META_NOEU",
+                                                             "EPSA_ELNO","EPSA_NOEU",)),
               PROL_DROITE   =SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
               PROL_GAUCHE   =SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
               FONC_INST     =SIMP(statut='f',typ=(fonction_sdaster,formule)),
@@ -4043,10 +4421,10 @@ AFFE_MATERIAU=OPER(nom="AFFE_MATERIAU",op=6,sd_prod=cham_mater,
 )  ;
 
 
-#& MODIF COMMANDE  DATE 08/11/2010   AUTEUR PELLET J.PELLET 
+#& MODIF COMMANDE  DATE 22/03/2011   AUTEUR DESOZA T.DESOZA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -4065,8 +4443,9 @@ AFFE_MATERIAU=OPER(nom="AFFE_MATERIAU",op=6,sd_prod=cham_mater,
 AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele_sdaster,
             UIinfo={"groupes":("Modélisation",)},
                  fr="Définir le phénomène physique modélisé et le type d'éléments finis sur le maillage",reentrant='n',
-         regles=(AU_MOINS_UN('AFFE','AFFE_SOUS_STRUC'),),
-         MAILLAGE        =SIMP(statut='o',typ=(maillage_sdaster) ),
+         regles=(AU_MOINS_UN('AFFE','AFFE_SOUS_STRUC'),UN_PARMI('MAILLAGE','GRILLE')),
+         MAILLAGE        =SIMP(statut='f',typ=maillage_sdaster),
+         GRILLE          =SIMP(statut='f',typ=grille_sdaster),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
          VERIF           =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=2,into=("MAILLE","NOEUD") ),
 #
@@ -4118,21 +4497,26 @@ AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele_sdaster,
                                   "3D_FLUI_ABSO",    # RESP. : DEVESA G.DEVESA
                                   "3D_FLUIDE",       # RESP. : GREFFET N.GREFFET
                                   "3D_INCO",         # RESP. : MICHEL S.MICHEL
+                                  "3D_INCO_UP",      # RESP. : SFAYOLLE
                                   "3D_INCO_GD",      # RESP. : MICHEL S.MICHEL
                                   "3D_SI",           # RESP. : DESROCHES X.DESROCHES
                                   "3D_GRAD_EPSI",    # RESP. : MICHEL S.MICHEL
                                   "3D_GRAD_VARI",    # RESP. : MICHEL S.MICHEL
+                                  "3D_GVNO",         # RESP. : BEAURAIN J.BEAURAIN
                                   "3D_XFEM_CONT",    # RESP. : GENIAUT S.GENIAUT
                                   "3D_JOINT",        # RESP. : LAVERNE J.LAVERNE
+                                  "3D_JOINT_HYME",   # RESP. : LAVERNE J.LAVERNE
                                   "3D_INTERFACE",    # RESP. : LAVERNE J.LAVERNE
                                   "AXIS",            # RESP. : LEFEBVRE J.P.LEFEBVRE
                                   "AXIS_FLUI_STRU",  # RESP. : GREFFET N.GREFFET
                                   "AXIS_FLUIDE",     # RESP. : GREFFET N.GREFFET
                                   "AXIS_FOURIER",    # RESP. : DESROCHES X.DESROCHES
                                   "AXIS_INCO",       # RESP. : MICHEL S.MICHEL
+                                  "AXIS_INCO_UP",    # RESP. : SFAYOLLE
                                   "AXIS_INCO_GD",    # RESP. : MICHEL S.MICHEL
                                   "AXIS_SI",         # RESP. : DESROCHES X.DESROCHES
                                   "AXIS_GRAD_VARI",  # RESP. : MICHEL S.MICHEL
+                                  "AXIS_GVNO",       # RESP. : BEAURAIN J.BEAURAIN
                                   "AXIS_JOINT",      # RESP. : LAVERNE J.LAVERNE
                                   "AXIS_INTERFACE",  # RESP. : LAVERNE J.LAVERNE
                                   "AXIS_ELDI",       # RESP. : LAVERNE J.LAVERNE
@@ -4152,12 +4536,15 @@ AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele_sdaster,
                                   "D_PLAN_XFEM_CONT",# RESP. : GENIAUT S.GENIAUT
                                   "D_PLAN_GRAD_EPSI",# RESP. : MICHEL S.MICHEL
                                   "D_PLAN_GRAD_VARI",# RESP. : MICHEL S.MICHEL
+                                  "D_PLAN_GVNO",     # RESP. : BEAURAIN J.BEAURAIN
                                   "D_PLAN_GRAD_SIGM",# RESP. : GRANET S.GRANET
                                   "PLAN_JOINT",      # RESP. : LAVERNE J.LAVERNE
+                                  "PLAN_JOINT_HYME", # RESP. : LAVERNE J.LAVERNE
                                   "PLAN_INTERFACE",  # RESP. : LAVERNE J.LAVERNE
                                   "PLAN_ELDI",       # RESP. : LAVERNE J.LAVERNE
                                   "D_PLAN_ABSO",     # RESP. : DEVESA G.DEVESA
                                   "D_PLAN_INCO",     # RESP. : MICHEL S.MICHEL
+                                  "D_PLAN_INCO_UP",  # RESP. : SFAYOLLE
                                   "D_PLAN_INCO_GD",  # RESP. : MICHEL S.MICHEL
                                   "D_PLAN_SI",       # RESP. : DESROCHES X.DESROCHES
                                   "DIS_T",           # RESP. : FLEJOU J.L.FLEJOU
@@ -4178,11 +4565,9 @@ AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele_sdaster,
                                   "Q4G",             # RESP. : DESROCHES X.DESROCHES
                                   "TUYAU_3M",        # RESP. : PROIX J.M.PROIX
                                   "TUYAU_6M",        # RESP. : PROIX J.M.PROIX
-                                  "SHB8",            # RESP. : DESROCHES X.DESROCHES
+                                  "SHB",             # RESP. : DESROCHES X.DESROCHES
                                   "D_PLAN_HHM",      # RESP. : GRANET S.GRANET
                                   "D_PLAN_HM",       # RESP. : GRANET S.GRANET
-                                  "D_PLAN_THH",      # RESP. : GRANET S.GRANET
-                                  "D_PLAN_THHM",     # RESP. : GRANET S.GRANET
                                   "D_PLAN_THM",      # RESP. : GRANET S.GRANET
                                   "D_PLAN_HHMD",     # RESP. : GRANET S.GRANET
                                   "D_PLAN_HH2MD",    # RESP. : GRANET S.GRANET
@@ -4210,8 +4595,6 @@ AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele_sdaster,
                                   "D_PLAN_HH2S",     # RESP. : GRANET S.GRANET
                                   "D_PLAN_2DG",      # RESP. : GRANET S.GRANET
                                   "D_PLAN_DIL",      # RESP. : GRANET S.GRANET
-                                  "AXIS_THH",        # RESP. : GRANET S.GRANET
-                                  "AXIS_THHM",       # RESP. : GRANET S.GRANET
                                   "AXIS_THM",        # RESP. : GRANET S.GRANET
                                   "AXIS_HHM",        # RESP. : GRANET S.GRANET
                                   "AXIS_HM",         # RESP. : GRANET S.GRANET
@@ -4239,8 +4622,6 @@ AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele_sdaster,
                                   "AXIS_HH2S",       # RESP. : GRANET S.GRANET
                                   "3D_HHM" ,         # RESP. : GRANET S.GRANET
                                   "3D_HM",           # RESP. : GRANET S.GRANET
-                                  "3D_THH",          # RESP. : GRANET S.GRANET
-                                  "3D_THV",          # RESP. : GRANET S.GRANET
                                   "3D_THHM",         # RESP. : GRANET S.GRANET
                                   "3D_THM",          # RESP. : GRANET S.GRANET
                                   "3D_HHMD",         # RESP. : GRANET S.GRANET
@@ -4273,8 +4654,8 @@ AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele_sdaster,
                                   "D_PLAN_HH2SUDM",  # RESP. : GRANET S.GRANET
                                   "D_PLAN_HH2SUC",   # RESP. : GRANET S.GRANET
                                   "D_PLAN_HH2SUDA",  # RESP. : GRANET S.GRANET
-                                  "2D_JOINT_HMS",
-                                  "AXIS_JOINT_HMS",
+                                  "PLAN_JHMS",
+                                  "AXIS_JHMS",
                                                                       )  )  ),
 
                 b_thermique     =BLOC( condition = "PHENOMENE=='THERMIQUE'",
@@ -4303,11 +4684,7 @@ AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele_sdaster,
 
          PARTITION         =FACT(statut='d',
              PARALLELISME    =SIMP(statut='f',typ='TXM',defaut="GROUP_ELEM",
-                                   into=("MAIL_CONTIGU","MAIL_DISPERSE","SOUS_DOMAINE","CENTRALISE","GROUP_ELEM")),
-             b_dist_sd          =BLOC(condition = "PARALLELISME == 'SOUS_DOMAINE'",
-                 PARTITION       =SIMP(statut='o',typ=sd_feti_sdaster),
-                 CHARGE_PROC0_SD =SIMP(statut='f',typ='I',defaut=0,val_min=0),
-             ),
+                                   into=("MAIL_CONTIGU","MAIL_DISPERSE","CENTRALISE","GROUP_ELEM")),
              b_dist_maille          =BLOC(condition = "PARALLELISME in ('MAIL_DISPERSE','MAIL_CONTIGU')",
                  CHARGE_PROC0_MA =SIMP(statut='f',typ='I',defaut=100,val_min=0,val_max=100),
              ),
@@ -4316,40 +4693,160 @@ AFFE_MODELE=OPER(nom="AFFE_MODELE",op=18,sd_prod=modele_sdaster,
          VERI_JACOBIEN  =SIMP(statut='f',typ='TXM',into=('OUI','NON'),defaut='OUI',
                               fr ="Vérification de la forme des mailles (jacobiens tous de meme signe).",),
 ) ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 25/01/2011   AUTEUR PELLET J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
-#
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
-#
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
-# RESPONSABLE LEFEBVRE J.P.LEFEBVRE
-AIDE=PROC(nom="AIDE",op=42,
-       UIinfo={"groupes":("Utilitaires",)},
-       fr="Interroger et imprimer une documentation partielle sur les noms des concepts déjà définis et sur les couples"
-           +" (type d'éléments, option) disponibles dans la version.",
-       regles=(AU_MOINS_UN('CONCEPT','TYPE_ELEM', ),),
-       UNITE       =SIMP(statut='f',typ='I',defaut=8),
-       TYPE_ELEM   =FACT(fr="couple type_elem option",statut='f',
-         INITEL       =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON",) ),
-                        ),
-       CONCEPT     =FACT(statut='f',max='**',
-         NOM          =SIMP(fr="liste des noms de concept",statut='f',typ='TXM',validators=NoRepeat(),max='**',defaut="*"),
-         OPTION       =SIMP(fr="option d'édition de concept",statut='f',typ='TXM',defaut="TOUT_TYPE",
-                                 into=("TOUT_TYPE","CREER","A_CREER",) ),
+# RESPONSABLE PELLET J.PELLET
+
+def appl_cine_matr_prod(MATR_ASSE,**args):
+  if AsType(MATR_ASSE) == matr_asse_depl_r : return matr_asse_depl_r
+  if AsType(MATR_ASSE) == matr_asse_depl_c : return matr_asse_depl_c
+  if AsType(MATR_ASSE) == matr_asse_temp_r : return matr_asse_temp_r
+  if AsType(MATR_ASSE) == matr_asse_temp_c : return matr_asse_temp_c
+  if AsType(MATR_ASSE) == matr_asse_pres_r : return matr_asse_pres_r
+  if AsType(MATR_ASSE) == matr_asse_pres_c : return matr_asse_pres_c
+  raise AsException("type de concept resultat non prevu")
+
+APPL_CINE_MATR=OPER(nom="APPL_CINE_MATR",op=158,sd_prod=appl_cine_matr_prod,
+               fr="Appliquer les C.L. cinématiques sur la matrice",
+               reentrant='f', UIinfo={"groupes":("Résolution",)},
+         MATR_ASSE       =SIMP(statut='o',typ=(matr_asse_depl_r,matr_asse_depl_c,matr_asse_temp_r,
+                                               matr_asse_temp_c,matr_asse_pres_r,matr_asse_pres_c) ),
+         TITRE           =SIMP(statut='f',typ='TXM',max='**'),
+         INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
+)  ;
+#& MODIF COMMANDE  DATE 25/01/2011   AUTEUR PELLET J.PELLET 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE PELLET J.PELLET
+
+APPL_CINE_SCMB=OPER(nom="APPL_CINE_SCMB",op=159,sd_prod=cham_no_sdaster,reentrant='f',
+               fr="Application des C.L. cinématiques au second membre",
+               UIinfo={"groupes":("Résolution",)},
+         CHAM_NO        =SIMP(statut='o',typ=cham_no_sdaster),
+         MATR           =SIMP(statut='o',typ=(matr_asse_depl_r,matr_asse_depl_c,matr_asse_temp_r,
+                                               matr_asse_temp_c,matr_asse_pres_r,matr_asse_pres_c) ),
+         CHAM_CINE       =SIMP(statut='f',typ=cham_no_sdaster),
+
+         TITRE           =SIMP(statut='f',typ='TXM',max='**'),
+         INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
+)  ;
+#& MODIF COMMANDE  DATE 03/01/2011   AUTEUR ANDRIAM H.ANDRIAMBOLOLONA 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE ANDRIAM H.ANDRIAMBOLOLONA
+
+from Macro.asse_elem_ssd_ops import asse_elem_ssd_ops
+
+def asse_elem_ssd_prod(self,RESU_ASSE_SSD,**args):
+    MTYPES = {
+        'MODELE' : modele_gene,
+        'NUME_DDL_GENE' : nume_ddl_gene,
+        'RIGI_GENE' : matr_asse_gene_r,
+        'MASS_GENE' : matr_asse_gene_r,
+              }
+    for res in RESU_ASSE_SSD:
+        for mc, typ in MTYPES.items():
+            if res[mc]:
+                self.type_sdprod(res[mc], typ)
+    return None
+
+ASSE_ELEM_SSD=MACRO(nom="ASSE_ELEM_SSD",
+        op=asse_elem_ssd_ops,
+        sd_prod=asse_elem_ssd_prod,
+        reentrant='n',
+        fr="Enchainer les commandes DEFI_MODELE_GENE, NUME_DDL_GENE et ASSE_MATR_GENE",
+        UIinfo={"groupes":("Matrices/vecteurs",)},
+
+# pour les concepts de sortie
+        RESU_ASSE_SSD = FACT( statut='o', max=1,
+                          regles=(PRESENT_PRESENT('RIGI_GENE','NUME_DDL_GENE'),
+                                  PRESENT_PRESENT('MASS_GENE','NUME_DDL_GENE'),),
+                              MODELE=SIMP(statut='o',typ=CO,defaut=None),
+                              NUME_DDL_GENE=SIMP(statut='f',typ=CO,defaut=None),
+                              RIGI_GENE=SIMP(statut='f',typ=CO,defaut=None),
+                              MASS_GENE=SIMP(statut='f',typ=CO,defaut=None),
+                           ),
+
+        INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
+
+# pour DEFI_MODELE_GENE
+        SOUS_STRUC      =FACT(statut='o',max='**',
+           NOM             =SIMP(statut='o',typ='TXM' ),
+           MACR_ELEM_DYNA  =SIMP(statut='o',typ=macr_elem_dyna ),
+           ANGL_NAUT       =SIMP(statut='f',typ='R',max=3),
+           TRANS           =SIMP(statut='f',typ='R',max=3),
          ),
-) ;
+        LIAISON         =FACT(statut='o',max='**',
+           SOUS_STRUC_1    =SIMP(statut='o',typ='TXM' ),
+           INTERFACE_1     =SIMP(statut='o',typ='TXM' ),
+           SOUS_STRUC_2    =SIMP(statut='o',typ='TXM' ),
+           INTERFACE_2     =SIMP(statut='o',typ='TXM' ),
+           regles=(EXCLUS('GROUP_MA_MAIT_1','GROUP_MA_MAIT_2','MAILLE_MAIT_2'),
+                   EXCLUS('MAILLE_MAIT_1','GROUP_MA_MAIT_2','MAILLE_MAIT_2'),),
+           GROUP_MA_MAIT_1   =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
+           MAILLE_MAIT_1     =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
+           GROUP_MA_MAIT_2   =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
+           MAILLE_MAIT_2     =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
+           OPTION            =SIMP(statut='f',typ='TXM',defaut="CLASSIQUE",into=("REDUIT","CLASSIQUE") ),
+         ),
+        VERIF           =FACT(statut='d',max=1,
+           STOP_ERREUR     =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
+           PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-3 ),
+           CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
+         ),
+
+
+# pour NUME_DDL_GENE
+        METHODE      =SIMP(statut='f',typ='TXM',defaut="CLASSIQUE",into=("CLASSIQUE","ELIMINE") ),
+        STOCKAGE     =SIMP(statut='f',typ='TXM',defaut="LIGN_CIEL",into=("LIGN_CIEL","PLEIN") ),
+
+)  ;
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -4471,14 +4968,19 @@ ASSE_MATRICE=OPER(nom="ASSE_MATRICE",op=12,sd_prod=asse_matrice_prod,
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
-# RESPONSABLE PELLET J.PELLET
-
-ASSE_VECTEUR=OPER(nom="ASSE_VECTEUR",op=13,sd_prod=cham_no_sdaster,
-                  fr="Construire un champ aux noeuds par assemblage de vecteurs élémentaires",reentrant='n',
+# RESPONSABLE BODEL C.BODEL
+ASSE_VECT_GENE=OPER(nom="ASSE_VECT_GENE",op= 140,sd_prod=vect_asse_gene,
+                    fr="Projection des chargements sur la base modale d'une sous structure",
+                    reentrant='n',
             UIinfo={"groupes":("Matrices et vecteurs",)},
-         VECT_ELEM       =SIMP(statut='o',typ=vect_elem,max='**'),
-         NUME_DDL        =SIMP(statut='o',typ=nume_ddl_sdaster ),
-         INFO            =SIMP(statut='f',typ='I',into=(1,2,) ),
+         NUME_DDL_GENE   =SIMP(statut='o',typ=nume_ddl_gene ),
+         METHODE          =SIMP(statut='f',typ='TXM',defaut="CLASSIQUE",into=("CLASSIQUE","INITIAL") ),
+         b_nume     =BLOC(condition = "METHODE == 'CLASSIQUE'",
+             CHAR_SOUS_STRUC =FACT(statut='o',max='**',
+             SOUS_STRUC      =SIMP(statut='o',typ='TXM' ),
+             VECT_ASSE       =SIMP(statut='o',typ=cham_no_sdaster ),
+           ),
+         ),
 )  ;
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -4498,19 +5000,14 @@ ASSE_VECTEUR=OPER(nom="ASSE_VECTEUR",op=13,sd_prod=cham_no_sdaster,
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
-# RESPONSABLE BODEL C.BODEL
-ASSE_VECT_GENE=OPER(nom="ASSE_VECT_GENE",op= 140,sd_prod=vect_asse_gene,
-                    fr="Projection des chargements sur la base modale d'une sous structure",
-                    reentrant='n',
+# RESPONSABLE PELLET J.PELLET
+
+ASSE_VECTEUR=OPER(nom="ASSE_VECTEUR",op=13,sd_prod=cham_no_sdaster,
+                  fr="Construire un champ aux noeuds par assemblage de vecteurs élémentaires",reentrant='n',
             UIinfo={"groupes":("Matrices et vecteurs",)},
-         NUME_DDL_GENE   =SIMP(statut='o',typ=nume_ddl_gene ),
-         METHODE          =SIMP(statut='f',typ='TXM',defaut="CLASSIQUE",into=("CLASSIQUE","INITIAL") ),
-         b_nume     =BLOC(condition = "METHODE == 'CLASSIQUE'",
-             CHAR_SOUS_STRUC =FACT(statut='o',max='**',
-             SOUS_STRUC      =SIMP(statut='o',typ='TXM' ),
-             VECT_ASSE       =SIMP(statut='o',typ=cham_no_sdaster ),
-           ),
-         ),
+         VECT_ELEM       =SIMP(statut='o',typ=vect_elem,max='**'),
+         NUME_DDL        =SIMP(statut='o',typ=nume_ddl_sdaster ),
+         INFO            =SIMP(statut='f',typ='I',into=(1,2,) ),
 )  ;
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -4583,10 +5080,10 @@ CALC_AMOR_MODAL=OPER(nom="CALC_AMOR_MODAL",op= 172,sd_prod=listr8_sdaster,
            SEUIL           =SIMP(statut='f',typ='R',defaut= 0.3 ),
          ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 13/01/2011   AUTEUR PELLET J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -4622,15 +5119,15 @@ CALC_CHAM_ELEM=OPER(nom="CALC_CHAM_ELEM",op=38,sd_prod=cham_elem,
 #
 
          OPTION          =SIMP(statut='o',typ='TXM',
-                               into=("FLUX_ELGA_TEMP","FLUX_ELNO_TEMP",
-                                     "PRES_ELNO_DBEL","PRES_ELNO_REEL","PRES_ELNO_IMAG",
+                               into=("FLUX_ELGA","FLUX_ELNO",
+                                     "PRAC_ELNO",
                                      "COOR_ELGA"), ),
 
-         b_thermique  =BLOC(condition="OPTION in ('FLUX_ELNO_TEMP','FLUX_ELGA_TEMP',)",
+         b_thermique  =BLOC(condition="OPTION in ('FLUX_ELNO','FLUX_ELGA',)",
            TEMP            =SIMP(statut='o',typ=(cham_no_sdaster,)),
          ),
 
-         b_acoustique  =BLOC(condition="OPTION in ('PRES_ELNO_DBEL','PRES_ELNO_REEL','PRES_ELNO_IMAG',)",
+         b_acoustique  =BLOC(condition="OPTION in ('PRAC_ELNO',)",
            PRES            =SIMP(statut='o',typ=(cham_no_sdaster,)),
          ),
 
@@ -4716,10 +5213,10 @@ CALC_CHAR_SEISME=OPER(nom="CALC_CHAR_SEISME",op=  92,sd_prod=calc_char_seisme_pr
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 28/02/2011   AUTEUR BOTTONI M.BOTTONI 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -4751,8 +5248,7 @@ def calc_ecrevisse_prod(self,CHARGE_MECA,CHARGE_THER1,CHARGE_THER2,TABLE,DEBIT,*
 
 CALC_ECREVISSE=MACRO(nom="CALC_ECREVISSE",op=calc_ecrevisse_ops,sd_prod=calc_ecrevisse_prod,reentrant='n',
                      UIinfo={"groupes":("Outils-métier",)},fr="Procedure de couplage avec Ecrevisse",
-
-        regles             = (UN_PARMI('LOGICIEL','VERSION'),),
+                      regles   = (UN_PARMI('LOGICIEL','VERSION'),),
 
 #      CONCEPTS SORTANTS : 2 CHARGEMENTS THERMIQUE + 1 MECANIQUE + 2 TABLES POUR LE POST-TRAITEMENT
 #      ********************************************
@@ -4884,16 +5380,16 @@ CALC_ECREVISSE=MACRO(nom="CALC_ECREVISSE",op=calc_ecrevisse_ops,sd_prod=calc_ecr
          COURBES            =SIMP(statut='f',typ='TXM',into=("INTERACTIF","POSTSCRIPT","AUCUNE"),defaut="AUCUNE",
                                   fr="Generation eventuelle des courbes" ),
          LOGICIEL           =SIMP(statut='f',typ='TXM',validators=LongStr(1,255),),
-         VERSION            =SIMP(statut='f',typ='TXM',defaut="3.1.2",into = ("3.1.1","3.1.2")),
+         VERSION            =SIMP(statut='f',typ='TXM',into = ("3.1.1","3.1.2","3.2")),
          ENTETE             =SIMP(statut='f',typ='TXM',max='**',defaut="Titre du calcul Ecrevisse" ),
          IMPRESSION         =SIMP(statut='f',typ='TXM',defaut='NON',into=( 'OUI','NON') ),
          INFO               =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -4925,8 +5421,7 @@ CALC_ELEM=OPER(nom="CALC_ELEM",op=58,sd_prod=calc_elem_prod,reentrant='f',
 
      regles=(EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST','FREQ','NUME_MODE',
                     'NOEUD_CMP','LIST_INST','LIST_FREQ','LIST_ORDRE','NOM_CAS'),
-             CONCEPT_SENSIBLE("SEPARE"),
-             DERIVABLE('RESULTAT'),),
+                    ),
      TOUT_ORDRE      =SIMP(statut='f',typ='TXM',into=("OUI",) ),
      NUME_ORDRE      =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
      NUME_MODE       =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
@@ -4984,48 +5479,49 @@ CALC_ELEM=OPER(nom="CALC_ELEM",op=58,sd_prod=calc_elem_prod,reentrant='f',
                                  "INDI_ERREUR","AUTRES","TOUTES"),
                            ),
           b_toutes=BLOC( condition = "TYPE_OPTION == 'TOUTES'",fr="toutes les options evol elas",
-               OPTION =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut="SIEF_ELNO_ELGA",
+               OPTION =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut="SIEF_ELNO",
                               #  contraintes
-                           into=( "SIEF_ELNO_ELGA","SIGM_ELNO_DEPL","SIEF_ELGA_DEPL",
-                                  "SIPO_ELNO_DEPL","EFGE_ELNO_DEPL","EFGE_ELNO_CART","SIGM_ELNO_CART",
-                                  "SIGM_ELNO_SIEF","SIPO_ELNO_SIEF","SIGM_ELNO_TUYO","PROJ_ELEM_SIGM",
+                           into=( "SIEF_ELNO","SIGM_ELNO","SIEF_ELGA",
+                                  "SIPO_ELNO","EFGE_ELNO","EFCA_ELNO","SICA_ELNO",
+                                  "SITU_ELNO","SIRO_ELEM","SIPM_ELNO",
                               # déformations
-                                 "EPSI_ELNO_DEPL","EPSI_ELGA_DEPL","EPSG_ELGA_DEPL","EPSG_ELNO_DEPL",
-                                 "EPME_ELNO_DEPL","EPME_ELGA_DEPL","DEGE_ELNO_DEPL","EPSI_ELNO_TUYO",
+                                 "EPSI_ELNO","EPSI_ELGA","EPSG_ELGA","EPSG_ELNO",
+                                 "EPME_ELNO","EPME_ELGA","DEGE_ELNO","EPTU_ELNO",
                                  "EPVC_ELNO","EPVC_ELGA",
                               #  ENER
-                                 "EPOT_ELEM_DEPL","ECIN_ELEM_DEPL","ENEL_ELGA","ENEL_ELNO_ELGA",
-                                 "ETOT_ELGA","ETOT_ELNO_ELGA","ETOT_ELEM","DISS_ELGA","DISS_ELNO_ELGA",
+                                 "EPOT_ELEM","ECIN_ELEM","ENEL_ELGA","ENEL_ELNO",
+                                 "ETOT_ELGA","ETOT_ELNO","ETOT_ELEM","DISS_ELGA","DISS_ELNO",
                               #  estimateurs erreur
-                                 "SIGM_NOZ1_ELGA","ERZ1_ELEM_SIGM","SIGM_NOZ2_ELGA","ERZ2_ELEM_SIGM",
-                                 "ERRE_ELEM_SIGM","ERRE_ELNO_ELEM",
-                                 "QIRE_ELEM_SIGM","QIRE_ELNO_ELEM","QIZ1_ELEM_SIGM","QIZ2_ELEM_SIGM",
-                                 "SING_ELEM","SING_ELNO_ELEM",
+                                 "SIZ1_ELGA","ERZ1_ELEM","SIZ2_ELGA","ERZ2_ELEM",
+                                 "ERME_ELEM","ERME_ELNO",
+                                 "QIRE_ELEM","QIRE_ELNO","QIZ1_ELEM","QIZ2_ELEM",
+                                 "SING_ELEM","SING_ELNO",
                               #  CRIT
-                                 "EQUI_ELNO_SIGM","EQUI_ELGA_SIGM","CRIT_ELNO_RUPT",
-                                 "EQUI_ELNO_EPSI","EQUI_ELGA_EPSI","EQUI_ELNO_EPME","EQUI_ELGA_EPME",
-                                 "ENDO_ELGA","ENDO_ELNO_ELGA",
-                                 "ENDO_ELNO_SIGA","ENDO_ELNO_SINO","SIEQ_ELNO_TUYO","EPEQ_ELNO_TUYO",
-                              #  derivees
-                                 "DEUL_ELGA_DEPL","DEDE_ELNO_DLDE","DESI_ELNO_DLSI",
+                                 "SIEQ_ELNO","SIEQ_ELGA","CRIT_ELNO",
+                                 "EPEQ_ELNO","EPEQ_ELGA","EPMQ_ELNO","EPMQ_ELGA",
+                                 "ENDO_ELGA","ENDO_ELNO",
+                                 "SITQ_ELNO","EPTQ_ELNO",
                               #  autres
-                                 "VALE_NCOU_MAXI","PRES_DBEL_DEPL","VARC_ELGA"),),
+                                 "SPMX_ELGA","PRME_ELNO","VARC_ELGA"),),
 
-               NOM_CHAM  =SIMP(statut='f',typ='TXM',fr="nom du champ pour VALE_NCOU_MAXI", ),
-               NOM_CMP   =SIMP(statut='f',typ='TXM',fr="nom de la composante pour VALE_NCOU_MAXI",  ),
+#              Les 2 mots cles suivants ne sont utiles qu' a l'option SPMX_ELGA
+#              mais  on est obligé de les laisser ici a cause des blocs
+               NOM_CHAM  =SIMP(statut='f',typ='TXM',into=("SIEF_ELGA","EPSI_ELGA","SIEQ_ELGA","EPEQ_ELGA","VARI_ELGA"),
+                               fr="nom du champ pour SPMX_ELGA",),
+               NOM_CMP   =SIMP(statut='f',typ='TXM',fr="nom de la composante pour SPMX_ELGA",  ),
 
-                b_erre_qi =BLOC(condition = "OPTION in ('QIRE_ELEM_SIGM','QIZ1_ELEM_SIGM','QIZ2_ELEM_SIGM') or \
-                                        (type(OPTION)==type(()) and 'QIRE_ELEM_SIGM' in OPTION) or \
-                                        (type(OPTION)==type(()) and 'QIZ1_ELEM_SIGM' in OPTION) or \
-                                        (type(OPTION)==type(()) and 'QIZ2_ELEM_SIGM' in OPTION)",
+                b_erre_qi =BLOC(condition = "OPTION in ('QIRE_ELEM','QIZ1_ELEM','QIZ2_ELEM') or \
+                                        (type(OPTION)==type(()) and 'QIRE_ELEM' in OPTION) or \
+                                        (type(OPTION)==type(()) and 'QIZ1_ELEM' in OPTION) or \
+                                        (type(OPTION)==type(()) and 'QIZ2_ELEM' in OPTION)",
                     RESU_DUAL=SIMP(statut='o',typ=evol_elas,fr="resultat du probleme dual"),),
 
                b_sing =BLOC(condition= "OPTION == 'SING_ELEM' or \
                                (type(OPTION)==type(()) and  'SING_ELEM' in OPTION)",
                     PREC_ERR=SIMP(statut='o',typ='R',val_min= 0.,
                                   fr="precision demandee pour calculer la carte de taille des elements"),
-                    TYPE_ESTI=SIMP(statut='f',typ='TXM',into=("ERRE_ELEM_SIGM","ERZ1_ELEM_SIGM","ERZ2_ELEM_SIGM",
-                                                              "QIRE_ELEM_SIGM","QIZ1_ELEM_SIGM","QIZ2_ELEM_SIGM",),
+                    TYPE_ESTI=SIMP(statut='f',typ='TXM',into=("ERME_ELEM","ERZ1_ELEM","ERZ2_ELEM",
+                                                              "QIRE_ELEM","QIZ1_ELEM","QIZ2_ELEM",),
                                    fr="choix de l'estimateur d'erreur"),),
 
                EXCIT           =FACT(statut='f',max='**',
@@ -5046,13 +5542,13 @@ CALC_ELEM=OPER(nom="CALC_ELEM",op=58,sd_prod=calc_elem_prod,reentrant='f',
 
           b_sigm_massif =BLOC( condition = "TYPE_OPTION == 'SIGM_MASSIF'",
                                      fr="options de contraintes elasticite 2D et 3D",
-              OPTION =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut='SIEF_ELNO_ELGA',
+              OPTION =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut='SIEF_ELNO',
                             fr="option de calcul des contraintes",
-                           into=( "SIEF_ELNO_ELGA","SIGM_ELNO_DEPL","SIEF_ELGA_DEPL",),),
+                           into=( "SIEF_ELNO","SIGM_ELNO","SIEF_ELGA",),),
 
-                    b_charge =BLOC( condition = "OPTION in ('SIGM_ELNO_DEPL','SIEF_ELGA_DEPL',) or \
-                                      (type(OPTION)==type(()) and  'SIGM_ELNO_DEPL' in OPTION ) or \
-                                      (type(OPTION)==type(()) and  'SIEF_ELGA_DEPL' in OPTION ) ",
+                    b_charge =BLOC( condition = "OPTION in ('SIGM_ELNO','SIEF_ELGA',) or \
+                                      (type(OPTION)==type(()) and  'SIGM_ELNO' in OPTION ) or \
+                                      (type(OPTION)==type(()) and  'SIEF_ELGA' in OPTION ) ",
                                       fr="charge contenant les temperatures ou autre charge",
                          EXCIT           =FACT(statut='f',max='**',
                          CHARGE          =SIMP(statut='o',typ=(char_meca,char_cine_meca) ),),
@@ -5061,18 +5557,18 @@ CALC_ELEM=OPER(nom="CALC_ELEM",op=58,sd_prod=calc_elem_prod,reentrant='f',
 
           b_sigm_struct =BLOC( condition = "TYPE_OPTION == 'SIGM_STRUCT'",
                                       fr="options de contraintes elasticite poutres, coques, tuyaux",
-               OPTION =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut='SIEF_ELNO_ELGA',
+               OPTION =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut='SIEF_ELNO',
                             fr="option de calcul des contraintes ou efforts generalises",
-                            into=( "SIEF_ELNO_ELGA","SIGM_ELNO_DEPL","SIEF_ELGA_DEPL","SIGM_ELNO_TUYO",
-                                   "SIPO_ELNO_DEPL","EFGE_ELNO_DEPL","EFGE_ELNO_CART","SIGM_ELNO_CART",
-                                   "SIGM_ELNO_SIEF","SIPO_ELNO_SIEF"),),
+                            into=( "SIEF_ELNO","SIGM_ELNO","SIEF_ELGA","SITU_ELNO",
+                                   "SIPO_ELNO","EFGE_ELNO","EFCA_ELNO","SICA_ELNO",
+                                   ),),
 
-               b_charge =BLOC( condition = "OPTION in ('SIGM_ELNO_DEPL','SIEF_ELGA_DEPL',\
-                                                       'SIPO_ELNO_DEPL','EFGE_ELNO_DEPL',) or \
-                                            (type(OPTION)==type(()) and  'SIGM_ELNO_DEPL' in OPTION ) or \
-                                            (type(OPTION)==type(()) and  'SIEF_ELGA_DEPL' in OPTION ) or \
-                                            (type(OPTION)==type(()) and  'SIPO_ELNO_DEPL' in OPTION ) or \
-                                            (type(OPTION)==type(()) and  'EFGE_ELNO_DEPL' in OPTION ) ",
+               b_charge =BLOC( condition = "OPTION in ('SIGM_ELNO','SIEF_ELGA',\
+                                                       'SIPO_ELNO','EFGE_ELNO',) or \
+                                            (type(OPTION)==type(()) and  'SIGM_ELNO' in OPTION ) or \
+                                            (type(OPTION)==type(()) and  'SIEF_ELGA' in OPTION ) or \
+                                            (type(OPTION)==type(()) and  'SIPO_ELNO' in OPTION ) or \
+                                            (type(OPTION)==type(()) and  'EFGE_ELNO' in OPTION ) ",
                                             fr="charge contenant les temperatures ou les efforts répartis (poutres) ou autre",
                     EXCIT           =FACT(statut='f',max='**',
                                           regles=(EXCLUS('FONC_MULT','FONC_MULT_C','COEF_MULT','COEF_MULT_C'),),
@@ -5092,15 +5588,15 @@ CALC_ELEM=OPER(nom="CALC_ELEM",op=58,sd_prod=calc_elem_prod,reentrant='f',
 
           b_epsi         =BLOC( condition = "TYPE_OPTION=='EPSI'",
                OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=("EPSI_ELNO_DEPL","EPSI_ELGA_DEPL","EPME_ELNO_DEPL","EPME_ELGA_DEPL",
-                                 "DEGE_ELNO_DEPL","EPSI_ELNO_TUYO","EPVC_ELNO","EPVC_ELGA",),
+                           into=("EPSI_ELNO","EPSI_ELGA","EPME_ELNO","EPME_ELGA",
+                                 "DEGE_ELNO","EPTU_ELNO","EPVC_ELNO","EPVC_ELGA",),
                                  ),
-b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_ELGA_DEPL','EPSI_ELNO_DEPL','EPSI_ELNO_TUYO' ) or \
-                                      (type(OPTION)==type(()) and  'EPSI_ELNO_DEPL' in OPTION ) or \
-                                      (type(OPTION)==type(()) and  'EPSI_ELNO_TUYO' in OPTION ) or \
-                                      (type(OPTION)==type(()) and  'EPSI_ELGA_DEPL' in OPTION ) or \
-                                      (type(OPTION)==type(()) and  'EPME_ELNO_DEPL' in OPTION ) or \
-                                      (type(OPTION)==type(()) and  'EPME_ELGA_DEPL' in OPTION ) ",
+b_charge =BLOC( condition = "OPTION in ('EPME_ELNO','EPSI_ELGA','EPME_ELGA','EPSI_ELNO','EPTU_ELNO' ) or \
+                                      (type(OPTION)==type(()) and  'EPSI_ELNO' in OPTION ) or \
+                                      (type(OPTION)==type(()) and  'EPTU_ELNO' in OPTION ) or \
+                                      (type(OPTION)==type(()) and  'EPSI_ELGA' in OPTION ) or \
+                                      (type(OPTION)==type(()) and  'EPME_ELNO' in OPTION ) or \
+                                      (type(OPTION)==type(()) and  'EPME_ELGA' in OPTION ) ",
                                       fr="charge contenant les temperatures",
                     EXCIT           =FACT(statut='f',max='**',
                          CHARGE          =SIMP(statut='o',typ=(char_meca,char_ther,char_acou,char_cine_meca,) ),),
@@ -5108,14 +5604,14 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
                                        ),
           b_ener         =BLOC( condition = "TYPE_OPTION=='ENER'",
                OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=("EPOT_ELEM_DEPL","ECIN_ELEM_DEPL","ENEL_ELGA","ENEL_ELNO_ELGA",
-                                 "ETOT_ELGA","ETOT_ELNO_ELGA","ETOT_ELEM","DISS_ELGA","DISS_ELNO_ELGA",),
+                           into=("EPOT_ELEM","ECIN_ELEM","ENEL_ELGA","ENEL_ELNO",
+                                 "ETOT_ELGA","ETOT_ELNO","ETOT_ELEM","DISS_ELGA","DISS_ELNO",),
                                  ),
-               b_charge =BLOC( condition = "OPTION in ('EPOT_ELEM_DEPL','ECIN_ELEM_DEPL','ENEL_ELGA','ENEL_ELNO_ELGA',) or \
-                                      (type(OPTION)==type(()) and  'EPOT_ELEM_DEPL' in OPTION ) or \
+               b_charge =BLOC( condition = "OPTION in ('EPOT_ELEM','ECIN_ELEM','ENEL_ELGA','ENEL_ELNO',) or \
+                                      (type(OPTION)==type(()) and  'EPOT_ELEM' in OPTION ) or \
                                       (type(OPTION)==type(()) and  'ENEL_ELGA' in OPTION ) or \
-                                      (type(OPTION)==type(()) and  'ENEL_ELNO_ELGA' in OPTION ) or \
-                                      (type(OPTION)==type(()) and  'ECIN_ELEM_DEPL' in OPTION ) ",
+                                      (type(OPTION)==type(()) and  'ENEL_ELNO' in OPTION ) or \
+                                      (type(OPTION)==type(()) and  'ECIN_ELEM' in OPTION ) ",
                                       fr="charge contenant les temperatures",
                     EXCIT           =FACT(statut='f',max='**',
                          CHARGE          =SIMP(statut='f',typ=(char_meca,char_ther,char_acou) ),),
@@ -5124,50 +5620,47 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
 
           b_crit         =BLOC( condition = "TYPE_OPTION=='CRIT'",
                OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=("EQUI_ELNO_SIGM","EQUI_ELGA_SIGM",
-                                 "EQUI_ELNO_EPSI","EQUI_ELGA_EPSI","EQUI_ELNO_EPME","EQUI_ELGA_EPME",
-                                 "ENDO_ELGA","ENDO_ELNO_ELGA",
-                                 "ENDO_ELNO_SIGA","ENDO_ELNO_SINO","CRIT_ELNO_RUPT","SIEQ_ELNO_TUYO","EPEQ_ELNO_TUYO",
+                           into=("SIEQ_ELNO","SIEQ_ELGA",
+                                 "EPEQ_ELNO","EPEQ_ELGA","EPMQ_ELNO","EPMQ_ELGA",
+                                 "ENDO_ELGA","ENDO_ELNO",
+                                 "CRIT_ELNO","SITQ_ELNO","EPTQ_ELNO",
                                  ) ),
                 EXCIT           =FACT(statut='f',max='**',fr="charge contenant les temperatures",
                      CHARGE          =SIMP(statut='o',typ=(char_meca,char_ther,char_acou) ),),
                                  ),
 
-          b_derivees         =BLOC( condition = "TYPE_OPTION=='DERIVEES'",
-                  OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=("DEUL_ELGA_DEPL","DEDE_ELNO_DLDE","DESI_ELNO_DLSI",
-                                 ) ),),
 
           b_autres         =BLOC( condition = "TYPE_OPTION=='AUTRES'",
                   OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=("VALE_NCOU_MAXI","PRES_DBEL_DEPL",
+                           into=("SPMX_ELGA","PRME_ELNO",
                                  ) ),
-               b_maxi    =BLOC( condition = "OPTION=='VALE_NCOU_MAXI' or \
-                                (type(OPTION)==type(()) and 'VALE_NCOU_MAXI' in OPTION)",
-                    NOM_CHAM  =SIMP(statut='o',typ='TXM',fr="Nom du champ pour VALE_NCOU_MAXI" ),
-                    NOM_CMP   =SIMP(statut='o',typ='TXM',fr="Nom de la composante pour VALE_NCOU_MAXI"),),
+               b_maxi    =BLOC( condition = "OPTION=='SPMX_ELGA' or \
+                                (type(OPTION)==type(()) and 'SPMX_ELGA' in OPTION)",
+                    NOM_CHAM  =SIMP(statut='o',typ='TXM',into=("SIEF_ELGA","EPSI_ELGA","SIEQ_ELGA","EPEQ_ELGA","VARI_ELGA"),
+                                    fr="Nom du champ pour SPMX_ELGA",),
+                    NOM_CMP   =SIMP(statut='o',typ='TXM',fr="Nom de la composante pour SPMX_ELGA"),),
                                  ),
 
           b_indi_erreur        =BLOC( condition = "TYPE_OPTION=='INDI_ERREUR'",
-               OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut="ERRE_ELEM_SIGM",
-                           into=("SIGM_NOZ1_ELGA","ERZ1_ELEM_SIGM","SIGM_NOZ2_ELGA","ERZ2_ELEM_SIGM",
-                                 "ERRE_ELEM_SIGM","ERRE_ELNO_ELEM",
-                                 "QIRE_ELEM_SIGM","QIRE_ELNO_ELEM","QIZ1_ELEM_SIGM","QIZ2_ELEM_SIGM",
-                                 "SING_ELEM","SING_ELNO_ELEM",
+               OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut="ERME_ELEM",
+                           into=("SIZ1_ELGA","ERZ1_ELEM","SIZ2_ELGA","ERZ2_ELEM",
+                                 "ERME_ELEM","ERME_ELNO",
+                                 "QIRE_ELEM","QIRE_ELNO","QIZ1_ELEM","QIZ2_ELEM",
+                                 "SING_ELEM","SING_ELNO",
                                  )),
 
-               b_erre_qi =BLOC(condition = "OPTION in ('QIRE_ELEM_SIGM','QIZ1_ELEM_SIGM','QIZ2_ELEM_SIGM') or \
-                                        (type(OPTION)==type(()) and 'QIRE_ELEM_SIGM' in OPTION) or \
-                                        (type(OPTION)==type(()) and 'QIZ1_ELEM_SIGM' in OPTION) or \
-                                        (type(OPTION)==type(()) and 'QIZ2_ELEM_SIGM' in OPTION)",
+               b_erre_qi =BLOC(condition = "OPTION in ('QIRE_ELEM','QIZ1_ELEM','QIZ2_ELEM') or \
+                                        (type(OPTION)==type(()) and 'QIRE_ELEM' in OPTION) or \
+                                        (type(OPTION)==type(()) and 'QIZ1_ELEM' in OPTION) or \
+                                        (type(OPTION)==type(()) and 'QIZ2_ELEM' in OPTION)",
                     RESU_DUAL=SIMP(statut='o',typ=evol_elas,fr="resultat du probleme dual"),),
 
                b_sing =BLOC(condition= "OPTION == 'SING_ELEM' or \
                                (type(OPTION)==type(()) and  'SING_ELEM' in OPTION)",
                     PREC_ERR=SIMP(statut='o',typ='R',val_min= 0.,
                                   fr="precision demandee pour calculer la carte de taille des elements" ),
-                    TYPE_ESTI=SIMP(statut='f',typ='TXM',into=("ERRE_ELEM_SIGM","ERZ1_ELEM_SIGM","ERZ2_ELEM_SIGM",
-                                                              "QIRE_ELEM_SIGM","QIZ1_ELEM_SIGM","QIZ2_ELEM_SIGM",),
+                    TYPE_ESTI=SIMP(statut='f',typ='TXM',into=("ERME_ELEM","ERZ1_ELEM","ERZ2_ELEM",
+                                                              "QIRE_ELEM","QIZ1_ELEM","QIZ2_ELEM",),
                                    fr="choix de l'estimateur d'erreur"),),
 
                EXCIT           =FACT(statut='f',max='**',fr="charge contenant les temperatures",
@@ -5184,55 +5677,55 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
                           ),
           b_toutes =BLOC( condition = "TYPE_OPTION == 'TOUTES'",fr="toutes les options evol noli",
                OPTION      =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=( "SIEF_ELNO_ELGA","PROJ_ELEM_SIGM",
-                                  "SIGM_ELNO_TUYO","SIGM_ELNO_COQU","PROJ_ELNO_SIGM",
-                                  "SIGM_ELNO_SIEF","SIPO_ELNO_SIEF","EFGE_ELNO_CART",
+                           into=( "SIEF_ELNO","SIRO_ELEM",
+                                  "SITU_ELNO","SICO_ELNO",
+                                  "EFCA_ELNO","SIPO_ELNO","SIPM_ELNO",
                                   "FLHN_ELGA",
                                   # EPSI
-                                  "EPSI_ELNO_DEPL","EPSI_ELGA_DEPL","EPSG_ELNO_DEPL","EPSG_ELGA_DEPL",
-                                 "EPME_ELNO_DEPL","EPME_ELGA_DEPL","EPMG_ELNO_DEPL","EPMG_ELGA_DEPL",
-                                 "DEGE_ELNO_DEPL","EPSI_ELNO_TUYO",
+                                  "EPSI_ELNO","EPSI_ELGA","EPSG_ELNO","EPSG_ELGA",
+                                 "EPME_ELNO","EPME_ELGA","EPMG_ELNO","EPMG_ELGA",
+                                 "DEGE_ELNO","EPTU_ELNO",
                                  "EPSP_ELNO","EPSP_ELGA",
                                  "EPFD_ELNO","EPFD_ELGA","EPVC_ELNO","EPVC_ELGA",
                                  "EPFP_ELNO","EPFP_ELGA",
                                  "VARC_ELGA",
-                                 "VARI_ELNO_ELGA","VARI_ELNO_TUYO","VARI_ELNO_COQU","CRIT_ELNO_RUPT",
-                                 "EXTR_ELGA_VARI","EXTR_ELNO_VARI",
+                                 "VARI_ELNO","VATU_ELNO","VACO_ELNO","CRIT_ELNO",
+                                 "VAEX_ELGA","VAEX_ELNO",
                                  # CRIT
-                                 "EQUI_ELNO_SIGM","EQUI_ELGA_SIGM","SIEQ_ELNO_TUYO","EPEQ_ELNO_TUYO",
-                                 "ERRE_ELEM_SIGM","ERRE_ELNO_ELEM","ERZ1_ELEM_SIGM","ERZ2_ELEM_SIGM",
-                                 "QIRE_ELEM_SIGM","QIRE_ELNO_ELEM","QIZ1_ELEM_SIGM","QIZ2_ELEM_SIGM",
-                                 "EQUI_ELNO_EPSI","EQUI_ELGA_EPSI","EQUI_ELNO_EPME","EQUI_ELGA_EPME",
-                                 "DCHA_ELNO_SIGM","DCHA_ELGA_SIGM","RADI_ELNO_SIGM","RADI_ELGA_SIGM",
-                                 "ENDO_ELGA","ENDO_ELNO_ELGA","INDI_LOCA_ELGA","SING_ELEM",
-                                 "SING_ELNO_ELEM","ENDO_ELNO_SIGA","ENDO_ELNO_SINO",
-                                 "PMPB_ELNO_SIEF","PMPB_ELGA_SIEF","ENEL_ELGA","ENEL_ELNO_ELGA",
-                                 "ETOT_ELGA","ETOT_ELNO_ELGA","ETOT_ELEM","VALE_NCOU_MAXI",
-                                 "DISS_ELGA","DISS_ELNO_ELGA"),
+                                 "SIEQ_ELNO","SIEQ_ELGA","SITQ_ELNO","EPTQ_ELNO",
+                                 "ERME_ELEM","ERME_ELNO","ERZ1_ELEM","ERZ2_ELEM",
+                                 "QIRE_ELEM","QIRE_ELNO","QIZ1_ELEM","QIZ2_ELEM",
+                                 "EPEQ_ELNO","EPEQ_ELGA","EPMQ_ELNO","EPMQ_ELGA",
+                                 "DERA_ELNO","DERA_ELGA",
+                                 "ENDO_ELGA","ENDO_ELNO","INDL_ELGA","SING_ELEM",
+                                 "SING_ELNO",
+                                 "PMPB_ELNO","PMPB_ELGA","ENEL_ELGA","ENEL_ELNO",
+                                 "ETOT_ELGA","ETOT_ELNO","ETOT_ELEM","SPMX_ELGA",
+                                 "DISS_ELGA","DISS_ELNO"),
                                ),
-               NORME =SIMP(statut='f',typ='TXM',defaut="VMIS",
-                                 into=("VMIS","TOTAL","VMIS_CINE","TOTAL_CINE"),
-                                 fr="Type de norme pour les options RADI_ et DCHA_"),
 
-               NOM_CHAM  =SIMP(statut='f',typ='TXM',fr="Nom du champ pour VALE_NCOU_MAXI"),
-               NOM_CMP   =SIMP(statut='f',typ='TXM',fr="Nom de la composante pour VALE_NCOU_MAXI"),
+#              Les 2 mots cles suivants ne sont utiles qu' a l'option SPMX_ELGA
+#              mais  on est obligé de les laisser ici a cause des blocs
+               NOM_CHAM  =SIMP(statut='f',typ='TXM',into=("SIEF_ELGA","EPSI_ELGA","SIEQ_ELGA","EPEQ_ELGA","VARI_ELGA"),
+                               fr="Nom du champ pour SPMX_ELGA",),
+               NOM_CMP   =SIMP(statut='f',typ='TXM',fr="Nom de la composante pour SPMX_ELGA"),
 
-               b_erre_qi =BLOC(condition = "OPTION in ('QIRE_ELEM_SIGM','QIZ1_ELEM_SIGM','QIZ2_ELEM_SIGM') or \
-                                        (type(OPTION)==type(()) and 'QIRE_ELEM_SIGM' in OPTION) or \
-                                        (type(OPTION)==type(()) and 'QIZ1_ELEM_SIGM' in OPTION) or \
-                                        (type(OPTION)==type(()) and 'QIZ2_ELEM_SIGM' in OPTION)",
+               b_erre_qi =BLOC(condition = "OPTION in ('QIRE_ELEM','QIZ1_ELEM','QIZ2_ELEM') or \
+                                        (type(OPTION)==type(()) and 'QIRE_ELEM' in OPTION) or \
+                                        (type(OPTION)==type(()) and 'QIZ1_ELEM' in OPTION) or \
+                                        (type(OPTION)==type(()) and 'QIZ2_ELEM' in OPTION)",
                     RESU_DUAL=SIMP(statut='o',typ=(evol_elas,evol_noli),fr="resultat du probleme dual"),),
 
                b_sing =BLOC(condition= "OPTION == 'SING_ELEM' or \
                                (type(OPTION)==type(()) and  'SING_ELEM' in OPTION)",
                     PREC_ERR=SIMP(statut='o',typ='R',val_min= 0.,
                                   fr="precision demandee pour calculer la carte de taille des elements" ),
-                    TYPE_ESTI=SIMP(statut='f',typ='TXM',into=("ERRE_ELEM_SIGM","ERZ1_ELEM_SIGM","ERZ2_ELEM_SIGM",
-                                                              "QIRE_ELEM_SIGM","QIZ1_ELEM_SIGM","QIZ2_ELEM_SIGM",),
+                    TYPE_ESTI=SIMP(statut='f',typ='TXM',into=("ERME_ELEM","ERZ1_ELEM","ERZ2_ELEM",
+                                                              "QIRE_ELEM","QIZ1_ELEM","QIZ2_ELEM",),
                                    fr="choix de l'estimateur d'erreur"),),
 
 
-               b_extr = BLOC( condition = "OPTION in ('EXTR_ELNO_VARI','EXTR_ELGA_VARI')",
+               b_extr = BLOC( condition = "OPTION in ('VAEX_ELNO','VAEX_ELGA')",
                              NOM_VARI =SIMP(statut='o',typ='TXM',min= 1,max=1,fr="nom de la variable à extraire",
                          into=("DPORO","DRHOLQ","DPVP","SATLIQ","EVP","IND_ETA","D","IND_END","TEMP_MAX","GAMP","PCR",
                                "SEUIL_HYD","IND_HYD","PCOHE","COMP_ROC","SEUIL_ISO","ANG_DEV","X11","X22","X33","X12","X13","X23",
@@ -5262,29 +5755,29 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
                                       fr="options de contraintes non lin 2D et 3D",
                OPTION =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
                               #  contraintes
-                           into=( "SIEF_ELNO_ELGA",),),
+                           into=( "SIEF_ELNO",),),
                             ),
 
           b_sigm_struct =BLOC( condition = "TYPE_OPTION == 'SIGM_STRUCT'",
                                        fr="options de contraintes non lin poutres, coques",
                OPTION =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
                               #  contraintes
-                           into=( "SIEF_ELNO_ELGA","EFGE_ELNO_CART","SIGM_ELNO_TUYO","SIGM_ELNO_COQU",
-                           "SIGM_ELNO_SIEF","SIPO_ELNO_SIEF",),),
+                           into=( "SIEF_ELNO","EFCA_ELNO","SITU_ELNO","SICO_ELNO",
+                           ),),
                              ),
 
           b_epsi         =BLOC( condition = "TYPE_OPTION=='EPSI'",
                OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=( "EPSI_ELNO_DEPL","EPSI_ELGA_DEPL","EPSG_ELNO_DEPL","EPSG_ELGA_DEPL",
-                                 "EPME_ELNO_DEPL","EPME_ELGA_DEPL","EPMG_ELNO_DEPL","EPMG_ELGA_DEPL",
-                                 "EPSP_ELNO","EPSP_ELGA","DEGE_ELNO_DEPL","EPVC_ELNO","EPVC_ELGA",
+                           into=( "EPSI_ELNO","EPSI_ELGA","EPSG_ELNO","EPSG_ELGA",
+                                 "EPME_ELNO","EPME_ELGA","EPMG_ELNO","EPMG_ELGA",
+                                 "EPSP_ELNO","EPSP_ELGA","DEGE_ELNO","EPVC_ELNO","EPVC_ELGA",
                                  "EPFD_ELNO","EPFD_ELGA","EPFP_ELNO","EPFP_ELGA"),
                                  ),
                EXCIT           =FACT(statut='f',max='**',fr="charge contenant les temperatures",
                     CHARGE          =SIMP(statut='o',typ=(char_meca,char_ther,char_acou) ),),
                                  ),
-         b_epstuyo       =BLOC( condition = "OPTION == 'EPSI_ELNO_TUYO' or \
-                                  (type(OPTION)==type(()) and  'EPSI_ELNO_TUYO' in OPTION) ",
+         b_epstuyo       =BLOC( condition = "OPTION == 'EPTU_ELNO' or \
+                                  (type(OPTION)==type(()) and  'EPTU_ELNO' in OPTION) ",
               EXCIT           =FACT(statut='f',max='**',fr="charge contenant les temperatures",
                     CHARGE          =SIMP(statut='o',typ=(char_meca,char_ther,char_acou) ),),
                                ),
@@ -5292,10 +5785,10 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
           b_vari         =BLOC( condition = "TYPE_OPTION=='VARI'",
                                        fr="Calcul et extraction des variables internes",
                    OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                                   into=("VARI_ELNO_ELGA","VARI_ELNO_TUYO","VARI_ELNO_COQU",
-                                         "EXTR_ELGA_VARI","EXTR_ELNO_VARI"),
+                                   into=("VARI_ELNO","VATU_ELNO","VACO_ELNO",
+                                         "VAEX_ELGA","VAEX_ELNO"),
                                  ),
-          b_extr         =BLOC( condition = "OPTION in ('EXTR_ELNO_VARI','EXTR_ELGA_VARI')",
+          b_extr         =BLOC( condition = "OPTION in ('VAEX_ELNO','VAEX_ELGA')",
                    NOM_VARI =SIMP(statut='o',typ='TXM',min= 1,max=1,fr="nom de la variable à extraire",
                          into=("DPORO","DRHOLQ","DPVP","SATLIQ","EVP","IND_ETA","D","IND_END","TEMP_MAX","GAMP","PCR",
                                "SEUIL_HYD","IND_HYD","PCOHE","COMP_ROC","SEUIL_ISO","ANG_DEV","X11","X22","X33","X12","X13","X23",
@@ -5306,8 +5799,8 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
 
           b_ener         =BLOC( condition = "TYPE_OPTION=='ENER'",
                OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=("ETOT_ELGA","ETOT_ELNO_ELGA","ETOT_ELEM","ENEL_ELGA","ENEL_ELNO_ELGA",
-                                 "DISS_ELGA","DISS_ELNO_ELGA",),
+                           into=("ETOT_ELGA","ETOT_ELNO","ETOT_ELEM","ENEL_ELGA","ENEL_ELNO",
+                                 "DISS_ELGA","DISS_ELNO",),
                                  ),
                EXCIT           =FACT(statut='f',max='**',fr="charge contenant les temperatures",
                     CHARGE          =SIMP(statut='o',typ=(char_meca,char_ther,char_acou) ),),
@@ -5315,52 +5808,44 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
 
           b_crit         =BLOC( condition = "TYPE_OPTION=='CRIT'",
                OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=("EQUI_ELNO_SIGM","EQUI_ELGA_SIGM",
-                                 "EQUI_ELNO_EPSI","EQUI_ELGA_EPSI","EQUI_ELNO_EPME","EQUI_ELGA_EPME",
-                                 "ENDO_ELNO_SIGA","ENDO_ELNO_SINO","CRIT_ELNO_RUPT",
-                                 "ENDO_ELGA","ENDO_ELNO_ELGA",
-                                 "PMPB_ELNO_SIEF","PMPB_ELGA_SIEF","SIEQ_ELNO_TUYO","EPEQ_ELNO_TUYO",
+                           into=("SIEQ_ELNO","SIEQ_ELGA",
+                                 "EPEQ_ELNO","EPEQ_ELGA","EPMQ_ELNO","EPMQ_ELGA",
+                                 "CRIT_ELNO",
+                                 "ENDO_ELGA","ENDO_ELNO",
+                                 "PMPB_ELNO","PMPB_ELGA","SITQ_ELNO","EPTQ_ELNO",
                                  ) ),
                                  ),
 
           b_autres         =BLOC( condition = "TYPE_OPTION=='AUTRES'",
                   OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=("VALE_NCOU_MAXI",) ),
-               b_maxi    =BLOC( condition = "OPTION=='VALE_NCOU_MAXI' or \
-                                (type(OPTION)==type(()) and 'VALE_NCOU_MAXI' in OPTION)",
-                    NOM_CHAM  =SIMP(statut='o',typ='TXM',fr="Nom du champ pour VALE_NCOU_MAXI" ),
-                    NOM_CMP   =SIMP(statut='o',typ='TXM',fr="Nom de la composante pour VALE_NCOU_MAXI"),),
+                           into=("SPMX_ELGA",) ),
+               b_maxi    =BLOC( condition = "OPTION=='SPMX_ELGA' or \
+                                (type(OPTION)==type(()) and 'SPMX_ELGA' in OPTION)",
+                    NOM_CHAM  =SIMP(statut='o',typ='TXM',into=("SIEF_ELGA","EPSI_ELGA","SIEQ_ELGA","EPEQ_ELGA","VARI_ELGA"),
+                                    fr="Nom du champ pour SPMX_ELGA",),
+                    NOM_CMP   =SIMP(statut='o',typ='TXM',fr="Nom de la composante pour SPMX_ELGA"),),
                                  ),
 
           b_indi_erreur         =BLOC( condition = "TYPE_OPTION=='INDI_ERREUR'",
-               OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut="ERRE_ELEM_SIGM",
-                           into=("ERRE_ELEM_SIGM","ERRE_ELNO_ELEM","ERZ1_ELEM_SIGM","ERZ2_ELEM_SIGM",
-                                 "DCHA_ELNO_SIGM","DCHA_ELGA_SIGM","RADI_ELNO_SIGM","RADI_ELGA_SIGM",
-                                 "QIRE_ELEM_SIGM","QIRE_ELNO_ELEM","QIZ1_ELEM_SIGM","QIZ2_ELEM_SIGM",
-                                 "SING_ELEM","SING_ELNO_ELEM",) ),
+               OPTION    =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut="ERME_ELEM",
+                           into=("ERME_ELEM","ERME_ELNO","ERZ1_ELEM","ERZ2_ELEM",
+                                 "DERA_ELNO","DERA_ELGA",
+                                 "QIRE_ELEM","QIRE_ELNO","QIZ1_ELEM","QIZ2_ELEM",
+                                 "SING_ELEM","SING_ELNO",) ),
 
-               b_erre_qi =BLOC(condition = "OPTION in ('QIRE_ELEM_SIGM','QIZ1_ELEM_SIGM','QIZ2_ELEM_SIGM') or \
-                                        (type(OPTION)==type(()) and 'QIRE_ELEM_SIGM' in OPTION) or \
-                                        (type(OPTION)==type(()) and 'QIZ1_ELEM_SIGM' in OPTION) or \
-                                        (type(OPTION)==type(()) and 'QIZ2_ELEM_SIGM' in OPTION)",
+               b_erre_qi =BLOC(condition = "OPTION in ('QIRE_ELEM','QIZ1_ELEM','QIZ2_ELEM') or \
+                                        (type(OPTION)==type(()) and 'QIRE_ELEM' in OPTION) or \
+                                        (type(OPTION)==type(()) and 'QIZ1_ELEM' in OPTION) or \
+                                        (type(OPTION)==type(()) and 'QIZ2_ELEM' in OPTION)",
                 RESU_DUAL    =SIMP(statut='o',typ=(evol_elas,evol_noli),fr="resultat du probleme dual")),
 
                b_sing =BLOC(condition= "OPTION == 'SING_ELEM' or \
                                (type(OPTION)==type(()) and  'SING_ELEM' in OPTION)",
                     PREC_ERR=SIMP(statut='o',typ='R',val_min= 0.,
                                   fr="precision demandee pour calculer la carte de taille des elements" ),
-                    TYPE_ESTI=SIMP(statut='f',typ='TXM',into=("ERRE_ELEM_SIGM","ERZ1_ELEM_SIGM","ERZ2_ELEM_SIGM",
-                                                              "QIRE_ELEM_SIGM","QIZ1_ELEM_SIGM","QIZ2_ELEM_SIGM",),
+                    TYPE_ESTI=SIMP(statut='f',typ='TXM',into=("ERME_ELEM","ERZ1_ELEM","ERZ2_ELEM",
+                                                              "QIRE_ELEM","QIZ1_ELEM","QIZ2_ELEM",),
                                    fr="choix de l'estimateur d'erreur"),),
-
-               b_indic = BLOC( condition ="OPTION in ('DCHA_ELNO_SIGM','DCHA_ELGA_SIGM','RADI_ELNO_SIGM','RADI_ELGA_SIGM') or\
-                                            (type(OPTION)==type(()) and 'DCHA_ELNO_SIGM' in OPTION) or\
-                                            (type(OPTION)==type(()) and 'DCHA_ELGA_SIGM' in OPTION) or\
-                                            (type(OPTION)==type(()) and 'RADI_ELNO_SIGM' in OPTION) or\
-                                            (type(OPTION)==type(()) and 'RADI_ELGA_SIGM' in OPTION) ",
-                    NORME =SIMP(statut='f',typ='TXM',defaut="VMIS",
-                                 into=("VMIS","TOTAL","VMIS_CINE","TOTAL_CINE") ),
-                                 ),
                                  ),
                                  ),
 #          fin bloc evol_noli
@@ -5368,9 +5853,8 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
 #           thermique : evol_ther, fourier_ther
      b_ther          =BLOC( condition = "AsType(RESULTAT) in (evol_ther,fourier_ther,)" ,fr="options thermiques",
           OPTION          =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=("DEUL_ELGA_TEMP","DETE_ELNO_DLTE","FLUX_ELGA_TEMP","FLUX_ELNO_TEMP",
-                                  "HYDR_ELNO_ELGA","DURT_ELGA_META","DURT_ELNO_META",
-                                  "SOUR_ELGA_ELEC","ERRE_ELEM_TEMP","ERRE_ELNO_ELEM",),),
+                           into=("FLUX_ELGA","FLUX_ELNO",
+                                  "DURT_ELNO","SOUR_ELGA","ERTH_ELEM","ERTH_ELNO",),),
                EXCIT           =FACT(statut='f',max='**',
                     regles=(EXCLUS('FONC_MULT','FONC_MULT_C','COEF_MULT','COEF_MULT_C'),),
                     CHARGE          =SIMP(statut='o',typ=char_ther ),
@@ -5387,8 +5871,7 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
 #    acoustique
      b_acou          =BLOC( condition = "AsType(RESULTAT) in (acou_harmo,mode_acou,)",fr="options acoustiques",
           OPTION          =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                           into=("PRES_ELNO_DBEL","PRES_ELNO_REEL","PRES_ELNO_IMAG",
-                                 "INTE_ELNO_ACTI","INTE_ELNO_REAC",
+                           into=("PRAC_ELNO", "INTE_ELNO",
                                  ),),
           EXCIT           =FACT(statut='f',max='**',
                 regles=(EXCLUS('FONC_MULT','FONC_MULT_C','COEF_MULT','COEF_MULT_C'),),
@@ -5425,26 +5908,24 @@ b_charge =BLOC( condition = "OPTION in ('EPME_ELNO_DEPL','EPSI_ELGA_DEPL','EPME_
          TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
          PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
          POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-         RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+         RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
          ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
          PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
          RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
          OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+         LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
          ),
      ),
 
 
 
-     SENSIBILITE     =SIMP(statut='f',typ=(para_sensi,theta_geom),validators=NoRepeat(),max='**',
-                           fr="Liste des paramètres de sensibilité.",
-                           ang="List of sensitivity parameters"),
      INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
      TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 ) ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 04/05/2011   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -5558,21 +6039,21 @@ CALC_ESSAI = MACRO(nom       = 'CALC_ESSAI',
                              # Si on realise une modification structurale, on donne les DDL capteurs et interface
                              b_modif   = BLOC( condition="MODIFSTRUCT!=None",
                                    GROUP_NO_CAPTEURS  = FACT( statut='f', max='**',
-                                                              GROUP_NO = SIMP(statut='o',typ='TXM', max='**'),
+                                                              GROUP_NO = SIMP(statut='o',typ=grno, max='**'),
                                                               NOM_CMP  = SIMP(statut='o',typ='TXM', max='**'),
                                                             ),
                                    GROUP_NO_EXTERIEUR = FACT( statut='f', max='**',
-                                                              GROUP_NO = SIMP(statut='o',typ='TXM', max='**'),
+                                                              GROUP_NO = SIMP(statut='o',typ=grno, max='**'),
                                                               NOM_CMP  = SIMP(statut='o',typ='TXM', max='**'),
                                                             ),
                                                ),
                                           ),
                         );
 
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -5600,7 +6081,7 @@ CALC_EUROPLEXUS = MACRO(nom="CALC_EUROPLEXUS",op=calc_europlexus_ops,sd_prod=cal
         UIinfo={"groupes":("Outils-métier","Dynamique",)},
         fr="Chainage Code_Aster-Europlexus",
 
-        LOGICIEL = SIMP(statut='f', typ='TXM', defaut='/home/europlex/EPXD/EUROPLEXUS_GESTION/runepx_d'),
+        LOGICIEL = SIMP(statut='f', typ='TXM', defaut='/home/europlex/EPXD/bin/europlexus'),
 
         MODELE     = SIMP(statut='o',typ=modele_sdaster),
         CARA_ELEM  = SIMP(statut='o',typ=cara_elem),
@@ -5670,8 +6151,8 @@ CALC_EUROPLEXUS = MACRO(nom="CALC_EUROPLEXUS",op=calc_europlexus_ops,sd_prod=cal
                                         EXCLUS('PAS_NBRE','PAS_INST',),
                                         EXCLUS('GROUP_NO','TOUT_GROUP_NO',),
                                         EXCLUS('GROUP_MA','TOUT_GROUP_MA',), ),
-           NOM_CHAM        = SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**', defaut = ('DEPL',),
-                                  into=('DEPL','VITE','ACCE','SIEF_ELGA','EPSI_ELGA','VARI_ELGA'),),
+           NOM_CHAM        = SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',defaut=('DEPL',),into=('DEPL'
+                                         ,'VITE','ACCE','SIEF_ELGA','EPSI_ELGA','VARI_ELGA'),),
            PAS_INST        = SIMP(statut='f',typ='R'),
            PAS_NBRE        = SIMP(statut='f',typ='I'),
            GROUP_NO        = SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
@@ -5682,7 +6163,7 @@ CALC_EUROPLEXUS = MACRO(nom="CALC_EUROPLEXUS",op=calc_europlexus_ops,sd_prod=cal
         ),
 
 
-        ARCHIVAGE        =FACT(statut='f', regles=( AU_MOINS_UN('PAS_NBRE','PAS_INST',), EXCLUS('PAS_NBRE','PAS_INST',), ),
+        ARCHIVAGE        =FACT(statut='o', regles=( AU_MOINS_UN('PAS_NBRE','PAS_INST',), EXCLUS('PAS_NBRE','PAS_INST',), ),
            PAS_INST     = SIMP(statut='f',typ='R'),
            PAS_NBRE     = SIMP(statut='f',typ='I'),
            CONT_GENER   = SIMP(statut='o',typ='TXM',defaut="NON",max=1,into=("OUI","NON")),
@@ -5837,10 +6318,10 @@ CALC_FATIGUE=OPER(nom="CALC_FATIGUE",op= 151,sd_prod=calc_fatigue_prod,reentrant
 
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 02/02/2011   AUTEUR PELLET J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2010  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -5930,7 +6411,7 @@ CALC_FERRAILLAGE=OPER(nom="CALC_FERRAILLAGE",op=175,sd_prod=calc_ferrailage_prod
 #     EPSIBE deformation béton
 
 # arrêt en erreur si:
-# - EFGE_ELNO_DEPL n'a pas été précédemment calculé et n'est donc pas présent dans la structure de données RESULTAT
+# - EFGE_ELNO n'a pas été précédemment calculé et n'est donc pas présent dans la structure de données RESULTAT
 # - si aucun CARA_ELEM n'est récupérable via la structure de données RESULTAT
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -6038,10 +6519,10 @@ CALC_FONC_INTERP=OPER(nom="CALC_FONC_INTERP",op= 134,sd_prod=calc_fonc_interp_pr
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 22/03/2011   AUTEUR COURTOIS M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -6194,19 +6675,22 @@ CALC_FONCTION=MACRO(nom="CALC_FONCTION",op=calc_fonction_ops,sd_prod=calc_foncti
          ),
          NOM_PARA        =SIMP(statut='f',typ='TXM',into=C_PARA_FONCTION() ),
          NOM_RESU        =SIMP(statut='f',typ='TXM' ),
-         INTERPOL        =SIMP(statut='f',typ='TXM',max=2,into=("NON","LIN","LOG") ),
+         INTERPOL        =SIMP(statut='f',typ='TXM',max=2,into=("NON","LIN","LOG"),
+                               fr="Type d'interpolation pour les abscisses et les ordonnées de la " \
+                                  "fonction ou bien pour le paramètre de la nappe."),
          PROL_DROITE     =SIMP(statut='f',typ='TXM',into=("CONSTANT","LINEAIRE","EXCLU") ),
          PROL_GAUCHE     =SIMP(statut='f',typ='TXM',into=("CONSTANT","LINEAIRE","EXCLU") ),
          NOM_PARA_FONC   =SIMP(statut='f',typ='TXM',into=C_PARA_FONCTION() ),
-         INTERPOL_FONC   =SIMP(statut='f',typ='TXM',max=2,into=("NON","LIN","LOG") ),
+         INTERPOL_FONC   =SIMP(statut='f',typ='TXM',max=2,into=("NON","LIN","LOG"),
+                                 fr="Type d'interpolation pour les abscisses et les ordonnées de la fonction"),
          PROL_DROITE_FONC=SIMP(statut='f',typ='TXM',into=("CONSTANT","LINEAIRE","EXCLU") ),
          PROL_GAUCHE_FONC=SIMP(statut='f',typ='TXM',into=("CONSTANT","LINEAIRE","EXCLU") ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/02/2011   AUTEUR TARDIEU N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -6273,7 +6757,7 @@ CALC_FORC_AJOU=OPER(nom="CALC_FORC_AJOU",op=199,sd_prod=vect_asse_gene,
                RENUM               =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
                ),
              b_simple        =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                ),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1.E-6 ),
              NMAX_ITER       =SIMP(statut='f',typ='I',defaut= 0 ),
@@ -6282,11 +6766,12 @@ CALC_FORC_AJOU=OPER(nom="CALC_FORC_AJOU",op=199,sd_prod=vect_asse_gene,
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=1.0E-6,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),            
            ),
            b_petsc          =BLOC(condition = "METHODE == 'PETSC' ",fr="Paramètres de la méthode PETSC",
              ALGORITHME      =SIMP(statut='f',typ='TXM',into=("BCGS","BICG","CG","CR","GMRES","TFQMR",),defaut="CG" ),
@@ -6297,7 +6782,7 @@ CALC_FORC_AJOU=OPER(nom="CALC_FORC_AJOU",op=199,sd_prod=vect_asse_gene,
                RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
              ),
              b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
              b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'",
@@ -6309,7 +6794,59 @@ CALC_FORC_AJOU=OPER(nom="CALC_FORC_AJOU",op=199,sd_prod=vect_asse_gene,
            ),
         ),
      ) ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 14/12/2010   AUTEUR PELLET J.PELLET 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2010  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE DEVESA
+
+CALC_FORC_NONL=OPER(nom="CALC_FORC_NONL",op= 183,sd_prod=dyna_trans,reentrant='n',
+            fr="Créer un dyna_trans contenant des champs nommés 'DEPL' correspondant à 'FONL_NOEU' ",
+            UIinfo={"groupes":("Post-traitements","Résultats et champs",)},
+         RESULTAT        =SIMP(statut='o',typ=resultat_sdaster),
+
+         regles=(EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST','FREQ','NUME_MODE',
+                        'NOEUD_CMP','LIST_INST','LIST_FREQ','LIST_ORDRE','NOM_CAS'),
+                 ),
+         TOUT_ORDRE      =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+         NUME_ORDRE      =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
+         NUME_MODE       =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
+         NOEUD_CMP       =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**'),
+         NOM_CAS         =SIMP(statut='f',typ='TXM' ),
+         INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**'),
+         FREQ            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**'),
+         LIST_INST       =SIMP(statut='f',typ=listr8_sdaster),
+         LIST_FREQ       =SIMP(statut='f',typ=listr8_sdaster),
+         LIST_ORDRE      =SIMP(statut='f',typ=listis_sdaster),
+         CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU",),),
+         b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+             PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
+         b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+             PRECISION       =SIMP(statut='o',typ='R',),),
+         OPTION          =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=1, defaut="FONL_NOEU",
+                               into=("FONL_NOEU",) ),
+
+         MODELE          =SIMP(statut='o',typ=modele_sdaster),
+         CHAM_MATER      =SIMP(statut='f',typ=cham_mater),
+         CARA_ELEM       =SIMP(statut='f',typ=cara_elem),
+
+         COMP_INCR       =C_COMP_INCR(),
+)  ;
+#& MODIF COMMANDE  DATE 07/12/2010   AUTEUR GENIAUT S.GENIAUT 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -6403,19 +6940,11 @@ CALC_G=OPER(nom="CALC_G",op=100,sd_prod=table_sdaster,
          ),
          SYME_CHAR       =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SYME","ANTI","SANS") ),
 
-         COMP_ELAS       =FACT(statut='f',
-               RELATION        =SIMP(statut='f',typ='TXM',defaut="ELAS",
-                                     into=("ELAS","ELAS_VMIS_LINE","ELAS_VMIS_TRAC","ELAS_VMIS_PUIS") ),
-               CALCUL_CONTRAINTE =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
-               DEFORMATION     =SIMP(statut='f',typ='TXM',defaut="PETIT" ,into=("PETIT","GROT_GDEP",) ),
-      regles=(PRESENT_ABSENT('TOUT','GROUP_MA','MAILLE'),),
-               TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
-               GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
-               MAILLE          =SIMP(statut='f',typ=ma,validators=NoRepeat(),max='**'),
-         ),
+         COMP_ELAS       =C_COMP_ELAS('CALC_G'),
+
          COMP_INCR       =FACT(statut='f',
                RELATION        =SIMP(statut='f',typ='TXM',defaut="ELAS",
-                                     into=("ELAS","VMIS_ISOT_TRAC","VMIS_ISOT_LINE","VMIS_CINE_LINE","ELAS_VMIS_PUIS") ),
+                                     into=("ELAS","VMIS_ISOT_TRAC","VMIS_ISOT_LINE","VMIS_CINE_LINE","VMIS_ISOT_PUIS") ),
                DEFORMATION     =SIMP(statut='f',typ='TXM',defaut="PETIT",into=("PETIT","PETIT_REAC") ),
       regles=(PRESENT_ABSENT('TOUT','GROUP_MA','MAILLE'),),
                TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
@@ -6459,6 +6988,257 @@ CALC_G=OPER(nom="CALC_G",op=100,sd_prod=table_sdaster,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 );
+#& MODIF COMMANDE  DATE 04/05/2011   AUTEUR MACOCCO K.MACOCCO 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE GREFFET N.GREFFET
+#
+# MACRO DE COUPLAGE IFS AVEC SATURNE VIA YACS
+#
+from Macro.calc_ifs_dnl_ops import calc_ifs_dnl_ops
+#
+CALC_IFS_DNL= MACRO(nom='CALC_IFS_DNL',op=calc_ifs_dnl_ops,sd_prod=evol_noli,reentrant='f',
+            fr="Calcul de l'évolution dynamique d'une structure couplée à un domaine fluide (résolu avec le code Saturne) via YACS",
+            UIinfo={"groupes":("Résolution","Dynamique",)},
+         regles=(AU_MOINS_UN('COMP_INCR','COMP_ELAS',),
+                 CONCEPT_SENSIBLE('ENSEMBLE'),),
+#IFS
+#=>
+         GROUP_MA_IFS     =SIMP(statut='o',typ=grma,max='**'),
+         NOM_CMP_IFS      =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**'),
+         UNITE_NOEUD      =SIMP(statut='f',typ='I',defaut= 81 ),
+         UNITE_ELEM       =SIMP(statut='f',typ='I',defaut= 82 ),
+         PAS_INIT         =SIMP(statut='o',typ='R' ),
+#<=
+#IFS
+         MODELE          =SIMP(statut='o',typ=modele_sdaster),
+         CHAM_MATER      =SIMP(statut='o',typ=cham_mater),
+         MODE_STAT       =SIMP(statut='f',typ=mode_meca),
+         CARA_ELEM       =SIMP(statut='f',typ=cara_elem),
+         MASS_DIAG       =SIMP(statut='f',typ='TXM',into=("OUI","NON",) ),
+#IFS
+#=>
+#(une charge force nodale est fournie par le couplage avec code_saturne
+         EXCIT           =FACT(statut='f',max='**',
+#<=
+#IFS
+           regles=(PRESENT_ABSENT('FONC_MULT','ACCE'),
+                   PRESENT_PRESENT('ACCE','VITE','DEPL'),
+                   # PRESENT_ABSENT('MULT_APPUI','FONC_MULT'),
+                   ),
+           TYPE_CHARGE     =SIMP(statut='f',typ='TXM',defaut="FIXE_CSTE",
+                                 into=("FIXE_CSTE","SUIV","DIDI")),
+#IFS
+#=>
+#(une charge force nodale est fournie par le couplage avec code_saturne
+#           CHARGE          =SIMP(statut='o',typ=(char_meca,char_cine_meca)),
+           CHARGE          =SIMP(statut='f',typ=(char_meca,char_cine_meca)),
+#<=
+#IFS
+           FONC_MULT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+           DEPL            =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+           ACCE            =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+           VITE            =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+           MULT_APPUI      =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON") ),
+           DIRECTION       =SIMP(statut='f',typ='R',max='**'),
+           NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+           GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+         ),
+         EXCIT_GENE      =FACT(statut='f',max='**',
+           FONC_MULT       =SIMP(statut='f',typ=fonction_sdaster,max='**' ),
+           VECT_GENE       =SIMP(statut='f',typ=vect_asse_gene,max='**' ),
+         ),
+         CONTACT         =SIMP(statut='f',typ=char_contact),
+         SOUS_STRUC      =FACT(statut='f',min=01,max='**',
+                regles=(UN_PARMI('TOUT','SUPER_MAILLE'),),
+                CAS_CHARGE  =SIMP(statut='o',typ='TXM' ),
+                TOUT        =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+                SUPER_MAILLE=SIMP(statut='f',typ=ma,validators=NoRepeat(),max='**',),
+                FONC_MULT   =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+              ),
+         AMOR_RAYL_RIGI = SIMP(statut='f',typ='TXM',defaut="TANGENTE",into=("TANGENTE","ELASTIQUE"),),
+         AMOR_MODAL      =FACT(statut='f',
+           regles=(EXCLUS('AMOR_REDUIT','LIST_AMOR'),),
+           MODE_MECA       =SIMP(statut='f',typ=mode_meca),
+           AMOR_REDUIT     =SIMP(statut='f',typ='R',max='**' ),
+           LIST_AMOR       =SIMP(statut='f',typ=listr8_sdaster ),
+           NB_MODE         =SIMP(statut='f',typ='I',defaut= 9999 ),
+           REAC_VITE       =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
+         ),
+         PROJ_MODAL      =FACT(statut='f',max='**',
+           MODE_MECA       =SIMP(statut='o',typ=mode_meca),
+           NB_MODE         =SIMP(statut='f',typ='I',defaut= 9999 ),
+           regles=(PRESENT_PRESENT('MASS_GENE','RIGI_GENE'),),
+           MASS_GENE       =SIMP(statut='f',typ=matr_asse_gene_r),
+           RIGI_GENE       =SIMP(statut='f',typ=matr_asse_gene_r),
+           AMOR_GENE       =SIMP(statut='f',typ=matr_asse_gene_r),
+           DEPL_INIT_GENE  =SIMP(statut='f',typ=vect_asse_gene),
+           VITE_INIT_GENE  =SIMP(statut='f',typ=vect_asse_gene),
+           ACCE_INIT_GENE  =SIMP(statut='f',typ=vect_asse_gene),
+         ),
+#-------------------------------------------------------------------         
+         COMP_INCR       =C_COMP_INCR(),
+#-------------------------------------------------------------------         
+         COMP_ELAS       =C_COMP_ELAS('DYNA_NON_LINE'),
+#-------------------------------------------------------------------
+         b_reuse =BLOC(condition = "reuse",fr="en mode concept reentrant : ETAT_INIT obligatoire",
+         ETAT_INIT       =FACT(statut='o',
+           regles=(AU_MOINS_UN('EVOL_NOLI','DEPL','VITE','ACCE','SIGM','VARI',),
+                   EXCLUS('EVOL_NOLI','DEPL',),
+                   EXCLUS('EVOL_NOLI','VITE'),
+                   EXCLUS('EVOL_NOLI','ACCE'),
+                   EXCLUS('EVOL_NOLI','SIGM',),
+                   EXCLUS('EVOL_NOLI','VARI',),
+                   EXCLUS('NUME_ORDRE','INST'), ),
+           DEPL            =SIMP(statut='f',typ=cham_no_sdaster),
+           VITE            =SIMP(statut='f',typ=cham_no_sdaster),
+           ACCE            =SIMP(statut='f',typ=cham_no_sdaster),
+           SIGM            =SIMP(statut='f',typ=(cham_elem,carte_sdaster)),
+           VARI            =SIMP(statut='f',typ=cham_elem),
+           EVOL_NOLI       =SIMP(statut='f',typ=evol_noli),
+           NUME_ORDRE      =SIMP(statut='f',typ='I'),
+           INST            =SIMP(statut='f',typ='R'),
+           CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
+           b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+               PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
+           b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+               PRECISION       =SIMP(statut='o',typ='R',),),
+           NUME_DIDI       =SIMP(statut='f',typ='I'),
+           INST_ETAT_INIT  =SIMP(statut='f',typ='R'),
+         ),),
+         b_not_reuse =BLOC(condition = "not reuse",fr="en mode concept non reentrant : ETAT_INIT facultatif",
+         ETAT_INIT       =FACT(statut='f',
+           regles=(AU_MOINS_UN('EVOL_NOLI','DEPL','VITE','ACCE','SIGM','VARI',),
+                   EXCLUS('EVOL_NOLI','DEPL',),
+                   EXCLUS('EVOL_NOLI','VITE'),
+                   EXCLUS('EVOL_NOLI','ACCE'),
+                   EXCLUS('EVOL_NOLI','SIGM',),
+                   EXCLUS('EVOL_NOLI','VARI',),
+                   EXCLUS('NUME_ORDRE','INST'), ),
+           DEPL            =SIMP(statut='f',typ=cham_no_sdaster),
+           VITE            =SIMP(statut='f',typ=cham_no_sdaster),
+           ACCE            =SIMP(statut='f',typ=cham_no_sdaster),
+           SIGM            =SIMP(statut='f',typ=(cham_elem,carte_sdaster)),
+           VARI            =SIMP(statut='f',typ=cham_elem),
+           EVOL_NOLI       =SIMP(statut='f',typ=evol_noli),
+           NUME_ORDRE      =SIMP(statut='f',typ='I'),
+           INST            =SIMP(statut='f',typ='R'),
+           CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
+           b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+               PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
+           b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+               PRECISION       =SIMP(statut='o',typ='R',),),
+           NUME_DIDI       =SIMP(statut='f',typ='I'),
+           INST_ETAT_INIT  =SIMP(statut='f',typ='R'),
+         ),),
+#-------------------------------------------------------------------
+#IFS : pas besoin d'INCREMENT
+#         INCREMENT       =C_INCREMENT(),
+#-------------------------------------------------------------------
+         SCHEMA_TEMPS     =FACT(statut='o',
+            SCHEMA          =SIMP(statut='o',min=1,max=1,typ='TXM',
+            into=("DIFF_CENT","TCHAMWA","NEWMARK","HHT","THETA_METHODE","KRENK"),),
+            COEF_MASS_SHIFT =SIMP(statut='f',typ='R',defaut= 0.0E+0 ),
+            b_tchamwa = BLOC(condition="SCHEMA=='TCHAMWA'",
+               PHI          =SIMP(statut='f',typ='R',defaut= 1.05),),
+               
+            b_newmark = BLOC(condition="SCHEMA=='NEWMARK'",
+               BETA         =SIMP(statut='f',typ='R',defaut= 0.25),
+               GAMMA        =SIMP(statut='f',typ='R',defaut= 0.5),),
+               
+            b_hht     = BLOC(condition="SCHEMA=='HHT'",
+               ALPHA        =SIMP(statut='f',typ='R',defaut= -0.3 ),
+               MODI_EQUI    =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),),
+               
+            b_theta   = BLOC(condition="SCHEMA=='THETA_METHODE'",
+               THETA         =SIMP(statut='f',typ='R',defaut= 1.,val_min=0.5,val_max=100. ),),
+
+            b_krenk   = BLOC(condition="SCHEMA=='KRENK'",
+               KAPPA         =SIMP(statut='f',typ='R',defaut= 1.0,val_min=1.0,val_max=100. ),), 
+               
+            b_explicit= BLOC(condition="SCHEMA=='TCHAMWA'or SCHEMA=='DIFF_CENT'",
+               STOP_CFL     =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON"),),
+               FORMULATION  =SIMP(statut='o',typ='TXM',into=("ACCELERATION",),),),
+               
+            b_implicit= BLOC(condition="SCHEMA!='TCHAMWA'and SCHEMA!='DIFF_CENT'",
+               FORMULATION  =SIMP(statut='o',max=1,typ='TXM',into=("DEPLACEMENT","VITESSE","ACCELERATION"),),),
+         ),
+#-------------------------------------------------------------------         
+         NEWTON          =C_NEWTON(),
+#-------------------------------------------------------------------
+         RECH_LINEAIRE   =C_RECH_LINEAIRE(),
+#-------------------------------------------------------------------
+         CONVERGENCE     =C_CONVERGENCE(),
+#-------------------------------------------------------------------
+         SOLVEUR         =C_SOLVEUR(),
+#-------------------------------------------------------------------
+         OBSERVATION     =C_OBSERVATION(),
+#-------------------------------------------------------------------
+         SUIVI_DDL       =C_SUIVI_DDL(),
+#------------------------------------------------------------------- 
+         AFFICHAGE       =C_AFFICHAGE(),
+#-------------------------------------------------------------------
+         ARCHIVAGE       =C_ARCHIVAGE(),
+#-------------------------------------------------------------------
+         CRIT_FLAMB     =FACT(statut='f',min=1,max=1,
+           NB_FREQ         =SIMP(statut='f',typ='I',max=1,defaut=3),
+           CHAR_CRIT       =SIMP(statut='f',typ='R',min=2,max=2,defaut=(-10.0,10.),
+                            fr="Valeur des deux charges critiques délimitant la bande de recherche en HPP"),
+           RIGI_GEOM     =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
+           bloc_ddl_exclus=BLOC(condition="(RIGI_GEOM=='NON')",
+              DDL_EXCLUS      =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=40,
+                                    into=('DX','DY','DZ','DRX','DRY','DRZ','GRX','PRES','PHI',
+                                          'TEMP','PRE1','PRE2','UI2','UI3','VI2','VI3','WI2','WI3','UO2',
+                                          'UO3','VO2','VO3','WO2','WO3','UI4','UI5','VI4','VI5','WI4',
+                                          'WI5','UO4','UO5','VO4','VO5','WO4','WO5','UI6','UO6','VI6',
+                                          'VO6','WI6','WO6','WO','WI1','WO1','GONF','LIAISON','DCX',
+                                          'DCY','DCZ','H1X','H1Y','H1Z','E1X','E1Y','E1Z','E2X','E2Y','E2Z',
+                                          'E3X','E3Y','E3Z','E4X','E4Y','E4Z','LAGS_C','V11','V12','V13','V21','V22',
+                                          'V23','V31','V32','V33','PRES11','PRES12','PRES13','PRES21','PRES22','PRES23',
+                                          'PRES31','PRES32','PRES33','VARI','LAG_GV')),),
+           INST_CALCUL       =SIMP(statut='f',typ='TXM',defaut="LISTE_ARCHIVAGE",into=("LISTE_ARCHIVAGE","TOUT_PAS",) ),
+         ),
+         MODE_VIBR     =FACT(statut='f',min=1,max=1,
+           MATR_RIGI        =SIMP(statut='f',typ='TXM',defaut="ELASTIQUE",into=("ELASTIQUE","TANGENTE","SECANTE",) ),
+           NB_FREQ          =SIMP(statut='f',typ='I',max=1,defaut=3,
+                            fr="Nombre de fréquences propres à calculer"),
+           BANDE            =SIMP(statut='f',typ='R',min=2,max=2,
+                            fr="Valeur des deux fréquences délimitant la bande de recherche",),
+           INST_CALCUL       =SIMP(statut='f',typ='TXM',defaut="LISTE_ARCHIVAGE",into=("LISTE_ARCHIVAGE","TOUT_PAS",) ),
+         ),
+#-------------------------------------------------------------------
+           SENSIBILITE     =SIMP(statut='f',typ=(para_sensi,theta_geom),validators=NoRepeat(),max='**',
+                               fr="Liste des paramètres de sensibilité",
+                               ang="List of sensitivity parameters"),
+#-------------------------------------------------------------------
+         INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
+         b_info=BLOC(condition="(INFO==2)",
+               fr="filtre les messages émis dans le .mess selon le type de message demandé",
+               INFO_DBG = SIMP(statut='f',typ='TXM',max='**',validators=NoRepeat(),
+                               into=("CONTACT",
+                                     "MECA_NON_LINE",
+                                     "PILOTAGE",
+                                     "FACTORISATION",
+                                     "APPARIEMENT"),
+                             ),
+                    ),
+         TITRE           =SIMP(statut='f',typ='TXM',max='**'),
+)  ;
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -6491,10 +7271,10 @@ CALC_INTE_SPEC=OPER(nom="CALC_INTE_SPEC",op= 120,sd_prod=table_fonction,
          TITRE           =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1 , 2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/02/2011   AUTEUR TARDIEU N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -6553,7 +7333,7 @@ CALC_MATR_AJOU=OPER(nom="CALC_MATR_AJOU",op= 152,sd_prod=matr_asse_gene_r,
                RENUM               =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
                ),
              b_simple        =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                ),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1.E-6 ),
              NMAX_ITER       =SIMP(statut='f',typ='I',defaut= 0 ),
@@ -6561,12 +7341,13 @@ CALC_MATR_AJOU=OPER(nom="CALC_MATR_AJOU",op= 152,sd_prod=matr_asse_gene_r,
            b_mumps        =BLOC(condition = "METHODE == 'MUMPS' ",fr="Paramètres de la méthode MUMPS",
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
-             POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),             
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=1.0E-6,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),             
              ),
            b_petsc          =BLOC(condition = "METHODE == 'PETSC' ",fr="Paramètres de la méthode PETSC",
              ALGORITHME      =SIMP(statut='f',typ='TXM',into=("BCGS","BICG","CG","CR","GMRES","TFQMR",),defaut="CG" ),
@@ -6577,10 +7358,10 @@ CALC_MATR_AJOU=OPER(nom="CALC_MATR_AJOU",op= 152,sd_prod=matr_asse_gene_r,
                RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
              ),
              b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
-             b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'",
+             b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'", 
                                                                          fr="Paramètres des préconditionneurs JACOBI et SOR",
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
@@ -6744,10 +7525,10 @@ CALC_MATR_ELEM=OPER(nom="CALC_MATR_ELEM",op=   9,sd_prod=calc_matr_elem_prod
            CHARGE            =SIMP(statut='o',typ=char_meca,validators=NoRepeat(),max='**' ),
          ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 13/01/2011   AUTEUR PELLET J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -6796,12 +7577,12 @@ CALC_META=OPER(nom="CALC_META",op=194,sd_prod=evol_ther,reentrant='o',
            MAILLE          =SIMP(statut='f',typ=ma, validators=NoRepeat(), max='**'),
          ),
          OPTION          =SIMP(statut='f',typ='TXM'
-                             ,into=("META_ELNO_TEMP",) ),
+                             ,into=("META_ELNO",) ),
 )  ;
-#& MODIF COMMANDE  DATE 23/11/2010   AUTEUR COURTOIS M.COURTOIS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR COURTOIS M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2010  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -6818,51 +7599,155 @@ CALC_META=OPER(nom="CALC_META",op=194,sd_prod=evol_ther,reentrant='o',
 # ======================================================================
 # RESPONSABLE COURTOIS M.COURTOIS
 
+def calc_miss_sdprod(self, TYPE_RESU, **kwargs):
+    if TYPE_RESU == 'TABLE':
+        return table_sdaster
+    elif TYPE_RESU == 'HARM_GENE':
+        return harm_gene
+    elif TYPE_RESU == 'TRAN_GENE':
+        return tran_gene
+    else:
+        return None
+
 from Macro.calc_miss_ops import calc_miss_ops
 
-CALC_MISS = MACRO(nom="CALC_MISS",op=calc_miss_ops,
-                  fr="Préparation des données puis exécution du logiciel MISS3D",
+CALC_MISS = MACRO(nom="CALC_MISS",
+                  op=calc_miss_ops,
+                  sd_prod=calc_miss_sdprod,
+                  fr="Préparation des données, exécution du logiciel Miss3D, et post-traitement",
                   UIinfo={"groupes":("Résolution","Outils-métier",)},
 
-   OPTION      = FACT(statut='o',
-      MODULE      = SIMP(statut='f',typ='TXM',defaut="MISS_IMPE", into=("MISS_IMPE",)),
-   ),
-   TABLE_SOL   = SIMP(statut='o', typ=table_sdaster),
+    TYPE_RESU   = SIMP(statut='o', typ='TXM', into=('HARM_GENE', 'TRAN_GENE', 'TABLE', 'FICHIER'),
+                       fr="Type de résultat produit en post-traitement. FICHIER : pas de post-traitement"),
+    PROJET      = SIMP(statut='f', typ='TXM', defaut='MODELE',
+                       fr="Nom de l'étude Miss"),
+    REPERTOIRE  = SIMP(statut='f', typ='TXM',
+                       fr="Répertoire de travail de Miss"),
+    VERSION     = SIMP(statut='f', typ='TXM', into=("V6.6","V6.5"), defaut="V6.6",
+                       fr="Version de Miss utilisée"),
 
-   PROJET      = SIMP(statut='f', typ='TXM'),
-   REPERTOIRE  = SIMP(statut='f', typ='TXM'),
-   VERSION     = SIMP(statut='f', typ='TXM', into=("V1_4",), defaut="V1_4"),
+    TABLE_SOL   = SIMP(statut='o', typ=table_sdaster,
+                       fr="Table des propriétés du sol"),
 
-   UNITE_IMPR_ASTER = SIMP(statut='f',typ='I',defaut=25),
-   UNITE_RESU_IMPE  = SIMP(statut='f',typ='I',defaut=30),
-   UNITE_RESU_FORC  = SIMP(statut='f',typ='I',defaut=0),
-   PARAMETRE   = FACT(statut='o',
-                      regles=(PRESENT_PRESENT('OFFSET_MAX','OFFSET_NB'),
-                              PRESENT_PRESENT('FREQ_MIN','FREQ_MAX','FREQ_PAS'),
-                              PRESENT_PRESENT('LFREQ_NB','LFREQ_LISTE'),
-                              UN_PARMI('FREQ_MIN', 'LFREQ_NB'),
-                              PRESENT_PRESENT('SPEC_MAX','SPEC_NB'),),
-      FREQ_MIN       = SIMP(statut='f',typ='R'),
-      FREQ_MAX       = SIMP(statut='f',typ='R'),
-      FREQ_PAS       = SIMP(statut='f',typ='R'),
-      LFREQ_NB       = SIMP(statut='f',typ='I'),
-      LFREQ_LISTE    = SIMP(statut='f',typ='R',max='**'),
-      Z0             = SIMP(statut='f',typ='R',defaut=0.),
-      SURF           = SIMP(statut='f',typ='TXM',into=("OUI","NON",),defaut="NON"),
-      ISSF           = SIMP(statut='f',typ='TXM',into=("OUI","NON",),defaut="NON"),
-      TYPE           = SIMP(statut='f',typ='TXM',into=("BINAIRE","ASCII",),defaut="ASCII"),
-      RFIC           = SIMP(statut='f',typ='R',defaut=0.),
+    # pas de post-traitement
+    b_fichier   = BLOC(condition="TYPE_RESU == 'FICHIER'",
+                       regles=(UN_PARMI('MACR_ELEM_DYNA', 'BASE_MODALE'),),
+        MACR_ELEM_DYNA  = SIMP(statut='f', typ=macr_elem_dyna,
+                               fr="Macro élément produit en amont"),
+        BASE_MODALE     = SIMP(statut='f', typ=mode_meca,
+                               fr="Base de modes"),
+        b_base_modale = BLOC(condition="BASE_MODALE is not None",
+            MATR_RIGI       = SIMP(statut='f', typ=(matr_asse_depl_r, matr_asse_depl_c),),
+            MATR_MASS       = SIMP(statut='f', typ=matr_asse_depl_r ),
+        ),
+        AMOR_REDUIT     = SIMP(statut='f', typ='R', max='**'),
+        GROUP_MA_INTERF = SIMP(statut='o', typ=grma, max='**',
+                               fr="Groupe de mailles de l'interface"),
 
-      ALGO           = SIMP(statut='f',typ='TXM',into=("DEPL","REGU")),
-      DREF           = SIMP(statut='f',typ='R'),
-      SPEC_MAX       = SIMP(statut='f',typ='R'),
-      SPEC_NB        = SIMP(statut='f',typ='I'),
-      OFFSET_MAX     = SIMP(statut='f',typ='R'),
-      OFFSET_NB      = SIMP(statut='f',typ='I'),
+        UNITE_IMPR_ASTER = SIMP(statut='f', typ='I', defaut=25,
+                                fr="Unité des résultats transmis par Code_Aster à Miss"),
+        UNITE_RESU_IMPE  = SIMP(statut='f', typ='I', defaut=38,
+                                fr="Unité logique des impédances écrites par Miss"),
+        UNITE_RESU_FORC  = SIMP(statut='f', typ='I', defaut=28,
+                                fr="Unité logique des forces sismiques écrites par Miss"),
+    ),
+    # si post-traitement
+    b_donnees   = BLOC(condition="TYPE_RESU != 'FICHIER'",
+        MACR_ELEM_DYNA  = SIMP(statut='f', typ=macr_elem_dyna,
+                               fr="Macro élément produit en amont"),
+        BASE_MODALE     = SIMP(statut='o', typ=mode_meca,
+                               fr="Base de modes"),
+        MATR_RIGI       = SIMP(statut='o', typ=(matr_asse_depl_r, matr_asse_depl_c),),
+        MATR_MASS       = SIMP(statut='o', typ=matr_asse_depl_r ),
+        AMOR_REDUIT     = SIMP(statut='o', typ='R', max='**'),
+        GROUP_MA_INTERF = SIMP(statut='o', typ=grma, max='**',
+                               fr="Groupe de mailles de l'interface"),
 
-      FICH_POST_TRAI = SIMP(statut='f',typ='TXM'),
-   ),
-   INFO        = SIMP(statut='f', typ='I', defaut=1, into=(1,2)),
+        UNITE_IMPR_ASTER = SIMP(statut='f', typ='I',
+                                fr="Unité des résultats transmis par Code_Aster à Miss"),
+        UNITE_RESU_IMPE  = SIMP(statut='f', typ='I',
+                                fr="Unité logique des impédances à relire."),
+        UNITE_RESU_FORC  = SIMP(statut='f', typ='I',
+                                fr="Unité logique des forces sismiques à relire"),
+    ),
+    # Paramètres du calcul Miss
+    PARAMETRE   = FACT(statut='o',
+                       regles=(PRESENT_PRESENT('OFFSET_MAX', 'OFFSET_NB'),
+                               PRESENT_PRESENT('FREQ_MIN', 'FREQ_MAX','FREQ_PAS'),
+                               UN_PARMI('FREQ_MIN', 'LIST_FREQ'),
+                               PRESENT_PRESENT('SPEC_MAX', 'SPEC_NB'),),
+        FREQ_MIN       = SIMP(statut='f', typ='R'),
+        FREQ_MAX       = SIMP(statut='f', typ='R'),
+        FREQ_PAS       = SIMP(statut='f', typ='R'),
+        LIST_FREQ      = SIMP(statut='f', typ='R', max='**'),
+        Z0             = SIMP(statut='f', typ='R', defaut=0.),
+        SURF           = SIMP(statut='f', typ='TXM', into=("OUI","NON",), defaut="NON"),
+        RFIC           = SIMP(statut='f', typ='R', defaut=0.),
+
+        ALGO           = SIMP(statut='f', typ='TXM', into=("DEPL","REGU")),
+        DREF           = SIMP(statut='f', typ='R'),
+        SPEC_MAX       = SIMP(statut='f', typ='R'),
+        SPEC_NB        = SIMP(statut='f', typ='I'),
+        OFFSET_MAX     = SIMP(statut='f', typ='R'),
+        OFFSET_NB      = SIMP(statut='f', typ='I'),
+        TYPE           = SIMP(statut='f', typ='TXM', into=("BINAIRE","ASCII",), defaut="ASCII"),
+    ),
+    # Post-traitement type 1 - tran_gene
+    b_post_tran_gene = BLOC(condition="TYPE_RESU == 'TRAN_GENE'",
+                       regles=(AU_MOINS_UN('ACCE_X', 'ACCE_Y', 'ACCE_Z'),),
+        MODELE         = SIMP(statut='o', typ=(modele_sdaster),),
+        ACCE_X         = SIMP(statut='f', typ=fonction_sdaster,),
+        ACCE_Y         = SIMP(statut='f', typ=fonction_sdaster,),
+        ACCE_Z         = SIMP(statut='f', typ=fonction_sdaster,),
+        INST_FIN       = SIMP(statut='o', typ='R', fr="Instant final du calcul"),
+        PAS_INST       = SIMP(statut='o', typ='R', fr="Pas de temps du calcul"),
+    ),
+    # Post-traitement type 1 - harm_gene
+    b_post_harm_gene  = BLOC(condition="TYPE_RESU == 'HARM_GENE'",
+                       regles=(AU_MOINS_UN('EXCIT_HARMO', 'ACCE_X', 'ACCE_Y', 'ACCE_Z'),
+                               PRESENT_ABSENT('EXCIT_HARMO', 'ACCE_X', 'ACCE_Y', 'ACCE_Z', 'INST_FIN'),
+                               ENSEMBLE('INST_FIN', 'PAS_INST'),),
+        MODELE         = SIMP(statut='o', typ=(modele_sdaster),),
+        ACCE_X         = SIMP(statut='f', typ=fonction_sdaster,),
+        ACCE_Y         = SIMP(statut='f', typ=fonction_sdaster,),
+        ACCE_Z         = SIMP(statut='f', typ=fonction_sdaster,),
+        INST_FIN       = SIMP(statut='f', typ='R', fr="Instant final du calcul"),
+        PAS_INST       = SIMP(statut='f', typ='R', fr="Pas de temps du calcul"),
+        # identique à EXCIT de DYNA_LINE_HARM au type attendu pour VECT_ASSE près
+        EXCIT_HARMO    = FACT(statut='f', max='**',
+                              regles=(UN_PARMI('VECT_ASSE', 'CHARGE'),
+                                      UN_PARMI('FONC_MULT', 'FONC_MULT_C', 'COEF_MULT', 'COEF_MULT_C'),),
+            VECT_ASSE     = SIMP(statut='f', typ=cham_no_sdaster,),
+            CHARGE        = SIMP(statut='f', typ=char_meca),
+            TYPE_CHARGE   = SIMP(statut='f', typ='TXM', defaut="FIXE", into=("FIXE",),),
+            FONC_MULT_C   = SIMP(statut='f', typ=(fonction_c, formule_c),),
+            COEF_MULT_C   = SIMP(statut='f', typ='C'),
+            FONC_MULT     = SIMP(statut='f', typ=(fonction_sdaster, nappe_sdaster, formule) ),
+            COEF_MULT     = SIMP(statut='f', typ='R'),
+            PHAS_DEG      = SIMP(statut='f', typ='R', defaut=0.),
+            PUIS_PULS     = SIMP(statut='f', typ='I', defaut=0),
+        ),
+    ),
+    # Post-traitement type 2
+    b_post_table = BLOC(condition="TYPE_RESU == 'TABLE'",
+                        regles=(AU_MOINS_UN('ACCE_X', 'ACCE_Y', 'ACCE_Z'),),
+        MODELE         = SIMP(statut='o', typ=(modele_sdaster),),
+        GROUP_NO       = SIMP(statut='o', typ=grno, max='**',
+                              fr="Liste des groupes de noeud de post-traitement"),
+        ACCE_X         = SIMP(statut='f', typ=fonction_sdaster,),
+        ACCE_Y         = SIMP(statut='f', typ=fonction_sdaster,),
+        ACCE_Z         = SIMP(statut='f', typ=fonction_sdaster,),
+        INST_FIN       = SIMP(statut='o', typ='R', fr="Instant final du calcul"),
+        PAS_INST       = SIMP(statut='o', typ='R', fr="Pas de temps du calcul"),
+        NORME          = SIMP(statut='o', typ='R',
+                              fr="Valeur de la norme du spectre d'oscillateur" ),
+        AMOR_SPEC_OSCI = SIMP(statut='o', typ='R', max='**',
+                              fr="Amortissement du spectre d'oscillateur"),
+        LIST_FREQ      = SIMP(statut='f', typ=listr8_sdaster,
+                              fr="Fréquences utilisées pour le calcul du spectre d'oscillateur"),
+    ),
+
+    INFO        = SIMP(statut='f', typ='I', defaut=1, into=(1,2)),
 )
 
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
@@ -7023,10 +7908,10 @@ CALC_MODE_ROTATION=MACRO(nom="CALC_MODE_ROTATION",op=calc_mode_rotation_ops,sd_p
                   PREC_SHIFT      =SIMP(statut='f',typ='R',defaut= 5.E-3 ),
                   STURM           =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),),
 );
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 02/02/2011   AUTEUR PELLET J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -7050,14 +7935,10 @@ CALC_NO=OPER(nom="CALC_NO",op= 106,sd_prod=calc_no_prod,reentrant='f',
             fr="Enrichir une SD Résultat par des champs aux noeuds calculés à partir de champs aux éléments évalués aux noeuds",
             UIinfo={"groupes":("Post-traitements","Résultats et champs",)},
          RESULTAT        =SIMP(statut='o',typ=resultat_sdaster),
-         SENSIBILITE     =SIMP(statut='f',typ=(para_sensi,theta_geom),validators=NoRepeat(),max='**',
-                               fr="Liste des paramètres de sensibilité.",
-                               ang="List of sensitivity parameters"),
 
          regles=(EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST','FREQ','NUME_MODE',
                         'NOEUD_CMP','LIST_INST','LIST_FREQ','LIST_ORDRE','NOM_CAS'),
-                 CONCEPT_SENSIBLE("SEPARE"),
-                 DERIVABLE('RESULTAT'),),
+                 ),
          TOUT_ORDRE      =SIMP(statut='f',typ='TXM',into=("OUI",) ),
          NUME_ORDRE      =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
          NUME_MODE       =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
@@ -7075,46 +7956,31 @@ CALC_NO=OPER(nom="CALC_NO",op= 106,sd_prod=calc_no_prod,reentrant='f',
              PRECISION       =SIMP(statut='o',typ='R',),),
          OPTION          =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
                                into=("FORC_NODA","REAC_NODA",
-                                     "FORC_NODA_NONL",
-                                     "DCHA_NOEU_SIGM",
-                                     "DEGE_NOEU_DEPL",
-                                     "DETE_NOEU_DLTE",
-                                     "DEDE_NOEU_DLDE",
-                                     "DESI_NOEU_DLSI",
-                                     "DURT_NOEU_META",
-                                     "EFGE_NOEU_CART","EFGE_NOEU_DEPL",
-                                     "ENDO_NOEU_SINO",
-                                     "ENEL_NOEU_ELGA",
-                                     "EPMG_NOEU_DEPL",
-                                     "EPSA_NOEU",
-                                     "EPSG_NOEU_DEPL",
-                                     "EPSI_NOEU_DEPL",
+                                     "DERA_NOEU",
+                                     "DURT_NOEU",
+                                     "EFCA_NOEU","EFGE_NOEU",
+                                     "ENDO_NOEU",
+                                     "ENEL_NOEU",
+                                     "EPMG_NOEU",
+                                     "EPSG_NOEU",
+                                     "EPSI_NOEU",
                                      "EPSP_NOEU"     ,
                                      "EPVC_NOEU","EPFD_NOEU","EPFP_NOEU","EPFP_NOEU",
-                                     "EQUI_NOEU_EPME","EQUI_NOEU_EPSI","EQUI_NOEU_SIGM",
-                                     "ERRE_NOEU_ELEM","QIRE_NOEU_ELEM",
-                                     "FLUX_NOEU_TEMP",
-                                     "HYDR_NOEU_ELGA",
-                                     "INTE_NOEU_ACTI","INTE_NOEU_REAC",
-                                     "META_NOEU_TEMP",
-                                     "PMPB_NOEU_SIEF",
-                                     "PRES_NOEU_DBEL","PRES_NOEU_IMAG","PRES_NOEU_REEL",
-                                     "RADI_NOEU_SIGM",
-                                     "SIEF_NOEU_ELGA",
-                                     "SIGM_NOEU_CART","SIGM_NOEU_COQU","SIGM_NOEU_DEPL",
-                                     "SIGM_NOEU_SIEF",
-                                     "SIPO_NOEU_DEPL","SIPO_NOEU_SIEF",
-                                     "VARI_NOEU","EXTR_NOEU_VARI","VARI_NOEU_ELGA",) ),
+                                     "EPMQ_NOEU","EPEQ_NOEU","SIEQ_NOEU",
+                                     "ERME_NOEU","ERTH_NOEU","QIRE_NOEU",
+                                     "FLUX_NOEU",
+                                     "HYDR_NOEU",
+                                     "INTE_NOEU",
+                                     "META_NOEU",
+                                     "PMPB_NOEU",
+                                     "PRAC_NOEU",
+                                     "SIEF_NOEU",
+                                     "SICA_NOEU","SICO_NOEU","SIGM_NOEU",
+                                     "SIPO_NOEU",
+                                     "VAEX_NOEU","VARI_NOEU","DISS_NOEU",) ),
 
-         b_forc_reac     =BLOC(condition = """(OPTION == 'FORC_NODA') or (type(OPTION) == type(()) and 'FORC_NODA' in OPTION) or\
- (OPTION == 'REAC_NODA') or (type(OPTION) == type(()) and 'REAC_NODA' in OPTION)""",
-             MODELE          =SIMP(statut='f',typ=modele_sdaster),
-         ),
-         b_forc_nonl     =BLOC(condition = """(OPTION == 'FORC_NODA_NONL')""",
-             MODELE          =SIMP(statut='f',typ=modele_sdaster),
-             COMP_INCR       =C_COMP_INCR(),
-         ),
 
+         MODELE          =SIMP(statut='f',typ=modele_sdaster),
          CHAM_MATER      =SIMP(statut='f',typ=cham_mater),
          CARA_ELEM       =SIMP(statut='f',typ=cara_elem),
          EXCIT           =FACT(statut='f',max='**',
@@ -7123,15 +7989,13 @@ CALC_NO=OPER(nom="CALC_NO",op= 106,sd_prod=calc_no_prod,reentrant='f',
            TYPE_CHARGE     =SIMP(statut='f',typ='TXM',defaut="FIXE_CSTE",
                                  into=("FIXE_CSTE","FIXE_PILO","SUIV") ),
          ),
+
          TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
          GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
          MAILLE          =SIMP(statut='f',typ=ma,validators=NoRepeat(),max='**'),
-         GROUP_MA_RESU   =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
-         MAILLE_RESU     =SIMP(statut='f',typ=ma,validators=NoRepeat(),max='**'),
-         GROUP_NO_RESU   =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
-         NOEUD_RESU      =SIMP(statut='f',typ=ma,validators=NoRepeat(),max='**'),
+
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 07/12/2010   AUTEUR GENIAUT S.GENIAUT 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2010  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -7155,13 +8019,7 @@ CALC_POINT_MAT=OPER(nom="CALC_POINT_MAT",op=33,sd_prod=table_sdaster,reentrant='
             fr="Intégrer une loi de comportement",
      MATER           =SIMP(statut='o',typ=mater_sdaster,max=1),
      COMP_INCR       =C_COMP_INCR(),
-     COMP_ELAS       =FACT(statut='f',max='**',
-           RESI_INTE_RELA  =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           ITER_INTE_MAXI  =SIMP(statut='f',typ='I',defaut= 10 ),
-           RELATION        =SIMP(statut='o',typ='TXM',defaut="ELAS",
-                                 into=("ELAS","ELAS_VMIS_LINE","ELAS_VMIS_TRAC","ELAS_VMIS_PUIS","ELAS_HYPER")),
-           DEFORMATION     =SIMP(statut='f',typ='TXM',defaut="PETIT" ,into=("PETIT",) ),
-         ),
+     COMP_ELAS       =C_COMP_ELAS('CALC_POINT_MAT'),
      INCREMENT       =C_INCREMENT(),
      NEWTON          =C_NEWTON(),
      CONVERGENCE     =C_CONVERGENCE(),
@@ -7234,10 +8092,10 @@ CALC_POINT_MAT=OPER(nom="CALC_POINT_MAT",op=33,sd_prod=table_sdaster,reentrant='
                            ),
      );
 
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 28/02/2011   AUTEUR BARGELLI R.BARGELLINI 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2003  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -7275,7 +8133,6 @@ CALC_PRECONT=MACRO(nom="CALC_PRECONT",op=calc_precont_ops,sd_prod=evol_noli,
          CABLE_BP         =SIMP(statut='o',typ=cabl_precont,validators=NoRepeat(),max='**'),
          CABLE_BP_INACTIF =SIMP(statut='f',typ=cabl_precont,validators=NoRepeat(),max='**'),
          INCREMENT        =C_INCREMENT(),
-         NEWTON           =C_NEWTON(),
          RECH_LINEAIRE    =C_RECH_LINEAIRE(),
          CONVERGENCE      =C_CONVERGENCE(),
           ETAT_INIT       =FACT(statut='f',
@@ -7298,6 +8155,13 @@ CALC_PRECONT=MACRO(nom="CALC_PRECONT",op=calc_precont_ops,sd_prod=evol_noli,
             NUME_DIDI       =SIMP(statut='f',typ='I'),
             INST_ETAT_INIT  =SIMP(statut='f',typ='R'),
           ),
+         METHODE = SIMP(statut='d',typ='TXM',defaut="NEWTON",into=("NEWTON","IMPL_EX")),
+         b_meth_newton = BLOC(condition = "METHODE == 'NEWTON'",
+                           NEWTON = C_NEWTON(),
+                        ),
+         b_meth_impl_ex = BLOC(condition = "METHODE == 'IMPL_EX'",
+                           IMPL_EX = C_IMPL_EX(),
+                        ),
           SOLVEUR         =C_SOLVEUR(),
           INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
           TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
@@ -7308,6 +8172,88 @@ CALC_PRECONT=MACRO(nom="CALC_PRECONT",op=calc_precont_ops,sd_prod=evol_noli,
 
          COMP_INCR       =C_COMP_INCR(),
   )  ;
+#& MODIF COMMANDE  DATE 02/02/2011   AUTEUR PELLET J.PELLET 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# ======================================================================
+# ======================================================================
+# RESPONSABLE GNICOLAS
+def calc_sensi_prod(RESULTAT,**args):
+   if AsType(RESULTAT) != None : return AsType(RESULTAT)
+   raise AsException("type de concept resultat non prevu")
+
+CALC_SENSI=OPER(nom="CALC_SENSI",op=132,sd_prod=calc_sensi_prod,reentrant='f',
+            UIinfo={"groupes":("Post-traitements","Résultats et champs",)},
+            fr="Compléter ou créer un résultat en calculant des champs dérivés )",
+     MODELE          =SIMP(statut='f',typ=modele_sdaster),
+     CHAM_MATER      =SIMP(statut='f',typ=cham_mater),
+     CARA_ELEM       =SIMP(statut='f',typ=cara_elem),
+
+     RESULTAT        =SIMP(statut='o',typ=resultat_sdaster,
+                                      fr="Résultat d'une commande globale"),
+
+     regles=(EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST','FREQ','NUME_MODE',
+                    'NOEUD_CMP','LIST_INST','LIST_FREQ','LIST_ORDRE','NOM_CAS'),
+             CONCEPT_SENSIBLE("SEPARE"),
+             DERIVABLE('RESULTAT'),),
+     TOUT_ORDRE      =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+     NUME_ORDRE      =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
+     NUME_MODE       =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
+     NOEUD_CMP       =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**'),
+     NOM_CAS         =SIMP(statut='f',typ='TXM' ),
+     INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**'),
+     FREQ            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**'),
+     LIST_INST       =SIMP(statut='f',typ=listr8_sdaster),
+     LIST_FREQ       =SIMP(statut='f',typ=listr8_sdaster),
+     CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU",) ),
+     b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+         PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6),),
+     b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+         PRECISION       =SIMP(statut='o',typ='R'),),
+     LIST_ORDRE      =SIMP(statut='f',typ=listis_sdaster),
+     TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+     GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**',
+                           fr="le calcul ne sera effectué que sur ces mailles là"),
+     MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**',
+                           fr="le calcul ne sera effectué que sur ces mailles là"),
+
+     OPTION =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
+
+                  into=('DEDE_ELNO','DEDE_NOEU','DESI_ELNO',
+                  'DESI_NOEU','DETE_ELNO','DETE_NOEU',
+                  'EFGE_ELNO','EPSI_ELGA','EPSI_ELNO',
+                  'EPSP_ELNO','FLUX_ELNO','FLUX_NOEU','REAC_NODA','SIEF_ELGA',
+                  'SIEF_ELNO','SIEF_NOEU',
+                  'SIGM_ELNO','SIGM_NOEU',
+                  'SIPO_ELNO','VARI_ELNO'),
+            ),
+
+
+   # -- mots cles inutiles mais qui permettent de reutiliser certaines routines :
+     EXCIT =FACT(statut='f',max='**', CHARGE=SIMP(statut='o',typ=(char_meca,) ),),
+     NORME =SIMP(statut='f',typ='TXM',defaut="XXXX", into=("XXXX",),),
+
+
+     SENSIBILITE     =SIMP(statut='f',typ=(para_sensi,theta_geom),validators=NoRepeat(),max='**',
+                           fr="Liste des paramètres de sensibilité.",
+                           ang="List of sensitivity parameters"),
+     INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
+     TITRE           =SIMP(statut='f',typ='TXM',max='**'),
+) ;
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -7572,63 +8518,6 @@ CALC_THETA=OPER(nom="CALC_THETA",op=54,sd_prod=theta_geom,reentrant='n',
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
-#
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
-#
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
-# ======================================================================
-# RESPONSABLE ABBAS M.ABBAS
-
-CALCUL=OPER(nom="CALCUL",op=26,sd_prod=table_container,reentrant='f',
-            UIinfo={"groupes":("Résolution",)},
-            fr="Calculer des objets élémentaires comme une matrice tangente, intégrer une loi de comportement, etc...",
-     OPTION          =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut="COMPORTEMENT",
-                           into=( "COMPORTEMENT","MATR_TANG_ELEM","FORC_INT_ELEM"),),
-     MODELE          =SIMP(statut='o',typ=modele_sdaster),
-     CARA_ELEM       =SIMP(statut='f',typ=cara_elem),
-     CHAM_MATER      =SIMP(statut='o',typ=cham_mater),
-     TABLE           =SIMP(statut='f',typ=table_container),
-     EXCIT           =FACT(statut='o',max='**',
-       CHARGE          =SIMP(statut='o',typ=(char_meca,char_cine_meca)),
-       FONC_MULT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-       TYPE_CHARGE     =SIMP(statut='f',typ='TXM',defaut="FIXE_CSTE",
-                                 into=("FIXE_CSTE",)),
-
-     ),
-     DEPL            =SIMP(statut='o',typ=cham_no_sdaster ),
-     INCR_DEPL       =SIMP(statut='o',typ=cham_no_sdaster ),
-     SIGM            =SIMP(statut='o',typ=cham_elem),
-     VARI            =SIMP(statut='o',typ=cham_elem),
-     INCREMENT       =FACT(statut='o',
-          LIST_INST       =SIMP(statut='o',typ=listr8_sdaster),
-          NUME_ORDRE      =SIMP(statut='o',typ='I'),),
-     COMP_INCR       =C_COMP_INCR(),
-     COMP_ELAS       =FACT(statut='f',max='**',
-          RESI_INTE_RELA  =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-          ITER_INTE_MAXI  =SIMP(statut='f',typ='I',defaut= 10 ),
-          ITER_INTE_PAS   =SIMP(statut='f',typ='I',defaut= 0 ),
-          RESO_INTE       =SIMP(statut='f',typ='TXM',defaut="IMPLICITE",into=("IMPLICITE",)),
-          RELATION        =SIMP(statut='o',typ='TXM',defaut="ELAS",
-                                into=("ELAS","ELAS_VMIS_LINE","ELAS_VMIS_TRAC",
-                                     "ELAS_POUTRE_GR","CABLE","ELAS_HYPER")),
-          DEFORMATION     =SIMP(statut='f',typ='TXM',defaut="PETIT" ,into=("PETIT","GROT_GDEP",) ),
-          ),
-     INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
-) ;
-
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
@@ -7693,10 +8582,58 @@ CALC_VECT_ELEM=OPER(nom="CALC_VECT_ELEM",op=8,sd_prod=calc_vect_elem_prod,reentr
            MODELE            =SIMP(statut='f',typ=modele_sdaster),
          ),
 ) ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 07/12/2010   AUTEUR GENIAUT S.GENIAUT 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# ======================================================================
+# RESPONSABLE ABBAS M.ABBAS
+
+CALCUL=OPER(nom="CALCUL",op=26,sd_prod=table_container,reentrant='f',
+            UIinfo={"groupes":("Résolution",)},
+            fr="Calculer des objets élémentaires comme une matrice tangente, intégrer une loi de comportement, etc...",
+     OPTION          =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',defaut="COMPORTEMENT",
+                           into=( "COMPORTEMENT","MATR_TANG_ELEM","FORC_INT_ELEM"),),
+     MODELE          =SIMP(statut='o',typ=modele_sdaster),
+     CARA_ELEM       =SIMP(statut='f',typ=cara_elem),
+     CHAM_MATER      =SIMP(statut='o',typ=cham_mater),
+     TABLE           =SIMP(statut='f',typ=table_container),
+     EXCIT           =FACT(statut='o',max='**',
+       CHARGE          =SIMP(statut='o',typ=(char_meca,char_cine_meca)),
+       FONC_MULT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+       TYPE_CHARGE     =SIMP(statut='f',typ='TXM',defaut="FIXE_CSTE",
+                                 into=("FIXE_CSTE",)),
+
+     ),
+     DEPL            =SIMP(statut='o',typ=cham_no_sdaster ),
+     INCR_DEPL       =SIMP(statut='o',typ=cham_no_sdaster ),
+     SIGM            =SIMP(statut='o',typ=cham_elem),
+     VARI            =SIMP(statut='o',typ=cham_elem),
+     INCREMENT       =FACT(statut='o',
+          LIST_INST       =SIMP(statut='o',typ=listr8_sdaster),
+          NUME_ORDRE      =SIMP(statut='o',typ='I'),),
+     COMP_INCR       =C_COMP_INCR(),
+     COMP_ELAS       =C_COMP_ELAS('CALCUL'),
+     INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
+) ;
+
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -7717,8 +8654,8 @@ COMB_FOURIER=OPER(nom="COMB_FOURIER",op= 161,sd_prod=comb_fourier,
             UIinfo={"groupes":("Post-traitements",)},
          RESULTAT        =SIMP(statut='o',typ=(fourier_elas,fourier_ther),),
          ANGL            =SIMP(statut='o',typ='R',max='**'),
-         NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=6,
-             into=("DEPL","REAC_NODA","SIEF_ELGA_DEPL","EPSI_ELNO_DEPL","SIGM_ELNO_DEPL","TEMP","FLUX_ELNO_TEMP"),),
+         NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=6,into=("DEPL","REAC_NODA",
+                               "SIEF_ELGA","EPSI_ELNO","SIGM_ELNO","TEMP","FLUX_ELNO"),),
 ) ;
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -7782,10 +8719,10 @@ COMB_MATR_ASSE=OPER(nom="COMB_MATR_ASSE",op=  31,sd_prod=comb_matr_asse_prod,
          ),
          SANS_CMP        =SIMP(statut='f',typ='TXM',into=("LAGR",) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 21/03/2011   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -7890,7 +8827,7 @@ COMB_SISM_MODAL=OPER(nom="COMB_SISM_MODAL",op= 109,sd_prod=mode_meca,
                    AU_MOINS_UN('DX','DY','DZ' ),),
            NOM_CAS         =SIMP(statut='o',typ='TXM',max='**'),
            NUME_CAS        =SIMP(statut='o',typ='I',max='**'),
-           MODE_STAT       =SIMP(statut='f',typ=mode_meca, ),
+           MODE_STAT       =SIMP(statut='o',typ=mode_meca, ),
            NOEUD_REFE      =SIMP(statut='f',typ=no),
            NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
            GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
@@ -7899,9 +8836,9 @@ COMB_SISM_MODAL=OPER(nom="COMB_SISM_MODAL",op= 109,sd_prod=mode_meca,
            DZ              =SIMP(statut='f',typ='R' ),
          ),
          OPTION          =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=9,
-                               into=("DEPL","VITE","ACCE_ABSOLU","SIGM_ELNO_DEPL","SIEF_ELGA_DEPL",
-                                     "EFGE_ELNO_DEPL","REAC_NODA","FORC_NODA","EFGE_ELNO_CART",
-                                     "SIPO_ELNO_DEPL") ),
+                               into=("DEPL","VITE","ACCE_ABSOLU","SIGM_ELNO","SIEF_ELGA",
+                                     "EFGE_ELNO","REAC_NODA","FORC_NODA","EFCA_ELNO",
+                                     "SIPO_ELNO") ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2 ) ),
          IMPRESSION      =FACT(statut='f',max='**',
            regles=(EXCLUS('TOUT','NIVEAU'),),
@@ -7910,10 +8847,10 @@ COMB_SISM_MODAL=OPER(nom="COMB_SISM_MODAL",op= 109,sd_prod=mode_meca,
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/03/2011   AUTEUR MASSIN P.MASSIN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -8042,6 +8979,7 @@ CREA_CHAMP=OPER(nom="CREA_CHAMP",op= 195,sd_prod=crea_champ_prod,
 #        ------------------------------------------------------------------
          b_extr          =BLOC(condition = "OPERATION == 'EXTR'",
              regles=(AU_MOINS_UN('MAILLAGE','FISSURE','RESULTAT','TABLE'),),
+#                     PRESENT_PRESENT('GRILLE_AUX','FISSURE'),),
              MAILLAGE        =SIMP(statut='f',typ=(maillage_sdaster) ),
              FISSURE         =SIMP(statut='f',typ=(fiss_xfem) ),
              RESULTAT        =SIMP(statut='f',typ=(resultat_sdaster) ),
@@ -8049,9 +8987,13 @@ CREA_CHAMP=OPER(nom="CREA_CHAMP",op= 195,sd_prod=crea_champ_prod,
              b_extr_maillage =BLOC(condition = "MAILLAGE != None and TABLE == None",
                  NOM_CHAM        =SIMP(statut='o',typ='TXM',into=("GEOMETRIE",)),
              ),
-             b_extr_fissure  =BLOC(condition = "FISSURE != None",
-                 NOM_CHAM        =SIMP(statut='o',typ='TXM',into=("LTNO","LNNO","GRLTNO","GRLNNO","STNO","STNOR","BASLOC")),
+
+             b_extr_fissure  = BLOC(condition = "FISSURE != None",
+                 NOM_CHAM=SIMP(statut='o',typ='TXM',into=("LTNO","LNNO","GRLTNO","GRLNNO","STNO","STNOR","BASLOC",
+                                                                  "GRI.LNNO","GRI.LTNO","GRI.GRLNNO","GRI.GRLTNO")),
+
              ),
+                 
              b_extr_table    =BLOC(condition = "TABLE != None",
                       regles=( EXCLUS('MODELE','MAILLAGE'),
                                EXCLUS('PROL_ZERO','MAILLAGE'),),
@@ -8115,10 +9057,102 @@ CREA_CHAMP=OPER(nom="CREA_CHAMP",op= 195,sd_prod=crea_champ_prod,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2,) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 03/01/2011   AUTEUR ANDRIAM H.ANDRIAMBOLOLONA 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE ANDRIAM H.ANDRIAMBOLOLONA
+
+from Macro.crea_elem_ssd_ops import crea_elem_ssd_ops
+
+def crea_elem_ssd_prod(self,NUME_DDL,**args):
+    if NUME_DDL:
+        self.type_sdprod(NUME_DDL,nume_ddl_sdaster)
+    return macr_elem_dyna
+
+CREA_ELEM_SSD=MACRO(nom="CREA_ELEM_SSD",
+         op=crea_elem_ssd_ops,
+         sd_prod=crea_elem_ssd_prod,
+         reentrant='n',
+         fr="Creation de macro-element dynamique en enchainant les commandes : \
+             CALC_MATR_ELEM, NUME_DDL, ASSE_MATRICE, MODE_ITER_SIMULT, \
+             DEFI_INTERF_DYNA, DEFI_BASE_MODALE et MACR_ELEM_DYNA",
+         UIinfo={"groupes":("Matrices/vecteurs",)},
+
+# pour CAL_MATR_ELEM + NUME_DDL + ASSE_MATRICE + MODE_ITER_SIMULT + MODE_STATIQUE
+         MODELE          =SIMP(statut='o',typ=modele_sdaster),
+         CHAM_MATER      =SIMP(statut='o',typ=cham_mater),
+         CARA_ELEM       =SIMP(statut='f',typ=cara_elem),
+         NUME_DDL        =SIMP(statut='f',typ=CO,defaut=None),
+         CHARGE          =SIMP(statut='f',typ=(char_meca,char_ther,char_acou),validators=NoRepeat(),max='**'),
+
+# pour DEFI_INTERF_DYNA
+         INTERFACE       =FACT(statut='o',max='**',
+           regles=(ENSEMBLE('NOM','TYPE'),
+                   UN_PARMI('NOEUD','GROUP_NO'),),
+           NOM             =SIMP(statut='f',typ='TXM' ),
+           TYPE            =SIMP(statut='f',typ='TXM',into=("MNEAL","CRAIGB","CB_HARMO",) ),
+           NOEUD           =SIMP(statut='f',typ=no,max='**'),
+           GROUP_NO        =SIMP(statut='f',typ=grno,max='**'),
+           FREQ            =SIMP(statut='f',typ='R',defaut= 1.),
+         ),
+
+# pour DEFI_BASE_MODALE
+         BASE_MODALE = FACT(statut='o',max = 1,
+           TYPE   =SIMP(statut='o',typ='TXM',max=1,into=('CLASSIQUE','RITZ',)),
+           b_ritz = BLOC(condition = "TYPE == 'RITZ' ",
+             NMAX_MODE_INTF  =SIMP(statut='f',typ='I',defaut=10),
+           ),
+         ),
+
+         INFO          =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
+
+         SOLVEUR         =C_SOLVEUR(),
+
+# pour le calcul modal
+         CALC_FREQ       =FACT(statut='d',min=0,
+             OPTION      =SIMP(statut='f',typ='TXM',defaut="PLUS_PETITE",into=("PLUS_PETITE","BANDE","CENTRE"),
+                                   fr="Choix de l option et par consequent du shift du probleme modal" ),
+             b_plus_petite =BLOC(condition = "OPTION == 'PLUS_PETITE'",fr="Recherche des plus petites valeurs propres",
+               NMAX_FREQ       =SIMP(statut='f',typ='I',defaut= 10,val_min=0 ),
+             ),
+             b_centre       =BLOC(condition = "OPTION == 'CENTRE'",
+                                  fr="Recherche des valeurs propres les plus proches d une valeur donnee",
+               FREQ            =SIMP(statut='o',typ='R',
+                                     fr="Frequence autour de laquelle on cherche les frequences propres"),
+               AMOR_REDUIT     =SIMP(statut='f',typ='R',),
+               NMAX_FREQ       =SIMP(statut='f',typ='I',defaut= 10,val_min=0 ),
+             ),
+             b_bande         =BLOC(condition = "(OPTION == 'BANDE')",
+                                   fr="Recherche des valeurs propres dans une bande donnee",
+               NMAX_FREQ       =SIMP(statut='f',typ='I',defaut= 9999,val_min=0 ),
+               FREQ            =SIMP(statut='o',typ='R',min=2,validators=NoRepeat(),max='**',
+                                     fr="Valeurs des frequences delimitant les bandes de recherche"),
+             ),
+             APPROCHE        =SIMP(statut='f',typ='TXM',defaut="REEL",into=("REEL","IMAG","COMPLEXE"),
+                                   fr="Choix du pseudo-produit scalaire pour la resolution du probleme quadratique" ),
+           ),
+
+
+)  ;
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -8270,16 +9304,16 @@ CREA_MAILLAGE=OPER(nom="CREA_MAILLAGE",op= 167,sd_prod=maillage_sdaster,
            GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
            SHRINK          =SIMP(statut='f',typ='R',defaut= 0.9, fr="Facteur de réduction" ),
            TAILLE_MIN      =SIMP(statut='f',typ='R',defaut= 0.0, fr="Taille minimale d'un coté" ),
-           NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**'),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',into=C_NOM_CHAM_INTO('ELGA'),),
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 #
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -8397,7 +9431,7 @@ CREA_RESU=OPER(nom="CREA_RESU",op=124,sd_prod=crea_resu_prod,reentrant='f',
 
            ECLA_PG         =FACT(statut='o',
              regles=(EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST','LIST_INST','LIST_ORDRE'),),
-             NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**'),
+             NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',into=C_NOM_CHAM_INTO('ELGA'),),
              MODELE_INIT     =SIMP(statut='o',typ=modele_sdaster),
              TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
              MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
@@ -8630,10 +9664,10 @@ DEBUG=PROC(nom="DEBUG",op=137,
      IMPR_MACRO      =SIMP(fr="affichage des sous-commandes produites par les macros dans le fichier mess",
                            statut='f',typ='TXM',into=("OUI","NON")),
  );
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 03/01/2011   AUTEUR COURTOIS M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -8735,11 +9769,12 @@ DEBUT=MACRO(nom="DEBUT",op=ops.build_debut ,repetable='n',
 
          IGNORE_ALARM = SIMP(statut='f', typ='TXM', max='**', fr="Alarmes que l'utilisateur souhaite délibérément ignorer"),
 
+         INFO     = SIMP(statut='f', typ='I', defaut=1, into=(1,2),),
 );
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 25/01/2011   AUTEUR NISTOR I.NISTOR 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -8810,13 +9845,12 @@ DEFI_BASE_MODALE=OPER(nom="DEFI_BASE_MODALE",op=  99,sd_prod=mode_meca,
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
-             FILTRAGE_MATRICE =SIMP(statut='f',typ='R',defaut=-1.0,),
-             MIXER_PRECISION =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              ),
          ),
 
@@ -8951,10 +9985,10 @@ DEFI_CABLE_OP=OPER(nom="DEFI_CABLE_OP",op= 180,sd_prod=cabl_precont,reentrant='n
            PRESENT           =SIMP(statut='o',typ='TXM',min=2,max=2,into=("OUI","NON") ),
          ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 23/02/2011   AUTEUR LAVERNE J.LAVERNE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -8981,16 +10015,31 @@ DEFI_COMPOR=OPER(nom="DEFI_COMPOR",op=59,sd_prod=compor_sdaster,
           MONOCRISTAL    =FACT(statut='f', max='**',
              MATER           =SIMP(statut='o', typ=mater_sdaster, max=1),
              ECOULEMENT      =SIMP(statut='o', typ='TXM', max=1,
+                                into=('MONO_VISC1', 'MONO_VISC2', 'MONO_VISC3', 'MONO_DD_KR', 'MONO_DD_CFC', 'MONO_DD_CC',),
                    fr="Donner le nom du mot-clé facteur de DEFI_MATERIAU précisant le type d'écoulement viscoplastique"),
-             ECRO_ISOT       =SIMP(statut='o', typ='TXM', max=1,
-                   fr="Donner le nom du mot-clé facteur de DEFI_MATERIAU précisant le type d'écrouissage isotrope"),
-             ECRO_CINE       =SIMP(statut='o', typ='TXM', max=1,
-                   fr="Donner le nom du mot-clé facteur de DEFI_MATERIAU précisant le type d'écrouissage cinématique"),
              ELAS            =SIMP(statut='f', typ='TXM', max=1,
                    fr="Donner le nom du mot-clé facteur de DEFI_MATERIAU précisant le comportement élastique (un et un seul)"),
-             FAMI_SYST_GLIS  =SIMP(statut='o',typ='TXM', max=1,
+             b_non_dd =BLOC(condition="ECOULEMENT=='MONO_VISC1' or ECOULEMENT=='MONO_VISC2' or ECOULEMENT=='MONO_VISC3'",
+                   ECRO_ISOT       =SIMP(statut='f', typ='TXM', max=1,
+                   fr="Donner le nom du mot-clé facteur de DEFI_MATERIAU précisant le type d'écrouissage isotrope"),
+                   ECRO_CINE       =SIMP(statut='f', typ='TXM', max=1,
+                   fr="Donner le nom du mot-clé facteur de DEFI_MATERIAU précisant le type d'écrouissage cinématique"),
+                   FAMI_SYST_GLIS  =SIMP(statut='o',typ='TXM', max=1,
                                 into=('BASAL', 'PRISMATIQUE', 'OCTAEDRIQUE', 'PYRAMIDAL1',
-                                'PYRAMIDAL2', 'CUBIQUE1', 'CUBIQUE2', 'MACLAGE', 'JOINT_GRAIN', 'RL', 'UNIAXIAL','BCC24'),),
+                                'PYRAMIDAL2', 'CUBIQUE1', 'CUBIQUE2', 'MACLAGE', 'UNIAXIAL','BCC24'),),
+                                ),
+             b_dd_kr =BLOC(condition="ECOULEMENT=='MONO_DD_KR' ",
+                   FAMI_SYST_GLIS  =SIMP(statut='f',typ='TXM', max=1,
+                                into=('BCC24',),defaut=('BCC24',),),
+                                ),
+             b_dd_cfc =BLOC(condition="ECOULEMENT=='MONO_DD_CFC' ",
+                   FAMI_SYST_GLIS  =SIMP(statut='f',typ='TXM', max=1,
+                                into=('OCTAEDRIQUE',),defaut=('OCTAEDRIQUE',),),
+                                ),
+             b_dd_cc =BLOC(condition="ECOULEMENT=='MONO_DD_CC' ",
+                   FAMI_SYST_GLIS  =SIMP(statut='o',typ='TXM', max=1,
+                                into=('CUBIQUE1',),defaut=('CUBIQUE1',),),
+                                ),
                                 ),
 
           ROTA_RESEAU =SIMP(statut='f', typ='TXM', max=1,into=('NON','POST','CALC'),defaut='NON',
@@ -9042,7 +10091,6 @@ DEFI_COMPOR=OPER(nom="DEFI_COMPOR",op=59,sd_prod=compor_sdaster,
                                        "GRANGER_FP_V",
                                        "BETON_UMLV_FP",
                                        "ROUSS_PR",
-                                       "NADAI_B",
                                        "BETON_DOUBLE_DP",
                                        ),),
 # on pourrait ajouter TOUT_GROUP_FIBRE
@@ -9076,10 +10124,10 @@ DEFI_CONSTANTE=OPER(nom="DEFI_CONSTANTE",op=   2,sd_prod=fonction_sdaster,
          VALE            =SIMP(statut='o',typ='R',),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 23/02/2011   AUTEUR MASSIN P.MASSIN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -9100,6 +10148,7 @@ DEFI_CONTACT=OPER(nom       = "DEFI_CONTACT",
                   op        = 30,
                   sd_prod   = char_contact,
                   fr        = "Définit les zones soumises à des conditions de contact unilatéral avec ou sans frottement",
+                  #en        = "Allows the definition of contact surfaces as well as unilateral conditions",
                   reentrant = 'n',
                   UIinfo    = {"groupes":("Modélisation",)},
 
@@ -9111,63 +10160,59 @@ DEFI_CONTACT=OPER(nom       = "DEFI_CONTACT",
 # FORMULATION (UNIQUE PAR OCCURRENCE DE DEFI_CONTACT)
 
          FORMULATION     =SIMP(statut='o',
-                               typ='TXM',
                                position='global',
+                               typ='TXM',
+                               fr="Choix d'une formulation de contact ou de liaisons unilatérales",
                                defaut="DISCRETE",
                                into=("DISCRETE","CONTINUE","XFEM","LIAISON_UNIL",),),
 
-# PARAMETRE GENERAL: FROTTEMENT
+# PARAMETRE GENERAL : FROTTEMENT
 
          FROTTEMENT      =SIMP(statut='f',
-                               typ='TXM',
                                position='global',
+                               typ='TXM',
+                               fr="Choix d'un modèle de frottement (uniquement pour les formulations de contact)",
                                defaut="SANS",
                                into=("COULOMB","SANS",)),
 
 ### PARAMETRES GENERAUX (UNIQUEMENT POUR LE CONTACT MAILLE, NE DEPENDENT PAS DE LA ZONE DE CONTACT)
 
          b_contact_mail=BLOC(condition = "((FORMULATION == 'CONTINUE') or (FORMULATION == 'DISCRETE'))",
-           STOP_INTERP   = SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
-           LISSAGE       = SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
-         ),
+#          ARRET DU CALCUL POUR LE MODE SANS RESOLUTION DU CONTACT
+           STOP_INTERP   = SIMP(statut='f',
+                                typ='TXM',
+                                fr="Arrête le calcul dès qu'une interpénétration est détectée en mode RESOLUTION='NON'",
+                                defaut="NON",
+                                into=("OUI","NON")),
+#          LISSAGE DES NORMALES PAR MOYENNATION AUX NOEUDS
+           LISSAGE       = SIMP(statut='f',
+                                typ='TXM',
+                                fr="Lissage des normales par moyennation aux noeuds",
+                                defaut="NON",
+                                into=("OUI","NON")),
+#          VERIFICATION DE L'ORIENTATION ET DE LA COHERENCE DES NORMALES
+           VERI_NORM       =SIMP(statut='f',
+                                 typ='TXM',
+                                 fr="Vérification de l'orientation (sortante) des normales aux surfaces",
+                                 defaut="OUI",
+                                 into=("OUI","NON"),),
+           ),
 
 ### PARAMETRES GENERAUX (UNIQUEMENT POUR LE CONTACT, NE DEPENDENT PAS DE LA ZONE DE CONTACT)
 
          b_contact=BLOC(condition = "FORMULATION != 'LIAISON_UNIL' ",
 
-# PARAMETRE GENERAL: VERIFICATION DE L'ORIENTATION ET DE LA COHERENCE DES NORMALES
+# PARAMETRE GENERAL : BOUCLE DE GEOMETRIE
 
-           VERI_NORM       =SIMP(statut='f',
-                                 typ='TXM',
-                                 defaut="OUI",
-                                 into=("OUI","NON"),),
-
-# PARAMETRE GENERAL: BOUCLE SUR GEOMETRIE
-
-           b_bouc_geom_disc=BLOC(condition = "FORMULATION == 'DISCRETE' ",
+           b_bouc_geom_mail=BLOC(condition = "(FORMULATION == 'DISCRETE' or FORMULATION == 'CONTINUE')",
                                  REAC_GEOM =SIMP(statut='f',
                                                  typ='TXM',
                                                  into=("AUTOMATIQUE","CONTROLE","SANS",),
                                                  defaut="AUTOMATIQUE",
                                                  ),
                                  b_automatique = BLOC(condition = "REAC_GEOM == 'AUTOMATIQUE' ",
-                                   ITER_GEOM_MAXI = SIMP(statut='f',typ='I',defaut=5),
-                                   RESI_GEOM      = SIMP(statut='f',typ='R',defaut=0.05),
-                                   ),
-                                 b_controle    = BLOC(condition = "REAC_GEOM == 'CONTROLE' ",
-                                   NB_ITER_GEOM   = SIMP(statut='f',typ='I',defaut = 2),
-                                   ),
-                                 ),
-
-           b_bouc_geom_cont=BLOC(condition = "FORMULATION == 'CONTINUE' ",
-                                 REAC_GEOM =SIMP(statut='f',
-                                                 typ='TXM',
-                                                 into=("AUTOMATIQUE","CONTROLE","SANS",),
-                                                 defaut="AUTOMATIQUE",
-                                                 ),
-                                 b_automatique = BLOC(condition = "REAC_GEOM == 'AUTOMATIQUE' ",
-                                   ITER_GEOM_MAXI = SIMP(statut='f',typ='I',defaut=5),
-                                   RESI_GEOM      = SIMP(statut='f',typ='R',defaut=0.0001),
+                                   ITER_GEOM_MAXI = SIMP(statut='f',typ='I',defaut=10),
+                                   RESI_GEOM      = SIMP(statut='f',typ='R',defaut=0.01),
                                    ),
                                  b_controle    = BLOC(condition = "REAC_GEOM == 'CONTROLE' ",
                                    NB_ITER_GEOM   = SIMP(statut='f',typ='I',defaut = 2),
@@ -9181,7 +10226,7 @@ DEFI_CONTACT=OPER(nom       = "DEFI_CONTACT",
                                                  defaut="SANS",
                                                  ),
                                  b_automatique = BLOC(condition = "REAC_GEOM == 'AUTOMATIQUE' ",
-                                   ITER_GEOM_MAXI = SIMP(statut='f',typ='I',defaut=5),
+                                   ITER_GEOM_MAXI = SIMP(statut='f',typ='I',defaut=10),
                                    RESI_GEOM      = SIMP(statut='f',typ='R',defaut=0.0001),
                                    ),
                                  b_controle    = BLOC(condition = "REAC_GEOM == 'CONTROLE' ",
@@ -9189,7 +10234,8 @@ DEFI_CONTACT=OPER(nom       = "DEFI_CONTACT",
                                    ),
                                  ),
 
-# PARAMETRE GENERAL: BOUCLE SUR CONTACT
+
+# PARAMETRE GENERAL : BOUCLE DE CONTACT
 
            b_bouc_cont_disc=BLOC(condition = "FORMULATION == 'DISCRETE' ",
                                  ITER_CONT_MULT = SIMP(statut='f',typ='I',defaut = 4),
@@ -9210,51 +10256,73 @@ DEFI_CONTACT=OPER(nom       = "DEFI_CONTACT",
                                  ITER_CONT_TYPE= SIMP(statut='f',typ='TXM',defaut="MAXI",
                                                       into=("MULT","MAXI")),
                                  b_bouc_cont_mult = BLOC(condition = "ITER_CONT_TYPE=='MULT'",
-                                   ITER_CONT_MULT = SIMP(statut='f',typ='I',defaut = 4),
+                                                         ITER_CONT_MULT = SIMP(statut='f',typ='I',defaut = 4),
                                    ),
                                  b_bouc_cont_maxi = BLOC(condition = "ITER_CONT_TYPE=='MAXI'",
-                                   ITER_CONT_MAXI = SIMP(statut='f',typ='I',defaut = 30),
+                                                         ITER_CONT_MAXI = SIMP(statut='f',typ='I',defaut = 30),
                                    ),
                                  ),
 
-# PARAMETRE GENERAL: BOUCLE SUR FROTTEMENT
+# PARAMETRE GENERAL : BOUCLE DE FROTTEMENT
 
            b_bouc_frot     = BLOC(condition = "FROTTEMENT=='COULOMB' and ((FORMULATION == 'CONTINUE') or (FORMULATION == 'XFEM')) ",
                                   REAC_FROT =SIMP(statut='f',
                                                   typ='TXM',
+                                                  defaut="AUTOMATIQUE",
                                                   into=("AUTOMATIQUE","CONTROLE",),
-                                                  defaut="AUTOMATIQUE",),
+                                                  ),
                                   b_automatique = BLOC(condition = "REAC_FROT == 'AUTOMATIQUE' ",
-                                    ITER_FROT_MAXI = SIMP(statut='f',typ='I',defaut=2),
-                                    RESI_FROT      = SIMP(statut='f',typ='R',defaut=0.0001),
+                                                       ITER_FROT_MAXI = SIMP(statut='f',typ='I',defaut=10),
+                                                       RESI_FROT      = SIMP(statut='f',typ='R',defaut=0.0001),
                                     ),
                                   b_controle    = BLOC(condition = "REAC_FROT == 'CONTROLE' ",
-                                    NB_ITER_FROT   = SIMP(statut='f',typ='I',defaut = 2),
+                                                       NB_ITER_FROT   = SIMP(statut='f',typ='I',defaut = 2),
                                     ),
-                                 ),
+                                  ),
 
-# PARAMETRE GENERAL: METHODES DISCRETES
+# PARAMETREs GENERAUX : METHODES DISCRETES
 
            b_para_discret  = BLOC(condition = "FORMULATION == 'DISCRETE' ",
-                                  STOP_SINGULIER= SIMP(statut='f',typ='TXM',defaut="OUI",
-                                                       into=("OUI","NON")),
-                                  NB_RESOL      = SIMP(statut='f',typ='I', defaut=10 ),
-                                  RESI_ABSO     = SIMP(statut='f',typ='R',
-                                  fr="Critere de convergence (niveau d'interpenetration autorise)"),
-                                  REAC_ITER     = SIMP(statut='f',typ='I',defaut=3,
-                                   fr="Frequence de reinitialisation de la conjugaison"),
-                                  ITER_GCP_MAXI = SIMP(statut='f',typ='I',defaut=0,
-                                  fr="Nombre d'iterations maximal pour le GCP"),
-
-                                  PRE_COND      = SIMP(statut='f',typ='TXM',defaut="SANS",into=("DIRICHLET","SANS"),
-                                  fr="Choix d'un preconditionneur (accelere la convergence)"),
-                                  ITER_PRE_MAXI = SIMP(statut='f',typ='I',defaut=0,
-                                  fr="Nombre d'iterations maximal pour le preconditionneur"),
-                                  COEF_RESI     = SIMP(statut='f',typ='R',defaut = 1.,
-                                  fr="Critere_Convergence_Preconditionneur = COEF_RESI*Critere_Convergence_GCP",),
-                                  RECH_LINEAIRE = SIMP(statut='f',typ='TXM',defaut="ADMISSIBLE",
-                                                       into=("ADMISSIBLE","NON_ADMISSIBLE"),
-                                                 fr="Autorise-t-on de sortir du domaine admissible lors de la recherche lineaire",),
+#                                 ## METHODES DE DUALISATION ##
+                                  STOP_SINGULIER= SIMP(statut='f',
+                                                       typ='TXM',
+                                                       fr="Tient compte de la singularité de la matrice de contact",
+                                                       defaut="OUI",
+                                                       into=("OUI","NON"),),
+                                  NB_RESOL      = SIMP(statut='f',
+                                                       typ='I',
+                                  fr="Nombre de résolutions simultanées pour la construction du complément de Schur",
+                                                       defaut=10,),
+#                                 ## GCP ##
+                                  RESI_ABSO     = SIMP(statut='f',
+                                                       typ='R',
+                                  fr="Critère de convergence (niveau d'interpénétration autorisé pour 'GCP')",),
+                                  REAC_ITER     = SIMP(statut='f',
+                                                       typ='I',
+                                                       fr="Fréquence de réinitialisation de la conjugaison ('GCP')",
+                                                       defaut=3,),
+                                  ITER_GCP_MAXI = SIMP(statut='f',
+                                                       typ='I',
+                                                       fr="Nombre d'itérations maximal ('GCP')",
+                                                       defaut=0,),
+                                  PRE_COND      = SIMP(statut='f',
+                                                       typ='TXM',
+                                                       fr="Choix d'un préconditionneur (accélère la convergence de 'GCP')",
+                                                       defaut="SANS",
+                                                       into=("DIRICHLET","SANS"),),
+                                  ITER_PRE_MAXI = SIMP(statut='f',
+                                                       typ='I',
+                                                       fr="Nombre d'itérations maximal pour le préconditionneur ('GCP')",
+                                                       defaut=0,),
+                                  COEF_RESI     = SIMP(statut='f',
+                                                       typ='R',
+                                                       fr="Critère de convergence du préconditionneur (COEF_RESI*RESI_ABSO)",
+                                                       defaut = 1.,),
+                                  RECH_LINEAIRE = SIMP(statut='f',
+                                                       typ='TXM',
+                                  fr="Autorisation de sortie du domaine admissible lors de la recherche linéaire",
+                                                       defaut="ADMISSIBLE",
+                                                       into=("ADMISSIBLE","NON_ADMISSIBLE"),),
                                   ),
            ), #fin bloc b_contact
 
@@ -9262,304 +10330,294 @@ DEFI_CONTACT=OPER(nom       = "DEFI_CONTACT",
 
 # AFFECTATION - CAS LIAISON_UNILATERALE
 
-           b_affe_unil     = BLOC(condition = "FORMULATION == 'LIAISON_UNIL'",
-                                  ZONE=FACT(statut='o',
-                                            max='**',
-
+         b_affe_unil     = BLOC(condition = "FORMULATION == 'LIAISON_UNIL'",
+                                ZONE=FACT(statut='o',
+                                          max='**',
 # -- Liaison unilatérale
-                                            regles=(UN_PARMI('GROUP_MA','MAILLE','GROUP_NO','NOEUD'),),
-                                            GROUP_MA        =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max='**'),
-                                            MAILLE          =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
-                                            GROUP_NO        =SIMP(statut='f',typ=grno ,validators=NoRepeat(),max='**'),
-                                            NOEUD           =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
-
-                                            NOM_CMP         =SIMP(statut='o',typ='TXM',max='**'),
-                                            COEF_IMPO       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),),
-                                            COEF_MULT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),max='**'),
-
+                                          regles=(UN_PARMI('GROUP_MA','MAILLE','GROUP_NO','NOEUD'),),
+                                          GROUP_MA        =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max='**'),
+                                          MAILLE          =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
+                                          GROUP_NO        =SIMP(statut='f',typ=grno ,validators=NoRepeat(),max='**'),
+                                          NOEUD           =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
+#
+                                          NOM_CMP         =SIMP(statut='o',typ='TXM',max='**'),
+                                          COEF_IMPO       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),),
+                                          COEF_MULT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),max='**'),
 # -- Incompatibilité avec CL
-                                            SANS_NOEUD      =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
-                                            SANS_GROUP_NO   =SIMP(statut='f',typ=grno ,validators=NoRepeat(),max='**'),
+                                          SANS_NOEUD      =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
+                                          SANS_GROUP_NO   =SIMP(statut='f',typ=grno ,validators=NoRepeat(),max='**'),
 
 
-                                            ),
-                                  ), #fin bloc b_affe_unil
+                                          ),
+                                ), #fin bloc b_affe_unil
 
 # AFFECTATION - CAS DISCRET
 
-           b_affe_discret  = BLOC(condition = "FORMULATION == 'DISCRETE'",
-                                  ZONE=FACT(statut='o',
-                                            max='**',
-
+         b_affe_discret  = BLOC(condition = "FORMULATION == 'DISCRETE'",
+                                ZONE=FACT(statut='o',
+                                          max='**',
 # -- Appariement
-                                            APPARIEMENT     =SIMP(statut='f',typ='TXM',defaut="MAIT_ESCL",
-                                                                  into=("NODAL","MAIT_ESCL"),),
+                                          APPARIEMENT     =SIMP(statut='f',typ='TXM',defaut="MAIT_ESCL",
+                                                                into=("NODAL","MAIT_ESCL"),),
+#
+                                          regles=(UN_PARMI('GROUP_MA_ESCL','MAILLE_ESCL'),
+                                                  UN_PARMI('GROUP_MA_MAIT','MAILLE_MAIT'),),
+                                          GROUP_MA_MAIT   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max=1),
+                                          MAILLE_MAIT     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
+                                          GROUP_MA_ESCL   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max=1),
+                                          MAILLE_ESCL     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
+#
+                                          NORMALE         =SIMP(statut='f',typ='TXM',defaut="MAIT",
+                                                                into=("MAIT","MAIT_ESCL","ESCL"),),
+#
+                                          VECT_MAIT       =SIMP(statut='f',typ='TXM',defaut="AUTO",
+                                                                into=("AUTO","FIXE","VECT_Y")),
 
-                                            regles=(UN_PARMI('GROUP_MA_ESCL','MAILLE_ESCL'),
-                                                    UN_PARMI('GROUP_MA_MAIT','MAILLE_MAIT'),),
-                                            GROUP_MA_MAIT   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max=1),
-                                            MAILLE_MAIT     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
-                                            GROUP_MA_ESCL   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max=1),
-                                            MAILLE_ESCL     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
-
-                                            NORMALE         =SIMP(statut='f',typ='TXM',defaut="MAIT",
-                                                                  into=("MAIT","MAIT_ESCL","ESCL"),),
-
-                                            VECT_MAIT       =SIMP(statut='f',typ='TXM',defaut="AUTO",
-                                                                  into=("AUTO","FIXE","VECT_Y")),
-
-                                            b_nmait_fixe=BLOC(condition = "VECT_MAIT == 'FIXE'",
-                                              MAIT_FIXE     =SIMP(statut='o',typ='R',min=3,max=3),
-                                              ),
-
-                                            b_nmait_vecty=BLOC(condition = "VECT_MAIT == 'VECT_Y'",
-                                              MAIT_VECT_Y   =SIMP(statut='o',typ='R',min=3,max=3),
-                                              ),
-
-                                            VECT_ESCL       =SIMP(statut='f',typ='TXM',defaut="AUTO",
-                                                                  into=("AUTO","FIXE","VECT_Y")),
-
-                                            b_nescl_fixe=BLOC(condition = "VECT_ESCL == 'FIXE'",
-                                              ESCL_FIXE     =SIMP(statut='o',typ='R',min=3,max=3),
-                                              ),
-
-                                            b_nescl_vecty=BLOC(condition = "VECT_ESCL == 'VECT_Y'",
-                                              ESCL_VECT_Y   =SIMP(statut='o',typ='R',min=3,max=3),
-                                              ),
-
-                                            TYPE_APPA       =SIMP(statut='f',typ='TXM',defaut="PROCHE",
-                                                             into  =("PROCHE","FIXE")),
-
-                                            b_appa_fixe     =BLOC(condition = "TYPE_APPA == 'FIXE'",
-                                              DIRE_APPA     =SIMP(statut='f',typ='R',min=3,max=3),
-                                              ),
-
-                                            DIST_POUTRE     =SIMP(statut='f',typ='TXM',defaut="NON", into=("OUI","NON")),
-                                            DIST_COQUE      =SIMP(statut='f',typ='TXM',defaut="NON", into=("OUI","NON")),
-                                            b_cara=BLOC(condition = "DIST_POUTRE == 'OUI' or DIST_COQUE == 'OUI'",
-                                              CARA_ELEM     =SIMP(statut='o',typ=(cara_elem) ),
-                                              ),
-
-                                            DIST_MAIT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                            DIST_ESCL       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-
-                                            TOLE_APPA       =SIMP(statut='f',typ='R'  ,defaut=-1.0),
-                                            TOLE_PROJ_EXT   =SIMP(statut='f',typ='R'  ,defaut=0.50),
-
-# -- Incompatibilité avec CL
-                                            SANS_NOEUD      =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
-                                            SANS_GROUP_NO   =SIMP(statut='f',typ=grno ,validators=NoRepeat(),max='**'),
-                                            SANS_MAILLE     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
-                                            SANS_GROUP_MA   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max='**'),
-
-# -- Mode sans calcul
-                                            RESOLUTION      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
-                                            b_verif=BLOC(condition = "RESOLUTION == 'NON' ",
-                                               TOLE_INTERP   = SIMP(statut='f',typ='R',defaut = 0.),
+                                          b_nmait_fixe=BLOC(condition = "VECT_MAIT == 'FIXE'",
+                                            MAIT_FIXE     =SIMP(statut='o',typ='R',min=3,max=3),
                                             ),
 
+                                          b_nmait_vecty=BLOC(condition = "VECT_MAIT == 'VECT_Y'",
+                                            MAIT_VECT_Y   =SIMP(statut='o',typ='R',min=3,max=3),
+                                            ),
+#
+                                          VECT_ESCL       =SIMP(statut='f',typ='TXM',defaut="AUTO",
+                                                                into=("AUTO","FIXE","VECT_Y")),
+
+                                          b_nescl_fixe=BLOC(condition = "VECT_ESCL == 'FIXE'",
+                                            ESCL_FIXE     =SIMP(statut='o',typ='R',min=3,max=3),
+                                            ),
+
+                                          b_nescl_vecty=BLOC(condition = "VECT_ESCL == 'VECT_Y'",
+                                            ESCL_VECT_Y   =SIMP(statut='o',typ='R',min=3,max=3),
+                                            ),
+#
+                                          TYPE_APPA       =SIMP(statut='f',typ='TXM',defaut="PROCHE",
+                                                           into  =("PROCHE","FIXE")),
+
+                                          b_appa_fixe     =BLOC(condition = "TYPE_APPA == 'FIXE'",
+                                            DIRE_APPA     =SIMP(statut='f',typ='R',min=3,max=3),
+                                            ),
+#
+                                          DIST_POUTRE     =SIMP(statut='f',typ='TXM',defaut="NON", into=("OUI","NON")),
+                                          DIST_COQUE      =SIMP(statut='f',typ='TXM',defaut="NON", into=("OUI","NON")),
+                                          b_cara=BLOC(condition = "DIST_POUTRE == 'OUI' or DIST_COQUE == 'OUI'",
+                                            CARA_ELEM     =SIMP(statut='o',typ=(cara_elem) ),
+                                            ),
+
+                                          DIST_MAIT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+                                          DIST_ESCL       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+#
+                                          TOLE_APPA       =SIMP(statut='f',typ='R'  ,defaut=-1.0),
+                                          TOLE_PROJ_EXT   =SIMP(statut='f',typ='R'  ,defaut=0.50),
+# -- Incompatibilité avec CL
+                                          SANS_NOEUD      =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
+                                          SANS_GROUP_NO   =SIMP(statut='f',typ=grno ,validators=NoRepeat(),max='**'),
+                                          SANS_MAILLE     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
+                                          SANS_GROUP_MA   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max='**'),
+# -- Mode sans calcul
+                                          RESOLUTION      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
+                                          b_verif=BLOC(condition = "RESOLUTION == 'NON' ",
+                                            TOLE_INTERP   = SIMP(statut='f',typ='R',defaut = 0.),
+                                            ),
 # -- Résolution
-                                            ALGO_CONT       =SIMP(statut='o',typ='TXM',defaut="CONTRAINTE",
-                                                                  into=("CONTRAINTE","LAGRANGIEN","PENALISATION","GCP"),),
+                                          ALGO_CONT       =SIMP(statut='o',typ='TXM',defaut="CONTRAINTE",
+                                                                into=("CONTRAINTE","LAGRANGIEN","PENALISATION","GCP"),),
 
-                                            b_active=BLOC(condition = "ALGO_CONT == 'CONTRAINTE' ",
-                                                         fr="Paramètres de la méthode des contraintes actives (contact uniquement)",
-                                              GLISSIERE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
-                                              b_glissiere=BLOC(condition = "GLISSIERE == 'OUI' ",
-                                                ALARME_JEU  =SIMP(statut='f',typ='R',defaut=0.),
-                                                ),
-                                              ),
-
-
-                                            b_penal_contact=BLOC(condition = "ALGO_CONT == 'PENALISATION' ",
-                                                                 fr="Paramètres de la méthode pénalisée (contact)",
-                                              E_N           =SIMP(statut='o',typ='R'),
-                                              ),
-
-                                            b_frottement=BLOC(condition = "FROTTEMENT == 'COULOMB' ",
-                                                              fr="Paramètres du frottement",
-                                              COULOMB       =SIMP(statut='o',typ='R',),
-                                              COEF_MATR_FROT=SIMP(statut='f',typ='R',defaut=0.E+0),
-                                              ALGO_FROT     =SIMP(statut='o',typ='TXM',defaut="PENALISATION",
-                                                                  into=("PENALISATION","LAGRANGIEN"),),
-
-                                              b_penal_frot=BLOC(condition = "ALGO_FROT == 'PENALISATION' ",
-                                                                fr="Paramètres de la méthode pénalisée (frottement)",
-                                                E_T         =SIMP(statut='o',typ='R'),
-                                                ),
-                                              ),
-                                            ), #fin mot-clé facteur ZONE
-                                  ), #fin bloc b_affe_discret
-
+                                          b_active=BLOC(condition = "ALGO_CONT == 'CONTRAINTE' ",
+                                                        fr="Paramètres de la méthode des contraintes actives (contact uniquement)",
+                                                        GLISSIERE=SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+                                                        b_glissiere=BLOC(condition = "GLISSIERE == 'OUI' ",
+                                                                         ALARME_JEU  =SIMP(statut='f',typ='R',defaut=0.),
+                                                                        ),
+                                                        ),
+#
+                                          b_penal_contact=BLOC(condition = "ALGO_CONT == 'PENALISATION' ",
+                                                               fr="Paramètres de la méthode pénalisée (contact)",
+                                                               E_N=SIMP(statut='o',typ='R'),
+                                                               ),
+#
+                                          b_frottement=BLOC(condition = "FROTTEMENT == 'COULOMB' ",
+                                                            fr="Paramètres du frottement de Coulomb",
+                                                            COULOMB       =SIMP(statut='o',typ='R',),
+                                                            COEF_MATR_FROT=SIMP(statut='f',typ='R',defaut=0.E+0),
+                                                            ALGO_FROT     =SIMP(statut='o',typ='TXM',defaut="PENALISATION",
+                                                                                into=("PENALISATION","LAGRANGIEN"),),
+#
+                                                            b_penal_frot=BLOC(condition = "ALGO_FROT == 'PENALISATION' ",
+                                                                              fr="Paramètres de la méthode pénalisée (frottement)",
+                                                                              E_T=SIMP(statut='o',typ='R'),
+                                                                              ),
+                                                           ),
+                                          ), #fin mot-clé facteur ZONE
+                                ), #fin bloc b_affe_discret
 
 # AFFECTATION - CAS CONTINUE
 
-           b_affe_continue = BLOC(condition = "FORMULATION == 'CONTINUE'",
-                                  ZONE=FACT(statut='o',
-                                            max='**',
-
+         b_affe_continue = BLOC(condition = "FORMULATION == 'CONTINUE'",
+                                ZONE=FACT(statut='o',
+                                          max='**',
 # -- Appariement
-                                            APPARIEMENT     =SIMP(statut='f',typ='TXM',defaut="MAIT_ESCL",
-                                                                  into=("MAIT_ESCL",)),
+                                          APPARIEMENT     =SIMP(statut='f',typ='TXM',defaut="MAIT_ESCL",
+                                                                into=("MAIT_ESCL",)),
+#
+                                          regles=(UN_PARMI('GROUP_MA_ESCL','MAILLE_ESCL'),
+                                                  UN_PARMI('GROUP_MA_MAIT','MAILLE_MAIT'),),
+                                          GROUP_MA_MAIT   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max=1),
+                                          MAILLE_MAIT     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
+                                          GROUP_MA_ESCL   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max=1),
+                                          MAILLE_ESCL     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
+#
+                                          NORMALE         =SIMP(statut='f',typ='TXM',defaut="MAIT",
+                                                                into=("MAIT","MAIT_ESCL","ESCL"),),
+#
+                                          VECT_MAIT       =SIMP(statut='f',typ='TXM',defaut="AUTO",
+                                                                into=("AUTO","FIXE","VECT_Y")),
 
-                                            regles=(UN_PARMI('GROUP_MA_ESCL','MAILLE_ESCL'),
-                                                    UN_PARMI('GROUP_MA_MAIT','MAILLE_MAIT'),),
-                                            GROUP_MA_MAIT   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max=1),
-                                            MAILLE_MAIT     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
-                                            GROUP_MA_ESCL   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max=1),
-                                            MAILLE_ESCL     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
-
-                                            NORMALE         =SIMP(statut='f',typ='TXM',defaut="MAIT",
-                                                                  into=("MAIT","MAIT_ESCL","ESCL"),),
-
-                                            VECT_MAIT       =SIMP(statut='f',typ='TXM',defaut="AUTO",
-                                                                  into=("AUTO","FIXE","VECT_Y")),
-
-                                            b_nmait_fixe=BLOC(condition = "VECT_MAIT == 'FIXE'",
-                                              MAIT_FIXE     =SIMP(statut='o',typ='R',min=3,max=3),
-                                              ),
-
-                                            b_nmait_vecty=BLOC(condition = "VECT_MAIT == 'VECT_Y'",
-                                              MAIT_VECT_Y   =SIMP(statut='o',typ='R',min=3,max=3),
-                                              ),
-
-                                            VECT_ESCL       =SIMP(statut='f',typ='TXM',defaut="AUTO",
-                                                                  into=("AUTO","FIXE","VECT_Y")),
-
-                                            b_nescl_fixe=BLOC(condition = "VECT_ESCL == 'FIXE'",
-                                              ESCL_FIXE     =SIMP(statut='o',typ='R',min=3,max=3),
-                                              ),
-
-                                            b_nescl_vecty=BLOC(condition = "VECT_ESCL == 'VECT_Y'",
-                                              ESCL_VECT_Y   =SIMP(statut='o',typ='R',min=3,max=3),
-                                              ),
-
-                                            TYPE_APPA       =SIMP(statut='f',typ='TXM',defaut="PROCHE",
-                                                             into  =("PROCHE","FIXE")),
-
-                                            b_appa_fixe=BLOC(condition = "TYPE_APPA == 'FIXE'",
-                                              DIRE_APPA     =SIMP(statut='f',typ='R',min=3,max=3),
-                                              ),
-
-                                            DIST_POUTRE     =SIMP(statut='f',typ='TXM',defaut="NON", into=("OUI","NON")),
-                                            DIST_COQUE      =SIMP(statut='f',typ='TXM',defaut="NON", into=("OUI","NON")),
-                                            b_cara=BLOC(condition = "DIST_POUTRE == 'OUI' or DIST_COQUE == 'OUI'",
-                                              CARA_ELEM     =SIMP(statut='o',typ=(cara_elem) ),
-                                              ),
-
-                                            DIST_MAIT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                            DIST_ESCL       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-
-                                            TOLE_APPA       =SIMP(statut='f',typ='R'  ,defaut=-1.0),
-                                            TOLE_PROJ_EXT   =SIMP(statut='f',typ='R'  ,defaut=0.50),
-
-# -- Incompatibilité avec CL
-
-                                            SANS_NOEUD      =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
-                                            SANS_GROUP_NO   =SIMP(statut='f',typ=grno ,validators=NoRepeat(),max='**'),
-                                            SANS_MAILLE     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
-                                            SANS_GROUP_MA   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max='**'),
-
-                                            FOND_FISSURE    =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),
-                                            b_fond_fissure =BLOC(condition = "FOND_FISSURE == 'OUI' ",
-                                                                 fr="Traitement en fond de fissure",
-                                              regles=(UN_PARMI('NOEUD_FOND','GROUP_NO_FOND','MAILLE_FOND','GROUP_MA_FOND'),),
-                                              NOEUD_FOND    =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-                                              GROUP_NO_FOND =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-                                              MAILLE_FOND   =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
-                                              GROUP_MA_FOND =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
-                                              ),
-
-                                            RACCORD_LINE_QUAD=SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),
-                                            b_raccord_surf =BLOC(condition = "RACCORD_LINE_QUAD == 'OUI' ",
-                                                                 fr="Traitement du raccord surfacique",
-                                              regles=(UN_PARMI('NOEUD_RACC','GROUP_NO_RACC'),),
-                                              NOEUD_RACC    =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-                                              GROUP_NO_RACC =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-                                              ),
-
-                                            EXCLUSION_PIV_NUL=SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON",),),
-
-# -- Mode sans calcul
-                                            RESOLUTION      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
-                                            b_verif=BLOC(condition = "RESOLUTION == 'NON' ",
-                                               TOLE_INTERP   = SIMP(statut='f',typ='R',defaut = 0.),
+                                          b_nmait_fixe=BLOC(condition = "VECT_MAIT == 'FIXE'",
+                                            MAIT_FIXE     =SIMP(statut='o',typ='R',min=3,max=3),
                                             ),
 
+                                          b_nmait_vecty=BLOC(condition = "VECT_MAIT == 'VECT_Y'",
+                                            MAIT_VECT_Y   =SIMP(statut='o',typ='R',min=3,max=3),
+                                            ),
+#
+                                          VECT_ESCL       =SIMP(statut='f',typ='TXM',defaut="AUTO",
+                                                                into=("AUTO","FIXE","VECT_Y")),
+
+                                          b_nescl_fixe=BLOC(condition = "VECT_ESCL == 'FIXE'",
+                                            ESCL_FIXE     =SIMP(statut='o',typ='R',min=3,max=3),
+                                            ),
+
+                                          b_nescl_vecty=BLOC(condition = "VECT_ESCL == 'VECT_Y'",
+                                            ESCL_VECT_Y   =SIMP(statut='o',typ='R',min=3,max=3),
+                                            ),
+#
+                                          TYPE_APPA       =SIMP(statut='f',typ='TXM',defaut="PROCHE",
+                                                           into  =("PROCHE","FIXE")),
+
+                                          b_appa_fixe=BLOC(condition = "TYPE_APPA == 'FIXE'",
+                                            DIRE_APPA     =SIMP(statut='f',typ='R',min=3,max=3),
+                                            ),
+#
+                                          DIST_POUTRE     =SIMP(statut='f',typ='TXM',defaut="NON", into=("OUI","NON")),
+                                          DIST_COQUE      =SIMP(statut='f',typ='TXM',defaut="NON", into=("OUI","NON")),
+                                          b_cara=BLOC(condition = "DIST_POUTRE == 'OUI' or DIST_COQUE == 'OUI'",
+                                            CARA_ELEM     =SIMP(statut='o',typ=(cara_elem) ),
+                                            ),
+
+                                          DIST_MAIT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+                                          DIST_ESCL       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+#
+                                          TOLE_APPA       =SIMP(statut='f',typ='R'  ,defaut=-1.0),
+                                          TOLE_PROJ_EXT   =SIMP(statut='f',typ='R'  ,defaut=0.50),
+# -- Incompatibilité avec CL
+                                          SANS_NOEUD      =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
+                                          SANS_GROUP_NO   =SIMP(statut='f',typ=grno ,validators=NoRepeat(),max='**'),
+                                          SANS_MAILLE     =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
+                                          SANS_GROUP_MA   =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max='**'),
+#
+                                          FOND_FISSURE    =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),
+                                          b_fond_fissure  =BLOC(condition = "FOND_FISSURE == 'OUI' ",
+                                                                fr="Traitement en fond de fissure",
+                                          regles=(UN_PARMI('NOEUD_FOND','GROUP_NO_FOND','MAILLE_FOND','GROUP_MA_FOND'),),
+                                          NOEUD_FOND    =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+                                          GROUP_NO_FOND =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+                                          MAILLE_FOND   =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
+                                          GROUP_MA_FOND =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
+                                                                ),
+#
+                                          RACCORD_LINE_QUAD=SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),
+                                          b_raccord_surf =BLOC(condition = "RACCORD_LINE_QUAD == 'OUI' ",
+                                                               fr="Traitement du raccord surfacique",
+                                                               regles=(UN_PARMI('NOEUD_RACC','GROUP_NO_RACC'),),
+                                          NOEUD_RACC    =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+                                          GROUP_NO_RACC =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+                                                               ),
+#
+                                          EXCLUSION_PIV_NUL=SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON",),),
+# -- Mode sans calcul
+                                          RESOLUTION       =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
+                                          b_verif=BLOC(condition = "RESOLUTION == 'NON' ",
+                                                       TOLE_INTERP   = SIMP(statut='f',typ='R',defaut = 0.),
+                                                       ),
 # -- Fonctionnalités spécifiques 'CONTINUE'
-                                            INTEGRATION     =SIMP(statut='f',typ='TXM',defaut="NOEUD",
-                                                                   into=("GAUSS","NOEUD","SIMPSON","SIMPSON1","SIMPSON2",
-                                                                                         "NCOTES" ,"NCOTES1" ,"NCOTES2"),),
+                                          INTEGRATION     =SIMP(statut='f',typ='TXM',defaut="NOEUD",
+                                                                 into=("GAUSS","NOEUD","SIMPSON","SIMPSON1","SIMPSON2",
+                                                                                       "NCOTES" ,"NCOTES1" ,"NCOTES2"),),
+#
+                                          CONTACT_INIT    =SIMP(statut='f',typ='TXM',defaut="NON",
+                                                                into=("OUI","INTERPENETRE","NON"),),
+#
+                                          GLISSIERE       =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),
+#
+                                          ALGO_CONT       =SIMP(statut='f',typ='TXM',defaut="STANDARD",
+                                                                into=("STANDARD","AVANCE","PENALISATION"),),
 
-                                            CONTACT_INIT    =SIMP(statut='f',typ='TXM',defaut="NON",
-                                                                  into=("OUI","INTERPENETRE","NON"),),
-
-                                            GLISSIERE       =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),
-
-                                            ALGO_CONT       =SIMP(statut='f',typ='TXM',defaut="STANDARD",
-                                                                  into=("STANDARD","AVANCE","PENALISATION"),),
-
-                                            b_cont_std=BLOC(condition = "ALGO_CONT == 'STANDARD' ",
-                                                            fr="Parametres de la formulation Lagrangienne",
-                                              COEF_CONT     =SIMP(statut='f',typ='R',defaut=100.E+0),
-                                              ),
-                                            b_cont_avc=BLOC(condition = "ALGO_CONT == 'AVANCE' ",
-                                                            fr="Parametres du Lagrangien augmenté",
-                                              COEF_REGU_CONT=SIMP(statut='f',typ='R',defaut=100.E+0),
-                                              COEF_STAB_CONT=SIMP(statut='f',typ='R',defaut=100.E+0),
-                                              COEF_PENA_CONT=SIMP(statut='f',typ='R',defaut=100.E+0),
-                                              ),
-                                            b_cont_pena =BLOC(condition = "ALGO_CONT == 'PENALISATION' ",
+                                          b_cont_std=BLOC(condition = "ALGO_CONT == 'STANDARD' ",
+                                                          fr="Paramètres de la formulation Lagrangienne",
+                                                          COEF_CONT = SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                          ),
+                                          b_cont_avc=BLOC(condition = "ALGO_CONT == 'AVANCE' ",
+                                                          fr="Paramètres du Lagrangien augmenté",
+                                                          COEF_REGU_CONT=SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                          COEF_STAB_CONT=SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                          COEF_PENA_CONT=SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                          ),
+                                          b_cont_pena=BLOC(condition = "ALGO_CONT == 'PENALISATION' ",
                                                             fr="Paramètres de la méthode pénalisée",
-                                              COEF_PENA_CONT  =SIMP(statut='o',typ='R'),),
+                                                            COEF_PENA_CONT  =SIMP(statut='o',typ='R'),
+                                                            ),
+#
+                                          COMPLIANCE      =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON",) ),
+                                          b_compliance=BLOC(condition = "COMPLIANCE == 'OUI' ",
+                                                            fr="Paramètres de la compliance",
+                                                            ASPERITE = SIMP(statut='o',typ='R',),
+                                                            E_N      = SIMP(statut='o',typ='R',),
+                                                            E_V      = SIMP(statut='f',typ='R',defaut=0.E+0),
+                                            ),
+#
+                                          b_frottement=BLOC(condition = "FROTTEMENT == 'COULOMB' ",
+                                                            fr="Paramètres du frottement de Coulomb",
+                                                            COULOMB    = SIMP(statut='o',typ='R',),
+                                                            SEUIL_INIT = SIMP(statut='f',typ='R',defaut=0.E+0),
+#
+                                          regles=(EXCLUS('SANS_NOEUD_FR','SANS_GROUP_NO_FR'),),
+                                          SANS_NOEUD_FR    =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+                                          SANS_GROUP_NO_FR =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+                                                            b_sans_group_no_frot=BLOC(condition = " SANS_GROUP_NO_FR != None or \
+                                                                                                    SANS_NOEUD_FR != None ",
+                                                            fr="Direction de frottement à exclure (uniquement dans le cas 3D)",
+                                                            DIRE_EXCL_FROT=SIMP(statut='f',typ='R',min=3,max=3),
+                                                            ),
 
-                                            COMPLIANCE      =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON",) ),
-                                            b_compliance=BLOC(condition = "COMPLIANCE == 'OUI' ",fr="Parametres de la compliance",
-                                              ASPERITE      =SIMP(statut='o',typ='R',),
-                                              E_N           =SIMP(statut='o',typ='R',),
-                                              E_V           =SIMP(statut='f',typ='R',defaut=0.E+0),
-                                              ),
+                                            ALGO_FROT       =SIMP(statut='f',typ='TXM',defaut="STANDARD",
+                                                                  into=("STANDARD","AVANCE","PENALISATION"),),
+                                            b_frot_std      =BLOC(condition = "ALGO_FROT == 'STANDARD' ",
+                                                                  fr="Paramètres de la formulation Lagrangienne",
+                                                                  COEF_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                                  ),
+                                            b_frot_avc      =BLOC(condition = "ALGO_FROT == 'AVANCE' ",
+                                                                  fr="Paramètres du Lagrangien augmenté",
+                                                                  COEF_REGU_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                                  COEF_STAB_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                                  COEF_PENA_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                                  ),
+                                            b_frot_pena     =BLOC(condition = "ALGO_FROT == 'PENALISATION' ",
+                                                                  fr="Paramètres de la méthode pénalisée",
+                                                                  COEF_PENA_FROT  =SIMP(statut='o',typ='R'),
+                                                                  ),
+#
+                                            USURE           =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","ARCHARD",),),
+                                            b_usure         =BLOC(condition = "USURE == 'ARCHARD' ",
+                                                                  fr="Parametres de la loi d'usure d'Archard",
+                                                                  K =SIMP(statut='o',typ='R',),
+                                                                  H =SIMP(statut='o',typ='R',val_min=1E-8),
+                                                                  ),
 
-                                            b_frottement=BLOC(condition = "FROTTEMENT == 'COULOMB' ",fr="Paramètres du frottement",
-                                              COULOMB          =SIMP(statut='o',typ='R',),
-                                              SEUIL_INIT     =SIMP(statut='f',typ='R',defaut=0.E+0),
-
-                                              regles=(EXCLUS('SANS_NOEUD_FR','SANS_GROUP_NO_FR'),),
-                                              SANS_NOEUD_FR    =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-                                              SANS_GROUP_NO_FR =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-                                              b_sans_group_no_frot=BLOC(condition = " SANS_GROUP_NO_FR != None or \
-                                                                                         SANS_NOEUD_FR != None ",
-                                                fr="Direction de frottement à exclure (uniquement dans le cas 3D)",
-                                                DIRE_EXCL_FROT=SIMP(statut='f',typ='R',min=3,max=3),
-                                                ),
-
-                                              ALGO_FROT       =SIMP(statut='f',typ='TXM',defaut="STANDARD",
-                                                                    into=("STANDARD","AVANCE","PENALISATION"),),
-                                              b_frot_std      =BLOC(condition = "ALGO_FROT == 'STANDARD' ",
-                                                                    fr="Parametres de la formulation Lagrangienne",
-                                                                   COEF_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
-                                                ),
-                                              b_frot_avc      =BLOC(condition = "ALGO_FROT == 'AVANCE' ",
-                                                                    fr="Parametres du Lagrangien augmenté",
-                                                                   COEF_REGU_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
-                                                                   COEF_STAB_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
-                                                                   COEF_PENA_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
-                                                ),
-                                              b_frot_pena =BLOC(condition = "ALGO_FROT == 'PENALISATION' ",
-                                                                    fr="Paramètres de la méthode pénalisée",
-                                                                   COEF_PENA_FROT  =SIMP(statut='o',typ='R'),
-                                                ),
-
-                                              USURE          =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","ARCHARD",),),
-                                              b_usure        =BLOC(condition = "USURE == 'ARCHARD' ",
-                                                                   fr="Parametres de la loi d'usure d'Archard",
-                                                                   K =SIMP(statut='o',typ='R',),
-                                                                   H =SIMP(statut='o',typ='R',val_min=1E-8),
-                                                ),
-
-                                              ), #fin bloc b_frottement
-                                            ), #fin mot-clé facteur ZONE
-                                  ), #fin bloc b_affe_continue
+                                            ), #fin bloc b_frottement
+                                          ), #fin mot-clé facteur ZONE
+                                ), #fin bloc b_affe_continue
 
 
 # AFFECTATION - CAS XFEM
@@ -9578,55 +10636,61 @@ DEFI_CONTACT=OPER(nom       = "DEFI_CONTACT",
                                                              into=("GAUSS","FPG2","FPG3","FPG4","FPG6","FPG7",
                                                                    "NOEUD","SIMPSON","SIMPSON1","NCOTES","NCOTES1","NCOTES2"),),
 
-                                       CONTACT_INIT   = SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),
 
-                                       GLISSIERE      = SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),
-                                       RELATION         = SIMP(statut='f',typ='TXM',defaut="NON",into=("CZM_XFEM","NON"),),
+                                       RELATION       = SIMP(statut='f',typ='TXM',defaut="NON",
+                                                             into=("CZM_EXP_REG","CZM_LIN_REG","NON"),),
 
                                        ALGO_LAGR      = SIMP(statut='f',typ='TXM',defaut="VERSION1",
                                                              into=("NON","VERSION1","VERSION2"),),
                                        COEF_ECHELLE   = SIMP(statut='f',typ='R',defaut=1.E+6),
 
-                                       ALGO_CONT      =SIMP(statut='f',typ='TXM',defaut="STANDARD",
-                                                                  into=("STANDARD","AVANCE","PENALISATION"),),
+                                       ALGO_CONT      = SIMP(statut='f',typ='TXM',defaut="STANDARD",
+                                                                  into=("STANDARD","AVANCE","PENALISATION","CZM"),),
+                                                                  
+                                       b_cont_nczm =BLOC(condition = "ALGO_CONT!='CZM'",
+                                                CONTACT_INIT   = SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),
+                                                GLISSIERE      = SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),),
+                                                ),
 
-                                       b_cont_std=BLOC(condition = "ALGO_CONT == 'STANDARD' ",
-                                                       fr="Parametres de la formulation Lagrangienne",
-                                         COEF_CONT    =SIMP(statut='f',typ='R',defaut=100.E+0),
-                                         ),
-                                       b_cont_avc=BLOC(condition = "ALGO_CONT == 'AVANCE' ",fr="Parametres du Lagrangien augmenté",
-                                         COEF_REGU_CONT =SIMP(statut='f',typ='R',defaut=100.E+0),
-                                         COEF_STAB_CONT =SIMP(statut='f',typ='R',defaut=0.E+0),
-                                         COEF_PENA_CONT =SIMP(statut='f',typ='R',defaut=0.E+0),
-                                         ),
+                                       b_cont_std=BLOC(condition = "ALGO_CONT == 'STANDARD'",
+                                                fr="Parametres de la formulation Lagrangienne",
+                                                COEF_CONT    =SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                ),
+             
+                                       b_cont_avc=BLOC(condition = "ALGO_CONT == 'AVANCE' ",
+                                                 fr="Parametres du Lagrangien augmenté",
+                                                 COEF_REGU_CONT =SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                 COEF_STAB_CONT =SIMP(statut='f',typ='R',defaut=0.E+0),
+                                                 COEF_PENA_CONT =SIMP(statut='f',typ='R',defaut=0.E+0),
+                                                 ),
 
                                        b_cont_pen=BLOC(condition = "ALGO_CONT == 'PENALISATION' ",
-                                         fr="Paramètre de la méthode pénalisée",
-                                         COEF_PENA_CONT =SIMP(statut='o',typ='R'),
-                                         ),
+                                                 fr="Paramètre de la méthode pénalisée",
+                                                 COEF_PENA_CONT =SIMP(statut='o',typ='R'),
+                                                 ),
 
-                                       b_frottement=BLOC(condition = "FROTTEMENT == 'COULOMB' ",fr="Paramètres du frottement",
-                                         COULOMB      =SIMP(statut='o',typ='R',),
-                                         SEUIL_INIT   =SIMP(statut='f',typ='R',defaut=0.E+0),
+                                       b_frottement=BLOC(condition = "FROTTEMENT == 'COULOMB' and  ALGO_CONT != 'CZM' ",
+                                                 fr="Paramètres du frottement",
+                                                 COULOMB      =SIMP(statut='o',typ='R',),
+                                                 SEUIL_INIT   =SIMP(statut='f',typ='R',defaut=0.E+0),
+                                                 ALGO_FROT    =SIMP(statut='f',typ='TXM',defaut="STANDARD",
+                                                                            into=("STANDARD","AVANCE","PENALISATION"),),
 
-                                         ALGO_FROT    =SIMP(statut='f',typ='TXM',defaut="STANDARD",
-                                                                  into=("STANDARD","AVANCE","PENALISATION"),),
-
-                                         b_frot_std=BLOC(condition = "ALGO_FROT == 'STANDARD' ",
-                                                         fr="Parametres de la formulation Lagrangienne",
-                                           COEF_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
-                                           ),
-                                         b_frot_avc=BLOC(condition = "ALGO_FROT == 'AVANCE' ",
-                                                         fr="Parametres du Lagrangien augmenté",
-                                           COEF_REGU_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
-                                           COEF_STAB_FROT  =SIMP(statut='f',typ='R',defaut=0.E+0),
-                                           COEF_PENA_FROT  =SIMP(statut='f',typ='R',defaut=0.E+0),
-                                           ),
-                                         b_frot_pen=BLOC(condition = "ALGO_FROT == 'PENALISATION' ",
-                                                         fr="Paramètre de la méthode pénalisée",
-                                           COEF_PENA_FROT  =SIMP(statut='o',typ='R'),
-                                           ),
-                                         ), #fin bloc b_frottement
+                                                 b_frot_std=BLOC(condition = "ALGO_FROT == 'STANDARD' ",
+                                                                  fr="Parametres de la formulation Lagrangienne",
+                                                                  COEF_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                                  ),
+                                                 b_frot_avc=BLOC(condition = "ALGO_FROT == 'AVANCE' ",
+                                                                  fr="Parametres du Lagrangien augmenté",
+                                                                  COEF_REGU_FROT  =SIMP(statut='f',typ='R',defaut=100.E+0),
+                                                                  COEF_STAB_FROT  =SIMP(statut='f',typ='R',defaut=0.E+0),
+                                                                  COEF_PENA_FROT  =SIMP(statut='f',typ='R',defaut=0.E+0),
+                                                                  ),
+                                                 b_frot_pen=BLOC(condition = "ALGO_FROT == 'PENALISATION' ",
+                                                                  fr="Paramètre de la méthode pénalisée",
+                                                                  COEF_PENA_FROT  =SIMP(statut='o',typ='R'),
+                                                                  ),
+                                                        ), #fin bloc b_frottement
                                        ), #fin mot-clé facteur ZONE
                              ), #fin bloc b_affe_xfem
 
@@ -9733,10 +10797,10 @@ DEFI_FICHIER=MACRO(nom="DEFI_FICHIER",op=ops.build_DEFI_FICHIER,sd_prod=DEFIC_pr
 
            INFO          =SIMP(statut='f',typ='I',into=(1,2) ),
            )
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/03/2011   AUTEUR MASSIN P.MASSIN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -9762,6 +10826,7 @@ DEFI_FISS_XFEM=OPER(nom="DEFI_FISS_XFEM",op=  41,sd_prod=fiss_xfem,reentrant='n'
 # ------------------------------------------------------------------------------------------------------------------------
 
     MODELE                =SIMP(statut='o',typ=modele_sdaster),
+    MODELE_GRILLE         =SIMP(statut='f',typ=modele_sdaster,max=1,position='global'),
 
 # ------------------------------------------------------------------------------------------------------------------------
 #                       fissure/interface
@@ -9783,7 +10848,7 @@ DEFI_FISS_XFEM=OPER(nom="DEFI_FISS_XFEM",op=  41,sd_prod=fiss_xfem,reentrant='n'
 #                             ENSEMBLE('CHAM_NO_LSN','CHAM_NO_LST'),
 #                             ENSEMBLE('GROUP_MA_FISS','GROUP_MA_FOND')),
 #                                ),
-#
+# 
 #       b_interface           =BLOC(condition = "TYPE_DISCONTINUITE == 'INTERFACE' ",fr="Regles pour les interfaces",
 #                 regles    =(PRESENT_ABSENT('FONC_LN','FONC_LT'),
 #                             PRESENT_ABSENT('CHAM_NO_LSN','CHAM_NO_LST'),
@@ -9841,13 +10906,33 @@ DEFI_FISS_XFEM=OPER(nom="DEFI_FISS_XFEM",op=  41,sd_prod=fiss_xfem,reentrant='n'
                             ),
 
 # ------------------------------------------------------------------------------------------------------------------------
+#                       grille (pour Homard)
+# ------------------------------------------------------------------------------------------------------------------------
+
+    DEFI_FISS_GRILLE       =FACT(statut='f',max=1,
+
+      b_fissure            =BLOC(condition="MODELE_GRILLE == None",
+           FISSURE         =SIMP(statut='f',typ=fiss_xfem,max=1),
+                                ),
+
+      b_levelset_grille    =BLOC(condition="MODELE_GRILLE != None" ,
+           CHAM_NO_LSN_GRILLE  =SIMP(statut='o',typ=cham_no_sdaster,max=1),
+           CHAM_NO_LST_GRILLE  =SIMP(statut='o',typ=cham_no_sdaster,max=1),
+           CHAM_NO_GRLSN_GRILLE=SIMP(statut='o',typ=cham_no_sdaster,max=1),
+           CHAM_NO_GRLST_GRILLE=SIMP(statut='o',typ=cham_no_sdaster,max=1),
+                                 ),
+                                 ),
+
+                           
+
+# ------------------------------------------------------------------------------------------------------------------------
 #                       partie du maillage potentiellement enrichie
 # ------------------------------------------------------------------------------------------------------------------------
 
     GROUP_MA_ENRI         =SIMP(statut='f',typ=grma,max=01),
 
 # ------------------------------------------------------------------------------------------------------------------------
-#                       types d'enrichissement
+#                       types d'enrichissement 
 # ------------------------------------------------------------------------------------------------------------------------
 
     b_enri_inte           =BLOC(condition = "TYPE_DISCONTINUITE == 'INTERFACE' ",
@@ -9869,7 +10954,7 @@ DEFI_FISS_XFEM=OPER(nom="DEFI_FISS_XFEM",op=  41,sd_prod=fiss_xfem,reentrant='n'
            NB_COUCHES     =SIMP(statut='f',typ='I',defaut=4,val_min=1),
 
                                ),
-                             ),
+                             ),                        
                           ),
 
 # ------------------------------------------------------------------------------------------------------------------------
@@ -9886,6 +10971,16 @@ DEFI_FISS_XFEM=OPER(nom="DEFI_FISS_XFEM",op=  41,sd_prod=fiss_xfem,reentrant='n'
 
                              ),
 
+# ------------------------------------------------------------------------------------------------------------------------
+#                       branchement
+# ------------------------------------------------------------------------------------------------------------------------
+
+    b_jonction            =BLOC(condition = "MODELE_GRILLE == None ",
+        JONCTION              =FACT(statut='f',max=1,
+          FISSURE             =SIMP(statut='o',typ=fiss_xfem,min=1,max='**',),
+          POINT               =SIMP(statut='o',typ='R',max=3,),
+                                   ),
+                               ),
 # ------------------------------------------------------------------------------------------------------------------------
 #                       info
 # ------------------------------------------------------------------------------------------------------------------------
@@ -10175,10 +11270,10 @@ DEFI_FONCTION=OPER(nom="DEFI_FONCTION",op=3,sd_prod=defi_fonction_prod
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 04/05/2011   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -10236,7 +11331,7 @@ DEFI_FOND_FISS=OPER(nom="DEFI_FOND_FISS",op=55,sd_prod=fond_fiss,reentrant='n',
              NOEUD_ORIG      =SIMP(statut='f',typ=no,),
              GROUP_NO_ORIG   =SIMP(statut='f',typ=grno,),
              MAILLE_ORIG     =SIMP(statut='f',typ=ma,),
-             GROUP_MA_ORIG   =SIMP(statut='f',typ=ma,),
+             GROUP_MA_ORIG   =SIMP(statut='f',typ=grma,),
            ),
            FOND_INF       =FACT(statut='f',
              GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
@@ -10328,10 +11423,10 @@ DEFI_GEOM_FIBRE=OPER(nom="DEFI_GEOM_FIBRE",op=  119, sd_prod=gfibre_sdaster,
 
 
 ) ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 11/01/2011   AUTEUR SFAYOLLE S.FAYOLLE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -10348,69 +11443,134 @@ DEFI_GEOM_FIBRE=OPER(nom="DEFI_GEOM_FIBRE",op=  119, sd_prod=gfibre_sdaster,
 # ======================================================================
 # RESPONSABLE SFAYOLLE S.FAYOLLE
 DEFI_GLRC=OPER(nom="DEFI_GLRC",op=57,sd_prod=mater_sdaster,reentrant='f',
-            UIinfo={"groupes":("Modélisation",)},
-                    fr="Determiner les caracteristiques du beton arme homogeneisees a partir des proprietes du beton et de  "
-                        +" plusieurs types d'armature",
-         reuse = SIMP(statut='f',typ=mater_sdaster),
-         BETON          =FACT(statut='o',max=1,
-           MATER           =SIMP(statut='o',typ=(mater_sdaster) ),
-           EPAIS           =SIMP(statut='o',typ='R',val_min=0.E+0 ),
-           GAMMA           =SIMP(statut='o',typ='R',val_min=0.E+0,val_max=1.E+0),
-           QP1             =SIMP(statut='o',typ='R',val_min=0.E+0,val_max=1.E+0),
-           QP2             =SIMP(statut='o',typ='R',val_min=0.E+0,val_max=1.E+0),
+               UIinfo={"groupes":("Modélisation",)},
+               fr="Déterminer les caractéristiques homogenéisées du béton armé à partir des propriétés du béton et des  "
+                        +" armatures",
+               reuse = SIMP(statut='f',typ=mater_sdaster),
+               RELATION = SIMP(statut='o',typ='TXM',defaut="GLRC_DAMAGE",
+                          into=("GLRC_DM","GLRC_DAMAGE"),),
 
-           C1N1            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C1N2            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C1N3            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C2N1            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C2N2            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C2N3            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C1M1            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C1M2            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C1M3            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C2M1            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C2M2            =SIMP(statut='o',typ='R',val_min=0.E+0),
-           C2M3            =SIMP(statut='o',typ='R',val_min=0.E+0),
+               b_glrc_dm=BLOC(condition = "RELATION == 'GLRC_DM'",
+                              fr="Paramètres de la loi GLRC_DM",
+                              BETON = FACT(statut='o',max=1,
+                                MATER = SIMP(statut='o',typ=(mater_sdaster),),
+                                EPAIS = SIMP(statut='o',typ='R',val_min=0.E+0 ),),
+                              NAPPE = FACT(statut='o',max=1,
+                                MATER = SIMP(statut='o',typ=(mater_sdaster),),
+                                OMY   = SIMP(statut='o',typ='R',val_min=0.E+0,),
+                                OMX   = SIMP(statut='o',typ='R',val_min=0.E+0,),
+                                RY    = SIMP(statut='o',typ='R',val_min=-1.0E+0,val_max=1.0E+0,),
+                                RX    = SIMP(statut='o',typ='R',val_min=-1.0E+0,val_max=1.0E+0),),
+                              RHO = SIMP(statut='f',typ='R',val_min=0.E+0,),
+                              AMOR_ALPHA = SIMP(statut='f',typ='R',val_min=0.E+0,),
+                              AMOR_BETA = SIMP(statut='f',typ='R',val_min=0.E+0,),
+                              COMPR = SIMP(statut='o',typ='TXM',defaut="GAMMA",
+                                           into=("GAMMA","SEUIL")),
+                   b_gamma=BLOC(condition = "COMPR == 'GAMMA'",
+                                fr="Paramètre d'endommagement en compression ",
+                                GC = SIMP(statut='o',typ='R',defaut=1.0E+0,val_min=0.0E+0, val_max=1.0E+0),),
+                   b_seuil=BLOC(condition = "COMPR == 'SEUIL'",
+                                fr="Seuil d'endommagement en compression ",
+                                SYC = SIMP(statut='o',typ='R'),),
+                   PENTE = SIMP(statut='o',typ='TXM',defaut="RIGI_ACIER",
+                                into=("PLAS_ACIER","UTIL","RIGI_ACIER")),
+                   b_util = BLOC(condition = "PENTE == 'UTIL'",
+                                 fr="Valeur de la déformation maximale de l'élément",
+                                  EPSI_MEMB = SIMP(statut='o',typ='R',defaut=0.E+0),
+                                  EPSI_FLEX = SIMP(statut='o',typ='R',defaut=0.E+0),),
+                   CISAIL = SIMP(statut='o',typ='TXM',defaut="NON",
+                                 into=("OUI","NON"),),
+                   METHODE_ENDO = SIMP(statut='o',typ='TXM',defaut="ENDO_INTER",
+                                  into=("ENDO_NAISS","ENDO_LIM","ENDO_INTER"),),
+                   INFO = SIMP(statut='f',typ='I',defaut=1,into=(1,2),),
+                           ),
+           b_glrc_damage=BLOC(condition = "RELATION == 'GLRC_DAMAGE'",
+                            fr="Paramètres de la loi GLRC_DAMAGE",
+                   BETON            =FACT(statut='o',max=1,
+                     MATER           =SIMP(statut='o',typ=(mater_sdaster) ),
+                     EPAIS           =SIMP(statut='o',typ='R',val_min=0.E+0 ),
+                     GAMMA           =SIMP(statut='o',typ='R',val_min=0.E+0,val_max=1.E+0),
+                     QP1             =SIMP(statut='o',typ='R',val_min=0.E+0,val_max=1.E+0),
+                     QP2             =SIMP(statut='o',typ='R',val_min=0.E+0,val_max=1.E+0),
 
-           OMT             =SIMP(statut='f',typ='R',val_min=0.E+0,defaut=0.0E+0),
-           EAT             =SIMP(statut='f',typ='R',val_min=0.E+0,defaut=0.0E+0),
-           BT1             =SIMP(statut='f',typ='R',val_min=0.E+0,defaut=0.0E+0),
-           BT2             =SIMP(statut='f',typ='R',val_min=0.E+0,defaut=0.0E+0),
+                     C1N1            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C1N2            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C1N3            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C2N1            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C2N2            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C2N3            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C1M1            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C1M2            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C1M3            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C2M1            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C2M2            =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     C2M3            =SIMP(statut='o',typ='R',val_min=0.E+0),
 
-           MP1X            =SIMP(statut='f',typ=('R',listr8_sdaster)),
-           MP2X            =SIMP(statut='f',typ=('R',listr8_sdaster)),
-           MP1Y            =SIMP(statut='f',typ=('R',listr8_sdaster)),
-           MP2Y            =SIMP(statut='f',typ=('R',listr8_sdaster)),
+                     OMT             =SIMP(statut='f',typ='R',val_min=0.E+0,defaut=0.0E+0),
+                     EAT             =SIMP(statut='f',typ='R',val_min=0.E+0,defaut=0.0E+0),
+                     BT1             =SIMP(statut='f',typ='R',val_min=0.E+0,defaut=0.0E+0),
+                     BT2             =SIMP(statut='f',typ='R',val_min=0.E+0,defaut=0.0E+0),
+
+                     MP1X            =SIMP(statut='f',typ=('R',listr8_sdaster)),
+                     MP2X            =SIMP(statut='f',typ=('R',listr8_sdaster)),
+                     MP1Y            =SIMP(statut='f',typ=('R',listr8_sdaster)),
+                     MP2Y            =SIMP(statut='f',typ=('R',listr8_sdaster)),
          ),
-         NAPPE     =FACT(statut='o',max=10,
-           MATER           =SIMP(statut='o',typ=(mater_sdaster) ),
-           OMX             =SIMP(statut='o',typ='R',val_min=0.E+0),
-           OMY             =SIMP(statut='o',typ='R',val_min=0.E+0),
-           RX              =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=1.E+0),
-           RY              =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=1.E+0),
+                   NAPPE     =FACT(statut='o',max=10,
+                     MATER           =SIMP(statut='o',typ=(mater_sdaster) ),
+                     OMX             =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     OMY             =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     RX              =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=1.E+0),
+                     RY              =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=1.E+0),
          ),
-         CABLE_PREC   =FACT(statut='f',max=1,
-           MATER           =SIMP(statut='o',typ=(mater_sdaster) ),
-           OMX             =SIMP(statut='o',typ='R',val_min=0.E+0),
-           OMY             =SIMP(statut='o',typ='R',val_min=0.E+0),
-           RX              =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=1.E+0),
-           RY              =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=1.E+0),
-           PREX            =SIMP(statut='o',typ='R'),
-           PREY            =SIMP(statut='o',typ='R'),
+                   CABLE_PREC   =FACT(statut='f',max=1,
+                     MATER           =SIMP(statut='o',typ=(mater_sdaster) ),
+                     OMX             =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     OMY             =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     RX              =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=1.E+0),
+                     RY              =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=1.E+0),
+                     PREX            =SIMP(statut='o',typ='R'),
+                     PREY            =SIMP(statut='o',typ='R'),
          ),
-         LINER           =FACT(statut='f',max=10,
-           MATER           =SIMP(statut='o',typ=(mater_sdaster) ),
-           OML             =SIMP(statut='o',typ='R',val_min=0.E+0),
-           RLR             =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=1.E+0),
+                   LINER           =FACT(statut='f',max=10,
+                     MATER           =SIMP(statut='o',typ=(mater_sdaster) ),
+                     OML             =SIMP(statut='o',typ='R',val_min=0.E+0),
+                     RLR             =SIMP(statut='o',typ='R',val_min=-1.E+0,val_max=1.E+0),
          ),
-         IMPRESSION      =FACT(statut='f',
-           UNITE           =SIMP(statut='f',typ='I',defaut=8),
+                   INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2),),
          ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/03/2011   AUTEUR MASSIN P.MASSIN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE GENIAUT S.GENIAUT
+DEFI_GRILLE=OPER(nom="DEFI_GRILLE",op=82,sd_prod=grille_sdaster,reentrant='n',
+                UIinfo={"groupes":("Modélisation",)},
+                fr="Définition d'une grille",
+    
+    MAILLAGE       = SIMP(statut='o',typ=maillage_sdaster),
+
+    INFO           = SIMP(statut='f',typ='I',defaut= 0,into=(0,1,2) ),
+)  ;
+#& MODIF COMMANDE  DATE 01/03/2011   AUTEUR GENIAUT S.GENIAUT 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -10455,7 +11615,7 @@ DEFI_GROUP=OPER(nom="DEFI_GROUP",op= 104,sd_prod=defi_group_prod,
             TYPE_MAILLE     =SIMP(statut='f',typ='TXM',defaut="TOUT",into=("TOUT","1D","2D","3D"),max=1 ),
 
             OPTION         =SIMP(statut='f',typ='TXM',into=("FACE_NORMALE","SPHERE","CYLINDRE",
-                                                              "BANDE","APPUI_LACHE","APPUI") ),
+                                                              "BANDE","APPUI_LACHE","APPUI","FISS_XFEM") ),
                 b_group_ma      =BLOC(condition = "GROUP_MA != None",
                   regles=(EXCLUS('POSITION','NUME_INIT'),),
                   NUME_INIT       =SIMP(statut='f',typ='I'),
@@ -10515,12 +11675,17 @@ DEFI_GROUP=OPER(nom="DEFI_GROUP",op= 104,sd_prod=defi_group_prod,
                   GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
                   TYPE_APPUI      =SIMP(statut='o',typ='TXM',max=1, into=('AU_MOINS_UN','TOUT','SOMMET','MAJORITE')),
                 ),
+                b_fiss_xfem       =BLOC(condition = "OPTION == 'FISS_XFEM'",
+                  TYPE_GROUP      =SIMP(statut='o',typ='TXM',max=1,defaut='XFEM',
+                                          into=('HEAVISIDE','CRACKTIP','MIXTE','FISSUREE','XFEM',),),
+                  FISSURE         =SIMP(statut='o',typ=fiss_xfem,min=1,max='**'),
+                ),
          ),
 
 
          CREA_GROUP_NO   =FACT(statut='f',max='**',
            OPTION          =SIMP(statut='f',typ='TXM',into=("ENV_SPHERE","ENV_CYLINDRE","PLAN",
-                                               "SEGM_DROI_ORDO","NOEUD_ORDO","TUNNEL","INCLUSION") ),
+                                               "SEGM_DROI_ORDO","NOEUD_ORDO","TUNNEL","INCLUSION","FISS_XFEM") ),
 
            b_option =BLOC(condition = "OPTION == None" ,
                           regles=(UN_PARMI('TOUT_GROUP_MA','GROUP_MA','GROUP_NO','NOEUD',
@@ -10632,48 +11797,14 @@ DEFI_GROUP=OPER(nom="DEFI_GROUP",op= 104,sd_prod=defi_group_prod,
              GROUP_MA_INCL   =SIMP(statut='o',typ=grma,validators=NoRepeat(),max='**'),
              MAILLAGE_INCL   =SIMP(statut='f',typ=maillage_sdaster),
            ),
-         ),
+           b_fiss_xfem            =BLOC(condition = "OPTION == 'FISS_XFEM'",
+                  NOM             =SIMP(statut='o',typ=geom),
+                  TYPE_GROUP      =SIMP(statut='o',typ='TXM',max=1,into=('HEAVISIDE','CRACKTIP','MIXTE','XFEM',)),
+                  FISSURE         =SIMP(statut='o',typ=fiss_xfem,min=1,max='**'),
+           ),
+          ),
          ALARME          =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
          INFO            =SIMP(statut='f',typ='I',into=( 1 , 2 ) ),
-)  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
-#
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
-#
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
-# ======================================================================
-# RESPONSABLE CORUS M.CORUS
-
-DEFI_INTERF_DYNA=OPER(nom="DEFI_INTERF_DYNA",op=  98,sd_prod=interf_dyna_clas,
-                      reentrant='n',
-            UIinfo={"groupes":("Matrices et vecteurs","Dynamique",)},
-            fr="Définir les interfaces d'une structure et leur affecter un type",
-         NUME_DDL        =SIMP(statut='o',typ=nume_ddl_sdaster ),
-         INTERFACE       =FACT(statut='o',max='**',
-           regles=(ENSEMBLE('NOM','TYPE'),
-#  erreur doc U sur la condition qui suit
-                   UN_PARMI('NOEUD','GROUP_NO'),),
-           NOM             =SIMP(statut='f',typ='TXM' ),
-           TYPE            =SIMP(statut='f',typ='TXM',into=("MNEAL","CRAIGB","CB_HARMO","AUCUN") ),
-           NOEUD           =SIMP(statut='f',typ=no,max='**'),
-           GROUP_NO        =SIMP(statut='f',typ=grno,max='**'),
-#           DDL_ACTIF       =SIMP(statut='f',typ='TXM',max='**'),
-           MASQUE          =SIMP(statut='f',typ='TXM',max='**'),
-         ),
-         FREQ            =SIMP(statut='f',typ='R',defaut= 1.),
-         INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -10757,6 +11888,45 @@ DEFI_INTE_SPEC=MACRO(nom="DEFI_INTE_SPEC",op= defi_inte_spec_ops,sd_prod=table_f
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
+# RESPONSABLE CORUS M.CORUS
+
+DEFI_INTERF_DYNA=OPER(nom="DEFI_INTERF_DYNA",op=  98,sd_prod=interf_dyna_clas,
+                      reentrant='n',
+            UIinfo={"groupes":("Matrices et vecteurs","Dynamique",)},
+            fr="Définir les interfaces d'une structure et leur affecter un type",
+         NUME_DDL        =SIMP(statut='o',typ=nume_ddl_sdaster ),
+         INTERFACE       =FACT(statut='o',max='**',
+           regles=(ENSEMBLE('NOM','TYPE'),
+#  erreur doc U sur la condition qui suit
+                   UN_PARMI('NOEUD','GROUP_NO'),),
+           NOM             =SIMP(statut='f',typ='TXM' ),
+           TYPE            =SIMP(statut='f',typ='TXM',into=("MNEAL","CRAIGB","CB_HARMO","AUCUN") ),
+           NOEUD           =SIMP(statut='f',typ=no,max='**'),
+           GROUP_NO        =SIMP(statut='f',typ=grno,max='**'),
+#           DDL_ACTIF       =SIMP(statut='f',typ='TXM',max='**'),
+           MASQUE          =SIMP(statut='f',typ='TXM',max='**'),
+         ),
+         FREQ            =SIMP(statut='f',typ='R',defaut= 1.),
+         INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
+)  ;
+#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# ======================================================================
 # RESPONSABLE COURTOIS M.COURTOIS
 DEFI_LIST_ENTI=OPER(nom="DEFI_LIST_ENTI",op=22,sd_prod=listis_sdaster,
                     fr="Définir une liste d'entiers strictement croissante",
@@ -10794,10 +11964,10 @@ DEFI_LIST_ENTI=OPER(nom="DEFI_LIST_ENTI",op=22,sd_prod=listis_sdaster,
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 23/11/2010   AUTEUR COURTOIS M.COURTOIS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR GENIAUT S.GENIAUT 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -10813,6 +11983,7 @@ DEFI_LIST_ENTI=OPER(nom="DEFI_LIST_ENTI",op=22,sd_prod=listis_sdaster,
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 # RESPONSABLE GENIAUT S.GENIAUT
+
 
 # bloc utilisé deux fois à l'identique
 bloc_unif = BLOC(condition = "SUBD_METHODE == 'UNIFORME'",
@@ -10835,7 +12006,6 @@ bloc_unif = BLOC(condition = "SUBD_METHODE == 'UNIFORME'",
                 ),
             ) # fin si UNIFORME
 
-
 DEFI_LIST_INST=OPER(nom="DEFI_LIST_INST",op=  28,sd_prod=list_inst,reentrant='n',
             UIinfo={"groupes":("Fonctions",)},
                fr="Définition de la gestion de la liste d'instants",
@@ -10852,27 +12022,21 @@ DEFI_LIST_INST=OPER(nom="DEFI_LIST_INST",op=  28,sd_prod=list_inst,reentrant='n'
            LIST_INST       =SIMP(statut='o',typ=listr8_sdaster),
                                   ),
 
-         b_auto              =BLOC(condition = "METHODE == 'AUTO' ",fr="a compléter",
+         b_auto              =BLOC(condition = "(METHODE == 'AUTO') ",fr="Gestion automatique de la liste d'instants",
            LIST_INST       =SIMP(statut='o',typ=listr8_sdaster),
-           PAS_MINI    =SIMP(statut='o',typ='R',val_min=0.0,max=1),
+           PAS_MINI    =SIMP(statut='f',typ='R',val_min=1.e-12,max=1),
            PAS_MAXI    =SIMP(statut='f',typ='R',max=1),
-           NB_PAS_MAXI =SIMP(statut='f',typ='I',max=1),
+           NB_PAS_MAXI =SIMP(statut='f',typ='I',val_max=1000000,max=1,defaut=1000000),
                                   ),
 
-#          b_cfl               =BLOC(condition = "METHODE  == 'CFL' ",fr="Liste d'instants construite sur condition CFL",
-#            COEF            =SIMP(statut='f',typ='R',val_min=0.E+0,val_max=1.E+0,defaut=0.5),
-#            MODELE          =SIMP(statut='o',typ=modele_sdaster),
-#                                   ),
-
-                               ),
-
+                      ),
 # ----------------------------------------------------------------------------------------------------------------------------------
 # mot-cle pour le comportement en cas d'echec (on doit recommencer le meme instant)
 # ----------------------------------------------------------------------------------------------------------------------------------
 
     ECHEC  =FACT(statut='d',max='**',
 
-        EVENEMENT     =SIMP(statut='f',typ='TXM',into=("ERREUR","DELTA_GRANDEUR"),defaut="ERREUR",max=1 ),
+        EVENEMENT     =SIMP(statut='f',typ='TXM',into=("ERREUR","DELTA_GRANDEUR","DIVE_ITER_PILO"),defaut="ERREUR",max=1 ),
 
         b_edelta           =BLOC(condition = "EVENEMENT == 'DELTA_GRANDEUR' ",fr=" ",
 #      event-driven : on sous-decoupe si l'increment d'une composante d'un champ depasse le seuil
@@ -10961,7 +12125,9 @@ DEFI_LIST_INST=OPER(nom="DEFI_LIST_INST",op=  28,sd_prod=list_inst,reentrant='n'
 #     2) parametre du mode de calcul de dt+
 #     ----------------------------------------
 
-      MODE_CALCUL_TPLUS =SIMP(statut='f',typ='TXM',into=("FIXE","DELTA_GRANDEUR","ITER_NEWTON","FORMULE"),defaut='FIXE',max=1 ),
+      MODE_CALCUL_TPLUS =SIMP(statut='f',typ='TXM',into=("FIXE","DELTA_GRANDEUR","ITER_NEWTON","FORMULE","IMPLEX"),defaut='FIXE',
+                              max=1),
+
          b_mfixe           =BLOC(condition = "MODE_CALCUL_TPLUS == 'FIXE' ",fr="fixe",
 #      dans le cas FIXE :(deltaT+) = (deltaT-)x(1+PCENT_AUGM/100)
       PCENT_AUGM                 =SIMP(statut='f',typ='R',defaut=100.,val_min=-100.,max=1),
@@ -11019,6 +12185,23 @@ DEFI_LIST_INST=OPER(nom="DEFI_LIST_INST",op=  28,sd_prod=list_inst,reentrant='n'
 
              ),
       ),
+#  b_adaplex  =   BLOC(condition = "METHODE == 'AUTO' and MODE_CALCUL_TPLUS == 'IMPLEX'",
+#
+#    ADAPTATION  =FACT(statut='d',max='**',
+#
+#     1 parametres de l'evenement declencheur
+#     ----------------------------------------
+#
+#      EVENEMENT       =SIMP(statut='f',typ='TXM',into=("TOUT_INST",),defaut="TOUT_INST",max=1 ),
+#
+#                           
+#     2 parametre du mode de calcul de dt+
+#     ----------------------------------------
+#
+#     MODE_CALCUL_TPLUS =SIMP(statut='f',typ='TXM',into=("IMPLEX",),defaut='IMPLEX',max=1,position='global' ),
+#
+#             ),
+#     ),
 
 # ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -11142,10 +12325,10 @@ DEFI_MAILLAGE=OPER(nom="DEFI_MAILLAGE",op=  88,sd_prod=maillage_sdaster,
            GROUP_NO_FIN    =SIMP(statut='f',typ=grno),
          ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 23/02/2011   AUTEUR LAVERNE J.LAVERNE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -11184,6 +12367,7 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
                EXCLUS('META_LEMA_ANI','META_LEMA_ANI_FO'),
                EXCLUS('VMIS_POUTRE','VMIS_POUTRE_FO'),
                EXCLUS('VENDOCHAB','VENDOCHAB_FO'),
+               EXCLUS('VISC_ENDO','VISC_ENDO_FO'),
                PRESENT_PRESENT('BPEL_ACIER','ELAS'),
                EXCLUS('RCCM','RCCM_FO'),
                EXCLUS('WEIBULL','WEIBULL_FO'),
@@ -11904,15 +13088,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
                      PRESENT_PRESENT('ANG1_FO','ANG2_FO','PEN1_FO','PEN2_FO','PEN3_FO',),
                                      ),
            ),
-           NADAI_B         =FACT(statut='f',
-             F_C             =SIMP(statut='o',typ='R',val_min=0.E+0),
-             F_T             =SIMP(statut='o',typ='R',val_min=0.E+0),
-             CRIT_E_C        =SIMP(statut='o',typ='R',val_min=0.E+0,val_max=1.E+0),
-             EPSP_P_C        =SIMP(statut='o',typ='R',val_min=0.E+0),
-             EPSP_R_C        =SIMP(statut='o',typ='R',val_min=0.E+0),
-             EPSI_R_T        =SIMP(statut='o',typ='R',val_min=0.E+0),
-             FAC_T_C         =SIMP(statut='o',typ='R',val_min=0.E+0,val_max=1.E+0),
-           ),
            BETON_DOUBLE_DP =FACT(statut='f',
              F_C             =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
              F_T             =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
@@ -11970,26 +13145,30 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
              BDN             =SIMP(statut='o',typ='R',defaut= 1.E+0,val_min=1.E-1),
            ),
           VENDOCHAB       =FACT(statut='f',
-             S               =SIMP(statut='o',typ='R',defaut= 0.E+0),
+             SY              =SIMP(statut='o',typ='R',defaut= 0.E+0),
              ALPHA_D         =SIMP(statut='o',typ='R',defaut= 0.E+0),
              BETA_D          =SIMP(statut='o',typ='R',defaut= 0.E+0),
-             N               =SIMP(statut='o',typ='R'),
-             UN_SUR_M        =SIMP(statut='o',typ='R',defaut= 0.E+0),
-             UN_SUR_K        =SIMP(statut='o',typ='R'),
              R_D             =SIMP(statut='o',typ='R'),
              A_D             =SIMP(statut='o',typ='R'),
              K_D             =SIMP(statut='o',typ='R'),
            ),
            VENDOCHAB_FO    =FACT(statut='f',
-             S               =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
+             SY              =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
              ALPHA_D         =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
              BETA_D          =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
-             N               =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
-             UN_SUR_M        =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
-             UN_SUR_K        =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
              R_D             =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
              A_D             =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
              K_D             =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
+           ),
+           VISC_ENDO      =FACT(statut='f',
+             SY              =SIMP(statut='o',typ='R',defaut= 0.E+0),
+             R_D             =SIMP(statut='o',typ='R'),
+             A_D             =SIMP(statut='o',typ='R'),
+           ),
+           VISC_ENDO_FO   =FACT(statut='f',
+             SY              =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
+             R_D             =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
+             A_D             =SIMP(statut='o',typ=(fonction_sdaster,nappe_sdaster,formule)),
            ),
            PINTO_MENEGOTTO =FACT(statut='f',
              SY              =SIMP(statut='o',typ='R'),
@@ -12604,7 +13783,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
                                            PRE2          = SIMP(statut='f',typ='R'),
                                            PRES_VAPE     = SIMP(statut='f',typ='R'),
                                            DEGR_SATU     = SIMP(statut='f',typ='R'),
-                                           PRES_ATMO     = SIMP(statut='f',typ='R'),
 # ---------------------------------------------------------------------------------
 # -------------------   DONNEE CACHEE ---------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -12659,10 +13837,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
                                            PERM_GAZ        =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            D_PERM_SATU_GAZ =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            D_PERM_PRES_GAZ =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           SIGMA_T         =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_SIGMA_T       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           PERM_G_INTR     =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           CHAL_VAPO       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_T          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PV         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PG         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
@@ -12738,7 +13912,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # ---------------------------------------------------------------------------------
                                            PRES_VAPE        = SIMP(statut='f',typ='R'),
                                            DEGR_SATU        = SIMP(statut='f',typ='R'),
-                                           PRES_ATMO        = SIMP(statut='f',typ='R'),
 # ---------------------------------------------------------------------------------
 # -------------------   DONNEE CACHEE ---------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -12808,10 +13981,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # -------------------   DONNEES INUTILES   ----------------------------------------
 # ---------------------------------------------------------------------------------
                                            EMMAG           = SIMP(statut='f',typ='R'),
-                                           SIGMA_T          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_SIGMA_T        = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           PERM_G_INTR      = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           CHAL_VAPO        = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_T          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PV         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PG         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
@@ -12890,7 +14059,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
                                            PRE2             = SIMP(statut='f',typ='R'),
                                            PRES_VAPE        = SIMP(statut='f',typ='R'),
                                            DEGR_SATU        = SIMP(statut='f',typ='R'),
-                                           PRES_ATMO        = SIMP(statut='f',typ='R'),
 # ---------------------------------------------------------------------------------
 # -------------------   DONNEE CACHEE ---------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -12942,10 +14110,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
                                            PERM_GAZ        =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            D_PERM_SATU_GAZ =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            D_PERM_PRES_GAZ =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           SIGMA_T         =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_SIGMA_T       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           PERM_G_INTR     =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           CHAL_VAPO       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_T          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PV         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PG         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
@@ -13022,7 +14186,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
                                            PRE2             = SIMP(statut='f',typ='R'),
                                            PRES_VAPE        = SIMP(statut='f',typ='R'),
                                            DEGR_SATU        = SIMP(statut='f',typ='R'),
-                                           PRES_ATMO        = SIMP(statut='f',typ='R'),
 # ---------------------------------------------------------------------------------
 # -------------------   DONNEE CACHEE ---------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -13074,10 +14237,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
              PERM_GAZ        =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
              D_PERM_SATU_GAZ =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
              D_PERM_PRES_GAZ =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-             SIGMA_T         =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-             D_SIGMA_T       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-             PERM_G_INTR     =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-             CHAL_VAPO       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
              FICKV_T          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
              FICKV_PV         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
              FICKV_PG         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
@@ -13154,7 +14313,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # -------------------   DONNEES INUTILES   ----------------------------------------
 # ---------------------------------------------------------------------------------
                                            DEGR_SATU        = SIMP(statut='f',typ='R'),
-                                           PRES_ATMO        = SIMP(statut='f',typ='R'),
 # ---------------------------------------------------------------------------------
 # -------------------   DONNEE CACHEE ---------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -13224,10 +14382,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # -------------------   DONNEES FACULTATIVES   ------------------------------------
 # ---------------------------------------------------------------------------------
                                            EMMAG            = SIMP(statut='f',typ='R'),
-                                           SIGMA_T          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_SIGMA_T        = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           PERM_G_INTR      = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           CHAL_VAPO        = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PV         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PG         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_S          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
@@ -13258,11 +14412,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # ---------------------------------------------------------------------------------
                                            ALPHA            = SIMP(statut='f',typ='R'),
                                            CP               = SIMP(statut='f',typ='R'),
-                                           LAMB_PHI = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_LB_PHI = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           LAMB_T    = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_LB_T = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           LAMB_CT        = SIMP(statut='f',typ='R'),
 # ---------------------------------------------------------------------------------
 # -------------------   DONNEES CACHEES -------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -13339,7 +14488,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # -------------------   DONNEES INUTILES   ----------------------------------------
 # ---------------------------------------------------------------------------------
                                            DEGR_SATU        = SIMP(statut='f',typ='R'),
-                                           PRES_ATMO        = SIMP(statut='f',typ='R'),
 # ---------------------------------------------------------------------------------
 # -------------------   DONNEE CACHEE ---------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -13409,10 +14557,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # -------------------   DONNEES FACULTATIVE   ----------------------------------
 # ---------------------------------------------------------------------------------
                                            EMMAG            = SIMP(statut='f',typ='R'),
-                                           SIGMA_T          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_SIGMA_T        = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           PERM_G_INTR      = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           CHAL_VAPO        = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PV         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PG         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_S          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
@@ -13499,7 +14643,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # -------------------   DONNEES INUTILES   ----------------------------------------
 # ---------------------------------------------------------------------------------
                                            DEGR_SATU        = SIMP(statut='f',typ='R'),
-                                           PRES_ATMO        = SIMP(statut='f',typ='R'),
 # ---------------------------------------------------------------------------------
 # -------------------   DONNEE CACHEE ---------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -13569,10 +14712,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # -------------------   DONNEES FACULTATIVES   ------------------------------------
 # ---------------------------------------------------------------------------------
                                            EMMAG            = SIMP(statut='f',typ='R'),
-                                           SIGMA_T          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_SIGMA_T        = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           PERM_G_INTR      = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           CHAL_VAPO        = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PV         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PG         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_S          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
@@ -13600,11 +14739,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # ---------------------------------------------------------------------------------
                                            ALPHA            = SIMP(statut='f',typ='R'),
                                            CP               = SIMP(statut='f',typ='R'),
-                                           LAMB_PHI = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_LB_PHI = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           LAMB_T    = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_LB_T = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           LAMB_CT        = SIMP(statut='f',typ='R'),
                                              ),
 # =================================================================================
 # --- MOT-CLE OBLIGATOIRE ---------------------------------------------------------
@@ -13671,7 +14805,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # ---------------------------------------------------------------------------------
                                            PRE2             = SIMP(statut='f',typ='R'),
                                            DEGR_SATU        = SIMP(statut='f',typ='R'),
-                                           PRES_ATMO        = SIMP(statut='f',typ='R'),
 # ---------------------------------------------------------------------------------
 # -------------------   DONNEE CACHEE ---------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -13739,10 +14872,6 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 # -------------------   DONNEES INUTILES   ----------------------------------------
 # ---------------------------------------------------------------------------------
                                            EMMAG            = SIMP(statut='f',typ='R'),
-                                           SIGMA_T          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           D_SIGMA_T        = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           PERM_G_INTR      = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
-                                           CHAL_VAPO        = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_T          = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PV         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
                                            FICKV_PG         = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
@@ -13894,8 +15023,23 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
              PENA_ADHERENCE  =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
              PENA_CONTACT    =SIMP(statut='f',typ='R',defaut=1.),
            ),
+           RUPT_DUCT       =FACT(statut='f',
+             GC              =SIMP(statut='o',typ='R'),
+             SIGM_C          =SIMP(statut='o',typ='R'),
+             COEF_EXTR       =SIMP(statut='o',typ='R',val_min=0.E+0,val_max=9.99E-1),
+             COEF_PLAS       =SIMP(statut='o',typ='R',val_min=0.E+0,val_max=9.99E-1),
+             PENA_LAGR       =SIMP(statut='f',typ='R',defaut=1.0E2,val_min=1.01E+0),
+             RIGI_GLIS       =SIMP(statut='f',typ='R',defaut=1.0E1),
+           ),
            JOINT_MECA_RUPT  =FACT(statut='f',
-             regles=(EXCLUS('PRES_FLUIDE','PRES_CLAVAGE'),),
+             regles=(EXCLUS('PRES_FLUIDE','PRES_CLAVAGE'),
+                     PRESENT_PRESENT('RHO_FLUIDE','VISC_FLUIDE','OUV_MIN'),
+                     PRESENT_ABSENT('PRES_FLUIDE','RHO_FLUIDE','VISC_FLUIDE','OUV_MIN'),
+                     PRESENT_ABSENT('PRES_CLAVAGE','RHO_FLUIDE','VISC_FLUIDE','OUV_MIN'),
+                     PRESENT_ABSENT('RHO_FLUIDE','PRES_FLUIDE','PRES_CLAVAGE'),
+                     PRESENT_ABSENT('VISC_FLUIDE','PRES_FLUIDE','PRES_CLAVAGE'),
+                     PRESENT_ABSENT('OUV_MIN','PRES_FLUIDE','PRES_CLAVAGE'),
+                     ),
              K_N             =SIMP(statut='o',typ='R',val_min=1.E-12),
              K_T             =SIMP(statut='f',typ='R',val_min=1.E-12),
              SIGM_MAX        =SIMP(statut='o',typ='R',val_min=0.),
@@ -13904,7 +15048,17 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
              PENA_CONTACT    =SIMP(statut='f',typ='R',defaut=1.,val_min=1.E-12),
              PRES_FLUIDE     =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
              PRES_CLAVAGE    =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
+             RHO_FLUIDE      =SIMP(statut='f',typ='R',val_min=0.),
+             VISC_FLUIDE     =SIMP(statut='f',typ='R',val_min=1.E-20),
+             OUV_MIN         =SIMP(statut='f',typ='R',val_min=1.E-15), 
            ),
+           JOINT_MECA_FROT   =FACT(statut='f',
+             K_N             =SIMP(statut='o',typ='R',val_min=1.E-12),
+             K_T             =SIMP(statut='f',typ='R',val_min=1.E-12),
+             MU              =SIMP(statut='o',typ='R',val_min=1.E-3),             
+             PENA_TANG       =SIMP(statut='f',typ='R',val_min=0.),
+             ADHESION        =SIMP(statut='f',typ='R',defaut=0., val_min=0.),
+           ),           
            RCCM            =FACT(statut='f',
              regles=(ENSEMBLE('A_AMORC','B_AMORC','D_AMORC','R_AMORC'),),
              SY_02           =SIMP(statut='f',typ='R'),
@@ -14054,13 +15208,13 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
            ),
 ####  MONOCRISTAL
 
-           ECOU_VISC1      =FACT(statut='f',
+           MONO_VISC1      =FACT(statut='f',
              TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECOU_VISC",),),
              N               =SIMP(statut='o',typ='R'),
              K               =SIMP(statut='o',typ='R'),
              C               =SIMP(statut='o',typ='R'),
            ),
-           ECOU_VISC2      =FACT(statut='f',
+           MONO_VISC2      =FACT(statut='f',
              TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECOU_VISC",),),
              N               =SIMP(statut='o',typ='R'),
              K               =SIMP(statut='o',typ='R'),
@@ -14068,7 +15222,7 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
              D               =SIMP(statut='o',typ='R'),
              A               =SIMP(statut='o',typ='R'),
            ),
-           ECOU_VISC3      =FACT(statut='f',
+           MONO_VISC3      =FACT(statut='f',
              TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECOU_VISC",),),
              K               =SIMP(statut='o',typ='R',fr="Constante de Boltzmann, en eV/K"),
              TAUMU           =SIMP(statut='o',typ='R',fr="Seuil d ecoulement, en unite de contraintes"),
@@ -14076,31 +15230,7 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
              DELTAV          =SIMP(statut='o',typ='R',fr="Volume d activation"),
              DELTAG0         =SIMP(statut='o',typ='R',fr="Gain d energie lie au franchissement d obstacle"),
            ),
-           KOCKS_RAUCH      =FACT(statut='f',
-              regles=(UN_PARMI('H','H1'),
-                      PRESENT_PRESENT('H1','H2','H3','H4'),
-                      PRESENT_ABSENT('H','H1','H2','H3','H4','H5','H6'),
-                      ),
-             TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECOU_VISC",),),
-             K               =SIMP(statut='o',typ='R',fr="Constante de Boltzmann, en eV/K"),
-             TAUR            =SIMP(statut='o',typ='R',fr="Contraintes de cisaillement à T=0K, en unite de contraintes"),
-             TAU0            =SIMP(statut='o',typ='R',fr="Contraintes critique initiale de cisaillement, en unite de contraintes"),
-             GAMMA0          =SIMP(statut='o',typ='R',fr="Vitesse d ecoulement initiale"),
-             DELTAG0         =SIMP(statut='o',typ='R',fr="Gain d energie lie au franchissement d obstacle"),
-             BSD             =SIMP(statut='o',typ='R',fr="fonction de la taille du grain B/D"),
-             GCB             =SIMP(statut='o',typ='R',fr="distance critique d'annihilation GC/B"),
-             KDCS            =SIMP(statut='o',typ='R',fr="Parametre relatif à la direction principale de la dislocation"),
-             P               =SIMP(statut='o',typ='R',fr="Parametre materiau dépendant de la forme de l'obstacle"),
-             Q               =SIMP(statut='o',typ='R',fr="Parametre materiau dépendant de la forme de l'obstacle"),
-             H               =SIMP(statut='f',typ='R'),
-             H1              =SIMP(statut='f',typ='R'),
-             H2              =SIMP(statut='f',typ='R'),
-             H3              =SIMP(statut='f',typ='R'),
-             H4              =SIMP(statut='f',typ='R'),
-             H5              =SIMP(statut='f',typ='R'),
-             H6              =SIMP(statut='f',typ='R'),
-           ),
-           ECRO_ISOT1      =FACT(statut='f',
+           MONO_ISOT1      =FACT(statut='f',
               regles=(UN_PARMI('H','H1'),
                       PRESENT_PRESENT('H1','H2','H3','H4'),
                       PRESENT_ABSENT('H','H1','H2','H3','H4','H5','H6'),
@@ -14117,7 +15247,7 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
              H5              =SIMP(statut='f',typ='R'),
              H6              =SIMP(statut='f',typ='R'),
            ),
-           ECRO_ISOT2      =FACT(statut='f',
+           MONO_ISOT2      =FACT(statut='f',
               regles=(UN_PARMI('H','H1'),
                       PRESENT_PRESENT('H1','H2','H3','H4'),
                       PRESENT_ABSENT('H','H1','H2','H3','H4','H5','H6'),
@@ -14136,30 +15266,53 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
              Q2              =SIMP(statut='o',typ='R'),
              B2              =SIMP(statut='o',typ='R'),
            ),
-           ECRO_CINE1      =FACT(statut='f',
+           MONO_CINE1      =FACT(statut='f',
              TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECRO_CINE",),),
              D               =SIMP(statut='o',typ='R'),
            ),
-           ECRO_CINE2      =FACT(statut='f',
+           MONO_CINE2      =FACT(statut='f',
              TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECRO_CINE",),),
              D               =SIMP(statut='o',typ='R'),
              GM              =SIMP(statut='o',typ='R'),
              PM              =SIMP(statut='o',typ='R'),
              C               =SIMP(statut='o',typ='R'),
            ),
-           ECOU_DD_CFC      =FACT(statut='f',
-             TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECOU_VISC",),),
+           MONO_DD_KR      =FACT(statut='f',
+              regles=(UN_PARMI('H','H1'),
+                      PRESENT_PRESENT('H1','H2','H3','H4'),
+                      PRESENT_ABSENT('H','H1','H2','H3','H4','H5','H6'),
+                      ),
+            # TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECOU_VISC",),),
+             K               =SIMP(statut='o',typ='R',fr="Constante de Boltzmann, en eV/K"),
+             TAUR            =SIMP(statut='o',typ='R',fr="Contraintes de cisaillement à T=0K, en unite de contraintes"),
+             TAU0            =SIMP(statut='o',typ='R',fr="Contraintes critique initiale de cisaillement, en unite de contraintes"),
+             GAMMA0          =SIMP(statut='o',typ='R',fr="Vitesse d ecoulement initiale"),
+             DELTAG0         =SIMP(statut='o',typ='R',fr="Gain d energie lie au franchissement d obstacle"),
+             BSD             =SIMP(statut='o',typ='R',fr="fonction de la taille du grain B/D"),
+             GCB             =SIMP(statut='o',typ='R',fr="distance critique d'annihilation GC/B"),
+             KDCS            =SIMP(statut='o',typ='R',fr="Parametre relatif à la direction principale de la dislocation"),
+             P               =SIMP(statut='o',typ='R',fr="Parametre materiau dépendant de la forme de l'obstacle"),
+             Q               =SIMP(statut='o',typ='R',fr="Parametre materiau dépendant de la forme de l'obstacle"),
+             H               =SIMP(statut='f',typ='R'),
+             H1              =SIMP(statut='f',typ='R'),
+             H2              =SIMP(statut='f',typ='R'),
+             H3              =SIMP(statut='f',typ='R'),
+             H4              =SIMP(statut='f',typ='R'),
+             H5              =SIMP(statut='f',typ='R'),
+             H6              =SIMP(statut='f',typ='R'),
+           ),
+           MONO_DD_CFC      =FACT(statut='f',
+             regles=(UN_PARMI('H','H1'),
+                     PRESENT_PRESENT('H1','H2','H3','H4','H5'),
+                     PRESENT_ABSENT('H','H1','H2','H3','H4','H5'),
+                     ),
+             #TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECOU_VISC",),),
              GAMMA0          =SIMP(statut='f',typ='R',defaut=0.001,fr="Vitesse d ecoulement initiale en s**-1"),
              TAU_F           =SIMP(statut='o',typ='R',fr="Contraintes , en unite de contraintes ex 20 MPa"),
              A               =SIMP(statut='f',typ='R',defaut=0.13,fr="paramètre A, sans unité"),
              B               =SIMP(statut='f',typ='R',defaut=0.005,fr="paramètre B, sans unité"),
              N               =SIMP(statut='f',typ='R',defaut=200.,fr="paramètre n, sans unité"),
              Y               =SIMP(statut='o',typ='R',fr="paramète Y, en unité de longueur ex 2.5 A"),
-           ),
-           ECRO_DD_CFC      =FACT(statut='f',
-              regles=(PRESENT_PRESENT('H1','H2','H3','H4','H5'),
-                      ),
-             TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECRO_ISOT",),),
              ALPHA           =SIMP(statut='f',typ='R',defaut=0.35,fr="ecrouissage, paramètre alpha"),
              BETA            =SIMP(statut='o',typ='R',fr="ecrouissage, paramètre b, en unite de longueur"),
              RHO_REF         =SIMP(statut='o',typ='R',fr="ecrouissage, paramètre rho_ref, en unité de longueur **-2"),
@@ -14169,6 +15322,31 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
              H3              =SIMP(statut='f',typ='R',defaut=0.137,fr="matrice d'interaction, terme a_glissile",),
              H4              =SIMP(statut='f',typ='R',defaut=0.122,fr="matrice d'interaction, terme a_Lomer",),
              H5              =SIMP(statut='f',typ='R',defaut=0.07,fr="matrice d'interaction, terme a_Hirth",),
+           ),
+
+
+           MONO_DD_CC      =FACT(statut='f',
+              regles=(UN_PARMI('H','H1'),
+                      PRESENT_PRESENT('H1','H2','H3','H4','H5','H6'),
+                      PRESENT_ABSENT('H','H1','H2','H3','H4','H5','H6'),
+                      ),
+             #TYPE_PARA       =SIMP(statut='f',typ='TXM',into=("ECOU_VISC",),),
+             GAMMA0          =SIMP(statut='f',typ='R',defaut=0.001,fr="Vitesse d ecoulement initiale en s**-1"),
+             TAU_F           =SIMP(statut='o',typ='R',fr="Contraintes , en unite de contraintes ex 20 MPa"),
+             A               =SIMP(statut='f',typ='R',defaut=0.13,fr="paramètre A, sans unité"),
+             B               =SIMP(statut='f',typ='R',defaut=0.005,fr="paramètre B, sans unité"),
+             N               =SIMP(statut='f',typ='R',defaut=200.,fr="paramètre n, sans unité"),
+             Y               =SIMP(statut='o',typ='R',fr="paramète Y, en unité de longueur ex 2.5 A"),
+             ALPHA           =SIMP(statut='f',typ='R',defaut=0.35,fr="ecrouissage, paramètre alpha"),
+             BETA            =SIMP(statut='o',typ='R',fr="ecrouissage, paramètre b, en unite de longueur"),
+             RHO_REF         =SIMP(statut='o',typ='R',fr="ecrouissage, paramètre rho_ref, en unité de longueur **-2"),
+             H               =SIMP(statut='f',typ='R'),
+             H1              =SIMP(statut='f',typ='R'),
+             H2              =SIMP(statut='f',typ='R'),
+             H3              =SIMP(statut='f',typ='R'),
+             H4              =SIMP(statut='f',typ='R'),
+             H5              =SIMP(statut='f',typ='R'),
+             H6              =SIMP(statut='f',typ='R'),
            ),
 
 
@@ -14335,10 +15513,10 @@ DEFI_MODELE_GENE=OPER(nom="DEFI_MODELE_GENE",op= 126,sd_prod=modele_gene,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 22/03/2011   AUTEUR COURTOIS M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -14367,14 +15545,16 @@ DEFI_NAPPE=OPER(nom="DEFI_NAPPE",op=4,sd_prod=nappe_sdaster,
          NOM_PARA_FONC   =SIMP(statut='f',typ='TXM',into=C_PARA_FONCTION() ),
          DEFI_FONCTION   =FACT(statut='f',max='**',
            VALE            =SIMP(statut='o',typ='R',max='**'),
-           INTERPOL        =SIMP(statut='f',typ='TXM',max=2,defaut="LIN",into=("NON","LIN","LOG") ),
+           INTERPOL        =SIMP(statut='f',typ='TXM',max=2,defaut="LIN",into=("NON","LIN","LOG"),
+                                 fr="Type d'interpolation pour les abscisses et les ordonnées de la fonction."),
            PROL_DROITE     =SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
            PROL_GAUCHE     =SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
          ),
-         INTERPOL        =SIMP(statut='f',typ='TXM',max=2,defaut="LIN",into=("NON","LIN","LOG") ),
+         INTERPOL        =SIMP(statut='f',typ='TXM',max=2,defaut="LIN",into=("NON","LIN","LOG"),
+                               fr="Type d'interpolation pour le paramètre de la nappe"),
          PROL_DROITE     =SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
          PROL_GAUCHE     =SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
-         INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
+         INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1, 2) ),
          VERIF           =SIMP(statut='f',typ='TXM',into=("CROISSANT",) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
@@ -14779,10 +15959,10 @@ DEFI_SPEC_TURB=OPER(nom="DEFI_SPEC_TURB",op= 145,sd_prod=spectre_sdaster,
          ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 25/01/2011   AUTEUR PELLET J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -14844,7 +16024,8 @@ DEFI_SQUELETTE=OPER(nom="DEFI_SQUELETTE",op= 110,sd_prod=squelette,
          TRANS           =SIMP(statut='f',typ='R',min=3,max=3),
          ANGL_NAUT       =SIMP(statut='f',typ='R',min=3,max=3),
          SOUS_STRUC      =FACT(statut='f',max='**',
-           NOM             =SIMP(statut='f',typ='TXM' ),
+           regles=(UN_PARMI('TOUT','MAILLE','GROUP_MA'),),
+           NOM             =SIMP(statut='o',typ='TXM' ),
            MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
            GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
            TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
@@ -15070,10 +16251,10 @@ DYNA_ALEA_MODAL=OPER(nom="DYNA_ALEA_MODAL",op= 131,sd_prod=table_fonction,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 04/05/2011   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -15089,45 +16270,68 @@ DYNA_ALEA_MODAL=OPER(nom="DYNA_ALEA_MODAL",op= 131,sd_prod=table_fonction,
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 # RESPONSABLE ZENTNER I.ZENTNER
+
 from Macro.dyna_iss_vari_ops import dyna_iss_vari_ops
 #
-DYNA_ISS_VARI=MACRO(nom="DYNA_ISS_VARI",op=dyna_iss_vari_ops ,sd_prod=table_fonction,
+def dyna_iss_vari_prod(self, FONC_SIGNAL,**args):
+   if FONC_SIGNAL !=None : 
+       return tran_gene
+   else:  
+      return  table_fonction
+   raise AsException("type de concept resultat non prevu")
+#
+    
+      
+DYNA_ISS_VARI=MACRO(nom="DYNA_ISS_VARI",op=dyna_iss_vari_ops ,   sd_prod=dyna_iss_vari_prod,
                     fr="Calcul du spectre de réponse ou de la reponse temporelle sismique incoherente par decomposition spectrale",
                     reentrant='n',
-                    UIinfo={"groupes":("Outils-métier","Dynamique",)},
-         NOM_CMP         =SIMP(statut='o',typ='TXM',into=("DX","DY","DZ") ),
-         PRECISION       =SIMP(statut='f',typ='R',defaut=0.999 ),
+                    UIinfo={"groupes":("Outils métier",)},
+         regles=(UN_PARMI('FONC_SIGNAL','NB_FREQ'),),                                    
+         FONC_SIGNAL     =SIMP(statut='f',typ=(fonction_sdaster) ),
+         NB_FREQ       =SIMP(statut='f',typ='I' ),
+         NOM_CMP       =SIMP(statut='o',typ='TXM',into=("DX","DY","DZ") ),
+         PRECISION     =SIMP(statut='f',typ='R',defaut=0.999 ),
          INTERF           =FACT(statut='o',
-            GROUP_NO_INTERF =SIMP(statut='o',typ=grma ,max='**'),
-            MODE_INTERF  =SIMP(statut='o',typ='TXM',into=("CORP_RIGI","TOUT")),
-         ),
+              GROUP_NO_INTERF =SIMP(statut='o',typ=grno ,max='**'), 
+              MODE_INTERF  =SIMP(statut='o',typ='TXM',into=("CORP_RIGI","TOUT")),
+         ),      
          MATR_COHE       =FACT(statut='o',
-            VITE_ONDE       =SIMP(statut='o',typ='R'),
-            PARA_ALPHA     =SIMP(statut='f',typ='R',defaut=0.5),
+              VITE_ONDE       =SIMP(statut='o',typ='R'),
+              PARA_ALPHA     =SIMP(statut='f',typ='R',defaut=0.5),           
          ),
-#        FONC_MULT     =SIMP(statut='f',typ='R' ),
-         FREQ_INIT       =SIMP(statut='o',typ='R' ),
-         NB_FREQ       =SIMP(statut='o',typ='I' ),
-         PAS             =SIMP(statut='o',typ='R' ),
-#        LIST_FREQ        =SIMP(statut='o',typ='liste' ),
+#        LIST_FREQ        =SIMP(statut='o',typ='liste' ),  
          UNITE_RESU_FORC = SIMP(statut='f',typ='I',defaut=33),
-         UNITE_RESU_IMPE  = SIMP(statut='f',typ='I',defaut=32),
+         UNITE_RESU_IMPE  = SIMP(statut='f',typ='I',defaut=32), 
          TYPE             = SIMP(statut='f',typ='TXM',into=("BINAIRE","ASCII"), defaut="ASCII"),
+#         NOM_CHAM        =SIMP(statut='f',typ='TXM',into=("DEPL","VITE","ACCE") , validators=NoRepeat(),max=3,defaut="DEPL" ),
 #
          MATR_GENE         = FACT(statut='o',
             MATR_MASS     = SIMP(statut='o',typ=(matr_asse_gene_r ) ),
             MATR_RIGI     = SIMP(statut='o',typ=(matr_asse_gene_r,matr_asse_gene_c ) ),
-            MATR_AMOR     = SIMP(statut='f',typ=(matr_asse_gene_r,matr_asse_gene_c ) ),
-         ),
-#
-         OPTION        = SIMP(statut='f',typ='TXM',into=("TOUT","DIAG"),defaut="TOUT"),
-#
-         INFO           =SIMP(statut='f',typ='I' ,defaut=1,into=( 1 , 2)),
+            MATR_AMOR     = SIMP(statut='f',typ=(matr_asse_gene_r,matr_asse_gene_c ) ), 
+         ),         
+#         
+        INFO           =SIMP(statut='f',typ='I' ,defaut=1,into=( 1 , 2)),
+#         
+         b_type_trans = BLOC(condition="FONC_SIGNAL !=None",                               
+                        FREQ_MAX       =SIMP(statut='f',typ='R' ),
+                        FREQ_PAS       =SIMP(statut='f',typ='R' ),    
+                        regles=( ENSEMBLE('FREQ_MAX','FREQ_PAS'),  )                                  
+                        
+                        ),
+                              
+        b_type_spec = BLOC(condition="NB_FREQ != None",          
+                       FREQ_INIT       =SIMP(statut='o',typ='R' ),
+                       FREQ_PAS     =SIMP(statut='o',typ='R' ),    
+                       OPTION        = SIMP(statut='f',typ='TXM',into=("TOUT","DIAG"),defaut="TOUT"),
+                       ),
+         
+         
          )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 18/01/2011   AUTEUR BOITEAU O.BOITEAU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -15217,11 +16421,12 @@ DYNA_LINE_HARM=OPER(nom="DYNA_LINE_HARM",op=  60,sd_prod=dyna_line_harm_prod,
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),             
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
            ),
           ),
          ),
@@ -15247,11 +16452,12 @@ DYNA_LINE_HARM=OPER(nom="DYNA_LINE_HARM",op=  60,sd_prod=dyna_line_harm_prod,
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),         
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
-             OUT_OF_CORE      =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              ),
           ),
          ),
@@ -15264,10 +16470,10 @@ DYNA_LINE_HARM=OPER(nom="DYNA_LINE_HARM",op=  60,sd_prod=dyna_line_harm_prod,
 # Rajouter test icompatibilite vect_asse et sensibilite
 # Peut-on aussi rajouter ici le test d incompatibilite charge complexe - derivation
 #  presents dans le Fortran
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/02/2011   AUTEUR TARDIEU N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -15384,7 +16590,7 @@ DYNA_LINE_TRAN=OPER(nom="DYNA_LINE_TRAN",op=  48,sd_prod=dyna_trans,
                RENUM               =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
                ),
              b_simple        =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                ),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1.E-6 ),
              NMAX_ITER       =SIMP(statut='f',typ='I',defaut= 0 ),
@@ -15393,12 +16599,13 @@ DYNA_LINE_TRAN=OPER(nom="DYNA_LINE_TRAN",op=  48,sd_prod=dyna_trans,
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),             
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
              PARALLELISME    =SIMP(statut='f',typ='TXM',defaut="CENTRALISE",into=("CENTRALISE","CENTRALISE")),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              ),
 
            b_petsc          =BLOC(condition = "METHODE == 'PETSC' ",fr="Paramètres de la méthode PETSC",
@@ -15410,7 +16617,7 @@ DYNA_LINE_TRAN=OPER(nom="DYNA_LINE_TRAN",op=  48,sd_prod=dyna_trans,
                RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
              ),
              b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
              b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'", 
@@ -15458,10 +16665,10 @@ DYNA_LINE_TRAN=OPER(nom="DYNA_LINE_TRAN",op=  48,sd_prod=dyna_trans,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 21/02/2011   AUTEUR ABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -15533,23 +16740,14 @@ DYNA_NON_LINE=OPER(nom="DYNA_NON_LINE",op= 70,sd_prod=evol_noli,reentrant='f',
            MASS_GENE       =SIMP(statut='f',typ=matr_asse_gene_r),
            RIGI_GENE       =SIMP(statut='f',typ=matr_asse_gene_r),
            AMOR_GENE       =SIMP(statut='f',typ=matr_asse_gene_r),
+           DEPL_INIT_GENE  =SIMP(statut='f',typ=vect_asse_gene),
+           VITE_INIT_GENE  =SIMP(statut='f',typ=vect_asse_gene),
+           ACCE_INIT_GENE  =SIMP(statut='f',typ=vect_asse_gene),           
          ),
+#-------------------------------------------------------------------         
          COMP_INCR       =C_COMP_INCR(),
-         COMP_ELAS       =FACT(statut='f',max='**',
-           RELATION        =SIMP(statut='o',typ='TXM',defaut="ELAS",
-                                 into=("ELAS","ELAS_VMIS_LINE","ELAS_VMIS_TRAC","ELAS_VMIS_PUIS",
-                                      "ELAS_POUTRE_GR","CABLE","ELAS_HYPER")),
-           DEFORMATION     =SIMP(statut='f',typ='TXM',defaut="PETIT" ,into=("PETIT","GROT_GDEP",) ),
-      regles=(PRESENT_ABSENT('TOUT','GROUP_MA','MAILLE'),),
-           TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
-           GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
-           MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
-           RESI_INTE_RELA  =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           ITER_INTE_MAXI  =SIMP(statut='f',typ='I',defaut= 10 ),
-           ITER_INTE_PAS   =SIMP(statut='f',typ='I',defaut= 0 ),
-           RESO_INTE       =SIMP(statut='f',typ='TXM',defaut="IMPLICITE",
-                                 into=("IMPLICITE",)),
-         ),
+#-------------------------------------------------------------------         
+         COMP_ELAS       =C_COMP_ELAS('DYNA_NON_LINE'),
 #-------------------------------------------------------------------
          b_reuse =BLOC(condition = "reuse",fr="en mode concept reentrant : ETAT_INIT obligatoire",
          ETAT_INIT       =FACT(statut='o',
@@ -15632,14 +16830,8 @@ DYNA_NON_LINE=OPER(nom="DYNA_NON_LINE",op= 70,sd_prod=evol_noli,reentrant='f',
             b_implicit= BLOC(condition="SCHEMA!='TCHAMWA'and SCHEMA!='DIFF_CENT'",
                FORMULATION  =SIMP(statut='o',max=1,typ='TXM',into=("DEPLACEMENT","VITESSE","ACCELERATION"),),),
          ),
-         NEWTON          =FACT(statut='d',
-           REAC_INCR       =SIMP(statut='f',typ='I',defaut= 1,val_min=0 ),
-           PREDICTION      =SIMP(statut='f',typ='TXM',into=("TANGENTE","ELASTIQUE") ),
-           MATRICE         =SIMP(statut='f',typ='TXM',defaut="TANGENTE",into=("TANGENTE","ELASTIQUE") ),
-           REAC_ITER       =SIMP(statut='f',typ='I',defaut= 0,val_min=0),
-           REAC_ITER_ELAS  =SIMP(statut='f',typ='I',defaut=0,val_min=0),
-           PAS_MINI_ELAS   =SIMP(statut='f',typ='R',defaut=0.0E+0),
-         ),
+#-------------------------------------------------------------------         
+         NEWTON          =C_NEWTON(),
 #-------------------------------------------------------------------
          RECH_LINEAIRE   =C_RECH_LINEAIRE(),
 #-------------------------------------------------------------------
@@ -15647,90 +16839,13 @@ DYNA_NON_LINE=OPER(nom="DYNA_NON_LINE",op= 70,sd_prod=evol_noli,reentrant='f',
 #-------------------------------------------------------------------
          SOLVEUR         =C_SOLVEUR(),
 #-------------------------------------------------------------------
-         OBSERVATION     =FACT(statut='f',max='**',
-           NOM_CMP         =SIMP(statut='o',typ='TXM',max='**'),
-           SUIVI_DDL       =SIMP(statut='f',typ='TXM',defaut="NON",max=1,into=("OUI","NON")),
-         b_suivi          =BLOC(condition = "SUIVI_DDL == 'OUI' ",
-                                regles=(UN_PARMI('NOEUD','MAILLE','GROUP_NO','GROUP_MA','VALE_MIN','VALE_MAX'),
-                                                  PRESENT_PRESENT('MAILLE','POINT'),),
-             NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-             GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-             POINT           =SIMP(statut='f',typ='I' ,validators=NoRepeat(),max='**'),
-             MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
-             NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',
-                                   into=("DEPL","VITE","ACCE","SIEF_ELGA",
-                                         "VARI_ELGA","FORC_NODA","DEPL_ABSOLU","VITE_ABSOLU","ACCE_ABSOLU",)),
-             GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
-             NUME_SUIVI      =SIMP(statut='o',typ='I' ,min=1,max=4),
-             VALE_MAX        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=1,into=("OUI",) ),
-             VALE_MIN        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=1,into=("OUI",) ),),
-         b_non_suivi      =BLOC(condition = "SUIVI_DDL == 'NON' ",
-                                regles=(UN_PARMI('NOEUD','GROUP_NO','MAILLE'),PRESENT_PRESENT('MAILLE','POINT'),),
-             NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-             GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-             POINT           =SIMP(statut='f',typ='I' ,validators=NoRepeat(),max='**'),
-             MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
-             NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',into=("DEPL","VITE","ACCE","SIEF_ELGA",
-                                              "VARI_ELGA","DEPL_ABSOLU","VITE_ABSOLU","ACCE_ABSOLU")),
-             INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
-             LIST_INST       =SIMP(statut='f',typ=listr8_sdaster),
-             PAS_OBSE        =SIMP(statut='f',typ='I'),
-             LIST_ARCH       =SIMP(statut='f',typ=listis_sdaster),
-             CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
-             b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
-                PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
-             b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
-                PRECISION       =SIMP(statut='o',typ='R',),),),
-         ),
-
-         AFFICHAGE      = FACT(statut='f',max=16,
-
-            UNITE       = SIMP(statut='f',typ='I',val_min=1),
-
-            LONG_R      = SIMP(statut='f',typ='I',defaut=12,val_min=1,val_max=12),
-            PREC_R      = SIMP(statut='f',typ='I',defaut=5, val_min=1,val_max=8),
-            LONG_I      = SIMP(statut='f',typ='I',defaut=6, val_min=1,val_max=12),
-
-            NOM_COLONNE = SIMP(statut='o',typ='TXM',defaut="STANDARD",
-                                into=("STANDARD","MINIMUM",
-                                      "ITER_NEWT",
-                                      "INCR_TPS",
-                                      "RESI_RELA","RELA_NOEU",
-                                      "RESI_MAXI","MAXI_NOEU",
-                                      "RESI_REFE","REFE_NOEU",
-                                      "RELI_ITER","RELI_COEF",
-                                      "PILO_PARA",
-                                      "MATR_ASSE",
-                                      "ITER_DEBO",
-                                      "CTCD_ITER","CTCD_GEOM","CTCD_NOEU",
-                                      "BOUC_GEOM","BOUC_FROT","BOUC_CONT","CTCC_BOUC","CTCC_NOEU",
-                                      "SUIV_1","SUIV_2","SUIV_3","SUIV_4",
-                                     ),
-                               ),
-            b_residu    = BLOC(condition = " NOM_COLONNE == 'RESI_RELA' or \
-                    NOM_COLONNE == 'RESI_MAXI' or\
-                    NOM_COLONNE == 'RESI_REFE' or\
-                    NOM_COLONNE == 'CTCD_GEOM' or\
-                    NOM_COLONNE == 'CTCC_BOUC' or\
-                    NOM_COLONNE == 'STANDARD' ",
-                            INFO_RESIDU = SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
-                          ),
-         ),
+         OBSERVATION     =C_OBSERVATION(),
 #-------------------------------------------------------------------
-         ARCHIVAGE       =FACT(statut='f',
-           regles=(EXCLUS('PAS_ARCH','LIST_INST','INST'),
-                   EXCLUS('ARCH_ETAT_INIT','NUME_INIT'), ),
-           LIST_INST       =SIMP(statut='f',typ=(listr8_sdaster) ),
-           INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
-           PAS_ARCH        =SIMP(statut='f',typ='I' ),
-           PRECISION       =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           ARCH_ETAT_INIT  =SIMP(statut='f',typ='TXM',into=("OUI",)),
-           NUME_INIT       =SIMP(statut='f',typ='I'),
-           DETR_NUME_SUIV  =SIMP(statut='f',typ='TXM',into=("OUI",)),
-           CHAM_EXCLU      =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',
-           into=("DEPL","SIEF_ELGA","VARI_ELGA","ACCE","VITE",)),
-         ),
-
+         SUIVI_DDL       =C_SUIVI_DDL(),
+#------------------------------------------------------------------- 
+         AFFICHAGE       =C_AFFICHAGE(),
+#-------------------------------------------------------------------
+         ARCHIVAGE       =C_ARCHIVAGE(),
 #-------------------------------------------------------------------
          CRIT_FLAMB     =FACT(statut='f',min=1,max=1,
            NB_FREQ         =SIMP(statut='f',typ='I',max=1,defaut=3),
@@ -15748,7 +16863,15 @@ DYNA_NON_LINE=OPER(nom="DYNA_NON_LINE",op= 70,sd_prod=evol_noli,reentrant='f',
                                           'E3X','E3Y','E3Z','E4X','E4Y','E4Z','LAGS_C','V11','V12','V13','V21','V22',
                                           'V23','V31','V32','V33','PRES11','PRES12','PRES13','PRES21','PRES22','PRES23',
                                           'PRES31','PRES32','PRES33','VARI','LAG_GV')),),
-           INST_CALCUL       =SIMP(statut='f',typ='TXM',defaut="LISTE_ARCHIVAGE",into=("LISTE_ARCHIVAGE","TOUT_PAS",) ),
+           regles         = (EXCLUS('PAS_CALC','LIST_INST','INST'),),
+           LIST_INST      = SIMP(statut='f',typ=(listr8_sdaster) ),
+           INST           = SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
+           PAS_CALC       = SIMP(statut='f',typ='I' ),
+           CRITERE        = SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
+              b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+                 PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
+              b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+                 PRECISION       =SIMP(statut='o',typ='R',),),
          ),
          MODE_VIBR     =FACT(statut='f',min=1,max=1,
            MATR_RIGI        =SIMP(statut='f',typ='TXM',defaut="ELASTIQUE",into=("ELASTIQUE","TANGENTE","SECANTE",) ),
@@ -15756,7 +16879,15 @@ DYNA_NON_LINE=OPER(nom="DYNA_NON_LINE",op= 70,sd_prod=evol_noli,reentrant='f',
                             fr="Nombre de fréquences propres à calculer"),
            BANDE            =SIMP(statut='f',typ='R',min=2,max=2,
                             fr="Valeur des deux fréquences délimitant la bande de recherche",),
-           INST_CALCUL       =SIMP(statut='f',typ='TXM',defaut="LISTE_ARCHIVAGE",into=("LISTE_ARCHIVAGE","TOUT_PAS",) ),
+           regles         = (EXCLUS('PAS_CALC','LIST_INST','INST'),),
+           LIST_INST      = SIMP(statut='f',typ=(listr8_sdaster) ),
+           INST           = SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
+           PAS_CALC       = SIMP(statut='f',typ='I' ),
+           CRITERE        = SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
+              b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+                 PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
+              b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+                 PRECISION       =SIMP(statut='o',typ='R',),),
          ),
 #-------------------------------------------------------------------
            SENSIBILITE     =SIMP(statut='f',typ=(para_sensi,theta_geom),validators=NoRepeat(),max='**',
@@ -15806,10 +16937,10 @@ DYNA_SPEC_MODAL=OPER(nom="DYNA_SPEC_MODAL",op= 147,sd_prod=table_fonction,
          OPTION          =SIMP(statut='f',typ='TXM',defaut="TOUT",into=("TOUT","DIAG") ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 31/01/2011   AUTEUR GREFFET N.GREFFET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -15833,7 +16964,7 @@ DYNA_TRAN_MODAL=OPER(nom="DYNA_TRAN_MODAL",op=  74,sd_prod=tran_gene,
       regles=(EXCLUS('AMOR_REDUIT','AMOR_GENE','LIST_AMOR'),
               PRESENT_ABSENT('MODE_STAT','MODE_CORR'),),
          METHODE         =SIMP(statut='f',typ='TXM',defaut="EULER",
-                               into=("EULER","NEWMARK","DEVOGE","ADAPT","ITMI") ),
+                               into=("EULER","NEWMARK","DEVOGE","ADAPT_ORDRE1","ADAPT_ORDRE2","ITMI") ),
          MASS_GENE       =SIMP(statut='o',typ=matr_asse_gene_r ),
          RIGI_GENE       =SIMP(statut='o',typ=matr_asse_gene_r ),
          AMOR_GENE       =SIMP(statut='f',typ=matr_asse_gene_r ),
@@ -15845,7 +16976,17 @@ DYNA_TRAN_MODAL=OPER(nom="DYNA_TRAN_MODAL",op=  74,sd_prod=tran_gene,
          COUPLAGE_EDYOS     =FACT(statut='f',max=1,         
                              VITE_ROTA          = SIMP(statut='o',typ='R' ),
                              PAS_TPS_EDYOS      = SIMP(statut='o',typ='R' ),
-                             UNITE              = SIMP(statut='f',typ='I',defaut=45),
+         ),
+
+         PALIER_EDYOS      =FACT(statut='f',max='**',
+         regles=(PRESENT_ABSENT('UNITE','GROUP_NO'),
+                 PRESENT_ABSENT('UNITE','TYPE_EDYOS'),
+                 EXCLUS('GROUP_NO','NOEUD'),),
+                                     UNITE       = SIMP(statut='f',typ='I',),
+                                     GROUP_NO    = SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+                                     NOEUD       = SIMP(statut='f',typ=no),
+                                     TYPE_EDYOS  = SIMP(statut='f',typ='TXM',
+                                     into=("PAPANL","PAFINL","PACONL","PAHYNL",),),
          ),
 
          ETAT_INIT       =FACT(statut='f',
@@ -16052,11 +17193,12 @@ DYNA_TRAN_MODAL=OPER(nom="DYNA_TRAN_MODAL",op=  74,sd_prod=tran_gene,
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              ),
          ),
 
@@ -16103,10 +17245,53 @@ ENGENDRE_TEST=PROC(nom="ENGENDRE_TEST",op=178,
             TYPE_TEST       =SIMP(statut='f',typ='TXM',defaut="SOMME",into=("SOMME",) ),
          ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 14/02/2011   AUTEUR GREFFET N.GREFFET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE GREFFET N.GREFFET
+# 
+#  ENVOI DES CHAMPS CINEMATIQUES VIA YACS POUR COUPLAGE IFS 
+#
+ENV_CINE_YACS=PROC(nom             = "ENV_CINE_YACS",
+                   op              = 111,
+                   UIinfo          = {"groupes":("Résultats et champs",)},
+                   fr              = "Envoi des champs de deplacement et vitesse via YACS pour Couplage de Code_Aster et Saturne",
+                   regles          = (EXCLUS('ETAT_INIT','RESULTAT',),),
+                   MATR_PROJECTION = SIMP(statut='o', typ=corresp_2_mailla,),
+                   VIS_A_VIS = FACT(statut='o', max='**',
+                                   GROUP_MA_1=SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
+                                   GROUP_NO_2=SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),),
+                   RESULTAT  = FACT(statut='f',
+                                   NUME_ORDRE=SIMP(statut='o', typ='I',              validators=NoRepeat()),
+                                   RESU      =SIMP(statut='o', typ=resultat_sdaster, validators=NoRepeat()),),
+                   ETAT_INIT = FACT(statut='f',
+                                    DEPL=SIMP(statut='f', typ=cham_no_sdaster,  validators=NoRepeat()),
+                                    VITE=SIMP(statut='f', typ=cham_no_sdaster,  validators=NoRepeat()),
+                                    ACCE=SIMP(statut='f', typ=cham_no_sdaster,  validators=NoRepeat()),),
+                   INST         = SIMP(statut='o',typ='R', ),
+                   PAS             = SIMP(statut='o',typ='R', ),
+                   NUME_ORDRE_YACS = SIMP(statut='o', typ='I',),
+                   INFO            = SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
+) ;
+#& MODIF COMMANDE  DATE 01/03/2011   AUTEUR ASSIRE A.ASSIRE 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -16134,10 +17319,24 @@ EXEC_LOGICIEL = MACRO(nom="EXEC_LOGICIEL",op=exec_logiciel_ops, sd_prod=exec_log
                       fr="Exécute un logiciel ou une commande système depuis Aster",
                       UIinfo={"groupes":("Gestion du travail","Outils-métier",)},
       
-      regles = (AU_MOINS_UN('LOGICIEL', 'MAILLAGE'),),
-      
+      regles = ( AU_MOINS_UN('LOGICIEL', 'MAILLAGE', 'SALOME'), 
+                 EXCLUS('MACHINE_DISTANTE','MAILLAGE'), 
+                 EXCLUS('MAILLAGE','SALOME'),
+                 ),
+
       LOGICIEL = SIMP(statut='f', typ='TXM'),
       ARGUMENT = SIMP(statut='f', max='**', typ='TXM'),
+
+
+      MACHINE_DISTANTE = FACT(statut='f',
+        SSH_ADRESSE  = SIMP(statut='o', typ='TXM', val_min=1, val_max=255,
+                           fr="Adresse IP ou nom de la machine sur laquelle le logiciel/script sera exécuté via SSH"),
+        SSH_LOGIN    = SIMP(statut='f', typ='TXM', val_min=1, val_max=255,
+                           fr="Nom d'utilisateur sur la machine distante"),
+        SSH_PORT     = SIMP(statut='f', typ='I', val_min=1, val_max=65535, defaut=22,
+                           fr="Port SSH de la machien distante"),
+      ),
+
 
       MAILLAGE = FACT(statut='f',
          FORMAT     = SIMP(statut='o', typ='TXM', into=("GMSH", "GIBI", "SALOME")),
@@ -16146,6 +17345,30 @@ EXEC_LOGICIEL = MACRO(nom="EXEC_LOGICIEL",op=exec_logiciel_ops, sd_prod=exec_log
          UNITE      = SIMP(statut='f', typ='I', val_min=10, val_max=90, defaut=19,
                            fr="Unité logique définissant le fichier (fort.N) produit par le mailleur"),
          MAILLAGE   = SIMP(statut='o', typ=CO),
+      ),
+
+
+      SALOME = FACT(statut='f',
+           regles=(UN_PARMI('CHEMIN_SCRIPT', 'UNITE_SCRIPT'),
+                   PRESENT_PRESENT('NOM_PARA','VALE'),),
+         CHEMIN_SCRIPT     = SIMP(statut='f', typ='TXM',
+                               fr="Chemin du script Salome"),
+         UNITE_SCRIPT      = SIMP(statut='f', typ='I', val_min=80, val_max=99,
+                               fr="Unité logique du script Salome"),
+         SALOME_HOST       = SIMP(statut='f', typ='TXM', defaut='localhost',
+                               fr="Machine sur laquelle tourne Salome"),
+         SALOME_PORT       = SIMP(statut='f', typ='I', val_min=2800, val_max=2900, defaut=2810,
+                               fr="Port de l'instance Salome (2810 ou supérieur)"),
+         SALOME_RUNAPPLI   = SIMP(statut='f', typ='TXM',
+                               fr="Chemin vers le script de lancement runAppli de Salome"),
+         FICHIERS_ENTREE   = SIMP(statut='f', typ='TXM', validators=NoRepeat(),max='**',
+                               fr="Liste des fichiers d'entrée du script Salome"),
+         FICHIERS_SORTIE   = SIMP(statut='f', typ='TXM', validators=NoRepeat(),max='**',
+                               fr="Liste des fichiers générés par le script Salome"),
+         NOM_PARA          = SIMP(statut='f',typ='TXM',max='**',validators=NoRepeat(), 
+                               fr="Liste des noms des paramètres à modifier dans le script Salome"),
+         VALE              = SIMP(statut='f',typ='TXM',max='**',
+                               fr="Valeur des paramètres à) modifier dans le script Salome"),
       ),
 
       CODE_RETOUR_MAXI = SIMP(statut='f', typ='I', defaut=0, val_min=-1,
@@ -16340,10 +17563,10 @@ EXTR_TABLE=OPER(nom="EXTR_TABLE",op=173,sd_prod=extr_table_prod,reentrant='n',
 
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/02/2011   AUTEUR TARDIEU N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -16394,6 +17617,7 @@ FACTORISER=OPER(nom="FACTORISER",op=14,sd_prod=factoriser_prod,
          PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
          ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
          OUT_OF_CORE  =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+         LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
          
          # mots clés pour solveur GCPC et PETSc :
          PRE_COND        =SIMP(statut='f',typ='TXM',into=("LDLT_INC","JACOBI","SOR","LDLT_SP"),defaut="LDLT_INC" ),
@@ -16403,7 +17627,7 @@ FACTORISER=OPER(nom="FACTORISER",op=14,sd_prod=factoriser_prod,
            RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
          ),
          b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-           REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+           REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
            RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
          ),
          b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'", 
@@ -16864,10 +18088,10 @@ IMPR_FONCTION=MACRO(nom="IMPR_FONCTION",op=impr_fonction_ops,sd_prod=None,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -16918,7 +18142,7 @@ IMPR_GENE=PROC(nom="IMPR_GENE",op= 157,
            TOUT_CMP_GENE   =SIMP(statut='f',typ='TXM',into=("OUI","NON") ),
            NUME_CMP_GENE   =SIMP(statut='f',typ='I',max='**'),
            TOUT_CHAM       =SIMP(statut='f',typ='TXM',into=("OUI","NON") ),
-           NOM_CHAM        =SIMP(statut='f',typ='TXM',max='**'),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',max='**',into=C_NOM_CHAM_INTO(),),
            TOUT_PARA       =SIMP(statut='f',typ='TXM',into=("OUI","NON") ),
            NOM_PARA        =SIMP(statut='f',typ='TXM',max='**'),
            SOUS_TITRE      =SIMP(statut='f',typ='TXM',max='**'),
@@ -16987,10 +18211,10 @@ IMPR_JEVEUX=PROC(nom="IMPR_JEVEUX",op=16,
          ),
          COMMENTAIRE     =SIMP(statut='f',typ='TXM' ),  
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 01/03/2011   AUTEUR CORUS M.CORUS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -17012,17 +18236,17 @@ IMPR_MACR_ELEM=PROC(nom="IMPR_MACR_ELEM",op= 160,
          fr="Impression d'une structure de données MACR_ELEM_DYNA au format IDEAS MISS3D PLEXUS ou CADYRO",
          MACR_ELEM_DYNA  =SIMP(statut='o',typ=macr_elem_dyna ),
          FORMAT          =SIMP(statut='f',typ='TXM',defaut="IDEAS",
-                               into=("MISS_3D","IDEAS","CADYRO","PLEXUS") ),
+                               into=("MISS_3D","IDEAS") ),
 
-         b_plexus         =BLOC(condition = "FORMAT == 'IDEAS'",
+         b_ideas         =BLOC(condition = "FORMAT == 'IDEAS'",
            UNITE           =SIMP(statut='f',typ='I',defaut=30),
            VERSION          =SIMP(statut='f',typ='I',defaut= 5,into=( 5 ,) ),
          ),             
 
-         b_ideas         =BLOC(condition = "FORMAT == 'PLEXUS'",
-           UNITE           =SIMP(statut='f',typ='I',defaut=30),
-           VERSION         =SIMP(statut='f',typ='I',defaut= 5,into=( 5 ,) ),
-         ),                      
+#         b_plexus         =BLOC(condition = "FORMAT == 'PLEXUS'",
+#           UNITE           =SIMP(statut='f',typ='I',defaut=30),
+#           VERSION         =SIMP(statut='f',typ='I',defaut= 5,into=( 5 ,) ),
+#         ),                      
 
          b_miss_3d       =BLOC(condition = "FORMAT == 'MISS_3D'",
            regles=(EXCLUS('AMOR_REDUIT','LIST_AMOR'),),
@@ -17040,20 +18264,49 @@ IMPR_MACR_ELEM=PROC(nom="IMPR_MACR_ELEM",op= 160,
            IMPR_MODE_STAT  =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
          ),
 
-         b_cadyro        =BLOC(condition = "FORMAT == 'CADYRO'",
-           SQUELETTE       =SIMP(statut='f',typ=squelette ),
-           UNITE_MODE_MECA =SIMP(statut='f',typ='I',defaut= 26 ),
-           UNITE_MODE_STAT =SIMP(statut='f',typ='I',defaut= 27 ),
-           UNITE_MAILLAGE  =SIMP(statut='f',typ='I',defaut= 28 ),
-           IMPR_MODE_MECA  =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
-           IMPR_MODE_STAT  =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
-         ),
+#         b_cadyro        =BLOC(condition = "FORMAT == 'CADYRO'",
+#           SQUELETTE       =SIMP(statut='f',typ=squelette ),
+#           UNITE_MODE_MECA =SIMP(statut='f',typ='I',defaut= 26 ),
+#           UNITE_MODE_STAT =SIMP(statut='f',typ='I',defaut= 27 ),
+#           UNITE_MAILLAGE  =SIMP(statut='f',typ='I',defaut= 28 ),
+#           IMPR_MODE_MECA  =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
+#           IMPR_MODE_STAT  =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
+#         ),
 
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 14/02/2011   AUTEUR GREFFET N.GREFFET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE GREFFET N.GREFFET
+#
+# RECUPERATION DES MAILLAGES IFS VENANT DE SATURNE VIA YACS
+#
+IMPR_MAIL_YACS=PROC(nom="IMPR_MAIL_YACS",op=43,
+            UIinfo={"groupes":("Maillage",)},
+               fr="Lecture d'un maillage via YACS lors du Couplage de Code_Aster et Saturne",
+         UNITE_MAILLAGE = SIMP(statut='f',typ='I',defaut=30),
+         TYPE_MAILLAGE = SIMP(statut='o',typ='TXM',into=("SOMMET","MILIEU")),
+         INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
+)  ;
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -17079,27 +18332,24 @@ IMPR_MISS_3D=PROC(nom="IMPR_MISS_3D",op= 162,
          EXCIT           =FACT(statut='f',max='**',
            regles=(UN_PARMI('FONC_MULT','COEF_MULT' ),),
            VECT_ASSE       =SIMP(statut='f',typ=cham_no_sdaster),
-           FONC_MULT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule) ),
+           FONC_MULT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),),
            COEF_MULT       =SIMP(statut='f',typ='R' ),
          ),
          EXCIT_SOL       =FACT(statut='f',max='**',
            DIRECTION       =SIMP(statut='o',typ='R',min=3,max=3),
            FONC_SIGNAL     =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule) ),
-           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut="DEPL",
-                                 into=("DEPL","VITE","ACCE","FORC",) ),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut="DEPL",into=("DEPL","VITE","ACCE","FORC",),),
          ),
          SOURCE_SOL      =FACT(statut='f',max='**',
            POINT           =SIMP(statut='o',typ='R',min=3,max=3),
            DIRECTION       =SIMP(statut='o',typ='R',min=3,max=3),
-           FONC_SIGNAL     =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule) ),
-           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut="DEPL",
-                                 into=("DEPL","VITE","ACCE","FORC",) ),
+           FONC_SIGNAL     =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut="DEPL",into=("DEPL","VITE","ACCE","FORC",),),
          ),
          SOURCE_FLUIDE   =FACT(statut='f',max='**',
            POINT           =SIMP(statut='o',typ='R',min=3,max=3),
-           FONC_SIGNAL     =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule) ),
-           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut="DEPL",
-                                 into=("DEPL","VITE","ACCE","FORC",) ),
+           FONC_SIGNAL     =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut="DEPL",into=("DEPL","VITE","ACCE","FORC",),),
          ),
          DIRE_ONDE       =SIMP(statut='f',typ='R',min=3,max=3),
          INST_INIT       =SIMP(statut='f',typ='R' ),
@@ -17181,10 +18431,10 @@ IMPR_OAR =MACRO(nom="IMPR_OAR",op= impr_oar_ops, sd_prod=None,
    UNITE = SIMP(statut='f',typ='I',defaut=38),
    AJOUT = SIMP(statut='f', typ='TXM', defaut='NON', into=('OUI', 'NON')),
    );
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 11/05/2011   AUTEUR SELLENET N.SELLENET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -17321,7 +18571,7 @@ IMPR_RESU=PROC(nom="IMPR_RESU",op=39,
 ###
            b_med=BLOC(condition="""((CHAM_GD != None)or(RESULTAT != None))and(FORMAT == 'MED')""",
                                 fr="renommage du champ",
-             NOM_CHAM_MED    =SIMP(statut='f',typ='TXM',validators=(LongStr(1,32),NoRepeat()),max='**'),
+             NOM_CHAM_MED    =SIMP(statut='f',typ='TXM',validators=(LongStr(1,64),NoRepeat()),max='**'),
            ),
 ###
            b_gmsh=BLOC(condition="""((CHAM_GD != None)or(RESULTAT != None))and((FORMAT == 'GMSH'))""",
@@ -17366,10 +18616,10 @@ IMPR_RESU=PROC(nom="IMPR_RESU",op=39,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 ) ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 18/01/2011   AUTEUR BOITEAU O.BOITEAU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -17422,10 +18672,11 @@ IMPR_STURM=PROC(nom="IMPR_STURM",op=32,fr="Calculer et imprimer le nombre de val
              b_mumps        =BLOC(condition = "METHODE == 'MUMPS' ",fr="Paramètres de la méthode MUMPS",
                TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
                PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
-               RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+               RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
                ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
                PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
                OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+               LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              ),
            ),    
 
@@ -17996,10 +19247,10 @@ LIRE_CHAMP=OPER(nom="LIRE_CHAMP",op= 192,sd_prod=lire_champ_prod,
                   ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 22/03/2011   AUTEUR COURTOIS M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -18046,7 +19297,8 @@ LIRE_FONCTION=MACRO(nom="LIRE_FONCTION",op=lire_fonction_ops,sd_prod=lire_foncti
          b_nappe         =BLOC(condition = "TYPE=='NAPPE' ",
            NOM_PARA_FONC   =SIMP(statut='o',typ='TXM',into=C_PARA_FONCTION() ),
            INDIC_ABSCISSE  =SIMP(statut='o',typ='I',min=2,max=2,),
-           INTERPOL_FONC   =SIMP(statut='f',typ='TXM',max=2,defaut="LIN",into=("NON","LIN","LOG") ),
+           INTERPOL_FONC   =SIMP(statut='f',typ='TXM',max=2,defaut="LIN",into=("NON","LIN","LOG"),
+                                 fr="Type d'interpolation pour les abscisses et les ordonnées de la fonction"),
            PROL_DROITE_FONC=SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
            PROL_GAUCHE_FONC=SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
            DEFI_FONCTION   =FACT(statut='f',max='**',
@@ -18054,7 +19306,9 @@ LIRE_FONCTION=MACRO(nom="LIRE_FONCTION",op=lire_fonction_ops,sd_prod=lire_foncti
          UNITE           =SIMP(statut='o',typ='I' ),
          NOM_PARA        =SIMP(statut='o',typ='TXM',into=C_PARA_FONCTION() ),
          NOM_RESU        =SIMP(statut='f',typ='TXM',defaut="TOUTRESU"),
-         INTERPOL        =SIMP(statut='f',typ='TXM',max=2,defaut="LIN",into=("NON","LIN","LOG") ),
+         INTERPOL        =SIMP(statut='f',typ='TXM',max=2,defaut="LIN",into=("NON","LIN","LOG"),
+                               fr="Type d'interpolation pour les abscisses et les ordonnées de la " \
+                                  "fonction ou bien pour le paramètre de la nappe."),
          PROL_DROITE     =SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
          PROL_GAUCHE     =SIMP(statut='f',typ='TXM',defaut="EXCLU",into=("CONSTANT","LINEAIRE","EXCLU") ),
          VERIF           =SIMP(statut='f',typ='TXM',defaut="CROISSANT",into=("CROISSANT","NON") ),
@@ -18306,10 +19560,10 @@ LIRE_PLEXUS=OPER(nom="LIRE_PLEXUS",op= 184,sd_prod=evol_char,
                    PRECISION       =SIMP(statut='o',typ='R',),),),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/03/2011   AUTEUR PELLET J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -18341,33 +19595,112 @@ def lire_resu_prod(TYPE_RESU,**args):
 
 # pour éviter d'écrire 3 fois cette liste :
 def l_nom_cham_pas_elga(): return (
-     "ACCE", "ACCE_ABSOLU", "CRIT_ELNO_RUPT", "DCHA_ELNO_SIGM",
-     "DCHA_NOEU_SIGM", "DEDE_ELNO_DLDE", "DEDE_NOEU_DLDE", "DEGE_ELNO_DEPL", "DEGE_NOEU_DEPL",
-     "DEPL", "DEPL_ABSOLU", "DESI_ELNO_DLSI", "DESI_NOEU_DLSI", "DETE_ELNO_DLTE", "DETE_NOEU_DLTE",
-     "DURT_ELNO_META", "DURT_NOEU_META", "ECIN_ELEM_DEPL", "EFGE_ELNO_CART", "EFGE_ELNO_DEPL",
-     "EFGE_NOEU_CART", "EFGE_NOEU_DEPL", "ENDO_ELNO_SIGA", "ENDO_ELNO_SINO", "ENDO_NOEU_SINO",
-     "ENEL_ELNO_ELGA", "ENEL_NOEU_ELGA", "EPEQ_ELNO_TUYO", "EPGR_ELNO", "EPME_ELNO_DEPL",
-     "EPMG_ELNO_DEPL", "EPMG_NOEU_DEPL", "EPOT_ELEM_DEPL", "EPSA_ELNO", "EPSA_NOEU",
-     "EPSG_ELNO_DEPL", "EPSG_NOEU_DEPL", "EPSI_ELNO_DEPL", "EPSI_ELNO_TUYO", "EPSI_NOEU_DEPL",
-     "EPSP_ELNO", "EPSP_NOEU", "EQUI_ELNO_EPME", "EQUI_ELNO_EPSI",
-     "EQUI_ELNO_SIGM", "EQUI_NOEU_EPME", "EQUI_NOEU_EPSI", "EQUI_NOEU_SIGM", "ERRE_ELEM_NOZ1",
-     "ERRE_ELEM_NOZ2", "ERRE_ELNO_ELGA", "ERRE_NOEU_ELGA", "ERTH_ELEM_TEMP", "ERTH_ELNO_ELEM",
-     "ETOT_ELEM", "ETOT_ELNO_ELGA", "FLUX_ELNO_TEMP", "FLUX_NOEU_TEMP", "FORC_NODA", "FSUR_2D",
-     "FSUR_3D", "FVOL_2D", "FVOL_3D", "GRAD_NOEU_THETA", "HYDR_ELNO_ELGA", "HYDR_NOEU_ELGA",
-     "INTE_ELNO_ACTI", "INTE_ELNO_REAC", "INTE_NOEU_ACTI", "INTE_NOEU_REAC", "IRRA",
-     "META_ELNO_TEMP", "META_NOEU_TEMP", "PMPB_ELNO_SIEF", "PMPB_NOEU_SIEF",
-     "PRES", "PRES_DBEL_DEPL", "PRES_ELNO_DBEL", "PRES_ELNO_IMAG", "PRES_ELNO_REEL",
-     "PRES_NOEU_DBEL", "PRES_NOEU_IMAG", "PRES_NOEU_REEL",
-     "RADI_ELNO_SIGM", "RADI_NOEU_SIGM", "REAC_NODA",
-     "SIEF_ELNO", "SIEF_ELNO_ELGA", "SIEF_NOEU", "SIEF_NOEU_ELGA", "SIEQ_ELNO_TUYO",
-     "SIGM_ELNO_CART", "SIGM_ELNO_COQU", "SIGM_ELNO_DEPL", "SIGM_ELNO_SIEF",
-     "SIGM_ELNO_TUYO", "SIGM_NOEU_CART", "SIGM_NOEU_COQU",
-     "SIGM_NOEU_DEPL", "SIGM_NOEU_SIEF", "SIGM_NOZ1_ELGA",
-     "SIGM_NOZ2_ELGA", "SIPO_ELNO_DEPL", "SIPO_ELNO_SIEF", "SIPO_NOEU_DEPL",
-     "SIPO_NOEU_SIEF", "TEMP", "THETA",
-     "VALE_CONT", "VALE_NCOU_MAXI", "VARI_ELNO", "VARI_ELNO_COQU",
-     "VARI_ELNO_ELGA", "VARI_ELNO_TUYO", "VARI_NOEU", "VARI_NOEU_ELGA",
-     "VITE", "VITE_ABSOLU", "VITE_VENT",
+     "ACCE",
+     "ACCE_ABSOLU",
+     "CRIT_ELNO",
+     "DERA_ELNO",
+     "DERA_NOEU",
+     "DEDE_ELNO",
+     "DEDE_NOEU",
+     "DEGE_ELNO",
+     "DEGE_NOEU",
+     "DEPL",
+     "DEPL_ABSOLU",
+     "DESI_ELNO",
+     "DESI_NOEU",
+     "DETE_ELNO",
+     "DETE_NOEU",
+     "DURT_ELNO",
+     "DURT_NOEU",
+     "ECIN_ELEM",
+     "EFCA_ELNO",
+     "EFGE_ELNO",
+     "EFCA_NOEU",
+     "EFGE_NOEU",
+     "ENDO_ELNO",
+     "ENDO_NOEU",
+     "ENEL_ELNO",
+     "ENEL_NOEU",
+     "EPTQ_ELNO",
+     "EPGR_ELNO",
+     "EPME_ELNO",
+     "EPMG_ELNO",
+     "EPMG_NOEU",
+     "EPOT_ELEM",
+     "EPSA_ELNO",
+     "EPSA_NOEU",
+     "EPSG_ELNO",
+     "EPSG_NOEU",
+     "EPSI_ELNO",
+     "EPTU_ELNO",
+     "EPSI_NOEU",
+     "EPSP_ELNO",
+     "EPSP_NOEU",
+     "EPMQ_ELNO",
+     "EPEQ_ELNO",
+     "SIEQ_ELNO",
+     "EPMQ_NOEU",
+     "EPEQ_NOEU",
+     "SIEQ_NOEU",
+     "ERRE_ELEM_NOZ1",
+     "ERRE_ELEM_NOZ2",
+     "ERRE_ELNO_ELGA",
+     "ERRE_NOEU_ELGA",
+     "ERTH_ELEM_TEMP",
+     "ERTH_ELNO_ELEM",
+     "ETOT_ELEM",
+     "ETOT_ELNO",
+     "FLUX_ELNO",
+     "FLUX_NOEU",
+     "FORC_NODA",
+     "FSUR_2D",
+     "FSUR_3D",
+     "FVOL_2D",
+     "FVOL_3D",
+     "GRAD_NOEU_THETA",
+     "HYDR_ELNO",
+     "HYDR_NOEU",
+     "INTE_ELNO",
+     "INTE_NOEU",
+     "IRRA",
+     "META_ELNO",
+     "META_NOEU",
+     "PMPB_ELNO",
+     "PMPB_NOEU",
+     "PRES",
+     "PRME_ELNO",
+     "PRAC_ELNO",
+     "PRAC_NOEU",
+     "REAC_NODA",
+     "SIEF_ELNO",
+     "SIEF_ELNO",
+     "SIEF_NOEU",
+     "SIEF_NOEU",
+     "SITQ_ELNO",
+     "SICA_ELNO",
+     "SICO_ELNO",
+     "SIGM_ELNO",
+     "SITU_ELNO",
+     "SICA_NOEU",
+     "SICO_NOEU",
+     "SIGM_NOEU",
+     "SIZ1_ELGA",
+     "SIZ2_ELGA",
+     "SIPO_ELNO",
+     "SIPO_NOEU",
+     "TEMP",
+     "THETA",
+     "VALE_CONT",
+     "SPMX_ELGA",
+     "VARI_ELNO",
+     "VACO_ELNO",
+     "VARI_ELNO",
+     "VATU_ELNO",
+     "VARI_NOEU",
+     "VARI_NOEU",
+     "VITE",
+     "VITE_ABSOLU",
+     "VITE_VENT",
                            )
 
 LIRE_RESU=OPER(nom="LIRE_RESU",op=150,sd_prod=lire_resu_prod,reentrant='n',
@@ -18394,7 +19727,7 @@ LIRE_RESU=OPER(nom="LIRE_RESU",op=150,sd_prod=lire_resu_prod,reentrant='n',
          NB_VARI         =SIMP(statut='f',typ='I' ),
 
          CHAM_MATER      =SIMP(statut='f',typ=cham_mater,),
-         
+
          CARA_ELEM       =SIMP(statut='f',typ=cara_elem,),
 
           b_evol_elas  = BLOC(condition="TYPE_RESU=='EVOL_ELAS'",
@@ -18436,7 +19769,7 @@ LIRE_RESU=OPER(nom="LIRE_RESU",op=150,sd_prod=lire_resu_prod,reentrant='n',
          ),
          b_dataset_58_b = BLOC(condition="(FORMAT=='IDEAS_DS58') and ((TYPE_RESU=='DYNA_TRANS') or\
                                         (TYPE_RESU=='DYNA_HARMO') or (TYPE_RESU=='HARM_GENE'))",
-           NOM_CHAM=SIMP(statut='o',typ='TXM',into=("DEPL","VITE","ACCE","EPSI_NOEU_DEPL","SIEF_NOEU",) ),
+           NOM_CHAM=SIMP(statut='o',typ='TXM',into=("DEPL","VITE","ACCE","EPSI_NOEU","SIEF_NOEU",),max='**' ),
            REDEFI_ORIENT=FACT(statut='f',max='**',
                               regles=(PRESENT_PRESENT('CODE_DIR','DIRECTION','NOEUD',),),
                               CODE_DIR =SIMP(statut='f',typ='I',into=(1,2,3,) ),
@@ -18466,7 +19799,7 @@ LIRE_RESU=OPER(nom="LIRE_RESU",op=150,sd_prod=lire_resu_prod,reentrant='n',
              POSI_INST       =SIMP(statut='f',typ='I',min=2,max=2),
              POSI_FREQ       =SIMP(statut='f',typ='I',min=2,max=2),
              NOM_CMP         =SIMP(statut='o',typ='TXM',max='**'),),
-         ),          
+         ),
 
 # 1-3 ensight :
 # -------------
@@ -18494,10 +19827,11 @@ LIRE_RESU=OPER(nom="LIRE_RESU",op=150,sd_prod=lire_resu_prod,reentrant='n',
 # 2) blocs selon le type du résultat :
 #---------------------------------
          b_mode_meca     =BLOC(condition="(TYPE_RESU=='MODE_MECA')or(TYPE_RESU=='MODE_MECA_C')",
+           # Ces mots cles sont stockes dans l'objet .REFD des mode_meca
+           # Ces mots cles sont aussi utilises  pour imposer la numerotation des cham_no de DEPL_R
            MATR_A         =SIMP(statut='f',typ=matr_asse_depl_r,max=1),
            MATR_B         =SIMP(statut='f',typ=matr_asse_depl_r,max=1),
-           NUME_DDL        =SIMP(statut='f',typ=(nume_ddl_sdaster),max=1,
-                           fr="Utile en dynamique pour pouvoir imposer la numérotation des cham_no."),
+           NUME_DDL        =SIMP(statut='f',typ=(nume_ddl_sdaster),max=1,),
          ),
 
 
@@ -18587,30 +19921,31 @@ MAC_MODES=OPER(nom="MAC_MODES",op=  141,sd_prod=table_sdaster,
          TITRE      =SIMP(statut='f',typ='TXM',max='**'),
          INFO       =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR GNICOLAS G.NICOLAS 
+#& MODIF COMMANDE  DATE 11/05/2011   AUTEUR SELLENET N.SELLENET 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
-# (AT YOUR OPTION) ANY LATER VERSION.                                 
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 # RESPONSABLE GNICOLAS G.NICOLAS
 
 
 from Macro.macr_adap_mail_ops import macr_adap_mail_ops
 
-def macr_adap_mail_prod(self,MAJ_CHAM,ADAPTATION,**args):
+def macr_adap_mail_prod(self, MAJ_CHAM, ADAPTATION, **args):
 #
 # 0. Typage des structures produites
 #
@@ -18641,14 +19976,14 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 #
 # 2. Version de HOMARD
 #
-  VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V9_8",
-                        into=("V9_8", "V9_N", "V9_N_PERSO"),
+  VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V10_1",
+                        into=("V10_1", "V10_N", "V10_N_PERSO"),
                         fr="Version de HOMARD",
                         ang="HOMARD release"),
 #
 # 3. Langue des messages produits par HOMARD
 #
-  LANGUE = SIMP(statut='f',typ='TXM',defaut="FRANCAIS",    
+  LANGUE = SIMP(statut='f',typ='TXM',defaut="FRANCAIS",
                 into=("FRANCAIS","FRENCH","ANGLAIS","ENGLISH",),
                 fr="Langue des messages produits par HOMARD.",
                 ang="Language for the HOMARD messages." ),
@@ -18663,14 +19998,14 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                       ang="Mesh before adaptation" ),
 #
   MAILLAGE_NP1 = SIMP(statut='o',typ=CO,
-                      fr="Maillage apres adaptation",
+                      fr="Maillage après adaptation",
                       ang="Mesh after adaptation" ),
 #
 # 4.2. Eventuellement, on peut produire un maillage annexe
 #      Actuellement, c'est le maillage n+1, mais de degré différent.
 #
   MAILLAGE_NP1_ANNEXE = SIMP(statut='f',typ=CO,
-                             fr="Maillage annexe apres adaptation",
+                             fr="Maillage annexe après adaptation",
                              ang="Additional mesh after adaptation" ),
 #
 # 5. Le pilotage de l'adaptation, avec les variantes suivantes :
@@ -18711,7 +20046,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 # 6.1.2. Sous forme de concept resultat_sdaster
 #
     RESULTAT_N = SIMP(statut='f',typ=(evol_elas,evol_noli,evol_ther) ,
-                      fr="Concept resultat Code_Aster contenant le champ",
+                      fr="Concept résultat Code_Aster contenant le champ",
                       ang="The Code_Aster result with the field" ),
 #
     b_champ_adaptation = BLOC(condition="(RESULTAT_N != None)",
@@ -18755,7 +20090,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 # 6.1.5.1. Soit le numero d'ordre
 #
       NUME_ORDRE = SIMP(statut='f',typ='I',
-                        fr="Numero d ordre",
+                        fr="Numéro d ordre",
                         ang="Rank" ),
 #
 # 6.1.5.2. Soit l'instant
@@ -18801,7 +20136,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 # 6.1.7. Usage du champ : la valeur par maille ou le max du saut entre mailles
 #
     b_usage_champ = BLOC(condition=" (RESULTAT_N != None) or (CHAM_GD != None) ",
-                         fr="Usage du champ : direct ou saut",
+                         fr="Usage du champ : par maille ou saut entre mailles voisines",
                          ang="Use type for the field : direct or jump",
 #
       USAGE_CHAMP = SIMP(statut='f',typ='TXM',defaut="MAILLE",into=("MAILLE","SAUT"),
@@ -18860,7 +20195,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                  fr="Pour une adaptation selon une zone à raffiner",
                  ang="For adaptation among a zone",
 #
-    ZONE = FACT(statut='f',max='**',
+    ZONE = FACT(statut='o',min=1,max='**',
                 fr="Définition de zones à raffiner.",
                 ang="Refined zone definition.",
 #
@@ -18935,10 +20270,10 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 ##gn                           fr="X et Y du centre d'un disque plein ou perce, d'une sphere.",
 ##gn                           ang="X and Y of the centre of a disk or of a sphere.",
       X_CENTRE = SIMP(statut='f',typ='R',
-                      fr="Abscisse du centre du disque ou de la sphere",
+                      fr="Abscisse du centre du disque ou de la sphère",
                       ang="X for the center of the disk or of the sphere"),
       Y_CENTRE = SIMP(statut='f',typ='R',
-                      fr="Ordonnee du centre du disque ou de la sphere",
+                      fr="Ordonnée du centre du disque ou de la sphère",
                       ang="Y for the center of the disk or of the sphere"),
 ##gn      ) ,
 #
@@ -18948,7 +20283,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 ##gn                       fr="Cote du centre de la sphere.",
 ##gn                       ang="Z for the center of the sphere.",
        Z_CENTRE = SIMP(statut='f',typ='R',
-                       fr="Cote du centre de la sphere",
+                       fr="Cote du centre de la sphère",
                        ang="Z for the center of the sphere"),
 ##gn      ) ,
 #
@@ -18958,10 +20293,10 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 ##gn                                fr="Le rayon d'un disque perce ou d'un tuyau.",
 ##gn                                ang="The radius of a holed disk or of a pipe.",
       RAYON_INT = SIMP(statut='f',typ='R',
-                       fr="Rayon interieur",
+                       fr="Rayon intérieur",
                        ang="Internal radius"),
       RAYON_EXT = SIMP(statut='f',typ='R',
-                       fr="Rayon exterieur",
+                       fr="Rayon extérieur",
                        ang="External radius"),
 ##gn      ) ,
 #
@@ -18974,7 +20309,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                    fr="Abscisse du vecteur directeur de l'axe",
                    ang="X for the axial vector"),
       Y_AXE = SIMP(statut='f',typ='R',
-                   fr="Ordonnee du vecteur directeur de l'axe",
+                   fr="Ordonnée du vecteur directeur de l'axe",
                    ang="Y for the axial vector"),
       Z_AXE = SIMP(statut='f',typ='R',
                    fr="Cote du vecteur directeur de l'axe",
@@ -18983,7 +20318,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                     fr="Abscisse d'un point de la base, sur l'axe",
                     ang="X for the basis, on the axis"),
       Y_BASE = SIMP(statut='f',typ='R',
-                    fr="Ordonnee d'un point de la base, sur l'axe",
+                    fr="Ordonnée d'un point de la base, sur l'axe",
                     ang="Y for the basis, on the axis"),
       Z_BASE = SIMP(statut='f',typ='R',
                     fr="Cote d'un point de la base, sur l'axe",
@@ -19004,11 +20339,17 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                                          (ADAPTATION == 'RAFFINEMENT') or \
                                          (ADAPTATION == 'RAFFINEMENT_UNIFORME') or \
                                          (ADAPTATION == 'RAFFINEMENT_ZONE') " ,
-                           fr="Niveau maximum de profondeur de raffinement",
-                           ang="Maximum level for the refinement",
+                           fr="Profondeur maximale de raffinement",
+                           ang="Maximum depth for the refinement",
+#
     NIVE_MAX = SIMP(statut='f',typ='I',
                     fr="Niveau maximum de profondeur de raffinement",
                     ang="Maximum level for the refinement"),
+#
+    DIAM_MIN = SIMP(statut='f',typ='R',
+                    fr="Diamètre minimal de maille",
+                    ang="Minimal diameter for the mesh" ),
+#
   ) ,
 #
 # 9.2. Pour le deraffinement :
@@ -19043,46 +20384,46 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                     ang="List of the groups of nodes for filtering of the adaptation." ),
   ) ,
 #
-# 11. Suivi d'une frontiere
+# 11. Suivi d'une frontière
 #
-# 11.1. Definition d'une frontiere par un maillage (valable seulement pour des frontieres 1D)
+# 11.1. Definition d'une frontière par un maillage (valable seulement pour des frontières 1D)
 #
   MAILLAGE_FRONTIERE = SIMP(statut='f',typ=maillage_sdaster,
-                           fr="Maillage de la frontiere à suivre",
-                           ang="Boundary mesh" ),
+                           fr="Maillage de la frontière discrète à suivre",
+                           ang="Discrete boundary mesh" ),
 #
-  b_frontiere = BLOC( condition = " MAILLAGE_FRONTIERE != None " ,
-                      fr="Information complémentaire sur la frontière",
-                      ang="Further information about boundary",
+  b_FRONTIERE = BLOC( condition = " MAILLAGE_FRONTIERE != None " ,
+                      fr="Information complémentaire sur la frontière discrète",
+                      ang="Further information about discrete boundary",
 #
     GROUP_MA_FRONT = SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**',
-                          fr="Liste des groupes de mailles définissant la frontière",
-                          ang="Mesh groups which define the boundary" ),
+                          fr="Liste des groupes de mailles définissant la frontière discrète",
+                          ang="Mesh groups which define the discrete boundary" ),
 #
   ) ,
 #
-# 11.2. Definition analytique d'une frontiere
+# 11.2. Definition analytique d'une frontière
 #
   FRONTIERE_ANALYTIQUE = FACT(statut='f',max='**',
-                              fr="Definition analytique de frontieres a suivre.",
+                              fr="Definition analytique de frontières a suivre.",
                               ang="Analytical definition of a boundary.",
 #
-# 11.2.1. Type de la frontiere
+# 11.2.1. Nom de la frontière
+#
+    NOM = SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=1,
+               fr="Nom de la frontière analytique",
+               ang="Name of the analytic boundary" ),
+#
+# 11.2.2. Type de la frontière
 #
     TYPE = SIMP(statut='o',typ='TXM',into=("SPHERE", "CYLINDRE"),
-                fr="Type de la frontiere",
-                ang="Type of the boundary" ),
-#
-# 11.2.2. Groupe lie a la frontiere
-#
-    GROUP_MA = SIMP(statut='o',typ=grma,validators=NoRepeat(),max='**',
-                    fr="Liste des groupes de mailles definissant la frontiere",
-                    ang="Groups of meshes which define the boundary" ),
+                fr="Type de la frontière analytique",
+                ang="Type of the analytic boundary" ),
 #
 # 11.2.3. Pour une sphere ou un cylindre : rayon et centre
 #
     b_fr_rayon = BLOC( condition = " (TYPE == 'SPHERE') or (TYPE == 'CYLINDRE') " ,
-                       fr="Le rayon et le centre d'une sphere ou d'un cylindre.",
+                       fr="Le rayon et le centre d'une sphère ou d'un cylindre.",
                        ang="The radius and the centre of a sphere or of a cylinder.",
       RAYON = SIMP(statut='o',typ='R',
                    fr="Rayon",
@@ -19091,7 +20432,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                       fr="Abscisse du centre",
                       ang="X for the center"),
       Y_CENTRE = SIMP(statut='o',typ='R',
-                      fr="Ordonnee du centre",
+                      fr="Ordonneée du centre",
                       ang="Y for the center"),
       Z_CENTRE = SIMP(statut='o',typ='R',
                       fr="Cote du centre",
@@ -19107,16 +20448,22 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                    fr="Abscisse du vecteur directeur de l'axe",
                    ang="X for the axial vector"),
       Y_AXE = SIMP(statut='o',typ='R',
-                   fr="Ordonnee du vecteur directeur de l'axe",
+                   fr="Ordonnée du vecteur directeur de l'axe",
                    ang="Y for the axial vector"),
       Z_AXE = SIMP(statut='o',typ='R',
                    fr="Cote du vecteur directeur de l'axe",
                    ang="Z for the axial vector"),
     ) ,
 #
+# 11.2.5. Groupe(s) lie(s) a la frontière
+#
+    GROUP_MA = SIMP(statut='o',typ=grma,validators=NoRepeat(),max='**',
+                    fr="Liste des groupes de mailles placées sur la frontière",
+                    ang="Groups of meshes which are located on the boundary" ),
+#
   ) ,
 #
-# 12. Mise à jour de champs sur le nouveau maillage
+# 12. mise à jour de champs sur le nouveau maillage
 #
   MAJ_CHAM = FACT(statut='f',max='**',
                   fr="Mise à jour de champs sur le nouveau maillage.",
@@ -19147,7 +20494,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 # 12.3.2. Sous forme de champ dans un resultat
 #
     RESULTAT = SIMP(statut='f',typ=(evol_elas,evol_noli,evol_ther),
-                    fr="Resultat contenant le champ à mettre à jour",
+                    fr="Résultat contenant le champ à mettre à jour",
                     ang="Result with the field to be updated" ),
 #
     b_nom_du_champ = BLOC(condition="(RESULTAT != None)",
@@ -19160,11 +20507,11 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 #
     ),
 #
-# 12.4. Est-ce un champ dérivé
+# 12.4. Les composantes
 #
-    SENSIBILITE = SIMP(statut='f',typ=(para_sensi,theta_geom),
-                       fr="Paramètre de sensibilité.",
-                       ang="Sensitivity parameter"),
+    NOM_CMP = SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**',
+                   fr="Liste des composante(s) retenue(s) pour le champ.",
+                   ang="List of the selected component(s) for the field." ),
 #
 # 12.5. Le paramètre temporel pour le champ a interpoler
 #
@@ -19177,7 +20524,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 # 12.5.1. Soit le numero d'ordre
 #
       NUME_ORDRE = SIMP(statut='f',typ='I',
-                        fr="Numero d ordre du champ à mettre à jour",
+                        fr="Numéro d ordre du champ à mettre à jour",
                         ang="Rank of the field to be updated" ),
 #
 # 12.5.2. Soit l'instant
@@ -19208,6 +20555,19 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
       ),
 #
     ),
+#
+# 12.6. Type d'interpolation
+#
+    TYPE_MAJ = SIMP(statut='f',typ='TXM',defaut="AUTO",
+                    into=("AUTO", "ISOP2"),
+                    fr="Type de mise à jour : automatique ou iso-P2",
+                    ang="Type of the updating" ),
+#
+# 12.7. Est-ce un champ dérivé
+#
+    SENSIBILITE = SIMP(statut='f',typ=(para_sensi,theta_geom),
+                       fr="Paramètre de sensibilité.",
+                       ang="Sensitivity parameter"),
   ),
 #
 # 13. Les Modifications
@@ -19221,7 +20581,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 # 13.1. Changement de degre
 #
       DEGRE         = SIMP(statut='o',typ='TXM',defaut="NON",into=("OUI","NON"),
-                          fr="Changement de degre du maillage",
+                          fr="Changement de degré du maillage",
                           ang="Modification of the degree of the mesh" ),
 #
 # 13.2. Création des joints
@@ -19239,7 +20599,7 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                         fr="Nombre de noeuds et de mailles du maillage",
                         ang="Number of nodes and meshes in the mesh" ),
 #
-# 14.2. Determination de la qualité des éléments du maillage
+# 14.2. Determination de la qualité des mailles du maillage
 #
   QUALITE        = SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),
                         fr="Qualité du maillage",
@@ -19271,13 +20631,13 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
 #
 # 15. Unite logique d'un fichier a ajouter a HOMARD.Configuration
 #
-  b_unite = BLOC( condition = " (VERSION_HOMARD == 'V9_N') or \
-                                (VERSION_HOMARD == 'V9_N_PERSO') " ,
-                                fr="Fichier supplementaire.",
+  b_unite = BLOC( condition = " (VERSION_HOMARD == 'V10_N') or \
+                                (VERSION_HOMARD == 'V10_N_PERSO') " ,
+                                fr="Fichier supplémentaire.",
                                 ang="Additional file.",
 #
   UNITE = SIMP(statut='f',typ='I',
-               fr="Unite logique a ajouter a HOMARD.Configuration",
+               fr="Unite logique du fichier à ajouter à HOMARD.Configuration",
                ang="Additional file to HOMARD.Configuration" ),
 #
   ) ,
@@ -19291,10 +20651,10 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",op=macr_adap_mail_ops,sd_prod=macr_ada
                              ang="Incompatible meshes for HOMARD" ),
 #
 ) ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 04/05/2011   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -19323,7 +20683,6 @@ MACR_ASCOUF_CALC=MACRO(nom="MACR_ASCOUF_CALC",op=macr_ascouf_calc_ops,sd_prod=ma
                       fr="Réalise l'analyse thermomécanique du coude dont le maillage a été concu par MACR_ASCOUF_MAIL",
                       reentrant='n',
             UIinfo={"groupes":("Résolution","Outils-métier",)},
-         regles=(UN_PARMI('COMP_INCR','COMP_ELAS'),),
 
          TYPE_MAILLAGE   =SIMP(statut='o',typ='TXM',
                                into=("SAIN",
@@ -19347,7 +20706,7 @@ MACR_ASCOUF_CALC=MACRO(nom="MACR_ASCOUF_CALC",op=macr_ascouf_calc_ops,sd_prod=ma
          AFFE_MATERIAU   =FACT(statut='o',max=3,
            regles=(UN_PARMI('TOUT','GROUP_MA'),),
            TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
-           GROUP_MA        =SIMP(statut='f',typ='TXM',into=("COUDE","BOL") ),
+           GROUP_MA        =SIMP(statut='f',typ=grma,into=("COUDE","BOL") ),
            MATER           =SIMP(statut='o',typ=mater_sdaster ),
            TEMP_REF        =SIMP(statut='f',typ='R',defaut= 0.E+0 ),
          ),
@@ -19375,24 +20734,8 @@ MACR_ASCOUF_CALC=MACRO(nom="MACR_ASCOUF_CALC",op=macr_ascouf_calc_ops,sd_prod=ma
            FONC_MULT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule) ),
          ),
 
-         COMP_INCR       =FACT(statut='f',
-           RELATION        =SIMP(statut='o',typ='TXM',into=("VMIS_ISOT_TRAC",) ),
-           RESI_INTE_RELA  =SIMP(statut='f',typ='R'
-                                ,defaut= 1.0E-6),
-           ITER_INTE_MAXI  =SIMP(statut='f',typ='I',defaut= 10 ),
-           ITER_INTE_PAS   =SIMP(statut='f',typ='I',defaut= 0 ),
-           RESO_INTE       =SIMP(statut='f',typ='TXM',defaut="IMPLICITE",
-                                 into=("RUNGE_KUTTA_2","RUNGE_KUTTA_4","IMPLICITE")),
-         ),
 
-         COMP_ELAS       =FACT(statut='f',
-           RELATION        =SIMP(statut='o',typ='TXM',into=("ELAS","ELAS_VMIS_TRAC") ),
-           RESI_INTE_RELA  =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           ITER_INTE_MAXI  =SIMP(statut='f',typ='I',defaut= 10 ),
-           ITER_INTE_PAS   =SIMP(statut='f',typ='I',defaut= 0 ),
-           RESO_INTE       =SIMP(statut='f',typ='TXM',defaut="IMPLICITE",
-                                 into=("RUNGE_KUTTA_2","RUNGE_KUTTA_4","IMPLICITE")),
-         ),
+         COMP_ELAS       =C_COMP_ELAS('MACR_ASCOUF_CALC'),
 
          SOLVEUR         =C_SOLVEUR(),
 
@@ -19596,10 +20939,10 @@ MACR_ASCOUF_MAIL=MACRO(nom="MACR_ASCOUF_MAIL",op=macr_ascouf_mail_ops,sd_prod=ma
 
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 04/05/2011   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -19629,7 +20972,6 @@ def macr_aspic_calc_prod(self,MODELE,CHAM_MATER,CARA_ELEM,FOND_FISS_1,FOND_FISS_
 MACR_ASPIC_CALC=MACRO(nom="MACR_ASPIC_CALC",op=macr_aspic_calc_ops,sd_prod=macr_aspic_calc_prod,
             fr="Réalise un calcul prédéfini de piquages sains ou fissurés ainsi que les post-traitements associés ",
             UIinfo={"groupes":("Résolution","Outils-métier",)},reentrant='n',
-         regles=(UN_PARMI('COMP_INCR','COMP_ELAS'),),
 
          TYPE_MAILLAGE   =SIMP(statut='o',typ='TXM',
                                into=("SAIN_FIN","SAIN_GROS","FISS_COUR_DEB","FISS_COUR_NONDEB","FISS_LONG_DEB",
@@ -19649,7 +20991,7 @@ MACR_ASPIC_CALC=MACRO(nom="MACR_ASPIC_CALC",op=macr_aspic_calc_ops,sd_prod=macr_
          AFFE_MATERIAU   =FACT(statut='o',max=3,
            regles=(UN_PARMI('TOUT','GROUP_MA'),),
            TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",)),
-           GROUP_MA        =SIMP(statut='f',typ='TXM',into=("TUBU","CORP","SOUD","SOUDCORP","SOUDTUBU") ),
+           GROUP_MA        =SIMP(statut='f',typ=grma,into=("TUBU","CORP","SOUD","SOUDCORP","SOUDTUBU") ),
            MATER           =SIMP(statut='o',typ=mater_sdaster),
            TEMP_REF        =SIMP(statut='f',typ='R',defaut= 0.E+0 ),
            RCCM            =SIMP(statut='o',typ='TXM',into=("OUI","NON")),
@@ -19696,23 +21038,7 @@ MACR_ASPIC_CALC=MACRO(nom="MACR_ASPIC_CALC",op=macr_aspic_calc_ops,sd_prod=macr_
            FONC_MULT       =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
          ),
 
-         COMP_INCR       =FACT(statut='f',
-           RELATION        =SIMP(statut='o',typ='TXM',into=("VMIS_ISOT_TRAC",) ),
-           RESI_INTE_RELA  =SIMP(statut='f',typ='R',defaut=1.0E-6),
-           ITER_INTE_MAXI  =SIMP(statut='f',typ='I',defaut=10),
-           ITER_INTE_PAS   =SIMP(statut='f',typ='I',defaut=0),
-           RESO_INTE       =SIMP(statut='f',typ='TXM',defaut="IMPLICITE",
-                                 into=("RUNGE_KUTTA_2","RUNGE_KUTTA_4","IMPLICITE")),
-         ),
-
-         COMP_ELAS       =FACT(statut='f',
-           RELATION        =SIMP(statut='o',typ='TXM',into=("ELAS","ELAS_VMIS_TRAC") ),
-           RESI_INTE_RELA  =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           ITER_INTE_MAXI  =SIMP(statut='f',typ='I',defaut= 10 ),
-           ITER_INTE_PAS   =SIMP(statut='f',typ='I',defaut= 0 ),
-           RESO_INTE       =SIMP(statut='f',typ='TXM',defaut="IMPLICITE",
-                                 into=("RUNGE_KUTTA_2","RUNGE_KUTTA_4","IMPLICITE")),
-         ),
+         COMP_ELAS       =C_COMP_ELAS('MACR_ASPIC_CALC'),
 
          THETA_3D        =FACT(statut='f',max='**',
            R_INF           =SIMP(statut='o',typ='R'),
@@ -19753,8 +21079,7 @@ MACR_ASPIC_CALC=MACRO(nom="MACR_ASPIC_CALC",op=macr_aspic_calc_ops,sd_prod=macr_
            b_extrac        =BLOC(condition="((FORMAT=='IDEAS')or(FORMAT=='CASTEM'))",
                                  fr="extraction d un champ de grandeur",
              regles=(EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST'),),
-             NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=3,
-                                   into=("DEPL","EQUI_ELNO_SIGM","TEMP")),
+             NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=3,into=("DEPL","SIEQ_ELNO","TEMP")),
 
              TOUT_ORDRE      =SIMP(statut='f',typ='TXM',into=("OUI",) ),
              NUME_ORDRE      =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
@@ -19940,10 +21265,10 @@ MACR_CARA_POUTRE=MACRO(nom="MACR_CARA_POUTRE",op=macr_cara_poutre_ops,sd_prod=ta
                                  fr="type de conditions aux limites sur le plancher supérieur" ),
             ),
 )
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -19976,7 +21301,7 @@ MACR_ECLA_PG=MACRO(nom="MACR_ECLA_PG",op=macr_ecla_pg_ops,sd_prod=macr_ecla_pg_p
              # SD résultat ,modèle et champs à "éclater" :
              RESU_INIT       =SIMP(statut='o',typ=resultat_sdaster,fr="RESULTAT à éclater",),
              MODELE_INIT     =SIMP(statut='o',typ=modele_sdaster,fr="MODELE à éclater"),
-             NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**'),
+             NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',into=C_NOM_CHAM_INTO('ELGA'),),
 
              # paramètres numériques de la commande :
              SHRINK          =SIMP(statut='f',typ='R',defaut= 0.9, fr="Facteur de réduction" ),
@@ -20004,10 +21329,10 @@ MACR_ECLA_PG=MACRO(nom="MACR_ECLA_PG",op=macr_ecla_pg_ops,sd_prod=macr_ecla_pg_p
              b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
                  PRECISION       =SIMP(statut='o',typ='R',),),
             )
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 28/02/2011   AUTEUR BOTTONI M.BOTTONI 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -20035,7 +21360,7 @@ def macr_ecre_calc_prod(self,TABLE,DEBIT,**args):
 MACR_ECRE_CALC=MACRO(nom="MACR_ECRE_CALC",op=macr_ecre_calc_ops,sd_prod=macr_ecre_calc_prod,reentrant='n',
                      UIinfo={"groupes":("Résolution","Outils-métier",)},fr="Procedure de couplage avec Ecrevisse",
 
-         regles             = (UN_PARMI('LOGICIEL','VERSION'),),
+                     regles = (UN_PARMI('LOGICIEL','VERSION'),),
 
 #      CONCEPTS SORTANT : 2 TABLES POUR LE POST-TRAITEMENT
 #      ********************************************
@@ -20180,16 +21505,16 @@ MACR_ECRE_CALC=MACRO(nom="MACR_ECRE_CALC",op=macr_ecre_calc_ops,sd_prod=macr_ecr
          COURBES            =SIMP(statut='f',typ='TXM',into=("INTERACTIF","POSTSCRIPT","AUCUNE"),defaut="AUCUNE",
                                   fr="Generation eventuelle des courbes" ),
          LOGICIEL           =SIMP(statut='f',typ='TXM',validators=LongStr(1,255),),
-         VERSION            =SIMP(statut='f',typ='TXM',defaut="3.1.2",into = ("3.1.1","3.1.2")),
+         VERSION            =SIMP(statut='f',typ='TXM',into = ("3.1.1","3.1.2","3.2")),
          ENTETE             =SIMP(statut='f',typ='TXM',max='**',defaut="Titre du calcul Ecrevisse" ),
          IMPRESSION         =SIMP(statut='f',typ='TXM',defaut='NON',into=( 'OUI','NON') ),
          INFO               =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
 
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 28/02/2011   AUTEUR BOTTONI M.BOTTONI 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -20221,7 +21546,7 @@ def macr_ecrevisse_prod(self,TABLE,TEMPER,DEBIT,**args):
 MACR_ECREVISSE=MACRO(nom="MACR_ECREVISSE",op=macr_ecrevisse_ops,sd_prod=macr_ecrevisse_prod,reentrant='f',
                        UIinfo={"groupes":("Résolution","Outils-métier",)},fr="Procedure de couplage avec Ecrevisse",
 
-       reuse =SIMP(statut='f',typ='evol_noli'),
+       reuse  = SIMP(statut='f',typ='evol_noli'),
        regles = (EXCLUS('TEMPER','ETAT_INIT'),
                  UN_PARMI('LOGICIEL','VERSION'),),
 
@@ -20408,7 +21733,7 @@ MACR_ECREVISSE=MACRO(nom="MACR_ECREVISSE",op=macr_ecrevisse_ops,sd_prod=macr_ecr
          COURBES            = SIMP(statut='f',typ='TXM',into=("INTERACTIF","POSTSCRIPT","AUCUNE"),defaut="AUCUNE",
                                   fr="Generation eventuelle des courbes" ),
          LOGICIEL           = SIMP(statut='f',typ='TXM',validators=LongStr(1,255),),
-         VERSION            = SIMP(statut='f',typ='TXM',defaut="3.1.2",into = ("3.1.1","3.1.2") ),
+         VERSION            =SIMP(statut='f',typ='TXM',into = ("3.1.1","3.1.2","3.2")),
          ENTETE             = SIMP(statut='f',typ='TXM',max='**',defaut="Titre du calcul Ecrevisse" ),
          IMPRESSION         = SIMP(statut='f',typ='TXM',defaut='NON',into=( 'OUI','NON') ),
          INFO               = SIMP(statut='f',typ='I',defaut="1",into=(1,2) ),
@@ -20572,6 +21897,76 @@ MACR_ELEM_STAT=OPER(nom="MACR_ELEM_STAT",op=86,sd_prod=macr_elem_stat,reentrant=
          ),
 
 )  ;
+#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE GNICOLAS G.NICOLAS
+
+from Macro.macr_fiab_impr_ops import macr_fiab_impr_ops
+
+MACR_FIAB_IMPR=MACRO(nom="MACR_FIAB_IMPR",op=macr_fiab_impr_ops,
+                     docu="U7.04.41",UIinfo={"groupes":("Impression","Outils-métier",)},
+                     fr="Imprimer les valeurs à transmettre au logiciel de fiabilité.",
+                     ang="Print values for the fiability software",
+#
+# 1. Le niveau d'information
+#
+   INFO           = SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
+#
+# 2. Impression de la valeur de la cible
+#
+# 2.1. ==> La table contenant la valeur à imprimer
+#
+   TABLE_CIBLE = SIMP(statut='o',typ=table_sdaster,
+                 fr="Table contenant la valeur cible.",
+                 ang="Table which includes the target value."),
+#
+# 2.2. ==> Le nom du paramètre associé à la valeur cible dans cette table
+#
+   NOM_PARA_CIBLE = SIMP(statut='o',typ='TXM',
+                    fr="Nom du paramètre associé à la valeur cible.",
+                    ang="Name of the parameter connected to the target value."),
+#
+# 3. Impressions des valeurs des éventuels gradients
+#
+   GRADIENTS = FACT(statut='f',min=1,max='**',
+#
+# 3.1. ==> La table contenant la valeur à imprimer
+#
+       TABLE = SIMP(statut='o',typ=table_sdaster,
+                    fr="Table contenant le gradient.",
+                    ang="Table which includes the gradient."),
+#
+# 3.2. ==> Le paramètre sensible
+#
+       PARA_SENSI = SIMP(statut='o',typ=(para_sensi,theta_geom),
+                       fr="Paramètre sensible associé au gradient.",
+                       ang="Sensitivity parameter connected to the gradient."),
+#
+# 3.3. ==> Le nom du paramètre associé au gradient dans cette table
+#
+       NOM_PARA = SIMP(statut='o',typ='TXM',
+                       fr="Nom du paramètre associé au gradient.",
+                       ang="Name of the parameter connected to the gradient."),
+#
+         ),
+#
+);
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -20951,93 +22346,24 @@ MACR_FIABILITE = MACRO ( nom="MACR_FIABILITE",op=macr_fiabilite_ops,
    ),
 #
 );
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 11/05/2011   AUTEUR SELLENET N.SELLENET 
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
-# ======================================================================
-# RESPONSABLE GNICOLAS G.NICOLAS
-
-from Macro.macr_fiab_impr_ops import macr_fiab_impr_ops
-
-MACR_FIAB_IMPR=MACRO(nom="MACR_FIAB_IMPR",op=macr_fiab_impr_ops,
-                     docu="U7.04.41",UIinfo={"groupes":("Impression","Outils-métier",)},
-                     fr="Imprimer les valeurs à transmettre au logiciel de fiabilité.",
-                     ang="Print values for the fiability software",
-#
-# 1. Le niveau d'information
-#
-   INFO           = SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
-#
-# 2. Impression de la valeur de la cible
-#
-# 2.1. ==> La table contenant la valeur à imprimer
-#
-   TABLE_CIBLE = SIMP(statut='o',typ=table_sdaster,
-                 fr="Table contenant la valeur cible.",
-                 ang="Table which includes the target value."),
-#
-# 2.2. ==> Le nom du paramètre associé à la valeur cible dans cette table
-#
-   NOM_PARA_CIBLE = SIMP(statut='o',typ='TXM',
-                    fr="Nom du paramètre associé à la valeur cible.",
-                    ang="Name of the parameter connected to the target value."),
-#
-# 3. Impressions des valeurs des éventuels gradients
-#
-   GRADIENTS = FACT(statut='f',min=1,max='**',
-#
-# 3.1. ==> La table contenant la valeur à imprimer
-#
-       TABLE = SIMP(statut='o',typ=table_sdaster,
-                    fr="Table contenant le gradient.",
-                    ang="Table which includes the gradient."),
-#
-# 3.2. ==> Le paramètre sensible
-#
-       PARA_SENSI = SIMP(statut='o',typ=(para_sensi,theta_geom),
-                       fr="Paramètre sensible associé au gradient.",
-                       ang="Sensitivity parameter connected to the gradient."),
-#
-# 3.3. ==> Le nom du paramètre associé au gradient dans cette table
-#
-       NOM_PARA = SIMP(statut='o',typ='TXM',
-                       fr="Nom du paramètre associé au gradient.",
-                       ang="Name of the parameter connected to the gradient."),
-#
-         ),
-#
-);
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR GNICOLAS G.NICOLAS 
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
-# (AT YOUR OPTION) ANY LATER VERSION.                                 
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 # RESPONSABLE GNICOLAS G.NICOLAS
 
@@ -21054,14 +22380,14 @@ MACR_INFO_MAIL=MACRO(nom="MACR_INFO_MAIL",op=macr_adap_mail_ops,
 #
 # 2. Version de HOMARD
 #
-  VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V9_8",
-                        into=("V9_8", "V9_N", "V9_N_PERSO"),
+  VERSION_HOMARD = SIMP(statut='f',typ='TXM',defaut="V10_1",
+                        into=("V10_1", "V10_N", "V10_N_PERSO"),
                         fr="Version de HOMARD",
                         ang="HOMARD release"),
 #
 # 3. Langue des messages issus de HOMARD
 #
-  LANGUE = SIMP(statut='f',typ='TXM',defaut="FRANCAIS",    
+  LANGUE = SIMP(statut='f',typ='TXM',defaut="FRANCAIS",
                 into=("FRANCAIS","FRENCH","ANGLAIS","ENGLISH",),
                 fr="Langue des messages issus de HOMARD.",
                 ang="Language for HOMARD messages." ),
@@ -21088,7 +22414,7 @@ MACR_INFO_MAIL=MACRO(nom="MACR_INFO_MAIL",op=macr_adap_mail_ops,
 #
                     ) ,
 #
-# 6. Les options ; par defaut, on controle tout
+# 6. Les options ; par defaut, on controle tout, sauf l'interpénétration
 # 6.1. Nombre de noeuds et mailles
 #
   NOMBRE         = SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON"),
@@ -21113,10 +22439,10 @@ MACR_INFO_MAIL=MACRO(nom="MACR_INFO_MAIL",op=macr_adap_mail_ops,
                         fr="Tailles des sous-domaines du maillage.",
                         ang="Sizes of mesh sub-domains." ),
 #
-# 6.5. Controle de la non-interpenetration des elements
+# 6.5. Controle de la non-interpénétration des mailles
 #
   INTERPENETRATION=SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON"),
-                        fr="Controle de la non interpénétration des éléments.",
+                        fr="Controle de la non interpénétration des mailles.",
                         ang="Overlapping checking." ),
 #
 # 6.6. Propriétés du maillage de calcul
@@ -21125,10 +22451,10 @@ MACR_INFO_MAIL=MACRO(nom="MACR_INFO_MAIL",op=macr_adap_mail_ops,
                         fr="Propriétés du maillage de calcul.",
                         ang="Properties of the calculation mesh." ),
 #
-# 7. Unite logique d'un fichier a ajouter a HOMARD.Configuration
+# 7. Unite logique d'un fichier à ajouter a HOMARD.Configuration
 #
-  b_unite = BLOC( condition = " (VERSION_HOMARD == 'V9_N') or \
-                                (VERSION_HOMARD == 'V9_N_PERSO') " ,
+  b_unite = BLOC( condition = " (VERSION_HOMARD == 'V10_N') or \
+                                (VERSION_HOMARD == 'V10_N_PERSO') " ,
                                 fr="Fichier supplementaire.",
                                 ang="Additional file.",
 #
@@ -21146,10 +22472,11 @@ MACR_INFO_MAIL=MACRO(nom="MACR_INFO_MAIL",op=macr_adap_mail_ops,
                              fr="Acceptation de mailles incompatibles avec HOMARD",
                              ang="Incompatible meshes for HOMARD" ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -21193,13 +22520,19 @@ MACR_LIGN_COUPE=MACRO(nom="MACR_LIGN_COUPE",op=macr_lign_coupe_ops,sd_prod=table
 
 # extraction des résultats
          b_meca        =BLOC(condition = "AsType(RESULTAT) in (evol_elas,evol_noli)",fr="résultat mécanique",
-           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut='SIGM_NOEU_DEPL' ),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut='SIGM_NOEU',into=C_NOM_CHAM_INTO(),),
          ),
          b_ther        =BLOC(condition = "AsType(RESULTAT) in (evol_ther,)",fr="résultat thermique",
-           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut='TEMP' ),
-         ),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut='TEMP',into=("TEMP",
+                                 "FLUX_ELGA","FLUX_ELNO","FLUX_NOEU",
+                                 "META_ELNO","META_NOEU",
+                                 "DURT_ELNO","DURT_NOEU",
+                                 "HYDR_ELNO","HYDR_NOEU",
+                                 "DETE_ELNO","DETE_NOEU",
+                                 "SOUR_ELGA","COMPORTHER",
+                                 "ERTH_ELEM","ERTH_ELNO","ERTH_NOEU",),),),
          b_cham       =BLOC(condition = "CHAM_GD!=None",
-           NOM_CHAM        =SIMP(statut='f',typ='TXM',),),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',into=C_NOM_CHAM_INTO(),),),
 
          UNITE_MAILLAGE  =SIMP(statut='f',typ='I',defaut=25),
          MODELE          =SIMP(statut='f',typ=modele_sdaster ),
@@ -21233,7 +22566,7 @@ MACR_LIGN_COUPE=MACRO(nom="MACR_LIGN_COUPE",op=macr_lign_coupe_ops,sd_prod=table
 
 
            b_local        =BLOC(condition = "REPERE=='LOCAL' ",
-             VECT_Y          =SIMP(statut='o',typ='R',min=2,max=3),),
+             VECT_Y          =SIMP(statut='f',typ='R',min=2,max=3),),
 
            b_utili        =BLOC(condition = "REPERE=='UTILISATEUR'",
              ANGL_NAUT       =SIMP(statut='o',typ='R',min=3,max=3),),
@@ -21269,10 +22602,195 @@ MACR_LIGN_COUPE=MACRO(nom="MACR_LIGN_COUPE",op=macr_lign_coupe_ops,sd_prod=table
 )  ;
 
 
+#& MODIF COMMANDE  DATE 28/03/2011   AUTEUR ASSIRE A.ASSIRE 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE ASSIRE A.ASSIRE
+
+from Macro.macr_recal_ops import macr_recal_ops
+
+def macr_recal_prod(self,**args ):
+  return listr8_sdaster
+
+MACR_RECAL = MACRO(nom="MACR_RECAL",op=macr_recal_ops,
+            UIinfo={"groupes":("Résolution","Résultats et champs",)},
+                      sd_prod=macr_recal_prod,
+                      fr="Réalise le recalage des calculs Aster sur des résultats expérimentaux"
+                        +" ou sur d'autres résultats de calculs",
+
+         UNITE_ESCL      =SIMP(statut='o',typ='I'),
+         RESU_EXP        =SIMP(statut='o',typ=assd,max='**'),
+         POIDS           =SIMP(statut='f',typ=assd,max='**'),
+         RESU_CALC       =SIMP(statut='o',typ=assd,max='**'),
+         LIST_PARA       =SIMP(statut='o',typ=assd,max='**'),
+
+         UNITE_RESU      =SIMP(statut='f',typ='I',defaut=91),
+         PARA_DIFF_FINI  =SIMP(statut='f',typ='R',defaut=0.001),
+
+         GRAPHIQUE       =FACT(statut='f',
+             FORMAT          =SIMP(statut='f',typ='TXM',defaut='XMGRACE',into=("XMGRACE","GNUPLOT"),),
+             AFFICHAGE       =SIMP(statut='f',typ='TXM',defaut='TOUTE_ITERATION',into=("TOUTE_ITERATION","ITERATION_FINALE"),),
+             b_pilote = BLOC(condition = "FORMAT == 'XMGRACE'", fr="Mots-clés propres à XMGRACE",
+                 PILOTE          =SIMP(statut='f',typ='TXM',defaut='', 
+                                       into=('','POSTSCRIPT','EPS','MIF','SVG','PNM','PNG','JPEG','PDF','INTERACTIF'),
+                            fr="Pilote de sortie, PNG/JPEG/PDF ne sont pas disponibles sur toutes les installations de xmgrace"),
+                 UNITE           =SIMP(statut='f',typ='I',val_min=10,val_max=90,defaut=29,
+                            fr="Unité logique définissant le fichier (fort.N) dans lequel on écrit"),
+             ),
+         ),
+
+
+         # Methodes d'optimisation
+         # -----------------------
+         METHODE         =SIMP(statut='f',typ='TXM',defaut='LEVENBERG',into=("LEVENBERG", "FMIN", "FMINBFGS", "FMINNCG",
+                                                                             "GENETIQUE","HYBRIDE")),
+
+         b_genetique_options=BLOC(condition = "METHODE == 'GENETIQUE' or METHODE == 'HYBRIDE'" ,
+             NB_PARENTS       =SIMP(statut='f',typ='I',defaut=10),
+             NB_FILS          =SIMP(statut='f',typ='I',defaut=5),
+             ECART_TYPE       =SIMP(statut='f',typ='R',defaut=1.),
+             GRAINE           =SIMP(statut='f',typ='I'),
+             ITER_ALGO_GENE   =SIMP(statut='f',typ='I',defaut=10),
+             RESI_ALGO_GENE   =SIMP(statut='f',typ='R',defaut=1.E-3),
+         ),
+         
+
+         # Criteres d'arret globaux
+         # -------------------------
+         ITER_MAXI       =SIMP(statut='f',typ='I',defaut=10,    fr="Nombre maximum d'iterations d'optimisation"),
+         ITER_FONC_MAXI  =SIMP(statut='f',typ='I',defaut=1000,  fr="Nombre maximum d'evaluations de la focntionnelle"),
+         RESI_GLOB_RELA  =SIMP(statut='f',typ='R',defaut=1.E-3, fr="Critere d'arret sur la valeur du residu"),
+         TOLE_PARA       =SIMP(statut='f',typ='R',defaut=1.E-8, fr="Critere d'arret sur la valeur des parametres"),
+         TOLE_FONC       =SIMP(statut='f',typ='R',defaut=1.E-8, fr="Critere d'arret sur la valeur de la fonctionnelle"),
+
+
+         # Calculs des gradients
+         # ---------------------
+         b_gradient =BLOC(condition = "METHODE == 'FMINBFGS' or METHODE == 'FMINNCG'" ,
+             GRADIENT        =SIMP(statut='f',typ='TXM',defaut='NON_CALCULE', into=("NON_CALCULE", "NORMAL", "ADIMENSIONNE" )),
+         ),
+
+         b_gradient_levenberg =BLOC(condition = "METHODE == 'LEVENBERG'" ,
+             GRADIENT        =SIMP(statut='f',typ='TXM',defaut='NORMAL', into=( "NORMAL", "ADIMENSIONNE" )),
+         ),
+
+
+         # Mode d'evaluation de l'esclave
+         # ------------------------------
+         CALCUL_ESCLAVE       =FACT(statut='d',
+            LANCEMENT         =SIMP(statut='f', typ='TXM', defaut='INCLUSION',into=("DISTRIBUTION","INCLUSION"),),
+
+            b_eval_distrib =BLOC(condition = "LANCEMENT == 'DISTRIBUTION'",
+                UNITE_SUIVI   =SIMP(statut='f', typ='I',val_min=10,val_max=99,defaut=29, 
+                                  fr="Affichage de l'output et/ou error des jobs esclaves dans ce fichier"),
+                MODE          =SIMP(statut='f', typ='TXM',      into=("INTERACTIF","BATCH"),),
+                MEMOIRE       =SIMP(statut='f', typ='I',        fr="Memoire demandee pour les calculs esclaves (Mo)"),
+                TEMPS         =SIMP(statut='f', typ='I',        fr="Temps demandee pour les calculs esclaves (secondes)"),
+                CLASSE        =SIMP(statut='f', typ='TXM',      fr="Classe demandee pour les calculs en batch"),
+                NMAX_SIMULT   =SIMP(statut='f', typ='I',
+                               fr="Nombre de calculs esclaves lances en paralle en mode distribution (non precise = automatique)"),
+            ),
+         ),
+
+         DYNAMIQUE       =FACT(statut='f',
+               MODE_EXP           =SIMP(statut='o',typ='TXM'),
+               MODE_CALC          =SIMP(statut='o',typ='TXM'),
+               APPARIEMENT_MANUEL =SIMP(statut='f',typ='TXM',defaut='NON',into=("OUI","NON")),           
+                               ),
+
+         INFO            =SIMP(statut='f',typ='I',defaut=1, into=( 1, 2 ) ),
+);
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE VOLDOIRE F.VOLDOIRE
+
+from Macro.macr_spectre_ops import macr_spectre_ops
+
+MACR_SPECTRE=MACRO(nom="MACR_SPECTRE",op=macr_spectre_ops,sd_prod=table_sdaster,
+                       reentrant='n',
+                       UIinfo={"groupes":("Post-traitements","Outils-métier",)},
+                       fr="Calcul de spectre, post-traitement de séisme",
+         MAILLAGE      =SIMP(statut='o',typ=maillage_sdaster,),
+         PLANCHER      =FACT(statut='o',max='**',
+            regles=(AU_MOINS_UN('NOEUD','GROUP_NO' ),),
+            NOM           =SIMP(statut='o',typ='TXM',),
+            GROUP_NO      =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+            NOEUD         =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'), ),
+         NOM_CHAM      =SIMP(statut='o',typ='TXM' ,into=('ACCE','DEPL')),
+         CALCUL        =SIMP(statut='o',typ='TXM' ,into=('ABSOLU','RELATIF'),position='global'),
+         b_acce  =BLOC( condition = "NOM_CHAM=='ACCE'",
+           regles=(UN_PARMI('LIST_FREQ','FREQ'),),
+           AMOR_SPEC     =SIMP(statut='o',typ='R',max='**'),
+           LIST_INST     =SIMP(statut='f',typ=listr8_sdaster ),
+           LIST_FREQ     =SIMP(statut='f',typ=listr8_sdaster ),
+           FREQ          =SIMP(statut='f',typ='R',max='**'),
+           NORME         =SIMP(statut='o',typ='R'),  
+           RESU          =FACT(statut='o',max='**',
+                regles=(UN_PARMI('RESU_GENE','RESULTAT'),),
+                RESU_GENE     =SIMP(statut='f',typ=tran_gene),
+                RESULTAT      =SIMP(statut='f',typ=(dyna_trans,evol_noli)),
+                b_calc  =BLOC( condition = "CALCUL=='RELATIF'",
+                   ACCE_X        =SIMP(statut='o',typ=fonction_sdaster),
+                   ACCE_Y        =SIMP(statut='o',typ=fonction_sdaster),
+                   ACCE_Z        =SIMP(statut='o',typ=fonction_sdaster),), ),
+           IMPRESSION    =FACT(statut='f',
+                TRI           =SIMP(statut='f',typ='TXM',defaut='AMOR_SPEC',into=("AMOR_SPEC","DIRECTION",),),
+                FORMAT        =SIMP(statut='f',typ='TXM',defaut='TABLEAU',into=("TABLEAU","XMGRACE",),),
+                UNITE         =SIMP(statut='f',typ='I',val_min=10,val_max=90,defaut=29,
+                                    fr="Unité logique définissant le fichier (fort.N) dans lequel on écrit"),
+                b_pilote = BLOC(condition = "FORMAT == 'XMGRACE'",
+                   PILOTE        =SIMP(statut='f',typ='TXM',defaut='',
+                                 into=('','POSTSCRIPT','EPS','MIF','SVG','PNM','PNG','JPEG','PDF','INTERACTIF'),),),
+                TOUT          =SIMP(statut='f',typ='TXM',defaut='NON',into=("OUI","NON",),),
+                              ),
+         ),
+         b_depl  =BLOC( condition = "NOM_CHAM=='DEPL'",
+           LIST_INST     =SIMP(statut='f',typ=listr8_sdaster),  
+           RESU          =FACT(statut='o',max=3,
+                regles=(UN_PARMI('RESU_GENE','RESULTAT'),),
+                RESU_GENE     =SIMP(statut='f',typ=tran_gene),
+                RESULTAT      =SIMP(statut='f',typ=(dyna_trans,evol_noli)),
+                b_calc  =BLOC( condition = "CALCUL=='ABSOLU'",
+                   DEPL_X        =SIMP(statut='o',typ=fonction_sdaster),
+                   DEPL_Y        =SIMP(statut='o',typ=fonction_sdaster),
+                   DEPL_Z        =SIMP(statut='o',typ=fonction_sdaster),),),
+         ),
+)
+#& MODIF COMMANDE  DATE 02/02/2011   AUTEUR PELLET J.PELLET 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -21318,17 +22836,17 @@ MACRO_ELAS_MULT=MACRO(nom="MACRO_ELAS_MULT",op=macro_elas_mult_ops,sd_prod=macro
            TYPE_MODE       =SIMP(statut='f',typ='TXM',defaut="SYME",into=("SYME","ANTI","TOUS") ),
            CHAR_MECA       =SIMP(statut='f',typ=(char_meca),validators=NoRepeat(),max='**'),
            OPTION          =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',
-                                 into=("EFGE_ELNO_DEPL","EPOT_ELEM_DEPL","SIGM_ELNO_DEPL","SIEF_ELGA_DEPL",
-                                       "SIGM_ELNO_CART","EFGE_ELNO_CART","DEGE_ELNO_DEPL","EPSI_ELNO_DEPL",
-                                       "EPSI_ELGA_DEPL","EPSG_ELNO_DEPL","EPSG_ELGA_DEPL","EPSP_ELNO","EPSP_ELGA",
-                                       "ECIN_ELEM_DEPL","FLUX_ELGA_TEMP","FLUX_ELNO_TEMP","SOUR_ELGA_ELEC",
-                                       "PRES_ELNO_DBEL","PRES_ELNO_REEL","PRES_ELNO_IMAG","INTE_ELNO_ACTI",
-                                       "INTE_ELNO_REAC","SIGM_NOZ1_ELGA","ERZ1_ELEM_SIGM","SIGM_NOZ2_ELGA",
-                                       "ERZ2_ELEM_SIGM","VNOR_ELEM_DEPL","ERRE_ELNO_ELEM",
-                                       "ERRE_ELEM_SIGM","EQUI_ELNO_SIGM","EQUI_ELGA_SIGM","EQUI_ELNO_EPSI",
-                                       "QIRE_ELEM_SIGM","QIRE_ELNO_ELEM","QIZ1_ELEM_SIGM","QIZ2_ELEM_SIGM",
-                                       "EQUI_ELGA_EPSI","FORC_NODA","REAC_NODA","EPSI_NOEU_DEPL","SIGM_NOEU_DEPL",
-                                       "EFGE_NOEU_DEPL","EQUI_NOEU_SIGM","EQUI_NOEU_EPSI","FLUX_NOEU_TEMP") ),
+                                 into=("EFGE_ELNO","EPOT_ELEM","SIGM_ELNO","SIEF_ELGA",
+                                       "SICA_ELNO","EFCA_ELNO","DEGE_ELNO","EPSI_ELNO",
+                                       "EPSI_ELGA","EPSG_ELNO","EPSG_ELGA","EPSP_ELNO","EPSP_ELGA",
+                                       "ECIN_ELEM","FLUX_ELGA","FLUX_ELNO","SOUR_ELGA",
+                                       "PRAC_ELNO","INTE_ELNO",
+                                       "SIZ1_ELGA","ERZ1_ELEM","SIZ2_ELGA",
+                                       "ERZ2_ELEM","VNOR_ELEM_DEPL","ERME_ELNO",
+                                       "ERME_ELEM","SIEQ_ELNO","SIEQ_ELGA","EPEQ_ELNO",
+                                       "QIRE_ELEM","QIRE_ELNO","QIZ1_ELEM","QIZ2_ELEM",
+                                       "EPEQ_ELGA","FORC_NODA","REAC_NODA","EPSI_NOEU","SIGM_NOEU",
+                                       "EFGE_NOEU","SIEQ_NOEU","EPEQ_NOEU","FLUX_NOEU") ),
            NUME_COUCHE     =SIMP(statut='f',typ='I',defaut=1),
            NIVE_COUCHE     =SIMP(statut='f',typ='TXM',defaut="MOY",into=("SUP","INF","MOY")),
            SOUS_TITRE      =SIMP(statut='f',typ='TXM',max='**'),
@@ -21352,10 +22870,10 @@ MACRO_ELAS_MULT=MACRO(nom="MACRO_ELAS_MULT",op=macro_elas_mult_ops,sd_prod=macro
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2)),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 13/01/2011   AUTEUR PELLET J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -21404,7 +22922,7 @@ MACRO_EXPANS=MACRO(nom="MACRO_EXPANS",
                            MODELE          = SIMP(statut='o',typ=(modele_sdaster) ),
                            MESURE          = SIMP(statut='o',typ=(dyna_trans,dyna_harmo,mode_meca,mode_meca_c,) ),
                            NOM_CHAM        = SIMP(statut='f',typ='TXM',defaut="DEPL",
-                                                  into=("DEPL","VITE","ACCE","SIEF_NOEU","EPSI_NOEU_DEPL",) ),
+                                                  into=("DEPL","VITE","ACCE","SIEF_NOEU","EPSI_NOEU",) ),
                            NUME_MODE       = SIMP(statut='f',typ='I',validators=NoRepeat(),max='**',defaut=0),
                            NUME_ORDRE      = SIMP(statut='f',typ='I',validators=NoRepeat(),max='**',defaut=0),
 
@@ -21427,10 +22945,10 @@ MACRO_EXPANS=MACRO(nom="MACRO_EXPANS",
                                         ),
                                              ),
                    )
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/02/2011   AUTEUR TARDIEU N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -21529,7 +23047,7 @@ MACRO_MATR_AJOU=MACRO(nom="MACRO_MATR_AJOU",op=macro_matr_ajou_ops,sd_prod=macro
                RENUM               =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
                ),
              b_simple        =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                ),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1.E-6 ),
              NMAX_ITER       =SIMP(statut='f',typ='I',defaut= 0 ),
@@ -21554,7 +23072,7 @@ MACRO_MATR_AJOU=MACRO(nom="MACRO_MATR_AJOU",op=macro_matr_ajou_ops,sd_prod=macro
                RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
              ),
              b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
              b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'", 
@@ -21569,10 +23087,10 @@ MACRO_MATR_AJOU=MACRO(nom="MACRO_MATR_AJOU",op=macro_matr_ajou_ops,sd_prod=macro
          NOEUD_DOUBLE    =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
          AVEC_MODE_STAT  =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
 )
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 18/01/2011   AUTEUR BOITEAU O.BOITEAU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -21636,8 +23154,9 @@ MACRO_MATR_ASSE=MACRO(nom="MACRO_MATR_ASSE",op=macro_matr_asse_ops,
            RENUM           =SIMP(statut='f',typ='TXM',into=("RCMK","SANS"),defaut="RCMK"  ),
          ),
          b_mumps         =BLOC(condition = "METHODE == 'MUMPS' ",fr="Paramètres de la méthode MUMPS",
-           RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+           RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
            OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+           LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
          ),
          b_gcpc          =BLOC(condition="METHODE=='GCPC'",fr="Paramètres associés à la méthode gradient conjugué",
            RENUM           =SIMP(statut='f',typ='TXM',into=("RCMK","SANS"),defaut="RCMK"  ),
@@ -21894,193 +23413,10 @@ MACRO_PROJ_BASE=MACRO(nom="MACRO_PROJ_BASE",op=macro_proj_base_ops,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 01/03/2011   AUTEUR LEFEBVRE J-P.LEFEBVRE 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
-# ======================================================================
-# RESPONSABLE ASSIRE A.ASSIRE
-
-from Macro.macr_recal_ops import macr_recal_ops
-
-def macr_recal_prod(self,**args ):
-  return listr8_sdaster
-
-MACR_RECAL = MACRO(nom="MACR_RECAL",op=macr_recal_ops,
-            UIinfo={"groupes":("Résolution","Résultats et champs",)},
-                      sd_prod=macr_recal_prod,
-                      fr="Réalise le recalage des calculs Aster sur des résultats expérimentaux"
-                        +" ou sur d'autres résultats de calculs",
-
-         UNITE_ESCL      =SIMP(statut='o',typ='I'),
-         RESU_EXP        =SIMP(statut='o',typ=assd,max='**'),
-         POIDS           =SIMP(statut='f',typ=assd,max='**'),
-         RESU_CALC       =SIMP(statut='o',typ=assd,max='**'),
-         LIST_PARA       =SIMP(statut='o',typ=assd,max='**'),
-
-         UNITE_RESU      =SIMP(statut='f',typ='I',defaut=91),
-         PARA_DIFF_FINI  =SIMP(statut='f',typ='R',defaut=0.001),
-
-         GRAPHIQUE       =FACT(statut='f',
-             FORMAT          =SIMP(statut='f',typ='TXM',defaut='XMGRACE',into=("XMGRACE","GNUPLOT"),),
-             AFFICHAGE       =SIMP(statut='f',typ='TXM',defaut='TOUTE_ITERATION',into=("TOUTE_ITERATION","ITERATION_FINALE"),),
-             b_pilote = BLOC(condition = "FORMAT == 'XMGRACE'", fr="Mots-clés propres à XMGRACE",
-                 PILOTE          =SIMP(statut='f',typ='TXM',defaut='', 
-                                       into=('','POSTSCRIPT','EPS','MIF','SVG','PNM','PNG','JPEG','PDF','INTERACTIF'),
-                            fr="Pilote de sortie, PNG/JPEG/PDF ne sont pas disponibles sur toutes les installations de xmgrace"),
-                 UNITE           =SIMP(statut='f',typ='I',val_min=10,val_max=90,defaut=29,
-                            fr="Unité logique définissant le fichier (fort.N) dans lequel on écrit"),
-             ),
-         ),
-
-
-         # Methodes d'optimisation
-         # -----------------------
-         METHODE         =SIMP(statut='f',typ='TXM',defaut='LEVENBERG',into=("LEVENBERG", "FMIN", "FMINBFGS", "FMINNCG",
-                                                                             "GENETIQUE","HYBRIDE")),
-
-         b_genetique_options=BLOC(condition = "METHODE == 'GENETIQUE' or METHODE == 'HYBRIDE'" ,
-             NB_PARENTS       =SIMP(statut='f',typ='I',defaut=10),
-             NB_FILS          =SIMP(statut='f',typ='I',defaut=5),
-             ECART_TYPE       =SIMP(statut='f',typ='R',defaut=1.),
-             GRAINE           =SIMP(statut='f',typ='I'),
-             ITER_ALGO_GENE   =SIMP(statut='f',typ='I',defaut=10),
-             RESI_ALGO_GENE   =SIMP(statut='f',typ='R',defaut=1.E-3),
-         ),
-         
-
-         # Criteres d'arret globaux
-         # -------------------------
-         ITER_MAXI       =SIMP(statut='f',typ='I',defaut=10,    fr="Nombre maximum d'iterations d'optimisation"),
-         ITER_FONC_MAXI  =SIMP(statut='f',typ='I',defaut=1000,  fr="Nombre maximum d'evaluations de la focntionnelle"),
-         RESI_GLOB_RELA  =SIMP(statut='f',typ='R',defaut=1.E-3, fr="Critere d'arret sur la valeur du residu"),
-         TOLE_PARA       =SIMP(statut='f',typ='R',defaut=1.E-8, fr="Critere d'arret sur la valeur des parametres"),
-         TOLE_FONC       =SIMP(statut='f',typ='R',defaut=1.E-8, fr="Critere d'arret sur la valeur de la fonctionnelle"),
-
-
-         # Calculs des gradients
-         # ---------------------
-         b_gradient =BLOC(condition = "METHODE == 'FMINBFGS' or METHODE == 'FMINNCG'" ,
-             GRADIENT        =SIMP(statut='f',typ='TXM',defaut='NON_CALCULE', into=("NON_CALCULE", "NORMAL", "ADIMENSIONNE" )),
-         ),
-
-         b_gradient_levenberg =BLOC(condition = "METHODE == 'LEVENBERG'" ,
-             GRADIENT        =SIMP(statut='f',typ='TXM',defaut='NORMAL', into=( "NORMAL", "ADIMENSIONNE" )),
-         ),
-
-
-         # Mode d'evaluation de l'esclave
-         # ------------------------------
-         CALCUL_ESCLAVE       =FACT(statut='d',
-            LANCEMENT         =SIMP(statut='f', typ='TXM', defaut='INCLUSION',into=("DISTRIBUTION","INCLUSION"),),
-
-            b_eval_distrib =BLOC(condition = "LANCEMENT == 'DISTRIBUTION'",
-                MODE          =SIMP(statut='f', typ='TXM',      into=("INTERACTIF","BATCH"),),
-                MEMOIRE       =SIMP(statut='f', typ='I',        fr="Memoire demandee pour les calculs esclaves (Mo)"),
-                TEMPS         =SIMP(statut='f', typ='I',        fr="Temps demandee pour les calculs esclaves (secondes)"),
-                CLASSE        =SIMP(statut='f', typ='TXM',      fr="Classe demandee pour les calculs en batch"),
-                NMAX_SIMULT   =SIMP(statut='f', typ='I',
-                               fr="Nombre de calculs esclaves lances en paralle en mode distribution (non precise = automatique)"),
-            ),
-         ),
-
-         DYNAMIQUE       =FACT(statut='f',
-               MODE_EXP           =SIMP(statut='o',typ='TXM'),
-               MODE_CALC          =SIMP(statut='o',typ='TXM'),
-               APPARIEMENT_MANUEL =SIMP(statut='f',typ='TXM',defaut='NON',into=("OUI","NON")),           
-                               ),
-
-         INFO            =SIMP(statut='f',typ='I',defaut=2,into=( 1, 2 ) ),
-);
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
-# ======================================================================
-# RESPONSABLE VOLDOIRE F.VOLDOIRE
-
-from Macro.macr_spectre_ops import macr_spectre_ops
-
-MACR_SPECTRE=MACRO(nom="MACR_SPECTRE",op=macr_spectre_ops,sd_prod=table_sdaster,
-                       reentrant='n',
-                       UIinfo={"groupes":("Post-traitements","Outils-métier",)},
-                       fr="Calcul de spectre, post-traitement de séisme",
-         MAILLAGE      =SIMP(statut='o',typ=maillage_sdaster,),
-         PLANCHER      =FACT(statut='o',max='**',
-            regles=(AU_MOINS_UN('NOEUD','GROUP_NO' ),),
-            NOM           =SIMP(statut='o',typ='TXM',),
-            GROUP_NO      =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-            NOEUD         =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'), ),
-         NOM_CHAM      =SIMP(statut='o',typ='TXM' ,into=('ACCE','DEPL')),
-         CALCUL        =SIMP(statut='o',typ='TXM' ,into=('ABSOLU','RELATIF'),position='global'),
-         b_acce  =BLOC( condition = "NOM_CHAM=='ACCE'",
-           regles=(UN_PARMI('LIST_FREQ','FREQ'),),
-           AMOR_SPEC     =SIMP(statut='o',typ='R',max='**'),
-           LIST_INST     =SIMP(statut='f',typ=listr8_sdaster ),
-           LIST_FREQ     =SIMP(statut='f',typ=listr8_sdaster ),
-           FREQ          =SIMP(statut='f',typ='R',max='**'),
-           NORME         =SIMP(statut='o',typ='R'),  
-           RESU          =FACT(statut='o',max='**',
-                regles=(UN_PARMI('RESU_GENE','RESULTAT'),),
-                RESU_GENE     =SIMP(statut='f',typ=tran_gene),
-                RESULTAT      =SIMP(statut='f',typ=(dyna_trans,evol_noli)),
-                b_calc  =BLOC( condition = "CALCUL=='RELATIF'",
-                   ACCE_X        =SIMP(statut='o',typ=fonction_sdaster),
-                   ACCE_Y        =SIMP(statut='o',typ=fonction_sdaster),
-                   ACCE_Z        =SIMP(statut='o',typ=fonction_sdaster),), ),
-           IMPRESSION    =FACT(statut='f',
-                TRI           =SIMP(statut='f',typ='TXM',defaut='AMOR_SPEC',into=("AMOR_SPEC","DIRECTION",),),
-                FORMAT        =SIMP(statut='f',typ='TXM',defaut='TABLEAU',into=("TABLEAU","XMGRACE",),),
-                UNITE         =SIMP(statut='f',typ='I',val_min=10,val_max=90,defaut=29,
-                                    fr="Unité logique définissant le fichier (fort.N) dans lequel on écrit"),
-                b_pilote = BLOC(condition = "FORMAT == 'XMGRACE'",
-                   PILOTE        =SIMP(statut='f',typ='TXM',defaut='',
-                                 into=('','POSTSCRIPT','EPS','MIF','SVG','PNM','PNG','JPEG','PDF','INTERACTIF'),),),
-                TOUT          =SIMP(statut='f',typ='TXM',defaut='NON',into=("OUI","NON",),),
-                              ),
-         ),
-         b_depl  =BLOC( condition = "NOM_CHAM=='DEPL'",
-           LIST_INST     =SIMP(statut='f',typ=listr8_sdaster),  
-           RESU          =FACT(statut='o',max=3,
-                regles=(UN_PARMI('RESU_GENE','RESULTAT'),),
-                RESU_GENE     =SIMP(statut='f',typ=tran_gene),
-                RESULTAT      =SIMP(statut='f',typ=(dyna_trans,evol_noli)),
-                b_calc  =BLOC( condition = "CALCUL=='ABSOLU'",
-                   DEPL_X        =SIMP(statut='o',typ=fonction_sdaster),
-                   DEPL_Y        =SIMP(statut='o',typ=fonction_sdaster),
-                   DEPL_Z        =SIMP(statut='o',typ=fonction_sdaster),),),
-         ),
-)
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -22096,17 +23432,21 @@ MACR_SPECTRE=MACRO(nom="MACR_SPECTRE",op=macr_spectre_ops,sd_prod=table_sdaster,
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
 # ======================================================================
 # RESPONSABLE LEFEBVRE J.P.LEFEBVRE
+#
 MAJ_CATA=PROC(nom="MAJ_CATA",op=20,
-            UIinfo={"groupes":("Gestion du travail",)},
-              fr="Compilation des catalogues de commandes et d'éléments",
+              UIinfo={"groupes":("Gestion du travail",)},
+              fr="Compilation des catalogues d'éléments et couverture des calculs élémentaires",
+              regles=(UN_PARMI('ELEMENT','TYPE_ELEM', ),),
 
-         ELEMENT         =FACT(statut='f',),
+              ELEMENT     =FACT(statut='f',),
 
-)  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+              UNITE       =SIMP(statut='f',typ='I',defaut=8),       
+              TYPE_ELEM   =FACT(statut='f',),
+);
+#& MODIF COMMANDE  DATE 08/02/2011   AUTEUR TARDIEU N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -22144,7 +23484,7 @@ MECA_STATIQUE=OPER(nom="MECA_STATIQUE",op=46,sd_prod=evol_elas,
          INST            =SIMP(statut='f',typ='R',defaut= 0.E+0 ),
          LIST_INST       =SIMP(statut='f',typ=listr8_sdaster),
          INST_FIN        =SIMP(statut='f',typ='R'),
-         OPTION          =SIMP(statut='f',typ='TXM',into=("SIEF_ELGA_DEPL","SANS"),defaut="SIEF_ELGA_DEPL",max=1,
+         OPTION          =SIMP(statut='f',typ='TXM',into=("SIEF_ELGA","SANS"),defaut="SIEF_ELGA",max=1,
              fr="seule option : contraintes aux points de Gauss. Utiliser CALC_ELEM pour les autres.",
                           ),
          SENSIBILITE     =SIMP(statut='f',typ=(para_sensi,theta_geom),validators=NoRepeat(),max='**',
@@ -22194,7 +23534,7 @@ MECA_STATIQUE=OPER(nom="MECA_STATIQUE",op=46,sd_prod=evol_elas,
                RENUM               =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
                ),
              b_simple        =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                ),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1.E-6 ),
              NMAX_ITER       =SIMP(statut='f',typ='I',defaut= 0 ),
@@ -22204,12 +23544,13 @@ MECA_STATIQUE=OPER(nom="MECA_STATIQUE",op=46,sd_prod=evol_elas,
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=1.0E-6,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              MATR_DISTRIBUEE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              ),
 
            b_petsc          =BLOC(condition = "METHODE == 'PETSC' ",fr="Paramètres de la méthode PETSC",
@@ -22221,7 +23562,7 @@ MECA_STATIQUE=OPER(nom="MECA_STATIQUE",op=46,sd_prod=evol_elas,
                RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
              ),
              b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
              b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'", 
@@ -22291,10 +23632,10 @@ MODE_ITER_CYCL=OPER(nom="MODE_ITER_CYCL",op=  80,sd_prod=mode_cycl,
          ),
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 18/01/2011   AUTEUR BOITEAU O.BOITEAU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -22362,11 +23703,12 @@ MODE_ITER_INV=OPER(nom="MODE_ITER_INV",op=  44,sd_prod=mode_iter_inv_prod
                  TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
                  PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
                  POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-                 RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+                 RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
                  ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
                  PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
                  RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
                  OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+                 LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
                ),
              ),
 
@@ -22403,11 +23745,12 @@ MODE_ITER_INV=OPER(nom="MODE_ITER_INV",op=  44,sd_prod=mode_iter_inv_prod
                  TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
                  PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
                  POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-                 RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+                 RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
                  ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
                  PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
                  RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
                  OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+                 LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
                ),
              ),
              
@@ -22434,10 +23777,10 @@ MODE_ITER_INV=OPER(nom="MODE_ITER_INV",op=  44,sd_prod=mode_iter_inv_prod
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
          TITRE           =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 18/01/2011   AUTEUR BOITEAU O.BOITEAU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -22546,11 +23889,12 @@ MODE_ITER_SIMULT=OPER(nom="MODE_ITER_SIMULT",op=  45,sd_prod=mode_iter_simult_pr
                  TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
                  PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
                  POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-                 RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+                 RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
                  ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
                  PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
                  RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
                  OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+                 LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
                ),
              ),
          ),
@@ -22599,11 +23943,12 @@ MODE_ITER_SIMULT=OPER(nom="MODE_ITER_SIMULT",op=  45,sd_prod=mode_iter_simult_pr
                  TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
                  PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
                  POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-                 RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+                 RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
                  ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
                  PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
                  RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
                  OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+                 LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),               
                ),
              ),
 
@@ -22629,10 +23974,10 @@ MODE_ITER_SIMULT=OPER(nom="MODE_ITER_SIMULT",op=  45,sd_prod=mode_iter_simult_pr
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),        
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/02/2011   AUTEUR TARDIEU N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -22653,7 +23998,6 @@ MODE_STATIQUE=OPER(nom="MODE_STATIQUE",op= 93,sd_prod=mode_meca,
                    fr="Calcul de déformées statiques pour un déplacement, une force ou une accélération unitaire imposé",
                    reentrant='n',
             UIinfo={"groupes":("Résolution","Dynamique",)},
-            
             
          regles=(UN_PARMI('MODE_STAT','FORCE_NODALE','PSEUDO_MODE','MODE_INTERF'),
                  PRESENT_PRESENT('MODE_INTERF','MATR_MASS'),
@@ -22736,11 +24080,12 @@ MODE_STATIQUE=OPER(nom="MODE_STATIQUE",op= 93,sd_prod=mode_meca,
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              ),
 
            b_petsc          =BLOC(condition = "METHODE == 'PETSC' ",fr="Paramètres de la méthode PETSC",
@@ -22752,7 +24097,7 @@ MODE_STATIQUE=OPER(nom="MODE_STATIQUE",op= 93,sd_prod=mode_meca,
                RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
              ),
              b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
              b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'", 
@@ -22770,7 +24115,7 @@ MODE_STATIQUE=OPER(nom="MODE_STATIQUE",op= 93,sd_prod=mode_meca,
                RENUM               =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
                ),
              b_simple        =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                ),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1.E-6 ),
              NMAX_ITER       =SIMP(statut='f',typ='I',defaut= 0 ),
@@ -22816,6 +24161,45 @@ MODI_BASE_MODALE=OPER(nom="MODI_BASE_MODALE",op= 149,sd_prod=mode_meca,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
+#& MODIF COMMANDE  DATE 14/02/2011   AUTEUR GREFFET N.GREFFET 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE GREFFET N.GREFFET
+#
+#  RECUPERATION DES EFFORTS VIA YACS POUR COUPLAGE IFS
+#
+MODI_CHAR_YACS=OPER(nom            = "MODI_CHAR_YACS",
+                   op              = 112,
+                   sd_prod         = char_meca,
+                   reentrant       = 'o',
+                   UIinfo          = {"groupes":("Résultats et champs",)},
+                   fr              = "Reception des forces nodales via YACS lors du couplage de  Code_Aster et Saturne",
+                   CHAR_MECA       = SIMP(statut ='o', typ = char_meca),
+                   MATR_PROJECTION = SIMP(statut ='o', typ = corresp_2_mailla,),
+                   NOM_CMP_IFS     = SIMP(statut ='o', typ = 'TXM',validators = NoRepeat(), max = '**'),
+                   VIS_A_VIS       = FACT(statut ='o', max = '**',
+                                   GROUP_MA_1 = SIMP(statut='o',typ=grma,validators=NoRepeat(),max='**'),
+                                   GROUP_NO_2 = SIMP(statut='o',typ=grno,validators=NoRepeat(),max='**'),),
+                   INST            = SIMP(statut='o',typ='R', ),
+                   PAS             = SIMP(statut='o',typ='R', ),
+                   NUME_ORDRE_YACS = SIMP(statut='o', typ='I',),
+                   INFO            = SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
+);
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -23222,10 +24606,10 @@ NORM_MODE=OPER(nom="NORM_MODE",op=  37,sd_prod=norm_mode_prod,
          TITRE      =SIMP(statut='f',typ='TXM',max='**'),
          INFO       =SIMP(statut='f',typ='I',defaut= 1,into=( 1 , 2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 18/01/2011   AUTEUR BOITEAU O.BOITEAU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -23259,7 +24643,7 @@ NUME_DDL=OPER(nom="NUME_DDL",op=11,sd_prod=nume_ddl_sdaster,reentrant='n',
            RENUM           =SIMP(statut='f',typ='TXM',into=("RCMK","SANS"),defaut="RCMK"  ),
          ),
          b_mumps        =BLOC(condition = "METHODE == 'MUMPS' ",fr="Paramètres de la méthode MUMPS",
-           RENUM         =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+           RENUM        =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
          ),
          b_gcpc          =BLOC(condition="METHODE=='GCPC' or METHODE=='PETSC'",fr="paramètres associés à la GCPC ou PETSc",
            RENUM           =SIMP(statut='f',typ='TXM',into=("RCMK","SANS"),defaut="RCMK"  ),
@@ -23301,10 +24685,10 @@ NUME_DDL_GENE=OPER(nom="NUME_DDL_GENE",op= 127,sd_prod=nume_ddl_gene,
                NB_VECT     =SIMP(statut='f',typ='I',defaut= 9999 ),
                              ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -23344,7 +24728,7 @@ OBSERVATION=MACRO(nom="OBSERVATION",op=observation_ops,
          MODELE_1        =SIMP(statut='o',typ=modele_sdaster),
          MODELE_2        =SIMP(statut='o',typ=modele_sdaster),
          RESULTAT        =SIMP(statut='o',typ=(mode_meca,evol_elas,dyna_harmo,dyna_trans,) ),
-         NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=1),
+         NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',into=C_NOM_CHAM_INTO(),),
 
 #        ------------------------------------------------------------------
 
@@ -23375,7 +24759,8 @@ OBSERVATION=MACRO(nom="OBSERVATION",op=observation_ops,
 #                fr="Si le résultat est un mode_xxx ou une base_xxx, on peut prolonger"
 #                   +" les champs par zéro la ou la projection ne donne pas de valeurs."),
 
-         NUME_DDL        =SIMP(statut='f',typ=(nume_ddl_sdaster) ),
+         MATR_A          =SIMP(statut='f',typ=(matr_asse_depl_r) ),
+         MATR_B          =SIMP(statut='f',typ=(matr_asse_depl_r) ),
          VIS_A_VIS       =FACT(statut='f',max='**',
              regles=(AU_MOINS_UN('TOUT_1','GROUP_MA_1','MAILLE_1','GROUP_NO_1','NOEUD_1'),
                      AU_MOINS_UN('TOUT_2','GROUP_MA_2','MAILLE_2','GROUP_NO_2','NOEUD_2'),),
@@ -23459,6 +24844,8 @@ OBSERVATION=MACRO(nom="OBSERVATION",op=observation_ops,
            MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
            NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
            TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+           NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),into=C_NOM_CHAM_INTO(),),
+
 #
            DDL_ACTIF       =SIMP(statut='f',typ='TXM',max=6),
 # TODO : mettre en place le systeme de masques
@@ -23469,10 +24856,10 @@ OBSERVATION=MACRO(nom="OBSERVATION",op=observation_ops,
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
       )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 23/02/2011   AUTEUR BARGELLI R.BARGELLINI 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2010  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -23504,6 +24891,8 @@ POST_BORDET =MACRO(nom="POST_BORDET", op=post_bordet_ops,sd_prod=table_sdaster,
          GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**',
                            fr="le calcul ne sera effectué que sur ces mailles"),
          INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**'),
+         PRECISION =SIMP(statut='f',typ='R',validators=NoRepeat(),val_min=0.,val_max=1E-3,defaut=1E-6),
+         CRITERE   =SIMP(statut='f',typ='TXM',defaut="ABSOLU",into=("RELATIF","ABSOLU") ),
          NUME_ORDRE      =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
          PROBA_NUCL      =SIMP(statut='f',typ='TXM',into=("NON","OUI"), defaut="NON",
                       fr="prise en compte du facteur exponentiel"),
@@ -23530,8 +24919,6 @@ POST_BORDET =MACRO(nom="POST_BORDET", op=post_bordet_ops,sd_prod=table_sdaster,
                                   
          RESULTAT        =SIMP(statut='o',typ=resultat_sdaster,
                                       fr="Resultat d'une commande globale STAT_NON_LINE"),
-         MODELE          =SIMP(statut='o',typ=modele_sdaster),
-         CHAM_MATER      =SIMP(statut='o',typ=cham_mater),
          TEMP            =SIMP(statut='o',typ=(fonction_sdaster,'R')),
          COEF_MULT       =SIMP(statut='f',typ='R', defaut=1.),                   
            )
@@ -23739,10 +25126,10 @@ POST_DYNA_MODA_T=OPER(nom="POST_DYNA_MODA_T",op= 130,sd_prod=table_sdaster,
          INFO            =SIMP(statut='f',typ='I',defaut= 1,into=(1,2) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 22/02/2011   AUTEUR TARDIEU N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -23764,7 +25151,7 @@ POST_ELEM=OPER(nom="POST_ELEM",op=107,sd_prod=table_sdaster,reentrant='n',
 
          regles=(UN_PARMI('MASS_INER', 'ENER_POT', 'ENER_CIN','TRAV_EXT','MINMAX',
                           'WEIBULL', 'RICE_TRACEY', 'CARA_GEOM','CHAR_LIMITE',
-                          'CARA_POUTRE', 'INDIC_ENER', 'INDIC_SEUIL',
+                          'CARA_POUTRE', 'INDIC_ENER', 'INDIC_SEUIL','VOLUMOGRAMME',
                           'AIRE_INTERNE','ENER_ELAS','ENER_TOTALE','ENER_DISS','INTEGRALE'),
                 ),
 
@@ -23995,6 +25382,36 @@ POST_ELEM=OPER(nom="POST_ELEM",op=107,sd_prod=table_sdaster,reentrant='n',
                        regles=(UN_PARMI('CHAM_GD','RESULTAT'),
                                EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST','LIST_ORDRE','LIST_INST'),),
                        MODELE         = SIMP(statut='f',typ=modele_sdaster),
+                       CHAM_MATER     = SIMP(statut='f',typ=cham_mater),
+                       RESULTAT       = SIMP(statut='f',typ=(evol_noli,evol_ther,evol_elas,evol_char) ),
+                       CHAM_GD        = SIMP(statut='f',typ=(cham_no_sdaster,cham_elem) ),
+                       CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU",),),
+                       b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+                          PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
+                       b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+                          PRECISION       =SIMP(statut='o',typ='R',),),
+                       TOUT_ORDRE     = SIMP(statut='f',typ='TXM',into=("OUI",) ),
+                       NUME_ORDRE     = SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),
+                       LIST_ORDRE     = SIMP(statut='f',typ=listis_sdaster),
+                       INST           = SIMP(statut='f',typ='R',validators=NoRepeat(),max='**'),
+                       LIST_INST      = SIMP(statut='f',typ=listr8_sdaster),
+         ),
+
+         VOLUMOGRAMME  = FACT(statut='f',max='**',
+                               regles=(AU_MOINS_UN('TOUT','GROUP_MA'),),
+                               TOUT         = SIMP(statut='f',typ='TXM',into=("OUI",) ),
+                               GROUP_MA     = SIMP(statut='f',typ=grma,max=1),
+                               TYPE_MAILLE  = SIMP(statut='f',typ='TXM',into=('2D','3D',)),
+                               NOM_CHAM     = SIMP(statut='f',typ='TXM',into=C_NOM_CHAM_INTO()),
+                               NOM_CMP      = SIMP(statut='o',typ='TXM'),
+                               NB_INTERV    = SIMP(statut='f',typ='I',defaut=5),
+                              ),
+         b_volumogramme = BLOC(condition = "( VOLUMOGRAMME != None )",
+                       fr="calcul de la distribution du volume d'une structure vis-à-vis d'une composante",
+                       regles=(UN_PARMI('CHAM_GD','RESULTAT'),
+                               EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST','LIST_ORDRE','LIST_INST'),),
+                       MODELE         = SIMP(statut='f',typ=modele_sdaster),
+                       CHAM_MATER     = SIMP(statut='f',typ=cham_mater),
                        RESULTAT       = SIMP(statut='f',typ=(evol_noli,evol_ther,evol_elas,evol_char) ),
                        CHAM_GD        = SIMP(statut='f',typ=(cham_no_sdaster,cham_elem) ),
                        CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU",),),
@@ -24452,10 +25869,10 @@ POST_FATIGUE=OPER(nom="POST_FATIGUE",op=136,sd_prod=table_sdaster,reentrant='n',
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -24491,8 +25908,7 @@ POST_GP=MACRO(nom="POST_GP", op=post_gp_ops, sd_prod=post_gp_prod,
               reentrant='n',
               UIinfo={"groupes":("Post-traitements","Rupture",)},
               regles=(UN_PARMI('IDENTIFICATION', 'PREDICTION'),
-                      UN_PARMI('THETA_2D','THETA_3D'),
-                      PRESENT_PRESENT('THETA_2D','DIRECTION'),),
+                      UN_PARMI('THETA_2D','THETA_3D'),),
       
       # Résultat, modèle, comportement, chargement
       RESULTAT     = SIMP(statut='o',typ=(evol_elas,evol_noli,dyna_trans,mode_meca),),
@@ -24500,12 +25916,10 @@ POST_GP=MACRO(nom="POST_GP", op=post_gp_ops, sd_prod=post_gp_prod,
       MODELE       = SIMP(statut='o',typ=modele_sdaster),
       MATER        = SIMP(statut='o',typ=mater_sdaster),
       
-      COMP_ELAS    = FACT(statut='o',
-            RELATION    = SIMP(statut='f',typ='TXM',defaut="ELAS",
-                            into=("ELAS","ELAS_VMIS_LINE","ELAS_VMIS_TRAC"),),
-           DEFORMATION     =SIMP(statut='f',typ='TXM',defaut="PETIT" ,into=("PETIT","GROT_GDEP",) ),
-      ),
+      COMP_ELAS    = C_COMP_ELAS('POST_GP'),
       
+      LIST_INST    = SIMP(statut='o',typ=listr8_sdaster),
+
       TYPE_DEF = SIMP(statut='f',typ='TXM', defaut="PETIT", into=("PETIT","GRAND")),
       EXCIT        = FACT(statut='f', max='**',
             CHARGE      = SIMP(statut='o', typ=(char_meca,char_cine_meca)),
@@ -24514,8 +25928,8 @@ POST_GP=MACRO(nom="POST_GP", op=post_gp_ops, sd_prod=post_gp_prod,
       ),
       SYME_CHAR    = SIMP(statut='f',typ='TXM',defaut="SANS",into=("SYME","ANTI","SANS")),
       
-      
-      DIRECTION    = SIMP(statut='f', typ='R', max=3),
+      b_direction     =BLOC(condition = "(THETA_2D != None) ",
+          DIRECTION    = SIMP(statut='o', typ='R', max=3),),
       
       THETA_2D     = FACT(statut='f', max='**',
                           fr="paramètres de définition des champs theta",
@@ -24574,15 +25988,12 @@ POST_GP=MACRO(nom="POST_GP", op=post_gp_ops, sd_prod=post_gp_prod,
       # table résultat
       TABL_GPMAX    = SIMP(statut='o', typ=CO,),
       TABL_GP       = SIMP(statut='f', typ=CO,),
-      b_tabl_gp=BLOC(condition="(TABL_GP != None)",
-             INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
-             LIST_INST  = SIMP(statut='f',typ=listr8_sdaster),),
       INFO         = SIMP(statut='f', typ='I', defaut=1, into=(1, 2),),
 )
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 14/03/2011   AUTEUR GENIAUT S.GENIAUT 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -24614,16 +26025,31 @@ POST_K1_K2_K3=MACRO(nom="POST_K1_K2_K3",op=post_k1_k2_k3_ops,sd_prod=table_sdast
                    ),
 
          MODELISATION  =SIMP(statut='o',typ='TXM',
-                             into=("3D","AXIS","D_PLAN","C_PLAN"),
+                             into=("3D","AXIS","D_PLAN","C_PLAN"),position='global',
                              fr="Modélisation cohérente avec celle utilisée pour le calcul des déplacements"),
          FOND_FISS     =SIMP(statut='f',typ=fond_fiss),
          FISSURE       =SIMP(statut='f',typ=fiss_xfem),
          NB_NOEUD_COUPE=SIMP(statut='f',typ='I',defaut=5,val_min = 3),
+         SYME_CHAR       =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SYME","SANS")),
 
 #        bloc correspondant a la donnee du fond de fissure pour les fissures maillees
-         b_fond_fiss   =BLOC (condition="(FOND_FISS!= None)",
+         b_fond_fiss_res   =BLOC (condition="((FOND_FISS!= None)and(RESULTAT!= None))",
+                         
+              b_ref_3d     =BLOC (condition="MODELISATION=='3D'",
+                                  TYPE_MAILLAGE = SIMP(statut='f',typ='TXM',into=("LIBRE","REGLE"),defaut="REGLE"),
+                                ),
+                         
+                         NOEUD         = SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+                         GROUP_NO      = SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+                         SANS_NOEUD    = SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+                         SANS_GROUP_NO = SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+                         TOUT          = SIMP(statut='f',typ='TXM',into=("OUI",) ),
+                         EVOL_THER     = SIMP(statut='f',typ=(evol_ther),fr="Température sur le fond de fissure")
+                         ),
+
+         b_fond_fiss_tab   =BLOC (condition="((FOND_FISS!= None)and(TABL_DEPL_SUP!= None)and(RESULTAT== None))",
+
                          MAILLAGE      = SIMP(statut='o',typ=maillage_sdaster),
-                         TYPE_MAILLAGE = SIMP(statut='f',typ='TXM',into=("LIBRE","REGLE"),defaut="REGLE"),
                          NOEUD         = SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
                          GROUP_NO      = SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
                          SANS_NOEUD    = SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
@@ -24632,13 +26058,21 @@ POST_K1_K2_K3=MACRO(nom="POST_K1_K2_K3",op=post_k1_k2_k3_ops,sd_prod=table_sdast
                          EVOL_THER     = SIMP(statut='f',typ=(evol_ther),fr="Température sur le fond de fissure")
                          ),
 #        bloc correspondant a la donnee de la fissure pour les fissures X-FEM
-         b_fissure     =BLOC (condition="(FISSURE!= None)",
+         b_fissure_res     =BLOC (condition="((FISSURE!= None)and(RESULTAT!= None))",
+                         NB_POINT_FOND = SIMP(statut='f',typ='I' ,),
+                         NUME_FOND     = SIMP(statut='f',typ='I',defaut=1),
+                         DTAN_ORIG     = SIMP(statut='f',typ='R',max='**'),
+                         DTAN_EXTR     = SIMP(statut='f',typ='R',max='**'),
+                         ),
+
+         b_fissure_tab     =BLOC (condition="((FISSURE!= None)and(TABL_DEPL_SUP!= None)and(RESULTAT== None))",
                          MAILLAGE      = SIMP(statut='o',typ=maillage_sdaster),
                          NB_POINT_FOND = SIMP(statut='f',typ='I' ,),
                          NUME_FOND     = SIMP(statut='f',typ='I',defaut=1),
                          DTAN_ORIG     = SIMP(statut='f',typ='R',max='**'),
                          DTAN_EXTR     = SIMP(statut='f',typ='R',max='**'),
                          ),
+
          MATER         =SIMP(statut='o',typ=mater_sdaster,
                              fr="Matériau homogène et isotrope cohérent avec celui utilisé pour le calcul des déplacements"),
          RESULTAT      =SIMP(statut='f',typ=(evol_elas,evol_noli),
@@ -24662,7 +26096,6 @@ POST_K1_K2_K3=MACRO(nom="POST_K1_K2_K3",op=post_k1_k2_k3_ops,sd_prod=table_sdast
                b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
                    PRECISION       =SIMP(statut='o',typ='R',),),
              ),
-         SYME_CHAR       =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SYME","SANS") ),
          INFO          =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
          VECT_K1       =SIMP(statut='f',typ='R',max=3,min=3,
                              fr="Vecteur normal au plan de fissure, orienté de la lèvre inférieure vers la lèvre supérieure"),  
@@ -24809,10 +26242,10 @@ POST_MAIL_XFEM=OPER(nom="POST_MAIL_XFEM",op= 187,sd_prod=maillage_sdaster,
     INFO           =SIMP(statut='f',typ='I',defaut= 1,into=(1,2,) ),
 
 );                     
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 02/02/2011   AUTEUR PELLET J.PELLET 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -25011,7 +26444,7 @@ POST_RCCM=OPER(nom="POST_RCCM",op= 165,sd_prod=table_sdaster,
            b_extrac        =BLOC(condition="RESULTAT != None",
                                  fr="extraction d un champ de grandeur",
              regles=(UN_PARMI('TOUT_ORDRE','NUME_ORDRE','INST','NOEUD_CMP'),),
-             NOM_CHAM        =SIMP(statut='o',typ='TXM',into=("EFGE_ELNO_DEPL","SIEF_ELNO_ELGA"),),
+             NOM_CHAM        =SIMP(statut='o',typ='TXM',into=("EFGE_ELNO","SIEF_ELNO"),),
              TOUT_ORDRE      =SIMP(statut='f',typ='TXM',into=("OUI",) ),
              NUME_ORDRE      =SIMP(statut='f',typ='I',),
              INST            =SIMP(statut='f',typ='R',),
@@ -25088,10 +26521,10 @@ POST_RCCM=OPER(nom="POST_RCCM",op= 165,sd_prod=table_sdaster,
                                ),
                ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 # ======================================================================
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -25165,7 +26598,7 @@ POST_RELEVE_T=OPER(nom="POST_RELEVE_T",op=51,sd_prod=table_sdaster,reentrant='f'
            b_extrac        =BLOC(condition = "RESULTAT != None",fr="extraction des résultats",
                                  regles=(EXCLUS('TOUT_ORDRE','NUME_ORDRE','LIST_ORDRE','NUME_MODE','LIST_MODE',         
                                                 'INST','LIST_INST','FREQ','LIST_FREQ','NOEUD_CMP','NOM_CAS'), ),           
-             NOM_CHAM        =SIMP(statut='o',typ='TXM' ),  
+             NOM_CHAM        =SIMP(statut='o',typ='TXM',into=C_NOM_CHAM_INTO(),),  
              TOUT_ORDRE      =SIMP(statut='f',typ='TXM',into=("OUI",) ),
              NUME_ORDRE      =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**'),  
              LIST_ORDRE      =SIMP(statut='f',typ=listis_sdaster),
@@ -25378,10 +26811,10 @@ POST_USURE=OPER(nom="POST_USURE",op=153,sd_prod=table_sdaster,reentrant='f',
          INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 03/01/2011   AUTEUR COURTOIS M.COURTOIS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -25483,6 +26916,7 @@ POURSUITE=MACRO(nom="POURSUITE",op=ops.build_poursuite,repetable='n',
 
          IGNORE_ALARM = SIMP(statut='f', typ='TXM', max='**', fr="Alarmes que l'utilisateur souhaite délibérément ignorer"),
 
+         INFO     = SIMP(statut='f', typ='I', defaut=1, into=(1,2),),
 )  ;
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -25590,10 +27024,10 @@ PROD_MATR_CHAM=OPER(nom="PROD_MATR_CHAM",op= 156,sd_prod=cham_no_sdaster,
          CHAM_NO         =SIMP(statut='o',typ=cham_no_sdaster),
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -25610,27 +27044,40 @@ PROD_MATR_CHAM=OPER(nom="PROD_MATR_CHAM",op= 156,sd_prod=cham_no_sdaster,
 # ======================================================================
 # RESPONSABLE PELLET J.PELLET
 def proj_champ_prod(RESULTAT=None,CHAM_GD=None,**args ):
-    if AsType(RESULTAT) != None : return AsType(RESULTAT)
-    if AsType(CHAM_GD)  != None : return AsType(CHAM_GD)
+    if (RESULTAT == None and CHAM_GD == None) : return corresp_2_mailla
+    if  RESULTAT != None                      : return AsType(RESULTAT)
+    if  CHAM_GD  != None                      : return AsType(CHAM_GD)
     raise AsException("type de concept resultat non prevu")
 
 
 
 
 PROJ_CHAMP=OPER(nom="PROJ_CHAMP",op= 166,sd_prod=proj_champ_prod,reentrant='f',
-            UIinfo={"groupes":("Résultats et champs",)},
-                fr="Projeter des champs d'un maillage sur un autre",
+        UIinfo={"groupes":("Résultats et champs",)},
+            fr="Projeter des champs d'un maillage sur un autre",
+
+     # faut-il projeter les champs ?
+     PROJECTION      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON",),),
+
+     # pour projeter avec une sd_corresp_2_mailla deja calculée :
+     MATR_PROJECTION   =SIMP(statut='f',typ=corresp_2_mailla,),
 
 
-         METHODE         =SIMP(statut='f',typ='TXM',defaut="AUTO",
-                               into=("NUAGE_DEG_0","NUAGE_DEG_1","AUTO","COLOCATION","ECLA_PG",) ),
 
+     #-----------------------------------------------------------------------------------------------------------
+     # 1er cas : on fait tout d'un coup : creation de la sd_corresp_2_mailla + projection des champs
+     #-----------------------------------------------------------------------------------------------
+     b_1_et_2   =BLOC(condition= "PROJECTION == 'OUI' and MATR_PROJECTION == None",
          regles=(UN_PARMI('RESULTAT','CHAM_GD'),
                  UN_PARMI('MODELE_1','MAILLAGE_1'),
                  UN_PARMI('MODELE_2','MAILLAGE_2'),
                  ),
          RESULTAT        =SIMP(statut='f',typ=resultat_sdaster),
          CHAM_GD         =SIMP(statut='f',typ=(cham_no_sdaster,cham_elem)),
+
+         METHODE         =SIMP(statut='f',typ='TXM',defaut="AUTO",
+                               into=("NUAGE_DEG_0","NUAGE_DEG_1","AUTO","COLLOCATION","ECLA_PG",) ),
+
 
          MODELE_1        =SIMP(statut='f',typ=modele_sdaster),
          MAILLAGE_1      =SIMP(statut='f',typ=maillage_sdaster),
@@ -25645,9 +27092,9 @@ PROJ_CHAMP=OPER(nom="PROJ_CHAMP",op= 166,sd_prod=proj_champ_prod,reentrant='f',
          ),
 
 
-         # Cas de la projection COLOCATION :
+         # Cas de la projection COLLOCATION :
          #--------------------------------------------
-         b_elem          =BLOC(condition="METHODE in ('COLOCATION','ECLA_PG','AUTO')",
+         b_elem          =BLOC(condition="METHODE in ('COLLOCATION','ECLA_PG','AUTO')",
              CAS_FIGURE      =SIMP(statut='f',typ='TXM',into=("2D","3D","2.5D","1.5D",),
                   fr="Pour indiquer au programme le type de projection souhaité"),
              DISTANCE_MAX    =SIMP(statut='f',typ='R',
@@ -25670,6 +27117,157 @@ PROJ_CHAMP=OPER(nom="PROJ_CHAMP",op= 166,sd_prod=proj_champ_prod,reentrant='f',
          ),
 
 
+         # Cas de la projection d'une sd_resultat :
+         #--------------------------------------------
+         b_resultat      =BLOC(condition="RESULTAT != None",
+           regles=(EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST','FREQ','LIST_INST','LIST_FREQ','LIST_ORDRE'),
+                   EXCLUS('TOUT_CHAM','NOM_CHAM',),
+                   CONCEPT_SENSIBLE('SEPARE'),
+                   REUSE_SENSIBLE(),
+                   DERIVABLE('RESULTAT'),),
+           SENSIBILITE     =SIMP(statut='f',typ=(para_sensi,theta_geom),validators=NoRepeat(),max='**',
+                               fr="Liste des paramétres de sensibilité.",
+                               ang="List of sensitivity parameters",),
+
+           NOM_PARA        =SIMP(statut='f',typ='TXM', max='**'),
+           TOUT_CHAM       =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',into=C_NOM_CHAM_INTO(),),
+
+           NUME_DDL        =SIMP(statut='f',typ=(nume_ddl_sdaster),
+                fr="Utile en dynamique pour pouvoir imoser la numérotation des cham_no."),
+
+           TOUT_ORDRE      =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+           NUME_ORDRE      =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**' ),
+           LIST_ORDRE      =SIMP(statut='f',typ=listis_sdaster),
+           INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
+           LIST_INST       =SIMP(statut='f',typ=listr8_sdaster),
+           FREQ            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
+           LIST_FREQ       =SIMP(statut='f',typ=listr8_sdaster),
+           NUME_MODE       =SIMP(statut='f',typ='I',validators=NoRepeat(),max='**' ),
+           NOEUD_CMP       =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**'),
+
+           b_acce_reel     =BLOC(condition="(FREQ != None)or(LIST_FREQ != None)or(INST != None)or(LIST_INST != None)",
+              CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU",),),
+              b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+                   PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
+              b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+                   PRECISION       =SIMP(statut='o',typ='R',),),
+           ),
+         ),
+
+
+         VIS_A_VIS       =FACT(statut='f',max='**',
+           regles=(AU_MOINS_UN('TOUT_1','GROUP_MA_1','MAILLE_1','GROUP_NO_1','NOEUD_1'),
+                   AU_MOINS_UN('TOUT_2','GROUP_MA_2','MAILLE_2','GROUP_NO_2','NOEUD_2'),),
+           TOUT_1          =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+           GROUP_MA_1      =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
+           MAILLE_1        =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
+           GROUP_NO_1      =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+           NOEUD_1         =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+           TOUT_2          =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+           GROUP_MA_2      =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
+           MAILLE_2        =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
+           GROUP_NO_2      =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+           NOEUD_2         =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+
+           # les mots clés suivants ne sont actifs que si METHODE='COLLOCATION' mais on ne peut pas le vérifier:
+               CAS_FIGURE      =SIMP(statut='f',typ='TXM',into=("2D","3D","2.5D","1.5D",) ),
+               TRANSF_GEOM_1   =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),min=2,max=3,
+                    fr="2 (ou 3) fonctions fx,fy,fz définissant la transformation géométrique à appliquer"+
+                       " aux noeuds du MODELE_1 avant la projection."),
+               TRANSF_GEOM_2   =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),min=2,max=3,
+                    fr="2 (ou 3) fonctions fx,fy,fz définissant la transformation géométrique à appliquer"+
+                       " aux noeuds du MODELE_2 avant la projection."),
+         ),
+     ), # fin bloc b_1_et_2
+
+
+
+     #-----------------------------------------------------------------------------------------------------------
+     # 2eme cas : on s'arrete apres la creation de la sd_corresp_2_mailla
+     #-----------------------------------------------------------------------------------------------
+     b_1   =BLOC(condition="PROJECTION == 'NON'",
+
+         METHODE         =SIMP(statut='f',typ='TXM',defaut="COLLOCATION",
+                               into=("COLLOCATION","COUPLAGE",) ),
+
+         regles=(UN_PARMI('MODELE_1','MAILLAGE_1'),
+                 UN_PARMI('MODELE_2','MAILLAGE_2'),
+                 ),
+         MODELE_1        =SIMP(statut='f',typ=modele_sdaster),
+         MAILLAGE_1      =SIMP(statut='f',typ=maillage_sdaster),
+
+         MODELE_2        =SIMP(statut='f',typ=modele_sdaster),
+         MAILLAGE_2      =SIMP(statut='f',typ=maillage_sdaster),
+
+
+         # Cas de la projection COLLOCATION :
+         #--------------------------------------------
+         b_elem          =BLOC(condition="METHODE in ('COLLOCATION',)",
+             CAS_FIGURE      =SIMP(statut='f',typ='TXM',into=("2D","3D","2.5D","1.5D",),
+                  fr="Pour indiquer au programme le type de projection souhaité"),
+             DISTANCE_MAX    =SIMP(statut='f',typ='R',
+                  fr="Distance maximale entre le noeud et l'élément le plus proche, lorsque le noeud n'est dans aucun élément."),
+
+             TRANSF_GEOM_1   =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),min=2,max=3,
+                  fr="2 (ou 3) fonctions fx,fy,fz définissant la transformation géométrique à appliquer"+
+                     " aux noeuds du MODELE_1 avant la projection."),
+             TRANSF_GEOM_2   =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),min=2,max=3,
+                  fr="2 (ou 3) fonctions fx,fy,fz définissant la transformation géométrique à appliquer"+
+                     " aux noeuds du MODELE_2 avant la projection."),
+
+             ALARME          =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
+
+         ),
+
+         VIS_A_VIS       =FACT(statut='f',max='**',
+           regles=(AU_MOINS_UN('TOUT_1','GROUP_MA_1','MAILLE_1','GROUP_NO_1','NOEUD_1'),
+                   AU_MOINS_UN('TOUT_2','GROUP_MA_2','MAILLE_2','GROUP_NO_2','NOEUD_2'),),
+           TOUT_1          =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+           GROUP_MA_1      =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
+           MAILLE_1        =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
+           GROUP_NO_1      =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+           NOEUD_1         =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+           TOUT_2          =SIMP(statut='f',typ='TXM',into=("OUI",) ),
+           GROUP_MA_2      =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
+           MAILLE_2        =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
+           GROUP_NO_2      =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
+           NOEUD_2         =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
+
+           # les mots clés suivants ne sont actifs que si METHODE='COLLOCATION' mais on ne peut pas le vérifier:
+               CAS_FIGURE      =SIMP(statut='f',typ='TXM',into=("2D","3D","2.5D","1.5D",) ),
+               TRANSF_GEOM_1   =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),min=2,max=3,
+                    fr="2 (ou 3) fonctions fx,fy,fz définissant la transformation géométrique à appliquer"+
+                       " aux noeuds du MODELE_1 avant la projection."),
+               TRANSF_GEOM_2   =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),min=2,max=3,
+                    fr="2 (ou 3) fonctions fx,fy,fz définissant la transformation géométrique à appliquer"+
+                       " aux noeuds du MODELE_2 avant la projection."),
+         ),
+     ), # fin bloc b_1
+
+
+
+     #-----------------------------------------------------------------------------------------------------------
+     # 3eme cas : on projette les champs avec une sd_corresp_2_mailla déjé calculée
+     #-----------------------------------------------------------------------------------------------
+     b_2   =BLOC(condition="MATR_PROJECTION != None",
+         regles=(UN_PARMI('RESULTAT','CHAM_GD'),),
+         RESULTAT        =SIMP(statut='f',typ=resultat_sdaster),
+         CHAM_GD         =SIMP(statut='f',typ=(cham_no_sdaster,cham_elem)),
+
+         TYPE_CHAM       =SIMP(statut='f',typ='TXM',into=("NOEU",),
+              fr="Pour forcer le type des champs projetés. NOEU -> cham_no"),
+
+         NUME_DDL        =SIMP(statut='f',typ=(nume_ddl_sdaster),
+              fr="Parfois utile en dynamique pour pouvoir imposer la numérotation des cham_no."),
+
+         # nécessaire si l'on projette des cham_elem :
+         MODELE_2        =SIMP(statut='f',typ=modele_sdaster),
+
+         PROL_ZERO       =SIMP(statut='f',typ='TXM',into=("OUI","NON"),defaut="NON",
+              fr="Pour prolonger les champs par zéro là où la projection ne donne pas de valeurs."),
+
+
 
          # Cas de la projection d'une sd_resultat :
          #--------------------------------------------
@@ -25680,15 +27278,12 @@ PROJ_CHAMP=OPER(nom="PROJ_CHAMP",op= 166,sd_prod=proj_champ_prod,reentrant='f',
                    REUSE_SENSIBLE(),
                    DERIVABLE('RESULTAT'),),
            SENSIBILITE     =SIMP(statut='f',typ=(para_sensi,theta_geom),validators=NoRepeat(),max='**',
-                               fr="Liste des paramètres de sensibilité.",
+                               fr="Liste des paramétres de sensibilité.",
                                ang="List of sensitivity parameters",),
 
            NOM_PARA        =SIMP(statut='f',typ='TXM', max='**'),
            TOUT_CHAM       =SIMP(statut='f',typ='TXM',into=("OUI",) ),
-           NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**'),
-
-           NUME_DDL        =SIMP(statut='f',typ=(nume_ddl_sdaster),
-                fr="Utile en dynamique pour pouvoir imoser la numérotation des cham_no."),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',into=C_NOM_CHAM_INTO(),),
 
 
            TOUT_ORDRE      =SIMP(statut='f',typ='TXM',into=("OUI",) ),
@@ -25710,37 +27305,12 @@ PROJ_CHAMP=OPER(nom="PROJ_CHAMP",op= 166,sd_prod=proj_champ_prod,reentrant='f',
            ),
 
          ),
+     ), # fin bloc b_2
 
 
 
-         # Mots clés utilisables dans tous les cas :
-         #---------------------------------------------
-         TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
-         INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
-
-         VIS_A_VIS       =FACT(statut='f',max='**',
-           regles=(AU_MOINS_UN('TOUT_1','GROUP_MA_1','MAILLE_1','GROUP_NO_1','NOEUD_1'),
-                   AU_MOINS_UN('TOUT_2','GROUP_MA_2','MAILLE_2','GROUP_NO_2','NOEUD_2'),),
-           TOUT_1          =SIMP(statut='f',typ='TXM',into=("OUI",) ),
-           GROUP_MA_1      =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
-           MAILLE_1        =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
-           GROUP_NO_1      =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-           NOEUD_1         =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-           TOUT_2          =SIMP(statut='f',typ='TXM',into=("OUI",) ),
-           GROUP_MA_2      =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
-           MAILLE_2        =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
-           GROUP_NO_2      =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-           NOEUD_2         =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-
-           # les mots clés suivants ne sont actifs que si METHODE='COLOCATION' mais on ne peut pas le vérifier:
-               CAS_FIGURE      =SIMP(statut='f',typ='TXM',into=("2D","3D","2.5D","1.5D",) ),
-               TRANSF_GEOM_1   =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),min=2,max=3,
-                    fr="2 (ou 3) fonctions fx,fy,fz définissant la transformation géométrique à appliquer"+
-                       " aux noeuds du MODELE_1 avant la projection."),
-               TRANSF_GEOM_2   =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule),min=2,max=3,
-                    fr="2 (ou 3) fonctions fx,fy,fz définissant la transformation géométrique à appliquer"+
-                       " aux noeuds du MODELE_2 avant la projection."),
-         ),
+     TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
+     INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
 )  ;
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -25779,10 +27349,10 @@ PROJ_MATR_BASE=OPER(nom="PROJ_MATR_BASE",op=  71,sd_prod=matr_asse_gene_prod,
          MATR_ASSE_GENE  =SIMP(statut='f',typ=(matr_asse_gene_r,matr_asse_gene_c) ),
 )  ;
 
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -25822,7 +27392,8 @@ PROJ_MESU_MODAL=OPER(nom="PROJ_MESU_MODAL",op= 193,
            MODELE          =SIMP(statut='o',typ=(modele_sdaster) ),
 #           MESURE          =SIMP(statut='o',typ=(dyna_trans,dyna_harmo,base_modale,mode_meca,mode_meca_c,) ),
            MESURE          =SIMP(statut='o',typ=(dyna_trans,dyna_harmo,mode_meca,mode_meca_c,) ),
-           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut="DEPL",into=("DEPL","VITE","ACCE","SIEF_NOEU","EPSI_NOEU_DEPL",) ),
+           NOM_CHAM        =SIMP(statut='f',typ='TXM',defaut="DEPL",into=("DEPL","VITE","ACCE",
+                                 "SIEF_NOEU","EPSI_NOEU",),max='**'),
                          ),
          CORR_MANU       =FACT(statut='f',max='**',
            regles=(PRESENT_PRESENT('NOEU_CALCUL','NOEU_MESURE'),),
@@ -25915,10 +27486,10 @@ PROJ_VECT_BASE=OPER(nom="PROJ_VECT_BASE",op=  72,sd_prod=vect_asse_gene,
          VECT_ASSE       =SIMP(statut='f',typ=cham_no_sdaster),
          VECT_ASSE_GENE  =SIMP(statut='f',typ=vect_asse_gene ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 04/05/2011   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -25974,7 +27545,6 @@ PROPA_FISS=MACRO(nom="PROPA_FISS",op=propa_fiss_ops,sd_prod=propa_fiss_prod,
                                    FISSURE   = FACT(statut='o',min=1,max='**',
                                                     FISS_ACTUELLE  = SIMP(statut='o',typ=fiss_xfem,max=1),
                                                     FISS_PROPAGEE  = SIMP(statut='o',typ=CO,max=1),
-                                                    GRILLE_AUX     = SIMP(statut='f',typ=modele_sdaster,max=1),
                                                     NB_POINT_FOND  = SIMP(statut='f',typ='I',max='**'),
                                                     TABLE          = SIMP(statut='o',typ=table_sdaster,max=1),
                                                     ),
@@ -25997,7 +27567,6 @@ PROPA_FISS=MACRO(nom="PROPA_FISS",op=propa_fiss_ops,sd_prod=propa_fiss_prod,
                                    FISSURE   = FACT(statut='o',min=1,max='**',
                                                     FISS_ACTUELLE  = SIMP(statut='o',typ=fiss_xfem,max=1),
                                                     FISS_PROPAGEE  = SIMP(statut='o',typ=CO,max=1),
-                                                    GRILLE_AUX     = SIMP(statut='f',typ=modele_sdaster,max=1),
                                                     ),
                                    ITERATIONS     = SIMP(statut='f',typ='I',max=1,val_min=3,defaut=5),
                                    TOLERANCE      = SIMP(statut='f',typ='R',max=1,val_min=0.0,val_max=100.0,defaut=5.0),
@@ -26012,12 +27581,11 @@ PROPA_FISS=MACRO(nom="PROPA_FISS",op=propa_fiss_ops,sd_prod=propa_fiss_prod,
                
                FISSURE   = FACT(statut='o',min=1,max='**',
                                 MAIL_ACTUEL    = SIMP(statut='o',typ=maillage_sdaster,max=1),
-                                GROUP_MA_FOND    = SIMP(statut='f',typ='TXM',defaut="FOND"), 
-                                GROUP_MA_FISS    = SIMP(statut='f',typ='TXM',defaut="FISS"), 
+                                GROUP_MA_FOND    = SIMP(statut='f',typ=grma,defaut="FOND"), 
+                                GROUP_MA_FISS    = SIMP(statut='f',typ=grma,defaut="FISS"), 
                                 FISS_ACTUELLE  = SIMP(statut='o',typ=fiss_xfem,max=1),
                                 MAIL_PROPAGE  = SIMP(statut='f',typ=CO,max=1),
                                 TABLE          = SIMP(statut='o',typ=table_sdaster,max=1),
-                                METHODE_POSTK  = SIMP(statut='f',typ='I',into=(1,2,3),max=1),
                                 DTAN_ORIG      = SIMP(statut='f',typ='R',max=3),
                                 DTAN_EXTR      = SIMP(statut='f',typ='R',max=3),
                                                     ),
@@ -26031,8 +27599,8 @@ PROPA_FISS=MACRO(nom="PROPA_FISS",op=propa_fiss_ops,sd_prod=propa_fiss_prod,
         b_init    =BLOC(condition="(METHODE_PROPA=='INITIALISATION')",
                MAIL_STRUC    = SIMP(statut='o',typ=maillage_sdaster), 
                FORM_FISS   = SIMP(statut='o',typ='TXM', into=("DEMI_DROITE","DEMI_PLAN","ELLIPSE"), ),
-               GROUP_MA_FOND    = SIMP(statut='f',typ='TXM',defaut="FOND"), 
-               GROUP_MA_FISS    = SIMP(statut='f',typ='TXM',defaut="FISS"), 
+               GROUP_MA_FOND    = SIMP(statut='f',typ=grma,defaut="FOND"), 
+               GROUP_MA_FISS    = SIMP(statut='f',typ=grma,defaut="FISS"), 
                MAIL_TOTAL     = SIMP(statut='o',typ=CO), 
                MAIL_FISS       = SIMP(statut='f',typ=CO), 
              
@@ -26045,7 +27613,7 @@ PROPA_FISS=MACRO(nom="PROPA_FISS",op=propa_fiss_ops,sd_prod=propa_fiss_prod,
                   DTAN        = SIMP(statut='o',typ='R',min=3,max=3),
                   POINT_ORIG        = SIMP(statut='o',typ='R',min=3,max=3),
                   POINT_EXTR        = SIMP(statut='o',typ='R',min=3,max=3),
-                  NB_POINT_FOND     = SIMP(statut='o',typ='I',val_max=26),
+                  NB_POINT_FOND     = SIMP(statut='o',typ='I',),
                ),
                 
                b_ellipse = BLOC(condition = "FORM_FISS == 'ELLIPSE' ",
@@ -26056,7 +27624,7 @@ PROPA_FISS=MACRO(nom="PROPA_FISS",op=propa_fiss_ops,sd_prod=propa_fiss_prod,
                   VECT_Y         =SIMP(statut='o',typ='R',min=3,max=3),
                   ANGLE_ORIG        = SIMP(statut='o',typ='R',),
                   ANGLE_EXTR        = SIMP(statut='o',typ='R',),
-                  NB_POINT_FOND     = SIMP(statut='o',typ='I',val_max=52,),
+                  NB_POINT_FOND     = SIMP(statut='o',typ='I',)
                ),   
              ),       
 
@@ -26075,10 +27643,10 @@ PROPA_FISS=MACRO(nom="PROPA_FISS",op=propa_fiss_ops,sd_prod=propa_fiss_prod,
         INFO = SIMP(statut='f',typ='I',defaut=1,into=(0,1,2)),
 )
 
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/03/2011   AUTEUR MASSIN P.MASSIN 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -26100,8 +27668,6 @@ PROPA_XFEM=OPER(nom="PROPA_XFEM",op=10,sd_prod=fiss_xfem,reentrant='n',
                 fr="Propagation de fissure avec X-FEM",
     
     MODELE        =SIMP(statut='o',typ=modele_sdaster),
-
-    GRILLE_AUX    =SIMP(statut='f',typ=modele_sdaster),
 
     TEST_MAIL     =SIMP(statut='f',typ='TXM',into=("NON","OUI",),defaut="NON"),
 
@@ -26489,6 +28055,46 @@ RECU_GENE=OPER(nom="RECU_GENE",op=  76,sd_prod=vect_asse_gene,reentrant='n',
          b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
              PRECISION       =SIMP(statut='o',typ='R',),),
 )  ;
+#& MODIF COMMANDE  DATE 14/02/2011   AUTEUR GREFFET N.GREFFET 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE GREFFET N.GREFFET
+#
+# RECUPERATION DE PARAMETRES DE COUPLAGE VIA YACS
+# 
+RECU_PARA_YACS=OPER(nom="RECU_PARA_YACS",op=114,sd_prod=listr8_sdaster,
+                   reentrant = 'n',
+                    UIinfo={"groupes":("Fonction",)},
+                   fr        = "Gestion des scalaires via YACS pour le coupleur IFS",
+          DONNEES = SIMP(statut='o',typ='TXM',into=("INITIALISATION","CONVERGENCE","FIN","PAS",) ),
+          b_init   = BLOC(condition= "DONNEES=='INITIALISATION'",
+                     PAS             = SIMP(statut='o',typ='R', ),),
+          b_noinit = BLOC(condition= "(DONNEES=='CONVERGENCE')or(DONNEES=='FIN')",
+                     NUME_ORDRE_YACS = SIMP(statut='o', typ='I',),
+                     INST         = SIMP(statut='o',typ='R', ),
+                     PAS             = SIMP(statut='o',typ='R', ),),
+          b_pastps = BLOC(condition= "(DONNEES=='PAS')",
+                     NUME_ORDRE_YACS = SIMP(statut='o', typ='I',),
+                     INST         = SIMP(statut='o',typ='R', ),
+                     PAS             = SIMP(statut='o',typ='R', ),),
+         INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2)),
+         TITRE           =SIMP(statut='f',typ='TXM',max='**'),
+);
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -26563,10 +28169,10 @@ RESOUDRE=OPER(nom="RESOUDRE",op=15,sd_prod=cham_no_sdaster,reentrant='f',
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -26583,10 +28189,11 @@ RESOUDRE=OPER(nom="RESOUDRE",op=15,sd_prod=cham_no_sdaster,reentrant='f',
 # ======================================================================
  
 # RESPONSABLE DEVESA G.DEVESA
-def rest_cond_tran_prod(RESULTAT,**args ):
+def rest_cond_tran_prod(RESULTAT,TYPE_RESU,**args ):
  
-  if AsType(RESULTAT) == evol_noli  : return dyna_trans
-  if AsType(RESULTAT) == dyna_trans : return dyna_trans
+  if AsType(RESULTAT) == dyna_trans  : return dyna_trans
+  if (AsType(RESULTAT) == evol_noli and TYPE_RESU == "DYNA_TRANS") : return dyna_trans
+  if (AsType(RESULTAT) == evol_noli and TYPE_RESU == "EVOL_NOLI") : return evol_noli
 
   raise AsException("type de concept resultat non prevu")
 
@@ -26594,12 +28201,14 @@ REST_COND_TRAN=OPER(nom="REST_COND_TRAN",op=  78,sd_prod=rest_cond_tran_prod,
                     fr="Restituer dans la base physique des résultats issus d'un calcul" 
                         +"non-lineaire avec projection modale ou d'un calcul transitoire linear"
                         +"avec condensation dynamique",
-                    reentrant='n',
+                    reentrant='f',
             UIinfo={"groupes":("Matrices et vecteurs",)},
         regles=(
                 EXCLUS('TOUT_ORDRE','NUME_ORDRE','INST','LIST_INST','TOUT_INST'),
                 EXCLUS('MACR_ELEM_DYNA','BASE_MODALE'),),
          RESULTAT        =SIMP(statut='f',typ=(evol_noli,dyna_trans) ),
+         TYPE_RESU       =SIMP(statut='f',typ='TXM',defaut="DYNA_TRANS",
+                          into=("DYNA_TRANS","EVOL_NOLI") ),
          BASE_MODALE     =SIMP(statut='f',typ=mode_meca),
 #         NUME_DDL        =SIMP(statut='f',typ=nume_ddl_sdaster ),
          MACR_ELEM_DYNA  =SIMP(statut='f',typ=macr_elem_dyna),
@@ -26616,14 +28225,18 @@ REST_COND_TRAN=OPER(nom="REST_COND_TRAN",op=  78,sd_prod=rest_cond_tran_prod,
          INTERPOL        =SIMP(statut='f',typ='TXM',defaut="NON",into=("NON","LIN") ),
          TOUT_CHAM       =SIMP(statut='f',typ='TXM',into=("OUI",) ),
          b_nom_cham=BLOC(condition="TOUT_CHAM == None",
-             NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=3,defaut="ACCE",   
-                               into=("DEPL","VITE","ACCE",) ),),
+             NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=3,defaut="ACCE",into=("DEPL",
+                                   "VITE","ACCE",),),),
+         b_base_moda=BLOC(condition="BASE_MODALE != None",
+             CHAM_MATER      =SIMP(statut='f',typ=cham_mater),
+             CARA_ELEM       =SIMP(statut='f',typ=cara_elem),),
+             RESU_FINAL      =SIMP(statut='f',typ=(evol_noli,dyna_trans) ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -26683,9 +28296,8 @@ REST_GENE_PHYS=OPER(nom="REST_GENE_PHYS",op=  75,sd_prod=rest_gene_phys_prod,
          CORR_STAT       =SIMP(statut='f',typ='TXM',into=("OUI",) ),
          TOUT_CHAM       =SIMP(statut='f',typ='TXM',into=("OUI",) ),
          b_nom_cham=BLOC(condition="TOUT_CHAM == None",
-             NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=8,defaut="ACCE",   
-                               into=("DEPL","VITE","ACCE","ACCE_ABSOLU","EFGE_ELNO_DEPL","SIPO_ELNO_DEPL",                 
-                                     "SIGM_ELNO_DEPL","FORC_NODA",) ),),
+             NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=8,defaut="ACCE",into=("DEPL",
+                                   "VITE","ACCE","ACCE_ABSOLU","EFGE_ELNO","SIPO_ELNO","SIGM_ELNO","FORC_NODA",),),),
          GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
          NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
          GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
@@ -26694,10 +28306,10 @@ REST_GENE_PHYS=OPER(nom="REST_GENE_PHYS",op=  75,sd_prod=rest_gene_phys_prod,
          DIRECTION       =SIMP(statut='f',typ='R',min=3,max=3 ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -26762,9 +28374,8 @@ REST_SOUS_STRUC=OPER(nom="REST_SOUS_STRUC",op=  77,sd_prod=rest_sous_struc_prod,
          INTERPOL        =SIMP(statut='f',typ='TXM',defaut="NON",into=("NON","LIN") ),
          TOUT_CHAM       =SIMP(statut='f',typ='TXM',into=("OUI",) ),
          b_nom_cham=BLOC(condition="TOUT_CHAM == None",
-             NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=8,defaut="ACCE",   
-                               into=("DEPL","VITE","ACCE","ACCE_ABSOLU","EFGE_ELNO_DEPL","SIPO_ELNO_DEPL",                 
-                                     "SIGM_ELNO_DEPL","FORC_NODA",) ),),
+             NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=8,defaut="ACCE",into=("DEPL",
+                                   "VITE","ACCE","ACCE_ABSOLU","EFGE_ELNO","SIPO_ELNO","SIGM_ELNO","FORC_NODA",) ),),
          GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
          NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
          GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
@@ -26781,10 +28392,10 @@ REST_SOUS_STRUC=OPER(nom="REST_SOUS_STRUC",op=  77,sd_prod=rest_sous_struc_prod,
          SECTEUR         =SIMP(statut='f',typ='I'),  
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 29/03/2011   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
@@ -26814,9 +28425,8 @@ REST_SPEC_PHYS=OPER(nom="REST_SPEC_PHYS",op= 148,sd_prod=table_fonction,
          NOEUD           =SIMP(statut='o',typ=no   ,max='**'),
          MAILLE          =SIMP(statut='f',typ=ma   ,max='**'),
          NOM_CMP         =SIMP(statut='o',typ='TXM',max='**'),  
-         NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=7,    
-                               into=("DEPL","VITE","ACCE","EFGE_ELNO_DEPL",
-                                     "SIPO_ELNO_DEPL","SIGM_ELNO_DEPL","FORC_NODA") ),
+         NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=7,into=("DEPL",
+                               "VITE","ACCE","EFGE_ELNO","SIPO_ELNO","SIGM_ELNO","FORC_NODA") ),
          MODE_STAT       =SIMP(statut='f',typ=mode_meca ),
          EXCIT           =FACT(statut='f',
            NOEUD           =SIMP(statut='o',typ=no   ,max='**'),
@@ -26866,10 +28476,10 @@ REST_SPEC_TEMP=OPER(nom="REST_SPEC_TEMP",op=181,sd_prod=rest_spec_temp_prod,
          TOUT_CHAM       =SIMP(statut='f',typ='TXM',into=("OUI",)),
          NOM_CHAM        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=3,into=("DEPL","VITE","ACCE") ),
 );
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 21/02/2011   AUTEUR ABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -26894,13 +28504,7 @@ SIMU_POINT_MAT=MACRO(nom="SIMU_POINT_MAT", op=simu_point_mat_ops,sd_prod=table_s
                    fr="Calcul de l'évolution mécanique, en quasi-statique,"
                       +" d'un point matériel en non linéaire",
    COMP_INCR       =C_COMP_INCR(),
-   COMP_ELAS       =FACT(statut='f',max='**',
-           RESI_INTE_RELA  =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           ITER_INTE_MAXI  =SIMP(statut='f',typ='I',defaut= 10 ),
-           RELATION        =SIMP(statut='o',typ='TXM',defaut="ELAS",
-                                 into=("ELAS","ELAS_VMIS_LINE","ELAS_VMIS_TRAC","ELAS_VMIS_PUIS","ELAS_HYPER")),
-           DEFORMATION     =SIMP(statut='f',typ='TXM',defaut="PETIT" ,into=("PETIT","GROT_GDEP",) ),
-         ),
+   COMP_ELAS       =C_COMP_ELAS('SIMU_POINT_MAT'),
    MATER           =SIMP(statut='o',typ=mater_sdaster,max=30),
    
 ## ANGLE : rotation de ANGLE autour de Z uniquement, et seulement pour les déformations imposées.
@@ -26928,37 +28532,22 @@ SIMU_POINT_MAT=MACRO(nom="SIMU_POINT_MAT", op=simu_point_mat_ops,sd_prod=table_s
                ),        
    b_EF = BLOC(condition="SUPPORT ==  'ELEMENT'",fr="Simulation sur un élément fini",                    
       MODELISATION  =SIMP(statut='f',typ='TXM',max=1,into=("3D","C_PLAN","D_PLAN",)),
-      RECH_LINEAIRE   =C_RECH_LINEAIRE(),                                      
-      ARCHIVAGE       =FACT(statut='f',
-       LIST_INST       =SIMP(statut='f',typ=(listr8_sdaster) ),
-       INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
-       PAS_ARCH        =SIMP(statut='f',typ='I' ),
-       PRECISION       =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-       ARCH_ETAT_INIT  =SIMP(statut='f',typ='TXM',into=("OUI",),defaut="OUI"),
-       NUME_INIT       =SIMP(statut='f',typ='I'),
-       DETR_NUME_SUIV  =SIMP(statut='f',typ='TXM',into=("OUI",)),
-       CHAM_EXCLU      =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',
-                                    into=("DEPL","SIEF_ELGA","VARI_ELGA",)),
-        ),
+      RECH_LINEAIRE   =C_RECH_LINEAIRE(),
+      ARCHIVAGE       =C_ARCHIVAGE(), 
                  ),                                            
    # on permet certaines variables de commandes scalaires, définies par une fonction du temps
    b_EFV = BLOC(condition="SUPPORT ==  'ELEMENT'",fr="variables de commande sur un élément fini",                    
          # un mot clé caché qui ne sert qu'à boucler sur les VARC possibles :
-         LIST_NOM_VARC =SIMP(statut='c',typ='TXM', defaut=("TEMP",)),
+         LIST_NOM_VARC =SIMP(statut='c',typ='TXM', defaut=("TEMP","CORR","IRRA","HYDR","SECH","EPSA",
+                                                           "M_ACIER","M_ZIRC","NEUT1","NEUT2")),
+
          AFFE_VARC    = FACT(statut='f',max='**',
-          NOM_VARC    = SIMP(statut='o',typ='TXM', into=("TEMP",)),
+          NOM_VARC        =SIMP(statut='o',typ='TXM', into=("TEMP","CORR","IRRA","HYDR","SECH","M_ACIER","M_ZIRC",
+                                                            "EPSA","NEUT1","NEUT2")),
           VALE_FONC   = SIMP(statut='o',typ=(fonction_sdaster,formule) ),
           VALE_REF    = SIMP(statut='f',typ='R'),
          ),
-         #  mots clés cachés pour variable de commande TEMP :
-         #  --------------------------------------------------
-         VARC_TEMP    =FACT(statut='d',
-           NOM_VARC        =SIMP(statut='c',typ='TXM',defaut="TEMP"),
-           GRANDEUR        =SIMP(statut='c',typ='TXM',defaut="TEMP_R"),
-           CMP_GD          =SIMP(statut='c',typ='TXM',max=1,min=1,defaut=("TEMP",)),
-           CMP_VARC        =SIMP(statut='c',typ='TXM',max=1,min=1,defaut=("TEMP",)),
-           VALE_DEF        =SIMP(statut='c',typ='R',max=1,min=1,defaut=(0.,)),
-                           ),
+
         SIGM_IMPOSE=FACT(statut='f',
               SIXX = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule) ),
               SIYY = SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule) ),
@@ -27072,10 +28661,10 @@ STANLEY=MACRO(nom="STANLEY",op=stanley_ops,sd_prod=None,
                                fr="Unité logique définissant le fichier (fort.N) dans lequel on écrit les md5"),
 
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 21/02/2011   AUTEUR ABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -27116,23 +28705,11 @@ STAT_NON_LINE=OPER(nom="STAT_NON_LINE",op=70,sd_prod=evol_noli,
                 SUPER_MAILLE=SIMP(statut='f',typ=ma,validators=NoRepeat(),max='**',),
                 FONC_MULT   =SIMP(statut='f',typ=(fonction_sdaster,nappe_sdaster,formule)),
               ),
+#-------------------------------------------------------------------               
          COMP_INCR       =C_COMP_INCR(),
-         COMP_ELAS       =FACT(statut='f',max='**',
-           RESI_INTE_RELA  =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           ITER_INTE_MAXI  =SIMP(statut='f',typ='I',defaut= 10 ),
-           ITER_INTE_PAS   =SIMP(statut='f',typ='I',defaut= 0 ),
-           RESO_INTE       =SIMP(statut='f',typ='TXM',defaut="IMPLICITE",
-                                 into=("IMPLICITE",)),
-           RELATION        =SIMP(statut='o',typ='TXM',defaut="ELAS",
-                                 into=("ELAS","ELAS_VMIS_LINE","ELAS_VMIS_TRAC","ELAS_VMIS_PUIS",
-                                      "ELAS_POUTRE_GR","CABLE","ELAS_HYPER")),
-          
-           DEFORMATION     =SIMP(statut='f',typ='TXM',defaut="PETIT" ,into=("PETIT","GROT_GDEP",) ),
-      regles=(PRESENT_ABSENT('TOUT','GROUP_MA','MAILLE'),),
-           TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
-           GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
-           MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
-         ),
+#-------------------------------------------------------------------          
+         COMP_ELAS       =C_COMP_ELAS('STAT_NON_LINE'),
+#-------------------------------------------------------------------          
          b_reuse =BLOC(condition = "reuse",fr="en mode concept reentrant : ETAT_INIT obligatoire",
            ETAT_INIT       =FACT(statut='o',
              regles=(AU_MOINS_UN('EVOL_NOLI','DEPL','SIGM','VARI',),
@@ -27175,130 +28752,33 @@ STAT_NON_LINE=OPER(nom="STAT_NON_LINE",op=70,sd_prod=evol_noli,
              NUME_DIDI       =SIMP(statut='f',typ='I'),
              INST_ETAT_INIT  =SIMP(statut='f',typ='R'),
          ),),
+#-------------------------------------------------------------------            
          INCREMENT       =C_INCREMENT(),
- 
-#         **C_ALGO_RESOLUTION()
-         METHODE = SIMP(statut='d',typ='TXM',defaut="NEWTON",into=("NEWTON","IMPL_EX")),
-         b_meth_newton = BLOC(condition = "METHODE == 'NEWTON'",
-                           NEWTON = C_NEWTON(),
-                        ),
-         b_meth_impl_ex = BLOC(condition = "METHODE == 'IMPL_EX'",
-                           IMPL_EX = C_IMPL_EX(),
-                        ),
- 
-         RECH_LINEAIRE   =C_RECH_LINEAIRE(),
-         
-         PILOTAGE        =FACT(statut='f',
-           regles=(EXCLUS('NOEUD','GROUP_NO'),PRESENT_ABSENT('TOUT','GROUP_MA','MAILLE'),),
-           TYPE    =SIMP(statut='o',typ='TXM',into=("DDL_IMPO","LONG_ARC","PRED_ELAS","DEFORMATION","ANA_LIM") ),
-           COEF_MULT       =SIMP(statut='f',typ='R',defaut= 1.0E+0),
-           EVOL_PARA       =SIMP(statut='f',typ='TXM',defaut="SANS", into=("SANS","CROISSANT","DECROISSANT") ),
-           
-           
-           ETA_PILO_MAX    =SIMP(statut='f',typ='R'),
-           ETA_PILO_MIN    =SIMP(statut='f',typ='R'),
-           ETA_PILO_R_MAX  =SIMP(statut='f',typ='R'),
-           ETA_PILO_R_MIN  =SIMP(statut='f',typ='R'),
-           PROJ_BORNES     =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
-           SELECTION       =SIMP(statut='f',typ='TXM',defaut="NORM_INCR_DEPL", into=("RESIDU","ANGL_INCR_DEPL","NORM_INCR_DEPL") ),
-           TOUT            =SIMP(statut='f',typ='TXM',into=("OUI",) ),
-           GROUP_MA        =SIMP(statut='f',typ=grma ,validators=NoRepeat(),max='**'),
-           MAILLE          =SIMP(statut='f',typ=ma   ,validators=NoRepeat(),max='**'),
-           NOEUD           =SIMP(statut='f',typ=no   ,validators=NoRepeat(),max='**'),
-           GROUP_NO        =SIMP(statut='f',typ=grno ,validators=NoRepeat(),max='**'),
-           NOM_CMP         =SIMP(statut='f',typ='TXM',max='**'),
-                         ),
-                         
-         CONVERGENCE     =C_CONVERGENCE(),
- 
-         SOLVEUR         =C_SOLVEUR(),
-          
-         ARCHIVAGE       =FACT(statut='f',
-           regles=(EXCLUS('PAS_ARCH','LIST_INST','INST'),
-                   EXCLUS('ARCH_ETAT_INIT','NUME_INIT'), ),
-           LIST_INST       =SIMP(statut='f',typ=(listr8_sdaster) ),
-           INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
-           PAS_ARCH        =SIMP(statut='f',typ='I' ),
-           PRECISION       =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           ARCH_ETAT_INIT  =SIMP(statut='f',typ='TXM',into=("OUI",)),
-           NUME_INIT       =SIMP(statut='f',typ='I'),
-           DETR_NUME_SUIV  =SIMP(statut='f',typ='TXM',into=("OUI",)),
-           CHAM_EXCLU      =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',
-                                 into=("DEPL","SIEF_ELGA","VARI_ELGA",)),
-         ),
-         OBSERVATION     =FACT(statut='f',max='**',
-           NOM_CMP         =SIMP(statut='o',typ='TXM',max='**'),
-           SUIVI_DDL       =SIMP(statut='f',typ='TXM',defaut="NON",max=1,into=("OUI","NON")),
-         b_suivi          =BLOC(condition = "SUIVI_DDL == 'OUI' ",
-                                regles=(UN_PARMI('NOEUD','MAILLE','GROUP_NO','GROUP_MA','VALE_MIN','VALE_MAX'),
-                                                  PRESENT_PRESENT('MAILLE','POINT'),),
-             NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-             GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-             POINT           =SIMP(statut='f',typ='I' ,validators=NoRepeat(),max='**'),
-             MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
-             NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max=1,
-                                   into=("DEPL","VITE","ACCE","SIEF_ELGA",
-                                         "VARI_ELGA","FORC_NODA","DEPL_ABSOLU","VITE_ABSOLU","ACCE_ABSOLU",)),
-             GROUP_MA        =SIMP(statut='f',typ=grma,validators=NoRepeat(),max='**'),
-             NUME_SUIVI      =SIMP(statut='o',typ='I' ,min=1,max=4),
-             VALE_MAX        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=1,into=("OUI",) ),
-             VALE_MIN        =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=1,into=("OUI",) ),),
-         b_non_suivi      =BLOC(condition = "SUIVI_DDL == 'NON' ",
-                                regles=(UN_PARMI('NOEUD','GROUP_NO','MAILLE'),PRESENT_PRESENT('MAILLE','POINT'),),
-             NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-             GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-             POINT           =SIMP(statut='f',typ='I' ,validators=NoRepeat(),max='**'),
-             MAILLE          =SIMP(statut='f',typ=ma  ,validators=NoRepeat(),max='**'),
-             NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',into=("DEPL","VITE","ACCE","SIEF_ELGA",
-                                              "VARI_ELGA","DEPL_ABSOLU","VITE_ABSOLU","ACCE_ABSOLU","VALE_CONT")),
-             INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
-             LIST_INST       =SIMP(statut='f',typ=listr8_sdaster),
-             PAS_OBSE        =SIMP(statut='f',typ='I'),
-             LIST_ARCH       =SIMP(statut='f',typ=listis_sdaster),
-             CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
-             b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
-                PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
-             b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
-                PRECISION       =SIMP(statut='o',typ='R',),),),
-         ),
-
-         AFFICHAGE      = FACT(statut='f',max=16,
-
-            UNITE       = SIMP(statut='f',typ='I',val_min=1),
-
-            LONG_R      = SIMP(statut='f',typ='I',defaut=12,val_min=1,val_max=12),
-            PREC_R      = SIMP(statut='f',typ='I',defaut=5, val_min=1,val_max=8),
-            LONG_I      = SIMP(statut='f',typ='I',defaut=6, val_min=1,val_max=12),
-
-            NOM_COLONNE = SIMP(statut='o',typ='TXM',defaut="STANDARD",
-                                into=("STANDARD","MINIMUM",
-                                      "ITER_NEWT",
-                                      "INCR_TPS",
-                                      "RESI_RELA","RELA_NOEU",
-                                      "RESI_MAXI","MAXI_NOEU",
-                                      "RESI_REFE","REFE_NOEU",
-                                      "RELI_ITER","RELI_COEF",
-                                      "RESI_COMP","COMP_NOEU",
-                                      "PILO_PARA",
-                                      "MATR_ASSE",
-                                      "ITER_DEBO",
-                                      "CTCD_ITER","CTCD_GEOM","CTCD_NOEU",
-                                      "BOUC_GEOM","BOUC_FROT","BOUC_CONT","CTCC_BOUC","CTCC_NOEU",
-                                      "SUIV_1","SUIV_2","SUIV_3","SUIV_4","ITER_FETI",
-                                     ),
-                               ),
-            b_residu    = BLOC(condition = " NOM_COLONNE == 'RESI_RELA' or \
-                    NOM_COLONNE == 'RESI_MAXI' or\
-                    NOM_COLONNE == 'RESI_REFE' or\
-                    NOM_COLONNE == 'CTCD_GEOM' or\
-                    NOM_COLONNE == 'CTCC_BOUC' or\
-                    NOM_COLONNE == 'STANDARD' ",
-                            INFO_RESIDU = SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+#-------------------------------------------------------------------   
+         METHODE         =SIMP(statut='d',typ='TXM',defaut="NEWTON",into=("NEWTON","IMPL_EX")),
+             b_meth_newton = BLOC(condition = "METHODE == 'NEWTON'",
+                                  NEWTON = C_NEWTON(),
+                                  ),
+            b_meth_impl_ex = BLOC(condition = "METHODE == 'IMPL_EX'",
+                                  IMPL_EX = C_IMPL_EX(),
                           ),
-         ),
-
-
-
+#-------------------------------------------------------------------    
+         RECH_LINEAIRE   =C_RECH_LINEAIRE(),
+#-------------------------------------------------------------------            
+         PILOTAGE        =C_PILOTAGE(),
+#-------------------------------------------------------------------                         
+         CONVERGENCE     =C_CONVERGENCE(),
+#------------------------------------------------------------------- 
+         SOLVEUR         =C_SOLVEUR(),
+#-------------------------------------------------------------------
+         OBSERVATION     =C_OBSERVATION(),
+#-------------------------------------------------------------------
+         SUIVI_DDL       =C_SUIVI_DDL(),
+#-------------------------------------------------------------------
+         ARCHIVAGE       =C_ARCHIVAGE(),
+#-------------------------------------------------------------------   
+         AFFICHAGE      = C_AFFICHAGE(),
+#-------------------------------------------------------------------   
          CRIT_FLAMB     =FACT(statut='f',min=1,max=1,
            NB_FREQ         =SIMP(statut='f',typ='I',max=1,defaut=3),
            CHAR_CRIT       =SIMP(statut='f',typ='R',min=2,max=2,defaut=(-10.0,10),
@@ -27315,7 +28795,15 @@ STAT_NON_LINE=OPER(nom="STAT_NON_LINE",op=70,sd_prod=evol_noli,
                                           'E3X','E3Y','E3Z','E4X','E4Y','E4Z','LAGS_C','V11','V12','V13','V21','V22',
                                           'V23','V31','V32','V33','PRES11','PRES12','PRES13','PRES21','PRES22','PRES23',
                                           'PRES31','PRES32','PRES33','VARI','LAG_GV')),),
-           INST_CALCUL       =SIMP(statut='f',typ='TXM',defaut="LISTE_ARCHIVAGE",into=("LISTE_ARCHIVAGE","TOUT_PAS",) ),
+           regles         = (EXCLUS('PAS_CALC','LIST_INST','INST'),),
+           LIST_INST      = SIMP(statut='f',typ=(listr8_sdaster) ),
+           INST           = SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
+           PAS_CALC       = SIMP(statut='f',typ='I' ),
+           CRITERE        = SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
+              b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
+                 PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
+              b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
+                 PRECISION       =SIMP(statut='o',typ='R',),),
          ),
            SENSIBILITE     =SIMP(statut='f',typ=(para_sensi,theta_geom),validators=NoRepeat(),max='**',
                                fr="Liste des paramètres de sensibilité",
@@ -27334,6 +28822,88 @@ STAT_NON_LINE=OPER(nom="STAT_NON_LINE",op=70,sd_prod=evol_noli,
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),
  )
 
+#& MODIF COMMANDE  DATE 08/02/2011   AUTEUR PROIX J-M.PROIX 
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                  
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# -*- coding: iso-8859-1 -*-
+# RESPONSABLE PROIX J.M.PROIX
+
+from Macro.test_compor_ops import test_compor_ops
+
+#              MACRO "TEST_THERMOPLASTIQUE"
+#           ----------------------------
+
+TEST_COMPOR =MACRO(nom="TEST_COMPOR", op=test_compor_ops,sd_prod=table_sdaster,
+                       docu="",reentrant='n',
+                       fr="macro de test des comportements incrementaux dependant de la temperature",         
+
+         OPTION         =SIMP(statut='f',typ='TXM',into=("THER","MECA"),defaut="THER"),
+
+         COMP_INCR       =C_COMP_INCR(),
+         COMP_ELAS       =C_COMP_ELAS('SIMU_POINT_MAT'),
+         NEWTON          =C_NEWTON(),
+         CONVERGENCE     =C_CONVERGENCE(),
+         
+         b_ther          =BLOC(condition = "OPTION == 'THER'",
+            regles=(EXCLUS('C_PRAG','D_SIGM_EPSI'),),
+            MATER           =SIMP(statut='o',typ=mater_sdaster,max=1,fr="materiau dependant de la temperature"),
+            ALPHA           =SIMP(statut='o',typ=fonction_sdaster,
+                                  fr="coefficient de dilatation fonction de la temperature"),
+            YOUNG           =SIMP(statut='o',typ=fonction_sdaster,
+                                  fr="module d'Young fonction de la temperature"),
+            LIST_MATER      =SIMP(statut='o',typ=mater_sdaster,max='**', 
+                                          fr="liste des materiaux constants interpolés à chaque température"),
+            TEMP_INIT       =SIMP(statut='o',typ='R', fr="temperature initiale et de reference"),
+            TEMP_FIN        =SIMP(statut='o',typ='R', fr="temperature finale"),
+            INST_FIN        =SIMP(statut='f',typ='R',defaut=1.,fr="instant final"),
+            NB_VARI         =SIMP(statut='o',typ='I', fr="nombre de variables internes - 0 en elasticité"),
+            VARI_TEST       =SIMP(statut='f',typ='TXM',max='**', 
+                                  fr="liste de variables internes à tester - par defaut, toutes"),
+
+#           special ecrouissage cinematique
+            D_SIGM_EPSI     =SIMP(statut='f',typ=fonction_sdaster,
+                                  fr="module tangent fonction de la temperature- VMIS_CINE_LINE"),
+            C_PRAG          =SIMP(statut='f',typ=fonction_sdaster,
+                                  fr="constante de Prager fonction de la temperature- VMIS_ECMI_*"),
+                        ),
+         b_meca          =BLOC(condition = "OPTION == 'MECA'",
+            LIST_MATER      =SIMP(statut='o',typ=mater_sdaster,max=2,min=2, 
+                                          fr="liste des materiaux en Pa puis MPa "),
+            YOUNG           =SIMP(statut='o',typ='R',fr="module d'Young"),
+            POISSON         =SIMP(statut='o',typ='R',fr="coef de Poisson"),
+            LIST_NPAS       =SIMP(statut='f',typ='I',max='**',
+                                  fr="nombre de pas de temps pour chaque discretisation"),
+            LIST_TOLE       =SIMP(statut='f',typ='R',max='**',),
+            PREC_ZERO       =SIMP(statut='f',typ='R',max='**',),
+            VARI_TEST       =SIMP(statut='f',typ='TXM',max='**',defaut=('V1','VMIS','TRACE'), 
+                                  fr="liste des CMP à tester "),
+            SUPPORT         =SIMP(statut='f',typ='TXM',max=1,into=("POINT","ELEMENT",)),
+            MODELISATION    =SIMP(statut='f',typ='TXM',max=1,into=("3D","C_PLAN"),defaut="3D",),
+            ANGLE           =SIMP(statut='f',typ='R',max=1, defaut=0.,
+             fr='Rotation de ANGLE autour de Z uniquement, et seulement pour les déformations imposées',),
+            MASSIF          =FACT(statut='f',max='**',fr='orientation du materiau (monocristal, orthotropie)',
+              regles=(UN_PARMI('ANGL_REP','ANGL_EULER'),),
+              ANGL_REP        =SIMP(statut='f',typ='R',min=1,max=3),
+              ANGL_EULER      =SIMP(statut='f',typ='R',min=1,max=3),
+                                 ),
+                               ),
+            INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
+                 )
 #& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -27762,10 +29332,10 @@ TEST_TEMPS=MACRO(nom="TEST_TEMPS",op=test_temps_ops, sd_prod=None,
    INFO  = SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )
 
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 21/02/2011   AUTEUR ABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -27847,7 +29417,7 @@ THER_LINEAIRE=OPER(nom="THER_LINEAIRE",op=25,sd_prod=evol_ther,reentrant='f',
                RENUM               =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
                ),
              b_simple        =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                ),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1.E-6 ),
              NMAX_ITER       =SIMP(statut='f',typ='I',defaut= 0 ),
@@ -27856,11 +29426,12 @@ THER_LINEAIRE=OPER(nom="THER_LINEAIRE",op=25,sd_prod=evol_ther,reentrant='f',
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),             
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              ),
 
            b_petsc          =BLOC(condition = "METHODE == 'PETSC' ",fr="Paramètres de la méthode PETSC",
@@ -27872,7 +29443,7 @@ THER_LINEAIRE=OPER(nom="THER_LINEAIRE",op=25,sd_prod=evol_ther,reentrant='f',
                RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
              ),
              b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
              b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'", 
@@ -27884,24 +29455,16 @@ THER_LINEAIRE=OPER(nom="THER_LINEAIRE",op=25,sd_prod=evol_ther,reentrant='f',
            ),
          ),
          PARM_THETA      =SIMP(statut='f',typ='R',defaut= 0.57),
-         ARCHIVAGE       =FACT(statut='f',
-           regles=EXCLUS('PAS_ARCH','LIST_INST','INST'),
-           LIST_INST       =SIMP(statut='f',typ=(listr8_sdaster) ),
-           INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
-           PAS_ARCH        =SIMP(statut='f',typ='I' ),
-           PRECISION       =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           NUME_INIT       =SIMP(statut='f',typ='I'),
-           DETR_NUME_SUIV  =SIMP(statut='f',typ='TXM',into=("OUI",)),
-           CHAM_EXCLU      =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',
-                                 into=("VARI",)),
-         ),
+#-------------------------------------------------------------------
+         ARCHIVAGE       =C_ARCHIVAGE(),         
+#-------------------------------------------------------------------
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',into=(1,2)),
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 21/02/2011   AUTEUR ABBAS M.ABBAS 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -28003,7 +29566,7 @@ THER_NON_LINE=OPER(nom="THER_NON_LINE",op= 186,sd_prod=evol_ther,reentrant='f',
                RENUM               =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
                ),
              b_simple        =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                ),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1.E-6 ),
              NMAX_ITER       =SIMP(statut='f',typ='I',defaut= 0 ),
@@ -28012,13 +29575,14 @@ THER_NON_LINE=OPER(nom="THER_NON_LINE",op= 186,sd_prod=evol_ther,reentrant='f',
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),           
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO","SCOTCH",)),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              FILTRAGE_MATRICE=SIMP(statut='f',typ='R',defaut=-1.0,),
              MIXER_PRECISION =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE  =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              ),
 
            b_petsc          =BLOC(condition = "METHODE == 'PETSC' ",fr="Paramètres de la méthode PETSC",
@@ -28030,7 +29594,7 @@ THER_NON_LINE=OPER(nom="THER_NON_LINE",op= 186,sd_prod=evol_ther,reentrant='f',
                RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
              ),
              b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
              b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'", 
@@ -28043,45 +29607,21 @@ THER_NON_LINE=OPER(nom="THER_NON_LINE",op= 186,sd_prod=evol_ther,reentrant='f',
            SYME            =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON",) ),
          ),
          PARM_THETA      =SIMP(statut='f',typ='R',defaut= 0.57 ),
-         ARCHIVAGE       =FACT(statut='f',
-           regles=EXCLUS('PAS_ARCH','LIST_INST','INST'),
-           LIST_INST       =SIMP(statut='f',typ=(listr8_sdaster) ),
-           INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
-           PAS_ARCH        =SIMP(statut='f',typ='I' ),
-           PRECISION       =SIMP(statut='f',typ='R',defaut= 1.0E-6),
-           NUME_INIT       =SIMP(statut='f',typ='I'),
-           DETR_NUME_SUIV  =SIMP(statut='f',typ='TXM',into=("OUI",)),
-           CHAM_EXCLU      =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max='**',
-                                 into=("VARI",)),
-         ),
-         OBSERVATION     =FACT(statut='f',max='**',
-           NOM_CMP         =SIMP(statut='o',typ='TXM',max='**' ),
-           SUIVI_DDL       =SIMP(statut='c',typ='TXM',defaut="NON",max=1,into=("NON",)),
-         b_non_suivi      =BLOC(condition = "SUIVI_DDL == 'NON' ",
-                                regles=(UN_PARMI('NOEUD','GROUP_NO')),
-             NOEUD           =SIMP(statut='f',typ=no  ,validators=NoRepeat(),max='**'),
-             GROUP_NO        =SIMP(statut='f',typ=grno,validators=NoRepeat(),max='**'),
-             NOM_CHAM        =SIMP(statut='o',typ='TXM',validators=NoRepeat(),max='**',into=("TEMP",)),
-             INST            =SIMP(statut='f',typ='R',validators=NoRepeat(),max='**' ),
-             LIST_INST       =SIMP(statut='f',typ=listr8_sdaster),
-             PAS_OBSE        =SIMP(statut='f',typ='I'),
-             LIST_ARCH       =SIMP(statut='f',typ=listis_sdaster),
-             CRITERE         =SIMP(statut='f',typ='TXM',defaut="RELATIF",into=("RELATIF","ABSOLU") ),
-             b_prec_rela=BLOC(condition="(CRITERE=='RELATIF')",
-                PRECISION       =SIMP(statut='f',typ='R',defaut= 1.E-6,),),
-             b_prec_abso=BLOC(condition="(CRITERE=='ABSOLU')",
-                PRECISION       =SIMP(statut='o',typ='R',),),),
-         ),
+#-------------------------------------------------------------------
+         ARCHIVAGE       =C_ARCHIVAGE(),
+#-------------------------------------------------------------------
+         OBSERVATION     =C_OBSERVATION(),
+#------------------------------------------------------------------- 
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          OPTION          =SIMP(statut='f',typ='TXM',validators=NoRepeat(),max=2,
-                               into=("FLUX_ELGA_TEMP","FLUX_ELNO_TEMP") ),
+                               into=("FLUX_ELGA","FLUX_ELNO") ),
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 
 )  ;
-#& MODIF COMMANDE  DATE 09/11/2010   AUTEUR DELMAS J.DELMAS 
+#& MODIF COMMANDE  DATE 08/02/2011   AUTEUR TARDIEU N.TARDIEU 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -28139,7 +29679,7 @@ THER_NON_LINE_MO=OPER(nom="THER_NON_LINE_MO",op= 171,sd_prod=evol_ther,
                RENUM               =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
                ),
              b_simple        =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                ),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut= 1.E-6 ),
              NMAX_ITER       =SIMP(statut='f',typ='I',defaut= 0 ),
@@ -28148,11 +29688,12 @@ THER_NON_LINE_MO=OPER(nom="THER_NON_LINE_MO",op= 171,sd_prod=evol_ther,
              TYPE_RESOL      =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("NONSYM","SYMGEN","SYMDEF","AUTO")),
              PRETRAITEMENTS  =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO")),
              POSTTRAITEMENTS =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("SANS","AUTO","FORCE")),             
-             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","AUTO")),
+             RENUM           =SIMP(statut='f',typ='TXM',defaut="AUTO",into=("AMD","AMF","PORD","METIS","QAMD","SCOTCH","AUTO")),
              ELIM_LAGR2      =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON")),
              PCENT_PIVOT     =SIMP(statut='f',typ='I',defaut=10,),
              RESI_RELA       =SIMP(statut='f',typ='R',defaut=-1.0,),
              OUT_OF_CORE     =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
+             LIBERE_MEMOIRE =SIMP(statut='f',typ='TXM',defaut="NON",into=("OUI","NON")),
              ),
            b_petsc          =BLOC(condition = "METHODE == 'PETSC' ",fr="Paramètres de la méthode PETSC",
              ALGORITHME      =SIMP(statut='f',typ='TXM',into=("BCGS","BICG","CG","CR","GMRES","TFQMR",),defaut="CG" ),
@@ -28163,7 +29704,7 @@ THER_NON_LINE_MO=OPER(nom="THER_NON_LINE_MO",op= 171,sd_prod=evol_ther,
                RENUM            =SIMP(statut='f',typ='TXM',defaut="RCMK",into=("SANS","RCMK") ),
              ),
              b_ldlt_sp      =BLOC(condition = "PRE_COND == 'LDLT_SP' ", fr="Paramètres de la factorisation simple précision",
-               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=5, ),
+               REAC_PRECOND        =SIMP(statut='f',typ='I',defaut=30, ),
                RENUM               =SIMP(statut='f',typ='TXM',defaut="SANS",into=("SANS","RCMK") ),
              ),
              b_jacobi_sor   =BLOC(condition = "PRE_COND == 'JACOBI' or PRE_COND == 'SOR'", 

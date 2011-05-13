@@ -1,8 +1,8 @@
-#@ MODIF macr_aspic_calc_ops Macro  DATE 14/09/2010   AUTEUR ABBAS M.ABBAS 
+#@ MODIF macr_aspic_calc_ops Macro  DATE 02/02/2011   AUTEUR PELLET J.PELLET 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -21,7 +21,7 @@
 
 def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM,
                              FOND_FISS_1,FOND_FISS_2,RESU_THER,AFFE_MATERIAU,EQUILIBRE,
-                             PRES_REP,ECHANGE,TORS_CORP,TORS_TUBU,COMP_INCR,COMP_ELAS,
+                             PRES_REP,ECHANGE,TORS_CORP,TORS_TUBU,COMP_ELAS,
                              THETA_3D,OPTION,SOLVEUR,CONVERGENCE,NEWTON,RECH_LINEAIRE,
                              INCREMENT,PAS_AZIMUT,IMPRESSION,INFO,TITRE,BORNES ,**args):
   """
@@ -346,9 +346,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
      
   motscles['EXCIT'] =mcfex
 #
-  mcfci=[]  # mot clé facteur COMP_INCR :obligatoire pour les noeuds discrets
-  if COMP_INCR!=None :
-    mcfci.append(_F(TOUT    ='OUI' ,RELATION=COMP_INCR['RELATION']))
+  mcfci=[]  # mot clé facteur COMP_INCR :obligatoire pour les noeuds discrets dans STAT_NON_LINE
   mcfci.append(  _F(GROUP_MA=NOMNOE,RELATION='ELAS'))
   motscles['COMP_INCR'] =mcfci
 #
@@ -405,7 +403,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
   nomres = CALC_ELEM( reuse      = nomres,
                       RESULTAT   = nomres ,
                       TOUT_ORDRE = 'OUI'  ,
-                      OPTION     = ('SIEF_ELNO_ELGA','VARI_ELNO_ELGA','EQUI_ELNO_SIGM') ,
+                      OPTION     = ('SIEF_ELNO','VARI_ELNO','SIEQ_ELNO') ,
                       INFO       = INFO ,)
 #
 #-----------------------------------------------------------------------
@@ -438,7 +436,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
       mcsimp['GROUP_NO' ]='LD'+str(i)
       mcfact.append( _F( RESULTAT   = nomres,
                          TOUT_ORDRE ='OUI',
-                         NOM_CHAM   ='SIEF_ELNO_ELGA',
+                         NOM_CHAM   ='SIEF_ELNO',
                          PRECISION  =55.E-1,
                          TOUT_CMP   ='OUI',
                          OPERATION  ='EXTRACTION',**mcsimp))
@@ -465,7 +463,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
         mcsimp['GROUP_NO'   ]='LD'+str(i)
         mcsimp['RESULTAT'   ]=nomres
         mcsimp['TOUT_ORDRE' ]='OUI'
-        mcsimp['NOM_CHAM'   ]='SIEF_ELNO_ELGA'
+        mcsimp['NOM_CHAM'   ]='SIEF_ELNO'
         mcsimp['PRECISION'  ]=55.E-1
         mcsimp['TOUT_CMP'   ]='OUI'
         mcsimp['OPERATION'  ]='EXTRACTION'
@@ -532,7 +530,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
       mcsimp['GROUP_NO'   ]='LI'+str(i)
       mcsimp['RESULTAT'   ]=nomres
       mcsimp['TOUT_ORDRE' ]='OUI'
-      mcsimp['NOM_CHAM'   ]='SIEF_ELNO_ELGA'
+      mcsimp['NOM_CHAM'   ]='SIEF_ELNO'
       mcsimp['PRECISION'  ]=55.E-1
       mcsimp['TOUT_CMP'   ]='OUI'
       mcsimp['REPERE'     ]='LOCAL'
@@ -555,7 +553,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
         mcsimp['GROUP_NO'   ]='LI'+str(i)
         mcsimp['RESULTAT'   ]=nomres
         mcsimp['TOUT_ORDRE' ]='OUI'
-        mcsimp['NOM_CHAM'   ]='SIEF_ELNO_ELGA'
+        mcsimp['NOM_CHAM'   ]='SIEF_ELNO'
         mcsimp['PRECISION'  ]=55.E-1
         mcsimp['TOUT_CMP'   ]='OUI'
         mcsimp['OPERATION'  ]='EXTRACTION'
@@ -754,7 +752,6 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
           motscles={}
           if COMP_ELAS!=None:  motscles['COMP_ELAS']=  _F(TOUT     = 'OUI',
                                                           RELATION = COMP_ELAS['RELATION'],)
-          if COMP_INCR!=None:  motscles['COMP_INCR']=  _F(RELATION = COMP_INCR['RELATION'],)
           __gtheta = CALC_G ( THETA      = _F(THETA=__theta),
                               OPTION     = 'CALC_G_GLOB',
                               RESULTAT   = nomres,
@@ -783,7 +780,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
 #
 #          --- commande CALC_G (3D LOCAL) ---
 #
-          montit = 'G_LOCAL AVEC R_INF = '+str(tht3d['R_INF'])+' ET R_SUP = '+str(tht3d['R_SUP'])
+          montit = 'G AVEC R_INF = '+str(tht3d['R_INF'])+' ET R_SUP = '+str(tht3d['R_SUP'])
           motscles={}
           if COMP_ELAS!=None:  motscles['COMP_ELAS'    ]=  _F(TOUT     = 'OUI',
                                                               RELATION = COMP_ELAS['RELATION'],)
@@ -834,7 +831,7 @@ def macr_aspic_calc_ops(self,TYPE_MAILLAGE,TUBULURE,MAILLAGE,MODELE,CHAM_MATER,C
       if IMPRESSION['NOM_CHAM']!=None :
          if type(IMPRESSION['NOM_CHAM']) in (types.TupleType,types.ListType) : ncham= IMPRESSION['NOM_CHAM']
          else                                                                : ncham=[IMPRESSION['NOM_CHAM'],]
-      if    len(ncham)==3       : motscles['NOM_CHAM'  ]=('DEPL','EQUI_ELNO_SIGM')
+      if    len(ncham)==3       : motscles['NOM_CHAM'  ]=('DEPL','SIEQ_ELNO')
       elif (len(ncham)==1) and (ncham[0][:4]!='TEMP')  :
                                   motscles['NOM_CHAM'  ]= ncham[0]
       elif (len(ncham)==2) and (ncham[0][:4]!='TEMP') and (ncham[1][:4]!='TEMP')  :
