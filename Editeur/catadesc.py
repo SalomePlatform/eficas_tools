@@ -75,13 +75,9 @@ class CatalogDescription:
                                   identifier = cata_tuple[1],
                                   cata_file_path = cata_tuple[2],
                                   file_format = cata_tuple[3])
-        if len(cata_tuple) == 5 :
-           if cata_tuple[4] == "defaut":
-            desc.default = True
-           else:
-             desc = CatalogDescription(code = cata_tuple[0],
-                                       identifier = cata_tuple[1],
-                                       cata_file_path = cata_tuple[2],
-                                       file_format = cata_tuple[3],
-                                       file_format_in = cata_tuple[4])
+        if len(cata_tuple) == 5:
+            if cata_tuple[4] == "defaut":
+                desc.default = True
+            else:
+                desc.file_format_in = cata_tuple[4]
         return desc

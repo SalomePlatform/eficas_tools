@@ -135,7 +135,7 @@ class JDCEditor(QSplitter):
                self.jdc = self.readFile(self.fichier)
             else :
                self.jdc=jdc
-            if units is not None:
+            if self.jdc is not None and units is not None:
                self.jdc.recorded_units=units
                self.jdc.old_recorded_units=units
         else: 
