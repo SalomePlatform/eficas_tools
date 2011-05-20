@@ -9,7 +9,7 @@ PY_FILES = desChoixCata.py desCommande.py desCommentaire.py desError.py desFormu
 	desUniqueASSD.py desUniqueBase.py desUniqueComp.py desUniqueInto.py desUniqueSDCOInto.py \
 	desUniqueSDCO.py desVisu.py  aideQT.py OptionsEditeur.py OptionsPdf.py myMain.py \
 	desViewTexte.py desPixmap.py desMatrice.py OptionsOT.py OptionsCuve.py desChoixMap.py \
-        OptionsMAP.py
+        OptionsMAP.py desImage.py
 
 %.py:%.ui
 	${PYUIC} -x -o $@ $<
