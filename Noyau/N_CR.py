@@ -136,6 +136,16 @@ class CR :
          else:
             if not subcr.estvide():
                s=s+str(subcr)
+
+      # convert all (eventually unicode) strings to 8-bit strings to
+      # avoid further encoding problems
+      if isinstance(self.debut, unicode):
+         self.debut = self.debut.encode("iso-8859-1")
+      if isinstance(s, unicode):
+         s = s.encode("iso-8859-1")
+      if isinstance(self.fin, unicode):
+         self.fin = self.fin.encode("iso-8859-1")
+
       if s != '':
          s=self.debut+'\n'+self.indent(s)+self.fin+'\n'
       else :
