@@ -206,6 +206,12 @@ class Appli(Ui_Eficas,QMainWindow):
     def initPatrons(self) :
     # Mise à jour du menu des fichiers recemment ouverts
         from Editeur import listePatrons
+        if not(self.code in listePatrons.sous_menus.keys()) :
+           return
+        self.menuPatrons = QMenu(self.menubar)
+        self.menuPatrons.setObjectName("menuPatrons")
+        self.menubar.addAction(self.menuPatrons.menuAction())
+        self.menuPatrons.setTitle(QApplication.translate("Eficas", "Patrons", None, QApplication.UnicodeUTF8))
         self.listePatrons = listePatrons.listePatrons(self.code)
         idx = 0
         for nomSsMenu in self.listePatrons.liste.keys():

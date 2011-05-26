@@ -68,17 +68,11 @@
     <addaction name="actionParametres_Eficas" />
     <addaction name="actionLecteur_Pdf" />
    </widget>
-   <widget class="QMenu" name="menuPatrons" >
-    <property name="title" >
-     <string>Patrons</string>
-    </property>
-   </widget>
    <addaction name="menuFichier" />
    <addaction name="menuEdition" />
    <addaction name="menuJdC" />
    <addaction name="menu_Aide" />
    <addaction name="menuOptions" />
-   <addaction name="menuPatrons" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
   <widget class="QToolBar" name="toolBar" >

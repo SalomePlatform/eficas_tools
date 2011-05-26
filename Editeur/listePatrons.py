@@ -1,7 +1,7 @@
 import os
 import re
 
-sous_menus={"ASTER" : {0:{"3D":"3D.comm"},1:{"poutre":"pou.comm"},2:{"salome":"salome.comm"},3:{"divers":"comm"}},
+sous_menus={
 	    "OPENTURNS_STUDY" : {0:{"Anne":"Std.comm"}},
             "OPENTURNS_WRAPPER" : {0:{"Anne":"wrapper_exemple.comm"}},
            }
