@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -852,7 +852,7 @@ class JDC(I_OBJECT.OBJECT):
           Retourne le nom du fichier correspondant à un numero d'unité
           logique (entier) ainsi que le source contenu dans le fichier
       """
-      if self.appli :
+      if self.appli is not None:
          # Si le JDC est relié à une application maitre, on délègue la recherche
          file,text= self.appli.get_file(unite,fic_origine)
       else:

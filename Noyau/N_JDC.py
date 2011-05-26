@@ -387,7 +387,7 @@ Causes possibles :
           Retourne le nom du fichier correspondant à un numero d'unité 
           logique (entier) ainsi que le source contenu dans le fichier
       """
-      if self.appli :
+      if self.appli is not None:
          # Si le JDC est relié à une application maitre, on délègue la recherche
          file,text= self.appli.get_file(unite,fic_origine)
       else:
