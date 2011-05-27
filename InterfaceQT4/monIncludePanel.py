@@ -148,7 +148,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
 
       fn = os.path.abspath((unicode(fn)))
       ulfile = os.path.abspath(unicode(fn))
-      self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+      self.node.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
       self.LENomFichier.setText(fn)
       self.LENomFichReturnPressed()
 
