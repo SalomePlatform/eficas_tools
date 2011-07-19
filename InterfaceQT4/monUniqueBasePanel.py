@@ -178,8 +178,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
                self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
              else :
                self.BSelectInFile.setVisible(1)
-         else:
-               self.BSelectInFile.setVisible(0)
+         elif hasattr(self, "BSelectInFile"):
+             self.BSelectInFile.setVisible(0)
 
           
   def BSelectInFilePressed(self):
