@@ -89,9 +89,10 @@
    <addaction name="action_Ouvrir" />
    <addaction name="actionEnregistrer" />
    <addaction name="separator" />
-   <addaction name="actionCouper" />
    <addaction name="actionCopier" />
    <addaction name="actionColler" />
+   <addaction name="actionSupprimer" />
+   <addaction name="actionCouper" />
   </widget>
   <action name="action_Nouveau" >
    <property name="icon" >
@@ -244,6 +245,10 @@
    </property>
   </action>
   <action name="actionSupprimer" >
+   <property name="icon" >
+    <iconset>
+     <normaloff>../Editeur/icons/delete.png</normaloff>../Editeur/icons/delete.png</iconset>
+   </property>
    <property name="text" >
     <string>Supprimer</string>
    </property>
