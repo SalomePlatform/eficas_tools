@@ -448,6 +448,7 @@ class JDCEditor(QSplitter):
 
       # on rend la copie a nouveau possible en liberant le flag edit
       self.QWParent.edit="copier"
+      self.QWParent.noeud_a_editer=child
           
     #---------------------#
     def getFileName(self):
