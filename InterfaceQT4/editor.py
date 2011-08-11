@@ -18,7 +18,7 @@
 #
 # ======================================================================
 
-import types,sys,os
+import types,sys,os, re
 import traceback
 from PyQt4 import *
 from PyQt4.QtGui  import *
@@ -235,7 +235,11 @@ class JDCEditor(QSplitter):
              # Le convertisseur existe on l'utilise
              #appli = self 
              p=convert.plugins[self.appliEficas.format_fichier_in]()
-             p.readfile(fn)         
+             p.readfile(fn)
+             pareil,texteNew=self.verifieCHECKSUM(p.text)
+             if pareil == False :
+                QMessageBox.warning( self, "fichier modifie","Attention! fichier change hors EFICAS")
+             p.text=texteNew
              text=p.convert('exec',self.appliEficas)
              if not p.cr.estvide():                 
                 self.affiche_infos("Erreur à la conversion",Qt.red)
@@ -489,6 +493,8 @@ class JDCEditor(QSplitter):
                   txt += eol
             else:
                 txt += eol        
+            checksum=self.get_checksum(txt)
+            txt=txt+checksum
         try:
             f = open(fn, 'wb')
             f.write(txt)
@@ -561,7 +567,6 @@ class JDCEditor(QSplitter):
              self.trUtf8("sauvegarde"), path,
              extensions,None,
              QFileDialog.DontConfirmOverwrite)
-      print fn
       if fn.isNull(): return (0, None)
       ext = QFileInfo(fn).suffix()
       if ext.isEmpty(): fn.append(extension)
@@ -724,6 +729,30 @@ class JDCEditor(QSplitter):
             jdcText = ''
         return ulfile, jdcText
 
+
+     
+    #------------------------------#
+    def verifieCHECKSUM(self,text):
+    #------------------------------#
+        indexDeb=text.find("#CHECKSUM:")
+        if indexDeb < 0 :
+           return 1, text
+        indexFin=text.find(":FIN CHECKSUM")
+        checkAvant=text[indexDeb:indexFin+13]
+        textJDC=text[0:indexDeb]+text[indexFin+13:-1]
+        checksum=self.get_checksum(textJDC)
+        pareil=(checkAvant==checksum)
+        return pareil, textJDC
+    #---------------------------#
+    def get_checksum(self,texte):
+    #---------------------------#
+        newtexte=texte.replace('"','\\"')
+        commande='echo "'+newtexte+'"|md5sum'
+        a=os.popen(commande)
+        checksum=a.read()
+        a.close()
+        ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
+        return ligne
         
 if __name__=='__main__':    
     import prefs # dans main
