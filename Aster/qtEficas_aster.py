@@ -24,13 +24,11 @@
    Ce module sert à lancer EFICAS configuré pour Code_Aster
 """
 # Modules Python
-
 # Modules Eficas
+
+import sys,os
+sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
+
 import prefs
-name='prefs_'+prefs.code
-__import__(name)
-
-import sys
 from InterfaceQT4 import eficas_go
-
 eficas_go.lance_eficas(code=prefs.code)

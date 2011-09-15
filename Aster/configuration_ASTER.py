@@ -22,6 +22,7 @@
     Ce module sert pour charger les paramètres de configuration d'EFICAS
 """
 # Modules Python
+print "dans Aster"
 import os, sys, string, types, re
 import traceback
 
@@ -53,6 +54,7 @@ class CONFIGbase:
       self.lecture_catalogues_standard()
       self.lecture_fichier_ini_utilisateur()
       self.init_liste_param()
+      
 
   #--------------------------------------
   def lecture_fichier_ini_standard(self):

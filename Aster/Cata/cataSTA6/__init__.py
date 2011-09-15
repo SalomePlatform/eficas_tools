@@ -11,4 +11,4 @@ POURSUITE.itemeditor=pre74.compomacro.POURSUITETreeItem
 import os,sys
 import prefs
 import sys
-rep_macro = os.path.join(prefs.REPINI,'Cata/cataSTA6')
+rep_macro = os.path.join(prefs.repIni,'Cata/cataSTA6')
