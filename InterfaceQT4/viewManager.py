@@ -38,11 +38,20 @@ class MyTabview:
        self.gridLayout = QGridLayout(self.appliEficas.centralWidget())
        self.myQtab = QTabWidget(self.appliEficas.centralWidget())
        self.gridLayout.addWidget(self.myQtab)
+       if self.appliEficas.multi== True:
+          self.myQtab.connect(self.myQtab,SIGNAL("currentChanged(int)"),self.indexChanged)
         
+   def indexChanged(self):
+       index=self.myQtab.currentIndex()
+       if  self.dict_editors.has_key(index):
+           editor=self.dict_editors[index]
+           self.appliEficas.CONFIGURATION=editor.CONFIGURATION
 
    def handleOpen(self,fichier=None,patron=0,units=None):
        result = None
        if fichier is None:
+            if self.appliEficas.multi==True : 
+               self.appliEficas.definitCode(None,None)
             fichier = QFileDialog.getOpenFileName(self.appliEficas,
                         self.appliEficas.trUtf8('Ouvrir Fichier'),
                         self.appliEficas.CONFIGURATION.savedir,
@@ -112,7 +121,7 @@ class MyTabview:
        return res
         
    def handleEditCopy(self):
-       #print "passage dans handleEditCopy"
+       print "passage dans handleEditCopy"
        index=self.myQtab.currentIndex()
        editor=self.dict_editors[index]
        editor.handleEditCopy()
@@ -135,6 +144,8 @@ class MyTabview:
        editor.handleSupprimer()
 
    def newEditor(self,include=0):
+       if self.appliEficas.multi==True : 
+           self.appliEficas.definitCode(None,None)
        maPage=self.getEditor(include=include)
 
    def newIncludeEditor(self):

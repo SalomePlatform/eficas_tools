@@ -23,6 +23,7 @@
 """
 # Modules Python
 import os
+import sys
 import configuration
 
 # Modules Eficas

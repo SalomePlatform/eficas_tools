@@ -15,27 +15,54 @@ class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code="ASTER",salome=0,parent=None,ssCode=None):
+    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False):
         """
         Constructor
         """
-        self.VERSION_EFICAS="Eficas QT4 V6.3.1"
+        QMainWindow.__init__(self,parent)
+        Ui_Eficas.__init__(self)
+        self.setupUi(self)
 
-        self.ihm="QT"
-        self.code=code
-        self.ssCode=ssCode
+        self.VERSION_EFICAS="Eficas QT4 V6.3.1"
         self.salome=salome
-	self.top = self #(pour CONFIGURATION)
+        self.ihm="QT"
+	self.top = self    #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
         self.indice=0
         self.dict_reels={}
 
-        import prefs
-        prefs.code=code
-        name='prefs_'+prefs.code
+        self.multi=multi
+        if self.multi == False :self.definitCode(code,ssCode)
+        self.RepIcon=os.path.abspath(os.path.join(os.getcwd(),'../Editeur/icons'))
+        self.ajoutIcones()
+
+
+        self.viewmanager = MyTabview(self) 
+        self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
+        self.connecterSignaux() 
+
+        self.recent =  QStringList()
+        self.ficPatrons={}
+        self.initRecents()
+
+        self.ouvreFichiers()
+        self.setWindowTitle(self.VERSION_EFICAS)
+        
+    def definitCode(self,code,ssCode) :
+        self.code=code
+        self.ssCode=ssCode
+        if self.code==None :
+           self.code=raw_input("Entrez le code : ")
+           pathCode=raw_input("Entrez le chemin : ")
+
+           self.cleanPath()
+           import sys
+           sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..',pathCode)))
+           # a faire dans le panel de choix du code Aster Cuve2Dg ou MAP
+        name='prefs_'+self.code
         prefsCode=__import__(name)
-        self.REPINI=prefsCode.REPINI
-        self.RepIcon=prefsCode.INSTALLDIR+"/Editeur/icons"
+
+        self.repIni=prefsCode.repIni
         self.INSTALLDIR=prefsCode.INSTALLDIR
         if ssCode != None :
            self.format_fichier= ssCode	#par defaut
@@ -43,44 +70,21 @@ class Appli(Ui_Eficas,QMainWindow):
         else :
            self.format_fichier="python"	#par defaut
 
-        if salome :
-           import sys
-        nameConf='configuration_'+prefs.code
+        nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
-        self.CONFIGURATION = configuration.make_config(self,prefsCode.REPINI)
+        self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
         self.CONFIGStyle = None
         if hasattr(configuration,'make_config_style'):
-           self.CONFIGStyle = configuration.make_config_style(self,prefsCode.REPINI)
+           self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
         if hasattr(prefsCode,'encoding'):
            import sys
            reload(sys)
            sys.setdefaultencoding(prefsCode.encoding)
-
-        QMainWindow.__init__(self,parent)
-        Ui_Eficas.__init__(self)
-        self.setupUi(self)
-        self.ajoutIcones()
         if code in Appli.__dict__.keys():
           listeTexte=apply(Appli.__dict__[code],(self,))
-
-        self.viewmanager = MyTabview(self) 
-        self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
-        self.connecterSignaux() 
-
-
-        #if self.salome :
-        #   from Editeur import session
-        #   self.ouvreFichiers()
-
-        self.recent =  QStringList()
-        self.ficPatrons={}
         self.initPatrons()
         self.ficRecents={}
-        self.initRecents()
 
-        self.ouvreFichiers()
-        self.setWindowTitle(self.VERSION_EFICAS)
-        
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
         self.actionTraduitV7V8 = QAction(self)
@@ -336,7 +340,7 @@ class Appli(Ui_Eficas,QMainWindow):
         
     def handleOpenPatrons(self):
         idx=self.sender()
-        fichier=self.REPINI+"/../Editeur/Patrons/"+self.code+"/"+self.ficPatrons[idx]
+        fichier=self.repIni+"/../Editeur/Patrons/"+self.code+"/"+self.ficPatrons[idx]
         self.viewmanager.handleOpen(fichier=fichier, patron = 1)
 
     def handleOpenRecent(self):
@@ -417,6 +421,15 @@ class Appli(Ui_Eficas,QMainWindow):
         texte="tempo"+str(self.indice)
         return texte
         
+    def cleanPath(self):
+        for pathCode in ('Aster','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP'):
+            try:
+              aEnlever=os.path.abspath(os.path.join(os.getcwd(),'..',pathCode))
+              sys.path.remove(aEnlever)
+            except :
+              pass
+              
+
 
 if __name__=='__main__':
 

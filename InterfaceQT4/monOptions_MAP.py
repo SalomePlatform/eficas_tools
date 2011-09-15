@@ -22,6 +22,7 @@ class Options(desOptions):
        self.dVersion={}
        self.dRepCat={}
        self.connecterSignaux()
+       self.code='MAP'
        self.initAll()
   
    def connecterSignaux(self) :
@@ -126,9 +127,7 @@ class Options(desOptions):
           item[2]=self.dRepCat[version]
           self.dVersion[version]=tuple(item)
        else :
-          import prefs
-          code=prefs.code
-          self.dVersion[version]=(code,version,self.dRepCat[version],code.lower())
+          self.dVersion[version]=(self.code,version,self.dRepCat[version],self.code.lower())
           
        lItem=[]
        for version in self.dVersion.keys() :
@@ -194,14 +193,12 @@ class Options(desOptions):
        old_fic_ini_util=fic_ini_util+"_old"
        commande="mv "+fic_ini_util+" "+old_fic_ini_util
        os.system(commande)
-       import prefs
-       name='prefs_'+prefs.code
+       name='prefs_'+self.code
        prefsCode=__import__(name)
-       repIni=prefsCode.REPINI
        nameConf='configuration_'+prefs.code
        configuration=__import__(nameConf)
 
-       configNew=configuration.CONFIG(appli,repIni)
+       configNew=configuration.CONFIG(appli,prefsCode.repIni)
        self.configuration=configNew
        appli.CONFIGURATION=configNew
        self.configuration.save_params()

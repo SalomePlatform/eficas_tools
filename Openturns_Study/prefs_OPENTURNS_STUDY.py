@@ -21,16 +21,15 @@
 
 import os, sys
 # Les variables pouvant positionnees sont :
-print "import des prefs de OPENTURNS"
 
-# REPINI sert à localiser le fichier 
+# repIni sert à localiser le fichier 
 # initialdir sert comme directory initial des QFileDialog
 # positionnee a repin au debut mise a jour dans configuration
-REPINI=os.path.dirname(os.path.abspath(__file__))
-initialdir=REPINI 
+repIni=os.path.dirname(os.path.abspath(__file__))
+initialdir=repIni 
 
 # INSTALLDIR sert à localiser l'installation d'Eficas
-INSTALLDIR=os.path.join(REPINI,'..')
+INSTALLDIR=os.path.join(repIni,'..')
 
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
@@ -46,6 +45,7 @@ savedir         = os.environ['HOME']
 
 
 # OpenTURNS Python module
+#OpenTURNS_path="/opt/Openturns/Install_0_13_2/lib/python2.5/site-packages"
 OpenTURNS_path=""
 # Choix des catalogues
 if len(OpenTURNS_path) > 0:

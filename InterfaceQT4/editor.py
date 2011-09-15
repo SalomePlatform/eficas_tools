@@ -29,7 +29,7 @@ from datetime import date
 
 # Modules Eficas
 
-import convert,generator
+import convert, generator
 from Editeur     import session
 from Editeur     import comploader
 from Editeur     import Objecttreeitem
@@ -50,7 +50,6 @@ class JDCEditor(QSplitter):
     def __init__ (self,appli,fichier = None, jdc = None, QWParent=None, units = None, include=0 , vm=None):          
     #----------------------------------------------------------------------------------------------------------#
 
-        #print "fichier", fichier,"jdc",jdc,"units",units,"include",include
         QSplitter.__init__(self, QWParent)
 	self.appliEficas = appli
 	self.appli       = appli  #---- attendu par IHM
@@ -59,25 +58,31 @@ class JDCEditor(QSplitter):
         self.jdc         = jdc
         self.QWParent    = QWParent
 
-        self.test=0
-        VERSION_CODE    = session.d_env.cata
         if appli != None :
            self.salome =  self.appliEficas.salome
-           self.format =  self.appliEficas.format_fichier
         else :
            self.salome=0
            print "dans JDC pas d appli ????????"
 
+        # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code = self.appliEficas.CONFIGURATION.code
-        self.version_code = VERSION_CODE
+        self.version_code = session.d_env.cata
+
+        if not hasattr ( self.appliEficas, 'readercata') or  self.appliEficas.multi==True:
+           self.readercata  = readercata.READERCATA( self, self.appliEficas )
+           self.appliEficas.readercata=self.readercata
+        else :
+           self.readercata=self.appliEficas.readercata
+        if self.readercata.fic_cata == None : return    #Sortie Salome
+
+        self.format =  self.appliEficas.format_fichier
         self.titre=self.appliEficas.VERSION_EFICAS + ' pour '+ self.code
 
         self.dict_reels={}
         self.liste_simp_reel=[]        
         self.ihm="QT"
         
-        import prefs
-        nameConf='configuration_'+prefs.code
+        nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
         self.CONFIGURATION = self.appliEficas.CONFIGURATION
         self.CONFIGStyle =   self.appliEficas.CONFIGStyle
@@ -111,15 +116,6 @@ class JDCEditor(QSplitter):
         self.node_selected = None
         self.message=''
         
-        #if not hasattr( readercata, 'reader' ) :
-        #    readercata.reader = readercata.READERCATA( self, self.appliEficas )
-        #self.readercata = readercata.reader
-        if not hasattr ( self.appliEficas, 'readercata'):
-           self.readercata  = readercata.READERCATA( self, self.appliEficas )
-           self.appliEficas.readercata=self.readercata
-        else :
-           self.readercata=self.appliEficas.readercata
-        if self.readercata.fic_cata == None : return    #Sortie Salome
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
         
         #------- construction du jdc --------------
@@ -272,12 +268,11 @@ class JDCEditor(QSplitter):
     #-----------------------#
     def get_source(self,file):
     #-----------------------#
-        format=self.appliEficas.format_fichier
 
         # Il faut convertir le contenu du fichier en fonction du format
-        if convert.plugins.has_key(format):
+        if convert.plugins.has_key(self.format):
             # Le convertisseur existe on l'utilise
-            p=convert.plugins[format]()
+            p=convert.plugins[self.format]()
             p.readfile(file)
             text=p.convert('execnoparseur')
             if not p.cr.estvide():
@@ -300,7 +295,6 @@ class JDCEditor(QSplitter):
     #-----------------------#
     def viewJdcSource(self):        
     #-----------------------#
-        format = self.appliEficas.format_fichier
         f=open(self.fichier,'r')
         texteSource=f.read()
         f.close()
@@ -309,8 +303,7 @@ class JDCEditor(QSplitter):
     #-----------------------#
     def viewJdcPy(self):        
     #-----------------------#
-        format = self.appliEficas.format_fichier
-        strSource = str( self.get_text_JDC(format) )       
+        strSource = str( self.get_text_JDC(self.format) )       
         self._viewText(strSource, "JDC_RESULTAT")
                  
     #-----------------------#
@@ -486,7 +479,7 @@ class JDCEditor(QSplitter):
         fn = unicode(fn)
 
         if txt == None :
-            txt = self.get_text_JDC(self.appliEficas.format_fichier)
+            txt = self.get_text_JDC(self.format)
             eol = '\n'        
             if len(txt) >= len(eol):
                if txt[-len(eol):] != eol:
@@ -521,18 +514,17 @@ class JDCEditor(QSplitter):
             return jdc_formate
       else:         
          # Il n'existe pas c'est une erreur
-         self.affiche_infos("Format %s non reconnu" % format,Qt.red)
-         QMessageBox.critical( self, "Format "+format+" non reconnu","EFICAS ne sait pas convertir le JDC selon le format "+format)
+         self.affiche_infos("Format %s non reconnu" % self.format,Qt.red)
+         QMessageBox.critical( self, "Format "+self.format+" non reconnu","EFICAS ne sait pas convertir le JDC selon le format "+self.format)
          return ""
 
     #-----------------------------#
     def run(self,execution="oui"):
     #-----------------------------#
-      format=self.appliEficas.format_fichier
       self.textePython=""
-      if generator.plugins.has_key(format):
+      if generator.plugins.has_key(self.format):
          # Le generateur existe on l'utilise
-         self.generator=generator.plugins[format]()
+         self.generator=generator.plugins[self.format]()
          self.textePython =self.generator.generRUN(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
       if execution=="oui" :
          exec self.textePython
@@ -542,10 +534,9 @@ class JDCEditor(QSplitter):
     #------------------------------------------------#
     def runYACS(self,execution="oui",nomFichier=None):
     #------------------------------------------------#
-      format=self.appliEficas.format_fichier
-      if generator.plugins.has_key(format):
+      if generator.plugins.has_key(self.format):
          # Le generateur existe on l'utilise
-         self.generator=generator.plugins[format]()
+         self.generator=generator.plugins[self.format]()
          self.generator.generRUNYACS(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION,nomFichier=nomFichier)
       if execution=="oui" :
          print "il faut faire le run dans Salome"
@@ -755,7 +746,7 @@ class JDCEditor(QSplitter):
         return ligne
         
 if __name__=='__main__':    
-    import prefs # dans main
+    self.code='ASTER'
     name='prefs_'+prefs.code
     prefsCode=__import__(name)
 

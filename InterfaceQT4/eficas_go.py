@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -18,49 +19,31 @@
 #
 #
 # ======================================================================
-"""
-    Ce module permet de lancer l'application EFICAS en affichant
-    un ecran Splash pour faire patienter l'utilisateur
-"""
 # Modules Python
-import sys
 
-# Test PyQt version
-min_version_number_str = "4.4.2"
-min_version_number = 0x040402
-version_number_str = "0"
-version_number = 0
-try:
-    from PyQt4 import pyqtconfig
-    conf = pyqtconfig.Configuration()
-    version_number_str = conf.pyqt_version_str
-    version_number = conf.pyqt_version
-except:
-    sys.stderr.write("Error: PyQt4 not found (Eficas needs PyQt4 version %s or greater to run).\n" %
-                     min_version_number_str)
-    sys.exit(1)
-if version_number < min_version_number:
-    sys.stderr.write("Error: Eficas needs PyQt4 version %s or greater to run "
-                     "(installed version is %s).\n" %
-                     (min_version_number_str, version_number_str))
-    sys.exit(1)
+import sys,os
+repIni=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),".."))
+ihmQTDir=os.path.join(repIni,"UiQT4")
+editeurDir=os.path.join(repIni,"Editeur")
+ihmDir=os.path.join(repIni,"InterfaceQT4")
+if ihmDir not in sys.path : sys.path.append(ihmDir)
+if ihmQTDir not in sys.path : sys.path.append(ihmQTDir)
+if editeurDir not in sys.path :sys.path.append(editeurDir)
 
 from PyQt4.QtGui import *
 
-from Editeur  import import_code
-from Editeur  import session
-from qtEficas import Appli
-
-def lance_eficas(code=None,fichier=None,ssCode=None):
+def lance_eficas(code=None,fichier=None,ssCode=None,multi=False):
     """
         Lance l'appli EFICAS
     """
     # Analyse des arguments de la ligne de commande
+    from Editeur  import session
     options=session.parse(sys.argv)
-    code=options.code
+    if options.code!= None : code=options.code
 
+    from qtEficas import Appli
     app = QApplication(sys.argv)
-    Eficas=Appli(code=code,ssCode=ssCode)
+    Eficas=Appli(code=code,ssCode=ssCode,multi=multi)
     Eficas.show()
 
     res=app.exec_()
@@ -75,6 +58,7 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
     options=session.parse(sys.argv)
     code=options.code
 
+    from qtEficas import Appli
     app = QApplication(sys.argv)
     Eficas=Appli(code=code,ssCode=ssCode)
 
@@ -92,15 +76,12 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
     print monEditeur.cherche_Groupes()
 
 def lance_MapToSh(code=None,fichier=None,ssCode='s_polymers_st_1_V1'):
-    """
-        Lance l'appli EFICAS pour trouver les noms des groupes
-    """
-    # Analyse des arguments de la ligne de commande
      
     options=session.parse(sys.argv)
     code=options.code
     fichier=options.comm[0]
 
+    from qtEficas import Appli
     app = QApplication(sys.argv)
     Eficas=Appli(code=code,ssCode=ssCode)
 
@@ -116,3 +97,10 @@ def lance_MapToSh(code=None,fichier=None,ssCode='s_polymers_st_1_V1'):
     monEditeur=JDCEditor(Eficas,fichier)
     texte=monEditeur.run("non")
     print texte
+
+if __name__ == "__main__":
+    import sys
+    sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..')))
+    lance_eficas(code=None,fichier=None,ssCode=None,multi=True)
+    
+

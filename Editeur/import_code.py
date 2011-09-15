@@ -28,14 +28,7 @@ import os
 import prefs
 name='prefs_'+prefs.code
 prefs_Code=__import__(name)
-
 INSTALLDIR=prefs_Code.INSTALLDIR
-sys.path.append(INSTALLDIR)
-sys.path.append(INSTALLDIR+"/UiQT4")
-sys.path.append(INSTALLDIR+"/InterfaceQT4")
-#sys.path.append(INSTALLDIR+"/Ui")
-#sys.path.append(INSTALLDIR+"/InterfaceQT")
-sys.path.append(INSTALLDIR+"/Editeur")
 
 # Ce chemin permet d'importer les modules Noyau et Validation
 # représentant le code utilisé (si fourni)
@@ -46,10 +39,5 @@ if hasattr(prefs_Code,'CODE_PATH'):
       import Noyau,Validation
       del sys.path[0]
 sys.path[:0]=[prefs_Code.INSTALLDIR]
-
-# Ensuite on surcharge eventuellement
-#if hasattr(prefs_Code,'CODE_PATH_SURCHARGE'):
-#   if prefs_Code.CODE_PATH_SURCHARGE:
-#       sys.path.insert(0,prefs_Code.CODE_PATH_SURCHARGE)
 
 import Accas

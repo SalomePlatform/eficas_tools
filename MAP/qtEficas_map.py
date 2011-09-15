@@ -24,21 +24,22 @@
    Ce module sert à lancer EFICAS configuré pour Perfect
 """
 # Modules Python
+import sys,os
+sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
+
+from PyQt4.QtGui import *
 
 # Modules Eficas
 import prefs
 name='prefs_'+prefs.code
 __import__(name)
 
-import sys
-from PyQt4.QtGui import *
-
-from Editeur  import import_code
-from Editeur  import session
-from qtEficas import Appli
 
 from InterfaceQT4 import eficas_go
 from InterfaceQT4 import monChoixMap
+from Editeur  import import_code
+from Editeur  import session
+
 
 class ChoixCata:
  def __init__(self):
@@ -61,8 +62,5 @@ else :
       print "Ce Catalogue ne convient pas"
       exit(1)
    MonChoixCata.nom=cata[0: p.search(cata).start()]
-   #MonChoixCata.nom=cata
 
-#permet de choisir le module
 eficas_go.lance_eficas(code=prefs.code,ssCode=MonChoixCata.nom)
-#eficas_go.lance_eficas(code=prefs.code,choix="non")
