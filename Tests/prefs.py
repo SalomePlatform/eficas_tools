@@ -21,14 +21,13 @@
 
 import os,sys
 
-# REPINI sert à localiser le fichier editeur.ini
+# repIni sert à localiser le fichier editeur.ini
 # Obligatoire
-REPINI=os.path.dirname(os.path.abspath(__file__))
-repIni=REPINI
+repIni=os.path.dirname(os.path.abspath(__file__))
 
 # INSTALLDIR sert à localiser l'installation d'Eficas
 # Obligatoire
-INSTALLDIR=os.path.join(REPINI,'..')
+INSTALLDIR=os.path.join(repIni,'..')
 
 # CODE_PATH sert à localiser Noyau et Validation éventuellement
 # non contenus dans la distribution EFICAS
