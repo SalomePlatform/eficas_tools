@@ -38,13 +38,13 @@ class OBJECT:
 
   def isMCList(self):
     """ 
-        Retourne 1 si self est une MCList (liste de mots-clés), 0 sinon (défaut) 
+        Retourne 1 si self est une MCList (liste de mots-cles), 0 sinon (defaut) 
     """
     return 0
 
   def get_regles(self):
     """ 
-       Retourne les règles de self 
+       Retourne les regles de self 
     """
     if hasattr(self,'definition'):
       return self.definition.regles
@@ -55,7 +55,7 @@ class OBJECT:
 
   def init_modif(self):
     """
-       Met l'état de l'objet à modified et propage au parent
+       Met l'etat de l'objet a modified et propage au parent
        qui vaut None s'il n'existe pas
     """
     self.state = 'modified'
@@ -64,11 +64,11 @@ class OBJECT:
 
   def fin_modif(self):
       """
-      Méthode appelée après qu'une modification a été faite afin de déclencher
-      d'éventuels traitements post-modification
+      Methode appelee apres qu'une modification a ete faite afin de declencher
+      d'eventuels traitements post-modification
       """
       #print "fin_modif",self
-      # pour les objets autres que les commandes, aucun traitement spécifique 
+      # pour les objets autres que les commandes, aucun traitement specifique 
       # on remonte l'info de fin de modif au parent
       CONNECTOR.Emit(self,"valid")
       if self.parent:
@@ -76,13 +76,13 @@ class OBJECT:
 
   def isrepetable(self):
     """
-         Indique si l'objet est répétable
+         Indique si l'objet est repetable
     """
     return 0
 
   def liste_mc_presents(self):
     """
-         Retourne la liste des noms des mots clés présents
+         Retourne la liste des noms des mots cles presents
     """
     return []
 
@@ -91,14 +91,14 @@ class OBJECT:
 
   def get_liste_mc_inconnus(self):
      """
-     Retourne la liste des mots-clés inconnus dans self
+     Retourne la liste des mots-cles inconnus dans self
      """
      return []
 
   def verif_condition_regles(self,liste_presents):
     """ 
-        Retourne la liste des mots-clés à rajouter pour satisfaire les règles
-        en fonction de la liste des mots-clés présents 
+        Retourne la liste des mots-cles a rajouter pour satisfaire les regles
+        en fonction de la liste des mots-cles presents 
     """
     liste=[]
     for regle in self.definition.regles:
@@ -108,17 +108,17 @@ class OBJECT:
   def verif_condition_bloc(self):
     """ 
         Evalue les conditions de tous les blocs fils possibles 
-        (en fonction du catalogue donc de la définition) de self et
+        (en fonction du catalogue donc de la definition) de self et
         retourne deux listes :
-          - la première contient les noms des blocs à rajouter
-          - la seconde contient les noms des blocs à supprimer
+          - la premiere contient les noms des blocs a rajouter
+          - la seconde contient les noms des blocs a supprimer
     """
     return [],[]
 
   def get_genealogie(self):
     """ 
         Retourne la liste des noms des ascendants (noms de MCSIMP,MCFACT,MCBLOC
-        ou ETAPE) de self jusqu'au premier objet etape rencontré
+        ou ETAPE) de self jusqu'au premier objet etape rencontre
     """
     if self.parent:
        l=self.parent.get_genealogie()
@@ -141,9 +141,9 @@ class OBJECT:
      pass
 
   def normalize(self):
-     """ Retourne l'objet normalisé. En général self sauf si
-         pour etre inséré dans l'objet père il doit etre 
-         wrappé dans un autre objet (voir mot cle facteur).
+     """ Retourne l'objet normalise. En general self sauf si
+         pour etre insere dans l'objet pere il doit etre 
+         wrappe dans un autre objet (voir mot cle facteur).
      """
      return self
 

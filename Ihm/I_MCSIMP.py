@@ -80,7 +80,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def GetText(self):
     """
-        Retourne le texte à afficher dans l'arbre représentant la valeur de l'objet
+        Retourne le texte a afficher dans l'arbre représentant la valeur de l'objet
         pointé par self
     """
 
@@ -381,7 +381,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         Inputs :
            - sd=concept detruit
         Fonction :
-        Met a jour la valeur du mot cle simple suite à la disparition 
+        Met a jour la valeur du mot cle simple suite a la disparition 
         du concept sd
         Attention aux matrices
     """
@@ -443,7 +443,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def set_valeur_co(self,nom_co):
       """
-          Affecte à self l'objet de type CO et de nom nom_co
+          Affecte a self l'objet de type CO et de nom nom_co
       """
       #print "set_valeur_co",nom_co
       step=self.etape.parent
@@ -483,7 +483,7 @@ class MCSIMP(I_OBJECT.OBJECT):
   def verif_existence_sd(self):
      """
         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-        avant étape, sinon enlève la référence à ces concepts
+        avant étape, sinon enlève la référea ces concepts
      """
      #print "verif_existence_sd"
      # Attention : possible probleme avec include
@@ -553,7 +553,7 @@ class MCSIMP(I_OBJECT.OBJECT):
      return 0
 
   def valide_item(self,item):
-      """Valide un item isolé. Cet item est candidat à l'ajout à la liste existante"""
+      """Valide un item isolé. Cet item est candidata l'ajout a la liste existante"""
       valid=1
       try:
           #on verifie le type
