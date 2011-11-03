@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -863,7 +863,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def make_incl2_except(self,mess=None):
          l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
-         if self.jdc.appli:
+         if self.jdc.appli is not None:
              if mess == None :
                      self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
                                             message="Le contenu de ce fichier ne sera pas pris en compte\n"+string.join(l)
