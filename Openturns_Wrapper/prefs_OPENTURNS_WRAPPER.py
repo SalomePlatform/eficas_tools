@@ -31,6 +31,7 @@ initialdir=repIni
 
 # INSTALLDIR sert à localiser l'installation d'Eficas
 INSTALLDIR=os.path.join(repIni,'..')
+sys.path.insert(0,INSTALLDIR)
 
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
@@ -50,4 +51,3 @@ OpenTURNS_path=""
 # Choix des catalogues
 if len(OpenTURNS_path) > 0:
     sys.path[:0]=[OpenTURNS_path]
-sys.path[:0]=[INSTALLDIR]
