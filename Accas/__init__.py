@@ -56,7 +56,7 @@ from A_MCLIST import MCList
 from A_MCBLOC import MCBLOC
 from A_MCSIMP import MCSIMP
 
-# Les règles
+# Les regles
 from A_AU_MOINS_UN import AU_MOINS_UN
 from A_MEME_NOMBRE import MEME_NOMBRE
 from A_AU_PLUS_UN import AU_PLUS_UN
@@ -80,6 +80,9 @@ from Noyau.N__F import _F
 
 from Noyau.N_Exception import AsException
 from Noyau.N_utils import AsType
+from Noyau.N_utils import AsType
+from Noyau.N_OPS import OPS, EMPTY_OPS
+from Noyau.N_ASSD import not_checked
 
 from A_VALIDATOR import OrVal,AndVal,OnlyStr
 from A_VALIDATOR import OrdList,NoRepeat,LongStr,Compulsory
