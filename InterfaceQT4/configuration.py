@@ -96,7 +96,6 @@ class CONFIG_BASE:
   #--------------------------------------
   # Surcharge les paramètres standards par les paramètres utilisateur s'ils existent
       self.fic_ini_utilisateur = os.path.join(self.rep_user,self.prefsUser)
-      print self.fic_ini_utilisateur
       if not os.path.isfile(self.fic_ini_utilisateur): return
 
       txt = utils.read_file(self.fic_ini_utilisateur)
@@ -153,7 +152,6 @@ class CONFIG_BASE:
              valeur=getattr(self,clef)
              texte= texte + clef+"	= " + repr(valeur) +"\n"
       f=open(self.fic_ini_utilisateur,'w+')
-      print self.fic_ini_utilisateur
       f.write(texte) 
       f.close()
 #
