@@ -388,8 +388,8 @@ class JDCEditor(QSplitter):
       """
       Stocke dans Eficas.noeud_a_editer le noeud a copier
       """
-      #print "handleEditCut"
       self.chercheNoeudSelectionne()
+      self.node_selected.update_node_label_in_blue()
       self.QWParent.edit="copier"
       self.QWParent.noeud_a_editer = self.node_selected
     
@@ -639,6 +639,7 @@ class JDCEditor(QSplitter):
           if path is None: 
              path=self.CONFIGURATION.savedir
           bOK, fn=self.determineNomFichier(path,extension)
+          if fn == None : return (0, None)
           if fn.isNull(): return (0, None)
 
           ulfile = os.path.abspath(unicode(fn))
