@@ -1,28 +1,28 @@
-#@ MODIF N_MACRO Noyau  DATE 07/09/2009   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_MACRO Noyau  DATE 30/08/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 # RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
-# (AT YOUR OPTION) ANY LATER VERSION.                                 
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
-#                                                                       
-#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+#
+#
 # ======================================================================
 
 
-""" 
+"""
     Ce module contient la classe de definition MACRO
     qui permet de spécifier les caractéristiques d'une macro-commande
 """
@@ -31,16 +31,17 @@ import types,string,traceback
 
 import N_ENTITE
 import N_MACRO_ETAPE
+import N_OPS
 import nommage
 
 class MACRO(N_ENTITE.ENTITE):
    """
     Classe pour definir une macro-commande
 
-    Cette classe a trois attributs de classe 
+    Cette classe a trois attributs de classe
 
-    - class_instance qui indique la classe qui devra etre utilisée 
-            pour créer l'objet qui servira à controler la conformité d'un 
+    - class_instance qui indique la classe qui devra etre utilisée
+            pour créer l'objet qui servira à controler la conformité d'un
             macro-commande avec sa définition
 
     - label qui indique la nature de l'objet de définition (ici, MACRO)
@@ -121,7 +122,7 @@ class MACRO(N_ENTITE.ENTITE):
       self.fichier_ini = fichier_ini
       # Attribut op_init : Fonction a appeler a la construction de l operateur sauf si == None
       self.op_init=op_init
-      self.entites=args
+      self.entites = args
       current_cata=CONTEXT.get_current_cata()
       if niveau == None:
          self.niveau=None
@@ -131,6 +132,7 @@ class MACRO(N_ENTITE.ENTITE):
          self.niveau.enregistre(self)
       self.UIinfo=UIinfo
       self.affecter_parente()
+      self.check_definition(self.nom)
 
    def __call__(self,reuse=None,**args):
       """
@@ -167,8 +169,8 @@ class MACRO(N_ENTITE.ENTITE):
       """
       if self.op is not None and (type(self.op) != types.IntType or self.op > 0) :
         self.cr.fatal("L'attribut 'op' doit etre un entier signé : %s" %`self.op`)
-      if self.proc is not None and type(self.proc) != types.FunctionType:
-        self.cr.fatal("L'attribut op doit etre une fonction Python : %s" % `self.proc`)
+      if self.proc is not None and not isinstance(self.proc, N_OPS.OPS):
+        self.cr.fatal("L'attribut op doit etre une instance d'OPS : %s" % `self.proc`)
       if type(self.regles) != types.TupleType :
         self.cr.fatal("L'attribut 'regles' doit etre un tuple : %s" %`self.regles`)
       if type(self.fr) != types.StringType :
@@ -187,5 +189,4 @@ class MACRO(N_ENTITE.ENTITE):
           des cycles de références
       """
       self.niveau=None
-
 

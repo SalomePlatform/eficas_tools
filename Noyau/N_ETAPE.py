@@ -1,29 +1,29 @@
-#@ MODIF N_ETAPE Noyau  DATE 16/11/2009   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_ETAPE Noyau  DATE 12/10/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 # RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
-# (AT YOUR OPTION) ANY LATER VERSION.                                 
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
-#                                                                       
-#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+#
+#
 # ======================================================================
 
 
-""" 
-    Ce module contient la classe ETAPE qui sert à vérifier et à exécuter
+"""
+    Ce module contient la classe ETAPE qui sert a verifier et a executer
     une commande
 """
 
@@ -39,29 +39,30 @@ from N_Exception import AsException
 import N_utils
 from N_utils import AsType
 from N_ASSD import ASSD
+from N_info import message, SUPERV
 
 class ETAPE(N_MCCOMPO.MCCOMPO):
    """
-      Cette classe hérite de MCCOMPO car ETAPE est un OBJECT composite
+      Cette classe herite de MCCOMPO car ETAPE est un OBJECT composite
 
    """
    nature = "OPERATEUR"
 
-   # L'attribut de classe codex est utilisé pour rattacher le module de calcul éventuel (voir Build)
-   # On le met à None pour indiquer qu'il n'y a pas de module de calcul rattaché
+   # L'attribut de classe codex est utilise pour rattacher le module de calcul eventuel (voir Build)
+   # On le met a None pour indiquer qu'il n'y a pas de module de calcul rattache
    codex=None
 
    def __init__(self,oper=None,reuse=None,args={}):
       """
          Attributs :
 
-          - definition : objet portant les attributs de définition d'une étape de type opérateur. Il
-                         est initialisé par l'argument oper.
+          - definition : objet portant les attributs de definition d'une etape de type operateur. Il
+                         est initialise par l'argument oper.
 
-          - reuse : indique le concept d'entrée réutilisé. Il se trouvera donc en sortie
-                    si les conditions d'exécution de l'opérateur l'autorise
+          - reuse : indique le concept d'entree reutilise. Il se trouvera donc en sortie
+                    si les conditions d'execution de l'operateur l'autorise
 
-          - valeur : arguments d'entrée de type mot-clé=valeur. Initialisé avec l'argument args.
+          - valeur : arguments d'entree de type mot-cle=valeur. Initialise avec l'argument args.
 
       """
       self.definition=oper
@@ -80,8 +81,8 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
    def make_register(self):
       """
-         Initialise les attributs jdc, id, niveau et réalise les 
-         enregistrements nécessaires
+         Initialise les attributs jdc, id, niveau et realise les
+         enregistrements necessaires
       """
       if self.parent :
          self.jdc = self.parent.get_jdc_root()
@@ -94,8 +95,8 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
    def nettoiargs(self):
       """
-         Cette methode a pour fonction de retirer tous les arguments egaux à None
-         de la liste des arguments. Ils sont supposés non présents et donc retirés.
+         Cette methode a pour fonction de retirer tous les arguments egaux a None
+         de la liste des arguments. Ils sont supposes non presents et donc retires.
       """
       for k in self.valeur.keys():
          if self.valeur[k] == None:del self.valeur[k]
@@ -109,28 +110,29 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
    def Build_sd(self,nom):
       """
-         Construit le concept produit de l'opérateur. Deux cas 
-         peuvent se présenter :
-        
-           - le parent n'est pas défini. Dans ce cas, l'étape prend en charge la création 
+         Construit le concept produit de l'operateur. Deux cas
+         peuvent se presenter :
+
+           - le parent n'est pas defini. Dans ce cas, l'etape prend en charge la creation
              et le nommage du concept.
 
-           - le parent est défini. Dans ce cas, l'étape demande au parent la création et 
+           - le parent est defini. Dans ce cas, l'etape demande au parent la creation et
              le nommage du concept.
 
       """
+      message.debug(SUPERV, "Build_sd %s", self.nom)
       self.sdnom=nom
       try:
          if self.parent:
             sd= self.parent.create_sdprod(self,nom)
-            if type(self.definition.op_init) == types.FunctionType: 
+            if type(self.definition.op_init) == types.FunctionType:
                apply(self.definition.op_init,(self,self.parent.g_context))
          else:
             sd=self.get_sd_prod()
-            # On n'utilise pas self.definition.op_init car self.parent 
+            # On n'utilise pas self.definition.op_init car self.parent
             # n'existe pas
             if sd != None and self.reuse == None:
-               # On ne nomme le concept que dans le cas de non reutilisation 
+               # On ne nomme le concept que dans le cas de non reutilisation
                # d un concept
                sd.set_name(nom)
       except AsException,e:
@@ -157,15 +159,15 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
    def get_sd_prod(self):
       """
-          Retourne le concept résultat de l'étape
+          Retourne le concept resultat de l'etape
           Deux cas :
                    - cas 1 : sd_prod de oper n'est pas une fonction
                      il s'agit d'une sous classe de ASSD
-                     on construit le sd à partir de cette classe
+                     on construit le sd a partir de cette classe
                      et on le retourne
                    - cas 2 : il s'agit d'une fonction
-                     on l'évalue avec les mots-clés de l'étape (mc_liste)
-                     on construit le sd à partir de la classe obtenue
+                     on l'evalue avec les mots-cles de l'etape (mc_liste)
+                     on construit le sd a partir de la classe obtenue
                      et on le retourne
       """
       if type(self.definition.sd_prod) == types.FunctionType:
@@ -183,23 +185,23 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
           #         sys.exc_info()[0],sys.exc_info()[1],)
       else:
         sd_prod=self.definition.sd_prod
-      # on teste maintenant si la SD est réutilisée ou s'il faut la créer
+      # on teste maintenant si la SD est reutilisee ou s'il faut la creer
       if self.definition.reentrant != 'n' and self.reuse:
         # Le concept produit est specifie reutilise (reuse=xxx). C'est une erreur mais non fatale.
         # Elle sera traitee ulterieurement.
         self.sd=self.reuse
       else:
         self.sd= sd_prod(etape=self)
-        # Si l'operateur est obligatoirement reentrant et reuse n'a pas ete specifie, c'est une erreur. 
+        # Si l'operateur est obligatoirement reentrant et reuse n'a pas ete specifie, c'est une erreur.
         # On ne fait rien ici. L'erreur sera traiter par la suite.
-      # précaution
+      # precaution
       if self.sd is not None and not isinstance(self.sd, ASSD):
          raise AsException("""
-Impossible de typer le résultat !
+Impossible de typer le resultat !
 Causes possibles :
-   Utilisateur : Soit la valeur fournie derrière "reuse" est incorrecte,
-                 soit il y a une "," à la fin d'une commande précédente.
-   Développeur : La fonction "sd_prod" retourne un type invalide.""")
+   Utilisateur : Soit la valeur fournie derriere "reuse" est incorrecte,
+                 soit il y a une "," a la fin d'une commande precedente.
+   Developpeur : La fonction "sd_prod" retourne un type invalide.""")
       return self.sd
 
    def get_type_produit(self):
@@ -210,14 +212,14 @@ Causes possibles :
 
    def get_type_produit_brut(self):
       """
-          Retourne le type du concept résultat de l'étape
+          Retourne le type du concept resultat de l'etape
           Deux cas :
             - cas 1 : sd_prod de oper n'est pas une fonction
               il s'agit d'une sous classe de ASSD
               on retourne le nom de la classe
             - cas 2 : il s'agit d'une fonction
-              on l'évalue avec les mots-clés de l'étape (mc_liste)
-              et on retourne son résultat
+              on l'evalue avec les mots-cles de l'etape (mc_liste)
+              et on retourne son resultat
       """
       if type(self.definition.sd_prod) == types.FunctionType:
         d=self.cree_dict_valeurs(self.mc_liste)
@@ -228,26 +230,30 @@ Causes possibles :
 
    def get_etape(self):
       """
-         Retourne l'étape à laquelle appartient self
-         Un objet de la catégorie etape doit retourner self pour indiquer que
-         l'étape a été trouvée
+         Retourne l'etape a laquelle appartient self
+         Un objet de la categorie etape doit retourner self pour indiquer que
+         l'etape a ete trouvee
          XXX fait double emploi avec self.etape ????
       """
       return self
 
    def supprime(self):
       """
-         Méthode qui supprime toutes les références arrières afin que l'objet puisse
-         etre correctement détruit par le garbage collector
+         Methode qui supprime toutes les references arrieres afin que l'objet puisse
+         etre correctement detruit par le garbage collector
       """
       N_MCCOMPO.MCCOMPO.supprime(self)
-      self.jdc=None
-      self.appel=None
-      if self.sd : self.sd.supprime()
+      self.jdc = None
+      self.appel = None
+      for name in dir(self):
+         if name.startswith( '_cache_' ):
+             setattr(self, name, None)
+      if self.sd:
+         self.sd.supprime()
 
    def isactif(self):
-      """ 
-         Indique si l'étape est active (1) ou inactive (0)
+      """
+         Indique si l'etape est active (1) ou inactive (0)
       """
       return self.actif
 
@@ -256,27 +262,30 @@ Causes possibles :
           Methode utilisee pour que l etape self se declare etape
           courante. Utilise par les macros
       """
+      message.debug(SUPERV, "call etape.set_current_step", stack_id=-1)
       cs= CONTEXT.get_current_step()
       if self.parent != cs :
-         raise "L'étape courante %s devrait etre le parent de self : %s" % (cs,self)
+         raise AsException("L'etape courante", cs.nom, cs,
+                           "devrait etre le parent de", self.nom, self)
       else :
          CONTEXT.unset_current_step()
          CONTEXT.set_current_step(self)
 
    def reset_current_step(self):
-      """ 
-            Methode utilisee par l'etape self qui remet son etape parent comme 
-            etape courante 
+      """
+            Methode utilisee par l'etape self qui remet son etape parent comme
+            etape courante
       """
       cs= CONTEXT.get_current_step()
       if self != cs :
-         raise "L'étape courante %s devrait etre self : %s" % (cs,self)
+         raise AsException("L'etape courante", cs.nom, cs,
+                           "devrait etre", self.nom, self)
       else :
          CONTEXT.unset_current_step()
          CONTEXT.set_current_step(self.parent)
 
    def issubstep(self,etape):
-      """ 
+      """
           Cette methode retourne un entier indiquant si etape est une
           sous etape de self ou non
           1 = oui
@@ -286,7 +295,7 @@ Causes possibles :
       return 0
 
    def get_file(self,unite=None,fic_origine=''):
-      """ 
+      """
          Retourne le nom du fichier associe a l unite logique unite (entier)
          ainsi que le source contenu dans le fichier
       """
@@ -296,9 +305,9 @@ Causes possibles :
          if unite != None:
             if os.path.exists("fort."+str(unite)):
                file= "fort."+str(unite)
-         if file == None : 
+         if file == None :
             raise AsException("Impossible de trouver le fichier correspondant a l unite %s" % unite)
-         if not os.path.exists(file): 
+         if not os.path.exists(file):
             raise AsException("%s n'est pas un fichier existant" % unite)
          fproc=open(file,'r')
          text=string.replace(fproc.read(),'\r\n','\n')
@@ -325,7 +334,7 @@ Causes possibles :
 
    def copy(self):
       """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
-          et sans sd 
+          et sans sd
       """
       etape = copy(self)
       etape.sd = None
@@ -341,13 +350,13 @@ Causes possibles :
       return etape
 
    def copy_reuse(self,old_etape):
-      """ Méthode qui copie le reuse d'une autre étape. 
+      """ Méthode qui copie le reuse d'une autre étape.
       """
       if hasattr(old_etape,"reuse") :
         self.reuse = old_etape.reuse
 
    def copy_sdnom(self,old_etape):
-      """ Méthode qui copie le sdnom d'une autre étape. 
+      """ Méthode qui copie le sdnom d'une autre étape.
       """
       if hasattr(old_etape,"sdnom") :
         self.sdnom = old_etape.sdnom
@@ -410,7 +419,7 @@ Causes possibles :
 
 
    def is_include(self):
-      """Permet savoir si on a affaire à une commande de type INCLUDE/INCLUDE_MATERIAU
+      """Permet savoir si on a affaire à la commande INCLUDE
       car le comportement de ces macros est particulier.
       """
       return self.nom.startswith('INCLUDE')
@@ -427,6 +436,4 @@ Causes possibles :
       """
       # pourrait être appelée par une commande fortran faisant appel à des fonctions python
       # on passe la main au parent
-      return self.parent.get_concept()
-
-
+      return self.parent.get_concept(nomsd)

@@ -37,9 +37,9 @@ class SIMP(N_ENTITE.ENTITE):
 
     Cette classe a deux attributs de classe 
 
-    - class_instance qui indique la classe qui devra etre utilisée 
-            pour créer l'objet qui servira à controler la conformité d'un 
-            mot-clé simple avec sa définition
+    - class_instance qui indique la classe qui devra etre utilisee 
+            pour creer l'objet qui servira a controler la conformite d'un 
+            mot-cle simple avec sa définition
 
     - label qui indique la nature de l'objet de définition (ici, SIMP)
 
@@ -49,14 +49,12 @@ class SIMP(N_ENTITE.ENTITE):
 
    def __init__(self,typ,fr="",ang="",statut='f',into=None,defaut=None,
                      min=1,max=1,homo=1,position ='local',
-                     val_min = '**',val_max='**',docu="",validators=None,
-                     equiv=None,cache=0):
+                     val_min = '**',val_max='**',docu="",validators=None):
      
       """
-          Un mot-clé simple est caractérisé par les attributs suivants :
+          Un mot-cle simple est caracterise par les attributs suivants :
 
           - type : cet attribut est obligatoire et indique le type de valeur attendue 
-
           - fr   :
           - ang :
           - statut :
@@ -88,12 +86,10 @@ class SIMP(N_ENTITE.ENTITE):
       self.val_min=val_min
       self.val_max=val_max
       self.docu = docu
-      self.equiv=equiv
-      self.cache=cache
 
    def verif_cata(self):
       """
-          Cette methode sert à valider les attributs de l'objet de définition 
+          Cette methode sert a valider les attributs de l'objet de definition 
           de la classe SIMP
       """
       if type(self.min) != types.IntType :
@@ -124,9 +120,5 @@ class SIMP(N_ENTITE.ENTITE):
           de sa valeur (val), de son nom (nom) et de son parent dans l arboresence (parent)
       """
       return self.class_instance(nom=nom,definition=self,val=val,parent=parent)
-
-
-
-
 
 
