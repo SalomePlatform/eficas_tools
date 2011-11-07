@@ -98,7 +98,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   def GetIconName(self):
       """
       Retourne le nom de l'icone a afficher dans l'arbre
-      Ce nom dépend de la validité de l'objet
+      Ce nom depend de la validite de l'objet
       """
       if not self.object.isactif():
          return "ast-white-square"

@@ -55,7 +55,7 @@ class DPlusInto(Ui_DPlusInto,QDialog):
 class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   """
   Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
   discrètes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
