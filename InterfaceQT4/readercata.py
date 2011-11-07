@@ -194,6 +194,7 @@ class READERCATA:
       if self.appliEficas.top:
         self.appliEficas.setWindowTitle(titre)
       self.appliEficas.titre=titre
+      self.QWParent.titre=titre
 
    def determineMater(self) :
       # Determinination du repertoire materiau

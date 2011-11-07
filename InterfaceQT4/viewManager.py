@@ -46,6 +46,7 @@ class MyTabview:
        if  self.dict_editors.has_key(index):
            editor=self.dict_editors[index]
            self.appliEficas.CONFIGURATION=editor.CONFIGURATION
+           self.appliEficas.setWindowTitle(editor.titre)
 
    def handleOpen(self,fichier=None,patron=0,units=None):
        result = None
@@ -121,7 +122,7 @@ class MyTabview:
        return res
         
    def handleEditCopy(self):
-       print "passage dans handleEditCopy"
+       #print "passage dans handleEditCopy"
        index=self.myQtab.currentIndex()
        editor=self.dict_editors[index]
        editor.handleEditCopy()

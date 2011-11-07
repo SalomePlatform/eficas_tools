@@ -26,15 +26,15 @@ class Appli(Ui_Eficas,QMainWindow):
         self.VERSION_EFICAS="Eficas QT4 V6.3.1"
         self.salome=salome
         self.ihm="QT"
-        self.top = self    #(pour CONFIGURATION)
+	self.top = self    #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
         self.indice=0
         self.dict_reels={}
 
         self.multi=multi
         if self.multi == False :self.definitCode(code,ssCode)
+        self.RepIcon=os.path.abspath(os.path.join(os.getcwd(),'../Editeur/icons'))
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.RepIcon = os.path.join(eficas_root_dir, "Editeur", "icons")
         self.ajoutIcones()
 
 
@@ -52,14 +52,11 @@ class Appli(Ui_Eficas,QMainWindow):
     def definitCode(self,code,ssCode) :
         self.code=code
         self.ssCode=ssCode
+        self.cleanPath()
         if self.code==None :
-           self.code=raw_input("Entrez le code : ")
-           pathCode=raw_input("Entrez le chemin : ")
-
-           self.cleanPath()
-           import sys
-           sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..',pathCode)))
-           # a faire dans le panel de choix du code Aster Cuve2Dg ou MAP
+           from monChoixCode import MonChoixCode
+           widgetChoix = MonChoixCode(self)
+           ret=widgetChoix.exec_()
         name='prefs_'+self.code
         prefsCode=__import__(name)
 
