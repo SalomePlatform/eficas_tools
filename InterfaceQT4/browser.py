@@ -80,13 +80,11 @@ class JDCTree( QTreeWidget ):
             
     def handleOnItem(self,item,int):
         self.itemCourrant=item
-        #try :
-        if 1 :
+        try :
            fr = item.item.get_fr()
            if self.editor:
               self.editor.affiche_infos(QString.toUtf8(QString(fr)))
-        #except:
-        else:
+        except:
             pass
         item.affichePanneau()
 
@@ -121,6 +119,7 @@ class JDCNode(QTreeWidgetItem):
         self.item.connect("supp" ,self.onSupp,())
         self.item.connect("add"  ,self.onAdd,())
         self.state=""
+       
 
 
     def build_children(self,posInsertion=10000):
@@ -340,9 +339,17 @@ class JDCNode(QTreeWidgetItem):
         labeltext,fonte,couleur = self.item.GetLabelText()
         self.setText(0, labeltext)        
     
+    def update_node_label_in_blue(self):
+        if hasattr(self.appliEficas,'noeudColore'):
+           self.appliEficas.noeudColore.setTextColor( 0,Qt.black)
+           self.appliEficas.noeudColore.update_node_label()
+        self.setTextColor( 0,Qt.blue )
+        labeltext,fonte,couleur = self.item.GetLabelText()
+        self.setText(0, labeltext)        
+        self.appliEficas.noeudColore=self
+
     def update_node_texte(self):
         """ Met a jour les noms des SD et valeurs des mots-cles """
-        #print "NODE update_node_texte", self.item.GetLabelText()
         value = self.item.GetText()
         self.setText(1, value)
 
