@@ -28,10 +28,10 @@ from Noyau import N_GEOM
 from Noyau import N_FONCTION 
 from Noyau import N_CO 
 
-# On ajoute la classe ASSD dans l'héritage multiple pour recréer 
-# une hiérarchie d'héritage identique à celle de Noyau
-# pour faire en sorte que isinstance(o,ASSD) marche encore après 
-# dérivation
+# On ajoute la classe ASSD dans l'heritage multiple pour recreer 
+# une hierarchie d'heritage identique a celle de Noyau
+# pour faire en sorte que isinstance(o,ASSD) marche encore apres 
+# derivation
 
 class ASSD(I_ASSD.ASSD,N_ASSD.ASSD):pass
 #class LASSD(I_LASSD.LASSD,N_LASSD.LASSD):pass
