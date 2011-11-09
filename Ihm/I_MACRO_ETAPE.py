@@ -536,7 +536,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     except:
        # Impossible de construire le jdc auxiliaire (sortie par exception)
        l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
-       if self.jdc.appli:
+       if self.jdc.appli is not None:
           self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
                                         message="Ce fichier ne sera pas pris en compte\n"+string.join(l)
                                        )

@@ -39,7 +39,8 @@ def set_current_step(step):
    global _root
    if _root : raise "Impossible d'affecter _root. Il devrait valoir None"
    _root=step
-   message.debug(SUPERV, "current_step = %s", step.nom, stack_id=-1)
+   if step is not None:
+     message.debug(SUPERV, "current_step = %s", step.nom, stack_id=-1)
 
 def get_current_step():
    """
