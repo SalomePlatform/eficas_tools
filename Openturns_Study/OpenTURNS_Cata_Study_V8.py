@@ -836,6 +836,7 @@ DETERMINISTICVARIABLE = OPER ( nom = "DETERMINISTICVARIABLE",
             op = None,
             fr = "Variable deterministe",
             ang = "Deterministic variable",
+            UIinfo = {"groupes": ("CACHE")},
             
   N = SIMP ( statut = 'o',
              typ = "TXM",

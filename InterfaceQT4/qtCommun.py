@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -228,7 +228,8 @@ class QTPanelTBW2(QTPanel):
            if len(listeCmd) != len(listeCmd2):
                listeCmd	= listeCmd2
            for aCmd in listeCmd:
-              self.LBNouvCommande.addItem( aCmd )
+              if aCmd not in aExclure :
+                 self.LBNouvCommande.addItem( aCmd )
         #QObject.connect( self.LBNouvCommande, SIGNAL("itemClicked(QListWidgetItem*)"),self.DefCmd )
         QObject.connect( self.LBNouvCommande, SIGNAL("itemDoubleClicked(QListWidgetItem*)"),self.DefCmd )
 
