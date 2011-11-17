@@ -30,6 +30,7 @@ class Validation  :
          self.parent=parent
 
   def TesteUneValeur(self,valeurentree):
+         commentaire = None
          valeur,validite=self.node.item.eval_valeur(valeurentree)
          if not validite :
                   commentaire = "impossible d'évaluer : %s " %`valeurentree`
@@ -46,7 +47,7 @@ class Validation  :
                  validite=valide
                  commentaire=" "
 
-         if not validite :
+         if not validite and commentaire is None:
                   commentaire = "impossible d'évaluer : %s " %`valeurentree`
          return valeur, validite, commentaire
 
