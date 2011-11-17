@@ -76,7 +76,10 @@ class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
         if self.listeValeursCourantes == [] :
 	   self.editor.affiche_infos("Pas de Validation d un groupe vide",Qt.red)
            return
-        if  len(self.listeValeursCourantes) == 1 : self.listeValeursCourantes=self.listeValeursCourantes[0]
+        try :
+          if  len(self.listeValeursCourantes) == 1 : self.listeValeursCourantes=self.listeValeursCourantes[0]
+        except :
+          pass
         self.node.item.set_valeur(self.listeValeursCourantes)
 	self.editor.affiche_infos("Valeur Acceptée")
 	pass

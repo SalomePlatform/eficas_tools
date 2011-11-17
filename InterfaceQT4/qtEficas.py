@@ -26,15 +26,15 @@ class Appli(Ui_Eficas,QMainWindow):
         self.VERSION_EFICAS="Eficas QT4 V6.3.1"
         self.salome=salome
         self.ihm="QT"
-        self.top = self    #(pour CONFIGURATION)
+	self.top = self    #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
         self.indice=0
         self.dict_reels={}
 
         self.multi=multi
         if self.multi == False :self.definitCode(code,ssCode)
+        self.RepIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.RepIcon = os.path.join(eficas_root_dir, "Editeur", "icons")
         self.ajoutIcones()
 
 
@@ -57,6 +57,7 @@ class Appli(Ui_Eficas,QMainWindow):
            from monChoixCode import MonChoixCode
            widgetChoix = MonChoixCode(self)
            ret=widgetChoix.exec_()
+        import sys
         name='prefs_'+self.code
         prefsCode=__import__(name)
 
