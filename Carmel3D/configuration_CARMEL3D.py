@@ -32,11 +32,11 @@ class CONFIG(configuration.CONFIG_BASE):
   def __init__(self,appli,repIni):
   #-----------------------------------
 
-      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_Openturns')
+      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_Carmel3D')
       self.INSTALLDIR =os.path.dirname(__file__)
       self.REPINI =os.path.dirname(__file__)
 
-      self.labels_user=['exec_acrobat', 'catalogues','savedir','path_doc','OpenTURNS_path']
+      self.labels_user=['exec_acrobat', 'catalogues','savedir','path_doc',]
       self.labels_eficas=["rep_user","INSTALLDIR","path_doc","exec_acrobat"]
       self.labels_eficas=self.labels_eficas+["rep_cata","initialdir","savedir","catalogues"]
       self.cataFile="editeur.ini"
@@ -46,8 +46,6 @@ class CONFIG(configuration.CONFIG_BASE):
   def lecture_fichier_ini_standard(self):
   #---------------------------------------
        configuration.CONFIG_BASE.lecture_fichier_ini_standard(self)
-       if hasattr(self,'OpenTURNS_path') :
-         self.oldOTPath=self.OpenTURNS_path
 
   #---------------------------------------
   def lecture_fichier_ini_utilisateur(self):
