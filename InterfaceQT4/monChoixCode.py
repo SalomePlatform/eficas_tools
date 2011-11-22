@@ -47,7 +47,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
 
   def verifieInstall(self):
       self.groupCodes=QButtonGroup(self)
-      for code in ('Aster','Cuve2dg','MAP','Openturns_Study','Openturns_Wrapper'):
+      for code in ('Aster','Cuve2dg','MAP','Openturns_Study','Openturns_Wrapper','Carmel3D'):
           nom='rB_'+code
           bouton=getattr(self,nom)
           dirCode=os.path.abspath(os.path.join(os.getcwd(),'..',code))
