@@ -229,7 +229,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def initRecents(self):
        try :
            rep=self.CONFIGURATION.rep_user
-           monFichier=rep+"/listefichiers_"+self.code
+           monFichier=rep+"/.listefichiers_"+self.code
            index=0
            f=open(monFichier)
            while ( index < 9) :
@@ -257,7 +257,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def sauveRecents(self) :
        rep=self.CONFIGURATION.rep_user
-       monFichier=rep+"/listefichiers_"+self.code
+       monFichier=rep+"/.listefichiers_"+self.code
        try :
             f=open(monFichier,'w')
             if len(self.recent) == 0 : return
