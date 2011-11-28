@@ -309,3 +309,8 @@ class MyTabview:
                     self.myQtab.setTabText(index,fileName)
                 return ok
         return res
+
+   def handleAjoutGroup(self,listeGroup):
+       index=self.myQtab.currentIndex()
+       editor=self.dict_editors[index]
+       editor.handleAjoutGroup(listeGroup)

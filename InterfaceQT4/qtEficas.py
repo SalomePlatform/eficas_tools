@@ -23,7 +23,7 @@ class Appli(Ui_Eficas,QMainWindow):
         Ui_Eficas.__init__(self)
         self.setupUi(self)
 
-        self.VERSION_EFICAS="Eficas QT4 V6.3.1"
+        self.VERSION_EFICAS="Eficas QT4 V6.4"
         self.salome=salome
         self.ihm="QT"
 	self.top = self    #(pour CONFIGURATION)
@@ -79,8 +79,8 @@ class Appli(Ui_Eficas,QMainWindow):
            import sys
            reload(sys)
            sys.setdefaultencoding(prefsCode.encoding)
-        if code in Appli.__dict__.keys():
-          listeTexte=apply(Appli.__dict__[code],(self,))
+        if self.code in Appli.__dict__.keys():
+          listeTexte=apply(Appli.__dict__[self.code],(self,))
         self.initPatrons()
         self.ficRecents={}
 
@@ -104,6 +104,23 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionTraduitV9V10,SIGNAL("activated()"),self.traductionV9V10)
 
 
+
+    def CARMEL3D(self):
+        if self.salome == 0 : return
+        self.menuMesh = self.menubar.addMenu("menuMesh")
+        self.menuMesh.setObjectName("Mesh")
+        self.actionChercheGrpMesh = QAction(self)
+        self.actionChercheGrpMesh.setText("Acquiert Groupe Maille")
+        self.menuMesh.addAction(self.actionChercheGrpMesh)
+        self.connect(self.actionChercheGrpMesh,SIGNAL("activated()"),self.ChercheGrpMesh)
+
+    def ChercheGrpMesh(self):
+        Msg,listeGroup=self.ChercheGrpMeshInSalome()
+        if Msg == None :
+           self.viewmanager.handleAjoutGroup(listeGroup)
+           #self.viewmanager.handleAjoutGroup(('Grp1','Grp2'))
+        else :
+           print "il faut gerer les erreurs"
 
     def MAP(self): 
         self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
@@ -140,6 +157,12 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionExecutionYACS.setText(QApplication.translate("Eficas", "Execution YACS", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecutionYACS,SIGNAL("activated()"),self.runYACS)
 
+    def OPENTURNS_STUDY(self):
+        self.menuOptions.setDisabled(True)
+    
+    def OPENTURNS_WRAPPER(self):
+        self.menuOptions.setDisabled(True)
+    
     def ajoutIcones(self) :
         # Pour pallier les soucis de repertoire d icone
         icon = QIcon(self.RepIcon+"/New24.png")
@@ -229,7 +252,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def initRecents(self):
        try :
            rep=self.CONFIGURATION.rep_user
-           monFichier=rep+"/.listefichiers_"+self.code
+           monFichier=rep+"/listefichiers_"+self.code
            index=0
            f=open(monFichier)
            while ( index < 9) :
@@ -257,7 +280,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def sauveRecents(self) :
        rep=self.CONFIGURATION.rep_user
-       monFichier=rep+"/.listefichiers_"+self.code
+       monFichier=rep+"/listefichiers_"+self.code
        try :
             f=open(monFichier,'w')
             if len(self.recent) == 0 : return
@@ -421,9 +444,9 @@ class Appli(Ui_Eficas,QMainWindow):
         return texte
         
     def cleanPath(self):
-        for pathCode in ('Aster','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP'):
+        for pathCode in ('Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP'):
             try:
-              aEnlever=os.path.abspath(os.path.join(os.getcwd(),'..',pathCode))
+              aEnlever=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__),'..',pathCode)))
               sys.path.remove(aEnlever)
             except :
               pass
