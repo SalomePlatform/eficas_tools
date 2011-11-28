@@ -11,11 +11,11 @@ import types
 # --------------------------------------------------
 # definition d une classe pour les materiaux
 # definition d une classe pour les groupes de mailles
-# definition d une classe pour les lois non lineaires
+# definition d une classe pour les laws non lineaires
 # --------------------------------------------------
 class materiau ( ASSD ) : pass
 class grmaille ( ASSD ) : pass
-class loi    ( ASSD ) : pass
+class law    ( ASSD ) : pass
 
 
 #CONTEXT.debug = 1
@@ -32,34 +32,25 @@ JdC = JDC_CATA ( code = 'CARMEL3D',
                            ),
                  ) # Fin JDC_CATA
 ##=========================================================
-## definition des parametres d une loi 
+## definition des parametres d une law 
 ##
 ## Constitution de sous bloc NONLINEAR
-## produit un objet "bloc NONLINEAR" de type (classe) loiNL 
+## produit un objet "bloc NONLINEAR" de type (classe) lawNL 
 ##------------------------------------------------
-LINEAIRE = OPER (nom = "LINEAIRE",
-                    UIinfo= {"groupes":("CACHE",)},
+
+LAW = OPER (nom = "LAW",
                     op = None,
 	            repetable = 'n',
 		    ang= "", 
 		    fr= "", 
-                    sd_prod= loi,
-
-                )
-
-LOI = OPER (nom = "LOI",
-                    op = None,
-	            repetable = 'n',
-		    ang= "", 
-		    fr= "", 
-                    sd_prod= loi,
+                    sd_prod= law,
 
 	                       NATURE       =  SIMP (statut="o",
 		                                     typ="TXM",
 			                             defaut="SPLINE",
 						     into=("SPLINE","MARROCCO","MARROCCO+SATURATION","LINEAR"),
 						     ang="nature of the law",
-						     fr ="nature de la loi",
+						     fr ="nature de la law",
                                                      ), 
 
                                    SplineParam  =  BLOC (condition="NATURE=='SPLINE'",
@@ -166,7 +157,7 @@ LOI = OPER (nom = "LOI",
 				                                    defaut="SPLINE",
 								    into= ("SPLINE","PARABOLIC","LINEAR"),
 						                    ang="type of join between laws",
-						                    fr ="type de jointure entre les 2 lois" ,
+						                    fr ="type de jointure entre les 2 law" ,
 							            ),
 		         		           APPLIEDTO = SIMP (statut="o",	
 				                                     typ="TXM",   
@@ -176,8 +167,8 @@ LOI = OPER (nom = "LOI",
 						                     fr ="jointure appliquee a ",
 								    ),
 				                        ), # fin BLOC MarroSatuParam
- ) # fin OPER LOI
-LINEAR=LOI(NATURE='LINEAR')
+ ) # fin OPER LAW
+LINEAR=LAW(NATURE='LINEAR')
 
 # --------------------------------------------------
 # definition de groupe de mailles
@@ -192,7 +183,7 @@ MESH_GROUPE     = OPER (nom = "MESH_GROUPE",
 		    ang = " mesh group definition", 
                     sd_prod= grmaille,
 
-              Material    =  SIMP (statut="o",
+              Material    =  SIMP (statut="f",
  		                   typ=(materiau,),
                                    ang="name of the linked material",
  		                   fr ="nom du materiau associe",
@@ -261,10 +252,10 @@ MATERIAU = OPER (nom = "MATERIAU",
                                  ),
 
  	         LAW             = SIMP (statut="o",
- 		                         typ=loi,
+ 		                         typ=law,
                                          defaut=LINEAR,
                                          ang = "type of law",
-                                         fr = "type de loi",
+                                         fr = "type de law",
  				        ),
 		 
                  HOMOGENEOUS     = SIMP (statut="f",
@@ -305,7 +296,7 @@ MATERIAU = OPER (nom = "MATERIAU",
                                  ),
                 
 	         LAW             = SIMP (statut="o",
-		                         typ=loi,
+		                         typ=law,
 				         defaut="LINEAR",
                                          ang = "type of law",
 				        ),
@@ -436,9 +427,9 @@ MATERIAU = OPER (nom = "MATERIAU",
 #
 #                 NonLinearCond  = BLOC (condition="LAW=='NONLINEAR'",
 #                                  NONLINEAR   = SIMP (statut="o",
-#		                                      typ= (loiNL,),
+#		                                      typ= (law,),
 #                                                      ang = "enter a complex value",
-#                                                      fr  = "parametres de la loi non lineaire",
+#                                                      fr  = "parametres de la law non lineaire",
 #      				                     ),
 #                                       ), 
 #
@@ -473,7 +464,7 @@ MATERIAU = OPER (nom = "MATERIAU",
 #				         defaut="LINEAR",
 #		                         into = ("LINEAR","NONLINEAR"),
 #                                         ang = "type of law",
-#                                         fr = "type de loi",
+#                                         fr = "type de law",
 #				        ),
 #                 HOMOGENEOUS     = SIMP (statut="f",
 #		                         typ="TXM",
@@ -517,7 +508,7 @@ MATERIAU = OPER (nom = "MATERIAU",
 #				         defaut="LINEAR",
 #		                         into = ("LINEAR","NONLINEAR"),
 #                                         ang = "type of law",
-#                                         fr = "type de loi",
+#                                         fr = "type de law",
 #				        ),
 #                 HOMOGENEOUS     = SIMP (statut="f",
 #		                         typ="TXM",
