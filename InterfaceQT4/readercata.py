@@ -257,7 +257,12 @@ class READERCATA:
       Ouvre une fenetre de sélection du catalogue dans le cas où plusieurs
       ont été définis dans Accas/editeur.ini
       """      
-      title = getattr(self.appliEficas.CONFIGURATION, "cata_choice_window_title", None)
+      code = getattr(self.appliEficas.CONFIGURATION, "code", None)
+      if code != None : 
+          title="Choix d une version du code "+str(code)
+      else :
+          title="Choix d une version "
+    
       widgetChoix = MonChoixCata(self.appliEficas, [cata.user_name for cata in cata_choice_list], title)
       ret=widgetChoix.exec_()
       
