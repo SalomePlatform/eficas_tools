@@ -30,9 +30,8 @@ repIni=os.path.dirname(os.path.abspath(__file__))
 initialdir=repIni 
 
 # INSTALLDIR sert à localiser l'installation d'Eficas
-INSTALLDIR=os.path.join(repIni,'..')
+INSTALLDIR=os.path.abspath(os.path.join(repIni,'..'))
 sys.path.insert(0,INSTALLDIR)
-
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 # lang indique la langue utilisée pour les chaines d'aide : fr ou ang
