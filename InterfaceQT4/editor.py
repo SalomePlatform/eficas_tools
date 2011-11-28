@@ -146,7 +146,15 @@ class JDCEditor(QSplitter):
             self.jdc.appli = self
             txt_exception  = None
             if not jdc:
-                self.jdc.analyse()            
+                if self.appli.code == "CARMEL3D"  and self.jdc.procedure == "" :
+                   try :
+                       self.jdc.procedure="LINEAR=LAW(NATURE='LINEAR')"
+                       self.jdc.analyse()            
+                   except :
+                       self.jdc = self._newJDC(units=units)
+                       self.jdc.analyse()            
+                else :
+                   self.jdc.analyse()            
                 txt_exception = self.jdc.cr.get_mess_exception()            
             if txt_exception:
                 self.jdc = None
@@ -169,7 +177,8 @@ class JDCEditor(QSplitter):
         Initialise un nouveau JDC vierge
         """
         CONTEXT.unset_current_step()        
-        jdc=self.readercata.cata[0].JdC( procedure="",
+
+        jdc=self.readercata.cata[0].JdC( procedure ="",
                                          appli=self,
                                          cata=self.readercata.cata,
                                          cata_ord_dico=self.readercata.cata_ordonne_dico,
@@ -212,7 +221,7 @@ class JDCEditor(QSplitter):
            J.old_recorded_units=units
         return J
 
-    #-----------------------#
+    #-------------------------------#
     def readFile(self, fn):
     #--------------------------------#
         """
@@ -612,6 +621,16 @@ class JDCEditor(QSplitter):
     #-----------------------------------------#
         listeMA,listeNO=self.get_text_JDC("GroupMA")
         return listeMA,listeNO
+
+    #-----------------------------------------#
+    def handleAjoutGroup(self,listeGroup):
+    #-----------------------------------------#
+         dernier=self.tree.racine.children[-1]
+         for groupe in listeGroup :
+             new_node = dernier.append_brother("MESH_GROUPE",'after')
+             test,mess = new_node.item.nomme_sd(groupe)
+             new_node.append_child('Material')
+             dernier=new_node
 
     #-----------------------------------------#
     def saveFile(self, path = None, saveas= 0):
