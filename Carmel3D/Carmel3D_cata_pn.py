@@ -38,6 +38,14 @@ JdC = JDC_CATA ( code = 'CARMEL3D',
 ## produit un objet "bloc NONLINEAR" de type (classe) lawNL 
 ##------------------------------------------------
 
+LLIN = OPER (nom = "LLIN",
+                    op = None,
+	            repetable = 'n',
+		    ang= "", 
+		    fr= "", 
+                    sd_prod= law,
+                    UIinfo= {"groupes":("CACHE",)},
+)
 LAW = OPER (nom = "LAW",
                     op = None,
 	            repetable = 'n',
@@ -48,7 +56,7 @@ LAW = OPER (nom = "LAW",
 	                       NATURE       =  SIMP (statut="o",
 		                                     typ="TXM",
 			                             defaut="SPLINE",
-						     into=("SPLINE","MARROCCO","MARROCCO+SATURATION","LINEAR"),
+						     into=("SPLINE","MARROCCO","MARROCCO+SATURATION"),
 						     ang="nature of the law",
 						     fr ="nature de la law",
                                                      ), 
@@ -168,7 +176,7 @@ LAW = OPER (nom = "LAW",
 								    ),
 				                        ), # fin BLOC MarroSatuParam
  ) # fin OPER LAW
-LINEAR=LAW(NATURE='LINEAR')
+LINEAR=LLIN(),
 
 # --------------------------------------------------
 # definition de groupe de mailles
