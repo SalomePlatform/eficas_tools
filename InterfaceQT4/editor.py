@@ -148,8 +148,12 @@ class JDCEditor(QSplitter):
             if not jdc:
                 if self.appli.code == "CARMEL3D"  and self.jdc.procedure == "" :
                    try :
-                       self.jdc.procedure="LINEAR=LAW(NATURE='LINEAR')"
+                       self.jdc.procedure="LINEAR=L_LAW()"
                        self.jdc.analyse()            
+                       print self.jdc.cr.get_mess_exception()
+                       if  self.jdc.cr.get_mess_exception()!="" :
+                           self.jdc = self._newJDC(units=units)
+                           self.jdc.analyse()            
                    except :
                        self.jdc = self._newJDC(units=units)
                        self.jdc.analyse()            
