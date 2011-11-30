@@ -1,0 +1,15 @@
+
+LINEAR=L_LAW();
+
+cyl=MATERIAU(TYPE='CONDUCTOR',
+             CONDUCTIVITY=_F(LAW=LINEAR,
+                             HOMOGENEOUS='TRUE',
+                             VALUE_COMPLEX=('RI',1.0,0.0,),),
+             PERMEABILITY=_F(LAW=LINEAR,
+                             VALUE_COMPLEX=('RI',1.0,0.0,),),);
+
+SOURCES(EPORT=_F(NAME='d',
+                 TYPE='VOLTAGE',
+                 AMP=84.852,
+                 POLAR=0,),);
+#CHECKSUM:a6e95dd249cb2097b82c453e926ec171  -:FIN CHECKSUM
