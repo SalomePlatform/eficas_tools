@@ -1,4 +1,4 @@
-#@ MODIF N_ASSD Noyau  DATE 30/08/2011   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_ASSD Noyau  DATE 25/10/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 # RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -103,25 +103,6 @@ class ASSD(object):
       """Type connu a posteriori (type CO)."""
       self.__class__ = new_type
 
-   def reparent_sd(self):
-      """Repositionne le parent des attributs de la SD associée.
-      """
-      sup = super(ASSD, self)
-      if hasattr(sup, 'nomj'):   # == AsBase
-         sup.reparent(None, None)
-
-   def rebuild_sd(self):
-      """Reconstruit les attributs de la SD associée.
-      """
-      etape = getattr(self, "etape", None)
-      sd = getattr(self, "sd", None)
-      new = self.__class__(etape=etape, sd=sd)
-      new.set_name(self.nom)
-      datt = new.__dict__
-      for nam in datt.keys():
-          if hasattr(self, nam) and getattr(self, nam) is None:
-              setattr(self, nam, getattr(new, nam))
-      self.reparent_sd()
    def get_name(self):
       """
           Retourne le nom de self, éventuellement en le demandant au JDC
@@ -187,14 +168,16 @@ class ASSD(object):
 
 
    def par_lot(self):
-      """Conserver uniquement pour la compatibilite avec le catalogue v9 dans eficas.
-      """
+      """Conserver uniquement pour la compatibilite avec le catalogue v9 dans eficas."""
       #XXX eficas
       if not hasattr(self, 'jdc') or self.jdc == None:
          val = None
       else:
          val = self.jdc.par_lot
       return val == 'OUI'
+
+   def rebuild_sd(self):
+      """Conserver uniquement pour la compatibilite avec le catalogue v10 dans eficas."""
 
 
 class assd(ASSD):
