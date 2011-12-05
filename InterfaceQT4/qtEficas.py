@@ -110,17 +110,28 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuMesh = self.menubar.addMenu("menuMesh")
         self.menuMesh.setObjectName("Mesh")
         self.actionChercheGrpMesh = QAction(self)
-        self.actionChercheGrpMesh.setText("Acquiert Groupe Maille")
+        self.actionChercheGrpMesh.setText("Acquiert SubMeshes")
         self.menuMesh.addAction(self.actionChercheGrpMesh)
         self.connect(self.actionChercheGrpMesh,SIGNAL("activated()"),self.ChercheGrpMesh)
+        self.actionChercheGrpMaille = QAction(self)
+        self.actionChercheGrpMaille.setText("Acquiert Groupe Maille")
+        self.menuMesh.addAction(self.actionChercheGrpMaille)
+        self.connect(self.actionChercheGrpMaille,SIGNAL("activated()"),self.ChercheGrpMaille)
 
     def ChercheGrpMesh(self):
         Msg,listeGroup=self.ChercheGrpMeshInSalome()
         if Msg == None :
            self.viewmanager.handleAjoutGroup(listeGroup)
-           #self.viewmanager.handleAjoutGroup(('Grp1','Grp2'))
         else :
            print "il faut gerer les erreurs"
+
+    def ChercheGrpMaille(self):
+        Msg,listeGroup=self.ChercheGrpMailleInSalome()
+        if Msg == None :
+           self.viewmanager.handleAjoutGroup(listeGroup)
+        else :
+           print "il faut gerer les erreurs"
+
 
     def MAP(self): 
         self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
