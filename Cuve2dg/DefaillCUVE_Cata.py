@@ -56,31 +56,31 @@ def Coef_WeibGen() : return FACT(statut='o',min=1,max='**',
 
   # A1
   A1 = SIMP ( statut="o", typ="R", defaut=21.263, 
-              fr="coef du coef a(T) d'une Weibull générale", ),
+              fr="coef A1 du coef a(T)=A1+A2.exp(A3.(T-RTndt)) d'une Weibull générale", ),
   # A2
   A2 = SIMP ( statut="o", typ="R", defaut=9.159, 
-              fr="coef du coef a(T) d'une Weibull générale", ),
+              fr="coef A2 du coef a(T)=A1+A2.exp(A3.(T-RTndt)) d'une Weibull générale", ),
   # A3
   A3 = SIMP ( statut="o", typ="R", defaut=0.04057, 
-              fr="coef du coef a(T) d'une Weibull générale", ),
+              fr="coef A3 du coef a(T)=A1+A2.exp(A3.(T-RTndt)) d'une Weibull générale", ),
   # B1
   B1 = SIMP ( statut="o", typ="R", defaut=17.153, 
-              fr="coef du coef b(T) d'une Weibull générale", ),
+              fr="coef B1 du coef b(T)=B1+B2.exp(B3.(T-RTndt)) d'une Weibull générale", ),
   # B2
   B2 = SIMP ( statut="o", typ="R", defaut=55.089, 
-              fr="coef du coef b(T) d'une Weibull générale", ),
+              fr="coef B2 du coef b(T)=B1+B2.exp(B3.(T-RTndt)) d'une Weibull générale", ),
   # B3
   B3 = SIMP ( statut="o", typ="R", defaut=0.0144, 
-              fr="coef du coef b(T) d'une Weibull générale", ),
+              fr="coef B3 du coef b(T)=B1+B2.exp(B3.(T-RTndt)) d'une Weibull générale", ),
   # C1
   C1 = SIMP ( statut="o", typ="R", defaut=4., 
-              fr="coef du coef c(T) d'une Weibull générale", ),
+              fr="coef C1 du coef c(T)=C1+C2.exp(C3.(T-RTndt)) d'une Weibull générale", ),
   # C2
   C2 = SIMP ( statut="o", typ="R", defaut=0., 
-              fr="coef du coef c(T) d'une Weibull générale", ),
+              fr="coef C2 du coef c(T)=C1+C2.exp(C3.(T-RTndt)) d'une Weibull générale", ),
   # C3
   C3 = SIMP ( statut="o", typ="R", defaut=0., 
-              fr="coef du coef c(T) d'une Weibull générale", ),
+              fr="coef C3 du coef c(T)=C1+C2.exp(C3.(T-RTndt)) d'une Weibull générale", ),
 
 ); # FIN def Coef_WeibGen
 
@@ -152,12 +152,12 @@ OPTIONS = PROC ( nom = "OPTIONS",
 
     # DATARESUME_FILE
     FichierDataIn	= SIMP (statut="o", typ="TXM", defaut="NON",
-                                fr="Fichier recapitulatif des donnees d entree : template.IN",
+                                fr="Fichier recapitulatif des donnees d entree (extension .IN)",
                                 into=( "OUI", "NON",),
                                 ),
     # TEMPSIG_FILE
     FichierTempSigma	= SIMP (statut="o", typ="TXM", defaut="NON",
-                                fr="Fichiers de temperature et de contraintes : template.TEMP et template.SIG",
+                                fr="Fichiers de temperature et de contraintes (extensions .TEMP et .SIG)",
                                 into=( "OUI", "NON",),
                                 ),
     # RESU_FILE
@@ -167,16 +167,26 @@ OPTIONS = PROC ( nom = "OPTIONS",
     #                            ),
     # CSV_FILE
     FichierCSV		= SIMP (statut="o", typ="TXM", defaut="NON",
-                                fr="Fichier resultat au format CSV : template_DEFAILLCUVE.CSV",
+                                fr="Fichier resultat au format CSV (extension .CSV)",
                                 into=( "OUI", "NON",),
                                 ),
-    # CREARE_FILE
-    FichierCREARE	= SIMP (statut="o", typ="TXM", defaut="NON",
-                                fr="Fichier Tfluide et coefficients d echange : template.CREA",
+    # RESTART_FILE
+    FichierRESTART	= SIMP (statut="o", typ="TXM", defaut="NON",
+                                fr="Fichier de re-demarrage",
                                 into=( "OUI", "NON",),
                                 ),
-
+    # EXTR_FILE
+    FichierEXTR		= SIMP (statut="o", typ="TXM", defaut="NON",
+                                fr="Fichier d extraction de transitoires de T et de SIG",
+                                into=( "OUI", "NON",),
+                                ),
   ), # FIN FACT SortieFichier
+
+  # CHOIPLUG
+  ChoixPlugin		= SIMP (statut="o", typ="TXM", defaut="NON",
+                                fr="Prise en compte du repertoire de plugin",
+                                into=( "OUI", "NON",),
+                                ),
 
   # GRANDEUR
   GrandeurEvaluee	= SIMP (statut="o", typ="TXM", defaut="Facteur de marge KIc/KCP",
@@ -194,6 +204,17 @@ OPTIONS = PROC ( nom = "OPTIONS",
     # DTPREC
     IncrementMaxTemperature    = SIMP ( statut="o", typ="R", val_min=0.1, val_max=1., defaut=0.1, 
 				      fr="Incrément maximum d'évolution de la température par noeud et par instant (°C)", ),
+    # CHOIEXTR
+    ChoixExtractionTransitoires= SIMP (statut="o", typ="TXM", defaut="NON",
+                                fr="Choix d extraction de transitoires de T et de SIG",
+                                into=( "OUI", "NON",),
+                                ),
+    AbscissesPourExtraction = BLOC ( condition = "ChoixExtractionTransitoires=='OUI'",
+    #
+      ListeAbscisses              = SIMP ( statut="o", typ="R", max="**",
+                                      fr = "Liste des abscisses pour lesquels la température et les contraintes seront extraits", ),
+    ), # Fin BLOC  AbscissesPourExtraction
+
     # DTARCH
     IncrementMaxTempsAffichage = SIMP ( statut="o", typ="R", val_min=0., val_max=1000., defaut=1000., 
 				      fr="Incrément maximum de temps pour l'affichage (s)", ),
@@ -279,7 +300,7 @@ CUVE = PROC (nom = "CUVE",
 			          fr = "Nombre de noeuds à considérer dans le maillage interne", ),
   
     ListeAbscisses       = SIMP ( statut="o", typ="R", max="**",
-                                  fr = "Liste des abscisses", ),
+                                  fr = "Liste des abscisses, à fournir sous forme d'une liste de réels (en m)", ),
   ), # Fin BLOC Maillage
 
 ) # Fin PROC CUVE
@@ -316,6 +337,11 @@ DEFAUT = PROC ( nom = "DEFAUT",
 			              fr="Orientation du défaut",
                                       into=( "Longitudinale", 
 			                     "Circonferentielle" ), ),
+    # POSDEF into VIROLE, JSOUDE
+    Position              = SIMP ( statut="o", typ="TXM", defaut="Virole",
+			              fr="Position du défaut",
+                                      into=( "Virole", 
+			                     "Joint soude" ), ),
 
     Profondeur_parametres = FACT (statut="o",
       # PROFDEF
@@ -387,6 +413,11 @@ DEFAUT = PROC ( nom = "DEFAUT",
 			              fr="Orientation du défaut",
                                       into=( "Longitudinale", 
 			                     "Circonferentielle" ), ),
+    # POSDEF into VIROLE, JSOUDE
+    Position              = SIMP ( statut="o", typ="TXM", defaut="Virole",
+			              fr="Position du défaut",
+                                      into=( "Virole", 
+			                     "Joint soude" ), ),
 
     Profondeur_parametres = FACT (statut="o",
       # PROFDEF
@@ -419,10 +450,10 @@ DEFAUT = PROC ( nom = "DEFAUT",
       Mode_Fctaffine           = BLOC ( condition = "ModeCalculLongueur=='Fonction affine de la profondeur'",
         # PROFSURLONG
         CoefDirecteur     = SIMP ( statut="o", typ="R", max=1, val_max=100., defaut=10.,
-                         fr="Inverse a1 du coefficient directeur de la fonction affine l=h/a1 + a0", ),
+                         fr="Inverse a1 du coefficient directeur de la fonction affine longueur=hauteur/a1 + a0", ),
         # LONGCONST
         Constante = SIMP ( statut="o", typ="R", max=1, val_max=100., defaut=0.,
-                         fr="constante a0 de la fonction affine l=pente*h + a0", ),
+                         fr="constante a0 de la fonction affine longueur=hauteur/a1 + a0", ),
       ), # Fin BLOC Mode_Fctaffine
 
     ), # FIN FACT Longueur_parametres
@@ -450,6 +481,10 @@ DEFAUT = PROC ( nom = "DEFAUT",
         # DECANOR
         DecalageNormalise          = SIMP ( statut="o", typ="R", defaut=0.01, 
                                        fr="Décalage radial normalise du defaut sous revêtement (entre 0. et 1.)", ),
+        # DECANOR_MESSAGE
+        DecalageNormalise_mess     = SIMP ( statut="o", typ="TXM", defaut="NON", 
+                                       fr="Affichage ecran du décalage normalise du defaut sous revêtement", 
+				       into = ( "NON", "OUI" ), ),
       ), # Fin BLOC Mode_Decalage_Normalisee
   
     ), # Fin FACT Decalage_parametres
@@ -489,6 +524,11 @@ DEFAUT = PROC ( nom = "DEFAUT",
                                       fr="Orientation du défaut : longitudinale ou circonférentielle",
                                       into=( "Longitudinale",
 		                             "Circonferentielle" ), ),
+    # POSDEF into VIROLE, JSOUDE
+    Position              = SIMP ( statut="o", typ="TXM", defaut="Virole",
+			              fr="Position du défaut",
+                                      into=( "Virole", 
+			                     "Joint soude" ), ),
 
     Profondeur_parametres = FACT (statut="o",
       # PROFDEF
@@ -671,37 +711,38 @@ MODELES = PROC ( nom = "MODELES",
       # MODELIRR
       ModeleIrradiation = SIMP ( statut="o", typ="TXM", defaut="Metal de Base : formule de FIM/FIS Houssin",
                                 fr="Modèle d'irradiation pour virole ou joint soudé",
-		                into=( "Metal de Base : formule de FIM/FIS Houssin", # HOUSSIN 
+		                into=( "Formule de FIM/FIS Lefebvre modifiee", #LEFEBnew
+				       "Metal de Base : formule de FIM/FIS Houssin", # HOUSSIN 
 		                       "Metal de Base : formule de FIM/FIS Persoz", # PERSOZ
 		                       "Metal de Base : formule de FIM/FIS Lefebvre", # LEFEBVRE
 		                       "Metal de Base : Regulatory Guide 1.00 rev 2", # USNRCmdb
 		                       "Joint Soude : formulation de FIM/FIS Brillaud", # BRILLAUD
 		                       "Joint Soude : Regulatory Guide 1.00 rev 2" ), # USNRCsoud
                                 ),
-      Parametres_FIMFIS = BLOC ( condition = " ModeleIrradiation in ( 'Metal de Base : formule de FIM/FIS Houssin' , 'Metal de Base : formule de FIM/FIS Persoz', 'Metal de Base : formule de FIM/FIS Lefebvre', 'Joint Soude : formulation de FIM/FIS Brillaud', ) ",
+      Parametres_FIMFIS = BLOC ( condition = " ModeleIrradiation in ( 'Formule de FIM/FIS Lefebvre modifiee', 'Metal de Base : formule de FIM/FIS Houssin' , 'Metal de Base : formule de FIM/FIS Persoz', 'Metal de Base : formule de FIM/FIS Lefebvre', 'Joint Soude : formulation de FIM/FIS Brillaud', ) ",
         # CU
-        TeneurCuivre         = SIMP ( statut="o", typ="R", defaut=0., 
+        TeneurCuivre         = SIMP ( statut="o", typ="R", defaut=0.0972, 
                                       fr="Teneur en cuivre (%)", ),
         # CU_MESSAGE
         TeneurCuivre_mess    = SIMP ( statut="o", typ="TXM", defaut="NON", 
                                       fr="Affichage ecran de la teneur en cuivre (%)",
 				      into=( "NON","OUI" ), ),
         # NI
-        TeneurNickel         = SIMP ( statut="o", typ="R", defaut=0., 
+        TeneurNickel         = SIMP ( statut="o", typ="R", defaut=0.72, 
                                       fr="Teneur en nickel (%)", ),
         # NI_MESSAGE
         TeneurNickel_mess    = SIMP ( statut="o", typ="TXM", defaut="NON", 
                                       fr="Affichage ecran de la teneur en nickel (%)",
 				      into=( "NON","OUI" ), ),
         # P
-        TeneurPhosphore      = SIMP ( statut="o", typ="R", defaut=0., 
+        TeneurPhosphore      = SIMP ( statut="o", typ="R", defaut=0.00912, 
                                       fr="Teneur en phosphore (%)", ),
         # P_MESSAGE
         TeneurPhosphore_mess = SIMP ( statut="o", typ="TXM", defaut="NON", 
                                       fr="Affichage ecran de la teneur en phosphore (%)",
 				      into=( "NON","OUI" ), ),
         # RTimoy
-        MoyenneRTndt         = SIMP ( statut="o", typ="R", defaut=0., 
+        MoyenneRTndt         = SIMP ( statut="o", typ="R", defaut=-12., 
                                       fr="Moyenne de RTNDT : virole C1 de cuve Chinon : mdb=>-17.°C et js=>42.°C (HT-56/05/038 : p.52)", ),
         # RTimoy_MESSAGE
         MoyenneRTndt_mess    = SIMP ( statut="o", typ="TXM", defaut="NON", 
@@ -784,7 +825,10 @@ MODELES = PROC ( nom = "MODELES",
       		           "Exponentielle n°1 (Frama)", # Frama
 		           "Exponentielle n°2 (LOGWOLF)" ), # LOGWOLF
 	            ),
-
+    # CHOIXCL
+    ChoixCorrectionLongueur     = SIMP ( statut="o", typ="TXM", defaut="OUI", 
+                                        fr = "Correction de la longueur (OUI/NON) ", 
+					into=( "OUI", "NON"),),
 
 #====
 # Definition des parametres selon le modele de tenacité
@@ -847,11 +891,11 @@ MODELES = PROC ( nom = "MODELES",
     KIc_Weibull = BLOC ( condition = " ModeleTenacite in ( 'Weibull basee sur la master cuve (REME)', 'Weibull n°1 (etude ORNL)', 'Weibull n°2', 'Weibull n°3', ) ",
  
       # NBCARAC
-      NBRE_CARACTERISTIQUE = SIMP ( statut="o", typ="TXM", defaut="QUANTILE", 
-                                        fr="Nombre caracteristique : ORDRE ou QUANTILE",
-                                        into=( "ORDRE", "QUANTILE" ), ),
+      NombreCaracteristique = SIMP ( statut="o", typ="TXM", defaut="Quantile", 
+                                        fr="Nombre caracteristique : Ordre ou Quantile",
+                                        into=( "Ordre", "Quantile" ), ),
 
-      QUANTILE = BLOC ( condition = "NBRE_CARACTERISTIQUE=='QUANTILE'",
+      Quantile = BLOC ( condition = "NombreCaracteristique=='Quantile'",
         # nbectKIc
         NbEcartType_MoyKIc = SIMP ( statut="o", typ="R", defaut=-2., 
                                     fr="Valeur caractéristique de KIc exprimée en nombre d'écart-type par rapport à la moyenne de KIc (nb sigma) : det = -2 ", ),
@@ -859,9 +903,9 @@ MODELES = PROC ( nom = "MODELES",
         NbEcartType_MoyKIc_mess  = SIMP ( statut="o", typ="TXM", defaut="NON", 
                                           fr = "Affichage ecran du nombre d'écart-type par rapport à la moyenne de KIc",
                                           into = ( "NON","OUI" ), ),
-      ), # Fin BLOC QUANTILE 
+      ), # Fin BLOC Quantile 
 
-      ORDRE = BLOC ( condition = "NBRE_CARACTERISTIQUE=='ORDRE'",
+      Ordre = BLOC ( condition = "NombreCaracteristique=='Ordre'",
         # fractKIc
         Fractile_KIc       = SIMP ( statut="o", typ="R", defaut=5., 
                                   fr="Valeur caractéristique de KIc exprimée en ordre de fractile (%) ", ),
@@ -869,18 +913,18 @@ MODELES = PROC ( nom = "MODELES",
         Fractile_KIc_mess  = SIMP ( statut="o", typ="TXM", defaut="NON", 
                                     fr="Affichage ecran de la valeur caractéristique de KIc exprimée en ordre de fractile (%) ",
                                     into = ( "NON","OUI" ), ),
-      ), # Fin BLOC ORDRE 
+      ), # Fin BLOC Ordre 
 
     ), # Fin BLOC KIc_Weibull
 
     KIc_MasterCuve = BLOC ( condition = " ModeleTenacite in ( 'Weibull basee sur la master cuve', ) ",
  
       # NBCARAC
-      NBRE_CARACTERISTIQUE = SIMP ( statut="o", typ="TXM", defaut="QUANTILE", 
-                                        fr="Nombre caracteristique : ORDRE ou QUANTILE",
-                                        into=( "ORDRE", "QUANTILE" ), ),
+      NombreCaracteristique = SIMP ( statut="o", typ="TXM", defaut="Quantile", 
+                                        fr="Nombre caracteristique : Ordre ou Quantile",
+                                        into=( "Ordre", "Quantile" ), ),
 
-      QUANTILE = BLOC ( condition = "NBRE_CARACTERISTIQUE=='QUANTILE'",
+      Quantile = BLOC ( condition = "NombreCaracteristique=='Quantile'",
         # nbectKIc
         NbEcartType_MoyKIc = SIMP ( statut="o", typ="R", defaut=-2., 
                                     fr="Valeur caractéristique de KIc exprimée en nombre d'écart-type par rapport à la moyenne de KIc (nb sigma) : det = -2 ", ),
@@ -888,9 +932,9 @@ MODELES = PROC ( nom = "MODELES",
         NbEcartType_MoyKIc_mess  = SIMP ( statut="o", typ="TXM", defaut="NON", 
                                           fr = "Affichage ecran du nombre d'écart-type par rapport à la moyenne de KIc",
                                           into = ( "NON","OUI" ), ),
-      ), # Fin BLOC QUANTILE 
+      ), # Fin BLOC Quantile 
 
-      ORDRE = BLOC ( condition = "NBRE_CARACTERISTIQUE=='ORDRE'",
+      Ordre = BLOC ( condition = "NombreCaracteristique=='Ordre'",
         # fractKIc
         Fractile_KIc       = SIMP ( statut="o", typ="R", defaut=5., 
                                   fr="Valeur caractéristique de KIc exprimée en ordre de fractile (%) ", ),
@@ -898,7 +942,7 @@ MODELES = PROC ( nom = "MODELES",
         Fractile_KIc_mess  = SIMP ( statut="o", typ="TXM", defaut="NON", 
                                     fr="Affichage ecran de la valeur caractéristique de KIc exprimée en ordre de fractile (%) ",
                                     into = ( "NON","OUI" ), ),
-      ), # Fin BLOC ORDRE 
+      ), # Fin BLOC Ordre 
 
       # T0WALLIN
       Temperature_KIc100 = SIMP ( statut="o", typ="I", defaut=-27, 
@@ -909,11 +953,11 @@ MODELES = PROC ( nom = "MODELES",
     Weibull_Generalisee = BLOC ( condition = " ModeleTenacite in ( 'Weibull generalisee',) ",
  
       # NBCARAC
-      NBRE_CARACTERISTIQUE = SIMP ( statut="o", typ="TXM", defaut="QUANTILE", 
-                                        fr="Nombre caracteristique : ORDRE ou QUANTILE",
-                                        into=( "ORDRE", "QUANTILE" ), ),
+      NombreCaracteristique = SIMP ( statut="o", typ="TXM", defaut="Quantile", 
+                                        fr="Nombre caracteristique : Ordre ou Quantile",
+                                        into=( "Ordre", "Quantile" ), ),
 
-      QUANTILE = BLOC ( condition = "NBRE_CARACTERISTIQUE=='QUANTILE'",
+      Quantile = BLOC ( condition = "NombreCaracteristique=='Quantile'",
         # nbectKIc
         NbEcartType_MoyKIc = SIMP ( statut="o", typ="R", defaut=-2., 
                                     fr="Valeur caractéristique de KIc exprimée en nombre d'écart-type par rapport à la moyenne de KIc (nb sigma) : det = -2 ", ),
@@ -921,9 +965,9 @@ MODELES = PROC ( nom = "MODELES",
         NbEcartType_MoyKIc_mess  = SIMP ( statut="o", typ="TXM", defaut="NON", 
                                           fr = "Affichage ecran du nombre d'écart-type par rapport à la moyenne de KIc",
                                           into = ( "NON","OUI" ), ),
-      ), # Fin BLOC QUANTILE 
+      ), # Fin BLOC Quantile 
 
-      ORDRE = BLOC ( condition = "NBRE_CARACTERISTIQUE=='ORDRE'",
+      Ordre = BLOC ( condition = "NombreCaracteristique=='Ordre'",
         # fractKIc
         Fractile_KIc       = SIMP ( statut="o", typ="R", defaut=5., 
                                   fr="Valeur caractéristique de KIc exprimée en ordre de fractile (%) ", ),
@@ -931,7 +975,7 @@ MODELES = PROC ( nom = "MODELES",
         Fractile_KIc_mess  = SIMP ( statut="o", typ="TXM", defaut="NON", 
                                     fr="Affichage ecran de la valeur caractéristique de KIc exprimée en ordre de fractile (%) ",
                                     into = ( "NON","OUI" ), ),
-      ), # Fin BLOC ORDRE 
+      ), # Fin BLOC Ordre 
 
       Coefficients       = Coef_WeibGen(),
 
@@ -992,7 +1036,7 @@ INITIALISATION = PROC ( nom = "INITIALISATION",
   TemperatureInitiale = FACT ( statut = "o",
 
     ProfilRadial_TemperatureInitiale = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                              fr="Profil radial de la température initiale dans la cuve (en m : °C) ", ),
+                                              fr="Profil radial de la température initiale dans la cuve (abscisse en m, température initiale en °C) ", ),
     Amont_TemperatureInitiale        = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                               fr="Prolongation à la frontière amont",
                                               into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1005,7 +1049,7 @@ INITIALISATION = PROC ( nom = "INITIALISATION",
   ContraintesInitiales = FACT ( statut = "o",
 
     ProfilRadial_ContraintesInitiales = SIMP ( statut="o", typ=Tuple(4), max="**",
-                                               fr="Profil radial des contraintes radiale, circonférentielle et longitudinale dans la cuve (en m : xx : xx : xx) ", ),
+                                               fr="Profil radial des contraintes dans la cuve (abscisse en m, contrainte résiduelle radiale en MPa, contrainte résiduelle circonférentielle en MPa, contrainte résiduelle longitudinale en MPa) ", ),
     Amont_ContraintesInitiales        = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                                fr="Prolongation à la frontière amont",
                                                into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1014,6 +1058,20 @@ INITIALISATION = PROC ( nom = "INITIALISATION",
                                                into=( 'Continu', 'Exclu', 'Lineaire' ), ),
 
   ), # Fin FACT ContraintesInitiales
+
+  # CHOIXSIGM
+  ChoixCoefficientChargement = SIMP ( statut="o", typ="TXM", defaut = "NON", 
+                                 fr="Application de coefficients de chargement (OUI/NON) ",
+				 into=( 'OUI','NON'),),
+
+    CoefficientChargement = BLOC ( condition = "ChoixCoefficientChargement=='OUI'",
+    # COEFSIGM1
+      CoefficientDuctile              = SIMP ( statut="o", typ="R", defaut = "1.0",
+                                      fr = "coefficient de chargement pour une rupture ductile", ),
+    # COEFSIGM2
+      CoefficientFragile              = SIMP ( statut="o", typ="R", defaut = "1.0",
+                                      fr = "coefficient de chargement pour une rupture fragile", ),
+    ), # Fin BLOC  CoefficientChargement
 
   # INSTINIT
   InstantInitialisation = SIMP ( statut="o", typ="R", defaut = -1., 
@@ -1032,15 +1090,15 @@ REVETEMENT = PROC ( nom = "REVETEMENT",
                     fr = "Caracteristiques du revêtement", 
 
   # KTHREV
-  ConditionLimiteThermiqueREV = SIMP ( statut="o", typ="TXM", defaut="CHALEUR",
+  ConditionLimiteThermiqueREV = SIMP ( statut="o", typ="TXM", defaut="Chaleur",
                                        fr="Option pour définir les caractéristiques du revêtement ",
-                                       into=( "ENTHALPIE", "CHALEUR",),
+                                       into=( "Enthalpie", "Chaleur",),
                                        ),
 
-  EnthalpieREV = BLOC ( condition = "ConditionLimiteThermiqueREV=='ENTHALPIE'",
+  EnthalpieREV = BLOC ( condition = "ConditionLimiteThermiqueREV=='Enthalpie'",
 
     EnthalpieREV_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                          fr="Température (°C) / enthalpie massique  (J/kg) ", ),
+                                          fr="(Température en °C, enthalpie volumique en J/m3) ", ),
     Amont_EnthalpieREV           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                           fr="Prolongation à la frontière amont",
                                           into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1051,10 +1109,10 @@ REVETEMENT = PROC ( nom = "REVETEMENT",
   ), # Fin BLOC EnthalpieREV
 
 
-  ChaleurREV = BLOC ( condition = "ConditionLimiteThermiqueREV=='CHALEUR'",
+  ChaleurREV = BLOC ( condition = "ConditionLimiteThermiqueREV=='Chaleur'",
 
     ChaleurREV_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                        fr="Température (°C) / chaleur volumique (J/kg/K) ", ),
+                                        fr="(Température en °C, chaleur volumique en J/m3/K) ", ),
     Amont_ChaleurREV           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                         fr="Prolongation à la frontière amont",
                                         into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1067,7 +1125,7 @@ REVETEMENT = PROC ( nom = "REVETEMENT",
   ConductiviteREV = FACT (statut = "o",
 
     ConductiviteREV_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                             fr="Température (°C) / conductivité thermique (W/m/°C) ", ),
+                                             fr="(Température en °C, conductivité thermique en W/m/°C) ", ),
     Amont_ConductiviteREV           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                              fr="Prolongation à la frontière amont",
                                              into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1080,7 +1138,7 @@ REVETEMENT = PROC ( nom = "REVETEMENT",
   ModuleYoungREV = FACT (statut = "o",
 
     ModuleYoungREV_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                            fr="Température (°C) / module d'Young (MPa) ", ),
+                                            fr="(Température en °C, module d'Young en MPa) ", ),
     Amont_ModuleYoungREV           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                             fr="Prolongation à la frontière amont",
                                             into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1093,7 +1151,7 @@ REVETEMENT = PROC ( nom = "REVETEMENT",
   CoeffDilatThermREV = FACT (statut = "o",
 
     CoeffDilatThermREV_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                                fr="Température (°C) / coefficient de dilatation thermique (°C-1) ", ),
+                                                fr="(Température en °C, coefficient de dilatation thermique en °C-1) ", ),
     Amont_CoeffDilatThermREV           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                                 fr="Prolongation à la frontière amont",
                                                 into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1106,7 +1164,7 @@ REVETEMENT = PROC ( nom = "REVETEMENT",
   LimiteElasticiteREV = FACT (statut = "o",
 
     LimiteElasticiteREV_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                                 fr="Température (°C) / limite d'élasticite (MPa) ", ),
+                                                 fr="(Température en °C, limite d'élasticite en MPa) ", ),
     Amont_LimiteElasticiteREV           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                                  fr="Prolongation à la frontière amont",
                                                  into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1143,14 +1201,14 @@ METAL_BASE = PROC ( nom = "METAL_BASE",
                     fr = "Caracteristiques du metal de base", 
 
   # KTHMDB
-  ConditionLimiteThermiqueMDB = SIMP ( statut="o", typ="TXM", defaut="CHALEUR",
+  ConditionLimiteThermiqueMDB = SIMP ( statut="o", typ="TXM", defaut="Chaleur",
                                        fr="Option pour definir les caractéristiques du revêtement ",
-                                       into=( "ENTHALPIE", "CHALEUR",), ),
+                                       into=( "Enthalpie", "Chaleur",), ),
 
-  EnthalpieMDB = BLOC ( condition = "ConditionLimiteThermiqueMDB=='ENTHALPIE'",
+  EnthalpieMDB = BLOC ( condition = "ConditionLimiteThermiqueMDB=='Enthalpie'",
 
     EnthalpieMDB_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                          fr="Température (°C) / enthalpie massique (J/kg) ", ),
+                                          fr="(Température en °C, enthalpie volumique en J/m3) ", ),
     Amont_EnthalpieMDB           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                           fr="Prolongation à la frontière amont",
                                           into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1160,10 +1218,10 @@ METAL_BASE = PROC ( nom = "METAL_BASE",
 
   ), # Fin BLOC EnthalpieMDB
 
-  ChaleurMDB = BLOC ( condition = "ConditionLimiteThermiqueMDB=='CHALEUR'",
+  ChaleurMDB = BLOC ( condition = "ConditionLimiteThermiqueMDB=='Chaleur'",
 
     ChaleurMDB_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                        fr="Température (°C) / chaleur volumique (J/kg/K) ", ),
+                                        fr="(Température en °C, chaleur volumique en J/m3/K) ", ),
     Amont_ChaleurMDB           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                         fr="Prolongation à la frontière amont",
                                         into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1176,7 +1234,7 @@ METAL_BASE = PROC ( nom = "METAL_BASE",
   ConductiviteMDB = FACT ( statut = "o",
 
     ConductiviteMDB_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                             fr="Température (°C) / conductivité thermique (W/m/°C) ", ),
+                                             fr="(Température en °C, conductivité thermique en W/m/°C) ", ),
     Amont_ConductiviteMDB           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                              fr="Prolongation à la frontière amont",
                                              into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1189,7 +1247,7 @@ METAL_BASE = PROC ( nom = "METAL_BASE",
   ModuleYoungMDB = FACT ( statut="o",
 
     ModuleYoungMDB_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                            fr="Température (°C) / module d'Young (MPa) ", ),
+                                            fr="(Température en °C, module d'Young en MPa) ", ),
     Amont_ModuleYoungMDB           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                             fr="Prolongation à la frontière amont",
                                             into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1202,7 +1260,7 @@ METAL_BASE = PROC ( nom = "METAL_BASE",
   CoeffDilatThermMDB = FACT ( statut="o",
 
     CoeffDilatThermMDB_Fct_Temperature = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                                fr="Température (°C) / coefficient de dilatation thermique (°C-1) ", ),
+                                                fr="(Température en °C, coefficient de dilatation thermique en °C-1) ", ),
     Amont_CoeffDilatThermMDB           = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                                 fr="Prolongation à la frontière amont",
                                                 into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1241,7 +1299,7 @@ TRANSITOIRE = PROC ( nom = "TRANSITOIRE",
   Pression = FACT ( statut = "o",
 
     ProfilTemporel_Pression = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                     fr = "Instant (s) / pression (MPa) ", ),
+                                     fr = "(Instant en s, pression en MPa) ", ),
     Amont_Pression          = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                      fr="Prolongation à la frontière amont",
                                      into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1262,33 +1320,50 @@ TRANSITOIRE = PROC ( nom = "TRANSITOIRE",
                                                "Temperature imposee du fluide et coefficient echange", # ECHANGE
                                                "Debit massique et temperature d injection de securite", # DEBIT
                                                "Temperature imposee du fluide et debit d injection de securite", # TEMP_FLU
+                                               "Calcul TEMPFLU puis DEBIT", # TFDEBIT
                                                "Courbe APRP"), # APRP
                                         ),
+
+    TFDEBIT = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Calcul TEMPFLU puis DEBIT', ) ",
+
+      # INST_PCN
+      InstantPerteCirculationNaturelle  = SIMP ( statut="o", typ="R", defaut=400.,
+                                      fr="Instant de perte de circulation naturelle (en s.) ", ),
+      # TIS
+      TempInjectionSecurite  = SIMP ( statut="o", typ="R", defaut=9.,
+                                      fr="Temperature injection securite (en degC) ", ),
+    ), # Fin BLOC TFDEBIT
 
     APRP = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Courbe APRP', ) ",
 
       # INSTANT1
       Instant_1              = SIMP ( statut="o", typ="R", defaut=21.,
-                                    fr="Palier 2 à T1 : borne inférieure (en s) ", ),
+                                    fr="Palier 1 à TACCU : borne superieure (en s) ", ),
       # INSTANT2
       Instant_2              = SIMP ( statut="o", typ="R", defaut=45.,
                                       fr="Palier 2 à T1 : borne supérieure (en s) ", ),
+      # INSTANT3
+      Instant_3              = SIMP ( statut="o", typ="R", defaut=45.,
+                                      fr="Palier 3 à TIS : borne supérieure (en s) ", ),
       # QACCU
       DebitAccumule          = SIMP ( statut="o", typ="R", defaut=2.3,
                                       fr="Debit accumule (en m3/h) ", ),
       # QIS
       DebitInjectionSecurite = SIMP ( statut="o", typ="R", defaut=0.375,
                                       fr="Debit injection securite (en m3/h) ", ),
+      # TIS
+      TempInjectionSecurite  = SIMP ( statut="o", typ="R", defaut=9.,
+                                      fr="Temperature injection securite (en degC) ", ),
       # TIS_MESSAGE
       TempInjectionSecurite_mess = SIMP ( statut="o", typ="TXM", defaut="NON",
                                       fr="Affichage ecran de la temperature injection securite",
                                       into = ( "NON", "OUI" ), ),
     ), # Fin BLOC APRP
 
-    TemperatureImposeeFluide     = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Temperature imposee en paroi','Temperature imposee du fluide et coefficient echange', 'Temperature imposee du fluide et debit d injection de securite', 'Courbe APRP' ) ",
+    TemperatureImposeeFluide     = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Temperature imposee en paroi','Temperature imposee du fluide et coefficient echange', 'Temperature imposee du fluide et debit d injection de securite', 'Calcul TEMPFLU puis DEBIT', 'Courbe APRP' ) ",
 
       ProfilTemporel_TemperatureImposeeFluide = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                                       fr = "Instant (s) / Température imposée (°C) ", ),
+                                                       fr = "(Instant en s, Température imposée en °C) ", ),
       Amont_TemperatureImposeeFluide          = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                                        fr="Prolongation à la frontière amont",
                                                        into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1302,7 +1377,7 @@ TRANSITOIRE = PROC ( nom = "TRANSITOIRE",
     FluxChaleur                  = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Flux de chaleur impose en paroi', ) ",
 
       ProfilTemporel_FluxChaleur    = SIMP ( statut="o", typ=Tuple(2), max="**",
-  	                                   fr="Instant (s) / Flux de chaleur impose (W/m2) ", ),
+  	                                   fr="(Instant en s, Flux de chaleur impose en W/m2) ", ),
       Amont_FluxChaleur             = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                            fr="Prolongation à la frontière amont",
                                            into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1315,7 +1390,7 @@ TRANSITOIRE = PROC ( nom = "TRANSITOIRE",
     CoefficientEchange          = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Temperature imposee du fluide et coefficient echange', ) ",
 
       ProfilTemporel_CoefficientEchange = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                               fr="Instant (s) / Coefficient d'échange (W/m2/K) ", ),
+                                               fr="(Instant en s, Coefficient d'échange en W/m2/K) ", ),
       Amont_CoefficientEchange          = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                                fr="Prolongation à la frontière amont",
                                                into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1328,7 +1403,7 @@ TRANSITOIRE = PROC ( nom = "TRANSITOIRE",
     DebitMassique               = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Debit massique et temperature d injection de securite', ) ",
 
       ProfilTemporel_DebitMassique = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                          fr="Instant (s) / Débit massique (kg/s) ", ),
+                                          fr="(Instant en s, Débit massique en kg/s) ", ),
       Amont_DebitMassique          = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                           fr="Prolongation à la frontière amont",
                                           into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1341,7 +1416,7 @@ TRANSITOIRE = PROC ( nom = "TRANSITOIRE",
     TemperatureInjection        = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Debit massique et temperature d injection de securite', ) ",
 
       ProfilTemporel_TemperatureInjection = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                                 fr="Instant (s) / Température d'injection de sécurité  (°C) ", ),
+                                                 fr="(Instant en s, Température d'injection de sécurité en °C) ", ),
       Amont_TemperatureInjection          = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                                  fr="Prolongation à la frontière amont",
                                                  into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1350,10 +1425,10 @@ TRANSITOIRE = PROC ( nom = "TRANSITOIRE",
                                                  into=( 'Continu', 'Exclu', 'Lineaire' ), ),
     ), # Fin BLOC TemperatureInjection
 
-    DebitInjection              = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Temperature imposee du fluide et debit d injection de securite', 'Courbe APRP', ) ",
+    DebitInjection              = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Temperature imposee du fluide et debit d injection de securite', 'Calcul TEMPFLU puis DEBIT', 'Courbe APRP', ) ",
 
       ProfilTemporel_DebitInjection = SIMP ( statut="o", typ=Tuple(2), max="**",
-                                           fr="Instant (s) / Débit d'injection de sécurité (kg/s) ", ),
+                                           fr="(Instant en s, Débit d'injection de sécurité en kg/s) ", ),
       Amont_DebitInjection          = SIMP ( statut="o", typ="TXM", defaut="Continu",
                                            fr="Prolongation à la frontière amont",
                                            into=( 'Continu', 'Exclu', 'Lineaire' ), ),
@@ -1363,7 +1438,7 @@ TRANSITOIRE = PROC ( nom = "TRANSITOIRE",
 
     ), # Fin BLOC DebitInjection
 
-    Vestale = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Temperature imposee du fluide et debit d injection de securite', 'Debit massique et temperature d injection de securite', 'Courbe APRP', ) ",
+    Vestale = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Temperature imposee du fluide et debit d injection de securite', 'Debit massique et temperature d injection de securite', 'Calcul TEMPFLU puis DEBIT', 'Courbe APRP', ) ",
 
       # DH
       DiametreHydraulique             = SIMP ( statut="o", typ="R", defaut=0.3816,
@@ -1396,15 +1471,17 @@ TRANSITOIRE = PROC ( nom = "TRANSITOIRE",
 
     ), # Fin BLOC Vestale
 
-    Creare = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Debit massique et temperature d injection de securite', ) ",
+    Creare = BLOC ( condition = " TypeConditionLimiteThermique in ( 'Debit massique et temperature d injection de securite', 'Calcul TEMPFLU puis DEBIT',) ",
 
-      # VM
-      VolumeMelange_CREARE           = SIMP ( statut="o", typ="R", defaut=14.9,
-                                            fr = "Volume de mélange CREARE (m3) ", ),
-      # VM_MESSAGE
-      VolumeMelange_CREARE_mess      = SIMP ( statut="o", typ="TXM", defaut="NON",
-                                            fr = "Affichage ecran du volume de mélange CREARE (m3) ",
-                                             into=( 'OUI', 'NON' ), ),
+      # VMTAB
+      ProfilTemporel_VolumeMelange_CREARE = SIMP ( statut="o", typ=Tuple(2), max="**",
+                                           fr="(Instant en s, Volume de melange CREARE (m3) ", ),
+      Amont_VolumeMelange_CREARE          = SIMP ( statut="o", typ="TXM", defaut="Continu",
+                                           fr="Prolongation à la frontière amont",
+                                           into=( 'Continu', 'Exclu', 'Lineaire' ), ),
+      Aval_VolumeMelange_CREARE           = SIMP ( statut="o", typ="TXM", defaut="Continu",
+                                           fr="Prolongation à la frontière aval",
+                                           into=( 'Continu', 'Exclu', 'Lineaire' ), ),
       # T0
       TemperatureInitiale_CREARE     = SIMP ( statut="o", typ="R", defaut=250.,
                                             fr="Température initiale CREARE (°C) ", ),
