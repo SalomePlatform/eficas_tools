@@ -32,8 +32,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.dict_reels={}
 
         self.multi=multi
-        if self.multi == False :self.definitCode(code,ssCode)
         self.RepIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
+        if self.multi == False :self.definitCode(code,ssCode)
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.ajoutIcones()
 
