@@ -19,31 +19,6 @@
    <string>DMacro</string>
   </property>
   <layout class="QGridLayout" >
-   <item row="2" column="1" >
-    <widget class="QPushButton" name="bOk" >
-     <property name="minimumSize" >
-      <size>
-       <width>0</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="toolTip" >
-      <string>validation de la saisie</string>
-     </property>
-     <property name="text" >
-      <string>&amp;Valider</string>
-     </property>
-     <property name="shortcut" >
-      <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
-     </property>
-     <property name="autoDefault" >
-      <bool>true</bool>
-     </property>
-     <property name="default" >
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0" colspan="3" >
     <widget class="QLabel" name="Commentaire" >
      <property name="text" >
@@ -299,17 +274,58 @@ p, li { white-space: pre-wrap; }
      </widget>
     </widget>
    </item>
+   <item row="2" column="0" >
+    <widget class="QPushButton" name="BAlpha" >
+     <property name="text" >
+      <string>Tri Alpha</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2" >
+    <widget class="QPushButton" name="bOk" >
+     <property name="minimumSize" >
+      <size>
+       <width>161</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="toolTip" >
+      <string>validation de la saisie</string>
+     </property>
+     <property name="text" >
+      <string>&amp;Valider</string>
+     </property>
+     <property name="shortcut" >
+      <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+     </property>
+     <property name="autoDefault" >
+      <bool>true</bool>
+     </property>
+     <property name="default" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" >
+    <spacer name="horizontalSpacer" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
   </layout>
-  <zorder>bOk</zorder>
-  <zorder>Commentaire</zorder>
-  <zorder>TWChoix</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
   <tabstop>LEFiltre</tabstop>
   <tabstop>LENomFichier</tabstop>
-  <tabstop>bOk</tabstop>
   <tabstop>TWChoix</tabstop>
   <tabstop>LBMCPermis</tabstop>
   <tabstop>LBRegles</tabstop>

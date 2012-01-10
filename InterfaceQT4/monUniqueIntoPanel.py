@@ -55,6 +55,7 @@ class MonUniqueIntoPanel(DUnIn,QTPanel,SaisieValeur):
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonUniqueIntoPanel"
+        self.alpha=0
         QTPanel.__init__(self,node,parent)
         DUnIn.__init__(self,parent,fl)
         SaisieValeur.RemplitPanel(self)
@@ -64,6 +65,7 @@ class MonUniqueIntoPanel(DUnIn,QTPanel,SaisieValeur):
   def connecterSignaux(self) :
         self.connect(self.listBoxVal, SIGNAL("itemDoubleClicked(QListWidgetItem*)" ), self.ClicValeur )
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
+        self.connect(self.BAlpha,SIGNAL("clicked()"),self.BAlphaPressed)
 
   def ClicValeur(self):
         SaisieValeur.ClicValeur(self)
@@ -71,4 +73,13 @@ class MonUniqueIntoPanel(DUnIn,QTPanel,SaisieValeur):
 
   def BOkPressed(self):
         SaisieValeur.BOkPressed(self)
+
+  def BAlphaPressed(self):
+       if self.alpha==1 :
+         self.alpha=0
+         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Alpha",None,QApplication.UnicodeUTF8))
+       else :
+         self.alpha=1
+         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Cata",None,QApplication.UnicodeUTF8))
+       SaisieValeur.RemplitPanel(self,alpha=self.alpha)
 

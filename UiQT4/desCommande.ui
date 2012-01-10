@@ -343,13 +343,20 @@
    <item row="2" column="0" >
     <layout class="QHBoxLayout" name="horizontalLayout" >
      <item>
+      <widget class="QPushButton" name="BAlpha" >
+       <property name="text" >
+        <string>Tri Alpha</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer" >
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0" >
         <size>
-         <width>263</width>
+         <width>198</width>
          <height>27</height>
         </size>
        </property>

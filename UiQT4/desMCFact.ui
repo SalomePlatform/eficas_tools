@@ -79,8 +79,14 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1" >
+   <item row="2" column="2" >
     <widget class="QPushButton" name="bOk" >
+     <property name="minimumSize" >
+      <size>
+       <width>159</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="toolTip" >
       <string>validation de la saisie</string>
      </property>
@@ -97,6 +103,26 @@
       <bool>true</bool>
      </property>
     </widget>
+   </item>
+   <item row="2" column="0" >
+    <widget class="QPushButton" name="BAlpha" >
+     <property name="text" >
+      <string>Tri Alpha</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" >
+    <spacer name="horizontalSpacer" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

@@ -15,27 +15,53 @@ class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code="ASTER",salome=0,parent=None,ssCode=None):
+    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False):
         """
         Constructor
         """
-        self.VERSION_EFICAS="Eficas QT4 V2.0"
+        QMainWindow.__init__(self,parent)
+        Ui_Eficas.__init__(self)
+        self.setupUi(self)
 
-        self.ihm="QT"
-        self.code=code
-        self.ssCode=ssCode
+        self.VERSION_EFICAS="Eficas QT4 V6.4"
         self.salome=salome
-	self.top = self #(pour CONFIGURATION)
+        self.ihm="QT"
+	self.top = self    #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
         self.indice=0
         self.dict_reels={}
 
-        import prefs
-        prefs.code=code
-        name='prefs_'+prefs.code
+        self.multi=multi
+        if self.multi == False :self.definitCode(code,ssCode)
+        self.RepIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
+        eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.ajoutIcones()
+
+
+        self.viewmanager = MyTabview(self) 
+        self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
+        self.connecterSignaux() 
+
+        self.recent =  QStringList()
+        self.ficPatrons={}
+        self.initRecents()
+
+        self.ouvreFichiers()
+        self.setWindowTitle(self.VERSION_EFICAS)
+        
+    def definitCode(self,code,ssCode) :
+        self.code=code
+        self.ssCode=ssCode
+        self.cleanPath()
+        if self.code==None :
+           from monChoixCode import MonChoixCode
+           widgetChoix = MonChoixCode(self)
+           ret=widgetChoix.exec_()
+        import sys
+        name='prefs_'+self.code
         prefsCode=__import__(name)
-        self.REPINI=prefsCode.REPINI
-        self.RepIcon=prefsCode.INSTALLDIR+"/Editeur/icons"
+
+        self.repIni=prefsCode.repIni
         self.INSTALLDIR=prefsCode.INSTALLDIR
         if ssCode != None :
            self.format_fichier= ssCode	#par defaut
@@ -43,70 +69,82 @@ class Appli(Ui_Eficas,QMainWindow):
         else :
            self.format_fichier="python"	#par defaut
 
-        if salome :
-           import sys
-        nameConf='configuration_'+prefs.code
+        nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
-        self.CONFIGURATION = configuration.make_config(self,prefsCode.REPINI)
+        self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
         self.CONFIGStyle = None
         if hasattr(configuration,'make_config_style'):
-           self.CONFIGStyle = configuration.make_config_style(self,prefsCode.REPINI)
+           self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
         if hasattr(prefsCode,'encoding'):
            import sys
            reload(sys)
            sys.setdefaultencoding(prefsCode.encoding)
-
-        QMainWindow.__init__(self,parent)
-        Ui_Eficas.__init__(self)
-        self.setupUi(self)
-        self.ajoutIcones()
-        if code in Appli.__dict__.keys():
-          listeTexte=apply(Appli.__dict__[code],(self,))
-
-        self.viewmanager = MyTabview(self) 
-        self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
-        self.connecterSignaux() 
-
-
-        #if self.salome :
-        #   from Editeur import session
-        #   self.ouvreFichiers()
-
-        self.recent =  QStringList()
-        self.ficPatrons={}
+        if self.code in Appli.__dict__.keys():
+          listeTexte=apply(Appli.__dict__[self.code],(self,))
         self.initPatrons()
         self.ficRecents={}
-        self.initRecents()
 
-        self.ouvreFichiers()
-        self.setWindowTitle(self.VERSION_EFICAS)
-        
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
         self.actionTraduitV7V8 = QAction(self)
         self.actionTraduitV7V8.setObjectName("actionTraduitV7V8")
         self.actionTraduitV8V9 = QAction(self)
         self.actionTraduitV8V9.setObjectName("actionTraduitV8V9")
+        self.actionTraduitV9V10 = QAction(self)
+        self.actionTraduitV9V10.setObjectName("actionTraduitV9V10")
         self.menuTraduction.addAction(self.actionTraduitV7V8)
         self.menuTraduction.addAction(self.actionTraduitV8V9)
+        self.menuTraduction.addAction(self.actionTraduitV9V10)
         self.menuTraduction.setTitle(QApplication.translate("Eficas", "Traduction", None, QApplication.UnicodeUTF8))
         self.actionTraduitV7V8.setText(QApplication.translate("Eficas","TraduitV7V8", None, QApplication.UnicodeUTF8))
         self.actionTraduitV8V9.setText(QApplication.translate("Eficas","TraduitV8V9", None, QApplication.UnicodeUTF8))
+        self.actionTraduitV9V10.setText(QApplication.translate("Eficas","TraduitV9V10", None, QApplication.UnicodeUTF8))
         self.connect(self.actionTraduitV7V8,SIGNAL("activated()"),self.traductionV7V8)
         self.connect(self.actionTraduitV8V9,SIGNAL("activated()"),self.traductionV8V9)
+        self.connect(self.actionTraduitV9V10,SIGNAL("activated()"),self.traductionV9V10)
 
 
-    def Map(self): 
-        self.MAP()
+
+    def CARMEL3D(self):
+        if self.salome == 0 : return
+        self.menuMesh = self.menubar.addMenu("menuMesh")
+        self.menuMesh.setObjectName("Mesh")
+        self.actionChercheGrpMesh = QAction(self)
+        self.actionChercheGrpMesh.setText("Acquiert SubMeshes")
+        self.menuMesh.addAction(self.actionChercheGrpMesh)
+        self.connect(self.actionChercheGrpMesh,SIGNAL("activated()"),self.ChercheGrpMesh)
+        self.actionChercheGrpMaille = QAction(self)
+        self.actionChercheGrpMaille.setText("Acquiert Groupe Maille")
+        self.menuMesh.addAction(self.actionChercheGrpMaille)
+        self.connect(self.actionChercheGrpMaille,SIGNAL("activated()"),self.ChercheGrpMaille)
+
+    def ChercheGrpMesh(self):
+        Msg,listeGroup=self.ChercheGrpMeshInSalome()
+        if Msg == None :
+           self.viewmanager.handleAjoutGroup(listeGroup)
+        else :
+           print "il faut gerer les erreurs"
+
+    def ChercheGrpMaille(self):
+        Msg,listeGroup=self.ChercheGrpMailleInSalome()
+        if Msg == None :
+           self.viewmanager.handleAjoutGroup(listeGroup)
+        else :
+           print "il faut gerer les erreurs"
+
 
     def MAP(self): 
+        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.menuExecution.setObjectName("menuExecution")
+        self.menuJdC.setTitle(QApplication.translate("Eficas", "Rapports", None, QApplication.UnicodeUTF8))
+
         self.actionExecution = QAction(self)
         icon6 = QIcon(self.RepIcon+"/compute.png")
         self.actionExecution.setIcon(icon6)
         self.actionExecution.setObjectName("actionExecution")
-        self.menuJdC.addAction(self.actionExecution)
+        self.menuExecution.addAction(self.actionExecution)
         self.toolBar.addAction(self.actionExecution)
-        self.actionExecution.setText(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.actionExecution.setText(QApplication.translate("Eficas", "Execution Python", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
 
         self.actionEnregistrer_Python = QAction(self)
@@ -125,11 +163,17 @@ class Appli(Ui_Eficas,QMainWindow):
         icon7 = QIcon(self.RepIcon+"/application.gif")
         self.actionExecutionYACS.setIcon(icon7)
         self.actionExecutionYACS.setObjectName("actionExecutionYACS")
-        self.menuJdC.addAction(self.actionExecutionYACS)
+        self.menuExecution.addAction(self.actionExecutionYACS)
         self.toolBar.addAction(self.actionExecutionYACS)
         self.actionExecutionYACS.setText(QApplication.translate("Eficas", "Execution YACS", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecutionYACS,SIGNAL("activated()"),self.runYACS)
 
+    def OPENTURNS_STUDY(self):
+        self.menuOptions.setDisabled(True)
+    
+    def OPENTURNS_WRAPPER(self):
+        self.menuOptions.setDisabled(True)
+    
     def ajoutIcones(self) :
         # Pour pallier les soucis de repertoire d icone
         icon = QIcon(self.RepIcon+"/New24.png")
@@ -199,6 +243,12 @@ class Appli(Ui_Eficas,QMainWindow):
     def initPatrons(self) :
     # Mise à jour du menu des fichiers recemment ouverts
         from Editeur import listePatrons
+        if not(self.code in listePatrons.sous_menus.keys()) :
+           return
+        self.menuPatrons = QMenu(self.menubar)
+        self.menuPatrons.setObjectName("menuPatrons")
+        self.menubar.addAction(self.menuPatrons.menuAction())
+        self.menuPatrons.setTitle(QApplication.translate("Eficas", "Patrons", None, QApplication.UnicodeUTF8))
         self.listePatrons = listePatrons.listePatrons(self.code)
         idx = 0
         for nomSsMenu in self.listePatrons.liste.keys():
@@ -267,6 +317,10 @@ class Appli(Ui_Eficas,QMainWindow):
         from gereTraduction import traduction
         traduction(self.CONFIGURATION.rep_ini,self.viewmanager,"V8V9")
 
+    def traductionV9V10(self):
+        from gereTraduction import traduction
+        traduction(self.CONFIGURATION.rep_ini,self.viewmanager,"V9V10")
+
     def version(self) :
         from monVisu import DVisu
         titre = "version "
@@ -279,19 +333,21 @@ class Appli(Ui_Eficas,QMainWindow):
     def aidePPal(self) :
         maD=self.INSTALLDIR+"/Aide"
         docsPath = QDir(maD).absolutePath()
-        monAssistant=QAssistantClient(QString(""), self)
-        arguments=QStringList()
-        arguments << "-profile" <<docsPath+QDir.separator()+QString("eficas_")+QString(self.code)+QString(".adp");
-        monAssistant.setArguments(arguments);
-        monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
+        try :
+          monAssistant=QAssistantClient(QString(""), self)
+          arguments=QStringList()
+          arguments << "-profile" <<docsPath+QDir.separator()+QString("eficas_")+QString(self.code)+QString(".adp");
+          monAssistant.setArguments(arguments);
+          monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
+        except:
+           QMessageBox.warning( self, "Aide Indisponible", "QT Assistant n est pas installe ")
+
 
     def optionEditeur(self) :
         name='monOptions_'+self.code
         try :
-        #if 1 :
            optionCode=__import__(name)
         except :
-        #else :
            QMessageBox.critical( self, "Parametrage", "Pas de possibilite de personnalisation de la configuration ")
            return
         monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
@@ -317,7 +373,7 @@ class Appli(Ui_Eficas,QMainWindow):
         
     def handleOpenPatrons(self):
         idx=self.sender()
-        fichier=self.REPINI+"/../Editeur/Patrons/"+self.code+"/"+self.ficPatrons[idx]
+        fichier=self.repIni+"/../Editeur/Patrons/"+self.code+"/"+self.ficPatrons[idx]
         self.viewmanager.handleOpen(fichier=fichier, patron = 1)
 
     def handleOpenRecent(self):
@@ -336,16 +392,16 @@ class Appli(Ui_Eficas,QMainWindow):
         self.viewmanager.handleOpen()        
         
     def fileSave(self):
-        self.viewmanager.saveCurrentEditor()
+        return self.viewmanager.saveCurrentEditor()
         
     def fileSaveAs(self):
-        self.viewmanager.saveAsCurrentEditor()
+        return self.viewmanager.saveAsCurrentEditor()
         
     def fileClose(self):
-        self.viewmanager.handleClose()
+        self.viewmanager.handleClose(texte='&Fermer')
         
     def fileCloseAll(self):
-        self.viewmanager.handleCloseAll()
+        self.viewmanager.handleCloseAll(texte='&Fermer')
         
     def fileExit(self):
         # On peut sortir sur Abort
@@ -398,6 +454,15 @@ class Appli(Ui_Eficas,QMainWindow):
         texte="tempo"+str(self.indice)
         return texte
         
+    def cleanPath(self):
+        for pathCode in ('Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP'):
+            try:
+              aEnlever=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__),'..',pathCode)))
+              sys.path.remove(aEnlever)
+            except :
+              pass
+              
+
 
 if __name__=='__main__':
 

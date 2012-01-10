@@ -1,8 +1,8 @@
-#@ MODIF calc_fonction_ops Macro  DATE 11/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF calc_fonction_ops Macro  DATE 22/03/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2005  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -17,6 +17,7 @@
 # ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
+# RESPONSABLE COURTOIS M.COURTOIS
 
 import os
 import copy
@@ -26,6 +27,7 @@ import traceback
 def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
                       SPEC_OSCI,ABS,COMB,COMB_C,COMPOSE,EXTRACTION,
                       ENVELOPPE,FRACTILE,ASSE,CORR_ACCE,PUISSANCE,INVERSE,
+                      REGR_POLYNOMIALE,
                       NOM_PARA,NOM_RESU,INTERPOL,PROL_DROITE,
                       PROL_GAUCHE,NOM_PARA_FONC,INTERPOL_FONC,PROL_DROITE_FONC,
                       PROL_GAUCHE_FONC,INFO,**args):
@@ -33,6 +35,8 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
       Ecriture de la macro CALC_FONCTION
    """
    ier=0
+   import numpy as NP
+
    from Cata_Utils.t_fonction import t_fonction, t_fonction_c, t_nappe, homo_support_nappe, \
             FonctionError, ParametreError, InterpolationError, ProlongementError, enveloppe, fractile
    from Utilitai import liss_enveloppe
@@ -301,7 +305,7 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
       
          # construction de la nappe
          vale_para = l_amor
-         para      = { 'INTERPOL'      : ['LIN','LOG'],
+         para      = { 'INTERPOL'      : ['LIN', 'LOG'],
                        'NOM_PARA_FONC' : 'FREQ',
                        'NOM_PARA'      : 'AMOR',
                        'PROL_DROITE'   : 'EXCLU',
@@ -325,6 +329,7 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
       ###
       if (LISS_ENVELOP!= None):
          __ff=LISS_ENVELOP['NAPPE'].convert()
+         ctxt.f = __ff.nom
          sp_nappe=liss_enveloppe.nappe(listFreq=__ff.l_fonc[0].vale_x, listeTable=[f.vale_y for f in __ff.l_fonc], listAmor=__ff.vale_para, entete="")
          sp_lisse=liss_enveloppe.lissage(nappe=sp_nappe,fmin=LISS_ENVELOP['FREQ_MIN'],fmax=LISS_ENVELOP['FREQ_MAX'],elarg=LISS_ENVELOP['ELARG'],tole_liss=LISS_ENVELOP['TOLE_LISS'])
          para_fonc=__ff.l_fonc[0].para
@@ -332,6 +337,26 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
          for val in sp_lisse.listTable: 
             l_fonc.append(t_fonction(sp_lisse.listFreq,val,para_fonc))
          __ex=t_nappe(vale_para=sp_lisse.listAmor,l_fonc=l_fonc,para=__ff.para)
+      ###
+      if (REGR_POLYNOMIALE != None):
+          __ff = REGR_POLYNOMIALE['FONCTION'].convert()
+          ctxt.f = __ff.nom
+          deg = REGR_POLYNOMIALE['DEGRE']
+          coef = NP.polyfit(__ff.vale_x, __ff.vale_y, deg)
+          if coef is None:
+              raise FonctionError("La régression polynomiale n'a pas convergé.")
+          # interpolation sur une liste d'abscisses
+          absc = __ff.vale_x
+          if args['LIST_PARA'] is not None:
+            absc = args['LIST_PARA'].Valeurs()
+          vale = NP.polyval(coef, absc)
+          # paramètres
+          para = __ff.para.copy()
+          para['INTERPOL'] = ['LIN', 'LIN']
+          __ex = t_fonction(absc, vale, para)
+          coef_as_str = os.linesep.join(['   a[%d] = %f' % (i, ci) \
+                                         for i, ci in enumerate(coef)])
+          UTMESS('I', 'FONCT0_57', coef_as_str)
 
    except InterpolationError, msg:
       UTMESS('F', 'FONCT0_27', valk=(ctxt.f, str(msg)))
@@ -348,11 +373,11 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
    
    if isinstance(__ex,t_fonction) or isinstance(__ex,t_fonction_c):
       para=__ex.para
-      if NOM_PARA   !=None : para['NOM_PARA']   =NOM_PARA
-      if NOM_RESU   !=None : para['NOM_RESU']   =NOM_RESU
-      if PROL_DROITE!=None : para['PROL_DROITE']=PROL_DROITE
-      if PROL_GAUCHE!=None : para['PROL_GAUCHE']=PROL_GAUCHE
-      if INTERPOL   !=None : para['INTERPOL']   =INTERPOL
+      if NOM_PARA    != None: para['NOM_PARA']    = NOM_PARA
+      if NOM_RESU    != None: para['NOM_RESU']    = NOM_RESU
+      if PROL_DROITE != None: para['PROL_DROITE'] = PROL_DROITE
+      if PROL_GAUCHE != None: para['PROL_GAUCHE'] = PROL_GAUCHE
+      if INTERPOL    != None: para['INTERPOL']    = INTERPOL
       if   isinstance(__ex,t_fonction_c): para['VALE_C'] = __ex.tabul()
       elif isinstance(__ex,t_fonction)  : para['VALE']   = __ex.tabul()
       C_out=DEFI_FONCTION(**para)
@@ -361,17 +386,20 @@ def calc_fonction_ops(self,FFT,DERIVE,INTEGRE,LISS_ENVELOP,
       for f in __ex.l_fonc :
          para=f.para
          def_fonc.append(_F(VALE       =f.tabul(),
-                            INTERPOL   =f.para['INTERPOL'],
-                            PROL_DROITE=f.para['PROL_DROITE'],
-                            PROL_GAUCHE=f.para['PROL_GAUCHE'],))
+                            INTERPOL   =INTERPOL_FONC or f.para['INTERPOL'],
+                            PROL_DROITE=PROL_DROITE_FONC or f.para['PROL_DROITE'],
+                            PROL_GAUCHE=PROL_GAUCHE_FONC or f.para['PROL_GAUCHE'],))
       para=__ex.para
-      if NOM_PARA      !=None : para['NOM_PARA']   =NOM_PARA
-      if NOM_RESU      !=None : para['NOM_RESU']   =NOM_RESU
-      if PROL_DROITE   !=None : para['PROL_DROITE']=PROL_DROITE
-      if PROL_GAUCHE   !=None : para['PROL_GAUCHE']=PROL_GAUCHE
-      if NOM_PARA_FONC !=None : para['NOM_PARA_FONC']   =INTERPOL
-      if INTERPOL_FONC !=None : para['INTERPOL']   =INTERPOL
-      C_out=DEFI_NAPPE(PARA=__ex.vale_para.tolist(),DEFI_FONCTION=def_fonc,**para)
+      if NOM_PARA      != None: para['NOM_PARA']      = NOM_PARA
+      if NOM_RESU      != None: para['NOM_RESU']      = NOM_RESU
+      if PROL_DROITE   != None: para['PROL_DROITE']   = PROL_DROITE
+      if PROL_GAUCHE   != None: para['PROL_GAUCHE']   = PROL_GAUCHE
+      if NOM_PARA_FONC != None: para['NOM_PARA_FONC'] = NOM_PARA_FONC
+      if INTERPOL      != None: para['INTERPOL']      = INTERPOL
+      print para
+      C_out=DEFI_NAPPE(PARA=__ex.vale_para.tolist(),
+                       DEFI_FONCTION=def_fonc,
+                       **para)
    if INFO > 1:
       IMPR_FONCTION(FORMAT='TABLEAU',
                     UNITE=6,

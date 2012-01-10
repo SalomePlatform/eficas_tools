@@ -38,26 +38,41 @@ class MyTabview:
        self.gridLayout = QGridLayout(self.appliEficas.centralWidget())
        self.myQtab = QTabWidget(self.appliEficas.centralWidget())
        self.gridLayout.addWidget(self.myQtab)
+       if self.appliEficas.multi== True:
+          self.myQtab.connect(self.myQtab,SIGNAL("currentChanged(int)"),self.indexChanged)
         
+   def indexChanged(self):
+       index=self.myQtab.currentIndex()
+       if  self.dict_editors.has_key(index):
+           editor=self.dict_editors[index]
+           self.appliEficas.CONFIGURATION=editor.CONFIGURATION
+           self.appliEficas.setWindowTitle(editor.titre)
 
    def handleOpen(self,fichier=None,patron=0,units=None):
+       result = None
        if fichier is None:
+            if self.appliEficas.multi==True : 
+               self.appliEficas.definitCode(None,None)
             fichier = QFileDialog.getOpenFileName(self.appliEficas,
                         self.appliEficas.trUtf8('Ouvrir Fichier'),
                         self.appliEficas.CONFIGURATION.savedir,
                         self.appliEficas.trUtf8('JDC Files (*.comm);;''All Files (*)'))
-            if fichier.isNull(): return
+            if fichier.isNull(): 
+              return result
        fichier = os.path.abspath(unicode(fichier))
        ulfile = os.path.abspath(unicode(fichier))
        self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
        self.appliEficas.addToRecentList(fichier)
        maPage=self.getEditor( fichier,units=units)
+       if maPage:
+         result = maPage
+       return result
 
-   def handleClose(self,doitSauverRecent = 1):
+   def handleClose(self,doitSauverRecent = 1,texte='&Quitter'):
        if doitSauverRecent : self.appliEficas.sauveRecents()
        index=self.myQtab.currentIndex()
        if index < 0 : return
-       res=self.checkDirty(self.dict_editors[index])
+       res=self.checkDirty(self.dict_editors[index],texte)
        if res == 2 : return 2             # l utilisateur a annule
        index=self.myQtab.currentIndex()
        idx=index
@@ -97,12 +112,12 @@ class MyTabview:
        editor=self.dict_editors[index]
        editor.saveYACS()
 
-   def handleCloseAll(self):
+   def handleCloseAll(self,texte='Quitter'):
        res=0
        self.appliEficas.sauveRecents()
        while len(self.dict_editors) > 0 :
              self.myQtab.setCurrentIndex(0)
-             res=self.handleClose(0)
+             res=self.handleClose(0,texte)
              if res==2 : return res   # l utilsateur a annule
        return res
         
@@ -130,6 +145,8 @@ class MyTabview:
        editor.handleSupprimer()
 
    def newEditor(self,include=0):
+       if self.appliEficas.multi==True : 
+           self.appliEficas.definitCode(None,None)
        maPage=self.getEditor(include=include)
 
    def newIncludeEditor(self):
@@ -153,9 +170,6 @@ class MyTabview:
    def saveCurrentEditor(self):
        index=self.myQtab.currentIndex()
        if index < 0 : return
-       print self
-       print index
-       print self.dict_editors
        editor=self.dict_editors[index]
        if editor in self.doubles.keys() :
            QMessageBox.warning(
@@ -168,6 +182,7 @@ class MyTabview:
        if ok :
            fileName=os.path.basename(unicode(newName))
            self.myQtab.setTabText(index,fileName)
+       return ok
 
    def saveAsCurrentEditor(self):
        index=self.myQtab.currentIndex()
@@ -180,7 +195,7 @@ class MyTabview:
        if editor in self.doubles.keys():
           if oldName != newName :
              del self.doubles[editor]
-
+       return ok
 
    def displayJDC(self,jdc,fn=None):
         """
@@ -259,7 +274,7 @@ class MyTabview:
     return 0
 
 
-   def checkDirty(self, editor):
+   def checkDirty(self, editor,texte):
         """
         Private method to check dirty status and open a message window.
         
@@ -272,10 +287,10 @@ class MyTabview:
                      None,
                      self.appliEficas.trUtf8("Fichier Duplique"),
                      self.appliEficas.trUtf8("Le fichier ne sera pas sauvegarde."),
-                     self.appliEficas.trUtf8("&Quitter"), 
+                     self.appliEficas.trUtf8(texte), 
                      self.appliEficas.trUtf8("&Annuler"))
             if res == 0 : return 1
-            return 0
+            return 2
         if editor.modified:
             fn = editor.getFileName()
             if fn is None:
@@ -284,7 +299,7 @@ class MyTabview:
                 self.appliEficas.trUtf8("Fichier Modifie"),
                 self.appliEficas.trUtf8("Le fichier <b>%1</b> n a pas ete sauvegarde.") .arg(fn),
                 self.appliEficas.trUtf8("&Sauvegarder"),
-                self.appliEficas.trUtf8("&Quitter "),
+                self.appliEficas.trUtf8(texte),
                 self.appliEficas.trUtf8("&Annuler") )
             if res == 0:
                 (ok, newName) = editor.saveFile()
@@ -294,3 +309,8 @@ class MyTabview:
                     self.myQtab.setTabText(index,fileName)
                 return ok
         return res
+
+   def handleAjoutGroup(self,listeGroup):
+       index=self.myQtab.currentIndex()
+       editor=self.dict_editors[index]
+       editor.handleAjoutGroup(listeGroup)

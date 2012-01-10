@@ -1,22 +1,22 @@
-#@ MODIF basetype Noyau  DATE 07/09/2009   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF basetype Noyau  DATE 28/06/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 # RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                                  
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 
 """
@@ -38,7 +38,7 @@ C'est ce comportement qui est capturé dans la classe BaseType
 La classe `Type` hérite de BaseType et y associe la métaclasse MetaType.
 
 """
-from copy import copy,deepcopy
+
 import cPickle
 
 __docformat__ = "restructuredtext"
@@ -131,25 +131,34 @@ class BaseType(object):
             obj = getattr( self, nam )
             obj.reparent( self, nam )
 
+    def supprime(self, delete=False):
+        """Permet de casser les boucles de références pour que les ASSD
+        puissent être détruites.
+        Si `delete` vaut True, on supprime l'objet lui-même et pas
+        seulement les références remontantes."""
+        self._parent = None
+        self._name = None
+        for nam in self._subtypes:
+            obj = getattr(self, nam)
+            obj.supprime(delete)
+        #XXX MC : avec ce code, j'ai l'impression qu'on supprime aussi
+        # des attributs de classe, ce qui pose problème pour une
+        # instanciation future...
+        # Dans une version précédente, on utilisait l'attribut
+        # sd_deleted pour ne faire qu'une fois, à voir.
+        # Supprimer les références remontantes devrait suffir.
+        #if delete:
+            #while len(self._subtypes):
+                #nam = self._subtypes.pop(0)
+                #try:
+                    #delattr(self, nam)
+                #except AttributeError:
+                    #pass
+
     def base( self ):
         if self._parent is None:
             return self
         return self._parent.base()
-
-    def change_type(self, new_type, nomj=None):
-        """Méthode appelée quand on change a posteriori le type
-        du concept (pour les 'CO').
-        Si `nomj` est None, on prend `self.nom`.
-        """
-        self.__class__ = new_type
-        nomj = nomj or self.nom
-        new_type.dup_attr(self)
-
-        # Comment appeler AsBase.__init__ ?
-        # type(nomj)=str donc plus simple que dans AsBase.__init__...
-        assert isinstance(nomj, str), 'Valeur inattendue pour nomj : %s' % nomj
-        assert self.nomj is not self.__class__.nomj
-        self.nomj.nomj = nomj
 
 
 class Type(BaseType):

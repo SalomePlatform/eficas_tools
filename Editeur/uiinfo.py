@@ -53,15 +53,15 @@ def traite_commande(commande,niveau):
     uiinfo=commande.UIinfo or {}
     UI=UIINFO(commande,**uiinfo)
     commande.UI=UI
-    if "CACHE" in UI.groupes:
+    #if "CACHE" in UI.groupes:
         # La commande est cachee aux utilisateurs
         #niveau.dict_groupes["CACHE"].append(commande.nom)
-        pass
-    else:
+        #pass
+    #else:
         # On ajoute la commande dans tous les groupes specifies
-        for grp in UI.groupes:
-            if not niveau.dict_groupes.has_key(grp): niveau.dict_groupes[grp]=[]
-            niveau.dict_groupes[grp].append(commande.nom)
+    for grp in UI.groupes:
+        if not niveau.dict_groupes.has_key(grp): niveau.dict_groupes[grp]=[]
+        niveau.dict_groupes[grp].append(commande.nom)
 
 def traite_niveau(niveau):
    if niveau.l_niveaux == ():

@@ -84,15 +84,23 @@ class READERCATA:
           else:
               print "Catalog description cannot be interpreted: ", catalogue
 
-      # TODO: Remove this filter. Normally, CONFIGURATION should only define the catalogs for this code anyway.
-      # Non pas pour Map qui a une notion de sscode
-      for catalogue in all_cata_list:
-          if catalogue.code == self.code :
-             if (self.ssCode == None) or (self.ssCode == catalogue.file_format):
-                 liste_cata_possibles.append(catalogue)
+      # This filter is only useful for codes that have subcodes (like MAP).
+      # Otherwise, the "code" attribute of the catalog description can (should) be None.
+      if self.ssCode is None:
+          liste_cata_possibles = all_cata_list
+      else:
+          for catalogue in all_cata_list:
+              #print catalogue.code
+              #print catalogue.file_format
+              if catalogue.code == self.code and catalogue.file_format == self.ssCode:
+                  liste_cata_possibles.append(catalogue)
 
+      #print "___________"
+      #print self.ssCode
+      #print self.code
       if len(liste_cata_possibles)==0:          
-          QMessageBox.critical( self.QWParent, "Import du catalogue","Pas de catalogue defini pour le code %s" % self.code)
+          QMessageBox.critical(self.QWParent, "Import du catalogue",
+                               u"Pas de catalogue défini pour le code %s" % self.code)
           self.appliEficas.close()
           if self.appliEficas.salome == 0 :
              sys.exit(1)
@@ -186,6 +194,7 @@ class READERCATA:
       if self.appliEficas.top:
         self.appliEficas.setWindowTitle(titre)
       self.appliEficas.titre=titre
+      self.QWParent.titre=titre
 
    def determineMater(self) :
       # Determinination du repertoire materiau
@@ -248,7 +257,12 @@ class READERCATA:
       Ouvre une fenetre de sélection du catalogue dans le cas où plusieurs
       ont été définis dans Accas/editeur.ini
       """      
-      title = getattr(self.appliEficas.CONFIGURATION, "cata_choice_window_title", None)
+      code = getattr(self.appliEficas.CONFIGURATION, "code", None)
+      if code != None : 
+          title="Choix d une version du code "+str(code)
+      else :
+          title="Choix d une version "
+    
       widgetChoix = MonChoixCata(self.appliEficas, [cata.user_name for cata in cata_choice_list], title)
       ret=widgetChoix.exec_()
       

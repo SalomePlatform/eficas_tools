@@ -23,7 +23,7 @@
 from __future__ import division
 
 __version__ = "$Name:  $"
-__Id__ = "$Id: cata.py,v 1.7.4.2 2010-06-03 08:50:35 pnoyret Exp $"
+__Id__ = "$Id: cata.py,v 1.8.4.3 2010-12-06 13:13:33 pnoyret Exp $"
 
 import Accas
 from Accas import *
@@ -12929,7 +12929,7 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 
            INFO            =SIMP(statut='f',typ='I',defaut=1,into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 21/04/2008   AUTEUR LEFEBVRE J-P.LEFEBVRE 
+#& MODIF COMMANDE  DATE 12/11/2010   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -12951,12 +12951,12 @@ DEFI_MATERIAU=OPER(nom="DEFI_MATERIAU",op=5,sd_prod=mater_sdaster,
 DEFI_MODELE_GENE=OPER(nom="DEFI_MODELE_GENE",op= 126,sd_prod=modele_gene,
                       reentrant='n',
             fr="Créer la structure globale à partir des sous-structures en sous-structuration dynamique", 
-            UIinfo={"groupes":("Matrices/vecteurs",)},
+            UIinfo={"groupes":("Matrices et vecteurs",)},
          SOUS_STRUC      =FACT(statut='o',max='**',
            NOM             =SIMP(statut='o',typ='TXM' ),
            MACR_ELEM_DYNA  =SIMP(statut='o',typ=macr_elem_dyna ),
-           ANGL_NAUT       =SIMP(statut='f',typ='R',max=3),
-           TRANS           =SIMP(statut='f',typ='R',max=3),
+           ANGL_NAUT       =SIMP(statut='o',typ='R',max=3),
+           TRANS           =SIMP(statut='o',typ='R',max=3),
          ),
          LIAISON         =FACT(statut='o',max='**',
            SOUS_STRUC_1    =SIMP(statut='o',typ='TXM' ),
@@ -14048,7 +14048,7 @@ DYNA_LINE_TRAN=OPER(nom="DYNA_LINE_TRAN",op=  48,sd_prod=dyna_trans,
          TITRE           =SIMP(statut='f',typ='TXM',max='**'),
          INFO            =SIMP(statut='f',typ='I',into=(1,2) ),
 )  ;
-#& MODIF COMMANDE  DATE 21/04/2009   AUTEUR ABBAS M.ABBAS 
+#& MODIF COMMANDE  DATE 12/11/2010   AUTEUR MICOL A.MICOL 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -14401,7 +14401,7 @@ DYNA_NON_LINE=OPER(nom="DYNA_NON_LINE",op= 70,sd_prod=evol_noli,reentrant='f',
                                       "MATR_ASSE",
                                       "ITER_DEBO",
                                       "CTCD_ITER","CTCD_GEOM","CTCD_NOEU",
-                                      "CTCC_GEOM","CTCC_FROT","CTCC_CONT",
+                                      "BOUC_GEOM","BOUC_FROT","BOUC_CONT",
                                       "SUIV_1","SUIV_2","SUIV_3","SUIV_4",
                                      ),
                                ),
@@ -15133,7 +15133,7 @@ FONC_FLUI_STRU=OPER(nom="FONC_FLUI_STRU",op= 169,sd_prod=fonction_sdaster,
             UIinfo={"groupes":("Fonction",)},
          TYPE_FLUI_STRU  =SIMP(statut='o',typ=(type_flui_stru) ),
 )  ;
-#& MODIF COMMANDE  DATE 21/04/2008   AUTEUR LEFEBVRE J-P.LEFEBVRE 
+#& MODIF COMMANDE  DATE 02/08/2010   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -15158,12 +15158,15 @@ def formule_prod(self,VALE,VALE_C,**args):
    elif VALE_C != None:
       return formule_c
 
-def form_pyth_ops(self,d):
-   NOM_PARA=self.etape['NOM_PARA']
+def form_pyth_ops(self, d):
+   NOM_PARA = self.etape['NOM_PARA']
    VALE    =self.etape['VALE']
    VALE_C  =self.etape['VALE_C']
    if type(NOM_PARA) not in (list, tuple):
       NOM_PARA = [NOM_PARA,]
+   for para in NOM_PARA:
+       if para.strip() != para:
+           raise AsException("nom de paramètre invalide (contient des blancs) : %s" % repr(para))
    if self.sd == None:
       return
    if VALE     != None :
@@ -24768,7 +24771,7 @@ REST_SPEC_PHYS=OPER(nom="REST_SPEC_PHYS",op= 148,sd_prod=table_fonction,
                                into=("DIAG_TOUT","DIAG_DIAG","TOUT_TOUT","TOUT_DIAG") ),
          TITRE           =SIMP(statut='f',typ='TXM',max='**' ),  
 )  ;
-#& MODIF COMMANDE  DATE 06/10/2008   AUTEUR DEVESA G.DEVESA 
+#& MODIF COMMANDE  DATE 17/11/2010   AUTEUR MACOCCO K.MACOCCO 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -24787,11 +24790,9 @@ REST_SPEC_PHYS=OPER(nom="REST_SPEC_PHYS",op= 148,sd_prod=table_fonction,
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
 # RESPONSABLE DEVESA G.DEVESA
-def rest_spec_temp_prod(RESU_GENE,RESULTAT,**args):
+def rest_spec_temp_prod(RESULTAT,**args):
   if AsType(RESULTAT) == dyna_harmo    : return dyna_trans
-  if AsType(RESU_GENE) == harm_gene    : return tran_gene
   if AsType(RESULTAT) == dyna_trans    : return dyna_harmo
-  if AsType(RESU_GENE) == tran_gene    : return harm_gene
   raise AsException("type de concept resultat non prevu")
 
 
@@ -24799,9 +24800,7 @@ REST_SPEC_TEMP=OPER(nom="REST_SPEC_TEMP",op=181,sd_prod=rest_spec_temp_prod,
               fr="Transformée de Fourier d'un résultat",
               reentrant='n',
             UIinfo={"groupes":("Matrices/vecteurs",)},
-         regles=UN_PARMI('RESU_GENE','RESULTAT'),
-         RESU_GENE       =SIMP(statut='f',typ=(harm_gene,tran_gene,) ),
-         RESULTAT        =SIMP(statut='f',typ=(dyna_harmo,dyna_trans,) ),
+         RESULTAT        =SIMP(statut='o',typ=(dyna_harmo,dyna_trans,) ),
          METHODE         =SIMP(statut='f',typ='TXM',defaut="PROL_ZERO",into=("PROL_ZERO","TRONCATURE") ),
          SYMETRIE        =SIMP(statut='f',typ='TXM',defaut="OUI",into=("OUI","NON") ),
          TOUT_CHAM       =SIMP(statut='f',typ='TXM',into=("OUI",)),
@@ -25050,7 +25049,7 @@ STANLEY=MACRO(nom="STANLEY",op=stanley_ops,sd_prod=None,
                                fr="Unité logique définissant le fichier (fort.N) dans lequel on écrit les md5"),
 
 )  ;
-#& MODIF COMMANDE  DATE 07/04/2009   AUTEUR ABBAS M.ABBAS 
+#& MODIF COMMANDE  DATE 12/11/2010   AUTEUR MICOL A.MICOL 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -25403,7 +25402,7 @@ STAT_NON_LINE=OPER(nom="STAT_NON_LINE",op=70,sd_prod=evol_noli,
                                       "MATR_ASSE",
                                       "ITER_DEBO",
                                       "CTCD_ITER","CTCD_GEOM","CTCD_NOEU",
-                                      "CTCC_GEOM","CTCC_FROT","CTCC_CONT",
+                                      "BOUC_GEOM","BOUC_FROT","BOUC_CONT",
                                       "SUIV_1","SUIV_2","SUIV_3","SUIV_4","ITER_FETI",
                                      ),
                                ),

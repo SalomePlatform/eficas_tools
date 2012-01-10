@@ -1,8 +1,8 @@
-#@ MODIF propa_fiss_ops Macro  DATE 11/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF propa_fiss_ops Macro  DATE 08/03/2011   AUTEUR MASSIN P.MASSIN 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2008  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -18,9 +18,11 @@
 #    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
 # ======================================================================
 
-from math import atan, atan2, cos, sin, sqrt
+from math import atan, atan2, cos, sin, log
 
 import numpy as NP
+from Accas import _F
+from types import ListType, TupleType
 
 
 def InterpolationLineaire(x0, points) :
@@ -100,63 +102,11 @@ def betaf(k1,k2) :
   if k2 == 0:
      beta = 0.
   else :
-     beta = 2*atan(0.25*(k1/k2-abs(k2)/k2*sqrt((k1/k2)**2+8)))
+     beta = 2*atan(0.25*(k1/k2-abs(k2)/k2*NP.sqrt((k1/k2)**2+8)))
   return beta
 
-#TODO prefer use numpy.cross
-def cross_product(a,b):
-    cross = [0]*3
-    cross[0] = a[1]*b[2]-a[2]*b[1]
-    cross[1] = a[2]*b[0]-a[0]*b[2]
-    cross[2] = a[0]*b[1]-a[1]*b[0]
-    return cross
-    
-#def propa_fiss_ops(self,METHODE_PROPA,TEST_MAIL,INFO,**args):
-def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
-  """
-  Macro PROPA_FISS
-  Propagation de fissure pour les modeles X-FEM : propagation par la methode de HAMILTON 
-  ou par projection sur un maillage
-  """
-  import aster
-  import string
-  import copy
-  from Accas import _F
-  from Utilitai.Utmess     import  UTMESS
-  from types import ListType, TupleType
-  from Utilitai.Table      import Table, merge
-  from Utilitai.partition import MAIL_PY
-  from SD.sd_mater     import sd_compor1
-  from Cata.cata import table_sdaster,fiss_xfem,modele_sdaster
-
-
-  EnumTypes = (ListType, TupleType)
-  
-  macro = 'PROPA_FISS'
-  ier=0
-#------------------------------------------------------------------
-  # On importe les definitions des commandes a utiliser dans la macro
-  ASSE_MAILLAGE         =self.get_cmd('ASSE_MAILLAGE'  )
-  LIRE_MAILLAGE    =self.get_cmd('LIRE_MAILLAGE'  )
-  DEFI_FICHIER = self.get_cmd('DEFI_FICHIER'  )
-  CREA_TABLE    =self.get_cmd('CREA_TABLE'  )
-  CALC_TABLE    =self.get_cmd('CALC_TABLE'  )
-  PROPA_XFEM = self.get_cmd('PROPA_XFEM'  )
-  DEFI_FISS_XFEM = self.get_cmd('DEFI_FISS_XFEM'  )
-  MODI_MODELE_XFEM = self.get_cmd('MODI_MODELE_XFEM'  )
-  # La macro compte pour 1 dans la numerotation des commandes
-  self.set_icmd(1)
-
-#------------------------------------------------------------------
-# CAS 1 : METHODE_PROPA = 'SIMPLEXE' OU 'UPWIND'
-#
-
-  if (METHODE_PROPA == 'SIMPLEXE') or (METHODE_PROPA == 'UPWIND'):
-
-    TEST_MAIL=args['TEST_MAIL']
-    
-    if (TEST_MAIL == 'NON' ) :
-      LOI= args['LOI_PROPA']
+def recup_Elas(LOI):
+      from SD.sd_mater     import sd_compor1
       if LOI == None :
          UTMESS('F','RUPTURE1_50') 
       dLoi=LOI[0].cree_dict_valeurs(LOI[0].mc_liste)
@@ -182,7 +132,76 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
         nu = valres[1]
       else :
         e  = dicmat['E']
-        nu = dicmat['NU']  
+        nu = dicmat['NU'] 
+      return e,nu,dLoi
+
+def nom_points_fonds(n_taille):
+   """
+   Construction des noms des points en fond de fissure
+   """
+   alphabet            = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+   if n_taille <= 26:
+       return alphabet[:n_taille]
+   else:
+       tab_alphabet        = alphabet  
+       taille_tab_alphabet = int(log(n_taille,26))
+       for l_let1 in range(1,taille_tab_alphabet):
+               for l_let2 in range(26):
+                   for l_let3 in range(26):
+                       tab_alphabet =  tab_alphabet + [tab_alphabet[(l_let1-1)*26+l_let2]+alphabet[l_let3]]       
+       reste1 = int(n_taille-len(tab_alphabet))/26
+       for l_let2 in range(reste1):
+                  for l_let3 in range(26):
+                      tab_alphabet =  tab_alphabet + [tab_alphabet[(taille_tab_alphabet-1)*26+l_let2]+alphabet[l_let3]]
+       reste2 = int(n_taille-len(tab_alphabet))
+       for l_let3 in range(reste2):
+                   tab_alphabet =  tab_alphabet + [tab_alphabet[(taille_tab_alphabet-1)*26+reste1]+alphabet[l_let3]]
+       return tab_alphabet  
+    
+#def propa_fiss_ops(self,METHODE_PROPA,TEST_MAIL,INFO,**args):
+def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
+  """
+  Macro PROPA_FISS
+  Propagation de fissure pour les modeles X-FEM : propagation par la methode de HAMILTON 
+  ou par projection sur un maillage
+  """
+
+  import aster
+  import string
+  from Accas import _F
+  from Utilitai.Utmess     import  UTMESS
+  from Utilitai.partition import MAIL_PY
+
+  EnumTypes = (ListType, TupleType)
+  
+  macro = 'PROPA_FISS'
+  ier=0
+#------------------------------------------------------------------
+  # On importe les definitions des commandes a utiliser dans la macro
+  ASSE_MAILLAGE         =self.get_cmd('ASSE_MAILLAGE'  )
+  LIRE_MAILLAGE    =self.get_cmd('LIRE_MAILLAGE'  )
+  DEFI_FICHIER = self.get_cmd('DEFI_FICHIER'  )
+  DEFI_GROUP = self.get_cmd('DEFI_GROUP'  )
+  CREA_TABLE    =self.get_cmd('CREA_TABLE'  )
+  CALC_TABLE    =self.get_cmd('CALC_TABLE'  )
+  PROPA_XFEM = self.get_cmd('PROPA_XFEM'  )
+  DEFI_FISS_XFEM = self.get_cmd('DEFI_FISS_XFEM'  )
+  MODI_MODELE_XFEM = self.get_cmd('MODI_MODELE_XFEM'  )
+  # La macro compte pour 1 dans la numerotation des commandes
+  self.set_icmd(1)
+
+#------------------------------------------------------------------
+# CAS 1 : METHODE_PROPA = 'SIMPLEXE' OU 'UPWIND'
+#
+
+  if (METHODE_PROPA == 'SIMPLEXE') or (METHODE_PROPA == 'UPWIND'):
+
+    TEST_MAIL=args['TEST_MAIL']
+    
+    if (TEST_MAIL == 'NON' ) :
+      LOI= args['LOI_PROPA']
+      e,nu,dLoi = recup_Elas(LOI)
+      
 # Construction catalogue PROPA_XFEM
       dLoix = {}
       dLoix['LOI'] = 'PARIS'
@@ -212,10 +231,6 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
     NbPointFond = []
     
     for Fiss in Fissures :
-        if Fiss['GRILLE_AUX']!=None :
-           GrilleAux.append(Fiss['GRILLE_AUX'])
-        else :
-           GrilleAux.append(args['MODELE'])
         FissAct.append(Fiss['FISS_ACTUELLE'])
         FissNou.append(Fiss['FISS_PROPAGEE'])
         if TEST_MAIL == 'NON':
@@ -246,11 +261,6 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
 #      propagating crack.
        for NumFiss in range(0,len(FissAct)) :
            mcsimp['FISS_PROP'] = FissAct[NumFiss]
-           mcsimp['GRILLE_AUX'] = 123
-           if GrilleAux[NumFiss]!=args['MODELE'] : 
-               mcsimp['GRILLE_AUX'] = GrilleAux[NumFiss]
-           else :
-               del mcsimp['GRILLE_AUX']
            self.DeclareOut('nomfiss',FissNou[NumFiss])
            nomfiss = PROPA_XFEM(METHODE=METHODE_PROPA,INFO=INFO,**mcsimp )
            
@@ -263,6 +273,12 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
        __Fis = [None]*(StepTot*len(FissAct))
        __Mod = [None]*StepTot
        mcsimp['TOLERANCE'] = args['TOLERANCE']
+       fiss = FissAct[0]
+       import aster
+       iret,ibid,mod_fiss = aster.dismoi('F','NOM_MODELE',fiss.nom,'FISS_XFEM')
+       mod_fiss=mod_fiss.strip()
+       MOD_FISS = self.get_concept(mod_fiss)
+
        for NumStep in range(0,StepTot) :
          
            aster.affiche('MESSAGE',' ------------------------')
@@ -280,11 +296,6 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
                  mcsimp['MODELE'] = __Mod[NumStep-1]
                  mcsimp['FISS_PROP'] = __Fis[(NumStep-1)*len(FissAct)+NumFiss]
               mcsimp['FISS_INITIALE'] = FissAct[NumFiss]
-              mcsimp['GRILLE_AUX'] = 123
-              if GrilleAux[NumFiss]!=args['MODELE'] : 
-                 mcsimp['GRILLE_AUX'] = GrilleAux[NumFiss]
-              else :
-                  del mcsimp['GRILLE_AUX']
               if NumStep==StepTot-1 :
                  self.DeclareOut('nomfiss',FissNou[NumFiss])
                  nomfiss = PROPA_XFEM(METHODE=METHODE_PROPA,INFO=INFO,**mcsimp )
@@ -296,7 +307,7 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
               aster.affiche('MESSAGE',' ------------------------')
               aster.affiche('MESSAGE',' CREATION DU MODELE FISSURE TEMPORAIRE')
               aster.affiche('MESSAGE',' ')
-              __Mod[NumStep] = MODI_MODELE_XFEM(MODELE_IN=args['MODELE'],FISSURE=(ListeFiss))
+              __Mod[NumStep] = MODI_MODELE_XFEM(MODELE_IN=MOD_FISS,FISSURE=(ListeFiss))
               mcsimp['LISTE_FISS'] = ListeFiss
               aster.affiche('MESSAGE',' ')
               aster.affiche('MESSAGE',' ------------------------')
@@ -306,9 +317,6 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
 #------------------------------------------------------------------
 # CAS 2 : METHODE_PROPA = 'MAILLAGE'
 #
-# il faudrait rendre cela plus automatique pour lever la limite a 52 points
-  ALPHABET=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-#            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ'];
   
   if METHODE_PROPA == 'MAILLAGE' :
     Fissures =  args['FISSURE']
@@ -319,7 +327,7 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
       coef_M =  LOI_PROPA['M']
       coef_C =  LOI_PROPA['C']
       coef_N =  LOI_PROPA['N']
-      YOUNG = 2.E11
+      YOUNG,NU,dLoi=recup_Elas(LOI_PROPA)
     it = args['ITERATION']
     Damax =  args['DA_MAX']
     COMP_LINE = args['COMP_LINE']
@@ -357,146 +365,98 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
          UTMESS('F','RUPTURE1_48',vali=Nbfiss)
 
 # Recuperation des K et calcul de DeltaK
-      Nmeth = Fiss['METHODE_POSTK']
       SIF = Fiss['TABLE']
       nbinst = 1
-# A- TABLEAU ISSSU DE POST_K1_K2_K3    
-      if  (Nmeth != None) :
-         __TABN = CALC_TABLE(TABLE=SIF,ACTION=_F(OPERATION='FILTRE',
-                                           NOM_PARA='METHODE',VALE_I=Nmeth),);
-         __tabp = __TABN.EXTR_TABLE()
-         if ('K1_MAX' not in __tabp.para) or ('G_MAX' not in __tabp.para):
-            UTMESS('F','RUPTURE1_44')
-         __tab1 = __tabp.values()
-         nbinst = 1
-         if 'INST' in __tabp.para : 
-           l_inst_tab=__tabp['INST'].values()['INST']
-           l_inst_tab=dict([(i,0) for i in l_inst_tab]).keys()
-           nbinst = len(l_inst_tab)
-         nbptfon = len(__tab1['K1_MAX']) / nbinst
-         R[numfis] = [None]*nbptfon
-         RmM[numfis] = [None]*nbptfon
-         DKeq[numfis] = [None]*nbptfon
-         BETA[numfis] = [None]*nbptfon
-         absc = [0.]*nbptfon
-         if nbinst > 1 :
-           for k in range(nbptfon) :
-             if (dime == 2) : __tmp = __tabp
-             if (dime == 3) : __tmp = __tabp.PT_FOND==(k+1)
-             if (dime == 3) : absc[k]=__tmp['ABSC_CURV'][k]
-             ddkeq = sqrt(YOUNG)*(sqrt(max(__tmp.values()['G_MAX'])) 
-                          - sqrt(min(__tmp.values()['G_MAX']))) 
-             rminmax = sqrt(min(__tmp.values()['G_MAX'])) / sqrt(max(__tmp.values()['G_MAX']))
-             DKeq[numfis][k] = [absc[k], ddkeq ]
-             RmM[numfis][k]  =   [absc[k], rminmax ]
-             k1 = __tmp.values()['K1_MAX']
-             k2 = __tmp.values()['K2_MAX']
-             betat = [0.]*nbinst
-             for jt in range(nbinst) :
-               betat[jt] = betaf(k1[jt],k2[jt])
+      __tabp = SIF.EXTR_TABLE()
+      if ('K1' not in __tabp.para) or ('G' not in __tabp.para):
+         UTMESS('F','RUPTURE1_44')
+
+      __tab1 = __tabp.values()
+      
+      if 'INST' in __tabp.para : 
+        l_inst_tab=__tabp['INST'].values()['INST']
+        l_inst_tab=dict([(i,0) for i in l_inst_tab]).keys()
+        nbinst = len(l_inst_tab)
+      nbptfon = len(__tab1['K1']) / nbinst
+      RmM[numfis] = [None]*nbptfon
+      DKeq[numfis] = [None]*nbptfon
+      BETA[numfis] = [None]*nbptfon
+      
+# Lorsque le calcul porte sur plusieurs instants 
+      if nbinst > 1 :
+        for k in range(nbptfon) :
+          if (dime == 2) : __tmp = __tabp
+          if (dime == 3) :
+              if __tabp.PT_FOND :
+                  __tmp = __tabp.PT_FOND==(k+1)
+                  indice_k = k
+              else:
+                  __tmp = __tabp.NUM_PT==(k+1)
+                  indice_k = 0
+          if ('ABSC_CURV' in __tmp.values()):
+              abscisse_curv_courante = __tmp.values()['ABSC_CURV'][indice_k]
+          else:
+              abscisse_curv_courante = 0.
+          ddkeq = NP.sqrt(YOUNG)*(NP.sqrt(max(__tmp.values()['G'])) 
+                       - NP.sqrt(min(__tmp.values()['G']))) 
+          rminmax = NP.sqrt(min(__tmp.values()['G'])) / NP.sqrt(max(__tmp.values()['G']))
+          DKeq[numfis][k] = [abscisse_curv_courante, ddkeq ]
+          RmM[numfis][k]  =   [abscisse_curv_courante, rminmax ]
+          if ('BETA' in __tmp.values()):
+               dbeta = max(__tmp.values()['BETA'])-min(__tmp.values()['BETA'])
+               if dbeta > (5./180.*3.1415) :
+                   UTMESS('F','XFEM2_72')
+               BETA[numfis][k] = [abscisse_curv_courante, __tmp.values()['BETA'][0] ]
+          else:
+               if (dime == 2) :
+                  k1 = __tmp.values()['K1'][k]
+                  k2 = __tmp.values()['K2'][k]
+                  BETA[numfis][k]=[0., betaf(k1,k2)]
+               else:
+                  k1 = __tmp.values()['K1']
+                  k2 = __tmp.values()['K2']
+                  betat = [0.]*nbinst
+                  for jt in range(nbinst) :
+                      betat[jt] = betaf(k1[jt],k2[jt])
 # ANGLE BETA NE DOIT PAS TROP VARIER ENTRE LES PAS DE TEMPS
-             dbeta = max(betat) - min(betat) 
-             if dbeta > (5./180.*3.1415) :
-                  UTMESS('F','XFEM2_72')
-             BETA[numfis][k] = [absc[k], betat[0] ]
-             VMAX0 = dadN(coef_C,coef_N,coef_M,DKeq[numfis][k][1],RmM[numfis][k][1]) 
-             VMAX = max(VMAX,VMAX0 )
-         else :
-            if COMP_LINE == None :
-              UTMESS('A','XFEM2_76')
-              CMIN = 0.
-              CMAX = 1.
-            else :
-              CMIN = COMP_LINE['COEF_MULT_MINI']
-              CMAX = COMP_LINE['COEF_MULT_MAXI']
-            if (min(__tab1['G_MAX']) < 0.) :
-              UTMESS('F','RUPTURE1_46')
-            DKmax0 = max(NP.sqrt(__tab1['G_MAX']))
-            DKmax = max(DKmax,DKmax0)
-            for k in range(nbptfon) :
-              k1 = __tab1['K1_MAX'][k]
-              k2 = __tab1['K2_MAX'][k]
-              if (dime == 3) : absc[k]=__tab1['ABSC_CURV'][k]
-              BETA[numfis][k] = [absc[k] , betaf(k1,k2)] 
-              DKeq[numfis][k] = [absc[k],sqrt(YOUNG)*NP.sqrt(__tab1['G_MAX'][k])]
-              RmM[numfis][k] = [absc[k], CMIN/CMAX]
-              VMAX0 = dadN(coef_C,coef_N,coef_M,DKeq[numfis][k][1],RmM[numfis][k][1]) 
-              VMAX = max(VMAX,VMAX0 )
-# B- TABLEAU ISSSU DE CALC_G (option CALC_K_G)
+                  dbeta = max(betat) - min(betat) 
+                  if dbeta > (5./180.*3.1415) :
+                     UTMESS('F','XFEM2_72')
+          VMAX0 = dadN(coef_C,coef_N,coef_M,DKeq[numfis][k][1],RmM[numfis][k][1]) 
+          VMAX = max(VMAX,VMAX0 )
+# Lorsque le calcul porte un seul instant 
       else :
-         __tabp = SIF.EXTR_TABLE()
-         if (dime == 3) and (('K1_LOCAL' not in __tabp.para) or ('G_LOCAL' not in __tabp.para) or ('BETA_LOCAL' not in __tabp.para)):
-            UTMESS('F','RUPTURE1_45')
-         if (dime == 2) and (('K1' not in __tabp.para) or ('G' not in __tabp.para)) :
-            UTMESS('F','RUPTURE1_45')
-         __tab1= __tabp.values()
-         if 'INST' in __tabp.para : 
-           l_inst_tab=__tabp['INST'].values()['INST']
-           l_inst_tab=dict([(i,0) for i in l_inst_tab]).keys()
-           nbinst = len(l_inst_tab)
-         if (dime == 2) : nbptfon = 1
-         if (dime == 3) : nbptfon = len(__tab1['G_LOCAL']) / nbinst
-         RmM[numfis] = [None]*nbptfon
-         DKeq[numfis] = [None]*nbptfon
-         BETA[numfis] = [None]*nbptfon
-         if nbinst > 1 :
-           for k in range(nbptfon) :
-              if (dime == 3) : 
-                __tmp = __tabp.NUM_PT==(k+1)
-                if (min(__tmp['G_LOCAL']) < 0.) :
-                  UTMESS('F','RUPTURE1_46')
-                absc = __tmp.values()['ABSC_CURV'][0]
-                DKeq[numfis][k]=[absc, sqrt(YOUNG)*(sqrt(max(__tmp.values()['G_LOCAL']))-sqrt(min(__tmp.values()['G_LOCAL'])))]
-                RmM[numfis][k] = [absc, sqrt(min(__tmp.values()['G_LOCAL'])) / sqrt(max(__tmp.values()['G_LOCAL']))]
-                dbeta = max(__tmp.values()['BETA_LOCAL'])-min(__tmp.values()['BETA_LOCAL'])
-                if dbeta > (5./180.*3.1415) :
-                  UTMESS('F','XFEM2_72')
-                BETA[numfis][k] = [absc, __tmp.values()['BETA_LOCAL'][0] ]
-              else :
-                if (min(__tabp.values()['G']) < 0.) :
-                  UTMESS('F','RUPTURE1_46')
-                DKeq[numfis][k]=[0.,sqrt(YOUNG)*(sqrt(max(__tabp.values()['G']))-sqrt(min(__tabp.values()['G'])))]
-                RmM[numfis][k] = [0., sqrt(min(__tabp.values()['G'])) / sqrt(max(__tabp.values()['G'])) ]
-                k1 = __tabp.values()['K1'][0]
-                k2 = __tabp.values()['K2'][0]
-                BETA[numfis][k]=[0., betaf(k1,k2)]
-              VMAX0 = dadN(coef_C,coef_N,coef_M,DKeq[numfis][k][1],RmM[numfis][k][1])
-              VMAX = max(VMAX,VMAX0 )
-         elif dime == 3 :
-            nbptfon = len(__tab1['G_LOCAL'])
-            if COMP_LINE == None :
-              UTMESS('A','XFEM2_76')
-              CMIN = 0.
-              CMAX = 1.
-            else :
-              CMIN = COMP_LINE['COEF_MULT_MINI']
-              CMAX = COMP_LINE['COEF_MULT_MAXI']
-            if (min(__tab1['G_LOCAL']) < 0.) :
-              UTMESS('F','RUPTURE1_46')
-            DKeq[numfis] = [[__tab1['ABSC_CURV'][i],NP.sqrt(__tab1['G_LOCAL'][i])*sqrt(YOUNG) ] for i in range(nbptfon)]
-            RmM[numfis] = [[__tab1['ABSC_CURV'][i], CMIN/CMAX] for i in range(nbptfon)]
-            BETA[numfis] = [[__tab1['ABSC_CURV'][i],__tab1['BETA_LOCAL'][i]] for i in range(nbptfon)]
-            for i in range(nbptfon) :
-              VMAX0 = dadN(coef_C,coef_N,coef_M,DKeq[numfis][i][1],RmM[numfis][i][1])
-              VMAX = max(VMAX,VMAX0 )
-         else :
-            nbptfon = 1
-            if COMP_LINE == None :
-              UTMESS('A','XFEM2_76')
-              CMIN = 0.
-              CMAX = 1.
-            else :
-              CMIN = COMP_LINE['COEF_MULT_MINI']
-              CMAX = COMP_LINE['COEF_MULT_MAXI']
-            if (min(__tab1['G']) < 0.) :
-              UTMESS('F','RUPTURE1_46')
-            DKeq[numfis][0] = [0.,sqrt(YOUNG)*max(NP.sqrt(__tab1['G']))]
-            k1 = __tab1['K1'][0]
-            k2 = __tab1['K2'][0]
-            BETA[numfis][0] = [0.,betaf(k1,k2)] 
-            RmM[numfis][0] = [0.,CMIN/CMAX] 
-            VMAX0 = dadN(coef_C,coef_N,coef_M,DKeq[numfis][0][1],RmM[numfis][0][1])
-            VMAX = max(VMAX,VMAX0 )
+        if COMP_LINE == None :
+             UTMESS('A','XFEM2_76')
+             CMIN = 0.
+             CMAX = 1.
+        else :
+           CMIN = COMP_LINE['COEF_MULT_MINI']
+           CMAX = COMP_LINE['COEF_MULT_MAXI']
+        if (min(__tab1['G']) < 0.) :
+           UTMESS('F','RUPTURE1_46')
+
+        for k in range(nbptfon) :
+          if (dime == 3) :
+              if __tabp.PT_FOND :
+                  indice_k = k
+          else:
+                  indice_k = 0
+          if ('ABSC_CURV' in __tabp.para) :
+              abscisse_curv_courante = __tab1['ABSC_CURV'][k]
+          else:
+              abscisse_curv_courante = 0.
+          DKeq[numfis][k] =   [abscisse_curv_courante, NP.sqrt(YOUNG)*NP.sqrt(__tab1['G'][k]) ]
+          RmM[numfis][k]  =   [abscisse_curv_courante, CMIN/CMAX ]
+          if ('BETA' in __tab1.values()):
+               BETA[numfis][k] = [abscisse_curv_courante, __tab1['BETA'][0] ]
+          else:
+              k1 = __tab1['K1'][indice_k]
+              k2 = __tab1['K2'][indice_k]
+              BETA[numfis][indice_k]=[abscisse_curv_courante, betaf(k1,k2)]
+          VMAX0 = dadN(coef_C,coef_N,coef_M,DKeq[numfis][k][1],RmM[numfis][k][1]) 
+          VMAX = max(VMAX,VMAX0 )
+
 
       numfis = numfis + 1
       
@@ -515,7 +475,6 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
       MAIL_FISS1 =  Fiss['MAIL_ACTUEL']
       MFOND = Fiss['GROUP_MA_FOND']
       MFISS = Fiss['GROUP_MA_FISS']
-  
 #------------------------------------------------------------------
 # CAS 2a : MODELE 3D
 #
@@ -575,6 +534,7 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
            DKmax = 1
         if (coef_C ==None) :
            coef_C = Damax
+        ALPHABET = nom_points_fonds(nbnofo)
         for ifond in range(nbnofo) :
            Xf =  d_coorf['NX%s%i' %(ALPHABET[ifond],it)][0]   
            Yf =  d_coorf['NX%s%i' %(ALPHABET[ifond],it)][1]     
@@ -660,6 +620,23 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
 #
       if dime == 2 :
         mm[numfis] = MAIL_PY()
+        FISS_A = '%s_%i' %(MFISS,(it-1))
+        DEFI_GROUP(reuse =MAIL_FISS1,
+                 MAILLAGE=MAIL_FISS1,
+                 CREA_GROUP_NO=_F(OPTION='NOEUD_ORDO',
+                                  NOM='Nds_Plan',
+                                  GROUP_MA=FISS_A,),INFO=2);
+        DEFI_GROUP(reuse =MAIL_FISS1,
+                 MAILLAGE=MAIL_FISS1,
+                 DETR_GROUP_MA=_F(NOM='A',),
+                 CREA_GROUP_MA=_F(OPTION='APPUI',
+                                  NOM='A',
+                                  TYPE_APPUI='TOUT',
+                                  GROUP_NO='Nds_Plan',),INFO=2);
+        DEFI_GROUP(reuse =MAIL_FISS1,
+                 MAILLAGE=MAIL_FISS1,
+                 DETR_GROUP_NO=_F(NOM='Nds_Plan',),);
+
         mm[numfis].FromAster(MAIL_FISS1)
         
         (nno,ndim) = mm[numfis].cn.shape
@@ -687,6 +664,7 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
         NomNoeudsEnPlus =     ['NXA%i' %(it+1)]
         mm[numfis].cn = NP.concatenate((mm[numfis].cn,LesNoeudsEnPlus))
         mm[numfis].correspondance_noeuds = tuple(linomno + NomNoeudsEnPlus )
+        ALPHABET = nom_points_fonds(1)
         
   # Ajout Maille levre (SEG2)
         NomMaillesEnPlus =     ['MX%s%i' %(ALPHABET[0], it+1)]
@@ -701,7 +679,7 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
         fsi = mm[numfis].gma['%s_%i' %(MFISS,it-1)]
         fsi = NP.concatenate((fsi,NP.array([nbma])))
         mm[numfis].gma['%s_%i' %(MFISS,it)] = fsi.astype(int)
-  
+ 
 # Ajout Maille fond (POI1)
         NomMaillesEnPlus =     ['MF%s%i' %(ALPHABET[0], it+1)]
         num_maille = [ nbma + 2 ]
@@ -742,7 +720,6 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
     ma_tot = ASSE_MAILLAGE(MAILLAGE_1 = MAIL_STRUC,
                       MAILLAGE_2 = __MMX[Nbfissure-1],
                       OPERATION='SUPERPOSE',)
- 
 #------------------------------------------------------------------
 # CAS 3 : METHODE_PROPA = 'INITIALISATION'
 #
@@ -766,6 +743,7 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
       NomNoeudsEnPlus =     ['NXA0','NXA1']
       mm.cn = LesNoeudsEnPlus
       mm.correspondance_noeuds = tuple( NomNoeudsEnPlus )
+      ALPHABET = nom_points_fonds(1)
 
 # Ajout Maille levre (SEG2)
       it = 1
@@ -799,6 +777,7 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
       P1 = args['POINT_EXTR']
       dpropa = args['DTAN']
       nbpt = args['NB_POINT_FOND']
+      ALPHABET = nom_points_fonds(nbpt)
       Q0 = NP.array([[P0[0]-dpropa[0],P0[1]-dpropa[1],P0[2]-dpropa[2]]])
       
       mm = MAIL_PY()
@@ -884,11 +863,12 @@ def propa_fiss_ops(self,METHODE_PROPA,INFO,**args):
       vect_y = args['VECT_Y']
       gdax = args['DEMI_GRAND_AXE']
       ptax = args['DEMI_PETIT_AXE']
-      normale = cross_product(vect_x,vect_y)
+      normale = NP.cross(vect_x,vect_y)
       verif = NP.dot(vect_x,vect_y)
       if abs(verif) > 0.01:
           UTMESS('F','RUPTURE1_52')
       nbpt = args['NB_POINT_FOND']
+      ALPHABET = nom_points_fonds(nbpt)
 
       mm = MAIL_PY()
       mm.__init__()      

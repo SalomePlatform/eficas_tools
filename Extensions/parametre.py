@@ -78,6 +78,18 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     #if not val : return None
     valeur = None
 
+    if type(val) == types.ListType:
+    # Un premier traitement a ete fait lors de la saisie
+    # permet de tester les parametres qui sont des listes
+       l_new_val = []
+       for v in val :
+           try :
+               valeur=eval(str(v))
+               l_new_val.append(v)
+           except :
+               return None
+       return l_new_val
+
     if type(val) == types.StringType:
        # on tente l'evaluation dans un contexte fourni par le parent s'il existe
        if self.parent:
@@ -272,6 +284,12 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
          else:
             return self.nom+' = '+ repr(self.valeur)
     else:
+       if type(self.valeur) == types.ListType :
+          aRetourner=self.nom+' = ['
+          for l in self.valeur :
+            aRetourner=aRetourner+str(l) +","
+          aRetourner=aRetourner[0:-1]+']'
+          return aRetourner
        return self.nom+' = '+ str(self.valeur)
 
   def __str__(self):

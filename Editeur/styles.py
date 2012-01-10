@@ -6,7 +6,7 @@ prefsCode=__import__(name)
 import basestyle
 from basestyle import STYLE,style
 
-inistylefile=os.path.join(prefsCode.REPINI,"style.py")
+inistylefile=os.path.join(prefsCode.repIni,"style.py")
 if os.path.isfile(inistylefile):
    execfile(inistylefile)
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -18,22 +17,33 @@
 #
 #
 # ======================================================================
-"""
-"""
 
-import parseur_python
-from convert_python import *
+import re
+from convert_python import PythonParser
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
-       Ces informations sont retournées dans un dictionnaire
+   Return a dictionary containing the description needed to load the plugin
    """
    return {
-        # Le nom du plugin
           'name' : 'openturns_study',
-        # La factory pour créer une instance du plugin
-          'factory' : PythonParser,
+          'factory' : OTStudyParser
           }
 
+class OTStudyParser(PythonParser):
+   """
+   This converter works like PythonParser, except that it also initializes all
+   model variables to None in order to avoid Python syntax errors when loading
+   a file with a different or inexistent definition of variables.
+   """
+   # We look for pattern "ModelVariable=NOMVAR,"
+   pattern_model_variable = re.compile(r'ModelVariable\s*=\s*(\w+)\s*,')
 
+   def convert(self, outformat, appli=None):
+      text = PythonParser.convert(self, outformat, appli)
+      varnames = self.pattern_model_variable.findall(text)
+      newtext = ""
+      for var in varnames:
+         newtext += "%s = None\n" % var
+      newtext += text
+      return newtext

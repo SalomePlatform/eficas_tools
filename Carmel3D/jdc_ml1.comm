@@ -1,0 +1,17 @@
+
+SOURCES(STRANDED_INDUCTOR=_F(NAME='llllllllll',
+                             NTURNS=1,
+                             CURJ=0,
+                             POLAR=0,),);
+
+LINEAR=L_LAW();
+
+diel1=MATERIAU(DIELECTRIC=_F(PERMITTIVITY=_F(LAW=LINEAR,
+                                             VALUE_REAL=1,),
+                             PERMEABILITY=_F(LAW=LINEAR,
+                                             VALUE_REAL=4,),),);
+
+em1=MATERIAU(ISOTROPIC='FALSE',
+             EM_ANISOTROPIC=_F(CONDUCTIVITY_File='/home/G17214/.Eficas_Carmel3D/jdc1.mater',
+                               PERMEABILITY_File='/home/G17214/.Eficas_Carmel3D/jdc1.mater',),);
+#CHECKSUM:5e3593b9a5a59bcea70190f481125e1e  -:FIN CHECKSUM

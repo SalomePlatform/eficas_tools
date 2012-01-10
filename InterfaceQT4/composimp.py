@@ -230,7 +230,6 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def get_liste_param_possible(self):
       liste_param=[]
-      print self.object.jdc.params
       for param in self.object.jdc.params:
           encorevalide=self.valide_item(param.valeur)
           if encorevalide:

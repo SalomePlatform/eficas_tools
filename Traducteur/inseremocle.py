@@ -32,7 +32,7 @@ def insereMotCleDansCommande(jdc,command,texte):
     if numcol > 0 :
        jdc.splitLine(command.lineno,numcol)
     indice = -1
-    while texte[indice] == " " : 
+    while texte[indice] == " " or texte[indice] == "\n": 
        indice = indice -1
     if texte[indice] != "," : texte=texte+","
     texteinfo=texte
@@ -204,6 +204,14 @@ def chercheOperInsereFacteurSiRegle(jdc,nomcommande,nouveau,liste_regles, estunF
     if nomcommande  not in jdcSet : return
     mesRegles=regles.ensembleRegles(liste_regles)
     chercheOperInsereFacteur(jdc,nomcommande,nouveau,mesRegles,estunFacteur)
+
+#----------------------------------------------------------------------------------------
+def chercheOperInsereMotCleSiRegle(jdc,nomcommande,nouveau,liste_regles, estunFacteur=0):
+#----------------------------------------------------------------------------------------
+    if nomcommande  not in jdcSet : return
+    mesRegles=regles.ensembleRegles(liste_regles)
+    chercheOperInsereFacteur(jdc,nomcommande,nouveau,mesRegles,estunFacteur)
+
     
 #---------------------------------------------------------------------------------------------------------
 def chercheOperInsereFacteurSiRegleAvecAvertissement(jdc,nomcommande,nouveau,liste_regles, estunFacteur=1):
@@ -247,3 +255,31 @@ def AjouteMotClefDansFacteurSiRegle(jdc,commande,fact,nouveau,liste_regles,estun
     mesRegles=regles.ensembleRegles(liste_regles)
     AjouteMotClefDansFacteur(jdc,commande,fact,nouveau,mesRegles,estunFacteur)
 
+#-------------------------------------------------------------------------------------------
+def AjouteMotClefDansFacteurCourantSiRegle(jdc,commande,fact,nouveau,liste_regles):
+#-------------------------------------------------------------------------------------------
+#
+    if commande  not in jdcSet : return
+    ensemble=regles.ensembleRegles(liste_regles)
+    commands= jdc.root.childNodes[:]
+    commands.reverse()
+    boolChange=0
+    for c in commands:
+        if c.name != commande : continue
+        for mcF in c.childNodes:
+          if mcF.name != fact : continue
+          l=mcF.childNodes[:]
+          l.reverse()
+          for ll in l:
+             if ensemble.verif(ll) == 0 : continue
+             boolChange=1
+             n=ll.childNodes[0]
+             ligneaCouper=n.lineno-1
+             numcol=n.colno
+             jdc.splitLine(ligneaCouper+1,numcol)
+             texte=nouveau+",\n"
+             jdc.addLine(texte,ligneaCouper+1)
+             logging.info("Insertion de %s dans %s : ligne %d", nouveau,c.name,ligneaCouper+1)
+             if numcol > 0 :    
+                 jdc.joinLineandNext(ligneaCouper+1)
+    if boolChange : jdc.reset(jdc.getSource())

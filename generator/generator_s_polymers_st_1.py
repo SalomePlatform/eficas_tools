@@ -28,38 +28,15 @@ import types,string,re,os
 
 from generator_map import MapGenerator
 
+import sys
+try :
+   sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'classes/python/'))
+   from class_MAP_parameters import *
+except :
+   pass
 #____________________________________________________________________________________
-# PYGMEEDict contient une equivalence entre le catalogue Map et les lignes generees
-# comme entete (commentaire ?) dans le fichier d'input de pygmee
 #
-
 CONFIGliste=('NAME_SCHEME', 'PATH_ASTER', 'PATH_BENHUR', 'PATH_MODULE', 'PATH_PYGMEE', 'PATH_STUDY', 'repIni')
-PYGMEEDict={
-       "_PYGMEE_FUSEAU1_b_forme_FICHIER"  : "#fuseau 1 (entree de lecfus) format : diametre DCE croissant / fraction cumulee decroisant ",
-       "FUSEAU2" :  "#fuseau 2 (entree de lecfus) format : diametre DCE croissant / fraction cumulee decroisant",
-       "_PYGMEE_TAILLE" : "# taille du VER en microns ",
-       "_PYGMEE_DISTANCE" : "# distance de repulsion :",
-           }
-
-#_______________________________________________________________________________________________________
-# listeOrdonneeMCPygmee contient une liste (donc ordonnee) des mots clefs pour 
-# imposer l'ordre des  lignes generees
-listeOrdonneeMCPygmee =('_PYGMEE_FUSEAU1_b_forme_FICHIER', 'FUSEAU2', '_PYGMEE_TAILLE','_PYGMEE_DISTANCE')
-
-
-BENHURDict={
-       "_BENHUR_FINESSE" : "discretisation des arretes du VER ",
-           }
-
-ASTERDict={
-       "_ASTER_LANCEMENT" : "execution de Code_Aster",
-       "_ASTER_CONDUCTIVITE_I" : "conductivite des inclusions",
-       "_ASTER_CONDUCTIVITE_M" : "conductivite de la matrice",
-           }
-
-GMSHDict={
-       "_GMSH_LANCEMENT" : "execution de GMSH",
-           }
 
 def entryPoint():
    """
@@ -83,135 +60,151 @@ class s_poly_st_1Generator(MapGenerator):
 
    """
    
-   def verifie(self):
-       liste=[]
-       for i in self.listeCODE:
-           liste.append(i.keys()[0])
-       if len(liste) != len(set(liste)):
-           raise AsException("il n'est pas prevu d avoir deux fois le meme code dans ce schema")
 
+#_________________________________
+#  - YACS functions
+#_________________________________
 
-   def PYGMEE(self,execution) :
-       dicoPygmee=self.dictMCVal["PYGMEE"]
-       self.dictPYGMEE=dicoPygmee
-       monFichier=self.config.PATH_PYGMEE+"/pygmee_input.txt"
+   def PYGMEEYACS(self, SchemaYacs, proc):
+      monFichierInput=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"/pygmee_input.txt"
+      factoryNode = SchemaYacs.monCata._nodeMap["pygmee_v2"]
+      SchemaYacs.pygmeeNode = factoryNode.cloneNode("pygmee_v2")
+      SchemaYacs.pygmeeNode.getInputPort("phase_number").edInitPy(1)
+      SchemaYacs.pygmeeNode.getInputPort("sieve_curve_in").edInitPy(self.sieve_curve_in)
+      SchemaYacs.pygmeeNode.getInputPort("sieve_curve_out").edInitPy(self.sieve_curve_out)
+      SchemaYacs.pygmeeNode.getInputPort("repulsion_distance").edInitPy(self.repulsion_distance)
+      SchemaYacs.pygmeeNode.getInputPort("file_result_inclusions").edInitPy(self.inclusion_name)
+      SchemaYacs.pygmeeNode.getInputPort("file_result_rve").edInitPy(self.rve_name)
+      SchemaYacs.pygmeeNode.getInputPort("rve_size").edInitPy(self.rve_size)
+      SchemaYacs.pygmeeNode.getInputPort("study_name").edInitPy(self.study_name)
+      SchemaYacs.pygmeeNode.getInputPort("study_path").edInitPy(self.study_path)
+      proc.edAddChild(SchemaYacs.pygmeeNode)
+      if SchemaYacs.nodeAvant != None :
+         proc.edAddCFLink(SchemaYacs.nodeAvant,SchemaYacs.pygmeeNode)
+      SchemaYacs.nodeAvant=SchemaYacs.pygmeeNode
+      print "PYGMEEYACS node Ok"
 
-       #Lecture du fichier a trous
-       f = file(self.config.repIni+"/pygmee_input.txt","r")
-       chaine = f.read()  
-       f.close()   
-       chaine2=self.remplaceCONFIG(chaine,CONFIGliste)
-       chaine=self.remplaceDICO(chaine2,dicoPygmee)
+   def FDVGRIDYACS(self, SchemaYacs, proc):
+      factoryNode = SchemaYacs.monCata._nodeMap["fdvgrid"]
+      SchemaYacs.fdvgridNode = factoryNode.cloneNode("fdvgrid")
 
-       if  os.path.isfile(monFichier) :
-           print "je detruis pygmee_input.txt"
-           commande="rm -rf " + monFichier
-           os.system (commande)
-       f=open(monFichier,'wb')
-       f.write(chaine)
-       f.close()
-       if execution=="non" : return ""
+      SchemaYacs.fdvgridNode.getInputPort("rve_size").edInitPy(self.rve_size)
+      SchemaYacs.fdvgridNode.getInputPort("lambda_I").edInitPy(self.lambda_I)
+      SchemaYacs.fdvgridNode.getInputPort("lambda_M").edInitPy(self.lambda_M)
+      SchemaYacs.fdvgridNode.getInputPort("finesse").edInitPy(self.finesse)
+      SchemaYacs.fdvgridNode.getInputPort("study_name").edInitPy(self.study_name)
+      SchemaYacs.fdvgridNode.getInputPort("study_path").edInitPy(self.study_path)
+         
+      proc.edAddChild(SchemaYacs.fdvgridNode)
+      pout=SchemaYacs.pygmeeNode.getOutputPort("result_inclusions")
+      pin=SchemaYacs.fdvgridNode.getInputPort("file_inclusions")
+      proc.edAddLink(pout,pin)
+         
+      if SchemaYacs.nodeAvant != None :
+         proc.edAddCFLink(SchemaYacs.nodeAvant,SchemaYacs.fdvgridNode)
+      SchemaYacs.nodeAvant=SchemaYacs.fdvgridNode
+      print "FDVGRIDYACS node Ok"
 
-       if ('_PYGMEE_LANCEMENT' in dicoPygmee.keys()) and  dicoPygmee['_PYGMEE_LANCEMENT'] == 'oui':
-           commande="echo '__________________';\n"
-           commande=commande + "echo 'execution de PYGMEE';\n"
-           commande=commande + "cd "+self.config.PATH_PYGMEE+";\n"
-           commande=commande + "python "+self.config.PATH_PYGMEE+"/pygmee_v1.py;\n"
-           commande=commande + "echo 'fin execution de PYGMEE';\n"
-           commande=commande + "echo '_____________________';\n\n\n"
-           return commande
-       else:
-           return ""
+   def BENHURYACS(self, SchemaYacs, proc):
+      factoryNode = SchemaYacs.monCata._nodeMap["benhur"]
+      SchemaYacs.benhurNode = factoryNode.cloneNode("benhur")
 
-   def BENHUR(self,execution) :
-       dicoBenhur=self.dictMCVal["BENHUR"]
-       if hasattr(self,'dictPYGMEE') and '_PYGMEE_TAILLE' in self.dictMCVal['PYGMEE']:
-           dicoBenhur["_PYGMEE_TAILLE"]=self.dictPYGMEE['_PYGMEE_TAILLE']
-       else :
-           dicoBenhur["_PYGMEE_TAILLE"]=0
-           print "Attention la variable Taille_VER non definie"
-       
-       finesse=str(dicoBenhur["_BENHUR_FINESSE"])
-       nom_fichier_BHR=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"_benhur_"+finesse+".bhr"
-       nom_BHR_Files=self.config.PATH_BENHUR+"/BHR_files.txt"
+      SchemaYacs.benhurNode.getInputPort("rve_size").edInitPy(self.rve_size)
+      SchemaYacs.benhurNode.getInputPort("finesse").edInitPy(self.finesse)
+      SchemaYacs.benhurNode.getInputPort("study_name").edInitPy(self.study_name)
+      SchemaYacs.benhurNode.getInputPort("study_path").edInitPy(self.study_path)
+         
+      proc.edAddChild(SchemaYacs.benhurNode)
+      pout=SchemaYacs.pygmeeNode.getOutputPort("result_inclusions")
+      pin=SchemaYacs.benhurNode.getInputPort("file_inclusions")
+      proc.edAddLink(pout,pin)
+         
+      if SchemaYacs.nodeAvant != None :
+         proc.edAddCFLink(SchemaYacs.nodeAvant,SchemaYacs.benhurNode)
+      SchemaYacs.nodeAvant=SchemaYacs.benhurNode
+      print "BENHURYACS node Ok"
 
-       #Lecture du fichier a trous
-       f = file(self.config.repIni+"/benhur_pygmee.txt","r")
-       chaine = f.read()  
-       f.close()   
-       chaine2=self.remplaceCONFIG(chaine,CONFIGliste)
-       chaine=self.remplaceDICO(chaine2,dicoBenhur)
+   def ASTERYACS(self, SchemaYacs, proc):
+      factoryNode = SchemaYacs.monCata._nodeMap["aster_s_polymers_st_1"]
+      SchemaYacs.aster_s_polymers_st_1Node = factoryNode.cloneNode("aster_s_polymers_st_1")
 
-       try :
-          f=open(nom_fichier_BHR,'wb')
-       except :
-          print "Pb de Generation de BENHUR"
-          return ""
-       f.write(chaine)
-       f.close()
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("lambda_I").edInitPy(self.lambda_I)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("lambda_M").edInitPy(self.lambda_M)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("study_name").edInitPy(self.study_name)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("study_path").edInitPy(self.study_path)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("rve_size").edInitPy(self.rve_size)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("finesse").edInitPy(self.finesse)
+      SchemaYacs.aster_s_polymers_st_1Node.getInputPort("aster_path").edInitPy(self.config.PATH_ASTER)
+      
+      proc.edAddChild(SchemaYacs.aster_s_polymers_st_1Node)
+      pout=SchemaYacs.benhurNode.getOutputPort("result_mesh")
+      pin=SchemaYacs.aster_s_polymers_st_1Node.getInputPort("mesh")
+      proc.edAddLink(pout,pin)
+         
+      if SchemaYacs.nodeAvant != None :
+         proc.edAddCFLink(SchemaYacs.nodeAvant,SchemaYacs.aster_s_polymers_st_1Node)
+      SchemaYacs.nodeAvant=SchemaYacs.aster_s_polymers_st_1Node
+      print "ASTERYACS node Ok"
 
-       f=open(nom_BHR_Files,'wb')
-       f.write(nom_fichier_BHR)
-       f.write("\n\n\n")
-       f.close()
+      
+   def GMSHYACS(self, SchemaYacs, proc):
+      factoryNode = SchemaYacs.monCata._nodeMap["gmsh_post"]
+      SchemaYacs.gmsh_postNode = factoryNode.cloneNode("gmsh_post")
+      
+      proc.edAddChild(SchemaYacs.gmsh_postNode)
+      pout=SchemaYacs.aster_s_polymers_st_1Node.getOutputPort("result_gmsh")
+      pin=SchemaYacs.gmsh_postNode.getInputPort("result_gmsh")
+      proc.edAddLink(pout,pin)
+         
+      if SchemaYacs.nodeAvant != None :
+         proc.edAddCFLink(SchemaYacs.nodeAvant,SchemaYacs.gmsh_postNode)
+      SchemaYacs.nodeAvant=SchemaYacs.gmsh_postNode
+      print "GMSHYACS node Ok"
 
-       if execution=="non" : return ""
-       if ('_BENHUR_LANCEMENT' in dicoBenhur.keys()) and  dicoBenhur['_BENHUR_LANCEMENT'] == 'oui':
-           commande="echo '__________________';\n"
-           commande=commande + "echo 'execution de BENHUR';\n"
-           commande=commande + "cd "+self.config.PATH_BENHUR+";\n"
-           commande=commande + "./benhur;\n"
-           commande=commande + "echo 'fin execution de BENHUR';\n"
-           commande=commande + "echo '________________________';\n\n\n"
-           return commande
-       else:
-          return ""
+   def METHODEYACS(self, SchemaYacs, proc):
+      self.PYGMEEYACS(SchemaYacs, proc)
+      if (self.CHOIX=="FD+grid") :
+         self.FDVGRIDYACS(SchemaYacs,proc)
+      if (self.CHOIX=="FEM+mesh") :
+         self.BENHURYACS(SchemaYacs,proc)
+         self.ASTERYACS(SchemaYacs,proc)
+         self.GMSHYACS(SchemaYacs,proc)
 
+#_________________________________
+#  - shell functions
+#_________________________________
 
+   def METHODE(self) :
+      commande=self.PYGMEE()
+      if (self.CHOIX=="FD+grid") :
+          commande+= self.FDVGRID()
+      elif (self.CHOIX=="FEM+mesh") :
+          commande+= self.BENHUR()
+          commande+= self.ASTER_s_polymers_st_1()
+          commande+= self.GMSH()
+      return commande
 
-   def ASTER(self,execution) :
-      print "Generation de ASTER"
-      dicoAster=self.dictMCVal["ASTER"]
-      nom_racine=self.config.PATH_MODULE+"/"+self.config.NAME_SCHEME+"/"+self.config.NAME_SCHEME
-      nom_fichier_ASTER=nom_racine+"_aster.comm"
+#_________________________________
+#  - code and component functions
+#_________________________________
 
-      #Lecture du fichier a trous
-      f = file(self.config.repIni+"/s_poly_st_1_aster_template.comm","r")
-      chaine = f.read()  
-      f.close()   
-      chaine2=self.remplaceDICO(chaine,self.dictPYGMEE)
-      chaine=self.remplaceDICO(chaine2,dicoAster)
+   def PYGMEE(self) :
+      commande="volume_fraction=component_pygmee_v2("+str(self.rve_size)+",1,'"+str(self.sieve_curve_in)+"','"+str(self.sieve_curve_out)+"',"+str(self.repulsion_distance)+",'"+str(self.study_name)+"','"+str(self.study_path)+"','"+str(self.inclusion_name)+"','"+str(self.rve_name)+"')\n"
+      return commande
 
-      f=open(nom_fichier_ASTER,'wb')
-      f.write(chaine)
-      f.close()
+   def FDVGRID(self):
+      commande="lambda_x=component_fdvgrid("+str(self.lambda_I)+","+str(self.lambda_M)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"',"+str(self.finesse)+",'"+str(self.study_path)+"')\n"
+      return commande
 
-      if ('_ASTER_LANCEMENT' in dicoAster.keys()) and  dicoAster['_ASTER_LANCEMENT'] == 'oui':
-         commande="cd "+self.config.PATH_MODULE+";"
-         commande=commande + self.config.PATH_ASTER + "/as_run "+self.config.PATH_MODULE
-         commande=commande + "/"+self.config.NAME_SCHEME+"/"+self.config.NAME_SCHEME+"_aster.export"
-         os.system(commande)
-      else:
-         return ""
+   def BENHUR(self):
+      commande="component_benhur("+str(self.finesse)+","+str(self.rve_size)+",'"+str(self.inclusion_name)+"','"+str(self.study_name)+"','"+str(self.study_path)+"');\n"
+      return commande
 
-   def GMSH(self,execution) :
-      dicoGmsh=self.dictMCVal["GMSH"]
-      if ('_GMSH_LANCEMENT' in dicoGmsh.keys()) and  dicoGmsh['_GMSH_LANCEMENT'] == 'oui':
-         commande="cd "+self.config.PATH_MODULE+";"
-         commande=commande + "gmsh "+self.config.PATH_MODULE+"/"+self.config.NAME_SCHEME+"/"+self.config.NAME_SCHEME+"_aster.resu.msh"
-         print commande
-         os.system(commande)
-      else:
-         return ""
+   def ASTER_s_polymers_st_1(self) :
+      commande="component_aster_s_polymers_st_1("+str(self.rve_size)+","+str(self.finesse)+","+str(self.lambda_I)+","+str(self.lambda_M)+",'"+str(self.study_name)+"','"+str(self.study_path)+"','"+self.config.PATH_ASTER+"');\n"
+      return commande
 
-   def METHODE(self,execution) :
-      print "METHODE"
-      return ""
+   def GMSH(self) :
+      commande="component_gmsh_post('"+str(self.study_path+"/s_polymers_st_1_aster.resu.msh")+"');\n"
+      return commande
 
-   def MATERIAUX(self,execution) :
-      print "MATERIAUX"
-      return ""
-
-   def DISCRETISATION(self,execution) :
-      print "DISCRETISATION"
-      return ""

@@ -57,7 +57,7 @@ import listePatronsTK
 REPTK=os.path.dirname(os.path.abspath(__file__))
 sys.path[:0]=[REPTK]
 
-VERSION="EFICAS v1.17"
+VERSION="EFICAS v2.1"
 
 class APPLI: 
   def __init__ (self,master,code=prefs.code,fichier=None,test=0,ihm="TK",salome=0) :
@@ -141,8 +141,8 @@ class APPLI:
       if (self.test == 0):
          splash._splash.configure(text = "Chargement des paramètres utilisateur")
       import configuration_ASTER
-      self.CONFIGURATION = configuration_ASTER.make_config(self,prefsCode.REPINI)
-      self.CONFIGStyle = configuration_ASTER.make_config_style(self,prefsCode.REPINI)
+      self.CONFIGURATION = configuration_ASTER.make_config(self,prefsCode.repIni)
+      self.CONFIGStyle = configuration_ASTER.make_config_style(self,prefsCode.repIni)
 
   def cree_composants_graphiques(self):
       """

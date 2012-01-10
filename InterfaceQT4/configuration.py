@@ -50,7 +50,6 @@ class CONFIG_BASE:
       self.code    = appli.code
       self.salome  = appli.salome
       self.repIni  = repIni
-      self.REPINI  = repIni
       self.rep_user   = os.path.join(os.environ['HOME'],nomDir)
      
       if self.appli: 
@@ -72,6 +71,8 @@ class CONFIG_BASE:
  
       #Lecture des fichiers utilisateurs
       self.lecture_fichier_ini_standard()
+      if hasattr(self,'make_ssCode'):
+         self.make_ssCode(self.ssCode)
       self.lecture_fichier_ini_utilisateur()
       self.lecture_catalogues()
 
@@ -80,8 +81,7 @@ class CONFIG_BASE:
   #--------------------------------------
   # Verifie l'existence du fichier "standard"
   # appelle la lecture de ce fichier
-      import prefs
-      name='prefs_'+prefs.code
+      name='prefs_'+self.appli.code
       prefsCode=__import__(name)
       self.prefsUser=name+".py"
       for k in self.labels_eficas :
@@ -90,9 +90,6 @@ class CONFIG_BASE:
             setattr(self,k,valeur)
          except :
             pass
-      if hasattr(self,'map_path') :
-         oldPath=self.map_path
-              
 
   #--------------------------------------
   def lecture_fichier_ini_utilisateur(self):
@@ -155,7 +152,6 @@ class CONFIG_BASE:
              valeur=getattr(self,clef)
              texte= texte + clef+"	= " + repr(valeur) +"\n"
       f=open(self.fic_ini_utilisateur,'w+')
-      print self.fic_ini_utilisateur
       f.write(texte) 
       f.close()
 #

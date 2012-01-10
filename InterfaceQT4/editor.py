@@ -18,15 +18,18 @@
 #
 # ======================================================================
 
-import types,sys,os
+import types,sys,os, re
 import traceback
 from PyQt4 import *
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
+import time
+from datetime import date
+
 
 # Modules Eficas
 
-import convert,generator
+import convert, generator
 from Editeur     import session
 from Editeur     import comploader
 from Editeur     import Objecttreeitem
@@ -47,7 +50,6 @@ class JDCEditor(QSplitter):
     def __init__ (self,appli,fichier = None, jdc = None, QWParent=None, units = None, include=0 , vm=None):          
     #----------------------------------------------------------------------------------------------------------#
 
-        #print "fichier", fichier,"jdc",jdc,"units",units,"include",include
         QSplitter.__init__(self, QWParent)
 	self.appliEficas = appli
 	self.appli       = appli  #---- attendu par IHM
@@ -56,25 +58,31 @@ class JDCEditor(QSplitter):
         self.jdc         = jdc
         self.QWParent    = QWParent
 
-        self.test=0
-        VERSION_CODE    = session.d_env.cata
         if appli != None :
            self.salome =  self.appliEficas.salome
-           self.format =  self.appliEficas.format_fichier
         else :
            self.salome=0
            print "dans JDC pas d appli ????????"
 
+        # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code = self.appliEficas.CONFIGURATION.code
-        self.version_code = VERSION_CODE
+        self.version_code = session.d_env.cata
+
+        if not hasattr ( self.appliEficas, 'readercata') or  self.appliEficas.multi==True:
+           self.readercata  = readercata.READERCATA( self, self.appliEficas )
+           self.appliEficas.readercata=self.readercata
+        else :
+           self.readercata=self.appliEficas.readercata
+        if self.readercata.fic_cata == None : return    #Sortie Salome
+
+        self.format =  self.appliEficas.format_fichier
         self.titre=self.appliEficas.VERSION_EFICAS + ' pour '+ self.code
 
         self.dict_reels={}
         self.liste_simp_reel=[]        
         self.ihm="QT"
         
-        import prefs
-        nameConf='configuration_'+prefs.code
+        nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
         self.CONFIGURATION = self.appliEficas.CONFIGURATION
         self.CONFIGStyle =   self.appliEficas.CONFIGStyle
@@ -108,15 +116,6 @@ class JDCEditor(QSplitter):
         self.node_selected = None
         self.message=''
         
-        #if not hasattr( readercata, 'reader' ) :
-        #    readercata.reader = readercata.READERCATA( self, self.appliEficas )
-        #self.readercata = readercata.reader
-        if not hasattr ( self.appliEficas, 'readercata'):
-           self.readercata  = readercata.READERCATA( self, self.appliEficas )
-           self.appliEficas.readercata=self.readercata
-        else :
-           self.readercata=self.appliEficas.readercata
-        if self.readercata.fic_cata == None : return    #Sortie Salome
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
         
         #------- construction du jdc --------------
@@ -132,7 +131,7 @@ class JDCEditor(QSplitter):
                self.jdc = self.readFile(self.fichier)
             else :
                self.jdc=jdc
-            if units is not None:
+            if self.jdc is not None and units is not None:
                self.jdc.recorded_units=units
                self.jdc.old_recorded_units=units
         else: 
@@ -147,7 +146,19 @@ class JDCEditor(QSplitter):
             self.jdc.appli = self
             txt_exception  = None
             if not jdc:
-                self.jdc.analyse()            
+                if self.appli.code == "CARMEL3D"  and self.jdc.procedure == "" :
+                   try :
+                       self.jdc.procedure="LINEAR=L_LAW()"
+                       self.jdc.analyse()            
+                       print self.jdc.cr.get_mess_exception()
+                       if  self.jdc.cr.get_mess_exception()!="" :
+                           self.jdc = self._newJDC(units=units)
+                           self.jdc.analyse()            
+                   except :
+                       self.jdc = self._newJDC(units=units)
+                       self.jdc.analyse()            
+                else :
+                   self.jdc.analyse()            
                 txt_exception = self.jdc.cr.get_mess_exception()            
             if txt_exception:
                 self.jdc = None
@@ -170,7 +181,8 @@ class JDCEditor(QSplitter):
         Initialise un nouveau JDC vierge
         """
         CONTEXT.unset_current_step()        
-        jdc=self.readercata.cata[0].JdC( procedure="",
+
+        jdc=self.readercata.cata[0].JdC( procedure ="",
                                          appli=self,
                                          cata=self.readercata.cata,
                                          cata_ord_dico=self.readercata.cata_ordonne_dico,
@@ -213,7 +225,7 @@ class JDCEditor(QSplitter):
            J.old_recorded_units=units
         return J
 
-    #-----------------------#
+    #-------------------------------#
     def readFile(self, fn):
     #--------------------------------#
         """
@@ -232,13 +244,17 @@ class JDCEditor(QSplitter):
              # Le convertisseur existe on l'utilise
              #appli = self 
              p=convert.plugins[self.appliEficas.format_fichier_in]()
-             p.readfile(fn)         
+             p.readfile(fn)
+             pareil,texteNew=self.verifieCHECKSUM(p.text)
+             if pareil == False :
+                QMessageBox.warning( self, "fichier modifie","Attention! fichier change hors EFICAS")
+             p.text=texteNew
              text=p.convert('exec',self.appliEficas)
              if not p.cr.estvide():                 
                 self.affiche_infos("Erreur à la conversion",Qt.red)
         else :
             self.affiche_infos("Type de fichier non reconnu",Qt.red)
-            QMessageBox.critical( self, "Type de fichier non reconnu","EFICAS ne sait pas ouvrir ce type de fichier")            
+            QMessageBox.critical( self, "Type de fichier non reconnu","EFICAS ne sait pas ouvrir le type de fichier %s" % self.appliEficas.format_fichier_in)            
             return None
         
         CONTEXT.unset_current_step()
@@ -265,12 +281,11 @@ class JDCEditor(QSplitter):
     #-----------------------#
     def get_source(self,file):
     #-----------------------#
-        format=self.appliEficas.format_fichier
 
         # Il faut convertir le contenu du fichier en fonction du format
-        if convert.plugins.has_key(format):
+        if convert.plugins.has_key(self.format):
             # Le convertisseur existe on l'utilise
-            p=convert.plugins[format]()
+            p=convert.plugins[self.format]()
             p.readfile(file)
             text=p.convert('execnoparseur')
             if not p.cr.estvide():
@@ -293,7 +308,6 @@ class JDCEditor(QSplitter):
     #-----------------------#
     def viewJdcSource(self):        
     #-----------------------#
-        format = self.appliEficas.format_fichier
         f=open(self.fichier,'r')
         texteSource=f.read()
         f.close()
@@ -302,8 +316,7 @@ class JDCEditor(QSplitter):
     #-----------------------#
     def viewJdcPy(self):        
     #-----------------------#
-        format = self.appliEficas.format_fichier
-        strSource = str( self.get_text_JDC(format) )       
+        strSource = str( self.get_text_JDC(self.format) )       
         self._viewText(strSource, "JDC_RESULTAT")
                  
     #-----------------------#
@@ -388,8 +401,8 @@ class JDCEditor(QSplitter):
       """
       Stocke dans Eficas.noeud_a_editer le noeud a copier
       """
-      #print "handleEditCut"
       self.chercheNoeudSelectionne()
+      self.node_selected.update_node_label_in_blue()
       self.QWParent.edit="copier"
       self.QWParent.noeud_a_editer = self.node_selected
     
@@ -445,6 +458,7 @@ class JDCEditor(QSplitter):
 
       # on rend la copie a nouveau possible en liberant le flag edit
       self.QWParent.edit="copier"
+      self.QWParent.noeud_a_editer=child
           
     #---------------------#
     def getFileName(self):
@@ -478,13 +492,15 @@ class JDCEditor(QSplitter):
         fn = unicode(fn)
 
         if txt == None :
-            txt = self.get_text_JDC(self.appliEficas.format_fichier)
+            txt = self.get_text_JDC(self.format)
             eol = '\n'        
             if len(txt) >= len(eol):
                if txt[-len(eol):] != eol:
                   txt += eol
             else:
                 txt += eol        
+            checksum=self.get_checksum(txt)
+            txt=txt+checksum
         try:
             f = open(fn, 'wb')
             f.write(txt)
@@ -511,88 +527,114 @@ class JDCEditor(QSplitter):
             return jdc_formate
       else:         
          # Il n'existe pas c'est une erreur
-         self.affiche_infos("Format %s non reconnu" % format,Qt.red)
-         QMessageBox.critical( self, "Format "+format+" non reconnu","EFICAS ne sait pas convertir le JDC selon le format "+format)
+         self.affiche_infos("Format %s non reconnu" % self.format,Qt.red)
+         QMessageBox.critical( self, "Format "+self.format+" non reconnu","EFICAS ne sait pas convertir le JDC selon le format "+self.format)
          return ""
 
     #-----------------------------#
     def run(self,execution="oui"):
     #-----------------------------#
-      format=self.appliEficas.format_fichier
       self.textePython=""
-      if generator.plugins.has_key(format):
+      if generator.plugins.has_key(self.format):
          # Le generateur existe on l'utilise
-         self.generator=generator.plugins[format]()
+         self.generator=generator.plugins[self.format]()
          self.textePython =self.generator.generRUN(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
       if execution=="oui" :
-         os.system(self.textePython)
+         exec self.textePython
       else:
          return self.textePython
 
     #------------------------------------------------#
     def runYACS(self,execution="oui",nomFichier=None):
     #------------------------------------------------#
-      format=self.appliEficas.format_fichier
-      if generator.plugins.has_key(format):
+      if generator.plugins.has_key(self.format):
          # Le generateur existe on l'utilise
-         self.generator=generator.plugins[format]()
+         self.generator=generator.plugins[self.format]()
          self.generator.generRUNYACS(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION,nomFichier=nomFichier)
       if execution=="oui" :
          print "il faut faire le run dans Salome"
     
-    #-----------------------------#
-    def saveRun(self):
-    #-----------------------------#
-        texte=self.run(execution="non")
-        path=self.CONFIGURATION.savedir
-        fn = QFileDialog.getSaveFileName( self,
+    
+    #-----------------------------------------------------#
+    def determineNomFichier(self,path,extension):
+    #-----------------------------------------------------#
+      if DictExtensions.has_key(self.appli.code) :
+         chaine1="JDC (*"+DictExtensions[self.appli.code]+");;"
+         extensions= self.trUtf8(chaine1+ "All Files (*)")
+      else :
+         extensions= self.trUtf8("JDC (*.comm);;" "All Files (*)")
+
+      if self.appli.code == "MAP" :
+         extensions = extensions + ";;Schema Yacs (*.xml);; Run (*.py);;"
+
+      fn = QFileDialog.getSaveFileName( self,
              self.trUtf8("sauvegarde"), path,
-             self.trUtf8("JDC (*.sh);;" "All Files (*)"),None,
+             extensions,None,
              QFileDialog.DontConfirmOverwrite)
-        if fn.isNull(): return 
-        ext = QFileInfo(fn).suffix()
-        if ext.isEmpty(): fn.append(".xml")
+      if fn.isNull(): return (0, None)
+      ext = QFileInfo(fn).suffix()
+      if ext.isEmpty(): fn.append(extension)
 
-        if QFileInfo(fn).exists():
-                abort = QMessageBox.warning(self,
-                       self.trUtf8("Sauvegarde du Fichier"),
-                       self.trUtf8("Le fichier <b>%1</b> existe deja.").arg(fn),
-                       self.trUtf8("&Ecraser"),
-                       self.trUtf8("&Abandonner"))
-                if abort == 1 :  return
+      if QFileInfo(fn).exists():
+           abort = QMessageBox.warning(self,
+                   self.trUtf8("Sauvegarde du Fichier"),
+                   self.trUtf8("Le fichier <b>%1</b> existe deja.").arg(fn),
+                   self.trUtf8("&Ecraser"),
+                   self.trUtf8("&Abandonner"))
+           if abort == 1 :  return (0, "")
+      return (1,fn)
 
-        fn = unicode(QDir.convertSeparators(fn))
-        self.writeFile( fn, txt = texte)
+    def saveRun(self):
+    #-----------------#
+        texte=self.run(execution="non")
+        extension=".py"
+
+        if hasattr(self,'fichierRun'):
+           self.writeFile( self.fichierRun, txt = texte)
+           return
+
+        if self.fichier == None :
+           path=self.CONFIGURATION.savedir
+        else :
+          path=QFileInfo(self.fichier).absolutePath()+"/"+QFileInfo(self.fichier).baseName()+".py"
+        bOK, fn=self.determineNomFichier(path,extension)
+        if fn == "" : return
+        self.fichierRun = unicode(QDir.convertSeparators(fn))
+        self.writeFile( self.fichierRun, txt = texte)
     
     #-----------------------------#
     def saveYACS(self):
     #-----------------------------#
-        path=self.CONFIGURATION.savedir
-        fn = QFileDialog.getSaveFileName( self,
-             self.trUtf8("sauvegarde"), path,
-             self.trUtf8("JDC (*.xml);;" "All Files (*)"),None,
-             QFileDialog.DontConfirmOverwrite)
-        if fn.isNull(): return 
-        ext = QFileInfo(fn).suffix()
-        if ext.isEmpty(): fn.append(".xml")
+        if hasattr(self,'fichierYACS'):
+           self.runYACS(execution="non",nomFichier=self.fichierYACS)
+           return
 
-        if QFileInfo(fn).exists():
-                abort = QMessageBox.warning(self,
-                       self.trUtf8("Sauvegarde du Fichier"),
-                       self.trUtf8("Le fichier <b>%1</b> existe deja.").arg(fn),
-                       self.trUtf8("&Ecraser"),
-                       self.trUtf8("&Abandonner"))
-                if abort == 1 :  return
-        fn = unicode(QDir.convertSeparators(fn))
+        today = str(date.today())
+        today = today.replace('-', '')
+        today+="-"+time.strftime("%H%M%S", time.localtime())
+        path=self.CONFIGURATION.PATH_STUDY+"/"+self.CONFIGURATION.NAME_SCHEME+"_"+today+".xml"
+        extension=".xml"
 
-        texte=self.runYACS(execution="non",nomFichier=fn)
-        #self.writeFile( fn, txt = texte)
+        bOK, fn=self.determineNomFichier(path,extension)
+        if fn == "" : return
+        self.runYACS(execution="non",nomFichier=fn)
+
       
     #-----------------------------------------#
     def cherche_Groupes(self):
     #-----------------------------------------#
         listeMA,listeNO=self.get_text_JDC("GroupMA")
         return listeMA,listeNO
+
+    #-----------------------------------------#
+    def handleAjoutGroup(self,listeGroup):
+    #-----------------------------------------#
+         dernier=self.tree.racine.children[-1]
+         for groupe in listeGroup :
+             new_node = dernier.append_brother("MESH_GROUPE",'after')
+             test,mess = new_node.item.nomme_sd(groupe)
+             new_node.append_child('Material')
+             dernier=new_node
 
     #-----------------------------------------#
     def saveFile(self, path = None, saveas= 0):
@@ -608,88 +650,44 @@ class JDCEditor(QSplitter):
         if not self.modified and not saveas:
             return (0, None)      # do nothing if text wasn't changed
             
+        extension='.py'
+        if DictExtensions.has_key(self.appli.code) :
+           extension=DictExtensions[self.appli.code]
+        else :
+           extension='.comm'
+
         newName = None
+        fn = self.fichier
         if self.fichier is None or saveas:
           if path is None: 
              path=self.CONFIGURATION.savedir
-          selectedFilter = QString('')
-          if DictExtensions.has_key(self.appli.code) :
-               chaine1="JDC (*"+DictExtensions[self.appli.code]+");;"
-               extensions= self.trUtf8(chaine1+ "All Files (*)")
-          else :
-               extensions= self.trUtf8("JDC (*.comm);;" "All Files (*)")
-          fn = QFileDialog.getSaveFileName( self,
-               self.trUtf8("sauvegarde"), path,
-               extensions,None,
-               QFileDialog.DontConfirmOverwrite)
+          bOK, fn=self.determineNomFichier(path,extension)
+          if fn == None : return (0, None)
           if fn.isNull(): return (0, None)
+
           ulfile = os.path.abspath(unicode(fn))
           self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
-
-          ext = QFileInfo(fn).suffix()
-          if ext.isEmpty():
-             if DictExtensions.has_key(self.appli.code) :
-                fn.append(DictExtensions[self.appli.code])
-             else :
-                fn.append(".comm")
-
-          if QFileInfo(fn).exists():
-                abort = QMessageBox.warning(self,
-                       self.trUtf8("Sauvegarde du Fichier"),
-                       self.trUtf8("Le fichier <b>%1</b> existe deja.").arg(fn),
-                       self.trUtf8("&Ecraser"),
-                       self.trUtf8("&Abandonner"))
-                if abort == 1 :  return (0, None)
-
           fn = unicode(QDir.convertSeparators(fn))
           newName = fn
 
-        else:
-            fn = self.fichier
-        
-        if self.writeFile(fn):
-            self.fichier = fn
-            self.modified  = False                        
-            if self.fileInfo is None or saveas:
-                self.fileInfo = QFileInfo(self.fichier)
-                self.fileInfo.setCaching(0)
-            self.lastModified = self.fileInfo.lastModified()
-            if newName is not None:
-                self.appliEficas.addToRecentList(newName)
-                self.tree.racine.item.getObject().nom=os.path.basename(newName)
-                self.tree.racine.update_node_label()
+        if not (self.writeFile(fn)): return (0, None)
+        self.fichier = fn
+        self.modified  = False                        
+        if self.fileInfo is None or saveas:
+           self.fileInfo = QFileInfo(self.fichier)
+           self.fileInfo.setCaching(0)
+        self.lastModified = self.fileInfo.lastModified()
+        if newName is not None:
+           self.appliEficas.addToRecentList(newName)
+           self.tree.racine.item.getObject().nom=os.path.basename(newName)
+           self.tree.racine.update_node_label()
                
-            if self.jdc.isvalid() != 0 :
-               try : 
-                  fileXML = fn[:fn.rfind(".")] + '.xml'
-                  self.generator.writeOpenturnsXML( fileXML )
-               except :
-                  pass
-               
-               try : 
-                  fileSTD = fn[:fn.rfind(".")] + '.py'
-                  self.generator.writeOpenturnsSTD( fileSTD )
-               except :
-                  pass
+        if self.jdc.isvalid() != 0 and hasattr(self.generator, "writeDefault"):
+            self.generator.writeDefault(fn)
 
-               try:
-                 self.generator.writeDefault(fn)
-               except:
-                 pass
-
-               try : 
-                  fileCuve2DG = fn[:fn.rfind(".")] + '.don'
-                  self.generator.writeCuve2DG(fileCuve2DG)
-               except :
-                  pass
-
-
-            if self.salome : 
+        if self.salome : 
                self.appliEficas.addJdcInSalome( self.fichier)
-
-            return (1, self.fichier)
-        else:
-            return (0, None)
+        return (1, self.fichier)
 #
     #---------------------------------#
     def saveFileAs(self, path = None):
@@ -746,9 +744,33 @@ class JDCEditor(QSplitter):
             jdcText = ''
         return ulfile, jdcText
 
+
+     
+    #------------------------------#
+    def verifieCHECKSUM(self,text):
+    #------------------------------#
+        indexDeb=text.find("#CHECKSUM:")
+        if indexDeb < 0 :
+           return 1, text
+        indexFin=text.find(":FIN CHECKSUM")
+        checkAvant=text[indexDeb:indexFin+13]
+        textJDC=text[0:indexDeb]+text[indexFin+13:-1]
+        checksum=self.get_checksum(textJDC)
+        pareil=(checkAvant==checksum)
+        return pareil, textJDC
+    #---------------------------#
+    def get_checksum(self,texte):
+    #---------------------------#
+        newtexte=texte.replace('"','\\"')
+        commande='echo "'+newtexte+'"|md5sum'
+        a=os.popen(commande)
+        checksum=a.read()
+        a.close()
+        ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
+        return ligne
         
 if __name__=='__main__':    
-    import prefs # dans main
+    self.code='ASTER'
     name='prefs_'+prefs.code
     prefsCode=__import__(name)
 

@@ -68,17 +68,11 @@
     <addaction name="actionParametres_Eficas" />
     <addaction name="actionLecteur_Pdf" />
    </widget>
-   <widget class="QMenu" name="menuPatrons" >
-    <property name="title" >
-     <string>Patrons</string>
-    </property>
-   </widget>
    <addaction name="menuFichier" />
    <addaction name="menuEdition" />
    <addaction name="menuJdC" />
    <addaction name="menu_Aide" />
    <addaction name="menuOptions" />
-   <addaction name="menuPatrons" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
   <widget class="QToolBar" name="toolBar" >
@@ -95,9 +89,10 @@
    <addaction name="action_Ouvrir" />
    <addaction name="actionEnregistrer" />
    <addaction name="separator" />
-   <addaction name="actionCouper" />
    <addaction name="actionCopier" />
    <addaction name="actionColler" />
+   <addaction name="actionSupprimer" />
+   <addaction name="actionCouper" />
   </widget>
   <action name="action_Nouveau" >
    <property name="icon" >
@@ -250,6 +245,10 @@
    </property>
   </action>
   <action name="actionSupprimer" >
+   <property name="icon" >
+    <iconset>
+     <normaloff>../Editeur/icons/delete.png</normaloff>../Editeur/icons/delete.png</iconset>
+   </property>
    <property name="text" >
     <string>Supprimer</string>
    </property>

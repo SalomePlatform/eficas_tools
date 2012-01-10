@@ -1,8 +1,8 @@
-#@ MODIF recal Macro  DATE 26/05/2010   AUTEUR ASSIRE A.ASSIRE 
+#@ MODIF recal Macro  DATE 28/03/2011   AUTEUR ASSIRE A.ASSIRE 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -76,6 +76,40 @@ except:
        if code=='F': sys.exit()
 
 
+# -------------------------------------------------------------------------------
+def affiche(unity, filename, label='', filetype='stderr'):
+   """ Affiche un fichier dans l'output courant (methode utilisee pour l'affichage
+       du stdout et/ou du stderr
+   """
+   try:
+       f=open(filename, 'r')
+       txt = f.read()
+       txt = """
+
+============================ %s (%s) =============================
+
+
+%s
+
+
+======================================================================
+======================================================================
+
+""" % (label, filetype, txt)   
+
+       f.close()
+
+       if unity:
+           fw=open('fort.%s' % str(unity), 'a')
+           fw.write( txt )
+           fw.close()
+       else:
+           print txt
+   except Exception, e: 
+       print e
+   return
+
+
 # # -------------------------------------------------------------------------------
 # def find_parameter(content, param):
 #    """
@@ -135,7 +169,7 @@ def make_include_files(UNITE_INCLUDE, calcul, parametres):
        sys.path.append(os.path.join(ASTER_ROOT, 'lib', 'python%s.%s' % (sys.version_info[0], sys.version_info[1] ) , 'site-packages'))
    except: pass
    try:
-       from asrun.utils import find_command, search_enclosed
+       from asrun.common.utils import find_command, search_enclosed
    except Exception, e:
        print e
        UTMESS('F','RECAL0_99')
@@ -365,6 +399,10 @@ class CALCULS_ASTER:
 
        self.jdc                = jdc
 
+       self.follow_output      = False
+       self.unity_follow       = None
+
+
        self.list_params        = [x[0] for x in parametres]
        self.list_params.sort()
 
@@ -466,10 +504,17 @@ class CALCULS_ASTER:
             for n in range(1,len(dX)+1):
                l = [0] * len(dX)
                l[n-1] = dX[n-1]
-               X = [ X0[i] * (1+l[i]) for i in range(len(dX)) ]
+#               X = [ X0[i] * (1+l[i]) for i in range(len(dX)) ]
+               X = []
+               for i in range(len(dX)):
+                  new_Xi = X0[i] * (1+l[i])
+                  if new_Xi > self.parametres[i][3]:
+                     UTMESS('I', 'RECAL0_75', valk=( str(self.parametres[i][0]), str(new_Xi), str(self.parametres[i][2]), str(self.parametres[i][3]), str(l[i]) ) )
+#                     new_Xi = X0[i] * (1-l[i])  # diff finie a gauche marche pas fort
+                  X.append( new_Xi )
+               #print 'X=', X
                dic = dict( zip( list_params, X ) )
                list_val.append( dic )
-
 
         # ----------------------------------------------------------------------------
         # Aiguillage vers INCLUDE
@@ -508,16 +553,6 @@ class CALCULS_ASTER:
      """  Module permettant de lancer N+1 calculs via un mecanisme d'include
      """
 
-#      # Importation de commandes Aster
-#      try:
-#         import aster
-#         import Macro
-#         from Accas import _F
-#         from Cata import cata
-#         from Cata.cata import *
-#      except ImportError:
-#         raise "Simu_point_mat doit etre lance depuis Aster"
-
      try:
          import aster
          import Macro
@@ -527,13 +562,7 @@ class CALCULS_ASTER:
     
          # Declaration de toutes les commandes Aster
          import cata
-         for k,v in cata.__dict__.items() :
-           #print k,v
-           if isinstance(v, (OPER, MACRO)):
-             #print k,v
-             #self.jdc.current_context[k]= v
-             exec("from Cata.cata import %s" % k)
-         #self.jdc.current_context['_F']=cata.__dict__['_F']
+         from Cata.cata import *
      except Exception, e:
          raise "Le mode INCLUDE doit etre lance depuis Aster : \nErreur : " % e
 
@@ -578,7 +607,10 @@ class CALCULS_ASTER:
          # Lancement du calcul (par un include)
          # ----------------------------------------------------------------------------
          new = "fort.%s.new" % self.UNITE_INCLUDE
-         execfile(new)
+         try:
+            execfile(new)
+         except Exception, e:
+            UTMESS('F', 'RECAL0_85', valk=str(e))
 
 
          # ----------------------------------------------------------------------------
@@ -682,8 +714,7 @@ class CALCULS_ASTER:
         try:
             from asrun.run          import AsRunFactory
             from asrun.profil       import ASTER_PROFIL
-            from asrun.common_func  import get_hostrc
-            from asrun.utils        import get_timeout
+            from asrun.repart       import get_hostrc
             from asrun.parametric   import is_list_of_dict
             from asrun.thread       import Dispatcher
             from asrun.distrib      import DistribParametricTask
@@ -700,7 +731,9 @@ class CALCULS_ASTER:
         # ----------------------------------------------------------------------------
         sys.argv = ['']
         run = AsRunFactory()
-        run.options['debug_stderr'] = True  # pas d'output d'executions des esclaves dans k'output maitre
+        #if info<=2: run.options['debug_stderr'] = False  # pas d'output d'executions des esclaves dans l'output maitre
+        if self.unity_follow and info==2: run.options['debug_stderr'] = True
+        else:                             run.options['debug_stderr'] = False  # pas d'output d'executions des esclaves dans l'output maitre
 
         # Master profile
         prof = ASTER_PROFIL(filename=export)
@@ -727,16 +760,29 @@ class CALCULS_ASTER:
                     resudir = None
         if not resudir:
             # Par defaut, dans un sous-repertoire du repertoire d'execution
+            shared_tmp=None
             pref = 'tmp_macr_recal_'
             # On cherche s'il y a un fichier hostfile pour placer les fichiers dans un repertoire partage
             l_fr = getattr(prof, 'data')
             l_tmp = l_fr[:]
             for dico in l_tmp:
                if dico['type']=='hostfile':
-                  pref = os.environ['HOME'] + os.sep + 'tmp_macr_recal_'
+                  shared_tmp = run.get('shared_tmp')
+                  if not shared_tmp: shared_tmp = os.path.join( os.environ['HOME'], 'tmp_macr_recal')
+                  pref = shared_tmp + os.sep + 'tmp_macr_recal_'
                   break
             # Si batch alors on place les fichiers dans un repertoire partage
-            if prof['mode'][0]=='batch': pref = os.environ['HOME'] + os.sep + 'tmp_macr_recal_'
+            if prof['mode'][0]=='batch': 
+                  shared_tmp = run.get('shared_tmp')
+                  if not shared_tmp: shared_tmp = os.path.join( os.environ['HOME'], 'tmp_macr_recal')
+                  pref = shared_tmp + os.sep + 'tmp_macr_recal1_'
+
+            # Creation du repertoire temporaire racine de macr_recal
+            if shared_tmp:
+               if not os.path.isdir(shared_tmp):
+                   try:    os.mkdir(shared_tmp)
+                   except: 
+                      if info>=1: UTMESS('F','RECAL0_82',valk=shared_tmp)
 
             resudir = tempfile.mkdtemp(prefix=pref)
         flashdir = os.path.join(resudir,'flash')
@@ -748,7 +794,7 @@ class CALCULS_ASTER:
         hostrc = get_hostrc(run, prof)
 
         # timeout before rejected a job
-        timeout = get_timeout(prof)
+        timeout = prof.get_timeout()
 
 
         # Ajout des impressions de tables a la fin du .comm
@@ -787,7 +833,7 @@ class CALCULS_ASTER:
                                      resudir=resudir, flashdir=flashdir,
                                      keywords={'POST_CALCUL': '\n'.join(t)},
                                      info=info,
-                                     nbnook=0, exec_result=[])            # OUT
+                                     nbnook=[0,]*numthread, exec_result=[])            # OUT
         # ... and dispatch task on 'list_tests'
         etiq = 'calc_%%0%dd' % (int(log10(nbval)) + 1)
         labels = [etiq % (i+1) for i in range(nbval)]
@@ -800,38 +846,45 @@ class CALCULS_ASTER:
         # Liste des diagnostics
         # ----------------------------------------------------------------------------
         d_diag = {}
+
+
         for result in task.exec_result:
-            #print result
             label = result[0]
             diag  = result[2]
             if len(result) >= 8: output_filename = os.path.join('~', 'flasheur', str(result[7]))
             else:                output_filename = ''
             d_diag[label] = diag
+
+            # Affichage de l'output de l'esclave dans l'output du maitre
+            if self.unity_follow:
+                affiche(unity=self.unity_follow, filename=output_filename, label=label, filetype='stdout')
+
+            # Calcul esclave NOOK
             if not diag[0:2] in ['OK', '<A']:
-              if not diag in ['<F>_COPY_ERROR']:
-                  UTMESS('A', 'RECAL0_70', valk=(label, output_filename))
-  
-                  # Affichage de l'output
-                  try:
-                     f=open(output_filename, 'r')
-                     print f.read()
-                     f.close()
-                  except: pass
+
+              # Affichage de l'output et/ou de l'error de l'esclave dans l'output du maitre
+              try:
+                  affiche(unity=None, filename=output_filename, label=label, filetype='stdout')
+                  error_filename = '.'.join(output_filename.split('.')[0:-1]) + '.e' + output_filename.split('.')[-1][1:]
+                  affiche(unity=None, filename=error_filename, label=label, filetype='stderr')
+              except Exception, e: 
+                  print e
+
+              if diag in ['<F>_NOT_RUN', '<A>_NOT_SUBMITTED']:
+                  UTMESS('F', 'RECAL0_86', valk=(label, diag))
+              else:
+                  UTMESS('A', 'RECAL0_83', valk=(label, output_filename))
 
 
         if not d_diag: 
-                UTMESS('F', 'RECAL0_71', valk=resudir)
+            UTMESS('F', 'RECAL0_84', valk=resudir)
         self.list_diag = [ d_diag[label] for label in labels ]
 
         # ----------------------------------------------------------------------------
         # Arret si tous les jobs ne se sont pas deroules correctement
         # ----------------------------------------------------------------------------
-        iret = 0
-        if task.nbnook > 0:
-           iret = 4
-        if iret:
-           UTMESS('A', 'RECAL0_71', valk=resudir)
-           run.Sortie(iret)
+        if sum(task.nbnook) > 0:
+           UTMESS('F', 'RECAL0_84', valk=resudir)
 
 
 
@@ -1043,8 +1096,7 @@ class CALC_ERROR:
 
        if info>=3: self.debug = True
        else:       self.debug = False
-       #if debug: self.debug = True
-       self.debug = True
+       if debug: self.debug = True
 
 
    # ---------------------------------------------------------------------------

@@ -1,8 +1,8 @@
-#@ MODIF N_types Noyau  DATE 11/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_types Noyau  DATE 28/06/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2010  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -22,8 +22,6 @@
 """
    Ce module contient des fonctions utilitaires pour tester les types
 """
-
-from N_ASSD import ASSD
 
 
 # use isinstance() instead of type() because objects returned from numpy arrays
@@ -56,6 +54,15 @@ def is_enum(obj):
     return is_list(obj) or is_tuple(obj)
 
 def is_assd(obj):
+    from N_ASSD import ASSD
     return isinstance(obj, ASSD)
 
+
+def force_list(obj):
+    """Retourne `obj` si c'est une liste ou un tuple,
+    sinon retourne [obj,] (en tant que list).
+    """
+    if not is_enum(obj):
+        obj = [obj,]
+    return list(obj)
 

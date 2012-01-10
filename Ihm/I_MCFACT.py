@@ -41,11 +41,11 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
   def getlabeltext(self):
     """
        Retourne le label de self suivant qu'il s'agit d'un MCFACT
-       isolé ou d'un MCFACT appartenant à une MCList :
-       utilisée pour l'affichage dans l'arbre
+       isole ou d'un MCFACT appartenant a une MCList :
+       utilisee pour l'affichage dans l'arbre
     """
     objet = self.parent.get_child(self.nom)
-    # objet peut-être self ou une MCList qui contient self ...
+    # objet peut-etre self ou une MCList qui contient self ...
     if objet is None or objet is self:
       return "Erreur - mclist inexistante: "+self.nom
 

@@ -29,6 +29,9 @@ from desUniqueBase import Ui_DUnBase
 from qtCommun      import QTPanel
 from qtSaisie      import SaisieValeur
 from politiquesValidation import PolitiqueUnique
+listeSuffixe= ('bmp','png','jpg' )
+
+
 
 class DUnBase(Ui_DUnBase,QDialog):
    def __init__(self,parent ,modal ) :
@@ -83,7 +86,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         self.BSalome.setIcon(icon)
         mc = self.node.item.get_definition()
         #if ( (self.node.item.get_nom() != "FileName" ) and ( mc.type[0]!="Fichier")) :
-        if ( mc.type[0]!="Fichier") :
+        if mc.type[0]!="Fichier" and mc.type[0]!="FichierNoAbs":
            self.BFichier.close()
         else :
 	   self.bParametres.close()
@@ -109,6 +112,17 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
                except :
                    str=QString(valeurTexte)
            self.lineEditVal.setText(str)
+           mc = self.node.item.get_definition()
+           if hasattr(self,"BSelectInFile"): return
+           if (( mc.type[0]=="Fichier") and (QFileInfo(str).suffix() in listeSuffixe )):
+             self.BSelectInFile = QPushButton(self.Widget8)
+             self.BSelectInFile.setMinimumSize(QSize(140,40))
+             self.BSelectInFile.setObjectName("BSelectInFile")
+             self.gridLayout.addWidget(self.BSelectInFile,1,1,1,1)
+             self.BSelectInFile.setText("Selection")
+             self.image=str
+             self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
+
 
 
   def InitCommentaire(self):
@@ -117,7 +131,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
                   'R'   : "Un réel est attendu",
                   'I'   : "Un entier est attendu",
                   'Matrice' : 'Une Matrice est attendue',
-                  'Fichier' : 'Un fichier est attendu'}
+                  'Fichier' : 'Un fichier est attendu',
+                  'FichierNoAbs' : 'Un fichier est attendu'}
       mctype = mc.type[0]
 
       if type(mctype) == types.ClassType:
@@ -152,6 +167,24 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
          ulfile = os.path.abspath(unicode(fichier))
          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)
+         if (QFileInfo(fichier).suffix() in listeSuffixe ):
+             self.image=fichier
+             if (not hasattr(self,"BSelectInFile")):
+               self.BSelectInFile = QPushButton(self.Widget8)
+               self.BSelectInFile.setMinimumSize(QSize(140,40))
+               self.BSelectInFile.setObjectName("BSelectInFile")
+               self.gridLayout.addWidget(self.BSelectInFile,1,1,1,1)
+               self.BSelectInFile.setText("Selection")
+               self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
+             else :
+               self.BSelectInFile.setVisible(1)
+         elif hasattr(self, "BSelectInFile"):
+             self.BSelectInFile.setVisible(0)
+
+          
+  def BSelectInFilePressed(self):
+      from monSelectImage import MonSelectImage
+      MonSelectImage(file=self.image,parent=self).show()
 
           
   def LEValeurPressed(self):

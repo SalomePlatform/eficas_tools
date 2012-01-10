@@ -47,7 +47,8 @@ class MonListeParamPanel(DLisParam):
         self.connecterSignaux()
 
   def connecterSignaux(self) :
-        self.connect(self.LBParam,SIGNAL("itemPressed(QListWidgetItem*)"),self.LBParamItemPressed)
+  #     self.connect(self.LBParam,SIGNAL("itemPressed(QListWidgetItem*)"),self.LBParamItemPressed)
+        self.connect(self.BOk,SIGNAL("clicked()"),self.valideParam)
 
   def initVal(self):
         self.LBParam.clear()
@@ -55,12 +56,19 @@ class MonListeParamPanel(DLisParam):
             self.LBParam.addItem(QString(repr(param)))
             self.dictListe[QString(repr(param))] = param
 
-  def LBParamItemPressed(self):
-        #print self.LBParam.selectedItems()
+  def valideParam(self):
         if self.LBParam.selectedItems()== None : return
-        i=self.LBParam.selectedItems()[0].text()
-        self.panel.Ajout1Valeur(self.dictListe[i])
-
-  def on_BOk_clicked(self):
-        self.LBParamItemPressed()
+        lParam=[]
+        for indice in range(len(self.LBParam.selectedItems())):
+            i=self.LBParam.selectedItems()[indice].text()
+            param=self.dictListe[i]
+            lParam.append(param)
+           
+        try :
+          self.panel.AjoutNValeur(lParam)
+        except :
+          for p in lParam :
+             self.panel.Ajout1Valeur(p)
         self.close()
+
+

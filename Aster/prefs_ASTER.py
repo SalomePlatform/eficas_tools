@@ -19,16 +19,13 @@
 #
 # ======================================================================
 
-import os,sys
+import os
 
-# REPINI sert à localiser le fichier editeur.ini
+# repIni sert à localiser le fichier editeur.ini
 # Obligatoire
-REPINI=os.path.dirname(os.path.abspath(__file__))
-repIni=REPINI
+repIni=os.path.dirname(os.path.abspath(__file__))
+INSTALLDIR=os.path.abspath(os.path.join(repIni,'..'))
 
-# INSTALLDIR sert à localiser l'installation d'Eficas
-# Obligatoire
-INSTALLDIR=os.path.join(REPINI,'..')
 
 # CODE_PATH sert à localiser Noyau et Validation éventuellement
 # non contenus dans la distribution EFICAS
@@ -36,17 +33,13 @@ INSTALLDIR=os.path.join(REPINI,'..')
 # Peut valoir None (defaut)
 CODE_PATH = None
 
+
 # lang indique la langue utilisée pour les chaines d'aide : fr ou ang
 lang='fr'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'
 
-
-EditeurDir=INSTALLDIR+"/Editeur"
-sys.path[:0]=[INSTALLDIR]
-
-ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')
 
 # Preference
 if os.name == 'nt':
@@ -59,7 +52,6 @@ if os.path.isfile(userprefs):
       execfile(userprefs)
    except:
       pass
-
 
 #-------------------------------------------------------------------
 # Partie pour TK

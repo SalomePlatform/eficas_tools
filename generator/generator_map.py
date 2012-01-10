@@ -25,14 +25,21 @@
 """
 import traceback
 import types,string,re,os
+import time
+from datetime import date
 
 from generator_python import PythonGenerator
+try :
+   sys.path.append(os.path.join(os.getenv('MAP_DIRECTORY'),'classes/python/'))
+   from class_MAP_parameters import *
+except :
+   pass
+
 
 
 def entryPoint():
    """
       Retourne les informations necessaires pour le chargeur de plugins
-
       Ces informations sont retournees dans un dictionnaire
    """
    return {
@@ -61,39 +68,42 @@ class MapGenerator(PythonGenerator):
          os.makedirs(self.nom_racine)
       self.listeCODE=[]
       self.text=""
-      self.textCode=""
-      self.texteExecution=""
-      self.ssCode=self.config.appli.ssCode
 
-   def verifie(self):
-      print 'verification generique'
+      self.ssCode=self.config.appli.ssCode
+      self.INSTALLDIR=self.config.appli.INSTALLDIR
+      self.ssCodeDir=os.path.join(self.INSTALLDIR,'MAP/Templates',self.ssCode)
+      self.fichierYacs=self.ssCode+"_YACS_nodes"
+      self.texteExecution="import os,sys\n"
+      self.texteExecution+="sys.path.append('"+self.ssCodeDir+"')\n"
+      self.texteExecution+="from " + self.fichierYacs +" import *\n"
 
    def gener(self,obj,format='brut',config=None):
-      print 'generation dans generator_map'
       self.initialise(config)
       text=PythonGenerator.gener(self,obj,format)
-      self.verifie()
-      self.generePythonMap("non")
       return text
 
    def generRUN(self,obj,format='brut',config=None,):
-      print 'generRUN dans generator_map'
       self.initialise(config)
       text=PythonGenerator.gener(self,obj,format)
-      self.verifie()
-      self.generePythonMap("oui") 
+      for elt in self.listeCODE:
+          code=elt.keys()[0]
+          self.dico=elt[code]
+          if code in self.__class__.__dict__.keys():
+             texteCode=apply(self.__class__.__dict__[code],(self,))
+             self.texteExecution += texteCode
       return self.texteExecution
 
 
    def generRUNYACS(self,obj,format='brut',config=None,nomFichier=None):
       self.initialise(config)
       text=PythonGenerator.gener(self,obj,format)
+      #self.generePythonMap("non")
+
       import sys
-      sys.path.append('/local/noyret/Salome_5.1.3/Install/YACS/lib/python2.5/site-packages/salome/')
-      self.verifie()
+      sys.path.append(os.path.join(os.getenv("YACS_ROOT_DIR"),"lib/python2.4/site-packages/salome/"))
       import monCreateYacs
       self.monSchema=monCreateYacs.getSchema(config)
-      self.proc=self.monSchema.createProc()
+      self.proc=self.monSchema.createProc(self)
       for elt in self.listeCODE:
           code=elt.keys()[0]
           dico=elt[code]
@@ -102,6 +112,8 @@ class MapGenerator(PythonGenerator):
              if hasattr(self.monSchema, codeYACS): 
                 fct=getattr(self.monSchema, codeYACS)
                 fct(self.proc,dico)
+                
+      print str(nomFichier)
       self.monSchema.write_yacs_proc(self.proc,str(nomFichier))
 
    def generePythonMap(self,execution) :
@@ -121,25 +133,30 @@ class MapGenerator(PythonGenerator):
              self.texteExecution=self.texteExecution+texteCode
 
    def generPROC_ETAPE(self,obj):
-      clefDico=obj.nom
       self.DictTemp={}
       s=PythonGenerator.generPROC_ETAPE(self,obj)
       dico={}
       dico[obj.nom]=self.DictTemp
       self.listeCODE.append(dico)
+      if hasattr(obj.definition,"mcOblig") :
+         for clef in obj.definition.mcOblig.keys():
+             setattr(self,clef,obj.definition.mcOblig[clef])
       return s
 
 
    def generMCSIMP(self,obj) :
       """
       Convertit un objet MCSIMP en texte python
-      Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
       """
       s=PythonGenerator.generMCSIMP(self,obj)
-      clef=""
-      for i in obj.get_genealogie() :
-           clef=clef+"_"+i
-      self.DictTemp[clef]=obj.valeur
+      #clef=""
+      #for i in obj.get_genealogie() :
+      #     clef=clef+"_"+i
+      self.DictTemp[obj.nom]=obj.valeur
+      if hasattr(obj.definition,'equiv') and obj.definition.equiv!= None:
+         setattr(self,obj.definition.equiv,obj.valeur)
+      else :
+         setattr(self,obj.nom,obj.valeur)
       return s
 
 
@@ -149,6 +166,7 @@ class MapGenerator(PythonGenerator):
            result=chaine.replace(rplact,self.config.__dict__[mot])
            chaine=result
        return chaine
+
 
    def  remplaceDICO(self,chaine,dico) :
        for mot in dico.keys() :

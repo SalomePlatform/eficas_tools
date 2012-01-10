@@ -203,7 +203,7 @@ def print_d_env():
 
 def create_parser():
     # creation du parser des options de la ligne de commande
-    import prefs
+    #import prefs
     parser=optparse.OptionParser(usage="usage: %prog [options]",version="%prog 1.13")
 
     parser.add_option("-j","--jdc",dest="comm",type='string',
@@ -226,7 +226,7 @@ def create_parser():
                   help="version de catalogue a utiliser")
 
     parser.add_option("-k","--kode", action="store", type="string",dest="code",
-                  help="nom du code a utiliser",default=prefs.code)
+                  help="nom du code a utiliser")
 
     parser.add_option("-d","--debug", action="store", type="int",dest="debug",
                   help="niveau de debug")

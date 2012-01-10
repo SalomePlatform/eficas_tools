@@ -1,8 +1,8 @@
-#@ MODIF post_endo_fiss_ops Macro  DATE 31/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF post_endo_fiss_ops Macro  DATE 02/02/2011   AUTEUR PELLET J.PELLET 
 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2010  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -236,7 +236,7 @@ def post_endo_fiss_ops(self,
   # TEST SUR LE TYPE DE CHAMP
   #
   ltyP_cham = ['NOEU_DEPL_R','ELGA_EPSI_R','ELNO_EPSI_R','NOEU_SIEF_R','ELGA_VARI_R','ELNO_VARI_R','ELNO_VARI_R','NOEU_VAR2_R']
-  lnoM_cham = ['DEPL','EPSI_ELGA_DEPL','EPSI_ELNO_DEPL','EPSI_NOEU_DEPL','VARI_ELGA','VARI_ELNO','VARI_ELNO_ELGA','VARI_NOEU_ELGA']
+  lnoM_cham = ['DEPL','EPSI_ELGA','EPSI_ELNO','EPSI_NOEU','VARI_ELGA','VARI_ELNO','VARI_ELNO','VARI_NOEU']
 
   if NOM_CHAM in lnoM_cham :
     Xtype_cham = ltyP_cham[lnoM_cham.index(NOM_CHAM)]
@@ -423,7 +423,7 @@ def post_endo_fiss_ops(self,
                                       PHENOMENE    = 'MECANIQUE',
                                       MODELISATION = 'BARRE'),)
 
-    __YBARPR = PROJ_CHAMP(METHODE        = 'ELEM',
+    __YBARPR = PROJ_CHAMP(METHODE        = 'COLLOCATION',
                             RESULTAT     = __resu,
                             MODELE_1     = __modtot,
                             MODELE_2     = __MO,
@@ -537,7 +537,7 @@ def post_endo_fiss_ops(self,
                                      PHENOMENE    = 'MECANIQUE',
                                      MODELISATION = 'BARRE'),)
 
-    __YBARPR = PROJ_CHAMP(METHODE      = 'ELEM',
+    __YBARPR = PROJ_CHAMP(METHODE      = 'COLLOCATION',
                           RESULTAT     = __resu,
                           MODELE_1     = __modtot,
                           MODELE_2     = __MO,
@@ -683,7 +683,7 @@ def post_endo_fiss_ops(self,
 
       try:
         # on essaie de projeter, exception: il n'y a pas des points "dans la matiere"
-        __YBARPR = PROJ_CHAMP(METHODE      = 'ELEM',
+        __YBARPR = PROJ_CHAMP(METHODE      = 'COLLOCATION',
                               RESULTAT     = __resu,
                               MODELE_1     = __modtot,
                               MODELE_2     = __MO,

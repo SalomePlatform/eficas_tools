@@ -6,7 +6,7 @@
 """
 
 # import modules Python
-import string
+import string, types
 
 # import modules EFICAS
 from Editeur     import Objecttreeitem
@@ -72,6 +72,11 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
       Ce texte est tronqué à 25 caractêres
       """
       texte=self.object.nom+"="+str(self.object.valeur)
+      if type(self.object.valeur) == types.ListType :
+          texte=self.nom+' = ['
+          for l in self.object.valeur :
+            texte=texte+str(l) +","
+          texte=texte[0:-1]+']'
       texte = string.split(texte,'\n')[0]
       if len(texte) < 25 :
           return texte

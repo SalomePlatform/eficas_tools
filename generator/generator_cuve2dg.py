@@ -589,7 +589,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "SurfaceEchange_FluideStructure_mess" : "TRANSITOIRE",
          }
 
-   def gener(self,obj,format='brut'):
+   def gener(self,obj,format='brut',config=None):
       self.text=''
       self.textCuve=''
       self.dico_mot={}
@@ -606,7 +606,8 @@ class Cuve2dgGenerator(PythonGenerator):
        s=PythonGenerator.generMCSIMP(self,obj)
        return s
 
-   def writeCuve2DG(self, filename):
+   def writeDefault(self, fn):
+      filename = fn[:fn.rfind(".")] + '.don'
       print "je passe dans writeCuve2DG"
       self.genereTexteCuve()
       f = open( filename, 'wb')

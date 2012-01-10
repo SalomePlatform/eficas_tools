@@ -53,7 +53,6 @@ class INCLUDENode(browser.JDCNode,typeNode.PopUpMenuNode):
 
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
-      #self.menu.insertItem( qApp.translate('Browser','Edit'), self.makeEdit )
       
     def makeEdit(self):    #,appli,node
         if self.item.object.text_converted == 0:
@@ -85,7 +84,6 @@ class POURSUITENode(browser.JDCNode, typeNode.PopUpMenuNode):
 
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
-      self.menu.insertItem( qApp.translate('Browser','Edit'), self.makeEdit )
 
     def makeEdit(self):    #,appli,node
         if self.item.object.text_converted == 0:
@@ -118,7 +116,6 @@ class MATERIAUNode(MACRONode):
 
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
-      self.menu.insertItem( qApp.translate('Browser','View'), self.makeView )
 
     def makeView(self) :
       if hasattr(self.item.object,'fichier_ini') and self.item.object.fichier_ini==None:

@@ -1,8 +1,8 @@
-#@ MODIF raff_xfem_ops Macro  DATE 11/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF raff_xfem_ops Macro  DATE 03/01/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2009  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -32,7 +32,6 @@ def raff_xfem_ops(self,FISSURE,INFO,**args):
    from types import ListType, TupleType
    from Accas import _F
    from SD.sd_xfem import sd_fiss_xfem
-   from Execution.E_JDC import JDC
    EnumTypes = (ListType, TupleType)
 
    macro = 'RAFF_XFEM'
@@ -57,10 +56,10 @@ def raff_xfem_ops(self,FISSURE,INFO,**args):
    else :
       nbfiss = 1
 
-#  formule distance pour une fissure: 1/exp(r)
-   __MDISTF=FORMULE(NOM_PARA=('X1','X2'),VALE= '1./exp(sqrt(X1**2+X2**2))');
-#  formule distance pour une interface: 1/exp(lsn)
-   __MDISTI=FORMULE(NOM_PARA=('X1'),VALE= '1./exp(sqrt(X1**2))');
+#  formule distance pour une fissure: -r
+   __MDISTF=FORMULE(NOM_PARA=('X1','X2'),VALE= '-1.*sqrt(X1**2+X2**2)');
+#  formule distance pour une interface: -r = -|lsn|
+   __MDISTI=FORMULE(NOM_PARA=('X1'),VALE= '-1.*sqrt(X1**2)');
 
    __CERR= [None]*nbfiss
    list_err=[]

@@ -1,8 +1,8 @@
-#@ MODIF simu_point_mat_ops Macro  DATE 11/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF simu_point_mat_ops Macro  DATE 28/02/2011   AUTEUR PROIX J-M.PROIX 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -50,6 +50,7 @@ def simu_point_mat_ops(self, MATER, INCREMENT,SIGM_IMPOSE,EPSI_IMPOSE,SIGM_INIT,
   from Accas import _F
   from Utilitai.UniteAster import UniteAster
   from Utilitai.Utmess import  UTMESS
+  from Noyau.N_types import is_enum
   
 # -- Tests de cohérence
   __fonczero = DEFI_FONCTION(NOM_PARA = 'INST',
@@ -60,12 +61,16 @@ def simu_point_mat_ops(self, MATER, INCREMENT,SIGM_IMPOSE,EPSI_IMPOSE,SIGM_INIT,
   CMP_EPS=['EPXX','EPYY','EPZZ','EPXY','EPXZ','EPYZ']
   CMP_SIG=['SIXX','SIYY','SIZZ','SIXY','SIXZ','SIYZ']
   
+  if COMP_INCR  :
+     lcomp = COMP_INCR.List_F()[0]
+  if COMP_ELAS   :
+     lcomp = COMP_ELAS.List_F()[0]
+
   if SUPPORT != None :
      if SUPPORT=='ELEMENT': 
         itetra=1
   if itetra==0 :
      if COMP_INCR != None : 
-        lcomp = COMP_INCR.List_F()[0]
         if lcomp['DEFORMATION'] != 'PETIT' :
            itetra=1
            UTMESS('A','COMPOR2_1',valk=lcomp['DEFORMATION'] )
@@ -138,6 +143,22 @@ def simu_point_mat_ops(self, MATER, INCREMENT,SIGM_IMPOSE,EPSI_IMPOSE,SIGM_INIT,
           if args['NB_VARI_TABLE'] != None:  
              motscles['NB_VARI_TABLE']  = args['NB_VARI_TABLE']
  
+       if args.has_key('MATR_C1'):
+          if args['MATR_C1'] != None:  
+          #   motscles['MATR_C1']  = MATR_C1.List_F()
+             motscles['MATR_C1']  = args['MATR_C1'].List_F()
+ 
+       if args.has_key('MATR_C2'):
+          if args['MATR_C2'] != None:  
+             motscles['MATR_C2']  = args['MATR_C2'].List_F()
+ 
+       if args.has_key('VECT_IMPO'):
+          if args['VECT_IMPO'] != None:  
+             motscles['VECT_IMPO']  = args['VECT_IMPO'].List_F()
+ 
+       if   ARCHIVAGE   :
+         motscles['ARCHIVAGE']   = ARCHIVAGE.List_F()
+
        self.DeclareOut('REPONSE',self.sd)
        __REP1 = CALC_POINT_MAT(INFO=INFO,MATER=MATER,ANGLE=ANGLE,**motscles)
  
@@ -420,26 +441,33 @@ def simu_point_mat_ops(self, MATER, INCREMENT,SIGM_IMPOSE,EPSI_IMPOSE,SIGM_INIT,
              lvarc  = args['AFFE_VARC'].List_F()
              nbvarc=len(lvarc)
              for ivarc in range(nbvarc) :
-                  typech = 'NOEU_' + str(lvarc[ivarc]['NOM_VARC']) + '_F'
                   dico={}
-                  __CHVARC=CREA_CHAMP(TYPE_CHAM=typech,
-                                     OPERATION='AFFE', 
-                                     MAILLAGE=__MA, 
-                                     AFFE=_F(MAILLE='VOLUME', 
+                  typech = 'NOEU_' + str(lvarc[ivarc]['NOM_VARC']) + '_R'
+                  labsc=lvarc[ivarc]['VALE_FONC'].Absc()
+                  lordo=lvarc[ivarc]['VALE_FONC'].Ordo()
+                  l_affe_cham=[]
+                  __CHV=[None]*len(labsc)
+                  for it,time in enumerate(labsc):
+                      __CHV[it]=CREA_CHAMP(TYPE_CHAM=typech,
+                                     OPERATION='AFFE',
+                                     MAILLAGE=__MA,
+                                     AFFE=_F(MAILLE='VOLUME',
                                              NOM_CMP=lvarc[ivarc]['NOM_VARC'],
-                                             VALE_F=lvarc[ivarc]['VALE_FONC'],
+                                             VALE=lordo[it],
                                             ),
-                                     ), 
-                  __LIST2  = INCREMENT.List_F()[0]['LIST_INST']
-                  __TEMP=CREA_RESU(OPERATION='AFFE',TYPE_RESU='EVOL_THER',NOM_CHAM='TEMP',
-                                   AFFE = _F(CHAM_GD = __CHVARC,LIST_INST = __LIST2,),
-                                   )
+                                     ),
+                      dicoch={}
+                      dicoch["CHAM_GD"]=__CHV[it]
+                      dicoch["INST"]=time
+                      l_affe_cham.append(dicoch)
+                  __EVOV=CREA_RESU(OPERATION='AFFE',TYPE_RESU='EVOL_VARC',NOM_CHAM=str(lvarc[ivarc]['NOM_VARC']),
+                               AFFE = l_affe_cham)  
                   dico["MAILLE"]='VOLUME'
-                  dico["EVOL"]=__TEMP
+                  dico["EVOL"]=__EVOV
                   dico["NOM_VARC"]=lvarc[ivarc]['NOM_VARC']
                   if lvarc[ivarc]['VALE_REF'] != None:
                      dico["VALE_REF"]=lvarc[ivarc]['VALE_REF']
-             mcvarc.append(dico)
+                  mcvarc.append(dico)
 #      -- Materiau et modele
       if len(mcvarc) > 0 :
          __CHMAT=AFFE_MATERIAU(MAILLAGE=__MA,AFFE = _F(MAILLE='VOLUME',MATER=MATER),
@@ -475,6 +503,8 @@ def simu_point_mat_ops(self, MATER, INCREMENT,SIGM_IMPOSE,EPSI_IMPOSE,SIGM_INIT,
           lnomneu=[]
           lnomvar=[]
           VARINI=VARI_INIT[0].cree_dict_valeurs(VARI_INIT[0].mc_liste)
+          if (not is_enum(VARINI['VALE'])) :
+              VARINI['VALE'] = [VARINI['VALE'],]
           nbvari=len(VARINI['VALE'])
           for i in range(nbvari):
               lnomneu.append('X'+str(i+1))
@@ -601,43 +631,48 @@ def simu_point_mat_ops(self, MATER, INCREMENT,SIGM_IMPOSE,EPSI_IMPOSE,SIGM_INIT,
                                  EXCIT = l_char,**motscles)
 
 
+      if lcomp['DEFORMATION'] != 'PETIT' :
+         nomepsi='EPSG_ELNO'
+      else :
+         nomepsi='EPSI_ELNO'
+         
       __EVOL1 = CALC_ELEM(reuse = __EVOL1,RESULTAT = __EVOL1,
-        OPTION = ('SIEF_ELNO_ELGA','EPSI_ELNO_DEPL','VARI_ELNO_ELGA'))
+        OPTION = ('SIEF_ELNO',nomepsi,'VARI_ELNO'))
  
       if MODELISATION=="3D":
           angles=(ANGLE,0,0)
           __EVOL=MODI_REPERE(RESULTAT=__EVOL1, MODI_CHAM=(
               _F(NOM_CHAM='DEPL',NOM_CMP=('DX','DY','DZ'),TYPE_CHAM='VECT_3D',),
-              _F(NOM_CHAM='SIEF_ELNO_ELGA',NOM_CMP=('SIXX','SIYY','SIZZ','SIXY','SIXZ','SIYZ'),TYPE_CHAM='TENS_3D',),
-              _F(NOM_CHAM='EPSI_ELNO_DEPL',NOM_CMP=('EPXX','EPYY','EPZZ','EPXY','EPXZ','EPYZ'),TYPE_CHAM='TENS_3D',),
+              _F(NOM_CHAM='SIEF_ELNO',NOM_CMP=('SIXX','SIYY','SIZZ','SIXY','SIXZ','SIYZ'),TYPE_CHAM='TENS_3D',),
+              _F(NOM_CHAM=nomepsi,NOM_CMP=('EPXX','EPYY','EPZZ','EPXY','EPXZ','EPYZ'),TYPE_CHAM='TENS_3D',),
                                   ),
                      DEFI_REPERE=_F(REPERE='UTILISATEUR',ANGL_NAUT=angles),);
       else :
           angles=ANGLE
           __EVOL=MODI_REPERE(RESULTAT=__EVOL1,MODI_CHAM=(
                      _F(NOM_CHAM='DEPL',NOM_CMP=('DX','DY'),TYPE_CHAM='VECT_2D',),
-                     _F(NOM_CHAM='SIEF_ELNO_ELGA',NOM_CMP=('SIXX','SIYY','SIZZ','SIXY'),TYPE_CHAM='TENS_2D',),
-                     _F(NOM_CHAM='EPSI_ELNO_DEPL',NOM_CMP=('EPXX','EPYY','EPZZ','EPXY'),TYPE_CHAM='TENS_2D',),
+                     _F(NOM_CHAM='SIEF_ELNO',NOM_CMP=('SIXX','SIYY','SIZZ','SIXY'),TYPE_CHAM='TENS_2D',),
+                     _F(NOM_CHAM=nomepsi,NOM_CMP=('EPXX','EPYY','EPZZ','EPXY'),TYPE_CHAM='TENS_2D',),
                                   ),
                      DEFI_REPERE=_F(REPERE='UTILISATEUR',ANGL_NAUT=angles),);
  
 #     -- Recuperation des courbes
 
       __REP_VARI = POST_RELEVE_T(ACTION = (
-          _F(INTITULE='VARI_INT',RESULTAT=__EVOL1,NOM_CHAM='VARI_ELNO_ELGA',
+          _F(INTITULE='VARI_INT',RESULTAT=__EVOL1,NOM_CHAM='VARI_ELNO',
             TOUT_CMP='OUI',OPERATION='EXTRACTION',NOEUD='P0'),))
 
  
       __REP_EPSI = POST_RELEVE_T(ACTION = (
-          _F(INTITULE='EPSILON',RESULTAT=__EVOL,NOM_CHAM='EPSI_ELNO_DEPL',
+          _F(INTITULE='EPSILON',RESULTAT=__EVOL,NOM_CHAM=nomepsi,
             TOUT_CMP='OUI',OPERATION='EXTRACTION',NOEUD     = 'P0'),))
 
       __REP_SIGM = POST_RELEVE_T(ACTION = (
-          _F(INTITULE  = 'SIGMA',RESULTAT  =  __EVOL,NOM_CHAM  = 'SIEF_ELNO_ELGA',
+          _F(INTITULE  = 'SIGMA',RESULTAT  =  __EVOL,NOM_CHAM  = 'SIEF_ELNO',
             TOUT_CMP  = 'OUI',OPERATION = 'EXTRACTION',NOEUD     = 'P0'),))
  
       __REP_INV = POST_RELEVE_T(ACTION = (
-          _F(INTITULE  = 'INV',RESULTAT  =  __EVOL,NOM_CHAM  = 'SIEF_ELNO_ELGA',
+          _F(INTITULE  = 'INV',RESULTAT  =  __EVOL,NOM_CHAM  = 'SIEF_ELNO',
             INVARIANT  = 'OUI',OPERATION = 'EXTRACTION',NOEUD     = 'P0'),))
  
       __REP_INV=CALC_TABLE( TABLE=__REP_INV,reuse=__REP_INV,

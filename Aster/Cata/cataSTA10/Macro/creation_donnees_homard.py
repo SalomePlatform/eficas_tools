@@ -1,30 +1,30 @@
-#@ MODIF creation_donnees_homard Macro  DATE 15/03/2010   AUTEUR GNICOLAS G.NICOLAS 
+#@ MODIF creation_donnees_homard Macro  DATE 11/05/2011   AUTEUR SELLENET N.SELLENET 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2006  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
-# (AT YOUR OPTION) ANY LATER VERSION.                                   
-#                                                                       
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
-#                                                                       
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
+#
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 # ======================================================================
 # RESPONSABLE GNICOLAS G.NICOLAS
 """
 Cette classe crée le fichier de configuration permettant de lancer HOMARD
 depuis Code_Aster.
 """
-__revision__ = "V1.5"
+__revision__ = "V1.10"
 __all__ = [ ]
- 
+
 import os
 import os.path
 from types import ListType, TupleType
@@ -34,7 +34,7 @@ try:
   from Utilitai.Utmess import   UTMESS
 except ImportError:
   def UTMESS(code, idmess, valk=(), vali=(), valr=()):
-    """Clone de utmess si on ne reussit pas é le charger
+    """Clone de utmess si on ne reussit pas e le charger
     """
     fmt = '\n <%s> <%s> %s %s %s\n\n'
     print fmt % (code, idmess, valk, vali, valr)
@@ -45,12 +45,12 @@ class creation_donnees_homard:
       Ce sont :
       . le fichier de configuration
       . le fichier des données dans le cas d'information
-   
-   Arguments (stockés en tant qu'attribut) :
+
+   Arguments (stockes en tant qu'attribut) :
       . nom_macro : nom de la macro-commande qui appelle :
                       'MACR_ADAP_MAIL' pour une adaptation
                       'MACR_INFO_MAIL' pour une information sur un maillage
-      . mots_cles : mots-clés de la macro-commande
+      . mots_cles : mots-cles de la macro-commande
       . dico_configuration : dictionnaire des options
 
    Attributs :
@@ -62,10 +62,10 @@ class creation_donnees_homard:
    """
 # ------------------------------------------------------------------------------
   def __init__(self, nom_macro, mots_cles, dico_configuration ) :
-    """Construction + valeurs par défaut des attributs
+    """Construction + valeurs par defaut des attributs
     """
 #
-# 1. Vérification de la macro qui appelle
+# 1. Verification de la macro qui appelle
 #
     d_aux = {}
     d_aux["MACR_ADAP_MAIL"] = ( "ADAP", "ADAPTATION" )
@@ -76,7 +76,7 @@ class creation_donnees_homard:
     else :
       UTMESS("F", 'HOMARD0_1')
 #
-# 2. Données générales de cette initialisation
+# 2. Données generales de cette initialisation
 #
 #gn    for mot_cle in mots_cles.keys() :
 #gn      print "mots_cles[", mot_cle, "] = ", mots_cles[mot_cle]
@@ -105,13 +105,13 @@ class creation_donnees_homard:
 # ------------------------------------------------------------------------------
   def int_to_str2 (self, entier) :
     """
-    Transforme un entier compris entre 0 et 99 en une chaine sur deux caractéres
+    Transforme un entier positif en une chaine d'au moins deux caracteres
     """
-#    print "\nArguments a l'entree de", __name__, ":", entier
+#    print "\nArguments à l'entree de", __name__, ":", entier
 #
-    try:
+    if type(entier) == type(0) :
       la_chaine = '%02d' % entier
-    except TypeError:
+    else :
       la_chaine = None
 #
     return la_chaine
@@ -124,14 +124,14 @@ class creation_donnees_homard:
     return
 # ------------------------------------------------------------------------------
   def creation_configuration (self) :
-    """Crée les données nécessaires é la configuration
+    """Cree les données necessaires à la configuration
     """
 #
     message_erreur = None
 #
     while message_erreur is None :
 #
-#     1. Les chaines liées aux numéros d'itération
+#     1. Les chaines liées aux numeros d'iteration
 #
       if self.mode_homard == "ADAP" :
         niter = self.dico_configuration["niter"]
@@ -169,7 +169,7 @@ class creation_donnees_homard:
 #
 #     4. Le type de bilan : il faut convertir la donnée textuelle en un entier,
 #        produit de nombres premiers.
-#        Si rien n'est demandé, on met 1.
+#        Si rien n'est demande, on met 1.
 #
       aux = 1
       dico_aux = {}
@@ -248,7 +248,7 @@ class creation_donnees_homard:
               self.critere_raffinement = (d_aux[mot_cle][0], aux)
 #gn          print "... self.critere_raffinement = ", self.critere_raffinement
 #
-#     7.3. L'éventuel seuil de déraffinement
+#     7.3. L'éventuel seuil de deraffinement
 #
         if self.TypeDera == "libre" :
           d_aux = {}
@@ -262,17 +262,29 @@ class creation_donnees_homard:
               self.critere_deraffinement = (d_aux[mot_cle][0], aux)
 #gn          print "... self.critere_deraffinement = ", self.critere_deraffinement
 #
-#     7.4. Les niveaux extremes
+#     7.4. Les profondeurs extremes de raffinement/deraffinement
 #
-        for mot_cle in [ "NIVE_MIN", "NIVE_MAX" ] :
+        saux = " "
+        for mot_cle in [ "NIVE_MIN", "NIVE_MAX", "DIAM_MIN" ] :
           if self.mots_cles.has_key(mot_cle) :
             if self.mots_cles[mot_cle] is not None :
               if mot_cle == "NIVE_MIN" :
                 aux = "NiveauMi"
-              else :
+              elif mot_cle == "NIVE_MAX" :
                 aux = "NiveauMa"
+              else :
+                aux = "DiametMi"
               self.niveau.append((aux, self.mots_cles[mot_cle]))
-        if len(self.niveau) == 2 :
+              saux += aux
+#
+        if ( "DiametMi" in saux ) :
+#gn          print self.mots_cles["DIAM_MIN"]
+          if self.mots_cles["DIAM_MIN"] < 0 :
+            message_erreur = "Le diametre mini doit etre strictement positif. "+\
+                             "La valeur "+str(self.mots_cles["DIAM_MIN"])+" est incorrecte."
+            break
+#
+        if ( ( "NiveauMi" in saux ) and ( "NiveauMa" in saux ) ) :
 #gn          print self.mots_cles["NIVE_MIN"]
 #gn          print self.mots_cles["NIVE_MAX"]
           if self.mots_cles["NIVE_MIN"] >= self.mots_cles["NIVE_MAX"] :
@@ -330,7 +342,7 @@ class creation_donnees_homard:
     return self.fic_homard_niter, self.fic_homard_niterp1
 # ------------------------------------------------------------------------------
   def ouvre_fichier (self, nomfic_local) :
-    """Ouvre en écriture un fichier aprés l'avoir éventuellement détruit
+    """Ouvre en ecriture un fichier apres l'avoir eventuellement detruit
     """
     codret_partiel = [0]
 ###    print nomfic_local
@@ -352,7 +364,7 @@ class creation_donnees_homard:
   def ecrire_ligne_configuration_0 (self, commentaire) :
     """Ecrit une ligne de commentaires du fichier de configuration
    Arguments :
-      . commentaire : le commentaire é écrire
+      . commentaire : le commentaire e ecrire
     """
 #
     ligne = "#\n"
@@ -380,7 +392,7 @@ class creation_donnees_homard:
     """Ecrit une ligne du fichier de configuration dans le cas : motcle + valeur
    Arguments :
       . motcle : le mot-cle HOMARD a ecrire
-      . valeur : la valeur associee
+      . valeur : la valeur associée
     """
 #
     ligne = motcle + " " + str(valeur) + "\n"
@@ -392,7 +404,7 @@ class creation_donnees_homard:
     """Ecrit une ligne du fichier de configuration dans le cas : motcle + valeur1 + valeur2
    Arguments :
       . motcle : le mot-cle HOMARD a ecrire
-      . valeur : la valeur associee
+      . valeur : la valeur associée
     """
 #
     ligne = motcle + " " + str(valeur1) + " " + str(valeur2) + "\n"
@@ -411,7 +423,7 @@ class creation_donnees_homard:
 #
       fichier, nomfic_global = self.ouvre_fichier(self.Nom_Fichier_Configuration)
 #
-#     2. Généralités
+#     2. Generalites
 #
       self.ecrire_ligne_configuration_0("Generalites")
       self.ecrire_ligne_configuration_2("ModeHOMA", self.ModeHOMA)
@@ -430,7 +442,7 @@ class creation_donnees_homard:
         self.ecrire_ligne_configuration_2("CCNoMNP1", self.CCNoMNP1)
         self.ecrire_ligne_configuration_2("CCMaiNP1", self.dico_configuration["Fichier_HOMARD_vers_ASTER"])
 #
-      self.ecrire_ligne_configuration_0("Le répertoire des fichiers de bilan")
+      self.ecrire_ligne_configuration_0("Le repertoire des fichiers de bilan")
       self.ecrire_ligne_configuration_2("RepeInfo", self.dico_configuration["Rep_Calc_HOMARD_global"])
 #
 #     4. Les fichiers HOMARD
@@ -439,10 +451,11 @@ class creation_donnees_homard:
       if self.mode_homard == "ADAP" :
         self.ecrire_ligne_configuration_3("HOMaiN__", "M_"+self.str_niter  , self.fic_homard_niter )
         self.ecrire_ligne_configuration_3("HOMaiNP1", "M_"+self.str_niterp1, self.fic_homard_niterp1)
-        aux = "oui"
-      else :
-        aux = "non"
-      self.ecrire_ligne_configuration_2("EcriFiHO", aux)
+        if ( self.dico_configuration["niter"] == 0 ) :
+          aux = "TOUT"
+        else :
+          aux = "NP1"
+        self.ecrire_ligne_configuration_2("EcriFiHO", aux)
 #
 #     5. Le pilotage de l'adaptation
 #
@@ -465,16 +478,17 @@ class creation_donnees_homard:
 #
           self.ecrire_ligne_configuration_0("L'indicateur d'erreur")
           self.ecrire_ligne_configuration_2("CCIndica", self.dico_configuration["Fichier_ASTER_vers_HOMARD"])
-          self.ecrire_ligne_configuration_2("CCNoChaI", self.dico_configuration["Indicateur"]["NOM_MED"])
-          for saux in self.dico_configuration["Indicateur"]["COMPOSANTE"] :
-            self.ecrire_ligne_configuration_2("CCCoChaI", saux)
+          self.ecrire_ligne_configuration_2("CCNoChaI", self.dico_configuration["Indicateur"]["NOM_CHAM_MED"])
+          if self.dico_configuration["Indicateur"].has_key("COMPOSANTE") :
+            for saux in self.dico_configuration["Indicateur"]["COMPOSANTE"] :
+              self.ecrire_ligne_configuration_2("CCCoChaI", saux)
           if self.dico_configuration["Indicateur"].has_key("NUME_ORDRE") :
             self.ecrire_ligne_configuration_2("CCNumOrI", self.dico_configuration["Indicateur"]["NUME_ORDRE"])
             self.ecrire_ligne_configuration_2("CCNumPTI", self.dico_configuration["Indicateur"]["NUME_ORDRE"])
-          if self.mots_cles.has_key("TYPE_VALEUR_INDICA") :
-            self.ecrire_ligne_configuration_2("CCUsCmpI", self.mots_cles["TYPE_VALEUR_INDICA"])
+          if self.mots_cles.has_key("USAGE_CMP") :
+            self.ecrire_ligne_configuration_2("CCUsCmpI", self.mots_cles["USAGE_CMP"])
 #
-#     5.3. Les éventuelles zones de raffinement
+#     5.3. Les eventuelles zones de raffinement
 #
         if self.dico_configuration.has_key("Zones_raffinement") :
           dico_zone = {}
@@ -509,25 +523,25 @@ class creation_donnees_homard:
           iaux = 0
           for zone in self.dico_configuration["Zones_raffinement"] :
             iaux = iaux + 1
-            self.ecrire_ligne_configuration_0("Zone de raffinement numéro "+str(iaux))
+            self.ecrire_ligne_configuration_0("Zone de raffinement numero "+str(iaux))
             jaux = dico_zone[zone["TYPE"]]
             self.ecrire_ligne_configuration_3(dico_zone["TYPE"], iaux, jaux)
             for aux in l_aux :
               if zone.has_key(aux) :
                 self.ecrire_ligne_configuration_3(dico_zone[aux], iaux, zone[aux])
 #
-#     5.4. Les niveaux extremes
+#     5.4. Les profondeurs extremes de raffinement/deraffinement
 #
         for aux in self.niveau :
           self.ecrire_ligne_configuration_2(aux[0], aux[1])
 #
 #     5.5. L'usage de l'indicateur
 #
-        if self.mots_cles.has_key("TYPE_OPER_INDICA") :
-          if self.mots_cles["TYPE_OPER_INDICA"] is not None :
-            self.ecrire_ligne_configuration_2("CCModeFI", self.mots_cles["TYPE_OPER_INDICA"])
+        if self.mots_cles.has_key("USAGE_CHAMP") :
+          if self.mots_cles["USAGE_CHAMP"] is not None :
+            self.ecrire_ligne_configuration_2("CCModeFI", self.mots_cles["USAGE_CHAMP"])
 #
-#     5.6. Les éventuels groupes de filtrage du raffinement/deraffinement
+#     5.6. Les eventuels groupes de filtrage du raffinement/deraffinement
 #
         for cle in ( "GROUP_MA", "GROUP_NO" ) :
           if self.mots_cles.has_key(cle) :
@@ -544,40 +558,41 @@ class creation_donnees_homard:
           self.ecrire_ligne_configuration_2("ModDegre", self.ModDegre)
           self.ecrire_ligne_configuration_2("CreJoint", self.CreJoint)
 #
-#     5.8. L'éventuel maillage annexe
+#     5.8. L'eventuel maillage annexe
 #
         if self.CCMaiAnn is not None :
-          self.ecrire_ligne_configuration_0("Maillage d'autre degré")
+          self.ecrire_ligne_configuration_0("Maillage d'autre degre")
           self.ecrire_ligne_configuration_2("ModDegre", "oui")
           self.ecrire_ligne_configuration_2("CCNoMAnn", self.CCMaiAnn)
           self.ecrire_ligne_configuration_2("CCMaiAnn", self.dico_configuration["Fichier_HOMARD_vers_ASTER"])
 #
-#     6. Les éventuels champs à mettre à jour
+#     6. Les eventuels champs a mettre a jour
 #
       if self.dico_configuration.has_key("Champs") :
-        self.ecrire_ligne_configuration_0("Champs à mettre à jour")
+        self.ecrire_ligne_configuration_0("Champs a mettre e jour")
         self.ecrire_ligne_configuration_2("CCSolN__", self.dico_configuration["Fichier_ASTER_vers_HOMARD"])
         self.ecrire_ligne_configuration_2("CCSolNP1", self.dico_configuration["Fichier_HOMARD_vers_ASTER"])
         iaux = 0
         for maj_champ in self.dico_configuration["Champs"] :
           iaux = iaux + 1
-          self.ecrire_ligne_configuration_0("Mise à jour du champ numéro "+str(iaux))
-          self.ecrire_ligne_configuration_3("CCChaNom", iaux, maj_champ["NOM_MED"])
+          self.ecrire_ligne_configuration_0("Mise a jour du champ numero "+str(iaux))
+          self.ecrire_ligne_configuration_3("CCChaNom", iaux, maj_champ["NOM_CHAM_MED"])
+          self.ecrire_ligne_configuration_3("CCChaTIn", iaux, maj_champ["TYPE_MAJ"])
           if maj_champ.has_key("NUME_ORDRE") :
             self.ecrire_ligne_configuration_3("CCChaNuO", iaux, maj_champ["NUME_ORDRE"])
             self.ecrire_ligne_configuration_3("CCChaPdT", iaux, maj_champ["NUME_ORDRE"])
           elif maj_champ.has_key("INST") :
             self.ecrire_ligne_configuration_3("CCChaIns", iaux, maj_champ["INST"])
 #
-#     7. L'éventuel suivi de frontière
+#     7. L'eventuel suivi de frontiere
 #
       SuivFron = 1
 #
-#     7.1. A partir d'un maillage de la frontière
+#     7.1. A partir d'un maillage de la frontiere
 #
       if self.dico_configuration.has_key("NOM_MED_MAILLAGE_FRONTIERE") :
         SuivFron = SuivFron * 2
-        self.ecrire_ligne_configuration_0("Maillage de frontière")
+        self.ecrire_ligne_configuration_0("Maillage de frontiere")
         self.ecrire_ligne_configuration_2("CCFronti", self.dico_configuration["Fichier_ASTER_vers_HOMARD"])
         self.ecrire_ligne_configuration_2("CCNoMFro", self.dico_configuration["NOM_MED_MAILLAGE_FRONTIERE"])
         if self.mots_cles.has_key("GROUP_MA_FRONT") :
@@ -593,6 +608,7 @@ class creation_donnees_homard:
       if self.dico_configuration.has_key("Frontiere_analytique") :
         SuivFron = SuivFron * 3
         dico_frontiere = {}
+        dico_frontiere["NOM"] = "FANom"
         dico_frontiere["RAYON"] = "FARayon"
         dico_frontiere["X_CENTRE"] = "FAXCen"
         dico_frontiere["Y_CENTRE"] = "FAYCen"
@@ -601,32 +617,37 @@ class creation_donnees_homard:
         dico_frontiere["Y_AXE"] = "FAYAxe"
         dico_frontiere["Z_AXE"] = "FAZAxe"
         l_aux = dico_frontiere.keys()
-        dico_frontiere["GROUP_MA"] = "FAGroupe"
+        dico_frontiere["FGNomGro"] = "FGNomGro"
+        dico_frontiere["FGNomFro"] = "FGNomFro"
         dico_frontiere["TYPE"] = "FAType"
         dico_frontiere["CYLINDRE"] = 1
         dico_frontiere["SPHERE"] = 2
         iaux = 0
+        kaux = 0
         for frontiere in self.dico_configuration["Frontiere_analytique"] :
+          iaux += 1
+          self.ecrire_ligne_configuration_0("Description de la frontiere analytique numero "+str(iaux))
+          jaux = dico_frontiere[frontiere["TYPE"]]
+          self.ecrire_ligne_configuration_3(dico_frontiere["TYPE"], iaux, jaux)
+          for aux in l_aux :
+            if frontiere.has_key(aux) :
+              self.ecrire_ligne_configuration_3(dico_frontiere[aux], iaux, frontiere[aux])
+          self.ecrire_ligne_configuration_0("Lien de la frontiere analytique numero "+str(iaux)+" avec les groupes")
           if not type(frontiere["GROUP_MA"]) in EnumTypes :
             lt_aux = [ frontiere["GROUP_MA"] ]
           else :
             lt_aux = frontiere["GROUP_MA"]
           for group_ma in lt_aux :
-            iaux = iaux + 1
-            self.ecrire_ligne_configuration_0("Description de la frontiere analytique numero "+str(iaux))
-            jaux = dico_frontiere[frontiere["TYPE"]]
-            self.ecrire_ligne_configuration_3(dico_frontiere["TYPE"], iaux, jaux)
-            self.ecrire_ligne_configuration_3(dico_frontiere["GROUP_MA"], iaux, group_ma)
-            for aux in l_aux :
-              if frontiere.has_key(aux) :
-                self.ecrire_ligne_configuration_3(dico_frontiere[aux], iaux, frontiere[aux])
+            kaux += 1
+            self.ecrire_ligne_configuration_3(dico_frontiere["FGNomGro"], kaux, group_ma)
+            self.ecrire_ligne_configuration_3(dico_frontiere["FGNomFro"], kaux, frontiere["NOM"])
 #
 #     7.3. Activation de la fonction
 #
       if ( self.dico_configuration.has_key("NOM_MED_MAILLAGE_FRONTIERE") or self.dico_configuration.has_key("Frontiere_analytique") ) :
         self.ecrire_ligne_configuration_2("SuivFron", SuivFron)
 #
-#     8. Options particuliéres
+#     8. Options particulieres
 #
       self.ecrire_ligne_configuration_0("Autres options")
       if self.mots_cles.has_key("LANGUE") :
@@ -635,7 +656,7 @@ class creation_donnees_homard:
         self.ecrire_ligne_configuration_2("MessInfo", self.MessInfo)
       if self.dico_configuration["version_perso"] :
         VERSION_HOMARD = self.dico_configuration["VERSION_HOMARD"]
-        self.ecrire_ligne_configuration_2("DicoOSGM", "$HOMARD_USER/"+VERSION_HOMARD+"/CONFIG/typobj.stu")
+        self.ecrire_ligne_configuration_2("DicoOSGM", "$HOMARD_USER/"+VERSION_HOMARD+"/src/CONFIG/typobj.stu")
 #
 #     9. L'usage des mailles incompatibles avec HOMARD
 #
@@ -643,7 +664,7 @@ class creation_donnees_homard:
         self.ecrire_ligne_configuration_0("Les mailles incompatibles avec HOMARD")
         self.ecrire_ligne_configuration_2("TypeElem", self.mailles_incompatibles)
 #
-#     10. L'éventuel complement
+#     10. L'eventuel complement
 #
       if self.dico_configuration.has_key("fichier_conf_suppl") :
         nomfic = self.dico_configuration["fichier_conf_suppl"]
@@ -668,7 +689,7 @@ class creation_donnees_homard:
     return
 # ------------------------------------------------------------------------------
   def ecrire_fichier_donnees (self) :
-    """Ecrit le fichier des donnees dans le cas d'une demande d'information
+    """Ecrit le fichier des données dans le cas d'une demande d'information
     """
     message_erreur = None
 #

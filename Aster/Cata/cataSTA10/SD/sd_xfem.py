@@ -1,8 +1,8 @@
-#@ MODIF sd_xfem SD  DATE 11/01/2010   AUTEUR COLOMBO D.COLOMBO 
+#@ MODIF sd_xfem SD  DATE 08/03/2011   AUTEUR MASSIN P.MASSIN 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2007  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -24,6 +24,7 @@ from SD.sd_cham_no   import sd_cham_no
 from SD.sd_cham_elem import sd_cham_elem
 from SD.sd_carte     import sd_carte
 from SD.sd_util      import *
+from SD.sd_l_table import sd_l_table
 
 
 
@@ -35,6 +36,7 @@ class sd_fiss_xfem(AsBase):
     nomj = SDNom(fin=8)
 
     INFO   = AsVK16(lonmax=2,)   # info discontinuite
+    MODELE = AsVK8(lonmax=1,)
 
 # I.1) objets relatifs aux level sets
 
@@ -47,6 +49,14 @@ class sd_fiss_xfem(AsBase):
     BASEFOND        = Facultatif(AsVR())
     FONDMULT        = Facultatif(AsVI())
     CARAFOND        = Facultatif(AsVR(lonmax=12,))
+    JONFISS = Facultatif(AsVK8())
+    JONCOEF = Facultatif(AsVI())
+#   objets relatifs a la grille auxiliaire
+    GRILLE_MODELE  = Facultatif(AsVK8(SDNom(nomj='.GRI.MODELE'),lonmax=1,))
+    GRILLE_LNNO    = Facultatif(sd_cham_no(SDNom(nomj='.GRI.LNNO')))
+    GRILLE_LTNO    = Facultatif(sd_cham_no(SDNom(nomj='.GRI.LTNO')))
+    GRILLE_GRLNNO  = Facultatif(sd_cham_no(SDNom(nomj='.GRI.GRLNNO')))
+    GRILLE_GRLTNO  = Facultatif(sd_cham_no(SDNom(nomj='.GRI.GRLTNO')))
 
 # I.2) objets relatifs a l'enrichissement
 
@@ -59,15 +69,14 @@ class sd_fiss_xfem(AsBase):
     MAILFISS_HEAV  = Facultatif(AsVI(SDNom(nomj='.MAILFISS  .HEAV')))
     MAILFISS_HECT  = Facultatif(AsVI(SDNom(nomj='.MAILFISS  .HECT')))
     MAILFISS_INDIC = AsVI(SDNom(nomj='.MAILFISS .INDIC'), lonmax=6, )
-    LISNOH         = Facultatif(AsVI())
 
 # I.3) objets relatifs a la propagation
 
     PRO_MES_EL  = Facultatif(sd_cham_elem(SDNom(nomj='.PRO.MES_EL')))
     PRO_NORMAL  = Facultatif(sd_cham_elem(SDNom(nomj='.PRO.NORMAL')))
+#   objets relatifs a la localisation du domaine de calcul
     PRO_RAYON_TORE  = Facultatif(AsVR(SDNom(nomj='.PRO.RAYON_TORE'),lonmax=1,))
     PRO_NOEUD_TORE  = Facultatif(AsVL(SDNom(nomj='.PRO.NOEUD_TORE')))
-    PRO_MOD_GRILLE  = Facultatif(AsVK8(SDNom(nomj='.PRO.MOD_GRILLE'),lonmax=1,))
 
 # I.4) objets relatifs au contact
 
@@ -75,8 +84,10 @@ class sd_fiss_xfem(AsBase):
     LISCO  = Facultatif(AsVR(SDNom(nomj='.LISCO')))
     LISEQ  = Facultatif(AsVI(SDNom(nomj='.LISEQ')))
     LISRL  = Facultatif(AsVI(SDNom(nomj='.LISRL')))
-    LISUP  = Facultatif(AsVI(SDNom(nomj='.LISUP')))    
 
+# I.4) objets relatifs au contact
+    # une sd_modele peut avoir une "sd_l_table" contenant des grandeurs caractéristiques de l'étude :
+    lt = Facultatif(sd_l_table(SDNom(nomj='')))
 
 # 1.5) verifications d'existence :
 
@@ -85,7 +96,8 @@ class sd_fiss_xfem(AsBase):
         sdu_ensemble((self.LISRL, self.LISCO))
         sdu_ensemble((self.PRO_MES_EL.CELD, self.PRO_NORMAL.CELD))
         sdu_ensemble((self.PRO_RAYON_TORE, self.PRO_NOEUD_TORE))
-
+        sdu_ensemble((self.GRILLE_MODELE, self.GRILLE_LNNO.DESC, self.GRILLE_GRLNNO.DESC))
+        sdu_ensemble((self.GRILLE_LTNO.DESC, self.GRILLE_GRLTNO.DESC))
 
 #-------------------------------
 #       II. sd modele
@@ -101,7 +113,9 @@ class sd_modele_xfem(AsBase):
     TOPOSE_HEA  = sd_cham_elem(SDNom(nomj='.TOPOSE.HEA'))
     TOPOSE_LON  = sd_cham_elem(SDNom(nomj='.TOPOSE.LON'))
     TOPOSE_AIN  = sd_cham_elem(SDNom(nomj='.TOPOSE.AIN'))
+    TOPOSE_PMI  = sd_cham_elem(SDNom(nomj='.TOPOSE.PMI'))
     TOPOSE_CRI  = Facultatif(sd_cham_elem(SDNom(nomj='.TOPOSE.CRI')))
+    
 
 # II.2) objets relatifs aux facettes de contact
 
@@ -118,10 +132,13 @@ class sd_modele_xfem(AsBase):
 
 # II.3) objets concatenes relatifs aux level sets
 
-    LNNO   = sd_cham_no()
-    LTNO   = sd_cham_no()
-    BASLOC = sd_cham_no()
-    STNO   = sd_cham_no()
+    LNNO   = sd_cham_elem(SDNom(nomj='.LNNO'))
+    LTNO   = sd_cham_elem(SDNom(nomj='.LTNO'))
+    BASLOC = sd_cham_elem(SDNom(nomj='.BASLOC'))
+    STNO   = sd_cham_elem(SDNom(nomj='.STNO'))
+    FISSNO = sd_cham_elem(SDNom(nomj='.FISSNO'))
+    NOXFEM = sd_cham_no()
+    LISNOH = Facultatif(AsVI())
 
 # II.4) autres objets
 

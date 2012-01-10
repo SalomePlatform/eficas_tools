@@ -1,0 +1,17 @@
+
+cond2=MATERIAU(TYPE='CONDUCTOR',
+               CONDUCTIVITY=_F(LAW=LINEAR,
+                               HOMOGENEOUS='TRUE',
+                               VALUE_REAL=2.3,),
+               PERMEABILITY=_F(LAW=LINEAR,
+                               VALUE_REAL=5,),);
+
+LINEAR=L_LAW();
+
+cond1=MATERIAU(TYPE='CONDUCTOR',
+               CONDUCTIVITY=_F(LAW=LINEAR,
+                               HOMOGENEOUS='TRUE',
+                               VALUE_REAL=2,),
+               PERMEABILITY=_F(LAW=LINEAR,
+                               VALUE_COMPLEX=('RI',2.0,3.0,),),);
+#CHECKSUM:ffb8e67edcb117fb4d6872eb08de66cf  -:FIN CHECKSUM

@@ -1,24 +1,24 @@
-#@ MODIF N_JDC Noyau  DATE 16/11/2009   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_JDC Noyau  DATE 25/10/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 # RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
-# (AT YOUR OPTION) ANY LATER VERSION.                                 
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
-#                                                                       
-#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+#
+#
 # ======================================================================
 
 
@@ -35,8 +35,7 @@ import N_OBJECT
 import N_CR
 from N_Exception import AsException
 from N_ASSD import ASSD
-
-
+from N_info import message, SUPERV
 
 
 MemoryErrorMsg = """MemoryError :
@@ -87,19 +86,20 @@ NONE = None
       self.procedure=procedure
       self.definition = definition
       self.cata=cata
-      if type(self.cata) != types.TupleType and cata != None: 
+      if type(self.cata) != types.TupleType and cata != None:
          self.cata=(self.cata,)
+      self._build_reserved_kw_list()
       self.cata_ordonne_dico=cata_ord_dico
       self.nom = nom
       self.appli=appli
       self.parent=parent
       self.context_ini=context_ini
-      # On conserve les arguments supplémentaires. Il est possible de passer 
-      # des informations globales au JDC par ce moyen. Il pourrait etre plus 
-      # sur de mettre en place le mecanisme des mots-cles pour verifier la 
+      # On conserve les arguments supplémentaires. Il est possible de passer
+      # des informations globales au JDC par ce moyen. Il pourrait etre plus
+      # sur de mettre en place le mecanisme des mots-cles pour verifier la
       # validité des valeurs passées.
       # Ceci reste à faire
-      # On initialise avec les parametres de la definition puis on 
+      # On initialise avec les parametres de la definition puis on
       # update avec ceux du JDC
       self.args=self.definition.args
       self.args.update(args)
@@ -115,7 +115,7 @@ NONE = None
       #
       #  Creation de l objet compte rendu pour collecte des erreurs
       #
-      self.cr = self.CR(debut = "CR phase d'initialisation", 
+      self.cr = self.CR(debut = "CR phase d'initialisation",
                         fin = "fin CR phase d'initialisation")
       # on met le jdc lui-meme dans le context global pour l'avoir sous
       # l'etiquette "jdc" dans le fichier de commandes
@@ -136,11 +136,11 @@ NONE = None
    def compile(self):
       """
          Cette methode compile la chaine procedure
-         Si des erreurs se produisent, elles sont consignées dans le 
+         Si des erreurs se produisent, elles sont consignées dans le
          compte-rendu self.cr
       """
       try:
-         if self.appli != None : 
+         if self.appli != None :
             self.appli.affiche_infos('Compilation du fichier de commandes en cours ...')
          self.proc_compile=compile(self.procedure,self.nom,'exec')
       except SyntaxError, e:
@@ -194,13 +194,14 @@ Causes possibles :
             for sdnom,sd in self.context_ini.items():
                if isinstance(sd,ASSD):self.sds_dict[sdnom]=sd
 
-         if self.appli != None : 
-            self.appli.affiche_infos('Interpretation du fichier de commandes en cours ...')
+         if self.appli != None :
+            self.appli.affiche_infos('Interprétation du fichier de commandes en cours ...')
          # On sauve le contexte pour garder la memoire des constantes
-         # En mode edition (EFICAS) ou lors des verifications le contexte 
+         # En mode edition (EFICAS) ou lors des verifications le contexte
          # est recalculé
          # mais les constantes sont perdues
          self.const_context=self.g_context
+         message.debug(SUPERV, "pass")
          exec self.proc_compile in self.g_context
 
          CONTEXT.unset_current_step()
@@ -230,10 +231,10 @@ Causes possibles :
         etype, value, tb = sys.exc_info()
         l= traceback.extract_tb(tb)
         s= traceback.format_exception_only("Erreur de nom",e)[0][:-1]
-        message = "erreur de syntaxe,  %s ligne %d" % (s,l[-1][1])
+        msg = "erreur de syntaxe,  %s ligne %d" % (s,l[-1][1])
         if CONTEXT.debug :
           traceback.print_exc()
-        self.cr.exception(message)
+        self.cr.exception(msg)
         CONTEXT.unset_current_step()
 
       except self.UserError,exc_val:
@@ -241,10 +242,10 @@ Causes possibles :
         CONTEXT.unset_current_step()
         self.affiche_fin_exec()
         self.traiter_fin_exec('commande')
-    
+
       except :
         # erreur inattendue
-        # sys_exc_typ,sys_exc_value,sys_exc_frame = sys_exc.info() 
+        # sys_exc_typ,sys_exc_value,sys_exc_frame = sys_exc.info()
         # (tuple de 3 éléments)
         if CONTEXT.debug : traceback.print_exc()
 
@@ -271,14 +272,14 @@ Causes possibles :
           Par defaut il n'y a pas de traitement. Elle doit etre surchargee
           pour en introduire un
        """
-       print "FIN D'EXECUTION",mode,etape
+       message.info(SUPERV, "FIN D'EXECUTION %s %s", mode, etape)
 
    def traiter_user_exception(self,exc_val):
-       """Cette methode realise un traitement sur les exceptions utilisateur    
-          Par defaut il n'y a pas de traitement. La méthode doit etre 
+       """Cette methode realise un traitement sur les exceptions utilisateur
+          Par defaut il n'y a pas de traitement. La méthode doit etre
           surchargée pour en introduire un.
        """
-       return 
+       return
 
    def register(self,etape):
       """
@@ -287,6 +288,7 @@ Causes possibles :
       """
       self.etapes.append(etape)
       self.index_etapes[etape] = len(self.etapes) - 1
+      message.debug(SUPERV, "#%d %s", self.index_etapes[etape], etape.nom)
       return self.g_register(etape)
 
    def o_register(self,sd):
@@ -306,45 +308,45 @@ Causes possibles :
       return idetape
 
    def create_sdprod(self,etape,nomsd):
-      """ 
+      """
           Cette methode doit fabriquer le concept produit retourne
           par l'etape etape et le nommer.
 
           Elle est appelée à l'initiative de l'etape
-          pendant le processus de construction de cette etape : 
+          pendant le processus de construction de cette etape :
           methode __call__ de la classe CMD (OPER ou MACRO)
 
-          Ce travail est réalisé par le contexte supérieur 
-          (etape.parent) car dans certains cas, le concept ne doit 
-          pas etre fabriqué mais l'etape doit simplement utiliser 
+          Ce travail est réalisé par le contexte supérieur
+          (etape.parent) car dans certains cas, le concept ne doit
+          pas etre fabriqué mais l'etape doit simplement utiliser
           un concept préexistant.
 
           Deux cas possibles :
                   - Cas 1 : etape.reuse != None : le concept est réutilisé
-                  - Cas 2 : l'étape appartient à une macro qui a déclaré un 
-                          concept de sortie qui doit etre produit par cette 
+                  - Cas 2 : l'étape appartient à une macro qui a déclaré un
+                          concept de sortie qui doit etre produit par cette
                           etape.
           Dans le cas du JDC, le deuxième cas ne peut pas se produire.
       """
       sd= etape.get_sd_prod()
       if sd != None and (etape.definition.reentrant == 'n' or etape.reuse is None) :
-         # ATTENTION : On ne nomme la SD que dans le cas de non reutilisation 
+         # ATTENTION : On ne nomme la SD que dans le cas de non reutilisation
          # d un concept. Commande non reentrante ou reuse absent.
          self.NommerSdprod(sd,nomsd)
       return sd
 
    def NommerSdprod(self,sd,sdnom,restrict='non'):
-      """ 
-          Nomme la SD apres avoir verifie que le nommage est possible : nom 
+      """
+          Nomme la SD apres avoir verifie que le nommage est possible : nom
           non utilise
           Si le nom est deja utilise, leve une exception
           Met le concept créé dans le concept global g_context
       """
-      if CONTEXT.debug : print "JDC.NommerSdprod ",sd,sdnom
-
       o=self.sds_dict.get(sdnom,None)
       if isinstance(o,ASSD):
          raise AsException("Nom de concept deja defini : %s" % sdnom)
+      if self._reserved_kw.get(sdnom) == 1:
+         raise AsException("Nom de concept invalide. '%s' est un mot-clé réservé." % sdnom)
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
       # Ajoute a la creation (appel de reg_sd).
@@ -354,10 +356,11 @@ Causes possibles :
       # En plus si restrict vaut 'non', on insere le concept dans le contexte du JDC
       if restrict == 'non':
          self.g_context[sdnom]=sd
+         message.debug(SUPERV, "g_context[%r] = %s", sdnom, sd)
 
    def reg_sd(self,sd):
-      """ 
-          Methode appelee dans l __init__ d un ASSD lors de sa creation 
+      """
+          Methode appelee dans l __init__ d un ASSD lors de sa creation
           pour s enregistrer
       """
       self.sds.append(sd)
@@ -368,8 +371,8 @@ Causes possibles :
           Met à jour les étapes du JDC qui sont après etape suite à
           la disparition du concept sd
       """
-      # Cette methode est définie dans le noyau mais ne sert que pendant 
-      # la phase de creation des etapes et des concepts. Il n'y a aucun 
+      # Cette methode est définie dans le noyau mais ne sert que pendant
+      # la phase de creation des etapes et des concepts. Il n'y a aucun
       # traitement particulier à réaliser.
       # Dans d'autres conditions, il faut surcharger cette méthode
       return
@@ -381,7 +384,7 @@ Causes possibles :
 
    def get_file(self,unite=None,fic_origine=''):
       """
-          Retourne le nom du fichier correspondant à un numero d'unité 
+          Retourne le nom du fichier correspondant à un numero d'unité
           logique (entier) ainsi que le source contenu dans le fichier
       """
       if self.appli :
@@ -406,10 +409,10 @@ Causes possibles :
       return file,text
 
    def set_par_lot(self,par_lot):
-      """ 
-          Met le mode de traitement a PAR LOT 
+      """
+          Met le mode de traitement a PAR LOT
           ou a COMMANDE par COMMANDE
-          en fonction de la valeur du mot cle PAR_LOT et 
+          en fonction de la valeur du mot cle PAR_LOT et
           du contexte : application maitre ou pas
       """
       if self.appli == None:
@@ -428,7 +431,7 @@ Causes possibles :
 
    def interact(self):
       """
-          Cette methode a pour fonction d'ouvrir un interpreteur 
+          Cette methode a pour fonction d'ouvrir un interpreteur
           pour que l'utilisateur entre des commandes interactivement
       """
       CONTEXT.set_current_step(self)
@@ -456,9 +459,9 @@ Causes possibles :
          comme DETRUIRE ou les macros
          Si etape == None, on retourne le contexte en fin de JDC
       """
-      # L'étape courante pour laquelle le contexte a été calculé est 
+      # L'étape courante pour laquelle le contexte a été calculé est
       # mémorisée dans self.index_etape_courante
-      # XXX on pourrait faire mieux dans le cas PAR_LOT="NON" : en 
+      # XXX on pourrait faire mieux dans le cas PAR_LOT="NON" : en
       # mémorisant l'étape
       # courante pendant le processus de construction des étapes.
       # Si on insère des commandes (par ex, dans EFICAS), il faut préalablement
@@ -488,7 +491,15 @@ Causes possibles :
       return d
 
    def get_global_contexte(self):
-      return self.g_context.copy()
+      """Retourne "un" contexte global ;-)"""
+      # N'est utilisé que par INCLUDE (sauf erreur).
+      # g_context est remis à {} en PAR_LOT='OUI'. const_context permet
+      # de retrouver ce qui y a été mis par exec_compile.
+      # Les concepts n'y sont pas en PAR_LOT='OUI'. Ils sont ajoutés
+      # par get_global_contexte de la MACRO.
+      d = self.const_context.copy()
+      d.update(self.g_context)
+      return d
 
 
    def get_contexte_courant(self, etape_courante=None):
@@ -543,4 +554,15 @@ Causes possibles :
       """
       if CONTEXT.debug: print ' `- JDC sd_accessible : PAR_LOT =', self.par_lot
       return self.par_lot == 'NON'
+
+
+   def _build_reserved_kw_list(self):
+       """Construit la liste des mots-clés réservés (interdits pour le
+       nommage des concepts)."""
+       wrk = set()
+       for cat in self.cata:
+           wrk.update([kw for kw in dir(cat) if len(kw) <= 8 and kw == kw.upper()])
+       wrk.difference_update(['OPER', 'MACRO', 'BLOC', 'SIMP', 'FACT', 'FORM',
+                              'GEOM', 'MCSIMP', 'MCFACT'])
+       self._reserved_kw = {}.fromkeys(wrk, 1)
 

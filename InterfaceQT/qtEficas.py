@@ -1,8 +1,8 @@
 # -*- coding: iso-8859-1 -*-
 
 import os, sys
-REPINI=os.path.dirname(os.path.abspath(__file__))
-INSTALLDIR=os.path.join(REPINI,'..')
+repIni=os.path.dirname(os.path.abspath(__file__))
+INSTALLDIR=os.path.join(repIni,'..')
 from Editeur import import_code
 
 from qt import *
@@ -52,8 +52,8 @@ class Appli(Eficas):
            del sys.setdefaultencoding
 
         self.top=self
-        self.CONFIGURATION = configuration.make_config(self,prefs.REPINI)
-        self.CONFIGStyle = configuration.make_config_style(self,prefs.REPINI)
+        self.CONFIGURATION = configuration.make_config(self,prefs.repIni)
+        self.CONFIGStyle = configuration.make_config_style(self,prefs.repIni)
 
         self.viewmanager = MyTabview(self, self) #MyTabview, MyWorkspace, Listspace
         self.setCentralWidget(self.viewmanager)
@@ -167,7 +167,7 @@ class Appli(Eficas):
         self.recentMenu.insertItem(self.trUtf8('&Clear'), self.handleClearRecent)
         
     def handleOpenPatrons(self, idx):
-        fichier=REPINI+"/../Editeur/Patrons/"+self.code+"/"+self.ficPatrons[idx]
+        fichier=repIni+"/../Editeur/Patrons/"+self.code+"/"+self.ficPatrons[idx]
         self.viewmanager.handleOpen(fn=fichier, patron = 1)
 
 

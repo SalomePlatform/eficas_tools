@@ -8,8 +8,6 @@ Ce module contient le generateur Etude pour Openturns
 
 __revision__ = "V1.0"
 
-import os
-
 defaultSTD = """#! /usr/bin/env python
 
 class StudyFileGenerationError:
@@ -269,13 +267,11 @@ class STDGenerateur :
     '''
     Importe le modele physique
     '''
-    fonction = None
     if ( self.DictMCVal.has_key( 'FileName' ) ):
       name =  self.DictMCVal[ 'FileName' ]
-      #fonction = name[name.rfind('/')+1:name.rfind('.xml')]
       
     txt  = "# Charge le modele physique\n"
-    txt  = "%s = WrapperFile( '%s' )\n" % (self.variable["wrapper"], name)
+    txt += "%s = WrapperFile( '%s' )\n" % (self.variable["wrapper"], name)
     txt += "%s = %s.getWrapperData()\n" % (self.variable["wrapperdata"], self.variable["wrapper"])
 
     txt += "# Ces lignes sont utiles pour le fonctionnement du script sous Salome\n"
@@ -289,7 +285,7 @@ class STDGenerateur :
     txt += "# Fin des lignes pour Salome\n"
     
     txt += "%s = NumericalMathFunction( %s )\n" % (self.variable["model"], self.variable["wrapper"],)
-    txt += "%s = %s.getInputNumericalPointDimension()\n" % (self.variable["n"], self.variable["model"])
+    txt += "%s = %s.getInputDimension()\n" % (self.variable["n"], self.variable["model"])
     txt += "\n"
     return txt
 

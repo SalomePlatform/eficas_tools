@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 import os,sys
 
-# REPINI sert à localiser le fichier editeur.ini
+# repIni sert à localiser le fichier editeur.ini
 # Obligatoire
-REPINI=os.path.dirname(os.path.abspath(__file__))
+repIni=os.path.dirname(os.path.abspath(__file__))
 
 # INSTALLDIR sert à localiser l'installation d'Eficas
 # Obligatoire
-INSTALLDIR=os.path.join(REPINI,'..')
+INSTALLDIR=os.path.join(repIni,'..')
 
 # CODE_PATH sert à localiser Noyau et Validation éventuellement
 # non contenus dans la distribution EFICAS
 # Par défaut on utilise les modules de INSTALLDIR
 # Peut valoir None (defaut)
 CODE_PATH = None
-#CODE_PATH = os.path.join(REPINI,'../../Superv')
-#CODE_PATH = "/home01/chris/projet_Eficas/Devel/SUPER6_3/Aster6_3/bibpyt"
+#CODE_PATH = os.path.join(repIni,'../../Superv')
 
 # la variable code donne le nom du code a selectionner
 code="MINICODE"

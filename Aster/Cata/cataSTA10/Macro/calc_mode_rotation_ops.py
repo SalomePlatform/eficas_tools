@@ -1,4 +1,4 @@
-#@ MODIF calc_mode_rotation_ops Macro  DATE 11/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF calc_mode_rotation_ops Macro  DATE 14/06/2010   AUTEUR COURTOIS M.COURTOIS 
 
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================

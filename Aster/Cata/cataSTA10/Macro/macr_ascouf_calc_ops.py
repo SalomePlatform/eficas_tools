@@ -1,8 +1,8 @@
-#@ MODIF macr_ascouf_calc_ops Macro  DATE 22/12/2009   AUTEUR ABBAS M.ABBAS 
+#@ MODIF macr_ascouf_calc_ops Macro  DATE 02/02/2011   AUTEUR PELLET J.PELLET 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2004  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -21,7 +21,7 @@
 
 def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MATER,CARA_ELEM,
                               FOND_FISS,RESU_THER,AFFE_MATERIAU,
-                              PRES_REP,ECHANGE,TORS_P1,COMP_INCR,COMP_ELAS,
+                              PRES_REP,ECHANGE,TORS_P1,COMP_ELAS,
                               SOLVEUR,CONVERGENCE,NEWTON,RECH_LINEAIRE,
                               INCREMENT,THETA_3D,IMPR_TABLE,IMPRESSION,INFO,TITRE ,**args):
   """
@@ -316,11 +316,11 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
   if TYPE_MAILLAGE in ('FISS_COUDE','FISS_AXIS_DEB'):
     _chcont = DEFI_CONTACT( MODELE      = modele ,
                             FORMULATION = 'DISCRETE',
-                            TOLE_INTERP = -1.E-6,
                             ZONE =_F(GROUP_MA_MAIT = 'FACE1',
                                      GROUP_MA_ESCL = 'FACE2',
-                                     ALGO_CONT     = 'VERIF',
-                                     GROUP_MA_FOND = 'FONDFISS'),)
+                                     RESOLUTION    = 'NON',
+                                     TOLE_INTERP   = -1.E-6,
+                                     SANS_GROUP_MA = 'FONDFISS'),)
 #
 #     --- commande STAT_NON_LINE ---
 #
@@ -347,10 +347,8 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
     contact = _chcont  
   motscles['EXCIT'] =mcfex
 #
-  mcfci=[]  # mot clé facteur COMP_INCR :obligatoire pour les noeuds discrets
-  if COMP_INCR!=None :
-    mcfci.append(_F(TOUT='OUI' ,RELATION=COMP_INCR['RELATION']))
-  elif COMP_ELAS!=None :
+  mcfci=[]  # mot clé facteur COMP_INCR :obligatoire pour les noeuds discrets dans STAT_NON_LINE
+  if COMP_ELAS!=None :
     motscles['COMP_ELAS'] =_F(GROUP_MA='COUDE',RELATION=COMP_ELAS['RELATION'])
     if TORS_P1!=None     : mcfci.append(  _F(GROUP_MA='P1',RELATION='ELAS'))
     if CL_BOL_P2_GV==None: mcfci.append(  _F(GROUP_MA='P2',RELATION='ELAS'))
@@ -403,9 +401,8 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
 #
   nomres = CALC_ELEM( reuse      = nomres,
                       RESULTAT   = nomres ,
-                      MODELE     = modele ,
                       TOUT_ORDRE = 'OUI'  ,
-                      OPTION     = ('SIEF_ELNO_ELGA','EQUI_ELNO_SIGM') ,
+                      OPTION     = ('SIEF_ELNO','SIEQ_ELNO') ,
                       INFO       = INFO   ,)
 #
 #     --- post-traitements ---
@@ -443,7 +440,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
       motscles['ACTION']=[]
       for grno in lgrno :
          motscles['ACTION'].append(_F(RESULTAT=nomres,
-                                      NOM_CHAM='SIEF_ELNO_ELGA',
+                                      NOM_CHAM='SIEF_ELNO',
                                       TOUT_CMP='OUI',
                                       INTITULE=grno,
                                       GROUP_NO=grno,
@@ -459,7 +456,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
       motscles['ACTION']=[]
       for tgrno in lgrno :
          motscles['ACTION'].append(_F(RESULTAT=nomres,
-                                      NOM_CHAM='SIEF_ELNO_ELGA',
+                                      NOM_CHAM='SIEF_ELNO',
                                       INTITULE=tgrno,
                                       GROUP_NO=tgrno,
                                       INVARIANT='OUI',
@@ -497,7 +494,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
                       ANGSEC = atan2(VSIN,VCOS)
                  vecty=(sin(ANGSEC),0.,cos(ANGSEC))
          motscles['ACTION'].append(_F(RESULTAT=nomres,
-                                      NOM_CHAM='SIEF_ELNO_ELGA',
+                                      NOM_CHAM='SIEF_ELNO',
                                       INTITULE=tgrno,
                                       GROUP_NO=tgrno,
                                       NOM_CMP=('SIXX','SIYY','SIZZ','SIXY','SIXZ','SIYZ',),
@@ -530,7 +527,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
          motscles['ACTION']=[]
          for j in range(8) :
             motscles['ACTION'].append(_F(RESULTAT=nomres,
-                                         NOM_CHAM='SIEF_ELNO_ELGA',
+                                         NOM_CHAM='SIEF_ELNO',
                                          TOUT_CMP='OUI',
                                          INTITULE=LIG[j]+SECT[i],
                                          GROUP_NO=LIG[j]+SECT[i],
@@ -550,7 +547,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
          for j in range(8) : motscles['ACTION'].append(_F(INTITULE =LIG[j]+SECT[i],
                                                           GROUP_NO =LIG[j]+SECT[i],
                                                           RESULTAT =nomres,
-                                                          NOM_CHAM ='SIEF_ELNO_ELGA',
+                                                          NOM_CHAM ='SIEF_ELNO',
                                                           INVARIANT='OUI',
                                                           OPERATION='EXTRACTION'))
          secinv[i] = POST_RELEVE_T(**motscles)
@@ -565,7 +562,7 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
                                                           VECT_Y   =vecty,
                                                           GROUP_NO =LIG[j]+SECT[i],
                                                           RESULTAT =nomres,
-                                                          NOM_CHAM ='SIEF_ELNO_ELGA',
+                                                          NOM_CHAM ='SIEF_ELNO',
                                                           NOM_CMP  =('SIXX','SIYY','SIZZ','SIXY','SIXZ','SIYZ'),
                                                           OPERATION='MOYENNE'))
          secmoy[i] = POST_RELEVE_T(**motscles)
@@ -722,7 +719,6 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
                                        R_SUP  = thet['R_SUP'],),
                            );
         motscles = {}
-        if COMP_INCR!=None : motscles['COMP_INCR']=_F(RELATION=COMP_INCR['RELATION'])
         if COMP_ELAS!=None : motscles['COMP_ELAS']=_F(RELATION=COMP_ELAS['RELATION'])
         _nogthe=CALC_G( RESULTAT   =nomres,
                         OPTION='CALC_G_GLOB',
@@ -733,7 +729,6 @@ def macr_ascouf_calc_ops(self,TYPE_MAILLAGE,CL_BOL_P2_GV,MAILLAGE,MODELE,CHAM_MA
 #
       for thet in THETA_3D:
         motscles = {}
-        if COMP_INCR!=None : motscles['COMP_INCR']=_F(RELATION=COMP_INCR['RELATION'])
         if COMP_ELAS!=None : motscles['COMP_ELAS']=_F(RELATION=COMP_ELAS['RELATION'])
         if   TYPE_MAILLAGE =='FISS_COUDE' :
                              motscles['LISSAGE']=_F(LISSAGE_THETA='LEGENDRE',

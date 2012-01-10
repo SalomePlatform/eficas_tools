@@ -66,12 +66,20 @@ class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
   def InitValeursCourantes(self):
         self.listNomsValeurs=[]
         for i in self.listeValeursCourantes :
+           #pour resoudre le typ= not_checked
+           try :
               self.listNomsValeurs.append(i.get_name())
+           except :
+              self.listNomsValeurs.append(i)
 
   def BOkPourListePressed(self):
         if self.listeValeursCourantes == [] :
 	   self.editor.affiche_infos("Pas de Validation d un groupe vide",Qt.red)
            return
+        try :
+          if  len(self.listeValeursCourantes) == 1 : self.listeValeursCourantes=self.listeValeursCourantes[0]
+        except :
+          pass
         self.node.item.set_valeur(self.listeValeursCourantes)
 	self.editor.affiche_infos("Valeur Acceptée")
 	pass

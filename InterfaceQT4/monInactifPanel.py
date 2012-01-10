@@ -16,7 +16,7 @@ class PanelInactif( QTPanel, Ui_DInactif,QDialog ):
         #print "PanelInactif"
         QDialog.__init__(self,parent)
         QTPanel.__init__(self,node,parent)
-        Ui_DInactif.__init__(self,parent)
+        Ui_DInactif.__init__(self)
         if hasattr(parent,"leLayout"):
            parent.leLayout.removeWidget(parent.leLayout.widgetActive)
            parent.leLayout.widgetActive.close()

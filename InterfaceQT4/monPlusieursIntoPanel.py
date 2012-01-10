@@ -55,7 +55,7 @@ class DPlusInto(Ui_DPlusInto,QDialog):
 class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   """
   Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
   discrètes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
@@ -67,6 +67,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
         SaisieValeur.BuildLBValeurs(self)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         SaisieValeur.RemplitPanel(self,self.listeValeursCourantes)
+        self.alpha=0
         self.connecterSignaux()
 
   def connecterSignaux(self) :
@@ -75,7 +76,16 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPourListePressed)
         self.connect(self.BAjout1Val,SIGNAL("clicked()"),self.Ajout1Valeur)
         self.connect(self.BSup1Val,SIGNAL("clicked()"),self.Sup1Valeur)
+        self.connect(self.BAlpha,SIGNAL("clicked()"),self.BAlphaPressed)
 
+  def BAlphaPressed(self):
+      if self.alpha==1 :
+         self.alpha=0
+         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Alpha",None,QApplication.UnicodeUTF8))
+      else :
+         self.alpha=1
+         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Cata",None,QApplication.UnicodeUTF8))
+      SaisieValeur.RemplitPanel(self,self.listeValeursCourantes, self.alpha)
 
   def BOkPourListePressed(self):
         if self.listeValeursCourantes == [] :

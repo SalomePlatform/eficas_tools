@@ -1,4 +1,4 @@
-#@ MODIF N_VALIDATOR Noyau  DATE 11/05/2010   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_VALIDATOR Noyau  DATE 11/10/2010   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 # RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -116,6 +116,7 @@ class TypeProtocol(PProtocol):
         self.typ=typ
 
     def default(self,obj,typ):
+
         help = ""
         for type_permis in typ:
             if type_permis == 'R':
@@ -131,6 +132,11 @@ class TypeProtocol(PProtocol):
             elif type_permis == 'Fichier' :
                  import os
                  if (len(typ) > 2 and typ[2] == "Sauvegarde") or os.path.isfile(obj):
+                     return obj
+                 else : raise ValError("%s n'est pas un fichier valide" % repr(obj))
+            elif type_permis == 'FichierNoAbs' :
+                 import os
+                 if (len(typ) > 2 and typ[2] == "Sauvegarde") or isinstance(obj, type("")):
                      return obj
                  else : raise ValError("%s n'est pas un fichier valide" % repr(obj))
             elif type(type_permis) == types.ClassType or isinstance(type_permis,type):
@@ -569,6 +575,38 @@ class LongStr(ListVal):
              raise ValError("%s n'est pas de la bonne longueur" % repr(valeur))
           return valeur
 
+class OnlyStr(ListVal):
+      """
+          Validateur operationnel
+          Valide que c'est une chaine
+      """
+      def __init__(self):
+          ListVal.__init__(self)
+          self.cata_info=""
+
+      def info(self):
+          return "regarde si c'est une chaine"
+
+      def info_erreur_item(self):
+          return "Ce n'est pas une chain"
+
+      def convert(self,valeur):
+          for val in valeur:
+              v=self.adapt(val)
+          return valeur
+
+      def verif_item(self,valeur):
+          try:
+             self.adapt(valeur)
+             return 1
+          except:
+             return 0
+
+      def default(self,valeur):
+          if not is_str(valeur):
+             raise ValError("%s n'est pas une string" % repr(valeur))
+          return valeur
+
 class OrdList(ListVal):
       """
           Validateur operationnel
@@ -803,7 +841,6 @@ class AndVal(Valid):
           return chaine
 
       def verif(self,valeur):
-          print "je suis dans le verif du AndVal"
           for validator in self.validators:
               v=validator.verif(valeur)
               if not v :
@@ -1262,12 +1299,14 @@ class VerifTypeTuple(Valid,ListVal) :
 
       def verif_item(self,valeur):
           try :
-		if len(valeur) != len(self.typeDesTuples): return 0
-                for i in range(len(valeur)) :
-                    ok=self.verifType(valeur[i],self.typeDesTuples[i])
-                    if ok!=1 : return 0
-          except :
+             if len(valeur) != len(self.typeDesTuples):
                 return 0
+             for i in range(len(valeur)) :
+                ok=self.verifType(valeur[i],self.typeDesTuples[i])
+                if ok!=1:
+                   return 0
+          except :
+             return 0
           return 1
 
       def verifType(self,valeur,type_permis):

@@ -111,6 +111,33 @@ def renameMotCleInFactSiRegle(jdc,command,fact,mocle,new_name,liste_regles):
     mesRegles=regles.ensembleRegles(liste_regles)
     renameMotCleInFact(jdc,command,fact,mocle,new_name,mesRegles)
 
+def renameMotCleInFactCourantSiRegle(jdc,command,fact,mocle,new_name,liste_regles,erreur=0):
+#--------------------------------------------------------------------------
+    if command not in jdcSet : return
+    ensemble=regles.ensembleRegles(liste_regles)
+    boolChange=0
+    for c in jdc.root.childNodes:
+        if c.name != command:continue
+        for mc in c.childNodes:
+            if mc.name != fact:continue
+            l=mc.childNodes[:]
+            #on itere a l'envers
+            l.reverse()
+            for ll in l:
+                if ensemble.verif(ll) == 0 : continue
+                for n in ll.childNodes:
+                    if n.name != mocle:continue
+                    s=jdc.getLines()[n.lineno-1]
+                    jdc.getLines()[n.lineno-1]=s[:n.colno]+new_name+s[n.colno+len(mocle):]
+                    boolChange=1
+                    if erreur :
+                       EcritErreur((command,fact,mocle),c.lineno)
+                    else :
+                       logging.info("Renommage de: %s, ligne %s, en %s",n.name,n.lineno,new_name)
+
+    if boolChange : jdc.reset(jdc.getSource())
+    
+    
 #-----------------------------------------------------------------
 def renameCommande(jdc,command,new_name,ensemble=regles.SansRegle):
 #-----------------------------------------------------------------

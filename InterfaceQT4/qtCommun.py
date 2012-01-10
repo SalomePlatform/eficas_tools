@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -42,7 +42,17 @@ class QTPanel:
   def __init__(self,node, parent = None):
         self.editor    = parent
         self.node      = node
-        
+        if hasattr(self,'TWChoix'):
+           self.connect(self.TWChoix, SIGNAL("currentChanged(QWidget *)"), self.GestionBALpha)
+
+  def GestionBALpha(self,fenetre):
+        if self.TWChoix.currentIndex()!=0:
+           if hasattr(self,'BAlpha'): #pour include materiau
+              self.BAlpha.hide()
+        else :
+           self.BAlpha.setVisible(True)
+           self.BuildLBMCPermis()
+
   def BOkPressed(self):
         """ Impossible d utiliser les vrais labels avec designer ?? """
         label=self.TWChoix.tabText(self.TWChoix.currentIndex())
@@ -103,19 +113,33 @@ class QTPanelTBW1(QTPanel):
   def __init__(self,node, parent = None):
         self.editor    = parent
         self.node      = node
+        if not(hasattr(self.node,'alpha')): self.node.alpha  = 0
         self.BuildLBMCPermis()
         self.AppelleBuildLBRegles()
+        if hasattr(self,'BAlpha'):
+           self.connect(self.BAlpha,SIGNAL("clicked()"),self.BAlphaPressed)
 
+  def BAlphaPressed (self):
+        if self.node.alpha == 0 :
+           self.node.alpha=1
+           self.BAlpha.setText("Tri Cata")
+        else :
+           self.node.alpha=0
+           self.BAlpha.setText("Tri Alpha")
+        self.BuildLBMCPermis()
+
+           
   def BuildLBMCPermis(self):
         self.LBMCPermis.clear()
         QObject.connect(self.LBMCPermis,SIGNAL("itemDoubleClicked(QListWidgetItem*)"),self.DefMC)
         jdc = self.node.item.get_jdc()
         genea =self.node.item.get_genealogie()
         liste_mc=self.node.item.get_liste_mc_ordonnee(genea,jdc.cata_ordonne_dico)
-        for aMc in liste_mc:
-           self.LBMCPermis.addItem( aMc)
-        if len(liste_mc) !=0:
-           self.LBMCPermis.setCurrentItem(self.LBMCPermis.item(0))
+        if ((len(liste_mc) < 10) and (hasattr(self,'BAlpha'))):
+           self.BAlpha.hide()
+        if self.node.alpha == 1 : liste_mc.sort()
+        for aMc in liste_mc: self.LBMCPermis.addItem( aMc)
+        if len(liste_mc) !=0: self.LBMCPermis.setCurrentItem(self.LBMCPermis.item(0))
 
 
   def DefMC(self,item):
@@ -170,12 +194,19 @@ class QTPanelTBW2(QTPanel):
         self.LBNouvCommande.clear()
 
         jdc=self.node.item.object.get_jdc_root()
+
+        listeGroupes,dictGroupes=jdc.get_groups()
+        if "CACHE" in dictGroupes.keys():
+           aExclure=dictGroupes["CACHE"]
+        else:
+           aExclure=()
         if self.editor.mode_nouv_commande == "alpha":
            self.RBalpha.setChecked(True)
            self.RBGroupe.setChecked(False)
            listeCmd = jdc.get_liste_cmd()
            for aCmd in listeCmd:
-              self.LBNouvCommande.addItem( aCmd )
+              if aCmd not in aExclure :
+                 self.LBNouvCommande.addItem( aCmd )
         elif self.editor.mode_nouv_commande== "groupe" :
            self.RBGroupe.setChecked(True)
            self.RBalpha.setChecked(False)
@@ -188,6 +219,7 @@ class QTPanelTBW2(QTPanel):
               self.LBNouvCommande.addItem( texte )
               self.LBNouvCommande.addItem( " " )
               for aCmd in listeCmd:
+                if aCmd not in aExclure :
                  self.LBNouvCommande.addItem( aCmd)
               self.LBNouvCommande.addItem( " " )
         elif self.editor.mode_nouv_commande== "initial" :
@@ -196,7 +228,8 @@ class QTPanelTBW2(QTPanel):
            if len(listeCmd) != len(listeCmd2):
                listeCmd	= listeCmd2
            for aCmd in listeCmd:
-              self.LBNouvCommande.addItem( aCmd )
+              if aCmd not in aExclure :
+                 self.LBNouvCommande.addItem( aCmd )
         #QObject.connect( self.LBNouvCommande, SIGNAL("itemClicked(QListWidgetItem*)"),self.DefCmd )
         QObject.connect( self.LBNouvCommande, SIGNAL("itemDoubleClicked(QListWidgetItem*)"),self.DefCmd )
 
@@ -319,9 +352,9 @@ class ViewText(Ui_dView,QDialog):
     """
     Classe permettant la visualisation de texte
     """
-    def __init__(self,parent):
+    def __init__(self,parent,editor=None):
         QDialog.__init__(self,parent)
-        self.parent=parent
+        self.editor=editor
         self.setupUi(self)
 
         self.resize( QSize(600,600).expandedTo(self.minimumSizeHint()) )
@@ -333,12 +366,16 @@ class ViewText(Ui_dView,QDialog):
         
     def saveFile(self):
         #recuperation du nom du fichier
+        if self.editor != None :
+           dir=elf.editor.appliEficas.CONFIGURATION.savedir
+        else:
+           dir='/tmp'
         fn = QFileDialog.getSaveFileName(None,
                 self.trUtf8("Save File"),
-                self.appliEficas.CONFIGURATION.savedir)
+                dir)
         if fn.isNull() : return
         ulfile = os.path.abspath(unicode(fn))
-        self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+        self.editor.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
         try:
            f = open(fn, 'wb')
            f.write(str(self.view.toPlainText()))

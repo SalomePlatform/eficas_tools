@@ -25,14 +25,14 @@ print "import des prefs de Homard"
 
 code = "Homard"
 
-# REPINI sert à localiser le fichier 
+# repIni sert à localiser le fichier 
 # initialdir sert comme directory initial des QFileDialog
 # positionnee a repin au debut mise a jour dans configuration
-REPINI=os.path.dirname(os.path.abspath(__file__))
-initialdir=REPINI 
+repIni=os.path.dirname(os.path.abspath(__file__))
+initialdir=repIni 
 
 # INSTALLDIR sert à localiser l'installation d'Eficas
-INSTALLDIR=os.path.join(REPINI,'..')
+INSTALLDIR=os.path.join(repIni,'..')
 sys.path[:0]=[INSTALLDIR]
 
 

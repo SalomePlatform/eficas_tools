@@ -148,12 +148,12 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
 
       fn = os.path.abspath((unicode(fn)))
       ulfile = os.path.abspath(unicode(fn))
-      self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+      self.node.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
       self.LENomFichier.setText(fn)
       self.LENomFichReturnPressed()
 
   def connecterSignaux(self):
-        self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListBoxItem*)"),self.LBNouvCommandeClicked)
+        self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListWidgetItem*)"),self.LBNouvCommandeClicked)
         self.connect(self.LEFiltre,SIGNAL("textChanged(const QString&)"),self.LEFiltreTextChanged)
         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEfiltreReturnPressed)
         self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)

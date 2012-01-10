@@ -41,14 +41,10 @@ class PopUpMenuNodeMinimal :
     def viewDoc(self):
         self.node=self.tree.currentItem()
         cle_doc = self.node.item.get_docu()
-        print self.node.item.get_docu
         if cle_doc == None :
             QMessageBox.information( self.editor, "Documentation Vide", \
                                     "Aucune documentation Aster n'est associée à ce noeud")
             return
-        #cle_doc = string.replace(cle_doc,'.','')
-        #cle_doc = string.replace(cle_doc,'-','')
-        #print dir(self)
         commande = self.editor.appliEficas.CONFIGURATION.exec_acrobat
         try :
             f=open(commande,"rb")

@@ -87,7 +87,6 @@ class MonFonctionPanel(MonPlusieursBasePanel):
                        for val in valeur :
                            TupleEnTexte = TupleEnTexte + str(self.politique.GetValeurTexte(val)) +", "
                        TupleEnTexte = TupleEnTexte[0:-2] +")"
-                       print TupleEnTexte
                        self.LBValeurs.addItem(TupleEnTexte)
                    else :
                        self.LBValeurs.addItem(QString(str(valeur)))
@@ -174,7 +173,9 @@ class MonFonctionPanel(MonPlusieursBasePanel):
   def Sup1Valeur(self):
         index=self.LBValeurs.currentRow()
         if index == None : return
-        self.LBValeurs.takeItem(index)
+        removed_item = self.LBValeurs.takeItem(index)
+        text = removed_item.text()[1:-1] # Remove the parenthesis
+        self.LEValeur.setText(text)
         listeVal=[]
         indexInterdit=[]
         for i in range(self.nbValeurs):
