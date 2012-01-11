@@ -1318,14 +1318,14 @@ class STDGenerateur :
 
 
 
-  def GraphiquePDF (self, loi, fichier):
+  def GraphiquePDF (self, loi, chemin, fichier):
     '''
     Produit une image PNG representant la PDF de la loi
     '''
     txt  = headerSTD % self.OpenTURNS_path
     txt += "dist = %s\n" % apply( STDGenerateur.__dict__[ loi[ 'Kind' ] ], (self, loi) )
     txt += "graph = dist.drawPDF()\n"
-    txt += "graph.draw( '%s' )\n" % fichier
+    txt += "graph.draw( '%s', '%s' , 640, 480, GraphImplementation.PNG)\n" % (chemin, fichier)
     txt += footerSTD
     return txt
   

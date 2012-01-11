@@ -449,11 +449,6 @@ class Appli(Ui_Eficas,QMainWindow):
     def NewInclude(self):
         self.viewmanager.newIncludeEditor()
 
-    def getName(self):
-        self.indice=self.indice+1
-        texte="tempo"+str(self.indice)
-        return texte
-        
     def cleanPath(self):
         for pathCode in ('Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP'):
             try:

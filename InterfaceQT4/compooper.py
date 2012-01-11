@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-import traceback
-import string
-from PyQt4 import *
-from PyQt4.QtGui  import *
-from PyQt4.QtCore import *
-
+# -*- coding: iso-8859-1 -*-
+import os
+import tempfile
+from PyQt4.QtGui import QMessageBox, QAction
+from PyQt4.QtCore import Qt, SIGNAL
 
 from Editeur     import Objecttreeitem
 import browser
@@ -45,39 +43,31 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
 
     def viewPng(self) :
         from monPixmap import MonLabelPixmap
-        fichier=self.appliEficas.getName()
-        try :
-	    os.remove(fichier)
-        except :
-	    pass     
-        #try:
-        if 1:
-            import generator
+        import generator
+        try:
             g = generator.plugins[self.appliEficas.format_fichier]()
             g.gener(self.item.object, format='beautifie')
             stdGener = g.getGenerateur()
-            if len(g.dictMCLois) != 1:
-                QMessageBox.warning(
-                    None,
-                    self.appliEficas.trUtf8("Erreur interne"),
-                    self.appliEficas.trUtf8("La PDF de la loi ne peut pas etre affichee."),
-                    self.appliEficas.trUtf8("&Annuler"))
-                return
             loi = g.dictMCLois.keys()[0]
             nomLoi = loi.get_name()
-            script = stdGener.GraphiquePDF(loi, fichier)
+            (fd, fichier) = tempfile.mkstemp(prefix = "openturns_graph_", suffix = ".png")
+            os.close(fd)
+            chemin = os.path.dirname(fichier)
+            base = os.path.splitext(os.path.basename(fichier))[0]
+            script = stdGener.GraphiquePDF(loi, chemin, base)
             #print script
             d = {}
             exec script in d
             widgetPng=MonLabelPixmap(self.appliEficas,fichier,nomLoi)
+            os.remove(fichier)
             widgetPng.show()
-        #except:
-        else:
+        except:
             QMessageBox.warning(
-                None,
-                self.appliEficas.trUtf8("Erreur interne"),
-                self.appliEficas.trUtf8("La PDF de la loi ne peut pas etre affichee."),
-                self.appliEficas.trUtf8("&Annuler"))
+                self.appliEficas,
+                self.appliEficas.tr("Erreur interne"),
+                self.appliEficas.tr("La PDF de la loi ne peut pas être affichée."),
+                self.appliEficas.tr("&Annuler"))
+            raise
 
 class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   """ La classe EtapeTreeItem est un adaptateur des objets ETAPE du noyau
