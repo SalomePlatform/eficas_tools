@@ -49,7 +49,6 @@ class FileFromTemplateGenerator(PythonGenerator):
         self.config = config
         self.kw_dict = {}
         self.text = PythonGenerator.gener(self, obj, format)
-        self.generate_output_from_template()
         return self.text
     
     def generate_output_from_template(self) :
@@ -87,6 +86,7 @@ class FileFromTemplateGenerator(PythonGenerator):
         return result
     
     def writeDefault(self, basefilename):
+        self.generate_output_from_template()
         output_filename = os.path.splitext(basefilename)[0] + \
                           self.config.get_extension()
         f = open(output_filename, 'w')
