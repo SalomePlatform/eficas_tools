@@ -151,7 +151,7 @@ class TypeProtocol(PProtocol):
                     help = str(err)
             else:
                 print "Type non encore géré %s" %`type_permis`
-        raise ValError("%s (de type %s) n'est pas d'un type autorisé: %s %s" % (repr(obj),type(obj),typ, help))
+        raise ValError(u"%s (de type %s) n'est pas d'un type autorisé: %s %s" % (repr(obj),type(obj),typ, help))
 
     def is_complexe(self,valeur):
         """ Retourne 1 si valeur est un complexe, 0 sinon """

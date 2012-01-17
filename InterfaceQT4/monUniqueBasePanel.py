@@ -127,8 +127,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def InitCommentaire(self):
       mc = self.node.item.get_definition()
-      d_aides = { 'TXM' : "Une chaîne de caractères est attendue",
-                  'R'   : "Un réel est attendu",
+      d_aides = { 'TXM' : u"Une chaîne de caractères est attendue",
+                  'R'   : u"Un réel est attendu",
                   'I'   : "Un entier est attendu",
                   'Matrice' : 'Une Matrice est attendue',
                   'Fichier' : 'Un fichier est attendu',
@@ -139,9 +139,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
          commentaire = getattr(mctype, 'help_message', "Type de base inconnu")
       else:
          commentaire = d_aides.get(mctype, "Type de base inconnu")
-      aideval=self.node.item.aide()
-      commentaire=commentaire +"\n"+ QString.toUtf8(QString(aideval))
-      self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
+      commentaire = commentaire + "\n" + self.node.item.aide()
+      self.Commentaire.setText(commentaire)
 
   def BOk2Pressed(self):
         SaisieValeur.BOk2Pressed(self)

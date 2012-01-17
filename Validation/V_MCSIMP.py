@@ -99,14 +99,14 @@ class MCSIMP:
         #  verification presence
         if self.isoblig() and v == None :
           if cr == 'oui' :
-            self.cr.fatal(string.join(("Mot-cle : ",self.nom," obligatoire non valorise")))
+            self.cr.fatal(string.join((u"Mot-clé : ", self.nom, u" obligatoire non valorisé")))
           valid = 0
 
         lval=listProto.adapt(v)
         if lval is None:
            valid=0
            if cr == 'oui' :
-              self.cr.fatal("None n'est pas une valeur autorisee")
+              self.cr.fatal(u"None n'est pas une valeur autorisée")
         else:
            # type,into ...
            #typeProto=TypeProtocol("type",typ=self.definition.type)
@@ -125,18 +125,18 @@ class MCSIMP:
                        typeProto.adapt(val)
                except ValError,e:
                    valid=0
-                   self.cr.fatal(str(e))
+                   self.cr.fatal(unicode(e))
                try:
                    for val in lval:
                        intoProto.adapt(val)
                except ValError,e:
                    valid=0
-                   self.cr.fatal(str(e))
+                   self.cr.fatal(unicode(e))
                try:
                    cardProto.adapt(lval)
                except ValError,e:
                    valid=0
-                   self.cr.fatal(str(e))
+                   self.cr.fatal(unicode(e))
                #
                # On verifie les validateurs s'il y en a et si necessaire (valid == 1)
                #
@@ -179,14 +179,14 @@ class MCSIMP:
    def report(self):
       """ genere le rapport de validation de self """
       self.cr=self.CR()
-      self.cr.debut = "Mot-cle simple : "+self.nom
-      self.cr.fin = "Fin Mot-cle simple : "+self.nom
+      self.cr.debut = u"Mot-clé simple : "+self.nom
+      self.cr.fin = u"Fin Mot-clé simple : "+self.nom
       self.state = 'modified'
       try:
         self.isvalid(cr='oui')
       except AsException,e:
         if CONTEXT.debug : traceback.print_exc()
-        self.cr.fatal(string.join(("Mot-cle simple : ",self.nom,str(e))))
+        self.cr.fatal(string.join((u"Mot-clé simple : ",self.nom,str(e))))
       return self.cr
 
 

@@ -322,7 +322,7 @@ class JDCEditor(QSplitter):
     #-----------------------#
     def viewJdcRapport(self):
     #-----------------------#
-        strRapport = str( self.jdc.report() )
+        strRapport = unicode( self.jdc.report() )
         self._viewText(strRapport, "JDC_RAPPORT")        
         
     #----------------#

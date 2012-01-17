@@ -120,7 +120,7 @@ class CR :
       l = string.split(s,'\n')
       return self.dec+string.join(l,'\n'+self.dec)[:-3]
 
-   def __str__(self):
+   def __unicode__(self):
       """
         Retourne une chaine de caractères décorée et représentative de self
       """
@@ -132,15 +132,18 @@ class CR :
       s=s+string.join(self.crexception_belle,'')
       for subcr in self.subcr:
          if self.verbeux == 'oui':
-            s=s+str(subcr)+'\n'
+            s=s+unicode(subcr)+'\n'
          else:
             if not subcr.estvide():
-               s=s+str(subcr)
+               s=s+unicode(subcr)
       if s != '':
          s=self.debut+'\n'+self.indent(s)+self.fin+'\n'
       else :
          s=self.debut+'\n'+self.fin+'\n'
       return s
+
+   def __str__(self):
+      return unicode(self).encode("utf-8")
 
    def report(self,decalage = 2):
       """

@@ -69,7 +69,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Selectionner</string>
+            <string>Sélectionner</string>
            </property>
            <property name="icon">
             <iconset>
@@ -92,7 +92,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Parametres</string>
+            <string>Paramètres</string>
            </property>
           </widget>
          </item>
