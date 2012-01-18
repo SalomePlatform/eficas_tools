@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
@@ -29,13 +28,13 @@ from PyQt4.QtCore import *
 
 
 labels = {
-"s_oxides_st_1" : "Determination de l'allure de l'interface d'un oxyde donné \npour un niveau a determiner d'irradiation" ,
+"s_oxides_st_1" : "Determination de l'allure de l'interface d'un oxyde donn \npour un niveau a determiner d'irradiation" ,
 "s_oxides_st_2" : "Estimation du champ mecanique dans une couche de zircone" ,
-"s_oxides_mt_1" : "Estimation du champ mecanique dans une couche de zircone \nprésentant des défauts et de l'énergie élastique relaxée",
-"s_scc_st_1"    : "Analyse morphologique et mécanique d'une couche d'oxydes",
-"s_scc_st_2"    : "Analyse statistique de données locales et expérimentales \nou numériques",
-"s_scc_st_3"     : "taux de couverture des joints de grains par des précipités",
-"s_polymers_st_1"   : "Estimation numérique 3D de la diffusion effective des gaz dans les polymères chargés",
+"s_oxides_mt_1" : "Estimation du champ mecanique dans une couche de zircone \npresentant des defauts et de l'energie elastique relaxee",
+"s_scc_st_1"    : "Analyse morphologique et mecanique d'une couche d'oxydes",
+"s_scc_st_2"    : "Analyse statistique de donnees locales et experimentales \nou numeriques",
+"s_scc_st_3"     : "taux de couverture des joints de grains par des precipites",
+"s_polymers_st_1"   : "Estimation numerique 3D de la diffusion effective des gaz dans les polymeres charges",
 "s_rpv2"   : "Essai Pascale",
 "s_DIC"   : "Essai Felix",
          }
@@ -45,6 +44,7 @@ dico={"oxides" : {"irradiation"            : "s_oxides_st_1",
                    "mecanique avec defaut" : "s_oxides_mt_1"},
       "scc" : {"analyse morphologique" : "s_scc_st_1",
                "analyse statistique"   : "s_scc_st_2",
+               "analyse 3d"   : "s_scc_pn",
                "taux de couverture"    : "s_scc_st_3"},
       "concrete" : {},
       "polycristals" : {"essai Pascale" : "s_rpv2",},
@@ -72,9 +72,6 @@ class MonRadioBouton(QRadioButton) :
 
 class MonChoixMap(Ui_ChoixMap,QtGui.QDialog):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
   """
   def __init__(self, choixCata,parentQT=None,parentAppli=None):
       QtGui.QDialog.__init__(self,parentQT)

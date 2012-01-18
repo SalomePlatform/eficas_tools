@@ -34,7 +34,6 @@ import types
 # Modules Eficas
 from Noyau.N_CR import CR
 from Editeur.catadesc import CatalogDescription
-from Editeur.utils  import init_rep_cata_dev
 
 import analyse_catalogue
 import analyse_catalogue_initial
@@ -220,6 +219,8 @@ class READERCATA:
       nom_cata = os.path.splitext(os.path.basename(cata))[0]
       rep_cata = os.path.dirname(cata)
       sys.path[:0] = [rep_cata]
+      self.appliEficas.listeAEnlever.append(rep_cata)
+     
       
       if sys.modules.has_key(nom_cata):
         del sys.modules[nom_cata]

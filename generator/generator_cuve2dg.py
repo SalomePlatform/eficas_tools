@@ -70,10 +70,13 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "FichierDataIn"    : "DATARESUME_FILE",
 	 "FichierTempSigma" : "TEMPSIG_FILE",
 	 "FichierCSV"       : "CSV_FILE",
-	 "FichierCREARE" : "CREARE_FILE",
+	 "FichierRESTART" : "RESTART_FILE",
+	 "FichierEXTR" : "EXTR_FILE",
+	 "ChoixPlugin" : "CHOIPLUG",
 	 "GrandeurEvaluee" : "GRANDEUR",
 	 "IncrementTemporel" : "INCRTPS",
 	 "IncrementMaxTemperature" : "DTPREC",
+	 "ChoixExtractionTransitoires" : "CHOIEXTR",
 	 "IncrementMaxTempsAffichage" : "DTARCH",
 	 "TraitementGeometrie" : "TYPEGEOM",
 	 "RayonInterne" : "RINT",
@@ -87,6 +90,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NombreNoeudsMaillage" : "NBNO",
 	 "TypeInitial" : "TYPEDEF",
 	 "Orientation" : "ORIEDEF",
+	 "Position" : "POSDEF",
 	 "ProfondeurRadiale" : "PROFDEF",
 	 "ProfondeurRadiale_mess" : "PROFDEF_MESSAGE",
 	 "ModeCalculLongueur" : "OPTLONG",
@@ -140,7 +144,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NombreEcartTypeRTndt" : "nbectDRTNDT",
 	 "NombreEcartTypeRTndt_mess" : "nbectDRTNDT_MESSAGE",
 	 "ModeleTenacite" : "MODELKIC",
-	 "NBRE_CARACTERISTIQUE" : "NBCARAC",
+	 "NombreCaracteristique" : "NBCARAC",
 	 "NbEcartType_MoyKIc" : "nbectKIc",
 	 "NbEcartType_MoyKIc_mess" : "nbectKIc_MESSAGE",
 	 "PalierDuctile_KIc" : "KICPAL",
@@ -157,6 +161,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "C1" : "C1",
 	 "C2" : "C2",
 	 "C3" : "C3",
+	 "ChoixCorrectionLongueur" : "CHOIXCL",
 	 "AttnCorrBeta" : "ATTNCORRBETA",
 	 "CorrIrwin" : "CORRIRWIN",
 	 "ArretDeFissure" : "ARRETFISSURE",
@@ -165,6 +170,9 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NbEcartType_MoyKIa" : "nbectKIa",
 	 "PalierDuctile_KIa" : "KIAPAL",
 	 "CoefficientVariation_KIa" : "KIACDV",
+	 "ChoixCoefficientChargement" : "CHOIXSIGM",
+	 "CoefficientDuctile" : "COEFSIGM1",
+	 "CoefficientFragile" : "COEFSIGM2",
 	 "InstantInitialisation" : "INSTINIT",
 	 "ConditionLimiteThermiqueREV" : "KTHREV",
 	 "TemperatureDeformationNulleREV" : "TREFREV",
@@ -177,8 +185,10 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "TypeConditionLimiteThermique" : "TYPCLTH",
 	 "Instant_1" : "INSTANT1",
 	 "Instant_2" : "INSTANT2",
+	 "Instant_3" : "INSTANT3",
 	 "DebitAccumule" : "QACCU",
 	 "DebitInjectionSecurite" : "QIS",
+	 "TempInjectionSecurite" : "TIS",
 	 "TempInjectionSecurite_mess" : "TIS_MESSAGE",
 	 "DiametreHydraulique" : "DH",
 	 "DiametreHydraulique_mess" : "DH_MESSAGE",
@@ -188,12 +198,80 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "HauteurCaracConvectionNaturelle_mess" : "DELTA_MESSAGE",
 	 "CritereConvergenceRelative" : "EPS",
 	 "CoefficientsVestale" : "COEFVESTALE",
-	 "VolumeMelange_CREARE" : "VM",
-	 "VolumeMelange_CREARE_mess" : "VM_MESSAGE",
+	 "VolumeMelange_CREARE" : "VMTAB",
 	 "TemperatureInitiale_CREARE" : "T0",
 	 "TemperatureInitiale_CREARE_mess" : "T0_MESSAGE",
 	 "SurfaceEchange_FluideStructure" : "SE",
 	 "SurfaceEchange_FluideStructure_mess" : "SE_MESSAGE",
+	 "InstantPerteCirculationNaturelle" : "INST_PCN",
+         }
+
+      # Ce dictionnaire liste le nom des valeurs proposées utilisees dans le script
+      self.valeurproposee = {
+         "Aucune impression" : "0",
+         "Temps total" : "1",
+         "Temps intermediaires" : "2",
+	 "Facteur de marge KIc/KCP" : "FM_KICSURKCP",
+	 "Marge KIc-KI" : "MARGE_KI",
+	 "Marge KIc-KCP" : "MARGE_KCP",
+	 "Topologie" : "GEOMETRIE",
+	 "Maillage" : "MAILLAGE",
+	 "Defaut Sous Revetement" : "DSR",
+	 "Defaut Decale" : "DECALE",
+	 "Defaut Debouchant" : "DEBOUCHANT",
+	 "Longitudinale" : "LONGITUD",
+	 "Circonferentielle" : "CIRCONF",
+	 "Virole" : "VIROLE",
+	 "Joint soude" : "JSOUDE",
+	 "Valeur" : "VALEUR",
+	 "Fonction affine de la profondeur" : "FCTAFFINE",
+	 "Valeur normalisee" : "NORMALISE",
+	 "A" : "A",
+	 "B" : "B",
+	 "A et B" : "BOTH",
+	 "Exponentiel sans revetement k=9.7 (Reglementaire)" : "Reglementaire",
+	 "Exponentiel sans revetement k=12.7 (France)" : "France",
+	 "Exponentiel sans revetement k=0. (ValeurImposee)" : "ValeurImposee",
+	 "Donnees francaises du palier CPY (SDM)" : "SDM",
+	 "Regulatory Guide 1.99 rev 2 (USNRC)" : "USNRC",
+	 "Dossier 900 MWe AP9701 rev 2 (REV_2)" : "REV_2",
+	 "Lissage du modele ajuste (SDM_Lissage)" : "SDM_Lissage",
+	 "Donnees francaises du palier CPY ajustees par secteur angulaire (GrandeDev)" : "GrandeDev",
+	 "Grand developpement (GD_Cuve)" : "GD_Cuve",
+	 "Exponentiel sans revetement k=9.7 (Reglementaire CUVE1D)" : "Cuve1D",
+	 "RTndt de la cuve a l instant de l analyse" : "RTNDT",
+	 "Modele d irradiation" : "FLUENCE",
+	 "Formule de FIM/FIS Lefebvre modifiee" : "LEFEBnew",
+	 "Metal de Base : formule de FIM/FIS Houssin" : "HOUSSIN",
+	 "Metal de Base : formule de FIM/FIS Persoz" : "PERSOZ",
+	 "Metal de Base : formule de FIM/FIS Lefebvre" : "LEFEBVRE",
+	 "Metal de Base : Regulatory Guide 1.00 rev 2" : "USNRCmdb",
+	 "Joint Soude : formulation de FIM/FIS Brillaud" : "BRILLAUD",
+	 "Joint Soude : Regulatory Guide 1.00 rev 2" : "USNRCsoud",
+	 "RCC-M/ASME coefficient=2" : "RCC-M",
+	 "RCC-M/ASME coefficient=2 CUVE1D" : "RCC-M_simpl",
+	 "RCC-M/ASME coefficient=2.33 (Houssin)" : "Houssin_RC",
+	 "RCC-M/ASME avec KI=KIpalier" : "RCC-M_pal",
+	 "RCC-M/ASME avec KI~exponentiel" : "RCC-M_exp",
+	 "Weibull basee sur la master cuve" : "Wallin",
+	 "Weibull basee sur la master cuve (REME)" : "REME",
+	 "Weibull n\xb01 (etude ORNL)" : "ORNL",
+	 "Weibull n\xb02" : "WEIB2",
+	 "Weibull n\xb03" : "WEIB3",
+	 "Weibull generalisee" : "WEIB-GEN",
+	 "Exponentielle n\xb01 (Frama)" : "Frama",
+	 "Exponentielle n\xb02 (LOGWOLF)" : "LOGWOLF",
+	 "Quantile" : "QUANTILE",
+	 "Ordre" : "ORDRE",
+	 "Enthalpie" : "ENTHALPIE",
+	 "Chaleur" : "CHALEUR",
+	 "Temperature imposee en paroi" : "TEMP_IMPO",
+	 "Flux de chaleur impose en paroi" : "FLUX_REP",
+	 "Temperature imposee du fluide et coefficient echange" : "ECHANGE",
+	 "Debit massique et temperature d injection de securite" : "DEBIT",
+	 "Temperature imposee du fluide et debit d injection de securite" : "TEMP_FLU",
+	 "Courbe APRP" : "APRP",
+	 "Calcul TEMPFLU puis DEBIT" : "TFDEBIT",
          }
 
       # Ce dictionnaire liste le commentaire des variables utilisees dans le script
@@ -202,10 +280,13 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "FichierDataIn"    : "sortie du fichier recapitulatif des donnees d entree {OUI ; NON}",
 	 "FichierTempSigma" : "sortie des fichiers temperature et contraintes {OUI ; NON}",
 	 "FichierCSV" : "sortie du fichier resultat template_DEFAILLCUVE.CSV {OUI ; NON}",
-	 "FichierCREARE" : "sortie du fichier Tfluide et Coef Echange {OUI ; NON}",
+	 "FichierRESTART" : "sortie du fichier de re-demarrage",
+	 "FichierEXTR" : "sortie du fichier d extraction des transitoires",
+	 "ChoixPlugin" : "choix d'un repertoire de plug-in",
 	 "GrandeurEvaluee" : "choix de la grandeur sous critere evaluee {FM_KICSURKCP ; MARGE_KI ; MARGE_KCP}",
 	 "IncrementTemporel" : "increment temporel pour l analyse PROBABILISTE (si DETERMINISTE, fixer a 1)",
 	 "IncrementMaxTemperature" : "increment max de temp/noeud/instant (degC)",
+	 "ChoixExtractionTransitoires" : "choix d'extraction de transitoires de temp et contraintes",
 	 "IncrementMaxTempsAffichage" : "increment max de temps pour affichage (s)",
 	 "TraitementGeometrie" : "traitement de la geometrie de la cuve : {GEOMETRIE, MAILLAGE}",
 	 "RayonInterne" : "rayon interne (m)",
@@ -219,6 +300,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NombreNoeudsMaillage" : "nbre de noeuds dans l'epaisseur de la cuve",
 	 "TypeInitial" : "type initial du defaut : DEBOUCHANT=Defaut Debouchant, DSR=Defaut Sous Revetement, DECALE=Defaut Decale",
 	 "Orientation" : "orientation (LONGITUD / CIRCONF)",
+	 "Position" : "Position du defaut (VIROLE / JSOUDE)",
 	 "ProfondeurRadiale" : "profondeur radiale ou encore hauteur (m)",
 	 "ProfondeurRadiale_mess" : "affichage ecran de la profondeur radiale ou encore hauteur (m)",
 	 "ModeCalculLongueur" : "option pour definir la longueur du defaut (VALEUR pour une valeur fixe, FCTAFFINE pour une fct affine de la profondeur)",
@@ -255,7 +337,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "Azimut_45deg" : "fluence a l'azimut 45 (10^19 n/cm)",
 	 "TypeIrradiation" : "type irradiation : {RTNDT, FLUENCE}",
 	 "RTNDT" : "RTNDT finale (degC)",
-	 "ModeleIrradiation" : "modele d irradiation : {HOUSSIN, PERSOZ, LEFEBVRE, USNRCmdb} pour virole et {BRILLAUD,USNRCsoud} pour jointsoude",
+	 "ModeleIrradiation" : "modele d irradiation : LEFEBnew, ou {HOUSSIN, PERSOZ, LEFEBVRE, USNRCmdb} pour virole et {BRILLAUD,USNRCsoud} pour jointsoude",
 	 "TeneurCuivre" : "teneur en cuivre (%)",
 	 "TeneurCuivre_mess" : "affichage ecran de la teneur en cuivre (%)",
 	 "TeneurNickel" : "teneur en nickel (%)",
@@ -271,7 +353,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NombreEcartTypeRTndt" : "Nbre d ecart-type par rapport a la moyenne de DRTNDT si analyse PROBABILISTE (en DETERMINISTE, fixer a 2.)",
 	 "NombreEcartTypeRTndt_mess" : "affichage ecran du nbre d ecart-type par rapport a la moyenne de DRTNDT si analyse PROBABILISTE",
 	 "ModeleTenacite" : "modele de tenacite : {RCC-M, RCC-M_pal, RCC-M_exp, RCC-M_simpl, Houssin_RC, Wallin, REME, ORNL, Frama, WEIB3, WEIB2, LOGWOLF, WEIB-GEN}",
-	 "NBRE_CARACTERISTIQUE" : "Nb caracteristique : ORDRE ou QUANTILE",
+	 "NombreCaracteristique" : "Nb caracteristique : ORDRE ou QUANTILE",
 	 "NbEcartType_MoyKIc" : "Nbre d ecart-type par rapport a la moyenne de KIc si analyse PROBABILISTE (en DETERMINISTE, fixer a -2.)",
 	 "NbEcartType_MoyKIc_mess" : "affichage ecran du nbre d ecart-type par rapport a la moyenne de KIc si analyse PROBABILISTE",
 	 "PalierDuctile_KIc" : "palier deterministe de K1c (MPa(m^0.5))",
@@ -288,6 +370,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "C1" : "",
 	 "C2" : "",
 	 "C3" : "",
+	 "ChoixCorrectionLongueur" : "Activation ou non de la correction de longueur {OUI ; NON}",
 	 "AttnCorrBeta" : "Attenuation de la correction plastique : {OUI, NON} ==> uniquement pour DSR ou DECALE",
 	 "CorrIrwin" : "Correction plastique IRWIN : {OUI, NON} ==> uniquement pour DEBOUCHANT",
 	 "ArretDeFissure" : "prise en compte de l arret de fissure {OUI, NON} (en PROBABILISTE, fixer a NON)",
@@ -296,6 +379,9 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NbEcartType_MoyKIa" : "Nbre d ecart-type par rapport a la moyenne de KIa (nb sigma)",
 	 "PalierDuctile_KIa" : "palier deterministe de K1a quand modele RCC-M  (MPa(m^0.5))",
 	 "CoefficientVariation_KIa" : "coef de variation de la loi normale de K1a",
+	 "ChoixCoefficientChargement" : "prise en compte de coefficients sur le chargement (OUI/NON)",
+	 "CoefficientDuctile" : "coefficient multiplicateur pour rupture ductile",
+	 "CoefficientFragile" : "coefficient multiplicateur pour rupture fragile",
 	 "InstantInitialisation" : "instant initial (s)",
 	 "ConditionLimiteThermiqueREV" : "Option 'ENTHALPIE' ou 'CHALEUR'",
 	 "TemperatureDeformationNulleREV" : "temperature de deformation nulle (degC)",
@@ -306,10 +392,12 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "TemperaturePourCoefDilatThermMDB" : "temperature de definition du coefficient de dilatation thermique (degC)",
 	 "CoefficientPoissonMDB" : "coefficient de Poisson",
 	 "TypeConditionLimiteThermique" : "Type de condition thermique en paroi interne {TEMP_IMPO,FLUX_REP,ECHANGE,DEBIT,TEMP_FLU,APRP}",
-	 "Instant_1" : "Borne inferieure de l intervalle de temps du 2nd palier T1",
+	 "Instant_1" : "Borne superieure de l intervalle de temps du 1er palier TACCU",
 	 "Instant_2" : "Borne superieure de l intervalle de temps du 2nd palier T1",
+	 "Instant_3" : "Borne superieure de l intervalle de temps du 3eme palier TIS",
 	 "DebitAccumule" : "Debit accumule (en m3/h)",
 	 "DebitInjectionSecurite" : "Debit injection de securite (en m3/h)",
+	 "TempInjectionSecurite" : "Temperature injection de securite (en degC)",
 	 "TempInjectionSecurite_mess" : "affichage ecran de la temperature injection de securite",
 	 "DiametreHydraulique" : "Diametre hydraulique (m)",
 	 "DiametreHydraulique_mess" : "affichage ecran du diametre hydraulique (m)",
@@ -319,12 +407,12 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "HauteurCaracConvectionNaturelle_mess" : "affichage ecran de la hauteur caracteristique convection naturelle (m)",
 	 "CritereConvergenceRelative" : "Critere convergence relative (-)",
 	 "CoefficientsVestale" : "Application des coefs de Vestale {OUI;NON}",
-	 "VolumeMelange_CREARE" : "Volume de melange CREARE (m3)",
-	 "VolumeMelange_CREARE_mess" : "affichage ecran du volume de melange CREARE (m3)",
+	 "VolumeMelange_CREARE" : "Transitoire de volume de melange CREARE (m3)",
 	 "TemperatureInitiale_CREARE" : "Temperature initiale CREARE (degC)",
 	 "TemperatureInitiale_CREARE_mess" : "affichage ecran de la temperature initiale CREARE (degC)",
 	 "SurfaceEchange_FluideStructure" : "Surface d'echange fluide/structure (m2)",
 	 "SurfaceEchange_FluideStructure_mess" : "affichage ecran de la surface d'echange fluide/structure (m2)",
+	 "InstantPerteCirculationNaturelle" : "Instant de perte de circulation naturelle",
          }
 
       # Ce dictionnaire liste la valeur par defaut des variables utilisees dans le script
@@ -333,10 +421,13 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "FichierDataIn" : "NON",
 	 "FichierTempSigma" : "NON",
 	 "FichierCSV" : "NON",
-	 "FichierCREARE" : "NON",
+	 "FichierRESTART" : "NON",
+	 "FichierEXTR" : "NON",
+	 "ChoixPlugin" : "NON",
 	 "GrandeurEvaluee" : "FM_KICSURKCP",
 	 "IncrementTemporel" : "1",
 	 "IncrementMaxTemperature" : "0.1",
+	 "ChoixExtractionTransitoires" : "NON",
 	 "IncrementMaxTempsAffichage" : "1000.",
 	 "TraitementGeometrie" : "GEOMETRIE",
 	 "RayonInterne" : "1.994",
@@ -349,7 +440,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "LigamentExterneMin_mess" : "NON",
 	 "NombreNoeudsMaillage" : "300",
 	 "TypeInitial" : "DSR",
-	 "Orientation" : "LONGITUD",
+	 "Position" : "VIROLE",
 	 "ProfondeurRadiale" : "0.006",
 	 "ProfondeurRadiale_mess" : "NON",
 	 "ModeCalculLongueur" : "VALEUR",
@@ -402,7 +493,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NombreEcartTypeRTndt" : "2.",
 	 "NombreEcartTypeRTndt_mess" : "NON",
 	 "ModeleTenacite" : "RCC-M",
-	 "NBRE_CARACTERISTIQUE" : "QUANTILE",
+	 "NombreCaracteristique" : "Quantile",
 	 "NbEcartType_MoyKIc" : "-2.",
 	 "NbEcartType_MoyKIc_mess" : "NON",
 	 "PalierDuctile_KIc" : "195.",
@@ -419,6 +510,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "C1" : "4.",
 	 "C2" : "0.",
 	 "C3" : "0.",
+	 "ChoixCorrectionLongueur" : "OUI",
 	 "AttnCorrBeta" : "NON",
 	 "CorrIrwin" : "NON",
 	 "ArretDeFissure" : "NON",
@@ -427,6 +519,9 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NbEcartType_MoyKIa" : "0.",
 	 "PalierDuctile_KIa" : "0.",
 	 "CoefficientVariation_KIa" : "0.",
+	 "ChoixCoefficientChargement" : "NON",
+	 "CoefficientDuctile" : "1.0",
+	 "CoefficientFragile" : "1.0",
 	 "InstantInitialisation" : "-1.",
 	 "ConditionLimiteThermiqueREV" : "CHALEUR",
 	 "TemperatureDeformationNulleREV" : "20.",
@@ -439,8 +534,10 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "TypeConditionLimiteThermique" : "TEMP_IMPO",
 	 "Instant_1" : "21.",
 	 "Instant_2" : "45.",
+	 "Instant_3" : "5870.",
 	 "DebitAccumule" : "2.3",
 	 "DebitInjectionSecurite" : "0.375",
+	 "TempInjectionSecurite" : "9.",
 	 "TempInjectionSecurite_mess" : "NON",
 	 "DiametreHydraulique" : "0.3816",
 	 "DiametreHydraulique_mess" : "NON",
@@ -450,12 +547,12 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "HauteurCaracConvectionNaturelle_mess" : "NON",
 	 "CritereConvergenceRelative" : "0.00001",
 	 "CoefficientsVestale" : "NON",
-	 "VolumeMelange_CREARE" : "14.9",
-	 "VolumeMelange_CREARE_mess" : "NON",
+#	 "VolumeMelange_CREARE" : "14.9",
 	 "TemperatureInitiale_CREARE" : "250.",
 	 "TemperatureInitiale_CREARE_mess" : "NON",
 	 "SurfaceEchange_FluideStructure" : "0.",
 	 "SurfaceEchange_FluideStructure_mess" : "NON",
+	 "InstantPerteCirculationNaturelle" : "400.",
          }
 
       # Ce dictionnaire liste la rubrique d'appartenance des variables utilisees dans le script
@@ -464,10 +561,13 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "FichierDataIn" : "OPTIONS",
 	 "FichierTempSigma" : "OPTIONS",
 	 "FichierCSV" : "OPTIONS",
-	 "FichierCREARE" : "OPTIONS",
+	 "FichierRESTART" : "OPTIONS",
+	 "FichierEXTR" : "OPTIONS",
+	 "ChoixPlugin" : "OPTIONS",
 	 "GrandeurEvaluee" : "OPTIONS",
 	 "IncrementTemporel" : "OPTIONS",
 	 "IncrementMaxTemperature" : "OPTIONS",
+	 "ChoixExtractionTransitoires" : "OPTIONS",
 	 "IncrementMaxTempsAffichage" : "OPTIONS",
 	 "TraitementGeometrie" : "DONNEES DE LA CUVE",
 	 "RayonInterne" : "DONNEES DE LA CUVE",
@@ -481,6 +581,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NombreNoeudsMaillage" : "DONNEES DE LA CUVE",
 	 "TypeInitial" : "CARACTERISTIQUES DU DEFAUT",
 	 "Orientation" : "CARACTERISTIQUES DU DEFAUT",
+	 "Position" : "CARACTERISTIQUES DU DEFAUT",
 	 "ProfondeurRadiale" : "CARACTERISTIQUES DU DEFAUT",
 	 "ProfondeurRadiale_mess" : "CARACTERISTIQUES DU DEFAUT",
 	 "ModeCalculLongueur" : "CARACTERISTIQUES DU DEFAUT",
@@ -533,7 +634,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NombreEcartTypeRTndt" : "MODELES",
 	 "NombreEcartTypeRTndt_mess" : "MODELES",
 	 "ModeleTenacite" : "MODELES",
-	 "NBRE_CARACTERISTIQUE" : "MODELES",
+	 "NombreCaracteristique" : "MODELES",
 	 "NbEcartType_MoyKIc" : "MODELES",
 	 "NbEcartType_MoyKIc_mess" : "MODELES",
 	 "PalierDuctile_KIc" : "MODELES",
@@ -550,6 +651,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "C1" : "MODELES",
 	 "C2" : "MODELES",
 	 "C3" : "MODELES",
+	 "ChoixCorrectionLongueur" : "MODELES",
 	 "AttnCorrBeta" : "MODELES",
 	 "CorrIrwin" : "MODELES",
 	 "ArretDeFissure" : "MODELES",
@@ -558,6 +660,9 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "NbEcartType_MoyKIa" : "MODELES",
 	 "PalierDuctile_KIa" : "MODELES",
 	 "CoefficientVariation_KIa" : "MODELES",
+	 "ChoixCoefficientChargement" : "ETAT INITIAL",
+	 "CoefficientDuctile" : "ETAT INITIAL",
+	 "CoefficientFragile" : "ETAT INITIAL",
 	 "InstantInitialisation" : "ETAT INITIAL",
 	 "ConditionLimiteThermiqueREV" : "CARACTERISTIQUES DU REVETEMENT",
 	 "TemperatureDeformationNulleREV" : "CARACTERISTIQUES DU REVETEMENT",
@@ -570,8 +675,10 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "TypeConditionLimiteThermique" : "TRANSITOIRE",
 	 "Instant_1" : "TRANSITOIRE",
 	 "Instant_2" : "TRANSITOIRE",
+	 "Instant_3" : "TRANSITOIRE",
 	 "DebitAccumule" : "TRANSITOIRE",
 	 "DebitInjectionSecurite" : "TRANSITOIRE",
+	 "TempInjectionSecurite" : "TRANSITOIRE",
 	 "TempInjectionSecurite_mess" : "TRANSITOIRE",
 	 "DiametreHydraulique" : "TRANSITOIRE",
 	 "DiametreHydraulique_mess" : "TRANSITOIRE",
@@ -582,16 +689,17 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "CritereConvergenceRelative" : "TRANSITOIRE",
 	 "CoefficientsVestale" : "TRANSITOIRE",
 	 "VolumeMelange_CREARE" : "TRANSITOIRE",
-	 "VolumeMelange_CREARE_mess" : "TRANSITOIRE",
 	 "TemperatureInitiale_CREARE" : "TRANSITOIRE",
 	 "TemperatureInitiale_CREARE_mess" : "TRANSITOIRE",
 	 "SurfaceEchange_FluideStructure" : "TRANSITOIRE",
 	 "SurfaceEchange_FluideStructure_mess" : "TRANSITOIRE",
+	 "InstantPerteCirculationNaturelle" : "TRANSITOIRE",
          }
 
-   def gener(self,obj,format='brut',config=None):
+   def gener(self,obj,format='brut'):
       self.text=''
       self.textCuve=''
+      self.texteTFDEBIT=''
       self.dico_mot={}
       self.dico_genea={}
       self.text=PythonGenerator.gener(self,obj,format)
@@ -606,8 +714,7 @@ class Cuve2dgGenerator(PythonGenerator):
        s=PythonGenerator.generMCSIMP(self,obj)
        return s
 
-   def writeDefault(self, fn):
-      filename = fn[:fn.rfind(".")] + '.don'
+   def writeCuve2DG(self, filename, file2):
       print "je passe dans writeCuve2DG"
       self.genereTexteCuve()
       f = open( filename, 'wb')
@@ -617,6 +724,13 @@ class Cuve2dgGenerator(PythonGenerator):
       ftmp = open( "/tmp/data_template", 'wb')
       ftmp.write( self.texteCuve )
       ftmp.close()
+
+      self.genereTexteTFDEBIT()
+      f2 = open( file2, 'wb')
+      print self.texteTFDEBIT
+      f2.write( self.texteTFDEBIT )
+      f2.close()
+
 
    def entete(self):
       '''
@@ -721,47 +835,63 @@ class Cuve2dgGenerator(PythonGenerator):
 
       self.texteCuve += self.sousRubrique('Impression a l ecran', '')
       if self.dico_mot.has_key('NiveauImpression'):
-         if str(self.dico_mot["NiveauImpression"])=='Aucune impression':
-            self.texteCuve += self.affecteValeur('NiveauImpression', '0')
-         if str(self.dico_mot["NiveauImpression"])=='Temps total':
-            self.texteCuve += self.affecteValeur('NiveauImpression', '1')
-         if str(self.dico_mot["NiveauImpression"])=='Temps intermediaires':
-            self.texteCuve += self.affecteValeur('NiveauImpression', '2')
+         self.texteCuve += self.affecteValeur('NiveauImpression', self.valeurproposee[str(self.dico_mot["NiveauImpression"])])
 
       self.texteCuve += self.sousRubrique('Generation de fichiers', '')
       self.texteCuve += self.ecritVariable('FichierDataIn')
       self.texteCuve += self.ecritVariable('FichierTempSigma')
       self.texteCuve += self.ecritVariable('FichierCSV')
-      self.texteCuve += self.ecritVariable('FichierCREARE')
+      self.texteCuve += self.ecritVariable('FichierRESTART')
+      self.texteCuve += self.ecritVariable('FichierEXTR')
+      self.texteCuve += self.ecritVariable('ChoixPlugin')
 
       self.texteCuve += self.sousRubrique('Grandeur evaluee', '')
       if self.dico_mot.has_key('GrandeurEvaluee'):
-         if str(self.dico_mot["GrandeurEvaluee"])=='Facteur de marge KIc/KCP':
-            self.texteCuve += self.affecteValeur('GrandeurEvaluee', 'FM_KICSURKCP')
-         if str(self.dico_mot["GrandeurEvaluee"])=='Marge KIc-KI':
-            self.texteCuve += self.affecteValeur('GrandeurEvaluee', 'MARGE_KI')
-         if str(self.dico_mot["GrandeurEvaluee"])=='Marge KIc-KCP':
-            self.texteCuve += self.affecteValeur('GrandeurEvaluee', 'MARGE_KCP')
+         self.texteCuve += self.affecteValeur('GrandeurEvaluee', self.valeurproposee[str(self.dico_mot["GrandeurEvaluee"])])
 
       self.texteCuve += self.sousRubrique('Divers', '')
       self.texteCuve += self.ecritVariable('IncrementTemporel')
       self.texteCuve += self.ecritVariable('IncrementMaxTemperature')
+
+      #self.texteCuve += self.ecritVariable('ChoixExtractionTransitoires')
+      if self.dico_mot.has_key('ChoixExtractionTransitoires'):
+         self.texteCuve += self.ecritVariable('ChoixExtractionTransitoires')
+         if str(self.dico_mot["ChoixExtractionTransitoires"])=='OUI':
+            if self.dico_mot.has_key('ListeAbscisses'):
+               self.texteCuve += "# liste des abscisses pour ecriture des transitoires de T et SIG (5 ou moins)"+"\n"
+               self.imprime(1,(self.dico_mot["ListeAbscisses"]))
+               self.texteCuve+="#"+"\n"
+            else :
+               print "Warning ==> Dans la rubrique OPTIONS, fournir ListeAbscisses."
+               self.texteCuve += "# liste des abscisses pour ecriture des transitoires de T et SIG (5 ou moins)"+"\n"
+               self.texteCuve += "  1.994\n"
+               self.texteCuve += "  2.000\n"
+               self.texteCuve+="#"+"\n"
+         else :
+            self.texteCuve+="#"+"\n"
+
       self.texteCuve += self.ecritVariable('IncrementMaxTempsAffichage')
       if self.dico_mot.has_key('ListeInstants'):
          self.texteCuve += "# liste des instants pour ecriture des resultats (s)"+"\n"
+         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+            self.texteCuve+="#BLOC_TFDEBIT"+"\n"
          self.imprime(1,(self.dico_mot["ListeInstants"]))
+         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+            self.texteCuve+="#BLOC_TFDEBIT"+"\n"
+         self.texteCuve+="#"+"\n"
       else :
          print "Warning ==> Dans la rubrique OPTIONS, fournir ListeInstants."
          self.texteCuve += "# liste des instants pour ecriture des resultats (s)"+"\n"
          self.texteCuve += "  0.\n"
          self.texteCuve += "  1.\n"
+         self.texteCuve+="#"+"\n"
 
 
       # Rubrique DONNEES DE LA CUVE
       self.texteCuve += self.rubrique('DONNEES DE LA CUVE')
       if self.dico_mot.has_key('TraitementGeometrie'):
+         self.texteCuve += self.affecteValeur('TraitementGeometrie', self.valeurproposee[str(self.dico_mot["TraitementGeometrie"])])
          if str(self.dico_mot["TraitementGeometrie"])=='Topologie':
-            self.texteCuve += self.affecteValeur('TraitementGeometrie', 'GEOMETRIE')
             self.texteCuve+="# - si MAILLAGE, fournir NBNO et liste des abscisses (m)"+"\n"
             self.texteCuve+="# - si GEOMETRIE, fournir (RINT, RINT_MESSAGE),"+"\n"
             self.texteCuve+="#                         (REXT, REXT_MESSAGE),"+"\n"
@@ -781,7 +911,6 @@ class Cuve2dgGenerator(PythonGenerator):
             self.texteCuve+="#"+"\n"
             self.texteCuve += self.ecritVariable('NombreNoeudsMaillage')
          if str(self.dico_mot["TraitementGeometrie"])=='Maillage':
-            self.texteCuve += self.affecteValeur('TraitementGeometrie', 'MAILLAGE')
             self.texteCuve+="# - si MAILLAGE, fournir NBNO et liste des abscisses (m)"+"\n"
             self.texteCuve+="# - si GEOMETRIE, fournir (RINT, RINT_MESSAGE),"+"\n"
             self.texteCuve+="#                         (REXT, REXT_MESSAGE),"+"\n"
@@ -817,12 +946,7 @@ class Cuve2dgGenerator(PythonGenerator):
       self.texteCuve += self.rubrique('CARACTERISTIQUES DU DEFAUT')
 
       if self.dico_mot.has_key('TypeInitial'):
-         if str(self.dico_mot["TypeInitial"])=='Defaut Sous Revetement':
-            self.texteCuve += self.affecteValeur('TypeInitial', 'DSR')
-         if str(self.dico_mot["TypeInitial"])=='Defaut Decale':
-            self.texteCuve += self.affecteValeur('TypeInitial', 'DECALE')
-         if str(self.dico_mot["TypeInitial"])=='Defaut Debouchant':
-            self.texteCuve += self.affecteValeur('TypeInitial', 'DEBOUCHANT')
+         self.texteCuve += self.affecteValeur('TypeInitial', self.valeurproposee[str(self.dico_mot["TypeInitial"])])
       else :
          self.texteCuve += self.affecteValeurDefaut('TypeInitial')
 
@@ -840,51 +964,53 @@ class Cuve2dgGenerator(PythonGenerator):
       self.texteCuve+="#"+"\n"
 
       if self.dico_mot.has_key('Orientation'):
-         if str(self.dico_mot["Orientation"])=='Longitudinale':
-            self.texteCuve += self.affecteValeur('Orientation', 'LONGITUD')
-         if str(self.dico_mot["Orientation"])=='Circonferentielle':
-            self.texteCuve += self.affecteValeur('Orientation', 'CIRCONF')
+         self.texteCuve += self.affecteValeur('Orientation', self.valeurproposee[str(self.dico_mot["Orientation"])])
       else :
          self.texteCuve += self.affecteValeurDefaut('Orientation')
+	 
+      if self.dico_mot.has_key('Position'):
+         self.texteCuve += self.affecteValeur('Position', self.valeurproposee[str(self.dico_mot["Position"])])
+      else :
+         self.texteCuve += self.affecteValeurDefaut('Position')
 	 
       self.texteCuve+="#"+"\n"
       self.texteCuve += self.ecritVariable('ProfondeurRadiale')
       self.texteCuve += self.ecritVariable('ProfondeurRadiale_mess')
 
       self.texteCuve+="#"+"\n"
-      if self.dico_mot.has_key('ModeCalculLongueur'):
-         if str(self.dico_mot["ModeCalculLongueur"])=='Valeur':
-            self.texteCuve += self.affecteValeur('ModeCalculLongueur', 'VALEUR')
-            self.texteCuve+="# - Si VALEUR,    fournir (LONGDEF, LONGDEF_MESSAGE)"+"\n"
-            self.texteCuve+="# - Si FCTAFFINE, fournir (PROFSURLONG, PROFSURLONG_MESSAGE) et LONGCONST : LONGDEF=PROFDEF/PROFSURLONG + LONGCONST"+"\n"
-            self.texteCuve += self.ecritVariable('Longueur')
-            self.texteCuve += self.ecritVariable('Longueur_mess')
-         if str(self.dico_mot["ModeCalculLongueur"])=='Fonction affine de la profondeur':
-            self.texteCuve += self.affecteValeur('ModeCalculLongueur', 'FCTAFFINE')
-            self.texteCuve+="# - Si VALEUR,    fournir (LONGDEF, LONGDEF_MESSAGE)"+"\n"
-            self.texteCuve+="# - Si FCTAFFINE, fournir (PROFSURLONG, PROFSURLONG_MESSAGE) et LONGCONST : LONGDEF=PROFDEF/PROFSURLONG + LONGCONST"+"\n"
-            self.texteCuve += self.ecritVariable('CoefDirecteur')
-            self.texteCuve += self.ecritVariable('CoefDirecteur_mess')
-            self.texteCuve += self.ecritVariable('Constante')
-      else :
-         self.texteCuve += self.affecteValeurDefaut('ModeCalculLongueur')
-         self.texteCuve+="# - Si VALEUR,    fournir (LONGDEF, LONGDEF_MESSAGE)"+"\n"
-         self.texteCuve+="# - Si FCTAFFINE, fournir (PROFSURLONG, PROFSURLONG_MESSAGE) et LONGCONST : LONGDEF=PROFDEF/PROFSURLONG + LONGCONST"+"\n"
-         self.texteCuve += self.affecteValeurDefaut('Longueur')
-         self.texteCuve += self.affecteValeurDefaut('Longueur_mess')
+      if self.dico_mot.has_key('TypeInitial'):
+         if str(self.dico_mot["TypeInitial"])!='Defaut Debouchant':
+            if self.dico_mot.has_key('ModeCalculLongueur'):
+               self.texteCuve += self.affecteValeur('ModeCalculLongueur', self.valeurproposee[str(self.dico_mot["ModeCalculLongueur"])])
+               if str(self.dico_mot["ModeCalculLongueur"])=='Valeur':
+                  self.texteCuve+="# - Si VALEUR,    fournir (LONGDEF, LONGDEF_MESSAGE)"+"\n"
+                  self.texteCuve+="# - Si FCTAFFINE, fournir (PROFSURLONG, PROFSURLONG_MESSAGE) et LONGCONST : LONGDEF=PROFDEF/PROFSURLONG + LONGCONST"+"\n"
+                  self.texteCuve += self.ecritVariable('Longueur')
+                  self.texteCuve += self.ecritVariable('Longueur_mess')
+               if str(self.dico_mot["ModeCalculLongueur"])=='Fonction affine de la profondeur':
+                  self.texteCuve+="# - Si VALEUR,    fournir (LONGDEF, LONGDEF_MESSAGE)"+"\n"
+                  self.texteCuve+="# - Si FCTAFFINE, fournir (PROFSURLONG, PROFSURLONG_MESSAGE) et LONGCONST : LONGDEF=PROFDEF/PROFSURLONG + LONGCONST"+"\n"
+                  self.texteCuve += self.ecritVariable('CoefDirecteur')
+                  self.texteCuve += self.ecritVariable('CoefDirecteur_mess')
+                  self.texteCuve += self.ecritVariable('Constante')
+            else :
+               self.texteCuve += self.affecteValeurDefaut('ModeCalculLongueur')
+               self.texteCuve+="# - Si VALEUR,    fournir (LONGDEF, LONGDEF_MESSAGE)"+"\n"
+               self.texteCuve+="# - Si FCTAFFINE, fournir (PROFSURLONG, PROFSURLONG_MESSAGE) et LONGCONST : LONGDEF=PROFDEF/PROFSURLONG + LONGCONST"+"\n"
+               self.texteCuve += self.affecteValeurDefaut('Longueur')
+               self.texteCuve += self.affecteValeurDefaut('Longueur_mess')
 
       if self.dico_mot.has_key('TypeInitial'):
-         if str(self.dico_mot["TypeInitial"])!='Defaut Sous Revetement':
+         if str(self.dico_mot["TypeInitial"])=='Defaut Decale':
             self.texteCuve+="#"+"\n"
             if self.dico_mot.has_key('ModeCalculDecalage'):
+               self.texteCuve += self.affecteValeur('ModeCalculDecalage', self.valeurproposee[str(self.dico_mot["ModeCalculDecalage"])])
                if str(self.dico_mot["ModeCalculDecalage"])=='Valeur normalisee':
-                  self.texteCuve += self.affecteValeur('ModeCalculDecalage', 'NORMALISE')
                   self.texteCuve+="# - Si NORMALISE, fournir (DECANOR, DECANOR_MESSAGE)"+"\n"
                   self.texteCuve+="# - Si VALEUR,    fournir (DECADEF, DECADEF_MESSAGE)"+"\n"
                   self.texteCuve += self.ecritVariable('DecalageNormalise')
                   self.texteCuve += self.ecritVariable('DecalageNormalise_mess')
                if str(self.dico_mot["ModeCalculDecalage"])=='Valeur':
-                  self.texteCuve += self.affecteValeur('ModeCalculDecalage', 'VALEUR')
                   self.texteCuve+="# - Si NORMALISE, fournir (DECANOR, DECANOR_MESSAGE)"+"\n"
                   self.texteCuve+="# - Si VALEUR,    fournir (DECADEF, DECADEF_MESSAGE)"+"\n"
                   self.texteCuve += self.ecritVariable('DecalageRadial')
@@ -904,40 +1030,16 @@ class Cuve2dgGenerator(PythonGenerator):
       self.texteCuve += self.ecritVariable('Altitude_mess')
       self.texteCuve+="#"+"\n"
       if self.dico_mot.has_key('Pointe'):
-         if str(self.dico_mot["Pointe"])=='A':
-            self.texteCuve += self.affecteValeur('Pointe', 'A')
-         if str(self.dico_mot["Pointe"])=='B':
-            self.texteCuve += self.affecteValeur('Pointe', 'B')
-         if str(self.dico_mot["Pointe"])=='A et B':
-            self.texteCuve += self.affecteValeur('Pointe', 'BOTH')
-      else :
-         self.texteCuve += self.affecteValeurDefaut('Pointe')
+         self.texteCuve += self.affecteValeur('Pointe', self.valeurproposee[str(self.dico_mot["Pointe"])])
+      #else :
+      #   self.texteCuve += self.affecteValeurDefaut('Pointe')
 
       # Rubrique MODELES FLUENCE, IRRADIATION, TENACITE
       self.texteCuve += self.rubrique('MODELES FLUENCE, IRRADIATION, TENACITE')
       self.texteCuve += self.sousRubrique('Modele d attenuation de la fluence dans l epaisseur','A.')
 
       if self.dico_mot.has_key('ModeleFluence'):
-         if str(self.dico_mot["ModeleFluence"])=='Exponentiel sans revetement k=9.7 (Reglementaire)':
-            self.texteCuve += self.affecteValeur('ModeleFluence', 'Reglementaire')
-         if str(self.dico_mot["ModeleFluence"])=='Exponentiel sans revetement k=12.7 (France)':
-            self.texteCuve += self.affecteValeur('ModeleFluence', 'France')
-         if str(self.dico_mot["ModeleFluence"])=='Exponentiel sans revetement k=0. (ValeurImposee)':
-            self.texteCuve += self.affecteValeur('ModeleFluence', 'ValeurImposee')
-         if str(self.dico_mot["ModeleFluence"])=='Donnees francaises du palier CPY (SDM)':
-            self.texteCuve += self.affecteValeur('ModeleFluence', 'SDM')
-         if str(self.dico_mot["ModeleFluence"])=='Regulatory Guide 1.99 rev 2 (USNRC)':
-            self.texteCuve += self.affecteValeur('ModeleFluence', 'USNRC')
-         if str(self.dico_mot["ModeleFluence"])=='Dossier 900 MWe AP9701 rev 2 (REV_2)':
-            self.texteCuve += self.affecteValeur('ModeleFluence', 'REV_2')
-         if str(self.dico_mot["ModeleFluence"])=='Lissage du modele ajuste (SDM_Lissage)':
-            self.texteCuve += self.affecteValeur('ModeleFluence', 'SDM_Lissage')
-         if str(self.dico_mot["ModeleFluence"])=='Donnees francaises du palier CPY ajustees par secteur angulaire (GrandeDev)':
-            self.texteCuve += self.affecteValeur('ModeleFluence', 'GrandeDev')
-         if str(self.dico_mot["ModeleFluence"])=='Grand developpement (GD_Cuve)':
-            self.texteCuve += self.affecteValeur('ModeleFluence', 'GD_Cuve')
-         if str(self.dico_mot["ModeleFluence"])=='Exponentiel sans revetement k=9.7 (Reglementaire CUVE1D)':
-            self.texteCuve += self.affecteValeur('ModeleFluence', 'Cuve1D')
+         self.texteCuve += self.affecteValeur('ModeleFluence', self.valeurproposee[str(self.dico_mot["ModeleFluence"])])
       else :
          self.texteCuve += self.affecteValeurDefaut('ModeleFluence')
 
@@ -969,47 +1071,35 @@ class Cuve2dgGenerator(PythonGenerator):
       self.texteCuve += self.sousRubrique('Irradiation','B.')
 
       if self.dico_mot.has_key('TypeIrradiation'):
+         self.texteCuve += self.affecteValeur('TypeIrradiation', self.valeurproposee[str(self.dico_mot["TypeIrradiation"])])
 
          if str(self.dico_mot["TypeIrradiation"])=='RTndt de la cuve a l instant de l analyse':
-            self.texteCuve += self.affecteValeur('TypeIrradiation', 'RTNDT')
             self.texteCuve+="# - si RTNDT, fournir RTNDT"+"\n"
             self.texteCuve+="# - si FLUENCE, fournir MODELIRR, et autres parametres selon MODELIRR (voir ci-dessous)"+"\n"
             self.texteCuve+="#"+"\n"
             self.texteCuve += self.ecritVariable('RTNDT')
 
          if str(self.dico_mot["TypeIrradiation"])=='Modele d irradiation':
-            self.texteCuve += self.affecteValeur('TypeIrradiation', 'FLUENCE')
             self.texteCuve+="# - si RTNDT, fournir RTNDT"+"\n"
             self.texteCuve+="# - si FLUENCE, fournir MODELIRR, et autres parametres selon MODELIRR (voir ci-dessous)"+"\n"
             self.texteCuve+="#"+"\n"
             if self.dico_mot.has_key('ModeleIrradiation'):
-               if str(self.dico_mot["ModeleIrradiation"])=='Metal de Base : formule de FIM/FIS Houssin':
-                  self.texteCuve += self.affecteValeur('ModeleIrradiation', 'HOUSSIN')
-               if str(self.dico_mot["ModeleIrradiation"])=='Metal de Base : formule de FIM/FIS Persoz':
-                  self.texteCuve += self.affecteValeur('ModeleIrradiation', 'PERSOZ')
-               if str(self.dico_mot["ModeleIrradiation"])=='Metal de Base : formule de FIM/FIS Lefebvre':
-                  self.texteCuve += self.affecteValeur('ModeleIrradiation', 'LEFEBVRE')
-               if str(self.dico_mot["ModeleIrradiation"])=='Metal de Base : Regulatory Guide 1.00 rev 2':
-                  self.texteCuve += self.affecteValeur('ModeleIrradiation', 'USNRCmdb')
-               if str(self.dico_mot["ModeleIrradiation"])=='Joint Soude : formulation de FIM/FIS Brillaud':
-                  self.texteCuve += self.affecteValeur('ModeleIrradiation', 'BRILLAUD')
-               if str(self.dico_mot["ModeleIrradiation"])=='Joint Soude : Regulatory Guide 1.00 rev 2':
-                  self.texteCuve += self.affecteValeur('ModeleIrradiation', 'USNRCsoud')
+               self.texteCuve += self.affecteValeur('ModeleIrradiation', self.valeurproposee[str(self.dico_mot["ModeleIrradiation"])])
             else :
               self.texteCuve += self.affecteValeurDefaut('ModeleIrradiation')
-            self.texteCuve+="# - pour tout modele,                       fournir (CU, CU_MESSAGE),"+"\n"
-            self.texteCuve+="#                                                   (NI, NI_MESSAGE),"+"\n"
-            self.texteCuve+="# - si HOUSSIN, PERSOZ, LEFEBVRE, BRILLAUD, fournir (P, P_MESSAGE)"+"\n"
-            self.texteCuve+="# - pour tout modele,                       fournir (RTimoy, RTimoy_MESSAGE),"+"\n"
-            self.texteCuve+="# - si USNRCsoud ou USNRCmdb,               fournir (RTicov, RTicov_MESSAGE)"+"\n"
-            self.texteCuve+="#                                                   (USectDRT, USectDRT_MESSAGE)"+"\n"
-            self.texteCuve+="# - pour tout modele,                       fournir (nbectDRTNDT, nbectDRTNDT_MESSAGE)"+"\n"
+            self.texteCuve+="# - pour tout modele,                                 fournir (CU, CU_MESSAGE),"+"\n"
+            self.texteCuve+="#                                                             (NI, NI_MESSAGE),"+"\n"
+            self.texteCuve+="# - si HOUSSIN, PERSOZ, LEFEBVRE, BRILLAUD, LEFEBnew, fournir (P, P_MESSAGE)"+"\n"
+            self.texteCuve+="# - pour tout modele,                                 fournir (RTimoy, RTimoy_MESSAGE),"+"\n"
+            self.texteCuve+="# - si USNRCsoud ou USNRCmdb,                         fournir (RTicov, RTicov_MESSAGE)"+"\n"
+            self.texteCuve+="#                                                             (USectDRT, USectDRT_MESSAGE)"+"\n"
+            self.texteCuve+="# - pour tout modele,                                 fournir (nbectDRTNDT, nbectDRTNDT_MESSAGE)"+"\n"
             self.texteCuve+="#"+"\n"
             self.texteCuve += self.ecritVariable('TeneurCuivre')
             self.texteCuve += self.ecritVariable('TeneurCuivre_mess')
             self.texteCuve += self.ecritVariable('TeneurNickel')
             self.texteCuve += self.ecritVariable('TeneurNickel_mess')
-            if str(self.dico_mot["ModeleIrradiation"])=='Metal de Base : formule de FIM/FIS Houssin' or str(self.dico_mot["ModeleIrradiation"])=='Metal de Base : formule de FIM/FIS Persoz' or str(self.dico_mot["ModeleIrradiation"])=='Metal de Base : formule de FIM/FIS Lefebvre' or str(self.dico_mot["ModeleIrradiation"])=='Joint Soude : formulation de FIM/FIS Brillaud':
+            if str(self.dico_mot["ModeleIrradiation"])=='Metal de Base : formule de FIM/FIS Houssin' or str(self.dico_mot["ModeleIrradiation"])=='Metal de Base : formule de FIM/FIS Persoz' or str(self.dico_mot["ModeleIrradiation"])=='Metal de Base : formule de FIM/FIS Lefebvre' or str(self.dico_mot["ModeleIrradiation"])=='Joint Soude : formulation de FIM/FIS Brillaud' or str(self.dico_mot["ModeleIrradiation"])=='Formule de FIM/FIS Lefebvre modifiee':
                self.texteCuve += self.ecritVariable('TeneurPhosphore')
                self.texteCuve += self.ecritVariable('TeneurPhosphore_mess')
             self.texteCuve += self.ecritVariable('MoyenneRTndt')
@@ -1032,32 +1122,7 @@ class Cuve2dgGenerator(PythonGenerator):
       self.texteCuve+="# tenacite d amorcage"+"\n"
 
       if self.dico_mot.has_key('ModeleTenacite'):
-         if str(self.dico_mot["ModeleTenacite"])=='RCC-M/ASME coefficient=2':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'RCC-M')
-         if str(self.dico_mot["ModeleTenacite"])=='RCC-M/ASME coefficient=2 CUVE1D':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'RCC-M_simpl')
-         if str(self.dico_mot["ModeleTenacite"])=='RCC-M/ASME coefficient=2.33 (Houssin)':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'Houssin_RC')
-         if str(self.dico_mot["ModeleTenacite"])=='RCC-M/ASME avec KI=KIpalier':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'RCC-M_pal')
-         if str(self.dico_mot["ModeleTenacite"])=='RCC-M/ASME avec KI~exponentiel':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'RCC-M_exp')
-         if str(self.dico_mot["ModeleTenacite"])=='Weibull basee sur la master cuve':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'Wallin')
-         if str(self.dico_mot["ModeleTenacite"])=='Weibull basee sur la master cuve (REME)':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'REME')
-         if str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb01 (etude ORNL)':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'ORNL')
-         if str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb02':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'WEIB2')
-         if str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb03':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'WEIB3')
-         if str(self.dico_mot["ModeleTenacite"])=='Weibull generalisee':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'WEIB-GEN')
-         if str(self.dico_mot["ModeleTenacite"])=='Exponentielle n\xb01 (Frama)':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'Frama')
-         if str(self.dico_mot["ModeleTenacite"])=='Exponentielle n\xb02 (LOGWOLF)':
-            self.texteCuve += self.affecteValeur('ModeleTenacite', 'LOGWOLF')
+         self.texteCuve += self.affecteValeur('ModeleTenacite', self.valeurproposee[str(self.dico_mot["ModeleTenacite"])])
       else :
          self.texteCuve += self.affecteValeurDefaut('ModeleTenacite')
       self.texteCuve+="# - si RCC-M, RCC-M_pal, Houssin_RC, fournir (nbectKIc, nbectKIc_MESSAGE), KICPAL, KICCDV"+"\n"
@@ -1074,11 +1139,17 @@ class Cuve2dgGenerator(PythonGenerator):
       self.texteCuve+="#               b(T) = B1 + B2*exp[B3*(T-RTNDT)]"+"\n"
       self.texteCuve+="#               c(T) = C1 + C2*exp[C3*(T-RTNDT)]"+"\n"
       self.texteCuve+="#"+"\n"
+      self.texteCuve+="# Correction de la longueur"+"\n"
+      self.texteCuve += self.ecritVariable('ChoixCorrectionLongueur')
+      self.texteCuve+="#"+"\n"
       if self.dico_mot.has_key('ModeleTenacite'):
-         if str(self.dico_mot["ModeleTenacite"])=='Weibull basee sur la master cuve' or str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb01 (etude ORNL)' or str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb03' or str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb02' :
-            self.texteCuve += self.ecritVariable('NBRE_CARACTERISTIQUE')
-            self.texteCuve+="# - Si CARAC = QUANTILE, fournir (nbectKIc, nbectKIc_MESSAGE)"+"\n"
-            self.texteCuve+="# - Si CARAC = ORDRE,    fournir (fractKIc, fractKIc_MESSAGE)"+"\n"
+         if str(self.dico_mot["ModeleTenacite"])=='Weibull basee sur la master cuve' or str(self.dico_mot["ModeleTenacite"])=='Weibull basee sur la master cuve (REME)' or str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb01 (etude ORNL)' or str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb03' or str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb02' or str(self.dico_mot["ModeleTenacite"])=='Weibull generalisee' :
+            if self.dico_mot.has_key('NombreCaracteristique'):
+               self.texteCuve += self.affecteValeur('NombreCaracteristique', self.valeurproposee[str(self.dico_mot["NombreCaracteristique"])])
+            else :
+               self.texteCuve += self.affecteValeurDefaut('NombreCaracteristique')
+            self.texteCuve+="# - Si NBCARAC = QUANTILE, fournir (nbectKIc, nbectKIc_MESSAGE)"+"\n"
+            self.texteCuve+="# - Si NBCARAC = ORDRE,    fournir (fractKIc, fractKIc_MESSAGE)"+"\n"
 
          if str(self.dico_mot["ModeleTenacite"])=='RCC-M/ASME coefficient=2' or str(self.dico_mot["ModeleTenacite"])=='RCC-M/ASME avec KI=KIpalier' or str(self.dico_mot["ModeleTenacite"])=='RCC-M/ASME coefficient=2.33 (Houssin)' :
             self.texteCuve += self.ecritVariable('NbEcartType_MoyKIc')
@@ -1091,10 +1162,10 @@ class Cuve2dgGenerator(PythonGenerator):
             self.texteCuve += self.ecritVariable('NbEcartType_MoyKIc_mess')
 
          if str(self.dico_mot["ModeleTenacite"])=='Weibull basee sur la master cuve (REME)' or str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb01 (etude ORNL)' or str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb03' or str(self.dico_mot["ModeleTenacite"])=='Weibull n\xb02' or str(self.dico_mot["ModeleTenacite"])=='Weibull basee sur la master cuve' or str(self.dico_mot["ModeleTenacite"])=='Weibull generalisee':
-            if str(self.dico_mot["NBRE_CARACTERISTIQUE"])=='QUANTILE' :
+            if str(self.dico_mot["NombreCaracteristique"])=='Quantile' :
                self.texteCuve += self.ecritVariable('NbEcartType_MoyKIc')
                self.texteCuve += self.ecritVariable('NbEcartType_MoyKIc_mess')
-            if str(self.dico_mot["NBRE_CARACTERISTIQUE"])=='ORDRE' :
+            if str(self.dico_mot["NombreCaracteristique"])=='Ordre' :
                self.texteCuve += self.ecritVariable('Fractile_KIc')
                self.texteCuve += self.ecritVariable('Fractile_KIc_mess')
 
@@ -1120,6 +1191,8 @@ class Cuve2dgGenerator(PythonGenerator):
       self.texteCuve+="#"+"\n"
       self.texteCuve+="# Correction plastique"+"\n"
 
+      #DTV if self.dico_mot.has_key('TypeInitial'):
+      #DTV    if str(self.dico_mot["TypeInitial"])!='Defaut Debouchant':
       if self.dico_mot.has_key('CorrectionPlastique'):
          if str(self.dico_mot["CorrectionPlastique"])=='Correction plastique BETA (pour DSR et defaut decale)':
             self.texteCuve += self.affecteValeur('AttnCorrBeta','NON')
@@ -1152,12 +1225,16 @@ class Cuve2dgGenerator(PythonGenerator):
       self.texteCuve+="# Profil radial de la temperature initiale dans la cuve"+"\n"
       self.texteCuve+="# abscisse (m) / temp initiale dans la cuve"+"\n"
       self.texteCuve+="# Prolongation aux frontieres amont et aval: C = constant / E = exclu / L = lineaire"+"\n"
+      if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+         self.texteCuve+="#BLOC_TFDEBIT"+"\n"
       if self.dico_mot.has_key('ProfilRadial_TemperatureInitiale'):
          self.imprime(2,(self.dico_mot["ProfilRadial_TemperatureInitiale"]))
          self.texteCuve += self.amontAval('Amont_TemperatureInitiale','Aval_TemperatureInitiale')
       else :
          self.texteCuve+="    1.9940    287."+"\n"
          self.texteCuve+="CC"+"\n"
+      if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+         self.texteCuve+="#BLOC_TFDEBIT"+"\n"
 
       self.texteCuve+="#"+"\n"
       self.texteCuve+="# Profils radiaux des contraintes residuelles dans la cuve"+"\n"
@@ -1171,13 +1248,25 @@ class Cuve2dgGenerator(PythonGenerator):
          self.texteCuve+="CC"+"\n"
 
       self.texteCuve+="#"+"\n"
+      self.texteCuve+="# Prise en compte de coefficients sur les contraintes"+"\n"
+      self.texteCuve += self.ecritVariable('ChoixCoefficientChargement')
+      if str(self.dico_mot["ChoixCoefficientChargement"])=='OUI':
+         self.texteCuve += self.ecritVariable('CoefficientDuctile')
+         self.texteCuve += self.ecritVariable('CoefficientFragile')
+      else :
+         self.texteCuve+="#"+"\n"
+
+      self.texteCuve+="#"+"\n"
       self.texteCuve+="# Instant initial"+"\n"
       self.texteCuve += self.ecritVariable('InstantInitialisation')
 
       # Rubrique CARACTERISTIQUES DU REVETEMENT
       self.texteCuve += self.rubrique('CARACTERISTIQUES DU REVETEMENT')
 
-      self.texteCuve += self.ecritVariable('ConditionLimiteThermiqueREV')
+      if self.dico_mot.has_key('ConditionLimiteThermiqueREV'):
+         self.texteCuve += self.affecteValeur('ConditionLimiteThermiqueREV', self.valeurproposee[str(self.dico_mot["ConditionLimiteThermiqueREV"])])
+      else :
+         self.texteCuve += self.affecteValeurDefaut('ConditionLimiteThermiqueREV')
       self.texteCuve+="# - si CHALEUR,   fournir Temperature (degC) / chaleur volumique (J/kg/K)"+"\n"
       self.texteCuve+="# - si ENTHALPIE, fournir Temperature (degC) / enthalpie (J/kg)"+"\n"
       self.texteCuve+="# Finir chacune des listes par la prolongation aux frontieres amont et aval: C = constant / E = exclu / L = lineaire"+"\n"
@@ -1254,7 +1343,10 @@ class Cuve2dgGenerator(PythonGenerator):
       # Rubrique CARACTERISTIQUES DU METAL DE BASE
       self.texteCuve += self.rubrique('CARACTERISTIQUES DU METAL DE BASE')
 
-      self.texteCuve += self.ecritVariable('ConditionLimiteThermiqueMDB')
+      if self.dico_mot.has_key('ConditionLimiteThermiqueMDB'):
+         self.texteCuve += self.affecteValeur('ConditionLimiteThermiqueMDB', self.valeurproposee[str(self.dico_mot["ConditionLimiteThermiqueMDB"])])
+      else :
+         self.texteCuve += self.affecteValeurDefaut('ConditionLimiteThermiqueMDB')
 
       self.texteCuve+="# - si CHALEUR,   fournir Temperature (degC) / chaleur volumique (J/kg/K)"+"\n"
       self.texteCuve+="# - si ENTHALPIE, fournir Temperature (degC) / enthalpie (J/kg)"+"\n"
@@ -1324,6 +1416,8 @@ class Cuve2dgGenerator(PythonGenerator):
 
       self.texteCuve+="# instant (s) / pression (MPa)"+"\n"
       self.texteCuve+="# Prolongation aux frontieres amont et aval: C = constant / E = exclu / L = lineaire"+"\n"
+      if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+         self.texteCuve+="#BLOC_TFDEBIT"+"\n"
       if self.dico_mot.has_key('ProfilTemporel_Pression'):
          self.imprime(2,(self.dico_mot["ProfilTemporel_Pression"]))
          self.texteCuve += self.amontAval('Amont_Pression','Aval_Pression')
@@ -1333,21 +1427,16 @@ class Cuve2dgGenerator(PythonGenerator):
          self.texteCuve+="200.  0.1 "+"\n"
          self.texteCuve+="1000. 0.1 "+"\n"
          self.texteCuve+="CC"+"\n"
+      if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+         self.texteCuve+="#BLOC_TFDEBIT"+"\n"
 
       self.texteCuve += self.sousRubrique('Chargement thermo-hydraulique','')
       if self.dico_mot.has_key('TypeConditionLimiteThermique'):
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee en paroi':
-            self.texteCuve += self.affecteValeur('TypeConditionLimiteThermique', 'TEMP_IMPO')
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Flux de chaleur impose en paroi':
-            self.texteCuve += self.affecteValeur('TypeConditionLimiteThermique', 'FLUX_REP')
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et coefficient echange':
-            self.texteCuve += self.affecteValeur('TypeConditionLimiteThermique', 'ECHANGE')
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Debit massique et temperature d injection de securite':
-            self.texteCuve += self.affecteValeur('TypeConditionLimiteThermique', 'DEBIT')
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et debit d injection de securite':
-            self.texteCuve += self.affecteValeur('TypeConditionLimiteThermique', 'TEMP_FLU')
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Courbe APRP':
-            self.texteCuve += self.affecteValeur('TypeConditionLimiteThermique', 'APRP')
+         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+            self.texteCuve+="#BLOC_TFDEBIT"+"\n"
+         self.texteCuve += self.affecteValeur('TypeConditionLimiteThermique', self.valeurproposee[str(self.dico_mot["TypeConditionLimiteThermique"])])
+         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+            self.texteCuve+="#BLOC_TFDEBIT"+"\n"
       else :
          self.texteCuve += self.affecteValeurDefaut('TypeConditionLimiteThermique')
 
@@ -1358,28 +1447,31 @@ class Cuve2dgGenerator(PythonGenerator):
       self.texteCuve+="# - si DEBIT,     fournir Instant (s) / Debit massique (kg/s)"+"\n"
       self.texteCuve+="#                    puis Instant (s) / Temperature d injection de securite  (degC)"+"\n"
       self.texteCuve+="#                    puis Modele VESTALE : (DH, DH_MESSAGE), (SECTION, SECTION_MESSAGE), (DELTA, DELTA_MESSAGE), EPS, COEFVESTALE"+"\n"
-      self.texteCuve+="#                    puis Modele CREARE  : (VM, VM_MESSAGE), (T0, T0_MESSAGE), (SE, SE_MESSAGE)"+"\n"
+      self.texteCuve+="#                    puis Modele CREARE  : "+"\n"
+      self.texteCuve+="#                        Instants(s) / Volume de melange CREARE (m3)"+"\n"
+      self.texteCuve+="#                        puis (T0, T0_MESSAGE), (SE, SE_MESSAGE)"+"\n"
       self.texteCuve+="# - si TEMP_FLU,  fournir Instant (s) / Temperature du fluide (degC)"+"\n"
       self.texteCuve+="#                    puis Instant (s) / Debit d injection de securite  (kg/s)"+"\n"
       self.texteCuve+="#                    puis Modele VESTALE : (DH, DH_MESSAGE), (SECTION, SECTION_MESSAGE), (DELTA, DELTA_MESSAGE), EPS, COEFVESTALE"+"\n"
-      self.texteCuve+="# - si APRP,      fournir INSTANT1, INSTANT2, QACCU, QIS"+"\n"
-      self.texteCuve+="#                    puis TIS_MESSAGE"+"\n"
+      self.texteCuve+="# - si TFDEBIT,   fournir INST_PCN et TIS"+"\n"
+      self.texteCuve+="#                 fournir Instant (s) / Temperature du fluide (degC)"+"\n"
+      self.texteCuve+="#                    puis Instant (s) / Debit d injection de securite  (kg/s)"+"\n"
+      self.texteCuve+="#                    puis Modele VESTALE : (DH, DH_MESSAGE), (SECTION, SECTION_MESSAGE), (DELTA, DELTA_MESSAGE), EPS, COEFVESTALE"+"\n"
+      self.texteCuve+="#                    puis Modele CREARE  : "+"\n"
+      self.texteCuve+="#                        Instants(s) / Volume de melange CREARE (m3)"+"\n"
+      self.texteCuve+="#                        puis (T0, T0_MESSAGE), (SE, SE_MESSAGE)"+"\n"
+      self.texteCuve+="# - si APRP,      fournir INSTANT1, INSTANT2, INSTANT3, QACCU, QIS, (TIS, TIS_MESSAGE)"+"\n"
       self.texteCuve+="#                    puis Instant (s) / Temperature du fluide (degC) tel que dans l'exemple ci-dessous"+"\n"
       self.texteCuve+="#                         0.    286."+"\n"
       self.texteCuve+="#                         12.   20.             # 1er palier à T=TACCU"+"\n"
-      self.texteCuve+="#                         20.   20.             # idem que ci-dessus"+"\n"
-      self.texteCuve+="#                         21.   18.             # 2nd palier à T=T1 : sera remplace par nouvelle valeur calculee par fonction idoine"+"\n"
-      self.texteCuve+="#                         45.   18.             # idem que ci-dessus"+"\n"
-      if self.dico_mot.has_key('TypeConditionLimiteThermique'):
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Courbe APRP':
-            self.texteCuve+="#                         46.   9999999999.     # 3eme palier à T=Tis, temperature d injection de securite"+"\n"
-         else :
-            self.texteCuve+="#                         46.   %INLET-TIS%     # 3eme palier à T=Tis, temperature d injection de securite"+"\n"
-      else :
-         self.texteCuve+="#                         46.   %INLET-TIS%     # 3eme palier à T=Tis, temperature d injection de securite"+"\n"
-      self.texteCuve+="#                         1870. 9999999999.     # idem que ci-dessus"+"\n"
+      self.texteCuve+="#                         20.   20.             # idem que ci-dessus : T=TACCU"+"\n"
+      self.texteCuve+="#                         21.   999999.         # 2nd palier à T=T1 : sera remplace par nouvelle valeur calculee par fonction idoine"+"\n"
+      self.texteCuve+="#                         45.   999999.         # idem que ci-dessus : T=T1"+"\n"
+      self.texteCuve+="#                         46.   9.              # 3eme palier à T=TIS, temperature d injection de securite : sa valeur est reactualisee avec la donnee de TIS ci-dessous"+"\n"
+      self.texteCuve+="#                         1870. 9.              # idem que ci-dessus : T=TIS"+"\n"
       self.texteCuve+="#                         1871. 80."+"\n"
       self.texteCuve+="#                         3871. 80."+"\n"
+      self.texteCuve+="#                         CC                    # C pour Constant, E pour Exclu, L pour Lineaire"+"\n"
       self.texteCuve+="#                    puis Instant (s) / Debit d injection de securite  (kg/s)"+"\n"
       self.texteCuve+="#                    puis Modele VESTALE : (DH, DH_MESSAGE), (SECTION, SECTION_MESSAGE), (DELTA, DELTA_MESSAGE), EPS, COEFVESTALE"+"\n"
       self.texteCuve+="# Finir chacune des listes par la prolongation aux frontieres amont et aval: C = constant / E = exclu / L = lineaire"+"\n"
@@ -1387,18 +1479,29 @@ class Cuve2dgGenerator(PythonGenerator):
 
       if self.dico_mot.has_key('TypeConditionLimiteThermique'):
 
+         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+            self.texteCuve+="#"+"\n"
+            self.texteCuve+="#BLOC_TFDEBIT"+"\n"
+            self.texteCuve += self.ecritVariable('InstantPerteCirculationNaturelle')
+            self.texteCuve += self.ecritVariable('TempInjectionSecurite')
+            self.texteCuve+="#BLOC_TFDEBIT"+"\n"
+
          if str(self.dico_mot["TypeConditionLimiteThermique"])=='Courbe APRP':
             self.texteCuve+="#"+"\n"
             self.texteCuve+="# Definition de parametres pour le cas d un transitoire APRP"+"\n"
             self.texteCuve += self.ecritVariable('Instant_1')
             self.texteCuve += self.ecritVariable('Instant_2')
+            self.texteCuve += self.ecritVariable('Instant_3')
             self.texteCuve += self.ecritVariable('DebitAccumule')
             self.texteCuve += self.ecritVariable('DebitInjectionSecurite')
+            self.texteCuve += self.ecritVariable('TempInjectionSecurite')
             self.texteCuve += self.ecritVariable('TempInjectionSecurite_mess')
 
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee en paroi' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et coefficient echange' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et debit d injection de securite' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Courbe APRP' :
+         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee en paroi' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et coefficient echange' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et debit d injection de securite' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Courbe APRP' :
             self.texteCuve+="#"+"\n"
             self.texteCuve+="# instant (s) / temperature imposee du fluide (degC)"+"\n"
+            if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+               self.texteCuve+="#BLOC_TFDEBIT"+"\n"
             if self.dico_mot.has_key('ProfilTemporel_TemperatureImposeeFluide'):
                self.imprime(2,(self.dico_mot["ProfilTemporel_TemperatureImposeeFluide"]))
                self.texteCuve += self.amontAval('Amont_TemperatureImposeeFluide','Aval_TemperatureImposeeFluide')
@@ -1408,6 +1511,8 @@ class Cuve2dgGenerator(PythonGenerator):
                self.texteCuve+="200.  7. "+"\n"
                self.texteCuve+="1000. 80. "+"\n"
                self.texteCuve+="CC"+"\n"
+            if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+               self.texteCuve+="#BLOC_TFDEBIT"+"\n"
 
          if str(self.dico_mot["TypeConditionLimiteThermique"])=='Flux de chaleur impose en paroi':
             self.texteCuve+="#"+"\n"
@@ -1423,9 +1528,11 @@ class Cuve2dgGenerator(PythonGenerator):
                self.texteCuve+="1000.  -56372."+"\n"
                self.texteCuve+="CC"+"\n"
 
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et debit d injection de securite' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Courbe APRP':
+         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et debit d injection de securite' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Courbe APRP':
             self.texteCuve+="#"+"\n"
             self.texteCuve+="# instant (s) / Debit d injection de securite  (kg/s)"+"\n"
+            if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+               self.texteCuve+="#BLOC_TFDEBIT"+"\n"
             if self.dico_mot.has_key('ProfilTemporel_DebitInjection'):
                self.imprime(2,(self.dico_mot["ProfilTemporel_DebitInjection"]))
                self.texteCuve += self.amontAval('Amont_DebitInjection','Aval_DebitInjection')
@@ -1435,6 +1542,8 @@ class Cuve2dgGenerator(PythonGenerator):
                self.texteCuve+="200.  340. "+"\n"
                self.texteCuve+="1000. 31.1 "+"\n"
                self.texteCuve+="CC"+"\n"
+            if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+               self.texteCuve+="#BLOC_TFDEBIT"+"\n"
 
          if str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et coefficient echange' :
             self.texteCuve+="#"+"\n"
@@ -1474,10 +1583,12 @@ class Cuve2dgGenerator(PythonGenerator):
                self.texteCuve+="1000. 7.0 "+"\n"
                self.texteCuve+="CC"+"\n"
 
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Debit massique et temperature d injection de securite' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et debit d injection de securite' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Courbe APRP' :
+         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Debit massique et temperature d injection de securite' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Temperature imposee du fluide et debit d injection de securite' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Courbe APRP' :
             self.texteCuve+="#"+"\n"
             self.texteCuve+="# Transitoire des coefficients d echange : modele VESTALE"+"\n"
             self.texteCuve+="#"+"\n"
+            if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+               self.texteCuve+="#BLOC_TFDEBIT"+"\n"
             self.texteCuve += self.ecritVariable('DiametreHydraulique')
             self.texteCuve += self.ecritVariable('DiametreHydraulique_mess')
             self.texteCuve+="#"+"\n"
@@ -1489,18 +1600,37 @@ class Cuve2dgGenerator(PythonGenerator):
             self.texteCuve+="#"+"\n"
             self.texteCuve += self.ecritVariable('CritereConvergenceRelative')
             self.texteCuve += self.ecritVariable('CoefficientsVestale')
-         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Debit massique et temperature d injection de securite':
+            if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+               self.texteCuve+="#BLOC_TFDEBIT"+"\n"
+
+         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Debit massique et temperature d injection de securite' or str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT' :
             self.texteCuve+="#"+"\n"
             self.texteCuve+="# Transitoire de temperature fluide locale : modele CREARE"+"\n"
             self.texteCuve+="#"+"\n"
-            self.texteCuve += self.ecritVariable('VolumeMelange_CREARE')
-            self.texteCuve += self.ecritVariable('VolumeMelange_CREARE_mess')
-            self.texteCuve+="#"+"\n"
+            #self.texteCuve += self.ecritVariable('VolumeMelange_CREARE')
+            self.texteCuve+="# instant (s) / Volume de melange CREARE  (m3)"+"\n"
+            if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+               self.texteCuve+="#BLOC_TFDEBIT"+"\n"
+            if self.dico_mot.has_key('ProfilTemporel_VolumeMelange_CREARE'):
+               self.imprime(2,(self.dico_mot["ProfilTemporel_VolumeMelange_CREARE"]))
+               self.texteCuve += self.amontAval('Amont_VolumeMelange_CREARE','Aval_VolumeMelange_CREARE')
+	    else :
+               self.texteCuve+="0.    14.3 "+"\n"
+               self.texteCuve+="20.   14.2 "+"\n"
+               self.texteCuve+="CC"+"\n"
+            if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+               self.texteCuve+="#BLOC_TFDEBIT"+"\n"
+            else :
+               self.texteCuve+="#"+"\n"
             self.texteCuve += self.ecritVariable('TemperatureInitiale_CREARE')
+            if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+               self.texteCuve+="#BLOC_TFDEBIT"+"\n"
             self.texteCuve += self.ecritVariable('TemperatureInitiale_CREARE_mess')
             self.texteCuve+="#"+"\n"
             self.texteCuve += self.ecritVariable('SurfaceEchange_FluideStructure')
             self.texteCuve += self.ecritVariable('SurfaceEchange_FluideStructure_mess')
+            if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT':
+               self.texteCuve+="#BLOC_TFDEBIT"+"\n"
       else :
          self.texteCuve+="#"+"\n"
          self.texteCuve+="# instant (s) / temperature imposee du fluide (degC)"+"\n"
@@ -1513,6 +1643,54 @@ class Cuve2dgGenerator(PythonGenerator):
       self.texteCuve+="############################################################################################"+"\n"
 
 
+   def genereTexteTFDEBIT(self):
+
+      self.texteTFDEBIT = ""
+
+      if self.dico_mot.has_key('TypeConditionLimiteThermique'):
+         if str(self.dico_mot["TypeConditionLimiteThermique"])=='Calcul TEMPFLU puis DEBIT' :
+            self.texteTFDEBIT+="# instant (s) / pression (MPa)"+"\n"
+            self.texteTFDEBIT+=" "+"\n"
+            self.imprime2(2,(self.dico_mot["ProfilTemporel_Pression"]))
+            self.texteTFDEBIT += self.amontAval('Amont_Pression','Aval_Pression')
+
+       #     self.texteTFDEBIT+=" "+"\n"
+       #     self.texteTFDEBIT += self.affecteValeur('TypeConditionLimiteThermique', self.valeurproposee[str(self.dico_mot["TypeConditionLimiteThermique"])])
+
+            self.texteTFDEBIT+=" "+"\n"
+            self.imprime2(2,(self.dico_mot["ProfilTemporel_TemperatureImposeeFluide"]))
+            self.texteTFDEBIT += self.amontAval('Amont_TemperatureImposeeFluide','Aval_TemperatureImposeeFluide')
+
+            self.texteTFDEBIT+=" "+"\n"
+            self.imprime2(2,(self.dico_mot["ProfilTemporel_DebitInjection"]))
+            self.texteTFDEBIT += self.amontAval('Amont_DebitInjection','Aval_DebitInjection')
+
+            self.texteTFDEBIT+=" "+"\n"
+            self.texteTFDEBIT += self.ecritVariable('DiametreHydraulique')
+            self.texteTFDEBIT += self.ecritVariable('DiametreHydraulique_mess')
+            self.texteTFDEBIT+="#"+"\n"
+            self.texteTFDEBIT += self.ecritVariable('SectionEspaceAnnulaire')
+            self.texteTFDEBIT += self.ecritVariable('SectionEspaceAnnulaire_mess')
+            self.texteTFDEBIT+="#"+"\n"
+            self.texteTFDEBIT += self.ecritVariable('HauteurCaracConvectionNaturelle')
+            self.texteTFDEBIT += self.ecritVariable('HauteurCaracConvectionNaturelle_mess')
+            self.texteTFDEBIT+="#"+"\n"
+            self.texteTFDEBIT += self.ecritVariable('CritereConvergenceRelative')
+            self.texteTFDEBIT += self.ecritVariable('CoefficientsVestale')
+
+            self.texteTFDEBIT+=" "+"\n"
+            self.imprime2(2,(self.dico_mot["ProfilTemporel_VolumeMelange_CREARE"]))
+            self.texteTFDEBIT += self.amontAval('Amont_VolumeMelange_CREARE','Aval_VolumeMelange_CREARE')
+
+            self.texteTFDEBIT+=" "+"\n"
+            self.texteTFDEBIT += self.ecritVariable('SurfaceEchange_FluideStructure')
+            self.texteTFDEBIT += self.ecritVariable('SurfaceEchange_FluideStructure_mess')
+            self.texteTFDEBIT += self.ecritVariable('InstantPerteCirculationNaturelle')
+            self.texteTFDEBIT += self.ecritVariable('TempInjectionSecurite')
+         else :
+            self.texteTFDEBIT+="Fichier inutile"+"\n"
+
+
    def imprime(self,nbdeColonnes,valeur):
       self.liste=[]
       self.transforme(valeur)
@@ -1521,6 +1699,16 @@ class Cuve2dgGenerator(PythonGenerator):
           for k in range(nbdeColonnes) :
               self.texteCuve+=str(self.liste[i+k]) +"  "
           self.texteCuve+="\n"
+          i=i+k+1
+               
+   def imprime2(self,nbdeColonnes,valeur):
+      self.liste=[]
+      self.transforme(valeur)
+      i=0
+      while i < len(self.liste):
+          for k in range(nbdeColonnes) :
+              self.texteTFDEBIT+=str(self.liste[i+k]) +"  "
+          self.texteTFDEBIT+="\n"
           i=i+k+1
                
 

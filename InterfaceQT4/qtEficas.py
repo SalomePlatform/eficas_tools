@@ -25,6 +25,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.VERSION_EFICAS="Eficas QT4 V6.4"
         self.salome=salome
+        self.listeAEnlever=[]
         self.ihm="QT"
 	self.top = self    #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
@@ -32,8 +33,15 @@ class Appli(Ui_Eficas,QMainWindow):
         self.dict_reels={}
 
         self.multi=multi
+<<<<<<< qtEficas.py
+        self.RepIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
+        if self.multi == False :
+             self.definitCode(code,ssCode)
+             if code==None: return
+=======
         self.RepIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
         if self.multi == False :self.definitCode(code,ssCode)
+>>>>>>> 1.5.4.3.2.17
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.ajoutIcones()
 
@@ -58,6 +66,7 @@ class Appli(Ui_Eficas,QMainWindow):
            widgetChoix = MonChoixCode(self)
            ret=widgetChoix.exec_()
         import sys
+        if self.code == None:return # pour le cancel de la fenetre choix code
         name='prefs_'+self.code
         prefsCode=__import__(name)
 
@@ -456,6 +465,8 @@ class Appli(Ui_Eficas,QMainWindow):
               sys.path.remove(aEnlever)
             except :
               pass
+        #for pathCode in self.listeAEnlever:
+        #      sys.path.remove(pathCode)
               
 
 

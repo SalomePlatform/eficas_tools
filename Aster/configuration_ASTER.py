@@ -245,16 +245,16 @@ class CONFIG(CONFIGbase):
       self.rep_ini = repIni
       self.fic_ini = os.path.join(self.repIni,self.fichier)
       self.titre = 'Parametres necessaires a la configuration d\'EFICAS'
-      self.texte_ini = "Voici les paramètres que requiert Eficas"
+      self.texte_ini = "Voici les parametres que requiert Eficas"
       self.commande = self.creation_fichier_ini_si_possible
-      self.labels={"savedir"       : "Répertoire initial pour Open/Save des fichiers",
-                   "rep_travail"   : "Répertoire de travail",
-                   "rep_mat"       : "Répertoire materiaux",
-                   "path_doc"      : "Chemin d'accès à la doc Aster",
+      self.labels={"savedir"       : "Repertoire initial pour Open/Save des fichiers",
+                   "rep_travail"   : "Repertoire de travail",
+                   "rep_mat"       : "Repertoire materiaux",
+                   "path_doc"      : "Chemin d'acces a la doc Aster",
                    "exec_acrobat"  : "Ligne de commande Acrobat Reader",
                    "catalogues"    : "Versions du code ",
                    "isdeveloppeur" : "Niveau de message ",
-                   "path_cata_dev" : "Chemin d'accès aux catalogues développeurs"}
+                   "path_cata_dev" : "Chemin d'acces aux catalogues developpeurs"}
 
                    
       self.types ={"savedir":"rep", "rep_travail":"rep","rep_mat":"rep",
@@ -282,7 +282,7 @@ class CONFIG(CONFIGbase):
   def save_params(self):
   #--------------------------------------
   # sauvegarde
-  # les nouveaux paramètres dans le fichier de configuration utilisateur
+  # les nouveaux parametres dans le fichier de configuration utilisateur
   #
       l_param=('exec_acrobat', 'repIni','catalogues','rep_travail','rep_mat','path_doc','savedir')
       texte=""
@@ -322,13 +322,13 @@ class CONFIGStyle(CONFIGbase):
       self.rep_ini = repIni
       self.fic_ini = os.path.join(self.repIni,self.fichier)
       self.titre = "Parametres d affichage"
-      self.texte_ini = "Voici les paramètres configurables :  "
+      self.texte_ini = "Voici les parametres configurables :  "
       self.commande = self.creation_fichier_ini_si_possible
       self.labels={"background":"couleur du fonds", 
                    "foreground":"couleur de la police standard" ,
                    "standard":" police et taille standard",
-                   "standard_italique":"police utilisée pour l'arbre ",
-                   "standard_gras_souligne":"police utilisée pour le gras souligné",
+                   "standard_italique":"police utilisee pour l'arbre ",
+                   "standard_gras_souligne":"police utilisee pour le gras souligne",
                    "canvas_italique":"police italique",
                    "standard_gras":"gras",
                   }

@@ -44,6 +44,10 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
       self.verifieInstall()
       self.code=None
       self.connect(self.pB_OK,SIGNAL("clicked()"),self.choisitCode)
+      self.connect(self.pB_cancel,SIGNAL("clicked()"),self.sortie)
+
+  def sortie(self):
+      QDialog.reject(self)
 
   def verifieInstall(self):
       self.groupCodes=QButtonGroup(self)
@@ -51,7 +55,6 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
           nom='rB_'+code
           bouton=getattr(self,nom)
           dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))
-          print dirCode
           try :
              l=os.listdir(dirCode)
              self.groupCodes.addButton(bouton)
@@ -65,4 +68,5 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
       codeUpper=code.upper()
       self.parentAppli.code=codeUpper
       sys.path.insert(0,os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code)))
+      print sys.path
       self.close()
