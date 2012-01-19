@@ -63,10 +63,6 @@ JdC = JDC_CATA ( code = 'OPENTURNS_STUDY',
                             ),
                  ) # Fin JDC_CATA
 
-specter_path= PROC(nom="specter_path",op=None,
-                fr="A class for the definition of a file",
-                path= SIMP(statut='o',typ='TXM',defaut='/home/A28637/SVN_MAP/trunk/vendor/PERFORM_20110225/perfect_dev/tools/bin/specter',),
-                )
 
 # --------------------------------------------------
 # fin entete
