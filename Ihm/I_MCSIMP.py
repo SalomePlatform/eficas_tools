@@ -582,7 +582,7 @@ class MCSIMP(I_OBJECT.OBJECT):
           valid=1
       except ValError,e:
           #traceback.print_exc()
-          comment=str(e)
+          comment=unicode(e)
           valid=0
       return valid,comment
 

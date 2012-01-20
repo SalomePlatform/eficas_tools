@@ -79,6 +79,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         self.connect(self.BSalome,SIGNAL("pressed()"),self.BSalomePressed)
         self.connect(self.BView2D,SIGNAL("clicked()"),self.BView2DPressed)
         self.connect(self.BFichier,SIGNAL("clicked()"),self.BFichierPressed)
+        self.connect(self.BRepertoire,SIGNAL("clicked()"),self.BRepertoirePressed)
 
 
   def detruitBouton(self):
@@ -86,10 +87,15 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         self.BSalome.setIcon(icon)
         mc = self.node.item.get_definition()
         #if ( (self.node.item.get_nom() != "FileName" ) and ( mc.type[0]!="Fichier")) :
-        if mc.type[0]!="Fichier" and mc.type[0]!="FichierNoAbs":
+        if mc.type[0] == "Fichier" or mc.type[0] == "FichierNoAbs":
+           self.bParametres.close()
+           self.BRepertoire.close()
+        elif mc.type[0] == "Repertoire":
+           self.bParametres.close()
            self.BFichier.close()
         else :
-	   self.bParametres.close()
+           self.BFichier.close()
+           self.BRepertoire.close()
         type = mc.type[0]
         # TODO: Use type properties instead of hard-coded "grno" and "grma" type check
         enable_salome_selection = self.editor.salome and \
@@ -132,7 +138,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
                   'I'   : "Un entier est attendu",
                   'Matrice' : 'Une Matrice est attendue',
                   'Fichier' : 'Un fichier est attendu',
-                  'FichierNoAbs' : 'Un fichier est attendu'}
+                  'FichierNoAbs' : 'Un fichier est attendu',
+                  'Repertoire' : u'Un répertoire est attendu'}
       mctype = mc.type[0]
 
       if type(mctype) == types.ClassType:
@@ -180,7 +187,16 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
          elif hasattr(self, "BSelectInFile"):
              self.BSelectInFile.setVisible(0)
 
-          
+  def BRepertoirePressed(self):
+      directory = QFileDialog.getExistingDirectory(self.appliEficas,
+            directory = self.appliEficas.CONFIGURATION.savedir,
+            options = QFileDialog.ShowDirsOnly)
+
+      if not directory.isNull():
+         absdir = os.path.abspath(unicode(directory))
+         self.appliEficas.CONFIGURATION.savedir = os.path.dirname(absdir)
+         self.lineEditVal.setText(directory)
+
   def BSelectInFilePressed(self):
       from monSelectImage import MonSelectImage
       MonSelectImage(file=self.image,parent=self).show()

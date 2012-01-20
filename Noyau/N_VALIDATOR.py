@@ -139,6 +139,12 @@ class TypeProtocol(PProtocol):
                  if (len(typ) > 2 and typ[2] == "Sauvegarde") or isinstance(obj, type("")):
                      return obj
                  else : raise ValError("%s n'est pas un fichier valide" % repr(obj))
+            elif type_permis == 'Repertoire':
+                import os
+                if os.path.isdir(obj):
+                    return obj
+                else:
+                    raise ValError(u"%s n'est pas un répertoire valide" % repr(obj))
             elif type(type_permis) == types.ClassType or isinstance(type_permis,type):
                 try:
                     if self.is_object_from(obj,type_permis): return obj
