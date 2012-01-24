@@ -86,24 +86,24 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         icon = QIcon(self.RepIcon+"/image240.png")
         self.BSalome.setIcon(icon)
         mc = self.node.item.get_definition()
-        #if ( (self.node.item.get_nom() != "FileName" ) and ( mc.type[0]!="Fichier")) :
-        if mc.type[0] == "Fichier" or mc.type[0] == "FichierNoAbs":
+        mctype = mc.type[0]
+        if mctype == "Fichier" or mctype == "FichierNoAbs" or \
+            (hasattr(mctype, "enable_file_selection") and mctype.enable_file_selection):
            self.bParametres.close()
            self.BRepertoire.close()
-        elif mc.type[0] == "Repertoire":
+        elif mctype == "Repertoire":
            self.bParametres.close()
            self.BFichier.close()
         else :
            self.BFichier.close()
            self.BRepertoire.close()
-        type = mc.type[0]
         # TODO: Use type properties instead of hard-coded "grno" and "grma" type check
         enable_salome_selection = self.editor.salome and \
-            (('grma' in repr(type)) or ('grno' in repr(type)) or
-             (hasattr(type, "enable_salome_selection") and type.enable_salome_selection))
+            (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or
+             (hasattr(mctype, "enable_salome_selection") and mctype.enable_salome_selection))
         if not enable_salome_selection:
            self.BSalome.close()
-        if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
+        if not(('grma' in repr(mctype)) or ('grno' in repr(mctype))) or not(self.editor.salome):
            self.BView2D.close()
 
   def InitLineEditVal(self):
@@ -153,12 +153,14 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         SaisieValeur.BOk2Pressed(self)
 
   def BFichierPressed(self):
-      type = self.node.item.get_definition().type
-      if len(type) > 1:
-          filters = type[1]
+      mctype = self.node.item.get_definition().type
+      if len(mctype) > 1:
+          filters = mctype[1]
+      elif hasattr(mctype[0], "filters"):
+          filters = mctype[0].filters
       else:
           filters = QString()
-      if len(type) > 2 and type[2] == "Sauvegarde":
+      if len(mctype) > 2 and mctype[2] == "Sauvegarde":
           fichier = QFileDialog.getSaveFileName(self.appliEficas,
                               self.appliEficas.trUtf8('Sauvegarder Fichier'),
                               self.appliEficas.CONFIGURATION.savedir,
@@ -173,6 +175,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
          ulfile = os.path.abspath(unicode(fichier))
          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)
+         self.Commentaire.setText(u"Fichier sélectionné")
          if (QFileInfo(fichier).suffix() in listeSuffixe ):
              self.image=fichier
              if (not hasattr(self,"BSelectInFile")):
@@ -218,7 +221,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
   def BSalomePressed(self):
         self.Commentaire.setText(QString(""))
         genea=self.node.item.get_genealogie()
-        kwType = None
+        kwType = self.node.item.get_definition().type[0]
         for e in genea:
             if "GROUP_NO" in e: kwType = "GROUP_NO"
             if "GROUP_MA" in e: kwType = "GROUP_MA"
