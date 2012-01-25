@@ -60,10 +60,14 @@ class MapGenerator(PythonGenerator):
    # Les extensions de fichier permis?
    extensions=('.map',)
 
+   def writeDefault(self, fn):
+      print "data saved in file ", fn
 
    def initialise(self,config):
       self.config=config
-      self.nom_racine=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"/"
+#      self.nom_racine=self.config.PATH_STUDY+"/"+self.config.NAME_SCHEME+"/"
+#      print "*"*50+"\n"+self.nom_racine
+      self.nom_racine = "/tmp"
       if not( os.path.exists(self.nom_racine)):
          os.makedirs(self.nom_racine)
       self.listeCODE=[]
@@ -73,9 +77,9 @@ class MapGenerator(PythonGenerator):
       self.INSTALLDIR=self.config.appli.INSTALLDIR
       self.ssCodeDir=os.path.join(self.INSTALLDIR,'MAP/Templates',self.ssCode)
       self.fichierYacs=self.ssCode+"_YACS_nodes"
-      self.texteExecution="import os,sys\n"
-      self.texteExecution+="sys.path.append('"+self.ssCodeDir+"')\n"
-      self.texteExecution+="from " + self.fichierYacs +" import *\n"
+#      self.texteExecution="import os,sys\n"
+#      self.texteExecution+="sys.path.append('"+self.ssCodeDir+"')\n"
+#      self.texteExecution+="from " + self.fichierYacs +" import *\n"
 
    def gener(self,obj,format='brut',config=None):
       self.initialise(config)
@@ -85,12 +89,25 @@ class MapGenerator(PythonGenerator):
    def generRUN(self,obj,format='brut',config=None,):
       self.initialise(config)
       text=PythonGenerator.gener(self,obj,format)
+      string = ""
       for elt in self.listeCODE:
           code=elt.keys()[0]
+          string = "[" + code + "]\n"
           self.dico=elt[code]
+          for key in self.dico.keys():
+             string += key + "=" + str(self.dico[key]) + "\n"
           if code in self.__class__.__dict__.keys():
              texteCode=apply(self.__class__.__dict__[code],(self,))
              self.texteExecution += texteCode
+      self.temp_parameter_file = os.tempnam(None, "map_" + code + "_")
+      self.texteExecution = os.path.join(os.getenv("MAP_DIRECTORY"), "runMAP")
+      self.texteExecution += " " + self.temp_parameter_file
+      f_id = open(self.temp_parameter_file, "w")
+      f_id.write(string)
+      f_id.close()
+      print "parameter file name :", self.temp_parameter_file
+      print string
+      print "command :", self.texteExecution
       return self.texteExecution
 
 
