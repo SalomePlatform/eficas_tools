@@ -519,13 +519,13 @@ class JDCEditor(QSplitter):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
          jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
-         if not self.generator.cr.estvide():            
+         if not self.generator.cr.estvide():
             self.affiche_infos("Erreur à la generation",Qt.red)
             QMessageBox.critical( self, "Erreur a la generation","EFICAS ne sait pas convertir ce JDC")
             return ""
          else:
             return jdc_formate
-      else:         
+      else:
          # Il n'existe pas c'est une erreur
          self.affiche_infos("Format %s non reconnu" % self.format,Qt.red)
          QMessageBox.critical( self, "Format "+self.format+" non reconnu","EFICAS ne sait pas convertir le JDC selon le format "+self.format)
@@ -538,9 +538,13 @@ class JDCEditor(QSplitter):
       if generator.plugins.has_key(self.format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[self.format]()
-         self.textePython =self.generator.generRUN(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+#         self.textePython =self.generator.generRUN(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+         self.generator=generator.plugins["c_transverse_empty_python"]()
       if execution=="oui" :
-         exec self.textePython
+         self.textePython =self.generator.generRUN(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+         os.system(self.textePython)
+         self.affiche_infos("launch runMAP on parameter file",Qt.red)
+         QMessageBox.information(self, "Execution launched in console", self.textePython)
       else:
          return self.textePython
 
@@ -553,8 +557,7 @@ class JDCEditor(QSplitter):
          self.generator.generRUNYACS(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION,nomFichier=nomFichier)
       if execution=="oui" :
          print "il faut faire le run dans Salome"
-    
-    
+
     #-----------------------------------------------------#
     def determineNomFichier(self,path,extension):
     #-----------------------------------------------------#
