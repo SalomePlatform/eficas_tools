@@ -62,5 +62,6 @@ else :
       print "Ce Catalogue ne convient pas"
       exit(1)
    MonChoixCata.nom=cata[0: p.search(cata).start()]
-
+print prefs.code
+print MonChoixCata.nom
 eficas_go.lance_eficas(code=prefs.code,ssCode=MonChoixCata.nom)
