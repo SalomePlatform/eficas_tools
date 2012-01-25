@@ -101,7 +101,7 @@ class MapGenerator(PythonGenerator):
              self.texteExecution += texteCode
       self.temp_parameter_file = os.tempnam(None, "map_" + code + "_")
       self.texteExecution = os.path.join(os.getenv("MAP_DIRECTORY"), "runMAP")
-      self.texteExecution += " " + self.temp_parameter_file
+      self.texteExecution += " " + self.temp_parameter_file + " -v"
       f_id = open(self.temp_parameter_file, "w")
       f_id.write(string)
       f_id.close()
