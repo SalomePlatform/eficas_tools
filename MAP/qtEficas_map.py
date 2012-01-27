@@ -21,47 +21,18 @@
 # ======================================================================
 
 """
-   Ce module sert à lancer EFICAS configuré pour Perfect
+   Ce module sert a lancer EFICAS configure pour Code_Aster
 """
 # Modules Python
-import sys,os
-sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
-
-from PyQt4.QtGui import *
-
 # Modules Eficas
 import prefs
 name='prefs_'+prefs.code
 __import__(name)
 
 
+import sys,os
+sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
+
+import prefs
 from InterfaceQT4 import eficas_go
-from InterfaceQT4 import monChoixMap
-from Editeur  import import_code
-from Editeur  import session
-
-
-class ChoixCata:
- def __init__(self):
-   self.schema=""
-   self.module=""
-   self.nom=""
-  
-options=session.parse(sys.argv)
-cata=options.cata
-MonChoixCata=ChoixCata()
-if cata == None :
-   app = QApplication(sys.argv)
-   ChoixMap = monChoixMap.MonChoixMap(MonChoixCata) 
-   ChoixMap.show()
-   res=app.exec_()
-else :
-   import re
-   p=re.compile('_V\d+')
-   if p.search(cata) == None :
-      print "Ce Catalogue ne convient pas"
-      exit(1)
-   MonChoixCata.nom=cata[0: p.search(cata).start()]
-print prefs.code
-print MonChoixCata.nom
-eficas_go.lance_eficas(code=prefs.code,ssCode=MonChoixCata.nom)
+eficas_go.lance_eficas(code=prefs.code)
