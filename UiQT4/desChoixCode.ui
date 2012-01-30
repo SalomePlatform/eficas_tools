@@ -124,7 +124,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="rB_Carmel3D">
+         <widget class="QRadioButton" name="rB_MAP">
           <property name="minimumSize">
            <size>
             <width>0</width>
