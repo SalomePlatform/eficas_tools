@@ -23,26 +23,26 @@
     au format python pour EFICAS.
 
     Un plugin convertisseur doit fournir deux attributs de classe :
-    extensions et formats et deux méthodes : readfile,convert.
+    extensions et formats et deux methodes : readfile,convert.
 
     L'attribut de classe extensions est une liste d'extensions
-    de fichiers préconisées pour ce type de format. Cette information
+    de fichiers preconisees pour ce type de format. Cette information
     est seulement indicative.
 
     L'attribut de classe formats est une liste de formats de sortie
-    supportés par le convertisseur. Les formats possibles sont :
+    supportes par le convertisseur. Les formats possibles sont :
     eval, dict ou exec.
-    Le format eval est un texte source Python qui peut etre evalué. Le
-    résultat de l'évaluation est un objet Python quelconque.
+    Le format eval est un texte source Python qui peut etre evalue. Le
+    resultat de l'evaluation est un objet Python quelconque.
     Le format dict est un dictionnaire Python.
-    Le format exec est un texte source Python qui peut etre executé. 
+    Le format exec est un texte source Python qui peut etre execute. 
 
-    La méthode readfile a pour fonction de lire un fichier dont le
-    nom est passé en argument de la fonction.
+    La methode readfile a pour fonction de lire un fichier dont le
+    nom est passe en argument de la fonction.
        - convertisseur.readfile(nom_fichier)
 
-    La méthode convert a pour fonction de convertir le fichier
-    préalablement lu dans un objet du format passé en argument.
+    La methode convert a pour fonction de convertir le fichier
+    prealablement lu dans un objet du format passe en argument.
        - objet=convertisseur.convert(outformat)
 
     Ce convertisseur supporte le format de sortie exec
@@ -55,13 +55,13 @@ from Noyau import N_CR
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
-       Ces informations sont retournées dans un dictionnaire
+       Retourne les informations necessaires pour le chargeur de plugins
+       Ces informations sont retournees dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'python',
-        # La factory pour créer une instance du plugin
+        # La factory pour creer une instance du plugin
           'factory' : PythonParser,
           }
 
@@ -73,14 +73,14 @@ class PythonParser:
        et retourne le texte au format outformat avec la 
        methode convertisseur.convert(outformat)
 
-       Ses caractéristiques principales sont exposées dans 2 attributs 
+       Ses caracteristiques principales sont exposees dans 2 attributs 
        de classe :
-          - extensions : qui donne une liste d'extensions de fichier préconisées
-          - formats : qui donne une liste de formats de sortie supportés
+          - extensions : qui donne une liste d'extensions de fichier preconisees
+          - formats : qui donne une liste de formats de sortie supportes
    """
-   # Les extensions de fichier préconisées
+   # Les extensions de fichier preconisees
    extensions=('.py',)
-   # Les formats de sortie supportés (eval dict ou exec)
+   # Les formats de sortie supportes (eval dict ou exec)
    # Le format exec est du python executable (commande exec) converti avec PARSEUR_PYTHON
    # Le format execnoparseur est du python executable (commande exec) non converti
    formats=('exec','execnoparseur')
@@ -112,13 +112,13 @@ class PythonParser:
             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],
                                          sys.exc_info()[2])
             self.cr.exception("Impossible de convertir le fichier python qui doit contenir des erreurs.\n"
-                               "On retourne le fichier non converti. Prévenir la maintenance.\n\n" + string.join(l))
-            # On retourne néanmoins le source initial non converti (au cas où)
+                               "On retourne le fichier non converti. Prevenir la maintenance.\n\n" + string.join(l))
+            # On retourne neanmoins le source initial non converti (au cas ou)
             return self.text
       elif outformat == 'execnoparseur':
          return self.text
       else:
-         raise "Format de sortie : %s, non supporté"
+         raise "Format de sortie : %s, non supporte"
          return None
 
 
