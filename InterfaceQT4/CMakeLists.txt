@@ -24,7 +24,7 @@ install ( FILES browser.py compobase.py compobloc.py compocommandecomm.py compoc
                 compoerror.py compofact.py compoformule.py compojdc.py compomacro.py
                 compomclist.py componiveau.py componuplet.py compooper.py compoparam.py
                 compoproc.py composimp.py editor.py eficas_go.py 
-                __init__.py monChoixCata.py monCommandePanel.py
+                __init__.py monChoixCata.py monChoixCode.py monCommandePanel.py
                 monCommentairePanel.py monFonctionPanel.py monFormulePanel.py
                 monInactifPanel.py monIncludePanel.py monListeParamPanel.py
                 monMacroPanel.py monMatricePanel.py monMCFactPanel.py
