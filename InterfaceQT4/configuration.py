@@ -58,7 +58,7 @@ class CONFIG_BASE:
       
       self.lecture_fichier_ini_standard()
       self.lecture_fichier_ini_integrateur()
-      #self.lecture_fichier_ini_utilisateur()
+      self.lecture_fichier_ini_utilisateur()
 
       #Particularite des schemas MAP
       if hasattr(self,'make_ssCode'): self.make_ssCode(self.ssCode)
