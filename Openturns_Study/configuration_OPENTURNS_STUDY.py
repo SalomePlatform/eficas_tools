@@ -32,24 +32,20 @@ class CONFIG(configuration.CONFIG_BASE):
   def __init__(self,appli,repIni):
   #-----------------------------------
 
-      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_Openturns')
-      self.INSTALLDIR =os.path.dirname(__file__)
 
-      self.labels_user=['exec_acrobat', 'catalogues','savedir','path_doc','OpenTURNS_path']
-      self.labels_eficas=["OpenTURNS_path","rep_user","INSTALLDIR","path_doc","exec_acrobat"]
-      self.labels_eficas=self.labels_eficas+["rep_cata","initialdir","savedir","catalogues"]
-      self.cataFile="catalogues_openturns.ini"
-      self.setValeurs()
+      self.labels_user=['exec_acrobat', 'catalogues','savedir','path_doc']
+      self.labels_eficas=["OpenTURNS_path","path_doc","exec_acrobat"]
+      self.labels_eficas=self.labels_eficas+["rep_cata","lang","catalogues"]
+      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_Openturns')
 
   #---------------------------------------
   def lecture_fichier_ini_standard(self):
   #---------------------------------------
        configuration.CONFIG_BASE.lecture_fichier_ini_standard(self)
-       if hasattr(self,'OpenTURNS_path') :
-         self.oldOTPath=self.OpenTURNS_path
+       if hasattr(self,'OpenTURNS_path') : self.oldOTPath=self.OpenTURNS_path
 
   #---------------------------------------
-  def lecture_fichier_ini_utilisateur(self):
+  def lecture_fichier_ini_integrateur(self):
   #---------------------------------------
        configuration.CONFIG_BASE.lecture_fichier_ini_utilisateur(self)
        if hasattr(self,'OpenTURNS_path') :

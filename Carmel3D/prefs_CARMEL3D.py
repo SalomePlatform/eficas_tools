@@ -21,85 +21,19 @@
 
 import os
 
-# repIni sert à localiser le fichier editeur.ini
-# Obligatoire
+# repIni sert a localiser le fichier editeur.ini  
 repIni=os.path.dirname(os.path.abspath(__file__))
-REPINI=os.path.dirname(os.path.abspath(__file__))
-INSTALLDIR=os.path.abspath(os.path.join(repIni,'..'))
 
-
-# CODE_PATH sert à localiser Noyau et Validation éventuellement
-# non contenus dans la distribution EFICAS
-# Par défaut on utilise les modules de INSTALLDIR
-# Peut valoir None (defaut)
-CODE_PATH = None
-
-
-# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
+# lang indique la langue utilisee pour les chaines d'aide : fr ou ang
 lang='fr'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'
 
+# Choix des catalogues
+# format du Tuple (code,version,catalogue,formatOut, finit par defaut Ãventuellement)
+catalogues = (
+ ('CARMEL3D','V1',os.path.join(repIni,'Carmel3D_cata_v0.py'),'python'),
+ ('CARMEL3D','V0',os.path.join(repIni,'Carmel3D_cata_v0.py'),'carmel3d','defaut'),
+)
 
-# Preference
-if os.name == 'nt':
-   userprefs = os.sep.join( [ os.environ['HOMEDRIVE'], os.environ['HOMEPATH'], 'Eficas_install', 'prefs.py' ])
-else :
-   userprefs=os.path.expanduser("~/.Eficas_install/prefs.py")
-
-if os.path.isfile(userprefs):
-   try:
-      execfile(userprefs)
-   except:
-      pass
-
-#-------------------------------------------------------------------
-# Partie pour TK
-#-------------------------------------------------------------------
-
-labels= ('Fichier','Edition','Jeu de commandes',
-                'Options',
-                'Aide',
-                 'Traduction',
-           )
-
-appli_composants=['readercata','bureau',
-                   'options',
-           ]
-
-menu_defs={ 'bureau': [
-              ('Fichier',[
-                           ('Nouveau','newJDC','<Control-n>','Ctrl+N'),
-                           ('Nouvel INCLUDE','newJDC_include'),
-                           ('Ouvrir','openJDC','<Control-o>','Ctrl+O'),
-                           ('Enregistrer','saveJDC','<Control-s>','Ctrl+S'),
-                           ('Enregistrer sous','saveasJDC','<Control-e>','Ctrl+E'),
-                           None,
-                           ('Fermer','closeJDC','<Control-w>','Ctrl+W'),
-                           ('Quitter','exitEFICAS','<Control-q>','Ctrl+Q'),
-                         ]
-              ),
-              ('Edition',[
-                           ('Copier','copy','<Control-c>','Ctrl+C'),
-                           ('Couper','cut','<Control-x>','Ctrl+X'),
-                           ('Coller','paste','<Control-v>','Ctrl+V'),
-                         ]
-              ),
-              ('Jeu de commandes',[
-               ('Rapport de validation','visuCRJDC','<Control-r>','Ctrl+R'),
-               ('Fichier source','visu_txt_brut_JDC','<Control-b>','Ctrl+B'),
-               #('Paramètres Eficas','affichage_fichier_ini'),
-                                  ]
-              ),
-              ('Traduction',[
-               ('Traduction v7 en v8','TraduitFichier7'),
-               ('Traduction v8 en v9','TraduitFichier8','<Control-t>','Ctrl+T'),
-                            ]
-              ),
-              ('Aide',[
-                        ('Aide EFICAS','aideEFICAS','<Control-a>','Ctrl+A'),
-                      ]
-              ),
-             ]
-           }

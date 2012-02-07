@@ -89,17 +89,12 @@ class READERCATA:
           liste_cata_possibles = all_cata_list
       else:
           for catalogue in all_cata_list:
-              #print catalogue.code
-              #print catalogue.file_format
               if catalogue.code == self.code and catalogue.file_format == self.ssCode:
                   liste_cata_possibles.append(catalogue)
 
-      #print "___________"
-      #print self.ssCode
-      #print self.code
       if len(liste_cata_possibles)==0:          
           QMessageBox.critical(self.QWParent, "Import du catalogue",
-                               u"Pas de catalogue défini pour le code %s" % self.code)
+                               "Pas de catalogue de�fini pour le code %s" % self.code)
           self.appliEficas.close()
           if self.appliEficas.salome == 0 :
              sys.exit(1)
@@ -147,7 +142,6 @@ class READERCATA:
               # plusieurs catalogues sont disponibles : il faut demander a l'utilisateur
               # lequel il veut utiliser ...
               self.ask_choix_catalogue(cata_choice_list)
-              # On est dans Salome et il faut sortir proprement
 
       if self.fic_cata == None :
           if self.appliEficas.salome == 0 :
@@ -158,9 +152,6 @@ class READERCATA:
              return
 
       self.determineMater()
-      # détermination de fic_cata_c et fic_cata_p
-      self.fic_cata_c = self.fic_cata + 'c'
-      self.fic_cata_p = os.path.splitext(self.fic_cata)[0]+'_pickled.py'
 
       # import du catalogue
       self.cata = self.import_cata(self.fic_cata)
@@ -180,7 +171,7 @@ class READERCATA:
          self.Retrouve_Ordre_Cata_Standard()
 
       #
-      # analyse des données liées a  l'IHM : UIinfo
+      # analyse des données liées l'IHM : UIinfo
       #
       uiinfo.traite_UIinfo(self.cata)
 
@@ -238,7 +229,7 @@ class READERCATA:
    def Retrouve_Ordre_Cata_Standard_autre(self):
       """ 
           Construit une structure de données dans le catalogue qui permet
-          a  EFICAS de retrouver l'ordre des mots-clés dans le texte du catalogue.
+          a EFICAS de retrouver l'ordre des mots-clés dans le texte du catalogue.
           Pour chaque entité du catlogue on crée une liste de nom ordre_mc qui
           contient le nom des mots clés dans le bon ordre
       """ 

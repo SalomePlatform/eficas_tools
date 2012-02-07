@@ -25,27 +25,35 @@ import os, sys
 print "import des prefs de CUVE2DG"
 
 
-# repIni sert à localiser le fichier 
-# initialdir sert comme directory initial des QFileDialog
+# repIni sert a localiser le fichier 
 # positionnee a repin au debut mise a jour dans configuration
 repIni=os.path.dirname(os.path.abspath(__file__))
-initialdir=repIni 
+rep_cata=repIni
 
-# INSTALLDIR sert à localiser l'installation d'Eficas
+# INSTALLDIR sert a localiser l'installation d'Eficas
 INSTALLDIR=os.path.join(repIni,'..')
 
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
-# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
+# lang indique la langue utilisee pour les chaines d'aide : fr ou ang
 lang='fr'
 encoding='iso-8859-1'
 
 # Acces a la documentation
-rep_cata        = INSTALLDIR
-path_doc        = os.path.join(rep_cata,'Doc')
+path_doc        = os.path.join(INSTALLDIR,'Doc')
 exec_acrobat    = "/usr/bin/xpdf"
 
 
+# Choix des catalogues
+import os
+
+catalogues = (
+# (code,version,catalogue,formatIn,formatOut)
+#  ('CUVE2DG','V1',os.path.join(rep_cata,'Cuve2dg_Cata_VPN.py'),'cuve2dg','cuve2dg'),
+  ('CUVE2DG','V2',os.path.join(rep_cata,'DefaillCUVE_Cata.py'),'cuve2dg','cuve2dg'),
+)
+
+print os.path.join(rep_cata,'DefaillCUVE_Cata.py')
 # Choix des catalogues
 sys.path[:0]=[INSTALLDIR]
 

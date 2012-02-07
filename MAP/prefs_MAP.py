@@ -23,15 +23,13 @@ import os, sys
 # Les variables pouvant positionnees sont :
 print "import des prefs de MAP"
 
-# repIni sert à localiser le fichier 
+# repIni sert a localiser le fichier 
 # initialdir sert comme directory initial des QFileDialog
 # positionnee a repin au debut mise a jour dans configuration
 repIni=os.path.dirname(os.path.abspath(__file__))
-initialdir=repIni 
-print repIni
-
-# INSTALLDIR sert à localiser l'installation d'Eficas
 INSTALLDIR=os.path.join(repIni,'..')
+
+# INSTALLDIR sert a localiser l'installation d'Eficas
 PATH_MAP="/local/noyret/MAP/"
 #PATH_MAP="/local00/bin/MAP/"
 PATH_PYGMEE=PATH_MAP+"/components/pygmee_v2"
@@ -45,16 +43,25 @@ PATH_GMSH="/usr/bin"
 
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
-# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
+# lang indique la langue utilisee pour les chaines d'aide : fr ou ang
 lang='fr'
 encoding='iso-8859-1'
 
 # Acces a la documentation
-rep_cata        = INSTALLDIR
 path_doc        = os.path.join(repIni,'Doc')
 exec_acrobat    = "/usr/bin/xpdf"
 savedir         = os.environ['HOME']
 
-OpenTURNS_path='/opt/Openturns/Install_0_13_2/lib/python2.5/site-packages'
+MAP_DIRECTORY=os.getenv("MAP_DIRECTORY")
+
+catalogues = (
+# (code, identifiant, catalogue, formatOut, formatIN)
+  ('MAP','s_Perfect_V1',os.path.join(repIni,'s_Perfect_V1.py'),'s_Perfect'),
+  ('MAP','V0',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC'),
+  ('MAP','V1',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC','defaut'),
+  ('MAP','V1',os.path.join(repIni,'s_scc_3d_analysis_V1.py'),'s_scc_3d','defaut'),
+)
+
+OpenTURNS_path='/local/noyret/Salome/V6_main/tools/install/Openturns_tool-0150-py266-r272-ro144-rp208-sw204-xm278-la331-gr2263-dox173_patch-tbb30/lib/python2.6/site-packages'
 sys.path[:0]=[INSTALLDIR, OpenTURNS_path]
 

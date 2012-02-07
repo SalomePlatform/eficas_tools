@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>ChoixMap</class>
  <widget class="QDialog" name="ChoixMap">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -61,78 +64,85 @@
        <property name="title">
         <string>Modules</string>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
          <widget class="QRadioButton" name="RBM1">
           <property name="text">
            <string>oxides</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="1" column="0">
          <widget class="QRadioButton" name="RBM2">
           <property name="text">
            <string>scc</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="2" column="0">
          <widget class="QRadioButton" name="RBM3">
           <property name="text">
            <string>concrete</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="3" column="0">
          <widget class="QRadioButton" name="RBM4">
           <property name="text">
            <string>polycristals</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="4" column="0">
          <widget class="QRadioButton" name="RBM5">
           <property name="text">
            <string>polymers</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="5" column="0">
          <widget class="QRadioButton" name="RBM6">
           <property name="text">
            <string>micro</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="6" column="0">
          <widget class="QRadioButton" name="RBM7">
           <property name="text">
            <string>seal</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="7" column="0">
          <widget class="QRadioButton" name="RBM8">
           <property name="text">
            <string>mox</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="8" column="0">
          <widget class="QRadioButton" name="RBM9">
           <property name="text">
            <string>nano</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="9" column="0">
+         <widget class="QRadioButton" name="RBM12">
+          <property name="text">
+           <string>perfect</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="0">
          <widget class="QRadioButton" name="RBM10">
           <property name="text">
            <string>insulator</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="11" column="0">
          <widget class="QRadioButton" name="RBM11">
           <property name="text">
            <string>images</string>
@@ -234,12 +244,6 @@
     </layout>
    </item>
   </layout>
-  <zorder>PBIconeMap</zorder>
-  <zorder>pushButton_3</zorder>
-  <zorder>groupBoxScheme</zorder>
-  <zorder>groupBoxModule</zorder>
-  <zorder>verticalSpacer</zorder>
-  <zorder>verticalSpacer_2</zorder>
  </widget>
  <resources/>
  <connections/>

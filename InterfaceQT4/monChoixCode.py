@@ -26,7 +26,6 @@ from desChoixCode import Ui_ChoixCode
 from PyQt4.QtGui import * 
 from PyQt4.QtCore import * 
 
-
     
 # Import des panels
 
@@ -51,7 +50,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
 
   def verifieInstall(self):
       self.groupCodes=QButtonGroup(self)
-      for code in ('Aster','Cuve2dg','Openturns_Study','Openturns_Wrapper','Carmel3D'):
+      for code in ('Aster','Cuve2dg','Openturns_Study','Openturns_Wrapper','Carmel3D','MAP'):
           nom='rB_'+code
           bouton=getattr(self,nom)
           dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))
@@ -60,7 +59,6 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
              self.groupCodes.addButton(bouton)
           except :
              bouton.close()
-          
 
   def choisitCode(self):
       bouton=self.groupCodes.checkedButton()
@@ -68,5 +66,4 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
       codeUpper=code.upper()
       self.parentAppli.code=codeUpper
       sys.path.insert(0,os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code)))
-      print sys.path
       self.close()

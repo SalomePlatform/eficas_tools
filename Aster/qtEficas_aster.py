@@ -21,7 +21,7 @@
 # ======================================================================
 
 """
-   Ce module sert à lancer EFICAS configuré pour Code_Aster
+   Ce module sert a lancer EFICAS configure pour Code_Aster
 """
 # Modules Python
 # Modules Eficas

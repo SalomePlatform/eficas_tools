@@ -31,12 +31,15 @@ class Appli(Ui_Eficas,QMainWindow):
         self.QWParent=None #(Pour lancement sans IHM)
         self.indice=0
         self.dict_reels={}
+        self.code=code
 
         self.RepIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
         self.multi=multi
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
+        
+        if self.code=="MAP" and ssCode== None : self.definitSsCode()
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.ajoutIcones()
 
@@ -66,7 +69,6 @@ class Appli(Ui_Eficas,QMainWindow):
         prefsCode=__import__(name)
 
         self.repIni=prefsCode.repIni
-        self.INSTALLDIR=prefsCode.INSTALLDIR
         if ssCode != None :
            self.format_fichier= ssCode	#par defaut
            prefsCode.NAME_SCHEME=ssCode
@@ -87,6 +89,12 @@ class Appli(Ui_Eficas,QMainWindow):
           listeTexte=apply(Appli.__dict__[self.code],(self,))
         self.initPatrons()
         self.ficRecents={}
+
+    def definitSsCode(self) :
+        from InterfaceQT4 import monChoixMap
+        ChoixMap = monChoixMap.MonChoixMap(self) 
+        ChoixMap.show()
+        ret=ChoixMap.exec_()
 
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
@@ -335,7 +343,7 @@ class Appli(Ui_Eficas,QMainWindow):
         monVisuDialg.show()
 
     def aidePPal(self) :
-        maD=self.INSTALLDIR+"/Aide"
+        maD=self.repIni+"../Aide"
         docsPath = QDir(maD).absolutePath()
         try :
           monAssistant=QAssistantClient(QString(""), self)
@@ -468,7 +476,8 @@ class Appli(Ui_Eficas,QMainWindow):
 if __name__=='__main__':
 
     # Modules Eficas
-    sys.path.append(INSTALLDIR+"/Aster")
+    rep=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__),'..','ASTER')))
+    sys.path.append(rep)
     from Aster import prefsCode
     if hasattr(prefsCode,'encoding'):
        # Hack pour changer le codage par defaut des strings

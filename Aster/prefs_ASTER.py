@@ -21,84 +21,30 @@
 
 import os
 
-# repIni sert à localiser le fichier editeur.ini
+# repIni sert a localiser le fichier editeur.ini
 # Obligatoire
 repIni=os.path.dirname(os.path.abspath(__file__))
-INSTALLDIR=os.path.abspath(os.path.join(repIni,'..'))
+rep_cata = os.path.join(repIni,'Cata')
+mode_nouv_commande='alpha'
 
 
-# CODE_PATH sert à localiser Noyau et Validation éventuellement
-# non contenus dans la distribution EFICAS
-# Par défaut on utilise les modules de INSTALLDIR
-# Peut valoir None (defaut)
-CODE_PATH = None
-
-
-# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
+# lang indique la langue utilisee pour les chaines d'aide : fr ou ang
 lang='fr'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'
 
+# Utilisateur/Developpeur
+isdeveloppeur   =       "NON"
 
-# Preference
-if os.name == 'nt':
-   userprefs = os.sep.join( [ os.environ['HOMEDRIVE'], os.environ['HOMEPATH'], 'Eficas_install', 'prefs.py' ])
-else :
-   userprefs=os.path.expanduser("~/.Eficas_install/prefs.py")
-
-if os.path.isfile(userprefs):
-   try:
-      execfile(userprefs)
-   except:
-      pass
-
-#-------------------------------------------------------------------
-# Partie pour TK
-#-------------------------------------------------------------------
-
-labels= ('Fichier','Edition','Jeu de commandes',
-                'Options',
-                'Aide',
-                 'Traduction',
-           )
-
-appli_composants=['readercata','bureau',
-                   'options',
-           ]
-
-menu_defs={ 'bureau': [
-              ('Fichier',[
-                           ('Nouveau','newJDC','<Control-n>','Ctrl+N'),
-                           ('Nouvel INCLUDE','newJDC_include'),
-                           ('Ouvrir','openJDC','<Control-o>','Ctrl+O'),
-                           ('Enregistrer','saveJDC','<Control-s>','Ctrl+S'),
-                           ('Enregistrer sous','saveasJDC','<Control-e>','Ctrl+E'),
-                           None,
-                           ('Fermer','closeJDC','<Control-w>','Ctrl+W'),
-                           ('Quitter','exitEFICAS','<Control-q>','Ctrl+Q'),
-                         ]
-              ),
-              ('Edition',[
-                           ('Copier','copy','<Control-c>','Ctrl+C'),
-                           ('Couper','cut','<Control-x>','Ctrl+X'),
-                           ('Coller','paste','<Control-v>','Ctrl+V'),
-                         ]
-              ),
-              ('Jeu de commandes',[
-               ('Rapport de validation','visuCRJDC','<Control-r>','Ctrl+R'),
-               ('Fichier source','visu_txt_brut_JDC','<Control-b>','Ctrl+B'),
-               #('Paramètres Eficas','affichage_fichier_ini'),
-                                  ]
-              ),
-              ('Traduction',[
-               ('Traduction v7 en v8','TraduitFichier7'),
-               ('Traduction v8 en v9','TraduitFichier8','<Control-t>','Ctrl+T'),
-                            ]
-              ),
-              ('Aide',[
-                        ('Aide EFICAS','aideEFICAS','<Control-a>','Ctrl+A'),
-                      ]
-              ),
-             ]
-           }
+# Choix des catalogues
+rep_mat_STA88=os.path.join(rep_cata,'cataSTA8','materiau')
+rep_mat_STA98=os.path.join(rep_cata,'cataSTA9','materiau')
+rep_mat_STA103=os.path.join(rep_cata,'cataSTA10','materiau')
+#
+catalogues=(
+('ASTER','STA8.8',os.path.join(rep_cata,'cataSTA8'),'python'),
+('ASTER','STA9.8',os.path.join(rep_cata,'cataSTA9'),'python'),
+('ASTER','STA10.3',os.path.join(rep_cata,'cataSTA10'),'python'),
+('ASTER','STA11',os.path.join(rep_cata,'cataSTA11'),'python','defaut'),
+)

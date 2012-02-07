@@ -33,9 +33,10 @@ labels = {
 "s_oxides_mt_1" : "Estimation du champ mecanique dans une couche de zircone \npresentant des defauts et de l'energie elastique relaxee",
 "s_scc_st_1"    : "Analyse morphologique et mecanique d'une couche d'oxydes",
 "s_scc_st_2"    : "Analyse statistique de donnees locales et experimentales \nou numeriques",
-"s_scc_st_3"     : "taux de couverture des joints de grains par des precipites",
+"s_scc_st_3"    : "taux de couverture des joints de grains par des precipites",
+"s_scc_3d"      : "Analyse 3D",
 "s_polymers_st_1"   : "Estimation numerique 3D de la diffusion effective des gaz dans les polymeres charges",
-"s_rpv2"   : "Essai Pascale",
+"s_Perfect" : "Essai Perfect",
 "s_DIC"   : "Essai Felix",
          }
 
@@ -44,15 +45,16 @@ dico={"oxides" : {"irradiation"            : "s_oxides_st_1",
                    "mecanique avec defaut" : "s_oxides_mt_1"},
       "scc" : {"analyse morphologique" : "s_scc_st_1",
                "analyse statistique"   : "s_scc_st_2",
-               "analyse 3d"   : "s_scc_pn",
+               "analyse 3d"   : "s_scc_3d",
                "taux de couverture"    : "s_scc_st_3"},
       "concrete" : {},
-      "polycristals" : {"essai Pascale" : "s_rpv2",},
+      "polycristals" : {},
       "polymers" : {"numerique 3D" : "s_polymers_st_1"},
       "micro" : {},
       "seal" : {},
       "mox" : {},
       "nano" : {},
+      "perfect" : {"Essai pour Perfect":"s_Perfect"},
       "insulator" : {},
       "images" : {"Felix" : "s_DIC"}
 }
@@ -73,14 +75,13 @@ class MonRadioBouton(QRadioButton) :
 class MonChoixMap(Ui_ChoixMap,QtGui.QDialog):
   """
   """
-  def __init__(self, choixCata,parentQT=None,parentAppli=None):
-      QtGui.QDialog.__init__(self,parentQT)
+  def __init__(self, parentAppli):
+      QtGui.QDialog.__init__(self)
       self.setMinimumSize(50, 50);
       self.setModal(True)
       self.setupUi(self)
-      self.ajouteCeQuilFaut()
-      self.choixCata=choixCata
       self.parentAppli=parentAppli
+      self.ajouteCeQuilFaut()
  
 
   def ajouteCeQuilFaut(self) :
@@ -97,6 +98,7 @@ class MonChoixMap(Ui_ChoixMap,QtGui.QDialog):
         self.groupModules.addButton(self.RBM9)
         self.groupModules.addButton(self.RBM10)
         self.groupModules.addButton(self.RBM11)
+        self.groupModules.addButton(self.RBM12)
         self.groupScheme=QButtonGroup(self.groupBoxScheme)
         self.connect(self.groupModules,SIGNAL("buttonClicked (QAbstractButton*)"),self.modifieModule)
         self.connect(self.groupScheme,SIGNAL("buttonClicked (QAbstractButton*)"),self.choisitSchema)
@@ -108,7 +110,6 @@ class MonChoixMap(Ui_ChoixMap,QtGui.QDialog):
   def modifieModule(self):
       self.module=str(self.groupModules.checkedButton().text())
       dicoModules=dico[self.module]
-      self.choixCata.module=self.module
       for bouton in self.groupScheme.buttons():
           self.groupScheme.removeButton(bouton)
           bouton.close()
@@ -121,11 +122,7 @@ class MonChoixMap(Ui_ChoixMap,QtGui.QDialog):
       
   def choisitSchema(self):
       schema=str(self.groupScheme.checkedButton().text())
-      self.choixCata.schema=schema
       nomCata= dico[self.module][schema]
-      if self.parentAppli==None :
-         self.choixCata.nom=nomCata
-      else :
-         self.parentAppli.ssCode=nomCata
+      self.parentAppli.ssCode=nomCata
       self.close();
 

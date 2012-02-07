@@ -21,7 +21,6 @@
 import sys
 import os
 import re
-import md5
 
 #-------------------------------------------------------------------------------
 class TestFichierError(Exception):
@@ -66,6 +65,7 @@ def test_fichier_ops(self, FICHIER, NB_VALE, VALE, VALE_K, TYPE_TEST,
      On teste le nombre de réels présents, et, facultativement, la
      somme de ces nombres et le texte du fichier.
    """
+   import md5
    ier = 0
    # La macro compte pour 1 dans la numerotation des commandes
    self.set_icmd(1)

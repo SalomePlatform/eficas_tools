@@ -23,14 +23,12 @@ import os, sys
 # Les variables pouvant positionnees sont :
 print "import des prefs de OPENTURNS"
 
-# repIni sert à localiser le fichier 
+# repIni sert a localiser le fichier 
 # initialdir sert comme directory initial des QFileDialog
 # positionnee a repin au debut mise a jour dans configuration
 repIni=os.path.dirname(os.path.abspath(__file__))
-initialdir=repIni 
-
-# INSTALLDIR sert à localiser l'installation d'Eficas
 INSTALLDIR=os.path.join(repIni,'..')
+sys.path[:0]=[INSTALLDIR]
 
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
@@ -39,15 +37,21 @@ lang='fr'
 encoding='iso-8859-1'
 
 # Acces a la documentation
-rep_cata        = INSTALLDIR
-path_doc        = os.path.join(rep_cata,'Doc')
+path_doc        = os.path.join(INSTALLDIR,'Doc')
 exec_acrobat    = "/usr/bin/xpdf"
 savedir         = os.environ['HOME']
 
 
 # OpenTURNS Python module
 OpenTURNS_path=""
+if len(OpenTURNS_path) > 0: sys.path[:0]=[OpenTURNS_path]
+
 # Choix des catalogues
-if len(OpenTURNS_path) > 0:
-    sys.path[:0]=[OpenTURNS_path]
-sys.path[:0]=[INSTALLDIR]
+from Editeur.catadesc import CatalogDescription
+
+catalogues = (
+    CatalogDescription(identifier = "OPENTURNS_STUDY_V8",
+                       cata_file_path = os.path.join(os.path.abspath(repIni), 'OpenTURNS_Cata_Study_V8.py'),
+                       file_format = "openturns_study"),
+)
+

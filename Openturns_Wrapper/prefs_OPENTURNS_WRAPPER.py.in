@@ -23,13 +23,13 @@ import os, sys
 # Les variables pouvant positionnees sont :
 print "import des prefs de OPENTURNS"
 
-# repIni sert à localiser le fichier 
+# repIni sert alocaliser le fichier 
 # initialdir sert comme directory initial des QFileDialog
 # positionnee a repin au debut mise a jour dans configuration
 repIni=os.path.dirname(os.path.abspath(__file__))
 initialdir=repIni 
 
-# INSTALLDIR sert à localiser l'installation d'Eficas
+# INSTALLDIR sert a localiser l'installation d'Eficas
 INSTALLDIR=os.path.abspath(os.path.join(repIni,'..'))
 sys.path.insert(0,INSTALLDIR)
 

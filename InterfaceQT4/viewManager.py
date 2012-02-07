@@ -54,6 +54,7 @@ class MyTabview:
             if self.appliEficas.multi==True : 
                self.appliEficas.definitCode(None,None)
                if self.appliEficas.code == None:return
+               if self.appliEficas.code=="MAP" and self.appliEficas.ssCode== None : self.appliEficas.definitSsCode()
             fichier = QFileDialog.getOpenFileName(self.appliEficas,
                         self.appliEficas.trUtf8('Ouvrir Fichier'),
                         self.appliEficas.CONFIGURATION.savedir,
@@ -148,6 +149,7 @@ class MyTabview:
    def newEditor(self,include=0):
        if self.appliEficas.multi==True : 
            self.appliEficas.definitCode(None,None)
+           if self.appliEficas.code=="MAP" and self.appliEficas.ssCode== None : self.appliEficas.definitSsCode()
            if self.appliEficas.code == None:return
        maPage=self.getEditor(include=include)
 

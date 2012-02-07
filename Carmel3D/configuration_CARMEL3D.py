@@ -32,25 +32,12 @@ class CONFIG(configuration.CONFIG_BASE):
   def __init__(self,appli,repIni):
   #-----------------------------------
 
-      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_Carmel3D')
+      self.labels_user=['exec_acrobat', 'catalogues','savedir']
+      self.labels_eficas=['path_doc','exec_acrobat','lang','rep_cata','catalogues']
+
       self.INSTALLDIR =os.path.dirname(__file__)
-      self.REPINI =os.path.dirname(__file__)
+      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_Carmel3D')
 
-      self.labels_user=['exec_acrobat', 'catalogues','savedir','path_doc',]
-      self.labels_eficas=["rep_user","INSTALLDIR","path_doc","exec_acrobat"]
-      self.labels_eficas=self.labels_eficas+["rep_cata","initialdir","savedir","catalogues"]
-      self.cataFile="editeur.ini"
-      self.setValeurs()
-
-  #---------------------------------------
-  def lecture_fichier_ini_standard(self):
-  #---------------------------------------
-       configuration.CONFIG_BASE.lecture_fichier_ini_standard(self)
-
-  #---------------------------------------
-  def lecture_fichier_ini_utilisateur(self):
-  #---------------------------------------
-       configuration.CONFIG_BASE.lecture_fichier_ini_utilisateur(self)
 
 def make_config(appli,rep):
     return CONFIG(appli,rep)

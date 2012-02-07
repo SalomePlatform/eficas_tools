@@ -19,7 +19,7 @@
 #
 # ======================================================================
 """
-    Ce module sert pour charger les paramètres de configuration d'EFICAS
+    Ce module sert pour charger les parametres de configuration d'EFICAS
 """
 # Modules Python
 import os
@@ -35,7 +35,6 @@ class CONFIG(configuration.CONFIG_BASE):
   def __init__(self,appli,repIni):
   #-----------------------------------
       self.ssCode=appli.ssCode
-      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_MAP')
       self.INSTALLDIR =os.path.dirname(__file__)
 
       self.labels_user=['exec_acrobat', 'catalogues','savedir','path_doc','map_path']
@@ -47,8 +46,8 @@ class CONFIG(configuration.CONFIG_BASE):
       self.labels_eficas=self.labels_eficas+['PATH_BENHUR','PATH_ASTER','PATH_MODULE','PATH_STUDY']
       self.labels_eficas=self.labels_eficas+['NAME_SCHEME','PATH_FDVGRID','PATH_MAP','OpenTURNS_path','PATH_GMSH']
 
-      self.cataFile="catalogues_MAP.ini"
-      self.setValeurs()
+      #self.cataFile="catalogues_MAP.ini"
+      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_MAP')
   
   def make_ssCode(self,ssCode):
       if ssCode == None : return

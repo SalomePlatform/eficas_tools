@@ -37,24 +37,13 @@ def substract_list(liste1,liste2):
       pass
   return liste1
 
-def get_rep_user():
+def get_rep_user(dir):
   """
       Determine sur quelle plate-forme s'execute Eficas et recherche
       le repertoire de l'utilisateur /$home/Eficas_install
   """
-  if os.name not in ('posix','nt'):
-    print "Systeme non reconnu par Eficas"
-    print "Prevenir la maintenance"
-    sys.exit(0)
-  if os.name == 'nt':
-    try:
-      drive = os.environ['HOMEDRIVE']
-      nom_user = os.environ['USERNAME']
-      rep_user_eficas = drive+'\\'+nom_user+'\\'+'Eficas_install'
-    except:
-      rep_user_eficas = os.path.join('C:','Eficas_install')
-  else :
-    rep_user_eficas= os.path.join(os.environ['HOME'],'.Eficas_install')
+
+  rep_user_eficas= os.path.join(os.environ['HOME'],dir)
   if os.path.exists(rep_user_eficas):
     if os.path.isfile(rep_user_eficas) :
       print "Un fichier de nom %s existe deja : impossible de creer un repertoire de meme nom" %rep_user_eficas
