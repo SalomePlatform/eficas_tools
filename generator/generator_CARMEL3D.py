@@ -58,11 +58,12 @@ class CARMEL3DGenerator(PythonGenerator):
       # Cette instruction génère le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)
       # Cette instruction génère le contenu du fichier de paramètres python
-      self.genereCARMEL3D()
+      print obj
+      print obj.isvalid()
+      if obj.isvalid() :self.genereCARMEL3D()
       print self.texteCarmel3D
       print self.dictName
       print self.dictMaterConductor
-      
       return self.text
 
 
