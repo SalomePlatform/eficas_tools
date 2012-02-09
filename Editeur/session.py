@@ -53,19 +53,19 @@ import re
 d_env={}
 #
 # L'attribut "studies" de d_env est une liste dans laquelle on range les etudes de niveau global.
-# Une étude est stockée dans un dictionnaire.
-# La clé "comm" du dictionnaire donne le nom du fichier de commandes principal
-# La clé (optionnelle) "pours" du dictionnaire donne les informations pour une poursuite
-# La valeur associée à la clé est un dictionnaire qui contient les informations sur
-# le nom du fichier de commandes de la poursuite (clé "comm"), une éventuelle poursuite
-# (clé "pours") et les includes (clés entières associées à des noms de fichier).
+# Une etude est stockee dans un dictionnaire.
+# La cle "comm" du dictionnaire donne le nom du fichier de commandes principal
+# La cle (optionnelle) "pours" du dictionnaire donne les informations pour une poursuite
+# La valeur associee a la cle est un dictionnaire qui contient les informations sur
+# le nom du fichier de commandes de la poursuite (cle "comm"), une eventuelle poursuite
+# (cle "pours") et les includes (cles entieres associees a des noms de fichier).
 #
 #
 #
-# Les informations (dictionnaire) associées au fichier de commandes en cours de traitement 
-# sont stockées dans parser.values.current
+# Les informations (dictionnaire) associees au fichier de commandes en cours de traitement 
+# sont stockees dans parser.values.current
 # En general, il faut utiliser current et pas parser.values.studies car les informations
-# sont stockées hiérarchiquement
+# sont stockees hierarchiquement
 #
 
 def check_comm(option, opt_str, value, parser):
@@ -230,6 +230,10 @@ def create_parser():
 
     parser.add_option("-d","--debug", action="store", type="int",dest="debug",
                   help="niveau de debug")
+
+    parser.add_option("-s","--schema", action="store", type="string",dest="ssCode",
+                  help="schema")
+
 
     return parser
 
