@@ -29,7 +29,7 @@ install ( FILES qtEficas_openturns_wrapper.py
                 ${CMAKE_CURRENT_SOURCE_DIR}/prefs_OPENTURNS_WRAPPER.py
 		prefs.py
 		configuration_OPENTURNS_WRAPPER.py
-		catalogues_openturns.ini
+		#catalogues_openturns.ini
 		OpenTURNS_Cata_Wrapper_V4.py
 	  DESTINATION ${CMAKE_INSTALL_PREFIX}/Openturns_Wrapper
         )
