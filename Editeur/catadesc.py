@@ -22,7 +22,7 @@
 class CatalogDescription:
     
     def __init__(self, identifier, cata_file_path, file_format = "python",
-                 default = False, code = None, user_name = None,
+                 default = False, code = None,ss_code=None, user_name = None,
                  selectable = True, file_format_in = "python"):
         """
         This class can be used to describe an Eficas catalog.
@@ -45,6 +45,9 @@ class CatalogDescription:
         :param code: Deprecated. Used to indicate the code associated to this
                      catalog
                 
+        :type  ss_code: string
+        :param ss_code: scheme associated to this catalog (Map only)
+
         :type  user_name: string
         :param user_name: name of the catalog as it will appear in the list
                 
@@ -75,6 +78,7 @@ class CatalogDescription:
                                   identifier = cata_tuple[1],
                                   cata_file_path = cata_tuple[2],
                                   file_format = cata_tuple[3])
+        
         if len(cata_tuple) == 5:
             if cata_tuple[4] == "defaut":
                 desc.default = True
