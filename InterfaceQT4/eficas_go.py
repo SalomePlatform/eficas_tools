@@ -40,6 +40,7 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False):
     from Editeur  import session
     options=session.parse(sys.argv)
     if options.code!= None : code=options.code
+    if options.ssCode!= None : ssCode=options.ssCode
 
     from qtEficas import Appli
     app = QApplication(sys.argv)

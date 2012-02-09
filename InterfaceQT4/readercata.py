@@ -295,3 +295,4 @@ class READERCATA:
       for oper in self.cata.JdC.commandes:
            if dict_clef_docu.has_key(oper.nom):
               oper.docu=dict_clef_docu[oper.nom]
+
