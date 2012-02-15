@@ -127,7 +127,7 @@ class MCList:
     """ 
         Inputs :
            - sd=concept detruit
-        Fonction : Mettre a jour les fils de l objet suite à la disparition 
+        Fonction : Mettre a jour les fils de l objet suite a la disparition 
         du concept sd
         Seuls les mots cles simples MCSIMP font un traitement autre 
         que de transmettre aux fils
