@@ -28,13 +28,13 @@ from copy import copy
 # Objet re pour controler les identificateurs Python
 concept_re=re.compile(r'[a-zA-Z_]\w*$')
 
-# import rajoutés suite à l'ajout de Build_sd --> à résorber
+# import rajoutés suitea� l'ajout de Build_sd --> a résorber
 import traceback
 import Noyau
 from Noyau import N_Exception
 from Noyau.N_Exception import AsException
 import Validation
-# fin import à résorber
+# fin import a résorber
 
 # Modules EFICAS
 import I_MCCOMPO
@@ -66,12 +66,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def init_modif(self):
       """
-         Met l'état de l'étape à : modifié
+         Met l'état de l'étapa : modifié
          Propage la modification au parent
       """
       # init_modif doit etre appelé avant de réaliser une modification
       # La validité devra etre recalculée apres cette modification
-      # mais dans l'appel à fin_modif pour préserver l'état modified
+      # mais dans l'appel a fin_modif pour préserver l'état modified
       # de tous les objets entre temps
       #print "init_modif",self,self.parent
       self.state = 'modified'
@@ -93,10 +93,10 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
           Cette méthode a pour fonction de donner un nom (nom) au concept 
           produit par l'étape (self).
-            - si le concept n'existe pas, on essaye de le créer (à condition que l'étape soit valide ET non réentrante)
-            - si il existe déjà, on le renomme et on répercute les changements dans les autres étapes    
+            - si le concept n'existe pas, on essaye de le créer a condition que l'étape soit valide ET non réentrante)
+            - si il existe déa, on le renomme et on répercute les changements dans les autres étapes    
           Les valeurs de retour sont :
-            - 0 si le nommage n'a pas pu etre mené à son terme,
+            - 0 si le nommage n'a pas pu etre menéa son terme,
             - 1 dans le cas contraire
       """
       # Le nom d'un concept doit etre un identificateur Python (toujours vrai ?)
@@ -129,14 +129,13 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       if self.definition.reentrant == 'f' :
         sd = self.jdc.get_sd_avant_etape(nom,self)
         if sd != None :
-          # FR : il faut tester que la sd trouvée est du bon type !!!!!!!!!!!!!!!!!
           if isinstance(sd,self.get_type_produit()) :
              self.sd = self.reuse = sd
              self.sdnom = sd.nom
              self.fin_modif()
              return 1,"Opérateur facultativement réentrant et concept existant trouvé"
           else:
-             return 0,"Concept déjà existant et de mauvais type"
+             return 0,"Concept déa existant et de mauvais type"
         else :
           # il faut enlever le lien vers une SD existante car si on passe ici
           # cela signifie que l'opérateur n'est pas utilisé en mode réentrant.
@@ -216,7 +215,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
           Rend l'etape courante active.
           Il faut ajouter la sd si elle existe au contexte global du JDC
-          et à la liste des sd
+          et a la liste des sd
       """
       if self.actif:return
       self.actif = 1
@@ -341,7 +340,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def get_noms_sd_oper_reentrant(self):
       """ 
-          Retourne la liste des noms de concepts utilisés à l'intérieur de la commande
+          Retourne la liste des noms de concepts utilisésa l'intérieur de la commande
           qui sont du type que peut retourner cette commande 
       """
       liste_sd = self.get_sd_utilisees()
@@ -362,14 +361,14 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def get_genealogie(self):
       """ 
           Retourne la liste des noms des ascendants de l'objet self
-          en s'arretant à la première ETAPE rencontrée
+          en s'arretant a la première ETAPE rencontrée
       """
       return [self.nom]
 
    def verif_existence_sd(self):
      """
         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-        avant étape, sinon enlève la référence à ces concepts
+        avant étape, sinon enlève la référea ces concepts
      """
      #print "verif_existence_sd",self.sd
      for motcle in self.mc_liste :
@@ -417,6 +416,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def modified(self):
       """Le contenu de l'etape (mots cles, ...) a ete modifie"""
+      self.valeur={}
+      for l in self.mc_liste:
+        try:
+           self.valeur[l.nom]=l.valeur
+        except :
+           pass
       if self.nom=="DETRUIRE":
         self.parent.control_context_apres(self)
 
