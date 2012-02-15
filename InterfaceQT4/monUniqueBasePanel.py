@@ -57,7 +57,7 @@ class DUnBase(Ui_DUnBase,QDialog):
 class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
   """
   Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
   discrètes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
@@ -133,20 +133,21 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def InitCommentaire(self):
       mc = self.node.item.get_definition()
-      d_aides = { 'TXM' : u"Une chaîne de caractères est attendue",
-                  'R'   : u"Un réel est attendu",
-                  'I'   : "Un entier est attendu",
-                  'Matrice' : 'Une Matrice est attendue',
-                  'Fichier' : 'Un fichier est attendu',
-                  'FichierNoAbs' : 'Un fichier est attendu',
-                  'Repertoire' : u'Un répertoire est attendu'}
+      d_aides = { 'TXM' : u"Une chaîne de caractères est attend.  ",
+                  'R'   : u"Un réel est attend. ",
+                  'I'   : u"Un entier est attendu.  ",
+                  'Matrice' : u'Une Matrice est attendue.  ',
+                  'Fichier' : u'Un fichier est attendu.  ',
+                  'FichierNoAbs' : u'Un fichier est attendu.  ',
+                  'Repertoire' : u'Un répertoire est attend.  '}
       mctype = mc.type[0]
 
       if type(mctype) == types.ClassType:
          commentaire = getattr(mctype, 'help_message', "Type de base inconnu")
       else:
          commentaire = d_aides.get(mctype, "Type de base inconnu")
-      commentaire = commentaire + "\n" + self.node.item.aide()
+       
+      commentaire = commentaire +  str(self.node.item.aide())
       self.Commentaire.setText(commentaire)
 
   def BOk2Pressed(self):
