@@ -164,6 +164,6 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
            else :
                commentaire="Entrez entre "+str(mc.min)+" et "+str(mc.max)+" "+d_aides[type]
         aideval=self.node.item.aide()
-        commentaire=commentaire + "\n" + QString.toUtf8(QString(aideval))
+        commentaire=commentaire + "   " + QString.toUtf8(QString(aideval))
         self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
 

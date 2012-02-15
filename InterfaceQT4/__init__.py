@@ -19,6 +19,6 @@
 #
 # ======================================================================
 """
-    Ce package contient les fonctionnalités  nécessaires
-    pour l'éditeur graphique QT
+    Ce package contient les fonctionnalites  necessaires
+    pour l'editeur graphique QT
 """

@@ -51,9 +51,9 @@ class DUnASSD(Ui_DUnASSD,QDialog):
 
 class MonUniqueASSDPanel(DUnASSD,QTPanel,SaisieValeur):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe definissant le panel associe aux mots-cles qui demandent
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discretes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonUniqueASSDPanel"
@@ -89,5 +89,5 @@ class MonUniqueASSDPanel(DUnASSD,QTPanel,SaisieValeur):
             type = type + ' ou '+l
       commentaire="Un objet de type "+type+" est attendu"
       aideval=self.node.item.aide()
-      commentaire=commentaire +"\n"+ QString.toUtf8(QString(aideval))
+      commentaire=commentaire +QString.toUtf8(QString("   "))+ QString.toUtf8(QString(aideval))
       self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
