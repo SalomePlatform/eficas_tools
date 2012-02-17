@@ -33,7 +33,21 @@ encoding='iso-8859-1'
 # Choix des catalogues
 # format du Tuple (code,version,catalogue,formatOut, finit par defaut Ãventuellement)
 catalogues = (
- ('CARMEL3D','V1',os.path.join(repIni,'Carmel3D_cata_v0.py'),'python'),
- ('CARMEL3D','V0',os.path.join(repIni,'Carmel3D_cata_v0.py'),'carmel3d','defaut'),
+
+# catalogue de la maquette finale avec generation Phys
+ ('CARMEL3D','G2',os.path.join(repIni,'Carmel3D_cata_g2.py'),'CARMEL3D','defaut'),
+# catalogue de la maquette finale avec generation Phys
+# ('CARMEL3D','G1',os.path.join(repIni,'Carmel3D_cata_g1.py'),'CARMEL3D','defaut'),
+# catalogue de la maquette finale avec materiau en premier pour reunion du 24 janvier
+ ('CARMEL3D','V0',os.path.join(repIni,'Carmel3D_cata_v0.py'),'python'),
+# catalogue entier et etendu : tout est decrit avec les repetitions qui en decoulent 
+ ('CARMEL3D','V1',os.path.join(repIni,'Carmel3D_cata_etendu.py'),'python'),
+# catalogue avec essai de mise en commun de certains blocs (loi) 
+ ('CARMEL3D','V2',os.path.join(repIni,'Carmel3D_cata_fact.py'),'python'),
+# catalogue avec materiau en tete 
+ ('CARMEL3D','V3',os.path.join(repIni,'Carmel3D_cata_mat.py'),'python'),
+ ('CARMEL3D','V4',os.path.join(repIni,'Carmel3D_cata_matloi.py'),'python'),
+ ('CARMEL3D','V5',os.path.join(repIni,'Carmel3D_cata_pa.py'),'python'),
+ ('CARMEL3D','V6',os.path.join(repIni,'Carmel3D_cata_pn.py'),'python'),
 )
 
