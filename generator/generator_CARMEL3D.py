@@ -27,7 +27,15 @@ import traceback
 import types,string,re,os
 
 from generator_python import PythonGenerator
-dictNatureMateriau={"MAT_REF_COND1":"CONDUCTOR"}
+
+# dictionnaire contenant :
+#           cle = nom du materiau de reference
+#           valeur = nature du materiau de reference ; correspond a l entete du sous bloc dans le bloc MATERIALS du fichier de parametres Carmel3D
+#
+dictNatureMaterRef={"MAT_REF_COND1":"CONDUCTOR", 
+                    "MAT_REF_DIEL1":"DIELECTRIC"}
+print "generateur carmel "
+print "generateur carmel "
 
 def entryPoint():
    """
@@ -47,37 +55,49 @@ class CARMEL3DGenerator(PythonGenerator):
    """
       Ce generateur parcourt un objet de type JDC et produit
       un texte au format eficas et 
-      un texte au format py 
+      un texte au format attendu par le code Carmel3D 
 
    """
    # Les extensions de fichier permis?
    extensions=('.comm',)
 
    def gener(self,obj,format='brut',config=None):
+       
       self.initDico()
+      
       # Cette instruction génère le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)
-      # Cette instruction génère le contenu du fichier de paramètres python
-      print obj
-      print obj.isvalid()
-      if obj.isvalid() :self.genereCARMEL3D()
-      print self.texteCarmel3D
-      print self.dictName
-      print self.dictMaterConductor
+
+      # Cette instruction génère le contenu du fichier de pametres pour le code Carmel3D
+      self.genereCARMEL3D()
+      
+      print "texte carmel3d :\n",self.texteCarmel3D
+      print "dictName : ",self.dictName
+      print "dictMaterConductor : ",self.dictMaterConductor
+      print "text = ", self.text
+      
       return self.text
 
 
    def genereCARMEL3D(self) :
       '''
-      Prépare le contenu du fichier de paramètres python. Le contenu
-      peut ensuite être obtenu au moyen de la fonction getTubePy().
+      Prépare le contenu du fichier de parmetres pour le code Carmel3D
       '''
+      print "cle dico materconductor : " , self.dictMaterConductor.keys()
+    
       self.texteCarmel3D+="[MATERIALS\n"
       self.texteCarmel3D+="     [CONDUCTOR\n"
-      for key in self.dictMaterConductor:
-          for ligne in self.dictName[key] :
-              self.texteCarmel3D+=self.dictName[key]
-              self.texteCarmel3D+=self.dictMaterConductor[key]
+    
+      for cle in self.dictMaterConductor.keys():
+          if cle not in self.dictName.keys():
+              print "Attention : groupe de maille non defini pour materiau : ",cle
+              print "fichier phys incomplet "
+          else : 
+              for chaine in self.dictMaterConductor[cle] :
+                   self.texteCarmel3D+=str(self.dictName[cle])
+                   self.texteCarmel3D+=chaine
+     
+     
       self.texteCarmel3D+="     ]\n"
       self.texteCarmel3D+="]\n"
 
@@ -88,49 +108,30 @@ class CARMEL3DGenerator(PythonGenerator):
       self.dictMaterConductor={}
 
   
-   #def generMCSIMP(self,obj) :
-      """
-      Convertit un objet MCSIMP en texte python
-      Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
-      """
-      #clef=""
-      #for i in obj.get_genealogie() :
-      #   clef=clef+"__"+i
-      #self.dictMCVal[obj.nom]=obj.valeur
-      #self.dictMCVal[clef]=obj.valeur
-      
-      #print "MCSIMP", obj.nom, "  ", obj.valeur
-      #s=PythonGenerator.generMCSIMP(self,obj)
-      #return s
-  
-   #def generMCFACT(self,obj) :
-      """
-      Convertit un objet MCSIMP en texte python
-      Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
-      """
-      #print "MCFACT", obj.nom, "  ", obj.valeur
-      #clef=""
-      #for i in obj.get_genealogie() :
-      #   clef=clef+"__"+i
-      #self.dictMCVal[obj.nom]=obj.valeur
-      #self.dictMCVal[clef]=obj.valeur
-      #s=PythonGenerator.generMCFACT(self,obj)
-      #return s
-  
    def generPROC_ETAPE(self,obj):
+      # analyse des PROC du catalogue
+      # ( SOURCES et VERSION )   
+      #   
       print "PROC_ETAPE", obj.nom, "  ", obj.valeur
       if obj.nom=="SOURCES" : self.generSOURCES(obj)
       s=PythonGenerator.generPROC_ETAPE(self,obj)
       return s
   
    def generETAPE(self,obj):
+      # analyse des OPER du catalogue
+
       print "ETAPE", obj.nom, "  ", obj.valeur
-      if obj.nom=="MESH_GROUPE" : self.generGROUPE(obj)
+  #   print "DIR = ", dir(obj)
+
+      if obj.nom=="MESH_GROUPE" : self.generMESHGROUPE(obj)
       if obj.nom=="MATERIALS" : self.generMATERIALS(obj)
+
       s=PythonGenerator.generETAPE(self,obj)
       return s
 
    def generSOURCES(self,obj):
+      # preparation du bloc SOURCES 
+
       self.texteCarmel3D+="["+obj.nom+"\n"
       for keyN1 in obj.valeur :
           self.texteCarmel3D+="   ["+keyN1+"\n"
@@ -139,41 +140,51 @@ class CARMEL3DGenerator(PythonGenerator):
 	  self.texteCarmel3D+="   ]"+"\n"
       self.texteCarmel3D+="]"+"\n"
 
-   def generGROUPE(self,obj):
+   def generMESHGROUPE(self,obj):
+      # preparation de la ligne NAME referencant le groupe de mailles 
+      # associe le groupe de mailles au materiau utilisateur
        texteName="       NAME     "+obj.get_sdname()+"\n"
-       self.dictName[obj.valeur['Material'].nom]=texteName
+       self.dictName[obj.valeur['MON_MATER'].nom]=texteName
 
    def generMATERIALS(self,obj):
+      # preparation du bloc MATERIALS 
           texte=""
+          print "gener materials obj valeur = ", obj.valeur
 	  try :
-              nature=dictNatureMateriau[obj.valeur['NATURE']]
+              nature=dictNatureMaterRef[obj.valeur['MAT_REF']]
 	      if nature=="CONDUCTOR" : self.generMATERIALSCONDUCTOR(obj)
+#	      if nature=="DIELECTRIC" : self.generMATERIALSDIELECTRIC(obj)
 	  except:
 	      pass
 
 
    def generMATERIALSCONDUCTOR(self,obj):
+      # preparation du sous bloc CONDUCTOR
        texte=""
        print "___________________________"
        for keyN1 in obj.valeur :
-	   if keyN1=='NATURE': continue
+	   if keyN1=='MAT_REF': continue
            print "keyN1=", keyN1
 	   print obj.valeur[keyN1]['TYPE_LAW']
-	   texte+="      ["+keyN1+"\n"
-	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' or obj.valeur[keyN1]['TYPE_LAW']=='LINEAR' :
-	      texte+="         LAW LINEAR\n"
-	      texte+="         HOMOGENOUS TRUE\n"
-	      texte+="         ISOTROPIC TRUE\n"
-	      texte+="         VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
+	   texte+="         ["+keyN1+"\n"
+	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
+	      texte+="            LAW LINEAR\n"
+	      texte+="            HOMOGENOUS TRUE\n"
+	      texte+="            ISOTROPIC TRUE\n"
+	      texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
 	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
-	         texte+="         LAW LINEAR\n"
-	         texte+="         HOMOGENOUS TRUE\n"
-	         texte+="         ISOTROPIC TRUE\n"
-	         texte+="         VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][1])+" "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][2])+"\n"
+	         texte+="            LAW LINEAR\n"
+	         texte+="            HOMOGENOUS TRUE\n"
+	         texte+="            ISOTROPIC TRUE\n"
+	         texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][1])+" "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][2])+"\n"
 	          
-	   texte+="   ]"+"\n"
-       if obj.get_sdname() in self.ditMaterConductor.keys() :
+	   texte+="         ]"+"\n"
+
+       print "obj get sdname= ", obj.get_sdname()
+       if obj.get_sdname() in self.dictMaterConductor.keys() :
          self.dictMaterConductor[obj.get_sdname()].append(texte) 
        else :
-         self.dictMaterConductor[obj.get_sdname()]=(texte,)
+         self.dictMaterConductor[obj.get_sdname()]=[texte,]
        print texte
+   
+
