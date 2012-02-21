@@ -61,6 +61,7 @@ catalogues = (
   ('MAP','V1',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC','defaut'),
   ('MAP','V1',os.path.join(repIni,'s_scc_3d_analysis_V1.py'),'s_scc_3d','defaut'),
   ('MAP','V1',os.path.join(repIni,'Essai/maquette.py'),'maquette','defaut'),
+  ('MAP','V1',os.path.join(repIni,'map_cata.py'),'maquettemap','defaut'),
   ('MAP','V1',os.path.join(repIni,'Essai/comp_c_image_3d.py'),'c_image_3d','defaut'),
   ('MAP','V1',os.path.join(repIni,'Essai/c_pre_interface_mesh.py.py'),'c_pre_interface_mesh','defaut'),
   ('MAP','V1',os.path.join(repIni,'Essai/c_post_distribution_properties.py'),'c_post_distribution_properties','defaut'),
