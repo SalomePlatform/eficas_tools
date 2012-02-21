@@ -28,7 +28,7 @@ install ( FILES qtEficas_map.py
 		style.py
 		prefs_MAP.py
 		configuration_MAP.py
-		catalogues_MAP.ini
+		#catalogues_MAP.ini
                 s_poly_st_1_V1.py
                 s_poly_st_1_V1_clefs_docu
                 s_scc_st_2_V1.py

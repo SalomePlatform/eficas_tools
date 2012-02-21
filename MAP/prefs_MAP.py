@@ -56,12 +56,16 @@ MAP_DIRECTORY=os.getenv("MAP_DIRECTORY")
 
 catalogues = (
 # (code, identifiant, catalogue, formatOut, formatIN)
-  ('MAP','s_Perfect_V1',os.path.join(repIni,'s_Perfect_V1.py'),'s_Perfect'),
+  ('MAP','V1',os.path.join(repIni,'s_Perfect_V1.py'),'Perfect'),
   ('MAP','V0',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC'),
   ('MAP','V1',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC','defaut'),
   ('MAP','V1',os.path.join(repIni,'s_scc_3d_analysis_V1.py'),'s_scc_3d','defaut'),
+  ('MAP','V1',os.path.join(repIni,'Essai/maquette.py'),'maquette','defaut'),
+  ('MAP','V1',os.path.join(repIni,'Essai/comp_c_image_3d.py'),'c_image_3d','defaut'),
+  ('MAP','V1',os.path.join(repIni,'Essai/c_pre_interface_mesh.py.py'),'c_pre_interface_mesh','defaut'),
+  ('MAP','V1',os.path.join(repIni,'Essai/c_post_distribution_properties.py'),'c_post_distribution_properties','defaut'),
 )
 
 OpenTURNS_path='/local/noyret/Salome/V6_main/tools/install/Openturns_tool-0150-py266-r272-ro144-rp208-sw204-xm278-la331-gr2263-dox173_patch-tbb30/lib/python2.6/site-packages'
-sys.path[:0]=[INSTALLDIR, OpenTURNS_path]
+sys.path[:0]=[repIni,INSTALLDIR, OpenTURNS_path]
 
