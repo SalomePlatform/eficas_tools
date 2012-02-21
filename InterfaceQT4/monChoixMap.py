@@ -38,6 +38,7 @@ labels = {
 "s_polymers_st_1"   : "Estimation numerique 3D de la diffusion effective des gaz dans les polymeres charges",
 "s_Perfect" : "Essai Perfect",
 "s_DIC"   : "Essai Felix",
+"maquettemap" : "Essai",
          }
 
 dico={"oxides" : {"irradiation"            : "s_oxides_st_1",
@@ -46,7 +47,8 @@ dico={"oxides" : {"irradiation"            : "s_oxides_st_1",
       "scc" : {"analyse morphologique" : "s_scc_st_1",
                "analyse statistique"   : "s_scc_st_2",
                "analyse 3d"   : "s_scc_3d",
-               "taux de couverture"    : "s_scc_st_3"},
+               "taux de couverture"    : "s_scc_st_3",
+               "maquette"              : "maquettemap"},
       "concrete" : {},
       "polycristals" : {},
       "polymers" : {"numerique 3D" : "s_polymers_st_1"},
