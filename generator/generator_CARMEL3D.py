@@ -69,7 +69,8 @@ class CARMEL3DGenerator(PythonGenerator):
       self.text=PythonGenerator.gener(self,obj,format)
 
       # Cette instruction génère le contenu du fichier de pametres pour le code Carmel3D
-      self.genereCARMEL3D()
+      # si le jdc est valide (sinon cela n a pas de sens)
+      if obj.isvalid() : self.genereCARMEL3D()
       
       print "texte carmel3d :\n",self.texteCarmel3D
       print "dictName : ",self.dictName
@@ -81,7 +82,7 @@ class CARMEL3DGenerator(PythonGenerator):
 
    def genereCARMEL3D(self) :
       '''
-      Prépare le contenu du fichier de parmetres pour le code Carmel3D
+      Peépare le contenu du fichier de parmetres pour le code Carmel3D
       '''
       print "cle dico materconductor : " , self.dictMaterConductor.keys()
     
@@ -104,8 +105,38 @@ class CARMEL3DGenerator(PythonGenerator):
 
    def initDico(self) :
       self.texteCarmel3D=""
+      self.dicoEtapeCourant=None
+      self.dicoMCFACTCourant=None
+      self.dicoCourant=None
       self.dictName={}
       self.dictMaterConductor={}
+
+
+   def generMCSIMP(self,obj) :
+      """
+      Convertit un objet MCSIMP en texte python
+      Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
+      """
+      
+      #print "MCSIMP", obj.nom, "  ", obj.valeur
+      self.dicoCourant[obj.nom]=obj.valeur
+      s=PythonGenerator.generMCSIMP(self,obj)
+      return s
+  
+   def generMCFACT(self,obj) :
+      """
+      Convertit un objet MCSIMP en texte python
+      Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
+      """
+      #print "MCFACT", obj.nom, "  ", obj.valeur
+      dico={}
+      self.dicoMCFACTCourant=dico
+      self.dicoCourant=self.dicoMCFACTCourant
+      s=PythonGenerator.generMCFACT(self,obj)
+      self.dicoEtapeCourant[obj.nom]=self.dicoMCFACTCourant
+      self.dicoMCFACTCourant=None
+      self.dicoCourant=self.dicoEtapeCourant
+      return s
 
   
    def generPROC_ETAPE(self,obj):
@@ -113,11 +144,21 @@ class CARMEL3DGenerator(PythonGenerator):
       # ( SOURCES et VERSION )   
       #   
       print "PROC_ETAPE", obj.nom, "  ", obj.valeur
+      dico={}
+      self.dicoEtapeCourant=dico
+      self.dicoCourant=self.dicoEtapeCourant
+      s=PythonGenerator.generPROC_ETAPE(self,obj)
+      obj.valeur=self.dicoEtapeCourant
       if obj.nom=="SOURCES" : self.generSOURCES(obj)
       s=PythonGenerator.generPROC_ETAPE(self,obj)
       return s
   
    def generETAPE(self,obj):
+      dico={}
+      self.dicoEtapeCourant=dico
+      self.dicoCourant=self.dicoEtapeCourant
+      s=PythonGenerator.generETAPE(self,obj)
+      obj.valeur=self.dicoEtapeCourant
       # analyse des OPER du catalogue
 
       print "ETAPE", obj.nom, "  ", obj.valeur
