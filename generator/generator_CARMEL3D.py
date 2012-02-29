@@ -35,7 +35,6 @@ from generator_python import PythonGenerator
 dictNatureMaterRef={"MAT_REF_COND1":"CONDUCTOR", 
                     "MAT_REF_DIEL1":"DIELECTRIC"}
 print "generateur carmel "
-print "generateur carmel "
 
 def entryPoint():
    """
@@ -65,60 +64,88 @@ class CARMEL3DGenerator(PythonGenerator):
        
       self.initDico()
       
-      # Cette instruction génère le contenu du fichier de commandes (persistance)
+      # Cette instruction genere le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)
 
-      # Cette instruction génère le contenu du fichier de pametres pour le code Carmel3D
+      # Cette instruction genere le contenu du fichier de parametres pour le code Carmel3D
       # si le jdc est valide (sinon cela n a pas de sens)
       if obj.isvalid() : self.genereCARMEL3D()
       
       print "texte carmel3d :\n",self.texteCarmel3D
       print "dictName : ",self.dictName
       print "dictMaterConductor : ",self.dictMaterConductor
+      print "dictMaterDielectric : ",self.dictMaterDielectric
       print "text = ", self.text
       
       return self.text
 
 
+   def initDico(self) :
+   # initialisations
+  
+      self.texteCarmel3D=""
+      self.dicoEtapeCourant=None
+      self.dicoMCFACTCourant=None
+      self.dicoCourant=None
+      self.dictName={"grm_def":"        NAME      gr_maille_a_saisir\n"}
+      self.dictMaterConductor={}
+      self.dictMaterDielectric={}
+
+
    def genereCARMEL3D(self) :
       '''
-      Peépare le contenu du fichier de parmetres pour le code Carmel3D
+      Prepare une partie du contenu du fichier de parametres (PHYS) pour le code Carmel3D
+      (bloc MATERIALS)
+      ce bloc existe toujours ! 
       '''
       print "cle dico materconductor : " , self.dictMaterConductor.keys()
+      print "cle dico materdielectric : " , self.dictMaterDielectric.keys()
     
+      # constitution du bloc MATERIALS du fichier PHYS
       self.texteCarmel3D+="[MATERIALS\n"
+
+      # constitution du bloc CONDUCTOR du fichier PHYS
+      
       self.texteCarmel3D+="     [CONDUCTOR\n"
     
       for cle in self.dictMaterConductor.keys():
           if cle not in self.dictName.keys():
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
+              self.texteCarmel3D+=str(self.dictName["grm_def"])
           else : 
-              for chaine in self.dictMaterConductor[cle] :
-                   self.texteCarmel3D+=str(self.dictName[cle])
-                   self.texteCarmel3D+=chaine
-     
+              self.texteCarmel3D+=str(self.dictName[cle])
+          for chaine in self.dictMaterConductor[cle] :
+              self.texteCarmel3D+=chaine
      
       self.texteCarmel3D+="     ]\n"
+     
+      # constitution du bloc DIELECTRIC du fichier PHYS
+ 
+      self.texteCarmel3D+="     [DIELECTRIC\n"
+    
+      for cle in self.dictMaterDielectric.keys():
+          if cle not in self.dictName.keys():
+              print "Attention : groupe de maille non defini pour materiau : ",cle
+              print "fichier phys incomplet "
+              self.texteCarmel3D+=str(self.dictName["grm_def"])
+          else : 
+              self.texteCarmel3D+=str(self.dictName[cle])
+          for chaine in self.dictMaterDielectric[cle] :
+              self.texteCarmel3D+=chaine
+     
+      self.texteCarmel3D+="     ]\n"
+
+# fin du bloc MATERIALS du fichier PHYS
       self.texteCarmel3D+="]\n"
-
-
-   def initDico(self) :
-      self.texteCarmel3D=""
-      self.dicoEtapeCourant=None
-      self.dicoMCFACTCourant=None
-      self.dicoCourant=None
-      self.dictName={}
-      self.dictMaterConductor={}
 
 
    def generMCSIMP(self,obj) :
       """
       Convertit un objet MCSIMP en texte python
-      Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
       """
       
-      #print "MCSIMP", obj.nom, "  ", obj.valeur
+      print "MCSIMP", obj.nom, "  ", obj.valeur
       self.dicoCourant[obj.nom]=obj.valeur
       s=PythonGenerator.generMCSIMP(self,obj)
       return s
@@ -126,9 +153,8 @@ class CARMEL3DGenerator(PythonGenerator):
    def generMCFACT(self,obj) :
       """
       Convertit un objet MCSIMP en texte python
-      Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
       """
-      #print "MCFACT", obj.nom, "  ", obj.valeur
+      print "MCFACT", obj.nom, "  ", obj.valeur
       dico={}
       self.dicoMCFACTCourant=dico
       self.dicoCourant=self.dicoMCFACTCourant
@@ -154,15 +180,14 @@ class CARMEL3DGenerator(PythonGenerator):
       return s
   
    def generETAPE(self,obj):
+      # analyse des OPER du catalogue
       dico={}
       self.dicoEtapeCourant=dico
       self.dicoCourant=self.dicoEtapeCourant
       s=PythonGenerator.generETAPE(self,obj)
       obj.valeur=self.dicoEtapeCourant
-      # analyse des OPER du catalogue
 
       print "ETAPE", obj.nom, "  ", obj.valeur
-  #   print "DIR = ", dir(obj)
 
       if obj.nom=="MESH_GROUPE" : self.generMESHGROUPE(obj)
       if obj.nom=="MATERIALS" : self.generMATERIALS(obj)
@@ -171,7 +196,7 @@ class CARMEL3DGenerator(PythonGenerator):
       return s
 
    def generSOURCES(self,obj):
-      # preparation du bloc SOURCES 
+      # preparation du bloc SOURCES du fichier PHYS
 
       self.texteCarmel3D+="["+obj.nom+"\n"
       for keyN1 in obj.valeur :
@@ -188,13 +213,13 @@ class CARMEL3DGenerator(PythonGenerator):
        self.dictName[obj.valeur['MON_MATER'].nom]=texteName
 
    def generMATERIALS(self,obj):
-      # preparation du bloc MATERIALS 
+      # preparation du bloc MATERIALS du fichier PHYS 
           texte=""
           print "gener materials obj valeur = ", obj.valeur
 	  try :
               nature=dictNatureMaterRef[obj.valeur['MAT_REF']]
 	      if nature=="CONDUCTOR" : self.generMATERIALSCONDUCTOR(obj)
-#	      if nature=="DIELECTRIC" : self.generMATERIALSDIELECTRIC(obj)
+	      if nature=="DIELECTRIC" : self.generMATERIALSDIELECTRIC(obj)
 	  except:
 	      pass
 
@@ -202,7 +227,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def generMATERIALSCONDUCTOR(self,obj):
       # preparation du sous bloc CONDUCTOR
        texte=""
-       print "___________________________"
+       print "__________cond_________________"
        for keyN1 in obj.valeur :
 	   if keyN1=='MAT_REF': continue
            print "keyN1=", keyN1
@@ -229,3 +254,32 @@ class CARMEL3DGenerator(PythonGenerator):
        print texte
    
 
+   def generMATERIALSDIELECTRIC(self,obj):
+      # preparation du sous bloc DIELECTRIC
+       texte=""
+       print "______________diel_____________"
+       for keyN1 in obj.valeur :
+	   if keyN1=='MAT_REF': continue
+           print "keyN1=", keyN1
+	   print obj.valeur[keyN1]['TYPE_LAW']
+	   texte+="         ["+keyN1+"\n"
+	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
+	      texte+="            LAW LINEAR\n"
+	      texte+="            HOMOGENOUS TRUE\n"
+	      texte+="            ISOTROPIC TRUE\n"
+	      texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
+	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
+	         texte+="            LAW LINEAR\n"
+	         texte+="            HOMOGENOUS TRUE\n"
+	         texte+="            ISOTROPIC TRUE\n"
+	         texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][1])+" "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][2])+"\n"
+	          
+	   texte+="         ]"+"\n"
+
+       print "obj get sdname= ", obj.get_sdname()
+       if obj.get_sdname() in self.dictMaterDielectric.keys() :
+         self.dictMaterDielectric[obj.get_sdname()].append(texte) 
+       else :
+         self.dictMaterDielectric[obj.get_sdname()]=[texte,]
+       print texte
+   
