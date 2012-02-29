@@ -33,7 +33,12 @@ from generator_python import PythonGenerator
 #           valeur = nature du materiau de reference ; correspond a l entete du sous bloc dans le bloc MATERIALS du fichier de parametres Carmel3D
 #
 dictNatureMaterRef={"MAT_REF_COND1":"CONDUCTOR", 
-                    "MAT_REF_DIEL1":"DIELECTRIC"}
+                    "MAT_REF_DIEL1":"DIELECTRIC",
+                    "MAT_REF_ZSURF1":"ZSURFACIC",
+                    "MAT_REF_EM_ISOTROPIC1":"EMISO",
+                    "MAT_REF_EM_ANISOTROPIC1":"EMANISO",
+                    "MAT_REF_NILMAT":"NILMAT"
+                    }
 print "generateur carmel "
 
 def entryPoint():
@@ -90,6 +95,10 @@ class CARMEL3DGenerator(PythonGenerator):
       self.dictName={"grm_def":"        NAME      gr_maille_a_saisir\n"}
       self.dictMaterConductor={}
       self.dictMaterDielectric={}
+      self.dictMaterZsurfacic={}
+      self.dictMaterEmIso={}
+      self.dictMaterEmAnIso={}
+      self.dictMaterNilmat={}
 
 
    def genereCARMEL3D(self) :
@@ -104,8 +113,30 @@ class CARMEL3DGenerator(PythonGenerator):
       # constitution du bloc MATERIALS du fichier PHYS
       self.texteCarmel3D+="[MATERIALS\n"
 
+      # constitution du bloc CONDUCTOR du fichier PHYS si existe
+      if self.dictMaterConductor != {} : self.creaBLOC_CONDUCTOR()
+     
+      # constitution du bloc DIELECTRIC du fichier PHYS si exixte
+      if self.dictMaterDielectric != {} : self.creaBLOC_DIELECTRIC()
+     
+      # constitution du bloc ZSURFACIC du fichier PHYS si exixte
+      if self.dictMaterZsurfacic != {} : self.creaBLOC_ZSURFACIC()
+     
+      # constitution du bloc EM_ISOTROPIC_FILES du fichier PHYS si exixte
+      if self.dictMaterEmIso != {} : self.creaBLOC_EMISO()
+     
+      # constitution du bloc EM_ANISOTROPIC_FILES du fichier PHYS si exixte
+      if self.dictMaterEmAnIso != {} : self.creaBLOC_EMANISO()
+     
+      # constitution du bloc NILMAT du fichier PHYS si exixte
+      if self.dictMaterNilmat != {} : self.creaBLOC_NILMAT()
+     
+      # fin du bloc MATERIALS du fichier PHYS
+      self.texteCarmel3D+="]\n"
+
+
+   def creaBLOC_CONDUCTOR(self) :
       # constitution du bloc CONDUCTOR du fichier PHYS
-      
       self.texteCarmel3D+="     [CONDUCTOR\n"
     
       for cle in self.dictMaterConductor.keys():
@@ -119,9 +150,10 @@ class CARMEL3DGenerator(PythonGenerator):
               self.texteCarmel3D+=chaine
      
       self.texteCarmel3D+="     ]\n"
-     
+
+
+   def creaBLOC_DIELECTRIC(self) :
       # constitution du bloc DIELECTRIC du fichier PHYS
- 
       self.texteCarmel3D+="     [DIELECTRIC\n"
     
       for cle in self.dictMaterDielectric.keys():
@@ -133,12 +165,54 @@ class CARMEL3DGenerator(PythonGenerator):
               self.texteCarmel3D+=str(self.dictName[cle])
           for chaine in self.dictMaterDielectric[cle] :
               self.texteCarmel3D+=chaine
-     
       self.texteCarmel3D+="     ]\n"
 
-# fin du bloc MATERIALS du fichier PHYS
-      self.texteCarmel3D+="]\n"
 
+   def creaBLOC_ZSURFACIC(self) :
+      # constitution du bloc ZSURFACIC du fichier PHYS
+      self.texteCarmel3D+="     [ZSURFACIC\n"
+    
+      for cle in self.dictMaterZsurfacic.keys():
+          if cle not in self.dictName.keys():
+              print "Attention : groupe de maille non defini pour materiau : ",cle
+              print "fichier phys incomplet "
+              self.texteCarmel3D+=str(self.dictName["grm_def"])
+          else : 
+              self.texteCarmel3D+=str(self.dictName[cle])
+          for chaine in self.dictMaterZsurfacic[cle] :
+              self.texteCarmel3D+=chaine
+      self.texteCarmel3D+="     ]\n"
+
+   def creaBLOC_EMISO(self) :
+      # constitution du bloc EMISO du fichier PHYS
+      self.texteCarmel3D+="     [EM_ISOTROPIC_FILES\n"
+    
+      for cle in self.dictMaterEmIso.keys():
+          for chaine in self.dictMaterEmIso[cle] :
+              self.texteCarmel3D+=chaine
+      self.texteCarmel3D+="     ]\n"
+
+   def creaBLOC_EMANISO(self) :
+      # constitution du bloc EMANISO du fichier PHYS
+      self.texteCarmel3D+="     [EM_ANISOTROPIC_FILES\n"
+    
+      for cle in self.dictMaterEmAnIso.keys():
+          for chaine in self.dictMaterEmAnIso[cle] :
+              self.texteCarmel3D+=chaine
+      self.texteCarmel3D+="     ]\n"
+
+   def creaBLOC_NILMAT(self) :
+      # constitution du bloc NILMAT du fichier PHYS
+      self.texteCarmel3D+="     [NILMAT\n"
+    
+      for cle in self.dictMaterNilmat.keys():
+          if cle not in self.dictName.keys():
+              print "Attention : groupe de maille non defini pour materiau : ",cle
+              print "fichier phys incomplet "
+              self.texteCarmel3D+=str(self.dictName["grm_def"])
+          else : 
+              self.texteCarmel3D+=str(self.dictName[cle])
+      self.texteCarmel3D+="     ]\n"
 
    def generMCSIMP(self,obj) :
       """
@@ -149,6 +223,7 @@ class CARMEL3DGenerator(PythonGenerator):
       self.dicoCourant[obj.nom]=obj.valeur
       s=PythonGenerator.generMCSIMP(self,obj)
       return s
+
   
    def generMCFACT(self,obj) :
       """
@@ -178,6 +253,7 @@ class CARMEL3DGenerator(PythonGenerator):
       if obj.nom=="SOURCES" : self.generSOURCES(obj)
       s=PythonGenerator.generPROC_ETAPE(self,obj)
       return s
+
   
    def generETAPE(self,obj):
       # analyse des OPER du catalogue
@@ -212,6 +288,7 @@ class CARMEL3DGenerator(PythonGenerator):
        texteName="       NAME     "+obj.get_sdname()+"\n"
        self.dictName[obj.valeur['MON_MATER'].nom]=texteName
 
+
    def generMATERIALS(self,obj):
       # preparation du bloc MATERIALS du fichier PHYS 
           texte=""
@@ -220,6 +297,10 @@ class CARMEL3DGenerator(PythonGenerator):
               nature=dictNatureMaterRef[obj.valeur['MAT_REF']]
 	      if nature=="CONDUCTOR" : self.generMATERIALSCONDUCTOR(obj)
 	      if nature=="DIELECTRIC" : self.generMATERIALSDIELECTRIC(obj)
+	      if nature=="ZSURFACIC" : self.generMATERIALSZSURFACIC(obj)
+	      if nature=="EMISO" : self.generMATERIALSEMISO(obj)
+	      if nature=="EMANISO" : self.generMATERIALSEMANISO(obj)
+	      if nature=="NILMAT" : self.generMATERIALSNILMAT(obj)
 	  except:
 	      pass
 
@@ -282,4 +363,72 @@ class CARMEL3DGenerator(PythonGenerator):
        else :
          self.dictMaterDielectric[obj.get_sdname()]=[texte,]
        print texte
+  
+ 
+   def generMATERIALSZSURFACIC(self,obj):
+      # preparation du sous bloc ZSURFACIC
+       texte=""
+       print "______________zsurf_____________"
+       for keyN1 in obj.valeur :
+	   if keyN1=='MAT_REF': continue
+           print "keyN1=", keyN1
+	   print obj.valeur[keyN1]['TYPE_LAW']
+	   texte+="         ["+keyN1+"\n"
+	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
+	      texte+="            LAW LINEAR\n"
+	      texte+="            HOMOGENOUS TRUE\n"
+	      texte+="            ISOTROPIC TRUE\n"
+	      texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
+	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
+	         texte+="            LAW LINEAR\n"
+	         texte+="            HOMOGENOUS TRUE\n"
+	         texte+="            ISOTROPIC TRUE\n"
+	         texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][1])+" "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][2])+"\n"
+	          
+	   texte+="         ]"+"\n"
+
+       print "obj get sdname= ", obj.get_sdname()
+       if obj.get_sdname() in self.dictMaterZsurfacic.keys() :
+         self.dictMaterZsurfacic[obj.get_sdname()].append(texte) 
+       else :
+         self.dictMaterZsurfacic[obj.get_sdname()]=[texte,]
+       print texte
+   
+ 
+   def generMATERIALSEMISO(self,obj):
+      # preparation du sous bloc EMISO
+       texte=""
+       print "______________emiso________"
+       texte+="        CONDUCTIVITY MED "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
+       texte+="        PERMEABILITY MED "+str(obj.valeur["PERMEABILITY_File"])+"\n"
+
+       print "obj get sdname= ", obj.get_sdname()
+       if obj.get_sdname() in self.dictMaterEmIso.keys() :
+         self.dictMaterEmIso[obj.get_sdname()].append(texte) 
+       else :
+         self.dictMaterEmIso[obj.get_sdname()]=[texte,]
+       print texte
+  
+ 
+   def generMATERIALSEMANISO(self,obj):
+      # preparation du sous bloc EMANISO
+       texte=""
+       print "______________emaniso________"
+       texte+="        CONDUCTIVITY  "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
+       texte+="        PERMEABILITY  "+str(obj.valeur["PERMEABILITY_File"])+"\n"
+
+       print "obj get sdname= ", obj.get_sdname()
+       if obj.get_sdname() in self.dictMaterEmAnIso.keys() :
+         self.dictMaterEmAnIso[obj.get_sdname()].append(texte) 
+       else :
+         self.dictMaterEmAnIso[obj.get_sdname()]=[texte,]
+       print texte
+   
+   def generMATERIALSNILMAT(self,obj):
+      # preparation du sous bloc NILMAT
+       texte=""
+       print "____________nil_____________"
+
+       print "obj get sdname= ", obj.get_sdname()
+       self.dictMaterNilmat[obj.get_sdname()]=[texte,]
    
