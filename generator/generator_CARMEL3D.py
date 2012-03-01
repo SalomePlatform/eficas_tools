@@ -30,7 +30,7 @@ from generator_python import PythonGenerator
 
 # dictionnaire contenant :
 #           cle = nom du materiau de reference
-#           valeur = nature du materiau de reference ; correspond a l entete du sous bloc dans le bloc MATERIALS du fichier de parametres Carmel3D
+#           valeur = nature du materiau de reference ; correspond a un sous bloc du bloc MATERIALS du fichier de parametres Carmel3D
 #
 dictNatureMaterRef={"MAT_REF_COND1":"CONDUCTOR", 
                     "MAT_REF_DIEL1":"DIELECTRIC",
@@ -74,13 +74,15 @@ class CARMEL3DGenerator(PythonGenerator):
 
       # Cette instruction genere le contenu du fichier de parametres pour le code Carmel3D
       # si le jdc est valide (sinon cela n a pas de sens)
-      if obj.isvalid() : self.genereCARMEL3D()
-      
+      if obj.isvalid() : 
+           self.genereCARMEL3D()
+           self.writePHYS()
+
       print "texte carmel3d :\n",self.texteCarmel3D
       print "dictName : ",self.dictName
       print "dictMaterConductor : ",self.dictMaterConductor
       print "dictMaterDielectric : ",self.dictMaterDielectric
-      print "text = ", self.text
+      #print "text = ", self.text
       
       return self.text
 
@@ -107,8 +109,8 @@ class CARMEL3DGenerator(PythonGenerator):
       (bloc MATERIALS)
       ce bloc existe toujours ! 
       '''
-      print "cle dico materconductor : " , self.dictMaterConductor.keys()
-      print "cle dico materdielectric : " , self.dictMaterDielectric.keys()
+      #print "cle dico materconductor : " , self.dictMaterConductor.keys()
+      #print "cle dico materdielectric : " , self.dictMaterDielectric.keys()
     
       # constitution du bloc MATERIALS du fichier PHYS
       self.texteCarmel3D+="[MATERIALS\n"
@@ -135,6 +137,16 @@ class CARMEL3DGenerator(PythonGenerator):
       self.texteCarmel3D+="]\n"
 
 
+   def writePHYS(self) :
+      '''
+      Ecrit le fichier de parametres (PHYS) pour le code Carmel3D
+      '''
+      print "ecriture fichier "
+      f=open('monficPHYS','w')
+      f.write(self.texteCarmel3D)
+      f.close()
+
+    
    def creaBLOC_CONDUCTOR(self) :
       # constitution du bloc CONDUCTOR du fichier PHYS
       self.texteCarmel3D+="     [CONDUCTOR\n"
@@ -219,7 +231,7 @@ class CARMEL3DGenerator(PythonGenerator):
       Convertit un objet MCSIMP en texte python
       """
       
-      print "MCSIMP", obj.nom, "  ", obj.valeur
+   #   print "MCSIMP", obj.nom, "  ", obj.valeur
       self.dicoCourant[obj.nom]=obj.valeur
       s=PythonGenerator.generMCSIMP(self,obj)
       return s
@@ -229,28 +241,30 @@ class CARMEL3DGenerator(PythonGenerator):
       """
       Convertit un objet MCSIMP en texte python
       """
-      print "MCFACT", obj.nom, "  ", obj.valeur
       dico={}
       self.dicoMCFACTCourant=dico
       self.dicoCourant=self.dicoMCFACTCourant
       s=PythonGenerator.generMCFACT(self,obj)
       self.dicoEtapeCourant[obj.nom]=self.dicoMCFACTCourant
+   #   print "MCFACT", obj.nom, "  ", obj.valeur
       self.dicoMCFACTCourant=None
       self.dicoCourant=self.dicoEtapeCourant
       return s
 
   
    def generPROC_ETAPE(self,obj):
-      # analyse des PROC du catalogue
-      # ( SOURCES et VERSION )   
-      #   
-      print "PROC_ETAPE", obj.nom, "  ", obj.valeur
+      # analyse des PROC du catalogue  ( SOURCES et VERSION )   
+         
       dico={}
       self.dicoEtapeCourant=dico
       self.dicoCourant=self.dicoEtapeCourant
       s=PythonGenerator.generPROC_ETAPE(self,obj)
       obj.valeur=self.dicoEtapeCourant
+      
+      print "PROC_ETAPE", obj.nom, "  ", obj.valeur
+      
       if obj.nom=="SOURCES" : self.generSOURCES(obj)
+     
       s=PythonGenerator.generPROC_ETAPE(self,obj)
       return s
 
@@ -292,7 +306,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def generMATERIALS(self,obj):
       # preparation du bloc MATERIALS du fichier PHYS 
           texte=""
-          print "gener materials obj valeur = ", obj.valeur
+    #      print "gener materials obj valeur = ", obj.valeur
 	  try :
               nature=dictNatureMaterRef[obj.valeur['MAT_REF']]
 	      if nature=="CONDUCTOR" : self.generMATERIALSCONDUCTOR(obj)
@@ -309,10 +323,11 @@ class CARMEL3DGenerator(PythonGenerator):
       # preparation du sous bloc CONDUCTOR
        texte=""
        print "__________cond_________________"
+      # parcours des proprietes du sous bloc CONDUCTOR
        for keyN1 in obj.valeur :
 	   if keyN1=='MAT_REF': continue
-           print "keyN1=", keyN1
-	   print obj.valeur[keyN1]['TYPE_LAW']
+      #     print "keyN1=", keyN1
+#	   print obj.valeur[keyN1]['TYPE_LAW']
 	   texte+="         ["+keyN1+"\n"
 	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
 	      texte+="            LAW LINEAR\n"
@@ -328,41 +343,61 @@ class CARMEL3DGenerator(PythonGenerator):
 	   texte+="         ]"+"\n"
 
        print "obj get sdname= ", obj.get_sdname()
-       if obj.get_sdname() in self.dictMaterConductor.keys() :
-         self.dictMaterConductor[obj.get_sdname()].append(texte) 
-       else :
-         self.dictMaterConductor[obj.get_sdname()]=[texte,]
-       print texte
+    #   if obj.get_sdname() in self.dictMaterConductor.keys() :
+     #    self.dictMaterConductor[obj.get_sdname()].append(texte) 
+      # else :
+       self.dictMaterConductor[obj.get_sdname()]=[texte,]
+ #      print texte
    
 
    def generMATERIALSDIELECTRIC(self,obj):
       # preparation du sous bloc DIELECTRIC
        texte=""
        print "______________diel_____________"
+      # parcours des proprietes du sous bloc DIELECTRIC
        for keyN1 in obj.valeur :
 	   if keyN1=='MAT_REF': continue
-           print "keyN1=", keyN1
-	   print obj.valeur[keyN1]['TYPE_LAW']
+  #         print "keyN1=", keyN1
+#	   print obj.valeur[keyN1]['TYPE_LAW']
+      # debut du sous bloc de propriete du DIELECTRIC
 	   texte+="         ["+keyN1+"\n"
+      # loi lineaire reelle
 	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
 	      texte+="            LAW LINEAR\n"
 	      texte+="            HOMOGENOUS TRUE\n"
 	      texte+="            ISOTROPIC TRUE\n"
 	      texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
+      # loi lineaire complexe
 	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
 	         texte+="            LAW LINEAR\n"
 	         texte+="            HOMOGENOUS TRUE\n"
 	         texte+="            ISOTROPIC TRUE\n"
 	         texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][1])+" "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][2])+"\n"
 	          
+      # loi non lineaire de type spline, Marrocco ou Marrocco et Saturation
+           for loiNL in [ 'SPLINE', 'MARROCCO', 'MARROCCO+SATURATION'] :
+	        if loiNL == obj.valeur[keyN1]['TYPE_LAW']:
+			 texte+="            LAW NONLINEAR\n"
+			 texte+="            HOMOGENOUS TRUE\n"
+			 texte+="            ISOTROPIC TRUE\n"
+		         texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][1])+" "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][2])+"\n"
+			 texte+="            [NONLINEAR \n"
+			 texte+="                ISOTROPY TRUE\n"
+			 texte+="                NATURE "+str(obj.valeur[keyN1]['TYPE_LAW'])+"\n"
+			 for keyN2 in obj.valeur[keyN1] :
+			     if keyN2 != 'LAW' and keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE_COMPLEX' :
+				  texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
+			 texte+="            ]"+"\n"
+
+      # fin du sous bloc de propriete
 	   texte+="         ]"+"\n"
 
        print "obj get sdname= ", obj.get_sdname()
-       if obj.get_sdname() in self.dictMaterDielectric.keys() :
-         self.dictMaterDielectric[obj.get_sdname()].append(texte) 
-       else :
-         self.dictMaterDielectric[obj.get_sdname()]=[texte,]
-       print texte
+       #if obj.get_sdname() in self.dictMaterDielectric.keys() :
+       #  self.dictMaterDielectric[obj.get_sdname()].append(texte) 
+       #else :
+       self.dictMaterDielectric[obj.get_sdname()]=[texte,]
+ #      print texte
   
  
    def generMATERIALSZSURFACIC(self,obj):
@@ -371,8 +406,8 @@ class CARMEL3DGenerator(PythonGenerator):
        print "______________zsurf_____________"
        for keyN1 in obj.valeur :
 	   if keyN1=='MAT_REF': continue
-           print "keyN1=", keyN1
-	   print obj.valeur[keyN1]['TYPE_LAW']
+  #         print "keyN1=", keyN1
+#	   print obj.valeur[keyN1]['TYPE_LAW']
 	   texte+="         ["+keyN1+"\n"
 	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
 	      texte+="            LAW LINEAR\n"
@@ -388,11 +423,11 @@ class CARMEL3DGenerator(PythonGenerator):
 	   texte+="         ]"+"\n"
 
        print "obj get sdname= ", obj.get_sdname()
-       if obj.get_sdname() in self.dictMaterZsurfacic.keys() :
-         self.dictMaterZsurfacic[obj.get_sdname()].append(texte) 
-       else :
-         self.dictMaterZsurfacic[obj.get_sdname()]=[texte,]
-       print texte
+      # if obj.get_sdname() in self.dictMaterZsurfacic.keys() :
+       #  self.dictMaterZsurfacic[obj.get_sdname()].append(texte) 
+       #else :
+       self.dictMaterZsurfacic[obj.get_sdname()]=[texte,]
+ #      print texte
    
  
    def generMATERIALSEMISO(self,obj):
@@ -403,11 +438,11 @@ class CARMEL3DGenerator(PythonGenerator):
        texte+="        PERMEABILITY MED "+str(obj.valeur["PERMEABILITY_File"])+"\n"
 
        print "obj get sdname= ", obj.get_sdname()
-       if obj.get_sdname() in self.dictMaterEmIso.keys() :
-         self.dictMaterEmIso[obj.get_sdname()].append(texte) 
-       else :
-         self.dictMaterEmIso[obj.get_sdname()]=[texte,]
-       print texte
+    #   if obj.get_sdname() in self.dictMaterEmIso.keys() :
+     #    self.dictMaterEmIso[obj.get_sdname()].append(texte) 
+      # else :
+       self.dictMaterEmIso[obj.get_sdname()]=[texte,]
+  #     print texte
   
  
    def generMATERIALSEMANISO(self,obj):
@@ -418,11 +453,11 @@ class CARMEL3DGenerator(PythonGenerator):
        texte+="        PERMEABILITY  "+str(obj.valeur["PERMEABILITY_File"])+"\n"
 
        print "obj get sdname= ", obj.get_sdname()
-       if obj.get_sdname() in self.dictMaterEmAnIso.keys() :
-         self.dictMaterEmAnIso[obj.get_sdname()].append(texte) 
-       else :
-         self.dictMaterEmAnIso[obj.get_sdname()]=[texte,]
-       print texte
+     #  if obj.get_sdname() in self.dictMaterEmAnIso.keys() :
+     #    self.dictMaterEmAnIso[obj.get_sdname()].append(texte) 
+     #  else :
+       self.dictMaterEmAnIso[obj.get_sdname()]=[texte,]
+   #    print texte
    
    def generMATERIALSNILMAT(self,obj):
       # preparation du sous bloc NILMAT
