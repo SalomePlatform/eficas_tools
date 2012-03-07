@@ -69,7 +69,7 @@ class vers3DSalomeGenerator(PythonGenerator):
                             "POUTRE", "SECTION", "VALE", "VARI_SECT",
                             "GRILLE", "ANGL_REP", "VECTEUR",
                              "b_constant", "b_homothetique", 
-                            "b_rectangle", "b_affine", "b_cercle" )
+                            "b_rectangle", "b_affine", "b_cercle", "b_generale" )
       self.dict_deb_com={"POUTRE":"VisuPoutre", "CABLE" : "VisuCable",
                          "COQUE" : "VisuCoque", "GRILLE" : "VisuGrille",
                          "ORIENTATION" : "Orientation", "BARRE" : "VisuBarre"}
