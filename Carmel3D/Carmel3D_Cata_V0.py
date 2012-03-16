@@ -66,7 +66,12 @@ MESH_GROUPE     = OPER (nom = "MESH_GROUPE",
 		    ang = " mesh group definition", 
                     sd_prod= grmaille,
 
-              MON_MATER =  SIMP (statut="o",
+# ----------------------------------------------------------
+# le mot cle SIMP doit etre facultatif sinon la recuperation 
+# des groupes de mailles sous SALOME ne fonctionne pas car 
+# le concept ne peut pas etre nomme car non valide
+#-----------------------------------------------------------
+              MON_MATER =  SIMP (statut="f",
  		                 typ=(materiau,),
                                  ang="name of the linked material",
  		                 fr ="nom du materiau associe",
