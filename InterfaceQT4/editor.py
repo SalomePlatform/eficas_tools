@@ -620,12 +620,31 @@ class JDCEditor(QSplitter):
     #-----------------------------------------#
     def handleAjoutGroup(self,listeGroup):
     #-----------------------------------------#
+    # liste des  prefixes de groupes de mailles et de noeuds a exclure 
+    # pour code CARMEL3D (fournis par THEMIS)
+    #
+         liste_prefixes_exclus = ["TOPO","CURRENT","EPORT","HPORT","PB_MOBILE","NILMAT",
+                                  "VCUT","VCUTN","EWALL","HWALL","GAMMAJ","PERIODIC","APERIODIC",
+                                  "HPROBE","EPROBE","BFLUX","BFLUXN","JFLUX","JFLUXN",
+                                  "PORT_OMEGA","POST_PHI","PB_GRID",
+                                  "SCUTE","SCUTN"]
          dernier=self.tree.racine.children[-1]
          for groupe in listeGroup :
-             new_node = dernier.append_brother("MESH_GROUPE",'after')
-             test,mess = new_node.item.nomme_sd(groupe)
-             new_node.append_child('Material')
-             dernier=new_node
+             exclure = 0
+  #           print "groupe: ", groupe
+             for prefix in liste_prefixes_exclus :
+  #               print "prefixe: ", prefix
+                 long_pref = len(prefix)
+                 if groupe[0:long_pref]== prefix :
+                     exclure = 1
+   # le groupe de mailles n est pas a exclure            
+             if exclure == 0 :
+                new_node = dernier.append_brother("MESH_GROUPE",'after')
+                test,mess = new_node.item.nomme_sd(groupe)
+   #             print "test : ",test 
+   #             print "mess : ",mess 
+                new_node.append_child('MON_MATER')
+                dernier=new_node
 
     #-----------------------------------------#
     def saveFile(self, path = None, saveas= 0):
