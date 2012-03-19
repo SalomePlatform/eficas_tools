@@ -317,8 +317,11 @@ class CARMEL3DGenerator(PythonGenerator):
    def generMESHGROUPE(self,obj):
       # preparation de la ligne NAME referencant le groupe de mailles 
       # associe le groupe de mailles au materiau utilisateur
-       texteName="       NAME     "+obj.get_sdname()+"\n"
-       self.dictName[obj.valeur['MON_MATER'].nom]=texteName
+       try :
+           texteName="       NAME     "+obj.get_sdname()+"\n"
+           self.dictName[obj.valeur['MON_MATER'].nom]=texteName
+       except:
+           pass
 
 
    def generMATERIALS(self,obj):
