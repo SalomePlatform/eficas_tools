@@ -19,7 +19,6 @@ class Options(desOptions):
        self.code='ASTER'
        desOptions.__init__(self,parent,modal)
        self.configuration=configuration
-       self.viewMan=parent
        self.dVersion={}
        self.dRepMat={}
        self.dRepCat={}
@@ -31,6 +30,7 @@ class Options(desOptions):
        self.connect(self.Bdefaut,SIGNAL("clicked()"),self.BdefautChecked)
        self.connect(self.LEVersionAjout,SIGNAL("returnPressed()"),self.AjoutVersion)
        self.connect(self.LERepDoc,SIGNAL("returnPressed()"),self.ChangePathDoc)
+       self.connect(self.LERepSaveDir,SIGNAL("returnPressed()"),self.ChangeSaveDir)
        self.connect(self.Bok,SIGNAL("clicked()"),self.BokClicked)
        self.connect(self.LEVersionSup,SIGNAL("returnPressed()"),self.SupVersion)
        self.connect(self.PBajout,SIGNAL("clicked()"),self.AjoutVersion)
@@ -51,15 +51,23 @@ class Options(desOptions):
 
            codeSansPoint=re.sub("\.","",version)
            chaine="rep_mat_"+codeSansPoint
+           print chaine
            if hasattr(self.configuration,chaine):
               rep_mat=getattr(self.configuration,chaine)
               self.dRepMat[version]=str(rep_mat)
            else :
               self.dRepMat[version]=""
+       version=str(self.CBVersions.itemText(0))
+       print version
+       print self.dRepMat[version]
+       print self.dRepCat[version]
+       
        self.LERepMat.setText(self.dRepMat[version])
        self.LERepCata.setText(self.dRepCat[version])
        if hasattr(self.configuration,"path_doc"):
           self.LERepDoc.setText(self.configuration.path_doc)
+       if hasattr(self.configuration,"savedir"):
+          self.LERepSaveDir.setText(self.configuration.savedir)
 
         
    def VersionChoisie(self):
@@ -147,19 +155,16 @@ class Options(desOptions):
        self.Bdefaut.setCheckState(Qt.Unchecked)
        if res == 1 : return 
 
-       appli=self.configuration.appli
        fic_ini_util=self.configuration.fic_ini_utilisateur
        old_fic_ini_util=fic_ini_util+"_old"
        commande="mv "+fic_ini_util+" "+old_fic_ini_util
-       os.system(commande)
-       name='prefs_ASTER'+self.code
-       prefsCode=__import__(name)
-       nameConf='configuration_'+self.code
-       configuration=__import__(nameConf)
-
-       configNew=configuration.CONFIG(appli,prefsCode.repIni)
-       self.configuration=configNew
-       appli.CONFIGURATION=configNew
+       try:
+         os.system(commande)
+       except:
+         pass
+       self.configuration.setValeursParDefaut()
+       self.configuration.lecture_fichier_ini_standard()
+       self.configuration.lecture_fichier_ini_integrateur()
        self.configuration.save_params()
        self.dVersion={}
        self.dRepMat={}
@@ -170,3 +175,6 @@ class Options(desOptions):
        self.configuration.path_doc=str(self.LERepDoc.text())
        self.configuration.save_params()
 
+   def ChangeSaveDir(self):
+       self.configuration.savedir=str(self.LERepSaveDir.text())
+       self.configuration.save_params()
