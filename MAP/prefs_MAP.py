@@ -29,18 +29,6 @@ print "import des prefs de MAP"
 repIni=os.path.dirname(os.path.abspath(__file__))
 INSTALLDIR=os.path.join(repIni,'..')
 
-# INSTALLDIR sert a localiser l'installation d'Eficas
-PATH_MAP="/local/noyret/MAP/"
-#PATH_MAP="/local00/bin/MAP/"
-PATH_PYGMEE=PATH_MAP+"/components/pygmee_v2"
-PATH_BENHUR=PATH_MAP+"/components/benhur"
-PATH_FDVGRID=PATH_MAP+"components/fdvgrid/ther2d/bin"
-PATH_STUDY=PATH_MAP+"/studies/demonstrateur_s_polymers_st_1"
-PATH_MODULE=PATH_MAP+"/module"
-#PATH_ASTER="/local/noyret/bin/Aster10/bin"
-PATH_ASTER="/local00/aster"
-PATH_GMSH="/usr/bin"
-
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 # lang indique la langue utilisee pour les chaines d'aide : fr ou ang
@@ -56,12 +44,17 @@ MAP_DIRECTORY=os.getenv("MAP_DIRECTORY")
 
 catalogues = (
 # (code, identifiant, catalogue, formatOut, formatIN)
-  ('MAP','V1',os.path.join(repIni,'s_Perfect_V1.py'),'Perfect'),
+  ('MAP','Analyse morphologique ',os.path.join(repIni,'cataDebut.py')    ,'s_scc_st_1'),
+  ('MAP','Analyse statistique'   ,os.path.join(repIni,'s_scc_st_2_V1.py'),'s_scc_st_2'),
+  ('MAP','taux de couverture'    ,os.path.join(repIni,'cataDebut.py'),    's_scc_st_3'),
+  ('MAP','Analyse 3D'            ,os.path.join(repIni,'s_scc_3d_analysis_V1.py'),'s_scc_3d'),
+  ('MAP','maquetteV1'            ,os.path.join(repIni,'map_cata.py'),     'maquettemap'),
+  ('MAP','perfect'               ,os.path.join(repIni,'s_Perfect_V1.py'), 's_Perfect'),
+  ('MAP','creation'              ,os.path.join(repIni,'cree_map_cata.py'),'Creation'),
   ('MAP','V0',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC'),
   ('MAP','V1',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC','defaut'),
-  ('MAP','V1',os.path.join(repIni,'s_scc_3d_analysis_V1.py'),'s_scc_3d','defaut'),
-  ('MAP','V1',os.path.join(repIni,'Essai/maquette.py'),'maquette','defaut'),
-  ('MAP','V1',os.path.join(repIni,'map_cata.py'),'maquettemap','defaut'),
+  ('MAP','V1',os.path.join(repIni,'Essai/maquette.py'),'maquette'),
+  ('MAP','V1',os.path.join(repIni,'map_cata2.py'),'maquettemap2'),
   ('MAP','V1',os.path.join(repIni,'Essai/comp_c_image_3d.py'),'c_image_3d','defaut'),
   ('MAP','V1',os.path.join(repIni,'Essai/c_pre_interface_mesh.py.py'),'c_pre_interface_mesh','defaut'),
   ('MAP','V1',os.path.join(repIni,'Essai/c_post_distribution_properties.py'),'c_post_distribution_properties','defaut'),

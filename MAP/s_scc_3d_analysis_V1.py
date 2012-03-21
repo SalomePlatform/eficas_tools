@@ -5,7 +5,6 @@
 ## --------------------------------------------------
 #
 from Accas import *
-from prefs_MAP import PATH_MODULE
 
 #
 #CONTEXT.debug = 1

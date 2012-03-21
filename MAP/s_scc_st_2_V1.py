@@ -5,13 +5,11 @@
 ## --------------------------------------------------
 #
 from Accas import *
-from prefs_MAP import PATH_MODULE
 
 #
 #CONTEXT.debug = 1
 JdC = JDC_CATA ( code = 'MAP',
                 execmodul = None,
-                #regles=(AU_MOINS_UN('TABLEAU',),AU_MOINS_UN('BENHUR',), AVANT ('PYGMEE' , 'BENHUR'),),
                 regles=(AU_MOINS_UN('TABLEAU',),AU_MOINS_UN('TRAITEMENT',),A_CLASSER('TABLEAU','TRAITEMENT',)),
                        )# Fin JDC_CATA
 #
