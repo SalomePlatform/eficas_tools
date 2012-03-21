@@ -234,12 +234,12 @@ class JDCEditor(QSplitter):
              p=convert.plugins[self.appliEficas.format_fichier_in]()
              p.readfile(fn)
              pareil,texteNew=self.verifieCHECKSUM(p.text)
-             if pareil == False :
+             if pareil == False and (self.QWParent != None) :
                 QMessageBox.warning( self, "fichier modifie","Attention! fichier change hors EFICAS")
              p.text=texteNew
              text=p.convert('exec',self.appliEficas)
              if not p.cr.estvide():                 
-                self.affiche_infos("Erreur à la conversion",Qt.red)
+                self.affiche_infos("Erreur a la conversion",Qt.red)
         else :
             self.affiche_infos("Type de fichier non reconnu",Qt.red)
             QMessageBox.critical( self, "Type de fichier non reconnu","EFICAS ne sait pas ouvrir le type de fichier %s" % self.appliEficas.format_fichier_in)            
@@ -618,6 +618,19 @@ class JDCEditor(QSplitter):
         return listeMA,listeNO
 
     #-----------------------------------------#
+    def cherche_Dico(self):
+    #-----------------------------------------#
+        dicoCourant={}
+        format =  self.appliEficas.format_fichier
+        if generator.plugins.has_key(format):
+           # Le generateur existe on l'utilise
+           self.generator=generator.plugins[format]()
+           jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+           dicoCourant=self.generator.dico
+        return dicoCourant 
+        return Dico
+
+    #-----------------------------------------#
     def handleAjoutGroup(self,listeGroup):
     #-----------------------------------------#
     # liste des  prefixes de groupes de mailles et de noeuds a exclure 
@@ -725,7 +738,7 @@ class JDCEditor(QSplitter):
         if unite :
             titre = "Choix unite %d " %unite
             texte = "Le fichier %s contient une commande INCLUDE \n" % fic_origine
-            texte = texte+'Donnez le nom du fichier correspondant\n à l unité logique %d' % unite
+            texte = texte+'Donnez le nom du fichier correspondant\n a l unité logique %d' % unite
             labeltexte = 'Fichier pour unite %d :' % unite
         else:
             titre = "Choix d'un fichier de poursuite"
@@ -747,7 +760,7 @@ class JDCEditor(QSplitter):
         # On utilise le convertisseur défini par format_fichier
         source=self.get_source(ulfile)
         if source:
-            # On a réussi à convertir le fichier self.ulfile                
+            # On a réussia convertir le fichier self.ulfile                
             jdcText = source
         else:
             # Une erreur a été rencontrée
