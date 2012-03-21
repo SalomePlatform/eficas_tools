@@ -34,7 +34,7 @@ class MACROTreeItem(compooper.EtapeTreeItem):
     itemNode=MACRONode
 
 # ------------------------------------
-#  Classes necessaires à INCLUDE
+#  Classes necessaires a INCLUDE
 # ------------------------------------
 
 class INCLUDETreeItemBase(MACROTreeItem):
@@ -104,7 +104,7 @@ class POURSUITETreeItem(INCLUDETreeItemBase):
 
 
 # ----------------------------------------
-#  Classes necessaires à INCLUDE MATERIAU
+#  Classes necessaires a INCLUDE MATERIAU
 # ----------------------------------------
     
 
@@ -144,7 +144,7 @@ def treeitem(appli, labeltext, object, setfunction=None):
    """
    if object.nom == "INCLUDE_MATERIAU":
       return INCLUDE_MATERIAUTreeItem(appli, labeltext, object, setfunction)
-   elif object.nom == "INCLUDE":
+   elif object.nom == "INCLUDE" or object.nom== "DICTDATA":
       return INCLUDETreeItem(appli, labeltext, object, setfunction)
    elif object.nom == "POURSUITE":
       return POURSUITETreeItem(appli, labeltext, object, setfunction)
