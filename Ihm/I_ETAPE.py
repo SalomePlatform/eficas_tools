@@ -309,7 +309,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           Fonction :
           Mettre a jour les mots cles de l etape et eventuellement 
           le concept produit si reuse
-          suite à la disparition du concept sd
+          suite a la disparition du concept sd
           Seuls les mots cles simples MCSIMP font un traitement autre 
           que de transmettre aux fils
       """
@@ -416,14 +416,9 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def modified(self):
       """Le contenu de l'etape (mots cles, ...) a ete modifie"""
-      self.valeur={}
-      for l in self.mc_liste:
-        try:
-           self.valeur[l.nom]=l.valeur
-        except :
-           pass
       if self.nom=="DETRUIRE":
         self.parent.control_context_apres(self)
+
 
      
 #ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
