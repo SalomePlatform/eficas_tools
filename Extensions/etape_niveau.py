@@ -19,8 +19,8 @@
 #
 # ======================================================================
 """
-    Ce module contient la classe ETAPE_NIVEAU qui sert à 
-    concrétiser les niveaux au sein d'un JDC
+    Ce module contient la classe ETAPE_NIVEAU qui sert a 
+    concretiser les niveaux au sein d'un JDC
 """
 import traceback
 
