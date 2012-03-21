@@ -75,7 +75,7 @@ class CONFIG_BASE:
   
       # Valeurs par defaut
       if not os.path.isdir(self.rep_user) : os.mkdir(self.rep_user)
-      self.path_doc     = os.path.join(self.repIni,'..','Doc') # sert pour la documentation du Node (clic droit)
+      self.path_doc     = os.path.abspath(os.path.join(self.repIni,'..','Doc'))
       self.exec_acrobat = 'acroread'
       nomDir="Eficas_"+self.code
       self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
@@ -101,7 +101,6 @@ class CONFIG_BASE:
       clef="PREFS_CATA_"+self.code
       try :
         repIntegrateur=os.path.abspath(os.environ[clef])
-        print repIntegrateur
       except :
         return
       
@@ -130,10 +129,10 @@ class CONFIG_BASE:
   def lecture_fichier_ini_utilisateur(self):
   #--------------------------------------
   # Surcharge les parametres standards par les parametres utilisateur s'ils existent
-      fic_ini_utilisateur = os.path.join(self.rep_user,self.name)
-      if not os.path.isfile(fic_ini_utilisateur): return
+      self.fic_ini_utilisateur = os.path.join(self.rep_user,self.name)
+      if not os.path.isfile(self.fic_ini_utilisateur): return
 
-      txt = read_file(fic_ini_utilisateur)
+      txt = read_file(self.fic_ini_utilisateur)
       d=locals()
       try:
          exec txt in d
