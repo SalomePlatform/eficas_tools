@@ -28,37 +28,31 @@ from PyQt4.QtCore import *
 
 
 labels = {
-"s_oxides_st_1" : "Determination de l'allure de l'interface d'un oxyde donn \npour un niveau a determiner d'irradiation" ,
-"s_oxides_st_2" : "Estimation du champ mecanique dans une couche de zircone" ,
-"s_oxides_mt_1" : "Estimation du champ mecanique dans une couche de zircone \npresentant des defauts et de l'energie elastique relaxee",
 "s_scc_st_1"    : "Analyse morphologique et mecanique d'une couche d'oxydes",
 "s_scc_st_2"    : "Analyse statistique de donnees locales et experimentales \nou numeriques",
 "s_scc_st_3"    : "taux de couverture des joints de grains par des precipites",
 "s_scc_3d"      : "Analyse 3D",
+"maquettemap"   : "Analyse 3D",
+"s_oxides_st_1" : "Determination de l'allure de l'interface d'un oxyde donne pour un niveau a determiner d'irradiation" ,
+"s_oxides_st_2" : "Estimation du champ mecanique dans une couche de zircone" ,
+"s_oxides_mt_1" : "Estimation du champ mecanique dans une couche de zircone presentant des defauts et de l'energie elastique relaxee",
 "s_polymers_st_1"   : "Estimation numerique 3D de la diffusion effective des gaz dans les polymeres charges",
-"s_Perfect" : "Essai Perfect",
+"s_Perfect"     : "Essai Perfect",
+"Creation"    : "Essai PN",
 "s_DIC"   : "Essai Felix",
 "maquettemap" : "Essai",
          }
 
-dico={"oxides" : {"irradiation"            : "s_oxides_st_1",
-                   "mecanique"             : "s_oxides_st_2",
-                   "mecanique avec defaut" : "s_oxides_mt_1"},
-      "scc" : {"analyse morphologique" : "s_scc_st_1",
+dico={"scc" : {"analyse morphologique" : "s_scc_st_1",
                "analyse statistique"   : "s_scc_st_2",
-               "analyse 3d"   : "s_scc_3d",
                "taux de couverture"    : "s_scc_st_3",
+               "analyse 3d"            : "s_scc_3d",
                "maquette"              : "maquettemap"},
-      "concrete" : {},
-      "polycristals" : {},
-      "polymers" : {"numerique 3D" : "s_polymers_st_1"},
-      "micro" : {},
-      "seal" : {},
-      "mox" : {},
-      "nano" : {},
-      "perfect" : {"Essai pour Perfect":"s_Perfect"},
-      "insulator" : {},
-      "images" : {"Felix" : "s_DIC"}
+      "Creation de catalogue" : {"Essai pour Perfect":"s_Perfect",
+                                 "Essai pour composant":"Creation"},
+      "image" : {"" : "c_image_2d_align",
+                 "" : "c_image_2d_", }
+# cli20i2.der.edf.fr/MAP/milestone/2012.1
 }
     
 # Import des panels
@@ -97,10 +91,6 @@ class MonChoixMap(Ui_ChoixMap,QtGui.QDialog):
         self.groupModules.addButton(self.RBM6)
         self.groupModules.addButton(self.RBM7)
         self.groupModules.addButton(self.RBM8)
-        self.groupModules.addButton(self.RBM9)
-        self.groupModules.addButton(self.RBM10)
-        self.groupModules.addButton(self.RBM11)
-        self.groupModules.addButton(self.RBM12)
         self.groupScheme=QButtonGroup(self.groupBoxScheme)
         self.connect(self.groupModules,SIGNAL("buttonClicked (QAbstractButton*)"),self.modifieModule)
         self.connect(self.groupScheme,SIGNAL("buttonClicked (QAbstractButton*)"),self.choisitSchema)
