@@ -32,9 +32,9 @@ from PyQt4.QtCore import *
 class QTPanel:
 # ---------- #
   """
-  Classe contenant les méthodes Qt communes a tous les panneaux droits
-  Tous les panneaux Mon...Panel héritent de cette classe
-  Gére plus précisement :
+  Classe contenant les methodes Qt communes a tous les panneaux droits
+  Tous les panneaux Mon...Panel heritent de cette classe
+  Gere plus precisement :
      - l affichage de la doc
      - le bouton Suppression (BSupPressed)
      - la mutualisation de l affichage des regles
@@ -63,7 +63,7 @@ class QTPanel:
         if label==QString("Ajouter Mot-Clef"):
            if self.LBMCPermis.currentItem() == None : return
            self.DefMC(self.LBMCPermis.currentItem())
-        if label==QString("Définition Formule"):
+        if label==QString("Definition Formule"):
            self.BOkPressedFormule()
         if label==QString("Valeur Parametre"):
            self.BOkParamPressed()

@@ -178,7 +178,7 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
   def InitCommentaire(self):
         commentaire='Un complexe est attendu'
         aideval=self.node.item.aide()
-        commentaire=commentaire +"\n"+ QString.toUtf8(QString(aideval))
+        commentaire=commentaire +"   "+ QString.toUtf8(QString(aideval))
         self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
 
 
