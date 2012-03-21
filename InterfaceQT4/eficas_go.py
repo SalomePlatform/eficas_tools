@@ -76,28 +76,32 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
     monEditeur=JDCEditor(Eficas,fichier)
     print monEditeur.cherche_Groupes()
 
-def lance_MapToSh(code=None,fichier=None,ssCode='s_polymers_st_1_V1'):
-     
+def lance_eficas_param(code='MAP',fichier='/local/noyret/Eficas_MAP/creation.comm',ssCode='Creation',version='creation'):
+    """
+        Lance l'appli EFICAS pour trouver les noms des groupes
+    """
+    # Analyse des arguments de la ligne de commande
+    from Editeur  import session
     options=session.parse(sys.argv)
-    code=options.code
-    fichier=options.comm[0]
+    if options.code!= None : code=options.code
+    if options.ssCode!= None : ssCode=options.ssCode
 
     from qtEficas import Appli
     app = QApplication(sys.argv)
     Eficas=Appli(code=code,ssCode=ssCode)
 
     from ssIhm  import QWParentSSIhm
-    parent=QWParentSSIhm(code,Eficas,None,ssCode)
+    parent=QWParentSSIhm(code,Eficas,version)
 
     import readercata
     if not hasattr ( Eficas, 'readercata'):
            monreadercata  = readercata.READERCATA( parent, Eficas )
            Eficas.readercata=monreadercata
 
+
     from editor import JDCEditor
     monEditeur=JDCEditor(Eficas,fichier)
-    texte=monEditeur.run("non")
-    print texte
+    print monEditeur.cherche_Dico()
 
 if __name__ == "__main__":
     import sys
