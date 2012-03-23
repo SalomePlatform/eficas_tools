@@ -63,7 +63,9 @@ class maquettemapGenerator(PythonGenerator):
       Prépare le contenu du fichier de paramètres python. Le contenu
       peut ensuite être obtenu au moyen de la fonction getTubePy().
       '''
-      self.texteEXE="%s.setParameters(%s)\n"%(self.schema,self.dictParam)
+      self.schema=self.schema.lower()
+      self.texteEXE="from map.schemas import %s\n"%self.schema
+      self.texteEXE+="%s.setParameters(%s)\n"%(self.schema,self.dictParam)
       self.texteEXE+="%s.setInputData(%s)\n"%(self.schema,self.dictValeur)
       self.texteEXE+="%s.schema.execute()\n"%self.schema
       self.texteEXE+="res=%s.getOutputData()\n"%self.schema

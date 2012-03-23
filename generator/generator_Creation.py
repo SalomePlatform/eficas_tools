@@ -27,7 +27,6 @@ import traceback
 import types,string,re,os
 
 from generator_python import PythonGenerator
-from cree_map_cata import param_map
 debut="""
 lqdkqmldk
 """
@@ -112,6 +111,7 @@ class CreationGenerator(PythonGenerator):
       """
       
       #print "MCSIMP", obj.nom, "  ", obj.valeur
+      from cree_map_cata import param_map
       if isinstance(obj.valeur,param_map):
         self.dicoCourant[obj.nom]=obj.valeur.nom
         self.dictParam[obj.valeur.nom]=obj.valeur
