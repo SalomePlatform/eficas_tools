@@ -208,7 +208,7 @@ class Formatage :
       increment = len(('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp))
       #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
       if (bool_fonction == 1 ) :
-          self.texte_etape = self.texte_etape +s_mcsimp
+          self.texte_etape = self.texte_etape+'\n'+self.indent_courant*' ' +s_mcsimp
       elif ( ((1-ind)*longueur+increment) <= self.l_max ) :
           self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
       else :
