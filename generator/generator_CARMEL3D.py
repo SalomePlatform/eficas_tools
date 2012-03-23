@@ -350,17 +350,22 @@ class CARMEL3DGenerator(PythonGenerator):
       #     print "keyN1=", keyN1
 #	   print obj.valeur[keyN1]['TYPE_LAW']
 	   texte+="         ["+keyN1+"\n"
+      # loi lineaire reelle
 	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
 	      texte+="            LAW LINEAR\n"
 	      texte+="            HOMOGENOUS TRUE\n"
 	      texte+="            ISOTROPIC TRUE\n"
 	      texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
+      # loi lineaire complexe
 	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
-	         texte+="            LAW LINEAR\n"
+#	         print "si avec linear complex"
+                 texte+="            LAW LINEAR\n"
 	         texte+="            HOMOGENOUS TRUE\n"
 	         texte+="            ISOTROPIC TRUE\n"
-	         texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][1])+" "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][2])+"\n"
-	          
+	         texte+="            VALUE COMPLEX "
+  #               print "nbre a formater : ",obj.valeur[keyN1]["VALUE_COMPLEX"]
+                 chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
+	         texte+= chC+"\n"
 	   texte+="         ]"+"\n"
 
  #      print "obj get sdname= ", obj.get_sdname()
@@ -368,7 +373,7 @@ class CARMEL3DGenerator(PythonGenerator):
      #    self.dictMaterConductor[obj.get_sdname()].append(texte) 
       # else :
        self.dictMaterConductor[obj.get_sdname()]=[texte,]
- #      print texte
+#       print texte
    
 
    def generMATERIALSDIELECTRIC(self,obj):
@@ -394,7 +399,9 @@ class CARMEL3DGenerator(PythonGenerator):
 	         texte+="            LAW LINEAR\n"
 	         texte+="            HOMOGENOUS TRUE\n"
 	         texte+="            ISOTROPIC TRUE\n"
-	         texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][1])+" "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][2])+"\n"
+	         texte+="            VALUE COMPLEX "
+                 chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
+	         texte+= chC+"\n"
 	          
       # loi non lineaire de type spline, Marrocco ou Marrocco et Saturation
            for loiNL in [ 'SPLINE', 'MARROCCO', 'MARROCCO+SATURATION'] :
@@ -402,7 +409,9 @@ class CARMEL3DGenerator(PythonGenerator):
 	              texte+="            LAW NONLINEAR\n"
 		      texte+="            HOMOGENOUS TRUE\n"
 		      texte+="            ISOTROPIC TRUE\n"
-		      texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][1])+" "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][2])+"\n"
+		      texte+="            VALUE COMPLEX "
+                      chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
+	              texte+= chC+"\n"
 		      texte+="            [NONLINEAR \n"
 		      texte+="                ISOTROPY TRUE\n"
 		      texte+="                NATURE "+str(obj.valeur[keyN1]['TYPE_LAW'])+"\n"
@@ -425,16 +434,20 @@ class CARMEL3DGenerator(PythonGenerator):
   #         print "keyN1=", keyN1
 #	   print obj.valeur[keyN1]['TYPE_LAW']
 	   texte+="         ["+keyN1+"\n"
+      # loi lineaire reelle
 	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
 	      texte+="            LAW LINEAR\n"
 	      texte+="            HOMOGENOUS TRUE\n"
 	      texte+="            ISOTROPIC TRUE\n"
 	      texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
+      # loi lineaire complexe
 	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
 	         texte+="            LAW LINEAR\n"
 	         texte+="            HOMOGENOUS TRUE\n"
 	         texte+="            ISOTROPIC TRUE\n"
-	         texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][1])+" "+str(obj.valeur[keyN1]["VALUE_COMPLEX"][2])+"\n"
+	         texte+="            VALUE COMPLEX "
+                 chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
+	         texte+= chC+"\n"
 	          
 	   texte+="         ]"+"\n"
 
@@ -444,8 +457,29 @@ class CARMEL3DGenerator(PythonGenerator):
        #else :
        self.dictMaterZsurfacic[obj.get_sdname()]=[texte,]
  #      print texte
-   
- 
+  
+   def formateCOMPLEX(self,nbC):
+ # prise en compte des differentes formes de description d un nombre complexe
+ # 3 formats possibles : 2 tuples et 1 nombre
+ #      print "formatage "
+ #      print "type : ", type(nbC), "pour ", nbC
+       nbformate =""
+       if isinstance(nbC,tuple) :
+          if nbC[0] == "RI" :
+                nbformate = str(nbC[1])+" "+str(nbC[2])            
+      
+          if nbC[0] == "MP" :
+                nbformate = str(nbC[1])+" "+str(nbC[2])            
+                print "attention : nombre complexe sous format MP"            
+
+       else :
+#         print "nombre"
+          nbformate = str(nbC.real)+" "+str(nbC.imag)
+
+#       print "nbformate : ", nbformate
+       return nbformate
+
+
    def generMATERIALSEMISO(self,obj):
       # preparation du sous bloc EMISO
        texte=""
