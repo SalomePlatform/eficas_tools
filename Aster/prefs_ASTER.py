@@ -48,3 +48,12 @@ catalogues=(
 ('ASTER','STA10.3',os.path.join(rep_cata,'cataSTA10'),'python'),
 ('ASTER','STA11',os.path.join(rep_cata,'cataSTA11'),'python','defaut'),
 )
+
+def addCatalog(catalogName, catalogPath):
+    """
+    This function helps you to add a new catalog dynamically
+    """
+    global catalogues
+    item=('ASTER',catalogName,catalogPath,'python')
+    catalogues+=(item,)
+    
