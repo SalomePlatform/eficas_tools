@@ -4,7 +4,6 @@ import os, sys
 
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
-from PyQt4.QtAssistant import *
 from myMain import Ui_Eficas
 from viewManager import MyTabview
 
@@ -343,16 +342,17 @@ class Appli(Ui_Eficas,QMainWindow):
         monVisuDialg.show()
 
     def aidePPal(self) :
-        maD=self.repIni+"../Aide"
+        maD=self.repIni+"/../Aide"
         docsPath = QDir(maD).absolutePath()
         try :
+          from PyQt4.QtAssistant import QAssistantClient
           monAssistant=QAssistantClient(QString(""), self)
           arguments=QStringList()
           arguments << "-profile" <<docsPath+QDir.separator()+QString("eficas_")+QString(self.code)+QString(".adp");
           monAssistant.setArguments(arguments);
           monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
         except:
-           QMessageBox.warning( self, "Aide Indisponible", "QT Assistant n est pas installe ")
+          QMessageBox.warning( self, "Aide Indisponible", "QT Assistant n est pas installe ")
 
 
     def optionEditeur(self) :
