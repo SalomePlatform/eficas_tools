@@ -44,7 +44,6 @@ dictNatureMaterRef={"ALU":"CONDUCTOR",
                     "EM_ANISOTROPIC":"EMANISO",
                     "NILMAT":"NILMAT"
                     }
-print "generateur carmel "
 
 def entryPoint():
    """
