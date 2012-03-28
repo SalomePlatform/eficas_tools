@@ -118,14 +118,14 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def is_list(self):
       """
-          Cette méthode indique si le mot cle simple attend une liste (valeur de retour 1)
+          Cette methode indique si le mot cle simple attend une liste (valeur de retour 1)
           ou s'il n'en attend pas (valeur de retour 0)
 
           Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
-          Dans le cas sans validateur, l'information est donnée par l'attribut max
+          Dans le cas sans validateur, l'information est donnee par l'attribut max
           de la definition du mot cle.
-          Dans le cas avec validateur, il faut combiner l'information précédente avec
-          celle issue de l'appel de la méthode is_list sur le validateur.On utilisera
+          Dans le cas avec validateur, il faut combiner l'information precedente avec
+          celle issue de l'appel de la methode is_list sur le validateur.On utilisera
           l'operateur ET pour effectuer cette combinaison (AndVal).
       """
       is_a_list=0
@@ -133,9 +133,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       assert (min <= max)
       if max > 1 :
                 is_a_list=1
-      # Dans le cas avec validateurs, pour que le mot cle soit considéré
-      # comme acceptant une liste, il faut que max soit supérieur a 1
-      # ET que la méthode is_list du validateur retourne 1. Dans les autres cas
+      # Dans le cas avec validateurs, pour que le mot cle soit considere
+      # comme acceptant une liste, il faut que max soit superieur a 1
+      # ET que la methode is_list du validateur retourne 1. Dans les autres cas
       # on retournera 0 (n'attend pas de liste)
       if self.definition.validators :
          is_a_list= self.definition.validators.is_list() * is_a_list
@@ -144,15 +144,15 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def has_into(self):
       """
-          Cette méthode indique si le mot cle simple propose un choix (valeur de retour 1)
+          Cette methode indique si le mot cle simple propose un choix (valeur de retour 1)
           ou s'il n'en propose pas (valeur de retour 0)
 
           Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
-          Dans le cas sans validateur, l'information est donnée par l'attribut into
+          Dans le cas sans validateur, l'information est donnee par l'attribut into
           de la definition du mot cle.
-          Dans le cas avec validateurs, pour que le mot cle soit considéré
-          comme proposant un choix, il faut que into soit présent OU
-          que la méthode has_into du validateur retourne 1. Dans les autres cas
+          Dans le cas avec validateurs, pour que le mot cle soit considere
+          comme proposant un choix, il faut que into soit present OU
+          que la methode has_into du validateur retourne 1. Dans les autres cas
           on retournera 0 (ne propose pas de choix)
       """
       has_an_into=0
@@ -164,19 +164,19 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
 
   def GetMinMax(self):
-      """ Retourne les valeurs min et max de la définition de object """
+      """ Retourne les valeurs min et max de la definition de object """
       return self.object.get_min_max()
 
   def GetMultiplicite(self):
-      """ A préciser.
-          Retourne la multiplicité des valeurs affectées a l'objet
-          représenté par l'item. Pour le moment retourne invariablement 1.
+      """ A preciser.
+          Retourne la multiplicite des valeurs affectees a l'objet
+          represente par l'item. Pour le moment retourne invariablement 1.
       """
       return 1
 
   def GetIntervalle(self):
       """ 
-           Retourne le domaine de valeur attendu par l'objet représenté 
+           Retourne le domaine de valeur attendu par l'objet represente 
            par l'item.
       """
       return self.object.getintervalle()
@@ -260,7 +260,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def valide_item(self,item):
       """
-        La validation est réalisée directement par l'objet
+        La validation est realisee directement par l'objet
       """
       return self.object.valide_item(item)
      
@@ -297,7 +297,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   def IsInIntervalle(self,valeur):
       """ 
           Retourne 1 si la valeur est dans l'intervalle permis par
-          l'objet représenté par l'item.
+          l'objet represente par l'item.
       """
       return self.valide_item(valeur)
 
@@ -328,8 +328,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   def GetText(self):
     """
     Classe SIMPTreeItem
-    Retourne le texte a afficher dans l'arbre représentant la valeur de l'objet
-    pointé par self 
+    Retourne le texte a afficher dans l'arbre representant la valeur de l'objet
+    pointe par self 
     """
     text= self.object.GetText()
     if text == None : text=""
