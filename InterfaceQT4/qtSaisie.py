@@ -79,10 +79,8 @@ class SaisieValeur:
                    self.editor.affiche_infos("Attention, valeurs modifiees", Qt.red)
                listeDejaLa=liste
         lChoix=self.node.item.get_liste_possible(listeDejaLa)
-        if ((len(lChoix) < 10 ) and (hasattr (self,'BAlpha'))) :
-            self.BAlpha.close()
-        if alpha==1 :
-            lChoix.sort()
+        if ((len(lChoix) < 10 ) and (hasattr (self,'BAlpha'))) : self.BAlpha.close()
+        if alpha==1 : lChoix.sort()
         for valeur in lChoix :
             self.listBoxVal.addItem( str(valeur) ) 
         if len(lChoix) == 1 :

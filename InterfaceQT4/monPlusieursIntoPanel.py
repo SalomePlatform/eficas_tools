@@ -60,14 +60,14 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonPlusieursIntoPanel"
+        self.alpha=0
         QTPanel.__init__(self,node,parent)
         DPlusInto.__init__(self,parent,fl)
         self.politique=PolitiquePlusieurs(node,parent)
         self.InitCommentaire()
         SaisieValeur.BuildLBValeurs(self)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
-        SaisieValeur.RemplitPanel(self,self.listeValeursCourantes)
-        self.alpha=0
+        SaisieValeur.RemplitPanel(self,self.listeValeursCourantes,self.alpha)
         self.connecterSignaux()
 
   def connecterSignaux(self) :
@@ -112,7 +112,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
                 i = i+1
         self.LBValeurs.setCurrentItem(self.LBValeurs.item(indexCourant -1))
         self.listeValeursCourantes=listeVal
-        SaisieValeur.RemplitPanel(self,self.listeValeursCourantes)
+        SaisieValeur.RemplitPanel(self,self.listeValeursCourantes,self.alpha)
           
   def Ajout1Valeur(self):
         liste=[]
@@ -143,7 +143,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
 	       self.LBValeurs.setCurrentItem(item)
                index=index+1
            self.listeValeursCourantes=l1+listeRetour+l3
-        SaisieValeur.RemplitPanel(self,self.listeValeursCourantes)
+        SaisieValeur.RemplitPanel(self,self.listeValeursCourantes,self.alpha)
 
   def InitCommentaire(self):
         commentaire=""

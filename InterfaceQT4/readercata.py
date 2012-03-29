@@ -151,7 +151,7 @@ class READERCATA:
              self.appliEficas.close()
              return
 
-      self.determineMater()
+      if self.code == "ASTER" : self.determineMater()
 
       # import du catalogue
       self.cata = self.import_cata(self.fic_cata)
@@ -178,7 +178,7 @@ class READERCATA:
       #
       # traitement des clefs documentaires
       #
-      self.traite_clefs_documentaires()
+      if self.code== "ASTER" :self.traite_clefs_documentaires()
       self.cata=(self.cata,)
       titre=self.VERSION_EFICAS + " avec le catalogue " + os.path.basename(self.fic_cata)
       if self.appliEficas.top:
@@ -279,19 +279,23 @@ class READERCATA:
 
    def traite_clefs_documentaires(self):
       try:
-        self.fic_cata_clef=os.path.splitext(self.fic_cata_c)[0]+'_clefs_docu'
-        #print self.fic_cata_clef
-        f=open(self.fic_cata_clef)
+      #if 1 :
+        fic_doc='fic_doc_'+str(self.version_cata)
+        self.fic_doc=getattr(self.appliEficas.CONFIGURATION,fic_doc )
+        f=open(self.fic_doc)
       except:
-        #print "Pas de fichier associe contenant des clefs documentaires"
+      #else :
+        print "Pas de fichier associe contenant des clefs documentaires"
         return
 
       dict_clef_docu={}
       for l in f.readlines():
           clef=l.split(':')[0]
-          docu=l.split(':')[1]
-          docu=docu[0:-1]
+          deb=l.find(':')+1
+          docu=l[deb:-1]
           dict_clef_docu[clef]=docu
+          print clef
+          print docu
       for oper in self.cata.JdC.commandes:
            if dict_clef_docu.has_key(oper.nom):
               oper.docu=dict_clef_docu[oper.nom]

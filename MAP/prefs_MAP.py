@@ -53,11 +53,6 @@ catalogues = (
   ('MAP','creation'              ,os.path.join(repIni,'cree_map_cata.py'),'Creation'),
   ('MAP','V0',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC'),
   ('MAP','V1',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC','defaut'),
-  ('MAP','V1',os.path.join(repIni,'Essai/maquette.py'),'maquette'),
-  ('MAP','V1',os.path.join(repIni,'map_cata2.py'),'maquettemap2'),
-  ('MAP','V1',os.path.join(repIni,'Essai/comp_c_image_3d.py'),'c_image_3d','defaut'),
-  ('MAP','V1',os.path.join(repIni,'Essai/c_pre_interface_mesh.py.py'),'c_pre_interface_mesh','defaut'),
-  ('MAP','V1',os.path.join(repIni,'Essai/c_post_distribution_properties.py'),'c_post_distribution_properties','defaut'),
 )
 
 OpenTURNS_path='/local/noyret/Salome/V6_main/tools/install/Openturns_tool-0150-py266-r272-ro144-rp208-sw204-xm278-la331-gr2263-dox173_patch-tbb30/lib/python2.6/site-packages'

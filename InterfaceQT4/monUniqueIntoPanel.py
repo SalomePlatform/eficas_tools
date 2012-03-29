@@ -49,16 +49,16 @@ class DUnIn(Ui_DUnIn,QDialog):
 
 class MonUniqueIntoPanel(DUnIn,QTPanel,SaisieValeur):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe definissant le panel associe aux mots-cles qui demandent
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discretes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonUniqueIntoPanel"
         self.alpha=0
         QTPanel.__init__(self,node,parent)
         DUnIn.__init__(self,parent,fl)
-        SaisieValeur.RemplitPanel(self)
+        SaisieValeur.RemplitPanel(self,alpha=self.alpha)
         self.politique=PolitiqueUnique(node,parent)
         self.connecterSignaux()
 

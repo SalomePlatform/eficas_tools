@@ -292,7 +292,35 @@ class JDCEditor(QSplitter):
         w.setWindowTitle( caption )
         w.setText(txt)
         w.show()
-        
+
+    #--------------------------------#
+    def _viewTextExecute(self, txt):    
+    #--------------------------------#
+        self.w = qtCommun.ViewText( self.QWParent )
+        self.w.setWindowTitle( "execution" )
+        self.monExe=QProcess(self.w)
+        pid=self.monExe.pid()
+        nomFichier='/tmp/map_'+str(pid)+'.py'
+        f=open(nomFichier,'w')
+        f.write(txt)
+        f.close()
+        self.connect(self.monExe, SIGNAL("readyReadStandardOutput()"), self.readFromStdOut )
+        self.connect(self.monExe, SIGNAL("readyReadStandardError()"), self.readFromStdErr )
+        exe='python ' + nomFichier
+        self.monExe.start(exe)
+        self.monExe.closeWriteChannel()
+        self.w.show()
+
+
+    def readFromStdErr(self):
+        a=self.monExe.readAllStandardError()
+        self.w.view.append(QString.fromUtf8(a.data(),len(a))) ;
+
+    def readFromStdOut(self) :
+        a=self.monExe.readAllStandardOutput()
+        self.w.view.append(QString.fromUtf8(a.data(),len(a))) ;
+
+
     #-----------------------#
     def viewJdcSource(self):        
     #-----------------------#
@@ -503,12 +531,14 @@ class JDCEditor(QSplitter):
     #-----------------------------#
     def get_text_JDC(self,format):
     #-----------------------------#
+      if self.code == "MAP" and not(generator.plugins.has_key(format)):
+         format = "MAP"
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
          jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
          if not self.generator.cr.estvide():
-            self.affiche_infos("Erreur à la generation",Qt.red)
+            self.affiche_infos("Erreur a la generation",Qt.red)
             QMessageBox.critical( self, "Erreur a la generation","EFICAS ne sait pas convertir ce JDC")
             return ""
          else:
@@ -522,29 +552,21 @@ class JDCEditor(QSplitter):
     #-----------------------------#
     def run(self,execution="oui"):
     #-----------------------------#
-      self.textePython=""
+      if self.code == "MAP" and not(generator.plugins.has_key(format)):
+         self.format="MAP"
       if generator.plugins.has_key(self.format):
-         # Le generateur existe on l'utilise
          self.generator=generator.plugins[self.format]()
-#         self.textePython =self.generator.generRUN(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
-         self.generator=generator.plugins["c_transverse_empty_python"]()
-      if execution=="oui" :
-         self.textePython =self.generator.generRUN(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
-         os.system(self.textePython)
-         self.affiche_infos("launch runMAP on parameter file",Qt.red)
-         QMessageBox.information(self, "Execution launched in console", self.textePython)
-      else:
-         return self.textePython
+      else :
+         QMessageBox.critical( self, "Execution impossible ","EFICAS ne sait pas executer ce JDC ")
+         return "" 
 
-    #------------------------------------------------#
-    def runYACS(self,execution="oui",nomFichier=None):
-    #------------------------------------------------#
-      if generator.plugins.has_key(self.format):
-         # Le generateur existe on l'utilise
-         self.generator=generator.plugins[self.format]()
-         self.generator.generRUNYACS(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION,nomFichier=nomFichier)
+      # 
+      #self.textePython =self.generator.generRUN(self.jdc,self.appli.ssCode)
+      self.textePython =self.generator.generRUN(self.jdc,"c_transverse_empty_python")
       if execution=="oui" :
-         print "il faut faire le run dans Salome"
+         self._viewTextExecute( self.textePython)    
+      return self.textePython
+
 
     #-----------------------------------------------------#
     def determineNomFichier(self,path,extension):
@@ -593,22 +615,6 @@ class JDCEditor(QSplitter):
         self.fichierRun = unicode(QDir.convertSeparators(fn))
         self.writeFile( self.fichierRun, txt = texte)
     
-    #-----------------------------#
-    def saveYACS(self):
-    #-----------------------------#
-        if hasattr(self,'fichierYACS'):
-           self.runYACS(execution="non",nomFichier=self.fichierYACS)
-           return
-
-        today = str(date.today())
-        today = today.replace('-', '')
-        today+="-"+time.strftime("%H%M%S", time.localtime())
-        path=self.CONFIGURATION.PATH_STUDY+"/"+self.CONFIGURATION.NAME_SCHEME+"_"+today+".xml"
-        extension=".xml"
-
-        bOK, fn=self.determineNomFichier(path,extension)
-        if fn == "" : return
-        self.runYACS(execution="non",nomFichier=fn)
 
       
     #-----------------------------------------#
@@ -622,6 +628,7 @@ class JDCEditor(QSplitter):
     #-----------------------------------------#
         dicoCourant={}
         format =  self.appliEficas.format_fichier
+        print format
         if generator.plugins.has_key(format):
            # Le generateur existe on l'utilise
            self.generator=generator.plugins[format]()

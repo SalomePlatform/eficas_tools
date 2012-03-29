@@ -49,6 +49,7 @@ class CONFIG_BASE:
       self.salome  = appli.salome
       if self.salome : self.name="editeur_salome.ini"
       else           : self.name="editeur.ini"
+      self.rep_mat = None
       self.repIni  = repIni
       self.rep_user   = os.path.join(os.environ['HOME'],nomDir)
       self.mode_nouv_commande='initial'
@@ -120,8 +121,9 @@ class CONFIG_BASE:
          except :
             pass
       #Glut pour les repertoires materiaux
+      #et pour la doc
       for k in d.keys() :
-          if k[0:9]=="rep_mat_v" :
+          if (k[0:8]=="rep_mat_") or (k[0:8]=="fic_doc_"):
              setattr(self,k,d[k])
 
 

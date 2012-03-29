@@ -147,7 +147,6 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
 
     def get_docu(self):
         """ Retourne la clef de doc de l'objet pointé par self """
-        print "hhhhhhhhhhhh"
         return self.object.get_docu()    
 
     def iscopiable(self):
