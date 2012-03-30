@@ -1,4 +1,4 @@
-#@ MODIF macr_lign_coupe_ops Macro  DATE 02/02/2011   AUTEUR PELLET J.PELLET 
+#@ MODIF macr_lign_coupe_ops Macro  DATE 26/10/2011   AUTEUR MACOCCO K.MACOCCO 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
@@ -57,10 +57,15 @@ def crea_grp_matiere(self,groupe,newgrp,iocc,m,__remodr,NOM_CHAM,LIGN_COUPE,__ma
 
   # dictc=table (extraite de dictb) contenant uniquement des noeuds dans la matière
   if m['NOM_CMP']!=None:
-     dictc=getattr(dictb,m['NOM_CMP'][0]).NON_VIDE()
-     lno_c2 = set(dictc.NOEUD.values())
+     lnomcmp = m['NOM_CMP']
+     if type(lnomcmp) not in (list, tuple):
+        lnomcmp = [lnomcmp]
+     lno_c2 = set()
+     for comp in lnomcmp:
+        dictc = getattr(dictb, comp).NON_VIDE()
+        lno_c2.update(dictc.NOEUD.values())
   else:# TOUT_CMP='OUI'
-     # on garde uniquement les composantes pour conserver les noeuds où il y a des valeurs
+     # on enlève les colonnes de POST_RELEVE_T pour ne garder que les composantes et NOEUD
      a_suppr = set(['INTITULE', 'RESU', 'NOM_CHAM', 'NUME_ORDRE', 'INST', 'ABSC_CURV', 'COOR_X', 'COOR_Y', 'COOR_Z'])
      new_para = set(dictb.para)
      new_para.difference_update(a_suppr)
@@ -659,8 +664,8 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
     nomresu=RESULTAT.nom
     iret,ibid,n_modele = aster.dismoi('F','MODELE',nomresu,'RESULTAT')
     n_modele=n_modele.strip()
-    if n_modele=='' :
-      if MODELE==None:
+    if n_modele in ('', '#AUCUN'):
+      if MODELE == None:
         UTMESS('F','POST0_9',valk=nomresu)
       else : n_modele=MODELE.nom
 
@@ -723,7 +728,7 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
               UTMESS('F','POST0_12')
            arcs.append((m['COOR_ORIG'],m['CENTRE'],m['NB_POINTS'],m['ANGLE'],m['DNOR']))
       elif m['TYPE']=='GROUP_NO':
-        ngrno=m['GROUP_NO'].ljust(8).upper()
+        ngrno=m['GROUP_NO'].ljust(8)
         collgrno=aster.getcolljev(n_mailla.ljust(8)+'.GROUPENO')
         if ngrno not in collgrno.keys() :
           UTMESS('F','POST0_13',valk=[ngrno,n_mailla])
@@ -733,7 +738,7 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
           l_coor_group.append(aster.getvectjev(n_mailla.ljust(8)+'.COORDO    .VALE',3*(node-1),3))
         groups.append(l_coor_group)
       elif m['TYPE']=='GROUP_MA':
-        ngrma=m['GROUP_MA'].ljust(8).upper()
+        ngrma=m['GROUP_MA'].ljust(8)
         if ngrma not in collgrma.keys() :
           UTMESS('F','POST0_14',valk=[ngrma,n_mailla])
         grpm=collgrma[ngrma]
@@ -779,7 +784,7 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
   motscles['CREA_GROUP_NO']=[]
   for m in LIGN_COUPE :
       if m['TYPE'] in ('GROUP_NO','GROUP_MA') :
-        motscles['CREA_GROUP_NO'].append(_F(GROUP_MA=m[m['TYPE']].ljust(8).upper(),) )
+        motscles['CREA_GROUP_NO'].append(_F(GROUP_MA=m[m['TYPE']].ljust(8),) )
       else :
         motscles['CREA_GROUP_NO'].append(_F(GROUP_MA='LICOU'+str(iocc),) )
         iocc=iocc+1
@@ -856,7 +861,7 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
 
      # on définit le groupe de noeud pour post_releve_t
      if m['TYPE'] in ('GROUP_NO','GROUP_MA'):
-         groupe=m[m['TYPE']].ljust(8).upper()
+         groupe=m[m['TYPE']].ljust(8)
          nomgrma=groupe
      else:
          ioc2=ioc2+1
@@ -938,7 +943,7 @@ def macr_lign_coupe_ops(self,RESULTAT,CHAM_GD,UNITE_MAILLAGE,LIGN_COUPE,
           if m['INTITULE'] !=None : intitl=m['INTITULE']
           else                    : intitl='l.coupe'+str(ioc2)
         else:
-          groupe=m[m['TYPE']].ljust(8).upper()
+          groupe=m[m['TYPE']].ljust(8)
           if m['INTITULE'] !=None : intitl=m['INTITULE']
           else                    : intitl=groupe
         mcACTION.append( _F(INTITULE  = intitl,
