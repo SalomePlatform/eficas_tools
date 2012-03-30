@@ -34,11 +34,11 @@ from N_types     import is_int, is_float, is_complex, is_str, is_enum, is_assd
 SEP='_'
 
 try:
-   # Si la version de Python possede la fonction _getframe
+   # Si la version de Python possède la fonction _getframe
    # on l'utilise.
    cur_frame=sys._getframe
 except:
-   # Sinon on l'emule
+   # Sinon on l'émule
    def cur_frame(offset=0):
      """ Retourne la frame d execution effective eventuellement en remontant
          de offset niveaux dans la pile d execution
@@ -69,7 +69,7 @@ def callee_where(niveau=4):
 def AsType(a):
    """
       Retourne le type d'un concept (a) à partir
-      des caracteristiques de l'objet Python
+      des caractéristiques de l'objet Python
    """
    if is_enum(a):  return AsType(a[0])
    if is_assd(a):  return type(a)
@@ -89,8 +89,8 @@ def prbanner(s):
 
 def repr_float(valeur):
   """
-      Cette fonction represente le reel valeur comme une chaine de caracteres
-      sous forme mantisse exposant si necessaire cad si le nombre contient plus de
+      Cette fonction représente le réel valeur comme une chaine de caractères
+      sous forme mantisse exposant si nécessaire cad si le nombre contient plus de
       5 caractères
       NB : valeur est un réel au format Python ou une chaine de caractères représentant un réel
   """

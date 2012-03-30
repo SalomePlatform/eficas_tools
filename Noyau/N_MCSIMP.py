@@ -23,8 +23,8 @@
 
 
 """
-    Ce module contient la classe MCSIMP qui sert a controler la valeur
-    d'un mot-cle simple par rapport a sa definition portee par un objet
+    Ce module contient la classe MCSIMP qui sert à controler la valeur
+    d'un mot-clé simple par rapport à sa définition portée par un objet
     de type ENTITE
 """
 
@@ -42,13 +42,18 @@ class MCSIMP(N_OBJECT.OBJECT):
    def __init__(self,val,definition,nom,parent):
       """
          Attributs :
-          - val : valeur du mot cle simple
+
+          - val : valeur du mot clé simple
+
           - definition
+
           - nom
+
           - parent
+
         Autres attributs :
 
-          - valeur : valeur du mot-cle simple en tenant compte de la valeur par defaut
+          - valeur : valeur du mot-clé simple en tenant compte de la valeur par défaut
 
       """
       self.definition=definition
@@ -62,15 +67,15 @@ class MCSIMP(N_OBJECT.OBJECT):
          self.niveau = self.parent.niveau
          self.etape = self.parent.etape
       else:
-         # Le mot cle simple a ete cree sans parent
+         # Le mot cle simple a été créé sans parent
          self.jdc = None
          self.niveau = None
          self.etape = None
 
    def GETVAL(self,val):
       """
-          Retourne la valeur effective du mot-cle en fonction
-          de la valeur donnee. Defaut si val == None
+          Retourne la valeur effective du mot-clé en fonction
+          de la valeur donnée. Defaut si val == None
       """
       if (val is None and hasattr(self.definition,'defaut')) :
          val = self.definition.defaut
@@ -80,14 +85,14 @@ class MCSIMP(N_OBJECT.OBJECT):
 
    def get_valeur(self):
       """
-          Retourne la "valeur" d'un mot-cle simple.
-          Cette valeur est utilisee lors de la creation d'un contexte
-          d'evaluation d'expressions a l'aide d'un interpreteur Python
+          Retourne la "valeur" d'un mot-clé simple.
+          Cette valeur est utilisée lors de la création d'un contexte
+          d'évaluation d'expressions à l'aide d'un interpréteur Python
       """
       v = self.valeur
       # Si singleton et max=1, on retourne la valeur.
       # Si une valeur simple et max='**', on retourne un singleton.
-      # (si liste de longueur > 1 et max=1, on sera arrete plus tard)
+      # (si liste de longueur > 1 et max=1, on sera arrêté plus tard)
       # Pour accepter les numpy.array, on remplace : "type(v) not in (list, tuple)"
       # par "not has_attr(v, '__iter__')".
       if v is None:
@@ -104,8 +109,8 @@ class MCSIMP(N_OBJECT.OBJECT):
 
    def get_val(self):
       """
-          Une autre methode qui retourne une "autre" valeur du mot cle simple.
-          Elle est utilisee par la methode get_mocle
+          Une autre méthode qui retourne une "autre" valeur du mot clé simple.
+          Elle est utilisée par la méthode get_mocle
       """
       return self.valeur
 
@@ -120,7 +125,7 @@ class MCSIMP(N_OBJECT.OBJECT):
       """ Retourne une copie de self """
       objet = self.makeobjet()
       # il faut copier les listes et les tuples mais pas les autres valeurs
-      # possibles (reel,SD,...)
+      # possibles (réel,SD,...)
       if type(self.valeur) in (list, tuple):
          objet.valeur = copy(self.valeur)
       else:
@@ -141,7 +146,7 @@ class MCSIMP(N_OBJECT.OBJECT):
 
    def get_sd_utilisees(self):
       """
-          Retourne une liste qui contient la ou les SD utilisee par self si c'est le cas
+          Retourne une liste qui contient la ou les SD utilisée par self si c'est le cas
           ou alors une liste vide
       """
       l=[]
@@ -155,9 +160,9 @@ class MCSIMP(N_OBJECT.OBJECT):
 
    def get_sd_mcs_utilisees(self):
       """
-          Retourne la ou les SD utilisee par self sous forme d'un dictionnaire :
-            - Si aucune sd n'est utilisee, le dictionnaire est vide.
-            - Sinon, la cle du dictionnaire est le mot-cle simple ; la valeur est
+          Retourne la ou les SD utilisée par self sous forme d'un dictionnaire :
+            - Si aucune sd n'est utilisée, le dictionnaire est vide.
+            - Sinon, la clé du dictionnaire est le mot-clé simple ; la valeur est
               la liste des sd attenante.
 
               Exemple ::
@@ -184,7 +189,7 @@ class MCSIMP(N_OBJECT.OBJECT):
    def get_all_co(self):
       """
           Cette methode retourne la liste de tous les concepts co
-          associes au mot cle simple
+          associés au mot cle simple
       """
       lval=self.valeur
       if type(self.valeur) not in (list, tuple):
