@@ -11,7 +11,8 @@ import types
 # et les fichiers de donnees des materiaux de reference
 from prefs_CARMEL3D import repIni
 
-print "repIni = ", repIni
+#print "catalogue carmel"
+#print "repIni = ", repIni
 
 # --------------------------------------------------
 # definition d une classe pour les materiaux
