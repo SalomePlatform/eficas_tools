@@ -885,3 +885,12 @@ class JDC(I_OBJECT.OBJECT):
      if valid != old_valid:
        CONNECTOR.Emit(self,"valid")
      return valid
+
+   def get_l_noms_etapes(self):
+      """ 
+          Retourne la liste des noms des étapes de self 
+      """
+      l=[]
+      for etape in self.etapes:
+        l.append(etape.nom)
+      return l
