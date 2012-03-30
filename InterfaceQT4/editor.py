@@ -628,7 +628,6 @@ class JDCEditor(QSplitter):
     #-----------------------------------------#
         dicoCourant={}
         format =  self.appliEficas.format_fichier
-        print format
         if generator.plugins.has_key(format):
            # Le generateur existe on l'utilise
            self.generator=generator.plugins[format]()
@@ -648,21 +647,21 @@ class JDCEditor(QSplitter):
                                   "HPROBE","EPROBE","BFLUX","BFLUXN","JFLUX","JFLUXN",
                                   "PORT_OMEGA","POST_PHI","PB_GRID",
                                   "SCUTE","SCUTN"]
-         dernier=self.tree.racine.children[-1]
+         try :
+            dernier=self.tree.racine.children[-1]
+         except :
+            dernier=None
          for groupe in listeGroup :
              exclure = 0
-  #           print "groupe: ", groupe
              for prefix in liste_prefixes_exclus :
-  #               print "prefixe: ", prefix
                  long_pref = len(prefix)
                  if groupe[0:long_pref]== prefix :
                      exclure = 1
    # le groupe de mailles n est pas a exclure            
              if exclure == 0 :
-                new_node = dernier.append_brother("MESH_GROUPE",'after')
+                if dernier != None : new_node = dernier.append_brother("MESH_GROUPE",'after')
+                else: new_node=self.tree.racine.append_child("MESH_GROUPE",pos='first')
                 test,mess = new_node.item.nomme_sd(groupe)
-   #             print "test : ",test 
-   #             print "mess : ",mess 
                 new_node.append_child('MON_MATER')
                 dernier=new_node
 
