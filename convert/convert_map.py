@@ -26,13 +26,13 @@ from convert_python import *
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
-       Ces informations sont retournées dans un dictionnaire
+       Retourne les informations necessaires pour le chargeur de plugins
+       Ces informations sont retournees dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'MAP',
-        # La factory pour créer une instance du plugin
+        # La factory pour creer une instance du plugin
           'factory' : PythonParser,
           }
 

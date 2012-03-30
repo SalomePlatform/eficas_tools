@@ -62,90 +62,62 @@
      <item>
       <widget class="QGroupBox" name="groupBoxModule">
        <property name="title">
-        <string>Modules</string>
+        <string>Family</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
          <widget class="QRadioButton" name="RBM1">
-          <property name="text">
-           <string>oxides</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QRadioButton" name="RBM2">
           <property name="text">
            <string>scc</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QRadioButton" name="RBM3">
+        <item>
+         <widget class="QRadioButton" name="RBM2">
           <property name="text">
            <string>concrete</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
+        <item>
+         <widget class="QRadioButton" name="RBM3">
+          <property name="text">
+           <string>Creation de catalogue</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QRadioButton" name="RBM4">
           <property name="text">
-           <string>polycristals</string>
+           <string>image</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
+        <item>
          <widget class="QRadioButton" name="RBM5">
           <property name="text">
-           <string>polymers</string>
+           <string>pre</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
+        <item>
          <widget class="QRadioButton" name="RBM6">
           <property name="text">
-           <string>micro</string>
+           <string>post</string>
           </property>
          </widget>
         </item>
-        <item row="6" column="0">
+        <item>
          <widget class="QRadioButton" name="RBM7">
           <property name="text">
-           <string>seal</string>
+           <string>solver</string>
           </property>
          </widget>
         </item>
-        <item row="7" column="0">
+        <item>
          <widget class="QRadioButton" name="RBM8">
           <property name="text">
-           <string>mox</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0">
-         <widget class="QRadioButton" name="RBM9">
-          <property name="text">
-           <string>nano</string>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="0">
-         <widget class="QRadioButton" name="RBM12">
-          <property name="text">
-           <string>perfect</string>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="0">
-         <widget class="QRadioButton" name="RBM10">
-          <property name="text">
-           <string>insulator</string>
-          </property>
-         </widget>
-        </item>
-        <item row="11" column="0">
-         <widget class="QRadioButton" name="RBM11">
-          <property name="text">
-           <string>images</string>
+           <string>transverse</string>
           </property>
          </widget>
         </item>
@@ -155,7 +127,7 @@
      <item>
       <widget class="QGroupBox" name="groupBoxScheme">
        <property name="title">
-        <string>Scheme</string>
+        <string>Entity</string>
        </property>
       </widget>
      </item>
