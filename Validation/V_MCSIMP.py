@@ -1,4 +1,4 @@
-#@ MODIF V_MCSIMP Validation  DATE 07/09/2009   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF V_MCSIMP Validation  DATE 11/10/2010   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 # RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
@@ -22,12 +22,12 @@
 # ======================================================================
 
 """
-   Ce module contient la classe mixin MCSIMP qui porte les methodes
-   necessaires pour realiser la validation d'un objet de type MCSIMP
-   derive de OBJECT.
+   Ce module contient la classe mixin MCSIMP qui porte les méthodes
+   nécessaires pour réaliser la validation d'un objet de type MCSIMP
+   dérivé de OBJECT.
 
    Une classe mixin porte principalement des traitements et est
-   utilisee par heritage multiple pour composer les traitements.
+   utilisée par héritage multiple pour composer les traitements.
 """
 # Modules Python
 import string,types
@@ -42,20 +42,20 @@ from Noyau.N_VALIDATOR import listProto
 class MCSIMP:
    """
       COMMENTAIRE CCAR:
-      Cette classe est quasiment identique a la classe originale d'EFICAS
-      a part quelques changements cosmetiques et des chagements pour la
-      faire fonctionner de facon plus autonome par rapport a l'environnement
+      Cette classe est quasiment identique à la classe originale d'EFICAS
+      a part quelques changements cosmétiques et des chagements pour la
+      faire fonctionner de facon plus autonome par rapport à l'environnement
       EFICAS
  
-      A mon avis, il faudrait aller plus loin et reduire les dependances
-      amont au strict necessaire.
+      A mon avis, il faudrait aller plus loin et réduire les dépendances
+      amont au strict nécessaire.
 
-          - Est il indispensable de faire l'evaluation de la valeur dans le contexte
+          - Est il indispensable de faire l'évaluation de la valeur dans le contexte
             du jdc dans cette classe.
 
-          - Ne pourrait on pas doter les objets en presence des methodes suffisantes
-            pour eviter les tests un peu particuliers sur GEOM, PARAMETRE et autres. J'ai
-            d'ailleurs modifie la classe pour eviter l'import de GEOM
+          - Ne pourrait on pas doter les objets en présence des méthodes suffisantes
+            pour éviter les tests un peu particuliers sur GEOM, PARAMETRE et autres. J'ai
+            d'ailleurs modifié la classe pour éviter l'import de GEOM
    """
 
    CR=N_CR.CR
@@ -82,14 +82,14 @@ class MCSIMP:
 
    def isvalid(self,cr='non'):
       """
-         Cette methode retourne un indicateur de validite de l'objet de type MCSIMP
+         Cette méthode retourne un indicateur de validité de l'objet de type MCSIMP
 
            - 0 si l'objet est invalide
            - 1 si l'objet est valide
 
-         Le parametre cr permet de parametrer le traitement. Si cr == 'oui'
-         la methode construit egalement un comte-rendu de validation
-         dans self.cr qui doit avoir ete cree prealablement.
+         Le paramètre cr permet de paramétrer le traitement. Si cr == 'oui'
+         la méthode construit également un comte-rendu de validation
+         dans self.cr qui doit avoir été créé préalablement.
       """
       if self.state == 'unchanged':
         return self.valid
@@ -99,7 +99,7 @@ class MCSIMP:
         #  verification presence
         if self.isoblig() and v == None :
           if cr == 'oui' :
-            self.cr.fatal(string.join((u"Mot-clé : ", self.nom, u" obligatoire non valorisé")))
+            self.cr.fatal(string.join((u"Mot-clé : ",self.nom,u" obligatoire non valorisé")))
           valid = 0
 
         lval=listProto.adapt(v)
@@ -119,7 +119,7 @@ class MCSIMP:
            intoProto=self.intoProto
            cardProto=self.cardProto
            if cr == 'oui' :
-               #un cr est demande : on collecte tous les types d'erreur
+               #un cr est demandé : on collecte tous les types d'erreur
                try:
                    for val in lval:
                        typeProto.adapt(val)
@@ -144,7 +144,7 @@ class MCSIMP:
                    try:
                        self.definition.validators.convert(lval)
                    except ValError,e:
-                       self.cr.fatal(string.join(("Mot-cle",self.nom,"invalide :",str(e),"\nCritere de validite:",self.definition.validators.info())))
+                       self.cr.fatal(string.join((u"Mot-clé",self.nom,"invalide :",str(e),"\nCritere de validite:",self.definition.validators.info())))
                        valid=0
            else:
                #si pas de cr demande, on sort a la toute premiere erreur 
@@ -164,20 +164,20 @@ class MCSIMP:
         return self.valid
 
    def isoblig(self):
-      """ indique si le mot-cle est obligatoire
+      """ indique si le mot-clé est obligatoire
       """
       return self.definition.statut=='o'
 
    def init_modif_up(self):
       """
-         Propage l'etat modifie au parent s'il existe et n'est l'objet 
+         Propage l'état modifié au parent s'il existe et n'est l'objet 
          lui-meme
       """
       if self.parent and self.parent != self :
         self.parent.state = 'modified'
 
    def report(self):
-      """ genere le rapport de validation de self """
+      """ génère le rapport de validation de self """
       self.cr=self.CR()
       self.cr.debut = u"Mot-clé simple : "+self.nom
       self.cr.fin = u"Fin Mot-clé simple : "+self.nom
@@ -186,7 +186,7 @@ class MCSIMP:
         self.isvalid(cr='oui')
       except AsException,e:
         if CONTEXT.debug : traceback.print_exc()
-        self.cr.fatal(string.join((u"Mot-clé simple : ",self.nom,str(e))))
+        self.cr.fatal(string.join(("Mot-clé simple : ",self.nom,str(e))))
       return self.cr
 
 
