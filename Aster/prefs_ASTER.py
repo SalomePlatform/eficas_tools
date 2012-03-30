@@ -42,6 +42,7 @@ rep_mat_STA88=os.path.join(rep_cata,'cataSTA8','materiau')
 rep_mat_STA98=os.path.join(rep_cata,'cataSTA9','materiau')
 rep_mat_STA103=os.path.join(rep_cata,'cataSTA10','materiau')
 #
+path_doc="/local/noyret/Docs"
 catalogues=(
 ('ASTER','STA8.8',os.path.join(rep_cata,'cataSTA8'),'python'),
 ('ASTER','STA9.8',os.path.join(rep_cata,'cataSTA9'),'python'),

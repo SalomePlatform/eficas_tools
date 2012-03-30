@@ -13,14 +13,14 @@ class PopUpMenuNodeMinimal :
         self.menu.addAction(self.Supprime)
     
     def createActions(self):
-        self.CommApres = QAction('après',self.tree)
+        self.CommApres = QAction('apres',self.tree)
         self.tree.connect(self.CommApres,SIGNAL("activated()"),self.addCommApres)
         self.CommApres.setStatusTip("Insere un commentaire apres la commande ")
         self.CommAvant = QAction('avant',self.tree)
         self.tree.connect(self.CommAvant,SIGNAL("activated()"),self.addCommAvant)
         self.CommAvant.setStatusTip("Insere un commentaire avant la commande ")
 
-        self.ParamApres = QAction('après',self.tree)
+        self.ParamApres = QAction('apres',self.tree)
         self.tree.connect(self.ParamApres,SIGNAL("activated()"),self.addParametersApres)
         self.ParamApres.setStatusTip("Insere un parametre apres la commande ")
         self.ParamAvant = QAction('avant',self.tree)
@@ -52,16 +52,20 @@ class PopUpMenuNodeMinimal :
              texte="impossible de trouver la commande  " + commande
              QMessageBox.information( self.editor, "Lecteur PDF", texte)
              return
-        nom_fichier = cle_doc
         import os
-        fichier = os.path.abspath(os.path.join(self.editor.CONFIGURATION.path_doc,
-                                       nom_fichier))
-        try :
-           f=open(fichier,"rb")
-        except :
-           texte="impossible d'ouvrir " + fichier
-           QMessageBox.information( self.editor, "Documentation Vide", texte)
-           return
+        if cle_doc.startswith('http:'):
+           fichier = cle_doc
+        else :
+            fichier = os.path.abspath(os.path.join(self.editor.CONFIGURATION.path_doc,
+                                       cle_doc))
+            try :
+               f=open(fichier,"rb")
+            except :
+               texte="impossible d'ouvrir " + fichier
+               QMessageBox.information( self.editor, "Documentation Vide", texte)
+               return
+
+       
         if os.name == 'nt':
            os.spawnv(os.P_NOWAIT,commande,(commande,fichier,))
         elif os.name == 'posix':

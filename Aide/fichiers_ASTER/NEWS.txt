@@ -1,16 +1,19 @@
+Version 6.5 (05/2012):
+<BR>
+   Comptabible avec la version 6.5 de Salome
+<BR> <BR>
 Version 6.4 (12/2011):
 <BR>
    Le numero de version d Eficas est celui de Salome. Ainsi la version 6.4 d Eficas est livree avec Salome 6.4 et tourne
 dans cette version.
-<BR>
+<BR> <BR>
 Version 2.O (12/2009):
-<BR>
    fusion des versions d Eficas pour Code_Aster, Outils Metiers et OpenTURNS
-<BR>
+<BR> <BR>
 Version 1.17 (12/2009):
 <BR>
    Mise en synchronisation avec la version 10.0 de Code_Aster de decembre 2009.
-<BR>
+<BR> <BR>
    Version en QT4
 <BR>
    La version TK est figee

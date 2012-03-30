@@ -23,8 +23,8 @@ import re,string,os
 
 
 #
-__Id__="$Id: analyse_catalogue_initial.py,v 1.2 2010-09-17 13:11:49 pnoyret Exp $"
-__version__="$Name: V2_1_1_beta $"
+__Id__="$Id: analyse_catalogue_initial.py,v 1.2.4.1 2010-12-06 13:22:07 pnoyret Exp $"
+__version__="$Name: V6_main $"
 #
 
                 

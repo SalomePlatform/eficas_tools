@@ -22,9 +22,9 @@ v=SIMP(typ='TXM',fr='',ang='',statut='o',docu='',into=['a', 'b'],min=1,max=1,def
                     )
 
 S_TEST01_DATA=PROC(nom='S_TEST01_DATA',op=None,
-a_string=SIMP(typ='TXM',fr='',ang='',statut='o',docu='',into=None,min=1,max=1,val_min='**',val_max='**',defaut=None),
-an_integer=SIMP(typ='I',fr='',ang='',statut='o',docu='',into=None,min=1,max=1000,val_min='**',val_max='**',defaut=None),
-a_float=SIMP(typ='R',fr='',ang='',statut='o',docu='',into=None,min=1,max=1,val_min='**',val_max='**',defaut=None),
+a_string=SIMP(typ='TXM',fr='',ang='',statut='o',docu='',min=1,max=1,val_min='**',val_max='**',defaut=None),
+an_integer=SIMP(typ='I',fr='',ang='',statut='o',docu='',min=1,max=1,val_min=0,val_max=10,defaut=None),
+a_float=SIMP(typ='R',fr='',ang='',statut='o',docu='',min=1,max=1,val_min='**',val_max='**',defaut=None),
 file_output=SIMP(typ='TXM',fr='',ang='',statut='o',docu='',into=None,min=1,max=1,val_min='**',val_max='**',defaut=None),
 )
 

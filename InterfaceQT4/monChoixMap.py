@@ -52,7 +52,6 @@ dico={"scc" : {"analyse morphologique" : "s_scc_st_1",
                                  "Essai pour composant":"Creation"},
       "image" : {"" : "c_image_2d_align",
                  "" : "c_image_2d_", }
-# cli20i2.der.edf.fr/MAP/milestone/2012.1
 }
     
 # Import des panels

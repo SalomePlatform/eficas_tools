@@ -770,8 +770,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          for concept in self.old_context_fichier_init.values():
              self.jdc.delete_concept(concept)
       if fichier == None :
-         #fichier=str(self.jdc.appli.get_file_dictDonnees())
-         fichier="/local/noyret/Install_Eficas/EficasV1/MAP/DictDonnees.py"
+         fichier=str(self.jdc.appli.get_file_dictDonnees())
          if fichier  == str("") : 
            self.fichier_ini="badfile"
            self.fichier_text=""

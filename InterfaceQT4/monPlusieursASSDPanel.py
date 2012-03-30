@@ -34,11 +34,12 @@ from politiquesValidation  import PolitiquePlusieurs
 class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
   """
   Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
   discrètes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonPlusieursASSDPanel"
+        self.alpha=0
         QTPanel.__init__(self,node,parent)
         DPlusInto.__init__(self,parent,fl)
 
@@ -49,6 +50,7 @@ class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
 
         self.politique=PolitiquePlusieurs(node,parent)
         self.connecterSignaux()
+        self.BAlpha.close()
 
   def DisplayListBoxPossibles(self):
         listeNomsSD = self.node.item.get_sd_avant_du_bon_type()
@@ -136,4 +138,13 @@ class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
            self.DisplayListBoxCourantes()
            self.DisplayListBoxPossibles()
 
+
+  def BAlphaPressed(self):
+      if self.alpha==1 :
+         self.alpha=0
+         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Alpha",None,QApplication.UnicodeUTF8))
+      else :
+         self.alpha=1
+         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Cata",None,QApplication.UnicodeUTF8))
+      self.DisplayListBoxPossibles()
 

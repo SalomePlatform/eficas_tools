@@ -54,9 +54,6 @@ class DInc(Ui_DInc1,QDialog):
 
 class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonIncludePanel"
@@ -67,6 +64,10 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
         self.connecterSignaux()
 
         self.node=node
+        #if (self.node.item.object.nom == "DICTDATA"):
+        #   self.pageOk()
+        #   return
+
         if not hasattr(self.node.item.object,'fichier_unite'):
            self.pageBad()
         else:

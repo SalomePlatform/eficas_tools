@@ -32,9 +32,9 @@ class DSelVal(Ui_DSelVal,QDialog):
 
 class MonSelectVal(DSelVal):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe definissant le panel associe aux mots-cles qui demandent
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discretes
   """
   def __init__(self,file,parent,name = None,fl = 0):
         #print "MonSelectVal"
