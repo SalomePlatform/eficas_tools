@@ -23,7 +23,7 @@
 
 
 """
-    Ce module contient la classe ETAPE qui sert a verifier et a executer
+    Ce module contient la classe ETAPE qui sert à vérifier et à exécuter
     une commande
 """
 
@@ -43,26 +43,26 @@ from N_info import message, SUPERV
 
 class ETAPE(N_MCCOMPO.MCCOMPO):
    """
-      Cette classe herite de MCCOMPO car ETAPE est un OBJECT composite
+      Cette classe hérite de MCCOMPO car ETAPE est un OBJECT composite
 
    """
    nature = "OPERATEUR"
 
-   # L'attribut de classe codex est utilise pour rattacher le module de calcul eventuel (voir Build)
-   # On le met a None pour indiquer qu'il n'y a pas de module de calcul rattache
+   # L'attribut de classe codex est utilisé pour rattacher le module de calcul éventuel (voir Build)
+   # On le met à None pour indiquer qu'il n'y a pas de module de calcul rattaché
    codex=None
 
    def __init__(self,oper=None,reuse=None,args={}):
       """
          Attributs :
 
-          - definition : objet portant les attributs de definition d'une etape de type operateur. Il
-                         est initialise par l'argument oper.
+          - definition : objet portant les attributs de définition d'une étape de type opérateur. Il
+                         est initialisé par l'argument oper.
 
-          - reuse : indique le concept d'entree reutilise. Il se trouvera donc en sortie
-                    si les conditions d'execution de l'operateur l'autorise
+          - reuse : indique le concept d'entrée réutilisé. Il se trouvera donc en sortie
+                    si les conditions d'exécution de l'opérateur l'autorise
 
-          - valeur : arguments d'entree de type mot-cle=valeur. Initialise avec l'argument args.
+          - valeur : arguments d'entrée de type mot-clé=valeur. Initialisé avec l'argument args.
 
       """
       self.definition=oper
@@ -81,8 +81,8 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
    def make_register(self):
       """
-         Initialise les attributs jdc, id, niveau et realise les
-         enregistrements necessaires
+         Initialise les attributs jdc, id, niveau et réalise les
+         enregistrements nécessaires
       """
       if self.parent :
          self.jdc = self.parent.get_jdc_root()
@@ -95,8 +95,8 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
    def nettoiargs(self):
       """
-         Cette methode a pour fonction de retirer tous les arguments egaux a None
-         de la liste des arguments. Ils sont supposes non presents et donc retires.
+         Cette methode a pour fonction de retirer tous les arguments egaux à None
+         de la liste des arguments. Ils sont supposés non présents et donc retirés.
       """
       for k in self.valeur.keys():
          if self.valeur[k] == None:del self.valeur[k]
@@ -110,13 +110,13 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
    def Build_sd(self,nom):
       """
-         Construit le concept produit de l'operateur. Deux cas
-         peuvent se presenter :
+         Construit le concept produit de l'opérateur. Deux cas
+         peuvent se présenter :
 
-           - le parent n'est pas defini. Dans ce cas, l'etape prend en charge la creation
+           - le parent n'est pas défini. Dans ce cas, l'étape prend en charge la création
              et le nommage du concept.
 
-           - le parent est defini. Dans ce cas, l'etape demande au parent la creation et
+           - le parent est défini. Dans ce cas, l'étape demande au parent la création et
              le nommage du concept.
 
       """
@@ -159,15 +159,15 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
    def get_sd_prod(self):
       """
-          Retourne le concept resultat de l'etape
+          Retourne le concept résultat de l'étape
           Deux cas :
                    - cas 1 : sd_prod de oper n'est pas une fonction
                      il s'agit d'une sous classe de ASSD
-                     on construit le sd a partir de cette classe
+                     on construit le sd à partir de cette classe
                      et on le retourne
                    - cas 2 : il s'agit d'une fonction
-                     on l'evalue avec les mots-cles de l'etape (mc_liste)
-                     on construit le sd a partir de la classe obtenue
+                     on l'évalue avec les mots-clés de l'étape (mc_liste)
+                     on construit le sd à partir de la classe obtenue
                      et on le retourne
       """
       if type(self.definition.sd_prod) == types.FunctionType:
@@ -185,7 +185,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
           #         sys.exc_info()[0],sys.exc_info()[1],)
       else:
         sd_prod=self.definition.sd_prod
-      # on teste maintenant si la SD est reutilisee ou s'il faut la creer
+      # on teste maintenant si la SD est réutilisée ou s'il faut la créer
       if self.definition.reentrant != 'n' and self.reuse:
         # Le concept produit est specifie reutilise (reuse=xxx). C'est une erreur mais non fatale.
         # Elle sera traitee ulterieurement.
@@ -194,14 +194,14 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         self.sd= sd_prod(etape=self)
         # Si l'operateur est obligatoirement reentrant et reuse n'a pas ete specifie, c'est une erreur.
         # On ne fait rien ici. L'erreur sera traiter par la suite.
-      # precaution
+      # précaution
       if self.sd is not None and not isinstance(self.sd, ASSD):
          raise AsException("""
-Impossible de typer le resultat !
+Impossible de typer le résultat !
 Causes possibles :
-   Utilisateur : Soit la valeur fournie derriere "reuse" est incorrecte,
-                 soit il y a une "," a la fin d'une commande precedente.
-   Developpeur : La fonction "sd_prod" retourne un type invalide.""")
+   Utilisateur : Soit la valeur fournie derrière "reuse" est incorrecte,
+                 soit il y a une "," à la fin d'une commande précédente.
+   Développeur : La fonction "sd_prod" retourne un type invalide.""")
       return self.sd
 
    def get_type_produit(self):
@@ -212,14 +212,14 @@ Causes possibles :
 
    def get_type_produit_brut(self):
       """
-          Retourne le type du concept resultat de l'etape
+          Retourne le type du concept résultat de l'étape
           Deux cas :
             - cas 1 : sd_prod de oper n'est pas une fonction
               il s'agit d'une sous classe de ASSD
               on retourne le nom de la classe
             - cas 2 : il s'agit d'une fonction
-              on l'evalue avec les mots-cles de l'etape (mc_liste)
-              et on retourne son resultat
+              on l'évalue avec les mots-clés de l'étape (mc_liste)
+              et on retourne son résultat
       """
       if type(self.definition.sd_prod) == types.FunctionType:
         d=self.cree_dict_valeurs(self.mc_liste)
@@ -230,17 +230,17 @@ Causes possibles :
 
    def get_etape(self):
       """
-         Retourne l'etape a laquelle appartient self
-         Un objet de la categorie etape doit retourner self pour indiquer que
-         l'etape a ete trouvee
+         Retourne l'étape à laquelle appartient self
+         Un objet de la catégorie etape doit retourner self pour indiquer que
+         l'étape a été trouvée
          XXX fait double emploi avec self.etape ????
       """
       return self
 
    def supprime(self):
       """
-         Methode qui supprime toutes les references arrieres afin que l'objet puisse
-         etre correctement detruit par le garbage collector
+         Méthode qui supprime toutes les références arrières afin que l'objet puisse
+         etre correctement détruit par le garbage collector
       """
       N_MCCOMPO.MCCOMPO.supprime(self)
       self.jdc = None
@@ -253,7 +253,7 @@ Causes possibles :
 
    def isactif(self):
       """
-         Indique si l'etape est active (1) ou inactive (0)
+         Indique si l'étape est active (1) ou inactive (0)
       """
       return self.actif
 
@@ -265,7 +265,7 @@ Causes possibles :
       message.debug(SUPERV, "call etape.set_current_step", stack_id=-1)
       cs= CONTEXT.get_current_step()
       if self.parent != cs :
-         raise AsException("L'etape courante", cs.nom, cs,
+         raise AsException("L'étape courante", cs.nom, cs,
                            "devrait etre le parent de", self.nom, self)
       else :
          CONTEXT.unset_current_step()
@@ -278,7 +278,7 @@ Causes possibles :
       """
       cs= CONTEXT.get_current_step()
       if self != cs :
-         raise AsException("L'etape courante", cs.nom, cs,
+         raise AsException("L'étape courante", cs.nom, cs,
                            "devrait etre", self.nom, self)
       else :
          CONTEXT.unset_current_step()

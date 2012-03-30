@@ -128,7 +128,7 @@ class BLOC(N_ENTITE.ENTITE):
           test = eval(self.condition,globs,dico)
           return test
         except NameError:
-          # erreur 'normale' : un mot-cle n'est pas present et on veut l'evaluer dans la condition
+          # erreur 'normale' : un mot-clé n'est pas présent et on veut l'évaluer dans la condition
           if CONTEXT.debug:
              l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
              print "WARNING : Erreur a l'evaluation de la condition "+string.join(l)
