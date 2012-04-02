@@ -352,7 +352,7 @@ class ViewText(Ui_dView,QDialog):
     """
     Classe permettant la visualisation de texte
     """
-    def __init__(self,parent,editor=None):
+    def __init__(self,parent,editor=None,entete=None):
         QDialog.__init__(self,parent)
         self.editor=editor
         self.setupUi(self)
@@ -360,6 +360,8 @@ class ViewText(Ui_dView,QDialog):
         self.resize( QSize(600,600).expandedTo(self.minimumSizeHint()) )
         self.connect( self.bclose,SIGNAL("clicked()"), self, SLOT("close()") )
         self.connect( self.bsave,SIGNAL("clicked()"), self.saveFile )
+        if entete != None : self.setWindowTitle (entete)
+
         
     def setText(self, txt ):    
         self.view.setText(txt)

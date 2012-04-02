@@ -141,7 +141,7 @@ class CONFIG_BASE:
       except :
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
          QMessageBox.critical( None, "Import du fichier de Configuration", 
-			"Erreur a la lecture du fichier de configuration " + fic_ini_utilisateur )
+			"Erreur a la lecture du fichier de configuration " + self.fic_ini_utilisateur )
       for k in self.labels_user :
          try :
             setattr(self,k,d[k])

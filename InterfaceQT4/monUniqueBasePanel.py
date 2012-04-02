@@ -79,6 +79,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         self.connect(self.BSalome,SIGNAL("pressed()"),self.BSalomePressed)
         self.connect(self.BView2D,SIGNAL("clicked()"),self.BView2DPressed)
         self.connect(self.BFichier,SIGNAL("clicked()"),self.BFichierPressed)
+        self.connect(self.BVisuFichier,SIGNAL("clicked()"),self.BFichierVisu)
         self.connect(self.BRepertoire,SIGNAL("clicked()"),self.BRepertoirePressed)
 
 
@@ -87,6 +88,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         self.BSalome.setIcon(icon)
         mc = self.node.item.get_definition()
         mctype = mc.type[0]
+        print mctype
         if mctype == "Fichier" or mctype == "FichierNoAbs" or \
             (hasattr(mctype, "enable_file_selection") and mctype.enable_file_selection):
            self.bParametres.close()
@@ -94,7 +96,9 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         elif mctype == "Repertoire":
            self.bParametres.close()
            self.BFichier.close()
+           self.BVisuFichier.close()
         else :
+           self.BVisuFichier.close()
            self.BFichier.close()
            self.BRepertoire.close()
         # TODO: Use type properties instead of hard-coded "grno" and "grma" type check
@@ -133,13 +137,13 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def InitCommentaire(self):
       mc = self.node.item.get_definition()
-      d_aides = { 'TXM' : u"Une chaîne de caractères est attendue.  ",
-                  'R'   : u"Un réel est attendu. ",
+      d_aides = { 'TXM' : u"Une chaîne de caractères est attend.  ",
+                  'R'   : u"Un réel est attend. ",
                   'I'   : u"Un entier est attendu.  ",
                   'Matrice' : u'Une Matrice est attendue.  ',
                   'Fichier' : u'Un fichier est attendu.  ',
                   'FichierNoAbs' : u'Un fichier est attendu.  ',
-                  'Repertoire' : u'Un répertoire est attendu.  '}
+                  'Repertoire' : u'Un répertoire est attend.  '}
       mctype = mc.type[0]
 
       if type(mctype) == types.ClassType:
@@ -152,6 +156,17 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def BOk2Pressed(self):
         SaisieValeur.BOk2Pressed(self)
+
+  def BFichierVisu(self):
+       fichier=self.lineEditVal.text()
+       from qtCommun import ViewText
+       fp=open(fichier)
+       txt=fp.read()
+       nomFichier=QFileInfo(fichier).baseName()
+       maVue=ViewText(self,entete=nomFichier)
+       maVue.setText(txt)
+       maVue.show()
+       fp.close()
 
   def BFichierPressed(self):
       mctype = self.node.item.get_definition().type
