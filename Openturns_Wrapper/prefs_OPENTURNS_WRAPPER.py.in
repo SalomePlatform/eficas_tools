@@ -52,6 +52,6 @@ from Editeur.catadesc import CatalogDescription
 catalogues = (
     CatalogDescription(identifier = "OPENTURNS_WRAPPER_V4",
                        cata_file_path = os.path.join(os.path.abspath(repIni), 'OpenTURNS_Cata_Wrapper_V4.py'),
-                       file_format = "openturns_study"),
+                       file_format = "openturns_wrapper"),
 )
 
