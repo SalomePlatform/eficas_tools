@@ -133,13 +133,13 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def InitCommentaire(self):
       mc = self.node.item.get_definition()
-      d_aides = { 'TXM' : u"Une chaîne de caractères est attend.  ",
-                  'R'   : u"Un réel est attend. ",
+      d_aides = { 'TXM' : u"Une chaîne de caractères est attendue.  ",
+                  'R'   : u"Un réel est attendu. ",
                   'I'   : u"Un entier est attendu.  ",
                   'Matrice' : u'Une Matrice est attendue.  ',
                   'Fichier' : u'Un fichier est attendu.  ',
                   'FichierNoAbs' : u'Un fichier est attendu.  ',
-                  'Repertoire' : u'Un répertoire est attend.  '}
+                  'Repertoire' : u'Un répertoire est attendu.  '}
       mctype = mc.type[0]
 
       if type(mctype) == types.ClassType:
