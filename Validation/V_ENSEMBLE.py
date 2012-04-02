@@ -52,7 +52,7 @@ class ENSEMBLE:
         for mc in self.mcs:
           if mc != pivot :
             if not args.has_key(mc):
-              text = text + "- "+ pivot + " étant présent, "+mc+" doit etre présent"+'\n'
+              text = text + "- "+ pivot + u" étant présent, "+mc+ u" doit être présent"+'\n'
               test = 0
       return text,test
 

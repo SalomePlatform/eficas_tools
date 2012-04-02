@@ -71,7 +71,7 @@ class PROC_ETAPE(V_ETAPE.ETAPE):
 
         if self.reste_val != {}:
           if cr == 'oui' :
-            self.cr.fatal("Mots cles inconnus :" + string.join(self.reste_val.keys(),','))
+            self.cr.fatal(u"Mots clés inconnus :" + string.join(self.reste_val.keys(),','))
           valid=0
 
         self.set_valid(valid)

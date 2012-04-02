@@ -70,7 +70,7 @@ class MCBLOC(V_MCCOMPO.MCCOMPO):
         # la validité des règles
         text_erreurs,test_regles = self.verif_regles()
         if not test_regles :
-          if cr == 'oui' : self.cr.fatal(string.join(("Règle(s) non respectée(s) :", text_erreurs)))
+          if cr == 'oui' : self.cr.fatal(string.join((u"Règle(s) non respectée(s) :", text_erreurs)))
           valid = 0
         self.valid = valid
         self.state = 'unchanged'

@@ -113,7 +113,7 @@ class JDC_CATA(N_ENTITE.ENTITE):
       self.verif_cata()
       for commande in self.commandes:
         cr = commande.report()
-        cr.debut = "Début Commande :"+commande.nom
+        cr.debut = u"Début Commande :"+commande.nom
         cr.fin = "Fin commande :"+commande.nom
         self.cr.add(cr)
       return self.cr

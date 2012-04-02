@@ -44,7 +44,7 @@ class AU_PLUS_UN:
       for mc in self.mcs:
          count = count + args.get(mc, 0)
       if count > 1:
-         text = "- Il ne faut qu'un mot-clé (au plus) parmi : "+`self.mcs`+'\n'
+         text = u"- Il ne faut qu'un mot-clé (au plus) parmi : "+`self.mcs`+'\n'
          return text, 0
       return text, 1
 

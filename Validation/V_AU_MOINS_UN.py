@@ -47,7 +47,7 @@ class AU_MOINS_UN:
       for mc in self.mcs:
         if args.has_key(mc):count=count+1
       if count == 0:
-          text =  "- Il faut au moins un mot-clé parmi : "+`self.mcs`+'\n'
+          text = u"- Il faut au moins un mot-clé parmi : "+`self.mcs`+'\n'
           return text,0
       return text,1
 

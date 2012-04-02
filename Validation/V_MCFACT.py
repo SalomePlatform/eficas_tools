@@ -70,20 +70,20 @@ class MCFACT(V_MCCOMPO.MCCOMPO):
         # la validité des règles
         text_erreurs,test_regles = self.verif_regles()
         if not test_regles :
-          if cr == 'oui' : self.cr.fatal(string.join(("Règle(s) non respectée(s) :", text_erreurs)))
+          if cr == 'oui' : self.cr.fatal(string.join((u"Règle(s) non respectée(s) :", text_erreurs)))
           valid = 0
         #
         # On verifie les validateurs s'il y en a
         #
         if self.definition.validators and not self.definition.validators.verif(self.valeur):
            if cr == 'oui' :
-              self.cr.fatal(string.join(("Mot-clé : ",self.nom,"devrait avoir ",self.definition.validators.info())))
+              self.cr.fatal(string.join((u"Mot-clé : ",self.nom,"devrait avoir ",self.definition.validators.info())))
            valid=0
         # fin des validateurs
         #
         if self.reste_val != {}:
           if cr == 'oui' :
-            self.cr.fatal("Mots cles inconnus :" + string.join(self.reste_val.keys(),','))
+            self.cr.fatal(u"Mots clés inconnus :" + string.join(self.reste_val.keys(),','))
           valid=0
         self.valid = valid
         self.state = 'unchanged'

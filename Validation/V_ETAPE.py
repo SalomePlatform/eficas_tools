@@ -54,7 +54,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
        """ Cette methode teste la validite des regles de l'etape """
        text_erreurs,test_regles = self.verif_regles()
        if not test_regles :
-          if cr == 'oui' : self.cr.fatal(string.join(("Règle(s) non respectée(s) :", text_erreurs)))
+          if cr == 'oui' : self.cr.fatal(string.join((u"Règle(s) non respectée(s) :", text_erreurs)))
           return 0 
        return 1
 
@@ -65,17 +65,17 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
           if self.jdc and self.jdc.definition.code == 'ASTER' and len(self.sd.nom) > 8 :
              #  le nom de la sd doit avoir une longueur <= 8 caractères pour ASTER
              if cr == 'oui' :
-                self.cr.fatal("Le nom de concept %s est trop long (8 caractères maxi)" %self.sd.nom)
+                self.cr.fatal(u"Le nom de concept %s est trop long (8 caractères maxi)" %self.sd.nom)
              valid = 0
           if string.find(self.sd.nom,'sansnom') != -1 :
              # la SD est 'sansnom' : --> erreur
              if cr == 'oui' :
-                self.cr.fatal("Pas de nom pour le concept retourné")
+                self.cr.fatal(u"Pas de nom pour le concept retourné")
              valid = 0
           elif string.find(self.sd.nom,'SD_') != -1 :
              # la SD est 'SD_' cad son nom = son id donc pas de nom donné par utilisateur : --> erreur
              if cr == 'oui' :
-                self.cr.fatal("Pas de nom pour le concept retourné")
+                self.cr.fatal(u"Pas de nom pour le concept retourné")
              valid = 0
        return valid
 
@@ -119,7 +119,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
 
         if self.reste_val != {}:
           if cr == 'oui' :
-            self.cr.fatal("Mots cles inconnus :" + string.join(self.reste_val.keys(),','))
+            self.cr.fatal(u"Mots clés inconnus :" + string.join(self.reste_val.keys(),','))
           valid=0
 
         if sd == "non":
@@ -130,12 +130,12 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
 
         if self.definition.reentrant == 'n' and self.reuse:
           # Il ne peut y avoir de concept reutilise avec un OPER non reentrant
-          if cr == 'oui' : self.cr.fatal('Operateur non reentrant : ne pas utiliser reuse ')
+          if cr == 'oui' : self.cr.fatal(u'Opérateur non réentrant : ne pas utiliser reuse ')
           valid=0
 
         if self.sd == None:
           # Le concept produit n'existe pas => erreur
-          if cr == 'oui' : self.cr.fatal("Concept retourné non défini")
+          if cr == 'oui' : self.cr.fatal(u"Concept retourné non défini")
           valid = 0
         else:
           valid = valid * self.valid_sdnom(cr)
@@ -172,19 +172,19 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
              l=traceback.format_exception(sys.exc_info()[0],
                                            sys.exc_info()[1],
                                            sys.exc_info()[2])
-             self.cr.fatal('Impossible d affecter un type au résultat\n'+string.join(l[2:]))
+             self.cr.fatal(u'Impossible d affecter un type au résultat\n'+string.join(l[2:]))
           return 0
       # on teste maintenant si la SD est r\351utilis\351e ou s'il faut la cr\351er
       valid=1
       if self.reuse:
         if AsType(self.reuse) != sd_prod:
-          if cr == 'oui' : self.cr.fatal('Type de concept reutilise incompatible avec type produit')
+          if cr == 'oui' : self.cr.fatal(u'Type de concept réutilisé incompatible avec type produit')
           valid= 0
         if self.sdnom!='':
            if self.sdnom[0] != '_' and self.reuse.nom != self.sdnom:
              # Le nom de la variable de retour (self.sdnom) doit etre le meme que celui du concept reutilise (self.reuse.nom)
              if cr == 'oui' : 
-                self.cr.fatal('Concept reutilise : le nom de la variable de retour devrait etre %s et non %s' %(self.reuse.nom,self.sdnom))
+                self.cr.fatal(u'Concept réutilisé : le nom de la variable de retour devrait être %s et non %s' %(self.reuse.nom,self.sdnom))
              valid= 0
         if valid:self.sd=self.reuse
       else:
@@ -199,10 +199,10 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                self.sd.change_type(sd_prod)
           else: 
              # Le sd n existait pas , on ne le crée pas
-             if cr == 'oui' : self.cr.fatal("Concept retourné non défini")
+             if cr == 'oui' : self.cr.fatal(u"Concept retourné non défini")
              valid=0 
         if self.definition.reentrant == 'o':
-           if cr == 'oui' : self.cr.fatal('Commande obligatoirement reentrante : specifier reuse=concept')
+           if cr == 'oui' : self.cr.fatal(u'Commande obligatoirement réentrante : spécifier reuse=concept')
            valid=0 
       return valid
 

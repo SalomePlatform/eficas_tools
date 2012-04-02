@@ -186,7 +186,7 @@ class MCSIMP:
         self.isvalid(cr='oui')
       except AsException,e:
         if CONTEXT.debug : traceback.print_exc()
-        self.cr.fatal(string.join(("Mot-clé simple : ",self.nom,str(e))))
+        self.cr.fatal(string.join((u"Mot-clé simple : ",self.nom,str(e))))
       return self.cr
 
 

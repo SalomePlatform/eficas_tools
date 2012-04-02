@@ -47,7 +47,7 @@ class UN_PARMI:
       for mc in self.mcs:
         if args.has_key(mc):count=count+1
       if count != 1:
-          text = "- Il faut un et un seul mot-clé parmi : "+`self.mcs`+'\n'
+          text = u"- Il faut un et un seul mot-clé parmi : "+`self.mcs`+'\n'
           return text,0
       return text,1
 

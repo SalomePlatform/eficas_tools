@@ -45,7 +45,7 @@ class EXCLUS:
       for mc in self.mcs:
         if args.has_key(mc):count=count+1
       if count > 1:
-          text= "- Il ne faut qu un mot cle parmi : "+`self.mcs`+'\n'
+          text= u"- Il ne faut qu un mot clé parmi : "+`self.mcs`+'\n'
           return text,0
       return text,1
 

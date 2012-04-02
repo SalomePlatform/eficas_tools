@@ -48,7 +48,7 @@ class PRESENT_ABSENT:
       if args.has_key(mc0):
         for mc in self.mcs[1:len(self.mcs)]:
           if args.has_key(mc):
-            text = text + "- Le mot cle "+`mc0`+" etant present, il faut que : "+\
+            text = text + u"- Le mot clé "+`mc0`+ u" étant présent, il faut que : "+\
                  mc+" soit absent"+'\n'
             test = 0
       return text,test

@@ -76,7 +76,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
              # Cette situation est interdite
              # Pb: La macro-commande a passe le concept a une commande (macro ?) mal definie
              if cr =='oui': 
-               self.cr.fatal("Macro-commande mal definie : manque probablement appel a type_sdprod pour %s" % c.nom)
+               self.cr.fatal(u"Macro-commande mal définie : manque probablement appel a type_sdprod pour %s" % c.nom)
              valid=0
 
         valid=valid * self.valid_child()
@@ -84,7 +84,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
 
         if self.reste_val != {}:
           if cr == 'oui' :
-            self.cr.fatal("Mots cles inconnus :" + string.join(self.reste_val.keys(),','))
+            self.cr.fatal(u"Mots clés inconnus :" + string.join(self.reste_val.keys(),','))
           valid=0
 
         if sd == "non":
@@ -97,7 +97,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
 
         if self.definition.reentrant == 'n' and self.reuse:
            # Il ne peut y avoir de concept reutilise avec une MACRO  non reentrante
-           if cr == 'oui' : self.cr.fatal('Macro-commande non reentrante : ne pas utiliser reuse ')
+           if cr == 'oui' : self.cr.fatal(u'Macro-commande non réentrante : ne pas utiliser reuse ')
            valid=0
 
         if valid:
@@ -146,20 +146,20 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
              l=traceback.format_exception(sys.exc_info()[0],
                                            sys.exc_info()[1],
                                            sys.exc_info()[2])
-             self.cr.fatal('Impossible d affecter un type au résultat\n'+string.join(l[2:]))
+             self.cr.fatal(u'Impossible d affecter un type au résultat\n'+string.join(l[2:]))
           return 0
       # on teste maintenant si la SD est r\351utilis\351e ou s'il faut la cr\351er
       valid=1
       if self.reuse:
         # Un concept reutilise a ete specifie
         if AsType(self.reuse) != sd_prod:
-          if cr == 'oui' : self.cr.fatal('Type de concept reutilise incompatible avec type produit')
+          if cr == 'oui' : self.cr.fatal(u'Type de concept réutilisé incompatible avec type produit')
           valid=0
         if self.sdnom!='':
            if self.sdnom[0] != '_' and self.reuse.nom != self.sdnom:
              # Le nom de la variable de retour (self.sdnom) doit etre le meme que celui du concept reutilise (self.reuse.nom)
              if cr == 'oui' :
-                self.cr.fatal('Concept reutilise : le nom de la variable de retour devrait etre %s et non %s' %(self.reuse.nom,self.sdnom))
+                self.cr.fatal(u'Concept réutilisé : le nom de la variable de retour devrait être %s et non %s' %(self.reuse.nom,self.sdnom))
              valid= 0
         if valid:self.sd=self.reuse
       else:
@@ -177,10 +177,10 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
           else: 
             # Le sd n existait pas , on ne le crée pas
             self.typret=sd_prod
-            if cr == 'oui' : self.cr.fatal("Concept retourné non défini")
+            if cr == 'oui' : self.cr.fatal(u"Concept retourné non défini")
             valid=0 
         if self.definition.reentrant == 'o':
-           if cr == 'oui' : self.cr.fatal('Commande obligatoirement reentrante : specifier reuse=concept')
+           if cr == 'oui' : self.cr.fatal(u'Commande obligatoirement réentrante : spécifier reuse=concept')
            valid=0
       return valid
 

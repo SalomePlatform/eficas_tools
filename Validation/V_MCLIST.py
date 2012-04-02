@@ -73,19 +73,19 @@ class MCList:
       if definition.min is not None and len(self.data) < definition.min :
          valid=0
          if cr == 'oui' :
-            self.cr.fatal("Nombre de mots cles facteurs insuffisant minimum : %s" % definition.min)
+            self.cr.fatal(u"Nombre de mots clés facteurs insuffisant minimum : %s" % definition.min)
 
       if definition.max is not None and len(self.data) > definition.max :
          valid=0
          if cr == 'oui' :
-            self.cr.fatal("Nombre de mots cles facteurs trop grand maximum : %s" % definition.max)
+            self.cr.fatal(u"Nombre de mots clés facteurs trop grand maximum : %s" % definition.max)
       num = 0
       for i in self.data:
         num = num+1
         if not i.isvalid():
           valid = 0
           if cr=='oui' and len(self) > 1:
-            self.cr.fatal(string.join(["L'occurrence n",`num`," du mot-clé facteur :",self.nom," n'est pas valide"]))
+            self.cr.fatal(string.join(["L'occurrence n",`num`,u" du mot-clé facteur :",self.nom," n'est pas valide"]))
       return valid
 
    def report(self):
@@ -94,21 +94,21 @@ class MCList:
       """
       if len(self) > 1:
          # Mot cle facteur multiple
-         self.cr=self.CR( debut = "Mot-clé facteur multiple : "+self.nom,
-                  fin = "Fin Mot-clé facteur multiple : "+self.nom)
+         self.cr=self.CR( debut = u"Mot-clé facteur multiple : "+self.nom,
+                  fin = u"Fin Mot-clé facteur multiple : "+self.nom)
          for i in self.data:
            self.cr.add(i.report())
       elif len(self) == 1:
          # Mot cle facteur non multiple
          self.cr=self.data[0].report()
       else:
-         self.cr=self.CR( debut = "Mot-cle facteur : "+self.nom,
-                  fin = "Fin Mot-cle facteur : "+self.nom)
+         self.cr=self.CR( debut = u"Mot-clé facteur : "+self.nom,
+                  fin = u"Fin Mot-clé facteur : "+self.nom)
 
       try :
         self.isvalid(cr='oui')
       except AsException,e:
         if CONTEXT.debug : traceback.print_exc()
-        self.cr.fatal(string.join(["Mot-clé facteur multiple : ",self.nom,str(e)]))
+        self.cr.fatal(string.join([u"Mot-clé facteur multiple : ",self.nom,str(e)]))
       return self.cr
 

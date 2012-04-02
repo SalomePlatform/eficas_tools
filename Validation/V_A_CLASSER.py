@@ -93,7 +93,7 @@ class A_CLASSER:
         if len(couple) == 1 :
           # on a un 'faux' couple
           if couple[0] not in self.args1:
-            text = text+"- L'objet : "+couple[0]+" doit etre suivi d'un objet de la liste : "+\
+            text = text+"- L'objet : "+couple[0]+ u" doit être suivi d'un objet de la liste : "+\
                    `self.args1`+'\n'
             test = 0
           else :
@@ -101,11 +101,11 @@ class A_CLASSER:
               # ce n'est pas le seul couple --> licite
               break
             else :
-              text = text+"- L'objet : "+couple[0]+" doit etre précédé d'un objet de la liste : "+\
+              text = text+"- L'objet : "+couple[0]+ u" doit être précédé d'un objet de la liste : "+\
                    `self.args0`+'\n'
               test = 0
         elif couple not in self.liste_couples :
-          text = text+"- L'objet : "+couple[0]+" ne peut etre suivi de : "+couple[1]+'\n'
+          text = text+"- L'objet : "+couple[0]+ u" ne peut être suivi de : "+couple[1]+'\n'
           test = 0
       return text,test
 
