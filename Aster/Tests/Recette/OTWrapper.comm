@@ -1,0 +1,15 @@
+
+WRAPPER(Framework='Stand-alone',
+        WrapperPath='/tmp',
+        FunctionName='maFonction',
+        WrapCouplingMode='fork',
+        Command='maCommande',
+        InDataTransfer='files',
+        OutDataTransfer='files',);
+
+maVIn1=VARIABLE(Type='in',);
+
+maVIn2=VARIABLE(Type='in',);
+
+maVOut=VARIABLE(Type='out',);
+#CHECKSUM:7b61013074031ba9b8b5dd831f17e9be  -:FIN CHECKSUM

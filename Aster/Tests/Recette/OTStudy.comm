@@ -1,0 +1,27 @@
+
+MODEL(FileName='/local/noyret/Install_Eficas/EficasV1/Recettes/OTWrapper.xml',);
+
+LOG(DebugMessages='no',
+    WrapperMessages='no',
+    UserMessages='no',
+    InfoMessages='yes',
+    WarningMessages='yes',
+    ErrorMessages='yes',);
+
+maDistr=DISTRIBUTION(Kind='Poisson',
+                     Lambda=3,);
+
+VARIABLE(ModelVariable=maVIn1,
+         Distribution=maDistr,);
+
+VARIABLE(ModelVariable=maVIn2,
+         Distribution=maDistr,);
+
+CORRELATION(Copula='Normal',
+            CorrelationMatrix=(['maVIn1', 'maVIn2'],[1.0, 0.0],[0.0, 1.0],),);
+
+CRITERIA(Type='Min/Max',
+         Method='Random Sampling',
+         SimulationsNumber=12,
+         Result='Min/Max',);
+#CHECKSUM:c27929a4fdb139607a7b69a0d24ea706  -:FIN CHECKSUM

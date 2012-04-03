@@ -1,0 +1,16 @@
+
+POURSUITE();
+
+rrr=AFFE_MODELE(MAILLAGE=MAILLA2,
+                INFO=1,
+                AFFE=_F(TOUT='OUI',
+                        PHENOMENE='MECANIQUE',
+                        MODELISATION='2D_DIS_TR',),);
+
+cara=AFFE_CARA_ELEM(MODELE=rrr,
+                    DISCRET=_F(CARA='K_TR_D_N',
+                               GROUP_MA='aa',
+                               VALE=(1,2,3,4,5,6,),),);
+
+FIN();
+#CHECKSUM:fc4490ae3c34d2ee7f4cb2f364350de7  -:FIN CHECKSUM

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wrapper version="1">
+  <library>
+    <path>/tmp</path>
+    <description>
+      <variable-list>
+        <variable id="maVIn1" type="in"/>
+        <variable id="maVIn2" type="in"/>
+        <variable id="maVOut" type="out"/>
+      </variable-list>
+      <function provided="yes">maFonction</function>
+      <gradient provided="no"></gradient>
+      <hessian provided="no"></hessian>
+    </description>
+  </library>
+  <external-code>
+    <data>
+      <framework>
+        <study-id>0</study-id>
+        <study-case></study-case>
+        <component-name>UNDEFINED</component-name>
+      </framework>
+    </data>
+    <wrap-mode type="fork" state="specific">
+      <in-data-transfer mode="files"/>
+      <out-data-transfer mode="files"/>
+    </wrap-mode>
+    <command>maCommande</command>
+    <user-prefix></user-prefix>
+  </external-code>
+</wrapper>
