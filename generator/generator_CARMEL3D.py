@@ -259,8 +259,9 @@ class CARMEL3DGenerator(PythonGenerator):
       """
       
    #   print "MCSIMP", obj.nom, "  ", obj.valeur
-      self.dicoCourant[obj.nom]=obj.valeur
+      
       s=PythonGenerator.generMCSIMP(self,obj)
+      self.dicoCourant[obj.nom]=obj.valeurFormattee
       return s
 
   
