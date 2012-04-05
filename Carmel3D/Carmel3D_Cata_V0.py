@@ -7,7 +7,7 @@ import os
 import sys
 from Accas import *
 import types
-# repertoire ou est stocké le cataloge carmel3d 
+# repertoire ou sont stockés le catalogue carmel3d 
 # et les fichiers de donnees des materiaux de reference
 from prefs_CARMEL3D import repIni
 
@@ -21,6 +21,7 @@ from prefs_CARMEL3D import repIni
 class materiau ( ASSD ) : pass
 class grmaille ( ASSD ) : pass
 
+# definition d une classe de Tuple : ne sert pas actuellement
 class Tuple :
 
    def __init__(self,ntuple):
@@ -49,7 +50,6 @@ JdC = JDC_CATA ( code = 'CARMEL3D',
 #                execmodul = None,
                   regles =(
                            AU_MOINS_UN ('MATERIALS'),
-#                           AU_MOINS_UN ('SOURCES'),
                            ),
                  ) # Fin JDC_CATA
 ##=========================================================
@@ -116,7 +116,7 @@ VERSION = PROC ( nom = "VERSION",
 #================================
 # 2eme bloc : bloc MATERIALS
 #================================
-#definition des matériax utilisateurs 
+#definition des matériaux utilisateurs 
 # a partir des materiaux de reference
 #------------------------------------
 #
@@ -127,27 +127,42 @@ MATERIALS = OPER (nom = "MATERIALS",
 		    fr= "definition d un materiau", 
                     sd_prod= materiau,
 
-#------------------------------------
-#liste des matéraux de reference 
-#------------------------------------
+#-----------------------------------------------------------------
+# liste des matériaux de reference fournis par THEMIS et  des
+# materiaux generiques (les materiaux generiques peuvent etre utilises 
+# si aucun materiau de reference  ne convient) 
+#-----------------------------------------------------------------
             MAT_REF = SIMP(statut='o',
                            typ='TXM',
-	                   into=("MAT_REF_DIEL1",
-		                 "ALU","BRONZE","INCONEL600","FERRITE","FERRITEB30","CUIVRE",
-                                 "ACIER_noir","ACIER_PE","ACIER_CIMBLOT","AIR","POTASSE",
-                                 "M6X","M6X2ISO1","M600_65", 
-                                 "MAT_REF_ZSURF1",
-                                 "E24","FEV1000","FEV470","FEV600","FEV800",
+	                   into=(
+#  type CONDUCTOR lineaire 
+                                 "ACIER_Noir","ACIER_PE","ACIER_CIMBLOT",
+		                 "ALU","BRONZE","CUIVRE",
+		                 "FERRITE_Mn_Zn","FERRITE_Ni_Zn",
+                                 "INCONEL600",
+                                 "POTASSE",
+#  type NOCOND 
+                                 "AIR","FERRITEB30",
+                                 "FEV470","FEV600","FEV800","FEV1000",
+                                 "E24","HA600",
+                                 "M600_65",
+#  type EM_ANISO 
+                                 "M6X","M6X_lineaire","M6X_homog", 
+#  type EM_ISO 
+                                 "M6X2ISO1", 
+#  materiau generique 
+                                 "CONDUCTOR",
+                                 "ZINSULATOR","ZSURFACIC",
                                  "NILMAT","EM_ISOTROPIC","EM_ANISOTROPIC"
                                 ),
                            ang = "reference  materials list",
                            fr  = "liste des materiaux de reference",
 		          ),
 
-#------------------------------------
-# sous bloc niveau 1 : CONDUCTOR
-#---------------------------------------------
-#  1er materiau Conductor de reference : ALU
+#-------------------------------------------------
+# sous bloc niveau 1 : materiaux de type CONDUCTOR
+#-------------------------------------------------
+#  materiau de reference type CONDUCTOR : ALU 
 #---------------------------------------------
    ALU_properties = BLOC(condition="MAT_REF=='ALU'",
   
@@ -180,7 +195,7 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          fr  = "loi lineaire",
 				        ),
 		 
-                  param_complex  = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
 	                     VALUE_COMPLEX = SIMP (statut="o",
 		                                   typ="C", 
 		                                   defaut=('RI',1,0),
@@ -189,10 +204,10 @@ MATERIALS = OPER (nom = "MATERIALS",
 		                                  ),
 		                         ), # fin bloc 
 
-                  param_real     = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
 	                     VALUE_REAL    = SIMP (statut="o",
 		                                   typ="R", 
-		                                   defaut=34480000,
+		                                   defaut=3.448E7,
                                                    ang = "enter a real relative value",
                                                    fr = "saisir une valeur reelle relative",
 		                                   ),
@@ -230,7 +245,7 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          fr  = "loi lineaire",
 				        ),
 		 
-                  param_complex  = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
 	                     VALUE_COMPLEX = SIMP (statut="o",
 		                                   typ="C", 
 		                                   defaut=('RI',1,0),
@@ -239,10 +254,10 @@ MATERIALS = OPER (nom = "MATERIALS",
 		                                  ),
 		                         ), # fin bloc 
 
-                  param_real     = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
 	                     VALUE_REAL    = SIMP (statut="o",
 		                                   typ="R", 
-		                                   defaut=1,
+		                                   defaut=1.000000,
                                                    ang = "enter a real relative value",
                                                    fr = "saisir une valeur reelle relative",
 		                                   ),
@@ -252,9 +267,9 @@ MATERIALS = OPER (nom = "MATERIALS",
 
              ), # fin BLOC conductor1
  
-#---------------------------------------------
-#  2eme materiau Conductor de reference : BRONZE
-#---------------------------------------------
+#----------------------------------------------
+# materiau de reference type CONDUCTOR : BRONZE
+#----------------------------------------------
    BRONZE_properties = BLOC(condition="MAT_REF=='BRONZE'",
   
 #------------------------------------------------
@@ -286,7 +301,7 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          fr  = "loi lineaire",
 				        ),
 		 
-                  param_complex  = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
 	                     VALUE_COMPLEX = SIMP (statut="o",
 		                                   typ="C", 
 		                                   defaut=('RI',1,0),
@@ -295,10 +310,10 @@ MATERIALS = OPER (nom = "MATERIALS",
 		                                  ),
 		                         ), # fin bloc 
 
-                  param_real     = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
 	                     VALUE_REAL    = SIMP (statut="o",
 		                                   typ="R", 
-		                                   defaut=1000000,
+		                                   defaut=1.000000E6,
                                                    ang = "enter a real relative value",
                                                    fr = "saisir une valeur reelle relative",
 		                                   ),
@@ -336,7 +351,7 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          fr  = "loi lineaire",
 				        ),
 		 
-                  param__complex = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
 	                     VALUE_COMPLEX = SIMP (statut="o",
 		                                   typ="C", 
 		                                   defaut=('RI',1,0),
@@ -345,10 +360,10 @@ MATERIALS = OPER (nom = "MATERIALS",
 		                                  ),
 		                         ), # fin bloc 
 
-                  param_real     = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
 	                     VALUE_REAL    = SIMP (statut="o",
 		                                   typ="R", 
-		                                   defaut=3,
+		                                   defaut=3.000000,
                                                    ang = "enter a real relative value",
                                                    fr = "saisir une valeur reelle relative",
 		                                   ),
@@ -358,9 +373,9 @@ MATERIALS = OPER (nom = "MATERIALS",
 
              ), # fin BLOC conductor2
 
-#---------------------------------------------
-#  3eme materiau Conductor de reference : INCONEL600
-#---------------------------------------------
+#---------------------------------------------------
+# materiau de reference type CONDUCTOR : INCONEL600
+#----------------------------------------------------
   INCONEL600_properties = BLOC(condition="MAT_REF=='INCONEL600'",
   
 #------------------------------------------------
@@ -392,7 +407,7 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          fr  = "loi lineaire",
 				        ),
 		 
-                  param_complex  = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
 	                     VALUE_COMPLEX = SIMP (statut="o",
 		                                   typ="C", 
 		                                   defaut=('RI',1,0),
@@ -401,10 +416,10 @@ MATERIALS = OPER (nom = "MATERIALS",
 		                                  ),
 		                         ), # fin bloc 
 
-                  param_real    = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
 	                     VALUE_REAL    = SIMP (statut="o",
 		                                   typ="R", 
-		                                   defaut=970000,
+		                                   defaut=9.700000E5,
                                                    ang = "enter a real relative value",
                                                    fr = "saisir une valeur reelle relative",
 		                                   ),
@@ -442,7 +457,7 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          fr  = "loi lineaire",
 				        ),
 		 
-                  param_complex  = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
 	                     VALUE_COMPLEX = SIMP (statut="o",
 		                                   typ="C", 
 		                                   defaut=('RI',1,0),
@@ -451,10 +466,10 @@ MATERIALS = OPER (nom = "MATERIALS",
 		                                  ),
 		                         ), # fin bloc 
 
-                  param_real    = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
 	                     VALUE_REAL    = SIMP (statut="o",
 		                                   typ="R", 
-		                                   defaut=1.01,
+		                                   defaut=1.010000,
                                                    ang = "enter a real relative value",
                                                    fr = "saisir une valeur reelle relative",
 		                                   ),
@@ -464,10 +479,10 @@ MATERIALS = OPER (nom = "MATERIALS",
 
              ), # fin BLOC conductor3
 
-#---------------------------------------------
-#  4eme materiau Conductor de reference : FERRITE
-#---------------------------------------------
-  FERRITE_properties = BLOC(condition="MAT_REF=='FERRITE'",
+#--------------------------------------------------------
+# materiau de reference de type CONDUCTOR : FERRITE Mn Zn
+#--------------------------------------------------------
+  FERRITE_Mn_Zn_properties = BLOC(condition="MAT_REF=='FERRITE_Mn_Zn'",
   
 #------------------------------------------------
 # sous bloc niveau 2 : CONDUCTIVITY
@@ -490,46 +505,31 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          ang = "the material is isotropic",
                                          fr  = "le materiau est isotrope",
 				        ),
- 	         LAW             = SIMP (statut="o",
- 		                         typ="TXM",
-                                         defaut="Mn_Zn",
-		                         into = ("Ni_Zn","Mn_Zn"),
-                                         ang = "conductivity law",
-                                         fr = "loi de conductivite",
- 				        ),
-
-                 param_Mn_Zn = BLOC(condition="LAW=='Mn_Zn'",
-                      TYPE_LAW   = SIMP (statut="o",
+                  TYPE_LAW       = SIMP (statut="o",
 		                         typ="TXM",
 				         defaut="LINEAR_REAL",
-		                         into = ("LINEAR_REAL"),
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
                                          ang = "linear law",
                                          fr  = "loi lineaire",
 				        ),
-	              VALUE_REAL = SIMP (statut="o",
-		                         typ="R", 
-		                         defaut=1,
-                                         ang = "enter a real relative value",
-                                         fr = "saisir une valeur reelle relative",
-		                        ),
-		            ), # fin bloc  law
-
-                param_Ni_Zn = BLOC(condition="LAW=='Ni_Zn'",
-                      TYPE_LAW   = SIMP (statut="o",
-		                         typ="TXM",
-				         defaut="LINEAR_REAL",
-		                         into = ("LINEAR_REAL"),
-                                         ang = "linear law",
-                                         fr  = "loi lineaire",
-				        ),
-	              VALUE_REAL = SIMP (statut="o",
-		                         typ="R", 
-		                         defaut=0.000001,
-                                         ang = "enter a real relative value",
-                                         fr = "saisir une valeur reelle relative",
-		                        ),
-		            ), # fin bloc law
 		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.000000E1,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
 
 	         ), # fin FACT CONDUCTIVITY
 
@@ -554,64 +554,47 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          ang = "the material is isotropic",
                                          fr  = "le materiau est isotrope",
 				        ),
-	         LAW             = SIMP (statut="o",
- 		                         typ="TXM",
-                                         defaut="Mn_Zn",
-		                         into = ("Ni_Zn","Mn_Zn"),
-                                         ang = "permeability law",
-                                         fr = "loi de permeabilite",
-				        ),
-
-                param_Mn_Zn = BLOC(condition="LAW=='Mn_Zn'",
-                      TYPE_LAW   = SIMP (statut="o",
+                  TYPE_LAW       = SIMP (statut="o",
 		                         typ="TXM",
 				         defaut="LINEAR_REAL",
-		                         into = ("LINEAR_REAL"),
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
                                          ang = "linear law",
                                          fr  = "loi lineaire",
 				        ),
-	              VALUE_REAL = SIMP (statut="o",
-		                         typ="R", 
-		                         defaut=1250,
-                                         ang = "enter a real relative value",
-                                         fr = "saisir une valeur reelle relative",
-		                        ),
-		            ), # fin bloc law
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
 
-                param_Ni_Zn = BLOC(condition="LAW=='Ni_Zn'",
-                      TYPE_LAW   = SIMP (statut="o",
-		                         typ="TXM",
-				         defaut="LINEAR_REAL",
-		                         into = ("LINEAR_REAL"),
-                                         ang = "linear law",
-                                         fr  = "loi lineaire",
-				        ),
-	              VALUE_REAL = SIMP (statut="o",
-		                         typ="R", 
-		                         defaut=1.5,
-                                         ang = "enter a real relative value",
-                                         fr = "saisir une valeur reelle relative",
-		                        ),
-		            ), # fin bloc law
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.250000E3,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
 	         ), # fin FACT PERMEABILITY
 
              ), # fin BLOC conductor4
 
-
-
-##------------------------------------
-## sous bloc niveau 1 : DIELECTRIC
-##------------------------------------
-# 1er materiau Dielectric de reference 
-#------------------------------------
-  mat_ref_d1_properties = BLOC(condition="MAT_REF=='MAT_REF_DIEL1'",
-
+#--------------------------------------------------------
+# materiau de reference de type CONDUCTOR : FERRITE Ni Zn
+#--------------------------------------------------------
+  FERRITE_Ni_Zn_properties = BLOC(condition="MAT_REF=='FERRITE_Ni_Zn'",
+  
 #------------------------------------------------
-# sous bloc niveau 2 : PERMITTIVITY
+# sous bloc niveau 2 : CONDUCTIVITY
 #------------------------------------------------
-  PERMITTIVITY = FACT ( statut="o", 
-                        ang ="Permittivity properties",
-                        fr  ="proprietes du bloc PERMITTIVITY",
+  CONDUCTIVITY = FACT ( statut="o", 
+                        ang ="Conductivity properties",
+                        fr  ="proprietes du bloc CONDUCTIVITY",
                 
                  HOMOGENEOUS     = SIMP (statut="f",
 		                         typ="TXM",
@@ -627,47 +610,1020 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          ang = "the material is isotropic",
                                          fr  = "le materiau est isotrope",
 				        ),
- 	         LAW             = SIMP (statut="o",
- 		                         typ="TXM",
-                                         defaut="EPSILON1",
-		                         into = ("EPSILON1","EPSILON2"),
-                                         ang = "permittivity law",
-                                         fr = "loi de permittivite",
- 				        ),
-
-                 param_epsilon1 = BLOC(condition="LAW=='EPSILON1'",
-                      TYPE_LAW   = SIMP (statut="o",
+                  TYPE_LAW       = SIMP (statut="o",
 		                         typ="TXM",
 				         defaut="LINEAR_REAL",
-		                         into = ("LINEAR_REAL"),
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
                                          ang = "linear law",
                                          fr  = "loi lineaire",
 				        ),
-	              VALUE_REAL = SIMP (statut="o",
-		                         typ="R", 
-		                         defaut=1,
-                                         ang = "enter a real relative value",
-                                         fr = "saisir une valeur reelle relative",
-		                        ),
-		            ), # fin bloc epsilon1
-
-                param_epsilon2 = BLOC(condition="LAW=='EPSILON2'",
-                      TYPE_LAW   = SIMP (statut="o",
-		                         typ="TXM",
-				         defaut="LINEAR_COMPLEX",
-		                         into = ("LINEAR_COMPLEX"),
-                                         ang = "linear law",
-                                         fr  = "loi lineaire",
-				        ),
-	              VALUE_COMPLEX = SIMP (statut="o",
-		                         typ="C", 
-		                         defaut=('RI',1,0),
-                                         ang = "enter a complex relative value",
-                                         fr = "saisir une valeur complexe relative",
-		                        ),
-		            ), # fin bloc epsilon2
 		 
-	         ), # fin FACT PERMITTIVITY
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.000000E-6,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+
+	         ), # fin FACT CONDUCTIVITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.500000E1,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+	         ), # fin FACT PERMEABILITY
+
+             ), # fin BLOC conductor5
+
+#--------------------------------------------------
+# materiau de reference type CONDUCTOR : ACIER Noir
+#--------------------------------------------------
+   ACIER_Noir_properties = BLOC(condition="MAT_REF=='ACIER_Noir'",
+  
+#------------------------------------------------
+# sous bloc niveau 2 : CONDUCTIVITY
+#------------------------------------------------
+     CONDUCTIVITY = FACT ( statut="o", 
+                        ang ="Conductivity properties",
+                        fr  ="proprietes du bloc CONDUCTIVITY",
+
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=6.000000E6,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+
+	         ), # fin FACT CONDUCTIVITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.000000E2,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+	         ), # fin FACT PERMEABILITY
+
+             ), # fin BLOC conductor6
+
+
+#--------------------------------------------------
+# materiau de reference type CONDUCTOR : ACIER PE
+#--------------------------------------------------
+   ACIER_PE_properties = BLOC(condition="MAT_REF=='ACIER_PE'",
+  
+#------------------------------------------------
+# sous bloc niveau 2 : CONDUCTIVITY
+#------------------------------------------------
+     CONDUCTIVITY = FACT ( statut="o", 
+                        ang ="Conductivity properties",
+                        fr  ="proprietes du bloc CONDUCTIVITY",
+
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.750000E6,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+
+	         ), # fin FACT CONDUCTIVITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=7.000000E1,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+	         ), # fin FACT PERMEABILITY
+
+             ), # fin BLOC conductor7
+
+
+#-----------------------------------------------------
+# materiau de reference type CONDUCTOR : ACIER CIMBLOT
+#-----------------------------------------------------
+   ACIER_CIMBLOT_properties = BLOC(condition="MAT_REF=='ACIER_CIMBLOT'",
+  
+#------------------------------------------------
+# sous bloc niveau 2 : CONDUCTIVITY
+#------------------------------------------------
+     CONDUCTIVITY = FACT ( statut="o", 
+                        ang ="Conductivity properties",
+                        fr  ="proprietes du bloc CONDUCTIVITY",
+
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=3.000000E6,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+
+	         ), # fin FACT CONDUCTIVITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=5.000000E1,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+	         ), # fin FACT PERMEABILITY
+
+             ), # fin BLOC conductor8
+
+
+#--------------------------------------------------
+# materiau de reference type CONDUCTOR : CUIVRE
+#--------------------------------------------------
+   CUIVRE_properties = BLOC(condition="MAT_REF=='CUIVRE'",
+  
+#------------------------------------------------
+# sous bloc niveau 2 : CONDUCTIVITY
+#------------------------------------------------
+     CONDUCTIVITY = FACT ( statut="o", 
+                        ang ="Conductivity properties",
+                        fr  ="proprietes du bloc CONDUCTIVITY",
+
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=5.85000000E07,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+
+	         ), # fin FACT CONDUCTIVITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.000000,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+	         ), # fin FACT PERMEABILITY
+
+             ), # fin BLOC conductor9
+
+#--------------------------------------------------
+# materiau de reference type CONDUCTOR : POTASSE
+#--------------------------------------------------
+   POTASSE_properties = BLOC(condition="MAT_REF=='POTASSE'",
+  
+#------------------------------------------------
+# sous bloc niveau 2 : CONDUCTIVITY
+#------------------------------------------------
+     CONDUCTIVITY = FACT ( statut="o", 
+                        ang ="Conductivity properties",
+                        fr  ="proprietes du bloc CONDUCTIVITY",
+
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=7.143E1,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+	         ), # fin FACT CONDUCTIVITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.000000E1,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+	         ), # fin FACT PERMEABILITY
+
+             ), # fin BLOC conductor10
+
+#-------------------------------------------------
+#  materiau generique de type CONDUCTOR  lineaire 
+#-------------------------------------------------
+   COND_properties = BLOC(condition="MAT_REF=='CONDUCTOR'",
+  
+#------------------------------------------------
+# sous bloc niveau 2 : CONDUCTIVITY
+#------------------------------------------------
+     CONDUCTIVITY = FACT ( statut="o", 
+                        ang ="Conductivity properties",
+                        fr  ="proprietes du bloc CONDUCTIVITY",
+
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.0,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+
+	         ), # fin FACT CONDUCTIVITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.0,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+	         ), # fin FACT PERMEABILITY
+
+             ), # fin BLOC conductor
+ 
+
+##--------------------------------------------
+## sous bloc niveau 1 : NOCOND
+##----------------------------------------------------------
+# materiau de reference de type NOCOND : materiau theorique  
+#-----------------------------------------------------------
+#  mat_ref_d1_properties = BLOC(condition="MAT_REF=='MAT_REF_DIEL1'",
+#
+##------------------------------------------------
+## sous bloc niveau 2 : PERMITTIVITY
+##------------------------------------------------
+##  PERMITTIVITY = FACT ( statut="o", 
+#                        ang ="Permittivity properties",
+#                        fr  ="proprietes du bloc PERMITTIVITY",
+#                
+#                 HOMOGENEOUS     = SIMP (statut="f",
+#		                         typ="TXM",
+#				         defaut="TRUE",
+#		                         into = ("TRUE","FALSE"),
+#                                         ang = "the material is homogeneous",
+#                                         fr  = "le materiau est homogene",
+#				        ),
+#	         ISOTROPIC       = SIMP (statut="f",
+#		                         typ="TXM",
+#				         defaut="TRUE",
+#		                         into = ("TRUE","FALSE"),
+#                                         ang = "the material is isotropic",
+#                                         fr  = "le materiau est isotrope",
+#				        ),
+# 	         LAW             = SIMP (statut="o",
+# 		                         typ="TXM",
+#                                         defaut="EPSILON1",
+#		                         into = ("EPSILON1","EPSILON2"),
+#                                         ang = "permittivity law",
+#                                         fr = "loi de permittivite",
+# 				        ),
+#
+#                 param_epsilon1 = BLOC(condition="LAW=='EPSILON1'",
+#                      TYPE_LAW   = SIMP (statut="o",
+#		                         typ="TXM",
+#				         defaut="LINEAR_REAL",
+#		                         into = ("LINEAR_REAL"),
+#                                         ang = "linear law",
+#                                         fr  = "loi lineaire",
+#				        ),
+#	              VALUE_REAL = SIMP (statut="o",
+#		                         typ="R", 
+#		                         defaut=1,
+#                                         ang = "enter a real relative value",
+#                                         fr = "saisir une valeur reelle relative",
+#		                        ),
+#		            ), # fin bloc epsilon1
+#
+#                param_epsilon2 = BLOC(condition="LAW=='EPSILON2'",
+#                      TYPE_LAW   = SIMP (statut="o",
+#		                         typ="TXM",
+#				         defaut="LINEAR_COMPLEX",
+#		                         into = ("LINEAR_COMPLEX"),
+#                                         ang = "linear law",
+#                                         fr  = "loi lineaire",
+#				        ),
+#	              VALUE_COMPLEX = SIMP (statut="o",
+#		                         typ="C", 
+#		                         defaut=('RI',1,0),
+#                                         ang = "enter a complex relative value",
+#                                         fr = "saisir une valeur complexe relative",
+#		                        ),
+#		            ), # fin bloc epsilon2
+#		 
+#	         ), # fin FACT PERMITTIVITY
+#
+##------------------------------------------------
+## sous bloc niveau 2 : PERMEABILITY
+##------------------------------------------------
+#
+#     PERMEABILITY = FACT ( statut="o", 
+#                        ang ="Permeability properties",
+#                        fr  ="proprietes du bloc PERMEABILITY",
+#                
+#                 HOMOGENEOUS     = SIMP (statut="f",
+#		                         typ="TXM",
+#				         defaut="TRUE",
+#		                         into = ("TRUE","FALSE"),
+#                                         ang = "the material is homogeneous",
+#                                         fr  = "le materiau est homogene",
+#				        ),
+#	         ISOTROPIC       = SIMP (statut="f",
+#		                         typ="TXM",
+#				         defaut="TRUE",
+#		                         into = ("TRUE","FALSE"),
+#                                         ang = "the material is isotropic",
+#                                         fr  = "le materiau est isotrope",
+#				        ),
+#	         LAW             = SIMP (statut="o",
+# 		                         typ="TXM",
+#                                         defaut="MU4",
+#		                         into = ("MU4","MU5","MU6","MU7","MU8"),
+#                                         ang = "permeability law",
+#                                         fr = "loi de permeabilite",
+#				        ),
+#
+#                param_mu4 = BLOC(condition="LAW=='MU4'",
+#                      TYPE_LAW   = SIMP (statut="o",
+#		                         typ="TXM",
+#				         defaut="LINEAR_REAL",
+#		                         into = ("LINEAR_REAL"),
+#                                         ang = "linear law",
+#                                         fr  = "loi lineaire",
+#				        ),
+#	              VALUE_REAL = SIMP (statut="o",
+#		                         typ="R", 
+#		                         defaut=1,
+#                                         ang = "enter a real relative value",
+#                                         fr = "saisir une valeur reelle relative",
+#		                        ),
+#		            ), # fin bloc mu4
+#
+#                param_mu5 = BLOC(condition="LAW=='MU5'",
+#                      TYPE_LAW   = SIMP (statut="o",
+#		                         typ="TXM",
+#				         defaut="LINEAR_COMPLEX",
+#		                         into = ("LINEAR_COMPLEX"),
+#                                         ang = "linear law",
+#                                         fr  = "loi lineaire",
+#				        ),
+#	              VALUE_COMPLEX = SIMP (statut="o",
+#		                         typ="C", 
+#		                         defaut=('RI',1,0),
+#                                         ang = "enter a complex relative value",
+#                                         fr = "saisir une valeur complexe relative",
+#		                        ),
+#		            ), # fin bloc mu5
+#
+#                param_mu6 = BLOC(condition="LAW=='MU6'",
+#                      TYPE_LAW   = SIMP (statut="o",
+#		                         typ="TXM",
+#				         defaut="SPLINE",
+#		                         into = ("SPLINE"),
+#                                         ang = "non linear law",
+#                                         fr  = "loi non lineaire",
+#				        ),
+#	              VALUE_COMPLEX = SIMP (statut="o",
+#		                         typ="C", 
+#		                         defaut=('RI',1,0),
+#                                         ang = "enter a complex relative value",
+#                                         fr = "saisir une valeur complexe relative",
+#		                        ),
+#                     DATA           = SIMP (statut="o", 
+#	                               typ=Tuple(2),
+#	                               ang="data file name",
+#			               fr ="nom du fichier",
+#                                       max="**",
+#			              ),
+#		      APPLIEDTO = SIMP (statut="o",	
+#		                        typ="TXM",   
+#		                        into=("B(H)&H(B)","B(H)","H(B)"),
+#				        defaut="B(H)&H(B)",
+#				        ang="spline applied to",
+#				        fr ="spline appliquee a ",
+#				       ),
+#			     ), # fin BLOC mu6
+#
+#                param_mu7 = BLOC(condition="LAW=='MU7'",
+#                      TYPE_LAW   = SIMP (statut="o",
+#		                         typ="TXM",
+#				         defaut="MARROCCO",
+#		                         into = ("MARROCCO"),
+#                                         ang = "non linear law",
+#                                         fr  = "loi non lineaire",
+#				        ),
+#
+#	              VALUE_COMPLEX = SIMP (statut="o",
+#		                         typ="C", 
+#		                         defaut=('RI',1,0),
+#                                         ang = "enter a complex relative value",
+#                                         fr = "saisir une valeur complexe relative",
+#		                        ),
+#			   ALPHA    = SIMP (statut="o", 
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="alpha parameter",
+#					    fr ="parametre alpha" ,
+#					   ),
+#			   TAU      = SIMP (statut="o",	
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="tau parameter",
+#					    fr ="parametre tau" ,
+#					    ),
+#			   C        = SIMP (statut="o",	
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="c parameter",
+#					    fr ="parametre c" ,
+#					    ),
+#			   EPSILON  = SIMP (statut="o",	
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="epsilon parameter",
+#					    fr ="parametre epsilon" ,
+#					    ),
+#			), # fin BLOC mu7
+#                                   
+#                param_mu8 = BLOC(condition="LAW=='MU8'",
+#                      TYPE_LAW   = SIMP (statut="o",
+#		                         typ="TXM",
+#				         defaut="MARROCCO+SATURATION",
+#		                         into = ("MARROCCO+SATURATION"),
+#                                         ang = "non linear law",
+#                                         fr  = "loi non lineaire",
+#				        ),
+#	              VALUE_COMPLEX = SIMP (statut="o",
+#		                         typ="C", 
+#		                         defaut=('RI',1,0),
+#                                         ang = "enter a complex relative value",
+#                                         fr = "saisir une valeur complexe relative",
+#		                        ),
+#
+#			   ALPHA    = SIMP (statut="o", 
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="alpha parameter",
+#					    fr ="parametre alpha" ,
+#					   ),
+#			   TAU      = SIMP (statut="o",	
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="tau parameter",
+#					    fr ="parametre tau" ,
+#					    ),
+#			   C        = SIMP (statut="o",	
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="c parameter",
+#					    fr ="parametre c" ,
+#					    ),
+#			   EPSILON  = SIMP (statut="o",	
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="epsilon parameter",
+#					    fr ="parametre epsilon" ,
+#					    ),
+#			   BMAX     = SIMP (statut="o",	
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="intersection B",
+#					    fr ="intersection B" ,
+#					    ),
+#			   HSAT     = SIMP (statut="o",	
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="H value",
+#					    fr ="valeur H" ,
+#					    ),
+#			   BSAT     = SIMP (statut="o",	
+#					    typ="R",
+#					    defaut=0,
+#					    val_min=0,
+#					    ang="B value",
+#					    fr ="valeur B" ,
+#					    ),
+#			   JOIN     = SIMP (statut="o",	
+#					    typ="TXM",
+#					    defaut="SPLINE",
+#					    into= ("SPLINE","PARABOLIC","LINEAR"),
+#					    ang="type of join between laws",
+#					    fr ="type de jointure entre les 2 law" ,
+#					    ),
+#			   APPLIEDTO = SIMP (statut="o",	
+#					     typ="TXM",   
+#					     into=("B(H)&H(B)","B(H)","H(B)"),
+#					     defaut="B(H)&H(B)",
+#					     ang="join applied to",
+#					     fr ="jointure appliquee a ",
+#					    ),
+#			), # fin BLOC mu8
+#
+#	         ), # fin FACT PERMEABILITY
+#
+# ), # fin BLOC dielectric1
+
+
+
+
+##---------------------------------------------
+# materiau de reference de type NOCOND : AIR  
+#----------------------------------------------
+  AIR_properties = BLOC(condition="MAT_REF=='AIR'",
 
 #------------------------------------------------
 # sous bloc niveau 2 : PERMEABILITY
@@ -691,47 +1647,215 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          ang = "the material is isotropic",
                                          fr  = "le materiau est isotrope",
 				        ),
-	         LAW             = SIMP (statut="o",
- 		                         typ="TXM",
-                                         defaut="MU4",
-		                         into = ("MU4","MU5","MU6","MU7","MU8"),
-                                         ang = "permeability law",
-                                         fr = "loi de permeabilite",
-				        ),
-
-                param_mu4 = BLOC(condition="LAW=='MU4'",
-                      TYPE_LAW   = SIMP (statut="o",
+                  TYPE_LAW       = SIMP (statut="o",
 		                         typ="TXM",
 				         defaut="LINEAR_REAL",
-		                         into = ("LINEAR_REAL"),
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
                                          ang = "linear law",
                                          fr  = "loi lineaire",
 				        ),
-	              VALUE_REAL = SIMP (statut="o",
-		                         typ="R", 
-		                         defaut=1,
-                                         ang = "enter a real relative value",
-                                         fr = "saisir une valeur reelle relative",
-		                        ),
-		            ), # fin bloc mu4
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
 
-                param_mu5 = BLOC(condition="LAW=='MU5'",
-                      TYPE_LAW   = SIMP (statut="o",
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.000000,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	         ), # fin FACT PERMEABILITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMITTIVITY
+#------------------------------------------------
+  PERMITTIVITY = FACT ( statut="o", 
+                        ang ="Permittivity properties",
+                        fr  ="proprietes du bloc PERMITTIVITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
 		                         typ="TXM",
-				         defaut="LINEAR_COMPLEX",
-		                         into = ("LINEAR_COMPLEX"),
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
                                          ang = "linear law",
                                          fr  = "loi lineaire",
 				        ),
-	              VALUE_COMPLEX = SIMP (statut="o",
-		                         typ="C", 
-		                         defaut=('RI',1,0),
-                                         ang = "enter a complex relative value",
-                                         fr = "saisir une valeur complexe relative",
-		                        ),
-		            ), # fin bloc mu5
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
 
-                param_mu6 = BLOC(condition="LAW=='MU6'",
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.000000,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+	         ), # fin FACT PERMITTIVITY
+
+            ), # fin BLOC NOCOND
+#
+##--------------------------------------------------
+# materiau de reference de type NOCOND : FERRITE B30  
+#---------------------------------------------------
+  FERRITEB30_properties = BLOC(condition="MAT_REF=='FERRITEB30'",
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.100000E3,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	         ), # fin FACT PERMEABILITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMITTIVITY
+#------------------------------------------------
+  PERMITTIVITY = FACT ( statut="o", 
+                        ang ="Permittivity properties",
+                        fr  ="proprietes du bloc PERMITTIVITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                  TYPE_LAW       = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
+
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.000000,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
+	 
+	         ), # fin FACT PERMITTIVITY
+
+            ), # fin BLOC NOCOND
+#---------------------------------------------
+# materiau de reference de type NOCOND : E24  
+#---------------------------------------------
+  E24_properties = BLOC(condition="MAT_REF=='E24'",
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
                       TYPE_LAW   = SIMP (statut="o",
 		                         typ="TXM",
 				         defaut="SPLINE",
@@ -739,17 +1863,18 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          ang = "non linear law",
                                          fr  = "loi non lineaire",
 				        ),
-	              VALUE_COMPLEX = SIMP (statut="o",
-		                         typ="C", 
-		                         defaut=('RI',1,0),
-                                         ang = "enter a complex relative value",
-                                         fr = "saisir une valeur complexe relative",
+	              VALUE      = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
 		                        ),
-                     DATA           = SIMP (statut="o", 
-	                               typ=Tuple(2),
+
+                      FILENAME = SIMP (statut="o", 
+	                               typ=("Fichier",'All Files (*)',),
+		                       defaut=str(repIni)+"/E24",
 	                               ang="data file name",
 			               fr ="nom du fichier",
-                                       max="**",
 			              ),
 		      APPLIEDTO = SIMP (statut="o",	
 		                        typ="TXM",   
@@ -758,143 +1883,8 @@ MATERIALS = OPER (nom = "MATERIALS",
 				        ang="spline applied to",
 				        fr ="spline appliquee a ",
 				       ),
-			     ), # fin BLOC mu6
-
-                param_mu7 = BLOC(condition="LAW=='MU7'",
-                      TYPE_LAW   = SIMP (statut="o",
-		                         typ="TXM",
-				         defaut="MARROCCO",
-		                         into = ("MARROCCO"),
-                                         ang = "non linear law",
-                                         fr  = "loi non lineaire",
-				        ),
-
-	              VALUE_COMPLEX = SIMP (statut="o",
-		                         typ="C", 
-		                         defaut=('RI',1,0),
-                                         ang = "enter a complex relative value",
-                                         fr = "saisir une valeur complexe relative",
-		                        ),
-			   ALPHA    = SIMP (statut="o", 
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="alpha parameter",
-					    fr ="parametre alpha" ,
-					   ),
-			   TAU      = SIMP (statut="o",	
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="tau parameter",
-					    fr ="parametre tau" ,
-					    ),
-			   C        = SIMP (statut="o",	
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="c parameter",
-					    fr ="parametre c" ,
-					    ),
-			   EPSILON  = SIMP (statut="o",	
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="epsilon parameter",
-					    fr ="parametre epsilon" ,
-					    ),
-			), # fin BLOC mu7
-                                   
-                param_mu8 = BLOC(condition="LAW=='MU8'",
-                      TYPE_LAW   = SIMP (statut="o",
-		                         typ="TXM",
-				         defaut="MARROCCO+SATURATION",
-		                         into = ("MARROCCO+SATURATION"),
-                                         ang = "non linear law",
-                                         fr  = "loi non lineaire",
-				        ),
-	              VALUE_COMPLEX = SIMP (statut="o",
-		                         typ="C", 
-		                         defaut=('RI',1,0),
-                                         ang = "enter a complex relative value",
-                                         fr = "saisir une valeur complexe relative",
-		                        ),
-
-			   ALPHA    = SIMP (statut="o", 
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="alpha parameter",
-					    fr ="parametre alpha" ,
-					   ),
-			   TAU      = SIMP (statut="o",	
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="tau parameter",
-					    fr ="parametre tau" ,
-					    ),
-			   C        = SIMP (statut="o",	
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="c parameter",
-					    fr ="parametre c" ,
-					    ),
-			   EPSILON  = SIMP (statut="o",	
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="epsilon parameter",
-					    fr ="parametre epsilon" ,
-					    ),
-			   BMAX     = SIMP (statut="o",	
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="intersection B",
-					    fr ="intersection B" ,
-					    ),
-			   HSAT     = SIMP (statut="o",	
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="H value",
-					    fr ="valeur H" ,
-					    ),
-			   BSAT     = SIMP (statut="o",	
-					    typ="R",
-					    defaut=0,
-					    val_min=0,
-					    ang="B value",
-					    fr ="valeur B" ,
-					    ),
-			   JOIN     = SIMP (statut="o",	
-					    typ="TXM",
-					    defaut="SPLINE",
-					    into= ("SPLINE","PARABOLIC","LINEAR"),
-					    ang="type of join between laws",
-					    fr ="type de jointure entre les 2 law" ,
-					    ),
-			   APPLIEDTO = SIMP (statut="o",	
-					     typ="TXM",   
-					     into=("B(H)&H(B)","B(H)","H(B)"),
-					     defaut="B(H)&H(B)",
-					     ang="join applied to",
-					     fr ="jointure appliquee a ",
-					    ),
-			), # fin BLOC mu8
 
 	         ), # fin FACT PERMEABILITY
-
- ), # fin BLOC dielectric1
-
-
-
-##------------------------------------
-# 2eme materiau Dielectric de reference 
-#------------------------------------
-  E24_properties = BLOC(condition="MAT_REF=='E24'",
 
 #------------------------------------------------
 # sous bloc niveau 2 : PERMITTIVITY
@@ -928,7 +1918,7 @@ MATERIALS = OPER (nom = "MATERIALS",
                  val_real = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
 	              VALUE_REAL = SIMP (statut="o",
 		                         typ="R", 
-		                         defaut=1,
+		                         defaut=1.000000E1,
                                          ang = "enter a real relative value",
                                          fr = "saisir une valeur reelle relative",
 		                        ),
@@ -944,11 +1934,16 @@ MATERIALS = OPER (nom = "MATERIALS",
 		            ), # fin bloc complex
 		 
 	         ), # fin FACT PERMITTIVITY
+ ), # fin BLOC E24
+
+##-----------------------------------------------
+# materiau de reference de type NOCOND : FEV470 
+#------------------------------------------------
+  FEV470_properties = BLOC(condition="MAT_REF=='FEV470'",
 
 #------------------------------------------------
 # sous bloc niveau 2 : PERMEABILITY
 #------------------------------------------------
-
      PERMEABILITY = FACT ( statut="o", 
                         ang ="Permeability properties",
                         fr  ="proprietes du bloc PERMEABILITY",
@@ -975,16 +1970,16 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          ang = "non linear law",
                                          fr  = "loi non lineaire",
 				        ),
-	              VALUE_COMPLEX = SIMP (statut="o",
-		                         typ="C", 
-		                         defaut=('RI',1,0),
-                                         ang = "enter a complex relative value",
-                                         fr = "saisir une valeur complexe relative",
+	              VALUE      = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
 		                        ),
 
                       FILENAME = SIMP (statut="o", 
 	                               typ=("Fichier",'All Files (*)',),
-		                       defaut=str(repIni)+"/E24",
+		                       defaut=str(repIni)+"/FEV470",
 	                               ang="data file name",
 			               fr ="nom du fichier",
 			              ),
@@ -997,13 +1992,6 @@ MATERIALS = OPER (nom = "MATERIALS",
 				       ),
 
 	         ), # fin FACT PERMEABILITY
-
- ), # fin BLOC E24
-
-##------------------------------------
-# 3eme materiau Dielectric de reference 
-#------------------------------------
-  FEV1000_properties = BLOC(condition="MAT_REF=='FEV1000'",
 
 #------------------------------------------------
 # sous bloc niveau 2 : PERMITTIVITY
@@ -1030,23 +2018,40 @@ MATERIALS = OPER (nom = "MATERIALS",
                       TYPE_LAW   = SIMP (statut="o",
 		                         typ="TXM",
 				         defaut="LINEAR_REAL",
-		                         into = ("LINEAR_REAL"),
+		                         into = ("LINEAR_REAL","LINEAR_COMPLEX"),
                                          ang = "linear law",
                                          fr  = "loi lineaire",
 				        ),
+                 val_real = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
 	              VALUE_REAL = SIMP (statut="o",
 		                         typ="R", 
-		                         defaut=1,
+		                         defaut=1.000000E1,
                                          ang = "enter a real relative value",
                                          fr = "saisir une valeur reelle relative",
 		                        ),
+		            ), # fin bloc real
+
+                val_complex = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	              VALUE_COMPLEX = SIMP (statut="o",
+		                         typ="C", 
+		                         defaut=('RI',1,0),
+                                         ang = "enter a complex relative value",
+                                         fr = "saisir une valeur complexe relative",
+		                        ),
+		            ), # fin bloc complex
 		 
 	         ), # fin FACT PERMITTIVITY
+
+ ), # fin BLOC FEV470
+
+##-----------------------------------------------
+# materiau de reference de type NOCOND : FEV600 
+#------------------------------------------------
+  FEV600_properties = BLOC(condition="MAT_REF=='FEV600'",
 
 #------------------------------------------------
 # sous bloc niveau 2 : PERMEABILITY
 #------------------------------------------------
-
      PERMEABILITY = FACT ( statut="o", 
                         ang ="Permeability properties",
                         fr  ="proprietes du bloc PERMEABILITY",
@@ -1073,12 +2078,229 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          ang = "non linear law",
                                          fr  = "loi non lineaire",
 				        ),
+	              VALUE      = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+
+                      FILENAME = SIMP (statut="o", 
+	                               typ=("Fichier",'All Files (*)',),
+		                       defaut=str(repIni)+"/FEV600",
+	                               ang="data file name",
+			               fr ="nom du fichier",
+			              ),
+		      APPLIEDTO = SIMP (statut="o",	
+		                        typ="TXM",   
+		                        into=("B(H)&H(B)","B(H)","H(B)"),
+				        defaut="B(H)&H(B)",
+				        ang="spline applied to",
+				        fr ="spline appliquee a ",
+				       ),
+
+	         ), # fin FACT PERMEABILITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMITTIVITY
+#------------------------------------------------
+  PERMITTIVITY = FACT ( statut="o", 
+                        ang ="Permittivity properties",
+                        fr  ="proprietes du bloc PERMITTIVITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_REAL","LINEAR_COMPLEX"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+                 val_real = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	              VALUE_REAL = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+		            ), # fin bloc real
+
+                val_complex = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
 	              VALUE_COMPLEX = SIMP (statut="o",
 		                         typ="C", 
-		                         defaut=('RI',1,1),
+		                         defaut=('RI',1,0),
                                          ang = "enter a complex relative value",
                                          fr = "saisir une valeur complexe relative",
 		                        ),
+		            ), # fin bloc complex
+		 
+	         ), # fin FACT PERMITTIVITY
+
+ ), # fin BLOC FEV600
+
+##-----------------------------------------------
+# materiau de reference de type NOCOND : FEV800 
+#------------------------------------------------
+  FEV800_properties = BLOC(condition="MAT_REF=='FEV800'",
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="SPLINE",
+		                         into = ("SPLINE"),
+                                         ang = "non linear law",
+                                         fr  = "loi non lineaire",
+				        ),
+	              VALUE      = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+
+                      FILENAME = SIMP (statut="o", 
+	                               typ=("Fichier",'All Files (*)',),
+		                       defaut=str(repIni)+"/FEV800",
+	                               ang="data file name",
+			               fr ="nom du fichier",
+			              ),
+		      APPLIEDTO = SIMP (statut="o",	
+		                        typ="TXM",   
+		                        into=("B(H)&H(B)","B(H)","H(B)"),
+				        defaut="B(H)&H(B)",
+				        ang="spline applied to",
+				        fr ="spline appliquee a ",
+				       ),
+
+	         ), # fin FACT PERMEABILITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMITTIVITY
+#------------------------------------------------
+  PERMITTIVITY = FACT ( statut="o", 
+                        ang ="Permittivity properties",
+                        fr  ="proprietes du bloc PERMITTIVITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_REAL","LINEAR_COMPLEX"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+                 val_real = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	              VALUE_REAL = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+		            ), # fin bloc real
+
+                val_complex = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	              VALUE_COMPLEX = SIMP (statut="o",
+		                         typ="C", 
+		                         defaut=('RI',1,0),
+                                         ang = "enter a complex relative value",
+                                         fr = "saisir une valeur complexe relative",
+		                        ),
+		            ), # fin bloc complex
+		 
+	         ), # fin FACT PERMITTIVITY
+
+ ), # fin BLOC FEV800
+
+##-----------------------------------------------
+# materiau de reference de type NOCOND : FEV1000 
+#------------------------------------------------
+  FEV1000_properties = BLOC(condition="MAT_REF=='FEV1000'",
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="SPLINE",
+		                         into = ("SPLINE"),
+                                         ang = "non linear law",
+                                         fr  = "loi non lineaire",
+				        ),
+	              VALUE      = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+
                       FILENAME = SIMP (statut="o", 
 	                               typ=("Fichier",'All Files (*)',),
 		                       defaut=str(repIni)+"/FEV1000",
@@ -1095,14 +2317,279 @@ MATERIALS = OPER (nom = "MATERIALS",
 
 	         ), # fin FACT PERMEABILITY
 
+#------------------------------------------------
+# sous bloc niveau 2 : PERMITTIVITY
+#------------------------------------------------
+  PERMITTIVITY = FACT ( statut="o", 
+                        ang ="Permittivity properties",
+                        fr  ="proprietes du bloc PERMITTIVITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_REAL","LINEAR_COMPLEX"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+                 val_real = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	              VALUE_REAL = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+		            ), # fin bloc real
+
+                val_complex = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	              VALUE_COMPLEX = SIMP (statut="o",
+		                         typ="C", 
+		                         defaut=('RI',1,0),
+                                         ang = "enter a complex relative value",
+                                         fr = "saisir une valeur complexe relative",
+		                        ),
+		            ), # fin bloc complex
+		 
+	         ), # fin FACT PERMITTIVITY
+
  ), # fin BLOC FEV1000
+
+##---------------------------------------------
+# materiau de reference de type NOCOND : HA600 
+#----------------------------------------------
+  HA600_properties = BLOC(condition="MAT_REF=='HA600'",
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="SPLINE",
+		                         into = ("SPLINE"),
+                                         ang = "non linear law",
+                                         fr  = "loi non lineaire",
+				        ),
+	              VALUE      = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+
+                      FILENAME = SIMP (statut="o", 
+	                               typ=("Fichier",'All Files (*)',),
+		                       defaut=str(repIni)+"/HA600",
+	                               ang="data file name",
+			               fr ="nom du fichier",
+			              ),
+		      APPLIEDTO = SIMP (statut="o",	
+		                        typ="TXM",   
+		                        into=("B(H)&H(B)","B(H)","H(B)"),
+				        defaut="B(H)&H(B)",
+				        ang="spline applied to",
+				        fr ="spline appliquee a ",
+				       ),
+
+	         ), # fin FACT PERMEABILITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMITTIVITY
+#------------------------------------------------
+  PERMITTIVITY = FACT ( statut="o", 
+                        ang ="Permittivity properties",
+                        fr  ="proprietes du bloc PERMITTIVITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_REAL","LINEAR_COMPLEX"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+                 val_real = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	              VALUE_REAL = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+		            ), # fin bloc real
+
+                val_complex = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	              VALUE_COMPLEX = SIMP (statut="o",
+		                         typ="C", 
+		                         defaut=('RI',1,0),
+                                         ang = "enter a complex relative value",
+                                         fr = "saisir une valeur complexe relative",
+		                        ),
+		            ), # fin bloc complex
+		 
+	         ), # fin FACT PERMITTIVITY
+
+ ), # fin BLOC HA600 
+
+##-----------------------------------------------
+# materiau de reference de type NOCOND : M600_65 
+#------------------------------------------------
+  M600_65_properties = BLOC(condition="MAT_REF=='M600_65'",
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="SPLINE",
+		                         into = ("SPLINE"),
+                                         ang = "non linear law",
+                                         fr  = "loi non lineaire",
+				        ),
+	              VALUE      = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+
+                      FILENAME = SIMP (statut="o", 
+	                               typ=("Fichier",'All Files (*)',),
+		                       defaut=str(repIni)+"/M600_65",
+	                               ang="data file name",
+			               fr ="nom du fichier",
+			              ),
+		      APPLIEDTO = SIMP (statut="o",	
+		                        typ="TXM",   
+		                        into=("B(H)&H(B)","B(H)","H(B)"),
+				        defaut="B(H)&H(B)",
+				        ang="spline applied to",
+				        fr ="spline appliquee a ",
+				       ),
+
+	         ), # fin FACT PERMEABILITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMITTIVITY
+#------------------------------------------------
+  PERMITTIVITY = FACT ( statut="o", 
+                        ang ="Permittivity properties",
+                        fr  ="proprietes du bloc PERMITTIVITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE","FALSE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_REAL","LINEAR_COMPLEX"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+                 val_real = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	              VALUE_REAL = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=1.000000E1,
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+		            ), # fin bloc real
+
+                val_complex = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	              VALUE_COMPLEX = SIMP (statut="o",
+		                         typ="C", 
+		                         defaut=('RI',1,0),
+                                         ang = "enter a complex relative value",
+                                         fr = "saisir une valeur complexe relative",
+		                        ),
+		            ), # fin bloc complex
+		 
+	         ), # fin FACT PERMITTIVITY
+
+ ), # fin BLOC M600_65
 
 # ------------------------------------
 # sous bloc niveau 1 : ZSURFACIC
 #------------------------------------
-# 1er materiau Zsurfasic de reference 
+# materiau ZSURFASIC generique 
 #------------------------------------
-  mat_ref_z1_properties = BLOC(condition="MAT_REF=='MAT_REF_ZSURF1'",
+  zsurfacic_properties = BLOC(condition="MAT_REF=='ZSURFACIC'",
 
 #------------------------------------------------
 # sous bloc niveau 2 : CONDUCTIVITY
@@ -1125,45 +2612,31 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          ang = "the material is isotropic",
                                          fr  = "le materiau est isotrope",
 				        ),
- 	         LAW             = SIMP (statut="o",
- 		                         typ="TXM",
-                                         defaut="SIGMA3",
-		                         into = ("SIGMA3","SIGMA4"),
-                                         ang = "conductivity law",
-                                         fr = "loi de conductivite",
- 				        ),
-
-                 param_sigma3 = BLOC(condition="LAW=='SIGMA3'",
-                      TYPE_LAW   = SIMP (statut="o",
+                  TYPE_LAW       = SIMP (statut="o",
 		                         typ="TXM",
 				         defaut="LINEAR_REAL",
-		                         into = ("LINEAR_REAL"),
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
                                          ang = "linear law",
                                          fr  = "loi lineaire",
 				        ),
-	              VALUE_REAL = SIMP (statut="o",
-		                         typ="R", 
-		                         defaut=1,
-                                         ang = "enter a real relative value",
-                                         fr = "saisir une valeur reelle relative",
-		                        ),
-		            ), # fin bloc sigma3
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
 
-                param_sigma4 = BLOC(condition="LAW=='SIGMA4'",
-                      TYPE_LAW   = SIMP (statut="o",
-		                         typ="TXM",
-				         defaut="LINEAR_COMPLEX",
-		                         into = ("LINEAR_COMPLEX"),
-                                         ang = "linear law",
-                                         fr  = "loi lineaire",
-				        ),
-	              VALUE_COMPLEX = SIMP (statut="o",
-		                         typ="C", 
-		                         defaut=('RI',1,0),
-                                         ang = "enter a complex relative value",
-                                         fr = "saisir une valeur complexe relative",
-		                        ),
-		            ), # fin bloc sigma4
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.0,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
 		 
 
 	         ), # fin FACT CONDUCTIVITY
@@ -1189,69 +2662,78 @@ MATERIALS = OPER (nom = "MATERIALS",
                                          ang = "the material is isotropic",
                                          fr  = "le materiau est isotrope",
 				        ),
-	         LAW             = SIMP (statut="o",
- 		                         typ="TXM",
-                                         defaut="MU1",
-		                         into = ("MU1","MU2"),
-                                         ang = "permeability law",
-                                         fr = "loi de permeabilite",
-				        ),
-
-                param_mu1 = BLOC(condition="LAW=='MU1'",
-                      TYPE_LAW   = SIMP (statut="o",
+                  TYPE_LAW       = SIMP (statut="o",
 		                         typ="TXM",
 				         defaut="LINEAR_REAL",
-		                         into = ("LINEAR_REAL"),
+		                         into = ("LINEAR_COMPLEX","LINEAR_REAL"),
                                          ang = "linear law",
                                          fr  = "loi lineaire",
 				        ),
-	              VALUE_REAL = SIMP (statut="o",
-		                         typ="R", 
-		                         defaut=1,
-                                         ang = "enter a real relative value",
-                                         fr = "saisir une valeur reelle relative",
-		                        ),
-		            ), # fin bloc mu1
+		 
+                  val_complex    = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	                     VALUE_COMPLEX = SIMP (statut="o",
+		                                   typ="C", 
+		                                   defaut=('RI',1,0),
+                                                   ang = "enter a complex relative value",
+                                                   fr = "saisir une valeur complexe relative",
+		                                  ),
+		                         ), # fin bloc 
 
-                param_mu2 = BLOC(condition="LAW=='MU2'",
-                      TYPE_LAW   = SIMP (statut="o",
-		                         typ="TXM",
-				         defaut="LINEAR_COMPLEX",
-		                         into = ("LINEAR_COMPLEX"),
-                                         ang = "linear law",
-                                         fr  = "loi lineaire",
-				        ),
-	              VALUE_COMPLEX = SIMP (statut="o",
-		                         typ="C", 
-		                         defaut=('RI',1,0),
-                                         ang = "enter a complex relative value",
-                                         fr = "saisir une valeur complexe relative",
-		                        ),
-		            ), # fin bloc mu2
+                  val_real       = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	                     VALUE_REAL    = SIMP (statut="o",
+		                                   typ="R", 
+		                                   defaut=1.0,
+                                                   ang = "enter a real relative value",
+                                                   fr = "saisir une valeur reelle relative",
+		                                   ),
+		                         ), # fin bloc
 	         ), # fin FACT PERMEABILITY
 
-	     ), # fin bloc ZSURFACIC1
+	     ), # fin bloc ZSURFACIC
 
 
 #===================================
-# 1 type de matériau fictif 
+# matériau de type ZINSULATOR 
 #---------------------------------------
-# sous bloc niveau 1 : materiau NILMAT   
+# sous bloc niveau 1  
 #---------------------------------------
-#  1er materiau Nilmat de reference 
-#------------------------------------
   
 # aucun parametre a saisir pour ce materiau
 
 
-#============================================
-# 1 type de matériau isotropique non homogene
-#----------------------------------------
+#===================================
+# matériau fictif 
+#---------------------------------------
+# sous bloc niveau 1 : materiau NILMAT   
+#---------------------------------------
+  
+# aucun parametre a saisir pour ce materiau
+
+
+#=================================================
 # sous bloc niveau 1 : EM_ISOTROPIC_FILES   
+#----------------------------------------------------------
+# matériau de reference isotropique non homogene : M6X2ISO1
+#-----------------------------------------------------------
+   M6X2ISO1_properties=BLOC(condition="MAT_REF=='M6X2ISO1'", 
+               
+	       CONDUCTIVITY_File = SIMP (statut="o", 
+	                                 typ=("Fichier",'MED Files (*.med)',),
+		                         defaut=str(repIni)+"/M6X2ISO1_sigma.med",
+	                                 ang="CONDUCTIVITY MED data file name",
+	                                 fr ="nom du fichier MED CONDUCTIVITY",
+	                                ),
+	       PERMEABILITY_File = SIMP (statut="o", 
+	                                 typ=("Fichier",'MED Files (*.med)',),
+		                         defaut=str(repIni)+"/M6X2ISO1_mu.med",
+	                                 ang="PERMEABILITY MED data file name",
+	                                 fr ="nom du fichier MED PERMEABILITY",
+	                                ),
+	      ), # fin bloc EM_ISOTROPIC
 #----------------------------------------
-#  1er materiau EM_isotropic de reference 
-#----------------------------------------
-   mat_ref_i1_properties=BLOC(condition="MAT_REF=='EM_ISOTROPIC'", 
+# matériau isotropique non homogene generique
+#-------------------------------------------------
+   em_iso_properties=BLOC(condition="MAT_REF=='EM_ISOTROPIC'", 
                
 	       CONDUCTIVITY_File = SIMP (statut="o", 
 	                                 typ=("Fichier",'MED Files (*.med)',),
@@ -1265,24 +2747,78 @@ MATERIALS = OPER (nom = "MATERIALS",
 	                                ),
 	      ), # fin bloc EM_ISOTROPIC
 
-#============================================
-# 1 type de matériau  non isotropique 
-#----------------------------------------
+#==========================================================
 # sous bloc niveau 1 : EM_ANISOTROPIC_FILES   
-#----------------------------------------
-#  1er materiau EM_anisotropic de reference 
-#----------------------------------------
-   mat_ref_a1_properties=BLOC(condition="MAT_REF=='EM_ANISOTROPIC'",
+##---------------------------------------------------------
+# materiau de reference anisotrope non homogene : M6X 
+#----------------------------------------------------------
+   M6X_properties=BLOC(condition="MAT_REF=='M6X'",
                  
+	       PERMEABILITY_File = SIMP (statut="o", 
+	                                 typ=("Fichier",'.mater Files (*.mater)',),
+		                         defaut=str(repIni)+"/M6X_mu.mater",
+	                                 ang="PERMEABILITY .mater data file name",
+	                                 fr ="nom du fichier .mater PERMEABILITY",
+	                                ),
+	       PERMITTIVITY_File = SIMP (statut="o", 
+	                                 typ=("Fichier",'.mater Files (*.mater)',),
+		                         defaut=str(repIni)+"/M6X_epsilon.mater",
+	                                 ang="PERMITTIVITY .mater data file name",
+	                                 fr ="nom du fichier .mater PERMITTIVITY",
+	                                ),
+	      ), # fin bloc EM_ANISOTROPIC
+##--------------------------------------------------------------
+# materiau de reference anisotrope non homogene : M6X_lineaire 
+#---------------------------------------------------------------
+   M6X_lineaire_properties=BLOC(condition="MAT_REF=='M6X_lineaire'",
+                 
+	       PERMEABILITY_File = SIMP (statut="o", 
+	                                 typ=("Fichier",'.mater Files (*.mater)',),
+		                         defaut=str(repIni)+"/M6X_lineaire_mu.mater",
+	                                 ang="PERMEABILITY .mater data file name",
+	                                 fr ="nom du fichier .mater PERMEABILITY",
+	                                ),
 	       CONDUCTIVITY_File = SIMP (statut="o", 
 	                                 typ=("Fichier",'.mater Files (*.mater)',),
+		                         defaut=str(repIni)+"/M6X_lineaire_sigma.mater",
 	                                 ang="CONDUCTIVITY .mater data file name",
 	                                 fr ="nom du fichier .mater CONDUCTIVITY",
 	                                ),
+	      ), # fin bloc EM_ANISOTROPIC
+    
+##--------------------------------------------------------------
+# materiau de reference anisotrope non homogene : M6X_homog 
+#---------------------------------------------------------------
+   M6X_homog_properties=BLOC(condition="MAT_REF=='M6X_homog'",
+                 
+	       PERMEABILITY_File = SIMP (statut="o", 
+	                                 typ=("Fichier",'.mater Files (*.mater)',),
+		                         defaut=str(repIni)+"/M6X_homog_mu.mater",
+	                                 ang="PERMEABILITY .mater data file name",
+	                                 fr ="nom du fichier .mater PERMEABILITY",
+	                                ),
+	       CONDUCTIVITY_File = SIMP (statut="o", 
+	                                 typ=("Fichier",'.mater Files (*.mater)',),
+		                         defaut=str(repIni)+"/M6X_homog_sigma.mater",
+	                                 ang="CONDUCTIVITY .mater data file name",
+	                                 fr ="nom du fichier .mater CONDUCTIVITY",
+	                                ),
+	      ), # fin bloc EM_ANISOTROPIC
+    
+#---------------------------------------------------
+# matériau  anisotropique non homogene generique 
+#---------------------------------------------------
+   em_aniso_properties=BLOC(condition="MAT_REF=='EM_ANISOTROPIC'",
+                 
 	       PERMEABILITY_File = SIMP (statut="o", 
 	                                 typ=("Fichier",'.mater Files (*.mater)',),
 	                                 ang="PERMEABILITY .mater data file name",
 	                                 fr ="nom du fichier .mater PERMEABILITY",
+	                                ),
+	       CONDUCTIVITY_File = SIMP (statut="o", 
+	                                 typ=("Fichier",'.mater Files (*.mater)',),
+	                                 ang="CONDUCTIVITY .mater data file name",
+	                                 fr ="nom du fichier .mater CONDUCTIVITY",
 	                                ),
 	      ), # fin bloc EM_ANISOTROPIC
     
