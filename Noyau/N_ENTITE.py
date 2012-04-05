@@ -129,9 +129,9 @@ class ENTITE:
             val.check_definition(parent)
             #PNPNPN surcharge
             # CALC_SPEC !
-            #assert self.label != 'FACT', \
-            #   'Commande %s : Mot-clef facteur present sous un mot-clef facteur : interdit !' \
-            #   % parent
+            assert self.label != 'FACT', \
+               'Commande %s : Mot-clef facteur present sous un mot-clef facteur : interdit !' \
+               % parent
          else:
             continue
          del args[nom]
