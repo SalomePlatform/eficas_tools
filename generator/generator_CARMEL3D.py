@@ -28,43 +28,47 @@ import types,string,re,os
 
 from generator_python import PythonGenerator
 
-# dictionnaire contenant la liste des materiaux de reference :
-#     cle = nom du materiau de reference
-#     valeur = nature du materiau de reference ; correspond a un sous bloc du bloc MATERIALS du fichier de parametres Carmel3D
+# dictionnaire contenant la liste des materiaux :
+#     cle = nom du materiau 
+#     valeur = nature du materiau ; correspond a un sous bloc du bloc MATERIALS du fichier de parametres Carmel3D
 #
-# avril 2012 : pas de materiau ZSURFACIC donc presence d un materiau theorique
-#
+# les materiaux sont : 
+#  - des materiaux de reference connus fournis par THEMIS,
+#  - ou des materiaux generiques theoriques 
 #
 #
 dictNatureMaterRef={"ACIER_CIMBLOT":"CONDUCTOR", 
                     "ACIER_Noir":"CONDUCTOR", 
                     "ACIER_PE":"CONDUCTOR", 
-                    "AIR":"NOCOND", 
                     "ALU":"CONDUCTOR", 
                     "BRONZE":"CONDUCTOR", 
                     "CUIVRE":"CONDUCTOR", 
-                    "E24":"NOCOND",
-                    "FEV1000":"NOCOND",
-                    "FERRITEB30":"NOCOND", 
                     "FERRITE_Mn_Zn":"CONDUCTOR", 
                     "FERRITE_Ni_Zn":"CONDUCTOR", 
+                    "INCONEL600":"CONDUCTOR", 
+                    "POTASSE":"CONDUCTOR",
+                    "COND_LINEAR":"CONDUCTOR",
+                    "AIR":"NOCOND", 
+                    "FERRITEB30":"NOCOND", 
+                    "E24":"NOCOND",
                     "FEV470":"NOCOND",
                     "FEV600":"NOCOND",
                     "FEV800":"NOCOND",
                     "FEV1000":"NOCOND",
                     "HA600":"NOCOND",
-                    "INCONEL600":"CONDUCTOR", 
-                    "MAT_REF_DIEL1":"NOCOND",
-                    "M6X":"NOCOND",
-                    "M6X2ISO1":"CONDUCTOR", 
                     "M600_65":"NOCOND",
-                    "E24":"NOCOND",
-                    "FEV1000":"NOCOND",
-                    "MAT_REF_ZSURF1":"ZSURFACIC",
+                    "NOCOND_LINEAR":"NOCOND",
+                    "NOCOND_NL_MAR":"NOCOND",
+                    "NOCOND_NL_MARSAT":"NOCOND",
+                    "M6X2ISO1":"EMISO", 
+                    "M6X":"EMANISO",
+                    "M6X_lineaire":"EMANISO",
+                    "M6X_homog":"EMANISO",
                     "EM_ISOTROPIC":"EMISO",
                     "EM_ANISOTROPIC":"EMANISO",
-                    "NILMAT":"NILMAT",
-                    "POTASSE":"CONDUCTOR"
+                    "ZSURFACIC":"ZSURFACIC",
+                    "ZINSULATOR":"ZINSULATOR",
+                    "NILMAT":"NILMAT"
                     }
 
 def entryPoint():
@@ -116,7 +120,7 @@ class CARMEL3DGenerator(PythonGenerator):
 
    def initDico(self) :
    # initialisations
-  
+ 
       self.texteCarmel3D=""
       self.dicoEtapeCourant=None
       self.dicoMCFACTCourant=None
@@ -128,6 +132,7 @@ class CARMEL3DGenerator(PythonGenerator):
       self.dictMaterEmIso={}
       self.dictMaterEmAnIso={}
       self.dictMaterNilmat={}
+      self.dictMaterZinsulator={}
 
 
    def generBLOC_MATERIALS(self) :
@@ -160,6 +165,9 @@ class CARMEL3DGenerator(PythonGenerator):
       # constitution du bloc NILMAT du fichier PHYS si exixte
       if self.dictMaterNilmat != {} : self.creaBLOC_NILMAT()
      
+      # constitution du bloc ZINSULATOR du fichier PHYS si exixte
+      if self.dictMaterZinsulator != {} : self.creaBLOC_ZINSULATOR()
+     
       # fin du bloc MATERIALS du fichier PHYS
       self.texteCarmel3D+="]\n"
   
@@ -167,7 +175,7 @@ class CARMEL3DGenerator(PythonGenerator):
       '''
       Ecrit le fichier de parametres (PHYS) pour le code Carmel3D
       '''
-      print "ecriture fic phys"
+      #print "ecriture fic phys"
       filePHYS = fn[:fn.rfind(".")] + '.phys'
       f = open( str(filePHYS), 'wb')
       f.write( self.texteCarmel3D)
@@ -240,6 +248,19 @@ class CARMEL3DGenerator(PythonGenerator):
               self.texteCarmel3D+=chaine
       self.texteCarmel3D+="     ]\n"
 
+   def creaBLOC_ZINSULATOR(self) :
+      # constitution du bloc ZINSULATOR du fichier PHYS
+      self.texteCarmel3D+="     [ZINSULATOR\n"
+    
+      for cle in self.dictMaterZinsulator.keys():
+          if cle not in self.dictName.keys():
+              print "Attention : groupe de maille non defini pour materiau : ",cle
+              print "fichier phys incomplet "
+              self.texteCarmel3D+=str(self.dictName["grm_def"])
+          else : 
+              self.texteCarmel3D+=str(self.dictName[cle])
+      self.texteCarmel3D+="     ]\n"
+
    def creaBLOC_NILMAT(self) :
       # constitution du bloc NILMAT du fichier PHYS
       self.texteCarmel3D+="     [NILMAT\n"
@@ -261,7 +282,7 @@ class CARMEL3DGenerator(PythonGenerator):
    #   print "MCSIMP", obj.nom, "  ", obj.valeur
       
       s=PythonGenerator.generMCSIMP(self,obj)
-      self.dicoCourant[obj.nom]=obj.valeurFormattee
+      self.dicoCourant[obj.nom]=obj.valeurFormatee
       return s
 
   
@@ -349,15 +370,16 @@ class CARMEL3DGenerator(PythonGenerator):
    def generMATERIALS(self,obj):
       # preparation du bloc MATERIALS du fichier PHYS 
           texte=""
-    #      print "gener materials obj valeur = ", obj.valeur
+         # print "gener materials obj valeur = ", obj.valeur
 	  try :
               nature=dictNatureMaterRef[obj.valeur['MAT_REF']]
-	      if nature=="CONDUCTOR" : self.generMATERIALSCONDUCTOR(obj)
+              if nature=="CONDUCTOR" : self.generMATERIALSCONDUCTOR(obj)
 	      if nature=="NOCOND" : self.generMATERIALSNOCOND(obj)
 	      if nature=="ZSURFACIC" : self.generMATERIALSZSURFACIC(obj)
 	      if nature=="EMISO" : self.generMATERIALSEMISO(obj)
 	      if nature=="EMANISO" : self.generMATERIALSEMANISO(obj)
 	      if nature=="NILMAT" : self.generMATERIALSNILMAT(obj)
+	      if nature=="ZINSULATOR" : self.generMATERIALSZINSULATOR(obj)
 	  except:
 	      pass
 
@@ -365,7 +387,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def generMATERIALSCONDUCTOR(self,obj):
       # preparation du sous bloc CONDUCTOR
        texte=""
-       print "__________cond_________________"
+      # print "__________cond_________________"
       # parcours des proprietes du sous bloc CONDUCTOR
        for keyN1 in obj.valeur :
 	   if keyN1=='MAT_REF': continue
@@ -401,15 +423,13 @@ class CARMEL3DGenerator(PythonGenerator):
    def generMATERIALSNOCOND(self,obj):
       # preparation du sous bloc NOCOND
        texte=""
-       print "______________nocond_____________"
+      # print "______________nocond_____________"
       # parcours des proprietes du sous bloc NOCOND
        for keyN1 in obj.valeur :
 	   if keyN1=='MAT_REF': continue
-        #   print "keyN1=", keyN1
-	#   print obj.valeur[keyN1]['TYPE_LAW']
+          # print "type loi = ", obj.valeur[keyN1]['TYPE_LAW']
       # debut du sous bloc de propriete du NOCOND
 	   texte+="         ["+keyN1+"\n"
-       #    print "texte = ", texte
       # loi lineaire reelle
 	   if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
 	      texte+="            LAW LINEAR\n"
@@ -426,31 +446,31 @@ class CARMEL3DGenerator(PythonGenerator):
 	         texte+= chC+"\n"
 	          
       # loi non lineaire de type spline, Marrocco ou Marrocco et Saturation
+      #  seuls les reels sont pris en compte
            for loiNL in [ 'SPLINE', 'MARROCCO', 'MARROCCO+SATURATION'] :
-	        if loiNL==obj.valeur[keyN1]['TYPE_LAW']:
+                if loiNL==obj.valeur[keyN1]['TYPE_LAW']:
 	              texte+="            LAW NONLINEAR\n"
 		      texte+="            HOMOGENOUS TRUE\n"
 		      texte+="            ISOTROPIC TRUE\n"
-		      texte+="            VALUE COMPLEX "
-                      chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
-	              texte+= chC+"\n"
+	              texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE"])+" 0\n"
 		      texte+="            [NONLINEAR \n"
 		      texte+="                ISOTROPY TRUE\n"
 		      texte+="                NATURE "+str(obj.valeur[keyN1]['TYPE_LAW'])+"\n"
 		      for keyN2 in obj.valeur[keyN1] :
-		          if keyN2 != 'LAW' and keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE_COMPLEX' :
+		          if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' :
 		               texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
 	              texte+="            ]"+"\n"
 
       # fin du sous bloc de propriete
 	   texte+="         ]"+"\n"
+       #print "texte = ", texte    
        self.dictMaterNocond[obj.get_sdname()]=[texte,]
   
  
    def generMATERIALSZSURFACIC(self,obj):
       # preparation du sous bloc ZSURFACIC
        texte=""
-       print "______________zsurf_____________"
+       #print "______________zsurf_____________"
        for keyN1 in obj.valeur :
 	   if keyN1=='MAT_REF': continue
   #         print "keyN1=", keyN1
@@ -505,7 +525,6 @@ class CARMEL3DGenerator(PythonGenerator):
    def generMATERIALSEMISO(self,obj):
       # preparation du sous bloc EMISO
        texte=""
-       print "______________emiso________"
        texte+="        CONDUCTIVITY MED "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
        texte+="        PERMEABILITY MED "+str(obj.valeur["PERMEABILITY_File"])+"\n"
 
@@ -532,3 +551,8 @@ class CARMEL3DGenerator(PythonGenerator):
       # preparation du sous bloc NILMAT
        texte=""
        self.dictMaterNilmat[obj.get_sdname()]=[texte,]
+   
+   def generMATERIALSZINSULATOR(self,obj):
+      # preparation du sous bloc ZINSULATOR
+       texte=""
+       self.dictMaterZinsulator[obj.get_sdname()]=[texte,]
