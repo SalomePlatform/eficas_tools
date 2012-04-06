@@ -528,9 +528,9 @@ class PythonGenerator:
 
          if waitTuple :
             s = str(obj.valeur) +','
-            obj.valeurFormattee=obj.valeur
+            obj.valeurFormatee=obj.valeur
          else :
-            obj.valeurFormattee=[]
+            obj.valeurFormatee=[]
             for val in obj.valeur :
                s =s +self.format_item(val,obj.etape) + ','
                obj.valeurFormattee.append(self.format_item(val,obj.etape))
@@ -539,7 +539,7 @@ class PythonGenerator:
          if obj.nbrColonnes() :
             s=self.formatColonnes(obj.nbrColonnes(),s)
       else :
-         obj.valeurFormattee=self.format_item(obj.valeur,obj.etape)
+         obj.valeurFormatee=obj.valeur
          s=self.format_item(obj.valeur,obj.etape) + ','
       return s
 
