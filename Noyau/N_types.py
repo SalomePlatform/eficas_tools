@@ -36,7 +36,8 @@ def is_complex(obj):
     return isinstance(obj, complex)
 
 def is_float_or_int(obj):
-    return is_float(obj) or is_int(obj)
+    from decimal import Decimal
+    return isinstance(obj, Decimal) or is_float(obj) or is_int(obj)
 
 def is_number(obj):
     return is_float_or_int(obj) or is_complex(obj)

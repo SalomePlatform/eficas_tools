@@ -44,3 +44,33 @@ class ENTITE:
     else:
       return None
 
+  def check_definition(self, parent):
+      """Verifie la definition d'un objet composite (commande, fact, bloc)."""
+      args = self.entites.copy()
+      mcs = set()
+      for nom, val in args.items():
+         if val.label == 'SIMP':
+            mcs.add(nom)
+            #XXX
+            #if val.max != 1 and val.type == 'TXM':
+                #print "#CMD", parent, nom
+         elif val.label == 'FACT':
+            val.check_definition(parent)
+            #PNPNPN surcharge
+            # CALC_SPEC !
+            #assert self.label != 'FACT', \
+            #   'Commande %s : Mot-clef facteur present sous un mot-clef facteur : interdit !' \
+            #   % parent
+         else:
+            continue
+         del args[nom]
+      # seuls les blocs peuvent entrer en conflit avec les mcs du plus haut niveau
+      for nom, val in args.items():
+         if val.label == 'BLOC':
+            mcbloc = val.check_definition(parent)
+            #XXX
+            #print "#BLOC", parent, re.sub('\s+', ' ', val.condition)
+            #assert mcs.isdisjoint(mcbloc), "Commande %s : Mot(s)-clef(s) vu(s) plusieurs fois : %s" \
+            #   % (parent, tuple(mcs.intersection(mcbloc)))
+      return mcs
+

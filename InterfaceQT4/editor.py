@@ -561,8 +561,7 @@ class JDCEditor(QSplitter):
          return "" 
 
       # 
-      #self.textePython =self.generator.generRUN(self.jdc,self.appli.ssCode)
-      self.textePython =self.generator.generRUN(self.jdc,"c_transverse_empty_python")
+      self.textePython =self.generator.generRUN(self.jdc,self.appli.ssCode)
       if execution=="oui" :
          self._viewTextExecute( self.textePython)    
       return self.textePython
