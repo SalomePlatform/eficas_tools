@@ -88,7 +88,6 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         self.BSalome.setIcon(icon)
         mc = self.node.item.get_definition()
         mctype = mc.type[0]
-        print mctype
         if mctype == "Fichier" or mctype == "FichierNoAbs" or \
             (hasattr(mctype, "enable_file_selection") and mctype.enable_file_selection):
            self.bParametres.close()
@@ -114,14 +113,17 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         valeur=self.node.item.get_valeur()
         valeurTexte=self.politique.GetValeurTexte(valeur)
         if valeurTexte != None :
-           if repr(valeurTexte.__class__).find("PARAMETRE") > 0:
-               str = QString(repr(valeur)) 
+           from decimal import Decimal
+           if isinstance(valeurTexte,Decimal):
+               chaine=str(valeurTexte)
+           elif repr(valeurTexte.__class__).find("PARAMETRE") > 0:
+               chaine = QString(repr(valeur)) 
            else :
                try :
-                   str=QString("").setNum(valeurTexte)
+                   chaine=QString("").setNum(valeurTexte)
                except :
-                   str=QString(valeurTexte)
-           self.lineEditVal.setText(str)
+                   chaine=QString(valeurTexte)
+           self.lineEditVal.setText(chaine)
            mc = self.node.item.get_definition()
            if hasattr(self,"BSelectInFile"): return
            if (( mc.type[0]=="Fichier") and (QFileInfo(str).suffix() in listeSuffixe )):

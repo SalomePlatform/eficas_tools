@@ -77,6 +77,9 @@ class Validation  :
 
   def GetValeurTexte(self,valeur) :
          valeurTexte=valeur
+         from decimal import Decimal
+         if  isinstance(valeur,Decimal) :
+             return valeur 
          if "R" in self.node.item.object.definition.type:
                   clefobj=self.node.item.object.GetNomConcept()
                   if self.parent.appliEficas.dict_reels.has_key(clefobj):
