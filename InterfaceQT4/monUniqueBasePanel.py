@@ -126,13 +126,13 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
            self.lineEditVal.setText(chaine)
            mc = self.node.item.get_definition()
            if hasattr(self,"BSelectInFile"): return
-           if (( mc.type[0]=="Fichier") and (QFileInfo(str).suffix() in listeSuffixe )):
+           if (( mc.type[0]=="Fichier") and (QFileInfo(chaine).suffix() in listeSuffixe )):
              self.BSelectInFile = QPushButton(self.Widget8)
              self.BSelectInFile.setMinimumSize(QSize(140,40))
              self.BSelectInFile.setObjectName("BSelectInFile")
              self.gridLayout.addWidget(self.BSelectInFile,1,1,1,1)
              self.BSelectInFile.setText("Selection")
-             self.image=str
+             self.image=chaine
              self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
 
 
