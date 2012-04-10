@@ -533,7 +533,7 @@ class PythonGenerator:
             obj.valeurFormatee=[]
             for val in obj.valeur :
                s =s +self.format_item(val,obj.etape) + ','
-               obj.valeurFormattee.append(self.format_item(val,obj.etape))
+               obj.valeurFormatee.append(self.format_item(val,obj.etape))
             if len(obj.valeur) > 1:
                s = '(' + s + '),'
          if obj.nbrColonnes() :
