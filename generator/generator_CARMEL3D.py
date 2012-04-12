@@ -60,7 +60,7 @@ dictNatureMaterRef={"ACIER_CIMBLOT":"CONDUCTOR",
                     "NOCOND_LINEAR":"NOCOND",
                     "NOCOND_NL_MAR":"NOCOND",
                     "NOCOND_NL_MARSAT":"NOCOND",
-                    "M6X2ISO1":"EMISO", 
+#                    "M6X2ISO1":"EMISO", 
                     "M6X":"EMANISO",
                     "M6X_lineaire":"EMANISO",
                     "M6X_homog":"EMANISO",
@@ -445,19 +445,18 @@ class CARMEL3DGenerator(PythonGenerator):
                  chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
 	         texte+= chC+"\n"
 	          
-      # loi non lineaire de type spline, Marrocco ou Marrocco et Saturation
+      # loi non lineaire de nature spline, Marrocco ou Marrocco et Saturation
       #  seuls les reels sont pris en compte
-           for loiNL in [ 'SPLINE', 'MARROCCO', 'MARROCCO+SATURATION'] :
-                if loiNL==obj.valeur[keyN1]['TYPE_LAW']:
+	   if obj.valeur[keyN1]['TYPE_LAW']=='NONLINEAR' :
 	              texte+="            LAW NONLINEAR\n"
 		      texte+="            HOMOGENOUS TRUE\n"
 		      texte+="            ISOTROPIC TRUE\n"
 	              texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE"])+" 0\n"
 		      texte+="            [NONLINEAR \n"
 		      texte+="                ISOTROPY TRUE\n"
-		      texte+="                NATURE "+str(obj.valeur[keyN1]['TYPE_LAW'])+"\n"
+		      texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
 		      for keyN2 in obj.valeur[keyN1] :
-		          if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' :
+		          if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' and keyN2 != 'NATURE' :
 		               texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
 	              texte+="            ]"+"\n"
 
