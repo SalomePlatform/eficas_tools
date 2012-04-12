@@ -122,6 +122,8 @@ MATERIALS = OPER (nom = "MATERIALS",
 		                 "FERRITE_Mn_Zn","FERRITE_Ni_Zn",
                                  "INCONEL600",
                                  "POTASSE",
+#  type CONDUCTOR non lineaire 
+                                 "M6X2ISO1", 
 #  type NOCOND 
                                  "AIR","FERRITEB30",
                                  "FEV470","FEV600","FEV800","FEV1000",
@@ -129,7 +131,6 @@ MATERIALS = OPER (nom = "MATERIALS",
                                  "M600_65",
 #  type EM_ANISO 
                                  "M6X","M6X_lineaire","M6X_homog", 
-#                                "M6X2ISO1", 
 #  materiaux generiques 
                                  "COND_LINEAR",
                                  "NOCOND_LINEAR",
@@ -1306,6 +1307,119 @@ MATERIALS = OPER (nom = "MATERIALS",
 
              ), # fin BLOC conductor
  
+#----------------------------------------------------------------
+# materiau de reference de type CONDUCTOR non lineaire : M6X2ISO1
+#----------------------------------------------------------------
+  M6X2ISO1_properties = BLOC(condition="MAT_REF=='M6X2ISO1'",
+
+#------------------------------------------------
+# sous bloc niveau 2 : PERMEABILITY
+#------------------------------------------------
+     PERMEABILITY = FACT ( statut="o", 
+                        ang ="Permeability properties",
+                        fr  ="proprietes du bloc PERMEABILITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="NONLINEAR",
+		                         into = ("NONLINEAR"),
+                                         ang = "non linear law",
+                                         fr  = "loi non lineaire",
+				        ),
+                      NATURE     = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="SPLINE",
+		                         into = ("SPLINE"),
+                                         ang = "nature law",
+                                         fr  = "nature de la loi",
+				        ),
+	              VALUE      = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=Decimal('1.0E0'),
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+
+                      FILENAME = SIMP (statut="o", 
+	                               typ=("Fichier",'All Files (*)',),
+		                       defaut=str(repIni)+"/M6X2ISO1",
+	                               ang="data file name",
+			               fr ="nom du fichier",
+			              ),
+		      APPLIEDTO = SIMP (statut="o",	
+		                        typ="TXM",   
+		                        into=("B(H)&H(B)","B(H)","H(B)"),
+				        defaut="B(H)&H(B)",
+				        ang="spline applied to",
+				        fr ="spline appliquee a ",
+				       ),
+
+	         ), # fin FACT PERMEABILITY
+
+#------------------------------------------------
+# sous bloc niveau 2 : CONDUCTIVITY
+#------------------------------------------------
+  CONDUCTIVITY = FACT ( statut="o", 
+                        ang ="Conductivity properties",
+                        fr  ="proprietes du bloc CONDUCTIVITY",
+                
+                 HOMOGENEOUS     = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE"),
+                                         ang = "the material is homogeneous",
+                                         fr  = "le materiau est homogene",
+				        ),
+	         ISOTROPIC       = SIMP (statut="f",
+		                         typ="TXM",
+				         defaut="TRUE",
+		                         into = ("TRUE"),
+                                         ang = "the material is isotropic",
+                                         fr  = "le materiau est isotrope",
+				        ),
+
+                      TYPE_LAW   = SIMP (statut="o",
+		                         typ="TXM",
+				         defaut="LINEAR_REAL",
+		                         into = ("LINEAR_REAL","LINEAR_COMPLEX"),
+                                         ang = "linear law",
+                                         fr  = "loi lineaire",
+				        ),
+                 val_real = BLOC(condition="TYPE_LAW=='LINEAR_REAL'",
+	              VALUE_REAL = SIMP (statut="o",
+		                         typ="R", 
+		                         defaut=Decimal('1.724E6'),
+                                         ang = "enter a real relative value",
+                                         fr = "saisir une valeur reelle relative",
+		                        ),
+		            ), # fin bloc real
+
+                val_complex = BLOC(condition="TYPE_LAW=='LINEAR_COMPLEX'",
+	              VALUE_COMPLEX = SIMP (statut="o",
+		                         typ="C", 
+		                         defaut=('RI',1,0),
+                                         ang = "enter a complex relative value",
+                                         fr = "saisir une valeur complexe relative",
+		                        ),
+		            ), # fin bloc complex
+		 
+	         ), # fin FACT CONDUCTIVITY
+ ), # fin BLOC 
+
 ###################################################################################################
 ##--------------------------------------------
 ## sous bloc niveau 1 : NOCOND

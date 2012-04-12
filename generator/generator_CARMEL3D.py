@@ -48,6 +48,7 @@ dictNatureMaterRef={"ACIER_CIMBLOT":"CONDUCTOR",
                     "INCONEL600":"CONDUCTOR", 
                     "POTASSE":"CONDUCTOR",
                     "COND_LINEAR":"CONDUCTOR",
+                    "M6X2ISO1":"CONDUCTOR", 
                     "AIR":"NOCOND", 
                     "FERRITEB30":"NOCOND", 
                     "E24":"NOCOND",
@@ -60,7 +61,6 @@ dictNatureMaterRef={"ACIER_CIMBLOT":"CONDUCTOR",
                     "NOCOND_LINEAR":"NOCOND",
                     "NOCOND_NL_MAR":"NOCOND",
                     "NOCOND_NL_MARSAT":"NOCOND",
-#                    "M6X2ISO1":"EMISO", 
                     "M6X":"EMANISO",
                     "M6X_lineaire":"EMANISO",
                     "M6X_homog":"EMANISO",
@@ -410,12 +410,23 @@ class CARMEL3DGenerator(PythonGenerator):
   #               print "nbre a formater : ",obj.valeur[keyN1]["VALUE_COMPLEX"]
                  chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
 	         texte+= chC+"\n"
+      # loi non lineaire de nature spline, Marrocco ou Marrocco et Saturation
+      #  seuls les reels sont pris en compte
+	   if obj.valeur[keyN1]['TYPE_LAW']=='NONLINEAR' :
+	              texte+="            LAW NONLINEAR\n"
+		      texte+="            HOMOGENOUS TRUE\n"
+		      texte+="            ISOTROPIC TRUE\n"
+	              texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE"])+" 0\n"
+		      texte+="            [NONLINEAR \n"
+		      texte+="                ISOTROPY TRUE\n"
+		      texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
+		      for keyN2 in obj.valeur[keyN1] :
+		          if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' and keyN2 != 'NATURE' :
+		               texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
+	              texte+="            ]"+"\n"
+
 	   texte+="         ]"+"\n"
 
- #      print "obj get sdname= ", obj.get_sdname()
-    #   if obj.get_sdname() in self.dictMaterConductor.keys() :
-     #    self.dictMaterConductor[obj.get_sdname()].append(texte) 
-      # else :
        self.dictMaterConductor[obj.get_sdname()]=[texte,]
 #       print texte
    
@@ -492,12 +503,7 @@ class CARMEL3DGenerator(PythonGenerator):
 	          
 	   texte+="         ]"+"\n"
 
-  #     print "obj get sdname= ", obj.get_sdname()
-      # if obj.get_sdname() in self.dictMaterZsurfacic.keys() :
-       #  self.dictMaterZsurfacic[obj.get_sdname()].append(texte) 
-       #else :
        self.dictMaterZsurfacic[obj.get_sdname()]=[texte,]
- #      print texte
   
    def formateCOMPLEX(self,nbC):
  # prise en compte des differentes formes de description d un nombre complexe
