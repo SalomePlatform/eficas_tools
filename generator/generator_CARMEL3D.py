@@ -184,9 +184,9 @@ class CARMEL3DGenerator(PythonGenerator):
     
    def creaBLOC_CONDUCTOR(self) :
       # constitution du bloc CONDUCTOR du fichier PHYS
-      self.texteCarmel3D+="     [CONDUCTOR\n"
     
       for cle in self.dictMaterConductor.keys():
+          self.texteCarmel3D+="     [CONDUCTOR\n"
           if cle not in self.dictName.keys():
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
@@ -196,14 +196,14 @@ class CARMEL3DGenerator(PythonGenerator):
           for chaine in self.dictMaterConductor[cle] :
               self.texteCarmel3D+=chaine
      
-      self.texteCarmel3D+="     ]\n"
+          self.texteCarmel3D+="     ]\n"
 
 
    def creaBLOC_NOCOND(self) :
       # constitution du bloc NOCOND du fichier PHYS
-      self.texteCarmel3D+="     [NOCOND\n"
     
       for cle in self.dictMaterNocond.keys():
+          self.texteCarmel3D+="     [NOCOND\n"
           if cle not in self.dictName.keys():
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
@@ -212,14 +212,14 @@ class CARMEL3DGenerator(PythonGenerator):
               self.texteCarmel3D+=str(self.dictName[cle])
           for chaine in self.dictMaterNocond[cle] :
               self.texteCarmel3D+=chaine
-      self.texteCarmel3D+="     ]\n"
+          self.texteCarmel3D+="     ]\n"
 
 
    def creaBLOC_ZSURFACIC(self) :
       # constitution du bloc ZSURFACIC du fichier PHYS
-      self.texteCarmel3D+="     [ZSURFACIC\n"
     
       for cle in self.dictMaterZsurfacic.keys():
+          self.texteCarmel3D+="     [ZSURFACIC\n"
           if cle not in self.dictName.keys():
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
@@ -228,51 +228,51 @@ class CARMEL3DGenerator(PythonGenerator):
               self.texteCarmel3D+=str(self.dictName[cle])
           for chaine in self.dictMaterZsurfacic[cle] :
               self.texteCarmel3D+=chaine
-      self.texteCarmel3D+="     ]\n"
+          self.texteCarmel3D+="     ]\n"
 
    def creaBLOC_EMISO(self) :
       # constitution du bloc EMISO du fichier PHYS
-      self.texteCarmel3D+="     [EM_ISOTROPIC_FILES\n"
     
       for cle in self.dictMaterEmIso.keys():
+          self.texteCarmel3D+="     [EM_ISOTROPIC_FILES\n"
           for chaine in self.dictMaterEmIso[cle] :
               self.texteCarmel3D+=chaine
-      self.texteCarmel3D+="     ]\n"
+          self.texteCarmel3D+="     ]\n"
 
    def creaBLOC_EMANISO(self) :
       # constitution du bloc EMANISO du fichier PHYS
-      self.texteCarmel3D+="     [EM_ANISOTROPIC_FILES\n"
     
       for cle in self.dictMaterEmAnIso.keys():
+          self.texteCarmel3D+="     [EM_ANISOTROPIC_FILES\n"
           for chaine in self.dictMaterEmAnIso[cle] :
               self.texteCarmel3D+=chaine
-      self.texteCarmel3D+="     ]\n"
+          self.texteCarmel3D+="     ]\n"
 
    def creaBLOC_ZINSULATOR(self) :
       # constitution du bloc ZINSULATOR du fichier PHYS
-      self.texteCarmel3D+="     [ZINSULATOR\n"
     
       for cle in self.dictMaterZinsulator.keys():
+          self.texteCarmel3D+="     [ZINSULATOR\n"
           if cle not in self.dictName.keys():
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
               self.texteCarmel3D+=str(self.dictName["grm_def"])
           else : 
               self.texteCarmel3D+=str(self.dictName[cle])
-      self.texteCarmel3D+="     ]\n"
+          self.texteCarmel3D+="     ]\n"
 
    def creaBLOC_NILMAT(self) :
       # constitution du bloc NILMAT du fichier PHYS
-      self.texteCarmel3D+="     [NILMAT\n"
     
       for cle in self.dictMaterNilmat.keys():
+          self.texteCarmel3D+="     [NILMAT\n"
           if cle not in self.dictName.keys():
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
               self.texteCarmel3D+=str(self.dictName["grm_def"])
           else : 
               self.texteCarmel3D+=str(self.dictName[cle])
-      self.texteCarmel3D+="     ]\n"
+          self.texteCarmel3D+="     ]\n"
 
    def generMCSIMP(self,obj) :
       """
