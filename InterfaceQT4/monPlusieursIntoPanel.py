@@ -88,7 +88,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
       SaisieValeur.RemplitPanel(self,self.listeValeursCourantes, self.alpha)
 
   def BOkPourListePressed(self):
-        if self.listeValeursCourantes == [] :
+        if self.listeValeursCourantes == [] and self.node.item.GetMinMax()[0] !=0 :
            self.editor.affiche_infos("Pas de validation d un groupe vide",Qt.red)
            return
         if hasattr(self.node.item.definition.validators,'verifie_liste'):
