@@ -1,9 +1,9 @@
-#@ MODIF N_ENTITE Noyau  DATE 30/08/2011   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_ENTITE Noyau  DATE 11/04/2012   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 # RESPONSABLE COURTOIS M.COURTOIS
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2012  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -28,28 +28,31 @@
 """
 
 import re
+import types
 import N_CR
+import N_OPS
 import N_VALIDATOR
+from strfunc import ufmt
 
 class ENTITE:
    """
       Classe de base pour tous les objets de definition : mots cles et commandes
       Cette classe ne contient que des methodes utilitaires
-      Elle ne peut etre instanciee et doit d abord etre specialisee
+      Elle ne peut être instanciee et doit d abord être specialisee
    """
    CR=N_CR.CR
    factories={'validator':N_VALIDATOR.validatorFactory}
 
    def __init__(self,validators=None):
       """
-         Initialise les deux attributs regles et entites d'une classe derivee
-          : pas de regles et pas de sous-entites.
+         Initialise les deux attributs regles et entites d'une classe dérivée
+         à : pas de règles et pas de sous-entités.
 
          L'attribut regles doit contenir la liste des regles qui s'appliquent
-         sur ses sous-entites
+         sur ses sous-entités
 
-         L'attribut entites doit contenir le dictionnaires des sous-entites
-         (cle = nom, valeur=objet)
+         L'attribut entités doit contenir le dictionnaires des sous-entités
+         (clé = nom, valeur=objet)
       """
       self.regles=()
       self.entites={}
@@ -61,7 +64,7 @@ class ENTITE:
    def affecter_parente(self):
       """
           Cette methode a pour fonction de donner un nom et un pere aux
-          sous entites qui n'ont aucun moyen pour atteindre leur parent
+          sous entités qui n'ont aucun moyen pour atteindre leur parent
           directement
           Il s'agit principalement des mots cles
       """
@@ -71,39 +74,41 @@ class ENTITE:
 
    def verif_cata(self):
       """
-          Cette methode sert a valider les attributs de l'objet de definition
+          Cette methode sert à valider les attributs de l'objet de définition
       """
-      raise "La methode verif_cata de la classe %s doit etre implementee" % self.__class__.__name__
+      raise NotImplementedError("La méthode verif_cata de la classe %s doit être implémentée"
+                                % self.__class__.__name__)
 
    def __call__(self):
       """
-          Cette methode doit retourner un objet derive de la classe OBJECT
+          Cette methode doit retourner un objet dérivé de la classe OBJECT
       """
-      raise "La methode __call__ de la classe %s doit etre implementee" % self.__class__.__name__
+      raise NotImplementedError("La méthode __call__ de la classe %s doit être implémentée"
+                                % self.__class__.__name__)
 
    def report(self):
       """
-         Cette methode construit pour tous les objets derives de ENTITE un
-         rapport de validation de la definition portee par cet objet
+         Cette méthode construit pour tous les objets dérivés de ENTITE un
+         rapport de validation de la définition portée par cet objet
       """
       self.cr = self.CR()
       self.verif_cata()
       for k,v in self.entites.items() :
          try :
             cr = v.report()
-            cr.debut = "Debut "+v.__class__.__name__+ ' : ' + k
+            cr.debut = "Début "+v.__class__.__name__+ ' : ' + k
             cr.fin = "Fin "+v.__class__.__name__+ ' : ' + k
             self.cr.add(cr)
          except:
-            self.cr.fatal("Impossible d'obtenir le rapport de %s %s" %(k,`v`))
+            self.cr.fatal(_(u"Impossible d'obtenir le rapport de %s %s"), k,`v`)
             print "Impossible d'obtenir le rapport de %s %s" %(k,`v`)
-            print "pere =",self
+            print "père =",self
       return self.cr
 
    def verif_cata_regles(self):
       """
-         Cette methode verifie pour tous les objets derives de ENTITE que
-         les objets REGLES associes ne portent que sur des sous-entites
+         Cette méthode vérifie pour tous les objets dérivés de ENTITE que
+         les objets REGLES associés ne portent que sur des sous-entités
          existantes
       """
       for regle in self.regles :
@@ -113,7 +118,7 @@ class ENTITE:
             l.append(mc)
         if l != [] :
           txt = str(regle)
-          self.cr.fatal("Argument(s) non permis : %s pour la regle : %s" %(`l`,txt))
+          self.cr.fatal(_(u"Argument(s) non permis : %r pour la règle : %s"), l, txt)
 
    def check_definition(self, parent):
       """Verifie la definition d'un objet composite (commande, fact, bloc)."""
@@ -127,10 +132,10 @@ class ENTITE:
                 #print "#CMD", parent, nom
          elif val.label == 'FACT':
             val.check_definition(parent)
-            #PNPNPN surcharge
             # CALC_SPEC !
             #assert self.label != 'FACT', \
-            #   'Commande %s : Mot-clef facteur present sous un mot-clef facteur : interdit !' % parent
+               #'Commande %s : Mot-clef facteur present sous un mot-clef facteur : interdit !' \
+               #% parent
          else:
             continue
          del args[nom]
@@ -140,7 +145,98 @@ class ENTITE:
             mcbloc = val.check_definition(parent)
             #XXX
             #print "#BLOC", parent, re.sub('\s+', ' ', val.condition)
-            #assert mcs.isdisjoint(mcbloc), "Commande %s : Mot(s)-clef(s) vu(s) plusieurs fois : %s" \
-            #   % (parent, tuple(mcs.intersection(mcbloc)))
+            assert mcs.isdisjoint(mcbloc), "Commande %s : Mot(s)-clef(s) vu(s) plusieurs fois : %s" \
+               % (parent, tuple(mcs.intersection(mcbloc)))
       return mcs
 
+   def check_op(self, valmin=-9999, valmax=9999):
+      """Vérifie l'attribut op."""
+      if self.op is not None and \
+         (type(self.op) is not int or self.op < valmin or self.op > valmax):
+         self.cr.fatal(_(u"L'attribut 'op' doit être un entier "
+                         u"compris entre %d et %d : %r"), valmin, valmax, self.op)
+
+   def check_proc(self):
+      """Vérifie l'attribut proc."""
+      if self.proc is not None and not isinstance(self.proc, N_OPS.OPS):
+         self.cr.fatal(_(u"L'attribut op doit être une instance d'OPS : %r"), self.proc)
+
+   def check_regles(self):
+      """Vérifie l'attribut regles."""
+      if type(self.regles) is not tuple:
+         self.cr.fatal(_(u"L'attribut 'regles' doit être un tuple : %r"),
+            self.regles)
+
+   def check_fr(self):
+      """Vérifie l'attribut fr."""
+      if type(self.fr) not in (str, unicode):
+         self.cr.fatal(_(u"L'attribut 'fr' doit être une chaine de caractères : %r"),
+            self.fr)
+
+   def check_docu(self):
+      """Vérifie l'attribut docu."""
+      if type(self.docu) not in (str, unicode):
+         self.cr.fatal(_(u"L'attribut 'docu' doit être une chaine de caractères : %r"),
+            self.docu)
+
+   def check_nom(self):
+      """Vérifie l'attribut proc."""
+      if type(self.nom) != types.StringType :
+         self.cr.fatal(_(u"L'attribut 'nom' doit être une chaine de caractères : %r"),
+            self.nom)
+
+   def check_reentrant(self):
+      """Vérifie l'attribut reentrant."""
+      if self.reentrant not in ('o', 'n', 'f'):
+         self.cr.fatal(_(u"L'attribut 'reentrant' doit valoir 'o','n' ou 'f' : %r"),
+            self.reentrant)
+
+   def check_statut(self, into=('o', 'f', 'c', 'd')):
+      """Vérifie l'attribut statut."""
+      if self.statut not in into:
+         self.cr.fatal(_(u"L'attribut 'statut' doit être parmi %s : %r"),
+            into, self.statut)
+
+   def check_condition(self):
+      """Vérifie l'attribut condition."""
+      if self.condition != None :
+         if type(self.condition) != types.StringType :
+            self.cr.fatal(_(u"L'attribut 'condition' doit être une chaine de caractères : %r"),
+                self.condition)
+      else:
+         self.cr.fatal(_(u"La condition ne doit pas valoir None !"))
+
+   def check_min_max(self):
+      """Vérifie les attributs min/max."""
+      if type(self.min) != types.IntType :
+         if self.min != '**':
+            self.cr.fatal(_(u"L'attribut 'min' doit être un entier : %r"), self.min)
+      if type(self.max) != types.IntType :
+         if self.max != '**':
+            self.cr.fatal(_(u"L'attribut 'max' doit être un entier : %r"), self.max)
+      if self.min > self.max :
+         self.cr.fatal(_(u"Nombres d'occurrence min et max invalides : %r %r"),
+            self.min, self.max)
+
+   def check_validators(self):
+      """Vérifie les validateurs supplémentaires"""
+      if self.validators and not self.validators.verif_cata():
+         self.cr.fatal(_(u"Un des validateurs est incorrect. Raison : %s"),
+            self.validators.cata_info)
+
+   def check_homo(self):
+      """Vérifie l'attribut homo."""
+      if self.homo != 0 and self.homo != 1 :
+          self.cr.fatal(_(u"L'attribut 'homo' doit valoir 0 ou 1 : %r"), self.homo)
+
+   def check_into(self):
+      """Vérifie l'attribut into."""
+      if self.into != None :
+         if type(self.into) != types.TupleType :
+            self.cr.fatal(_(u"L'attribut 'into' doit être un tuple : %r"), self.into)
+
+   def check_position(self):
+      """Vérifie l'attribut position."""
+      if self.position not in ('local', 'global', 'global_jdc'):
+         self.cr.fatal(_(u"L'attribut 'position' doit valoir 'local', 'global' "
+                             u"ou 'global_jdc' : %r"), self.position)
