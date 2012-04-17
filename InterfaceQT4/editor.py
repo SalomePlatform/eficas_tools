@@ -113,7 +113,7 @@ class JDCEditor(QSplitter):
         self.modified   = False
         self.isReadOnly = False
         self.tree = None
-        self.node_selected = None
+        self.node_selected = []
         self.message=''
         
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
@@ -382,29 +382,26 @@ class JDCEditor(QSplitter):
       """
 	appele par Cut et Copy pour positionner self.node_selected
       """
-      self.node_selected=None
+      self.node_selected=[]
       if len(self.tree.selectedItems()) == 0 : return
-      if len(self.tree.selectedItems()) != 1 :
-          QMessageBox.information( self, 
-                      "Copie impossible",
-                      "Cette version d'EFICAS permet uniquement la copie d un seul objet")
-          return
-      self.node_selected=self.tree.selectedItems()[0]
-      if copie == 0 : return
+      self.node_selected=self.tree.selectedItems()
     
     
     #---------------------#
     def handleSupprimer(self):
     #---------------------#
-      #print "handleSupprimer"
       self.chercheNoeudSelectionne()
-      self.node_selected.delete()
+      if len(self.node_selected) == 0 : return
+      self.QWParent.noeud_a_editer = []
+      if len(self.node_selected) == 1 : self.node_selected[0].delete()
+      else : self.node_selected[0].deleteMultiple(self.node_selected)
+     
     
     #---------------------#
     def handleEditCut(self):
     #---------------------#
       """
-      Stocke dans Eficas.noeud_a_editer le noeud Ã  couper
+      Stocke dans Eficas.noeud_a_editer le noeud a couper
       """
       #print "handleEditCut"
       self.chercheNoeudSelectionne()
@@ -418,7 +415,9 @@ class JDCEditor(QSplitter):
       Stocke dans Eficas.noeud_a_editer le noeud a copier
       """
       self.chercheNoeudSelectionne()
-      self.node_selected.update_node_label_in_blue()
+      if len(self.node_selected) == 0 : return
+      if len(self.node_selected) == 1 : self.node_selected[0].update_node_label_in_blue()
+      else :  self.node_selected[0].update_plusieurs_node_label_in_blue(self.node_selected)
       self.QWParent.edit="copier"
       self.QWParent.noeud_a_editer = self.node_selected
     
@@ -429,53 +428,126 @@ class JDCEditor(QSplitter):
       Lance la copie de l'objet place dans self.QWParent.noeud_a_editer
       Ne permet que la copie d'objets de type Commande ou MCF
       """
-      #print "handleEditPaste"
       self.chercheNoeudSelectionne()
-      try :
-          index_noeud_a_couper=self.QWParent.noeud_a_editer.treeParent.children.index(self.QWParent.noeud_a_editer)
-      except :
+      if (not(hasattr(self.QWParent,'noeud_a_editer'))) or len(self.QWParent.noeud_a_editer)==0:
           QMessageBox.information( self, 
                       "Copie impossible",
-                      "Aucun Objet n a ete copie ou coupe ")
+                      "Veuillez selectionner un objet à copier")
           return
-      child=0
-      try:
-         child=self.QWParent.noeud_a_editer.doPaste(self.node_selected)
-      except:
-         traceback.print_exc()
-         QMessageBox.information( self, 
-                     "Copie refusee",         
-                     "Copie refusee pour ce type d objet a cet endroit")
-         self.message = ''
-         self.affiche_infos("Copie refusÃ©e")
+      if len(self.node_selected) != 1 : 
+          QMessageBox.information( self, 
+                      "Copie impossible",
+                      "Veuillez selectionner un seul objet : la copie se fera après le noeud selectionné")
+          return
+
+      if len(self.QWParent.noeud_a_editer)!=1:
+         self.handleEditPasteMultiple()
          return
-     
-      if child == 0 or child == None:
-          QMessageBox.critical( self, "Copie refusee",'Copie refusee pour ce type d objet')
-          self.message = ''
-          self.affiche_infos("Copie refusÃ©e",Qt.red)
-          return
+
+      noeudOuColler=self.node_selected[0]
+      indexNoeudOuColler=noeudOuColler.treeParent.children.index(noeudOuColler)
+
+      try :
+       noeudACopier=self.QWParent.noeud_a_editer[0]
+       indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
+      except :
+       QMessageBox.information( self, "Copie impossible", "Aucun Objet n a ete copie ou coupe ")
+       return
+
+      try:
+         child=noeudACopier.doPaste(noeudOuColler)
+      except  :
+         traceback.print_exc()
+         QMessageBox.critical( self, "Copie refusee",'Copie refusee pour ce type d objet')
+         self.message = ''
+         self.affiche_infos("Copie refusee",Qt.red)
+         return
+    
+      if child==None:
+         QMessageBox.critical( self, "Copie refusee",'Eficas n a pas réussi à copier l objet')
+         self.message = ''
+         self.affiche_infos("Copie refusee",Qt.red)
+         return
     
       # il faut declarer le JDCDisplay_courant modifie
       self.init_modif()
       # suppression eventuelle du noeud selectionne
       # si possible on renomme l objet comme le noeud couper
 
-      if self.QWParent.edit == "couper":
-         index_ajoute=child.treeParent.children.index(child)
-         if index_ajoute <= index_noeud_a_couper :
-            index_noeud_a_couper=index_noeud_a_couper + 1
-         item=self.QWParent.noeud_a_editer.item
-         noeud_a_supprimer=self.QWParent.noeud_a_editer.treeParent.children[index_noeud_a_couper]
-         noeud_a_supprimer.delete()
+      if (noeudACopier.treeParent == child.treeParent ):
+           indexAjoute=child.treeParent.children.index(child)
+           if indexAjoute <= indexNoeudACopier :
+                indexNoeudACopier=indexNoeudACopier +1
+           self.QWParent.noeud_a_editer=(noeudACopier.treeParent.children[indexNoeudACopier],)
+      if (self.QWParent.edit == "couper"):
+         noeudASupprimer=noeudACopier.treeParent.children[indexNoeudACopier]
+         item=noeudASupprimer.item
+         noeudASupprimer.delete()
          child.item.update(item)
-         #test,mess = child.item.nomme_sd(nom)
-         child.select()
+         self.QWParent.noeud_a_editer=[]
 
       # on rend la copie a nouveau possible en liberant le flag edit
       self.QWParent.edit="copier"
-      self.QWParent.noeud_a_editer=child
-          
+      child.select()
+
+    #----------------------------------#
+    def handleEditPasteMultiple(self):
+    #----------------------------------#
+    
+    # On ne garde que les niveaux "Etape"
+    # On insere dans l'ordre du JDC
+     listeNoeudsACouper=[]
+     listeIndex=[]
+     from InterfaceQT4 import compojdc
+     noeudOuColler=self.node_selected[0]
+     if not (isinstance(noeudOuColler.treeParent, compojdc.Node)):
+        QMessageBox.information( self, 
+                  "Copie impossible a cet endroit",
+                  "Veuillez selectionner une commande, un parametre, un commentaire ou une macro")
+        return
+     indexNoeudOuColler=noeudOuColler.treeParent.children.index(noeudOuColler)
+
+     for noeud in self.QWParent.noeud_a_editer :
+        if not (isinstance(noeud.treeParent, compojdc.Node)): continue
+        indexInTree=noeud.treeParent.children.index(noeud)
+        indice = 0
+        for index in listeIndex:
+            if index < indexInTree : indice = indice +1 
+        listeIndex.insert(indice, indexInTree)
+        listeNoeudsACouper.insert(indice, noeud)
+
+     noeudJdc=noeudOuColler.treeParent
+     dejaCrees=0
+     # on les cree à l'envers parcequ'on ajoute à NoeudOuColler
+     listeIndex.reverse()
+     for index in listeIndex:
+         indexTravail=index
+         if indexNoeudOuColler < index:
+            indexTravail=indexTravail+dejaCrees
+         noeudOuColler=noeudJdc.children[indexNoeudOuColler]
+         noeud=noeudJdc.children[indexTravail]
+         child=noeud.doPaste(noeudOuColler)
+         dejaCrees=dejaCrees+1
+      
+     self.QWParent.noeud_a_editer = []
+     for i in range(len(listeIndex)):
+        noeud=noeudJdc.children[indexNoeudOuColler+1+i]
+        self.QWParent.noeud_a_editer.append(noeud)
+
+     listeASupprimer=[]
+     if self.QWParent.edit !="couper" : return
+     for index in listeIndex:
+         indexTravail=index
+         if indexNoeudOuColler < index:
+            indexTravail=indexTravail+(len(listeIndex))
+         noeud=noeudJdc.children[indexTravail]
+         listeASupprimer.append(noeud)
+     listeASupprimer[0].deleteMultiple(listeASupprimer)
+     self.QWParent.noeud_a_editer = []
+     
+            
+            
+
     #---------------------#
     def getFileName(self):
     #---------------------#

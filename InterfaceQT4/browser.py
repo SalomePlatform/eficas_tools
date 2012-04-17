@@ -29,13 +29,14 @@ from PyQt4.QtCore import *
 
 class JDCTree( QTreeWidget ):
     def __init__( self, jdc_item, QWParent):        
-        QListView.__init__( self, QWParent )
+        QTreeWidget.__init__( self, QWParent )
         
         self.item          = jdc_item
         self.tree          = self        
         self.editor	   = QWParent
         self.appliEficas   = self.editor.appliEficas
         
+        self.setSelectionMode(3)
         self.setColumnCount(2)
         mesLabels=QStringList()
         mesLabels << self.trUtf8('Commande                   ') << self.trUtf8('Concept/Valeur           ')
@@ -79,6 +80,7 @@ class JDCTree( QTreeWidget ):
            item.menu.exec_(coord)            
             
     def handleOnItem(self,item,int):
+        if (len(self.selectedIndexes())!=2): return
         self.itemCourrant=item
         try :
            fr = item.item.get_fr()
@@ -273,8 +275,12 @@ class JDCNode(QTreeWidgetItem):
         obj=self.item.additem(name,index) #CS_pbruno emet le signal 'add'
         if obj is None:obj=0
         if obj == 0:return 0
-        child=self.children[index]
-        child.affichePanneau() 
+        # Souci pour gerer les copies des AFFE d'une commande à l autre
+        try :
+          child=self.children[index]
+          child.affichePanneau() 
+        except:
+          pass
         return child
 
     def delete(self):
@@ -290,19 +296,48 @@ class JDCNode(QTreeWidgetItem):
            jdc=self.item.jdc
 
         ret=self.treeParent.item.suppitem(self.item)
-        if ret == 0:return
-
         self.treeParent.build_children()
-        brothers=self.treeParent.children
-        if brothers:
-           toselect=brothers[index]
-        else:
-           toselect=self.treeParent
+        if self.treeParent.children : toselect=self.treeParent.children[index]
+        else: toselect=self.treeParent
         if recalcule :
            jdc.recalcule_etat_correlation()
         toselect.select()
         toselect.affichePanneau()
 
+    def deleteMultiple(self,liste=()):
+        """ 
+            Methode externe pour la destruction d une liste de noeud
+        """
+        from InterfaceQT4 import compojdc 
+        self.editor.init_modif()
+        index=9999
+        recalcule=0
+        jdc=self.treeParent
+        parentPosition=jdc
+        while not(isinstance(jdc,compojdc.Node)):
+              jdc=jdc.treeParent
+        for noeud in liste :
+            if not( isinstance(noeud.treeParent, compojdc.Node)): continue
+            if noeud.item.nom == "VARIABLE" : recalcule=1
+            if noeud.treeParent.children.index(noeud) < index : index=noeud.treeParent.children.index(noeud)
+        if index < 0 : index =0
+
+        # Cas ou on détruit dans une ETape
+        if index == 9999 : 
+              parentPosition=self.treeParent
+              while not(isinstance(parentPosition, compojdc.Node)):
+                 index=parentPosition.treeParent.children.index(parentPosition)
+                 parentPosition=parentPosition.treeParent
+
+        for noeud in liste:
+            noeud.treeParent.item.suppitem(noeud.item)
+
+        jdc.build_children()
+        if recalcule : jdc.recalcule_etat_correlation()
+        try    : toselect=parentPosition.children[index]
+        except : toselect=jdc
+        toselect.select()
+        toselect.affichePanneau()
 #        
 #    #------------------------------------------------------------------
     def onValid(self):        
@@ -331,6 +366,9 @@ class JDCNode(QTreeWidgetItem):
         #print 'NODE update_node_valid', self.item.GetLabelText()
         RepIcon=QString(self.appliEficas.RepIcon)
         monIcone = QIcon(RepIcon+"/" +self.item.GetIconName() + ".png")
+        #PNPNPNPN tototototo
+        #if  self.item.GetIconName() == "ast-yel-los"
+        
         self.setIcon(0,monIcone)
 
     def update_node_label(self):
@@ -347,6 +385,18 @@ class JDCNode(QTreeWidgetItem):
         labeltext,fonte,couleur = self.item.GetLabelText()
         self.setText(0, labeltext)        
         self.appliEficas.noeudColore=self
+
+    def update_plusieurs_node_label_in_blue(self,liste):
+        if hasattr(self.appliEficas,'listeNoeudsColores'):
+           for noeud in self.appliEficas.listeNoeudsColores:
+               noeud.setTextColor( 0,Qt.black)
+               noeud.update_node_label()
+        self.appliEficas.listeNoeudsColores=[]
+        for noeud in liste :
+            noeud.setTextColor( 0,Qt.blue )
+            labeltext,fonte,couleur = noeud.item.GetLabelText()
+            noeud.setText(0, labeltext)        
+            self.appliEficas.listeNoeudsColores.append(noeud)
 
     def update_node_texte(self):
         """ Met a jour les noms des SD et valeurs des mots-cles """
@@ -404,7 +454,7 @@ class JDCNode(QTreeWidgetItem):
           Réalise la copie de l'objet passé en argument qui est nécessairement
           une commande
         """
-        #print 'je passe dans doPasteCommande'
+        child=None
         try :
           child = self.append_brother(objet_a_copier)
         except :

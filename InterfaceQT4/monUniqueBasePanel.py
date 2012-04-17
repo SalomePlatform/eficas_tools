@@ -162,13 +162,18 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
   def BFichierVisu(self):
        fichier=self.lineEditVal.text()
        from qtCommun import ViewText
-       fp=open(fichier)
-       txt=fp.read()
-       nomFichier=QFileInfo(fichier).baseName()
-       maVue=ViewText(self,entete=nomFichier)
-       maVue.setText(txt)
-       maVue.show()
-       fp.close()
+       try :
+         fp=open(fichier)
+         txt=fp.read()
+         nomFichier=QFileInfo(fichier).baseName()
+         maVue=ViewText(self,entete=nomFichier)
+         maVue.setText(txt)
+         maVue.show()
+         fp.close()
+       except:
+        QMessageBox.warning( None,
+            self.trUtf8("VIsualisation Fichier "),
+           self.trUtf8("Impossibilite d'afficher le Fichier"),)
 
   def BFichierPressed(self):
       mctype = self.node.item.get_definition().type

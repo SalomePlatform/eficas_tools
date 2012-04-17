@@ -218,7 +218,9 @@ class JDC(I_OBJECT.OBJECT):
         # on est donc necessairement en mode editeur ...
         objet = name
         # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
-        objet.reparent(self)
+        from Extensions import commentaire
+        if not( isinstance (objet,commentaire.COMMENTAIRE)):
+           objet.reparent(self)
         self.set_current_step()
         if isinstance(objet,ETAPE):
           if objet.nom_niveau_definition == 'JDC':

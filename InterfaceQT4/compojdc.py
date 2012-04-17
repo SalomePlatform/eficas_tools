@@ -49,16 +49,16 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
       return cmd
 
   def suppitem(self,item) :
-    # item             = item de l'ETAPE à supprimer du JDC
+    # item             = item de l'ETAPE a supprimer du JDC
     # item.getObject() = ETAPE ou COMMENTAIRE
     # self.object      = JDC
 
     itemobject=item.getObject()
     if self.object.suppentite(itemobject):
        if itemobject.nature == "COMMENTAIRE" :
-          message = "Commentaire supprimé"
+          message = "Commentaire supprim�"
        else :
-          message = "Commande " + itemobject.nom + " supprimée"
+          message = "Commande " + itemobject.nom + " supprimee"
        self.appli.affiche_infos(message)
        return 1
     else:

@@ -60,6 +60,10 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       # il faut l'enregistrer dans la liste des étapes
       self.parent.register(self)
 
+  def copy(self):
+    c=COMMENTAIRE(valeur=self.valeur,parent=self.jdc)
+    return c
+
   def isvalid(self):
     """
     Retourne 1 si self est valide, 0 sinon
