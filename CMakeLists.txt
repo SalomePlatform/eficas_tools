@@ -82,6 +82,7 @@ option ( WITH_SALOME_MECA  "Install OT, Aster and SEP files" OFF )
 option ( WITH_OPENTURNS    "Install Open TURNS files"  OFF )
 option ( WITH_ASTER        "Install Aster files"       OFF )
 option ( WITH_MAP          "Install MAP files"         OFF )
+option ( WITH_CARMEL       "Install CARMEL files"      OFF )
 option ( WITH_SEP          "Install SEP files"         OFF )
 option ( IN_SALOME_CONTEXT "Configure Eficas for use in Salome" OFF )
 
@@ -89,8 +90,7 @@ set ( _OPTIONLIST
   WITH_OPENTURNS 
   WITH_ASTER
   WITH_MAP
-  WITH_SEP
-  WITH_TK
+  WITH_CARMEL
   WITH_SALOME_MECA
   )
 
@@ -181,6 +181,11 @@ endif (WITH_TK)
 if (WITH_MAP)
   add_subdirectory ( MAP )
 endif (WITH_MAP)
+
+# Installation des fichiers : CARMEL
+if (WITH_CARMEL)
+  add_subdirectory ( Carmel3D )
+endif (WITH_CARMEL)
 
 # Installation des fichiers : Sep
 if (WITH_SEP)
