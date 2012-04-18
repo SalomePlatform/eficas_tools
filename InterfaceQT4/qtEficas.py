@@ -22,7 +22,7 @@ class Appli(Ui_Eficas,QMainWindow):
         Ui_Eficas.__init__(self)
         self.setupUi(self)
 
-        self.VERSION_EFICAS="Eficas QT4 V6.4"
+        self.VERSION_EFICAS="Eficas QT4 V6.5"
         self.salome=salome
         self.listeAEnlever=[]
         self.ihm="QT"
@@ -161,23 +161,23 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionEnregistrer_Python = QAction(self)
         self.actionEnregistrer_Python.setObjectName("actionEnregistrer_Python")
         self.menuFichier.addAction(self.actionEnregistrer_Python)
-        self.actionEnregistrer_Python.setText(QApplication.translate("Eficas", "Sauve Python", None,QApplication.UnicodeUTF8))
+        self.actionEnregistrer_Python.setText(QApplication.translate("Eficas", "Sauve Script Run", None,QApplication.UnicodeUTF8))
         self.connect(self.actionEnregistrer_Python,SIGNAL("activated()"),self.saveRun)
 
-        self.actionEnregistrerYACS = QAction(self)
-        self.actionEnregistrerYACS.setObjectName("actionEnregistrerYACS")
-        self.menuFichier.addAction(self.actionEnregistrerYACS)
-        self.actionEnregistrerYACS.setText(QApplication.translate("Eficas", "Sauve Schema YACS", None,QApplication.UnicodeUTF8))
-        self.connect(self.actionEnregistrerYACS,SIGNAL("activated()"),self.saveYACS)
+        #self.actionEnregistrerYACS = QAction(self)
+        #self.actionEnregistrerYACS.setObjectName("actionEnregistrerYACS")
+        #self.menuFichier.addAction(self.actionEnregistrerYACS)
+        #self.actionEnregistrerYACS.setText(QApplication.translate("Eficas", "Sauve Schema YACS", None,QApplication.UnicodeUTF8))
+        #self.connect(self.actionEnregistrerYACS,SIGNAL("activated()"),self.saveYACS)
 
-        self.actionExecutionYACS = QAction(self)
-        icon7 = QIcon(self.RepIcon+"/application.gif")
-        self.actionExecutionYACS.setIcon(icon7)
-        self.actionExecutionYACS.setObjectName("actionExecutionYACS")
-        self.menuExecution.addAction(self.actionExecutionYACS)
-        self.toolBar.addAction(self.actionExecutionYACS)
-        self.actionExecutionYACS.setText(QApplication.translate("Eficas", "Execution YACS", None, QApplication.UnicodeUTF8))
-        self.connect(self.actionExecutionYACS,SIGNAL("activated()"),self.runYACS)
+        #self.actionExecutionYACS = QAction(self)
+        #icon7 = QIcon(self.RepIcon+"/application.gif")
+        #self.actionExecutionYACS.setIcon(icon7)
+        #self.actionExecutionYACS.setObjectName("actionExecutionYACS")
+        #self.menuExecution.addAction(self.actionExecutionYACS)
+        #self.toolBar.addAction(self.actionExecutionYACS)
+        #self.actionExecutionYACS.setText(QApplication.translate("Eficas", "Execution YACS", None, QApplication.UnicodeUTF8))
+        #self.connect(self.actionExecutionYACS,SIGNAL("activated()"),self.runYACS)
 
     def OPENTURNS_STUDY(self):
         self.menuOptions.setDisabled(True)
