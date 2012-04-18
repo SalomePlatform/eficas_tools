@@ -20,27 +20,13 @@
 # ======================================================================
 
 
-install ( FILES qtEficas_Carmel3D.py
-                prefs_CARMEL3D.py
-		prefs.py
-		configuration_CARMEL3D.py
-		#catalogue carmel + fichiers de données Carmel
-		Carmel3D_Cata_V0.py
-                E24
-                FEV470
-                FEV600
-                FEV800
-                FEV1000
-                HA600
-                M600_65
-                M6X2ISO1
-                M6X_epsilon.mater
-                M6X_mu.mater
-                M6X_homog_mu.mater
-                M6X_homog_sigma.mater
-                M6X_lineaire_mu.mater
-                M6X_lineaire_sigma.mater
-	  DESTINATION ${CMAKE_INSTALL_PREFIX}/Carmel3D
+install ( FILES 
+            qtEficas_Carmel3D.py prefs_CARMEL3D.py prefs.py configuration_CARMEL3D.py
+	    Carmel3D_Cata_V0.py
+            E24 FEV470 FEV600 FEV800 FEV1000 HA600 M600_65 M6X2ISO1
+            M6X_epsilon.mater M6X_mu.mater M6X_homog_mu.mater
+            M6X_homog_sigma.mater M6X_lineaire_mu.mater M6X_lineaire_sigma.mater
+	   DESTINATION ${CMAKE_INSTALL_PREFIX}/Carmel3D
         )
 
 

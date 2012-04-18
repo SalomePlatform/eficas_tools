@@ -60,26 +60,22 @@ class MapGenerator(PythonGenerator):
 
    def genereExeMap(self) :
       '''
-      Prépare le contenu du fichier de paramètres pytho
-      peut ensuite être obtenu au moyen de la fonction getTubePy().
+      Prepare le contenu du fichier de parametres python
+      peut ensuite etre obtenu au moyen de la fonction getTubePy().
       '''
       nomSpec="spec_"+self.schema
-      
       self.texteEXE="from map.spec import %s;\n"%nomSpec
       self.texteEXE+="node=%s.new();\n"%nomSpec
-      #self.texteEXE+="node.setParameters(%s);\n"%self.dictParam
       self.texteEXE+="node.getInputData();\n"
       self.texteEXE+="node.setInputData(%s);\n"%self.dictValeur
       self.texteEXE+="node.execute();\n"
       self.texteEXE+="res=node.getOutputData();\n"
-      print self.texteEXE
       
 
    def initDico(self) :
       if not hasattr(self,'schema') : self.schema=""
       self.dictParam={}
       self.dictValeur={}
-
   
    def writeDefault(self, fn):
       fileEXE = fn[:fn.rfind(".")] + '.py'
@@ -104,7 +100,7 @@ class MapGenerator(PythonGenerator):
    def generRUN(self,obj,schema):
        if not(obj.isvalid()) :
           print "TODO TODO TODO"
+       self.texteEXE=""
        self.schema=schema
        textComm=self.gener(obj)
-       print self.texteEXE
        return self.texteEXE
