@@ -26,46 +26,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
-
-labels = {
-"s_scc_st_1"    : "Analyse morphologique et mecanique d'une couche d'oxydes",
-"s_scc_st_2"    : "Analyse statistique de donnees locales et experimentales \nou numeriques",
-"s_scc_st_3"    : "taux de couverture des joints de grains par des precipites",
-"s_scc_3d"      : "Analyse 3D",
-"maquettemap"   : "Analyse 3D",
-"s_oxides_st_1" : "Determination de l'allure de l'interface d'un oxyde donne pour un niveau a determiner d'irradiation" ,
-"s_oxides_st_2" : "Estimation du champ mecanique dans une couche de zircone" ,
-"s_oxides_mt_1" : "Estimation du champ mecanique dans une couche de zircone presentant des defauts et de l'energie elastique relaxee",
-"s_polymers_st_1"   : "Estimation numerique 3D de la diffusion effective des gaz dans les polymeres charges",
-"s_Perfect"     : "Essai Perfect",
-"Creation"    : "Essai PN",
-"s_DIC"   : "Essai Felix",
-"maquettemap" : "Essai",
-         }
-
-dico={"scc" : {"analyse morphologique" : "s_scc_st_1",
-               "analyse statistique"   : "s_scc_st_2",
-               "taux de couverture"    : "s_scc_st_3",
-               "analyse 3d"            : "s_scc_3d",
-               "maquette"              : "maquettemap"},
-      "Creation de catalogue" : {"Essai pour Perfect":"s_Perfect",
-                                 "Essai pour composant":"Creation"},
-      "image" : {"" : "c_image_2d_align",
-                 "" : "c_image_2d_", }
-}
     
 # Import des panels
-
-class MonRadioBouton(QRadioButton) :
-
-  def setModule(self,module,fenetreMere):
-      self.module=module
-      self.fenetreMere=fenetreMere
-
-  def enterEvent(self,e):
-      schema=str(self.text())
-      nomCata=dico[self.module][schema]
-      self.fenetreMere.labelScheme.setText(labels[nomCata])
 
 class MonChoixMap(Ui_ChoixMap,QtGui.QDialog):
   """
@@ -76,15 +38,15 @@ class MonChoixMap(Ui_ChoixMap,QtGui.QDialog):
       self.setModal(True)
       self.setupUi(self)
       self.parentAppli=parentAppli
+      self.code='MAP'
+      self.ChercheCatalogues()
       self.ajouteCeQuilFaut()
  
 
   def ajouteCeQuilFaut(self) :
         self.groupModules=QButtonGroup(self.groupBoxModule)
-        self.vLayoutScheme=QVBoxLayout(self.groupBoxScheme)
         self.groupModules.addButton(self.RBM1)
         self.groupModules.addButton(self.RBM2)
-        self.groupModules.addButton(self.RBM3)
         self.groupModules.addButton(self.RBM4)
         self.groupModules.addButton(self.RBM5)
         self.groupModules.addButton(self.RBM6)
@@ -100,20 +62,36 @@ class MonChoixMap(Ui_ChoixMap,QtGui.QDialog):
       
   def modifieModule(self):
       self.module=str(self.groupModules.checkedButton().text())
-      dicoModules=dico[self.module]
+      self.dicoScheme={}
       for bouton in self.groupScheme.buttons():
           self.groupScheme.removeButton(bouton)
           bouton.close()
-      for label in dicoModules.keys():
-          bouton=MonRadioBouton(QString(label),self.groupBoxScheme)
-          bouton.setModule(self.module,self)
-          self.vLayoutScheme.addWidget(bouton)
+      for cata in self.catalogues :
+          if len(cata)== 4 : code,label,fichierCata,tagCata=cata
+          if len(cata)== 5 : code,label,fichierCata,tagCata,defaut=cata
+          if self.module not in tagCata : continue
+          bouton=QtGui.QRadioButton(self)
           self.groupScheme.addButton(bouton)
+          bouton.setText(label)
+          self.verticalLayout_2.addWidget(bouton)
+          bouton.show()
+          self.dicoScheme[label]=tagCata
 
-      
   def choisitSchema(self):
-      schema=str(self.groupScheme.checkedButton().text())
-      nomCata= dico[self.module][schema]
-      self.parentAppli.ssCode=nomCata
+      label=str(self.groupScheme.checkedButton().text())
+      nomSscode=self.dicoScheme[label]
+      self.parentAppli.ssCode=nomSscode
       self.close();
+
+  def ChercheCatalogues(self):
+      name='prefs_'+self.code
+      prefsCode=__import__(name)
+      nameConf='configuration_'+self.code
+      configuration=__import__(nameConf)
+      self.ssCode=None
+      self.salome=self.parentAppli.salome
+      self.top = self    #(pour CONFIGURATION)
+      self.mode_nouv_commande='initial'
+      self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
+      self.catalogues=self.CONFIGURATION.catalogues
 
