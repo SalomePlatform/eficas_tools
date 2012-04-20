@@ -102,7 +102,6 @@ def analyse_catalogue(cata):
    liste_simp_reel=[]
    if cata.JdC.l_niveaux == ():
        # Il n'y a pas de niveaux
-       a=1
        for oper in cata.JdC.commandes:
            traite_entite(oper,liste_simp_reel)
            cata_ordonne_dico[oper.nom]=oper
