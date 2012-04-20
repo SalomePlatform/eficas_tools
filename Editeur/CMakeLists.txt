@@ -22,7 +22,7 @@
 # Installation de tous les fichiers Python, texte et images du repertoire et des sous-repertoires (sauf CVS)
 install ( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
           DESTINATION ${CMAKE_INSTALL_PREFIX}
-	  FILES_MATCHING PATTERN *.py PATTERN *.txt PATTERN *.gif PATTERN *.png
+	  FILES_MATCHING PATTERN *.py PATTERN *.txt PATTERN *.gif PATTERN *.png PATTERN *.ppm
           PATTERN CMakeLists.txt EXCLUDE
           PATTERN Patrons EXCLUDE
           PATTERN CVS EXCLUDE
