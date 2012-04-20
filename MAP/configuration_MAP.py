@@ -37,14 +37,8 @@ class CONFIG(configuration.CONFIG_BASE):
       self.ssCode=appli.ssCode
       self.INSTALLDIR =os.path.dirname(__file__)
 
-      self.labels_user=['exec_acrobat', 'catalogues','savedir','path_doc','map_path']
-      self.labels_user=self.labels_user+['PATH_PYGMEE','PATH_BENHUR','PATH_ASTER','PATH_MODULE']
-      self.labels_user=self.labels_user+['PATH_STUDY','NAME_SCHEME','PATH_FDVGRID','PATH_MAP','OpenTURNS_path','PATH_GMSH']
-
-      self.labels_eficas=["map_path","rep_user","INSTALLDIR","path_doc","exec_acrobat"]
-      self.labels_eficas=self.labels_eficas+["rep_cata","initialdir","savedir","catalogues",'PATH_PYGMEE']
-      self.labels_eficas=self.labels_eficas+['PATH_BENHUR','PATH_ASTER','PATH_MODULE','PATH_STUDY']
-      self.labels_eficas=self.labels_eficas+['NAME_SCHEME','PATH_FDVGRID','PATH_MAP','OpenTURNS_path','PATH_GMSH']
+      self.labels_user=['exec_acrobat','savedir','path_doc']
+      self.labels_eficas=['exec_acrobat','savedir','path_doc','catalogues']
 
       #self.cataFile="catalogues_MAP.ini"
       configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_MAP')
