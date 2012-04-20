@@ -40,20 +40,6 @@ path_doc        = os.path.join(repIni,'Doc')
 exec_acrobat    = "/usr/bin/xpdf"
 savedir         = os.environ['HOME']
 
-MAP_DIRECTORY=os.getenv("MAP_DIRECTORY")
-
-catalogues = (
-# (code, identifiant, catalogue, formatOut, formatIN)
-  ('MAP','Analyse morphologique ',os.path.join(repIni,'cataDebut.py')    ,'s_scc_st_1'),
-  ('MAP','Analyse statistique'   ,os.path.join(repIni,'s_scc_st_2_V1.py'),'s_scc_st_2'),
-  ('MAP','taux de couverture'    ,os.path.join(repIni,'cataDebut.py'),    's_scc_st_3'),
-  ('MAP','Analyse 3D'            ,os.path.join(repIni,'s_scc_3d_analysis_V1.py'),'s_scc_3d'),
-  ('MAP','maquetteV1'            ,os.path.join(repIni,'map_cata.py'),     'maquettemap'),
-  ('MAP','perfect'               ,os.path.join(repIni,'s_Perfect_V1.py'), 's_Perfect'),
-  ('MAP','creation'              ,os.path.join(repIni,'cree_map_cata.py'),'Creation'),
-  ('MAP','V0',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC'),
-  ('MAP','V1',os.path.join(repIni,'s_DIC_V1.py'),'s_DIC','defaut'),
-)
 
 OpenTURNS_path='/local/noyret/Salome/V6_main/tools/install/Openturns_tool-0150-py266-r272-ro144-rp208-sw204-xm278-la331-gr2263-dox173_patch-tbb30/lib/python2.6/site-packages'
 sys.path[:0]=[repIni,INSTALLDIR, OpenTURNS_path]
