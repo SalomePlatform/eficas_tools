@@ -19,9 +19,6 @@
 #
 # ======================================================================
 
-#configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/prefs_OPENTURNS_WRAPPER.py.in
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/prefs_OPENTURNS_WRAPPER.py
-#		 @ONLY )
 
 install ( FILES qtEficas_map.py
 		prefs.py
@@ -30,11 +27,6 @@ install ( FILES qtEficas_map.py
 		configuration_MAP.py
 	  DESTINATION ${CMAKE_INSTALL_PREFIX}/MAP
         )
-install ( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Doc
-                    ${CMAKE_CURRENT_SOURCE_DIR}/Templates
-	  DESTINATION ${CMAKE_INSTALL_PREFIX}/MAP
-        )
-
 
 
 ### Local Variables:
