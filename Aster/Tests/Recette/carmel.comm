@@ -1,0 +1,110 @@
+
+mon_alu=MATERIALS(MAT_REF='ALU',
+                  CONDUCTIVITY=_F(TYPE_LAW='LINEAR_REAL',
+                                  VALUE_REAL=Decimal('3.448E+7'),),
+                  PERMEABILITY=_F(TYPE_LAW='LINEAR_REAL',
+                                  VALUE_REAL=1.0,),);
+
+maille22_alu=MESH_GROUPE(MON_MATER=mon_alu,);
+
+mon_air=MATERIALS(MAT_REF='AIR',
+                  PERMEABILITY=_F(TYPE_LAW='LINEAR_REAL',
+                                  VALUE_REAL=1.0,),
+                  PERMITTIVITY=_F(TYPE_LAW='LINEAR_REAL',
+                                  VALUE_REAL=1.0,),);
+
+tube_air=MESH_GROUPE(MON_MATER=mon_air,);
+
+me24=MATERIALS(MAT_REF='E24',
+               PERMEABILITY=_F(TYPE_LAW='NONLINEAR',
+                               NATURE='SPLINE',
+                               VALUE=Decimal('1.0'),
+                               FILENAME=
+                 '/home/G17214/salomeDev/V6_main/tools/install/Eficasv1-V6_main-py266-qt463p1-sip4112-pyqt481-cm285/Carmel3D/E24',
+                               APPLIEDTO='B(H)&H(B)',),
+               PERMITTIVITY=_F(TYPE_LAW='LINEAR_REAL',
+                               VALUE_REAL=Decimal('1.0'),),);
+
+arete_e24=MESH_GROUPE(MON_MATER=me24,);
+
+mon_mat_fictif=MATERIALS(MAT_REF='NILMAT',);
+
+maille_nilmat=MESH_GROUPE(MON_MATER=mon_mat_fictif,);
+
+mon_m6x_lin=MATERIALS(MAT_REF='M6X_lineaire',
+                      PERMEABILITY_File=
+'/home/G17214/salomeDev/V6_main/tools/install/Eficasv1-V6_main-py266-qt463p1-sip4112-pyqt481-cm285/Carmel3D/M6X_lineaire_mu.mater',
+                      CONDUCTIVITY_File=
+'/home/G17214/salomeDev/V6_main/tools/install/Eficasv1-V6_main-py266-qt463p1-sip4112-pyqt481-cm285/Carmel3D/M6X_lineaire_sigma.mater',);
+
+arete_m6x_lin=MESH_GROUPE(MON_MATER=mon_m6x_lin,);
+
+mon_m6xiso=MATERIALS(MAT_REF='M6X2ISO1',
+                     PERMEABILITY=_F(TYPE_LAW='NONLINEAR',
+                                     NATURE='SPLINE',
+                                     VALUE=Decimal('1.0'),
+                                     FILENAME=
+            '/home/G17214/salomeDev/V6_main/tools/install/Eficasv1-V6_main-py266-qt463p1-sip4112-pyqt481-cm285/Carmel3D/M6X2ISO1',
+                                     APPLIEDTO='B(H)&H(B)',),
+                     CONDUCTIVITY=_F(TYPE_LAW='LINEAR_REAL',
+                                     VALUE_REAL=Decimal('1.724E+6'),),);
+
+maille_m6xiso=MESH_GROUPE(MON_MATER=mon_m6xiso,);
+
+mon_m6x=MATERIALS(MAT_REF='M6X',
+                  PERMEABILITY_File=
+        '/home/G17214/salomeDev/V6_main/tools/install/Eficasv1-V6_main-py266-qt463p1-sip4112-pyqt481-cm285/Carmel3D/M6X_mu.mater',
+                  PERMITTIVITY_File=
+   '/home/G17214/salomeDev/V6_main/tools/install/Eficasv1-V6_main-py266-qt463p1-sip4112-pyqt481-cm285/Carmel3D/M6X_epsilon.mater',);
+
+SOURCES(EPORT=_F(NAME='source2',
+                 TYPE='CURRENT',
+                 AMP=0.0,
+                 POLAR=0.0,),);
+
+SOURCES(STRANDED_INDUCTOR=_F(NAME='ma_source',
+                             NTURNS=1,
+                             CURJ=0.0,
+                             POLAR=0.0,),);
+
+mon_nocond_marsat=MATERIALS(MAT_REF='NOCOND_NL_MARSAT',
+                            PERMEABILITY=_F(TYPE_LAW='NONLINEAR',
+                                            NATURE='MARROCCO+SATURATION',
+                                            VALUE=Decimal('1.0'),
+                                            ALPHA=0,
+                                            TAU=14,
+                                            C=0,
+                                            EPSILON=0,
+                                            BMAX=0,
+                                            HSAT=0,
+                                            BSAT=0,
+                                            JOIN='SPLINE',
+                                            APPLIEDTO='B(H)&H(B)',),
+                            PERMITTIVITY=_F(TYPE_LAW='LINEAR_COMPLEX',
+                                            VALUE_COMPLEX=(5+5j),),);
+
+mon_zin=MATERIALS(MAT_REF='ZINSULATOR',);
+
+mon_nocond_mar=MATERIALS(MAT_REF='NOCOND_NL_MAR',
+                         PERMEABILITY=_F(TYPE_LAW='NONLINEAR',
+                                         NATURE='MARROCCO',
+                                         VALUE=Decimal('1.0'),
+                                         ALPHA=0,
+                                         TAU=0,
+                                         C=0,
+                                         EPSILON=0,),
+                         PERMITTIVITY=_F(TYPE_LAW='LINEAR_REAL',
+                                         VALUE_REAL=Decimal('1.0'),),);
+
+mon_zsurf=MATERIALS(MAT_REF='ZSURFACIC',
+                    CONDUCTIVITY=_F(TYPE_LAW='LINEAR_REAL',
+                                    VALUE_REAL=1.0,),
+                    PERMEABILITY=_F(TYPE_LAW='LINEAR_REAL',
+                                    VALUE_REAL=1.0,),);
+
+mon_mat_iso=MATERIALS(MAT_REF='EM_ISOTROPIC',
+                      CONDUCTIVITY_File='/home/G17214/Eficas_CARMEL3D/cond1.med',
+                      PERMEABILITY_File='/home/G17214/Eficas_CARMEL3D/perm1.med',);
+
+COND_cyl=MESH_GROUPE(MON_MATER=mon_alu,);
+#CHECKSUM:2c2eeef880e987738071eb0a5f5a4bc6  -:FIN CHECKSUM

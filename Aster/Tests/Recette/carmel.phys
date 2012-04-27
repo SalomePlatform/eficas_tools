@@ -1,0 +1,174 @@
+[SOURCES
+   [EPORT
+      AMP 0.0
+      TYPE CURRENT
+      NAME source2
+      POLAR 0.0
+   ]
+]
+[SOURCES
+   [STRANDED_INDUCTOR
+      CURJ 0.0
+      NTURNS 1
+      NAME ma_source
+      POLAR 0.0
+   ]
+]
+[VERSION
+   FILETYPE PHYS
+   NUM 1
+]
+[MATERIALS
+     [CONDUCTOR
+       NAME     COND_cyl
+         [CONDUCTIVITY
+            LAW LINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 3.448E+7 0
+         ]
+         [PERMEABILITY
+            LAW LINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+         ]
+     ]
+     [CONDUCTOR
+       NAME     maille_m6xiso
+         [PERMEABILITY
+            LAW NONLINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+            [NONLINEAR 
+                ISOTROPY TRUE
+                NATURE SPLINE
+                FILENAME /home/G17214/salomeDev/V6_main/tools/install/Eficasv1-V6_main-py266-qt463p1-sip4112-pyqt481-cm285/Carmel3D/M6X2ISO1
+                APPLIEDTO B(H)&H(B)
+            ]
+         ]
+         [CONDUCTIVITY
+            LAW LINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.724E+6 0
+         ]
+     ]
+     [NOCOND
+       NAME     arete_e24
+         [PERMEABILITY
+            LAW NONLINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+            [NONLINEAR 
+                ISOTROPY TRUE
+                NATURE SPLINE
+                FILENAME /home/G17214/salomeDev/V6_main/tools/install/Eficasv1-V6_main-py266-qt463p1-sip4112-pyqt481-cm285/Carmel3D/E24
+                APPLIEDTO B(H)&H(B)
+            ]
+         ]
+         [PERMITTIVITY
+            LAW LINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+         ]
+     ]
+     [NOCOND
+        NAME      gr_maille_a_saisir
+         [PERMEABILITY
+            LAW NONLINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+            [NONLINEAR 
+                ISOTROPY TRUE
+                NATURE MARROCCO+SATURATION
+                TAU 14
+                C 0
+                JOIN SPLINE
+                APPLIEDTO B(H)&H(B)
+                EPSILON 0
+                BSAT 0
+                HSAT 0
+                ALPHA 0
+                BMAX 0
+            ]
+         ]
+         [PERMITTIVITY
+            LAW LINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 5.0 5.0
+         ]
+     ]
+     [NOCOND
+        NAME      gr_maille_a_saisir
+         [PERMEABILITY
+            LAW NONLINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+            [NONLINEAR 
+                ISOTROPY TRUE
+                NATURE MARROCCO
+                TAU 0
+                C 0
+                EPSILON 0
+                ALPHA 0
+            ]
+         ]
+         [PERMITTIVITY
+            LAW LINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+         ]
+     ]
+     [NOCOND
+       NAME     tube_air
+         [PERMEABILITY
+            LAW LINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+         ]
+         [PERMITTIVITY
+            LAW LINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+         ]
+     ]
+     [ZSURFACIC
+        NAME      gr_maille_a_saisir
+         [CONDUCTIVITY
+            LAW LINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+         ]
+         [PERMEABILITY
+            LAW LINEAR
+            HOMOGENOUS TRUE
+            ISOTROPIC TRUE
+            VALUE COMPLEX 1.0 0
+         ]
+     ]
+     [EM_ISOTROPIC_FILES
+        CONDUCTIVITY MED /home/G17214/Eficas_CARMEL3D/cond1.med
+        PERMEABILITY MED /home/G17214/Eficas_CARMEL3D/perm1.med
+     ]
+     [EM_ANISOTROPIC_FILES
+        CONDUCTIVITY  /home/G17214/salomeDev/V6_main/tools/install/Eficasv1-V6_main-py266-qt463p1-sip4112-pyqt481-cm285/Carmel3D/M6X_lineaire_sigma.mater
+        PERMEABILITY  /home/G17214/salomeDev/V6_main/tools/install/Eficasv1-V6_main-py266-qt463p1-sip4112-pyqt481-cm285/Carmel3D/M6X_lineaire_mu.mater
+     ]
+     [NILMAT
+       NAME     maille_nilmat
+     ]
+     [ZINSULATOR
+        NAME      gr_maille_a_saisir
+     ]
+]
