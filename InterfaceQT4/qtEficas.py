@@ -356,7 +356,11 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
     def optionEditeur(self) :
-        name='monOptions_'+self.code
+        try :
+           name='monOptions_'+self.code
+        except :
+           QMessageBox.critical( self, "Parametrage", "Veuillez d abord choisir un code")
+           return
         try :
            optionCode=__import__(name)
         except :
