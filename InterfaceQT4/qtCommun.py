@@ -63,7 +63,7 @@ class QTPanel:
         if label==QString("Ajouter Mot-Clef"):
            if self.LBMCPermis.currentItem() == None : return
            self.DefMC(self.LBMCPermis.currentItem())
-        if label==QString("Definition Formule"):
+        if label==QString("Définition Formule"):
            self.BOkPressedFormule()
         if label==QString("Valeur Parametre"):
            self.BOkParamPressed()
