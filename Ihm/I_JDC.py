@@ -174,6 +174,7 @@ class JDC(I_OBJECT.OBJECT):
         self.set_current_step()
         ind = 1
         for child in self.etapes :
+          from Extensions import commentaire
           if isinstance(child,commentaire.COMMENTAIRE):
             ind = ind+1
         objet = commentaire.COMMENTAIRE('',parent=self)

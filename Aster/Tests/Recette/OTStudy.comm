@@ -1,5 +1,5 @@
 
-MODEL(FileName='/local/noyret/Install_Eficas/EficasV1/Recettes/OTWrapper.xml',);
+MODEL(FileName='./OTWrapper.xml',);
 
 LOG(DebugMessages='no',
     WrapperMessages='no',
