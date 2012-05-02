@@ -25,6 +25,12 @@ install ( FILES qtEficas_map.py
 		style.py
 		prefs_MAP.py
 		configuration_MAP.py
+                cata_c_pre_interface_mesh.py
+		cata_s_scc_3d_analysis.py
+		cata_c_image_3d_altitude_thickness.py
+		cata_c_solver_aster.py
+		cata_c_post_table_fft.py
+		cata_c_transverse_empty_python.py
 	  DESTINATION ${CMAKE_INSTALL_PREFIX}/MAP
         )
 

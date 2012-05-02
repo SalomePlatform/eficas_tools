@@ -40,7 +40,16 @@ path_doc        = os.path.join(repIni,'Doc')
 exec_acrobat    = "/usr/bin/xpdf"
 savedir         = os.environ['HOME']
 
+rep_cata=os.path.dirname(os.path.abspath(__file__))
+ 
+catalogues=(
+ ('MAP','Solver',os.path.join(rep_cata,'cata_solver1.py'),'solver1'),
+ ('MAP','Test',os.path.join(rep_cata,'cata_s_test03.py'),'s_test03'),
+ ('MAP','Exemple python',os.path.join(rep_cata,'cata_c_transverse_empty_python.py'),'c_transverse_empty_python'),
+ ('MAP','Image 3D',os.path.join(rep_cata,'cata_c_image_3d_altitude_thickness.py'),'c_image_3d_altitude_thickness'),
+ ('MAP','Table FFT',os.path.join(rep_cata,'cata_c_post_table_fft.py'), 'c_post_table_fft'),
+ ('MAP','PRE Mesh',os.path.join(rep_cata,'cata_c_pre_interface_mesh.py'), 'c_pre_interface_mesh'),
+ ('MAP','Analyse 3D',os.path.join(rep_cata,'cata_s_scc_3d_analysis.py'), 's_scc_3d_analysis'),
+)
 
-OpenTURNS_path='/local/noyret/Salome/V6_main/tools/install/Openturns_tool-0150-py266-r272-ro144-rp208-sw204-xm278-la331-gr2263-dox173_patch-tbb30/lib/python2.6/site-packages'
-sys.path[:0]=[repIni,INSTALLDIR, OpenTURNS_path]
 
