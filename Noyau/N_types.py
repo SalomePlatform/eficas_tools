@@ -1,8 +1,8 @@
-#@ MODIF N_types Noyau  DATE 28/06/2011   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF N_types Noyau  DATE 30/04/2012   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2012  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
@@ -35,9 +35,9 @@ def is_float(obj):
 def is_complex(obj):
     return isinstance(obj, complex)
 
+from decimal import Decimal
 def is_float_or_int(obj):
-    from decimal import Decimal
-    return isinstance(obj, Decimal) or is_float(obj) or is_int(obj)
+    return is_float(obj) or is_int(obj) or isinstance(obj, Decimal)
 
 def is_number(obj):
     return is_float_or_int(obj) or is_complex(obj)
@@ -67,3 +67,6 @@ def force_list(obj):
         obj = [obj,]
     return list(obj)
 
+def force_tuple(obj):
+    """Return `obj` as a tuple."""
+    return tuple(force_list(obj))
