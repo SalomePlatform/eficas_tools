@@ -21,7 +21,7 @@
 
 
 install ( FILES 
-           qtEficas_SEP.py  SEP_Cata_V1_4.py configuration_SEP.py  .ini  prefs.py      
+           qtEficas_SEP.py  SEP_Cata_V1_4.py configuration_SEP.py    prefs.py      
            __init__.py  prefs_SEP.py  
 	  DESTINATION ${CMAKE_INSTALL_PREFIX}/Sep
         )

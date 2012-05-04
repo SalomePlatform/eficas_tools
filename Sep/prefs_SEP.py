@@ -32,6 +32,6 @@ lang='fr'
 encoding='iso-8859-1'
 
 catalogues = (
-   ('Sous_epaisseur','v1.0',os.path.join(repIni,'SEP_Cata_V1_4'),'python'),
+   ('Sous_epaisseur','v1.0',os.path.join(repIni,'SEP_Cata_V1_4.py'),'python'),
 )
 
