@@ -813,9 +813,9 @@ class JDCEditor(QSplitter):
         titre  = ""
         
         if unite :
-            titre = "Choix unite %d " %unite
+            titre = "Choix unité %d " %unite
             texte = "Le fichier %s contient une commande INCLUDE \n" % fic_origine
-            texte = texte+'Donnez le nom du fichier correspondant\n a l unitÃ© logique %d' % unite
+            texte = texte+'Donnez le nom du fichier correspondant\n à l unité logique %d' % unite
             labeltexte = 'Fichier pour unite %d :' % unite
         else:
             titre = "Choix d'un fichier de poursuite"
