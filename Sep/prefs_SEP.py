@@ -25,39 +25,13 @@ import os,sys
 # Obligatoire
 repIni=os.path.dirname(os.path.abspath(__file__))
 
-# INSTALLDIR sert à localiser l'installation d'Eficas
-# Obligatoire
-INSTALLDIR=os.path.join(repIni,'..')
-sys.path.insert(0,INSTALLDIR)
-
-# CODE_PATH sert à localiser Noyau et Validation éventuellement
-# non contenus dans la distribution EFICAS
-# Par défaut on utilise les modules de INSTALLDIR
-# Peut valoir None (defaut)
-CODE_PATH = None
-
-# la variable code donne le nom du code a selectionner
-code="SEP" 
-
 # lang indique la langue utilisée pour les chaines d'aide : fr ou ang
 lang='fr'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'
 
-
-EditeurDir=INSTALLDIR+"/Editeur"
-ICONDIR=os.path.join(INSTALLDIR,'Editeur','icons')
-
-# Preference
-if os.name == 'nt':
-   userprefs = os.sep.join( [ os.environ['HOMEDRIVE'], os.environ['HOMEPATH'], 'Eficas_install', 'prefs.py' ])
-else :
-   userprefs=os.path.expanduser("~/.Eficas_SEP/prefs.py")
-
-if os.path.isfile(userprefs):
-   try:
-      execfile(userprefs)
-   except:
-      pass
+catalogues = (
+   ('Sous_epaisseur','v1.0',os.path.join(repIni,'SEP_Cata_V1_4'),'python'),
+)
 
