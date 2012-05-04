@@ -626,7 +626,7 @@ class JDC(I_OBJECT.OBJECT):
       #print "del_sdprod",self.sds
       #print "del_sdprod",self.g_context
       #print "del_sdprod",self.sds_dict
-      if sd in self.sds : self.sds.remove(sd)
+      #if sd in self.sds : self.sds.remove(sd)
       if self.g_context.has_key(sd.nom) : del self.g_context[sd.nom]
       if self.sds_dict.has_key(sd.nom) : del self.sds_dict[sd.nom]
 
@@ -658,7 +658,7 @@ class JDC(I_OBJECT.OBJECT):
          raise AsException("Nom de concept deja defini : %s" % sd.nom)
       self.sds_dict[sd.nom]=sd
       self.g_context[sd.nom] = sd
-      if sd not in self.sds : self.sds.append(sd)
+      #if sd not in self.sds : self.sds.append(sd)
 
    def append_param(self,param):
       """
@@ -764,11 +764,12 @@ class JDC(I_OBJECT.OBJECT):
 #ATTENTION SURCHARGE : cette methode doit etre gardee en synchronisation avec celle de Noyau
    def supprime(self):
       #print "supprime",self
-      Noyau.N_JDC.JDC.supprime(self)
+      N_OBJECT.OBJECT.supprime(self)
+      for etape in self.etapes:
+         etape.supprime()
       self.appli=None
       self.g_context={}
       self.const_context={}
-      self.sds=[]
       self.sds_dict={}
       self.mc_globaux={}
       self.current_context={}
@@ -852,7 +853,7 @@ class JDC(I_OBJECT.OBJECT):
       for child in self.etapes[index:]:
         child.delete_concept(sd)
 
-#ATTENTION SURCHARGE : les methodes ci-dessous surchargent des methodes de Noyau et Validation : a reintegrer
+#ATTENTION SURCHARGE : les methodes ci-dessus surchargent des methodes de Noyau et Validation : a reintegrer
 
    def get_file(self,unite=None,fic_origine=''):
       """

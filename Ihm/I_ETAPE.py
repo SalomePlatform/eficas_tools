@@ -456,13 +456,13 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
          self.id=   self.parent.register(self)
          self.UserError=self.jdc.UserError
          if self.definition.niveau :
-            # La définition est dans un niveau. En plus on
+            # La definition est dans un niveau. En plus on
             # l'enregistre dans le niveau
             self.nom_niveau_definition = self.definition.niveau.nom
             self.niveau = self.parent.dict_niveaux[self.nom_niveau_definition]
             self.niveau.register(self)
          else:
-            # La définition est au niveau global
+            # La definition est au niveau global
             self.nom_niveau_definition = 'JDC'
             self.niveau=self.parent
       else:
@@ -473,7 +473,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def report(self):
      cr= Validation.V_ETAPE.ETAPE.report(self)
-     #rafraichissement de la validité de l'etape (probleme avec l'ordre dans les macros : etape puis mots cles)
+     #rafraichisst de la validite de l'etape (probleme avec l'ordre dans les macros : etape puis mots cles)
      self.isvalid()
      return cr
 

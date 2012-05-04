@@ -742,12 +742,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.jdc_aux.supprime_aux()
          self.jdc_aux=None
       Noyau.N_MACRO_ETAPE.MACRO_ETAPE.supprime(self)
-  #    self.contexte_fichier_init={}
-  #    self.old_contexte_fichier_init={}
-  #    self.g_context={}
-  #    self.current_context={}
-  #    self.etapes=[]
-  #    self.mc_liste=[]
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
   def get_file(self,unite=None,fic_origine=''):
