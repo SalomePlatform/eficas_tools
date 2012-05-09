@@ -764,7 +764,7 @@ class JDC(I_OBJECT.OBJECT):
 #ATTENTION SURCHARGE : cette methode doit etre gardee en synchronisation avec celle de Noyau
    def supprime(self):
       #print "supprime",self
-      N_OBJECT.OBJECT.supprime(self)
+      Noyau.N_JDC.JDC.supprime(self)
       for etape in self.etapes:
          etape.supprime()
       self.appli=None
