@@ -342,7 +342,8 @@ class Appli(Ui_Eficas,QMainWindow):
         monVisuDialg.show()
 
     def aidePPal(self) :
-        maD=self.repIni+"/../Aide"
+        repAide=os.path.dirname(os.path.abspath(__file__))
+        maD=repAide+"/../Aide"
         docsPath = QDir(maD).absolutePath()
         try :
           from PyQt4.QtAssistant import QAssistantClient
