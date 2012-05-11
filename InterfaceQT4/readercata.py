@@ -178,8 +178,9 @@ class READERCATA:
       #
       # traitement des clefs documentaires
       #
-      if self.code== "ASTER" :self.traite_clefs_documentaires()
+      if self.code == "ASTER" : self.traite_clefs_documentaires()
       self.cata=(self.cata,)
+
       titre=self.VERSION_EFICAS + " avec le catalogue " + os.path.basename(self.fic_cata)
       if self.appliEficas.top:
         self.appliEficas.setWindowTitle(titre)
@@ -279,12 +280,10 @@ class READERCATA:
 
    def traite_clefs_documentaires(self):
       try:
-      #if 1 :
-        fic_doc='fic_doc_'+str(self.version_cata)
+        fic_doc='fic_doc_'+str(self.version_code)
         self.fic_doc=getattr(self.appliEficas.CONFIGURATION,fic_doc )
         f=open(self.fic_doc)
       except:
-      #else :
         print "Pas de fichier associe contenant des clefs documentaires"
         return
 
