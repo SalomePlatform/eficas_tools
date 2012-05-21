@@ -18,7 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-   Ce module sert à lancer EFICAS configuré pour Code_Aster
+   Ce module sert a lancer EFICAS configure pour Code_Aster Outils Metier Sous-Epaisseur
 """
 # Modules Python
 
