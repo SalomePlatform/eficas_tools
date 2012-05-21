@@ -17,6 +17,8 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from Noyau import N_FACT
+from Ihm import I_ENTITE
 import A_MCFACT
 import A_MCLIST
 

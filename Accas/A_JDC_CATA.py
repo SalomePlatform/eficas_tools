@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 import A_JDC
+from Noyau import N_JDC_CATA
 from Ihm import I_JDC_CATA
 
 class JDC_CATA(I_JDC_CATA.JDC_CATA,N_JDC_CATA.JDC_CATA):
