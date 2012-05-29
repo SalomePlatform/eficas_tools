@@ -17,7 +17,6 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-
 import os, sys
 # Les variables pouvant positionnees sont :
 print "import des prefs de OPENTURNS"

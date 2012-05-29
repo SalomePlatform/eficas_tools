@@ -93,7 +93,7 @@ class READERCATA:
 
       if len(liste_cata_possibles)==0:          
           QMessageBox.critical(self.QWParent, "Import du catalogue",
-                               "Pas de catalogue de©fini pour le code %s" % self.code)
+                               u"Pas de catalogue d√©fini pour le code %s" % self.code)
           self.appliEficas.close()
           if self.appliEficas.salome == 0 :
              sys.exit(1)
@@ -292,8 +292,6 @@ class READERCATA:
           deb=l.find(':')+1
           docu=l[deb:-1]
           dict_clef_docu[clef]=docu
-          print clef
-          print docu
       for oper in self.cata.JdC.commandes:
            if dict_clef_docu.has_key(oper.nom):
               oper.docu=dict_clef_docu[oper.nom]
