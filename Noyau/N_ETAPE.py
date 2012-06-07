@@ -51,7 +51,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
       """
          Attributs :
 
-          - definition : objet portant les attributs de définition d'une étape de type opérateur. Il
+          - definition : objet portant les attributs de définition d'une etape de type opérateur. Il
                          est initialisé par l'argument oper.
 
           - reuse : indique le concept d'entrée réutilisé. Il se trouvera donc en sortie
@@ -108,10 +108,10 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
          Construit le concept produit de l'opérateur. Deux cas
          peuvent se présenter :
 
-           - le parent n'est pas défini. Dans ce cas, l'étape prend en charge la création
+           - le parent n'est pas défini. Dans ce cas, l'etape prend en charge la création
              et le nommage du concept.
 
-           - le parent est défini. Dans ce cas, l'étape demande au parent la création et
+           - le parent est défini. Dans ce cas, l'etape demande au parent la création et
              le nommage du concept.
 
       """
@@ -154,14 +154,14 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
    def get_sd_prod(self):
       """
-          Retourne le concept résultat de l'étape
+          Retourne le concept résultat de l'etape
           Deux cas :
                    - cas 1 : sd_prod de oper n'est pas une fonction
                      il s'agit d'une sous classe de ASSD
                      on construit le sd à partir de cette classe
                      et on le retourne
                    - cas 2 : il s'agit d'une fonction
-                     on l'évalue avec les mots-clés de l'étape (mc_liste)
+                     on l'évalue avec les mots-clés de l'etape (mc_liste)
                      on construit le sd à partir de la classe obtenue
                      et on le retourne
       """
@@ -207,13 +207,13 @@ Causes possibles :
 
    def get_type_produit_brut(self):
       """
-          Retourne le type du concept résultat de l'étape
+          Retourne le type du concept résultat de l'etape
           Deux cas :
             - cas 1 : sd_prod de oper n'est pas une fonction
               il s'agit d'une sous classe de ASSD
               on retourne le nom de la classe
             - cas 2 : il s'agit d'une fonction
-              on l'évalue avec les mots-clés de l'étape (mc_liste)
+              on l'évalue avec les mots-clés de l'etape (mc_liste)
               et on retourne son résultat
       """
       if type(self.definition.sd_prod) == types.FunctionType:
@@ -225,9 +225,9 @@ Causes possibles :
 
    def get_etape(self):
       """
-         Retourne l'étape à laquelle appartient self
+         Retourne l'etape à laquelle appartient self
          Un objet de la catégorie etape doit retourner self pour indiquer que
-         l'étape a été trouvée
+         l'etape a été trouvée
          XXX fait double emploi avec self.etape ????
       """
       return self
@@ -248,7 +248,7 @@ Causes possibles :
 
    def isactif(self):
       """
-         Indique si l'étape est active (1) ou inactive (0)
+         Indique si l'etape est active (1) ou inactive (0)
       """
       return self.actif
 
@@ -259,8 +259,8 @@ Causes possibles :
       """
       message.debug(SUPERV, "call etape.set_current_step", stack_id=-1)
       cs= CONTEXT.get_current_step()
-      if self.parent != cs :
-         raise AsException("L'étape courante", cs.nom, cs,
+      if self.parent != cs and cs is not None:
+         raise AsException("L'etape courante", cs.nom, cs,
                            "devrait etre le parent de", self.nom, self)
       else :
          CONTEXT.unset_current_step()
@@ -272,8 +272,8 @@ Causes possibles :
             etape courante
       """
       cs= CONTEXT.get_current_step()
-      if self != cs :
-         raise AsException("L'étape courante", cs.nom, cs,
+      if self != cs and cs is not None:
+         raise AsException("L'etape courante", cs.nom, cs,
                            "devrait etre", self.nom, self)
       else :
          CONTEXT.unset_current_step()
@@ -285,7 +285,7 @@ Causes possibles :
           sous etape de self ou non
           1 = oui
           0 = non
-          Une étape simple n'a pas de sous etape
+          Une etape simple n'a pas de sous etape
       """
       return 0
 
@@ -345,13 +345,13 @@ Causes possibles :
       return etape
 
    def copy_reuse(self,old_etape):
-      """ Méthode qui copie le reuse d'une autre étape.
+      """ Méthode qui copie le reuse d'une autre etape.
       """
       if hasattr(old_etape,"reuse") :
         self.reuse = old_etape.reuse
 
    def copy_sdnom(self,old_etape):
-      """ Méthode qui copie le sdnom d'une autre étape.
+      """ Méthode qui copie le sdnom d'une autre etape.
       """
       if hasattr(old_etape,"sdnom") :
         self.sdnom = old_etape.sdnom
@@ -387,8 +387,8 @@ Causes possibles :
    def full_copy(self,parent=None):
        """
           Méthode permettant d'effectuer une copie complète
-          d'une étape (y compris concept produit, éléments internes)
-          Si l'argument parent est fourni, la nouvelle étape
+          d'une etape (y compris concept produit, éléments internes)
+          Si l'argument parent est fourni, la nouvelle etape
           aura cet objet comme parent.
        """
        new_etape = self.copy()
@@ -420,7 +420,7 @@ Causes possibles :
       return self.nom.startswith('INCLUDE')
 
    def sd_accessible(self):
-      """Dit si on peut acceder aux "valeurs" (jeveux) de l'ASSD produite par l'étape.
+      """Dit si on peut acceder aux "valeurs" (jeveux) de l'ASSD produite par l'etape.
       """
       if CONTEXT.debug: print '`- ETAPE sd_accessible :', self.nom
       return self.parent.sd_accessible()
