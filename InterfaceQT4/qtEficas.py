@@ -340,15 +340,15 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def traductionV7V8(self):
         from gereTraduction import traduction
-        traduction(self.CONFIGURATION.rep_ini,self.viewmanager,"V7V8")
+        traduction(self.CONFIGURATION.repIni,self.viewmanager,"V7V8")
 
     def traductionV8V9(self):
         from gereTraduction import traduction
-        traduction(self.CONFIGURATION.rep_ini,self.viewmanager,"V8V9")
+        traduction(self.CONFIGURATION.repIni,self.viewmanager,"V8V9")
 
     def traductionV9V10(self):
         from gereTraduction import traduction
-        traduction(self.CONFIGURATION.rep_ini,self.viewmanager,"V9V10")
+        traduction(self.CONFIGURATION.repIni,self.viewmanager,"V9V10")
 
     def version(self) :
         from monVisu import DVisu
