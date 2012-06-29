@@ -57,6 +57,7 @@ class CONFIG_BASE:
       self.setValeursParDefaut()
       
       self.lecture_fichier_ini_standard()
+      print self.savedir
       self.lecture_fichier_ini_integrateur()
       self.lecture_fichier_ini_utilisateur()
 
@@ -67,6 +68,7 @@ class CONFIG_BASE:
          self.parent=appli.top
          self.appli.mode_nouv_commande= self.mode_nouv_commande
       else: 	     self.parent=None
+      if not os.path.isdir(self.savedir) : self.savedir=os.environ['HOME']
       
 
 
@@ -79,7 +81,6 @@ class CONFIG_BASE:
       self.exec_acrobat = 'acroread'
       nomDir="Eficas_"+self.code
       self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
-      if not os.path.isdir(self.savedir) : os.mkdir(self.savedir)
  
   #--------------------------------------
   def lecture_fichier_ini_standard(self):
@@ -91,6 +92,7 @@ class CONFIG_BASE:
           if (k[0:1] != "__" and k[-1:-2] !='__'):
              valeur=getattr(prefsCode,k)
              setattr(self,k,valeur)
+       
 
 
   #--------------------------------------
@@ -105,6 +107,7 @@ class CONFIG_BASE:
         return
       
       fic_ini_integrateur=os.path.join(repIntegrateur,self.name)
+      print fic_ini_integrateur
       if not os.path.isfile(fic_ini_integrateur): return
       txt = read_file(fic_ini_integrateur)
       d=locals()
