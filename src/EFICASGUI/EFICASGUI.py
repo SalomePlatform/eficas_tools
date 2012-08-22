@@ -1,174 +1,233 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 """
     Interface PyQt
 """
-import qt
-import libSALOME_Swig
-import SalomePyQt
-
-# Variable globale pour stocker le Workspace de Salome
-
-WORKSPACE=None
-currentStudyId=None
-desktop=None
-
-# -----------------------------------------------------------------------------
-
-import notifqt
-
-def g():
-   print "lastWindowClosed()"
-   import Tkinter
-   root=Tkinter.Tk()
-   root.destroy()
-
-qt.QObject.connect(qt.qApp,qt.SIGNAL("lastWindowClosed()"),g)
-
-# -----------------------------------------------------------------------------
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 
 import salome
+import SalomePyQt
 
-sg=salome.sg
+from salome.kernel.studyedit import getStudyEditor
+
 sgPyQt=SalomePyQt.SalomePyQt()
 
-
-import studyManager
+# -----------------------------------------------------------------------------
 
 print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
 
+# Test Eficas directory
+eficasRoot = os.getenv("EFICAS_ROOT")
+if eficasRoot is None:
+    QMessageBox.critical(sgPyQt.getDesktop(), "Error",
+                         "Cannot initialize EFICAS module. Environment "
+                         "variable EFICAS_ROOT is not set.")
+elif not os.path.isdir(eficasRoot):
+    QMessageBox.critical(sgPyQt.getDesktop(), "Error",
+                         "Cannot initialize EFICAS module. Directory %s does "
+                         "not exist (check EFICAS_ROOT environment "
+                         "variable)." % eficasRoot)
 
 
-# -----------------------------------------------------------------------------
-#Cette méthode est obsolète en V3
-#En V2, si on n'implémente pas cette méthode, le composant fonctionne
-#correctement. Un message "Attribute Error" apparait dans la trace.
-def setWorkSpace(workSpace):
-   global WORKSPACE
-   WORKSPACE=workSpace
-   # le desktop
-   desktop=sgPyQt.getDesktop()
+################################################
+# GUI context class
+# Used to store actions, menus, toolbars, etc...
+################################################
 
-   # recuperation du workspace
-   ws=sgPyQt.getMainFrame()
-   #print ws
+class GUIcontext:
+    # menus/toolbars/actions IDs
+    EFICAS_MENU_ID = 90
+    ASTER_ID       = 941
+    OM_ID          = 942
+    MAP_ID         = 943
+    OT_STUDY_ID    = 944
+    OT_WRAPPER_ID  = 945
+    MULTICATALOG_ID = 946
+    CARMEL3D_ID    = 947
+
+    # constructor
+    def __init__(self):
+        # create top-level menu
+        self.mid = sgPyQt.createMenu("Eficas", -1, GUIcontext.EFICAS_MENU_ID,
+                                     sgPyQt.defaultMenuGroup())
+        # create toolbar
+        self.tid = sgPyQt.createTool("Eficas")
+
+        a = sgPyQt.createAction(GUIcontext.MULTICATALOG_ID, "Eficas MultiCatalogue","Lancer Eficas" , "Lancer Eficas",  "eficas.png")
+        sgPyQt.createMenu(a, self.mid)
+        sgPyQt.createTool(a, self.tid)
+
+        # create actions conditionally and fill menu and toolbar with actions
+        self.addActionConditionally("Aster/prefs.py", GUIcontext.ASTER_ID,
+                                    "Eficas pour Code_Aster",
+                                    "Editer un jeu de commande ASTER avec Eficas",
+                                    "eficaster.png")
+        self.addActionConditionally("Sep/prefs.py", GUIcontext.OM_ID,
+                                    "Eficas pour Outils Metier",
+                                    "Editer un jeu de commande Outils Metier avec Eficas",
+                                    "eficasOM.png")
+        self.addActionConditionally("MAP/prefs.py", GUIcontext.MAP_ID,
+                                    "Eficas pour Map",
+                                    "Editer un jeu de commande Map avec Eficas",
+                                    "plus.png")
+        self.addActionConditionally("Openturns_Study/prefs.py", GUIcontext.OT_STUDY_ID,
+                                    "Eficas pour Openturns Study",
+                                    "Editer un jeu de commande Openturns Study avec Eficas",
+                                    "eficasotstd.png")
+        self.addActionConditionally("Openturns_Wrapper/prefs.py", GUIcontext.OT_WRAPPER_ID,
+                                    "Eficas pour Openturns Wrapper",
+                                    "Editer un jeu de commande Openturns Wrapper avec Eficas",
+                                    "eficasotwrp.png")
+        self.addActionConditionally("Carmel3D/prefs.py", GUIcontext.CARMEL3D_ID,
+                                    "Eficas pour Carmel3D",
+                                    "Editer un jeu de commande Carmel3D avec Eficas",
+                                    "eficascarmel.png")
+
+    def addActionConditionally(self, fileToTest, commandId, menuLabel, tipLabel, icon):
+        global eficasRoot
+        if os.path.isfile(os.path.join(eficasRoot, fileToTest)):
+            a = sgPyQt.createAction(commandId, menuLabel, tipLabel, tipLabel, icon)
+            sgPyQt.createMenu(a, self.mid)
+            sgPyQt.createTool(a, self.tid)
+
+################################################
+# Global variables
+################################################
+
+# study-to-context map
+__study2context__   = {}
+# current context
+__current_context__ = None
+
+###
+# set and return current GUI context
+# study ID is passed as parameter
+###
+def _setContext( studyID ):
+    global eficasRoot
+    if eficasRoot is None:
+        return
+    global __study2context__, __current_context__
+    if not __study2context__.has_key(studyID):
+        __study2context__[studyID] = GUIcontext()
+        pass
+    __current_context__ = __study2context__[studyID]
+    return __current_context__
+
 
 # -----------------------------------------------------------------------------
 
 def OnGUIEvent(commandID) :
-   print "EficasGUI :: OnGUIEvent :::::::::::::::::::::::::::::::::commandID = ",commandID
    if dict_command.has_key(commandID):
-      print "OnGUIEvent ::::::::::  commande associée  : ",commandID      
+      print "OnGUIEvent ::::::::::  commande associÃ©e  : ",commandID      
       dict_command[commandID]()
    else:
-      print "Pas de commande associée a : ",commandID
+      print "Pas de commande associÃ©e a : ",commandID
 
 # -----------------------------------------------------------------------------
 
 def setSettings():
    """
-   Cette méthode permet les initialisations. On définit en particulier
-   l'identifiant de l'étude courante.
+   Cette mÃ©thode permet les initialisations.
    """
-   # le desktop
-   desktop=sgPyQt.getDesktop()
-   global currentStudyId
-   currentStudyId = sgPyQt.getStudyId()
-   #print "setSettings: currentStudyId = " + str(currentStudyId)
-   # _CS_gbo_ Voir si on peut utiliser directement sgPyQt.getStudyId()
-   # dans salomedsgui?
-   
-   studyManager.palStudy.setCurrentStudyID( currentStudyId ) #CS_pbruno   
+   _setContext(sgPyQt.getStudyId())
 
 def activate():
    """
-   Cette méthode permet l'activation du module, s'il a été chargé mais pas encore
-   activé dans une étude précédente.
+   Cette mÃ©thode permet l'activation du module, s'il a Ã©tÃ© chargÃ© mais pas encore
+   activÃ© dans une Ã©tude prÃ©cÃ©dente.
    
    Portage V3.
    """
-   print "--------EFICASGUI:: activate"
    setSettings()
 
 
 # -----------------------------------------------------------------------------
 
 def activeStudyChanged(ID):
-   # le desktop
-   desktop=sgPyQt.getDesktop()
-   global currentStudyId
-   # ne marche pas car sg est supposé résider dans une etude
-   # studyId=sg.getActiveStudyId()
-   currentStudyId=ID
-   
-   studyManager.palStudy.setCurrentStudyID( currentStudyId ) #CS_pbruno
-   
+   _setContext(ID)
 
-def definePopup(theContext, theObject, theParent):    
-   theContext= ""
-   theObject = "100"
-   theParent = "ObjectBrowser"
-   a=salome.sg.getAllSelected()
-   #print a
+
+#def definePopup(theContext, theObject, theParent):    
+#   print "EFICASGUI --- definePopup"
+#   print "EFICASGUI --- definePopup"
+#   theContext= ""
+#   theObject = "100"
+#   theParent = "ObjectBrowser"
+#   a=salome.sg.getAllSelected()
     
-   selectedEntry = a[0]
-   aType, aValue = studyManager.palStudy.getTypeAndValue( selectedEntry )
-   
-   if aType == studyManager.FICHIER_EFICAS_ASTER or aType == studyManager.FICHIER_EFICAS_HOMARD \
-      or aType == studyManager.FICHIER_EFICAS_HOMARD:
-        theObject="73"    
-            
-   return (theContext, theObject, theParent)
+#   selectedEntry = a[0]
+#   mySO = monEditor.study.FindObjectID(selectedEntry);
+#   aType = monEditor.getFileType(mySO)
+#   print aType
+#   return (theContext, theObject, theParent)
 
 
-def customPopup(popup, theContext, theObject, theParent):
-   print "EFICASGUI --- customPopup"
-   popup.removeItem(99000)
-   popup.removeItem(99001)
-   popup.removeItem(99002)
-   popup.removeItem(99003)
+#def customPopup(popup, theContext, theObject, theParent):
+#   a=salome.sg.getAllSelected()
+
+#   selectedEntry = a[0]
+#   mySO = monEditor.study.FindObjectID(selectedEntry);
+#   aType = monEditor.getFileType(mySO)
+
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   print "EFICASGUI --- customPopup"
+#   popup.removeItem(99003)
 
 
-def windows():
-    """
-    This method is called when GUI module is being created
-    and initialized.
-    Should return a map of the SALOME dockable windows id's
-    needed to be opened when module is activated.
-    """
-    print "ASTERGUI::windows"
-    from qt import Qt
-    winMap = {}
-    winMap[ SalomePyQt.WT_ObjectBrowser ] = Qt.DockLeft
-    winMap[ SalomePyQt.WT_PyConsole ]     = Qt.DockBottom
-    return winMap   
 
 # -----------------------------------------------------------------------------
 
-import eficasSalome
-
 def runEficas():
    print "-------------------------EFICASGUI::runEficas-------------------------"
-   print currentStudyId      
+   import eficasSalome
+   eficasSalome.runEficas(multi=True)
+   
+def runEficaspourAster():
+   import eficasSalome
    eficasSalome.runEficas( "ASTER" )
    
-
-def runEficaspourHomard():
-   print "runEficas"
-   desktop=sgPyQt.getDesktop()
-   eficasSalome.runEficas( "HOMARD" ) 
    
-def runEficaspourOpenturns():
-   print "runEficas Pour Openturns"
-   desktop=sgPyQt.getDesktop()
-   eficasSalome.runEficas( "OPENTURNS" ) 
+def runEficaspourOpenturnsStudy():
+   print "runEficas Pour Openturns Study"
+   import eficasSalome
+   eficasSalome.runEficas( "OPENTURNS_STUDY" ) 
    
+def runEficaspourOpenturnsWrapper():
+   print "runEficas Pour Openturns Wrapper"
+   import eficasSalome
+   eficasSalome.runEficas( "OPENTURNS_WRAPPER" ) 
+   
+def runEficaspourOM():
+   print "runEficas Pour Outils Metier"
+   import eficasSalome
+   eficasSalome.runEficas( "SEP" )
+   
+def runEficaspourMap():
+   print "runEficas Pour Map "
+   import eficasSalome
+   eficasSalome.runEficas( "MAP" )
+   
+   
+def runEficaspourCarmel3D():
+   print "runEficas Pour Carmel3D "
+   import eficasSalome
+   eficasSalome.runEficas( "CARMEL3D" )
    
 
 def runEficasFichier(version=None):
    """
    Lancement d'eficas pour ASTER
-   si un fichier est sélectionné, il est ouvert dans eficas
+   si un fichier est sÃ©lectionnÃ©, il est ouvert dans eficas
    """
    fileName = None
    code     = None
@@ -176,48 +235,36 @@ def runEficasFichier(version=None):
    if len(a) == 1:
       selectedEntry = a[0]
       
-      aType, aValue = studyManager.palStudy.getTypeAndValue( selectedEntry )
-      if aType == studyManager.FICHIER_EFICAS_ASTER:        
+      editor = getStudyEditor()
+      mySO = editor.study.FindObjectID(selectedEntry);
+      aType = editor.getFileType(mySO)
+      aValue = editor.getFileName(mySO)
+      if aType !=  None :
         fileName = aValue
-        code     = "ASTER"
-      elif aType == studyManager.FICHIER_EFICAS_HOMARD:        
-        fileName = aValue
-        code     = "HOMARD"
-      elif aType == studyManager.FICHIER_EFICAS_OPENTURNS:        
-        fileName = aValue
-        code     = "OPENTURNS"
-      else:
-        fileName=None
-        code = "ASTER"
+        code     = aType[15:]
    else:        
-        code = "ASTER"            
-        
+      QMessageBox.critical(None, "Selection Invalide",
+             "Selectionner un seul fichier SVP") 
+      return;
+ 
+   import eficasSalome        
    if code:
-        #eficasSalome.runEficas(code,attr,studyId=currentStudyId)         
-        #desktop=sgPyQt.getDesktop()        
         if version :
             eficasSalome.runEficas( code, fileName, version=version)
         else :
             eficasSalome.runEficas( code, fileName)
         
 
-def runEficasFichierV8():
-    runEficasFichier(version="v8.5")
-   
-def runEficasFichierV9():
-    runEficasFichier(version="v9.1")
-
 # Partie applicative
 
 dict_command={
-                941:runEficasFichier,# runEficas,
-                946:runEficaspourHomard,
-                946:runEficaspourOpenturns,
-                4041:runEficasFichier, #runEficas,
-                4046:runEficaspourHomard,
-                4047:runEficaspourOpenturns,
-                9042:runEficasFichier,
-                9043:runEficasFichier,
-                9044:runEficasFichierV9,
+                GUIcontext.ASTER_ID      : runEficaspourAster,
+                GUIcontext.OM_ID         : runEficaspourOM,
+                GUIcontext.MAP_ID        : runEficaspourMap,
+                GUIcontext.OT_STUDY_ID   : runEficaspourOpenturnsStudy,
+                GUIcontext.OT_WRAPPER_ID : runEficaspourOpenturnsWrapper,
+                GUIcontext.CARMEL3D_ID   : runEficaspourCarmel3D,
+                GUIcontext.MULTICATALOG_ID : runEficas,
+
+                9041:runEficasFichier,
              }
-             

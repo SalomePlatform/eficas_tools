@@ -12,7 +12,7 @@ try :
 except :
     pass
 
-from Logger import Logger
+from salome.kernel.logger import Logger
 logger=Logger( "EficasStudy" )
 
 

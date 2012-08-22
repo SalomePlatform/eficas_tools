@@ -1,5 +1,4 @@
 
-
 DEBUT();
 
 maillage=LIRE_MAILLAGE();
@@ -16,6 +15,6 @@ Affe=AFFE_CARA_ELEM(MODELE=modele,
                               SECTION='RECTANGLE',
                               VARI_SECT='HOMOTHETIQUE',
                               CARA=('HY1','HZ1','HZ2','HY2',),
-                              VALE=(0.1,0.2,0.1,0.2,),),);
+                              VALE=(0.1,0.2,1,2,),),);
 
 FIN();

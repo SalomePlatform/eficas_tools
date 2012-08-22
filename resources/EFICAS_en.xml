@@ -11,27 +11,14 @@
 
   <desktop>
 
-  <!-- ### MENUBAR ###  -->
-
-    <menubar>
-      <menu-item label-id="EFICAS" item-id="90" pos-id="3">
-        <popup-item item-id="941" label-id="Eficas pour Code_Aster" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande ASTER avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-  <!-- 	<popup-item item-id="946" label-id="Eficas pour Homard" icon-id="eficashomard.png" tooltip-id="Editer un jeu de commande HOMARD avec Eficas" accel-id="" toggle-id="" execute-action=""/> -->
-      </menu-item>
-    </menubar>
-
-  <!-- ### TOOLBAR ###  -->
-
-    <toolbar label-id="Eficas">
-        <toolbutton-item item-id="4041" label-id="Eficas pour Code_Aster" icon-id="eficaster.png" tooltip-id="Editer un jeu de commande ASTER avec Eficas" accel-id="" toggle-id="" execute-action=""/>
-   <!--     <toolbutton-item item-id="4046" label-id="Eficas pour Homard" icon-id="eficashomard.png" tooltip-id="Editer un jeu de commande HOMARD avec Eficas" accel-id="" toggle-id="" execute-action=""/> -->
-    </toolbar>
+  <!-- Menubar and toolbar are now created dynamically depending on the catalogs installed with Eficas.
+       Check file EFICASGUI.py for more details. -->
 
   <!-- ### POPUP MENU ###  -->
-     <popupmenu label-id="" context-id="" parent-id="ObjectBrowser" object-id="73">
-	<popup-item item-id="9043" pos-id="" label-id="Ouvrir avec Eficas pour Aster V8" icon-id="" tooltip-id="Editer avec Eficas" execute-action=""/>
-	<popup-item item-id="9044" pos-id="" label-id="Ouvrir avec Eficas pour Aster V9" icon-id="" tooltip-id="Editer avec Eficas" execute-action=""/>
+     <popupmenu label-id="Popup for Viewer" context-id="" parent-id="ObjectBrowser" object-id="" pos_id="1">
+	<popup-item item-id="9041" pos-id="" label-id="Ouvrir avec Eficas" icon-id="" tooltip-id="Editer avec Eficas" execute-action=""/>
     </popupmenu>
 
   </desktop>	
+
 </application>

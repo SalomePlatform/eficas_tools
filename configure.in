@@ -148,27 +148,18 @@ CHECK_SALOME_GUI
 
 echo
 echo ---------------------------------------------
-echo testing msg2qm
+echo Summary
 echo ---------------------------------------------
 echo
 
-CHECK_MSG2QM
-
 echo
 echo ---------------------------------------------
-echo Testing Pal
+echo Testing Sphinx
 echo ---------------------------------------------
 echo
 
-CHECK_PAL
+CHECK_SPHINX
 
-echo
-echo ---------------------------------------------
-echo Testing Visu
-echo ---------------------------------------------
-echo
-
-CHECK_VISU
 echo
 echo ---------------------------------------------
 echo Summary
@@ -176,7 +167,7 @@ echo ---------------------------------------------
 echo
 
 echo Configure
-variables="python_ok threads_ok OpenGL_ok qt_ok omniORB_ok Kernel_ok  SalomeGUI_ok msg2qm_ok"
+variables="python_ok threads_ok OpenGL_ok qt_ok omniORB_ok Kernel_ok SalomeGUI_ok sphinx_ok"
 
 for var in $variables
 do
@@ -187,20 +178,6 @@ done
 echo
 echo "Default ORB   : $DEFAULT_ORB"
 echo
-
-echo
-echo ---------------------------------------------
-echo RunTime Dependencies
-echo ---------------------------------------------
-echo
-variables="Visu_ok pal_ok"
-
-for var in $variables
-do
-   printf "   %10s : " `echo \$var | sed -e "s,_ok,,"`
-   eval echo \$$var
-done
-
 
 
 dnl generals files which could be included in every makefile

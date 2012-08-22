@@ -7,7 +7,7 @@
 
 module EFICAS_ORB
 {
-  interface EFICAS_Gen : Engines::Component, SALOMEDS::Driver
+  interface EFICAS_Gen : Engines::EngineComponent, SALOMEDS::Driver
   {
   };
 };
