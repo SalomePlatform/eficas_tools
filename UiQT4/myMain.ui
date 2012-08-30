@@ -231,7 +231,7 @@
   </action>
   <action name="actionLecteur_Pdf" >
    <property name="text" >
-    <string>Lecteur Pdf</string>
+    <string>Lecteur documentation</string>
    </property>
   </action>
   <action name="actionEficas" >
