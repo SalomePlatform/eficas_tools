@@ -25,11 +25,42 @@ from PyQt4.QtCore import *
 class PopUpMenuNodeMinimal :
 #---------------------------#
     def createPopUpMenu(self):
+        #self.appliEficas.salome=True
         self.createActions()
         self.menu = QMenu(self.tree)
         #items du menu
         self.menu.addAction(self.Supprime)
+        if hasattr(self.appliEficas, 'mesScripts'):
+            if self.tree.currentItem().item.get_nom() in self.appliEficas.mesScripts.dict_commandes.keys() : 
+               self.ajoutScript()
     
+    def ajoutScript(self):
+        conditionSalome=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][3]
+        if (self.appliEficas.salome == 0 and conditionSalome == True): return
+        label=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][1]
+        tip=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][5]
+        self.action=QAction(label,self.tree)
+        self.action.setStatusTip(tip)
+        self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction)
+        self.menu.addAction(self.action)
+
+    def AppelleFonction(self):
+        conditionValid=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][4]
+        if (self.tree.currentItem().item.isvalid() == 0 and conditionValid == True):
+                 QMessageBox.warning( None, 
+                             self.appliEficas.trUtf8("item invalide"),
+                             self.appliEficas.trUtf8("l item doit etre valide"),
+                             self.appliEficas.trUtf8("&Ok"))
+		 return
+        fonction=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][0]
+        listenomparam=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][2]
+        listeparam=[]
+        for p in listenomparam:
+            if hasattr(self.tree.currentItem(),p):
+               listeparam.append(getattr(self.tree.currentItem(),p))
+        fonction(listeparam)
+
+
     def createActions(self):
         self.CommApres = QAction('apres',self.tree)
         self.tree.connect(self.CommApres,SIGNAL("activated()"),self.addCommApres)
