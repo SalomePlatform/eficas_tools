@@ -462,7 +462,7 @@ class JDCEditor(QSplitter):
          self.affiche_infos("Copie refusee",Qt.red)
          return
     
-      if child==None:
+      if child==None or child==0:
          QMessageBox.critical( self, "Copie refusee",'Eficas n a pas réussi à copier l objet')
          self.message = ''
          self.affiche_infos("Copie refusee",Qt.red)
