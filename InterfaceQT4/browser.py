@@ -274,12 +274,26 @@ class JDCNode(QTreeWidgetItem):
         obj=self.item.additem(name,index) #CS_pbruno emet le signal 'add'
         if obj is None:obj=0
         if obj == 0:return 0
-        # Souci pour gerer les copies des AFFE d'une commande à l autre
+        #try :
+        #  child=self.children[index]
+        #  child.affichePanneau() 
+        #except:
+          # Souci pour gerer les copies des AFFE d'une commande à l autre
+        #  try :
+        #     old_obj = self.item.object.get_child(name.nom,restreint = 'oui')
+        #     child=old_obj[-1]
+        #     child.affichePanneau() 
         try :
-          child=self.children[index]
+          old_obj = self.item.object.get_child(name.nom,restreint = 'oui')
+          child=old_obj[-1]
           child.affichePanneau() 
         except:
-          pass
+          # Souci pour gerer les copies des AFFE d'une commande à l autre
+          try :
+             child=self.children[index]
+             child.affichePanneau() 
+          except :
+             pass
         return child
 
     def delete(self):
