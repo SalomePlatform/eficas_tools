@@ -57,12 +57,25 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
              l=os.listdir(dirCode)
              self.groupCodes.addButton(bouton)
           except :
-             bouton.close()
+             clef="PREFS_CATA_"+code
+             try :
+                repIntegrateur=os.path.abspath(os.environ[clef])
+                l=os.listdir(repIntegrateur)
+                self.groupCodes.addButton(bouton)
+             except :
+                bouton.close()
 
   def choisitCode(self):
       bouton=self.groupCodes.checkedButton()
       code=str(bouton.text())
       codeUpper=code.upper()
       self.parentAppli.code=codeUpper
-      sys.path.insert(0,os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code)))
+      try :
+          dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))
+          l=os.listdir(dirCode)
+          sys.path.insert(0,dirCode)
+      except :
+          repIntegrateur=os.path.abspath(os.environ[clef])
+          l=os.listdir(repIntegrateur)
+          sys.path.insert(0,repIntegrateur)
       self.close()
