@@ -143,6 +143,7 @@ class JDCEditor(QSplitter):
         
         if self.jdc:            
             self.jdc.appli = self
+            self.jdc.lang    = self.appli.CONFIGURATION.lang
             txt_exception  = None
             if not jdc:
                 self.jdc.analyse()            
@@ -179,6 +180,7 @@ class JDCEditor(QSplitter):
            jdc.recorded_units=units
            jdc.old_recorded_units=units
         jdc.analyse()        
+        jdc.lang    = self.appli.CONFIGURATION.lang
         return jdc
         
     #--------------------------------#
@@ -359,6 +361,8 @@ class JDCEditor(QSplitter):
 	   mapalette.setColor( QPalette.WindowText, couleur )
 	   self.sb.setPalette( mapalette );
            self.sb.showMessage(QString.fromUtf8(message))#,2000)
+           #if couleur==Qt.red :
+           #   QToolTip.showText(QPoint(0,0),'tttttttttttt',self.sb)
 
     #------------------------------#
     def affiche_alerte(self,titre,message):

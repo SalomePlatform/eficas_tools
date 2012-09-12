@@ -20,14 +20,7 @@
 """
 """
 import string
-
 import Noyau
-
-try:
-  import prefs
-  lang=prefs.lang
-except:
-  lang='fr'
 
 import CONNECTOR
 
@@ -132,9 +125,12 @@ class OBJECT:
          en tenant compte de la langue
      """
      try :
-        return getattr(self.definition,lang)
+        return getattr(self.definition,self.jdc.lang)
      except:
-        return ''
+        try :
+            return getattr(self.definition,"fr")
+        except :
+            return ''
 
   def update_concept(self,sd):
      pass
