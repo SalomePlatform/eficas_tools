@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,7 +18,16 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-code="Syrthes" 
-import sys, os
-if os.path.dirname(os.path.abspath(__file__)) not in sys.path :
-   sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
+"""
+   Ce module sert à lancer EFICAS configuré pour Syrthes
+"""
+# Modules Python
+
+# Modules Eficas
+import prefs
+name='prefs_'+prefs.code
+__import__(name)
+
+import sys
+from InterfaceQT4 import eficas_go
+eficas_go.lance_eficas(code=prefs.code)
