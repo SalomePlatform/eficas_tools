@@ -277,6 +277,7 @@ class PythonGenerator:
       """
       try:
         sdname= self.generator(obj.sd)
+        if  string.find(sdname,'SD_') != -1: sdname='sansnom'
       except:
         sdname='sansnom'
       l=[]
