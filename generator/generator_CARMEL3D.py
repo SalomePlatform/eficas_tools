@@ -405,7 +405,7 @@ class CARMEL3DGenerator(PythonGenerator):
                  texte+="            LAW LINEAR\n"
 	         texte+="            HOMOGENOUS TRUE\n"
 	         texte+="            ISOTROPIC TRUE\n"
-	         texte+="            VALUE COMPLEX "
+	         texte+="            VALUE "
   #               print "nbre a formater : ",obj.valeur[keyN1]["VALUE_COMPLEX"]
                  chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
 	         texte+= chC+"\n"
@@ -451,7 +451,7 @@ class CARMEL3DGenerator(PythonGenerator):
 	         texte+="            LAW LINEAR\n"
 	         texte+="            HOMOGENOUS TRUE\n"
 	         texte+="            ISOTROPIC TRUE\n"
-	         texte+="            VALUE COMPLEX "
+	         texte+="            VALUE "
                  chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
 	         texte+= chC+"\n"
 	          
@@ -496,7 +496,7 @@ class CARMEL3DGenerator(PythonGenerator):
 	         texte+="            LAW LINEAR\n"
 	         texte+="            HOMOGENOUS TRUE\n"
 	         texte+="            ISOTROPIC TRUE\n"
-	         texte+="            VALUE COMPLEX "
+	         texte+="            VALUE "
                  chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
 	         texte+= chC+"\n"
 	          
@@ -506,23 +506,21 @@ class CARMEL3DGenerator(PythonGenerator):
   
    def formateCOMPLEX(self,nbC):
  # prise en compte des differentes formes de description d un nombre complexe
- # 3 formats possibles : 2 tuples et 1 nombre
- #      print "formatage "
- #      print "type : ", type(nbC), "pour ", nbC
+ # 3 formats possibles : 2 listes (anciennement tuples?)  et 1 nombre complexe
+       print "formatage "
+       print "type : ", type(nbC), "pour ", nbC
        nbformate =""
-       if isinstance(nbC,tuple) :
-          if nbC[0] == "RI" :
-                nbformate = str(nbC[1])+" "+str(nbC[2])            
+       if isinstance(nbC,(tuple,list)) :
+          if nbC[0] == "'RI'" :
+                nbformate = "COMPLEX " + str(nbC[1])+" "+str(nbC[2])            
       
-          if nbC[0] == "MP" :
-                nbformate = str(nbC[1])+" "+str(nbC[2])            
-                print "attention : nombre complexe sous format MP"            
+          if nbC[0] == "'MP'" :
+                nbformate = "POLAR " + str(nbC[1])+" "+str(nbC[2])            
 
        else :
-#         print "nombre"
-          nbformate = str(nbC.real)+" "+str(nbC.imag)
+          nbformate = "COMPLEX" + str(nbC.real)+" "+str(nbC.imag)
 
-#       print "nbformate : ", nbformate
+       print "nbformate : ", nbformate
        return nbformate
 
 
