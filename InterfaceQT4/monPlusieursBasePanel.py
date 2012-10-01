@@ -101,7 +101,7 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
            self.editor.affiche_infos("Aucune Valeur",Qt.red)
            return
         self.node.item.set_valeur(self.listeValeursCourantes)
-	self.editor.affiche_infos("Valeur Acceptée")
+	self.editor.affiche_infos("Valeur Acceptee")
 
 
   def BParametresPressed(self):
