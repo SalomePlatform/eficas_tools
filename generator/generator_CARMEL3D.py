@@ -518,7 +518,7 @@ class CARMEL3DGenerator(PythonGenerator):
                 nbformate = "POLAR " + str(nbC[1])+" "+str(nbC[2])            
 
        else :
-          nbformate = "COMPLEX" + str(nbC.real)+" "+str(nbC.imag)
+          nbformate = "COMPLEX " + str(nbC.real)+" "+str(nbC.imag)
 
        print "nbformate : ", nbformate
        return nbformate
