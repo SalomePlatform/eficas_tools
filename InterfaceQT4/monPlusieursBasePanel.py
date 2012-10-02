@@ -100,6 +100,16 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         if self.listeValeursCourantes == [] :
            self.editor.affiche_infos("Aucune Valeur",Qt.red)
            return
+        min,max = self.node.item.GetMinMax()
+        if len(self.listeValeursCourantes) > max :
+            commentaire="La liste comporte trop d elements : la cardinalite maximale est "+ str(max)
+            self.editor.affiche_infos(commentaire,Qt.red)
+            return 
+        if len(self.listeValeursCourantes) < min :
+            commentaire="La liste ne comporte pas suffisament d elements : la cardinalite minimale est "+ str(min)
+            self.editor.affiche_infos(commentaire,Qt.red)
+            return 
+
         self.node.item.set_valeur(self.listeValeursCourantes)
 	self.editor.affiche_infos("Valeur Acceptee")
 

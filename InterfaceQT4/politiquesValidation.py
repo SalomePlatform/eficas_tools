@@ -222,10 +222,11 @@ class PolitiquePlusieurs(Validation):
          encorevalide=self.node.item.valide_liste_partielle(valeurTuple,listecourante)
          if not encorevalide :
             commentaire2=self.node.item.info_erreur_liste()
-            # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
-            min,max = self.node.item.GetMinMax()
-            if len(listecourante) + 1 >= max :
-               commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
-               return valide,commentaire,commentaire2,listeRetour
+            return valide,commentaire,commentaire2,listeRetour
+         #min,max = self.node.item.GetMinMax()
+         #if len(listecourante)  >= max :
+         #   commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
+         #   valide=0
+         #   return valide,commentaire,commentaire2,listeRetour
          listeRetour.append(valeurTuple)
          return valide,commentaire,commentaire2,listeRetour
