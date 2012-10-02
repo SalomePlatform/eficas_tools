@@ -171,7 +171,10 @@ class PolitiquePlusieurs(Validation):
                    #return testtype,commentaire,"",listeRetour
                    pass
              if not valide:
-                commentaire="Valeur "+str(valeur)+ " incorrecte : ajout à la liste refusé"
+                if commentaire.find("On attend un chaine") > 1 :
+                   commentaire="Valeur "+str(valeur)+ " incorrecte : ajout à la liste refusé: On attend une chaine de caracteres < 8"
+                else :
+                   commentaire="Valeur "+str(valeur)+ " incorrecte : ajout à la liste refusé"
                 commentaire2=self.node.item.info_erreur_item()
                 return valide,commentaire,commentaire2,listeRetour
 
