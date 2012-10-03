@@ -34,9 +34,11 @@ from prefs_CARMEL3D import repIni
 
 # --------------------------------------------------
 # definition d une classe pour les materiaux
+# definition d une classe pour les sources
 # definition d une classe pour les groupes de mailles
 # --------------------------------------------------
 class materiau ( ASSD ) : pass
+class source   ( ASSD ) : pass
 class grmaille ( ASSD ) : pass
 
 #CONTEXT.debug = 1
@@ -54,7 +56,7 @@ JdC = JDC_CATA ( code = 'CARMEL3D',
 
 # --------------------------------------------------
 # definition de groupe de mailles
-# et association du nom du materiau au groupe de mailles
+# il est associe a un  materiau ou a une source
 #---------------------------------------------------
 
 MESH_GROUPE     = OPER (nom = "MESH_GROUPE",
@@ -64,6 +66,9 @@ MESH_GROUPE     = OPER (nom = "MESH_GROUPE",
 		    fr= "definition du groupe de mailles", 
 		    ang = " mesh group definition", 
                     sd_prod= grmaille,
+                    regles =(
+                             EXCLUS ('MON_MATER','MA_SOURCE'),
+                           ),
 
 # ----------------------------------------------------------
 # le mot cle SIMP doit etre facultatif sinon la recuperation 
@@ -74,6 +79,11 @@ MESH_GROUPE     = OPER (nom = "MESH_GROUPE",
  		                 typ=(materiau,),
                                  ang="name of the linked material",
  		                 fr ="nom du materiau associe",
+                                ), 
+              MA_SOURCE =  SIMP (statut="f",
+ 		                 typ=(source,),
+                                 ang="name of the linked source",
+ 		                 fr ="nom de la source associee",
                                 ), 
                       )
 
@@ -3080,25 +3090,33 @@ MATERIALS = OPER (nom = "MATERIALS",
 
     ) # fin OPER Materials
     
-#================================
+#===================================================================
 # 3eme bloc : bloc SOURCES
-#================================
+#====================================================================
+# definition des differentes sources qui seront dans le bloc SOURCES
+#-------------------------------------------------------------------
+#
 
-SOURCES = PROC ( nom = "SOURCES",
+SOURCES = OPER ( nom = "SOURCES",
                  op = None,
 		 repetable = 'n',
-                 ang = "sources block definition", 
-                 fr = "definition du bloc sources", 
+                 ang = "source definition", 
+                 fr = "definition d une source", 
+                 sd_prod= source,
 
- STRANDED_INDUCTOR  = FACT (statut="f",
-                            fr="stranded inductor source",
-                            ang="stranded inductor source",
+         TYPE_SOURCE = SIMP (statut="o",
+	                     typ="TXM",
+			     into=("STRANDED_INDUCTOR","HPORT","EPORT"),
+                             fr="type de source",
+                             ang="type of source",
+			  ),
+
+
+#----------------------------------------------------------
+# sous bloc niveau 1 : stranded inductor source 
+##---------------------------------------------------------
+  st_ind_properties=BLOC(condition="TYPE_SOURCE=='STRANDED_INDUCTOR'",
 		
-                      NAME     = SIMP (statut="o",
-		                       typ="TXM",
-                                       ang="name of the source",
-                                       fr="nom de la source",
-				       ),
                       NTURNS   = SIMP (statut="o",
 		                       typ="I",
 				       defaut=1,
@@ -3118,17 +3136,13 @@ SOURCES = PROC ( nom = "SOURCES",
                                        ang="polarization",
 				       ),
 
-                      ), # fin FACT inductor
+                      ), # fin bloc stranded inductor
 			    
- EPORT = FACT (statut="f",
-               fr="eport source",
-               ang="eport source",
+#----------------------------------------------------------
+# sous bloc niveau 1 : eport source 
+#----------------------------------------------------------
+  eport_properties=BLOC(condition="TYPE_SOURCE=='EPORT'",
 		
-         NAME     = SIMP (statut="o",
-	                  typ="TXM",
-                          ang="name of the source",
-                          fr="nom de la source",
-			  ),
          TYPE     = SIMP (statut="o",
 	                  typ="TXM",
 			  into=("VOLTAGE","CURRENT"),
@@ -3148,17 +3162,12 @@ SOURCES = PROC ( nom = "SOURCES",
                           ang="polarization",
 			  ),
 
-               ), # fin FACT eport
+               ), # fin bloc eport
 
- HPORT = FACT (statut="f",
-               fr="hport source",
-               ang="hport source",
-         
-	 NAME     = SIMP (statut="o",
-	                  typ="TXM",
-                          ang="name of the source",
-                          fr="nom de la source",
-			  ),
+#----------------------------------------------------------
+# sous bloc niveau 1 : hport source 
+#----------------------------------------------------------
+  hport_properties=BLOC(condition="TYPE_SOURCE=='HPORT'",
          TYPE     = SIMP (statut="o",
 	                  typ="TXM",
 			  into=("VOLTAGE","CURRENT"),
@@ -3178,6 +3187,6 @@ SOURCES = PROC ( nom = "SOURCES",
                           ang="polarization",
 			  ),
 
-               ), # fin FACT hport
-) # Fin PROC sources
+               ), # fin bloc hport
+) # Fin OPER sources
 
