@@ -238,6 +238,9 @@ class JDCEditor(QSplitter):
              if pareil == False and (self.QWParent != None) :
                 QMessageBox.warning( self, "fichier modifie","Attention! fichier change hors EFICAS")
              p.text=texteNew
+             memeVersion,texteNew=self.verifieVersionCataDuJDC(p.text)
+             if memeVersion == 0 : texteNew=self.traduitCatalogue(texteNew)
+             p.text=texteNew
              text=p.convert('exec',self.appliEficas)
              if not p.cr.estvide():                 
                 self.affiche_infos("Erreur a la conversion",Qt.red)
@@ -590,6 +593,7 @@ class JDCEditor(QSplitter):
                   txt += eol
             else:
                 txt += eol        
+            txt=self.ajoutVersionCataDsJDC(txt)
             checksum=self.get_checksum(txt)
             txt=txt+checksum
         try:
@@ -671,6 +675,7 @@ class JDCEditor(QSplitter):
            if abort == 1 :  return (0, "")
       return (1,fn)
 
+    #-----------------#
     def saveRun(self):
     #-----------------#
         texte=self.run(execution="non")
@@ -847,8 +852,51 @@ class JDCEditor(QSplitter):
             jdcText = ''
         return ulfile, jdcText
 
+    #-------------------------------------#
+    def ajoutVersionCataDsJDC(self,txt):
+    #-------------------------------------#
+        if not hasattr(self.readercata.cata[0],'version_cata'): return txt
+        ligneVersion="#VERSION_CATA:"+self.readercata.cata[0].version_cata+":FIN VERSION_CATA\n"
+        texte=txt+ligneVersion
+        return texte
 
+    #-------------------------------------#
+    def verifieVersionCataDuJDC(self,text):
+    #-------------------------------------#
+        memeVersion=False
+        indexDeb=text.find("#VERSION_CATA:")
+        indexFin=text.find(":FIN VERSION_CATA")
+        if indexDeb < 0 : 
+           self.versionCataDuJDC="sans"
+           textJDC=text
+        else :
+           self.versionCataDuJDC=text[indexDeb+13:indexFin]
+           textJDC=text[0:indexDeb]+text[indexFin+17:-1]
      
+        self.versionCata="sans"
+        if hasattr(self.readercata.cata[0],'version_cata'): self.versionCata=self.readercata.cata[0].version_cata
+
+        if self.versionCata==self.versionCataDuJDC : memeVersion=True
+        return memeVersion,textJDC
+        
+    #-------------------------------#
+    def traduitCatalogue(self,texte):
+    #-------------------------------#
+        nomTraducteur="traduit"+self.readercata.code+self.versionCataDuJDC+"To"+self.versionCata
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"../Traducteur")))
+        print nomTraducteur
+        #try :
+        if 1 :
+            print "hh"
+            traducteur=__import__(nomTraducteur)
+            monTraducteur=traducteur.MonTraducteur(texte)
+            nouveauTexte=monTraducteur.traduit()
+            return nouveauTexte
+        else :
+        #except :
+            return texte
+     
+
     #------------------------------#
     def verifieCHECKSUM(self,text):
     #------------------------------#
@@ -861,6 +909,7 @@ class JDCEditor(QSplitter):
         checksum=self.get_checksum(textJDC)
         pareil=(checkAvant==checksum)
         return pareil, textJDC
+
     #---------------------------#
     def get_checksum(self,texte):
     #---------------------------#

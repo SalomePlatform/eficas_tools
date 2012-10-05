@@ -22,7 +22,7 @@ import compiler
 import types
 from parseur  import Keyword, FactNode, lastparen, lastparen2,maskStringsAndComments
 from visiteur import KeywordFinder, visitor
-from utils    import indexToCoordinates
+import utils
 import traceback
 
 debug=0

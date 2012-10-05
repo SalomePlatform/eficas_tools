@@ -25,12 +25,11 @@ from mocles import parseKeywords
 
 
 
-class JDC:
+class JDCTrad:
     """Cet objet conserve toutes les informations relatives à un fichier de commandes .comm"""
 
-    def __init__(self,filename,src,atraiter):
+    def __init__(self,src,atraiter):
     #----------------------------------------
-        self.filename = os.path.abspath(filename)
         self.atraiter=atraiter
         self.init(src,atraiter)
 
@@ -127,11 +126,16 @@ class JDC:
         self.lines[numeroLigne]=nouveauTexte
 
 def getJDC(filename,atraiter):
-#---------------------------_
+#----------------------------
 # lit le JDC
     f=open(filename)
     src=f.read()
     f.close()
-    jdc=JDC(filename,src,atraiter)
+    jdc=JDCTrad(src,atraiter)
     return jdc
 
+def getJDCFromTexte(texte,atraiter):
+#-----------------------------------
+# lit le JDC
+    jdc=JDCTrad(texte,atraiter)
+    return jdc
