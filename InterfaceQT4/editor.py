@@ -718,8 +718,10 @@ class JDCEditor(QSplitter):
     #-----------------------------------------#
     def handleAjoutGroup(self,listeGroup):
     #-----------------------------------------#
-    # liste des  prefixes de groupes de mailles et de noeuds a exclure 
-    # pour code CARMEL3D (fournis par THEMIS)
+    # CARMEL3D : a completer ou modifier :  
+    # liste des  prefixes de groupes de mailles a exclure 
+    # pour code CARMEL3D (fournis par THEMIS en dec 2011)
+    # attention : certaines les SOURCES sont exclues 
     #
          liste_prefixes_exclus = ["TOPO","CURRENT","EPORT","HPORT","PB_MOBILE","NILMAT",
                                   "VCUT","VCUTN","EWALL","HWALL","GAMMAJ","PERIODIC","APERIODIC",
@@ -741,7 +743,7 @@ class JDCEditor(QSplitter):
                 if dernier != None : new_node = dernier.append_brother("MESH_GROUPE",'after')
                 else: new_node=self.tree.racine.append_child("MESH_GROUPE",pos='first')
                 test,mess = new_node.item.nomme_sd(groupe)
-                new_node.append_child('MON_MATER')
+    #            new_node.append_child('MON_MATER')
                 dernier=new_node
 
     #-----------------------------------------#
