@@ -104,18 +104,18 @@ class CARMEL3DGenerator(PythonGenerator):
       # Cette instruction genere le contenu du fichier de parametres pour le code Carmel3D
       # si le jdc est valide (sinon cela n a pas de sens)
       if obj.isvalid() : 
-           # constitution du bloc VERSION du fichier PHYS
+           # constitution du bloc VERSION du fichier PHYS (existe toujours)
            self.generBLOC_VERSION(obj)
 
-           # constitution du bloc MATERIALS du fichier PHYS
+           # constitution du bloc MATERIALS du fichier PHYS (existe toujours)
            self.generBLOC_MATERIALS()
 
-           # constitution du bloc SOURCES du fichier PHYS
-           self.generBLOC_SOURCES()
+           # constitution du bloc SOURCES du fichier PHYS s il existe
+           if self.source == "oui" : self.generBLOC_SOURCES()
 
 #      print "texte carmel3d :\n",self.texteCarmel3D
-#      print "dictName : ",self.dictName
-#      print "dictMaterConductor : ",self.dictMaterConductor
+      print "dictName : ",self.dictName
+      print "dictMaterConductor : ",self.dictMaterConductor
 #      print "dictMaterNocond : ",self.dictMaterNocond
       
       return self.text
@@ -128,6 +128,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def initDico(self) :
  
       self.texteCarmel3D=""
+      self.source="non"
       self.dicoEtapeCourant=None
       self.dicoMCFACTCourant=None
       self.dicoCourant=None
@@ -214,7 +215,7 @@ class CARMEL3DGenerator(PythonGenerator):
       s=PythonGenerator.generETAPE(self,obj)
       obj.valeur=self.dicoEtapeCourant
 
-  #    print "ETAPE", obj.nom, "  ", obj.valeur
+      print "ETAPE :obj.nom =", obj.nom, " , obj.valeur= ", obj.valeur
 
       if obj.nom=="MESH_GROUPE" : self.generMESHGROUPE(obj)
       if obj.nom=="MATERIALS" : self.generMATERIALS(obj)
@@ -231,9 +232,15 @@ class CARMEL3DGenerator(PythonGenerator):
        try :
            texteName="        NAME     "+obj.get_sdname()+"\n"
            for cle in obj.valeur :
-   #            print "cle : ", cle
-               self.dictName[obj.valeur[cle].nom]=texteName
-    #           print "dans gener_mesh dictName : ",self.dictName
+               print "cle : ", cle
+               print "cle sd  : ", obj.valeur[cle].nom
+               print "cle dico : ",self.dictName.keys()
+               if  obj.valeur[cle].nom in self.dictName :
+                   self.dictName[obj.valeur[cle].nom] += (texteName,)
+               else:     
+                   self.dictName[obj.valeur[cle].nom]=(texteName,) 
+
+               print "dans gener_mesh 2 dictName : ",self.dictName
        except:
            pass
 
@@ -297,7 +304,8 @@ class CARMEL3DGenerator(PythonGenerator):
 
 	   texte+="         ]"+"\n"
 
-       self.dictMaterConductor[obj.get_sdname()]=[texte,]
+       self.dictMaterConductor[obj.get_sdname()]=texte
+     #  self.dictMaterConductor[obj.get_sdname()]=[texte,]
 #       print texte
    
 
@@ -344,7 +352,7 @@ class CARMEL3DGenerator(PythonGenerator):
       # fin du sous bloc de propriete
 	   texte+="         ]"+"\n"
        #print "texte = ", texte    
-       self.dictMaterNocond[obj.get_sdname()]=[texte,]
+       self.dictMaterNocond[obj.get_sdname()]=texte
  
    def generMATERIALSZSURFACIC(self,obj):
       # preparation du sous bloc ZSURFACIC
@@ -372,7 +380,7 @@ class CARMEL3DGenerator(PythonGenerator):
 	          
 	   texte+="         ]"+"\n"
 
-       self.dictMaterZsurfacic[obj.get_sdname()]=[texte,]
+       self.dictMaterZsurfacic[obj.get_sdname()]=texte
 
    def generMATERIALSEMISO(self,obj):
       # preparation du sous bloc EMISO
@@ -384,7 +392,7 @@ class CARMEL3DGenerator(PythonGenerator):
     #   if obj.get_sdname() in self.dictMaterEmIso.keys() :
      #    self.dictMaterEmIso[obj.get_sdname()].append(texte) 
       # else :
-       self.dictMaterEmIso[obj.get_sdname()]=[texte,]
+       self.dictMaterEmIso[obj.get_sdname()]=texte
   
    def generMATERIALSEMANISO(self,obj):
       # preparation du sous bloc EMANISO
@@ -396,17 +404,17 @@ class CARMEL3DGenerator(PythonGenerator):
      #  if obj.get_sdname() in self.dictMaterEmAnIso.keys() :
      #    self.dictMaterEmAnIso[obj.get_sdname()].append(texte) 
      #  else :
-       self.dictMaterEmAnIso[obj.get_sdname()]=[texte,]
+       self.dictMaterEmAnIso[obj.get_sdname()]=texte
    
    def generMATERIALSNILMAT(self,obj):
       # preparation du sous bloc NILMAT
        texte=""
-       self.dictMaterNilmat[obj.get_sdname()]=[texte,]
+       self.dictMaterNilmat[obj.get_sdname()]=texte
    
    def generMATERIALSZINSULATOR(self,obj):
       # preparation du sous bloc ZINSULATOR
        texte=""
-       self.dictMaterZinsulator[obj.get_sdname()]=[texte,]
+       self.dictMaterZinsulator[obj.get_sdname()]=texte
 
 #-------------------------------------------------------------------
 
@@ -415,10 +423,11 @@ class CARMEL3DGenerator(PythonGenerator):
      #     print "gener sources obj valeur = ", obj.valeur
           texte=""
 	  try :
-              source=obj.valeur['TYPE_SOURCE']
-              if source=="STRANDED_INDUCTOR" : self.generSOURCES_ST_IND(obj)
-              if source=="HPORT" : self.generSOURCES_H_PORT(obj)
-              if source=="EPORT" : self.generSOURCES_E_PORT(obj)
+              self.source="oui"
+              typesource=obj.valeur['TYPE_SOURCE']
+              if typesource=="STRANDED_INDUCTOR" : self.generSOURCES_ST_IND(obj)
+              if typesource=="HPORT" : self.generSOURCES_H_PORT(obj)
+              if typesource=="EPORT" : self.generSOURCES_E_PORT(obj)
 	  except:
 	      pass
 
@@ -428,7 +437,7 @@ class CARMEL3DGenerator(PythonGenerator):
 	  try :
 	      texte+="        NTURNS "+ str(obj.valeur['NTURNS']) + "\n"
 	      texte+="        CURJ POLAR " + str(obj.valeur['CURJ']) +" " +str(obj.valeur['POLAR'])+"\n" 
-              self.dictSourceStInd[obj.get_sdname()]=[texte,]
+              self.dictSourceStInd[obj.get_sdname()]=texte
   #            print texte
 	  except:
 	      pass
@@ -439,7 +448,7 @@ class CARMEL3DGenerator(PythonGenerator):
 	  try :
 	      texte+="        TYPE "+ str(obj.valeur['TYPE']) + "\n"
 	      texte+="        AMP POLAR " + str(obj.valeur['AMP']) +" " +str(obj.valeur['POLAR'])+"\n" 
-              self.dictSourceHport[obj.get_sdname()]=[texte,]
+              self.dictSourceHport[obj.get_sdname()]=texte
   #            print texte
 	  except:
 	      pass
@@ -450,7 +459,7 @@ class CARMEL3DGenerator(PythonGenerator):
 	  try :
 	      texte+="        TYPE "+ str(obj.valeur['TYPE']) + "\n"
 	      texte+="        AMP POLAR " + str(obj.valeur['AMP']) +" " +str(obj.valeur['POLAR'])+"\n" 
-              self.dictSourceEport[obj.get_sdname()]=[texte,]
+              self.dictSourceEport[obj.get_sdname()]=texte
   #            print texte
 	  except:
 	      pass
@@ -514,57 +523,65 @@ class CARMEL3DGenerator(PythonGenerator):
       # constitution du bloc CONDUCTOR du fichier PHYS
     
       for cle in self.dictMaterConductor.keys():
-          self.texteCarmel3D+="     [CONDUCTOR\n"
           if cle not in self.dictName.keys():
+              self.texteCarmel3D+="     [CONDUCTOR\n"
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
               self.texteCarmel3D+=str(self.dictName["grm_def"])
+              self.texteCarmel3D+= self.dictMaterConductor[cle] 
+              self.texteCarmel3D+="     ]\n"
           else : 
-              self.texteCarmel3D+=str(self.dictName[cle])
-          for chaine in self.dictMaterConductor[cle] :
-              self.texteCarmel3D+=chaine
+              for elt_tup in self.dictName[cle] :
+                   self.texteCarmel3D+="     [CONDUCTOR\n"
+                   self.texteCarmel3D+=str(elt_tup)
+                   self.texteCarmel3D+= self.dictMaterConductor[cle] 
+                   self.texteCarmel3D+="     ]\n"
      
-          self.texteCarmel3D+="     ]\n"
 
 
    def creaBLOC_NOCOND(self) :
       # constitution du bloc NOCOND du fichier PHYS
     
       for cle in self.dictMaterNocond.keys():
-          self.texteCarmel3D+="     [NOCOND\n"
           if cle not in self.dictName.keys():
+              self.texteCarmel3D+="     [NOCOND\n"
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
               self.texteCarmel3D+=str(self.dictName["grm_def"])
+              self.texteCarmel3D+= self.dictMaterNocond[cle] 
+              self.texteCarmel3D+="     ]\n"
           else : 
-              self.texteCarmel3D+=str(self.dictName[cle])
-          for chaine in self.dictMaterNocond[cle] :
-              self.texteCarmel3D+=chaine
-          self.texteCarmel3D+="     ]\n"
+              for elt_tup in self.dictName[cle] :
+                   self.texteCarmel3D+="     [NOCOND\n"
+                   self.texteCarmel3D+=str(elt_tup)
+                   self.texteCarmel3D+= self.dictMaterNocond[cle] 
+                   self.texteCarmel3D+="     ]\n"
 
 
    def creaBLOC_ZSURFACIC(self) :
       # constitution du bloc ZSURFACIC du fichier PHYS
     
       for cle in self.dictMaterZsurfacic.keys():
-          self.texteCarmel3D+="     [ZSURFACIC\n"
           if cle not in self.dictName.keys():
+              self.texteCarmel3D+="     [ZSURFACIC\n"
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
               self.texteCarmel3D+=str(self.dictName["grm_def"])
+              self.texteCarmel3D+= self.dictMaterZsurfacic[cle] 
+              self.texteCarmel3D+="     ]\n"
           else : 
-              self.texteCarmel3D+=str(self.dictName[cle])
-          for chaine in self.dictMaterZsurfacic[cle] :
-              self.texteCarmel3D+=chaine
-          self.texteCarmel3D+="     ]\n"
+              for elt_tup in self.dictName[cle] :
+                   self.texteCarmel3D+="     [ZSURFACIC\n"
+                   self.texteCarmel3D+=str(elt_tup)
+                   self.texteCarmel3D+= self.dictMaterZsurfacic[cle] 
+                   self.texteCarmel3D+="     ]\n"
 
    def creaBLOC_EMISO(self) :
       # constitution du bloc EMISO du fichier PHYS
     
       for cle in self.dictMaterEmIso.keys():
           self.texteCarmel3D+="     [EM_ISOTROPIC_FILES\n"
-          for chaine in self.dictMaterEmIso[cle] :
-              self.texteCarmel3D+=chaine
+          self.texteCarmel3D+= self.dictMaterEmIso[cle] 
           self.texteCarmel3D+="     ]\n"
 
    def creaBLOC_EMANISO(self) :
@@ -572,35 +589,40 @@ class CARMEL3DGenerator(PythonGenerator):
     
       for cle in self.dictMaterEmAnIso.keys():
           self.texteCarmel3D+="     [EM_ANISOTROPIC_FILES\n"
-          for chaine in self.dictMaterEmAnIso[cle] :
-              self.texteCarmel3D+=chaine
+          self.texteCarmel3D+=  self.dictMaterEmAnIso[cle] 
           self.texteCarmel3D+="     ]\n"
 
    def creaBLOC_ZINSULATOR(self) :
       # constitution du bloc ZINSULATOR du fichier PHYS
     
       for cle in self.dictMaterZinsulator.keys():
-          self.texteCarmel3D+="     [ZINSULATOR\n"
           if cle not in self.dictName.keys():
+              self.texteCarmel3D+="     [ZINSULATOR\n"
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
               self.texteCarmel3D+=str(self.dictName["grm_def"])
+              self.texteCarmel3D+="     ]\n"
           else : 
-              self.texteCarmel3D+=str(self.dictName[cle])
-          self.texteCarmel3D+="     ]\n"
+              for elt_tup in self.dictName[cle] :
+                  self.texteCarmel3D+="     [ZINSULATOR\n"
+                  self.texteCarmel3D+=str(elt_tup)
+                  self.texteCarmel3D+="     ]\n"
 
    def creaBLOC_NILMAT(self) :
       # constitution du bloc NILMAT du fichier PHYS
     
       for cle in self.dictMaterNilmat.keys():
-          self.texteCarmel3D+="     [NILMAT\n"
           if cle not in self.dictName.keys():
+              self.texteCarmel3D+="     [NILMAT\n"
               print "Attention : groupe de maille non defini pour materiau : ",cle
               print "fichier phys incomplet "
               self.texteCarmel3D+=str(self.dictName["grm_def"])
+              self.texteCarmel3D+="     ]\n"
           else : 
-              self.texteCarmel3D+=str(self.dictName[cle])
-          self.texteCarmel3D+="     ]\n"
+              for elt_tup in self.dictName[cle] :
+                  self.texteCarmel3D+="     [NILMAT\n"
+                  self.texteCarmel3D+=str(elt_tup)
+                  self.texteCarmel3D+="     ]\n"
 
 #----------------------------------------------------------------------------------------
    def generBLOC_SOURCES(self):
@@ -622,46 +644,55 @@ class CARMEL3DGenerator(PythonGenerator):
       # constitution du bloc STRANDED INDUCTOR du fichier PHYS
     
       for cle in self.dictSourceStInd.keys():
-          self.texteCarmel3D+="     [STRANDED INDUCTOR\n"
           if cle not in self.dictName.keys():
+              self.texteCarmel3D+="     [STRANDED INDUCTOR\n"
               print "Attention : groupe de maille non defini pour source : ",cle
               print "fichier phys incomplet "
               self.texteCarmel3D+=str(self.dictName["grm_def"])
+              self.texteCarmel3D+= self.dictSourceStInd[cle] 
+              self.texteCarmel3D+="     ]\n"
           else : 
-              self.texteCarmel3D+=str(self.dictName[cle])
-          for chaine in self.dictSourceStInd[cle] :
-              self.texteCarmel3D+=chaine
-          self.texteCarmel3D+="     ]\n"
+              for elt_tup in self.dictName[cle] :
+                   self.texteCarmel3D+="     [STRANDED INDUCTOR\n"
+                   self.texteCarmel3D+=str(elt_tup)
+                   self.texteCarmel3D+=  self.dictSourceStInd[cle] 
+                   self.texteCarmel3D+="     ]\n"
 
    def creaBLOC_EPORT(self) :
       # constitution du bloc EPORT du fichier PHYS
     
       for cle in self.dictSourceEport.keys():
-          self.texteCarmel3D+="     [EPORT\n"
           if cle not in self.dictName.keys():
+              self.texteCarmel3D+="     [EPORT\n"
               print "Attention : groupe de maille non defini pour source : ",cle
               print "fichier phys incomplet "
               self.texteCarmel3D+=str(self.dictName["grm_def"])
+              self.texteCarmel3D+= self.dictSourceEport[cle] 
+              self.texteCarmel3D+="     ]\n"
           else : 
-              self.texteCarmel3D+=str(self.dictName[cle])
-          for chaine in self.dictSourceEport[cle] :
-              self.texteCarmel3D+=chaine
-          self.texteCarmel3D+="     ]\n"
+              for elt_tup in self.dictName[cle] :
+                   self.texteCarmel3D+="     [EPORT\n"
+                   self.texteCarmel3D+=str(elt_tup)
+                   self.texteCarmel3D+=  self.dictSourceEport[cle] 
+                   self.texteCarmel3D+="     ]\n"
 
    def creaBLOC_HPORT(self) :
       # constitution du bloc HPORT du fichier PHYS
     
       for cle in self.dictSourceHport.keys():
-          self.texteCarmel3D+="     [HPORT\n"
           if cle not in self.dictName.keys():
+              self.texteCarmel3D+="     [HPORT\n"
               print "Attention : groupe de maille non defini pour source : ",cle
               print "fichier phys incomplet "
               self.texteCarmel3D+=str(self.dictName["grm_def"])
+              self.texteCarmel3D+= self.dictSourceHport[cle] 
+              self.texteCarmel3D+="     ]\n"
           else : 
-              self.texteCarmel3D+=str(self.dictName[cle])
-          for chaine in self.dictSourceHport[cle] :
-              self.texteCarmel3D+=chaine
-          self.texteCarmel3D+="     ]\n"
+              for elt_tup in self.dictName[cle] :
+                   self.texteCarmel3D+="     [HPORT\n"
+                   self.texteCarmel3D+=str(elt_tup)
+                   self.texteCarmel3D+=  self.dictSourceHport[cle] 
+                   self.texteCarmel3D+="     ]\n"
 
 #----------------------------------------------------------------------------
 
