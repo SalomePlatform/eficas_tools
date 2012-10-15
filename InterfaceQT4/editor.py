@@ -50,8 +50,8 @@ class JDCEditor(QSplitter):
     #----------------------------------------------------------------------------------------------------------#
 
         QSplitter.__init__(self, QWParent)
-	self.appliEficas = appli
-	self.appli       = appli  #---- attendu par IHM
+        self.appliEficas = appli
+        self.appli       = appli  #---- attendu par IHM
         self.vm          = vm
         self.fichier     = fichier
         self.jdc         = jdc
@@ -238,9 +238,6 @@ class JDCEditor(QSplitter):
              if pareil == False and (self.QWParent != None) :
                 QMessageBox.warning( self, "fichier modifie","Attention! fichier change hors EFICAS")
              p.text=texteNew
-             memeVersion,texteNew=self.verifieVersionCataDuJDC(p.text)
-             if memeVersion == 0 : texteNew=self.traduitCatalogue(texteNew)
-             p.text=texteNew
              text=p.convert('exec',self.appliEficas)
              if not p.cr.estvide():                 
                 self.affiche_infos("Erreur a la conversion",Qt.red)
@@ -359,13 +356,13 @@ class JDCEditor(QSplitter):
     def affiche_infos(self,message,couleur=Qt.black):
     #----------------------------------------------#
         if self.sb:
-           mapalette=self.sb.palette()
-           from PyQt4.QtGui import QPalette
-	   mapalette.setColor( QPalette.WindowText, couleur )
-	   self.sb.setPalette( mapalette );
-           self.sb.showMessage(QString.fromUtf8(message))#,2000)
-           #if couleur==Qt.red :
-           #   QToolTip.showText(QPoint(0,0),'tttttttttttt',self.sb)
+            mapalette=self.sb.palette()
+            from PyQt4.QtGui import QPalette
+            mapalette.setColor( QPalette.WindowText, couleur )
+            self.sb.setPalette( mapalette );
+            self.sb.showMessage(QString.fromUtf8(message))#,2000)
+            #if couleur==Qt.red :
+            #   QToolTip.showText(QPoint(0,0),'tttttttttttt',self.sb)
 
     #------------------------------#
     def affiche_alerte(self,titre,message):
@@ -386,7 +383,7 @@ class JDCEditor(QSplitter):
     def chercheNoeudSelectionne(self,copie=1):
     #---------------------------------------#
       """
-	appele par Cut et Copy pour positionner self.node_selected
+      appele par Cut et Copy pour positionner self.node_selected
       """
       self.node_selected=[]
       if len(self.tree.selectedItems()) == 0 : return
@@ -438,12 +435,12 @@ class JDCEditor(QSplitter):
       if (not(hasattr(self.QWParent,'noeud_a_editer'))) or len(self.QWParent.noeud_a_editer)==0:
           QMessageBox.information( self, 
                       "Copie impossible",
-                      "Veuillez selectionner un objet � copier")
+                      "Veuillez selectionner un objet ŕ copier")
           return
       if len(self.node_selected) != 1 : 
           QMessageBox.information( self, 
                       "Copie impossible",
-                      "Veuillez selectionner un seul objet : la copie se fera apr�s le noeud selectionn�")
+                      "Veuillez selectionner un seul objet : la copie se fera aprčs le noeud selectionné")
           return
 
       if len(self.QWParent.noeud_a_editer)!=1:
@@ -470,7 +467,7 @@ class JDCEditor(QSplitter):
          return
     
       if child==None or child==0:
-         QMessageBox.critical( self, "Copie refusee",'Eficas n a pas r�ussi � copier l objet')
+         QMessageBox.critical( self, "Copie refusee",'Eficas n a pas réussi ŕ copier l objet')
          self.message = ''
          self.affiche_infos("Copie refusee",Qt.red)
          return
@@ -524,7 +521,7 @@ class JDCEditor(QSplitter):
 
      noeudJdc=noeudOuColler.treeParent
      dejaCrees=0
-     # on les cree � l'envers parcequ'on ajoute � NoeudOuColler
+     # on les cree ŕ l'envers parcequ'on ajoute ŕ NoeudOuColler
      listeIndex.reverse()
      for index in listeIndex:
          indexTravail=index
@@ -593,7 +590,6 @@ class JDCEditor(QSplitter):
                   txt += eol
             else:
                 txt += eol        
-            txt=self.ajoutVersionCataDsJDC(txt)
             checksum=self.get_checksum(txt)
             txt=txt+checksum
         try:
@@ -675,7 +671,6 @@ class JDCEditor(QSplitter):
            if abort == 1 :  return (0, "")
       return (1,fn)
 
-    #-----------------#
     def saveRun(self):
     #-----------------#
         texte=self.run(execution="non")
@@ -718,33 +713,89 @@ class JDCEditor(QSplitter):
     #-----------------------------------------#
     def handleAjoutGroup(self,listeGroup):
     #-----------------------------------------#
-    # CARMEL3D : a completer ou modifier :  
-    # liste des  prefixes de groupes de mailles a exclure 
-    # pour code CARMEL3D (fournis par THEMIS en dec 2011)
-    # attention : certaines les SOURCES sont exclues 
-    #
-         liste_prefixes_exclus = ["TOPO","CURRENT","EPORT","HPORT","PB_MOBILE","NILMAT",
-                                  "VCUT","VCUTN","EWALL","HWALL","GAMMAJ","PERIODIC","APERIODIC",
-                                  "HPROBE","EPROBE","BFLUX","BFLUXN","JFLUX","JFLUXN",
-                                  "PORT_OMEGA","POST_PHI","PB_GRID",
-                                  "SCUTE","SCUTN"]
-         try :
+        u"""CARMEL3D : obtention des groupes de maille du maillage sélectionné dans Salomé
+        Les groupes de mailles sont filtrés en utilisant une liste des  prefixes autorisés pour code Code_Carmel3D,
+        i.e. un nom de groupe de mailles est DIEL_toto_foo par exemple, qui deviendra toto_foo.
+        La création du MESH_GROUPE est typé (matériau ou source), d'après le préfixe.
+        ATTENTION! Le nom devenant un concept, i.e. une variable Python, certains signes sont interdits dans le nom du groupe,
+        e.g. les signes moins (-), plus (+), etc. Une erreur est retournée en ce cas.
+        """
+        from string import join
+        debug = True
+        listePrefixesMateriaux = ('DIEL', 'NOCOND','COND', 'ZS', 'ZJ', 'NILMAT') # liste des préfixes pour les matériaux
+        listePrefixesSources = ('CURRENT', 'EPORT', 'HPORT') # liste des préfixes pour les sources
+        listePrefixes = listePrefixesMateriaux + listePrefixesSources # liste de tous les préfixes autorisés
+        listePrefixesGroupesMultiples = ('CURRENT', ) # listes des préfixes autorisés pour groupes multiples, i.e. plusieurs groupes de mailles associés en une seule caractéistique matériau ou source
+        sep = '_' # séparateur entre le préfixe et le nom réel du groupe (qui peut lui aussi contenir ce séparateur)
+        dictGroupesMultiplesNomsPossibles = {} # dictionnaire contenant les noms réels possibles de groupes multiples et leur occurence dans la liste, i.e. 1 par défaut et > 1 pour une groupe multiple, e.g. pour un inducteur bobiné en plusieurs morceaux CURRENT_toto_1, CURRENT_toto_2, ce dictionnaire contiendra 'toto':2 
+        listeGroupesMultiples = [] # liste contenant les noms possibles de groupes multiples, e.g. pour un inducteur bobiné en plusieurs morceaux CURRENT_toto_1, CURRENT_toto_2, cette liste contiendra 'toto'
+        for groupe in listeGroup:
+            partiesGroupe = groupe.split(sep) # parties du nom, séparées initialement par le séparateur du préfixe, e.g. 'CURRENT_toto_foo' devient ['CURRENT','toto','foo'] et 'toto' devient ['toto']
+            prefix = partiesGroupe[0] # préfixe possible de ce nom, ou nom lui-meme
+            if len(partiesGroupe) >= 2 and prefix in listePrefixesGroupesMultiples: # préfixe existant et autorisé
+                nomGroupeMultiple = partiesGroupe[1] # nom possible d'un groupe multiple
+                if dictGroupesMultiplesNomsPossibles.has_key(nomGroupeMultiple): # comptage du nombre d'occurrences de ce nom de groupe multiple possible
+                    dictGroupesMultiplesNomsPossibles[nomGroupeMultiple] += 1
+                else:
+                    dictGroupesMultiplesNomsPossibles[nomGroupeMultiple] = 1
+        for nom in dictGroupesMultiplesNomsPossibles: # suppression des noms avec une seule occurence, i.e. ils ne sont pas des groupes multiples
+            if dictGroupesMultiplesNomsPossibles[nom] > 1: listeGroupesMultiples.append(nom)
+        if debug:
+            print "listeGroup=", listeGroup
+            print "dictGroupesMultiplesNomPossibles=", dictGroupesMultiplesNomsPossibles
+            print "listeGroupesMultiples=", listeGroupesMultiples
+            print "listePrefixes=", listePrefixes
+        # retourne le dernier élément du JdC, ou None si le JdC est vide, afin de savoir à quelle place ajouter les MESH_GROUPE (en dernier)
+        try:
             dernier=self.tree.racine.children[-1]
-         except :
+        except:
             dernier=None
-         for groupe in listeGroup :
-             exclure = 0
-             for prefix in liste_prefixes_exclus :
-                 long_pref = len(prefix)
-                 if groupe[0:long_pref]== prefix :
-                     exclure = 1
-   # le groupe de mailles n est pas a exclure            
-             if exclure == 0 :
-                if dernier != None : new_node = dernier.append_brother("MESH_GROUPE",'after')
-                else: new_node=self.tree.racine.append_child("MESH_GROUPE",pos='first')
-                test,mess = new_node.item.nomme_sd(groupe)
-    #            new_node.append_child('MON_MATER')
-                dernier=new_node
+        for groupe in listeGroup: # parcours de la liste de tous les groupes de maille trouvés (volumiques et les autres)
+            if debug: print 'groupe=', groupe
+            partiesGroupe = groupe.split(sep) # parties du nom, séparées initialement par le séparateur du préfixe, e.g. 'CURRENT_toto_foo' devient ['CURRENT','toto','foo'] et 'toto' devient ['toto']
+            prefix = partiesGroupe[0] # préfixe possible de ce nom, ou nom lui-meme
+            if len(partiesGroupe) == 1: # pas de préfixe
+                print u"ERREUR: ce nom de groupe ("+groupe+") ne peut pas être utilisé car il n'a pas de préfixe"
+            elif len(partiesGroupe) >= 2 and prefix in listePrefixes: # préfixe existant et autorisé
+                nomReel = None # initialisation du nom réel, qui provoquera une erreur par la suite (evaluation de None=None) s'il reste ainsi
+                if prefix in listePrefixesGroupesMultiples: # ce groupe pourrait faire partie d'un groupe multiple
+                    nomGroupeMultiple = partiesGroupe[1] # nom possible d'un groupe multiple
+                    if nomGroupeMultiple in listeGroupesMultiples: # ce groupe est multiple et n'a pas encore été créé
+                        nomReel = nomGroupeMultiple # ce groupe pourrait être utilisé...
+                        listeGroupesMultiples.remove(nomGroupeMultiple) #... une seule fois
+                        if debug: print u"ce nom de groupe ("+nomReel+") est multiple et sera utilisé une fois seulement"
+                    elif dictGroupesMultiplesNomsPossibles[nomGroupeMultiple] == 1: # ce groupe existe dans le dictionnaire et n'est pas multiple (occurence =1)
+                        nomReel = join(partiesGroupe[1:], sep) # reconstruction du nom réel, i.e. sans le préfixe
+                        if debug: print u"ce nom de groupe ("+nomReel+") n'est pas multiple et sera utilisé"
+                    else: # ce groupe est multiple et a déjà été utilisé
+                        if debug: print u"ce nom de groupe ("+groupe+") est multiple et a déjà été utilisé"
+                else: # ce groupe n'est pas multiple, il pourrait être utilisé tel quel
+                    nomReel = join(partiesGroupe[1:], sep) # reconstruction du nom réel, i.e. sans le préfixe
+                if nomReel is not None: # on a un nom de groupe possible, il faut réaliser des tests plus poussés
+                    try: # test de conformité du nom pour un concept, i.e. une variable Python
+                        exec(nomReel+'=None') # le test consiste à tenter de créer une variable, initialisée à None, à partir du nom, e.g. toto=None est bon mais toto-foo=None ne fonctionne pas.
+                        # création du groupe MESH_GROUPE
+                        if dernier != None:
+                            new_node = dernier.append_brother("MESHGROUP",'after')
+                        else:
+                            new_node=self.tree.racine.append_child("MESHGROUP",pos='first')
+                        test,mess = new_node.item.nomme_sd(nomReel) # précision du nom (de concept) du groupe
+                        if debug: print u"ce nom de groupe ("+nomReel+") est utilisé..."
+                        if prefix in listePrefixesMateriaux: # ce groupe est associé à un matériau
+                            new_node.append_child('MATERIAL') # on rajoute la propriété de matériau, qu'il suffit d'associer ensuite à la liste des matériaux présents
+                            if debug: print u" et c'est un matériau."
+                        elif prefix in listePrefixesSources: # ce groupe est associé à une source
+                            new_node.append_child('SOURCE') # on rajoute la propriété de la source, qu'il suffit d'associer ensuite à la liste des sources présentes
+                            if debug: print u" et c'est une source."
+                        else: # ce cas ne devrait pas se produire
+                            pass
+                        dernier=new_node # mise à jour du dernier noeud du JdC, afin de rajouter les autres MESH_GROUPE éventuels à sa suite
+                    except:
+                        print u"ERREUR: ce nom de groupe ("+nomReel+") ne peut pas être utilisé car il ne peut pas servir de concept à cause de caractères interdits, e.g. signes moins (-), plus (+), etc."
+                else: # ce nom de groupe est écarté car le groupe multiple  déjà été créé
+                        print u"Ce nom de groupe ("+groupe+") ne peut pas être utilisé car il appartient à un groupe multiple qui a déjà été créé."
+            else: # préfixe existant mais non autorisé
+                print u"ERREUR: ce nom de groupe ("+groupe+") ne peut pas être utilisé car son préfixe ("+partiesGroupe[0]+") n'est pas dans la liste autorisée "+str(listePrefixes)
 
     #-----------------------------------------#
     def saveFile(self, path = None, saveas= 0):
@@ -823,9 +874,9 @@ class JDCEditor(QSplitter):
         titre  = ""
         
         if unite :
-            titre = "Choix unit� %d " %unite
+            titre = "Choix unité %d " %unite
             texte = "Le fichier %s contient une commande INCLUDE \n" % fic_origine
-            texte = texte+'Donnez le nom du fichier correspondant\n � l unit� logique %d' % unite
+            texte = texte+'Donnez le nom du fichier correspondant\n ŕ l unité logique %d' % unite
             labeltexte = 'Fichier pour unite %d :' % unite
         else:
             titre = "Choix d'un fichier de poursuite"
@@ -844,61 +895,18 @@ class JDCEditor(QSplitter):
         ulfile = os.path.abspath(unicode(fn))
         self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
        
-        # On utilise le convertisseur défini par format_fichier
+        # On utilise le convertisseur dĂŠfini par format_fichier
         source=self.get_source(ulfile)
         if source:
-            # On a réussia convertir le fichier self.ulfile                
+            # On a rĂŠussia convertir le fichier self.ulfile                
             jdcText = source
         else:
-            # Une erreur a été rencontrée
+            # Une erreur a ĂŠtĂŠ rencontrĂŠe
             jdcText = ''
         return ulfile, jdcText
 
-    #-------------------------------------#
-    def ajoutVersionCataDsJDC(self,txt):
-    #-------------------------------------#
-        if not hasattr(self.readercata.cata[0],'version_cata'): return txt
-        ligneVersion="#VERSION_CATA:"+self.readercata.cata[0].version_cata+":FIN VERSION_CATA\n"
-        texte=txt+ligneVersion
-        return texte
 
-    #-------------------------------------#
-    def verifieVersionCataDuJDC(self,text):
-    #-------------------------------------#
-        memeVersion=False
-        indexDeb=text.find("#VERSION_CATA:")
-        indexFin=text.find(":FIN VERSION_CATA")
-        if indexDeb < 0 : 
-           self.versionCataDuJDC="sans"
-           textJDC=text
-        else :
-           self.versionCataDuJDC=text[indexDeb+13:indexFin]
-           textJDC=text[0:indexDeb]+text[indexFin+17:-1]
      
-        self.versionCata="sans"
-        if hasattr(self.readercata.cata[0],'version_cata'): self.versionCata=self.readercata.cata[0].version_cata
-
-        if self.versionCata==self.versionCataDuJDC : memeVersion=True
-        return memeVersion,textJDC
-        
-    #-------------------------------#
-    def traduitCatalogue(self,texte):
-    #-------------------------------#
-        nomTraducteur="traduit"+self.readercata.code+self.versionCataDuJDC+"To"+self.versionCata
-        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"../Traducteur")))
-        print nomTraducteur
-        #try :
-        if 1 :
-            print "hh"
-            traducteur=__import__(nomTraducteur)
-            monTraducteur=traducteur.MonTraducteur(texte)
-            nouveauTexte=monTraducteur.traduit()
-            return nouveauTexte
-        else :
-        #except :
-            return texte
-     
-
     #------------------------------#
     def verifieCHECKSUM(self,text):
     #------------------------------#
@@ -911,7 +919,6 @@ class JDCEditor(QSplitter):
         checksum=self.get_checksum(textJDC)
         pareil=(checkAvant==checksum)
         return pareil, textJDC
-
     #---------------------------#
     def get_checksum(self,texte):
     #---------------------------#
