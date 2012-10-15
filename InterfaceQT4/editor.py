@@ -50,8 +50,8 @@ class JDCEditor(QSplitter):
     #----------------------------------------------------------------------------------------------------------#
 
         QSplitter.__init__(self, QWParent)
-        self.appliEficas = appli
-        self.appli       = appli  #---- attendu par IHM
+	self.appliEficas = appli
+	self.appli       = appli  #---- attendu par IHM
         self.vm          = vm
         self.fichier     = fichier
         self.jdc         = jdc
@@ -238,6 +238,9 @@ class JDCEditor(QSplitter):
              if pareil == False and (self.QWParent != None) :
                 QMessageBox.warning( self, "fichier modifie","Attention! fichier change hors EFICAS")
              p.text=texteNew
+             memeVersion,texteNew=self.verifieVersionCataDuJDC(p.text)
+             if memeVersion == 0 : texteNew=self.traduitCatalogue(texteNew)
+             p.text=texteNew
              text=p.convert('exec',self.appliEficas)
              if not p.cr.estvide():                 
                 self.affiche_infos("Erreur a la conversion",Qt.red)
@@ -356,13 +359,13 @@ class JDCEditor(QSplitter):
     def affiche_infos(self,message,couleur=Qt.black):
     #----------------------------------------------#
         if self.sb:
-            mapalette=self.sb.palette()
-            from PyQt4.QtGui import QPalette
-            mapalette.setColor( QPalette.WindowText, couleur )
-            self.sb.setPalette( mapalette );
-            self.sb.showMessage(QString.fromUtf8(message))#,2000)
-            #if couleur==Qt.red :
-            #   QToolTip.showText(QPoint(0,0),'tttttttttttt',self.sb)
+           mapalette=self.sb.palette()
+           from PyQt4.QtGui import QPalette
+	   mapalette.setColor( QPalette.WindowText, couleur )
+	   self.sb.setPalette( mapalette );
+           self.sb.showMessage(QString.fromUtf8(message))#,2000)
+           #if couleur==Qt.red :
+           #   QToolTip.showText(QPoint(0,0),'tttttttttttt',self.sb)
 
     #------------------------------#
     def affiche_alerte(self,titre,message):
@@ -383,7 +386,7 @@ class JDCEditor(QSplitter):
     def chercheNoeudSelectionne(self,copie=1):
     #---------------------------------------#
       """
-      appele par Cut et Copy pour positionner self.node_selected
+	appele par Cut et Copy pour positionner self.node_selected
       """
       self.node_selected=[]
       if len(self.tree.selectedItems()) == 0 : return
@@ -435,12 +438,12 @@ class JDCEditor(QSplitter):
       if (not(hasattr(self.QWParent,'noeud_a_editer'))) or len(self.QWParent.noeud_a_editer)==0:
           QMessageBox.information( self, 
                       "Copie impossible",
-                      "Veuillez selectionner un objet ŕ copier")
+                      "Veuillez selectionner un objet � copier")
           return
       if len(self.node_selected) != 1 : 
           QMessageBox.information( self, 
                       "Copie impossible",
-                      "Veuillez selectionner un seul objet : la copie se fera aprčs le noeud selectionné")
+                      "Veuillez selectionner un seul objet : la copie se fera apr�s le noeud selectionn�")
           return
 
       if len(self.QWParent.noeud_a_editer)!=1:
@@ -467,7 +470,7 @@ class JDCEditor(QSplitter):
          return
     
       if child==None or child==0:
-         QMessageBox.critical( self, "Copie refusee",'Eficas n a pas réussi ŕ copier l objet')
+         QMessageBox.critical( self, "Copie refusee",'Eficas n a pas r�ussi � copier l objet')
          self.message = ''
          self.affiche_infos("Copie refusee",Qt.red)
          return
@@ -521,7 +524,7 @@ class JDCEditor(QSplitter):
 
      noeudJdc=noeudOuColler.treeParent
      dejaCrees=0
-     # on les cree ŕ l'envers parcequ'on ajoute ŕ NoeudOuColler
+     # on les cree � l'envers parcequ'on ajoute � NoeudOuColler
      listeIndex.reverse()
      for index in listeIndex:
          indexTravail=index
@@ -590,6 +593,7 @@ class JDCEditor(QSplitter):
                   txt += eol
             else:
                 txt += eol        
+            txt=self.ajoutVersionCataDsJDC(txt)
             checksum=self.get_checksum(txt)
             txt=txt+checksum
         try:
@@ -671,6 +675,7 @@ class JDCEditor(QSplitter):
            if abort == 1 :  return (0, "")
       return (1,fn)
 
+    #-----------------#
     def saveRun(self):
     #-----------------#
         texte=self.run(execution="non")
@@ -874,9 +879,9 @@ class JDCEditor(QSplitter):
         titre  = ""
         
         if unite :
-            titre = "Choix unité %d " %unite
+            titre = "Choix unit� %d " %unite
             texte = "Le fichier %s contient une commande INCLUDE \n" % fic_origine
-            texte = texte+'Donnez le nom du fichier correspondant\n ŕ l unité logique %d' % unite
+            texte = texte+'Donnez le nom du fichier correspondant\n � l unit� logique %d' % unite
             labeltexte = 'Fichier pour unite %d :' % unite
         else:
             titre = "Choix d'un fichier de poursuite"
@@ -895,18 +900,61 @@ class JDCEditor(QSplitter):
         ulfile = os.path.abspath(unicode(fn))
         self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
        
-        # On utilise le convertisseur dĂŠfini par format_fichier
+        # On utilise le convertisseur défini par format_fichier
         source=self.get_source(ulfile)
         if source:
-            # On a rĂŠussia convertir le fichier self.ulfile                
+            # On a réussia convertir le fichier self.ulfile                
             jdcText = source
         else:
-            # Une erreur a ĂŠtĂŠ rencontrĂŠe
+            # Une erreur a été rencontrée
             jdcText = ''
         return ulfile, jdcText
 
+    #-------------------------------------#
+    def ajoutVersionCataDsJDC(self,txt):
+    #-------------------------------------#
+        if not hasattr(self.readercata.cata[0],'version_cata'): return txt
+        ligneVersion="#VERSION_CATA:"+self.readercata.cata[0].version_cata+":FIN VERSION_CATA\n"
+        texte=txt+ligneVersion
+        return texte
 
+    #-------------------------------------#
+    def verifieVersionCataDuJDC(self,text):
+    #-------------------------------------#
+        memeVersion=False
+        indexDeb=text.find("#VERSION_CATA:")
+        indexFin=text.find(":FIN VERSION_CATA")
+        if indexDeb < 0 : 
+           self.versionCataDuJDC="sans"
+           textJDC=text
+        else :
+           self.versionCataDuJDC=text[indexDeb+13:indexFin]
+           textJDC=text[0:indexDeb]+text[indexFin+17:-1]
      
+        self.versionCata="sans"
+        if hasattr(self.readercata.cata[0],'version_cata'): self.versionCata=self.readercata.cata[0].version_cata
+
+        if self.versionCata==self.versionCataDuJDC : memeVersion=True
+        return memeVersion,textJDC
+        
+    #-------------------------------#
+    def traduitCatalogue(self,texte):
+    #-------------------------------#
+        nomTraducteur="traduit"+self.readercata.code+self.versionCataDuJDC+"To"+self.versionCata
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"../Traducteur")))
+        print nomTraducteur
+        #try :
+        if 1 :
+            print "hh"
+            traducteur=__import__(nomTraducteur)
+            monTraducteur=traducteur.MonTraducteur(texte)
+            nouveauTexte=monTraducteur.traduit()
+            return nouveauTexte
+        else :
+        #except :
+            return texte
+     
+
     #------------------------------#
     def verifieCHECKSUM(self,text):
     #------------------------------#
@@ -919,6 +967,7 @@ class JDCEditor(QSplitter):
         checksum=self.get_checksum(textJDC)
         pareil=(checkAvant==checksum)
         return pareil, textJDC
+
     #---------------------------#
     def get_checksum(self,texte):
     #---------------------------#
