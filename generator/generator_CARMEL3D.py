@@ -321,7 +321,7 @@ class CARMEL3DGenerator(PythonGenerator):
               if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' and keyN2 != 'NATURE' :
                    texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
           texte+="            ]"+"\n"
-          texte+="         ]"+"\n"
+       texte+="         ]"+"\n"
 
        self.dictMaterConductor[obj.get_sdname()]=texte
      #  self.dictMaterConductor[obj.get_sdname()]=[texte,]
