@@ -148,7 +148,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def initDico(self) :
  
       self.texteCarmel3D=""
-      self.debug = False # affichage de messages pour déboguage (.true.) ou non
+      self.debug = True # affichage de messages pour déboguage (.true.) ou non
       self.dicoEtapeCourant=None
       self.dicoMCFACTCourant=None
       self.dicoCourant=None
@@ -296,31 +296,46 @@ class CARMEL3DGenerator(PythonGenerator):
           texte+="            LAW LINEAR\n"
           texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
           texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-          texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
+          # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
+          # car sinon ces valeurs sont définies dans des fichiers annexes
+          homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
+          isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
+          if homogeneous and isotropic:
+             texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
       # loi lineaire complexe
-          if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
-   #            print "si avec linear complex"
-            texte+="            LAW LINEAR\n"
-            texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
-            texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-            texte+="            VALUE "
-  #               print "nbre a formater : ",obj.valeur[keyN1]["VALUE_COMPLEX"]
-            chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
-            texte+= chC+"\n"
+       if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
+   #         print "si avec linear complex"
+          texte+="            LAW LINEAR\n"
+          texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
+          texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
+          # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
+          # car sinon ces valeurs sont définies dans des fichiers annexes
+          homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
+          isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
+          if homogeneous and isotropic:
+             texte+="            VALUE "
+  #                print "nbre a formater : ",obj.valeur[keyN1]["VALUE_COMPLEX"]
+             chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
+             texte+= chC+"\n"
       # loi non lineaire de nature spline, Marrocco ou Marrocco et Saturation
       #  seuls les reels sont pris en compte
        if obj.valeur[keyN1]['TYPE_LAW']=='NONLINEAR' :
           texte+="            LAW NONLINEAR\n"
           texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
           texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-          texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE"])+" 0\n"
-          texte+="            [NONLINEAR \n"
-          texte+="                ISOTROPY TRUE\n"
-          texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
-          for keyN2 in obj.valeur[keyN1] :
-              if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' and keyN2 != 'NATURE' :
-                   texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
-          texte+="            ]"+"\n"
+          # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
+          # car sinon ces valeurs sont définies dans des fichiers annexes
+          homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
+          isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
+          if homogeneous and isotropic:
+             texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE"])+" 0\n"
+             texte+="            [NONLINEAR \n"
+             texte+="                ISOTROPY TRUE\n"
+             texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
+             for keyN2 in obj.valeur[keyN1] :
+                 if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' and keyN2 != 'NATURE' :
+                      texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
+             texte+="            ]"+"\n"
        texte+="         ]"+"\n"
 
        self.dictMaterConductor[obj.get_sdname()]=texte
@@ -343,15 +358,25 @@ class CARMEL3DGenerator(PythonGenerator):
               texte+="            LAW LINEAR\n"
               texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
               texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-              texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
+              # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
+              # car sinon ces valeurs sont définies dans des fichiers annexes
+              homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
+              isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
+              if homogeneous and isotropic:
+                 texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
           # loi lineaire complexe
            if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
                  texte+="            LAW LINEAR\n"
                  texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
                  texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-                 texte+="            VALUE "
-                 chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
-                 texte+= chC+"\n"
+                 # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
+                 # car sinon ces valeurs sont définies dans des fichiers annexes
+                 homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
+                 isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
+                 if homogeneous and isotropic:
+                   texte+="            VALUE "
+                   chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
+                   texte+= chC+"\n"
                   
           # loi non lineaire de nature spline, Marrocco ou Marrocco et Saturation
           #  seuls les reels sont pris en compte
@@ -359,14 +384,19 @@ class CARMEL3DGenerator(PythonGenerator):
                 texte+="            LAW NONLINEAR\n"
                 texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
                 texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-                texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE"])+" 0\n"
-                texte+="            [NONLINEAR \n"
-                texte+="                ISOTROPY TRUE\n"
-                texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
-                for keyN2 in obj.valeur[keyN1] :
-                    if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' and keyN2 != 'NATURE' :
-                       texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
-                texte+="            ]"+"\n"
+                # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
+                # car sinon ces valeurs sont définies dans des fichiers annexes
+                homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
+                isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
+                if homogeneous and isotropic:
+                   texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE"])+" 0\n"
+                   texte+="            [NONLINEAR \n"
+                   texte+="                ISOTROPY TRUE\n"
+                   texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
+                   for keyN2 in obj.valeur[keyN1] :
+                       if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' and keyN2 != 'NATURE' :
+                          texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
+                   texte+="            ]"+"\n"
            # fin du sous bloc de propriete
            texte+="         ]"+"\n"
         #print "texte = ", texte    
@@ -400,14 +430,15 @@ class CARMEL3DGenerator(PythonGenerator):
 
    def generMATERIAL_EMISO(self,obj):
         """preparation du sous bloc EM_ISOTROPIC_FILES.
-        Les fichiers sont indiqués par le chemin indiqué dans Eficas, i.e. le chemin absolu par défaut
+        Les fichiers sont indiqués par le chemin relatif, i.e. le nom du fichier seulement,
+         de façon à permettre de déplacer les dossiers contenant le modèle complet.
         """
-        texte ="        CONDUCTIVITY MED "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
-        texte+="        PERMEABILITY MED "+str(obj.valeur["PERMEABILITY_File"])+"\n"
+        #texte ="        CONDUCTIVITY MED "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
+        #texte+="        PERMEABILITY MED "+str(obj.valeur["PERMEABILITY_File"])+"\n"
         # Possibilité de forcer le chemin relatif (nom de fichier seulement) plutôt que le chemin absolu par défaut
-        #from os.path import basename
-        #texte ="        CONDUCTIVITY MED "+basename(str(obj.valeur["CONDUCTIVITY_File"]))+"\n"
-        #texte+="        PERMEABILITY MED "+basename(str(obj.valeur["PERMEABILITY_File"]))+"\n"
+        from os.path import basename
+        texte ="        CONDUCTIVITY MED "+basename(str(obj.valeur["CONDUCTIVITY_File"]))+"\n"
+        texte+="        PERMEABILITY MED "+basename(str(obj.valeur["PERMEABILITY_File"]))+"\n"
         #      print "obj get sdname= ", obj.get_sdname()
         #   if obj.get_sdname() in self.dictMaterEmIso.keys() :
         #    self.dictMaterEmIso[obj.get_sdname()].append(texte) 
@@ -416,14 +447,15 @@ class CARMEL3DGenerator(PythonGenerator):
   
    def generMATERIAL_EMANISO(self,obj):
         """preparation du sous bloc EM_ANISOTROPIC_FILES.
-        Les fichiers sont indiqués par le chemin indiqué dans Eficas, i.e. le chemin absolu par défaut
+        Les fichiers sont indiqués par le chemin relatif, i.e. le nom du fichier seulement,
+         de façon à permettre de déplacer les dossiers contenant le modèle complet.
         """
-        texte ="        CONDUCTIVITY  "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
-        texte+="        PERMEABILITY  "+str(obj.valeur["PERMEABILITY_File"])+"\n"
+        #texte ="        CONDUCTIVITY MATER "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
+        #texte+="        PERMEABILITY MATER "+str(obj.valeur["PERMEABILITY_File"])+"\n"
         # Possibilité de forcer le chemin relatif (nom de fichier seulement) plutôt que le chemin absolu par défaut
-        #from os.path import basename
-        #texte ="        CONDUCTIVITY  "+basename(str(obj.valeur["CONDUCTIVITY_File"]))+"\n"
-        #texte+="        PERMEABILITY  "+basename(str(obj.valeur["PERMEABILITY_File"]))+"\n"
+        from os.path import basename
+        texte ="        CONDUCTIVITY MATER "+basename(str(obj.valeur["CONDUCTIVITY_File"]))+"\n"
+        texte+="        PERMEABILITY MATER "+basename(str(obj.valeur["PERMEABILITY_File"]))+"\n"
         #  print "obj get sdname= ", obj.get_sdname()
         #  if obj.get_sdname() in self.dictMaterEmAnIso.keys() :
         #    self.dictMaterEmAnIso[obj.get_sdname()].append(texte) 
