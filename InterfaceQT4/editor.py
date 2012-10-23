@@ -122,7 +122,7 @@ class JDCEditor(QSplitter):
         jdc_item = None
         self.mode_nouv_commande=self.readercata.mode_nouv_commande
                         
-        nouveau=0
+        self.nouveau=0
         if self.fichier is not None:        #  fichier jdc fourni
             self.fileInfo = QFileInfo(self.fichier)
             self.fileInfo.setCaching(0)
@@ -139,7 +139,7 @@ class JDCEditor(QSplitter):
                    self.jdc = self._newJDC(units=units)
                 else :
                    self.jdc = self._newJDCInclude(units=units)
-                nouveau=1
+                self.nouveau=1
         
         if self.jdc:            
             self.jdc.appli = self
@@ -157,7 +157,7 @@ class JDCEditor(QSplitter):
                 comploader.charger_composants("QT")
                 jdc_item=Objecttreeitem.make_objecttreeitem( self, "nom", self.jdc )
 
-                if (not self.jdc.isvalid()) and (not nouveau) :
+                if (not self.jdc.isvalid()) and (not self.nouveau) :
                     self.viewJdcRapport()
         if jdc_item:                        
             self.tree = browser.JDCTree( jdc_item,  self )
@@ -234,7 +234,9 @@ class JDCEditor(QSplitter):
              #appli = self 
              p=convert.plugins[self.appliEficas.format_fichier_in]()
              p.readfile(fn)
+             if p.text=="" : self.nouveau=1
              pareil,texteNew=self.verifieCHECKSUM(p.text)
+             #if texteNew == ""
              if pareil == False and (self.QWParent != None) :
                 QMessageBox.warning( self, "fichier modifie","Attention! fichier change hors EFICAS")
              p.text=texteNew
