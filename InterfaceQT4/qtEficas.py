@@ -442,10 +442,8 @@ class Appli(Ui_Eficas,QMainWindow):
         # On peut sortir sur Abort
         res=self.viewmanager.handleCloseAll()
         if (res != 2) : 
-           if self.salome :
-              self.close()
-           else :
-              qApp.closeAllWindows()
+            self.close()
+        return res
         
     def editCopy(self):
         self.viewmanager.handleEditCopy()
@@ -495,6 +493,9 @@ class Appli(Ui_Eficas,QMainWindow):
         #      sys.path.remove(pathCode)
               
 
+    def closeEvent(self,event):
+      res=self.fileExit()
+      if res==2 : event.ignore()
 
 if __name__=='__main__':
 
