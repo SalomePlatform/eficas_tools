@@ -44,6 +44,12 @@ class QTPanel:
         if hasattr(self,'TWChoix'):
            self.connect(self.TWChoix, SIGNAL("currentChanged(QWidget *)"), self.GestionBALpha)
 
+  def keyReleaseEvent(self,event):
+        if event.matches(QKeySequence.Copy): self.editor.appliEficas.editCopy() 
+        if event.matches(QKeySequence.Cut): self.editor.appliEficas.editCut() 
+        if event.matches(QKeySequence.Paste): self.editor.appliEficas.editPaste() 
+
+
   def GestionBALpha(self,fenetre):
         if self.TWChoix.currentIndex()!=0:
            if hasattr(self,'BAlpha'): #pour include materiau
