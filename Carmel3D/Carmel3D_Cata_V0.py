@@ -29,6 +29,7 @@ from decimal import Decimal
 # et les fichiers de donnees des materiaux de reference
 from prefs_CARMEL3D import repIni
 
+
 #print "catalogue carmel"
 #print "repIni = ", repIni
 
@@ -57,6 +58,23 @@ JdC = JDC_CATA ( code = 'CARMEL3D',
                            ),
                  ) # Fin JDC_CATA
 ##=========================================================
+import opsCarmel
+MODEL = MACRO ( nom = "MODEL",
+                 op = None,
+                 UIinfo = { "groupes" : ( "Gestion du travail", ) },
+                 sd_prod = opsCarmel.INCLUDE,
+                 op_init = opsCarmel.INCLUDE_context,
+                 fichier_ini = 1,
+ 
+   FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.xml);;All Files (*)',),
+                     fr = "Nom du modele physique",
+                    ang = "Physical model identifier",
+                     ),
+  
+ ) # Fin PROC MODEL
+
+
 
 # --------------------------------------------------
 # definition de groupe de mailles
