@@ -59,7 +59,7 @@ JdC = JDC_CATA ( code = 'CARMEL3D',
                  ) # Fin JDC_CATA
 ##=========================================================
 import opsCarmel
-MODEL = MACRO ( nom = "MODEL",
+INCLUDE = MACRO ( nom = "INCLUDE",
                  op = None,
                  UIinfo = { "groupes" : ( "Gestion du travail", ) },
                  sd_prod = opsCarmel.INCLUDE,
@@ -67,9 +67,9 @@ MODEL = MACRO ( nom = "MODEL",
                  fichier_ini = 1,
  
    FileName = SIMP ( statut = "o",
-                    typ = ('Fichier', 'Wrapper Files (*.xml);;All Files (*)',),
-                     fr = "Nom du modele physique",
-                    ang = "Physical model identifier",
+                    typ = ('Fichier', 'comm Files (*.comm);;All Files (*)',),
+                     fr = "bibliotheque des materiaux",
+                    ang = "material library file",
                      ),
   
  ) # Fin PROC MODEL
