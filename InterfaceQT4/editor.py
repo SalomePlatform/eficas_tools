@@ -406,6 +406,13 @@ class JDCEditor(QSplitter):
      
     
     #---------------------#
+    def handleRechercher(self):
+    #---------------------#
+      print "hhhhhhhhh"
+      from monRecherche import DRecherche
+      monRechercheDialg=DRecherche(parent=self,fl=0)
+    
+    #---------------------#
     def handleEditCut(self):
     #---------------------#
       """

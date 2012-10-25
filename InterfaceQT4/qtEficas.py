@@ -238,6 +238,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionCopier,SIGNAL("activated()"),self.editCopy)
         self.connect(self.actionColler,SIGNAL("activated()"),self.editPaste)
         self.connect(self.actionSupprimer,SIGNAL("activated()"),self.supprimer)
+        self.connect(self.actionRechercher,SIGNAL("activated()"),self.rechercher)
 
         self.connect(self.actionRapport_de_Validation,SIGNAL("activated()"),self.jdcRapport)
         self.connect(self.actionFichier_Source,SIGNAL("activated()"),self.jdcFichierSource)
@@ -453,6 +454,9 @@ class Appli(Ui_Eficas,QMainWindow):
     
     def editPaste(self):
         self.viewmanager.handleEditPaste()
+        
+    def rechercher(self):
+        self.viewmanager.handleRechercher()
         
     def run(self):
         self.viewmanager.run()

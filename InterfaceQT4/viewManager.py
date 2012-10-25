@@ -122,6 +122,13 @@ class MyTabview:
              if res==2 : return res   # l utilsateur a annule
        return res
         
+   def handleRechercher(self):
+       #print "passage dans handleRechercher"
+       index=self.myQtab.currentIndex()
+       editor=self.dict_editors[index]
+       editor.handleRechercher()
+
+   
    def handleEditCopy(self):
        #print "passage dans handleEditCopy"
        index=self.myQtab.currentIndex()
