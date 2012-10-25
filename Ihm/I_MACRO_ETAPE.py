@@ -754,7 +754,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
 
   def make_include3(self,fichier=None):
-  # Pour Map
+      self.make_includeCarmel(fichier)
+
+  def make_includeCarmel(self,fichier=None):
+  # Pour Carmel
       unite=999
       if hasattr(self,'fichier_ini') : return
       reevalue=0
