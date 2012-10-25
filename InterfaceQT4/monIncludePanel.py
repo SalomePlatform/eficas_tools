@@ -56,6 +56,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonIncludePanel"
+        self.parentQT=parent
         DInc.__init__(self,parent,fl)
         QTPanel.__init__(self,node,parent)
         QTPanelTBW2.__init__(self,node,parent)
@@ -81,6 +82,8 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
   def pageBad(self) :
         self.TWChoix.removeTab(2)
         self.TWChoix.setCurrentIndex(2)
+        if self.parentQT.appliEficas.code!="Aster" :
+           self.textLabelbad.setText("La commande Include n a pas encore de fichier associe")
 
   def BBrowsePressed(self):
       self.node.makeEdit()
