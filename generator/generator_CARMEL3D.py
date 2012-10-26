@@ -237,6 +237,8 @@ class CARMEL3DGenerator(PythonGenerator):
         jdc_aux_texte=monGenerateur.gener(obj.jdc_aux)
         print "__________________________________________________"
         print monGenerateur.texteCarmel3D
+        print monGenerateur.dictMaterConductor
+        # self.dictMaterConductor += monGenerateur.dictMaterConductor
         print "__________________________________________________"
         s=PythonGenerator.generETAPE(self,obj)
         return s
