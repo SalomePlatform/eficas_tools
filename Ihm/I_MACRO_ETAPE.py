@@ -111,7 +111,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        if self.nom != "INCLUDE_MATERIAU":
           if self.parent.appli.ihm == "QT" :
               format=self.parent.appli.appliEficas.format_fichier
-              format="python"
           else :
               format=self.jdc.appli.format_fichier.get()
           #on force a python pour Carmel
