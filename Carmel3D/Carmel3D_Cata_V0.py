@@ -57,6 +57,25 @@ JdC = JDC_CATA ( code = 'CARMEL3D',
                            ),
                  ) # Fin JDC_CATA
 ##=========================================================
+# création d'une macro pour traiter les INCLUDE
+#
+#----------------------------------------------------------
+
+import opsCarmel
+INCLUDE = MACRO ( nom = "INCLUDE",
+                 op = None,
+                 UIinfo = { "groupes" : ( "Gestion du travail", ) },
+                 sd_prod = opsCarmel.INCLUDE,
+                 op_init = opsCarmel.INCLUDE_context,
+                 fichier_ini = 1,
+ 
+   FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'comm Files (*.comm);;All Files (*)',),
+                     fr = u"bibliothèque des matériaux",
+                    ang = "material library file",
+                     ),
+  
+ ) # Fin MACRO 
 
 # --------------------------------------------------
 # definition de groupe de mailles
