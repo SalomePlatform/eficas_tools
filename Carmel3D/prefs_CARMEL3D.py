@@ -27,7 +27,7 @@ repIni=os.path.dirname(os.path.abspath(__file__))
 lang='fr'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
-encoding='iso-8859-1'
+encoding='utf-8'
 
 # Choix des catalogues
 # format du Tuple (code,version,catalogue,formatOut, finit par defaut Ãventuellement)

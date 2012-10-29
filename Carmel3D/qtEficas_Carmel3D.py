@@ -19,7 +19,7 @@
 #
 
 """
-   Ce module sert a lancer EFICAS configure pour Carmel
+   Ce module sert à lancer EFICAS configuré pour Carmel
 """
 # Modules Python
 # Modules Eficas
