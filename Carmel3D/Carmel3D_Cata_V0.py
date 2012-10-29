@@ -68,13 +68,11 @@ INCLUDE = MACRO ( nom = "INCLUDE",
  
    FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'comm Files (*.comm);;All Files (*)',),
-                     fr = "bibliotheque des materiaux",
+                     fr = u"bibliothèque des matériaux",
                     ang = "material library file",
                      ),
   
  ) # Fin PROC MODEL
-
-
 
 # --------------------------------------------------
 # definition de groupe de mailles
