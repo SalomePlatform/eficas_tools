@@ -194,6 +194,22 @@ class CARMEL3DGenerator(PythonGenerator):
         return s
 
 #----------------------------------------------------------------------------------------
+   def generMACRO_ETAPE(self,obj):
+        dico={}
+        self.dicoEtapeCourant=dico
+        self.dicoCourant=self.dicoEtapeCourant
+        import generator
+        monGenerateur=generator.plugins["CARMEL3D"]()
+        jdc_aux_texte=monGenerateur.gener(obj.jdc_aux)
+        print "__________________________________________________"
+        print monGenerateur.texteCarmel3D
+        print monGenerateur.dictMaterConductor
+        # self.dictMaterConductor += monGenerateur.dictMaterConductor
+        print "__________________________________________________"
+        s=PythonGenerator.generETAPE(self,obj)
+        return s
+
+#----------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------
    def generMESHGROUP(self,obj):
         """preparation de la ligne NAME referencant le groupe de mailles 
