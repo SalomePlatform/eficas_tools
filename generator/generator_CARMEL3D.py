@@ -25,47 +25,6 @@ import types,string,re,os
 
 from generator_python import PythonGenerator
 
-# dictionnaire contenant la liste des materiaux :
-#     cle = nom du materiau 
-#     valeur = nature du materiau ; correspond a un sous bloc du bloc MATERIALS du fichier de parametres Carmel3D
-#
-# les materiaux sont : 
-#  - des materiaux de reference connus fournis par THEMIS,
-#  - ou des materiaux generiques theoriques 
-#
-#
-dictNatureMaterRef={"DIELECTRIC":"DIELECTRIC",
-                    "CONDUCTOR":"CONDUCTOR",
-                    "ZSURFACIC":"ZSURFACIC",
-                    "ZINSULATOR":"ZINSULATOR",
-                    "NILMAT":"NILMAT",
-                    "EM_ISOTROPIC":"EMISO",
-                    "EM_ANISOTROPIC":"EMANISO",
-                    "ACIER_CIMBLOT":"CONDUCTOR", 
-                    "ACIER_Noir":"CONDUCTOR", 
-                    "ACIER_PE":"CONDUCTOR", 
-                    "ALU":"CONDUCTOR", 
-                    "BRONZE":"CONDUCTOR", 
-                    "CUIVRE":"CONDUCTOR", 
-                    "FERRITE_Mn_Zn":"CONDUCTOR", 
-                    "FERRITE_Ni_Zn":"CONDUCTOR", 
-                    "INCONEL600":"CONDUCTOR", 
-                    "POTASSE":"CONDUCTOR",
-                    "M6X2ISO1":"CONDUCTOR", 
-                    "AIR":"DIELECTRIC", 
-                    "FERRITEB30":"DIELECTRIC", 
-                    "E24":"DIELECTRIC",
-                    "FEV470":"DIELECTRIC",
-                    "FEV600":"DIELECTRIC",
-                    "FEV800":"DIELECTRIC",
-                    "FEV1000":"DIELECTRIC",
-                    "HA600":"DIELECTRIC",
-                    "M600_65":"DIELECTRIC",
-                    "M6X":"EMANISO",
-                    "M6X_lineaire":"EMANISO",
-                    "M6X_homog":"EMANISO"
-                    }
-
 # Groupes de mailles dont les types sont définis par des préfixes dans leur nom
 usePrefix = False # les noms ont des préfixes (True) ou non (False)
 # liste des préfixes des groupes de mailles, sans le caractère _ séparant le préfixe du reste du nom
@@ -86,6 +45,10 @@ dictPrefixesGroupeMaille = {'DIELECTRIC':('DIEL','NOCOND'),
                                              'NILMAT':('NILMAT', )}
 # séparateur entre le préfixe et le reste du nom du groupe de maille
 sepNomGroupeMaille = '_'
+
+# types de problèmes
+HARMONIC = 'HARMONIC' # problème fréquentiel
+TIME_DOMAIN = 'TIME_DOMAIN' # problème temporel
 
 def entryPoint():
    """
@@ -163,6 +126,8 @@ class CARMEL3DGenerator(PythonGenerator):
       self.dictSourceStInd={}
       self.dictSourceEport={}
       self.dictSourceHport={}
+      # on force le problème à être fréquentiel, seul possible en l'état des choses
+      self.problem = HARMONIC
 
 
 #----------------------------------------------------------------------------------------
@@ -228,20 +193,7 @@ class CARMEL3DGenerator(PythonGenerator):
         s=PythonGenerator.generETAPE(self,obj)
         return s
 
-   def generMACRO_ETAPE(self,obj):
-        dico={}
-        self.dicoEtapeCourant=dico
-        self.dicoCourant=self.dicoEtapeCourant
-        import generator
-        monGenerateur=generator.plugins["CARMEL3D"]()
-        jdc_aux_texte=monGenerateur.gener(obj.jdc_aux)
-        print "__________________________________________________"
-        print monGenerateur.texteCarmel3D
-        print monGenerateur.dictMaterConductor
-        # self.dictMaterConductor += monGenerateur.dictMaterConductor
-        print "__________________________________________________"
-        s=PythonGenerator.generETAPE(self,obj)
-        return s
+#----------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------
    def generMESHGROUP(self,obj):
         """preparation de la ligne NAME referencant le groupe de mailles 
@@ -283,207 +235,166 @@ class CARMEL3DGenerator(PythonGenerator):
         texte=""
         if self.debug: print "gener material obj valeur = ", obj.valeur
         try :
-            nature=dictNatureMaterRef[obj.valeur['MAT_REF']]
+            nature = obj.valeur['TYPE'] # la nature est le paramètre TYPE du MATERIAL
             if nature=="CONDUCTOR" : self.generMATERIAL_CONDUCTOR(obj)
             if nature=="DIELECTRIC" : self.generMATERIAL_DIELECTRIC(obj)
             if nature=="ZSURFACIC" : self.generMATERIAL_ZSURFACIC(obj)
-            if nature=="EMISO" : self.generMATERIAL_EMISO(obj)
-            if nature=="EMANISO" : self.generMATERIAL_EMANISO(obj)
+            if nature=="EM_ISOTROPIC" : self.generMATERIAL_EMISO(obj)
+            if nature=="EM_ANISOTROPIC" : self.generMATERIAL_EMANISO(obj)
             if nature=="NILMAT" : self.generMATERIAL_NILMAT(obj)
             if nature=="ZINSULATOR" : self.generMATERIAL_ZINSULATOR(obj)
         except:
             pass
 
    def generMATERIAL_CONDUCTOR(self,obj):
-      # preparation du sous bloc CONDUCTOR
-      texte=""
-      # print "__________cond_________________"
-      # parcours des proprietes du sous bloc CONDUCTOR
-      for keyN1 in obj.valeur :
-       if keyN1=='MAT_REF': continue
-      #     print "keyN1=", keyN1
-#      print obj.valeur[keyN1]['TYPE_LAW']
-       texte+="         ["+keyN1+"\n"
-      # loi lineaire reelle
-       if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
-          texte+="            LAW LINEAR\n"
-          texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
-          texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-          # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
-          # car sinon ces valeurs sont définies dans des fichiers annexes
-          homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
-          isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
-          if homogeneous and isotropic:
-             texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
-      # loi lineaire complexe
-       if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
-   #         print "si avec linear complex"
-          texte+="            LAW LINEAR\n"
-          texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
-          texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-          # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
-          # car sinon ces valeurs sont définies dans des fichiers annexes
-          homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
-          isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
-          if homogeneous and isotropic:
-             texte+="            VALUE "
-  #                print "nbre a formater : ",obj.valeur[keyN1]["VALUE_COMPLEX"]
-             chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
-             texte+= chC+"\n"
-      # loi non lineaire de nature spline, Marrocco ou Marrocco et Saturation
-      #  seuls les reels sont pris en compte
-       if obj.valeur[keyN1]['TYPE_LAW']=='NONLINEAR' :
-          texte+="            LAW NONLINEAR\n"
-          texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
-          texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-          # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
-          # car sinon ces valeurs sont définies dans des fichiers annexes
-          homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
-          isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
-          if homogeneous and isotropic:
-             texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE"])+" 0\n"
-             texte+="            [NONLINEAR \n"
-             texte+="                ISOTROPY TRUE\n"
-             texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
-             for keyN2 in obj.valeur[keyN1] :
-                 if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' and keyN2 != 'NATURE' :
-                      texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
-             texte+="            ]"+"\n"
-       texte+="         ]"+"\n"
-
-       self.dictMaterConductor[obj.get_sdname()]=texte
-     #  self.dictMaterConductor[obj.get_sdname()]=[texte,]
-#       print texte
-   
-
-   def generMATERIAL_DIELECTRIC(self,obj):
-      # preparation du sous bloc DIELECTRIC
+       """preparation du sous bloc CONDUCTOR"""
        texte=""
-      # print "______________nocond_____________"
-      # parcours des proprietes du sous bloc DIELECTRIC
-       for keyN1 in obj.valeur :
-           if keyN1=='MAT_REF': continue
-              # print "type loi = ", obj.valeur[keyN1]['TYPE_LAW']
-          # debut du sous bloc de propriete du DIELECTRIC
-           texte+="         ["+keyN1+"\n"
-          # loi lineaire reelle
-           if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
-              texte+="            LAW LINEAR\n"
-              texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
-              texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-              # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
-              # car sinon ces valeurs sont définies dans des fichiers annexes
-              homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
-              isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
-              if homogeneous and isotropic:
-                 texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
-          # loi lineaire complexe
-           if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
-                 texte+="            LAW LINEAR\n"
-                 texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
-                 texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-                 # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
-                 # car sinon ces valeurs sont définies dans des fichiers annexes
-                 homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
-                 isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
-                 if homogeneous and isotropic:
-                   texte+="            VALUE "
-                   chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
-                   texte+= chC+"\n"
-                  
-          # loi non lineaire de nature spline, Marrocco ou Marrocco et Saturation
-          #  seuls les reels sont pris en compte
-           if obj.valeur[keyN1]['TYPE_LAW']=='NONLINEAR' :
-                texte+="            LAW NONLINEAR\n"
-                texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
-                texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-                # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
-                # car sinon ces valeurs sont définies dans des fichiers annexes
-                homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
-                isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
-                if homogeneous and isotropic:
-                   texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE"])+" 0\n"
+       if self.debug: print "_____________cond_____________"
+       # verification des proprietes du sous bloc CONDUCTOR (PERMEABILITY, CONDUCTIVITY)
+       if 'PERMEABILITY' not in obj.valeur or 'CONDUCTIVITY' not in obj.valeur:
+	  print "ERREUR! Le bloc CONDUCTOR doit contenir PERMEABILITY et CONDUCTIVITY."
+       else:
+          # parcours des proprietes du sous bloc CONDUCTOR (PERMEABILITY, CONDUCTIVITY)
+          for keyN1 in ('PERMEABILITY','CONDUCTIVITY') :
+             # debut du sous bloc de propriete du DIELECTRIC
+             texte+="         ["+keyN1+"\n"
+             texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
+             texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
+             # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
+             # car sinon ces valeurs sont définies dans des fichiers annexes
+             homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
+             isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
+             if homogeneous and isotropic:
+                # loi (linéaire ou non)
+                texte+="            LAW "+str(obj.valeur[keyN1]["LAW"])+"\n"
+                # valeur de la loi linéaire
+                texte+="            VALUE "+self.formateCOMPLEX(obj.valeur[keyN1]["VALUE"])+"\n"
+                # loi non lineaire de nature spline, Marrocco ou Marrocco et Saturation
+                #  seuls les reels sont pris en compte
+                if obj.valeur[keyN1]['LAW']=='NONLINEAR' :
                    texte+="            [NONLINEAR \n"
                    texte+="                ISOTROPY TRUE\n"
                    texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
+                   # ajout des autres paramètres autres que ISOTROPY, NATURE, VALUE, LAW, HOMOGENEOUS, ISOTROPIC
                    for keyN2 in obj.valeur[keyN1] :
-                       if keyN2 != 'TYPE_LAW' and keyN2 != 'VALUE' and keyN2 != 'NATURE' :
+                      if keyN2 not in ('ISOTROPY','NATURE','VALUE','LAW','HOMOGENEOUS','ISOTROPIC') :
                           texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
+                   # fin du sous-bloc NONLINEAR
                    texte+="            ]"+"\n"
-           # fin du sous bloc de propriete
-           texte+="         ]"+"\n"
-        #print "texte = ", texte    
-       self.dictMaterDielectric[obj.get_sdname()]=texte
- 
-   def generMATERIAL_ZSURFACIC(self,obj):
-      # preparation du sous bloc ZSURFACIC
+             # fin du sous bloc de propriete
+             texte+="         ]"+"\n"
+       if self.debug: print "texte = ", texte
+       self.dictMaterConductor[obj.get_sdname()]=texte # sauvegarde du texte pour ce bloc
+
+   def generMATERIAL_DIELECTRIC(self,obj):
+       """preparation du sous bloc DIELECTRIC"""
        texte=""
-       #print "______________zsurf_____________"
-       for keyN1 in obj.valeur :
-           if keyN1=='MAT_REF': continue
-      #         print "keyN1=", keyN1
-    #      print obj.valeur[keyN1]['TYPE_LAW']
-           texte+="         ["+keyN1+"\n"
-          # loi lineaire reelle
-           if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_REAL' :
-              texte+="            LAW LINEAR\n"
-              texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
-              texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-              texte+="            VALUE COMPLEX "+str(obj.valeur[keyN1]["VALUE_REAL"])+" 0\n"
-          # loi lineaire complexe
-           if obj.valeur[keyN1]['TYPE_LAW']=='LINEAR_COMPLEX' :
-                texte+="            LAW LINEAR\n"
-                texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
-                texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
-                texte+="            VALUE "
-                chC= self.formateCOMPLEX(obj.valeur[keyN1]["VALUE_COMPLEX"])
-                texte+= chC+"\n"             
-           texte+="         ]"+"\n"
-       self.dictMaterZsurfacic[obj.get_sdname()]=texte
+       if self.debug: print "______________nocond_____________"
+       # verification des proprietes du sous bloc DIELECTRIC (PERMEABILITY, PERMITTIVITY)
+       if 'PERMEABILITY' not in obj.valeur or 'PERMITTIVITY' not in obj.valeur:
+	  print "ERREUR! Le bloc DIELECTRIC doit contenir PERMEABILITY et PERMITTIVITY."
+       else:
+          # parcours des proprietes du sous bloc DIELECTRIC (PERMEABILITY, PERMITTIVITY)
+          for keyN1 in ('PERMEABILITY','PERMITTIVITY') :
+             # debut du sous bloc de propriete du DIELECTRIC
+             texte+="         ["+keyN1+"\n"
+             texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
+             texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
+             # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
+             # car sinon ces valeurs sont définies dans des fichiers annexes
+             homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
+             isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
+             if homogeneous and isotropic:
+                # loi (linéaire ou non)
+                texte+="            LAW "+str(obj.valeur[keyN1]["LAW"])+"\n"
+                # valeur de la loi linéaire
+                texte+="            VALUE "+self.formateCOMPLEX(obj.valeur[keyN1]["VALUE"])+"\n"
+                # loi non lineaire de nature spline, Marrocco ou Marrocco et Saturation
+                #  seuls les reels sont pris en compte
+                if obj.valeur[keyN1]['LAW']=='NONLINEAR' :
+                   texte+="            [NONLINEAR \n"
+                   texte+="                ISOTROPY TRUE\n"
+                   texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
+                   # ajout des autres paramètres autres que ISOTROPY, NATURE, VALUE, LAW, HOMOGENEOUS, ISOTROPIC
+                   for keyN2 in obj.valeur[keyN1] :
+                      if keyN2 not in ('ISOTROPY','NATURE','VALUE','LAW','HOMOGENEOUS','ISOTROPIC') :
+                          texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
+                   # fin du sous-bloc NONLINEAR
+                   texte+="            ]"+"\n"
+             # fin du sous bloc de propriete
+             texte+="         ]"+"\n"
+       if self.debug: print "texte = ", texte
+       self.dictMaterDielectric[obj.get_sdname()]=texte # sauvegarde du texte pour ce bloc
+
+   def generMATERIAL_ZSURFACIC(self,obj):
+       """preparation du sous bloc ZSURFACIC"""
+       texte=""
+       if self.debug: print "______________zsurf_____________"
+       # verification des proprietes du sous bloc ZSURFACIC (PERMEABILITY, CONDUCTIVITY)
+       if 'PERMEABILITY' not in obj.valeur or 'CONDUCTIVITY' not in obj.valeur:
+	  print "ERREUR! Le bloc ZSURFACIC doit contenir PERMEABILITY et CONDUCTIVITY."
+       else:
+          # parcours des proprietes du sous bloc ZSURFACIC (PERMEABILITY, CONDUCTIVITY)
+          for keyN1 in obj.valeur :
+             if keyN1=='TYPE': continue
+             # print "type loi = ", obj.valeur[keyN1]['LAW']
+             # debut du sous bloc de propriete du DIELECTRIC
+             texte+="         ["+keyN1+"\n"
+             texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
+             texte+="            ISOTROPIC "+str(obj.valeur[keyN1]["ISOTROPIC"])+"\n"
+             # Ecriture des valeurs seulement pour un matériau homogène et isotrope,
+             # car sinon ces valeurs sont définies dans des fichiers annexes
+             homogeneous = str(obj.valeur[keyN1]["HOMOGENEOUS"]) == 'TRUE'
+             isotropic = str(obj.valeur[keyN1]["ISOTROPIC"]) == 'TRUE'
+             if homogeneous and isotropic:
+                # loi (linéaire ou non)
+                texte+="            LAW "+str(obj.valeur[keyN1]["LAW"])+"\n"
+                # valeur de la loi linéaire
+                texte+="            VALUE "+self.formateCOMPLEX(obj.valeur[keyN1]["VALUE"])+"\n"
+             # fin du sous bloc de propriete
+             texte+="         ]"+"\n"
+       if self.debug: print "texte = ", texte
+       self.dictMaterZsurfacic[obj.get_sdname()]=texte # sauvegarde du texte pour ce bloc
 
    def generMATERIAL_EMISO(self,obj):
-        """preparation du sous bloc EM_ISOTROPIC_FILES.
-        Les fichiers sont indiqués par le chemin relatif, i.e. le nom du fichier seulement,
-         de façon à permettre de déplacer les dossiers contenant le modèle complet.
-        """
-        #texte ="        CONDUCTIVITY MED "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
-        #texte+="        PERMEABILITY MED "+str(obj.valeur["PERMEABILITY_File"])+"\n"
-        # Possibilité de forcer le chemin relatif (nom de fichier seulement) plutôt que le chemin absolu par défaut
-        from os.path import basename
-        texte ="        CONDUCTIVITY MED "+basename(str(obj.valeur["CONDUCTIVITY_File"]))+"\n"
-        texte+="        PERMEABILITY MED "+basename(str(obj.valeur["PERMEABILITY_File"]))+"\n"
-        #      print "obj get sdname= ", obj.get_sdname()
-        #   if obj.get_sdname() in self.dictMaterEmIso.keys() :
-        #    self.dictMaterEmIso[obj.get_sdname()].append(texte) 
-        # else :
-        self.dictMaterEmIso[obj.get_sdname()]=texte
+       """preparation du sous bloc EM_ISOTROPIC_FILES.
+       Les fichiers sont indiqués par le chemin absolu, i.e. le nom complet du JdC,
+        ce qui permet de déplacer les dossiers contenant le modèle complet puisque le JdC permet les chemins relatifs.
+       """
+       texte ="        CONDUCTIVITY MED "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
+       texte+="        PERMEABILITY MED "+str(obj.valeur["PERMEABILITY_File"])+"\n"
+       # Possibilité de forcer le chemin relatif (nom de fichier seulement) plutôt que le chemin absolu par défaut
+       #from os.path import basename
+       #texte ="        CONDUCTIVITY MED "+basename(str(obj.valeur["CONDUCTIVITY_File"]))+"\n"
+       #texte+="        PERMEABILITY MED "+basename(str(obj.valeur["PERMEABILITY_File"]))+"\n"
+       #      print "obj get sdname= ", obj.get_sdname()
+       #   if obj.get_sdname() in self.dictMaterEmIso.keys() :
+       #    self.dictMaterEmIso[obj.get_sdname()].append(texte) 
+       # else :
+       self.dictMaterEmIso[obj.get_sdname()]=texte
   
    def generMATERIAL_EMANISO(self,obj):
-        """preparation du sous bloc EM_ANISOTROPIC_FILES.
-        Les fichiers sont indiqués par le chemin relatif, i.e. le nom du fichier seulement,
-         de façon à permettre de déplacer les dossiers contenant le modèle complet.
-        """
-        #texte ="        CONDUCTIVITY MATER "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
-        #texte+="        PERMEABILITY MATER "+str(obj.valeur["PERMEABILITY_File"])+"\n"
-        # Possibilité de forcer le chemin relatif (nom de fichier seulement) plutôt que le chemin absolu par défaut
-        from os.path import basename
-        texte ="        CONDUCTIVITY MATER "+basename(str(obj.valeur["CONDUCTIVITY_File"]))+"\n"
-        texte+="        PERMEABILITY MATER "+basename(str(obj.valeur["PERMEABILITY_File"]))+"\n"
-        #  print "obj get sdname= ", obj.get_sdname()
-        #  if obj.get_sdname() in self.dictMaterEmAnIso.keys() :
-        #    self.dictMaterEmAnIso[obj.get_sdname()].append(texte) 
-        #  else :
-        self.dictMaterEmAnIso[obj.get_sdname()]=texte
+       """preparation du sous bloc EM_ANISOTROPIC_FILES.
+       Les fichiers sont indiqués par le chemin absolu, i.e. le nom complet du JdC,
+        ce qui permet de déplacer les dossiers contenant le modèle complet puisque le JdC permet les chemins relatifs.
+       """
+       texte ="        CONDUCTIVITY MATER "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
+       texte+="        PERMEABILITY MATER "+str(obj.valeur["PERMEABILITY_File"])+"\n"
+       #  print "obj get sdname= ", obj.get_sdname()
+       #  if obj.get_sdname() in self.dictMaterEmAnIso.keys() :
+       #    self.dictMaterEmAnIso[obj.get_sdname()].append(texte) 
+       #  else :
+       self.dictMaterEmAnIso[obj.get_sdname()]=texte
    
    def generMATERIAL_NILMAT(self,obj):
-      # preparation du sous bloc NILMAT
+       """preparation du sous bloc NILMAT"""
        texte=""
        self.dictMaterNilmat[obj.get_sdname()]=texte
    
    def generMATERIAL_ZINSULATOR(self,obj):
-        """"preparation du sous bloc ZINSULATOR"""
-        texte=""
-        self.dictMaterZinsulator[obj.get_sdname()]=texte
+       """"preparation du sous bloc ZINSULATOR"""
+       texte=""
+       self.dictMaterZinsulator[obj.get_sdname()]=texte
 
 #-------------------------------------------------------------------
 
@@ -492,19 +403,40 @@ class CARMEL3DGenerator(PythonGenerator):
         if self.debug: print "gener source obj valeur = ", obj.valeur
         texte=""
         try :
-            typesource=obj.valeur['TYPE_SOURCE']
-            if typesource=="STRANDED_INDUCTOR" : self.generSOURCE_STRANDED_INDUCTOR(obj)
-            if typesource=="HPORT" : self.generSOURCE_HPORT(obj)
-            if typesource=="EPORT" : self.generSOURCE_EPORT(obj)
+            # test de la présence des types de sources reconnus
+            # commes ces sources sont des mot-clés facteurs, i.e. une clé de dictionnaire,
+            # la source ne peut contenir au plus qu'un type de source.
+            if "STRANDED_INDUCTOR" in obj.valeur:
+               self.generSOURCE_STRANDED_INDUCTOR(obj)
+            elif "HPORT" in obj.valeur:
+               self.generSOURCE_HPORT(obj)
+            elif "EPORT" in obj.valeur:
+               self.generSOURCE_EPORT(obj)
+            else:
+               print "ERREUR! Une source du type STRANDED_INDUCTOR, HPORT ou EPORT est attendue."
         except:
             pass
 
    def generSOURCE_STRANDED_INDUCTOR(self,obj):
         """preparation du sous bloc STRANDED_INDUCTOR"""
         texte=""
+        sdict = obj.valeur['STRANDED_INDUCTOR'] # dictionnaire contenant les paramètres de la source, outre la forme de la source
         try :
-            texte+="        NTURNS "+ str(obj.valeur['NTURNS']) + "\n"
-            texte+="        CURJ " + self.formateCOMPLEX(obj.valeur['CURJ']) + "\n"
+            texte+="        NTURNS "+ str(sdict['NTURNS']) + "\n"
+            # test de la présence d'une forme de source reconnue
+            # commes ces formes sont des mot-clés facteurs, i.e. une clé de dictionnaire,
+            # la source ne peut contenir au plus qu'un type de source.
+            if "WAVEFORM_CONSTANT" in obj.valeur:
+               wdict = obj.valeur['WAVEFORM_CONSTANT'] # dictionnaire contenant les paramètres de la forme de la source
+               if self.problem == HARMONIC:
+                  texte+="        CURJ POLAR " + str(wdict['AMPLITUDE']) + " 0\n"
+                  print "ATTENTION! Une source constante n'est possible qu'à fréquence nulle en régime fréquentiel"
+            elif "WAVEFORM_SINUS" in obj.valeur:
+               wdict = obj.valeur['WAVEFORM_SINUS'] # dictionnaire contenant les paramètres de la forme de la source
+               if self.problem == HARMONIC:
+                  texte+="        CURJ POLAR " + str(wdict['AMPLITUDE']) + " " + str(wdict['PHASE']) + "\n"
+            else:
+               print "ERREUR! Une forme de la source du type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue."
             self.dictSourceStInd[obj.get_sdname()]=texte
             if self.debug: print texte
         except:
@@ -513,9 +445,23 @@ class CARMEL3DGenerator(PythonGenerator):
    def generSOURCE_HPORT(self,obj):
         """preparation du sous bloc HPORT"""
         texte=""
+        sdict = obj.valeur['HPORT'] # dictionnaire contenant les paramètres de la source, outre la forme de la source
         try :
-            texte+="        TYPE "+ str(obj.valeur['TYPE']) + "\n"
-            texte+="        AMP " + self.formateCOMPLEX(obj.valeur['AMP']) + "\n"
+            texte+="        TYPE "+ str(sdict['TYPE']) + "\n"
+            # test de la présence d'une forme de source reconnue
+            # commes ces formes sont des mot-clés facteurs, i.e. une clé de dictionnaire,
+            # la source ne peut contenir au plus qu'un type de source.
+            if "WAVEFORM_CONSTANT" in obj.valeur:
+               wdict = obj.valeur['WAVEFORM_CONSTANT'] # dictionnaire contenant les paramètres de la forme de la source
+               if self.problem == HARMONIC:
+                  texte+="        AMP POLAR " + str(wdict['AMPLITUDE']) + " 0\n"
+                  print "ATTENTION! Une source constante n'est possible qu'à fréquence nulle en régime fréquentiel"
+            elif "WAVEFORM_SINUS" in obj.valeur:
+               wdict = obj.valeur['WAVEFORM_SINUS'] # dictionnaire contenant les paramètres de la forme de la source
+               if self.problem == HARMONIC:
+                  texte+="        AMP POLAR " + str(wdict['AMPLITUDE']) + " " + str(wdict['PHASE']) + "\n"
+            else:
+               print "ERREUR! Une forme de la source du type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue."
             self.dictSourceHport[obj.get_sdname()]=texte
             if self.debug: print texte
         except:
@@ -524,9 +470,23 @@ class CARMEL3DGenerator(PythonGenerator):
    def generSOURCE_EPORT(self,obj):
         """preparation du sous bloc EPORT"""
         texte=""
+        sdict = obj.valeur['EPORT'] # dictionnaire contenant les paramètres de la source, outre la forme de la source
         try :
-            texte+="        TYPE "+ str(obj.valeur['TYPE']) + "\n"
-            texte+="        AMP " + self.formateCOMPLEX(obj.valeur['AMP']) + "\n"
+            texte+="        TYPE "+ str(sdict['TYPE']) + "\n"
+            # test de la présence d'une forme de source reconnue
+            # commes ces formes sont des mot-clés facteurs, i.e. une clé de dictionnaire,
+            # la source ne peut contenir au plus qu'un type de source.
+            if "WAVEFORM_CONSTANT" in obj.valeur:
+               wdict = obj.valeur['WAVEFORM_CONSTANT'] # dictionnaire contenant les paramètres de la forme de la source
+               if self.problem == HARMONIC:
+                  texte+="        AMP POLAR " + str(wdict['AMPLITUDE']) + " 0\n"
+                  print "ATTENTION! Une source constante n'est possible qu'à fréquence nulle en régime fréquentiel"
+            elif "WAVEFORM_SINUS" in obj.valeur:
+               wdict = obj.valeur['WAVEFORM_SINUS'] # dictionnaire contenant les paramètres de la forme de la source
+               if self.problem == HARMONIC:
+                  texte+="        AMP POLAR " + str(wdict['AMPLITUDE']) + " " + str(wdict['PHASE']) + "\n"
+            else:
+               print "ERREUR! Une forme de la source du type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue."
             self.dictSourceEport[obj.get_sdname()]=texte
             if self.debug: print texte
         except:
@@ -790,4 +750,3 @@ class CARMEL3DGenerator(PythonGenerator):
                     if self.debug: print u"ce groupe de maille ("+nom+") a un préfixe qui est supprimé automatiquement pour devenir : "+nomReel
         if self.debug: print "... "+nomReel
         return nomReel
-
