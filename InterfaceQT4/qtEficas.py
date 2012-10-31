@@ -56,7 +56,6 @@ class Appli(Ui_Eficas,QMainWindow):
              self.definitCode(code,ssCode)
              if code==None: return
         
-        if self.code=="MAP" and ssCode== None : self.definitSsCode()
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.ajoutIcones()
 
@@ -106,12 +105,6 @@ class Appli(Ui_Eficas,QMainWindow):
           listeTexte=apply(Appli.__dict__[self.code],(self,))
         self.initPatrons()
         self.ficRecents={}
-
-    def definitSsCode(self) :
-        from InterfaceQT4 import monChoixMap
-        ChoixMap = monChoixMap.MonChoixMap(self) 
-        ChoixMap.show()
-        ret=ChoixMap.exec_()
 
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
