@@ -53,13 +53,6 @@ if (WITH_ASTER)
           )
 endif (WITH_ASTER)
 
-# Installatiion des fichiers : MAP
-if (WITH_MAP)
-  install ( FILES monChoixMap.py 
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
-          )
-endif (WITH_MAP)
-
 #monOptions_CUVE2DG.py
 
 ### Local Variables:
