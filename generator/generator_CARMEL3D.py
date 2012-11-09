@@ -201,12 +201,19 @@ class CARMEL3DGenerator(PythonGenerator):
         import generator
         monGenerateur=generator.plugins["CARMEL3D"]()
         jdc_aux_texte=monGenerateur.gener(obj.jdc_aux)
-        print "__________________________________________________"
-        print monGenerateur.texteCarmel3D
-        print monGenerateur.dictMaterConductor
-        # self.dictMaterConductor += monGenerateur.dictMaterConductor
-        print "__________________________________________________"
-        s=PythonGenerator.generETAPE(self,obj)
+        print "_______MACRO_______________________________________"
+        if self.debug: print "jdc_aux_texte :" , jdc_aux_texte
+
+        if monGenerateur.dictMaterConductor != {} :
+             for cle in monGenerateur.dictMaterConductor:
+                  print "cle= ", cle
+                  self.dictMaterConductor[cle] = monGenerateur.dictMaterConductor[cle]
+        if monGenerateur.dictMaterDielectric != {} :
+             for cle in monGenerateur.dictMaterDielectric:
+                  self.dictMaterDielectric[cle] = monGenerateur.dictMaterDielectric[cle]
+              
+        print "________FIN MACRO______________________________________"
+        s=PythonGenerator.generMACRO_ETAPE(self,obj)
         return s
 
 #----------------------------------------------------------------------------------------
