@@ -408,7 +408,6 @@ class JDCEditor(QSplitter):
     #---------------------#
     def handleRechercher(self):
     #---------------------#
-      print "hhhhhhhhh"
       from monRecherche import DRecherche
       monRechercheDialg=DRecherche(parent=self,fl=0)
     
@@ -952,15 +951,12 @@ class JDCEditor(QSplitter):
         nomTraducteur="traduit"+self.readercata.code+self.versionCataDuJDC+"To"+self.versionCata
         sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"../Traducteur")))
         print nomTraducteur
-        #try :
-        if 1 :
-            print "hh"
+        try :
             traducteur=__import__(nomTraducteur)
             monTraducteur=traducteur.MonTraducteur(texte)
             nouveauTexte=monTraducteur.traduit()
             return nouveauTexte
-        else :
-        #except :
+        except :
             return texte
      
 
