@@ -390,6 +390,7 @@ class JDCNode(QTreeWidgetItem):
         labeltext,fonte,couleur = self.item.GetLabelText()
         self.setText(0, labeltext)        
     
+    
     def update_node_label_in_blue(self):
         if hasattr(self.appliEficas,'noeudColore'):
            self.appliEficas.noeudColore.setTextColor( 0,Qt.black)
@@ -411,8 +412,20 @@ class JDCNode(QTreeWidgetItem):
             noeud.setText(0, labeltext)        
             self.appliEficas.listeNoeudsColores.append(noeud)
 
+    def update_node_texte_in_black(self):
+        """ Met a jour les noms des SD et valeurs des mots-cles """
+        self.setTextColor( 1,Qt.black )
+        value = self.item.GetText()
+        self.setText(1, value)
+
     def update_node_texte(self):
         """ Met a jour les noms des SD et valeurs des mots-cles """
+        value = self.item.GetText()
+        self.setText(1, value)
+
+    def update_node_texte_in_blue(self):
+    #def update_node_texte_in_blue(self,noeudAvant):
+        self.setTextColor( 1,Qt.blue )
         value = self.item.GetText()
         self.setText(1, value)
 
