@@ -127,6 +127,10 @@ class MyTabview:
        editor=self.dict_editors[index]
        editor.handleRechercher()
 
+   def handleDeplier(self):
+       index=self.myQtab.currentIndex()
+       editor=self.dict_editors[index]
+       editor.handleDeplier()
    
    def handleEditCopy(self):
        #print "passage dans handleEditCopy"

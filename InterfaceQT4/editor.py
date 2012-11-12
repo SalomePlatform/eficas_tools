@@ -113,6 +113,7 @@ class JDCEditor(QSplitter):
         self.isReadOnly = False
         self.tree = None
         self.node_selected = []
+        self.deplier = True
         self.message=''
         
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
@@ -410,6 +411,14 @@ class JDCEditor(QSplitter):
     #---------------------#
       from monRecherche import DRecherche
       monRechercheDialg=DRecherche(parent=self,fl=0)
+    
+    #---------------------#
+    def handleDeplier(self):
+    #---------------------#
+       if self.tree == None : return
+       self.deplier = False
+       self.tree.collapseAll()
+       self.tree.expandItem(self.tree.topLevelItem(0))
     
     #---------------------#
     def handleEditCut(self):

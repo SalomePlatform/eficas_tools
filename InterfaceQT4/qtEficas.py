@@ -156,24 +156,25 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
     def MAP(self): 
-        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
-        self.menuExecution.setObjectName("menuExecution")
-        self.menuJdC.setTitle(QApplication.translate("Eficas", "Rapports", None, QApplication.UnicodeUTF8))
+        pass
+        #self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        #self.menuExecution.setObjectName("menuExecution")
+        #self.menuJdC.setTitle(QApplication.translate("Eficas", "Rapports", None, QApplication.UnicodeUTF8))
 
-        self.actionExecution = QAction(self)
-        icon6 = QIcon(self.RepIcon+"/compute.png")
-        self.actionExecution.setIcon(icon6)
-        self.actionExecution.setObjectName("actionExecution")
-        self.menuExecution.addAction(self.actionExecution)
-        self.toolBar.addAction(self.actionExecution)
-        self.actionExecution.setText(QApplication.translate("Eficas", "Execution Python", None, QApplication.UnicodeUTF8))
-        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+        #self.actionExecution = QAction(self)
+        #icon6 = QIcon(self.RepIcon+"/compute.png")
+        #self.actionExecution.setIcon(icon6)
+        #self.actionExecution.setObjectName("actionExecution")
+        #self.menuExecution.addAction(self.actionExecution)
+        #self.toolBar.addAction(self.actionExecution)
+        #self.actionExecution.setText(QApplication.translate("Eficas", "Execution Python", None, QApplication.UnicodeUTF8))
+        #self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
 
-        self.actionEnregistrer_Python = QAction(self)
-        self.actionEnregistrer_Python.setObjectName("actionEnregistrer_Python")
-        self.menuFichier.addAction(self.actionEnregistrer_Python)
-        self.actionEnregistrer_Python.setText(QApplication.translate("Eficas", "Sauve Script Run", None,QApplication.UnicodeUTF8))
-        self.connect(self.actionEnregistrer_Python,SIGNAL("activated()"),self.saveRun)
+        #self.actionEnregistrer_Python = QAction(self)
+        #self.actionEnregistrer_Python.setObjectName("actionEnregistrer_Python")
+        #self.menuFichier.addAction(self.actionEnregistrer_Python)
+        #self.actionEnregistrer_Python.setText(QApplication.translate("Eficas", "Sauve Script Run", None,QApplication.UnicodeUTF8))
+        #self.connect(self.actionEnregistrer_Python,SIGNAL("activated()"),self.saveRun)
 
         #self.actionEnregistrerYACS = QAction(self)
         #self.actionEnregistrerYACS.setObjectName("actionEnregistrerYACS")
@@ -232,6 +233,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionColler,SIGNAL("activated()"),self.editPaste)
         self.connect(self.actionSupprimer,SIGNAL("activated()"),self.supprimer)
         self.connect(self.actionRechercher,SIGNAL("activated()"),self.rechercher)
+        self.connect(self.actionDeplier_replier,SIGNAL("activated()"),self.Deplier)
 
         self.connect(self.actionRapport_de_Validation,SIGNAL("activated()"),self.jdcRapport)
         self.connect(self.actionFichier_Source,SIGNAL("activated()"),self.jdcFichierSource)
@@ -243,6 +245,9 @@ class Appli(Ui_Eficas,QMainWindow):
         #self.connect(self.helpIndexAction,SIGNAL("activated()"),self.helpIndex)
         #self.connect(self.helpContentsAction,SIGNAL("activated()"),self.helpContents)
                              
+
+    def Deplier(self):
+        self.viewmanager.handleDeplier()
 
     def ouvreFichiers(self) :
     # Ouverture des fichiers de commandes donnes sur la ligne de commande

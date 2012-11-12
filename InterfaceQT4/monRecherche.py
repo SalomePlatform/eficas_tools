@@ -62,7 +62,3 @@ class DRecherche(Ui_desRecherche ,QtGui.QDialog):
       self.surLigne=0
       self.suivantClicked()
 
-      #self.tree.collapseAll()
-      
-     
-
