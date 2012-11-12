@@ -48,6 +48,7 @@
     <addaction name="actionSupprimer"/>
     <addaction name="separator"/>
     <addaction name="actionRechercher"/>
+    <addaction name="actionDeplier_replier"/>
    </widget>
    <widget class="QMenu" name="menuJdC">
     <property name="title">
@@ -268,6 +269,14 @@
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionDeplier_replier">
+   <property name="text">
+    <string>Replier/Deplier</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
    </property>
   </action>
  </widget>
