@@ -36,7 +36,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
   discretes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
-        print "MonFonctionPanel"
+        #print "MonFonctionPanel"
         self.node=node
         self.SetNbValeurs()
         MonPlusieursBasePanel.__init__(self,node,parent,name,fl)
@@ -139,7 +139,6 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         if not validite :
                 self.editor.affiche_infos(comm,Qt.red)
         else:
-           print "iiii"
            self.LEValeur.setText(QString(""))
            l1=self.listeValeursCourantes[:indexListe]
            l3=self.listeValeursCourantes[indexListe:]
