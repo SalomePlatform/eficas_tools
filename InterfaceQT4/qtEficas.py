@@ -40,7 +40,7 @@ class Appli(Ui_Eficas,QMainWindow):
         Ui_Eficas.__init__(self)
         self.setupUi(self)
 
-        self.VERSION_EFICAS="Eficas QT4 V6.5"
+        self.VERSION_EFICAS="Eficas QT4 V6.6"
         self.salome=salome
         self.listeAEnlever=[]
         self.ihm="QT"
@@ -269,7 +269,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
         
     def initPatrons(self) :
-    # Mise à jour du menu des fichiers recemment ouverts
+    # Mise a jour du menu des fichiers recemment ouverts
         from Editeur import listePatrons
         if not(self.code in listePatrons.sous_menus.keys()) :
            return
@@ -287,6 +287,8 @@ class Appli(Ui_Eficas,QMainWindow):
                self.connect(id, SIGNAL('triggered()'),self.handleOpenPatrons)
             #   self.Patrons.setItemParameter(id,idx)
                idx=idx+1
+    # Mise a jour du menu specifique de l aide pour le code 
+        print dir(self)
 
     def initRecents(self):
        try :
