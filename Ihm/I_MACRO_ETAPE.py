@@ -767,6 +767,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          reevalue=1
          for concept in self.old_context_fichier_init.values():
              self.jdc.delete_concept(concept)
+      print fichier
       if fichier == None :
          fichier=str(self.jdc.appli.get_file_dictDonnees())
          if fichier  == str("") : 
@@ -812,7 +813,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       except:
       #else:
          self.make_incl2_except()
-      CONTEXT.set_current_step(self)
+      # Cette P*** de ligne suivante ne fonctionne que pour Aster
+      # si quelqu un a une idee merci de m en parler
+      #CONTEXT.set_current_step(self)
 
   def make_include2(self,fichier=None):
   # Pour OT
