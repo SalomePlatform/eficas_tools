@@ -26,14 +26,13 @@ def INCLUDE(self,FileName,**args):
        delattr(self,'change_fichier')
        delattr(self,'fichier_ini')
 
-   self.make_include3(fichier=FileName)
+   self.make_includeCarmel(fichier=FileName)
 
 def INCLUDE_context(self,d):
    """ 
        Fonction op_init pour macro INCLUDE
    """
    for k,v in self.g_context.items():
-      print k,v
       d[k]=v
 
 
