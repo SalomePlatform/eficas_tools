@@ -45,7 +45,9 @@ class MyTabview:
        if  self.dict_editors.has_key(index):
            editor=self.dict_editors[index]
            self.appliEficas.CONFIGURATION=editor.CONFIGURATION
+           self.appliEficas.code=editor.CONFIGURATION.code
            self.appliEficas.setWindowTitle(editor.titre)
+           self.appliEficas.reconstruitMenu()
 
    def handleOpen(self,fichier=None,patron=0,units=None):
        result = None
@@ -64,8 +66,7 @@ class MyTabview:
        self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
        self.appliEficas.addToRecentList(fichier)
        maPage=self.getEditor( fichier,units=units)
-       if maPage:
-         result = maPage
+       if maPage: result = maPage
        return result
 
    def handleClose(self,doitSauverRecent = 1,texte='&Quitter'):
@@ -124,34 +125,40 @@ class MyTabview:
    def handleRechercher(self):
        #print "passage dans handleRechercher"
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleRechercher()
 
    def handleDeplier(self):
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleDeplier()
    
    def handleEditCopy(self):
        #print "passage dans handleEditCopy"
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleEditCopy()
 
    def handleEditCut(self):
        #print "passage dans handleEditCut"
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleEditCut()
 
    def handleEditPaste(self):
        #print "passage dans handleEditPaste"
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleEditPaste()
 
    def handleSupprimer(self):
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleSupprimer()
 

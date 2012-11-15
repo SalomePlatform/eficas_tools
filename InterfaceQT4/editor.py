@@ -162,6 +162,7 @@ class JDCEditor(QSplitter):
                     self.viewJdcRapport()
         if jdc_item:                        
             self.tree = browser.JDCTree( jdc_item,  self )
+        self.appliEficas.reconstruitMenu()
         
     #--------------------------------#
     def _newJDC( self ,units = None):        

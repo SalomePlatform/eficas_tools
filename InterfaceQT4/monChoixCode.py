@@ -20,7 +20,7 @@
 # Modules Python
 # Modules Eficas
 
-import os,sys
+import os,sys,re
 from desChoixCode import Ui_ChoixCode
 from PyQt4.QtGui import * 
 from PyQt4.QtCore import * 
@@ -49,7 +49,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
 
   def verifieInstall(self):
       self.groupCodes=QButtonGroup(self)
-      #for code in ('Aster','Cuve2dg','Openturns_Study','Openturns_Wrapper','Carmel3D','MAP','MT'):
+      vars=os.environ.items()
       for code in ('Aster','Cuve2dg','Openturns_Study','Openturns_Wrapper','Carmel3D','MAP'):
           nom='rB_'+code
           bouton=getattr(self,nom)
@@ -65,6 +65,27 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
                 self.groupCodes.addButton(bouton)
              except :
                 bouton.close()
+      #listeCodesIntegrateur=['MT','MT','MT','MT','MT','MT','MT']
+      listeCodesIntegrateur=[]
+      for k,v in vars:
+          if re.search('^PREFS_CATA_',k) != None:
+             listeCodesIntegrateur.append(k[11:])
+      i=1
+      for code in listeCodesIntegrateur:
+          try :
+              clef="PREFS_CATA_"+code
+              repIntegrateur=os.path.abspath(os.environ[clef])
+              l=os.listdir(repIntegrateur)
+              bouton=QRadioButton(self)
+              bouton.setGeometry(QRect(10,200+30*i, 162, 30))
+              i=i+1
+              bouton.setMinimumSize(QSize(0, 30))
+              bouton.setText(code)
+              bouton.show()
+              self.groupCodes.addButton(bouton)
+          except :
+              pass
+      self.parentAppli.ListeCode=self.parentAppli.ListeCode+listeCodesIntegrateur
 
   def choisitCode(self):
       bouton=self.groupCodes.checkedButton()
@@ -76,6 +97,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
           l=os.listdir(dirCode)
           sys.path.insert(0,dirCode)
       except :
+          clef="PREFS_CATA_"+code
           repIntegrateur=os.path.abspath(os.environ[clef])
           l=os.listdir(repIntegrateur)
           sys.path.insert(0,repIntegrateur)

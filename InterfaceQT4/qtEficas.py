@@ -42,13 +42,14 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.VERSION_EFICAS="Eficas QT4 V6.6"
         self.salome=salome
-        self.listeAEnlever=[]
         self.ihm="QT"
 	self.top = self    #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
         self.indice=0
         self.dict_reels={}
         self.code=code
+        self.listeAEnlever=[]
+        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP']
 
         self.RepIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
         self.multi=multi
@@ -58,7 +59,6 @@ class Appli(Ui_Eficas,QMainWindow):
         
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.ajoutIcones()
-
 
         self.viewmanager = MyTabview(self) 
         self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
@@ -103,8 +103,20 @@ class Appli(Ui_Eficas,QMainWindow):
            sys.setdefaultencoding(prefsCode.encoding)
         if self.code in Appli.__dict__.keys():
           listeTexte=apply(Appli.__dict__[self.code],(self,))
-        self.initPatrons()
         self.ficRecents={}
+
+    def reconstruitMenu(self):
+        self.initPatrons()
+        self.initRecents()
+        for intituleMenu in ("menuTraduction","menuOptions"):
+           if hasattr(self,intituleMenu):
+              menu=getattr(self,intituleMenu)
+              menu.setAttribute(Qt.WA_DeleteOnClose)
+              menu.close()
+              delattr(self,intituleMenu)
+        if self.code in Appli.__dict__.keys():
+          listeTexte=apply(Appli.__dict__[self.code],(self,))
+
 
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
@@ -192,10 +204,16 @@ class Appli(Ui_Eficas,QMainWindow):
         #self.connect(self.actionExecutionYACS,SIGNAL("activated()"),self.runYACS)
 
     def OPENTURNS_STUDY(self):
-        self.menuOptions.setDisabled(True)
+        if hasattr(self,"menuOptions"):
+           self.menuOptions.setAttribute(Qt.WA_DeleteOnClose)
+           self.menuOptions.close()
+           delattr(self,"menuOptions")
     
     def OPENTURNS_WRAPPER(self):
-        self.menuOptions.setDisabled(True)
+        if hasattr(self,"menuOptions"):
+           self.menuOptions.setAttribute(Qt.WA_DeleteOnClose)
+           self.menuOptions.close()
+           delattr(self,"menuOptions")
     
     def ajoutIcones(self) :
         # Pour pallier les soucis de repertoire d icone
@@ -272,11 +290,18 @@ class Appli(Ui_Eficas,QMainWindow):
     # Mise a jour du menu des fichiers recemment ouverts
         from Editeur import listePatrons
         if not(self.code in listePatrons.sous_menus.keys()) :
+           if hasattr(self,"menuPatrons"):
+              self.menuPatrons.setAttribute(Qt.WA_DeleteOnClose)
+              self.menuPatrons.close()
+              delattr(self,"menuPatrons")
            return
-        self.menuPatrons = QMenu(self.menubar)
-        self.menuPatrons.setObjectName("menuPatrons")
-        self.menubar.addAction(self.menuPatrons.menuAction())
-        self.menuPatrons.setTitle(QApplication.translate("Eficas", "Patrons", None, QApplication.UnicodeUTF8))
+        if (not hasattr(self,"menuPatrons")):
+           self.menuPatrons = QMenu(self.menubar)
+           self.menuPatrons.setObjectName("menuPatrons")
+           self.menubar.addAction(self.menuPatrons.menuAction())
+           self.menuPatrons.setTitle(QApplication.translate("Eficas", "Patrons", None, QApplication.UnicodeUTF8))
+        else :
+           self.menuPatrons.clear()
         self.listePatrons = listePatrons.listePatrons(self.code)
         idx = 0
         for nomSsMenu in self.listePatrons.liste.keys():
@@ -287,10 +312,9 @@ class Appli(Ui_Eficas,QMainWindow):
                self.connect(id, SIGNAL('triggered()'),self.handleOpenPatrons)
             #   self.Patrons.setItemParameter(id,idx)
                idx=idx+1
-    # Mise a jour du menu specifique de l aide pour le code 
-        print dir(self)
 
     def initRecents(self):
+       self.recent.clear()
        try :
            rep=self.CONFIGURATION.rep_user
            monFichier=rep+"/listefichiers_"+self.code
@@ -320,8 +344,11 @@ class Appli(Ui_Eficas,QMainWindow):
             self.recent = self.recent[:9]
 
     def sauveRecents(self) :
-       rep=self.CONFIGURATION.rep_user
-       monFichier=rep+"/listefichiers_"+self.code
+       try :
+         rep=self.CONFIGURATION.rep_user
+         monFichier=rep+"/listefichiers_"+self.code
+       except :
+         return
        try :
             f=open(monFichier,'w')
             if len(self.recent) == 0 : return
@@ -361,6 +388,7 @@ class Appli(Ui_Eficas,QMainWindow):
         monVisuDialg.show()
 
     def aidePPal(self) :
+        if self.code==None : return
         repAide=os.path.dirname(os.path.abspath(__file__))
         maD=repAide+"/../Aide"
         docsPath = QDir(maD).absolutePath()
@@ -487,14 +515,18 @@ class Appli(Ui_Eficas,QMainWindow):
         self.viewmanager.newIncludeEditor()
 
     def cleanPath(self):
-        for pathCode in ('Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP'):
+        for pathCode in self.ListeCode:
             try:
-              aEnlever=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__),'..',pathCode)))
+            #if 1:
+              aEnlever=os.path.abspath(os.path.join(os.path.dirname(__file__),'..',pathCode))
               sys.path.remove(aEnlever)
             except :
               pass
-        #for pathCode in self.listeAEnlever:
-        #      sys.path.remove(pathCode)
+        for pathCode in self.listeAEnlever:
+            try:
+              sys.path.remove(aEnlever)
+            except :
+              pass
               
 
     def closeEvent(self,event):

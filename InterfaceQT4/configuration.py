@@ -117,6 +117,7 @@ class CONFIG_BASE:
          QMessageBox.critical( None, "Import du fichier de Configuration", 
 			"Erreur a la lecture du fichier de configuration " + fic_ini_integrateur)
          return
+      self.labels_eficas.append('rep_aide')
       for k in self.labels_eficas :
          try :
             setattr(self,k,d[k])
