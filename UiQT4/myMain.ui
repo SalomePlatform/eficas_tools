@@ -65,18 +65,10 @@
     <addaction name="actionEficas"/>
     <addaction name="actionVersion"/>
    </widget>
-   <widget class="QMenu" name="menuOptions">
-    <property name="title">
-     <string>Options</string>
-    </property>
-    <addaction name="actionParametres_Eficas"/>
-    <addaction name="actionLecteur_Pdf"/>
-   </widget>
    <addaction name="menuFichier"/>
    <addaction name="menuEdition"/>
    <addaction name="menuJdC"/>
    <addaction name="menu_Aide"/>
-   <addaction name="menuOptions"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
