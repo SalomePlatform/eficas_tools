@@ -295,7 +295,7 @@ class READERCATA:
 
    def traite_clefs_documentaires(self):
       try:
-        fic_doc='fic_doc_'+str(self.version_code)
+        fic_doc='rep_doc_'+str(self.version_code)
         self.fic_doc=getattr(self.appliEficas.CONFIGURATION,fic_doc )
         f=open(self.fic_doc)
       except:

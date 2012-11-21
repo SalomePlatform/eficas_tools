@@ -40,6 +40,7 @@ class Options(desOptions):
        self.dVersion={}
        self.dRepMat={}
        self.dRepCat={}
+       self.dRepDoc={}
        self.connecterSignaux()
        self.initAll()
   
@@ -47,7 +48,6 @@ class Options(desOptions):
        self.connect(self.CBVersions,SIGNAL("activated(int)"),self.VersionChoisie)
        self.connect(self.Bdefaut,SIGNAL("clicked()"),self.BdefautChecked)
        self.connect(self.LEVersionAjout,SIGNAL("returnPressed()"),self.AjoutVersion)
-       self.connect(self.LERepDoc,SIGNAL("returnPressed()"),self.ChangePathDoc)
        self.connect(self.LERepSaveDir,SIGNAL("returnPressed()"),self.ChangeSaveDir)
        self.connect(self.Bok,SIGNAL("clicked()"),self.BokClicked)
        self.connect(self.LEVersionSup,SIGNAL("returnPressed()"),self.SupVersion)
@@ -69,21 +69,22 @@ class Options(desOptions):
 
            codeSansPoint=re.sub("\.","",version)
            chaine="rep_mat_"+codeSansPoint
-           print chaine
            if hasattr(self.configuration,chaine):
               rep_mat=getattr(self.configuration,chaine)
               self.dRepMat[version]=str(rep_mat)
            else :
               self.dRepMat[version]=""
+           chaine="rep_doc_"+codeSansPoint
+           if hasattr(self.configuration,chaine):
+              rep_doc=getattr(self.configuration,chaine)
+              self.dRepDoc[version]=str(rep_doc)
+           else :
+              self.dRepDoc[version]=""
        version=str(self.CBVersions.itemText(0))
-       print version
-       print self.dRepMat[version]
-       print self.dRepCat[version]
        
        self.LERepMat.setText(self.dRepMat[version])
        self.LERepCata.setText(self.dRepCat[version])
-       if hasattr(self.configuration,"path_doc"):
-          self.LERepDoc.setText(self.configuration.path_doc)
+       self.LERepDoc.setText(self.dRepDoc[version])
        if hasattr(self.configuration,"savedir"):
           self.LERepSaveDir.setText(self.configuration.savedir)
 
@@ -94,6 +95,8 @@ class Options(desOptions):
           self.LERepMat.setText(self.dRepMat[version])
        if self.dRepCat.has_key(version):
           self.LERepCata.setText(self.dRepCat[version])
+       if self.dRepDoc.has_key(version):
+          self.LERepDoc.setText(self.dRepDoc[version])
 
    def BokClicked(self):
        version=str(self.CBVersions.currentText())
@@ -105,7 +108,9 @@ class Options(desOptions):
        if str(self.dRepMat[version] != "") != "" :
           codeSansPoint=re.sub("\.","",version)
           chaine="rep_mat_"+codeSansPoint
-          setattr(self.configuration,chaine,self.dRepMat[version])
+          ancienneValeur=getattr(self.configuration,chaine)
+          if ancienneValeur != self.dRepMat[version]:
+             setattr(self.configuration,chaine,self.dRepMat[version])
 
        self.dRepCat[version]=str(self.LERepCata.text())
        if version in self.dVersion.keys():
@@ -115,6 +120,14 @@ class Options(desOptions):
        else :
           self.dVersion[version]=('ASTER',version,self.dRepCat[version],'python')
           
+       self.dRepDoc[version]=str(self.LERepDoc.text())
+       if str(self.dRepDoc[version] != "") != "" :
+          codeSansPoint=re.sub("\.","",version)
+          chaine="rep_doc_"+codeSansPoint
+          ancienneValeur=getattr(self.configuration,chaine)
+          if ancienneValeur != self.dRepDoc[version]:
+             setattr(self.configuration,chaine,self.dRepDoc[version])
+
        lItem=[]
        for version in self.dVersion.keys() :
           lItem.append(self.dVersion[version])
@@ -189,9 +202,6 @@ class Options(desOptions):
        self.dRepCat={}
        self.initAll()
 
-   def ChangePathDoc(self):
-       self.configuration.path_doc=str(self.LERepDoc.text())
-       self.configuration.save_params()
 
    def ChangeSaveDir(self):
        self.configuration.savedir=str(self.LERepSaveDir.text())

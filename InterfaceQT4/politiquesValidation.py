@@ -32,7 +32,7 @@ class Validation  :
          commentaire = None
          valeur,validite=self.node.item.eval_valeur(valeurentree)
          if not validite :
-                  commentaire = "impossible d'évaluer : %s " %`valeurentree`
+                  commentaire = "impossible d'evaluer : %s " %`valeurentree`
                   return valeur,validite,commentaire
 
          testtype,commentaire = self.node.item.object.verif_type(valeur)
@@ -51,7 +51,7 @@ class Validation  :
          return valeur, validite, commentaire
 
 # ----------------------------------------------------------------------------------------
-#   Méthodes utilisées pour la manipulation des items en notation scientifique
+#   Methodes utilisees pour la manipulation des items en notation scientifique
 #   a mettre au point
 # ----------------------------------------------------------------------------------------
   def SetValeurTexte(self,texteValeur) :
@@ -161,6 +161,12 @@ class PolitiquePlusieurs(Validation):
          if listevaleur=="": return
          if not( type(listevaleur)  in (types.ListType,types.TupleType)) :
             listevaleur=tuple(listevaleur)
+         # on verifie que la cardinalite max n a pas ete atteinte
+         min,max = self.node.item.GetMinMax()
+         if len(listecourante) + len(listevaleur) > max :
+            commentaire="La liste atteint le nombre maximum d'elements,ajout refuse"
+            return False,commentaire,commentaire2,listeRetour
+
          for valeur in listevaleur :
              # On teste le type de la valeur
              valeurScientifique=valeur
@@ -182,6 +188,7 @@ class PolitiquePlusieurs(Validation):
 
              # On valide la liste obtenue
              encorevalide=self.node.item.valide_liste_partielle(valeur,listecourante)
+             #print encorevalide
              if not encorevalide :
                 commentaire2=self.node.item.info_erreur_liste()
                 # On traite le cas ou la liste n est pas valide pour un pb de cardinalite

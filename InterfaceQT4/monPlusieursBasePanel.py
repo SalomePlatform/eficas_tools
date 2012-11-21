@@ -55,9 +55,9 @@ class DPlusBase (Ui_DPlusBase,QDialog):
 
 class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe definissant le panel associe aux mots-cles qui demandent
+  a l'utilisateur de choisir une liste de valeurs parmi une liste de valeurs
+  discretes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonPlusieursBasePanel"

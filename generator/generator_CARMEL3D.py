@@ -201,16 +201,22 @@ class CARMEL3DGenerator(PythonGenerator):
         import generator
         monGenerateur=generator.plugins["CARMEL3D"]()
         jdc_aux_texte=monGenerateur.gener(obj.jdc_aux)
-        print "_______MACRO_______________________________________"
         if self.debug: print "jdc_aux_texte :" , jdc_aux_texte
 
-        if monGenerateur.dictMaterConductor != {} :
-             for cle in monGenerateur.dictMaterConductor:
-                  print "cle= ", cle
-                  self.dictMaterConductor[cle] = monGenerateur.dictMaterConductor[cle]
-        if monGenerateur.dictMaterDielectric != {} :
-             for cle in monGenerateur.dictMaterDielectric:
-                  self.dictMaterDielectric[cle] = monGenerateur.dictMaterDielectric[cle]
+        for cle in monGenerateur.dictMaterConductor:
+            self.dictMaterConductor[cle] = monGenerateur.dictMaterConductor[cle]
+        for cle in monGenerateur.dictMaterDielectric:
+            self.dictMaterDielectric[cle] = monGenerateur.dictMaterDielectric[cle]
+        for cle in monGenerateur.dictMaterZsurfacic:
+            self.dictMaterZsurfacic[cle] = monGenerateur.dictMaterZsurfacic[cle]
+        for cle in monGenerateur.dictMaterEmIso:
+            self.dictMaterEmIso[cle] = monGenerateur.dictMaterEmIso[cle]
+        for cle in monGenerateur.dictMaterEmAnIso:
+            self.dictMaterEmAnIso[cle] = monGenerateur.dictMaterEmAnIso[cle]
+        for cle in monGenerateur.dictMaterNilmat:
+            self.dictMaterNilMat[cle] = monGenerateur.dictMaterNilMat[cle]
+        for cle in monGenerateur.dictMaterZinsultator:
+            self.dictMaterZinsultator[cle] = monGenerateur.dictMaterZinsultator[cle]
               
         print "________FIN MACRO______________________________________"
         s=PythonGenerator.generMACRO_ETAPE(self,obj)
