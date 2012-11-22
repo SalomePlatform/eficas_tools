@@ -47,7 +47,7 @@ class MyTabview:
            self.appliEficas.CONFIGURATION=editor.CONFIGURATION
            self.appliEficas.code=editor.CONFIGURATION.code
            self.appliEficas.setWindowTitle(editor.titre)
-           self.appliEficas.reconstruitMenu()
+           self.appliEficas.construitMenu()
 
    def handleOpen(self,fichier=None,patron=0,units=None):
        result = None

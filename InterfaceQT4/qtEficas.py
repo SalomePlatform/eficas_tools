@@ -45,9 +45,11 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ihm="QT"
 	self.top = self    #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
+        self.code=code
         self.indice=0
         self.dict_reels={}
-        self.code=code
+        self.recent =  QStringList()
+        self.ficRecents={}
         self.listeAEnlever=[]
         self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP']
 
@@ -63,10 +65,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.viewmanager = MyTabview(self) 
         self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
         self.connecterSignaux() 
+        if self.code != None : self.construitMenu()
 
-        self.recent =  QStringList()
-        self.ficPatrons={}
-        self.initRecents()
 
         self.ouvreFichiers()
         self.setWindowTitle(self.VERSION_EFICAS)
@@ -102,9 +102,10 @@ class Appli(Ui_Eficas,QMainWindow):
            reload(sys)
            sys.setdefaultencoding(prefsCode.encoding)
 
-    def reconstruitMenu(self):
+    def construitMenu(self):
         self.initPatrons()
         self.initRecents()
+        self.initAides()
         for intituleMenu in ("menuTraduction","menuOptions","menuMesh"):
               if hasattr(self,intituleMenu):
                  menu=getattr(self,intituleMenu)
@@ -113,6 +114,20 @@ class Appli(Ui_Eficas,QMainWindow):
                  delattr(self,intituleMenu)
         if self.code in Appli.__dict__.keys():
           listeTexte=apply(Appli.__dict__[self.code],(self,))
+
+    def initAides(self):
+        repAide=os.path.dirname(os.path.abspath(__file__))
+        self.docPath=repAide+"/../Aide"
+        if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'rep_aide') : self.docPath=self.CONFIGURATION.rep_aide
+        fileName='eficas_'+str(self.code)+'.adp'
+        self.fileDoc=os.path.join(self.docPath,fileName)
+        if not os.path.isfile(self.fileDoc) : 
+               self.fileDoc=""
+               self.docPath=""
+               return
+
+        self.menuAide.addAction(self.actionCode)
+        self.actionCode.setText("Aide spécifique "+str(self.code))
 
 
     def ASTER(self) :
@@ -215,6 +230,11 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionChercheGrpMaille.setText("Acquiert Groupe Maille")
         self.connect(self.actionChercheGrpMaille,SIGNAL("activated()"),self.ChercheGrpMaille)
 
+        # Pour Aide
+        self.actionCode = QAction(self)
+        self.actionCode.setText("Specificites Maille")
+        self.connect(self.actionCode,SIGNAL("activated()"),self.aideCode)
+
     def Deplier(self):
         self.viewmanager.handleDeplier()
 
@@ -227,6 +247,7 @@ class Appli(Ui_Eficas,QMainWindow):
             d=session.get_unit(study,self)
             self.viewmanager.handleOpen(fichier=study["comm"],units=d)
 
+
     def  get_source(self,file):
     # appele par Editeur/session.py
         import convert
@@ -235,8 +256,6 @@ class Appli(Ui_Eficas,QMainWindow):
         texte=p.convert('execnoparseur')
         return texte
 
-
-        
     def initPatrons(self) :
     # Mise a jour du menu des fichiers recemment ouverts
         from Editeur import listePatrons
@@ -265,9 +284,10 @@ class Appli(Ui_Eficas,QMainWindow):
                idx=idx+1
 
     def initRecents(self):
-       self.recent.clear()
-       try :
-           rep=self.CONFIGURATION.rep_user
+       self.recent =  QStringList()
+       #try :
+       if 1 :
+           rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
            monFichier=rep+"/listefichiers_"+self.code
            index=0
            f=open(monFichier)
@@ -277,7 +297,8 @@ class Appli(Ui_Eficas,QMainWindow):
                  l=(ligne.split("\n"))[0]
                  self.recent.append(l)
               index=index+1
-       except :
+       #except :
+       else :
            pass
 
        try    : f.close()
@@ -340,8 +361,6 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def aidePPal(self) :
         if self.code==None : return
-        print self.CONFIGURATION
-        ##if self.CONFIGURATION,'rep_aide'
         repAide=os.path.dirname(os.path.abspath(__file__))
         maD=repAide+"/../Aide"
         docsPath = QDir(maD).absolutePath()
@@ -349,9 +368,22 @@ class Appli(Ui_Eficas,QMainWindow):
           from PyQt4.QtAssistant import QAssistantClient
           monAssistant=QAssistantClient(QString(""), self)
           arguments=QStringList()
-          arguments << "-profile" <<docsPath+QDir.separator()+QString("eficas_")+QString(self.code)+QString(".adp");
+          arguments << "-profile" <<docsPath+QDir.separator()+QString("eficas.adp")
           monAssistant.setArguments(arguments);
-          monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
+          monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_EFICAS/index.html"))
+        except:
+          QMessageBox.warning( self, "Aide Indisponible", "QT Assistant n est pas installe ")
+
+
+    def aideCode(self) :
+        if self.code==None : return
+        try :
+          from PyQt4.QtAssistant import QAssistantClient
+          monAssistant=QAssistantClient(QString(""), self)
+          arguments=QStringList()
+          arguments << "-profile" <<self.fileDoc
+          monAssistant.setArguments(arguments);
+          monAssistant.showPage(QString(self.docPath)+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
         except:
           QMessageBox.warning( self, "Aide Indisponible", "QT Assistant n est pas installe ")
 

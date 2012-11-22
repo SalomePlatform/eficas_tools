@@ -58,7 +58,7 @@
     <addaction name="actionFichier_Source"/>
     <addaction name="actionFichier_Resultat"/>
    </widget>
-   <widget class="QMenu" name="menu_Aide">
+   <widget class="QMenu" name="menuAide">
     <property name="title">
      <string>&amp;Aide</string>
     </property>
@@ -68,7 +68,7 @@
    <addaction name="menuFichier"/>
    <addaction name="menuEdition"/>
    <addaction name="menuJdC"/>
-   <addaction name="menu_Aide"/>
+   <addaction name="menuAide"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
