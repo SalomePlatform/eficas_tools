@@ -164,7 +164,7 @@ class PolitiquePlusieurs(Validation):
          # on verifie que la cardinalite max n a pas ete atteinte
          min,max = self.node.item.GetMinMax()
          if len(listecourante) + len(listevaleur) > max :
-            commentaire="La liste atteint le nombre maximum d'elements,ajout refuse"
+            commentaire="La liste atteint le nombre maximum d'elements : "+ str(max) +" ,ajout refuse"
             return False,commentaire,commentaire2,listeRetour
 
          for valeur in listevaleur :
@@ -194,7 +194,7 @@ class PolitiquePlusieurs(Validation):
                 # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
                 min,max = self.node.item.GetMinMax()
                 if len(listecourante) + 1 >= max :
-                   commentaire="La liste a deja atteint le nombre maximum d'elements,ajout refuse"
+                   commentaire="La liste atteint le nombre maximum d'elements : "+ str(max) +" ,ajout refuse"
                    return valide,commentaire,commentaire2,listeRetour
                 if len(listecourante) + 1 > min :
                    commentaire=""
