@@ -177,6 +177,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionCopier.setIcon(icon4)
         icon5 = QIcon(self.RepIcon+"/Paste24.png")
         self.actionColler.setIcon(icon5)
+        icon6 = QIcon(self.RepIcon+"/Delete24.png")
+        self.actionSupprimer.setIcon(icon6)
+
 
 
     def connecterSignaux(self) :
