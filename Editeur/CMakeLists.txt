@@ -27,7 +27,7 @@ install ( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
           PATTERN Patrons EXCLUDE
           PATTERN CVS EXCLUDE
 	)
-add_subdirectory ( Patrons , icons)
+add_subdirectory (Patrons)
 
 ### Local Variables:
 ### mode: cmake
