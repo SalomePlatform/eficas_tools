@@ -288,8 +288,8 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def initRecents(self):
        self.recent =  QStringList()
-       #try :
-       if 1 :
+       try :
+       #if 1 :
            rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
            monFichier=rep+"/listefichiers_"+self.code
            index=0
@@ -300,8 +300,8 @@ class Appli(Ui_Eficas,QMainWindow):
                  l=(ligne.split("\n"))[0]
                  self.recent.append(l)
               index=index+1
-       #except :
-       else :
+       except :
+       #else :
            pass
 
        try    : f.close()

@@ -106,7 +106,6 @@ class CONFIG_BASE:
         return
       
       fic_ini_integrateur=os.path.join(repIntegrateur,self.name)
-      print fic_ini_integrateur
       if not os.path.isfile(fic_ini_integrateur): return
       txt = read_file(fic_ini_integrateur)
       d=locals()
@@ -149,6 +148,9 @@ class CONFIG_BASE:
             setattr(self,k,d[k])
          except :
             pass
+      for k in d.keys() :
+          if (k[0:8]=="rep_mat_") or (k[0:8]=="rep_doc_"):
+             setattr(self,k,d[k])
 
   #--------------------------------------
   def save_params(self):
@@ -166,7 +168,6 @@ class CONFIG_BASE:
       for k in dir(self):
           if (k[0:8]=="rep_mat_") or (k[0:8]=="rep_doc_"):
              valeur=getattr(self,k)
-             print valeur
              texte= texte + k+"	= " + repr(valeur) +"\n"
 
       f=open(self.fic_ini_utilisateur,'w+')
