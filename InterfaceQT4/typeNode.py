@@ -22,6 +22,23 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 #---------------------------#
+class PopUpMenuRacine :
+#---------------------------#
+
+
+    def createPopUpMenu(self):
+        self.ParamApres = QAction('Parametre',self.tree)
+        self.tree.connect(self.ParamApres,SIGNAL("activated()"),self.addParametersApres)
+        self.ParamApres.setStatusTip("Insere un parametre")
+        self.menu = QMenu(self.tree)
+        self.menu.addAction(self.ParamApres)
+
+
+    def addParametersApres(self):
+        item= self.tree.currentItem()
+        item.addParameters(True)
+
+#---------------------------#
 class PopUpMenuNodeMinimal :
 #---------------------------#
     def createPopUpMenu(self):
