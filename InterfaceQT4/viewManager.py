@@ -331,5 +331,6 @@ class MyTabview:
 
    def handleAjoutGroup(self,listeGroup):
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleAjoutGroup(listeGroup)
