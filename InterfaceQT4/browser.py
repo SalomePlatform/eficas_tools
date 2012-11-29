@@ -465,24 +465,28 @@ class JDCNode(QTreeWidgetItem):
               
         
 
-    def doPaste(self,node_selected):
+    def doPaste(self,node_selected,pos='after'):
         """
             Déclenche la copie de l'objet item avec pour cible
             l'objet passé en argument : node_selected
         """
-        #print 'je passe dans doPaste'
+        print 'je passe dans doPaste'
         objet_a_copier = self.item.get_copie_objet()
-        child=node_selected.doPasteCommande(objet_a_copier)
+        print objet_a_copier
+        child=node_selected.doPasteCommande(objet_a_copier,pos)
+        print child 
+        print node_selected
+        print node_selected.doPasteCommande
         return child
 
-    def doPasteCommande(self,objet_a_copier):
+    def doPasteCommande(self,objet_a_copier,pos='after'):
         """
           Réalise la copie de l'objet passé en argument qui est nécessairement
           une commande
         """
         child=None
         try :
-          child = self.append_brother(objet_a_copier)
+          child = self.append_brother(objet_a_copier,pos)
         except :
            pass
         return child
