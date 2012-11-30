@@ -393,6 +393,19 @@ class JDC(I_OBJECT.OBJECT):
            etape.inactive()
         if etape.nom == 'FIN':actif=-1
 
+   def deplaceEntite(self,etape) :
+      """
+          Pour le cut
+      """
+      print "deplaceEntite",self
+      if etape not in self.etapes: return 0
+
+      self.init_modif()
+      index_etape=self.etapes.index(etape)
+      self.etapes.remove(etape)
+      if etape.niveau is not self: etape.niveau.unregister(etape)
+      return 1
+
    def suppentite(self,etape) :
       """  
           Cette methode a pour fonction de supprimer une etape dans 
@@ -400,7 +413,6 @@ class JDC(I_OBJECT.OBJECT):
           Retourne 1 si la suppression a pu etre effectuee,
           Retourne 0 dans le cas contraire
       """
-      #print "suppentite",self
       #PN correction de bugs 
       if etape not in self.etapes:
          return 0
@@ -427,7 +439,7 @@ class JDC(I_OBJECT.OBJECT):
       else:
          etape=None
       self.control_context_apres(etape)
-      
+     
       self.reset_context()
       CONNECTOR.Emit(self,"supp",etape)
       self.fin_modif()

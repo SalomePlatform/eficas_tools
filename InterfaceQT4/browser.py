@@ -248,7 +248,7 @@ class JDCNode(QTreeWidgetItem):
             return 0
         return self.treeParent.append_child(name,pos=index)
 
-    def append_child(self,name,pos=None,verif='oui'):
+    def append_child(self,name,pos=None):
         """
            Methode pour ajouter un objet fils a l'objet associe au noeud self.
            On peut l'ajouter en debut de liste (pos='first'), en fin (pos='last')
@@ -274,15 +274,6 @@ class JDCNode(QTreeWidgetItem):
         obj=self.item.additem(name,index) #CS_pbruno emet le signal 'add'
         if obj is None:obj=0
         if obj == 0:return 0
-        #try :
-        #  child=self.children[index]
-        #  child.affichePanneau() 
-        #except:
-          # Souci pour gerer les copies des AFFE d'une commande à l autre
-        #  try :
-        #     old_obj = self.item.object.get_child(name.nom,restreint = 'oui')
-        #     child=old_obj[-1]
-        #     child.affichePanneau() 
         try :
           old_obj = self.item.object.get_child(name.nom,restreint = 'oui')
           child=old_obj[-1]
@@ -296,6 +287,12 @@ class JDCNode(QTreeWidgetItem):
              pass
         return child
 
+    def deplace(self):
+        self.editor.init_modif()
+        index = self.treeParent.children.index(self) - 1 
+        if index < 0 : index =0
+        ret=self.treeParent.item.deplaceEntite(self.item.getObject())
+
     def delete(self):
         """ 
             Methode externe pour la destruction de l'objet associe au noeud
@@ -307,7 +304,6 @@ class JDCNode(QTreeWidgetItem):
         if self.item.nom == "VARIABLE" :
            recalcule=1
            jdc=self.item.jdc
-
         ret=self.treeParent.item.suppitem(self.item)
         self.treeParent.build_children()
         if self.treeParent.children : toselect=self.treeParent.children[index]
@@ -472,11 +468,7 @@ class JDCNode(QTreeWidgetItem):
         """
         print 'je passe dans doPaste'
         objet_a_copier = self.item.get_copie_objet()
-        print objet_a_copier
         child=node_selected.doPasteCommande(objet_a_copier,pos)
-        print child 
-        print node_selected
-        print node_selected.doPasteCommande
         return child
 
     def doPasteCommande(self,objet_a_copier,pos='after'):
