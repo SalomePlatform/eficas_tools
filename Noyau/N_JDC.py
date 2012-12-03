@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+
 """
    Ce module contient la classe JDC qui sert à interpréter un jeu de commandes
 """
@@ -556,9 +557,23 @@ Causes possibles :
 
    def get_concept(self, nomsd):
       """
-          Méthode pour recuperer un concept à partir de son nom
+          Méthode pour récuperer un concept à partir de son nom
       """
-      return self.get_contexte_courant().get(nomsd.strip(), None)
+      co = self.get_contexte_courant().get(nomsd.strip(), None)
+      if not isinstance(co, ASSD):
+          co = None
+      return co
+
+   def get_concept_by_type(self, nomsd, typesd, etape):
+      """
+          Méthode pour récuperer un concept à partir de son nom et de son type.
+          Il aura comme père 'etape'.
+      """
+      assert issubclass(typesd, ASSD), typesd
+      co = typesd(etape=etape)
+      co.set_name(nomsd)
+      co.executed = 1
+      return co
 
    def del_concept(self, nomsd):
       """

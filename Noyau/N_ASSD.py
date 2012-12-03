@@ -59,6 +59,11 @@ class ASSD(object):
       self.executed = 0
       # permet de savoir si le catalogue de SD a déjà été supprimé (1) ou non (0)
       self.sd_deleted = 0
+      if self.parent:
+          self.order = self.parent.icmd
+      else:
+          self.order = 0
+
       # attributs pour le Catalogue de Structure de Données Jeveux
       # "self.cata_sdj" est un attribut de classe
       self.ptr_class_sdj = None

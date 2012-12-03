@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+
 """
     Ce module contient la classe MCSIMP qui sert à controler la valeur
     d'un mot-clé simple par rapport à sa définition portée par un objet
@@ -163,8 +164,8 @@ class MCSIMP(N_OBJECT.OBJECT):
               la liste des sd attenante.
 
               Exemple ::
-                      { 'VALE_F': [ <Cata.cata.para_sensi instance at 0x9419854>,
-                                    <Cata.cata.para_sensi instance at 0x941a204> ] }
+                      { 'VALE_F': [ <Cata.cata.fonction_sdaster instance at 0x9419854>,
+                                    <Cata.cata.fonction_sdaster instance at 0x941a204> ] }
       """
       l=self.get_sd_utilisees()
       dico = {}

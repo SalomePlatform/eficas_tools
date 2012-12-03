@@ -30,3 +30,4 @@ class JDC(jdc.JDC,I_JDC.JDC,V_JDC.JDC,N_JDC.JDC):
       V_JDC.JDC.__init__(self)
       I_JDC.JDC.__init__(self)
       jdc.JDC.__init__(self)
+      self.icmd=0

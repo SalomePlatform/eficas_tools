@@ -173,6 +173,17 @@ def import_object(uri):
     return object
 
 
+class Singleton(object):
+    """Singleton implementation in python."""
+    # add _singleton_id attribute to the class to be independant of import path used
+    __inst = {}
+    def __new__(cls, *args, **kargs):
+        cls_id = getattr(cls, '_singleton_id', cls)
+        if Singleton.__inst.get(cls_id) is None:
+            Singleton.__inst[cls_id] = object.__new__(cls)
+        return Singleton.__inst[cls_id]
+
+
 class Enum(object):
     """
     This class emulates a C-like enum for python. It is initialized with a list
