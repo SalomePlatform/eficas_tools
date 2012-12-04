@@ -116,18 +116,21 @@ class Appli(Ui_Eficas,QMainWindow):
           listeTexte=apply(Appli.__dict__[self.code],(self,))
 
     def initAides(self):
+        print "je passe la"
         repAide=os.path.dirname(os.path.abspath(__file__))
         self.docPath=repAide+"/../Aide"
         if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'rep_aide') : self.docPath=self.CONFIGURATION.rep_aide
         fileName='eficas_'+str(self.code)+'.adp'
         self.fileDoc=os.path.join(self.docPath,fileName)
+        self.actionCode.setText("Aide spécifique "+str(self.code))
         if not os.path.isfile(self.fileDoc) : 
                self.fileDoc=""
                self.docPath=""
+               self.actionCode.setEnabled(False)
                return
 
+        self.actionCode.setEnabled(True)
         self.menuAide.addAction(self.actionCode)
-        self.actionCode.setText("Aide spécifique "+str(self.code))
 
 
     def ASTER(self) :
@@ -157,6 +160,8 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def ChercheGrpMaille(self):
         Msg,listeGroup=self.ChercheGrpMailleInSalome()
+        #listeGroup=('a','b')
+        #Msg=None
         if Msg == None :
            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
