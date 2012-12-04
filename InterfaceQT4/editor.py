@@ -940,14 +940,14 @@ class JDCEditor(QSplitter):
     def verifieVersionCataDuJDC(self,text):
     #-------------------------------------#
         memeVersion=False
-        indexDeb=text.find("#VERSION_CATA:")
-        indexFin=text.find(":FIN VERSION_CATA")
+        indexDeb=text.find("#LABEL_TRADUCTION:")
+        indexFin=text.find(":FIN LABEL_TRADUCTION")
         if indexDeb < 0 : 
            self.versionCataDuJDC="sans"
            textJDC=text
         else :
-           self.versionCataDuJDC=text[indexDeb+13:indexFin]
-           textJDC=text[0:indexDeb]+text[indexFin+17:-1]
+           self.versionCataDuJDC=text[indexDeb+17:indexFin]
+           textJDC=text[0:indexDeb]+text[indexFin+21:-1]
      
         self.versionCata="sans"
         if hasattr(self.readercata.cata[0],'version_cata'): self.versionCata=self.readercata.cata[0].version_cata
