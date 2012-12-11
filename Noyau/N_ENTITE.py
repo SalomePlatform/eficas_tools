@@ -140,8 +140,8 @@ class ENTITE:
             mcbloc = val.check_definition(parent)
             #XXX
             #print "#BLOC", parent, re.sub('\s+', ' ', val.condition)
-            assert mcs.isdisjoint(mcbloc), "Commande %s : Mot(s)-clef(s) vu(s) plusieurs fois : %s" \
-               % (parent, tuple(mcs.intersection(mcbloc)))
+            #assert mcs.isdisjoint(mcbloc), "Commande %s : Mot(s)-clef(s) vu(s) plusieurs fois : %s" \
+            #   % (parent, tuple(mcs.intersection(mcbloc)))
       return mcs
 
    def check_op(self, valmin=-9999, valmax=9999):
