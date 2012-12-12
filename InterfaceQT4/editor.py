@@ -881,7 +881,7 @@ class JDCEditor(QSplitter):
     def ajoutVersionCataDsJDC(self,txt):
     #-------------------------------------#
         if not hasattr(self.readercata.cata[0],'LABEL_TRADUCTION'): return txt
-        ligneVersion="#LABEL_TRADUCTION:"+self.readercata.cata[0].version_cata+":FIN LABEL_TRADUCTION\n"
+        ligneVersion="#LABEL_TRADUCTION:"+self.readercata.cata[0].LABEL_TRADUCTION+":FIN LABEL_TRADUCTION\n"
         texte=txt+ligneVersion
         return texte
 
