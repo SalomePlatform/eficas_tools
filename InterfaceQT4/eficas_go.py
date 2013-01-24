@@ -55,6 +55,7 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
         Lance l'appli EFICAS pour trouver les noms des groupes
     """
     # Analyse des arguments de la ligne de commande
+    from Editeur  import session
     options=session.parse(sys.argv)
     code=options.code
 
@@ -75,19 +76,17 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
     monEditeur=JDCEditor(Eficas,fichier)
     print monEditeur.cherche_Groupes()
 
-def lance_eficas_param(code='MAP',fichier='/local/noyret/Eficas_MAP/creation.comm',ssCode='Creation',version='creation'):
+def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION_STUDY'):
     """
         Lance l'appli EFICAS pour trouver les noms des groupes
     """
     # Analyse des arguments de la ligne de commande
     from Editeur  import session
     options=session.parse(sys.argv)
-    if options.code!= None : code=options.code
-    if options.ssCode!= None : ssCode=options.ssCode
 
     from qtEficas import Appli
     app = QApplication(sys.argv)
-    Eficas=Appli(code=code,ssCode=ssCode)
+    Eficas=Appli(code=code,ssCode=None)
 
     from ssIhm  import QWParentSSIhm
     parent=QWParentSSIhm(code,Eficas,version)
@@ -97,10 +96,42 @@ def lance_eficas_param(code='MAP',fichier='/local/noyret/Eficas_MAP/creation.com
            monreadercata  = readercata.READERCATA( parent, Eficas )
            Eficas.readercata=monreadercata
 
-
     from editor import JDCEditor
     monEditeur=JDCEditor(Eficas,fichier)
-    print monEditeur.cherche_Dico()
+    texte=loadJDC(fichier)
+    parameters=getJdcParameters(texte,macro)
+    return parameters
+
+def getJdcParameters(jdc,macro):
+    """
+    This function converts the data from the specified macro of the
+    specified jdc text to a python dictionnary whose keys are the
+    names of the data of the macro.
+    """
+    context = {}
+    source = "def args_to_dict(**kwargs): return kwargs \n"
+    source+= "%s = _F = args_to_dict          \n"%macro
+    source+= "parameters="+jdc+"                        \n"
+    source+= "context['parameters'] = parameters         \n"
+    code = compile(source, 'file.py', 'exec')
+    eval(code)
+    parameters = context['parameters']
+    return parameters
+
+def loadJDC(filename):
+    """
+    This function loads the text from the specified JdC file. A JdC
+    file is the persistence file of Eficas (*.comm).
+    """
+    fcomm=open(filename,'r')
+    jdc = ""
+    for line in fcomm.readlines():
+        if not (line[0]=='#'):
+           jdc+="%s"%line
+
+    # Warning, we have to make sure that the jdc comes as a simple
+    # string without any extra spaces/newlines
+    return jdc.strip()
 
 if __name__ == "__main__":
     import sys

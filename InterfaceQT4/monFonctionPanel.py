@@ -31,9 +31,9 @@ from PyQt4.QtCore import *
 
 class MonFonctionPanel(MonPlusieursBasePanel):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe definissant le panel associe� aux mots-cles qui demandent
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discretes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonFonctionPanel"
@@ -51,29 +51,32 @@ class MonFonctionPanel(MonPlusieursBasePanel):
                except :
                    pass
         genea=self.node.item.get_genealogie()
-        if "VALE" in genea:
-            self.nbValeurs=2
-        if "VALE_C" in genea:
-            self.nbValeurs=3
+        self.nbValeursASaisir=self.nbValeurs
+        if "VALE" in genea: self.nbValeurs=2
+        if "VALE_C" in genea: self.nbValeurs=3
 
 
   def DecoupeListeValeurs(self,liste):
         #decoupe la liste des valeurs en n ( les x puis les y)
         l_valeurs=[]
-        if (len(liste)% self.nbValeurs != 0):
-            message="La cardinalité n'est pas correcte, la dernière valeur est ignorée"
+        if ((len(liste)% self.nbValeursASaisir != 0 and (len(liste)% self.nbValeurs))):
+            message="La cardinalite n'est pas correcte, la derniere valeur est ignoree"
             #self.Commentaire.setText(QString(commentaire)) 
             self.editor.affiche_infos(message,Qt.red)
         i=0
-        while ( i < (len(liste) - self.nbValeurs + 1)) :
-            t=tuple(liste[i:i+self.nbValeurs])
+        while ( i < len(liste) ) :
+            try :
+              t=tuple(liste[i:i+self.nbValeurs])
+              i=i+self.nbValeurs
+            except:
+              t=tuple(liste[i:len(liste)])
             l_valeurs.append(t)
-            i=i+self.nbValeurs
         return l_valeurs
 
-  def BuildLBValeurs(self):
+  def BuildLBValeurs(self,listeValeurs=None):
         self.LBValeurs.clear()
-        listeValeurs=self.node.item.GetListeValeurs()
+        if listeValeurs== None :
+           listeValeurs=self.node.item.GetListeValeurs()
         if self.node.item.wait_tuple()== 1 :
 	      listeATraiter=listeValeurs
               for valeur in listeATraiter:
@@ -92,7 +95,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
 
 
   def  Ajout1Valeur(self,liste=[]):
-        # Pour être appele a partir du Panel Importer (donc plusieurs fois par AjouterNValeur)
+        # Pour etre appele a partir du Panel Importer (donc plusieurs fois par AjouterNValeur)
         validite=1
         if liste == [] :
            if self.node.item.wait_tuple()== 1 :
@@ -103,10 +106,10 @@ class MonFonctionPanel(MonPlusieursBasePanel):
               if validite == 0 : return
         if liste ==[]    : return
 
-        if len(liste) != self.nbValeurs :
+        if (self.node.item.wait_tuple()== 1 and len(liste) != self.nbValeurs):
             commentaire  = QString(str(liste)) 
             commentaire += QString(" n est pas un tuple de ") 
-            commentaire += QString(str(self.nbValeurs)) 
+            commentaire += QString(str(self.nbValeursASaisir)) 
             commentaire += QString(" valeurs")
 	    self.LEValeur.setText(QString(str(liste)))
             self.editor.affiche_infos(commentaire,Qt.red)
@@ -157,6 +160,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
                self.LBValeurs.setCurrentItem(item)
                index=index+1
            self.listeValeursCourantes=l1+listeRetour+l3
+           self.BuildLBValeurs(self.listeValeursCourantes)
 
 
   def AjoutNValeur(self,liste) :

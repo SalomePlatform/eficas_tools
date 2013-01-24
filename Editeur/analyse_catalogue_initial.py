@@ -22,8 +22,8 @@ import re,string,os
 
 
 #
-__Id__="$Id: analyse_catalogue_initial.py,v 1.2.4.1.2.1 2012-03-30 09:42:07 pnoyret Exp $"
-__version__="$Name:  $"
+__Id__="$Id: analyse_catalogue_initial.py,v 1.2.4.1.2.2 2012-05-16 09:43:00 pnoyret Exp $"
+__version__="$Name: V6_main $"
 #
 
                 

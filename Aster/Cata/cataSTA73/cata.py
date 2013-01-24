@@ -33,8 +33,8 @@ except:
   pass
 
 #
-__version__="$Name:  $"
-__Id__="$Id: cata_aster_v6.py,v 1.12 2001/01/16 15:55:05 iliade Exp $"
+__version__="$Name: V6_main $"
+__Id__="$Id: cata.py,v 1.1 2005-01-25 18:25:17 eficas Exp $"
 #
 JdC = JDC_CATA(code='ASTER',
                execmodul=None,

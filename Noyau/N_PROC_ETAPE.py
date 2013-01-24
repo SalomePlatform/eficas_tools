@@ -48,7 +48,7 @@ class PROC_ETAPE(N_ETAPE.ETAPE):
        - valeur : arguments d'entrée de type mot-clé=valeur. Initialisé avec l'argument args.
        - reuse : forcément None pour une PROC
       """
-      N_ETAPE.ETAPE.__init__(self, oper, reuse=None, args=args)
+      N_ETAPE.ETAPE.__init__(self, oper, reuse=None, args=args, niveau=5)
       self.reuse = None
 
    def Build_sd(self):

@@ -277,6 +277,7 @@ class PythonGenerator:
       """
       try:
         sdname= self.generator(obj.sd)
+        if  string.find(sdname,'SD_') != -1: sdname='sansnom'
       except:
         sdname='sansnom'
       l=[]
@@ -536,7 +537,7 @@ class PythonGenerator:
             if len(obj.valeur) > 1:
                s = '(' + s + '),'
          if obj.nbrColonnes() :
-            s=self.formatColonnes(obj.nbrColonnes(),s)
+            s=self.formatColonnes(obj.nbrColonnes(),str(obj.valeur))
       else :
          obj.valeurFormatee=obj.valeur
          s=self.format_item(obj.valeur,obj.etape) + ','
@@ -549,12 +550,18 @@ class PythonGenerator:
         liste=text.split(",")
         indice=0
         textformat=""
-        while ( indice < len(liste) -2  ) :
-          for l in range(nbrColonnes) :
-            textformat=textformat+liste[indice]+","
-            indice=indice+1
-          textformat=textformat+"\n"
-        textformat=textformat+"),"
+        while ( indice < len(liste) ) :
+          try :
+            k=liste[indice+nbrColonnes]
+            for l in range(nbrColonnes) :
+                textformat=textformat+liste[indice]+","
+                indice=indice+1
+            textformat=textformat+"\n"
+          except :
+            while ( indice < len(liste) ) :
+                textformat=textformat+liste[indice]+","
+                indice=indice+1
+            textformat=textformat+"\n"
       except :
       #else :
          textformat=text

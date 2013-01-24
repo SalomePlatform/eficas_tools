@@ -228,6 +228,11 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       return 1
 
+  def updateDeplace(self,item):
+      if item.sd and item.sd.nom:
+         self.object.sd=item.sd
+         self.object.sd.nom=item.sd.nom
+
   def update(self,item):
       if item.sd and item.sd.nom:
          self.nomme_sd(item.sd.nom)

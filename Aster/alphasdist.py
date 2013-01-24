@@ -23,7 +23,7 @@
 import os,shutil,glob,sys
 import types
 
-version="$Name:  $"[7:-2] or 'Test1_4'
+version="$Name: V6_main $"[7:-2] or 'Test1_4'
 # ==========Path du noyau local           ====================
 path_Noyau=".."
 # ============================================================

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 2007 - 2012  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -27,7 +27,7 @@ install ( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
           PATTERN Patrons EXCLUDE
           PATTERN CVS EXCLUDE
 	)
-add_subdirectory ( Patrons )
+add_subdirectory (Patrons)
 
 ### Local Variables:
 ### mode: cmake

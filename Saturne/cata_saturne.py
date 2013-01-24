@@ -8,8 +8,8 @@ from Accas import OPER,PROC,MACRO
 from Accas import SIMP,FACT,BLOC
 from Accas import ASSD 
 #
-__version__="$Name:  $"
-__Id__="$Id: cata_saturne.py,v 1.1.1.1 2002/03/26 09:08:47 eficas Exp $"
+__version__="$Name: V6_main $"
+__Id__="$Id: cata_saturne.py,v 1.2 2004-09-10 15:52:07 eficas Exp $"
 #
 
 JdC = JDC_CATA(code='SATURNE',

@@ -34,7 +34,7 @@ try:
 except:
   pass
 
-__version__="$Name: V2_1_1_beta $"
+__version__="$Name: V6_main $"
 
 EnumTypes = (ListType, TupleType)
 

@@ -24,8 +24,8 @@ from Editeur import compomacro
 import ongletpanel
 
 #
-__version__="$Name:  $"
-__Id__="$Id: compomacro.py,v 1.12 2004/03/11 09:59:00 eficas Exp $"
+__version__="$Name: V6_main $"
+__Id__="$Id: compomacro.py,v 1.1 2004-11-19 09:06:24 eficas Exp $"
 #
 
 class MACROPanel(ongletpanel.OngletPanel,compomacro.MACROPanel) :

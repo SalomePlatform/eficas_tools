@@ -113,6 +113,7 @@ class JDCEditor(QSplitter):
         self.isReadOnly = False
         self.tree = None
         self.node_selected = []
+        self.deplier = True
         self.message=''
         
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
@@ -122,7 +123,7 @@ class JDCEditor(QSplitter):
         jdc_item = None
         self.mode_nouv_commande=self.readercata.mode_nouv_commande
                         
-        nouveau=0
+        self.nouveau=0
         if self.fichier is not None:        #  fichier jdc fourni
             self.fileInfo = QFileInfo(self.fichier)
             self.fileInfo.setCaching(0)
@@ -139,10 +140,11 @@ class JDCEditor(QSplitter):
                    self.jdc = self._newJDC(units=units)
                 else :
                    self.jdc = self._newJDCInclude(units=units)
-                nouveau=1
+                self.nouveau=1
         
         if self.jdc:            
             self.jdc.appli = self
+            self.jdc.lang    = self.appli.CONFIGURATION.lang
             txt_exception  = None
             if not jdc:
                 self.jdc.analyse()            
@@ -156,10 +158,11 @@ class JDCEditor(QSplitter):
                 comploader.charger_composants("QT")
                 jdc_item=Objecttreeitem.make_objecttreeitem( self, "nom", self.jdc )
 
-                if (not self.jdc.isvalid()) and (not nouveau) :
+                if (not self.jdc.isvalid()) and (not self.nouveau) :
                     self.viewJdcRapport()
         if jdc_item:                        
             self.tree = browser.JDCTree( jdc_item,  self )
+        self.appliEficas.construitMenu()
         
     #--------------------------------#
     def _newJDC( self ,units = None):        
@@ -179,6 +182,7 @@ class JDCEditor(QSplitter):
            jdc.recorded_units=units
            jdc.old_recorded_units=units
         jdc.analyse()        
+        jdc.lang    = self.appli.CONFIGURATION.lang
         return jdc
         
     #--------------------------------#
@@ -232,9 +236,14 @@ class JDCEditor(QSplitter):
              #appli = self 
              p=convert.plugins[self.appliEficas.format_fichier_in]()
              p.readfile(fn)
+             if p.text=="" : self.nouveau=1
              pareil,texteNew=self.verifieCHECKSUM(p.text)
+             #if texteNew == ""
              if pareil == False and (self.QWParent != None) :
                 QMessageBox.warning( self, "fichier modifie","Attention! fichier change hors EFICAS")
+             p.text=texteNew
+             memeVersion,texteNew=self.verifieVersionCataDuJDC(p.text)
+             if memeVersion == 0 : texteNew=self.traduitCatalogue(texteNew)
              p.text=texteNew
              text=p.convert('exec',self.appliEficas)
              if not p.cr.estvide():                 
@@ -299,13 +308,13 @@ class JDCEditor(QSplitter):
         self.w.setWindowTitle( "execution" )
         self.monExe=QProcess(self.w)
         pid=self.monExe.pid()
-        nomFichier='/tmp/map_'+str(pid)+'.py'
+        nomFichier='/tmp/map_'+str(pid)+'.sh'
         f=open(nomFichier,'w')
         f.write(txt)
         f.close()
         self.connect(self.monExe, SIGNAL("readyReadStandardOutput()"), self.readFromStdOut )
         self.connect(self.monExe, SIGNAL("readyReadStandardError()"), self.readFromStdErr )
-        exe='python ' + nomFichier
+        exe='sh ' + nomFichier
         self.monExe.start(exe)
         self.monExe.closeWriteChannel()
         self.w.show()
@@ -359,6 +368,8 @@ class JDCEditor(QSplitter):
 	   mapalette.setColor( QPalette.WindowText, couleur )
 	   self.sb.setPalette( mapalette );
            self.sb.showMessage(QString.fromUtf8(message))#,2000)
+           #if couleur==Qt.red :
+           #   QToolTip.showText(QPoint(0,0),'tttttttttttt',self.sb)
 
     #------------------------------#
     def affiche_alerte(self,titre,message):
@@ -392,9 +403,24 @@ class JDCEditor(QSplitter):
       self.chercheNoeudSelectionne()
       if len(self.node_selected) == 0 : return
       self.QWParent.noeud_a_editer = []
+      if self.node_selected[0]==self.tree.racine: return
       if len(self.node_selected) == 1 : self.node_selected[0].delete()
       else : self.node_selected[0].deleteMultiple(self.node_selected)
      
+    
+    #---------------------#
+    def handleRechercher(self):
+    #---------------------#
+      from monRecherche import DRecherche
+      monRechercheDialg=DRecherche(parent=self,fl=0)
+    
+    #---------------------#
+    def handleDeplier(self):
+    #---------------------#
+       if self.tree == None : return
+       self.deplier = False
+       self.tree.collapseAll()
+       self.tree.expandItem(self.tree.topLevelItem(0))
     
     #---------------------#
     def handleEditCut(self):
@@ -444,7 +470,12 @@ class JDCEditor(QSplitter):
          return
 
       noeudOuColler=self.node_selected[0]
-      indexNoeudOuColler=noeudOuColler.treeParent.children.index(noeudOuColler)
+      pos='after'
+      if noeudOuColler == self.tree.racine:
+         indexNoeudOuColler=0
+         pos='before'
+      else :
+         indexNoeudOuColler=noeudOuColler.treeParent.children.index(noeudOuColler)
 
       try :
        noeudACopier=self.QWParent.noeud_a_editer[0]
@@ -453,42 +484,55 @@ class JDCEditor(QSplitter):
        QMessageBox.information( self, "Copie impossible", "Aucun Objet n a ete copie ou coupe ")
        return
 
-      try:
-         child=noeudACopier.doPaste(noeudOuColler)
-      except  :
-         traceback.print_exc()
-         QMessageBox.critical( self, "Copie refusee",'Copie refusee pour ce type d objet')
-         self.message = ''
-         self.affiche_infos("Copie refusee",Qt.red)
-         return
-    
-      if child==None:
-         QMessageBox.critical( self, "Copie refusee",'Eficas n a pas réussi à copier l objet')
-         self.message = ''
-         self.affiche_infos("Copie refusee",Qt.red)
-         return
+      if (self.QWParent.edit != "couper"):
+        try:
+           if noeudOuColler == self.tree.racine :
+              child=noeudOuColler.doPastePremier(noeudACopier)
+           else :
+              child=noeudACopier.doPaste(noeudOuColler,pos)
+           if child==None or child==0:
+               QMessageBox.critical( self, "Copie refusee",'Eficas n a pas réussi à copier l objet')
+               self.message = ''
+               self.affiche_infos("Copie refusee",Qt.red)
+           return
+           self.init_modif()
+           child.select()
+        except  :
+           traceback.print_exc()
+           QMessageBox.critical( self, "Copie refusee",'Copie refusee pour ce type d objet')
+           self.message = ''
+           self.affiche_infos("Copie refusee",Qt.red)
+           return
     
       # il faut declarer le JDCDisplay_courant modifie
-      self.init_modif()
       # suppression eventuelle du noeud selectionne
       # si possible on renomme l objet comme le noeud couper
 
-      if (noeudACopier.treeParent == child.treeParent ):
-           indexAjoute=child.treeParent.children.index(child)
-           if indexAjoute <= indexNoeudACopier :
-                indexNoeudACopier=indexNoeudACopier +1
-           self.QWParent.noeud_a_editer=(noeudACopier.treeParent.children[indexNoeudACopier],)
       if (self.QWParent.edit == "couper"):
-         noeudASupprimer=noeudACopier.treeParent.children[indexNoeudACopier]
-         item=noeudASupprimer.item
-         noeudASupprimer.delete()
-         child.item.update(item)
+         #try :
+         if noeudACopier.treeParent.editor != noeudOuColler.treeParent.editor:
+           QMessageBox.critical( self, "Deplacement refuse",'Deplacement refuse entre 2 fichiers. Seule la copie est autorisée ')
+
+         #if 1:
+         try :
+            indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
+            noeudACopier.treeParent.item.deplaceEntite(indexNoeudACopier,indexNoeudOuColler,pos)
+            noeudACopier.treeParent.build_children()
+            
+         #else:
+         except:
+            pass
          self.QWParent.noeud_a_editer=[]
 
       # on rend la copie a nouveau possible en liberant le flag edit
       self.QWParent.edit="copier"
-      child.select()
+      noeudACopier.select()
 
+    #----------------------------------#
+    def handleDeplaceMultiple(self):
+    #----------------------------------#
+       pass
+    
     #----------------------------------#
     def handleEditPasteMultiple(self):
     #----------------------------------#
@@ -497,6 +541,8 @@ class JDCEditor(QSplitter):
     # On insere dans l'ordre du JDC
      listeNoeudsACouper=[]
      listeIndex=[]
+     listeChild=[]
+     listeItem=[]
      from InterfaceQT4 import compojdc
      noeudOuColler=self.node_selected[0]
      if not (isinstance(noeudOuColler.treeParent, compojdc.Node)):
@@ -526,6 +572,7 @@ class JDCEditor(QSplitter):
          noeudOuColler=noeudJdc.children[indexNoeudOuColler]
          noeud=noeudJdc.children[indexTravail]
          child=noeud.doPaste(noeudOuColler)
+         listeChild.append(child)
          dejaCrees=dejaCrees+1
       
      self.QWParent.noeud_a_editer = []
@@ -535,16 +582,21 @@ class JDCEditor(QSplitter):
 
      listeASupprimer=[]
      if self.QWParent.edit !="couper" : return
+
      for index in listeIndex:
          indexTravail=index
          if indexNoeudOuColler < index:
             indexTravail=indexTravail+(len(listeIndex))
          noeud=noeudJdc.children[indexTravail]
+         
+         listeItem.append(noeud.item)
          listeASupprimer.append(noeud)
-     listeASupprimer[0].deleteMultiple(listeASupprimer)
-     self.QWParent.noeud_a_editer = []
+
+     for i in range(len(listeChild)):
+         self.tree.item.suppitem(listeItem[i])
+         listeChild[i].item.update(listeItem[i])
      
-            
+     self.QWParent.noeud_a_editer = []
             
 
     #---------------------#
@@ -586,6 +638,7 @@ class JDCEditor(QSplitter):
                   txt += eol
             else:
                 txt += eol        
+            txt=self.ajoutVersionCataDsJDC(txt)
             checksum=self.get_checksum(txt)
             txt=txt+checksum
         try:
@@ -620,22 +673,26 @@ class JDCEditor(QSplitter):
          QMessageBox.critical( self, "Format "+self.format+" non reconnu","EFICAS ne sait pas convertir le JDC selon le format "+self.format)
          return ""
 
-    #-----------------------------#
-    def run(self,execution="oui"):
-    #-----------------------------#
-      if self.code == "MAP" and not(generator.plugins.has_key(format)):
-         self.format="MAP"
-      if generator.plugins.has_key(self.format):
-         self.generator=generator.plugins[self.format]()
-      else :
-         QMessageBox.critical( self, "Execution impossible ","EFICAS ne sait pas executer ce JDC ")
-         return "" 
-
+    #------------#
+    def run(self):
+    #------------#
       # 
-      self.textePython =self.generator.generRUN(self.jdc,self.appli.ssCode)
-      if execution=="oui" :
-         self._viewTextExecute( self.textePython)    
-      return self.textePython
+      if not(self.jdc.isvalid()):
+         QMessageBox.critical( self, "Execution impossible ","le JDC doit etre valide pour une execution MAP")
+         return
+      if len(self.jdc.etapes) != 1 :
+         QMessageBox.critical( self, "Execution impossible ","le JDC doit contenir un et un seul composant")
+         return
+      if self.modified :
+         QMessageBox.critical( self, "Execution impossible ","le JDC doit être sauvegarde avant execution")
+         return
+      if  self.fichier==None :
+         QMessageBox.critical( self, "Execution impossible ","le JDC doit être sauvegarde avant execution")
+         return
+      composant=self.jdc.etapes[0].nom.lower()[0:-5]
+      textePython=("map run -n "+composant +" -i "+self.fichier)
+      #print textePython
+      self._viewTextExecute( textePython)    
 
 
     #-----------------------------------------------------#
@@ -667,6 +724,7 @@ class JDCEditor(QSplitter):
            if abort == 1 :  return (0, "")
       return (1,fn)
 
+    #-----------------#
     def saveRun(self):
     #-----------------#
         texte=self.run(execution="non")
@@ -709,31 +767,14 @@ class JDCEditor(QSplitter):
     #-----------------------------------------#
     def handleAjoutGroup(self,listeGroup):
     #-----------------------------------------#
-    # liste des  prefixes de groupes de mailles et de noeuds a exclure 
-    # pour code CARMEL3D (fournis par THEMIS)
-    #
-         liste_prefixes_exclus = ["TOPO","CURRENT","EPORT","HPORT","PB_MOBILE","NILMAT",
-                                  "VCUT","VCUTN","EWALL","HWALL","GAMMAJ","PERIODIC","APERIODIC",
-                                  "HPROBE","EPROBE","BFLUX","BFLUXN","JFLUX","JFLUXN",
-                                  "PORT_OMEGA","POST_PHI","PB_GRID",
-                                  "SCUTE","SCUTN"]
-         try :
-            dernier=self.tree.racine.children[-1]
-         except :
-            dernier=None
-         for groupe in listeGroup :
-             exclure = 0
-             for prefix in liste_prefixes_exclus :
-                 long_pref = len(prefix)
-                 if groupe[0:long_pref]== prefix :
-                     exclure = 1
-   # le groupe de mailles n est pas a exclure            
-             if exclure == 0 :
-                if dernier != None : new_node = dernier.append_brother("MESH_GROUPE",'after')
-                else: new_node=self.tree.racine.append_child("MESH_GROUPE",pos='first')
-                test,mess = new_node.item.nomme_sd(groupe)
-                new_node.append_child('MON_MATER')
-                dernier=new_node
+        #try :
+        if 1:
+           from ajoutGroupe import handleAjoutGroupFiltre
+           listeSource,listeMateriaux=handleAjoutGroupFiltre(listeGroup)
+           print listeSource,listeMateriaux
+        #except :
+        else :
+           pass
 
     #-----------------------------------------#
     def saveFile(self, path = None, saveas= 0):
@@ -843,8 +884,47 @@ class JDCEditor(QSplitter):
             jdcText = ''
         return ulfile, jdcText
 
+    #-------------------------------------#
+    def ajoutVersionCataDsJDC(self,txt):
+    #-------------------------------------#
+        if not hasattr(self.readercata.cata[0],'LABEL_TRADUCTION'): return txt
+        ligneVersion="#LABEL_TRADUCTION:"+self.readercata.cata[0].LABEL_TRADUCTION+":FIN LABEL_TRADUCTION\n"
+        texte=txt+ligneVersion
+        return texte
 
+    #-------------------------------------#
+    def verifieVersionCataDuJDC(self,text):
+    #-------------------------------------#
+        memeVersion=False
+        indexDeb=text.find("#LABEL_TRADUCTION:")
+        indexFin=text.find(":FIN LABEL_TRADUCTION")
+        if indexDeb < 0 : 
+           self.versionCataDuJDC="sans"
+           textJDC=text
+        else :
+           self.versionCataDuJDC=text[indexDeb+17:indexFin]
+           textJDC=text[0:indexDeb]+text[indexFin+21:-1]
      
+        self.versionCata="sans"
+        if hasattr(self.readercata.cata[0],'version_cata'): self.versionCata=self.readercata.cata[0].version_cata
+
+        if self.versionCata==self.versionCataDuJDC : memeVersion=True
+        return memeVersion,textJDC
+        
+    #-------------------------------#
+    def traduitCatalogue(self,texte):
+    #-------------------------------#
+        nomTraducteur="traduit"+self.readercata.code+self.versionCataDuJDC+"To"+self.versionCata
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"../Traducteur")))
+        try :
+            traducteur=__import__(nomTraducteur)
+            monTraducteur=traducteur.MonTraducteur(texte)
+            nouveauTexte=monTraducteur.traduit()
+            return nouveauTexte
+        except :
+            return texte
+     
+
     #------------------------------#
     def verifieCHECKSUM(self,text):
     #------------------------------#
@@ -857,6 +937,7 @@ class JDCEditor(QSplitter):
         checksum=self.get_checksum(textJDC)
         pareil=(checkAvant==checksum)
         return pareil, textJDC
+
     #---------------------------#
     def get_checksum(self,texte):
     #---------------------------#

@@ -205,13 +205,13 @@ class READERCATA:
 
    def import_cata(self,cata):
       """ 
-          Réalise l'import du catalogue dont le chemin d'acces est donné par cata
+          Realise l'import du catalogue dont le chemin d'acces est donne par cata
       """
       nom_cata = os.path.splitext(os.path.basename(cata))[0]
       rep_cata = os.path.dirname(cata)
       sys.path[:0] = [rep_cata]
       self.appliEficas.listeAEnlever.append(rep_cata)
-     
+
       
       if sys.modules.has_key(nom_cata):
         del sys.modules[nom_cata]
@@ -219,12 +219,28 @@ class READERCATA:
         if k[0:len(nom_cata)+1] == nom_cata+'.':
           del sys.modules[k]
 
+      if self.code == "ASTER" :
+         self.appliEficas.rep_scripts=os.path.join(rep_cata,nom_cata)
+         sys.path[:0] = [self.appliEficas.rep_scripts]
+         try :
+             self.appliEficas.mesScripts=__import__('mesScripts')
+         except:
+             pass
+         sys.path=sys.path[1:]
+      else :
+         try :
+            self.appliEficas.mesScripts=__import__('mesScripts')
+         except:
+            pass
+
       try :
           o=__import__(nom_cata)
           return o
       except Exception,e:
           traceback.print_exc()
           return 0
+
+
 
    def Retrouve_Ordre_Cata_Standard_autre(self):
       """ 
@@ -279,7 +295,7 @@ class READERCATA:
 
    def traite_clefs_documentaires(self):
       try:
-        fic_doc='fic_doc_'+str(self.version_code)
+        fic_doc='rep_doc_'+str(self.version_code)
         self.fic_doc=getattr(self.appliEficas.CONFIGURATION,fic_doc )
         f=open(self.fic_doc)
       except:

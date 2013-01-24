@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+
 """
     Ce module contient la classe de definition MACRO
     qui permet de spécifier les caractéristiques d'une macro-commande
@@ -135,15 +136,8 @@ class MACRO(N_ENTITE.ENTITE):
           Construit l'objet MACRO_ETAPE a partir de sa definition (self),
           puis demande la construction de ses sous-objets et du concept produit.
       """
-      # Glut MC (2007-05) / Sensibilité
-      # Précaution nécessaire pour la sensibilité (on fait 'exec' du texte d'une commande)
-      # car on n'a pas de "ligne" à décoder pour trouver le nom du résultat (à gauche
-      # du signe égal). Cà tombe bien, dans ce cas, sd_prod=None : pas de résultat !
-      if self.sd_prod != None:
-         nomsd=self.nommage.GetNomConceptResultat(self.nom)
-      else:
-         nomsd = None
-      etape= self.class_instance(oper=self,reuse=reuse,args=args)
+      nomsd = self.nommage.GetNomConceptResultat(self.nom)
+      etape = self.class_instance(oper=self,reuse=reuse,args=args)
       etape.McBuild()
       return etape.Build_sd(nomsd)
 

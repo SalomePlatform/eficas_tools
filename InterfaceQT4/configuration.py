@@ -50,14 +50,13 @@ class CONFIG_BASE:
       else           : self.name="editeur.ini"
       self.rep_mat = None
       self.repIni  = repIni
-      self.rep_user   = os.path.join(os.environ['HOME'],nomDir)
+      self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',appli.code)
       self.mode_nouv_commande='initial'
      
 
       self.setValeursParDefaut()
       
       self.lecture_fichier_ini_standard()
-      print self.savedir
       self.lecture_fichier_ini_integrateur()
       self.lecture_fichier_ini_utilisateur()
 
@@ -76,7 +75,7 @@ class CONFIG_BASE:
   #-----------------------------
   
       # Valeurs par defaut
-      if not os.path.isdir(self.rep_user) : os.mkdir(self.rep_user)
+      if not os.path.isdir(self.rep_user) : os.makedirs(self.rep_user)
       self.path_doc     = os.path.abspath(os.path.join(self.repIni,'..','Doc'))
       self.exec_acrobat = 'acroread'
       nomDir="Eficas_"+self.code
@@ -107,7 +106,6 @@ class CONFIG_BASE:
         return
       
       fic_ini_integrateur=os.path.join(repIntegrateur,self.name)
-      print fic_ini_integrateur
       if not os.path.isfile(fic_ini_integrateur): return
       txt = read_file(fic_ini_integrateur)
       d=locals()
@@ -117,6 +115,7 @@ class CONFIG_BASE:
          QMessageBox.critical( None, "Import du fichier de Configuration", 
 			"Erreur a la lecture du fichier de configuration " + fic_ini_integrateur)
          return
+      self.labels_eficas.append('rep_aide')
       for k in self.labels_eficas :
          try :
             setattr(self,k,d[k])
@@ -125,7 +124,7 @@ class CONFIG_BASE:
       #Glut pour les repertoires materiaux
       #et pour la doc
       for k in d.keys() :
-          if (k[0:8]=="rep_mat_") or (k[0:8]=="fic_doc_"):
+          if (k[0:8]=="rep_mat_") or (k[0:8]=="rep_doc_"):
              setattr(self,k,d[k])
 
 
@@ -149,6 +148,9 @@ class CONFIG_BASE:
             setattr(self,k,d[k])
          except :
             pass
+      for k in d.keys() :
+          if (k[0:8]=="rep_mat_") or (k[0:8]=="rep_doc_"):
+             setattr(self,k,d[k])
 
   #--------------------------------------
   def save_params(self):
@@ -161,6 +163,13 @@ class CONFIG_BASE:
           if hasattr(self,clef):
              valeur=getattr(self,clef)
              texte= texte + clef+"	= " + repr(valeur) +"\n"
+      #Glut pour les repertoires materiaux
+      #et pour la doc
+      for k in dir(self):
+          if (k[0:8]=="rep_mat_") or (k[0:8]=="rep_doc_"):
+             valeur=getattr(self,k)
+             texte= texte + k+"	= " + repr(valeur) +"\n"
+
       f=open(self.fic_ini_utilisateur,'w+')
       f.write(texte) 
       f.close()

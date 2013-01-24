@@ -50,9 +50,7 @@ class DRac(Ui_DRac,QWidget):
 
 class MonRacinePanel(DRac,QTPanelTBW2):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe definissant le panel associe aux mots-clefs qui demandent
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonRacinePanel"

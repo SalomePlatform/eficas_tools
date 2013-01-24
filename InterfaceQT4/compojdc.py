@@ -20,15 +20,21 @@
 
 from Editeur import Objecttreeitem
 import browser
+import typeNode
 
 
-class Node(browser.JDCNode):
+class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
     def getPanel(self):
         """
         """
         from monRacinePanel import MonRacinePanel
         return MonRacinePanel(self,parent=self.editor)
 
+    def createPopUpMenu(self):
+        typeNode.PopUpMenuRacine.createPopUpMenu(self)
+
+    def addParameters(self,apres):
+        self.append_child("PARAMETRE",pos=0)
 
 
 class JDCTreeItem(Objecttreeitem.ObjectTreeItem):

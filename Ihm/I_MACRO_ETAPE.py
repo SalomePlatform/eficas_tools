@@ -113,6 +113,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
               format=self.parent.appli.appliEficas.format_fichier
           else :
               format=self.jdc.appli.format_fichier.get()
+          #on force a python pour Carmel
+          if format=="CARMEL3D" : format="python"
           if convert.plugins.has_key(format):
               # Le convertisseur existe on l'utilise
               p=convert.plugins[format]()
@@ -754,7 +756,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
 
   def make_include3(self,fichier=None):
-  # Pour Map
+      self.make_includeCarmel(fichier)
+
+  def make_includeCarmel(self,fichier=None):
+  # Pour Carmel
       unite=999
       if hasattr(self,'fichier_ini') : return
       reevalue=0
@@ -762,6 +767,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          reevalue=1
          for concept in self.old_context_fichier_init.values():
              self.jdc.delete_concept(concept)
+      print fichier
       if fichier == None :
          fichier=str(self.jdc.appli.get_file_dictDonnees())
          if fichier  == str("") : 
@@ -785,14 +791,17 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       self.fichier_err=None
 
       try:
+      #if 1 :
          import Extensions.jdc_include
          self.JdC_aux=Extensions.jdc_include.JdC_include
       except:
+      #else:
          traceback.print_exc()
          self.make_incl2_except()
          raise
 
       try:
+      #if 1 :
          self.make_contexte_include(self.fichier_ini ,self.fichier_text)
          self.old_context_fichier_init=self.contexte_fichier_init
          self.parent.record_unit(unite,self)
@@ -802,8 +811,11 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          except :
             pass
       except:
+      #else:
          self.make_incl2_except()
-      CONTEXT.set_current_step(self)
+      # Cette P*** de ligne suivante ne fonctionne que pour Aster
+      # si quelqu un a une idee merci de m en parler
+      #CONTEXT.set_current_step(self)
 
   def make_include2(self,fichier=None):
   # Pour OT

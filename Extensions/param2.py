@@ -68,7 +68,9 @@ class Formula:
     def __rfloordiv__(self, other): return Binop('//', other, self)
     def __pow__(self, other): return Binop('**', self, other)
     def __rpow__(self, other): return Binop('**', other, self)
-    def __getitem__(self,i):return Binop('[]',self,i)
+    def __getitem__(self,i): 
+        if i > len(self) : raise StopIteration
+        return Binop('[]',self,i)
     def __cmp__( self, other ): return self.eval().__cmp__(other)
     def __eq__(  self, other ): return self.eval() == other
     def __ne__(  self, other ): return self.eval() != other
@@ -100,6 +102,7 @@ class Binop(Formula):
     def __init__(self, op, value1, value2):
         self.op = op
         self.values = mkf(value1), mkf(value2)
+
     def __str__(self):
         if self.op == '[]':
            return "%s[%s]" % (self.values[0], self.values[1])

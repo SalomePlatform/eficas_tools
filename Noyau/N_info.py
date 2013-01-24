@@ -18,8 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-"""
-Module to manage information printing : debug, info, error.
+"""Module to manage information printing : debug, info, error.
 Should replace 'print' and 'UTMESS' calls at least in the supervisor
 modules.
 Only used for debug right now.
@@ -32,7 +31,7 @@ import traceback
 from functools import partial
 from subprocess import Popen, PIPE
 
-from N_utils import Enum
+from N_utils import Enum, Singleton
 from strfunc import convert
 
 def default_print(text):
@@ -92,8 +91,10 @@ REGEXP_ORIG = re.compile('File [\'\"]*(.*?)[\'\"]*, *line ([0-9]+), *in (.*)')
 
 # slighty different and very simplier than logger objects
 # from the logging module.
-class InfoLevel(object):
+class InfoLevel(Singleton):
     """Store informations level."""
+    _singleton_id = 'N_info.InfoLevel'
+    
     def __init__(self, level):
         """Initialization"""
         self._parts = []

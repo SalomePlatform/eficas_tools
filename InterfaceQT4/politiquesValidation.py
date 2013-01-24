@@ -32,7 +32,7 @@ class Validation  :
          commentaire = None
          valeur,validite=self.node.item.eval_valeur(valeurentree)
          if not validite :
-                  commentaire = "impossible d'évaluer : %s " %`valeurentree`
+                  commentaire = "impossible d'evaluer : %s " %`valeurentree`
                   return valeur,validite,commentaire
 
          testtype,commentaire = self.node.item.object.verif_type(valeur)
@@ -51,7 +51,7 @@ class Validation  :
          return valeur, validite, commentaire
 
 # ----------------------------------------------------------------------------------------
-#   Méthodes utilisées pour la manipulation des items en notation scientifique
+#   Methodes utilisees pour la manipulation des items en notation scientifique
 #   a mettre au point
 # ----------------------------------------------------------------------------------------
   def SetValeurTexte(self,texteValeur) :
@@ -87,7 +87,9 @@ class Validation  :
          return valeurTexte
 
   def AjoutDsDictReel(self,texteValeur):
-         # le try except est nécessaire pour saisir les paramétres
+         # le try except est necessaire pour saisir les parametres
+         # on enleve l erreur de saisie 00 pour 0
+         if str(texteValeur)== '00' : return
          try :
             if "R" in self.node.item.object.definition.type:
                 if str(texteValeur)[0] != "'":
@@ -159,6 +161,12 @@ class PolitiquePlusieurs(Validation):
          if listevaleur=="": return
          if not( type(listevaleur)  in (types.ListType,types.TupleType)) :
             listevaleur=tuple(listevaleur)
+         # on verifie que la cardinalite max n a pas ete atteinte
+         min,max = self.node.item.GetMinMax()
+         if len(listecourante) + len(listevaleur) > max :
+            commentaire="La liste atteint le nombre maximum d'elements : "+ str(max) +" ,ajout refuse"
+            return False,commentaire,commentaire2,listeRetour
+
          for valeur in listevaleur :
              # On teste le type de la valeur
              valeurScientifique=valeur
@@ -166,23 +174,27 @@ class PolitiquePlusieurs(Validation):
              if not valide :
                 try :
                    valeur,valide=self.node.item.eval_valeur(valeur)
-                   valide,commentaire = self.node.item.object.verif_type(valeur)
+                   valide,commentaire2 = self.node.item.object.verif_type(valeur)
                 except :
                    #return testtype,commentaire,"",listeRetour
                    pass
              if not valide:
-                commentaire="Valeur "+str(valeur)+ " incorrecte : ajout à la liste refusé"
-                commentaire2=self.node.item.info_erreur_item()
+                if commentaire.find("On attend un chaine") > 1 :
+                   commentaire="Valeur "+str(valeur)+ " incorrecte : ajout a la liste refuse: On attend une chaine de caracteres < 8"
+                else :
+                   commentaire="Valeur "+str(valeur)+ " incorrecte : ajout a la liste refuse"
+                if commentaire2== "" :commentaire2=self.node.item.info_erreur_item()
                 return valide,commentaire,commentaire2,listeRetour
 
              # On valide la liste obtenue
              encorevalide=self.node.item.valide_liste_partielle(valeur,listecourante)
+             #print encorevalide
              if not encorevalide :
                 commentaire2=self.node.item.info_erreur_liste()
                 # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
                 min,max = self.node.item.GetMinMax()
                 if len(listecourante) + 1 >= max :
-                   commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
+                   commentaire="La liste atteint le nombre maximum d'elements : "+ str(max) +" ,ajout refuse"
                    return valide,commentaire,commentaire2,listeRetour
                 if len(listecourante) + 1 > min :
                    commentaire=""
@@ -197,7 +209,7 @@ class PolitiquePlusieurs(Validation):
 
   def AjoutTuple(self,valeurTuple,index,listecourante):
          listeRetour=[]
-         commentaire="Nouvelle valeur acceptée"
+         commentaire="Nouvelle valeur acceptee"
          commentaire2=""
          valide=1
          if valeurTuple==None: return
@@ -211,7 +223,7 @@ class PolitiquePlusieurs(Validation):
             except :
                 pass
          if not valide:
-            commentaire="Valeur "+str(valeurTuple)+ " incorrecte : ajout à la liste refusé"
+            commentaire="Valeur "+str(valeurTuple)+ " incorrecte : ajout a la liste refuse"
             commentaire2=self.node.item.info_erreur_item()
             return valide,commentaire,commentaire2,listeRetour
 
@@ -219,10 +231,11 @@ class PolitiquePlusieurs(Validation):
          encorevalide=self.node.item.valide_liste_partielle(valeurTuple,listecourante)
          if not encorevalide :
             commentaire2=self.node.item.info_erreur_liste()
-            # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
-            min,max = self.node.item.GetMinMax()
-            if len(listecourante) + 1 >= max :
-               commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
-               return valide,commentaire,commentaire2,listeRetour
+            return valide,commentaire,commentaire2,listeRetour
+         #min,max = self.node.item.GetMinMax()
+         #if len(listecourante)  >= max :
+         #   commentaire="La liste a deja atteint le nombre maximum d'elements,ajout refuse"
+         #   valide=0
+         #   return valide,commentaire,commentaire2,listeRetour
          listeRetour.append(valeurTuple)
          return valide,commentaire,commentaire2,listeRetour

@@ -20,8 +20,8 @@ import os
 import re
 
 sous_menus={
-	    "OPENTURNS_STUDY" : {0:{"Essai":"Std.comm"}},
-            "OPENTURNS_WRAPPER" : {0:{"Essai":"wrapper_exemple.comm"}},
+#	    "OPENTURNS_STUDY" : {0:{"Essai":"Std.comm"}},
+#            "OPENTURNS_WRAPPER" : {0:{"Essai":"wrapper_exemple.comm"}},
            }
 
 class listePatrons :

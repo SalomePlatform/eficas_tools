@@ -248,7 +248,7 @@ class JDCNode(QTreeWidgetItem):
             return 0
         return self.treeParent.append_child(name,pos=index)
 
-    def append_child(self,name,pos=None,verif='oui'):
+    def append_child(self,name,pos=None):
         """
            Methode pour ajouter un objet fils a l'objet associe au noeud self.
            On peut l'ajouter en debut de liste (pos='first'), en fin (pos='last')
@@ -274,13 +274,24 @@ class JDCNode(QTreeWidgetItem):
         obj=self.item.additem(name,index) #CS_pbruno emet le signal 'add'
         if obj is None:obj=0
         if obj == 0:return 0
-        # Souci pour gerer les copies des AFFE d'une commande à l autre
         try :
-          child=self.children[index]
+          old_obj = self.item.object.get_child(name.nom,restreint = 'oui')
+          child=old_obj[-1]
           child.affichePanneau() 
         except:
-          pass
+          # Souci pour gerer les copies des AFFE d'une commande à l autre
+          try :
+             child=self.children[index]
+             child.affichePanneau() 
+          except :
+             pass
         return child
+
+    def deplace(self):
+        self.editor.init_modif()
+        index = self.treeParent.children.index(self) - 1 
+        if index < 0 : index =0
+        ret=self.treeParent.item.deplaceEntite(self.item.getObject())
 
     def delete(self):
         """ 
@@ -293,7 +304,6 @@ class JDCNode(QTreeWidgetItem):
         if self.item.nom == "VARIABLE" :
            recalcule=1
            jdc=self.item.jdc
-
         ret=self.treeParent.item.suppitem(self.item)
         self.treeParent.build_children()
         if self.treeParent.children : toselect=self.treeParent.children[index]
@@ -365,7 +375,6 @@ class JDCNode(QTreeWidgetItem):
         #print 'NODE update_node_valid', self.item.GetLabelText()
         RepIcon=QString(self.appliEficas.RepIcon)
         monIcone = QIcon(RepIcon+"/" +self.item.GetIconName() + ".png")
-        #PNPNPNPN tototototo
         #if  self.item.GetIconName() == "ast-yel-los"
         
         self.setIcon(0,monIcone)
@@ -375,6 +384,7 @@ class JDCNode(QTreeWidgetItem):
         #print "NODE update_node_label", self.item.GetLabelText()
         labeltext,fonte,couleur = self.item.GetLabelText()
         self.setText(0, labeltext)        
+    
     
     def update_node_label_in_blue(self):
         if hasattr(self.appliEficas,'noeudColore'):
@@ -397,8 +407,20 @@ class JDCNode(QTreeWidgetItem):
             noeud.setText(0, labeltext)        
             self.appliEficas.listeNoeudsColores.append(noeud)
 
+    def update_node_texte_in_black(self):
+        """ Met a jour les noms des SD et valeurs des mots-cles """
+        self.setTextColor( 1,Qt.black )
+        value = self.item.GetText()
+        self.setText(1, value)
+
     def update_node_texte(self):
         """ Met a jour les noms des SD et valeurs des mots-cles """
+        value = self.item.GetText()
+        self.setText(1, value)
+
+    def update_node_texte_in_blue(self):
+    #def update_node_texte_in_blue(self,noeudAvant):
+        self.setTextColor( 1,Qt.blue )
         value = self.item.GetText()
         self.setText(1, value)
 
@@ -438,35 +460,34 @@ class JDCNode(QTreeWidgetItem):
               
         
 
-    def doPaste(self,node_selected):
+    def doPaste(self,node_selected,pos='after'):
         """
             Déclenche la copie de l'objet item avec pour cible
             l'objet passé en argument : node_selected
         """
         #print 'je passe dans doPaste'
         objet_a_copier = self.item.get_copie_objet()
-        child=node_selected.doPasteCommande(objet_a_copier)
+        child=node_selected.doPasteCommande(objet_a_copier,pos)
         return child
 
-    def doPasteCommande(self,objet_a_copier):
+    def doPasteCommande(self,objet_a_copier,pos='after'):
         """
           Réalise la copie de l'objet passé en argument qui est nécessairement
           une commande
         """
         child=None
         try :
-          child = self.append_brother(objet_a_copier)
+          child = self.append_brother(objet_a_copier,pos)
         except :
            pass
         return child
 
-    def doPasteMCF(self,objet_a_copier):
+    def doPastePremier(self,objet_a_copier):
         """
            Réalise la copie de l'objet passé en argument (objet_a_copier)
-           Il s'agit forcément d'un mot clé facteur
         """
-        #print 'je passe dans doPasteMCF'
-        child = self.append_child(objet_a_copier,pos='first',retour='oui')
+        objet = objet_a_copier.item.get_copie_objet()
+        child = self.append_child(objet,pos='first')
         return child
 
 

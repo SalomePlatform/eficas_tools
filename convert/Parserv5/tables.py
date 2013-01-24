@@ -29,8 +29,8 @@
 from TextTools import *
 
 #
-__version__="$Name:  $"
-__Id__="$Id: tables.py,v 1.4 2003/09/18 16:16:54 eficas Exp $"
+__version__="$Name: V6_main $"
+__Id__="$Id: tables.py,v 1.5 2004-09-10 15:52:11 eficas Exp $"
 #
 
 err0='ERR0 , erreur non identifiee : '

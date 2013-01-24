@@ -8,8 +8,8 @@ from Accas import OPER,PROC,MACRO,FORM
 from Accas import SIMP,FACT,BLOC
 from Accas import ASSD,CO,GEOM,fonction,geom,assd
 #
-__version__="$Name:  $"
-__Id__="$Id: cata_saturne2.py,v 1.3 2004/09/10 15:52:03 eficas Exp $"
+__version__="$Name: V6_main $"
+__Id__="$Id: cata_saturne2.py,v 1.4 2004-10-11 08:23:20 eficas Exp $"
 #
 
 import ops

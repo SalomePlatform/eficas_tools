@@ -58,7 +58,6 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   discrètes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
-        #print "MonPlusieursIntoPanel"
         self.alpha=0
         QTPanel.__init__(self,node,parent)
         DPlusInto.__init__(self,parent,fl)

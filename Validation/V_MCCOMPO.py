@@ -18,17 +18,19 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+
 """
    Ce module contient la classe  de base MCCOMPO qui sert à factoriser
    les traitements des objets composites de type OBJECT
 """
 # Modules Python
+import os
 import traceback
 
 # Modules EFICAS
 from Noyau import N_CR
 from Noyau.N_Exception import AsException
-from Noyau.strfunc import ufmt
+from Noyau.strfunc import ufmt, to_unicode
 
 class MCCOMPO:
    """
@@ -39,7 +41,9 @@ class MCCOMPO:
    CR=N_CR.CR
 
    def __init__(self):
-      self.state='undetermined'
+      self.state = 'undetermined'
+      # défini dans les classes dérivées
+      self.txt_nat = ''
 
    def init_modif_up(self):
       """
@@ -55,7 +59,7 @@ class MCCOMPO:
       """
       self.cr=self.CR()
       self.cr.debut = self.txt_nat+self.nom
-      self.cr.fin = "Fin "+self.txt_nat+self.nom
+      self.cr.fin = u"Fin "+self.txt_nat+self.nom
       for child in self.mc_liste:
         self.cr.add(child.report())
       self.state = 'modified'
@@ -77,19 +81,17 @@ class MCCOMPO:
 
            - testglob = booléen 1 si toutes les règles OK, 0 sinon
       """
-      #dictionnaire=self.dict_mc_presents(restreint='oui')
-      dictionnaire=self.dict_mc_presents(restreint='non') # On verifie les regles avec les defauts affectés
-      texte='\n'
+      # On verifie les regles avec les defauts affectés
+      dictionnaire = self.dict_mc_presents(restreint='non')
+      texte = ['']
       testglob = 1
       for r in self.definition.regles:
-        erreurs,test=r.verif(dictionnaire)
+        erreurs,test = r.verif(dictionnaire)
         testglob = testglob*test
         if erreurs != '':
-          if len(texte) > 1 :
-            texte=texte+'\n'+erreurs
-          else :
-            texte = texte + erreurs
-      return texte,testglob
+            texte.append(to_unicode(erreurs))
+      texte = os.linesep.join(texte)
+      return texte, testglob
 
    def dict_mc_presents(self,restreint='non'):
       """

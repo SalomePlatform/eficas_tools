@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+
 """ 
     Ce module contient la classe MCList qui sert à controler la valeur
     d'une liste de mots-clés facteur par rapport à sa définition portée par un objet
@@ -130,8 +131,8 @@ class MCList(UserList.UserList):
 
               Exemple ::
               
-                { 'VALE_F': [ <Cata.cata.para_sensi instance at 0x9419854>,
-                              <Cata.cata.para_sensi instance at 0x941a204> ],
+                { 'VALE_F': [ <Cata.cata.fonction_sdaster instance at 0x9419854>,
+                              <Cata.cata.fonction_sdaster instance at 0x941a204> ],
                   'MODELE': [<Cata.cata.modele instance at 0x941550c>] }
       """
       dico = {}

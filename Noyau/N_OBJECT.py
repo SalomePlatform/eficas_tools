@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+
 """
     Ce module contient la classe OBJECT classe mère de tous les objets
     servant à controler les valeurs par rapport aux définitions
@@ -122,8 +123,8 @@ class ErrorObj(OBJECT):
     def report(self):
       """ génère le rapport de validation de self """
       self.cr=CR()
-      self.cr.debut = ufmt(_(u"Mot-clé invalide : %s"), self.nom)
-      self.cr.fin = ufmt(_(u"Fin Mot-clé invalide : %s"), self.nom)
+      self.cr.debut = u"Mot-clé invalide : "+self.nom
+      self.cr.fin = u"Fin Mot-clé invalide : "+self.nom
       self.cr.fatal(_(u"Type non autorisé pour le mot-clé %s : '%s'"),
                         self.nom, self.valeur)
       return self.cr

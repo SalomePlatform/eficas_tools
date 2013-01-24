@@ -22,8 +22,8 @@
 # faire que la division soit toujours réelle
 from __future__ import division
 
-__version__ = "$Name: V2_1_1_beta $"
-__Id__ = "$Id: cata.py,v 1.8.4.2 2010-11-29 09:55:15 pnoyret Exp $"
+__version__ = "$Name: V6_main $"
+__Id__ = "$Id: cata.py,v 1.8.4.3 2010-12-06 13:13:33 pnoyret Exp $"
 
 import Accas
 from Accas import *

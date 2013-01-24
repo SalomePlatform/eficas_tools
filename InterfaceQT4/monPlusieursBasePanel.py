@@ -55,9 +55,9 @@ class DPlusBase (Ui_DPlusBase,QDialog):
 
 class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe definissant le panel associe aux mots-cles qui demandent
+  a l'utilisateur de choisir une liste de valeurs parmi une liste de valeurs
+  discretes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonPlusieursBasePanel"
@@ -100,8 +100,18 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         if self.listeValeursCourantes == [] :
            self.editor.affiche_infos("Aucune Valeur",Qt.red)
            return
+        min,max = self.node.item.GetMinMax()
+        if len(self.listeValeursCourantes) > max :
+            commentaire="La liste comporte trop d elements : la cardinalite maximale est "+ str(max)
+            self.editor.affiche_infos(commentaire,Qt.red)
+            return 
+        if len(self.listeValeursCourantes) < min :
+            commentaire="La liste ne comporte pas suffisament d elements : la cardinalite minimale est "+ str(min)
+            self.editor.affiche_infos(commentaire,Qt.red)
+            return 
+
         self.node.item.set_valeur(self.listeValeursCourantes)
-	self.editor.affiche_infos("Valeur Acceptée")
+	self.editor.affiche_infos("Valeur Acceptee")
 
 
   def BParametresPressed(self):
@@ -144,6 +154,13 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         for valeur in self.listeValeursCourantes :
                 listeVal.append(valeur)
         validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,index,listeVal) 
+        if len(comm2) > 40:
+           restant=comm2
+           comm2=""
+           while len(restant) > 40 :
+                 comm2=comm2+restant[0:40]+"\n"
+                 restant=restant[41:]
+           comm2+=restant 
 	self.Commentaire.setText(comm2)
         if not validite :
 		self.editor.affiche_infos(comm,Qt.red)

@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+
 # Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -17,6 +18,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+
 
 """
    Ce module sert à nommer les concepts produits par les commandes.
@@ -68,7 +70,6 @@ def _GetNomConceptResultat(ope, level=2):
   co = f.f_code
   filename = co.co_filename
   name = co.co_name
-  #print "NOMOP,FICHIER, LIGNE ",ope,filename,lineno
   #pattern pour identifier le debut de la commande
   pattern_oper=re.compile(regex1 % ope)
 
@@ -77,13 +78,10 @@ def _GetNomConceptResultat(ope, level=2):
     line = linecache.getline(filename, lineno)
     lineno=lineno-1
     if pattern_comment.match(line):continue
-    #print "LIGNE ",line
     list.append(line)
     if pattern_oper.search(line):
       l=pattern_oper.split(line)
       list.reverse()
-      #print "COMMANDE ",string.join(list)
-      #print "SPLIT ",l
       # On suppose que le concept resultat a bien ete
       # isole en tete de la ligne de source
       m=evalnom(string.strip(l[0]),f.f_locals)
@@ -102,13 +100,11 @@ def evalnom(text,d):
       evaluant la partie indice dans le contexte de l'appelant d
   """
   l=re.split('([\[\]]+)',text)
-  #print l
   if l[-1] == '' :l=l[:-1]
   lll=[]
   i=0
   while i<len(l):
     s=l[i]
-    ll=string.split(s,',')
     ll=re.split('[ ,]+',s)
     if ll[0] == '' :ll=ll[1:]
     if len(ll) == 1:
@@ -146,8 +142,10 @@ def f_lineno(f):
    return line
 
 
-class NamingSystem:
+class NamingSystem(N_utils.Singleton):
     """Cette classe définit un système de nommage dynamique des concepts."""
+    _singleton_id = 'nommage.NamingSystem'
+    
     def __init__(self):
         """Initialisation"""
         self.native = _GetNomConceptResultat

@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+
 """
    Ce module contient la classe mixin ETAPE qui porte les méthodes
    nécessaires pour réaliser la validation d'un objet de type ETAPE
@@ -72,6 +73,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
              # la SD est 'sansnom' : --> erreur
              if cr == 'oui' :
                 self.cr.fatal(_(u"Pas de nom pour le concept retourné"))
+             valid = 0
           elif re.search('^SD_[0-9]*$', self.sd.nom):
              # la SD est 'SD_' cad son nom = son id donc pas de nom donné par utilisateur : --> erreur
              if cr == 'oui' :
@@ -218,10 +220,10 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
       """
           Methode pour generation d un rapport de validite
       """
-      self.cr=self.CR(debut='Etape : '+self.nom \
-                + '    ligne : '+`self.appel[0]`\
-                + '    fichier : '+`self.appel[1]`,
-                 fin = 'Fin Etape : '+self.nom)
+      self.cr=self.CR(debut=u'Etape : '+self.nom \
+                + u'    ligne : '+`self.appel[0]`\
+                + u'    fichier : '+`self.appel[1]`,
+                 fin = u'Fin Etape : '+self.nom)
       self.state = 'modified'
       try:
         self.isvalid(cr='oui')

@@ -36,18 +36,24 @@ encoding='iso-8859-1'
 # Utilisateur/Developpeur
 isdeveloppeur   =       "NON"
 
-# Choix des catalogues
 rep_mat_STA88=os.path.join(rep_cata,'cataSTA8','materiau')
 rep_mat_STA98=os.path.join(rep_cata,'cataSTA9','materiau')
 rep_mat_STA103=os.path.join(rep_cata,'cataSTA10','materiau')
-#
-path_doc="/local/noyret/Docs"
+ 
+#path_doc="/local/noyret/Docs"
+rep_doc_STA88="/local/noyret/Docs"
+rep_doc_STA103="/local/noyret/Docs"
+rep_doc_STA11="/local/noyret/Docs/cataSTA11c_clefs_docu"
+
+# Choix des catalogues
 catalogues=(
-('ASTER','STA8.8',os.path.join(rep_cata,'cataSTA8'),'python'),
-('ASTER','STA9.8',os.path.join(rep_cata,'cataSTA9'),'python'),
+#('ASTER','STA8.8',os.path.join(rep_cata,'cataSTA8'),'python'),
+#('ASTER','STA9.8',os.path.join(rep_cata,'cataSTA9'),'python'),
 ('ASTER','STA10.3',os.path.join(rep_cata,'cataSTA10'),'python'),
 ('ASTER','STA11',os.path.join(rep_cata,'cataSTA11'),'python','defaut'),
 )
+exec_acrobat    = '/usr/bin/xgd-open'
+
 
 def addCatalog(catalogName, catalogPath):
     """

@@ -17,6 +17,9 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#
+# ======================================================================
+
 
 """
     Ce module contient la classe de definition JDC_CATA
@@ -104,13 +107,13 @@ class JDC_CATA(N_ENTITE.ENTITE):
       """
          Methode pour produire un compte-rendu de validation d'un catalogue de commandes
       """
-      self.cr = self.CR(debut = "Compte-rendu de validation du catalogue "+self.code,
-                        fin = "Fin Compte-rendu de validation du catalogue "+self.code)
+      self.cr = self.CR(debut = u"Compte-rendu de validation du catalogue "+self.code,
+                        fin = u"Fin Compte-rendu de validation du catalogue "+self.code)
       self.verif_cata()
       for commande in self.commandes:
         cr = commande.report()
         cr.debut = u"Début Commande :"+commande.nom
-        cr.fin = "Fin commande :"+commande.nom
+        cr.fin = u"Fin commande :"+commande.nom
         self.cr.add(cr)
       return self.cr
 

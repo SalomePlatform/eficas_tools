@@ -393,6 +393,32 @@ class JDC(I_OBJECT.OBJECT):
            etape.inactive()
         if etape.nom == 'FIN':actif=-1
 
+   def deplaceEntite(self,indexNoeudACopier,indexNoeudOuColler,pos):
+      """
+          Pour le cut
+      """
+      if indexNoeudACopier==indexNoeudOuColler:return
+      etapeACopier=self.etapes[indexNoeudACopier]
+      try :
+        sd=self.etapes[indexNoeudACopier].sd
+      except :
+        sd=None
+      if pos=='before' and indexNoeudOuColler==0 : 
+         self.etapes2=[etapeACopier,]+self.etapes[0:indexNoeudACopier]+self.etapes[indexNoeudACopier+1:]
+      elif indexNoeudACopier < indexNoeudOuColler :
+         self.etapes2=self.etapes[0:indexNoeudACopier]+self.etapes[indexNoeudACopier+1:indexNoeudOuColler+1]+[etapeACopier,]+self.etapes[indexNoeudOuColler+1:]
+      else:
+         self.etapes2=self.etapes[0:indexNoeudOuColler+1]+[etapeACopier,]+self.etapes[indexNoeudOuColler+1:indexNoeudACopier]+self.etapes[indexNoeudACopier+1:]
+      self.etapes=self.etapes2
+      if indexNoeudACopier < indexNoeudOuColler :
+        self.delete_concept_entre_etapes(indexNoeudACopier,indexNoeudOuColler,sd)
+      self.reset_context()
+      for e in self.etapes :
+         e.state = 'modified'
+      self.control_context_apres(None)
+      return 1
+
+
    def suppentite(self,etape) :
       """  
           Cette methode a pour fonction de supprimer une etape dans 
@@ -400,7 +426,6 @@ class JDC(I_OBJECT.OBJECT):
           Retourne 1 si la suppression a pu etre effectuee,
           Retourne 0 dans le cas contraire
       """
-      #print "suppentite",self
       #PN correction de bugs 
       if etape not in self.etapes:
          return 0
@@ -427,7 +452,7 @@ class JDC(I_OBJECT.OBJECT):
       else:
          etape=None
       self.control_context_apres(etape)
-      
+     
       self.reset_context()
       CONNECTOR.Emit(self,"supp",etape)
       self.fin_modif()
@@ -840,7 +865,11 @@ class JDC(I_OBJECT.OBJECT):
       if restrict == 'non':
          self.g_context[sdnom]=sd
 
-#ATTENTION SURCHARGE : cette methode doit etre gardee en synchronisation avec celle de Noyau
+   def delete_concept_entre_etapes(self,index1,index2,sd):
+      if index2 <= index1 :return
+      for child in self.etapes[index1:index2]:
+        child.delete_concept(sd)
+
    def delete_concept_after_etape(self,etape,sd):
       """
           Met a jour les etapes du JDC qui sont apres etape en fonction

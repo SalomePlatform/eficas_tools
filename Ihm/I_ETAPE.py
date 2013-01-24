@@ -46,6 +46,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       return self.nom
 
    def get_sdname(self):
+      #print "SDNAME ",self.reuse,self.sd,self.sd.get_name()
       if CONTEXT.debug : print "SDNAME ",self.reuse,self.sd,self.sd.get_name()
       sdname=''
       if self.reuse != None:
@@ -53,7 +54,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       else:
         if self.sd:sdname=self.sd.get_name()
       if string.find(sdname,'sansnom') != -1 or string.find(sdname,'SD_') != -1:
-        # dans le cas où la SD est 'sansnom' ou 'SD_' on retourne la chaîne vide
+        # dans le cas ou la SD est 'sansnom' ou 'SD_' on retourne la chaine vide
         return ''
       return sdname
 

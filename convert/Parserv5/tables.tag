@@ -28,8 +28,8 @@
 from TextTools import *
 
 #
-__version__="$Name:  $"
-__Id__="$Id: tables.tag,v 1.1.1.1 2002/03/26 09:08:45 eficas Exp $"
+__version__="$Name: V6_main $"
+__Id__="$Id: tables.tag,v 1.2 2002-05-15 15:32:01 eficas Exp $"
 #
 
 err0='ERR0 , erreur non identifiee : '

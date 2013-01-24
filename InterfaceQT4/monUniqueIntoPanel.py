@@ -58,6 +58,7 @@ class MonUniqueIntoPanel(DUnIn,QTPanel,SaisieValeur):
         QTPanel.__init__(self,node,parent)
         DUnIn.__init__(self,parent,fl)
         SaisieValeur.RemplitPanel(self,alpha=self.alpha)
+        self.surligneValeur()
         self.politique=PolitiqueUnique(node,parent)
         self.connecterSignaux()
 
@@ -82,3 +83,8 @@ class MonUniqueIntoPanel(DUnIn,QTPanel,SaisieValeur):
          self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Cata",None,QApplication.UnicodeUTF8))
        SaisieValeur.RemplitPanel(self,alpha=self.alpha)
 
+  def surligneValeur(self):
+      l=self.node.item.get_val()
+      if l== None : return
+      for i in self.listBoxVal.findItems(str(l),Qt.MatchExactly):
+          i.setSelected(True)

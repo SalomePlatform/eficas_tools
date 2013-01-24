@@ -194,6 +194,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         if issubclass(typ,GEOM) : return 1
     return 0
 
+
   def wait_TXM(self):
     """ 
          Retourne 1 si le mot-clé simple attend un objet de type TXM
@@ -325,6 +326,9 @@ class MCSIMP(I_OBJECT.OBJECT):
        Si new_valeur contient au moins un separateur (,), tente l'evaluation sur
        la chaine splittee
     """
+    if new_valeur in ('True','False') and 'TXM' in self.definition.type  :
+       valeur=self.eval_val_item(str(new_valeur))
+       return new_valeur
     if type(new_valeur) in (types.ListType,types.TupleType):
        valeurretour=[]
        for item in new_valeur :

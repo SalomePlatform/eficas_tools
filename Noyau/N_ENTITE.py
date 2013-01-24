@@ -17,8 +17,6 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-
-
 """
     Ce module contient la classe ENTITE qui est la classe de base
     de toutes les classes de definition d'EFICAS.
@@ -93,8 +91,8 @@ class ENTITE:
       for k,v in self.entites.items() :
          try :
             cr = v.report()
-            cr.debut = "Début "+v.__class__.__name__+ ' : ' + k
-            cr.fin = "Fin "+v.__class__.__name__+ ' : ' + k
+            cr.debut = u"Début "+v.__class__.__name__+ ' : ' + k
+            cr.fin = u"Fin "+v.__class__.__name__+ ' : ' + k
             self.cr.add(cr)
          except:
             self.cr.fatal(_(u"Impossible d'obtenir le rapport de %s %s"), k,`v`)

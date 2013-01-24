@@ -27,8 +27,8 @@ import images
 from Ihm import CONNECTOR
 
 #
-__version__="$Name:  $"
-__Id__="$Id: treewidget.py,v 1.2.4.1 2008-11-13 10:35:11 cchris Exp $"
+__version__="$Name: V6_main $"
+__Id__="$Id: treewidget.py,v 1.4 2009-06-19 08:36:50 pnoyret Exp $"
 #
 
 Fonte_Standard = fontes.standard
