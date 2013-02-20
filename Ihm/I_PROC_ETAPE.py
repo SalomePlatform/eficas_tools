@@ -26,7 +26,7 @@ import traceback,types,string
 import Noyau
 from Noyau import N_Exception
 from Noyau.N_Exception import AsException
-# fin import à résorber
+from Extensions.eficas_exception import EficasException
 
 class PROC_ETAPE(I_ETAPE.ETAPE):
    def get_sdname(self):
@@ -80,7 +80,7 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
       """
       try:
          sd=Noyau.N_PROC_ETAPE.PROC_ETAPE.Build_sd(self)
-      except AsException,e:
+      except AsException  :
          # Une erreur s'est produite lors de la construction du concept
          # Comme on est dans EFICAS, on essaie de poursuivre quand meme
          # Si on poursuit, on a le choix entre deux possibilités :

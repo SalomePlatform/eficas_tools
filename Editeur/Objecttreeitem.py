@@ -27,6 +27,8 @@ from copy import copy,deepcopy
 # import du chargeur de composants
 from comploader import make_objecttreeitem
 from Ihm import CONNECTOR
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 myrepr = Repr()
 myrepr.maxstring = 100
@@ -298,7 +300,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         elif pos == 'after':
             index = index +1
         else:
-            print str(pos)," n'est pas un index valide pour append_brother"
+            print tr("%d n'est pas un index valide pour append_brother", pos)
             return
         return self.parent.addobject(name,index)
 
@@ -340,8 +342,9 @@ class ObjectTreeItem(TreeItem,Delegate):
         représentatif de self.object
         --> à surcharger par les différents items
         """
-        raise Exception("MESSAGE AU DEVELOPPEUR : il faut surcharger la methode get_objet_commentarise() pour la classe "+self.__class__.__name__)
-        pass
+        raise EficasException(tr("MESSAGE AU DEVELOPPEUR : il faut \
+                                 surcharger la methode get_objet_commentarise() \
+                                 pour la classe %s", self.__class__.__name__))
         
     def isvalid(self):
         """ Retourne 1 si l'objet pointé par self est valide, 0 sinon"""

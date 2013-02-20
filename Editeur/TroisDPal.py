@@ -22,6 +22,7 @@
    de pilotage de l idl PAL pour un element de structure
 """
 import generator
+from Extensions.i18n import tr
 
 class TroisDPilote:
 
@@ -39,8 +40,8 @@ class TroisDPilote:
          g.init_jdc(self.node.get_jdc())
          texte=g.gener(self.node)
       else:
-         print "Le generateur n a pas ete trouv�"
-         print "Erreur ! Erreur!"
+         print tr("Le générateur n'a pas été trouvé")
+         print tr("Erreur ! Erreur!")
          return ""
       self.appli.envoievisu(texte)
 

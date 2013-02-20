@@ -20,6 +20,7 @@
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 #---------------------------#
 class PopUpMenuRacine :
@@ -27,9 +28,9 @@ class PopUpMenuRacine :
 
 
     def createPopUpMenu(self):
-        self.ParamApres = QAction('Parametre',self.tree)
+        self.ParamApres = QAction(tr('Parametre'),self.tree)
         self.tree.connect(self.ParamApres,SIGNAL("activated()"),self.addParametersApres)
-        self.ParamApres.setStatusTip("Insere un parametre")
+        self.ParamApres.setStatusTip(tr("Insere un parametre"))
         self.menu = QMenu(self.tree)
         self.menu.addAction(self.ParamApres)
 
@@ -65,9 +66,9 @@ class PopUpMenuNodeMinimal :
         conditionValid=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][4]
         if (self.tree.currentItem().item.isvalid() == 0 and conditionValid == True):
                  QMessageBox.warning( None, 
-                             self.appliEficas.trUtf8("item invalide"),
-                             self.appliEficas.trUtf8("l item doit etre valide"),
-                             self.appliEficas.trUtf8("&Ok"))
+                             tr("item invalide"),
+                             tr("l item doit etre valide"),
+                             tr("&Ok"))
 		 return
         fonction=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][0]
         listenomparam=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][2]
@@ -79,26 +80,26 @@ class PopUpMenuNodeMinimal :
 
 
     def createActions(self):
-        self.CommApres = QAction('apres',self.tree)
+        self.CommApres = QAction(tr('apres'),self.tree)
         self.tree.connect(self.CommApres,SIGNAL("activated()"),self.addCommApres)
-        self.CommApres.setStatusTip("Insere un commentaire apres la commande ")
-        self.CommAvant = QAction('avant',self.tree)
+        self.CommApres.setStatusTip(tr("Insere un commentaire apres la commande "))
+        self.CommAvant = QAction(tr('avant'),self.tree)
         self.tree.connect(self.CommAvant,SIGNAL("activated()"),self.addCommAvant)
-        self.CommAvant.setStatusTip("Insere un commentaire avant la commande ")
+        self.CommAvant.setStatusTip(tr("Insere un commentaire avant la commande "))
 
-        self.ParamApres = QAction('apres',self.tree)
+        self.ParamApres = QAction(tr('apres'),self.tree)
         self.tree.connect(self.ParamApres,SIGNAL("activated()"),self.addParametersApres)
-        self.ParamApres.setStatusTip("Insere un parametre apres la commande ")
-        self.ParamAvant = QAction('avant',self.tree)
+        self.ParamApres.setStatusTip(tr("Insere un parametre apres la commande "))
+        self.ParamAvant = QAction(tr('avant'),self.tree)
         self.tree.connect(self.ParamAvant,SIGNAL("activated()"),self.addParametersAvant)
-        self.ParamAvant.setStatusTip("Insere un parametre avant la commande ")
+        self.ParamAvant.setStatusTip(tr("Insere un parametre avant la commande "))
 
-        self.Supprime = QAction('Supprimer',self.tree)
+        self.Supprime = QAction(tr('Supprimer'),self.tree)
         self.tree.connect(self.Supprime,SIGNAL("activated()"),self.supprimeNoeud)
-        self.Supprime.setStatusTip("supprime le mot clef ")
-        self.Documentation = QAction('Documentation',self.tree)
+        self.Supprime.setStatusTip(tr("supprime le mot clef "))
+        self.Documentation = QAction(tr('Documentation'),self.tree)
         self.tree.connect(self.Documentation,SIGNAL("activated()"),self.viewDoc)
-        self.Documentation.setStatusTip("documentation sur la commande ")
+        self.Documentation.setStatusTip(tr("documentation sur la commande "))
 
     def supprimeNoeud(self):
         item= self.tree.currentItem()
@@ -108,15 +109,15 @@ class PopUpMenuNodeMinimal :
         self.node=self.tree.currentItem()
         cle_doc = self.node.item.get_docu()
         if cle_doc == None :
-            QMessageBox.information( self.editor, "Documentation Vide", \
-                                    "Aucune documentation Aster n'est associée à ce noeud")
+            QMessageBox.information( self.editor,tr( "Documentation Vide"), \
+                                    tr("Aucune documentation n'est associée à ce noeud"))
             return
         commande = self.editor.appliEficas.CONFIGURATION.exec_acrobat
         try :
             f=open(commande,"rb")
         except :
-             texte="impossible de trouver la commande  " + commande
-             QMessageBox.information( self.editor, "Lecteur PDF", texte)
+             texte=tr("impossible de trouver la commande  ") + commande
+             QMessageBox.information( self.editor, tr("Lecteur PDF"), texte)
              return
         import os
         if cle_doc.startswith('http:'):
@@ -127,8 +128,8 @@ class PopUpMenuNodeMinimal :
             try :
                f=open(fichier,"rb")
             except :
-               texte="impossible d'ouvrir " + fichier
-               QMessageBox.information( self.editor, "Documentation Vide", texte)
+               texte=tr("impossible d'ouvrir ") + fichier
+               QMessageBox.information( self.editor, tr("Documentation Vide"), texte)
                return
 
        
@@ -160,11 +161,11 @@ class PopUpMenuNodePartiel (PopUpMenuNodeMinimal):
     def createPopUpMenu(self):
         PopUpMenuNodeMinimal.createPopUpMenu(self)
         #ss-menu Comment:
-        self.commentMenu=self.menu.addMenu('Commentaire')
+        self.commentMenu=self.menu.addMenu(tr('Commentaire'))
         self.commentMenu.addAction(self.CommApres)
         self.commentMenu.addAction(self.CommAvant)
         #ss-menu Parameters:
-        self.paramMenu =self.menu.addMenu('Parametre') 
+        self.paramMenu =self.menu.addMenu(tr('Parametre')) 
         self.paramMenu.addAction(self.ParamApres)
         self.paramMenu.addAction(self.ParamAvant)
         self.menu.addAction(self.Documentation)
@@ -177,9 +178,9 @@ class PopUpMenuNode(PopUpMenuNodePartiel) :
 #-----------------------------------------#
     def createPopUpMenu(self):
         PopUpMenuNodePartiel.createPopUpMenu(self)
-        self.Commente = QAction('ce noeud',self.tree)
+        self.Commente = QAction(tr('ce noeud'),self.tree)
         self.tree.connect(self.Commente,SIGNAL("activated()"),self.Commenter)
-        self.Commente.setStatusTip("commente le noeud ")
+        self.Commente.setStatusTip(tr("commente le noeud "))
         self.commentMenu.addAction(self.Commente)
         self.menu.removeAction(self.Supprime)
         self.menu.addAction(self.Supprime)

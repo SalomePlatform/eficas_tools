@@ -23,6 +23,8 @@ import string,types,os,re
 # Modules Eficas
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from Extensions.i18n import tr
+
 
 from desUniqueComp import Ui_DUnComp
 from qtCommun      import QTPanel
@@ -87,42 +89,42 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
   def LEcompRPressed(self) :
         self.LEReel.clear()
         self.LEImag.clear()
-        commentaire="expression valide"
+        commentaire=tr("expression valide")
         valeur = str(self.LEcomp.text())
         d={}
         try :
           v=eval(valeur,d)
         except :
-          commentaire="expression invalide"
+          commentaire=tr("expression invalide")
           self.editor.affiche_infos(commentaire,Qt.red)
           return
         try :
           i=v.imag
           self.editor.affiche_infos(commentaire)
         except :
-          commentaire="expression n est pas de la forme a+bj"
+          commentaire=tr("expression n est pas de la forme a+bj")
           self.editor.affiche_infos(commentaire,Qt.red)
           
   def LEReelRPressed(self):
         self.LEcomp.clear()
-        commentaire="expression valide"
+        commentaire=tr("expression valide")
         valeur = str(self.LEReel.text())
         try :
           a=string.atof(valeur)
           self.editor.affiche_infos(commentaire)
         except :
-          commentaire="expression invalide"
+          commentaire=tr("expression invalide")
           self.editor.affiche_infos(commentaire,Qt.red)
 
   def LEImagRPressed(self):
         self.LEcomp.clear()
-        commentaire="expression valide"
+        commentaire=tr("expression valide")
         valeur = str(self.LEImag.text())
         try :
           a=string.atof(valeur)
           self.editor.affiche_infos(commentaire)
         except :
-          commentaire="expression invalide"
+          commentaire=tr("expression invalide")
           self.editor.affiche_infos(commentaire,Qt.red)
 
   def BOkPressed(self):
@@ -130,7 +132,7 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
            valeur = self.getValeurAster()
         else :
            if self.LEReel.text() != "" or self.LEImag.text() != "" :
-              commentaire="entrer une seule valeur SVP"
+              commentaire=tr("entrer une seule valeur SVP")
               self.editor.affiche_infos(commentaire,Qt.red)
               return
            valeur=  self.getValeurComp()
@@ -146,7 +148,7 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
       elif (self.RBRI.isChecked() == 1) :
          l.append("RI")
       else :
-         commentaire="saisir le type de complexe"
+         commentaire=tr("saisir le type de complexe")
          self.editor.affiche_infos(commentaire,Qt.red)
          return None
       try :
@@ -157,25 +159,25 @@ class MonUniqueCompPanel(DUnComp,QTPanel,PolitiqueUnique):
       return `tuple(l)`
 
   def getValeurComp(self):
-        commentaire="expression valide"
+        commentaire=tr("expression valide")
         valeur = str(self.LEcomp.text())
         d={}
         try :
           v=eval(valeur,d)
         except :
-          commentaire="expression invalide"
+          commentaire=tr("expression invalide")
           self.editor.affiche_infos(commentaire,Qt.red)
           return None
         try :
           i=v.imag
         except :
-          commentaire="expression n est pas de la forme a+bj"
+          commentaire=tr("expression n est pas de la forme a+bj")
           self.editor.affiche_infos(commentaire,Qt.red)
           return None
         return v
 
   def InitCommentaire(self):
-        commentaire='Un complexe est attendu'
+        commentaire=tr('Un complexe est attendu')
         aideval=self.node.item.aide()
         commentaire=commentaire +"   "+ QString.toUtf8(QString(aideval))
         self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))

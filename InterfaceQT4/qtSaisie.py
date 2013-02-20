@@ -22,6 +22,8 @@ import string,types,os
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
+
 
 # Import des panels
 
@@ -75,7 +77,7 @@ class SaisieValeur:
                    self.node.item.set_valeur(liste)
                    self.BuildLBValeurs()
                    self.listeValeursCourantes=liste
-                   self.editor.affiche_infos("Attention, valeurs modifiees", Qt.red)
+                   self.editor.affiche_infos(tr("Attention, valeurs modifiees"), Qt.red)
                listeDejaLa=liste
         lChoix=self.node.item.get_liste_possible(listeDejaLa)
         if ((len(lChoix) < 10 ) and (hasattr (self,'BAlpha'))) : self.BAlpha.close()
@@ -91,7 +93,7 @@ class SaisieValeur:
   def ClicASSD(self):
          if self.listBoxASSD.currentItem()== None : return
          valeurQstring=self.listBoxASSD.currentItem().text()
-         commentaire = QString("Valeur selectionnée : ") 
+         commentaire = tr("Valeur selectionnee : ") 
          commentaire.append(valeurQstring)
          self.Commentaire.setText(commentaire)
          valeur=str(valeurQstring)
@@ -109,14 +111,14 @@ class SaisieValeur:
 
   def BOkPressed(self):
          if self.listBoxVal.currentItem()==None :
-            commentaire = "Pas de valeur selectionnée" 
+            commentaire = tr("Pas de valeur selectionnee" )
             self.Commentaire.setText(QString(commentaire))
          else :
             self.ClicValeur()       
 
   def BOk2Pressed(self):
          if str(self.lineEditVal.text())== "" :
-            commentaire = "Pas de valeur entrée " 
+            commentaire = tr("Pas de valeur entree" )
             self.Commentaire.setText(QString(commentaire))
          else :
             self.LEValeurPressed()       
@@ -173,12 +175,12 @@ class SaisieValeur:
                        listeValeurs.append(t)
                        indice=indice+3
                     except :
-                       commentaire = "Veuillez entrer le complexe sous forme aster ou sous forme python"
+                       commentaire = tr("Veuillez entrer le complexe sous forme aster ou sous forme python")
                        self.editor.affiche_infos(commentaire)
                        return listeValeurs,0
                        
 
-                 else :     # ce n'est pas un tuple à la mode aster
+                 else :     # ce n'est pas un tuple a la mode aster
                     listeValeurs.append(v)
                     indice = indice + 1
 
@@ -216,10 +218,10 @@ class SaisieSDCO :
 
         test,commentaire=self.node.item.set_valeur_co(nomConcept)
         if test:
-           commentaire="Valeur du mot-clé enregistree"
+           commentaire=tr("Valeur du mot-clef enregistree")
            self.node.update_node_valid()
         else :
            cr = self.node.item.get_cr()
-           commentaire = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
+           commentaire = tr("Valeur du mot-clef non autorisee :")+cr.get_mess_fatal()
            self.node.item.set_valeur_co(anc_val)
         self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))

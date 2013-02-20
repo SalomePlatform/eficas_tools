@@ -19,6 +19,7 @@
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 import os
 
 
@@ -34,9 +35,9 @@ def traduction(directPath,editor,version):
        suffixe="v10.comm"
     fn = QFileDialog.getOpenFileName( 
    			editor.appliEficas,
-                        editor.appliEficas.trUtf8('Traduire Fichier'),
+                        tr('Traduire Fichier'),
 			QString(directPath) ,
-                        editor.appliEficas.trUtf8('JDC Files (*.comm);;''All Files (*)'))
+                        tr('Fichiers JDC  (*.comm);;''Tous les Fichiers (*)'))
 
     FichieraTraduire=str(fn)
     if (FichieraTraduire == "" or FichieraTraduire == () ) : return
@@ -56,7 +57,7 @@ def traduction(directPath,editor,version):
     if version == "V9V10" : traduitV9V10.traduc(FichieraTraduire,FichierTraduit,log)
     qApp.setOverrideCursor(QCursor(Qt.ArrowCursor))
 
-    Entete="Fichier Traduit : "+FichierTraduit +"\n\n"
+    Entete=tr("Fichier Traduit : %s\n\n",FichierTraduit)
     if  os.stat(log)[6] != 0L :
         f=open(log)
         texte= f.read()
@@ -66,7 +67,7 @@ def traduction(directPath,editor,version):
        commande="diff "+FichieraTraduire+" "+FichierTraduit+" >/dev/null"
        try :
          if os.system(commande) == 0 :
-            texte = texte + "Pas de difference entre le fichier origine et le fichier traduit"
+            texte = texte + tr("Pas de difference entre le fichier origine et le fichier traduit")
        except :
          pass
 

@@ -23,6 +23,8 @@ import string,types,os
 # Modules Eficas
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
+
 
 from desUniqueInto        import Ui_DUnIn
 from qtCommun             import QTPanel
@@ -77,10 +79,10 @@ class MonUniqueIntoPanel(DUnIn,QTPanel,SaisieValeur):
   def BAlphaPressed(self):
        if self.alpha==1 :
          self.alpha=0
-         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Alpha",None,QApplication.UnicodeUTF8))
+         self.BAlpha.setText(tr("Tri Alpha"))
        else :
          self.alpha=1
-         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Cata",None,QApplication.UnicodeUTF8))
+         self.BAlpha.setText(tr("Tri Cata"))
        SaisieValeur.RemplitPanel(self,alpha=self.alpha)
 
   def surligneValeur(self):

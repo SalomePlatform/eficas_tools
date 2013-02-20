@@ -26,7 +26,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
-
+from Extensions.i18n import tr
 # Import des panels
 
 class MonChoixCata(Ui_DChoixCata,QtGui.QDialog):
@@ -40,10 +40,9 @@ class MonChoixCata(Ui_DChoixCata,QtGui.QDialog):
       self.setModal(True)
       self.setupUi(self)
       self.CBChoixCata.addItems(listeCata)
-      self.TLNb.setText(QString("%d versions du catalogue sont disponibles" %
-                                len(listeCata)))
+      self.TLNb.setText(tr("%d versions du catalogue sont disponibles", len(listeCata)))
       if title is not None:
-          self.setWindowTitle(QString.fromUtf8(title))
+          self.setWindowTitle(tr(title))
 
   def on_buttonCancel_clicked(self):
       QDialog.reject(self)

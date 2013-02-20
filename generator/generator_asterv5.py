@@ -24,7 +24,8 @@
 """
 import traceback
 import types,string
-
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 from Noyau import N_CR
 from Accas import ETAPE,PROC_ETAPE,MACRO_ETAPE,ETAPE_NIVEAU,JDC,FORM_ETAPE
 from Accas import MCSIMP,MCFACT,MCBLOC,MCList,EVAL
@@ -34,14 +35,14 @@ from Formatage import Formatage
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
+       Retourne les informations necessaires pour le chargeur de plugins
 
-       Ces informations sont retournées dans un dictionnaire
+       Ces informations sont retournees dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'asterv5',
-        # La factory pour créer une instance du plugin
+        # La factory pour creer une instance du plugin
           'factory' : AsterGenerator,
           }
 
@@ -51,18 +52,18 @@ class AsterGenerator:
        Ce generateur parcourt un objet de type JDC et produit
        un fichier au format asterv5
 
-       L'acquisition et le parcours sont réalisés par la méthode
+       L'acquisition et le parcours sont realises par la methode
        generator.gener(objet_jdc,format)
 
-       L'écriture du fichier au format asterv5 est réalisée par appel de la méthode
+       L'ecriture du fichier au format asterv5 est realisee par appel de la methode
        generator.writefile(nom_fichier)
 
-       Ses caractéristiques principales sont exposées dans des attributs 
+       Ses caracteristiques principales sont exposees dans des attributs 
        de classe :
-         - extensions : qui donne une liste d'extensions de fichier préconisées
+         - extensions : qui donne une liste d'extensions de fichier preconisees
 
    """
-   # Les extensions de fichier préconisées
+   # Les extensions de fichier preconisees
    extensions=('.comm',)
 
    def __init__(self,cr=None):
@@ -72,7 +73,7 @@ class AsterGenerator:
       else:
          self.cr=N_CR.CR(debut='CR generateur format asterv5',
                          fin='fin CR format asterv5')
-      # Le texte au format asterv5 est stocké dans l'attribut text
+      # Le texte au format asterv5 est stocke dans l'attribut text
       self.text=''
 
    def writefile(self,filename):
@@ -82,11 +83,11 @@ class AsterGenerator:
 
    def gener(self,obj,format='brut'):
       """
-          Retourne une représentation du JDC obj sous une
-          forme qui est paramétrée par format.
+          Retourne une representation du JDC obj sous une
+          forme qui est parametree par format.
           Si format vaut 'brut',      retourne une liste de listes de ...
-          Si format vaut 'standard',  retourne un texte obtenu par concaténation de la liste
-          Si format vaut 'beautifie', retourne le meme texte beautifié
+          Si format vaut 'standard',  retourne un texte obtenu par concatenation de la liste
+          Si format vaut 'beautifie', retourne le meme texte beautifie
       """
       liste= self.generator(obj)
       if format == 'brut':
@@ -97,16 +98,16 @@ class AsterGenerator:
          jdc_formate = Formatage(liste,sep=':',l_max=72)
          self.text=jdc_formate.formate_jdc()
       else:
-         raise "Format pas implémenté : "+format
+         raise EficasException(tr("Format pas implemente : %s", format))
       return self.text
 
    def generator(self,obj):
       """
          Cette methode joue un role d'aiguillage en fonction du type de obj
-         On pourrait utiliser les méthodes accept et visitxxx à la
-         place (dépend des gouts !!!)
+         On pourrait utiliser les methodes accept et visitxxx Ã  la
+         place (depend des gouts !!!)
       """
-      # ATTENTION a l'ordre des tests : il peut avoir de l'importance (héritage)
+      # ATTENTION a l'ordre des tests : il peut avoir de l'importance (heritage)
       if isinstance(obj,PROC_ETAPE):
          return self.generPROC_ETAPE(obj)
       elif isinstance(obj,MACRO_ETAPE):
@@ -129,7 +130,7 @@ class AsterGenerator:
          return self.generETAPE_NIVEAU(obj)
       elif isinstance(obj,COMMENTAIRE):
          return self.generCOMMENTAIRE(obj)
-      # Attention doit etre placé avant PARAMETRE (raison : héritage)
+      # Attention doit etre place avant PARAMETRE (raison : heritage)
       elif isinstance(obj,PARAMETRE_EVAL):
          return self.generPARAMETRE_EVAL(obj)
       elif isinstance(obj,PARAMETRE):
@@ -141,12 +142,12 @@ class AsterGenerator:
       elif isinstance(obj,JDC):
          return self.generJDC(obj)
       else:
-         raise "Type d'objet non prévu",obj
+         raise EficasException(tr("Type d'objet non prevu : %s", repr(obj)))
 
    def generJDC(self,obj):
       """
-         Cette méthode convertit un objet JDC en une liste de chaines de 
-         caractères à la syntaxe asterv5
+         Cette methode convertit un objet JDC en une liste de chaines de 
+         caracteres Ã  la syntaxe asterv5
       """
       l=[]
       if obj.definition.l_niveaux == ():
@@ -158,7 +159,7 @@ class AsterGenerator:
          for etape_niveau in obj.etapes_niveaux:
             l.extend(self.generator(etape_niveau))
       if l != [] : 
-         # Si au moins une étape, on ajoute le retour chariot sur la dernière étape
+         # Si au moins une etape, on ajoute le retour chariot sur la derniere etape
          if type(l[-1])==types.ListType:
             l[-1][-1] = l[-1][-1]+'\n'
          elif type(l[-1])==types.StringType:
@@ -167,8 +168,8 @@ class AsterGenerator:
 
    def generCOMMANDE_COMM(self,obj):
       """
-         Cette méthode convertit un COMMANDE_COMM
-         en une liste de chaines de caractères à la syntaxe asterv5
+         Cette methode convertit un COMMANDE_COMM
+         en une liste de chaines de caracteres Ã  la syntaxe asterv5
       """
       l_lignes = string.split(obj.valeur,'\n')
       txt=''
@@ -178,15 +179,15 @@ class AsterGenerator:
 
    def generEVAL(self,obj):
       """
-         Cette méthode convertit un EVAL
-         en une liste de chaines de caractères à la syntaxe asterv5
+         Cette methode convertit un EVAL
+         en une liste de chaines de caracteres Ã  la syntaxe asterv5
       """
-      return 'EVAL("'+ obj.valeur +'")'
+      return 'EVAL(u"'+ obj.valeur +'")'
 
    def generCOMMENTAIRE(self,obj):
       """
-         Cette méthode convertit un COMMENTAIRE
-         en une liste de chaines de caractères à la syntaxe asterv5
+         Cette methode convertit un COMMENTAIRE
+         en une liste de chaines de caracteres Ã  la syntaxe asterv5
       """
       l_lignes = string.split(obj.valeur,'\n')
       txt=''
@@ -196,8 +197,8 @@ class AsterGenerator:
 
    def generPARAMETRE_EVAL(self,obj):
       """
-         Cette méthode convertit un PARAMETRE_EVAL
-         en une liste de chaines de caractères à la syntaxe asterv5
+         Cette methode convertit un PARAMETRE_EVAL
+         en une liste de chaines de caracteres Ã  la syntaxe asterv5
       """
       if obj.valeur == None:
          return obj.nom + ' = None ;\n'
@@ -206,8 +207,8 @@ class AsterGenerator:
 
    def generPARAMETRE(self,obj):
       """
-         Cette méthode convertit un PARAMETRE
-         en une liste de chaines de caractères à la syntaxe asterv5
+         Cette methode convertit un PARAMETRE
+         en une liste de chaines de caracteres Ã  la syntaxe asterv5
       """
       if type(obj.valeur) == types.StringType:
         return obj.nom + " = '" + obj.valeur + "';\n"
@@ -216,8 +217,8 @@ class AsterGenerator:
 
    def generETAPE_NIVEAU(self,obj):
       """
-         Cette méthode convertit une étape niveau
-         en une liste de chaines de caractères à la syntaxe asterv5
+         Cette methode convertit une etape niveau
+         en une liste de chaines de caracteres Ã  la syntaxe asterv5
       """
       l=[]
       if obj.etapes_niveaux == []:
@@ -230,8 +231,8 @@ class AsterGenerator:
 
    def generETAPE(self,obj):
       """
-         Cette méthode convertit une étape
-         en une liste de chaines de caractères à la syntaxe asterv5
+         Cette methode convertit une etape
+         en une liste de chaines de caracteres Ã  la syntaxe asterv5
       """
       try:
         if obj.reuse != None:
@@ -258,7 +259,7 @@ class AsterGenerator:
 
    def generFORM_ETAPE(self,obj):
         """
-            Méthode particulière pour les objets de type FORMULE
+            Methode particuliere pour les objets de type FORMULE
         """
         l=[]
         nom = obj.get_nom()
@@ -274,8 +275,8 @@ class AsterGenerator:
 
    def generMACRO_ETAPE(self,obj):
       """
-         Cette méthode convertit une macro-étape
-         en une liste de chaines de caractères à la syntaxe asterv5
+         Cette methode convertit une macro-etape
+         en une liste de chaines de caracteres Ã  la syntaxe asterv5
       """
       if obj.definition.nom == 'FORMULE' : return self.gen_ast_formule(obj)
       try:
@@ -306,7 +307,7 @@ class AsterGenerator:
 
    def gen_ast_formule(self,obj):
       """ 
-           Méthode gen_ast particuliere aux objets de type FORMULE 
+           Methode gen_ast particuliere aux objets de type FORMULE 
       """
       label='!FORMULE('
       try:
@@ -327,8 +328,8 @@ class AsterGenerator:
 
    def generPROC_ETAPE(self,obj):
       """
-         Cette méthode convertit une étape
-         en une liste de chaines de caractères à la syntaxe asterv5
+         Cette methode convertit une etape
+         en une liste de chaines de caracteres Ã  la syntaxe asterv5
       """
       l=[]
       label=obj.definition.nom+'('
@@ -348,7 +349,7 @@ class AsterGenerator:
 
    def generMCSIMP(self,obj) :
       """
-          Convertit un objet MCSIMP en une liste de chaines de caractères à la
+          Convertit un objet MCSIMP en une liste de chaines de caracteres Ã  la
           syntaxe asterv5
       """
       if type(obj.valeur) == types.TupleType :
@@ -358,7 +359,7 @@ class AsterGenerator:
           if type(val) == types.InstanceType :
             if isinstance(val,PARAMETRE):
               # il ne faut pas prendre la string que retourne gen_ast
-              # mais seulement le nom dans le cas d'un paramètre
+              # mais seulement le nom dans le cas d'un parametre
               s = s + val.nom
             else:
               s = s + self.generator(val)
@@ -376,7 +377,7 @@ class AsterGenerator:
         if type(obj.valeur) == types.InstanceType :
           if isinstance(obj.valeur,PARAMETRE):
             # il ne faut pas prendre la string que retourne gen_ast
-            # mais seulement str dans le cas d'un paramètre
+            # mais seulement str dans le cas d'un parametre
             s = obj.valeur.nom
           else:
             s =  self.generator(obj.valeur)
@@ -398,9 +399,9 @@ class AsterGenerator:
 
    def repr_float(self,valeur):
       """ 
-          Cette fonction représente le réel valeur comme une chaîne de caractères
-          sous forme mantisse exposant si nécessaire cad si le nombre contient plus de 5 caractères
-          NB : valeur est un réel au format Python ou une chaîne de caractères représentant un réel
+          Cette fonction represente le reel valeur comme une chaÃ®ne de caracteres
+          sous forme mantisse exposant si necessaire cad si le nombre contient plus de 5 caracteres
+          NB : valeur est un reel au format Python ou une chaÃ®ne de caracteres representant un reel
       """
       if type(valeur) == types.StringType : valeur = eval(valeur)
       if valeur == 0. : return '0.0'
@@ -410,10 +411,10 @@ class AsterGenerator:
         if abs(valeur) > 0.01 : return repr(valeur)
       t=repr(valeur)
       if string.find(t,'e') != -1 or string.find(t,'E') != -1 :
-        # le réel est déjà sous forme mantisse exposant !
+        # le reel est dejÃ  sous forme mantisse exposant !
         # --> on remplace e par E
         t=string.replace(t,'e','E')
-        # --> on doit encore vérifier que la mantisse contient bien un '.'
+        # --> on doit encore verifier que la mantisse contient bien un '.'
         if string.find(t,'.')!= -1:
           return t
         else:
@@ -427,7 +428,7 @@ class AsterGenerator:
         t=t[1:]
       cpt = 0
       if string.atof(t[0]) == 0.:
-        # réel plus petit que 1
+        # reel plus petit que 1
         neg = 1
         t=t[2:]
         cpt=1
@@ -438,7 +439,7 @@ class AsterGenerator:
         for c in t[1:]:
           s=s+c
       else:
-        # réel plus grand que 1
+        # reel plus grand que 1
         s=s+t[0]+'.'
         if string.atof(t[1:]) == 0.:
           l=string.split(t[1:],'.')
@@ -459,14 +460,14 @@ class AsterGenerator:
 
    def generASSD(self,obj):
       """
-          Convertit un objet dérivé d'ASSD en une chaine de caractères à la
+          Convertit un objet derive d'ASSD en une chaine de caracteres Ã  la
           syntaxe asterv5
       """
       return obj.get_name()
 
    def generMCFACT(self,obj):
       """
-          Convertit un objet MCFACT en une liste de chaines de caractères à la
+          Convertit un objet MCFACT en une liste de chaines de caracteres Ã  la
           syntaxe asterv5
       """
       l=[]
@@ -484,7 +485,7 @@ class AsterGenerator:
 
    def generMCList(self,obj):
       """
-          Convertit un objet MCList en une liste de chaines de caractères à la
+          Convertit un objet MCList en une liste de chaines de caracteres Ã  la
           syntaxe asterv5
       """
       l=[]
@@ -494,7 +495,7 @@ class AsterGenerator:
 
    def generMCBLOC(self,obj):
       """
-          Convertit un objet MCBLOC en une liste de chaines de caractères à la
+          Convertit un objet MCBLOC en une liste de chaines de caracteres Ã  la
           syntaxe asterv5
       """
       l=[]

@@ -19,6 +19,8 @@
 #
 import string
 from I_ASSD import ASSD
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 class FONCTION(ASSD):
   def __init__(self,etape=None,sd=None,reg='oui'):
@@ -27,7 +29,7 @@ class FONCTION(ASSD):
 
   def get_formule(self):
     """
-    Retourne une formule décrivant self sous la forme d'un tuple :
+    Retourne une formule decrivant self sous la forme d'un tuple :
     (nom,type_retourne,arguments,corps)
     """
     if hasattr(self.etape,'get_formule'):
@@ -37,7 +39,7 @@ class FONCTION(ASSD):
       # on est dans le cas d'une fonction
       return (self.nom,'REEL','(REEL:x)','''bidon''')
 
-# On ajoute la classe formule pour etre cohérent avec la
+# On ajoute la classe formule pour etre coherent avec la
 # modification de C Durand sur la gestion des formules dans le superviseur
 # On conserve l'ancienne classe fonction (ceinture et bretelles)
 class fonction(FONCTION) : pass
@@ -60,10 +62,11 @@ class formule(FONCTION) :
       try :
        res=eval(self.expression,self.jdc.const_context, context)
       except :
-       print 75*'!'
-       print '! '+string.ljust('Erreur evaluation formule '+self.nom,72)+'!'
-       print 75*'!'
-       raise
+####### A TRAVAILLER DEPUIS ICI !!
+       print tr(75 * '!')
+       print '! ' + tr(string.ljust("Erreur evaluation formule %s", 72), self.nom) + '!'
+       print tr(75 * '!')
+       raise EficasException
       return res
 
 

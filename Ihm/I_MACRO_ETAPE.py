@@ -24,6 +24,8 @@ import sys
 import traceback,types,string
 
 # Modules Eficas
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 import I_ETAPE
 import I_ENTITE
 import I_OBJECT
@@ -158,7 +160,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        #print j.cr
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(step)
-       raise Exception("Impossible de relire le fichier\n"+str(j.cr))
+       raise EficasException(tr("Impossible de relire le fichier %s \n ", unicode(j.cr)))
+
 
     if not j.isvalid():
        # L'INCLUDE n'est pas valide.
@@ -168,7 +171,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # On retablit l'etape courante step
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(step)
-       raise Exception("Le fichier include contient des erreurs\n"+str(cr))
+       raise EficasException(tr("Le fichier include contient des erreurs %s \n ", unicode(cr)))
+
 
     # Si aucune erreur rencontree
     # On recupere le contexte de l'include verifie
@@ -180,7 +184,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # On retablit l'etape courante step
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(step)
-       raise
+       raise EficasException(" ")
 
     # Si on est arrive ici, le texte du fichier inclus (INCLUDE, POURSUITE, ...)
     # est valide et inserable dans le JDC
@@ -417,9 +421,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     try:
        self.make_contexte_include(new_fic,text)
     except:
-       l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+       l=traceback.format_exception_only(tr("Fichier invalide %s", sys.exc_info()[1]))
        self.fichier_err=string.join(l)
-       raise
+       raise EficasException(" ")
 
     # L'evaluation de text dans un JDC auxiliaire s'est bien passe
     # on peut poursuivre le traitement
@@ -524,7 +528,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        if contexte is None :
           # Impossible de construire le jdc auxiliaire (sortie par None)
           # On simule une sortie par exception
-          raise Exception("Impossible de construire le jeu de commandes correspondant au fichier")
+          raise EficasException(tr("Impossible de construire le jeu de commandes correspondant au fichier"))
        else:
           # La construction du jdc auxiliaire est allee au bout
           self.contexte_fichier_init = contexte
@@ -534,9 +538,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # Impossible de construire le jdc auxiliaire (sortie par exception)
        l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
        if self.jdc.appli is not None:
-          self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
-                                        message="Ce fichier ne sera pas pris en compte\n"+string.join(l)
-                                       )
+          self.jdc.appli.affiche_alerte(tr("Erreur lors de l'evaluation du fichier inclus"),
+                                       message= tr("Ce fichier ne sera pas pris en compte\n %s",string.join(l)))
+
        self.g_context={}
        self.etapes=[]
        self.jdc_aux=None
@@ -544,7 +548,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.contexte_fichier_init={}
        self.init_modif()
        self.fin_modif()
-       raise
+       raise EficasException(" ")
 
   def make_contexte_include(self,fichier,text):
     """
@@ -554,7 +558,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     # on recupere le contexte d'un nouveau jdc dans lequel on interprete text
     contexte = self.get_contexte_jdc(fichier,text)
     if contexte == None :
-      raise Exception("Impossible de construire le jeu de commandes correspondant au fichier")
+      raise EficasException("Impossible de construire le jeu de commandes correspondant au fichier")
     else:
       # Pour les macros de type include : INCLUDE, INCLUDE_MATERIAU et POURSUITE
       # l'attribut g_context est un dictionnaire qui contient les concepts produits par inclusion
@@ -693,8 +697,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
       self.recorded_units=units
       if f is None and self.jdc.appli:
-         self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
-                          message="Ce fichier ne sera pas pris en compte\n"+"Le fichier associe n'est pas defini")
+         self.jdc.appli.affiche_alerte(tr("Erreur lors de l'evaluation du fichier inclus"),
+			   message= tr("Ce fichier ne sera pas pris en compte\nLe fichier associe n'est pas defini"))
       return f,text
 
   def update_context(self,d):
@@ -773,14 +777,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          if fichier  == str("") : 
            self.fichier_ini="badfile"
            self.fichier_text=""
-	   self.fichier_err="Le fichier n est pas defini"
+	   self.fichier_err=tr("Le fichier n est pas defini")
            self.parent.record_unit(999,self)
            try :
               MCFils=self.get_child('FileName')
               MCFils.set_valeur(None)
            except :
               pass
-           raise Exception(self.fichier_err)
+           raise EficasException(self.fichier_err)
       self.fichier_ini  = fichier
       f=open(self.fichier_ini,'r')
       self.fichier_text=f.read()
@@ -798,7 +802,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       #else:
          traceback.print_exc()
          self.make_incl2_except()
-         raise
+         raise EficasException(" ")
 
       try:
       #if 1 :
@@ -834,14 +838,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          if fichier  == str("") : 
            self.fichier_ini="badfile"
            self.fichier_text=""
-	   self.fichier_err="Le fichier n est pas defini"
+	   self.fichier_err=tr("Le fichier n est pas defini")
            self.parent.record_unit(999,self)
            try :
               MCFils=self.get_child('FileName')
               MCFils.set_valeur(None)
            except :
               pass
-           raise Exception(self.fichier_err)
+           raise EficasException(self.fichier_err)
 
       self.fichier_ini  = fichier
       self.fichier_text = ""
@@ -867,12 +871,12 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
              self.fichier_text = self.fichier_text + ligneTexte
       except:
          self.make_incl2_except()
-         raise
+         raise EficasException(" ")
 
       if nbVariableOut != 1 :
          print nbVariableOut ,"nbVariableOut"
-         self.make_incl2_except(mess="le fichier doit contenir une unique variable de sortie")
-         raise
+         self.make_incl2_except(mess=tr("le fichier doit contenir une unique variable de sortie"))
+         raise EficasException(" ")
 
       try:
          import Extensions.jdc_include
@@ -880,7 +884,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       except:
          traceback.print_exc()
          self.make_incl2_except()
-         raise
+         raise EficasException(" ")
       
       try:
          print self.fichier_ini ,self.fichier_text
@@ -917,15 +921,16 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
               e.isvalid()
 
   def make_incl2_except(self,mess=None):
-         l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+         l=traceback.format_exception_only(tr("Fichier invalide"),sys.exc_info()[1])
          if self.jdc.appli is not None:
              if mess == None :
-                     self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
-                                            message="Le contenu de ce fichier ne sera pas pris en compte\n"+string.join(l)
-                                           )
+                     self.jdc.appli.affiche_alerte(tr("Erreur lors de l'evaluation du fichier inclus"),
+                     message= tr("Le contenu de ce fichier ne sera pas pris en compte\n %s",\
+                                                                   string.join(l)))
+
              else :
-                     self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
-                                            message=mess )
+                     self.jdc.appli.affiche_alerte(tr("Erreur lors de l'evaluation du fichier inclus"),
+                                            message=tr(mess))
          #self.parent.record_unit(unite,self)
          self.g_context={}
          self.etapes=[]
@@ -967,38 +972,37 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
            import Extensions.jdc_include
          except:
            traceback.print_exc()
-           raise
+           raise EficasException(tr("pb import Extensions"))
          self.JdC_aux=Extensions.jdc_include.JdC_include
 
          #print "make_include",self.fichier_ini,self.fichier_text 
          if f is None and not text:
-             self.fichier_err="Le fichier INCLUDE n est pas defini"
+             self.fichier_err=tr("Le fichier INCLUDE n est pas defini")
              self.parent.record_unit(unite,self)
-             raise Exception(self.fichier_err)
+             raise EficasException(self.fichier_err)
 
          try:
            self.make_contexte_include(self.fichier_ini ,self.fichier_text)
            self.parent.record_unit(unite,self)
          except:
-           l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+           l=traceback.format_exception_only(tr("Fichier invalide %s",sys.exc_info()[1]))
            if self.jdc.appli:
-              self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier inclus",
-                                            message="Le contenu de ce fichier ne sera pas pris en compte\n"+string.join(l)
-                                           )
+              self.jdc.appli.affiche_alerte(tr("Erreur lors de l'evaluation du fichier inclus"),
+                                            message=tr("Le contenu de ce fichier ne sera pas pris en compte\n"+string.join(l)))
            self.parent.record_unit(unite,self)
            self.g_context={}
            self.etapes=[]
            self.jdc_aux=None
            self.fichier_err = string.join(l)
            self.contexte_fichier_init={}
-           raise
+           raise EficasException(" ")
 
       else:
          # Si le fichier est deja defini on ne reevalue pas le fichier
          # et on leve une exception si une erreur a ete enregistree
          self.update_fichier_init(unite)
          self.fichier_unite=unite
-         if self.fichier_err is not None: raise Exception(self.fichier_err)
+         if self.fichier_err is not None: raise EficasException(self.fichier_err)
         
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
@@ -1025,7 +1029,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          import Extensions.jdc_include
          self.JdC_aux=Extensions.jdc_include.JdC_include
        except:
-         raise
+         raise EficasException(" ")
        try:
           self.make_contexte_include(self.fichier_ini ,self.fichier_text)
           if not self.g_context.has_key(self.nom_mater):
@@ -1033,7 +1037,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
              self.g_context[self.nom_mater]=None
              if self.parent: self.parent.g_context[self.nom_mater]=None
        except:
-          l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
+          l=traceback.format_exception_only(tr("Fichier invalide %s",sys.exc_info()[1]))
           self.fichier_err = string.join(l)
           self.g_context={}
           #Pour permettre de lire un jeu de commandes avec des INCLUDE_MATERIAU errones
@@ -1044,11 +1048,11 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           self.etapes=[]
           self.jdc_aux=None
           self.contexte_fichier_init={}
-          raise
+          raise EficasException(" ")
     else:
        # le fichier est le meme on ne le reevalue pas
        # et on leve une exception si une erreur a ete enregistree
-       if self.fichier_err is not None: raise Exception(self.fichier_err)
+       if self.fichier_err is not None: raise EficasException(self.fichier_err)
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
   def update_sdprod(self,cr='non'):
@@ -1102,7 +1106,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
            import Extensions.jdc_include
          except:
            traceback.print_exc()
-           raise
+           raise EficasException(" ")
          self.JdC_aux=Extensions.jdc_include.JdC_poursuite
          self.contexte_fichier_init={}
          #print "make_poursuite",self.fichier_ini,self.fichier_text
@@ -1111,7 +1115,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
              self.fichier_err="Le fichier POURSUITE n'est pas defini"
              self.jdc_aux=None
              self.parent.record_unit(None,self)
-             raise Exception(self.fichier_err)
+             raise EficasException(self.fichier_err)
 
          try:
            self.make_contexte_include(self.fichier_ini,self.fichier_text)
@@ -1119,19 +1123,18 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          except:
            l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
            if self.jdc.appli:
-              self.jdc.appli.affiche_alerte("Erreur lors de l'evaluation du fichier poursuite",
-                                            message="Ce fichier ne sera pas pris en compte\n"+string.join(l)
-                                           )
+              self.jdc.appli.affiche_alerte(tr("Erreur lors de l'evaluation du fichier poursuite"),
+                                            message=tr("Ce fichier ne sera pas pris en compte\n %s",string.join(l)))
            self.parent.record_unit(None,self)
            self.g_context={}
            self.etapes=[]
            self.jdc_aux=None
            self.fichier_err = string.join(l)
            self.contexte_fichier_init={}
-           raise
+           raise EficasException(" ")
 
       else:
          # Si le fichier est deja defini on ne reevalue pas le fichier
          # et on leve une exception si une erreur a ete enregistree
          self.update_fichier_init(None)
-         if self.fichier_err is not None: raise Exception(self.fichier_err)
+         if self.fichier_err is not None: raise EficasException(self.fichier_err)

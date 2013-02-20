@@ -24,6 +24,8 @@
 """
 import traceback
 import types,string,re
+from Extensions.i18n import tr
+
 
 from generator_python import PythonGenerator
 from OpenturnsBase import Generateur 
@@ -119,7 +121,7 @@ class OpenturnsGenerator(PythonGenerator):
           self.texteXML=MonGenerateur.CreeXML()
        #except :
        else :
-	  self.texteXML="Il y a un pb a la Creation du XML"
+	  self.texteXML=tr("Il y a un pb a la Creation du XML")
 
    def genereSTD(self):
        MonBaseGenerateur=Generateur(self.dictMCVal, self.listeVariables, self.dictMCLois)
@@ -129,7 +131,7 @@ class OpenturnsGenerator(PythonGenerator):
           self.texteSTD=MonGenerateur.CreeSTD()
        #except :
        else :
-       	  self.texteSTD="Il y a un pb a la Creation du STD"
+       	  self.texteSTD=tr("Il y a un pb a la Creation du STD")
 
    def getOpenturnsXML(self):
        return self.texteXML

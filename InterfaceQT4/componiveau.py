@@ -20,6 +20,7 @@
 
 from Editeur     import Objecttreeitem
 from Extensions  import commentaire 
+from Extensions.i18n import tr
 import browser
 
 class Node(browser.JDCNode):
@@ -100,13 +101,13 @@ class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
     itemobject=item.getObject()
     if self.object.suppentite(itemobject):
        if isinstance(item.object,commentaire.COMMENTAIRE):
-          message = "Commentaire supprimé"
+          message = tr("Commentaire supprime")
        else :
-          message = "Commande " + itemobject.nom + " supprimée"
+          message = tr("Commande %s supprimee",unicode(itemobject.nom))
        self.appli.affiche_infos(message)
        return 1
     else:
-       self.appli.affiche_infos("Pb interne : impossible de supprimer cet objet",Qt.red)
+       self.appli.affiche_infos(tr("Pb interne : impossible de supprimer cet objet"),Qt.red)
        return 0
 
   def GetText(self):

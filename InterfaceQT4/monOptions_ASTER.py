@@ -19,6 +19,7 @@
 #
 
 import os, re
+from Extensions.i18n import tr
 
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
@@ -101,7 +102,7 @@ class Options(desOptions):
    def BokClicked(self):
        version=str(self.CBVersions.currentText())
        if self.LERepCata.text() == "" :
-          QMessageBox.critical( self, "Champ non rempli","Le champs Catalogue  doit etre rempli" )
+          QMessageBox.critical( self, tr("Champ non rempli"),tr("Le champs Catalogue  doit etre rempli" ))
           return
 
        self.dRepMat[version]=self.LERepMat.text()
@@ -179,10 +180,10 @@ class Options(desOptions):
    def BdefautChecked(self):
        res = QMessageBox.warning(
                  None,
-                 self.trUtf8("Restauration des parametres par defaut "),
-                 self.trUtf8("Votre fichier editeur sera ecrase."),
-                 self.trUtf8("&Ok"),
-                 self.trUtf8("&Abandonner"))
+                 tr("Restauration des parametres par defaut "),
+                 tr("Votre fichier editeur sera ecrase."),
+                 tr("&Ok"),
+                 tr("&Abandonner"))
        self.Bdefaut.setCheckState(Qt.Unchecked)
        if res == 1 : return 
 

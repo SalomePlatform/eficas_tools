@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@ Ce module contient le generateur XML pour Openturns
 """
 import sys
 print sys.path
+from Extensions.i18n import tr
 import openturns
 
 # Dictionnaires de conversion des valeurs lues dans EFICAS
@@ -87,7 +88,7 @@ class XMLGenerateur :
     Pilotage general de la creation du fichier XML
     '''
     data = openturns.WrapperData()
-    data.setLibraryPath( self.GetMCVal('WrapperPath','') )
+    data.setLibraryPath( self.GetMCVal(u'WrapperPath','') )
     data.setVariableList( self.VariableList() )
     data.setFunctionDescription( self.FunctionDefinition() )
     data.setGradientDescription( self.GradientDefinition() )
@@ -126,10 +127,10 @@ class XMLGenerateur :
     variable.id_ = var
     if dictVar[ 'Type' ] in VariableTypeByName.keys() :
       variable.type_ = VariableTypeByName[ dictVar[ 'Type' ] ]
-    if dictVar.has_key('Comment')   : variable.comment_ = dictVar[ 'Comment' ]
-    if dictVar.has_key('Unit')      : variable.unit_    = dictVar[ 'Unit'    ]
-    if dictVar.has_key('Regexp')    : variable.regexp_  = dictVar[ 'Regexp'  ]
-    if dictVar.has_key('Format')    : variable.format_  = dictVar[ 'Format'  ]
+    if dictVar.has_key(u'Comment')   : variable.comment_ = dictVar[ 'Comment' ]
+    if dictVar.has_key(u'Unit')      : variable.unit_    = dictVar[ 'Unit'    ]
+    if dictVar.has_key(u'Regexp')    : variable.regexp_  = dictVar[ 'Regexp'  ]
+    if dictVar.has_key(u'Format')    : variable.format_  = dictVar[ 'Format'  ]
     return variable
 
   def FunctionDefinition (self) :
@@ -166,7 +167,7 @@ class XMLGenerateur :
     Ecrit la liste des fichiers
     '''
     fileList = openturns.WrapperDataFileCollection()
-    for dictFile in self.GetMCVal('Files', []) :
+    for dictFile in self.GetMCVal(u'Files', []) :
       fileList.add( self.File( dictFile ) )
     return fileList
 
@@ -178,9 +179,9 @@ class XMLGenerateur :
     fich.id_ = dictFile[ 'Id' ]
     if dictFile[ 'Type' ] in FileTypeByName.keys() :
       fich.type_ = FileTypeByName[ dictFile[ 'Type' ] ]
-    if dictFile.has_key('Name')   : fich.name_  = dictFile[ 'Name' ]
-    if dictFile.has_key('Path')   : fich.path_  = dictFile[ 'Path' ]
-    if dictFile.has_key('Subst')  :
+    if dictFile.has_key(u'Name')   : fich.name_  = dictFile[ 'Name' ]
+    if dictFile.has_key(u'Path')   : fich.path_  = dictFile[ 'Path' ]
+    if dictFile.has_key(u'Subst')  :
       import string
       fich.subst_ = string.join( dictFile[ 'Subst' ], ',' )
     return fich
@@ -190,14 +191,14 @@ class XMLGenerateur :
     Ecrit les parametres de couplage au code externe
     '''
     parameters = openturns.WrapperParameter()
-    parameters.mode_  = WrapperModeByName[ self.GetMCVal('WrapCouplingMode') ]
+    parameters.mode_  = WrapperModeByName[ self.GetMCVal(u'WrapCouplingMode') ]
     if (parameters.mode_ == openturns.WrapperMode.FORK ):
-      parameters.command_ = self.GetMCVal('Command')
-      userPrefix = self.GetMCVal('UserPrefix', None)
+      parameters.command_ = self.GetMCVal(u'Command')
+      userPrefix = self.GetMCVal(u'UserPrefix', None)
       if userPrefix != None : parameters.userPrefix_ = userPrefix
-    parameters.state_ = WrapperStateByName[ self.GetMCVal('State') ]
-    parameters.in_    = WrapperDataTransferByName[ self.GetMCVal('InDataTransfer') ]
-    parameters.out_   = WrapperDataTransferByName[ self.GetMCVal('OutDataTransfer') ]
+    parameters.state_ = WrapperStateByName[ self.GetMCVal(u'State') ]
+    parameters.in_    = WrapperDataTransferByName[ self.GetMCVal(u'InDataTransfer') ]
+    parameters.out_   = WrapperDataTransferByName[ self.GetMCVal(u'OutDataTransfer') ]
     return parameters
   
   def FrameworkData (self) :
@@ -206,9 +207,9 @@ class XMLGenerateur :
     '''
     framework = openturns.WrapperFrameworkData()
 #   framework.studycase_ = "12:23:34"
-#   framework.componentname_ = self.GetMCVal('SolverComponentName', 'UNDEFINED')
-    CN = self.GetMCVal('SolverComponentName', 'UNDEFINED')
-    print 'CN = ', CN
+#   framework.componentname_ = self.GetMCVal(u'SolverComponentName', 'UNDEFINED')
+    CN = self.GetMCVal(u'SolverComponentName', 'UNDEFINED')
+    print tr('CN = %s', CN)
     framework.componentname_ = CN
     return framework
 
@@ -224,7 +225,7 @@ class XMLGenerateur :
     if ( dictTagsXML.has_key(tag) ) :
       return dictTagsXML[tag]
     else :
-      raise KeyError, "Tag '%s' is undefined. This is an internal bug. Report bug to developers" % tag 
+      raise KeyError, tr("Tag %s non-defini. Ceci est un bogue interne. en informer les developpeurs.", tag))
     pass
   
   def GetMCVal (self, MC, default = None, mandatory = False) :
@@ -236,7 +237,7 @@ class XMLGenerateur :
       return self.DictMCVal[MC]
     else :
       if ( mandatory ) :
-        raise KeyError, "Keyword '%s' is mandatory" % MC
+        raise KeyError, tr(" Le mot-cle %s est obligatoire.", MC))
       else :
         return default
     pass

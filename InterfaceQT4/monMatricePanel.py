@@ -23,6 +23,7 @@ import string,types,os
 # Modules Eficas
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 from desMatrice           import Ui_desMatrice
 
@@ -76,17 +77,17 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
       if texte=="" : return
       val,ok=texte.toDouble() 
       if ok == False :
-	self.editor.affiche_infos("Entrer un float SVP",Qt.red)
+	self.editor.affiche_infos(tr("Entrer un float SVP"),Qt.red)
         monItem.setText("")
         return
       if self.monType.valSup != None :
          if val > self.monType.valSup :
-	    self.editor.affiche_infos("Entrer un float infÃ©rieur Ã  " + repr(self.monType.valSup),Qt.red)
+	    self.editor.affiche_infos(tr("Entrer un float inférieur à ") + repr(self.monType.valSup),Qt.red)
             monItem.setText("")
             return
       if self.monType.valMin != None :
          if val < self.monType.valMin :
-	    self.editor.affiche_infos("Entrer un float superieur Ã  " + repr(self.monType.valMin),Qt.red)
+	    self.editor.affiche_infos(tr("Entrer un float superieur a ") + repr(self.monType.valMin),Qt.red)
             monItem.setText("")
             return
       self.editor.affiche_infos("")
@@ -108,7 +109,7 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
            apply (MonMatricePanel.__dict__[self.monType.methodeCalculTaille],(self,))
          else :
          #except :
-           QMessageBox.critical( self, "Mauvaise execution ", "impossible d executer la mÃ©thode " + monType.methodeCalculTaille )
+           QMessageBox.critical( self, tr("Mauvaise execution "),tr( "impossible d executer la méthode ") + monType.methodeCalculTaille )
            return
       else :
          self.nbLigs=self.monType.nbLigs
@@ -120,7 +121,7 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
        etape=self.node.item.object.etape
        self.listeVariables=jdc.get_variables(etape)
        if self.listeVariables == [] :
-           QMessageBox.critical( self, "Mauvaise Commande ", "Aucune variable connue")
+           QMessageBox.critical( self, tr("Mauvaise Commande "),tr( "Aucune variable connue"))
            return
        self.TBMatrice.setColumnCount(len(self.listeVariables))
        self.TBMatrice.setRowCount(len(self.listeVariables))
@@ -145,12 +146,12 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
       liste=self.node.item.get_valeur()
       dejaAffiche=0
       if (len(liste)) != self.nbLigs +1  :
-         QMessageBox.critical( self, "Mauvaise dimension de matrice", "le nombre de ligne n est pas egal a " + str(self.nbLigs))
+         QMessageBox.critical( self,tr( "Mauvaise dimension de matrice"),tr( "le nombre de ligne n est pas egal a ") + str(self.nbLigs))
          dejaAffiche=1
       for i in range(self.nbLigs):
           inter=liste[i+1]
           if (len(inter)) != self.nbCols and (dejaAffiche == 0 ) :
-             QMessageBox.critical( self, "Mauvaise dimension de matrice", "le nombre de colonne n est pas egal a " + str(self.nbCols))
+             QMessageBox.critical( self, tr("Mauvaise dimension de matrice"), tr("le nombre de colonne n est pas egal a ") + str(self.nbCols))
              dejaAffiche=1
           for j in range(self.nbCols):
               self.TBMatrice.setItem(i,j,QTableWidgetItem(str(liste[i+1][j])))
@@ -164,9 +165,9 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
       liste=[]
       liste.append(self.listeVariables)
       if self.TBMatrice.rowCount() != self.nbLigs :
-         QMessageBox.critical( self, "Mauvaise dimension de matrice", "le nombre de ligne n est pas egal a " + str(self.nbLigs))
+         QMessageBox.critical( self, tr("Mauvaise dimension de matrice"),tr( "le nombre de ligne n est pas egal a ") + str(self.nbLigs))
       if self.TBMatrice.columnCount() != self.nbCols :
-         QMessageBox.critical( self, "Mauvaise dimension de matrice", "le nombre de colonne n est pas egal a " + str(self.nbCols))
+         QMessageBox.critical( self, tr("Mauvaise dimension de matrice"), tr("le nombre de colonne n est pas egal a ") + str(self.nbCols))
       for i in range(self.nbLigs):
           listeCol=[]
           for j in range(self.nbCols):
@@ -174,7 +175,7 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
               texte=monItem.text()
               val,ok=texte.toDouble() 
               if ok == False :
-                 QMessageBox.critical( self, "Mauvaise Valeur", "l element " + str(i) + "," +str(j) +"n est pas correct")
+                 QMessageBox.critical( self, tr("Mauvaise Valeur"),tr( "l element ") + str(i) + "," +str(j) +tr("n est pas correct"))
               listeCol.append(val)
           liste.append(listeCol)
       # on ajoute l ordre des variables aux valeurs

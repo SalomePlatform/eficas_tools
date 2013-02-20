@@ -23,6 +23,7 @@ import string,types,sys
 from copy import copy
 import traceback
 
+from Extensions.i18n import tr
 from Noyau.N_MCLIST import MCList
 from Noyau.N_MCSIMP import MCSIMP
 from Noyau.N_MCFACT import MCFACT
@@ -220,8 +221,9 @@ class MCCOMPO(I_OBJECT.OBJECT):
 
       # On verifie que l'ajout d'objet est autorise
       if self.ispermis(objet) == 0:
-        self.jdc.appli.affiche_alerte("Erreur","L'objet %s ne peut etre un fils de %s" %(objet.nom,
-                                                                        self.nom))
+        self.jdc.appli.affiche_alerte(tr("Erreur"),
+                                      tr("L'objet %(v_1)s ne peut  etre un fils de %(v_2)s",\
+                                      {'v_1': objet.nom, 'v_2': self.nom}))
         self.fin_modif()
         return 0
 
@@ -248,7 +250,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
          # on cree une liste d'objets. Dans le cas contraire,
          # on emet un message d'erreur.
          if not old_obj.isrepetable():
-            self.jdc.appli.affiche_alerte("Erreur","L'objet %s ne peut pas etre repete" %objet.nom)
+            self.jdc.appli.affiche_alerte(tr("Erreur"),tr("L'objet %s ne peut pas etre repete", objet.nom))
             self.fin_modif()
             return 0
          else:

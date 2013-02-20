@@ -24,6 +24,7 @@ import string,types,os
 from PyQt4 import *
 from PyQt4.QtGui import *
 
+from Extensions.i18n import tr
 from desUniqueSDCOInto    import DUnSDCOInto
 from qtCommun             import QTPanel
 from qtSaisie             import SaisieSDCO
@@ -79,7 +80,7 @@ class MonUniqueSDCOIntoPanel(DUnSDCOInto,QTPanel,SaisieSDCO):
           commentaire = self.node.item.get_cr()
           self.reset_old_valeur(anc_val,mess=mess)
           self.editor.affiche_infos(commentaire,Qt.red)
-        self.Commentaire.setText(QString.FromUtf8(commentaire))
+        self.Commentaire.setText(tr(commentaire))
 
   def LESDCOReturnPressed(self) :
         self.LBSDCO.clearSelection()

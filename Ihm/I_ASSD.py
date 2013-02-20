@@ -19,11 +19,16 @@
 #
 
 #from I_VALIDATOR import ValidException
+
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 from Noyau.N_VALIDATOR import ValError
 
 class ASSD:
    def __repr__(self):
-      return "concept %s de type %s" % (self.get_name(),self.__class__.__name__)
+      return tr("concept %(inst_name)s de type %(class_name)s", \
+                       {'inst_name': self.get_name(), \
+                        'class_name': self.__class__.__name__})
 
    def __str__(self):
       return self.get_name() or "<None>"
@@ -41,7 +46,8 @@ class GEOM(ASSD):
       return valeur
    __convert__=classmethod(__convert__)
 
-class geom(GEOM):pass
+class geom(GEOM):
+   pass
 
 class CO(ASSD):
    def __convert__(cls,valeur):
@@ -50,7 +56,6 @@ class CO(ASSD):
          if valeur.etape == valeur._etape:
              # le concept est bien produit par l'etape
              return valeur
-      raise ValError("Pas un concept CO")
-      #raise ValidException("Pas un concept CO")
+      raise ValError(u"Pas un concept CO")
    __convert__=classmethod(__convert__)
 

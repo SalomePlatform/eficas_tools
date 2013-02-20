@@ -51,6 +51,8 @@ import sys,string,traceback
 
 import parseur_python
 from Noyau import N_CR
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 def entryPoint():
    """
@@ -99,25 +101,27 @@ class PythonParser:
       try:
          self.text=open(filename).read()
       except:
-         self.cr.fatal("Impossible ouvrir fichier %s" % filename)
+         self.cr.exception(tr("Impossible d'ouvrir le fichier %s" ,filename))
+         self.cr.fatal(tr("Impossible d'ouvrir le fichier %s" ,filename))
          return
    
    def convert(self,outformat,appli=None):
       if outformat == 'exec':
          try:
             return parseur_python.PARSEUR_PYTHON(self.text).get_texte(appli)
-         except:
+         except EficasException:
             # Erreur lors de la conversion
             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],
                                          sys.exc_info()[2])
-            self.cr.exception("Impossible de convertir le fichier python qui doit contenir des erreurs.\n"
-                               "On retourne le fichier non converti. Prevenir la maintenance.\n\n" + string.join(l))
+            self.cr.exception(tr("Impossible de convertir le fichier Python qui doit contenir des erreurs.\n\
+                                  On retourne le fichier non converti. Prevenir la maintenance.\n\n %s", string.join(l)))
             # On retourne neanmoins le source initial non converti (au cas ou)
             return self.text
       elif outformat == 'execnoparseur':
          return self.text
       else:
-         raise "Format de sortie : %s, non supporte"
+
+###############"
+##############
+         raise EficasException(tr("Format de sortie : %s, non supporte", outformat))
          return None
-
-

@@ -23,6 +23,7 @@ from Noyau.N_CR import CR
 from Noyau.N_Exception import AsException
 from Noyau import N_OBJECT
 from Ihm import I_OBJECT
+from Extensions.i18n import tr
 
 class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     """
@@ -57,7 +58,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         Génère l'objet rapport (classe CR)
         """
         self.cr=CR()
-        if not self.isvalid(): self.cr.warn("Objet commande commentarisé invalide")
+        if not self.isvalid(): self.cr.warn(tr("Objet commande commentarisé invalide"))
         return self.cr
 
     def copy(self):
@@ -186,15 +187,15 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         except Exception,e:
             traceback.print_exc()
             #self.jdc.set_context()
-            raise AsException("Erreur",str(e))
+            raise AsException(tr("Erreur"),e.__str__())
         if len(J.cr.crfatal)>0 :
             # des erreurs fatales ont été rencontrées
             #self.jdc.set_context()
             print 'erreurs fatales !!!'
-            raise AsException("Erreurs fatales",string.join(J.cr.crfatal))
+            raise AsException(tr("Erreurs fatales"),string.join(J.cr.crfatal))
         if not J.etapes :
             # des erreurs ont été rencontrées
-            raise AsException("Impossible reconstruire commande\n",str(J.cr))
+            raise AsException(tr("Impossible reconstruire commande\n"),str(J.cr))
         #self.jdc.set_context()
 
         new_etape = J.etapes[0]

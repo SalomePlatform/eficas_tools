@@ -25,6 +25,9 @@
 """
 import traceback
 import types,string
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
+
 
 from Noyau import N_CR
 from Accas import MCSIMP,MCFACT,MCList
@@ -84,14 +87,14 @@ class IniGenerator:
       sect_defaut=''
       if isinstance(obj,MCList):
         if len(obj.data) > 1:
-          raise "Pas supporté"
+          raise EficasException(tr("Pas supporte"))
         else:
           obj=obj.data[0]
 
       for mocle in obj.mc_liste:
         if isinstance(mocle,MCList):
           if len(mocle.data) > 1:
-            raise "Pas supporté"
+            raise EficasException(tr("Pas supporte"))
           else:
             liste_mcfact.append(self.generMCFACT(mocle.data[0]))
         elif isinstance(mocle,MCFACT):
@@ -99,7 +102,7 @@ class IniGenerator:
         elif isinstance(mocle,MCSIMP):
           sect_defaut=sect_defaut+self.generMCSIMP(mocle)
         else:
-          self.cr.fatal("Entite inconnue ou interdite : "+`mocle`)
+          self.cr.fatal(tr("Entite inconnue ou interdite :%s",`mocle`))
 
       self.text=''
       if sect_defaut != '':
@@ -117,7 +120,7 @@ class IniGenerator:
          if isinstance(mocle,MCSIMP):
             sect_text=sect_text+self.generMCSIMP(mocle)
          else:
-            self.cr.fatal("Entite inconnue ou interdite : "+`mocle`+" Elle est ignorée")
+            self.cr.fatal(tr("Entite inconnue ou interdite :%s. Elle est ignoree",`mocle`))
       return sect_text
 
    def generMCSIMP(self,obj):
@@ -127,13 +130,13 @@ class IniGenerator:
       """
       s=''
       if type(obj.valeur) == types.TupleType :
-         self.cr.fatal("Les tuples ne sont pas supportés pour le format ini : "+ obj.nom)
+         self.cr.fatal(tr("Les tuples ne sont pas supportés pour le format ini :%s ", obj.nom))
          s="%s = %s\n" % (obj.nom,"ERREUR")
       else :
          try:
             s="%s = %s\n" % (obj.nom,obj.valeur)
-         except Exception,e :
-            self.cr.fatal("Type de valeur non supporté par le format ini : "+ obj.nom + '\n'+str(e))
-            s="%s = %s\n" % (obj.nom,"ERREUR")
+         except Exception as e :
+            self.cr.fatal(tr("Type de valeur non supporté par le format ini :%(nom)s\n%(exception)s", \
+                                         {'nom': obj.nom, 'exception': str(e)}))
       return s
 

@@ -31,6 +31,7 @@ import traceback
 # import modules Eficas
 import interpreteur_formule
 from Noyau.N_CR import CR
+from Extensions.i18n import tr
 import parametre
 
 pattern_eval       = re.compile(r'^(EVAL)([ \t\r\f\v]*)\(([\w\W]*)')
@@ -145,7 +146,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     else:
         # pas d'expression EVAL --> self non valide
         if cr == 'oui' : 
-           self.cr.fatal("Le paramètre EVAL %s ne peut valoir None" % self.nom)
+           self.cr.fatal(tr("Le paramètre EVAL %s ne peut valoir None") , self.nom)
         return 0,"Le paramètre EVAL ne peut valoir None"
 
   def verif_nom(self,nom=None,cr='non'):
@@ -159,14 +160,14 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     if not nom :
         nom = self.nom
     if nom == "" :
-        if cr == 'oui' : self.cr.fatal("Pas de nom donné au paramètre EVAL")
+        if cr == 'oui' : self.cr.fatal(tr("Pas de nom donné au paramètre EVAL"))
         return 0,"Pas de nom donné au paramètre EVAL"
     if len(nom) > 8 :
-        if cr == 'oui' : self.cr.fatal("Un nom de paramètre ne peut dépasser 8 caractères")
+        if cr == 'oui' : self.cr.fatal(tr("Un nom de paramètre ne peut dépasser 8 caractères"))
         return 0,"Un nom de paramètre ne peut dépasser 8 caractères"
     sd = self.parent.get_sd_autour_etape(nom,self)
     if sd :
-        if cr == 'oui' : self.cr.fatal("Un concept de nom %s existe déjà !" %nom)
+        if cr == 'oui' : self.cr.fatal(tr("Un concept de nom %s existe déjà !"), nom)
         return 0,"Un concept de nom %s existe déjà !" %nom
     return 1,''
 

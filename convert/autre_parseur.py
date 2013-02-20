@@ -20,6 +20,7 @@
 import sys,string,re,tokenize
 import cStringIO
 
+
 class ENTITE_JDC :
     def __init__(self):
         self.texte = ''
@@ -40,7 +41,7 @@ class COMMENTAIRE(ENTITE_JDC):
         sous une forme interprétable par EFICAS
         """
         t=repr(self.texte)
-        return "COMMENTAIRE("+t+")\n"
+        return "COMMENTAIRE(u"+t+")\n"
 
     def append_text(self,texte):
         """
@@ -321,7 +322,7 @@ class PARSEUR_PYTHON:
            return
 
     def ERRORTOKEN(self, tstring):
-        print "ERRORTOKEN",tstring
+        print "ERRORTOKEN",tstring)
 
     def NAME(self, tstring):
         if self.buffer:

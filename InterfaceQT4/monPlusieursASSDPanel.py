@@ -23,6 +23,8 @@ import string,types,os
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
+
 
 # Modules Eficas
 from monPlusieursIntoPanel import MonPlusieursIntoPanel
@@ -141,9 +143,9 @@ class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
   def BAlphaPressed(self):
       if self.alpha==1 :
          self.alpha=0
-         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Alpha",None,QApplication.UnicodeUTF8))
+         self.BAlpha.setText(tr( "Tri Alpha"))
       else :
          self.alpha=1
-         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Cata",None,QApplication.UnicodeUTF8))
+         self.BAlpha.setText(tr( "Tri Cata"))
       self.DisplayListBoxPossibles()
 

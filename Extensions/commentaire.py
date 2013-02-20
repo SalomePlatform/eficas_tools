@@ -25,6 +25,7 @@
 from Noyau.N_CR import CR
 from Noyau import N_OBJECT
 from Ihm import I_OBJECT
+from Extensions.i18n import tr
 
 class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
   """ 
@@ -142,7 +143,7 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
   def report(self):
     """ Génère l'objet rapport (classe CR) """
     self.cr=CR()
-    if not self.isvalid(): self.cr.warn("Objet commentaire non valorisé")
+    if not self.isvalid(): self.cr.warn(tr("Objet commentaire non valorisé"))
     return self.cr
 
   def ident(self):

@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@ import traceback
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 # Import des panels
 
@@ -61,18 +62,18 @@ class QTPanel:
   def BOkPressed(self):
         """ Impossible d utiliser les vrais labels avec designer ?? """
         label=self.TWChoix.tabText(self.TWChoix.currentIndex())
-        if label==QString("Nouvelle Commande"):
+        if label==tr("Nouvelle Commande"):
            self.DefCmd()
-        if label==QString("Nommer Concept"):
+        if label==tr("Nommer Concept"):
            self.LENomConceptReturnPressed()
-        if label==QString("Ajouter Mot-Clef"):
+        if label==tr("Ajouter Mot-Clef"):
            if self.LBMCPermis.currentItem() == None : return
            self.DefMC(self.LBMCPermis.currentItem())
-        if label==QString("Définition Formule"):
+        if label==tr("Definition Formule"):
            self.BOkPressedFormule()
-        if label==QString("Valeur Parametre"):
+        if label==tr("Valeur Parametre"):
            self.BOkParamPressed()
-        if label==QString("Fichier Include"):
+        if label==tr("Fichier Include"):
            self.BOkIncPressed()
 
   def BParametresPressed(self):
@@ -111,9 +112,9 @@ class QTPanel:
 class QTPanelTBW1(QTPanel):
 # ----------------------- #
   """
-  Classe contenant les méthodes nécessaires a l onglet "Ajouter Mot-Clef"  
-  hérite de QTPanel  # Attention n appelle pas le __init__
-  Gére plus précisement :
+  Classe contenant les methodes necessaires a l onglet "Ajouter Mot-Clef"  
+  herite de QTPanel  # Attention n appelle pas le __init__
+  Gere plus precisement :
   """
   def __init__(self,node, parent = None):
         self.editor    = parent
@@ -127,10 +128,10 @@ class QTPanelTBW1(QTPanel):
   def BAlphaPressed (self):
         if self.node.alpha == 0 :
            self.node.alpha=1
-           self.BAlpha.setText("Tri Cata")
+           self.BAlpha.setText(tr("Tri Cata"))
         else :
            self.node.alpha=0
-           self.BAlpha.setText("Tri Alpha")
+           self.BAlpha.setText(tr("Tri Alpha"))
         self.BuildLBMCPermis()
 
            
@@ -148,7 +149,7 @@ class QTPanelTBW1(QTPanel):
 
 
   def DefMC(self,item):
-        """ On ajoute un mot-clé à  la commande : subnode """
+        """ On ajoute un mot-cle Ã   la commande : subnode """
         name=str(item.text())
         self.editor.init_modif()
         self.node.append_child(name)
@@ -157,9 +158,9 @@ class QTPanelTBW1(QTPanel):
 class QTPanelTBW2(QTPanel):
 # ---------------------------- #
   """
-  Classe contenant les méthodes nécessaires a l onglet "Nouvelle Commande"  
-  hérite de QTPanel  # Attention n appelle pas le __init__
-  Gére plus précisement :
+  Classe contenant les methodes necessaires a l onglet "Nouvelle Commande"  
+  herite de QTPanel  # Attention n appelle pas le __init__
+  Gere plus precisement :
   """
 
   def __init__(self,node, parent = None, racine = 0):
@@ -179,17 +180,17 @@ class QTPanelTBW2(QTPanel):
   def handleCurrentChanged(self):
         try :
           label=self.TWChoix.tabText(self.TWChoix.currentIndex())
-          if label==QString("Nouvelle Commande"):
+          if label==tr("Nouvelle Commande"):
             self.LEFiltre.setFocus()
-          if label==QString("Nommer Concept"):
+          if label==tr("Nommer Concept"):
            self.LENomConcept.setFocus()
-          if label==QString("Définition Formule"):
+          if label==tr("Definition Formule"):
            self.LENomFormule.setFocus()
-          if label==QString("Valeur Parametre"):
+          if label==tr("Valeur Parametre"):
            self.lineEditNom.setFocus()
-          if label==QString("Fichier Include"):
+          if label==tr("Fichier Include"):
            self.LENomFichier.setFocus()
-          if label==QString("Ajouter Mot-Clef"):
+          if label==tr("Ajouter Mot-Clef"):
            self.LBMCPermis.setCurrentItem(self.LBMCPermis.item(0))
         except :
           pass
@@ -291,10 +292,10 @@ class QTPanelTBW3(QTPanel):
 # ---------------------------- #
 
   """
-  Classe contenant les méthodes nécessaires a l onglet "Nommer Concept"  
-  si non réentrant
-  hérite de QTPanel                   # Attention n appelle pas le __init__
-  Gére plus précisement :
+  Classe contenant les methodes necessaires a l onglet "Nommer Concept"  
+  si non reentrant
+  herite de QTPanel                   # Attention n appelle pas le __init__
+  Gere plus precisement :
   """
 
   def __init__(self,node, parent = None):
@@ -318,8 +319,8 @@ class QTPanelTBW3(QTPanel):
         self.Label3.close()
         self.typeConcept.close()
         self.LENomConcept.close()
-        self.Label1.setText(QtGui.QApplication.translate("DUnASSD", "<font size=\"+1\"><p align=\"center\">Structures de données à enrichir\n"
-" par l\'operateur courant :</p></font>", None, QtGui.QApplication.CodecForTr))
+        self.Label1.setText(tr("<font size=\"+1\"><p align=\"center\">Structures de donnees Ã  enrichir\n"
+" par l\'operateur courant :</p></font>"))
         listeNomsSD = self.node.item.get_noms_sd_oper_reentrant()
         for aSD in listeNomsSD:
             self.listBoxASSD.addItem( aSD)
@@ -378,7 +379,7 @@ class ViewText(Ui_dView,QDialog):
         else:
            dir='/tmp'
         fn = QFileDialog.getSaveFileName(None,
-                self.trUtf8("Save File"),
+                tr("Sauvegarder le fichier"),
                 dir)
         if fn.isNull() : return
         ulfile = os.path.abspath(unicode(fn))
@@ -390,8 +391,7 @@ class ViewText(Ui_dView,QDialog):
            f.close()
            return 1
         except IOError, why:
-           QMessageBox.critical(self, self.trUtf8('Save File'),
-                self.trUtf8('The file <b>%1</b> could not be saved.<br>Reason: %2')
-                    .arg(unicode(fn)).arg(str(why)))
+           QMessageBox.critical(self, tr("Sauvegarder le fichier"),
+                tr("Le fichier <b>%(v_1)s</b> n'a pu etre sauvegarde. <br>Raison : %(v_2)s", {'v_1': unicode(fn), 'v_2': unicode(why)}))
            return
 

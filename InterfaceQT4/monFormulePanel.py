@@ -23,6 +23,7 @@
 from desFormule import Ui_DFormule
 from qtCommun import QTPanel
 from qtCommun import QTPanelTBW2
+from Extensions.i18n import tr
 
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
@@ -109,10 +110,10 @@ class MonFormulePanel(DFormule,QTPanelTBW2):
       if nomFormule == '' : return
       test,erreur = self.node.item.verif_nom(nomFormule)
       if test :
-         commentaire=nomFormule+" est un nom valide pour une FORMULE"
+         commentaire=nomFormule+tr(" est un nom valide pour une FORMULE")
          self.editor.affiche_infos(commentaire) 
       else :
-         commentaire=nomFormule+" n'est pas un nom valide pour une FORMULE"
+         commentaire=nomFormule+tr(" n'est pas un nom valide pour une FORMULE")
          self.editor.affiche_infos(commentaire,Qt.red) 
 
   def argsSaisis(self):
@@ -120,10 +121,10 @@ class MonFormulePanel(DFormule,QTPanelTBW2):
       if arguments == '' : return
       test,erreur = self.node.item.verif_arguments(arguments)
       if test:
-         commentaire="Argument(s) valide(s) pour une FORMULE"
+         commentaire=tr("Argument(s) valide(s) pour une FORMULE")
          self.editor.affiche_infos(commentaire) 
       else:
-         commentaire="Argument(s) invalide(s) pour une FORMULE"
+         commentaire=tr("Argument(s) invalide(s) pour une FORMULE")
          self.editor.affiche_infos(commentaire,Qt.red) 
 
   def FormuleSaisie(self):
@@ -134,10 +135,10 @@ class MonFormulePanel(DFormule,QTPanelTBW2):
       test,erreur = self.node.item.verif_formule_python((nomFormule,"REEL",arguments,expression))
 
       if test:
-         commentaire="Corps de FORMULE valide"
+         commentaire=tr("Corps de FORMULE valide")
          self.editor.affiche_infos(commentaire) 
       else:
-         commentaire="Corps de FORMULE invalide"
+         commentaire=tr("Corps de FORMULE invalide")
          self.editor.affiche_infos(commentaire,Qt.red) 
 
 

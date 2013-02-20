@@ -17,6 +17,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from Extensions.i18n import tr
 import CONNECTOR
 import I_MCCOMPO
 import Noyau
@@ -46,7 +47,7 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
     objet = self.parent.get_child(self.nom)
     # objet peut-etre self ou une MCList qui contient self ...
     if objet is None or objet is self:
-      return "Erreur - mclist inexistante: "+self.nom
+     return tr("Erreur - mclist inexistante : %s", self.nom)
 
     try:
       if len(objet) > 1 :
@@ -55,7 +56,7 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
       else:
         return self.nom
     except:
-        return "Erreur - mot clé facteur de nom: "+self.nom
+      return tr("Erreur - mot cle facteur de nom : %s", self.nom)
 
   def init_modif(self):
     """

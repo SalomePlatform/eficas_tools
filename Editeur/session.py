@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -66,6 +66,8 @@ import os,traceback
 import ConfigParser
 import re
 
+from Extensions.i18n import tr
+
 # Les valeurs decodees par optparse sont mises dans un objet dictionnaire-like.
 # On l'utilise comme environnement de session.
 d_env={}
@@ -91,7 +93,7 @@ def check_comm(option, opt_str, value, parser):
        parser.values.studies=[]
        parser.values.comm=[]
     if not os.path.isfile(value):
-       raise OptionValueError("le fichier de commandes %s n'existe pas" % value)
+       raise OptionValueError(tr("le fichier de commandes %s n'existe pas", value))
     parser.values.comm.append(value)
     d_study={"comm":value}
     parser.values.current=d_study
@@ -99,9 +101,9 @@ def check_comm(option, opt_str, value, parser):
 
 def check_poursuite(option, opt_str, value, parser):
     if parser.values.comm is None:
-       raise OptionValueError("un fichier de commandes doit etre defini avant une poursuite %s" % value)
+       raise OptionValueError(tr("un fichier de commandes doit etre defini avant une poursuite %s", value))
     if not os.path.isfile(value):
-       raise OptionValueError("le fichier poursuite %s n'existe pas" % value)
+       raise OptionValueError(tr("le fichier poursuite %s n'existe pas", value))
     #current : fichier de commandes en cours de traitement (dictionnaire des infos)
     comm=parser.values.current
     d_study={"comm":value}
@@ -112,15 +114,15 @@ def check_include(option, opt_str, value, parser):
     try:
        args=[int(parser.rargs[0]),parser.rargs[1]]
     except:
-       raise OptionValueError("include mal defini %s" % parser.rargs[0:2])
+       raise OptionValueError(tr("include mal defini %s", parser.rargs[0:2]))
 
     del parser.rargs[0]
     del parser.rargs[0]
 
     if parser.values.comm is None:
-       raise OptionValueError("un fichier de commandes doit etre defini avant un include %s" % args)
+       raise OptionValueError(tr("un fichier de commandes doit etre defini avant un include %s", args))
     if not os.path.isfile(args[1]):
-       raise OptionValueError("le fichier include %s n'existe pas" % args[1])
+       raise OptionValueError(tr("le fichier include %s n'existe pas", args[1]))
 
     comm=parser.values.current
     comm[args[0]]=args[1]
@@ -130,12 +132,12 @@ def check_jdc(config,jdc,parser,fich):
     """
         Fonction : analyse une section de fichier .ini pour en extraire
         les informations sur les fichiers poursuite et includes
-        définis dans cette section
+        definis dans cette section
 
         parser : objet analyseur de la ligne de commande
         fich : nom du fichier .ini en cours d'analyse
         config : objet de la classe ConfigParser permettant de parser le fichier fich
-        jdc : nom de la section du fichier fich à analyser
+        jdc : nom de la section du fichier fich Ã  analyser
     """
     d_study={}
 
@@ -144,10 +146,14 @@ def check_jdc(config,jdc,parser,fich):
           p=config.get(jdc,"poursuite")
 
           if not config.has_option(p,"comm"):
-             raise OptionValueError("jdc %s manque fichier comm dans section %s" % (fich,p))
+             raise OptionValueError(tr(" jdc %(v_1)s manque \
+                                      fichier comm dans section %(v_2)s", \
+                                      {'v_1': fich, 'v_2': p}))
           comm=config.get(p,"comm")
           if not os.path.isfile(comm):
-             raise OptionValueError("jdc %s, le fichier de commandes %s n'existe pas" % (fich,comm))
+             raise OptionValueError(tr("jdc %(v_1)s, le fichier\
+                                      de commandes %(v_2)s n'existe pas", \
+                                      {'v_1': fich, 'v_2': comm}))
 
           pours=check_jdc(config,p,parser,fich)
           pours["comm"]=comm
@@ -158,10 +164,13 @@ def check_jdc(config,jdc,parser,fich):
           unit=int(o)
           # si le parametre est un entier, il s'agit d'un include
           inc=config.get(jdc,o)
-       except:
+       except EficasException:
           continue
        if not os.path.isfile(inc):
-          raise OptionValueError("jdc %s fichier include %s, %s n'existe pas" % (fich,unit,inc))
+          raise OptionValueError(tr(" jdc %(v_1)s \
+                                   fichier include %(v_2)s, %(v_3)s \
+                                   n'existe pas", \
+                                   {'v_1': fich, 'v_2': unit, 'v_3': inc}))
        d_study[unit]=inc
 
     return d_study
@@ -172,11 +181,11 @@ def check_fich(option, opt_str, fich, parser):
         
         option : option en cours de traitement
         opt_str : chaine de caracteres utilisee par l'utilisateur
-        fich : nom du fichier .ini donné par l'utilisateur
+        fich : nom du fichier .ini donne par l'utilisateur
         parser : objet parseur des options de la ligne de commande
     """
     if not os.path.isfile(fich):
-       raise OptionValueError("le fichier jdc %s n'existe pas" % fich)
+       raise OptionValueError(tr(" le fichier jdc %s n'existe pas", fich))
     if parser.values.fich is None:
        parser.values.fich=[]
     parser.values.fich.append(fich)
@@ -185,15 +194,17 @@ def check_fich(option, opt_str, fich, parser):
        parser.values.comm=[]
     config = ConfigParser.ConfigParser()
     config.read([fich])
-    if not config.has_option("jdc","jdc"):
-       raise OptionValueError("jdc %s manque option jdc dans section jdc")
-    jdc=config.get("jdc","jdc")
+    if not config.has_option(u"jdc","jdc"):
+       raise OptionValueError(tr(" jdc %s manque option jdc dans section jdc", fich))
+    jdc=config.get(u"jdc","jdc")
 
     if not config.has_option(jdc,"comm"):
-       raise OptionValueError("jdc %s manque fichier comm dans section %s" % (fich,jdc))
+       raise OptionValueError(tr(" jdc %(v_1)s manque fichier comm \
+                                dans section %(v_2)s", {'v_1': fich, 'v_2': jdc}))
     comm=config.get(jdc,"comm")
     if not os.path.isfile(comm):
-       raise OptionValueError("jdc %s, le fichier de commandes %s n'existe pas" % (fich,comm))
+       raise OptionValueError(tr("jdc %(v_1)s, le fichier de commandes \
+                                %(v_2)s n'existe pas", {'v_1': fich, 'v_2': comm}))
     parser.values.comm.append(comm)
 
     d_study=check_jdc(config,jdc,parser,fich)
@@ -203,54 +214,57 @@ def check_fich(option, opt_str, fich, parser):
 def print_pours(d_pours,dec=''):
     # Les fichiers includes d'abord
     for k,v in d_pours.items():
-       if k in ("pours","comm"):continue
-       print dec+" include",k," :",v
+       if k in (u"pours","comm"):continue
+       print tr("%(v_1)s include %(v_2)s : %(v_3)s", {'v_1': str(dec), 'v_2': str(k), 'v_3': str(v)})
 
-    if d_pours.has_key("pours"):
+    if d_pours.has_key(u"pours"):
        # Description de la poursuite
-       print dec+" fichier poursuite:",d_pours["pours"]["comm"]
+       print tr("%(v_1)s fichier poursuite: %(v_2)s", {'v_1': dec, 'v_2': d_pours["pours"]["comm"]})
        print_pours(d_pours["pours"],dec=dec+"++")
 
 def print_d_env():
     #print d_env
     if d_env.studies is None:return
     for study in d_env.studies:
-       print "nom etude:",study["comm"]
+       print tr("nom etude : %s", study["comm"])
        print_pours(study,dec="++")
        print
 
 def create_parser():
     # creation du parser des options de la ligne de commande
     #import prefs
-    parser=optparse.OptionParser(usage="usage: %prog [options]",version="%prog 1.13")
+    parser=optparse.OptionParser(usage=tr("utilisation : %prog [options]"), version="%prog 1.13")
 
-    parser.add_option("-j","--jdc",dest="comm",type='string',
+    parser.add_option(u"-j","--jdc",dest="comm",type='string',
                     action="callback",callback=check_comm,
-                    help="nom du fichier de commandes")
+                    help=tr("nom du fichier de commandes"))
 
-    parser.add_option("-p","--poursuite", type="string",dest="pours",
+    parser.add_option(u"-p","--poursuite", type="string",dest="pours",
                   action="callback", callback=check_poursuite,
-                  help="nom du fichier poursuite")
+                  help=tr("nom du fichier poursuite"))
 
-    parser.add_option("-i","--include", 
+    parser.add_option(u"-i","--include", 
                   action="callback", callback=check_include,
-                  nargs=2, help="numero d'unite suivi du nom du fichier include")
+                  nargs=2, help=tr("numero d'unite suivi du nom du fichier include"))
 
-    parser.add_option("-f","--fich", type="string",dest="fich",
+    parser.add_option(u"-f","--fich", type="string",dest="fich",
                   action="callback", callback=check_fich,
-                  help="fichier decrivant une etude")
+                  help=tr("fichier decrivant une etude"))
 
-    parser.add_option("-c","--cata", action="store", type="string",dest="cata",
-                  help="version de catalogue a utiliser")
+    parser.add_option(u"-c","--cata", action="store", type="string",dest="cata",
+                  help=tr("version de catalogue Ã  utiliser"))
 
-    parser.add_option("-k","--kode", action="store", type="string",dest="code",
-                  help="nom du code a utiliser")
+    parser.add_option(u"-k","--kode", action="store", type="string",dest="code",
+                  help=tr("nom du code Ã  utiliser"))
 
-    parser.add_option("-d","--debug", action="store", type="int",dest="debug",
-                  help="niveau de debug")
+    parser.add_option(u"-d","--debug", action="store", type="int",dest="debug",
+                  help=tr("niveau de debug"))
 
-    parser.add_option("-s","--schema", action="store", type="string",dest="ssCode",
-                  help="schema")
+    parser.add_option(u"-s","--schema", action="store", type="string",dest="ssCode",
+                  help=tr("schema"))
+    # To handle locale information
+    parser.add_option("-l", "--locale", action="store", type="string", dest="locale",
+                  help=tr("localisation de l'application, pour la traduction"))
 
 
     return parser
@@ -265,7 +279,6 @@ def parse(args):
        del parser.values.current
     except:
        pass
-
     for file in args:
          if os.path.isfile(file):
             options.comm.append(file)
@@ -275,11 +288,13 @@ def parse(args):
                 f=open(file,'w')
                 f.close()
             except :
-                parser.error("incorrect number of arguments")
+                parser.error(tr("Nombre incorrect d'arguments"))
             options.comm.append(file)
             options.studies.append({"comm":file})
+         elif len(args) == 1 and options.locale:
+            print tr("Localisation specifiee pour l'application.")
          else:
-            parser.error("incorrect number of arguments")
+            parser.error(tr("Nombre incorrect d'arguments"))
 
     global d_env
     d_env=options
@@ -289,7 +304,7 @@ def parse(args):
 def get_unit(d_study,appli):
     """
        Fonction : construit et retourne un dictionnaire contenant les informations
-       sur les fichiers poursuite et includes sous la forme adaptée
+       sur les fichiers poursuite et includes sous la forme adaptee
        pour EFICAS ::
 
                   [None : nom_fichier, texte_source, unites_associees,           # poursuite
@@ -303,7 +318,7 @@ def get_unit(d_study,appli):
 
 def get_dunit(d_unit,appli):
     d={}
-    if d_unit.has_key("pours"):
+    if d_unit.has_key(u"pours"):
        # on a une poursuite
        comm=d_unit["pours"]["comm"]
        g=get_dunit(d_unit["pours"],appli)
@@ -311,7 +326,7 @@ def get_dunit(d_unit,appli):
        d[None]=comm,text,g
 
     for k,v in d_unit.items():
-       if k in ("pours","comm"): continue
+       if k in (u"pours","comm"): continue
        text=appli.get_source(v)
        d[k]=v,text,d
 

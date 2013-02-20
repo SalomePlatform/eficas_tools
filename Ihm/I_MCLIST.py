@@ -18,6 +18,8 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 import types,traceback
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 from copy import copy
 import CONNECTOR
 
@@ -89,10 +91,11 @@ class MCList:
       """
       if type(obj)==types.StringType :
          # on est en mode création d'un motcle
-         raise "traitement non prevu"
+                  raise EficasException(tr("traitement non-prevu"))
 
       if not self.ajout_possible():
-         self.jdc.appli.affiche_alerte("Erreur","L'objet %s ne peut pas être ajouté" % obj.nom)
+         self.jdc.appli.affiche_alerte(tr("Erreur"),
+                                       tr("L'objet %s ne peut pas etre ajoute", obj.nom))
          return None
 
       if self.nom != obj.nom:

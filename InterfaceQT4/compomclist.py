@@ -24,10 +24,10 @@ import traceback
 import compofact
 import browser
 import typeNode
+from Extensions.i18n import tr
 
 from Editeur     import Objecttreeitem
 from Noyau.N_OBJECT import ErrorObj
-#import compoerror
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
@@ -211,7 +211,7 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
            self.appli.affiche_infos(message)
            return 1
         else:
-           self.appli.affiche_infos('Impossible de supprimer ce mot-clef',Qt.red)
+           self.appli.affiche_infos(tr('Impossible de supprimer ce mot-clef'),Qt.red)
            return 0
 
             

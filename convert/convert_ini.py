@@ -31,6 +31,9 @@ import traceback
 
 from ConfigParser import ConfigParser
 from Noyau import N_CR
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
+
 
 def entryPoint():
    """
@@ -75,7 +78,7 @@ class IniParser(ConfigParser):
       try:
          self.read(filename)
       except Exception,e:
-         self.cr.fatal(str(e))
+         self.cr.fatal(tr("lecture du fichier impossible :%s",str(e)))
 
    def convert(self,outformat,appli=None):
       if outformat == 'eval':
@@ -83,7 +86,8 @@ class IniParser(ConfigParser):
       elif outformat == 'dict':
          return self.getdict()
       else:
-         raise "Format de sortie : %s, non supporté"
+        raise ExceptionException("Format de sortie : %s, non supporte", outformat)
+
 
    def getdicttext(self):
       s='{'

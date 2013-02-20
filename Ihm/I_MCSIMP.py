@@ -21,6 +21,8 @@ import types,string
 import traceback
 from copy import copy
 from repr import Repr
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 myrepr = Repr()
 myrepr.maxstring = 100
 myrepr.maxother = 100
@@ -29,14 +31,14 @@ from Noyau.N_utils import repr_float
 import Validation
 import CONNECTOR
 
-# Attention : les classes ASSD,.... peuvent etre surchargées
-# dans le package Accas. Il faut donc prendre des précautions si
+# Attention : les classes ASSD,.... peuvent etre surchargees
+# dans le package Accas. Il faut donc prendre des precautions si
 # on utilise les classes du Noyau pour faire des tests (isxxxx, ...)
-# Si on veut créer des objets comme des CO avec les classes du noyau
+# Si on veut creer des objets comme des CO avec les classes du noyau
 # ils n'auront pas les conportements des autres packages (pb!!!)
-# Il vaut mieux les importer d'Accas mais problème d'import circulaire,
-# on ne peut pas les importer au début.
-# On fait donc un import local quand c'est nécessaire (peut occasionner
+# Il vaut mieux les importer d'Accas mais probleme d'import circulaire,
+# on ne peut pas les importer au debut.
+# On fait donc un import local quand c'est necessaire (peut occasionner
 # des pbs de prformance).
 from Noyau.N_ASSD import ASSD,assd
 from Noyau.N_GEOM import GEOM,geom
@@ -79,14 +81,14 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def GetText(self):
     """
-        Retourne le texte a afficher dans l'arbre représentant la valeur de l'objet
-        pointé par self
+        Retourne le texte a afficher dans l'arbre representant la valeur de l'objet
+        pointe par self
     """
 
     if self.valeur == None : 
       return None
     elif type(self.valeur) == types.FloatType : 
-      # Traitement d'un flottant isolé
+      # Traitement d'un flottant isole
       txt = str(self.valeur)
       clefobj=self.GetNomConcept()
       if self.jdc.appli.appliEficas.dict_reels.has_key(clefobj):
@@ -127,7 +129,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def getval(self):
     """ 
-       Retourne une chaîne de caractère représentant la valeur de self 
+       Retourne une chaine de caractere representant la valeur de self 
     """
     val=self.valeur
     if type(val) == types.FloatType : 
@@ -152,7 +154,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def wait_co(self):
     """
-        Méthode booléenne qui retourne 1 si l'objet attend un objet ASSD 
+        Methode booleenne qui retourne 1 si l'objet attend un objet ASSD 
         qui n'existe pas encore (type CO()), 0 sinon
     """
     for typ in self.definition.type:
@@ -163,8 +165,8 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def wait_assd(self):
     """ 
-        Méthode booléenne qui retourne 1 si le MCS attend un objet de type ASSD 
-        ou dérivé, 0 sinon
+        Methode booleenne qui retourne 1 si le MCS attend un objet de type ASSD 
+        ou derive, 0 sinon
     """
     for typ in self.definition.type:
       if type(typ) == types.ClassType or isinstance(typ,type):
@@ -174,7 +176,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def wait_assd_or_geom(self):
     """ 
-         Retourne 1 si le mot-clé simple attend un objet de type
+         Retourne 1 si le mot-cle simple attend un objet de type
          assd, ASSD, geom ou GEOM
          Retourne 0 dans le cas contraire
     """
@@ -186,7 +188,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def wait_geom(self):
     """ 
-         Retourne 1 si le mot-clé simple attend un objet de type GEOM
+         Retourne 1 si le mot-cle simple attend un objet de type GEOM
          Retourne 0 dans le cas contraire
     """
     for typ in self.definition.type:
@@ -197,7 +199,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def wait_TXM(self):
     """ 
-         Retourne 1 si le mot-clé simple attend un objet de type TXM
+         Retourne 1 si le mot-cle simple attend un objet de type TXM
          Retourne 0 dans le cas contraire
     """
     for typ in self.definition.type:
@@ -227,7 +229,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       lval=listProto.adapt(valeur)
       if lval is None:
          valid=0
-         mess="None n'est pas une valeur autorisée"
+         mess=tr("None n'est pas une valeur autorisee")
       else:
          try:
             for val in lval:
@@ -237,7 +239,7 @@ class MCSIMP(I_OBJECT.OBJECT):
             if self.definition.validators:
                 self.definition.validators.convert(lval)
             valid,mess=1,""
-         except ValError,e:
+         except ValError as e:
             mess=str(e)
             valid=0
       return valid,mess
@@ -260,10 +262,10 @@ class MCSIMP(I_OBJECT.OBJECT):
           for val in new_valeur:
               self.typeProto.adapt(val)
               self.intoProto.adapt(val)
-              #on ne verifie pas la cardinalité
+              #on ne verifie pas la cardinalite
               if self.definition.validators:
                   validite=self.definition.validators.valide_liste_partielle(new_valeur)
-      except ValError,e:
+      except ValError as e:
           validite=0
 
       return validite
@@ -290,8 +292,8 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def eval_valeur(self,new_valeur):
     """
-        Essaie d'évaluer new_valeur comme une SD, une déclaration Python 
-        ou un EVAL: Retourne la valeur évaluée (ou None) et le test de réussite (1 ou 0)
+        Essaie d'evaluer new_valeur comme une SD, une declaration Python 
+        ou un EVAL: Retourne la valeur evaluee (ou None) et le test de reussite (1 ou 0)
     """
     sd = self.jdc.get_sd_avant_etape(new_valeur,self.etape)
     #sd = self.jdc.get_contexte_avant(self.etape).get(new_valeur,None)
@@ -359,7 +361,7 @@ class MCSIMP(I_OBJECT.OBJECT):
   def cherche_item_parametre (self,new_valeur):
         try:
           nomparam=new_valeur[0:new_valeur.find("[")]
-          indice=new_valeur[new_valeur.find("[")+1:new_valeur.find("]")]
+          indice=new_valeur[new_valeur.find(u"[")+1:new_valeur.find(u"]")]
           for p in self.jdc.params:
              if p.nom == nomparam :
                 if int(indice) < len(p.get_valeurs()):
@@ -417,7 +419,7 @@ class MCSIMP(I_OBJECT.OBJECT):
   def replace_concept(self,old_sd,sd):
     """
         Inputs :
-           - old_sd=concept remplacé
+           - old_sd=concept remplace
            - sd=nouveau concept
         Fonction :
         Met a jour la valeur du mot cle simple suite au remplacement 
@@ -453,18 +455,18 @@ class MCSIMP(I_OBJECT.OBJECT):
       if nom_co == None or nom_co == '':
          new_objet=None
       else:
-         # Avant de créer un concept il faut s'assurer du contexte : step 
+         # Avant de creer un concept il faut s'assurer du contexte : step 
          # courant
          sd= step.get_sd_autour_etape(nom_co,self.etape,avec='oui')
          if sd:
-            # Si un concept du meme nom existe deja dans la portée de l'étape
-            # on ne crée pas le concept
-            return 0,"un concept de meme nom existe deja"
-         # Il n'existe pas de concept de meme nom. On peut donc le créer 
-         # Il faut néanmoins que la méthode NommerSdProd de step gère les 
+            # Si un concept du meme nom existe deja dans la portee de l'etape
+            # on ne cree pas le concept
+            return 0,tr("un concept de meme nom existe deja")
+         # Il n'existe pas de concept de meme nom. On peut donc le creer 
+         # Il faut neanmoins que la methode NommerSdProd de step gere les 
          # contextes en mode editeur
-         # Normalement la méthode  du Noyau doit etre surchargée
-         # On déclare l'étape du mot clé comme etape courante pour NommerSdprod
+         # Normalement la methode  du Noyau doit etre surchargee
+         # On declare l'etape du mot cle comme etape courante pour NommerSdprod
          cs= CONTEXT.get_current_step()
          CONTEXT.unset_current_step()
          CONTEXT.set_current_step(step)
@@ -481,12 +483,12 @@ class MCSIMP(I_OBJECT.OBJECT):
       self.fin_modif()
       step.reset_context()
       #print "set_valeur_co",new_objet
-      return 1,"Concept créé"
+      return 1,tr("Concept cree")
         
   def verif_existence_sd(self):
      """
-        Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-        avant étape, sinon enlève la référea ces concepts
+        Verifie que les structures de donnees utilisees dans self existent bien dans le contexte
+        avant etape, sinon enleve la referea ces concepts
      """
      #print "verif_existence_sd"
      # Attention : possible probleme avec include
@@ -521,7 +523,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def get_type(self):
      """
-     Retourne le type attendu par le mot-clé simple
+     Retourne le type attendu par le mot-cle simple
      """
      return self.definition.type
 
@@ -537,7 +539,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def update_mc_global(self):
      """
-        Met a jour les mots cles globaux enregistrés dans l'étape parente
+        Met a jour les mots cles globaux enregistres dans l'etape parente
         et dans le jdc parent.
         Un mot cle simple peut etre global. 
      """
@@ -556,17 +558,17 @@ class MCSIMP(I_OBJECT.OBJECT):
      return 0
 
   def valide_item(self,item):
-      """Valide un item isolé. Cet item est candidata l'ajout a la liste existante"""
+      """Valide un item isole. Cet item est candidata l'ajout a la liste existante"""
       valid=1
       try:
           #on verifie le type
           self.typeProto.adapt(item)
           #on verifie les choix possibles
           self.intoProto.adapt(item)
-          #on ne verifie pas la cardinalité
+          #on ne verifie pas la cardinalite
           if self.definition.validators:
               valid=self.definition.validators.verif_item(item)
-      except ValError,e:
+      except ValError as e:
           #traceback.print_exc()
           valid=0
       return valid
@@ -578,14 +580,14 @@ class MCSIMP(I_OBJECT.OBJECT):
           self.typeProto.adapt(item)
           #on verifie les choix possibles
           self.intoProto.adapt(item)
-          #on ne verifie pas la cardinalité mais on verifie les validateurs
+          #on ne verifie pas la cardinalite mais on verifie les validateurs
           if self.definition.validators:
               valid=self.definition.validators.verif_item(item)
           comment=""
           valid=1
-      except ValError,e:
+      except ValError as e:
           #traceback.print_exc()
-          comment=unicode(e)
+          comment=tr(e.__str__())
           valid=0
       return valid,comment
 
@@ -608,7 +610,8 @@ class MCSIMP(I_OBJECT.OBJECT):
        #else :
             pass
        if cr == 'oui' :
-          self.cr.fatal("La matrice n est pas une matrice "+str(self.monType.nbLigs)+","+str(self.monType.nbCols))
+             self.cr.fatal(tr("La matrice n'est pas une matrice %(n_lign)d sur %(n_col)d", \
+             {'n_lign': self.monType.nbLigs, 'n_col': self.monType.nbCols}))
        self.set_valid(0)
        return 0
 

@@ -25,6 +25,7 @@ import os, sys, string, types, re
 import traceback
 from PyQt4.QtGui import QMessageBox
 from  Editeur.utils import read_file
+from Extensions.i18n import tr
 
 class CONFIG_BASE:
 
@@ -112,8 +113,8 @@ class CONFIG_BASE:
       try:
          exec txt in d
       except :
-         QMessageBox.critical( None, "Import du fichier de Configuration", 
-			"Erreur a la lecture du fichier de configuration " + fic_ini_integrateur)
+         QMessageBox.critical( None, tr("Import du fichier de Configuration"), 
+			tr("Erreur a la lecture du fichier de configuration %s " , fic_ini_integrateur))
          return
       self.labels_eficas.append('rep_aide')
       for k in self.labels_eficas :
@@ -141,8 +142,8 @@ class CONFIG_BASE:
          exec txt in d
       except :
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-         QMessageBox.critical( None, "Import du fichier de Configuration", 
-			"Erreur a la lecture du fichier de configuration " + self.fic_ini_utilisateur )
+         QMessageBox.critical( None, tr("Import du fichier de Configuration"), 
+			tr("Erreur a la lecture du fichier de configuration %s " , fic_ini_integrateur))
       for k in self.labels_user :
          try :
             setattr(self,k,d[k])

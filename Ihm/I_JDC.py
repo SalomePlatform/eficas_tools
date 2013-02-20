@@ -22,6 +22,9 @@
 # Modules Python
 import types,traceback,sys,os
 import string,linecache
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
+
 
 # Modules Eficas
 import I_OBJECT
@@ -244,8 +247,7 @@ class JDC(I_OBJECT.OBJECT):
         return objet
       else :
         # On veut ajouter une nouvelle commande
-        #try:
-        if 1 :
+        try:
           self.set_current_step()
           cmd=self.get_cmd(name)
           # L'appel a make_objet n'a pas pour effet d'enregistrer l'etape
@@ -261,12 +263,12 @@ class JDC(I_OBJECT.OBJECT):
           CONNECTOR.Emit(self,"add",e)
           self.fin_modif()
           return e
-        #except AsException,e:
+        except AsException,e:
           self.reset_current_step()
           self.editmode=0
-          raise AsException("Impossible d ajouter la commande "+name + '\n' +str(e))
-        #except:
-        else :
+          raise AsException(tr("Impossible d'ajouter la commande")+name + '\n')
+        except:
+        #else :
           traceback.print_exc()
           self.reset_current_step()
           self.editmode=0
@@ -580,11 +582,11 @@ class JDC(I_OBJECT.OBJECT):
 
    def deep_update_condition_bloc(self):
       # pour le moment, on ne fait rien
-      raise "Not implemented"
+      raise EficasException(tr("Pas implemente"))
 
    def update_condition_bloc(self):
       # pour le moment, on ne fait rien
-      raise "Not implemented"
+      raise EficasException(tr("Pas implemente"))
 
    def get_liste_mc_inconnus(self):
      """
@@ -679,7 +681,7 @@ class JDC(I_OBJECT.OBJECT):
 
       o=self.sds_dict.get(sd.nom,None)
       if isinstance(o,ASSD):
-         raise AsException("Nom de concept deja defini : %s" % sd.nom)
+         raise AsException(tr("Nom de concept deja defini "+ sd.nom))
       self.sds_dict[sd.nom]=sd
       self.g_context[sd.nom] = sd
       #if sd not in self.sds : self.sds.append(sd)
@@ -854,7 +856,7 @@ class JDC(I_OBJECT.OBJECT):
          o=self.sds_dict.get(sdnom,None)
 
       if isinstance(o,ASSD):
-         raise AsException("Nom de concept deja defini : %s" % sdnom)
+         raise AsException(tr(" Nom de concept deja  defini : "+ sdnom))
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
       # Ajoute a la creation (appel de reg_sd).
@@ -894,13 +896,12 @@ class JDC(I_OBJECT.OBJECT):
       else:
          file = None
          if unite != None:
-            if os.path.exists("fort."+str(unite)):
+            if os.path.exists(u"fort."+str(unite)):
                file= "fort."+str(unite)
          if file == None :
-            raise AsException("Impossible de trouver le fichier correspondant"
-                               " a l unite %s" % unite)
+            raise AsException(tr("Impossible de trouver le fichier correspondant a l'unite "+str( unite)))
          if not os.path.exists(file):
-            raise AsException("%s n'est pas un fichier existant" % unite)
+            raise AsException(str(unite)+ tr(" n'est pas un fichier existant"))
          fproc=open(file,'r')
          text=fproc.read()
          fproc.close()

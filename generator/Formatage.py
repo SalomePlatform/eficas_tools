@@ -23,6 +23,7 @@
     jeu de commandes en un texte présentable
 """
 import types,string,re
+from Extensions.i18n import tr
 
 class Formatage :
   """ 
@@ -121,12 +122,12 @@ class Formatage :
         # on écrit son nom (element[0])
         longueur = self.longueur(self.texte_etape)
         try:
-          increment = len(('\n'+self.indent_courant*' ')*ind + element[0])
+          increment = len((u'\n'+self.indent_courant*' ')*ind + element[0])
         except:
-          print 'ERREUR'
+          print tr('ERREUR')
           print liste
           print element
-        self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind + element[0]
+        self.texte_etape = self.texte_etape + (u'\n'+self.indent_courant*' ')*ind + element[0]
         length = len(self.indent)
         self.indent.insert(length,self.indent[length-1]+len(element[0]))
         self.indent_courant = self.indent[length]
@@ -199,17 +200,16 @@ class Formatage :
                     numident=s_mcsimp.find("=")+2
                     txt=l
                  else :
-                    txt=txt+('\n'+self.indent_courant*' '+numident*' ')*ind+l
+                    txt=txt+(u'\n'+self.indent_courant*' '+numident*' ')*ind+l
               s_mcsimp = txt
       else : 
           bool_fonction=0
       longueur = self.longueur(self.texte_etape)
-      increment = len(('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp))
-      #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
+      increment = len((u'\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp))
       if (bool_fonction == 1 ) :
           self.texte_etape = self.texte_etape+'\n'+self.indent_courant*' ' +s_mcsimp
       elif ( ((1-ind)*longueur+increment) <= self.l_max ) :
-          self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
+          self.texte_etape = self.texte_etape + (u'\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
       else :
           # il faut couper ...
           nom,valeur = string.split(s_mcsimp,self.sep,1)
@@ -240,8 +240,7 @@ class Formatage :
       s=texte + label
       longueur = len(increment + label)
 
-      if ('(' not in valeur) or (valeur[0:3]=='"""'):
-#      if ('(' not in valeur):
+      if (u'(u' not in valeur) or (valeur[0:3]=='"""'):
         # il s'agit d'une vraie chaîne de caractères
         val = len(valeur)
         texte = (self.l_max-2-val)*' '+valeur
@@ -250,7 +249,7 @@ class Formatage :
       elif ',' in valeur:
         # il s'agit d'une liste de tuple
         # c est trop complique on ne splitte pas
-        if valeur[0:2]=='((' or valeur[0:2]=='[(': 
+        if valeur[0:2]=='((u' or valeur[0:2]=='[(u':
            s=s+valeur
            return s
         # il s'agit d'une liste

@@ -23,6 +23,7 @@ from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
 import browser
 import typeNode
+from Extensions.i18n import tr
 
 
 from Editeur import Objecttreeitem
@@ -50,11 +51,11 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def GetLabelText(self):
       """ Retourne 3 valeurs :
-        - le texte à afficher dans le noeud représentant l'item
+        - le texte à afficher dans le noeud representant l'item
         - la fonte dans laquelle afficher ce texte
         - la couleur du texte
       """
-      # None --> fonte et couleur par défaut
+      # None --> fonte et couleur par defaut
       return self.object.getlabeltext(),None,None
 
   def isvalid(self):
@@ -116,15 +117,15 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       itemobject=item.getObject()
       if itemobject.isoblig() :
-         self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ',Qt.red)
+         self.appli.affiche_infos(tr('Impossible de supprimer un mot-cle obligatoire '),Qt.red)
          return 0
 
       if self.object.suppentite(itemobject):
-         message = "Mot-clé " + itemobject.nom + " supprimé"
+         message = tr("Mot-cle %s supprime", unicode(itemobject.nom))
          self.appli.affiche_infos(message)
          return 1
       else:
-         self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-clé',Qt.red)
+         self.appli.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-cle'),Qt.red)
          return 0
 
 import Accas

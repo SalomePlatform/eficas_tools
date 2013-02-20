@@ -27,6 +27,7 @@ from qtCommun import QTPanelTBW2
 from qtCommun import QTPanelTBW3
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 from  desInclude import Ui_DInc1
 import convert
@@ -83,7 +84,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
         self.TWChoix.removeTab(2)
         self.TWChoix.setCurrentIndex(2)
         if self.parentQT.appliEficas.code!="Aster" :
-           self.textLabelbad.setText("La commande Include n a pas encore de fichier associe")
+           self.textLabelbad.setText(tr("La commande Include n a pas encore de fichier associe"))
 
   def BBrowsePressed(self):
       self.node.makeEdit()
@@ -94,7 +95,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
   def LENomFichReturnPressed(self):
         nomFichier=str(self.LENomFichier.text())
         if not os.path.isfile(nomFichier) :
-           commentaire = "Fichier introuvable"
+           commentaire = tr("Fichier introuvable")
            self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
            self.editor.affiche_infos(commentaire,Qt.red)
            return
@@ -109,13 +110,13 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
 
         try :
            self.node.item.object.change_fichier_init(nomFichier,text)
-           commentaire = "Fichier modifie  : " + self.node.item.get_nom()
+           commentaire = tr("Fichier modifie  :")  + self.node.item.get_nom()
            self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
            self.editor.affiche_infos(commentaire)
         except: 
            l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
-           QMessageBox.critical( self, "Erreur fatale au chargement du fichier Include", l[0])
-           commentaire = "Fichier invalide" 
+           QMessageBox.critical( self, tr("Erreur fatale au chargement du fichier Include"), l[0])
+           commentaire = tr("Fichier invalide" )
            self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
            self.editor.affiche_infos(commentaire,Qt.red)
            return
@@ -133,7 +134,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
           p.readfile(file)
           text=p.convert('execnoparseur')
        else :
-           commentaire = "Impossible de lire le fichier : Format inconnu"
+           commentaire = tr("Impossible de lire le fichier : Format inconnu")
            self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
            self.editor.affiche_infos(commentaire,Qt.red)
        return text
@@ -142,9 +143,9 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
   def BChangeFilePressed(self):
       userDir=self.node.appliEficas.CONFIGURATION.savedir
       fn = QFileDialog.getOpenFileName(self.node.appliEficas,
-                self.node.appliEficas.trUtf8('Fichier Include'),
+                tr('Fichier Include'),
                 userDir,
-                self.node.appliEficas.trUtf8('All Files (*);;''JDC Files (*.comm);;'))
+                tr('Tous les Fichiers (*);;''Fichiers JDC  (*.comm);;'))
 
       if fn.isNull():
          return

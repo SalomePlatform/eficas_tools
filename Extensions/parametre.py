@@ -36,6 +36,7 @@ from Noyau import N_OBJECT
 from Ihm import I_OBJECT
 from param2 import *
 from Ihm import CONNECTOR
+from Extensions.i18n import tr
 
 class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   """
@@ -183,12 +184,12 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     if self.nom == '' :
         if cr == 'oui':
-           self.cr.fatal("Pas de nom donné au paramètre ")
+           self.cr.fatal(tr("Pas de nom donné au paramètre "))
         return 0
     else:
         if self.valeur == None :
             if cr == 'oui' : 
-               self.cr.fatal("Le paramètre %s ne peut valoir None" % self.nom)
+               self.cr.fatal(tr("Le paramètre %s ne peut valoir None" , self.nom))
             return 0
     return 1
 

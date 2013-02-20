@@ -25,6 +25,8 @@ from PyQt4.QtCore import *
 from myMain import Ui_Eficas
 from viewManager import MyTabview
 
+from Extensions.i18n import tr
+
 from Editeur import session
 
 
@@ -63,7 +65,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ajoutIcones()
 
         self.viewmanager = MyTabview(self) 
-        self.recentMenu=self.menuFichier.addMenu(self.trUtf8('&Recents'))
+        self.recentMenu=self.menuFichier.addMenu(tr('&Recents'))
         self.connecterSignaux() 
         if self.code != None : self.construitMenu()
 
@@ -126,7 +128,7 @@ class Appli(Ui_Eficas,QMainWindow):
         if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'rep_aide') : self.docPath=self.CONFIGURATION.rep_aide
         fileName='eficas_'+str(self.code)+'.adp'
         self.fileDoc=os.path.join(self.docPath,fileName)
-        self.actionCode.setText("Aide spécifique "+str(self.code))
+        self.actionCode.setText(tr("Aide spécifique ")+str(self.code))
         if not os.path.isfile(self.fileDoc) : 
                self.fileDoc=""
                self.docPath=""
@@ -137,7 +139,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuAide.addAction(self.actionCode)
 
     def MAP(self):
-        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.menuExecution = self.menubar.addMenu(Application.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
         self.actionExecution = QAction(self)
         icon6 = QIcon(self.RepIcon+"/compute.png")
         self.actionExecution.setIcon(icon6)
@@ -154,12 +156,12 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuTraduction.addAction(self.actionTraduitV7V8)
         self.menuTraduction.addAction(self.actionTraduitV8V9)
         self.menuTraduction.addAction(self.actionTraduitV9V10)
-        self.menuTraduction.setTitle(QApplication.translate("Eficas", "Traduction", None, QApplication.UnicodeUTF8))
+        self.menuTraduction.setTitle(tr("Traduction"))
 
         self.menuOptions = self.menubar.addMenu("menuOptions")
         self.menuOptions.addAction(self.actionParametres_Eficas)
         self.menuOptions.addAction(self.actionLecteur_Pdf)
-        self.menuOptions.setTitle(QApplication.translate("Eficas", "Options", None,QApplication.UnicodeUTF8))
+        self.menuOptions.setTitle(tr("Options"))
 
     def CARMEL3D(self):
         #if self.salome == 0 : return
@@ -240,9 +242,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionTraduitV8V9.setObjectName("actionTraduitV8V9")
         self.actionTraduitV9V10 = QAction(self)
         self.actionTraduitV9V10.setObjectName("actionTraduitV9V10")
-        self.actionTraduitV7V8.setText(QApplication.translate("Eficas","TraduitV7V8", None, QApplication.UnicodeUTF8))
-        self.actionTraduitV8V9.setText(QApplication.translate("Eficas","TraduitV8V9", None, QApplication.UnicodeUTF8))
-        self.actionTraduitV9V10.setText(QApplication.translate("Eficas","TraduitV9V10", None, QApplication.UnicodeUTF8))
+        self.actionTraduitV7V8.setText(tr("TraduitV7V8"))
+        self.actionTraduitV8V9.setText(tr("TraduitV8V9"))
+        self.actionTraduitV9V10.setText(tr("TraduitV9V10"))
         self.connect(self.actionParametres_Eficas,SIGNAL("activated()"),self.optionEditeur)
         self.connect(self.actionLecteur_Pdf,SIGNAL("activated()"),self.optionPdf)
         self.connect(self.actionTraduitV7V8,SIGNAL("activated()"),self.traductionV7V8)
@@ -251,12 +253,12 @@ class Appli(Ui_Eficas,QMainWindow):
 
         # Pour Carmel
         self.actionChercheGrpMaille = QAction(self)
-        self.actionChercheGrpMaille.setText("Acquiert Groupe Maille")
+        self.actionChercheGrpMaille.setText(tr("Acquiert Groupe Maille"))
         self.connect(self.actionChercheGrpMaille,SIGNAL("activated()"),self.ChercheGrpMaille)
 
         # Pour Aide
         self.actionCode = QAction(self)
-        self.actionCode.setText("Specificites Maille")
+        self.actionCode.setText(tr("Specificites Maille"))
         self.connect(self.actionCode,SIGNAL("activated()"),self.aideCode)
 
     def Deplier(self):
@@ -376,10 +378,10 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def version(self) :
         from monVisu import DVisu
-        titre = "version "
+        titre = tr("version ")
         monVisuDialg=DVisu(parent=self,fl=0)
         monVisuDialg.setWindowTitle(titre)
-        monVisuDialg.TB.setText(self.VERSION_EFICAS +QString(" pour ") + self.code)
+        monVisuDialg.TB.setText(self.VERSION_EFICAS +tr(" pour ") + self.code)
         monVisuDialg.adjustSize()
         monVisuDialg.show()
 
@@ -396,7 +398,7 @@ class Appli(Ui_Eficas,QMainWindow):
           monAssistant.setArguments(arguments);
           monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_EFICAS/index.html"))
         except:
-          QMessageBox.warning( self, "Aide Indisponible", "QT Assistant n est pas installe ")
+          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "QT Assistant n est pas installe "))
 
 
     def aideCode(self) :
@@ -409,19 +411,19 @@ class Appli(Ui_Eficas,QMainWindow):
           monAssistant.setArguments(arguments);
           monAssistant.showPage(QString(self.docPath)+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
         except:
-          QMessageBox.warning( self, "Aide Indisponible", "QT Assistant n est pas installe ")
+          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "QT Assistant n est pas installe "))
 
 
     def optionEditeur(self) :
         try :
            name='monOptions_'+self.code
         except :
-           QMessageBox.critical( self, "Parametrage", "Veuillez d abord choisir un code")
+           QMessageBox.critical( self,tr( "Parametrage"),tr( "Veuillez d abord choisir un code"))
            return
         try :
            optionCode=__import__(name)
         except :
-           QMessageBox.critical( self, "Parametrage", "Pas de possibilite de personnalisation de la configuration ")
+           QMessageBox.critical( self, tr("Parametrage"), tr("Pas de possibilite de personnalisation de la configuration "))
            return
         monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
         monOption.show()
@@ -442,7 +444,7 @@ class Appli(Ui_Eficas,QMainWindow):
             self.ficRecents[id]=rp
             self.connect(id, SIGNAL('triggered()'),self.handleOpenRecent)
         self.recentMenu.addSeparator()
-        self.recentMenu.addAction(self.trUtf8('&Clear'), self.handleClearRecent)
+        self.recentMenu.addAction(tr('&Effacer'), self.handleClearRecent)
         
     def handleOpenPatrons(self):
         idx=self.sender()

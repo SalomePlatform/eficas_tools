@@ -25,6 +25,7 @@ import string
 # Modules Eficas
 from Noyau import N_MCCOMPO
 from Validation import V_MCCOMPO
+from Extensions.i18n import tr
 
 class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
    """
@@ -100,7 +101,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
         if len(self.mc_liste) != len(self.definition.entites):
           valid=0
           if cr == 'oui' :
-            self.cr.fatal(string.join(("Nuplet : ",self.nom," Longueur incorrecte")))
+            self.cr.fatal(string.join(("Nuplet : ",self.nom,tr("Longueur incorrecte"))))
         self.valid = valid
         self.state = 'unchanged'
         if old_valid:

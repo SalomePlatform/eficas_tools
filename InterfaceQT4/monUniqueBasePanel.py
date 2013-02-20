@@ -23,6 +23,8 @@ import string,types,os
 # Modules Eficas
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
+
 
 from desUniqueBase import Ui_DUnBase
 from qtCommun      import QTPanel
@@ -55,9 +57,9 @@ class DUnBase(Ui_DUnBase,QDialog):
 
 class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
+  Classe definissant le panel associe aux mots-cles qui demandent
   a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  discretes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonUniqueBasePanel"
@@ -130,7 +132,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
              self.BSelectInFile.setMinimumSize(QSize(140,40))
              self.BSelectInFile.setObjectName("BSelectInFile")
              self.gridLayout.addWidget(self.BSelectInFile,1,1,1,1)
-             self.BSelectInFile.setText("Selection")
+             self.BSelectInFile.setText(tr("Selection"))
              self.image=chaine
              self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
 
@@ -138,19 +140,19 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def InitCommentaire(self):
       mc = self.node.item.get_definition()
-      d_aides = { 'TXM' : u"Une chaîne de caractères est attend.  ",
-                  'R'   : u"Un réel est attend. ",
-                  'I'   : u"Un entier est attendu.  ",
-                  'Matrice' : u'Une Matrice est attendue.  ',
-                  'Fichier' : u'Un fichier est attendu.  ',
-                  'FichierNoAbs' : u'Un fichier est attendu.  ',
-                  'Repertoire' : u'Un répertoire est attend.  '}
+      d_aides = { 'TXM' : tr("Une chaine de caracteres est attendue.  "),
+                  'R'   : tr("Un reel est attendu. "),
+                  'I'   : tr("Un entier est attendu.  "),
+                  'Matrice' : tr('Une Matrice est attendue.  '),
+                  'Fichier' : tr('Un fichier est attendu.  '),
+                  'FichierNoAbs' : tr('Un fichier est attendu.  '),
+                  'Repertoire' : tr('Un repertoire est attendu.  ')}
       mctype = mc.type[0]
 
       if type(mctype) == types.ClassType:
-         commentaire = getattr(mctype, 'help_message', "Type de base inconnu")
+         commentaire = getattr(mctype, 'help_message', tr("Type de base inconnu"))
       else:
-         commentaire = d_aides.get(mctype, "Type de base inconnu")
+         commentaire = d_aides.get(mctype, tr("Type de base inconnu"))
        
       commentaire = commentaire +  str(self.node.item.aide())
       self.Commentaire.setText(commentaire)
@@ -171,8 +173,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
          fp.close()
        except:
         QMessageBox.warning( None,
-            self.trUtf8("VIsualisation Fichier "),
-           self.trUtf8("Impossibilite d'afficher le Fichier"),)
+           tr("Visualisation Fichier "),
+           tr("Impossibilite d'afficher le Fichier"),)
 
   def BFichierPressed(self):
       mctype = self.node.item.get_definition().type
@@ -184,12 +186,12 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
           filters = QString()
       if len(mctype) > 2 and mctype[2] == "Sauvegarde":
           fichier = QFileDialog.getSaveFileName(self.appliEficas,
-                              self.appliEficas.trUtf8('Sauvegarder Fichier'),
+                              tr('Sauvegarder Fichier'),
                               self.appliEficas.CONFIGURATION.savedir,
                               filters)
       else:
           fichier = QFileDialog.getOpenFileName(self.appliEficas,
-                              self.appliEficas.trUtf8('Ouvrir Fichier'),
+                              tr('Ouvrir Fichier'),
                               self.appliEficas.CONFIGURATION.savedir,
                               filters)
 
@@ -197,7 +199,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
          ulfile = os.path.abspath(unicode(fichier))
          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)
-         self.Commentaire.setText(u"Fichier sélectionné")
+         self.Commentaire.setText(tr("Fichier selectionne"))
          if (QFileInfo(fichier).suffix() in listeSuffixe ):
              self.image=fichier
              if (not hasattr(self,"BSelectInFile")):
@@ -205,7 +207,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
                self.BSelectInFile.setMinimumSize(QSize(140,40))
                self.BSelectInFile.setObjectName("BSelectInFile")
                self.gridLayout.addWidget(self.BSelectInFile,1,1,1,1)
-               self.BSelectInFile.setText("Selection")
+               self.BSelectInFile.setText(tr("Selection"))
                self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
              else :
                self.BSelectInFile.setVisible(1)

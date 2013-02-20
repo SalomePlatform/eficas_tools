@@ -25,6 +25,7 @@ import typeNode
 from PyQt4 import *
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 class JDCTree( QTreeWidget ):
     def __init__( self, jdc_item, QWParent):        
@@ -38,14 +39,14 @@ class JDCTree( QTreeWidget ):
         self.setSelectionMode(3)
         self.setColumnCount(2)
         mesLabels=QStringList()
-        mesLabels << self.trUtf8('Commande                   ') << self.trUtf8('Concept/Valeur           ')
+        mesLabels << tr('Commande                   ') << tr('Concept/Valeur           ')
         self.setHeaderLabels(mesLabels)
                 
         #self.setMinimumSize(QSize(600,505))
         try :
            self.setColumnWidth(0,300)
         except :
-            QMessageBox.critical(self.editor,'probleme d environnement', "L environnement doit etre en QT4")
+            QMessageBox.critical(self.editor,tr('probleme d environnement'), tr("L environnement doit etre en QT4"))
             sys.exit(0)
         self.itemCourrant=None
 
@@ -84,7 +85,7 @@ class JDCTree( QTreeWidget ):
         try :
            fr = item.item.get_fr()
            if self.editor:
-              self.editor.affiche_infos(QString.toUtf8(QString(fr)))
+              self.editor.affiche_infos(tr(fr))
         except:
             pass
         item.affichePanneau()
@@ -244,7 +245,7 @@ class JDCNode(QTreeWidgetItem):
         elif pos == 'after':
             index = index +1
         else:
-            print str(pos)," n'est pas un index valide pour append_brother"
+            print tr("%s n'est pas un index valide pour append_brother", unicode(pos))
             return 0
         return self.treeParent.append_child(name,pos=index)
 

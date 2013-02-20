@@ -24,6 +24,8 @@
 """
 import traceback
 import types,string,re
+from Extensions.i18n import tr
+
 
 from generator_python import PythonGenerator
 from OpenturnsBase import Generateur 
@@ -122,10 +124,10 @@ class OpenturnsGenerator(PythonGenerator):
          self.texteSTD=MonGenerateur.CreeSTD()
       #except :
       else :
-         self.texteSTD="Il y a un pb a la Creation du STD"
+         self.texteSTD=tr("Il y a un pb a la Creation du STD")
 
    def writeDefault(self, fn):
-      fileSTD = fn[:fn.rfind(".")] + '.py'
+      fileSTD = fn[:fn.rfind(u".")] + '.py'
       f = open( str(fileSTD), 'wb')
       f.write( self.texteSTD )
       f.close()

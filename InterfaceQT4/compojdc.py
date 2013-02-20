@@ -21,6 +21,7 @@
 from Editeur import Objecttreeitem
 import browser
 import typeNode
+from Extensions.i18n import tr
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
@@ -47,12 +48,12 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
       return  "    "
 
   def GetLabelText(self):
-      # None --> fonte et couleur par dÃ©faut
+      # None --> fonte et couleur par defaut
       return self.object.nom,None,None
 
   def get_jdc(self):
     """
-    Retourne l'objet pointÃ© par self
+    Retourne l'objet pointe par self
     """
     return self.object
   
@@ -80,13 +81,13 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
     itemobject=item.getObject()
     if self.object.suppentite(itemobject):
        if itemobject.nature == "COMMENTAIRE" :
-          message = "Commentaire supprimé"
+          message = tr("Commentaire supprimé")
        else :
-          message = "Commande " + itemobject.nom + " supprimee"
+          message = tr("Commande %s supprimee",itemobject.nom)
        self.appli.affiche_infos(message)
        return 1
     else:
-       self.appli.affiche_infos("Pb interne : impossible de supprimer cet objet",Qt.red)
+       self.appli.affiche_infos(tr("Pb interne : impossible de supprimer cet objet"),Qt.red)
        return 0
 
   def GetSubList(self):
@@ -120,7 +121,7 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
     return self.sublist
 
   def get_l_noms_etapes(self):
-      """ Retourne la liste des noms des Ã©tapes de self.object"""
+      """ Retourne la liste des noms des etapes de self.object"""
       return self.object.get_l_noms_etapes()
 
   def get_liste_cmd(self):

@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -18,18 +18,18 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-  La classe CONNECTOR sert à enregistrer les observateurs d'objets et à délivrer
-  les messages émis à ces objets.
+  La classe CONNECTOR sert a enregistrer les observateurs d'objets et a delivrer
+  les messages emis a ces objets.
 
-  Le principe général est le suivant : un objet (subscriber) s'enregistre aupres du 
+  Le principe general est le suivant : un objet (subscriber) s'enregistre aupres du 
   connecteur global (theconnector) pour observer un objet emetteur de messages (publisher) 
-  sur un canal donné (channel). Il demande à etre notifie par appel d'une fonction (listener).
-  La séquence est donc :
+  sur un canal donne (channel). Il demande a etre notifie par appel d'une fonction (listener).
+  La sequence est donc :
 
      - enregistrement du subscriber pour le publisher : theconnector.Connect(publisher,channel,listener,args)
-     - émission du message par le publisher : theconnector.Emit(publisher,channel,cargs)
+     - emission du message par le publisher : theconnector.Emit(publisher,channel,cargs)
 
-  args et cargs sont des tuples contenant les arguments de la fonction listener qui sera appelée
+  args et cargs sont des tuples contenant les arguments de la fonction listener qui sera appelee
   comme suit::
 
      listener(cargs+args)
@@ -37,6 +37,9 @@
 import traceback
 from copy import copy
 import weakref
+
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 class ConnectorError(Exception):
     pass
@@ -73,8 +76,9 @@ class CONNECTOR:
     try:
        receivers = self.connections[id(object)][channel]
     except KeyError:
-       raise ConnectorError, \
-            'no receivers for channel %s of %s' % (channel, object)
+       raise EficasException(tr("ConnectorError: Pas de recepteur \
+                                pour le canal %(channel)s de %(object)s", \
+                                {'channel': channel, 'object': object}))
 
     for funct,fargs in receivers[:]:
         if funct() is None:
@@ -92,9 +96,10 @@ class CONNECTOR:
                  del self.connections[id(object)]
            return
 
-    raise ConnectorError,\
-          'receiver %s%s is not connected to channel %s of %s' \
-          % (function, args, channel, object)
+    raise EficasException(tr("ConnectorError: Le Recepteur %(v_1)s%(v_2)s \
+                             n'est pas connecte au canal %(v_3)s de %(v_4)s", \
+                             {'v_1': function, 'v_2': args, \
+                              'v_3': channel, 'v_4': object}))
 
 
   def Emit(self, object, channel, *args):
@@ -141,30 +146,32 @@ Emit = _the_connector.Emit
 Disconnect = _the_connector.Disconnect
 
 if __name__ == "__main__":
-   class A:pass
+   class A:
+     pass
    class B:
+     # Not sure we should i18n these strings as well:
      def add(self,a):
-       print "add",self,a
+       print tr("add %s %s", (self + a))
      def __del__(self):
-       print "__del__",self
+       print tr("__del__", self)
 
    def f(a):
-     print f,a
-   print "a=A()"
+     print tr("%s%s", (f, a))
+   print tr("a=A()")
    a=A()
-   print "b=B()"
+   print tr("b=B()")
    b=B()
-   print "c=B()"
+   print tr("c=B()")
    c=B()
    Connect(a,"add",b.add,())
    Connect(a,"add",b.add,())
    Connect(a,"add",c.add,())
    Connect(a,"add",f,())
    Emit(a,"add",1)
-   print "del b"
+   print tr("del b")
    del b
    Emit(a,"add",1)
-   print "del f"
+   print tr("del f")
    del f
    Emit(a,"add",1)
    Disconnect(a,"add",c.add,())

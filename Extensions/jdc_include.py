@@ -91,7 +91,7 @@ class JDC_POURSUITE(JDC):
 
       o=self.sds_dict.get(sdnom,None)
       if isinstance(o,ASSD):
-         raise AsException("Nom de concept deja defini : %s" % sdnom)
+         raise AsException(tr("Nom de concept deja defini : %s" ,sdnom))
 
       # On pourrait verifier que le jdc_pere apres l'etape etape_include
       # ne contient pas deja un concept de ce nom

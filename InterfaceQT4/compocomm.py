@@ -25,6 +25,8 @@ import string
 from Editeur     import Objecttreeitem
 import browser
 import typeNode
+from Extensions.i18n import tr
+from EficasException import EficasException
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
@@ -36,9 +38,9 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodePartiel.createPopUpMenu(self)
-        self.Decommente = QAction('Decommenter',self.tree)
+        self.Decommente = QAction(tr("Decommenter"),self.tree)
         self.tree.connect(self.Decommente,SIGNAL("activated()"),self.Decommenter)
-        self.Decommente.setStatusTip("Decommente la commande ")
+        self.Decommente.setStatusTip(tr("Decommente la commande "))
 
         if hasattr(self.item,'uncomment'):
            self.menu.addAction(self.Decommente)
@@ -110,7 +112,7 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
            surcharge la méthode get_objet_commentarise de la classe Objecttreeitem.ObjectTreeItem
            elle a pour but d'empecher l'utilisateur final de commentariser un commentaire.
        """
-       raise Exception( 'Impossible de commentariser un commentaire' )
+       raise EficasException( 'Impossible de commentariser un commentaire' )
   
 import Extensions
 treeitem =COMMTreeItem

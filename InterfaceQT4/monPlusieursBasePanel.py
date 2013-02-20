@@ -28,6 +28,8 @@ from desPlusieursBase import Ui_DPlusBase
 from qtCommun      import QTPanel
 from qtSaisie      import SaisieValeur
 from politiquesValidation import PolitiquePlusieurs
+from Extensions.i18n import tr
+
 
 class DPlusBase (Ui_DPlusBase,QDialog):
    def __init__(self,parent ,modal ) :
@@ -102,16 +104,16 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
            return
         min,max = self.node.item.GetMinMax()
         if len(self.listeValeursCourantes) > max :
-            commentaire="La liste comporte trop d elements : la cardinalite maximale est "+ str(max)
+            commentaire=tr("La liste comporte trop d elements : la cardinalite maximale est ")+ str(max)
             self.editor.affiche_infos(commentaire,Qt.red)
             return 
         if len(self.listeValeursCourantes) < min :
-            commentaire="La liste ne comporte pas suffisament d elements : la cardinalite minimale est "+ str(min)
+            commentaire=tr("La liste ne comporte pas suffisament d elements : la cardinalite minimale est ")+ str(min)
             self.editor.affiche_infos(commentaire,Qt.red)
             return 
 
         self.node.item.set_valeur(self.listeValeursCourantes)
-	self.editor.affiche_infos("Valeur Acceptee")
+	self.editor.affiche_infos(tr("Valeur Acceptee"))
 
 
   def BParametresPressed(self):
@@ -176,7 +178,7 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
                self.LBValeurs.setCurrentItem(item)
                index=index+1
            self.listeValeursCourantes=l1+listeRetour+l3
-	   self.editor.affiche_infos("Valeurs AjoutÃ©es")
+	   self.editor.affiche_infos(tr("Valeurs Ajoutées"))
 
   def AjoutNValeur(self,liste) :
       for val in liste :
@@ -185,10 +187,9 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   def BImportPressed(self):
         init=QString( self.editor.CONFIGURATION.savedir)
         fn = QFileDialog.getOpenFileName(self.node.appliEficas, 
-                                         #self.node.appliEficas.trUtf8('Fichier de donnÃ©es'), 
-                                        QApplication.translate('Eficas','Fichier de donnees',None, QApplication.UnicodeUTF8),
+                                         tr("Fichier de donnees"),
                                          init,
-                                         self.trUtf8('All Files (*)',))
+                                         tr('Tous les  Fichiers (*)',))
         if fn == None : return
         if fn == "" : return
         ulfile = os.path.abspath(unicode(fn))
@@ -200,21 +201,21 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   def InitCommentaire(self):
         commentaire=""
         mc = self.node.item.get_definition()
-        d_aides = { 'TXM' : 'chaÃ®nes de caractÃ¨res',
-                  'R'   : 'rÃ©els',
+        d_aides = { 'TXM' : 'chaines de caractères',
+                  'R'   : 'réels',
                   'I'   : 'entiers',
                   'C'   : 'complexes'}
         type = mc.type[0]
         if not d_aides.has_key(type) :
            if mc.min == mc.max:
-               commentaire="Entrez "+str(mc.min)+" valeurs "
+               commentaire=tr("Entrez ")+str(mc.min)+tr(" valeurs ")
            else :
-               commentaire="Entrez entre "+str(mc.min)+" et "+str(mc.max)+" valeurs "
+               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")
         else :
            if mc.min == mc.max:
-               commentaire="Entrez "+str(mc.min)+" "+d_aides[type]
+               commentaire=tr("Entrez ")+str(mc.min)+" "+tr(d_aides[type])
            else :
-               commentaire="Entrez entre "+str(mc.min)+" et  "+str(mc.max) +" " + d_aides[type]
+               commentaire=tr("Entrez entre ")+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])
         aideval=self.node.item.aide()
         commentaire=commentaire + "   " + QString.toUtf8(QString(aideval))
         self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))

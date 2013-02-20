@@ -24,6 +24,7 @@ from copy import copy,deepcopy
 
 # Modules Eficas
 from Editeur import Objecttreeitem
+from Extensions.eficas_exception import EficasException
 
 myrepr = Repr()
 myrepr.maxstring = 100
@@ -68,10 +69,10 @@ class NUPLETTreeItem(Objecttreeitem.ObjectTreeItem):
     return sublist
 
   def additem(self,name,pos):
-    raise "NUPLET"
+    raise EficasException("NUPLET")
 
   def suppitem(self,item) :
-    raise "NUPLET"
+    raise EficasException("NUPLET")
 
 import Accas
 treeitem=NUPLETTreeItem

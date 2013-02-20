@@ -24,6 +24,8 @@
 """
 import traceback
 import types,string,re
+from Extensions.i18n import tr
+
 
 from generator_python import PythonGenerator
 from OpenturnsBase import Generateur 
@@ -136,5 +138,5 @@ class OpenturnsGenerator(PythonGenerator):
 	  self.wrapperXML=None
 
    def writeDefault(self, filename):
-      fileXML = filename[:filename.rfind(".")] + '.xml'
+      fileXML = filename[:filename.rfind(u".")] + '.xml'
       self.wrapperXML.writeFile( str(fileXML) )

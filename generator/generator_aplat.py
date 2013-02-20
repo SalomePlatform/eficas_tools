@@ -24,6 +24,8 @@
 """
 import traceback
 import types,string,re
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 from Noyau import N_CR
 from Noyau.N_utils import repr_float
@@ -96,7 +98,7 @@ class AplatGenerator:
       elif format == 'beautifie':
          self.text=liste
       else:
-         raise "Format pas implémenté : "+format
+        raise EficasException(tr("Format pas implémenté : %s", format))
       return self.text
 
    def generator(self,obj):
@@ -142,7 +144,8 @@ class AplatGenerator:
       elif isinstance(obj,MCNUPLET):
          return self.generMCNUPLET(obj)
       else:
-         raise "Type d'objet non prévu",obj
+         raise EficasException(tr("Format pas implémenté : %s", format))
+
 
    def generJDC(self,obj):
       """
@@ -176,7 +179,7 @@ class AplatGenerator:
          Cette méthode convertit un EVAL
          en une chaine de caractères à la syntaxe aplat 
       """
-      return 'EVAL("""'+ obj.valeur +'""")'
+      return 'EVAL(u"""'+ obj.valeur +'""")'
 
    def generCOMMENTAIRE(self,obj):
       """

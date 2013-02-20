@@ -25,6 +25,7 @@ import string,types,os,re
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 from desParam import Ui_DParam
 from qtCommun import QTPanel
@@ -91,7 +92,7 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         nom,commentaire=self.LENomPressed()
         if not nom :
            if commentaire == None :
-              commentaire="Entrer un nom de parametre"
+              commentaire=tr("Entrer un nom de parametre")
            self.Commentaire.setText(QString(commentaire))
            self.editor.affiche_infos(commentaire,Qt.red)
            return
@@ -124,12 +125,12 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         try :
           exec monTexte in contexte
         except :
-          self.Commentaire.setText("Valeur incorrecte")
-          self.editor.affiche_infos("Valeur incorrecte",Qt.red)
+          self.Commentaire.setText(tr("Valeur incorrecte"))
+          self.editor.affiche_infos(tr("Valeur incorrecte"),Qt.red)
           return None
 
-        self.Commentaire.setText("Valeur correcte")
-        self.editor.affiche_infos("Valeur correcte")
+        self.Commentaire.setText(tr("Valeur correcte"))
+        self.editor.affiche_infos(tr("Valeur correcte"))
         return valString
 
   def LENomPressed(self):
@@ -140,7 +141,7 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         if numDebutPattern.match(nom) :
            return nom,None
         else :
-           commentaire="Les noms de parametre doivent commencer par une lettre ou un souligne"
+           commentaire=tr("Les noms de parametre doivent commencer par une lettre ou un souligne")
            return None,commentaire
 
   def BuildTabCommandChanged(self):

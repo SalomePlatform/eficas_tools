@@ -39,6 +39,7 @@ import analyse_catalogue_initial
 import autre_analyse_cata
 import uiinfo
 from monChoixCata import MonChoixCata
+from Extensions.i18n import tr
 
 from PyQt4 import *
 from PyQt4.QtGui import *
@@ -66,8 +67,8 @@ class READERCATA:
 
    def OpenCata(self):
       """ 
-          Ouvre le catalogue standard du code courant, cad le catalogue présent
-          dans le répertoire Cata 
+          Ouvre le catalogue standard du code courant, cad le catalogue present
+          dans le repertoire Cata 
       """
 
       liste_cata_possibles=[]
@@ -92,8 +93,8 @@ class READERCATA:
                   liste_cata_possibles.append(catalogue)
 
       if len(liste_cata_possibles)==0:          
-          QMessageBox.critical(self.QWParent, "Import du catalogue",
-                               u"Pas de catalogue défini pour le code %s" % self.code)
+          QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
+                               tr("Pas de catalogue defini pour le code ") + self.code)
           self.appliEficas.close()
           if self.appliEficas.salome == 0 :
              sys.exit(1)
@@ -116,8 +117,8 @@ class READERCATA:
                   else :
                       cata_choice_list.append(cata)
           if len(cata_choice_list) == 0:
-              QMessageBox.critical(self.QWParent, "Import du catalogue",
-                                   QString.fromUtf8("Aucun catalogue trouvé"))
+              QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
+                                   tr("Aucun catalogue trouve"))
               self.appliEficas.close()
               if self.appliEficas.salome == 0 :
                  sys.exit(1)
@@ -128,9 +129,9 @@ class READERCATA:
               self.appliEficas.format_fichier_in = cata_choice_list[0].file_format_in
               lab=QString("Eficas ") 
               lab+=QString(self.VERSION_EFICAS) 
-              lab+=QString(" pour ")
+              lab+=tr(" pour ")
               lab+=QString(self.code) 
-              lab+=QString(" avec le catalogue ")
+              lab+=tr(" avec le catalogue ")
               lab+=self.version_code
               try :
               # souci pour les includes et sans Ihm
@@ -155,22 +156,22 @@ class READERCATA:
       # import du catalogue
       self.cata = self.import_cata(self.fic_cata)
       if not self.cata :          
-          QMessageBox.critical( self.QWParent, "Import du catalogue","Impossible d'importer le catalogue %s" %self.fic_cata)
+          QMessageBox.critical( self.QWParent, tr("Import du catalogue"),tr("Impossible d'importer le catalogue ")+ self.fic_cata)
 	  self.appliEficas.close()
           if self.appliEficas.salome == 0 :
              sys.exit(1)
       #
-      # analyse du catalogue (ordre des mots-clés)
+      # analyse du catalogue (ordre des mots-cles)
       #
       # Retrouve_Ordre_Cata_Standard fait une analyse textuelle du catalogue
-      # remplacé par Retrouve_Ordre_Cata_Standard_autre qui utilise une numerotation
-      # des mots clés a la création
+      # remplace par Retrouve_Ordre_Cata_Standard_autre qui utilise une numerotation
+      # des mots cles a la creation
       self.Retrouve_Ordre_Cata_Standard_autre()
       if self.mode_nouv_commande== "initial" :
          self.Retrouve_Ordre_Cata_Standard()
 
       #
-      # analyse des données liées l'IHM : UIinfo
+      # analyse des donnees liees l'IHM : UIinfo
       #
       uiinfo.traite_UIinfo(self.cata)
 
@@ -180,7 +181,7 @@ class READERCATA:
       if self.code == "ASTER" : self.traite_clefs_documentaires()
       self.cata=(self.cata,)
 
-      titre=self.VERSION_EFICAS + " avec le catalogue " + os.path.basename(self.fic_cata)
+      titre=self.VERSION_EFICAS +tr( " avec le catalogue ") + os.path.basename(self.fic_cata)
       if self.appliEficas.top:
         self.appliEficas.setWindowTitle(titre)
       self.appliEficas.titre=titre
@@ -244,16 +245,16 @@ class READERCATA:
 
    def Retrouve_Ordre_Cata_Standard_autre(self):
       """ 
-          Construit une structure de données dans le catalogue qui permet
-          a EFICAS de retrouver l'ordre des mots-clés dans le texte du catalogue.
-          Pour chaque entité du catlogue on crée une liste de nom ordre_mc qui
-          contient le nom des mots clés dans le bon ordre
+          Construit une structure de donnees dans le catalogue qui permet
+          a EFICAS de retrouver l'ordre des mots-cles dans le texte du catalogue.
+          Pour chaque entite du catlogue on cree une liste de nom ordre_mc qui
+          contient le nom des mots cles dans le bon ordre
       """ 
       self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyse_catalogue(self.cata)
 
    def Retrouve_Ordre_Cata_Standard(self):
       """ 
-          Retrouve l'ordre des mots-clés dans le catalogue, cad :
+          Retrouve l'ordre des mots-cles dans le catalogue, cad :
           Attention s appuie sur les commentaires
       """
       nom_cata = os.path.splitext(os.path.basename(self.fic_cata))[0]
@@ -262,22 +263,22 @@ class READERCATA:
 
    def ask_choix_catalogue(self, cata_choice_list):
       """
-      Ouvre une fenetre de sélection du catalogue dans le cas où plusieurs
-      ont été définis dans Accas/editeur.ini
+      Ouvre une fenetre de selection du catalogue dans le cas où plusieurs
+      ont ete definis dans Accas/editeur.ini
       """      
       code = getattr(self.appliEficas.CONFIGURATION, "code", None)
       if code != None : 
-          title="Choix d une version du code "+str(code)
+          title=tr("Choix d une version du code ")+str(code)
       else :
-          title="Choix d une version "
+          title=tr("Choix d une version ")
     
       widgetChoix = MonChoixCata(self.appliEficas, [cata.user_name for cata in cata_choice_list], title)
       ret=widgetChoix.exec_()
       
       lab=QString(self.VERSION_EFICAS)
-      lab+=QString(" pour ")
+      lab+=tr(" pour ")
       lab+=QString(self.code) 
-      lab+=QString(" avec le catalogue ")
+      lab+=tr(" avec le catalogue ")
       if ret == QDialog.Accepted:
           cata = cata_choice_list[widgetChoix.CBChoixCata.currentIndex()]
           self.version_cata = cata.identifier

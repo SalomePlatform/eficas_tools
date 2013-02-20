@@ -24,6 +24,7 @@ import string,types,os
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
+from Extensions.i18n import tr
 from desPlusieursInto import Ui_DPlusInto
 from qtCommun      import QTPanel
 from qtSaisie      import SaisieValeur
@@ -58,6 +59,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   discr√®tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
+        #print "MonPlusieursIntoPanel"
         self.alpha=0
         QTPanel.__init__(self,node,parent)
         DPlusInto.__init__(self,parent,fl)
@@ -79,10 +81,10 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   def BAlphaPressed(self):
       if self.alpha==1 :
          self.alpha=0
-         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Alpha",None,QApplication.UnicodeUTF8))
+         self.BAlpha.setText(tr("Tri Alpha"))
       else :
          self.alpha=1
-         self.BAlpha.setText(QApplication.translate("DPlusInto", "Tri Cata",None,QApplication.UnicodeUTF8))
+         self.BAlpha.setText(tr("Tri Cata"))
       SaisieValeur.RemplitPanel(self,self.listeValeursCourantes, self.alpha)
 
   def BOkPourListePressed(self):
@@ -146,8 +148,8 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   def InitCommentaire(self):
         commentaire=""
         mc = self.node.item.get_definition()
-        d_aides = { 'TXM' : 'cha√Ænes de caract√®res',
-                  'R'   : 'r√©els',
+        d_aides = { 'TXM' : 'chaÓnes de caractÈres',
+                  'R'   : 'rÈels',
                   'I'   : 'entiers',
                   'C'   : 'complexes'}
         type = mc.type[0]
@@ -163,5 +165,6 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
                commentaire="Entrez entre "+str(mc.min)+" et "+str(mc.max)+" "+d_aides[type]
         aideval=self.node.item.aide()
         commentaire=commentaire + "   " + QString.toUtf8(QString(aideval))
-        self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
+        print commentaire
+        self.Commentaire.setText(tr(commentaire))
 

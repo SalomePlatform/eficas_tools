@@ -102,7 +102,7 @@ class Generateur :
     num = 0
     liste = []
     for DictVariable in self.ListeVariables :
-      if not DictVariable.has_key("Type") : DictVariable["Type"] = "in"
+      if not DictVariable.has_key(u"Type") : DictVariable["Type"] = "in"
       self.DictTypeVar[num] = DictVariable["Type"]
       if DictVariable["Type"] == "in" : 
          self.nbVarIn = self.nbVarIn + 1

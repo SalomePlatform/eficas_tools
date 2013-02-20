@@ -25,6 +25,7 @@ from PyQt4  import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 
 # Import des panels
@@ -38,7 +39,7 @@ class MonLabelPixmap(Ui_LabelPixmap,QtGui.QDialog):
       self.fichier = fichier
       self.setModal(False)
       self.setupUi(self)
-      self.setWindowTitle("PDF de la loi '%s'" % name)
+      self.setWindowTitle(tr("PDF de la loi : ') + name)
       self.labelPix.setPixmap(QPixmap(fichier));
       
 

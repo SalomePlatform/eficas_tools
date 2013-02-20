@@ -24,9 +24,9 @@ import os,traceback,sys
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+
+from Extensions.i18n import tr
 import convert
-
-
 from monMacroPanel import MonMacroPanel
 
 
@@ -35,9 +35,9 @@ from monMacroPanel import MonMacroPanel
 
 class MonPoursuitePanel(MonMacroPanel):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe definissant le panel associe aux mots-cles qui demandent
+  Ã  l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discrÃ¨tes
   """
   def __init__(self,node, parent = None,name = None,fl = 0):
         MonMacroPanel.__init__(self,node,parent,name,fl)
@@ -75,9 +75,9 @@ class MonPoursuitePanel(MonMacroPanel):
         self.BBrowse.setObjectName("BBrowse")
         self.TWChoix.addTab(self.TabPage, "")
 
-        self.BFichier.setText(QtGui.QApplication.translate("DPour", "Autre Fichier", None, QtGui.QApplication.UnicodeUTF8))
-        self.BBrowse.setText(QtGui.QApplication.translate("DPour", "Edit", None, QtGui.QApplication.UnicodeUTF8))
-        self.TWChoix.setTabText(self.TWChoix.indexOf(self.TabPage), QtGui.QApplication.translate("DPour", "Fichier Poursuite", None, QtGui.QApplication.UnicodeUTF8))
+        self.BFichier.setText(tr("Autre Fichier"))
+        self.BBrowse.setText(tr("Edit"))
+        self.TWChoix.setTabText(self.TWChoix.indexOf(self.TabPage), tr("Fichier Poursuite"))
 
         if hasattr(self.node.item.object,"fichier_ini"):
            self.LENomFichier.setText(self.node.item.object.fichier_ini)
@@ -94,9 +94,9 @@ class MonPoursuitePanel(MonMacroPanel):
 
   def BFichierPressed(self):
       fichier = QFileDialog.getOpenFileName(self.appliEficas,
-                        self.appliEficas.trUtf8('Ouvrir Fichier'),
+                        tr('Ouvrir Fichier'),
                         self.appliEficas.CONFIGURATION.savedir,
-                        self.appliEficas.trUtf8('JDC Files (*.comm);;''All Files (*)'))
+                        tr('Fichiers .comm (*.comm);;''Tous les  Fichiers (*)'))
       if not(fichier.isNull()):
         ulfile = os.path.abspath(unicode(fichier))
         self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
@@ -106,9 +106,9 @@ class MonPoursuitePanel(MonMacroPanel):
   def LENomFichReturnPressed(self):
         nomFichier=str(self.LENomFichier.text())
         if not os.path.isfile(nomFichier) :
-           commentaire = "Fichier introuvable"
-           self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
-           self.editor.affiche_infos(commentaire,Qt.red)
+           commentaire = tr("Fichier introuvable")
+           self.Commentaire.setText(commentaire)
+           self.editor.affiche_infos(commentaire, Qt.red)
            return
 
         text=self.convert_file(nomFichier)
@@ -119,14 +119,14 @@ class MonPoursuitePanel(MonMacroPanel):
 
         try :
            self.node.item.object.change_fichier_init(nomFichier,text)
-           commentaire = "Fichier modifie  : " + self.node.item.get_nom()
-           self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
+           commentaire = tr("Fichier modifie  : %s", self.node.item.get_nom())
+           self.Commentaire.setText(commentaire)
         except: 
-           l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
-           QMessageBox.critical( self, "Erreur fatale au chargement du fichier Include", l[0])
-           commentaire = "Fichier invalide" 
-           self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
-           self.editor.affiche_infos(commentaire,Qt.red)
+           l=traceback.format_exception_only(tr("Fichier invalide") ,sys.exc_info()[1])
+           QMessageBox.critical( self, tr("Erreur fatale au chargement du fichier Include"), l[0])
+           commentaire = tr("Fichier invalide")
+           self.Commentaire.setText(commentaire)
+           self.editor.affiche_infos(commentaire, Qt.red)
            return
 
 
@@ -145,8 +145,8 @@ class MonPoursuitePanel(MonMacroPanel):
           p.readfile(file)
           text=p.convert('execnoparseur')
        else :
-            commentaire = "Impossible de lire le fichier : Format inconnu"
-            self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
-            self.editor.affiche_infos(commentaire,Qt.red)
+            commentaire = tr("Impossible de lire le fichier : Format inconnu")
+            self.Commentaire.setText(commentaire)
+            self.editor.affiche_infos(commentaire, Qt.red)
        return text
 

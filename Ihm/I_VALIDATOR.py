@@ -34,7 +34,7 @@ class OrdList(OrdList):
           try:
              self.convert(liste_courante)
              valid=1
-          except:
+          except :
              valid=0
           return valid
 

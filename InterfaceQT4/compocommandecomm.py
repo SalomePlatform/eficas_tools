@@ -21,6 +21,7 @@ import traceback
 import string
 
 from Editeur import Objecttreeitem
+from EficasException import EficasException
 import compocomm
 
 class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
@@ -83,9 +84,9 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
       try:
         commande,nom = self.object.uncomment()
         #self.parent.children[pos].select()
-      except Exception,e:
+      except Exception as e:
         traceback.print_exc()
-        raise e
+        raise EficasException(e)
       return commande,nom
   
 import Accas

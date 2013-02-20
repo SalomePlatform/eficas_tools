@@ -25,6 +25,8 @@ import glob
 import traceback
 import codecs,types
 
+from Extensions.i18n import tr
+
 def substract_list(liste1,liste2):
   """ 
       Enleve tous les elements de liste2 presents dans liste1 et retourne liste1
@@ -45,13 +47,13 @@ def get_rep_user(dir):
   rep_user_eficas= os.path.join(os.environ['HOME'],dir)
   if os.path.exists(rep_user_eficas):
     if os.path.isfile(rep_user_eficas) :
-      print "Un fichier de nom %s existe deja : impossible de creer un repertoire de meme nom" %rep_user_eficas
+      print tr("Un fichier de nom %s existe déjà : impossible de créer un répertoire de même nom", rep_user_eficas)
       sys.exit(0)
   else :
     try:
       os.mkdir(rep_user_eficas)
     except:
-      print "Creation du repertoire %s impossible\n Verifiez vos droits d'acces" %rep_user_eficas
+      print tr("Création du répertoire %s impossible\n Vérifiez vos droits d'accès", rep_user_eficas)
   return rep_user_eficas
 
 def read_file(file):
@@ -125,7 +127,7 @@ def init_rep_cata_dev(fic_cata,rep_goal):
     os.chdir(cur_dir)
   except:
     traceback.print_exc()
-    print "Impossible de transferer les fichiers requis dans :",rep_goal
+    print tr("Impossible de transférer les fichiers requis dans : %s", rep_goal)
 
 def get_entete_cata(fic_cata):
   """ Retrouve l'entete du catalogue """
@@ -133,8 +135,8 @@ def get_entete_cata(fic_cata):
   txt = ''
   flag = 0
   for ligne in l_lignes :
-    if re.match("# debut entete",ligne) : flag = 1
-    if re.match("# fin entete",ligne) : break
+    if re.match(u"# debut entete",ligne) : flag = 1
+    if re.match(u"# fin entete",ligne) : break
     if not flag : continue
     txt = txt + ligne
   return txt

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -17,9 +18,9 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 import os
-
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 from generator_python import PythonGenerator
-
 
 def entryPoint():
     """
@@ -55,8 +56,8 @@ class FileFromTemplateGenerator(PythonGenerator):
         """
         templateFileName = self.config.get_template_file()
         if not os.path.isfile(templateFileName):
-            raise Exception("Template file %s does not exist." %
-                            templateFileName)
+            raise EficasException(tr("Fichier patron %s n'existe pas.",
+                                     templateFileName))
         f = file(templateFileName, "r")
         template = f.read()  
         f.close()

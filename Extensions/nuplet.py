@@ -26,6 +26,7 @@ import types
 # Modules Eficas
 from Noyau import N_ENTITE,N_MCLIST,N_CR
 from Ihm import I_ENTITE
+from Extensions.i18n import tr
 import mcnuplet
 
 class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
@@ -61,18 +62,18 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
       """
       if type(self.min) != types.IntType :
         if self.min != '**':
-          self.cr.fatal("L'attribut 'min' doit être un entier : "+`self.min`)
+          self.cr.fatal(tr("L'attribut 'min' doit être un entier : ")+str(self.min))
       if type(self.max) != types.IntType :
         if self.max != '**' :
-          self.cr.fatal("L'attribut 'max' doit être un entier : "+`self.max`)
+          self.cr.fatal(tr("L'attribut 'max' doit être un entier : ")+str(self.max))
       if self.min > self.max :
-         self.cr.fatal("Nombres d'occurrence min et max invalides : %s %s" %(`self.min`,`self.max`))
+         self.cr.fatal(tr("Nombres d'occurrence min et max invalides :") +str(self.min)+","+str(self.max))
       if type(self.fr) != types.StringType :
-        self.cr.fatal("L'attribut 'fr' doit être une chaîne de caractères : %s" +`self.fr`)
+        self.cr.fatal(tr("L'attribut 'fr' doit être une chaîne de caractères"))
       if self.statut not in ['o','f','c','d']:
-        self.cr.fatal("L'attribut 'statut' doit valoir 'o','f','c' ou 'd' : %s" %`self.statut`)
+        self.cr.fatal(tr("L'attribut 'statut' doit valoir 'o','f','c' ou 'd'"))
       if type(self.docu) != types.StringType :
-        self.cr.fatal("L'attribut 'docu' doit être une chaîne de caractères : %s" %`self.docu`)
+        self.cr.fatal(tr("L'attribut 'docu' doit être une chaîne de caractères"))
       self.verif_cata_regles()
 
    def __call__(self,val,nom,parent):
@@ -100,8 +101,8 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
       self.verif_cata()
       for v in self.entites :
         cr = v.report()
-        cr.debut = "Début "+v.__class__.__name__+ ' : '
-        cr.fin = "Fin "+v.__class__.__name__+ ' : '
+        cr.debut =tr("Début ")+v.__class__.__name__+ ' : '
+        cr.fin =tr("Fin ")+v.__class__.__name__+ ' : '
         self.cr.add(cr)
       return self.cr
 

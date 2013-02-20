@@ -24,6 +24,7 @@ import string,types,os
 from PyQt4.QtCore import *
 from PyQt4.QtGui  import *
 
+from Extensions.i18n import tr
 from desUniqueSDCO        import Ui_DUnSDCO
 from qtCommun             import QTPanel
 from qtSaisie             import SaisieSDCO
@@ -58,7 +59,7 @@ class MonUniqueSDCOPanel(DUnSDCO,QTPanel,SaisieSDCO):
         DUnSDCO.__init__(self,parent,fl)
         valeur = self.node.item.get_valeur()
         if valeur  != "" and valeur != None :
-           self.LESDCO.setText(QString(valeur.nom))
+           self.LESDCO.setText(valeur.nom)
         self.connecterSignaux()
 
   def connecterSignaux(self) :
@@ -71,7 +72,7 @@ class MonUniqueSDCOPanel(DUnSDCO,QTPanel,SaisieSDCO):
 
 
   def BOuiPressed(self):
-        self.Commentaire.setText("Aucun Objet de ce type n'est defini")
+        self.Commentaire.setText(tr("Aucun Objet de ce type n'est défini"))
         self.rbOui.setChecked(1)
 
   def LESDCOReturnPressed(self):

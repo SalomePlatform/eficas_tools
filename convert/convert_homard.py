@@ -22,26 +22,26 @@
     au format python pour EFICAS.
 
     Un plugin convertisseur doit fournir deux attributs de classe :
-    extensions et formats et deux méthodes : readfile,convert.
+    extensions et formats et deux mÃ©thodes : readfile,convert.
 
     L'attribut de classe extensions est une liste d'extensions
-    de fichiers préconisées pour ce type de format. Cette information
+    de fichiers prÃ©conisÃ©es pour ce type de format. Cette information
     est seulement indicative.
 
     L'attribut de classe formats est une liste de formats de sortie
-    supportés par le convertisseur. Les formats possibles sont :
+    supportÃ©s par le convertisseur. Les formats possibles sont :
     eval, dict ou exec.
-    Le format eval est un texte source Python qui peut etre evalué. Le
-    résultat de l'évaluation est un objet Python quelconque.
+    Le format eval est un texte source Python qui peut etre evaluÃ©. Le
+    rÃ©sultat de l'Ã©valuation est un objet Python quelconque.
     Le format dict est un dictionnaire Python.
-    Le format exec est un texte source Python qui peut etre executé. 
+    Le format exec est un texte source Python qui peut etre executÃ©. 
 
-    La méthode readfile a pour fonction de lire un fichier dont le
-    nom est passé en argument de la fonction.
+    La mÃ©thode readfile a pour fonction de lire un fichier dont le
+    nom est passÃ© en argument de la fonction.
        - convertisseur.readfile(nom_fichier)
 
-    La méthode convert a pour fonction de convertir le fichier
-    préalablement lu dans un objet du format passé en argument.
+    La mÃ©thode convert a pour fonction de convertir le fichier
+    prÃ©alablement lu dans un objet du format passÃ© en argument.
        - objet=convertisseur.convert(outformat)
 
     Ce convertisseur supporte le format de sortie exec
@@ -51,16 +51,18 @@ import sys,string,traceback
 
 import parseur_python
 from Noyau import N_CR
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
-       Ces informations sont retournées dans un dictionnaire
+       Retourne les informations nÃ©cessaires pour le chargeur de plugins
+       Ces informations sont retournÃ©es dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'homard',
-        # La factory pour créer une instance du plugin
+        # La factory pour crÃ©er une instance du plugin
           'factory' : PythonParser,
           }
 
@@ -72,14 +74,14 @@ class PythonParser:
        et retourne le texte au format outformat avec la 
        methode convertisseur.convert(outformat)
 
-       Ses caractéristiques principales sont exposées dans 2 attributs 
+       Ses caractÃ©ristiques principales sont exposÃ©es dans 2 attributs 
        de classe :
-          - extensions : qui donne une liste d'extensions de fichier préconisées
-          - formats : qui donne une liste de formats de sortie supportés
+          - extensions : qui donne une liste d'extensions de fichier prÃ©conisÃ©es
+          - formats : qui donne une liste de formats de sortie supportÃ©s
    """
-   # Les extensions de fichier préconisées
+   # Les extensions de fichier prÃ©conisÃ©es
    extensions=('.py',)
-   # Les formats de sortie supportés (eval dict ou exec)
+   # Les formats de sortie supportÃ©s (eval dict ou exec)
    # Le format exec est du python executable (commande exec) converti avec PARSEUR_PYTHON
    # Le format execnoparseur est du python executable (commande exec) non converti
    formats=('exec','execnoparseur')
@@ -99,7 +101,7 @@ class PythonParser:
       try:
          self.text=open(filename).read()
       except:
-         self.cr.fatal("Impossible ouvrir fichier %s" % filename)
+         self.cr.fatal(tr("Impossible d'ouvrir le fichier %s", filename))
          return
 
    def convert(self,outformat,appli=None):
@@ -110,15 +112,14 @@ class PythonParser:
             # Erreur lors de la conversion
             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],
                                          sys.exc_info()[2])
-            self.cr.exception("Impossible de convertir le fichier python \
-                               qui doit contenir des erreurs.\n \
-                               On retourne le fichier non converti \n \
-                               Prévenir la maintenance. \n" + string.join(l))
-            # On retourne néanmoins le source initial non converti (au cas où)
+            self.cr.exception(tr("Impossible de convertir le fichier Python \
+                                        qui doit contenir des erreurs.\n \
+                                        On retourne le fichier non converti \n \
+                                        PrÃ©venir la maintenance. \n %s", string.join(l)))
+            # On retourne nÃ©anmoins le source initial non converti (au cas oÃ¹)
             return self.text
       elif outformat == 'execnoparseur':
          return self.text
       else:
-         raise "Format de sortie : %s, non supporté"
+         raise EficasException(tr("Format de sortie : %s, non supportÃ©", unicode(outformat)))
          return None
-

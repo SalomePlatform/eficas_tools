@@ -21,6 +21,7 @@
 import os, string
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 class MyTabview:
 
@@ -56,9 +57,9 @@ class MyTabview:
                self.appliEficas.definitCode(None,None)
                if self.appliEficas.code == None:return
             fichier = QFileDialog.getOpenFileName(self.appliEficas,
-                        self.appliEficas.trUtf8('Ouvrir Fichier'),
+                        tr('Ouvrir Fichier'),
                         self.appliEficas.CONFIGURATION.savedir,
-                        self.appliEficas.trUtf8('JDC Files (*.comm);;''All Files (*)'))
+                        tr('Fichiers JDC (*.comm);;''Tous les Fichiers (*)'))
             if fichier.isNull(): 
               return result
        fichier = os.path.abspath(unicode(fichier))
@@ -69,7 +70,7 @@ class MyTabview:
        if maPage: result = maPage
        return result
 
-   def handleClose(self,doitSauverRecent = 1,texte='&Quitter'):
+   def handleClose(self,doitSauverRecent = 1,texte=tr('&Quitter')):
        if doitSauverRecent : self.appliEficas.sauveRecents()
        index=self.myQtab.currentIndex()
        if index < 0 : return
@@ -113,7 +114,7 @@ class MyTabview:
        editor=self.dict_editors[index]
        editor.saveYACS()
 
-   def handleCloseAll(self,texte='Quitter'):
+   def handleCloseAll(self,texte=tr('Quitter')):
        res=0
        self.appliEficas.sauveRecents()
        while len(self.dict_editors) > 0 :
@@ -193,9 +194,9 @@ class MyTabview:
        if editor in self.doubles.keys() :
            QMessageBox.warning(
                      None,
-                     self.appliEficas.trUtf8("Fichier Duplique"),
-                     self.appliEficas.trUtf8("Le fichier ne sera pas sauvegarde."),
-                     self.appliEficas.trUtf8("&Annuler"))
+                     tr("Fichier Duplique"),
+                     tr("Le fichier ne sera pas sauvegarde."),
+                     tr("&Annuler"))
            return
        ok, newName = editor.saveFile()
        if ok :
@@ -235,10 +236,10 @@ class MyTabview:
            editor=self.dict_editors[indexEditor]
            if self.samepath(fichier, editor.getFileName()):
               abort = QMessageBox.warning(self.appliEficas,
-                        self.appliEficas.trUtf8("Fichier"),
-                        self.appliEficas.trUtf8("Le fichier <b>%1</b> est deja ouvert.").arg(fichier),
-                        self.appliEficas.trUtf8("&Duplication"),
-                        self.appliEficas.trUtf8("&Abort"))
+                        tr("Fichier"),
+                        tr("Le fichier <b>%s</b> est deja ouvert.",fichier),
+                        tr("&Duplication"),
+                        tr("&Abort"))
               if abort: break
               double=editor
        else :
@@ -265,7 +266,7 @@ class MyTabview:
    def addView(self, win, fichier=None):
         if fichier is None:
             self.untitledCount += 1
-            self.myQtab.addTab(win, self.appliEficas.trUtf8("Untitled %1").arg(self.untitledCount))
+            self.myQtab.addTab(win, tr("Sans nom %s", self.untitledCount))
         else:
             liste=fichier.split('/')
             txt =  liste[-1]
@@ -304,10 +305,10 @@ class MyTabview:
         if (editor.modified) and (editor in self.doubles.keys()) :
             res = QMessageBox.warning(
                      None,
-                     self.appliEficas.trUtf8("Fichier Duplique"),
-                     self.appliEficas.trUtf8("Le fichier ne sera pas sauvegarde."),
-                     self.appliEficas.trUtf8(texte), 
-                     self.appliEficas.trUtf8("&Annuler"))
+                     tr("Fichier Duplique"),
+                     tr("Le fichier ne sera pas sauvegarde."),
+                     tr(texte), 
+                     tr("&Annuler"))
             if res == 0 : return 1
             return 2
         if editor.modified:
@@ -315,11 +316,11 @@ class MyTabview:
             if fn is None:
                 fn = self.appliEficas.trUtf8('Noname')
             res = QMessageBox.warning(self.appliEficas, 
-                self.appliEficas.trUtf8("Fichier Modifie"),
-                self.appliEficas.trUtf8("Le fichier <b>%1</b> n a pas ete sauvegarde.") .arg(fn),
-                self.appliEficas.trUtf8("&Sauvegarder"),
-                self.appliEficas.trUtf8(texte),
-                self.appliEficas.trUtf8("&Annuler") )
+                tr("Fichier Modifie"),
+                tr("Le fichier <b>%s</b> n a pas ete sauvegarde.",fn),
+                tr("&Sauvegarder"),
+                tr(texte),
+                tr("&Annuler") )
             if res == 0:
                 (ok, newName) = editor.saveFile()
                 if ok:

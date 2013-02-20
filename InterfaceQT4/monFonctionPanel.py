@@ -26,6 +26,7 @@ from monPlusieursBasePanel import MonPlusieursBasePanel
 
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 # Import des panels
 
@@ -60,7 +61,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         #decoupe la liste des valeurs en n ( les x puis les y)
         l_valeurs=[]
         if ((len(liste)% self.nbValeursASaisir != 0 and (len(liste)% self.nbValeurs))):
-            message="La cardinalite n'est pas correcte, la derniere valeur est ignoree"
+            message=tr("La cardinalite n'est pas correcte, la derniere valeur est ignoree")
             #self.Commentaire.setText(QString(commentaire)) 
             self.editor.affiche_infos(message,Qt.red)
         i=0
@@ -108,9 +109,9 @@ class MonFonctionPanel(MonPlusieursBasePanel):
 
         if (self.node.item.wait_tuple()== 1 and len(liste) != self.nbValeurs):
             commentaire  = QString(str(liste)) 
-            commentaire += QString(" n est pas un tuple de ") 
+            commentaire += QString(tr(" n est pas un tuple de ")) 
             commentaire += QString(str(self.nbValeursASaisir)) 
-            commentaire += QString(" valeurs")
+            commentaire += QString(tr(" valeurs"))
 	    self.LEValeur.setText(QString(str(liste)))
             self.editor.affiche_infos(commentaire,Qt.red)
             return

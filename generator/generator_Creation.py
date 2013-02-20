@@ -24,7 +24,7 @@
 """
 import traceback
 import types,string,re,os
-
+from Extensions.i18n import tr
 from generator_python import PythonGenerator
 debut="""
 lqdkqmldk
@@ -54,7 +54,7 @@ class CreationGenerator(PythonGenerator):
    def gener(self,obj,format='brut',config=None):
        
       self.initDico(obj)
-      # Cette instruction génère le contenu du fichier de commandes (persistance)
+      # Cette instruction genère le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)
       if obj.isvalid() : self.genereDescription()
       return self.text
@@ -70,7 +70,7 @@ class CreationGenerator(PythonGenerator):
       try:
          jdcDict=self.jdc.jdcDict
       except:
-         raise valueError, "toutes les donnees ne sont pas connues"
+         raise ValueError,tr("toutes les donnees ne sont pas connues")
       for param in listeParam:
           obj=None
           for etape in self.jdc.jdcDict.etapes:
@@ -80,7 +80,7 @@ class CreationGenerator(PythonGenerator):
               break
               
       if obj==None:
-         raise valueError, "toutes les donnees ne sont pas connues"
+         raise ValueError,tr("toutes les donnees ne sont pas connues")
          return
 
       texteEtape=self.generETAPE(obj)

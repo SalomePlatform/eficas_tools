@@ -20,10 +20,10 @@
 from string import split,strip,lowercase,uppercase
 import re,string,os
 
-
+from Extensions.i18n import tr
 #
 __Id__="$Id: analyse_catalogue_initial.py,v 1.2.4.1.2.2 2012-05-16 09:43:00 pnoyret Exp $"
-__version__="$Name: V6_main $"
+__version__="$Name: LOGILAB $"
 #
 
                 
@@ -41,7 +41,7 @@ class Catalogue_initial:
                         self.lignes=f.readlines()
                         f.close()
                 except :
-                        print "Impossible d'ouvrir le fichier :",self.fichier
+                        print tr("Impossible d'ouvrir le fichier : %s", self.fichier)
 
         def constr_list_txt_cmd(self):
                 pattern = '^# Ordre Catalogue '

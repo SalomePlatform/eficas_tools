@@ -21,6 +21,7 @@
 """
 import string,traceback
 
+from Extensions.i18n import tr
 from I_MACRO_ETAPE import MACRO_ETAPE
 from Extensions import interpreteur_formule
 from Editeur import analyse_catalogue
@@ -101,9 +102,9 @@ class FORM_ETAPE(MACRO_ETAPE):
         # encadrant les arguments
         arguments = string.strip(arguments)
         if arguments[0] != '(':
-            return 0,"La liste des arguments d'une formule doit être entre parenthèses : parenthèse ouvrante manquante"
+            return 0,tr("La liste des arguments d'une formule doit être entre parenthèses : parenthèse ouvrante manquante")
         if arguments[-1] != ')':
-            return 0,"La liste des arguments d'une formule doit être entre parenthèses : parenthèse fermante manquante"
+            return 0,tr("La liste des arguments d'une formule doit être entre parenthèses : parenthèse fermante manquante")
         # on peut tester la syntaxe de chaque argument maintenant
         erreur=''
         test = 1
@@ -134,7 +135,7 @@ class FORM_ETAPE(MACRO_ETAPE):
                                              fonctions = l_form)
         except :
             traceback.print_exc()
-            return 0,"Impossible de réaliser la vérification de la formule"
+            return 0,tr("Impossible de réaliser la vérification de la formule")
         return verificateur.isvalid(),verificateur.report()
 
     def verif_nom(self,nom=None):
@@ -148,14 +149,14 @@ class FORM_ETAPE(MACRO_ETAPE):
         if not nom :
             nom = self.get_nom()
         if nom == "" :
-            return 0,"Pas de nom donné à la FORMULE"
+            return 0,tr("Pas de nom donné à la FORMULE")
         if len(nom) > 8 :
-            return 0,"Un nom de FORMULE ne peut dépasser 8 caractères"
+            return 0,tr("Un nom de FORMULE ne peut dépasser 8 caractères")
         if nom[0] > "0" and nom[0] < "9" :
-            return 0,"Un nom de FORMULE ne peut pas commencer par un chiffre"
+            return 0,tr("Un nom de FORMULE ne peut pas commencer par un chiffre")
         sd = self.parent.get_sd_autour_etape(nom,self)
         if sd :
-            return 0,"Un concept de nom %s existe déjà !" %nom
+            return 0,tr("Un concept de nom %s existe déjà !" %nom)
         return 1,''
 
     def verif_type(self,type=None):
@@ -169,9 +170,9 @@ class FORM_ETAPE(MACRO_ETAPE):
         if not type:
             type = self.type_retourne
         if not type :
-            return 0,"Le type de la valeur retournée n'est pas spécifié"
+            return 0,tr("Le type de la valeur retournée n'est pas spécifié")
         if type not in self.l_types_autorises:
-            return 0,"Une formule ne peut retourner une valeur de type : %s" %type
+            return 0,tr("Une formule ne peut retourner une valeur de type : %s" %type)
         return 1,''
 
     def verif_formule(self,formule=None):

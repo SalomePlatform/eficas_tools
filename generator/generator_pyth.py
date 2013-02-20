@@ -27,6 +27,9 @@ import types,string
 
 from Noyau import N_CR
 from Accas import MCSIMP,MCFACT,MCList
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
+
 
 def entryPoint():
    """
@@ -87,14 +90,14 @@ class PythGenerator:
       s=''
       if isinstance(obj,MCList):
         if len(obj.data) > 1:
-          raise "Pas supporté"
+          raise EficasException(tr("Pas supporte"))
         else:
           obj=obj.data[0]
 
       for mocle in obj.mc_liste:
         if isinstance(mocle,MCList):
           if len(mocle.data) > 1:
-            raise "Pas supporté"
+            raise EficasException(tr("Pas supporte"))
           else:
             valeur=self.generMCFACT(mocle.data[0])
             s=s+"%s = %s\n" % (mocle.nom,valeur)
@@ -124,7 +127,8 @@ class PythGenerator:
             valeur=self.generMCFACT(mocle)
             s=s+"'%s' : %s,\n" % (mocle.nom,valeur)
          else:
-            self.cr.fatal("Entite inconnue ou interdite : "+`mocle`+" Elle est ignorée")
+            self.cr.fatal(tr("Entite inconnue ou interdite : %s. Elle est ignoree", `mocle`))
+
       s=s+'}'
       return s
 
@@ -135,8 +139,11 @@ class PythGenerator:
       """
       try:
          s="%s" % obj.valeur
-      except Exception,e :
-         self.cr.fatal("Type de valeur non supporté par le format pyth : "+ obj.nom + '\n'+str(e))
+      except Exception as e :
+         self.cr.fatal(tr("Type de valeur non supporté par le format pyth : n %(exception)s", \
+                           {'nom': obj.nom, 'exception': unicode(e)}))
+
+
          s="ERREUR"
       return s
 

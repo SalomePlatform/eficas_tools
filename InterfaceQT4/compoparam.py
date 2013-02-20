@@ -25,6 +25,7 @@
 
 # import modules Python
 import string, types
+from Extensions.i18n import tr
 
 # import modules EFICAS
 from Editeur     import Objecttreeitem
@@ -142,7 +143,7 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       Retourne le fr associé au paramêtre, cad la bulle d'aide pour EFICAS
       """
-      return "Définition d'un paramêtre"
+      return tr("Définition d'un paramêtre")
     
 import Extensions.parametre
 treeitem =PARAMTreeItem
