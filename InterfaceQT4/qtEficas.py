@@ -139,7 +139,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuAide.addAction(self.actionCode)
 
     def MAP(self):
-        self.menuExecution = self.menubar.addMenu(Application.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
         self.actionExecution = QAction(self)
         icon6 = QIcon(self.RepIcon+"/compute.png")
         self.actionExecution.setIcon(icon6)
