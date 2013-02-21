@@ -22,7 +22,7 @@ import tempfile
 from PyQt4.QtGui import QMessageBox, QAction
 from PyQt4.QtCore import Qt, SIGNAL
 from Extensions.i18n import tr
-from EficasException import EficasException
+from Extensions.eficas_exception import EficasException
 
 from Editeur     import Objecttreeitem
 import browser

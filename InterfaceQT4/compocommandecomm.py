@@ -21,7 +21,7 @@ import traceback
 import string
 
 from Editeur import Objecttreeitem
-from EficasException import EficasException
+from Extensions.eficas_exception import EficasException
 import compocomm
 
 class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):

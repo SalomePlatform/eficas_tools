@@ -26,7 +26,7 @@ from Editeur     import Objecttreeitem
 import browser
 import typeNode
 from Extensions.i18n import tr
-from EficasException import EficasException
+from Extensions.eficas_exception import EficasException
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
