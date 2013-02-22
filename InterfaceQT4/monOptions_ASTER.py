@@ -102,14 +102,17 @@ class Options(desOptions):
    def BokClicked(self):
        version=str(self.CBVersions.currentText())
        if self.LERepCata.text() == "" :
-          QMessageBox.critical( self, tr("Champ non rempli"),tr("Le champs Catalogue  doit etre rempli" ))
+          QMessageBox.critical( self, tr("Champ non rempli"),tr("Le champ Catalogue  doit etre rempli" ))
           return
 
-       self.dRepMat[version]=self.LERepMat.text()
+       self.dRepMat[version]=str(self.LERepMat.text())
        if str(self.dRepMat[version] != "") != "" :
           codeSansPoint=re.sub("\.","",version)
           chaine="rep_mat_"+codeSansPoint
-          ancienneValeur=getattr(self.configuration,chaine)
+          try :
+             ancienneValeur=getattr(self.configuration,chaine)
+          except :
+             ancienneValeur=''
           if ancienneValeur != self.dRepMat[version]:
              setattr(self.configuration,chaine,self.dRepMat[version])
 
@@ -125,7 +128,10 @@ class Options(desOptions):
        if str(self.dRepDoc[version] != "") != "" :
           codeSansPoint=re.sub("\.","",version)
           chaine="rep_doc_"+codeSansPoint
-          ancienneValeur=getattr(self.configuration,chaine)
+          try :
+             ancienneValeur=getattr(self.configuration,chaine)
+          except :
+             ancienneValeur=''
           if ancienneValeur != self.dRepDoc[version]:
              setattr(self.configuration,chaine,self.dRepDoc[version])
 
@@ -141,7 +147,9 @@ class Options(desOptions):
        self.CBVersions.addItem(version)
        self.LERepMat.setText("")
        self.LERepCata.setText("")
-       self.LEVersionAjout.setText("")
+       self.LERepCata.setText("")
+       self.dRepDoc[version]=""
+       self.LERepDoc.setText("")
        self.CBVersions.setCurrentIndex(self.CBVersions.count()-1)
 
    def SupVersion(self):
