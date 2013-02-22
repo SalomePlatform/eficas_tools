@@ -77,7 +77,7 @@ class MapGenerator(PythonGenerator):
       self.dictValeur={}
   
    def writeDefault(self, fn):
-      fileEXE = fn[:fn.rfind(u".")] + '.py'
+      fileEXE = fn[:fn.rfind(".")] + '.py'
       f = open( str(fileEXE), 'wb')
       f.write( self.texteEXE )
       f.close()

@@ -35,7 +35,7 @@ class CONFIG(configuration.CONFIG_BASE):
       self.labels_user=['catalogues','lang']
       self.labels_eficas=['lang','rep_cata','catalogues']
 
-      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_Syrthes')
+      configuration.CONFIG_BASE.__init__(self,appli,repIni)
 
 
 def make_config(appli,rep):

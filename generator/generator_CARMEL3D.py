@@ -29,20 +29,20 @@ from generator_python import PythonGenerator
 usePrefix = False # les noms ont des prefixes (True) ou non (False)
 # liste des prefixes des groupes de mailles, sans le caractere _ separant le prefixe du reste du nom
 # Ce prefixe (et caractere _) doivent etre supprimes dans le fichier .phys
-listePrefixesGroupeMaille = (u"DIEL","NOCOND","COND","CURRENT","EPORT","HPORT","TOPO","PB_MOBILE","NILMAT",
+listePrefixesGroupeMaille = ("DIEL","NOCOND","COND","CURRENT","EPORT","HPORT","TOPO","PB_MOBILE","NILMAT",
                          "VCUT","VCUTN","EWALL","HWALL","GAMMAJ","PERIODIC","APERIODIC",
                          "HPROBE","EPROBE","BFLUX","BFLUXN","JFLUX","JFLUXN",
                          "PORT_OMEGA","POST_PHI","PB_GRID",
                          "SCUTE","SCUTN","ZS","ZJ","ZT")
 # liste des prefixes des groupes de mailles, sans le separateur, par type de bloc du fichier PHYS sous la forme d'un dictionnaire
-dictPrefixesGroupeMaille = {'DIELECTRIC':(u'DIEL','NOCOND'), 
-                                             'CONDUCTOR':(u'COND',), 
-                                             'STRANDED_INDUCTOR':(u'CURRENT', ), 
-                                             'EPORT':(u'EPORT', ), 
-                                             'HPORT':(u'HPORT', ), 
-                                             'ZSURFACIC':(u'ZS', ), 
-                                             'ZINSULATOR':(u'ZJ', ), 
-                                             'NILMAT':(u'NILMAT', )}
+dictPrefixesGroupeMaille = {'DIELECTRIC':('DIEL','NOCOND'), 
+                                             'CONDUCTOR':('COND',), 
+                                             'STRANDED_INDUCTOR':('CURRENT', ), 
+                                             'EPORT':('EPORT', ), 
+                                             'HPORT':('HPORT', ), 
+                                             'ZSURFACIC':('ZS', ), 
+                                             'ZINSULATOR':('ZJ', ), 
+                                             'NILMAT':('NILMAT', )}
 # separateur entre le prefixe et le reste du nom du groupe de maille
 sepNomGroupeMaille = '_'
 
@@ -71,7 +71,7 @@ class CARMEL3DGenerator(PythonGenerator):
 
    """
    # Les extensions de fichier permis?
-   extensions=(u'.comm',)
+   extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
    def gener(self,obj,format='brut',config=None):
@@ -138,7 +138,7 @@ class CARMEL3DGenerator(PythonGenerator):
         """Ecrit le fichier de parametres (PHYS) pour le code Carmel3D"""
         if self.debug: 
             print tr("ecriture du fichier de parametres (PHYS)")
-        filePHYS = fn[:fn.rfind(u".")] + '.phys'
+        filePHYS = fn[:fn.rfind(".")] + '.phys'
         f = open( str(filePHYS), 'wb')
         f.write( self.texteCarmel3D)
         f.close()
@@ -243,13 +243,13 @@ class CARMEL3DGenerator(PythonGenerator):
                 nomGroupeMaillage = obj.get_sdname() # nom du groupe de maillage, i.e. nom du concept
             # test: un et un seul nom de materiau ou source doit etre associe a ce groupe de maillage, via les cles MATERIAL et SOURCE, respectivement.
             # test sur un seul attribut, non pertinent car il peut y en avoir plusieurs.
-            #assert len(obj.valeur.keys())==1,u"Un et un seul nom de materiau ou source doit etre associe a ce groupe du maillage :"+nomGroupeMaillage
+            #assert len(obj.valeur.keys())==1,"Un et un seul nom de materiau ou source doit etre associe a ce groupe du maillage :"+nomGroupeMaillage
             #
             # on utilise le fait que obj.valeur est un dictionnaire
             if self.debug: 
                 print tr("obj.valeur.keys()= %s", obj.valeur.keys())
             if 'MATERIAL' in obj.valeur.keys() and 'SOURCE' in obj.valeur.keys(): # test d'erreur lors de presence de materiau et source a la fois
-                raise ValueError,tr(" ce groupe de maillage (%s) est associe a au moins un materiau  et au moins une source.", nomGroupeMaillage))
+                raise ValueError,tr(" ce groupe de maillage %s est associe a au moins un materiau  et au moins une source.", nomGroupeMaillage)
             # association a un materiau
             if 'MATERIAL' in obj.valeur.keys():
                 self.dictGroupesMaillage[nomGroupeMaillage] = obj.valeur['MATERIAL'].nom # sauvegarde de l'association entre ce groupe de maillage et un materiau ou source, par son nom, i.e. nom du concept du materiau ou de la source
@@ -260,7 +260,7 @@ class CARMEL3DGenerator(PythonGenerator):
                 self.dictGroupesMaillage['ordreSourcesJdC'].append(nomGroupeMaillage) # sauvegarde du nom du groupe de maillage associe a une source, dans l'ordre du JdC
             # erreur ni materiau ni source associee
             else:
-                raise ValueError, tr("ce groupe de maillage (%s)  n'est associe a aucun materiau ou source.",  nomGroupeMaillage))
+                raise ValueError, tr("ce groupe de maillage %s  n'est associe a aucun materiau ou source.",  nomGroupeMaillage)
             if self.debug:
                 print tr("self.dictGroupesMaillage= %s", repr(self.dictGroupesMaillage))
         except:
@@ -294,7 +294,7 @@ class CARMEL3DGenerator(PythonGenerator):
 	  print tr("ERREUR! Le bloc CONDUCTOR doit contenir PERMEABILITY et CONDUCTIVITY.")
        else:
           # parcours des proprietes du sous bloc CONDUCTOR (PERMEABILITY, CONDUCTIVITY)
-          for keyN1 in (u'PERMEABILITY','CONDUCTIVITY') :
+          for keyN1 in ('PERMEABILITY','CONDUCTIVITY') :
              # debut du sous bloc de propriete du DIELECTRIC
              texte+="         ["+keyN1+"\n"
              texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
@@ -316,7 +316,7 @@ class CARMEL3DGenerator(PythonGenerator):
                    texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
                    # ajout des autres parametres autres que ISOTROPY, NATURE, VALUE, LAW, HOMOGENEOUS, ISOTROPIC
                    for keyN2 in obj.valeur[keyN1] :
-                      if keyN2 not in (u'ISOTROPY','NATURE','VALUE','LAW','HOMOGENEOUS','ISOTROPIC') :
+                      if keyN2 not in ('ISOTROPY','NATURE','VALUE','LAW','HOMOGENEOUS','ISOTROPIC') :
                           texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
                    # fin du sous-bloc NONLINEAR
                    texte+="            ]"+"\n"
@@ -336,7 +336,7 @@ class CARMEL3DGenerator(PythonGenerator):
 	  print tr("ERREUR! Le bloc DIELECTRIC doit contenir PERMEABILITY et PERMITTIVITY.")
        else:
           # parcours des proprietes du sous bloc DIELECTRIC (PERMEABILITY, PERMITTIVITY)
-          for keyN1 in (u'PERMEABILITY','PERMITTIVITY') :
+          for keyN1 in ('PERMEABILITY','PERMITTIVITY') :
              # debut du sous bloc de propriete du DIELECTRIC
              texte+="         ["+keyN1+"\n"
              texte+="            HOMOGENEOUS "+str(obj.valeur[keyN1]["HOMOGENEOUS"])+"\n"
@@ -358,7 +358,7 @@ class CARMEL3DGenerator(PythonGenerator):
                    texte+="                NATURE "+str(obj.valeur[keyN1]['NATURE'])+"\n"
                    # ajout des autres parametres autres que ISOTROPY, NATURE, VALUE, LAW, HOMOGENEOUS, ISOTROPIC
                    for keyN2 in obj.valeur[keyN1] :
-                      if keyN2 not in (u'ISOTROPY','NATURE','VALUE','LAW','HOMOGENEOUS','ISOTROPIC') :
+                      if keyN2 not in ('ISOTROPY','NATURE','VALUE','LAW','HOMOGENEOUS','ISOTROPIC') :
                           texte+="                "+keyN2+" "+str(obj.valeur[keyN1][keyN2])+"\n"
                    # fin du sous-bloc NONLINEAR
                    texte+="            ]"+"\n"
@@ -557,7 +557,7 @@ class CARMEL3DGenerator(PythonGenerator):
       # constitution du bloc VERSION du fichier PHYS
       # creation d une entite  VERSION ; elle sera du type PROC car decrit ainsi
       # dans le du catalogue
-      version=obj.addentite(u'VERSION',pos=None)
+      version=obj.addentite('VERSION',pos=None)
       self.generPROC_ETAPE(obj.etapes[0])
       self.texteCarmel3D+="["+obj.etapes[0].nom+"\n"
       for cle in obj.etapes[0].valeur :
@@ -673,7 +673,7 @@ class CARMEL3DGenerator(PythonGenerator):
         """Constitution du bloc ZINSULATOR du fichier PHYS"""
         typeBloc = 'ZINSULATOR' # initialisation du type de bloc
         dictProprietes = self.dictMaterZinsulator # initialisation du dictionnaire des proprietes du bloc
-        if self.debug: print u'cles materiaux de type '+typeBloc+'=', dictProprietes.keys()
+        if self.debug: print 'cles materiaux de type '+typeBloc+'=', dictProprietes.keys()
         for nom in nomsGroupesMaillage: # parcours des noms des groupes de maillage
             if self.dictGroupesMaillage[nom] in dictProprietes.keys(): # test si le nom du materiau associe est du bon type
                 # ecriture du bloc complet

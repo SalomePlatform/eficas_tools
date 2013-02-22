@@ -237,7 +237,7 @@ class MyTabview:
            if self.samepath(fichier, editor.getFileName()):
               abort = QMessageBox.warning(self.appliEficas,
                         tr("Fichier"),
-                        tr("Le fichier <b>%s</b> est deja ouvert.",fichier),
+                        tr("Le fichier <b>%s</b> est deja ouvert.",str(fichier)),
                         tr("&Duplication"),
                         tr("&Abort"))
               if abort: break
@@ -317,7 +317,7 @@ class MyTabview:
                 fn = self.appliEficas.trUtf8('Noname')
             res = QMessageBox.warning(self.appliEficas, 
                 tr("Fichier Modifie"),
-                tr("Le fichier <b>%s</b> n a pas ete sauvegarde.",fn),
+                tr("Le fichier %s n a pas ete sauvegarde.",str(fn)),
                 tr("&Sauvegarder"),
                 tr(texte),
                 tr("&Annuler") )

@@ -101,7 +101,7 @@ class PythonParser:
       try:
          self.text=open(filename).read()
       except:
-         self.cr.fatal(tr("Impossible d'ouvrir le fichier %s", filename))
+         self.cr.fatal(tr("Impossible d'ouvrir le fichier %s", str(filename)))
          return
 
    def convert(self,outformat,appli=None):
@@ -115,11 +115,11 @@ class PythonParser:
             self.cr.exception(tr("Impossible de convertir le fichier Python \
                                         qui doit contenir des erreurs.\n \
                                         On retourne le fichier non converti \n \
-                                        Prévenir la maintenance. \n %s", string.join(l)))
-            # On retourne néanmoins le source initial non converti (au cas où)
+                                        Prevenir la maintenance. \n %s", string.join(l)))
+            # On retourne neanmoins le source initial non converti (au cas ou)
             return self.text
       elif outformat == 'execnoparseur':
          return self.text
       else:
-         raise EficasException(tr("Format de sortie : %s, non supporté", unicode(outformat)))
+         raise EficasException(tr("Format de sortie : %s, non supporte", unicode(outformat)))
          return None

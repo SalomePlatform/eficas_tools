@@ -29,9 +29,9 @@ from Extensions.i18n import tr
 
 class CONFIG_BASE:
 
-  #--------------------------------------
-  def __init__(self,appli,repIni,nomDir):
-  #--------------------------------------
+  #-------------------------------
+  def __init__(self,appli,repIni):
+  #-------------------------------
 
   # Classe de base permettant de lire, afficher
   # et sauvegarder les fichiers utilisateurs 
@@ -114,7 +114,7 @@ class CONFIG_BASE:
          exec txt in d
       except :
          QMessageBox.critical( None, tr("Import du fichier de Configuration"), 
-			tr("Erreur a la lecture du fichier de configuration %s " , fic_ini_integrateur))
+			tr("Erreur a la lecture du fichier de configuration %s " , str(fic_ini_integrateur)))
          return
       self.labels_eficas.append('rep_aide')
       for k in self.labels_eficas :
@@ -143,7 +143,7 @@ class CONFIG_BASE:
       except :
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
          QMessageBox.critical( None, tr("Import du fichier de Configuration"), 
-			tr("Erreur a la lecture du fichier de configuration %s " , fic_ini_integrateur))
+			tr("Erreur a la lecture du fichier de configuration %s " , str(fic_ini_integrateur)))
       for k in self.labels_user :
          try :
             setattr(self,k,d[k])

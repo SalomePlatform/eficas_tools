@@ -88,7 +88,7 @@ class XMLGenerateur :
     Pilotage general de la creation du fichier XML
     '''
     data = openturns.WrapperData()
-    data.setLibraryPath( self.GetMCVal(u'WrapperPath','') )
+    data.setLibraryPath( self.GetMCVal('WrapperPath','') )
     data.setVariableList( self.VariableList() )
     data.setFunctionDescription( self.FunctionDefinition() )
     data.setGradientDescription( self.GradientDefinition() )
@@ -127,10 +127,10 @@ class XMLGenerateur :
     variable.id_ = var
     if dictVar[ 'Type' ] in VariableTypeByName.keys() :
       variable.type_ = VariableTypeByName[ dictVar[ 'Type' ] ]
-    if dictVar.has_key(u'Comment')   : variable.comment_ = dictVar[ 'Comment' ]
-    if dictVar.has_key(u'Unit')      : variable.unit_    = dictVar[ 'Unit'    ]
-    if dictVar.has_key(u'Regexp')    : variable.regexp_  = dictVar[ 'Regexp'  ]
-    if dictVar.has_key(u'Format')    : variable.format_  = dictVar[ 'Format'  ]
+    if dictVar.has_key('Comment')   : variable.comment_ = dictVar[ 'Comment' ]
+    if dictVar.has_key('Unit')      : variable.unit_    = dictVar[ 'Unit'    ]
+    if dictVar.has_key('Regexp')    : variable.regexp_  = dictVar[ 'Regexp'  ]
+    if dictVar.has_key('Format')    : variable.format_  = dictVar[ 'Format'  ]
     return variable
 
   def FunctionDefinition (self) :
@@ -167,7 +167,7 @@ class XMLGenerateur :
     Ecrit la liste des fichiers
     '''
     fileList = openturns.WrapperDataFileCollection()
-    for dictFile in self.GetMCVal(u'Files', []) :
+    for dictFile in self.GetMCVal('Files', []) :
       fileList.add( self.File( dictFile ) )
     return fileList
 
@@ -179,9 +179,9 @@ class XMLGenerateur :
     fich.id_ = dictFile[ 'Id' ]
     if dictFile[ 'Type' ] in FileTypeByName.keys() :
       fich.type_ = FileTypeByName[ dictFile[ 'Type' ] ]
-    if dictFile.has_key(u'Name')   : fich.name_  = dictFile[ 'Name' ]
-    if dictFile.has_key(u'Path')   : fich.path_  = dictFile[ 'Path' ]
-    if dictFile.has_key(u'Subst')  :
+    if dictFile.has_key('Name')   : fich.name_  = dictFile[ 'Name' ]
+    if dictFile.has_key('Path')   : fich.path_  = dictFile[ 'Path' ]
+    if dictFile.has_key('Subst')  :
       import string
       fich.subst_ = string.join( dictFile[ 'Subst' ], ',' )
     return fich
@@ -191,14 +191,14 @@ class XMLGenerateur :
     Ecrit les parametres de couplage au code externe
     '''
     parameters = openturns.WrapperParameter()
-    parameters.mode_  = WrapperModeByName[ self.GetMCVal(u'WrapCouplingMode') ]
+    parameters.mode_  = WrapperModeByName[ self.GetMCVal('WrapCouplingMode') ]
     if (parameters.mode_ == openturns.WrapperMode.FORK ):
-      parameters.command_ = self.GetMCVal(u'Command')
-      userPrefix = self.GetMCVal(u'UserPrefix', None)
+      parameters.command_ = self.GetMCVal('Command')
+      userPrefix = self.GetMCVal('UserPrefix', None)
       if userPrefix != None : parameters.userPrefix_ = userPrefix
-    parameters.state_ = WrapperStateByName[ self.GetMCVal(u'State') ]
-    parameters.in_    = WrapperDataTransferByName[ self.GetMCVal(u'InDataTransfer') ]
-    parameters.out_   = WrapperDataTransferByName[ self.GetMCVal(u'OutDataTransfer') ]
+    parameters.state_ = WrapperStateByName[ self.GetMCVal('State') ]
+    parameters.in_    = WrapperDataTransferByName[ self.GetMCVal('InDataTransfer') ]
+    parameters.out_   = WrapperDataTransferByName[ self.GetMCVal('OutDataTransfer') ]
     return parameters
   
   def FrameworkData (self) :
@@ -207,8 +207,8 @@ class XMLGenerateur :
     '''
     framework = openturns.WrapperFrameworkData()
 #   framework.studycase_ = "12:23:34"
-#   framework.componentname_ = self.GetMCVal(u'SolverComponentName', 'UNDEFINED')
-    CN = self.GetMCVal(u'SolverComponentName', 'UNDEFINED')
+#   framework.componentname_ = self.GetMCVal('SolverComponentName', 'UNDEFINED')
+    CN = self.GetMCVal('SolverComponentName', 'UNDEFINED')
     print tr('CN = %s', CN)
     framework.componentname_ = CN
     return framework

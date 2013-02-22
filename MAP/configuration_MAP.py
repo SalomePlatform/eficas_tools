@@ -40,7 +40,7 @@ class CONFIG(configuration.CONFIG_BASE):
       self.labels_eficas=['exec_acrobat','savedir','path_doc','catalogues']
 
       #self.cataFile="catalogues_MAP.ini"
-      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_MAP')
+      configuration.CONFIG_BASE.__init__(self,appli,repIni)
   
   def make_ssCode(self,ssCode):
       if ssCode == None : return

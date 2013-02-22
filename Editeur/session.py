@@ -185,7 +185,7 @@ def check_fich(option, opt_str, fich, parser):
         parser : objet parseur des options de la ligne de commande
     """
     if not os.path.isfile(fich):
-       raise OptionValueError(tr(" le fichier jdc %s n'existe pas", fich))
+       raise OptionValueError(tr(" le fichier jdc %s n'existe pas", str(fich)))
     if parser.values.fich is None:
        parser.values.fich=[]
     parser.values.fich.append(fich)
@@ -195,7 +195,7 @@ def check_fich(option, opt_str, fich, parser):
     config = ConfigParser.ConfigParser()
     config.read([fich])
     if not config.has_option(u"jdc","jdc"):
-       raise OptionValueError(tr(" jdc %s manque option jdc dans section jdc", fich))
+       raise OptionValueError(tr(" jdc %s manque option jdc dans section jdc", str(fich)))
     jdc=config.get(u"jdc","jdc")
 
     if not config.has_option(jdc,"comm"):
@@ -252,10 +252,10 @@ def create_parser():
                   help=tr("fichier decrivant une etude"))
 
     parser.add_option(u"-c","--cata", action="store", type="string",dest="cata",
-                  help=tr("version de catalogue à utiliser"))
+                  help=tr("version de catalogue a utiliser"))
 
     parser.add_option(u"-k","--kode", action="store", type="string",dest="code",
-                  help=tr("nom du code à utiliser"))
+                  help=tr("nom du code a utiliser"))
 
     parser.add_option(u"-d","--debug", action="store", type="int",dest="debug",
                   help=tr("niveau de debug"))

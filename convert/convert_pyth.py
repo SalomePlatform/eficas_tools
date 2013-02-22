@@ -97,7 +97,7 @@ class PythParser:
       try:
          self.text=open(filename).read()
       except:
-         self.cr.fatal(tr("Impossible d'ouvrir le fichier %s", filename))
+         self.cr.fatal(tr("Impossible d'ouvrir le fichier %s",str( filename)))
          return
       self.g={}
       try:

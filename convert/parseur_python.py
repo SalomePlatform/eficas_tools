@@ -119,7 +119,7 @@ def construit_genea(texte,liste_mc):
 
 class ENTITE_JDC :
     """Classe de base pour tous les objets créés lors de la conversion
-       Tout objet dérivé est enregistré auprès de son pere Ã  sa création
+       Tout objet dérivé est enregistré auprès de son pere a sa création
     """
     def __init__(self,pere):
         self.texte = ''
@@ -130,7 +130,7 @@ class ENTITE_JDC :
 
     def append_text(self,texte):
         """
-        Ajoute texte Ã  self.texte en mettant un retour chariot Ã  la fin de texte
+        Ajoute texte a self.texte en mettant un retour chariot a la fin de texte
         """
         texte = texte+'\n'
         self.texte = self.texte +texte
@@ -153,7 +153,7 @@ class COMMENTAIRE(ENTITE_JDC):
 
     def append_text(self,texte):
         """
-        Ajoute texte Ã  self.texte en enlevant le # initial
+        Ajoute texte a self.texte en enlevant le # initial
         """
         texte = texte+'\n'
         if texte[0] == '#':
@@ -178,7 +178,7 @@ class COMMANDE(ENTITE_JDC):
         Peut donc retourner un entier négatif
         """
         # faire attention aux commentaires contenus dans self.texte
-        # qui peuvent eux-mÃªmes contenir des parenthèses !!!!
+        # qui peuvent eux-memes contenir des parenthèses !!!!
         l_lignes = string.split(self.texte,'\n')
         nb = 0
         for ligne in l_lignes:
@@ -190,7 +190,7 @@ class AFFECTATION(ENTITE_JDC):
 
     def append_text(self,texte):
         """
-        Ajoute texte Ã  self.texte en enlevant tout retour chariot et tout point virgule
+        Ajoute texte a self.texte en enlevant tout retour chariot et tout point virgule
         PN et tout commentaire
         """
         if texte[-1] == '\n' : texte = string.rstrip(texte[0:-1])
@@ -212,7 +212,7 @@ class COMMANDE_COMMENTARISEE(ENTITE_JDC):
 
     def append_text(self,texte):
         """
-        Ajoute texte Ã  self.texte en enlevant les doubles commentaires
+        Ajoute texte a self.texte en enlevant les doubles commentaires
         """
         texte = string.strip(texte)
         texte = string.strip(texte[2:])
@@ -230,7 +230,7 @@ class AFFECTATION_EVAL(ENTITE_JDC):
 
     def append_text(self,texte):
         """
-        Ajoute texte Ã  self.texte en enlevant tout retour chariot
+        Ajoute texte a self.texte en enlevant tout retour chariot
         """
         if texte[-1] == '\n' : texte = texte[1:-1]
         self.texte = self.texte+texte
@@ -248,7 +248,7 @@ class AFFECTATION_EVAL(ENTITE_JDC):
         
 class PARSEUR_PYTHON:
     """
-    Cette classe sert Ã  générer un objet PARSEUR_PYTHON qui réalise l'analyse d'un texte 
+    Cette classe sert a générer un objet PARSEUR_PYTHON qui réalise l'analyse d'un texte 
     représentant un JDC Python en distinguant :
       - les commentaires inter commandes
       - les affectations
@@ -314,7 +314,7 @@ class PARSEUR_PYTHON:
         # A ce stade il faut avoir un OPER ou une MACRO, bref un '=' !
         if '=' not in texte : return 0
         # on a un texte de la forme xxxx = yyyyy
-        # --> reste Ã  analyser yyyy
+        # --> reste a analyser yyyy
         amont,aval = string.split(texte,'=',1)
         aval = string.strip(aval)
         if self.pattern_commande.match(aval):
@@ -370,13 +370,13 @@ class PARSEUR_PYTHON:
                 continue
 
             if pattern_2comments.match(ligne):
-                #on a trouvé une commande commentarisée : double commentaire sans rien devant Ã  part des blancs
+                #on a trouvé une commande commentarisée : double commentaire sans rien devant a part des blancs
                 if commentaire_courant:
                     #Si un commentaire ordinaire est en cours on le termine
                     commentaire_courant = None
 
                 if commande_courante :
-                    # on a un objet commentarisé Ã  l'intérieur d'une commande
+                    # on a un objet commentarisé a l'intérieur d'une commande
                     # --> non traité pour l'instant : on l'ajoute simplement a la commande courante comme
                     # un commentaire ordinaire
                     commande_courante.append_text(ligne)
@@ -388,7 +388,7 @@ class PARSEUR_PYTHON:
                     commande_commentarisee_courante = COMMANDE_COMMENTARISEE(self)
                     commande_commentarisee_courante.append_text(ligne)
 
-                #on passe Ã  la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             if pattern_comment.match(ligne):
@@ -398,7 +398,7 @@ class PARSEUR_PYTHON:
                     commande_commentarisee_courante = None
 
                 if commande_courante :
-                    # il s'agit d'un commentaire Ã  l'intérieur d'une commande --> on ne fait rien de special
+                    # il s'agit d'un commentaire a l'intérieur d'une commande --> on ne fait rien de special
                     #on l'ajoute au texte de la commande 
                     commande_courante.append_text(ligne)
                 elif commentaire_courant :
@@ -411,16 +411,16 @@ class PARSEUR_PYTHON:
                     commentaire_courant = COMMENTAIRE(self)
                     commentaire_courant.append_text(ligne)
 
-                #on passe Ã  la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             # la ligne contient des données autre qu'un éventuel commentaire
             if commentaire_courant :
-                # on clÃ´t un éventuel commentaire courant
+                # on clot un éventuel commentaire courant
                 commentaire_courant = None
 
             if commande_commentarisee_courante :
-                # on clÃ´t une éventuelle commande commentarisee courante
+                # on clot une éventuelle commande commentarisee courante
                 commande_commentarisee_courante = None
 
             if commande_courante :
@@ -434,7 +434,7 @@ class PARSEUR_PYTHON:
                     self.analyse_reel(commande_courante.texte)
                     commande_courante = None
 
-                #on passe Ã  la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             if affectation_courante != None :
@@ -445,7 +445,7 @@ class PARSEUR_PYTHON:
                    and not hangingComments:
                     #L'affectation est terminée
                     affectation_courante=None
-                #on passe Ã  la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             # il peut s'agir d'une commande ou d'une affectation ...
@@ -455,7 +455,7 @@ class PARSEUR_PYTHON:
                 if affectation_courante : affectation_courante = None
                 affectation = AFFECTATION_EVAL(self)
                 affectation.append_text(ligne)
-                #on passe Ã  la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             if self.is_affectation(ligne):
@@ -486,7 +486,7 @@ class PARSEUR_PYTHON:
                    and not hangingComments:
                     #L'affectation est terminée
                     affectation_courante=None
-                #on passe Ã  la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             if self.is_commande(ligne):
@@ -502,7 +502,7 @@ class PARSEUR_PYTHON:
                     #print "fin de commande"
                     self.analyse_reel(commande_courante.texte)
                     commande_courante = None
-                #on passe Ã  la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
     def enleve (self,texte) :
@@ -632,7 +632,7 @@ class PARSEUR_PYTHON:
             for obj in self.l_objets:
                 txt = txt+str(obj)
         #else :
-        except  ParserException
+        except  ParserException:
             #Impossible de convertir le texte, on le retourne tel que
             txt=self.texte
         return txt

@@ -179,7 +179,7 @@ class AplatGenerator:
          Cette méthode convertit un EVAL
          en une chaine de caractères à la syntaxe aplat 
       """
-      return 'EVAL(u"""'+ obj.valeur +'""")'
+      return 'EVAL("""'+ obj.valeur +'""")'
 
    def generCOMMENTAIRE(self,obj):
       """

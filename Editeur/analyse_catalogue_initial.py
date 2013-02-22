@@ -22,8 +22,8 @@ import re,string,os
 
 from Extensions.i18n import tr
 #
-__Id__="$Id: analyse_catalogue_initial.py,v 1.2.4.1.2.2 2012-05-16 09:43:00 pnoyret Exp $"
-__version__="$Name: LOGILAB $"
+__Id__="$Id: analyse_catalogue_initial.py,v 1.2.4.1.2.2.2.2 2013-02-20 10:34:57 pnoyret Exp $"
+__version__="$Name:  $"
 #
 
                 
@@ -41,7 +41,7 @@ class Catalogue_initial:
                         self.lignes=f.readlines()
                         f.close()
                 except :
-                        print tr("Impossible d'ouvrir le fichier : %s", self.fichier)
+                        print tr("Impossible d'ouvrir le fichier : %s", str(self.fichier))
 
         def constr_list_txt_cmd(self):
                 pattern = '^# Ordre Catalogue '

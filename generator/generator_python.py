@@ -24,8 +24,6 @@
 """
 import traceback
 import types,string,re
-from Extensions.i18n import tr
-from Extensions.eficas_exception import EficasException
 
 from Noyau import N_CR
 from Noyau.N_utils import repr_float
@@ -103,7 +101,7 @@ class PythonGenerator:
          jdc_formate = Formatage(liste,mode='.py')
          self.text=jdc_formate.formate_jdc()
       else:
-         raise EficasException(tr("Format pas implemente : %s", format))
+         raise "Format pas implemente : "+format
       return self.text
 
    def generator(self,obj):
@@ -154,7 +152,7 @@ class PythonGenerator:
       elif isinstance(obj,Formula):
          return self.generFormula(obj)
       else:
-         raise EficasException(tr("Type d'objet non prevu %s", repr(obj)))
+         raise "Type d'objet non prevu",obj
 
    def generJDC(self,obj):
       """
@@ -186,7 +184,7 @@ class PythonGenerator:
       l=[]
       l.append('(')
       for v in obj.mc_liste:
-        text = re.sub(u".*=","",self.generator(v))
+        text = re.sub(".*=","",self.generator(v))
         l.append(text)
       l.append('),')
       return l
@@ -207,7 +205,7 @@ class PythonGenerator:
          Cette methode convertit un EVAL
          en une liste de chaines de caracteres a la syntaxe python
       """
-      return 'EVAL(u"""'+ obj.valeur +'""")'
+      return 'EVAL("""'+ obj.valeur +'""")'
 
    def generCOMMENTAIRE(self,obj):
       """
@@ -218,7 +216,7 @@ class PythonGenerator:
       # l'ajout systematique d'un diese, a la suite du commentaire
       # Dans la chaine de caracteres obj.valeur, on supprime le dernier
       # saut de ligne
-      sans_saut = re.sub(u"\n$","",obj.valeur)
+      sans_saut = re.sub("\n$","",obj.valeur)
       l_lignes = string.split(sans_saut,'\n')
       txt=''
       i=1
@@ -228,7 +226,7 @@ class PythonGenerator:
       # suppression du dernier saut de ligne
       #txt = re.sub("\n$","",txt)
       # on ajoute un saut de ligne avant
-      pattern=re.compile(u" ?\#")
+      pattern=re.compile(" ?\#")
       m=pattern.match(txt)
       if m:
          txt="\n"+txt
@@ -549,7 +547,7 @@ class PythonGenerator:
    def formatColonnes(self,nbrColonnes,text):
       try :
       #if 1 == 1 :
-        liste=text.split(u",")
+        liste=text.split(",")
         indice=0
         textformat=""
         while ( indice < len(liste) ) :

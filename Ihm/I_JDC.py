@@ -272,7 +272,7 @@ class JDC(I_OBJECT.OBJECT):
           traceback.print_exc()
           self.reset_current_step()
           self.editmode=0
-          raise AsException("Impossible d ajouter la commande "+name)
+          raise AsException(tr("Impossible d ajouter la commande")+name)
 
    def close(self):
       #print "JDC.close",self

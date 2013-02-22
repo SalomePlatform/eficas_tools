@@ -30,13 +30,13 @@ from Extensions.eficas_exception import EficasException
 # Objet re pour controler les identificateurs Python
 concept_re=re.compile(r'[a-zA-Z_]\w*$')
 
-# import rajoutÃ©s suitea  l'ajout de Build_sd --> a rÃ©sorber
+# import rajoute suite a l'ajout de Build_sd --> a resorber
 import traceback
 import Noyau
 from Noyau import N_Exception
 from Noyau.N_Exception import AsException
 import Validation
-# fin import a rÃ©sorber
+# fin import a resorber
 
 # Modules EFICAS
 import I_MCCOMPO
@@ -70,12 +70,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def init_modif(self):
       """
-         Met l'Ã©tat de l'Ã©tapa : modifiÃ©
+         Met l'etat de l'etape a : modifie
          Propage la modification au parent
       """
-      # init_modif doit etre appelÃ© avant de rÃ©aliser une modification
-      # La validitÃ© devra etre recalculÃ©e apres cette modification
-      # mais dans l'appel a fin_modif pour prÃ©server l'Ã©tat modified
+      # init_modif doit etre appele avant de realiser une modification
+      # La validite devra etre recalculee apres cette modification
+      # mais dans l'appel a fin_modif pour preserver l'etat modified
       # de tous les objets entre temps
       #print "init_modif",self,self.parent
       self.state = 'modified'
@@ -84,8 +84,8 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def fin_modif(self):
       """
-          MÃ©thode appelÃ©e une fois qu'une modification a Ã©tÃ© faite afin de 
-          dÃ©clencher d'Ã©ventuels traitements post-modification
+          Methode appelee une fois qu'une modification a ete faite afin de 
+          declencher d'eventuels traitements post-modification
           ex : INCLUDE et POURSUITE
           Ne pas mettre de traitement qui risque d'induire des recursions (soit a peu pres rien)
       """
@@ -95,28 +95,28 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def nomme_sd(self,nom) :
       """
-          Cette mÃ©thode a pour fonction de donner un nom (nom) au concept 
-          produit par l'Ã©tape (self).
-            - si le concept n'existe pas, on essaye de le crÃ©er a condition que l'Ã©tape soit valide ET non rÃ©entrante)
-            - si il existe dÃ©a, on le renomme et on rÃ©percute les changements dans les autres Ã©tapes    
+          Cette methode a pour fonction de donner un nom (nom) au concept 
+          produit par l'etape (self).
+            - si le concept n'existe pas, on essaye de le creer a condition que l'etape soit valide ET non reentrante)
+            - si il existe dea, on le renomme et on repercute les changements dans les autres etapes    
           Les valeurs de retour sont :
-            - 0 si le nommage n'a pas pu etre menÃ©a son terme,
+            - 0 si le nommage n'a pas pu etre menea son terme,
             - 1 dans le cas contraire
       """
       # Le nom d'un concept doit etre un identificateur Python (toujours vrai ?)
       if not concept_re.match(nom):
-         return 0, tr("Un nom de concept doit être un identificateur Python")
+         return 0, tr("Un nom de concept doit etre un identificateur Python")
 
       if len(nom) > 8 and self.jdc.definition.code == 'ASTER':
-        return 0, tr("Nom de concept trop long (maxi 8 caractères)")
+        return 0, tr("Nom de concept trop long (maxi 8 caracteres)")
 
       self.init_modif()
       #
       # On verifie d'abord si les mots cles sont valides
       #
-      if not self.isvalid(sd='non') : return 0,"Nommage du concept refusÃ© : l'opÃ©rateur n'est pas valide"
+      if not self.isvalid(sd='non') : return 0,"Nommage du concept refuse : l'operateur n'est pas valide"
       #
-      # Cas particulier des opÃ©rateurs obligatoirement rÃ©entrants
+      # Cas particulier des operateurs obligatoirement reentrants
       #
       if self.definition.reentrant == 'o':
         self.sd = self.reuse = self.jdc.get_sd_avant_etape(nom,self)
@@ -125,9 +125,9 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           self.fin_modif()
           return 1, tr("Concept existant")
         else:
-          return 0, tr("Opérateur réentrant mais concept non existant")
+          return 0, tr("Operateur reentrant mais concept non existant")
       #
-      # Cas particulier des opÃ©rateurs facultativement rÃ©entrants
+      # Cas particulier des operateurs facultativement reentrants
       #
       old_reuse=None
       if self.definition.reentrant == 'f' :
@@ -137,19 +137,19 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
              self.sd = self.reuse = sd
              self.sdnom = sd.nom
              self.fin_modif()
-             return 1, tr("Opérateur facultativement réentrant et concept existant trouvé")
+             return 1, tr("Operateur reentrant et concept existant trouve")
           else:
-             return 0, tr("Concept déjà existant et de mauvais type")
+             return 0, tr("Concept deja existant et de mauvais type")
         else :
           # il faut enlever le lien vers une SD existante car si on passe ici
-          # cela signifie que l'opÃ©rateur n'est pas utilisÃ© en mode rÃ©entrant.
-          # Si on ne fait pas cela, on risque de modifier une SD produite par un autre opÃ©rateur
+          # cela signifie que l'operateur n'est pas utilise en mode reentrant.
+          # Si on ne fait pas cela, on risque de modifier une SD produite par un autre operateur
           if self.reuse :
              old_reuse=self.reuse
              self.sd = self.reuse = self.sdnom = None
       #
-      # On est dans le cas ou l'opÃ©rateur n'est pas rÃ©entrant ou est facultativement reentrant
-      # mais est utilisÃ© en mode non rÃ©entrant
+      # On est dans le cas ou l'operateur n'est pas reentrant ou est facultativement reentrant
+      # mais est utilise en mode non reentrant
       #
       if self.sd == None :
           #Pas de concept produit preexistant
@@ -159,11 +159,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             if old_reuse:
                self.sd=self.reuse=old_reuse
                self.sdnom=old_reuse.nom
-            return 0, tr("Nommage du concept refusé : un concept de même nom existe déjà")
+            return 0, tr("Nommage du concept refuse : un concept de meme nom existe deja")
           else:
             # Il n'existe pas de concept de ce nom dans le voisinage de l'etape courante
-            # On peut donc crÃ©er le concept retournÃ©.
-            # Il est crÃ©Ã© sans nom mais enregistrÃ© dans la liste des concepts existants
+            # On peut donc creer le concept retourne
+            # Il est cree sans nom mais enregistre dans la liste des concepts existants
             try:
                self.get_sd_prod()
                # Renommage du concept : Il suffit de changer son attribut nom pour le nommer
@@ -171,38 +171,38 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
                self.sdnom=nom
                self.parent.update_concept_after_etape(self,self.sd)
                self.fin_modif()
-               return 1, tr("Nommage du concept effectué")
+               return 1, tr("Nommage du concept effectue")
             except:
                return 0, tr("Nommage impossible %s", str(sys.exc_info()[1]))
       else :
           #Un concept produit preexiste
           old_nom=self.sd.nom
           if string.find(old_nom,'sansnom') :
-            # Dans le cas oÃ¹ old_nom == sansnom, isvalid retourne 0 alors que ...
-            # par contre si le concept existe et qu'il s'appelle sansnom c'est que l'Ã©tape est valide
-            # on peut donc le nommer sans test prÃ©alable
+            # Dans le cas ou old_nom == sansnom, isvalid retourne 0 alors que ...
+            # par contre si le concept existe et qu'il s'appelle sansnom c'est que l'etape est valide
+            # on peut donc le nommer sans test prealable
             if self.parent.get_sd_autour_etape(nom,self):
-              return 0, tr("Nommage du concept refusé : un concept de même nom existe déjà")
+              return 0, tr("Nommage du concept refuse : un concept de meme nom existe deja")
             else:
               # Renommage du concept : Il suffit de changer son attribut nom pour le nommer
               self.sd.nom=nom
               self.sdnom=nom
               self.parent.update_concept_after_etape(self,self.sd)
               self.fin_modif()
-              return 1, tr("Nommage du concept effectué")
+              return 1, tr("Nommage du concept effectue")
           if self.isvalid() :
             # Normalement l appel de isvalid a mis a jour le concept produit (son type)
-            # Il suffit de spÃ©cifier l attribut nom de sd pour le nommer si le nom n est pas
-            # deja attribuÃ©
+            # Il suffit de specifier l attribut nom de sd pour le nommer si le nom n est pas
+            # deja attribue
             if self.parent.get_sd_autour_etape(nom,self):
-              return 0, tr("Nommage du concept refusé : un concept de même nom existe déjà")
+              return 0, tr("Nommage du concept refuse : un concept de meme nom existe deja")
             else:
               # Renommage du concept : Il suffit de changer son attribut nom pour le nommer
               self.sd.nom=nom
               self.sdnom=nom
               self.parent.update_concept_after_etape(self,self.sd)
               self.fin_modif()
-              return 1, tr("Nommage du concept effectué")
+              return 1, tr("Nommage du concept effectue")
           else:
             # Normalement on ne devrait pas passer ici
             return 0, tr('Normalement on ne devrait pas passer ici')
@@ -286,15 +286,15 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """ 
             Fonction:
             Lors d'une destruction d'etape, detruit tous les concepts produits
-            Un opÃ©rateur n a qu un concept produit 
+            Un operateur n a qu un concept produit 
             Une procedure n'en a aucun
-            Une macro en a en gÃ©nÃ©ral plus d'un
+            Une macro en a en general plus d'un
       """
       #print "supprime_sdprods",self
       if self.reuse is self.sd :return
-      # l'Ã©tape n'est pas rÃ©entrante
-      # le concept retournÃ© par l'Ã©tape est Ã  supprimer car il Ã©tait 
-      # crÃ©Ã© par l'Ã©tape
+      # l'etape n'est pas reentrante
+      # le concept retourne par l'etape est a supprimer car il etait 
+      # cree par l'etape
       if self.sd != None :
          self.parent.del_sdprod(self.sd)
          self.parent.delete_concept(self.sd)
@@ -344,7 +344,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def get_noms_sd_oper_reentrant(self):
       """ 
-          Retourne la liste des noms de concepts utilisÃ©sa l'intÃ©rieur de la commande
+          Retourne la liste des noms de concepts utilisesa l'interieur de la commande
           qui sont du type que peut retourner cette commande 
       """
       liste_sd = self.get_sd_utilisees()
@@ -365,14 +365,14 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def get_genealogie(self):
       """ 
           Retourne la liste des noms des ascendants de l'objet self
-          en s'arretant a la premiÃ¨re ETAPE rencontrÃ©e
+          en s'arretant a la premiere ETAPE rencontree
       """
       return [self.nom]
 
    def verif_existence_sd(self):
      """
-        VÃ©rifie que les structures de donnÃ©es utilisÃ©es dans self existent bien dans le contexte
-        avant Ã©tape, sinon enlÃ¨ve la rÃ©fÃ©rea ces concepts
+        Verifie que les structures de donnees utilisees dans self existent bien dans le contexte
+        avant etape, sinon enleve la referea ces concepts
      """
      #print "verif_existence_sd",self.sd
      for motcle in self.mc_liste :
@@ -380,10 +380,10 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def update_mc_global(self):
      """
-        Met a jour les mots cles globaux enregistrÃ©s dans l'Ã©tape
+        Met a jour les mots cles globaux enregistres dans l'etape
         et dans le jdc parent.
         Une etape ne peut pas etre globale. Elle se contente de passer
-        la requete a ses fils apres avoir reinitialisÃ© le dictionnaire 
+        la requete a ses fils apres avoir reinitialise le dictionnaire 
         des mots cles globaux.
      """
      self.mc_globaux={}
@@ -397,17 +397,17 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def get_objet_commentarise(self,format):
       """
-          Cette mÃ©thode retourne un objet commande commentarisÃ©e
+          Cette methode retourne un objet commande commentarisee
           representant la commande self
       """
       import generator
       g=generator.plugins[format]()
       texte_commande = g.gener(self,format='beautifie')
-      # Il faut enlever la premiÃ¨re ligne vide de texte_commande que
+      # Il faut enlever la premiere ligne vide de texte_commande que
       # rajoute le generator
       #rebut,texte_commande = string.split(texte_commande,'\n',1)
-      # on construit l'objet COMMANDE_COMM repÃ©sentatif de self mais non
-      # enregistrÃ© dans le jdc (pas ajoutÃ© dans jdc.etapes)
+      # on construit l'objet COMMANDE_COMM repesentatif de self mais non
+      # enregistre dans le jdc (pas ajoute dans jdc.etapes)
       parent=self.parent
       pos=self.parent.etapes.index(self)
       commande_comment = commande_comm.COMMANDE_COMM(texte=texte_commande,
@@ -447,11 +447,11 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
       return self.sd
 
-#ATTENTION SURCHARGE: cette methode doit etre gardÃ©e en synchronisation avec Noyau
+#ATTENTION SURCHARGE: cette methode doit etre gardee en synchronisation avec Noyau
    def make_register(self):
       """
-         Initialise les attributs jdc, id, niveau et rÃ©alise les
-         enregistrements nÃ©cessaires
+         Initialise les attributs jdc, id, niveau et realise les
+         enregistrements necessaires
          Pour EFICAS, on tient compte des niveaux
          Surcharge la methode make_register du package Noyau
       """

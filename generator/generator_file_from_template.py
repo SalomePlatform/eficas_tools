@@ -57,7 +57,7 @@ class FileFromTemplateGenerator(PythonGenerator):
         templateFileName = self.config.get_template_file()
         if not os.path.isfile(templateFileName):
             raise EficasException(tr("Fichier patron %s n'existe pas.",
-                                     templateFileName))
+                                    str( templateFileName)))
         f = file(templateFileName, "r")
         template = f.read()  
         f.close()

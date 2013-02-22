@@ -57,7 +57,7 @@ def traduction(directPath,editor,version):
     if version == "V9V10" : traduitV9V10.traduc(FichieraTraduire,FichierTraduit,log)
     qApp.setOverrideCursor(QCursor(Qt.ArrowCursor))
 
-    Entete=tr("Fichier Traduit : %s\n\n",FichierTraduit)
+    Entete=tr("Fichier Traduit : %s\n\n",str(FichierTraduit))
     if  os.stat(log)[6] != 0L :
         f=open(log)
         texte= f.read()

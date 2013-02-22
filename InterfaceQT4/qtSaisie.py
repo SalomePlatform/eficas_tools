@@ -94,7 +94,7 @@ class SaisieValeur:
          if self.listBoxASSD.currentItem()== None : return
          valeurQstring=self.listBoxASSD.currentItem().text()
          commentaire = tr("Valeur selectionnee : ") 
-         commentaire.append(valeurQstring)
+         commentaire+=valeurQstring
          self.Commentaire.setText(commentaire)
          valeur=str(valeurQstring)
          validite,commentaire=self.politique.RecordValeur(valeur)

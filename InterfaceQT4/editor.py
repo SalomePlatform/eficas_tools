@@ -156,7 +156,7 @@ class JDCEditor(QSplitter):
             if txt_exception:
                 self.jdc = None
                 qApp.restoreOverrideCursor()
-                self.affiche_infos(tr("Erreur fatale au chargement de %s"%fichier),Qt.red)                
+                self.affiche_infos(tr("Erreur fatale au chargement de %s",str(fichier)),Qt.red)                
                 QMessageBox.critical( self, tr("Erreur fatale au chargement d'un fichier"), txt_exception)                
             else:
                 comploader.charger_composants("QT")
@@ -722,7 +722,7 @@ class JDCEditor(QSplitter):
       if QFileInfo(fn).exists():
            abort = QMessageBox.warning(self,
                    tr("Sauvegarde du Fichier"),
-                   tr("Le fichier <b>%s</b> existe deja.",fn),
+                   tr("Le fichier <b>%s</b> existe deja.",str(fn)),
                    tr("&Ecraser"),
                    self.trUtf8("&Abandonner"))
            if abort == 1 :  return (0, "")
@@ -858,7 +858,7 @@ class JDCEditor(QSplitter):
         
         if unite :
             titre = tr("Choix unité %d ", unite)
-            texte = tr("Le fichier %s contient une commande INCLUDE \n",  fic_origine)
+            texte = tr("Le fichier %s contient une commande INCLUDE \n",  str(fic_origine))
             texte = texte+ tr('Donnez le nom du fichier correspondant\n à l unité logique %d' , unite)
             labeltexte = 'Fichier pour unite %d :' % unite
         else:

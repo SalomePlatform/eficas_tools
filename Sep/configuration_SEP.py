@@ -40,7 +40,7 @@ class CONFIG(configuration.CONFIG_BASE):
       self.labels_eficas=['path_doc','exec_acrobat','lang','rep_cata','catalogues']
 
       self.INSTALLDIR =os.path.dirname(__file__)
-      configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_SEP')
+      configuration.CONFIG_BASE.__init__(self,appli,repIni)
 
 
 
