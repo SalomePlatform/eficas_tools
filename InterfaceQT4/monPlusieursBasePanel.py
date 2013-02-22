@@ -201,8 +201,8 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
   def InitCommentaire(self):
         commentaire=""
         mc = self.node.item.get_definition()
-        d_aides = { 'TXM' : 'chaines de caractères',
-                  'R'   : 'réels',
+        d_aides = { 'TXM' : 'chaines de caracteres',
+                  'R'   : 'reels',
                   'I'   : 'entiers',
                   'C'   : 'complexes'}
         type = mc.type[0]
