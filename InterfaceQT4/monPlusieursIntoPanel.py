@@ -54,7 +54,7 @@ class DPlusInto(Ui_DPlusInto,QDialog):
 
 class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
+  Classe definissant le panel associe aux mots-cles qui demandent
   a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
   discrètes
   """
@@ -96,7 +96,7 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
                self.editor.affiche_infos("les valeurs ne sont pas correctes",Qt.red)
                return
         self.node.item.set_valeur(self.listeValeursCourantes)
-	self.editor.affiche_infos("Valeur Acceptée")
+	self.editor.affiche_infos("Valeur Acceptee")
 
 
   def Sup1Valeur(self):
@@ -116,7 +116,6 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
           
   def Ajout1Valeur(self):
         liste=[]
-
         indexCourant=self.listBoxVal.currentRow()
         if indexCourant == None : return
         if self.listBoxVal.isItemSelected(self.listBoxVal.item(indexCourant))== 0 : return
@@ -165,6 +164,5 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
                commentaire="Entrez entre "+str(mc.min)+" et "+str(mc.max)+" "+d_aides[type]
         aideval=self.node.item.aide()
         commentaire=commentaire + "   " + QString.toUtf8(QString(aideval))
-        print commentaire
         self.Commentaire.setText(tr(commentaire))
 
