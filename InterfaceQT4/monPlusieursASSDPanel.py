@@ -134,10 +134,12 @@ class MonPlusieursASSDPanel(MonPlusieursIntoPanel):
                item.setSelected(1)
                self.LBValeurs.setCurrentItem(item)
                index=index+1
+
            self.listeValeursCourantes=l1+listeRetour+l3
            self.InitValeursCourantes()
            self.DisplayListBoxCourantes()
            self.DisplayListBoxPossibles()
+           self.LBValeurs.setCurrentItem(self.LBValeurs.item(index-1))
 
 
   def BAlphaPressed(self):
