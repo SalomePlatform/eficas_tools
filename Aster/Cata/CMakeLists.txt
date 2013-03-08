@@ -29,7 +29,7 @@ install (
           DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Utilitai
                     ${CMAKE_CURRENT_SOURCE_DIR}/cataSTA10
                     ${CMAKE_CURRENT_SOURCE_DIR}/cataSTA9
-                    ${CMAKE_CURRENT_SOURCE_DIR}/cataSTA8
+                    ${CMAKE_CURRENT_SOURCE_DIR}/cataSTA11
           DESTINATION ${CMAKE_INSTALL_PREFIX}/Aster/Cata
 )
 
