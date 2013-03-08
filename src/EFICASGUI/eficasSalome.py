@@ -96,6 +96,10 @@ class MyEficas( qtEficas.Appli ):
         
         
     def closeEvent(self,event):
+        res=self.fileExit()
+        if res==2 : 
+          event.ignore()
+          return
         if hasattr(self,'readercata') :
            del self.readercata
         global appli
@@ -471,15 +475,30 @@ class MyEficas( qtEficas.Appli ):
             moduleEntry = self.editor.findOrCreateComponent(self.module, self.componentName)
             itemName    = re.split("/",jdcPath)[-1]
             
+            if folderName.has_key(self.code) :
+               monFolderName=folderName[ self.code ]
+            else :
+               monFolderName=str(self.code)+"Files"
+
+            if folderType.has_key(self.code) :
+               monFolderType=fileType[ self.code ]
+            else :
+               monFolderType=str(self.code)+"_FILE_FOLDER"
+
+            if fileType.has_key(self.code) :
+               monFileType=fileType[ self.code ]
+            else :
+               monFileType="FICHIER_EFICAS_"+str(self.code)
+
             fatherEntry = self.editor.findOrCreateItem(
                                     moduleEntry,
-                                    name = folderName[self.code],
+                                    name = monFolderName,
                                     #icon = "ICON_COMM_FOLDER",
-                                    fileType = folderType[self.code])
+                                    fileType = monFolderType)
                                                                         
             commEntry = self.editor.findOrCreateItem( fatherEntry ,
                                            name = itemName,
-                                           fileType = fileType[ self.code ],
+                                           fileType = monFileType,
                                            fileName = jdcPath,
                                            #icon    = "ICON_COMM_FILE",
                                            comment = str( jdcPath ))

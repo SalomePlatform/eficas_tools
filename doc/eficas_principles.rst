@@ -113,16 +113,16 @@ a parameter ("mot-clef simple") should have :
    :align: center
 
 
-- a File parameter should be 
+- a File parameter should be : 
 
-an existing file (type='Fichier'), 
+        - an existing file (type='Fichier'), 
 	- a directory (type='Repertoire'), 
 
 	- an existing file with specific suffix (type='Fichier','JDC Files (*.comm);;All Files (*)') The contents of the directory are filtered before being shown in the dialog, using a semicolon-separated list of filters specified.
 
-	- a  non-allready existant (type=('Fichier',"",'Sauvegarde')
+	- a  non-allready existant (type=('Fichier',"",'Sauvegarde'),
 
-	- a simple string (type='FichierNoAbs')
+	- a simple string (type='FichierNoAbs').
 
 This is the way the catalog should look like :
 
