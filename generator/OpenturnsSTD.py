@@ -342,7 +342,7 @@ class STDGenerateur :
     txt += "# Calcul\n"
     txt += "%s = %d\n" % (self.variable["inSize"], size)
     txt += "%s = RandomVector( %s, %s )\n" % (self.variable["outputRandomVector"], self.variable["model"], self.variable["inputRandomVector"])
-    txt += "%s = %s.getNumericalSample( %s )\n" % (self.variable["outputSample"], self.variable["outputRandomVector"], self.variable["inSize"])
+    txt += "%s = %s.getSample( %s )\n" % (self.variable["outputSample"], self.variable["outputRandomVector"], self.variable["inSize"])
     return txt
 
   def InputDistribution (self):
@@ -595,7 +595,7 @@ class STDGenerateur :
 
     txt  = "# Echantillonnage aleatoire de la variable de sortie\n"
     txt += "%s = %d\n" % (self.variable["inSize"], size)
-    txt += "%s = %s.getNumericalSample( %s )\n" % (self.variable["inputSample"], self.variable["inputRandomVector"], self.variable["inSize"])
+    txt += "%s = %s.getSample( %s )\n" % (self.variable["inputSample"], self.variable["inputRandomVector"], self.variable["inSize"])
     txt += "%s = %s( %s )\n" % (self.variable["outputSample"], self.variable["model"], self.variable["inputSample"])
     txt += "\n"
 
