@@ -23,6 +23,7 @@
 """
 import types
 import traceback
+import re
 from N_ASSD import ASSD
 from N_types import is_int, is_float_or_int, is_complex, is_number, is_str, is_enum
 from strfunc import convert, ufmt
@@ -1393,3 +1394,41 @@ class VerifExiste(ListVal) :
           if valeur in self.listeDesFreres : return valeur
           raise ValError(ufmt(_(u"%s n'est pas dans %s"), valeur, self.listeDesFreres))
 
+class RegExpVal(ListVal):
+    """
+    Vérifie qu'une chaîne de caractère corresponde à l'expression régulière 'pattern'
+    """
+
+    errormsg = u'La chaîne "%(value)s" ne correspond pas au motif "%(pattern)s"'
+
+    def __init__(self, pattern):
+        self.pattern = pattern
+        self.compiled_regexp = re.compile(pattern)
+    
+    def info(self):
+        return u'Une chaîne correspondant au motif "%s" est attendue.' % self.pattern
+
+    def verif_item(self, valeur):
+        if self.compiled_regexp.match(valeur):
+            return 1
+        else:
+            return (0, self.errormsg % {"value": valeur, "pattern": self.pattern})
+
+    def convert_item(self, valeur):
+        if self.compiled_regexp.match(valeur):
+            return valeur
+        else:
+            raise ValError(self.errormsg % {"value": valeur, "pattern": self.pattern})
+
+class FileExtVal(RegExpVal):
+    """
+    Vérifie qu'une chaîne de caractère soit un nom de fichier valide avec l'extension 'ext'
+    """
+
+    def __init__(self, ext):
+        self.ext = ext
+        self.errormsg = u'"%%(value)s" n\'est pas un nom de fichier %(ext)s valide' % {"ext": ext}
+        RegExpVal.__init__(self, "^[\w\-]+\.%s$" % self.ext)
+    
+    def info(self):
+        return u'Un nom de fichier se terminant par ".%s" est attendu.' % self.ext
