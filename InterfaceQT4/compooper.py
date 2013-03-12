@@ -19,7 +19,7 @@
 #
 import os
 import tempfile
-from PyQt4.QtGui import QMessageBox, QAction
+from PyQt4.QtGui import QMessageBox, QAction, QApplication, QCursor
 from PyQt4.QtCore import Qt, SIGNAL
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
@@ -65,6 +65,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
         from monPixmap import MonLabelPixmap
         import generator
         try:
+            QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             g = generator.plugins[self.appliEficas.format_fichier]()
             g.gener(self.item.object, format='beautifie')
             stdGener = g.getGenerateur()
@@ -80,14 +81,15 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
             exec script in d
             widgetPng=MonLabelPixmap(self.appliEficas,fichier,nomLoi)
             os.remove(fichier)
+            QApplication.restoreOverrideCursor()
             widgetPng.show()
         except:
+            QApplication.restoreOverrideCursor()
             QMessageBox.warning(
                 self.appliEficas,
-                appliEficas.tr("Erreur interne"),
-                appliEficas.tr("La PDF de la loi ne peut pas être affichée."),
-                appliEficas.tr("&Annuler"))
-            raise EficasException("")
+                tr("Erreur interne"),
+                tr("La PDF de la loi ne peut pas être affichée."),
+                tr("&Annuler"))
 
 class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   """ La classe EtapeTreeItem est un adaptateur des objets ETAPE du noyau
