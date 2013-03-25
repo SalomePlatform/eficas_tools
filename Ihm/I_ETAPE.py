@@ -51,7 +51,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def get_sdname(self):
       #print "SDNAME ",self.reuse,self.sd,self.sd.get_name()
       if CONTEXT.debug : 
-          print tr("SDNAME %(v_1)s %(v_2)s %(v_3)s", {'v_1': self.reuse, 'v_2': self.sd, 'v_3': self.sd.get_name()})
+          print "SDNAME ",  self.reuse,  self.sd,  self.sd.get_name()
       sdname=''
       if self.reuse != None:
         sdname= self.reuse.get_name()
@@ -205,7 +205,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
               return 1, tr("Nommage du concept effectue")
           else:
             # Normalement on ne devrait pas passer ici
-            return 0, tr('Normalement on ne devrait pas passer ici')
+            return 0, 'Normalement on ne devrait pas passer ici'
 
    def get_sdprods(self,nom_sd):
       """ 

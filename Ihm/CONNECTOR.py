@@ -76,9 +76,8 @@ class CONNECTOR:
     try:
        receivers = self.connections[id(object)][channel]
     except KeyError:
-       raise EficasException(tr("ConnectorError: Pas de recepteur \
-                                pour le canal %(channel)s de %(object)s", \
-                                {'channel': channel, 'object': object}))
+       raise ConnectorError, \
+            'no receivers for channel %s of %s' % (channel, object)
 
     for funct,fargs in receivers[:]:
         if funct() is None:
@@ -96,10 +95,10 @@ class CONNECTOR:
                  del self.connections[id(object)]
            return
 
-    raise EficasException(tr("ConnectorError: Le Recepteur %(v_1)s%(v_2)s \
-                             n'est pas connecte au canal %(v_3)s de %(v_4)s", \
-                             {'v_1': function, 'v_2': args, \
-                              'v_3': channel, 'v_4': object}))
+    raise ConnectorError,\
+          'receiver %s%s is not connected to channel %s of %s' \
+          % (function, args, channel, object)
+
 
 
   def Emit(self, object, channel, *args):
@@ -149,29 +148,25 @@ if __name__ == "__main__":
    class A:
      pass
    class B:
-     # Not sure we should i18n these strings as well:
      def add(self,a):
-       print tr("add %s %s", (self + a))
+       print "add ", self , a
      def __del__(self):
-       print tr("__del__", self)
+       print "__del__", self
 
    def f(a):
-     print tr("%s%s", (f, a))
-   print tr("a=A()")
+     print f, a
    a=A()
-   print tr("b=B()")
    b=B()
-   print tr("c=B()")
    c=B()
    Connect(a,"add",b.add,())
    Connect(a,"add",b.add,())
    Connect(a,"add",c.add,())
    Connect(a,"add",f,())
    Emit(a,"add",1)
-   print tr("del b")
+   print "del b"
    del b
    Emit(a,"add",1)
-   print tr("del f")
+   print "del f"
    del f
    Emit(a,"add",1)
    Disconnect(a,"add",c.add,())

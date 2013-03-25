@@ -48,23 +48,23 @@ def localise(application, locale=None):
     sys_locale = QLocale.system().name()
 
     if locale is None:
-        locale = sys_locale
+        #locale = sys_locale
+        locale="fr"
 
-    global qt_translator
-    if qt_translator.load("qt_" + locale,
-                          QLibraryInfo.location(QLibraryInfo.TranslationsPath)):
-        print "Qt base translator with user locale loaded!"
-        application.installTranslator(qt_translator)
-    elif qt_translator.load("qt_" + sys_locale,
-                            QLibraryInfo.location(QLibraryInfo.TranslationsPath)):
-        print "Qt base translator with default locale loaded!"
-        application.installTranslator(qt_translator)
+    #global qt_translator
+    #if qt_translator.load("qt_" + locale,
+    #                      QLibraryInfo.location(QLibraryInfo.TranslationsPath)):
+    #    application.installTranslator(qt_translator)
+    #elif qt_translator.load("qt_" + sys_locale,
+    #                        QLibraryInfo.location(QLibraryInfo.TranslationsPath)):
+    #    print "Qt base translator with default locale loaded!"
+    #    application.installTranslator(qt_translator)
         # Try to load Qt base translator according to system locale.
-    else:
-        print "Unable to load Qt base translator!"
+    #else:
+    #    print "Unable to load Qt base translator!"
     
     global eficas_translator
-    if eficas_translator.load("eficas_" + locale, ":/"):
+    if eficas_translator.load("eficas_" + locale, "../UiQT4"):
         print "Eficas translator loaded!"
         application.installTranslator(eficas_translator)
     else:

@@ -47,13 +47,13 @@ def get_rep_user(dir):
   rep_user_eficas= os.path.join(os.environ['HOME'],dir)
   if os.path.exists(rep_user_eficas):
     if os.path.isfile(rep_user_eficas) :
-      print tr("Un fichier de nom %s existe dejà : impossible de creer un repertoire de même nom", rep_user_eficas)
+      print tr("Un fichier de nom %s existe deja : impossible de creer un repertoire de meme nom", rep_user_eficas)
       sys.exit(0)
   else :
     try:
       os.mkdir(rep_user_eficas)
     except:
-      print tr("Creation du repertoire %s impossible\n Verifiez vos droits d'accès", rep_user_eficas)
+      print tr("Creation du repertoire %s impossible\n Verifiez vos droits d'acces", rep_user_eficas)
   return rep_user_eficas
 
 def read_file(file):

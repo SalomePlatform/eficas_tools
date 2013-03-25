@@ -21,10 +21,10 @@
 # ======================================================================
 
 """
-   Ce module sert à lancer EFICAS configuré pour Code_Aster
+   Ce module sert a lancer EFICAS  configure pour Code_Aster
 """
 # Modules Python
-import sys
+import sys,os
 
 # Modules Eficas
 import prefs
@@ -36,15 +36,10 @@ if hasattr(prefs,'encoding'):
    del sys.setdefaultencoding
    # Fin hack
 
-import prefs_ASTER
-sys.path[:0]=[prefs_ASTER.INSTALLDIR]
 
-import InterfaceTK
-from InterfaceTK import eficas_test
+sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
+from InterfaceQT4 import eficas_go
 
 if len(sys.argv) > 1 :
     # on veut ouvrir un fichier directement au lancement d'Eficas
-    eficas_test.lance_eficas(code='ASTER',fichier = sys.argv[1])
-else:
-    # on veut ouvrir Eficas 'vide'
-    eficas_test.lance_eficas(code='ASTER')
+    eficas_go.lance_eficas_ssIhm_cherche_cr(code='ASTER',fichier = sys.argv[1],version='STA10.3')

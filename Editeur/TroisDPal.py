@@ -40,8 +40,8 @@ class TroisDPilote:
          g.init_jdc(self.node.get_jdc())
          texte=g.gener(self.node)
       else:
-         print tr("Le generateur n'a pas ete trouve")
-         print tr("Erreur ! Erreur!")
+         print "Le generateur n'a pas ete trouve"
+         print "Erreur ! Erreur!"
          return ""
       self.appli.envoievisu(texte)
 

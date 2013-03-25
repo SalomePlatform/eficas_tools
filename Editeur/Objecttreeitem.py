@@ -342,9 +342,9 @@ class ObjectTreeItem(TreeItem,Delegate):
         représentatif de self.object
         --> à surcharger par les différents items
         """
-        raise EficasException(tr("MESSAGE AU DEVELOPPEUR : il faut \
+        raise EficasException("MESSAGE AU DEVELOPPEUR : il faut \
                                  surcharger la methode get_objet_commentarise() \
-                                 pour la classe %s", self.__class__.__name__))
+                                 pour la classe %s", self.__class__.__name__)
         
     def isvalid(self):
         """ Retourne 1 si l'objet pointé par self est valide, 0 sinon"""

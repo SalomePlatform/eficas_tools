@@ -24,7 +24,7 @@ from Extensions.i18n import tr
 from Noyau.N_CR import CR
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.9.8.1.2.1.2.2 2013-02-20 10:34:57 pnoyret Exp $"
+__Id__="$Id: analyse_catalogue.py,v 1.9.8.1.2.1.2.3 2013-02-22 18:19:03 pnoyret Exp $"
 __version__="$Name:  $"
 #
 l_noms_commandes = ['OPER','PROC','MACRO','FORM']
@@ -115,7 +115,7 @@ class ENTITE:
                         self.ordre_mc = l
                         self.entites = d
                 except:
-                        print tr("erreur : %(v_1)s %(v_2)s", {'v_1': self.nom, 'v_2': self.__class__})
+                        print "erreur : ", self.nom,  self.__class__
                 
 class COMMANDE_CATA(ENTITE) :
         def __init__(self,nom,args,parent):

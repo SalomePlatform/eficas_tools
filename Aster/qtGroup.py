@@ -22,12 +22,15 @@
    Ce module sert à lancer EFICAS configuré pour Code_Aster
 """
 # Modules Python
+import sys,os
 
 # Modules Eficas
 import prefs
 name='prefs_'+prefs.code
 __import__(name)
 
+
+sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
 from InterfaceQT4 import eficas_go
 
-eficas_go.lance_eficas_ssIhm(code=prefs.code,fichier="/local/noyret/Eficas_Aster/cable.comm",version='v10.2')
+eficas_go.lance_eficas_ssIhm_cherche_Groupes(code=prefs.code,version='STA10.3')

@@ -972,7 +972,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
            import Extensions.jdc_include
          except:
            traceback.print_exc()
-           raise EficasException(tr("pb import Extensions"))
+           raise EficasException("pb import Extensions")
          self.JdC_aux=Extensions.jdc_include.JdC_include
 
          #print "make_include",self.fichier_ini,self.fichier_text 
