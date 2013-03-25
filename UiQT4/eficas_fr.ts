@@ -920,12 +920,6 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="79"/>
-        <source>%(v_1)s pour %(v_2)s</source>
-        <comment>v_1</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../InterfaceQT4/editor.py" line="159"/>
         <source>Erreur fatale au chargement de %s</source>
         <translation type="unfinished"></translation>
@@ -966,12 +960,12 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="462"/>
+        <location filename="../../InterfaceQT4/editor.py" line="464"/>
         <source>Veuillez selectionner un objet &#xe0; copier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="467"/>
+        <location filename="../../InterfaceQT4/editor.py" line="469"/>
         <source>Veuillez selectionner un seul objet : la copie se fera apr&#xe8;s le noeud selectionn&#xe9;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1006,12 +1000,12 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="553"/>
+        <location filename="../../InterfaceQT4/editor.py" line="554"/>
         <source>Copie impossible a cet endroit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="553"/>
+        <location filename="../../InterfaceQT4/editor.py" line="555"/>
         <source>Veuillez selectionner une commande, un parametre, un commentaire ou une macro</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1066,38 +1060,38 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="713"/>
+        <location filename="../../InterfaceQT4/editor.py" line="714"/>
         <source>sauvegarde</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="722"/>
+        <location filename="../../InterfaceQT4/editor.py" line="723"/>
         <source>Sauvegarde du Fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="722"/>
+        <location filename="../../InterfaceQT4/editor.py" line="724"/>
         <source>Le fichier &lt;b&gt;%s&lt;/b&gt; existe deja.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="722"/>
+        <location filename="../../InterfaceQT4/editor.py" line="725"/>
         <source>&amp;Ecraser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="859"/>
+        <location filename="../../InterfaceQT4/editor.py" line="850"/>
         <source>Choix unit&#xe9; %d </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="860"/>
+        <location filename="../../InterfaceQT4/editor.py" line="859"/>
         <source>Le fichier %s contient une commande INCLUDE 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="861"/>
+        <location filename="../../InterfaceQT4/editor.py" line="860"/>
         <source>Donnez le nom du fichier correspondant
  &#xe0; l unit&#xe9; logique %d</source>
         <translation type="unfinished"></translation>
@@ -1108,7 +1102,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="865"/>
+        <location filename="../../InterfaceQT4/editor.py" line="864"/>
         <source>Le fichier %s contient une commande POURSUITE
 </source>
         <translation type="unfinished"></translation>
@@ -1217,7 +1211,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="191"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="195"/>
         <source>Fichier Include</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1342,12 +1336,12 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="134"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="138"/>
         <source>Tri Alpha</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="131"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="135"/>
         <source>Tri Cata</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1522,43 +1516,43 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="183"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="187"/>
         <source>Nouvelle Commande</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="185"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="189"/>
         <source>Nommer Concept</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="193"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="197"/>
         <source>Ajouter Mot-Clef</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="187"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="191"/>
         <source>Definition Formule</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="189"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="193"/>
         <source>Valeur Parametre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="322"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="326"/>
         <source>&lt;font size=&quot;+1&quot;&gt;&lt;p align=&quot;center&quot;&gt;Structures de donnees &#xc3;&#xa0; enrichir
  par l&apos;operateur courant :&lt;/p&gt;&lt;/font&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="394"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="398"/>
         <source>Sauvegarder le fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="394"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="398"/>
         <source>Le fichier &lt;b&gt;%(v_1)s&lt;/b&gt; n&apos;a pu etre sauvegarde. &lt;br&gt;Raison : %(v_2)s</source>
         <comment>v_1</comment>
         <translation type="unfinished"></translation>
@@ -3605,7 +3599,7 @@ requis par l&apos;objet courant :&lt;/p&gt;&lt;/font&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="654"/>
+        <location filename="../../InterfaceQT4/editor.py" line="655"/>
         <source>The file &lt;b&gt;%1&lt;/b&gt; could not be saved.&lt;br&gt;Reason: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3615,7 +3609,7 @@ requis par l&apos;objet courant :&lt;/p&gt;&lt;/font&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="722"/>
+        <location filename="../../InterfaceQT4/editor.py" line="726"/>
         <source>&amp;Abandonner</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3944,7 +3938,7 @@ Version :</source>
 <context>
     <name>self.appliEficas</name>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="619"/>
+        <location filename="../../InterfaceQT4/editor.py" line="622"/>
         <source>Wrapper Files (*.xml);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>

@@ -31,7 +31,7 @@ if editeurDir not in sys.path :sys.path.append(editeurDir)
 
 from PyQt4.QtGui import *
 
-def lance_eficas(code=None,fichier=None,ssCode=None,multi=False):
+def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
     """
         Lance l'appli EFICAS
     """
@@ -42,7 +42,9 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False):
     if options.ssCode!= None : ssCode=options.ssCode
 
     from qtEficas import Appli
+    from Extensions import localisation
     app = QApplication(sys.argv)
+    localisation.localise(app,langue)
     Eficas=Appli(code=code,ssCode=ssCode,multi=multi)
     Eficas.show()
 
@@ -57,7 +59,9 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
     # Analyse des arguments de la ligne de commande
     from Editeur  import session
     options=session.parse(sys.argv)
-    code=options.code
+    if version!=None and options.cata==None : options.cata=version
+    if fichier==None : fichier=options.comm[0]
+    if code == None : code=options.code
 
     from qtEficas import Appli
     app = QApplication(sys.argv)
@@ -71,10 +75,17 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
            monreadercata  = readercata.READERCATA( parent, Eficas )
            Eficas.readercata=monreadercata
 
-
     from editor import JDCEditor
     monEditeur=JDCEditor(Eficas,fichier)
+    return monEditeur
+
+def lance_eficas_ssIhm_cherche_Groupes(code=None,fichier=None,ssCode=None,version=None):
+    monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
     print monEditeur.cherche_Groupes()
+
+def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=None):
+    monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
+    print monEditeur.jdc.cr
 
 def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION_STUDY'):
     """

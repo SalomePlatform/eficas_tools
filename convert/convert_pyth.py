@@ -97,7 +97,7 @@ class PythParser:
       try:
          self.text=open(filename).read()
       except:
-         self.cr.fatal(tr("Impossible d'ouvrir le fichier %s",str( filename)))
+         self.cr.fatal(tr("Impossible d'ouvrir le fichier : %s",str( filename)))
          return
       self.g={}
       try:
@@ -106,13 +106,13 @@ class PythParser:
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
          s= string.join(l[2:])
          s= string.replace(s,'"<string>"','"<%s>"'%self.filename)
-         self.cr.fatal(tr("Erreur à l'évaluation :\n %s", s))
+         self.cr.fatal(tr("Erreur a l'evaluation :\n %s", s))
 
    def convert(self,outformat,appli=None):
       if outformat == 'dict':
          return self.getdict()
       else:
-         raise EficasException(tr("Format de sortie : %s, non supporté", outformat))
+         raise EficasException(tr("Format de sortie : %s, non supporte", outformat))
 
    def getdict(self):
       d={}

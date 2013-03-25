@@ -76,7 +76,7 @@ class JDCEditor(QSplitter):
         if self.readercata.fic_cata == None : return    #Sortie Salome
 
         self.format =  self.appliEficas.format_fichier
-        self.titre= tr("%(v_1)s pour %(v_2)s", {'v_1': unicode(self.appliEficas.VERSION_EFICAS), 'v_2': unicode(self.code)})
+        self.titre= unicode(self.appliEficas.VERSION_EFICAS)+tr(' pour ') + unicode(self.code)
 
         self.dict_reels={}
         self.liste_simp_reel=[]        
@@ -410,7 +410,6 @@ class JDCEditor(QSplitter):
       if self.node_selected[0]==self.tree.racine: return
       if len(self.node_selected) == 1 : self.node_selected[0].delete()
       else : self.node_selected[0].deleteMultiple(self.node_selected)
-     
     
     #---------------------#
     def handleRechercher(self):
@@ -659,8 +658,7 @@ class JDCEditor(QSplitter):
     #-----------------------------#
     def get_text_JDC(self,format):
     #-----------------------------#
-      if self.code == "MAP" and not(generator.plugins.has_key(format)):
-         format = "MAP"
+      if self.code == "MAP" and not(generator.plugins.has_key(format)): format = "MAP"
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()

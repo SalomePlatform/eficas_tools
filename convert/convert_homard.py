@@ -101,7 +101,7 @@ class PythonParser:
       try:
          self.text=open(filename).read()
       except:
-         self.cr.fatal(tr("Impossible d'ouvrir le fichier %s", str(filename)))
+         self.cr.fatal(tr("Impossible d'ouvrir le fichier: %s", str(filename)))
          return
 
    def convert(self,outformat,appli=None):

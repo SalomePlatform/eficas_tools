@@ -249,7 +249,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   def get_liste_param_possible(self):
       liste_param=[]
       l1,l2=self.jdc.get_parametres_fonctions_avant_etape(self.get_etape())
-      for param in l1:
+      for param in self.object.jdc.params:
+          if param.nom not in l1 : continue
           encorevalide=self.valide_item(param.valeur)
           if encorevalide:
              type_param=param.valeur.__class__.__name__

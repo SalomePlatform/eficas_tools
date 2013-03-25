@@ -322,7 +322,7 @@ class PARSEUR_PYTHON:
            return
 
     def ERRORTOKEN(self, tstring):
-        print "ERRORTOKEN",tstring)
+        print "ERRORTOKEN", tstring
 
     def NAME(self, tstring):
         if self.buffer:

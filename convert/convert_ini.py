@@ -78,7 +78,7 @@ class IniParser(ConfigParser):
       try:
          self.read(filename)
       except Exception,e:
-         self.cr.fatal(tr("lecture du fichier impossible :%s",str(e)))
+         self.cr.fatal(tr("lecture du fichier impossible :")+str(e))
 
    def convert(self,outformat,appli=None):
       if outformat == 'eval':
