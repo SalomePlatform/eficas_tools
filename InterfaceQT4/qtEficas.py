@@ -26,6 +26,7 @@ from myMain import Ui_Eficas
 from viewManager import MyTabview
 
 from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 from Editeur import session
 
@@ -460,12 +461,22 @@ class Appli(Ui_Eficas,QMainWindow):
         self.recent = QStringList()
         self.sauveRecents()
         
-    def fileNew(self):        
-        self.viewmanager.newEditor()        
+    def fileNew(self):
+        try:
+            self.viewmanager.newEditor()
+        except EficasException, exc:
+            msg = unicode(exc)
+            if msg != "":
+                QMessageBox.warning(self, tr(u"Erreur"), msg)
         
-    def fileOpen(self ):
-        self.viewmanager.handleOpen()        
-        
+    def fileOpen(self):
+        try:
+            self.viewmanager.handleOpen()
+        except EficasException, exc:
+            msg = unicode(exc)
+            if msg != "":
+                QMessageBox.warning(self, tr(u"Erreur"), msg)
+
     def fileSave(self):
         return self.viewmanager.saveCurrentEditor()
         

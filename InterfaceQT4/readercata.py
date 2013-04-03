@@ -40,6 +40,7 @@ import autre_analyse_cata
 import uiinfo
 from monChoixCata import MonChoixCata
 from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 from PyQt4 import *
 from PyQt4.QtGui import *
@@ -290,9 +291,7 @@ class READERCATA:
           self.appliEficas.setWindowTitle(lab)
           #qApp.mainWidget().setCaption(lab)
       else:
-          self.appliEficas.close()
-          if self.appliEficas.salome == 0 :
-             sys.exit(0)
+          raise EficasException()
 
    def traite_clefs_documentaires(self):
       try:
