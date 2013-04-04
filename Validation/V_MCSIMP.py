@@ -122,18 +122,20 @@ class MCSIMP:
                        typeProto.adapt(val)
                except ValError,e:
                    valid=0
-                   self.cr.fatal(unicode(e))
+                   self.cr.fatal(*e)
                try:
                    for val in lval:
                        intoProto.adapt(val)
                except ValError,e:
                    valid=0
-                   self.cr.fatal(unicode(e))
+                   self.cr.fatal(*e)
+                   #self.cr.fatal(unicode(e))
                try:
                    cardProto.adapt(lval)
                except ValError,e:
                    valid=0
-                   self.cr.fatal(unicode(e))
+                   self.cr.fatal(*e)
+                   #self.cr.fatal(unicode(e))
                #
                # On verifie les validateurs s'il y en a et si necessaire (valid == 1)
                #
