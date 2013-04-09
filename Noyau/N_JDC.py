@@ -398,31 +398,29 @@ Causes possibles :
         del self.index_etapes[e]
 
 
-   def get_file(self,unite=None,fic_origine=''):
+   def get_file(self, unite=None, fic_origine='', fname=None):
       """
           Retourne le nom du fichier correspondant à un numero d'unité
           logique (entier) ainsi que le source contenu dans le fichier
       """
       if self.appli :
          # Si le JDC est relié à une application maitre, on délègue la recherche
-         file,text= self.appli.get_file(unite,fic_origine)
+         return self.appli.get_file(unite, fic_origine)
       else:
-         file = None
          if unite != None:
             if os.path.exists("fort."+str(unite)):
-               file= "fort."+str(unite)
-         if file == None :
+               fname= "fort."+str(unite)
+         if fname == None :
             raise AsException("Impossible de trouver le fichier correspondant"
                                " a l unite %s" % unite)
-         if not os.path.exists(file):
-            raise AsException("%s n'est pas un fichier existant" % unite)
-         fproc=open(file,'r')
+         if not os.path.exists(fname):
+            raise AsException("%s n'est pas un fichier existant" % fname)
+         fproc = open(fname, 'r')
          text=fproc.read()
          fproc.close()
-      if file == None : return None,None
-      text=string.replace(text,'\r\n','\n')
-      linecache.cache[file]=0,0,string.split(text,'\n'),file
-      return file,text
+         text = text.replace('\r\n', '\n')
+         linecache.cache[fname] = 0, 0, text.split('\n'), fname
+         return fname, text
 
    def set_par_lot(self, par_lot, user_value=False):
       """

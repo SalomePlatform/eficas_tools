@@ -27,7 +27,7 @@ import sys
 
 # Modules EFICAS
 from N_Exception import AsException
-from N_types     import is_int, is_float, is_complex, is_str, is_enum, is_assd
+from N_types     import is_int, is_float, is_complex, is_str, is_sequence, is_assd
 
 SEP='_'
 
@@ -69,17 +69,19 @@ def AsType(a):
       Retourne le type d'un concept (a) à partir
       des caractéristiques de l'objet Python
    """
-   if is_enum(a):  return AsType(a[0])
-   if is_assd(a):  return type(a)
-   if is_float(a): return "R"
-   if is_int(a):   return "I"
-   if is_str(a):   return "TXM"
-   if a == None:   return None
-   print 'a=', a, type(a)
-   raise AsException("type inconnu")
-
-
-def prbanner(s):
+   if is_sequence(a):
+       return AsType(a[0])
+   if is_assd(a):
+       return type(a)
+   if is_float(a):
+       return "R"
+   if is_int(a):
+       return "I"
+   if is_str(a):
+       return "TXM"
+   if a == None:
+       return None
+   raise AsException("type inconnu: %r %s" % (a, type(a)))def prbanner(s):
    print "*"*(len(s)+10)
    print "*"*5 + s + "*"*5
    print "*"*(len(s)+10)

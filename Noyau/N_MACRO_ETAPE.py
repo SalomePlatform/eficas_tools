@@ -26,6 +26,7 @@
 # Modules Python
 import types,sys,string
 import traceback
+from warnings import warn
 
 # Modules EFICAS
 import N_MCCOMPO
@@ -55,7 +56,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
          - valeur : arguments d'entrée de type mot-clé=valeur. Initialisé
            avec l'argument args.
       """
-      N_ETAPE.ETAPE.__init__(self, oper, reuse, args)
+      N_ETAPE.ETAPE.__init__(self, oper, reuse, args, niveau=5)
       self.g_context = {}
       # Contexte courant
       self.current_context = {}
@@ -69,6 +70,8 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
       self.Outputs = {}
       self.sdprods = []
       self.UserError = "UserError"
+      # permet de stocker le nom du dernier concept nommé dans la macro
+      self.last = None
 
    def make_register(self):
       """
@@ -237,14 +240,19 @@ Causes possibles :
           return d
       # retirer les sd produites par 'etape'
       sd_names = [sd.nom for sd in etape.get_created_sd()]
-      #message.debug(SUPERV, "reuse : %s, sdprods : %s", etape.reuse, sd_names)
+      #message.debug(SUPERV, "etape: %s, reuse : %s, sdprods de %s : %s",
+                    #self.nom, etape.reuse, etape.nom, sd_names)
       for nom in sd_names:
          try:
-              del d[nom]
+             del d[nom]
          except KeyError:
-             from warnings import warn
-             warn("concept '%s' absent du contexte de %s" % (nom, self.nom),
-                  RuntimeWarning, stacklevel=2)
+             pass
+             # Exemple avec INCLUDE_MATERIAU appelé dans une macro.
+             # Les fonctions restent uniquement dans le contexte de INCLUDE_MATERIAU,
+             # elles ne sont donc pas dans le contexte de la macro appelante.
+             #from warnings import warn
+             #warn("concept '%s' absent du contexte de %s" % (nom, self.nom),
+                  #RuntimeWarning, stacklevel=2)
       return d
 
    def supprime(self):
@@ -477,60 +485,60 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" %(t,co
       return sd
 
    def NommerSdprod(self,sd,sdnom,restrict='non'):
-      """
-          Cette methode est appelee par les etapes internes de la macro
-          La macro appelle le JDC pour valider le nommage
-          On considere que l espace de nom est unique et géré par le JDC
-          Si le nom est deja utilise, l appel leve une exception
-          Si restrict=='non', on insere le concept dans le contexte de la macro
-          Si restrict=='oui', on n'insere pas le concept dans le contexte de la macro
-      """
-      # Normalement, lorsqu'on appelle cette methode, on ne veut nommer que des concepts nouvellement crees.
-      # Le filtrage sur les concepts a creer ou a ne pas creer est fait dans la methode
-      # create_sdprod. La seule chose a verifier apres conversion eventuelle du nom
-      # est de verifier que le nom n'est pas deja attribue. Ceci est fait en delegant
-      # au JDC par l'intermediaire du parent.
-
-      #XXX attention inconsistence : gcncon n'est pas
-      # défini dans le package Noyau. La methode NommerSdprod pour
-      # les macros devrait peut etre etre déplacée dans Build ???
-      if self.Outputs.has_key(sdnom):
-        # Il s'agit d'un concept de sortie de la macro produit par une sous commande
-        sdnom=self.Outputs[sdnom].nom
-      elif sdnom != '' and sdnom[0] == '_':
-        # Si le nom du concept commence par le caractere _ on lui attribue
-        # un identificateur JEVEUX construit par gcncon et respectant
-        # la regle gcncon legerement adaptee ici
-        # nom commencant par __ : il s'agit de concepts qui seront detruits
-        # nom commencant par _ : il s'agit de concepts intermediaires qui seront gardes
-        # ATTENTION : il faut traiter différemment les concepts dont le nom
-        # commence par _ mais qui sont des concepts nommés automatiquement par
-        # une éventuelle sous macro.
-        # Le test suivant n'est pas tres rigoureux mais permet de fonctionner pour le moment (a améliorer)
-        if sdnom[1] in string.digits:
-          # Ce concept provient probablement d'une macro appelee par self
-          pass
-        elif sdnom[1] == '_':
-          sdnom=self.gcncon('.')
+        """
+          Cette méthode est appelée par les etapes internes de la macro.
+          La macro appelle le JDC pour valider le nommage.
+          On considère que l'espace de nom est unique et géré par le JDC.
+          Si le nom est déjà utilisé, l'appel lève une exception.
+          Si restrict=='non', on insère le concept dans le contexte du parent de la macro.
+          Si restrict=='oui', on insère le concept uniquement dans le contexte de la macro.
+        """
+        # Normalement, lorsqu'on appelle cette methode, on ne veut nommer que des concepts nouvellement crees.
+        # Le filtrage sur les concepts a creer ou a ne pas creer est fait dans la methode
+        # create_sdprod. La seule chose a verifier apres conversion eventuelle du nom
+        # est de verifier que le nom n'est pas deja attribue. Ceci est fait en delegant
+        # au JDC par l'intermediaire du parent.
+        #message.debug(SUPERV, "macro results = %s, (sdnom: %r, restrict: %r)",
+                      #self.Outputs.keys(), sdnom, restrict)
+        if self.Outputs.has_key(sdnom):
+            # Il s'agit d'un concept de sortie de la macro produit par une sous commande
+            sdnom = self.Outputs[sdnom].nom
+        elif len(sdnom) > 0:
+            if sdnom[0] in ('_', '.') and sdnom[1:].isdigit():
+                # il est déjà de la forme _9000012 ou .9000017
+                pass
+            elif sdnom[0] == '_':
+                # Si le nom du concept commence par le caractère '_', on lui attribue
+                # un identificateur JEVEUX construit par gcncon.
+                # nom commençant par __ : il s'agit de concepts qui seront détruits
+                # nom commençant par _ : il s'agit de concepts intermediaires qui seront gardés
+                if len(sdnom) > 1 and sdnom[1] == '_':
+                    sdnom = self.gcncon('.')
+                else:
+                    sdnom = self.gcncon('_')
+            elif self.nom in ('INCLUDE', 'MACR_RECAL'):
+                # dans le cas d'INCLUDE, on passe
+                # MACR_RECAL fonctionne comme INCLUDE
+                pass
+            else:
+                # On est dans le cas d'un nom de concept global
+                #XXX à voir, création de CO() dans CALC_ESSAI (sdls139a)
+                if not sd.is_typco():
+                    raise AsException("Résultat non déclaré par la macro %s : %s" % (self.nom, sdnom))
+        self.last = sdnom
+        if restrict == 'non':
+            # On demande le nommage au parent mais sans ajout du concept dans le contexte du parent
+            # car on va l'ajouter dans le contexte de la macro
+            self.parent.NommerSdprod(sd,sdnom,restrict='oui')
+            # On ajoute dans le contexte de la macro les concepts nommes
+            # Ceci est indispensable pour les CO (macro) dans un INCLUDE
+            self.g_context[sdnom]=sd
+            #message.debug(SUPERV, "g_context[%s] = %s", sdnom, sd)
         else:
-          sdnom=self.gcncon('_')
-      else:
-        # On est dans le cas d'un nom de concept global.
-        pass
-
-      if restrict == 'non':
-         # On demande le nommage au parent mais sans ajout du concept dans le contexte du parent
-         # car on va l'ajouter dans le contexte de la macro
-         self.parent.NommerSdprod(sd,sdnom,restrict='oui')
-         # On ajoute dans le contexte de la macro les concepts nommes
-         # Ceci est indispensable pour les CO (macro) dans un INCLUDE
-         self.g_context[sdnom]=sd
-         #message.debug(SUPERV, "g_context[%s] = %s", sdnom, sd)
-      else:
-         # La demande de nommage vient probablement d'une macro qui a mis
-         # le concept dans son contexte. On ne traite plus que le nommage (restrict="oui")
-         #message.debug(SUPERV, "restrict=oui  co[%s] = %s", sdnom, sd)
-         self.parent.NommerSdprod(sd,sdnom,restrict='oui')
+            # La demande de nommage vient probablement d'une macro qui a mis
+            # le concept dans son contexte. On ne traite plus que le nommage (restrict="oui")
+            #message.debug(SUPERV, "restrict=oui  co[%s] = %s", sdnom, sd)
+            self.parent.NommerSdprod(sd,sdnom,restrict='oui')
 
    def delete_concept_after_etape(self,etape,sd):
       """
@@ -551,6 +559,12 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" %(t,co
           sdprods.append(self.sd)
       return sdprods
 
+   def get_last_concept(self):
+       """Retourne le dernier concept produit dans la macro.
+       Peut-être utile pour accéder au contenu 'fortran' dans une
+       clause 'except'."""
+       return self.g_context.get(self.last, None)
+
    def accept(self,visitor):
       """
          Cette methode permet de parcourir l'arborescence des objets
@@ -570,27 +584,23 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" %(t,co
       for co in self.sdprods:
         d[co.nom]=co
 
-   def make_include(self,unite=None):
-      """
-          Inclut un fichier dont l'unite logique est unite
-      """
-      if not unite : return
-      f,text=self.get_file(unite=unite,fic_origine=self.parent.nom)
+   def make_include(self, unite=None, fname=None):
+      """Inclut un fichier dont l'unite logique est `unite` ou de nom `fname`"""
+      if unite is not None:
+         warn("'unite' is deprecated, please use 'fname' instead",
+              DeprecationWarning, stacklevel=2)
+         fname = 'fort.%s' % unite
+      if not fname:
+         return
+      f, text = self.get_file(fic_origine=self.parent.nom, fname=fname)
       self.fichier_init = f
-      if f == None:return
-      self.make_contexte(f,text)
+      if f == None:
+         return
+      self.make_contexte(f, text)
 
    def make_poursuite(self):
-      """
-          Inclut un fichier poursuite
-      """
-      try:
-         f,text=self.get_file(fic_origine=self.parent.nom)
-      except:
-         raise AsException("Impossible d'ouvrir la base pour une poursuite")
-      self.fichier_init=f
-      if f == None:return
-      self.make_contexte(f,text)
+      """Inclut un fichier poursuite"""
+      raise NotImplementedError('this method must be derivated (in Eficas)')
 
    def make_contexte(self,f,text):
       """
@@ -647,8 +657,18 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" %(t,co
       """
       # chercher dans self.get_contexte_avant, puis si non trouve
       # self.parent.get_concept est peut-etre plus performant
-      return self.get_contexte_courant().get(nomsd.strip(), None)
+      co = self.get_contexte_courant().get(nomsd.strip(), None)
+      if not isinstance(co, ASSD):
+          co = None
+      return co
 
+   def get_concept_by_type(self, nomsd, typesd, etape=None):
+      """
+          Méthode pour récuperer un concept à partir de son nom et de son type.
+          Il aura comme père 'etape' (ou la macro courante si etape est absente).
+      """
+      return self.parent.get_concept_by_type(nomsd, typesd, etape=etape or self)
+      
    def copy(self):
       """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
           et sans sd

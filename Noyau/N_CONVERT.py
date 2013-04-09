@@ -40,15 +40,15 @@ class Conversion:
    def convert(self, obj):
       """Filtre liste
       """
-      in_as_enum = is_enum(obj)
-      if not in_as_enum:
+      in_as_seq = is_sequence(obj)
+      if not in_as_seq:
          obj = (obj,)
-      
+
       result = []
       for o in obj:
          result.append(self.function(o))
       
-      if not in_as_enum:
+      if not in_as_seq:
          return result[0]
       else:
          # ne marche pas avec MACR_RECAL qui attend une liste et non un tuple

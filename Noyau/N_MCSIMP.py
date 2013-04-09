@@ -31,7 +31,7 @@ from Noyau.N_ASSD import ASSD
 from Noyau.N_CO import CO
 import N_OBJECT
 from N_CONVERT import ConversionFactory
-from N_types import force_list
+from N_types import force_list, is_sequence
 
 class MCSIMP(N_OBJECT.OBJECT):
    """
@@ -95,9 +95,9 @@ class MCSIMP(N_OBJECT.OBJECT):
       # par "not has_attr(v, '__iter__')".
       if v is None:
           pass
-      elif type(v) in (list, tuple) and len(v) == 1 and self.definition.max == 1:
+      elif is_sequence(v) and len(v) == 1 and self.definition.max == 1:
          v = v[0]
-      elif not hasattr(v, '__iter__') and self.definition.max != 1:
+      elif not is_sequence(v) and self.definition.max != 1:
           v = (v, )
       # traitement particulier pour les complexes ('RI', r, i)
       if 'C' in self.definition.type and self.definition.max != 1 \
