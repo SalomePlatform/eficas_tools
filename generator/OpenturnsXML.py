@@ -225,7 +225,7 @@ class XMLGenerateur :
     if ( dictTagsXML.has_key(tag) ) :
       return dictTagsXML[tag]
     else :
-      raise KeyError, tr("Tag %s non-defini. Ceci est un bogue interne. en informer les developpeurs.", tag))
+      raise KeyError, tr("Tag %s non-defini. Ceci est un bogue interne. en informer les developpeurs.", tag)
     pass
   
   def GetMCVal (self, MC, default = None, mandatory = False) :
@@ -237,7 +237,7 @@ class XMLGenerateur :
       return self.DictMCVal[MC]
     else :
       if ( mandatory ) :
-        raise KeyError, tr(" Le mot-cle %s est obligatoire.", MC))
+        raise KeyError, tr(" Le mot-cle %s est obligatoire.", MC)
       else :
         return default
     pass
