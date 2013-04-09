@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2012   EDF R&D
+# Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -31,11 +31,9 @@ from Extensions.i18n import tr
 # Import des panels
 
 class MonFonctionPanel(MonPlusieursBasePanel):
-  """
-  Classe definissant le panel associe© aux mots-cles qui demandent
-  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discretes
-  """
+#  Classe definissant le panel associe© aux mots-cles qui demandent
+#  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+#  discretes
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonFonctionPanel"
         self.node=node

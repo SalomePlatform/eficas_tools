@@ -65,7 +65,7 @@ def localise(application, locale=None):
     
     global eficas_translator
     if eficas_translator.load("eficas_" + locale, "../UiQT4"):
-        print "Eficas translator loaded!"
+        #print "Eficas translator loaded!"
         application.installTranslator(eficas_translator)
     else:
         print "Unable to load Eficas translator!"

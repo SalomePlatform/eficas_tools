@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2012   EDF R&D
+# Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,8 +22,8 @@ import re,string,os
 
 from Extensions.i18n import tr
 #
-__Id__="$Id: analyse_catalogue_initial.py,v 1.2.4.1.2.2.2.2 2013-02-20 10:34:57 pnoyret Exp $"
-__version__="$Name:  $"
+__Id__="$Id: analyse_catalogue_initial.py,v 1.2.4.1.2.2.2.3 2013-02-22 18:19:03 pnoyret Exp $"
+__version__="$Name: V7_main $"
 #
 
                 

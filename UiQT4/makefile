@@ -1,6 +1,7 @@
 PYUIC = pyuic4
+QTRELEASE = lrelease-qt4
 .PHONY : all
-.SUFFIXES : .ui .py
+.SUFFIXES : .ui .py .ts .qm
 
 
 PY_FILES = desChoixCata.py desCommande.py desCommentaire.py desError.py desFormule.py desInactif.py \
@@ -11,10 +12,15 @@ PY_FILES = desChoixCata.py desCommande.py desCommentaire.py desError.py desFormu
 	desViewTexte.py desPixmap.py desMatrice.py OptionsOT.py OptionsCuve.py desChoixMap.py \
         OptionsMAP.py desImage.py desChoixCode.py desRecherche.py
 
+QM_FILES=eficas_en.qm 
+
 %.py:%.ui
 	${PYUIC} -x -o $@ $<
 
-all : $(PY_FILES)
+%.qm:%.ts
+	${QTRELEASE}  -qm $@ $<
+
+all : $(PY_FILES) $(QM_FILES)
 clean :
 	-rm -rf $(PY_FILES) *.pyc
 

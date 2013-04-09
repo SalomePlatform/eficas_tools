@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2012   EDF R&D
+# Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -24,8 +24,8 @@ from Extensions.i18n import tr
 from Noyau.N_CR import CR
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.9.8.1.2.1.2.3 2013-02-22 18:19:03 pnoyret Exp $"
-__version__="$Name:  $"
+__Id__="$Id: analyse_catalogue.py,v 1.9.8.1.2.1.2.4 2013-03-25 15:47:45 pnoyret Exp $"
+__version__="$Name: V7_main $"
 #
 l_noms_commandes = ['OPER','PROC','MACRO','FORM']
 l_noms_composes=['FACT','BLOC','NUPL','FORM']

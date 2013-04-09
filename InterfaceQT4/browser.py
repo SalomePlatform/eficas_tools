@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2012   EDF R&D
+# Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -245,7 +245,7 @@ class JDCNode(QTreeWidgetItem):
         elif pos == 'after':
             index = index +1
         else:
-            print tr("%s n'est pas un index valide pour append_brother", unicode(pos))
+            print unicode(pos), tr("  n'est pas un index valide pour append_brother")
             return 0
         return self.treeParent.append_child(name,pos=index)
 

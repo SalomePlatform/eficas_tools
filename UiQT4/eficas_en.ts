@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="en">
-<defaultcodec></defaultcodec>
 <context>
     <name>@default</name>
     <message>
@@ -400,62 +399,62 @@ ask eficas team
         <translation>object type not expected : %s</translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="249"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="252"/>
         <source> ce groupe de maillage %s est associe a au moins un materiau  et au moins une source.</source>
         <translation>mesh group %s is associated with at least one material and at least a source.</translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="260"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="263"/>
         <source>ce groupe de maillage %s  n&apos;est associe a aucun materiau ou source.</source>
         <translation>mesh group %s is associated with no material or no source.</translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="291"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="294"/>
         <source>ERREUR! Le bloc CONDUCTOR doit contenir PERMEABILITY et CONDUCTIVITY.</source>
         <translation>ERROR! CONDUCTOR bloc must contains PERMEABILITY and CONDUCTIVITY.</translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="333"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="336"/>
         <source>ERREUR! Le bloc DIELECTRIC doit contenir PERMEABILITY et PERMITTIVITY.</source>
         <translation>ERROR! DIELECTRIC bloc must contains PERMEABILITY and PERMITTIVITY.</translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="375"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="378"/>
         <source>ERREUR! Le bloc ZSURFACIC doit contenir PERMEABILITY et CONDUCTIVITY.</source>
         <translation>ERROR!ZSURFACIC bloc must contains PERMEABILITY and CONDUCTIVITY.</translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="458"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="461"/>
         <source>ERREUR! Une source du type STRANDED_INDUCTOR, HPORT ou EPORT est attendue.</source>
         <translation>ERROR! source&apos;s type must be STRANDED_INDUCTOR, HPORT or EPORT.</translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="475"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="478"/>
         <source>ATTENTION! Une source constante 
                                   n&apos;est possible qu&apos;a frequence nulle 
                                   en regime frequentiel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="484"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="487"/>
         <source>ERREUR! Une forme de la source du 
                                type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.</source>
         <translation>ERROR! source&apos;s type must be WAVEFORM_CONSTANT or WAVEFORM_SINUS.</translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="505"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="508"/>
         <source>ATTENTION! Une source constante n&apos;est 
                                   possible qu&apos;a frequence nulle en regime frequentiel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="541"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="544"/>
         <source>ERREUR! Une forme de la source du type 
                                WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.</source>
         <translation>ERROR! source&apos;s type must be WAVEFORM_CONSTANT or WAVEFORM_SINUS.</translation>
     </message>
     <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="534"/>
+        <location filename="../../generator/generator_CARMEL3D.py" line="537"/>
         <source>ATTENTION! Une source constante n&apos;est possible qu&apos;a frequence nulle en regime frequentiel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -810,7 +809,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../InterfaceQT4/browser.py" line="249"/>
         <source>%s n&apos;est pas un index valide pour append_brother</source>
-        <translation>%s is not a valid index for append_brother</translation>
+        <translation type="obsolete">%s is not a valid index for append_brother</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/compocomm.py" line="41"/>
@@ -900,17 +899,17 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>display distribution</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="171"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="173"/>
         <source>Impossible de supprimer un mot-cl&#xe9; obligatoire </source>
         <translation>unable to delete a mandatory keyword</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="174"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="176"/>
         <source>Mot-cl&#xe9; % supprim&#xe9; </source>
         <translation>Keyword %s is deleted</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="178"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="180"/>
         <source>Pb interne : impossible de supprimer ce mot-cl&#xe9;</source>
         <translation>internal problem : unable to delete keyword</translation>
     </message>
@@ -971,62 +970,62 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Eficas is not able to open this file&apos;s type</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="488"/>
+        <location filename="../../InterfaceQT4/editor.py" line="487"/>
         <source>Copie impossible</source>
         <translation>unable to copy</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="464"/>
+        <location filename="../../InterfaceQT4/editor.py" line="461"/>
         <source>Veuillez selectionner un objet &#xe0; copier</source>
         <translation>you have to select an object to copy</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="469"/>
+        <location filename="../../InterfaceQT4/editor.py" line="466"/>
         <source>Veuillez selectionner un seul objet : la copie se fera apr&#xe8;s le noeud selectionn&#xe9;</source>
         <translation>You have to select a single object : copy will be done after the selected node</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="488"/>
+        <location filename="../../InterfaceQT4/editor.py" line="487"/>
         <source>Aucun Objet n a ete copie ou coupe</source>
         <translation>No object was cut or copied</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="506"/>
+        <location filename="../../InterfaceQT4/editor.py" line="505"/>
         <source>Copie refusee</source>
         <translation>rejected copy</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="498"/>
+        <location filename="../../InterfaceQT4/editor.py" line="497"/>
         <source>Eficas n a pas r&#xe9;ussi &#xe0; copier l objet</source>
         <translation>Eficas cannot copy this object</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="506"/>
+        <location filename="../../InterfaceQT4/editor.py" line="505"/>
         <source>Copie refusee pour ce type d objet</source>
         <translation>Copy rejected : bad object type</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="518"/>
+        <location filename="../../InterfaceQT4/editor.py" line="517"/>
         <source>Deplacement refuse</source>
         <translation>move rejected</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="518"/>
+        <location filename="../../InterfaceQT4/editor.py" line="517"/>
         <source>Deplacement refuse entre 2 fichiers. Seule la copie est autoris&#xe9;e </source>
         <translation>move rejected. no move between two files : only copy is available</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="554"/>
+        <location filename="../../InterfaceQT4/editor.py" line="552"/>
         <source>Copie impossible a cet endroit</source>
         <translation>unable to copy here</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="555"/>
+        <location filename="../../InterfaceQT4/editor.py" line="552"/>
         <source>Veuillez selectionner une commande, un parametre, un commentaire ou une macro</source>
         <translation>select a command; a parameter, a comment or a macro</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="614"/>
+        <location filename="../../InterfaceQT4/editor.py" line="613"/>
         <source>Choix d&apos;un fichier XML</source>
         <translation>Choice of XML file</translation>
     </message>
@@ -1036,67 +1035,67 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Open file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="669"/>
+        <location filename="../../InterfaceQT4/editor.py" line="668"/>
         <source>Erreur a la generation</source>
         <translation>Error when generating</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="669"/>
+        <location filename="../../InterfaceQT4/editor.py" line="668"/>
         <source>EFICAS ne sait pas convertir ce JDC</source>
         <translation>Eficas is unable to convert JDC</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="675"/>
+        <location filename="../../InterfaceQT4/editor.py" line="674"/>
         <source>Format %s non reconnu</source>
         <translation> not supported format %s</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="676"/>
+        <location filename="../../InterfaceQT4/editor.py" line="675"/>
         <source>EFICAS ne sait pas convertir le JDC selon le format %s </source>
         <translation>Eficas is not able to convert JDC with format %s</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="693"/>
+        <location filename="../../InterfaceQT4/editor.py" line="692"/>
         <source>Execution impossible </source>
         <translation>Unable to execute</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="684"/>
+        <location filename="../../InterfaceQT4/editor.py" line="683"/>
         <source>le JDC doit etre valide pour une execution MAP</source>
         <translation>JDC has to be valid before run</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="687"/>
+        <location filename="../../InterfaceQT4/editor.py" line="686"/>
         <source>le JDC doit contenir un et un seul composant</source>
         <translation>JDC must contains a single componant</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="693"/>
+        <location filename="../../InterfaceQT4/editor.py" line="692"/>
         <source>le JDC doit &#xea;tre sauvegarde avant execution</source>
         <translation>JDC has to be saved before run</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="714"/>
+        <location filename="../../InterfaceQT4/editor.py" line="712"/>
         <source>sauvegarde</source>
         <translation>save</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="723"/>
+        <location filename="../../InterfaceQT4/editor.py" line="721"/>
         <source>Sauvegarde du Fichier</source>
         <translation>save file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="724"/>
+        <location filename="../../InterfaceQT4/editor.py" line="721"/>
         <source>Le fichier &lt;b&gt;%s&lt;/b&gt; existe deja.</source>
         <translation>file  &lt;b&gt;%s&lt;/b&gt; already exists.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="725"/>
+        <location filename="../../InterfaceQT4/editor.py" line="721"/>
         <source>&amp;Ecraser</source>
         <translation>&amp;Replace</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="850"/>
+        <location filename="../../InterfaceQT4/editor.py" line="858"/>
         <source>Choix unit&#xe9; %d </source>
         <translation>Choose unit %d</translation>
     </message>
@@ -1113,7 +1112,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Choose file corresponding to unit %d</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="864"/>
+        <location filename="../../InterfaceQT4/editor.py" line="863"/>
         <source>Choix d&apos;un fichier de poursuite</source>
         <translation>Choose poursuite file</translation>
     </message>
@@ -1124,7 +1123,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>file %s contains a POURSUITE command</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="866"/>
+        <location filename="../../InterfaceQT4/editor.py" line="865"/>
         <source>Donnez le nom du fichier dont vous 
  voulez faire une poursuite</source>
         <translation>choose primary file for the POURSUITE file</translation>
@@ -1157,17 +1156,17 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>%d catalogs versions are available</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monFonctionPanel.py" line="64"/>
+        <location filename="../../InterfaceQT4/monFonctionPanel.py" line="62"/>
         <source>La cardinalite n&apos;est pas correcte, la derniere valeur est ignoree</source>
         <translation>incorrect cardinality : the last value is ignored</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monFonctionPanel.py" line="112"/>
+        <location filename="../../InterfaceQT4/monFonctionPanel.py" line="110"/>
         <source> n est pas un tuple de </source>
         <translation>is not a tuple</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monFonctionPanel.py" line="114"/>
+        <location filename="../../InterfaceQT4/monFonctionPanel.py" line="112"/>
         <source> valeurs</source>
         <translation>values</translation>
     </message>
@@ -1227,7 +1226,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Unable to read file : unsupported format</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="195"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="191"/>
         <source>Fichier Include</source>
         <translation>INCLUDE File</translation>
     </message>
@@ -1352,12 +1351,12 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>parameters&apos;name must begin with a letter or &apos;_&apos;</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="138"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="134"/>
         <source>Tri Alpha</source>
         <translation>alpha sort</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="135"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="131"/>
         <source>Tri Cata</source>
         <translation>cata sort</translation>
     </message>
@@ -1444,32 +1443,32 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="143"/>
         <source>Une chaine de caracteres est attendue.  </source>
-        <translation>a string is expected.</translation>
+        <translation type="obsolete">a string is expected.</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="144"/>
         <source>Un reel est attendu. </source>
-        <translation>a float is expected.</translation>
+        <translation type="obsolete">a float is expected.</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="145"/>
         <source>Un entier est attendu.  </source>
-        <translation>an integer is expected.</translation>
+        <translation type="obsolete">an integer is expected.</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="146"/>
         <source>Une Matrice est attendue.  </source>
-        <translation>a Matix is expected.</translation>
+        <translation type="obsolete">a Matix is expected.</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="148"/>
         <source>Un fichier est attendu.  </source>
-        <translation>a file is expected.</translation>
+        <translation type="obsolete">a file is expected.</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="149"/>
         <source>Un repertoire est attendu.  </source>
-        <translation>a directory is expected.</translation>
+        <translation type="obsolete">a directory is expected.</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="155"/>
@@ -1532,43 +1531,43 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>No Object of this type is defined</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="187"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="183"/>
         <source>Nouvelle Commande</source>
         <translation>New Command</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="189"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="185"/>
         <source>Nommer Concept</source>
         <translation>Concept Name</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="197"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="193"/>
         <source>Ajouter Mot-Clef</source>
         <translation>Add Keyword</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="191"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="187"/>
         <source>Definition Formule</source>
         <translation>Formule definition</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="193"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="189"/>
         <source>Valeur Parametre</source>
         <translation>Parameter&apos;s value</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="326"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="322"/>
         <source>&lt;font size=&quot;+1&quot;&gt;&lt;p align=&quot;center&quot;&gt;Structures de donnees &#xc3;&#xa0; enrichir
  par l&apos;operateur courant :&lt;/p&gt;&lt;/font&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="398"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="394"/>
         <source>Sauvegarder le fichier</source>
         <translation>save file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtCommun.py" line="398"/>
+        <location filename="../../InterfaceQT4/qtCommun.py" line="394"/>
         <source>Le fichier &lt;b&gt;%(v_1)s&lt;/b&gt; n&apos;a pu etre sauvegarde. &lt;br&gt;Raison : %(v_2)s</source>
         <comment>v_1</comment>
         <translation>file &lt;b&gt;%(v_1)s&lt;/b&gt; was not saved</translation>
@@ -1936,6 +1935,234 @@ Le fichier associe n&apos;est pas defini</source>
         <source>Creation du repertoire %s impossible
  Verifiez vos droits d&apos;acces</source>
         <translation>Unable to create directory : check your access rights</translation>
+    </message>
+    <message>
+        <location filename="../../Editeur/session.py" line="266"/>
+        <source>localisation de l&apos;application, pour la traduction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="85"/>
+        <source>self.text = %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="102"/>
+        <source>dictMaterConductor : %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="140"/>
+        <source>ecriture du fichier de parametres (PHYS)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="153"/>
+        <source>MCSIMP %(v_1)s  %(v_2)s</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="180"/>
+        <source>PROC_ETAPE %(v_1)s  %(v_2)s</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="194"/>
+        <source>ETAPE : obj.nom = %(v_1)s , obj.valeur= %(v_2)s</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="211"/>
+        <source>jdc_aux_texte : %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="250"/>
+        <source>obj.valeur.keys()= %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="265"/>
+        <source>self.dictGroupesMaillage= %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="274"/>
+        <source>generation material obj valeur = %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="291"/>
+        <source>_____________cond_____________</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="400"/>
+        <source>texte = %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="333"/>
+        <source>______________nocond_____________</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="375"/>
+        <source>______________zsurf_____________</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="448"/>
+        <source>generation source obj valeur = %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="575"/>
+        <source>cle dictionnaire materconductor : %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="576"/>
+        <source>cle dictionnaire materdielectric : %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="583"/>
+        <source>noms groupes de mailles associes a des materiaux 
+                            (ordre JdC puis tri)= %(v_1)s %(v_2)s</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="610"/>
+        <source>cles materiaux de type %(type_bloc)s = %(cle_bloc)s</source>
+        <comment>type_bloc</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="694"/>
+        <source>cles materiaux de type %(type_bloc)s=%(cle_bloc)s</source>
+        <comment>type_bloc</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="716"/>
+        <source>noms groupes de mailles associes a des sources 
+                            (ordre JdC puis tri)=%(g_maillage_orig)s %(g_maillage_trie)s</source>
+        <comment>g_maillage_orig</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="730"/>
+        <source>cles sources STRANDED_INDUCTOR= %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="743"/>
+        <source>cles sources EPORT= %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="760"/>
+        <source>cles sources HPORT= %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="782"/>
+        <source>formatage </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="783"/>
+        <source>type : %(type_nb_c)s pour %(nb_c)s</source>
+        <comment>type_nb_c</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="794"/>
+        <source>nbformate : %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="805"/>
+        <source>nom groupe original : %(nom)s avec usePrefix=%(use_prefix)s devient...</source>
+        <comment>nom</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="813"/>
+        <source>ERREUR! ce groupe de maille (%s) n&apos;a pas de prefixe 
+                                indiquant le type de materiau ou de source associee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="816"/>
+        <source>ERREUR! ce groupe de maille (%s) n&apos;a pas de prefixe valable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="821"/>
+        <source>ERREUR! ce type de bloc (%s) n&apos;est pas valable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="823"/>
+        <source>ERREUR! ce groupe de maille (%(nom)s) n&apos;a pas 
+                                        le prefixe correct pour etre associe a un type %(type_bloc)s</source>
+        <comment>nom</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="829"/>
+        <source>ce groupe de maille (%(nom)s) a un prefixe qui 
+                                            est supprime automatiquement pour devenir : %(nom_reel)s</source>
+        <comment>nom</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="835"/>
+        <source>ce groupe de maille (%(nom)s) a un prefixe qui 
+                                        est supprime automatiquement pour devenir : %(nom_reel)s</source>
+        <comment>nom</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="839"/>
+        <source>... %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/OpenturnsSTD.py" line="98"/>
+        <source>ListeVariablesIn= %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/OpenturnsSTD.py" line="101"/>
+        <source>ListeVariablesOut= %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/OpenturnsXML.py" line="212"/>
+        <source>CN = %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/browser.py" line="248"/>
+        <source>  n&apos;est pas un index valide pour append_brother</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/compooper.py" line="88"/>
+        <source>Erreur interne</source>
+        <translation type="unfinished">Internal error</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/compooper.py" line="88"/>
+        <source>La PDF de la loi ne peut pas &#xea;tre affich&#xe9;e.</source>
+        <translation type="unfinished">unable to display law&apos;s PDF</translation>
     </message>
 </context>
 <context>
@@ -3612,22 +3839,22 @@ requis par l&apos;objet courant :&lt;/p&gt;&lt;/font&gt;</source>
 <context>
     <name>JDCEditor</name>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="654"/>
+        <location filename="../../InterfaceQT4/editor.py" line="653"/>
         <source>Save File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="655"/>
+        <location filename="../../InterfaceQT4/editor.py" line="653"/>
         <source>The file &lt;b&gt;%1&lt;/b&gt; could not be saved.&lt;br&gt;Reason: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="708"/>
+        <location filename="../../InterfaceQT4/editor.py" line="707"/>
         <source>JDC (*.comm);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="726"/>
+        <location filename="../../InterfaceQT4/editor.py" line="721"/>
         <source>&amp;Abandonner</source>
         <translation>&amp;Cancel</translation>
     </message>
@@ -3733,17 +3960,17 @@ requis par l&apos;objet courant :&lt;/p&gt;&lt;/font&gt;</source>
     <message>
         <location filename="../../InterfaceQT4/compooper.py" line="85"/>
         <source>Erreur interne</source>
-        <translation>Internal error</translation>
+        <translation type="obsolete">Internal error</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/compooper.py" line="85"/>
         <source>La PDF de la loi ne peut pas &#xea;tre affich&#xe9;e.</source>
-        <translation>unable to display law&apos;s PDF</translation>
+        <translation type="obsolete">unable to display law&apos;s PDF</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/compooper.py" line="85"/>
         <source>&amp;Annuler</source>
-        <translation>&amp;Cancel</translation>
+        <translation type="obsolete">&amp;Cancel</translation>
     </message>
 </context>
 <context>
@@ -3958,7 +4185,7 @@ Version:</translation>
 <context>
     <name>self.appliEficas</name>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="622"/>
+        <location filename="../../InterfaceQT4/editor.py" line="618"/>
         <source>Wrapper Files (*.xml);;All Files (*)</source>
         <translation></translation>
     </message>
