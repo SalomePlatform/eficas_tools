@@ -81,7 +81,10 @@ def AsType(a):
        return "TXM"
    if a == None:
        return None
-   raise AsException("type inconnu: %r %s" % (a, type(a)))def prbanner(s):
+   raise AsException("type inconnu: %r %s" % (a, type(a)))
+
+
+def prbanner(s):
    print "*"*(len(s)+10)
    print "*"*5 + s + "*"*5
    print "*"*(len(s)+10)

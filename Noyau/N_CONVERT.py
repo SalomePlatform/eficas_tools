@@ -21,7 +21,7 @@
    Module de conversion des valeurs saisies par l'utilisateur après vérification.
 """
 
-from N_types import is_int, is_float, is_enum
+from N_types import is_int, is_float, is_enum, is_sequence
 
 
 def has_int_value(real):
