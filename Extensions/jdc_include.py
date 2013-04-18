@@ -353,7 +353,9 @@ class JDC_CATA_POURSUITE(JDC_CATA):
 
 from Accas import AU_MOINS_UN,A_CLASSER
 
-JdC_include=JDC_CATA_INCLUDE(code='ASTER', execmodul=None)
+import prefs
+c=prefs.code
+JdC_include=JDC_CATA_INCLUDE(code=c, execmodul=None)
 
 JdC_poursuite=JDC_CATA_POURSUITE(code='ASTER', execmodul=None,
                                  regles = (AU_MOINS_UN('DEBUT','POURSUITE'),
