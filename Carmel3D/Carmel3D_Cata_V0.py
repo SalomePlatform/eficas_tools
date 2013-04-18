@@ -50,10 +50,9 @@ class grmaille ( ASSD ) : pass
 
 JdC = JDC_CATA ( code = 'CARMEL3D',
 #                execmodul = None,
-                  regles =(
-                           AU_MOINS_UN ('MATERIAL'),
-                           AU_MOINS_UN ('SOURCE'),
-                           AU_MOINS_UN ('MESHGROUP'),
+                 regles =(
+                           AU_MOINS_UN ('MATERIAL','INCLUDE'),
+                           ENSEMBLE ('SOURCE','MESHGROUP'),
                            ),
                  ) # Fin JDC_CATA
 ##=========================================================
@@ -164,7 +163,9 @@ MATERIAL = OPER (nom = "MATERIAL",
 # materiaux generiques (les materiaux generiques peuvent etre utilises 
 # si aucun materiau de reference  ne convient) 
 #---------------------------------------------------------------------
-                 TYPE = SIMP(statut='o',
+# debut commentaire PN pour que le fichier materiaux soit valide
+#                 TYPE = SIMP(statut='o',
+                 MAT_REF = SIMP(statut='f',
                              typ='TXM',
                              into=(
 #  matériaux génériques 
@@ -210,10 +211,10 @@ MATERIAL = OPER (nom = "MATERIAL",
                                           fr  = u"le matériau est isotrope ou non",
                                          ),
                    HOMOGENEOUS_ISOTROPIC_PROPERTIES = BLOC (condition="HOMOGENEOUS=='TRUE' and ISOTROPIC=='TRUE'",
-                        LAW = SIMP (statut="o",
+                        TYPE_LAW = SIMP (statut="o",
                                     typ="TXM",
-                                    defaut="LINEAR",
-                                    into = ("LINEAR","NONLINEAR"),
+                                    defaut="LINEAR_REAL",
+                                    into = ("LINEAR_REAL","NONLINEAR"),
                                     ang = "harmonic or time-domain linear or nonlinear law only for homogeneous and isotropic materials",
                                     fr  = u"loi linéaire (fréquentielle ou temporelle) ou non (homogène et isotrope seulement)",
                                    ), 
