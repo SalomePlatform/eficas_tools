@@ -98,7 +98,7 @@ class AplatGenerator:
       elif format == 'beautifie':
          self.text=liste
       else:
-        raise EficasException(tr("Format pas implémenté : %s", format))
+        raise EficasException(tr("Format pas implemente : %s", format))
       return self.text
 
    def generator(self,obj):

@@ -110,7 +110,7 @@ class PopUpMenuNodeMinimal :
         cle_doc = self.node.item.get_docu()
         if cle_doc == None :
             QMessageBox.information( self.editor,tr( "Documentation Vide"), \
-                                    tr("Aucune documentation n'est associée à ce noeud"))
+                                    tr("Aucune documentation n'est associee a ce noeud"))
             return
         commande = self.editor.appliEficas.CONFIGURATION.exec_acrobat
         try :

@@ -45,7 +45,7 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
     from Extensions import localisation
     app = QApplication(sys.argv)
     localisation.localise(app,langue)
-    Eficas=Appli(code=code,ssCode=ssCode,multi=multi)
+    Eficas=Appli(code=code,ssCode=ssCode,multi=multi,langue=langue)
     Eficas.show()
 
     res=app.exec_()

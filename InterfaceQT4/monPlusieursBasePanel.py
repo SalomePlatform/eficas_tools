@@ -178,7 +178,7 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
                self.LBValeurs.setCurrentItem(item)
                index=index+1
            self.listeValeursCourantes=l1+listeRetour+l3
-	   self.editor.affiche_infos(tr("Valeurs Ajoutées"))
+	   self.editor.affiche_infos(tr("Valeurs Ajoutees"))
 
   def AjoutNValeur(self,liste) :
       for val in liste :

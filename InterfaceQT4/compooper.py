@@ -40,7 +40,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
         if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome: 
            self.ViewElt = QAction(tr('View3D'),self.tree)
            self.tree.connect(self.ViewElt,SIGNAL("activated()"),self.view3D)
-           self.ViewElt.setStatusTip(tr("affiche dans Geom les éléments de structure"))
+           self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
            self.menu.addAction(self.ViewElt)
            if self.item.isvalid() :
 	      self.ViewElt.setEnabled(1)
@@ -88,7 +88,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
             QMessageBox.warning(
                 self.appliEficas,
                 tr("Erreur interne"),
-                tr("La PDF de la loi ne peut pas être affichée."),
+                tr("La PDF de la loi ne peut pas etre affichee."),
                 tr("&Annuler"))
 
 class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
@@ -170,14 +170,14 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       # item.getObject() = MCSIMP, MCFACT, MCBLOC ou MCList 
       itemobject=item.getObject()
       if itemobject.isoblig() :
-          self.appli.affiche_infos(tr('Impossible de supprimer un mot-clé obligatoire '),Qt.red)
+          self.appli.affiche_infos(tr('Impossible de supprimer un mot-clef obligatoire '),Qt.red)
           return 0
       if self.object.suppentite(itemobject):
-          message = tr("Mot-clé % supprimé " , itemobject.nom)
+          message = tr("Mot-clef %s supprime " , itemobject.nom)
           self.appli.affiche_infos(message)
           return 1
       else :
-          self.appli.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-clé'),Qt.red)
+          self.appli.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-clef'),Qt.red)
           return 0
 
   def GetText(self):

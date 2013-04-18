@@ -83,10 +83,11 @@ class JDCTree( QTreeWidget ):
         if (len(self.selectedIndexes())!=2): return
         self.itemCourrant=item
         try :
+        #if 1:
            fr = item.item.get_fr()
-           if self.editor:
-              self.editor.affiche_infos(tr(fr))
+           if self.editor: self.editor.affiche_infos(unicode(fr))
         except:
+        #else :
             pass
         item.affichePanneau()
 

@@ -22,6 +22,7 @@ tuples, or atoms.
 
 ``PyQt4`` is currently supported.
 """
+from Extensions.eficas_exception import EficasException
 def _reformat_qstring_from_tuple(qstring, params):
     """
     _reformat_qstring_from_tuple(QString, tuple) -> QString
@@ -58,7 +59,6 @@ def _reformat_qstring_from_tuple(qstring, params):
             elif isinstance(params[j], list):
                 qstring = qstring.arg(repr(params[j]))
             else:
-                from Extensions.eficas_exception import EficasException
                 raise EficasException("TypeError: i18n.translation: \
                                       Unicode, list or number expected!")
     return qstring
@@ -95,7 +95,6 @@ def _reformat_qstring_from_dict(qstring, params):
             elif isinstance(params[p], list):
                 qstring = qstring.arg(repr(params[p]))
             else:
-                from EficasException import EficasException
                 raise EficasException("TypeError: i18n.translation: \
                                       Improper string parameter type.")
     return qstring
@@ -138,7 +137,6 @@ def _reformat_qstring_from_atom(qstring, params):
             elif isinstance(params, int):
                 qstring = qstring.arg(QString.number(params, 10))
             else:
-                from EficasException import EficasException
                 raise EficasException("TypeError: i18n.translation: Unicode, \
                                       string or number expected!")
     return qstring
@@ -162,7 +160,6 @@ def _reformat_qstring_from_list(qstring, params):
         qstring.append("%1")
         qstring = qstring.arg(u' '.join(map(unicode, params)))
     else:
-        from EficasException import EficasException
         raise EficasException("ValueError: i18n.translation: \
                               At most one '%' expected!")
     return qstring
@@ -180,7 +177,6 @@ def _preprocess_atom(string):
     elif isinstance(string, str):
         return _str_to_unicode(string)
     else:
-        from EficasException import EficasException
         raise EficasException("TypeError: Expected number, string or\
                               Unicode object!")
 
@@ -197,7 +193,6 @@ def _str_to_unicode(string):
         try:
             string = unicode(string, "iso-8859-15")
         except UnicodeDecodeError:
-            from EficasException import EficasException
             raise EficasException("UnicodeDecodeError: UTF-8, Latin-1 \
                                   or Latin-9 expected")
     return string
@@ -224,7 +219,6 @@ def tr(string, *args):
             elif string.count("%") == 0:
                 r = (unicode(QApplication.translate("@default", string)), args[0])
             else:
-                from EficasException import EficasException
                 raise EficasException("ValueError: i18n.translate.tr: \
                                       Improper input string formatting")
         elif isinstance(args[0], (unicode, str, int, float, complex)):
@@ -242,12 +236,10 @@ def tr(string, *args):
                 r = (unicode(QApplication.translate("@default", string)), args[0])
 
         else:
-            from EficasException import EficasException
             raise EficasException("ValueError: i18n.translation.tr: \
                                   Wrong type for formatted string \
                                   arguments: %s" % type(args[0]))
     else:
-        from EficasException import EficasException
         raise EficasException("ValueError: i18n.translation.tr: \
                               Wrong formatted string arguments")
     return r
@@ -280,7 +272,6 @@ def tr_qt(string, *args):
             elif r.count("%") in range(2) and r.count("%(") == 0:
                 r = _reformat_qstring_from_atom(r, _preproces_atom(repr(args[0])))
             else:
-                from EficasException import EficasException
                 raise EficasException("ValueError: i18n.translation.tr_qt: \
                                       Improper formatting string parameters")
         elif isinstance(args[0], (unicode, str, int, float, complex)):
@@ -290,11 +281,9 @@ def tr_qt(string, *args):
         elif args[0] is None:
             r = _reformat_qstring_from_atom(r, _preprocess_string_from_atom(repr(args[0])))
         else:
-            from EficasException import EficasException
             raise EficasException("ValueError: i18n.translation.tr_qt: \
                                   Wrong string formatting parameter types")
     else:
-        from EficasException import EficasException
         raise EficasException("ValueError: i18n.translation.tr_qt: \
                               Improper formatted string parameter set")
 #    print r

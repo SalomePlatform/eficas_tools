@@ -95,10 +95,10 @@ class STDGenerateur :
     self.ListeVariablesOut = ListeVariablesOut
     self.DictLois = DictLois
     #print "DictMCVal=", DictMCVal
-    print tr("ListeVariablesIn= %s", ListeVariablesIn)
+    print "ListeVariablesIn= %s", ListeVariablesIn
 
 # A REPRENDRE DEPUIS ICI !!
-    print tr("ListeVariablesOut= %s", ListeVariablesOut)
+    print "ListeVariablesOut= %s", ListeVariablesOut
     #print "DictLois=", DictLois
     self.texteSTD = defaultSTD
     self.OpenTURNS_path = appli.CONFIGURATION.OpenTURNS_path

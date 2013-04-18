@@ -143,7 +143,7 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       Retourne le fr associé au paramêtre, cad la bulle d'aide pour EFICAS
       """
-      return tr("Définition d'un paramêtre")
+      return tr("Definition d'un parametre")
     
 import Extensions.parametre
 treeitem =PARAMTreeItem

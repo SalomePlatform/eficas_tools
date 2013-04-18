@@ -72,7 +72,7 @@ class MonUniqueSDCOPanel(DUnSDCO,QTPanel,SaisieSDCO):
 
 
   def BOuiPressed(self):
-        self.Commentaire.setText(tr("Aucun Objet de ce type n'est défini"))
+        self.Commentaire.setText(tr("Aucun Objet de ce type n'est defini"))
         self.rbOui.setChecked(1)
 
   def LESDCOReturnPressed(self):

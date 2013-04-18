@@ -140,7 +140,7 @@ class PythGenerator:
       try:
          s="%s" % obj.valeur
       except Exception as e :
-         self.cr.fatal(tr("Type de valeur non supporté par le format pyth : n %(exception)s", \
+         self.cr.fatal(tr("Type de valeur non supporte par le format pyth : n %(exception)s", \
                            {'nom': obj.nom, 'exception': unicode(e)}))
 
 

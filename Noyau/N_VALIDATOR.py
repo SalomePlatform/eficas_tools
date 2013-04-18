@@ -147,7 +147,7 @@ class TypeProtocol(PProtocol):
                     return obj
                 else:
                     #raise ValError(ufmt(_(u"%s n'est pas un répertoire valide"), repr(obj)))
-                    raise ValError(repr(obj)+tr(" n'est pas un répertoire valide"))
+                    raise ValError(repr(obj)+tr(" n'est pas un repertoire valide"))
             elif type(type_permis) == types.ClassType or isinstance(type_permis,type):
                 try:
                     if self.is_object_from(obj,type_permis): return obj
@@ -160,10 +160,10 @@ class TypeProtocol(PProtocol):
                     pass
             else:
                 #print convert(ufmt(_(u"Type non encore géré %s"), `type_permis`))
-                print tr("Type non encore géré "), `type_permis`
+                print tr("Type non encore gere "), `type_permis`
         #raise ValError(ufmt(_(u"%s (de type %s) n'est pas d'un type autorisé: %s %s"),
                             #repr(obj), type(obj), typ, unicode(err)))
-        raise ValError(repr(obj) +tr("de type ") + repr(type(obj)) + tr (" n'est pas d'un type autorisé: ")+ str(typ) + " " +  unicode(err)) 
+        raise ValError(repr(obj) +tr("de type ") + repr(type(obj)) + tr (" n'est pas d'un type autorise: ")+ str(typ) + " " +  unicode(err)) 
 
     def is_complexe(self,valeur):
         """ Retourne 1 si valeur est un complexe, 0 sinon """
@@ -244,7 +244,7 @@ class IntoProtocol(PProtocol):
                 if obj < val_min or obj > val_max :
                     #raise ValError(ufmt(_(u"La valeur : %s est en dehors du domaine de validité [ %s , %s ]"),
                     #               repr(obj), self.val_min, self.val_max))
-                    raise ValError(tr("La valeur :") +repr(obj)+ tr(" est en dehors du domaine de validité [ ") +  repr(self.val_min) + "," + repr(self.val_max) + "]")
+                    raise ValError(tr("La valeur :") +repr(obj)+ tr(" est en dehors du domaine de validite [ ") +  repr(self.val_min) + "," + repr(self.val_max) + "]")
         return obj
 
 class MinStr:
@@ -519,7 +519,7 @@ class NoRepeat(ListVal):
 
       def info(self):
           #return _(u": pas de présence de doublon dans la liste")
-          return tr(": pas de présence de doublon dans la liste")
+          return tr(": pas de presence de doublon dans la liste")
 
       def info_erreur_liste(self):
           #return _(u"Les doublons ne sont pas permis")
@@ -1018,7 +1018,7 @@ class RangeVal(ListVal):
           if valeur > self.low and valeur < self.high:return valeur
           #raise ValError(ufmt(_(u"%s devrait être comprise entre %s et %s"),
           #                    valeur, self.low, self.high))
-          raise ValError(valeur + tr(" devrait être comprise entre ") +  self.low + tr(" et ")+ self.high)
+          raise ValError(valeur + tr(" devrait etre comprise entre ") +  self.low + tr(" et ")+ self.high)
 
       def verif_item(self,valeur):
           return valeur > self.low and valeur < self.high
@@ -1042,7 +1042,7 @@ class CardVal(Valid):
       def __init__(self,min='**',max='**'):
           self.min=min
           self.max=max
-          self.cata_info=min + tr(" doit être inférieur a ")+ max
+          self.cata_info=min + tr(" doit etre inferieur a ")+ max
           #self.cata_info= ufmt(_(u"%s doit etre inferieur a %s"), min,max)
 
       def info(self):

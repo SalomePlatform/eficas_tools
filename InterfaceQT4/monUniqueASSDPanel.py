@@ -19,6 +19,7 @@
 #
 # Modules Python
 import string,types,os
+from Extensions.i18n import tr
 
 # Modules Eficas
 
@@ -86,7 +87,7 @@ class MonUniqueASSDPanel(DUnASSD,QTPanel,SaisieValeur):
             except:
                 l=str(typ)
             type = type + ' ou '+l
-      commentaire="Un objet de type "+type+" est attendu"
+      commentaire=tr("Un objet de type %s est attendu ",repr(type))
       aideval=self.node.item.aide()
       commentaire=commentaire +QString.toUtf8(QString("   "))+ QString.toUtf8(QString(aideval))
       self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))

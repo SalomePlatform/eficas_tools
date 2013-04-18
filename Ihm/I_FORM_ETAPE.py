@@ -102,9 +102,9 @@ class FORM_ETAPE(MACRO_ETAPE):
         # encadrant les arguments
         arguments = string.strip(arguments)
         if arguments[0] != '(':
-            return 0,tr("La liste des arguments d'une formule doit être entre parenthèses : parenthèse ouvrante manquante")
+            return 0,tr("La liste des arguments d'une formule doit etre entre parentheses : parenthese ouvrante manquante")
         if arguments[-1] != ')':
-            return 0,tr("La liste des arguments d'une formule doit être entre parenthèses : parenthèse fermante manquante")
+            return 0,tr("La liste des arguments d'une formule doit etre entre parentheses : parenthese fermante manquante")
         # on peut tester la syntaxe de chaque argument maintenant
         erreur=''
         test = 1
@@ -149,9 +149,9 @@ class FORM_ETAPE(MACRO_ETAPE):
         if not nom :
             nom = self.get_nom()
         if nom == "" :
-            return 0,tr("Pas de nom donné à la FORMULE")
+            return 0,tr("Pas de nom donne a la FORMULE")
         if len(nom) > 8 :
-            return 0,tr("Un nom de FORMULE ne peut dépasser 8 caractères")
+            return 0,tr("Un nom de FORMULE ne peut depasser 8 caracteres")
         if nom[0] > "0" and nom[0] < "9" :
             return 0,tr("Un nom de FORMULE ne peut pas commencer par un chiffre")
         sd = self.parent.get_sd_autour_etape(nom,self)
@@ -170,7 +170,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         if not type:
             type = self.type_retourne
         if not type :
-            return 0,tr("Le type de la valeur retournée n'est pas spécifié")
+            return 0,tr("Le type de la valeur retournee n'est pas specifie")
         if type not in self.l_types_autorises:
             return 0,tr("Une formule ne peut retourner une valeur de type : %s" %type)
         return 1,''

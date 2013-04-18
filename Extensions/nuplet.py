@@ -62,18 +62,18 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
       """
       if type(self.min) != types.IntType :
         if self.min != '**':
-          self.cr.fatal(tr("L'attribut 'min' doit être un entier : ")+str(self.min))
+          self.cr.fatal(tr("L'attribut 'min' doit etre un entier : ")+str(self.min))
       if type(self.max) != types.IntType :
         if self.max != '**' :
-          self.cr.fatal(tr("L'attribut 'max' doit être un entier : ")+str(self.max))
+          self.cr.fatal(tr("L'attribut 'max' doit etre un entier : ")+str(self.max))
       if self.min > self.max :
          self.cr.fatal(tr("Nombres d'occurrence min et max invalides :") +str(self.min)+","+str(self.max))
       if type(self.fr) != types.StringType :
-        self.cr.fatal(tr("L'attribut 'fr' doit être une chaîne de caractères"))
+        self.cr.fatal(tr("L'attribut 'fr' doit etre une chaine de caracteres"))
       if self.statut not in ['o','f','c','d']:
         self.cr.fatal(tr("L'attribut 'statut' doit valoir 'o','f','c' ou 'd'"))
       if type(self.docu) != types.StringType :
-        self.cr.fatal(tr("L'attribut 'docu' doit être une chaîne de caractères"))
+        self.cr.fatal(tr("L'attribut 'docu' doit etre une chaine de caracteres"))
       self.verif_cata_regles()
 
    def __call__(self,val,nom,parent):

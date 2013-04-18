@@ -209,7 +209,7 @@ class XMLGenerateur :
 #   framework.studycase_ = "12:23:34"
 #   framework.componentname_ = self.GetMCVal('SolverComponentName', 'UNDEFINED')
     CN = self.GetMCVal('SolverComponentName', 'UNDEFINED')
-    print tr('CN = %s', CN)
+    print 'CN = %s', CN
     framework.componentname_ = CN
     return framework
 

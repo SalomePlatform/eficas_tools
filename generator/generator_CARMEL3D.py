@@ -82,7 +82,7 @@ class CARMEL3DGenerator(PythonGenerator):
       self.text=PythonGenerator.gener(self,obj,format)
 
       if self.debug:
-         print tr("self.text = %s", self.text)
+         print "self.text = %s", self.text
 
       # Cette instruction genere le contenu du fichier de parametres pour le code Carmel3D
       # si le jdc est valide (sinon cela n a pas de sens)
@@ -99,7 +99,7 @@ class CARMEL3DGenerator(PythonGenerator):
 #      print "texte carmel3d :\n",self.texteCarmel3D
 #      print "dictMaterDielectric : ",self.dictMaterDielectric
       if self.debug:
-         print tr("dictMaterConductor : %s", repr(self.dictMaterConductor))
+         print "dictMaterConductor : %s", repr(self.dictMaterConductor)
       
       return self.text
 
@@ -137,7 +137,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def writeDefault(self,fn) :
         """Ecrit le fichier de parametres (PHYS) pour le code Carmel3D"""
         if self.debug: 
-            print tr("ecriture du fichier de parametres (PHYS)")
+            print "ecriture du fichier de parametres (PHYS)"
         filePHYS = fn[:fn.rfind(".")] + '.phys'
         f = open( str(filePHYS), 'wb')
         f.write( self.texteCarmel3D)
@@ -150,7 +150,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
         if self.debug: 
-            print tr("MCSIMP %(v_1)s  %(v_2)s", {'v_1': obj.nom, "v_2": obj.valeur})
+            print "MCSIMP %(v_1)s  %(v_2)s", {'v_1': obj.nom, "v_2": obj.valeur}
         s=PythonGenerator.generMCSIMP(self,obj)
         self.dicoCourant[obj.nom]=obj.valeurFormatee
         return s
@@ -177,8 +177,8 @@ class CARMEL3DGenerator(PythonGenerator):
         s=PythonGenerator.generPROC_ETAPE(self,obj)
         obj.valeur=self.dicoEtapeCourant
         if self.debug: 
-            print tr("PROC_ETAPE %(v_1)s  %(v_2)s", \
-                     {'v_1': unicode(obj.nom), "v_2": unicode(obj.valeur)})
+            print "PROC_ETAPE %(v_1)s  %(v_2)s", \
+                     {'v_1': unicode(obj.nom), "v_2": unicode(obj.valeur)}
         s=PythonGenerator.generPROC_ETAPE(self,obj)
         return s
   
@@ -191,8 +191,8 @@ class CARMEL3DGenerator(PythonGenerator):
         s=PythonGenerator.generETAPE(self,obj)
         obj.valeur=self.dicoEtapeCourant
         if self.debug: 
-            print tr("ETAPE : obj.nom = %(v_1)s , obj.valeur= %(v_2)s", \
-                     {'v_1': obj.nom, 'v_2': obj.valeur})
+            print "ETAPE : obj.nom = %(v_1)s , obj.valeur= %(v_2)s", \
+                     {'v_1': obj.nom, 'v_2': obj.valeur}
         if obj.nom=="MESHGROUP" : self.generMESHGROUP(obj)
         if obj.nom=="MATERIAL" : self.generMATERIAL(obj)
         if obj.nom=="SOURCE" : self.generSOURCE(obj)
@@ -208,7 +208,7 @@ class CARMEL3DGenerator(PythonGenerator):
         monGenerateur=generator.plugins["CARMEL3D"]()
         jdc_aux_texte=monGenerateur.gener(obj.jdc_aux)
         if self.debug: 
-            print tr("jdc_aux_texte : %s", jdc_aux_texte)
+            print "jdc_aux_texte : %s", jdc_aux_texte
 
         for cle in monGenerateur.dictMaterConductor:
             self.dictMaterConductor[cle] = monGenerateur.dictMaterConductor[cle]
@@ -222,8 +222,8 @@ class CARMEL3DGenerator(PythonGenerator):
             self.dictMaterEmAnIso[cle] = monGenerateur.dictMaterEmAnIso[cle]
         for cle in monGenerateur.dictMaterNilmat:
             self.dictMaterNilMat[cle] = monGenerateur.dictMaterNilMat[cle]
-        for cle in monGenerateur.dictMaterZinsultator:
-            self.dictMaterZinsultator[cle] = monGenerateur.dictMaterZinsultator[cle]
+        for cle in monGenerateur.dictMaterZinsulator:
+            self.dictMaterZinsulator[cle] = monGenerateur.dictMaterZinsulator[cle]
               
         print "________FIN MACRO______________________________________"
         s=PythonGenerator.generMACRO_ETAPE(self,obj)
@@ -247,7 +247,7 @@ class CARMEL3DGenerator(PythonGenerator):
             #
             # on utilise le fait que obj.valeur est un dictionnaire
             if self.debug: 
-                print tr("obj.valeur.keys()= %s", obj.valeur.keys())
+                print "obj.valeur.keys()= %s", obj.valeur.keys()
             if 'MATERIAL' in obj.valeur.keys() and 'SOURCE' in obj.valeur.keys(): # test d'erreur lors de presence de materiau et source a la fois
                 raise ValueError,tr(" ce groupe de maillage %s est associe a au moins un materiau  et au moins une source.", nomGroupeMaillage)
             # association a un materiau
@@ -262,7 +262,7 @@ class CARMEL3DGenerator(PythonGenerator):
             else:
                 raise ValueError, tr("ce groupe de maillage %s  n'est associe a aucun materiau ou source.",  nomGroupeMaillage)
             if self.debug:
-                print tr("self.dictGroupesMaillage= %s", repr(self.dictGroupesMaillage))
+                print "self.dictGroupesMaillage= %s", repr(self.dictGroupesMaillage)
         except:
             pass
 
@@ -271,7 +271,7 @@ class CARMEL3DGenerator(PythonGenerator):
         """preparation du bloc correspondant a un materiau du fichier PHYS"""
         texte=""
         if self.debug: 
-            print tr("generation material obj valeur = %s", obj.valeur)
+            print "generation material obj valeur = %s", obj.valeur
         try :
             nature = obj.valeur['TYPE'] # la nature est le parametre TYPE du MATERIAL
             if nature=="CONDUCTOR" : self.generMATERIAL_CONDUCTOR(obj)
@@ -288,10 +288,10 @@ class CARMEL3DGenerator(PythonGenerator):
        """preparation du sous bloc CONDUCTOR"""
        texte=""
        if self.debug: 
-           print tr("_____________cond_____________")
+           print "_____________cond_____________"
        # verification des proprietes du sous bloc CONDUCTOR (PERMEABILITY, CONDUCTIVITY)
        if 'PERMEABILITY' not in obj.valeur or 'CONDUCTIVITY' not in obj.valeur:
-	  print tr("ERREUR! Le bloc CONDUCTOR doit contenir PERMEABILITY et CONDUCTIVITY.")
+	  print "ERREUR! Le bloc CONDUCTOR doit contenir PERMEABILITY et CONDUCTIVITY."
        else:
           # parcours des proprietes du sous bloc CONDUCTOR (PERMEABILITY, CONDUCTIVITY)
           for keyN1 in ('PERMEABILITY','CONDUCTIVITY') :
@@ -323,17 +323,17 @@ class CARMEL3DGenerator(PythonGenerator):
              # fin du sous bloc de propriete
              texte+="         ]"+"\n"
        if self.debug: 
-           print tr("texte = %s", texte)
+           print "texte = %s", texte
        self.dictMaterConductor[obj.get_sdname()]=texte # sauvegarde du texte pour ce bloc
 
    def generMATERIAL_DIELECTRIC(self,obj):
        """preparation du sous bloc DIELECTRIC"""
        texte=""
        if self.debug: 
-           print tr("______________nocond_____________")
+           print "______________nocond_____________"
        # verification des proprietes du sous bloc DIELECTRIC (PERMEABILITY, PERMITTIVITY)
        if 'PERMEABILITY' not in obj.valeur or 'PERMITTIVITY' not in obj.valeur:
-	  print tr("ERREUR! Le bloc DIELECTRIC doit contenir PERMEABILITY et PERMITTIVITY.")
+	  print "ERREUR! Le bloc DIELECTRIC doit contenir PERMEABILITY et PERMITTIVITY."
        else:
           # parcours des proprietes du sous bloc DIELECTRIC (PERMEABILITY, PERMITTIVITY)
           for keyN1 in ('PERMEABILITY','PERMITTIVITY') :
@@ -365,17 +365,17 @@ class CARMEL3DGenerator(PythonGenerator):
              # fin du sous bloc de propriete
              texte+="         ]"+"\n"
        if self.debug: 
-           print tr("texte = %s", texte)
+           print "texte = %s", texte
        self.dictMaterDielectric[obj.get_sdname()]=texte # sauvegarde du texte pour ce bloc
 
    def generMATERIAL_ZSURFACIC(self,obj):
        """preparation du sous bloc ZSURFACIC"""
        texte=""
        if self.debug: 
-           print tr("______________zsurf_____________")
+           print "______________zsurf_____________"
        # verification des proprietes du sous bloc ZSURFACIC (PERMEABILITY, CONDUCTIVITY)
        if 'PERMEABILITY' not in obj.valeur or 'CONDUCTIVITY' not in obj.valeur:
-	  print tr("ERREUR! Le bloc ZSURFACIC doit contenir PERMEABILITY et CONDUCTIVITY.")
+	  print "ERREUR! Le bloc ZSURFACIC doit contenir PERMEABILITY et CONDUCTIVITY."
        else:
           # parcours des proprietes du sous bloc ZSURFACIC (PERMEABILITY, CONDUCTIVITY)
           for keyN1 in obj.valeur :
@@ -397,7 +397,7 @@ class CARMEL3DGenerator(PythonGenerator):
              # fin du sous bloc de propriete
              texte+="         ]"+"\n"
        if self.debug: 
-           print tr("texte = %s", texte)
+           print "texte = %s", texte
        self.dictMaterZsurfacic[obj.get_sdname()]=texte # sauvegarde du texte pour ce bloc
 
    def generMATERIAL_EMISO(self,obj):
@@ -445,7 +445,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def generSOURCE(self,obj):
         """preparation du bloc correspondant a une source du fichier PHYS"""
         if self.debug: 
-            print tr("generation source obj valeur = %s", obj.valeur)
+            print "generation source obj valeur = %s", obj.valeur
         texte=""
         try :
             # test de la presence des types de sources reconnus
@@ -458,7 +458,7 @@ class CARMEL3DGenerator(PythonGenerator):
             elif "EPORT" in obj.valeur:
                self.generSOURCE_EPORT(obj)
             else:
-               print tr("ERREUR! Une source du type STRANDED_INDUCTOR, HPORT ou EPORT est attendue.")
+               print "ERREUR! Une source du type STRANDED_INDUCTOR, HPORT ou EPORT est attendue."
         except:
             pass
 
@@ -488,7 +488,7 @@ class CARMEL3DGenerator(PythonGenerator):
                                type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.")
             self.dictSourceStInd[obj.get_sdname()]=texte
             if self.debug: 
-                print tr(texte)
+                print texte
         except Exception:
             pass
 
@@ -517,7 +517,7 @@ class CARMEL3DGenerator(PythonGenerator):
                                WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.")
             self.dictSourceHport[obj.get_sdname()]=texte
             if self.debug: 
-                print tr(texte)
+                print texte
         except:
             pass
 
@@ -545,7 +545,7 @@ class CARMEL3DGenerator(PythonGenerator):
                                WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.")
             self.dictSourceEport[obj.get_sdname()]=texte
             if self.debug: 
-                print tr(texte)
+                print texte
         except:
             pass
 
@@ -572,18 +572,18 @@ class CARMEL3DGenerator(PythonGenerator):
         Le bloc MATERIALS existe toujours ! 
         """
         if self.debug:
-            print tr("cle dictionnaire materconductor : %s", self.dictMaterConductor.keys())
-            print tr("cle dictionnaire materdielectric : %s", self.dictMaterDielectric.keys())
+            print "cle dictionnaire materconductor : %s", self.dictMaterConductor.keys()
+            print "cle dictionnaire materdielectric : %s", self.dictMaterDielectric.keys()
         # constitution du bloc MATERIALS du fichier PHYS
         self.texteCarmel3D+="[MATERIALS\n"
         # tri alphabetique de tous les groupes de maillage associes a des sources (plus necessaire Code_Carmel3D V_2_3_1 et +, mais avant oui)
         nomsGroupesMaillage = self.dictGroupesMaillage['ordreMateriauxJdC'][:] # copie de l'original, qui est une liste
         nomsGroupesMaillage.sort() # tri alphabetique, avec les prefixes eventuels
         if self.debug:
-            print tr("noms groupes de mailles associes a des materiaux \
+            print "noms groupes de mailles associes a des materiaux \
                             (ordre JdC puis tri)= %(v_1)s %(v_2)s", \
                             {'v_1': self.dictGroupesMaillage['ordreMateriauxJdC'], \
-                             'v_2': nomsGroupesMaillage})
+                             'v_2': nomsGroupesMaillage}
         # constitution du bloc CONDUCTOR du fichier PHYS si existe
         if self.dictMaterConductor != {} : self.creaBLOC_CONDUCTOR(nomsGroupesMaillage)
         # constitution du bloc DIELECTRIC du fichier PHYS si exixte
@@ -607,8 +607,8 @@ class CARMEL3DGenerator(PythonGenerator):
         typeBloc = 'CONDUCTOR' # initialisation du type de bloc
         dictProprietes = self.dictMaterConductor # initialisation du dictionnaire des proprietes du bloc
         if self.debug: 
-            print tr('cles materiaux de type %(type_bloc)s = %(cle_bloc)s', \
-                            {'type_bloc': typeBloc, 'cle_bloc': dictProprietes.keys()})
+            print 'cles materiaux de type %(type_bloc)s = %(cle_bloc)s', \
+                            {'type_bloc': typeBloc, 'cle_bloc': dictProprietes.keys()}
         for nom in nomsGroupesMaillage: # parcours des noms des groupes de maillage
             if self.dictGroupesMaillage[nom] in dictProprietes.keys(): # test si le nom du materiau associe est du bon type
                 # ecriture du bloc complet
@@ -626,8 +626,8 @@ class CARMEL3DGenerator(PythonGenerator):
         typeBloc = 'DIELECTRIC' # initialisation du type de bloc
         dictProprietes = self.dictMaterDielectric # initialisation du dictionnaire des proprietes du bloc
         if self.debug: 
-            print tr('cles materiaux de type %(type_bloc)s=%(cle_bloc)s', \
-                     {'type_bloc': typeBloc, 'cle_bloc': dictProprietes.keys()})
+            print 'cles materiaux de type %(type_bloc)s=%(cle_bloc)s', \
+                     {'type_bloc': typeBloc, 'cle_bloc': dictProprietes.keys()}
         for nom in nomsGroupesMaillage: # parcours des noms des groupes de maillage
             if self.dictGroupesMaillage[nom] in dictProprietes.keys(): # test si le nom du materiau associe est du bon type
                 # ecriture du bloc complet
@@ -641,8 +641,8 @@ class CARMEL3DGenerator(PythonGenerator):
         typeBloc = 'ZSURFACIC' # initialisation du type de bloc
         dictProprietes = self.dictMaterZsurfacic # initialisation du dictionnaire des proprietes du bloc
         if self.debug: 
-            print tr('cles materiaux de type %(type_bloc)s=%(cle_bloc)s', \
-                            {'type_bloc': typeBloc, 'cle_bloc': dictProprietes.keys()})
+            print 'cles materiaux de type %(type_bloc)s=%(cle_bloc)s', \
+                            {'type_bloc': typeBloc, 'cle_bloc': dictProprietes.keys()}
         for nom in nomsGroupesMaillage: # parcours des noms des groupes de maillage
             if self.dictGroupesMaillage[nom] in dictProprietes.keys(): # test si le nom du materiau associe est du bon type
                 # ecriture du bloc complet
@@ -691,8 +691,8 @@ class CARMEL3DGenerator(PythonGenerator):
         typeBloc = 'NILMAT' # initialisation du type de bloc
         dictProprietes = self.dictMaterNilmat # initialisation du dictionnaire des proprietes du bloc
         if self.debug: 
-            print tr('cles materiaux de type %(type_bloc)s=%(cle_bloc)s', \
-                     {'type_bloc': typeBloc, 'cle_bloc': dictProprietes.keys()})
+            print 'cles materiaux de type %(type_bloc)s=%(cle_bloc)s', \
+                     {'type_bloc': typeBloc, 'cle_bloc': dictProprietes.keys()}
         for nom in nomsGroupesMaillage: # parcours des noms des groupes de maillage
             if self.dictGroupesMaillage[nom] in dictProprietes.keys(): # test si le nom du materiau associe est du bon type
                 # ecriture du bloc complet
@@ -713,10 +713,10 @@ class CARMEL3DGenerator(PythonGenerator):
         nomsGroupesMaillage = self.dictGroupesMaillage['ordreSourcesJdC'][:] # copie de l'original, qui est une liste
         nomsGroupesMaillage.sort() # tri alphabetique, avec les prefixes eventuels
         if self.debug:
-            print tr('noms groupes de mailles associes a des sources \
+            print 'noms groupes de mailles associes a des sources \
                             (ordre JdC puis tri)=%(g_maillage_orig)s %(g_maillage_trie)s', \
                             {'g_maillage_orig': self.dictGroupesMaillage['ordreSourcesJdC'], \
-                             'g_maillage_trie': nomsGroupesMaillage})
+                             'g_maillage_trie': nomsGroupesMaillage}
         if self.dictSourceStInd != {}: self.creaBLOC_STRANDED_INDUCTOR(nomsGroupesMaillage)
         if self.dictSourceEport != {}: self.creaBLOC_EPORT(nomsGroupesMaillage)
         if self.dictSourceHport != {}: self.creaBLOC_HPORT(nomsGroupesMaillage)
@@ -727,7 +727,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def creaBLOC_STRANDED_INDUCTOR(self, nomsGroupesMaillage) :
         """constitution du bloc STRANDED_INDUCTOR du fichier PHYS"""
         if self.debug: 
-            print tr('cles sources STRANDED_INDUCTOR= %s', self.dictSourceStInd.keys())
+            print 'cles sources STRANDED_INDUCTOR= %s', self.dictSourceStInd.keys()
         typeBloc = 'STRANDED_INDUCTOR'
         for nom in nomsGroupesMaillage: # parcours des noms des groupes de maillage
             if self.dictGroupesMaillage[nom] in self.dictSourceStInd.keys(): # test si le nom de la source associee est un inducteur bobine
@@ -740,7 +740,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def creaBLOC_EPORT(self, nomsGroupesMaillage) :
         """constitution du bloc EPORT du fichier PHYS"""
         if self.debug: 
-            print tr('cles sources EPORT= %s', self.dictSourceEport.keys())
+            print 'cles sources EPORT= %s', self.dictSourceEport.keys()
         typeBloc = 'EPORT'
         for nom in nomsGroupesMaillage: # parcours des noms des groupes de maillage
             if self.dictGroupesMaillage[nom] in self.dictSourceEport.keys(): # test si le nom de la source associee est un port electrique
@@ -757,7 +757,7 @@ class CARMEL3DGenerator(PythonGenerator):
    def creaBLOC_HPORT(self, nomsGroupesMaillage) :
         """constitution du bloc HPORT du fichier PHYS"""
         if self.debug: 
-            print tr('cles sources HPORT= %s', self.dictSourceHport.keys())
+            print 'cles sources HPORT= %s', self.dictSourceHport.keys()
         typeBloc = 'HPORT'
         for nom in nomsGroupesMaillage: # parcours des noms des groupes de maillage
             if self.dictGroupesMaillage[nom] in self.dictSourceHport.keys(): # test si le nom de la source associee est un port magnetique
@@ -779,9 +779,9 @@ class CARMEL3DGenerator(PythonGenerator):
         3 formats possibles : 2 listes (anciennement tuples?)  et 1 nombre complexe
         """
         if self.debug:
-            print tr("formatage ")
-            print tr("type : %(type_nb_c)s pour %(nb_c)s", \
-                            {'type_nb_c': type(nbC), 'nb_c': nbC})
+            print "formatage "
+            print "type : %(type_nb_c)s pour %(nb_c)s", \
+                            {'type_nb_c': type(nbC), 'nb_c': nbC}
         nbformate =""
         if isinstance(nbC,(tuple,list)):
             if nbC[0] == "'RI'" :
@@ -791,7 +791,7 @@ class CARMEL3DGenerator(PythonGenerator):
         else:
             nbformate = "COMPLEX " + str(nbC.real)+" "+str(nbC.imag)
         if self.debug: 
-            print tr("nbformate : %s", nbformate)
+            print "nbformate : %s", nbformate
         return nbformate
    
    def nomReelGroupeMaillage(self, nom, typeBloc=None):
@@ -802,8 +802,8 @@ class CARMEL3DGenerator(PythonGenerator):
         """
         from string import join
         if self.debug: 
-            print tr("nom groupe original : %(nom)s avec usePrefix=%(use_prefix)s devient...", \
-                            {'nom': nom, 'use_prefix': str(usePrefix)})
+            print "nom groupe original : %(nom)s avec usePrefix=%(use_prefix)s devient...", \
+                            {'nom': nom, 'use_prefix': str(usePrefix)}
         nomReel= None # nom affiche dans le fichier PHYS, sans prefixe a priori
         if usePrefix:
             # suppression du prefixe si present
@@ -826,15 +826,15 @@ class CARMEL3DGenerator(PythonGenerator):
                     else: # c'est bon
                         nomReel = join(partiesNom[1:], sepNomGroupeMaille) # reconstruction du nom du groupe sans prefixe complet
                         if self.debug: 
-                            print tr("ce groupe de maille (%(nom)s) a un prefixe qui \
+                            print "ce groupe de maille (%(nom)s) a un prefixe qui \
                                             est supprime automatiquement pour devenir : %(nom_reel)s", \
-                                            {'nom': nom, 'nom_reel': nomReel})
+                                            {'nom': nom, 'nom_reel': nomReel}
                 else: # c'est bon
                     nomReel = join(partiesNom[1:], sepNomGroupeMaille) # reconstruction du nom du groupe sans prefixe complet
                     if self.debug: 
-                        print tr("ce groupe de maille (%(nom)s) a un prefixe qui \
+                        print "ce groupe de maille (%(nom)s) a un prefixe qui \
                                         est supprime automatiquement pour devenir : %(nom_reel)s", \
-                                        {'nom': nom, 'nom_reel': nomReel})
+                                        {'nom': nom, 'nom_reel': nomReel}
         if self.debug: 
-            print tr("... %s", nomReel)
+            print "... %s", nomReel
         return nomReel

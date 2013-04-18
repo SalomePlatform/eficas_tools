@@ -154,15 +154,20 @@ class MonPlusieursIntoPanel(DPlusInto,QTPanel,SaisieValeur):
         type = mc.type[0]
         if not d_aides.has_key(type) :
            if mc.min == mc.max:
-               commentaire="Entrez "+str(mc.min)+" valeurs "
+               commentaire=tr("Entrez ")+str(mc.min)+(" valeurs ")
            else :
-               commentaire="Entrez entre "+str(mc.min)+" et "+str(mc.max)+" valeurs "
+               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")
         else :
+          # Pour la traduction
+           if type == 'TXM' : aide=tr('chaines de caracteres')
+           if type == 'R'   : aide=tr('reels')
+           if type == 'I'   : aide=tr('entiers')
+           if type == 'C'   : aide=tr('complexes')
            if mc.min == mc.max:
-               commentaire="Entrez "+str(mc.min)+" "+d_aides[type]
+               commentaire=tr("Entrez ")+str(mc.min)+" "+ aide
            else :
-               commentaire="Entrez entre "+str(mc.min)+" et "+str(mc.max)+" "+d_aides[type]
+               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+" "+aide
         aideval=self.node.item.aide()
-        commentaire=commentaire + "   " + QString.toUtf8(QString(aideval))
-        self.Commentaire.setText(tr(commentaire))
+        commentaire=commentaire + "   " + (aideval)
+        self.Commentaire.setText(commentaire)
 

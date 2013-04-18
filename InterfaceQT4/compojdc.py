@@ -81,7 +81,7 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
     itemobject=item.getObject()
     if self.object.suppentite(itemobject):
        if itemobject.nature == "COMMENTAIRE" :
-          message = tr("Commentaire supprimé")
+          message = tr("Commentaire supprime")
        else :
           message = tr("Commande %s supprimee",itemobject.nom)
        self.appli.affiche_infos(message)

@@ -130,13 +130,13 @@ class IniGenerator:
       """
       s=''
       if type(obj.valeur) == types.TupleType :
-         self.cr.fatal(tr("Les tuples ne sont pas supportés pour le format ini :%s ", obj.nom))
+         self.cr.fatal(tr("Les tuples ne sont pas supportes pour le format ini :%s ", obj.nom))
          s="%s = %s\n" % (obj.nom,"ERREUR")
       else :
          try:
             s="%s = %s\n" % (obj.nom,obj.valeur)
          except Exception as e :
-            self.cr.fatal(tr("Type de valeur non supporté par le format ini :%(nom)s\n%(exception)s", \
+            self.cr.fatal(tr("Type de valeur non supportee par le format ini :%(nom)s\n%(exception)s", \
                                          {'nom': obj.nom, 'exception': str(e)}))
       return s
 

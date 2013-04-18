@@ -56,8 +56,9 @@ class QTPanel:
            if hasattr(self,'BAlpha'): #pour include materiau
               self.BAlpha.hide()
         else :
-           self.BAlpha.setVisible(True)
-           self.BuildLBMCPermis()
+           if hasattr(self,'BAlpha'): 
+              self.BAlpha.setVisible(True)
+              self.BuildLBMCPermis()
 
   def BOkPressed(self):
         """ Impossible d utiliser les vrais labels avec designer ?? """
@@ -206,7 +207,7 @@ class QTPanelTBW2(QTPanel):
            aExclure=dictGroupes["CACHE"]
         else:
            aExclure=()
-        if self.editor.mode_nouv_commande == "alpha":
+        if ((self.editor.mode_nouv_commande == "alpha") and (hasattr(self,'RBalpha'))):
            self.RBalpha.setChecked(True)
            self.RBGroupe.setChecked(False)
            listeCmd = jdc.get_liste_cmd()
@@ -319,7 +320,7 @@ class QTPanelTBW3(QTPanel):
         self.Label3.close()
         self.typeConcept.close()
         self.LENomConcept.close()
-        self.Label1.setText(tr("<font size=\"+1\"><p align=\"center\">Structures de donnees à enrichir\n"
+        self.Label1.setText(tr("<font size=\"+1\"><p align=\"center\">Structures de donnees a enrichir\n"
 " par l\'operateur courant :</p></font>"))
         listeNomsSD = self.node.item.get_noms_sd_oper_reentrant()
         for aSD in listeNomsSD:

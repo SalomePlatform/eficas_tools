@@ -35,7 +35,7 @@ class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False):
+    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False,langue='fr'):
         """
         Constructor
         """
@@ -58,6 +58,8 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.RepIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
         self.multi=multi
+        if langue=='fr': self.langue=langue
+        else           : self.langue="ang"
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
@@ -129,7 +131,7 @@ class Appli(Ui_Eficas,QMainWindow):
         if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'rep_aide') : self.docPath=self.CONFIGURATION.rep_aide
         fileName='eficas_'+str(self.code)+'.adp'
         self.fileDoc=os.path.join(self.docPath,fileName)
-        self.actionCode.setText(tr("Aide spécifique ")+str(self.code))
+        self.actionCode.setText(tr("Aide specifique ")+str(self.code))
         if not os.path.isfile(self.fileDoc) : 
                self.fileDoc=""
                self.docPath=""

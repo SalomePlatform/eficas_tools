@@ -148,7 +148,7 @@ class JDCEditor(QSplitter):
         
         if self.jdc:            
             self.jdc.appli = self
-            self.jdc.lang    = self.appli.CONFIGURATION.lang
+            self.jdc.lang    = self.appli.langue
             txt_exception  = None
             if not jdc:
                 self.jdc.analyse()            
@@ -186,7 +186,7 @@ class JDCEditor(QSplitter):
            jdc.recorded_units=units
            jdc.old_recorded_units=units
         jdc.analyse()        
-        jdc.lang    = self.appli.CONFIGURATION.lang
+        jdc.lang    = self.appli.langue
         return jdc
         
     #--------------------------------#
@@ -460,12 +460,12 @@ class JDCEditor(QSplitter):
       if (not(hasattr(self.QWParent,'noeud_a_editer'))) or len(self.QWParent.noeud_a_editer)==0:
           QMessageBox.information( self, 
                       tr("Copie impossible"),
-                      tr("Veuillez selectionner un objet à copier"))
+                      tr("Veuillez selectionner un objet a copier"))
           return
       if len(self.node_selected) != 1 : 
           QMessageBox.information( self, 
                       tr("Copie impossible"),
-                      tr("Veuillez selectionner un seul objet : la copie se fera après le noeud selectionné"))
+                      tr("Veuillez selectionner un seul objet : la copie se fera apres le noeud selectionne"))
           return
 
       if len(self.QWParent.noeud_a_editer)!=1:
@@ -494,7 +494,7 @@ class JDCEditor(QSplitter):
            else :
               child=noeudACopier.doPaste(noeudOuColler,pos)
            if child==None or child==0:
-               QMessageBox.critical( self,tr( "Copie refusee"),tr('Eficas n a pas réussi à copier l objet'))
+               QMessageBox.critical( self,tr( "Copie refusee"),tr('Eficas n a pas reussi a copier l objet'))
                self.message = ''
                self.affiche_infos("Copie refusee",Qt.red)
            return
@@ -514,7 +514,7 @@ class JDCEditor(QSplitter):
       if (self.QWParent.edit == "couper"):
          #try :
          if noeudACopier.treeParent.editor != noeudOuColler.treeParent.editor:
-           QMessageBox.critical( self, tr("Deplacement refuse"),tr('Deplacement refuse entre 2 fichiers. Seule la copie est autorisée '))
+           QMessageBox.critical( self, tr("Deplacement refuse"),tr('Deplacement refuse entre 2 fichiers. Seule la copie est autorisee '))
 
          #if 1:
          try :
@@ -611,8 +611,8 @@ class JDCEditor(QSplitter):
     def get_file_variable(self) :
     #---------------------------#
      titre = tr("Choix d'un fichier XML")
-     texte = "Le fichier contient une commande MODEL\n"
-     texte = texte+'Donnez le nom du fichier XML qui contient la description des variables'
+     texte = tr("Le fichier contient une commande MODEL\n")
+     texte = texte+tr('Donnez le nom du fichier XML qui contient la description des variables')
      QMessageBox.information( self, titre,tr(texte))
                                         
      fichier = QFileDialog.getOpenFileName(self.appliEficas,
@@ -686,10 +686,10 @@ class JDCEditor(QSplitter):
          QMessageBox.critical( self, tr("Execution impossible "),tr("le JDC doit contenir un et un seul composant"))
          return
       if self.modified :
-         QMessageBox.critical( self, tr("Execution impossible "),tr("le JDC doit être sauvegarde avant execution"))
+         QMessageBox.critical( self, tr("Execution impossible "),tr("le JDC doit etre sauvegarde avant execution"))
          return
       if  self.fichier==None :
-         QMessageBox.critical( self, tr("Execution impossible "),tr("le JDC doit être sauvegarde avant execution"))
+         QMessageBox.critical( self, tr("Execution impossible "),tr("le JDC doit etre sauvegarde avant execution"))
          return
       composant=self.jdc.etapes[0].nom.lower()[0:-5]
       textePython=("map run -n "+composant +" -i "+self.fichier)
@@ -855,10 +855,10 @@ class JDCEditor(QSplitter):
         titre  = ""
         
         if unite :
-            titre = tr("Choix unité %d ", unite)
-            texte = tr("Le fichier %s contient une commande INCLUDE \n",  str(fic_origine))
-            texte = texte+ tr('Donnez le nom du fichier correspondant\n à l unité logique %d' , unite)
-            labeltexte = 'Fichier pour unite %d :' % unite
+            titre = tr("Choix unite %d ", unite)
+            texte = tr("Le fichier %s contient une commande INCLUDE \n",  str(fic_origine)) +"\n"
+            texte = texte+ tr("Donnez le nom du fichier correspondant a l unite logique ") + repr(unite)
+            labeltexte = tr('Fichier pour unite ') + repr( unite)
         else:
             titre = tr("Choix d'un fichier de poursuite")
             texte = tr("Le fichier %s contient une commande POURSUITE\n", fic_origine)

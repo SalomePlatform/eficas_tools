@@ -82,7 +82,7 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
         return
       if self.monType.valSup != None :
          if val > self.monType.valSup :
-	    self.editor.affiche_infos(tr("Entrer un float inférieur à ") + repr(self.monType.valSup),Qt.red)
+	    self.editor.affiche_infos(tr("Entrer un float inferieur a ") + repr(self.monType.valSup),Qt.red)
             monItem.setText("")
             return
       if self.monType.valMin != None :
@@ -109,7 +109,7 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
            apply (MonMatricePanel.__dict__[self.monType.methodeCalculTaille],(self,))
          else :
          #except :
-           QMessageBox.critical( self, tr("Mauvaise execution "),tr( "impossible d executer la méthode ") + monType.methodeCalculTaille )
+           QMessageBox.critical( self, tr("Mauvaise execution "),tr( "impossible d executer la methode ") + monType.methodeCalculTaille )
            return
       else :
          self.nbLigs=self.monType.nbLigs

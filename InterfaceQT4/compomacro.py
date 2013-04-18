@@ -138,7 +138,7 @@ class MATERIAUNode(MACRONode):
 
     def makeView(self) :
       if hasattr(self.item.object,'fichier_ini') and self.item.object.fichier_ini==None:
-         QMessageBox.information( self,tr("Include vide"),tr("L'include doit etre correctement initialisé pour etre visualisé"))
+         QMessageBox.information( self,tr("Include vide"),tr("L'include doit etre correctement initialise pour etre visualise"))
          return
       f = open(self.item.object.fichier_ini, "rb")
       texte = f.read()

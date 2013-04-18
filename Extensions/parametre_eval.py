@@ -146,8 +146,8 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     else:
         # pas d'expression EVAL --> self non valide
         if cr == 'oui' : 
-           self.cr.fatal(tr("Le paramètre EVAL %s ne peut valoir None") , self.nom)
-        return 0,"Le paramètre EVAL ne peut valoir None"
+           self.cr.fatal(tr("Le parametre EVAL %s ne peut valoir None") , self.nom)
+        return 0,tr("Le parametre EVAL ne peut valoir None")
 
   def verif_nom(self,nom=None,cr='non'):
     """
@@ -160,11 +160,11 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     if not nom :
         nom = self.nom
     if nom == "" :
-        if cr == 'oui' : self.cr.fatal(tr("Pas de nom donné au paramètre EVAL"))
+        if cr == 'oui' : self.cr.fatal(tr("Pas de nom donne au parametre EVAL"))
         return 0,"Pas de nom donné au paramètre EVAL"
     if len(nom) > 8 :
-        if cr == 'oui' : self.cr.fatal(tr("Un nom de paramètre ne peut dépasser 8 caractères"))
-        return 0,"Un nom de paramètre ne peut dépasser 8 caractères"
+        if cr == 'oui' : self.cr.fatal(tr("Un nom de parametre ne peut depasser 8 caracteres"))
+        return 0,"Un nom de parametre ne peut dépasser 8 caracteres"
     sd = self.parent.get_sd_autour_etape(nom,self)
     if sd :
         if cr == 'oui' : self.cr.fatal(tr("Un concept de nom %s existe déjà !"), nom)
