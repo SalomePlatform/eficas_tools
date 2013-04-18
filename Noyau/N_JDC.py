@@ -251,10 +251,11 @@ Causes possibles :
         # (tuple de 3 éléments)
         if CONTEXT.debug : traceback.print_exc()
 
+        traceback.print_exc()
+
         exc_typ,exc_val,exc_fr=sys.exc_info()
         l=traceback.format_exception(exc_typ,exc_val,exc_fr)
-        self.cr.exception("erreur non prevue et non traitee prevenir la maintenance "+
-                           self.nom+'\n'+ string.join(l))
+        self.cr.exception("erreur non prevue et non traitee prevenir la maintenance "+'\n'+ string.join(l))
         del exc_typ,exc_val,exc_fr
         CONTEXT.unset_current_step()
 
@@ -330,6 +331,7 @@ Causes possibles :
                           etape.
           Dans le cas du JDC, le deuxième cas ne peut pas se produire.
       """
+      #print "entree dans create_sd_prod"
       sd= etape.get_sd_prod()
       if sd != None and (etape.definition.reentrant == 'n' or etape.reuse is None) :
          # ATTENTION : On ne nomme la SD que dans le cas de non reutilisation
@@ -344,6 +346,7 @@ Causes possibles :
           Si le nom est deja utilise, leve une exception
           Met le concept créé dans le concept global g_context
       """
+      #print "debut NommerSdprod pour ", sdnom
       o=self.sds_dict.get(sdnom,None)
       if isinstance(o,ASSD):
          raise AsException("Nom de concept deja defini : %s" % sdnom)
