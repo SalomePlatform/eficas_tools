@@ -26,7 +26,7 @@ from PyQt4.QtCore import QTranslator
 qt_translator = QTranslator()
 eficas_translator = QTranslator()
 
-def localise(application, locale=None):
+def localise(application, locale=None ):
     """
     localise(QApplication) -> None
 
@@ -45,6 +45,7 @@ def localise(application, locale=None):
     QTextCodec.setCodecForTr(QTextCodec.codecForName("utf-8"))
     
     from PyQt4.QtCore import QLocale
+    from PyQt4.QtGui import QApplication
     sys_locale = QLocale.system().name()
 
     if locale is None:
@@ -64,9 +65,10 @@ def localise(application, locale=None):
     #    print "Unable to load Qt base translator!"
     
     global eficas_translator
-    if eficas_translator.load("eficas_" + locale, "../UiQT4"):
-        #print "Eficas translator loaded!"
-        application.installTranslator(eficas_translator)
+    import os
+    monPath=os.path.join(os.path.dirname(__file__),'..','UiQT4')
+    if eficas_translator.load("eficas_" + locale, monPath):
+        QApplication.installTranslator(eficas_translator)
     else:
         print "Unable to load Eficas translator!"
 
