@@ -764,6 +764,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def make_includeCarmel(self,fichier=None):
   # Pour Carmel
+      #print "je suis dans make_includeCarmel"
       unite=999
       if hasattr(self,'fichier_ini') : return
       reevalue=0
@@ -811,9 +812,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.parent.record_unit(unite,self)
          try :
             MCFils=self.get_child('FileName')
-            MCFils.set_valeur(fichier)
+            #MCFils.set_valeur(fichier)
+            #on appelle pas set_valeur qui modifie le contexte ce qui fout le bazar
+            #pas de modification de bloc
+            MCFils.valeur=fichier
+            MCFils.val=fichier
          except :
             pass
+         print "je sors de la"
       except:
       #else:
          self.make_incl2_except()
