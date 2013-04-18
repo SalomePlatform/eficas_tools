@@ -143,7 +143,7 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
   def report(self):
     """ Génère l'objet rapport (classe CR) """
     self.cr=CR()
-    if not self.isvalid(): self.cr.warn(tr("Objet commentaire non valorisé"))
+    if not self.isvalid(): self.cr.warn(tr("Objet commentaire non valorise"))
     return self.cr
 
   def ident(self):
