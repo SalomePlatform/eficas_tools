@@ -30,7 +30,6 @@ LIB_SERVER_IDL =
 
 EXPORT_PYSCRIPTS = \
 colors.py\
-cabri.py\
 EFICASGUI.py   \
 eficasSalome.py \
 

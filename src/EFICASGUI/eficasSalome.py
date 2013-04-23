@@ -4,6 +4,7 @@
 import sys, os, re,types
 import traceback
 from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QApplication
 
 from salome.kernel.logger import Logger
 logger = Logger( "EFICAS_SRC.EFICASGUI.eficasSalome.py" )
@@ -18,6 +19,7 @@ sys.path[:0]=[eficasConfig.eficasPath,
               os.path.join( eficasConfig.eficasPath,'Editeur'),
               os.path.join( eficasConfig.eficasPath,'UiQT4'),
               os.path.join( eficasConfig.eficasPath,'InterfaceQT4'),
+              os.path.join( eficasConfig.eficasPath,'Extensions'),
               eficasConfig.eficasPath,
              ]
 
@@ -36,6 +38,10 @@ from salome.kernel.studyedit import getStudyEditor
 import colors
 COLORS = colors.ListeColors
 LEN_COLORS = len( COLORS )
+
+from Extensions import localisation
+localisation.localise(None,"en")
+
 
 
 class MyEficas( qtEficas.Appli ):
@@ -587,16 +593,6 @@ class MyEficas( qtEficas.Appli ):
         return(msg,names)
 
 
-    #---------------------------------------
-           
-#    def buildCabriGeom( self, name, **param ):
-        """
-        visualisation dans GEOM d'une geometrie CABRI
-        """
-#        import cabri        
-#        qt.QApplication.setOverrideCursor( qt.QCursor.waitCursor )
-#        cabri.tetra( name, **param )
-#        qt.QApplication.restoreOverrideCursor()
         
         
         
