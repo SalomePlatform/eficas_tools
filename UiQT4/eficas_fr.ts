@@ -292,7 +292,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="481"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="480"/>
         <source>Erreur</source>
         <translation type="unfinished"></translation>
     </message>
@@ -702,7 +702,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="1040"/>
+        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="1046"/>
         <source>Fichier invalide %s</source>
         <translation type="unfinished"></translation>
     </message>
@@ -712,12 +712,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="990"/>
+        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="996"/>
         <source>Erreur lors de l&apos;evaluation du fichier inclus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="1126"/>
+        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="1132"/>
         <source>Ce fichier ne sera pas pris en compte
  %s</source>
         <translation type="unfinished"></translation>
@@ -729,12 +729,12 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="841"/>
+        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="847"/>
         <source>Le fichier n est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="878"/>
+        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="884"/>
         <source>le fichier doit contenir une unique variable de sortie</source>
         <translation type="unfinished"></translation>
     </message>
@@ -744,24 +744,24 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="927"/>
+        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="933"/>
         <source>Le contenu de ce fichier ne sera pas pris en compte
  %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="980"/>
+        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="986"/>
         <source>Le fichier INCLUDE n est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="990"/>
+        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="996"/>
         <source>Le contenu de ce fichier ne sera pas pris en compte
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="1126"/>
+        <location filename="../../Ihm/I_MACRO_ETAPE.py" line="1132"/>
         <source>Erreur lors de l&apos;evaluation du fichier poursuite</source>
         <translation type="unfinished"></translation>
     </message>
@@ -797,22 +797,22 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="232"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="240"/>
         <source>None n&apos;est pas une valeur autorisee</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="464"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="472"/>
         <source>un concept de meme nom existe deja</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="486"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="494"/>
         <source>Concept cree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="613"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="621"/>
         <source>La matrice n&apos;est pas une matrice %(n_lign)d sur %(n_col)d</source>
         <comment>n_lign</comment>
         <translation type="unfinished"></translation>
@@ -1501,7 +1501,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="210"/>
+        <location filename="../../InterfaceQT4/monUniqueBoolPanel.py" line="154"/>
         <source>Selection</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1541,22 +1541,22 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="175"/>
+        <location filename="../../InterfaceQT4/monUniqueBoolPanel.py" line="119"/>
         <source>Visualisation Fichier </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="175"/>
+        <location filename="../../InterfaceQT4/monUniqueBoolPanel.py" line="119"/>
         <source>Impossibilite d&apos;afficher le Fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="188"/>
+        <location filename="../../InterfaceQT4/monUniqueBoolPanel.py" line="132"/>
         <source>Sauvegarder Fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monUniqueBasePanel.py" line="202"/>
+        <location filename="../../InterfaceQT4/monUniqueBoolPanel.py" line="146"/>
         <source>Fichier selectionne</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1638,82 +1638,82 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="72"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="71"/>
         <source>&amp;Recents</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="135"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="134"/>
         <source>Aide specifique </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="163"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="162"/>
         <source>Traduction</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="168"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="167"/>
         <source>Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="249"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="248"/>
         <source>TraduitV7V8</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="250"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="249"/>
         <source>TraduitV8V9</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="251"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="250"/>
         <source>TraduitV9V10</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="260"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="259"/>
         <source>Acquiert Groupe Maille</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="265"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="264"/>
         <source>Specificites Maille</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="385"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="384"/>
         <source>version </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="418"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="417"/>
         <source>Aide Indisponible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="418"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="417"/>
         <source>QT Assistant n est pas installe </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="430"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="429"/>
         <source>Parametrage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="425"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="424"/>
         <source>Veuillez d abord choisir un code</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="430"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="429"/>
         <source>Pas de possibilite de personnalisation de la configuration </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="451"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="450"/>
         <source>&amp;Effacer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2232,6 +2232,11 @@ Le fichier associe n&apos;est pas defini</source>
         <source>reels</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../../InterfaceQT4/monUniqueBoolPanel.py" line="70"/>
+        <source>un booleen est attendu</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Aide</name>
@@ -2339,6 +2344,34 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../UiQT4/desChoixMap.ui" line="179"/>
         <source>Doc</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DBool</name>
+    <message>
+        <location filename="../../UiQT4/desUniqueBool.ui" line="14"/>
+        <source>DUnIn</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desUniqueBool.ui" line="21"/>
+        <source>Saisir Valeur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desUniqueBool.ui" line="27"/>
+        <source>Vrai</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desUniqueBool.ui" line="34"/>
+        <source>TextLabel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desUniqueBool.ui" line="41"/>
+        <source>Faux</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2763,87 +2796,87 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="40"/>
+        <location filename="../../UiQT4/desInclude.ui" line="85"/>
         <source>Ajouter Mot-Clef</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="62"/>
+        <location filename="../../UiQT4/desInclude.ui" line="107"/>
         <source>&lt;h3&gt;&lt;p align=&quot;center&quot;&gt;&lt;u&gt;&lt;b&gt;Mots Clefs Permis&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;/h3&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desInclude.ui" line="75"/>
+        <location filename="../../UiQT4/desInclude.ui" line="120"/>
         <source>&lt;h3&gt;&lt;p align=&quot;center&quot;&gt;&lt;u&gt;&lt;b&gt;Régles&lt;/b&gt;&lt;/u&gt;&lt;/p&gt;&lt;/h3&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="86"/>
+        <location filename="../../UiQT4/desInclude.ui" line="131"/>
         <source>Nouvelle Commande</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="92"/>
+        <location filename="../../UiQT4/desInclude.ui" line="137"/>
         <source>&lt;b&gt;&lt;u&gt;Commandes :&lt;/u&gt;&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="102"/>
+        <location filename="../../UiQT4/desInclude.ui" line="147"/>
         <source>Affichage</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desInclude.ui" line="108"/>
+        <location filename="../../UiQT4/desInclude.ui" line="153"/>
         <source>alphabétique</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="118"/>
+        <location filename="../../UiQT4/desInclude.ui" line="163"/>
         <source>par groupe</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="134"/>
+        <location filename="../../UiQT4/desInclude.ui" line="179"/>
         <source>Filtre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="154"/>
+        <location filename="../../UiQT4/desInclude.ui" line="199"/>
         <source>Suivant</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desInclude.ui" line="164"/>
+        <location filename="../../UiQT4/desInclude.ui" line="209"/>
         <source>La commande choisie sera ajoutée APRES la commande courante</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="175"/>
+        <location filename="../../UiQT4/desInclude.ui" line="220"/>
         <source>Fichier Include</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="187"/>
+        <location filename="../../UiQT4/desInclude.ui" line="230"/>
         <source>&lt;font size=&quot;+1&quot;&gt;La commande INCLUDE requiert un nom de Fichier :&lt;/font&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="231"/>
+        <location filename="../../UiQT4/desInclude.ui" line="287"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="250"/>
+        <location filename="../../UiQT4/desInclude.ui" line="306"/>
         <source>Autre Fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="256"/>
+        <location filename="../../UiQT4/desInclude.ui" line="333"/>
         <source>Fichier Inc</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desInclude.ui" line="262"/>
+        <location filename="../../UiQT4/desInclude.ui" line="339"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -2853,22 +2886,22 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="281"/>
+        <location filename="../../UiQT4/desInclude.ui" line="26"/>
         <source>Tri Alpha</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="294"/>
+        <location filename="../../UiQT4/desInclude.ui" line="52"/>
         <source>validation de la saisie</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="297"/>
+        <location filename="../../UiQT4/desInclude.ui" line="55"/>
         <source>&amp;Valider</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desInclude.ui" line="300"/>
+        <location filename="../../UiQT4/desInclude.ui" line="58"/>
         <source>Shift+A, Alt+A, Alt+A, Alt+A</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3878,17 +3911,17 @@ requis par l&apos;objet courant :&lt;/p&gt;&lt;/font&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="146"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="145"/>
         <source>Execution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="154"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="153"/>
         <source>Execution </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="302"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="301"/>
         <source>Patrons</source>
         <translation type="unfinished"></translation>
     </message>

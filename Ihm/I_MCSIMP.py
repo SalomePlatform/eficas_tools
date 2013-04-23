@@ -152,6 +152,14 @@ class MCSIMP(I_OBJECT.OBJECT):
       s=s+' )'
       return s
 
+  def wait_bool(self):
+      for typ in self.definition.type:
+          try :
+            if typ == types.BooleanType: return True
+          except :
+            pass
+      return False
+
   def wait_co(self):
     """
         Methode booleenne qui retourne 1 si l'objet attend un objet ASSD 
