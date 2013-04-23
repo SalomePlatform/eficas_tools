@@ -146,6 +146,7 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../InterfaceQT4/monSelectVal.py \
           ../../InterfaceQT4/monUniqueASSDPanel.py \
           ../../InterfaceQT4/monUniqueBasePanel.py \
+          ../../InterfaceQT4/monUniqueBoolPanel.py \
           ../../InterfaceQT4/monUniqueCompPanel.py \
           ../../InterfaceQT4/monUniqueIntoPanel.py \
           ../../InterfaceQT4/monUniqueSDCOIntoPanel.py \
@@ -186,7 +187,9 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../Utilites/ici.py \
           ../../Utilites/message.py \
           ../../Utilites/modification.py \
-          ../../Utilites/pause.py 
+          ../../Utilites/pause.py \
+          ../../Validation/V_A_CLASSER.py \
+          ../../Noyau/N_VALIDATOR.py 
 
 FORMS =   ../../UiQT4/aideQT.ui \
           ../../UiQT4/desChoixCata.ui \
@@ -213,6 +216,7 @@ FORMS =   ../../UiQT4/aideQT.ui \
           ../../UiQT4/desSelectVal.ui \
           ../../UiQT4/desUniqueASSD.ui \
           ../../UiQT4/desUniqueBase.ui \
+          ../../UiQT4/desUniqueBool.ui \
           ../../UiQT4/desUniqueComp.ui \
           ../../UiQT4/desUniqueInto.ui \
           ../../UiQT4/desUniqueSDCOInto.ui \

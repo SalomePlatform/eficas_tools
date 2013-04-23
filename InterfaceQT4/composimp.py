@@ -90,8 +90,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                      if self.item.wait_complex():
                         from monUniqueCompPanel import MonUniqueCompPanel
                         klass = MonUniqueCompPanel
-                     else:
-                        # on attend un entier, un réel ou une string
+                     elif self.item.wait_bool() :
+                        from monUniqueBoolPanel import MonUniqueBoolPanel
+                        klass = MonUniqueBoolPanel
+                     else :
                         from monUniqueBasePanel import MonUniqueBasePanel
                         klass = MonUniqueBasePanel
                         

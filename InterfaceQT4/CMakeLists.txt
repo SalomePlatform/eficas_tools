@@ -31,7 +31,8 @@ install ( FILES browser.py compobase.py compobloc.py compocommandecomm.py compoc
                 monMCListAjoutPanel.py monOptionsPdf.py monParamPanel.py monPixmap.py
                 monPlusieursASSDPanel.py monPlusieursBasePanel.py monPlusieursIntoPanel.py
                 monPoursuitePanel.py monRacinePanel.py monSelectVal.py
-                monUniqueASSDPanel.py monUniqueBasePanel.py monUniqueCompPanel.py monUniqueIntoPanel.py
+                monUniqueASSDPanel.py monUniqueBasePanel.py monUniqueBoolPanel.py
+		monUniqueCompPanel.py monUniqueIntoPanel.py
                 monUniqueSDCOIntoPanel.py monUniqueSDCOPanel.py monVisu.py
                 politiquesValidation.py qtCommun.py qtEficas.py
                 qtSaisie.py readercata.py typeNode.py utilIcons.py viewManager.py
