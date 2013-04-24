@@ -76,6 +76,23 @@ install ( FILES ${_PYFILES}
           DESTINATION ${CMAKE_INSTALL_PREFIX}/UiQT4
         )
 
+# Rules to compile TS files
+SET(TSFILES eficas_en.ts
+            eficas_fr.ts)
+
+SET(QMFILES)
+FOREACH(input ${TSFILES})
+  GET_FILENAME_COMPONENT(base ${input} NAME_WE)
+  SET(output ${CMAKE_CURRENT_BINARY_DIR}/${base}.qm)
+  SET(QMFILES ${QMFILES} ${output})
+  ADD_CUSTOM_COMMAND(OUTPUT ${output}
+    COMMAND ${QT_LRELEASE_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${input} -qm ${output}
+    MAIN_DEPENDENCY ${input})
+ENDFOREACH(input ${TSFILES})
+
+ADD_CUSTOM_TARGET(CompileTS ALL DEPENDS ${QMFILES})
+INSTALL(FILES ${QMFILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/UiQT4)
+
 ### Local Variables:
 ### mode: cmake
 ### End:
