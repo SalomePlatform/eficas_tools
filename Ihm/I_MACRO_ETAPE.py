@@ -819,7 +819,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
             MCFils.val=fichier
          except :
             pass
-         print "je sors de la"
       except:
       #else:
          self.make_incl2_except()
