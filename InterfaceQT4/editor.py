@@ -497,6 +497,12 @@ class JDCEditor(QSplitter):
                QMessageBox.critical( self,tr( "Copie refusee"),tr('Eficas n a pas reussi a copier l objet'))
                self.message = ''
                self.affiche_infos("Copie refusee",Qt.red)
+           if noeudACopier.treeParent.editor != noeudOuColler.treeParent.editor:
+               try :
+                 nom=noeudACopier.item.sd.nom
+                 child.item.nomme_sd(nom)
+               except :
+                 pass
            return
            self.init_modif()
            child.select()
@@ -662,7 +668,10 @@ class JDCEditor(QSplitter):
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
-         jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+         try :
+            jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+         except ValueError,e:
+            QMessageBox.critical(self, tr("Erreur a la generation"),str(e))
          if not self.generator.cr.estvide():
             self.affiche_infos(tr("Erreur a la generation"),Qt.red)
             QMessageBox.critical( self, tr("Erreur a la generation"),tr("EFICAS ne sait pas convertir ce JDC"))
@@ -769,13 +778,13 @@ class JDCEditor(QSplitter):
     #-----------------------------------------#
     def handleAjoutGroup(self,listeGroup):
     #-----------------------------------------#
-        #try :
-        if 1:
+        try :
+        #if 1:
            from ajoutGroupe import handleAjoutGroupFiltre
            listeSource,listeMateriaux=handleAjoutGroupFiltre(listeGroup)
            print listeSource,listeMateriaux
-        #except :
-        else :
+        except :
+        #else :
            pass
 
     #-----------------------------------------#
@@ -804,6 +813,7 @@ class JDCEditor(QSplitter):
           if path is None: 
              path=self.CONFIGURATION.savedir
           bOK, fn=self.determineNomFichier(path,extension)
+          if bOK == 0 : return (0, None)
           if fn == None : return (0, None)
           if fn.isNull(): return (0, None)
 
