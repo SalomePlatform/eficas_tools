@@ -88,7 +88,10 @@ class CARMEL3DGenerator(PythonGenerator):
       # si le jdc est valide (sinon cela n a pas de sens)
       if obj.isvalid() : 
            # constitution du bloc VERSION du fichier PHYS (existe toujours)
-           self.generBLOC_VERSION(obj)
+           try :
+             self.generBLOC_VERSION(obj)
+           except ValueError, err:
+             raise ValueError(str(err))
 
            # constitution du bloc MATERIALS du fichier PHYS (existe toujours)
            self.generBLOC_MATERIALS()
@@ -236,6 +239,7 @@ class CARMEL3DGenerator(PythonGenerator):
             associe le groupe de mailles au materiau ou a la source utilisateur
             on sauvegarde aussi les noms des groupes de maillage
         """
+
         try:
             if usePrefix:
                 nomGroupeMaillage = self.nomReelGroupeMaillage(obj.get_sdname()) # nom du groupe de maillage, i.e. nom du concept, avec prefixes enleves

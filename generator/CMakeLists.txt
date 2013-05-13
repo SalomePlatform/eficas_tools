@@ -48,7 +48,7 @@ endif (WITH_MAP)
 
 # Installation des fichiers : CARMEL
 if (WITH_CARMEL)
-  install ( FILES generator_CARMEL3D.py
+  install ( FILES generator_CARMEL3D_frequentiel.py
             DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
           )
 endif (WITH_CARMEL)
