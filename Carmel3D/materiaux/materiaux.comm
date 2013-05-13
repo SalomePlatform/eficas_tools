@@ -233,9 +233,9 @@ M600_65=MATERIAL(TYPE='DIELECTRIC',
                                  LAW='LINEAR',
                                  VALUE=Decimal('1.0'),),);
 
-M6X=MATERIAL(TYPE='EM_ANISOTROPIC',
-             PERMEABILITY_File='M6X_mu.mater',
-             CONDUCTIVITY_File='M6X_sigma.mater',);
+#M6X=MATERIAL(TYPE='EM_ANISOTROPIC',
+#             PERMEABILITY_File='M6X_mu.mater',
+#             CONDUCTIVITY_File='M6X_sigma.mater',);
 
 M6X2ISO1=MATERIAL(TYPE='CONDUCTOR',
                   PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -250,13 +250,13 @@ M6X2ISO1=MATERIAL(TYPE='CONDUCTOR',
                                   LAW='LINEAR',
                                   VALUE=Decimal('1.724E+6'),),);
 
-M6X_LINEAIRE=MATERIAL(TYPE='EM_ANISOTROPIC',
-                      PERMEABILITY_File='M6X_lineaire_mu.mater',
-                      CONDUCTIVITY_File='M6X_lineaire_sigma.mater',);
+#M6X_LINEAIRE=MATERIAL(TYPE='EM_ANISOTROPIC',
+#                      PERMEABILITY_File='M6X_lineaire_mu.mater',
+#                      CONDUCTIVITY_File='M6X_lineaire_sigma.mater',);
 
-M6X_HOMOGENE=MATERIAL(TYPE='EM_ANISOTROPIC',
-                      PERMEABILITY_File='M6X_homogene_mu.mater',
-                      CONDUCTIVITY_File='M6X_homogene_sigma.mater',);
+#M6X_HOMOGENE=MATERIAL(TYPE='EM_ANISOTROPIC',
+#                      PERMEABILITY_File='M6X_homogene_mu.mater',
+#                      CONDUCTIVITY_File='M6X_homogene_sigma.mater',);
 
 POTASSE=MATERIAL(TYPE='CONDUCTOR',
                  PERMEABILITY=_F(HOMOGENEOUS='TRUE',
