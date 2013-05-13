@@ -701,9 +701,22 @@ class JDCEditor(QSplitter):
          QMessageBox.critical( self, tr("Execution impossible "),tr("le JDC doit etre sauvegarde avant execution"))
          return
       composant=self.jdc.etapes[0].nom.lower()[0:-5]
-      textePython=("map run -n "+composant +" -i "+self.fichier)
-      #print textePython
-      self._viewTextExecute( textePython)    
+
+
+      # :TRICKY: to determine if a component requires SALOME, loads the component from Eficas catalog
+      # then instantiate corresponding class and call getUseSalome() method
+      try:
+          from mapengine.spec import factory
+          mapComponent = factory.new(composant)[0]
+
+          command = "map"
+          if mapComponent.getUseSalome():
+              command += " -r sappli"
+          textePython=(command + " run -n "+composant +" -i "+self.fichier)
+          #print textePython
+          self._viewTextExecute( textePython)
+      except Exception, e:
+          print traceback.print_exc()
 
 
     #-----------------------------------------------------#
