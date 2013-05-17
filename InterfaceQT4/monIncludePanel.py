@@ -69,7 +69,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
         #   self.pageOk()
         #   return
 
-        if not hasattr(self.node.item.object,'fichier_unite'):
+        if not hasattr(self.node.item.object,'fichier_unite') :
            self.pageBad()
         else:
            self.pageOk()
@@ -77,7 +77,10 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
   def pageOk(self):
         self.TWChoix.removeTab(3)
         self.TWChoix.setCurrentIndex(2)
-        self.LENomFichier.setText(self.node.item.object.fichier_ini)
+        if self.node.item.object.fichier_ini != None :
+           self.LENomFichier.setText(self.node.item.object.fichier_ini)
+        else :
+           self.LENomFichier.setText("")
 
 
   def pageBad(self) :
@@ -108,6 +111,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
 
         self.editor.init_modif()
 
+        print "kkkkkkkkkkkkkkkkkk"
         try :
            self.node.item.object.change_fichier_init(nomFichier,text)
            commentaire = tr("Fichier modifie  :")  + self.node.item.get_nom()
@@ -117,9 +121,10 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
            l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
            QMessageBox.critical( self, tr("Erreur fatale au chargement du fichier Include"), l[0])
            commentaire = tr("Fichier invalide" )
-           self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
+           self.Commentaire.setText(commentaire)
            self.editor.affiche_infos(commentaire,Qt.red)
            return
+        print "jjjjjjjjjjjjjjjjjj"
 
 
   def convert_file(self,file):
