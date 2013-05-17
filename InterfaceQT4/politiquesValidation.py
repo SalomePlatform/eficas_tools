@@ -132,11 +132,11 @@ class PolitiqueUnique(Validation) :
          if validite :
             validite=self.node.item.set_valeur(valeur)
             if self.node.item.isvalid():
-                  commentaire = u"Valeur du mot-clé enregistrée"
+                  commentaire = tr("Valeur du mot-cle enregistree")
                   self.SetValeurTexte(str(valeurentree))
             else:
                   cr = self.node.item.get_cr()
-                  commentaire =  u"Valeur du mot-clé non autorisée "+cr.get_mess_fatal()
+                  commentaire =  tr("Valeur du mot-cle non autorisee ")+cr.get_mess_fatal()
                   self.node.item.set_valeur(ancienne_val)
          return validite, commentaire 
 

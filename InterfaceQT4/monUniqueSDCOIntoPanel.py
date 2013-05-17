@@ -68,9 +68,9 @@ class MonUniqueSDCOIntoPanel(DUnSDCOInto,QTPanel,SaisieSDCO):
         valeur,validite=self.node.item.eval_valeur(nomConcept)
         test = self.node.item.set_valeur(valeur)
         if not test :
-          commentaire = "impossible d'évaluer : %s " %`valeur`
+          commentaire = tr("impossible d'evaluer : ") +  valeur
         elif validite:
-          commentaire = "Valeur du mot-clé enregistrée"
+          commentaire = tr("Valeur du mot-clef enregistree")
           if test_CO:
              # il faut egalement propager la destruction de l'ancien concept
              self.node.item.delete_valeur_co(valeur=anc_val)
