@@ -43,7 +43,7 @@ class Appli(Ui_Eficas,QMainWindow):
         Ui_Eficas.__init__(self)
         self.setupUi(self)
 
-        self.VERSION_EFICAS="Eficas QT4 V6.6"
+        self.VERSION_EFICAS="Eficas QT4 V7.2"
         self.salome=salome
         self.ihm="QT"
 	self.top = self    #(pour CONFIGURATION)
