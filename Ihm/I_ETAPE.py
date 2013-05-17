@@ -479,5 +479,8 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
      cr= Validation.V_ETAPE.ETAPE.report(self)
      #rafraichisst de la validite de l'etape (probleme avec l'ordre dans les macros : etape puis mots cles)
      self.isvalid()
+     if not self.isvalid() and self.nom == "INCLUDE" :
+        self.cr.fatal(('Etape : %s ligne : %r  %s'),
+        self.nom, self.appel[0],  tr("\n   Include Invalide. \n  ne sera pas pris en compte"))
      return cr
 

@@ -26,6 +26,7 @@ import traceback,types,string
 # Modules Eficas
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
+import exceptions
 import I_ETAPE
 import I_ENTITE
 import I_OBJECT
@@ -146,6 +147,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.etapes=j.etapes
        self.jdc_aux=j
        self.jdc.jdcDict=self.jdc_aux
+
     except:
        traceback.print_exc()
        # On retablit l'etape courante step
@@ -158,20 +160,21 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # mais on n'insere pas les concepts
        # On retablit l'etape courante step
        #print j.cr
+       #print j.isvalid()
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(step)
-       raise EficasException(tr("Impossible de relire le fichier %s \n ", unicode(j.cr)))
+       raise exceptions.Exception(tr("Impossible de relire le fichier %s \n ")+ unicode(j.cr))
 
 
     if not j.isvalid():
        # L'INCLUDE n'est pas valide.
        # on produit un rapport d'erreurs
        cr=j.report()
-       #print cr
        # On retablit l'etape courante step
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(step)
-       raise EficasException(tr("Le fichier include contient des erreurs %s \n ", unicode(cr)))
+       self.jdc.cr.fatal("Le fichier include contient des erreurs ")
+       raise EficasException(tr("Le fichier include contient des erreurs "))
 
 
     # Si aucune erreur rencontree
@@ -423,7 +426,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     except:
        l=traceback.format_exception_only(tr("Fichier invalide %s", sys.exc_info()[1]))
        self.fichier_err=string.join(l)
-       raise EficasException(" ")
+       raise EficasException(self.fichier_err)
 
     # L'evaluation de text dans un JDC auxiliaire s'est bien passe
     # on peut poursuivre le traitement
@@ -568,6 +571,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # g_context est utilise pour avoir les concepts produits par la macro
       # contexte_fichier_init est utilise pour avoir les concepts supprimes par la macro
       self.contexte_fichier_init = contexte
+    #print "fin make_contexte_include",fichier
 
   def reevalue_fichier_init_OBSOLETE(self):
       """Recalcule les concepts produits par le fichier enregistre"""
@@ -772,7 +776,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          reevalue=1
          for concept in self.old_context_fichier_init.values():
              self.jdc.delete_concept(concept)
-      print fichier
       if fichier == None :
          fichier=str(self.jdc.appli.get_file_dictDonnees())
          if fichier  == str("") : 

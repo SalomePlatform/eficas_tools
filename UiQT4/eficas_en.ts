@@ -1528,7 +1528,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../InterfaceQT4/qtCommun.py" line="188"/>
         <source>Definition Formule</source>
-        <translation>Formule definition</translation>
+        <translation>Formula</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/qtCommun.py" line="190"/>
@@ -2544,7 +2544,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desCommande.ui" line="185"/>
         <source>Nouvelle Commande</source>
-        <translation>New command</translation>
+        <translation>New Command</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desCommande.ui" line="193"/>
