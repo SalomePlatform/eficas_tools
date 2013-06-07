@@ -516,6 +516,27 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     self.recorded_units={}
     self.build_jdcaux(fichier,text)
 
+  def build_includeInclude(self,text):
+    import Extensions.jdc_include
+    self.JdC_aux=Extensions.jdc_include.JdC_include
+    # un include partage la table des unites avec son parent (jdc)
+    self.build_jdcauxInclude(text)
+
+  def build_jdcauxInclude(self,text):
+       
+       try :
+         contexte = self.get_contexte_jdc(None,text)
+       except EficasException:
+         pass
+       index=self.jdc.etapes.index(self)
+       for e in self.etapes:
+           e.niveau=self.niveau
+       self.jdc.etapes=self.jdc.etapes[:index+1]+self.etapes+self.jdc.etapes[index+1:]
+       self.g_context={}
+       self.etapes=[]
+       self.jdc_aux=None
+       CONTEXT.unset_current_step()
+
   def build_jdcaux(self,fichier,text):
     """
          Cree un jdc auxiliaire initialise avec text. 

@@ -21,6 +21,9 @@ from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from Extensions.i18n import tr
+import types
+
+
 
 #---------------------------#
 class PopUpMenuRacine :
@@ -42,6 +45,7 @@ class PopUpMenuRacine :
 #---------------------------#
 class PopUpMenuNodeMinimal :
 #---------------------------#
+
     def createPopUpMenu(self):
         #self.appliEficas.salome=True
         self.createActions()
@@ -53,30 +57,72 @@ class PopUpMenuNodeMinimal :
                self.ajoutScript()
     
     def ajoutScript(self):
-        conditionSalome=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][3]
-        if (self.appliEficas.salome == 0 and conditionSalome == True): return
-        label=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][1]
-        tip=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][5]
-        self.action=QAction(label,self.tree)
-        self.action.setStatusTip(tip)
-        self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction)
-        self.menu.addAction(self.action)
+    # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
+        listeCommandes=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()]
+        if type(listeCommandes) != types.TupleType: listeCommandes=(listeCommandes,)
+        if len(listeCommandes) > 5 : print "pas possible appeler la maintenance" 
+        numero=0
+        for commande in listeCommandes :
+           conditionSalome=commande[3]
+           if (self.appliEficas.salome == 0 and conditionSalome == True): return
+           label=commande[1]
+           tip=commande[5]
+           self.action=QAction(label,self.tree)
+           self.action.setStatusTip(tip)
+           if numero==4: 
+              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction4)
+           if numero==3: 
+              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction3)
+              numero=4
+           if numero==2: 
+              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction2)
+              numero=3
+           if numero==1: 
+              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction1)
+              numero=2
+           if numero==0: 
+              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction0)
+              numero=1
+           self.menu.addAction(self.action)
 
-    def AppelleFonction(self):
-        conditionValid=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][4]
+
+    def AppelleFonction0(self):
+        self.AppelleFonction(0)
+
+    def AppelleFonction1(self):
+        self.AppelleFonction(1)
+
+    def AppelleFonction2(self):
+        self.AppelleFonction(2)
+
+    def AppelleFonction3(self):
+        self.AppelleFonction(3)
+
+    def AppelleFonction4(self):
+        self.AppelleFonction(4)
+
+
+    def AppelleFonction(self,numero):
+        listeCommandes=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()]
+        commande=listeCommandes[numero]
+        conditionValid=commande[4]
         if (self.tree.currentItem().item.isvalid() == 0 and conditionValid == True):
                  QMessageBox.warning( None, 
                              tr("item invalide"),
                              tr("l item doit etre valide"),
                              tr("&Ok"))
 		 return
-        fonction=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][0]
-        listenomparam=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()][2]
+        fonction=commande[0]
+        listenomparam=commande[2]
         listeparam=[]
         for p in listenomparam:
             if hasattr(self.tree.currentItem(),p):
                listeparam.append(getattr(self.tree.currentItem(),p))
-        fonction(listeparam)
+            if p=="self" : listeparam.append(self)
+        try :
+           fonction(listeparam,self.appliEficas)
+        except :
+           fonction(listeparam)
 
 
     def createActions(self):

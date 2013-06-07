@@ -219,6 +219,7 @@ class JDCEditor(QSplitter):
            J.old_recorded_units=units
         return J
 
+
     #-------------------------------#
     def readFile(self, fn):
     #--------------------------------#
@@ -994,6 +995,21 @@ class JDCEditor(QSplitter):
             # Une erreur a ete rencontree
             jdcText = ''
         return ulfile, jdcText
+
+    #-------------------------------#
+    def updateJdc(self, itemApres,texte):
+    #--------------------------------#
+        monItem=itemApres
+        etape=monItem.item.object
+
+#        texte="sansnom=ZONE(NOEUDS=(_F(NOM='N1', X=0.0,), _F(NOM='N2', X=0.19,),), ELEMENTS=(_F(NOM='E1', DEBUT='N1', FIN='N2', RAFFINAGE='NON', MATERIAU=MAT_R01, SECTION_MASSE=_F(TYPE_SECTION='CONSTANTE', DIAM_EXTERN_DEBUT=0.1, DIAM_INTERN_DEBUT=0,), SECTION_RIGIDITE=_F(TYPE_SECTION='CONSTANTE', DIAM_EXTERN_DEBUT=0.1, DIAM_INTERN_DEBUT=0.0,),), _F(NOM='E2', DEBUT='N2', FIN='N3', RAFFINAGE='NON', MATERIAU=MAT_R01, SECTION_MASSE=_F(TYPE_SECTION='VARIABLE', DIAM_EXTERN_DEBUT=0.1, DIAM_INTERN_DEBUT=0, DIAM_EXTERN_SORTIE=0.2, DIAM_INTERN_SORTIE=0.0,), SECTION_RIGIDITE=_F(TYPE_SECTION='VARIABLE', DIAM_EXTERN_DEBUT=0.1, DIAM_INTERN_DEBUT=0.0, DIAM_EXTERN_SORTIE=0.2, DIAM_INTERN_SORTIE=0.0,),),),);"
+       
+        CONTEXT.set_current_step(etape)
+        etape.build_includeInclude(texte)
+        self.tree.racine.build_children()
+
+        
+
 
     #-------------------------------------#
     def ajoutVersionCataDsJDC(self,txt):
