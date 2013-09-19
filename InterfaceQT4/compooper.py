@@ -20,7 +20,8 @@
 import os
 import tempfile
 from PyQt4.QtGui import QMessageBox, QAction, QApplication, QCursor
-from PyQt4.QtCore import Qt, SIGNAL
+from PyQt4.QtGui import *
+from PyQt4.QtCore import Qt, SIGNAL, QVariant
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
@@ -29,6 +30,31 @@ import browser
 import typeNode
 
 class Node(browser.JDCNode, typeNode.PopUpMenuNode):
+
+    def __init__(self,treeParent, item):
+        browser.JDCNode.__init__( self, treeParent, item)
+
+    def select(self):
+        browser.JDCNode.select(self)
+        self.treeParent.tree.openPersistentEditor(self,1)
+        self.monWidgetNom=self.treeParent.tree.itemWidget(self,1)
+        self.treeParent.tree.connect(self.monWidgetNom,SIGNAL("returnPressed()"), self.nomme)
+        if self.item.GetIconName() == "ast-red-square" : self.monWidgetNom.setDisabled(True)
+
+    def nomme(self):
+        nom=str(self.monWidgetNom.text())
+        test,mess = self.item.nomme_sd(nom)
+        if (test== 0):
+           self.editor.affiche_infos(mess,Qt.red)
+           old=self.item.GetText()
+           self.monWidgetNom.setText(old)
+        else :
+           self.editor.affiche_infos(tr("Nommage du concept effectue"))
+           try :
+	       self.editor.panel.LENomConcept.setText(nom)
+           except :
+               pass
+
     def getPanel( self ):
         """
         """

@@ -51,6 +51,7 @@ class JDCTree( QTreeWidget ):
         self.itemCourrant=None
 
         self.connect(self, SIGNAL("itemClicked ( QTreeWidgetItem * ,int) "), self.handleOnItem)
+
         self.racine=self.item.itemNode(self,self.item)
         self.expandItem(self.racine)
         self.node_selected=self.racine
@@ -79,6 +80,7 @@ class JDCTree( QTreeWidget ):
               item.Graphe.setEnabled(1)
            item.menu.exec_(coord)            
             
+
     def handleOnItem(self,item,int):
         if (len(self.selectedIndexes())!=2): return
         self.itemCourrant=item
@@ -91,13 +93,14 @@ class JDCTree( QTreeWidget ):
             pass
         item.affichePanneau()
 
-
+ 
 # type de noeud
 COMMENT     = "COMMENTAIRE"
 PARAMETERS  = "PARAMETRE"
  
 class JDCNode(QTreeWidgetItem):
     def __init__( self, treeParent, item):
+        #print "creation d'un noeud : ", item
         self.item        = item
         self.treeParent  = treeParent
         self.tree        = self.treeParent.tree
@@ -152,6 +155,7 @@ class JDCNode(QTreeWidgetItem):
         else:
             from monInactifPanel import PanelInactif
             panel = PanelInactif(self,self.editor)
+        self.editor.panel=panel
         panel.show()
         self.select()
 
@@ -374,12 +378,12 @@ class JDCNode(QTreeWidgetItem):
         """Cette methode remet a jour la validite du noeud (icone)
            Elle appelle isvalid
         """
-        #print 'NODE update_node_valid', self.item.GetLabelText()
         RepIcon=QString(self.appliEficas.RepIcon)
         monIcone = QIcon(RepIcon+"/" +self.item.GetIconName() + ".png")
-        #if  self.item.GetIconName() == "ast-yel-los"
-        
+        if  self.item.GetIconName() != "ast-yellow-square"   and hasattr(self,'monWidgetNom') :
+            if self.monWidgetNom.isEnabled() == False : self.monWidgetNom.setDisabled(False)
         self.setIcon(0,monIcone)
+
 
     def update_node_label(self):
         """ Met a jour le label du noeud """
@@ -421,7 +425,6 @@ class JDCNode(QTreeWidgetItem):
         self.setText(1, value)
 
     def update_node_texte_in_blue(self):
-    #def update_node_texte_in_blue(self,noeudAvant):
         self.setTextColor( 1,Qt.blue )
         value = self.item.GetText()
         self.setText(1, value)
