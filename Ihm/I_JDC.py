@@ -114,7 +114,28 @@ class JDC(I_OBJECT.OBJECT):
              if etapeTraitee.state=='arecalculer':
                 etapeTraitee.isvalid()
                 
+
+   def recalcule_validite_apres_changement_global_jdc(self):
+        #print "je passe dans recalcule_validite_apres_changement_global_jdc"
+        liste=self.get_jdc_root().cata[0].liste_condition
+        for etapeTraitee in self.etapes :
+           if etapeTraitee.nom not in liste: continue
+           self.forceRecalculBloc(etapeTraitee)
+           etapeTraitee.state='arecalculer'
+           etapeTraitee.isvalid()
+
         
+   def forceRecalculBloc(self,objet):
+       # Attention : certains objets deviennent None quand on recalcule 
+       # les conditions d existence des blocs
+       if objet != None:  objet.state='arecalculer'
+       if hasattr(objet,'liste_mc_presents'):
+          for childNom in objet.liste_mc_presents():
+              child=objet.get_child(childNom)
+              if hasattr(objet,'_update_condition_bloc'):objet._update_condition_bloc()
+              self.forceRecalculBloc(child)
+       
+   
    def get_sd_avant_du_bon_type_pour_type_de_base(self,etape,type):
       """
           Retourne la liste des concepts avant etape d'1 type de base acceptable
@@ -582,7 +603,8 @@ class JDC(I_OBJECT.OBJECT):
 
    def deep_update_condition_bloc(self):
       # pour le moment, on ne fait rien
-      raise EficasException(tr("Pas implemente"))
+      self.get_jdc_root().recalcule_validite_apres_changement_global_jdc()
+      #raise EficasException(tr("Pas implemente"))
 
    def update_condition_bloc(self):
       # pour le moment, on ne fait rien
