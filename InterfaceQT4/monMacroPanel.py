@@ -28,6 +28,7 @@ from qtCommun import QTPanelTBW3
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 class DMacro(Ui_DComm,QDialog):
    def __init__(self,parent ,modal ) :
@@ -64,7 +65,12 @@ class MonMacroPanel(DMacro,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
         if self.node.item.object.get_type_produit() != None :
            QTPanelTBW3.__init__(self,node,parent)
         else :
-           self.TWChoix.removeTab(1)
+          for i in range(self.TWChoix.count()) :
+            label=self.TWChoix.tabText(i)
+            if label==tr("Nommer Concept"):
+               self.TWChoix.removeTab(i)
+               break
+
            
   def connecterSignaux(self):
         self.connect(self.LBNouvCommande,SIGNAL("doubleClicked(QListWidgetItem*)"),self.LBNouvCommandeClicked)

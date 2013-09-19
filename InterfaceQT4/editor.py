@@ -372,8 +372,6 @@ class JDCEditor(QSplitter):
 	   mapalette.setColor( QPalette.WindowText, couleur )
 	   self.sb.setPalette( mapalette );
            self.sb.showMessage(QString.fromUtf8(message))#,2000)
-           #if couleur==Qt.red :
-           #   QToolTip.showText(QPoint(0,0),'tttttttttttt',self.sb)
 
     #------------------------------#
     def affiche_alerte(self,titre,message):
