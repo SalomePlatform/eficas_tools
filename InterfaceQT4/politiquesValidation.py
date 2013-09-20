@@ -19,6 +19,7 @@
 #
 # Modules Python
 import types
+from Extensions.i18n import tr
 
 
 #------------------
@@ -133,6 +134,7 @@ class PolitiqueUnique(Validation) :
             validite=self.node.item.set_valeur(valeur)
             if self.node.item.isvalid():
                   commentaire = tr("Valeur du mot-cle enregistree")
+                  #commentaire = "Valeur du mot-cle enregistree"
                   self.SetValeurTexte(str(valeurentree))
             else:
                   cr = self.node.item.get_cr()
