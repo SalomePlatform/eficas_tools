@@ -19,25 +19,24 @@
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
-from Extensions.i18n import tr
 import os
+from Extensions.i18n import tr
 
 
 def traduction(directPath,editor,version):
-    if version == "V7V8" : 
-       from Traducteur import traduitV7V8 
-       suffixe="v8.comm"
-    if version == "V8V9" : 
-       from Traducteur import traduitV8V9 
-       suffixe="v9.comm"
     if version == "V9V10" : 
        from Traducteur import traduitV9V10 
        suffixe="v10.comm"
+    if version == "V10V11" :
+       from Traducteur import traduitV10V11
+       suffixe="v11.comm"
+
     fn = QFileDialog.getOpenFileName( 
    			editor.appliEficas,
                         tr('Traduire Fichier'),
 			QString(directPath) ,
                         tr('Fichiers JDC  (*.comm);;''Tous les Fichiers (*)'))
+
 
     FichieraTraduire=str(fn)
     if (FichieraTraduire == "" or FichieraTraduire == () ) : return
@@ -52,9 +51,8 @@ def traduction(directPath,editor,version):
     os.system("rm -rf "+FichierTraduit)
 
     qApp.setOverrideCursor(QCursor(Qt.WaitCursor))
-    if version == "V7V8" : traduitV7V8.traduc(FichieraTraduire,FichierTraduit,log)
-    if version == "V8V9" : traduitV8V9.traduc(FichieraTraduire,FichierTraduit,log)
     if version == "V9V10" : traduitV9V10.traduc(FichieraTraduire,FichierTraduit,log)
+    if version == "V10V11" : traduitV10V11.traduc(FichieraTraduire,FichierTraduit,log)
     qApp.setOverrideCursor(QCursor(Qt.ArrowCursor))
 
     Entete=tr("Fichier Traduit : %s\n\n",str(FichierTraduit))
