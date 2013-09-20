@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2013   EDF R&D
+# Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -130,7 +130,7 @@ def ChangementValeurAvecAvertissement(jdc, command,motcle,DictNouvVal,liste):
     ChangementValeur(jdc,command,motcle,DictNouvVal,liste,defaut)
 
 #--------------------------------------------------------------------------
-def SuppressionValeurs(jdc, command,motcle,valeur):
+def SuppressionValeurs(jdc, command,motcle,liste):
 #--------------------------------------------------------------------------
 
     if command not in jdcSet : return
@@ -140,47 +140,50 @@ def SuppressionValeurs(jdc, command,motcle,valeur):
        for mc in c.childNodes:
           if mc.name != motcle : continue
           indexLigneGlob=mc.lineno-1
-          # on cherche le motclef
-          trouve=0
-          while indexLigneGlob < mc.endline  :
-             MaLigne = jdc.getLines()[indexLigneGlob]
-             debutMC =MaLigne.find(motcle)
-             if debutMC != -1 : 
-                trouve=1
-                break
-             indexLigneGlob+=1
+          while indexLigneGlob < mc.endline-1  :
+             MaLigneTexte = jdc.getLines()[indexLigneGlob]
+             MaLigne=MaLigneTexte
+             for Valeur in liste :
+                debutMC =MaLigne.find(motcle)
+                if debutMC ==-1 : debutMC=0
+                debut1=MaLigne[0:debutMC]
+                chercheLigne=MaLigne[debutMC:]
+                trouve=chercheLigne.find(Valeur)
+                premier=0
+                if trouve > 1 : #on a au moins une quote
+                   debut=debut1 + chercheLigne[0:trouve-1]
+                   index = -1
+                   while (-1 * index) < len(debut) :
+                      if (debut[index] == "(")  :
+                         premier = 1
+                         if index == -1 :
+                            index=len(debut)
+                         else :
+                            index=index+1
+                         break
+                      if (debut[index] == "," ) : 
+                          break
+                      if (debut[index] != " " ) :
+                         assert(0)
+                      index = index -1
+                   debLigne = debut[0:index]
+                   fin=trouve+len(Valeur)+1
+                   if premier == 1 and chercheLigne[fin] == ',': fin = fin + 1 # on supprime la ,
+                   finLigne = chercheLigne[fin:]
+                   MaLigne_tmp=debLigne+finLigne
+                   # Traitement ligne commancant par ,
+                   if len(MaLigne_tmp.strip()) > 0 :
+                      if MaLigne_tmp.strip()[0]==',' :
+                         MaLigne=MaLigne_tmp.strip()[1:]
+                      else :
+                         MaLigne=MaLigne_tmp[0:]
+                   else :
+                      MaLigne=MaLigne_tmp[0:]
+                   boolChange=1
+                jdc.getLines()[indexLigneGlob]=MaLigne
+             indexLigneGlob=indexLigneGlob+1
+    if boolChange : jdc.reset(jdc.getSource())
 
-          # on a pas trouve le mot cle
-          if trouve==0 : continue
-
-          while indexLigneGlob < mc.endline  :
-             maLigne = jdc.getLines()[indexLigneGlob]
-             indexLigneGlob+=1
-             indexValeur =maLigne.find(valeur)
-             if indexValeur ==-1 : continue
-
-             # on a trouve la valeur a enlever
-             # on separe la ligne en 2
-             debutLigne=maLigne[0:indexValeur]
-
-             if indexValeur != 0 :
-                index=-1
-                while (-1 * index) < len(debutLigne) :
-                  if (debutLigne[index] == "(") or (debutLigne[index] == ","): 
-                      debutNouvelleLigne=maLigne[0:indexValeur+index+1]
-                      break
-                  if (debutLigne[index] != " ")  :
-                     # on est dans le cas ou on veut enlever DIS, et ou ADIS existe
-                     # a traiter quand on en aura besoin (expression régulière)
-                     print "impossible de traiter cette suppression"
-                     assert 0
-                  index=index-1
-                fin=indexValeur+len(valeur) +1 # +1 pour la ','
-                finNouvelleLigne = maLigne[fin:]
-                maLigne2=debutNouvelleLigne+finNouvelleLigne
-                jdc.getLines()[indexLigneGlob-1]=maLigne2
-                jdc.reset(jdc.getSource())
-                    
 #----------------------------------------------
 def AppelleMacroSelonValeurConcept(jdc,macro,genea):
 #----------------------------------------------

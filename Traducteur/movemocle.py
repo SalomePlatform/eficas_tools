@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-# Copyright (C) 2007-2013   EDF R&D
+# -*- coding: iso-8859-1 -*-
+# Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -211,6 +211,35 @@ def moveMCFToCommand(jdc,command,factsource,commandcible,factcible):
     if boolChange :
         jdc.reset(jdc.getSource())
         jdcSet.add(commandcible)
+
+#-----------------------------------------------------
+def FusionMotCleToFact(jdc,command,liste_mc,factcible,defaut=0):
+#-----------------------------------------------------
+    if command  not in jdcSet : return
+    boolChange=0
+    commands= jdc.root.childNodes[:]
+    commands.reverse()
+    for c in commands:
+       if c.name != command  : continue
+       list_val=[]
+       trouveUnMC=0
+       for mc in c.childNodes:
+           if mc.name not in liste_mc : continue
+           val=mc.getText(jdc).split("=")[1].split(",")[0]
+           list_val.append(val)
+           trouveUnMC=1
+       if trouveUnMC :
+           TexteMC=factcible+"=("
+           for val in list_val : TexteMC=TexteMC+val+","
+           TexteMC=TexteMC[:-1]+"),"
+           inseremocle.insereMotCle(jdc,c,TexteMC)
+           jdc.reset(jdc.getSource())
+           boolChange=1
+    if boolChange :
+        jdc.reset(jdc.getSource())
+        for mc in liste_mc : 
+           removemocle.removeMotCle(jdc,command,mc)
+           jdc.reset(jdc.getSource())
 
 #--------------------------------------------------------------------
 def EclaMotCleToFact(jdc,command,motcle,mot1,mot2,defaut=0):
