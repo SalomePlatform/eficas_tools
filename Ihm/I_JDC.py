@@ -117,7 +117,10 @@ class JDC(I_OBJECT.OBJECT):
 
    def recalcule_validite_apres_changement_global_jdc(self):
         #print "je passe dans recalcule_validite_apres_changement_global_jdc"
-        liste=self.get_jdc_root().cata[0].liste_condition
+        try :
+          liste=self.get_jdc_root().cata[0].liste_condition
+        except :
+          liste=()
         for etapeTraitee in self.etapes :
            if etapeTraitee.nom not in liste: continue
            self.forceRecalculBloc(etapeTraitee)
