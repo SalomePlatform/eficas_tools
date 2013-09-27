@@ -125,6 +125,10 @@ class JDCNode(QTreeWidgetItem):
         self.item.connect("supp" ,self.onSupp,())
         self.item.connect("add"  ,self.onAdd,())
         self.state=""
+        try :
+          if self.item.getObject().isBLOC() : self.setExpanded(True) 
+        except :
+          pass
        
 
 
