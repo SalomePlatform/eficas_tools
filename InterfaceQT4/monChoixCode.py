@@ -50,7 +50,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
   def verifieInstall(self):
       self.groupCodes=QButtonGroup(self)
       vars=os.environ.items()
-      listeCode=('Aster','Cuve2dg','Openturns_Study','Openturns_Wrapper','Carmel3D','MAP')
+      listeCode=('Aster','CF','Openturns_Study','Openturns_Wrapper','Carmel3D','MAP')
       i=1
       for code in listeCode:
           nom='rB_'+code
@@ -60,7 +60,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
              bouton=QRadioButton(self)
              bouton.setMinimumSize(QSize(0, 30))
              bouton.setText(code)
-             bouton.setGeometry(QRect(10,20+30*i, 162, 30))
+             bouton.setGeometry(QRect(10,20+30*i, 300, 30))
              bouton.show()
              self.groupCodes.addButton(bouton)
              i=i+1
@@ -70,7 +70,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
                 repIntegrateur=os.path.abspath(os.environ[clef])
                 l=os.listdir(repIntegrateur)
                 bouton=QRadioButton(self)
-                bouton.setGeometry(QRect(10,20+30*i, 162, 30))
+                bouton.setGeometry(QRect(10,20+30*i, 300, 30))
                 bouton.setMinimumSize(QSize(0, 30))
                 bouton.setText(code)
                 bouton.show()
@@ -88,7 +88,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
               repIntegrateur=os.path.abspath(os.environ[clef])
               l=os.listdir(repIntegrateur)
               bouton=QRadioButton(self)
-              bouton.setGeometry(QRect(10,20+30*i, 162, 30))
+              bouton.setGeometry(QRect(10,20+30*i, 300, 30))
               i=i+1
               bouton.setMinimumSize(QSize(0, 30))
               bouton.setText(code)
