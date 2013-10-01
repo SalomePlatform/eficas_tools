@@ -103,7 +103,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
            self.BRepertoire.close()
         # TODO: Use type properties instead of hard-coded "grno" and "grma" type check
         enable_salome_selection = self.editor.salome and \
-            (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or
+            (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or ('SalomeEntry' in repr(mctype)) or
              (hasattr(mctype, "enable_salome_selection") and mctype.enable_salome_selection))
         if not enable_salome_selection:
            self.BSalome.close()
@@ -244,13 +244,25 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
   def BSalomePressed(self):
         self.Commentaire.setText(QString(""))
+        selection=[]
+        commentaire=""
         genea=self.node.item.get_genealogie()
         kwType = self.node.item.get_definition().type[0]
         for e in genea:
             if "GROUP_NO" in e: kwType = "GROUP_NO"
             if "GROUP_MA" in e: kwType = "GROUP_MA"
 
-        selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
+        mc = self.node.item.get_definition()
+        type = mc.type[0]
+        if 'grno' in repr(type): kwType = "GROUP_NO"
+        if 'grma' in repr(type): kwType = "GROUP_NO"
+
+        if kwType in ("GROUP_NO","GROUP_MA"):
+           selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
+
+        if 'SalomeEntry' in repr(type):
+           selection, commentaire = self.appliEficas.selectEntryFromSalome(editor=self.editor)
+
         if commentaire !="" :
             self.Commentaire.setText(QString(commentaire))
         monTexte=""

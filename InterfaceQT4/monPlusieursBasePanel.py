@@ -88,10 +88,9 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         self.BSalome.setIcon(icon3)
         mc = self.node.item.get_definition()
         type = mc.type[0]
-        if not(('grma' in repr(type)) or ('grno' in repr(type))) or not(self.editor.salome) :
+        if not(('grma' in repr(type)) or ('grno' in repr(type)) or ('SalomeEntry' in repr(type))) or not(self.editor.salome) :
            self.BSalome.close()
            self.BView2D.close()
-
 
   def BuildLBValeurs(self):
        # redefinit en raison de l heritage par monFonctionPanel
@@ -225,13 +224,24 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         self.LEValeur.setText(QString(""))
         self.Commentaire.setText(QString(""))
         genea=self.node.item.get_genealogie()
+        selection=[]
+        commentaire=""
         kwType = None
         for e in genea:
             if "GROUP_NO" in e: kwType = "GROUP_NO"
             if "GROUP_MA" in e: kwType = "GROUP_MA"
+        mc = self.node.item.get_definition()
+        type = mc.type[0]
+
+        if 'grno' in repr(type): kwType = "GROUP_NO"
+        if 'grma' in repr(type): kwType = "GROUP_NO"
+        if 'SalomeEntry' in repr(type):
+           selection, commentaire = self.appliEficas.selectEntryFromSalome(editor=self.editor)
+           selection[0]=str(selection[0])
 
         #print "BkwType",kwType
-        selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
+        if kwType in ("GROUP_NO","GROUP_MA") :
+           selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
         if commentaire !="" :
             self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
         monTexte=""
