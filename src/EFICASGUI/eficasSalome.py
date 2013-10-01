@@ -439,6 +439,47 @@ class MyEficas( qtEficas.Appli ):
         #print "=================== selectGroupFromSalome ", names, msg
         #print "=================== selectGroupFromSalome ", names, msg
         return names, msg                
+
+    #----------------------------------------------------------------
+    def selectEntryFromSalome( self, kwType = None, editor=None):
+    #----------------------------------------------------------------
+        """
+        Selection d'element a partir de l'arbre salome
+        Ne verifie que l unicite de la selection
+        retourne ( la liste avec le  nom du groupe, message d'erreur )
+      
+        retourne une liste pour etre coherent avec selectGroupFromSalome
+        Note: Appele par EFICAS lorsqu'on clique sur le bouton ajouter la liste du panel SalomeEntry        
+        """
+        names, msg = [], ''
+        try:            
+            atLeastOneStudy = self.editor.study
+            if not atLeastOneStudy:
+               return names, msg
+            entries = salome.sg.getAllSelected()
+            nbEntries = len( entries )
+            if nbEntries < 1:
+               msg = u"Veuillez sélectionner une entrée de l'arbre d'étude de " \
+                      u"Salome"
+               QMessageBox.information(self, self.tr(u"Sélection depuis Salome"),
+                       self.tr(msg))
+               return [], msg
+            elif nbEntries > 1 :
+               msg = u"Une seule entrée doit être sélectionnée dans l'arbre " \
+                     u"d'étude de Salome"
+               QMessageBox.information(self, self.tr(u"Sélection depuis Salome"),
+                       self.tr(msg))
+               return [], msg
+
+            value = salome.sg.getSelected(0)
+
+            msg = u"L'entrée de l'arbre d'étude de Salome a été sélectionnée"
+            return [value], msg
+        except Exception, e:
+             QMessageBox.information(self, self.tr(u"Sélection depuis Salome"),
+                         self.tr(unicode(e)))
+             return [], unicode(e)
+
         
     #---------------------------------------------
     def addJdcInSalome(  self, jdcPath ):
@@ -557,7 +598,8 @@ class MyEficas( qtEficas.Appli ):
                 
     #---------------------------------------
     def ChercheGrpMeshInSalome(self):
-        print "je passe par la"
+    #---------------------------------------
+        #print "je passe par la"
         import SMESH
         names, msg = [], ''
         try :
@@ -566,19 +608,18 @@ class MyEficas( qtEficas.Appli ):
            names, msg = None, "Selection SALOME non autorisee."
            if nbEntries == 1:
                 for entry in entries:
-                    print entry
                     names,msg=self.giveMeshGroups(entry,"SubMeshes",SMESH.SMESH_subMesh)
-                    print names
         except :
            print "bim bam boum"
         return(msg,names)
 
     #---------------------------------------
     def ChercheGrpMailleInSalome(self):
+    #---------------------------------------
         import SMESH
         names, msg = [], ''
-        #try :
-        if 1:
+        try :
+        #if 1:
            entries = salome.sg.getAllSelected()
            nbEntries = len( entries )
            names, msg = None, "Selection SALOME non autorisee."
@@ -587,8 +628,8 @@ class MyEficas( qtEficas.Appli ):
                     print entry
                     names,msg=self.giveMeshGroups(entry,"Groups of",SMESH.SMESH_GroupBase)
                     print names
-        #except :
-        else:
+        except :
+        #else:
            print "bim bam boum"
         return(msg,names)
 
