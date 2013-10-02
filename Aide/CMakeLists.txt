@@ -27,13 +27,12 @@ if (WITH_OPENTURNS)
   add_subdirectory ( fichiers_OPENTURNS_STUDY )
 endif (WITH_OPENTURNS)
 
-# Installation des fichiers d'aide : Aster
-if (WITH_ASTER)
-  install ( FILES eficas_ASTER.adp
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/Aide
-	    )
-  add_subdirectory ( fichiers_ASTER )
-endif (WITH_ASTER)
+
+install (
+          DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fichiers_EFICAS
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/Aide
+)
+
 
 ### Local Variables:
 ### mode: cmake
