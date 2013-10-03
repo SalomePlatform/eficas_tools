@@ -20,7 +20,7 @@
 
 import os, sys
 # Les variables pouvant positionnees sont :
-print "import des prefs de MAP"
+#print "import des prefs de MAP"
 
 # repIni sert a localiser le fichier 
 # initialdir sert comme directory initial des QFileDialog
