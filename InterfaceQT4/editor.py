@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 import types,sys,os, re
+import  subprocess
 import traceback
 from PyQt4 import *
 from PyQt4.QtGui  import *
@@ -322,6 +323,11 @@ class JDCEditor(QSplitter):
         self.monExe.start(exe)
         self.monExe.closeWriteChannel()
         self.w.show()
+        try:
+          commande="rm  "+self.fichierMapInput
+          os.system(commande)
+        except :
+          pass
 
 
     def readFromStdErr(self):
@@ -692,12 +698,14 @@ class JDCEditor(QSplitter):
       if len(self.jdc.etapes) != 1 :
          QMessageBox.critical( self, tr("Execution impossible "),tr("le JDC doit contenir un et un seul composant"))
          return
-      if self.modified :
-         QMessageBox.critical( self, tr("Execution impossible "),tr("le JDC doit etre sauvegarde avant execution"))
-         return
-      if  self.fichier==None :
-         QMessageBox.critical( self, tr("Execution impossible "),tr("le JDC doit etre sauvegarde avant execution"))
-         return
+      if self.modified or self.fichier==None  :
+         import tempfile
+         (fd, self.fichierMapInput) = tempfile.mkstemp(prefix = "map_run", suffix = ".map")
+         os.close(fd)
+         texte=self.get_text_JDC("MAP")
+         self.writeFile( self.fichierMapInput, txt = texte)
+      else :
+         self.fichierMapInput=self.fichier
       composant=self.jdc.etapes[0].nom.lower()[0:-5]
 
 
@@ -710,8 +718,7 @@ class JDCEditor(QSplitter):
           command = "map"
           if mapComponent.getUseSalome():
               command += " -r sappli"
-          textePython=(command + " run -n "+composant +" -i "+self.fichier)
-          #print textePython
+          textePython=(command + " run -n "+composant +" -i "+self.fichierMapInput)
           self._viewTextExecute( textePython)
       except Exception, e:
           print traceback.print_exc()
@@ -727,7 +734,7 @@ class JDCEditor(QSplitter):
          extensions= self.trUtf8("JDC (*.comm);;" "All Files (*)")
 
       if self.appli.code == "MAP" :
-         extensions = extensions + ";;Schema Yacs (*.xml);; Run (*.py);;"
+         extensions = extensions + ";; Run (*.input);;"
 
       fn = QFileDialog.getSaveFileName( self,
              tr("sauvegarde"), path,
@@ -749,24 +756,47 @@ class JDCEditor(QSplitter):
     #-----------------#
     def saveRun(self):
     #-----------------#
-        texte=self.run(execution="non")
-        extension=".py"
-
-        if hasattr(self,'fichierRun'):
-           self.writeFile( self.fichierRun, txt = texte)
+        extension=".input"
+        if not(self.jdc.isvalid()):
+           QMessageBox.critical( self, tr( "Sauvegarde de l'input impossible "),
+                                tr("Un JdC valide est necessaire pour creer un .input")
+                                 )
            return
-
-        if self.fichier == None :
-           path=self.CONFIGURATION.savedir
-        else :
-          path=QFileInfo(self.fichier).absolutePath()+"/"+QFileInfo(self.fichier).baseName()+".py"
-        bOK, fn=self.determineNomFichier(path,extension)
-        if fn == "" : return
-        self.fichierRun = unicode(QDir.convertSeparators(fn))
-        self.writeFile( self.fichierRun, txt = texte)
+        try :
+          composant=self.jdc.etapes[0].nom.lower()[0:-5]
+        except :
+           QMessageBox.critical( self, tr( "Sauvegarde de l'input impossible "),
+                                tr("Choix du composant obligatoire")
+                                 )
+           return
+        if hasattr(self.CONFIGURATION, "savedir"): path=self.CONFIGURATION.savedir
+        else : path=os.environ['HOME']
     
+        monNomFichier=""
+        if hasattr(self,'monNomFichierInput') : monNomFichier=self.monNomFichierInput
+        elif self.fichier is not None and self.fichier != "" :       
+             maBase=str(QFileInfo(self.fichier).baseName())+".input"
+             monPath=str(QFileInfo(self.fichier).absolutePath())
+             monNomFichier=os.path.join(monPath,maBase)
 
-      
+
+        monDialog=QFileDialog(self.appliEficas)
+        monDialog.setDirectory (path)
+        mesFiltres=QStringList()
+        mesFiltres << "input Map (*.input)" << "All Files (*)"
+        monDialog.setNameFilters(mesFiltres)
+        if monNomFichier!="" : monDialog.selectFile(monNomFichier)
+        BOk=monDialog.exec_()
+        if BOk==0: return
+        fn=str(monDialog.selectedFiles()[0].toLatin1())
+        if fn == "" or fn == None : return
+        self.monNomFichierInput=monNomFichier
+
+        #p = subprocess.Popen(["ls","-l",fn], stdout=subprocess.PIPE)
+        p = subprocess.Popen(["map","run","-n",composant,"-i",fn], stdout=subprocess.PIPE)
+        (output, err) = p.communicate()
+
+
     #-----------------------------------------#
     def cherche_Groupes(self):
     #-----------------------------------------#
