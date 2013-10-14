@@ -313,7 +313,9 @@ class JDCEditor(QSplitter):
         self.w.setWindowTitle( "execution" )
         self.monExe=QProcess(self.w)
         pid=self.monExe.pid()
-        nomFichier='/tmp/map_'+str(pid)+'.sh'
+        import tempfile
+        (fd, nomFichier) = tempfile.mkstemp(prefix = "map_run", suffix = ".sh")
+        os.close(fd)
         f=open(nomFichier,'w')
         f.write(txt)
         f.close()
@@ -322,9 +324,11 @@ class JDCEditor(QSplitter):
         exe='sh ' + nomFichier
         self.monExe.start(exe)
         self.monExe.closeWriteChannel()
-        self.w.show()
+        self.w.exec_()
         try:
           commande="rm  "+self.fichierMapInput
+          os.system(commande)
+          commande="rm  "+ nomFichier
           os.system(commande)
         except :
           pass
@@ -719,6 +723,8 @@ class JDCEditor(QSplitter):
           if mapComponent.getUseSalome():
               command += " -r sappli"
           textePython=(command + " run -n "+composant +" -i "+self.fichierMapInput)
+          
+          #textePython="ls -l"
           self._viewTextExecute( textePython)
       except Exception, e:
           print traceback.print_exc()
