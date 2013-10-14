@@ -23,6 +23,7 @@ from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
+DictExtensions= {"MAP" : ".map"}
 class MyTabview:
 
    def __init__(self,appliEficas):
@@ -56,10 +57,17 @@ class MyTabview:
             if self.appliEficas.multi==True : 
                self.appliEficas.definitCode(None,None)
                if self.appliEficas.code == None:return
+            
+            if DictExtensions.has_key(self.appliEficas.code) :
+               chaine="JDC (*"+DictExtensions[self.appliEficas.code]+");;"
+               extensions=tr(chaine+ "All Files (*)")
+            else :
+               extensions=tr('Fichiers JDC (*.comm);;''Tous les Fichiers (*)')
+
             fichier = QFileDialog.getOpenFileName(self.appliEficas,
                         tr('Ouvrir Fichier'),
                         self.appliEficas.CONFIGURATION.savedir,
-                        tr('Fichiers JDC (*.comm);;''Tous les Fichiers (*)'))
+                         extensions)
             if fichier.isNull(): 
               return result
        fichier = os.path.abspath(unicode(fichier))
