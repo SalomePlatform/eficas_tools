@@ -117,7 +117,7 @@ class Appli(Ui_Eficas,QMainWindow):
                  menu.setAttribute(Qt.WA_DeleteOnClose)
                  menu.close()
                  delattr(self,intituleMenu)
-        for intituleAction in ("actionExecution",):
+        for intituleAction in ("actionExecution","actionSaveRun",):
             if hasattr(self,intituleAction):
               action=getattr(self,intituleAction)
               self.toolBar.removeAction(action)
@@ -128,8 +128,8 @@ class Appli(Ui_Eficas,QMainWindow):
         #print "je passe la"
         repAide=os.path.dirname(os.path.abspath(__file__))
         self.docPath=repAide+"/../Aide"
-        if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'rep_aide') : self.docPath=self.CONFIGURATION.rep_aide
-        fileName='eficas_'+str(self.code)+'.adp'
+        if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'docPath') : self.docPath=self.CONFIGURATION.docPath
+        fileName='index.html'
         self.fileDoc=os.path.join(self.docPath,fileName)
         self.actionCode.setText(tr("Aide specifique ")+str(self.code))
         if not os.path.isfile(self.fileDoc) : 
@@ -152,6 +152,16 @@ class Appli(Ui_Eficas,QMainWindow):
            self.toolBar.addAction(self.actionExecution)
         self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+
+        self.actionSaveRun = QAction(self)
+        icon7 = QIcon(self.RepIcon+"/export_MAP.png")
+        self.actionSaveRun.setIcon(icon7)
+        self.actionSaveRun.setObjectName("actionSaveRun")
+        self.menuExecution.addAction(self.actionSaveRun)
+        if not(self.actionSaveRun in self.toolBar.actions()):
+           self.toolBar.addAction(self.actionSaveRun)
+        self.actionSaveRun.setText(QApplication.translate("Eficas", "Save Run", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionSaveRun,SIGNAL("activated()"),self.saveRun)
 
 
     def ASTER(self) :
@@ -181,8 +191,6 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def ChercheGrpMaille(self):
         Msg,listeGroup=self.ChercheGrpMailleInSalome()
-        #listeGroup=('a','b')
-        #Msg=None
         if Msg == None :
            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
@@ -392,29 +400,23 @@ class Appli(Ui_Eficas,QMainWindow):
         if self.code==None : return
         repAide=os.path.dirname(os.path.abspath(__file__))
         maD=repAide+"/../Aide"
-        docsPath = QDir(maD).absolutePath()
         try :
-          from PyQt4.QtAssistant import QAssistantClient
-          monAssistant=QAssistantClient(QString(""), self)
-          arguments=QStringList()
-          arguments << "-profile" <<docsPath+QDir.separator()+QString("eficas.adp")
-          monAssistant.setArguments(arguments);
-          monAssistant.showPage(docsPath+QDir.separator()+QString("fichiers_EFICAS/index.html"))
+          indexAide=maD+"/fichiers_EFICAS/index.html"
+          cmd="xdg-open "+indexAide
+          os.system(cmd)
         except:
-          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "QT Assistant n est pas installe "))
+          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
 
     def aideCode(self) :
         if self.code==None : return
         try :
-          from PyQt4.QtAssistant import QAssistantClient
-          monAssistant=QAssistantClient(QString(""), self)
-          arguments=QStringList()
-          arguments << "-profile" <<self.fileDoc
-          monAssistant.setArguments(arguments);
-          monAssistant.showPage(QString(self.docPath)+QDir.separator()+QString("fichiers_"+QString(self.code)+QString("/index.html")))
+        #if 1 :
+          cmd="xdg-open "+self.fileDoc
+          os.system(cmd)
         except:
-          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "QT Assistant n est pas installe "))
+        #else:
+          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
 
     def optionEditeur(self) :
