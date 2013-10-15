@@ -788,6 +788,15 @@ class JDCEditor(QSplitter):
 
         monDialog=QFileDialog(self.appliEficas)
         monDialog.setDirectory (path)
+        monDialog.setWindowTitle ("Save")
+
+        for c in monDialog.children():
+            if isinstance(c,QDialogButtonBox):
+               for b in c.children():
+                  if isinstance(b,QPushButton):
+                     avant=b.text()
+                     if avant.toLatin1()=="&Open":
+                        b.setText("Save") 
         mesFiltres=QStringList()
         mesFiltres << "input Map (*.input)" << "All Files (*)"
         monDialog.setNameFilters(mesFiltres)
@@ -796,10 +805,10 @@ class JDCEditor(QSplitter):
         if BOk==0: return
         fn=str(monDialog.selectedFiles()[0].toLatin1())
         if fn == "" or fn == None : return
-        self.monNomFichierInput=monNomFichier
+        self.monNomFichierInput=fn
 
-        #p = subprocess.Popen(["ls","-l",fn], stdout=subprocess.PIPE)
-        p = subprocess.Popen(["map","run","-n",composant,"-i",fn], stdout=subprocess.PIPE)
+        p = subprocess.Popen(["ls","-l",fn], stdout=subprocess.PIPE)
+        #p = subprocess.Popen(["map","run","-n",composant,"-i",fn], stdout=subprocess.PIPE)
         (output, err) = p.communicate()
 
 
