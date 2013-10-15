@@ -63,12 +63,12 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
        """ Cette methode teste la validite du nom du concept produit par l'etape """
        valid=1
        if self.sd.nom != None :
-          if self.jdc and self.jdc.definition.code == 'ASTER' and len(self.sd.nom) > 8 :
+          #if self.jdc and self.jdc.definition.code == 'ASTER' and len(self.sd.nom) > 8 :
              #  le nom de la sd doit avoir une longueur <= 8 caractères pour ASTER
-             if cr == 'oui' :
-                self.cr.fatal(_(u"Le nom de concept %s est trop long (8 caractères maxi)"),
-                    self.sd.nom)
-             valid = 0
+          #   if cr == 'oui' :
+          #      self.cr.fatal(_(u"Le nom de concept %s est trop long (8 caractères maxi)"),
+          #          self.sd.nom)
+          #   valid = 0
           if self.sd.nom.find('sansnom') != -1 :
              # la SD est 'sansnom' : --> erreur
              if cr == 'oui' :
