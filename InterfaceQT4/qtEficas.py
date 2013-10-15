@@ -127,9 +127,10 @@ class Appli(Ui_Eficas,QMainWindow):
     def initAides(self):
         #print "je passe la"
         repAide=os.path.dirname(os.path.abspath(__file__))
+        fileName='index.html'
         self.docPath=repAide+"/../Aide"
         if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'docPath') : self.docPath=self.CONFIGURATION.docPath
-        fileName='index.html'
+        if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'fileName'):fileName=self.CONFIGURATION.fileName
         self.fileDoc=os.path.join(self.docPath,fileName)
         self.actionCode.setText(tr("Aide specifique ")+str(self.code))
         if not os.path.isfile(self.fileDoc) : 
