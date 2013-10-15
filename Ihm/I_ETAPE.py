@@ -107,8 +107,8 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       if not concept_re.match(nom):
          return 0, tr("Un nom de concept doit etre un identificateur Python")
 
-      if len(nom) > 8 and self.jdc.definition.code == 'ASTER':
-        return 0, tr("Nom de concept trop long (maxi 8 caracteres)")
+      #if len(nom) > 8 and self.jdc.definition.code == 'ASTER':
+      #  return 0, tr("Nom de concept trop long (maxi 8 caracteres)")
 
       self.init_modif()
       #
