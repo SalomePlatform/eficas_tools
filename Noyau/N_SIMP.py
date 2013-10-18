@@ -46,7 +46,7 @@ class SIMP(N_ENTITE.ENTITE):
 
    def __init__(self,typ,fr="",ang="",statut='f',into=None,defaut=None,
                      min=1,max=1,homo=1,position ='local',
-                     val_min = '**',val_max='**',docu="",validators=None):
+                     val_min = '**',val_max='**',docu="",validators=None,sug=None):
 
       """
           Un mot-clé simple est caractérisé par les attributs suivants :
@@ -95,6 +95,7 @@ class SIMP(N_ENTITE.ENTITE):
       self.val_min=val_min
       self.val_max=val_max
       self.docu = docu
+      self.sug = sug
 
    def verif_cata(self):
       """
