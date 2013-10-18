@@ -43,6 +43,11 @@ class ENTITE:
     else:
       return None
 
+  def get_sug(self):
+    if hasattr(self,'sug') :
+      if self.sug != "" : return self.sug
+    return None
+
   def check_definition(self, parent):
       """Verifie la definition d'un objet composite (commande, fact, bloc)."""
       args = self.entites.copy()
