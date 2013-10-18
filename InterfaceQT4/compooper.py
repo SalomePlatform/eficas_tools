@@ -40,10 +40,11 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
         self.monWidgetNom=self.treeParent.tree.itemWidget(self,1)
         self.treeParent.tree.connect(self.monWidgetNom,SIGNAL("returnPressed()"), self.nomme)
         if self.item.GetIconName() == "ast-red-square" : self.monWidgetNom.setDisabled(True)
-        else : self.monWidgetNom.setDisabled(False)
+        else : self.monWidgetNom.setFocus()  ;self.monWidgetNom.setDisabled(False)
 
     def nomme(self):
         nom=str(self.monWidgetNom.text())
+        self.editor.init_modif()
         test,mess = self.item.nomme_sd(nom)
         if (test== 0):
            self.editor.affiche_infos(mess,Qt.red)
@@ -51,6 +52,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
            self.monWidgetNom.setText(old)
         else :
            self.editor.affiche_infos(tr("Nommage du concept effectue"))
+           self.onValid()
            try :
 	       self.editor.panel.LENomConcept.setText(nom)
            except :

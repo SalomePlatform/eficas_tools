@@ -155,6 +155,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
          commentaire = d_aides.get(mctype, tr("Type de base inconnu"))
        
       commentaire = commentaire + unicode(self.node.item.aide())
+      if self.node.item.object.definition.get_sug() != None :
+         commentaire=commentaire+str("\nsuggestion : ")+str(self.node.item.object.definition.get_sug())
       self.Commentaire.setText(commentaire)
 
   def BOk2Pressed(self):
