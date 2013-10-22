@@ -24,6 +24,7 @@ from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
 from myMain import Ui_Eficas
 from viewManager import MyTabview
+from getVersion import getEficasVersion
 
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
@@ -43,7 +44,8 @@ class Appli(Ui_Eficas,QMainWindow):
         Ui_Eficas.__init__(self)
         self.setupUi(self)
 
-        self.VERSION_EFICAS="Eficas QT4 V7.2"
+        version=getEficasVersion()
+        self.VERSION_EFICAS="Eficas QT4 "+version
         self.salome=salome
         self.ihm="QT"
 	self.top = self    #(pour CONFIGURATION)
@@ -163,6 +165,10 @@ class Appli(Ui_Eficas,QMainWindow):
            self.toolBar.addAction(self.actionSaveRun)
         self.actionSaveRun.setText(QApplication.translate("Eficas", "Save Run", None, QApplication.UnicodeUTF8))
         self.connect(self.actionSaveRun,SIGNAL("activated()"),self.saveRun)
+
+        self.menuOptions = self.menubar.addMenu("menuOptions")
+        self.menuOptions.addAction(self.actionParametres_Eficas)
+        self.menuOptions.setTitle(tr("Options"))
 
 
     def ASTER(self) :
@@ -423,12 +429,15 @@ class Appli(Ui_Eficas,QMainWindow):
     def optionEditeur(self) :
         try :
            name='monOptions_'+self.code
+           print name
         except :
            QMessageBox.critical( self,tr( "Parametrage"),tr( "Veuillez d abord choisir un code"))
            return
         try :
+        #if 1:
            optionCode=__import__(name)
         except :
+        #else :
            QMessageBox.critical( self, tr("Parametrage"), tr("Pas de possibilite de personnalisation de la configuration "))
            return
         monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
