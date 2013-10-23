@@ -40,7 +40,7 @@ class Options(desOptions):
        self.connecterSignaux()
        self.code='MAP'
        self.initAll()
-  
+
    def connecterSignaux(self) :
        self.connect(self.LESaveDir,SIGNAL("returnPressed()"),self.ChangeSaveDir)
        self.connect(self.BOk,SIGNAL("clicked()"),self.BOkClicked)
@@ -65,20 +65,21 @@ class Options(desOptions):
    def ChangeSaveDir(self):
        if not os.path.isdir(self.LESaveDir.text()) :
           res = QMessageBox.warning( None,
-                 self.trUtf8("Repertoire de Sauvegarde par défaut "),
-                 self.trUtf8("Le Repertoire  n existe pas."),
-                 self.trUtf8("&Ok"),
-                 self.trUtf8("&Abandonner"))
+                 "Dossier de sauvegarde par defaut",
+                 "Le dossier n'existe pas.",
+                 "&Ok",
+                 "&Abandonner")
+          print res
           if res == 1 :
              if hasattr(self.configuration,"savedir"):
                 self.LESaveDir.setText(self.configuration.savedir)
-       self.configuration.savedir=str(self.LESaveDir.text())
-       self.configuration.save_params()
+          self.configuration.savedir=str(self.LESaveDir.text())
+          self.configuration.save_params()
 
    def BDirClicked(self):
        directory = QFileDialog.getExistingDirectory(self,
                directory = self.configuration.savedir,
                options = QFileDialog.ShowDirsOnly)
-       if directory != None :
+       if directory:
           self.LESaveDir.setText(directory)
           self.ChangeSaveDir()

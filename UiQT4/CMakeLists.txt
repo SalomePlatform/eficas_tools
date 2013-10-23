@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2002, 2013  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -25,9 +25,9 @@ macro ( eficas_compile_ui uifile )
   set ( _pyfile "${_file_we}.py" )
   add_custom_command ( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile}
                        COMMAND ${PYUIC4} ARGS -x -o ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile} ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
-		       MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
-		       COMMENT "Compiling ${uifile}"
-		     )
+                       MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
+                       COMMENT "Compiling ${uifile}"
+                     )
   list ( APPEND _PYFILES ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile} )
 endmacro ( eficas_compile_ui )
 
@@ -35,6 +35,7 @@ eficas_compile_ui ( OptionsCuve.ui )
 eficas_compile_ui ( OptionsEditeur.ui )
 eficas_compile_ui ( OptionsOT.ui )
 eficas_compile_ui ( OptionsPdf.ui )
+eficas_compile_ui ( OptionsMAP.ui )
 eficas_compile_ui ( aideQT.ui )
 eficas_compile_ui ( desChoixCata.ui )
 eficas_compile_ui ( desChoixCode.ui )

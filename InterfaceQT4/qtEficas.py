@@ -32,7 +32,7 @@ from Extensions.eficas_exception import EficasException
 from Editeur import session
 
 
-class Appli(Ui_Eficas,QMainWindow):    
+class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
@@ -48,7 +48,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.VERSION_EFICAS="Eficas QT4 "+version
         self.salome=salome
         self.ihm="QT"
-	self.top = self    #(pour CONFIGURATION)
+        self.top = self    #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
         self.code=code
         self.indice=0
@@ -65,19 +65,19 @@ class Appli(Ui_Eficas,QMainWindow):
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
-        
+
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.ajoutIcones()
 
-        self.viewmanager = MyTabview(self) 
+        self.viewmanager = MyTabview(self)
         self.recentMenu=self.menuFichier.addMenu(tr('&Recents'))
-        self.connecterSignaux() 
+        self.connecterSignaux()
         if self.code != None : self.construitMenu()
 
 
         self.ouvreFichiers()
         self.setWindowTitle(self.VERSION_EFICAS)
-        
+
     def definitCode(self,code,ssCode) :
         self.code=code
         self.ssCode=ssCode
@@ -93,10 +93,10 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.repIni=prefsCode.repIni
         if ssCode != None :
-           self.format_fichier= ssCode	#par defaut
+           self.format_fichier= ssCode  #par defaut
            prefsCode.NAME_SCHEME=ssCode
         else :
-           self.format_fichier="python"	#par defaut
+           self.format_fichier="python" #par defaut
 
         nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
@@ -135,7 +135,7 @@ class Appli(Ui_Eficas,QMainWindow):
         if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'fileName'):fileName=self.CONFIGURATION.fileName
         self.fileDoc=os.path.join(self.docPath,fileName)
         self.actionCode.setText(tr("Aide specifique ")+str(self.code))
-        if not os.path.isfile(self.fileDoc) : 
+        if not os.path.isfile(self.fileDoc) :
                self.fileDoc=""
                self.docPath=""
                self.actionCode.setEnabled(False)
@@ -226,7 +226,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def connecterSignaux(self) :
         self.connect(self.recentMenu,SIGNAL('aboutToShow()'),self.handleShowRecentMenu)
 
-	self.connect(self.action_Nouveau,SIGNAL("activated()"),self.fileNew)
+        self.connect(self.action_Nouveau,SIGNAL("activated()"),self.fileNew)
         self.connect(self.actionNouvel_Include,SIGNAL("activated()"),self.NewInclude)
         self.connect(self.action_Ouvrir,SIGNAL("activated()"),self.fileOpen)
         self.connect(self.actionEnregistrer,SIGNAL("activated()"),self.fileSave)
@@ -429,7 +429,6 @@ class Appli(Ui_Eficas,QMainWindow):
     def optionEditeur(self) :
         try :
            name='monOptions_'+self.code
-           print name
         except :
            QMessageBox.critical( self,tr( "Parametrage"),tr( "Veuillez d abord choisir un code"))
            return
@@ -442,25 +441,25 @@ class Appli(Ui_Eficas,QMainWindow):
            return
         monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
         monOption.show()
-        
+
     def optionPdf(self) :
         from monOptionsPdf import OptionPdf
         monOption=OptionPdf(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
         monOption.show()
-        
+
     def handleShowRecentMenu(self):
         """
         Private method to set up recent files menu.
         """
         self.recentMenu.clear()
-        
+
         for rp in self.recent:
             id = self.recentMenu.addAction(rp)
             self.ficRecents[id]=rp
             self.connect(id, SIGNAL('triggered()'),self.handleOpenRecent)
         self.recentMenu.addSeparator()
         self.recentMenu.addAction(tr('&Effacer'), self.handleClearRecent)
-        
+
     def handleOpenPatrons(self):
         idx=self.sender()
         fichier=self.repIni+"/../Editeur/Patrons/"+self.code+"/"+self.ficPatrons[idx]
@@ -470,11 +469,11 @@ class Appli(Ui_Eficas,QMainWindow):
         idx=self.sender()
         fichier=self.ficRecents[idx]
         self.viewmanager.handleOpen(fichier=fichier, patron =0 )
-        
+
     def handleClearRecent(self):
         self.recent = QStringList()
         self.sauveRecents()
-        
+
     def fileNew(self):
         try:
             self.viewmanager.newEditor()
@@ -482,7 +481,7 @@ class Appli(Ui_Eficas,QMainWindow):
             msg = unicode(exc)
             if msg != "":
                 QMessageBox.warning(self, tr(u"Erreur"), msg)
-        
+
     def fileOpen(self):
         try:
             self.viewmanager.handleOpen()
@@ -493,56 +492,56 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def fileSave(self):
         return self.viewmanager.saveCurrentEditor()
-        
+
     def fileSaveAs(self):
         return self.viewmanager.saveAsCurrentEditor()
-        
+
     def fileClose(self):
         self.viewmanager.handleClose(texte='&Fermer')
-        
+
     def fileCloseAll(self):
         self.viewmanager.handleCloseAll(texte='&Fermer')
-        
+
     def fileExit(self):
         # On peut sortir sur Abort
         res=self.viewmanager.handleCloseAll()
-        if (res != 2) : 
+        if (res != 2) :
             self.close()
         return res
-        
+
     def editCopy(self):
         self.viewmanager.handleEditCopy()
-      
+
     def editCut(self):
         self.viewmanager.handleEditCut()
-    
+
     def editPaste(self):
         self.viewmanager.handleEditPaste()
-        
+
     def rechercher(self):
         self.viewmanager.handleRechercher()
-        
+
     def run(self):
         self.viewmanager.run()
-        
+
     def saveRun(self):
         self.viewmanager.saveRun()
-        
+
     def runYACS(self):
         self.viewmanager.runYACS()
-        
+
     def saveYACS(self):
         self.viewmanager.saveYACS()
-        
+
     def supprimer(self):
         self.viewmanager.handleSupprimer()
-        
+
     def jdcFichierSource(self):
         self.viewmanager.handleViewJdcFichierSource()
-        
+
     def jdcRapport(self):
         self.viewmanager.handleViewJdcRapport()
-        
+
     def visuJdcPy(self):
         self.viewmanager.handleViewJdcPy()
 
@@ -562,7 +561,7 @@ class Appli(Ui_Eficas,QMainWindow):
               sys.path.remove(aEnlever)
             except :
               pass
-              
+
 
     def closeEvent(self,event):
       res=self.fileExit()

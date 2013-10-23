@@ -43,7 +43,7 @@
     </message>
     <message>
         <location filename="../../convert/parseur_python.py" line="479"/>
-        <source>Eficas ne peut pas traiter plusieurs instructions 
+        <source>Eficas ne peut pas traiter plusieurs instructions
                                                  sur la meme ligne : %s</source>
         <translation type="unfinished"></translation>
     </message>
@@ -74,7 +74,7 @@
     </message>
     <message>
         <location filename="../../Editeur/analyse_catalogue.py" line="209"/>
-        <source>le texte a analyser n&apos;est pas celui d&apos;une commande ou 
+        <source>le texte a analyser n&apos;est pas celui d&apos;une commande ou
                                          d&apos;un operateur : %s</source>
         <translation type="unfinished"></translation>
     </message>
@@ -90,14 +90,14 @@
     </message>
     <message>
         <location filename="../../Editeur/analyse_catalogue.py" line="229"/>
-        <source>le texte a analyser n&apos;est pas celui d&apos;une commande connue : 
+        <source>le texte a analyser n&apos;est pas celui d&apos;une commande connue :
                                         %(v_1)s %(v_2)s</source>
         <comment>v_1</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../Editeur/analyse_catalogue.py" line="231"/>
-        <source>le texte a analyser n&apos;est pas celui d&apos;une commande connue : 
+        <source>le texte a analyser n&apos;est pas celui d&apos;une commande connue :
                                          %(v_1)s %(v_2)s</source>
         <comment>v_1</comment>
         <translation type="unfinished"></translation>
@@ -149,7 +149,7 @@
     </message>
     <message>
         <location filename="../../Editeur/session.py" line="149"/>
-        <source> jdc %(v_1)s manque 
+        <source> jdc %(v_1)s manque
                                       fichier comm dans section %(v_2)s</source>
         <comment>v_1</comment>
         <translation type="unfinished"></translation>
@@ -163,8 +163,8 @@
     </message>
     <message>
         <location filename="../../Editeur/session.py" line="170"/>
-        <source> jdc %(v_1)s 
-                                   fichier include %(v_2)s, %(v_3)s 
+        <source> jdc %(v_1)s
+                                   fichier include %(v_2)s, %(v_3)s
                                    n&apos;existe pas</source>
         <comment>v_1</comment>
         <translation type="unfinished"></translation>
@@ -181,14 +181,14 @@
     </message>
     <message>
         <location filename="../../Editeur/session.py" line="202"/>
-        <source> jdc %(v_1)s manque fichier comm 
+        <source> jdc %(v_1)s manque fichier comm
                                 dans section %(v_2)s</source>
         <comment>v_1</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../Editeur/session.py" line="206"/>
-        <source>jdc %(v_1)s, le fichier de commandes 
+        <source>jdc %(v_1)s, le fichier de commandes
                                 %(v_2)s n&apos;existe pas</source>
         <comment>v_1</comment>
         <translation type="unfinished"></translation>
@@ -444,26 +444,26 @@
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="478"/>
-        <source>ATTENTION! Une source constante 
-                                  n&apos;est possible qu&apos;a frequence nulle 
+        <source>ATTENTION! Une source constante
+                                  n&apos;est possible qu&apos;a frequence nulle
                                   en regime frequentiel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="487"/>
-        <source>ERREUR! Une forme de la source du 
+        <source>ERREUR! Une forme de la source du
                                type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="508"/>
-        <source>ATTENTION! Une source constante n&apos;est 
+        <source>ATTENTION! Une source constante n&apos;est
                                   possible qu&apos;a frequence nulle en regime frequentiel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="544"/>
-        <source>ERREUR! Une forme de la source du type 
+        <source>ERREUR! Une forme de la source du type
                                WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -474,7 +474,7 @@
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="813"/>
-        <source>ERREUR! ce groupe de maille (%s) n&apos;a pas de prefixe 
+        <source>ERREUR! ce groupe de maille (%s) n&apos;a pas de prefixe
                                 indiquant le type de materiau ou de source associee</source>
         <translation type="unfinished"></translation>
     </message>
@@ -490,7 +490,7 @@
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="823"/>
-        <source>ERREUR! ce groupe de maille (%(nom)s) n&apos;a pas 
+        <source>ERREUR! ce groupe de maille (%(nom)s) n&apos;a pas
                                         le prefixe correct pour etre associe a un type %(type_bloc)s</source>
         <comment>nom</comment>
         <translation type="unfinished"></translation>
@@ -691,13 +691,13 @@
     </message>
     <message>
         <location filename="../../Ihm/I_MACRO_ETAPE.py" line="163"/>
-        <source>Impossible de relire le fichier %s 
+        <source>Impossible de relire le fichier %s
  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../Ihm/I_MACRO_ETAPE.py" line="174"/>
-        <source>Le fichier include contient des erreurs %s 
+        <source>Le fichier include contient des erreurs %s
  </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1152,7 +1152,7 @@ Le fichier associe n&apos;est pas defini</source>
     </message>
     <message>
         <location filename="../../InterfaceQT4/editor.py" line="859"/>
-        <source>Le fichier %s contient une commande INCLUDE 
+        <source>Le fichier %s contient une commande INCLUDE
 </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1179,7 +1179,7 @@ Le fichier associe n&apos;est pas defini</source>
     </message>
     <message>
         <location filename="../../InterfaceQT4/editor.py" line="865"/>
-        <source>Donnez le nom du fichier dont vous 
+        <source>Donnez le nom du fichier dont vous
  voulez faire une poursuite</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4020,24 +4020,24 @@ requis par l&apos;objet courant :&lt;/p&gt;&lt;/font&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monOptions_MAP.py" line="86"/>
-        <source>Repertoire MAP </source>
-        <translation type="unfinished"></translation>
+        <location filename="../../InterfaceQT4/monOptions_MAP.py" line="68"/>
+        <source>Dossier de sauvegarde par defaut</source>
+        <translation>Dossier de sauvegarde par défaut</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monOptions_MAP.py" line="109"/>
-        <source>Le Repertoire n existe pas.</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../InterfaceQT4/monOptions_MAP.py" line="69"/>
+        <source>Le dossier n&apos;existe pas.</source>
+        <translation>Le dossier n&apos;existe pas.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monOptions_MAP.py" line="109"/>
-        <source>Repertoire Aster </source>
-        <translation type="unfinished"></translation>
+        <location filename="../../InterfaceQT4/monOptions_MAP.py" line="70"/>
+        <source>&amp;Ok</source>
+        <translation>&amp;Ok</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monOptions_MAP.py" line="132"/>
-        <source>Le Fichier n existe pas. Voulez-vous supprimer cette version ?</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../InterfaceQT4/monOptions_MAP.py" line="71"/>
+        <source>&amp;Abandonner</source>
+        <translation>&amp;Abandonner</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/monOptions_OPENTURNS_WRAPPER.py" line="225"/>
@@ -4204,6 +4204,36 @@ Version :</source>
         <location filename="../../UiQT4/OptionsMAP.ui" line="531"/>
         <source>Schema</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/OptionsMAP.ui" line="14"/>
+        <source>Options Map</source>
+        <translation>Options Map</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/OptionsMAP.ui" line="22"/>
+        <source>Dossier de sauvegarde :</source>
+        <translation>Dossier de sauvegarde :</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/OptionsMAP.ui" line="81"/>
+        <source>Choisir le dossier</source>
+        <translation>Choisir le dossier</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/OptionsMAP.ui" line="94"/>
+        <source>Valider et fermer</source>
+        <translation>Valider et fermer</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/OptionsMAP.ui" line="107"/>
+        <source>Valider</source>
+        <translation>Valider</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/OptionsMAP.ui" line="120"/>
+        <source>Annuler</source>
+        <translation>Annuler</translation>
     </message>
     <message encoding="UTF-8">
         <location filename="../../UiQT4/OptionsOT.ui" line="200"/>

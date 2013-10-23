@@ -19,7 +19,7 @@
      <item>
       <widget class="QLabel" name="textLabel1_2">
        <property name="text">
-        <string>Répertoire de sauvegarde :</string>
+        <string>Dossier de sauvegarde :</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>
@@ -78,7 +78,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Dir</string>
+        <string>Choisir le dossier</string>
        </property>
       </widget>
      </item>
@@ -91,7 +91,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Ok et Close</string>
+        <string>Valider et fermer</string>
        </property>
       </widget>
      </item>
@@ -104,7 +104,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Ok</string>
+        <string>Valider</string>
        </property>
       </widget>
      </item>
@@ -117,7 +117,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Cancel</string>
+        <string>Annuler</string>
        </property>
       </widget>
      </item>
