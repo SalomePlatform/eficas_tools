@@ -67,9 +67,8 @@ class Options(desOptions):
           res = QMessageBox.warning( None,
                  "Dossier de sauvegarde par defaut",
                  "Le dossier n'existe pas.",
-                 "&Ok",
-                 "&Abandonner")
-          if res == 1 :
+                 "&Ok")
+          if res == 0:
              if hasattr(self.configuration,"savedir"):
                 self.LESaveDir.setText(self.configuration.savedir)
        self.configuration.savedir=str(self.LESaveDir.text())
