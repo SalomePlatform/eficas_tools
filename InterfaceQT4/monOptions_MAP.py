@@ -69,12 +69,11 @@ class Options(desOptions):
                  "Le dossier n'existe pas.",
                  "&Ok",
                  "&Abandonner")
-          print res
           if res == 1 :
              if hasattr(self.configuration,"savedir"):
                 self.LESaveDir.setText(self.configuration.savedir)
-          self.configuration.savedir=str(self.LESaveDir.text())
-          self.configuration.save_params()
+       self.configuration.savedir=str(self.LESaveDir.text())
+       self.configuration.save_params()
 
    def BDirClicked(self):
        directory = QFileDialog.getExistingDirectory(self,
