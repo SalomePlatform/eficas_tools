@@ -29,6 +29,8 @@ from InterfaceQT4 import qtEficas
 
 import salome
 import SalomePyQt
+sgPyQt = SalomePyQt.SalomePyQt()
+langue=str(sgPyQt.stringSetting("language","language"))
 
 
 from salome.kernel.studyedit import getStudyEditor
@@ -40,7 +42,7 @@ COLORS = colors.ListeColors
 LEN_COLORS = len( COLORS )
 
 from Extensions import localisation
-localisation.localise(None,"en")
+localisation.localise(None,langue)
 
 
 
@@ -83,7 +85,7 @@ class MyEficas( qtEficas.Appli ):
                         
         self.editor = getStudyEditor()    # Editeur de l'arbre d'etude
 
-        qtEficas.Appli.__init__( self,code=code,salome=1,parent=parent,multi=multi)
+        qtEficas.Appli.__init__( self,code=code,salome=1,parent=parent,multi=multi,langue=langue)
         
         #--------------- specialisation EFICAS dans SALOME  -------------------                
         self.parent = parent        
@@ -160,7 +162,7 @@ class MyEficas( qtEficas.Appli ):
                            if  subSSMeshSO.GetObject()._narrow(typeMesh):
                                names.append(subSSMeshSO.GetName())
             else :
-                msg=entry + " n est pas un maillage"         
+                msg=entry + self.tr(" n est pas un maillage")
        except :
          logger.debug(' giveMeshGroups pb avec ( entry = %s ) ' %entry )          
          msg=' giveMeshGroup pb avec ( entry = %s ) '+ entry          
@@ -322,10 +324,10 @@ class MyEficas( qtEficas.Appli ):
         if aGroup: tGroup = aGroup.GetType()
 
         if kwType == "GROUP_NO" and tGroup != SMESH.NODE:
-             msgError = "GROUP_NO attend un groupe de noeud"
+             msgError = self.tr("GROUP_NO attend un groupe de noeud")
              return name, msgError
         elif kwType == "GROUP_MA" and tGroup == SMESH.NODE:
-             msgError = "GROUP_MA attend un point goupe de maille"
+             msgError = self.tr("GROUP_MA attend un point goupe de maille")
              return name, msgError
 
         # on cherche la shape associee
@@ -342,7 +344,7 @@ class MyEficas( qtEficas.Appli ):
              else :
                 mainShapeID=0
         else :
-             return name, "Type d objet non permis"    
+             return name, self.tr("Type d objet non permis")
 
         # on cherche si la shape associee est la bonne
         #print "------------- mainShapeID" , mainShapeID
@@ -351,7 +353,7 @@ class MyEficas( qtEficas.Appli ):
           if self.mainShapeNames[editor] == mainShapeID:
              name=mySO.GetName()
           else :
-             msgError="Le groupe reference la geometrie " + mainShapeID + " et non " + self.mainShapeNames[editor]
+             msgError=self.tr("Le groupe reference la geometrie ") + mainShapeID + self.tr(" et non ") + self.mainShapeNames[editor]
         else :
           self.mainShapeNames[editor] = mainShapeID
           name=mySO.GetName()
@@ -380,9 +382,9 @@ class MyEficas( qtEficas.Appli ):
             #print "liste des groupes de maille de nom %s: "%(meshGroupName), listSO
             
             if len(listSO)>1:
-               return 0,'Plusieurs objets  portent ce nom'
+               return 0,self.tr('Plusieurs objets  portent ce nom')
             if len(listSO) ==0 :
-               return 0,'Aucun objet ne porte ce nom'
+               return 0,self.tr('Aucun objet ne porte ce nom')
             SObjet=listSO[0]
             groupEntry = SObjet.GetID()                
             myComponent = salome.lcc.FindOrLoadComponent("FactoryServer", "SMESH")
@@ -399,7 +401,7 @@ class MyEficas( qtEficas.Appli ):
 
         except:
         #else :
-            msgError = "Impossible d afficher "+shapeName
+            msgError = self.tr("Impossible d afficher ")+shapeName
             logger.debug(50*'=')
         return ok, msgError
 
@@ -429,7 +431,7 @@ class MyEficas( qtEficas.Appli ):
                     elif self.isShape(entry):               # selection d'une sous-geometrie
                        name, msg = self.selectShape( editor, entry, kwType )
                     else:
-                       name, msg = None, "Selection SALOME non autorisee."
+                       name, msg = None,self.tr("Selection SALOME non autorisee.")
                     if name:
                        names.append( name )                    
                         
@@ -459,25 +461,20 @@ class MyEficas( qtEficas.Appli ):
             entries = salome.sg.getAllSelected()
             nbEntries = len( entries )
             if nbEntries < 1:
-               msg = u"Veuillez sélectionner une entrée de l'arbre d'étude de " \
-                      u"Salome"
-               QMessageBox.information(self, self.tr(u"Sélection depuis Salome"),
-                       self.tr(msg))
+               msg = self.tr(u"Veuillez selectionner une entree de l'arbre d'etude de Salome")
+               QMessageBox.information(self, self.tr(u"Selection depuis Salome"), msg)
                return [], msg
             elif nbEntries > 1 :
-               msg = u"Une seule entrée doit être sélectionnée dans l'arbre " \
-                     u"d'étude de Salome"
-               QMessageBox.information(self, self.tr(u"Sélection depuis Salome"),
-                       self.tr(msg))
+               msg = self.tr(u"Une seule entrée doit être sélectionnée dans l'arbre d'étude de Salome")
+               QMessageBox.information(self, self.tr(u"Sélection depuis Salome"),msg)
                return [], msg
 
             value = salome.sg.getSelected(0)
 
-            msg = u"L'entrée de l'arbre d'étude de Salome a été sélectionnée"
+            msg = self.tr(u"L'entrée de l'arbre d'étude de Salome a été sélectionnée")
             return [value], msg
         except Exception, e:
-             QMessageBox.information(self, self.tr(u"Sélection depuis Salome"),
-                         self.tr(unicode(e)))
+             QMessageBox.information(self, self.tr(u"Sélection depuis Salome"), unicode(e))
              return [], unicode(e)
 
         
@@ -559,8 +556,7 @@ class MyEficas( qtEficas.Appli ):
             msgError = "Can't add Eficas file to Salome study tree"
             logger.debug(msgError, exc_info = True)
             QMessageBox.warning(self, self.tr("Warning"),
-                                self.tr("%s. Reason:\n%s\n\nSee logs for "
-                                        "more details." % (msgError, exc)))
+                                self.tr("%s. Raison:\n%s\n\n Voir la log pour plus de détails " % (msgError, exc)))
         return ok, msgError        
         
            
@@ -590,7 +586,7 @@ class MyEficas( qtEficas.Appli ):
                 salome.sg.FitAll()
                 self.icolor = self.icolor + 1             
                 if not ok:
-                    msgError = "Impossible d afficher "+shapeName
+                    msgError =self.tr("Impossible d afficher ")+shapeName
         #except:            
         else :
             logger.debug(50*'=')
@@ -605,7 +601,7 @@ class MyEficas( qtEficas.Appli ):
         try :
            entries = salome.sg.getAllSelected()
            nbEntries = len( entries )
-           names, msg = None, "Selection SALOME non autorisee."
+           names, msg = None, self.tr("Selection SALOME non autorisee.")
            if nbEntries == 1:
                 for entry in entries:
                     names,msg=self.giveMeshGroups(entry,"SubMeshes",SMESH.SMESH_subMesh)
@@ -622,7 +618,7 @@ class MyEficas( qtEficas.Appli ):
         #if 1:
            entries = salome.sg.getAllSelected()
            nbEntries = len( entries )
-           names, msg = None, "Selection SALOME non autorisee."
+           names, msg = None, self.tr("Selection SALOME non autorisee.")
            if nbEntries == 1:
                 for entry in entries:
                     print entry
@@ -647,8 +643,8 @@ class MyEficas( qtEficas.Appli ):
             from salome.geom.structelem import StructuralElementManager, InvalidParameterError
         except ImportError:
             QMessageBox.critical(self, self.tr("Error"),
-                                 self.tr("Cannot display structural elements: "
-                                         "module GEOM is not installed."))
+                                 self.tr("Impossible d'afficher les elements de structure: "
+                                         "module GEOM n est pas  installe."))
             return
         try:
             atLeastOneStudy = self.editor.study
