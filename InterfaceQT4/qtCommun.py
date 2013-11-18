@@ -61,21 +61,21 @@ class QTPanel:
               self.BuildLBMCPermis()
 
   def BOkPressed(self):
-        """ Impossible d utiliser les vrais labels avec designer ?? """
-        label=self.TWChoix.tabText(self.TWChoix.currentIndex())
-        if label==tr("Nouvelle Commande"):
-           self.DefCmd()
-        if label==tr("Nommer Concept"):
-           self.LENomConceptReturnPressed()
-        if label==tr("Ajouter Mot-Clef"):
-           if self.LBMCPermis.currentItem() == None : return
-           self.DefMC(self.LBMCPermis.currentItem())
-        if label==tr("Definition Formule"):
-           self.BOkPressedFormule()
-        if label==tr("Valeur Parametre"):
-           self.BOkParamPressed()
-        if label==tr("Fichier Include"):
-           self.BOkIncPressed()
+    if hasattr(self, "Commande") and self.TWChoix.currentWidget() is self.Commande:
+      self.DefCmd()
+    elif hasattr(self, "Concept") and self.TWChoix.currentWidget() is self.Concept:
+      self.LENomConceptReturnPressed()
+    elif hasattr(self, "MotClef") and self.TWChoix.currentWidget() is self.MotClef:
+      if self.LBMCPermis.currentItem() == None : return
+      self.DefMC(self.LBMCPermis.currentItem())
+    elif hasattr(self, "Formule") and self.TWChoix.currentWidget() is self.Formule:
+      self.BOkPressedFormule()
+    elif hasattr(self, "Valeur_Parametre") and self.TWChoix.currentWidget() is self.Valeur_Parametre:
+      self.BOkParamPressed()
+    elif hasattr(self, "maPageOk") and self.TWChoix.currentWidget() is self.maPageOk:
+      self.BOkIncPressed()
+    else:
+      raise Exception("Unknown selected tab %s" % self.TWChoix.tabText(self.TWChoix.currentIndex()))
 
   def BParametresPressed(self):
         liste=self.node.item.get_liste_param_possible()
