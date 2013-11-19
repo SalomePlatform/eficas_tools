@@ -384,8 +384,6 @@ class JDCNode(QTreeWidgetItem):
         """
         RepIcon=QString(self.appliEficas.RepIcon)
         monIcone = QIcon(RepIcon+"/" +self.item.GetIconName() + ".png")
-        if  self.item.GetIconName() != "ast-yellow-square"   and hasattr(self,'monWidgetNom') :
-            if self.monWidgetNom.isEnabled() == False : self.monWidgetNom.setDisabled(False)
         self.setIcon(0,monIcone)
 
 
