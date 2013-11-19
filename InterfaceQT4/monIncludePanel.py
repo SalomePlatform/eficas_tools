@@ -111,7 +111,6 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
 
         self.editor.init_modif()
 
-        print "kkkkkkkkkkkkkkkkkk"
         try :
            self.node.item.object.change_fichier_init(nomFichier,text)
            commentaire = tr("Fichier modifie  :")  + self.node.item.get_nom()
@@ -124,7 +123,6 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
            self.Commentaire.setText(commentaire)
            self.editor.affiche_infos(commentaire,Qt.red)
            return
-        print "jjjjjjjjjjjjjjjjjj"
 
 
   def convert_file(self,file):
