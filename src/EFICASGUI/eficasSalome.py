@@ -453,29 +453,22 @@ class MyEficas( qtEficas.Appli ):
         retourne une liste pour etre coherent avec selectGroupFromSalome
         Note: Appele par EFICAS lorsqu'on clique sur le bouton ajouter la liste du panel SalomeEntry        
         """
-        names, msg = [], ''
         try:            
-            atLeastOneStudy = self.editor.study
-            if not atLeastOneStudy:
-               return names, msg
+            if self.editor.study._non_existent():
+               raise Exception(self.tr(u"L'étude Salome n'existe plus"))
             entries = salome.sg.getAllSelected()
             nbEntries = len( entries )
             if nbEntries < 1:
-               msg = self.tr(u"Veuillez selectionner une entree de l'arbre d'etude de Salome")
-               QMessageBox.information(self, self.tr(u"Selection depuis Salome"), msg)
-               return [], msg
+               raise Exception(self.tr(u"Veuillez sélectionner une entrée de l'arbre d'étude de Salome"))
             elif nbEntries > 1 :
-               msg = self.tr(u"Une seule entrée doit être sélectionnée dans l'arbre d'étude de Salome")
-               QMessageBox.information(self, self.tr(u"Sélection depuis Salome"),msg)
-               return [], msg
+               raise Exception(self.tr(u"Une seule entrée doit être sélectionnée dans l'arbre d'étude de Salome"))
 
-            value = salome.sg.getSelected(0)
-
+            value = kwType.get_selected_value(entries[0], self.editor)
             msg = self.tr(u"L'entrée de l'arbre d'étude de Salome a été sélectionnée")
             return [value], msg
         except Exception, e:
-             QMessageBox.information(self, self.tr(u"Sélection depuis Salome"), unicode(e))
-             return [], unicode(e)
+            QMessageBox.information(self, self.tr(u"Sélection depuis Salome"), unicode(e))
+            return [], unicode(e)
 
         
     #---------------------------------------------
@@ -664,6 +657,30 @@ class MyEficas( qtEficas.Appli ):
         except:
             traceback.print_exc()
             logger.debug(10*'#'+":pb dans envoievisu")
+
+
+class SalomeEntry:
+  """
+  This class replaces the class Accas.SalomeEntry (defined in EFICAS tool)
+  when Eficas is launched in Salome context. It handles the objects that can
+  be selected from Salome object browser.
+  By default, the selected value is the entry of the selected item in the
+  object browser. This class can be subclassed to provide more advanced
+  functions.
+  """
+  
+  help_message = u"Une entrée de l'arbre d'étude de Salome est attendue"
+  
+  def __init__(self, entryStr):
+    self._entry = entryStr
+  
+  @staticmethod
+  def __convert__(entryStr):
+    return SalomeEntry(entryStr)
+  
+  @staticmethod
+  def get_selected_value(selected_entry, study_editor):
+    return selected_entry
 
         
 #-------------------------------------------------------------------------------------------------------        
