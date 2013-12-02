@@ -88,7 +88,8 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         self.BSalome.setIcon(icon3)
         mc = self.node.item.get_definition()
         type = mc.type[0]
-        if not(('grma' in repr(type)) or ('grno' in repr(type)) or ('SalomeEntry' in repr(type))) or not(self.editor.salome) :
+        from Accas import SalomeEntry
+        if not(('grma' in repr(type)) or ('grno' in repr(type)) or (isinstance(type, types.ClassType) and issubclass(type, SalomeEntry))) or not(self.editor.salome) :
            self.BSalome.close()
            self.BView2D.close()
 
@@ -230,13 +231,12 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         for e in genea:
             if "GROUP_NO" in e: kwType = "GROUP_NO"
             if "GROUP_MA" in e: kwType = "GROUP_MA"
-        mc = self.node.item.get_definition()
-        type = mc.type[0]
+        if 'grno' in repr(kwType): kwType = "GROUP_NO"
+        if 'grma' in repr(kwType): kwType = "GROUP_NO"
 
-        if 'grno' in repr(type): kwType = "GROUP_NO"
-        if 'grma' in repr(type): kwType = "GROUP_NO"
-        if 'SalomeEntry' in repr(type):
-           selection, commentaire = self.appliEficas.selectEntryFromSalome(editor=self.editor)
+        from Accas import SalomeEntry
+        if isinstance(kwType, types.ClassType) and issubclass(kwType, SalomeEntry):
+           selection, commentaire = self.appliEficas.selectEntryFromSalome(kwType,editor=self.editor)
            selection[0]=str(selection[0])
 
         #print "BkwType",kwType

@@ -102,9 +102,10 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
            self.BFichier.close()
            self.BRepertoire.close()
         # TODO: Use type properties instead of hard-coded "grno" and "grma" type check
+        from Accas import SalomeEntry
         enable_salome_selection = self.editor.salome and \
-            (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or ('SalomeEntry' in repr(mctype)) or
-             (hasattr(mctype, "enable_salome_selection") and mctype.enable_salome_selection))
+            (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or \
+             (isinstance(mctype, types.ClassType) and issubclass(mctype, SalomeEntry)))
         if not enable_salome_selection:
            self.BSalome.close()
         if not(('grma' in repr(mctype)) or ('grno' in repr(mctype))) or not(self.editor.salome):
@@ -254,16 +255,15 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
             if "GROUP_NO" in e: kwType = "GROUP_NO"
             if "GROUP_MA" in e: kwType = "GROUP_MA"
 
-        mc = self.node.item.get_definition()
-        type = mc.type[0]
-        if 'grno' in repr(type): kwType = "GROUP_NO"
-        if 'grma' in repr(type): kwType = "GROUP_NO"
+        if 'grno' in repr(kwType): kwType = "GROUP_NO"
+        if 'grma' in repr(kwType): kwType = "GROUP_NO"
 
         if kwType in ("GROUP_NO","GROUP_MA"):
            selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
 
-        if 'SalomeEntry' in repr(type):
-           selection, commentaire = self.appliEficas.selectEntryFromSalome(editor=self.editor)
+        from Accas import SalomeEntry
+        if isinstance(kwType, types.ClassType) and issubclass(kwType, SalomeEntry):
+           selection, commentaire = self.appliEficas.selectEntryFromSalome(kwType,editor=self.editor)
 
         if commentaire !="" :
             self.Commentaire.setText(QString(commentaire))

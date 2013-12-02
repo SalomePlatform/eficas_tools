@@ -105,3 +105,4 @@ from Extensions.parametre_eval import PARAMETRE_EVAL
 from Extensions.commande_comm import COMMANDE_COMM 
 from Extensions.mcnuplet import MCNUPLET
 
+from A_SALOME_ENTRY import SalomeEntry

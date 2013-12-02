@@ -58,6 +58,11 @@ class Appli(Ui_Eficas,QMainWindow):
         self.listeAEnlever=[]
         self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP']
 
+        if self.salome:
+          import Accas
+          import eficasSalome
+          Accas.SalomeEntry = eficasSalome.SalomeEntry
+
         self.RepIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
         self.multi=multi
         if langue=='fr': self.langue=langue
