@@ -1,25 +1,22 @@
-#@ MODIF V_ETAPE Validation  DATE 06/08/2012   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2012  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 
 """
@@ -66,12 +63,12 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
        """ Cette methode teste la validite du nom du concept produit par l'etape """
        valid=1
        if self.sd.nom != None :
-          if self.jdc and self.jdc.definition.code == 'ASTER' and len(self.sd.nom) > 8 :
+          #if self.jdc and self.jdc.definition.code == 'ASTER' and len(self.sd.nom) > 8 :
              #  le nom de la sd doit avoir une longueur <= 8 caractères pour ASTER
-             if cr == 'oui' :
-                self.cr.fatal(_(u"Le nom de concept %s est trop long (8 caractères maxi)"),
-                    self.sd.nom)
-             valid = 0
+          #   if cr == 'oui' :
+          #      self.cr.fatal(_(u"Le nom de concept %s est trop long (8 caractères maxi)"),
+          #          self.sd.nom)
+          #   valid = 0
           if self.sd.nom.find('sansnom') != -1 :
              # la SD est 'sansnom' : --> erreur
              if cr == 'oui' :
