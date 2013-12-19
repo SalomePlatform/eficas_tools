@@ -24,7 +24,6 @@
 import traceback
 
 from Noyau import N_OBJECT
-import prefs
 
 class ETAPE_NIVEAU(N_OBJECT.OBJECT):
 
@@ -135,6 +134,7 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
         Retourne le texte d'aide dans la langue choisie
      """
      try :
+        import prefs
         return getattr(self.definition,prefs.lang)
      except:
         return ''
