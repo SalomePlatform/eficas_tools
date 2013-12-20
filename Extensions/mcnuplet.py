@@ -196,7 +196,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
         Retourne le texte d'aide dans la langue choisie
      """
      try :
-        return getattr(self.definition,prefs.lang)
+        return getattr(self.definition,self.jdc.lang)
      except:
         return ''
 

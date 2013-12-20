@@ -134,8 +134,7 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
         Retourne le texte d'aide dans la langue choisie
      """
      try :
-        import prefs
-        return getattr(self.definition,prefs.lang)
+        return getattr(self.definition,self.jdc.lang)
      except:
         return ''
 
