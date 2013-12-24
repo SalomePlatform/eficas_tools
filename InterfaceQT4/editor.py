@@ -695,7 +695,7 @@ class JDCEditor(QSplitter):
       else:
          # Il n'existe pas c'est une erreur
          self.affiche_infos(tr("Format %s non reconnu" , self.format),Qt.red)
-         QMessageBox.critical( self,( "Format % non reconnu ",self.format),tr("EFICAS ne sait pas convertir le JDC selon le format %s ",self.format))
+         QMessageBox.critical( self, "Format  non reconnu" ,tr("EFICAS ne sait pas convertir le JDC selon le format "+ self.format))
          return ""
 
     #------------#
