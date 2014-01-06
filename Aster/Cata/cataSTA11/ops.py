@@ -1,8 +1,8 @@
-#@ MODIF ops Cata  DATE 31/10/2011   AUTEUR COURTOIS M.COURTOIS 
+#@ MODIF ops Cata  DATE 15/04/2013   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2013  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -20,7 +20,9 @@
 # RESPONSABLE COURTOIS M.COURTOIS
 
 # Modules Python
+import sys
 import os
+import os.path as osp
 import traceback
 import cPickle as pickle
 import re
@@ -31,18 +33,18 @@ import Accas
 from Accas import ASSD
 from Noyau.ascheckers     import CheckLog
 from Noyau.N_info import message, SUPERV
+from Noyau.N_types import force_list
 
 try:
    import aster
+   import aster_core
    aster_exists = True
    # Si le module aster est présent, on le connecte
    # au JDC
    import Build.B_CODE
    Build.B_CODE.CODE.codex=aster
 
-   from Utilitai.Utmess   import UTMESS
-   from Build.B_SENSIBILITE_MEMO_NOM_SENSI import MEMORISATION_SENSIBILITE
-   from Execution.E_Global import MessageLog
+   from Utilitai.Utmess   import UTMESS, MessageLog
 except:
    aster_exists = False
 
@@ -52,27 +54,24 @@ def commun_DEBUT_POURSUITE(jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, 
    """Fonction sdprod partie commune à DEBUT et POURSUITE.
    (on stocke un entier au lieu du logique)
    """
-   jdc.par_lot    = PAR_LOT
+   jdc.set_par_lot(PAR_LOT, user_value=True)
    jdc.impr_macro = int(IMPR_MACRO == 'OUI')
    jdc.jxveri     = int(CODE != None or (DEBUG != None and DEBUG['JXVERI'] == 'OUI'))
    jdc.sdveri     = int(DEBUG != None and DEBUG['SDVERI'] == 'OUI')
    jdc.fico       = None
    jdc.sd_checker = CheckLog()
    jdc.info_level = INFO
+   jdc.hist_etape = (DEBUG != None and DEBUG['HIST_ETAPE'] == 'OUI')
    if CODE != None:
       jdc.fico = CODE['NOM']
-   if LANG:
-       from Execution.i18n import localization
-       localization.install(LANG)
    if aster_exists:
+      if LANG:
+         from Execution.i18n import localization
+         localization.install(LANG)
       # pb en cas d'erreur dans FIN : appeler reset_print_function dans traiter_fin_exec ?
       #from functools import partial
       #asprint = partial(aster.affiche, 'MESSAGE')
       #message.register_print_function(asprint)
-      # en POURSUITE, ne pas écraser la mémorisation existante.
-      if not hasattr(jdc, 'memo_sensi'):
-         jdc.memo_sensi = MEMORISATION_SENSIBILITE()
-      jdc.memo_sensi.reparent(jdc)
       # ne faire qu'une fois
       if not hasattr(jdc, 'msg_init'):
          # messages d'alarmes désactivés
@@ -112,11 +111,11 @@ def build_debut(self,**args):
    # le numéro de l'operateur associé (getoper)
    self.definition.op=0
    self.set_icmd(1)
-   lot,ier=self.codex.debut(self,1)
+   self.codex.debut(self)
    # On remet op a None juste apres pour eviter que la commande DEBUT
    # ne soit executée dans la phase d'execution
    self.definition.op=None
-   return ier
+   return 0
 
 def POURSUITE(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, LANG, INFO, **args):
    """
@@ -128,7 +127,14 @@ def POURSUITE(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, LANG, INFO, 
 
    commun_DEBUT_POURSUITE(self.jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, LANG, INFO)
 
-   if (self.codex and os.path.isfile("glob.1") or os.path.isfile("bhdf.1")):
+   if self.codex:
+     base = 'glob.1'
+     if aster_exists:
+        repglob = aster_core.get_option("repglob")
+        bhdf = osp.join(repglob, 'bhdf.1')
+        base = osp.join(repglob, 'glob.1')
+        if not osp.isfile(base) and not osp.isfile(bhdf):
+            UTMESS('F','SUPERVIS_89')
      # Le module d'execution est accessible et glob.1 est present
      # Pour eviter de rappeler plusieurs fois la sequence d'initialisation
      # on memorise avec l'attribut fichier_init que l'initialisation
@@ -139,31 +145,11 @@ def POURSUITE(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, LANG, INFO, 
      # le sous programme fortran appelé par self.codex.poursu demande le numéro
      # de l'operateur (GCECDU->getoper), on lui donne la valeur 0
      self.definition.op=0
-     lot,ier,lonuti,concepts=self.codex.poursu(self,1)
+     self.codex.poursu(self)
      # Par la suite pour ne pas executer la commande pendant la phase
      # d'execution on le remet à None
-     self.definition.op=None
-     # On demande la numérotation de la commande POURSUITE avec l'incrément
-     # lonuti pour qu'elle soit numérotée à la suite des commandes existantes.
-     # self.set_icmd(lonuti)    Non : on repart à zéro
-     pos=0
-     d={}
-     while pos+80 < len(concepts)+1:
-       nomres=concepts[pos:pos+8]
-       concep=concepts[pos+8:pos+24]
-       nomcmd=concepts[pos+24:pos+40]
-       statut=concepts[pos+40:pos+48]
-       message.info(SUPERV, '%s %s %s %s', nomres, concep, nomcmd, statut)
-       if nomres[0] not in (' ', '.', '&') and statut != '&DETRUIT':
-          exec nomres+'='+concep.lower()+'()' in self.parent.g_context,d
-       elif statut == '&DETRUIT':
-          self.jdc.nsd = self.jdc.nsd+1
-       pos=pos+80
-     # ces ASSD seront écrasées par le pick.1,
-     # on vérifiera la cohérence de type entre glob.1 et pick.1
-     for k,v in d.items():
-       self.parent.NommerSdprod(v,k)
-     self.g_context=d
+     self.definition.op = None
+     self.g_context = {}
 
      # Il peut exister un contexte python sauvegardé sous forme  pickled
      # On récupère ces objets après la restauration des concepts pour que
@@ -180,40 +166,65 @@ def POURSUITE(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, LANG, INFO, 
         UTMESS('F', 'SUPERVIS_86')
         return
      self.jdc.restore_pickled_attrs(pickle_context)
+     # vérification cohérence pick/base
+     savsign = self.jdc._sign
+     newsign = self.jdc.signature(base)
+     if args.get('FORMAT_HDF') == 'OUI':
+         UTMESS('I', 'SUPERVIS_71')
+     elif newsign != savsign:
+         UTMESS('A', 'SUPERVIS_69', valk=(savsign, newsign),
+                                    vali=self.jdc.jeveux_sysaddr)
+     else:
+         UTMESS('I', 'SUPERVIS_70', valk=newsign, vali=self.jdc.jeveux_sysaddr)
      from Cata.cata  import entier
      from Noyau.N_CO import CO
-     for elem in pickle_context.keys():
-         if isinstance(pickle_context[elem], ASSD):
-            pickle_class = pickle_context[elem].__class__
+     interrupt = []
+     count = 0
+     UTMESS('I', 'SUPERVIS_65')
+     for elem, co in pickle_context.items():
+         if isinstance(co, ASSD):
+            count += 1
+            typnam = co.__class__.__name__
             # on rattache chaque assd au nouveau jdc courant (en poursuite)
-            pickle_context[elem].jdc = self.jdc
-            pickle_context[elem].parent = self.jdc
+            co.jdc = self.jdc
+            co.parent = self.jdc
             # le marquer comme 'executed'
-            pickle_context[elem].executed = 1
+            i_int = ''
+            if co.executed != 1:
+                interrupt.append((co.nom, typnam))
+                i_int = 'exception'
+            co.executed = 1
+            UTMESS('I', 'SUPERVIS_66', valk=(co.nom, typnam.lower(), i_int))
             # pour que sds_dict soit cohérent avec g_context
-            self.jdc.sds_dict[elem] = pickle_context[elem]
-            if elem != pickle_context[elem].nom:
-               name = re.sub('_([0-9]+)$', '[\\1]', pickle_context[elem].nom)
+            self.jdc.sds_dict[elem] = co
+            if elem != co.nom:
+               name = re.sub('_([0-9]+)$', '[\\1]', co.nom)
                if self.jdc.info_level > 1:
                   UTMESS('I', 'SUPERVIS2_3',
-                         valk=(elem, type(pickle_context[elem]).__name__.upper()))
+                         valk=(elem, type(co).__name__.upper()))
                UTMESS('A', 'SUPERVIS_93', valk=(elem, "del %s" % name))
                del pickle_context[elem]
                continue
-            # détecte les incohérences
-            if elem in self.g_context.keys():
-               poursu_class = self.g_context[elem].__class__
-               if poursu_class != pickle_class :
-                  UTMESS('F','SUPERVIS_87',valk=[elem])
-                  return
-            elif pickle_class not in (CO, entier) :
-            # on n'a pas trouvé le concept dans la base et sa classe est ASSD : ce n'est pas normal
-            # sauf dans le cas de CO : il n'a alors pas été typé et c'est normal qu'il soit absent de la base
-            # même situation pour le type 'entier' produit uniquement par DEFI_FICHIER
-               UTMESS('F','SUPERVIS_88', valk=[elem,str(pickle_class)])
-               return
-         if pickle_context[elem]==None:
+         if co == None:
             del pickle_context[elem]
+     if count == 0:
+         UTMESS('I', 'SUPERVIS_67')
+     for nom, typnam in interrupt:
+         UTMESS('I', 'SUPERVIS_76', valk=(nom, typnam))
+     if not interrupt:
+         UTMESS('I', 'SUPERVIS_72')
+     if self.jdc.info_level > 1:
+         keys = pickle_context.keys()
+         keys.sort()
+         for key in keys:
+             try:
+                 value = str(pickle_context[key])
+                 if len(value) > 1000:
+                     value = value[:1000] + '...'
+                 valk = key, value
+             except:
+                 valk = key, '...'
+             UTMESS('I', 'SUPERVIS_73', valk=valk)
      self.g_context.update(pickle_context)
      return
 
@@ -224,8 +235,6 @@ def POURSUITE(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, LANG, INFO, 
      # POURSUITE
      if hasattr(self,'fichier_init'):
         return
-     if aster_exists:
-        UTMESS('F','SUPERVIS_89')
      self.make_poursuite()
 
 def get_pickled_context():
@@ -235,17 +244,17 @@ def get_pickled_context():
        précédente étude. Un fichier pick.1 doit être présent dans le répertoire de travail
     """
     fpick = 'pick.1'
-    if not os.path.isfile(fpick):
+    if not osp.isfile(fpick):
        return None
 
     # Le fichier pick.1 est présent. On essaie de récupérer les objets python sauvegardés
     context={}
     try:
-       file=open(fpick,'r')
+       file=open(fpick, 'rb')
        # Le contexte sauvegardé a été picklé en une seule fois. Il est seulement
        # possible de le récupérer en bloc. Si cette opération echoue, on ne récupère
        # aucun objet.
-       context=pickle.load(file)
+       context = pickle.load(file)
        file.close()
     except:
        # En cas d'erreur on ignore le contenu du fichier
@@ -262,10 +271,6 @@ def POURSUITE_context(self,d):
    d.update(self.g_context)
    # Une commande POURSUITE n'est possible qu'au niveau le plus haut
    # On ajoute directement les concepts dans le contexte du jdc
-   # XXX est ce que les concepts ne sont pas ajoutés plusieurs fois ??
-   for v in self.g_context.values():
-      if isinstance(v, ASSD) :
-         self.jdc.sds.append(v)
 
 def build_poursuite(self,**args):
    """
@@ -278,71 +283,81 @@ def build_poursuite(self,**args):
    self.jdc.UserError = self.codex.error
    return 0
 
-def INCLUDE(self,UNITE,**args):
-   """
-       Fonction sd_prod pour la macro INCLUDE
-   """
-   if not UNITE : return
-   if hasattr(self,'unite'):return
-   self.unite=UNITE
-
-   if self.jdc and self.jdc.par_lot == 'NON':
-      # On est en mode commande par commande, on appelle la methode speciale
-      self.Execute_alone()
-
-   self.make_include(unite=UNITE)
+def INCLUDE(self, UNITE, DONNEE, **args):
+    """Fonction sd_prod pour la macro INCLUDE"""
+    if not (UNITE or DONNEE) or hasattr(self, '_mark'):
+        return
+    self._mark = 1
+    if self.jdc and self.jdc.par_lot == 'NON':
+        # On est en mode commande par commande, on appelle la methode speciale
+        self.Execute_alone()
+    if UNITE:
+        fname = 'fort.%s' % UNITE
+    else:
+        fname = DONNEE
+        if aster_exists:
+            repdex = aster_core.get_option('repdex')
+            fname = osp.join(repdex, fname)
+    try:
+        self.make_include(fname=fname)
+    except Accas.AsException:
+        if aster_exists:
+            UTMESS('F+', 'FICHIER_1', valk=fname)
+            UTMESS('F', 'FICHIER_2')
+        raise
 
 def INCLUDE_context(self,d):
-   """
-       Fonction op_init pour macro INCLUDE
-   """
-   ctxt = self.g_context
-   d.update(ctxt)
+    """Fonction op_init pour macro INCLUDE"""
+    ctxt = self.g_context
+    d.update(ctxt)
 
 def build_include(self,**args):
-   """
-   Fonction ops de la macro INCLUDE appelée lors de la phase de Build
-   """
-   # Pour presque toutes les commandes (sauf FORMULE et POURSUITE)
-   # le numéro de la commande n est pas utile en phase de construction
-   # La macro INCLUDE ne sera pas numérotée (incrément=None)
-   ier=0
-   self.set_icmd(None)
-   icmd=0
-   # On n'execute pas l'ops d'include en phase BUILD car il ne sert a rien.
-   #ier=self.codex.opsexe(self,icmd,-1,1)
-   return ier
+    """Fonction ops de la macro INCLUDE appelée lors de la phase de Build"""
+    # Pour presque toutes les commandes (sauf FORMULE et POURSUITE)
+    # le numéro de la commande n est pas utile en phase de construction
+    # La macro INCLUDE ne sera pas numérotée (incrément=None)
+    ier=0
+    self.set_icmd(None)
+    # On n'execute pas l'ops d'include en phase BUILD car il ne sert a rien.
+    #ier=self.codex.opsexe(self,1)
+    return ier
 
-def build_detruire(self,d):
-   """Fonction op_init de DETRUIRE."""
-   list_co = set()
-   sd = []
-   # par nom de concept (typ=assd)
-   if self["CONCEPT"] != None:
-      for mc in self["CONCEPT"]:
-         mcs = mc["NOM"]
-         if type(mcs) not in (list, tuple):
-            mcs = [mcs]
-         list_co.update(mcs)
-   # par chaine de caractères (typ='TXM')
-   if self["OBJET"] != None:
-      for mc in self["OBJET"]:
-         mcs = mc["CHAINE"]
-         if type(mcs) not in (list, tuple):
-            mcs = [mcs]
-         # longueur <= 8, on cherche les concepts existants
-         for nom in mcs:
+def _detr_list_co(self, context):
+    """Utilitaire pour DETRUIRE"""
+    list_co = set()
+    # par nom de concept (typ=assd)
+    for mc in self['CONCEPT'] or []:
+        list_co.update(force_list(mc["NOM"]))
+    # par chaine de caractères (typ='TXM')
+    for mc in self['OBJET'] or []:
+        # longueur <= 8, on cherche les concepts existants
+        for nom in force_list(mc['CHAINE']):
             assert type(nom) in (str, unicode), 'On attend une chaine de caractères : %s' % nom
             if len(nom.strip()) <= 8:
-               if self.jdc.sds_dict.get(nom) != None:
-                  list_co.add(self.jdc.sds_dict[nom])
-               elif d.get(nom) != None:
-                  list_co.add(d[nom])
+                if self.jdc.sds_dict.get(nom) != None:
+                    list_co.add(self.jdc.sds_dict[nom])
+                elif context.get(nom) != None:
+                    list_co.add(context[nom])
             #else uniquement destruction des objets jeveux
+    return list_co
 
-   for co in list_co:
+def DETRUIRE(self, CONCEPT, OBJET, **args):
+   """Fonction OPS pour la macro DETRUIRE : exécution réelle."""
+   # pour les formules, il ne faut pas vider l'attribut "parent_context" trop tôt
+   for co in _detr_list_co(self, {}):
+       co.supprime(force=True)
+   self.set_icmd(1)
+   ier = self.codex.opsexe(self, 7)
+   return ier
+
+def build_detruire(self, d):
+   """Fonction op_init de DETRUIRE."""
+   # d est le g_context du jdc ou d'une macro
+   #message.debug(SUPERV, "id(d) : %s", id(d))
+   for co in _detr_list_co(self, d):
       assert isinstance(co, ASSD), 'On attend un concept : %s (type=%s)' % (co, type(co))
       nom = co.nom
+      #message.debug(SUPERV, "refcount_1(%s) = %d", nom, sys.getrefcount(co))
       # traitement particulier pour les listes de concepts, on va mettre à None
       # le terme de l'indice demandé dans la liste :
       # nomconcept_i est supprimé, nomconcept[i]=None
@@ -361,8 +376,8 @@ def build_detruire(self,d):
          del d[nom]
       if self.jdc.sds_dict.has_key(nom):
          del self.jdc.sds_dict[nom]
-      #XXX/memoire suppression du concept et de sa partie SD
-      #co.supprime()
+      # "suppression" du concept
+      co.supprime()
       # On signale au parent que le concept n'existe plus après l'étape self
       self.parent.delete_concept_after_etape(self, co)
       # marque comme détruit == non executé
@@ -378,23 +393,20 @@ def build_procedure(self,**args):
     # le numéro de la commande n est pas utile en phase de construction
     # On ne numérote pas une macro PROCEDURE (incrément=None)
     self.set_icmd(None)
-    icmd=0
-    #ier=self.codex.opsexe(self,icmd,-1,3)
+    #ier=self.codex.opsexe(self,3)
     return ier
 
 def build_DEFI_FICHIER(self,**args):
     """
     Fonction ops de la macro DEFI_FICHIER
     """
-    ier=0
     self.set_icmd(1)
-    icmd=0
-    ier=self.codex.opsexe(self,icmd,-1,26)
+    ier = self.codex.opsexe(self, 26)
     return ier
 
 def build_formule(self, d):
     """Fonction ops de FORMULE."""
-    NOM_PARA = self.etape['NOM_PARA']
+    NOM_PARA = self.etape['NOM_PARA'] or ''
     VALE = self.etape['VALE']
     VALE_C = self.etape['VALE_C']
     if type(NOM_PARA) not in (list, tuple):
@@ -405,7 +417,7 @@ def build_formule(self, d):
                " : %s" % repr(para))
     if self.sd == None:
         return
-    if VALE     != None :
+    if VALE != None :
         texte = ''.join(VALE.splitlines())
     elif VALE_C != None :
         texte = ''.join(VALE_C.splitlines())
