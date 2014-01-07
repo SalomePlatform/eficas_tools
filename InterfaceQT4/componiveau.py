@@ -103,7 +103,7 @@ class NIVEAUTreeItem(Objecttreeitem.ObjectTreeItem):
        if isinstance(item.object,commentaire.COMMENTAIRE):
           message = tr("Commentaire supprime")
        else :
-          message = tr("Commande %s supprimee",unicode(itemobject.nom))
+          message = tr("Commande ")+unicode(itemobject.nom)+tr ("  supprimee")
        self.appli.affiche_infos(message)
        return 1
     else:

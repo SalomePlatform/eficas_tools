@@ -121,7 +121,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
          return 0
 
       if self.object.suppentite(itemobject):
-         message = tr("Mot-cle %s supprime"), unicode(itemobject.nom)
+         message = tr("Mot-cle %s supprime")+ unicode(itemobject.nom)
          self.appli.affiche_infos(message)
          return 1
       else:
