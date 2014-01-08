@@ -49,6 +49,14 @@ import math
 # Chargement du module Open TURNS
 from openturns import *
 
+# Fonction verifiant si un echantillon contient des valeurs non valides (NaN)
+def contain_nan_values(sample):
+  for point in sample:
+    for val in point:
+      if math.isnan(val):
+        return True
+  return False
+
 results = {}
 
 """
@@ -337,6 +345,8 @@ class STDGenerateur :
     txt += "# Etude 'Min/Max'\n"
     txt += "# Calcul\n"
     txt += "%s = %s( %s )\n" % (self.variable["outputSample"], self.variable["model"], self.variable["inputSample"])
+    txt += "if contain_nan_values( %s ):\n" % (self.variable["outputSample"])
+    txt += "  raise Exception('Some computations failed')\n"
     txt += "\n"
     return txt
 
@@ -357,6 +367,8 @@ class STDGenerateur :
     txt += "%s = %d\n" % (self.variable["inSize"], size)
     txt += "%s = RandomVector( %s, %s )\n" % (self.variable["outputRandomVector"], self.variable["model"], self.variable["inputRandomVector"])
     txt += "%s = %s.getSample( %s )\n" % (self.variable["outputSample"], self.variable["outputRandomVector"], self.variable["inSize"])
+    txt += "if contain_nan_values( %s ):\n" % (self.variable["outputSample"])
+    txt += "  raise Exception('Some computations failed')\n"
     return txt
 
   def InputDistribution (self):
@@ -611,6 +623,8 @@ class STDGenerateur :
     txt += "%s = %d\n" % (self.variable["inSize"], size)
     txt += "%s = %s.getSample( %s )\n" % (self.variable["inputSample"], self.variable["inputRandomVector"], self.variable["inSize"])
     txt += "%s = %s( %s )\n" % (self.variable["outputSample"], self.variable["model"], self.variable["inputSample"])
+    txt += "if contain_nan_values( %s ):\n" % (self.variable["outputSample"])
+    txt += "  raise Exception('Some computations failed')\n"
     txt += "\n"
 
     if ( self.DictMCVal.has_key( 'EmpiricalMean' ) ):
