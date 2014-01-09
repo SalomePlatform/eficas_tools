@@ -554,12 +554,16 @@ class PythonGenerator:
           try :
             k=liste[indice+nbrColonnes]
             for l in range(nbrColonnes) :
-                textformat=textformat+liste[indice]+","
+                texteVariable=liste[indice].split("=")[0]
+                if ( liste[indice][-1]==')' and texteVariable[-1] !=')') : texteVariable=texteVariable+')'
+                textformat=textformat+texteVariable+","
                 indice=indice+1
             textformat=textformat+"\n"
           except :
             while ( indice < len(liste) ) :
-                textformat=textformat+liste[indice]+","
+                texteVariable=liste[indice].split("=")[0]
+                if ( liste[indice][-1]==')' and texteVariable[-1] !=')') : texteVariable=texteVariable+')'
+                textformat=textformat+texteVariable+","
                 indice=indice+1
             textformat=textformat+"\n"
       except :
