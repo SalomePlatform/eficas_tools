@@ -700,7 +700,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          if hasattr(self,'fichier_unite') : 
             self.parent.record_unit(self.fichier_unite,self)
 
-  def get_file_memo(self,unite=None,fic_origine=''):
+  def get_file_memo(self,unite=None,fname=None,fic_origine=''):
       """Retourne le nom du fichier et le source correspondant a l'unite unite
          Initialise en plus recorded_units
       """
@@ -716,7 +716,13 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       if self.parent.recorded_units.has_key(unite):
          f,text,units=self.parent.recorded_units[unite]
       elif self.jdc :
-         f,text=self.jdc.get_file(unite=unite,fic_origine=fic_origine)
+         if fname:
+             if not os.path.exists(fname):
+                raise AsException(fname + tr(" n'est pas un fichier existant"))
+             f = fname
+             text = open(fname, 'rb').read()
+         else:
+             f,text=self.jdc.get_file(unite=unite,fic_origine=fic_origine)
       else:
          f,text=None,None
 
@@ -974,7 +980,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
-  def make_include(self,unite=None):
+  def make_include(self,unite=None,fname=None):
       """
           Inclut un fichier dont l'unite logique est unite
           Cette methode est appelee par la fonction sd_prod de la macro INCLUDE
@@ -986,11 +992,11 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # On supprime l'attribut unite qui bloque l'evaluation du source de l'INCLUDE
       # car on ne s'appuie pas sur lui dans EFICAS mais sur l'attribut fichier_ini
       # Si unite n'a pas de valeur, l'etape est forcement invalide. On peut retourner None
-      if not unite : return
+      if not unite and not fname: return
 
       if not hasattr(self,'fichier_ini') : 
          # Si le fichier n'est pas defini on le demande
-         f,text=self.get_file_memo(unite=unite,fic_origine=self.parent.nom)
+         f,text=self.get_file_memo(unite=unite,fname=fname,fic_origine=self.parent.nom)
          # On memorise le fichier retourne
          self.fichier_ini  = f
          self.fichier_text = text
