@@ -21,6 +21,7 @@
 """
 # Modules Python
 import sys
+import os.path as osp
 import traceback,types,string
 
 # Modules Eficas
@@ -159,7 +160,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # Erreurs dans l'INCLUDE. On garde la memoire du fichier 
        # mais on n'insere pas les concepts
        # On retablit l'etape courante step
-       #print j.cr
+       print j.cr
        #print j.isvalid()
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(step)
@@ -526,6 +527,27 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        
        try :
          contexte = self.get_contexte_jdc(None,text)
+       except Exception:
+         pass
+       index=self.jdc.etapes.index(self)
+       for e in self.etapes:
+           e.niveau=self.niveau
+       self.jdc.etapes=self.jdc.etapes[:index+1]+self.etapes+self.jdc.etapes[index+1:]
+       self.g_context={}
+       self.etapes=[]
+       self.jdc_aux=None
+       CONTEXT.unset_current_step()
+
+  def build_includeInclude(self,text):
+    import Extensions.jdc_include
+    self.JdC_aux=Extensions.jdc_include.JdC_include
+    # un include partage la table des unites avec son parent (jdc)
+    self.build_jdcauxInclude(text)
+
+  def build_jdcauxInclude(self,text):
+       
+       try :
+         contexte = self.get_contexte_jdc(None,text)
        except EficasException:
          pass
        index=self.jdc.etapes.index(self)
@@ -700,7 +722,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          if hasattr(self,'fichier_unite') : 
             self.parent.record_unit(self.fichier_unite,self)
 
-  def get_file_memo(self,unite=None,fname=None,fic_origine=''):
+  def get_file_memo(self, unite=None, fname=None, fic_origine=''):
       """Retourne le nom du fichier et le source correspondant a l'unite unite
          Initialise en plus recorded_units
       """
@@ -717,19 +739,19 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          f,text,units=self.parent.recorded_units[unite]
       elif self.jdc :
          if fname:
-             if not os.path.exists(fname):
+             if not osp.exists(fname):
                 raise AsException(fname + tr(" n'est pas un fichier existant"))
              f = fname
              text = open(fname, 'rb').read()
          else:
-             f,text=self.jdc.get_file(unite=unite,fic_origine=fic_origine)
+             f,text=self.jdc.get_file(unite=unite, fic_origine=fic_origine)
       else:
          f,text=None,None
 
       self.recorded_units=units
       if f is None and self.jdc.appli:
          self.jdc.appli.affiche_alerte(tr("Erreur lors de l'evaluation du fichier inclus"),
-			   message= tr("Ce fichier ne sera pas pris en compte\nLe fichier associe n'est pas defini"))
+               message= tr("Ce fichier ne sera pas pris en compte\nLe fichier associe n'est pas defini"))
       return f,text
 
   def update_context(self,d):
@@ -808,7 +830,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          if fichier  == str("") : 
            self.fichier_ini="badfile"
            self.fichier_text=""
-	   self.fichier_err=tr("Le fichier n est pas defini")
+           self.fichier_err=tr("Le fichier n est pas defini")
            self.parent.record_unit(999,self)
            try :
               MCFils=self.get_child('FileName')
@@ -873,7 +895,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          if fichier  == str("") : 
            self.fichier_ini="badfile"
            self.fichier_text=""
-	   self.fichier_err=tr("Le fichier n est pas defini")
+           self.fichier_err=tr("Le fichier n est pas defini")
            self.parent.record_unit(999,self)
            try :
               MCFils=self.get_child('FileName')
@@ -980,7 +1002,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
-  def make_include(self,unite=None,fname=None):
+  def make_include(self, unite=None, fname=None):
       """
           Inclut un fichier dont l'unite logique est unite
           Cette methode est appelee par la fonction sd_prod de la macro INCLUDE
@@ -992,11 +1014,12 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # On supprime l'attribut unite qui bloque l'evaluation du source de l'INCLUDE
       # car on ne s'appuie pas sur lui dans EFICAS mais sur l'attribut fichier_ini
       # Si unite n'a pas de valeur, l'etape est forcement invalide. On peut retourner None
-      if not unite and not fname: return
+      if not unite and not fname:
+          return
 
       if not hasattr(self,'fichier_ini') : 
          # Si le fichier n'est pas defini on le demande
-         f,text=self.get_file_memo(unite=unite,fname=fname,fic_origine=self.parent.nom)
+         f,text=self.get_file_memo(unite=unite, fname=fname, fic_origine=self.parent.nom)
          # On memorise le fichier retourne
          self.fichier_ini  = f
          self.fichier_text = text

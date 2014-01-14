@@ -309,7 +309,14 @@ def INCLUDE(self, UNITE, DONNEE, **args):
             repdex = aster_core.get_option('repdex')
             fname = osp.join(repdex, fname)
     try:
-        self.make_include(fname=fname)
+        if aster_exists:
+            self.make_include(fname=fname)
+        else:
+            # dans eficas
+            if UNITE:
+                self.make_include(unite=UNITE)
+            else:
+                self.make_include(fname=fname)
     except Accas.AsException:
         if aster_exists:
             UTMESS('F+', 'FICHIER_1', valk=fname)

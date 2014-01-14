@@ -218,7 +218,7 @@ class CardProtocol(PProtocol):
         if length < min or length >max:
             #raise ValError(ufmt(_(u"Nombre d'arguments de %s incorrect (min = %s, max = %s)"),
             #               repr(obj), min, max))
-            raise ValError(tr("Nombre incorrect d'arguments de ")+repr(obj)+"min = "+repr(min)+" max ="+rep(max))
+            raise ValError(tr("Nombre incorrect d'arguments de ")+repr(obj)+"min = "+repr(min)+" max ="+repr(max))
         return obj
 
 class IntoProtocol(PProtocol):
