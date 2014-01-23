@@ -36,7 +36,7 @@ class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False,langue='fr'):
+    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False,langue='fr',ssIhm=False):
         """
         Constructor
         """
@@ -48,6 +48,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.VERSION_EFICAS="Eficas QT4 "+version
         self.salome=salome
         self.ihm="QT"
+        self.ssIhm=ssIhm
         self.top = self    #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
         self.code=code
@@ -56,7 +57,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.recent =  QStringList()
         self.ficRecents={}
         self.listeAEnlever=[]
-        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP']
+        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelSara']
 
         if self.salome:
           import Accas
@@ -82,6 +83,11 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.ouvreFichiers()
         self.setWindowTitle(self.VERSION_EFICAS)
+
+    #def eventFilter(QObject watched, QEvent e) :
+    #def eventFilter(watched, e) :
+    #    print "hhhhhhhhhhhhhhhhhhhhhh"
+    #    return QMainWindow.eventFilter(watched, e)
 
     def definitCode(self,code,ssCode) :
         self.code=code
