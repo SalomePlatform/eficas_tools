@@ -24,7 +24,7 @@ from Extensions.i18n import tr
 from Noyau.N_CR import CR
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.9.8.1.2.1.2.4 2013-03-25 15:47:45 pnoyret Exp $"
+__Id__="$Id: analyse_catalogue.py,v 1.9.8.1.2.1.2.5 2013-04-09 14:04:43 pnoyret Exp $"
 __version__="$Name: V7_main $"
 #
 l_noms_commandes = ['OPER','PROC','MACRO','FORM']
