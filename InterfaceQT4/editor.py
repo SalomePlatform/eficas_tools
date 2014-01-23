@@ -880,13 +880,10 @@ class JDCEditor(QSplitter):
 
         newName = None
         fn = self.fichier
-        print "jkkkkkkjjjjjjjjjjjjjllllllllllll"
-        print  self.fichier , saveas
         if self.fichier is None or saveas:
           if path is None:
              path=self.CONFIGURATION.savedir
           bOK, fn=self.determineNomFichier(path,extension)
-          print  bOK, fn
           if bOK == 0 : return (0, None)
           if fn == None : return (0, None)
           if fn.isNull(): return (0, None)
