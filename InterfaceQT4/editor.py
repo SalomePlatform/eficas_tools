@@ -158,11 +158,11 @@ class JDCEditor(QSplitter):
                 self.jdc = None
                 qApp.restoreOverrideCursor()
                 self.affiche_infos(tr("Erreur fatale au chargement de %s",str(fichier)),Qt.red)
-                QMessageBox.critical( self, tr("Erreur fatale au chargement d'un fichier"), txt_exception)
+                if (self.appliEficas.ssIhm == False) : QMessageBox.critical( self, tr("Erreur fatale au chargement d'un fichier"), txt_exception)
             else:
                 comploader.charger_composants("QT")
                 jdc_item=Objecttreeitem.make_objecttreeitem( self, "nom", self.jdc )
-                if (not self.jdc.isvalid()) and (not self.nouveau) :
+                if (not self.jdc.isvalid()) and (not self.nouveau) and (self.appliEficas.ssIhm == False):
                     self.viewJdcRapport()
         if jdc_item:
             self.tree = browser.JDCTree( jdc_item,  self )
@@ -244,7 +244,7 @@ class JDCEditor(QSplitter):
              if p.text=="" : self.nouveau=1
              pareil,texteNew=self.verifieCHECKSUM(p.text)
              #if texteNew == ""
-             if pareil == False and (self.QWParent != None) :
+             if pareil == False and (self.appliEficas.ssIhm == False) :
                 QMessageBox.warning( self, tr("fichier modifie"),tr("Attention! fichier change hors EFICAS"))
              p.text=texteNew
              memeVersion,texteNew=self.verifieVersionCataDuJDC(p.text)
@@ -255,7 +255,9 @@ class JDCEditor(QSplitter):
                 self.affiche_infos("Erreur a la conversion",Qt.red)
         else :
             self.affiche_infos("Type de fichier non reconnu",Qt.red)
-            QMessageBox.critical( self, tr("Type de fichier non reconnu"),tr("EFICAS ne sait pas ouvrir le type de fichier %s" ,self.appliEficas.format_fichier_in))
+            if self.appliEficas.ssIhm == False:
+                    QMessageBox.critical( self, tr("Type de fichier non reconnu"),
+                    tr("EFICAS ne sait pas ouvrir le type de fichier %s" ,self.appliEficas.format_fichier_in))
             return None
 
         CONTEXT.unset_current_step()
@@ -878,10 +880,13 @@ class JDCEditor(QSplitter):
 
         newName = None
         fn = self.fichier
+        print "jkkkkkkjjjjjjjjjjjjjllllllllllll"
+        print  self.fichier , saveas
         if self.fichier is None or saveas:
           if path is None:
              path=self.CONFIGURATION.savedir
           bOK, fn=self.determineNomFichier(path,extension)
+          print  bOK, fn
           if bOK == 0 : return (0, None)
           if fn == None : return (0, None)
           if fn.isNull(): return (0, None)
@@ -910,9 +915,9 @@ class JDCEditor(QSplitter):
                self.appliEficas.addJdcInSalome( self.fichier)
         return (1, self.fichier)
 #
-    #---------------------------------#
-    def saveFileAs(self, path = None):
-    #---------------------------------#
+    #----------------------------------------------#
+    def saveFileAs(self, path = None,fileName=None):
+    #----------------------------------------------#
         """
         Public slot to save a file with a new name.
 
@@ -920,7 +925,11 @@ class JDCEditor(QSplitter):
         @return tuple of two values (boolean, string) giving a success indicator and
             the name of the saved file
         """
-        return self.saveFile(path,1)
+        print fileName
+        if fileName == None : return self.saveFile(path,1)
+        self.fichier = fileName
+        self.modified = 1
+        return self.saveFile()
 
 
 
