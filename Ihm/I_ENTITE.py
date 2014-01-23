@@ -19,6 +19,7 @@
 #
 _no=0
 
+import Accas
 def number_entite(entite):
    """
       Fonction qui attribue un numero unique a tous les objets du catalogue
@@ -78,3 +79,93 @@ class ENTITE:
             #   % (parent, tuple(mcs.intersection(mcbloc)))
       return mcs
 
+  def enregistreXML(self,root,catalogueXml):
+      import xml.etree.ElementTree as ET
+      import types
+      moi=ET.SubElement(root,str(self.__class__))
+      nom=ET.SubElement(moi,'nom')
+      nom.text=self.nom
+
+      if hasattr(self,'validators') and (self.validators != () and self.validators != None):
+         valid=ET.SubElement(moi,'validators')
+         valid.text= str(self.validators.__class__)
+         catalogueXml.validatorsUtilises.append(self.validators)
+
+      if hasattr(self,'regles') and (self.regles !=() and self.regles != None):
+         for regle in self.regles:
+             regle.enregistreXML(moi,catalogueXml)
+         catalogueXml.reglesUtilisees.append(self.regles)
+
+      if ((self.get_docu() !="" and self.get_docu() !=None) or  \
+          (self.fr != "" and self.fr != None) or \
+          (self.ang != "" and self.ang != None) ):
+                dico={}
+                if self.get_docu() !=None : dico["docu"]=self.get_docu()
+                if self.fr != None        : dico["fr"]=unicode(self.fr,"iso-8859-1")
+                if self.ang != None       : dico["ang"]=self.ang
+                doc=ET.SubElement(moi,'doc')
+                doc.attrib=dico
+
+      if ((self.get_sug() !=None) or  \
+          (hasattr(self,'defaut') and (self.defaut != None) and (self.defaut != 'None'))) :
+                # il faut ajouter des sug dans le catalogue
+                # les attributs sont  toujours du texte 
+                dico={}
+                if (self.defaut != None) and (self.defaut != 'None') :
+                    if isinstance(self.defaut,str ) : dico["defaut"]=unicode(self.defaut,"iso-8859-1")
+                    else :dico["defaut"]=str(self.defaut)
+                if self.get_sug() !=None:
+                    if isinstance(self.get_sug(),str ) : dico["sug"]=unicode(self.get_sug(),"iso-8859-1")
+                    else :dico["sug"]=str(self.get_sug())
+                
+                doc=ET.SubElement(moi,'ValeurDef')
+                doc.attrib=dico
+
+      dico={}
+      if hasattr(self,'into') and self.into!=None: dico['into']=str(self.into)
+      if hasattr(self,'max') : dico['max']=str(self.max)
+      if hasattr(self,'min') : dico['min']=str(self.min)
+      if dico != {} :
+           PV=ET.SubElement(moi,'PlageValeur')
+           PV.attrib=dico
+
+      dico={}
+      if hasattr(self,'val_max') : dico['val_max']=str(self.val_max)
+      if hasattr(self,'val_min') : dico['val_min']=str(self.val_min)
+      if dico != {} :
+           Card=ET.SubElement(moi,'Cardinalite')
+           Card.attrib=dico
+
+      dico={}
+      if hasattr(self,'reentrant') and self.reentrant not in ('f','n') : dico['reentrant']=str(self.reentrant)
+      if hasattr(self,'position') and self.position != "local": dico['position']=str(self.position)
+      if hasattr(self,'homo') and self.homo != 1 : dico['homogene']=str(self.homo)
+      if hasattr(self,'statut') : dico['statut']=str(self.statut)
+      if hasattr(self,'repetable') : dico['repetable']=str(self.repetable)
+      if dico != {} :
+           pos=ET.SubElement(moi,'situation')
+           pos.attrib=dico
+
+      if hasattr(self,'type') and self.type != ():
+         typeAttendu=ET.SubElement(moi,'typeAttendu')
+         l=[]
+         for t in self.type:
+             if type(t) == types.TypeType : l.append(t.__name__)
+             else : l.append(t)
+         typeAttendu.text=str(l)
+
+      if hasattr(self,'sd_prod') and self.sd_prod != () and self.sd_prod !=None:
+         typeCree=ET.SubElement(moi,'typeCree')
+         typeCree.text=str(self.sd_prod.__name__) 
+ 
+      if hasattr(self,'op') and self.op !=None  : 
+         subRoutine=ET.SubElement(moi,'subRoutine')
+         subRoutine.text=str(self.op)
+
+      if hasattr(self,'proc') and self.proc != None : 
+         construction=ET.SubElement(moi,'Construction')
+         construction.text=self.proc.uri
+
+      for nomFils, fils in self.entites.items() :
+          fils.enregistreXML(moi,catalogueXml)
+      
