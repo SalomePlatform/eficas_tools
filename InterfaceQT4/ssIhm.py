@@ -19,6 +19,28 @@
 #
 #    permet de lancer  EFICAS en n affichant rien
 
+class appliEficasSSIhm:
+   def __init__ (self,code):
+       self.VERSION_EFICAS="Sans Ihm"
+       self.code=code
+       self.ssCode=None
+       self.salome=None
+       self.top=None
+       self.indice=0
+       self.dict_reels={}
+       self.listeAEnlever=[]
+
+
+       name='prefs_'+self.code
+       prefsCode=__import__(name)
+
+       self.repIni=prefsCode.repIni
+       self.format_fichier="python" #par defaut
+
+       nameConf='configuration_'+self.code
+       configuration=__import__(nameConf)
+       self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
+        
 class QWParentSSIhm:
    def __init__(self,code,appliEficas,version_code,ssCode=None):
         self.ihm="QT"
@@ -31,4 +53,5 @@ class QWParentSSIhm:
         else :
            self.format_fichier="python" #par defaut
         self.appliEficas=appliEficas
+        self.appliEficas.ssCode=ssCode
 
