@@ -176,17 +176,20 @@ class JDCEditor(QSplitter):
         """
         CONTEXT.unset_current_step()
 
-        jdc=self.readercata.cata[0].JdC( procedure ="",
+        texte=""
+        if self.code == "CARMELCND" : texte=self._newJDCCND()
+        jdc=self.readercata.cata[0].JdC( procedure =texte,
                                          appli=self,
                                          cata=self.readercata.cata,
                                          cata_ord_dico=self.readercata.cata_ordonne_dico,
                                          rep_mat=self.CONFIGURATION.rep_mat
                                         )
+        jdc.lang    = self.appli.langue
+        if self.code == "CARMELCND" : return jdc
         if units is not None:
            jdc.recorded_units=units
            jdc.old_recorded_units=units
         jdc.analyse()
-        jdc.lang    = self.appli.langue
         return jdc
 
     #--------------------------------#
@@ -1051,10 +1054,40 @@ class JDCEditor(QSplitter):
         ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
         return ligne
 
-if __name__=='__main__':
+
+    #---------------------------#
+    def _newJDCCND(self):
+    #---------------------------#
+      extensions=tr('Fichiers Med (*.med);;''Tous les Fichiers (*)')
+      QMessageBox.information( self,
+                      tr("Fichier Med"),
+                      tr("Veuillez selectionner un fichier Med"))
+      QSfichier = QFileDialog.getOpenFileName(self.appliEficas,
+                        caption='Fichier Med',
+                        filter=extensions)
+
+      fichier=str(QSfichier.toLatin1())
+      from acquiertGroupes import getGroupes
+      erreur,listeGroupes=getGroupes(fichier)
+      if erreur != "" : print "a traiter"
+      texteSources=""
+      texteCond=""
+      texteNoCond=""
+      texteVcut=""
+      for groupe in listeGroupes :
+          if groupe[0:8]=='CURRENT_': texteSources +=groupe[8:]+"=SOURCE();\n"
+          if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"
+          if groupe[0:7]=='NOCOND_':  texteNoCond  +=groupe[7:]+"=NOCOND();\n"
+          #if groupe[0:5]=='VCUT_':    texteVcut    +=groupe[5:]+"=VCUT();\n"
+          if groupe[0:5]=='VCUT_':    texteVcut    +='V_'+groupe[5:]+"=VCUT();\n"
+      texte=texteSources+texteCond+texteNoCond+texteVcut
+      return texte
+
+if __name__ == "__main__":
     self.code='ASTER'
     name='prefs_'+prefs.code
     prefsCode=__import__(name)
+
 
     if hasattr(prefsCode,'encoding'):
        # Hack pour changer le codage par defaut des strings
