@@ -105,7 +105,8 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         from Accas import SalomeEntry
         enable_salome_selection = self.editor.salome and \
             (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or \
-             (isinstance(mctype, types.ClassType) and issubclass(mctype, SalomeEntry)))
+             (isinstance(mctype, types.ClassType) and issubclass(mctype, SalomeEntry)) or \
+             (isinstance(mc.type,types.TupleType) and "(med)" in mc.type[1] ))
         if not enable_salome_selection:
            self.BSalome.close()
         if not(('grma' in repr(mctype)) or ('grno' in repr(mctype))) or not(self.editor.salome):
@@ -260,6 +261,20 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
         if kwType in ("GROUP_NO","GROUP_MA"):
            selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
+
+        mc = self.node.item.get_definition()
+
+        if  (isinstance(mc.type,types.TupleType) and "(med)" in mc.type[1] ) :
+           selection, commentaire = self.appliEficas.selectMeshFile(editor=self.editor)
+           print selection, commentaire
+           if commentaire != "" : 
+                  QMessageBox.warning( None,
+                  tr("Export Med vers Fichier "),
+                  tr("Impossibilite d exporter le Fichier"),)
+                  return
+           else :
+                  self.lineEditVal.setText(QString(selection))
+                  return
 
         from Accas import SalomeEntry
         if isinstance(kwType, types.ClassType) and issubclass(kwType, SalomeEntry):
