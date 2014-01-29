@@ -66,7 +66,7 @@ class MyEficas( qtEficas.Appli ):
         """
 
         dictPathCode={'ASTER':'Aster','OPENTURNS_STUDY':'Openturns_Study','CARMEL3D':'Carmel3D',
-                      'OPENTURNS_WRAPPER':'Openturns_Wrapper','MAP':'MAP','SEP':'Sep'}
+                      'OPENTURNS_WRAPPER':'Openturns_Wrapper','MAP':'MAP','SEP':'Sep', 'ZCRACKS':'ZCracks'}
         if code in dictPathCode.keys():
             pathCode=dictPathCode[code]
             sys.path[:0]=[os.path.join(eficasConfig.eficasPath,pathCode)]
@@ -181,6 +181,36 @@ class MyEficas( qtEficas.Appli ):
        except :
          logger.debug(' isMeshGroup pb avec ( entry = %s ) ' %entry )          
        return result
+
+    #-------------------------------------
+    def isMesh( self,entry):
+    #-------------------------------------
+       result=False
+       import SMESH
+       try:
+         monObjet =self.getCORBAObjectInComponent(entry,"SMESH") 
+         if monObjet != None :                                    # selection d'un groupe de SMESH
+            if  monObjet._narrow(SMESH.SMESH_Mesh):
+                result = True 
+       except :
+         logger.debug(' isMesh pb avec ( entry = %s ) ' %entry )          
+       return result
+
+    #-------------------------------------
+    def getMesh( self,entry):
+    #-------------------------------------
+       meshObject=None
+       import SMESH
+       #try:
+       if 1 :
+         monObjet =self.getCORBAObjectInComponent(entry,"SMESH") 
+         if monObjet != None :                                    # selection d'un groupe de SMESH
+            meshObject=monObjet._narrow(SMESH.SMESH_Mesh)
+       #except :
+       #  logger.debug('  pb avec ( entry = %s ) ' %entry )          
+       return meshObject
+
+    #-------------------------------------
 
     #-------------------------------------
     def isShape( self,entry):
@@ -442,6 +472,33 @@ class MyEficas( qtEficas.Appli ):
         #print "=================== selectGroupFromSalome ", names, msg
         return names, msg                
 
+    #----------------------------------------------------------------
+    def selectMeshFile( self,  editor=None):
+    #----------------------------------------------------------------
+        """
+        """
+        try :            
+            atLeastOneStudy = self.editor.study
+            if not atLeastOneStudy: return "", 'Pas d etude'
+
+           # recupere toutes les selections de l'utilsateur dans l'arbre Salome
+            entries = salome.sg.getAllSelected()
+            nbEntries = len( entries )
+            if nbEntries != 1 : return "", 'select a Mesh'
+            entry = entries[0]
+            if not self.isMesh(entry): return "", 'select a Mesh'
+            mySO=self.editor.study.FindObjectID(entry)
+            print mySO
+            ok, anAttr = mySO.FindAttribute("AttributeName")
+            if not ok :  return "" ,'Pb de nommage'
+            meshFile="/tmp/"+str(anAttr.Value())+'.med'
+            myMesh=self.getMesh(entry) 
+            if myMesh==None : return "" ,'Pb dans la selection '
+            myMesh.ExportMED( meshFile, 0)
+            return meshFile ,""
+        except :
+           return "", "Pb dans la selection "
+                     
     #----------------------------------------------------------------
     def selectEntryFromSalome( self, kwType = None, editor=None):
     #----------------------------------------------------------------
