@@ -27,11 +27,12 @@ from med.medfamily import *
 
 def getGroupes(filename,debug=0) :
     listeGroupes=[]
+    maa=""
     
     try :
         fid = MEDfileOpen(filename,MED_ACC_RDONLY)
     except :
-        return ("Pb a la lecture du fichier", listeGroupes)
+        return ("Pb a la lecture du fichier", listeGroupes,maa)
 
    
     # /* Lecture des infos concernant le premier maillage */
@@ -76,7 +77,7 @@ def getGroupes(filename,debug=0) :
    
    
     MEDfileClose(fid)
-    return ("",listeGroupes)
+    return ("",listeGroupes,maa)
 
 if __name__ == "__main__":
     filename="/home/A96028/Carmel/Pascale/Domaine.med"
