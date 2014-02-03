@@ -38,5 +38,5 @@ image=1
 
 #
 catalogues=(
-   ('monCode','default',os.path.join(repIni,'monCode_Cata.py'),'Zcrack','python'),
+   ('monCode','default',os.path.join(repIni,'monCode_Cata.py'),'ZCRACKS','python'),
 )

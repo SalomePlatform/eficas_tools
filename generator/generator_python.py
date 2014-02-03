@@ -470,15 +470,18 @@ class PythonGenerator:
       return l
 
 
-   def format_item(self,valeur,etape):
-      if type(valeur) == types.FloatType :
+   def format_item(self,valeur,etape,obj):
+      if (type(valeur) == types.FloatType or 'R' in obj.definition.type) and not(isinstance(valeur,Accas.PARAMETRE)) :
          # Pour un flottant on utilise str
          # ou la notation scientifique
+         # On ajoute un . si il n y en a pas dans la valeur
          s = str(valeur)
+         if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : s=s+'.0'
          clefobj=etape.get_sdname()
          if self.appli.appliEficas and self.appli.appliEficas.dict_reels.has_key(clefobj):
            if self.appli.appliEficas.dict_reels[clefobj].has_key(valeur):
              s=self.appli.appliEficas.dict_reels[clefobj][valeur]
+         
       elif type(valeur) == types.StringType :
          if valeur.find('\n') == -1:
             # pas de retour chariot, on utilise repr
@@ -532,41 +535,42 @@ class PythonGenerator:
          else :
             obj.valeurFormatee=[]
             for val in obj.valeur :
-               s =s +self.format_item(val,obj.etape) + ','
-               obj.valeurFormatee.append(self.format_item(val,obj.etape))
+               s =s +self.format_item(val,obj.etape,obj) + ','
+               obj.valeurFormatee.append(self.format_item(val,obj.etape,obj))
             if len(obj.valeur) > 1:
                s = '(' + s + '),'
          if obj.nbrColonnes() :
-            s=self.formatColonnes(obj.nbrColonnes(),str(obj.valeur))
+            s=self.formatColonnes(obj.nbrColonnes(),obj.valeur,obj)
       else :
          obj.valeurFormatee=obj.valeur
-         s=self.format_item(obj.valeur,obj.etape) + ','
+         s=self.format_item(obj.valeur,obj.etape,obj) + ','
       return s
 
 
-   def formatColonnes(self,nbrColonnes,text):
-      try :
-      #if 1 == 1 :
-        liste=text.split(",")
+   def formatColonnes(self,nbrColonnes,listeValeurs,obj):
+      #try :
+      print listeValeurs
+      if 1 == 1 :
         indice=0
-        textformat=""
-        while ( indice < len(liste) ) :
+        textformat="("
+        while ( indice < len(listeValeurs) ) :
           try :
-            k=liste[indice+nbrColonnes]
+          #if 1 :
             for l in range(nbrColonnes) :
-                texteVariable=liste[indice].split("=")[0]
-                if ( liste[indice][-1]==')' and texteVariable[-1] !=')') : texteVariable=texteVariable+')'
-                textformat=textformat+texteVariable+","
+                texteVariable=self.format_item(listeValeurs[indice],obj.etape,obj)
+                textformat=textformat+texteVariable+" ,"
                 indice=indice+1
             textformat=textformat+"\n"
           except :
-            while ( indice < len(liste) ) :
-                texteVariable=liste[indice].split("=")[0]
-                if ( liste[indice][-1]==')' and texteVariable[-1] !=')') : texteVariable=texteVariable+')'
-                textformat=textformat+texteVariable+","
+          #else :
+            while ( indice < len(listeValeurs) ) :
+                texteVariable=self.format_item(listeValeurs[indice],obj.etape,obj)
+                textformat=textformat+texteVariable+", "
                 indice=indice+1
             textformat=textformat+"\n"
-      except :
-      #else :
-         textformat=text
+        textformat=textformat[0:-1]+"),\n"
+      #except :
+      else :
+         textformat=str(obj.valeur)
+      print textformat
       return textformat
