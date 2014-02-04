@@ -312,21 +312,23 @@ class JDCEditor(QSplitter):
         w.show()
     #
 
-    def __generateMapFilename(self, prefix, suffix):
+    #----------------------------------------------#
+    def __generateTempFilename(self, prefix, suffix):
+    #----------------------------------------------#
         import tempfile
         (fd, filename) = tempfile.mkstemp(prefix=prefix, suffix=suffix)
         os.close(fd)
         return filename
     #
 
-    #--------------------------------#
-    def _viewTextExecute(self, txt):
-    #--------------------------------#
+    #----------------------------------------------#
+    def _viewTextExecute(self, txt, prefix, suffix):
+    #----------------------------------------------#
         self.w = qtCommun.ViewText( self.QWParent )
         self.w.setWindowTitle( "execution" )
         self.monExe=QProcess(self.w)
         pid=self.monExe.pid()
-        nomFichier = self.__generateMapFilename(prefix = "map_run", suffix = ".sh")
+        nomFichier = self.__generateTempFilename(prefix = "map_run", suffix = ".sh")
         f=open(nomFichier,'w')
         f.write(txt)
         f.close()
@@ -680,15 +682,16 @@ class JDCEditor(QSplitter):
                     .arg(unicode(fn)).arg(str(why)))
             return 0
 
-    #-----------------------------#
-    def get_text_JDC(self,format):
-    #-----------------------------#
+    #-------------------------------------#
+    def get_text_JDC(self,format,pourRun=0):
+    #-------------------------------------#
       if self.code == "MAP" and not(generator.plugins.has_key(format)): format = "MAP"
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
          try :
             jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+            if pourRun : jdc_formate=self.generator.textePourRun
          except ValueError,e:
             QMessageBox.critical(self, tr("Erreur a la generation"),str(e))
          if not self.generator.cr.estvide():
@@ -707,6 +710,9 @@ class JDCEditor(QSplitter):
     def run(self):
     #------------#
       #
+      if self.code == "ZCRACKS" :
+         self.runZCRACKS()
+         return
       if not(self.jdc.isvalid()):
          QMessageBox.critical( self, tr( "Execution impossible "),tr("le JDC doit etre valide pour une execution MAP"))
          return
@@ -714,7 +720,7 @@ class JDCEditor(QSplitter):
          QMessageBox.critical( self, tr("Execution impossible "),tr("le JDC doit contenir un et un seul composant"))
          return
       if self.modified or self.fichier==None  :
-         self.fichierMapInput = self.__generateMapFilename(prefix = "map_run", suffix = ".map")
+         self.fichierMapInput = self.__generateTempFilename(prefix = "map_run", suffix = ".map")
          texte=self.get_text_JDC("MAP")
          self.writeFile( self.fichierMapInput, txt = texte)
       else :
@@ -734,10 +740,30 @@ class JDCEditor(QSplitter):
           textePython=(command + " run -n "+composant +" -i "+self.fichierMapInput)
 
           #textePython="ls -l"
-          self._viewTextExecute( textePython)
+          self._viewTextExecute( textePython,"map_run",".sh")
       except Exception, e:
           print traceback.print_exc()
 
+    #-------------------#
+    def runZCRACKS(self):
+    #-------------------#
+      if not(self.jdc.isvalid()):
+         QMessageBox.critical( self, tr( "Execution impossible "),tr("le JDC doit etre valide pour une execution "))
+         return
+      #if self.modified or self.fichier==None  :
+      if 1:
+         self.fichierZcracksInput = self.__generateTempFilename(prefix = "zcracks_run", suffix = ".z7p")
+         texte=self.get_text_JDC("ZCRACKS",pourRun=1)
+         self.writeFile( self.fichierZcracksInput, txt = texte)
+      else :
+         self.fichierZcracksInput=self.fichier
+      try :
+          #commande ="Zrun -zp "
+          commande="more "
+          textePython=(commande + self.fichierZcracksInput)
+          self._viewTextExecute( textePython,"run_zcracks",".sh")
+      except Exception, e:
+          print traceback.print_exc()
 
     #-----------------------------------------------------#
     def determineNomFichier(self,path,extension):
@@ -820,7 +846,7 @@ class JDCEditor(QSplitter):
         self.monNomFichierInput=fn
 
         if not hasattr(self, 'fichierMapInput') or not self.fichierMapInput or not os.path.exists(self.fichierMapInput):
-            self.fichierMapInput = self.__generateMapFilename(prefix = "map_run", suffix = ".map")
+            self.fichierMapInput = self.__generateTempFilename(prefix = "map_run", suffix = ".map")
             texte=self.get_text_JDC("MAP")
             self.writeFile( self.fichierMapInput, txt = texte)
 
@@ -872,6 +898,8 @@ class JDCEditor(QSplitter):
             the name of the saved file
         """
 
+#PNPNPNPNPN
+        self.modified=1
         if not self.modified and not saveas:
             return (0, None)      # do nothing if text wasn't changed
 
@@ -980,8 +1008,6 @@ class JDCEditor(QSplitter):
         monItem=itemApres
         etape=monItem.item.object
 
-#        texte="sansnom=ZONE(NOEUDS=(_F(NOM='N1', X=0.0,), _F(NOM='N2', X=0.19,),), ELEMENTS=(_F(NOM='E1', DEBUT='N1', FIN='N2', RAFFINAGE='NON', MATERIAU=MAT_R01, SECTION_MASSE=_F(TYPE_SECTION='CONSTANTE', DIAM_EXTERN_DEBUT=0.1, DIAM_INTERN_DEBUT=0,), SECTION_RIGIDITE=_F(TYPE_SECTION='CONSTANTE', DIAM_EXTERN_DEBUT=0.1, DIAM_INTERN_DEBUT=0.0,),), _F(NOM='E2', DEBUT='N2', FIN='N3', RAFFINAGE='NON', MATERIAU=MAT_R01, SECTION_MASSE=_F(TYPE_SECTION='VARIABLE', DIAM_EXTERN_DEBUT=0.1, DIAM_INTERN_DEBUT=0, DIAM_EXTERN_SORTIE=0.2, DIAM_INTERN_SORTIE=0.0,), SECTION_RIGIDITE=_F(TYPE_SECTION='VARIABLE', DIAM_EXTERN_DEBUT=0.1, DIAM_INTERN_DEBUT=0.0, DIAM_EXTERN_SORTIE=0.2, DIAM_INTERN_SORTIE=0.0,),),),);"
-
         CONTEXT.set_current_step(etape)
         etape.build_includeInclude(texte)
         self.tree.racine.build_children()
@@ -992,8 +1018,8 @@ class JDCEditor(QSplitter):
     #-------------------------------------#
     def ajoutVersionCataDsJDC(self,txt):
     #-------------------------------------#
-        if not hasattr(self.readercata.cata[0],'LABEL_TRADUCTION'): return txt
-        ligneVersion="#LABEL_TRADUCTION:"+self.readercata.cata[0].LABEL_TRADUCTION+":FIN LABEL_TRADUCTION\n"
+        if not hasattr(self.readercata.cata[0],'VERSION_CATALOGUE'): return txt
+        ligneVersion="#VERSION_CATALOGUE:"+self.readercata.cata[0].VERSION_CATALOGUE+":FIN VERSION_CATALOGUE\n"
         texte=txt+ligneVersion
         return texte
 
@@ -1001,19 +1027,23 @@ class JDCEditor(QSplitter):
     def verifieVersionCataDuJDC(self,text):
     #-------------------------------------#
         memeVersion=False
-        indexDeb=text.find("#LABEL_TRADUCTION:")
-        indexFin=text.find(":FIN LABEL_TRADUCTION")
+        indexDeb=text.find("#VERSION_CATALOGUE:")
+        indexFin=text.find(":FIN VERSION_CATALOGUE")
         if indexDeb < 0 :
            self.versionCataDuJDC="sans"
            textJDC=text
         else :
-           self.versionCataDuJDC=text[indexDeb+17:indexFin]
-           textJDC=text[0:indexDeb]+text[indexFin+21:-1]
+           self.versionCataDuJDC=text[indexDeb+19:indexFin]
+           textJDC=text[0:indexDeb]+text[indexFin+23:-1]
+           print textJDC
 
         self.versionCata="sans"
-        if hasattr(self.readercata.cata[0],'version_cata'): self.versionCata=self.readercata.cata[0].version_cata
+        if hasattr(self.readercata.cata[0],'VERSION_CATALOGUE'): self.versionCata=self.readercata.cata[0].VERSION_CATALOGUE
 
         if self.versionCata==self.versionCataDuJDC : memeVersion=True
+        print self.versionCata
+        print self.versionCataDuJDC
+        print memeVersion
         return memeVersion,textJDC
 
     #-------------------------------#
@@ -1068,8 +1098,10 @@ class JDCEditor(QSplitter):
 
       fichier=str(QSfichier.toLatin1())
       from acquiertGroupes import getGroupes
-      erreur,listeGroupes=getGroupes(fichier)
+      erreur,listeGroupes,nomMaillage=getGroupes(fichier)
       if erreur != "" : print "a traiter"
+      texteComm="COMMENTAIRE(u'Cree - fichier : "+fichier +" - Nom Maillage : "+nomMaillage+"');\n"
+      print texteComm
       texteSources=""
       texteCond=""
       texteNoCond=""
@@ -1080,7 +1112,8 @@ class JDCEditor(QSplitter):
           if groupe[0:7]=='NOCOND_':  texteNoCond  +=groupe[7:]+"=NOCOND();\n"
           #if groupe[0:5]=='VCUT_':    texteVcut    +=groupe[5:]+"=VCUT();\n"
           if groupe[0:5]=='VCUT_':    texteVcut    +='V_'+groupe[5:]+"=VCUT();\n"
-      texte=texteSources+texteCond+texteNoCond+texteVcut
+      texte=texteComm+texteSources+texteCond+texteNoCond+texteVcut
+      print texte
       return texte
 
 if __name__ == "__main__":
