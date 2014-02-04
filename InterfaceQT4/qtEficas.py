@@ -57,7 +57,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.recent =  QStringList()
         self.ficRecents={}
         self.listeAEnlever=[]
-        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelSara']
+        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND']
 
         if self.salome:
           import Accas
@@ -181,6 +181,21 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.addAction(self.actionParametres_Eficas)
         self.menuOptions.setTitle(tr("Options"))
 
+    def ZCRACKS(self):
+        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.actionExecution = QAction(self)
+        icon6 = QIcon(self.RepIcon+"/compute.png")
+        self.actionExecution.setIcon(icon6)
+        self.actionExecution.setObjectName("actionExecution")
+        self.menuExecution.addAction(self.actionExecution)
+        if not(self.actionExecution in self.toolBar.actions()):
+           self.toolBar.addAction(self.actionExecution)
+        self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+
+        self.menuOptions = self.menubar.addMenu("menuOptions")
+        self.menuOptions.addAction(self.actionParametres_Eficas)
+        self.menuOptions.setTitle(tr("Options"))
 
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
@@ -200,6 +215,12 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuMesh.setObjectName("Mesh")
         self.menuMesh.addAction(self.actionChercheGrpMaille)
 
+    def CARMELCND(self):
+        self.menuMesh = self.menubar.addMenu("Maillage")
+        self.menuMesh.setObjectName("Mesh")
+        self.menuMesh.addAction(self.actionChercheGrp)
+
+
     def ChercheGrpMesh(self):
         Msg,listeGroup=self.ChercheGrpMeshInSalome()
         if Msg == None :
@@ -213,6 +234,13 @@ class Appli(Ui_Eficas,QMainWindow):
            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
            print "il faut gerer les erreurs"
+
+    def ChercheGrp(self):
+        #Msg,listeGroup=self.ChercheGrpMailleInSalome()
+        #if Msg == None :
+        #   self.viewmanager.handleAjoutGroup(listeGroup)
+        #else :
+        print "il faut gerer "
 
 
     def ajoutIcones(self) :
@@ -284,6 +312,11 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionChercheGrpMaille = QAction(self)
         self.actionChercheGrpMaille.setText(tr("Acquiert Groupe Maille"))
         self.connect(self.actionChercheGrpMaille,SIGNAL("activated()"),self.ChercheGrpMaille)
+
+        # Pour CarmelCND
+        self.actionChercheGrp = QAction(self)
+        self.actionChercheGrp.setText(tr("Accquisition Groupe Maille"))
+        self.connect(self.actionChercheGrp,SIGNAL("activated()"),self.ChercheGrp)
 
         # Pour Aide
         self.actionCode = QAction(self)
