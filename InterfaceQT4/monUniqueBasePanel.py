@@ -106,7 +106,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
         enable_salome_selection = self.editor.salome and \
             (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or \
              (isinstance(mctype, types.ClassType) and issubclass(mctype, SalomeEntry)) or \
-             (isinstance(mc.type,types.TupleType) and "(*.med)" in mc.type[1] ))
+             (isinstance(mc.type,types.TupleType) and len(mc.type) > 1 and "(*.med)" in mc.type[1] ))
         if not enable_salome_selection:
            self.BSalome.close()
         if not(('grma' in repr(mctype)) or ('grno' in repr(mctype))) or not(self.editor.salome):
