@@ -1100,7 +1100,7 @@ class JDCEditor(QSplitter):
       from acquiertGroupes import getGroupes
       erreur,listeGroupes,nomMaillage=getGroupes(fichier)
       if erreur != "" : print "a traiter"
-      texteComm="COMMENTAIRE(u'Cree - fichier : "+fichier +" - Nom Maillage : "+nomMaillage+"');\n"
+      texteComm="COMMENTAIRE(u'Cree - fichier : "+fichier +" - Nom Maillage : "+nomMaillage+"');\nPARAMETRES()\n"
       print texteComm
       texteSources=""
       texteCond=""
