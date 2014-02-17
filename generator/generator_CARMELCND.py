@@ -27,7 +27,7 @@ from generator_python import PythonGenerator
 import Accas
 
 debutTextePhys ="[VERSION\n  NUM      1\n  FILETYPE PHYS\n]\n"
-debutTextePhys+="[MATERIAL\n   [CONDUCTOR\n"
+debutTextePhys+="[MATERIALS\n   [CONDUCTOR\n"
 texteConductor ="      [CONDUCTIVITY\n         LAW LINEAR\n"
 texteConductor+="         HOMOGENEOUS TRUE\n"
 texteConductor+="         ISOTROPIC  TRUE\n"
@@ -41,9 +41,9 @@ texteNoCond+="         VALUE COMPLEX  0.1000000000000000E+01  0.0000000000000000
 texteNoCond+="      ]\n      [PERMEABILITY\n         LAW LINEAR\n"
 texteNoCond+="         HOMOGENEOUS TRUE\n         ISOTROPIC TRUE\n"
 
-debutTexteParam ="[VERSION\n  NUM      1\n  FILETYPE PARAM\n]\n"
-debutTexteParam+="[PROBLEM\n  NAME HARMONIC\n]\n"
-debutTexteParam+="[CAR_FILES\n  NAME "
+debutTexteParam ="[VERSION\n   NUM     1\n   FILETYPE PARAM\n]\n"
+debutTexteParam+="[PROBLEM\n   NAME HARMONIC\n]\n"
+debutTexteParam+="[CAR_FILES\n   NAME "
 
 
 
@@ -125,15 +125,19 @@ class CARMELSARAGenerator(PythonGenerator):
        nomFichier="inconnu"
        for e in self.racine.etapes:
            if  isinstance(e,Accas.COMMENTAIRE):
-               if e.valeur[0:25]=="Cree a partir du fichier ":
-                  debut=e.valeur[25:]
-                  liste=debut.split("\n")
+               print 'ùmasdkfh=',e.valeur[0:17]
+               if e.valeur[0:17]=="Cree - fichier : ":
+                  debut=e.valeur[17:]
+                  liste=debut.split(" - ")
                   nomFichier=liste[0]
+                  print 'nom=',nomFichier
+                  print 'e.va=',e.valeur.split(" ")[-1]
+                  print 'liste=',liste
                   nomDomaine=e.valeur.split(" ")[-1]
                   break
-       self.texteIngendof =os.path.basename(nomFichier)+".med"
-       self.texteParam += os.path.basename(nomFichier)+".car\n]\n"
-       self.texteParam +="[PHYS_FILES\n  NAME "+nomDomaine+"]\n"
+       self.texteIngendof =os.path.basename(nomFichier)+"\n"
+       self.texteParam += os.path.basename(nomFichier).split(".med")[0]+".car\n]\n"
+       self.texteParam +="[PHYS_FILES\n   NAME "+os.path.basename(nomFichier).split(".med")[0]+".phys\n]\n"
 
 #----------------------------------------------------------------------------------------
 #  analyse du dictionnaire  pour trouver les sources et les VCut
@@ -162,7 +166,6 @@ class CARMELSARAGenerator(PythonGenerator):
                texteSource+=str(val)+" "
            texteSource+="\n"
            texteSource+=str(self.dictMCVal[debutKey+"SectionDomaine"])+"\n"
-           texteSource+="\n"
            self.texteIngendof+=texteSource
            self.texteSourcePhys+="   [STRANDED_INDUCTOR\n"
            self.texteSourcePhys+="      NAME "+source+"\n"
@@ -171,12 +174,11 @@ class CARMELSARAGenerator(PythonGenerator):
            self.texteSourcePhys+=" 0.0000000000000000E+00\n   ]\n"
          
        self.texteSourcePhys+="]\n"
-       self.texteIngendof+="\n1\n\n"
        for vcut in listeVCut:
+           self.texteIngendof+="1\n"
            debutKey=vcut+"______VCUT__"
            if self.dictMCVal[debutKey+"Orientation"] == "Oppose" :self.texteIngendof+="0\n"
            else : self.texteIngendof+="1\n"
-       self.texteIngendof+="\n"
        if self.dictMCVal["__PARAMETRES__TypedeFormule"]=="APHI" :self.texteIngendof+="1\n"
        else : self.texteIngendof+="2\n"
        
@@ -204,8 +206,8 @@ class CARMELSARAGenerator(PythonGenerator):
            self.textePhys+=str(self.dictMCVal[c+"______CONDUCTEUR__Permeabilite"])
            self.textePhys+="  0.0000000000000000E+00\n      ]\n   ]\n"
 
-       self.textePhys+="\n   [DIELECTRIC\n"
        for c in listeNoCond:
+           self.textePhys+="   [DIELECTRIC\n"
            self.textePhys +="      NAME "+c+"\n"
            self.textePhys += texteNoCond
            self.textePhys+="         VALUE COMPLEX "
@@ -219,11 +221,11 @@ class CARMELSARAGenerator(PythonGenerator):
 #  Creation du fichier Param
 #----------------------------------------------------------------------------------------
    def traiteParam(self):
-       self.texteParam +="[FREQUENCY\n  SINGLE "+str(self.dictMCVal["__PARAMETRES__Frequence_en_Hz"])+"\n]\n"
-       self.texteParam +="[SOLVER\n  NAME BICGCR\n"
-       self.texteParam +="  [ITERATIVE_PARAM\n"
-       self.texteParam +="    NITERMAX "+str(self.dictMCVal["__PARAMETRES__Nb_Max_Iterations"])+"\n"
-       self.texteParam +="    EPSILON  "+ str(self.dictMCVal["__PARAMETRES__Erreur_Max"])+"\n   ]\n]"
+       self.texteParam +="[FREQUENCY\n   SINGLE  "+str(self.dictMCVal["__PARAMETRES__Frequence_en_Hz"])+"\n]\n"
+       self.texteParam +="[SOLVER\n   NAME BICGCR\n"
+       self.texteParam +="   [ITERATIVE_PARAM\n"
+       self.texteParam +="      NITERMAX  "+str(self.dictMCVal["__PARAMETRES__Nb_Max_Iterations"])+"\n"
+       self.texteParam +="       EPSILON  "+ str(self.dictMCVal["__PARAMETRES__Erreur_Max"])+"\n   ]\n]"
 
 
 #----------------------------------------------------------------------------------------
