@@ -46,7 +46,6 @@ debutTexteParam+="[PROBLEM\n   NAME HARMONIC\n]\n"
 debutTexteParam+="[CAR_FILES\n   NAME "
 
 
-
 def entryPoint():
    """
       Retourne les informations necessaires pour le chargeur de plugins
@@ -115,6 +114,26 @@ class CARMELSARAGenerator(PythonGenerator):
        self.traiteParam()
        f = open( str(fileParam), 'wb')
        f.write( self.texteParam )
+       f.close()
+       
+       self.texteCMD="[ \n    GLOBAL \n] \n[ \nVISU \nDomaine \nMED \nELEMENT \n] "
+       fileCMD = fn[:fn.rfind(".")] + '.cmd'
+       f = open( str(fileCMD), 'wb')
+       f.write( self.texteCMD )
+       f.close()
+       
+       nomBaseFichier=os.path.basename(fileParam).split(".med")[0]
+       
+       self.texteInfcarmel=nomBaseFichier
+       fileInfcarmel = fn[:fn.rfind(".")] + '.infcarmel'
+       f = open( str(fileInfcarmel), 'wb')
+       f.write( self.texteInfcarmel )
+       f.close()
+       
+       self.texteInpostpro=nomBaseFichier+"\n"+nomBaseFichier.split(".param")[0]+'.xmat\n'+nomBaseFichier.split(".param")[0]+'.cmd'
+       fileInpostpro = fn[:fn.rfind(".")] + '.inpostprocess'
+       f = open( str(fileInpostpro), 'wb')
+       f.write( self.texteInpostpro )
        f.close()
 
 #----------------------------------------------------------------------------------------
