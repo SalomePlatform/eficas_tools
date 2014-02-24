@@ -713,6 +713,9 @@ class JDCEditor(QSplitter):
       if self.code == "ZCRACKS" :
          self.runZCRACKS()
          return
+      if self.code == "CarmelCS" :
+         self.runCarmelCS()
+         return
       if not(self.jdc.isvalid()):
          QMessageBox.critical( self, tr( "Execution impossible "),tr("le JDC doit etre valide pour une execution MAP"))
          return
@@ -750,8 +753,8 @@ class JDCEditor(QSplitter):
       if not(self.jdc.isvalid()):
          QMessageBox.critical( self, tr( "Execution impossible "),tr("le JDC doit etre valide pour une execution "))
          return
-      #if self.modified or self.fichier==None  :
-      if 1:
+      if self.modified or self.fichier==None  :
+      #if 1:
          self.fichierZcracksInput = self.__generateTempFilename(prefix = "zcracks_run", suffix = ".z7p")
          texte=self.get_text_JDC("ZCRACKS",pourRun=1)
          self.writeFile( self.fichierZcracksInput, txt = texte)
@@ -762,6 +765,15 @@ class JDCEditor(QSplitter):
           commande="more "
           textePython=(commande + self.fichierZcracksInput)
           self._viewTextExecute( textePython,"run_zcracks",".sh")
+      except Exception, e:
+          print traceback.print_exc()
+
+    #-------------------#
+    def runCarmelCS(self):
+    #-------------------#
+      try :
+         commande="runSession pilotyacsCS.py"
+          os.system(commande)
       except Exception, e:
           print traceback.print_exc()
 
