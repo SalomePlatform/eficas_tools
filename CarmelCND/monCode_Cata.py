@@ -14,8 +14,6 @@ class vcut(ASSD):
 
 JdC = JDC_CATA (code = 'monCode',
                 execmodul = None,
-                regles=(AU_MOINS_UN('DONNEES_GENE','SOURCE','NOCOND','PARAMETRES'),
-                         A_CLASSER('DONNEES_GENE',('SOURCE','NOCOND','PARAMETRES')),)
                )
                 
 # ======================================================================
@@ -30,7 +28,7 @@ JdC = JDC_CATA (code = 'monCode',
 #)
 
 
-SOURCE=OPER(nom='SOURCE',op=None,sd_prod=source,
+SOURCE=OPER(nom='SOURCE',op=None,sd_prod=source,UIinfo = { "groupes" : ( "CACHE", ) },
             NomDomaine=SIMP(statut='o',typ='TXM',defaut="default"),
             VecteurDirecteur=SIMP(statut='o',typ='R',min=3,max=3),
             Centre=SIMP(statut='o',typ='R',min=3,max=3),
@@ -39,19 +37,19 @@ SOURCE=OPER(nom='SOURCE',op=None,sd_prod=source,
             NbdeTours=SIMP(statut='o',typ='I',val_min=1),
 )
 
-CONDUCTEUR=OPER(nom='CONDUCTEUR',op=None,sd_prod=conducteur,
+CONDUCTEUR=OPER(nom='CONDUCTEUR',op=None,sd_prod=conducteur,UIinfo = { "groupes" : ( "CACHE", ) },
                 Conductivite=SIMP(statut='o',typ='R',),
                 Permeabilite=SIMP(statut='o',typ='R',),
 )
-NOCOND=OPER(nom='NOCOND',op=None,sd_prod=nocond,
+NOCOND=OPER(nom='NOCOND',op=None,sd_prod=nocond,UIinfo = { "groupes" : ( "CACHE", ) },
             Permeabilite=SIMP(statut='o',typ='R',),
 )
 #
-VCUT=OPER(nom='VCUT',op=None,sd_prod=vcut,
+VCUT=OPER(nom='VCUT',op=None,sd_prod=vcut,UIinfo = { "groupes" : ( "CACHE", ) },
             Orientation=SIMP(statut='o',typ='TXM',into=("Oppose","Meme sens")),
 )
-PARAMETRES=PROC(nom='PARAMETRES',op=None,
-             RepCarmel=SIMP(typ='Repertoire',fr= "Repertoire Carmel",ang= "Carmel Directory",statut= "o",),
+PARAMETRES=PROC(nom='PARAMETRES',op=None, UIinfo = { "groupes" : ( "CACHE", ) },
+             RepCarmel=SIMP(typ='Repertoire',fr= "Repertoire Carmel",ang= "Carmel Directory",statut= "o",defaut="/projets/projets.002/carmel3d.001/frequentiel/V_240_test/Compil"),
              TypedeFormule=SIMP(statut='o',typ='TXM',into=("TOMEGA","APHI")),
              Frequence_en_Hz=SIMP(statut='o',typ='I',fr="frequence en hz",ang="frequence en hz"),
              Nb_Max_Iterations=SIMP(statut='o',typ='I',val_min=1,val_max=10000,defaut=10000),
