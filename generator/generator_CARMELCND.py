@@ -53,13 +53,13 @@ def entryPoint():
    """
    return {
         # Le nom du plugin
-          'name' : 'CARMELSARA',
+          'name' : 'CARMELCND',
         # La factory pour creer une instance du plugin
-          'factory' : CARMELSARAGenerator,
+          'factory' : CARMELCNDGenerator,
           }
 
 
-class CARMELSARAGenerator(PythonGenerator):
+class CARMELCNDGenerator(PythonGenerator):
    """
       Ce generateur parcourt un objet de type JDC et produit
       un texte au format eficas et 
