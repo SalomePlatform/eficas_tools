@@ -571,11 +571,6 @@ class Appli(Ui_Eficas,QMainWindow):
     def saveRun(self):
         self.viewmanager.saveRun()
 
-    def runYACS(self):
-        self.viewmanager.runYACS()
-
-    def saveYACS(self):
-        self.viewmanager.saveYACS()
 
     def supprimer(self):
         self.viewmanager.handleSupprimer()

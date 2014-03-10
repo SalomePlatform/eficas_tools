@@ -110,18 +110,6 @@ class MyTabview:
        editor=self.dict_editors[index]
        editor.saveRun()
 
-   def runYACS(self):
-       index=self.myQtab.currentIndex()
-       if index < 0 : return
-       editor=self.dict_editors[index]
-       editor.runYACS()
-
-   def saveYACS(self):
-       index=self.myQtab.currentIndex()
-       if index < 0 : return
-       editor=self.dict_editors[index]
-       editor.saveYACS()
-
    def handleCloseAll(self,texte=tr('Quitter')):
        res=0
        self.appliEficas.sauveRecents()

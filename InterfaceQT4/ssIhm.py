@@ -32,7 +32,13 @@ class appliEficasSSIhm:
 
 
        name='prefs_'+self.code
-       prefsCode=__import__(name)
+       try :
+         prefsCode=__import__(name)
+       except :
+         name='prefs_'+self.code.upper()
+         self.code=self.code.upper()
+         prefsCode=__import__(name)
+       
 
        self.repIni=prefsCode.repIni
        self.format_fichier="python" #par defaut
