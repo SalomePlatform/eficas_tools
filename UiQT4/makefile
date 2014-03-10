@@ -10,7 +10,8 @@ PY_FILES = desChoixCata.py desCommande.py desCommentaire.py desError.py desFormu
 	desUniqueASSD.py desUniqueBase.py desUniqueComp.py desUniqueInto.py desUniqueSDCOInto.py \
 	desUniqueSDCO.py desVisu.py  aideQT.py OptionsEditeur.py OptionsPdf.py myMain.py \
 	desViewTexte.py desPixmap.py desMatrice.py OptionsOT.py OptionsCuve.py desChoixMap.py \
-        OptionsMAP.py desImage.py desChoixCode.py desRecherche.py desUniqueBool.py
+        OptionsMAP.py desImage.py desChoixCode.py desRecherche.py desUniqueBool.py\
+        desRacineOnglet.py desBoutonSalome.py
 
 QM_FILES=eficas_en.qm 
 
