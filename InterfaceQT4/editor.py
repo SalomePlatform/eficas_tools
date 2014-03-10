@@ -178,6 +178,8 @@ class JDCEditor(QSplitter):
 
         texte=""
         if self.code == "CARMELCND" : texte=self._newJDCCND()
+        #   texte=self.newTexteCND
+       
         jdc=self.readercata.cata[0].JdC( procedure =texte,
                                          appli=self,
                                          cata=self.readercata.cata,
@@ -328,7 +330,7 @@ class JDCEditor(QSplitter):
         self.w.setWindowTitle( "execution" )
         self.monExe=QProcess(self.w)
         pid=self.monExe.pid()
-        nomFichier = self.__generateTempFilename(prefix = "map_run", suffix = ".sh")
+        nomFichier = self.__generateTempFilename(prefix, suffix = ".sh")
         f=open(nomFichier,'w')
         f.write(txt)
         f.close()
@@ -709,13 +711,19 @@ class JDCEditor(QSplitter):
     #------------#
     def run(self):
     #------------#
-      #
-      if self.code == "ZCRACKS" :
-         self.runZCRACKS()
-         return
-      if self.code == "CarmelCS" :
-         self.runCarmelCS()
-         return
+      fonction="run"+self.code
+      if fonction in JDCEditor.__dict__.keys(): apply(JDCEditor.__dict__[fonction],(self,))
+
+    #------------#
+    def saveRun(self):
+    #------------#
+      fonction="saveRun"+self.code
+      if fonction in JDCEditor.__dict__.keys(): apply(JDCEditor.__dict__[fonction],(self,))
+
+    #---------------#
+    def runMAP(self):
+    #---------------#
+
       if not(self.jdc.isvalid()):
          QMessageBox.critical( self, tr( "Execution impossible "),tr("le JDC doit etre valide pour une execution MAP"))
          return
@@ -772,7 +780,7 @@ class JDCEditor(QSplitter):
     def runCarmelCS(self):
     #-------------------#
       try :
-         commande="runSession pilotyacsCS.py"
+          commande="runSession pilotyacsCS.py"
           os.system(commande)
       except Exception, e:
           print traceback.print_exc()
@@ -807,7 +815,7 @@ class JDCEditor(QSplitter):
       return (1,fn)
 
     #-----------------#
-    def saveRun(self):
+    def saveRunMAP(self):
     #-----------------#
         extension=".input"
         if not(self.jdc.isvalid()):
@@ -910,8 +918,7 @@ class JDCEditor(QSplitter):
             the name of the saved file
         """
 
-#PNPNPNPNPN
-        self.modified=1
+        #self.modified=1
         if not self.modified and not saveas:
             return (0, None)      # do nothing if text wasn't changed
 
@@ -1101,32 +1108,65 @@ class JDCEditor(QSplitter):
     def _newJDCCND(self):
     #---------------------------#
       extensions=tr('Fichiers Med (*.med);;''Tous les Fichiers (*)')
-      QMessageBox.information( self,
+      
+      if self.salome == 0 :
+         QMessageBox.information( self,
                       tr("Fichier Med"),
                       tr("Veuillez selectionner un fichier Med"))
-      QSfichier = QFileDialog.getOpenFileName(self.appliEficas,
+         QSfichier = QFileDialog.getOpenFileName(self.appliEficas,
                         caption='Fichier Med',
                         filter=extensions)
+         self.fichier=str(QSfichier.toLatin1())
+         from acquiertGroupes import getGroupes
+         erreur,self.listeGroupes,self.nomMaillage=getGroupes(self.fichier)
+         if erreur != "" : print "a traiter"
+      else :
+         from monBoutonSalome import MonBoutonSalome
+         desBoutonSalome = MonBoutonSalome()
+         icon = QIcon()
+         icon = QIcon(self.appli.RepIcon+"/image240.png")
+         desBoutonSalome.pushButton.setIcon(icon)
+         desBoutonSalome.setMinimumSize(QtCore.QSize(453, 103))
 
-      fichier=str(QSfichier.toLatin1())
-      from acquiertGroupes import getGroupes
-      erreur,listeGroupes,nomMaillage=getGroupes(fichier)
-      if erreur != "" : print "a traiter"
-      texteComm="COMMENTAIRE(u'Cree - fichier : "+fichier +" - Nom Maillage : "+nomMaillage+"');\nPARAMETRES()\n"
-      print texteComm
+         self.openfile=QFileDialog(self.appli,caption='Fichier Med',filter=extensions)
+         self.openfile.layout().addWidget(desBoutonSalome)
+         self.connect(desBoutonSalome.pushButton,SIGNAL("clicked()"),self.BoutonSalomePressed)
+         self.connect(self.openfile,SIGNAL("fileSelected(QString)"),self.BoutonFileSelected)
+         r=self.openfile.exec_()
+      texteComm="COMMENTAIRE(u'Cree - fichier : "+self.fichier +" - Nom Maillage : "+self.nomMaillage+"');\nPARAMETRES()\n"
       texteSources=""
       texteCond=""
       texteNoCond=""
       texteVcut=""
-      for groupe in listeGroupes :
+      for groupe in self.listeGroupes :
           if groupe[0:8]=='CURRENT_': texteSources +=groupe[8:]+"=SOURCE();\n"
           if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"
           if groupe[0:7]=='NOCOND_':  texteNoCond  +=groupe[7:]+"=NOCOND();\n"
           #if groupe[0:5]=='VCUT_':    texteVcut    +=groupe[5:]+"=VCUT();\n"
           if groupe[0:5]=='VCUT_':    texteVcut    +='V_'+groupe[5:]+"=VCUT();\n"
       texte=texteComm+texteSources+texteCond+texteNoCond+texteVcut
-      print texte
+      self.newTexteCND=texte
       return texte
+
+
+    #---------------------------#
+    def  BoutonFileSelected(self):
+    #---------------------------#
+
+      QSfichier=self.openfile.selectedFiles()[0]
+      self.fichier=str(QSfichier.toLatin1())
+      from acquiertGroupes import getGroupes
+      erreur,self.listeGroupes,self.nomMaillage=getGroupes(self.fichier)
+      if erreur != "" : print "a traiter"
+
+    #-----------------------------
+    def BoutonSalomePressed(self):
+    #----------------------------
+      Msg,self.listeGroupes=self.appliEficas.ChercheGrpMailleInSalome()
+      print Msg,self.listeGroupes
+      self.fichier="A_partir_de_SMESH"
+      self.nomMaillage="A_partir_de_SMESH"
+      self.openfile.close()
 
 if __name__ == "__main__":
     self.code='ASTER'
