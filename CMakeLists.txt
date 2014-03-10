@@ -185,6 +185,8 @@ endif (WITH_MAP)
 # Installation des fichiers : CARMEL
 if (WITH_CARMEL)
   add_subdirectory ( Carmel3D )
+  add_subdirectory ( CarmelCND )
+  add_subdirectory ( CarmelCS )
 endif (WITH_CARMEL)
 
 # Installation des fichiers : Sep
