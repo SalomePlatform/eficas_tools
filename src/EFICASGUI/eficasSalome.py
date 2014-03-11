@@ -201,12 +201,12 @@ class MyEficas( qtEficas.Appli ):
     #-------------------------------------
        meshObject=None
        import SMESH
-       #try:
-       if 1 :
+       try:
+       #if 1 :
          monObjet =self.getCORBAObjectInComponent(entry,"SMESH") 
          if monObjet != None :                                    # selection d'un groupe de SMESH
             meshObject=monObjet._narrow(SMESH.SMESH_Mesh)
-       #except :
+       except :
        #  logger.debug('  pb avec ( entry = %s ) ' %entry )          
        return meshObject
 
@@ -498,6 +498,20 @@ class MyEficas( qtEficas.Appli ):
             return meshFile ,""
         except :
            return "", "Pb dans la selection "
+
+    #----------------------------------------------------------------
+    def importMedFile( self,fileName,  editor=None):
+    #----------------------------------------------------------------
+        try :            
+            theStudy = self.editor.study
+            if not theStudy: return (0, 'Pas d etude')
+            from salome.smesh import smeshBuilder
+            smesh = smeshBuilder.New(theStudy)
+            aMesh,aResult = smesh.CreateMeshesFromMED(fileName)
+            salome.sg.updateObjBrowser(1)
+            return 1,"" 
+        except :
+            return (O,"Pb a l import")
                      
     #----------------------------------------------------------------
     def selectEntryFromSalome( self, kwType = None, editor=None):
@@ -617,8 +631,8 @@ class MyEficas( qtEficas.Appli ):
         visualisation de nom shapeName dans salome
         """
         ok, msgError = False, ''
-        #try:
-        if 1 :
+        try:
+        #if 1 :
             import SalomePyQt
             sgPyQt = SalomePyQt.SalomePyQt()
             myActiveView=sgPyQt.getActiveView() 
@@ -637,18 +651,19 @@ class MyEficas( qtEficas.Appli ):
                 self.icolor = self.icolor + 1             
                 if not ok:
                     msgError =self.tr("Impossible d afficher ")+shapeName
-        #except:            
-        else :
+        except:            
+        #else :
             logger.debug(50*'=')
         return ok, msgError    
                 
     #---------------------------------------
     def ChercheGrpMeshInSalome(self):
     #---------------------------------------
-        #print "je passe par la"
+        print "je passe par la"
         import SMESH
         names, msg = [], ''
         try :
+        #if 1 :
            entries = salome.sg.getAllSelected()
            nbEntries = len( entries )
            names, msg = None, self.tr("Selection SALOME non autorisee.")
@@ -656,6 +671,7 @@ class MyEficas( qtEficas.Appli ):
                 for entry in entries:
                     names,msg=self.giveMeshGroups(entry,"SubMeshes",SMESH.SMESH_subMesh)
         except :
+        #else :
            print "bim bam boum"
         return(msg,names)
 
