@@ -19,24 +19,13 @@
 #
 # ======================================================================
 
-import os,sys
-# repIni sert a localiser le fichier editeur.ini
-# Obligatoire
-repIni=os.path.dirname(os.path.abspath(__file__))
-INSTALLDIR=os.path.join(repIni,'..')
-sys.path[:0]=[INSTALLDIR]
 
+install ( FILES 
+           qtEficas_CarmelCND.py prefs_CARMELCND.py prefs.py configuration_CARMELCND.py
+	   acquiertGroupes.py CarmelCND_Cata.py
+	   DESTINATION ${CMAKE_INSTALL_PREFIX}/CarmelCND
+        )
 
-# lang indique la langue utilisee pour les chaines d'aide : fr ou ang
-lang='fr'
-
-# Codage des strings qui accepte les accents (en remplacement de 'ascii')
-encoding='iso-8859-1'
-docPath=repIni
-fileName="docMonCode.png"
-image=1
-
-#
-catalogues=(
-   ('monCode','default',os.path.join(repIni,'CarmelCND_Cata.py'),'CARMELCND','python'),
-)
+### Local Variables:
+### mode: cmake
+### End:

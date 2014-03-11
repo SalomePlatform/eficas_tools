@@ -25,6 +25,7 @@ from med.medfile import *
 from med.medmesh import *
 from med.medfamily import *
 
+
 def getGroupes(filename,debug=0) :
     listeGroupes=[]
     maa=""
@@ -72,13 +73,15 @@ def getGroupes(filename,debug=0) :
         # print "gro = %s\n"%(gro[j*MED_LNAME_SIZE:j*MED_LNAME_SIZE+MED_LNAME_SIZE])
             groupSplit=gro[j*MED_LNAME_SIZE:j*MED_LNAME_SIZE+MED_LNAME_SIZE]
             groupeName="".join(groupSplit).split("\x00")[0]
+            print groupeName,  numfam
             if groupeName not in listeGroupes : listeGroupes.append(groupeName) 
 
    
    
+    print listeGroupes
     MEDfileClose(fid)
     return ("",listeGroupes,maa)
 
 if __name__ == "__main__":
-    filename="/home/A96028/Carmel/Pascale/Domaine.med"
+    filename="/home/A96028/Carmel/Pascale/Domaine_Bidouille.med"
     print getGroupes(filename)
