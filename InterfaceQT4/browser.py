@@ -58,6 +58,7 @@ class JDCTree( QTreeWidget ):
         self.racine.affichePanneau()
 
 
+
     def contextMenuEvent(self,event) :
         coord=event.globalPos()
         item= self.currentItem()
@@ -106,12 +107,17 @@ class JDCNode(QTreeWidgetItem):
         self.tree        = self.treeParent.tree
         self.editor	 = self.treeParent.editor
         self.appliEficas = treeParent.appliEficas
+        #if hasattr(self.editor, 'affichage_onglet' ) :self.affichage_onglet=self.editor.affichage_onglet
+        #else : self.affichage_onglet=False
+
                         
         name  = self.appliEficas.trUtf8(  str( item.GetLabelText()[0] ) )
         value = self.appliEficas.trUtf8(  str( item.GetText() ) )
         mesColonnes=QStringList()
         mesColonnes <<  name << value
         QTreeWidgetItem.__init__(self,treeParent,mesColonnes)
+        self.setToolTip(0,QString(self.item.get_fr()))
+        self.setToolTip(1,QString(self.item.get_fr()))
 
         RepIcon=QString(self.appliEficas.RepIcon)
         monIcone = QIcon(RepIcon+"/" +self.item.GetIconName() + ".png")
