@@ -57,7 +57,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.recent =  QStringList()
         self.ficRecents={}
         self.listeAEnlever=[]
-        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND']
+        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND','MT']
 
         if self.salome:
           import Accas
@@ -219,6 +219,16 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuMesh = self.menubar.addMenu("Maillage")
         self.menuMesh.setObjectName("Mesh")
         self.menuMesh.addAction(self.actionChercheGrp)
+        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.actionExecution = QAction(self)
+        icon6 = QIcon(self.RepIcon+"/compute.png")
+        self.actionExecution.setIcon(icon6)
+        self.actionExecution.setObjectName("actionExecution")
+        self.menuExecution.addAction(self.actionExecution)
+        if not(self.actionExecution in self.toolBar.actions()):
+           self.toolBar.addAction(self.actionExecution)
+        self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
 
 
     def ChercheGrpMesh(self):
