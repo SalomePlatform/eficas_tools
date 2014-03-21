@@ -221,17 +221,18 @@ class READERCATA:
         if k[0:len(nom_cata)+1] == nom_cata+'.':
           del sys.modules[k]
 
+      mesScriptsNomFichier='mesScripts_'+self.code.upper()
       if self.code == "ASTER" :
          self.appliEficas.rep_scripts=os.path.join(rep_cata,nom_cata)
          sys.path[:0] = [self.appliEficas.rep_scripts]
          try :
-             self.appliEficas.mesScripts=__import__('mesScripts')
+             self.appliEficas.mesScripts=__import__(mesScriptsNomFichier)
          except:
              pass
          sys.path=sys.path[1:]
       else :
          try :
-            self.appliEficas.mesScripts=__import__('mesScripts')
+            self.appliEficas.mesScripts=__import__(mesScriptsNomFichier)
          except:
             pass
 
