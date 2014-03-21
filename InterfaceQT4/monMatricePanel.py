@@ -128,6 +128,18 @@ class MonMatricePanel(Ui_desMatrice,QDialog):
        self.nbLigs=len(self.listeVariables)
        self.nbCols=len(self.listeVariables)
 
+  def  NbDeDistributions(self):
+       jdc=self.node.item.object.jdc
+       etape=self.node.item.object.etape
+       self.listeVariables=jdc.get_distributions(etape)
+       if self.listeVariables == [] :
+           QMessageBox.critical( self, tr("Mauvaise Commande "),tr( "Aucune variable connue"))
+           return
+       self.TBMatrice.setColumnCount(len(self.listeVariables))
+       self.TBMatrice.setRowCount(len(self.listeVariables))
+       self.nbLigs=len(self.listeVariables)
+       self.nbCols=len(self.listeVariables)
+
   def  initialSsValeur(self):
        for row in range(self.nbLigs):
 	   for column in range(self.nbCols):
