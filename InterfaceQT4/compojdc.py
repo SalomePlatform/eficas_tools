@@ -28,6 +28,9 @@ class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
     def getPanel(self):
         """
         """
+        #if self.affichage_onglet==1 :
+        #   from monRacinePanel_onglet import MonRacinePanel
+        #   return MonRacinePanel(self,parent=self.editor)
         from monRacinePanel import MonRacinePanel
         return MonRacinePanel(self,parent=self.editor)
 
