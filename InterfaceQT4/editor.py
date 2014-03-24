@@ -174,6 +174,7 @@ class JDCEditor(QSplitter):
         """
         Initialise un nouveau JDC vierge
         """
+        self.modified=1
         CONTEXT.unset_current_step()
 
         texte=""
@@ -323,6 +324,7 @@ class JDCEditor(QSplitter):
         return filename
     #
 
+
     #----------------------------------------------#
     def _viewTextExecute(self, txt, prefix, suffix):
     #----------------------------------------------#
@@ -341,8 +343,6 @@ class JDCEditor(QSplitter):
         self.monExe.closeWriteChannel()
         self.w.exec_()
         try:
-          commande="rm  "+self.fichierMapInput
-          os.system(commande)
           commande="rm  "+ nomFichier
           os.system(commande)
         except :
@@ -752,6 +752,11 @@ class JDCEditor(QSplitter):
 
           #textePython="ls -l"
           self._viewTextExecute( textePython,"map_run",".sh")
+          try:
+             commande="rm  "+self.fichierMapInput
+             os.system(commande)
+          except :
+             pass
       except Exception, e:
           print traceback.print_exc()
 
@@ -773,6 +778,26 @@ class JDCEditor(QSplitter):
           commande="more "
           textePython=(commande + self.fichierZcracksInput)
           self._viewTextExecute( textePython,"run_zcracks",".sh")
+      except Exception, e:
+          print traceback.print_exc()
+
+    #-------------------#
+    def runCARMELCND(self):
+    #-------------------#
+      #if not(self.jdc.isvalid()):
+      #   QMessageBox.critical( self, tr( "Execution impossible "),tr("le JDC doit etre valide pour une execution "))
+      #   return
+      if self.modified or self.fichier==None  :
+         QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
+         return
+      if not hasattr(self,'generator'): texte=self.get_text_JDC(self.format)
+      from PrepareRunCarmel import prepareRunCarmel
+      fichierGenerique=os.path.basename(self.fichier).split(".")[0]
+      repMed=os.path.dirname(self.fichier)
+      repExeCarmel="/home/A96028/ExecCarmel/Compil"
+      textePython=prepareRunCarmel(repExeCarmel,repMed,fichierGenerique)
+      try :
+          self._viewTextExecute( textePython,"carmel_run",".sh")
       except Exception, e:
           print traceback.print_exc()
 
@@ -892,7 +917,8 @@ class JDCEditor(QSplitter):
            jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
            dicoCourant=self.generator.dico
         return dicoCourant
-        return Dico
+
+         
 
     #-----------------------------------------#
     def handleAjoutGroup(self,listeGroup):
@@ -960,6 +986,7 @@ class JDCEditor(QSplitter):
 
         if self.salome :
                self.appliEficas.addJdcInSalome( self.fichier)
+        self.modified = 0
         return (1, self.fichier)
 #
     #----------------------------------------------#
@@ -972,11 +999,10 @@ class JDCEditor(QSplitter):
         @return tuple of two values (boolean, string) giving a success indicator and
             the name of the saved file
         """
-        print fileName
-        if fileName == None : return self.saveFile(path,1)
-        self.fichier = fileName
-        self.modified = 1
-        return self.saveFile()
+        if fileName != None :
+           self.fichier = fileName
+           return self.saveFile()
+        return self.saveFile(path,1)
 
 
 
@@ -1116,9 +1142,9 @@ class JDCEditor(QSplitter):
          QSfichier = QFileDialog.getOpenFileName(self.appliEficas,
                         caption='Fichier Med',
                         filter=extensions)
-         self.fichier=str(QSfichier.toLatin1())
+         self.fichierMED=str(QSfichier.toLatin1())
          from acquiertGroupes import getGroupes
-         erreur,self.listeGroupes,self.nomMaillage=getGroupes(self.fichier)
+         erreur,self.listeGroupes,self.nomMaillage,self.dicoCoord=getGroupes(self.fichierMED)
          if erreur != "" : print "a traiter"
       else :
          from monBoutonSalome import MonBoutonSalome
@@ -1133,19 +1159,21 @@ class JDCEditor(QSplitter):
          self.connect(desBoutonSalome.pushButton,SIGNAL("clicked()"),self.BoutonSalomePressed)
          self.connect(self.openfile,SIGNAL("fileSelected(QString)"),self.BoutonFileSelected)
          r=self.openfile.exec_()
-      texteComm="COMMENTAIRE(u'Cree - fichier : "+self.fichier +" - Nom Maillage : "+self.nomMaillage+"');\nPARAMETRES()\n"
+      texteComm="COMMENTAIRE(u'Cree - fichier : "+self.fichierMED +" - Nom Maillage : "+self.nomMaillage+"');\nPARAMETRES()\n"
       texteSources=""
       texteCond=""
       texteNoCond=""
       texteVcut=""
       for groupe in self.listeGroupes :
-          if groupe[0:8]=='CURRENT_': texteSources +=groupe[8:]+"=SOURCE();\n"
+          if groupe[0:8]=='CURRENT_': 
+             texteSources +=groupe[8:]+"=SOURCE("
+             texteSources +="VecteurDirecteur=(1.0,2.0,3.0,),);\n"
           if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"
           if groupe[0:7]=='NOCOND_':  texteNoCond  +=groupe[7:]+"=NOCOND();\n"
-          #if groupe[0:5]=='VCUT_':    texteVcut    +=groupe[5:]+"=VCUT();\n"
           if groupe[0:5]=='VCUT_':    texteVcut    +='V_'+groupe[5:]+"=VCUT();\n"
       texte=texteComm+texteSources+texteCond+texteNoCond+texteVcut
       self.newTexteCND=texte
+      self.modified=1
       return texte
 
 
@@ -1154,9 +1182,9 @@ class JDCEditor(QSplitter):
     #---------------------------#
 
       QSfichier=self.openfile.selectedFiles()[0]
-      self.fichier=str(QSfichier.toLatin1())
+      self.fichierMED=str(QSfichier.toLatin1())
       from acquiertGroupes import getGroupes
-      erreur,self.listeGroupes,self.nomMaillage=getGroupes(self.fichier)
+      erreur,self.listeGroupes,self.nomMaillage=getGroupes(self.fichierMED)
       if erreur != "" : print "a traiter"
 
     #-----------------------------
@@ -1164,7 +1192,7 @@ class JDCEditor(QSplitter):
     #----------------------------
       Msg,self.listeGroupes=self.appliEficas.ChercheGrpMailleInSalome()
       print Msg,self.listeGroupes
-      self.fichier="A_partir_de_SMESH"
+      self.fichierMED="A_partir_de_SMESH"
       self.nomMaillage="A_partir_de_SMESH"
       self.openfile.close()
 
