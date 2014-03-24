@@ -262,4 +262,6 @@ class CARMELCNDGenerator(PythonGenerator):
 
         return s
 
+   def get_repExeCarmel(self) :
+       return self.dictMCVal["__PARAMETRES__RepCarmel"]
   
