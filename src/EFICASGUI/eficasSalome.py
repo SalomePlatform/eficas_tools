@@ -208,6 +208,7 @@ class MyEficas( qtEficas.Appli ):
             meshObject=monObjet._narrow(SMESH.SMESH_Mesh)
        except :
        #  logger.debug('  pb avec ( entry = %s ) ' %entry )          
+         pass
        return meshObject
 
     #-------------------------------------
