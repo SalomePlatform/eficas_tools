@@ -264,7 +264,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
 
         mc = self.node.item.get_definition()
 
-        if  (isinstance(mc.type,types.TupleType) and "(*.med)" in mc.type[1] ) :
+        if  (isinstance(mc.type,types.TupleType) and len(mc.type) > 1 and "(*.med)" in mc.type[1] ))
            selection, commentaire = self.appliEficas.selectMeshFile(editor=self.editor)
            print selection, commentaire
            if commentaire != "" : 
