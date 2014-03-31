@@ -10,6 +10,8 @@ class grma(GEOM):
 class grno(GEOM):
   pass
 
+ONGLET="oui"
+
 MAILLAGES = PROC(nom='MAILLAGES',op=None,
   MAILLAGE_SAIN=FACT(statut='o',
      sane_name=SIMP(typ=('Fichier', 'Med Files(*.med);;All Files (*)'),fr= "",ang= "Name of the initial uncracked mesh",statut= "o"),
