@@ -84,6 +84,7 @@ option ( WITH_ASTER        "Install Aster files"       OFF )
 option ( WITH_MAP          "Install MAP files"         OFF )
 option ( WITH_CARMEL       "Install CARMEL files"      OFF )
 option ( WITH_SEP          "Install SEP files"         OFF )
+option ( WITH_ZCRACKS      "Install ZCRACKS files"     OFF )
 option ( IN_SALOME_CONTEXT "Configure Eficas for use in Salome" OFF )
 
 set ( _OPTIONLIST
@@ -98,6 +99,7 @@ set ( _SALOME_MECA_LIST
   WITH_OPENTURNS 
   WITH_ASTER
   WITH_SEP
+  WITH_ZCRACKS
   IN_SALOME_CONTEXT
   )
 
@@ -193,6 +195,12 @@ endif (WITH_CARMEL)
 if (WITH_SEP)
   add_subdirectory ( Sep )
 endif (WITH_SEP)
+
+# Installation des fichiers : ZCracks
+if (WITH_SEP)
+  add_subdirectory ( ZCracks )
+endif (WITH_SEP)
+
 
 ### Local Variables:
 ### mode: cmake
