@@ -65,7 +65,7 @@ class MyEficas( qtEficas.Appli ):
         @param  fichier: chemin absolu du fichier eficas a ouvrir a das le lancement. optionnel
         """
 
-        dictPathCode={'ASTER':'Aster','OPENTURNS_STUDY':'Openturns_Study','CARMEL3D':'Carmel3D',
+        dictPathCode={'ASTER':'Aster','OPENTURNS_STUDY':'Openturns_Study','CARMEL3D':'Carmel3D', 'CARMELCND':'CarmelCND',
                       'OPENTURNS_WRAPPER':'Openturns_Wrapper','MAP':'MAP','SEP':'Sep', 'ZCRACKS':'ZCracks'}
         if code in dictPathCode.keys():
             pathCode=dictPathCode[code]
@@ -207,8 +207,7 @@ class MyEficas( qtEficas.Appli ):
          if monObjet != None :                                    # selection d'un groupe de SMESH
             meshObject=monObjet._narrow(SMESH.SMESH_Mesh)
        except :
-       #  logger.debug('  pb avec ( entry = %s ) ' %entry )          
-         pass
+         logger.debug('  pb avec ( entry = %s ) ' %entry )          
        return meshObject
 
     #-------------------------------------
@@ -564,11 +563,13 @@ class MyEficas( qtEficas.Appli ):
                          'OPENTURNS_STUDY': "FICHIER_EFICAS_OPENTURNS_STUDY",
                          'OPENTURNS_WRAPPER': "FICHIER_EFICAS_OPENTURNS_WRAPPER",
                          'CARMEL3D': "FICHIER_EFICAS_CARMEL3D",
+                         'CARMELCND': "FICHIER_EFICAS_CARMELCND",
                         }
                         
             folderName = {  'ASTER'    :  'AsterFiles',
                             'SEP'       : 'OMFiles' ,
                             'CARMEL3D'  : 'CARMEL3DFiles' ,
+                            'CARMELCND'  : 'CARMELCNDFiles' ,
                             'MAP'       : 'MapFiles' ,
                             'OPENTURNS_STUDY': 'OpenturnsFiles',                                    
                             'OPENTURNS_WRAPPER': 'OpenturnsFiles'}                                    
@@ -577,6 +578,7 @@ class MyEficas( qtEficas.Appli ):
                            'SEP':      "SEP_FILE_FOLDER",
                            'MAP':      "MAP_FILE_FOLDER",
                            'CARMEL3D': "CARMEL3D_FILE_FOLDER",
+                           'CARMELCND': "CARMELCND_FILE_FOLDER",
                            'OPENTURNS_STUDY':"OPENTURNS_FILE_FOLDER",
                            'OPENTURNS_WRAPPER': "OPENTURNS_FILE_FOLDER"}
 

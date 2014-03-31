@@ -47,6 +47,7 @@ class GUIcontext:
     OT_WRAPPER_ID  = 945
     MULTICATALOG_ID = 946
     CARMEL3D_ID    = 947
+    CARMELCND_ID    = 948
 
     # constructor
     def __init__(self):
@@ -81,6 +82,10 @@ class GUIcontext:
                                     "Eficas pour Openturns Wrapper",
                                     "Editer un jeu de commande Openturns Wrapper avec Eficas",
                                     "eficasotwrp.png")
+        self.addActionConditionally("CarmelCND/prefs.py", GUIcontext.CARMELCND_ID,
+                                    "Eficas pour CarmelCND",
+                                    "Editer un jeu de commande CarmelCND avec Eficas",
+                                    "eficasCND.png")
         self.addActionConditionally("Carmel3D/prefs.py", GUIcontext.CARMEL3D_ID,
                                     "Eficas pour Carmel3D",
                                     "Editer un jeu de commande Carmel3D avec Eficas",
@@ -223,6 +228,10 @@ def runEficaspourCarmel3D():
    import eficasSalome
    eficasSalome.runEficas( "CARMEL3D" )
    
+def runEficaspourCarmelCND():
+   print "runEficas Pour CarmelCND "
+   import eficasSalome
+   eficasSalome.runEficas( "CARMELCND" )
 
 def runEficasFichier(version=None):
    """
@@ -263,6 +272,7 @@ dict_command={
                 GUIcontext.MAP_ID        : runEficaspourMap,
                 GUIcontext.OT_STUDY_ID   : runEficaspourOpenturnsStudy,
                 GUIcontext.OT_WRAPPER_ID : runEficaspourOpenturnsWrapper,
+                GUIcontext.CARMELCND_ID   : runEficaspourCarmelCND,
                 GUIcontext.CARMEL3D_ID   : runEficaspourCarmel3D,
                 GUIcontext.MULTICATALOG_ID : runEficas,
 
