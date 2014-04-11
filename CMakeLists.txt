@@ -197,9 +197,9 @@ if (WITH_SEP)
 endif (WITH_SEP)
 
 # Installation des fichiers : ZCracks
-if (WITH_SEP)
+if (WITH_ZCRACKS)
   add_subdirectory ( ZCracks )
-endif (WITH_SEP)
+endif (WITH_ZCRACKS)
 
 
 ### Local Variables:
