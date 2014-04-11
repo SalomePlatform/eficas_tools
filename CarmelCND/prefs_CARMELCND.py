@@ -25,6 +25,7 @@ import os,sys
 repIni=os.path.dirname(os.path.abspath(__file__))
 INSTALLDIR=os.path.join(repIni,'..')
 sys.path[:0]=[INSTALLDIR]
+sys.path[:0]=[repIni]
 
 
 # lang indique la langue utilisee pour les chaines d'aide : fr ou ang
