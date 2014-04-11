@@ -24,12 +24,15 @@ sys.path.append('/home/A96028/Salome/V7_main/tools/install/Medfichier-307-hdf518
 from med.medfile import *
 from med.medmesh import *
 from med.medfamily import *
+from med.medfilter import *
 
 
 def getGroupes(filename,debug=0) :
     listeGroupes=[]
     maa=""
     
+    dicoNumFam={}
+
     try :
         fid = MEDfileOpen(filename,MED_ACC_RDONLY)
     except :
@@ -73,14 +76,49 @@ def getGroupes(filename,debug=0) :
         # print "gro = %s\n"%(gro[j*MED_LNAME_SIZE:j*MED_LNAME_SIZE+MED_LNAME_SIZE])
             groupSplit=gro[j*MED_LNAME_SIZE:j*MED_LNAME_SIZE+MED_LNAME_SIZE]
             groupeName="".join(groupSplit).split("\x00")[0]
-            print groupeName,  numfam
+            if groupeName[0:7]=="CENTRE_" : dicoNumFam[groupeName]=numfam
             if groupeName not in listeGroupes : listeGroupes.append(groupeName) 
 
+
+    # /* Lecture des Numeros de Familles */ 
+    
+    nnoe, chgt, trsf = MEDmeshnEntity(fid,maa,MED_NO_DT,MED_NO_IT, MED_NODE,MED_NONE,MED_COORDINATE,MED_NO_CMODE)
+    nufano = MEDINT(nnoe)
+    MEDmeshEntityFamilyNumberRd(fid,maa, MED_NO_DT, MED_NO_IT, MED_NODE,MED_NONE,nufano)
+    dicoNumNode={}
+    for groupe in dicoNumFam.keys():
+        famille=dicoNumFam[groupe]
+        i=0
+        while i < nufano.size():
+           if nufano[i]==famille :
+              dicoNumNode[groupe]=i
+              break
+           i=i+1
    
    
-    print listeGroupes
+    print dicoNumNode
+    dicoCoord={}
+#    for groupe in dicoNumNode.keys() :
+#    for groupe in (1,) :
+#        flt=MEDINT(1)
+#        flt[0]=2
+#        print flt
+#        coo1=MEDFLOAT(4)
+#        filter=med_filter()
+#        print "kk"
+#        err=MEDfilterEntityCr( fid, nnoe, 1, sdim, MED_ALL_CONSTITUENT, MED_FULL_INTERLACE, MED_COMPACT_PFLMODE, MED_NO_PROFILE,1 , flt, filter)
+#        print err
+#        print "kk"
+#        MEDmeshNodeCoordinateAdvancedRd(fid, maa, MED_NO_DT, MED_NO_IT, filter, coo1)
+#        print "kk"
+#        MEDfilterClose(filter)
+#        print "kk"
+#        print coo1
+    dicoCoord['CENTRE_saxBas']=(0,0,28.5e-3)
+    dicoCoord['CENTRE_saxHaut']=(0,0,31.5e-3)
+
     MEDfileClose(fid)
-    return ("",listeGroupes,maa)
+    return ("",listeGroupes,maa,dicoCoord)
 
 if __name__ == "__main__":
     filename="/home/A96028/Carmel/Pascale/Domaine_Bidouille.med"
