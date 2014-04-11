@@ -12,8 +12,8 @@ def prepareRunCarmel(repertoireExe,repertoireMed,nom):
     #texte+= 'then\n    exit(1)\nfi \n\n'
     texte+= 'echo "Debut execution postprocess" \n'
     texte+= repertoireExe+"/postprocess.exe < " + nom + ".inpostprocess\n"
+    texte+= 'read a' 
     #texte+= repertoireExe+"/postprocess.exe"
-    print texte
 
     return texte
 
