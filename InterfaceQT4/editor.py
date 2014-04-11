@@ -179,6 +179,7 @@ class JDCEditor(QSplitter):
 
         texte=""
         if self.code == "CARMELCND" : texte=self._newJDCCND()
+        if self.code == "ZCRACKS" : texte=self._newZCRACKS()
         #   texte=self.newTexteCND
        
         jdc=self.readercata.cata[0].JdC( procedure =texte,
@@ -188,11 +189,11 @@ class JDCEditor(QSplitter):
                                          rep_mat=self.CONFIGURATION.rep_mat
                                         )
         jdc.lang    = self.appli.langue
-        if self.code == "CARMELCND" : return jdc
         if units is not None:
            jdc.recorded_units=units
            jdc.old_recorded_units=units
-        jdc.analyse()
+        ## PNPN est ce que la ligne suivante est bien utile ?
+        if texte == "" :jdc.analyse()
         return jdc
 
     #--------------------------------#
@@ -338,7 +339,7 @@ class JDCEditor(QSplitter):
         f.close()
         self.connect(self.monExe, SIGNAL("readyReadStandardOutput()"), self.readFromStdOut )
         self.connect(self.monExe, SIGNAL("readyReadStandardError()"), self.readFromStdErr )
-        exe='sh ' + nomFichier
+        exe='sh /tmp/test.sh'
         self.monExe.start(exe)
         self.monExe.closeWriteChannel()
         self.w.exec_()
@@ -356,6 +357,7 @@ class JDCEditor(QSplitter):
     def readFromStdOut(self) :
         a=self.monExe.readAllStandardOutput()
         self.w.view.append(QString.fromUtf8(a.data(),len(a))) ;
+        
 
 
     #-----------------------#
@@ -794,12 +796,18 @@ class JDCEditor(QSplitter):
       from PrepareRunCarmel import prepareRunCarmel
       fichierGenerique=os.path.basename(self.fichier).split(".")[0]
       repMed=os.path.dirname(self.fichier)
-      repExeCarmel="/home/A96028/ExecCarmel/Compil"
+      repExeCarmel=self.generator.get_repExeCarmel()
       textePython=prepareRunCarmel(repExeCarmel,repMed,fichierGenerique)
-      try :
-          self._viewTextExecute( textePython,"carmel_run",".sh")
-      except Exception, e:
-          print traceback.print_exc()
+      nomFichier = self.__generateTempFilename("carmel_run", suffix = ".sh")
+      f=open(nomFichier,'w')
+      f.write(textePython)
+      f.close()
+      commande="xterm -e sh "+nomFichier +"\n"
+      os.system(commande)
+      #try :
+      #    self._viewTextExecute( textePython,"carmel_run",".sh")
+      #except Exception, e:
+      #    print traceback.print_exc()
 
     #-------------------#
     def runCarmelCS(self):
@@ -1131,34 +1139,40 @@ class JDCEditor(QSplitter):
 
 
     #---------------------------#
+    def _newZCRACKS(self):
+    #---------------------------#
+        texte="MAILLAGES();REMESHING();"
+        return texte
+
+    #---------------------------#
     def _newJDCCND(self):
     #---------------------------#
       extensions=tr('Fichiers Med (*.med);;''Tous les Fichiers (*)')
       
-      if self.salome == 0 :
-         QMessageBox.information( self,
+      #if self.salome == 0 :
+      QMessageBox.information( self,
                       tr("Fichier Med"),
                       tr("Veuillez selectionner un fichier Med"))
-         QSfichier = QFileDialog.getOpenFileName(self.appliEficas,
+      QSfichier = QFileDialog.getOpenFileName(self.appliEficas,
                         caption='Fichier Med',
                         filter=extensions)
-         self.fichierMED=str(QSfichier.toLatin1())
-         from acquiertGroupes import getGroupes
-         erreur,self.listeGroupes,self.nomMaillage,self.dicoCoord=getGroupes(self.fichierMED)
-         if erreur != "" : print "a traiter"
-      else :
-         from monBoutonSalome import MonBoutonSalome
-         desBoutonSalome = MonBoutonSalome()
-         icon = QIcon()
-         icon = QIcon(self.appli.RepIcon+"/image240.png")
-         desBoutonSalome.pushButton.setIcon(icon)
-         desBoutonSalome.setMinimumSize(QtCore.QSize(453, 103))
+      self.fichierMED=str(QSfichier.toLatin1())
+      from acquiertGroupes import getGroupes
+      erreur,self.listeGroupes,self.nomMaillage,self.dicoCoord=getGroupes(self.fichierMED)
+      if erreur != "" : print "a traiter"
+      #else :
+      #   from monBoutonSalome import MonBoutonSalome
+      #   desBoutonSalome = MonBoutonSalome()
+      #   icon = QIcon()
+      #   icon = QIcon(self.appli.RepIcon+"/image240.png")
+      #   desBoutonSalome.pushButton.setIcon(icon)
+      #   desBoutonSalome.setMinimumSize(QtCore.QSize(453, 103))
 
-         self.openfile=QFileDialog(self.appli,caption='Fichier Med',filter=extensions)
-         self.openfile.layout().addWidget(desBoutonSalome)
-         self.connect(desBoutonSalome.pushButton,SIGNAL("clicked()"),self.BoutonSalomePressed)
-         self.connect(self.openfile,SIGNAL("fileSelected(QString)"),self.BoutonFileSelected)
-         r=self.openfile.exec_()
+      #   self.openfile=QFileDialog(self.appli,caption='Fichier Med',filter=extensions)
+      #   self.openfile.layout().addWidget(desBoutonSalome)
+      #   self.connect(desBoutonSalome.pushButton,SIGNAL("clicked()"),self.BoutonSalomePressed)
+      #   self.connect(self.openfile,SIGNAL("fileSelected(QString)"),self.BoutonFileSelected)
+      #   r=self.openfile.exec_()
       texteComm="COMMENTAIRE(u'Cree - fichier : "+self.fichierMED +" - Nom Maillage : "+self.nomMaillage+"');\nPARAMETRES()\n"
       texteSources=""
       texteCond=""
