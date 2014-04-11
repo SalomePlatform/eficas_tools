@@ -77,8 +77,10 @@ class ZCrackGenerator(PythonGenerator):
         fileZcrack = fn[:fn.rfind(".")] + '.z7p'
         f = open( str(fileZcrack), 'wb')
         print self.textePourRun
+      
         self.ajoutRun()
-        f.write( self.textePourRun)
+        self.textePourRunAvecDouble=self.textePourRun.replace("'",'"')
+        f.write( self.textePourRunAvecDouble)
         f.close()
 
    def ajoutRun(self) :
@@ -87,7 +89,6 @@ class ZCrackGenerator(PythonGenerator):
         self.textePourRun+="   nice_cut(20.);\n"
         self.textePourRun+='   export_mesh("'+self.cracked_name+'","med");\n'
         self.textePourRun+="}"
-
 
 #----------------------------------------------------------------------------------------
 #  analyse de chaque noeud de l'arbre 
@@ -103,11 +104,12 @@ class ZCrackGenerator(PythonGenerator):
                stringListe+=str(val)+" "
            self.textePourRun+="   "+obj.nom+ "='"+ stringListe[0:-1]+ "';\n"
            return s
-        if obj.nom=="elset_radius" :
+        if obj.nom=="elset_radius"  :
            self.textePourRun+="   if_must_define_elset=1;\n"
-        if obj.nom=="sane_name" :
-           self.textePourRun+="   import_mesh('"+obj.val+"');\n"
-        if obj.nom=="cracked_name" : self.cracked_name=obj.val
+        if obj.nom=="sane_name" and obj.val!=None :
+           self.textePourRun+='   import_mesh("'+obj.val+'");\n'
+
+        if obj.nom=="cracked_name" and obj.val!=None : self.cracked_name=obj.val
         if obj.nom=="repertoire" : 
            print "PNPNPN a traiter"
            return s
@@ -116,4 +118,4 @@ class ZCrackGenerator(PythonGenerator):
 
   
 # si repertoire on change tous les noms de fichier
-# exple repertoire='/home' __> fichier='/home/crack.med'
+# exple repertoire='/home' __> fichier='/home/crack.med
