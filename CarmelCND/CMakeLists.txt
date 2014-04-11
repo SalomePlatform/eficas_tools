@@ -22,7 +22,7 @@
 
 install ( FILES 
            qtEficas_CarmelCND.py prefs_CARMELCND.py prefs.py configuration_CARMELCND.py
-	   acquiertGroupes.py CarmelCND_Cata.py
+	   acquiertGroupes.py CarmelCND_Cata.py PrepareRunCarmel.py
 	   DESTINATION ${CMAKE_INSTALL_PREFIX}/CarmelCND
         )
 
