@@ -100,6 +100,12 @@ class MCSIMP:
           valid = 0
 
         lval=listProto.adapt(v)
+        #Pour tenir compte des Tuples
+        if hasattr(self.definition.type[0],'ntuple') :
+           try :
+              if not (type(lval[0]) is tuple) : lval=(lval,)
+           except :
+              pass
         if lval is None:
            valid=0
            if cr == 'oui' :

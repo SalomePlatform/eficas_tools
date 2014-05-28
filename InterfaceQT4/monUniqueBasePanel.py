@@ -155,6 +155,9 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
          commentaire = getattr(mctype, 'help_message', tr("Type de base inconnu"))
       else:
          commentaire = d_aides.get(mctype, tr("Type de base inconnu"))
+      if commentaire == tr("Type de base inconnu") and "Tuple" in str(mctype):
+         commentaire=str(mctype)
+      
        
       commentaire = commentaire + unicode(self.node.item.aide())
       if self.node.item.object.definition.get_sug() != None :
