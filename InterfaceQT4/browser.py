@@ -370,6 +370,7 @@ class JDCNode(QTreeWidgetItem):
            self.item.jdc.recalcule_etat_correlation()
         if hasattr(self.item,'forceRecalcul'):
            self.forceRecalculChildren(self.item.forceRecalcul)
+        if self.editor.appliEficas.ssIhm==True: return
         self.editor.init_modif()
         self.update_node_valid()
         self.update_node_label()
