@@ -809,11 +809,20 @@ class JDCEditor(QSplitter):
       #except Exception, e:
       #    print traceback.print_exc()
 
+
     #-------------------#
-    def runCarmelCS(self):
+    def runCARMELCS(self):
     #-------------------#
       try :
-          commande="runSession pilotyacsCS.py"
+          #commande="runSession pilotyacsCS.py"
+          print "runCarmelCS  coucou"
+          #self.generator=generator.plugins['CARMELCS']()
+          runxmlfile=self.generator.generxml(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+          #print "editor : runCarmelCS : runxmlfile = ",runxmlfile
+          path = os.environ['EFICAS_ROOT']
+          CarmelCSpath = os.path.join(path,"CarmelCS")
+          commande="./runSession " + " python " + os.path.join(CarmelCSpath,"pilotyacsCS.py ") + runxmlfile
+
           os.system(commande)
       except Exception, e:
           print traceback.print_exc()
@@ -984,7 +993,8 @@ class JDCEditor(QSplitter):
            self.fileInfo = QFileInfo(self.fichier)
            self.fileInfo.setCaching(0)
         self.lastModified = self.fileInfo.lastModified()
-        if newName is not None:
+        
+        if newName is not None and (self.appliEficas.ssIhm != False):
            self.appliEficas.addToRecentList(newName)
            self.tree.racine.item.getObject().nom=os.path.basename(newName)
            self.tree.racine.update_node_label()
@@ -1009,6 +1019,7 @@ class JDCEditor(QSplitter):
         """
         if fileName != None :
            self.fichier = fileName
+           self.modified=1
            return self.saveFile()
         return self.saveFile(path,1)
 
