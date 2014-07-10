@@ -1,4 +1,3 @@
-# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -22,19 +21,12 @@
    Ce module contient la classe AsException
 """
 
-# Modules Python
-import types
+# Modules EFICAS
+from strfunc import get_encoding
 
 class AsException(Exception):
-  def __str__(self):
-    if not self.args:
-      return ''
-    elif len(self.args) == 1:
-      return str(self.args[0])
-    else:
-      s=''
-      for e in self.args:
-        if type(e) == types.StringType: s=s+ ' ' + e
-        else:s=s+ ' ' + str(e)
-      return s
+  def __unicode__(self):
+    return " ".join([unicode(x) for x in self.args])
 
+  def __str__(self):
+    return unicode(self).encode(get_encoding())

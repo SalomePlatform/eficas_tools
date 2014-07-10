@@ -128,9 +128,8 @@ class OpenturnsGenerator(PythonGenerator):
 
    def writeDefault(self, fn):
       fileSTD = fn[:fn.rfind(".")] + '.py'
-      f = open( str(fileSTD), 'wb')
-      f.write( self.texteSTD )
-      f.close()
+      with open(fileSTD, 'w') as f:
+        f.write(self.texteSTD)
 
    def getGenerateur (self):
       print "IDM: getGenerateur dans generator_openturns_study.py"

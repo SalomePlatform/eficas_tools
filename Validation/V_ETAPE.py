@@ -222,7 +222,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
       """
       self.cr=self.CR(debut=u'Etape : '+self.nom \
                 + u'    ligne : '+`self.appel[0]`\
-                + u'    fichier : '+`self.appel[1]`,
+                + u'    fichier : '+ self.appel[1],
                  fin = u'Fin Etape : '+self.nom)
       self.state = 'modified'
       try:

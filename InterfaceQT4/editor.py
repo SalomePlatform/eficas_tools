@@ -157,7 +157,7 @@ class JDCEditor(QSplitter):
             if txt_exception:
                 self.jdc = None
                 qApp.restoreOverrideCursor()
-                self.affiche_infos(tr("Erreur fatale au chargement de %s",str(fichier)),Qt.red)
+                self.affiche_infos(tr("Erreur fatale au chargement de %s", fichier), Qt.red)
                 if (self.appliEficas.ssIhm == False) : QMessageBox.critical( self, tr("Erreur fatale au chargement d'un fichier"), txt_exception)
             else:
                 comploader.charger_composants("QT")
@@ -850,7 +850,7 @@ class JDCEditor(QSplitter):
       if QFileInfo(fn).exists():
            abort = QMessageBox.warning(self,
                    tr("Sauvegarde du Fichier"),
-                   tr("Le fichier <b>%s</b> existe deja.",str(fn)),
+                   tr("Le fichier <b>%s</b> existe deja.", unicode(fn)),
                    tr("&Ecraser"),
                    self.trUtf8("&Abandonner"))
            if abort == 1 :  return (0, "")

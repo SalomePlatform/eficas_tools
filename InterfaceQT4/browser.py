@@ -110,9 +110,8 @@ class JDCNode(QTreeWidgetItem):
         #if hasattr(self.editor, 'affichage_onglet' ) :self.affichage_onglet=self.editor.affichage_onglet
         #else : self.affichage_onglet=False
 
-                        
-        name  = self.appliEficas.trUtf8(  str( item.GetLabelText()[0] ) )
-        value = self.appliEficas.trUtf8(  str( item.GetText() ) )
+        name  = self.appliEficas.trUtf8( item.GetLabelText()[0] )
+        value = self.appliEficas.trUtf8( item.GetText() )
         mesColonnes=QStringList()
         mesColonnes <<  name << value
         QTreeWidgetItem.__init__(self,treeParent,mesColonnes)
@@ -178,7 +177,7 @@ class JDCNode(QTreeWidgetItem):
         """
         Cette methode a pour but de commentariser la commande pointee par self
         """
-        # On traite par une exception le cas ou l'utilisateur final cherche a désactiver
+        # On traite par une exception le cas oÃ¹ l'utilisateur final cherche Ã  dÃ©sactiver
         # (commentariser) un commentaire.
         try :
             pos=self.treeParent.children.index(self)
@@ -295,7 +294,7 @@ class JDCNode(QTreeWidgetItem):
           child=old_obj[-1]
           child.affichePanneau() 
         except:
-          # Souci pour gerer les copies des AFFE d'une commande à l autre
+          # Souci pour gÃ©rer les copies des AFFE d'une commande Ã  l autre
           try :
              child=self.children[index]
              child.affichePanneau() 
@@ -347,7 +346,7 @@ class JDCNode(QTreeWidgetItem):
             if noeud.treeParent.children.index(noeud) < index : index=noeud.treeParent.children.index(noeud)
         if index < 0 : index =0
 
-        # Cas ou on détruit dans une ETape
+        # Cas ou on dÃ©truit dans une Etape
         if index == 9999 : 
               parentPosition=self.treeParent
               while not(isinstance(parentPosition, compojdc.Node)):
@@ -476,8 +475,8 @@ class JDCNode(QTreeWidgetItem):
 
     def doPaste(self,node_selected,pos='after'):
         """
-            Déclenche la copie de l'objet item avec pour cible
-            l'objet passé en argument : node_selected
+            DÃ©clenche la copie de l'objet item avec pour cible
+            l'objet passÃ© en argument : node_selected
         """
         #print 'je passe dans doPaste'
         objet_a_copier = self.item.get_copie_objet()
@@ -486,7 +485,7 @@ class JDCNode(QTreeWidgetItem):
 
     def doPasteCommande(self,objet_a_copier,pos='after'):
         """
-          Réalise la copie de l'objet passé en argument qui est nécessairement
+          RÃ©alise la copie de l'objet passÃ© en argument qui est nÃ©cessairement
           une commande
         """
         child=None
@@ -498,7 +497,7 @@ class JDCNode(QTreeWidgetItem):
 
     def doPastePremier(self,objet_a_copier):
         """
-           Réalise la copie de l'objet passé en argument (objet_a_copier)
+           RÃ©alise la copie de l'objet passÃ© en argument (objet_a_copier)
         """
         objet = objet_a_copier.item.get_copie_objet()
         child = self.append_child(objet,pos='first')
