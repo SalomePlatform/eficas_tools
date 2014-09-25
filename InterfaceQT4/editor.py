@@ -754,11 +754,11 @@ class JDCEditor(QSplitter):
 
           #textePython="ls -l"
           self._viewTextExecute( textePython,"map_run",".sh")
-          try:
-             commande="rm  "+self.fichierMapInput
-             os.system(commande)
-          except :
-             pass
+          #try:
+          #   commande="rm  "+self.fichierMapInput
+          #   os.system(commande)
+          #except :
+          #   pass
       except Exception, e:
           print traceback.print_exc()
 
