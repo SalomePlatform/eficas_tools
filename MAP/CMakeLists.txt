@@ -21,12 +21,11 @@
 
 
 install ( FILES qtEficas_map.py
-		prefs.py
-		style.py
-		prefs_MAP.py
-		configuration_MAP.py
-                mapcata.py
-	  DESTINATION ${CMAKE_INSTALL_PREFIX}/MAP
+                prefs.py
+                style.py
+                prefs_MAP.py
+                configuration_MAP.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/MAP
         )
 
 

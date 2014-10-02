@@ -22,7 +22,7 @@ import os, sys
 # Les variables pouvant positionnees sont :
 #print "import des prefs de MAP"
 
-# repIni sert a localiser le fichier 
+# repIni sert a localiser le fichier
 # initialdir sert comme directory initial des QFileDialog
 # positionnee a repin au debut mise a jour dans configuration
 repIni=os.path.dirname(os.path.abspath(__file__))
@@ -40,7 +40,7 @@ exec_acrobat    = "/usr/bin/xpdf"
 savedir         = os.environ['HOME']
 
 rep_cata=os.path.dirname(os.path.abspath(__file__))
- 
+
 catalogues=(
 # ('MAP','Solver',os.path.join(rep_cata,'cata_solver1.py'),'solver1'),
 # ('MAP','Test',os.path.join(rep_cata,'cata_s_test03.py'),'s_test03'),
@@ -49,7 +49,5 @@ catalogues=(
 # ('MAP','Table FFT',os.path.join(rep_cata,'cata_c_post_table_fft.py'), 'c_post_table_fft'),
 # ('MAP','PRE Mesh',os.path.join(rep_cata,'cata_c_pre_interface_mesh.py'), 'c_pre_interface_mesh'),
 # ('MAP','Analyse 3D',os.path.join(rep_cata,'cata_s_scc_3d_analysis.py'), 's_scc_3d_analysis'),
- ('MAP','Map',os.path.join(rep_cata,'mapcata.py'), 'essai'),
+# ('MAP','Map',os.path.join(rep_cata,'mapcata.py'), 'essai'),
 )
-
-
