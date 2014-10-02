@@ -1109,15 +1109,15 @@ class JDCEditor(QSplitter):
         else :
            self.versionCataDuJDC=text[indexDeb+19:indexFin]
            textJDC=text[0:indexDeb]+text[indexFin+23:-1]
-           print textJDC
+           #print textJDC
 
         self.versionCata="sans"
         if hasattr(self.readercata.cata[0],'VERSION_CATALOGUE'): self.versionCata=self.readercata.cata[0].VERSION_CATALOGUE
 
         if self.versionCata==self.versionCataDuJDC : memeVersion=True
-        print self.versionCata
-        print self.versionCataDuJDC
-        print memeVersion
+        #print self.versionCata
+        #print self.versionCataDuJDC
+        #print memeVersion
         return memeVersion,textJDC
 
     #-------------------------------#
