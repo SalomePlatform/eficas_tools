@@ -127,6 +127,16 @@ class JDCEditor(QSplitter):
 
         self.nouveau=0
         if self.fichier is not None:        #  fichier jdc fourni
+            fileName, fileExtension = os.path.splitext(self.fichier)
+            if self.code == "MAP" and fileExtension == ".input":
+                # need to convert .input to .map (JDC) format
+                jdc_file = self.__generateTempFilename(prefix = fileName+"_", suffix = ".map")
+                cmd = ("map gen -t jdc -i " + self.fichier + " -o " + jdc_file)
+                p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+                (output, err) = p.communicate()
+                self.fichier = jdc_file
+            #
+
             self.fileInfo = QFileInfo(self.fichier)
             self.fileInfo.setCaching(0)
             if jdc==None :

@@ -23,7 +23,7 @@ from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
-DictExtensions= {"MAP" : ".map"}
+DictExtensions= {"MAP" : ".map .input"}
 class MyTabview:
 
    def __init__(self,appliEficas):
@@ -59,7 +59,9 @@ class MyTabview:
                if self.appliEficas.code == None:return
             
             if DictExtensions.has_key(self.appliEficas.code) :
-               chaine="JDC (*"+DictExtensions[self.appliEficas.code]+");;"
+               ext_values = DictExtensions[self.appliEficas.code].split()
+               ext_values = " ".join([ "*"+ext for ext in ext_values ])
+               chaine="JDC ("+ext_values+");;"
                extensions=tr(chaine+ "All Files (*)")
             else :
                extensions=tr('Fichiers JDC (*.comm);;''Tous les Fichiers (*)')
