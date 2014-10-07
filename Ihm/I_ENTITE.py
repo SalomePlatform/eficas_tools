@@ -123,15 +123,15 @@ class ENTITE:
 
       dico={}
       if hasattr(self,'into') and self.into!=None: dico['into']=str(self.into)
-      if hasattr(self,'max') : dico['max']=str(self.max)
-      if hasattr(self,'min') : dico['min']=str(self.min)
+      if hasattr(self,'val_max') and self.val_max != "**" : dico['max']=str(self.val_max)
+      if hasattr(self,'val_min') and self.val_min != "**" : dico['min']=str(self.val_min)
       if dico != {} :
            PV=ET.SubElement(moi,'PlageValeur')
            PV.attrib=dico
 
       dico={}
-      if hasattr(self,'val_max') : dico['val_max']=str(self.val_max)
-      if hasattr(self,'val_min') : dico['val_min']=str(self.val_min)
+      if hasattr(self,'max')  and self.max != 1 : dico['max']=str(self.max)
+      if hasattr(self,'min')  and self.min != 1 : dico['max']=str(self.min)
       if dico != {} :
            Card=ET.SubElement(moi,'Cardinalite')
            Card.attrib=dico
@@ -168,4 +168,70 @@ class ENTITE:
 
       for nomFils, fils in self.entites.items() :
           fils.enregistreXML(moi,catalogueXml)
+      
+  def enregistreXMLStructure(self,root,catalogueXml):
+      import xml.etree.ElementTree as ET
+      import types
+      moi=ET.SubElement(root,str(self.__class__))
+
+      if hasattr(self,'into') and self.into!=None: 
+          INTO=ET.SubElement(moi,'into')
+          INTO.text='into'
+
+      dico={}
+      if hasattr(self,'val_max') and self.val_max != "**" : dico['max']=str(self.val_max)
+      if hasattr(self,'val_min') and self.val_min != "**" : dico['min']=str(self.val_min)
+      if dico != {} :
+           PV=ET.SubElement(moi,'maxOrMin')
+           PV.text='maxOrMin'
+
+      dico={}
+      if hasattr(self,'max')  and self.max != 1 : dico['max']=str(self.max)
+      if hasattr(self,'min')  and self.min != 1 : dico['max']=str(self.min)
+      if dico != {} :
+           Card=ET.SubElement(moi,'liste')
+           Card.text="liste"
+
+      dico={}
+      if hasattr(self,'statut') and self.statut=="f" :
+         statut=ET.SubElement(moi,'facultatif')
+         statut.text='facultatif'
+      if hasattr(self,'statut') and self.statut !="f" :
+         statut=ET.SubElement(moi,'obligatoire')
+         statut.text='obligatoire'
+
+      if hasattr(self,'type') and self.type != ():
+        try :
+           if 'Fichier' in self.type : ty=ET.SubElement(moi,'Fichier')
+           ty.text='type'
+        except :
+           try :
+             if 'Repertoire' in self.type : ty=ET.SubElement(moi,'Repertoire')
+             ty.text='type'
+           except :
+              for t in self.type:
+                if t == "I" : ty=ET.SubElement(moi,'typeEntier')
+                elif t == "R" : ty=ET.SubElement(moi,'typeReel')
+                elif t == "TXM" : ty=ET.SubElement(moi,'typeTXM')
+                else :
+                  try :
+                    ty=ET.SubElement(moi,t.__name__) 
+                  except :
+                    ty=ET.SubElement(moi,'autre') 
+                ty.text='type'
+
+      if hasattr(self,'sd_prod') and self.sd_prod != () and self.sd_prod !=None:
+         typeCree=ET.SubElement(moi,'typeCree')
+         typeCree.text='sd_prod'
+ 
+      if hasattr(self,'op') and self.op !=None  : 
+         subRoutine=ET.SubElement(moi,'subRoutine')
+         subRoutine.text='op'
+
+      if hasattr(self,'proc') and self.proc != None : 
+         construction=ET.SubElement(moi,'Construction')
+         construction.text='proc'
+
+      for nomFils, fils in self.entites.items() :
+          fils.enregistreXMLStructure(moi,catalogueXml)
       
