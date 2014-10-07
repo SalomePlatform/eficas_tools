@@ -29,6 +29,7 @@ class appliEficasSSIhm:
        self.indice=0
        self.dict_reels={}
        self.listeAEnlever=[]
+       self.multi=False
 
 
        name='prefs_'+self.code
@@ -46,6 +47,9 @@ class appliEficasSSIhm:
        nameConf='configuration_'+self.code
        configuration=__import__(nameConf)
        self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
+       self.CONFIGStyle = None
+       self.langue='fr'
+       self.ssIhm=True
         
 class QWParentSSIhm:
    def __init__(self,code,appliEficas,version_code,ssCode=None):
