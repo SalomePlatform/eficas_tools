@@ -110,8 +110,8 @@ class JDCNode(QTreeWidgetItem):
         #if hasattr(self.editor, 'affichage_onglet' ) :self.affichage_onglet=self.editor.affichage_onglet
         #else : self.affichage_onglet=False
 
-        name  = self.appliEficas.trUtf8( item.GetLabelText()[0] )
-        value = self.appliEficas.trUtf8( item.GetText() )
+        name  = self.appliEficas.trUtf8(str( item.GetLabelText()[0]) )
+        value = self.appliEficas.trUtf8(str( item.GetText() ))
         mesColonnes=QStringList()
         mesColonnes <<  name << value
         QTreeWidgetItem.__init__(self,treeParent,mesColonnes)
