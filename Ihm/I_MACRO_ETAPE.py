@@ -77,7 +77,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          ou leve une exception
          --> utilisee par ops.POURSUITE et INCLUDE
     """
-    #print "get_contexte_jdc",self,self.nom
+    print "get_contexte_jdc",self,self.nom
     # On recupere l'etape courante
     step=CONTEXT.get_current_step()
     try:
@@ -517,32 +517,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     self.recorded_units={}
     self.build_jdcaux(fichier,text)
 
-  def build_includeInclude(self,text):
-    import Extensions.jdc_include
-    self.JdC_aux=Extensions.jdc_include.JdC_include
-    # un include partage la table des unites avec son parent (jdc)
-    self.build_jdcauxInclude(text)
-
-  def build_jdcauxInclude(self,text):
        
-       try :
-         contexte = self.get_contexte_jdc(None,text)
-       except Exception:
-         pass
-       index=self.jdc.etapes.index(self)
-       for e in self.etapes:
-           e.niveau=self.niveau
-       self.jdc.etapes=self.jdc.etapes[:index+1]+self.etapes+self.jdc.etapes[index+1:]
-       self.g_context={}
-       self.etapes=[]
-       self.jdc_aux=None
-       CONTEXT.unset_current_step()
 
   def build_includeInclude(self,text):
     import Extensions.jdc_include
     self.JdC_aux=Extensions.jdc_include.JdC_include
     # un include partage la table des unites avec son parent (jdc)
     self.build_jdcauxInclude(text)
+
 
   def build_jdcauxInclude(self,text):
        
@@ -814,6 +796,33 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def make_include3(self,fichier=None):
       self.make_includeCarmel(fichier)
+
+
+  def make_includeCND(self,fichier=None):
+      unite=999
+      if fichier==None : return
+      if hasattr(self,'fichier_ini'):print self.fichier_ini
+      if hasattr(self,'fichier_ini') : return
+      self.fichier_ini=fichier
+      print "je suis dans make_includeCND"
+      from acquiertGroupes import getGroupes
+      erreur,listeGroupes=getGroupes(fichier)
+      if erreur != "" : print "a traiter"
+      texteSources=""
+      texteCond=""
+      texteNoCond=""
+      texteVcut=""
+      for groupe in listeGroupes :
+          if groupe[0:8]=='CURRENT_': texteSources +=groupe[8:]+"=SOURCE();\n"
+          if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"
+          if groupe[0:7]=='NOCOND_':  texteNoCond  +=groupe[7:]+"=NOCOND();\n"
+          #if groupe[0:5]=='VCUT_':    texteVcut    +=groupe[5:]+"=VCUT();\n"
+          if groupe[0:5]=='VCUT_':    texteVcut    +='V_'+groupe[5:]+"=VCUT();\n"
+      texte=texteSources+texteCond+texteNoCond+texteVcut
+      print texte
+      self.build_includeInclude(texte)
+      if CONTEXT.get_current_step()==None : CONTEXT.set_current_step(self)
+      reevalue=0
 
   def make_includeCarmel(self,fichier=None):
   # Pour Carmel
