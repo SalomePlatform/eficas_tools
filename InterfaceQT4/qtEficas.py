@@ -57,7 +57,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.recent =  QStringList()
         self.ficRecents={}
         self.listeAEnlever=[]
-        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND','MT']
+        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND','MT','CarmelCS']
 
         if self.salome:
           import Accas
@@ -197,6 +197,19 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.addAction(self.actionParametres_Eficas)
         self.menuOptions.setTitle(tr("Options"))
 
+    def PSEN(self):
+        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.actionExecution = QAction(self)
+        icon6 = QIcon(self.RepIcon+"/compute.png")
+        self.actionExecution.setIcon(icon6)
+        self.actionExecution.setObjectName("actionExecution")
+        self.menuExecution.addAction(self.actionExecution)
+        if not(self.actionExecution in self.toolBar.actions()):
+           self.toolBar.addAction(self.actionExecution)
+        self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+
+        self.menuOptions = self.menubar.addMenu("menuOptions")
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
         self.menuTraduction.addAction(self.actionTraduitV7V8)
@@ -229,6 +242,22 @@ class Appli(Ui_Eficas,QMainWindow):
            self.toolBar.addAction(self.actionExecution)
         self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+
+    def CARMELCS(self):
+        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.actionExecution = QAction(self)
+        icon6 = QIcon(self.RepIcon+"/compute.png")
+        self.actionExecution.setIcon(icon6)
+        self.actionExecution.setObjectName("actionExecution")
+        self.menuExecution.addAction(self.actionExecution)
+        if not(self.actionExecution in self.toolBar.actions()):
+           self.toolBar.addAction(self.actionExecution)
+        self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+
+        self.menuOptions = self.menubar.addMenu("menuOptions")
+        self.menuOptions.addAction(self.actionParametres_Eficas)
+        self.menuOptions.setTitle(tr("Options"))
 
 
     def ChercheGrpMesh(self):
