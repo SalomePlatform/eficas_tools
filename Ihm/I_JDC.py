@@ -89,6 +89,17 @@ class JDC(I_OBJECT.OBJECT):
                 l.append(variable.nom)
       return l
 
+   def get_distributions(self,etape):
+      etapeStop=etape
+      l=[]
+      for etapeTraitee in self.etapes :
+          if etapeTraitee==etapeStop:
+             break
+          if etapeTraitee.nom == 'DISTRIBUTION' :
+             l.append(etapeTraitee.sd.nom)
+      return l
+
+
    def set_Copules_recalcule_etat(self):
       for etapeTraitee in self.etapes :
           if etapeTraitee.nom == 'CORRELATION' :
@@ -116,7 +127,6 @@ class JDC(I_OBJECT.OBJECT):
                 
 
    def recalcule_validite_apres_changement_global_jdc(self):
-        #print "je passe dans recalcule_validite_apres_changement_global_jdc"
         try :
           liste=self.get_jdc_root().cata[0].liste_condition
         except :
@@ -288,6 +298,7 @@ class JDC(I_OBJECT.OBJECT):
           self.fin_modif()
           return e
         except AsException,e:
+          traceback.print_exc()
           self.reset_current_step()
           self.editmode=0
           raise AsException(tr("Impossible d'ajouter la commande")+name + '\n')
