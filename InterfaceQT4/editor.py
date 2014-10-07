@@ -1201,8 +1201,7 @@ class JDCEditor(QSplitter):
       texteVcut=""
       for groupe in self.listeGroupes :
           if groupe[0:8]=='CURRENT_':
-             texteSources +=groupe[8:]+"=SOURCE("
-             texteSources +="VecteurDirecteur=(1.0,2.0,3.0,),);\n"
+             texteSources +=groupe[8:]+"=SOURCE();\n"
           if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"
           if groupe[0:7]=='NOCOND_':  texteNoCond  +=groupe[7:]+"=NOCOND();\n"
           if groupe[0:5]=='VCUT_':    texteVcut    +='V_'+groupe[5:]+"=VCUT();\n"
