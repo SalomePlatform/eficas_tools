@@ -289,7 +289,6 @@ class MCSIMP(I_OBJECT.OBJECT):
          self.parent.update_condition_bloc()
 
   def set_valeur(self,new_valeur,evaluation='oui'):
-        #print "set_valeur",new_valeur
         self.init_modif()
         self.valeur = new_valeur
         self.val = new_valeur
@@ -628,6 +627,11 @@ class MCSIMP(I_OBJECT.OBJECT):
        self.monType.nbLigs=len(listeVariables)
        self.monType.nbCols=len(listeVariables)
       
+
+  def NbDeDistributions(self):
+       listeVariables=self.jdc.get_distributions(self.etape)
+       self.monType.nbLigs=len(listeVariables)
+       self.monType.nbCols=len(listeVariables)
       
 #--------------------------------------------------------------------------------
  
