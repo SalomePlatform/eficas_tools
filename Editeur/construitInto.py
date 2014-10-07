@@ -18,6 +18,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+listeCode=( "Aster" , "Adao" , "Carmel3D" , "CarmelCND" , "Openturns_Wrapper" , "Openturns_Study" , "MAP" , "MT" , "SPECA")
 
 import sys,os
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
@@ -27,57 +28,69 @@ from Extensions.i18n import tr
 from string import split,strip,lowercase,uppercase
 import re,string
 
-import xml.etree.ElementTree as ET
-from xml.dom import minidom
 
-from PyQt4.QtGui import *
-
-def prettify(elem):
-    """Return a pretty-printed XML string for the Element.
-    """
-    rough_string = ET.tostring(elem, 'iso-8859-1')
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ")
-
-                
-class CatalogueXML:
+class ChercheInto:
         def __init__(self,cata,cataName):
-                self.fichier="/tmp/XML/"+cataName+".xml"
                 self.cata=cata
-                self.first=ET.Element('cata')
-                comment=ET.Comment("catalogue "+str(cataName))
-                self.first.append(comment)
-                self.reglesUtilisees=[]
-                self.validatorsUtilises=[]
-                self.constr_list_txt_cmd()
-                self.ecrire_fichier()
-
-
-        def ecrire_fichier(self):
-                try :
-                   import codecs
-		   f = codecs.open(self.fichier, "w", "ISO-8859-1")
-                   #print prettify(self.first)
-                   f.write(prettify(self.first))
-                   f.close()
-                except :
-                   print ("Impossible d'ecrire le fichier : "+ str(self.fichier))
-
-        def constr_list_txt_cmd(self):
+                self.dictInto={}
                 mesCommandes=self.cata.JdC.commandes
-                self.commandes=ET.SubElement(self.first,'commandes')
                 for maCommande in mesCommandes:
-                    maCommande.enregistreXMLStructure(self.commandes,self)
+                    self.construitListeInto(maCommande)
+                #print self.dictInto
 
 
+        def construitListeInto(self,e):
+            if hasattr(e,'into') and e.into!=None:
+               if len(e.into) in self.dictInto.keys():
+                 self.dictInto[len(e.into)]+=1
+               else :
+                 self.dictInto[len(e.into)]=1
+            for nomFils, fils in e.entites.items():
+                self.construitListeInto(fils)
+
+        def getDico(self):
+            return self.dictInto
+
+class CompteInto:
+      def __init__ (self) :
+        self.monDico={}
+        self.monDico[2]=0
+        self.monDico[10]=0
+        self.monDico[30]=0
+        self.monDico[60]=0
+        self.monDico[61]=0
+        self.tout=0.0
+
+      def ajoutDico(self,dico) :
+          for k in dico.keys():
+              if k < 3 : self.monDico[2]+=dico[k]
+              elif k < 11 : self.monDico[10]+=dico[k]
+              elif k < 31 : self.monDico[30]+=dico[k]
+              elif k < 61 : self.monDico[60]+=dico[k]
+              else : self.monDico[61]+=dico[k]
+              self.tout+=dico[k]
+
+      def imprime(self):
+          for l in 2,10,30,60,61:
+              print l
+              print self.monDico[l]
+              print self.monDico[l]/self.tout 
+              print "_______________________"
+              
+
+        
 if __name__ == "__main__" :
 	#monCata="/local/noyret/Install_Eficas/MAP/mapcata.py"
 	#monCata="/local/noyret/Install_Eficas/Aster/Cata/cataSTA11/cata.py"
 	#monCata="/local/noyret/Install_Eficas/MAP/mapcata.py"
 	#monCata="/local/noyret/Install_Eficas/MAP/mapcata.py"
-        code="Aster"
-        version=None
 
+
+
+   cmpte=CompteInto()
+   for code in listeCode:
+
+        version=None
         from Editeur  import session
         options=session.parse(sys.argv)
         if options.code!= None :    code=options.code
@@ -95,7 +108,11 @@ if __name__ == "__main__" :
         Eficas.readercata=monreadercata
         monCata=monreadercata.cata[0]
 
-        monCataXML=CatalogueXML(monCata,code)
+        monConstruitInto=ChercheInto(monCata,code)
+        dic=monConstruitInto.getDico()
+        cmpte.ajoutDico(dic)
+
+   cmpte.imprime()
 
 
 
