@@ -227,12 +227,12 @@ class MonPlusieursBasePanel(DPlusBase,QTPanel,SaisieValeur):
         genea=self.node.item.get_genealogie()
         selection=[]
         commentaire=""
-        kwType = None
+        kwType = self.node.item.object.definition.type[0]
         for e in genea:
             if "GROUP_NO" in e: kwType = "GROUP_NO"
             if "GROUP_MA" in e: kwType = "GROUP_MA"
         if 'grno' in repr(kwType): kwType = "GROUP_NO"
-        if 'grma' in repr(kwType): kwType = "GROUP_NO"
+        if 'grma' in repr(kwType): kwType = "GROUP_MA"
 
         from Accas import SalomeEntry
         if isinstance(kwType, types.ClassType) and issubclass(kwType, SalomeEntry):

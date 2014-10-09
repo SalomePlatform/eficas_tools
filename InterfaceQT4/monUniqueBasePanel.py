@@ -260,7 +260,7 @@ class MonUniqueBasePanel(DUnBase,QTPanel,SaisieValeur):
             if "GROUP_MA" in e: kwType = "GROUP_MA"
 
         if 'grno' in repr(kwType): kwType = "GROUP_NO"
-        if 'grma' in repr(kwType): kwType = "GROUP_NO"
+        if 'grma' in repr(kwType): kwType = "GROUP_MA"
 
         if kwType in ("GROUP_NO","GROUP_MA"):
            selection, commentaire = self.appliEficas.selectGroupFromSalome(kwType,editor=self.editor)
