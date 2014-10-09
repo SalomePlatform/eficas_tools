@@ -176,7 +176,7 @@ class CARMELCNDGenerator(PythonGenerator):
        listeSource.sort()
        for source in listeSource:
            debutKey=source+"______SOURCE__"
-           texteSource=self.dictMCVal[debutKey+"NomDomaine"]+"\n"
+           texteSource=self.dictMCVal[debutKey+"EnveloppeConnexeInducteur"]+"\n"
            texteSource+="2\n"
            for val in self.dictMCVal[debutKey+"VecteurDirecteur"] :
                texteSource+=str(val)+" "
@@ -184,7 +184,7 @@ class CARMELCNDGenerator(PythonGenerator):
            for val in self.dictMCVal[debutKey+"Centre"] :
                texteSource+=str(val)+" "
            texteSource+="\n"
-           texteSource+=str(self.dictMCVal[debutKey+"SectionDomaine"])+"\n"
+           texteSource+=str(self.dictMCVal[debutKey+"SectionBobine"])+"\n"
            self.texteIngendof+=texteSource
            self.texteSourcePhys+="   [STRANDED_INDUCTOR\n"
            self.texteSourcePhys+="      NAME "+source+"\n"
@@ -222,7 +222,7 @@ class CARMELCNDGenerator(PythonGenerator):
            self.textePhys+=str(self.dictMCVal[c+"______CONDUCTEUR__Conductivite"])
            self.textePhys+=texteConducto2 
            self.textePhys+="         VALUE COMPLEX "
-           self.textePhys+=str(self.dictMCVal[c+"______CONDUCTEUR__Permeabilite"])
+           self.textePhys+=str(self.dictMCVal[c+"______CONDUCTEUR__PermeabiliteRelative"])
            self.textePhys+="  0.0000000000000000E+00\n      ]\n   ]\n"
 
        for c in listeNoCond:
@@ -230,7 +230,7 @@ class CARMELCNDGenerator(PythonGenerator):
            self.textePhys +="      NAME "+c+"\n"
            self.textePhys += texteNoCond
            self.textePhys+="         VALUE COMPLEX "
-           self.textePhys+=str(self.dictMCVal[c+"______NOCOND__Permeabilite"])
+           self.textePhys+=str(self.dictMCVal[c+"______NOCOND__PermeabiliteRelative"])
            self.textePhys+="  0.0000000000000000E+00\n      ]\n   ]\n"
 
        self.textePhys+="]\n"
@@ -240,7 +240,7 @@ class CARMELCNDGenerator(PythonGenerator):
 #  Creation du fichier Param
 #----------------------------------------------------------------------------------------
    def traiteParam(self):
-       self.texteParam +="[FREQUENCY\n   SINGLE  "+str(self.dictMCVal["__PARAMETRES__Frequence_en_Hz"])+"\n]\n"
+       self.texteParam +="[FREQUENCY\n   SINGLE  "+str(self.dictMCVal["__PARAMETRES__Frequence"])+"\n]\n"
        self.texteParam +="[SOLVER\n   NAME BICGCR\n"
        self.texteParam +="   [ITERATIVE_PARAM\n"
        self.texteParam +="      NITERMAX  "+str(self.dictMCVal["__PARAMETRES__Nb_Max_Iterations"])+"\n"
