@@ -27,7 +27,7 @@ from generator_python import PythonGenerator
 import Accas
 
 debutTextePhys ="[VERSION\n  NUM      1\n  FILETYPE PHYS\n]\n"
-debutTextePhys+="[MATERIALS\n   [CONDUCTOR\n"
+debutTextePhys+="[MATERIALS\n"
 texteConductor ="      [CONDUCTIVITY\n         LAW LINEAR\n"
 texteConductor+="         HOMOGENEOUS TRUE\n"
 texteConductor+="         ISOTROPIC  TRUE\n"
@@ -92,32 +92,38 @@ class CARMELCNDGenerator(PythonGenerator):
 # ecriture
 #----------------------------------------------------------------------------------------
 
-   def writeDefault(self,fn) :
+   def writeDefault(self,file) :
+# le file ne sert pas
 
        self.texteIngendof=""
        self.texteParam=debutTexteParam
        self.chercheFichier()
        self.traiteSourceVCut()
-       fileIngendof = fn[:fn.rfind(".")] + '.ingendof'
+       fn=self.fnBase
+       fileIngendofDeb = fn[:fn.rfind(".")] + '.ingendof'
+       fileIngendof = os.path.join(self.sauveDirectory,fileIngendofDeb)
        f = open( str(fileIngendof), 'wb')
        f.write( self.texteIngendof )
        f.close()
 
        self.textePhys=debutTextePhys
        self.traiteMateriaux()
-       filePhys = fn[:fn.rfind(".")] + '.phys'
+       filePhysDeb = fn[:fn.rfind(".")] + '.phys'
+       filePhys = os.path.join(self.sauveDirectory,filePhysDeb)
        f = open( str(filePhys), 'wb')
        f.write( self.textePhys )
        f.close()
 
-       fileParam = fn[:fn.rfind(".")] + '.param'
+       fileParamDeb = fn[:fn.rfind(".")] + '.param'
+       fileParam = os.path.join(self.sauveDirectory,fileParamDeb)
        self.traiteParam()
        f = open( str(fileParam), 'wb')
        f.write( self.texteParam )
        f.close()
        
        self.texteCMD="[ \n    GLOBAL \n] \n[ \nVISU \nDomaine \nMED \nELEMENT \n] "
-       fileCMD = fn[:fn.rfind(".")] + '.cmd'
+       fileCMDDeb = fn[:fn.rfind(".")] + '.cmd'
+       fileCMD =os.path.join(self.sauveDirectory,fileCMDDeb)
        f = open( str(fileCMD), 'wb')
        f.write( self.texteCMD )
        f.close()
@@ -125,13 +131,15 @@ class CARMELCNDGenerator(PythonGenerator):
        nomBaseFichier=os.path.basename(fileParam).split(".med")[0]
        
        self.texteInfcarmel=nomBaseFichier
-       fileInfcarmel = fn[:fn.rfind(".")] + '.infcarmel'
+       fileInfcarmelDeb = fn[:fn.rfind(".")] + '.infcarmel'
+       fileInfcarmel =os.path.join(self.sauveDirectory,fileInfcarmelDeb)
        f = open( str(fileInfcarmel), 'wb')
        f.write( self.texteInfcarmel )
        f.close()
        
        self.texteInpostpro=nomBaseFichier+"\n"+nomBaseFichier.split(".param")[0]+'.xmat\n'+nomBaseFichier.split(".param")[0]+'.cmd'
-       fileInpostpro = fn[:fn.rfind(".")] + '.inpostprocess'
+       fileInpostproDeb = fn[:fn.rfind(".")] + '.inpostprocess'
+       fileInpostpro = os.path.join(self.sauveDirectory,fileInpostproDeb)
        f = open( str(fileInpostpro), 'wb')
        f.write( self.texteInpostpro )
        f.close()
@@ -154,6 +162,8 @@ class CARMELCNDGenerator(PythonGenerator):
                   print 'liste=',liste
                   nomDomaine=e.valeur.split(" ")[-1]
                   break
+       self.sauveDirectory=os.path.dirname(nomFichier)
+       self.fnBase=os.path.basename(nomFichier)
        self.texteIngendof =os.path.basename(nomFichier)+"\n"
        self.texteParam += os.path.basename(nomFichier).split(".med")[0]+".car\n]\n"
        self.texteParam +="[PHYS_FILES\n   NAME "+os.path.basename(nomFichier).split(".med")[0]+".phys\n]\n"
@@ -216,6 +226,7 @@ class CARMELCNDGenerator(PythonGenerator):
               if noms[0] not in listeNoCond : listeNoCond.append(noms[0])
    
        for c in listeCond:
+           self.textePhys +="   [CONDUCTOR\n"
            self.textePhys +="      NAME "+c+"\n"
            self.textePhys +=texteConductor
            self.textePhys+="         VALUE COMPLEX "
