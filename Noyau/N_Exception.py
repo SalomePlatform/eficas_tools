@@ -30,3 +30,7 @@ class AsException(Exception):
 
   def __str__(self):
     return unicode(self).encode(get_encoding())
+
+class InterruptParsingError(Exception):
+    """Exception used to interrupt the parsing of the command file
+    without raising an error (see N_JDC.exec_compile for usage)"""

@@ -30,7 +30,7 @@ import types,sys,linecache
 # Modules EFICAS
 import N_OBJECT
 import N_CR
-from N_Exception import AsException
+from N_Exception import AsException, InterruptParsingError
 from N_ASSD import ASSD
 from N_info import message, SUPERV
 from strfunc import get_encoding
@@ -212,6 +212,10 @@ Causes possibles :
 
          CONTEXT.unset_current_step()
          if self.appli != None : self.appli.affiche_infos('')
+
+      except InterruptParsingError:
+         # interrupt the command file parsing used by FIN to ignore the end of the file
+         pass
 
       except EOFError:
         # Exception utilise pour interrompre un jeu
