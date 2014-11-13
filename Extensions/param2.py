@@ -180,7 +180,6 @@ class Variable(Formula):
     def __str__(self): return self._name
     def __adapt__(self,validator):
         return validator.adapt(self._value)
-
 def Eval(f):
     if isinstance(f,Formula):
         f=f.eval()
@@ -191,47 +190,84 @@ def Eval(f):
     return f
 
 
-#surcharge de la fonction cos de Numeric pour les parametres
-original_ncos=Numeric.cos
 def cos(f): return Unop('ncos', f)
-Unop.opmap['ncos']=lambda x: original_ncos(x)
-Numeric.cos=cos
-
-#surcharge de la fonction sin de Numeric pour les parametres
-original_nsin=Numeric.sin
 def sin(f): return Unop('nsin', f)
-Unop.opmap['nsin']=lambda x: original_nsin(x)
-Numeric.sin=sin
-
-#surcharge de la fonction array de Numeric pour les parametres
-original_narray=Numeric.array
 def array(f,*tup,**args): 
     """array de Numeric met en défaut la mécanique des parametres
        on la supprime dans ce cas. Il faut que la valeur du parametre soit bien définie
     """
     return original_narray(Eval(f),*tup,**args)
-Numeric.array=array
-
-#surcharge de la fonction sin de math pour les parametres
-original_sin=math.sin
 def sin(f): return Unop('sin', f)
-Unop.opmap['sin']=lambda x: original_sin(x)
-math.sin=sin
-
-#surcharge de la fonction cos de math pour les parametres
-original_cos=math.cos
-Unop.opmap['cos']=lambda x: original_cos(x)
 def cos(f): return Unop('cos', f)
-math.cos=cos
-
-#surcharge de la fonction sqrt de math pour les parametres
-original_sqrt=math.sqrt
-def sqrt(f): return Unop('sqrt', f)
-Unop.opmap['sqrt']=lambda x: original_sqrt(x)
-math.sqrt=sqrt
-
-#surcharge de la fonction ceil de math pour les parametres
-original_ceil=math.ceil
-Unop.opmap['ceil']=lambda x: original_ceil(x)
 def ceil(f): return Unop('ceil', f)
-math.ceil=ceil
+def sqrt(f): return Unop('sqrt', f)
+
+def pi2():return Unop('pi')
+
+class  OriginalMath(object):
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(OriginalMath, cls).__new__(
+                                cls, *args, **kwargs)
+
+        return cls._instance
+
+    def __init__(self):
+        if hasattr(self,'pi') :return
+        print "je passe dans le init"
+        print self
+        import math
+        self.numeric_ncos=Numeric.cos
+        self.numeric_nsin=Numeric.sin
+        self.numeric_narray=Numeric.array
+        self.sin=math.sin
+        self.cos=math.cos
+        self.sqrt=math.sqrt
+        self.ceil=math.ceil
+        self.pi=math.pi
+
+        #surcharge de la fonction cos de Numeric pour les parametres
+        original_ncos=Numeric.cos
+        Unop.opmap['ncos']=lambda x: original_ncos(x)
+        Numeric.cos=cos
+
+        #surcharge de la fonction sin de Numeric pour les parametres
+        original_nsin=Numeric.sin
+        Unop.opmap['nsin']=lambda x: original_nsin(x)
+        Numeric.sin=sin
+
+        #surcharge de la fonction array de Numeric pour les parametres
+        original_narray=Numeric.array
+        Numeric.array=array
+
+        #surcharge de la fonction sin de math pour les parametres
+        original_sin=math.sin
+        Unop.opmap['sin']=lambda x: original_sin(x)
+        math.sin=sin
+
+        #surcharge de la fonction cos de math pour les parametres
+        original_cos=math.cos
+        Unop.opmap['cos']=lambda x: original_cos(x)
+        math.cos=cos
+
+        #surcharge de la fonction sqrt de math pour les parametres
+        original_sqrt=math.sqrt
+        Unop.opmap['sqrt']=lambda x: original_sqrt(x)
+        math.sqrt=sqrt
+
+        #surcharge de la fonction ceil de math pour les parametres
+        original_ceil=math.ceil
+        Unop.opmap['ceil']=lambda x: original_ceil(x)
+        math.ceil=ceil
+
+        original_pi=math.pi
+        Unop.opmap['pi']=lambda x: original_pi
+        pi=Variable('pi',pi2)
+        math.pi=pi
+
+originalMath=OriginalMath()
+print originalMath.numeric_ncos(90)
+print Numeric.cos(90)
+print originalMath.pi
+print math.pi
