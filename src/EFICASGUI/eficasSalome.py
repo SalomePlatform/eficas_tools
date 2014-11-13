@@ -19,7 +19,7 @@ sys.path[:0]=[eficasConfig.eficasPath,
               os.path.join( eficasConfig.eficasPath,'Editeur'),
               os.path.join( eficasConfig.eficasPath,'UiQT4'),
               os.path.join( eficasConfig.eficasPath,'InterfaceQT4'),
-              os.path.join( eficasConfig.eficasPath,'Extensions'),
+              #os.path.join( eficasConfig.eficasPath,'Extensions'),
               eficasConfig.eficasPath,
              ]
 
@@ -43,7 +43,6 @@ LEN_COLORS = len( COLORS )
 
 from Extensions import localisation
 localisation.localise(None,langue)
-
 
 
 class MyEficas( qtEficas.Appli ):
@@ -110,6 +109,23 @@ class MyEficas( qtEficas.Appli ):
           return
         if hasattr(self,'readercata') :
            del self.readercata
+        import math
+        try:
+          import Numeric
+        except:
+          import numpy
+          Numeric = numpy
+
+        from Extensions.param2 import originalMath
+        Numeric.cos=originalMath.numeric_ncos
+        Numeric.sin=originalMath.numeric_nsin
+        Numeric.array=originalMath.numeric_narray
+        math.sin=originalMath.sin
+        math.cos=originalMath.cos
+        math.sqrt=originalMath.sqrt
+        math.ceil=originalMath.ceil
+        math.pi=originalMath.pi
+
         global appli
         appli = None
         event.accept()
