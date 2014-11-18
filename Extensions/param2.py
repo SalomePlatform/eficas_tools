@@ -215,9 +215,10 @@ class  OriginalMath(object):
 
     def __init__(self):
         if hasattr(self,'pi') :return
-        print "je passe dans le init"
-        print self
         import math
+        self.toSurcharge()
+
+    def toSurcharge(self):
         self.numeric_ncos=Numeric.cos
         self.numeric_nsin=Numeric.sin
         self.numeric_narray=Numeric.array
@@ -265,6 +266,24 @@ class  OriginalMath(object):
         Unop.opmap['pi']=lambda x: original_pi
         pi=Variable('pi',pi2)
         math.pi=pi
+
+    def toOriginal(self):
+        import math
+        try:
+          import Numeric
+        except:
+          import numpy
+          Numeric = numpy
+
+        Numeric.cos=originalMath.numeric_ncos
+        Numeric.sin=originalMath.numeric_nsin
+        Numeric.array=originalMath.numeric_narray
+        math.sin=originalMath.sin
+        math.cos=originalMath.cos
+        math.sqrt=originalMath.sqrt
+        math.ceil=originalMath.ceil
+        math.pi=originalMath.pi
+
 
 originalMath=OriginalMath()
 print originalMath.numeric_ncos(90)
