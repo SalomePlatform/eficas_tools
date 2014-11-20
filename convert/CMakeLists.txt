@@ -25,37 +25,29 @@ install ( FILES __init__.py parseur_python.py convert_python.py
         )
 
 # Installation des fichiers : Open TURNS
-if (WITH_OPENTURNS)
-  install ( FILES convert_openturns_study.py convert_openturns_wrapper.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
-          )
-endif (WITH_OPENTURNS)
+install ( FILES convert_openturns_study.py convert_openturns_wrapper.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
+        )
 
 # Installation des fichiers : Aster
-if (WITH_ASTER)
-  install ( FILES convert_asterv5.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
-          )
-  install ( DIRECTORY Parserv5
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
-	    FILES_MATCHING PATTERN *.py PATTERN *.tag PATTERN README
-            PATTERN CVS EXCLUDE
-          )
-endif (WITH_ASTER)
+install ( FILES convert_asterv5.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
+        )
+install ( DIRECTORY Parserv5
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
+   FILES_MATCHING PATTERN *.py PATTERN *.tag PATTERN README
+          PATTERN CVS EXCLUDE
+        )
 
 # Installation des fichiers : MAP
-if (WITH_MAP)
-  install ( FILES convert_map.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
-          )
-endif (WITH_MAP)
+install ( FILES convert_map.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
+        )
 
 # Installation des fichiers : SEP
-if (WITH_SEP)
-  install ( FILES convert_SEP.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
-          )
-endif (WITH_SEP)
+install ( FILES convert_SEP.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
+        )
 
 ### Local Variables:
 ### mode: cmake

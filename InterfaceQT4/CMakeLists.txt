@@ -42,25 +42,19 @@ install ( FILES browser.py compobase.py compobloc.py compocommandecomm.py compoc
         )
 
 # Installation des fichiers : OpenTURNS
-if (WITH_OPENTURNS)
-  install ( FILES monOptions_OPENTURNS_STUDY.py monOptions_OPENTURNS_WRAPPER.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
-          )
-endif (WITH_OPENTURNS)
+install ( FILES monOptions_OPENTURNS_STUDY.py monOptions_OPENTURNS_WRAPPER.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
+        )
 
 # Installation des fichiers : Aster
-if (WITH_ASTER)
-  install ( FILES gereTraduction.py monOptions_ASTER.py ssIhm.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
-          )
-endif (WITH_ASTER)
+install ( FILES gereTraduction.py monOptions_ASTER.py ssIhm.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
+        )
 
 # Installation des fichiers : MAP
-if (WITH_MAP)
-  install ( FILES monOptions_MAP.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
-          )
-endif (WITH_MAP)
+install ( FILES monOptions_MAP.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
+        )
 
 #monOptions_CUVE2DG.py
 

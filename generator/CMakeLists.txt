@@ -25,48 +25,36 @@ install ( FILES __init__.py generator_python.py Formatage.py generator_aplat.py
         )
 
 # Installation des fichiers : Open TURNS
-if (WITH_OPENTURNS)
-  install ( FILES generator_openturns.py generator_openturns_study.py generator_openturns_wrapper.py
-                  OpenturnsBase.py OpenturnsSTD.py OpenturnsXML.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
-          )
-endif (WITH_OPENTURNS)
+install ( FILES generator_openturns.py generator_openturns_study.py generator_openturns_wrapper.py
+                OpenturnsBase.py OpenturnsSTD.py OpenturnsXML.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+        )
 
 # Installation des fichiers : Aster
-if (WITH_ASTER)
-  install ( FILES generator_asterv5.py generator_GroupMA.py generator_vers3DSalome.py 
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
-          )
-endif (WITH_ASTER)
+install ( FILES generator_GroupMA.py generator_vers3DSalome.py 
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+        )
 
 # Installation des fichiers : ZCRACKS
-if (WITH_ASTER)
-  install ( FILES generator_ZCracks.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
-          )
-endif (WITH_ASTER)
+install ( FILES generator_ZCracks.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+        )
 
 # Installation des fichiers : MAP
-if (WITH_MAP)
-  install ( FILES generator_map.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
-          )
-endif (WITH_MAP)
+install ( FILES generator_map.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+        )
 
 # Installation des fichiers : CARMEL
-if (WITH_CARMEL)
-  install ( FILES generator_CARMEL3D_frequentiel.py generator_CARMELCND.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
-          )
-endif (WITH_CARMEL)
+install ( FILES generator_CARMEL3D_frequentiel.py generator_CARMELCND.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+        )
 
 
 # Installation des fichiers : SEP
-if (WITH_SEP)
-  install ( FILES generator_SEP.py tube.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
-          )
-endif (WITH_SEP)
+install ( FILES generator_SEP.py tube.py
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+        )
 
 
 ### Local Variables:
