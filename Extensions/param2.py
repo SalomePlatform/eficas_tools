@@ -286,7 +286,3 @@ class  OriginalMath(object):
 
 
 originalMath=OriginalMath()
-print originalMath.numeric_ncos(90)
-print Numeric.cos(90)
-print originalMath.pi
-print math.pi
