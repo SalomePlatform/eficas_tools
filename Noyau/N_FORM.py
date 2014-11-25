@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# coding=utf-8
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,17 +16,17 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
 
 
 import N_MACRO
 import N_FORM_ETAPE
 
+
 class FORM(N_MACRO.MACRO):
+
     """
-       Cette classe sert à définir dans le catalogue des objets de type
+       Cette classe sert Ã  dÃ©finir dans le catalogue des objets de type
        FORMULE pour ASTER.
        Elle surcharge la classe MACRO
     """
-    class_instance=N_FORM_ETAPE.FORM_ETAPE
-
+    class_instance = N_FORM_ETAPE.FORM_ETAPE

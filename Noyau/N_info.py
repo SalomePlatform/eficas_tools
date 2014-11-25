@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# coding=utf-8
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
+
 
 """Module to manage information printing : debug, info, error.
 Should replace 'print' and 'UTMESS' calls at least in the supervisor
@@ -34,6 +34,7 @@ from subprocess import Popen, PIPE
 from N_utils import Enum, Singleton
 from strfunc import convert
 
+
 def default_print(text):
     """Basic print function."""
     print convert(text)
@@ -45,17 +46,20 @@ LEVEL = Enum(
     'ERROR'
 )
 
+
 class Category(object):
+
     """Define a category of message for different parts of the code.
     This allows to store different parameters for each category of message."""
+
     def __init__(self):
         self._level = LEVEL.INFO
         self._fmt = "%-8s"
         self._header = {
-            LEVEL.DEBUG : "DEBUG",
-            LEVEL.INFO : None,
-            LEVEL.WARN : "WARNING",
-            LEVEL.ERROR : "ERROR",
+            LEVEL.DEBUG: "DEBUG",
+            LEVEL.INFO: None,
+            LEVEL.WARN: "WARNING",
+            LEVEL.ERROR: "ERROR",
         }
 
     def set_level(self, level):
@@ -91,10 +95,13 @@ REGEXP_ORIG = re.compile('File [\'\"]*(.*?)[\'\"]*, *line ([0-9]+), *in (.*)')
 
 # slighty different and very simplier than logger objects
 # from the logging module.
+
+
 class InfoLevel(Singleton):
+
     """Store informations level."""
     _singleton_id = 'N_info.InfoLevel'
-    
+
     def __init__(self, level):
         """Initialization"""
         self._parts = []
@@ -102,7 +109,7 @@ class InfoLevel(Singleton):
             part.level = level
         self.reset_print_function()
         self._msg_callback = []
-        #self.extend_message(ALL, stack_header_callback)
+        # self.extend_message(ALL, stack_header_callback)
         self.extend_message(ALL, insert_header)
 
     def add(self, category):
@@ -165,10 +172,10 @@ class InfoLevel(Singleton):
         # how to use callbacks ? valk ?
         from Utilitai.Utmess import MessageLog
         code = {
-            LEVEL.DEBUG : 'I',
-            LEVEL.INFO : 'I',
-            LEVEL.WARN : 'A',
-            LEVEL.ERROR : 'F',
+            LEVEL.DEBUG: 'I',
+            LEVEL.INFO: 'I',
+            LEVEL.WARN: 'A',
+            LEVEL.ERROR: 'F',
         }
         valk = kwargs.get('valk', ())
         vali = kwargs.get('vali', ())
@@ -215,13 +222,15 @@ def insert_header(category, level, msg, args, kwargs):
         msg = header + msg
     return msg, args
 
+
 def stack_header_callback(category, level, msg, args, kwargs):
     """To insert the origin."""
     if level <= LEVEL.DEBUG:
         stack_id = -5 + kwargs.get('stack_id', 0)
         stack = traceback.format_stack(limit=10)[stack_id]
         mat = REGEXP_ORIG.search(stack)
-        origin = '[%s:%s in %s] ' % (osp.basename(mat.group(1)), mat.group(2), mat.group(3))
+        origin = '[%s:%s in %s] ' % (
+            osp.basename(mat.group(1)), mat.group(2), mat.group(3))
         msg = origin + msg
     return msg, args
 
@@ -237,6 +246,7 @@ _pid = os.getpid()
 
 RE_VMPEAK = re.compile('VmPeak:\s*([0-9]+)\s*([kMGBo]+)', re.M | re.I)
 
+
 def memory_used(pid):
     """Return the current VmPeak value."""
     p = Popen(['cat', '/proc/%s/status' % pid], stdout=PIPE)
@@ -246,6 +256,7 @@ def memory_used(pid):
     return mem / 1024.
 
 current_memory_used = partial(memory_used, _pid)
+
 
 def mem_msg_callback(category, level, msg, args, kwargs):
     """Callback to add memory infos to message."""
@@ -258,15 +269,13 @@ def mem_msg_callback(category, level, msg, args, kwargs):
 if __name__ == "__main__":
     message.set_level(SUPERV, LEVEL.WARN)
     message.set_level(MISS, LEVEL.DEBUG)
-    #message.debug(None, "debug message")
+    # message.debug(None, "debug message")
     message.info(ALL, "information message")
     message.warn(None, "warning message")
     message.error(ALL, "error message")
     message.add_memory_info()
-    #message.debug(MISS, "debug supervisor message")
+    # message.debug(MISS, "debug supervisor message")
     message.info(SUPERV, "information supervisor message")
     message.warn(SUPERV, "warning supervisor message")
     message.error(SUPERV, "error supervisor message")
     message.critical(MISS, "test the critical alias")
-
-

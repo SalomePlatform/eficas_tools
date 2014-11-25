@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# coding=utf-8
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,14 +16,16 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
+
 
 """
     Ce module contient la classe de definition BLOC
-    qui permet de spécifier les caractéristiques des blocs de mots clés
+    qui permet de spÃ©cifier les caractÃ©ristiques des blocs de mots clÃ©s
 """
 
-import types,string,sys
+import types
+import string
+import sys
 import traceback
 
 import N_ENTITE
@@ -32,115 +34,123 @@ from N_Exception import AsException
 from N_types import force_list
 from strfunc import ufmt
 
+
 class BLOC(N_ENTITE.ENTITE):
-   """
-    Classe pour definir un bloc de mots-cles
 
-    Cette classe a deux attributs de classe :
+    """
+     Classe pour definir un bloc de mots-cles
 
-      - class_instance qui indique la classe qui devra etre utilisée
-        pour créer l'objet qui servira à controler la conformité d'un
-        bloc de mots-clés avec sa définition
-      - label qui indique la nature de l'objet de définition (ici, BLOC)
+     Cette classe a deux attributs de classe :
 
-   """
-   class_instance = N_MCBLOC.MCBLOC
-   label = 'BLOC'
+       - class_instance qui indique la classe qui devra etre utilisÃ©e
+         pour crÃ©er l'objet qui servira Ã  controler la conformitÃ© d'un
+         bloc de mots-clÃ©s avec sa dÃ©finition
+       - label qui indique la nature de l'objet de dÃ©finition (ici, BLOC)
 
-   def __init__(self,fr="",ang="",docu="",regles=(),statut='f',condition=None,
-                     **args):
+    """
+    class_instance = N_MCBLOC.MCBLOC
+    label = 'BLOC'
 
-      """
-          Un bloc est caractérisé par les attributs suivants :
+    def __init__(self, fr="", docu="", regles=(), statut='f', condition=None,
+                 **args):
+        """
+            Un bloc est caractÃ©risÃ© par les attributs suivants :
 
-            - fr   : chaine de caractere commentaire pour aide en ligne (en francais)
-            - ang : chaine de caractere commentaire pour aide en ligne (en anglais)
-            - regles : liste d'objets de type REGLE pour vérifier la cohérence des sous-objets
-            - statut : obligatoire ('o') ou facultatif ('f')
-            - condition : chaine de caractère evaluable par l'interpreteur Python
-            - entites : dictionnaire contenant les sous-objets de self (mots-clés).
-              La clé du dictionnaire est le nom du mot-clé et la valeur l'objet de
-              définition correspondant. Cet attribut est initialisé avec l'argument
-              args de la méthode __init__
+              - fr   : chaine de caractere commentaire pour aide en ligne (en francais)
+              - regles : liste d'objets de type REGLE pour vÃ©rifier la cohÃ©rence des sous-objets
+              - statut : obligatoire ('o') ou facultatif ('f')
+              - condition : chaine de caractÃ¨re evaluable par l'interpreteur Python
+              - entites : dictionnaire contenant les sous-objets de self (mots-clÃ©s).
+                La clÃ© du dictionnaire est le nom du mot-clÃ© et la valeur l'objet de
+                dÃ©finition correspondant. Cet attribut est initialisÃ© avec l'argument
+                args de la mÃ©thode __init__
 
-      """
-      # Initialisation des attributs
-      self.fr=fr
-      self.ang=ang
-      self.docu=docu
-      if type(regles)== types.TupleType:
-          self.regles=regles
-      else:
-          self.regles=(regles,)
-      self.statut=statut
-      self.condition=condition
-      self.entites=args
-      self.affecter_parente()
+        """
+        # Initialisation des attributs
+        self.fr = fr
+        assert args.get(
+            'ang') is None, '"ang" attribute does not exist anymore'
+        self.docu = docu
+        if type(regles) == types.TupleType:
+            self.regles = regles
+        else:
+            self.regles = (regles,)
+        self.statut = statut
+        self.condition = condition
+        self.entites = args
+        self.affecter_parente()
 
-   def __call__(self,val,nom,parent=None):
-      """
-          Construit un objet MCBLOC a partir de sa definition (self)
-          de sa valeur (val), de son nom (nom) et de son parent dans l arboresence (parent)
-      """
-      return self.class_instance(nom=nom,definition=self,val=val,parent=parent)
+    def __call__(self, val, nom, parent=None):
+        """
+            Construit un objet MCBLOC a partir de sa definition (self)
+            de sa valeur (val), de son nom (nom) et de son parent dans l arboresence (parent)
+        """
+        return self.class_instance(nom=nom, definition=self, val=val, parent=parent)
 
-   def verif_cata(self):
-      """
-         Cette méthode vérifie si les attributs de définition sont valides.
-         Les éventuels messages d'erreur sont écrits dans l'objet compte-rendu (self.cr).
-      """
-      self.check_fr()
-      self.check_docu()
-      self.check_regles()
-      self.check_statut(into=('f', 'o'))
-      self.check_condition()
-      self.verif_cata_regles()
+    def verif_cata(self):
+        """
+           Cette mÃ©thode vÃ©rifie si les attributs de dÃ©finition sont valides.
+           Les Ã©ventuels messages d'erreur sont Ã©crits dans l'objet compte-rendu (self.cr).
+        """
+        self.check_fr()
+        self.check_docu()
+        self.check_regles()
+        self.check_statut(into=('f', 'o'))
+        self.check_condition()
+        self.verif_cata_regles()
 
-   def verif_presence(self,dict,globs):
-      """
-         Cette méthode vérifie si le dictionnaire passé en argument (dict)
-         est susceptible de contenir un bloc de mots-clés conforme à la
-         définition qu'il porte.
+    def verif_presence(self, dict, globs):
+        """
+           Cette mÃ©thode vÃ©rifie si le dictionnaire passÃ© en argument (dict)
+           est susceptible de contenir un bloc de mots-clÃ©s conforme Ã  la
+           dÃ©finition qu'il porte.
 
-         Si la réponse est oui, la méthode retourne 1
+           Si la rÃ©ponse est oui, la mÃ©thode retourne 1
 
-         Si la réponse est non, la méthode retourne 0
+           Si la rÃ©ponse est non, la mÃ©thode retourne 0
 
-         Le dictionnaire dict a pour clés les noms des mots-clés et pour valeurs
-         les valeurs des mots-clés
-      """
-      # On recopie le dictionnaire pour protéger l'original
-      dico = bloc_utils()
-      dico.update(dict)
-      if self.condition != None :
-        try:
-          test = eval(self.condition,globs,dico)
-          return test
-        except NameError:
-          # erreur 'normale' : un mot-clé n'est pas présent et on veut l'évaluer dans la condition
-          if CONTEXT.debug:
-             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-             print "WARNING : Erreur a l'evaluation de la condition "+string.join(l)
-          return 0
-        except SyntaxError:
-          # le texte de la condition n'est pas du Python correct --> faute de catalogue
-          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-          raise AsException("Catalogue entite : ", self.nom,", de pere : ", self.pere.nom,
-                     '\n',"Erreur dans la condition : ", self.condition,string.join(l))
-        except:
-          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-          raise AsException("Catalogue entite : ", self.nom,", de pere : ", self.pere.nom,
-                     '\n',"Erreur dans la condition : ", self.condition,string.join(l))
-      else :
-        return 0
+           Le dictionnaire dict a pour clÃ©s les noms des mots-clÃ©s et pour valeurs
+           les valeurs des mots-clÃ©s
+        """
+        # On recopie le dictionnaire pour protÃ©ger l'original
+        dico = bloc_utils()
+        dico.update(dict)
+        if self.condition != None:
+            try:
+                test = eval(self.condition, globs, dico)
+                return test
+            except NameError:
+                # erreur 'normale' : un mot-clÃ© n'est pas prÃ©sent et on veut
+                # l'Ã©valuer dans la condition
+                if CONTEXT.debug:
+                    l = traceback.format_exception(
+                        sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+                    print "WARNING : Erreur a l'evaluation de la condition " + string.join(l)
+                return 0
+            except SyntaxError:
+                # le texte de la condition n'est pas du Python correct -->
+                # faute de catalogue
+                l = traceback.format_exception(
+                    sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+                raise AsException(
+                    "Catalogue entite : ", self.nom, ", de pere : ", self.pere.nom,
+                    '\n', "Erreur dans la condition : ", self.condition, string.join(l))
+            except:
+                l = traceback.format_exception(
+                    sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+                raise AsException(
+                    "Catalogue entite : ", self.nom, ", de pere : ", self.pere.nom,
+                    '\n', "Erreur dans la condition : ", self.condition, string.join(l))
+        else:
+            return 0
 
 
 def bloc_utils():
-    """Définit un ensemble de fonctions utilisables pour écrire les
+    """DÃ©finit un ensemble de fonctions utilisables pour Ã©crire les
     conditions de BLOC."""
     def au_moins_un(mcsimp, valeurs):
         """Valide si la (ou une) valeur de 'mcsimp' est au moins une fois dans
-        la ou les 'valeurs'. Similaire à la règle AU_MOINS_UN, 'mcsimp' peut
+        la ou les 'valeurs'. Similaire Ã  la rÃ¨gle AU_MOINS_UN, 'mcsimp' peut
         contenir plusieurs valeurs."""
         test = set(force_list(mcsimp))
         valeurs = set(force_list(valeurs))
@@ -151,4 +161,3 @@ def bloc_utils():
         return not au_moins_un(mcsimp, valeurs)
 
     return locals()
-

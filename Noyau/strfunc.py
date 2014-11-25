@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# coding=utf-8
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,17 +16,17 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
 
+"""Module rassemblant des fonctions utilitaires de manipulations
+de chaines de caractÃ¨res
 """
-Module rassemblant des fonctions utilitaires de manipulations
-de chaines de caractères
-"""
-# module identique à Execution/strfunc.py pour usage dans Eficas
+# module identique Ã  Execution/strfunc.py pour usage dans Eficas
 
 import locale
 
 _encoding = None
+
+
 def get_encoding():
     """Return local encoding
     """
@@ -63,6 +63,7 @@ def to_unicode(string):
             pass
     return unicode(string, 'utf-8', 'replace')
 
+
 def from_unicode(ustring, encoding, errors='replace'):
     """Try to encode a unicode string using encoding."""
     try:
@@ -71,6 +72,7 @@ def from_unicode(ustring, encoding, errors='replace'):
         pass
     return ustring.encode(encoding, errors)
 
+
 def convert(content, encoding=None, errors='replace'):
     """Convert content using encoding or default encoding if None."""
     if type(content) not in (str, unicode):
@@ -78,6 +80,7 @@ def convert(content, encoding=None, errors='replace'):
     if type(content) == str:
         content = to_unicode(content)
     return from_unicode(content, encoding or get_encoding(), errors)
+
 
 def ufmt(uformat, *args):
     """Helper function to format a string by converting all its arguments to unicode"""

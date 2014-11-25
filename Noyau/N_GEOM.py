@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# coding=utf-8
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
 
 
 """
@@ -24,40 +23,45 @@
 """
 from N_ASSD import ASSD
 
+
 class GEOM(ASSD):
-   """
-      Cette classe sert à définir les types de concepts
-      géométriques comme GROUP_NO, GROUP_MA,NOEUD et MAILLE
 
-   """
-   def __init__(self,nom,etape=None,sd=None,reg='oui'):
-      """
-      """
-      self.etape=etape
-      self.sd=sd
-      if etape:
-        self.parent=etape.parent
-      else:
-        self.parent=CONTEXT.get_current_step()
-      if self.parent :
-         self.jdc = self.parent.get_jdc_root()
-      else:
-         self.jdc = None
+    """
+       Cette classe sert Ã  dÃ©finir les types de concepts
+       gÃ©omÃ©triques comme GROUP_NO, GROUP_MA,NOEUD et MAILLE
 
-      if not self.parent:
-        self.id=None
-      elif reg == 'oui' :
-        self.id = self.parent.reg_sd(self)
-      self.nom=nom
+    """
 
-   def get_name(self):
-      return self.nom
+    def __init__(self, nom, etape=None, sd=None, reg='oui'):
+        """
+        """
+        self.etape = etape
+        self.sd = sd
+        if etape:
+            self.parent = etape.parent
+        else:
+            self.parent = CONTEXT.get_current_step()
+        if self.parent:
+            self.jdc = self.parent.get_jdc_root()
+        else:
+            self.jdc = None
 
-   def __convert__(cls,valeur):
-      if isinstance(valeur, (str,unicode)) and len(valeur.strip()) <= 8:
-         return valeur.strip()
-      raise ValueError(_(u'On attend une chaine de caractères (de longueur < 8).'))
-   __convert__=classmethod(__convert__)
+        if not self.parent:
+            self.id = None
+        elif reg == 'oui':
+            self.id = self.parent.reg_sd(self)
+        self.nom = nom
 
-class geom(GEOM):pass
+    def get_name(self):
+        return self.nom
 
+    def __convert__(cls, valeur):
+        if isinstance(valeur, (str, unicode)) and len(valeur.strip()) <= 8:
+            return valeur.strip()
+        raise ValueError(
+            _(u'On attend une chaine de caractÃ¨res (de longueur <= 8).'))
+    __convert__ = classmethod(__convert__)
+
+
+class geom(GEOM):
+    pass

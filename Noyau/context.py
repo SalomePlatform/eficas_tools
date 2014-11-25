@@ -1,73 +1,83 @@
-# -*- coding: iso-8859-1 -*-
-# Copyright (C) 2007-2013   EDF R&D
+# coding=utf-8
+# person_in_charge: mathieu.courtois at edf.fr
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2012  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
 #
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2.1 of the License.
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
 #
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 #
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
-_root=None
-_cata=None
-debug=0
+# ======================================================================
+
+_root = None
+_cata = None
+debug = 0
 from Noyau.N_info import message, SUPERV
 
-# Le "current step" est l'étape courante.
-# Une macro se déclare étape courante dans sa méthode Build avant de construire
-# ses étapes filles ou dans BuildExec avant de les exécuter.
-# Les étapes simples le font aussi : dans Execute et BuildExec.
-# (Build ne fait rien pour une étape)
+# Le "current step" est l'Ã©tape courante.
+# Une macro se dÃ©clare Ã©tape courante dans sa mÃ©thode Build avant de construire
+# ses Ã©tapes filles ou dans BuildExec avant de les exÃ©cuter.
+# Les Ã©tapes simples le font aussi : dans Execute et BuildExec.
+# (Build ne fait rien pour une Ã©tape)
+
 
 def set_current_step(step):
-   """
-      Fonction qui permet de changer la valeur de l'étape courante
-   """
-   global _root
-   if _root : raise Exception("Impossible d'affecter _root. Il devrait valoir None")
-   _root=step
-   #message.debug(SUPERV, "current_step = %s", step and step.nom, stack_id=-1)
+    """
+       Fonction qui permet de changer la valeur de l'Ã©tape courante
+    """
+    global _root
+    if _root:
+        raise Exception("Impossible d'affecter _root. Il devrait valoir None")
+    _root = step
+    # message.debug(SUPERV, "current_step = %s", step and step.nom,
+    # stack_id=-1)
+
 
 def get_current_step():
-   """
-      Fonction qui permet d'obtenir la valeur de l'étape courante
-   """
-   return _root
+    """
+       Fonction qui permet d'obtenir la valeur de l'Ã©tape courante
+    """
+    return _root
+
 
 def unset_current_step():
-   """
-      Fonction qui permet de remettre à None l'étape courante
-   """
-   global _root
-   _root=None
+    """
+       Fonction qui permet de remettre Ã  None l'Ã©tape courante
+    """
+    global _root
+    _root = None
+
 
 def set_current_cata(cata):
-   """
-      Fonction qui permet de changer l'objet catalogue courant
-   """
-   global _cata
-   if _cata : raise Exception("Impossible d'affecter _cata. Il devrait valoir None")
-   _cata=cata
+    """
+       Fonction qui permet de changer l'objet catalogue courant
+    """
+    global _cata
+    if _cata:
+        raise Exception("Impossible d'affecter _cata. Il devrait valoir None")
+    _cata = cata
+
 
 def get_current_cata():
-   """
-      Fonction qui retourne l'objet catalogue courant
-   """
-   return _cata
+    """
+       Fonction qui retourne l'objet catalogue courant
+    """
+    return _cata
+
 
 def unset_current_cata():
-   """
-      Fonction qui permet de remettre à None le catalogue courant
-   """
-   global _cata
-   _cata=None
-
+    """
+       Fonction qui permet de remettre Ã  None le catalogue courant
+    """
+    global _cata
+    _cata = None
