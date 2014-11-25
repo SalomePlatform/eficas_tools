@@ -117,14 +117,15 @@ class MyEficas( qtEficas.Appli ):
           Numeric = numpy
 
         from Extensions.param2 import originalMath
-        Numeric.cos=originalMath.numeric_ncos
-        Numeric.sin=originalMath.numeric_nsin
-        Numeric.array=originalMath.numeric_narray
-        math.sin=originalMath.sin
-        math.cos=originalMath.cos
-        math.sqrt=originalMath.sqrt
-        math.ceil=originalMath.ceil
-        math.pi=originalMath.pi
+        #Numeric.cos=originalMath.numeric_ncos
+        #Numeric.sin=originalMath.numeric_nsin
+        #Numeric.array=originalMath.numeric_narray
+        #math.sin=originalMath.sin
+        #math.cos=originalMath.cos
+        #math.sqrt=originalMath.sqrt
+        #math.ceil=originalMath.ceil
+        #math.pi=originalMath.pi
+        originalMath.toOriginal()
 
         global appli
         appli = None
