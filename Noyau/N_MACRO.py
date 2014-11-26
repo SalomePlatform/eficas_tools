@@ -88,7 +88,7 @@ class MACRO(N_ENTITE.ENTITE):
     nommage = nommage
 
     def __init__(
-        self, nom, op, sd_prod=None, reentrant='n', repetable='o', fr="",
+        self, nom, op, sd_prod=None, reentrant='n', repetable='o', fr="",ang="",
             docu="", regles=(), op_init=None, niveau = None, fichier_ini=0, UIinfo=None, **args):
         """
            Méthode d'initialisation de l'objet MACRO. Les arguments sont utilisés pour initialiser
@@ -111,8 +111,7 @@ class MACRO(N_ENTITE.ENTITE):
         self.sd_prod = sd_prod
         self.reentrant = reentrant
         self.fr = fr
-        assert args.get(
-            'ang') is None, '"ang" attribute does not exist anymore'
+        self.ang=ang
         self.repetable = repetable
         self.docu = docu
         if type(regles) == types.TupleType:

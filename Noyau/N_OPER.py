@@ -87,7 +87,7 @@ class OPER(N_ENTITE.ENTITE):
     label = 'OPER'
     nommage = nommage
 
-    def __init__(self, nom, op, sd_prod, reentrant='n', repetable='o', fr="",
+    def __init__(self, nom, op, sd_prod, reentrant='n', repetable='o', fr="",ang="",
                  docu="", regles=(), op_init=None, niveau = None, UIinfo=None, **args):
         """
            Méthode d'initialisation de l'objet OPER. Les arguments sont utilisés pour initialiser
@@ -98,8 +98,7 @@ class OPER(N_ENTITE.ENTITE):
         self.sd_prod = sd_prod
         self.reentrant = reentrant
         self.fr = fr
-        assert args.get(
-            'ang') is None, '"ang" attribute does not exist anymore'
+        self.ang = ang
         self.repetable = repetable
         self.docu = docu
         if type(regles) == types.TupleType:

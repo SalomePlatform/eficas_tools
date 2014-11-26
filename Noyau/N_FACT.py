@@ -53,7 +53,7 @@ class FACT(N_ENTITE.ENTITE):
     list_instance = N_MCLIST.MCList
     label = 'FACT'
 
-    def __init__(self, fr="", docu="", regles=(), statut='f', defaut=None,
+    def __init__(self, fr="", docu="", regles=(), statut='f', defaut=None,ang=""
                  min=0, max=1, validators=None, **args):
         """
             Un mot-clé facteur est caractérisé par les attributs suivants :
@@ -70,8 +70,7 @@ class FACT(N_ENTITE.ENTITE):
         N_ENTITE.ENTITE.__init__(self, validators)
         # Initialisation des attributs
         self.fr = fr
-        assert args.get(
-            'ang') is None, '"ang" attribute does not exist anymore'
+        self.ang=ang
         self.docu = docu
         if type(regles) == types.TupleType:
             self.regles = regles

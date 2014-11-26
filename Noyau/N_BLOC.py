@@ -51,7 +51,7 @@ class BLOC(N_ENTITE.ENTITE):
     class_instance = N_MCBLOC.MCBLOC
     label = 'BLOC'
 
-    def __init__(self, fr="", docu="", regles=(), statut='f', condition=None,
+    def __init__(self, fr="", docu="", regles=(), statut='f', condition=None,ang=""
                  **args):
         """
             Un bloc est caractérisé par les attributs suivants :
@@ -68,8 +68,7 @@ class BLOC(N_ENTITE.ENTITE):
         """
         # Initialisation des attributs
         self.fr = fr
-        assert args.get(
-            'ang') is None, '"ang" attribute does not exist anymore'
+        self.ang = ang
         self.docu = docu
         if type(regles) == types.TupleType:
             self.regles = regles
