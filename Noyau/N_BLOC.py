@@ -51,7 +51,7 @@ class BLOC(N_ENTITE.ENTITE):
     class_instance = N_MCBLOC.MCBLOC
     label = 'BLOC'
 
-    def __init__(self, fr="", docu="", regles=(), statut='f', condition=None,ang=""
+    def __init__(self, fr="", docu="", regles=(), statut='f', condition=None,ang="",
                  **args):
         """
             Un bloc est caractérisé par les attributs suivants :
