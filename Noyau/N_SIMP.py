@@ -46,7 +46,7 @@ class SIMP(N_ENTITE.ENTITE):
     class_instance = N_MCSIMP.MCSIMP
     label = 'SIMP'
 
-    def __init__(self, typ, fr="", statut='f', into=None, defaut=None,
+    def __init__(self, typ,ang="", fr="", statut='f', into=None, defaut=None,
                  min=1, max=1, homo=1, position='local',
                  val_min='**', val_max='**', docu="", validators=None,
                  sug=None):
@@ -60,6 +60,7 @@ class SIMP(N_ENTITE.ENTITE):
             - min : nombre minimal de valeurs
             - max : nombre maximal de valeurs
             - homo : ?
+            - ang : doc
             - position : si global, le mot-clé peut-être lu n'importe où dans la commande
             - val_min : valeur minimale autorisée
             - val_max : valeur maximale autorisée
@@ -84,6 +85,7 @@ class SIMP(N_ENTITE.ENTITE):
         self.val_max = val_max
         self.docu = docu
         self.sug = sug
+        self.ang=ang
 
     def verif_cata(self):
         """
