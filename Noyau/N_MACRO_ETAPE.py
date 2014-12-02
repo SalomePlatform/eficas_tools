@@ -49,7 +49,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
     nature = "COMMANDE"
     typeCO = CO
 
-    def __init__(self, oper=None, reuse=None,ang="", args={}):
+    def __init__(self, oper=None, reuse=None, args={}):
         """
         Attributs :
            - definition : objet portant les attributs de définition d'une étape
@@ -75,7 +75,6 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
         self.Outputs = {}
         self.sdprods = []
         self.UserError = "UserError"
-        self.ang=ang
         # permet de stocker le nom du dernier concept nommé dans la macro
         self.last = None
 
