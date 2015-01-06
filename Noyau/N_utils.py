@@ -1,24 +1,22 @@
-#@ MODIF N_utils Noyau  DATE 28/06/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
-# ======================================================================
-
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 """
    Ce module contient des fonctions utilitaires
@@ -29,16 +27,16 @@ import sys
 
 # Modules EFICAS
 from N_Exception import AsException
-from N_types     import is_int, is_float, is_complex, is_str, is_enum, is_assd
+from N_types     import is_int, is_float, is_complex, is_str, is_sequence, is_assd
 
 SEP='_'
 
 try:
-   # Si la version de Python possede la fonction _getframe
+   # Si la version de Python possède la fonction _getframe
    # on l'utilise.
    cur_frame=sys._getframe
 except:
-   # Sinon on l'emule
+   # Sinon on l'émule
    def cur_frame(offset=0):
      """ Retourne la frame d execution effective eventuellement en remontant
          de offset niveaux dans la pile d execution
@@ -69,16 +67,21 @@ def callee_where(niveau=4):
 def AsType(a):
    """
       Retourne le type d'un concept (a) à partir
-      des caracteristiques de l'objet Python
+      des caractéristiques de l'objet Python
    """
-   if is_enum(a):  return AsType(a[0])
-   if is_assd(a):  return type(a)
-   if is_float(a): return "R"
-   if is_int(a):   return "I"
-   if is_str(a):   return "TXM"
-   if a == None:   return None
-   print 'a=', a, type(a)
-   raise AsException("type inconnu")
+   if is_sequence(a):
+       return AsType(a[0])
+   if is_assd(a):
+       return type(a)
+   if is_float(a):
+       return "R"
+   if is_int(a):
+       return "I"
+   if is_str(a):
+       return "TXM"
+   if a == None:
+       return None
+   raise AsException("type inconnu: %r %s" % (a, type(a)))
 
 
 def prbanner(s):
@@ -89,8 +92,8 @@ def prbanner(s):
 
 def repr_float(valeur):
   """
-      Cette fonction represente le reel valeur comme une chaine de caracteres
-      sous forme mantisse exposant si necessaire cad si le nombre contient plus de
+      Cette fonction représente le réel valeur comme une chaine de caractères
+      sous forme mantisse exposant si nécessaire cad si le nombre contient plus de
       5 caractères
       NB : valeur est un réel au format Python ou une chaine de caractères représentant un réel
   """
@@ -173,6 +176,17 @@ def import_object(uri):
         raise AttributeError(u"object (%s) not found in module '%s'. "
             "Module content is: %s" % (objname, modname, tuple(dir(mod))))
     return object
+
+
+class Singleton(object):
+    """Singleton implementation in python."""
+    # add _singleton_id attribute to the class to be independant of import path used
+    __inst = {}
+    def __new__(cls, *args, **kargs):
+        cls_id = getattr(cls, '_singleton_id', cls)
+        if Singleton.__inst.get(cls_id) is None:
+            Singleton.__inst[cls_id] = object.__new__(cls)
+        return Singleton.__inst[cls_id]
 
 
 class Enum(object):

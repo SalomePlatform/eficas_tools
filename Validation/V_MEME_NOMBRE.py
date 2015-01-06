@@ -1,35 +1,30 @@
-#@ MODIF V_MEME_NOMBRE Validation  DATE 07/09/2009   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
-# (AT YOUR OPTION) ANY LATER VERSION.                                 
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
-#                                                                       
-#                                                                       
-# ======================================================================
-
-
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 class MEME_NOMBRE:
    """
       La règle MEME_NOMBRE vérifie que l'on trouve au moins un des mots-clés
       de la règle parmi les arguments d'un OBJECT.
 
-      Ces arguments sont transmis à la règle pour validation sous la forme 
-      d'une liste de noms de mots-clés ou d'un dictionnaire dont 
+      Ces arguments sont transmis à la règle pour validation sous la forme
+      d'une liste de noms de mots-clés ou d'un dictionnaire dont
       les clés sont des noms de mots-clés.
    """
    def verif(self,args):
@@ -47,7 +42,7 @@ class MEME_NOMBRE:
 
       for mc in self.mcs:
         if mc not in args.keys():
-          text = "Une clé dans la régle n'existe pas %s" % mc
+          text = u"Une clé dans la règle n'existe pas %s" % mc
           return text,0
 
         val = args[mc].valeur
@@ -60,7 +55,7 @@ class MEME_NOMBRE:
         if size == -1:
           size = len_val
         elif size != len_val:
-          text = "Pas la même longeur"
+          text = u"Pas la même longeur"
           return text,0
       return text,1
 

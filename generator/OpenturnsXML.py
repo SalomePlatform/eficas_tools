@@ -1,12 +1,28 @@
-#@ AJOUT OpenturnsSolver Macro
-# -*- coding: iso-8859-1 -*-
-# RESPONSABLE
-
+# -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 """
 Ce module contient le generateur XML pour Openturns
 """
 import sys
 print sys.path
+from Extensions.i18n import tr
 import openturns
 
 # Dictionnaires de conversion des valeurs lues dans EFICAS
@@ -193,7 +209,7 @@ class XMLGenerateur :
 #   framework.studycase_ = "12:23:34"
 #   framework.componentname_ = self.GetMCVal('SolverComponentName', 'UNDEFINED')
     CN = self.GetMCVal('SolverComponentName', 'UNDEFINED')
-    print 'CN = ', CN
+    print 'CN = %s', CN
     framework.componentname_ = CN
     return framework
 
@@ -209,7 +225,7 @@ class XMLGenerateur :
     if ( dictTagsXML.has_key(tag) ) :
       return dictTagsXML[tag]
     else :
-      raise KeyError, "Tag '%s' is undefined. This is an internal bug. Report bug to developers" % tag 
+      raise KeyError, tr("Tag %s non-defini. Ceci est un bogue interne. en informer les developpeurs.", tag)
     pass
   
   def GetMCVal (self, MC, default = None, mandatory = False) :
@@ -221,7 +237,7 @@ class XMLGenerateur :
       return self.DictMCVal[MC]
     else :
       if ( mandatory ) :
-        raise KeyError, "Keyword '%s' is mandatory" % MC
+        raise KeyError, tr(" Le mot-cle %s est obligatoire.", MC)
       else :
         return default
     pass

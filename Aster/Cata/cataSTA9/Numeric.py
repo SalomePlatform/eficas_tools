@@ -1,1 +1,0 @@
-from numpy.oldnumeric import *

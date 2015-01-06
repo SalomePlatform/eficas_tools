@@ -1,4 +1,22 @@
 # -*- coding: utf-8 -*-
+# Copyright (C) 2007-2012   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 import logging
 from dictErreurs import EcritErreur
 from dictErreurs import jdcSet
@@ -122,7 +140,7 @@ def SuppressionValeurs(jdc, command,motcle,liste):
        for mc in c.childNodes:
           if mc.name != motcle : continue
           indexLigneGlob=mc.lineno-1
-          while indexLigneGlob < mc.endline  :
+          while indexLigneGlob < mc.endline-1  :
              MaLigneTexte = jdc.getLines()[indexLigneGlob]
              MaLigne=MaLigneTexte
              for Valeur in liste :
@@ -132,8 +150,8 @@ def SuppressionValeurs(jdc, command,motcle,liste):
                 chercheLigne=MaLigne[debutMC:]
                 trouve=chercheLigne.find(Valeur)
                 premier=0
-                if trouve > 0 : 
-                   debut=debut1 + chercheLigne[0:trouve]
+                if trouve > 1 : #on a au moins une quote
+                   debut=debut1 + chercheLigne[0:trouve-1]
                    index = -1
                    while (-1 * index) < len(debut) :
                       if (debut[index] == "(")  :
@@ -149,10 +167,18 @@ def SuppressionValeurs(jdc, command,motcle,liste):
                          assert(0)
                       index = index -1
                    debLigne = debut[0:index]
-                   fin=trouve+len(Valeur)
-                   if premier == 1 : fin = fin + 1 # on supprime la ,
+                   fin=trouve+len(Valeur)+1
+                   if premier == 1 and chercheLigne[fin] == ',': fin = fin + 1 # on supprime la ,
                    finLigne = chercheLigne[fin:]
-                   MaLigne=debLigne+finLigne
+                   MaLigne_tmp=debLigne+finLigne
+                   # Traitement ligne commancant par ,
+                   if len(MaLigne_tmp.strip()) > 0 :
+                      if MaLigne_tmp.strip()[0]==',' :
+                         MaLigne=MaLigne_tmp.strip()[1:]
+                      else :
+                         MaLigne=MaLigne_tmp[0:]
+                   else :
+                      MaLigne=MaLigne_tmp[0:]
                    boolChange=1
                 jdc.getLines()[indexLigneGlob]=MaLigne
              indexLigneGlob=indexLigneGlob+1

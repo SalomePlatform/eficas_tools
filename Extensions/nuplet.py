@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 """
     Ce module contient la classe de définition pour les nuplets NUPL
 """
@@ -27,6 +26,7 @@ import types
 # Modules Eficas
 from Noyau import N_ENTITE,N_MCLIST,N_CR
 from Ihm import I_ENTITE
+from Extensions.i18n import tr
 import mcnuplet
 
 class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
@@ -62,18 +62,18 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
       """
       if type(self.min) != types.IntType :
         if self.min != '**':
-          self.cr.fatal("L'attribut 'min' doit être un entier : "+`self.min`)
+          self.cr.fatal(tr("L'attribut 'min' doit etre un entier : ")+str(self.min))
       if type(self.max) != types.IntType :
         if self.max != '**' :
-          self.cr.fatal("L'attribut 'max' doit être un entier : "+`self.max`)
+          self.cr.fatal(tr("L'attribut 'max' doit etre un entier : ")+str(self.max))
       if self.min > self.max :
-         self.cr.fatal("Nombres d'occurrence min et max invalides : %s %s" %(`self.min`,`self.max`))
+         self.cr.fatal(tr("Nombres d'occurrence min et max invalides :") +str(self.min)+","+str(self.max))
       if type(self.fr) != types.StringType :
-        self.cr.fatal("L'attribut 'fr' doit être une chaîne de caractères : %s" +`self.fr`)
+        self.cr.fatal(tr("L'attribut 'fr' doit etre une chaine de caracteres"))
       if self.statut not in ['o','f','c','d']:
-        self.cr.fatal("L'attribut 'statut' doit valoir 'o','f','c' ou 'd' : %s" %`self.statut`)
+        self.cr.fatal(tr("L'attribut 'statut' doit valoir 'o','f','c' ou 'd'"))
       if type(self.docu) != types.StringType :
-        self.cr.fatal("L'attribut 'docu' doit être une chaîne de caractères : %s" %`self.docu`)
+        self.cr.fatal(tr("L'attribut 'docu' doit etre une chaine de caracteres"))
       self.verif_cata_regles()
 
    def __call__(self,val,nom,parent):
@@ -101,8 +101,8 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
       self.verif_cata()
       for v in self.entites :
         cr = v.report()
-        cr.debut = "Début "+v.__class__.__name__+ ' : '
-        cr.fin = "Fin "+v.__class__.__name__+ ' : '
+        cr.debut =tr("Début ")+v.__class__.__name__+ ' : '
+        cr.fin =tr("Fin ")+v.__class__.__name__+ ' : '
         self.cr.add(cr)
       return self.cr
 

@@ -1,35 +1,33 @@
-#@ MODIF V_A_CLASSER Validation  DATE 13/10/2009   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
-# (AT YOUR OPTION) ANY LATER VERSION.                                 
+# Copyright (C) 2007-2012   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
-#                                                                       
-#                                                                       
-# ======================================================================
-
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
+from Noyau.strfunc import convert, ufmt
 
 class A_CLASSER:
    """
-      La règle A_CLASSER vérifie que ...
+      La rÃ¨gle A_CLASSER vÃ©rifie que ...
 
    """
    def __init__(self,*args):
       if len(args) > 2 :
-        print "Erreur à la création de la règle A_CLASSER(",args,")"
+        print convert(ufmt(_(u"Erreur Ã  la crÃ©ation de la rÃ¨gle A_CLASSER(%s)"),
+                           args))
         return
       self.args=args
       if type(args[0]) == tuple:
@@ -37,14 +35,16 @@ class A_CLASSER:
       elif type(args[0]) == str:
         self.args0 = (args[0],)
       else :
-        print "Le premier argument de :",args," doit etre un tuple ou une string"
+        print convert(ufmt(_(u"Le premier argument de : %s doit etre un "
+                             u"tuple ou une chaine"), args))
       if type(args[1]) == tuple:
         self.args1 = args[1]
       elif type(args[1]) == str:
         self.args1 = (args[1],)
       else :
-        print "Le deuxième argument de :",args," doit etre un tuple ou une string"
-      # création de la liste des mcs
+        print convert(ufmt(_(u"Le deuxiÃ¨me argument de :%s doit etre un "
+                             u"tuple ou une chaine"), args))
+      # crÃ©ation de la liste des mcs
       liste = []
       liste.extend(self.args0)
       liste.extend(self.args1)
@@ -52,8 +52,8 @@ class A_CLASSER:
       self.init_couples_permis()
 
    def init_couples_permis(self):
-      """ Crée la liste des couples permis parmi les self.args, càd pour chaque élément
-          de self.args0 crée tous les couples possibles avec un élément de self.args1"""
+      """ CrÃ©e la liste des couples permis parmi les self.args, cÃ d pour chaque Ã©lÃ©ment
+          de self.args0 crÃ©e tous les couples possibles avec un Ã©lÃ©ment de self.args1"""
       liste = []
       for arg0 in self.args0:
         for arg1 in self.args1:
@@ -62,14 +62,13 @@ class A_CLASSER:
 
    def verif(self,args):
       """
-
-          args peut etre un dictionnaire ou une liste. Les éléments de args
-          sont soit les éléments de la liste soit les clés du dictionnaire.
+          args peut etre un dictionnaire ou une liste. Les Ã©lÃ©ments de args
+          sont soit les Ã©lÃ©ments de la liste soit les clÃ©s du dictionnaire.
       """
-      # création de la liste des couples présents dans le fichier de commandes
+      # crÃ©ation de la liste des couples prÃ©sents dans le fichier de commandes
       l_couples = []
       couple = []
-      text = ''
+      text = u''
       test = 1
       for nom in args:
         if nom in self.mcs :
@@ -79,13 +78,14 @@ class A_CLASSER:
             couple = [nom,]
       if len(couple) > 0 :
         l_couples.append(tuple(couple))
-      # l_couples peut etre vide si l'on n'a pas réussi à trouver au moins un
-      # élément de self.mcs
+      # l_couples peut etre vide si l'on n'a pas rÃ©ussi Ã  trouver au moins un
+      # Ã©lÃ©ment de self.mcs
       if len(l_couples) == 0 :
-        message = "- Il faut qu'au moins un objet de la liste : "+`self.args0`+\
-                  " soit suivi d'au moins un objet de la liste : "+`self.args1`
+        message = ufmt(_(u"- Il faut qu'au moins un objet de la liste : %r"
+                         u" soit suivi d'au moins un objet de la liste : %r"),
+                       self.args0, self.args1)
         return message,0
-      # A ce stade, on a trouvé des couples : il faut vérifier qu'ils sont
+      # A ce stade, on a trouvÃ© des couples : il faut vÃ©rifier qu'ils sont
       # tous licites
       num = 0
       for couple in l_couples :
@@ -93,19 +93,22 @@ class A_CLASSER:
         if len(couple) == 1 :
           # on a un 'faux' couple
           if couple[0] not in self.args1:
-            text = text+"- L'objet : "+couple[0]+" doit etre suivi d'un objet de la liste : "+\
-                   `self.args1`+'\n'
+            text = text + ufmt(_(u"- L'objet : %s doit Ãªtre suivi d'un objet de la liste : %r\n"),
+                               couple[0], self.args1)
             test = 0
           else :
             if num > 1 :
               # ce n'est pas le seul couple --> licite
               break
             else :
-              text = text+"- L'objet : "+couple[0]+" doit etre précédé d'un objet de la liste : "+\
-                   `self.args0`+'\n'
+              text = text + ufmt(_(u"- L'objet : %s doit Ãªtre prÃ©cÃ©dÃ© d'un objet de la liste : %r\n"),
+                                 couple[0], self.args0)
               test = 0
         elif couple not in self.liste_couples :
-          text = text+"- L'objet : "+couple[0]+" ne peut etre suivi de : "+couple[1]+'\n'
+          text = text + ufmt(_(u"- L'objet : %s ne peut Ãªtre suivi de : %s\n"),
+                             couple[0], couple[1])
           test = 0
       return text,test
+
+
 

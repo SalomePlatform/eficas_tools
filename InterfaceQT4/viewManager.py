@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 import os, string
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
+DictExtensions= {"MAP" : ".map"}
 class MyTabview:
 
    def __init__(self,appliEficas):
@@ -35,9 +36,7 @@ class MyTabview:
        self.untitledCount = 0
        self.doubles = {}
 
-       self.gridLayout = QGridLayout(self.appliEficas.centralWidget())
-       self.myQtab = QTabWidget(self.appliEficas.centralWidget())
-       self.gridLayout.addWidget(self.myQtab)
+       self.myQtab = self.appliEficas.myQtab
        if self.appliEficas.multi== True:
           self.myQtab.connect(self.myQtab,SIGNAL("currentChanged(int)"),self.indexChanged)
         
@@ -46,17 +45,27 @@ class MyTabview:
        if  self.dict_editors.has_key(index):
            editor=self.dict_editors[index]
            self.appliEficas.CONFIGURATION=editor.CONFIGURATION
+           self.appliEficas.code=editor.CONFIGURATION.code
            self.appliEficas.setWindowTitle(editor.titre)
+           self.appliEficas.construitMenu()
 
    def handleOpen(self,fichier=None,patron=0,units=None):
        result = None
        if fichier is None:
             if self.appliEficas.multi==True : 
                self.appliEficas.definitCode(None,None)
+               if self.appliEficas.code == None:return
+            
+            if DictExtensions.has_key(self.appliEficas.code) :
+               chaine="JDC (*"+DictExtensions[self.appliEficas.code]+");;"
+               extensions=tr(chaine+ "All Files (*)")
+            else :
+               extensions=tr('Fichiers JDC (*.comm);;''Tous les Fichiers (*)')
+
             fichier = QFileDialog.getOpenFileName(self.appliEficas,
-                        self.appliEficas.trUtf8('Ouvrir Fichier'),
+                        tr('Ouvrir Fichier'),
                         self.appliEficas.CONFIGURATION.savedir,
-                        self.appliEficas.trUtf8('JDC Files (*.comm);;''All Files (*)'))
+                         extensions)
             if fichier.isNull(): 
               return result
        fichier = os.path.abspath(unicode(fichier))
@@ -64,11 +73,11 @@ class MyTabview:
        self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
        self.appliEficas.addToRecentList(fichier)
        maPage=self.getEditor( fichier,units=units)
-       if maPage:
-         result = maPage
+       if maPage: result = maPage
+       if maPage : self.myQtab.setTabText(self.myQtab.indexOf(maPage),os.path.basename(fichier))
        return result
 
-   def handleClose(self,doitSauverRecent = 1,texte='&Quitter'):
+   def handleClose(self,doitSauverRecent = 1,texte=tr('&Quitter')):
        if doitSauverRecent : self.appliEficas.sauveRecents()
        index=self.myQtab.currentIndex()
        if index < 0 : return
@@ -100,19 +109,7 @@ class MyTabview:
        editor=self.dict_editors[index]
        editor.saveRun()
 
-   def runYACS(self):
-       index=self.myQtab.currentIndex()
-       if index < 0 : return
-       editor=self.dict_editors[index]
-       editor.runYACS()
-
-   def saveYACS(self):
-       index=self.myQtab.currentIndex()
-       if index < 0 : return
-       editor=self.dict_editors[index]
-       editor.saveYACS()
-
-   def handleCloseAll(self,texte='Quitter'):
+   def handleCloseAll(self,texte=tr('Quitter')):
        res=0
        self.appliEficas.sauveRecents()
        while len(self.dict_editors) > 0 :
@@ -121,32 +118,50 @@ class MyTabview:
              if res==2 : return res   # l utilsateur a annule
        return res
         
+   def handleRechercher(self):
+       #print "passage dans handleRechercher"
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       editor=self.dict_editors[index]
+       editor.handleRechercher()
+
+   def handleDeplier(self):
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       editor=self.dict_editors[index]
+       editor.handleDeplier()
+   
    def handleEditCopy(self):
        #print "passage dans handleEditCopy"
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleEditCopy()
 
    def handleEditCut(self):
        #print "passage dans handleEditCut"
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleEditCut()
 
    def handleEditPaste(self):
        #print "passage dans handleEditPaste"
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleEditPaste()
 
    def handleSupprimer(self):
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleSupprimer()
 
    def newEditor(self,include=0):
        if self.appliEficas.multi==True : 
            self.appliEficas.definitCode(None,None)
+           if self.appliEficas.code == None:return
        maPage=self.getEditor(include=include)
 
    def newIncludeEditor(self):
@@ -174,9 +189,9 @@ class MyTabview:
        if editor in self.doubles.keys() :
            QMessageBox.warning(
                      None,
-                     self.appliEficas.trUtf8("Fichier Duplique"),
-                     self.appliEficas.trUtf8("Le fichier ne sera pas sauvegarde."),
-                     self.appliEficas.trUtf8("&Annuler"))
+                     tr("Fichier Duplique"),
+                     tr("Le fichier ne sera pas sauvegarde."),
+                     tr("&Annuler"))
            return
        ok, newName = editor.saveFile()
        if ok :
@@ -216,10 +231,10 @@ class MyTabview:
            editor=self.dict_editors[indexEditor]
            if self.samepath(fichier, editor.getFileName()):
               abort = QMessageBox.warning(self.appliEficas,
-                        self.appliEficas.trUtf8("Fichier"),
-                        self.appliEficas.trUtf8("Le fichier <b>%1</b> est deja ouvert.").arg(fichier),
-                        self.appliEficas.trUtf8("&Duplication"),
-                        self.appliEficas.trUtf8("&Abort"))
+                        tr("Fichier"),
+                        tr("Le fichier <b>%s</b> est deja ouvert.",str(fichier)),
+                        tr("&Duplication"),
+                        tr("&Abort"))
               if abort: break
               double=editor
        else :
@@ -244,15 +259,17 @@ class MyTabview:
        return editor
 
    def addView(self, win, fichier=None):
+#PNPNPNPN --> a affiner
         if fichier is None:
             self.untitledCount += 1
-            self.myQtab.addTab(win, self.appliEficas.trUtf8("Untitled %1").arg(self.untitledCount))
+            self.myQtab.addTab(win, tr("Fichier non encore nommé ", self.untitledCount))
+            #self.myQtab.addTab(win, str(self.appliEficas.code))
         else:
             liste=fichier.split('/')
             txt =  liste[-1]
             if not QFileInfo(fichier).isWritable():
                 txt = '%s (ro)' % txt
-            self.myQtab.addTab(win, txt)
+            self.myQtab.addTab(win,txt )
         self.myQtab.setCurrentWidget(win)
         self.currentEditor=win
         win.setFocus()
@@ -285,10 +302,10 @@ class MyTabview:
         if (editor.modified) and (editor in self.doubles.keys()) :
             res = QMessageBox.warning(
                      None,
-                     self.appliEficas.trUtf8("Fichier Duplique"),
-                     self.appliEficas.trUtf8("Le fichier ne sera pas sauvegarde."),
-                     self.appliEficas.trUtf8(texte), 
-                     self.appliEficas.trUtf8("&Annuler"))
+                     tr("Fichier Duplique"),
+                     tr("Le fichier ne sera pas sauvegarde."),
+                     tr(texte), 
+                     tr("&Annuler"))
             if res == 0 : return 1
             return 2
         if editor.modified:
@@ -296,11 +313,11 @@ class MyTabview:
             if fn is None:
                 fn = self.appliEficas.trUtf8('Noname')
             res = QMessageBox.warning(self.appliEficas, 
-                self.appliEficas.trUtf8("Fichier Modifie"),
-                self.appliEficas.trUtf8("Le fichier <b>%1</b> n a pas ete sauvegarde.") .arg(fn),
-                self.appliEficas.trUtf8("&Sauvegarder"),
-                self.appliEficas.trUtf8(texte),
-                self.appliEficas.trUtf8("&Annuler") )
+                tr("Fichier Modifie"),
+                tr("Le fichier %s n a pas ete sauvegarde.",str(fn)),
+                tr("&Sauvegarder"),
+                tr(texte),
+                tr("&Annuler") )
             if res == 0:
                 (ok, newName) = editor.saveFile()
                 if ok:
@@ -312,5 +329,6 @@ class MyTabview:
 
    def handleAjoutGroup(self,listeGroup):
        index=self.myQtab.currentIndex()
+       if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleAjoutGroup(listeGroup)

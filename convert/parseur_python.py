@@ -1,30 +1,30 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 import sys,string,re
 import traceback
+from Extensions.i18n import tr
 
 escapedQuotesRE = re.compile(r"(\\\\|\\\"|\\\')")
 stringsAndCommentsRE =  \
-      re.compile("(\"\"\".*?\"\"\"|'''.*?'''|\"[^\"]*\"|\'[^\']*\'|#.*?\n)", re.DOTALL)
-allchars = string.maketrans("", "")
+      re.compile(u"(\"\"\".*?\"\"\"|'''.*?'''|\"[^\"]*\"|\'[^\']*\'|#.*?\n)", re.DOTALL)
+allchars = string.maketrans(u"", "")
 allcharsExceptNewline = allchars[: allchars.index('\n')]+allchars[allchars.index('\n')+1:]
 allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
 
@@ -34,11 +34,11 @@ def maskStringsAndComments(src):
        Le masquage est realise en remplacant les caracteres par des * 
        Attention : cette fonction doit etre utilisee sur un texte complet et pas ligne par ligne
     """
-    src = escapedQuotesRE.sub("**", src)
+    src = escapedQuotesRE.sub(u"**", src)
     allstrings = stringsAndCommentsRE.split(src)
     # every odd element is a string or comment
     for i in xrange(1, len(allstrings), 2):
-        if allstrings[i].startswith("'''")or allstrings[i].startswith('"""'):
+        if allstrings[i].startswith(u"'''")or allstrings[i].startswith('"""'):
             allstrings[i] = allstrings[i][:3]+ \
                            allstrings[i][3:-3].translate(allcharsExceptNewlineTranstable)+ \
                            allstrings[i][-3:]
@@ -119,7 +119,7 @@ def construit_genea(texte,liste_mc):
 
 class ENTITE_JDC :
     """Classe de base pour tous les objets créés lors de la conversion
-       Tout objet dérivé est enregistré auprès de son père à sa création
+       Tout objet dérivé est enregistré auprès de son pere a sa création
     """
     def __init__(self,pere):
         self.texte = ''
@@ -130,7 +130,7 @@ class ENTITE_JDC :
 
     def append_text(self,texte):
         """
-        Ajoute texte à self.texte en mettant un retour chariot à la fin de texte
+        Ajoute texte a self.texte en mettant un retour chariot a la fin de texte
         """
         texte = texte+'\n'
         self.texte = self.texte +texte
@@ -142,24 +142,24 @@ class COMMENTAIRE(ENTITE_JDC):
 
     def __str__(self):
         """
-        Retourne une chaîne de caractères représentants self
+        Retourne une chaine de caractères représentants self
         sous une forme interprétable par EFICAS
         """
         t=repr(self.texte)
-        return "COMMENTAIRE("+t+")\n"
+        return "COMMENTAIRE(u"+t+")\n"
 
-        #s='COMMENTAIRE("""'+self.texte+'""")\n\n'
+        #s='COMMENTAIRE(u"""'+self.texte+'""")\n\n'
         #return s
 
     def append_text(self,texte):
         """
-        Ajoute texte à self.texte en enlevant le # initial
+        Ajoute texte a self.texte en enlevant le # initial
         """
         texte = texte+'\n'
         if texte[0] == '#':
             self.texte = self.texte+texte[1:]
         else:
-            # le dièse n'est pas sur le premier caractère
+            # le dièse n'est pas sur le premier caractere
             amont,aval = string.split(texte,'#',1) # on découpe suivant la première occurrence de #
             self.texte = self.texte +amont + aval
         
@@ -178,7 +178,7 @@ class COMMANDE(ENTITE_JDC):
         Peut donc retourner un entier négatif
         """
         # faire attention aux commentaires contenus dans self.texte
-        # qui peuvent eux-mêmes contenir des parenthèses !!!!
+        # qui peuvent eux-memes contenir des parenthèses !!!!
         l_lignes = string.split(self.texte,'\n')
         nb = 0
         for ligne in l_lignes:
@@ -190,7 +190,7 @@ class AFFECTATION(ENTITE_JDC):
 
     def append_text(self,texte):
         """
-        Ajoute texte à self.texte en enlevant tout retour chariot et tout point virgule
+        Ajoute texte a self.texte en enlevant tout retour chariot et tout point virgule
         PN et tout commentaire
         """
         if texte[-1] == '\n' : texte = string.rstrip(texte[0:-1])
@@ -212,7 +212,7 @@ class COMMANDE_COMMENTARISEE(ENTITE_JDC):
 
     def append_text(self,texte):
         """
-        Ajoute texte à self.texte en enlevant les doubles commentaires
+        Ajoute texte a self.texte en enlevant les doubles commentaires
         """
         texte = string.strip(texte)
         texte = string.strip(texte[2:])
@@ -230,7 +230,7 @@ class AFFECTATION_EVAL(ENTITE_JDC):
 
     def append_text(self,texte):
         """
-        Ajoute texte à self.texte en enlevant tout retour chariot
+        Ajoute texte a self.texte en enlevant tout retour chariot
         """
         if texte[-1] == '\n' : texte = texte[1:-1]
         self.texte = self.texte+texte
@@ -248,7 +248,7 @@ class AFFECTATION_EVAL(ENTITE_JDC):
         
 class PARSEUR_PYTHON:
     """
-    Cette classe sert à générer un objet PARSEUR_PYTHON qui réalise l'analyse d'un texte 
+    Cette classe sert a générer un objet PARSEUR_PYTHON qui réalise l'analyse d'un texte 
     représentant un JDC Python en distinguant :
       - les commentaires inter commandes
       - les affectations
@@ -314,7 +314,7 @@ class PARSEUR_PYTHON:
         # A ce stade il faut avoir un OPER ou une MACRO, bref un '=' !
         if '=' not in texte : return 0
         # on a un texte de la forme xxxx = yyyyy
-        # --> reste à analyser yyyy
+        # --> reste a analyser yyyy
         amont,aval = string.split(texte,'=',1)
         aval = string.strip(aval)
         if self.pattern_commande.match(aval):
@@ -359,7 +359,7 @@ class PARSEUR_PYTHON:
                 hangingBraces[i] = numHanging+line.count(contchar[0]) - line.count(contchar[1])
 
             hangingComments ^= line.count('"""') % 2
-            hangingComments ^= line.count("'''") % 2
+            hangingComments ^= line.count(u"'''") % 2
             #print hangingComments,hangingBraces
             if hangingBraces[0] < 0 or hangingBraces[1] < 0 or hangingBraces[2] < 0: 
                 raise ParserException()
@@ -370,13 +370,13 @@ class PARSEUR_PYTHON:
                 continue
 
             if pattern_2comments.match(ligne):
-                #on a trouvé une commande commentarisée : double commentaire sans rien devant à part des blancs
+                #on a trouvé une commande commentarisée : double commentaire sans rien devant a part des blancs
                 if commentaire_courant:
                     #Si un commentaire ordinaire est en cours on le termine
                     commentaire_courant = None
 
                 if commande_courante :
-                    # on a un objet commentarisé à l'intérieur d'une commande
+                    # on a un objet commentarisé a l'intérieur d'une commande
                     # --> non traité pour l'instant : on l'ajoute simplement a la commande courante comme
                     # un commentaire ordinaire
                     commande_courante.append_text(ligne)
@@ -388,7 +388,7 @@ class PARSEUR_PYTHON:
                     commande_commentarisee_courante = COMMANDE_COMMENTARISEE(self)
                     commande_commentarisee_courante.append_text(ligne)
 
-                #on passe à la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             if pattern_comment.match(ligne):
@@ -398,7 +398,7 @@ class PARSEUR_PYTHON:
                     commande_commentarisee_courante = None
 
                 if commande_courante :
-                    # il s'agit d'un commentaire à l'intérieur d'une commande --> on ne fait rien de special
+                    # il s'agit d'un commentaire a l'intérieur d'une commande --> on ne fait rien de special
                     #on l'ajoute au texte de la commande 
                     commande_courante.append_text(ligne)
                 elif commentaire_courant :
@@ -411,16 +411,16 @@ class PARSEUR_PYTHON:
                     commentaire_courant = COMMENTAIRE(self)
                     commentaire_courant.append_text(ligne)
 
-                #on passe à la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             # la ligne contient des données autre qu'un éventuel commentaire
             if commentaire_courant :
-                # on clôt un éventuel commentaire courant
+                # on clot un éventuel commentaire courant
                 commentaire_courant = None
 
             if commande_commentarisee_courante :
-                # on clôt une éventuelle commande commentarisee courante
+                # on clot une éventuelle commande commentarisee courante
                 commande_commentarisee_courante = None
 
             if commande_courante :
@@ -434,7 +434,7 @@ class PARSEUR_PYTHON:
                     self.analyse_reel(commande_courante.texte)
                     commande_courante = None
 
-                #on passe à la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             if affectation_courante != None :
@@ -445,7 +445,7 @@ class PARSEUR_PYTHON:
                    and not hangingComments:
                     #L'affectation est terminée
                     affectation_courante=None
-                #on passe à la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             # il peut s'agir d'une commande ou d'une affectation ...
@@ -455,28 +455,29 @@ class PARSEUR_PYTHON:
                 if affectation_courante : affectation_courante = None
                 affectation = AFFECTATION_EVAL(self)
                 affectation.append_text(ligne)
-                #on passe à la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             if self.is_affectation(ligne):
                 # --> affectation
                 text=ligne
                 #traitement des commentaires en fin de ligne
-                compos=line.find("#")
+                compos=line.find(u"#")
                 if compos > 2:
                     #commentaire en fin de ligne
                     #on cree un nouveau commentaire avant le parametre
                     COMMENTAIRE(self).append_text(ligne[compos:])
                     text=ligne[:compos]
                 #si plusieurs instructions separees par des ; sur la meme ligne
-                inspos=line.find(";")
+                inspos=line.find(u";")
                 if inspos > 2:
                     #on garde seulement la premiere partie de la ligne
                     #si on a que des blancs apres le point virgule
                     if string.strip(text[inspos:]) == ";":
                         text=text[:inspos]
                     else:
-                        raise FatalError("Eficas ne peut pas traiter plusieurs instructions sur la meme ligne : %s" % ligne)
+                        raise FatalError(tr("Eficas ne peut pas traiter plusieurs instructions \
+                                                 sur la meme ligne : %s", ligne))
 
                 affectation_courante = AFFECTATION(self)
                 affectation_courante.append_text(text)
@@ -485,7 +486,7 @@ class PARSEUR_PYTHON:
                    and not hangingComments:
                     #L'affectation est terminée
                     affectation_courante=None
-                #on passe à la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
             if self.is_commande(ligne):
@@ -501,7 +502,7 @@ class PARSEUR_PYTHON:
                     #print "fin de commande"
                     self.analyse_reel(commande_courante.texte)
                     commande_courante = None
-                #on passe à la ligne suivante
+                #on passe a la ligne suivante
                 continue
 
     def enleve (self,texte) :
@@ -526,13 +527,13 @@ class PARSEUR_PYTHON:
         # traitement pour chaque caractere
         while (indiceC < len(texte)): 
            c=texte[indiceC]
-           if ( c == "," or c == "(" or c == ")"):
+           if ( c == "," or c == "(u" or c == ")"):
               mot=""
            elif ( c== "="):
               #on doit trouver derriere soit une valeur soit une parenthese
               valeur=""
               nouvelindice=indiceC+1
-              if texte[nouvelindice] != "(":
+              if texte[nouvelindice] != "(u":
                  #pas de parenthese ouvrante derriere un signe =, on a une valeur.
                  while ( texte[nouvelindice] != "," and texte[nouvelindice] != ")"):
                     valeur=valeur+texte[nouvelindice]
@@ -553,7 +554,7 @@ class PARSEUR_PYTHON:
               else:
                  #parenthese ouvrante derriere un signe =, on a un tuple de valeur ou de mots cles facteurs.
                  # s agit -il d un tuple 
-                 if texte[nouvelindice+1] != "(":
+                 if texte[nouvelindice+1] != "(u":
                     #le suivant n'est pas une parenthese ouvrante : on a un tuple de valeurs ou un mot cle facteur
                     tuple=False
                     #on avance jusqu'a la fin du tuple de valeurs ou jusqu'a la fin du premier mot cle simple
@@ -598,16 +599,16 @@ class PARSEUR_PYTHON:
         nomConcept=None
         # On verifie qu on a bien un OPER
         # et pas une MACRO
-        if commande.find("=") > commande.find("(") :
+        if commande.find(u"=") > commande.find(u"(u") :
            return
-        if commande.find("=") > 0:
+        if commande.find(u"=") > 0:
            #epure1=self.enleve(commande)
-           epure1=pattern_blancs.sub("",commande)
-           nomConcept,corps=epure1.split("=",1)
-           epure2=corps.replace("_F(","(")
-           #nomConcept=epure1.split("=")[0]
-           #index=epure1.find("=")
-           #epure2=epure1[index+1:len(epure1)].replace("_F(","(")
+           epure1=pattern_blancs.sub(u"",commande)
+           nomConcept,corps=epure1.split(u"=",1)
+           epure2=corps.replace(u"_F(u","(u")
+           #nomConcept=epure1.split(u"=")[0]
+           #index=epure1.find(u"=")
+           #epure2=epure1[index+1:len(epure1)].replace(u"_F(u","(u")
            #dict_reel_concept=self.construit_genea(epure2)
            if self.appli:
              dict_reel_concept=construit_genea(epure2,self.appli.liste_simp_reel)
@@ -631,7 +632,7 @@ class PARSEUR_PYTHON:
             for obj in self.l_objets:
                 txt = txt+str(obj)
         #else :
-        except ParserException:
+        except  ParserException:
             #Impossible de convertir le texte, on le retourne tel que
             txt=self.texte
         return txt
@@ -663,10 +664,10 @@ if __name__ == "__main__" :
         print t0,time.clock()-t0
     else:
         import hotshot, hotshot.stats
-        prof = hotshot.Profile("stones.prof")
+        prof = hotshot.Profile(u"stones.prof")
         txt = prof.runcall(PARSEUR_PYTHON(texte).get_texte,a)
         prof.close()
-        stats = hotshot.stats.load("stones.prof")
+        stats = hotshot.stats.load(u"stones.prof")
         stats.strip_dirs()
         stats.sort_stats('time', 'calls')
         stats.print_stats(20)

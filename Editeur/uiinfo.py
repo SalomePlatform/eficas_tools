@@ -1,26 +1,25 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 """
-   Ce module sert à construire les structures de données porteuses 
-   des informations liées aux groupes de commandes
+   Ce module sert Ã  construire les structures de donnÃ©es porteuses 
+   des informations liÃ©es aux groupes de commandes
 """
 import types
 
@@ -28,19 +27,19 @@ class UIINFO:
    """
        Pour le moment la classe UIINFO ne sait traiter que des infos
        portant sur la definition des groupes de commandes
-       Les autres informations sont ignorées
+       Les autres informations sont ignorÃ©es
    """
    def __init__(self,parent,groupes=None,**args):
       """
          Initialiseur de la classe UIINFO.
-         Initialise a partir du dictionnaire UIinfo passé à
+         Initialise a partir du dictionnaire UIinfo passÃ© Ã 
          un objet ENTITE les attributs de la classe
       """
-      # L'attribut parent stocke le lien vers l'objet ENTITE relié à UIINFO
+      # L'attribut parent stocke le lien vers l'objet ENTITE reliÃ© Ã  UIINFO
       self.parent=parent
       self.groupes=groupes
       if groupes == None:
-         # L'entite n'a pas de groupe associé. On lui associe le groupe "DEFAUT"
+         # L'entite n'a pas de groupe associÃ©. On lui associe le groupe "DEFAUT"
          self.groupes=("DEFAUT",)
       if type(self.groupes) != types.TupleType:
          self.groupes=(self.groupes,)
@@ -48,7 +47,7 @@ class UIINFO:
 def traite_commande(commande,niveau):
     """
         Cette fonction cree l'attribut UI de l'objet commande
-        à partir des informations contenues dans UIinfo
+        Ã  partir des informations contenues dans UIinfo
     """
     uiinfo=commande.UIinfo or {}
     UI=UIINFO(commande,**uiinfo)
@@ -72,7 +71,7 @@ def traite_niveau(niveau):
        # A la fin les cles du dictionnaire dict_groupes donnent la liste des groupes
        # sans doublon
        niveau.liste_groupes=niveau.dict_groupes.keys()
-       # On ordonne les listes alphabétiquement
+       # On ordonne les listes alphabÃ©tiquement
        niveau.liste_groupes.sort()
        for v in niveau.dict_groupes.values():v.sort()
        #print niveau.liste_groupes
@@ -84,8 +83,8 @@ def traite_niveau(niveau):
 def traite_UIinfo(cata):
    """
       Cette fonction parcourt la liste des commandes d'un catalogue (cata)
-      construit les objets UIINFO à partir de l'attribut UIinfo de la commande
-      et construit la liste complète de tous les groupes présents
+      construit les objets UIINFO Ã  partir de l'attribut UIinfo de la commande
+      et construit la liste complÃ¨te de tous les groupes prÃ©sents
    """
    #dict_groupes["CACHE"]=[]
    #XXX Ne doit pas marcher avec les niveaux
@@ -99,13 +98,13 @@ def traite_UIinfo(cata):
        # A la fin les cles du dictionnaire dict_groupes donnent la liste des groupes
        # sans doublon
        cata.JdC.liste_groupes=cata.JdC.dict_groupes.keys()
-       # On ordonne les listes alphabétiquement
+       # On ordonne les listes alphabÃ©tiquement
        cata.JdC.liste_groupes.sort()
        for v in cata.JdC.dict_groupes.values():v.sort()
        #print cata.JdC.liste_groupes
        #print cata.JdC.dict_groupes
    else:
-       # Le catalogue de commandes contient des définitions de niveau
+       # Le catalogue de commandes contient des dÃ©finitions de niveau
        for niv in cata.JdC.l_niveaux:
           traite_niveau(niv)
 

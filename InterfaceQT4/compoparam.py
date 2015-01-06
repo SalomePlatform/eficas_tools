@@ -1,4 +1,22 @@
 # -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 """
    Ce module contient les classes permettant de définir les objets graphiques
    représentant un objet de type PARAMETRE, cad le panneau et l'item de l'arbre
@@ -7,6 +25,7 @@
 
 # import modules Python
 import string, types
+from Extensions.i18n import tr
 
 # import modules EFICAS
 from Editeur     import Objecttreeitem
@@ -15,7 +34,7 @@ import typeNode
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel): 
-    def getPanel(self):
+    def getPanel2(self):
         """        
         """    
         from monParamPanel  import MonParamPanel
@@ -124,7 +143,7 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       Retourne le fr associé au paramêtre, cad la bulle d'aide pour EFICAS
       """
-      return "Définition d'un paramêtre"
+      return tr("Definition d'un parametre")
     
 import Extensions.parametre
 treeitem =PARAMTreeItem

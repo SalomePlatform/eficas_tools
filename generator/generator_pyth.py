@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 """
     Ce module contient le plugin generateur de fichier au format pyth pour EFICAS.
 
@@ -28,6 +27,9 @@ import types,string
 
 from Noyau import N_CR
 from Accas import MCSIMP,MCFACT,MCList
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
+
 
 def entryPoint():
    """
@@ -88,14 +90,14 @@ class PythGenerator:
       s=''
       if isinstance(obj,MCList):
         if len(obj.data) > 1:
-          raise "Pas supporté"
+          raise EficasException(tr("Pas supporte"))
         else:
           obj=obj.data[0]
 
       for mocle in obj.mc_liste:
         if isinstance(mocle,MCList):
           if len(mocle.data) > 1:
-            raise "Pas supporté"
+            raise EficasException(tr("Pas supporte"))
           else:
             valeur=self.generMCFACT(mocle.data[0])
             s=s+"%s = %s\n" % (mocle.nom,valeur)
@@ -125,7 +127,8 @@ class PythGenerator:
             valeur=self.generMCFACT(mocle)
             s=s+"'%s' : %s,\n" % (mocle.nom,valeur)
          else:
-            self.cr.fatal("Entite inconnue ou interdite : "+`mocle`+" Elle est ignorée")
+            self.cr.fatal(tr("Entite inconnue ou interdite : %s. Elle est ignoree", `mocle`))
+
       s=s+'}'
       return s
 
@@ -136,8 +139,11 @@ class PythGenerator:
       """
       try:
          s="%s" % obj.valeur
-      except Exception,e :
-         self.cr.fatal("Type de valeur non supporté par le format pyth : "+ obj.nom + '\n'+str(e))
+      except Exception as e :
+         self.cr.fatal(tr("Type de valeur non supporte par le format pyth : n %(exception)s", \
+                           {'nom': obj.nom, 'exception': unicode(e)}))
+
+
          s="ERREUR"
       return s
 

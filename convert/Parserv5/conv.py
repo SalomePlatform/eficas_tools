@@ -30,8 +30,8 @@ except :
     ""
 
 #
-__version__="$Name:  $"
-__Id__="$Id: conv.py,v 1.5 2003/09/18 16:16:54 eficas Exp $"
+__version__="$Name: V7_main $"
+__Id__="$Id: conv.py,v 1.6.52.1 2013-01-24 14:25:23 pnoyret Exp $"
 #
 
 Keywords=('MAILLE_1','MAILLE_2','MAILLE_ESCL','MAILLE_FOND','MAILLE_MAIT','MAILLE_ORIG','MAILLE',

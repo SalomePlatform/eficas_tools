@@ -1,25 +1,22 @@
-#@ MODIF N_MCCOMPO Noyau  DATE 30/08/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 
 """
@@ -208,6 +205,13 @@ class MCCOMPO(N_OBJECT.OBJECT):
 
       return dico
 
+   def cree_dict_toutes_valeurs(self):
+      """Semblable à `cree_dict_valeurs(liste=self.mc_liste)` en supprimant les
+      valeurs None."""
+      dico = self.cree_dict_valeurs(self.mc_liste, condition=0)
+      dico = dict([(k, v) for k, v in dico.items() if v is not None])
+      return dico
+
    def cree_dict_condition(self,liste=[],condition=0):
       """
           Methode pour construire un contexte qui servira dans l'évaluation
@@ -279,7 +283,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
       # on cherche dans les mots cles presents, le mot cle de nom key
       # s'il est là on retourne sa valeur (méthode get_val)
       for child in self.mc_liste:
-        if child.nom == key : return child.get_val()
+        if child.nom == key : return child.get_valeur()
       #  Si on n a pas trouve de mot cle present on retourne le defaut
       #  eventuel pour les mots cles accessibles dans la definition
       #  a ce niveau
@@ -393,8 +397,8 @@ class MCCOMPO(N_OBJECT.OBJECT):
               trouve des sd ; la valeur est la liste des sd attenante.
               Exemple ::
 
-                { 'VALE_F': [ <Cata.cata.para_sensi instance at 0x9419854>,
-                              <Cata.cata.para_sensi instance at 0x941a204> ],
+                { 'VALE_F': [ <Cata.cata.fonction_sdaster instance at 0x9419854>,
+                              <Cata.cata.fonction_sdaster instance at 0x941a204> ],
                   'MODELE': [<Cata.cata.modele instance at 0x941550c>] }
       """
       dico = {}

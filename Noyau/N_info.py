@@ -1,23 +1,22 @@
-#@ MODIF N_info Noyau  DATE 17/08/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
-# ======================================================================
-# RESPONSABLE COURTOIS M.COURTOIS
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 """Module to manage information printing : debug, info, error.
 Should replace 'print' and 'UTMESS' calls at least in the supervisor
@@ -32,11 +31,12 @@ import traceback
 from functools import partial
 from subprocess import Popen, PIPE
 
-from N_utils import Enum
+from N_utils import Enum, Singleton
+from strfunc import convert
 
 def default_print(text):
     """Basic print function."""
-    print text
+    print convert(text)
 
 LEVEL = Enum(
     'DEBUG',
@@ -91,8 +91,10 @@ REGEXP_ORIG = re.compile('File [\'\"]*(.*?)[\'\"]*, *line ([0-9]+), *in (.*)')
 
 # slighty different and very simplier than logger objects
 # from the logging module.
-class InfoLevel(object):
+class InfoLevel(Singleton):
     """Store informations level."""
+    _singleton_id = 'N_info.InfoLevel'
+    
     def __init__(self, level):
         """Initialization"""
         self._parts = []
@@ -240,7 +242,8 @@ def memory_used(pid):
     p = Popen(['cat', '/proc/%s/status' % pid], stdout=PIPE)
     output = p.communicate()[0]
     mat = RE_VMPEAK.search(output)
-    return int(mat.group(1)) / 1024.
+    mem = mat and int(mat.group(1)) or 0.
+    return mem / 1024.
 
 current_memory_used = partial(memory_used, _pid)
 
@@ -255,12 +258,12 @@ def mem_msg_callback(category, level, msg, args, kwargs):
 if __name__ == "__main__":
     message.set_level(SUPERV, LEVEL.WARN)
     message.set_level(MISS, LEVEL.DEBUG)
-    message.debug(None, "debug message")
+    #message.debug(None, "debug message")
     message.info(ALL, "information message")
     message.warn(None, "warning message")
     message.error(ALL, "error message")
     message.add_memory_info()
-    message.debug(MISS, "debug supervisor message")
+    #message.debug(MISS, "debug supervisor message")
     message.info(SUPERV, "information supervisor message")
     message.warn(SUPERV, "warning supervisor message")
     message.error(SUPERV, "error supervisor message")

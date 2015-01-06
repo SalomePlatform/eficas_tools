@@ -1,4 +1,22 @@
 # -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 # Modules Python
 import string,types,os
 
@@ -10,6 +28,7 @@ import typeNode
 from Editeur import Objecttreeitem
 import browser
 from Noyau.N_CR   import justify_text
+from Accas        import SalomeEntry
     
 class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):    
     def getPanel(self):
@@ -72,8 +91,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                      if self.item.wait_complex():
                         from monUniqueCompPanel import MonUniqueCompPanel
                         klass = MonUniqueCompPanel
-                     else:
-                        # on attend un entier, un réel ou une string
+                     elif self.item.wait_bool() :
+                        from monUniqueBoolPanel import MonUniqueBoolPanel
+                        klass = MonUniqueBoolPanel
+                     else :
                         from monUniqueBasePanel import MonUniqueBasePanel
                         klass = MonUniqueBasePanel
                         
@@ -88,10 +109,80 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             return None
         return klass( self, self.editor )
         
+
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
-        
+
+    def getPanelGroupe(self,parentQt):
+        maDefinition=self.item.get_definition()
+        monObjet=self.item.object
+        monNom=self.item.nom
+
+      # Attention l ordre des if est important
+      # Attention il faut gerer les blocs et les facteurs 
+      # a gerer comme dans composimp
+      # Gerer les matrices --> Actuellement pas dans ce type de panneau
+
+        if maDefinition.max == 1 :
+          if maDefinition.into != [] and maDefinition.into != None:
+          # a revoir
+            if len(maDefinition.into) < 4 :
+              from monWidgetRadioButton import MonWidgetRadioButton
+              widget=MonWidgetRadioButton(self,maDefinition,monNom,monObjet,parentQt)
+            elif len(maDefinition.into) < 7 :
+              from monWidget4a6RadioButton import MonWidget4a6RadioButton
+              widget=MonWidget4a6RadioButton(self,maDefinition,monNom,monObjet,parentQt)
+            else :
+              from monWidgetCB import MonWidgetCB
+              widget=MonWidgetCB(self,maDefinition,monNom,monObjet,parentQt)
+
+          elif self.item.wait_bool() :
+            from monWidgetSimpBool import MonWidgetSimpBool
+            widget=MonWidgetSimpBool(self,maDefinition,monNom,monObjet,parentQt)
+
+          elif self.item.wait_fichier():
+            from monWidgetSimpFichier import MonWidgetSimpFichier
+            widget=MonWidgetSimpFichier(self,maDefinition,monNom,monObjet,parentQt)
+
+          elif self.item.wait_tuple() :
+          # Pas fait
+            from monWidgetSimpTuple import MonWidgetSimpTuple
+            widget=MonWidgetSimpTuple(self,maDefinition,monNom,monObjet,parentQt)
+
+          elif self.item.wait_complex():
+          # Pas fait
+            from monWidgetSimpComplexe import MonWidgetSimpComplexe
+            widget=MonWidgetSimpComplexe(self,maDefinition,monNom,monObjet,parentQt)
+
+          elif self.item.wait_co():
+          # Pas fait
+            from monWidgetSimpASSD import MonWidgetSimpASSD
+            widget=MonWidgetSimpASSD(self,maDefinition,monNom,monObjet,parentQt)
+          
+          elif  self.item.wait_Salome() and self.editor.salome:
+          # Pas fait
+            from monWidgetSimpSalome import MonWidgetSimpSalome
+            widget=MonWidgetSimpSalome(self,maDefinition,monNom,monObjet,parentQt)
+
+          elif self.item.wait_TXM():
+          # Pas fait
+            from monWidgetSimpTxt import MonWidgetSimpTxt
+            widget=MonWidgetSimpTxt(self,maDefinition,monNom,monObjet,parentQt)
+          else :
+            from monWidgetSimpBase import MonWidgetSimpBase
+            widget=MonWidgetSimpBase(self,maDefinition,monNom,monObjet,parentQt)
+
+        else :
+          if maDefinition.into != [] and maDefinition.into != None:
+             #Pas encore traité
+            from monWidgetPlusieursInto import MonWidgetPlusieursInto
+            widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt)
+          else :
+            from monWidgetPlusieursBase import MonWidgetPlusieursBase
+            widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt)
+        return widget
+         
     
 class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   itemNode=Node
@@ -118,14 +209,14 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def is_list(self):
       """
-          Cette méthode indique si le mot cle simple attend une liste (valeur de retour 1)
+          Cette methode indique si le mot cle simple attend une liste (valeur de retour 1)
           ou s'il n'en attend pas (valeur de retour 0)
 
           Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
-          Dans le cas sans validateur, l'information est donnée par l'attribut max
+          Dans le cas sans validateur, l'information est donnee par l'attribut max
           de la definition du mot cle.
-          Dans le cas avec validateur, il faut combiner l'information précédente avec
-          celle issue de l'appel de la méthode is_list sur le validateur.On utilisera
+          Dans le cas avec validateur, il faut combiner l'information precedente avec
+          celle issue de l'appel de la methode is_list sur le validateur.On utilisera
           l'operateur ET pour effectuer cette combinaison (AndVal).
       """
       is_a_list=0
@@ -133,9 +224,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       assert (min <= max)
       if max > 1 :
                 is_a_list=1
-      # Dans le cas avec validateurs, pour que le mot cle soit considéré
-      # comme acceptant une liste, il faut que max soit supérieur a 1
-      # ET que la méthode is_list du validateur retourne 1. Dans les autres cas
+      # Dans le cas avec validateurs, pour que le mot cle soit considere
+      # comme acceptant une liste, il faut que max soit superieur a 1
+      # ET que la methode is_list du validateur retourne 1. Dans les autres cas
       # on retournera 0 (n'attend pas de liste)
       if self.definition.validators :
          is_a_list= self.definition.validators.is_list() * is_a_list
@@ -144,15 +235,15 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def has_into(self):
       """
-          Cette méthode indique si le mot cle simple propose un choix (valeur de retour 1)
+          Cette methode indique si le mot cle simple propose un choix (valeur de retour 1)
           ou s'il n'en propose pas (valeur de retour 0)
 
           Deux cas principaux peuvent se presenter : avec validateurs ou bien sans.
-          Dans le cas sans validateur, l'information est donnée par l'attribut into
+          Dans le cas sans validateur, l'information est donnee par l'attribut into
           de la definition du mot cle.
-          Dans le cas avec validateurs, pour que le mot cle soit considéré
-          comme proposant un choix, il faut que into soit présent OU
-          que la méthode has_into du validateur retourne 1. Dans les autres cas
+          Dans le cas avec validateurs, pour que le mot cle soit considere
+          comme proposant un choix, il faut que into soit present OU
+          que la methode has_into du validateur retourne 1. Dans les autres cas
           on retournera 0 (ne propose pas de choix)
       """
       has_an_into=0
@@ -164,19 +255,19 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
 
   def GetMinMax(self):
-      """ Retourne les valeurs min et max de la définition de object """
+      """ Retourne les valeurs min et max de la definition de object """
       return self.object.get_min_max()
 
   def GetMultiplicite(self):
-      """ A préciser.
-          Retourne la multiplicité des valeurs affectées a l'objet
-          représenté par l'item. Pour le moment retourne invariablement 1.
+      """ A preciser.
+          Retourne la multiplicite des valeurs affectees a l'objet
+          represente par l'item. Pour le moment retourne invariablement 1.
       """
       return 1
 
   def GetIntervalle(self):
       """ 
-           Retourne le domaine de valeur attendu par l'objet représenté 
+           Retourne le domaine de valeur attendu par l'objet represente 
            par l'item.
       """
       return self.object.getintervalle()
@@ -230,7 +321,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def get_liste_param_possible(self):
       liste_param=[]
+      l1,l2=self.jdc.get_parametres_fonctions_avant_etape(self.get_etape())
       for param in self.object.jdc.params:
+          if param.nom not in l1 : continue
           encorevalide=self.valide_item(param.valeur)
           if encorevalide:
              type_param=param.valeur.__class__.__name__
@@ -260,8 +353,11 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def valide_item(self,item):
       """
-        La validation est réalisée directement par l'objet
+        La validation est realisee directement par l'objet
       """
+      print self.object
+      print item
+      print self.object.valide_item
       return self.object.valide_item(item)
      
   def valide_liste_partielle(self,item,listecourante):
@@ -297,7 +393,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   def IsInIntervalle(self,valeur):
       """ 
           Retourne 1 si la valeur est dans l'intervalle permis par
-          l'objet représenté par l'item.
+          l'objet represente par l'item.
       """
       return self.valide_item(valeur)
 
@@ -324,12 +420,13 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return "ast-red-ball"
     else:
       return "ast-yel-ball"
+    print "invalide"
 
   def GetText(self):
     """
     Classe SIMPTreeItem
-    Retourne le texte a afficher dans l'arbre représentant la valeur de l'objet
-    pointé par self 
+    Retourne le texte a afficher dans l'arbre representant la valeur de l'objet
+    pointe par self 
     """
     text= self.object.GetText()
     if text == None : text=""
@@ -389,6 +486,14 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       """
       return self.object.wait_co()
 
+  def wait_fichier(self):
+      maDefinition=self.object.definition
+      try : 
+        if ('Repertoire' in maDefinition.type[0]) or ('Fichier' in maDefinition.type[0]) :
+           return 1
+      except :
+           return 0
+
   def wait_geom(self):
       """
       Méthode booléenne qui retourne 1 si l'objet pointé par self
@@ -442,6 +547,12 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
             boo = 1
       return boo
 
+  def wait_Salome(self):
+      type = self.object.definition.type[0]
+      if 'grma' in repr(type) : return True
+      if 'grno' in repr(type) : return True
+      if (isinstance(type, types.ClassType) and issubclass(type, SalomeEntry)) : return True
+      return False
    
   def GetType(self):
       """ 

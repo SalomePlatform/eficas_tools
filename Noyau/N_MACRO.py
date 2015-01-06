@@ -1,25 +1,22 @@
-#@ MODIF N_MACRO Noyau  DATE 30/08/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 
 """
@@ -31,8 +28,8 @@ import types,string,traceback
 
 import N_ENTITE
 import N_MACRO_ETAPE
-import N_OPS
 import nommage
+from strfunc import ufmt
 
 class MACRO(N_ENTITE.ENTITE):
    """
@@ -139,15 +136,8 @@ class MACRO(N_ENTITE.ENTITE):
           Construit l'objet MACRO_ETAPE a partir de sa definition (self),
           puis demande la construction de ses sous-objets et du concept produit.
       """
-      # Glut MC (2007-05) / Sensibilité
-      # Précaution nécessaire pour la sensibilité (on fait 'exec' du texte d'une commande)
-      # car on n'a pas de "ligne" à décoder pour trouver le nom du résultat (à gauche
-      # du signe égal). Cà tombe bien, dans ce cas, sd_prod=None : pas de résultat !
-      if self.sd_prod != None:
-         nomsd=self.nommage.GetNomConceptResultat(self.nom)
-      else:
-         nomsd = None
-      etape= self.class_instance(oper=self,reuse=reuse,args=args)
+      nomsd = self.nommage.GetNomConceptResultat(self.nom)
+      etape = self.class_instance(oper=self,reuse=reuse,args=args)
       etape.McBuild()
       return etape.Build_sd(nomsd)
 
@@ -167,20 +157,13 @@ class MACRO(N_ENTITE.ENTITE):
       """
           Méthode de vérification des attributs de définition
       """
-      if self.op is not None and (type(self.op) != types.IntType or self.op > 0) :
-        self.cr.fatal("L'attribut 'op' doit etre un entier signé : %s" %`self.op`)
-      if self.proc is not None and not isinstance(self.proc, N_OPS.OPS):
-        self.cr.fatal("L'attribut op doit etre une instance d'OPS : %s" % `self.proc`)
-      if type(self.regles) != types.TupleType :
-        self.cr.fatal("L'attribut 'regles' doit etre un tuple : %s" %`self.regles`)
-      if type(self.fr) != types.StringType :
-        self.cr.fatal("L'attribut 'fr' doit etre une chaine de caractères : %s" %`self.fr`)
-      if type(self.docu) != types.StringType :
-        self.cr.fatal("L'attribut 'docu' doit etre une chaine de caractères : %s" %`self.docu` )
-      if type(self.nom) != types.StringType :
-        self.cr.fatal("L'attribut 'nom' doit etre une chaine de caractères : %s" %`self.nom`)
-      if self.reentrant not in ('o','n','f'):
-        self.cr.fatal("L'attribut 'reentrant' doit valoir 'o','n' ou 'f' : %s" %`self.reentrant`)
+      self.check_op(valmax=0)
+      self.check_proc()
+      self.check_regles()
+      self.check_fr()
+      self.check_docu()
+      self.check_nom()
+      self.check_reentrant()
       self.verif_cata_regles()
 
    def supprime(self):

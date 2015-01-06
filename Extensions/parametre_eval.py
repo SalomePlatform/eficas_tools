@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 """
 Ce module contient la classe PARAMETRE_EVAL qui sert à définir
 des objets paramètres qui sont compréhensibles et donc affichables
@@ -32,6 +31,7 @@ import traceback
 # import modules Eficas
 import interpreteur_formule
 from Noyau.N_CR import CR
+from Extensions.i18n import tr
 import parametre
 
 pattern_eval       = re.compile(r'^(EVAL)([ \t\r\f\v]*)\(([\w\W]*)')
@@ -146,8 +146,8 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     else:
         # pas d'expression EVAL --> self non valide
         if cr == 'oui' : 
-           self.cr.fatal("Le paramètre EVAL %s ne peut valoir None" % self.nom)
-        return 0,"Le paramètre EVAL ne peut valoir None"
+           self.cr.fatal(tr("Le parametre EVAL %s ne peut valoir None") , self.nom)
+        return 0,tr("Le parametre EVAL ne peut valoir None")
 
   def verif_nom(self,nom=None,cr='non'):
     """
@@ -160,14 +160,14 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     if not nom :
         nom = self.nom
     if nom == "" :
-        if cr == 'oui' : self.cr.fatal("Pas de nom donné au paramètre EVAL")
+        if cr == 'oui' : self.cr.fatal(tr("Pas de nom donne au parametre EVAL"))
         return 0,"Pas de nom donné au paramètre EVAL"
     if len(nom) > 8 :
-        if cr == 'oui' : self.cr.fatal("Un nom de paramètre ne peut dépasser 8 caractères")
-        return 0,"Un nom de paramètre ne peut dépasser 8 caractères"
+        if cr == 'oui' : self.cr.fatal(tr("Un nom de parametre ne peut depasser 8 caracteres"))
+        return 0,"Un nom de parametre ne peut dépasser 8 caracteres"
     sd = self.parent.get_sd_autour_etape(nom,self)
     if sd :
-        if cr == 'oui' : self.cr.fatal("Un concept de nom %s existe déjà !" %nom)
+        if cr == 'oui' : self.cr.fatal(tr("Un concept de nom %s existe déjà !"), nom)
         return 0,"Un concept de nom %s existe déjà !" %nom
     return 1,''
 

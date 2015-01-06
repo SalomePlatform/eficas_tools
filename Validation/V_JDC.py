@@ -1,26 +1,22 @@
-#@ MODIF V_JDC Validation  DATE 07/09/2009   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
-# (AT YOUR OPTION) ANY LATER VERSION.                                 
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
-#                                                                       
-#                                                                       
-# ======================================================================
-
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 """
    Ce module contient la classe mixin JDC qui porte les méthodes
@@ -30,20 +26,18 @@
    Une classe mixin porte principalement des traitements et est
    utilisée par héritage multiple pour composer les traitements.
 """
-# Modules Python
-import string,types
-
 # Modules EFICAS
 import V_MCCOMPO
 from Noyau.N_Exception import AsException
 from Noyau.N_utils import AsType
+from Noyau.strfunc import ufmt
 
 class JDC(V_MCCOMPO.MCCOMPO):
    """
    """
 
    def report(self):
-      """ 
+      """
           Methode pour generation d un rapport de validite
       """
       self.cr.purge()
@@ -61,14 +55,15 @@ class JDC(V_MCCOMPO.MCCOMPO):
         Méthode booléenne qui retourne 0 si le JDC est invalide, 1 sinon
       """
       # FR : on prend en compte l'état du JDC ('unchanged','modified','undetermined')
-      # afin d'accélérer le test de validité du JDC 
+      # afin d'accélérer le test de validité du JDC
       if self.state == 'unchanged':
         return self.valid
       else:
         valid = 1
         texte,test = self.verif_regles()
         if test == 0:
-          if cr == 'oui': self.cr.fatal(string.strip(texte))
+          if cr == 'oui':
+              self.cr.fatal(' '.strip(texte))
           valid = 0
         if valid :
           for e in self.etapes:
@@ -81,24 +76,15 @@ class JDC(V_MCCOMPO.MCCOMPO):
         return self.valid
 
    def verif_regles(self):
-      """ 
-         Effectue la vérification de validité des règles du jeu de commandes 
       """
-      l_noms_etapes=self.get_l_noms_etapes()
+      Effectue la vérification de validité des règles du jeu de commandes
+      """
+      noms_etapes = [etape.nom for etape in self.etapes]
       texte_global = ''
       test_global = 1
-      for regle in self.regles :
-        texte,test = regle.verif(l_noms_etapes)
+      for regle in self.regles:
+        texte, test = regle.verif(noms_etapes)
         texte_global = texte_global + texte
         test_global = test_global*test
-      return texte_global,test_global
-
-   def get_l_noms_etapes(self):
-      """ 
-          Retourne la liste des noms des étapes de self 
-      """
-      l=[]
-      for etape in self.etapes:
-        l.append(etape.nom)
-      return l
+      return texte_global, test_global
 

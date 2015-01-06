@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 # Modules Python
 import string,types,os
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
+
 
 # Import des panels
 
@@ -76,13 +77,11 @@ class SaisieValeur:
                    self.node.item.set_valeur(liste)
                    self.BuildLBValeurs()
                    self.listeValeursCourantes=liste
-                   self.editor.affiche_infos("Attention, valeurs modifiees", Qt.red)
+                   self.editor.affiche_infos(tr("Attention, valeurs modifiees"), Qt.red)
                listeDejaLa=liste
         lChoix=self.node.item.get_liste_possible(listeDejaLa)
-        if ((len(lChoix) < 10 ) and (hasattr (self,'BAlpha'))) :
-            self.BAlpha.close()
-        if alpha==1 :
-            lChoix.sort()
+        if ((len(lChoix) < 10 ) and (hasattr (self,'BAlpha'))) : self.BAlpha.close()
+        if alpha==1 : lChoix.sort()
         for valeur in lChoix :
             self.listBoxVal.addItem( str(valeur) ) 
         if len(lChoix) == 1 :
@@ -94,8 +93,8 @@ class SaisieValeur:
   def ClicASSD(self):
          if self.listBoxASSD.currentItem()== None : return
          valeurQstring=self.listBoxASSD.currentItem().text()
-         commentaire = QString("Valeur selectionnée : ") 
-         commentaire.append(valeurQstring)
+         commentaire = tr("Valeur selectionnee : ") 
+         commentaire+=valeurQstring
          self.Commentaire.setText(commentaire)
          valeur=str(valeurQstring)
          validite,commentaire=self.politique.RecordValeur(valeur)
@@ -112,14 +111,14 @@ class SaisieValeur:
 
   def BOkPressed(self):
          if self.listBoxVal.currentItem()==None :
-            commentaire = "Pas de valeur selectionnée" 
+            commentaire = tr("Pas de valeur selectionnee" )
             self.Commentaire.setText(QString(commentaire))
          else :
             self.ClicValeur()       
 
   def BOk2Pressed(self):
          if str(self.lineEditVal.text())== "" :
-            commentaire = "Pas de valeur entrée " 
+            commentaire = tr("Pas de valeur entree" )
             self.Commentaire.setText(QString(commentaire))
          else :
             self.LEValeurPressed()       
@@ -128,12 +127,18 @@ class SaisieValeur:
          if valeur == None :
             nouvelleValeur=str(self.lineEditVal.text())
          else :
-            self.lineEditVal.setText(QString(valeur.nom))
+            if hasattr(self,"lineEditVal"):self.lineEditVal.setText(QString(valeur.nom))
             nouvelleValeur=valeur
          validite,commentaire=self.politique.RecordValeur(nouvelleValeur)
          if commentaire != "" :
+            #PNPNPNP Il faut trouver une solution pour les 2 cas 
+            #   self.editor.affiche_infos(commentaire)
             #self.Commentaire.setText(QString(commentaire))
-            self.editor.affiche_infos(commentaire)
+            if validite :
+                self.editor.affiche_infos(commentaire)
+            else :
+                self.editor.affiche_infos(commentaire,Qt.red)
+         self.setValide()
 
 
   def TraiteLEValeurTuple(self) :
@@ -176,12 +181,12 @@ class SaisieValeur:
                        listeValeurs.append(t)
                        indice=indice+3
                     except :
-                       commentaire = "Veuillez entrer le complexe sous forme aster ou sous forme python"
+                       commentaire = tr("Veuillez entrer le complexe sous forme aster ou sous forme python")
                        self.editor.affiche_infos(commentaire)
                        return listeValeurs,0
                        
 
-                 else :     # ce n'est pas un tuple à la mode aster
+                 else :     # ce n'est pas un tuple a la mode aster
                     listeValeurs.append(v)
                     indice = indice + 1
 
@@ -219,10 +224,10 @@ class SaisieSDCO :
 
         test,commentaire=self.node.item.set_valeur_co(nomConcept)
         if test:
-           commentaire="Valeur du mot-clé enregistree"
+           commentaire=tr("Valeur du mot-clef enregistree")
            self.node.update_node_valid()
         else :
            cr = self.node.item.get_cr()
-           commentaire = "Valeur du mot-clé non autorisée :"+cr.get_mess_fatal()
+           commentaire = tr("Valeur du mot-clef non autorisee :")+cr.get_mess_fatal()
            self.node.item.set_valeur_co(anc_val)
         self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))

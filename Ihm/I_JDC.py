@@ -1,28 +1,30 @@
 # -*- coding: iso-8859-1 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 """
 """
 # Modules Python
 import types,traceback,sys,os
 import string,linecache
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
+
 
 # Modules Eficas
 import I_OBJECT
@@ -62,10 +64,12 @@ class JDC(I_OBJECT.OBJECT):
           Retourne la liste des concepts avant etape d'un type acceptable
       """
       d=self.get_contexte_avant(etape)
+      
+      
       l=[]
       for k,v in d.items():
         if type(v) != types.InstanceType and not isinstance(v,object): continue
-        # On considère que seul assd indique un type quelconque pas CO
+        # On considere que seul assd indique un type quelconque pas CO
         elif self.assd in types_permis :
            l.append(k)
         elif self.est_permis(v,types_permis):
@@ -84,6 +88,17 @@ class JDC(I_OBJECT.OBJECT):
              if variable != None :
                 l.append(variable.nom)
       return l
+
+   def get_distributions(self,etape):
+      etapeStop=etape
+      l=[]
+      for etapeTraitee in self.etapes :
+          if etapeTraitee==etapeStop:
+             break
+          if etapeTraitee.nom == 'DISTRIBUTION' :
+             l.append(etapeTraitee.sd.nom)
+      return l
+
 
    def set_Copules_recalcule_etat(self):
       for etapeTraitee in self.etapes :
@@ -110,11 +125,35 @@ class JDC(I_OBJECT.OBJECT):
              if etapeTraitee.state=='arecalculer':
                 etapeTraitee.isvalid()
                 
+
+   def recalcule_validite_apres_changement_global_jdc(self):
+        #print "je passe dans recalcule_validite_apres_changement_global_jdc"
+        try :
+          liste=self.get_jdc_root().cata[0].liste_condition
+        except :
+          liste=()
+        for etapeTraitee in self.etapes :
+           if etapeTraitee.nom not in liste: continue
+           self.forceRecalculBloc(etapeTraitee)
+           etapeTraitee.state='arecalculer'
+           etapeTraitee.isvalid()
+
         
+   def forceRecalculBloc(self,objet):
+       # Attention : certains objets deviennent None quand on recalcule 
+       # les conditions d existence des blocs
+       if objet != None:  objet.state='arecalculer'
+       if hasattr(objet,'liste_mc_presents'):
+          for childNom in objet.liste_mc_presents():
+              child=objet.get_child(childNom)
+              if hasattr(objet,'_update_condition_bloc'):objet._update_condition_bloc()
+              self.forceRecalculBloc(child)
+       
+   
    def get_sd_avant_du_bon_type_pour_type_de_base(self,etape,type):
       """
           Retourne la liste des concepts avant etape d'1 type de base acceptable
-          Attention different de la routine précédente : 1 seul type passé en parametre
+          Attention different de la routine precedente : 1 seul type passe en parametre
           Teste sur issubclass et par sur le type permis
       """
       d=self.get_contexte_avant(etape)
@@ -172,6 +211,7 @@ class JDC(I_OBJECT.OBJECT):
         self.set_current_step()
         ind = 1
         for child in self.etapes :
+          from Extensions import commentaire
           if isinstance(child,commentaire.COMMENTAIRE):
             ind = ind+1
         objet = commentaire.COMMENTAIRE('',parent=self)
@@ -211,26 +251,28 @@ class JDC(I_OBJECT.OBJECT):
         self.fin_modif()
         return objet
       elif type(name)==types.InstanceType:
-        # on est dans le cas où on veut ajouter une commande déjà 
+        # on est dans le cas ou on veut ajouter une commande deja 
         # existante (par copie donc)
-        # on est donc nécessairement en mode editeur ...
+        # on est donc necessairement en mode editeur ...
         objet = name
         # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
-        objet.reparent(self)
+        from Extensions import commentaire
+        if not( isinstance (objet,commentaire.COMMENTAIRE)):
+           objet.reparent(self)
         self.set_current_step()
         if isinstance(objet,ETAPE):
           if objet.nom_niveau_definition == 'JDC':
-            # l'objet dépend directement du JDC
+            # l'objet depend directement du JDC
             objet.niveau = self
           else:
-            # l'étape dépend d'un niveau et non directement du JDC :
+            # l'etape depend d'un niveau et non directement du JDC :
             # il faut l'enregistrer dans le niveau de parent
             objet.parent.dict_niveaux[objet.nom_niveau_definition].register(objet)
             objet.niveau = objet.parent.dict_niveaux[objet.nom_niveau_definition]
         self.etapes.insert(pos,objet)
         self.reset_context()
-        # il faut vérifier que les concepts utilisés par objet existent bien
-        # à ce niveau d'arborescence
+        # il faut verifier que les concepts utilises par objet existent bien
+        # a ce niveau d'arborescence
         objet.verif_existence_sd()
         objet.update_mc_global()
         self.editmode=0
@@ -243,8 +285,8 @@ class JDC(I_OBJECT.OBJECT):
         try:
           self.set_current_step()
           cmd=self.get_cmd(name)
-          # L'appel a make_objet n'a pas pour effet d'enregistrer l'étape
-          # auprès du step courant car editmode vaut 1
+          # L'appel a make_objet n'a pas pour effet d'enregistrer l'etape
+          # aupres du step courant car editmode vaut 1
           # Par contre elle a le bon parent grace a set_current_step
           e=cmd.make_objet()
           if pos == None : pos = 0
@@ -257,14 +299,16 @@ class JDC(I_OBJECT.OBJECT):
           self.fin_modif()
           return e
         except AsException,e:
-          self.reset_current_step()
-          self.editmode=0
-          raise AsException("Impossible d ajouter la commande "+name + '\n' +str(e))
-        except:
           traceback.print_exc()
           self.reset_current_step()
           self.editmode=0
-          raise AsException("Impossible d ajouter la commande "+name)
+          raise AsException(tr("Impossible d'ajouter la commande")+name + '\n')
+        except:
+        #else :
+          traceback.print_exc()
+          self.reset_current_step()
+          self.editmode=0
+          raise AsException(tr("Impossible d ajouter la commande")+name)
 
    def close(self):
       #print "JDC.close",self
@@ -287,8 +331,8 @@ class JDC(I_OBJECT.OBJECT):
 
    def get_sd_apres_etape_avec_detruire(self,nom_sd,sd,etape,avec='non'):
       """ 
-           Cette méthode retourne la SD sd de nom nom_sd qui est éventuellement
-           définie apres etape en tenant compte des concepts detruits
+           Cette methode retourne la SD sd de nom nom_sd qui est eventuellement
+           definie apres etape en tenant compte des concepts detruits
            Si avec vaut 'non' exclut etape de la recherche
       """
       #print "JDC.get_sd_apres_etape_avec_detruire",nom_sd,sd
@@ -310,7 +354,7 @@ class JDC(I_OBJECT.OBJECT):
                  # Le concept etant reutilise, on interrompt la recherche. 
                  # On considere qu'il n'y a pas de nouveau concept defini
                  # meme si dans les etapes suivantes le concept est detruit
-                 # et un concept de meme nom créé.
+                 # et un concept de meme nom cree.
                  # AVERIFIER : avec reuse le concept devrait etre le meme
                  # le passage par ici est tres improbable
                  return None
@@ -324,8 +368,8 @@ class JDC(I_OBJECT.OBJECT):
 
    def get_sd_apres_etape(self,nom_sd,etape,avec='non'):
       """ 
-           Cette méthode retourne la SD de nom nom_sd qui est éventuellement
-           définie apres etape 
+           Cette methode retourne la SD de nom nom_sd qui est eventuellement
+           definie apres etape 
            Si avec vaut 'non' exclut etape de la recherche
       """
       ietap=self.etapes.index(etape)
@@ -340,10 +384,10 @@ class JDC(I_OBJECT.OBJECT):
 
    def get_sd_autour_etape(self,nom_sd,etape,avec='non'):
       """
-           Fonction: retourne la SD de nom nom_sd qui est éventuellement
-           définie avant ou apres etape
-           Permet de vérifier si un concept de meme nom existe dans le périmètre 
-           d'une étape
+           Fonction: retourne la SD de nom nom_sd qui est eventuellement
+           definie avant ou apres etape
+           Permet de verifier si un concept de meme nom existe dans le perimetre 
+           d'une etape
            Si avec vaut 'non' exclut etape de la recherche
       """
       sd=self.get_sd_avant_etape(nom_sd,etape)
@@ -366,8 +410,8 @@ class JDC(I_OBJECT.OBJECT):
 
    def active_etapes(self):
       """
-          Cette méthode a pour fonction de désactiver les étapes qui doivent
-          l'être cad, dans le cas d'ASTER, les étapes qui ne sont pas 
+          Cette methode a pour fonction de desactiver les etapes qui doivent
+          l'etre cad, dans le cas d'ASTER, les etapes qui ne sont pas 
           comprises entre le premier DEBUT/POURSUITE et le premier FIN 
           et rendre actives les autres
       """
@@ -387,14 +431,39 @@ class JDC(I_OBJECT.OBJECT):
            etape.inactive()
         if etape.nom == 'FIN':actif=-1
 
+   def deplaceEntite(self,indexNoeudACopier,indexNoeudOuColler,pos):
+      """
+          Pour le cut
+      """
+      if indexNoeudACopier==indexNoeudOuColler:return
+      etapeACopier=self.etapes[indexNoeudACopier]
+      try :
+        sd=self.etapes[indexNoeudACopier].sd
+      except :
+        sd=None
+      if pos=='before' and indexNoeudOuColler==0 : 
+         self.etapes2=[etapeACopier,]+self.etapes[0:indexNoeudACopier]+self.etapes[indexNoeudACopier+1:]
+      elif indexNoeudACopier < indexNoeudOuColler :
+         self.etapes2=self.etapes[0:indexNoeudACopier]+self.etapes[indexNoeudACopier+1:indexNoeudOuColler+1]+[etapeACopier,]+self.etapes[indexNoeudOuColler+1:]
+      else:
+         self.etapes2=self.etapes[0:indexNoeudOuColler+1]+[etapeACopier,]+self.etapes[indexNoeudOuColler+1:indexNoeudACopier]+self.etapes[indexNoeudACopier+1:]
+      self.etapes=self.etapes2
+      if indexNoeudACopier < indexNoeudOuColler :
+        self.delete_concept_entre_etapes(indexNoeudACopier,indexNoeudOuColler,sd)
+      self.reset_context()
+      for e in self.etapes :
+         e.state = 'modified'
+      self.control_context_apres(None)
+      return 1
+
+
    def suppentite(self,etape) :
       """  
-          Cette methode a pour fonction de supprimer une étape dans 
+          Cette methode a pour fonction de supprimer une etape dans 
           un jeu de commandes
-          Retourne 1 si la suppression a pu être effectuée,
+          Retourne 1 si la suppression a pu etre effectuee,
           Retourne 0 dans le cas contraire
       """
-      #print "suppentite",self
       #PN correction de bugs 
       if etape not in self.etapes:
          return 0
@@ -404,8 +473,8 @@ class JDC(I_OBJECT.OBJECT):
       self.etapes.remove(etape)
 
       if etape.niveau is not self:
-        # Dans ce cas l'étape est enregistrée dans un niveau
-        # Il faut la désenregistrer
+        # Dans ce cas l'etape est enregistree dans un niveau
+        # Il faut la desenregistrer
         etape.niveau.unregister(etape)
 
       etape.supprime_sdprods()
@@ -421,7 +490,7 @@ class JDC(I_OBJECT.OBJECT):
       else:
          etape=None
       self.control_context_apres(etape)
-      
+     
       self.reset_context()
       CONNECTOR.Emit(self,"supp",etape)
       self.fin_modif()
@@ -429,10 +498,10 @@ class JDC(I_OBJECT.OBJECT):
 
    def control_context_apres(self,etape):
       """
-         Cette méthode verifie que les etapes apres l'etape etape
+         Cette methode verifie que les etapes apres l'etape etape
          ont bien des concepts produits acceptables (pas de conflit de 
          nom principalement)
-         Si des concepts produits ne sont pas acceptables ils sont supprimés.
+         Si des concepts produits ne sont pas acceptables ils sont supprimes.
          Effectue les verifications sur les etapes du jdc mais aussi sur les
          jdc parents s'ils existent.
       """
@@ -472,19 +541,19 @@ class JDC(I_OBJECT.OBJECT):
 
    def register_parametre(self,param):
       """
-          Cette méthode sert à ajouter un paramètre dans la liste des paramètres
+          Cette methode sert a ajouter un parametre dans la liste des parametres
       """
       self.params.append(param)
 
    def register_fonction(self,fonction):
       """
-          Cette méthode sert à ajouter une fonction dans la liste des fonctions
+          Cette methode sert a ajouter une fonction dans la liste des fonctions
       """
       self.fonctions.append(fonction)
 
    def delete_param(self,param):
       """
-          Supprime le paramètre param de la liste des paramètres
+          Supprime le parametre param de la liste des parametres
           et du contexte gobal
       """
       if param in self.params : self.params.remove(param)
@@ -492,15 +561,15 @@ class JDC(I_OBJECT.OBJECT):
 
    def get_parametres_fonctions_avant_etape(self,etape):
       """
-          Retourne deux éléments :
-          - une liste contenant les noms des paramètres (constantes ou EVAL) 
-            définis avant etape
-          - une liste contenant les formules définies avant etape
+          Retourne deux elements :
+          - une liste contenant les noms des parametres (constantes ou EVAL) 
+            definis avant etape
+          - une liste contenant les formules definies avant etape
       """
       l_constantes = []
       l_fonctions = []
-      # on récupère le contexte avant etape
-      # on ne peut mettre dans les deux listes que des éléments de ce contexte
+      # on recupere le contexte avant etape
+      # on ne peut mettre dans les deux listes que des elements de ce contexte
       d=self.get_contexte_avant(etape)
       # construction de l_constantes
       for param in self.params:
@@ -535,8 +604,8 @@ class JDC(I_OBJECT.OBJECT):
 
    def init_modif(self):
       """
-      Méthode appelée au moment où une modification va être faite afin de 
-      déclencher d'éventuels traitements pré-modification
+      Methode appelee au moment ou une modification va etre faite afin de 
+      declencher d'eventuels traitements pre-modification
       """
       #print "init_modif",self
       self.state = 'modified'
@@ -549,15 +618,16 @@ class JDC(I_OBJECT.OBJECT):
 
    def deep_update_condition_bloc(self):
       # pour le moment, on ne fait rien
-      raise "Not implemented"
+      self.get_jdc_root().recalcule_validite_apres_changement_global_jdc()
+      #raise EficasException(tr("Pas implemente"))
 
    def update_condition_bloc(self):
       # pour le moment, on ne fait rien
-      raise "Not implemented"
+      raise EficasException(tr("Pas implemente"))
 
    def get_liste_mc_inconnus(self):
      """
-     Retourne une liste contenant les mots-clés inconnus à la relecture du JDC
+     Retourne une liste contenant les mots-cles inconnus a la relecture du JDC
      """
      # cette liste a le format suivant : [etape,(bloc,mcfact,...),nom_mc,valeur_mc]
      l_mc = []
@@ -571,7 +641,7 @@ class JDC(I_OBJECT.OBJECT):
    def get_genealogie(self):
       """
           Retourne la liste des noms des ascendants de l'objet self
-          jusqu'à la première ETAPE parent.
+          jusqu'a la premiere ETAPE parent.
       """
       return []
 
@@ -590,14 +660,14 @@ class JDC(I_OBJECT.OBJECT):
    def set_etape_context(self,etape):
       """
           Positionne l'etape qui sera utilisee dans NommerSdProd pour
-          decider si le concept passé pourra etre  nommé
+          decider si le concept passe pourra etre  nomme
       """
       self._etape_context=etape
 
    def reset_context(self):
       """ 
           Cette methode reinitialise le contexte glissant pour pouvoir
-          tenir compte des modifications de l'utilisateur : création
+          tenir compte des modifications de l'utilisateur : craation
           de commandes, nommage de concepts, etc.
       """
       #print "reset_context",self,self.nom
@@ -619,13 +689,13 @@ class JDC(I_OBJECT.OBJECT):
       #print "del_sdprod",self.sds
       #print "del_sdprod",self.g_context
       #print "del_sdprod",self.sds_dict
-      if sd in self.sds : self.sds.remove(sd)
+      #if sd in self.sds : self.sds.remove(sd)
       if self.g_context.has_key(sd.nom) : del self.g_context[sd.nom]
       if self.sds_dict.has_key(sd.nom) : del self.sds_dict[sd.nom]
 
    def del_param(self,param):
       """
-          Supprime le paramètre param de la liste des paramètres
+          Supprime le parametre param de la liste des paramatres
           et du contexte gobal
       """
       if param in self.params : self.params.remove(param)
@@ -641,33 +711,33 @@ class JDC(I_OBJECT.OBJECT):
 
    def append_sdprod(self,sd):
       """
-          Ajoute la SD sd à la liste des sd en vérifiant au préalable qu'une SD de
-          même nom n'existe pas déjà
+          Ajoute la SD sd a la liste des sd en verifiant au prealable qu'une SD de
+          meme nom n'existe pas deja
       """
       if sd == None or sd.nom == None:return
 
       o=self.sds_dict.get(sd.nom,None)
       if isinstance(o,ASSD):
-         raise AsException("Nom de concept deja defini : %s" % sd.nom)
+         raise AsException(tr("Nom de concept deja defini "+ sd.nom))
       self.sds_dict[sd.nom]=sd
       self.g_context[sd.nom] = sd
-      if sd not in self.sds : self.sds.append(sd)
+      #if sd not in self.sds : self.sds.append(sd)
 
    def append_param(self,param):
       """
-          Ajoute le paramètre param à la liste des params
+          Ajoute le parametre param a la liste des params
           et au contexte global
       """
-      # il faudrait vérifier qu'un paramètre de même nom n'existe pas déjà !!!
+      # il faudrait verifier qu'un parametre de meme nom n'existe pas deja !!!
       if param not in self.params : self.params.append(param)
       self.g_context[param.nom]=param
 
    def append_fonction(self,fonction):
       """
-          Ajoute la fonction fonction à la liste des fonctions
+          Ajoute la fonction fonction a la liste des fonctions
           et au contexte global
       """
-      # il faudrait vérifier qu'une fonction de même nom n'existe pas déjà !!!
+      # il faudrait verifier qu'une fonction de meme nom n'existe pas deja !!!
       if fonction not in self.fonctions : self.fonctions.append(fonction)
       self.g_context[fonction.nom]=fonction
 
@@ -676,7 +746,7 @@ class JDC(I_OBJECT.OBJECT):
           Inputs :
              - sd=concept detruit
           Fonction :
-          Mettre a jour les etapes du JDC suite à la disparition du
+          Mettre a jour les etapes du JDC suite a la disparition du
           concept sd
           Seuls les mots cles simples MCSIMP font un traitement autre
           que de transmettre aux fils
@@ -688,18 +758,18 @@ class JDC(I_OBJECT.OBJECT):
 
    def replace_concept_after_etape(self,etape,old_sd,sd):
       """
-          Met à jour les étapes du JDC qui sont après etape en fonction
+          Met a jour les etapes du JDC qui sont apres etape en fonction
           du remplacement du concept sd
       """
       index = self.etapes.index(etape)+1
       if index == len(self.etapes) :
-         return # etape est la dernière étape du jdc ...on ne fait rien !
+         return # etape est la derniere etape du jdc ...on ne fait rien !
       for child in self.etapes[index:]:
         child.replace_concept(old_sd,sd)
 
    def update_concept_after_etape(self,etape,sd):
       """
-          Met à jour les étapes du JDC qui sont après etape en fonction
+          Met a jour les etapes du JDC qui sont apres etape en fonction
           de la modification (principalement nommage) du concept sd
       """
       if etape is None:
@@ -708,7 +778,7 @@ class JDC(I_OBJECT.OBJECT):
       else:
          index = self.etapes.index(etape)+1
       if index == len(self.etapes) :
-         return # etape est la dernière étape du jdc ...on ne fait rien !
+         return # etape est la derniere etape du jdc ...on ne fait rien !
       for child in self.etapes[index:]:
         child.update_concept(sd)
 
@@ -754,14 +824,15 @@ class JDC(I_OBJECT.OBJECT):
          pass
       return valeur
 
-#ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
+#ATTENTION SURCHARGE : cette methode doit etre gardee en synchronisation avec celle de Noyau
    def supprime(self):
       #print "supprime",self
       Noyau.N_JDC.JDC.supprime(self)
+      for etape in self.etapes:
+         etape.supprime()
       self.appli=None
       self.g_context={}
       self.const_context={}
-      self.sds=[]
       self.sds_dict={}
       self.mc_globaux={}
       self.current_context={}
@@ -773,23 +844,23 @@ class JDC(I_OBJECT.OBJECT):
       self._etape_context=None
       self.etapes=[]
        
-#ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
+#ATTENTION SURCHARGE : cette methode doit etre gardee en synchronisation avec celle de Noyau
    def register(self,etape):
       """
-           Cette méthode ajoute  etape dans la liste
-           des etapes self.etapes et retourne l identificateur d'étape
+           Cette methode ajoute  etape dans la liste
+           des etapes self.etapes et retourne l identificateur d'etape
            fourni par l appel a g_register
 
            A quoi sert editmode ?
               - Si editmode vaut 1, on est en mode edition de JDC. On cherche
-                à enregistrer une étape que l'on a créée avec eficas (en passant
-                par addentite) auquel cas on ne veut récupérer que son numéro
-                d'enregistrement et c'est addentité qui l'enregistre dans
-                self.etapes à la bonne place...
+                a enregistrer une etape que l'on a creee avec eficas (en passant
+                par addentite) auquel cas on ne veut recuperer que son numero
+                d'enregistrement et c'est addentite qui l'enregistre dans
+                self.etapes a la bonne place...
               - Si editmode vaut 0, on est en mode relecture d'un fichier de
-                commandes et on doit enregistrer l'étape à la fin de self.etapes
-                (dans ce cas l'ordre des étapes est bien l'ordre chronologique
-                de leur création   )
+                commandes et on doit enregistrer l'etape a la fin de self.etapes
+                (dans ce cas l'ordre des etapes est bien l'ordre chronologique
+                de leur creation   )
       """
       if not self.editmode:
          self.etapes.append(etape)
@@ -798,21 +869,21 @@ class JDC(I_OBJECT.OBJECT):
          pass
       return self.g_register(etape)
 
-#ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
+#ATTENTION SURCHARGE : cette methode doit etre gardee en synchronisation avec celle de Noyau
    def NommerSdprod(self,sd,sdnom,restrict='non'):
       """
           Nomme la SD apres avoir verifie que le nommage est possible :
           nom non utilise
           Si le nom est deja utilise, leve une exception
-          Met le concept créé dans le concept global g_context
+          Met le concept cree dans le concept global g_context
       """
-      # XXX En mode editeur dans EFICAS, le nommage doit etre géré différemment
-      # Le dictionnaire g_context ne représente pas le contexte
-      # effectif avant une étape.
-      # Il faut utiliser get_contexte_avant avec indication de l'étape
-      # traitée.
+      # XXX En mode editeur dans EFICAS, le nommage doit etre gere differemment
+      # Le dictionnaire g_context ne represente pas le contexte
+      # effectif avant une etape.
+      # Il faut utiliser get_contexte_avant avec indication de l'etape
+      # traitee.
       # Cette etape est indiquee par l'attribut _etape_context qui a ete
-      # positionné préalablement par un appel à set_etape_context
+      # positionne prealablement par un appel a set_etape_context
 
       if CONTEXT.debug : print "JDC.NommerSdprod ",sd,sdnom
 
@@ -822,7 +893,7 @@ class JDC(I_OBJECT.OBJECT):
          o=self.sds_dict.get(sdnom,None)
 
       if isinstance(o,ASSD):
-         raise AsException("Nom de concept deja defini : %s" % sdnom)
+         raise AsException(tr(" Nom de concept deja  defini : "+ sdnom))
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
       # Ajoute a la creation (appel de reg_sd).
@@ -833,38 +904,41 @@ class JDC(I_OBJECT.OBJECT):
       if restrict == 'non':
          self.g_context[sdnom]=sd
 
-#ATTENTION SURCHARGE : cette methode doit etre gardée en synchronisation avec celle de Noyau
+   def delete_concept_entre_etapes(self,index1,index2,sd):
+      if index2 <= index1 :return
+      for child in self.etapes[index1:index2]:
+        child.delete_concept(sd)
+
    def delete_concept_after_etape(self,etape,sd):
       """
-          Met à jour les étapes du JDC qui sont après etape en fonction
+          Met a jour les etapes du JDC qui sont apres etape en fonction
           de la disparition du concept sd
       """
       index = self.etapes.index(etape)+1
       if index == len(self.etapes) :
-         return # etape est la dernière étape du jdc ...on ne fait rien !
+         return # etape est la derniere etape du jdc ...on ne fait rien !
       for child in self.etapes[index:]:
         child.delete_concept(sd)
 
-#ATTENTION SURCHARGE : les methodes ci-dessous surchargent des methodes de Noyau et Validation : a reintegrer
+#ATTENTION SURCHARGE : les methodes ci-dessus surchargent des methodes de Noyau et Validation : a reintegrer
 
    def get_file(self,unite=None,fic_origine=''):
       """
-          Retourne le nom du fichier correspondant à un numero d'unité
+          Retourne le nom du fichier correspondant a un numero d'unite
           logique (entier) ainsi que le source contenu dans le fichier
       """
       if self.appli is not None:
-         # Si le JDC est relié à une application maitre, on délègue la recherche
+         # Si le JDC est relie a une application maitre, on delegue la recherche
          file,text= self.appli.get_file(unite,fic_origine)
       else:
          file = None
          if unite != None:
-            if os.path.exists("fort."+str(unite)):
+            if os.path.exists(u"fort."+str(unite)):
                file= "fort."+str(unite)
          if file == None :
-            raise AsException("Impossible de trouver le fichier correspondant"
-                               " a l unite %s" % unite)
+            raise AsException(tr("Impossible de trouver le fichier correspondant a l'unite "+str( unite)))
          if not os.path.exists(file):
-            raise AsException("%s n'est pas un fichier existant" % unite)
+            raise AsException(str(unite)+ tr(" n'est pas un fichier existant"))
          fproc=open(file,'r')
          text=fproc.read()
          fproc.close()
@@ -881,3 +955,12 @@ class JDC(I_OBJECT.OBJECT):
      if valid != old_valid:
        CONNECTOR.Emit(self,"valid")
      return valid
+
+   def get_l_noms_etapes(self):
+      """ 
+          Retourne la liste des noms des Ã©tapes de self 
+      """
+      l=[]
+      for etape in self.etapes:
+        l.append(etape.nom)
+      return l

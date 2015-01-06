@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 from PyQt4 import *
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
 import browser
 import typeNode
+from Extensions.i18n import tr
 
 
 from Editeur import Objecttreeitem
@@ -34,8 +34,23 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         """
         """
         from monMCFactPanel import MonMCFactPanel
-        return MonMCFactPanel(self,parent=self.editor)
-        
+        return MonMCFactPanel(self,parent=self.editor) 
+
+    def getPanelGroupe(self,parentQt):
+        maDefinition=self.item.get_definition()
+        monObjet=self.item.object
+        monNom=self.item.nom
+        if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
+        else : self.niveau=1
+        if  hasattr(self,'plie') and self.plie==True : 
+           from monWidgetFactPlie import MonWidgetFactPlie
+           widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau)
+        else:
+           from monWidgetFact import MonWidgetFact
+           widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau)
+        return widget
+
+
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
@@ -51,11 +66,11 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def GetLabelText(self):
       """ Retourne 3 valeurs :
-        - le texte à afficher dans le noeud représentant l'item
+        - le texte à afficher dans le noeud representant l'item
         - la fonte dans laquelle afficher ce texte
         - la couleur du texte
       """
-      # None --> fonte et couleur par défaut
+      # None --> fonte et couleur par defaut
       return self.object.getlabeltext(),None,None
 
   def isvalid(self):
@@ -117,15 +132,15 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       itemobject=item.getObject()
       if itemobject.isoblig() :
-         self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ',Qt.red)
+         self.appli.affiche_infos(tr('Impossible de supprimer un mot-cle obligatoire '),Qt.red)
          return 0
 
       if self.object.suppentite(itemobject):
-         message = "Mot-clé " + itemobject.nom + " supprimé"
+         message = tr("Mot-cle %s supprime")+ unicode(itemobject.nom)
          self.appli.affiche_infos(message)
          return 1
       else:
-         self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-clé',Qt.red)
+         self.appli.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-cle'),Qt.red)
          return 0
 
 import Accas

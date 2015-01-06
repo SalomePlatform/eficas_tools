@@ -1,4 +1,22 @@
 # -*- coding: iso-8859-1 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 # --------------------------------------------------
 # debut entete
@@ -68,16 +86,16 @@ JdC = JDC_CATA ( code = 'OPENTURNS_STUDY',
 # fin entete
 # --------------------------------------------------
 
-LOG = PROC ( nom = "LOG",
+SIMULATION = PROC ( nom = "SIMULATION",
              op = None,
              docu = "",
                
-  DebugMessages = SIMP ( statut = "o",
-                 typ = "TXM",
-                 into = ( 'yes', 'no' ),
-                 defaut = 'no',
-                 fr = "Affichage du niveau de debug de la bibliotheque Open TURNS",
-                 ang = "Open TURNS library debug level print",
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "Nom du modele physique",
+ ),
+  SAMPLE = SIMP ( statut = "o",
+                 typ = "R",
                  ),
                
   WrapperMessages = SIMP ( statut = "o",
@@ -120,8 +138,8 @@ LOG = PROC ( nom = "LOG",
                  ang = "Open TURNS library error level print",
                  ),
                
-) # Fin PROC LOG
-# Ordre Catalogue LOG
+) # Fin PROC SIMULATION
+# Ordre Catalogue SIMULATION
 
 
 
@@ -145,6 +163,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
   Kind = SIMP ( statut = "o", typ = "TXM",
                 into = ( "Beta",
+                         "Pascale",
                          "Exponential",
                          "Gamma",
                          "Geometric",
@@ -410,7 +429,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                        # Il faut definir une collection de couples ( x,p ) 
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**',
+                                       max = '**', 
                                        fr = "Liste de couples : largeur de classe, hauteur de classe",
                                        ang = "Class bandwidth, class height couple list",
                                        validators=VerifTypeTuple(('R','R')),
@@ -439,6 +458,35 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
   ), # Fin BLOC LAPLACE
 
+  BLOC1 = BLOC ( condition = " Kind in ( 'Pascale', ) ",
+                     Settings = SIMP ( statut = "o",
+                                       typ = "TXM",
+                                       max = 1,
+                                       into = ( "Cas1", "Cas2", "Cas3" ),
+                                       defaut = "Cas1",
+                                       fr = "Parametrage de la loi lognormale",
+                                       ang = "Lognormal distribution parameter set",
+                                       ),
+                     BLOC2_1 = BLOC ( condition = " Settings in ( 'Cas1', ) ",
+
+                                                 Mu = SIMP ( statut = "o",
+                                                             typ = "R",
+                                                             max = 1,
+                                                             fr = "Moyenne de la loi",
+                                                             ang = "Mean value",
+                                                             ),
+
+                                    ),
+                     BLOC2_2 = BLOC ( condition = " Settings in ( 'Cas2', ) ",
+
+                                                 Sigma = SIMP ( statut = "o",
+                                                                typ = "R",
+                                                                max = 1,
+                                                                val_min = 0.,
+                                                                fr = "Ecart type de la loi",
+                                                             ),
+                                    ),
+                   ),
   LOGNORMAL = BLOC ( condition = " Kind in ( 'LogNormal', ) ",
 
                      Settings = SIMP ( statut = "o",

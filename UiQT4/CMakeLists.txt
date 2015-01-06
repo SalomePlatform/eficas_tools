@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2002, 2013  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -25,9 +25,9 @@ macro ( eficas_compile_ui uifile )
   set ( _pyfile "${_file_we}.py" )
   add_custom_command ( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile}
                        COMMAND ${PYUIC4} ARGS -x -o ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile} ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
-		       MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
-		       COMMENT "Compiling ${uifile}"
-		     )
+                       MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
+                       COMMENT "Compiling ${uifile}"
+                     )
   list ( APPEND _PYFILES ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile} )
 endmacro ( eficas_compile_ui )
 
@@ -35,6 +35,7 @@ eficas_compile_ui ( OptionsCuve.ui )
 eficas_compile_ui ( OptionsEditeur.ui )
 eficas_compile_ui ( OptionsOT.ui )
 eficas_compile_ui ( OptionsPdf.ui )
+eficas_compile_ui ( OptionsMAP.ui )
 eficas_compile_ui ( aideQT.ui )
 eficas_compile_ui ( desChoixCata.ui )
 eficas_compile_ui ( desChoixCode.ui )
@@ -53,11 +54,14 @@ eficas_compile_ui ( desParam.ui )
 eficas_compile_ui ( desPixmap.ui )
 eficas_compile_ui ( desPlusieursBase.ui )
 eficas_compile_ui ( desPlusieursInto.ui )
+eficas_compile_ui ( desBoutonSalome.ui )
 eficas_compile_ui ( desPoursuite.ui )
 eficas_compile_ui ( desRacine.ui )
+eficas_compile_ui ( desRecherche.ui )
 eficas_compile_ui ( desSelectVal.ui )
 eficas_compile_ui ( desUniqueASSD.ui )
 eficas_compile_ui ( desUniqueBase.ui )
+eficas_compile_ui ( desUniqueBool.ui )
 eficas_compile_ui ( desUniqueComp.ui )
 eficas_compile_ui ( desUniqueInto.ui )
 eficas_compile_ui ( desUniqueSDCO.ui )
@@ -73,6 +77,23 @@ add_custom_target ( CompileUI ALL DEPENDS ${_PYFILES}
 install ( FILES ${_PYFILES}
           DESTINATION ${CMAKE_INSTALL_PREFIX}/UiQT4
         )
+
+# Rules to compile TS files
+SET(TSFILES eficas_en.ts
+            eficas_fr.ts)
+
+SET(QMFILES)
+FOREACH(input ${TSFILES})
+  GET_FILENAME_COMPONENT(base ${input} NAME_WE)
+  SET(output ${CMAKE_CURRENT_BINARY_DIR}/${base}.qm)
+  SET(QMFILES ${QMFILES} ${output})
+  ADD_CUSTOM_COMMAND(OUTPUT ${output}
+    COMMAND ${QT_LRELEASE_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${input} -qm ${output}
+    MAIN_DEPENDENCY ${input})
+ENDFOREACH(input ${TSFILES})
+
+ADD_CUSTOM_TARGET(CompileTS ALL DEPENDS ${QMFILES})
+INSTALL(FILES ${QMFILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/UiQT4)
 
 ### Local Variables:
 ### mode: cmake

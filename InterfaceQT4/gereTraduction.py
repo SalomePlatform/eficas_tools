@@ -1,24 +1,42 @@
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import os
+from Extensions.i18n import tr
 
 
 def traduction(directPath,editor,version):
-    if version == "V7V8" : 
-       from Traducteur import traduitV7V8 
-       suffixe="v8.comm"
-    if version == "V8V9" : 
-       from Traducteur import traduitV8V9 
-       suffixe="v9.comm"
     if version == "V9V10" : 
        from Traducteur import traduitV9V10 
        suffixe="v10.comm"
+    if version == "V10V11" :
+       from Traducteur import traduitV10V11
+       suffixe="v11.comm"
+
     fn = QFileDialog.getOpenFileName( 
    			editor.appliEficas,
-                        editor.appliEficas.trUtf8('Traduire Fichier'),
+                        tr('Traduire Fichier'),
 			QString(directPath) ,
-                        editor.appliEficas.trUtf8('JDC Files (*.comm);;''All Files (*)'))
+                        tr('Fichiers JDC  (*.comm);;''Tous les Fichiers (*)'))
+
 
     FichieraTraduire=str(fn)
     if (FichieraTraduire == "" or FichieraTraduire == () ) : return
@@ -33,12 +51,11 @@ def traduction(directPath,editor,version):
     os.system("rm -rf "+FichierTraduit)
 
     qApp.setOverrideCursor(QCursor(Qt.WaitCursor))
-    if version == "V7V8" : traduitV7V8.traduc(FichieraTraduire,FichierTraduit,log)
-    if version == "V8V9" : traduitV8V9.traduc(FichieraTraduire,FichierTraduit,log)
     if version == "V9V10" : traduitV9V10.traduc(FichieraTraduire,FichierTraduit,log)
+    if version == "V10V11" : traduitV10V11.traduc(FichieraTraduire,FichierTraduit,log)
     qApp.setOverrideCursor(QCursor(Qt.ArrowCursor))
 
-    Entete="Fichier Traduit : "+FichierTraduit +"\n\n"
+    Entete=tr("Fichier Traduit : %s\n\n",str(FichierTraduit))
     if  os.stat(log)[6] != 0L :
         f=open(log)
         texte= f.read()
@@ -48,7 +65,7 @@ def traduction(directPath,editor,version):
        commande="diff "+FichieraTraduire+" "+FichierTraduit+" >/dev/null"
        try :
          if os.system(commande) == 0 :
-            texte = texte + "Pas de difference entre le fichier origine et le fichier traduit"
+            texte = texte + tr("Pas de difference entre le fichier origine et le fichier traduit")
        except :
          pass
 

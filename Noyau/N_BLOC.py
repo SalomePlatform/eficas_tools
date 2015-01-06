@@ -1,26 +1,22 @@
-#@ MODIF N_BLOC Noyau  DATE 30/08/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
-
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 """
     Ce module contient la classe de definition BLOC
@@ -34,6 +30,7 @@ import N_ENTITE
 import N_MCBLOC
 from N_Exception import AsException
 from N_types import force_list
+from strfunc import ufmt
 
 class BLOC(N_ENTITE.ENTITE):
    """
@@ -92,19 +89,11 @@ class BLOC(N_ENTITE.ENTITE):
          Cette méthode vérifie si les attributs de définition sont valides.
          Les éventuels messages d'erreur sont écrits dans l'objet compte-rendu (self.cr).
       """
-      if type(self.fr) != types.StringType :
-        self.cr.fatal("L'attribut 'fr' doit etre une chaine de caractères : %s" %`self.fr`)
-      if type(self.docu) != types.StringType :
-        self.cr.fatal("L'attribut 'docu' doit etre une chaine de caractères : %s" %`self.docu`)
-      if type(self.regles) != types.TupleType :
-        self.cr.fatal("L'attribut 'regles' doit etre un tuple : %s" %`self.regles` )
-      if self.statut not in ['f','o'] :
-        self.cr.fatal("L'attribut 'statut' doit valoir 'o' ou 'f' : %s" %`self.statut` )
-      if self.condition != None :
-        if type(self.condition) != types.StringType :
-          self.cr.fatal("L'attribut 'condition' doit etre une chaine de caractères : %s" %`self.condition`)
-      else:
-        self.cr.fatal("La condition ne doit pas valoir None !")
+      self.check_fr()
+      self.check_docu()
+      self.check_regles()
+      self.check_statut(into=('f', 'o'))
+      self.check_condition()
       self.verif_cata_regles()
 
    def verif_presence(self,dict,globs):
@@ -128,7 +117,7 @@ class BLOC(N_ENTITE.ENTITE):
           test = eval(self.condition,globs,dico)
           return test
         except NameError:
-          # erreur 'normale' : un mot-cle n'est pas present et on veut l'evaluer dans la condition
+          # erreur 'normale' : un mot-clé n'est pas présent et on veut l'évaluer dans la condition
           if CONTEXT.debug:
              l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
              print "WARNING : Erreur a l'evaluation de la condition "+string.join(l)

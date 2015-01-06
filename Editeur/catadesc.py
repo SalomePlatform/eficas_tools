@@ -1,28 +1,26 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
-
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 class CatalogDescription:
     
     def __init__(self, identifier, cata_file_path, file_format = "python",
-                 default = False, code = None, user_name = None,
+                 default = False, code = None,ss_code=None, user_name = None,
                  selectable = True, file_format_in = "python"):
         """
         This class can be used to describe an Eficas catalog.
@@ -45,6 +43,9 @@ class CatalogDescription:
         :param code: Deprecated. Used to indicate the code associated to this
                      catalog
                 
+        :type  ss_code: string
+        :param ss_code: scheme associated to this catalog (Map only)
+
         :type  user_name: string
         :param user_name: name of the catalog as it will appear in the list
                 
@@ -75,6 +76,7 @@ class CatalogDescription:
                                   identifier = cata_tuple[1],
                                   cata_file_path = cata_tuple[2],
                                   file_format = cata_tuple[3])
+        
         if len(cata_tuple) == 5:
             if cata_tuple[4] == "defaut":
                 desc.default = True

@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 """
     Ce module contient le plugin generateur de fichier au format 
     python pour EFICAS.
@@ -36,14 +35,14 @@ from Extensions.param2 import Formula
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
+       Retourne les informations necessaires pour le chargeur de plugins
 
-       Ces informations sont retournées dans un dictionnaire
+       Ces informations sont retournees dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'python',
-        # La factory pour créer une instance du plugin
+        # La factory pour creer une instance du plugin
           'factory' : PythonGenerator,
           }
 
@@ -53,18 +52,18 @@ class PythonGenerator:
        Ce generateur parcourt un objet de type JDC et produit
        un fichier au format python 
 
-       L'acquisition et le parcours sont réalisés par la méthode
+       L'acquisition et le parcours sont realises par la methode
        generator.gener(objet_jdc,format)
 
-       L'écriture du fichier au format ini par appel de la méthode
+       L'ecriture du fichier au format ini par appel de la methode
        generator.writefile(nom_fichier)
 
-       Ses caractéristiques principales sont exposées dans des attributs 
+       Ses caracteristiques principales sont exposees dans des attributs 
        de classe :
-         - extensions : qui donne une liste d'extensions de fichier préconisées
+         - extensions : qui donne une liste d'extensions de fichier preconisees
 
    """
-   # Les extensions de fichier préconisées
+   # Les extensions de fichier preconisees
    extensions=('.comm',)
 
    def __init__(self,cr=None):
@@ -74,7 +73,7 @@ class PythonGenerator:
       else:
          self.cr=N_CR.CR(debut='CR generateur format python pour python',
                          fin='fin CR format python pour python')
-      # Le texte au format python est stocké dans l'attribut text
+      # Le texte au format python est stocke dans l'attribut text
       self.text=''
       self.appli=None
 
@@ -85,11 +84,11 @@ class PythonGenerator:
 
    def gener(self,obj,format='brut',config=None):
       """
-          Retourne une représentation du JDC obj sous une
-          forme qui est paramétrée par format.
+          Retourne une representation du JDC obj sous une
+          forme qui est parametree par format.
           Si format vaut 'brut', retourne une liste de listes de ...
-          Si format vaut 'standard', retourne un texte obtenu par concaténation de la liste
-          Si format vaut 'beautifie', retourne le meme texte beautifié
+          Si format vaut 'standard', retourne un texte obtenu par concatenation de la liste
+          Si format vaut 'beautifie', retourne le meme texte beautifie
       """
       self.appli=obj.get_jdc_root().appli
       #self.appli=obj.appli
@@ -102,19 +101,19 @@ class PythonGenerator:
          jdc_formate = Formatage(liste,mode='.py')
          self.text=jdc_formate.formate_jdc()
       else:
-         raise "Format pas implémenté : "+format
+         raise "Format pas implemente : "+format
       return self.text
 
    def generator(self,obj):
       """
          Cette methode joue un role d'aiguillage en fonction du type de obj
-         On pourrait utiliser les méthodes accept et visitxxx à la 
-         place (dépend des gouts !!!)
+         On pourrait utiliser les methodes accept et visitxxx a la 
+         place (depend des gouts !!!)
       """
-      # ATTENTION a l'ordre des tests : il peut avoir de l'importance (héritage)
+      # ATTENTION a l'ordre des tests : il peut avoir de l'importance (heritage)
       if isinstance(obj,Accas.PROC_ETAPE):
          return self.generPROC_ETAPE(obj)
-      # Attention doit etre placé avant MACRO (raison : héritage)
+      # Attention doit etre place avant MACRO (raison : heritage)
       elif isinstance(obj,Accas.FORM_ETAPE):
          return self.generFORM_ETAPE(obj)
       elif isinstance(obj,Accas.MACRO_ETAPE):
@@ -135,7 +134,7 @@ class PythonGenerator:
          return self.generETAPE_NIVEAU(obj)
       elif isinstance(obj,Accas.COMMENTAIRE):
          return self.generCOMMENTAIRE(obj)
-      # Attention doit etre placé avant PARAMETRE (raison : héritage)
+      # Attention doit etre place avant PARAMETRE (raison : heritage)
       elif isinstance(obj,Accas.PARAMETRE_EVAL):
          return self.generPARAMETRE_EVAL(obj)
       elif isinstance(obj,Accas.PARAMETRE):
@@ -157,8 +156,8 @@ class PythonGenerator:
 
    def generJDC(self,obj):
       """
-         Cette méthode convertit un objet JDC en une liste de chaines de
-         caractères à la syntaxe python
+         Cette methode convertit un objet JDC en une liste de chaines de
+         caracteres a la syntaxe python
       """
       l=[]
       if obj.definition.l_niveaux == ():
@@ -170,7 +169,7 @@ class PythonGenerator:
          for etape_niveau in obj.etapes_niveaux:
             l.extend(self.generator(etape_niveau))
       if l != [] :
-         # Si au moins une étape, on ajoute le retour chariot sur la dernière étape
+         # Si au moins une etape, on ajoute le retour chariot sur la derniere etape
          if type(l[-1])==types.ListType:
             l[-1][-1] = l[-1][-1]+'\n'
          elif type(l[-1])==types.StringType:
@@ -179,7 +178,7 @@ class PythonGenerator:
 
    def generMCNUPLET(self,obj):
       """ 
-          Méthode générant une représentation de self permettant son ecriture
+          Methode generant une representation de self permettant son ecriture
           dans le format python
       """
       l=[]
@@ -192,8 +191,8 @@ class PythonGenerator:
 
    def generCOMMANDE_COMM(self,obj):
       """
-         Cette méthode convertit un COMMANDE_COMM
-         en une liste de chaines de caractères à la syntaxe python
+         Cette methode convertit un COMMANDE_COMM
+         en une liste de chaines de caracteres a la syntaxe python
       """
       l_lignes = string.split(obj.valeur,'\n')
       txt=''
@@ -203,18 +202,18 @@ class PythonGenerator:
 
    def generEVAL(self,obj):
       """
-         Cette méthode convertit un EVAL
-         en une liste de chaines de caractères à la syntaxe python
+         Cette methode convertit un EVAL
+         en une liste de chaines de caracteres a la syntaxe python
       """
       return 'EVAL("""'+ obj.valeur +'""")'
 
    def generCOMMENTAIRE(self,obj):
       """
-         Cette méthode convertit un COMMENTAIRE
-         en une liste de chaines de caractères à la syntaxe python
+         Cette methode convertit un COMMENTAIRE
+         en une liste de chaines de caracteres a la syntaxe python
       """
-      # modification pour répondre à la demande de C. Durand, d'éviter
-      # l'ajout systématique d'un dièse, à la suite du commentaire
+      # modification pour repondre a la demande de C. Durand, d'eviter
+      # l'ajout systematique d'un diese, a la suite du commentaire
       # Dans la chaine de caracteres obj.valeur, on supprime le dernier
       # saut de ligne
       sans_saut = re.sub("\n$","",obj.valeur)
@@ -235,8 +234,8 @@ class PythonGenerator:
 
    def generPARAMETRE_EVAL(self,obj):
       """
-         Cette méthode convertit un PARAMETRE_EVAL
-         en une liste de chaines de caractères à la syntaxe python
+         Cette methode convertit un PARAMETRE_EVAL
+         en une liste de chaines de caracteres a la syntaxe python
       """
       if obj.valeur == None:
          return obj.nom + ' = None ;\n'
@@ -252,15 +251,15 @@ class PythonGenerator:
 
    def generPARAMETRE(self,obj):
       """
-         Cette méthode convertit un PARAMETRE
-         en une liste de chaines de caractères à la syntaxe python
+         Cette methode convertit un PARAMETRE
+         en une liste de chaines de caracteres a la syntaxe python
       """
       return repr(obj) + ";\n"
 
    def generETAPE_NIVEAU(self,obj):
       """
-         Cette méthode convertit une étape niveau
-         en une liste de chaines de caractères à la syntaxe python
+         Cette methode convertit une etape niveau
+         en une liste de chaines de caracteres a la syntaxe python
       """
       l=[]
       if obj.etapes_niveaux == []:
@@ -273,11 +272,12 @@ class PythonGenerator:
 
    def generETAPE(self,obj):
       """
-         Cette méthode convertit une étape
-         en une liste de chaines de caractères à la syntaxe python
+         Cette methode convertit une etape
+         en une liste de chaines de caracteres a la syntaxe python
       """
       try:
         sdname= self.generator(obj.sd)
+        if  string.find(sdname,'SD_') != -1: sdname='sansnom'
       except:
         sdname='sansnom'
       l=[]
@@ -307,7 +307,7 @@ class PythonGenerator:
 
    def generFORM_ETAPE(self,obj):
         """
-            Méthode particulière pour les objets de type FORMULE
+            Methode particuliere pour les objets de type FORMULE
         """
         l=[]
         nom = obj.get_nom()
@@ -321,8 +321,8 @@ class PythonGenerator:
 
    def generMACRO_ETAPE(self,obj):
       """
-         Cette méthode convertit une macro-étape
-         en une liste de chaines de caractères à la syntaxe python
+         Cette methode convertit une macro-etape
+         en une liste de chaines de caracteres a la syntaxe python
       """
       try:
         if obj.sd == None:
@@ -360,8 +360,8 @@ class PythonGenerator:
 
    def generPROC_ETAPE(self,obj):
       """
-         Cette méthode convertit une PROC étape
-         en une liste de chaines de caractères à la syntaxe python
+         Cette methode convertit une PROC etape
+         en une liste de chaines de caracteres a la syntaxe python
       """
       l=[]
       label=obj.definition.nom+'('
@@ -388,21 +388,21 @@ class PythonGenerator:
 
    def generASSD(self,obj):
       """
-          Convertit un objet dérivé d'ASSD en une chaine de caractères à la
+          Convertit un objet derive d'ASSD en une chaine de caracteres a la
           syntaxe python
       """
       return obj.get_name()
 
    def generMCFACT(self,obj):
       """
-          Convertit un objet MCFACT en une liste de chaines de caractères à la
+          Convertit un objet MCFACT en une liste de chaines de caracteres a la
           syntaxe python
       """
       l=[]
       l.append('_F(')
       for v in obj.mc_liste:
          if not isinstance(v,Accas.MCSIMP) and not isinstance (v,Accas.MCBLOC) :
-           # on est en présence d'une entite composée : on récupère une liste
+           # on est en presence d'une entite composee : on recupere une liste
            liste=self.generator(v)
            liste[0]=v.nom+'='+liste[0]
            l.append(liste)
@@ -411,24 +411,26 @@ class PythonGenerator:
            for arg in liste :
              l.append(arg)
          else:
-           # on est en présence d'un MCSIMP : on récupère une string
+           # on est en presence d'un MCSIMP : on recupere une string
            text =self.generator(v)
            l.append(v.nom+'='+text)
-      # il faut être plus subtil dans l'ajout de la virgule en différenciant 
-      # le cas où elle est obligatoire (si self a des frères cadets 
+           if obj.nom=="Observers": print l
+      # il faut etre plus subtil dans l'ajout de la virgule en differenciant 
+      # le cas ou elle est obligatoire (si self a des freres cadets 
       # dans self.parent) ou non
-      # (cas où self est seul ou le benjamin de self.parent)
+      # (cas ou self est seul ou le benjamin de self.parent)
       l.append('),')
       return l
 
    def generMCList(self,obj):
       """
-          Convertit un objet MCList en une liste de chaines de caractères à la
+          Convertit un objet MCList en une liste de chaines de caracteres a la
           syntaxe python
       """
       if len(obj.data) > 1:
          l=['(']
-         for mcfact in obj.data: l.append(self.generator(mcfact))
+         for mcfact in obj.data: 
+             l.append(self.generator(mcfact))
          l.append('),')
       else:
          l= self.generator(obj.data[0])
@@ -436,7 +438,7 @@ class PythonGenerator:
 
    def generMCBLOC(self,obj):
       """
-          Convertit un objet MCBLOC en une liste de chaines de caractères à la
+          Convertit un objet MCBLOC en une liste de chaines de caracteres a la
           syntaxe python
       """
       l=[]
@@ -470,15 +472,18 @@ class PythonGenerator:
       return l
 
 
-   def format_item(self,valeur,etape):
-      if type(valeur) == types.FloatType :
+   def format_item(self,valeur,etape,obj):
+      if (type(valeur) == types.FloatType or 'R' in obj.definition.type) and not(isinstance(valeur,Accas.PARAMETRE)) :
          # Pour un flottant on utilise str
          # ou la notation scientifique
+         # On ajoute un . si il n y en a pas dans la valeur
          s = str(valeur)
+         if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : s=s+'.0'
          clefobj=etape.get_sdname()
          if self.appli.appliEficas and self.appli.appliEficas.dict_reels.has_key(clefobj):
            if self.appli.appliEficas.dict_reels[clefobj].has_key(valeur):
              s=self.appli.appliEficas.dict_reels[clefobj][valeur]
+         
       elif type(valeur) == types.StringType :
          if valeur.find('\n') == -1:
             # pas de retour chariot, on utilise repr
@@ -494,7 +499,7 @@ class PythonGenerator:
          s = self.generator(valeur)
       elif isinstance(valeur,Accas.PARAMETRE):
          # il ne faut pas prendre la string que retourne gener
-         # mais seulement le nom dans le cas d'un paramètre
+         # mais seulement le nom dans le cas d'un parametre
          s = valeur.nom
 
       #elif type(valeur) == types.InstanceType or isinstance(valeur,object):
@@ -502,7 +507,7 @@ class PythonGenerator:
       #      s = "CO('"+ self.generator(valeur) +"')"
       #   elif isinstance(valeur,Accas.PARAMETRE):
             # il ne faut pas prendre la string que retourne gener
-            # mais seulement le nom dans le cas d'un paramètre
+            # mais seulement le nom dans le cas d'un parametre
       #      s = valeur.nom
       #   else:
       #      print valeur
@@ -515,7 +520,7 @@ class PythonGenerator:
 
    def generMCSIMP(self,obj) :
       """
-          Convertit un objet MCSIMP en une liste de chaines de caractères à la
+          Convertit un objet MCSIMP en une liste de chaines de caracteres a la
           syntaxe python
       """
       waitTuple=0
@@ -528,31 +533,47 @@ class PythonGenerator:
 
          if waitTuple :
             s = str(obj.valeur) +','
+            obj.valeurFormatee=obj.valeur
          else :
+            obj.valeurFormatee=[]
             for val in obj.valeur :
-               s =s +self.format_item(val,obj.etape) + ','
+               s =s +self.format_item(val,obj.etape,obj) + ','
+               obj.valeurFormatee.append(self.format_item(val,obj.etape,obj))
             if len(obj.valeur) > 1:
                s = '(' + s + '),'
+            if obj.valeur==[] : s="(),"
          if obj.nbrColonnes() :
-            s=self.formatColonnes(obj.nbrColonnes(),s)
+            s=self.formatColonnes(obj.nbrColonnes(),obj.valeur,obj)
       else :
-         s=self.format_item(obj.valeur,obj.etape) + ','
+         obj.valeurFormatee=obj.valeur
+         s=self.format_item(obj.valeur,obj.etape,obj) + ','
       return s
 
 
-   def formatColonnes(self,nbrColonnes,text):
-      try :
-      #if 1 == 1 :
-        liste=text.split(",")
+   def formatColonnes(self,nbrColonnes,listeValeurs,obj):
+      #try :
+      print listeValeurs
+      if 1 == 1 :
         indice=0
-        textformat=""
-        while ( indice < len(liste) -2  ) :
-          for l in range(nbrColonnes) :
-            textformat=textformat+liste[indice]+","
-            indice=indice+1
-          textformat=textformat+"\n"
-        textformat=textformat+"),"
-      except :
-      #else :
-         textformat=text
+        textformat="("
+        while ( indice < len(listeValeurs) ) :
+          try :
+          #if 1 :
+            for l in range(nbrColonnes) :
+                texteVariable=self.format_item(listeValeurs[indice],obj.etape,obj)
+                textformat=textformat+texteVariable+" ,"
+                indice=indice+1
+            textformat=textformat+"\n"
+          except :
+          #else :
+            while ( indice < len(listeValeurs) ) :
+                texteVariable=self.format_item(listeValeurs[indice],obj.etape,obj)
+                textformat=textformat+texteVariable+", "
+                indice=indice+1
+            textformat=textformat+"\n"
+        textformat=textformat[0:-1]+"),\n"
+      #except :
+      else :
+         textformat=str(obj.valeur)
+      print textformat
       return textformat

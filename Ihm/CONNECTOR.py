@@ -1,36 +1,35 @@
-# -*- coding: iso-8859-15 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 """
-  La classe CONNECTOR sert à enregistrer les observateurs d'objets et à délivrer
-  les messages émis à ces objets.
+  La classe CONNECTOR sert a enregistrer les observateurs d'objets et a delivrer
+  les messages emis a ces objets.
 
-  Le principe général est le suivant : un objet (subscriber) s'enregistre aupres du 
+  Le principe general est le suivant : un objet (subscriber) s'enregistre aupres du 
   connecteur global (theconnector) pour observer un objet emetteur de messages (publisher) 
-  sur un canal donné (channel). Il demande à etre notifie par appel d'une fonction (listener).
-  La séquence est donc :
+  sur un canal donne (channel). Il demande a etre notifie par appel d'une fonction (listener).
+  La sequence est donc :
 
      - enregistrement du subscriber pour le publisher : theconnector.Connect(publisher,channel,listener,args)
-     - émission du message par le publisher : theconnector.Emit(publisher,channel,cargs)
+     - emission du message par le publisher : theconnector.Emit(publisher,channel,cargs)
 
-  args et cargs sont des tuples contenant les arguments de la fonction listener qui sera appelée
+  args et cargs sont des tuples contenant les arguments de la fonction listener qui sera appelee
   comme suit::
 
      listener(cargs+args)
@@ -38,6 +37,9 @@
 import traceback
 from copy import copy
 import weakref
+
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 class ConnectorError(Exception):
     pass
@@ -98,8 +100,9 @@ class CONNECTOR:
           % (function, args, channel, object)
 
 
+
   def Emit(self, object, channel, *args):
-    ###print "Emit",object, channel, args
+    #print "Emit",object, channel, args
     try:
        receivers = self.connections[id(object)][channel]
     except KeyError:
@@ -142,20 +145,18 @@ Emit = _the_connector.Emit
 Disconnect = _the_connector.Disconnect
 
 if __name__ == "__main__":
-   class A:pass
+   class A:
+     pass
    class B:
      def add(self,a):
-       print "add",self,a
+       print "add ", self , a
      def __del__(self):
-       print "__del__",self
+       print "__del__", self
 
    def f(a):
-     print f,a
-   print "a=A()"
+     print f, a
    a=A()
-   print "b=B()"
    b=B()
-   print "c=B()"
    c=B()
    Connect(a,"add",b.add,())
    Connect(a,"add",b.add,())

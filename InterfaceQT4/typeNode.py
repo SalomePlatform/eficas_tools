@@ -1,38 +1,152 @@
 # -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
+import types
+
+
+
+#---------------------------#
+class PopUpMenuRacine :
+#---------------------------#
+
+
+    def createPopUpMenu(self):
+        print "createPopUpMenu"
+        self.ParamApres = QAction(tr('Parametre'),self.tree)
+        self.tree.connect(self.ParamApres,SIGNAL("activated()"),self.addParametersApres)
+        self.ParamApres.setStatusTip(tr("Insere un parametre"))
+        self.menu = QMenu(self.tree)
+        self.menu.addAction(self.ParamApres)
+
+
+    def addParametersApres(self):
+        item= self.tree.currentItem()
+        item.addParameters(True)
 
 #---------------------------#
 class PopUpMenuNodeMinimal :
 #---------------------------#
+
     def createPopUpMenu(self):
+        print "createPopUpMenu"
+        #self.appliEficas.salome=True
         self.createActions()
         self.menu = QMenu(self.tree)
         #items du menu
         self.menu.addAction(self.Supprime)
+        if hasattr(self.appliEficas, 'mesScripts'):
+            if self.tree.currentItem().item.get_nom() in self.appliEficas.mesScripts.dict_commandes.keys() : 
+               self.ajoutScript()
     
+    def ajoutScript(self):
+    # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
+        listeCommandes=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()]
+        if type(listeCommandes) != types.TupleType: listeCommandes=(listeCommandes,)
+        numero=0
+        for commande in listeCommandes :
+           conditionSalome=commande[3]
+           if (self.appliEficas.salome == 0 and conditionSalome == True): return
+           label=commande[1]
+           tip=commande[5]
+           self.action=QAction(label,self.tree)
+           self.action.setStatusTip(tip)
+           if numero==4: 
+              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction4)
+           if numero==3: 
+              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction3)
+              numero=4
+           if numero==2: 
+              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction2)
+              numero=3
+           if numero==1: 
+              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction1)
+              numero=2
+           if numero==0: 
+              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction0)
+              numero=1
+           self.menu.addAction(self.action)
+
+
+    def AppelleFonction0(self):
+        self.AppelleFonction(0)
+
+    def AppelleFonction1(self):
+        self.AppelleFonction(1)
+
+    def AppelleFonction2(self):
+        self.AppelleFonction(2)
+
+    def AppelleFonction3(self):
+        self.AppelleFonction(3)
+
+    def AppelleFonction4(self):
+        self.AppelleFonction(4)
+
+
+    def AppelleFonction(self,numero):
+        listeCommandes=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()]
+        commande=listeCommandes[numero]
+        conditionValid=commande[4]
+        if (self.tree.currentItem().item.isvalid() == 0 and conditionValid == True):
+                 QMessageBox.warning( None, 
+                             tr("item invalide"),
+                             tr("l item doit etre valide"),
+                             tr("&Ok"))
+		 return
+        fonction=commande[0]
+        listenomparam=commande[2]
+        listeparam=[]
+        for p in listenomparam:
+            if hasattr(self.tree.currentItem(),p):
+               listeparam.append(getattr(self.tree.currentItem(),p))
+            if p=="self" : listeparam.append(self)
+        try :
+           fonction(listeparam,self.appliEficas)
+        except :
+           fonction(listeparam)
+
+
     def createActions(self):
-        self.CommApres = QAction('après',self.tree)
+        self.CommApres = QAction(tr('apres'),self.tree)
         self.tree.connect(self.CommApres,SIGNAL("activated()"),self.addCommApres)
-        self.CommApres.setStatusTip("Insere un commentaire apres la commande ")
-        self.CommAvant = QAction('avant',self.tree)
+        self.CommApres.setStatusTip(tr("Insere un commentaire apres la commande "))
+        self.CommAvant = QAction(tr('avant'),self.tree)
         self.tree.connect(self.CommAvant,SIGNAL("activated()"),self.addCommAvant)
-        self.CommAvant.setStatusTip("Insere un commentaire avant la commande ")
+        self.CommAvant.setStatusTip(tr("Insere un commentaire avant la commande "))
 
-        self.ParamApres = QAction('après',self.tree)
+        self.ParamApres = QAction(tr('apres'),self.tree)
         self.tree.connect(self.ParamApres,SIGNAL("activated()"),self.addParametersApres)
-        self.ParamApres.setStatusTip("Insere un parametre apres la commande ")
-        self.ParamAvant = QAction('avant',self.tree)
+        self.ParamApres.setStatusTip(tr("Insere un parametre apres la commande "))
+        self.ParamAvant = QAction(tr('avant'),self.tree)
         self.tree.connect(self.ParamAvant,SIGNAL("activated()"),self.addParametersAvant)
-        self.ParamAvant.setStatusTip("Insere un parametre avant la commande ")
+        self.ParamAvant.setStatusTip(tr("Insere un parametre avant la commande "))
 
-        self.Supprime = QAction('Supprimer',self.tree)
+        self.Supprime = QAction(tr('Supprimer'),self.tree)
         self.tree.connect(self.Supprime,SIGNAL("activated()"),self.supprimeNoeud)
-        self.Supprime.setStatusTip("supprime le mot clef ")
-        self.Documentation = QAction('Documentation',self.tree)
+        self.Supprime.setStatusTip(tr("supprime le mot clef "))
+        self.Documentation = QAction(tr('Documentation'),self.tree)
         self.tree.connect(self.Documentation,SIGNAL("activated()"),self.viewDoc)
-        self.Documentation.setStatusTip("documentation sur la commande ")
+        self.Documentation.setStatusTip(tr("documentation sur la commande "))
 
     def supprimeNoeud(self):
         item= self.tree.currentItem()
@@ -42,26 +156,30 @@ class PopUpMenuNodeMinimal :
         self.node=self.tree.currentItem()
         cle_doc = self.node.item.get_docu()
         if cle_doc == None :
-            QMessageBox.information( self.editor, "Documentation Vide", \
-                                    "Aucune documentation Aster n'est associée à ce noeud")
+            QMessageBox.information( self.editor,tr( "Documentation Vide"), \
+                                    tr("Aucune documentation n'est associee a ce noeud"))
             return
         commande = self.editor.appliEficas.CONFIGURATION.exec_acrobat
         try :
             f=open(commande,"rb")
         except :
-             texte="impossible de trouver la commande  " + commande
-             QMessageBox.information( self.editor, "Lecteur PDF", texte)
+             texte=tr("impossible de trouver la commande  ") + commande
+             QMessageBox.information( self.editor, tr("Lecteur PDF"), texte)
              return
-        nom_fichier = cle_doc
         import os
-        fichier = os.path.abspath(os.path.join(self.editor.CONFIGURATION.path_doc,
-                                       nom_fichier))
-        try :
-           f=open(fichier,"rb")
-        except :
-           texte="impossible d'ouvrir " + fichier
-           QMessageBox.information( self.editor, "Documentation Vide", texte)
-           return
+        if cle_doc.startswith('http:'):
+           fichier = cle_doc
+        else :
+            fichier = os.path.abspath(os.path.join(self.editor.CONFIGURATION.path_doc,
+                                       cle_doc))
+            try :
+               f=open(fichier,"rb")
+            except :
+               texte=tr("impossible d'ouvrir ") + fichier
+               QMessageBox.information( self.editor, tr("Documentation Vide"), texte)
+               return
+
+       
         if os.name == 'nt':
            os.spawnv(os.P_NOWAIT,commande,(commande,fichier,))
         elif os.name == 'posix':
@@ -90,11 +208,11 @@ class PopUpMenuNodePartiel (PopUpMenuNodeMinimal):
     def createPopUpMenu(self):
         PopUpMenuNodeMinimal.createPopUpMenu(self)
         #ss-menu Comment:
-        self.commentMenu=self.menu.addMenu('Commentaire')
+        self.commentMenu=self.menu.addMenu(tr('Commentaire'))
         self.commentMenu.addAction(self.CommApres)
         self.commentMenu.addAction(self.CommAvant)
         #ss-menu Parameters:
-        self.paramMenu =self.menu.addMenu('Parametre') 
+        self.paramMenu =self.menu.addMenu(tr('Parametre')) 
         self.paramMenu.addAction(self.ParamApres)
         self.paramMenu.addAction(self.ParamAvant)
         self.menu.addAction(self.Documentation)
@@ -107,9 +225,9 @@ class PopUpMenuNode(PopUpMenuNodePartiel) :
 #-----------------------------------------#
     def createPopUpMenu(self):
         PopUpMenuNodePartiel.createPopUpMenu(self)
-        self.Commente = QAction('ce noeud',self.tree)
+        self.Commente = QAction(tr('ce noeud'),self.tree)
         self.tree.connect(self.Commente,SIGNAL("activated()"),self.Commenter)
-        self.Commente.setStatusTip("commente le noeud ")
+        self.Commente.setStatusTip(tr("commente le noeud "))
         self.commentMenu.addAction(self.Commente)
         self.menu.removeAction(self.Supprime)
         self.menu.addAction(self.Supprime)

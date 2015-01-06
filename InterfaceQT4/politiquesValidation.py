@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 # Modules Python
-import types
+import types, string
+from Extensions.i18n import tr
 
 
 #------------------
@@ -33,7 +33,7 @@ class Validation  :
          commentaire = None
          valeur,validite=self.node.item.eval_valeur(valeurentree)
          if not validite :
-                  commentaire = "impossible d'évaluer : %s " %`valeurentree`
+                  commentaire = "impossible d'evaluer : %s " %`valeurentree`
                   return valeur,validite,commentaire
 
          testtype,commentaire = self.node.item.object.verif_type(valeur)
@@ -52,7 +52,7 @@ class Validation  :
          return valeur, validite, commentaire
 
 # ----------------------------------------------------------------------------------------
-#   Méthodes utilisées pour la manipulation des items en notation scientifique
+#   Methodes utilisees pour la manipulation des items en notation scientifique
 #   a mettre au point
 # ----------------------------------------------------------------------------------------
   def SetValeurTexte(self,texteValeur) :
@@ -77,15 +77,35 @@ class Validation  :
 
   def GetValeurTexte(self,valeur) :
          valeurTexte=valeur
+         from decimal import Decimal
+         if  isinstance(valeur,Decimal) :
+             return valeur 
+         if valeur == None : return valeur
          if "R" in self.node.item.object.definition.type:
                   clefobj=self.node.item.object.GetNomConcept()
                   if self.parent.appliEficas.dict_reels.has_key(clefobj):
                      if self.parent.appliEficas.dict_reels[clefobj].has_key(valeur):
                         valeurTexte=self.parent.appliEficas.dict_reels[clefobj][valeur]
+                  else :
+                     if string.find(str(valeur),'.') == -1 and string.find(str(valeur),'e') == -1 and string.find(str(valeur),'E'):
+                     # aucun '.' n'a été trouvé dans valeur --> on en rajoute un a la fin
+                        print self.is_param(valeur)
+                        if (self.is_param(valeur)):
+                           return valeur
+                        else:
+                          val2=eval(str(valeur)+'.')
          return valeurTexte
 
+  def is_param(self,valeur) :
+      for param in self.node.item.jdc.params:
+          if ((repr(param) == repr(valeur)) or (str(param)==str(valeur))):
+             return 1
+      return 0
+
   def AjoutDsDictReel(self,texteValeur):
-         # le try except est nécessaire pour saisir les paramétres
+         # le try except est necessaire pour saisir les parametres
+         # on enleve l erreur de saisie 00 pour 0
+         if str(texteValeur)== '00' : return
          try :
             if "R" in self.node.item.object.definition.type:
                 if str(texteValeur)[0] != "'":
@@ -128,11 +148,12 @@ class PolitiqueUnique(Validation) :
          if validite :
             validite=self.node.item.set_valeur(valeur)
             if self.node.item.isvalid():
-                  commentaire = "Valeur du mot-clé enregistrée"
+                  commentaire = tr("Valeur du mot-cle enregistree")
+                  #commentaire = "Valeur du mot-cle enregistree"
                   self.SetValeurTexte(str(valeurentree))
             else:
                   cr = self.node.item.get_cr()
-                  commentaire =  "Valeur du mot-clé non autorisée "+cr.get_mess_fatal()
+                  commentaire =  tr("Valeur du mot-cle non autorisee ")+cr.get_mess_fatal()
                   self.node.item.set_valeur(ancienne_val)
          return validite, commentaire 
 
@@ -144,8 +165,11 @@ class PolitiquePlusieurs(Validation):
   classe servant pour les entrees ne demandant qu un mot clef
   """
   def __init__(self,node,parent) :
+         print "ds PolitiquePlusieurs"
          self.node=node
          self.parent=parent
+         print self.node
+         print self.parent
 
 
   def AjoutValeurs(self,listevaleur,index,listecourante):
@@ -157,6 +181,12 @@ class PolitiquePlusieurs(Validation):
          if listevaleur=="": return
          if not( type(listevaleur)  in (types.ListType,types.TupleType)) :
             listevaleur=tuple(listevaleur)
+         # on verifie que la cardinalite max n a pas ete atteinte
+         min,max = self.node.item.GetMinMax()
+         if len(listecourante) + len(listevaleur) > max :
+            commentaire="La liste atteint le nombre maximum d'elements : "+ str(max) +" ,ajout refuse"
+            return False,commentaire,commentaire2,listeRetour
+
          for valeur in listevaleur :
              # On teste le type de la valeur
              valeurScientifique=valeur
@@ -164,13 +194,16 @@ class PolitiquePlusieurs(Validation):
              if not valide :
                 try :
                    valeur,valide=self.node.item.eval_valeur(valeur)
-                   valide,commentaire = self.node.item.object.verif_type(valeur)
+                   valide,commentaire2 = self.node.item.object.verif_type(valeur)
                 except :
                    #return testtype,commentaire,"",listeRetour
                    pass
              if not valide:
-                commentaire="Valeur "+str(valeur)+ " incorrecte : ajout à la liste refusé"
-                commentaire2=self.node.item.info_erreur_item()
+                if commentaire.find("On attend un chaine") > 1 :
+                   commentaire="Valeur "+str(valeur)+ " incorrecte : ajout a la liste refuse: On attend une chaine de caracteres < 8"
+                else :
+                   commentaire="Valeur "+str(valeur)+ " incorrecte : ajout a la liste refuse"
+                if commentaire2== "" :commentaire2=self.node.item.info_erreur_item()
                 return valide,commentaire,commentaire2,listeRetour
 
              # On valide la liste obtenue
@@ -180,7 +213,7 @@ class PolitiquePlusieurs(Validation):
                 # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
                 min,max = self.node.item.GetMinMax()
                 if len(listecourante) + 1 >= max :
-                   commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
+                   commentaire="La liste atteint le nombre maximum d'elements : "+ str(max) +" ,ajout refuse"
                    return valide,commentaire,commentaire2,listeRetour
                 if len(listecourante) + 1 > min :
                    commentaire=""
@@ -195,7 +228,7 @@ class PolitiquePlusieurs(Validation):
 
   def AjoutTuple(self,valeurTuple,index,listecourante):
          listeRetour=[]
-         commentaire="Nouvelle valeur acceptée"
+         commentaire="Nouvelle valeur acceptee"
          commentaire2=""
          valide=1
          if valeurTuple==None: return
@@ -209,7 +242,7 @@ class PolitiquePlusieurs(Validation):
             except :
                 pass
          if not valide:
-            commentaire="Valeur "+str(valeurTuple)+ " incorrecte : ajout à la liste refusé"
+            commentaire="Valeur "+str(valeurTuple)+ " incorrecte : ajout a la liste refuse"
             commentaire2=self.node.item.info_erreur_item()
             return valide,commentaire,commentaire2,listeRetour
 
@@ -217,10 +250,11 @@ class PolitiquePlusieurs(Validation):
          encorevalide=self.node.item.valide_liste_partielle(valeurTuple,listecourante)
          if not encorevalide :
             commentaire2=self.node.item.info_erreur_liste()
-            # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
-            min,max = self.node.item.GetMinMax()
-            if len(listecourante) + 1 >= max :
-               commentaire="La liste a déjà atteint le nombre maximum d'éléments,ajout refusé"
-               return valide,commentaire,commentaire2,listeRetour
+            return valide,commentaire,commentaire2,listeRetour
+         #min,max = self.node.item.GetMinMax()
+         #if len(listecourante)  >= max :
+         #   commentaire="La liste a deja atteint le nombre maximum d'elements,ajout refuse"
+         #   valide=0
+         #   return valide,commentaire,commentaire2,listeRetour
          listeRetour.append(valeurTuple)
          return valide,commentaire,commentaire2,listeRetour

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 1991 - 2002, 2013  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -23,21 +23,23 @@
 install ( FILES browser.py compobase.py compobloc.py compocommandecomm.py compocomm.py
                 compoerror.py compofact.py compoformule.py compojdc.py compomacro.py
                 compomclist.py componiveau.py componuplet.py compooper.py compoparam.py
-                compoproc.py composimp.py editor.py eficas_go.py 
-                __init__.py monChoixCata.py monCommandePanel.py
+                compoproc.py composimp.py editor.py eficas_go.py
+                __init__.py monChoixCata.py monChoixCode.py monCommandePanel.py
                 monCommentairePanel.py monFonctionPanel.py monFormulePanel.py
                 monInactifPanel.py monIncludePanel.py monListeParamPanel.py
                 monMacroPanel.py monMatricePanel.py monMCFactPanel.py
                 monMCListAjoutPanel.py monOptionsPdf.py monParamPanel.py monPixmap.py
                 monPlusieursASSDPanel.py monPlusieursBasePanel.py monPlusieursIntoPanel.py
                 monPoursuitePanel.py monRacinePanel.py monSelectVal.py
-                monUniqueASSDPanel.py monUniqueBasePanel.py monUniqueCompPanel.py monUniqueIntoPanel.py
+                monUniqueASSDPanel.py monUniqueBasePanel.py monUniqueBoolPanel.py
+                monUniqueCompPanel.py monUniqueIntoPanel.py
                 monUniqueSDCOIntoPanel.py monUniqueSDCOPanel.py monVisu.py
                 politiquesValidation.py qtCommun.py qtEficas.py
                 qtSaisie.py readercata.py typeNode.py utilIcons.py viewManager.py
                 configuration.py monSelectImage.py
+                monRecherche.py getVersion.py monBoutonSalome.py
           DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
-	)
+        )
 
 # Installation des fichiers : OpenTURNS
 if (WITH_OPENTURNS)
@@ -53,9 +55,9 @@ if (WITH_ASTER)
           )
 endif (WITH_ASTER)
 
-# Installatiion des fichiers : MAP
+# Installation des fichiers : MAP
 if (WITH_MAP)
-  install ( FILES monChoixMap.py 
+  install ( FILES monOptions_MAP.py
             DESTINATION ${CMAKE_INSTALL_PREFIX}/InterfaceQT4
           )
 endif (WITH_MAP)

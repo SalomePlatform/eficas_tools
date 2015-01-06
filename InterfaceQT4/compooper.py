@@ -1,37 +1,88 @@
-# -*- coding: utf-8 -*-
-import traceback
-import string
-from PyQt4 import *
-from PyQt4.QtGui  import *
-from PyQt4.QtCore import *
-
+#-*- coding: iso-8859-1 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
+import os
+import tempfile
+from PyQt4.QtGui import QMessageBox, QAction, QApplication, QCursor
+from PyQt4.QtGui import *
+from PyQt4.QtCore import Qt, SIGNAL, QVariant
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 from Editeur     import Objecttreeitem
 import browser
 import typeNode
 
 class Node(browser.JDCNode, typeNode.PopUpMenuNode):
+
+    def __init__(self,treeParent, item):
+        browser.JDCNode.__init__( self, treeParent, item)
+
+    def select(self):
+        browser.JDCNode.select(self)
+        self.treeParent.tree.openPersistentEditor(self,1)
+        self.monWidgetNom=self.treeParent.tree.itemWidget(self,1)
+        self.treeParent.tree.connect(self.monWidgetNom,SIGNAL("returnPressed()"), self.nomme)
+        if self.item.GetIconName() == "ast-red-square" : self.monWidgetNom.setDisabled(True)
+        else : self.monWidgetNom.setFocus()  ;self.monWidgetNom.setDisabled(False)
+
+    def nomme(self):
+        nom=str(self.monWidgetNom.text())
+        self.editor.init_modif()
+        test,mess = self.item.nomme_sd(nom)
+        if (test== 0):
+           self.editor.affiche_infos(mess,Qt.red)
+           old=self.item.GetText()
+           self.monWidgetNom.setText(old)
+        else :
+           self.editor.affiche_infos(tr("Nommage du concept effectue"))
+           self.onValid()
+           try :
+	       self.editor.panel.LENomConcept.setText(nom)
+           except :
+               pass
+
     def getPanel( self ):
         """
         """
         from monCommandePanel import MonCommandePanel
         return MonCommandePanel(self,parent=self.editor)
 
+    def getPanel2(self):
+        from monWidgetCommande import MonWidgetCommande
+        return MonWidgetCommande(self,self.editor,self.item.object)
+
     def createPopUpMenu(self):
         typeNode.PopUpMenuNode.createPopUpMenu(self)
         if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome: 
-           self.ViewElt = QAction('View3D',self.tree)
+           self.ViewElt = QAction(tr('View3D'),self.tree)
            self.tree.connect(self.ViewElt,SIGNAL("activated()"),self.view3D)
-           self.ViewElt.setStatusTip("affiche dans Geom les elements de structure")
+           self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
            self.menu.addAction(self.ViewElt)
            if self.item.isvalid() :
 	      self.ViewElt.setEnabled(1)
            else:
 	      self.ViewElt.setEnabled(0)
         if  self.item.get_nom() == "DISTRIBUTION" :
-           self.Graphe = QAction('Graphique',self.tree)
+           self.Graphe = QAction(tr('Graphique'),self.tree)
            self.tree.connect(self.Graphe,SIGNAL("activated()"),self.viewPng)
-           self.Graphe.setStatusTip("affiche la distribution ")
+           self.Graphe.setStatusTip(tr("affiche la distribution "))
            self.menu.addAction(self.Graphe)
            if self.item.isvalid() :
 	      self.Graphe.setEnabled(1)
@@ -45,39 +96,33 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
 
     def viewPng(self) :
         from monPixmap import MonLabelPixmap
-        fichier=self.appliEficas.getName()
-        try :
-	    os.remove(fichier)
-        except :
-	    pass     
-        #try:
-        if 1:
-            import generator
+        import generator
+        try:
+            QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             g = generator.plugins[self.appliEficas.format_fichier]()
             g.gener(self.item.object, format='beautifie')
             stdGener = g.getGenerateur()
-            if len(g.dictMCLois) != 1:
-                QMessageBox.warning(
-                    None,
-                    self.appliEficas.trUtf8("Erreur interne"),
-                    self.appliEficas.trUtf8("La PDF de la loi ne peut pas etre affichee."),
-                    self.appliEficas.trUtf8("&Annuler"))
-                return
             loi = g.dictMCLois.keys()[0]
             nomLoi = loi.get_name()
-            script = stdGener.GraphiquePDF(loi, fichier)
+            (fd, fichier) = tempfile.mkstemp(prefix = "openturns_graph_", suffix = ".png")
+            os.close(fd)
+            chemin = os.path.dirname(fichier)
+            base = os.path.splitext(os.path.basename(fichier))[0]
+            script = stdGener.GraphiquePDF(loi, chemin, base)
             #print script
             d = {}
             exec script in d
             widgetPng=MonLabelPixmap(self.appliEficas,fichier,nomLoi)
+            os.remove(fichier)
+            QApplication.restoreOverrideCursor()
             widgetPng.show()
-        #except:
-        else:
+        except:
+            QApplication.restoreOverrideCursor()
             QMessageBox.warning(
-                None,
-                self.appliEficas.trUtf8("Erreur interne"),
-                self.appliEficas.trUtf8("La PDF de la loi ne peut pas etre affichee."),
-                self.appliEficas.trUtf8("&Annuler"))
+                self.appliEficas,
+                tr("Erreur interne"),
+                tr("La PDF de la loi ne peut pas etre affichee."),
+                tr("&Annuler"))
 
 class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   """ La classe EtapeTreeItem est un adaptateur des objets ETAPE du noyau
@@ -158,14 +203,14 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       # item.getObject() = MCSIMP, MCFACT, MCBLOC ou MCList 
       itemobject=item.getObject()
       if itemobject.isoblig() :
-          self.appli.affiche_infos('Impossible de supprimer un mot-clé obligatoire ',Qt.red)
+          self.appli.affiche_infos(tr('Impossible de supprimer un mot-clef obligatoire '),Qt.red)
           return 0
       if self.object.suppentite(itemobject):
-          message = "Mot-clef " + itemobject.nom + " supprime"
+          message = tr("Mot-clef %s supprime " , itemobject.nom)
           self.appli.affiche_infos(message)
           return 1
       else :
-          self.appli.affiche_infos('Pb interne : impossible de supprimer ce mot-clé',Qt.red)
+          self.appli.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-clef'),Qt.red)
           return 0
 
   def GetText(self):
@@ -219,6 +264,11 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       Retourne 1 si l'objet est copiable, 0 sinon
       """
       return 1
+
+  def updateDeplace(self,item):
+      if item.sd and item.sd.nom:
+         self.object.sd=item.sd
+         self.object.sd.nom=item.sd.nom
 
   def update(self,item):
       if item.sd and item.sd.nom:

@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 import string
 from I_ASSD import ASSD
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 
 class FONCTION(ASSD):
   def __init__(self,etape=None,sd=None,reg='oui'):
@@ -28,7 +29,7 @@ class FONCTION(ASSD):
 
   def get_formule(self):
     """
-    Retourne une formule décrivant self sous la forme d'un tuple :
+    Retourne une formule decrivant self sous la forme d'un tuple :
     (nom,type_retourne,arguments,corps)
     """
     if hasattr(self.etape,'get_formule'):
@@ -38,7 +39,7 @@ class FONCTION(ASSD):
       # on est dans le cas d'une fonction
       return (self.nom,'REEL','(REEL:x)','''bidon''')
 
-# On ajoute la classe formule pour etre cohérent avec la
+# On ajoute la classe formule pour etre coherent avec la
 # modification de C Durand sur la gestion des formules dans le superviseur
 # On conserve l'ancienne classe fonction (ceinture et bretelles)
 class fonction(FONCTION) : pass
@@ -61,10 +62,11 @@ class formule(FONCTION) :
       try :
        res=eval(self.expression,self.jdc.const_context, context)
       except :
-       print 75*'!'
-       print '! '+string.ljust('Erreur evaluation formule '+self.nom,72)+'!'
-       print 75*'!'
-       raise
+####### A TRAVAILLER DEPUIS ICI !!
+       print tr(75 * '!')
+       print '! ' + tr(string.ljust("Erreur evaluation formule %s", 72), self.nom) + '!'
+       print tr(75 * '!')
+       raise EficasException
       return res
 
 

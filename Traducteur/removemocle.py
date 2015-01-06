@@ -1,12 +1,30 @@
 # -*- coding: utf-8 -*-
+# Copyright (C) 2007-2012   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 import logging
 import regles
 from parseur import FactNode
 from dictErreurs import EcritErreur
 from dictErreurs import jdcSet
 
-#debug=1
 debug=0
+#debug=1
 #on n'a qu'un mocle par commande. On peut donc supprimer le mocle sans trop de précautions (a part iterer a l'envers sur les commandes)
 #avant de supprimer un autre mocle, on remet à jour l'arbre syntaxique (lineno,colno,etc.)
 
@@ -66,6 +84,13 @@ def removeCommande(jdc,command,ensemble=regles.SansRegle,erreur=0):
         jdc.supLignes(c.lineno,c.endline)
         logging.warning("Suppression de %s ligne %s",c.name,c.lineno)
     if boolChange : jdc.reset(jdc.getSource())
+
+#-------------------------------------------------------------
+def removeCommandeSiRegle(jdc,command,liste_regles):
+#-------------------------------------------------------------
+    if command not in jdcSet : return
+    mesRegles=regles.ensembleRegles(liste_regles)
+    removeCommande(jdc,command,mesRegles,0)
 
 #-------------------------------------------------------------
 def removeCommandeSiRegleAvecErreur(jdc,command,liste_regles):

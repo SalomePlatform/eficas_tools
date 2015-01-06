@@ -1,27 +1,26 @@
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
-
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 import os
-
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 from generator_python import PythonGenerator
-
 
 def entryPoint():
     """
@@ -49,7 +48,6 @@ class FileFromTemplateGenerator(PythonGenerator):
         self.config = config
         self.kw_dict = {}
         self.text = PythonGenerator.gener(self, obj, format)
-        self.generate_output_from_template()
         return self.text
     
     def generate_output_from_template(self) :
@@ -58,8 +56,8 @@ class FileFromTemplateGenerator(PythonGenerator):
         """
         templateFileName = self.config.get_template_file()
         if not os.path.isfile(templateFileName):
-            raise Exception("Template file %s does not exist." %
-                            templateFileName)
+            raise EficasException(tr("Fichier patron %s n'existe pas.",
+                                    str( templateFileName)))
         f = file(templateFileName, "r")
         template = f.read()  
         f.close()
@@ -87,6 +85,7 @@ class FileFromTemplateGenerator(PythonGenerator):
         return result
     
     def writeDefault(self, basefilename):
+        self.generate_output_from_template()
         output_filename = os.path.splitext(basefilename)[0] + \
                           self.config.get_extension()
         f = open(output_filename, 'w')

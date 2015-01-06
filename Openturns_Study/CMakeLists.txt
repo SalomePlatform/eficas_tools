@@ -30,7 +30,7 @@ install ( FILES qtEficas_openturns_study.py
 		prefs.py
 		configuration_OPENTURNS_STUDY.py
 		opsOT.py
-		catalogues_openturns.ini
+		#catalogues_openturns.ini
 		OpenTURNS_Cata_Study_V8.py
 	  DESTINATION ${CMAKE_INSTALL_PREFIX}/Openturns_Study
         )

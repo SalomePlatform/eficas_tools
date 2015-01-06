@@ -1,25 +1,22 @@
-#@ MODIF N_JDC Noyau  DATE 25/10/2011   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2011  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 
 """
@@ -106,6 +103,7 @@ NONE = None
       self.nstep=0
       self.nsd=0
       self.par_lot='OUI'
+      self.par_lot_user = None
       if definition:
          self.regles=definition.regles
          self.code = definition.code
@@ -120,8 +118,7 @@ NONE = None
       # on met le jdc lui-meme dans le context global pour l'avoir sous
       # l'etiquette "jdc" dans le fichier de commandes
       self.g_context={ 'jdc' : self }
-      # Liste pour stocker tous les concepts produits dans le JDC
-      self.sds=[]
+      #message.debug(SUPERV, "g_context : %s - %s", self.g_context, id(self.g_context))
       # Dictionnaire pour stocker tous les concepts du JDC (acces rapide par le nom)
       self.sds_dict={}
       self.etapes=[]
@@ -132,6 +129,8 @@ NONE = None
       self.index_etape_courante=0
       self.UserError="UserError"
       self.alea = None
+      # permet transitoirement de conserver la liste des étapes
+      self.hist_etape = False
 
    def compile(self):
       """
@@ -176,10 +175,12 @@ Causes possibles :
       linecache.cache[self.nom]=0,0,string.split(self.procedure,'\n'),self.nom
       try:
          exec self.exec_init in self.g_context
+         #message.debug(SUPERV, "JDC.exec_compile_1 - len(g_context) = %d", len(self.g_context.keys()))
          for obj_cata in self.cata:
             if type(obj_cata) == types.ModuleType :
                init2 = "from "+obj_cata.__name__+" import *"
                exec init2 in self.g_context
+         #message.debug(SUPERV, "JDC.exec_compile_2 - len(g_context) = %d", len(self.g_context.keys()))
 
          # Initialisation du contexte global pour l'évaluation des conditions de BLOC
          # On utilise une copie de l'initialisation du contexte du jdc
@@ -201,8 +202,9 @@ Causes possibles :
          # est recalculé
          # mais les constantes sont perdues
          self.const_context=self.g_context
-         message.debug(SUPERV, "pass")
+         #message.debug(SUPERV, "pass")
          exec self.proc_compile in self.g_context
+         #message.debug(SUPERV, "JDC.exec_compile_3 - len(g_context) = %d", len(self.g_context.keys()))
 
          CONTEXT.unset_current_step()
          if self.appli != None : self.appli.affiche_infos('')
@@ -249,10 +251,11 @@ Causes possibles :
         # (tuple de 3 éléments)
         if CONTEXT.debug : traceback.print_exc()
 
+        traceback.print_exc()
+
         exc_typ,exc_val,exc_fr=sys.exc_info()
         l=traceback.format_exception(exc_typ,exc_val,exc_fr)
-        self.cr.exception("erreur non prevue et non traitee prevenir la maintenance "+
-                           self.nom+'\n'+ string.join(l))
+        self.cr.exception("erreur non prevue et non traitee prevenir la maintenance "+'\n'+ string.join(l))
         del exc_typ,exc_val,exc_fr
         CONTEXT.unset_current_step()
 
@@ -288,7 +291,7 @@ Causes possibles :
       """
       self.etapes.append(etape)
       self.index_etapes[etape] = len(self.etapes) - 1
-      message.debug(SUPERV, "#%d %s", self.index_etapes[etape], etape.nom)
+      #message.debug(SUPERV, "#%d %s", self.index_etapes[etape], etape.nom)
       return self.g_register(etape)
 
    def o_register(self,sd):
@@ -328,6 +331,7 @@ Causes possibles :
                           etape.
           Dans le cas du JDC, le deuxième cas ne peut pas se produire.
       """
+      #print "entree dans create_sd_prod"
       sd= etape.get_sd_prod()
       if sd != None and (etape.definition.reentrant == 'n' or etape.reuse is None) :
          # ATTENTION : On ne nomme la SD que dans le cas de non reutilisation
@@ -342,13 +346,13 @@ Causes possibles :
           Si le nom est deja utilise, leve une exception
           Met le concept créé dans le concept global g_context
       """
+      #print "debut NommerSdprod pour ", sdnom
       o=self.sds_dict.get(sdnom,None)
       if isinstance(o,ASSD):
          raise AsException("Nom de concept deja defini : %s" % sdnom)
-      if self._reserved_kw.get(sdnom) == 1:
+      if sdnom in self._reserved_kw:
          raise AsException("Nom de concept invalide. '%s' est un mot-clé réservé." % sdnom)
 
-      # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
       # Ajoute a la creation (appel de reg_sd).
       self.sds_dict[sdnom]=sd
       sd.set_name(sdnom)
@@ -356,14 +360,13 @@ Causes possibles :
       # En plus si restrict vaut 'non', on insere le concept dans le contexte du JDC
       if restrict == 'non':
          self.g_context[sdnom]=sd
-         message.debug(SUPERV, "g_context[%r] = %s", sdnom, sd)
+         #message.debug(SUPERV, "g_context[%r] = %s", sdnom, sd)
 
    def reg_sd(self,sd):
       """
           Methode appelee dans l __init__ d un ASSD lors de sa creation
           pour s enregistrer
       """
-      self.sds.append(sd)
       return self.o_register(sd)
 
    def delete_concept_after_etape(self,etape,sd):
@@ -382,39 +385,62 @@ Causes possibles :
       for etape in self.etapes:
          etape.supprime()
 
-   def get_file(self,unite=None,fic_origine=''):
+   def clean(self, netapes):
+      """Nettoie les `netapes` dernières étapes de la liste des étapes."""
+      if self.hist_etape:
+          return
+      for i in xrange(netapes):
+        e=self.etapes.pop()
+        jdc=e.jdc
+        parent=e.parent
+        e.supprime()
+        e.parent=parent
+        e.jdc=jdc
+        #message.debug(SUPERV, "JDC.clean - etape = %r - refcount(e) = %d",
+                      #e.nom, sys.getrefcount(e))
+        del self.index_etapes[e]
+
+
+   def get_file(self, unite=None, fic_origine='', fname=None):
       """
           Retourne le nom du fichier correspondant à un numero d'unité
           logique (entier) ainsi que le source contenu dans le fichier
       """
       if self.appli :
          # Si le JDC est relié à une application maitre, on délègue la recherche
-         file,text= self.appli.get_file(unite,fic_origine)
+         return self.appli.get_file(unite, fic_origine)
       else:
-         file = None
          if unite != None:
             if os.path.exists("fort."+str(unite)):
-               file= "fort."+str(unite)
-         if file == None :
+               fname= "fort."+str(unite)
+         if fname == None :
             raise AsException("Impossible de trouver le fichier correspondant"
                                " a l unite %s" % unite)
-         if not os.path.exists(file):
-            raise AsException("%s n'est pas un fichier existant" % unite)
-         fproc=open(file,'r')
+         if not os.path.exists(fname):
+            raise AsException("%s n'est pas un fichier existant" % fname)
+         fproc = open(fname, 'r')
          text=fproc.read()
          fproc.close()
-      if file == None : return None,None
-      text=string.replace(text,'\r\n','\n')
-      linecache.cache[file]=0,0,string.split(text,'\n'),file
-      return file,text
+         text = text.replace('\r\n', '\n')
+         linecache.cache[fname] = 0, 0, text.split('\n'), fname
+         return fname, text
 
-   def set_par_lot(self,par_lot):
+   def set_par_lot(self, par_lot, user_value=False):
       """
-          Met le mode de traitement a PAR LOT
-          ou a COMMANDE par COMMANDE
-          en fonction de la valeur du mot cle PAR_LOT et
-          du contexte : application maitre ou pas
+      Met le mode de traitement a PAR LOT
+      ou a COMMANDE par COMMANDE
+      en fonction de la valeur du mot cle PAR_LOT et
+      du contexte : application maitre ou pas
+      
+      En PAR_LOT='NON', il n'y a pas d'ambiguité.
+      En PAR_LOT='OUI', E_SUPERV positionne l'attribut à 'NON' après la phase
+      d'analyse et juste avant la phase d'exécution.
+      `user_value` : permet de stocker la valeur choisie par l'utilisateur
+      pour l'interroger plus tard (par exemple dans `get_contexte_avant`).
       """
+      #message.debug(SUPERV, "set par_lot = %r", par_lot)
+      if user_value:
+          self.par_lot_user = par_lot
       if self.appli == None:
         # Pas d application maitre
         self.par_lot=par_lot
@@ -466,6 +492,23 @@ Causes possibles :
       # courante pendant le processus de construction des étapes.
       # Si on insère des commandes (par ex, dans EFICAS), il faut préalablement
       # remettre ce pointeur à 0
+      #message.debug(SUPERV, "g_context : %s", [k for k, v in self.g_context.items() if isinstance(v, ASSD)])
+      #message.debug(SUPERV, "current_context : %s", [k for k, v in self.current_context.items() if isinstance(v, ASSD)])
+      if self.par_lot_user == 'NON':
+          d = self.current_context = self.g_context.copy()
+          if etape is None:
+              return d
+          # retirer les sd produites par 'etape'
+          sd_names = [sd.nom for sd in etape.get_created_sd()]
+          #message.debug(SUPERV, "reuse : %s, sdprods : %s", etape.reuse, sd_names)
+          for nom in sd_names:
+             try:
+                  del d[nom]
+             except KeyError:
+                 from warnings import warn
+                 warn("concept '%s' absent du contexte de %s" % (nom, self.nom),
+                      RuntimeWarning, stacklevel=2)
+          return d
       if etape:
          index_etape = self.index_etapes[etape]
       else:
@@ -488,6 +531,7 @@ Causes possibles :
          if e.isactif():
             e.update_context(d)
       self.index_etape_courante=index_etape
+      #message.debug(SUPERV, "returns : %s", [k for k, v in d.items() if isinstance(v, ASSD)])
       return d
 
    def get_global_contexte(self):
@@ -514,9 +558,23 @@ Causes possibles :
 
    def get_concept(self, nomsd):
       """
-          Méthode pour recuperer un concept à partir de son nom
+          Méthode pour récuperer un concept à partir de son nom
       """
-      return self.get_contexte_courant().get(nomsd.strip(), None)
+      co = self.get_contexte_courant().get(nomsd.strip(), None)
+      if not isinstance(co, ASSD):
+          co = None
+      return co
+
+   def get_concept_by_type(self, nomsd, typesd, etape):
+      """
+          Méthode pour récuperer un concept à partir de son nom et de son type.
+          Il aura comme père 'etape'.
+      """
+      assert issubclass(typesd, ASSD), typesd
+      co = typesd(etape=etape)
+      co.set_name(nomsd)
+      co.executed = 1
+      return co
 
    def del_concept(self, nomsd):
       """
@@ -559,10 +617,9 @@ Causes possibles :
    def _build_reserved_kw_list(self):
        """Construit la liste des mots-clés réservés (interdits pour le
        nommage des concepts)."""
-       wrk = set()
+       self._reserved_kw = set()
        for cat in self.cata:
-           wrk.update([kw for kw in dir(cat) if len(kw) <= 8 and kw == kw.upper()])
-       wrk.difference_update(['OPER', 'MACRO', 'BLOC', 'SIMP', 'FACT', 'FORM',
-                              'GEOM', 'MCSIMP', 'MCFACT'])
-       self._reserved_kw = {}.fromkeys(wrk, 1)
+           self._reserved_kw.update([kw for kw in dir(cat) if len(kw) <= 8 and kw == kw.upper()])
+       self._reserved_kw.difference_update(['OPER', 'MACRO', 'BLOC', 'SIMP', 'FACT', 'FORM',
+                                            'GEOM', 'MCSIMP', 'MCFACT'])
 

@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 """
 """
 import string,traceback
 
+from Extensions.i18n import tr
 from I_MACRO_ETAPE import MACRO_ETAPE
 from Extensions import interpreteur_formule
 from Editeur import analyse_catalogue
@@ -102,9 +102,9 @@ class FORM_ETAPE(MACRO_ETAPE):
         # encadrant les arguments
         arguments = string.strip(arguments)
         if arguments[0] != '(':
-            return 0,"La liste des arguments d'une formule doit être entre parenthèses : parenthèse ouvrante manquante"
+            return 0,tr("La liste des arguments d'une formule doit etre entre parentheses : parenthese ouvrante manquante")
         if arguments[-1] != ')':
-            return 0,"La liste des arguments d'une formule doit être entre parenthèses : parenthèse fermante manquante"
+            return 0,tr("La liste des arguments d'une formule doit etre entre parentheses : parenthese fermante manquante")
         # on peut tester la syntaxe de chaque argument maintenant
         erreur=''
         test = 1
@@ -135,7 +135,7 @@ class FORM_ETAPE(MACRO_ETAPE):
                                              fonctions = l_form)
         except :
             traceback.print_exc()
-            return 0,"Impossible de réaliser la vérification de la formule"
+            return 0,tr("Impossible de réaliser la vérification de la formule")
         return verificateur.isvalid(),verificateur.report()
 
     def verif_nom(self,nom=None):
@@ -149,14 +149,14 @@ class FORM_ETAPE(MACRO_ETAPE):
         if not nom :
             nom = self.get_nom()
         if nom == "" :
-            return 0,"Pas de nom donné à la FORMULE"
+            return 0,tr("Pas de nom donne a la FORMULE")
         if len(nom) > 8 :
-            return 0,"Un nom de FORMULE ne peut dépasser 8 caractères"
+            return 0,tr("Un nom de FORMULE ne peut depasser 8 caracteres")
         if nom[0] > "0" and nom[0] < "9" :
-            return 0,"Un nom de FORMULE ne peut pas commencer par un chiffre"
+            return 0,tr("Un nom de FORMULE ne peut pas commencer par un chiffre")
         sd = self.parent.get_sd_autour_etape(nom,self)
         if sd :
-            return 0,"Un concept de nom %s existe déjà !" %nom
+            return 0,tr("Un concept de nom %s existe déjà !" %nom)
         return 1,''
 
     def verif_type(self,type=None):
@@ -170,9 +170,9 @@ class FORM_ETAPE(MACRO_ETAPE):
         if not type:
             type = self.type_retourne
         if not type :
-            return 0,"Le type de la valeur retournée n'est pas spécifié"
+            return 0,tr("Le type de la valeur retournee n'est pas specifie")
         if type not in self.l_types_autorises:
-            return 0,"Une formule ne peut retourner une valeur de type : %s" %type
+            return 0,tr("Une formule ne peut retourner une valeur de type : %s" %type)
         return 1,''
 
     def verif_formule(self,formule=None):

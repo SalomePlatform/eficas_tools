@@ -1,26 +1,27 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 import string,re,sys,exceptions,types
 
 from Noyau.N_CR import CR
+from Extensions.i18n import tr
+
 
 def group(*choices): return '(' + string.join(choices, '|') + ')'
 def any(*choices): return apply(group, choices) + '*'
@@ -93,7 +94,7 @@ class Interpreteur_Formule:
         Méthode externe
         """
         if type(formule) != types.TupleType:
-            raise InterpreteurException,"La formule passée à l'interpréteur doit être sous forme de tuple"
+            raise InterpreteurException,tr("La formule passee à l'interpreteur doit etre sous forme de tuple")
         self.t_formule = formule
         self.init_cr()
         self.modify_listes()
@@ -106,8 +107,8 @@ class Interpreteur_Formule:
         nom = self.t_formule[0]
         if nom :
             if nom[0] in ('+','-') : nom = nom[1:]
-        self.cr.debut = "Début Fonction %s" %nom
-        self.cr.fin = "Fin Fonction %s" %nom
+        self.cr.debut = tr("Debut Fonction %s", nom)
+        self.cr.fin = tr("Fin Fonction %s", nom)
         
     def str(self):
         """
@@ -163,7 +164,7 @@ class Interpreteur_Formule:
             try:
                 self.l_operateurs.append(self.split_operateurs(text_arg))
             except InterpreteurException,e:
-                self.cr.fatal(str(e))
+                self.cr.fatal(e.__str__())
 
     def modify_listes(self):
         """
@@ -214,25 +215,25 @@ class Interpreteur_Formule:
         try:
             oper,reste = self.cherche_nombre(texte)
         except InterpreteurException,e:
-            raise InterpreteurException,str(e)
+            raise InterpreteurException,e.__str__()
         if not oper :
             # on recherche une constante en début de texte
             try:
                 oper,reste = self.cherche_constante(texte)
             except InterpreteurException,e:
-                raise InterpreteurException,str(e)
+                raise InterpreteurException,e.__str__()
             if not oper :
                 # on recherche une expression entre parenthèses...
                 try:
                     oper,reste = self.cherche_expression_entre_parentheses(texte)
                 except InterpreteurException,e:
-                    raise InterpreteurException,str(e)
+                    raise InterpreteurException,e.__str__()
                 if not oper :
                     # on recherche le début d'un opérateur unaire en début de texte
                     try:
                         oper,reste = self.cherche_operateur_unaire(texte)
                     except InterpreteurException,e:
-                        raise InterpreteurException,str(e)
+                        raise InterpreteurException,e.__str__()
                     if not oper :
                         type_objet,nom_objet = self.get_type(texte)
                         if type_objet == 'constante':
@@ -258,7 +259,7 @@ class Interpreteur_Formule:
                 try:
                     l_op = self.split_operateurs(reste)
                 except InterpreteurException,e:
-                    raise InterpreteurException,str(e)
+                    raise InterpreteurException,e.__str__()
                 l_operateurs.extend(l_op)
                 return l_operateurs
         else:
@@ -399,7 +400,7 @@ class Interpreteur_Formule:
             try:
                 args,reste = self.cherche_args(texte)
             except InterpreteurException,e:
-                raise InterpreteurException,str(e)
+                raise InterpreteurException,e.__str__()
             if not args :
                 # opérateur unaire sans arguments
                 raise InterpreteurException,'opérateur unaire  %s sans arguments' %operateur
@@ -435,7 +436,7 @@ class Interpreteur_Formule:
             try:
                 args,reste = self.cherche_args(reste)
             except InterpreteurException,e:
-                raise InterpreteurException,str(e)
+                raise InterpreteurException,e.__str__()
             if not args :
                 # opérateur unaire sans arguments
                 # en principe on ne doit jamais être dans ce cas car il est déjà trappé par cherche_constante ...
@@ -458,7 +459,7 @@ class Interpreteur_Formule:
             try :
                args,reste = self.cherche_args(texte[1:])
             except InterpreteurException,e:
-                raise InterpreteurException,str(e)
+                raise InterpreteurException,e.__str__()
             if not args :
                # Il ne s'agit pas de '-' comme opérateur unaire --> on retourne None
                return None,texte

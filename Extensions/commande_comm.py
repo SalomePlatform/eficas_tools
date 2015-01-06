@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 import os,traceback,string
 
 from Noyau.N_CR import CR
 from Noyau.N_Exception import AsException
 from Noyau import N_OBJECT
 from Ihm import I_OBJECT
+from Extensions.i18n import tr
 
 class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     """
@@ -58,7 +58,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         Génère l'objet rapport (classe CR)
         """
         self.cr=CR()
-        if not self.isvalid(): self.cr.warn("Objet commande commentarisé invalide")
+        if not self.isvalid(): self.cr.warn(tr("Objet commande commentarisé invalide"))
         return self.cr
 
     def copy(self):
@@ -125,7 +125,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         Retourne l'attribut fr de self.definition
         """
         try :
-          return getattr(self.definition,'fr')
+          return getattr(self.definition,self.jdc.lang)
         except:
           return ''
 
@@ -187,15 +187,15 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         except Exception,e:
             traceback.print_exc()
             #self.jdc.set_context()
-            raise AsException("Erreur",str(e))
+            raise AsException(tr("Erreur"),e.__str__())
         if len(J.cr.crfatal)>0 :
             # des erreurs fatales ont été rencontrées
             #self.jdc.set_context()
             print 'erreurs fatales !!!'
-            raise AsException("Erreurs fatales",string.join(J.cr.crfatal))
+            raise AsException(tr("Erreurs fatales"),string.join(J.cr.crfatal))
         if not J.etapes :
             # des erreurs ont été rencontrées
-            raise AsException("Impossible reconstruire commande\n",str(J.cr))
+            raise AsException(tr("Impossible reconstruire commande\n"),str(J.cr))
         #self.jdc.set_context()
 
         new_etape = J.etapes[0]

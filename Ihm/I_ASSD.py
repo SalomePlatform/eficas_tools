@@ -1,30 +1,34 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 #from I_VALIDATOR import ValidException
+
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
 from Noyau.N_VALIDATOR import ValError
 
 class ASSD:
    def __repr__(self):
-      return "concept %s de type %s" % (self.get_name(),self.__class__.__name__)
+      return tr("concept %(inst_name)s de type %(class_name)s", \
+                       {'inst_name': self.get_name(), \
+                        'class_name': self.__class__.__name__})
 
    def __str__(self):
       return self.get_name() or "<None>"
@@ -42,7 +46,8 @@ class GEOM(ASSD):
       return valeur
    __convert__=classmethod(__convert__)
 
-class geom(GEOM):pass
+class geom(GEOM):
+   pass
 
 class CO(ASSD):
    def __convert__(cls,valeur):
@@ -51,7 +56,6 @@ class CO(ASSD):
          if valeur.etape == valeur._etape:
              # le concept est bien produit par l'etape
              return valeur
-      raise ValError("Pas un concept CO")
-      #raise ValidException("Pas un concept CO")
+      raise ValError(u"Pas un concept CO")
    __convert__=classmethod(__convert__)
 

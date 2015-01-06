@@ -1,30 +1,30 @@
 # -*- coding: utf-8 -*-
-#                                                CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002        EDF R&D                                                                        WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#                1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 from string import split,strip,lowercase,uppercase
 import re,string,cPickle,os
 
+from Extensions.i18n import tr
 from Noyau.N_CR import CR
 
 #
-__Id__="$Id: analyse_catalogue.py,v 1.9.8.1 2010-12-06 13:22:07 pnoyret Exp $"
+__Id__="$Id: analyse_catalogue.py,v 1.9.8.1.2.1.2.6 2014-01-23 09:14:44 pnoyret Exp $"
 __version__="$Name:  $"
 #
 l_noms_commandes = ['OPER','PROC','MACRO','FORM']
@@ -34,26 +34,26 @@ l_noms=l_noms_composes+l_noms_simples
 
 def elimine_commentaires(text):
         """ Elimine les lignes de commentaires dans text
-        Attention : supprime sauvagement tous les caractères entre # et le retour chariot ..."""
+        Attention : supprime sauvagement tous les caracteres entre # et le retour chariot ..."""
         comments = re.compile(r'#[^\n]*')
-        return comments.sub('',text)
+        return comments.sub(u'',text)
 
 def cherche_nom(text):
         Whitespace = r'[ \f\t]*'
         Name = r'[a-zA-Z_]\w*'
-        myexpr = '('+Name+')'+Whitespace+'='+Whitespace+'$'
+        myexpr = '(u'+Name+')'+Whitespace+'='+Whitespace+'$'
         a=re.search(myexpr,text)
         return a.group(1)
 
 def cherche_args(text):
         text = strip(text)
         longueur = len(text)
-        if text[0] != '(':
+        if text[0] != '(u':
                 return 'erreur !'
         else :
                 nbpar = 1
                 for i in range(1,longueur) :
-                        if text[i] =='(':
+                        if text[i] =='(u':
                                 nbpar = nbpar + 1
                         elif text[i] == ')':
                                 nbpar = nbpar - 1
@@ -62,18 +62,18 @@ def cherche_args(text):
                         if nbpar == 0:
                                 break
                 if nbpar != 0 :
-                        return 'erreur !','erreur !'
+                        return tr('Erreur ! Erreur !')
                 else :
                         try :
-                                return text[1:i],text[i+1:] # on enlève les première et dernière parenthèses
+                                return text[1:i],text[i+1:] # on enleve les premiere et derniere parentheses
                         except :
                                 return text[1:i],''
 
-class ENTITE :
+class ENTITE:
         def cherche_enfants(self):
                 try :
                         self.text = strip(self.text)
-                        liste = re.split('=',self.text,1)
+                        liste = re.split(u'=',self.text,1)
                         if len(liste)>1 :
                                 arg1=liste[0]
                                 reste=liste[1]
@@ -86,10 +86,10 @@ class ENTITE :
                                         self.text = reste
                                 self.cherche_enfants()
                         else :
-                                # pas de = rencontré
+                                # pas de = rencontre
                                 return
-                except Exception,e:
-                        self.cr.fatal("Erreur rencontrée dans recherche_enfants :%s" %str(e))
+                except Exception as e:
+                        self.cr.fatal(tr("Erreur rencontree dans recherche_enfants : %s", e.__str()))
                 
         def cree_mc(self,nom_mc,arg_mc,test):
                 if test in l_noms_composes :
@@ -99,7 +99,7 @@ class ENTITE :
                         mc = SIMP_CATA(nom_mc,self)
                         self.children.append(mc)
                 else :
-                        print 'erreur dans la création du mot-clé :',nom_mc
+                        print tr("Erreur dans la creation du mot-cle : %s", nom_mc)
 
         def construit_liste_dico(self):
                 l=[]
@@ -115,7 +115,7 @@ class ENTITE :
                         self.ordre_mc = l
                         self.entites = d
                 except:
-                        print 'erreur :',self.nom,self.__class__
+                        print "erreur : ", self.nom,  self.__class__
                 
 class COMMANDE_CATA(ENTITE) :
         def __init__(self,nom,args,parent):
@@ -124,7 +124,7 @@ class COMMANDE_CATA(ENTITE) :
                 self.children = []
                 self.text = args
                 self.cr = CR()
-                self.cr.debut = "Début commande %s" %self.nom
+                self.cr.debut = "Debut commande %s" %self.nom
                 self.cr.fin = "Fin commande %s" %self.nom
                 self.cherche_enfants()
                 self.construit_liste_dico()
@@ -141,8 +141,8 @@ class SIMP_CATA :
         def __init__(self,nom,parent):
                 self.nom = nom
                 self.cr = CR()
-                self.cr.debut = "Début mot-clé simple %s" %self.nom
-                self.cr.fin = "Fin mot-clé simple %s" %self.nom
+                self.cr.debut = "Debut mot-cle simple %s" %self.nom
+                self.cr.fin = "Fin mot-cle simple %s" %self.nom
                 parent.cr.add(self.cr)
 
         def affiche(self,ind):
@@ -156,8 +156,8 @@ class FACT_CATA(ENTITE) :
                 self.children = []
                 self.text=args
                 self.cr = CR()
-                self.cr.debut = "Début mot-clé facteur ou bloc %s" %self.nom
-                self.cr.fin = "Fin mot-clé facteur ou bloc %s" %self.nom
+                self.cr.debut = "Debut mot-cle facteur ou bloc %s" %self.nom
+                self.cr.fin = "Fin mot-cle facteur ou bloc %s" %self.nom
                 self.cherche_enfants()
                 self.construit_liste_dico()
                 parent.cr.add(self.cr)
@@ -175,7 +175,7 @@ class CATALOGUE_CATA:
                 self.parent = parent
                 self.fichier=fichier
                 self.cr = CR()
-                self.cr.debut = "Début compte-rendu catalogue %s" %self.fichier
+                self.cr.debut = "Debut compte-rendu catalogue %s" %self.fichier
                 self.cr.fin = "Fin compte-rendu catalogue %s" %self.fichier
                 self.ouvrir_fichier()
                 self.liste_commandes=[]
@@ -187,8 +187,8 @@ class CATALOGUE_CATA:
                         self.texte_complet=f.read()
                         f.close()
                 except :
-                        print "Impossible d'ouvrir le fichier :",self.fichier
-                        self.cr.fatal("Impossible d'ouvrir le fichier :%s" %self.fichier)
+                        print tr("Impossible d'ouvrir le fichier : %s ", str(self.fichier))
+                        self.cr.fatal(tr("Impossible d'ouvrir le fichier : %s ", str(self.fichier)))
 
         def constr_list_txt_cmd(self,text):
                 text = elimine_commentaires(text)
@@ -199,44 +199,47 @@ class CATALOGUE_CATA:
 
         def analyse_commande_old(self,text):
                 #if strip(text) == '' or strip(text) ==')': return
-                liste = re.split('OPER *\(',text,1)
+                liste = re.split(u'OPER *\(u',text,1)
                 if len(liste) < 2 :
-                        liste = re.split('PROC *\(',text,1)
+                        liste = re.split(u'PROC *\(u',text,1)
                 if len(liste) < 2 :
-                        liste = re.split('MACRO *\(',text,1)
+                        liste = re.split(u'MACRO *\(u',text,1)
                 if len(liste) < 2 :
-                        print "le texte à analyser n'est pas celui d'une commande ou d'un opérateur",text
-                        self.cr.fatal("le texte à analyser n'est pas celui d'une commande ou d'un opérateur :%s" %text)
+                        print tr("le texte a analyser n'est pas celui d'une commande ou d'un operateur : "), text
+                        self.cr.fatal(tr("le texte a analyser n'est pas celui d'une commande ou \
+                                         d'un operateur : %s", text))
                         return
                 debut = liste[0]
                 fin = liste[1]
                 nom_cmd = cherche_nom(debut)
                 if nom_cmd == 'erreur !':
-                        print "Erreur dans la recherche du nom de la commande :",debut
-                args_cmd,toto = cherche_args('('+fin)
+                        print tr("Erreur dans la recherche  du nom de la commande : "), debut
+                args_cmd,toto = cherche_args(u'(u'+fin)
                 if args_cmd == 'erreur !':
-                        print "Erreur dans la recherche des args de la commande :",debut
+                        print tr("Erreur dans la recherche des  args de la commande :") , debut
                 cmd=COMMANDE_CATA(nom_cmd,args_cmd,self)
                 self.liste_commandes.append(cmd)
 
         def analyse_commande(self,text):
                 #if strip(text) == '' or strip(text) ==')': return
                 for nom_cmd in l_noms_commandes:
-                        liste = re.split(nom_cmd+' *\(',text,1)
+                        liste = re.split(nom_cmd+' *\(u',text,1)
                         if len(liste) == 2 : break
                 if len(liste) < 2 :
-                        print "le texte à analyser n'est pas celui d'une commande connue :"+str(l_noms_commandes),text
-                        self.cr.fatal("le texte à analyser n'est pas celui d'une commande ou d'un opérateur :%s" %text)
+                        print tr("le texte a analyser n'est pas celui d'une commande connue : \
+                                        %(v_1)s %(v_2)s", {'v_1': str(l_noms_commandes), 'v_2': text})
+                        self.cr.fatal(tr("le texte a analyser n'est pas celui d'une commande connue : \
+                                         %(v_1)s %(v_2)s", {'v_1': str(l_noms_commandes), 'v_2': text}))
                         return
                 debut = liste[0]
                 fin = liste[1]
                 nom_cmd = cherche_nom(debut)
                 if nom_cmd == 'erreur !':
-                        print "Erreur dans la recherche du nom de la commande :",debut
-                args_cmd,toto = cherche_args('('+fin)
+                        print tr("Erreur dans la recherche du  nom de la commande : "), debut
+                args_cmd,toto = cherche_args(u'(u'+fin)
                 if args_cmd == 'erreur !':
-                        print "Erreur dans la recherche des args de la commande :",debut
-                        print fin
+                        print tr("Erreur dans la recherche des args de la commande : "), debut
+                        print tr(fin)
                 cmd=COMMANDE_CATA(nom_cmd,args_cmd,self)
                 self.liste_commandes.append(cmd)
                 
@@ -255,7 +258,7 @@ class CATALOGUE_CATA:
                 self.construit_liste_dico()
 
         def ecrit_lcmd(self):
-                f=open('U:\\EFICAS\\Accas\\cata.txt','w')
+                f=open(u'U:\\EFICAS\\Accas\\cata.txt','w')
                 for cmd in self.liste_commandes :
                         f.write(cmd.affiche())
                 f.close()
@@ -287,8 +290,8 @@ def analyse_catalogue_commande(parent,nom_cata):
 
 def make_cata_pickle(fic_cata):
         """
-        Lance l'analyse de l'ordre des mots-clés dans le catalogue dont le nom
-        est passé en argument et sauvegarde ces infos dans le fichier pickle relu
+        Lance l'analyse de l'ordre des mots-cles dans le catalogue dont le nom
+        est passe en argument et sauvegarde ces infos dans le fichier pickle relu
         par Eficas
         """
         fic_cata_p = os.path.splitext(fic_cata)[0]+'_pickled.py'
@@ -300,7 +303,7 @@ def make_cata_pickle(fic_cata):
         
 if __name__ == "__main__" :
         import profile
-        profile.run("analyse_catalogue(None,'U:\\EFICAS\\Cata\\cata_saturne.py')")
+        profile.run(u"analyse_catalogue(None,'U:\\EFICAS\\Cata\\cata_saturne.py')")
 
 
 

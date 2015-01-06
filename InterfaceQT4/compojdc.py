@@ -1,16 +1,49 @@
 # -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 from Editeur import Objecttreeitem
 import browser
+import typeNode
+from Extensions.i18n import tr
 
 
-class Node(browser.JDCNode):
+class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
     def getPanel(self):
         """
         """
+        #if self.affichage_onglet==1 :
+        #   from monRacinePanel_onglet import MonRacinePanel
+        #   return MonRacinePanel(self,parent=self.editor)
         from monRacinePanel import MonRacinePanel
         return MonRacinePanel(self,parent=self.editor)
 
+    def getPanel2(self):
+        from monChoixCommande import MonChoixCommande
+        return MonChoixCommande(self,self.item, self.editor)
+        
+
+    def createPopUpMenu(self):
+        typeNode.PopUpMenuRacine.createPopUpMenu(self)
+
+    def addParameters(self,apres):
+        self.append_child("PARAMETRE",pos=0)
 
 
 class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
@@ -23,12 +56,12 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
       return  "    "
 
   def GetLabelText(self):
-      # None --> fonte et couleur par défaut
+      # None --> fonte et couleur par defaut
       return self.object.nom,None,None
 
   def get_jdc(self):
     """
-    Retourne l'objet pointé par self
+    Retourne l'objet pointe par self
     """
     return self.object
   
@@ -49,20 +82,20 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
       return cmd
 
   def suppitem(self,item) :
-    # item             = item de l'ETAPE à supprimer du JDC
+    # item             = item de l'ETAPE a supprimer du JDC
     # item.getObject() = ETAPE ou COMMENTAIRE
     # self.object      = JDC
 
     itemobject=item.getObject()
     if self.object.suppentite(itemobject):
        if itemobject.nature == "COMMENTAIRE" :
-          message = "Commentaire supprimé"
+          message = tr("Commentaire supprime")
        else :
-          message = "Commande " + itemobject.nom + " supprimée"
+          message = tr("Commande %s supprimee",itemobject.nom)
        self.appli.affiche_infos(message)
        return 1
     else:
-       self.appli.affiche_infos("Pb interne : impossible de supprimer cet objet",Qt.red)
+       self.appli.affiche_infos(tr("Pb interne : impossible de supprimer cet objet"),Qt.red)
        return 0
 
   def GetSubList(self):
@@ -96,7 +129,7 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
     return self.sublist
 
   def get_l_noms_etapes(self):
-      """ Retourne la liste des noms des étapes de self.object"""
+      """ Retourne la liste des noms des etapes de self.object"""
       return self.object.get_l_noms_etapes()
 
   def get_liste_cmd(self):

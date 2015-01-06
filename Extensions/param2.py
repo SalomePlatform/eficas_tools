@@ -1,4 +1,22 @@
 # -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 from __future__ import division
 import math
 import types
@@ -50,7 +68,9 @@ class Formula:
     def __rfloordiv__(self, other): return Binop('//', other, self)
     def __pow__(self, other): return Binop('**', self, other)
     def __rpow__(self, other): return Binop('**', other, self)
-    def __getitem__(self,i):return Binop('[]',self,i)
+    def __getitem__(self,i): 
+        if i > len(self) : raise StopIteration
+        return Binop('[]',self,i)
     def __cmp__( self, other ): return self.eval().__cmp__(other)
     def __eq__(  self, other ): return self.eval() == other
     def __ne__(  self, other ): return self.eval() != other
@@ -82,6 +102,7 @@ class Binop(Formula):
     def __init__(self, op, value1, value2):
         self.op = op
         self.values = mkf(value1), mkf(value2)
+
     def __str__(self):
         if self.op == '[]':
            return "%s[%s]" % (self.values[0], self.values[1])

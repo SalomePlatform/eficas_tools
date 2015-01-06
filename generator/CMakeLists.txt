@@ -34,7 +34,14 @@ endif (WITH_OPENTURNS)
 
 # Installation des fichiers : Aster
 if (WITH_ASTER)
-  install ( FILES generator_asterv5.py generator_GroupMA.py generator_vers3DSalome.py
+  install ( FILES generator_asterv5.py generator_GroupMA.py generator_vers3DSalome.py 
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+          )
+endif (WITH_ASTER)
+
+# Installation des fichiers : ZCRACKS
+if (WITH_ASTER)
+  install ( FILES generator_ZCracks.py
             DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
           )
 endif (WITH_ASTER)
@@ -45,6 +52,13 @@ if (WITH_MAP)
             DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
           )
 endif (WITH_MAP)
+
+# Installation des fichiers : CARMEL
+if (WITH_CARMEL)
+  install ( FILES generator_CARMEL3D_frequentiel.py generator_CARMELCND.py
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
+          )
+endif (WITH_CARMEL)
 
 
 # Installation des fichiers : SEP

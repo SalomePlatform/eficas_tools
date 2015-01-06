@@ -1,23 +1,22 @@
-# -*- coding: iso-8859-1 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
-# (AT YOUR OPTION) ANY LATER VERSION.
+# -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# ======================================================================
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 # Modules Python
 import string,types,os
 import traceback
@@ -25,6 +24,7 @@ import traceback
 from PyQt4 import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from Extensions.i18n import tr
 
 # Import des panels
 
@@ -32,9 +32,9 @@ from PyQt4.QtCore import *
 class QTPanel:
 # ---------- #
   """
-  Classe contenant les méthodes Qt communes a tous les panneaux droits
-  Tous les panneaux Mon...Panel héritent de cette classe
-  Gére plus précisement :
+  Classe contenant les methodes Qt communes a tous les panneaux droits
+  Tous les panneaux Mon...Panel heritent de cette classe
+  Gere plus precisement :
      - l affichage de la doc
      - le bouton Suppression (BSupPressed)
      - la mutualisation de l affichage des regles
@@ -45,30 +45,37 @@ class QTPanel:
         if hasattr(self,'TWChoix'):
            self.connect(self.TWChoix, SIGNAL("currentChanged(QWidget *)"), self.GestionBALpha)
 
+  def keyReleaseEvent(self,event):
+        if event.matches(QKeySequence.Copy): self.editor.appliEficas.editCopy() 
+        if event.matches(QKeySequence.Cut): self.editor.appliEficas.editCut() 
+        if event.matches(QKeySequence.Paste): self.editor.appliEficas.editPaste() 
+
+
   def GestionBALpha(self,fenetre):
         if self.TWChoix.currentIndex()!=0:
            if hasattr(self,'BAlpha'): #pour include materiau
               self.BAlpha.hide()
         else :
-           self.BAlpha.setVisible(True)
-           self.BuildLBMCPermis()
+           if hasattr(self,'BAlpha'): 
+              self.BAlpha.setVisible(True)
+              self.BuildLBMCPermis()
 
   def BOkPressed(self):
-        """ Impossible d utiliser les vrais labels avec designer ?? """
-        label=self.TWChoix.tabText(self.TWChoix.currentIndex())
-        if label==QString("Nouvelle Commande"):
-           self.DefCmd()
-        if label==QString("Nommer Concept"):
-           self.LENomConceptReturnPressed()
-        if label==QString("Ajouter Mot-Clef"):
-           if self.LBMCPermis.currentItem() == None : return
-           self.DefMC(self.LBMCPermis.currentItem())
-        if label==QString("Définition Formule"):
-           self.BOkPressedFormule()
-        if label==QString("Valeur Parametre"):
-           self.BOkParamPressed()
-        if label==QString("Fichier Include"):
-           self.BOkIncPressed()
+    if hasattr(self, "Commande") and self.TWChoix.currentWidget() is self.Commande:
+      self.DefCmd()
+    elif hasattr(self, "Concept") and self.TWChoix.currentWidget() is self.Concept:
+      self.LENomConceptReturnPressed()
+    elif hasattr(self, "MotClef") and self.TWChoix.currentWidget() is self.MotClef:
+      if self.LBMCPermis.currentItem() == None : return
+      self.DefMC(self.LBMCPermis.currentItem())
+    elif hasattr(self, "Formule") and self.TWChoix.currentWidget() is self.Formule:
+      self.BOkPressedFormule()
+    elif hasattr(self, "Valeur_Parametre") and self.TWChoix.currentWidget() is self.Valeur_Parametre:
+      self.BOkParamPressed()
+    elif hasattr(self, "maPageOk") and self.TWChoix.currentWidget() is self.maPageOk:
+      self.BOkIncPressed()
+    else:
+      raise Exception("Unknown selected tab %s" % self.TWChoix.tabText(self.TWChoix.currentIndex()))
 
   def BParametresPressed(self):
         liste=self.node.item.get_liste_param_possible()
@@ -106,9 +113,9 @@ class QTPanel:
 class QTPanelTBW1(QTPanel):
 # ----------------------- #
   """
-  Classe contenant les méthodes nécessaires a l onglet "Ajouter Mot-Clef"  
-  hérite de QTPanel  # Attention n appelle pas le __init__
-  Gére plus précisement :
+  Classe contenant les methodes necessaires a l onglet "Ajouter Mot-Clef"  
+  herite de QTPanel  # Attention n appelle pas le __init__
+  Gere plus precisement :
   """
   def __init__(self,node, parent = None):
         self.editor    = parent
@@ -122,10 +129,10 @@ class QTPanelTBW1(QTPanel):
   def BAlphaPressed (self):
         if self.node.alpha == 0 :
            self.node.alpha=1
-           self.BAlpha.setText("Tri Cata")
+           self.BAlpha.setText(tr("Tri Cata"))
         else :
            self.node.alpha=0
-           self.BAlpha.setText("Tri Alpha")
+           self.BAlpha.setText(tr("Tri Alpha"))
         self.BuildLBMCPermis()
 
            
@@ -143,7 +150,7 @@ class QTPanelTBW1(QTPanel):
 
 
   def DefMC(self,item):
-        """ On ajoute un mot-clé à  la commande : subnode """
+        """ On ajoute un mot-cle Ã   la commande : subnode """
         name=str(item.text())
         self.editor.init_modif()
         self.node.append_child(name)
@@ -152,9 +159,9 @@ class QTPanelTBW1(QTPanel):
 class QTPanelTBW2(QTPanel):
 # ---------------------------- #
   """
-  Classe contenant les méthodes nécessaires a l onglet "Nouvelle Commande"  
-  hérite de QTPanel  # Attention n appelle pas le __init__
-  Gére plus précisement :
+  Classe contenant les methodes necessaires a l onglet "Nouvelle Commande"  
+  herite de QTPanel  # Attention n appelle pas le __init__
+  Gere plus precisement :
   """
 
   def __init__(self,node, parent = None, racine = 0):
@@ -174,17 +181,17 @@ class QTPanelTBW2(QTPanel):
   def handleCurrentChanged(self):
         try :
           label=self.TWChoix.tabText(self.TWChoix.currentIndex())
-          if label==QString("Nouvelle Commande"):
+          if label==tr("Nouvelle Commande"):
             self.LEFiltre.setFocus()
-          if label==QString("Nommer Concept"):
+          if label==tr("Nommer Concept"):
            self.LENomConcept.setFocus()
-          if label==QString("Définition Formule"):
+          if label==tr("Definition Formule"):
            self.LENomFormule.setFocus()
-          if label==QString("Valeur Parametre"):
+          if label==tr("Valeur Parametre"):
            self.lineEditNom.setFocus()
-          if label==QString("Fichier Include"):
+          if label==tr("Fichier Include"):
            self.LENomFichier.setFocus()
-          if label==QString("Ajouter Mot-Clef"):
+          if label==tr("Ajouter Mot-Clef"):
            self.LBMCPermis.setCurrentItem(self.LBMCPermis.item(0))
         except :
           pass
@@ -200,7 +207,7 @@ class QTPanelTBW2(QTPanel):
            aExclure=dictGroupes["CACHE"]
         else:
            aExclure=()
-        if self.editor.mode_nouv_commande == "alpha":
+        if ((self.editor.mode_nouv_commande == "alpha") and (hasattr(self,'RBalpha'))):
            self.RBalpha.setChecked(True)
            self.RBGroupe.setChecked(False)
            listeCmd = jdc.get_liste_cmd()
@@ -286,10 +293,10 @@ class QTPanelTBW3(QTPanel):
 # ---------------------------- #
 
   """
-  Classe contenant les méthodes nécessaires a l onglet "Nommer Concept"  
-  si non réentrant
-  hérite de QTPanel                   # Attention n appelle pas le __init__
-  Gére plus précisement :
+  Classe contenant les methodes necessaires a l onglet "Nommer Concept"  
+  si non reentrant
+  herite de QTPanel                   # Attention n appelle pas le __init__
+  Gere plus precisement :
   """
 
   def __init__(self,node, parent = None):
@@ -313,8 +320,8 @@ class QTPanelTBW3(QTPanel):
         self.Label3.close()
         self.typeConcept.close()
         self.LENomConcept.close()
-        self.Label1.setText(QtGui.QApplication.translate("DUnASSD", "<font size=\"+1\"><p align=\"center\">Structures de données à enrichir\n"
-" par l\'operateur courant :</p></font>", None, QtGui.QApplication.CodecForTr))
+        self.Label1.setText(tr("<font size=\"+1\"><p align=\"center\">Structures de donnees a enrichir\n"
+" par l\'operateur courant :</p></font>"))
         listeNomsSD = self.node.item.get_noms_sd_oper_reentrant()
         for aSD in listeNomsSD:
             self.listBoxASSD.addItem( aSD)
@@ -352,7 +359,7 @@ class ViewText(Ui_dView,QDialog):
     """
     Classe permettant la visualisation de texte
     """
-    def __init__(self,parent,editor=None):
+    def __init__(self,parent,editor=None,entete=None):
         QDialog.__init__(self,parent)
         self.editor=editor
         self.setupUi(self)
@@ -360,6 +367,8 @@ class ViewText(Ui_dView,QDialog):
         self.resize( QSize(600,600).expandedTo(self.minimumSizeHint()) )
         self.connect( self.bclose,SIGNAL("clicked()"), self, SLOT("close()") )
         self.connect( self.bsave,SIGNAL("clicked()"), self.saveFile )
+        if entete != None : self.setWindowTitle (entete)
+
         
     def setText(self, txt ):    
         self.view.setText(txt)
@@ -367,23 +376,23 @@ class ViewText(Ui_dView,QDialog):
     def saveFile(self):
         #recuperation du nom du fichier
         if self.editor != None :
-           dir=elf.editor.appliEficas.CONFIGURATION.savedir
+           dir=self.editor.appliEficas.CONFIGURATION.savedir
         else:
            dir='/tmp'
         fn = QFileDialog.getSaveFileName(None,
-                self.trUtf8("Save File"),
+                tr("Sauvegarder le fichier"),
                 dir)
         if fn.isNull() : return
         ulfile = os.path.abspath(unicode(fn))
-        self.editor.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+        if self.editor != None :
+           self.editor.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
         try:
            f = open(fn, 'wb')
            f.write(str(self.view.toPlainText()))
            f.close()
            return 1
         except IOError, why:
-           QMessageBox.critical(self, self.trUtf8('Save File'),
-                self.trUtf8('The file <b>%1</b> could not be saved.<br>Reason: %2')
-                    .arg(unicode(fn)).arg(str(why)))
+           QMessageBox.critical(self, tr("Sauvegarder le fichier"),
+                tr("Le fichier <b>%(v_1)s</b> n'a pu etre sauvegarde. <br>Raison : %(v_2)s", {'v_1': unicode(fn), 'v_2': unicode(why)}))
            return
 

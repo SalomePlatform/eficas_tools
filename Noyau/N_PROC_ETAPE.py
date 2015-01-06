@@ -1,25 +1,22 @@
-#@ MODIF N_PROC_ETAPE Noyau  DATE 07/09/2009   AUTEUR COURTOIS M.COURTOIS 
 # -*- coding: iso-8859-1 -*-
-# RESPONSABLE COURTOIS M.COURTOIS
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
-# ======================================================================
-# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
-# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
-# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
-# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR   
-# (AT YOUR OPTION) ANY LATER VERSION.                                 
+# Copyright (C) 2007-2013   EDF R&D
 #
-# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT 
-# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF          
-# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU    
-# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                            
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE   
-# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,       
-#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.      
-#                                                                       
-#                                                                       
-# ======================================================================
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 
 """ 
@@ -43,49 +40,16 @@ class PROC_ETAPE(N_ETAPE.ETAPE):
 
    """
    nature = "PROCEDURE"
-   def __init__(self,oper=None,args={}):
+   def __init__(self, oper=None, reuse=None, args={}):
       """
-         Attributs :
-
-          - definition : objet portant les attributs de définition d'une étape de type opérateur. Il
-                         est initialisé par l'argument oper.
-
-          - valeur : arguments d'entrée de type mot-clé=valeur. Initialisé avec l'argument args.
-
+      Attributs :
+       - definition : objet portant les attributs de définition d'une étape de type opérateur. Il
+                      est initialisé par l'argument oper.
+       - valeur : arguments d'entrée de type mot-clé=valeur. Initialisé avec l'argument args.
+       - reuse : forcément None pour une PROC
       """
-      self.definition=oper
-      self.valeur=args
-      self.nettoiargs()
-      self.parent=CONTEXT.get_current_step()
-      self.etape = self
-      self.nom=oper.nom
-      self.idracine=oper.label
-      self.appel=N_utils.callee_where()
-      self.mc_globaux={}
-      self.sd=None
-      self.actif=1
-      self.make_register()
-
-   def make_register(self):
-      """
-         Initialise les attributs jdc, id, niveau et réalise les enregistrements
-         nécessaires
-      """
-      if self.parent :
-         self.jdc = self.parent.get_jdc_root()
-         self.id=self.parent.register(self)
-         self.niveau=None
-      else:
-         self.jdc = self.parent =None
-         self.id=None
-         self.niveau=None
-
-   def McBuild(self):
-      """
-         Demande la construction des sous-objets et les stocke dans l'attribut
-         mc_liste.
-      """
-      self.mc_liste=self.build_mc()
+      N_ETAPE.ETAPE.__init__(self, oper, reuse=None, args=args, niveau=5)
+      self.reuse = None
 
    def Build_sd(self):
       """

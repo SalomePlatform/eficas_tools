@@ -1,4 +1,22 @@
 # -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
 
 # Modules Python
 import os,sys,string
@@ -7,6 +25,7 @@ import traceback
 
 # Modules Eficas
 from Editeur import Objecttreeitem
+from Extensions.i18n import tr
 import compooper
 import browser
 import typeNode
@@ -17,6 +36,10 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
       from   monMacroPanel import MonMacroPanel
       return MonMacroPanel (self,parent=self.editor )
     
+    def getPanel2(self):
+        from monWidgetCommande import MonWidgetCommande
+        return MonWidgetCommande(self,self.editor,self.item.object)
+
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
         
@@ -34,7 +57,7 @@ class MACROTreeItem(compooper.EtapeTreeItem):
     itemNode=MACRONode
 
 # ------------------------------------
-#  Classes necessaires à INCLUDE
+#  Classes necessaires a INCLUDE
 # ------------------------------------
 
 class INCLUDETreeItemBase(MACROTreeItem):
@@ -57,7 +80,7 @@ class INCLUDENode(browser.JDCNode,typeNode.PopUpMenuNode):
     def makeEdit(self):    #,appli,node
         if self.item.object.text_converted == 0:
                 # Le texte du fichier inclus n'a pas pu etre converti par le module convert
-                msg="Le fichier de commande n'a pas pu etre converti pour etre editable par Eficas\n\n"
+                msg=tr("Le fichier de commande n'a pas pu etre converti pour etre editable par Eficas\n\n")
                 msg=msg+self.item.object.text_error
                 return
     
@@ -87,7 +110,7 @@ class POURSUITENode(browser.JDCNode, typeNode.PopUpMenuNode):
 
     def makeEdit(self):    #,appli,node
         if self.item.object.text_converted == 0:
-                msg="Le fichier de commande n'a pas pu etre converti pour etre editable par Eficas\n\n"
+                msg=tr("Le fichier de commande n'a pas pu etre converti pour etre editable par Eficas\n\n")
                 msg=msg+self.item.object.text_error
                 return
     
@@ -104,7 +127,7 @@ class POURSUITETreeItem(INCLUDETreeItemBase):
 
 
 # ----------------------------------------
-#  Classes necessaires à INCLUDE MATERIAU
+#  Classes necessaires a INCLUDE MATERIAU
 # ----------------------------------------
     
 
@@ -119,7 +142,7 @@ class MATERIAUNode(MACRONode):
 
     def makeView(self) :
       if hasattr(self.item.object,'fichier_ini') and self.item.object.fichier_ini==None:
-         QMessageBox.information( self, "Include vide","L'include doit etre correctement initialisé pour etre visualisé")
+         QMessageBox.information( self,tr("Include vide"),tr("L'include doit etre correctement initialise pour etre visualise"))
          return
       f = open(self.item.object.fichier_ini, "rb")
       texte = f.read()
@@ -144,7 +167,7 @@ def treeitem(appli, labeltext, object, setfunction=None):
    """
    if object.nom == "INCLUDE_MATERIAU":
       return INCLUDE_MATERIAUTreeItem(appli, labeltext, object, setfunction)
-   elif object.nom == "INCLUDE":
+   elif object.nom == "INCLUDE" or object.nom== "DICTDATA":
       return INCLUDETreeItem(appli, labeltext, object, setfunction)
    elif object.nom == "POURSUITE":
       return POURSUITETreeItem(appli, labeltext, object, setfunction)
