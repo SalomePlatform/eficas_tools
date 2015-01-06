@@ -222,12 +222,23 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.addAction(self.actionLecteur_Pdf)
         self.menuOptions.setTitle(tr("Options"))
 
+
     def CARMEL3D(self):
         #if self.salome == 0 : return
         self.menuMesh = self.menubar.addMenu("menuMesh")
         self.menuMesh.setObjectName("Mesh")
         self.menuMesh.addAction(self.actionChercheGrpMaille)
-
+        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.actionExecution = QAction(self)
+        icon6 = QIcon(self.RepIcon+"/compute.png")
+        self.actionExecution.setIcon(icon6)
+        self.actionExecution.setObjectName("actionExecution")
+        self.menuExecution.addAction(self.actionExecution)
+        if not(self.actionExecution in self.toolBar.actions()):
+           self.toolBar.addAction(self.actionExecution)
+        self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
+        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+        
     def CARMELCND(self):
         self.menuMesh = self.menubar.addMenu("Maillage")
         self.menuMesh.setObjectName("Mesh")
@@ -267,8 +278,14 @@ class Appli(Ui_Eficas,QMainWindow):
         else :
            print "il faut gerer les erreurs"
 
+
     def ChercheGrpMaille(self):
-        Msg,listeGroup=self.ChercheGrpMailleInSalome()
+        # Normalement la variable self.salome permet de savoir si on est ou non dans Salome
+        try:
+            Msg,listeGroup=self.ChercheGrpMailleInSalome() # recherche dans Salomé
+            #Msg = None; listeGroup = None # recherche manuelle, i.e., sans Salomé si ligne précédente commentée
+        except:
+            raise ValueError('Salome non ouvert')
         if Msg == None :
            self.viewmanager.handleAjoutGroup(listeGroup)
         else :

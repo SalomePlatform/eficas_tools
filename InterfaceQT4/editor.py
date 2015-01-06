@@ -793,6 +793,27 @@ class JDCEditor(QSplitter):
       except Exception, e:
           print traceback.print_exc()
 
+
+    #-------------------#
+    def runCARMEL3D(self):
+    #-------------------#
+      if self.modified or self.fichier==None  :
+         QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
+         return
+      if not hasattr(self,'generator'): texte=self.get_text_JDC(self.format)
+      repMed=os.path.dirname(self.fichier) # emplacement contenant le fichier de l'étude *.comm, et aussi le modèle à calculer (maillage, config)
+      nomFichier = repMed + '/lancer.sh' # nom (absolu) du script d'éxécution de l'étude
+      f = open(nomFichier, 'r') # ouverture du fichier en mode lecture pour copie dans un fichier d'éxécution personnalisé pour que le log reste à l'écran
+      script  = f.read() # lecture du script lancer.sh
+      f.close() # fermeture du fichier
+      nomFichier = repMed + '/lancer_eficas.sh' # nom du script d'éxécution depuis Eficas
+      f = open(nomFichier, 'w') # ouverture du fichier pour copie dans un fichier d'éxécution personnalisé pour que le log reste à l'écran
+      f.write(script + "\nread -p '\nAPPUYEZ SUR LA TOUCHE ENTREE POUR FERMER CETTE FENETRE...' a\n") # ajout d'une instruction  shell (bash, sh) pour attendre l'appui sur la touche entrée.
+      f.close() # fermeture du fichier
+      commande="cd "+repMed+"; xterm -l -e sh "+ nomFichier  # commande Linux (shell : sh ou bash) d'éxécution,  avec sauvegarde du log dans fichier Xterm.log.<machine>.<date>, et fenêtre présente jusqu'à appui retour chariot
+      os.system(commande) # éxécution de l'étude
+      os.remove(nomFichier) # suppression du script dédié Eficas, pour nettoyer le dossier
+
     #-------------------#
     def runCARMELCND(self):
     #-------------------#
