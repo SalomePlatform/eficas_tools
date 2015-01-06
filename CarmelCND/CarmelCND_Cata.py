@@ -20,7 +20,7 @@ JdC = JDC_CATA (code = 'monCode',
 # ======================================================================
 #INCLUDE = MACRO ( nom = "INCLUDE", op = None,
 #DONNEES_GENE=MACRO(nom='DONNEES_GENE',op=None,
-#                UIinfo = { "groupes" : ( "iii", ) },
+#                UIinfo = { "groupes" : ( "CACHE", ) },
 #                sd_prod = opsCarmelCND.INCLUDE,
 #                fichier_ini = 1,
 
@@ -49,7 +49,7 @@ VCUT=OPER(nom='VCUT',op=None,sd_prod=vcut,UIinfo = { "groupes" : ( "CACHE", ) },
             Orientation=SIMP(statut='o',typ='TXM',into=("Oppose","Meme sens")),
 )
 PARAMETRES=PROC(nom='PARAMETRES',op=None, UIinfo = { "groupes" : ( "CACHE", ) },
-             RepCarmel=SIMP(typ='Repertoire',fr= "Repertoire Carmel",ang= "Carmel Directory",statut= "o",defaut="/projets/projets.002/carmel3d.001/frequentiel/V_240_test/Compil"),
+             RepCarmel=SIMP(typ='Repertoire',fr= "Repertoire Carmel",ang= "Carmel Directory",statut= "o",defaut="/projets/projets.002/carmel3d.001/frequentiel/V_242_test/Compil"),
              TypedeFormule=SIMP(statut='o',typ='TXM',into=("TOMEGA","APHI")),
              Frequence_en_Hz=SIMP(statut='o',typ='I',fr="frequence en hz",ang="frequence en hz"),
              Nb_Max_Iterations=SIMP(statut='o',typ='I',val_min=1,val_max=10000,defaut=10000),
