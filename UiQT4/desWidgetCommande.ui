@@ -167,7 +167,7 @@ font : 'times' 9px</string>
            </sizepolicy>
           </property>
           <property name="toolTip">
-           <string>Nom de l'objet</string>
+           <string>Nom de l'objet. Seuls, les objets valides peuvent être nommés</string>
           </property>
           <property name="styleSheet">
            <string notr="true"> QLineEdit {
@@ -176,7 +176,13 @@ font : 'times' 9px</string>
      padding: 0 8px;
      background: darkgray;
    /*  selection-background-color: darkgray;*/
- }</string>
+ }
+QLineEdit:disabled
+{
+    background: lightgray;
+}
+/*read-only {
+     background: lightblue;*/</string>
           </property>
           <property name="readOnly">
            <bool>false</bool>
