@@ -27,6 +27,7 @@ from PyQt4.QtCore import *
 from Extensions.i18n import tr
 import Accas 
 import os
+import string
 
     
 # Import des panels
@@ -38,7 +39,8 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       print "MonWidgetCommande ", self
       Groupe.__init__(self,node,editor,None,etape.definition,etape,1)
       if (etape.get_type_produit()==None): self.LENom.close()
-      elif (hasattr (etape, 'sdnom')) : self.LENom.setText(etape.sdnom) 
+      elif (hasattr (etape, 'sdnom')) and etape.sdnom != "sansnom" : self.LENom.setText(etape.sdnom) 
+      else : self.LENom.setText("")
       maPolice= QFont("Times", 10,)
       self.setFont(maPolice)
       self.repIcon=self.appliEficas.repIcon
@@ -48,8 +50,9 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.scrollAreaCommandes.focusInEvent=self.focusInEvent
       #self.RBValide.focusInEvent=FacultatifOuOptionnel.focusInEvent
       self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+      self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
       self.racine=self.node.tree.racine
-       
+      if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)
 
       self.setAcceptDrops(True)
       from monWidgetOptionnel import MonWidgetOptionnel
@@ -61,6 +64,19 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.editor.splitter.addWidget(self.monOptionnel)
       self.afficheOptionnel()
 
+
+  def nomChange(self):
+      nom = str(self.LENom.text())
+      nom = string.strip(nom)
+      if nom == '' : return                  # si pas de nom, on ressort sans rien faire
+      test,mess = self.node.item.nomme_sd(nom)
+      self.editor.affiche_infos(mess)
+
+      #Notation scientifique
+      if test :
+        from politiquesValidation import Validation
+        validation=Validation(self.node,self.editor)
+        validation.AjoutDsDictReelEtape()
 
   def afficheOptionnel(self):
       # N a pas de parentQt. doit donc etre redefini
@@ -86,3 +102,14 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       if self.node : self.node.select()
       else : self.racine.select()
 
+  def setValide(self):
+      if not(hasattr (self,'RBValide')) : return
+      icon = QIcon()
+      print self.repIcon
+      if self.node.item.object.isvalid() :
+         icon=QIcon(self.repIcon+"/ast-green-ball.png")
+      else :
+         icon=QIcon(self.repIcon+"/ast-red-ball.png")
+      if self.node.item.GetIconName() == "ast-yellow-square" :
+         icon=QIcon(self.repIcon+"/ast-yel-ball.png")
+      self.RBValide.setIcon(icon)
