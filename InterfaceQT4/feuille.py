@@ -170,9 +170,6 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       if self.max!=1 : commentaire+="s" 
       return commentaire
 
-      
-
-
    def setZoneInfo(self):
       # info=str(self.nom)+'  '
       # if self.monSimpDef.get_fr() != None and self.monSimpDef.get_fr() != "": info+=self.monSimpDef.get_sug() +" "

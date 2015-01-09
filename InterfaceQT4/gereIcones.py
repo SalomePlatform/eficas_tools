@@ -56,9 +56,6 @@ class FacultatifOuOptionnel:
 
   def aDetruire(self):
       self.node.delete()
-      # Cas du mono-commande
-      if self.parentQt == None : self.afficheCatalogue()
-      else : self.parentQt.reaffiche()
 
   def setValide(self):
       if not(hasattr (self,'RBValide')) : return
@@ -69,6 +66,9 @@ class FacultatifOuOptionnel:
          icon=QIcon(self.repIcon+"/ast-red-ball.png")
       self.RBValide.setIcon(icon)
 
+  def rendVisible(self):
+      self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(self)
+      self.setFocus()
 
 
 class ContientIcones:

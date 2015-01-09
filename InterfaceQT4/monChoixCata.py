@@ -24,7 +24,6 @@ from desChoixCata import Ui_DChoixCata
 from PyQt4  import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 
 from Extensions.i18n import tr
 # Import des panels

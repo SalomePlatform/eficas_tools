@@ -177,4 +177,3 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       self.node.setDeplie()
       self.reaffiche() 
 
-

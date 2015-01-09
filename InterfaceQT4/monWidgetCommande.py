@@ -36,7 +36,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   """
   """
   def __init__(self,node,editor,etape):
-      print "MonWidgetCommande ", self
+      #print "MonWidgetCommande ", self
       Groupe.__init__(self,node,editor,None,etape.definition,etape,1)
       if (etape.get_type_produit()==None): self.LENom.close()
       elif (hasattr (etape, 'sdnom')) and etape.sdnom != "sansnom" : self.LENom.setText(etape.sdnom) 
@@ -105,7 +105,6 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   def setValide(self):
       if not(hasattr (self,'RBValide')) : return
       icon = QIcon()
-      print self.repIcon
       if self.node.item.object.isvalid() :
          icon=QIcon(self.repIcon+"/ast-green-ball.png")
       else :

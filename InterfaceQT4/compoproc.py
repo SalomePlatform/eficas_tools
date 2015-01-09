@@ -29,7 +29,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNode):
         return MonMacroPanel(self,parent=self.editor)
 
     def getPanel2(self):
-        print "getPanel2 de compoproc"
+        #print "getPanel2 de compoproc"
         from monWidgetCommande import MonWidgetCommande
         return MonWidgetCommande(self,self.editor,self.item.object)
 

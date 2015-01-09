@@ -165,11 +165,11 @@ class PolitiquePlusieurs(Validation):
   classe servant pour les entrees ne demandant qu un mot clef
   """
   def __init__(self,node,parent) :
-         print "ds PolitiquePlusieurs"
+         #print "ds PolitiquePlusieurs"
          self.node=node
          self.parent=parent
-         print self.node
-         print self.parent
+         #print self.node
+         #print self.parent
 
 
   def AjoutValeurs(self,listevaleur,index,listecourante):

@@ -99,8 +99,15 @@ class JDCTree( QTreeWidget ):
             pass
 
     def handleDoubleClickedOnItem(self,item,int):
-        item.affichePanneau()
-        self.expandItem(item)
+        print "handleDoubleClickedOnItem on ",item
+        print "handleDoubleClickedOnItem on ",item.fenetre
+        if item.fenetre == None :
+           while not (hasattr (item,'getPanel2')) : item=item.treeParent 
+           item.affichePanneau()
+           self.expandItem(item)
+        else:
+           print item.fenetre
+           item.fenetre.rendVisible()
 
     def choisitPremier(self,name):
         self.editor.layoutJDCCHOIX.removeWidget(self.racine.fenetre)
@@ -127,9 +134,9 @@ class JDCNode(QTreeWidgetItem):
         value = self.appliEficas.trUtf8(  str( item.GetText() ) )
         mesColonnes=QStringList()
         mesColonnes <<  name << value
-        from InterfaceQT4 import compobloc
 
         ajoutAuParentduNoeud=0
+        from InterfaceQT4 import compobloc
         while (isinstance(self.treeParent,compobloc.Node)) :
               self.treeParent=self.treeParent.treeParent
               ajoutAuParentduNoeud=1
@@ -189,6 +196,7 @@ class JDCNode(QTreeWidgetItem):
             parent.removeChild(item)
 
         self.children = []
+        self.childrenComplete = []
         sublist = self.item._GetSubList()
         ind=0
         for item in sublist :
@@ -201,8 +209,7 @@ class JDCNode(QTreeWidgetItem):
         
 
     def affichePanneau(self) :
-        #print "affichePanneau pour" ,self.item.nom
-        self.select()
+        #print "dans affichePanneau"
         if self.item.isactif():
 	    panel=self.getPanel2()
         else:
@@ -222,7 +229,7 @@ class JDCNode(QTreeWidgetItem):
            self.editor.splitter.setSizes((400,1400,400))
            if not(isinstance(self.fenetre,MonChoixCommande)): self.editor.first=False
         self.tree.expandItem(self)
-        #print "fin affichePanneau"
+        self.select()
           
 
     def createPopUpMenu(self):
@@ -291,7 +298,6 @@ class JDCNode(QTreeWidgetItem):
         """        
         for item in self.tree.selectedItems() :
             item.setSelected(0)
-        #print "select -----------> " , self.item.GetLabelText()
         self.setSelected( True )    
         self.setExpanded( True )    
         self.tree.setCurrentItem( self )    
@@ -348,7 +354,7 @@ class JDCNode(QTreeWidgetItem):
         ## PNPNPN : cas de Map nouvelle version 
         #if 1 :
         try :
-          print "1er Try"
+          #print "1er Try"
           old_obj = self.item.object.get_child(name.nom,restreint = 'oui')
           child=old_obj[-1]
           child.affichePanneau() 
@@ -384,10 +390,14 @@ class JDCNode(QTreeWidgetItem):
         self.treeParent.build_children()
         if self.treeParent.childrenComplete : toselect=self.treeParent.childrenComplete[index]
         else: toselect=self.treeParent
-        if recalcule :
-           jdc.recalcule_etat_correlation()
-        toselect.select()
-        #toselect.affichePanneau()
+        if recalcule : jdc.recalcule_etat_correlation()
+        from InterfaceQT4 import compojdc
+        # cas ou on detruit dans l arbre sans affichage
+        if self.treeParent.fenetre== None : return
+        if isinstance(self.treeParent,compojdc.Node) : 
+           toselect.affichePanneau()
+        else :
+           self.treeParent.fenetre.reaffiche(toselect)
 
     def deleteMultiple(self,liste=()):
         """ 

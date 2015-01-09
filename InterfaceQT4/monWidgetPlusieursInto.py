@@ -34,7 +34,7 @@ from gereListe              import GereListe
 class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
-        print "MonWidgetPlusieursInto", nom
+        #print "MonWidgetPlusieursInto", nom
         self.index=1
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()

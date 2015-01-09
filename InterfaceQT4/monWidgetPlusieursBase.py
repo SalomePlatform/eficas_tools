@@ -30,14 +30,16 @@ from desWidgetPlusieursBase import Ui_WidgetPlusieursBase
 from politiquesValidation   import PolitiquePlusieurs
 from qtSaisie               import SaisieValeur
 from gereListe              import GereListe
+from gereListe              import LECustom
 
-class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille):
+class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
-        print "MonWidgetPlusieursBase", nom
+        #print "MonWidgetPlusieursBase", nom
         self.index=1
         self.indexDernierLabel=0
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
+        GereListe.__init__(self)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         self.parentQt.commandesLayout.insertWidget(1,self)
 
@@ -76,7 +78,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille):
       if hasattr(self,nomLineEdit) : 
          self.indexDernierLabel=self.indexDernierLabel-1
          return
-      nouveauLE = QLineEdit(self.scrollArea)
+      nouveauLE = LECustom(self.scrollArea,self,self.indexDernierLabel)
       self.verticalLayoutLE.insertWidget(self.indexDernierLabel-1,nouveauLE)
       nouveauLE.setText("")
       if self.indexDernierLabel % 2 == 1 : nouveauLE.setStyleSheet("background:rgb(210,210,210)")
@@ -138,7 +140,8 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille):
         
 
 
-  def changeValeur(self):
+  def changeValeur(self,changeDePlace=True):
+      print 'ds chge valeur'
       donneFocus=None
       derniereValeur=None
       self.listeValeursCourantes = []
@@ -156,13 +159,13 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille):
       nomDernierLineEdit="labelVal"+str(self.indexDernierLabel)
       dernier=getattr(self,nomDernierLineEdit)
       derniereValeur=dernier.text()
-      print 'ds chge valeur'
-      if donneFocus != None : 
-         donneFocus.setFocus()
-         self.scrollArea.ensureWidgetVisible(donneFocus)
-      elif self.indexDernierLabel < self.monSimpDef.max  : 
+      if changeDePlace:
+         if donneFocus != None : 
+           donneFocus.setFocus()
+           self.scrollArea.ensureWidgetVisible(donneFocus)
+         elif self.indexDernierLabel < self.monSimpDef.max  : 
            self.ajoutLineEdit()
-      else : 
+      if  self.indexDernierLabel == self.monSimpDef.max  :
         self.scrollArea.setToolTip('nb max de valeurs atteint')
         self.editor.affiche_infos('nb max de valeurs atteint')
       if self.listeValeursCourantes == [] : return

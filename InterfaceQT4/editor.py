@@ -35,9 +35,9 @@ from Editeur        import session
 from Editeur        import comploader
 from Editeur        import Objecttreeitem
 from desBaseWidget  import Ui_baseWidget
+from monViewTexte   import ViewText 
 import browser
 import readercata
-import qtCommun
 
 DictExtensions= {"MAP" : ".map"}
 
@@ -76,7 +76,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         if self.code in ['MAP','Adao'] : 
            self.widgetTree.close()
            self.widgetTree=None
-           self.appliEficas.resize(1400,self.appliEficas.height())
+           self.appliEficas.resize(1440,self.appliEficas.height())
         else :
            self.appliEficas.resize(2000,self.appliEficas.height())
 
@@ -191,7 +191,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         CONTEXT.unset_current_step()
 
         texte=""
-        #if self.code == "CARMELCND" : texte=self._newJDCCND()
+        if self.code == "CARMELCND" : texte=self._newJDCCND()
         if self.code == "ZCRACKS" : texte=self._newZCRACKS()
         #   texte=self.newTexteCND
        
@@ -325,7 +325,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #----------------------------------------------#
     def _viewText(self, txt, caption = "FILE_VIEWER"):
     #----------------------------------------------#
-        w = qtCommun.ViewText( self.QWParent )
+        w = ViewText( self.QWParent )
         w.setWindowTitle( caption )
         w.setText(txt)
         w.show()
@@ -344,7 +344,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #----------------------------------------------#
     def _viewTextExecute(self, txt, prefix, suffix):
     #----------------------------------------------#
-        self.w = qtCommun.ViewText( self.QWParent )
+        self.w = ViewText( self.QWParent )
         self.w.setWindowTitle( "execution" )
         self.monExe=QProcess(self.w)
         pid=self.monExe.pid()
