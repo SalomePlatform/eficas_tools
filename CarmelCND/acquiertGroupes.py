@@ -76,10 +76,14 @@ def getGroupes(filename,debug=0) :
         # print "gro = %s\n"%(gro[j*MED_LNAME_SIZE:j*MED_LNAME_SIZE+MED_LNAME_SIZE])
             groupSplit=gro[j*MED_LNAME_SIZE:j*MED_LNAME_SIZE+MED_LNAME_SIZE]
             groupeName="".join(groupSplit).split("\x00")[0]
+            groupeName=groupeName.replace(' ','')
             if groupeName[0:7]=="CENTRE_" : dicoNumFam[groupeName]=numfam
             if groupeName not in listeGroupes : listeGroupes.append(groupeName) 
 
 
+    #print dicoNumFam
+    #print listeGroupes 
+    
     # /* Lecture des Numeros de Familles */ 
     
     nnoe, chgt, trsf = MEDmeshnEntity(fid,maa,MED_NO_DT,MED_NO_IT, MED_NODE,MED_NONE,MED_COORDINATE,MED_NO_CMODE)
@@ -91,35 +95,30 @@ def getGroupes(filename,debug=0) :
         i=0
         while i < nufano.size():
            if nufano[i]==famille :
-              dicoNumNode[groupe]=i
+              dicoNumNode[groupe]=i+1
               break
            i=i+1
    
    
-    print dicoNumNode
+    #print dicoNumNode
     dicoCoord={}
-#    for groupe in dicoNumNode.keys() :
-#    for groupe in (1,) :
-#        flt=MEDINT(1)
-#        flt[0]=2
-#        print flt
-#        coo1=MEDFLOAT(4)
-#        filter=med_filter()
-#        print "kk"
-#        err=MEDfilterEntityCr( fid, nnoe, 1, sdim, MED_ALL_CONSTITUENT, MED_FULL_INTERLACE, MED_COMPACT_PFLMODE, MED_NO_PROFILE,1 , flt, filter)
-#        print err
-#        print "kk"
-#        MEDmeshNodeCoordinateAdvancedRd(fid, maa, MED_NO_DT, MED_NO_IT, filter, coo1)
-#        print "kk"
-#        MEDfilterClose(filter)
-#        print "kk"
-#        print coo1
-    dicoCoord['CENTRE_saxBas']=(0,0,28.5e-3)
-    dicoCoord['CENTRE_saxHaut']=(0,0,31.5e-3)
+    for groupe in dicoNumNode.keys() :
+        flt=MEDINT(1)
+        flt[0]=dicoNumNode[groupe]
+        coo1=MEDFLOAT(3)
+        filter=med_filter()
+        err=MEDfilterEntityCr( fid, nnoe, 1, sdim, MED_ALL_CONSTITUENT, MED_FULL_INTERLACE, MED_COMPACT_PFLMODE, MED_NO_PROFILE,1 , flt, filter)
+        MEDmeshNodeCoordinateAdvancedRd(fid, maa, MED_NO_DT, MED_NO_IT, filter, coo1)
+        MEDfilterClose(filter)
+        dicoCoord[groupe]=coo1
+#   dicoCoord['CENTRE_saxBas']=(0,0,28.5e-3)
+#   dicoCoord['CENTRE_saxHaut']=(0,0,31.5e-3)
 
     MEDfileClose(fid)
+    print listeGroupes
     return ("",listeGroupes,maa,dicoCoord)
 
 if __name__ == "__main__":
     filename="/home/A96028/Carmel/Pascale/Domaine_Bidouille.med"
+    #filename="/home/A96028/Carmel/nouveauMed/Domaine.med"
     print getGroupes(filename)

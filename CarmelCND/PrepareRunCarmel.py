@@ -1,6 +1,7 @@
 def prepareRunCarmel(repertoireExe,repertoireMed,nom):
     texte=  'echo "Debut execution gendof" \n'
     texte+= 'cd ' + repertoireMed + ' \n'
+    texte+= "ulimit -s 256000 \n"
     texte+= repertoireExe+"/gendof.exe -scale 0.001 < " + nom + ".ingendof\n"
     texte+=  'echo "Debut execution fcarmel" \n'
     #texte+= repertoireExe+"/gendof.exe -scale 0.001 \n"

@@ -45,6 +45,17 @@ debutTexteParam ="[VERSION\n   NUM     1\n   FILETYPE PARAM\n]\n"
 debutTexteParam+="[PROBLEM\n   NAME HARMONIC\n]\n"
 debutTexteParam+="[CAR_FILES\n   NAME "
 
+debutTexteZs0 ="   [ZSURFACIC\n      NAME "
+debutTexteZs ="\n      [CONDUCTIVITY\n"
+debutTexteZs+="         LAW LINEAR\n"
+debutTexteZs+="         HOMOGENEOUS TRUE\n"
+debutTexteZs+="         ISOTROPIC TRUE\n"
+debutTexteZs+="         VALUE COMPLEX  "
+texteZs2     ="  0.0000000000000000E+00\n      ]\n"
+texteZs2    +="      [PERMEABILITY\n         LAW LINEAR\n"
+texteZs2    +="         HOMOGENEOUS TRUE\n"
+texteZs2    +="         ISOTROPIC TRUE\n         VALUE COMPLEX  "
+finTexteZs   ="  0.0000000000000000E+00\n      ]\n   ]\n"
 
 def entryPoint():
    """
@@ -93,12 +104,13 @@ class CARMELCNDGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,file) :
-# le file ne sert pas
+#file ne sert pas
 
        self.texteIngendof=""
        self.texteParam=debutTexteParam
        self.chercheFichier()
        self.traiteSourceVCut()
+
        fn=self.fnBase
        fileIngendofDeb = fn[:fn.rfind(".")] + '.ingendof'
        fileIngendof = os.path.join(self.sauveDirectory,fileIngendofDeb)
@@ -121,7 +133,7 @@ class CARMELCNDGenerator(PythonGenerator):
        f.write( self.texteParam )
        f.close()
        
-       self.texteCMD="[ \n    GLOBAL \n] \n[ \nVISU \nDomaine \nMED \nELEMENT \n] "
+       self.texteCMD="[ \n    GLOBAL \n] \n[ \nVISU \n"+self.fnBase.split(".med")[0]+"\nMED \nELEMENT \n] "
        fileCMDDeb = fn[:fn.rfind(".")] + '.cmd'
        fileCMD =os.path.join(self.sauveDirectory,fileCMDDeb)
        f = open( str(fileCMD), 'wb')
@@ -132,7 +144,7 @@ class CARMELCNDGenerator(PythonGenerator):
        
        self.texteInfcarmel=nomBaseFichier
        fileInfcarmelDeb = fn[:fn.rfind(".")] + '.infcarmel'
-       fileInfcarmel =os.path.join(self.sauveDirectory,fileInfcarmelDeb)
+       fileInfcarmel=os.path.join(self.sauveDirectory,fileInfcarmelDeb)
        f = open( str(fileInfcarmel), 'wb')
        f.write( self.texteInfcarmel )
        f.close()
@@ -157,9 +169,9 @@ class CARMELCNDGenerator(PythonGenerator):
                   debut=e.valeur[17:]
                   liste=debut.split(" - ")
                   nomFichier=liste[0]
-                  print 'nom=',nomFichier
-                  print 'e.va=',e.valeur.split(" ")[-1]
-                  print 'liste=',liste
+                  #print 'nom=',nomFichier
+                  #print 'e.va=',e.valeur.split(" ")[-1]
+                  #print 'liste=',liste
                   nomDomaine=e.valeur.split(" ")[-1]
                   break
        self.sauveDirectory=os.path.dirname(nomFichier)
@@ -169,12 +181,13 @@ class CARMELCNDGenerator(PythonGenerator):
        self.texteParam +="[PHYS_FILES\n   NAME "+os.path.basename(nomFichier).split(".med")[0]+".phys\n]\n"
 
 #----------------------------------------------------------------------------------------
-#  analyse du dictionnaire  pour trouver les sources et les VCut
+#  analyse du dictionnaire  pour trouver les sources et les VCut et les ZS
 #----------------------------------------------------------------------------------------
 
    def traiteSourceVCut(self) :
        listeSource=[]
        listeVCut=[]
+       self.listeZS=[]
        self.texteSourcePhys="[SOURCES\n"
        for k in self.dictMCVal.keys():
            if k.find ("______SOURCE__") > -1 :
@@ -183,6 +196,9 @@ class CARMELCNDGenerator(PythonGenerator):
            if k.find ("______VCUT__") > -1 :
               noms=k.split("_____")
               if noms[0] not in listeVCut : listeVCut.append(noms[0])
+           if k.find ("______ZS") > -1 :
+              noms=k.split("_____")
+              if noms[0] not in self.listeZS : self.listeZS.append(noms[0])
        listeSource.sort()
        for source in listeSource:
            debutKey=source+"______SOURCE__"
@@ -211,6 +227,7 @@ class CARMELCNDGenerator(PythonGenerator):
        if self.dictMCVal["__PARAMETRES__TypedeFormule"]=="APHI" :self.texteIngendof+="1\n"
        else : self.texteIngendof+="2\n"
        
+
         
 #----------------------------------------------------------------------------------------
    def traiteMateriaux(self) :
@@ -243,6 +260,14 @@ class CARMELCNDGenerator(PythonGenerator):
            self.textePhys+="         VALUE COMPLEX "
            self.textePhys+=str(self.dictMCVal[c+"______NOCOND__PermeabiliteRelative"])
            self.textePhys+="  0.0000000000000000E+00\n      ]\n   ]\n"
+
+       for zs in self.listeZS:
+          self.textePhys+=debutTexteZs0+zs
+          self.textePhys+=debutTexteZs
+          self.textePhys+=str(self.dictMCVal[zs+"______ZS__Conductivite"])
+          self.textePhys+=texteZs2
+          self.textePhys+=str(self.dictMCVal[zs+"______ZS__PermeabiliteRelative"])
+          self.textePhys+=finTexteZs
 
        self.textePhys+="]\n"
        self.textePhys+=self.texteSourcePhys
