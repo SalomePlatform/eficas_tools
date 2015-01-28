@@ -34,7 +34,7 @@ encoding='utf-8'
 catalogues = (
 
 # catalogue avec generation Phys et materiaux reels
- ('CARMEL3D','frequentiel (V0)',os.path.join(repIni,'Carmel3D_Cata_frequentiel_V0.py'),'CARMEL3DFV0','defaut'),
+ ('CARMEL3D','frequentiel ',os.path.join(repIni,'Carmel3D_Cata_frequentiel_V1.py'),'CARMEL3DFV0','defaut'),
 # ('CARMEL3D','frequentiel (V1)',os.path.join(repIni,'Carmel3D_Cata_frequentiel_V1.py'),'CARMEL3DFV1','defaut'),
 # ('CARMEL3D','temporel (V1)',os.path.join(repIni,'Carmel3D_Cata_temporel_V1.py'),'CARMEL3DTV1','defaut'),
 )
