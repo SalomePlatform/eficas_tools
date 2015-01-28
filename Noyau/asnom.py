@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# coding=utf-8
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,28 +16,28 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
-
 """
 Description des types de base aster
 
-version 2 - réécrite pour essayer de simplifier
-le problème des instances/types et instances/instances
+version 2 - rÃ©Ã©crite pour essayer de simplifier
+le problÃ¨me des instances/types et instances/instances
 
-le type de base ASBase permet de représenter une structure
-de donnée. Une instance de ASBase comme attribut d'une classe
-dérivée de ASBase représente une sous-structure nommée.
+le type de base ASBase permet de reprÃ©senter une structure
+de donnÃ©e. Une instance de ASBase comme attribut d'une classe
+dÃ©rivÃ©e de ASBase reprÃ©sente une sous-structure nommÃ©e.
 
-une instance de ASBase 'libre' représente une instance de la
-structure de donnée complète.
+une instance de ASBase 'libre' reprÃ©sente une instance de la
+structure de donnÃ©e complÃ¨te.
 
-c'est ce comportement qui est capturé dans la classe StructType
+c'est ce comportement qui est capturÃ© dans la classe StructType
 """
 
 from basetype import Type
 
+
 class SDNom(Type):
-    """Objet représentant une sous-partie de nom
+
+    """Objet reprÃ©sentant une sous-partie de nom
     d'objet jeveux"""
     nomj = None
     debut = None
@@ -45,28 +45,29 @@ class SDNom(Type):
     just = None
     justtype = None
 
-    def __init__(self, nomj=None, debut=None, fin=None, just='l', **kwargs ):
+    def __init__(self, nomj=None, debut=None, fin=None, just='l', **kwargs):
         """
         Configure un objet nom
-        nomj : la partie du nom fixée (par ex .TITR) ou '' si non précisée
-        debut, fin : la partie du K24 concernée
+        nomj : la partie du nom fixÃ©e (par ex .TITR) ou '' si non prÃ©cisÃ©e
+        debut, fin : la partie du K24 concernÃ©e
         just : la justification a droite ou a gauche ('l' ou 'r')
-        kwargs : inutilisé, juste par simplicité
+        kwargs : inutilisÃ©, juste par simplicitÃ©
 
         Note:
         On utilise cet objet comme attribut d'instance ou de classe.
         En attribut de classe pour les noms de structure, cela permet
-        de définir la position du nom d'objet dans le nom jeveux, l'attribut
+        de dÃ©finir la position du nom d'objet dans le nom jeveux, l'attribut
         nom est alors la valeur du suffixe pour une sous-structure ou None pour
         une structure principale.
         """
-        super( SDNom, self ).__init__( nomj=nomj, debut=debut, fin=fin, just=just, **kwargs )
-        self.update( (nomj, debut, fin, just) )
+        super(SDNom, self).__init__(
+            nomj=nomj, debut=debut, fin=fin, just=just, **kwargs)
+        self.update((nomj, debut, fin, just))
 
     def __call__(self):
         if self._parent is None or self._parent._parent is None:
             debut = self.debut or 0
-            prefix = ' '*debut
+            prefix = ' ' * debut
         else:
             # normalement
             # assert self._parent.nomj is self
@@ -75,37 +76,36 @@ class SDNom(Type):
             debut = self.debut or nomparent.fin or len(prefix)
         fin = self.fin or 24
         nomj = self.nomj or ''
-        nomj = self.just( nomj, fin-debut )
+        nomj = self.just(nomj, fin - debut)
         prefix = prefix.ljust(24)
-        res = prefix[:debut]+nomj+prefix[fin:]
+        res = prefix[:debut] + nomj + prefix[fin:]
         return res[:24]
 
     def fcata(self):
-        return self.just(self.nomj,self.fin-self.debut).replace(' ','?')
+        return self.just(self.nomj, self.fin - self.debut).replace(' ', '?')
 
     def __repr__(self):
-        return "<SDNom(%r,%s,%s)>" % (self.nomj,self.debut,self.fin)
+        return "<SDNom(%r,%s,%s)>" % (self.nomj, self.debut, self.fin)
 
-    # On utilise pickle pour les copies, et pickle ne sait pas gérer la
-    # sauvegarde de str.ljust ou str.rjust (c'est une méthode non liée)
+    # On utilise pickle pour les copies, et pickle ne sait pas gÃ©rer la
+    # sauvegarde de str.ljust ou str.rjust (c'est une mÃ©thode non liÃ©e)
 
     def __getstate__(self):
-        return (self.nomj, self.debut, self.fin, self.justtype )
+        return (self.nomj, self.debut, self.fin, self.justtype)
 
-    def __setstate__( self, (nomj,debut,fin,just) ):
+    def __setstate__(self, (nomj, debut, fin, just)):
         self.nomj = nomj
         self.debut = debut
         self.fin = fin
-        if just=='l' or just is None:
+        if just == 'l' or just is None:
             self.just = str.ljust
-        elif just=='r':
+        elif just == 'r':
             self.just = str.rjust
         else:
-            raise ValueError("Justification '%s' invalide" % just )
+            raise ValueError("Justification '%s' invalide" % just)
         self.justtype = just
 
-
-    def update( self, (nomj,debut,fin,just) ):
+    def update(self, (nomj, debut, fin, just)):
         if nomj is not None:
             self.nomj = nomj
         if self.debut is None:
@@ -113,21 +113,19 @@ class SDNom(Type):
         if self.fin is None:
             self.fin = fin
         if self.justtype is None and just is not None:
-            if just=='l':
+            if just == 'l':
                 self.just = str.ljust
-            elif just=='r':
+            elif just == 'r':
                 self.just = str.rjust
             else:
-                raise ValueError("Justification '%s' invalide" % just )
+                raise ValueError("Justification '%s' invalide" % just)
             self.justtype = just
 
-    def reparent( self, parent, new_name ):
+    def reparent(self, parent, new_name):
         self._parent = parent
         self._name = new_name
         for nam in self._subtypes:
-            obj = getattr( self, nam )
-            obj.reparent( self, nam )
+            obj = getattr(self, nam)
+            obj.reparent(self, nam)
         if self.nomj is None and self._parent._name is not None:
             self.nomj = "." + self._parent._name
-
-
