@@ -45,6 +45,16 @@ debutTexteParam ="[VERSION\n   NUM     1\n   FILETYPE PARAM\n]\n"
 debutTexteParam+="[PROBLEM\n   NAME HARMONIC\n]\n"
 debutTexteParam+="[CAR_FILES\n   NAME "
 
+debutTexteBav ="[ZSURFACIC\n    NAME BAV\n    [CONDUCTIVITY\n"
+debutTexteBav+="         LAW LINEAR\n"
+debutTexteBav+="         HOMOGENEOUS TRUE\n"
+debutTexteBav+="         ISOTROPIC TRUE\n"
+debutTexteBav+="         VALUE COMPLEX  "
+texteBav2     ="  0.0000000000000000E+00\n    ]\n"
+texteBav2    +="    [PERMEABILITY\n         LAW LINEAR\n"
+texteBav2    +="         HOMOGENEOUS TRUE\n"
+texteBav2    +="         ISOTROPIC TRUE\n         VALUE COMPLEX  "
+finTexteBav   ="  0.0000000000000000E+00\n    ]\n]\n"
 
 def entryPoint():
    """
@@ -98,8 +108,13 @@ class CARMELCNDGenerator(PythonGenerator):
        self.texteParam=debutTexteParam
        self.chercheFichier()
        self.traiteSourceVCut()
+       self.traiteZs_Bav()
+
        fileIngendof = fn[:fn.rfind(".")] + '.ingendof'
        f = open( str(fileIngendof), 'wb')
+       f.write( self.texteIngendof )
+       f.close()
+       f = open( str("/tmp/toto"), 'wb')
        f.write( self.texteIngendof )
        f.close()
 
@@ -201,6 +216,16 @@ class CARMELCNDGenerator(PythonGenerator):
        if self.dictMCVal["__PARAMETRES__TypedeFormule"]=="APHI" :self.texteIngendof+="1\n"
        else : self.texteIngendof+="2\n"
        
+#----------------------------------------------------------------------------------------
+   def traiteZs_Bav(self):
+#----------------------------------------------------------------------------------------
+       if "__ZS_BAV__Permeabilite"  in self.dictMCVal.keys():
+          self.texteSourcePhys+=debutTexteBav
+          self.texteSourcePhys+=str(self.dictMCVal["__ZS_BAV__Conductivite"])
+          self.texteSourcePhys+=texteBav2
+          self.texteSourcePhys+=str(self.dictMCVal["__ZS_BAV__Permeabilite"])
+          self.texteSourcePhys+=finTexteBav
+
         
 #----------------------------------------------------------------------------------------
    def traiteMateriaux(self) :
