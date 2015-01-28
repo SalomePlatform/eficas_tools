@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# coding=utf-8
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
+
 
 from N_ASSD import ASSD
 from N_Exception import AsException
@@ -25,24 +25,27 @@ import N_utils
 
 from asojb import AsBase
 
-class CO(ASSD, AsBase):
-   def __init__(self,nom):
-      ASSD.__init__(self, etape=None, sd=None, reg='oui')
-      self._as_co = 1
-      #
-      #  On demande le nommage du concept
-      #
-      if self.parent : 
-         try:
-            self.parent.NommerSdprod(self,nom)
-         except AsException,e:
-            appel=N_utils.callee_where(niveau=2)
-            raise AsException("Concept CO, fichier: ",appel[1]," ligne : ",appel[0],'\n',e)
-      else:
-         self.nom=nom
 
-   def __convert__(cls,valeur):
-         if valeur.is_typco():
-             return valeur
-         raise ValError("Pas un concept CO")
-   __convert__=classmethod(__convert__)
+class CO(ASSD, AsBase):
+
+    def __init__(self, nom):
+        ASSD.__init__(self, etape=None, sd=None, reg='oui')
+        self._as_co = 1
+        #
+        #  On demande le nommage du concept
+        #
+        if self.parent:
+            try:
+                self.parent.NommerSdprod(self, nom)
+            except AsException, e:
+                appel = N_utils.callee_where(niveau=2)
+                raise AsException(
+                    "Concept CO, fichier: ", appel[1], " ligne : ", appel[0], '\n', e)
+        else:
+            self.nom = nom
+
+    def __convert__(cls, valeur):
+        if valeur.is_typco():
+            return valeur
+        raise ValError("Pas un concept CO")
+    __convert__ = classmethod(__convert__)

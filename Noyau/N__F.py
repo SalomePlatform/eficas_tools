@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# coding=utf-8
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,40 +16,42 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
+
 
 import UserDict
 
+
 class _F(UserDict.UserDict):
-   """
-       Cette classe a un comportement semblable à un
-       dictionnaire Python et permet de donner
-       la valeur d'un mot-clé facteur avec pour les sous
-       mots-clés la syntaxe motcle=valeur
-   """
 
-   def __init__(self, *pos, **args):
-      if len(pos) != 0:
-         raise SyntaxError("Valeur invalide pour '_F('. "\
-            "On attend cette syntaxe : _F(MOTCLE=valeur, ...)")
-      self.data=args
+    """
+        Cette classe a un comportement semblable Ã  un
+        dictionnaire Python et permet de donner
+        la valeur d'un mot-clÃ© facteur avec pour les sous
+        mots-clÃ©s la syntaxe motcle=valeur
+    """
 
-   def supprime(self):
-      self.data={}
+    def __init__(self, *pos, **args):
+        if len(pos) != 0:
+            raise SyntaxError("Valeur invalide pour '_F('. "
+                              "On attend cette syntaxe : _F(MOTCLE=valeur, ...)")
+        self.data = args
 
-   def __cmp__(self, dict):
-      if type(dict) == type(self.data):
-        return cmp(self.data, dict)
-      elif hasattr(dict,"data"):
-        return cmp(self.data, dict.data)
-      else:
-        return cmp(self.data, dict)
+    def supprime(self):
+        self.data = {}
 
-   def __iter__(self):
-      return iter(self.data)
+    def __cmp__(self, dict):
+        if type(dict) == type(self.data):
+            return cmp(self.data, dict)
+        elif hasattr(dict, "data"):
+            return cmp(self.data, dict.data)
+        else:
+            return cmp(self.data, dict)
 
-   def copy(self):
-      import copy
-      c= copy.copy(self)
-      c.data=self.data.copy()
-      return c
+    def __iter__(self):
+        return iter(self.data)
+
+    def copy(self):
+        import copy
+        c = copy.copy(self)
+        c.data = self.data.copy()
+        return c

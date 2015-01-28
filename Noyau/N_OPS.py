@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# coding=utf-8
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,10 +16,12 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
+
 from N_utils import import_object
 
+
 class OPS:
+
     """Wrapper to ops functions.
     This allows to import them only when they are needed."""
 
@@ -33,8 +35,9 @@ class OPS:
         return func(*args, **kwargs)
 
 
-# utilisé par exemple par des macros où tout est fait dans l'init.
+# utilisÃ© par exemple par des macros oÃ¹ tout est fait dans l'init.
 class NOTHING(OPS):
+
     """OPS which does nothing."""
 
     def __call__(self, macro, *args, **kwargs):
