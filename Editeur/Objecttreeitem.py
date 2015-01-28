@@ -55,7 +55,6 @@ class TreeItem:
 
     def __init__(self):
         """Constructor.  Do whatever you need to do."""
-        print self
 
     def GetText(self):
         """Return text string to display."""
