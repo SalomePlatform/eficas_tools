@@ -42,7 +42,7 @@ class MonUniqueSDCOIntoPanel(Ui_DUnSDCOInto,QTPanel,SaisieSDCO, QDialog):
         #print "MonUniqueSDCOIntoPanel"
         QTPanel.__init__(self,node,parent)
         #DUnSDCOInto.__init__(self,parent,name,fl)
- 	QDialog.__init__(self,parent)
+        QDialog.__init__(self,parent)
         if hasattr(parent,"leLayout"):
            parent.leLayout.removeWidget(parent.leLayout.widgetActive)
            parent.leLayout.widgetActive.close()
