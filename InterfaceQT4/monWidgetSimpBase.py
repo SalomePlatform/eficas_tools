@@ -33,11 +33,12 @@ from qtSaisie              import SaisieValeur
 
 class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
-        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.setFocusPolicy(Qt.StrongFocus)
         self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
+        self.maCommande.listeAffichageWidget.append(self.lineEditVal)
 
   def showEvent(self, event):
       if self.prendLeFocus==1 :
@@ -51,6 +52,7 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
        valeur=self.node.item.get_valeur()
        valeurTexte=self.politique.GetValeurTexte(valeur)
        chaine=QString("")
+
        if valeurTexte != None :
           from decimal import Decimal
           if isinstance(valeurTexte,Decimal):
@@ -58,10 +60,11 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
           elif repr(valeurTexte.__class__).find("PARAMETRE") > 0:
              chaine = QString(repr(valeur))
           else :
-             try :
-               chaine=QString("").setNum(valeurTexte)
-             except :
-               chaine=QString(str(valeurTexte))
+             #PN ????
+             #try :
+             #  chaine=QString("").setNum(valeurTexte)
+             #except :
+             chaine=QString(str(valeurTexte))
        self.lineEditVal.setText(chaine)
 
 
@@ -81,13 +84,11 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
 
 
   def LEValeurPressed(self):
-      print "LEValeurPressed"
-      print SaisieValeur.LEValeurPressed
+      if str(self.lineEditVal.text())=="" or str(self.lineEditVal.text())==None : return
       SaisieValeur.LEValeurPressed(self)
       self.parentQt.donneFocus()
+      self.setValeurs()
       
-      print "je suis la aussi"
-      #PNPNPN - pas fait
       #if self.objSimp.parent.nom == "MODEL" :
       #   if self.objSimp.isvalid():
       #      self.objSimp.parent.change_fichier="1"

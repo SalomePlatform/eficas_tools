@@ -110,8 +110,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       if self.affiche_alpha==1 :
          liste=self.CreeListeCommande(filtre)
          for cmd in liste :
-#PNPNPN Possibilite de tr ?
-           rbcmd=(QRadioButton(cmd))
+           rbcmd=(QRadioButton(tr(cmd)))
            self.buttonGroup.addButton(rbcmd)
            self.commandesLayout.addWidget(rbcmd)
            rbcmd.mouseDoubleClickEvent=self.mouseDoubleClickEvent
@@ -121,7 +120,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
          for grp in listeGroupes:
            if grp == "CACHE" : continue
            label=QLabel(self)
-           text=QString.fromUtf8('<html><head/><body><p><span style=\" font-weight:600;\">Groupe : '+grp+'</span></p></body></html>')
+           text=QString.fromUtf8('<html><head/><body><p><span style=\" font-weight:600;\">Groupe : '+tr(grp)+'</span></p></body></html>')
            label.setText(text)
            self.listeWidget.append(label)
            aAjouter=1
@@ -130,7 +129,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
               if aAjouter == 1 :
                  self.commandesLayout.addWidget(label)
                  aAjouter=0
-              rbcmd=(QRadioButton(cmd))
+              rbcmd=(QRadioButton(tr(cmd)))
               self.buttonGroup.addButton(rbcmd)
               self.commandesLayout.addWidget(rbcmd)
               rbcmd.mouseDoubleClickEvent=self.mouseDoubleClickEvent

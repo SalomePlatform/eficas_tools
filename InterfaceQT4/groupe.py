@@ -32,7 +32,7 @@ import Accas
 class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
   """
   """
-  def __init__(self,node,editor,parentQt,definition,obj,niveau):
+  def __init__(self,node,editor,parentQt,definition,obj,niveau,commande=None):
       QtGui.QWidget.__init__(self,None)
       self.node=node
       self.node.fenetre=self
@@ -44,6 +44,7 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       self.niveau=niveau
       self.definition=definition
       self.parentQt=parentQt
+      self.maCommande=commande
       self.listeFocus=[]
       self.appliEficas=self.editor.appliEficas
       self.repIcon=self.appliEficas.repIcon
@@ -75,7 +76,7 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
            #   print "pas ", node.item.nom
            #   continue
            if hasattr(self.node,'appartientAUnNoeudPlie') and self.node.appartientAUnNoeudPlie==True : return
-           else : widget=node.getPanelGroupe(self)
+           widget=node.getPanelGroupe(self,self.maCommande)
            #print node
            #print node.item.nom
            self.listeFocus.append(node.fenetre)

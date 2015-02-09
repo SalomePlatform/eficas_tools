@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1064</width>
-    <height>37</height>
+    <height>41</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -106,7 +106,7 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>220</width>
+       <width>300</width>
        <height>24</height>
       </size>
      </property>
@@ -160,7 +160,7 @@ border:0px;</string>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>58</width>
+       <width>70</width>
        <height>20</height>
       </size>
      </property>
@@ -297,6 +297,13 @@ border:0px;</string>
    <header>monBoutonValide.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>lineEditVal</tabstop>
+  <tabstop>BFichier</tabstop>
+  <tabstop>BVisuFichier</tabstop>
+  <tabstop>RBPoubelle</tabstop>
+  <tabstop>RBValide</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -78,12 +78,12 @@ class GereListe:
    def echange(self,num1,num2):
        # on donne le focus au a celui ou on a bouge
        # par convention le 2
-       nomLineEdit="labelVal"+str(num1)
-       print nomLineEdit
+       nomLineEdit="lineEditVal"+str(num1)
+       #print nomLineEdit
        courant=getattr(self,nomLineEdit)
        valeurAGarder=courant.text()
-       nomLineEdit2="labelVal"+str(num2)
-       print nomLineEdit2
+       nomLineEdit2="lineEditVal"+str(num2)
+       #print nomLineEdit2
        courant2=getattr(self,nomLineEdit2)
        courant.setText(courant2.text())
        courant2.setText(valeurAGarder)
@@ -92,33 +92,39 @@ class GereListe:
        self.LineEditEnCours=courant2
 
    def moinsPushed(self):
+       if self.indexDernierLabel < self.monSimpDef.min:
+          self.editor.affiche_infos('nb min de valeurs : '+str(self.monSimpDef.min)+' atteint')
+          return
        # on supprime le dernier
        if self.NumLineEditEnCours==self.indexDernierLabel : 
           self.setText("")
        else :
          for i in range (self.NumLineEditEnCours, self.indexDernierLabel):
              aRemonter=i+1
-             nomLineEdit="labelVal"+str(aRemonter)
+             nomLineEdit="lineEditVal"+str(aRemonter)
              courant=getattr(self,nomLineEdit)
              valeurARemonter=courant.text()
-             nomLineEdit="labelVal"+str(i)
+             nomLineEdit="lineEditVal"+str(i)
              courant=getattr(self,nomLineEdit)
              courant.setText(valeurARemonter)
-         nomLineEdit="labelVal"+str(self.indexDernierLabel)
+         nomLineEdit="lineEditVal"+str(self.indexDernierLabel)
          courant=getattr(self,nomLineEdit)
          courant.setText("")
        self.changeValeur(changeDePlace=False)
 
    def plusPushed(self):
+       if self.indexDernierLabel == self.monSimpDef.max:
+          self.editor.affiche_infos('nb max de valeurs : '+str(self.monSimpDef.max)+' atteint')
+          return
        self.ajoutLineEdit()
        if self.NumLineEditEnCours==self.indexDernierLabel : return
-       nomLineEdit="labelVal"+str(self.NumLineEditEnCours+1)
+       nomLineEdit="lineEditVal"+str(self.NumLineEditEnCours+1)
        courant=getattr(self,nomLineEdit)
        valeurADescendre=courant.text()
        courant.setText("")
        for i in range (self.NumLineEditEnCours+1, self.indexDernierLabel):
              aDescendre=i+1
-             nomLineEdit="labelVal"+str(aDescendre)
+             nomLineEdit="lineEditVal"+str(aDescendre)
              courant=getattr(self,nomLineEdit)
              valeurAGarder=courant.text()
              courant.setText(valeurADescendre)

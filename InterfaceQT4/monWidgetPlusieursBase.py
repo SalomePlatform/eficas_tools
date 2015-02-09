@@ -32,16 +32,28 @@ from qtSaisie               import SaisieValeur
 from gereListe              import GereListe
 from gereListe              import LECustom
 
+dicoLongueur={2:95,3:125,4:154,5:183,6:210}
+hauteurMax=253
+
 class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursBase", nom
         self.index=1
         self.indexDernierLabel=0
-        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
+        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
+        if self.monSimpDef.max != "**"  and self.monSimpDef.max < 7: 
+           hauteur=dicoLongueur[self.monSimpDef.max]
+           self.resize(self.width(),hauteur)
+           self.setMinimumHeight(hauteur)
+           if self.monSimpDef.max == self.monSimpDef.min : self.setMaximumHeight(hauteur)
+        else :
+           self.resize(self.width(),hauteurMax)
+           self.setMinimumHeight(hauteurMax)
         self.parentQt.commandesLayout.insertWidget(1,self)
+        self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
 
 
   def setValeurs(self):
@@ -54,12 +66,12 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
        for i in range(1,aConstruire):
            self.ajoutLineEdit()
        qApp.processEvents()
-       self.scrollArea.ensureWidgetVisible(self.labelVal1)
+       self.scrollArea.ensureWidgetVisible(self.lineEditVal1)
        self.listeValeursCourantes=self.node.item.GetListeValeurs()
        index=1
        for valeur in self.listeValeursCourantes :
            val=self.politique.GetValeurTexte(valeur)
-           nomLineEdit="labelVal"+str(index)
+           nomLineEdit="lineEditVal"+str(index)
            if hasattr(self,nomLineEdit) : 
               courant=getattr(self,nomLineEdit)
               courant.setText(str(val))
@@ -74,7 +86,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
 
   def ajoutLineEdit(self,valeur=None):
       self.indexDernierLabel=self.indexDernierLabel+1
-      nomLineEdit="labelVal"+str(self.indexDernierLabel)
+      nomLineEdit="lineEditVal"+str(self.indexDernierLabel)
       if hasattr(self,nomLineEdit) : 
          self.indexDernierLabel=self.indexDernierLabel-1
          return
@@ -146,7 +158,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
       derniereValeur=None
       self.listeValeursCourantes = []
       for i in range (1, self.indexDernierLabel+1):
-          nomLineEdit="labelVal"+str(i)
+          nomLineEdit="lineEditVal"+str(i)
           courant=getattr(self,nomLineEdit)
           valeur=courant.text()
           if valeur != None and valeur != "" : 
@@ -156,7 +168,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
                  courant.setText("")
                  donneFocus=courant
           elif donneFocus==None : donneFocus=courant
-      nomDernierLineEdit="labelVal"+str(self.indexDernierLabel)
+      nomDernierLineEdit="lineEditVal"+str(self.indexDernierLabel)
       dernier=getattr(self,nomDernierLineEdit)
       derniereValeur=dernier.text()
       if changeDePlace:
@@ -166,7 +178,6 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
          elif self.indexDernierLabel < self.monSimpDef.max  : 
            self.ajoutLineEdit()
       if  self.indexDernierLabel == self.monSimpDef.max  :
-        self.scrollArea.setToolTip('nb max de valeurs atteint')
         self.editor.affiche_infos('nb max de valeurs atteint')
       if self.listeValeursCourantes == [] : return
       min,max = self.node.item.GetMinMax()

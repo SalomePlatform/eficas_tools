@@ -19,6 +19,7 @@
 #
 # Modules Python
 import types, string
+from Accas import PARAMETRE
 from Extensions.i18n import tr
 
 
@@ -145,6 +146,10 @@ class PolitiqueUnique(Validation) :
          if self.parent.modified == 'n' : self.parent.init_modif()
          ancienne_val = self.node.item.get_valeur()
          valeur,validite,commentaire =self.TesteUneValeur(valeurentree)
+         if validite and ('R' in self.node.item.object.definition.type) and not(isinstance(valeur,PARAMETRE)) :
+            s=valeurentree
+            if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : s=s+'.'
+            valeur,validite,commentaire =self.TesteUneValeur(s)
          if validite :
             validite=self.node.item.set_valeur(valeur)
             if self.node.item.isvalid():

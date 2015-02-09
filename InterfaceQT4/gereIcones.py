@@ -38,12 +38,37 @@ class FacultatifOuOptionnel:
       except :
          pass
       if listeRegles==() and hasattr(self,"RBRegle"): self.RBRegle.close() 
-      if isinstance(self,MonWidgetCommande):return
-      cle_doc = self.node.item.get_docu()
-      if cle_doc == None and hasattr(self,"RBInfo") : self.RBInfo.close()
+      cle_doc=None
+      if not hasattr(self,"RBInfo"):return
+      if isinstance(self,MonWidgetCommande) and self.editor.code =="MAP":
+         self.cle_doc = self.chercheDocMAP()
+      else :
+         self.cle_doc = self.node.item.get_docu()
+      if self.cle_doc == None  : self.RBInfo.close()
+      else : self.connect (self.RBInfo,SIGNAL("clicked()"),self.viewDoc)
 
 
+  def chercheDocMAP(self):
+      try :
+        clef=self.editor.CONFIGURATION.adresse+"/"
+      except :
+        return None
+      for k in self.editor.readercata.cata[0].JdC.dict_groupes.keys():
+          if self.obj.nom in self.editor.readercata.cata[0].JdC.dict_groupes[k]:
+             clef+=k
+             break
+      clef+="/"+ self.obj.nom[0:-5].lower()+"/spec_"+self.obj.nom[0:-5].lower()+".html"
+
+      return clef
  
+  def viewDoc(self):
+      try :
+          cmd="xdg-open "+self.cle_doc
+          os.system(cmd)
+      except:
+          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
+
+
   def setPoubelle(self):
       if not(hasattr(self,"RBPoubelle")):return
       if self.node.item.object.isoblig() : 
@@ -58,6 +83,7 @@ class FacultatifOuOptionnel:
       self.node.delete()
 
   def setValide(self):
+      #print " c est le moment de gerer le passage au suivant"
       if not(hasattr (self,'RBValide')) : return
       icon = QIcon()
       if self.node.item.object.isvalid() : 

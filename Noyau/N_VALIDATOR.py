@@ -1444,14 +1444,12 @@ class VerifTypeTuple(Valid, ListVal):
         self.cata_info = ""
 
     def info(self):
-        return _(u": vérifie les types dans un tuple")
+        return _(u"tuple de la forme :")+str(self.typeDesTuples)
 
     def info_erreur_liste(self):
-        return _(u"Les types entrés ne sont pas permis")
+        return _(u"Les types ne sont pas : ") +str(self.typeDesTuples)
 
     def default(self, valeur):
-        # if valeur in self.liste : raise ValError("%s est un doublon" %
-        # valeur)
         return valeur
 
     def is_list(self):

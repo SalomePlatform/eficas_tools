@@ -76,6 +76,9 @@
          <height>35</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -186,6 +189,9 @@ border:0px;</string>
          <height>16777215</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="styleSheet">
         <string notr="true">background:rgb(235,235,235);
 border:0px;</string>
@@ -231,6 +237,9 @@ border:0px;</string>
        <height>31</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true">border : 0px</string>
      </property>
@@ -258,6 +267,11 @@ border:0px;</string>
    <header>monBoutonValide.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>lineEditVal1</tabstop>
+  <tabstop>lineEditVal2</tabstop>
+  <tabstop>RBValide</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -75,7 +75,7 @@
         <widget class="QLabel" name="label">
          <property name="minimumSize">
           <size>
-           <width>178</width>
+           <width>300</width>
            <height>24</height>
           </size>
          </property>

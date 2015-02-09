@@ -68,7 +68,16 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
   def affiche(self,liste):
      self.show()
      labeltext,fonte,couleur = self.parentMC.node.item.GetLabelText()
-     self.GeneaLabel.setText(tr("Options pour \n") +labeltext)
+     l=labeltext
+     li=[]
+     while len(l) > 25:
+         li.append(l[0:24])
+         l=l[24:]
+     li.append(l)
+     texte=""
+     for l in li : texte+=l+"\n"
+     texte=texte[0:-2]
+     self.GeneaLabel.setText(tr("Options pour \n") +texte)
 
      for cb in self.dicoCb.keys():
          cb.close()

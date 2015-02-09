@@ -30,11 +30,11 @@ from Extensions.eficas_exception import EficasException
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
-    def getPanel( self ):
+    def getPanel2( self ):
         """
         """
-        from monCommentairePanel import MonCommentairePanel
-        return MonCommentairePanel(self,parent=self.editor)
+        from monWidgetCommentaire import MonWidgetCommentaire
+        return MonWidgetCommentaire(self,self.editor,self.item.object)
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodePartiel.createPopUpMenu(self)

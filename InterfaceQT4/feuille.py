@@ -30,12 +30,13 @@ from gereIcones import ContientIcones
 from gereIcones import FacultatifOuOptionnel
 from qtSaisie    import SaisieValeur
 
+nomMax=26
 # ---------------------------------------------------------------------- #
 class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 # --------------------------------------------------------------------- #
 
 
-   def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
+   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
        #print "Feuille", monSimpDef,nom,objSimp
        QWidget.__init__(self,None)
        self.node=node
@@ -54,6 +55,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
        self.nom=nom
        self.objSimp=objSimp
        self.node.fenetre=self
+       self.maCommande=commande
 
        self.aRedimensionner=0
        self.setSuggestion()
@@ -68,12 +70,13 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    def setNom(self):
        self.debutToolTip=""
-       if len(self.objSimp.nom) >= 17 :
-         nom=self.objSimp.nom[0:15]+'...'
-         self.label.setText(nom)
-         self.debutToolTip=self.objSimp.nom+"\n"
+       nomTraduit=tr(self.objSimp.nom)
+       if len(nomTraduit) >= nomMax :
+         nom=nomTraduit[0:nomMax]+'...'
+         self.label.setText(nomTraduit)
+         self.debutToolTip=nomTraduit+"\n"
        else :   
-         self.label.setText(self.objSimp.nom)
+         self.label.setText(nomTraduit)
 
                                  
    def setValeurs(self):
@@ -90,16 +93,16 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
          if hasattr(self,'lineEditVal'): self.lineEditVal.setToolTip(suggere)
 
    def setCommentaire(self):
-      #print "dans setCommentaire"
-     
       c  = self.debutToolTip
+      if self.node.item.definition.validators : c+=self.node.item.definition.validators.aide()
       if self.objSimp.get_fr() != None and self.objSimp.get_fr() != "":
-          c2 = '<html><head/><body><p><span style=" font-size:8pt;">'+c+str(self.objSimp.get_fr())+"</span></p></body></html>"
+          c2 = '<html><head/><body><p>'+c+str(self.objSimp.get_fr())+"</p></body></html>"
           self.label.setToolTip(c2)
       else :
          c+=self.finCommentaire()
          if c != "" and c != None :
-            c=str('<html><head/><body><p><span style=" font-size:8pt; ">')+c+"</span></p></body></html>"
+            #c=str('<html><head/><body><p><span style=" font-size:8pt; ">')+c+"</span></p></body></html>"
+            c=str('<html><head/><body><p>')+c+"</p></body></html>"
             self.label.setToolTip(c)
 
    def setIcones(self):
@@ -109,13 +112,9 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
        if ( hasattr(self,"BFichier")): 
           if mctype == "Repertoire":
              self.BRepertoire=self.BFichier
-	     #icon = QIcon(self.repIcon+"/fichier.png")
-             #self.BRepertoire.setIcon(icon)
              self.connect(self.BRepertoire,SIGNAL("clicked()"),self.BRepertoirePressed)
-             #self.BVisuFichier.close()
           else :
 	     #icon = QIcon(self.repIcon+"/visuFichier.png")
-             #self.BVisuFichier.setIcon(icon)
              self.connect(self.BFichier,SIGNAL("clicked()"),self.BFichierPressed)
              self.connect(self.BVisuFichier,SIGNAL("clicked()"),self.BFichierVisu)
           return
@@ -126,14 +125,10 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
                (hasattr(mctype, "enable_salome_selection") and mctype.enable_salome_selection))
           if  enable_salome_selection:
               self.connect(self.BSalome,SIGNAL("pressed()"),self.BSalomePressed)
-              #icon = QIcon(self.repIcon+"/flecheSalome.png")
-              #self.BSalome.setIcon(icon)
 
               if not(('grma' in repr(mctype)) or ('grno' in repr(mctype))) or not(self.editor.salome):
                 self.BView2D.close()
               else :
-	        #icon = QIcon(self.repIcon+"/salomeLoupe.png")
-                #self.BView2D.setIcon(icon)
                 self.connect(self.BView2D,SIGNAL("clicked()"),self.BView2DPressed)
           else:
               self.BSalome.close()

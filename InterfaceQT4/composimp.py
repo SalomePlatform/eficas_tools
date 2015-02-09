@@ -35,7 +35,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         """        
         """
         klass = None 
-        
         # Attention l ordre des if est important        
 
         if self.item.wait_matrice ():
@@ -114,73 +113,81 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
 
-    def getPanelGroupe(self,parentQt):
+    def getPanelGroupe(self,parentQt,commande):
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
         monNom=self.item.nom
+        maCommande=commande
 
       # Attention l ordre des if est important
       # Attention il faut gerer les blocs et les facteurs 
       # a gerer comme dans composimp
       # Gerer les matrices --> Actuellement pas dans ce type de panneau
 
+        #print "____________________________", self.item.wait_tuple() 
         if maDefinition.max == 1 :
           if maDefinition.into != [] and maDefinition.into != None:
           # a revoir
             if len(maDefinition.into) < 4 :
               from monWidgetRadioButton import MonWidgetRadioButton
-              widget=MonWidgetRadioButton(self,maDefinition,monNom,monObjet,parentQt)
+              widget=MonWidgetRadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif len(maDefinition.into) < 7 :
               from monWidget4a6RadioButton import MonWidget4a6RadioButton
-              widget=MonWidget4a6RadioButton(self,maDefinition,monNom,monObjet,parentQt)
+              widget=MonWidget4a6RadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
               from monWidgetCB import MonWidgetCB
-              widget=MonWidgetCB(self,maDefinition,monNom,monObjet,parentQt)
+              widget=MonWidgetCB(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.wait_bool() :
             from monWidgetSimpBool import MonWidgetSimpBool
-            widget=MonWidgetSimpBool(self,maDefinition,monNom,monObjet,parentQt)
+            widget=MonWidgetSimpBool(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.wait_fichier():
             from monWidgetSimpFichier import MonWidgetSimpFichier
-            widget=MonWidgetSimpFichier(self,maDefinition,monNom,monObjet,parentQt)
+            widget=MonWidgetSimpFichier(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.wait_tuple() :
           # Pas fait
-            from monWidgetSimpTuple import MonWidgetSimpTuple
-            widget=MonWidgetSimpTuple(self,maDefinition,monNom,monObjet,parentQt)
+            if self.item.object.definition.type[0].ntuple == 2:
+               from monWidgetSimpTuple2 import MonWidgetSimpTuple2
+               widget=MonWidgetSimpTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            elif self.item.object.definition.type[0].ntuple == 3 :
+               from monWidgetSimpTuple3 import MonWidgetSimpTuple3
+               widget=MonWidgetSimpTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            else :
+               print "Pas fait"
 
           elif self.item.wait_complex():
           # Pas fait
             from monWidgetSimpComplexe import MonWidgetSimpComplexe
-            widget=MonWidgetSimpComplexe(self,maDefinition,monNom,monObjet,parentQt)
+            widget=MonWidgetSimpComplexe(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.wait_co():
           # Pas fait
             from monWidgetSimpASSD import MonWidgetSimpASSD
-            widget=MonWidgetSimpASSD(self,maDefinition,monNom,monObjet,parentQt)
+            widget=MonWidgetSimpASSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           
           elif  self.item.wait_Salome() and self.editor.salome:
           # Pas fait
             from monWidgetSimpSalome import MonWidgetSimpSalome
-            widget=MonWidgetSimpSalome(self,maDefinition,monNom,monObjet,parentQt)
+            widget=MonWidgetSimpSalome(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.wait_TXM():
           # Pas fait
             from monWidgetSimpTxt import MonWidgetSimpTxt
-            widget=MonWidgetSimpTxt(self,maDefinition,monNom,monObjet,parentQt)
+            widget=MonWidgetSimpTxt(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
             from monWidgetSimpBase import MonWidgetSimpBase
-            widget=MonWidgetSimpBase(self,maDefinition,monNom,monObjet,parentQt)
+            widget=MonWidgetSimpBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
         else :
           if maDefinition.into != [] and maDefinition.into != None:
              #Pas encore traité
             from monWidgetPlusieursInto import MonWidgetPlusieursInto
-            widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt)
+            widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
             from monWidgetPlusieursBase import MonWidgetPlusieursBase
-            widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt)
+            widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
         return widget
          
     
@@ -355,9 +362,6 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       """
         La validation est realisee directement par l'objet
       """
-      print self.object
-      print item
-      print self.object.valide_item
       return self.object.valide_item(item)
      
   def valide_liste_partielle(self,item,listecourante):

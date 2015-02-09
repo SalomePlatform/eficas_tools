@@ -38,8 +38,14 @@
    <property name="leftMargin">
     <number>0</number>
    </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
    <property name="rightMargin">
     <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
    </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -85,6 +91,9 @@
              <width>21</width>
              <height>35</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
@@ -160,18 +169,6 @@
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QRadioButton" name="radioButton_1">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>32</height>
-          </size>
-         </property>
          <property name="text">
           <string>RadioButton</string>
          </property>
@@ -179,12 +176,6 @@
        </item>
        <item>
         <widget class="QRadioButton" name="radioButton_2">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="text">
           <string>RadioButton</string>
          </property>
@@ -192,12 +183,6 @@
        </item>
        <item>
         <widget class="QRadioButton" name="radioButton_3">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="text">
           <string>RadioButton</string>
          </property>
@@ -209,18 +194,6 @@
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QRadioButton" name="radioButton_4">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>32</height>
-          </size>
-         </property>
          <property name="text">
           <string>RadioButton</string>
          </property>
@@ -228,12 +201,6 @@
        </item>
        <item>
         <widget class="QRadioButton" name="radioButton_5">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="text">
           <string>RadioButton</string>
          </property>
@@ -241,12 +208,6 @@
        </item>
        <item>
         <widget class="QRadioButton" name="radioButton_6">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="text">
           <string>RadioButton</string>
          </property>
@@ -302,6 +263,9 @@
          <height>31</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -344,6 +308,12 @@
    <header>monBoutonValide.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>radioButton_1</tabstop>
+  <tabstop>radioButton_4</tabstop>
+  <tabstop>RBValide</tabstop>
+  <tabstop>RBPoubelle</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

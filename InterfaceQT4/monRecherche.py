@@ -48,13 +48,12 @@ class DRecherche(Ui_desRecherche ,QtGui.QDialog):
       self.nodeSurligne=None
 
   def suivantClicked(self):
-      if self.motAChercher!=self.LERecherche.text(): self.recherche()
+      #if self.motAChercher!=self.LERecherche.text(): self.recherche()
       if self.listeTrouvee=={} : return
       if self.surLigne > len(self.listeTrouvee) -1 : return
       if self.nodeSurligne!=None : self.nodeSurligne.update_node_texte_in_black()
       #self.listeTrouvee[self.surLigne].update_node_texte_in_blue()
       #self.nodeSurligne=self.listeTrouvee[self.surLigne]
-      self.listeTrouvee[self.surLigne].select()
       self.listeTrouvee[self.surLigne].select()
       self.listeTrouvee[self.surLigne].affichePanneau()
       self.surLigne=self.surLigne+1
@@ -65,5 +64,4 @@ class DRecherche(Ui_desRecherche ,QtGui.QDialog):
       self.motAChercher=self.LERecherche.text()
       self.listeTrouvee=self.tree.findItems(self.motAChercher,Qt.MatchContains|Qt.MatchRecursive,1)
       self.surLigne=0
-      self.suivantClicked()
 

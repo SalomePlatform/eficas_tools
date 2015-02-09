@@ -33,12 +33,13 @@ from qtSaisie              import SaisieValeur
 
 class MonWidgetSimpBool (Ui_WidgetSimpBool,Feuille):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
-        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.connect(self.RBTrue,SIGNAL("clicked()"),self.boutonTrueClic)
         self.connect(self.RBFalse,SIGNAL("clicked()"),self.boutonFalseClic)
         self.parentQt.commandesLayout.insertWidget(-1,self)
+        self.maCommande.listeAffichageWidget.append(self.RBTrue)
 
   def setValeurs(self):
        valeur=self.node.item.get_valeur()

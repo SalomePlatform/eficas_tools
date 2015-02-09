@@ -31,17 +31,16 @@ from politiquesValidation  import PolitiqueUnique
 from qtSaisie              import SaisieValeur
 
 
-
 class MonWidgetRadioButtonCommun (Feuille):
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         self.setMaxI()
-        #print "dans MonWidgetRadioButtonCommun", self.maxI
-        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
+        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.dict_bouton={}
         self.determineChoix()
         self.setValeursApresBouton()
         self.parentQt.commandesLayout.insertWidget(-1,self)
+        self.maCommande.listeAffichageWidget.append(self.radioButton_1)
 
 
   def setValeursApresBouton(self):
@@ -68,6 +67,8 @@ class MonWidgetRadioButtonCommun (Feuille):
          bouton.setText(valeur)
          self.dict_bouton[valeur]=bouton
          self.connect(bouton,SIGNAL("clicked()"),self.boutonclic)
+         bouton.keyPressEvent=self.keyPressEvent
+         setattr(self,nomBouton,bouton)
          i=i+1
       while i < self.maxI +1 :
          nomBouton="radioButton_"+str(i)
@@ -82,9 +83,37 @@ class MonWidgetRadioButtonCommun (Feuille):
              SaisieValeur.LEValeurPressed(self,valeur)
       self.parentQt.reaffiche()
 
+
+  def keyPressEvent(self, event):
+    if event.key() == Qt.Key_Right : self.selectSuivant(); return
+    if event.key() == Qt.Key_Left  : self.selectPrecedent(); return
+    QWidget.keyPressEvent(self,event)
+
+  def selectSuivant(self):
+      aLeFocus=self.focusWidget()
+      nom=aLeFocus.objectName()[12:]
+      i=nom.toInt()[0]+1
+      if i ==  len(self.monSimpDef.into) +1 : i=1
+      nomBouton="radioButton_"+str(i)
+      courant=getattr(self,nomBouton)
+      courant.setFocus(True)
+
+  def selectPrecedent(self):
+      aLeFocus=self.focusWidget()
+      nom=aLeFocus.objectName()[12:]
+      i=nom.toInt()[0]-1
+      print i
+      if i == 0 : i= len(self.monSimpDef.into)  
+      print i
+      print "_______"
+      nomBouton="radioButton_"+str(i)
+      courant=getattr(self,nomBouton)
+      courant.setFocus(True)
+
+
 class MonWidgetRadioButton (Ui_WidgetRadioButton,MonWidgetRadioButtonCommun):
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
-        MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         
   def setMaxI(self):
         self.maxI=3

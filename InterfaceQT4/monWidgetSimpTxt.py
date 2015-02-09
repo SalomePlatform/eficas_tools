@@ -32,8 +32,11 @@ from monWidgetSimpBase     import MonWidgetSimpBase
 class MonWidgetSimpTxt (Ui_WidgetSimpTxt,MonWidgetSimpBase):
 # c est juste la taille des differents widgets de base qui change
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
-        MonWidgetSimpBase.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        MonWidgetSimpBase.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+        # deja fait dans MonWidgetSimpBase
+        #self.maCommande.listeAffichageWidget.append(self.lineEditVal)
+        print self.lineEditVal
 
 
 

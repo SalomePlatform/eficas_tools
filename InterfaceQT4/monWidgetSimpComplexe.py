@@ -33,8 +33,8 @@ from qtSaisie               import SaisieValeur
 
 class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
-        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.setFocusPolicy(Qt.StrongFocus)
         self.connect(self.LEImag,SIGNAL("returnPressed()"),self.LEImagRPressed)
@@ -42,6 +42,11 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
         self.connect(self.RBRI,SIGNAL("clicked()"), self.ValeurPressed )
         self.connect(self.RBMP,SIGNAL("clicked()"), self.ValeurPressed )
         self.connect(self.LEComp,SIGNAL("returnPressed()"),self.LECompRPressed)
+        self.maCommande.listeAffichageWidget.append(self.LEComp)
+        #self.maCommande.listeAffichageWidget.append(self.RBRI)
+        #self.maCommande.listeAffichageWidget.append(self.RBMP)
+        #self.maCommande.listeAffichageWidget.append(self.LEReel)
+        #self.maCommande.listeAffichageWidget.append(self.LEImag)
 
 
   def setValeurs(self):

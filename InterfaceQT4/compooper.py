@@ -36,11 +36,11 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
 
     def select(self):
         browser.JDCNode.select(self)
-        self.treeParent.tree.openPersistentEditor(self,1)
-        self.monWidgetNom=self.treeParent.tree.itemWidget(self,1)
-        self.treeParent.tree.connect(self.monWidgetNom,SIGNAL("returnPressed()"), self.nomme)
-        if self.item.GetIconName() == "ast-red-square" : self.monWidgetNom.setDisabled(True)
-        else : self.monWidgetNom.setFocus()  ;self.monWidgetNom.setDisabled(False)
+        #self.treeParent.tree.openPersistentEditor(self,1)
+        #self.monWidgetNom=self.treeParent.tree.itemWidget(self,1)
+        #self.treeParent.tree.connect(self.monWidgetNom,SIGNAL("returnPressed()"), self.nomme)
+        #if self.item.GetIconName() == "ast-red-square" : self.monWidgetNom.setDisabled(True)
+        #else : self.monWidgetNom.setFocus()  ;self.monWidgetNom.setDisabled(False)
 
     def nomme(self):
         nom=str(self.monWidgetNom.text())

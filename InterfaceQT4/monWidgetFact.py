@@ -29,16 +29,15 @@ from Extensions.i18n import tr
 class MonWidgetFact(Ui_WidgetFact,Groupe):
   """
   """
-  def __init__(self,node,editor,parentQt,definition, obj, niveau):
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
       #print "init de Fact"
-      Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau)
+      Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
       labeltext,fonte,couleur = self.node.item.GetLabelText()
-      #self.groupBox.setTitle(labeltext)
-      self.GroupBox.setText(labeltext)
+      self.GroupBox.setText(tr(labeltext))
       self.GroupBox.setTextInteractionFlags(Qt.TextSelectableByMouse)
       self.parentQt.commandesLayout.insertWidget(-1,self)
 
   def focusInEvent(self,event):
       print "je passe dans focusInEvent"
-      self.afficheOptionnel()
+      if self.editor.code != "CARMELCND" :self.afficheOptionnel()
 

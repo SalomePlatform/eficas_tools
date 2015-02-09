@@ -33,12 +33,13 @@ from gereListe              import GereListe
 
 class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursInto", nom
         self.index=1
-        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
+        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         self.parentQt.commandesLayout.insertWidget(-1,self)
+        self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
 
 
   def setValeurs(self):
@@ -61,7 +62,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
        for i in range(1,len(self.listeAAfficher)+1):
            self.ajoutCB(i)
        for i in range(len(self.listeAAfficher)):
-           nomCB="labelVal"+str(i+1)
+           nomCB="lineEditVal"+str(i+1)
            courant=getattr(self,nomCB)
            courant.setText(str(self.listeAAfficher[i]))
            if self.monSimpDef.into[i] in self.listeValeursCourantes : 
@@ -71,7 +72,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
        
 
   def ajoutCB(self,index,valeur=None):
-      nomCB="labelVal"+str(index)
+      nomCB="lineEditVal"+str(index)
       if hasattr(self,nomCB) : 
          return
       nouveauCB = QCheckBox(self.scrollArea)
@@ -133,7 +134,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
   def changeValeur(self,etat):
       self.listeValeursCourantes = []
       for i in range (1,len(self.monSimpDef.into)+1):
-          nomLineEdit="labelVal"+str(i)
+          nomLineEdit="lineEditVal"+str(i)
           courant=getattr(self,nomLineEdit)
           if not (courant.isChecked()):continue
           valeur=courant.text()

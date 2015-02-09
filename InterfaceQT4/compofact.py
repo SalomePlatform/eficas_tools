@@ -36,18 +36,19 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         from monMCFactPanel import MonMCFactPanel
         return MonMCFactPanel(self,parent=self.editor) 
 
-    def getPanelGroupe(self,parentQt):
+    def getPanelGroupe(self,parentQt,commande):
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
         monNom=self.item.nom
+        maCommande=commande
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
         if  hasattr(self,'plie') and self.plie==True : 
            from monWidgetFactPlie import MonWidgetFactPlie
-           widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau)
+           widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         else:
            from monWidgetFact import MonWidgetFact
-           widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau)
+           widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         return widget
 
 

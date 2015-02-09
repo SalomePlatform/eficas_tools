@@ -37,24 +37,30 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   """
   def __init__(self,node,editor,etape):
       #print "MonWidgetCommande ", self
-      Groupe.__init__(self,node,editor,None,etape.definition,etape,1)
+      self.listeAffichageWidget=[]
+      self.inhibe=0
+      Groupe.__init__(self,node,editor,None,etape.definition,etape,1,self)
       if (etape.get_type_produit()==None): self.LENom.close()
       elif (hasattr (etape, 'sdnom')) and etape.sdnom != "sansnom" : self.LENom.setText(etape.sdnom) 
       else : self.LENom.setText("")
       maPolice= QFont("Times", 10,)
       self.setFont(maPolice)
       self.repIcon=self.appliEficas.repIcon
-      self.labelNomCommande.setText(self.obj.nom)
+      self.labelNomCommande.setText(tr(self.obj.nom))
       self.commandesLayout.addStretch()
       self.commandesLayout.focusInEvent=self.focusInEvent
       self.scrollAreaCommandes.focusInEvent=self.focusInEvent
       #self.RBValide.focusInEvent=FacultatifOuOptionnel.focusInEvent
-      self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+      if self.editor.code in ['MAP','Adao','CARMELCND'] : self.bCatalogue.close()
+      else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
       self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
       self.racine=self.node.tree.racine
       if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)
 
       self.setAcceptDrops(True)
+      self.etablitOrdre()
+
+      if self.editor.code == "CARMELCND" : return #Pas de MC Optionnels pour Carmel
       from monWidgetOptionnel import MonWidgetOptionnel
       if hasattr(self.editor,'widgetOptionnel') : 
         self.monOptionnel=self.editor.widgetOptionnel
@@ -64,6 +70,40 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.editor.splitter.addWidget(self.monOptionnel)
       self.afficheOptionnel()
 
+
+  def focusNextPrevChild(self, next):
+      print "je passe dans focusNextPrevChild"
+      print self.focusWidget().objectName()
+      try :
+        i= self.listeAffichageWidget.index(self.focusWidget())
+      except :
+        i = -1
+      if (i==len(self.listeAffichageWidget) -1) and next and not self.inhibe: 
+         self.listeAffichageWidget[1].setFocus(7)
+         w=self.focusWidget()
+         self.inhibe=1
+         w.focusPreviousChild()
+         self.inhibe=0
+         return True
+      if i==0 and next==False and not self.inhibe: 
+         if hasattr(self.editor.fenetreCentraleAffichee,'scrollArea'):
+            self.editor.fenetreCentraleAffichee.scrollArea.ensureWidgetVisible(self.listeAffichageWidget[-1])
+         self.listeAffichageWidget[-2].setFocus(7)
+         self.inhibe=1
+         w=self.focusWidget()
+         w.focusNextChild()
+         self.inhibe=0
+         return True
+      return QWidget.focusNextPrevChild(self, next)
+
+  def etablitOrdre(self):
+      i=0
+      for l in self.listeAffichageWidget:
+          print l.objectName()
+      while(i +1 < len(self.listeAffichageWidget)):
+         self.setTabOrder(self.listeAffichageWidget[i],self.listeAffichageWidget[i+1])
+         i=i+1
+      # si on boucle on perd l'ordre
 
   def nomChange(self):
       nom = str(self.LENom.text())
@@ -86,6 +126,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
   def focusInEvent(self,event):
       #print "je mets a jour dans focusInEvent de monWidget Commande "
+      if self.editor.code == "CARMELCND" : return #Pas de MC Optionnels pour Carmel
       self.afficheOptionnel()
 
 
@@ -97,7 +138,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(f)
 
   def afficheCatalogue(self):
-      self.monOptionnel.hide()
+      if self.editor.code != "CARMELCND" : self.monOptionnel.hide()
       self.racine.affichePanneau()
       if self.node : self.node.select()
       else : self.racine.select()

@@ -79,6 +79,9 @@
          <height>35</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -188,6 +191,9 @@ border:0px;</string>
          <height>30</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -225,6 +231,9 @@ border:0px;</string>
          <width>25</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="styleSheet">
         <string notr="true">border:0px</string>
@@ -274,6 +283,9 @@ border:0px;</string>
          <height>31</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -303,6 +315,13 @@ border:0px;</string>
    <header>monBoutonValide.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>lineEditVal</tabstop>
+  <tabstop>BSalome</tabstop>
+  <tabstop>BView2D</tabstop>
+  <tabstop>RBValide</tabstop>
+  <tabstop>RBPoubelle</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

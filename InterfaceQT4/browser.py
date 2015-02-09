@@ -99,14 +99,16 @@ class JDCTree( QTreeWidget ):
             pass
 
     def handleDoubleClickedOnItem(self,item,int):
-        print "handleDoubleClickedOnItem on ",item
-        print "handleDoubleClickedOnItem on ",item.fenetre
-        if item.fenetre == None :
-           while not (hasattr (item,'getPanel2')) : item=item.treeParent 
-           item.affichePanneau()
-           self.expandItem(item)
-        else:
-           print item.fenetre
+        #if item.fenetre == None :
+        #   while not (hasattr (item,'getPanel2')) : item=item.treeParent 
+        #   item.affichePanneau()
+        #   self.expandItem(item)
+        #else:
+        #   item.fenetre.rendVisible()
+        itemParent=item
+        while not (hasattr (itemParent,'getPanel2')) : itemParent=item.treeParent 
+        itemParent.affichePanneau()
+        if itemParent!=item:
            item.fenetre.rendVisible()
 
     def choisitPremier(self,name):
@@ -178,7 +180,6 @@ class JDCNode(QTreeWidgetItem):
         """ Construit la liste des enfants de self """
         """ Se charge de remettre les noeuds Expanded dans le meme etat """
         #print "*********** build_children ",self.item, self.item.GetLabelText()
-        #print self.childrenComplete
         
         listeExpanded=[]
         for item in self.childrenComplete :
@@ -209,7 +210,8 @@ class JDCNode(QTreeWidgetItem):
         
 
     def affichePanneau(self) :
-        #print "dans affichePanneau"
+        print "dans affichePanneau", self.item.GetLabelText()
+        #if  self.item.GetLabelText()[0]=='VCUT : ' : print y
         if self.item.isactif():
 	    panel=self.getPanel2()
         else:
@@ -393,10 +395,10 @@ class JDCNode(QTreeWidgetItem):
         if recalcule : jdc.recalcule_etat_correlation()
         from InterfaceQT4 import compojdc
         # cas ou on detruit dans l arbre sans affichage
-        if self.treeParent.fenetre== None : return
         if isinstance(self.treeParent,compojdc.Node) : 
            toselect.affichePanneau()
         else :
+           if self.treeParent.fenetre== None : return
            self.treeParent.fenetre.reaffiche(toselect)
 
     def deleteMultiple(self,liste=()):

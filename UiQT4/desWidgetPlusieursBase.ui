@@ -199,7 +199,7 @@ border: 1px solid gray;
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>594</width>
+          <width>514</width>
           <height>251</height>
          </rect>
         </property>
@@ -645,6 +645,19 @@ border: 1px solid gray;
   <zorder></zorder>
   <zorder></zorder>
  </widget>
+ <tabstops>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>RBValide</tabstop>
+  <tabstop>RBHaut</tabstop>
+  <tabstop>RBBas</tabstop>
+  <tabstop>RBMoins</tabstop>
+  <tabstop>RBPlus</tabstop>
+  <tabstop>RBVoisListe</tabstop>
+  <tabstop>RBSalome</tabstop>
+  <tabstop>RBSalomeVue</tabstop>
+  <tabstop>BSelectFichier</tabstop>
+  <tabstop>RBPoubelle</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

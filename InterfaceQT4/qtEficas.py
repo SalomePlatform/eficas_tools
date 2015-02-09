@@ -164,7 +164,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionCode.setEnabled(True)
         self.menuAide.addAction(self.actionCode)
 
-    def MAP(self):
+
+    def ajoutExecution(self):
         self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
         self.actionExecution = QAction(self)
         icon6 = QIcon(self.repIcon+"/roue.png")
@@ -176,9 +177,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
 
+    def ajoutSauveExecution(self):
         self.actionSaveRun = QAction(self)
         icon7 = QIcon(self.repIcon+"/export_MAP.png")
-        #icon7 = QIcon(self.repIcon+"/saveRun.png")
         self.actionSaveRun.setIcon(icon7)
         self.actionSaveRun.setObjectName("actionSaveRun")
         self.menuExecution.addAction(self.actionSaveRun)
@@ -187,27 +188,31 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionSaveRun.setText(QApplication.translate("Eficas", "Save Run", None, QApplication.UnicodeUTF8))
         self.connect(self.actionSaveRun,SIGNAL("activated()"),self.saveRun)
 
-        self.menuOptions = self.menubar.addMenu("menuOptions")
-        self.menuOptions.addAction(self.actionParametres_Eficas)
-        self.menuOptions.setTitle(tr("Options"))
+    def griserActionsStructures(self):
+        self.actionCouper.setEnabled(False)
+        self.actionColler.setEnabled(False)
+        self.actionCopier.setEnabled(False)
+        self.actionSupprimer.setEnabled(False)
+
+    def enleverNewInclude(self):
+        self.actionNouvel_Include.setVisible(False)
+
+    def enleverRechercherDsCatalogue(self):
+        self.actionRechercherDsCatalogue.setVisible(False)
 
     def ZCRACKS(self):
+        self.enleverNewInclude()
         self.toolBar.addSeparator()
-        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
-        self.actionExecution = QAction(self)
-        icon6 = QIcon(self.repIcon+"/compute.png")
-        self.actionExecution.setIcon(icon6)
-        self.actionExecution.setObjectName("actionExecution")
-        self.menuExecution.addAction(self.actionExecution)
-        if not(self.actionExecution in self.toolBar.actions()):
-           self.toolBar.addAction(self.actionExecution)
-        self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
-        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+        self.ajoutExecution()
 
         self.menuOptions = self.menubar.addMenu("menuOptions")
         self.menuOptions.addAction(self.actionParametres_Eficas)
         self.menuOptions.setTitle(tr("Options"))
 
+    def ADAO(self):
+        self.griserActionsStructures()
+        self.enleverNewInclude()
+        self.enleverRechercherDsCatalogue()
 
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
@@ -223,24 +228,27 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def CARMEL3D(self):
         #if self.salome == 0 : return
+        self.enleverNewInclude()
         self.menuMesh = self.menubar.addMenu("menuMesh")
         self.menuMesh.setObjectName("Mesh")
         self.menuMesh.addAction(self.actionChercheGrpMaille)
+        self.griserActionsStructures()
 
     def CARMELCND(self):
-        self.menuMesh = self.menubar.addMenu("Maillage")
-        self.menuMesh.setObjectName("Mesh")
-        self.menuMesh.addAction(self.actionChercheGrp)
-        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
-        self.actionExecution = QAction(self)
-        icon6 = QIcon(self.repIcon+"/compute.png")
-        self.actionExecution.setIcon(icon6)
-        self.actionExecution.setObjectName("actionExecution")
-        self.menuExecution.addAction(self.actionExecution)
-        if not(self.actionExecution in self.toolBar.actions()):
-           self.toolBar.addAction(self.actionExecution)
-        self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
-        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+        self.enleverNewInclude()
+        self.enleverRechercherDsCatalogue()
+        self.ajoutExecution()
+        self.ajoutSauveExecution()
+        self.griserActionsStructures()
+        
+    def MAP(self):
+        self.enleverNewInclude()
+        self.toolBar.addSeparator()
+        self.ajoutExecution()
+        self.ajoutSauveExecution()
+        self.menuOptions = self.menubar.addMenu("menuOptions")
+        self.menuOptions.addAction(self.actionParametres_Eficas)
+        self.menuOptions.setTitle(tr("Options"))
 
 
     def ChercheGrpMesh(self):

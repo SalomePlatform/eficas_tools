@@ -39,14 +39,15 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
 
-    def getPanelGroupe(self,parentQt):
+    def getPanelGroupe(self,parentQt,commande):
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
         monNom=self.item.nom
+        maCommande=commande
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
         from monWidgetBloc import MonWidgetBloc
-        widget=MonWidgetBloc(self,self.editor,parentQt,maDefinition,monObjet,self.niveau)
+        widget=MonWidgetBloc(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
 
 
 class BLOCTreeItem(compofact.FACTTreeItem):

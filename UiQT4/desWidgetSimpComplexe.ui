@@ -309,6 +309,15 @@
    <header>monBoutonValide.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>LEComp</tabstop>
+  <tabstop>RBRI</tabstop>
+  <tabstop>RBMP</tabstop>
+  <tabstop>LEReel</tabstop>
+  <tabstop>LEImag</tabstop>
+  <tabstop>RBPoubelle</tabstop>
+  <tabstop>RBValide</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

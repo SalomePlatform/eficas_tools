@@ -29,8 +29,8 @@ from Extensions.i18n import tr
 class MonWidgetBloc(Ui_WidgetBloc,Groupe):
   """
   """
-  def __init__(self,node,editor,parentQt,definition, obj, niveau):
-      Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau)
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
+      Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
       self.parentQt.commandesLayout.insertWidget(-1,self)
 
 

@@ -162,6 +162,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         if self.jdc:
             self.jdc.appli = self
             self.jdc.lang    = self.appli.langue
+            print self.jdc.lang
             txt_exception  = None
             if not jdc:
                 self.jdc.analyse()
@@ -1179,24 +1180,12 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
       from acquiertGroupes import getGroupes
       erreur,self.listeGroupes,self.nomMaillage,self.dicoCoord=getGroupes(self.fichierMED)
       if erreur != "" : print "a traiter"
-      #else :
-      #   from monBoutonSalome import MonBoutonSalome
-      #   desBoutonSalome = MonBoutonSalome()
-      #   icon = QIcon()
-      #   icon = QIcon(self.appli.repIcon+"/image240.png")
-      #   desBoutonSalome.pushButton.setIcon(icon)
-      #   desBoutonSalome.setMinimumSize(QtCore.QSize(453, 103))
-
-      #   self.openfile=QFileDialog(self.appli,caption='Fichier Med',filter=extensions)
-      #   self.openfile.layout().addWidget(desBoutonSalome)
-      #   self.connect(desBoutonSalome.pushButton,SIGNAL("clicked()"),self.BoutonSalomePressed)
-      #   self.connect(self.openfile,SIGNAL("fileSelected(QString)"),self.BoutonFileSelected)
-      #   r=self.openfile.exec_()
       texteComm="COMMENTAIRE(u'Cree - fichier : "+self.fichierMED +" - Nom Maillage : "+self.nomMaillage+"');\nPARAMETRES()\n"
       texteSources=""
       texteCond=""
       texteNoCond=""
       texteVcut=""
+      texteZs=""
       for groupe in self.listeGroupes :
           if groupe[0:8]=='CURRENT_': 
              texteSources +=groupe[8:]+"=SOURCE("
@@ -1204,7 +1193,8 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
           if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"
           if groupe[0:7]=='NOCOND_':  texteNoCond  +=groupe[7:]+"=NOCOND();\n"
           if groupe[0:5]=='VCUT_':    texteVcut    +='V_'+groupe[5:]+"=VCUT();\n"
-      texte=texteComm+texteSources+texteCond+texteNoCond+texteVcut
+          if groupe[0:3]=='ZS_':      texteZs      +=groupe[3:]+"=ZS();\n"
+      texte=texteComm+texteSources+texteCond+texteNoCond+texteVcut+texteZs
       self.newTexteCND=texte
       self.modified=1
       return texte

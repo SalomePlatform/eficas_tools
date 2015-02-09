@@ -33,13 +33,14 @@ from qtSaisie              import SaisieValeur
 
 class MonWidgetCB (Ui_WidgetCB,Feuille):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt):
-        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt)
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.determineChoix()
         self.setValeursApresBouton()
         self.connect(self.CBChoix,SIGNAL("currentIndexChanged(int)"),self.ChoixSaisi)
         self.parentQt.commandesLayout.insertWidget(-1,self)
+        self.maCommande.listeAffichageWidget.append(self.CBChoix)
 
   def setValeursApresBouton(self):
       if self.objSimp.get_valeur()==None : 

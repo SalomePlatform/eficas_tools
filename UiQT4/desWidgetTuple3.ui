@@ -76,6 +76,9 @@
          <height>35</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -184,6 +187,9 @@ border:0px;</string>
        <height>16777215</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true">background:rgb(235,235,235);
 border:0px;</string>
@@ -217,6 +223,9 @@ border:0px;</string>
        <height>16777215</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true">background:rgb(235,235,235);
 border:0px;</string>
@@ -231,6 +240,19 @@ border:0px;</string>
     </widget>
    </item>
    <item>
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
     <widget class="QToolButton" name="RBPoubelle">
      <property name="minimumSize">
       <size>
@@ -243,6 +265,9 @@ border:0px;</string>
        <width>21</width>
        <height>31</height>
       </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
      </property>
      <property name="styleSheet">
       <string notr="true">border : 0px</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WidgetCommande</class>
- <widget class="QWidget" name="WidgetCommande">
+ <class>WidgetCommentaire</class>
+ <widget class="QWidget" name="WidgetCommentaire">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -35,9 +35,6 @@ font : 'times' 9px</string>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <property name="spacing">
-      <number>6</number>
-     </property>
      <item>
       <widget class="QFrame" name="frame_2">
        <property name="sizePolicy">
@@ -53,9 +50,6 @@ font : 'times' 9px</string>
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout">
-        <property name="spacing">
-         <number>0</number>
-        </property>
         <item>
          <spacer name="horizontalSpacer_5">
           <property name="orientation">
@@ -85,9 +79,6 @@ font : 'times' 9px</string>
             <width>21</width>
             <height>31</height>
            </size>
-          </property>
-          <property name="focusPolicy">
-           <enum>Qt::ClickFocus</enum>
           </property>
           <property name="toolTip">
            <string>Affiche le rapport de validité de la commande</string>
@@ -147,54 +138,7 @@ font : 'times' 9px</string>
            <enum>QFrame::Raised</enum>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;commande &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="toto">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Maximum</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>2</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LENom">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="toolTip">
-           <string>Nom de l'objet. Seuls, les objets valides peuvent être nommés</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"> QLineEdit {
-     border: 2px solid gray;
-     border-radius: 10px;
-     padding: 0 8px;
-     background: darkgray;
-   /*  selection-background-color: darkgray;*/
- }
-QLineEdit:disabled
-{
-    background: lightgray;
-}
-/*read-only {
-     background: lightblue;*/</string>
-          </property>
-          <property name="readOnly">
-           <bool>false</bool>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;Commentaire&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -204,152 +148,12 @@ QLineEdit:disabled
            <enum>Qt::Horizontal</enum>
           </property>
           <property name="sizeType">
-           <enum>QSizePolicy::Ignored</enum>
+           <enum>QSizePolicy::Maximum</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>2</width>
+            <width>78</width>
             <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <property name="spacing">
-           <number>4</number>
-          </property>
-          <property name="sizeConstraint">
-           <enum>QLayout::SetFixedSize</enum>
-          </property>
-          <item>
-           <widget class="QToolButton" name="RBRun">
-            <property name="minimumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::ClickFocus</enum>
-            </property>
-            <property name="toolTip">
-             <string>Lance un script associé à la commande</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">border : 0px</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/roue.png</normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/roue.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="RBInfo">
-            <property name="minimumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::ClickFocus</enum>
-            </property>
-            <property name="toolTip">
-             <string>ouvre un navigateur sur l'aide contextuelle</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">border : 0px</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/point-interrogation30.png</normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/point-interrogation30.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="RBRegle">
-            <property name="minimumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::ClickFocus</enum>
-            </property>
-            <property name="toolTip">
-             <string>affiche les régles de validité</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">border : 0px</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/lettreRblanc30.png</normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/lettreRblanc30.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>13</width>
-            <height>20</height>
            </size>
           </property>
          </spacer>
@@ -367,9 +171,6 @@ QLineEdit:disabled
             <width>21</width>
             <height>31</height>
            </size>
-          </property>
-          <property name="focusPolicy">
-           <enum>Qt::ClickFocus</enum>
           </property>
           <property name="toolTip">
            <string>Détruit la commande</string>
@@ -395,9 +196,7 @@ QLineEdit:disabled
        </layout>
        <zorder>RBValide</zorder>
        <zorder>labelNomCommande</zorder>
-       <zorder>LENom</zorder>
        <zorder>horizontalSpacer_3</zorder>
-       <zorder>horizontalSpacer_4</zorder>
        <zorder>RBPoubelle</zorder>
        <zorder>horizontalSpacer_5</zorder>
       </widget>
@@ -440,9 +239,6 @@ QLineEdit:disabled
            <height>31</height>
           </size>
          </property>
-         <property name="focusPolicy">
-          <enum>Qt::ClickFocus</enum>
-         </property>
          <property name="toolTip">
           <string>Affiche les commandes possibles</string>
          </property>
@@ -453,7 +249,7 @@ border-radius : 12px
 </string>
          </property>
          <property name="text">
-          <string>&amp;Commandes</string>
+          <string>&amp;Catalogue</string>
          </property>
          <property name="shortcut">
           <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
@@ -524,6 +320,29 @@ border-radius : 12px
          <property name="spacing">
           <number>6</number>
          </property>
+         <item>
+          <widget class="QLineEdit" name="commentaireLE">
+           <property name="styleSheet">
+            <string notr="true">background:rgb(240, 240, 240)</string>
+           </property>
+           <property name="frame">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
       </layout>
@@ -541,6 +360,13 @@ border-radius : 12px
    <header>monBoutonValide.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>commentaireLE</tabstop>
+  <tabstop>RBPoubelle</tabstop>
+  <tabstop>bCatalogue</tabstop>
+  <tabstop>RBValide</tabstop>
+  <tabstop>scrollAreaCommandes</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
