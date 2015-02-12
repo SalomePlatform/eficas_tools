@@ -40,10 +40,7 @@ def localise(application, locale=None ):
     If no locale is specified by the user, the system locale
     is used instead, for both Qt base and Eficas translators.
     """
-    from PyQt4.QtCore import QLibraryInfo, QTextCodec
-    
-    QTextCodec.setCodecForTr(QTextCodec.codecForName("utf-8"))
-    
+    from PyQt4.QtCore import QLibraryInfo
     from PyQt4.QtCore import QLocale
     from PyQt4.QtGui import QApplication
     sys_locale = QLocale.system().name()
