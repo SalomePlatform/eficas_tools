@@ -229,6 +229,10 @@ class MCSIMP(I_OBJECT.OBJECT):
   def isoblig(self):
     return self.definition.statut=='o'
 
+  def isImmuable(self):
+    return self.definition.statut=='i'
+
+
   def valid_val(self,valeur):
       """
         Verifie que la valeur passee en argument (valeur) est valide

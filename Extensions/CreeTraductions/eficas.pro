@@ -1,4 +1,5 @@
 SOURCES = ../../convert/autre_parseur.py \
+          pourValidation.py \
           ../../convert/convert_asterv5.py \
           ../../convert/convert_cuve2dg.py \
           ../../convert/convert_file_from_template.py \
@@ -168,7 +169,26 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../Traducteur/visiteur.py \
           ../../Validation/V_A_CLASSER.py \
           ../../Noyau/N_VALIDATOR.py \
-          ../../CarmelCND/PourTraductionCarmel.py
+          ../../Noyau/N_JDC.py \
+          ../../CarmelCND/PourTraductionCarmel.py \
+          ../../Validation/V_A_CLASSER.py \
+          ../../Validation/V_AU_MOINS_UN.py \
+          ../../Validation/V_AU_PLUS_UN.py \
+          ../../Validation/V_ENSEMBLE.py \
+          ../../Validation/V_ETAPE.py \
+          ../../Validation/V_EXCLUS.py \
+          ../../Validation/V_JDC.py \
+          ../../Validation/V_MACRO_ETAPE.py \
+          ../../Validation/V_MCBLOC.py \
+          ../../Validation/V_MCCOMPO.py \
+          ../../Validation/V_MCFACT.py \
+          ../../Validation/V_MCLIST.py \
+          ../../Validation/V_MCSIMP.py \
+          ../../Validation/V_MEME_NOMBRE.py \
+          ../../Validation/V_PRESENT_ABSENT.py \
+          ../../Validation/V_PRESENT_PRESENT.py \
+          ../../Validation/V_PROC_ETAPE.py \
+          ../../Validation/V_UN_PARMI.py 
 
 FORMS=    ../../UiQT4/aideQT.ui \
           ../../UiQT4/desBaseWidget.ui \
@@ -196,6 +216,6 @@ FORMS=    ../../UiQT4/aideQT.ui \
           ../../UiQT4/desWidgetSimpTxt.ui \
           ../../UiQT4/desWidgetTuple2.ui \
           ../../UiQT4/desWidgetTuple3.ui \
-          ../../UiQT4/myMain.ui \
+          ../../UiQT4/myMain.ui 
 
 TRANSLATIONS = ../../UiQT4/eficas_fr.ts ../../UiQT4/eficas_en.ts

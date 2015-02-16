@@ -32,6 +32,14 @@ from Noyau.N_Exception import AsException
 from Noyau.N_utils import AsType
 from Noyau.strfunc import ufmt
 
+
+try :
+  from Extensions.i18n import tr
+except :
+  def tr(txt):
+    return txt
+
+
 class JDC(V_MCCOMPO.MCCOMPO):
    """
    """
@@ -41,8 +49,8 @@ class JDC(V_MCCOMPO.MCCOMPO):
           Methode pour generation d un rapport de validite
       """
       self.cr.purge()
-      self.cr.debut="DEBUT CR validation : "+self.nom
-      self.cr.fin="FIN CR validation :"+self.nom
+      self.cr.debut=tr("DEBUT CR validation : ")+self.nom
+      self.cr.fin=tr("FIN CR validation : ")+self.nom
       for e in self.etapes :
         if e.isactif():
           self.cr.add(e.report())

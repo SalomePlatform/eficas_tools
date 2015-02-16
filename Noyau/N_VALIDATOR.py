@@ -28,6 +28,12 @@ from N_ASSD import ASSD
 from N_types import is_int, is_float_or_int, is_complex, is_number, is_str, is_sequence
 from strfunc import convert, ufmt
 
+try :
+  from Extensions.i18n import tr
+except :
+  def tr(txt):
+    return txt
+
 
 class ValError(Exception):
     pass
@@ -156,21 +162,21 @@ class TypeProtocol(PProtocol):
                     return obj
                 else:
                     raise ValError(
-                        ufmt(_(u"%s n'est pas un fichier valide"), repr(obj)))
+                        ufmt(_tr((u"%s n'est pas un fichier valide")), repr(obj)))
             elif type_permis == 'FichierNoAbs':
                 import os
                 if (len(typ) > 2 and typ[2] == "Sauvegarde") or isinstance(obj, type("")):
                     return obj
                 else:
                     raise ValError(
-                        ufmt(_(u"%s n'est pas un fichier valide"), repr(obj)))
+                        ufmt(_(tr(u"%s n'est pas un fichier valide")), repr(obj)))
             elif type_permis == 'Repertoire':
                 import os
                 if os.path.isdir(obj):
                     return obj
                 else:
                     raise ValError(
-                        ufmt(_(u"%s n'est pas un répertoire valide"), repr(obj)))
+                        ufmt(_(tr(u"%s n'est pas un répertoire valide")), repr(obj)))
             elif type(type_permis) == types.ClassType or isinstance(type_permis, type):
                 try:
                     if self.is_object_from(obj, type_permis):
@@ -246,7 +252,7 @@ class CardProtocol(PProtocol):
         if length < min or length > max:
             raise ValError(
                 ufmt(
-                    _(u"Nombre d'arguments de %s incorrect (min = %s, max = %s)"),
+                    _(tr(u"Nombre d'arguments de %s incorrect (min = %s, max = %s)")),
                     repr(obj), min, max))
         return obj
 
@@ -268,7 +274,7 @@ class IntoProtocol(PProtocol):
             if obj not in into:
                 raise ValError(
                     ufmt(
-                        _(u"La valeur : %s  ne fait pas partie des choix possibles %s"),
+                        _tr((u"La valeur : %s  ne fait pas partie des choix possibles %s")),
                         repr(obj), into))
         else:
             # on est dans le cas d'un ensemble continu de valeurs possibles
@@ -281,7 +287,7 @@ class IntoProtocol(PProtocol):
                 if obj < val_min or obj > val_max:
                     raise ValError(
                         ufmt(
-                            _(u"La valeur : %s est en dehors du domaine de validité [ %s , %s ]"),
+                            _(tr(u"La valeur : %s est en dehors du domaine de validité [ %s , %s ]")),
                             repr(obj), self.val_min, self.val_max))
         return obj
 
@@ -300,7 +306,7 @@ class MinStr:
             return valeur
         raise ValError(
             ufmt(
-                _(u"%s n'est pas une chaine de longueur comprise entre %s et %s"),
+                _tr((u"%s n'est pas une chaine de longueur comprise entre %s et %s")),
                 valeur, self.min, self.max))
 
     def __repr__(self):
@@ -539,7 +545,7 @@ class Compulsory(ListVal):
                 elem.remove(v)
         if elem:
             raise ValError(
-                ufmt(_(u"%s ne contient pas les elements obligatoires : %s "),
+                ufmt(_tr((u"%s ne contient pas les elements obligatoires : %s ")),
                      valeur, elem))
         return valeur
 
@@ -572,14 +578,14 @@ class NoRepeat(ListVal):
         self.cata_info = ""
 
     def info(self):
-        return _(u": pas de présence de doublon dans la liste")
+        return _(tr(u": pas de présence de doublon dans la liste"))
 
     def info_erreur_liste(self):
-        return _(u"Les doublons ne sont pas permis")
+        return _(tr(u"Les doublons ne sont pas permis"))
 
     def default(self, valeur):
         if valeur in self.liste:
-            raise ValError(ufmt(_(u"%s est un doublon"), valeur))
+            raise ValError(ufmt(_tr((u"%s est un doublon")), valeur))
         return valeur
 
     def convert(self, valeur):
@@ -654,13 +660,13 @@ class LongStr(ListVal):
 
     def default(self, valeur, low, high):
         if not is_str(valeur):
-            raise ValError(ufmt(_(u"%s n'est pas une chaine"), repr(valeur)))
+            raise ValError(ufmt(_tr((u"%s n'est pas une chaine")), repr(valeur)))
         if valeur[0] == "'" and valeur[-1] == "'":
             low = low + 2
             high = high + 2
         if len(valeur) < low or len(valeur) > high:
             raise ValError(
-                ufmt(_(u"%s n'est pas de la bonne longueur"), repr(valeur)))
+                ufmt(_(tr(u"%s n'est pas de la bonne longueur")), repr(valeur)))
         return valeur
 
 
@@ -695,7 +701,7 @@ class OnlyStr(ListVal):
 
     def default(self, valeur):
         if not is_str(valeur):
-            raise ValError(ufmt(_(u"%s n'est pas une chaine"), repr(valeur)))
+            raise ValError(ufmt(_tr((u"%s n'est pas une chaine")), repr(valeur)))
         return valeur
 
 
@@ -728,11 +734,11 @@ class OrdList(ListVal):
         if self.ord == 'croissant':
             if self.val is not None and valeur < self.val:
                 raise ValError(
-                    ufmt(_(u"%s n'est pas par valeurs croissantes"), repr(self.liste)))
+                    ufmt(_tr((u"%s n'est pas par valeurs croissantes")), repr(self.liste)))
         elif self.ord == 'decroissant':
             if self.val is not None and valeur > self.val:
                 raise ValError(
-                    ufmt(_(u"%s n'est pas par valeurs decroissantes"), repr(self.liste)))
+                    ufmt(_tr((u"%s n'est pas par valeurs decroissantes")), repr(self.liste)))
         self.val = valeur
         return valeur
 
@@ -790,7 +796,7 @@ class OrVal(Valid):
                 return validator.convert(valeur)
             except:
                 pass
-        raise ValError(ufmt(_(u"%s n'est pas du bon type"), repr(valeur)))
+        raise ValError(ufmt(_tr((u"%s n'est pas du bon type")), repr(valeur)))
 
     def info_erreur_item(self):
         l = []
@@ -1079,22 +1085,22 @@ class RangeVal(ListVal):
     def __init__(self, low, high):
         self.low = low
         self.high = high
-        self.cata_info = ufmt(_(u"%s doit être inférieur a %s"), low, high)
+        self.cata_info = ufmt(_(tr(u"%s doit être inférieur a %s")), low, high)
 
     def info(self):
-        return ufmt(_(u"valeur dans l'intervalle %s , %s"), self.low, self.high)
+        return ufmt(_(tr(u"valeur dans l'intervalle %s , %s")), self.low, self.high)
 
     def convert_item(self, valeur):
         if valeur > self.low and valeur < self.high:
             return valeur
-        raise ValError(ufmt(_(u"%s devrait être comprise entre %s et %s"),
+        raise ValError(ufmt(_(tr(u"%s devrait être comprise entre %s et %s")),
                             valeur, self.low, self.high))
 
     def verif_item(self, valeur):
         return valeur > self.low and valeur < self.high
 
     def info_erreur_item(self):
-        return ufmt(_(u"La valeur doit etre comprise entre %s et %s"), self.low, self.high)
+        return ufmt(_(tr(u"La valeur doit etre comprise entre %s et %s")), self.low, self.high)
 
     def verif_cata(self):
         if self.low > self.high:
@@ -1115,14 +1121,14 @@ class CardVal(Valid):
     def __init__(self, min='**', max='**'):
         self.min = min
         self.max = max
-        self.cata_info = ufmt(_(u"%s doit etre inferieur a %s"), min, max)
+        self.cata_info = ufmt(_(tr(u"%s doit etre inferieur a %s")), min, max)
 
     def info(self):
-        return ufmt(_(u"longueur de liste comprise entre  %s et %s"), self.min, self.max)
+        return ufmt(_(tr(u"longueur de liste comprise entre  %s et %s")), self.min, self.max)
 
     def info_erreur_liste(self):
         return ufmt(
-            _(u"Le cardinal de la liste doit etre compris entre %s et %s"),
+            _(tr(u"Le cardinal de la liste doit etre compris entre %s et %s")),
             self.min, self.max)
 
     def is_list(self):
@@ -1149,10 +1155,10 @@ class CardVal(Valid):
             l = 1
         if self.max != '**' and l > self.max:
             raise ValError(
-                ufmt(_(u"%s devrait etre de longueur inferieure a %s"), valeur, self.max))
+                ufmt(_(tr(u"%s devrait etre de longueur inferieure a %s")), valeur, self.max))
         if self.min != '**' and l < self.min:
             raise ValError(
-                ufmt(_(u"%s devrait etre de longueur superieure a %s"), valeur, self.min))
+                ufmt(_(tr(u"%s devrait etre de longueur superieure a %s")), valeur, self.min))
         return valeur
 
     def verif_item(self, valeur):
@@ -1202,14 +1208,14 @@ class PairVal(ListVal):
         return _(u"valeur paire")
 
     def info_erreur_item(self):
-        return _(u"La valeur saisie doit etre paire")
+        return _(tr(u"La valeur saisie doit etre paire"))
 
     def convert(self, valeur):
         for val in valeur:
             v = self.adapt(val)
             if v % 2 != 0:
                 raise ValError(
-                    ufmt(_(u"%s contient des valeurs non paires"), repr(valeur)))
+                    ufmt(_(tr(u"%s contient des valeurs non paires")), repr(valeur)))
         return valeur
 
     def default(self, valeur):
@@ -1253,7 +1259,7 @@ class EnumVal(ListVal):
         if valeur in self.into:
             return valeur
         raise ValError(
-            ufmt(_(u"%s contient des valeurs hors des choix possibles: %s "),
+            ufmt(_(tr(u"%s contient des valeurs hors des choix possibles: %s ")),
                  valeur, self.into))
 
     def verif_item(self, valeur):
@@ -1275,7 +1281,7 @@ class EnumVal(ListVal):
         return liste_choix
 
     def info_erreur_item(self):
-        return _(u"La valeur n'est pas dans la liste des choix possibles")
+        return _(tr(u"La valeur n'est pas dans la liste des choix possibles"))
 
 
 def ImpairVal(valeur):
@@ -1294,7 +1300,7 @@ def ImpairVal(valeur):
             return 0
         return 1
 
-ImpairVal.info = "valeur impaire"
+ImpairVal.info = tr("valeur impaire")
 
 
 class F1Val(Valid):

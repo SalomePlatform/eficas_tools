@@ -172,11 +172,12 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       - la fonte dans laquelle afficher ce texte
       - la couleur du texte
       """
-      if self.object.isactif():
+      return self.labeltext,None,None
+      #if self.object.isactif():
         # None --> fonte et couleur par défaut
-        return self.labeltext,None,None
-      else:
-        return self.labeltext, None, None #CS_pbruno todo
+      #  return self.labeltext,None,None
+      #else:
+      #  return self.labeltext, None, None #CS_pbruno todo
       
   def get_objet(self,name) :
       for v in self.object.mc_liste:

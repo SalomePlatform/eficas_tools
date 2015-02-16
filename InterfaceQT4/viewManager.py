@@ -37,6 +37,7 @@ class MyTabview:
        self.doubles = {}
 
        self.myQtab = self.appliEficas.myQtab
+       self.myQtab.connect(self.myQtab, SIGNAL('tabCloseRequested(int)'), self.closeTab)
        if self.appliEficas.multi== True:
           self.myQtab.connect(self.myQtab,SIGNAL("currentChanged(int)"),self.indexChanged)
         
@@ -76,6 +77,9 @@ class MyTabview:
        if maPage: result = maPage
        if maPage : self.myQtab.setTabText(self.myQtab.indexOf(maPage),os.path.basename(fichier))
        return result
+
+   def closeTab(self):
+       self.handleClose()
 
    def handleClose(self,doitSauverRecent = 1,texte=tr('&Quitter')):
        if doitSauverRecent : self.appliEficas.sauveRecents()
@@ -171,6 +175,11 @@ class MyTabview:
        index=self.myQtab.currentIndex()
        if index < 0 : return
        self.dict_editors[index].viewJdcSource()
+
+   def handlegestionParam(self):
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       self.dict_editors[index].gestionParam()
 
    def handleViewJdcRapport(self):
        index=self.myQtab.currentIndex()

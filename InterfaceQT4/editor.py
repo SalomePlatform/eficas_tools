@@ -36,6 +36,7 @@ from Editeur        import comploader
 from Editeur        import Objecttreeitem
 from desBaseWidget  import Ui_baseWidget
 from monViewTexte   import ViewText 
+from monWidgetParam import MonWidgetParam 
 import browser
 import readercata
 
@@ -162,7 +163,6 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         if self.jdc:
             self.jdc.appli = self
             self.jdc.lang    = self.appli.langue
-            print self.jdc.lang
             txt_exception  = None
             if not jdc:
                 self.jdc.analyse()
@@ -323,12 +323,10 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
             QMessageBox.critical( self, tr("Type de fichier non reconnu"),tr("EFICAS ne sait pas ouvrir ce type de fichier"))
             return None
 
-    #----------------------------------------------#
-    def _viewText(self, txt, caption = "FILE_VIEWER"):
-    #----------------------------------------------#
-        w = ViewText( self.QWParent )
-        w.setWindowTitle( caption )
-        w.setText(txt)
+    #-----------------------------------------------------------------------#
+    def _viewText(self, txt, caption = "FILE_VIEWER",largeur=1200,hauteur=600):
+    #--------------------------------------------------------------------#
+        w = ViewText( self.QWParent,self ,caption,txt,largeur,hauteur)
         w.show()
     #
 
@@ -375,6 +373,12 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.w.view.append(QString.fromUtf8(a.data(),len(a))) ;
         
 
+
+    #-----------------------#
+    def gestionParam(self):
+    #-----------------------#
+        w = MonWidgetParam( self)
+        w.show()
 
     #-----------------------#
     def viewJdcSource(self):

@@ -60,7 +60,9 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.setAcceptDrops(True)
       self.etablitOrdre()
 
-      if self.editor.code == "CARMELCND" : return #Pas de MC Optionnels pour Carmel
+      if self.editor.code == "CARMELCND" : 
+         self.RBPoubelle.close() # JDC Fige
+         return                  # Pas de MC Optionnels pour Carmel
       from monWidgetOptionnel import MonWidgetOptionnel
       if hasattr(self.editor,'widgetOptionnel') : 
         self.monOptionnel=self.editor.widgetOptionnel
@@ -72,8 +74,8 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
 
   def focusNextPrevChild(self, next):
-      print "je passe dans focusNextPrevChild"
-      print self.focusWidget().objectName()
+      # on s assure que ce n est pas un chgt de fenetre
+      if self.editor.fenetreAffichee != self : return True
       try :
         i= self.listeAffichageWidget.index(self.focusWidget())
       except :
@@ -98,8 +100,6 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
   def etablitOrdre(self):
       i=0
-      for l in self.listeAffichageWidget:
-          print l.objectName()
       while(i +1 < len(self.listeAffichageWidget)):
          self.setTabOrder(self.listeAffichageWidget[i],self.listeAffichageWidget[i+1])
          i=i+1

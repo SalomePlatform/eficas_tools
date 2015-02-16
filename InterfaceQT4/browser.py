@@ -132,8 +132,13 @@ class JDCNode(QTreeWidgetItem):
         self.treeParent.childrenIssusDesBlocs=[]
         self.childrenComplete=[]
                         
-        name  = self.appliEficas.trUtf8(  str( item.GetLabelText()[0] ) )
-        value = self.appliEficas.trUtf8(  str( item.GetText() ) )
+        from InterfaceQT4 import compocomm
+        from InterfaceQT4 import compoparam
+        if   (isinstance(self.item,compocomm.COMMTreeItem)) : name=tr("Commentaire")
+        elif (isinstance(self.item,compoparam.PARAMTreeItem)) : name=self.appliEficas.trUtf8(str(item.GetLabelText()[0]))
+        else:   name  = self.appliEficas.trUtf8(str(tr( item.nom))+" :")
+        value = self.appliEficas.trUtf8(str( item.GetText() ) )
+
         mesColonnes=QStringList()
         mesColonnes <<  name << value
 
@@ -210,7 +215,7 @@ class JDCNode(QTreeWidgetItem):
         
 
     def affichePanneau(self) :
-        print "dans affichePanneau", self.item.GetLabelText()
+        #print "dans affichePanneau", self.item.GetLabelText()
         #if  self.item.GetLabelText()[0]=='VCUT : ' : print y
         if self.item.isactif():
 	    panel=self.getPanel2()

@@ -91,12 +91,6 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ouvreFichiers()
 
 
-    #def eventFilter(QObject watched, QEvent e) :
-    #def eventFilter(watched, e) :
-    #    print "hhhhhhhhhhhhhhhhhhhhhh"
-    #    return QMainWindow.eventFilter(watched, e)
-
-   
 
     def definitCode(self,code,ssCode) :
         self.code=code
@@ -306,6 +300,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.connect(self.actionEficas,SIGNAL("activated()"),self.aidePPal)
         self.connect(self.actionVersion,SIGNAL("activated()"),self.version)
+        self.connect(self.actionParametres,SIGNAL("activated()"),self.gestionParam)
 
         self.connect(self.actionCouper,SIGNAL("activated()"),self.editCut)
         self.connect(self.actionCopier,SIGNAL("activated()"),self.editCopy)
@@ -610,6 +605,9 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def jdcRapport(self):
         self.viewmanager.handleViewJdcRapport()
+
+    def gestionParam(self):
+        self.viewmanager.handlegestionParam()
 
     def visuJdcPy(self):
         self.viewmanager.handleViewJdcPy()

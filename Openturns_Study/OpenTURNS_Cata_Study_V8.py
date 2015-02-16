@@ -151,19 +151,22 @@ SIMULATION = PROC ( nom = "SIMULATION",
 
 # Nota : les variables de type OPER doivent etre en majuscules !
 # Nota : les variables de type OPER doivent etre de premier niveau (pas imbriquees dans un autre type)
-DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
-                      sd_prod = loi,
+VARIABLE2=OPER( nom= "VARIABLE2",
+             
+#DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
+                      sd_prod = variable,
                       op = 68,
                       fr = "Definitions des lois marginales utilisees par les variables d'entree", 
                       
+NOM=SIMP(statut = "o", typ = "TXM",),
                       
+DISTRIBUTION= FACT(statut = "o",
 #====
 # Type de distribution
 #====
 
   Kind = SIMP ( statut = "o", typ = "TXM",
                 into = ( "Beta",
-                         "Pascale",
                          "Exponential",
                          "Gamma",
                          "Geometric",
@@ -429,7 +432,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                        # Il faut definir une collection de couples ( x,p ) 
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       #max = '**', 
                                        fr = "Liste de couples : largeur de classe, hauteur de classe",
                                        ang = "Class bandwidth, class height couple list",
                                        validators=VerifTypeTuple(('R','R')),
@@ -458,35 +461,6 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
   ), # Fin BLOC LAPLACE
 
-  BLOC1 = BLOC ( condition = " Kind in ( 'Pascale', ) ",
-                     Settings = SIMP ( statut = "o",
-                                       typ = "TXM",
-                                       max = 1,
-                                       into = ( "Cas1", "Cas2", "Cas3" ),
-                                       defaut = "Cas1",
-                                       fr = "Parametrage de la loi lognormale",
-                                       ang = "Lognormal distribution parameter set",
-                                       ),
-                     BLOC2_1 = BLOC ( condition = " Settings in ( 'Cas1', ) ",
-
-                                                 Mu = SIMP ( statut = "o",
-                                                             typ = "R",
-                                                             max = 1,
-                                                             fr = "Moyenne de la loi",
-                                                             ang = "Mean value",
-                                                             ),
-
-                                    ),
-                     BLOC2_2 = BLOC ( condition = " Settings in ( 'Cas2', ) ",
-
-                                                 Sigma = SIMP ( statut = "o",
-                                                                typ = "R",
-                                                                max = 1,
-                                                                val_min = 0.,
-                                                                fr = "Ecart type de la loi",
-                                                             ),
-                                    ),
-                   ),
   LOGNORMAL = BLOC ( condition = " Kind in ( 'LogNormal', ) ",
 
                      Settings = SIMP ( statut = "o",
@@ -869,6 +843,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
     ), # Fin BLOC WEIBULL
 
+), # Fin OPER DISTRIBUTION
 ) # Fin OPER DISTRIBUTION
 # Ordre Catalogue DISTRIBUTION
 

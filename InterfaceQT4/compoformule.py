@@ -84,12 +84,13 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
       - la fonte dans laquelle afficher ce texte
       - la couleur du texte
       """
-      if self.object.isactif():
+      return self.labeltext,None,None
+      #if self.object.isactif():
         # None --> fonte et couleur par défaut
-        return self.labeltext,None,None
-      else:
-        return self.labeltext,None,None
-        #return self.labeltext,fontes.standard_italique,None
+      #  return tr(self.labeltext),None,None
+      #else:
+      #   return tr(self.labeltext),None,None
+      #return self.labeltext,fontes.standard_italique,None
     
 # ---------------------------------------------------------------------------
 #       Méthodes permettant la modification et la lecture des attributs

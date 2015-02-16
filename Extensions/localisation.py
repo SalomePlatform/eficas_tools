@@ -42,7 +42,7 @@ def localise(application, locale=None ):
     """
     from PyQt4.QtCore import QLibraryInfo, QTextCodec
     
-    QTextCodec.setCodecForTr(QTextCodec.codecForName("utf-8"))
+    #QTextCodec.setCodecForTr(QTextCodec.codecForName("utf-8"))
     
     from PyQt4.QtCore import QLocale
     from PyQt4.QtGui import QApplication

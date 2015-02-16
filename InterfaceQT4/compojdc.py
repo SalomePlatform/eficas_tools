@@ -57,7 +57,7 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def GetLabelText(self):
       # None --> fonte et couleur par defaut
-      return self.object.nom,None,None
+      return tr(self.object.nom),None,None
 
   def get_jdc(self):
     """

@@ -173,7 +173,7 @@ font : 'times' 9px</string>
            </size>
           </property>
           <property name="toolTip">
-           <string>Détruit la commande</string>
+           <string>Détruit le commentaire</string>
           </property>
           <property name="styleSheet">
            <string notr="true">border : 0px</string>

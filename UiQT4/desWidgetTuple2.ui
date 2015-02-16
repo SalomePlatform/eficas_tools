@@ -25,6 +25,11 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">
+ 
+</string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_3">
    <property name="spacing">
     <number>0</number>
@@ -158,7 +163,12 @@
        </property>
        <property name="styleSheet">
         <string notr="true">background:rgb(235,235,235);
-border:0px;</string>
+border:0px;
+
+</string>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
        </property>
       </widget>
      </item>

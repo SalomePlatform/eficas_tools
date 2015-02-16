@@ -35,6 +35,7 @@ class CONFIG(configuration.CONFIG_BASE):
   #-----------------------------------
       self.ssCode=appli.ssCode
       self.INSTALLDIR =os.path.dirname(__file__)
+      self.adresse="ftp://ftp.pleiade.edf.fr/projets/MAP/OnlineDoc/MAP2014.1/components"
 
       self.labels_user=['exec_acrobat','savedir','path_doc']
       self.labels_eficas=['exec_acrobat','savedir','path_doc','catalogues']

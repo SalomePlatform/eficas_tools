@@ -37,7 +37,11 @@ from N_Exception import AsException, InterruptParsingError
 from N_ASSD import ASSD
 from N_info import message, SUPERV
 from strfunc import get_encoding
-
+try :
+  from Extensions.i18n import tr
+except :
+  def tr(txt):
+    return txt
 
 MemoryErrorMsg = """MemoryError :
 
@@ -374,10 +378,10 @@ Causes possibles :
         """
         o = self.sds_dict.get(sdnom, None)
         if isinstance(o, ASSD):
-            raise AsException("Nom de concept deja defini : %s" % sdnom)
+            raise AsException(tr("Nom de concept deja defini : %s" % sdnom))
         if sdnom in self._reserved_kw:
             raise AsException(
-                "Nom de concept invalide. '%s' est un mot-clé réservé." % sdnom)
+               tr( "Nom de concept invalide. '%s' est un mot-clé réservé." % sdnom))
 
         # Ajoute a la creation (appel de reg_sd).
         self.sds_dict[sdnom] = sd
@@ -441,10 +445,10 @@ Causes possibles :
                 if os.path.exists("fort." + str(unite)):
                     fname = "fort." + str(unite)
             if fname == None:
-                raise AsException("Impossible de trouver le fichier correspondant"
-                                  " a l unite %s" % unite)
+                raise AsException(tr("Impossible de trouver le fichier correspondant"
+                                  " a l unite %s" % unite))
             if not os.path.exists(fname):
-                raise AsException("%s n'est pas un fichier existant" % fname)
+                raise AsException (tr("%s n'est pas un fichier existant" % fname))
             fproc = open(fname, 'r')
             text = fproc.read()
             fproc.close()
@@ -538,8 +542,8 @@ Causes possibles :
                 except KeyError:
                     from warnings import warn
                     warn(
-                        "concept '%s' absent du contexte de %s" % (
-                            nom, self.nom),
+                        tr("concept '%s' absent du contexte de %s" % (
+                            nom, self.nom)),
                         RuntimeWarning, stacklevel=2)
             return d
         if etape:

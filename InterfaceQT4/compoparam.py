@@ -83,11 +83,11 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
         - la fonte dans laquelle afficher ce texte
         - la couleur du texte
         """
-        return 'PARAMETRE',None,None 
+        return tr('PARAMETRE'),None,None 
 
     def GetText(self):
       """
-      Retourne le texte à afficher aprês le nom de la commande (ici apres 'paramêtre')
+      Retourne le texte à afficher aprês le nom de la commande (ici apres 'parametre')
       Ce texte est tronqué à 25 caractêres
       """
       texte=self.object.nom+"="+str(self.object.valeur)
@@ -110,7 +110,7 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
     
 # ---------------------------------------------------------------------------
 #       Méthodes permettant la modification et la lecture des attributs
-#       du paramêtre = API graphique du PARAMETRE pour Panel et EFICAS
+#       du parametre = API graphique du PARAMETRE pour Panel et EFICAS
 # ---------------------------------------------------------------------------
 
     def get_valeur(self):
@@ -122,7 +122,7 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
 
     def get_nom(self):
       """
-      Retourne le nom du paramêtre
+      Retourne le nom du parametre
       """
       return self.object.nom
 
@@ -134,14 +134,14 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
 
     def set_nom(self,new_nom):
       """
-      Renomme le paramêtre
+      Renomme le parametre
       """
       self.object.set_nom(new_nom)
       #self.object.set_attribut('nom',new_nom)
 
     def get_fr(self):
       """
-      Retourne le fr associé au paramêtre, cad la bulle d'aide pour EFICAS
+      Retourne le fr associé au parametre, cad la bulle d'aide pour EFICAS
       """
       return tr("Definition d'un parametre")
     

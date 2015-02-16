@@ -36,6 +36,15 @@ from Noyau.N_VALIDATOR import ValError,TypeProtocol,CardProtocol,IntoProtocol
 from Noyau.N_VALIDATOR import listProto
 from Noyau.strfunc import ufmt
 
+try :
+  from Extensions.i18n import tr
+except :
+  def tr(txt):
+    return txt
+
+print '___________'
+print (tr(u"None n'est pas une valeur autorisée"))
+print '___________'
 class MCSIMP:
    """
       COMMENTAIRE CCAR:
@@ -96,7 +105,7 @@ class MCSIMP:
         #  verification presence
         if self.isoblig() and v == None :
           if cr == 'oui' :
-            self.cr.fatal(_(u"Mot-clé : %s obligatoire non valorisé"), self.nom)
+            self.cr.fatal(_(tr(u"Mot-clé : %s obligatoire non valorisé")), self.nom)
           valid = 0
 
         lval=listProto.adapt(v)
@@ -109,7 +118,7 @@ class MCSIMP:
         if lval is None:
            valid=0
            if cr == 'oui' :
-              self.cr.fatal(_(u"None n'est pas une valeur autorisée"))
+              self.cr.fatal(_(tr(u"None n'est pas une valeur autorisée")))
         else:
            # type,into ...
            #typeProto=TypeProtocol("type",typ=self.definition.type)
@@ -149,7 +158,7 @@ class MCSIMP:
                    try:
                        self.definition.validators.convert(lval)
                    except ValError,e:
-                       self.cr.fatal(_(u"Mot-clé %s invalide : %s\nCritère de validité: %s"),
+                       self.cr.fatal(_(tr(u"Mot-clé %s invalide : %s\nCritère de validité: %s")),
                             self.nom, str(e), self.definition.validators.info())
                        valid=0
            else:
@@ -185,14 +194,14 @@ class MCSIMP:
    def report(self):
       """ génère le rapport de validation de self """
       self.cr=self.CR()
-      self.cr.debut = u"Mot-clé simple : "+self.nom
-      self.cr.fin = u"Fin Mot-clé simple : "+self.nom
+      self.cr.debut = tr("Mot-clef simple : ")+tr(self.nom)
+      self.cr.fin = tr(u"Fin Mot-clé simple : ")+tr(self.nom)
       self.state = 'modified'
       try:
         self.isvalid(cr='oui')
       except AsException,e:
         if CONTEXT.debug : traceback.print_exc()
-        self.cr.fatal(_(u"Mot-clé simple : %s %s"), self.nom, e)
+        self.cr.fatal(_(tr(u"Mot-clé simple : %s %s")), self.nom, e)
       return self.cr
 
 

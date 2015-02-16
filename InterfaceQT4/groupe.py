@@ -50,6 +50,7 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       self.repIcon=self.appliEficas.repIcon
       self.jdc=self.node.item.get_jdc()
       self.setPoubelle()
+      self.setRun()
       self.setValide()
       self.setReglesEtAide()
       self.afficheMots()
@@ -127,7 +128,7 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
 
 
   def reaffiche(self,nodeAVoir=None):
-      print "dans reaffiche ________________________", nodeAVoir
+      #print "dans reaffiche ________________________", nodeAVoir
       self.parentQt.reaffiche(nodeAVoir)
 
   def recalculeListeMC(self,listeMC):

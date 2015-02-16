@@ -39,6 +39,13 @@ from Noyau.N_Exception import AsException
 from Noyau.N_utils import AsType
 from Noyau.strfunc import ufmt
 
+try :
+  from Extensions.i18n import tr
+except :
+  def tr(txt):
+    return txt
+
+
 class ETAPE(V_MCCOMPO.MCCOMPO):
    """
    """
@@ -220,17 +227,18 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
       """
           Methode pour generation d un rapport de validite
       """
-      self.cr=self.CR(debut=u'Etape : '+self.nom \
-                + u'    ligne : '+`self.appel[0]`\
-                + u'    fichier : '+`self.appel[1]`,
-                 fin = u'Fin Etape : '+self.nom)
+      self.cr=self.CR(debut=tr('Etape : ')+tr(self.nom) +' ' \
+                + tr('    ligne : ')+`self.appel[0]`\
+                + tr('    fichier :')+`self.appel[1]`,
+                 fin = tr('Fin Etape : ')+tr(self.nom))
       self.state = 'modified'
       try:
         self.isvalid(cr='oui')
       except AsException,e:
         if CONTEXT.debug : traceback.print_exc()
-        self.cr.fatal(_(u'Etape : %s ligne : %r fichier : %r %s'),
-            self.nom, self.appel[0], self.appel[1], e)
+        self.cr.fatal(tr('Etape : ')+tr(self.nom) \
+                + tr('    ligne : ')+`self.appel[0]`\
+                + tr('    fichier :')+`self.appel[1]`, +e)
       for child in self.mc_liste:
         self.cr.add(child.report())
       return self.cr
