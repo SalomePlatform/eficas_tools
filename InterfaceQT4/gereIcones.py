@@ -102,6 +102,7 @@ class FacultatifOuOptionnel:
       self.RBValide.setIcon(icon)
 
   def rendVisible(self):
+      print "je passe par rendVisible de FacultatifOuOptionnel"
       self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(self)
       self.setFocus()
 

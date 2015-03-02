@@ -39,7 +39,9 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       #print "MonWidgetCommande ", self
       self.listeAffichageWidget=[]
       self.inhibe=0
+      self.ensure=0
       Groupe.__init__(self,node,editor,None,etape.definition,etape,1,self)
+      self.labelDoc.setText(QString(etape.definition.fr))
       if (etape.get_type_produit()==None): self.LENom.close()
       elif (hasattr (etape, 'sdnom')) and etape.sdnom != "sansnom" : self.LENom.setText(etape.sdnom) 
       else : self.LENom.setText("")
@@ -50,7 +52,6 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.commandesLayout.addStretch()
       self.commandesLayout.focusInEvent=self.focusInEvent
       self.scrollAreaCommandes.focusInEvent=self.focusInEvent
-      #self.RBValide.focusInEvent=FacultatifOuOptionnel.focusInEvent
       if self.editor.code in ['MAP','Adao','CARMELCND'] : self.bCatalogue.close()
       else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
       self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
@@ -70,12 +71,14 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.monOptionnel=MonWidgetOptionnel(self)
         self.editor.widgetOptionnel=self.monOptionnel
         self.editor.splitter.addWidget(self.monOptionnel)
+      print "dans init ", self.monOptionnel
       self.afficheOptionnel()
 
 
   def focusNextPrevChild(self, next):
       # on s assure que ce n est pas un chgt de fenetre
-      if self.editor.fenetreAffichee != self : return True
+      print "je passe dans focusNextPrevChild"
+      if self.editor.fenetreCentraleAffichee != self : return True
       try :
         i= self.listeAffichageWidget.index(self.focusWidget())
       except :
@@ -121,21 +124,47 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   def afficheOptionnel(self):
       # N a pas de parentQt. doit donc etre redefini
       liste=self.ajouteMCOptionnelDesBlocs()
+      print "dans afficheOptionnel", self.monOptionnel
       self.monOptionnel.parentMC=self
       self.monOptionnel.affiche(liste)
 
   def focusInEvent(self,event):
-      #print "je mets a jour dans focusInEvent de monWidget Commande "
+      print "je mets a jour dans focusInEvent de monWidget Commande "
       if self.editor.code == "CARMELCND" : return #Pas de MC Optionnels pour Carmel
       self.afficheOptionnel()
 
 
   def reaffiche(self,nodeAVoir=None):
+      self.avantH=self.editor.fenetreCentraleAffichee.scrollAreaCommandes.horizontalScrollBar().sliderPosition()
+      self.avantV=self.editor.fenetreCentraleAffichee.scrollAreaCommandes.verticalScrollBar().sliderPosition()
       self.node.affichePanneau()
+      print "dans reaffiche de monWidgetCommande", self.avantH, self.avantV
+      QTimer.singleShot(1, self.recentre)
       if nodeAVoir != None:
-        f=nodeAVoir.fenetre
-        qApp.processEvents()
-        self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(f)
+        self.f=nodeAVoir.fenetre
+        if self.f==None : 
+             newNode=nodeAVoir.treeParent.chercheNoeudCorrespondant(nodeAVoir.item.object)
+             self.f = newNode.fenetre 
+        print "dans reaffiche",self.f, nodeAVoir.item.nom
+        if self.f != None and self.f.isVisible() : return
+        if self.f != None : QTimer.singleShot(1, self.rendVisible)
+
+
+  def recentre(self):
+      qApp.processEvents()
+      s=self.editor.fenetreCentraleAffichee.scrollAreaCommandes
+      s.horizontalScrollBar().setSliderPosition(self.avantH)
+      s.verticalScrollBar().setSliderPosition(self.avantV)
+
+  def rendVisibleNoeud(self,node):
+      self.f=node.fenetre
+      print "dans rendVisibleNoeud",self.f, node.item.nom
+      QTimer.singleShot(1, self.rendVisible)
+     
+  def rendVisible(self):
+      qApp.processEvents()
+      self.f.setFocus()
+      self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(self.f)
 
   def afficheCatalogue(self):
       if self.editor.code != "CARMELCND" : self.monOptionnel.hide()

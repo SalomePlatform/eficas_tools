@@ -128,7 +128,7 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
 
 
   def reaffiche(self,nodeAVoir=None):
-      #print "dans reaffiche ________________________", nodeAVoir
+      print "dans reaffiche de groupe.py", nodeAVoir
       self.parentQt.reaffiche(nodeAVoir)
 
   def recalculeListeMC(self,listeMC):
@@ -167,15 +167,16 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
         if firstNode==None : firstNode=nouveau 
         if nouveau == None or nouveau == 0  : 
            self.editor.affiche_infos(str('insertion impossible a cet endroit pour '+nom),Qt.red)
+      print firstNode
+      print firstNode.fenetre
       self.reaffiche(firstNode)
-      
 
 
   def Plie(self):
       self.node.setPlie()
-      self.reaffiche() 
+      self.reaffiche(self.node) 
 
   def Deplie(self):
       self.node.setDeplie()
-      self.reaffiche() 
+      self.reaffiche(self.node) 
 

@@ -79,9 +79,9 @@ class MonWidgetRadioButtonCommun (Feuille):
   def boutonclic(self):
       for valeur in self.dict_bouton.keys():
           if self.dict_bouton[valeur].isChecked():
-             print "dans boutonclic is checked", valeur, type(valeur)
+             #print "dans boutonclic is checked", valeur, type(valeur)
              SaisieValeur.LEValeurPressed(self,valeur)
-      self.parentQt.reaffiche()
+      self.reaffiche()
 
 
   def keyPressEvent(self, event):
@@ -102,10 +102,7 @@ class MonWidgetRadioButtonCommun (Feuille):
       aLeFocus=self.focusWidget()
       nom=aLeFocus.objectName()[12:]
       i=nom.toInt()[0]-1
-      print i
       if i == 0 : i= len(self.monSimpDef.into)  
-      print i
-      print "_______"
       nomBouton="radioButton_"+str(i)
       courant=getattr(self,nomBouton)
       courant.setFocus(True)
@@ -113,6 +110,7 @@ class MonWidgetRadioButtonCommun (Feuille):
 
 class MonWidgetRadioButton (Ui_WidgetRadioButton,MonWidgetRadioButtonCommun):
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        #print "MonWidgetRadioButton ", self
         MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         
   def setMaxI(self):

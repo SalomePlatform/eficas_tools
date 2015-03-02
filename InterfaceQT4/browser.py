@@ -44,7 +44,6 @@ class JDCTree( QTreeWidget ):
         self.item          = jdc_item
         self.tree          = self        
         self.editor	   = QWParent
-        self.editor.fenetreAffichee=None
         self.appliEficas   = self.editor.appliEficas
         self.childrenComplete=[]
         self.childrenIssusDesBlocs=[]
@@ -53,7 +52,7 @@ class JDCTree( QTreeWidget ):
         self.itemCourrant=None
 
         self.connect(self, SIGNAL("itemClicked ( QTreeWidgetItem * ,int) "), self.handleOnItem)
-        self.connect(self, SIGNAL("itemDoubleClicked ( QTreeWidgetItem * ,int) "), self.handleDoubleClickedOnItem)
+        #self.connect(self, SIGNAL("itemDoubleClicked ( QTreeWidgetItem * ,int) "), self.handleDoubleClickedOnItem)
 
         #PNPNPN verifier dans quel cas on se trouve : affiche l arbre ou la commande
         self.node_selected=self.racine
@@ -90,6 +89,7 @@ class JDCTree( QTreeWidget ):
     def handleOnItem(self,item,int):
         if (len(self.selectedIndexes())!=2): return
         self.itemCourrant=item
+        self.handleDoubleClickedOnItem(item,int)
         #try :
         if 1:
            fr = item.item.get_fr()
@@ -99,6 +99,7 @@ class JDCTree( QTreeWidget ):
             pass
 
     def handleDoubleClickedOnItem(self,item,int):
+        print "je passe dans handleDoubleClickedOnItem"
         #if item.fenetre == None :
         #   while not (hasattr (item,'getPanel2')) : item=item.treeParent 
         #   item.affichePanneau()
@@ -213,10 +214,13 @@ class JDCNode(QTreeWidgetItem):
             ind=ind+1
         #print "*********** fin build_children ",self.item, self.item.GetLabelText()
         
+    def chercheNoeudCorrespondant(self,objSimp):
+        sublist = self.item._GetSubList()
+        for node in self.childrenComplete:
+            if node.item.object==objSimp : return node
+        return None
 
     def affichePanneau(self) :
-        #print "dans affichePanneau", self.item.GetLabelText()
-        #if  self.item.GetLabelText()[0]=='VCUT : ' : print y
         if self.item.isactif():
 	    panel=self.getPanel2()
         else:
@@ -404,6 +408,7 @@ class JDCNode(QTreeWidgetItem):
            toselect.affichePanneau()
         else :
            if self.treeParent.fenetre== None : return
+           print "J appelle reaffiche de browser apres delete"
            self.treeParent.fenetre.reaffiche(toselect)
 
     def deleteMultiple(self,liste=()):
@@ -444,6 +449,7 @@ class JDCNode(QTreeWidgetItem):
 #    #------------------------------------------------------------------
     def onValid(self):        
 
+        #print "onValid pour ", self.item.nom
         if hasattr(self,'fenetre') and self.fenetre: 
            self.fenetre.setValide()
         if self.item.nom == "VARIABLE" and self.item.isvalid():
@@ -457,14 +463,19 @@ class JDCNode(QTreeWidgetItem):
         self.update_node_texte()
 
     def onAdd(self,object):
-        #print "___________________________ onAdd", object
+        #print "onAdd pour ", self.item.nom
         self.editor.init_modif()
         self.update_nodes()
+        print "dans onAdd" ,self.item 
+        # PN -- non necessaire si item=jdc
+        if hasattr(self.item,'jdc'): self.item.jdc.aReafficher=True
  
     def onSupp(self,object):
-        #print "___________________________ onSupp",  self.item, self.item.GetLabelText()
+        #print "onSupp pour ", self.item.nom
         self.editor.init_modif()
         self.update_nodes()
+        # PN -- non necessaire si item=jdc
+        if hasattr(self.item,'jdc'): self.item.jdc.aReafficher=True
          
     def detruit_les_noeuds_issus_de_blocs(self,bloc):
         from InterfaceQT4 import compobloc

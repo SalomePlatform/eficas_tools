@@ -32,7 +32,7 @@ from desWidget4a6RadioButton  import Ui_Widget4a6RadioButton
 class MonWidget4a6RadioButton (Ui_Widget4a6RadioButton,MonWidgetRadioButtonCommun):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        #print "dans le init de MonWidget4a6RadioButton"
+        #print "dans le init de MonWidget4a6RadioButton",self
         MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
 
   def setMaxI(self):

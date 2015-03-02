@@ -53,9 +53,12 @@ class MonWidgetParam(Ui_desWidgetParam,QDialog):
         if val == "" or None : return
         if nom == "" or None : return
         print self.editor.tree
-        if len(self.editor.tree.selectedItems()) == 0 : itemAvant=self.editor.tree.racine 
-        else :                                          itemAvant=self.editor.tree.selectedItems()[0]
-        param=itemAvant.addParameters(True)
+        if len(self.editor.tree.selectedItems()) == 0 : 
+           itemAvant=self.editor.tree.racine 
+           param=itemAvant.addParameters(True)
+        else :                                     
+           itemAvant=self.editor.tree.selectedItems()[0]
+           param=itemAvant.addParameters(False)
         param.item.set_nom(nom)
         param.item.set_valeur(val)
         param.update_node_texte()

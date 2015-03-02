@@ -30,6 +30,6 @@ __import__(name)
 
 from InterfaceQT4 import eficas_go
 
-dico=eficas_go.lance_eficas_param(code=prefs.code,fichier="/local/noyret/Eficas_ASTER/adao.comm",version='V0',macro="ASSIMILATION_STUDY")
+dico=eficas_go.lance_eficas_param(code=prefs.code,fichier="/local00/home/A96028/GitEficasTravail/eficas/Adao/kk.comm",version='V1',macro="ASSIMILATION_STUDY")
 print dico
 

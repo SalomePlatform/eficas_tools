@@ -180,6 +180,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
 
         if jdc_item:
             self.tree = browser.JDCTree( jdc_item,  self )
+        self.jdc.aReafficher=False
         self.appliEficas.construitMenu()
 
     #--------------------------------#
@@ -194,6 +195,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         texte=""
         if self.code == "CARMELCND" : texte=self._newJDCCND()
         if self.code == "ZCRACKS" : texte=self._newZCRACKS()
+        if self.code == "TELEMAC" : texte=self._newTELEMAC()
         #   texte=self.newTexteCND
        
         jdc=self.readercata.cata[0].JdC( procedure =texte,
@@ -1161,6 +1163,14 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
         return ligne
 
+
+    #---------------------------#
+    def _newTELEMAC(self):
+    #---------------------------#
+        texte="INITIALIZATION();TIDE_PARAMETERS();INITIAL_STATE();NUMERICAL_PARAMETERS();PHYSICAL_PARAMETERS()"
+        return texte
+
+    #---------------------------#
 
     #---------------------------#
     def _newZCRACKS(self):

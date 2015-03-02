@@ -50,7 +50,9 @@ class MonWidgetSimpBool (Ui_WidgetSimpBool,Feuille):
 
   def boutonTrueClic(self):
       SaisieValeur.LEValeurPressed(self,True)
+      self.reaffiche()
 
   def boutonFalseClic(self):
       SaisieValeur.LEValeurPressed(self,False)
+      self.reaffiche()
 

@@ -59,13 +59,13 @@ class SIMP(N_ENTITE.ENTITE):
             - defaut : valeur par défaut
             - min : nombre minimal de valeurs
             - max : nombre maximal de valeurs
-            - homo : ?
+            - homo : homogene (toutes les valeurs d une liste sont de meme type)
             - ang : doc
             - position : si global, le mot-clé peut-être lu n'importe où dans la commande
             - val_min : valeur minimale autorisée
             - val_max : valeur maximale autorisée
             - docu : ?
-            - sug : ?
+            - sug : suggere
         """
         N_ENTITE.ENTITE.__init__(self, validators)
         # Initialisation des attributs

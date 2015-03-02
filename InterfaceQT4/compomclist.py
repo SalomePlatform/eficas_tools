@@ -54,7 +54,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         monObjet=self.item.object
         monNom=self.item.nom
         maCommande=commande
-        print parentQt
+        #print parentQt
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
         if not (monObjet.isMCList()) :
