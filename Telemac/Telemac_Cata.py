@@ -58,7 +58,8 @@ INITIALIZATION=PROC(nom="INITIALIZATION",op=None,
                     fr = 'Format du fichier de resultats. Les valeurs possibles sont : \n- SERAFIN : format standard simple precision pour Telemac;  - SERAFIND: format standard double precision pour Telemac; - MED     : format MED base sur HDF5' ,
                     ang = 'Results file format. Possible values are:\n - SERAFIN : classical single precision format in Telemac;\n  - SERAFIND: classical double precision format in Telemac; - MED     : MED format based on HDF5' ,),
  
-          Results_File     = SIMP( statut='o', typ = ('Fichier', 'Steering Files (*.cas);;All Files (*)',),),
+          Results_File     = SIMP( statut='o', typ = ('Fichier', 'Steering Files (*.cas);;All Files (*)',),
+                                   fr='Nom du fichier dans lequel seront ecrits les resultats du calcul avec la periodicite donnee par le mot cle : PERIODE POUR LES SORTIES GRAPHIQUES.', ang='Name of the file into which the computation results shall be written, the periodicity being given by the key-word: GRAPHIC PRINTOUT PERIOD.',),
 # Inexistant eventuellement
           Fortran_File = SIMP(statut='f',typ = ('Fichier', 'Fortran files (*.f);;All Files (*)'),
                               fr='Nom du fichier a soumettre',
