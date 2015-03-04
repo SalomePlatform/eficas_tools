@@ -25,14 +25,14 @@ from PyQt4 import *
 from PyQt4.QtGui import *
 
 from Extensions.i18n import tr
-from desUniqueSDCOInto    import DUnSDCOInto
+from desUniqueSDCOInto    import Ui_DUnSDCOInto
 from qtCommun             import QTPanel
 from qtSaisie             import SaisieSDCO
 from politiquesValidation import PolitiqueUnique
 
 # Import des panels
 
-class MonUniqueSDCOIntoPanel(DUnSDCOInto,QTPanel,SaisieSDCO):
+class MonUniqueSDCOIntoPanel(Ui_DUnSDCOInto,QTPanel,SaisieSDCO, QDialog):
   """
   Classe définissant le panel associé aux mots-clés qui demandent
   à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
@@ -41,7 +41,20 @@ class MonUniqueSDCOIntoPanel(DUnSDCOInto,QTPanel,SaisieSDCO):
   def __init__(self,node, parent = None,name = None,fl = 0):
         #print "MonUniqueSDCOIntoPanel"
         QTPanel.__init__(self,node,parent)
-        DUnSDCOInto.__init__(self,parent,name,fl)
+        #DUnSDCOInto.__init__(self,parent,name,fl)
+        QDialog.__init__(self,parent)
+        if hasattr(parent,"leLayout"):
+           parent.leLayout.removeWidget(parent.leLayout.widgetActive)
+           parent.leLayout.widgetActive.close()
+           parent.leLayout.addWidget(self)
+           parent.leLayout.widgetActive=self
+        else:
+           parent.partieDroite=QWidget()
+           parent.leLayout=QGridLayout(parent.partieDroite)
+           parent.leLayout.addWidget(self)
+           parent.addWidget(parent.partieDroite)
+           parent.leLayout.widgetActive=self
+	self.setupUi(self)
         self.initLBSDCO()
 
   def initLBSDCO(self):
