@@ -283,7 +283,8 @@ def parse(args):
          if os.path.isfile(file):
             options.comm.append(file)
             options.studies.append({"comm":file})
-         elif len(args)==1 and re.search('.comm',file):
+            print options.studies
+         elif len(args)==1 and (re.search('.comm',file) or re.search('.map',file)):
             try :
                 f=open(file,'w')
                 f.close()
