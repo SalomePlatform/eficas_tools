@@ -57,7 +57,9 @@ class JDCTree( QTreeWidget ):
         #PNPNPN verifier dans quel cas on se trouve : affiche l arbre ou la commande
         self.node_selected=self.racine
         self.expandItem(self.racine)
-        if self.racine.children !=[] :  self.racine.children[0].affichePanneau()
+        if self.racine.children !=[] :  
+           self.racine.children[0].affichePanneau()
+           if self.editor.afficheCommandesPliees : self.racine.children[0].plieToutEtReaffiche()
         else : self.racine.affichePanneau()
 
 
@@ -99,13 +101,6 @@ class JDCTree( QTreeWidget ):
             pass
 
     def handleDoubleClickedOnItem(self,item,int):
-        print "je passe dans handleDoubleClickedOnItem"
-        #if item.fenetre == None :
-        #   while not (hasattr (item,'getPanel2')) : item=item.treeParent 
-        #   item.affichePanneau()
-        #   self.expandItem(item)
-        #else:
-        #   item.fenetre.rendVisible()
         itemParent=item
         while not (hasattr (itemParent,'getPanel2')) : itemParent=item.treeParent 
         itemParent.affichePanneau()
@@ -124,6 +119,7 @@ PARAMETERS  = "PARAMETRE"
 class JDCNode(QTreeWidgetItem):
     def __init__( self, treeParent, item):
         #print "creation d'un noeud : ", item, " ",item.nom,"", treeParent
+        self.a=0
         self.item        = item
         self.vraiParent  = treeParent
         self.treeParent  = treeParent
@@ -221,26 +217,31 @@ class JDCNode(QTreeWidgetItem):
         return None
 
     def affichePanneau(self) :
-        if self.item.isactif():
-	    panel=self.getPanel2()
+        #print "______________________________"
+        #print "dans affichePanneau appel getPanel2", self.item.GetLabelText()
+
+        if self.item.isactif(): self.fenetre=self.getPanel2()
         else:
             from monInactifPanel import PanelInactif
-            panel = PanelInactif(self,self.editor)
-        if hasattr(self,'fenetre') and self.fenetre: 
-           self.fenetre.close()
-        self.fenetre=panel
-        if self.editor.fenetreCentraleAffichee != None : 
-           self.editor.fenetreCentraleAffichee.close()
-        self.editor.fenetreCentraleAffichee=panel
+            self.fenetre = PanelInactif(self,self.editor)
+        self.editor.widgetCentraleLayout.addWidget(self.fenetre)
+
+        self.editor.anciennefenetre=self.editor.fenetreCentraleAffichee
+        self.editor.fenetreCentraleAffichee=self.fenetre
+
+        if self.editor.anciennefenetre != None : 
+           self.editor.anciennefenetre.close()
+
         if self.editor.widgetTree !=None  : index=1
         else : index=0
-        self.editor.widgetCentraleLayout.addWidget(self.fenetre)
 
         if self.editor.first :
            self.editor.splitter.setSizes((400,1400,400))
            if not(isinstance(self.fenetre,MonChoixCommande)): self.editor.first=False
         self.tree.expandItem(self)
         self.select()
+        #print "fin de affichePanneau"
+        #print "______________________________"
           
 
     def createPopUpMenu(self):
@@ -343,7 +344,7 @@ class JDCNode(QTreeWidgetItem):
            ou en position intermediaire.
            Si pos vaut None, on le place a la position du catalogue.
         """
-        #print "************** append_child ",self.item.GetLabelText()
+        print "************** append_child ",self.item.GetLabelText()
         self.editor.init_modif()
         if pos == 'first':
             index = 0
@@ -362,22 +363,21 @@ class JDCNode(QTreeWidgetItem):
         obj=self.item.additem(name,index) #CS_pbruno emet le signal 'add'
         if obj is None:obj=0
         if obj == 0:return 0
-        ## PNPNPN : cas de Map nouvelle version 
-        #if 1 :
         try :
-          #print "1er Try"
           old_obj = self.item.object.get_child(name.nom,restreint = 'oui')
           child=old_obj[-1]
           child.affichePanneau() 
+          print "dans le 1er Try"
         #else :
         except:
           # Souci pour gerer les copies des AFFE d'une commande à l autre
           try :
              child=self.children[index]
              child.affichePanneau() 
+             print "dans le 2nd Try"
           except :
              child=self.children[index]
-             pass
+             print "dans le except"
         return child
 
     def deplace(self):
@@ -606,6 +606,18 @@ class JDCNode(QTreeWidgetItem):
         child = self.append_child(objet,pos='first')
         return child
 
+    def plieToutEtReaffiche(self):
+        self.editor.deplier = False
+        for item in self.children :
+            item.setPlie()
+        self.affichePanneau()
+
+    def deplieToutEtReaffiche(self):
+        self.editor.deplier = True
+        for item in self.children :
+            item.setDeplie()
+        self.affichePanneau()
+
     def setPlie(self):
         self.plie=True
         self.setPlieChildren()
@@ -615,7 +627,6 @@ class JDCNode(QTreeWidgetItem):
         for item in self.children :
             item.setPlieChildren()
             
-
     def setDeplie(self):
         self.plie=False
         self.setDeplieChildren()

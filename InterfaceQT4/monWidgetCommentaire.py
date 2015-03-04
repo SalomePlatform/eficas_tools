@@ -42,7 +42,7 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
       self.editor=editor
       self.setPoubelle()
       self.remplitTexte()
-      if self.editor.code in ['MAP','Adao','CARMELCND'] : self.bCatalogue.close()
+      if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
       else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
       self.connect(self.commentaireLE,SIGNAL("returnPressed()"),self.TexteCommentaireEntre)
        

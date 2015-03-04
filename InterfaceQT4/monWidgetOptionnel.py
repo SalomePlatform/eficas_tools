@@ -34,14 +34,14 @@ class monButtonCustom(QCheckBox):
       self.monOptionnel=monOptionnel
 
    def mouseDoubleClickEvent(self, event):
-      print "dans mouseDoubleClickEvent"
+      #print "dans mouseDoubleClickEvent"
       if self not in self.monOptionnel.dicoCb.keys() : return
       listeCheckedMC="+"+self.monOptionnel.dicoCb[self]
       self.monOptionnel.parentMC.ajoutMC(listeCheckedMC)
       self.setChecked(False)
 
    def mousePressEvent(self, event):
-      print "dans mousePressEvent"
+      #print "dans mousePressEvent"
       self.mousePressed=True
       if not( event.button() != Qt.RightButton)  : return
       QCheckBox.mousePressEvent(self, event)
@@ -51,10 +51,7 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
   """
   """
   def __init__(self,parentQt):
-     print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-     print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-     print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-     print "dans init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
+     #print "dans init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
      QWidget.__init__(self,None)
      self.setupUi(self)
      self.dicoCb={}
@@ -69,7 +66,7 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      
 
   def affiche(self,liste):
-     print "dans Optionnel ____ affiche", liste
+     #print "dans Optionnel ____ affiche", liste
      self.show()
      labeltext,fonte,couleur = self.parentMC.node.item.GetLabelText()
      l=labeltext
@@ -110,6 +107,6 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      for cb in self.dicoCb.keys():
          if cb.isChecked() : maListe+="+"+str(cb.text())
      if maListe=="":return
-     print "dans Optionnel __ ajout de ", maListe
+     #print "dans Optionnel __ ajout de ", maListe
      self.parentMC.ajoutMC(maListe)
 

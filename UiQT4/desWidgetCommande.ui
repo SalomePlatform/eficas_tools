@@ -532,7 +532,7 @@ border-radius : 12px
        <item>
         <layout class="QVBoxLayout" name="commandesLayout">
          <property name="spacing">
-          <number>6</number>
+          <number>0</number>
          </property>
         </layout>
        </item>

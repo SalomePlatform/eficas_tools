@@ -57,6 +57,8 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.setupUi(self)
         self.monOptionnel=None
         self.fenetreCentraleAffichee=None
+        self.dejaDansPlieTout=False
+        self.afficheCommandesPliees = False
         self.appliEficas = appli
         self.appli       = appli  #---- attendu par IHM
         self.vm          = vm
@@ -74,7 +76,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code = self.appliEficas.CONFIGURATION.code
         self.affiche_alpha=1
-        if self.code in ['MAP','Adao'] : 
+        if self.code in ['MAP',] : 
            self.widgetTree.close()
            self.widgetTree=None
            self.appliEficas.resize(1440,self.appliEficas.height())
@@ -130,7 +132,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.node_selected = []
         self.deplier = True
         self.message=''
-
+        if self.code in ['Adao',] : self.afficheCommandesPliees=True
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
 
         #------- construction du jdc --------------
@@ -473,9 +475,17 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
        if self.deplier :
           self.tree.collapseItem(self.tree.topLevelItem(0))
           self.deplier = False
+          if self.fenetreCentraleAffichee != None  :
+             if hasattr(self.fenetreCentraleAffichee.node,'plieToutEtReaffiche'):
+                 print "plie"
+                 self.fenetreCentraleAffichee.node.plieToutEtReaffiche()
        else:
           self.tree.expandItem(self.tree.topLevelItem(0))
           self.deplier = True
+          if self.fenetreCentraleAffichee != None  :
+             if hasattr(self.fenetreCentraleAffichee.node,'deplieToutEtReaffiche'):
+                 print "deplie"
+                 self.fenetreCentraleAffichee.node.deplieToutEtReaffiche()
 
     #---------------------#
     def handleEditCut(self):

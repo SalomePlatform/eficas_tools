@@ -30,7 +30,7 @@ class MonWidgetFactPlie(Ui_WidgetFactPlie,Groupe):
   """
   """
   def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
-      print "init de FactPlie"
+      #print "init de FactPlie"
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
       self.groupBox.setText(self.obj.nom)
       self.parentQt.commandesLayout.insertWidget(-1,self)

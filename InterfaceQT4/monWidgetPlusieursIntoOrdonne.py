@@ -31,7 +31,7 @@ from politiquesValidation   import PolitiquePlusieurs
 from qtSaisie               import SaisieValeur
 from gereListe              import GereListe
 
-class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
+class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursInto,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursInto", nom, self

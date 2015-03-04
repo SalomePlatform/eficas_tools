@@ -88,6 +88,7 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
       SaisieValeur.LEValeurPressed(self)
       self.parentQt.donneFocus()
       self.setValeurs()
+      self.reaffiche()
       
       #if self.objSimp.parent.nom == "MODEL" :
       #   if self.objSimp.isvalid():

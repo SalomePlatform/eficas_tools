@@ -73,15 +73,10 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
 
   def afficheMots(self):
       for node in self.node.children:
-           #if node in self.node.listeMCVenantDesBlocs : continue
-           #   print "pas ", node.item.nom
-           #   continue
            if hasattr(self.node,'appartientAUnNoeudPlie') and self.node.appartientAUnNoeudPlie==True : return
+           #print "getPanel ds afficheMots " ,node.item.nom, node.getPanelGroupe
            widget=node.getPanelGroupe(self,self.maCommande)
-           #print node
-           #print node.item.nom
            self.listeFocus.append(node.fenetre)
-      #print "fin afficheMots pou " ,self.node.item.nom
 
        
   def calculOptionnel(self):
@@ -171,6 +166,9 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       print firstNode.fenetre
       self.reaffiche(firstNode)
 
+
+  #def PlieTout(self):
+  #    self.node.setPlie()
 
   def Plie(self):
       self.node.setPlie()

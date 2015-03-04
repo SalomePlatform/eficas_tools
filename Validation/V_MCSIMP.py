@@ -42,9 +42,9 @@ except :
   def tr(txt):
     return txt
 
-print '___________'
-print (tr(u"None n'est pas une valeur autorisée"))
-print '___________'
+#print '___________'
+#print (tr(u"None n'est pas une valeur autorisée"))
+#print '___________'
 class MCSIMP:
    """
       COMMENTAIRE CCAR:

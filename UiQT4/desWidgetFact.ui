@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>949</width>
-    <height>263</height>
+    <height>49</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -33,6 +33,9 @@
    </property>
    <property name="leftMargin">
     <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
    </property>
    <property name="rightMargin">
     <number>0</number>
@@ -116,13 +119,13 @@
        <property name="minimumSize">
         <size>
          <width>17</width>
-         <height>31</height>
+         <height>25</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>21</width>
-         <height>31</height>
+         <height>25</height>
         </size>
        </property>
        <property name="styleSheet">
@@ -138,7 +141,7 @@
        <property name="iconSize">
         <size>
          <width>21</width>
-         <height>31</height>
+         <height>25</height>
         </size>
        </property>
       </widget>
@@ -159,13 +162,13 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>31</height>
+           <height>25</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>12121213</width>
-           <height>31</height>
+           <height>25</height>
           </size>
          </property>
          <property name="text">
@@ -243,13 +246,13 @@
            <property name="minimumSize">
             <size>
              <width>21</width>
-             <height>31</height>
+             <height>25</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>21</width>
-             <height>31</height>
+             <height>25</height>
             </size>
            </property>
            <property name="styleSheet">
@@ -265,7 +268,7 @@
            <property name="iconSize">
             <size>
              <width>21</width>
-             <height>31</height>
+             <height>25</height>
             </size>
            </property>
           </widget>
@@ -275,13 +278,13 @@
            <property name="minimumSize">
             <size>
              <width>21</width>
-             <height>31</height>
+             <height>25</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>21</width>
-             <height>31</height>
+             <height>25</height>
             </size>
            </property>
            <property name="styleSheet">
@@ -297,7 +300,7 @@
            <property name="iconSize">
             <size>
              <width>21</width>
-             <height>31</height>
+             <height>25</height>
             </size>
            </property>
           </widget>
@@ -325,13 +328,13 @@
          <property name="minimumSize">
           <size>
            <width>21</width>
-           <height>31</height>
+           <height>25</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>21</width>
-           <height>31</height>
+           <height>25</height>
           </size>
          </property>
          <property name="styleSheet">
@@ -347,7 +350,7 @@
          <property name="iconSize">
           <size>
            <width>21</width>
-           <height>31</height>
+           <height>25</height>
           </size>
          </property>
         </widget>

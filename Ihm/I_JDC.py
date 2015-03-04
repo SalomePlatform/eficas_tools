@@ -63,6 +63,7 @@ class JDC(I_OBJECT.OBJECT):
       """
           Retourne la liste des concepts avant etape d'un type acceptable
       """
+      print "je suis la",self,etape,types_permis
       d=self.get_contexte_avant(etape)
       
       
@@ -71,9 +72,9 @@ class JDC(I_OBJECT.OBJECT):
         if type(v) != types.InstanceType and not isinstance(v,object): continue
         # On considere que seul assd indique un type quelconque pas CO
         elif self.assd in types_permis :
-           l.append(k)
+           if v.etape.sdnom != "sansnom" : l.append(k)
         elif self.est_permis(v,types_permis):
-           l.append(k)
+           if v.etape.sdnom != "sansnom" : l.append(k)
       l.sort()
       return l
 

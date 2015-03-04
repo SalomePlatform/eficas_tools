@@ -25,28 +25,16 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
-from monWidgetRadioButton  import MonWidgetRadioButtonCommun 
-from desWidget4a6RadioButton  import Ui_Widget4a6RadioButton 
+from feuille               import Feuille
+from desWidgetVide         import Ui_WidgetVide 
+from politiquesValidation  import PolitiqueUnique
 
 
-class MonWidget4a6RadioButton (Ui_Widget4a6RadioButton,MonWidgetRadioButtonCommun):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        #print "dans le init de MonWidget4a6RadioButton",self
-        self.maListeDeValeur=monSimpDef.into
-        MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-
-  def setMaxI(self):
-        self.maxI=6
-
-
-class MonWidget4a6RadioButtonSD (Ui_Widget4a6RadioButton,MonWidgetRadioButtonCommun):
+class MonWidgetVide (Ui_WidgetVide,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        #print "dans le init de MonWidget4a6RadioButton",self
-        self.maListeDeValeur=node.item.get_sd_avant_du_bon_type()
-        MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+        self.politique=PolitiqueUnique(self.node,self.editor)
 
-  def setMaxI(self):
-        self.maxI=6
-
+        #PN il faut remplir le type

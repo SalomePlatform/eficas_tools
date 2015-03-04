@@ -79,8 +79,12 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       nodeCourrant=self.node.tree.currentItem()
       if nodeCourrant==None: nodeCourrant=self.node.tree.racine
       if self.name != None :
-         if nodeCourrant==self.node : self.node.append_child(self.name,'first')
-         else : nodeCourrant.append_brother(self.name)
+         if nodeCourrant==self.node : nouveau=self.node.append_child(self.name,'first')
+         else : nouveau=nodeCourrant.append_brother(self.name)
+         print "je suis la"
+         from InterfaceQT4 import compojdc
+         if self.editor.afficheCommandesPliees==True and isinstance(nouveau.treeParent,compojdc.Node) :
+            nouveau.plieToutEtReaffiche()
 
   def CreeListeCommande(self,filtre):
       listeGroupes,dictGroupes=self.jdc.get_groups()

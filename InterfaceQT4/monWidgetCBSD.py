@@ -31,7 +31,7 @@ from politiquesValidation  import PolitiqueUnique
 from qtSaisie              import SaisieValeur
 
 
-class MonWidgetCBCommun (Ui_WidgetCB,Feuille):
+class MonWidgetCB (Ui_WidgetCB,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
@@ -39,35 +39,22 @@ class MonWidgetCBCommun (Ui_WidgetCB,Feuille):
         self.determineChoix()
         self.setValeursApresBouton()
         self.connect(self.CBChoix,SIGNAL("currentIndexChanged(int)"),self.ChoixSaisi)
-        #self.CBChoix.lineEdit().setText(tr("Select"))
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.CBChoix)
+        print self.objSimp.isoblig()
 
 
   def setValeursApresBouton(self):
       if self.objSimp.get_valeur()==None : 
          self.CBChoix.setCurrentIndex(-1)
-         #self.CBChoix.lineEdit().setStyleSheet(("QLineEdit {" " background:yellow;\n" "font: italic ;\n" " }\n" " "))
-         self.CBChoix.lineEdit().setStyleSheet(("\n"
-"QLineEdit {\n"
-"     font : italic ;\n"
-"     background: rgb(168,168,168);\n"
-" }"))
-
-         self.CBChoix.lineEdit().setText(tr("Select"))
          return
-      self.CBChoix.lineEdit().setStyleSheet(("\n"
-"QLineEdit {\n"
-"     font : italic ;\n"
-"     background: rgb(235,235,235);\n"
-" }"))
       valeur=self.objSimp.get_valeur()
       if not(type(valeur) in types.StringTypes) : valeur=str(valeur)
       self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur))
       
   def determineChoix(self):
       listeChoix=QStringList()
-      for choix in self.maListeDeValeur:
+      for choix in self.monSimpDef.into:
           if not(type(choix) in types.StringTypes) : choix=str(choix)
           listeChoix<<choix
           self.CBChoix.addItem(choix)
@@ -77,23 +64,6 @@ class MonWidgetCBCommun (Ui_WidgetCB,Feuille):
       self.CBChoix.setCompleter(monCompleteur)
 
   def ChoixSaisi(self):
-      self.CBChoix.lineEdit().setStyleSheet(("\n"
-"QLineEdit {\n"
-"     font : italic ;\n"
-"     background: rgb(235,235,235);\n"
-" }"))
       valeur=str(self.CBChoix.currentText().toLatin1())
       SaisieValeur.LEValeurPressed(self,valeur)
       self.reaffiche()
-
-class MonWidgetCB (MonWidgetCBCommun):
-
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-      self.maListeDeValeur=monSimpDef.into
-      MonWidgetCBCommun. __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-
-class MonWidgetCBSD (MonWidgetCBCommun):
-
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-      self.maListeDeValeur=node.item.get_sd_avant_du_bon_type()
-      MonWidgetCBCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)

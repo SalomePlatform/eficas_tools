@@ -274,7 +274,7 @@ class IntoProtocol(PProtocol):
             if obj not in into:
                 raise ValError(
                     ufmt(
-                        _tr((u"La valeur : %s  ne fait pas partie des choix possibles %s")),
+                        _(tr(u"La valeur : %s  ne fait pas partie des choix possibles %s")),
                         repr(obj), into))
         else:
             # on est dans le cas d'un ensemble continu de valeurs possibles

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>652</width>
-    <height>43</height>
+    <height>31</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -39,7 +39,7 @@
     <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>2</number>
+    <number>0</number>
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -67,13 +67,13 @@
        <property name="minimumSize">
         <size>
          <width>21</width>
-         <height>31</height>
+         <height>25</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>21</width>
-         <height>35</height>
+         <height>25</height>
         </size>
        </property>
        <property name="focusPolicy">
@@ -91,8 +91,8 @@
        </property>
        <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>25</width>
+         <height>25</height>
         </size>
        </property>
       </widget>
@@ -110,7 +110,7 @@
      <property name="minimumSize">
       <size>
        <width>300</width>
-       <height>24</height>
+       <height>25</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -138,7 +138,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>32</height>
+       <height>25</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -190,13 +190,13 @@ border:0px;</string>
      <property name="minimumSize">
       <size>
        <width>21</width>
-       <height>31</height>
+       <height>25</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
        <width>21</width>
-       <height>31</height>
+       <height>25</height>
       </size>
      </property>
      <property name="focusPolicy">
@@ -214,8 +214,8 @@ border:0px;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>32</width>
-       <height>32</height>
+       <width>25</width>
+       <height>25</height>
       </size>
      </property>
     </widget>

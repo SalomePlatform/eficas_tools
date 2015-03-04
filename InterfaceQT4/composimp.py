@@ -170,10 +170,19 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             from monWidgetSimpComplexe import MonWidgetSimpComplexe
             widget=MonWidgetSimpComplexe(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
-          elif self.item.wait_co():
-          # Pas fait
-            from monWidgetSimpASSD import MonWidgetSimpASSD
-            widget=MonWidgetSimpASSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+          elif self.item.wait_assd():
+            if len(self.item.get_sd_avant_du_bon_type()) == 0 :
+               from monWidgetVide import MonWidgetVide
+               widget=MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            if len(self.item.get_sd_avant_du_bon_type()) < 4 :
+              from monWidgetRadioButton import MonWidgetRadioButtonSD
+              widget=MonWidgetRadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            elif len(self.item.get_sd_avant_du_bon_type()) < 7 :
+              from monWidget4a6RadioButton import MonWidget4a6RadioButtonSD
+              widget=MonWidget4a6RadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            else :
+              from monWidgetCB import MonWidgetCBSD
+              widget=MonWidgetCBSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           
           elif  self.item.wait_Salome() and self.editor.salome:
           # Pas fait

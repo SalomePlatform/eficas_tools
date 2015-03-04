@@ -36,23 +36,27 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   """
   """
   def __init__(self,node,editor,etape):
-      #print "MonWidgetCommande ", self
+      print "MonWidgetCommande ", self
       self.listeAffichageWidget=[]
       self.inhibe=0
       self.ensure=0
       Groupe.__init__(self,node,editor,None,etape.definition,etape,1,self)
+
       self.labelDoc.setText(QString(etape.definition.fr))
       if (etape.get_type_produit()==None): self.LENom.close()
-      elif (hasattr (etape, 'sdnom')) and etape.sdnom != "sansnom" : self.LENom.setText(etape.sdnom) 
+      elif (hasattr(etape, 'sdnom')) and etape.sdnom != "sansnom" and etape.sdnom != None: self.LENom.setText(etape.sdnom) 
       else : self.LENom.setText("")
+
       maPolice= QFont("Times", 10,)
       self.setFont(maPolice)
       self.repIcon=self.appliEficas.repIcon
       self.labelNomCommande.setText(tr(self.obj.nom))
+
       self.commandesLayout.addStretch()
       self.commandesLayout.focusInEvent=self.focusInEvent
       self.scrollAreaCommandes.focusInEvent=self.focusInEvent
-      if self.editor.code in ['MAP','Adao','CARMELCND'] : self.bCatalogue.close()
+
+      if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
       else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
       self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
       self.racine=self.node.tree.racine
@@ -71,9 +75,10 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.monOptionnel=MonWidgetOptionnel(self)
         self.editor.widgetOptionnel=self.monOptionnel
         self.editor.splitter.addWidget(self.monOptionnel)
-      print "dans init ", self.monOptionnel
+      #print "dans init ", self.monOptionnel
       self.afficheOptionnel()
-
+      print "fin init de widget Commande"
+      
 
   def focusNextPrevChild(self, next):
       # on s assure que ce n est pas un chgt de fenetre
@@ -124,7 +129,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   def afficheOptionnel(self):
       # N a pas de parentQt. doit donc etre redefini
       liste=self.ajouteMCOptionnelDesBlocs()
-      print "dans afficheOptionnel", self.monOptionnel
+      #print "dans afficheOptionnel", self.monOptionnel
       self.monOptionnel.parentMC=self
       self.monOptionnel.affiche(liste)
 
@@ -182,3 +187,15 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       if self.node.item.GetIconName() == "ast-yellow-square" :
          icon=QIcon(self.repIcon+"/ast-yel-ball.png")
       self.RBValide.setIcon(icon)
+
+  #def plieTout(self):
+  #    print "dans plieTout de fenetre"
+  #    if self.editor.dejaDansPlieTout: 
+  #       print "dans le hasattr"
+  #       self.editor.dejaDansPlieTout=False
+  #       return
+  #    self.editor.dejaDansPlieTout=True
+  #    self.node.plieTout()
+  #    print "je reaffiche"
+  #    self.node.affichePanneau()
+

@@ -55,14 +55,14 @@ class MonWidgetRadioButtonCommun (Feuille):
   def determineChoix(self):
       self.horizontalLayout.setAlignment(Qt.AlignLeft)
       i=1
-      j=len(self.monSimpDef.into)
+      j=len(self.maListeDeValeur)
       if j > self.maxI : 
          print "poumbadaboum"
          return
       while i < j+1 :
          nomBouton="radioButton_"+str(i)
          bouton=getattr(self,nomBouton)
-         valeur=self.monSimpDef.into[i-1]
+         valeur=self.maListeDeValeur[i-1]
          if not(type(valeur) in types.StringTypes) : valeur=str(valeur)
          bouton.setText(valeur)
          self.dict_bouton[valeur]=bouton
@@ -93,7 +93,7 @@ class MonWidgetRadioButtonCommun (Feuille):
       aLeFocus=self.focusWidget()
       nom=aLeFocus.objectName()[12:]
       i=nom.toInt()[0]+1
-      if i ==  len(self.monSimpDef.into) +1 : i=1
+      if i ==  len(self.maListeDeValeur) +1 : i=1
       nomBouton="radioButton_"+str(i)
       courant=getattr(self,nomBouton)
       courant.setFocus(True)
@@ -102,7 +102,7 @@ class MonWidgetRadioButtonCommun (Feuille):
       aLeFocus=self.focusWidget()
       nom=aLeFocus.objectName()[12:]
       i=nom.toInt()[0]-1
-      if i == 0 : i= len(self.monSimpDef.into)  
+      if i == 0 : i= len(self.maListeDeValeur)  
       nomBouton="radioButton_"+str(i)
       courant=getattr(self,nomBouton)
       courant.setFocus(True)
@@ -111,7 +111,19 @@ class MonWidgetRadioButtonCommun (Feuille):
 class MonWidgetRadioButton (Ui_WidgetRadioButton,MonWidgetRadioButtonCommun):
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetRadioButton ", self
+        self.maListeDeValeur=monSimpDef.into
         MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         
+  def setMaxI(self):
+        self.maxI=3
+
+
+class MonWidgetRadioButtonSD (Ui_WidgetRadioButton,MonWidgetRadioButtonCommun):
+
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        print "dans le init de MonWidgetRadioButtonSD",self
+        self.maListeDeValeur=node.item.get_sd_avant_du_bon_type()
+        MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+
   def setMaxI(self):
         self.maxI=3

@@ -8,9 +8,10 @@ PY_FILES = desSelectVal.py desViewTexte.py  desChoixCommandes.py desWidgetComman
         desWidgetSimpBase.py desWidget4a6RadioButton.py desWidgetRadioButton.py  desWidgetBloc.py \
         desWidgetCB.py desWidgetPlusieursBase.py desWidgetFact.py desWidgetFactPlie.py \
         desWidgetSimpBool.py desWidgetSimpComplexe.py desWidgetSimpTuple.py myMain.py \
-        desChoixCata.py desWidgetPlusieursInto.py desBaseWidget.py desWidgetOptionnel.py \
+        desChoixCata.py desWidgetPlusieursInto.py desWidgetPlusieursIntoOrdonne.py desBaseWidget.py desWidgetOptionnel.py \
         desWidgetSimpFichier.py desWidgetSimpTxt.py desRecherche.py desWidgetCommentaire.py\
-	desWidgetTuple2.py desWidgetTuple3.py desWidgetParam.py desWidgetHeure.py desWidgetDate.py
+	desWidgetTuple2.py desWidgetTuple3.py desWidgetParam.py desWidgetHeure.py desWidgetDate.py\
+        desWidgetVide.py
 
 QM_FILES=eficas_en.qm 
 
