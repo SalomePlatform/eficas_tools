@@ -203,7 +203,7 @@ INITIAL_STATE=PROC(nom="INITIAL_STATE",op=None,
        ),
        Stage_Discharge_Curves=SIMP(statut='f',typ='I',into=[0,1,2],fr='Indique si une courbe de tarage doit etre utilisee pour une frontiere 0:non 1:Z(Q) 2: Q(Z) (2 non programme)',ang='Says if a discharge-elevation curve must be used for a given boundary :NO 1:Z(Q) 2: Q(Z) (2 not programmed)'),
        Stage_Discharge_Curves_File   = SIMP( statut='f', typ = ('Fichier', 'All Files (*)',),fr='Nom du fichier contenant les courbes de tarage',ang='Name of the file containing stage-discharge curves',),
-       Treatment_of_Fluxes_at_the_Boundaries   = SIMP( statut='f',typ='I',into=[1,2],sug=1),
+       Treatment_of_Fluxes_at_the_Boundaries   = SIMP( statut='f',typ='I',into=[1,2],sug=1,fr='Utilise pour les schemas SUPG, PSI et N, avec option 2, on ne retrouvepas exactement les valeurs imposees des traceurs,mais le flux est correct',ang='Used so far only with the SUPG, PSI and N schemes.With option 2, Dirichlet prescribed values are not obeyed,but the fluxes are correct'),
        Option_for_tidal_Boundary_Conditions   = SIMP( statut='f',typ='I',into=[1,2],sug=1),
    ),
 )
