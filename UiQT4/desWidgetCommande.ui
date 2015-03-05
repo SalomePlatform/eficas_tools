@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1031</width>
-    <height>203</height>
+    <height>251</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -487,6 +487,13 @@ border-radius : 12px
     </layout>
    </item>
    <item>
+    <widget class="QLabel" name="labelDoc">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QScrollArea" name="scrollAreaCommandes">
      <property name="minimumSize">
       <size>
@@ -506,6 +513,9 @@ border-radius : 12px
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAsNeeded</enum>
      </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAsNeeded</enum>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
@@ -515,7 +525,7 @@ border-radius : 12px
         <x>0</x>
         <y>0</y>
         <width>1013</width>
-        <height>117</height>
+        <height>135</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">

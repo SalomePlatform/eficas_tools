@@ -38,6 +38,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
        #print "Feuille", monSimpDef,nom,objSimp
+       #print self
        QWidget.__init__(self,None)
        self.node=node
        self.node.fenetre=self
@@ -171,3 +172,17 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       # if self.monSimpDef.get_sug() != None and self.monSimpDef.get_sug() != "": info+="Valeur suggérée : "self.monSimpDef.get_sug()
       pass
       #self.editor.affiche_infos(info)
+
+   def reaffiche(self):
+      print "dans reaffiche de feuille", self.nom
+      if self.editor.jdc.aReafficher==True :
+         print " j appelle le reaffiche de parentQt"
+         self.parentQt.reaffiche()
+         #PN PN PN pas satisfaisant
+         #nodeAVoir=self.parentQt.node.chercheNoeudCorrespondant(self.objSimp)
+         #print nodeAVoir.fenetre
+         #print "nodeAVoir.fenetre.isVisible()", nodeAVoir.fenetre.isVisible()
+         #if nodeAVoir.fenetre.isVisible() : return
+         #self.editor.fenetreCentraleAffichee.rendVisibleNoeud(nodeAVoir)
+         #nodeAVoir.fenetre.setFocus()
+

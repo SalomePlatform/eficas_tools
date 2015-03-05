@@ -146,6 +146,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
            self.listeValeursCourantes=self.listeValeursCourantes+listeRetour
            if len(self.listeValeursCourantes) > self.monSimpDef.min :
               self.node.item.set_valeur(self.listeValeursCourantes)
+              self.reaffiche()
            return None
         else :
            return(comm2+" "+comm)
@@ -185,6 +186,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
       if len(self.listeValeursCourantes) < min : return
       self.node.item.set_valeur(self.listeValeursCourantes)
       self.setValide()
+      self.reaffiche()
 
           
 

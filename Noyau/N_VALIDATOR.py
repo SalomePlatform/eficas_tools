@@ -162,7 +162,7 @@ class TypeProtocol(PProtocol):
                     return obj
                 else:
                     raise ValError(
-                        ufmt(_tr((u"%s n'est pas un fichier valide")), repr(obj)))
+                        ufmt(_(tr(u"%s n'est pas un fichier valide")), repr(obj)))
             elif type_permis == 'FichierNoAbs':
                 import os
                 if (len(typ) > 2 and typ[2] == "Sauvegarde") or isinstance(obj, type("")):

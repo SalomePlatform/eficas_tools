@@ -142,6 +142,7 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
               return
           valeur=  self.getValeurComp()
       self.politique.RecordValeur(valeur)
+      self.reaffiche()
       self.parentQt.donneFocus()
 
   def getValeurRI(self):

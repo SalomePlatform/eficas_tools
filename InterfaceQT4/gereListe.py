@@ -50,7 +50,6 @@ class GereListe:
 # ------------- #
 
    def __init__(self):
-       print "GereListe"
        self.connecterSignaux()
 
    def connecterSignaux(self):

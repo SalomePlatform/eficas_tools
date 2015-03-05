@@ -125,9 +125,11 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
       # Gerer les matrices --> Actuellement pas dans ce type de panneau
 
         #print "____________________________", self.item.wait_tuple() 
+        # Gestion d'une seule valeur (eventuellement un tuple ou un complexe)
         if maDefinition.max == 1 :
+
+          # Listes de valeur discretes
           if maDefinition.into != [] and maDefinition.into != None:
-          # a revoir
             if len(maDefinition.into) < 4 :
               from monWidgetRadioButton import MonWidgetRadioButton
               widget=MonWidgetRadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
@@ -141,13 +143,19 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
           elif self.item.wait_bool() :
             from monWidgetSimpBool import MonWidgetSimpBool
             widget=MonWidgetSimpBool(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-
           elif self.item.wait_fichier():
             from monWidgetSimpFichier import MonWidgetSimpFichier
             widget=MonWidgetSimpFichier(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
+          # PNPNPN - a faire
+          elif self.item.wait_date():
+            from monWidgetDate import MonWidgetDate
+            widget=MonWidgetDate(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+          elif self.item.wait_heure():
+            from monWidgetHeure import MonWidgetHeure
+            widget=MonWidgetHeure(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+
           elif self.item.wait_tuple() :
-          # Pas fait
             if self.item.object.definition.type[0].ntuple == 2:
                from monWidgetSimpTuple2 import MonWidgetSimpTuple2
                widget=MonWidgetSimpTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
@@ -155,10 +163,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                from monWidgetSimpTuple3 import MonWidgetSimpTuple3
                widget=MonWidgetSimpTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-               print "Pas fait"
+               print "Pas de Tuple de longueur > 3"
+               print "Prevenir la maintenance "
 
           elif self.item.wait_complex():
-          # Pas fait
             from monWidgetSimpComplexe import MonWidgetSimpComplexe
             widget=MonWidgetSimpComplexe(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
@@ -173,21 +181,25 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             widget=MonWidgetSimpSalome(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.wait_TXM():
-          # Pas fait
             from monWidgetSimpTxt import MonWidgetSimpTxt
             widget=MonWidgetSimpTxt(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
             from monWidgetSimpBase import MonWidgetSimpBase
             widget=MonWidgetSimpBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
+        # Gestion des listes
         else :
           if maDefinition.into != [] and maDefinition.into != None:
-             #Pas encore traité
-            from monWidgetPlusieursInto import MonWidgetPlusieursInto
-            widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            if self.item.is_list_SansOrdreNiDoublon():
+               from monWidgetPlusieursInto import MonWidgetPlusieursInto
+               widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            else :
+               from monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
+               widget=MonWidgetPlusieursIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
             from monWidgetPlusieursBase import MonWidgetPlusieursBase
             widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+        self.widget=widget
         return widget
          
     
@@ -239,6 +251,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
          is_a_list= self.definition.validators.is_list() * is_a_list
       return is_a_list 
 
+  def is_list_SansOrdreNiDoublon(self):
+      if self.definition.homo=="SansOrdreNiDoublon": return 1
+      return 0 
 
   def has_into(self):
       """
@@ -520,6 +535,24 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           return 1
       else:
           return 0
+
+  def wait_date(self):
+      """ Méthode booléenne qui retourne 1 si l'objet pointé par self
+      attend un réel, 0 sinon """
+      if 'DateHHMMAAAA' in self.object.definition.type:
+          return 1
+      else:
+          return 0
+        
+  def wait_heure(self):
+      """ Méthode booléenne qui retourne 1 si l'objet pointé par self
+      attend un réel, 0 sinon """
+      if 'HeureHHMMSS' in self.object.definition.type:
+          return 1
+      else:
+          return 0
+        
+        
         
   def wait_tuple(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self

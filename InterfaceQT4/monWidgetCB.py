@@ -66,4 +66,4 @@ class MonWidgetCB (Ui_WidgetCB,Feuille):
   def ChoixSaisi(self):
       valeur=str(self.CBChoix.currentText().toLatin1())
       SaisieValeur.LEValeurPressed(self,valeur)
-      self.parentQt.reaffiche()
+      self.reaffiche()
