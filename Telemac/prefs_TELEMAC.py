@@ -28,7 +28,7 @@ sys.path[:0]=[INSTALLDIR]
 
 
 # lang indique la langue utilisee pour les chaines d'aide : fr ou ang
-lang='fr'
+lang='ang'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'
@@ -36,5 +36,6 @@ docPath=repIni
 
 #
 catalogues=(
+   #('TELEMAC','default',os.path.join(repIni,'Telemac_Cata_nouveau.py'),'TELEMAC','python'),
    ('TELEMAC','default',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC','python'),
 )
