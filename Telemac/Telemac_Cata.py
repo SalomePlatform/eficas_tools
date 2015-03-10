@@ -232,7 +232,7 @@ TIDE_PARAMETERS=PROC(nom="TIDE_PARAMETERS",op=None,
                          ), # fin bloc b_lat
              ), # fin bloc b_geo
 
-        Zone_number_in_Geographic_System=SIMP(statut='f',typ='I',
+        Zone_number_in_Geographic_System=SIMP(statut='f',typ='TXM',
             #into=[-1,0,1,2,3,4,22,30],
             into=[ 'LAMBERT 1 NORD', 'LAMBERT 2 CENTRE', 'LAMBERT 3 SUD', 'LAMBERT 4 CORSE', 'LAMBERT 2 ETENDU', 'ZONE UTM, PAR EXEMPLE'],
             fr="Numero de zone (fuseau ou type de projection) lors de l'utilisation d'une projection plane.\n Indiquer le systeme geographique dans lequel est construit le modele numerique avec le mot-cle SYSTEME GEOGRAPHIQUE",
