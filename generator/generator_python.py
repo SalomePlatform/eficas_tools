@@ -30,8 +30,12 @@ from Noyau.N_utils import repr_float
 import Accas
 import Extensions
 from Extensions.parametre import ITEM_PARAMETRE
-from Formatage import Formatage
+from Formatage import Formatage 
+from Formatage import FormatageLigne
 from Extensions.param2 import Formula
+from Extensions.eficas_exception import EficasException
+from Extensions.i18n import tr
+
 
 def entryPoint():
    """
@@ -92,6 +96,7 @@ class PythonGenerator:
       """
       self.appli=obj.get_jdc_root().appli
       #self.appli=obj.appli
+      print format
       liste= self.generator(obj)
       if format == 'brut':
          self.text=liste
@@ -100,8 +105,11 @@ class PythonGenerator:
       elif format == 'beautifie':
          jdc_formate = Formatage(liste,mode='.py')
          self.text=jdc_formate.formate_jdc()
+      elif format == 'Ligne':
+         jdc_formate = FormatageLigne(liste,mode='.py')
+         self.text=jdc_formate.formate_jdc()
       else:
-         raise "Format pas implemente : "+format
+         raise EficasException(tr("Format non implemente ") +format)
       return self.text
 
    def generator(self,obj):
@@ -152,7 +160,7 @@ class PythonGenerator:
       elif isinstance(obj,Formula):
          return self.generFormula(obj)
       else:
-         raise "Type d'objet non prevu",obj
+         raise EficasException(tr("Type d'objet non prevu") +obj)
 
    def generJDC(self,obj):
       """

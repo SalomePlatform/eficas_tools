@@ -222,6 +222,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.addAction(self.actionLecteur_Pdf)
         self.menuOptions.setTitle(tr("Options"))
 
+        self.menuFichier.addAction(self.actionSauveLigne)
 
     def CARMEL3D(self):
         #if self.salome == 0 : return
@@ -355,10 +356,13 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionTraduitV10V11.setObjectName("actionTraduitV10V11")
         self.actionTraduitV9V10.setText(tr("TraduitV9V10"))
         self.actionTraduitV10V11.setText(tr("TraduitV10V11"))
+        self.actionSauveLigne = QAction(self)
+        self.actionSauveLigne.setText(tr("Sauve Format Ligne"))
         self.connect(self.actionParametres_Eficas,SIGNAL("activated()"),self.optionEditeur)
         self.connect(self.actionLecteur_Pdf,SIGNAL("activated()"),self.optionPdf)
         self.connect(self.actionTraduitV9V10,SIGNAL("activated()"),self.traductionV9V10)
         self.connect(self.actionTraduitV10V11,SIGNAL("activated()"),self.traductionV10V11)
+        self.connect(self.actionSauveLigne,SIGNAL("activated()"),self.sauveLigne)
 
         # Pour Carmel
         self.actionChercheGrpMaille = QAction(self)
@@ -583,6 +587,9 @@ class Appli(Ui_Eficas,QMainWindow):
             msg = unicode(exc)
             if msg != "":
                 QMessageBox.warning(self, tr(u"Erreur"), msg)
+
+    def sauveLigne(self):
+        return self.viewmanager.sauveLigneCurrentEditor()
 
     def fileSave(self):
         return self.viewmanager.saveCurrentEditor()

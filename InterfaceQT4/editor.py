@@ -662,9 +662,9 @@ class JDCEditor(QSplitter):
                    self.appliEficas.trUtf8('Wrapper Files (*.xml);;''All Files (*)'))
      return  fichier
 
-    #----------------------------------#
-    def writeFile(self, fn, txt = None):
-    #----------------------------------#
+    #---------------------------------------------------------------#
+    def writeFile(self, fn, txt = None, formatLigne="beautifie"):
+    #---------------------------------------------------------------#
         """
         Public slot to write the text to a file.
 
@@ -675,7 +675,7 @@ class JDCEditor(QSplitter):
         fn = unicode(fn)
 
         if txt == None :
-            txt = self.get_text_JDC(self.format)
+            txt = self.get_text_JDC(self.format,formatLigne=formatLigne)
             eol = '\n'
             if len(txt) >= len(eol):
                if txt[-len(eol):] != eol:
@@ -696,15 +696,15 @@ class JDCEditor(QSplitter):
                     .arg(unicode(fn)).arg(str(why)))
             return 0
 
-    #-------------------------------------#
-    def get_text_JDC(self,format,pourRun=0):
-    #-------------------------------------#
+    #---------------------------------------------------------------#
+    def get_text_JDC(self,format,pourRun=0,formatLigne="beautifie"):
+    #---------------------------------------------------------------#
       if self.code == "MAP" and not(generator.plugins.has_key(format)): format = "MAP"
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
          try :
-            jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+            jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.CONFIGURATION)
             if pourRun : jdc_formate=self.generator.textePourRun
          except ValueError,e:
             QMessageBox.critical(self, tr("Erreur a la generation"),str(e))
@@ -981,9 +981,9 @@ class JDCEditor(QSplitter):
         #else :
            pass
 
-    #-----------------------------------------#
-    def saveFile(self, path = None, saveas= 0):
-    #-----------------------------------------#
+    #-------------------------------------------------------------#
+    def saveFile(self, path = None, saveas= 0, formatLigne="beautifie"):
+    #-------------------------------------------------------------#
         """
         Public slot to save the text to a file.
 
@@ -1017,7 +1017,7 @@ class JDCEditor(QSplitter):
           fn = unicode(QDir.convertSeparators(fn))
           newName = fn
 
-        if not (self.writeFile(fn)): return (0, None)
+        if not (self.writeFile(fn,formatLigne=formatLigne)): return (0, None)
         self.fichier = fn
         self.modified  = False
         if self.fileInfo is None or saveas:
@@ -1039,8 +1039,14 @@ class JDCEditor(QSplitter):
         return (1, self.fichier)
 #
     #----------------------------------------------#
-    def saveFileAs(self, path = None,fileName=None):
+    def sauveLigneFile(self):
     #----------------------------------------------#
+        self.modified=1
+        return self.saveFile(formatLigne="Ligne")
+
+    #---------------------------------------------------------------#
+    def saveFileAs(self, path = None,fileName=None):
+    #---------------------------------------------------------------#
         """
         Public slot to save a file with a new name.
 
@@ -1052,7 +1058,7 @@ class JDCEditor(QSplitter):
            self.fichier = fileName
            self.modified=1
            return self.saveFile()
-        return self.saveFile(path,1)
+        return self.saveFile(path,1,"beautifie")
 
 
 
