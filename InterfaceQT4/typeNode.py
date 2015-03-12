@@ -118,10 +118,14 @@ class PopUpMenuNodeMinimal :
             if hasattr(self.tree.currentItem(),p):
                listeparam.append(getattr(self.tree.currentItem(),p))
             if p=="self" : listeparam.append(self)
+        from Extensions.param2 import originalMath
+        originalMath.toOriginal()
         try :
            fonction(listeparam,self.appliEficas)
         except :
            fonction(listeparam)
+        originalMath.toSurcharge()
+
 
 
     def createActions(self):

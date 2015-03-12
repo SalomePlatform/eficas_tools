@@ -71,7 +71,6 @@ class Appli(Ui_Eficas,QMainWindow):
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
-        self.salome=1
 
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.ajoutIcones()
