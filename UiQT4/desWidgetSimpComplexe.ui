@@ -98,7 +98,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/ast-green-ball.png</normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/ast-green-ball.png</iconset>
+           <normaloff>../Editeur/icons/ast-green-ball.png</normaloff>../Editeur/icons/ast-green-ball.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -238,7 +238,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/deleteRond.png</normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/deleteRond.png</iconset>
+       <normaloff>../Editeur/icons/deleteRond.png</normaloff>../Editeur/icons/deleteRond.png</iconset>
      </property>
      <property name="iconSize">
       <size>

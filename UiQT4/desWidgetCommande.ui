@@ -32,12 +32,9 @@
    <string notr="true">background-color : rgb(224,223,222);
 font : 'times' 9px</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <property name="spacing">
-      <number>6</number>
-     </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QFrame" name="frame_2">
        <property name="sizePolicy">
@@ -100,7 +97,7 @@ font : 'times' 9px</string>
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/ast-green-ball.png</normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/ast-green-ball.png</iconset>
+            <normaloff>../Editeur/icons/ast-green-ball.png</normaloff>../Editeur/icons/ast-green-ball.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -250,7 +247,7 @@ QLineEdit:disabled
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/roue.png</normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/roue.png</iconset>
+              <normaloff>../Editeur/icons/roue.png</normaloff>../Editeur/icons/roue.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -288,7 +285,7 @@ QLineEdit:disabled
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/point-interrogation30.png</normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/point-interrogation30.png</iconset>
+              <normaloff>../Editeur/icons/point-interrogation30.png</normaloff>../Editeur/icons/point-interrogation30.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -326,7 +323,7 @@ QLineEdit:disabled
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/lettreRblanc30.png</normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/lettreRblanc30.png</iconset>
+              <normaloff>../Editeur/icons/lettreRblanc30.png</normaloff>../Editeur/icons/lettreRblanc30.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -382,7 +379,7 @@ QLineEdit:disabled
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/deleteRond.png</normaloff>../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/deleteRond.png</iconset>
+            <normaloff>../Editeur/icons/deleteRond.png</normaloff>../Editeur/icons/deleteRond.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -403,29 +400,7 @@ QLineEdit:disabled
       </widget>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="sizeConstraint">
-        <enum>QLayout::SetFixedSize</enum>
-       </property>
-       <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QPushButton" name="bCatalogue">
          <property name="sizePolicy">
@@ -467,20 +442,100 @@ border-radius : 12px
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="bAvant">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>Affiche les commandes possibles</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color:rgb(104,110,149);
+color :white;
+border-radius : 12px
+</string>
+           </property>
+           <property name="text">
+            <string>&lt;&lt;</string>
+           </property>
+           <property name="shortcut">
+            <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+           </property>
+           <property name="autoDefault">
+            <bool>true</bool>
+           </property>
+           <property name="default">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="bApres">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>Affiche les commandes possibles</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color:rgb(104,110,149);
+color :white;
+border-radius : 12px
+</string>
+           </property>
+           <property name="text">
+            <string>&gt;&gt;</string>
+           </property>
+           <property name="shortcut">
+            <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+           </property>
+           <property name="autoDefault">
+            <bool>true</bool>
+           </property>
+           <property name="default">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
@@ -525,7 +580,7 @@ border-radius : 12px
         <x>0</x>
         <y>0</y>
         <width>1013</width>
-        <height>135</height>
+        <height>130</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">

@@ -86,7 +86,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../../../../../../../home/A96028/Install_EficasV1/EficasV1/Editeur/icons/minusnode.png</normaloff>../../../../../../../../home/A96028/Install_EficasV1/EficasV1/Editeur/icons/minusnode.png</iconset>
+         <normaloff>../Editeur/icons/minusnode.png</normaloff>../Editeur/icons/minusnode.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -136,7 +136,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/ast-green-ball.png</normaloff>../../../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/ast-green-ball.png</iconset>
+         <normaloff>../Editeur/icons/ast-green-ball.png</normaloff>../Editeur/icons/ast-green-ball.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -263,7 +263,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../../../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/point-interrogation30.png</normaloff>../../../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/point-interrogation30.png</iconset>
+             <normaloff>../Editeur/icons/point-interrogation30.png</normaloff>../Editeur/icons/point-interrogation30.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -295,7 +295,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../../../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/lettreRblanc30.png</normaloff>../../../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/lettreRblanc30.png</iconset>
+             <normaloff>../Editeur/icons/lettreRblanc30.png</normaloff>../Editeur/icons/lettreRblanc30.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -345,7 +345,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../../../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/deleteRond.png</normaloff>../../../../../../../../home/A96028/Install_EficasV1/ArbreEficas/Editeur/icons/deleteRond.png</iconset>
+           <normaloff>../Editeur/icons/deleteRond.png</normaloff>../Editeur/icons/deleteRond.png</iconset>
          </property>
          <property name="iconSize">
           <size>
