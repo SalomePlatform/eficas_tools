@@ -36,13 +36,15 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   """
   """
   def __init__(self,node,editor,etape):
-      print "MonWidgetCommande ", self
+      #print "MonWidgetCommande ", self
       self.listeAffichageWidget=[]
       self.inhibe=0
       self.ensure=0
       Groupe.__init__(self,node,editor,None,etape.definition,etape,1,self)
 
-      self.labelDoc.setText(QString(etape.definition.fr))
+      if node.item.get_fr() != "" : self.labelDoc.setText(QString(node.item.get_fr()))
+      else : self.labelDoc.close()
+      
       if (etape.get_type_produit()==None): self.LENom.close()
       elif (hasattr(etape, 'sdnom')) and etape.sdnom != "sansnom" and etape.sdnom != None: self.LENom.setText(etape.sdnom) 
       else : self.LENom.setText("")
@@ -58,6 +60,12 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
       if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
       else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+      if self.editor.code in ['Adao','MAP'] : 
+            self.bAvant.close()
+            self.bApres.close()
+      else : 
+            self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
+            self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
       self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
       self.racine=self.node.tree.racine
       if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)
@@ -77,12 +85,12 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.editor.splitter.addWidget(self.monOptionnel)
       #print "dans init ", self.monOptionnel
       self.afficheOptionnel()
-      print "fin init de widget Commande"
+      #print "fin init de widget Commande"
       
 
   def focusNextPrevChild(self, next):
       # on s assure que ce n est pas un chgt de fenetre
-      print "je passe dans focusNextPrevChild"
+      #print "je passe dans focusNextPrevChild"
       if self.editor.fenetreCentraleAffichee != self : return True
       try :
         i= self.listeAffichageWidget.index(self.focusWidget())
@@ -134,7 +142,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.monOptionnel.affiche(liste)
 
   def focusInEvent(self,event):
-      print "je mets a jour dans focusInEvent de monWidget Commande "
+      #print "je mets a jour dans focusInEvent de monWidget Commande "
       if self.editor.code == "CARMELCND" : return #Pas de MC Optionnels pour Carmel
       self.afficheOptionnel()
 
@@ -142,6 +150,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   def reaffiche(self,nodeAVoir=None):
       self.avantH=self.editor.fenetreCentraleAffichee.scrollAreaCommandes.horizontalScrollBar().sliderPosition()
       self.avantV=self.editor.fenetreCentraleAffichee.scrollAreaCommandes.verticalScrollBar().sliderPosition()
+      self.inhibeExpand=True
       self.node.affichePanneau()
       print "dans reaffiche de monWidgetCommande", self.avantH, self.avantV
       QTimer.singleShot(1, self.recentre)
@@ -153,6 +162,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         print "dans reaffiche",self.f, nodeAVoir.item.nom
         if self.f != None and self.f.isVisible() : return
         if self.f != None : QTimer.singleShot(1, self.rendVisible)
+      self.inhibeExpand=False
 
 
   def recentre(self):
@@ -177,6 +187,12 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       if self.node : self.node.select()
       else : self.racine.select()
 
+  def afficheApres(self):
+       self.node.selectApres()
+
+  def afficheAvant(self):
+       self.node.selectAvant()
+
   def setValide(self):
       if not(hasattr (self,'RBValide')) : return
       icon = QIcon()
@@ -188,14 +204,4 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
          icon=QIcon(self.repIcon+"/ast-yel-ball.png")
       self.RBValide.setIcon(icon)
 
-  #def plieTout(self):
-  #    print "dans plieTout de fenetre"
-  #    if self.editor.dejaDansPlieTout: 
-  #       print "dans le hasattr"
-  #       self.editor.dejaDansPlieTout=False
-  #       return
-  #    self.editor.dejaDansPlieTout=True
-  #    self.node.plieTout()
-  #    print "je reaffiche"
-  #    self.node.affichePanneau()
 

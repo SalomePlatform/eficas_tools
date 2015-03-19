@@ -102,10 +102,10 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
       if valeur != None : nouveauLE.setText(str(valeur))
       # deux lignes pour que le ensureVisible fonctionne
       self.estVisible=nouveauLE
-      QTimer.singleShot(1, self.rendVisible)
+      QTimer.singleShot(1, self.rendVisibleLigne)
 
 
-  def rendVisible(self):
+  def rendVisibleLigne(self):
       qApp.processEvents()
       self.estVisible.setFocus()
       self.scrollArea.ensureWidgetVisible(self.estVisible,0,0)

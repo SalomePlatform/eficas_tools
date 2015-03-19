@@ -53,12 +53,13 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def __init__ (self,appli,fichier = None, jdc = None, QWParent=None, units = None, include=0 , vm=None):
     #----------------------------------------------------------------------------------------------------------#
 
+        self.a=0
         QtGui.QWidget.__init__(self,None)
         self.setupUi(self)
         self.monOptionnel=None
         self.fenetreCentraleAffichee=None
         self.dejaDansPlieTout=False
-        self.afficheCommandesPliees = False
+        self.afficheCommandesPliees = True
         self.appliEficas = appli
         self.appli       = appli  #---- attendu par IHM
         self.vm          = vm
@@ -75,6 +76,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code = self.appliEficas.CONFIGURATION.code
+        if self.code in ['MAP','CARMELCND'] : self.afficheCommandesPliees=False
         self.affiche_alpha=1
         if self.code in ['MAP',] : 
            self.widgetTree.close()
@@ -132,7 +134,13 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.node_selected = []
         self.deplier = True
         self.message=''
-        if self.code in ['Adao',] : self.afficheCommandesPliees=True
+        if self.code in ['Adao','MAP'] : self.afficheApresInsert=True
+        else :  self.afficheApresInsert=False
+        if self.code in ['TELEMAC',] : self.enteteQTree='premier'
+        else : self.enteteQTree='complet'
+        if self.code in ['Adao','TELEMAC'] : self.affichePlie=True
+        else : self.affichePlie=False
+
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
 
         #------- construction du jdc --------------
@@ -145,9 +153,11 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
             self.fileInfo = QFileInfo(self.fichier)
             self.fileInfo.setCaching(0)
             if jdc==None :
-               try :
+              # try :
+              if 1:
                    self.jdc = self.readFile(self.fichier)
-               except :
+               #except :
+              else :
                    print "mauvaise lecture"
             else :
                self.jdc=jdc
@@ -179,6 +189,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                 jdc_item=Objecttreeitem.make_objecttreeitem( self, "nom", self.jdc )
                 if (not self.jdc.isvalid()) and (not self.nouveau) and (self.appliEficas.ssIhm == False):
                     self.viewJdcRapport()
+ 
+        if self.code=="TELEMAC" : print "kkkkkkkk"
+
 
         if jdc_item:
             self.tree = browser.JDCTree( jdc_item,  self )
@@ -470,21 +483,22 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #---------------------#
     def handleDeplier(self):
     #---------------------#
+       print "je passe ici"
        if self.tree == None : return
-       self.tree.collapseAll()
+       #self.tree.collapseAll()
        if self.deplier :
-          self.tree.collapseItem(self.tree.topLevelItem(0))
+          #print "je plie"
+          self.tree.expandItem(self.tree.topLevelItem(0))
           self.deplier = False
           if self.fenetreCentraleAffichee != None  :
              if hasattr(self.fenetreCentraleAffichee.node,'plieToutEtReaffiche'):
-                 print "plie"
                  self.fenetreCentraleAffichee.node.plieToutEtReaffiche()
        else:
+          #print "je deplie"
           self.tree.expandItem(self.tree.topLevelItem(0))
           self.deplier = True
           if self.fenetreCentraleAffichee != None  :
              if hasattr(self.fenetreCentraleAffichee.node,'deplieToutEtReaffiche'):
-                 print "deplie"
                  self.fenetreCentraleAffichee.node.deplieToutEtReaffiche()
 
     #---------------------#
@@ -689,9 +703,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                    self.appliEficas.trUtf8('Wrapper Files (*.xml);;''All Files (*)'))
      return  fichier
 
-    #----------------------------------#
-    def writeFile(self, fn, txt = None):
-    #----------------------------------#
+    #--------------------------------------------------#
+    def writeFile(self, fn, txt = None,formatLigne="beautifie"):
+    #--------------------------------------------------#
         """
         Public slot to write the text to a file.
 
@@ -700,9 +714,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         """
 
         fn = unicode(fn)
-
+       
         if txt == None :
-            txt = self.get_text_JDC(self.format)
+            txt = self.get_text_JDC(self.format,formatLigne=formatLigne)
             eol = '\n'
             if len(txt) >= len(eol):
                if txt[-len(eol):] != eol:
@@ -723,15 +737,15 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                     .arg(unicode(fn)).arg(str(why)))
             return 0
 
-    #-------------------------------------#
-    def get_text_JDC(self,format,pourRun=0):
-    #-------------------------------------#
+    #-----------------------------------------------------------#
+    def get_text_JDC(self,format,pourRun=0,formatLigne="beautifie"):
+    #-----------------------------------------------------------#
       if self.code == "MAP" and not(generator.plugins.has_key(format)): format = "MAP"
       if generator.plugins.has_key(format):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
          try :
-            jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+            jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.CONFIGURATION)
             if pourRun : jdc_formate=self.generator.textePourRun
          except ValueError,e:
             QMessageBox.critical(self, tr("Erreur a la generation"),str(e))
@@ -978,9 +992,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         #else :
            pass
 
-    #-----------------------------------------#
-    def saveFile(self, path = None, saveas= 0):
-    #-----------------------------------------#
+    #-----------------------------------------------------------------#
+    def saveFile(self, path = None, saveas= 0,formatLigne="beautifie"):
+    #-----------------------------------------------------------------#
         """
         Public slot to save the text to a file.
 
@@ -1014,7 +1028,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
           fn = unicode(QDir.convertSeparators(fn))
           newName = fn
 
-        if not (self.writeFile(fn)): return (0, None)
+        if not (self.writeFile(fn,formatLigne=formatLigne)): return (0, None)
         self.fichier = fn
         self.modified  = False
         if self.fileInfo is None or saveas:
@@ -1037,6 +1051,14 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
 
         return (1, self.fichier)
 #
+
+    #----------------------------------------------#
+    def sauveLigneFile(self):
+    #----------------------------------------------#
+        self.modified=1
+        return self.saveFile(formatLigne="Ligne")
+
+
     #----------------------------------------------#
     def saveFileAs(self, path = None,fileName=None):
     #----------------------------------------------#
@@ -1050,7 +1072,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         if fileName != None :
            self.fichier = fileName
            return self.saveFile()
-        return self.saveFile(path,1)
+        return self.saveFile(path,1,"beautifie")
 
 
 

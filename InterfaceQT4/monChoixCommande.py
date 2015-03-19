@@ -79,12 +79,15 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       nodeCourrant=self.node.tree.currentItem()
       if nodeCourrant==None: nodeCourrant=self.node.tree.racine
       if self.name != None :
-         if nodeCourrant==self.node : nouveau=self.node.append_child(self.name,'first')
-         else : nouveau=nodeCourrant.append_brother(self.name)
-         print "je suis la"
-         from InterfaceQT4 import compojdc
-         if self.editor.afficheCommandesPliees==True and isinstance(nouveau.treeParent,compojdc.Node) :
-            nouveau.plieToutEtReaffiche()
+         plier=self.editor.afficheCommandesPliees
+         if nodeCourrant==self.node : nouveau=self.node.append_child(self.name,'first',plier)
+         else : nouveau=nodeCourrant.append_brother(self.name,plier=plier)
+      nouveau.setDeplie()
+      #if self.editor.afficheApresInsert==True : nouveau.plieToutEtReaffiche()
+      if self.editor.afficheApresInsert == True :
+           if self.editor.affichePlie ==True:  nouveau.plieToutEtReaffiche()
+           else : nouveau.deplieToutEtReaffiche()
+           #nouveau.deplieToutEtReaffiche()
 
   def CreeListeCommande(self,filtre):
       listeGroupes,dictGroupes=self.jdc.get_groups()
@@ -161,13 +164,6 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            commentaire=""
       self.editor.labelCommentaire.setText(commentaire)
 
-  def bOkPressed(self):
-      if self.name==None :  
-         QMessageBox.critical(None, tr("Commande non choisie "),
-                     tr("Vous devez choisir une commande") )
-         return
-      #new_node = self.node.append_child(self.name,'first')
-      self.node.tree.choisitPremier(self.name)
 
 
   def setValide(self):

@@ -73,9 +73,14 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
 
   def afficheMots(self):
       for node in self.node.children:
-           if hasattr(self.node,'appartientAUnNoeudPlie') and self.node.appartientAUnNoeudPlie==True : return
-           #print "getPanel ds afficheMots " ,node.item.nom, node.getPanelGroupe
+           print "ds afficheMots ",node," " ,node.item.nom, " "
+           print "ds afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie
+           # return et non continue car c est vrai pour tous les noeuds frere
+           if node.appartientAUnNoeudPlie==True : return
+           print "je suis apres le if pour ",node.item.nom
            widget=node.getPanelGroupe(self,self.maCommande)
+           #print "widget pour ", node.item.nom, widget
+           #print "fin pour " , node.item.nom
            self.listeFocus.append(node.fenetre)
 
        
@@ -162,13 +167,9 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
         if firstNode==None : firstNode=nouveau 
         if nouveau == None or nouveau == 0  : 
            self.editor.affiche_infos(str('insertion impossible a cet endroit pour '+nom),Qt.red)
-      print firstNode
-      print firstNode.fenetre
       self.reaffiche(firstNode)
 
 
-  #def PlieTout(self):
-  #    self.node.setPlie()
 
   def Plie(self):
       self.node.setPlie()

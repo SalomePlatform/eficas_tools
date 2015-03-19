@@ -208,6 +208,24 @@ class MyTabview:
            self.myQtab.setTabText(index,fileName)
        return ok
 
+   def sauveLigneCurrentEditor(self):
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       editor=self.dict_editors[index]
+       if editor in self.doubles.keys() :
+           QMessageBox.warning(
+                     None,
+                     tr("Fichier Duplique"),
+                     tr("Le fichier ne sera pas sauvegarde."),
+                     tr("&Annuler"))
+           return
+       ok, newName = editor.sauveLigneFile()
+       if ok :
+           fileName=os.path.basename(unicode(newName))
+           self.myQtab.setTabText(index,fileName)
+       return ok
+
+
    def saveAsCurrentEditor(self):
        index=self.myQtab.currentIndex()
        editor=self.dict_editors[index]

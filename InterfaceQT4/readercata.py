@@ -65,6 +65,7 @@ class READERCATA:
       self.fic_cata=None
       self.OpenCata()
       self.cataitem=None
+      if self.code=="TELEMAC": self.cree_dico_inverse()
 
    def OpenCata(self):
       """ 
@@ -302,3 +303,43 @@ class READERCATA:
            if dict_clef_docu.has_key(oper.nom):
               oper.docu=dict_clef_docu[oper.nom]
 
+
+   def cree_dico_inverse(self):
+        self.dicoInverse={}
+        self.dico={}
+        listeEtapes=self.cata[0].JdC.commandes
+        for e in self.cata[0].JdC.commandes:
+            self.traite_entite(e)
+        #for e in self.cata[0].JdC.commandes:
+        #    print "___________", e. nom , '__________________'
+        #    self.cree_rubrique(e,self.dico,0)
+
+        
+   def traite_entite(self,e):
+       boolIn=0
+       for (nomFils, fils) in e.entites.items() :
+          self.traite_entite(fils)
+          boolIn=1
+       if boolIn==0 :
+          liste=[]
+          moi=e
+          while hasattr(moi,'pere') :
+                liste.append((moi.nom,moi))
+                moi=moi.pere
+          liste.append((moi.nom,moi))
+          self.dicoInverse[e.nom]=liste
+
+   def cree_rubrique(self,e,dico, niveau):
+       from Accas import A_BLOC
+       decale=niveau*"   "
+       if niveau != 0 :
+           if isinstance(e,A_BLOC.BLOC): print decale, e.condition 
+           else :                           print decale, e. nom  
+       for (nom, fils) in e.entites.items() :
+           if  fils.entites.items() != [] : self.cree_rubrique(fils,dico,niveau+1)
+           else : print (niveau+1)*"   ", nom
+
+        
+          
+              
+            

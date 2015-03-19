@@ -83,7 +83,11 @@ Where this keyword is used, these bathymetric data shall be used in the computat
                               fr='Nom du fichier a soumettre',
                               ang='Name of FORTRAN file to be submitted',),
 
-          Boundary_Condition_File = SIMP( statut='o', typ = ('Fichier', 'Boundary Condition (*.cli);;All Files (*)',),fr='Nom du fichier contenant les types de conditions aux limites. Ce fichier est rempli de facon automatique par le mailleur au moyen de couleurs affectees aux noeuds des frontieres du domaine de calcul.',ang='Name of the file containing the types of boundary conditions. This file is filled automatically by the mesh generator through through colours that are assigned to the boundary nodes.',),
+          Boundary_Conditions_File = SIMP( statut='o', typ = ('Fichier', 'Boundary Condition (*.cli);;All Files (*)',),
+          fr='Nom du fichier contenant les types de conditions aux limites. Ce fichier est rempli de facon automatique\n\
+              par le mailleur au moyen de couleurs affectees aux noeuds des frontieres du domaine de calcul.',
+          ang='Name of the file containing the types of boundary conditions. This file is filled automatically\n\
+              by the mesh generator through through colours that are assigned to the boundary nodes.',),
 
 
      Validation=FACT( statut='f',
@@ -106,12 +110,6 @@ Where this keyword is used, these bathymetric data shall be used in the computat
 
      Formatted_And_Binary_Files=FACT( statut='f',
 
-          Formatted_File1    = SIMP( statut='f', typ = ('Fichier', 'formated File (*.txt);;All Files (*)',),
-              fr = "Fichier de donnees formate mis a la disposition de l''utilisateur.  \n\
-Les donnees de ce fichier seront a lire sur le canal 26.",
-              ang = 'Formatted data file made available to the user.\n\
-The data in this file shall be read on channel 26.',
-          ),
           Formatted_File2    = SIMP( statut='f', typ = ('Fichier', 'formated File (*.txt);;All Files (*)',),
             fr = "Fichier de donnees formate mis a la disposition de l'utilisateur. \n\
 Les donnees de ce fichier seront a lire sur le canal 27.",
@@ -132,7 +130,7 @@ The data in this file shall be read on channel 25.',
           ),
      ), # fin Formatted_And_Binary_Files
 
-), # Fin de InputFile 
+     ), # Fin de InputFile 
 
 
      Computation_Continued=FACT( statut='f',
@@ -170,11 +168,11 @@ The data in this file shall be read on channel 25.',
      ),
 
      Computation=FACT(statut='o',
-        Machine=FACT( statut='o',
+        #Machine=FACT( statut='o',
 # A voir plus tar Obsolete ? 
-           Number_of_Processors=SIMP(statut='o',typ='I',val_min=0,defaut=1),
+        #   Parallel_Processors=SIMP(statut='o',typ='I',val_min=0,defaut=1),
            #Parallel_Computation=SIMP(statut='o',typ=bool,defaut=False),
-         ),
+        # ),
         Coupling=FACT( statut='o',
            Sisyphe=SIMP(statut='o',typ=bool,defaut=False),
            Tomawac=SIMP(statut='o',typ=bool,defaut=False),
@@ -194,17 +192,32 @@ The data in this file shall be read on channel 25.',
 TIDE_PARAMETERS=PROC(nom="TIDE_PARAMETERS",op=None,
      fr="",
      ang="",
+     Inputs_Outputs_For_Tide=FACT( statut='o',
+        Harmonic_Constants_File = SIMP( statut='o',
+          typ = ('Fichier', 'All Files (*)',),
+          fr = 'Constantes harmoniques extraites du fichier du modele de maree',
+          ang= 'Harmonic constants extracted from the tidalmodel file',
+         ),
+
+        Tidal_Model_File = SIMP( statut='o',
+          typ = ('Fichier', 'All Files (*)',),
+          fr = 'Fichier de geometrie du modele dont sont extraites les constantes harmoniques',
+          ang= 'Geometry file of the model from which harmonic constituents are extracted',
+         ),
+
+      ),
+
      Time=FACT( statut='o',
-       #Original_Date_of_Time=SIMP(statut='f',typ=DateJJMMAAAA,validators=VerifTypeTuple(('R','R','R'))),
-       #Original_Hour_of_Time=SIMP(statut='f',typ=HeureHHMMSS,validators=VerifTypeTuple(('R','R','R'))),
-       Original_Date_of_Time=FACT( statut='o',
+       #Original_Date_Of_Time=SIMP(statut='f',typ=DateJJMMAAAA,validators=VerifTypeTuple(('R','R','R'))),
+       #Original_Hour_Of_Time=SIMP(statut='f',typ=HeureHHMMSS,validators=VerifTypeTuple(('R','R','R'))),
+       Original_Date_Of_Time=FACT( statut='o',
          fr = "Permet de fixer la date d'origine des temps du modele lors de la prise en compte de la force generatrice de la maree.",
          ang ='Give the date of the time origin of the model when taking into account the tide generating force.', 
          Year=SIMP(statut='o',typ='I',val_min=1900,defaut=1900),
          Month=SIMP(statut='o',typ='I',val_min=1,val_max=12,defaut=1),
          Day=SIMP(statut='o',typ='I',val_min=1,val_max=31,defaut=1),
           ),
-       Original_Hour_of_Time=FACT( statut='f',
+       Original_Hour_Of_Time=FACT( statut='f',
          fr = "Permet de fixer l'heure d'origine des temps du modele lors de la prise en compte de la force generatrice de la maree.",
          ang ='Give the time of the time origin of the model when taking into account the tide generating force.', 
          Hour=SIMP(statut='o',typ='I',val_min=0,val_max=24,defaut=0),
@@ -213,7 +226,7 @@ TIDE_PARAMETERS=PROC(nom="TIDE_PARAMETERS",op=None,
          ),
       ),
      Location=FACT( statut='f',
-        #regles=( PRESENT_PRESENT('Longitude_of_origin','Latitute_of_origin', ),),
+        #regles=( PRESENT_PRESENT('Longitude_Of_origin','Latitute_Of_origin', ),),
         #Spatial_Projection=SIMP(statut='f',typ='I',into=[1,2,3]),
         #Geographic_System=SIMP(statut='f',typ='I',into=[-1,0,1,2,3,4,5]),
 
@@ -227,8 +240,8 @@ TIDE_PARAMETERS=PROC(nom="TIDE_PARAMETERS",op=None,
              Spatial_Projection=SIMP(statut='o',typ='TXM',into=["CARTESIAN, NOT GEOREFERENCED","MERCATOR","LATITUDE LONGITUDE"]),
              ang = 'Option 2 or 3 mandatory for spherical coordinates Option 3: latitude and longitude in radians!',
              b_lat     = BLOC(condition = "Spatial_Projection == 'LATITUDE LONGITUDE' ",
-                 Latitude_of_origin=SIMP(statut='o',typ='R',val_min=-90,val_max=90,fr="en radians", ang="in radians"),
-                 Longitude_of_origin=SIMP(statut='o',typ='R',fr="en radians", ang="in radians"),
+                 Latitude_Of_Origin=SIMP(statut='o',typ='R',val_min=-90,val_max=90,fr="en radians", ang="in radians"),
+                 Longitude_Of_Origin=SIMP(statut='o',typ='R',fr="en radians", ang="in radians"),
                          ), # fin bloc b_lat
              ), # fin bloc b_geo
 
@@ -335,13 +348,16 @@ INITIAL_STATE=PROC(nom="INITIAL_STATE",op=None,
 
        ), # fin des Liquid_Boundaries
 
-       Stage_Discharge_Curves = SIMP(statut='f',typ='I',
+#PNPN Attention dans le Dico STAGE-DISCHARGE CURVES
+       Stage_Discharge_Curves = SIMP(statut='f',typ='TXM',
         #into=[0,1,2],
         into=["no","Z(Q)","not programmed"],
         fr='Indique si une courbe de tarage doit etre utilisee pour une frontiere',
         ang='Says if a discharge-elevation curve must be used for a given boundary',
         ),
         b_discharge_curve   = BLOC (condition = "Stage_Discharge_Curves == 'Z(Q)'",
+
+#PNPN Attention dans le Dico STAGE-DISCHARGE CURVES FILES
         Stage_Discharge_Curves_File   = SIMP( statut='f', typ = ('Fichier', 'All Files (*)',),
           fr='Nom du fichier contenant les courbes de tarage',
           ang='Name of the file containing stage-discharge curves',
@@ -358,8 +374,7 @@ if Priority to fluxes, Dirichlet prescribed values are not obeyed,but the fluxes
 
 #???? into no coherent avec dico
 # Ira dans la marée
-       Option_For_Tidal_Boundary_Conditions   = SIMP( statut='f',typ='I',
-       #into=[1,2],sug=1),
+       Option_For_Tidal_Boundary_Conditions   = SIMP( statut='f',typ='TXM',
        into=['No tide', 'Real tide (recommended methodology)', 'Astronomical tide', 'Mean spring tide', 'Mean tide',\
            'Mean neap tide', 'Astronomical neap tide', 'Real tide (methodology before 2010)'],
        ),
@@ -371,7 +386,7 @@ if Priority to fluxes, Dirichlet prescribed values are not obeyed,but the fluxes
 
 NUMERICAL_PARAMETERS=PROC(nom="NUMERICAL_PARAMETERS",op=None,
 
-        Solver=FACT(statut='o',
+        Solver_Definition=FACT(statut='o',
 
           Equations=SIMP(statut='o',typ='TXM',
              into=['SAINT-VENANT EF','SAINT-VENANT VF','BOUSSINESQ'],
@@ -381,7 +396,8 @@ NUMERICAL_PARAMETERS=PROC(nom="NUMERICAL_PARAMETERS",op=None,
              ),
 
           Solver=SIMP(statut='o',typ='TXM',
-           into = ["conjugate gradient", "conjugate residual", "minimum error", "cgstab", "gmres", "direct",],
+           into = ["conjugate gradient", "conjugate residual","conjugate gradient on a normal equation",\
+                   "minimum error", "cgstab", "gmres", "direct",],
            fr = 'Permet de choisir le solveur utilise pour la resolution de l''etape de propagation. \n\
 Toutes les methodes proposees actuellement s''apparentent au Gradient Conjugue. Ce sont :\n\
   1 : gradient conjugue 2 : residu conjugue       3 : gradient conjugue sur equation normale \n\
@@ -401,12 +417,14 @@ All the currently available methods are variations of the Conjugate Gradient met
                ),
           ),
 
+          Initial_Guess_for_H=SIMP(statut='f',typ='TXM',into=['zero','previous','extrapolation'],defaut='previous',),
+          Initial_Guess_for_U=SIMP(statut='f',typ='TXM',into=['zero','previous','extrapolation'],defaut='previous',),
           Solver_Accuracy = SIMP(statut='o',typ='R', defaut=1e-4,
             fr = 'Precision demandee pour la resolution de l''etape de propagation (cf.  Note de principe).',
             ang = 'Required accuracy for solving the propagation step (refer to Principle note).',
            ),
 
-          Maximum_Number_of_Iterations_For_Solver=SIMP(statut='o',typ='I', defaut=40,
+          Maximum_Number_Of_Iterations_For_Solver=SIMP(statut='o',typ='I', defaut=40,
           fr = 'Les algorithmes utilises pour la resolution de l''etape de propagation etant iteratifs, \n\
 il est necessaire de limiter le nombre d''iterations autorisees.\n\
 Remarque : un maximum de 40 iterations par pas de temps semble raisonnable.',
@@ -417,10 +435,10 @@ Note: a maximum number of 40 iterations per time step seems to be reasonable.',
         ), # fin Solver
 
         Time=FACT(statut='f',
-        regles=(UN_PARMI('Number_of_Time_Steps','Duration'),),
+        regles=(UN_PARMI('Number_Of_Time_Steps','Duration'),),
 
            Time_Step=SIMP(statut='f',typ='R'),
-           Number_of_Time_Steps=SIMP(statut='f',typ='I',
+           Number_Of_Time_Steps=SIMP(statut='f',typ='I',
               fr='Definit le nombre de pas de temps effectues lors de l''execution du code.',
               ang='Specifies the number of time steps performed when running the code.'),
            Duration=SIMP(statut='f',typ='R'),
@@ -458,9 +476,9 @@ ang = 'The program is stopped if the limits on u,v,h, or t are trespassed',
     ), # Fin de Time
 
      Linearity=FACT(statut='f',
-           Treatment_of_Fluxes_at_the_Boundaries =SIMP( statut='f',typ='I',into=[1,2],sug=1),
+           Treatment_Of_Fluxes_at_the_Boundaries =SIMP( statut='f',typ='I',into=[1,2],sug=1),
            Continuity_Correction  =SIMP(typ=bool, statut='f'),
-           Number_of_Sub_Iterations=SIMP(statut='f',typ='I'),
+           Number_Of_Sub_Iterations=SIMP(statut='f',typ='I'),
      ),
      Precondionning=FACT(statut='f',
 
@@ -488,7 +506,7 @@ ang = 'The program is stopped if the limits on u,v,h, or t are trespassed',
 
      Advection=FACT(statut='f',
 
-          Mass_Lumping_on_H =SIMP(statut='f',typ='R',defaut=0,
+          Mass_Lumping_On_H =SIMP(statut='f',typ='R',defaut=0,
             fr = 'TELEMAC offre la possibilite d''effectuer du mass-lumping sur H ou U.\n\
 Ceci revient a ramener tout ou partie (suivant la valeur de ce coefficient) des matrices AM1 (h) ou AM2 (U) \n\
 et AM3 (V) sur leur diagonale.  Cette technique permet d''accelerer le code dans des proportions tres\n\
@@ -500,7 +518,7 @@ Thanks to that technique, the code can be speeded up to a quite significant exte
 more stable. The resulting solutions, however, become artificially smoothed. \n\
 This parameter sets the extent of mass-lumping that is performed on h.'),
 
-          Mass_Lumping_on_Velocity =SIMP(statut='f',typ='R',defaut=0,
+          Mass_Lumping_On_Velocity =SIMP(statut='f',typ='R',defaut=0,
             fr = 'Fixe le taux de mass-lumping effectue sur la vitesse.',
             ang = 'Sets the amount of mass-lumping that is performed on the velocity.'
 ),
@@ -512,20 +530,20 @@ This parameter sets the extent of mass-lumping that is performed on h.'),
 # Il faut recalculer des listes de 4 en sortie
 #
         Advection_Propagation=FACT(statut='f',
-          Advection_Of_U_and_V=SIMP(statut='o',typ=bool,defaut=False,
+          Advection_Of_U_And_V=SIMP(statut='o',typ=bool,defaut=False,
             fr = 'Prise en compte ou non de la convection de U et V.',
             ang= 'The advection of U and V is taken into account or ignored.'
             ),
 
-          b_u_v = BLOC( condition = "Advection_Of_U_and_V==True",
+          b_u_v = BLOC( condition = "Advection_Of_U_And_V==True",
+          Type_Of_Advection_U_And_V=SIMP(statut='o',typ='TXM',
+          into=["characteristics", "SUPG", "Conservative N-scheme",  'Conservative N-scheme',\
+                 'Conservative PSI-scheme', 'Non conservative PSI scheme', 'Implicit non conservative N scheme',\
+                 ' Edge-based N-scheme', 'Edge-based N-scheme'],
 
-          Type_of_Advection_U_and_V=SIMP(statut='o',typ='TXM',
-          into=["CARACTERISTIQUES", "SUPG", "SCHEMA VOLUME FINI EXPLICIT", "SCHEMA DISTRIBUTIF N CONSERVATIF",\
-                "SCHEMA PSI CONSERVATIF", "SCHEMA PSI NON CONSERVATIF", "SCHEMA N IMPLICITE NON CONSERVATIF",\
-                 "SCHEMA N PAR SEGMENTS SCHEMA 3", "SCHEMA N PAR SEGMENTS SCHEMA 4"],
                  ),
-           b_upwind     =BLOC(condition = "Type_of_Advection_U_and_V== 'SUPG'",
-            Upwind_Coefficients_of_U_and_V=SIMP(statut='o',typ='R',)
+           b_upwind     =BLOC(condition = "Type_Of_Advection_U_And_V== 'SUPG'",
+            Upwind_Coefficients_Of_U_And_V=SIMP(statut='o',typ='R',)
                ),
            ),
 
@@ -536,13 +554,13 @@ This parameter sets the extent of mass-lumping that is performed on h.'),
 
           b_h = BLOC( condition = "Advection_Of_H==True",
 
-          Type_of_Advection_H=SIMP(statut='o',typ='TXM',
-          into=["CARACTERISTIQUES", "SUPG", "SCHEMA VOLUME FINI EXPLICIT", "SCHEMA DISTRIBUTIF N CONSERVATIF",\
-                "SCHEMA PSI CONSERVATIF", "SCHEMA PSI NON CONSERVATIF", "SCHEMA N IMPLICITE NON CONSERVATIF",\
-                 "SCHEMA N PAR SEGMENTS SCHEMA 3", "SCHEMA N PAR SEGMENTS SCHEMA 4"],
+          Type_Of_Advection_H=SIMP(statut='o',typ='TXM',
+          into=["characteristics", "SUPG", "Conservative N-scheme",  'Conservative N-scheme',\
+                 'Conservative PSI-scheme', 'Non conservative PSI scheme', 'Implicit non conservative N scheme',\
+                 ' Edge-based N-scheme', 'Edge-based N-scheme'],
                  ),
-           b_upwind_H     = BLOC(condition = "Type_of_Advection_H== 'SUPG'",
-            Upwind_Coefficients_of_H=SIMP(statut='o',typ='R',)
+           b_upwind_H     = BLOC(condition = "Type_Of_Advection_H== 'SUPG'",
+            Upwind_Coefficients_Of_H=SIMP(statut='o',typ='R',)
                ),
            ),
 
@@ -551,33 +569,33 @@ This parameter sets the extent of mass-lumping that is performed on h.'),
             ang= 'The advection of Tracer is taken into account or ignored.'
             ),
 
-          b_tracers = BLOC( condition = "Advection_Of_Travers==True",
+          b_tracers = BLOC( condition = "Advection_Of_Tracers==True",
 
-          Type_of_Advection_Tracers=SIMP(statut='o',typ='TXM',
-          into=["CARACTERISTIQUES", "SUPG", "SCHEMA VOLUME FINI EXPLICIT", "SCHEMA DISTRIBUTIF N CONSERVATIF",\
-                "SCHEMA PSI CONSERVATIF", "SCHEMA PSI NON CONSERVATIF", "SCHEMA N IMPLICITE NON CONSERVATIF",\
-                 "SCHEMA N PAR SEGMENTS SCHEMA 3", "SCHEMA N PAR SEGMENTS SCHEMA 4"],
+          Type_Of_Advection_Tracers=SIMP(statut='o',typ='TXM',
+          into=["characteristics", "SUPG", "Conservative N-scheme",  'Conservative N-scheme',\
+                 'Conservative PSI-scheme', 'Non conservative PSI scheme', 'Implicit non conservative N scheme',\
+                 ' Edge-based N-scheme', 'Edge-based N-scheme'],
                  ),
-           b_upwind_Tracers     =BLOC(condition = "Type_of_Advection_Tracers== 'SUPG'",
-            Upwind_Coefficients_of_Tracers=SIMP(statut='o',typ='R',)
+           b_upwind_Tracers     =BLOC(condition = "Type_Of_Advection_Tracers== 'SUPG'",
+            Upwind_Coefficients_Of_Tracers=SIMP(statut='o',typ='R',)
                ),
            ),
 
 
-         Advection_of_K_and_Epsilon=SIMP(statut='f',typ=bool,defaut=False,
+         Advection_Of_K_And_Epsilon=SIMP(statut='f',typ=bool,defaut=False,
            fr = 'Prise en compte ou non de la convection de Tracer.',
             ang= 'The advection of Tracer is taken into account or ignored.'
             ),
 
-          b_k = BLOC( condition = "Advection_Of_K_and_Epsilon==True",
+          b_k = BLOC( condition = "Advection_Of_K_And_Epsilon==True",
 
-          Type_of_Advection_K_and_Epsilon=SIMP(statut='o',typ='TXM',
-          into=["CARACTERISTIQUES", "SUPG", "SCHEMA VOLUME FINI EXPLICIT", "SCHEMA DISTRIBUTIF N CONSERVATIF",\
-                "SCHEMA PSI CONSERVATIF", "SCHEMA PSI NON CONSERVATIF", "SCHEMA N IMPLICITE NON CONSERVATIF",\
-                 "SCHEMA N PAR SEGMENTS SCHEMA 3", "SCHEMA N PAR SEGMENTS SCHEMA 4"],
+          Type_Of_Advection_K_And_Epsilon=SIMP(statut='o',typ='TXM',
+          into=["characteristics", "SUPG", "Conservative N-scheme",  'Conservative N-scheme',\
+                 'Conservative PSI-scheme', 'Non conservative PSI scheme', 'Implicit non conservative N scheme',\
+                 ' Edge-based N-scheme', 'Edge-based N-scheme'],
                  ),
-           b_upwind_k     =BLOC(condition = "Type_of_Advection_K_and_Epsilon== 'SUPG'",
-            Upwind_Coefficients_of_K_and_Epsilon=SIMP(statut='o',typ='R',)
+           b_upwind_k     =BLOC(condition = "Type_Of_Advection_K_And_Epsilon== 'SUPG'",
+            Upwind_Coefficients_Of_K_And_Epsilon=SIMP(statut='o',typ='R',)
                ),
            ),
 
@@ -591,14 +609,14 @@ This parameter sets the extent of mass-lumping that is performed on h.'),
           ),
         ),
         Discretisation_Implicitation=FACT(statut='f',
-          Discretisation_in_Space=SIMP(statut='f',typ='I',min=4,max=4,into=[11,12,13],defaut=(11,11,11),),
-          Implicitation_for_Diffusion_of_velocity=SIMP(statut='f',typ='R',sug=0),
-          Implicitation_for_Depth=SIMP(statut='f',typ='R',sug=0.55),
+          Discretisations_In_Space=SIMP(statut='f',typ='TXM', 
+            into =["linear for velocity and depth", "quasi-bubble-velocity and linear depth", "quadratic velocity and linear depth"],
+            defaut="linear for velocity and depth",),
+          Implicitation_For_Diffusion_Of_velocity=SIMP(statut='f',typ='R',sug=0),
+          Implicitation_For_Depth=SIMP(statut='f',typ='R',sug=0.55),
           Implicitation_for_Velocity=SIMP(statut='f',typ='R',sug=0.55),
           Free_Surface_Gradient_Compatibility=SIMP(statut='f',typ='R',sug=1.),
         ),
-        Initial_Guess_for_H=SIMP(statut='f',typ='TXM',into=['zero','previous','extrapolation'],defaut='previous',),
-        Initial_Guess_for_U=SIMP(statut='f',typ='TXM',into=['zero','previous','extrapolation'],defaut='previous',),
 )# fin NUMERICAL_PARAMETERS
 
 PHYSICAL_PARAMETERS=PROC(nom="PHYSICAL_PARAMETERS",op=None,
@@ -606,7 +624,7 @@ PHYSICAL_PARAMETERS=PROC(nom="PHYSICAL_PARAMETERS",op=None,
           Wind=SIMP(statut='f',typ=bool,sug=False),
           b_Wind     =BLOC(condition = "Wind=='True'",
             regles=( PRESENT_PRESENT('Wind_Velocity_along_X','Wind_Velocity_along_Y', ),),
-            Coefficient_of_Wind_Influence=SIMP(statut='f',typ='R',sug=0,),
+            Coefficient_Of_Wind_Influence=SIMP(statut='f',typ='R',sug=0,),
             Wind_Velocity_along_X=SIMP(statut='f',typ='R',sug=0,),
             Wind_Velocity_along_Y=SIMP(statut='f',typ='R',sug=0,),
             Threashold_Depth_for_Wind=SIMP(statut='f',typ='R',sug=0,),
@@ -617,25 +635,104 @@ PHYSICAL_PARAMETERS=PROC(nom="PHYSICAL_PARAMETERS",op=None,
             Rain_or_Evaporation_in_mm_perday=SIMP(statut='f',typ='I',sug=0),
                          ),
          ),
-          Tide_Generating_Force=SIMP(statut='f',typ=bool,sug=False),
-          b_Tide     =BLOC(condition = "Tide_Generating_Force=='True'",
-              Tidal_Data_Base=SIMP(statut='f',typ='I',into=[-1,1,2,3,4]),
-              Coefficient_To_Calibrate_Tidal_Range=SIMP(statut='f',typ='R',sug=1.),
-              Coefficient_To_Calibrate_Tidal_Velocity=SIMP(statut='f',typ='R',sug=999999),
-              Coefficient_To_Calibrate_Sea_Level=SIMP(statut='f',typ='R',sug=0.),
-              Binary_Database_1_for_Tide  = SIMP( statut='f', typ = ('Fichier', '(All Files (*)',),),
-              Binary_Database_2_for_Tide  = SIMP( statut='f', typ = ('Fichier', '(All Files (*)',),),
-         ),
+
+          Tide_Generating_Force=SIMP(statut='o',typ=bool,defaut=False),
+          b_Tide  = BLOC(condition = "Tide_Generating_Force==True",
+              Tidal_Data_Base=SIMP(statut='o',typ='I',into=[-1,1,2,3,4]),
+              Coefficient_To_Calibrate_Tidal_Range=SIMP(statut='o',typ='R',sug=1.),
+              Coefficient_To_Calibrate_Tidal_Velocity=SIMP(statut='o',typ='R',sug=999999),
+              Coefficient_To_Calibrate_Sea_Level=SIMP(statut='o',typ='R',sug=0.),
+              Binary_Database_1_for_Tide  = SIMP( statut='o', typ = ('Fichier', '(All Files (*),)',),),
+              Binary_Database_2_for_Tide  = SIMP( statut='o', typ = ('Fichier', '(All Files (*),)',),),
+                      ),
+
           Wave_Driver_Currents=SIMP(statut='f',typ=bool,sug=False),
           b_Wave     =BLOC(condition = "Wave_Driver_Currents=='True'",
               Record_Number_in_Wave_File=SIMP(statut='f',typ='I',sug=1),
          ),
+
+          Friction_Data=SIMP(statut='o',typ=bool,defaut=False),
+          b_Friction  = BLOC(condition = "Friction_Data==True",
+             Friction_Data_File = SIMP( statut='o',
+               typ = ('Fichier', ';;All Files (*)'),
+               fr = 'fichier de donnees pour le frottement',
+               ang= 'friction data file',
+              ),
+              Depth_In_Friction_Terms = SIMP( statut='o',typ='TXM',
+               defaut= '1="nodal"' ,
+               into =('1="nodal"', '2="average"'),
+               fr = '1 : nodale 2 : moyenne',
+               ang= '1: nodal   2: average',
+             ),
+             Law_Of_Bottom_Friction = SIMP( statut='o',typ='TXM',
+             defaut='0="NO FRICTION"' ,
+             into =('0="NO FRICTION"', '1="HAALAND"', '2="CHEZY"', '3="STRICKLER"', '4="MANNING"', '5="NIKURADSE"','Log Law of Boundaries 6','Colebrooke_White Log 7'),
+             fr = 'selectionne le type de formulation utilisee pour le calcul du frottement sur le fond.',
+             ang= 'Selects the type of formulation used for the bottom friction.',
+             ),
+             b_Law_Friction  = BLOC(condition = "Law_Of_Bottom_Friction!=0",
+                     Friction_Coefficient = SIMP( statut='o',typ='R',
+                     defaut=50.0 ,
+                     fr = 'Fixe la valeur du coefficient de frottement pour la formulation choisie.  \
+Attention, la signification de ce chiffre varie suivant la formule choisie : \
+1 : coefficient lineaire 2 : coefficient de Chezy 3 : coefficient de Strickler \
+4 : coefficient de Manning 5 : hauteur de rugosite de Nikuradse',
+    ang= 'Sets the value of the friction coefficient for the selected formulation. \
+It is noteworthy that the meaning of this figure changes according to the selected formula (Chezy, Strickler, etc.) : \
+1 : linear coefficient 2 : Chezy coefficient 3 : Strickler coefficient 4 : Manning coefficient 5 : Nikuradse grain size',
+                   ),
+              ),
+             b_Colebrooke_White  = BLOC(condition =' "Law_Of_Bottom_Friction" in ("Colebrooke_White Log 7",)',
+                 Manning_Default_Value_For_Colebrook_white_Law = SIMP( statut='o',typ='R',
+                 defaut=0.02 ,
+                 fr = 'valeur par defaut du manning pour la loi de frottement de  Colebrook-White ',
+                 ang= 'Manning default value for the friction law of Colebrook-White ',
+                  ),
+            ),
+
+         Non_submerged_Vegetation_Friction = SIMP( statut='o',typ=bool,
+           defaut=False ,
+           fr = 'calcul du frottement du a la vegetation non submergee',
+           ang= 'friction calculation of the non-submerged vegetation',
+             ),
+          b_Non_Sub  = BLOC(condition =' Non_submerged_Vegetation_Friction == True',
+            Diameter_Of_Roughness_Elements = SIMP( statut='o',typ='R',
+              defaut=0.006 ,
+              fr = 'diametre des elements de frottements',
+              ang= 'diameter of roughness element',
+               ),
+
+          Spacing_Of_Roughness_Elements = SIMP( statut='o',typ='R',
+              defaut=0.14 ,
+              fr = 'espacement des elements de frottement',
+              ang= 'spacing of rouhness element',
+              ),
+            ),
+          Law_Of_Friction_On_Lateral_Boundaries = SIMP( statut='o',typ='TXM',
+             defaut=0 ,
+             into =('0="NO FRICTION"', '1="HAALAND"', '2="CHEZY"', '3="STRICKLER"', '4="MANNING"', '5="NIKURADSE"', '6="LOG LAW"', '7="COLEBROOK-WHITE"'),
+             fr = 'selectionne le type de formulation utilisee pour le calcul du frottement sur les parois laterales.',
+             ang= 'Selects the type of formulation used for the friction on lateral boundaries.',
+            ),
+          Roughness_Coefficient_Of_Boundaries = SIMP( statut='o',typ='R',
+            defaut=100.0 ,
+            fr = 'Fixe la valeur du coefficient de frottement sur les frontieres solides avec un regime turbulent rugueux\n\
+ sur les bords du domaine.  meme convention que pour le coefficient de frottement',
+    ang= 'Sets the value of the friction coefficient of the solid boundary with the bed roughness option. Same meaning than friction coefficient',
+              ),
+          Maximum_Number_Of_Friction_Domains = SIMP( statut='o',typ='I',
+             defaut=10 ,
+             fr = 'nombre maximal de zones pouvant etre definies pour le frottement. Peut etre augmente si necessaire',
+             ang= 'maximal number of zones defined for the friction.  Could be increased if needed',
+              ),
+
+     ), # Fin de Friction
 )
 
 POST_PROCESSING=PROC(nom="POST_PROCESSING",op=None,
    Graphic_Printouts=FACT(statut='f',
         Graphic_Printout_Period=SIMP(statut='o', typ='I',defaut=1),
-        Number_of_First_TimeStep_For_Graphic_Printouts=SIMP(statut='o', typ='I',defaut=1),
+        Number_Of_First_TimeStep_For_Graphic_Printouts=SIMP(statut='o', typ='I',defaut=1),
         Variables_For_Graphic_Printouts=SIMP(statut='o',max="**", typ='TXM',into=['a','b','c'],),
         # ajouter le into
    ),
@@ -665,6 +762,14 @@ POST_PROCESSING=PROC(nom="POST_PROCESSING",op=None,
         Variables_To_Be_Printed=SIMP(statut='o',max="**", typ='TXM',into=['a','b','c']),
    ),#Listing_Printouts
 
+   Formatted_Results_File = SIMP( statut='o',typ= ('Fichier','All Files (*)',),
+        fr = 'Fichier de resultats formate mis a la disposition de l utilisateur. \
+Les resultats a placer dans ce fichier seront a ecrire sur le canal 29.',
+       ang= 'Formatted file of results made available to the user.  \
+The results to be entered into this file shall be written on channel 29.',
+     ),
+
+
    Debugger     = SIMP(typ=bool, statut='o', defaut=False),
    Output_Of_Initial_Conditions = SIMP(typ=bool, statut='o', defaut=True,
         fr = 'Si Vrai, impression des conditions initiales dans les resultats',
@@ -692,3 +797,92 @@ PRECONDITIONING = SIMP( statut='o',typ='I',
      ),
 
 ) # FIN POST-PRO
+
+
+# Attention calculer le logique BREACH 
+STRUCTURES=PROC(nom="STRUCTURES",op=None,
+
+# Attention calculer le logique BREACH 
+     Breaches= FACT(statut='f',
+         Breaches_Data_File = SIMP( statut='o',typ = ('Fichier', 'All Files (*)',),
+                fr = 'Fichier de description des breches',
+                ang= 'Description of breaches',
+         ),
+      ),
+
+     Culverts= FACT(statut='o',
+
+        Number_Of_Culverts = SIMP( statut='o',typ='I',
+               defaut=0 ,
+          fr = 'Nombre de siphons traites comme des termes sources ou puits. Ces siphons doivent etre decrits comme des sources \
+dans le fichier cas. Leurs caracteristiques sont donnees dans le fichier de donnees des siphons (voir la documentation ecrite)',
+          ang= 'Number of culverts treated as source terms.  They must be described as sources in the domain\
+ and their features are given in the culvert data file (see written documentation)',
+           ),
+
+        Culvert_Data_File = SIMP( statut='o',typ = ('Fichier', 'All Files (*)',),
+            fr = 'Fichier de description des siphons presents dans le modele',
+            ang= 'Description of culvert existing in the model',
+        ),
+
+        Formatted_File1    = SIMP( statut='f', typ = ('Fichier', 'formated File (*.txt);;All Files (*)',),
+              fr = "Fichier de donnees formate mis a la disposition de l''utilisateur.  \n\
+Les donnees de ce fichier seront a lire sur le canal 26.",
+              ang = 'Formatted data file made available to the user.\n\
+The data in this file shall be read on channel 26.',
+          ),
+
+
+         Abscissae_Of_Sources = SIMP( statut='o',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+          fr = 'Valeurs des abscisses des sources de debit et de traceur.',
+          ang= 'abscissae of sources of flowrate and/or tracer',
+         ),
+
+          Ordinates_Of_Sources = SIMP( statut='o',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+          fr = 'Valeurs des ordonnees des sources de debit et de traceur.',
+          ang= 'ordinates of sources of flowrate and/or tracer',
+          ),
+          Water_Discharge_Of_Sources = SIMP( statut='o',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+          fr = 'Valeurs des debits des sources.',
+          ang= 'values of water discharge of sources',
+          ),
+          Velocities_Of_The_Sources_Along_X = SIMP( statut='o',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+          fr = 'Vitesses du courant a chacune des sources. Si elles ne sont pas donnees, on considere que la vitesse est celle du courant',
+          ang= 'Velocities at the sources. If they are not given, the velocity of the flow at this location is taken',
+          ),
+          Velocities_Of_The_Sources_Along_Y = SIMP( statut='o',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+          fr = 'Vitesses du courant a chacune des sources',
+          ang= 'Velocities at the sources',
+         ),
+    ),
+
+     Tubes= FACT(statut='f',
+          Number_Of_Tubes = SIMP( statut='o',typ='I',
+          defaut=0 ,
+          fr = 'Nombre de buses ou ponts traites comme des termes sources ou puits. Ces buses doivent etre decrits comme des sources\n\
+dans le fichier cas. Leurs caracteristiques sont donnees dans le fichier de donnees des buses (voir la documentation ecrite)',
+          ang= 'Number of tubes or bridges treated as source terms.  They must be described as sources in the domain \n\
+and their features are given in the tubes data file (see written documentation)',
+              ),
+
+        Tubes_Data_File = SIMP( statut='o',
+           typ = ('Fichier', 'All Files (*)',),
+           fr = 'Fichier de description des buses/ponts presents dans le modele',
+           ang= 'Description of tubes/bridges existing in the model',
+          ),
+          ),
+
+     Weirs= FACT(statut='f',
+        Weirs_Data_File = SIMP( statut='o',
+        typ = ('Fichier', 'All Files (*)',),
+        fr = 'Fichier de description des seuils presents dans le modele',
+        ang= 'Description of weirs existing in the model',
+        ),
+     ),
+
+) # FIN STRUCTURES

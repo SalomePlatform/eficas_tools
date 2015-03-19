@@ -281,3 +281,28 @@ class Formatage :
         s=s+'\n'+texte
 
     return s
+
+class FormatageLigne(Formatage) :
+  def __init__(self,l_jdc,code=None,mode=None,sep='=',l_max="**"):
+      Formatage.__init__(self,l_jdc,code=None,mode=None,sep='=',l_max="**")
+      
+  def formate_jdc(self):
+      texte1=Formatage.formate_jdc(self)
+      newText=""
+      lignes=texte1.split("\n")
+      texte=""
+      pattern_debut_blanc  = re.compile(r"^ \s*.*")
+      pattern_commentaire   = re.compile(r"^\s*#.*")
+      pattern_vide=re.compile(r"\s*^$")
+      for l in lignes :
+          if pattern_commentaire.match(l) or pattern_vide.match(l): 
+             newText+=l+"\n"
+             continue
+          if not pattern_debut_blanc.match(l) : texte=l 
+          else : texte+=re.sub(r'^ \s*',' ',l)
+          if texte[-1]==";" :
+             newText+=texte+"\n"
+             texte=""
+      return newText
+
+          
