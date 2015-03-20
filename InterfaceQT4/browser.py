@@ -110,7 +110,8 @@ class JDCTree( QTreeWidget ):
         #if self.tree.node_selected != self : 
         #     item.setExpanded(False)
         #     return
-        item.setPlie()
+        if item.fenetre != self.editor.fenetreCentraleAffichee : 
+           item.setPlie()
         #print "apres 2ndif"
         item.plieToutEtReaffiche()
 
@@ -716,8 +717,8 @@ class JDCNode(QTreeWidgetItem):
         self.tree.collapseItem(self)
         self.setPlieChildren()
 
+
         # on ne plie pas au niveau 1
-        #from InterfaceQT4 import compojdc
         #if not(isinstance(self.treeParent,compojdc.Node)) : 
         #   self.plie=True
         #else :
@@ -735,6 +736,16 @@ class JDCNode(QTreeWidgetItem):
             c.appartientAUnNoeudPlie=True
             c.plie=True
             c.setExpanded(True)
+
+        # Pour les blocs
+        # on affiche un niveau de plus
+        from InterfaceQT4 import compobloc
+        if isinstance(self,compobloc.Node) : 
+            niveauPere=self.treeParent
+            while (isinstance(niveauPere,compobloc.Node)):
+               niveauPere=self.niveauPere.treeParent
+            for c in self.children :
+                c.appartientAUnNoeudPlie=niveauPere.appartientAUnNoeudPlie
             
 
     def setDeplie(self):

@@ -68,15 +68,14 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
              fenetre.prendLeFocus=1
              fenetre.hide()
              fenetre.show()
-             break
       
 
   def afficheMots(self):
       for node in self.node.children:
            print "ds afficheMots ",node," " ,node.item.nom, " "
            print "ds afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie
-           # return et non continue car c est vrai pour tous les noeuds frere
-           if node.appartientAUnNoeudPlie==True : return
+           # non return mais  continue car il faut tenir compte des blocs
+           if node.appartientAUnNoeudPlie==True : continue
            print "je suis apres le if pour ",node.item.nom
            widget=node.getPanelGroupe(self,self.maCommande)
            #print "widget pour ", node.item.nom, widget
