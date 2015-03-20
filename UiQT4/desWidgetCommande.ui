@@ -124,7 +124,7 @@ font : 'times' 9px</string>
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="labelNomCommande">
+         <widget class="MonLabelClic" name="labelNomCommande">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -604,6 +604,11 @@ border-radius : 12px
    <class>MonBoutonValide</class>
    <extends>QToolButton</extends>
    <header>monBoutonValide.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MonLabelClic</class>
+   <extends>QLabel</extends>
+   <header>monLabelClic.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

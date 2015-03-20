@@ -106,7 +106,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="MonLabelClic" name="label">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -234,6 +234,11 @@ QComboBox:on {
    <class>MonBoutonValide</class>
    <extends>QToolButton</extends>
    <header>monBoutonValide.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MonLabelClic</class>
+   <extends>QLabel</extends>
+   <header>monLabelClic.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

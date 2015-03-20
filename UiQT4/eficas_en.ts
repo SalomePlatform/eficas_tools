@@ -1110,7 +1110,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../InterfaceQT4/readercata.py" line="270"/>
         <source> pour </source>
-        <translation>for</translation>
+        <translation> for </translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/qtEficas_with_log.py" line="436"/>
@@ -1814,7 +1814,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../CarmelCND/PourTraductionCarmel.py" line="8"/>
         <source>NbdeTours</source>
-        <translation>Amplitude</translation>
+        <translation>NbTurns</translation>
     </message>
     <message>
         <location filename="../../CarmelCND/PourTraductionCarmel.py" line="9"/>

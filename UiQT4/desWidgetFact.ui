@@ -152,7 +152,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QLabel" name="GroupBox">
+        <widget class="MonLabelClic" name="GroupBox">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -378,6 +378,11 @@
    <class>MonBoutonValide</class>
    <extends>QToolButton</extends>
    <header>monBoutonValide.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MonLabelClic</class>
+   <extends>QLabel</extends>
+   <header>monLabelClic.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
