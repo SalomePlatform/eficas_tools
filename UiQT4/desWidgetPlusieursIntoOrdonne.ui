@@ -73,7 +73,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QToolButton" name="RBValide">
+          <widget class="MonBoutonValide" name="RBValide">
            <property name="minimumSize">
             <size>
              <width>21</width>
@@ -107,7 +107,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="MonLabelClic" name="label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -543,6 +543,18 @@
   <zorder>scrollArea</zorder>
   <zorder>horizontalSpacer_2</zorder>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MonBoutonValide</class>
+   <extends>QToolButton</extends>
+   <header>monBoutonValide.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MonLabelClic</class>
+   <extends>QLabel</extends>
+   <header>monLabelClic.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
