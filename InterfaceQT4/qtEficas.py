@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2007-2013   EDF R&D
+# Copyright (C) 2007-2013, 2015   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -36,7 +36,7 @@ class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False,langue='fr',ssIhm=False):
+    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False,langue='fr',ssIhm=False, code_version=""):
         """
         Constructor
         """
@@ -52,6 +52,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.top = self    #(pour CONFIGURATION)
         self.QWParent=None #(Pour lancement sans IHM)
         self.code=code
+        self.code_version=code_version
         self.indice=0
         self.dict_reels={}
         self.recent =  QStringList()
@@ -180,6 +181,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions = self.menubar.addMenu("menuOptions")
         self.menuOptions.addAction(self.actionParametres_Eficas)
         self.menuOptions.setTitle(tr("Options"))
+        # set MAP version
+        from mapcore import getVersion
+        self.code_version = getVersion()
 
     def ZCRACKS(self):
         self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
@@ -239,7 +243,7 @@ class Appli(Ui_Eficas,QMainWindow):
            self.toolBar.addAction(self.actionExecution)
         self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
-        
+
     def CARMELCND(self):
         self.menuMesh = self.menubar.addMenu("Maillage")
         self.menuMesh.setObjectName("Mesh")
@@ -497,7 +501,8 @@ class Appli(Ui_Eficas,QMainWindow):
         titre = tr("version ")
         monVisuDialg=DVisu(parent=self,fl=0)
         monVisuDialg.setWindowTitle(titre)
-        monVisuDialg.TB.setText(self.VERSION_EFICAS +tr(" pour ") + self.code)
+        monVisuDialg.TB.setText(self.VERSION_EFICAS + " " + tr("pour") + " " + self.code
+                                + " " + self.code_version)
         monVisuDialg.adjustSize()
         monVisuDialg.show()
 
