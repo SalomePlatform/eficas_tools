@@ -39,8 +39,10 @@ class LECustom(QLineEdit):
         self.num=i
 
  def focusInEvent(self,event):
+     print "dans focusInEvent de LECustom"
      self.parentQt.LineEditEnCours=self
      self.parentQt.NumLineEditEnCours=self.num
+     QLineEdit.focusInEvent(self,event)
 
 
 
@@ -58,8 +60,6 @@ class GereListe:
        self.connect(self.RBMoins,SIGNAL("clicked()"),self.moinsPushed)
        self.connect(self.RBPlus,SIGNAL("clicked()"),self.plusPushed)
        self.connect(self.RBVoisListe,SIGNAL("clicked()"),self.voisListePushed)
-       self.connect(self.RBSalome,SIGNAL("clicked()"),self.salomePushed)
-       self.connect(self.RBSalomeVue,SIGNAL("clicked()"),self.salomeVuePushed)
 
    def hautPushed(self):
        if self.NumLineEditEnCours == 1 : return
@@ -140,9 +140,6 @@ class GereListe:
        f=ViewText(self,self.editor,entete,texteValeurs[0:-2])
        f.show()
 
-   def salomePushed(self):
-       print "salomePushed"
 
-   def salomeVuePushed(self):
-       print "salomeVuePushed"
-
+   def selectInFile(self):
+       print "selectInFile"

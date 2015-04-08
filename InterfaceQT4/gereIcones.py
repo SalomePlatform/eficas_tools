@@ -69,15 +69,49 @@ class FacultatifOuOptionnel:
           QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
 
-  def setPoubelle(self):
+  def setIconePoubelle(self):
       if not(hasattr(self,"RBPoubelle")):return
+      icon1 = QtGui.QIcon()
+      repIcon=os.path.join(os.path.abspath(os.path.dirname(__file__)),'../Editeur/icons')
       if self.node.item.object.isoblig() : 
-         icon1 = QtGui.QIcon()
-         icon1.addPixmap(QtGui.QPixmap("/home/A96028/Install_EficasV1/KarineEficas/Editeur/icons/deleteRondVide.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+         icon1.addPixmap(QtGui.QPixmap(repIcon+"/deleteRondVide.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
          self.RBPoubelle.setIcon(icon1)
          return
+      icon1.addPixmap(QtGui.QPixmap(repIcon+"/deleteRond.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
       self.RBPoubelle.show()
       self.connect(self.RBPoubelle,SIGNAL("clicked()"),self.aDetruire)
+
+  def setIconesSalome(self):
+       if not (hasattr(self,"RBSalome")): return
+       from Accas import SalomeEntry
+       mc = self.node.item.get_definition()
+       mctype = mc.type[0]
+       enable_salome_selection = self.editor.salome and \
+         (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or ('SalomeEntry' in repr(mctype)) or \
+         (hasattr(mctype, "enable_salome_selection") and mctype.enable_salome_selection))
+       if enable_salome_selection:
+          self.connect(self.RBSalome,SIGNAL("pressed()"),self.BSalomePressed)
+          if not(('grma' in repr(mctype)) or ('grno' in repr(mctype))) or not(self.editor.salome): self.BView2D.close()
+          else : self.connect(self.RBSalomeVue,SIGNAL("clicked()"),self.BView2DPressed)
+       else:
+          self.RBSalome.close()
+          self.RBSalomeVue.close()
+
+     
+  def setIconesFichier(self):
+       if not ( hasattr(self,"BFichier")): return
+       mc = self.node.item.get_definition()
+       mctype = mc.type[0]
+       if mctype == "Repertoire":
+          self.BRepertoire=self.BFichier
+          self.connect(self.BRepertoire,SIGNAL("clicked()"),self.BRepertoirePressed)
+          self.BVisuFichier.close()
+       else :
+          self.connect(self.BFichier,SIGNAL("clicked()"),self.BFichierPressed)
+          self.connect(self.BVisuFichier,SIGNAL("clicked()"),self.BFichierVisu)
+
+
+
 
   def setRun(self):
       if hasattr(self.editor.appliEficas, 'mesScripts'):
@@ -101,10 +135,18 @@ class FacultatifOuOptionnel:
          icon=QIcon(self.repIcon+"/ast-red-ball.png")
       self.RBValide.setIcon(icon)
 
+  # il faut chercher la bonne fenetre
   def rendVisible(self):
       print "je passe par rendVisible de FacultatifOuOptionnel"
-      self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(self)
-      self.setFocus()
+      print self
+      print self.node.fenetre
+      print "return pour etre sure"
+      return
+      #PNPN
+      newNode=self.node.treeParent.chercheNoeudCorrespondant(self.node.item.object)
+      print newNode
+      self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(newNode.fenetre)
+      #newNode.fenetre.setFocus()
 
 
 class ContientIcones:

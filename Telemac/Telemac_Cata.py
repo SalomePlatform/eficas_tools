@@ -43,6 +43,8 @@ JdC = JDC_CATA (code = 'MAP',
 INITIALIZATION=PROC(nom="INITIALIZATION",op=None,
      fr="Initialisation des fichiers d'entrée et de sortie",
      ang="Input and Output files initialization",
+     #UIinfo = { "groupes" : ( "CACHE", )},
+     UIinfo = { "groupes" : ( "iiii", )},
 
      Title = SIMP( statut='o',typ='TXM',
             fr='Titre du cas etudie. Ce titre figurera sur les dessins.',
@@ -51,9 +53,11 @@ INITIALIZATION=PROC(nom="INITIALIZATION",op=None,
      #Working_Directory = SIMP( statut='o',typ='Repertoire',defaut='/tmp'),
 
      Input_Files= FACT(statut='o',
-          Dictionary = SIMP( statut='o', typ = ('Fichier', 'Dico (*.dico);;All Files (*)',), 
-                            defaut='telemac2d.dico', 
-                            fr='Dictionnaire des mots cles.', ang='Key word dictionary.',),
+     #     Dictionary = SIMP( statut='o', typ = ('Fichier', 'Dico (*.dico);;All Files (*)',), 
+     #                       defaut='telemac2d.dico', 
+     #                       fr='Dictionnaire des mots cles.', ang='Key word dictionary.',),
+# PN : le mot cle doit etre dans le dictionnaire et repris du catalogue mais n 
+# est pas modifiable
 
           Geometry_File_Format = SIMP( statut='o',typ='TXM',into=['SERAFIN','MED','SERAFIND'], defaut='SERAFIN',
                                  fr='Format du fichier de geometrie. Les valeurs possibles sont : \n \
@@ -72,17 +76,17 @@ INITIALIZATION=PROC(nom="INITIALIZATION",op=None,
 
           #Steering_File     = SIMP( statut='o', typ = ('Fichier', 'Steering Files (*.cas);;All Files (*)',),),
 
+
+          Fortran_File = SIMP(statut='f',typ = ('Fichier', 'Fortran files (*.f);;All Files (*)'),
+                              fr='Nom du fichier a soumettre',
+                              ang='Name of FORTRAN file to be submitted',),
+
           Bottom_Topography_File  = SIMP( statut='f', typ = ('Fichier', 'Geo Files (*.geo);;All Files (*)',),
                             fr = "Nom du fichier eventuel contenant la bathymetrie associee au maillage. \
 Si ce mot-cle est utilise; c'est cette bathymetrie qui sera utilisee pour le calcul.",
                             ang = 'Name of the possible file containing the bathymetric data.\
 Where this keyword is used, these bathymetric data shall be used in the computation.',
          ),
-
-          Fortran_File = SIMP(statut='f',typ = ('Fichier', 'Fortran files (*.f);;All Files (*)'),
-                              fr='Nom du fichier a soumettre',
-                              ang='Name of FORTRAN file to be submitted',),
-
           Boundary_Conditions_File = SIMP( statut='o', typ = ('Fichier', 'Boundary Condition (*.cli);;All Files (*)',),
           fr='Nom du fichier contenant les types de conditions aux limites. Ce fichier est rempli de facon automatique\n\
               par le mailleur au moyen de couleurs affectees aux noeuds des frontieres du domaine de calcul.',
@@ -110,6 +114,12 @@ Where this keyword is used, these bathymetric data shall be used in the computat
 
 
      Formatted_And_Binary_Files=FACT( statut='f',
+         Formatted_File1    = SIMP( statut='f', typ = ('Fichier', 'formated File (*.txt);;All Files (*)',),
+              fr = "Fichier de donnees formate mis a la disposition de l''utilisateur.  \n\
+Les donnees de ce fichier seront a lire sur le canal 26.",
+              ang = 'Formatted data file made available to the user.\n\
+The data in this file shall be read on channel 26.',
+          ),
 
           Formatted_File2    = SIMP( statut='f', typ = ('Fichier', 'formated File (*.txt);;All Files (*)',),
             fr = "Fichier de donnees formate mis a la disposition de l'utilisateur. \n\
@@ -134,9 +144,10 @@ The data in this file shall be read on channel 25.',
      ), # Fin de InputFile 
 
 
-     Computation_Continued=FACT( statut='f',
+     Computation_Continued=SIMP( statut='o',typ=bool,defaut=False),
+      b_comput_con  = BLOC(condition = 'Computation_Continued== True',
 
-#PNPNPN Computation_Continued == Validation
+       Computattion_Continued_Settings=FACT(statut='o',
           Previous_Computation_File_Format=SIMP( statut='o',typ='TXM',
                 into=['SERAFIN','MED','SERAFIND'],
                 defaut='SERAFIN',
@@ -157,10 +168,7 @@ The data in this file shall be read on channel 25.',
                ang = 'Name of a file containing the results of an earlier computation which was made on the same mesh.\n\
  The last recorded time step will provid the initial conditions for the new computation.',
                     ),
-          Previous_Computation_Comm  = SIMP( statut='f', typ = ('Fichier', 'COMM(*.comm);;All Files (*)',),
-              fr  = "Nom du fichier .comm décrivant le cas précédent",
-              ang = "Name of a file containing the earlier study" ,),
-          Initial_Time_Set     = SIMP(typ=bool, statut='f',
+          Initial_Time_Set     = SIMP(typ=bool, statut='o',
              fr = 'Remet le temps a zero en cas de suite de calcul',
              ang = 'Initial time set to zero in case of restart',
              defaut="False"),
@@ -168,14 +176,9 @@ The data in this file shall be read on channel 25.',
               fr = "numero de l'enregistrement de depart dans le fichier du calcul precedent. 0 signifie qu'on prend le dernier enregistrement", 
               ang ="record number to start from in the previous computation file, 0 for last record" ),
      ),
+     ),# fin Fact conputation
 
-     Computation=FACT(statut='o',
-        #Machine=FACT( statut='o',
-# A voir plus tar Obsolete ? 
-        #   Parallel_Processors=SIMP(statut='o',typ='I',val_min=0,defaut=1),
-           #Parallel_Computation=SIMP(statut='o',typ=bool,defaut=False),
-        # ),
-        Coupling=FACT( statut='o',
+     Coupling=FACT( statut='o',
            Sisyphe=SIMP(statut='o',typ=bool,defaut=False),
            Tomawac=SIMP(statut='o',typ=bool,defaut=False),
           Delwacq=SIMP(statut='o',typ=bool,defaut=False),
@@ -188,7 +191,10 @@ The data in this file shall be read on channel 25.',
      TOMAWAC : internal coupling with Tomawac\n\
      DELWAQ: will yield results file for Delwaq',
         ),
-     ),
+      Parallel_Computation=SIMP(statut='o',typ='TXM',into=['Sequentiel','Parallel'],defaut='Sequentiel',),
+      b_para  = BLOC(condition = 'Parallel_Computation== "Parallel"',
+        Parallel_Processors=SIMP(statut='o',typ='I',val_min=0,defaut=1),
+      ),
 )
 
 TIDE_PARAMETERS=PROC(nom="TIDE_PARAMETERS",op=None,
@@ -209,27 +215,7 @@ TIDE_PARAMETERS=PROC(nom="TIDE_PARAMETERS",op=None,
 
       ),
 
-     Time=FACT( statut='o',
-       #Original_Date_Of_Time=SIMP(statut='f',typ=DateJJMMAAAA,validators=VerifTypeTuple(('R','R','R'))),
-       #Original_Hour_Of_Time=SIMP(statut='f',typ=HeureHHMMSS,validators=VerifTypeTuple(('R','R','R'))),
-       Original_Date_Of_Time=FACT( statut='o',
-         fr = "Permet de fixer la date d'origine des temps du modele lors de la prise en compte de la force generatrice de la maree.",
-         ang ='Give the date of the time origin of the model when taking into account the tide generating force.', 
-         Year=SIMP(statut='o',typ='I',val_min=1900,defaut=1900),
-         Month=SIMP(statut='o',typ='I',val_min=1,val_max=12,defaut=1),
-         Day=SIMP(statut='o',typ='I',val_min=1,val_max=31,defaut=1),
-          ),
-       Original_Hour_Of_Time=FACT( statut='f',
-         fr = "Permet de fixer l'heure d'origine des temps du modele lors de la prise en compte de la force generatrice de la maree.",
-         ang ='Give the time of the time origin of the model when taking into account the tide generating force.', 
-         Hour=SIMP(statut='o',typ='I',val_min=0,val_max=24,defaut=0),
-         Minute=SIMP(statut='o',typ='I',val_min=0,val_max=60,defaut=0),
-         Second=SIMP(statut='o',typ='I',val_min=0,val_max=60,defaut=0),
-         ),
-      ),
-     Location=FACT( statut='f',
-        #regles=( PRESENT_PRESENT('Longitude_Of_origin','Latitute_Of_origin', ),),
-        #Spatial_Projection=SIMP(statut='f',typ='I',into=[1,2,3]),
+     Location=FACT( statut='o',
         #Geographic_System=SIMP(statut='f',typ='I',into=[-1,0,1,2,3,4,5]),
 
         Geographic_System=SIMP(statut='f',typ='TXM',
@@ -238,25 +224,20 @@ TIDE_PARAMETERS=PROC(nom="TIDE_PARAMETERS",op=None,
               fr = 'Systeme de coordonnees geographiques dans lequel est construit le modele numerique.',
               ang = 'Geographic coordinates system in which the numerical model is built.Indicate the corresponding zone with the keyword ',
         ),
-             b_geo_system  = BLOC(condition = "Geographic_System in ('WGS84 LONGITUDE/LATITUDE EN DEGRES REELS','WGS84 NORD UTM','WGS84 SUD UTM','MERCATOR')",
-             Spatial_Projection=SIMP(statut='o',typ='TXM',into=["CARTESIAN, NOT GEOREFERENCED","MERCATOR","LATITUDE LONGITUDE"]),
-             ang = 'Option 2 or 3 mandatory for spherical coordinates Option 3: latitude and longitude in radians!',
-             b_lat     = BLOC(condition = "Spatial_Projection == 'LATITUDE LONGITUDE' ",
-                 Latitude_Of_Origin=SIMP(statut='o',typ='R',val_min=-90,val_max=90,fr="en radians", ang="in radians"),
-                 Longitude_Of_Origin=SIMP(statut='o',typ='R',fr="en radians", ang="in radians"),
-                         ), # fin bloc b_lat
-             ), # fin bloc b_geo
-# declenchement du calcul du mot_clef SPHERICAL COORDINATES
 
         Zone_number_in_Geographic_System=SIMP(statut='f',typ='TXM',
             #into=[-1,0,1,2,3,4,22,30],
             into=[ 'LAMBERT 1 NORD', 'LAMBERT 2 CENTRE', 'LAMBERT 3 SUD', 'LAMBERT 4 CORSE', 'LAMBERT 2 ETENDU', 'ZONE UTM, PAR EXEMPLE'],
             fr="Numero de zone (fuseau ou type de projection) lors de l'utilisation d'une projection plane.\n Indiquer le systeme geographique dans lequel est construit le modele numerique avec le mot-cle SYSTEME GEOGRAPHIQUE",
             ang='Number of zone when using a plane projection. \nIndicate the geographic system in which the numerical model is built with the keyword GEOGRAPHIC SYSTEM'),
-             ),
-          Physical_Parameters=FACT(statut='o',
+        ),
+     Physical_Parameters=FACT(statut='o',
           Tide_Generating_Force=SIMP(statut='o',typ=bool,defaut=False),
           b_Tide  = BLOC(condition = "Tide_Generating_Force==True",
+            Longitude_Of_Origin_Point=SIMP(typ='R',statut='o',defaut=48.,
+              fr = 'Fixe la valeur de la longitude du point origine du modele, lors de l utilisation de la force generatrice de la maree.',
+              ang = 'Give the value of the longitude of the origin point of the model, when taking into account of the tide generator force.',
+             ),
               Tidal_Data_Base=SIMP(statut='o',typ='TXM',
                 into=[ "JMJ", "TPXO", "LEGOS-NEA", "FES20XX", "PREVIMER",],
 fr = 'Pour JMJ, renseigner la localisation du fichier bdd_jmj et geofin dans les mots-cles BASE DE DONNEES DE MAREE \n\
@@ -266,18 +247,24 @@ ang = 'For JMJ, indicate the location of the files bdd_jmj and geofin with keywo
 For TPXO, LEGOS-NEA, FES20XX and PREVIMER, the user has to download files of harmonic constituents on the internet',
              ),
 
-#-1,1,2,3,4]),
+       b_tpxo     =BLOC(condition = "Tidal_Data_Base=='TPXO'",
+              Minor_Constituents_Inference = SIMP( statut='o',typ='bool',
+              defaut=False ,
+              fr = 'Interpolation de composantes harmoniques mineures a partir de celles lues dans les fichiers dentree lies aux mots-cles BASE BINAIRE 1 DE DONNEES DE MAREE et BASE BINAIRE 2 DE DONNEES DE MAREE',
+    ang= 'Inference of minor constituents from the one read in input files linked to keywords BINARY DATABASE 1 FOR TIDE and BINARY DATABASE 2 FOR TIDE',
+     ),
+     ),#fin du bloc b_tpxo
+
+#-1,1,2,3,4],
               Coefficient_To_Calibrate_Tidal_Range=SIMP(statut='o',typ='R',sug=1.),
               Coefficient_To_Calibrate_Tidal_Velocity=SIMP(statut='o',typ='R',sug=999999),
               Coefficient_To_Calibrate_Sea_Level=SIMP(statut='o',typ='R',sug=0.),
               Binary_Database_1_for_Tide  = SIMP( statut='o', typ = ('Fichier', '(All Files (*),)',),),
               Binary_Database_2_for_Tide  = SIMP( statut='o', typ = ('Fichier', '(All Files (*),)',),),
-                      ),
-
-          Wave_Driven_Currents=SIMP(statut='f',typ=bool,sug=False),
+             ),
+          Wave_Driven_Currents=SIMP(statut='o',typ=bool,defaut=False),
           b_Wave     =BLOC(condition = "Wave_Driver_Currents=='True'",
               Record_Number_in_Wave_File=SIMP(statut='f',typ='I',sug=1),
-         ),
          ),
 
        Option_For_Tidal_Boundary_Conditions   = SIMP( statut='o',typ='TXM',defaut='No tide',
@@ -299,8 +286,9 @@ For TPXO, LEGOS-NEA, FES20XX and PREVIMER, the user has to download files of har
             fr = 'Coefficient pour ajuster le marnage de l''onde de maree aux frontieres maritimes',
             ang = 'Coefficient to calibrate the tidal range of tidal wave at tidal open boundary conditions',
               ),
+         ),
        ),
-
+#
 ) # Fin TIDE_PARAMETERS
 
 INITIAL_STATE=PROC(nom="INITIAL_STATE",op=None,
@@ -346,8 +334,10 @@ INITIAL_STATE=PROC(nom="INITIAL_STATE",op=None,
          ), # fin b_special
 
 
+#PNPN il faut changer la condition pour que cela soit dans maree. il faut une position=global_jdc et remonter
+# cela
          b_initial_TPXO = BLOC (condition = "Initial_Conditions == 'TPXO SATELLITE ALTIMETRY'",
-           Base_Ascii_De_Donnees_De_Maree = SIMP( statut='o', typ = ('Fichier', 'All Files (*)',), ),
+           Ascii_Database_For_Tide = SIMP( statut='o', typ = ('Fichier', 'All Files (*)',), ),
            fr  = 'Base de donnees de constantes harmoniques tirees du fichier du modele de maree',
            ang = 'Tide data base of harmonic constituents extracted from the tidal model file',
          ), # fin b_initial_TPXO
@@ -356,6 +346,8 @@ INITIAL_STATE=PROC(nom="INITIAL_STATE",op=None,
 BOUNDARY_CONDITIONS=PROC(nom="BOUNDARY_CONDITIONS",op=None,
             fr  = 'On donne un ensemble de conditions par frontiere liquide',
             ang = 'One condition set per liquid boundary is given',
+            #UIinfo = { "groupes" : ( "CACHE", )},
+            UIinfo = { "groupes" : ( "iiii", )},
  # Dans l ideal il faut aller regarder selon les groupes dans le fichier med
  # en sortie il faut aller chercher le .cli qui va bien 
             #Liquid_Boundaries=FACT(statut='f',max='**',
@@ -408,13 +400,14 @@ Les donnees de ce fichier seront a lire sur le canal 12.',
    
 
 #PNPN Attention dans le Dico STAGE-DISCHARGE CURVES
+#PNPN regarder le document de reference pour changer non programme
        Stage_Discharge_Curves = SIMP(statut='f',typ='TXM',
         #into=[0,1,2],
         into=["no","Z(Q)","not programmed"],
         fr='Indique si une courbe de tarage doit etre utilisee pour une frontiere',
         ang='Says if a discharge-elevation curve must be used for a given boundary',
         ),
-        b_discharge_curve   = BLOC (condition = "Stage_Discharge_Curves == 'Z(Q)'",
+        b_discharge_curve   = BLOC (condition = "Stage_Discharge_Curves != 'no'",
 
 #PNPN Attention dans le Dico STAGE-DISCHARGE CURVES FILES
         Stage_Discharge_Curves_File   = SIMP( statut='f', typ = ('Fichier', 'All Files (*)',),
@@ -437,6 +430,8 @@ Les donnees de ce fichier seront a lire sur le canal 12.',
 
 NUMERICAL_PARAMETERS=PROC(nom="NUMERICAL_PARAMETERS",op=None,
 
+        #UIinfo = { "groupes" : ( "CACHE", )},
+        UIinfo = { "groupes" : ( "iiii", )},
         Solver_Definition=FACT(statut='o',
 
           Equations=SIMP(statut='o',typ='TXM',
@@ -483,12 +478,12 @@ Note: a maximum number of 40 iterations per time step seems to be reasonable.',
            ),
         ), # fin Solver
 
-        Time=FACT(statut='f',
+        Time=FACT(statut='o',
         regles=(AU_MOINS_UN('Number_Of_Time_Steps','Duration'),
                 EXCLUS('Number_Of_Time_Steps','Duration'),
                ),
 
-           Time_Step=SIMP(statut='o',typ='R'),
+           Time_Step=SIMP(statut='o',typ='R',defaut=1),
            Number_Of_Time_Steps=SIMP(statut='f',typ='I',
               fr='Definit le nombre de pas de temps effectues lors de l''execution du code.',
               ang='Specifies the number of time steps performed when running the code.'),
@@ -497,6 +492,19 @@ Note: a maximum number of 40 iterations per time step seems to be reasonable.',
            b_var_time  = BLOC(condition = "Variable_Time_Step==True" ,
              Desired_Courant_Number=SIMP(statut='o',typ='R'),
            ),
+           Original_Date_Of_Time=FACT( statut='o',
+              fr = "Permet de fixer la date d'origine des temps du modele lors de la prise en compte de la force generatrice de la maree.",
+              ang ='Give the date of the time origin of the model when taking into account the tide generating force.', 
+               Year=SIMP(statut='o',typ='I',val_min=1900,defaut=1900),
+               Month=SIMP(statut='o',typ='I',val_min=1,val_max=12,defaut=1),
+               Day=SIMP(statut='o',typ='I',val_min=1,val_max=31,defaut=1),),
+           Original_Hour_Of_Time=FACT( statut='f',
+               fr = "Permet de fixer l'heure d'origine des temps du modele lors de la prise en compte de la force generatrice de la maree.",
+               ang ='Give the time of the time origin of the model when taking into account the tide generating force.', 
+               Hour=SIMP(statut='o',typ='I',val_min=0,val_max=24,defaut=0),
+               Minute=SIMP(statut='o',typ='I',val_min=0,val_max=60,defaut=0),
+               Second=SIMP(statut='o',typ='I',val_min=0,val_max=60,defaut=0),
+             ),
 
            Stop_If_A_Steady_State_Is_Reached=SIMP(statut='f',typ=bool,defaut='False'),
            b_stop  = BLOC(condition = "Stop_If_A_Steady_State_Is_Reached==True" ,
@@ -647,6 +655,10 @@ The non-linearities can be taken into account through this technique.',),
                 ),
           ),
         ),
+        Scheme_For_Advection_Of_K_Epsilon=SIMP(statut='o',typ='TXM',
+        into=["no advection", "characteristics", "explicit + supg"," postma", "explicit + murd scheme n", "explicit + murd scheme psi", "leo postma for tidal flats", "n-scheme for tidal flats"],
+      fr = 'Choix du schema de convection pour k et epsilon, remplace FORME DE LA CONVECTION',
+       ang = 'Choice of the advection scheme for k and epsilon, replaces TYPE OF ADVECTION',),
 
 #PNPNPN
 # recalculer la liste de 4
@@ -772,85 +784,6 @@ This key-word may have an influence on mass conservation since the truncation of
               ),
      ),
 
-   Turbulence=FACT(statut='f',
-      Solver_For_K_epsilon_Model = SIMP( statut='o',typ='TXM',
-            defaut="conjugate gradient" ,
-   into =("conjugate gradient", "conjugate residuals", "conjugate gradient on normal equation", "minimum error", "conjugate gradient squared",\
-        "conjugate gradient squared stabilised (cgstab)", "gmres", "direct"),
-   #into =('1="conjugate gradient"', '2="conjugate residuals"', '3="conjugate gradient on normal equation"', '4="minimum error"', '5="conjugate gradient squared"', '6="conjugate gradient squared stabilised (cgstab)"', '7="gmres (see option for the solver for k-epsilon model)"', '8="direct"'),
-    fr = 'Permet de choisir le solveur utilise pour la resolution du systeme du modele k-epsilon',
-    ang= 'Makes it possible to select the solver used for solving the system of the k-epsilon model.',
-     ),
-
-       b_gmres=BLOC(condition='Solver_For_K_epsilon_Model=="gmres"',
-         Option_For_The_Solver_For_K_epsilon_Model = SIMP( statut='o',typ='I',
-              defaut=2 ,val_min=2,val_max=15,
-              fr = 'le mot cle est la dimension de lespace de KRILOV (valeurs conseillees entre 2 et 7)',
-              ang= 'dimension of the krylov space try values between 2 and 7',),
-            ),
-
-      Preconditioning_For_K_epsilon_Model = SIMP( statut='o',typ='TXM',
-         defaut='diagonal' ,
-         into =("diagonal", "no preconditioning", "diagonal condensed", "crout", "diagonal and crout", "diagonal condensed and crout"),
-   #into =('2="diagonal"', '0="no preconditioning"', '3="diagonal condensed"', '7="crout"', '14="diagonal and crout"', '21="diagonal condensed and crout"'),
-         fr = 'Permet de preconditionner le systeme relatif au modele k-epsilon',
-         ang= 'Preconditioning of the linear system in the diffusion step of the k-epsilon model.',
-     ),
-
-    Turbulence_Model = SIMP( statut='o',typ='TXM', defaut="CONSTANT VISCOSITY", 
-   #into =('1="CONSTANT VISCOSITY"', '2="ELDER"', '3="K-EPSILON MODEL"', '4="SMAGORINSKI"'),
-   into =("Constant Viscosity", "Elder", "K-Epsilon Model", "Smagorinski"),
-    
-    fr = 'si on choisit loption 2 il ne faut pas oublier dajuster les deux valeurs du mot-cle : COEFFICIENTS ADIMENSIONNELS DE DISPERSION Si on choisit loption 3, ce meme parametre doit retrouver sa vraie valeur physique car elle est utilisee comme telle dans le modele de turbulence',
-    ang= 'When option 2 is chosen, the two values of key-word : NON-DIMENSIONAL DISPERSION COEFFICIENTS are used When option 3 is chosen, this parameter should recover its true physical value, since it is used as such in the turbulence model.',
-     ),
-
-    b_turbu_const=BLOC(condition='Turbulence_Model=="Constant Viscosity"',
-      Velocity_Diffusivity=SIMP( statut='o',typ='R',defaut=1.E-6,
-      fr='Fixe de facon uniforme pour l ensemble du domaine la valeur du coefficient de diffusion de viscosite globale (dynamique + turbulente).\n\
-Cette valeur peut avoir une influence non negligeable sur la forme et la taille des recirculations.',
-      ang = 'Sets, in an even way for the whole domain, the value of the coefficient of global (dynamic+turbulent) viscosity. \n\
-this value may have a significant effect both on the shapes and sizes of recirculation zones.',),
-
-    ),
-    b_turbu_elder=BLOC(condition='Turbulence_Model=="Elder"',
- Non_Dimensional_Dispersion_Coefficients = SIMP (statut='o',
-          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),defaut=(6.,0.6),
-          fr = 'coefficients longitudinal et transversal dans la formule de Elder.',
-           ang = 'Longitudinal and transversal coefficients in elder s formula.  Used only with turbulence model number 2',),
-    ),
-
-     Accuracy_Of_K = SIMP( statut='o',typ='R', defaut=1e-09 ,
-            fr = 'Fixe la precision demandee sur k pour le test darret dans letape de diffusion et termes sources du modele k-epsilon.',
-            ang= 'Sets the required accuracy for computing k in the diffusion and source terms step of the k-epsilon model.',
-     ),
-
-     Accuracy_Of_Epsilon = SIMP( statut='o',typ='R', defaut=1e-09 ,
-           fr = 'Fixe la precision demandee sur epsilon pour le test darret dans letape de diffusion et termes sources de k et epsilon.',
-           ang= 'Sets the required accuracy for computing epsilon in the diffusion and source-terms step of the k-epsilon model.',
-     ),
-     Time_Step_Reduction_For_K_epsilon_Model = SIMP( statut='f',typ='R', defaut=1.0 ,
-    fr = 'Coefficient reducteur du pas de temps pour le modele k-epsilon (qui est normalement identique a celui du systeme hydrodynamique).\n\
-Utilisation deconseillee',
-    ang= 'Time step reduction coefficient for k-epsilon model (which is normally same the same as that of the hydrodynamic system).\n\
-Not recommended for use.',
-     ),
-     Maximum_Number_Of_Iterations_For_K_And_Epsilon = SIMP( statut='o',typ='I',
-               defaut=50 ,
-           fr = 'Fixe le nombre maximum diterations accepte lors de la resolution du systeme diffusion-termes sources du modele k-epsilon.',
-           ang= 'Sets the maximum number of iterations that are acceptable when solving the diffusion source-terms step of the k-epsilon model.',
-     ),
-     Turbulence_Model_For_Solid_Boundaries = SIMP( statut='o',typ='TXM',
-         defaut='rough' ,
-         #into =('1=smooth', '2=rough'),
-         into =('smooth', 'rough'),
-         fr = 'Permet de choisir le regime de turbulence aux parois ',
-         ang= 'Provided for selecting the type of friction on the walls',
-     ),
-
-
-     ),# fin Turbulence
-
      Various=FACT(
          Finite_Volume_Scheme = SIMP( statut='o',typ='TXM',
               #CHoix de 0 a 6
@@ -877,24 +810,50 @@ Not recommended for use.',
 
 PHYSICAL_PARAMETERS=PROC(nom="PHYSICAL_PARAMETERS",op=None,
         Atmosphere=FACT(statut='f',
-          Wind=SIMP(statut='f',typ=bool,sug=False),
-          b_Wind     =BLOC(condition = "Wind=='True'",
+          Wind=SIMP(statut='o',typ=bool,defaut=False),
+          b_Wind     =BLOC(condition = "Wind==True",
             regles=( PRESENT_PRESENT('Wind_Velocity_along_X','Wind_Velocity_along_Y', ),),
-            Coefficient_Of_Wind_Influence=SIMP(statut='f',typ='R',sug=0,),
-            Wind_Velocity_along_X=SIMP(statut='f',typ='R',sug=0,),
-            Wind_Velocity_along_Y=SIMP(statut='f',typ='R',sug=0,),
-            Threashold_Depth_for_Wind=SIMP(statut='f',typ='R',sug=0,),
-            Air_Pressure=SIMP(statut='f',typ=bool,sug=False),
-         ),
-          Rain_or_Evaporation=SIMP(statut='f',typ=bool,sug=False),
-          b_Rain     =BLOC(condition = "Rain_or_Evaporation=='True'",
-            Rain_or_Evaporation_in_mm_perday=SIMP(statut='f',typ='I',sug=0),
-                         ),
-         ),
+            Wind_Velocity_along_X=SIMP(statut='o',typ='R',defaut=0.,),
+            Wind_Velocity_along_Y=SIMP(statut='o',typ='R',defaut=0.,),
+            Threashold_Depth_for_Wind=SIMP(statut='o',typ='R',defaut=0.,),
+            Air_Pressure=SIMP(statut='o',typ=bool,defaut=False),
+            Coefficient_Of_Wind_Influence = SIMP( statut='o',typ='R', defaut=0.0 ,
+               fr = 'Fixe la valeur du coefficient d entrainement du vent (cf.  Note de principe).',
+               ang= 'Sets the value of the wind driving coefficient.  Refer to principle note.',
+     ),
 
+
+           Option_For_Wind = SIMP( statut='o',typ='TXM', defaut=0 ,
+           into=["no wind","constant in time and space","variable in time","variable in time and space"],
+              fr = 'donne les options pour introduire le vent',
+               ang= 'gives option for managing the wind'
+           ),
+          file_for_wind = BLOC (condition = 'Option_For_Wind== "variable in time" or Option_For_Wind == "variable in time and space"',
+          Consigne = SIMP(statut="o",homo='information',typ="TXM", defaut=" give formated file 3"),
+          ),
+          speed_for_wind = BLOC (condition = 'Option_For_Wind== "constant in time and space"',
+            Speed_And_Direction_Of_Wind = SIMP( statut='o', defaut=(0.0, 0.0) , typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+            fr = 'Donne la vitesse et la direction (en degres de 0 a 360, 0 etant y=0 et x=+inf) du vent',
+            ang= 'gives the speed and direction (degre (from 0 to 360), 0 given y=0 anx x=+infinity)',
+                 ),
+              ),
+          ), # fin b_Wind
+
+          Value_Of_Atmospheric_Pressure = SIMP( statut='o',typ='R',
+          defaut=100000.0 ,
+          fr = 'donne la valeur de la pression atmospherique lorsquelle est constante en temps et en espace',
+          ang= 'gives the value of atmospheric pressure when it is contant in time and space',
+            ),
+
+          Rain_or_Evaporation=SIMP(statut='o',typ=bool,defaut=False),
+          b_Rain     =BLOC(condition = "Rain_or_Evaporation==True",
+            Rain_or_Evaporation_in_mm_perday=SIMP(statut='o',typ='I',defaut=0.),
+                         ),
+         ), # fin atmosphere
 
           Friction_Data=SIMP(statut='o',typ=bool,defaut=False),
           b_Friction  = BLOC(condition = "Friction_Data==True",
+          Friction_Setting=FACT(statut='o',
              Friction_Data_File = SIMP( statut='o',
                typ = ('Fichier', ';;All Files (*)'),
                fr = 'fichier de donnees pour le frottement',
@@ -907,8 +866,8 @@ PHYSICAL_PARAMETERS=PROC(nom="PHYSICAL_PARAMETERS",op=None,
                ang= '1: nodal   2: average',
              ),
              Law_Of_Bottom_Friction = SIMP( statut='o',typ='TXM',
-             defaut='0="NO FRICTION"' ,
-             into =('0="NO FRICTION"', '1="HAALAND"', '2="CHEZY"', '3="STRICKLER"', '4="MANNING"', '5="NIKURADSE"','Log Law of Boundaries 6','Colebrooke_White Log 7'),
+             defaut='NO FRICTION' ,
+             into =('NO FRICTION', '1="HAALAND"', '2="CHEZY"', '3="STRICKLER"', '4="MANNING"', '5="NIKURADSE"','Log Law of Boundaries 6','Colebrooke_White Log 7'),
              fr = 'selectionne le type de formulation utilisee pour le calcul du frottement sur le fond.',
              ang= 'Selects the type of formulation used for the bottom friction.',
              ),
@@ -924,7 +883,7 @@ It is noteworthy that the meaning of this figure changes according to the select
 1 : linear coefficient 2 : Chezy coefficient 3 : Strickler coefficient 4 : Manning coefficient 5 : Nikuradse grain size',
                    ),
               ),
-             b_Colebrooke_White  = BLOC(condition =' "Law_Of_Bottom_Friction" in ("Colebrooke_White Log 7",)',
+             b_Colebrooke_White  = BLOC(condition ="Law_Of_Bottom_Friction =='Colebrooke_White Log 7'",
                  Manning_Default_Value_For_Colebrook_white_Law = SIMP( statut='o',typ='R',
                  defaut=0.02 ,
                  fr = 'valeur par defaut du manning pour la loi de frottement de  Colebrook-White ',
@@ -980,6 +939,7 @@ fr ='Si > 0., declenche la procedure de ressuyage qui evite le franchissement pa
 ang='If > 0., will trigger the receding procedure that avoids overwhelming of dykes which are too loosely discretised ',
      ),
 
+     ),
      ), # Fin de Friction
      Parameter_Estimation=FACT(statut='f',
            Parameter_Estimation = SIMP( statut='o',typ='TXM', into =["FRICTION","FROTTEMENT, STEADY"],
@@ -1014,7 +974,61 @@ ang='If > 0., will trigger the receding procedure that avoids overwhelming of dy
        min=4,max=4,)
       ),
 
-)
+
+
+        Number_Of_Sources = SIMP( statut='o',typ='I', defaut=0 ,),
+#PNPNPNPN saisir autant de source du le nombre
+# Attention a la sortie a reformatter. voir page 68 du user manuel V7
+        sources_exist=BLOC(condition="Number_Of_Sources!=0",
+        Sources_File = SIMP( statut='o',typ = ('Fichier', 'All Files (*)',),
+          fr = 'Nom du fichier contenant les informations variables en temps des sources',
+           ang= 'Name of the file containing time-dependent information on sources',
+         ),
+        Source=FACT(statut='o',
+         max="**",
+         Abscissae_Of_Sources = SIMP( statut='o',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+          fr = 'Valeurs des abscisses des sources de debit et de traceur.',
+          ang= 'abscissae of sources of flowrate and/or tracer',
+         ),
+
+          Ordinates_Of_Sources = SIMP( statut='o',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+          fr = 'Valeurs des ordonnees des sources de debit et de traceur.',
+          ang= 'ordinates of sources of flowrate and/or tracer',
+          ),
+          Water_Discharge_Of_Sources = SIMP( statut='o',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+          fr = 'Valeurs des debits des sources.',
+          ang= 'values of water discharge of sources',
+          ),
+          Velocities_Of_The_Sources_Along_X = SIMP( statut='f',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+          fr = 'Vitesses du courant a chacune des sources. Si elles ne sont pas donnees, on considere que la vitesse est celle du courant',
+          ang= 'Velocities at the sources. If they are not given, the velocity of the flow at this location is taken',
+          ),
+          Velocities_Of_The_Sources_Along_Y = SIMP( statut='f',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
+          fr = 'Vitesses du courant a chacune des sources',
+          ang= 'Velocities at the sources',
+        ),
+        ),
+       Type_Of_Sources=SIMP(statut='o',typ='TXM',into=["Normal","Dirac"],
+        fr = 'Source portee par une base elements finis  Source portee  par une fonction de Dirac',
+        ang= 'Source term multiplied by a finite element basis,  Source term multiplied by a Dirac function',
+        ),
+    ),#fin bloc source
+    Water_Density=SIMP(statut='o',typ='R',defaut=1000.,
+         fr = 'Fixe la valeur de la masse volumique de l eau.',
+         ang = 'set the value of water density',
+    ),
+    Gravity_Acceleration=SIMP(statut='o',typ='R',defaut=9.81,
+        fr = 'Fixe la valeur de l acceleration de la pesanteur.',
+        ang = 'Set the value of the acceleration due to gravity.',
+      ),
+
+
+)# fin PHYSICAL
 
 POST_PROCESSING=PROC(nom="POST_PROCESSING",op=None,
    Graphic_Printouts=FACT(statut='f',
@@ -1023,6 +1037,7 @@ POST_PROCESSING=PROC(nom="POST_PROCESSING",op=None,
         Variables_For_Graphic_Printouts=SIMP(statut='o',max="**", typ='TXM',into=['a','b','c'],),
         # ajouter le into
    ),
+#PNPN Attention - il existe un mot clef Listing_Printouts
   Listing_Printouts=FACT(statut='f',
 
           Results_File_Format = SIMP( statut='o',typ='TXM',into=['SERAFIN','MED','SERAFIND'], defaut='SERAFIN',
@@ -1070,12 +1085,38 @@ Les resultats a placer dans ce fichier seront a ecrire sur le canal 28.",
 The results to be entered into this file shall be written on channel 28.",
     ),
 
-Information_About_Solver = SIMP(typ=bool, statut='f',defaut=False,
+     Information_About_Solver = SIMP(typ=bool, statut='f',defaut=False,
        fr = "Si vrai, Donne a chaque pas de temps le nombre d'iterations necessaires a la convergence du solveur de l'etape de propagation.",
      ang = "if True, prints the number of iterations that have been necessary to get the solution of the linear system.",
-),
+      ),
+
+  Controls=FACT(
+    Controls_Section=SIMP(statut='o',typ=Tuple(2),validators=VerifTypeTuple(('I','I')),
+       fr = 'Couples de points (numeros globaux dans le maillage) entre lesquels les debits instantanes et cumules seront donnes.',
+       ang ='Couples of points (global numbers in the mesh) defining sections where the instantaneous and cumulated discharges will be given',
+          ),
+
+    Printing_Cumulated_Flowrates = SIMP( statut='o',typ=bool, defaut=False ,
+    fr = 'IMPRESSION DU FLUX CUMULE A TRAVERS LES SECTIONS DE CONTROLE',
+    ang= 'PRINTING THE CUMULATED FLOWRATES THROUGH CONTROL SECTIONS',
+     ),
+
+    Compatible_Computation_Of_Fluxes = SIMP( statut='o',typ=bool, defaut=False ,
+    fr = 'FLUX A TRAVERS LES SECTIONS DE CONTROLE, CALCUL COMPATIBLE AVEC LIMPERMEABILITE SOUS FORME FAIBLE',
+    ang= 'FLOWRATES THROUGH CONTROL SECTIONS, COMPUTATION COMPATIBLE WITH THE WEAK FORMULATION OF NO-FLUX BOUNDARY CONDITION',
+     ),
+   Sections_Input_File = SIMP( statut='f', typ = ('Fichier', 'All Files (*)'),
+    fr = 'sections input file, partitioned',
+    ang= 'sections input file, partitioned',
+     ),
+
+    Sections_Output_File = SIMP( statut='f', typ = ('Fichier', 'All Files (*)'),
+    fr = 'sections output file, written by the master',
+    ang= 'sections output file, written by the master',
+     ),
 
 
+  ),# fin controls
 
 PRECONDITIONING = SIMP( statut='o',typ='I',
     defaut=2 ,
@@ -1087,7 +1128,7 @@ PRECONDITIONING = SIMP( statut='o',typ='I',
 
 
 # Attention calculer le logique BREACH 
-STRUCTURES=PROC(nom="STRUCTURES",op=None,
+CONSTRUCTION_WORKS_MODELLING=PROC(nom="CONSTRUCTION_WORKS_MODELLING",op=None,
 
 # Attention calculer le logique BREACH 
 
@@ -1098,43 +1139,11 @@ dans le fichier cas. Leurs caracteristiques sont donnees dans le fichier de donn
           ang= 'Number of culverts treated as source terms.  They must be described as sources in the domain\
  and their features are given in the culvert data file (see written documentation)',
            ),
-
         culvert_exist=BLOC(condition="Number_Of_Culverts!=0",
-        Culverts= FACT(statut='o',
-         min=1,max="**",
-         Abscissae_Of_Sources = SIMP( statut='o',
-          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
-          fr = 'Valeurs des abscisses des sources de debit et de traceur.',
-          ang= 'abscissae of sources of flowrate and/or tracer',
-         ),
-
-          Ordinates_Of_Sources = SIMP( statut='o',
-          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
-          fr = 'Valeurs des ordonnees des sources de debit et de traceur.',
-          ang= 'ordinates of sources of flowrate and/or tracer',
-          ),
-          Water_Discharge_Of_Sources = SIMP( statut='o',
-          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
-          fr = 'Valeurs des debits des sources.',
-          ang= 'values of water discharge of sources',
-          ),
-          Velocities_Of_The_Sources_Along_X = SIMP( statut='o',
-          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
-          fr = 'Vitesses du courant a chacune des sources. Si elles ne sont pas donnees, on considere que la vitesse est celle du courant',
-          ang= 'Velocities at the sources. If they are not given, the velocity of the flow at this location is taken',
-          ),
-          Velocities_Of_The_Sources_Along_Y = SIMP( statut='o',
-          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),
-          fr = 'Vitesses du courant a chacune des sources',
-          ang= 'Velocities at the sources',
-         ),
-        ),
-
         Culvert_Data_File = SIMP( statut='o',typ = ('Fichier', 'All Files (*)',),
             fr = 'Fichier de description des siphons presents dans le modele',
             ang= 'Description of culvert existing in the model',
         ),
-
         ),
 
           Number_Of_Tubes = SIMP( statut='o',typ='I',
@@ -1164,9 +1173,19 @@ Ces seuils doivent etre decrits comme des frontieres du domaine de calcul',
         typ = ('Fichier', 'All Files (*)',),
         fr = 'Fichier de description des seuils presents dans le modele',
         ang= 'Description of weirs existing in the model',),
+
+#PNPN a passer an anglais avec une solution lisible
+     Type_Of_Weirs = SIMP( statut='o',typ='TXM',
+       into=["HORIZONTAL AVEC MEME NOMBRE DE NOEUDS AMONT/AVAL (Solution historique avec bord)",
+             "GENERALE (Nouvelle solution avec pts sources)"],
+       defaut= "HORIZONTAL AVEC MEME NOMBRE DE NOEUDS AMONT/AVAL (Solution historique avec bord)",
+       fr = 'Méthode de traitement des seuils ',
+       ang= 'Method for treatment of weirs',
      ),
 
-     Breach=SIMP(statut='o',typ=bool,defaut=False,
+     ),
+
+     Breach=SIMP(statut='f',typ=bool,defaut=False,
          fr = 'Prise en compte de breches dans le calcul par modification altimetrique dans le maillage.',
          ang = 'Take in account some breaches during the computation by modifying the bottom level of the mesh.',
      ),
@@ -1183,12 +1202,6 @@ Ces seuils doivent etre decrits comme des frontieres du domaine de calcul',
       maskob = BLOC (condition = 'Vertical_Structures==True',
       Consigne = SIMP(statut="o",homo='information',typ="TXM", defaut="subroutine DRAGFO must then be implemented"),
       ),
-      Formatted_File1    = SIMP( statut='f', typ = ('Fichier', 'formated File (*.txt);;All Files (*)',),
-              fr = "Fichier de donnees formate mis a la disposition de l''utilisateur.  \n\
-Les donnees de ce fichier seront a lire sur le canal 26.",
-              ang = 'Formatted data file made available to the user.\n\
-The data in this file shall be read on channel 26.',
-          ),
 ) # FIn STRUCTURE
 TRACERS=PROC(nom="TRACERS",op=None,
         Boundary_conditions=FACT(statut='o',
@@ -1201,3 +1214,186 @@ if Priority to fluxes, Dirichlet prescribed values are not obeyed,but the fluxes
         ),
         ), # fin Boundary_conditions
 )          # FIN TRACERS
+
+GENERAL_PARAMETERS=PROC(nom="GENERAL_PARAMETERS",op=None,
+
+        Spherical_Coordinates=SIMP(typ=bool,statut='o',defaut=False,
+        fr = 'Choix des coordonnees spheriques pour la realisation du calcul ( pour les grands domaines de calcul).',
+        ang = 'Selection of spherical coordinates to perform the computation (for large computation domains).'
+        ),
+
+        b_Spher  = BLOC(condition = 'Spherical_Coordinates== True',
+            Latitude_Of_Origin_Point=SIMP(typ='R',statut='o',defaut=48.,
+              fr = 'Determine l origine utilisee pour le calcul de latitudes lorsque l on effectue un calcul en coordonnees spheriques.',
+              ang = 'Determines the origin used for computing latitudes when a computation is made in spherical coordinates.this latitude\n\
+is in particular used to compute the Coriolis force. In cartesian coordinates, Coriolis coefficient is considered constant.'
+              ),
+            Spatial_Projection_Type=SIMP(statut='o',typ='TXM',into=["MERCATOR","LATITUDE LONGITUDE"]),
+        ),
+        b_Spher_faux  = BLOC(condition = 'Spherical_Coordinates== False',
+           Spatial_Projection_Type=SIMP(statut='o',typ='TXM',into=["CARTESIAN, NOT GEOREFERENCED","MERCATOR","LATITUDE LONGITUDE"],
+           defaut="CARTESIAN, NOT GEOREFERENCED",),
+        ),
+)
+
+
+TURBULENCE=PROC(nom="TURBULENCE",op=None,
+
+    Turbulence_Model = SIMP( statut='o',typ='TXM', defaut="CONSTANT VISCOSITY", 
+   #into =('1="CONSTANT VISCOSITY"', '2="ELDER"', '3="K-EPSILON MODEL"', '4="SMAGORINSKI"'),
+   into =("Constant Viscosity", "Elder", "K-Epsilon Model", "Smagorinski"),
+    
+    fr = 'si on choisit loption 2 il ne faut pas oublier dajuster les deux valeurs du mot-cle : COEFFICIENTS ADIMENSIONNELS DE DISPERSION Si on choisit loption 3, ce meme parametre doit retrouver sa vraie valeur physique car elle est utilisee comme telle dans le modele de turbulence',
+    ang= 'When option 2 is chosen, the two values of key-word : NON-DIMENSIONAL DISPERSION COEFFICIENTS are used When option 3 is chosen, this parameter should recover its true physical value, since it is used as such in the turbulence model.',
+     ),
+
+    b_turbu_const=BLOC(condition='Turbulence_Model=="Constant Viscosity"',
+      Velocity_Diffusivity=SIMP( statut='o',typ='R',defaut=1.E-6,
+      fr='Fixe de facon uniforme pour l ensemble du domaine la valeur du coefficient de diffusion de viscosite globale (dynamique + turbulente).\n\
+Cette valeur peut avoir une influence non negligeable sur la forme et la taille des recirculations.',
+      ang = 'Sets, in an even way for the whole domain, the value of the coefficient of global (dynamic+turbulent) viscosity. \n\
+this value may have a significant effect both on the shapes and sizes of recirculation zones.',),
+
+    ),
+    b_turbu_elder=BLOC(condition='Turbulence_Model=="Elder"',
+ Non_Dimensional_Dispersion_Coefficients = SIMP (statut='o',
+          typ=Tuple(2),validators=VerifTypeTuple(('R','R')),defaut=(6.,0.6),
+          fr = 'coefficients longitudinal et transversal dans la formule de Elder.',
+           ang = 'Longitudinal and transversal coefficients in elder s formula.  Used only with turbulence model number 2',),
+    ),
+
+     Accuracy_Of_K = SIMP( statut='o',typ='R', defaut=1e-09 ,
+            fr = 'Fixe la precision demandee sur k pour le test darret dans letape de diffusion et termes sources du modele k-epsilon.',
+            ang= 'Sets the required accuracy for computing k in the diffusion and source terms step of the k-epsilon model.',
+     ),
+
+     Accuracy_Of_Epsilon = SIMP( statut='o',typ='R', defaut=1e-09 ,
+           fr = 'Fixe la precision demandee sur epsilon pour le test darret dans letape de diffusion et termes sources de k et epsilon.',
+           ang= 'Sets the required accuracy for computing epsilon in the diffusion and source-terms step of the k-epsilon model.',
+     ),
+     Time_Step_Reduction_For_K_epsilon_Model = SIMP( statut='f',typ='R', defaut=1.0 ,
+    fr = 'Coefficient reducteur du pas de temps pour le modele k-epsilon (qui est normalement identique a celui du systeme hydrodynamique).\n\
+Utilisation deconseillee',
+    ang= 'Time step reduction coefficient for k-epsilon model (which is normally same the same as that of the hydrodynamic system).\n\
+Not recommended for use.',
+     ),
+     Maximum_Number_Of_Iterations_For_K_And_Epsilon = SIMP( statut='o',typ='I',
+               defaut=50 ,
+           fr = 'Fixe le nombre maximum diterations accepte lors de la resolution du systeme diffusion-termes sources du modele k-epsilon.',
+           ang= 'Sets the maximum number of iterations that are acceptable when solving the diffusion source-terms step of the k-epsilon model.',
+     ),
+     Turbulence_Model_For_Solid_Boundaries = SIMP( statut='o',typ='TXM',
+         defaut='rough' ,
+         #into =('1=smooth', '2=rough'),
+         into =('smooth', 'rough'),
+         fr = 'Permet de choisir le regime de turbulence aux parois ',
+         ang= 'Provided for selecting the type of friction on the walls',
+     ),
+      Solver_For_K_epsilon_Model = SIMP( statut='o',typ='TXM',
+            defaut="conjugate gradient" ,
+   into =("conjugate gradient", "conjugate residuals", "conjugate gradient on normal equation", "minimum error", "conjugate gradient squared",\
+        "conjugate gradient squared stabilised (cgstab)", "gmres", "direct"),
+   #into =('1="conjugate gradient"', '2="conjugate residuals"', '3="conjugate gradient on normal equation"', '4="minimum error"', '5="conjugate gradient squared"', '6="conjugate gradient squared stabilised (cgstab)"', '7="gmres (see option for the solver for k-epsilon model)"', '8="direct"'),
+    fr = 'Permet de choisir le solveur utilise pour la resolution du systeme du modele k-epsilon',
+    ang= 'Makes it possible to select the solver used for solving the system of the k-epsilon model.',
+     ),
+
+       b_gmres=BLOC(condition='Solver_For_K_epsilon_Model=="gmres"',
+         Option_For_The_Solver_For_K_epsilon_Model = SIMP( statut='o',typ='I',
+              defaut=2 ,val_min=2,val_max=15,
+              fr = 'le mot cle est la dimension de lespace de KRILOV (valeurs conseillees entre 2 et 7)',
+              ang= 'dimension of the krylov space try values between 2 and 7',),
+            ),
+
+      Preconditioning_For_K_epsilon_Model = SIMP( statut='o',typ='TXM',
+         defaut='diagonal' ,
+         into =("diagonal", "no preconditioning", "diagonal condensed", "crout", "diagonal and crout", "diagonal condensed and crout"),
+   #into =('2="diagonal"', '0="no preconditioning"', '3="diagonal condensed"', '7="crout"', '14="diagonal and crout"', '21="diagonal condensed and crout"'),
+         fr = 'Permet de preconditionner le systeme relatif au modele k-epsilon',
+         ang= 'Preconditioning of the linear system in the diffusion step of the k-epsilon model.',
+     ),
+    Information_About_K_Epsilon_Model=SIMP(statut='o',typ=bool,defaut=True,
+        fr = 'Donne le nombre d iterations du solveur de l etape de diffusion et termes sources du modele k-epsilon.',
+        ang = 'Gives the number of iterations of the solver in the diffusion and source terms step of the k-epsilon model.',
+     ),
+)# fin Turbulence
+
+PARTICULE=PROC(nom="PARTICULE",op=None,
+      Number_Of_Drogues=SIMP(statut='o',typ='I',defaut=0,
+      fr = 'Permet d''effectuer un suivi de flotteurs',
+      ang = 'Number of drogues in the computation.',
+      ),
+
+
+     Algae_Transport_Model = SIMP( statut='o',typ=bool, defaut=False ,
+          fr = 'Si oui, les flotteurs seront des algues',
+          ang= 'If yes, the floats or particles will be algae',
+     ),
+
+    algae_exist=BLOC(condition="Algae_Transport_Model==True", 
+
+       Algae_Type = SIMP( statut='o',typ='TXM',
+        into=["SPHERE", "IRIDAEA FLACCIDA (CLOSE TO ULVA)", "PELVETIOPSIS LIMITATA", "GIGARTINA LEPTORHYNCHOS"],
+        defaut="Sphere",
+        fr = 'Type des algues. Pour le choix 1 les algues seront modelisees comme des spheres, pour les autres choix voir Gaylord et al. (1994).',
+         ang= 'Algae type. For choice 1 the algae particles will be modeled as spheres, and for the other choices see Gaylord et al. (1994)',
+       ),
+      Diametre_Of_Algae = SIMP( statut='o',typ='R', defaut=0.1 ,
+            fr = 'Diametre des algues en m',
+            ang= 'Diametre of algae in m',
+       ),
+
+      Density_Of_Algae = SIMP( statut='o',typ='R', defaut=1050.0 ,
+         fr = 'Masse volumique des algues en kg/m3',
+         ang= 'Density of algae in kg/m3',
+        ),
+
+      Thickness_Of_Algae = SIMP( statut='o',typ='R', defaut=0.01 ,
+         fr = 'Epaisseur des algues en m',
+         ang= 'Thickness of algae in m',
+       ),
+      ), # fin algae
+
+
+    Oil_Spill_Model = SIMP( statut='o',typ=bool, defaut=False ,
+    fr = 'pour declencher le modele de derive de nappes, dans ce cas le fichier de commandes migrhycar est necessaire',
+    ang= 'will trigger the oil spill model, in this case the migrhycar steering file is needed',
+     ),
+
+    oil_exist=BLOC(condition="Oil_Spill_Model==True", 
+        Oil_Spill_Steering_File = SIMP( statut='o',typ=('Fichier', 'All Files (*)',),
+         fr = 'Contient les donnees pour le modele de derive de nappes',
+         ang= 'Contains data for the oil spill model',
+     ),
+     ),
+
+     drogues_exist=BLOC(condition="Number_Of_Drogues!=0 or Algae_Transport_Model==True or Oil_Spill_Model==True",
+        Drogues_File = SIMP( statut='o',typ = ('Fichier', 'All Files (*)',),
+           fr = 'Fichier de resultat avec les positions des flotteurs',
+           ang = 'Results file with positions of drogues',
+         ),
+
+     Printout_Period_For_Drogues=SIMP(statut='o',typ='I',defaut=1,
+       fr = 'Nombre de pas de temps entre 2 sorties de positions de flotteurs dans le fichier des resultats binaire supplementaire\n\
+N affecte pas la qualite du calcul de la trajectoire',
+       ang = 'Number of time steps between 2 outputs of drogues positions in the binary file',
+     ),
+    ),#fin drogues ou algae
+
+
+    Stochastic_Diffusion_Model = SIMP( statut='o',typ='I', defaut=0 ,
+    fr = 'Pour les particules : flotteurs, algues, hydrocarbures',
+    ang= 'Meant for particles: drogues, algae, oil spills',
+     ),
+
+    Number_Of_Lagrangian_Drifts = SIMP( statut='o',typ='I', defaut=0 ,
+      fr = 'Permet deffectuer simultanement plusieurs calculs de derives lagrangiennes initiees a des pas differents',
+      ang= 'Provided for performing several computations of lagrangian drifts starting at different times.',
+      ),
+
+    b_cons=BLOC(condition="Number_Of_Lagrangian_Drifts !=0",
+     Consigne = SIMP(statut="o",homo='information',typ="TXM", 
+     defaut="Add A and G in the VARIABLES FOR GRAPHIC PRINTOUTS key-word in POST_PROCESSING SECTION"),
+    ),
+
+)# fin PARTICULE

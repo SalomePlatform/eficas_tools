@@ -124,9 +124,11 @@ class OBJECT:
          Retourne la chaine d'aide contenue dans le catalogue
          en tenant compte de la langue
      """
-     try :
+     try:
+     #if 1 :
         return getattr(self.definition,self.jdc.lang)
      except:
+     #else:
         try :
             return getattr(self.definition,"fr")
         except :

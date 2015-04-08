@@ -22,6 +22,7 @@ import string,re
 import types,sys,os
 import traceback
 import typeNode
+import pdb
 from PyQt4 import *
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
@@ -68,8 +69,10 @@ class JDCTree( QTreeWidget ):
         if self.racine.children !=[] :  
            if self.editor.afficheCommandesPliees : self.racine.children[0].plieToutEtReaffiche()
            else : self.racine.children[0].deplieToutEtReaffiche()
+           self.racine.children[0].fenetre.donnePremier()
         else : self.racine.affichePanneau()
-
+        #PNPNPN
+        #pdb.set_trace()
 
     def contextMenuEvent(self,event) :
         print "contextMenuEvent"
@@ -97,22 +100,18 @@ class JDCTree( QTreeWidget ):
             
 
     def handleCollapsedItem(self,item):
-        print "dans CollapsedItem", self.inhibeExpand  
+        #print "dans CollapsedItem", self.inhibeExpand  
         if self.inhibeExpand == True : return
-        #print "apres if"
-        #print "item = ", item, item.item.get_nom()
-        #itemParent=item
-        #while not (hasattr (itemParent,'getPanel2')) : 
-        #   print "While itemParent = ", itemParent, itemParent.item.get_nom()
-        #   print itemParent.plie
-        #   if itemParent.plie==True : itemParent.setPlie()
-        #   itemParent=itemParent.treeParent 
-        #if self.tree.node_selected != self : 
-        #     item.setExpanded(False)
-        #     return
-        if item.fenetre != self.editor.fenetreCentraleAffichee : 
-           item.setPlie()
-        #print "apres 2ndif"
+        # On traite le cas de l item non selectionne
+        itemParent=item
+        while not (hasattr (itemParent,'getPanel2')) : 
+           itemParent=itemParent.treeParent 
+        if self.tree.node_selected != itemParent : 
+             item.setExpanded(False)
+             return
+
+        itemParent=item
+        item.setPlie()
         item.plieToutEtReaffiche()
 
     def handleExpandedItem(self,item):
@@ -147,7 +146,7 @@ class JDCTree( QTreeWidget ):
             #print self.editor.afficheCommandesPliees
             if self.editor.afficheCommandesPliees : itemParent.plieToutEtReaffiche()
             else :                                  itemParent.affichePanneau()
-        if itemParent!=item : item.fenetre.rendVisible()
+        if itemParent!=item and item.fenetre != None: item.fenetre.rendVisible()
         #try :
         if 1:
            fr = item.item.get_fr()
@@ -204,7 +203,9 @@ class JDCNode(QTreeWidgetItem):
 
         ajoutAuParentduNoeud=0
         from InterfaceQT4 import compobloc
-        while (isinstance(self.treeParent,compobloc.Node)) :
+        from InterfaceQT4 import compomclist
+        while (isinstance(self.treeParent,compobloc.Node) or ( isinstance(self.treeParent,compomclist.Node) and self.treeParent.item.isMCList())) : 
+        #while (isinstance(self.treeParent,compobloc.Node)) :
               self.treeParent=self.treeParent.treeParent
               ajoutAuParentduNoeud=1
         if ajoutAuParentduNoeud :
@@ -212,7 +213,8 @@ class JDCNode(QTreeWidgetItem):
            self.treeParent.childrenIssusDesBlocs.append(self)
         while (isinstance(self.treeParent,compobloc.Node)) : self.treeParent=self.treeParent.treeParent
 
-        if isinstance(self,compobloc.Node) : 
+        #if isinstance(self,compobloc.Node) : 
+        if (isinstance(self,compobloc.Node) or ( isinstance(self,compomclist.Node) and self.item.isMCList())) : 
            QTreeWidgetItem.__init__(self,None,mesColonnes)
         else :
            QTreeWidgetItem.__init__(self,self.treeParent,mesColonnes)
@@ -236,7 +238,9 @@ class JDCNode(QTreeWidgetItem):
         self.state=""
         self.fenetre=None
         try :
-          if self.item.getObject().isBLOC() : self.setExpanded(True) 
+          if self.item.getObject().isBLOC() : 
+                self.setExpanded(True) 
+                self.plie=False
         except :
           pass
 
@@ -248,19 +252,18 @@ class JDCNode(QTreeWidgetItem):
         
         listeExpanded=[]
         for item in self.childrenComplete :
-            #try :
-            #  print "              je detruis ",  item.item.GetLabelText() ," parent : ", item.treeParent.item.GetLabelText()
-            #except :
-            #  print "mot clef fact"
-            if item.isExpanded():
-               if self.childrenComplete.index(item) < posInsertion :
-                  listeExpanded.append(self.childrenComplete.index(item))
-               else :
-                  listeExpanded.append( self.childrenComplete.index(item) +1)
+            print dir(item)
+            #if item.isExpanded():
+            #   if self.childrenComplete.index(item) < posInsertion :
+            #      listeExpanded.append(self.childrenComplete.index(item))
+            #      print dir(item.item )
+            #   else :
+            #      listeExpanded.append( self.childrenComplete.index(item) +1)
             self.detruit_les_noeuds_issus_de_blocs(item)
             parent=item.treeParent
             parent.removeChild(item)
 
+        #print listeExpanded
         self.children = []
         self.childrenComplete = []
         sublist = self.item._GetSubList()
@@ -269,13 +272,15 @@ class JDCNode(QTreeWidgetItem):
             nouvelItem=item.itemNode(self,item)
             self.children.append(nouvelItem)
             #print "         J ajoute ", nouvelItem ,nouvelItem.item.GetLabelText(),"dans" ,self.item.GetLabelText()
+            #print item
             #if ind in listeExpanded : nouvelItem.setExpanded(1)
  
             #if ind in listeExpanded : print "plie=0"
             #else 		    : print "plie=1"
             #if ind in listeExpanded : nouvelItem.plie=0
             #else 		    : nouvelItem.plie=1
-            ind=ind+1
+            #ind=ind+1
+
         #print "*********** fin build_children ",self.item, self.item.GetLabelText()
         
     def chercheNoeudCorrespondant(self,objSimp):
@@ -285,7 +290,7 @@ class JDCNode(QTreeWidgetItem):
         return None
 
     def affichePanneau(self) :
-        print "dans affichePanneau appel getPanel2", self.item.GetLabelText()
+        #print "dans affichePanneau appel getPanel2", self.item.GetLabelText()
         if self.item.isactif(): 
            itemParent=self
            while not (hasattr (itemParent,'getPanel2')) : 
@@ -299,8 +304,8 @@ class JDCNode(QTreeWidgetItem):
             self.fenetre = PanelInactif(self,self.editor)
          
         self.editor.widgetCentraleLayout.addWidget(self.fenetre)
-        print "widgetCentraleLayout = ", self.editor.widgetCentraleLayout
-        print "nouvelle fenetre ", self.fenetre, " associee a ", self
+        #print "widgetCentraleLayout = ", self.editor.widgetCentraleLayout
+        #print "nouvelle fenetre ", self.fenetre, " associee a ", self
 
         self.editor.anciennefenetre=self.editor.fenetreCentraleAffichee
         #print "ancienne fenetre ", self.editor.anciennefenetre
@@ -389,6 +394,7 @@ class JDCNode(QTreeWidgetItem):
         Rend le noeud courant (self) selectionne et deselectionne
         tous les autres
         """        
+        print "je suis sur select"
         for item in self.tree.selectedItems() :
             item.setSelected(0)
         self.setSelected( True )    
@@ -422,7 +428,7 @@ class JDCNode(QTreeWidgetItem):
            ou en position intermediaire.
            Si pos vaut None, on le place a la position du catalogue.
         """
-        print "************** append_child ",self.item.GetLabelText(), plier
+        #print "************** append_child ",self.item.GetLabelText(), plier
         self.editor.init_modif()
         if pos == 'first':
             index = 0
@@ -498,7 +504,7 @@ class JDCNode(QTreeWidgetItem):
            toselect.affichePanneau()
         else :
            if self.treeParent.fenetre== None : return
-           print "J appelle reaffiche de browser apres delete"
+           #print "J appelle reaffiche de browser apres delete"
            self.treeParent.fenetre.reaffiche(toselect)
 
     def deleteMultiple(self,liste=()):
@@ -556,7 +562,7 @@ class JDCNode(QTreeWidgetItem):
         #print "onAdd pour ", self.item.nom
         self.editor.init_modif()
         self.update_nodes()
-        print "dans onAdd" ,self.item 
+        #print "dans onAdd" ,self.item 
         # PN -- non necessaire si item=jdc
         if hasattr(self.item,'jdc'): self.item.jdc.aReafficher=True
  
@@ -698,7 +704,7 @@ class JDCNode(QTreeWidgetItem):
 
 
     def plieToutEtReaffiche(self):
-        print "je suis dans plieToutEtReaffiche", self.item.get_nom()
+        #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
         self.editor.deplier = False
         for item in self.children :
             item.setPlie()
@@ -712,7 +718,7 @@ class JDCNode(QTreeWidgetItem):
 
     def setPlie(self):
         #print "je mets inhibeExpand a true dans setPlie"
-        print "je suis dans plieTout", self.item.get_nom()
+        #print "je suis dans plieTout", self.item.get_nom()
         self.tree.inhibeExpand=True
         self.tree.collapseItem(self)
         self.setPlieChildren()
@@ -732,21 +738,31 @@ class JDCNode(QTreeWidgetItem):
         self.plie=True
         for c in self.children :
             c.setPlieChildren()
-            print "dans setPlieChildren appartientAUnNoeudPlie=True ", c, c.item.GetLabelText()[0]
+            #print "dans setPlieChildren appartientAUnNoeudPlie=True ", c, c.item.GetLabelText()[0]
             c.appartientAUnNoeudPlie=True
             c.plie=True
-            c.setExpanded(True)
+            c.setExpanded(False)
 
-        # Pour les blocs
+        # Pour les blocs et les motcles list
         # on affiche un niveau de plus
         from InterfaceQT4 import compobloc
-        if isinstance(self,compobloc.Node) : 
+        from InterfaceQT4 import compomclist
+        if (isinstance(self,compobloc.Node) or ( isinstance(self,compomclist.Node) and self.item.isMCList())) : 
             niveauPere=self.treeParent
-            while (isinstance(niveauPere,compobloc.Node)):
-               niveauPere=self.niveauPere.treeParent
+            while (isinstance(niveauPere,compobloc.Node) or (isinstance(niveauPere,compomclist.Node) and niveauPere.item.isMCList())) : 
+               niveauPere=niveauPere.treeParent
             for c in self.children :
                 c.appartientAUnNoeudPlie=niveauPere.appartientAUnNoeudPlie
-            
+                c.setExpanded(False)
+
+        # on affiche un niveau de plus
+        #if isinstance(self,compomclist.Node)  : 
+        #if isinstance(self,compobloc.Node)  : 
+        #    niveauPere=self.treeParent
+        #    while (isinstance(niveauPere,compobloc.Node)):
+        #       niveauPere=niveauPere.treeParent
+        #    for c in self.children :
+        #        c.appartientAUnNoeudPlie=niveauPere.appartientAUnNoeudPlie
 
     def setDeplie(self):
         #print "je mets inhibeExpand a true dans setDeplie"
@@ -755,13 +771,13 @@ class JDCNode(QTreeWidgetItem):
         self.tree.expandItem(self)
         self.setDeplieChildren()
         self.tree.inhibeExpand=False
-        print "je mets inhibeExpand a false dans setDePlie"
+        #print "je mets inhibeExpand a false dans setDePlie"
 
     def setDeplieChildren(self):
-        print "dans setDeplieChildren appartientAUnNoeudPlie=False ", self.item.GetLabelText()
+        #print "dans setDeplieChildren appartientAUnNoeudPlie=False ", self.item.GetLabelText()
         for c in self.children :
             c.setDeplieChildren()
-            print "dans setDeplieChildren appartientAUnNoeudPlie=False ", c.item.GetLabelText()
+            #print "dans setDeplieChildren appartientAUnNoeudPlie=False ", c.item.GetLabelText()
             c.appartientAUnNoeudPlie=False
             c.setExpanded(True)
             c.plie=False

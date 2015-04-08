@@ -35,3 +35,6 @@ class MonWidgetFactPlie(Ui_WidgetFactPlie,Groupe):
       self.groupBox.setText(self.obj.nom)
       self.parentQt.commandesLayout.insertWidget(-1,self)
 
+  def traiteClicSurLabel(self):
+      return
+

@@ -38,14 +38,16 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.setFocusPolicy(Qt.StrongFocus)
         self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
+        self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
 
-  def showEvent(self, event):
-      if self.prendLeFocus==1 :
-         self.activateWindow()
-         self.lineEditVal.setFocus()
-         self.prendLeFocus=0
-      QWidget.showEvent(self,event)
+
+  #def showEvent(self, event):
+  #    if self.prendLeFocus==1 :
+  #       self.activateWindow()
+  #       self.lineEditVal.setFocus()
+  #       self.prendLeFocus=0
+  #    QWidget.showEvent(self,event)
 
   def setValeurs(self):
        self.politique=PolitiqueUnique(self.node,self.editor)

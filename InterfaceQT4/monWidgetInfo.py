@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -17,27 +18,23 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-# Modules Eficas
+import string,types,os
 
-from desWidgetFact import Ui_WidgetFact
-from groupe import Groupe
+# Modules Eficas
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from Extensions.i18n import tr
-# Import des panels
 
-class MonWidgetFact(Ui_WidgetFact,Groupe):
-  """
-  """
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
-      #print "init de Fact"
-      Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
-      labeltext,fonte,couleur = self.node.item.GetLabelText()
-      self.GroupBox.setText(tr(labeltext))
-      self.GroupBox.setTextInteractionFlags(Qt.TextSelectableByMouse)
-      self.parentQt.commandesLayout.insertWidget(-1,self)
+from desWidgetInformation  import Ui_WidgetInformative 
 
-  #def focusInEvent(self,event):
-      #print "je passe dans focusInEvent"
-  #    if self.editor.code != "CARMELCND" :self.afficheOptionnel()
+
+class MonWidgetInfo (Ui_WidgetInformative,QWidget):
+# c est juste la taille des differents widgets de base qui change
+
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        QWidget.__init__(self,None)
+        self.setupUi(self)
+        valeur=node.item.get_valeur()
+        self.lineEditVal.setText(str(valeur))
+        parentQt.commandesLayout.insertWidget(-1,self)
 

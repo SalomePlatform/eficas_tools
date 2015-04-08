@@ -49,7 +49,7 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       self.appliEficas=self.editor.appliEficas
       self.repIcon=self.appliEficas.repIcon
       self.jdc=self.node.item.get_jdc()
-      self.setPoubelle()
+      self.setIconePoubelle()
       self.setRun()
       self.setValide()
       self.setReglesEtAide()
@@ -71,16 +71,16 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       
 
   def afficheMots(self):
+      print "ds afficheMots ",self.node.item.nom
       for node in self.node.children:
-           print "ds afficheMots ",node," " ,node.item.nom, " "
-           print "ds afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie
+           print "afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie
            # non return mais  continue car il faut tenir compte des blocs
            if node.appartientAUnNoeudPlie==True : continue
-           print "je suis apres le if pour ",node.item.nom
+           #print "je suis apres le if pour ",node.item.nom
            widget=node.getPanelGroupe(self,self.maCommande)
            #print "widget pour ", node.item.nom, widget
-           #print "fin pour " , node.item.nom
            self.listeFocus.append(node.fenetre)
+      print "fin pour " , self.node.item.nom
 
        
   def calculOptionnel(self):
@@ -177,4 +177,8 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
   def Deplie(self):
       self.node.setDeplie()
       self.reaffiche(self.node) 
+
+  def traiteClicSurLabel(self):
+      self.afficheOptionnel()
+
 

@@ -230,7 +230,11 @@ class MCSIMP(I_OBJECT.OBJECT):
     return self.definition.statut=='o'
 
   def isImmuable(self):
-    return self.definition.statut=='i'
+    return self.definition.homo=='constant'
+
+  def isInformation(self):
+    return self.definition.homo=='information'
+
 
 
   def valid_val(self,valeur):
@@ -604,7 +608,6 @@ class MCSIMP(I_OBJECT.OBJECT):
       return valid,comment
 
   def valideMatrice(self,cr):
-       print "jjjjjjjjjjjjjjjj"
        #Attention, la matrice contient comme dernier tuple l ordre des variables
        if self.monType.methodeCalculTaille != None :
            apply (MCSIMP.__dict__[self.monType.methodeCalculTaille],(self,))

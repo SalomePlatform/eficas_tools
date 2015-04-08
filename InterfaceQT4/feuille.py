@@ -63,8 +63,9 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
        self.setValeurs()
        self.setNom()
        self.setValide()
-       self.setPoubelle()
-       self.setIcones()
+       self.setIconePoubelle()
+       self.setIconesFichier()
+       self.setIconesSalome()
        self.setCommentaire()
        self.setZoneInfo()
           
@@ -96,44 +97,19 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
    def setCommentaire(self):
       c  = self.debutToolTip
       if self.node.item.definition.validators : c+=self.node.item.definition.validators.aide()
+      self.aide=c
       if self.objSimp.get_fr() != None and self.objSimp.get_fr() != "":
           c2 = '<html><head/><body><p>'+c+str(self.objSimp.get_fr())+"</p></body></html>"
           self.label.setToolTip(c2)
+          self.aide=str(self.objSimp.get_fr())+" "+c
       else :
          c+=self.finCommentaire()
          if c != "" and c != None :
+            self.aide=c
             #c=str('<html><head/><body><p><span style=" font-size:8pt; ">')+c+"</span></p></body></html>"
             c=str('<html><head/><body><p>')+c+"</p></body></html>"
             self.label.setToolTip(c)
 
-   def setIcones(self):
-
-       mctype = self.monSimpDef.type[0]
-       # selon 
-       if ( hasattr(self,"BFichier")): 
-          if mctype == "Repertoire":
-             self.BRepertoire=self.BFichier
-             self.connect(self.BRepertoire,SIGNAL("clicked()"),self.BRepertoirePressed)
-          else :
-	     #icon = QIcon(self.repIcon+"/visuFichier.png")
-             self.connect(self.BFichier,SIGNAL("clicked()"),self.BFichierPressed)
-             self.connect(self.BVisuFichier,SIGNAL("clicked()"),self.BFichierVisu)
-          return
-
-       if ( hasattr(self,"BSalome")): 
-          enable_salome_selection = self.editor.salome and \
-              (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or ('SalomeEntry' in repr(mctype)) or
-               (hasattr(mctype, "enable_salome_selection") and mctype.enable_salome_selection))
-          if  enable_salome_selection:
-              self.connect(self.BSalome,SIGNAL("pressed()"),self.BSalomePressed)
-
-              if not(('grma' in repr(mctype)) or ('grno' in repr(mctype))) or not(self.editor.salome):
-                self.BView2D.close()
-              else :
-                self.connect(self.BView2D,SIGNAL("clicked()"),self.BView2DPressed)
-          else:
-              self.BSalome.close()
-              self.BView2D.close()
 
 
    def showEvent(self, event):
@@ -144,10 +120,9 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       QWidget.showEvent(self,event)
 
    def aideALaSaisie(self):
-      return
       mc = self.node.item.get_definition()
       mctype = mc.type[0]
-      d_aide = { 'TXM' : tr(u"chaine de caracteres"),
+      d_aides = { 'TXM' : tr(u"chaine de caracteres"),
                   'R'   : tr("reel"),
                   'I'   : tr("entier"),
                   'C'   : tr("complexe"),
@@ -155,7 +130,8 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
                   'Fichier' : tr(u'fichier'),
                   'FichierNoAbs' : tr(u'fichier existant'),
                   'Repertoire' : tr(u'repertoire')}
-      if mc.min == mc.max: commentaire=tr("Entrez ")+str(mc.min)
+
+      if mc.min == mc.max: commentaire=tr("Entrez ")+" "+str(mc.min)+" "
       else :               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)
 
       if type(mctype) == types.ClassType: ctype = getattr(mctype, 'help_message', tr("Type de base inconnu"))
@@ -163,7 +139,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       if ctype == tr("Type de base inconnu") and "Tuple" in str(mctype): ctype=str(mctype)
 
       commentaire+=ctype
-      if self.max!=1 : commentaire+="s" 
+      if mc.max!=1 : commentaire+="s" 
       return commentaire
 
    def setZoneInfo(self):
@@ -174,10 +150,11 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       #self.editor.affiche_infos(info)
 
    def reaffiche(self):
-      print "dans reaffiche de feuille", self.nom
+      #print "dans reaffiche de feuille", self.nom
       if self.editor.jdc.aReafficher==True :
-         print " j appelle le reaffiche de parentQt"
+         #print " j appelle le reaffiche de parentQt"
          self.parentQt.reaffiche()
+
          #PN PN PN pas satisfaisant
          #nodeAVoir=self.parentQt.node.chercheNoeudCorrespondant(self.objSimp)
          #print nodeAVoir.fenetre
@@ -185,4 +162,15 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
          #if nodeAVoir.fenetre.isVisible() : return
          #self.editor.fenetreCentraleAffichee.rendVisibleNoeud(nodeAVoir)
          #nodeAVoir.fenetre.setFocus()
+         # return  # on est bien postionne
+      if self.objSimp.isvalid():
+         self.editor.fenetreCentraleAffichee.afficheSuivant(self.AAfficher)
+      else :
+         print "dans le else de reaffiche"
+         self.AAfficher.setFocus(7)
 
+
+   def traiteClicSurLabel(self):
+       #print self.aide 
+       self.aide+="\n"+self.aideALaSaisie()
+       self.editor.affiche_infos(self.aide)

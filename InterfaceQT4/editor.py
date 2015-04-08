@@ -82,6 +82,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
            self.widgetTree.close()
            self.widgetTree=None
            self.appliEficas.resize(1440,self.appliEficas.height())
+           self.affiche_alpha=0
         else :
            self.appliEficas.resize(2000,self.appliEficas.height())
 
@@ -190,7 +191,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                 if (not self.jdc.isvalid()) and (not self.nouveau) and (self.appliEficas.ssIhm == False):
                     self.viewJdcRapport()
  
-        if self.code=="TELEMAC" : print "kkkkkkkk"
+       # if self.code=="TELEMAC" : print "kkkkkkkk"
 
 
         if jdc_item:
@@ -1199,7 +1200,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #---------------------------#
     def _newTELEMAC(self):
     #---------------------------#
-        texte="INITIALIZATION();TIDE_PARAMETERS();INITIAL_STATE();NUMERICAL_PARAMETERS();PHYSICAL_PARAMETERS()"
+        texte="INITIALIZATION();INITIAL_STATE();BOUNDARY_CONDITIONS();NUMERICAL_PARAMETERS();PHYSICAL_PARAMETERS()"
         return texte
 
     #---------------------------#

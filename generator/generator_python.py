@@ -30,8 +30,12 @@ from Noyau.N_utils import repr_float
 import Accas
 import Extensions
 from Extensions.parametre import ITEM_PARAMETRE
-from Formatage import Formatage
+from Formatage import Formatage 
+from Formatage import FormatageLigne
 from Extensions.param2 import Formula
+from Extensions.eficas_exception import EficasException
+from Extensions.i18n import tr
+
 
 def entryPoint():
    """
@@ -92,6 +96,7 @@ class PythonGenerator:
       """
       self.appli=obj.get_jdc_root().appli
       #self.appli=obj.appli
+      print format
       liste= self.generator(obj)
       if format == 'brut':
          self.text=liste
@@ -100,8 +105,11 @@ class PythonGenerator:
       elif format == 'beautifie':
          jdc_formate = Formatage(liste,mode='.py')
          self.text=jdc_formate.formate_jdc()
+      elif format == 'Ligne':
+         jdc_formate = FormatageLigne(liste,mode='.py')
+         self.text=jdc_formate.formate_jdc()
       else:
-         raise "Format pas implemente : "+format
+         raise EficasException(tr("Format non implemente ") +format)
       return self.text
 
    def generator(self,obj):
@@ -152,7 +160,7 @@ class PythonGenerator:
       elif isinstance(obj,Formula):
          return self.generFormula(obj)
       else:
-         raise "Type d'objet non prevu",obj
+         raise EficasException(tr("Type d'objet non prevu") +obj)
 
    def generJDC(self,obj):
       """
@@ -414,7 +422,6 @@ class PythonGenerator:
            # on est en presence d'un MCSIMP : on recupere une string
            text =self.generator(v)
            l.append(v.nom+'='+text)
-           if obj.nom=="Observers": print l
       # il faut etre plus subtil dans l'ajout de la virgule en differenciant 
       # le cas ou elle est obligatoire (si self a des freres cadets 
       # dans self.parent) ou non
@@ -429,8 +436,7 @@ class PythonGenerator:
       """
       if len(obj.data) > 1:
          l=['(']
-         for mcfact in obj.data: 
-             l.append(self.generator(mcfact))
+         for mcfact in obj.data: l.append(self.generator(mcfact))
          l.append('),')
       else:
          l= self.generator(obj.data[0])
@@ -523,6 +529,7 @@ class PythonGenerator:
           Convertit un objet MCSIMP en une liste de chaines de caracteres a la
           syntaxe python
       """
+      if obj.isInformation() : return ""
       waitTuple=0
       if type(obj.valeur) in (types.TupleType,types.ListType) :
          s = ''

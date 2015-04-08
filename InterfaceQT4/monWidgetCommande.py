@@ -83,19 +83,32 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.monOptionnel=MonWidgetOptionnel(self)
         self.editor.widgetOptionnel=self.monOptionnel
         self.editor.splitter.addWidget(self.monOptionnel)
-      #print "dans init ", self.monOptionnel
       self.afficheOptionnel()
       #print "fin init de widget Commande"
       
+
+  def donnePremier(self):
+      #print "dans donnePremier"
+      qApp.processEvents()
+      self.listeAffichageWidget[0].setFocus(7)
+      #print self.listeAffichageWidget 
+      qApp.processEvents()
+      #print self.focusWidget()
+
 
   def focusNextPrevChild(self, next):
       # on s assure que ce n est pas un chgt de fenetre
       #print "je passe dans focusNextPrevChild"
       if self.editor.fenetreCentraleAffichee != self : return True
-      try :
-        i= self.listeAffichageWidget.index(self.focusWidget())
-      except :
-        i = -1
+      f=self.focusWidget()
+      if f not in self.listeAffichageWidget :
+         i=0
+         while not hasattr (f,'AAfficher') :
+           if f==None :i=-1; break
+           f=f.parentWidget()
+         if hasattr(f,'AAfficher') : f=f.AAfficher
+         if i != -1 : i=self.listeAffichageWidget.index(f)
+      else :i=self.listeAffichageWidget.index(f) 
       if (i==len(self.listeAffichageWidget) -1) and next and not self.inhibe: 
          self.listeAffichageWidget[1].setFocus(7)
          w=self.focusWidget()
@@ -120,6 +133,17 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
          self.setTabOrder(self.listeAffichageWidget[i],self.listeAffichageWidget[i+1])
          i=i+1
       # si on boucle on perd l'ordre
+ 
+  def  afficheSuivant(self,f):
+      try :
+        i=self.listeAffichageWidget.index(f) 
+        next=i+1
+      except :
+        next=1
+      if (next==len(self.listeAffichageWidget) -1 ): next =0
+      #self.f=next
+      #QTimer.singleShot(1, self.rendVisible)
+      self.listeAffichageWidget[next].setFocus(7)
 
   def nomChange(self):
       nom = str(self.LENom.text())
@@ -141,10 +165,10 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.monOptionnel.parentMC=self
       self.monOptionnel.affiche(liste)
 
-  def focusInEvent(self,event):
+  #def focusInEvent(self,event):
       #print "je mets a jour dans focusInEvent de monWidget Commande "
-      if self.editor.code == "CARMELCND" : return #Pas de MC Optionnels pour Carmel
-      self.afficheOptionnel()
+  #    if self.editor.code == "CARMELCND" : return #Pas de MC Optionnels pour Carmel
+  #    self.afficheOptionnel()
 
 
   def reaffiche(self,nodeAVoir=None):
@@ -178,7 +202,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
      
   def rendVisible(self):
       qApp.processEvents()
-      self.f.setFocus()
+      self.f.setFocus(7)
       self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(self.f)
 
   def afficheCatalogue(self):

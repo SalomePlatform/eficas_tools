@@ -60,6 +60,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       self.name=None
       self.AjouteRadioButton()
       self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.AjouteRadioButton)
+      if self.editor.affiche_alpha==0 : self.afficheGroupe()
 
   def afficheAlpha(self):
       self.affiche_alpha=1
@@ -85,9 +86,13 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       nouveau.setDeplie()
       #if self.editor.afficheApresInsert==True : nouveau.plieToutEtReaffiche()
       if self.editor.afficheApresInsert == True :
-           if self.editor.affichePlie ==True:  nouveau.plieToutEtReaffiche()
+           #if self.editor.affichePlie==True:  nouveau.plieToutEtReaffiche()
+           if self.editor.afficheCommandesPliees ==True:  nouveau.plieToutEtReaffiche()
            else : nouveau.deplieToutEtReaffiche()
+           nouveau.fenetre.donnePremier()
            #nouveau.deplieToutEtReaffiche()
+      event.accept()
+      
 
   def CreeListeCommande(self,filtre):
       listeGroupes,dictGroupes=self.jdc.get_groups()

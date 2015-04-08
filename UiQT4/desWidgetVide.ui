@@ -181,7 +181,7 @@ border:0px;</string>
       <number>0</number>
      </property>
      <item>
-      <widget class="QToolButton" name="BSalome">
+      <widget class="QToolButton" name="RBSalome">
        <property name="minimumSize">
         <size>
          <width>25</width>
@@ -216,7 +216,7 @@ border:0px;</string>
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="BView2D">
+      <widget class="QToolButton" name="RBSalomeVue">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -321,7 +321,7 @@ border:0px;</string>
  <tabstops>
   <tabstop>lineEditVal</tabstop>
   <tabstop>BSalome</tabstop>
-  <tabstop>BView2D</tabstop>
+  <tabstop>RBSalomeVue</tabstop>
   <tabstop>RBValide</tabstop>
   <tabstop>RBPoubelle</tabstop>
  </tabstops>

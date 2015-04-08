@@ -39,10 +39,13 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursBase", nom
-        self.index=1
+        self.inInit=True
         self.indexDernierLabel=0
+        self.listeAffichageWidget=[]
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
+        self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
+
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         if self.monSimpDef.max != "**"  and self.monSimpDef.max < 7: 
            hauteur=dicoLongueur[self.monSimpDef.max]
@@ -54,10 +57,12 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
            self.setMinimumHeight(hauteurMax)
         self.parentQt.commandesLayout.insertWidget(1,self)
         self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
+        self.AAfficher=self.lineEditVal1
+        self.inInit=False
 
 
   def setValeurs(self):
-       #print "je passe dans SetValeur"
+       print "je passe dans SetValeur"
        self.vScrollBar = self.scrollArea.verticalScrollBar()
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        # construction du min de valeur a entrer
@@ -97,15 +102,27 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
       else :	                           nouveauLE.setStyleSheet("background:rgb(235,235,235)")
       nouveauLE.setFrame(False)
       self.connect(nouveauLE,SIGNAL("returnPressed()"),self.changeValeur)
-      nouveauLE.setFocus()
       setattr(self,nomLineEdit,nouveauLE)
+      self.listeAffichageWidget.append(nouveauLE)
+      self.etablitOrdre()
       if valeur != None : nouveauLE.setText(str(valeur))
       # deux lignes pour que le ensureVisible fonctionne
       self.estVisible=nouveauLE
-      QTimer.singleShot(1, self.rendVisibleLigne)
+      if self.inInit==False :QTimer.singleShot(1, self.rendVisibleLigne)
+
+  def etablitOrdre(self):
+      i=0
+      while(i +1 < len(self.listeAffichageWidget)):
+         self.listeAffichageWidget[i].setFocusPolicy(Qt.StrongFocus)
+         self.setTabOrder(self.listeAffichageWidget[i],self.listeAffichageWidget[i+1])
+         i=i+1
+      # si on boucle on perd l'ordre
+
 
 
   def rendVisibleLigne(self):
+      #PNPNP
+      return
       qApp.processEvents()
       self.estVisible.setFocus()
       self.scrollArea.ensureWidgetVisible(self.estVisible,0,0)

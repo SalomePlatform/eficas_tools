@@ -119,6 +119,14 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         monNom=self.item.nom
         maCommande=commande
 
+        # label informatif 
+        if monObjet.isInformation():
+          from monWidgetInfo import MonWidgetInfo
+          widget=MonWidgetInfo(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+          self.widget=widget
+          return widget
+
+
       # Attention l ordre des if est important
       # Attention il faut gerer les blocs et les facteurs 
       # a gerer comme dans composimp

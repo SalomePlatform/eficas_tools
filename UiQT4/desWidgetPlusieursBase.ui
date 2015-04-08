@@ -89,6 +89,9 @@ border: 1px solid gray;
              <height>35</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -213,7 +216,16 @@ border: 1px solid gray;
          <property name="spacing">
           <number>1</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>2</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>2</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -273,6 +285,9 @@ border: 1px solid gray;
              <height>31</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -304,6 +319,9 @@ border: 1px solid gray;
              <width>21</width>
              <height>31</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
@@ -337,6 +355,9 @@ border: 1px solid gray;
              <height>31</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -368,6 +389,9 @@ border: 1px solid gray;
              <width>21</width>
              <height>31</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
@@ -418,6 +442,9 @@ border: 1px solid gray;
            <width>21</width>
            <height>31</height>
           </size>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
          </property>
          <property name="styleSheet">
           <string notr="true">border : 0px</string>
@@ -475,6 +502,9 @@ border: 1px solid gray;
              <height>31</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -506,6 +536,9 @@ border: 1px solid gray;
              <width>21</width>
              <height>31</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
@@ -558,6 +591,9 @@ border: 1px solid gray;
            <height>30</height>
           </size>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
          <property name="styleSheet">
           <string notr="true">border:0px</string>
          </property>
@@ -605,6 +641,9 @@ border: 1px solid gray;
            <width>21</width>
            <height>31</height>
           </size>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
          </property>
          <property name="styleSheet">
           <string notr="true">border : 0px</string>

@@ -40,6 +40,7 @@ class MonWidgetRadioButtonCommun (Feuille):
         self.determineChoix()
         self.setValeursApresBouton()
         self.parentQt.commandesLayout.insertWidget(-1,self)
+        self.AAfficher=self.radioButton_1
         self.maCommande.listeAffichageWidget.append(self.radioButton_1)
 
 

@@ -35,16 +35,23 @@ class monButtonCustom(QCheckBox):
 
    def mouseDoubleClickEvent(self, event):
       #print "dans mouseDoubleClickEvent"
-      if self not in self.monOptionnel.dicoCb.keys() : return
+      if self not in self.monOptionnel.dicoCb.keys() : 
+         event.accept()
+         return
       listeCheckedMC="+"+self.monOptionnel.dicoCb[self]
       self.monOptionnel.parentMC.ajoutMC(listeCheckedMC)
       self.setChecked(False)
+      event.accept()
+      
 
    def mousePressEvent(self, event):
       #print "dans mousePressEvent"
       self.mousePressed=True
-      if not( event.button() != Qt.RightButton)  : return
+      if not( event.button() != Qt.RightButton)  : 
+         event.accept()
+         return
       QCheckBox.mousePressEvent(self, event)
+      event.accept()
 
 
 class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
@@ -62,8 +69,10 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.cb=None
      self.parentQt=parentQt
      self.connect(self.bAjoutMC,SIGNAL("clicked()"), self.ajoutMC)
+     #print "fin init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
 
      
+
 
   def affiche(self,liste):
      #print "dans Optionnel ____ affiche", liste
@@ -82,8 +91,8 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
 
      for cb in self.dicoCb.keys():
          #print 'je detruit', self.dicoCb[cb], cb
+         #print cb.close()
          cb.close()
-     #print self.commandesOptionnellesLayout.children()
      self.dicoCb={}
      liste.reverse()
      for mot in liste :
@@ -91,6 +100,7 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
          #print "j ajoute ", mot, cb
          self.dicoCb[cb]=mot
          self.commandesOptionnellesLayout.insertWidget(0,cb)
+     #print "Fin Optionnel ____ affiche", liste
 
   def CBChecked(self):
       # ordre ?

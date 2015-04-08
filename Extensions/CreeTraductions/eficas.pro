@@ -212,10 +212,10 @@ FORMS=    ../../UiQT4/aideQT.ui \
           ../../UiQT4/desWidgetSimpBool.ui \
           ../../UiQT4/desWidgetSimpComplexe.ui \
           ../../UiQT4/desWidgetSimpFichier.ui \
-          ../../UiQT4/desWidgetSimpTuple.ui \
           ../../UiQT4/desWidgetSimpTxt.ui \
           ../../UiQT4/desWidgetTuple2.ui \
           ../../UiQT4/desWidgetTuple3.ui \
+          ../../UiQT4/desVisu.ui \
           ../../UiQT4/myMain.ui 
 
 TRANSLATIONS = ../../UiQT4/eficas_fr.ts ../../UiQT4/eficas_en.ts
