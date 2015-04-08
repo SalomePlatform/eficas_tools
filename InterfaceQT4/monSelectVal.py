@@ -96,7 +96,7 @@ class MonSelectVal(DSelVal):
             val=str(val)
             try :
                val2=eval(val,{})
-               liste.append(val)
+               liste.append(val2)
             except :
               pass
         self.FonctPanel.AjoutNValeur(liste) 
