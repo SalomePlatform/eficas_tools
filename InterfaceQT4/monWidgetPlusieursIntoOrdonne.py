@@ -26,40 +26,38 @@ from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from feuille                import Feuille
-from desWidgetPlusieursInto import Ui_WidgetPlusieursInto 
+from desWidgetPlusieursIntoOrdonne import Ui_WidgetPlusieursIntoOrdonne 
 from politiquesValidation   import PolitiquePlusieurs
 from qtSaisie               import SaisieValeur
 from gereListe              import GereListe
+from gereListe              import LECustom
+from monLabelClic           import MonLabelClic
 
-class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursInto,Feuille):
+
+class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,GereListe):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursInto", nom, self
-        self.index=1
+        self.nomLine="LEResultat"
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-        self.listeValeursCourantes=self.node.item.GetListeValeurs()
+        GereListe.__init__(self)
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
-
+        self.prepareListeResultat()
+        self.vScrollBarRE = self.scrollAreaRE.verticalScrollBar()
+       
 
   def setValeurs(self):
-       self.listeValeursCourantes=self.node.item.GetListeValeurs()
-       #print "dans setValeurs"
-       #print self.node.item.definition.validators
-       #print self.monSimpDef.into
-       #if len(self.monSimpDef.into)*20 > 400 : self.setMinimumHeight(400)
-       #else : self.setMinimumHeight(len(self.monSimpDef.into)*30)
-       #self.adjustSize()
+       listeValeursCourantes=self.node.item.GetListeValeurs()
        if hasattr(self.node.item.definition.validators,'set_MCSimp'):
             obj=self.node.item.getObject()
             self.node.item.definition.validators.set_MCSimp(obj)
             if self.node.item.isvalid() == 0 :
                liste=[]
-               for item in self.listeValeursCourantes:
+               for item in listeValeursCourantes:
                    if self.node.item.definition.validators.verif_item(item)==1:
                       liste.append(item)
                self.listeAAfficher=self.node.item.get_liste_possible(liste)
-               #print self.listeAAfficher
             else: 
                self.listeAAfficher=self.node.item.get_liste_possible([])
        else :
@@ -69,33 +67,64 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursInto,Feuille):
        self.adjustSize()
        self.vScrollBar = self.scrollArea.verticalScrollBar()
        self.politique=PolitiquePlusieurs(self.node,self.editor)
-       self.indexListe=1
        for i in range(1,len(self.listeAAfficher)+1):
-           self.ajoutCB(i)
+           self.ajoutLE(i)
        for i in range(len(self.listeAAfficher)):
-           nomCB="lineEditVal"+str(i+1)
-           courant=getattr(self,nomCB)
+           nomLE="lineEditVal"+str(i+1)
+           courant=getattr(self,nomLE)
            courant.setText(str(self.listeAAfficher[i]))
-           if self.monSimpDef.into[i] in self.listeValeursCourantes : 
-              courant.setChecked(True)
-           self.connect(courant,SIGNAL("toggled(bool)"),self.changeValeur)
        self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)
        
+  def prepareListeResultat(self):
+       listeValeursCourantes=self.node.item.GetListeValeurs()
+       if self.monSimpDef.max == "**" : aConstruire=7
+       else                           : aConstruire=self.monSimpDef.max
+       if len(listeValeursCourantes) > aConstruire : aConstruire=len(listeValeursCourantes)
+       for i in range(1,aConstruire+1):
+           self.ajoutLEResultat(i)
+       self.indexDernierLabel=aConstruire
+       index=1
+       for val in listeValeursCourantes :
+          nomLE="LEResultat"+str(index)
+          courant=getattr(self,nomLE)
+          courant.setText(str(val))
+          courant.setReadOnly(True)
+          index=index+1
 
-  def ajoutCB(self,index,valeur=None):
-      #print "ajoutCB ", index
-      nomCB="lineEditVal"+str(index)
-      if hasattr(self,nomCB) : 
-         return
-      nouveauCB = QCheckBox(self.scrollArea)
-      self.CBLayout.addWidget(nouveauCB)
-      qApp.processEvents()
-      nouveauCB.setText("")
-      if index % 2 == 1 : nouveauCB.setStyleSheet("background:rgb(210,210,210)")
-      else :	                    nouveauCB.setStyleSheet("background:rgb(240,240,240)")
+
+  def ajoutLineEdit(self):
+      print "kljlkj"
+
+  def ajoutLEResultat (self,index,valeur=None):
+      nomLE="LEResultat"+str(index)
+      if hasattr(self,nomLE) : return
+      nouveauLE = LECustom(self.scrollAreaRE,self,index)
+      nouveauLE.setFrame(False)
+      self.CBChoisis.addWidget(nouveauLE)
+      nouveauLE.setText("")
+      nouveauLE.setReadOnly(True)
+      if index % 2 == 1 : nouveauLE.setStyleSheet("background:rgb(210,210,210)")
+      else :	          nouveauLE.setStyleSheet("background:rgb(240,240,240)")
       self.vScrollBar.triggerAction(QScrollBar.SliderToMaximum)
-      nouveauCB.setFocus()
-      setattr(self,nomCB,nouveauCB)
+      setattr(self,nomLE,nouveauLE)
+      self.estVisibleRE=nouveauLE
+      if valeur != None : 
+         nouveauLE.setText(valeur)
+      
+  def ajoutLE(self,index,valeur=None):
+      #print "ajoutLE ", index
+      nomLE="lineEditVal"+str(index)
+      if hasattr(self,nomLE) : return
+      nouveauLE = MonLabelClic(self)
+      self.CBLayout.addWidget(nouveauLE)
+      nouveauLE.setFrameShape(QFrame.NoFrame)
+      qApp.processEvents()
+      nouveauLE.setText("")
+      if index % 2 == 1 : nouveauLE.setStyleSheet("background:rgb(210,210,210)")
+      else :	          nouveauLE.setStyleSheet("background:rgb(240,240,240)")
+      self.vScrollBar.triggerAction(QScrollBar.SliderToMaximum)
+      nouveauLE.setFocus()
+      setattr(self,nomLE,nouveauLE)
       
 
   def finCommentaire(self):
@@ -117,55 +146,73 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursInto,Feuille):
            else :
                commentaire=tr("Entrez entre ")+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])
         aideval=self.node.item.aide()
-        commentaire=commentaire + "   " + QString.toUtf8(QString(aideval))
-        return str(commentaire)
+        com=commentaire + "   " + QString.toUtf8(QString(aideval))
+        return str(com)
 
-  def ajout1Valeur(self,valeur=None):
-        #print "________________"
-        #print self
-        #print self.node
-        #print self.node.item
+
+  def traiteClicSurLabel(self,valeur):
         if valeur == None : return
         liste,validite=SaisieValeur.TraiteLEValeur(self,str(valeur))
         if validite == 0 : return
         if liste ==[]    : return
         listeVal=[]
-        for valeur in self.listeValeursCourantes : listeVal.append(valeur)
-        validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,-1,listeVal)
-        if (comm2 != "" and comm != None) : return comm2
-        if validite : 
-           self.listeValeursCourantes=self.listeValeursCourantes+listeRetour
-           if len(self.listeValeursCourantes) > self.monSimpDef.min :
-              self.node.item.set_valeur(self.listeValeursCourantes)
-           return None
+
+        listeValeursCourantes=self.node.item.GetListeValeurs()
+        min,max = self.node.item.GetMinMax()
+        if len(listeValeursCourantes) +1 > max : 
+           self.editor.affiche_infos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
+           return
         else :
-           return(comm2+" "+comm)
-        
+           self.editor.affiche_infos(tr(""))
 
+        affiche=False
+        for i in range(1,self.indexDernierLabel+1):
+           nomLE="LEResultat"+str(i)
+           courant=getattr(self,nomLE)
+           if str(courant.text())==str("") : 
+              courant.setText(valeur)
+              courant.setReadOnly(True)
+              affiche=True
+              self.estVisibleRE=courant
+              QTimer.singleShot(1, self.rendVisibleLigneRE)
+              break
+          
+        if affiche == False:
+           self.indexDernierLabel = self.indexDernierLabel+1
+           self.ajoutLEResultat (self.indexDernierLabel,str(valeur))
+           self.vScrollBarRE.triggerAction(QScrollBar.SliderToMaximum)
+           QTimer.singleShot(1, self.rendVisibleLigneRE)
+        self.changeValeur()
 
-  def changeValeur(self):
-      self.listeValeursCourantesAvant=self.listeValeursCourantes
-      self.listeValeursCourantes = []
-      print "changeValeur ____________" , self.monSimpDef.into, len(self.monSimpDef.into)
-      for i in range (1,len(self.listeAAfficher)+1):
-          nomLineEdit="lineEditVal"+str(i)
-          courant=getattr(self,nomLineEdit)
-          if not (courant.isChecked()):continue
-          valeur=courant.text()
-          if valeur != None and valeur != "" : 
-             commentaire=self.ajout1Valeur(valeur)
-             if (commentaire != None ):
-                 self.editor.affiche_infos(commentaire,Qt.red)
-                 courant.setText("")
-      min,max = self.node.item.GetMinMax()
-      if len(self.listeValeursCourantes) < min : 
-         self.editor.affiche_infos(tr("Nombre minimal de valeurs : ") + str(min),Qt.red)
-      elif len(self.listeValeursCourantes) > max : 
-         self.editor.affiche_infos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
-      else :
-         self.editor.affiche_infos(tr(""))
-      self.node.item.set_valeur(self.listeValeursCourantes)
-      self.setValide()
-      self.reaffiche()
+  def changeValeur(self,changeDePlace=False,oblige=False):
+#PN les 2 arg sont pour que la signature de ma fonction soit identique a monWidgetPlusieursBase
+        listeVal=[]
+        for i in range(1,self.indexDernierLabel+1):
+           nomLE="LEResultat"+str(i)
+           courant=getattr(self,nomLE)
+           valeur=courant.text()
+           if str(valeur)=="" : continue
+           liste,validite=SaisieValeur.TraiteLEValeur(self,str(valeur))
+           listeVal.append(str(valeur))
 
+        validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(listeVal,-1,[])
 
+        listeValeursCourantes=self.node.item.GetListeValeurs()
+        min,max = self.node.item.GetMinMax()
+        if len(listeValeursCourantes) < min : 
+           self.editor.affiche_infos(tr("Nombre minimal de valeurs : ") + str(min),Qt.red)
+        else :
+           self.editor.affiche_infos("")
+    
+        if validite :
+           self.node.item.set_valeur(listeRetour)
+        else :
+           commentaire=comm+" "+comm2
+           self.editor.affiche_infos(commentaire,Qt.red)
+        self.setValide()
+#
+  def rendVisibleLigneRE(self):
+      qApp.processEvents()
+      self.estVisibleRE.setFocus()
+      self.scrollArea.ensureWidgetVisible(self.estVisibleRE,0,0)
+#

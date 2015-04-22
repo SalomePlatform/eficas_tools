@@ -86,6 +86,9 @@
              <height>35</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Affiche le rapport de validation du mot-clef</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -222,7 +225,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QScrollArea" name="scrollArea_2">
+      <widget class="QScrollArea" name="scrollAreaRE">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -244,7 +247,7 @@
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
        </property>
-       <widget class="QWidget" name="verticalWidgetLEChoisi">
+       <widget class="QWidget" name="verticalWidgetLEChoisis">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -259,7 +262,7 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <layout class="QVBoxLayout" name="CBLayout_2">
+        <layout class="QVBoxLayout" name="CBChoisis">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -294,6 +297,9 @@
              <height>31</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Remonte d'une ligne</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -325,6 +331,9 @@
              <width>21</width>
              <height>31</height>
             </size>
+           </property>
+           <property name="toolTip">
+            <string>Descend d'une ligne</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
@@ -358,6 +367,9 @@
              <height>31</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Détruit une ligne</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -389,6 +401,9 @@
              <width>21</width>
              <height>31</height>
             </size>
+           </property>
+           <property name="toolTip">
+            <string>ajoute une ligne</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
@@ -436,6 +451,9 @@
            <width>21</width>
            <height>31</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>visualise l'ensemble des valeurs</string>
          </property>
          <property name="styleSheet">
           <string notr="true">border : 0px</string>
@@ -503,6 +521,9 @@
          <width>21</width>
          <height>31</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Détruit le mot-clef</string>
        </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>

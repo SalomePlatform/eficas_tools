@@ -82,6 +82,9 @@
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
+       <property name="toolTip">
+        <string>Affiche le rapport de validité du mot-clef</string>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -194,6 +197,9 @@ border:0px;</string>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
+       <property name="toolTip">
+        <string>Séléctionne dans Salomé</string>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -234,6 +240,9 @@ border:0px;</string>
        </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
+       </property>
+       <property name="toolTip">
+        <string>Visualise dans Salomé</string>
        </property>
        <property name="styleSheet">
         <string notr="true">border:0px</string>
@@ -285,6 +294,9 @@ border:0px;</string>
        </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
+       </property>
+       <property name="toolTip">
+        <string>Détruit le mot-clef</string>
        </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>

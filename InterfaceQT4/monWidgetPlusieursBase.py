@@ -39,6 +39,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursBase", nom
+        self.nomLine="lineEditVal"
         self.inInit=True
         self.indexDernierLabel=0
         self.listeAffichageWidget=[]
@@ -89,7 +90,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
        #self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)
        
 
-  def ajoutLineEdit(self,valeur=None):
+  def ajoutLineEdit(self,valeur=None,):
       self.indexDernierLabel=self.indexDernierLabel+1
       nomLineEdit="lineEditVal"+str(self.indexDernierLabel)
       if hasattr(self,nomLineEdit) : 
@@ -109,6 +110,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
       # deux lignes pour que le ensureVisible fonctionne
       self.estVisible=nouveauLE
       if self.inInit==False :QTimer.singleShot(1, self.rendVisibleLigne)
+      #if donneLeFocus==True : nouveauLE.setFocus()
 
   def etablitOrdre(self):
       i=0
@@ -119,10 +121,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
       # si on boucle on perd l'ordre
 
 
-
   def rendVisibleLigne(self):
-      #PNPNP
-      return
       qApp.processEvents()
       self.estVisible.setFocus()
       self.scrollArea.ensureWidgetVisible(self.estVisible,0,0)
@@ -168,10 +167,34 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
         else :
            return(comm2+" "+comm)
         
+  def reaffiche(self):
+      # A priori, on ne fait rien
+      pass
 
+  def AjoutNValeur(self,liste) :
+      for val in liste :
+         i=1
+         ajoute=False
+         while i <  self.indexDernierLabel+1:
+            nomLineEdit="lineEditVal"+str(i)
+            courant=getattr(self,nomLineEdit)
+            valeur=courant.text()
+            if valeur == None or valeur == QString("") :
+              ajoute=True
+              courant.setText(str(val))
+              commentaire=self.ajout1Valeur(val)
+              if (commentaire != None ):
+                 self.editor.affiche_infos(commentaire,Qt.red)
+                 courant.setText("")
+              break
+            else : 
+              i=i+1
+         if ajoute : continue
+         self.ajoutLineEdit(valeur=str(val))
+         self.changeValeur()
+                
 
-  def changeValeur(self,changeDePlace=True):
-      print 'ds chge valeur'
+  def changeValeur(self,changeDePlace=True,oblige=False):
       donneFocus=None
       derniereValeur=None
       self.listeValeursCourantes = []
@@ -185,6 +208,10 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
                  self.editor.affiche_infos(commentaire,Qt.red)
                  courant.setText("")
                  donneFocus=courant
+                 self.reaffiche()
+                 return
+             else :
+                 self.editor.affiche_infos("")
           elif donneFocus==None : donneFocus=courant
       nomDernierLineEdit="lineEditVal"+str(self.indexDernierLabel)
       dernier=getattr(self,nomDernierLineEdit)
@@ -195,13 +222,15 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
            self.scrollArea.ensureWidgetVisible(donneFocus)
          elif self.indexDernierLabel < self.monSimpDef.max  : 
            self.ajoutLineEdit()
-      if  self.indexDernierLabel == self.monSimpDef.max  :
-        self.editor.affiche_infos('nb max de valeurs atteint')
       if self.listeValeursCourantes == [] : return
       min,max = self.node.item.GetMinMax()
+      if len(self.listeValeursCourantes) < self.monSimpDef.min  :
+        self.editor.affiche_infos(tr('nb min de valeurs : ')+str( self.monSimpDef.min))
+      if len(self.listeValeursCourantes) < min and oblige==True: return
       if len(self.listeValeursCourantes) > max : return
-      if len(self.listeValeursCourantes) < min : return
       self.node.item.set_valeur(self.listeValeursCourantes)
+      if len(self.listeValeursCourantes) == self.monSimpDef.max  :
+        self.editor.affiche_infos(tr('nb max de valeurs atteint'))
       self.setValide()
       self.reaffiche()
 

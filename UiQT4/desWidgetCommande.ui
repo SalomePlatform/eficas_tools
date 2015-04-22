@@ -467,7 +467,7 @@ border-radius : 12px
             <enum>Qt::ClickFocus</enum>
            </property>
            <property name="toolTip">
-            <string>Affiche les commandes possibles</string>
+            <string>Affiche le formulaire de la commande précédente</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgb(104,110,149);
@@ -513,7 +513,7 @@ border-radius : 12px
             <enum>Qt::ClickFocus</enum>
            </property>
            <property name="toolTip">
-            <string>Affiche les commandes possibles</string>
+            <string>Affiche le formulaire de la commande suivante</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgb(104,110,149);

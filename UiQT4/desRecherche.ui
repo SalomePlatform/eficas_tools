@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Rechercher dans le JDC</string>
   </property>
+  <property name="toolTip">
+   <string>Next</string>
+  </property>
   <widget class="QLineEdit" name="LERecherche">
    <property name="geometry">
     <rect>

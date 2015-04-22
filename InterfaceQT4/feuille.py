@@ -170,7 +170,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
          self.AAfficher.setFocus(7)
 
 
-   def traiteClicSurLabel(self):
+   def traiteClicSurLabel(self,texte):
        #print self.aide 
        self.aide+="\n"+self.aideALaSaisie()
        self.editor.affiche_infos(self.aide)

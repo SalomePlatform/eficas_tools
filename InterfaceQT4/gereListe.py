@@ -27,6 +27,7 @@ from PyQt4.QtCore import *
 from Extensions.i18n import tr
 from monViewTexte   import ViewText
 
+
 # ---------------------- #
 class LECustom(QLineEdit):
 # ---------------------- #
@@ -77,11 +78,11 @@ class GereListe:
    def echange(self,num1,num2):
        # on donne le focus au a celui ou on a bouge
        # par convention le 2
-       nomLineEdit="lineEditVal"+str(num1)
+       nomLineEdit=self.nomLine+str(num1)
        #print nomLineEdit
        courant=getattr(self,nomLineEdit)
        valeurAGarder=courant.text()
-       nomLineEdit2="lineEditVal"+str(num2)
+       nomLineEdit2=self.nomLine+str(num2)
        #print nomLineEdit2
        courant2=getattr(self,nomLineEdit2)
        courant.setText(courant2.text())
@@ -91,25 +92,25 @@ class GereListe:
        self.LineEditEnCours=courant2
 
    def moinsPushed(self):
-       if self.indexDernierLabel < self.monSimpDef.min:
-          self.editor.affiche_infos('nb min de valeurs : '+str(self.monSimpDef.min)+' atteint')
-          return
        # on supprime le dernier
        if self.NumLineEditEnCours==self.indexDernierLabel : 
-          self.setText("")
+          nomLineEdit=self.nomLine+str(aRemonter)
+          courant=getattr(self,nomLineEdit)
+          courant.setText("")
        else :
          for i in range (self.NumLineEditEnCours, self.indexDernierLabel):
              aRemonter=i+1
-             nomLineEdit="lineEditVal"+str(aRemonter)
+             nomLineEdit=self.nomLine+str(aRemonter)
              courant=getattr(self,nomLineEdit)
              valeurARemonter=courant.text()
-             nomLineEdit="lineEditVal"+str(i)
+             nomLineEdit=self.nomLine+str(i)
              courant=getattr(self,nomLineEdit)
              courant.setText(valeurARemonter)
-         nomLineEdit="lineEditVal"+str(self.indexDernierLabel)
+         nomLineEdit=self.nomLine+str(self.indexDernierLabel)
          courant=getattr(self,nomLineEdit)
          courant.setText("")
-       self.changeValeur(changeDePlace=False)
+       self.changeValeur(changeDePlace=False,oblige=True)
+       self.setValide()
 
    def plusPushed(self):
        if self.indexDernierLabel == self.monSimpDef.max:
@@ -117,13 +118,13 @@ class GereListe:
           return
        self.ajoutLineEdit()
        if self.NumLineEditEnCours==self.indexDernierLabel : return
-       nomLineEdit="lineEditVal"+str(self.NumLineEditEnCours+1)
+       nomLineEdit=self.nomLine+str(self.NumLineEditEnCours+1)
        courant=getattr(self,nomLineEdit)
        valeurADescendre=courant.text()
        courant.setText("")
        for i in range (self.NumLineEditEnCours+1, self.indexDernierLabel):
              aDescendre=i+1
-             nomLineEdit="lineEditVal"+str(aDescendre)
+             nomLineEdit=self.nomLine+str(aDescendre)
              courant=getattr(self,nomLineEdit)
              valeurAGarder=courant.text()
              courant.setText(valeurADescendre)
@@ -143,3 +144,17 @@ class GereListe:
 
    def selectInFile(self):
        print "selectInFile"
+       init=QString( self.editor.CONFIGURATION.savedir)
+       fn = QFileDialog.getOpenFileName(self.node.appliEficas,
+                                         tr("Fichier de donnees"),
+                                         init,
+                                         tr('Tous les  Fichiers (*)',))
+       if fn == None : return
+       if fn == "" : return
+       ulfile = os.path.abspath(unicode(fn))
+       self.editor.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+
+       from monSelectVal import MonSelectVal
+       MonSelectVal(file=fn,parent=self).show()
+
+  

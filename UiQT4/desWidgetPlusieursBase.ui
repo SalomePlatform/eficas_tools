@@ -92,6 +92,9 @@ border: 1px solid gray;
            <property name="focusPolicy">
             <enum>Qt::ClickFocus</enum>
            </property>
+           <property name="toolTip">
+            <string>Affiche le rapport de validation du mot-clef</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -288,6 +291,9 @@ border: 1px solid gray;
            <property name="focusPolicy">
             <enum>Qt::ClickFocus</enum>
            </property>
+           <property name="toolTip">
+            <string>Remonte la ligne</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -322,6 +328,9 @@ border: 1px solid gray;
            </property>
            <property name="focusPolicy">
             <enum>Qt::ClickFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>Descend la ligne</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
@@ -358,6 +367,9 @@ border: 1px solid gray;
            <property name="focusPolicy">
             <enum>Qt::ClickFocus</enum>
            </property>
+           <property name="toolTip">
+            <string>supprime une ligne</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -392,6 +404,9 @@ border: 1px solid gray;
            </property>
            <property name="focusPolicy">
             <enum>Qt::ClickFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>Ajoute une ligne</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
@@ -445,6 +460,9 @@ border: 1px solid gray;
          </property>
          <property name="focusPolicy">
           <enum>Qt::ClickFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>Montre l'ensemble des valeurs</string>
          </property>
          <property name="styleSheet">
           <string notr="true">border : 0px</string>
@@ -505,6 +523,9 @@ border: 1px solid gray;
            <property name="focusPolicy">
             <enum>Qt::ClickFocus</enum>
            </property>
+           <property name="toolTip">
+            <string>Sélectionne depuis Salome</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
            </property>
@@ -539,6 +560,9 @@ border: 1px solid gray;
            </property>
            <property name="focusPolicy">
             <enum>Qt::ClickFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>Visualise dans Salome</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border : 0px</string>
@@ -594,6 +618,9 @@ border: 1px solid gray;
          <property name="focusPolicy">
           <enum>Qt::ClickFocus</enum>
          </property>
+         <property name="toolTip">
+          <string>Ouvre un fichier de sélection des valeurs</string>
+         </property>
          <property name="styleSheet">
           <string notr="true">border:0px</string>
          </property>
@@ -644,6 +671,9 @@ border: 1px solid gray;
          </property>
          <property name="focusPolicy">
           <enum>Qt::ClickFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>Détruit le mot-clef</string>
          </property>
          <property name="styleSheet">
           <string notr="true">border : 0px</string>

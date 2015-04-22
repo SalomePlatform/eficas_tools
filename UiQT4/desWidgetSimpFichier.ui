@@ -76,6 +76,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Affiche le rapport de validité du mot-clef</string>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -188,6 +191,9 @@ border:0px;</string>
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>affiche l'explorateur de fichier</string>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -213,6 +219,9 @@ border:0px;</string>
          <width>25</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>ouvre le fichier choisi</string>
        </property>
        <property name="styleSheet">
         <string notr="true">border:0px</string>
@@ -267,6 +276,9 @@ border:0px;</string>
          <width>21</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Détruit le mot-clef</string>
        </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>

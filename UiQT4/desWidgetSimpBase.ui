@@ -79,6 +79,9 @@
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
+       <property name="toolTip">
+        <string>Affiche le rapport de validation du mot-clef</string>
+       </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
        </property>
@@ -201,6 +204,9 @@ border:0px;</string>
      </property>
      <property name="focusPolicy">
       <enum>Qt::ClickFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>Détruit le mot-clef</string>
      </property>
      <property name="styleSheet">
       <string notr="true">border : 0px</string>

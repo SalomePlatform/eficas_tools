@@ -178,7 +178,7 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       self.node.setDeplie()
       self.reaffiche(self.node) 
 
-  def traiteClicSurLabel(self):
+  def traiteClicSurLabel(self,texte):
       self.afficheOptionnel()
 
 

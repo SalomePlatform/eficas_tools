@@ -60,6 +60,9 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
          self.commentaireLE.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
          self.commentaireLE.setToolTip(tr("Valeur non modifiable"))
 
+  def donnePremier(self):
+      self.commentaireLE.setFocus(7)
+
 
   def TexteCommentaireEntre(self):
       texte=str(self.commentaireLE.text())

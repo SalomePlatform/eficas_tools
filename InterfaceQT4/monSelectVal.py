@@ -1,0 +1,103 @@
+# -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
+# Modules Python
+# Modules Eficas
+
+from desSelectVal import Ui_DSelVal
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+
+class DSelVal(Ui_DSelVal,QDialog):
+   def __init__(self,parent ,modal ) :
+       QDialog.__init__(self,parent)
+       self.setupUi(self)
+
+class MonSelectVal(DSelVal):
+  """
+  Classe definissant le panel associe aux mots-cles qui demandent
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discretes
+  """
+  def __init__(self,file,parent,name = None,fl = 0):
+        #print "MonSelectVal"
+        self.FonctPanel=parent
+        DSelVal.__init__(self,parent,0)
+        self.separateur=" "
+        self.texte=" "
+        self.textTraite=""
+        self.file=str(file)
+        self.readVal()
+        self.initVal()
+        self.connecterSignaux()
+
+  def connecterSignaux(self) :
+        self.connect(self.Bespace,SIGNAL("clicked()"),self.SelectEsp)
+        self.connect(self.BpointVirgule,SIGNAL("clicked()"),self.SelectPoint)
+        self.connect(self.Bvirgule,SIGNAL("clicked()"),self.SelectVir)
+        self.connect(self.BImportSel,SIGNAL("clicked()"),self.BImportSelPressed)
+        self.connect(self.BImportTout,SIGNAL("clicked()"),self.BImportToutPressed)
+
+  def readVal(self):
+        if self.file == "" : return
+        f = open(self.file, "rb")
+        self.texte = f.read()
+        f.close()
+
+  def initVal(self):
+        self.TBtext.clear()
+        self.TBtext.setText(self.texte)
+
+  def SelectEsp(self):
+        self.separateur=" "
+        
+  def SelectVir(self):
+        self.separateur=","
+        
+  def SelectPoint(self):
+        self.separateur=";"
+        
+  def BImportSelPressed(self):
+
+        texte = self.TBtext.textCursor().selectedText()
+        textTraite=texte.replace(u'\u2029',"\n")
+        self.textTraite=str(textTraite)
+        self.Traitement()
+        
+  def BImportToutPressed(self):
+        self.textTraite=self.texte
+        self.Traitement()
+
+  def Traitement(self):
+        import string
+        if self.textTraite == "" : return
+        if self.textTraite[-1]=="\n" : self.textTraite=self.textTraite[0:-1]
+        self.textTraite=string.replace(self.textTraite,"\n",self.separateur)
+        liste1=self.textTraite.split(self.separateur)
+        liste=[]
+        for val in liste1 :
+          if val != '' and val != ' ' and val != self.separateur :
+            val=str(val)
+            try :
+               val2=eval(val,{})
+               liste.append(val2)
+            except :
+              pass
+        print self.FonctPanel.AjoutNValeur 
+        self.FonctPanel.AjoutNValeur(liste) 

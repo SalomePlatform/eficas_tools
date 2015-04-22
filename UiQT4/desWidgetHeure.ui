@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>936</width>
-    <height>29</height>
+    <height>52</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -78,6 +78,9 @@
        </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
+       </property>
+       <property name="toolTip">
+        <string>Affiche le repport de validité du mot-clef</string>
        </property>
        <property name="styleSheet">
         <string notr="true">border : 0px</string>
@@ -182,6 +185,9 @@
      </property>
      <property name="focusPolicy">
       <enum>Qt::ClickFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>Détruit le mot-clef</string>
      </property>
      <property name="styleSheet">
       <string notr="true">border : 0px</string>
