@@ -75,7 +75,7 @@ class JDCTree( QTreeWidget ):
         #pdb.set_trace()
 
     def contextMenuEvent(self,event) :
-        print "contextMenuEvent"
+        #print "contextMenuEvent"
         coord=event.globalPos()
         item= self.currentItem()
         self.handleContextMenu(item,coord)
@@ -88,7 +88,7 @@ class JDCTree( QTreeWidget ):
         @param coord the position of the mouse pointer (QPoint)
         Attention : existeMenu permet de savoir si un menu est associe a cet item
         """
-        print "handleContextMenu"
+        #print "handleContextMenu"
         if item == None : return
         if item.existeMenu == 0 : return
         if item.menu == None:
@@ -131,7 +131,7 @@ class JDCTree( QTreeWidget ):
 
     def handleOnItem(self,item,int):
         #if (len(self.selectedIndexes())!=2): return
-        print "je passe dans handleOnItem"
+        #print "je passe dans handleOnItem"
         self.inhibeExpand == True 
         self.itemCourrant=item
         itemParent=item
@@ -252,7 +252,7 @@ class JDCNode(QTreeWidgetItem):
         
         listeExpanded=[]
         for item in self.childrenComplete :
-            print dir(item)
+            #print dir(item)
             #if item.isExpanded():
             #   if self.childrenComplete.index(item) < posInsertion :
             #      listeExpanded.append(self.childrenComplete.index(item))
@@ -394,7 +394,7 @@ class JDCNode(QTreeWidgetItem):
         Rend le noeud courant (self) selectionne et deselectionne
         tous les autres
         """        
-        print "je suis sur select"
+        #print "je suis sur select"
         for item in self.tree.selectedItems() :
             item.setSelected(0)
         self.setSelected( True )    
@@ -472,7 +472,7 @@ class JDCNode(QTreeWidgetItem):
            else             : child.setDeplie() 
         except :
            child=self.children[index]
-           print "dans le except"
+           #print "dans le except"
         self.tree.inhibeExpand=False
         return child
 
@@ -719,20 +719,20 @@ class JDCNode(QTreeWidgetItem):
     def setPlie(self):
         #print "je mets inhibeExpand a true dans setPlie"
         #print "je suis dans plieTout", self.item.get_nom()
+        import compojdc
+        if self.fenetre == self.editor.fenetreCentraleAffichee  and isinstance(self.treeParent,compojdc.Node): 
+           return
         self.tree.inhibeExpand=True
         self.tree.collapseItem(self)
         self.setPlieChildren()
+        self.tree.inhibeExpand=False
+        #print "je mets inhibeExpand a false dans setPlie"
 
 
         # on ne plie pas au niveau 1
-        #if not(isinstance(self.treeParent,compojdc.Node)) : 
-        #   self.plie=True
-        #else :
         #   self.plie=False
         #   for item in self.children :
         #       item.appartientAUnNoeudPlie=False
-        #self.tree.inhibeExpand=False
-        #print "je mets inhibeExpand a false dans setPlie"
 
     def setPlieChildren(self):
         self.plie=True

@@ -71,16 +71,16 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       
 
   def afficheMots(self):
-      print "ds afficheMots ",self.node.item.nom
+      #print "ds afficheMots ",self.node.item.nom
       for node in self.node.children:
-           print "afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie
+           #print "afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie
            # non return mais  continue car il faut tenir compte des blocs
            if node.appartientAUnNoeudPlie==True : continue
            #print "je suis apres le if pour ",node.item.nom
            widget=node.getPanelGroupe(self,self.maCommande)
            #print "widget pour ", node.item.nom, widget
            self.listeFocus.append(node.fenetre)
-      print "fin pour " , self.node.item.nom
+      #print "fin pour " , self.node.item.nom
 
        
   def calculOptionnel(self):
@@ -127,7 +127,7 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
 
 
   def reaffiche(self,nodeAVoir=None):
-      print "dans reaffiche de groupe.py", nodeAVoir
+      #print "dans reaffiche de groupe.py", nodeAVoir
       self.parentQt.reaffiche(nodeAVoir)
 
   def recalculeListeMC(self,listeMC):
@@ -156,7 +156,7 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       firstNode=None
       for nom in listeNom:
         if nom not in self.dictMCVenantDesBlocs.keys():
-           print "bizarre, bizarre"
+           #print "bizarre, bizarre"
            self.editor.init_modif()
            nouveau=self.node.append_child(nom)
         else :

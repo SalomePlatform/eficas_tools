@@ -153,7 +153,7 @@ by the mesh generator through through colours that are assigned to the boundary 
 #        ------------------------------------
 
 #            ------------------------------------
-             Formatted_File1 = SIMP( statut = 'f', typ = ('Fichier', 'formated File (*.txt);;All Files (*)',),
+             Formatted_Data_File_1 = SIMP( statut = 'f', typ = ('Fichier', 'formated File (*.txt);;All Files (*)',),
 #            ------------------------------------
                   fr = "Fichier de donnees formate mis a la disposition de l''utilisateur.  \n\
 Les donnees de ce fichier seront a lire sur le canal 26.",
@@ -161,7 +161,7 @@ Les donnees de ce fichier seront a lire sur le canal 26.",
 The data in this file shall be read on channel 26.',),
 
 #            ------------------------------------
-             Formatted_File2 = SIMP( statut = 'f', typ = ('Fichier', 'formated File (*.txt);;All Files (*)',),
+             Formatted_Data_File_2 = SIMP( statut = 'f', typ = ('Fichier', 'formated File (*.txt);;All Files (*)',),
 #            ------------------------------------
                   fr = "Fichier de donnees formate mis a la disposition de l'utilisateur. \n\
 Les donnees de ce fichier seront a lire sur le canal 27.",
@@ -169,7 +169,7 @@ Les donnees de ce fichier seront a lire sur le canal 27.",
 The data in this file shall be read on channel 27.",),
 
 #            ------------------------------------
-             Binary_Data_File1 = SIMP( statut = 'f', typ = ('Fichier', 'Reference File (*.txt);;All Files (*)',),
+             Binary_Data_File_1 = SIMP( statut = 'f', typ = ('Fichier', 'Reference File (*.txt);;All Files (*)',),
 #            ------------------------------------
                   fr = 'Fichier de donnees code en binaire mis a la disposition de l utilisateur. \n\
 Les donnees de ce fichier seront a lire sur le canal 24.',
@@ -177,7 +177,7 @@ Les donnees de ce fichier seront a lire sur le canal 24.',
 The data in this file shall be read on channel 24.',),
 
 #            ------------------------------------
-             Binary_Data_File2 = SIMP( statut = 'f', typ = ('Fichier', 'Reference File (*.txt);;All Files (*)',),
+             Binary_Data_File_2 = SIMP( statut = 'f', typ = ('Fichier', 'Reference File (*.txt);;All Files (*)',),
 #            ------------------------------------
                   fr = 'Fichier de donnees code en binaire mis a la disposition de l utilisateur.\n\
 Les donnees de ce fichier seront a lire sur le canal 25.',
@@ -221,7 +221,7 @@ The data in this file shall be read on channel 25.',),
  The last recorded time step will provid the initial conditions for the new computation.',
                     ),
 #        ------------------------------------
-          Initial_Time_Set = SIMP(typ = bool, statut = 'o',
+          Initial_Time_Set_To_Zero = SIMP(typ = bool, statut = 'o',
 #        ------------------------------------
              fr = 'Remet le temps a zero en cas de suite de calcul',
              ang = 'Initial time set to zero in case of restart',
@@ -326,7 +326,7 @@ TIDE_PARAMETERS = PROC(nom = "TIDE_PARAMETERS",op = None,
             ang = 'Geographic coordinates system in which the numerical model is built.',),
 
 #       ------------------------------------
-        Zone_number_in_Geographic_System = SIMP(statut = 'f',typ = 'TXM',
+        Zone_Number_In_Geographic_System = SIMP(statut = 'f',typ = 'TXM',
 #       ------------------------------------
             into = [ 'Lambert 1 north', 'Lambert 2 center', 'Lambert 3 xouth', \
                      'Lambert 4 corsica', 'Lambert 2 extended', 'UTM zone,E.G.'],
@@ -385,7 +385,7 @@ keywords BINARY DATABASE 1 FOR TIDE and BINARY DATABASE 2 FOR TIDE',),
 
 
 #           ------------------------------------
-              Binary_Database_1_for_Tide = SIMP( statut = 'o',
+              Binary_Database_1_For_Tide = SIMP( statut = 'o',
 #           ------------------------------------
                 typ = ('Fichier', '(All Files (*),)',),
                 fr = 'Base de donnees binaire 1 tiree du fichier du modele de maree.\n\
@@ -394,7 +394,7 @@ Dans le cas des donnees satellitaires de TPXO, ce fichier correspond aux donnees
 In the case of the TPXO satellite altimetry model, this file should be for free surface level, for instance h_tpxo7.2',),
 
 #           ------------------------------------
-              Binary_Database_2_for_Tide = SIMP( statut = 'o',
+              Binary_Database_2_For_Tide = SIMP( statut = 'o',
 #           ------------------------------------
                 typ = ('Fichier', '(All Files (*),)',),
                 fr= 'Base de donnees binaire 2 tiree du fichier du modele de maree.\n\
@@ -415,7 +415,7 @@ In the case of the TPXO satellite altimetry model, this file should be for tidal
         b_Wave = BLOC(condition = "Wave_Driver_Currents == 'True'",
 #       ------------------------------------
 #           ------------------------------------
-            Record_Number_in_Wave_File = SIMP(statut = 'o',typ = 'I', defaut = 1,
+            Record_Number_In_Wave_File = SIMP(statut = 'o',typ = 'I', defaut = 1,
 #           ------------------------------------
                 fr = 'Numero d enregistrement dans le fichier des courants de houle',
                 ang = 'Record number to read in the wave driven currents file'),
@@ -440,7 +440,7 @@ In the case of the TPXO satellite altimetry model, this file should be for tidal
                 ang = 'Coefficient to calibrate the tidal range of tidal wave at tidal open boundary conditions'),
 
 #           ------------------------------------
-            Coefficient_To_Calibrate_Tidal_Velocity = SIMP(statut = 'o',
+            Coefficient_To_Calibrate_Tidal_Velocities = SIMP(statut = 'o',
 #           ------------------------------------
                 typ = 'R', defaut = 999999,
                 fr = 'Coefficient pour ajuster les composantes de vitesse de l''onde de maree aux frontieres maritimes.\n\
@@ -595,7 +595,7 @@ The section about boundary conditions is to be read in the manual'),
          b_Velocity = BLOC (condition = "Type_Condition == 'Prescribed Velocity'",
 #        ------------------------------------
 #            ------------------------------------
-             Prescribed_Velocity = SIMP(statut = 'o',typ = 'R',
+             Prescribed_Velocities = SIMP(statut = 'o',typ = 'R',
 #            ------------------------------------
                  fr = 'Valeurs des vitesses imposees aux frontieres liquides entrantes.\n\
 Lire la partie du mode d''emploi consacree aux conditions aux limites',
@@ -628,7 +628,7 @@ Les donnees de ce fichier seront a lire sur le canal 12.',
        b_discharge_curve = BLOC (condition = "Stage_Discharge_Curves != 'no'",
 #      ------------------------------------
 #            ------------------------------------
-             Stage_Discharge_Curves_Files = SIMP( statut = 'f', 
+             Stage_Discharge_Curves_File = SIMP( statut = 'f', 
 #            ------------------------------------
                 typ = ('Fichier', 'All Files (*)',),
                 fr = 'Nom du fichier contenant les courbes de tarage',
@@ -798,7 +798,7 @@ The nearest integer to (duration/time step) is taken.  If NUMBER OF TIME STEPS i
            ), # fin b_stop
 
 #          ------------------------------------
-           Control_Of_Limit = SIMP(statut = 'o',
+           Control_Of_Limits = SIMP(statut = 'o',
 #          ------------------------------------
                typ = bool, defaut = 'False',
                fr = 'Le programme s''arrete si les limites sur u,v,h ou t sont depassees',
@@ -807,6 +807,7 @@ The nearest integer to (duration/time step) is taken.  If NUMBER OF TIME STEPS i
 #          ------------------------------------
            b_limit = BLOC(condition = "Control_Of_Limit == True" ,
            Limit_Values = FACT(statut = 'o',
+#            Attention : 1 seul MC ds Telemac
 #          ------------------------------------
                 fr = 'valeurs mini et maxi acceptables  min puis  max',
                 ang = 'min and max acceptable values ',
@@ -841,7 +842,7 @@ The nearest integer to (duration/time step) is taken.  If NUMBER OF TIME STEPS i
              ang = 'Correction of the velocities on points with a prescribed elevation, where the continuity equation has not been solved',),
 
 #          ------------------------------------
-           Number_Of_Sub_Iterations_For_Non_Linearity = SIMP(statut = 'o',typ = 'I',
+           Number_Of_Sub_Iterations_For_Non_Linearities = SIMP(statut = 'o',typ = 'I',
 #          ------------------------------------
              defaut = 1,
              fr = 'Permet de reactualiser, pour un meme pas de temps, les champs convecteur et propagateur \n\
@@ -862,7 +863,7 @@ The non-linearities can be taken into account through this technique.',),
 #      ------------------------------------
 
 #         ------------------------------------
-          Preconditionning = SIMP(statut = 'o',typ = 'TXM',
+          Preconditioning = SIMP(statut = 'o',typ = 'TXM',
 #         ------------------------------------
 # PNPN Soizic ? Est ce que c'est une liste
 # Comment fait-on  le into est faux : voir l aide
@@ -882,7 +883,7 @@ Only prime numbers are therefore kept to denote the preconditioning operations. 
 the product of relevant options shall be made.',
           ),
 #         ------------------------------------
-          C_U_Preconditionning = SIMP(typ = bool, statut = 'o', defaut=False,
+          C_U_Preconditioning = SIMP(typ = bool, statut = 'o', defaut=False,
 #         ------------------------------------
              fr = 'Changement de variable de H en C dans le systeme lineaire final',
              ang = 'Change of variable from H to C in the final linear system'
@@ -920,6 +921,7 @@ the product of relevant options shall be made.',
 # Tres differents du dico  liste de 4
 # PNPN eclaircir les choix SVP
 # soizic. choix 3 et 4 et 13 et 14
+#            Attention recalcul de Type_Of_Advection
 #             ------------------------------------
               Advection_Of_U_And_V = SIMP(statut = 'o',typ = bool, defaut = False,
 #             ------------------------------------
@@ -1058,7 +1060,7 @@ the product of relevant options shall be made.',
 #             ------------------------------------
                        into = ['No upwinding', 'Classical SUPG','Modified SUPG']),
 #             ------------------------------------
-              Supg_Option_K_and_Epsilon = SIMP(statut = 'o', defaut = 'Modified SUPG', typ = 'TXM',
+              Supg_Option_K_And_Epsilon = SIMP(statut = 'o', defaut = 'Modified SUPG', typ = 'TXM',
 #             ------------------------------------
                        into = ['No upwinding', 'Classical SUPG','Modified SUPG']),
             ), # Fin de SUPG
@@ -1115,14 +1117,14 @@ e.g. when performing test-cases for which an analytical solution in the lineariz
           b_linear = BLOC(condition = "Linearized_Propagation == True ",
 #         ------------------------------------
 #             ------------------------------------
-              Mean_Depth_For_Linearity = SIMP(statut = 'o',typ = 'R', defaut = 0.0, val_min = 0,
+              Mean_Depth_For_Linearization = SIMP(statut = 'o',typ = 'R', defaut = 0.0, val_min = 0,
 #             ------------------------------------
                fr = 'Fixe la hauteur d eau autour de laquelle s effectue la linearisation lorsque l option PROPAGATION LINEARISEE est choisie.',
                ang = 'Sets the water depth about which the linearization is made when the LINEARIZED PROPAGATION OPTION is selected.'),
           ), # fin b_linear
 
 #         ------------------------------------
-          Initial_Guess_for_H = SIMP(statut = 'o',typ = 'TXM',
+          Initial_Guess_For_H = SIMP(statut = 'o',typ = 'TXM',
 #         ------------------------------------
               into = ['Zero', 'Previous', 'Extrapolation'],
               defaut = 'Previous',
@@ -1134,7 +1136,7 @@ upon each iteration in the propagation step, by using the ultimate values this v
 Thus, the convergence can be speeded up when the system is being solved.',),
 
 #         ------------------------------------
-          Initial_Guess_for_U = SIMP(statut = 'o',typ = 'TXM',
+          Initial_Guess_For_U = SIMP(statut = 'o',typ = 'TXM',
 #         ------------------------------------
               into = ['Zero', 'Previous', 'Extrapolation'],
               defaut = 'Previous',
@@ -1148,11 +1150,11 @@ Thus, the convergence can be speeded up when the system is being solved.',),
       ), # fin Propagation
 
 #    ------------------------------------
-     Discretisation_Implicitation = FACT(statut = 'f',
+     Discretization_Implicitation = FACT(statut = 'f',
 #    ------------------------------------
 
 #         ------------------------------------
-          Discretisations_In_Space = SIMP(statut = 'o',typ = 'TXM', 
+          Discretizations_In_Space = SIMP(statut = 'o',typ = 'TXM', 
 #         ------------------------------------
               into = ["Linear", "Quasi-bubble", "Quadratic"],
               defaut = "Linear",),
@@ -1166,7 +1168,7 @@ Les valeurs inferieures a 0.5 donnent un schema instable.',
 Values below 0.5 result in an unstable scheme.'),
 
 #         ------------------------------------
-          Implicitation_for_Velocity = SIMP(statut = 'o',typ = 'R',defaut = 0.55,
+          Implicitation_For_Velocity = SIMP(statut = 'o',typ = 'R',defaut = 0.55,
 #         ------------------------------------
              fr = 'Fixe la valeur du coefficient d''implicitation sur la vitesse dans l''etape de propagation (cf.  Note de principe).\n\
 Les valeurs inferieures a 0.5 donnent un schema instable.',
@@ -1179,7 +1181,7 @@ Values below 0.5 result in an unstable condition.'),
             fr = 'Fixe la valeur du coefficient d''implicitation sur les termes de diffusion des vitesses',
             ang = 'Sets the value of the implicitation coefficient for the diffusion of velocity',),
 
-      ), # fin Discretisation_Implicitation
+      ), # fin Discretization_Implicitation
       
 
 #    ------------------------------------
@@ -1281,19 +1283,19 @@ PHYSICAL_PARAMETERS = PROC(nom = "PHYSICAL_PARAMETERS",op = None,
           b_Wind = BLOC(condition = "Wind == True",
 #         ------------------------------------
 #             ------------------------------------
-              Wind_Velocity_along_X = SIMP(statut = 'o',typ = 'R', defaut = 0.,
+              Wind_Velocity_Along_X = SIMP(statut = 'o',typ = 'R', defaut = 0.,
 #             ------------------------------------
                  fr = 'Composante de la vitesse du vent suivant l''axe des x (m/s).',
                  ang = 'Wind velocity, component along x axis (m/s).',),
 
 #             ------------------------------------
-              Wind_Velocity_along_Y = SIMP(statut = 'o',typ = 'R',defaut = 0.,
+              Wind_Velocity_Along_Y = SIMP(statut = 'o',typ = 'R',defaut = 0.,
 #             ------------------------------------
                  fr = 'Composante de la vitesse du vent suivant l''axe des y (m/s).',
                  ang = 'Wind velocity, component along y axis (m/s).',),
 
 #             ------------------------------------
-              Threashold_Depth_for_Wind = SIMP(statut = 'o',typ = 'R',defaut = 0.,
+              Threshold_Depth_For_Wind = SIMP(statut = 'o',typ = 'R',defaut = 0.,
 #             ------------------------------------
                  fr = 'Retire la force due au vent dans les petites profondeurs',
                  ang = 'Wind is not taken into account for small depths' ),
@@ -1312,16 +1314,16 @@ PHYSICAL_PARAMETERS = PROC(nom = "PHYSICAL_PARAMETERS",op = None,
                  ang = 'gives option for managing the wind'),
 
 #             ------------------------------------
-              file_for_wind = BLOC (condition = 'Option_For_Wind == "Variable in time" or Option_For_Wind == "Variable in time and space"',
+              file_For_wind = BLOC (condition = 'Option_For_Wind == "Variable in time" or Option_For_Wind == "Variable in time and space"',
 #             ------------------------------------
 #                  ------------------------------------
                    Consigne = SIMP(statut = "o",homo = 'information',typ = "TXM",
 #                  ------------------------------------
                           defaut = "give formated file 3"),
-              ), # fin bloc file_for_wind
+              ), # fin bloc file_For_wind
 
 #             ------------------------------------
-              speed_for_wind = BLOC (condition = 'Option_For_Wind == "Constant in time and space"',
+              speed_For_wind = BLOC (condition = 'Option_For_Wind == "Constant in time and space"',
 #             ------------------------------------
 #                  ------------------------------------
                    Speed_And_Direction_Of_Wind = SIMP( statut = 'o', defaut = (0.0, 0.0) , 
@@ -1329,7 +1331,7 @@ PHYSICAL_PARAMETERS = PROC(nom = "PHYSICAL_PARAMETERS",op = None,
                       typ = Tuple(2),validators = VerifTypeTuple(('R','R')),
                       fr = 'Donne la vitesse et la direction (en degres de 0 a 360, 0 etant y = 0 et x = +inf) du vent',
                       ang = 'gives the speed and direction (degre (from 0 to 360), 0 given y = 0 anx x = +infinity)',),
-              ), # speed_for_wind
+              ), # speed_For_wind
 
           ), # fin b_Wind
 
@@ -1351,17 +1353,17 @@ PHYSICAL_PARAMETERS = PROC(nom = "PHYSICAL_PARAMETERS",op = None,
            ), # fin b_air
 
 #         ------------------------------------
-          Rain_or_Evaporation = SIMP(statut = 'o',typ = bool,
+          Rain_Or_Evaporation = SIMP(statut = 'o',typ = bool,
 #         ------------------------------------
               defaut = False,
               fr  = 'Pour ajouter un apport ou une perte d''eau en surface.',
               ang = 'to add or remove water at the free surface. ',),
 
 #         -----------------------------------
-          b_Rain = BLOC(condition = "Rain_or_Evaporation == True",
+          b_Rain = BLOC(condition = "Rain_Or_Evaporation == True",
 #         ------------------------------------
 #              ------------------------------------
-               Rain_or_Evaporation_in_mm_perday = SIMP(statut = 'o',typ = 'I',defaut = 0.),
+               Rain_Or_Evaporation_In_Mm_Per_Day = SIMP(statut = 'o',typ = 'I',defaut = 0.),
 #              ------------------------------------
           ), # fin b_Rain
 
@@ -1415,7 +1417,7 @@ It is noteworthy that the meaning of this figure changes according to the select
                b_Colebrooke_White = BLOC(condition = "Law_Of_Bottom_Friction == 'Colebrooke_white'",
 #              ------------------------------------
 #                  ------------------------------------
-                   Manning_Default_Value_For_Colebrook_white_Law = SIMP( statut = 'o',typ = 'R',
+                   Manning_Default_Value_For_Colebrook_White_Law = SIMP( statut = 'o',typ = 'R',
 #                  ------------------------------------
                        defaut = 0.02 ,
                        fr = 'valeur par defaut du manning pour la loi de frottement de  Colebrook-White ',
@@ -1423,7 +1425,7 @@ It is noteworthy that the meaning of this figure changes according to the select
                ), # Fin b_Colebrooke_White
 
 #         ------------------------------------
-          Non_submerged_Vegetation_Friction = SIMP( statut = 'o',typ = bool,
+          Non_Submerged_Vegetation_Friction = SIMP( statut = 'o',typ = bool,
 #         ------------------------------------
               defaut = False ,
               fr = 'calcul du frottement du a la vegetation non submergee',
@@ -1535,22 +1537,22 @@ to be used when interpolation of bathymetry on the mesh gives very rough results
 #         ------------------------------------
 # PNPNPN recalculer en liste de 4 reels 
 #             ------------------------------------
-              Tolerance_sur_H = SIMP( statut = 'o',typ = 'R', defaut=1.E-3, 
+              Tolerance_For_H = SIMP( statut = 'o',typ = 'R', defaut=1.E-3, 
 #             ------------------------------------
                    fr  = "precision absolue sur H",
                    ang = "absolute precision on H",),
 #             ------------------------------------
-              Tolerance_sur_U = SIMP( statut = 'o',typ = 'R', defaut=1.E-3, 
+              Tolerance_For_U = SIMP( statut = 'o',typ = 'R', defaut=1.E-3, 
 #             ------------------------------------
                    fr  = "precision absolue sur U",
                    ang = "absolute precision on U",),
 #             ------------------------------------
-              Tolerance_sur_V = SIMP( statut = 'o',typ = 'R', defaut=1.E-3, 
+              Tolerance_For_V = SIMP( statut = 'o',typ = 'R', defaut=1.E-3, 
 #             ------------------------------------
                    fr  = "precision absolue sur V",
                    ang = "absolute precision on V",),
 #             ------------------------------------
-              Tolerance_sur_cout = SIMP( statut = 'o',typ = 'R', defaut=1.E-4, 
+              Tolerance_For_cout = SIMP( statut = 'o',typ = 'R', defaut=1.E-4, 
 #             ------------------------------------
                    fr  = "precision relative sur la fonction cout",
                    ang = "relative precision on the cost function",),
@@ -1667,7 +1669,7 @@ POST_PROCESSING = PROC(nom = "POST_PROCESSING",op = None,
                     ang = 'Determines, in number of time steps, the printout period for the VARIABLES FOR GRAPHIC PRINTOUTS in the RESULTS FILE.' ,),
 
 #       ------------------------------------
-        Number_Of_First_TimeStep_For_Graphic_Printouts = SIMP(statut = 'o', typ = 'I',defaut = 1,
+        Number_Of_First_Time_Step_For_Graphic_Printouts = SIMP(statut = 'o', typ = 'I',defaut = 1,
 #       ------------------------------------
                    fr = 'Determine le nombre de pas de temps a partir duquel debute l''ecriture des resultats dans le listing.',
                    ang = 'Determines the number of time steps after which the results are first written into the listing.'),
@@ -1762,7 +1764,7 @@ The results to be entered into this file shall be written on channel 28.",),
   Controls = FACT( statut='f',
 #  ------------------------------------
 #      ------------------------------------
-       Controls_Section = SIMP(statut = 'f',typ = Tuple(2),validators = VerifTypeTuple(('I','I')),
+       Control_Sections = SIMP(statut = 'f',typ = Tuple(2),validators = VerifTypeTuple(('I','I')),
 #      ------------------------------------
             fr = 'Couples de points (numeros globaux dans le maillage) entre lesquels les debits instantanes et cumules seront donnes.',
             ang = 'Couples of points (global numbers in the mesh) defining sections where the instantaneous and cumulated discharges will be given',),
@@ -2008,7 +2010,7 @@ this value may have a significant effect both on the shapes and sizes of recircu
             ang = 'Sets the required accuracy for computing epsilon in the diffusion and source-terms step of the k-epsilon model.',),
 
 #    -----------------------------------------------------------------------
-     Time_Step_Reduction_For_K_epsilon_Model = SIMP( statut = 'f',typ = 'R', defaut = 1.0 ,
+     Time_Step_Reduction_For_K_Epsilon_Model = SIMP( statut = 'f',typ = 'R', defaut = 1.0 ,
 #    -----------------------------------------------------------------------
            fr = 'Coefficient reducteur du pas de temps pour le modele k-epsilon (qui est normalement identique a celui du systeme hydrodynamique).\n\
 Utilisation deconseillee',
@@ -2031,7 +2033,7 @@ Not recommended for use.',),
            ang = 'Provided for selecting the type of friction on the walls',),
 
 #    -----------------------------------------------------------------------
-      Solver_For_K_epsilon_Model = SIMP( statut = 'o',typ = 'TXM',
+      Solver_For_K_Epsilon_Model = SIMP( statut = 'o',typ = 'TXM',
 #    -----------------------------------------------------------------------
            defaut = "Conjugate gradient" ,
            into = ("Conjugate gradient", "Conjugate residuals", "Conjugate gradient on normal equation", 
@@ -2041,10 +2043,10 @@ Not recommended for use.',),
            ang = 'Makes it possible to select the solver used for solving the system of the k-epsilon model.',),
 
 #        -----------------------------------------------------------------------
-         b_gmres = BLOC(condition = 'Solver_For_K_epsilon_Model == "GMRES"',
+         b_gmres = BLOC(condition = 'Solver_For_K_Epsilon_Model == "GMRES"',
 #        -----------------------------------------------------------------------
 #            -----------------------------------------------------------------------
-             Option_For_The_Solver_For_K_epsilon_Model = SIMP( statut = 'o',typ = 'I',
+             Option_For_The_Solver_For_K_Epsilon_Model = SIMP( statut = 'o',typ = 'I',
 #            -----------------------------------------------------------------------
                   defaut = 2 ,val_min = 2,val_max = 15,
                   fr = 'le mot cle est la dimension de lespace de KRILOV (valeurs conseillees entre 2 et 7)',
@@ -2052,7 +2054,7 @@ Not recommended for use.',),
          ), # fin bloc b_gmres
 
 #    -----------------------------------------------------------------------
-     Preconditioning_For_K_epsilon_Model = SIMP( statut = 'o',typ = 'TXM',
+     Preconditioning_For_K_Epsilon_Model = SIMP( statut = 'o',typ = 'TXM',
 #    -----------------------------------------------------------------------
          defaut = 'Diagonal' ,
          into = ("Diagonal", "No preconditioning", "Diagonal condensed", "Crout", "Diagonal and crout", "Diagonal condensed and crout"),

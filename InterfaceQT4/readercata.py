@@ -310,6 +310,7 @@ class READERCATA:
         listeEtapes=self.cata[0].JdC.commandes
         for e in self.cata[0].JdC.commandes:
             self.traite_entite(e)
+        #print self.dicoInverse.keys()
         #for e in self.cata[0].JdC.commandes:
         #    print "___________", e. nom , '__________________'
         #    self.cree_rubrique(e,self.dico,0)

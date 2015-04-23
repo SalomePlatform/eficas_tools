@@ -163,7 +163,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
          #self.editor.fenetreCentraleAffichee.rendVisibleNoeud(nodeAVoir)
          #nodeAVoir.fenetre.setFocus()
          # return  # on est bien postionne
-      if self.objSimp.isvalid():
+      if self.objSimp.isvalid() and hasattr(self, 'AAfficher'):
          self.editor.fenetreCentraleAffichee.afficheSuivant(self.AAfficher)
       else :
          print "dans le else de reaffiche"
