@@ -21,10 +21,6 @@
 
 # Question : Que faire des fichiers sdistOTqt.py et style.py
 
-configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/prefs_OPENTURNS_WRAPPER.py.in
-                 ${CMAKE_CURRENT_SOURCE_DIR}/prefs_OPENTURNS_WRAPPER.py
-		 @ONLY )
-
 install ( FILES qtEficas_openturns_wrapper.py
                 ${CMAKE_CURRENT_SOURCE_DIR}/prefs_OPENTURNS_WRAPPER.py
 		prefs.py
