@@ -1347,7 +1347,14 @@ class FunctionVal(Valid):
         return self.function.info
 
     def verif(self, valeur):
+#PNPN --> a corriger evtl voir verif_item
         return self.function(valeur)
+
+    def verif_item(self, valeur):
+        return self.function(valeur)
+
+    def convert(self, valeur):
+        return valeur
 
 # MC ca ne devrait plus servir !
 CoercableFuncs = {types.IntType:     int,
@@ -1600,7 +1607,7 @@ class FileExtVal(RegExpVal):
         self.ext = ext
         self.errormsg = u'"%%(value)s" n\'est pas un nom de fichier %(ext)s valide' % {
             "ext": ext}
-        RegExpVal.__init__(self, "^[\w\-]+\.%s$" % self.ext)
+        RegExpVal.__init__(self, "^[\S]+\.%s$" % self.ext)
 
     def info(self):
         return u'Un nom de fichier se terminant par ".%s" est attendu.' % self.ext

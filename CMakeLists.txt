@@ -158,6 +158,7 @@ add_subdirectory ( UiQT4 )
 add_subdirectory ( Validation )
 add_subdirectory ( convert )
 add_subdirectory ( generator )
+add_subdirectory ( Traducteur )
 
 # Installation des fichiers : Open TURNS
 if (WITH_OPENTURNS)
@@ -168,7 +169,6 @@ endif (WITH_OPENTURNS)
 # Installation des fichiers : Aster
 if (WITH_ASTER)
   add_subdirectory ( Aster )
-  add_subdirectory ( Traducteur )
 endif (WITH_ASTER)
 
 if (WITH_TK)

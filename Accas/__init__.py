@@ -88,6 +88,7 @@ from A_VALIDATOR import OrdList,NoRepeat,LongStr,Compulsory
 from A_VALIDATOR import RangeVal, EnumVal, TypeVal, PairVal
 from A_VALIDATOR import CardVal, InstanceVal
 from A_VALIDATOR import VerifTypeTuple, VerifExiste
+from A_VALIDATOR import FileExtVal, FunctionVal
 
 # On remplace la factory des validateurs initialement dans Noyau par celle
 # de A_VALIDATOR
