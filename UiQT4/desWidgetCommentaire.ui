@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1031</width>
-    <height>198</height>
+    <height>437</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -369,7 +369,7 @@ border-radius : 12px
         <x>0</x>
         <y>0</y>
         <width>1013</width>
-        <height>107</height>
+        <height>346</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -379,27 +379,14 @@ border-radius : 12px
           <number>6</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="commentaireLE">
+          <widget class="QTextBrowser" name="commentaireLE">
            <property name="styleSheet">
             <string notr="true">background:rgb(240, 240, 240)</string>
            </property>
-           <property name="frame">
-            <bool>false</bool>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -419,7 +406,6 @@ border-radius : 12px
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>commentaireLE</tabstop>
   <tabstop>RBPoubelle</tabstop>
   <tabstop>bCatalogue</tabstop>
   <tabstop>RBValide</tabstop>

@@ -33,13 +33,13 @@
     <number>0</number>
    </property>
    <property name="topMargin">
-    <number>1</number>
+    <number>2</number>
    </property>
    <property name="rightMargin">
     <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>1</number>
+    <number>2</number>
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -88,7 +88,7 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:rgb(255,250,240);
+      <string notr="true">background:rgb(255,245,215);
 border:0px;</string>
      </property>
     </widget>
