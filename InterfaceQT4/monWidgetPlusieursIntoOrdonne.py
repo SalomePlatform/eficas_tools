@@ -43,6 +43,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         GereListe.__init__(self)
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
+        self.ouAjouter=0
         self.prepareListeResultat()
         self.vScrollBarRE = self.scrollAreaRE.verticalScrollBar()
        
@@ -91,16 +92,21 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           courant.setReadOnly(True)
           index=index+1
 
+  def moinsPushed(self):
+      self.ouAjouter=self.ouAjouter-1
+      feuille.moinsPushed(self)
 
-  def ajoutLineEdit(self):
-      print "kljlkj"
+  #def ajoutLineEdit(self):
+  #    print "kljlkj"
 
   def ajoutLEResultat (self,index,valeur=None):
       nomLE="LEResultat"+str(index)
       if hasattr(self,nomLE) : return
       nouveauLE = LECustom(self.scrollAreaRE,self,index)
       nouveauLE.setFrame(False)
-      self.CBChoisis.addWidget(nouveauLE)
+      #self.CBChoisis.addWidget(nouveauLE)
+      self.CBChoisis.insertWidget(self.ouAjouter,nouveauLE)
+      self.ouAjouter=self.ouAjouter+1
       nouveauLE.setText("")
       nouveauLE.setReadOnly(True)
       if index % 2 == 1 : nouveauLE.setStyleSheet("background:rgb(210,210,210)")
@@ -116,7 +122,8 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       nomLE="lineEditVal"+str(index)
       if hasattr(self,nomLE) : return
       nouveauLE = MonLabelClic(self)
-      self.CBLayout.addWidget(nouveauLE)
+      #self.CBLayout.addWidget(nouveauLE)
+      self.CBLayout.insertWidget(index -1,nouveauLE)
       nouveauLE.setFrameShape(QFrame.NoFrame)
       qApp.processEvents()
       nouveauLE.setText("")
