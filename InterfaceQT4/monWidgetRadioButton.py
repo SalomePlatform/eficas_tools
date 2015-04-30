@@ -122,7 +122,7 @@ class MonWidgetRadioButton (Ui_WidgetRadioButton,MonWidgetRadioButtonCommun):
 class MonWidgetRadioButtonSD (Ui_WidgetRadioButton,MonWidgetRadioButtonCommun):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        print "dans le init de MonWidgetRadioButtonSD",self
+        #print "dans le init de MonWidgetRadioButtonSD",self
         self.maListeDeValeur=node.item.get_sd_avant_du_bon_type()
         MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
 

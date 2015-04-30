@@ -76,13 +76,13 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code = self.appliEficas.CONFIGURATION.code
+        self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
+        self.affiche=self.appliEficas.CONFIGURATION.affiche
         if self.code in ['MAP','CARMELCND'] : self.afficheCommandesPliees=False
-        self.affiche_alpha=1
         if self.code in ['MAP',] : 
            self.widgetTree.close()
            self.widgetTree=None
            self.appliEficas.resize(1440,self.appliEficas.height())
-           self.affiche_alpha=0
         else :
            self.appliEficas.resize(2000,self.appliEficas.height())
 
@@ -95,6 +95,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
            self.readercata=self.appliEficas.readercata
         if self.readercata.fic_cata == None : return    #Sortie Salome
         self.titre=self.readercata.titre
+        self.Ordre_Des_Commandes=self.readercata.Ordre_Des_Commandes
 
         self.format =  self.appliEficas.format_fichier
 
@@ -147,7 +148,6 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         #------- construction du jdc --------------
 
         jdc_item = None
-        self.mode_nouv_commande=self.readercata.mode_nouv_commande
 
         self.nouveau=0
         if self.fichier is not None:        #  fichier jdc fourni
@@ -176,6 +176,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         if self.jdc:
             self.jdc.appli = self
             self.jdc.lang    = self.appli.langue
+            self.jdc.aReafficher=False
             txt_exception  = None
             if not jdc:
                 self.jdc.analyse()
@@ -196,7 +197,6 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
 
         if jdc_item:
             self.tree = browser.JDCTree( jdc_item,  self )
-        self.jdc.aReafficher=False
         self.appliEficas.construitMenu()
 
     #--------------------------------#
@@ -1200,7 +1200,8 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #---------------------------#
     def _newTELEMAC(self):
     #---------------------------#
-        texte="INITIALIZATION();INITIAL_STATE();BOUNDARY_CONDITIONS();NUMERICAL_PARAMETERS();PHYSICAL_PARAMETERS()"
+        #texte="INITIALIZATION();INITIAL_STATE();BOUNDARY_CONDITIONS();NUMERICAL_PARAMETERS();PHYSICAL_PARAMETERS()"
+        texte=""
         return texte
 
     #---------------------------#

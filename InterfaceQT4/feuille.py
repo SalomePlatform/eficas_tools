@@ -30,7 +30,7 @@ from gereIcones import ContientIcones
 from gereIcones import FacultatifOuOptionnel
 from qtSaisie    import SaisieValeur
 
-nomMax=26
+nomMax=250
 # ---------------------------------------------------------------------- #
 class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 # --------------------------------------------------------------------- #
@@ -73,12 +73,36 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
    def setNom(self):
        self.debutToolTip=""
        nomTraduit=tr(self.objSimp.nom)
-       if len(nomTraduit) >= nomMax :
-         nom=nomTraduit[0:nomMax]+'...'
-         self.label.setText(nomTraduit)
-         self.debutToolTip=nomTraduit+"\n"
+       #if len(nomTraduit) >= nomMax :
+       #  nom=nomTraduit[0:nomMax]+'...'
+       #  self.label.setText(nomTraduit)
+       #  self.debutToolTip=nomTraduit+"\n"
+       longueur=QFontMetrics(self.label.font()).width(nomTraduit)
+       if longueur >= nomMax :
+         print "je formate"
+         nouveauNom=self.formate(nomTraduit)
+         print"________"
+         print nouveauNom
+         print"________"
+         print self
+         #self.label.setTextFormat(Qt.AutoText)
+         self.label.setText(nouveauNom)
+         #self.agrandit()
        else :   
          self.label.setText(nomTraduit)
+
+   def agrandit(self):
+       # inutile pour certains widgets
+       if self.height() < 40 :
+          print "j agrandis"
+          self.setMinimumHeight(50)
+          #self.setMaximumHeight(50)
+          self.resize(self.width(),200)
+          #self.principalLayout.setAlignment(Qt.AlignTop)
+          #self.label.resize(self.label.width(),200)
+          print self.label.height()
+       print self.height()
+       print "__________"
 
                                  
    def setValeurs(self):
@@ -166,11 +190,30 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       if self.objSimp.isvalid() and hasattr(self, 'AAfficher'):
          self.editor.fenetreCentraleAffichee.afficheSuivant(self.AAfficher)
       else :
-         print "dans le else de reaffiche"
-         self.AAfficher.setFocus(7)
+         if hasattr(self, 'AAfficher'): self.AAfficher.setFocus(7)
 
 
    def traiteClicSurLabel(self,texte):
        #print self.aide 
-       self.aide+="\n"+self.aideALaSaisie()
-       self.editor.affiche_infos(self.aide)
+       aide=self.aide+"\n"+self.aideALaSaisie()
+       self.editor.affiche_infos(aide)
+
+   def formate(self,t):
+       if t.find('_')==0 :
+          newText=t[0:19]+'\n'+t[19:]
+       else:
+          listeNom=t.split('_')
+          newTexte=""
+          ligne=""
+          for n in listeNom:
+            if len(ligne)+len(n) < 25 : 
+               newTexte=newTexte+"_"+n
+               ligne+="_"+n
+            else :
+               newTexte=newTexte+"\n_"+n
+               ligne=""
+          #newTexte=t[0:t.rfind('_')]+'\n'+ t[t.rfind('_'):]
+          newText=newTexte[1:]
+       return newText
+      
+       

@@ -56,10 +56,7 @@ class READERCATA:
       self.code=self.QWParent.code
       self.ssCode=self.appliEficas.ssCode
       self.appliEficas.format_fichier='python'
-      if hasattr(self.appliEficas,'mode_nouv_commande'):
-	 self.mode_nouv_commande=self.appliEficas.mode_nouv_commande
-      else :
-         self.mode_nouv_commande='alpha'
+      self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
       self.version_code=self.QWParent.version_code
       self.version_cata=None
       self.fic_cata=None
@@ -158,8 +155,10 @@ class READERCATA:
       # remplace par Retrouve_Ordre_Cata_Standard_autre qui utilise une numerotation
       # des mots cles a la creation
       self.Retrouve_Ordre_Cata_Standard_autre()
-      if self.mode_nouv_commande== "initial" :
-         self.Retrouve_Ordre_Cata_Standard()
+      if self.mode_nouv_commande== "initial" : self.Retrouve_Ordre_Cata_Standard()
+      if hasattr(self.cata, 'Ordre_Des_Commandes') : self.Ordre_Des_Commandes=self.cata.Ordre_Des_Commandes
+      else : self.Ordre_Des_Commandes=None
+      #print self.cata.Ordre_Des_Commandes
 
       #
       # analyse des donnees liees l'IHM : UIinfo
@@ -243,6 +242,7 @@ class READERCATA:
           contient le nom des mots cles dans le bon ordre
       """ 
       self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyse_catalogue(self.cata)
+      #print self.cata_ordonne_dico,self.appliEficas.liste_simp_reel
 
    def Retrouve_Ordre_Cata_Standard(self):
       """ 
@@ -252,6 +252,7 @@ class READERCATA:
       nom_cata = os.path.splitext(os.path.basename(self.fic_cata))[0]
       rep_cata = os.path.dirname(self.fic_cata)
       self.Commandes_Ordre_Catalogue = analyse_catalogue_initial.analyse_catalogue(self.fic_cata)
+      #print self.Commandes_Ordre_Catalogue
 
    def ask_choix_catalogue(self, cata_choice_list):
       """

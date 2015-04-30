@@ -132,7 +132,8 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
       # a gerer comme dans composimp
       # Gerer les matrices --> Actuellement pas dans ce type de panneau
 
-        #print "____________________________", self.item.wait_tuple() 
+        #print "____________________________", monNom, self.item.wait_co() 
+        #print "____________________________", monNom, self.item.wait_assd() 
         # Gestion d'une seule valeur (eventuellement un tuple ou un complexe)
         if maDefinition.max == 1 :
 
@@ -178,6 +179,13 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             from monWidgetSimpComplexe import MonWidgetSimpComplexe
             widget=MonWidgetSimpComplexe(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
+          elif self.item.wait_co():
+            if len(self.item.get_sd_avant_du_bon_type()) == 0 :
+               from monWidgetSDCO import MonWidgetSDCO
+               widget=MonWidgetSDCO(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            else :      
+               from monWidgetSDCOInto import MonWidgetSDCOInto
+               widget=MonWidgetSDCOInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_assd():
             if len(self.item.get_sd_avant_du_bon_type()) == 0 :
                from monWidgetVide import MonWidgetVide

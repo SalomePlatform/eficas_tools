@@ -56,7 +56,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
         else :
            self.resize(self.width(),hauteurMax)
            self.setMinimumHeight(hauteurMax)
-        self.parentQt.commandesLayout.insertWidget(1,self)
+        self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
         self.AAfficher=self.lineEditVal1
         self.inInit=False

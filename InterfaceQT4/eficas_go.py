@@ -89,7 +89,8 @@ def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=Non
 
 def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None):
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
-    fileName=fichier.split(".")[0]+"_73.comm"
+    print fichier
+    fileName=fichier.split(".")[0]+"_reecrit.comm"
     monEditeur.saveFileAs(fileName=fileName)
 
 def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION_STUDY'):

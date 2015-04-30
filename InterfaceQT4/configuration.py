@@ -52,7 +52,6 @@ class CONFIG_BASE:
       self.rep_mat = None
       self.repIni  = repIni
       self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',appli.code)
-      self.mode_nouv_commande='initial'
      
 
       self.setValeursParDefaut()
@@ -64,10 +63,9 @@ class CONFIG_BASE:
       #Particularite des schemas MAP
       if hasattr(self,'make_ssCode'): self.make_ssCode(self.ssCode)
 
-      if self.appli: 
-         self.parent=appli.top
-         self.appli.mode_nouv_commande= self.mode_nouv_commande
+      if self.appli: self.parent=appli.top
       else: 	     self.parent=None
+
       if not os.path.isdir(self.savedir) : self.savedir=os.environ['HOME']
       
 
@@ -81,6 +79,8 @@ class CONFIG_BASE:
       self.exec_acrobat = 'acroread'
       nomDir="Eficas_"+self.code
       self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
+      self.mode_nouv_commande='initial'
+      self.affiche="alpha"
  
   #--------------------------------------
   def lecture_fichier_ini_standard(self):

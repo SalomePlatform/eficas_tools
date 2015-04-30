@@ -48,19 +48,8 @@ class MonWidgetCBCommun (Ui_WidgetCB,Feuille):
       if self.objSimp.get_valeur()==None : 
          self.CBChoix.setCurrentIndex(-1)
          #self.CBChoix.lineEdit().setStyleSheet(("QLineEdit {" " background:yellow;\n" "font: italic ;\n" " }\n" " "))
-         self.CBChoix.lineEdit().setStyleSheet(("\n"
-"QLineEdit {\n"
-"     font : italic ;\n"
-"     background: rgb(168,168,168);\n"
-" }"))
-
          self.CBChoix.lineEdit().setText(tr("Select"))
          return
-      self.CBChoix.lineEdit().setStyleSheet(("\n"
-"QLineEdit {\n"
-"     font : italic ;\n"
-"     background: rgb(235,235,235);\n"
-" }"))
       valeur=self.objSimp.get_valeur()
       if not(type(valeur) in types.StringTypes) : valeur=str(valeur)
       self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur))

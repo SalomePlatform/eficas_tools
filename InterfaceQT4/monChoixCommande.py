@@ -42,10 +42,6 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       self.node = node
       self.editor = editor
       self.jdc  = self.item.object.get_jdc_root()
-      if self.editor.widgetTree != None:
-         self.connect(self.bFormulaire,SIGNAL("clicked()"),self.bFormulaireReturnPressed)
-      else :
-         self.bFormulaire.close()
       debutTitre=self.editor.titre
       self.listeWidget=[]
       if self.editor.fichier != None : 
@@ -53,28 +49,50 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       else :
           nouveauTitre=debutTitre
       self.editor.appliEficas.setWindowTitle(nouveauTitre)
+
+
       self.connect(self.RBalpha,SIGNAL("clicked()"),self.afficheAlpha)
       self.connect(self.RBGroupe,SIGNAL("clicked()"),self.afficheGroupe)
+      self.connect(self.RBOrdre,SIGNAL("clicked()"),self.afficheOrdre)
+
+
       self.editor.labelCommentaire.setText("")
-      self.affiche_alpha=self.editor.affiche_alpha
       self.name=None
-      self.AjouteRadioButton()
       self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.AjouteRadioButton)
-      if self.editor.affiche_alpha==0 : self.afficheGroupe()
+
+      self.affiche_alpha=0
+      self.affiche_groupe=0
+      self.affiche_ordre=0
+      if self.editor.affiche=="alpha"  : 
+         self.affiche_alpha==1;  
+         self.RBalpha.setChecked(True);
+         self.afficheAlpha()
+      elif self.editor.affiche=="groupe" : 
+         self.affiche_groupe==1; 
+         self.RBGroupe.setChecked(True); 
+         self.afficheGroupe()
+      elif self.editor.affiche=="ordre"  : 
+         self.affiche_ordre==1;  
+         self.RBOrdre.setChecked(True);  
+         self.afficheOrdre()
 
   def afficheAlpha(self):
       self.affiche_alpha=1
-      self.editor.affiche_alpha=1
+      self.affiche_groupe=0
+      self.affiche_ordre=0
       self.AjouteRadioButton()
 
   def afficheGroupe(self):
       self.affiche_alpha=0
-      self.editor.affiche_alpha=0
+      self.affiche_groupe=1
+      self.affiche_ordre=0
       self.AjouteRadioButton()
 
-  def bFormulaireReturnPressed(self):
-      print "PNPNPNPN a Programmer" 
-      self.connect(self.bFormulaire,SIGNAL("clicked()"),self.bFormulaireReturnPressed)
+  def afficheOrdre(self):
+      self.affiche_alpha=0
+      self.affiche_groupe=0
+      self.affiche_ordre=1
+      self.AjouteRadioButton()
 
   def mouseDoubleClickEvent(self,event):
       nodeCourrant=self.node.tree.currentItem()
@@ -91,6 +109,11 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            else : nouveau.deplieToutEtReaffiche()
            nouveau.fenetre.donnePremier()
            #nouveau.deplieToutEtReaffiche()
+      else :
+           print "je passe la"
+           self.node.setSelected(False)
+           nouveau.setSelected(True)
+           self.node.tree.setCurrentItem(nouveau)
       event.accept()
       
 
@@ -127,7 +150,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            self.commandesLayout.addWidget(rbcmd)
            rbcmd.mouseDoubleClickEvent=self.mouseDoubleClickEvent
            self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique) 
-      else :
+      elif  self.affiche_groupe==1 :
          listeGroupes,dictGroupes=self.jdc.get_groups()
          for grp in listeGroupes:
            if grp == "CACHE" : continue
@@ -150,6 +173,20 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            label2.setText(" ")
            self.listeWidget.append(label2)
            self.commandesLayout.addWidget(label2)
+      elif  self.affiche_ordre==1 :
+         listeFiltre=self.CreeListeCommande(filtre)
+         liste=[]
+         if self.editor.Ordre_Des_Commandes == None : Ordre_Des_Commandes=listeFiltre
+         else : Ordre_Des_Commandes=self.editor.Ordre_Des_Commandes
+         for cmd in Ordre_Des_Commandes :
+            if cmd in listeFiltre :
+                 liste.append(cmd)
+         for cmd in liste :
+           rbcmd=(QRadioButton(tr(cmd)))
+           self.buttonGroup.addButton(rbcmd)
+           self.commandesLayout.addWidget(rbcmd)
+           rbcmd.mouseDoubleClickEvent=self.mouseDoubleClickEvent
+           self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique) 
 
      
   def LEfiltreReturnPressed(self):
