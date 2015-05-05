@@ -30,6 +30,9 @@ def traduction(directPath,editor,version):
     if version == "V10V11" :
        from Traducteur import traduitV10V11
        suffixe="v11.comm"
+    if version == "V11V12" :
+       from Traducteur import traduitV11V12
+       suffixe="v12.comm"
 
     fn = QFileDialog.getOpenFileName( 
    			editor.appliEficas,
@@ -53,6 +56,7 @@ def traduction(directPath,editor,version):
     qApp.setOverrideCursor(QCursor(Qt.WaitCursor))
     if version == "V9V10" : traduitV9V10.traduc(FichieraTraduire,FichierTraduit,log)
     if version == "V10V11" : traduitV10V11.traduc(FichieraTraduire,FichierTraduit,log)
+    if version == "V11V12" : traduitV11V12.traduc(FichieraTraduire,FichierTraduit,log)
     qApp.setOverrideCursor(QCursor(Qt.ArrowCursor))
 
     Entete=tr("Fichier Traduit : %s\n\n",str(FichierTraduit))

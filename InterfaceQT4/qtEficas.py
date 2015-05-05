@@ -182,8 +182,11 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.addAction(self.actionParametres_Eficas)
         self.menuOptions.setTitle(tr("Options"))
         # set MAP version
-        from mapcore import getVersion
-        self.code_version = getVersion()
+        try :
+          from mapcore import getVersion
+          self.code_version = getVersion()
+        except :
+          pass
 
     def ZCRACKS(self):
         self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
@@ -217,8 +220,9 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
-        self.menuTraduction.addAction(self.actionTraduitV9V10)
+        self.menuTraduction.addAction(self.actionTraduitV11V12)
         self.menuTraduction.addAction(self.actionTraduitV10V11)
+        self.menuTraduction.addAction(self.actionTraduitV9V10)
         self.menuTraduction.setTitle(tr("Traduction"))
 
         self.menuOptions = self.menubar.addMenu("menuOptions")
@@ -356,16 +360,20 @@ class Appli(Ui_Eficas,QMainWindow):
         # Pour Aster
         self.actionTraduitV9V10 = QAction(self)
         self.actionTraduitV9V10.setObjectName("actionTraduitV9V10")
+        self.actionTraduitV9V10.setText(tr("TraduitV9V10"))
         self.actionTraduitV10V11 = QAction(self)
         self.actionTraduitV10V11.setObjectName("actionTraduitV10V11")
-        self.actionTraduitV9V10.setText(tr("TraduitV9V10"))
         self.actionTraduitV10V11.setText(tr("TraduitV10V11"))
+        self.actionTraduitV11V12 = QAction(self)
+        self.actionTraduitV11V12.setObjectName("actionTraduitV11V12")
+        self.actionTraduitV11V12.setText(tr("TraduitV11V12"))
         self.actionSauveLigne = QAction(self)
         self.actionSauveLigne.setText(tr("Sauve Format Ligne"))
         self.connect(self.actionParametres_Eficas,SIGNAL("activated()"),self.optionEditeur)
         self.connect(self.actionLecteur_Pdf,SIGNAL("activated()"),self.optionPdf)
         self.connect(self.actionTraduitV9V10,SIGNAL("activated()"),self.traductionV9V10)
         self.connect(self.actionTraduitV10V11,SIGNAL("activated()"),self.traductionV10V11)
+        self.connect(self.actionTraduitV11V12,SIGNAL("activated()"),self.traductionV11V12)
         self.connect(self.actionSauveLigne,SIGNAL("activated()"),self.sauveLigne)
 
         # Pour Carmel
@@ -494,6 +502,10 @@ class Appli(Ui_Eficas,QMainWindow):
     def traductionV10V11(self):
         from gereTraduction import traduction
         traduction(self.CONFIGURATION.repIni,self.viewmanager,"V10V11")
+
+    def traductionV11V12(self):
+        from gereTraduction import traduction
+        traduction(self.CONFIGURATION.repIni,self.viewmanager,"V11V12")
 
 
     def version(self) :
