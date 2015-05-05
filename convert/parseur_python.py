@@ -58,6 +58,7 @@ class FatalError(Exception): pass
 
 #commentaire double precede d'un nombre quelconque de blancs (pas multiligne)
 pattern_2comments   = re.compile(r"^\s*##.*")
+pattern_finComments = re.compile("^\s*##Fin Commentaire")
 #commentaire standard precede d'un nombre quelconque de blancs (pas multiligne)
 pattern_comment   = re.compile(r"^\s*#.*")
 #fin de ligne ; suivi d'un nombre quelconque de blancs (pas multiligne)
@@ -383,6 +384,9 @@ class PARSEUR_PYTHON:
                 elif commande_commentarisee_courante :
                     # commande_commentarisee en cours : on ajoute la ligne
                     commande_commentarisee_courante.append_text(ligne)
+                    # on a 2 commandes commentarisées de suite
+                    if pattern_finComments.match(ligne) :
+                       commande_commentarisee_courante = None
                 else:
                     # debut de commande commentarisée : on crée un objet commande_commentarisee_courante
                     commande_commentarisee_courante = COMMANDE_COMMENTARISEE(self)
