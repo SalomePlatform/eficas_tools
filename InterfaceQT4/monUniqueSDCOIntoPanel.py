@@ -23,6 +23,7 @@ import string,types,os
 # Modules Eficas
 from PyQt4 import *
 from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 
 from Extensions.i18n import tr
 from desUniqueSDCOInto    import Ui_DUnSDCOInto
@@ -56,23 +57,27 @@ class MonUniqueSDCOIntoPanel(Ui_DUnSDCOInto,QTPanel,SaisieSDCO, QDialog):
            parent.leLayout.widgetActive=self
 	self.setupUi(self)
         self.initLBSDCO()
+        self.connect(self.bOk,SIGNAL("clicked()"),self.BOkPressed)
+        self.connect(self.LESDCO, SIGNAL("returnPressed()"),self.LESDCOReturnPressed)
+        self.connect(self.LBSDCO, SIGNAL("itemDoubleClicked(QListWidgetItem*)" ), self.LBSDCODoubleClicked )
+        
 
   def initLBSDCO(self):
         listeNomsSDCO = self.node.item.get_sd_avant_du_bon_type()
         for aSDCO in listeNomsSDCO:
-            self.LBSDCO.insertItem( aSDCO)
+            self.LBSDCO.insertItem( 1,aSDCO)
         valeur = self.node.item.get_valeur()
         if valeur  != "" and valeur != None :
            self.LESDCO.setText(QString(valeur.nom))
 
 
-  def LBSDCOReturnPressed(self):
+  def LBSDCODoubleClicked(self):
         """
          Teste si la valeur fournie par l'utilisateur est une valeur permise :
           - si oui, l'enregistre
           - si non, restaure l'ancienne valeur
         """
-        nomConcept=str(self.LBSDCO.currentText())
+        nomConcept=str(self.LBSDCO.currentItem().text())
         self.LESDCO.clear()
         self.editor.init_modif()
         anc_val = self.node.item.get_valeur()
@@ -89,6 +94,7 @@ class MonUniqueSDCOIntoPanel(Ui_DUnSDCOInto,QTPanel,SaisieSDCO, QDialog):
              self.node.item.delete_valeur_co(valeur=anc_val)
              self.node.item.object.etape.get_type_produit(force=1)
              self.node.item.object.etape.parent.reset_context()
+             self.LESDCO.setText(QString(nomConcept))
         else :
           commentaire = self.node.item.get_cr()
           self.reset_old_valeur(anc_val,mess=mess)
