@@ -100,6 +100,9 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         if val == None : return
         self.node.item.set_nom(nom)
         self.node.item.set_valeur(val)
+        print dir(self.node.item)
+        #print self.node.item.get_val()
+        #print self.node.item.get_valeur()
         self.node.update_texte()
         self.node.update_node_valid()
         self.editor.init_modif()
@@ -112,16 +115,17 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         valString=str(self.lineEditVal.text())
             
         contexte={}
-        exec "from math import *" in contexte
+        #exec "from originalMath import *" in contexte
+        exec "from Extensions.param2 import originalMath" in contexte
         jdc=self.node.item.get_jdc()
         for p in jdc.params :
            try:
-              tp=p.nom+'='+str(p.val)
-              exec tp  in contexte
+              tp=p.nom+'='+str(repr(p.valeur))
            except :
               pass
 
         monTexte="monParam="+valString
+        exec monTexte in contexte
         try :
           exec monTexte in contexte
         except :
