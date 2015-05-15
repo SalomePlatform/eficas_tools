@@ -74,14 +74,6 @@ class GUIcontext:
                                     "Eficas pour Map",
                                     "Editer un jeu de commande Map avec Eficas",
                                     "plus.png")
-        self.addActionConditionally("Openturns_Study/prefs.py", GUIcontext.OT_STUDY_ID,
-                                    "Eficas pour Openturns Study",
-                                    "Editer un jeu de commande Openturns Study avec Eficas",
-                                    "eficasotstd.png")
-        self.addActionConditionally("Openturns_Wrapper/prefs.py", GUIcontext.OT_WRAPPER_ID,
-                                    "Eficas pour Openturns Wrapper",
-                                    "Editer un jeu de commande Openturns Wrapper avec Eficas",
-                                    "eficasotwrp.png")
         self.addActionConditionally("CarmelCND/prefs.py", GUIcontext.CARMELCND_ID,
                                     "Eficas pour CarmelCND",
                                     "Editer un jeu de commande CarmelCND avec Eficas",
