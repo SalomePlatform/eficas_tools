@@ -92,7 +92,8 @@ class PROC(N_ENTITE.ENTITE):
         self.reentrant = reentrant
         self.repetable = repetable
         self.fr = fr
-        self.ang=""
+        #self.ang=""
+        self.ang=ang
         self.docu = docu
         if type(regles) == types.TupleType:
             self.regles = regles
