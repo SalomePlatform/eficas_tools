@@ -142,6 +142,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     Remplace la valeur de self par new_valeur interprétée
     """
     self.valeur = self.interprete_valeur(new_valeur)
+    self.val=repr(valeur)
     self.parent.update_concept_after_etape(self,self)
     self.init_modif()
 

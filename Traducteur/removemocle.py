@@ -21,7 +21,7 @@ import logging
 import regles
 from parseur import FactNode
 from dictErreurs import EcritErreur
-from dictErreurs import jdcSet
+from load import jdcSet 
 
 debug=0
 #debug=1

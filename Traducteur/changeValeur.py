@@ -17,11 +17,13 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from utils import lineToDict
 import logging
 from dictErreurs import EcritErreur
-from dictErreurs import jdcSet
+from load import jdcSet 
 from renamemocle import decaleLignesdeNBlancs
 from removemocle import removeMotCleInFact
+import regles
 
 
 #--------------------------------------------------------------------------
@@ -44,8 +46,13 @@ def ChangementValeur(jdc,command,motcle,DictNouvVal,liste=(),defaut=0):
              MaLigneGlob=jdc.getLines()[indexLigneGlob]
              MaLigneTexte=liste_ligne_MC[indexTexteMC]
              for Valeur in DictNouvVal.keys() :
-                trouve=MaLigneTexte.find(Valeur)
-                if trouve > -1 :
+                MaLigneTexteDict=lineToDict(MaLigneTexte)
+                trouvecol=MaLigneTexte.find(Valeur)
+                if trouvecol > -1:
+                    trouve=(Valeur==MaLigneTexteDict[trouvecol])
+                else:
+                    trouve=False
+                if trouve:
                    debut=MaLigneGlob.find(motcle)
                    if debut==-1 : debut=0
 	           Nouveau=MaLigneGlob[debut:].replace(Valeur,DictNouvVal[Valeur])
@@ -65,51 +72,65 @@ def ChangementValeur(jdc,command,motcle,DictNouvVal,liste=(),defaut=0):
     if boolChange : jdc.reset(jdc.getSource())
              
 #--------------------------------------------------------------------------------
-def ChangementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste=(),defaut=0):
+def ChangementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste=(),ensemble=regles.SansRegle,defaut=0):
 #--------------------------------------------------------------------------------
 
     if command  not in jdcSet : return
     boolChange=0
     for c in jdc.root.childNodes:
-       if c.name != command  : continue
-       for mcF in c.childNodes:
-          if mcF.name != fact : continue
-          l=mcF.childNodes[:]
-          l.reverse()
-          for ll in l:
-             trouveUnMC=0
-             for mc in ll.childNodes:
-                if mc.name != motcle:continue
-                trouveUnMC=1
-                TexteMC=mc.getText(jdc)
-                liste_ligne_MC=TexteMC.splitlines()
-                indexLigneGlob=mc.lineno-1
-                indexTexteMC=0
-                while indexLigneGlob < mc.endline  :
-                   if indexTexteMC > len(liste_ligne_MC)-1 : break
-                   MaLigneGlob=jdc.getLines()[indexLigneGlob]
-                   MaLigneTexte=liste_ligne_MC[indexTexteMC]
-                   for Valeur in DictNouvVal.keys() :
-                      trouve=MaLigneTexte.find(Valeur)
-                      if trouve > -1 :
-                         debut=MaLigneGlob.find(motcle)
-                         if debut==-1 : debut=0
-	                 Nouveau=MaLigneGlob[debut:].replace(Valeur,DictNouvVal[Valeur])
-                         Nouveau=MaLigneGlob[0:debut]+Nouveau
-                         jdc.getLines()[indexLigneGlob]=Nouveau
-                         MaLigneTexte=Nouveau # raccourci honteux mais ...
-                         MaLigneGlob=Nouveau
-                         if Valeur in liste :
-                            EcritErreur((command,fact,motcle,Valeur),indexLigneGlob)
-                         else :
-                            logging.info("Changement de %s par %s dans %s ligne %d",Valeur,DictNouvVal[Valeur],command,indexLigneGlob)
-                   boolChange=1
-                   indexLigneGlob=indexLigneGlob+1
-                   indexTexteMC=indexTexteMC+1
-             if (trouveUnMC == 0) and ( defaut == 1):
-                logging.warning("OPTION  (defaut) de CALCG à verifier ligne %s" ,c.lineno )                     
-                EcritErreur((command,fact,motcle,"DEFAUT"),c.lineno)
+        if c.name != command  : continue
+        for mcF in c.childNodes:
+            if mcF.name != fact : continue
+            l=mcF.childNodes[:]
+            l.reverse()
+            for ll in l:
+                trouveUnMC=0
+                for mc in ll.childNodes:
+                    if mc.name != motcle:continue                    
+                    if ensemble.verif(c) == 0 : continue
+                    trouveUnMC=1
+                    TexteMC=mc.getText(jdc)
+                    liste_ligne_MC=TexteMC.splitlines()
+                    indexLigneGlob=mc.lineno-1
+                    indexTexteMC=0
+                    while indexLigneGlob < mc.endline  :
+                        if indexTexteMC > len(liste_ligne_MC)-1 : break
+                        MaLigneGlob=jdc.getLines()[indexLigneGlob]
+                        MaLigneTexte=liste_ligne_MC[indexTexteMC]
+                        for Valeur in DictNouvVal.keys() :
+                            MaLigneTexteDict=lineToDict(MaLigneTexte)
+                            trouvecol=MaLigneTexte.find(Valeur)
+                            if trouvecol > -1:
+                                trouve=(Valeur==MaLigneTexteDict[trouvecol])
+                            else:
+                                trouve=False
+                            if trouve:
+                                debut=MaLigneGlob.find(motcle)
+                                if debut==-1 : debut=0
+                                Nouveau=MaLigneGlob[debut:].replace(Valeur,DictNouvVal[Valeur])
+                                Nouveau=MaLigneGlob[0:debut]+Nouveau
+                                jdc.getLines()[indexLigneGlob]=Nouveau
+                                MaLigneTexte=Nouveau # raccourci honteux mais ...
+                                MaLigneGlob=Nouveau
+                                if Valeur in liste :
+                                   EcritErreur((command,fact,motcle,Valeur),indexLigneGlob)
+                                else :
+                                   logging.info("Changement de %s par %s dans %s ligne %d",Valeur,DictNouvVal[Valeur],command,indexLigneGlob)
+                        boolChange=1
+                        indexLigneGlob=indexLigneGlob+1
+                        indexTexteMC=indexTexteMC+1
+                if (trouveUnMC == 0) and ( defaut == 1):
+                   logging.warning("OPTION  (defaut) de CALCG à verifier ligne %s" ,c.lineno )                     
+                   EcritErreur((command,fact,motcle,"DEFAUT"),c.lineno)
     if boolChange : jdc.reset(jdc.getSource())
+             
+#--------------------------------------------------------------------------------
+def ChangementValeurDsMCFSiRegle(jdc,command,fact,motcle,DictNouvVal,liste_regles,defaut=0):
+#--------------------------------------------------------------------------------
+    if command not in jdcSet : return
+    mesRegles=regles.ensembleRegles(liste_regles)
+    liste=()
+    ChangementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste,mesRegles,defaut)
              
 #---------------------------------------------------------------------------------------
 def ChangementValeurDsMCFAvecAvertissement(jdc, command, fact,motcle,DictNouvVal,liste):
