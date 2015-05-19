@@ -846,7 +846,7 @@ class JDCEditor(QSplitter):
     #-------------------#
       try :
           #commande="runSession pilotyacsCS.py"
-          print "runCarmelCS  coucou"
+          #print "runCarmelCS  coucou"
           #self.generator=generator.plugins['CARMELCS']()
           runxmlfile=self.generator.generxml(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
           #print "editor : runCarmelCS : runxmlfile = ",runxmlfile
@@ -974,9 +974,7 @@ class JDCEditor(QSplitter):
         try :
         #if 1:
            from ajoutGroupe import handleAjoutGroupFiltre
-           print listeGroup
            handleAjoutGroupFiltre(self,listeGroup)
-           print "apres handleAjoutGroupFiltre"
         except :
         #else :
            pass
@@ -1242,7 +1240,6 @@ class JDCEditor(QSplitter):
     def BoutonSalomePressed(self):
     #----------------------------
       Msg,self.listeGroupes=self.appliEficas.ChercheGrpMailleInSalome()
-      print Msg,self.listeGroupes
       self.fichierMED="A_partir_de_SMESH"
       self.nomMaillage="A_partir_de_SMESH"
       self.openfile.close()

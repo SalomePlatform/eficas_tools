@@ -46,6 +46,7 @@ class MonPoursuitePanel(MonMacroPanel):
 
   def ajoutPageOk(self) :
         self.TabPage = QtGui.QWidget()
+        self.maPageOk = self.TabPage
         self.TabPage.setObjectName("TabPage")
         self.textLabel1_3 = QtGui.QLabel(self.TabPage)
         self.textLabel1_3.setGeometry(QtCore.QRect(9, 9, 481, 19))
@@ -89,8 +90,9 @@ class MonPoursuitePanel(MonMacroPanel):
 
 
   def BBrowsePressed(self):
-      if hasattr(self.node.item,'object'):
-         self.node.makeEdit()
+      nomFichier=str(self.LENomFichier.text())
+      if nomFichier=="" : return
+      if hasattr(self.node.item,'object'): self.node.makeEdit()
 
   def BFichierPressed(self):
       fichier = QFileDialog.getOpenFileName(self.appliEficas,
@@ -105,6 +107,7 @@ class MonPoursuitePanel(MonMacroPanel):
 
   def LENomFichReturnPressed(self):
         nomFichier=str(self.LENomFichier.text())
+        if nomFichier=="" : return
         if not os.path.isfile(nomFichier) :
            commentaire = tr("Fichier introuvable")
            self.Commentaire.setText(commentaire)
@@ -117,13 +120,17 @@ class MonPoursuitePanel(MonMacroPanel):
         if not text:
            return
 
+        
         try :
            self.node.item.object.change_fichier_init(nomFichier,text)
            commentaire = tr("Fichier modifie  : %s", self.node.item.get_nom())
            self.Commentaire.setText(commentaire)
+           self.node.item.object.state='changed'
+           self.node.update_valid()
         except: 
-           l=traceback.format_exception_only(tr("Fichier invalide") ,sys.exc_info()[1])
-           QMessageBox.critical( self, tr("Erreur fatale au chargement du fichier Include"), l[0])
+           #l=traceback.format_exception_only(tr("Fichier invalide") ,sys.exc_info()[1])
+           l=traceback.format_exception_only("Fichier invalide" ,sys.exc_info()[1])
+           QMessageBox.critical( self, tr("Erreur fatale au chargement du fichier Poursuivi"), l[0])
            commentaire = tr("Fichier invalide")
            self.Commentaire.setText(commentaire)
            self.editor.affiche_infos(commentaire, Qt.red)
@@ -150,3 +157,5 @@ class MonPoursuitePanel(MonMacroPanel):
             self.editor.affiche_infos(commentaire, Qt.red)
        return text
 
+  def BOkIncPressed (self):
+      self.LENomFichReturnPressed()

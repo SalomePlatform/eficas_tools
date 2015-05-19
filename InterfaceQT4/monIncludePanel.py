@@ -97,6 +97,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
 
   def LENomFichReturnPressed(self):
         nomFichier=str(self.LENomFichier.text())
+        if nomFichier=="" : return
         if not os.path.isfile(nomFichier) :
            commentaire = tr("Fichier introuvable")
            self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
@@ -106,8 +107,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
         text=self.convert_file(nomFichier)
 
         # Si probleme a la lecture-conversion on arrete le traitement
-        if not text:
-           return
+        if not text: return
 
         self.editor.init_modif()
 
@@ -116,6 +116,7 @@ class MonIncludePanel(DInc,QTPanelTBW1,QTPanelTBW2,QTPanelTBW3):
            commentaire = tr("Fichier modifie  :")  + self.node.item.get_nom()
            self.Commentaire.setText(QString.fromUtf8(QString(commentaire)))
            self.editor.affiche_infos(commentaire)
+           self.node.update_node_valid()
         except: 
            l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
            QMessageBox.critical( self, tr("Erreur fatale au chargement du fichier Include"), l[0])

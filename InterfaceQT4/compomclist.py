@@ -39,12 +39,14 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
               from monMCListAjoutPanel import MonMCListAjoutPanel
               return MonMCListAjoutPanel(self,parent=self.editor)
            else :
-              print "MCList"
+              #print "MCList"
+              pass
         elif self.item.isMCFact() :
            from monMCFactPanel import MonMCFactPanel
            return MonMCFactPanel(self,parent=self.editor)
         else :
-           print "MCList"
+           #print "MCList"
+           pass
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)

@@ -478,7 +478,7 @@ class JDCNode(QTreeWidgetItem):
             Déclenche la copie de l'objet item avec pour cible
             l'objet passé en argument : node_selected
         """
-        print 'je passe dans doPaste'
+        #print 'je passe dans doPaste'
         objet_a_copier = self.item.get_copie_objet()
         child=node_selected.doPasteCommande(objet_a_copier,pos)
         return child
