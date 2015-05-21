@@ -124,6 +124,15 @@ class vers3DSalomeGenerator(PythonGenerator):
       for v in obj.mc_liste:
          liste=self.generator(v)
 
+   def generMACRO_ETAPE(self,obj):
+      """
+      """
+      if obj.isvalid() == 0 :
+         #showerror("Element non valide","Salome ne sait pas traiter les elements non valides")
+         return
+      for v in obj.mc_liste:
+         liste=self.generator(v)
+
 
    def generMCSIMP(self,obj) :
       """

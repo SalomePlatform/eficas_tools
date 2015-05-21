@@ -40,7 +40,7 @@ class Appli(Ui_Eficas,QMainWindow):
         """
         Constructor
         """
-        QMainWindow.__init__(self,parent)
+        QMainWindow.__init__(self)
         Ui_Eficas.__init__(self)
         self.setupUi(self)
 

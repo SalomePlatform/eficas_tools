@@ -1445,7 +1445,7 @@ class FunctionVal(Valid):
     def verif(self, valeur):
         return self.function(valeur)
 
-   def verif_item(self, valeur):
+    def verif_item(self, valeur):
         return self.function(valeur)
 
     def convert(self, valeur):
