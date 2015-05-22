@@ -118,6 +118,7 @@ class MonParamPanel(DParam,QTPanelTBW2,QTPanel):
         for p in jdc.params :
            try:
               tp=p.nom+'='+str(repr(p.valeur))
+              exec tp in contexte
            except :
               pass
 
