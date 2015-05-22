@@ -40,7 +40,6 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
     
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
-      self.editor.salome=1
       if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome:
            self.ViewElt = QAction(tr('View3D'),self.tree)
            self.tree.connect(self.ViewElt,SIGNAL("activated()"),self.view3D)
