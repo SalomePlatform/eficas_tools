@@ -24,7 +24,7 @@ install (
           FILES
 		calcG.py changeValeur.py dictErreurs.py __init__.py inseremocle.py 
 		load.py log.py mocles.py movemocle.py parseur.py regles.py removemocle.py 
-		renamemocle.py  traduitV10V11.py traduitV9V10.py utils.py
+		renamemocle.py  traduitV10V11.py traduitV9V10.py traduitV11V12.py utils.py
 		visiteur.py
           DESTINATION ${CMAKE_INSTALL_PREFIX}/Traducteur
 	)
