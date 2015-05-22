@@ -178,15 +178,11 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
                 sd_prod = apply(self.definition.sd_prod, (), d)
             except EOFError:
                 raise
-            except:
+            except Exception, exc:
                 if CONTEXT.debug:
                     traceback.print_exc()
-                l = traceback.format_exception(
-                    sys.exc_info()[0], sys.exc_info()[1],
-                    sys.exc_info()[2])
-                raise AsException("impossible d affecter un type au resultat",
-                                  string.join(l[2:]))
-                #         sys.exc_info()[0],sys.exc_info()[1],)
+                raise AsException("impossible d affecter un type au resultat:",
+                                  str(exc))
         else:
             sd_prod = self.definition.sd_prod
         # on teste maintenant si la SD est réutilisée ou s'il faut la créer
