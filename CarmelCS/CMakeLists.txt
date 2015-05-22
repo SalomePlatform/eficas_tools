@@ -23,7 +23,7 @@
 install ( FILES 
 	  CarmelCS_cata.py configuration_CARMELCS.py pilotyacsCS.py
 	  prefs_CARMELCS.py prefs.py qtEficas_CarmelCS.py
-	   DESTINATION ${CMAKE_INSTALL_PREFIX}/CarmelCND
+	   DESTINATION ${CMAKE_INSTALL_PREFIX}/CarmelCS
         )
 
 ### Local Variables:
