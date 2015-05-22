@@ -137,7 +137,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         # Gestion d'une seule valeur (eventuellement un tuple ou un complexe)
         if maDefinition.max == 1 :
 
-          # Listes de valeur discretes
           if maDefinition.into != [] and maDefinition.into != None:
             if len(maDefinition.into) < 4 :
               from monWidgetRadioButton import MonWidgetRadioButton
@@ -181,8 +180,8 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 
           elif self.item.wait_co():
             if len(self.item.get_sd_avant_du_bon_type()) == 0 :
-               from monWidgetSDCO import MonWidgetSDCO
-               widget=MonWidgetSDCO(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               from monWidgetUniqueSDCO import MonWidgetUniqueSDCO
+               widget=MonWidgetUniqueSDCO(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :      
                from monWidgetSDCOInto import MonWidgetSDCOInto
                widget=MonWidgetSDCOInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)

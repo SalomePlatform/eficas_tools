@@ -1391,7 +1391,7 @@ class STDGenerateur :
     txt  = headerSTD % self.OpenTURNS_path
     txt += "dist = %s\n" % apply( STDGenerateur.__dict__[ loi[ 'Kind' ] ], (self, loi) )
     txt += "graph = dist.drawPDF()\n"
-    txt += "graph.draw( '%s', '%s' , 640, 480, GraphImplementation.PNG)\n" % (chemin, fichier)
+    txt += "graph.draw( '%s/', '%s' , 640, 480, GraphImplementation.PNG)\n" % (chemin, fichier)
     txt += footerSTD
     return txt
   

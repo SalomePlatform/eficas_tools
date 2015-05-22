@@ -1,21 +1,23 @@
 # coding=utf-8
-# Copyright (C) 2007-2013   EDF R&D
+# person_in_charge: mathieu.courtois at edf.fr
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2015  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
 #
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2.1 of the License.
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
 #
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 #
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+# ======================================================================
 
 
 """
@@ -24,11 +26,16 @@
 """
 
 import re
-import types
 import N_CR
 import N_OPS
 import N_VALIDATOR
 from strfunc import ufmt
+
+try:
+    from PyQt4 import QtCore
+    stringTypes = (str, unicode, QtCore.QString)
+except ImportError:
+    stringTypes = (str, unicode)
 
 
 class ENTITE:
@@ -171,21 +178,21 @@ class ENTITE:
 
     def check_fr(self):
         """Vérifie l'attribut fr."""
-        if type(self.fr) not in (str, unicode):
+        if type(self.fr) not in stringTypes:
             self.cr.fatal(
                 _(u"L'attribut 'fr' doit être une chaine de caractères : %r"),
                 self.fr)
 
     def check_docu(self):
         """Vérifie l'attribut docu."""
-        if type(self.docu) not in (str, unicode):
+        if type(self.docu) not in stringTypes:
             self.cr.fatal(
                 _(u"L'attribut 'docu' doit être une chaine de caractères : %r"),
                 self.docu)
 
     def check_nom(self):
         """Vérifie l'attribut proc."""
-        if type(self.nom) != types.StringType:
+        if type(self.nom) is not str:
             self.cr.fatal(
                 _(u"L'attribut 'nom' doit être une chaine de caractères : %r"),
                 self.nom)
@@ -206,7 +213,7 @@ class ENTITE:
     def check_condition(self):
         """Vérifie l'attribut condition."""
         if self.condition != None:
-            if type(self.condition) != types.StringType:
+            if type(self.condition) is not str:
                 self.cr.fatal(
                     _(u"L'attribut 'condition' doit être une chaine de caractères : %r"),
                     self.condition)
@@ -215,11 +222,11 @@ class ENTITE:
 
     def check_min_max(self):
         """Vérifie les attributs min/max."""
-        if type(self.min) != types.IntType:
+        if type(self.min) != int:
             if self.min != '**':
                 self.cr.fatal(
                     _(u"L'attribut 'min' doit être un entier : %r"), self.min)
-        if type(self.max) != types.IntType:
+        if type(self.max) != int:
             if self.max != '**':
                 self.cr.fatal(
                     _(u"L'attribut 'max' doit être un entier : %r"), self.max)
@@ -243,7 +250,7 @@ class ENTITE:
     def check_into(self):
         """Vérifie l'attribut into."""
         if self.into != None:
-            if type(self.into) != types.TupleType:
+            if type(self.into) not in (list, tuple):
                 self.cr.fatal(
                     _(u"L'attribut 'into' doit être un tuple : %r"), self.into)
 

@@ -266,7 +266,7 @@ class CARMELCNDGenerator(PythonGenerator):
           self.textePhys+=debutTexteZs
           self.textePhys+=str(self.dictMCVal[zs+"______ZS__Conductivite"])
           self.textePhys+=texteZs2
-          self.textePhys+=str(self.dictMCVal[zs+"______ZS__Permeabilite"])
+          self.textePhys+=str(self.dictMCVal[zs+"______ZS__PermeabiliteRelative"])
           self.textePhys+=finTexteZs
 
        self.textePhys+="]\n"

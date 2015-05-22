@@ -20,7 +20,7 @@
 import logging
 import sys
 from parseur import FactNode
-from dictErreurs import jdcSet
+from load import jdcSet 
 import regles
 from dictErreurs import EcritErreur
 #debug=1

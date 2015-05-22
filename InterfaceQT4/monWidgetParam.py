@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -18,106 +17,119 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os,re
-
 # Modules Eficas
 
-from PyQt4 import *
+from desWidgetParam import Ui_WidgetParam
+from gereIcones import FacultatifOuOptionnel
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from Extensions.i18n import tr
-from desWidgetParam import Ui_desWidgetParam
+from Extensions.eficas_exception import EficasException
+import Accas 
+import os, re
+import string
+import types
 
+pattern_name       = re.compile(r'^[^\d\W]\w*\Z')
 
-class MonWidgetParam(Ui_desWidgetParam,QDialog):
+    
+# Import des panels
+
+class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
   """
   """
-  def __init__(self,editor, name = None,fl = 0):
-       self.editor=editor
-       QDialog.__init__(self,editor)
-       self.setupUi(self)
-       self.connecterSignaux()
-       self.dejaExistant=0
-       self.listeTousParam=self.editor.jdc.params
-       self.dictListe={}
-       self.initToutesVal()
-
-  def connecterSignaux(self) :
-        self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.lineEditValReturnPressed)
-        self.connect(self.lineEditNom,SIGNAL("returnPressed()"),self.lineEditNomReturnPressed)
-
-
-  def CreeParametre(self):
-        nom=str(self.lineEditNom.text())
-        val=str(self.lineEditVal.text())
-        if val == "" or None : return
-        if nom == "" or None : return
-        print self.editor.tree
-        if len(self.editor.tree.selectedItems()) == 0 : 
-           itemAvant=self.editor.tree.racine 
-           param=itemAvant.addParameters(True)
-        else :                                     
-           itemAvant=self.editor.tree.selectedItems()[0]
-           param=itemAvant.addParameters(False)
-        param.item.set_nom(nom)
-        param.item.set_valeur(val)
-        param.update_node_texte()
+  def __init__(self,node,editor,commentaire):
+      QWidget.__init__(self,None)
+      self.node=node
+      self.node.fenetre=self
+      self.setupUi(self)
+      self.editor=editor
+      self.setIconePoubelle()
+      self.remplit()
+      if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
+      else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+      self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
+      self.connect(self.lineEditNom,SIGNAL("returnPressed()"),self.LENomPressed)
+      self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
+      self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
+      self.connect(self.bVerifie,SIGNAL("clicked()"), self.verifiePressed)
+      self.editor.affiche_infos("")
 
 
-  def lineEditValReturnPressed(self):
-        qtVal=self.lineEditVal.text()
+       
+  def afficheCatalogue(self):
+      self.node.tree.racine.affichePanneau()
+      if self.node : self.node.select()
+      else : self.node.tree.racine.select()
+
+  def remplit(self):
+      nom=self.node.item.get_nom()
+      self.lineEditNom.setText(nom)
+
+      valeur=self.node.item.get_valeur()
+      if valeur == None : 
+         self.lineEditVal.clear()
+      elif type(valeur) == types.ListType :
+         texte="["
+         for l in valeur :
+           texte=texte+str(l) +","
+         texte=texte[0:-1]+"]"
+         self.lineEditVal.setText(texte)
+      else :
+         self.lineEditVal.setText(str(valeur))
+
+
+  def donnePremier(self):
+      self.lineEditVal.setFocus(7)
+
+  def LEValeurPressed(self):
+      if self.verifiePressed() == False :
+         QMessageBox.warning( self,tr( "Modification Impossible"),tr( "le parametre n'est pas valide"))
+      nom=str(self.lineEditNom.text())
+      val=str(self.lineEditVal.text())
+      self.node.item.set_nom(nom)
+      self.node.item.set_valeur(val)
+      self.node.update_texte()
+      self.node.update_node_valid()
+
+  def LENomPressed(self):
+      self.LEValeurPressed()
+
+  def verifiePressed(self):
+        nomString=str(self.lineEditNom.text())
+        if not pattern_name.match(nomString) : 
+           self.LECommentaire.setText(nomString + tr(" n est pas un identifiant correct"))
+           return False
+
         valString=str(self.lineEditVal.text())
+
         contexte={}
         exec "from math import *" in contexte
-        jdc=self.editor.jdc
-        if jdc == None : 
-          self.editor.affiche_infos(tr("La Creation de parametre n est possible que dans un jeu de données"),Qt.red)
-          return
-
+        jdc=self.node.item.get_jdc()
         for p in jdc.params :
            try:
-              tp=p.nom+'='+str(p.val)
+              tp=p.nom+'='+str(repr(p.valeur))
               exec tp  in contexte
-           except :
+           except exc :
               pass
-        monTexte="monParam="+valString
+
+        monTexte=nomString+"="+valString
         try :
           exec monTexte in contexte
+        except (ValueError,TypeError, NameError,RuntimeError,ZeroDivisionError),  exc:
+          self.LECommentaire.setText(tr("Valeur incorrecte: ")+unicode (exc))
+          return False
         except :
-          self.editor.affiche_infos(tr("Valeur incorrecte"),Qt.red)
-        if self.lineEditNom.text()!="" and self.dejaExistant==False : self.CreeParametre()
+          self.LECommentaire.setText(tr("Valeur incorrecte "))
+          return False
 
+        self.LECommentaire.setText(tr("Valeur correcte "))
+        return True
 
-  def lineEditNomReturnPressed(self):
-        qtNom=self.lineEditNom.text()
-        nom=str(qtNom)
-        numDebutPattern=re.compile('[a-zA-Z"_"]')
-        if not (numDebutPattern.match(nom)) :
-           commentaire=tr("Les noms de parametre doivent commencer par une lettre ou un souligne")
-           self.lineEditNom.setText("")
-           self.editor.affiche_infos(commentaire,Qt.red)
-        if self.lineEditVal.text()!="" : self.CreeParametre()
-        self.lineEditVal.setFocus(Qt.OtherFocusReason)
+  def afficheApres(self):
+       self.node.selectApres()
 
+  def afficheAvant(self):
+       self.node.selectAvant()
 
-  def initToutesVal(self):
-        self.LBParam.clear()
-        for param in self.listeTousParam :
-            self.LBParam.addItem(QString(repr(param)))
-            self.dictListe[QString(repr(param))] = param
-
-  def valideParam(self):
-        if self.LBParam.selectedItems()== None : return
-        lParam=[]
-        for indice in range(len(self.LBParam.selectedItems())):
-            i=self.LBParam.selectedItems()[indice].text()
-            param=self.dictListe[i]
-            lParam.append(param)
-
-        try :
-          self.panel.AjoutNValeur(lParam)
-        except :
-          for p in lParam :
-             self.panel.Ajout1Valeur(p)
-        self.close()
 

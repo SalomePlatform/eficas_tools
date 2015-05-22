@@ -178,7 +178,9 @@ class MyTabview:
 
    def handlegestionParam(self):
        index=self.myQtab.currentIndex()
-       if index < 0 : return
+       if index < 0 : 
+          QMessageBox.warning( self.appliEficas,tr( "Creation Paramètre indisponible"),tr( "les paramètres sont liés à un jeu de données"))
+          return
        self.dict_editors[index].gestionParam()
 
    def handleViewJdcRapport(self):

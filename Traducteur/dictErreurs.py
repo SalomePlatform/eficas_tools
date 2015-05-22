@@ -19,9 +19,7 @@
 #
 
 import logging
-import sets
-
-jdcSet=sets.Set()
+from load import jdcSet 
 
 
 def EcritErreur(listeGena,ligne=None) :
@@ -55,10 +53,13 @@ def GenereErreurPourCommande(jdc,listeCommande) :
     commands= jdc.root.childNodes[:]
     commands.reverse()
     for c in commands:
-        jdcSet.add(c.name) 
-        for Mot in listeCommande :
-           if c.name != Mot :continue
-           EcritErreur((Mot,),c.lineno)
+        if type(listeCommande)==list: 
+            for Mot in listeCommande :
+               if c.name != Mot :continue
+               EcritErreur((Mot,),c.lineno)
+        else:
+            if c.name != listeCommande :continue
+            EcritErreur((listeCommande,),c.lineno)
 
 def GenereErreurMotCleInFact(jdc,command,fact,mocle):
     for c in jdc.root.childNodes:
@@ -106,4 +107,4 @@ def GenereErreurValeurDsMCF(jdc,command,fact,mocle,list_valeur):
                     for valeur in list_valeur:
                         trouve=texte.find(valeur)
                         if trouve > -1 :  
-                           logging.warning("%s doit etre supprimee ou modifiee dans %s : ligne %d",valeur,c.name,n.lineno)
+                            logging.warning("%s doit etre supprimee ou modifiee dans %s : ligne %d",valeur,c.name,n.lineno)

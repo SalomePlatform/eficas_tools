@@ -382,11 +382,10 @@ class JDCNode(QTreeWidgetItem):
         Ajoute un parametre a l'interieur du JDC :
         """
         self.editor.init_modif()
-        if after:
-            pos = 'after'
-        else:
-            pos = 'before'
-        return self.append_brother( PARAMETERS, pos )
+        if after: pos = 'after'
+        else: pos = 'before'
+        child=self.append_brother( PARAMETERS, pos )
+        return  child
     
     
     def select( self ):

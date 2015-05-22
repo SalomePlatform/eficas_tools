@@ -286,6 +286,7 @@ def tr_qt(string, *args):
     else:
         raise EficasException("ValueError: i18n.translation.tr_qt: \
                               Improper formatted string parameter set")
+#    print r
     return unicode(r)
 
 

@@ -1,30 +1,29 @@
-# -*- coding: iso-8859-1 -*-
-# Copyright (C) 2007-2013   EDF R&D
+# coding=utf-8
+# person_in_charge: mathieu.courtois at edf.fr
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2015  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
 #
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2.1 of the License.
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
 #
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
-#
-# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# ======================================================================
 
 """
-   Ce module contient la classe mixin PROC_ETAPE qui porte les méthodes
-   nécessaires pour réaliser la validation d'un objet de type PROC_ETAPE
-   dérivé de OBJECT.
+   Ce module contient la classe mixin PROC_ETAPE qui porte les mÃ©thodes
+   nÃ©cessaires pour rÃ©aliser la validation d'un objet de type PROC_ETAPE
+   dÃ©rivÃ© de OBJECT.
 
    Une classe mixin porte principalement des traitements et est
-   utilisée par héritage multiple pour composer les traitements.
+   utilisÃ©e par hÃ©ritage multiple pour composer les traitements.
 """
 # Modules EFICAS
 import V_ETAPE
@@ -34,38 +33,39 @@ from Noyau.strfunc import ufmt
 
 
 class PROC_ETAPE(V_ETAPE.ETAPE):
-   """
-      On réutilise les méthodes report,verif_regles
-      de ETAPE par héritage.
-   """
 
-   def isvalid(self,sd='oui',cr='non'):
-      """
-         Methode pour verifier la validité de l'objet PROC_ETAPE. Cette méthode
-         peut etre appelée selon plusieurs modes en fonction de la valeur
-         de sd et de cr (sd n'est pas utilisé).
+    """
+       On rÃ©utilise les mÃ©thodes report,verif_regles
+       de ETAPE par hÃ©ritage.
+    """
 
-         Si cr vaut oui elle crée en plus un compte-rendu.
+    def isvalid(self, sd='oui', cr='non'):
+        """
+           Methode pour verifier la validitÃ© de l'objet PROC_ETAPE. Cette mÃ©thode
+           peut etre appelÃ©e selon plusieurs modes en fonction de la valeur
+           de sd et de cr (sd n'est pas utilisÃ©).
 
-         Cette méthode a plusieurs fonctions :
+           Si cr vaut oui elle crÃ©e en plus un compte-rendu.
 
-          - retourner un indicateur de validité 0=non, 1=oui
+           Cette mÃ©thode a plusieurs fonctions :
 
-          - produire un compte-rendu : self.cr
+            - retourner un indicateur de validitÃ© 0=non, 1=oui
 
-          - propager l'éventuel changement d'état au parent
-      """
-      if CONTEXT.debug : print "ETAPE.isvalid ",self.nom
-      if self.state == 'unchanged' :
-        return self.valid
-      else:
-        valid=self.valid_child()
-        valid=valid * self.valid_regles(cr)
-        if self.reste_val != {}:
-          if cr == 'oui' :
-            self.cr.fatal(_(u"Mots clés inconnus : %s"), ','.join(self.reste_val.keys()))
-          valid=0
-        self.set_valid(valid)
-        return self.valid
+            - produire un compte-rendu : self.cr
 
-
+            - propager l'Ã©ventuel changement d'Ã©tat au parent
+        """
+        if CONTEXT.debug:
+            print "ETAPE.isvalid ", self.nom
+        if self.state == 'unchanged':
+            return self.valid
+        else:
+            valid = self.valid_child()
+            valid = valid * self.valid_regles(cr)
+            if self.reste_val != {}:
+                if cr == 'oui':
+                    self.cr.fatal(
+                        _(u"Mots clÃ©s inconnus : %s"), ','.join(self.reste_val.keys()))
+                valid = 0
+            self.set_valid(valid)
+            return self.valid

@@ -22,7 +22,7 @@ import logging
 import removemocle
 import inseremocle
 from parseur import lastparen
-from dictErreurs import jdcSet
+from load import jdcSet
 debug=0
 
 #-----------------------------------------------------
@@ -107,6 +107,7 @@ def moveMotCleFromFactToFact(jdc,oper,factsource,mocle,factcible):
               boolChange=1
               logging.info("Changement de place   %s ligne %s vers %s",n.name, n.lineno, cible.name)
     if boolChange : jdc.reset(jdc.getSource())
+    removemocle.removeMotCleInFact(jdc,oper,factsource,mocle)
 
 
 
@@ -240,6 +241,82 @@ def FusionMotCleToFact(jdc,command,liste_mc,factcible,defaut=0):
         for mc in liste_mc : 
            removemocle.removeMotCle(jdc,command,mc)
            jdc.reset(jdc.getSource())
+
+#-----------------------------------------------------
+def FusionMotCleInFact(jdc,command,fact,liste_mc,new_name,defaut=0):
+#-----------------------------------------------------
+    if command  not in jdcSet : return
+    boolChange=0
+    commands= jdc.root.childNodes[:]
+    commands.reverse()
+    for c in commands:
+        if c.name != command  : continue
+        list_val=[]
+        trouveUnMC=0
+        for mcF in c.childNodes:
+            if mcF.name != fact: continue
+            for ll in mcF.childNodes[:]:
+                for mc in ll.childNodes:
+                    if mc.name not in liste_mc : continue
+                    val=mc.getText(jdc).split("=")[1].split(",")[0]
+                    list_val.append(val)
+                    trouveUnMC=1
+                if trouveUnMC :
+                    TexteMC=new_name+"=("+",".join(list_val)+"),"
+                    inseremocle.insereMotCleDansFacteur(jdc,mcF,TexteMC)
+                    jdc.reset(jdc.getSource())
+                    boolChange=1
+    if boolChange :
+        jdc.reset(jdc.getSource())
+        for mc in liste_mc : 
+           removemocle.removeMotCleInFact(jdc,command,fact,mc)
+           jdc.reset(jdc.getSource())
+
+#-----------------------------------------------------
+def FusionMCFToMCF(jdc,command,liste_mcf,factcible,defaut=0):
+#-----------------------------------------------------
+    if command  not in jdcSet : return
+    boolChange=0
+    commands= jdc.root.childNodes[:]
+    commands.reverse()
+    for c in commands:
+        if c.name != command  : continue
+        list_val=[]
+        trouveUnMC=0
+        TexteMC=factcible+'=('
+        esp1=' '*len(TexteMC)
+        pp=0
+        for mcF in c.childNodes:
+            if mcF.name not in liste_mcf : continue
+            trouveUnMC=1
+            val=mcF.getText(jdc)
+            # esp=esp1+(inseremocle.chercheDebutFacteur(jdc,mcF)-len(mcF.name))*' '
+            esp=esp1+inseremocle.chercheAlignement(jdc,c)
+            # print len(esp)
+            for ll in mcF.childNodes[:]:
+                # if(pp>0): TexteMC+=esp
+                TexteMC+='_F('
+                for mc in ll.childNodes:
+                    val=mc.getText(jdc)
+                    TexteMC+=val+'\n   '+esp
+                    # if('#' in val.split('\n')[-1]): TexteMC+='\n'+esp+'  '
+                lastkey = ''.join(val.split('=')[-1].split(' '))
+                if((len(lastkey.split('(')) - len(lastkey.split(')'))) >= 0):
+                    TexteMC += '),\n'+esp
+            # TexteMC+='),'
+        TexteMC+='),'
+        # print TexteMC
+        if(trouveUnMC):
+            inseremocle.insereMotCle(jdc,c,TexteMC)
+            jdc.reset(jdc.getSource())
+            boolChange=1
+    if boolChange :
+        jdc.reset(jdc.getSource())
+        for mcF in liste_mcf : 
+            removemocle.removeMotCle(jdc,command,mcF)
+            jdc.reset(jdc.getSource())
+
+
 
 #--------------------------------------------------------------------
 def EclaMotCleToFact(jdc,command,motcle,mot1,mot2,defaut=0):

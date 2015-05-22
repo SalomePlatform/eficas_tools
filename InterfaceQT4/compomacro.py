@@ -29,6 +29,8 @@ from Extensions.i18n import tr
 import compooper
 import browser
 import typeNode
+from PyQt4.QtGui import QAction
+from PyQt4.QtCore import Qt, SIGNAL, QVariant
 
 
 class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):         
@@ -36,12 +38,23 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
       from   monMacroPanel import MonMacroPanel
       return MonMacroPanel (self,parent=self.editor )
     
-    def getPanel2(self):
-        from monWidgetCommande import MonWidgetCommande
-        return MonWidgetCommande(self,self.editor,self.item.object)
-
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
+      if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome:
+           self.ViewElt = QAction(tr('View3D'),self.tree)
+           self.tree.connect(self.ViewElt,SIGNAL("activated()"),self.view3D)
+           self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
+           self.menu.addAction(self.ViewElt)
+           if self.item.isvalid() :
+              self.ViewElt.setEnabled(1)
+           else:
+              self.ViewElt.setEnabled(0)
+
+    def view3D(self) :
+        from Editeur import TroisDPal
+        troisD=TroisDPal.TroisDPilote(self.item,self.editor.appliEficas)
+        troisD.envoievisu()
+
         
     #def doPaste(self,node_selected):
     #    print 'je suis la'

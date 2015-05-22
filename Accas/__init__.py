@@ -84,7 +84,7 @@ from Noyau.N_OPS import OPS, EMPTY_OPS
 from Noyau.N_ASSD import not_checked
 
 from A_VALIDATOR import OrVal,AndVal,OnlyStr
-from A_VALIDATOR import OrdList,NoRepeat,LongStr,Compulsory
+from A_VALIDATOR import OrdList,NoRepeat,LongStr,Compulsory,Absent,Together
 from A_VALIDATOR import RangeVal, EnumVal, TypeVal, PairVal
 from A_VALIDATOR import CardVal, InstanceVal
 from A_VALIDATOR import VerifTypeTuple, VerifExiste

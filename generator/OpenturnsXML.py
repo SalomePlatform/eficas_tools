@@ -95,7 +95,7 @@ class XMLGenerateur :
     data.setHessianDescription(  self.HessianDefinition()  )
     data.setFileList( self.FileList() )
     data.setParameters( self.Parameters() )
-    data.setFrameworkData( self.FrameworkData() )
+    #data.setFrameworkData( self.FrameworkData() )
     
     wrapper=openturns.WrapperFile()
     wrapper.setWrapperData( data )

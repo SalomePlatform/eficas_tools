@@ -398,6 +398,22 @@ class MCsousMCFcourantnaPasPourValeurDansListe(MCsousMCFcourantaPourValeurDansLi
         if bool : return 0
         return 1
   
+#-----------------------------------------
+class MCsousMCFnaPasPourValeurDansListe(MCsousMCFaPourValeurDansListe) :
+#-----------------------------------------
+    """
+    Non égalité du mot-clé simple à une valeur dans une liste 
+    sous le mot-clé facteur
+    """
+    def __init__(self, list_arg):
+        MCsousMCFaPourValeurDansListe.__init__(self, list_arg)
+        
+
+    def verif(self, commande):
+        bool = MCsousMCFaPourValeurDansListe.verif(self, commande)
+        if bool : return 0
+        return 1
+  
 #------------------------------
 class MCaPourValeur :
 #------------------------------
@@ -500,6 +516,7 @@ dictionnaire_regle = {"existe":existe,
                       "MCsousMCFcourantaPourValeur":MCsousMCFcourantaPourValeur,
                       "MCsousMCFcourantaPourValeurDansListe":MCsousMCFcourantaPourValeurDansListe,
                       "MCsousMCFcourantnaPasPourValeurDansListe":MCsousMCFcourantnaPasPourValeurDansListe,
+                      "MCsousMCFnaPasPourValeurDansListe":MCsousMCFnaPasPourValeurDansListe,
                       "MCaPourValeurDansListe":MCaPourValeurDansListe,
                       "MCnaPasPourValeurDansListe":MCnaPasPourValeurDansListe}
 

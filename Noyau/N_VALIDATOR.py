@@ -1,21 +1,21 @@
 # coding=utf-8
-# Copyright (C) 2007-2013   EDF R&D
+# person_in_charge: mathieu.courtois at edf.fr
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2015  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
 #
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2.1 of the License.
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
 #
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
-#
-# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
+# ======================================================================
 
 """
    Ce module contient toutes les classes necessaires pour
@@ -508,7 +508,6 @@ class ListVal(Valid):
 
 
 class Compulsory(ListVal):
-
     """
         Validateur operationnel
         Verification de la présence obligatoire d'un élément dans une liste
@@ -560,13 +559,110 @@ class Compulsory(ListVal):
         return _(u"La valeur n'est pas dans la liste des choix possibles")
 
 
-class NoRepeat(ListVal):
+class Together(ListVal):
+    """
+        Validateur operationnel
+        si un des éléments est présent les autres doivent aussi l'être
+    """
+    registry = {}
 
+    def __init__(self, elem=()):
+        if not is_sequence(elem):
+            elem = (elem,)
+        Valid.__init__(self, elem=elem)
+        self.elem = elem
+        self.cata_info = ""
+
+    def info(self):
+        return ufmt(_(u"%s présent ensemble"), `self.elem`)
+
+    def default(self, valeur, elem):
+        return valeur
+
+    def verif_item(self, valeur):
+        return 1
+
+    def convert(self, valeur):
+        elem = list(self.elem)
+        for val in valeur:
+            v = self.adapt(val)
+            if v in elem: elem.remove(v)
+        if ( len(elem) == 0 ): return valeur
+        if len(elem) != len(list(self.elem)) :
+            raise ValError( ufmt(_(u"%s ne contient pas les éléments devant être présent ensemble: %s "), valeur, elem))
+        return valeur
+
+    def has_into(self):
+        return 1
+
+    def verif(self, valeur):
+        if not is_sequence(valeur):
+            liste = list(valeur)
+        else:
+            liste = valeur
+        compte = 0
+        for val in self.elem:
+            if val in liste: compte += 1
+        if ( compte == 0 ): return 1
+        if ( compte != len( list(self.elem) ) ): return 0
+        return 1
+
+    def info_erreur_item(self):
+        return _(u"La valeur n'est pas dans la liste des choix possibles")
+
+
+class Absent(ListVal):
+    """
+        Validateur operationnel
+        si un des éléments est présent non valide
+    """
+    registry = {}
+
+    def __init__(self, elem=()):
+        if not is_sequence(elem):
+            elem = (elem,)
+        Valid.__init__(self, elem=elem)
+        self.elem = elem
+        self.cata_info = ""
+
+    def info(self):
+        return ufmt(_(u"%s absent"), `self.elem`)
+
+    def default(self, valeur, elem):
+        return valeur
+
+    def verif_item(self, valeur):
+        return 1
+
+    def convert(self, valeur):
+        elem = list(self.elem)
+        for val in valeur:
+            v = self.adapt(val)
+            if v in elem:
+                raise ValError( ufmt(_(u"%s n'est pas autorisé : %s "), v, elem))
+        return valeur
+
+    def has_into(self):
+        return 1
+
+    def verif(self, valeur):
+        if not is_sequence(valeur):
+            liste = list(valeur)
+        else:
+            liste = valeur
+        for val in self.elem:
+            if val in liste: return 0
+        return 1
+
+    def info_erreur_item(self):
+        return _(u"La valeur n'est pas dans la liste des choix possibles")
+
+
+class NoRepeat(ListVal):
     """
         Validateur operationnel
         Verification d'absence de doublons dans la liste.
     """
-
     def __init__(self):
         Valid.__init__(self)
         self.cata_info = ""
@@ -1347,7 +1443,6 @@ class FunctionVal(Valid):
         return self.function.info
 
     def verif(self, valeur):
-#PNPN --> a corriger evtl voir verif_item
         return self.function(valeur)
 
     def verif_item(self, valeur):
@@ -1607,7 +1702,7 @@ class FileExtVal(RegExpVal):
         self.ext = ext
         self.errormsg = u'"%%(value)s" n\'est pas un nom de fichier %(ext)s valide' % {
             "ext": ext}
-        RegExpVal.__init__(self, "^[\S]+\.%s$" % self.ext)
+        RegExpVal.__init__(self, "^[\w\-]+\.%s$" % self.ext)
 
     def info(self):
         return u'Un nom de fichier se terminant par ".%s" est attendu.' % self.ext

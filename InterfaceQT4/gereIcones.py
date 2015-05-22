@@ -129,22 +129,23 @@ class FacultatifOuOptionnel:
       #print " c est le moment de gerer le passage au suivant"
       if not(hasattr (self,'RBValide')) : return
       icon = QIcon()
+      repIcon=os.path.join(os.path.abspath(os.path.dirname(__file__)),'../Editeur/icons')
       if self.node.item.object.isvalid() : 
-         icon=QIcon(self.repIcon+"/ast-green-ball.png")
+         icon=QIcon(repIcon+"/ast-green-ball.png")
       else :
-         icon=QIcon(self.repIcon+"/ast-red-ball.png")
+         icon=QIcon(repIcon+"/ast-red-ball.png")
       self.RBValide.setIcon(icon)
 
   # il faut chercher la bonne fenetre
   def rendVisible(self):
-      print "je passe par rendVisible de FacultatifOuOptionnel"
-      print self
-      print self.node.fenetre
-      print "return pour etre sure"
+      #print "je passe par rendVisible de FacultatifOuOptionnel"
+      #print self
+      #print self.node.fenetre
+      #print "return pour etre sure"
       return
       #PNPN
       newNode=self.node.treeParent.chercheNoeudCorrespondant(self.node.item.object)
-      print newNode
+      #print newNode
       self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(newNode.fenetre)
       #newNode.fenetre.setFocus()
 

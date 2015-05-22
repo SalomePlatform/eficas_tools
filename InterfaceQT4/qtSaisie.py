@@ -113,4 +113,30 @@ class SaisieValeur:
 
         return listeValeurs,1
 
+class SaisieSDCO :
 
+  def LESDCOReturnPressed(self):
+        """
+           Lit le nom donné par l'utilisateur au concept de type CO qui doit être
+           la valeur du MCS courant et stocke cette valeur
+        """
+        self.editor.init_modif()
+        anc_val = self.node.item.get_valeur()
+        if anc_val != None:
+          # il faut egalement propager la destruction de l'ancien concept
+          self.node.item.delete_valeur_co(valeur=anc_val)
+          # et on force le recalcul des concepts de sortie de l'etape
+          self.node.item.object.etape.get_type_produit(force=1)
+          # et le recalcul du contexte
+          self.node.item.object.etape.parent.reset_context()
+        nomConcept = str(self.LESDCO.text())
+        if nomConcept == "" : return
+
+        test,commentaire=self.node.item.set_valeur_co(nomConcept)
+        if test:
+           commentaire=tr("Valeur du mot-clef enregistree")
+           self.node.update_node_valid()
+        else :
+           cr = self.node.item.get_cr()
+           commentaire = tr("Valeur du mot-clef non autorisee :")+cr.get_mess_fatal()
+                                                                                         

@@ -23,6 +23,8 @@ import re
 import parseur
 from mocles import parseKeywords
 
+import sets
+jdcSet=sets.Set()
 
 
 class JDCTrad:
@@ -32,6 +34,10 @@ class JDCTrad:
     #----------------------------------------
         self.atraiter=atraiter
         self.init(src,atraiter)
+        commands= self.root.childNodes[:]
+        commands.reverse()
+        for c in commands:
+            jdcSet.add(c.name)
 
     def init(self,src,atraiter):
     #---------------------------

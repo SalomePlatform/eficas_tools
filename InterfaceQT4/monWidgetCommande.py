@@ -51,7 +51,6 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
       maPolice= QFont("Times", 10,)
       self.setFont(maPolice)
-      self.repIcon=self.appliEficas.repIcon
       self.labelNomCommande.setText(tr(self.obj.nom))
 
       self.commandesLayout.addStretch()
@@ -90,8 +89,8 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   def donnePremier(self):
       #print "dans donnePremier"
       qApp.processEvents()
-      self.listeAffichageWidget[0].setFocus(7)
-      #print self.listeAffichageWidget 
+      if self.listeAffichageWidget != [] :
+         self.listeAffichageWidget[0].setFocus(7)
       qApp.processEvents()
       #print self.focusWidget()
 

@@ -43,7 +43,9 @@ class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
         typeNode.PopUpMenuRacine.createPopUpMenu(self)
 
     def addParameters(self,apres):
-        self.append_child("PARAMETRE",pos=0)
+        param=self.append_child("PARAMETRE",pos=0)
+        return param
+       
 
 
 class JDCTreeItem(Objecttreeitem.ObjectTreeItem):

@@ -19,7 +19,7 @@
 #
 import logging
 from parseur import FactNode
-from dictErreurs import jdcSet
+from load import jdcSet 
 from dictErreurs import EcritErreur
 import string
 import regles
@@ -85,71 +85,59 @@ def insereMotCleDansFacteur(jdc,facteur,texte):
     texte=texte+"\n"
   
     ligneaCouper=facteur.lineno
-    trouve=0
-    trouveF=0
-    trouveP=0
     while ligneaCouper < facteur.endline + 1 :
-       indiceDeCoupe=0
-       while  ancien.find("_F") > 0 :
-          longueur=len(ancien)
-          indice=ancien.find("_F")
-          indiceParcours=0
-          # pour ne pas tenir compte des autres noms 
-          # Attention si 2 MCF sur la meme ligne (la 1ere)
-          if trouveF == 0 :
-            if ((ligneaCouper!=facteur.lineno) or ((ancien.find(facteur.name) < indice ) or (ancien.find(facteur.name) < 0))) :
-               trouveF=1
-               indiceParcours=indice + 2
-          # attention pour regler DEFI_FONCTION .. 
-            else :
-               indiceDeCoupe=indiceDeCoupe+indice+2
-               ancien=ancien[indice +2:]
-               continue
+        trouve=0
+        trouveF=0
+        trouveP=0
+        indiceDeCoupe=0
+        while  ancien.find("_F") > 0 :
+            longueur=len(ancien)
+            indice=ancien.find("_F")
+            indiceParcours=0
+            # pour ne pas tenir compte des autres noms 
+            # Attention si 2 MCF sur la meme ligne (la 1ere)
+            if trouveF == 0 :
+                if ((ligneaCouper!=facteur.lineno) or ((ancien.find(facteur.name) < indice ) or (ancien.find(facteur.name) < 0))) :
+                   trouveF=1
+                   indiceParcours=indice + 2
+            # attention pour regler DEFI_FONCTION .. 
+                else :
+                   indiceDeCoupe=indiceDeCoupe+indice+2
+                   ancien=ancien[indice +2:]
+                   continue
+            if trouveF == 1 :
+                indiceDeCoupe=indiceDeCoupe+indice
+    #            print "indice de Parcours" ,indiceParcours
+    #            print ancien[indiceParcours] 
+    #            print ancien[indiceParcours+1] 
+    #            print ancien[indiceParcours+2] 
+                while  indiceParcours < longueur :
+                    if ancien[indiceParcours] == "(" :
+                        trouveP=1
+    #                    print "trouve"
+                        break
+                    if ancien[indiceParcours] != " " :
+                        trouveP=0
+    #                    print "mouv"
+                        break
+                    indiceParcours = indiceParcours+1
+            trouve = trouveP * trouveF
+            if trouve : break
+            ancien=ancien[indice+1:]
+        if trouve :
+            debut=indiceDeCoupe + 3
+            if(jdc.getLine(ligneaCouper)[debut:]!="\n"):
+                jdc.splitLine(ligneaCouper,debut)
+            jdc.addLine(texte,ligneaCouper)
+            jdc.joinLineandNext(ligneaCouper)
+            logging.info("Insertion de %s ligne %d", texteinfo,ligneaCouper)
 
-          if trouveF == 1 :
-             indiceDeCoupe=indiceDeCoupe+indice
-    #         print "indice de Parcours" ,indiceParcours
-    #         print ancien[indiceParcours] 
-    #         print ancien[indiceParcours+1] 
-    #         print ancien[indiceParcours+2] 
-             while  indiceParcours < longueur :
-               if ancien[indiceParcours] == "(" :
-                trouveP=1
-    #            print "trouve"
-                break
-               if ancien[indiceParcours] != " " :
-                trouveP=0
-    #            print "mouv"
-                break
-               indiceParcours = indiceParcours+1
-          trouve = trouveP * trouveF
-          if trouve : break
-          ancien=ancien[indice+1:]
-          
-       trouve = trouveP * trouveF
-       if trouve : break
-       ligneaCouper=ligneaCouper+1
-       ancien=jdc.getLine(ligneaCouper)
-         
-    if trouve :
-       debut=indiceDeCoupe + 3
-       jdc.splitLine(ligneaCouper,debut)
-    else :
-       print "Le traducteur ne sait pas faire"
-       assert 0
+            # Gestion du cas particulier du mot clef facteur vide
+            if facteur.childNodes == []:
+                jdc.joinLineandNext(facteur.lineno)
 
-    # enleve les blancs en debut de texte
-    i = 0
-    while i < len(texte) :
-      if texte[i] != " " : break
-      i = i +1
-
-    jdc.addLine(texte,ligneaCouper)
-    jdc.joinLineandNext(ligneaCouper)
-    logging.info("Insertion de %s ligne %d", texteinfo,ligneaCouper)
-    # Gestion du cas particulier du mot clef facteur vide
-    if facteur.childNodes == []:
-       jdc.joinLineandNext(facteur.lineno)
+        ligneaCouper=ligneaCouper+1
+        ancien=jdc.getLine(ligneaCouper)
 
 
 #-----------------------------------
@@ -257,12 +245,10 @@ def AjouteMotClefDansFacteur(jdc,commande,fact,nouveau,ensemble=regles.SansRegle
     for c in commands:
         if c.name != commande : continue
         for mcF in c.childNodes:
-          if mcF.name != fact : continue
-          if ensemble.verif(c) == 0 : continue
-          l=mcF.childNodes[:]
-          l.reverse()
-          boolChange=1
-          insereMotCleDansFacteur(jdc,mcF,texte)
+            if mcF.name != fact : continue
+            if ensemble.verif(c) == 0 : continue
+            boolChange=1
+            insereMotCleDansFacteur(jdc,mcF,texte)
     if boolChange : jdc.reset(jdc.getSource())
 
 #-------------------------------------------------------------------------------------------

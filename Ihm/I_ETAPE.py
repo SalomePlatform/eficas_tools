@@ -410,6 +410,8 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       # enregistre dans le jdc (pas ajoute dans jdc.etapes)
       parent=self.parent
       pos=self.parent.etapes.index(self)
+      # on ajoute une fin à la commande pour pouvoir en commenter 2
+      texte_commande+='\nFin Commentaire'
       commande_comment = commande_comm.COMMANDE_COMM(texte=texte_commande,
                                                      reg='non',
                                                      parent=parent)

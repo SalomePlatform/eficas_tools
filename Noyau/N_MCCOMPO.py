@@ -104,10 +104,11 @@ class MCCOMPO(N_OBJECT.OBJECT):
         # args ne contient plus que des mots-clés qui n'ont pas été attribués car ils sont
         #      à attribuer à des blocs du niveau inférieur ou bien sont des mots-clés erronés
         for k, v in self.definition.entites.items():
-            if v.label != 'BLOC': continue
-
+            if v.label != 'BLOC':
+                continue
             # condition and a or b  : Equivalent de l'expression :  condition ?
             # a : b du langage C
+
             #PNPN on recalcule dico_valeurs dans le for
             # pour les globaux imbriques (exple Telemac Advection)
             # avant le calcul etait avant le for

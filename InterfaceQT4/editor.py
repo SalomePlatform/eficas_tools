@@ -36,7 +36,7 @@ from Editeur        import comploader
 from Editeur        import Objecttreeitem
 from desBaseWidget  import Ui_baseWidget
 from monViewTexte   import ViewText 
-from monWidgetParam import MonWidgetParam 
+from monWidgetCreeParam import MonWidgetCreeParam 
 import browser
 import readercata
 
@@ -395,7 +395,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #-----------------------#
     def gestionParam(self):
     #-----------------------#
-        w = MonWidgetParam( self)
+        w = MonWidgetCreeParam( self)
         w.show()
 
     #-----------------------#
@@ -1200,8 +1200,8 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #---------------------------#
     def _newTELEMAC(self):
     #---------------------------#
-        #texte="INITIALIZATION();INITIAL_STATE();BOUNDARY_CONDITIONS();NUMERICAL_PARAMETERS();PHYSICAL_PARAMETERS()"
-        texte=""
+        texte="INITIALIZATION();INITIAL_STATE();BOUNDARY_CONDITIONS();NUMERICAL_PARAMETERS();PHYSICAL_PARAMETERS()"
+        #texte=""
         return texte
 
     #---------------------------#
