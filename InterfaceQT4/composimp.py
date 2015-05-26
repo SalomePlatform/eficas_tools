@@ -130,7 +130,12 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
       # Attention l ordre des if est important
       # Attention il faut gerer les blocs et les facteurs 
       # a gerer comme dans composimp
-      # Gerer les matrices --> Actuellement pas dans ce type de panneau
+      # Gestion des matrices
+        if self.item.wait_matrice ():
+	  from monWidgetMatrice import MonWidgetMatrice
+          widget=MonWidgetMatrice(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+          self.widget=widget
+          return widget
 
         #print "____________________________", monNom, self.item.wait_co() 
         #print "____________________________", monNom, self.item.wait_assd() 

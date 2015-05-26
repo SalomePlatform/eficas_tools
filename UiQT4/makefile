@@ -11,7 +11,8 @@ PY_FILES = desSelectVal.py desViewTexte.py  desChoixCommandes.py desWidgetComman
         desChoixCata.py desWidgetPlusieursInto.py desWidgetPlusieursIntoOrdonne.py desBaseWidget.py desWidgetOptionnel.py \
         desWidgetSimpFichier.py desWidgetSimpTxt.py desRecherche.py desWidgetCommentaire.py\
 	desWidgetTuple2.py desWidgetTuple3.py desWidgetCreeParam.py desWidgetParam.py desWidgetHeure.py desWidgetDate.py\
-        desWidgetVide.py desWidgetInformation.py desVisu.py desSelectVal.py desWidgetUniqueSDCO.py desWidgetSDCOInto.py
+        desWidgetVide.py desWidgetInformation.py desVisu.py desSelectVal.py desWidgetUniqueSDCO.py desWidgetSDCOInto.py\
+        desWidgetMatrice.py
 
 
 QM_FILES=eficas_en.qm 
