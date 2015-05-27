@@ -1704,7 +1704,9 @@ class FileExtVal(RegExpVal):
             "ext": ext}
         #RegExpVal.__init__(self, "^[\w\-]+\.%s$" % self.ext)
         #PNPN Modif pour Adao
-        RegExpVal.__init__(self, "^[\S]+\.%s$" % self.ext
+        #RegExpVal.__init__(self, "^[\S]+\.%s$" % self.ext
+        RegExpVal.__init__(self, "^\S+\.%s$" % self.ext)
+
 
     def info(self):
         return u'Un nom de fichier se terminant par ".%s" est attendu.' % self.ext
