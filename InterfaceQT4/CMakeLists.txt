@@ -20,7 +20,7 @@
 # ======================================================================
 
 # Installation de tous les fichiers Python du repertoire et des sous-repertoires (sauf CVS)
-install ( FILES browser.py compobase.py compobloc.py compocommandecomm.py compocomm.py
+install ( FILES browser.py compobloc.py compocommandecomm.py compocomm.py
                 compoerror.py compofact.py compoformule.py compojdc.py compomacro.py
                 compomclist.py componiveau.py componuplet.py compooper.py compoparam.py
                 compoproc.py composimp.py editor.py eficas_go.py
