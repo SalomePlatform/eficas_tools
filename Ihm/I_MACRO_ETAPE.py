@@ -77,7 +77,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          ou leve une exception
          --> utilisee par ops.POURSUITE et INCLUDE
     """
-    print "get_contexte_jdc",self,self.nom
+    #print "get_contexte_jdc",self,self.nom
     # On recupere l'etape courante
     step=CONTEXT.get_current_step()
     try:
@@ -160,7 +160,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # Erreurs dans l'INCLUDE. On garde la memoire du fichier 
        # mais on n'insere pas les concepts
        # On retablit l'etape courante step
-       print j.cr
+       #print j.cr
        #print j.isvalid()
        CONTEXT.unset_current_step()
        CONTEXT.set_current_step(step)
