@@ -46,7 +46,7 @@ install ( FILES generator_map.py
         )
 
 # Installation des fichiers : CARMEL
-install ( FILES generator_CARMEL3D_frequentiel.py generator_CARMELCND.py generator_CARMELCS.py
+install ( FILES generator_CARMEL3D_frequentiel.py generator_CARMELCND.py generator_CARMELCS.py generator_CARMEL3D_temporel.py
           DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
         )
 

@@ -21,8 +21,9 @@
 
 
 install ( FILES 
-            qtEficas_Carmel3D.py prefs_CARMEL3D.py prefs.py configuration_CARMEL3D.py
-	    Carmel3D_Cata_frequentiel_V0.py opsCarmel.py ajoutGroupe.py
+            ajoutGroupe.py Carmel3D_Cata_frequentiel_V1.py Carmel3D_Cata_temporel_V0.py
+            configuration_CARMEL3D.py opsCarmel.py prefs_CARMEL3D.py
+            prefs.py properties.py qtEficas_Carmel3D.py
 	   DESTINATION ${CMAKE_INSTALL_PREFIX}/Carmel3D
         )
 
