@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 import os,traceback,string
+import re
 
 from Noyau.N_CR import CR
 from Noyau.N_Exception import AsException
@@ -177,6 +178,8 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         try:
             # on essaie de créer un objet JDC...
             CONTEXT.unset_current_step()
+            if re.search('Fin Commentaire',self.valeur) :
+               self.valeur=self.valeur.replace('Fin Commentaire','')
             J=self.jdc.__class__(procedure=self.valeur,
                                  definition=self.jdc.definition,
                                  cata=self.jdc.cata,
