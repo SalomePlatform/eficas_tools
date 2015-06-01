@@ -124,6 +124,7 @@ class OBJECT:
          Retourne la chaine d'aide contenue dans le catalogue
          en tenant compte de la langue
      """
+     if self.jdc.code=='ASTER' : return self.definition.fr
      try :
         return getattr(self.definition,self.jdc.lang)
      except:
