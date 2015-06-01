@@ -4,10 +4,7 @@ AIR=MATERIAL(TYPE='DIELECTRIC',
                              ISOTROPIC='TRUE',
                              LAW='LINEAR',
                              VALUE=1,),
-             PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                             ISOTROPIC='TRUE',
-                             LAW='LINEAR',
-                             VALUE=1,),);
+             Utiliser_la_permittivite='NON',);
 
 ALU=MATERIAL(TYPE='CONDUCTOR',
              PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -17,7 +14,8 @@ ALU=MATERIAL(TYPE='CONDUCTOR',
              CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                              ISOTROPIC='TRUE',
                              LAW='LINEAR',
-                             VALUE=Decimal('3.448E+7'),),);
+                             VALUE=Decimal('3.448E+7'),),
+             Utiliser_la_permittivite='NON',);
 
 ACIER_NOIR=MATERIAL(TYPE='CONDUCTOR',
                     PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -27,7 +25,8 @@ ACIER_NOIR=MATERIAL(TYPE='CONDUCTOR',
                     CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                                     ISOTROPIC='TRUE',
                                     LAW='LINEAR',
-                                    VALUE=Decimal('6.00000E+6'),),);
+                                    VALUE=Decimal('6.00000E+6'),),
+                    Utiliser_la_permittivite='NON',);
 
 ACIER_CIMBLOT=MATERIAL(TYPE='CONDUCTOR',
                        PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -37,7 +36,8 @@ ACIER_CIMBLOT=MATERIAL(TYPE='CONDUCTOR',
                        CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                                        ISOTROPIC='TRUE',
                                        LAW='LINEAR',
-                                       VALUE=Decimal('3.00000E+6'),),);
+                                       VALUE=Decimal('3.00000E+6'),),
+                       Utiliser_la_permittivite='NON',);
 
 ACIER_PE=MATERIAL(TYPE='CONDUCTOR',
                   PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -47,7 +47,8 @@ ACIER_PE=MATERIAL(TYPE='CONDUCTOR',
                   CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                                   ISOTROPIC='TRUE',
                                   LAW='LINEAR',
-                                  VALUE=Decimal('1.75000E+6'),),);
+                                  VALUE=Decimal('1.75000E+6'),),
+                  Utiliser_la_permittivite='NON',);
 
 ACIER_TEAM13_mesures=MATERIAL(TYPE='DIELECTRIC',
                               PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -57,30 +58,37 @@ ACIER_TEAM13_mesures=MATERIAL(TYPE='DIELECTRIC',
                                               NATURE='SPLINE',
                                               FILENAME='ACIER_TEAM13',
                                               APPLIEDTO='B(H)&H(B)',),
-                              PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                                              ISOTROPIC='TRUE',
-                                              LAW='LINEAR',
-                                              VALUE=('RI',1,0,),),);
+                              Utiliser_la_permittivite='NON',);
+
+ACIER_TEAM13_MarroccoEtSaturation=MATERIAL(TYPE='DIELECTRIC',
+                                           PERMEABILITY=_F(HOMOGENEOUS='TRUE',
+                                                           ISOTROPIC='TRUE',
+                                                           LAW='NONLINEAR',
+                                                           VALUE=2376,
+                                                           NATURE='MARROCCO+SATURATION',
+                                                           ALPHA=9.98,
+                                                           TAU=106000.0,
+                                                           C=0.0119,
+                                                           EPSILON=0.000467,
+                                                           BMAX=1.85,
+                                                           HSAT=47732.7,
+                                                           BSAT=2.22,
+                                                           JOIN='PARABOLIC',
+                                                           APPLIEDTO='B(H)&H(B)',),
+                                           Utiliser_la_permittivite='NON',);
 
 ACIER_TEAM13_Marrocco=MATERIAL(TYPE='DIELECTRIC',
                                PERMEABILITY=_F(HOMOGENEOUS='TRUE',
                                                ISOTROPIC='TRUE',
                                                LAW='NONLINEAR',
                                                VALUE=2376,
-                                               NATURE='MARROCCO+SATURATION',
+                                               NATURE='MARROCCO',
                                                ALPHA=9.98,
                                                TAU=106000.0,
                                                C=0.0119,
                                                EPSILON=0.000467,
-                                               BMAX=1.85,
-                                               HSAT=47732.7,
-                                               BSAT=2.22,
-                                               JOIN='PARABOLIC',
                                                APPLIEDTO='B(H)&H(B)',),
-                               PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                                               ISOTROPIC='TRUE',
-                                               LAW='LINEAR',
-                                               VALUE=('RI',1,0,),),);
+                               Utiliser_la_permittivite='NON',);
 
 BRONZE=MATERIAL(TYPE='CONDUCTOR',
                 PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -90,7 +98,8 @@ BRONZE=MATERIAL(TYPE='CONDUCTOR',
                 CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                                 ISOTROPIC='TRUE',
                                 LAW='LINEAR',
-                                VALUE=Decimal('1.00000E+6'),),);
+                                VALUE=Decimal('1.00000E+6'),),
+                Utiliser_la_permittivite='NON',);
 
 CUIVRE=MATERIAL(TYPE='CONDUCTOR',
                 PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -100,7 +109,8 @@ CUIVRE=MATERIAL(TYPE='CONDUCTOR',
                 CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                                 ISOTROPIC='TRUE',
                                 LAW='LINEAR',
-                                VALUE=Decimal('5.85E+7'),),);
+                                VALUE=Decimal('5.85E+7'),),
+                Utiliser_la_permittivite='NON',);
 
 E24=MATERIAL(TYPE='DIELECTRIC',
              PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -110,10 +120,7 @@ E24=MATERIAL(TYPE='DIELECTRIC',
                              NATURE='SPLINE',
                              FILENAME='E24',
                              APPLIEDTO='B(H)&H(B)',),
-             PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                             ISOTROPIC='TRUE',
-                             LAW='LINEAR',
-                             VALUE=Decimal('1.0'),),);
+             Utiliser_la_permittivite='NON',);
 
 HA600=MATERIAL(TYPE='DIELECTRIC',
                PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -123,10 +130,7 @@ HA600=MATERIAL(TYPE='DIELECTRIC',
                                NATURE='SPLINE',
                                FILENAME='HA600',
                                APPLIEDTO='B(H)&H(B)',),
-               PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                               ISOTROPIC='TRUE',
-                               LAW='LINEAR',
-                               VALUE=Decimal('1.0'),),);
+               Utiliser_la_permittivite='NON',);
 
 INCONEL600=MATERIAL(TYPE='CONDUCTOR',
                     PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -136,17 +140,15 @@ INCONEL600=MATERIAL(TYPE='CONDUCTOR',
                     CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                                     ISOTROPIC='TRUE',
                                     LAW='LINEAR',
-                                    VALUE=Decimal('9.7000E+5'),),);
+                                    VALUE=Decimal('9.7000E+5'),),
+                    Utiliser_la_permittivite='NON',);
 
 FERRITEB30=MATERIAL(TYPE='DIELECTRIC',
                     PERMEABILITY=_F(HOMOGENEOUS='TRUE',
                                     ISOTROPIC='TRUE',
                                     LAW='LINEAR',
                                     VALUE=Decimal('1.10E+3'),),
-                    PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                                    ISOTROPIC='TRUE',
-                                    LAW='LINEAR',
-                                    VALUE=1.0,),);
+                    Utiliser_la_permittivite='NON',);
 
 FERRITE_Ni_Zn=MATERIAL(TYPE='CONDUCTOR',
                        PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -156,7 +158,8 @@ FERRITE_Ni_Zn=MATERIAL(TYPE='CONDUCTOR',
                        CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                                        ISOTROPIC='TRUE',
                                        LAW='LINEAR',
-                                       VALUE=Decimal('0.0000010000'),),);
+                                       VALUE=Decimal('0.0000010000'),),
+                       Utiliser_la_permittivite='NON',);
 
 FERRITE_Mn_Zn=MATERIAL(TYPE='CONDUCTOR',
                        PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -166,7 +169,8 @@ FERRITE_Mn_Zn=MATERIAL(TYPE='CONDUCTOR',
                        CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                                        ISOTROPIC='TRUE',
                                        LAW='LINEAR',
-                                       VALUE=Decimal('10'),),);
+                                       VALUE=Decimal('10'),),
+                       Utiliser_la_permittivite='NON',);
 
 FEV470=MATERIAL(TYPE='DIELECTRIC',
                 PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -176,10 +180,7 @@ FEV470=MATERIAL(TYPE='DIELECTRIC',
                                 NATURE='SPLINE',
                                 FILENAME='FEV470',
                                 APPLIEDTO='B(H)&H(B)',),
-                PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                                ISOTROPIC='TRUE',
-                                LAW='LINEAR',
-                                VALUE=Decimal('1.0'),),);
+                Utiliser_la_permittivite='NON',);
 
 FEV600=MATERIAL(TYPE='DIELECTRIC',
                 PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -189,10 +190,7 @@ FEV600=MATERIAL(TYPE='DIELECTRIC',
                                 NATURE='SPLINE',
                                 FILENAME='FEV600',
                                 APPLIEDTO='B(H)&H(B)',),
-                PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                                ISOTROPIC='TRUE',
-                                LAW='LINEAR',
-                                VALUE=Decimal('1.0'),),);
+                Utiliser_la_permittivite='NON',);
 
 FEV800=MATERIAL(TYPE='DIELECTRIC',
                 PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -202,10 +200,7 @@ FEV800=MATERIAL(TYPE='DIELECTRIC',
                                 NATURE='SPLINE',
                                 FILENAME='FEV800',
                                 APPLIEDTO='B(H)&H(B)',),
-                PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                                ISOTROPIC='TRUE',
-                                LAW='LINEAR',
-                                VALUE=Decimal('1.0'),),);
+                Utiliser_la_permittivite='NON',);
 
 FEV1000=MATERIAL(TYPE='DIELECTRIC',
                  PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -215,10 +210,7 @@ FEV1000=MATERIAL(TYPE='DIELECTRIC',
                                  NATURE='SPLINE',
                                  FILENAME='FEV1000',
                                  APPLIEDTO='B(H)&H(B)',),
-                 PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                                 ISOTROPIC='TRUE',
-                                 LAW='LINEAR',
-                                 VALUE=Decimal('1.0'),),);
+                 Utiliser_la_permittivite='NON',);
 
 M600_65=MATERIAL(TYPE='DIELECTRIC',
                  PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -228,14 +220,12 @@ M600_65=MATERIAL(TYPE='DIELECTRIC',
                                  NATURE='SPLINE',
                                  FILENAME='M600_65',
                                  APPLIEDTO='B(H)&H(B)',),
-                 PERMITTIVITY=_F(HOMOGENEOUS='TRUE',
-                                 ISOTROPIC='TRUE',
-                                 LAW='LINEAR',
-                                 VALUE=Decimal('1.0'),),);
+                 Utiliser_la_permittivite='NON',);
 
-#M6X=MATERIAL(TYPE='EM_ANISOTROPIC',
-#             PERMEABILITY_File='M6X_mu.mater',
-#             CONDUCTIVITY_File='M6X_sigma.mater',);
+M6X=MATERIAL(TYPE='EM_ANISOTROPIC',
+             PERMEABILITY_File='M6X_mu.mater',
+             CONDUCTIVITY_File='M6X_sigma.mater',
+             Utiliser_la_permittivite='NON',);
 
 M6X2ISO1=MATERIAL(TYPE='CONDUCTOR',
                   PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -248,15 +238,18 @@ M6X2ISO1=MATERIAL(TYPE='CONDUCTOR',
                   CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                                   ISOTROPIC='TRUE',
                                   LAW='LINEAR',
-                                  VALUE=Decimal('1.724E+6'),),);
+                                  VALUE=Decimal('1.724E+6'),),
+                  Utiliser_la_permittivite='NON',);
 
-#M6X_LINEAIRE=MATERIAL(TYPE='EM_ANISOTROPIC',
-#                      PERMEABILITY_File='M6X_lineaire_mu.mater',
-#                      CONDUCTIVITY_File='M6X_lineaire_sigma.mater',);
+M6X_LINEAIRE=MATERIAL(TYPE='EM_ANISOTROPIC',
+                      PERMEABILITY_File='M6X_lineaire_mu.mater',
+                      CONDUCTIVITY_File='M6X_lineaire_sigma.mater',
+                      Utiliser_la_permittivite='NON',);
 
-#M6X_HOMOGENE=MATERIAL(TYPE='EM_ANISOTROPIC',
-#                      PERMEABILITY_File='M6X_homogene_mu.mater',
-#                      CONDUCTIVITY_File='M6X_homogene_sigma.mater',);
+M6X_HOMOGENE=MATERIAL(TYPE='EM_ANISOTROPIC',
+                      PERMEABILITY_File='M6X_homogene_mu.mater',
+                      CONDUCTIVITY_File='M6X_homogene_sigma.mater',
+                      Utiliser_la_permittivite='NON',);
 
 POTASSE=MATERIAL(TYPE='CONDUCTOR',
                  PERMEABILITY=_F(HOMOGENEOUS='TRUE',
@@ -266,5 +259,6 @@ POTASSE=MATERIAL(TYPE='CONDUCTOR',
                  CONDUCTIVITY=_F(HOMOGENEOUS='TRUE',
                                  ISOTROPIC='TRUE',
                                  LAW='LINEAR',
-                                 VALUE=Decimal('71.43'),),);
-#CHECKSUM:614994a51cd56f24959331e5ef1c7a98  -:FIN CHECKSUM
+                                 VALUE=Decimal('71.43'),),
+                 Utiliser_la_permittivite='NON',);
+#CHECKSUM:489783a627b43f830fd82d55a50555f2  -:FIN CHECKSUM
