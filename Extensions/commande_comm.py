@@ -125,6 +125,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         """
         Retourne l'attribut fr de self.definition
         """
+        if self.jdc.code=='ASTER' : return self.definition.fr
         try :
           return getattr(self.definition,self.jdc.lang)
         except:

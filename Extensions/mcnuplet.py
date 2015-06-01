@@ -195,6 +195,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
      """
         Retourne le texte d'aide dans la langue choisie
      """
+     if self.jdc.code=='ASTER' : return self.definition.fr
      try :
         return getattr(self.definition,self.jdc.lang)
      except:
