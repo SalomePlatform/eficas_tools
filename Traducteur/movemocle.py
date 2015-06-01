@@ -19,10 +19,10 @@
 #
 
 import logging
-import removemocle
-import inseremocle
-from parseur import lastparen
-from load import jdcSet
+from Traducteur import removemocle
+from Traducteur import inseremocle
+from Traducteur.parseur import lastparen
+from Traducteur.load import jdcSet
 debug=0
 
 #-----------------------------------------------------

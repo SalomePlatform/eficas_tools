@@ -17,13 +17,13 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-from utils import lineToDict
+from Traducteur.utils import lineToDict
 import logging
-from dictErreurs import EcritErreur
-from load import jdcSet 
-from renamemocle import decaleLignesdeNBlancs
-from removemocle import removeMotCleInFact
-import regles
+from Traducteur.dictErreurs import EcritErreur
+from Traducteur.load import jdcSet 
+from Traducteur.renamemocle import decaleLignesdeNBlancs
+from Traducteur.removemocle import removeMotCleInFact
+from Traducteur import regles
 
 
 #--------------------------------------------------------------------------

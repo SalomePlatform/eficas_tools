@@ -20,9 +20,9 @@
 
 import compiler
 import types
-from parseur  import Keyword, FactNode, lastparen, lastparen2,maskStringsAndComments
-from visiteur import KeywordFinder, visitor
-from utils import indexToCoordinates, lineToDict, DictToLine
+from Traducteur.parseur  import Keyword, FactNode, lastparen, lastparen2,maskStringsAndComments
+from Traducteur.visiteur import KeywordFinder, visitor
+from Traducteur.utils import indexToCoordinates, lineToDict, DictToLine
 
 debug=0
 

@@ -18,11 +18,11 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 import logging
-from parseur import FactNode
-from load import jdcSet 
-from dictErreurs import EcritErreur
+from Traducteur.parseur import FactNode
+from Traducteur.load import jdcSet 
+from Traducteur.dictErreurs import EcritErreur
 import string
-import regles
+from Traducteur import regles
 debug=0
 
 

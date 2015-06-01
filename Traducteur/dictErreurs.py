@@ -19,7 +19,7 @@
 #
 
 import logging
-from load import jdcSet 
+from Traducteur.load import jdcSet 
 
 
 def EcritErreur(listeGena,ligne=None) :
