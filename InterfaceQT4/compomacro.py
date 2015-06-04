@@ -92,6 +92,10 @@ class INCLUDENode(browser.JDCNode,typeNode.PopUpMenuNode):
       from   monIncludePanel import MonIncludePanel
       return MonIncludePanel (self,parent=self.editor )
 
+    def getPanel2(self):
+      from   monWidgetCommande import MonWidgetCommande
+      return MonWidgetCommande (self,self.editor ,self.item.object)
+
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
       
@@ -122,6 +126,10 @@ class POURSUITENode(browser.JDCNode, typeNode.PopUpMenuNode):
     def getPanel(self):
       from   monPoursuitePanel import MonPoursuitePanel
       return MonPoursuitePanel (self,parent=self.editor )
+
+    def getPanel2(self):
+      from   monWidgetCommande import MonWidgetCommande
+      return MonWidgetCommande (self,self.editor ,self.item.object)
 
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
