@@ -81,7 +81,7 @@ def getGroupes(filename,debug=0) :
             if groupeName not in listeGroupes : listeGroupes.append(groupeName) 
 
 
-    print dicoNumFam
+    #print dicoNumFam
     #print listeGroupes 
     
     # /* Lecture des Numeros de Familles */ 
@@ -100,7 +100,7 @@ def getGroupes(filename,debug=0) :
            i=i+1
    
    
-    print dicoNumNode
+    #print dicoNumNode
     dicoCoord={}
     for groupe in dicoNumNode.keys() :
         flt=MEDINT(1)
