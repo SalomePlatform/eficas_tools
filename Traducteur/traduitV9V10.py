@@ -29,16 +29,16 @@ import log
 import optparse
 import sys
 
-from load   import getJDC
-from mocles import parseKeywords
-from removemocle  import *
-from renamemocle  import *
-from renamemocle  import *
-from inseremocle  import *
-from changeValeur import *
-from movemocle    import *
-from dictErreurs  import * 
-from regles import pasDeRegle
+from Traducteur.load   import getJDC
+from Traducteur.mocles import parseKeywords
+from Traducteur.removemocle  import *
+from Traducteur.renamemocle  import *
+from Traducteur.renamemocle  import *
+from Traducteur.inseremocle  import *
+from Traducteur.changeValeur import *
+from Traducteur.movemocle    import *
+from Traducteur.dictErreurs  import * 
+from Traducteur.regles import pasDeRegle
 
 atraiter=("AFFE_CARA_ELEM","AFFE_CHAR_CINE","AFFE_CHAR_MECA","AFFE_CHAR_MECA_F","AFFE_MATERIAU","AFFE_MODELE",
           "CALC_CHAM_ELEM","CALC_ELEM","CALC_G","CALC_META","CALC_MODAL","CALC_PRECONT","CALCUL","CALC_MISS","CALC_NO",

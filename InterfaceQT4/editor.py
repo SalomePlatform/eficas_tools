@@ -1200,7 +1200,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #---------------------------#
     def _newTELEMAC(self):
     #---------------------------#
-        texte="INITIALIZATION();INITIAL_STATE();BOUNDARY_CONDITIONS();NUMERICAL_PARAMETERS();PHYSICAL_PARAMETERS()"
+        texte="INITIALIZATION();BOUNDARY_CONDITIONS();GENERAL_PARAMETERS();PHYSICAL_PARAMETERS();NUMERICAL_PARAMETERS();"
         #texte=""
         return texte
 

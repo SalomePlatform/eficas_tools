@@ -310,8 +310,7 @@ border: 1px solid gray;
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>../Editeur/icons/flecheHautBleue.png</normaloff>../Editeur/icons/flecheHautBleue.png</iconset>
+             <iconset theme="go-up"/>
             </property>
             <property name="iconSize">
              <size>
@@ -348,8 +347,7 @@ border: 1px solid gray;
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>../Editeur/icons/flecheBasBleue.png</normaloff>../Editeur/icons/flecheBasBleue.png</iconset>
+             <iconset theme="go-down"/>
             </property>
             <property name="iconSize">
              <size>
@@ -387,7 +385,8 @@ border: 1px solid gray;
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../Editeur/icons/MoinsBleu2.png</normaloff>../Editeur/icons/MoinsBleu2.png</iconset>
+              <normalon>../Editeur/icons/MoinsBleu2.png</normalon>
+             </iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -638,8 +637,7 @@ border: 1px solid gray;
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>../Editeur/icons/txt2.png</normaloff>../Editeur/icons/txt2.png</iconset>
+          <iconset theme="text-x-generic"/>
          </property>
          <property name="iconSize">
           <size>
@@ -741,7 +739,6 @@ border: 1px solid gray;
   <tabstop>RBHaut</tabstop>
   <tabstop>RBBas</tabstop>
   <tabstop>RBMoins</tabstop>
-  <tabstop>RBPlus</tabstop>
   <tabstop>RBVoisListe</tabstop>
   <tabstop>RBSalome</tabstop>
   <tabstop>RBSalomeVue</tabstop>

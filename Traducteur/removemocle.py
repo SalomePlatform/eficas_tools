@@ -18,10 +18,10 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 import logging
-import regles
-from parseur import FactNode
-from dictErreurs import EcritErreur
-from load import jdcSet 
+from Traducteur import regles
+from Traducteur.parseur import FactNode
+from Traducteur.dictErreurs import EcritErreur
+from Traducteur.load import jdcSet
 
 debug=0
 #debug=1
@@ -212,5 +212,4 @@ def fusionne(jdc,numLigne):
        fusion=0
  
     if fusion : 
-       import load 
        jdc.joinLineandNext(numLigne)

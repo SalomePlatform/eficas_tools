@@ -1034,6 +1034,7 @@ class AndVal(Valid):
 
     def info_erreur_liste(self):
         a = 1
+        chaine=""
         for v in self.validators:
             if v.info_erreur_liste() != " ":
                 if a == 1:

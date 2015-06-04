@@ -65,6 +65,8 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       else : 
             self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
             self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
+
+      
       self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
       self.racine=self.node.tree.racine
       if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)

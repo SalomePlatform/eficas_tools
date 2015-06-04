@@ -181,4 +181,3 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
   def traiteClicSurLabel(self,texte):
       self.afficheOptionnel()
 
-

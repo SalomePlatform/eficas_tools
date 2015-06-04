@@ -158,7 +158,7 @@ SOLVEUR = PROC ( nom ="SOLVEUR",
           
           Type= SIMP (statut="o",
                               typ="TXM",
-                              into=('Solveur_lineaire',), 
+                              into=("Solveur_lineaire"), 
                               defaut='Solveur_lineaire', 
                               ang="Linear solver only for harmonic problems.",
                               fr =u"Solveur linéaire seulement pour les problèmes fréquentiels.",

@@ -19,10 +19,10 @@
 #
 import logging
 import sys
-from parseur import FactNode
-from load import jdcSet 
-import regles
-from dictErreurs import EcritErreur
+from Traducteur.parseur import FactNode
+from Traducteur.load import jdcSet 
+from Traducteur import regles
+from Traducteur.dictErreurs import EcritErreur
 #debug=1
 debug=0
 

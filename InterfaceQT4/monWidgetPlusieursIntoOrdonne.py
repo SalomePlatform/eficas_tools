@@ -31,7 +31,8 @@ from politiquesValidation   import PolitiquePlusieurs
 from qtSaisie               import SaisieValeur
 from gereListe              import GereListe
 from gereListe              import LECustom
-from monLabelClic           import MonLabelClic
+from gereListe              import MonLabelListeClic
+
 
 
 class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,GereListe):
@@ -39,16 +40,24 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursInto", nom, self
         self.nomLine="LEResultat"
+        self.listeLE=[]
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
         self.parentQt.commandesLayout.insertWidget(-1,self)
-        self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
+        try :
+          self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
+        except :
+          # cas ou on ne peut rien ajouter
+          pass 
         self.ouAjouter=0
         self.prepareListeResultat()
+        self.adjustSize()
         self.vScrollBarRE = self.scrollAreaRE.verticalScrollBar()
        
-
   def setValeurs(self):
+       for i in self.listeLE:
+           i.close()
+       self.listeLE=[]
        listeValeursCourantes=self.node.item.GetListeValeurs()
        if hasattr(self.node.item.definition.validators,'set_MCSimp'):
             obj=self.node.item.getObject()
@@ -56,20 +65,19 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
             if self.node.item.isvalid() == 0 :
                liste=[]
                for item in listeValeursCourantes:
-                   if self.node.item.definition.validators.verif_item(item)==1:
-                      liste.append(item)
+                   if self.node.item.definition.validators.verif_item(item)==1: liste.append(item)
                self.listeAAfficher=self.node.item.get_liste_possible(liste)
             else: 
                self.listeAAfficher=self.node.item.get_liste_possible([])
        else :
-               self.listeAAfficher=self.monSimpDef.into
+               self.listeAAfficher=self.node.item.get_liste_possible(listeValeursCourantes)
+
        if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
        else : self.setMinimumHeight(len(self.listeAAfficher)*30)
-       self.adjustSize()
+
        self.vScrollBar = self.scrollArea.verticalScrollBar()
        self.politique=PolitiquePlusieurs(self.node,self.editor)
-       for i in range(1,len(self.listeAAfficher)+1):
-           self.ajoutLE(i)
+       for i in range(1,len(self.listeAAfficher)+1): self.ajoutLE(i)
        for i in range(len(self.listeAAfficher)):
            nomLE="lineEditVal"+str(i+1)
            courant=getattr(self,nomLE)
@@ -81,8 +89,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
        if self.monSimpDef.max == "**" : aConstruire=7
        else                           : aConstruire=self.monSimpDef.max
        if len(listeValeursCourantes) > aConstruire : aConstruire=len(listeValeursCourantes)
-       for i in range(1,aConstruire+1):
-           self.ajoutLEResultat(i)
+       for i in range(1,aConstruire+1): self.ajoutLEResultat(i)
        self.indexDernierLabel=aConstruire
        index=1
        for val in listeValeursCourantes :
@@ -94,17 +101,15 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
 
   def moinsPushed(self):
       self.ouAjouter=self.ouAjouter-1
-      feuille.moinsPushed(self)
+      GereListe.moinsPushed(self)
+      self.setValeurs()
 
-  #def ajoutLineEdit(self):
-  #    print "kljlkj"
 
   def ajoutLEResultat (self,index,valeur=None):
       nomLE="LEResultat"+str(index)
       if hasattr(self,nomLE) : return
       nouveauLE = LECustom(self.scrollAreaRE,self,index)
       nouveauLE.setFrame(False)
-      #self.CBChoisis.addWidget(nouveauLE)
       self.CBChoisis.insertWidget(self.ouAjouter,nouveauLE)
       self.ouAjouter=self.ouAjouter+1
       nouveauLE.setText("")
@@ -118,12 +123,11 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
          nouveauLE.setText(valeur)
       
   def ajoutLE(self,index,valeur=None):
-      #print "ajoutLE ", index
       nomLE="lineEditVal"+str(index)
-      if hasattr(self,nomLE) : return
-      nouveauLE = MonLabelClic(self)
+      nouveauLE = MonLabelListeClic(self)
       #self.CBLayout.addWidget(nouveauLE)
       self.CBLayout.insertWidget(index -1,nouveauLE)
+      self.listeLE.append(nouveauLE)
       nouveauLE.setFrameShape(QFrame.NoFrame)
       qApp.processEvents()
       nouveauLE.setText("")
@@ -157,7 +161,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         return str(com)
 
 
-  def traiteClicSurLabel(self,valeur):
+  def traiteClicSurLabelListe(self,valeur):
         if valeur == None : return
         liste,validite=SaisieValeur.TraiteLEValeur(self,str(valeur))
         if validite == 0 : return
@@ -190,6 +194,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
            self.vScrollBarRE.triggerAction(QScrollBar.SliderToMaximum)
            QTimer.singleShot(1, self.rendVisibleLigneRE)
         self.changeValeur()
+        self.setValeurs()
 
   def changeValeur(self,changeDePlace=False,oblige=False):
 #PN les 2 arg sont pour que la signature de ma fonction soit identique a monWidgetPlusieursBase
@@ -203,6 +208,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
            listeVal.append(str(valeur))
 
         validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(listeVal,-1,[])
+        
 
         listeValeursCourantes=self.node.item.GetListeValeurs()
         min,max = self.node.item.GetMinMax()

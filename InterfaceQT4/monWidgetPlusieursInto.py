@@ -70,8 +70,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
        self.vScrollBar = self.scrollArea.verticalScrollBar()
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        self.indexListe=1
-       for i in range(1,len(self.listeAAfficher)+1):
-           self.ajoutCB(i)
+       for i in range(1,len(self.listeAAfficher)+1): self.ajoutCB(i)
        for i in range(len(self.listeAAfficher)):
            nomCB="lineEditVal"+str(i+1)
            courant=getattr(self,nomCB)
@@ -85,8 +84,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
   def ajoutCB(self,index,valeur=None):
       #print "ajoutCB ", index
       nomCB="lineEditVal"+str(index)
-      if hasattr(self,nomCB) : 
-         return
+      if hasattr(self,nomCB) : return
       nouveauCB = QCheckBox(self.scrollArea)
       self.CBLayout.addWidget(nouveauCB)
       qApp.processEvents()

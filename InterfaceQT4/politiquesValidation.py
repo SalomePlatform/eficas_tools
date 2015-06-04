@@ -217,6 +217,7 @@ class PolitiquePlusieurs(Validation):
                 commentaire2=self.node.item.info_erreur_liste()
                 # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
                 min,max = self.node.item.GetMinMax()
+                print len(listecourante) 
                 if len(listecourante) + 1 >= max :
                    commentaire="La liste atteint le nombre maximum d'elements : "+ str(max) +" ,ajout refuse"
                    return valide,commentaire,commentaire2,listeRetour

@@ -20,8 +20,8 @@
 
 import os
 import re
-import parseur
-from mocles import parseKeywords
+from Traducteur import parseur
+from Traducteur.mocles import parseKeywords
 
 import sets
 jdcSet=sets.Set()

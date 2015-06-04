@@ -216,4 +216,5 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
           newText=newTexte[1:]
        return newText
       
-       
+
+ 

@@ -17,8 +17,8 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-from parseur import FactNode
-from load import jdcSet 
+from Traducteur.parseur import FactNode
+from Traducteur.load import jdcSet 
 import logging
 
 dict_commande={}

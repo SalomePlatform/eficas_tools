@@ -22,7 +22,6 @@ def INCLUDE(self,FileName,**args):
    """ 
        Fonction sd_prod pour la macro INCLUDE
    """
-   print "kkkkkkkkkkkk"
    if hasattr(self,'change_fichier'):
        delattr(self,'change_fichier')
        delattr(self,'fichier_ini')
@@ -33,9 +32,7 @@ def INCLUDE_context(self,d):
    """ 
        Fonction op_init pour macro INCLUDE
    """
-   print "llllllllllllllllllll"
    for k,v in self.g_context.items():
       d[k]=v
-
 
 

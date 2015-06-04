@@ -67,8 +67,10 @@ class JDCTree( QTreeWidget ):
         self.inhibeExpand=False
         #print "self.editor.afficheCommandesPliees", self.editor.afficheCommandesPliees
         if self.racine.children !=[] :  
+
            if self.editor.afficheCommandesPliees : self.racine.children[0].plieToutEtReaffiche()
            else : self.racine.children[0].deplieToutEtReaffiche()
+
            self.racine.children[0].fenetre.donnePremier()
         else : self.racine.affichePanneau()
         #PNPNPN

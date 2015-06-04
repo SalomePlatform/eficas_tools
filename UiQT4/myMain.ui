@@ -209,8 +209,7 @@ QMenuBar {
   </widget>
   <action name="action_Nouveau">
    <property name="icon">
-    <iconset>
-     <normaloff>../Editeur/icons/new_file.png</normaloff>../Editeur/icons/new_file.png</iconset>
+    <iconset theme="document-new"/>
    </property>
    <property name="text">
     <string>&amp;Nouveau</string>
@@ -229,8 +228,7 @@ QMenuBar {
   </action>
   <action name="action_Ouvrir">
    <property name="icon">
-    <iconset>
-     <normaloff>../Editeur/icons/ouvrir.png</normaloff>../Editeur/icons/ouvrir.png</iconset>
+    <iconset theme="document-open"/>
    </property>
    <property name="text">
     <string>&amp;Ouvrir</string>
@@ -241,8 +239,7 @@ QMenuBar {
   </action>
   <action name="actionEnregistrer">
    <property name="icon">
-    <iconset>
-     <normaloff>../Editeur/icons/save.png</normaloff>../Editeur/icons/save.png</iconset>
+    <iconset theme="document-save"/>
    </property>
    <property name="text">
     <string>Enregistrer</string>
@@ -257,6 +254,9 @@ QMenuBar {
    </property>
   </action>
   <action name="actionEnregistrer_sous">
+   <property name="icon">
+    <iconset theme="document-save-as"/>
+   </property>
    <property name="text">
     <string>Enregistrer sous</string>
    </property>
@@ -279,8 +279,7 @@ QMenuBar {
   </action>
   <action name="actionCouper">
    <property name="icon">
-    <iconset>
-     <normaloff>../Editeur/icons/cut.png</normaloff>../Editeur/icons/cut.png</iconset>
+    <iconset theme="edit-cut"/>
    </property>
    <property name="text">
     <string>Couper</string>
@@ -294,8 +293,7 @@ QMenuBar {
   </action>
   <action name="actionCopier">
    <property name="icon">
-    <iconset>
-     <normaloff>../Editeur/icons/copy.png</normaloff>../Editeur/icons/copy.png</iconset>
+    <iconset theme="edit-copy"/>
    </property>
    <property name="text">
     <string>Copier</string>
@@ -309,8 +307,7 @@ QMenuBar {
   </action>
   <action name="actionColler">
    <property name="icon">
-    <iconset>
-     <normaloff>../Editeur/icons/paste.png</normaloff>../Editeur/icons/paste.png</iconset>
+    <iconset theme="edit-paste"/>
    </property>
    <property name="text">
     <string>Coller</string>
@@ -368,8 +365,7 @@ QMenuBar {
   </action>
   <action name="actionSupprimer">
    <property name="icon">
-    <iconset>
-     <normaloff>../Editeur/icons/delete.png</normaloff>../Editeur/icons/delete.png</iconset>
+    <iconset theme="edit-delete"/>
    </property>
    <property name="text">
     <string>Supprimer</string>
@@ -390,6 +386,9 @@ QMenuBar {
    </property>
   </action>
   <action name="actionRechercher">
+   <property name="icon">
+    <iconset theme="edit-find"/>
+   </property>
    <property name="text">
     <string>Rechercher</string>
    </property>

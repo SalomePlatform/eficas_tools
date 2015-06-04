@@ -55,7 +55,9 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       self.connect(self.RBGroupe,SIGNAL("clicked()"),self.afficheGroupe)
       self.connect(self.RBOrdre,SIGNAL("clicked()"),self.afficheOrdre)
 
+      if self.editor.Ordre_Des_Commandes == None : self.RBOrdre.close()
 
+       
       self.editor.labelCommentaire.setText("")
       self.name=None
       self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.AjouteRadioButton)

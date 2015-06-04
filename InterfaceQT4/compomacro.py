@@ -38,6 +38,11 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
       from   monMacroPanel import MonMacroPanel
       return MonMacroPanel (self,parent=self.editor )
     
+    def getPanel2(self):
+      from   monWidgetCommande import MonWidgetCommande
+      return MonWidgetCommande (self,self.editor ,self.item.object)
+
+
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
       if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome:

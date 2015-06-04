@@ -43,7 +43,25 @@ class LECustom(QLineEdit):
      print "dans focusInEvent de LECustom"
      self.parentQt.LineEditEnCours=self
      self.parentQt.NumLineEditEnCours=self.num
+     self.setFrame(True)
      QLineEdit.focusInEvent(self,event)
+
+ def focusOutEvent(self,event):
+     self.setFrame(False)
+     QLineEdit.focusOutEvent(self,event)
+
+# ---------------------------- #
+class MonLabelListeClic(QLabel):
+# ---------------------------- #
+     def __init__(self,parent):
+        QLabel.__init__(self,parent)
+        self.parent=parent
+
+     def event(self,event) :
+         if event.type() == QEvent.MouseButtonRelease:
+            self.texte=self.text()
+            self.parent.traiteClicSurLabelListe(self.texte)
+         return QLabel.event(self,event)
 
 
 
@@ -66,6 +84,7 @@ class GereListe:
        if self.NumLineEditEnCours == 1 : return
        else : numEchange=self.NumLineEditEnCours-1
        self.echange(self.NumLineEditEnCours,numEchange)
+       self.LineEditEnCours.setFocus(True)
        self.scrollArea.ensureWidgetVisible(self.LineEditEnCours)
 
 
@@ -73,6 +92,7 @@ class GereListe:
        if self.NumLineEditEnCours == self.indexDernierLabel : return
        else : numEchange=self.NumLineEditEnCours+1
        self.echange(self.NumLineEditEnCours,numEchange)
+       self.LineEditEnCours.setFocus(True)
        self.scrollArea.ensureWidgetVisible(self.LineEditEnCours)
 
    def echange(self,num1,num2):
@@ -90,6 +110,7 @@ class GereListe:
        self.changeValeur(changeDePlace=False)
        self.NumLineEditEnCours=num2
        self.LineEditEnCours=courant2
+       self.LineEditEnCours.setFocus(True)
 
    def moinsPushed(self):
        # on supprime le dernier
