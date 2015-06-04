@@ -64,6 +64,7 @@ def insereMotCleDansCommande(jdc,command,texte):
 def insereMotCleDansFacteur(jdc,facteur,texte):
 #-------------------------------------------------
     if debug : print "insereMotCle ", texte , " dans ", facteur.name
+    print "insereMotCle ", texte , " dans ", facteur.name
 
     if texte[-1] == "\n" : texte=texte[0:-1] 
     ancien=jdc.getLine(facteur.lineno)
@@ -138,6 +139,7 @@ def insereMotCleDansFacteur(jdc,facteur,texte):
 
         ligneaCouper=ligneaCouper+1
         ancien=jdc.getLine(ligneaCouper)
+        if trouve : break
 
 
 #-----------------------------------
