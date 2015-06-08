@@ -60,9 +60,9 @@ def insereMotCleDansCommande(jdc,command,texte):
     if numcol > 0 : 		# Les mots clefs etaient sur la même ligne
         jdc.joinLineandNext(command.lineno)
 
-#---------------------------------------------
-def insereMotCleDansFacteur(jdc,facteur,texte):
-#-------------------------------------------------
+#-------------------------------------------------------------
+def insereMotCleDansFacteur(jdc,facteur,texte,plusieursFois=True):
+#----------------------------------------------------------------
     if debug : print "insereMotCle ", texte , " dans ", facteur.name
     print "insereMotCle ", texte , " dans ", facteur.name
 
@@ -139,7 +139,7 @@ def insereMotCleDansFacteur(jdc,facteur,texte):
 
         ligneaCouper=ligneaCouper+1
         ancien=jdc.getLine(ligneaCouper)
-        if trouve : break
+        if not plusieursFois and trouve : break
 
 
 #-----------------------------------
