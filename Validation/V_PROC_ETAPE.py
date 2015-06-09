@@ -30,6 +30,7 @@ import V_ETAPE
 from Noyau.N_Exception import AsException
 from Noyau.N_utils import AsType
 from Noyau.strfunc import ufmt
+from Extensions.i18n import tr
 
 
 class PROC_ETAPE(V_ETAPE.ETAPE):
@@ -65,7 +66,8 @@ class PROC_ETAPE(V_ETAPE.ETAPE):
             if self.reste_val != {}:
                 if cr == 'oui':
                     self.cr.fatal(
-                        _(u"Mots clés inconnus : %s"), ','.join(self.reste_val.keys()))
+                        #_(tr(u"Mots clefs inconnus : %s")), ','.join(self.reste_val.keys()))
+                        _(tr(u"unknown keywords : %s")), ','.join(self.reste_val.keys()))
                 valid = 0
             self.set_valid(valid)
             return self.valid

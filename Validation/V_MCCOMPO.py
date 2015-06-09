@@ -63,7 +63,8 @@ class MCCOMPO:
         """
         self.cr = self.CR()
         self.cr.debut = self.txt_nat + self.nom
-        self.cr.fin = u"Fin " + self.txt_nat + self.nom
+        #self.cr.fin = u"Fin " + self.txt_nat + self.nom
+        self.cr.fin = u"END " + self.txt_nat + self.nom
         i = 0
         for child in self.mc_liste:
             i += 1

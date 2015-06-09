@@ -92,7 +92,8 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
             if self.reste_val != {}:
                 if cr == 'oui':
                     self.cr.fatal(
-                        _(u"Mots clés inconnus : %s"), ','.join(self.reste_val.keys()))
+                        #_(u"Mots clés inconnus : %s"), ','.join(self.reste_val.keys()))
+                        _(u"unknown keyword : %s"), ','.join(self.reste_val.keys()))
                 valid = 0
 
             if sd == "non":

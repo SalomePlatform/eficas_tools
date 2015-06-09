@@ -36,6 +36,7 @@ from Noyau.N_Exception import AsException
 from Noyau.N_VALIDATOR import ValError, TypeProtocol, CardProtocol, IntoProtocol
 from Noyau.N_VALIDATOR import listProto
 from Noyau.strfunc import ufmt
+from Extensions.i18n import tr
 
 
 class MCSIMP:
@@ -102,7 +103,8 @@ class MCSIMP:
             if self.isoblig() and v == None:
                 if cr == 'oui':
                     self.cr.fatal(
-                        _(u"Mot-clé : %s obligatoire non valorisé"), self.nom)
+                        _(u"Mandatory keyword : %s has no value"), tr(self.nom))
+                        #_(u"Mot-clé : %s obligatoire non valorisé"), self.nom)
                 valid = 0
 
             lval = listProto.adapt(v)
@@ -117,7 +119,8 @@ class MCSIMP:
             if lval is None:
                 valid = 0
                 if cr == 'oui':
-                    self.cr.fatal(_(u"None n'est pas une valeur autorisée"))
+                    self.cr.fatal(_(u"None is not a valid value"))
+                    #self.cr.fatal(_(u"None n'est pas une valeur autorisée"))
             else:
                 # type,into ...
                 # typeProto=TypeProtocol("type",typ=self.definition.type)
@@ -156,8 +159,9 @@ class MCSIMP:
                             self.definition.validators.convert(lval)
                         except ValError, e:
                             self.cr.fatal(
-                                _(u"Mot-clé %s invalide : %s\nCritère de validité: %s"),
-                                self.nom, str(e), self.definition.validators.info())
+                                #_(u"Mot-clé %s invalide : %s\nCritère de validité: %s"),
+                                _(u"invalid keyword %s  : %s\nCriteria : %s"),
+                                tr(self.nom), str(e), self.definition.validators.info())
                             valid = 0
                 else:
                     # si pas de cr demande, on sort a la toute premiere erreur
@@ -192,13 +196,16 @@ class MCSIMP:
     def report(self):
         """ génère le rapport de validation de self """
         self.cr = self.CR()
-        self.cr.debut = u"Mot-clé simple : " + self.nom
-        self.cr.fin = u"Fin Mot-clé simple : " + self.nom
+        #self.cr.debut = u"Mot-clé simple : " + self.nom
+        self.cr.debut = u"Simple Keyword : " + tr(self.nom)
+        #self.cr.fin = u"Fin Mot-clé simple : " + self.nom
+        self.cr.fin = u"End Simple Keyword: " + tr(self.nom)
         self.state = 'modified'
         try:
             self.isvalid(cr='oui')
         except AsException, e:
             if CONTEXT.debug:
                 traceback.print_exc()
-            self.cr.fatal(_(u"Mot-clé simple : %s %s"), self.nom, e)
+            #self.cr.fatal(_(u"Mot-clé simple : %s %s"), self.nom, e)
+            self.cr.fatal(_(u"Simple Keyword  : %s %s"), tr(self.nom), e)
         return self.cr

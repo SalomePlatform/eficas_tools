@@ -45,8 +45,10 @@ class JDC(V_MCCOMPO.MCCOMPO):
             Methode pour generation d un rapport de validite
         """
         self.cr.purge()
-        self.cr.debut = "DEBUT CR validation : " + self.nom
-        self.cr.fin = "FIN CR validation :" + self.nom
+        #self.cr.debut = "DEBUT CR validation : " + self.nom
+        #self.cr.fin = "FIN CR validation :" + self.nom
+        self.cr.debut = "BEGIN validation report : " + self.nom
+        self.cr.fin = "END validation report :" + self.nom
         for e in self.etapes:
             if e.isactif():
                 self.cr.add(e.report())

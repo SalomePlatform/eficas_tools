@@ -40,6 +40,8 @@ from Noyau import MAXSIZE, MAXSIZE_MSGCHK
 from Noyau.N_Exception import AsException
 from Noyau.N_utils import AsType
 from Noyau.strfunc import ufmt
+from Extensions.i18n import tr
+
 
 
 class ETAPE(V_MCCOMPO.MCCOMPO):
@@ -79,14 +81,16 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
             if self.sd.nom.find('sansnom') != -1:
                 # la SD est 'sansnom' : --> erreur
                 if cr == 'oui':
-                    self.cr.fatal(_(u"Pas de nom pour le concept retourné"))
+                    #self.cr.fatal(_(u"Pas de nom pour le concept retourné"))
+                    self.cr.fatal(_("object must have a name"))
                 valid = 0
             elif re.search('^SD_[0-9]*$', self.sd.nom):
                 # la SD est 'SD_' cad son nom = son id donc pas de nom donné
                 # par utilisateur : --> erreur
                 if cr == 'oui':
                     self.cr.fatal(
-                        _(u"Nom de concept invalide ('SD_' est réservé)"))
+                        #_(u"Nom de concept invalide ('SD_' est réservé)"))
+                        _("invalid name ('SD_' is a reserved keyword)"))
                 valid = 0
         return valid
 
@@ -132,7 +136,8 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
             if self.reste_val != {}:
                 if cr == 'oui':
                     self.cr.fatal(
-                        _(u"Mots clés inconnus : %s"), ','.join(self.reste_val.keys()))
+                        #_(u"Mots clés inconnus : %s"), ','.join(self.reste_val.keys()))
+                        _("unknown keywords : %s"), ','.join(self.reste_val.keys()))
                 valid = 0
 
             if sd == "non":
@@ -152,7 +157,8 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
             if self.sd == None:
                 # Le concept produit n'existe pas => erreur
                 if cr == 'oui':
-                    self.cr.fatal(_(u"Concept retourné non défini"))
+                   # self.cr.fatal(_(u"Concept retourné non défini"))
+                    self.cr.fatal(_("Concept is not defined"))
                 valid = 0
             else:
                 valid = valid * self.valid_sdnom(cr)
@@ -191,7 +197,8 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                                                    sys.exc_info()[1],
                                                    sys.exc_info()[2])
                     self.cr.fatal(
-                        _(u'Impossible d affecter un type au résultat\n %s'), ' '.join(l[2:]))
+                        #_(u'Impossible d affecter un type au résultat\n %s'), ' '.join(l[2:]))
+                        _('unable to affect type to concept\n %s'), ' '.join(l[2:]))
                 return 0
         # on teste maintenant si la SD est r\351utilis\351e ou s'il faut la
         # cr\351er
@@ -240,18 +247,24 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
         """
             Methode pour generation d un rapport de validite
         """
-        self.cr = self.CR(debut=u'Etape : ' + self.nom
-                          + u'    ligne : ' + `self.appel[0]`
-                          + u'    fichier : ' + `self.appel[1]`,
-                          fin=u'Fin Etape : ' + self.nom)
+        #self.cr = self.CR(debut=u'Etape : ' + self.nom
+        #                  + u'    ligne : ' + `self.appel[0]`
+        #                  + u'    fichier : ' + `self.appel[1]`,
+        #                  fin=u'Fin Etape : ' + self.nom)
+        self.cr = self.CR(debut=u'Command : ' + tr(self.nom)
+                          + u'    line : ' + `self.appel[0]`
+                          + u'    file : ' + `self.appel[1]`,
+                          fin=u'End Command : ' + tr(self.nom))
         self.state = 'modified'
         try:
             self.isvalid(cr='oui')
         except AsException, e:
             if CONTEXT.debug:
                 traceback.print_exc()
-            self.cr.fatal(_(u'Etape : %s ligne : %r fichier : %r %s'),
-                          self.nom, self.appel[0], self.appel[1], e)
+            #self.cr.fatal(_(u'Etape : %s ligne : %r fichier : %r %s'),
+            #              self.nom, self.appel[0], self.appel[1], e)
+            self.cr.fatal(_(u'Command : %s line : %r file : %r %s'),
+                          tr(self.nom), self.appel[0], self.appel[1], e)
         i = 0
         for child in self.mc_liste:
             i += 1

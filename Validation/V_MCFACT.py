@@ -77,7 +77,9 @@ class MCFACT(V_MCCOMPO.MCCOMPO):
             #
             if self.definition.validators and not self.definition.validators.verif(self.valeur):
                 if cr == 'oui':
-                    self.cr.fatal(_(u"Mot-clé : %s devrait avoir %s"),
+                    #self.cr.fatal(_(u"Mot-clé : %s devrait avoir %s"),
+                    #              self.nom, self.definition.validators.info())
+                    self.cr.fatal(_(u"Keyword : %s should have %s"),
                                   self.nom, self.definition.validators.info())
                 valid = 0
             # fin des validateurs
@@ -85,7 +87,8 @@ class MCFACT(V_MCCOMPO.MCCOMPO):
             if self.reste_val != {}:
                 if cr == 'oui':
                     self.cr.fatal(
-                        _(u"Mots clés inconnus : %s"), ','.join(self.reste_val.keys()))
+                        #_(u"Mots clés inconnus : %s"), ','.join(self.reste_val.keys()))
+                        _(u"unknow keyword : %s"), ','.join(self.reste_val.keys()))
                 valid = 0
             self.valid = valid
             self.state = 'unchanged'

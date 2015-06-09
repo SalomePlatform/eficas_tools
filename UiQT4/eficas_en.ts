@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="en" sourcelanguage="">
+<!DOCTYPE TS>
+<TS version="2.0" language="en">
 <context>
     <name>@default</name>
     <message>
@@ -51,7 +52,7 @@ ask eficas team
     <message>
         <location filename="../../Editeur/analyse_catalogue.py" line="191"/>
         <source>Impossible d&apos;ouvrir le fichier : %s </source>
-        <translation>unanble to open file : %s</translation>
+        <translation>unable to open file : %s</translation>
     </message>
     <message>
         <location filename="../../Editeur/analyse_catalogue.py" line="208"/>
@@ -209,7 +210,7 @@ ask eficas team
     </message>
     <message>
         <location filename="../../Extensions/commande_comm.py" line="61"/>
-        <source>Objet commande commentaris&#xe9; invalide</source>
+        <source>Objet commande commentarisé invalide</source>
         <translation>invalid commented command</translation>
     </message>
     <message>
@@ -244,7 +245,7 @@ ask eficas team
         <translation>end function %s</translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_JDC.py" line="381"/>
+        <location filename="../../Extensions/jdc_include.py" line="94"/>
         <source>Nom de concept deja defini : %s</source>
         <translation>Concept&apos;s name %s is already existing</translation>
     </message>
@@ -305,7 +306,7 @@ ask eficas team
     </message>
     <message>
         <location filename="../../Ihm/I_FORM_ETAPE.py" line="159"/>
-        <source>Un concept de nom %s existe d&#xe9;j&#xe0; !</source>
+        <source>Un concept de nom %s existe déjà !</source>
         <translation>Concept&apos;s name %s is already existing!</translation>
     </message>
     <message>
@@ -336,7 +337,7 @@ ask eficas team
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="541"/>
         <source>ATTENTION! Une source constante n&apos;est possible qu&apos;a frequence nulle en regime frequentiel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../generator/generator_Creation.py" line="83"/>
@@ -483,32 +484,32 @@ ask eficas team
         <translation>impossible to return a value of type : %s</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_JDC.py" line="305"/>
+        <location filename="../../Ihm/I_JDC.py" line="306"/>
         <source>Impossible d&apos;ajouter la commande</source>
         <translation>unable to add the keyword (commande)</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_JDC.py" line="311"/>
+        <location filename="../../Ihm/I_JDC.py" line="312"/>
         <source>Impossible d ajouter la commande</source>
         <translation>unable to add the keyword (commande)</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_JDC.py" line="626"/>
+        <location filename="../../Ihm/I_JDC.py" line="627"/>
         <source>Pas implemente</source>
         <translation>not implemented</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_JDC.py" line="721"/>
+        <location filename="../../Ihm/I_JDC.py" line="722"/>
         <source>Nom de concept deja defini </source>
         <translation>already defined concept</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_JDC.py" line="896"/>
+        <location filename="../../Ihm/I_JDC.py" line="897"/>
         <source> Nom de concept deja  defini : </source>
         <translation>already defined concept :</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_JDC.py" line="939"/>
+        <location filename="../../Ihm/I_JDC.py" line="940"/>
         <source>Impossible de trouver le fichier correspondant a l&apos;unite </source>
         <translation>unable to find file corresponding to unit</translation>
     </message>
@@ -616,22 +617,22 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Object %s cannot be add</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="244"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="248"/>
         <source>None n&apos;est pas une valeur autorisee</source>
         <translation>None is not a valid value</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="476"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="480"/>
         <source>un concept de meme nom existe deja</source>
         <translation>concept already exists</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="498"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="502"/>
         <source>Concept cree</source>
         <translation>concept created</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="626"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="629"/>
         <source>La matrice n&apos;est pas une matrice %(n_lign)d sur %(n_col)d</source>
         <comment>n_lign</comment>
         <translation>matrix is not a %(n_lign)d x %(n_col)d matrix</translation>
@@ -662,34 +663,34 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>internal problem : unable to delete keyword</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compojdc.py" line="92"/>
+        <location filename="../../InterfaceQT4/compojdc.py" line="94"/>
         <source>Commentaire supprime</source>
         <translation>comment is deleted</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compojdc.py" line="94"/>
+        <location filename="../../InterfaceQT4/compojdc.py" line="96"/>
         <source>Commande %s supprimee</source>
         <translation>command %s is deleted</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compojdc.py" line="98"/>
+        <location filename="../../InterfaceQT4/compojdc.py" line="100"/>
         <source>Pb interne : impossible de supprimer cet objet</source>
         <translation>internal problem : unable to delete object</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compomacro.py" line="113"/>
+        <location filename="../../InterfaceQT4/compomacro.py" line="139"/>
         <source>Le fichier de commande n&apos;a pas pu etre converti pour etre editable par Eficas
 
 </source>
         <translation>unable to convert .comm file in order to open it with Eficas</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compomacro.py" line="145"/>
+        <location filename="../../InterfaceQT4/compomacro.py" line="171"/>
         <source>Include vide</source>
         <translation>include file is empty</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compomacro.py" line="145"/>
+        <location filename="../../InterfaceQT4/compomacro.py" line="171"/>
         <source>L&apos;include doit etre correctement initialise pour etre visualise</source>
         <translation>include file must be correct</translation>
     </message>
@@ -744,97 +745,97 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Error when reading configuration file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="172"/>
+        <location filename="../../InterfaceQT4/editor.py" line="187"/>
         <source>Erreur fatale au chargement de %s</source>
         <translation>fatal error when loading %s</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="173"/>
+        <location filename="../../InterfaceQT4/editor.py" line="188"/>
         <source>Erreur fatale au chargement d&apos;un fichier</source>
         <translation>Fatal error when loading file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="268"/>
+        <location filename="../../InterfaceQT4/editor.py" line="287"/>
         <source>fichier modifie</source>
         <translation>file updated </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="268"/>
+        <location filename="../../InterfaceQT4/editor.py" line="287"/>
         <source>Attention! fichier change hors EFICAS</source>
         <translation>Warning ! this file was modified outside Eficas</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="322"/>
+        <location filename="../../InterfaceQT4/editor.py" line="341"/>
         <source>Type de fichier non reconnu</source>
         <translation>unsupported file type</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="279"/>
+        <location filename="../../InterfaceQT4/editor.py" line="298"/>
         <source>EFICAS ne sait pas ouvrir le type de fichier %s</source>
         <translation>Eficas is not able to open this file&apos;s type : %s</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="322"/>
+        <location filename="../../InterfaceQT4/editor.py" line="341"/>
         <source>EFICAS ne sait pas ouvrir ce type de fichier</source>
         <translation>Eficas is not able to open this file&apos;s type</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="530"/>
+        <location filename="../../InterfaceQT4/editor.py" line="564"/>
         <source>Copie impossible</source>
         <translation>unable to copy</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="504"/>
+        <location filename="../../InterfaceQT4/editor.py" line="538"/>
         <source>Veuillez selectionner un objet a copier</source>
         <translation>you have to select an object to copy</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="509"/>
+        <location filename="../../InterfaceQT4/editor.py" line="543"/>
         <source>Veuillez selectionner un seul objet : la copie se fera apres le noeud selectionne</source>
         <translation>You have to select a single object : copy will be done after the selected node</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="530"/>
+        <location filename="../../InterfaceQT4/editor.py" line="564"/>
         <source>Aucun Objet n a ete copie ou coupe</source>
         <translation>No object was cut or copied</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="554"/>
+        <location filename="../../InterfaceQT4/editor.py" line="588"/>
         <source>Copie refusee</source>
         <translation>rejected copy</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="540"/>
+        <location filename="../../InterfaceQT4/editor.py" line="574"/>
         <source>Eficas n a pas reussi a copier l objet</source>
         <translation>Eficas cannot copy this object</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="554"/>
+        <location filename="../../InterfaceQT4/editor.py" line="588"/>
         <source>Copie refusee pour ce type d objet</source>
         <translation>Copy rejected : bad object type</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="566"/>
+        <location filename="../../InterfaceQT4/editor.py" line="600"/>
         <source>Deplacement refuse</source>
         <translation>move rejected</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="566"/>
+        <location filename="../../InterfaceQT4/editor.py" line="600"/>
         <source>Deplacement refuse entre 2 fichiers. Seule la copie est autorisee </source>
         <translation>move rejected. no move between two files : only copy is available</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="601"/>
+        <location filename="../../InterfaceQT4/editor.py" line="635"/>
         <source>Copie impossible a cet endroit</source>
         <translation>unable to copy here</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="601"/>
+        <location filename="../../InterfaceQT4/editor.py" line="635"/>
         <source>Veuillez selectionner une commande, un parametre, un commentaire ou une macro</source>
         <translation>select a command; a parameter, a comment or a macro</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="662"/>
+        <location filename="../../InterfaceQT4/editor.py" line="696"/>
         <source>Choix d&apos;un fichier XML</source>
         <translation>Choice of XML file</translation>
     </message>
@@ -844,90 +845,90 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Open file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="721"/>
+        <location filename="../../InterfaceQT4/editor.py" line="755"/>
         <source>Erreur a la generation</source>
         <translation>Error when generating</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="721"/>
+        <location filename="../../InterfaceQT4/editor.py" line="755"/>
         <source>EFICAS ne sait pas convertir ce JDC</source>
         <translation>Eficas is unable to convert JDC</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="727"/>
+        <location filename="../../InterfaceQT4/editor.py" line="761"/>
         <source>Format %s non reconnu</source>
         <translation> not supported format %s</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="811"/>
+        <location filename="../../InterfaceQT4/editor.py" line="845"/>
         <source>Execution impossible </source>
         <translation>Unable to execute</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="748"/>
+        <location filename="../../InterfaceQT4/editor.py" line="782"/>
         <source>le JDC doit etre valide pour une execution MAP</source>
         <translation>JDC has to be valid before run</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="751"/>
+        <location filename="../../InterfaceQT4/editor.py" line="785"/>
         <source>le JDC doit contenir un et un seul composant</source>
         <translation>JDC must contains a single componant</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="851"/>
+        <location filename="../../InterfaceQT4/editor.py" line="885"/>
         <source>sauvegarde</source>
         <translation>save</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="860"/>
+        <location filename="../../InterfaceQT4/editor.py" line="894"/>
         <source>Sauvegarde du Fichier</source>
         <translation>save file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="860"/>
+        <location filename="../../InterfaceQT4/editor.py" line="894"/>
         <source>Le fichier &lt;b&gt;%s&lt;/b&gt; existe deja.</source>
         <translation>file  &lt;b&gt;%s&lt;/b&gt; already exists.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="860"/>
+        <location filename="../../InterfaceQT4/editor.py" line="894"/>
         <source>&amp;Ecraser</source>
         <translation>&amp;Replace</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1050"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1092"/>
         <source>Donnez le nom du fichier correspondant a l unite logique </source>
         <translation>Choose file corresponding to unit </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1053"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1095"/>
         <source>Choix d&apos;un fichier de poursuite</source>
         <translation>Choose poursuite file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1054"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1096"/>
         <source>Le fichier %s contient une commande POURSUITE
 </source>
         <translation>file %s contains a POURSUITE command</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereTraduction.py" line="34"/>
+        <location filename="../../InterfaceQT4/gereTraduction.py" line="37"/>
         <source>Traduire Fichier</source>
         <translation>file translation</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereTraduction.py" line="34"/>
+        <location filename="../../InterfaceQT4/gereTraduction.py" line="37"/>
         <source>Fichiers JDC  (*.comm);;Tous les Fichiers (*)</source>
         <translation>JDC files(*.comm);; All FIles(*)</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereTraduction.py" line="58"/>
+        <location filename="../../InterfaceQT4/gereTraduction.py" line="62"/>
         <source>Fichier Traduit : %s
 
 </source>
         <translation>Translated file : %s</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereTraduction.py" line="68"/>
+        <location filename="../../InterfaceQT4/gereTraduction.py" line="72"/>
         <source>Pas de difference entre le fichier origine et le fichier traduit</source>
         <translation>No difference between the primary file and the translated file</translation>
     </message>
@@ -942,82 +943,82 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>&amp;Ok</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="104"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="114"/>
         <source>Entrez </source>
         <translation>enter</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="101"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="111"/>
         <source> valeurs </source>
         <translation>values</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="106"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="116"/>
         <source>Entrez entre </source>
         <translation>enter between </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="101"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="111"/>
         <source> et </source>
         <translation> and </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="164"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="208"/>
         <source>Selection</source>
         <translation>selection</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="73"/>
+        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="76"/>
         <source>Une chaine de caracteres est attendue.  </source>
         <translation>string expected</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="74"/>
+        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="77"/>
         <source>Un reel est attendu. </source>
         <translation>float expected</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="75"/>
+        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="78"/>
         <source>Un entier est attendu.  </source>
         <translation>integer expected.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="76"/>
+        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="79"/>
         <source>Une Matrice est attendue.  </source>
         <translation>Matrix expected.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="78"/>
+        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="81"/>
         <source>Un fichier est attendu.  </source>
         <translation>file expected.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="79"/>
+        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="82"/>
         <source>Un repertoire est attendu.  </source>
         <translation>directory expected</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="81"/>
+        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="84"/>
         <source>Type de base inconnu</source>
         <translation>unkown type</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="128"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="172"/>
         <source>Visualisation Fichier </source>
         <translation>view file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="128"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="172"/>
         <source>Impossibilite d&apos;afficher le Fichier</source>
         <translation>Unable to display file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="141"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="185"/>
         <source>Sauvegarder Fichier</source>
         <translation>save File</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="155"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="199"/>
         <source>Fichier selectionne</source>
         <translation>file selected</translation>
     </message>
@@ -1042,7 +1043,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Please, enter a single value</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpComplexe.py" line="157"/>
+        <location filename="../../InterfaceQT4/monWidgetSimpComplexe.py" line="158"/>
         <source>saisir le type de complexe</source>
         <translation>choose complex&apos;s type</translation>
     </message>
@@ -1108,7 +1109,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>version</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/readercata.py" line="270"/>
+        <location filename="../../InterfaceQT4/readercata.py" line="272"/>
         <source> pour </source>
         <translation> for </translation>
     </message>
@@ -1143,37 +1144,37 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>enter a complex</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/readercata.py" line="149"/>
+        <location filename="../../InterfaceQT4/readercata.py" line="147"/>
         <source>Import du catalogue</source>
         <translation>Loading catalog</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/readercata.py" line="97"/>
+        <location filename="../../InterfaceQT4/readercata.py" line="95"/>
         <source>Pas de catalogue defini pour le code </source>
         <translation>No catalog for this code</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/readercata.py" line="121"/>
+        <location filename="../../InterfaceQT4/readercata.py" line="119"/>
         <source>Aucun catalogue trouve</source>
         <translation>No catalog</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/readercata.py" line="272"/>
+        <location filename="../../InterfaceQT4/readercata.py" line="274"/>
         <source> avec le catalogue </source>
         <translation>with catalog  </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/readercata.py" line="149"/>
+        <location filename="../../InterfaceQT4/readercata.py" line="147"/>
         <source>Impossible d&apos;importer le catalogue </source>
         <translation>unable to load catalog</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/readercata.py" line="262"/>
+        <location filename="../../InterfaceQT4/readercata.py" line="264"/>
         <source>Choix d une version du code </source>
         <translation>Choose a version for </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/readercata.py" line="264"/>
+        <location filename="../../InterfaceQT4/readercata.py" line="266"/>
         <source>Choix d une version </source>
         <translation>choose a version</translation>
     </message>
@@ -1303,52 +1304,52 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="307"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="332"/>
         <source>Fichier Duplique</source>
         <translation>file is duplicated</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="307"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="332"/>
         <source>Le fichier ne sera pas sauvegarde.</source>
         <translation>File will not be saved.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="319"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="344"/>
         <source>&amp;Annuler</source>
         <translation>&amp;Cancel</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="237"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="262"/>
         <source>Fichier</source>
         <translation>File</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="237"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="262"/>
         <source>Le fichier &lt;b&gt;%s&lt;/b&gt; est deja ouvert.</source>
         <translation>File  &lt;b&gt;%s&lt;/b&gt; is already open.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="237"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="262"/>
         <source>&amp;Duplication</source>
         <translation>&amp;Duplication</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="237"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="262"/>
         <source>&amp;Abort</source>
         <translation>&amp;Abort</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="319"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="344"/>
         <source>Fichier Modifie</source>
         <translation>File is modified</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="319"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="344"/>
         <source>Le fichier %s n a pas ete sauvegarde.</source>
         <translation>file %s was not saved.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="319"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="344"/>
         <source>&amp;Sauvegarder</source>
         <translation>&amp;Save</translation>
     </message>
@@ -1378,15 +1379,15 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="820"/>
         <source>ERREUR! ce groupe de maille (%s) n&apos;a pas de prefixe valable</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="825"/>
         <source>ERREUR! ce type de bloc (%s) n&apos;est pas valable</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="328"/>
+        <location filename="../../InterfaceQT4/browser.py" line="426"/>
         <source>  n&apos;est pas un index valide pour append_brother</source>
         <translation>is not correct - no possible &quot;append_brother&quot;</translation>
     </message>
@@ -1401,34 +1402,34 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>unable to display law&apos;s PDF.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="663"/>
+        <location filename="../../InterfaceQT4/editor.py" line="697"/>
         <source>Le fichier contient une commande MODEL
 </source>
         <translation>file contains MODEL command </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="664"/>
+        <location filename="../../InterfaceQT4/editor.py" line="698"/>
         <source>Donnez le nom du fichier XML qui contient la description des variables</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1048"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1090"/>
         <source>Choix unite %d </source>
         <translation>Choice for unit %d</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1051"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1093"/>
         <source>Fichier pour unite </source>
         <translation>File for unit </translation>
     </message>
     <message>
         <location filename="../../Extensions/interpreteur_formule.py" line="97"/>
-        <source>La formule passee &#xe0; l&apos;interpreteur doit etre sous forme de tuple</source>
+        <source>La formule passee à l&apos;interpreteur doit etre sous forme de tuple</source>
         <translation>formula must be written as tuple</translation>
     </message>
     <message>
         <location filename="../../Extensions/nuplet.py" line="104"/>
-        <source>D&#xe9;but </source>
+        <source>Début </source>
         <translation>Beginning</translation>
     </message>
     <message>
@@ -1437,18 +1438,18 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>None is not a valid value for EVAL</translation>
     </message>
     <message>
-        <location filename="../../Extensions/parametre.py" line="187"/>
-        <source>Pas de nom donn&#xe9; au param&#xe8;tre </source>
+        <location filename="../../Extensions/parametre.py" line="188"/>
+        <source>Pas de nom donné au paramètre </source>
         <translation>No name given</translation>
     </message>
     <message>
-        <location filename="../../Extensions/parametre.py" line="192"/>
-        <source>Le param&#xe8;tre %s ne peut valoir None</source>
+        <location filename="../../Extensions/parametre.py" line="193"/>
+        <source>Le paramètre %s ne peut valoir None</source>
         <translation>None is an incorrect value for parameter %s</translation>
     </message>
     <message>
         <location filename="../../generator/generator_aplat.py" line="147"/>
-        <source>Format pas impl&#xe9;ment&#xe9; : %s</source>
+        <source>Format pas implémenté : %s</source>
         <translation>Not implemented fromat</translation>
     </message>
     <message>
@@ -1459,7 +1460,7 @@ Le fichier associe n&apos;est pas defini</source>
     </message>
     <message>
         <location filename="../../Ihm/I_FORM_ETAPE.py" line="138"/>
-        <source>Impossible de r&#xe9;aliser la v&#xe9;rification de la formule</source>
+        <source>Impossible de réaliser la vérification de la formule</source>
         <translation>unable to verify formula</translation>
     </message>
     <message>
@@ -1468,7 +1469,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>internal problem : unable to delete keyword</translation>
     </message>
     <message>
-        <location filename="../../convert/parseur_python.py" line="479"/>
+        <location filename="../../convert/parseur_python.py" line="483"/>
         <source>Eficas ne peut pas traiter plusieurs instructions 
                                                  sur la meme ligne : %s</source>
         <translation>Eficas is not able to manage many instructions on a same line</translation>
@@ -1527,41 +1528,41 @@ Le fichier associe n&apos;est pas defini</source>
         <source>ATTENTION! Une source constante 
                                   n&apos;est possible qu&apos;a frequence nulle 
                                   en regime frequentiel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="491"/>
         <source>ERREUR! Une forme de la source du 
                                type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="512"/>
         <source>ATTENTION! Une source constante n&apos;est 
                                   possible qu&apos;a frequence nulle en regime frequentiel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="548"/>
         <source>ERREUR! Une forme de la source du type 
                                WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="817"/>
         <source>ERREUR! ce groupe de maille (%s) n&apos;a pas de prefixe 
                                 indiquant le type de materiau ou de source associee</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../generator/generator_CARMEL3D.py" line="827"/>
         <source>ERREUR! ce groupe de maille (%(nom)s) n&apos;a pas 
                                         le prefixe correct pour etre associe a un type %(type_bloc)s</source>
         <comment>nom</comment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_ETAPE.py" line="483"/>
+        <location filename="../../Ihm/I_ETAPE.py" line="485"/>
         <source>
    Include Invalide. 
   ne sera pas pris en compte</source>
@@ -1584,59 +1585,59 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>PARAMETER</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="728"/>
+        <location filename="../../InterfaceQT4/editor.py" line="762"/>
         <source>EFICAS ne sait pas convertir le JDC selon le format </source>
         <translation>Eficas does not know how to convert data according to the defined format</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="787"/>
+        <location filename="../../InterfaceQT4/editor.py" line="821"/>
         <source>le JDC doit etre valide pour une execution </source>
         <translation>Before a run action, JDC must be valid</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="811"/>
+        <location filename="../../InterfaceQT4/editor.py" line="845"/>
         <source>Sauvegarder SVP avant l&apos;execution </source>
         <translation>Save before run action</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="880"/>
+        <location filename="../../InterfaceQT4/editor.py" line="914"/>
         <source>Sauvegarde de l&apos;input impossible </source>
         <translation>unable to save input file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="873"/>
+        <location filename="../../InterfaceQT4/editor.py" line="907"/>
         <source>Un JdC valide est necessaire pour creer un .input</source>
         <translation>file must be valid to create a .input file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="880"/>
+        <location filename="../../InterfaceQT4/editor.py" line="914"/>
         <source>Choix du composant obligatoire</source>
         <translation>You have to choose a component</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1049"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1091"/>
         <source>Le fichier %s contient une commande INCLUDE 
 </source>
         <translation>file %s contains an &quot;INCLUDE&quot; command</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1055"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1097"/>
         <source>Donnez le nom du fichier dont vous 
  voulez faire une poursuite</source>
         <translation>Name the principal file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1167"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1218"/>
         <source>Fichiers Med (*.med);;Tous les Fichiers (*)</source>
         <translation>Med Files (*.med);;All Files(*)</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1170"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1221"/>
         <source>Fichier Med</source>
         <translation>Med File</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1170"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1221"/>
         <source>Veuillez selectionner un fichier Med</source>
         <translation>Choose a Med file</translation>
     </message>
@@ -1686,12 +1687,12 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Help is not available</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="210"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="254"/>
         <source>Export Med vers Fichier </source>
         <translation>export Med Mesh in a file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="210"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="254"/>
         <source>Impossibilite d exporter le Fichier</source>
         <translation>Unable to export file</translation>
     </message>
@@ -1703,12 +1704,12 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../InterfaceQT4/monChoixCommande.py" line="162"/>
         <source>Commande non choisie </source>
-        <translation>Choose a command</translation>
+        <translation type="obsolete">Choose a command</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/monChoixCommande.py" line="162"/>
         <source>Vous devez choisir une commande</source>
-        <translation>Choose a command</translation>
+        <translation type="obsolete">Choose a command</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/monWidgetSimpTuple3.py" line="47"/>
@@ -1716,18 +1717,18 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>value can not be changed</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetOptionnel.py" line="80"/>
+        <location filename="../../InterfaceQT4/monWidgetOptionnel.py" line="90"/>
         <source>Options pour 
 </source>
         <translation>Settings </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="152"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="160"/>
         <source>Nombre minimal de valeurs : </source>
         <translation>minimal number of values :</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="154"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="162"/>
         <source>Nombre maximal de valeurs : </source>
         <translation>Maximal number of values :</translation>
     </message>
@@ -1747,34 +1748,34 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Value is not authorized</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="348"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="350"/>
         <source>Accquisition Groupe Maille</source>
-        <translation type="unfinished"></translation>
+        <translation>acquiers mesh groups</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="269"/>
-        <source>Fichier non encore nomm&#xc3;&#xa9; </source>
+        <location filename="../../InterfaceQT4/viewManager.py" line="294"/>
+        <source>Fichier non encore nommÃ© </source>
         <translation>unnamed file</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_JDC.py" line="383"/>
-        <source>Nom de concept invalide. &apos;%s&apos; est un mot-cl&#xc3;&#xa9; r&#xc3;&#xa9;serv&#xc3;&#xa9;.</source>
-        <translation>invalid concept :&apos;%s&apos;  is a reserved keyword</translation>
+        <source>Nom de concept invalide. &apos;%s&apos; est un mot-clÃ© rÃ©servÃ©.</source>
+        <translation type="obsolete">invalid concept :&apos;%s&apos;  is a reserved keyword</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_JDC.py" line="448"/>
         <source>Impossible de trouver le fichier correspondant a l unite %s</source>
-        <translation>unable to find file for unit %s</translation>
+        <translation type="obsolete">unable to find file for unit %s</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_JDC.py" line="451"/>
         <source>%s n&apos;est pas un fichier existant</source>
-        <translation>%s is not an existing file</translation>
+        <translation type="obsolete">%s is not an existing file</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_JDC.py" line="544"/>
         <source>concept &apos;%s&apos; absent du contexte de %s</source>
-        <translation>concept &apos;%s&apos; not in context  %s </translation>
+        <translation type="obsolete">concept &apos;%s&apos; not in context  %s </translation>
     </message>
     <message>
         <location filename="../../CarmelCND/PourTraductionCarmel.py" line="1"/>
@@ -1799,7 +1800,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../CarmelCND/PourTraductionCarmel.py" line="5"/>
         <source>Centre</source>
-        <translation>Center<byte value="x9"/></translation>
+        <translation>Center	</translation>
     </message>
     <message>
         <location filename="../../CarmelCND/PourTraductionCarmel.py" line="6"/>
@@ -1883,80 +1884,415 @@ Le fichier associe n&apos;est pas defini</source>
     </message>
     <message>
         <location filename="../../Validation/V_MCSIMP.py" line="121"/>
-        <source>None n&apos;est pas une valeur autoris&#xe9;e</source>
-        <translation>None is not a valid value</translation>
+        <source>None n&apos;est pas une valeur autorisée</source>
+        <translation type="obsolete">None is not a valid value</translation>
     </message>
     <message>
         <location filename="../../Validation/V_MCSIMP.py" line="161"/>
-        <source>Mot-cl&#xe9; %s invalide : %s
-Crit&#xe8;re de validit&#xe9;: %s</source>
-        <translation>Invalid keyword %s : %s
+        <source>Mot-clé %s invalide : %s
+Critère de validité: %s</source>
+        <translation type="obsolete">Invalid keyword %s : %s
 validity criteria: %s</translation>
     </message>
     <message>
         <location filename="../../Validation/V_MCSIMP.py" line="200"/>
-        <source>Mot-cl&#xe9; simple : </source>
-        <translation>keyword :</translation>
+        <source>Mot-clé simple : </source>
+        <translation type="obsolete">keyword :</translation>
     </message>
     <message>
-        <location filename="../../Validation/V_MCSIMP.py" line="201"/>
-        <source>Fin Mot-cl&#xe9; simple : </source>
-        <translation>End Keyword :</translation>
+        <location filename="pourValidation.py" line="4"/>
+        <source>Fin Mot-clé simple : </source>
+        <translation type="obsolete">End Keyword :</translation>
     </message>
     <message>
         <location filename="../../Validation/V_MCSIMP.py" line="207"/>
-        <source>Mot-cl&#xe9; simple : %s %s</source>
-        <translation>Keyword: %s %s </translation>
+        <source>Mot-clé simple : %s %s</source>
+        <translation type="obsolete">Keyword: %s %s </translation>
     </message>
     <message>
         <location filename="../../Validation/V_ETAPE.py" line="239"/>
         <source>Etape : </source>
-        <translation>Command : </translation>
+        <translation type="obsolete">Command : </translation>
     </message>
     <message>
         <location filename="../../Validation/V_ETAPE.py" line="239"/>
         <source>    ligne : </source>
-        <translation>    line :              </translation>
+        <translation type="obsolete">    line :              </translation>
     </message>
     <message>
         <location filename="../../Validation/V_ETAPE.py" line="239"/>
         <source>    fichier :</source>
-        <translation>    File : </translation>
+        <translation type="obsolete">    File : </translation>
     </message>
     <message>
         <location filename="../../Validation/V_ETAPE.py" line="230"/>
         <source>Fin Etape : </source>
-        <translation>End Command :</translation>
+        <translation type="obsolete">End Command :</translation>
     </message>
     <message>
         <location filename="../../Validation/V_JDC.py" line="52"/>
         <source>DEBUT CR validation : </source>
-        <translation>BEGIN Validation Report : </translation>
+        <translation type="obsolete">BEGIN Validation Report : </translation>
     </message>
     <message>
         <location filename="../../Validation/V_JDC.py" line="53"/>
         <source>FIN CR validation : </source>
-        <translation>END Validation report : </translation>
+        <translation type="obsolete">END Validation report : </translation>
     </message>
     <message>
-        <location filename="../../Validation/V_MCSIMP.py" line="108"/>
-        <source>Mot-cl&#xe9; : %s obligatoire non valoris&#xe9;</source>
-        <translation>Mandatory Keyword %s has no value</translation>
+        <location filename="pourValidation.py" line="1"/>
+        <source>Mot-clé : %s obligatoire non valorisé</source>
+        <translation type="obsolete">Mandatory Keyword %s has no value</translation>
     </message>
     <message>
         <location filename="../../Validation/V_MCSIMP.py" line="197"/>
         <source>Mot-clef simple : </source>
-        <translation>Keyword :</translation>
-    </message>
-    <message>
-        <location filename="pourValidation.py" line="2"/>
-        <source>None n&apos;est pas ujjjjjjjjjne valeur autoris&#xe9;e</source>
-        <translation></translation>
+        <translation type="obsolete">Keyword :</translation>
     </message>
     <message>
         <location filename="pourValidation.py" line="3"/>
         <source>Mot-cle simple : </source>
-        <translation>Keyword :</translation>
+        <translation type="obsolete">Keyword :</translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_python.py" line="112"/>
+        <source>Format non implemente </source>
+        <translation>non implemented format</translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_python.py" line="163"/>
+        <source>Type d&apos;objet non prevu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/gereListe.py" line="169"/>
+        <source>Fichier de donnees</source>
+        <translation>data file</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/gereListe.py" line="169"/>
+        <source>Tous les  Fichiers (*)</source>
+        <translation>all files (*)</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetCB.py" line="51"/>
+        <source>Select</source>
+        <translation>select</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursBase.py" line="228"/>
+        <source>nb min de valeurs : </source>
+        <translation>minimal number of values :</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursBase.py" line="233"/>
+        <source>nb max de valeurs atteint</source>
+        <translation>maximum number of values</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="328"/>
+        <source>TraduitV10V11</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="331"/>
+        <source>TraduitV11V12</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="333"/>
+        <source>Sauve Format Ligne</source>
+        <translation>save file in line format</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/qtSaisie.py" line="137"/>
+        <source>Valeur du mot-clef enregistree</source>
+        <translation>value recorded</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/qtSaisie.py" line="141"/>
+        <source>Valeur du mot-clef non autorisee :</source>
+        <translation>unvalid value</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/viewManager.py" line="182"/>
+        <source>Creation ParamÃ¨tre indisponible</source>
+        <translation>Not implemented</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/viewManager.py" line="182"/>
+        <source>les paramÃ¨tres sont liÃ©s Ã  un jeu de donnÃ©es</source>
+        <translation>Parameter are defined for a JDC</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="173"/>
+        <source>%s n&apos;est pas un fichier valide</source>
+        <translation>%s is not a valid file</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="195"/>
+        <source>Type non encore gÃ©rÃ© %s</source>
+        <translation type="obsolete">unvalid type</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="196"/>
+        <source>%s (de type %s) n&apos;est pas d&apos;un type autorisÃ©: %s %s</source>
+        <translation type="obsolete">%s (type %) is not valid : should be %s%s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="255"/>
+        <source>Nombre d&apos;arguments de %s incorrect (min = %s, max = %s)</source>
+        <translation>incorrect number of arguments </translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="277"/>
+        <source>La valeur : %s  ne fait pas partie des choix possibles %s</source>
+        <translation>value %s is not valid</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="290"/>
+        <source>La valeur : %s est en dehors du domaine de validitÃ© [ %s , %s ]</source>
+        <translation type="obsolete">%s is not a value in [%s,%s]</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="309"/>
+        <source>%s n&apos;est pas une chaine de longueur comprise entre %s et %s</source>
+        <translation>%s is not a valid string. length must be betwenn %s and %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="315"/>
+        <source>TXM de longueur entre %s et %s</source>
+        <translation>string : length msut be between %s and %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="533"/>
+        <source>valeur %s obligatoire</source>
+        <translation>mandatory value %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="548"/>
+        <source>%s ne contient pas les elements obligatoires : %s </source>
+        <translation>%s does not contain mandatory elements %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="585"/>
+        <source>%s prÃ©sent ensemble</source>
+        <translation type="obsolete">%s present together</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="600"/>
+        <source>%s ne contient pas les Ã©lÃ©ments devant Ãªtre prÃ©sent ensemble: %s </source>
+        <translation type="obsolete">% does not contains elements which had to be present simultaneously</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="637"/>
+        <source>%s absent</source>
+        <translation>%s mandatory</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="650"/>
+        <source>%s n&apos;est pas autorisÃ© : %s </source>
+        <translation type="obsolete">%s is not valid</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="686"/>
+        <source>%s est un doublon</source>
+        <translation>%s is a double</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="742"/>
+        <source>longueur de la chaine entre %s et %s</source>
+        <translation>string with a length between %s and %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="745"/>
+        <source>Longueur de la chaine incorrecte</source>
+        <translation>incorrect length</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="802"/>
+        <source>%s n&apos;est pas une chaine</source>
+        <translation>% is not a string</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="766"/>
+        <source>%s n&apos;est pas de la bonne longueur</source>
+        <translation>%s has not a valid length</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="819"/>
+        <source>liste %s</source>
+        <translation>list %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="822"/>
+        <source>La liste doit etre en ordre %s</source>
+        <translation>list must be ordered %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="834"/>
+        <source>%s n&apos;est pas par valeurs croissantes</source>
+        <translation>%s is not increasing</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="838"/>
+        <source>%s n&apos;est pas par valeurs decroissantes</source>
+        <translation>%s in not decreasing</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="897"/>
+        <source>%s n&apos;est pas du bon type</source>
+        <translation>%s has not a valid type</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1186"/>
+        <source>%s doit Ãªtre infÃ©rieur a %s</source>
+        <translation type="obsolete">%s must be &lt; %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1189"/>
+        <source>valeur dans l&apos;intervalle %s , %s</source>
+        <translation>value must be in [%s;%s]</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1194"/>
+        <source>%s devrait Ãªtre comprise entre %s et %s</source>
+        <translation type="obsolete">%s must be between %s and %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1201"/>
+        <source>La valeur doit etre comprise entre %s et %s</source>
+        <translation>value must be [%s,%s]</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1222"/>
+        <source>%s doit etre inferieur a %s</source>
+        <translation>%s must be &lt; %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1225"/>
+        <source>longueur de liste comprise entre  %s et %s</source>
+        <translation>list&apos;s length must be in [ %s, %s ]</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1228"/>
+        <source>Le cardinal de la liste doit etre compris entre %s et %s</source>
+        <translation>list&apos;s length must be in [%s, %s]</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1255"/>
+        <source>%s devrait etre de longueur inferieure a %s</source>
+        <translation>%s must have a length &lt; %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1258"/>
+        <source>%s devrait etre de longueur superieure a %s</source>
+        <translation>%s must have a lenght &gt; %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1315"/>
+        <source>%s contient des valeurs non paires</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1359"/>
+        <source>%s contient des valeurs hors des choix possibles: %s </source>
+        <translation>%s contains unvalid values</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1418"/>
+        <source>valeur %s pour la somme des cles A et B </source>
+        <translation>value %s for the sum of keys A and B</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1493"/>
+        <source>valeur de %s</source>
+        <translation>value of %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1541"/>
+        <source>valeur d&apos;instance de %s</source>
+        <translation>value of %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1557"/>
+        <source>: verifie les types dans un tuple</source>
+        <translation>valids type in a list</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1560"/>
+        <source>Les types entrÃ©s ne sont pas permis</source>
+        <translation>unvalid type for values</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1577"/>
+        <source>%s devrait etre de type  %s </source>
+        <translation>%s should be of %s type</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1670"/>
+        <source>%s n&apos;est pas dans %s</source>
+        <translation>%s in not in %s</translation>
+    </message>
+    <message>
+        <location filename="../../Validation/V_PROC_ETAPE.py" line="68"/>
+        <source>Mots clÃ©s inconnus : %s</source>
+        <translation type="obsolete">unknown keyword</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="37"/>
+        <source>%s n&apos;est pas un  valide</source>
+        <translation type="obsolete">%s not valid</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="38"/>
+        <source>uuuuuuuu</source>
+        <translation type="obsolete">aaaaaaaaaa</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="600"/>
+        <source>%s ne contient pas les elements devant etre presents ensemble: %s </source>
+        <translation>%s does not contains elements which have to be together : %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="650"/>
+        <source>%s n&apos;est pas autorise : %s </source>
+        <translation>%s in not valide : %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1194"/>
+        <source>%s devrait etre comprise entre %s et %s</source>
+        <translation>%s have to be between %s and %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="180"/>
+        <source>%s n&apos;est pas un repertoire valide</source>
+        <translation>%s is not a valid directory</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="195"/>
+        <source>Type non encore gere %s</source>
+        <translation>unknown type %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="196"/>
+        <source>%s (de type %s) n&apos;est pas d&apos;un type autorise: %s %s</source>
+        <translation>%s (type %s) is not a valid type : %s %s</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="290"/>
+        <source>La valeur : %s est en dehors du domaine de validite [ %s , %s ]</source>
+        <translation>value %s is not included in [%s, %s]</translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="585"/>
+        <source>%s present ensemble</source>
+        <translation>%s together</translation>
+    </message>
+    <message>
+        <location filename="../../Validation/V_PROC_ETAPE.py" line="68"/>
+        <source>unknown keywords : %s</source>
+        <translation>unknown keywords : %s</translation>
     </message>
 </context>
 <context>
@@ -1964,22 +2300,22 @@ validity criteria: %s</translation>
     <message>
         <location filename="../../UiQT4/aideQT.ui" line="14"/>
         <source>Aide</source>
-        <translation>Help</translation>
+        <translation type="obsolete">Help</translation>
     </message>
     <message>
         <location filename="../../UiQT4/aideQT.ui" line="29"/>
         <source>Index</source>
-        <translation>Index</translation>
+        <translation type="obsolete">Index</translation>
     </message>
     <message>
         <location filename="../../UiQT4/aideQT.ui" line="45"/>
         <source>Back</source>
-        <translation>Back</translation>
+        <translation type="obsolete">Back</translation>
     </message>
     <message>
         <location filename="../../UiQT4/aideQT.ui" line="61"/>
         <source>Forward</source>
-        <translation>Foward</translation>
+        <translation type="obsolete">Foward</translation>
     </message>
 </context>
 <context>
@@ -1992,32 +2328,62 @@ validity criteria: %s</translation>
     <message>
         <location filename="../../UiQT4/desChoixCommandes.ui" line="86"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Recherche Commande&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Find Command&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Find Command&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="123"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="85"/>
         <source>Alphabetique</source>
         <translation>alphabetic sort</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="130"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="105"/>
         <source>Par Groupe</source>
         <translation>Sort by group</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="../../UiQT4/desChoixCommandes.ui" line="185"/>
         <source>Mise en données de la commande sélectionnée dans l&apos;arbre. Un double-clic permet également de choisir une commande</source>
-        <translation>Data entry form for the selected item. Selections are done by double-clicked</translation>
+        <translation type="obsolete">Data entry form for the selected item. Selections are done by double-clicked</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desChoixCommandes.ui" line="194"/>
         <source>&amp;Formulaire</source>
-        <translation>&amp;Form</translation>
+        <translation type="obsolete">&amp;Form</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desChoixCommandes.ui" line="197"/>
         <source>Shift+A, Alt+A, Alt+A, Alt+A</source>
-        <translation>Shift+A, Alt+A, Alt+A, Alt+A</translation>
+        <translation type="obsolete">Shift+A, Alt+A, Alt+A, Alt+A</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="73"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Affichage&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="82"/>
+        <source>affiche les commandes par ordre alphabetique</source>
+        <translation>display commands in alphabetic order</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="102"/>
+        <source>affiche les commandes selon les thèmes</source>
+        <translation>display commands by thema</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="95"/>
+        <source>Ordre de la modélisation</source>
+        <translation>display commands ordered by modelisation</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="152"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Filtre Commande&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>filters commands</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="174"/>
+        <source>filter commands</source>
+        <translation>filters commands</translation>
     </message>
 </context>
 <context>
@@ -2047,65 +2413,88 @@ p, li { white-space: pre-wrap; }
 &lt;td style=&quot;border: none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large;&quot;&gt;Veuillez choisir celle avec laquelle&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large;&quot;&gt; vous souhaitez travailler&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;p, li { white-space: pre-wrap; }&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;&lt;table style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border: none;&quot;&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large;&quot;&gt;Please, choose the one &lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large;&quot;&gt; you want to use&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="obsolete">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;p, li { white-space: pre-wrap; }&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;&lt;table style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border: none;&quot;&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large;&quot;&gt;Please, choose the one &lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large;&quot;&gt; you want to use&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCata.ui" line="170"/>
+        <location filename="../../UiQT4/desChoixCata.ui" line="180"/>
         <source>&amp;OK</source>
         <translation>&amp;Ok</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCata.ui" line="205"/>
+        <location filename="../../UiQT4/desChoixCata.ui" line="135"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Cancel</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desChoixCata.ui" line="170"/>
+        <source>Validate choice</source>
+        <translation>validate choice</translation>
     </message>
 </context>
 <context>
     <name>DSelVal</name>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="../../UiQT4/desSelectVal.ui" line="14"/>
         <source>Sélection de valeurs</source>
         <translation>Values Selections</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desSelectVal.ui" line="44"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="45"/>
         <source>Separateur</source>
         <translation>marker</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desSelectVal.ui" line="53"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="54"/>
         <source>espace</source>
         <translation>space</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desSelectVal.ui" line="63"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="64"/>
         <source>virgule</source>
         <translation>comma</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desSelectVal.ui" line="70"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="71"/>
         <source>point-virgule</source>
         <translation>semi-colon</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desSelectVal.ui" line="142"/>
         <source>validation de la saisie</source>
-        <translation>Entry Validation</translation>
+        <translation type="obsolete">Entry Validation</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desSelectVal.ui" line="101"/>
         <source>&amp;Ajouter Selection</source>
-        <translation>&amp;Add Selection</translation>
+        <translation type="obsolete">&amp;Add Selection</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desSelectVal.ui" line="154"/>
         <source>Shift+A, Alt+A, Alt+A, Alt+A</source>
-        <translation>Shift+A, Alt+A, Alt+A, Alt+A</translation>
+        <translation type="obsolete">Shift+A, Alt+A, Alt+A, Alt+A</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desSelectVal.ui" line="151"/>
         <source>&amp;Importer Tout</source>
-        <translation>&amp;Import all</translation>
+        <translation type="obsolete">&amp;Import all</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desSelectVal.ui" line="108"/>
+        <source>Ajouter Selection</source>
+        <translation>add selected value</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desSelectVal.ui" line="127"/>
+        <source>Importer Tout</source>
+        <translation>imports all values</translation>
+    </message>
+</context>
+<context>
+    <name>DVisu</name>
+    <message>
+        <location filename="../../UiQT4/desVisu.ui" line="14"/>
+        <source>Visualisation Include Materiau</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -2131,32 +2520,32 @@ p, li { white-space: pre-wrap; }
         <translation>toolBar</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="216"/>
+        <location filename="../../UiQT4/myMain.ui" line="215"/>
         <source>&amp;Nouveau</source>
         <translation>&amp;New</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="219"/>
+        <location filename="../../UiQT4/myMain.ui" line="218"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="224"/>
+        <location filename="../../UiQT4/myMain.ui" line="223"/>
         <source>Nouvel Include</source>
         <translation>New Include</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="236"/>
+        <location filename="../../UiQT4/myMain.ui" line="234"/>
         <source>&amp;Ouvrir</source>
         <translation>&amp;Open</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="239"/>
+        <location filename="../../UiQT4/myMain.ui" line="237"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="248"/>
+        <location filename="../../UiQT4/myMain.ui" line="245"/>
         <source>Enregistrer</source>
         <translation>Save</translation>
     </message>
@@ -2181,102 +2570,102 @@ p, li { white-space: pre-wrap; }
         <translation>Close all</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="286"/>
+        <location filename="../../UiQT4/myMain.ui" line="285"/>
         <source>Couper</source>
         <translation>Cut</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="289"/>
+        <location filename="../../UiQT4/myMain.ui" line="288"/>
         <source>Ctrl+X</source>
         <translation>Ctrl+X</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="301"/>
+        <location filename="../../UiQT4/myMain.ui" line="299"/>
         <source>Copier</source>
         <translation>Copy</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="304"/>
+        <location filename="../../UiQT4/myMain.ui" line="302"/>
         <source>Ctrl+C</source>
         <translation>Ctrl+C</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="316"/>
+        <location filename="../../UiQT4/myMain.ui" line="313"/>
         <source>Coller</source>
         <translation>Paste</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="319"/>
+        <location filename="../../UiQT4/myMain.ui" line="316"/>
         <source>Ctrl+V</source>
         <translation>Ctrl+V</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="327"/>
+        <location filename="../../UiQT4/myMain.ui" line="324"/>
         <source>Quitter</source>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="330"/>
+        <location filename="../../UiQT4/myMain.ui" line="327"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="335"/>
+        <location filename="../../UiQT4/myMain.ui" line="332"/>
         <source>Rapport de Validation</source>
         <translation>Validation Report</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="346"/>
+        <location filename="../../UiQT4/myMain.ui" line="343"/>
         <source>Fichier Source</source>
         <translation>Source File</translation>
     </message>
-    <message encoding="UTF-8">
-        <location filename="../../UiQT4/myMain.ui" line="351"/>
+    <message utf8="true">
+        <location filename="../../UiQT4/myMain.ui" line="348"/>
         <source>Fichier Résultat</source>
         <translation>Result File</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="256"/>
+        <location filename="../../UiQT4/myMain.ui" line="253"/>
         <source>Parametres Eficas</source>
         <translation>Eficas Parameters</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="356"/>
+        <location filename="../../UiQT4/myMain.ui" line="353"/>
         <source>Lecteur documentation</source>
         <translation>documentation reader</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="361"/>
+        <location filename="../../UiQT4/myMain.ui" line="358"/>
         <source>Eficas</source>
         <translation>Eficas</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="366"/>
+        <location filename="../../UiQT4/myMain.ui" line="363"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="375"/>
+        <location filename="../../UiQT4/myMain.ui" line="371"/>
         <source>Supprimer</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="394"/>
+        <location filename="../../UiQT4/myMain.ui" line="393"/>
         <source>Rechercher</source>
         <translation>Find</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="397"/>
+        <location filename="../../UiQT4/myMain.ui" line="396"/>
         <source> Rechercher dans l&apos;arbre d&apos;etude</source>
         <translation>Find in JdC Tree</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="400"/>
+        <location filename="../../UiQT4/myMain.ui" line="399"/>
         <source>Ctrl+F</source>
         <translation>Ctrl+F</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="408"/>
+        <location filename="../../UiQT4/myMain.ui" line="407"/>
         <source>Replier/Deplier</source>
         <translation>Expand/Collapse</translation>
     </message>
@@ -2305,106 +2694,106 @@ p, li { white-space: pre-wrap; }
         <source>&amp;Edition</source>
         <translation>&amp;Edit</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="../../UiQT4/myMain.ui" line="160"/>
         <source>&amp;JeuDeDonnées</source>
         <translation>&amp;Data</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="227"/>
+        <location filename="../../UiQT4/myMain.ui" line="226"/>
         <source>Shift+I</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="251"/>
+        <location filename="../../UiQT4/myMain.ui" line="248"/>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../UiQT4/myMain.ui" line="264"/>
         <source>Ctrl+Shift+S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="338"/>
+        <location filename="../../UiQT4/myMain.ui" line="335"/>
         <source>Shift+V</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="380"/>
+        <location filename="../../UiQT4/myMain.ui" line="376"/>
         <source>Chercher Mot-Clef</source>
         <translation> find Keyword</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="383"/>
+        <location filename="../../UiQT4/myMain.ui" line="379"/>
         <source> Rechercher dans le catalogue</source>
         <translation>find Keyword in Catalog</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="386"/>
+        <location filename="../../UiQT4/myMain.ui" line="382"/>
         <source>Shift+F</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="411"/>
+        <location filename="../../UiQT4/myMain.ui" line="410"/>
         <source>Shift+D</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="416"/>
+        <location filename="../../UiQT4/myMain.ui" line="415"/>
         <source>Commentaire</source>
         <translation>Comment</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="419"/>
+        <location filename="../../UiQT4/myMain.ui" line="418"/>
         <source>Shift+C</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
-    <message encoding="UTF-8">
-        <location filename="../../UiQT4/myMain.ui" line="428"/>
+    <message utf8="true">
+        <location filename="../../UiQT4/myMain.ui" line="427"/>
         <source>Paramètres</source>
         <translation>Parameters</translation>
     </message>
-    <message encoding="UTF-8">
-        <location filename="../../UiQT4/myMain.ui" line="431"/>
+    <message utf8="true">
+        <location filename="../../UiQT4/myMain.ui" line="430"/>
         <source>Gestion des paramètres</source>
         <translation>Managing parameters</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="434"/>
+        <location filename="../../UiQT4/myMain.ui" line="433"/>
         <source>Shift+P</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/myMain.ui" line="439"/>
+        <location filename="../../UiQT4/myMain.ui" line="438"/>
         <source>Parametre Eficas</source>
         <translation>Eficas Settings</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/qtEficas_with_log.py" line="176"/>
         <source>Save Run</source>
-        <translation type="unfinished"></translation>
+        <translation>Save run</translation>
     </message>
 </context>
 <context>
     <name>JDCEditor</name>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="702"/>
+        <location filename="../../InterfaceQT4/editor.py" line="736"/>
         <source>Save File</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="702"/>
+        <location filename="../../InterfaceQT4/editor.py" line="736"/>
         <source>The file &lt;b&gt;%1&lt;/b&gt; could not be saved.&lt;br&gt;Reason: %2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="846"/>
+        <location filename="../../InterfaceQT4/editor.py" line="880"/>
         <source>JDC (*.comm);;All Files (*)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="860"/>
+        <location filename="../../InterfaceQT4/editor.py" line="894"/>
         <source>&amp;Abandonner</source>
         <translation>&amp;Cancel</translation>
     </message>
@@ -2414,22 +2803,32 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidget4a6RadioButton.ui" line="32"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidget4a6RadioButton.ui" line="273"/>
+        <location filename="../../UiQT4/desWidget4a6RadioButton.ui" line="326"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidget4a6RadioButton.ui" line="142"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../UiQT4/desWidget4a6RadioButton.ui" line="212"/>
+        <location filename="../../UiQT4/desWidget4a6RadioButton.ui" line="260"/>
         <source>RadioButton</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidget4a6RadioButton.ui" line="97"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>Display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidget4a6RadioButton.ui" line="158"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidget4a6RadioButton.ui" line="320"/>
+        <source>Détruit le mot-clef</source>
+        <translation>deletes the keyword</translation>
     </message>
 </context>
 <context>
@@ -2437,7 +2836,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetBloc.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -2445,17 +2844,27 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetCB.ui" line="32"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetCB.ui" line="198"/>
+        <location filename="../../UiQT4/desWidgetCB.ui" line="267"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetCB.ui" line="132"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../UiQT4/desWidgetCB.ui" line="100"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCB.ui" line="161"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetCB.ui" line="261"/>
+        <source>Détruit le mot-clef</source>
+        <translation>deletes the keyword</translation>
     </message>
 </context>
 <context>
@@ -2463,62 +2872,87 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetCommande.ui" line="26"/>
         <source>DCommandeUnique</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
-    <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="93"/>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="90"/>
         <source>Affiche le rapport de validité de la commande</source>
         <translation>Display validation report</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="381"/>
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="378"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="150"/>
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="147"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;commande &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;command &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html</translation>
     </message>
-    <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="179"/>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="176"/>
         <source>Nom de l&apos;objet. Seuls, les objets valides peuvent être nommés</source>
         <translation>Object Name. Only valid objects can be named </translation>
     </message>
-    <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="243"/>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="240"/>
         <source>Lance un script associé à la commande</source>
         <translation>Run associated script</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="281"/>
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="278"/>
         <source>ouvre un navigateur sur l&apos;aide contextuelle</source>
         <translation>open a browser to navigate to contextual help</translation>
     </message>
-    <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="319"/>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="316"/>
         <source>affiche les régles de validité</source>
         <translation>display validity rules</translation>
     </message>
-    <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="375"/>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="372"/>
         <source>Détruit la commande</source>
         <translation>delete the command</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="447"/>
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="422"/>
         <source>Affiche les commandes possibles</source>
         <translation>display allowed commands</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="456"/>
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="431"/>
         <source>&amp;Commandes</source>
         <translation>&amp;Commands</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetCommande.ui" line="459"/>
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="528"/>
         <source>Shift+A, Alt+A, Alt+A, Alt+A</source>
-        <translation type="unfinished">Shift+A, Alt+A, Alt+A, Alt+A</translation>
+        <translation>Shift+A, Alt+A, Alt+A, Alt+A</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="470"/>
+        <source>Affiche le formulaire de la commande précédente</source>
+        <translation>diplay previous command</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="479"/>
+        <source>&lt;&lt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="516"/>
+        <source>Affiche le formulaire de la commande suivante</source>
+        <translation>display next command</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="525"/>
+        <source>&gt;&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCommande.ui" line="547"/>
+        <source>TextLabel</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -2526,42 +2960,62 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetCommentaire.ui" line="26"/>
         <source>DCommandeUnique</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="../../UiQT4/desWidgetCommentaire.ui" line="84"/>
         <source>Affiche le rapport de validité de la commande</source>
-        <translation type="unfinished">Display validation report</translation>
+        <translation type="obsolete">Display validation report</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desWidgetCommentaire.ui" line="182"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../UiQT4/desWidgetCommentaire.ui" line="141"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;Commentaire&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Comment</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetCommentaire.ui" line="243"/>
+        <location filename="../../UiQT4/desWidgetCommentaire.ui" line="221"/>
         <source>Affiche les commandes possibles</source>
         <translation>display allowed commands</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetCommentaire.ui" line="252"/>
-        <source>&amp;Catalogue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../UiQT4/desWidgetCommentaire.ui" line="255"/>
+        <location filename="../../UiQT4/desWidgetCommentaire.ui" line="327"/>
         <source>Shift+A, Alt+A, Alt+A, Alt+A</source>
-        <translation type="unfinished">Shift+A, Alt+A, Alt+A, Alt+A</translation>
+        <translation>Shift+A, Alt+A, Alt+A, Alt+A</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="../../UiQT4/desWidgetCommentaire.ui" line="176"/>
         <source>Détruit le commentaire</source>
-        <translation type="unfinished"></translation>
+        <translation>deletes the comment</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCommentaire.ui" line="230"/>
+        <source>&amp;Commandes</source>
+        <translation>&amp;Commands</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetCommentaire.ui" line="269"/>
+        <source>Affiche le formulaire de la commande précédente</source>
+        <translation>display previous command</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCommentaire.ui" line="278"/>
+        <source>&lt;&lt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCommentaire.ui" line="315"/>
+        <source>Affiche le formulaire de la commande suivante</source>
+        <translation>display next command</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCommentaire.ui" line="324"/>
+        <source>&gt;&gt;</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -2569,17 +3023,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetFact.ui" line="17"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetFact.ui" line="341"/>
+        <location filename="../../UiQT4/desWidgetFact.ui" line="344"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetFact.ui" line="172"/>
+        <location filename="../../UiQT4/desWidgetFact.ui" line="175"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;TextLabel&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -2587,17 +3041,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetFactPlie.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../UiQT4/desWidgetFactPlie.ui" line="189"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../UiQT4/desWidgetFactPlie.ui" line="142"/>
         <source>TextLabel</source>
-        <translation type="unfinished">TextLabel</translation>
+        <translation>TextLabel</translation>
     </message>
 </context>
 <context>
@@ -2605,12 +3059,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetOptionnel.ui" line="26"/>
         <source>WidgetOptionnel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../UiQT4/desWidgetOptionnel.ui" line="69"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;commande &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;command &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;command &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desWidgetOptionnel.ui" line="190"/>
@@ -2625,25 +3079,75 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetOptionnel.ui" line="202"/>
         <source>Shift+A, Alt+A, Alt+A, Alt+A</source>
-        <translation type="unfinished">Shift+A, Alt+A, Alt+A, Alt+A</translation>
+        <translation>Shift+A, Alt+A, Alt+A, Alt+A</translation>
     </message>
 </context>
 <context>
     <name>WidgetPlusieursBase</name>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpTuple.ui" line="26"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="26"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpTuple.ui" line="279"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="690"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpTuple.ui" line="86"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="97"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="158"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="304"/>
+        <source>Remonte la ligne</source>
+        <translation>up</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="341"/>
+        <source>Descend la ligne</source>
+        <translation>down</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="378"/>
+        <source>supprime une ligne</source>
+        <translation>deletes a line</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="417"/>
+        <source>Ajoute une ligne</source>
+        <translation>add a line</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="473"/>
+        <source>Montre l&apos;ensemble des valeurs</source>
+        <translation>display all the value</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="535"/>
+        <source>Sélectionne depuis Salome</source>
+        <translation>from salome</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="573"/>
+        <source>Visualise dans Salome</source>
+        <translation>Show in salome</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="631"/>
+        <source>Ouvre un fichier de sélection des valeurs</source>
+        <translation>Open a file for selection</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="684"/>
+        <source>Détruit le mot-clef</source>
+        <translation>delete the key word</translation>
     </message>
 </context>
 <context>
@@ -2651,17 +3155,27 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="26"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="110"/>
+        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="250"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="150"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="91"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>Display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="152"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="244"/>
+        <source>Détruit le mot-clef</source>
+        <translation>delete tht keyword</translation>
     </message>
 </context>
 <context>
@@ -2669,40 +3183,60 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetRadioButton.ui" line="32"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetRadioButton.ui" line="200"/>
+        <location filename="../../UiQT4/desWidgetRadioButton.ui" line="289"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetRadioButton.ui" line="120"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../UiQT4/desWidgetRadioButton.ui" line="165"/>
+        <location filename="../../UiQT4/desWidgetRadioButton.ui" line="251"/>
         <source>RadioButton</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetRadioButton.ui" line="97"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>Display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetRadioButton.ui" line="158"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetRadioButton.ui" line="283"/>
+        <source>Détruit le mot-clef</source>
+        <translation>Delete the keyword</translation>
     </message>
 </context>
 <context>
     <name>WidgetSimpBase</name>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpBase.ui" line="26"/>
+        <location filename="../../UiQT4/desWidgetSimpBase.ui" line="32"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpBase.ui" line="209"/>
+        <location filename="../../UiQT4/desWidgetSimpBase.ui" line="257"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpBase.ui" line="126"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../UiQT4/desWidgetSimpBase.ui" line="97"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>Display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSimpBase.ui" line="158"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetSimpBase.ui" line="251"/>
+        <source>Détruit le mot-clef</source>
+        <translation>Delete the keyword</translation>
     </message>
 </context>
 <context>
@@ -2710,27 +3244,37 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetSimpBool.ui" line="32"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpBool.ui" line="200"/>
+        <location filename="../../UiQT4/desWidgetSimpBool.ui" line="252"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpBool.ui" line="129"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../UiQT4/desWidgetSimpBool.ui" line="136"/>
+        <location filename="../../UiQT4/desWidgetSimpBool.ui" line="166"/>
         <source>True</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpBool.ui" line="159"/>
+        <location filename="../../UiQT4/desWidgetSimpBool.ui" line="189"/>
         <source>False</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSimpBool.ui" line="88"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>Display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSimpBool.ui" line="149"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetSimpBool.ui" line="246"/>
+        <source>Détruit le mot-clef</source>
+        <translation>Delete the keyword</translation>
     </message>
 </context>
 <context>
@@ -2738,37 +3282,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="32"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="237"/>
+        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="339"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="137"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="157"/>
+        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="203"/>
         <source>Complexe : a+bj</source>
         <translation>Complex : a+bj</translation>
     </message>
-    <message>
-        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="191"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OU &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="206"/>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="259"/>
         <source>Réel/Imaginaire</source>
         <translation>Real/Imaginary</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="213"/>
+        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="266"/>
         <source>Module/Phase</source>
         <translation>Module/Phase</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="103"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>Display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="164"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSimpComplexe.ui" line="244"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;OU &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -2776,35 +3325,65 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetSimpFichier.ui" line="26"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpFichier.ui" line="275"/>
+        <location filename="../../UiQT4/desWidgetSimpFichier.ui" line="313"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetSimpFichier.ui" line="82"/>
+        <source>Affiche le rapport de validité du mot-clef</source>
+        <translation>Display validation report for the keyword</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpFichier.ui" line="123"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../UiQT4/desWidgetSimpFichier.ui" line="143"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSimpFichier.ui" line="222"/>
+        <source>affiche l&apos;explorateur de fichier</source>
+        <translation>open file explorer</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSimpFichier.ui" line="250"/>
+        <source>ouvre le fichier choisi</source>
+        <translation>Open the file</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetSimpFichier.ui" line="307"/>
+        <source>Détruit le mot-clef</source>
+        <translation>Delete the keyword</translation>
     </message>
 </context>
 <context>
     <name>WidgetSimpTxt</name>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpTxt.ui" line="26"/>
+        <location filename="../../UiQT4/desWidgetSimpTxt.ui" line="32"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpTxt.ui" line="293"/>
+        <location filename="../../UiQT4/desWidgetSimpTxt.ui" line="257"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetSimpTxt.ui" line="129"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../UiQT4/desWidgetSimpTxt.ui" line="97"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>Display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSimpTxt.ui" line="158"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetSimpTxt.ui" line="251"/>
+        <source>Détruit le mot-clef</source>
+        <translation>Delete the keyword</translation>
     </message>
 </context>
 <context>
@@ -2812,32 +3391,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetTuple2.ui" line="26"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetTuple2.ui" line="257"/>
+        <location filename="../../UiQT4/desWidgetTuple2.ui" line="294"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetTuple2.ui" line="131"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../UiQT4/desWidgetTuple2.ui" line="140"/>
+        <location filename="../../UiQT4/desWidgetTuple2.ui" line="174"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;(&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetTuple2.ui" line="178"/>
+        <location filename="../../UiQT4/desWidgetTuple2.ui" line="212"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;,&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetTuple2.ui" line="214"/>
+        <location filename="../../UiQT4/desWidgetTuple2.ui" line="248"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetTuple2.ui" line="94"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>Display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetTuple2.ui" line="155"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetTuple2.ui" line="288"/>
+        <source>Détruit le mot-clef</source>
+        <translation>Delete the keyword</translation>
     </message>
 </context>
 <context>
@@ -2845,32 +3434,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetTuple3.ui" line="26"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetTuple3.ui" line="276"/>
+        <location filename="../../UiQT4/desWidgetTuple3.ui" line="315"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetTuple3.ui" line="126"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../UiQT4/desWidgetTuple3.ui" line="133"/>
+        <location filename="../../UiQT4/desWidgetTuple3.ui" line="169"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;(&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../UiQT4/desWidgetTuple3.ui" line="202"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;,&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../UiQT4/desWidgetTuple3.ui" line="238"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;,&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetTuple3.ui" line="274"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetTuple3.ui" line="91"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation>Display validation report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetTuple3.ui" line="152"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetTuple3.ui" line="309"/>
+        <source>Détruit le mot-clef</source>
+        <translation>Delete the keyword</translation>
     </message>
 </context>
 <context>
@@ -2878,7 +3477,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desBaseWidget.ui" line="26"/>
         <source>DMacro</source>
-        <translation type="unfinished">DMacro</translation>
+        <translation>DMacro</translation>
     </message>
 </context>
 <context>
@@ -2907,20 +3506,25 @@ p, li { white-space: pre-wrap; }
         <translation>Find in JDC</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desRecherche.ui" line="60"/>
+        <location filename="../../UiQT4/desRecherche.ui" line="63"/>
         <source>Suivant</source>
         <translation>Next</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desRecherche.ui" line="17"/>
+        <source>Next</source>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>self.appliEficas</name>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="667"/>
+        <location filename="../../InterfaceQT4/editor.py" line="701"/>
         <source>Wrapper Files (*.xml);;All Files (*)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="318"/>
+        <location filename="../../InterfaceQT4/viewManager.py" line="343"/>
         <source>Noname</source>
         <translation></translation>
     </message>
