@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or

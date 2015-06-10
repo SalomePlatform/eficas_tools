@@ -179,7 +179,7 @@ class MyTabview:
    def handlegestionParam(self):
        index=self.myQtab.currentIndex()
        if index < 0 : 
-          QMessageBox.warning( self.appliEficas,tr( "Creation Paramètre indisponible"),tr( "les paramètres sont liés à un jeu de données"))
+          QMessageBox.warning( self.appliEficas,tr(u"Creation Parametre indisponible"),tr(u"les parametres sont lies a un jeu de donnees"))
           return
        self.dict_editors[index].gestionParam()
 
@@ -291,7 +291,7 @@ class MyTabview:
 #PNPNPNPN --> a affiner
         if fichier is None:
             self.untitledCount += 1
-            self.myQtab.addTab(win, tr("Fichier non encore nommé ", self.untitledCount))
+            self.myQtab.addTab(win, tr("Fichier non encore nomme ", self.untitledCount))
             #self.myQtab.addTab(win, str(self.appliEficas.code))
         else:
             liste=fichier.split('/')

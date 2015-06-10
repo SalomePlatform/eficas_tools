@@ -144,7 +144,7 @@ class AplatGenerator:
       elif isinstance(obj,MCNUPLET):
          return self.generMCNUPLET(obj)
       else:
-         raise EficasException(tr("Format pas implémenté : %s", format))
+         raise EficasException(tr("Format non implemente : %s", format))
 
 
    def generJDC(self,obj):

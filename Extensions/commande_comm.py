@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: ISO-8859-1 -*-
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         Génère l'objet rapport (classe CR)
         """
         self.cr=CR()
-        if not self.isvalid(): self.cr.warn(tr("Objet commande commentarisé invalide"))
+        if not self.isvalid(): self.cr.warn(tr(u"Objet commande commentarisee invalide"))
         return self.cr
 
     def copy(self):

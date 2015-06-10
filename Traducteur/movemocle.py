@@ -112,9 +112,9 @@ def moveMotCleFromFactToFact(jdc,oper,factsource,mocle,factcible):
 
 
 
-#------------------------------------------------------
-def moveMotClefInOperToFact(jdc,oper,mocle,factcible):
-#------------------------------------------------------
+#-----------------------------------------------------------------------
+def moveMotClefInOperToFact(jdc,oper,mocle,factcible,plusieursFois=True):
+#-----------------------------------------------------------------------
 # Attention le cas type est THETA_OLD dans calc_G
 
     if oper not in jdcSet : return
@@ -147,7 +147,7 @@ def moveMotClefInOperToFact(jdc,oper,mocle,factcible):
            continue
         MonTexte=source.getText(jdc);
         boolChange=1
-        inseremocle.insereMotCleDansFacteur(jdc,cible,MonTexte)
+        inseremocle.insereMotCleDansFacteur(jdc,cible,MonTexte,plusieursFois)
     if boolChange : jdc.reset(jdc.getSource())
     removemocle.removeMotCle(jdc,oper,mocle)
 

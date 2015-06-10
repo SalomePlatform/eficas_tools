@@ -1554,7 +1554,7 @@ class VerifTypeTuple(Valid, ListVal):
         return _(tr(u": verifie les types dans un tuple"))
 
     def info_erreur_liste(self):
-        return _(tr(u"Les types entrés ne sont pas permis"))
+        return _(tr(u"Les types entres ne sont pas permis"))
 
     def default(self, valeur):
         # if valeur in self.liste : raise ValError("%s est un doublon" %

@@ -68,8 +68,10 @@ class JDCTree( QTreeWidget ):
         #print "self.editor.afficheCommandesPliees", self.editor.afficheCommandesPliees
         if self.racine.children !=[] :  
 
+            
            if self.editor.afficheCommandesPliees : self.racine.children[0].plieToutEtReaffiche()
            else : self.racine.children[0].deplieToutEtReaffiche()
+        
 
            self.racine.children[0].fenetre.donnePremier()
         else : self.racine.affichePanneau()
@@ -292,14 +294,17 @@ class JDCNode(QTreeWidgetItem):
         return None
 
     def affichePanneau(self) :
-        #print "dans affichePanneau appel getPanel2", self.item.GetLabelText()
+        print "dans affichePanneau appel getPanel2", self.item.GetLabelText()
         if self.item.isactif(): 
            itemParent=self
+           print self
+           print self.getPanel2
            while not (hasattr (itemParent,'getPanel2')) : 
                 itemParent=itemParent.treeParent 
            if itemParent!=self : 
               itemParent.affichePanneau()
               return
+           print self.getPanel2
            self.fenetre=self.getPanel2()
         else:
             from monInactifPanel import PanelInactif
@@ -705,7 +710,7 @@ class JDCNode(QTreeWidgetItem):
 
 
     def plieToutEtReaffiche(self):
-        #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
+        print "je suis dans plieToutEtReaffiche", self.item.get_nom()
         self.editor.deplier = False
         for item in self.children :
             item.setPlie()

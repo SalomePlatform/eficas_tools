@@ -144,7 +144,10 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       if (next==len(self.listeAffichageWidget) -1 ): next =0
       #self.f=next
       #QTimer.singleShot(1, self.rendVisible)
-      self.listeAffichageWidget[next].setFocus(7)
+      try :
+        self.listeAffichageWidget[next].setFocus(7)
+      except :
+        pass
 
   def nomChange(self):
       nom = str(self.LENom.text())

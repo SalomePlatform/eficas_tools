@@ -185,12 +185,12 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     if self.nom == '' :
         if cr == 'oui':
-           self.cr.fatal(tr("Pas de nom donné au paramètre "))
+           self.cr.fatal(tr("Pas de nom donne au parametre "))
         return 0
     else:
         if self.valeur == None :
             if cr == 'oui' : 
-               self.cr.fatal(tr("Le paramètre %s ne peut valoir None" , self.nom))
+               self.cr.fatal(tr("Le parametre %s ne peut valoir None" , self.nom))
             return 0
     return 1
 

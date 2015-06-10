@@ -101,7 +101,7 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
       self.verif_cata()
       for v in self.entites :
         cr = v.report()
-        cr.debut =tr("Début ")+v.__class__.__name__+ ' : '
+        cr.debut =tr("Debut ")+v.__class__.__name__+ ' : '
         cr.fin =tr("Fin ")+v.__class__.__name__+ ' : '
         self.cr.add(cr)
       return self.cr

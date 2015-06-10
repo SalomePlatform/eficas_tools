@@ -83,6 +83,8 @@ INITIALIZATION = PROC(nom = "INITIALIZATION",op = None,
 #        ------------------------------------
          Geometry_File = SIMP( statut = 'o', 
 #        ------------------------------------
+# PNPNPN Question Soizic --> pourqoi Geo Files
+# idem pour Bottom_Topography_File
              typ = ('Fichier', 'Geo Files (*.geo);;All Files (*)',),
              fr = 'Nom du fichier contenant le maillage du calcul a realiser.',
              ang = 'Name of the file containing the mesh. \n\

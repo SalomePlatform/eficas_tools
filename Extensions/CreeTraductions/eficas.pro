@@ -1,5 +1,5 @@
 SOURCES = ../../convert/autre_parseur.py \
-          pourValidation.py \
+#          pourValidation.py \
           ../../convert/convert_asterv5.py \
           ../../convert/convert_cuve2dg.py \
           ../../convert/convert_file_from_template.py \
@@ -94,62 +94,76 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../Ihm/I_REGLE.py \
           ../../Ihm/I_UN_PARMI.py \
           ../../Ihm/I_VALIDATOR.py \
-	  ../../InterfaceQT4/browser.py \
-	  ../../InterfaceQT4/compobloc.py \
-	  ../../InterfaceQT4/compocomm.py \
-	  ../../InterfaceQT4/compofact.py \
-	  ../../InterfaceQT4/compoformule.py \
-	  ../../InterfaceQT4/compojdc.py \
-	  ../../InterfaceQT4/compomacro.py \
-	  ../../InterfaceQT4/compomclist.py \
-	  ../../InterfaceQT4/compooper.py \
-	  ../../InterfaceQT4/compoparam.py \
-	  ../../InterfaceQT4/compoproc.py \
-	  ../../InterfaceQT4/composimp.py \
-	  ../../InterfaceQT4/configuration.py \
-	  ../../InterfaceQT4/editor.py \
-	  ../../InterfaceQT4/eficas_go.py \
-	  ../../InterfaceQT4/feuille.py \
-	  ../../InterfaceQT4/gereIcones.py \
-	  ../../InterfaceQT4/gereListe.py \
-	  ../../InterfaceQT4/gereTraduction.py \
-	  ../../InterfaceQT4/getVersion.py \
-	  ../../InterfaceQT4/groupe.py \
-	  ../../InterfaceQT4/monBoutonValide.py \
-	  ../../InterfaceQT4/monChoixCata.py \
-	  ../../InterfaceQT4/monChoixCommande.py \
-	  ../../InterfaceQT4/monRecherche.py \
-	  ../../InterfaceQT4/monViewTexte.py \
-	  ../../InterfaceQT4/monVisu.py \
-	  ../../InterfaceQT4/monWidget4a6RadioButton.py \
-	  ../../InterfaceQT4/monWidgetBloc.py \
-	  ../../InterfaceQT4/monWidgetCB.py \
-	  ../../InterfaceQT4/monWidgetCommande.py \
-	  ../../InterfaceQT4/monWidgetCommentaire.py \
-	  ../../InterfaceQT4/monWidgetFactPlie.py \
-	  ../../InterfaceQT4/monWidgetFact.py \
-	  ../../InterfaceQT4/monWidgetOptionnel.py \
-	  ../../InterfaceQT4/monWidgetPlusieursBase.py \
-	  ../../InterfaceQT4/monWidgetPlusieursInto.py \
-	  ../../InterfaceQT4/monWidgetRadioButton.py \
-	  ../../InterfaceQT4/monWidgetSimpBase.py \
-	  ../../InterfaceQT4/monWidgetSimpBool.py \
-	  ../../InterfaceQT4/monWidgetSimpComplexe.py \
-	  ../../InterfaceQT4/monWidgetSimpFichier.py \
-	  ../../InterfaceQT4/monWidgetSimpTuple2.py \
-	  ../../InterfaceQT4/monWidgetSimpTuple3.py \
-	  ../../InterfaceQT4/monWidgetSimpTuple.py \
-	  ../../InterfaceQT4/monWidgetSimpTxt.py \
-	  ../../InterfaceQT4/MonWidgetSimpTxt.py \
-	  ../../InterfaceQT4/politiquesValidation.py \
-	  ../../InterfaceQT4/qtEficas.py \
-	  ../../InterfaceQT4/qtEficas_with_log.py \
-	  ../../InterfaceQT4/qtSaisie.py \
-	  ../../InterfaceQT4/readercata.py \
-	  ../../InterfaceQT4/ssIhm.py \
-	  ../../InterfaceQT4/typeNode.py \
-	  ../../InterfaceQT4/utilIcons.py \
-	  ../../InterfaceQT4/viewManager.py \
+          ../../InterfaceQT4/browser.py \
+          ../../InterfaceQT4/compobloc.py \
+          ../../InterfaceQT4/compocomm.py \
+          ../../InterfaceQT4/compofact.py \
+          ../../InterfaceQT4/compoformule.py \
+          ../../InterfaceQT4/compojdc.py \
+          ../../InterfaceQT4/compomacro.py \
+          ../../InterfaceQT4/compomclist.py \
+          ../../InterfaceQT4/compooper.py \
+          ../../InterfaceQT4/compoparam.py \
+          ../../InterfaceQT4/compoproc.py \
+          ../../InterfaceQT4/composimp.py \
+          ../../InterfaceQT4/configuration.py \
+          ../../InterfaceQT4/editor.py \
+          ../../InterfaceQT4/eficas_go.py \
+          ../../InterfaceQT4/feuille.py \
+          ../../InterfaceQT4/gereIcones.py \
+          ../../InterfaceQT4/gereListe.py \
+          ../../InterfaceQT4/gereTraduction.py \
+          ../../InterfaceQT4/getVersion.py \
+          ../../InterfaceQT4/groupe.py \
+          ../../InterfaceQT4/monBoutonValide.py \
+          ../../InterfaceQT4/monChoixCata.py \
+          ../../InterfaceQT4/monChoixCommande.py \
+          ../../InterfaceQT4/monFonctionPanel.py \
+          ../../InterfaceQT4/monLabelClic.py \
+          ../../InterfaceQT4/monRecherche.py \
+          ../../InterfaceQT4/monSelectVal.py \
+          ../../InterfaceQT4/monViewTexte.py \
+          ../../InterfaceQT4/monVisu.py \
+          ../../InterfaceQT4/monWidget4a6RadioButton.py \
+          ../../InterfaceQT4/monWidget4a6RadioButtonSD.py \
+          ../../InterfaceQT4/monWidgetBloc.py \
+          ../../InterfaceQT4/monWidgetCB.py \
+          ../../InterfaceQT4/monWidgetCBSD.py \
+          ../../InterfaceQT4/monWidgetCommande.py \
+          ../../InterfaceQT4/monWidgetCommentaire.py \
+          ../../InterfaceQT4/monWidgetCreeParam.py \
+          ../../InterfaceQT4/monWidgetDate.py \
+          ../../InterfaceQT4/monWidgetFactPlie.py \
+          ../../InterfaceQT4/monWidgetFact.py \
+          ../../InterfaceQT4/monWidgetHeure.py \
+          ../../InterfaceQT4/monWidgetInfo.py \
+          ../../InterfaceQT4/monWidgetMatrice.py \
+          ../../InterfaceQT4/monWidgetOptionnel.py \
+          ../../InterfaceQT4/monWidgetParam.py \
+          ../../InterfaceQT4/monWidgetPlusieursBase.py \
+          ../../InterfaceQT4/monWidgetPlusieursIntoOrdonne.py \
+          ../../InterfaceQT4/monWidgetPlusieursInto.py \
+          ../../InterfaceQT4/monWidgetRadioButton.py \
+          ../../InterfaceQT4/monWidgetSDCOInto.py \
+          ../../InterfaceQT4/monWidgetSimpBase.py \
+          ../../InterfaceQT4/monWidgetSimpBool.py \
+          ../../InterfaceQT4/monWidgetSimpComplexe.py \
+          ../../InterfaceQT4/monWidgetSimpFichier.py \
+          ../../InterfaceQT4/monWidgetSimpTuple2.py \
+          ../../InterfaceQT4/monWidgetSimpTuple3.py \
+          ../../InterfaceQT4/monWidgetSimpTuple.py \
+          ../../InterfaceQT4/monWidgetSimpTxt.py \
+          ../../InterfaceQT4/monWidgetUniqueSDCO.py \
+          ../../InterfaceQT4/monWidgetVide.py \
+          ../../InterfaceQT4/politiquesValidation.py \
+          ../../InterfaceQT4/qtEficas.py \
+          ../../InterfaceQT4/qtEficas_with_log.py \
+          ../../InterfaceQT4/qtSaisie.py \
+          ../../InterfaceQT4/readercata.py \
+          ../../InterfaceQT4/ssIhm.py \
+          ../../InterfaceQT4/typeNode.py \
+          ../../InterfaceQT4/utilIcons.py \
+          ../../InterfaceQT4/viewManager.py \
           ../../Traducteur/calcG.py \
           ../../Traducteur/changeValeur.py \
           ../../Traducteur/dictErreurs.py \
@@ -190,8 +204,7 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../Validation/V_PROC_ETAPE.py \
           ../../Validation/V_UN_PARMI.py 
 
-FORMS=    ../../UiQT4/aideQT.ui \
-          ../../UiQT4/desBaseWidget.ui \
+FORMS=    ../../UiQT4/desBaseWidget.ui \
           ../../UiQT4/desChoixCata.ui \
           ../../UiQT4/desChoixCommandes.ui \
           ../../UiQT4/desRecherche.ui \
@@ -202,12 +215,20 @@ FORMS=    ../../UiQT4/aideQT.ui \
           ../../UiQT4/desWidgetCB.ui \
           ../../UiQT4/desWidgetCommande.ui \
           ../../UiQT4/desWidgetCommentaire.ui \
+          ../../UiQT4/desWidgetCreeParam.ui \
+          ../../UiQT4/desWidgetDate.ui \
           ../../UiQT4/desWidgetFactPlie.ui \
           ../../UiQT4/desWidgetFact.ui \
+          ../../UiQT4/desWidgetHeure.ui \
+          ../../UiQT4/desWidgetInformation.ui \
+          ../../UiQT4/desWidgetMatrice.ui \
           ../../UiQT4/desWidgetOptionnel.ui \
+          ../../UiQT4/desWidgetParam.ui \
           ../../UiQT4/desWidgetPlusieursBase.ui \
+          ../../UiQT4/desWidgetPlusieursIntoOrdonne.ui \
           ../../UiQT4/desWidgetPlusieursInto.ui \
           ../../UiQT4/desWidgetRadioButton.ui \
+          ../../UiQT4/desWidgetSDCOInto.ui \
           ../../UiQT4/desWidgetSimpBase.ui \
           ../../UiQT4/desWidgetSimpBool.ui \
           ../../UiQT4/desWidgetSimpComplexe.ui \
@@ -215,6 +236,8 @@ FORMS=    ../../UiQT4/aideQT.ui \
           ../../UiQT4/desWidgetSimpTxt.ui \
           ../../UiQT4/desWidgetTuple2.ui \
           ../../UiQT4/desWidgetTuple3.ui \
+          ../../UiQT4/desWidgetUniqueSDCO.ui \
+          ../../UiQT4/desWidgetVide.ui \
           ../../UiQT4/desVisu.ui \
           ../../UiQT4/myMain.ui 
 

@@ -94,7 +94,7 @@ class Interpreteur_Formule:
         Méthode externe
         """
         if type(formule) != types.TupleType:
-            raise InterpreteurException,tr("La formule passee à l'interpreteur doit etre sous forme de tuple")
+            raise InterpreteurException,tr("La formule passee a l'interpreteur doit etre sous forme de tuple")
         self.t_formule = formule
         self.init_cr()
         self.modify_listes()

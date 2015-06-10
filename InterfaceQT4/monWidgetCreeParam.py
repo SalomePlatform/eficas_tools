@@ -71,7 +71,7 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         exec "from math import *" in contexte
         jdc=self.editor.jdc
         if jdc == None : 
-          self.editor.affiche_infos(tr("La Creation de parametre n est possible que dans un jeu de données"),Qt.red)
+          self.editor.affiche_infos(tr(u"La Creation de parametre n est possible que dans un jeu de donnees"),Qt.red)
           return
 
         for p in jdc.params :
@@ -97,7 +97,7 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
            self.editor.affiche_infos(commentaire,Qt.red)
         for p in self.editor.jdc.params :
            if p.nom==nom :
-             commentaire=nom + tr(" existe déjà\n ")
+             commentaire=nom + tr(" existe deja\n ")
              self.editor.affiche_infos(commentaire,Qt.red)
              return
 

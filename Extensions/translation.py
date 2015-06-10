@@ -206,6 +206,7 @@ def tr(string, *args):
        optionally, an iterable or an int or float.
        Lets Python do the string formatting."""
     from PyQt4.QtGui import QApplication
+    print string, args
     string = _preprocess_atom(string)
     if len(args) == 0:
         r = unicode(QApplication.translate("@default", string))
@@ -286,7 +287,6 @@ def tr_qt(string, *args):
     else:
         raise EficasException("ValueError: i18n.translation.tr_qt: \
                               Improper formatted string parameter set")
-#    print r
     return unicode(r)
 
 

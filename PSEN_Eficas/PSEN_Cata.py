@@ -172,6 +172,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 #====
 # Type de distribution
 #====
+  Type_Model = SIMP ( statut='o', typ='TXM',
+                      into = ('type_1','type_2','type_3','type_4',
+                              ),
+                      ),
 
   Kind = SIMP ( statut = "o", typ = "TXM",
                 into = ( "Beta",
@@ -198,10 +202,6 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                 fr = "Choix du type de la loi marginale",
                 ang = "1D marginal distribution",
                 ),
-  Type_Model = SIMP ( statut='o', typ='TXM',
-                      into = ('type_1','type_2','type_3','type_4',
-                              ),
-                      ),
 
 #====
 # Definition des parametres selon le type de la loi

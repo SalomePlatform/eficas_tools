@@ -135,7 +135,7 @@ class FORM_ETAPE(MACRO_ETAPE):
                                              fonctions = l_form)
         except :
             traceback.print_exc()
-            return 0,tr("Impossible de réaliser la vérification de la formule")
+            return 0,tr("Impossible de realiser la verification de la formule")
         return verificateur.isvalid(),verificateur.report()
 
     def verif_nom(self,nom=None):
@@ -156,7 +156,7 @@ class FORM_ETAPE(MACRO_ETAPE):
             return 0,tr("Un nom de FORMULE ne peut pas commencer par un chiffre")
         sd = self.parent.get_sd_autour_etape(nom,self)
         if sd :
-            return 0,tr("Un concept de nom %s existe déjà !" %nom)
+            return 0,tr("Un concept de nom %s existe deja !" %nom)
         return 1,''
 
     def verif_type(self,type=None):
