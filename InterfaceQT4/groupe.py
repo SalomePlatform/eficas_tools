@@ -179,5 +179,5 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       self.reaffiche(self.node) 
 
   def traiteClicSurLabel(self,texte):
-      self.afficheOptionnel()
+      if self.editor.code != "CARMELCND" : self.afficheOptionnel()
 
