@@ -1004,7 +1004,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
             the name of the saved file
         """
 
-        #self.modified=1
+        self.modified=1
         if not self.modified and not saveas:
             return (0, None)      # do nothing if text wasn't changed
 

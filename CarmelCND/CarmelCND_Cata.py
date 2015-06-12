@@ -64,7 +64,7 @@ VCUT=OPER(nom='VCUT',op=None,sd_prod=vcut,UIinfo = { "groupes" : ( "CACHE", ) },
 )
 ZS=OPER(nom='ZS',op=None,sd_prod=zs,UIinfo = { "groupes" : ( "CACHE", ) },
                 Conductivite=SIMP(statut='o',typ='R',),
-                Permeabilite=SIMP(statut='o',typ='R',),
+                PermeabiliteRelative=SIMP(statut='o',typ='R',),
 )
 PARAMETRES=PROC(nom='PARAMETRES',op=None, UIinfo = { "groupes" : ( "CACHE", ) },
              RepCarmel=SIMP(typ='Repertoire',fr= "Repertoire Carmel",ang= "Carmel Directory",statut= "o",defaut="/projets/projets.002/carmel3d.001/frequentiel/V_240/Compil"),

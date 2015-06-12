@@ -1925,7 +1925,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="274"/>
         <source>La valeur : %s  ne fait pas partie des choix possibles %s</source>
-        <translation>value %s is not valid</translation>
+        <translation>value %s is not valid. must be in %s</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="306"/>
@@ -2300,7 +2300,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../UiQT4/desChoixCommandes.ui" line="73"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Affichage&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Order&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desChoixCommandes.ui" line="82"/>
