@@ -142,6 +142,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         # Gestion d'une seule valeur (eventuellement un tuple ou un complexe)
         if maDefinition.max == 1 :
 
+        # A verifier
           if maDefinition.into != [] and maDefinition.into != None:
             if len(maDefinition.into) < 4 :
               from monWidgetRadioButton import MonWidgetRadioButton
@@ -218,7 +219,12 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 
         # Gestion des listes
         else :
-          if maDefinition.into != [] and maDefinition.into != None:
+          #if maDefinition.into != [] and maDefinition.into != None:
+          # Attention pas fini --> on attend une liste de ASSD avec ordre
+          if self.item.wait_assd() and self.item.is_list_SansOrdreNiDoublon():
+               from monWidgetPlusieursInto import MonWidgetPlusieursInto
+               widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+          elif self.item.has_into():
             if self.item.is_list_SansOrdreNiDoublon():
                from monWidgetPlusieursInto import MonWidgetPlusieursInto
                widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)

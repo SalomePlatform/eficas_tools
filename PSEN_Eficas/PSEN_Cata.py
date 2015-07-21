@@ -24,9 +24,13 @@
 
 #from Accas import ASSD, JDC_CATA, AU_MOINS_UN, PROC, SIMP, FACT, OPER, MACRO, BLOC, A_VALIDATOR
 from Accas import *
+import opsPSEN
 
 class loi      ( ASSD ) : pass
 class variable ( ASSD ) : pass
+class sd_charge     ( ASSD ) : pass
+class sd_generateur ( ASSD ) : pass
+class sd_busbar ( sd_generateur,sd_charge ) : pass
 
 import types
 class Tuple:
@@ -70,15 +74,17 @@ class Matrice:
 
 
 #CONTEXT.debug = 1
-JdC = JDC_CATA ( code = 'OPENTURNS_STUDY',
+JdC = JDC_CATA ( code = 'PSEN',
                  execmodul = None,
-##                 regles = ( AU_MOINS_UN ( 'CRITERIA' ),
-##                            AU_MOINS_UN ( 'MODEL' ),
-##                            AVANT ( ('DISTRIBUTION', 'MODEL'), 'VARIABLE' ),
-#                            A_CLASSER ( 'VARIABLE',                'CORRELATION' ),
-#                            A_CLASSER ( 'VARIABLE',                'CRITERIA' ),
-#                            A_CLASSER ( 'CORRELATION',             'CRITERIA' ),
-                            #),
+                 regles = ( AU_MOINS_UN ( 'PARAMETRES_PSSE' ),
+                            AU_MOINS_UN ( 'DIRECTORY' ),
+                            AU_MOINS_UN ( 'DISTRIBUTION' ),
+                            AU_MOINS_UN ( 'SIMULATION' ),
+                            AU_PLUS_UN ( 'PARAMETRES_PSSE' ),
+                            AU_PLUS_UN ( 'DIRECTORY' ),
+                            AU_PLUS_UN ( 'SIMULATION' ),
+                            AU_PLUS_UN ( 'CORRELATION' ),
+                            ),
                  ) # Fin JDC_CATA
 
 
@@ -86,16 +92,77 @@ JdC = JDC_CATA ( code = 'OPENTURNS_STUDY',
 # fin entete
 # --------------------------------------------------
 
+MONGENER =  OPER ( nom = "MONGENER",
+            sd_prod = sd_generateur,
+            UIinfo = {"groupes": ("CACHE")},
+            op = None,
+            fr = "Generateur",
+            ang = "Generator",
+
+  ID = SIMP ( statut = 'o', typ = "TXM", fr = "num bus", ang = "num bus",),
+)
+MACHARGE =  OPER ( nom = "MACHARGE",
+            sd_prod = sd_charge,
+            UIinfo = {"groupes": ("CACHE")},
+            op = None,
+            fr = "Charge",
+            ang = "Load",
+
+  ID = SIMP ( statut = 'o', typ = "TXM", fr = "num bus", ang = "num bus",),
+)
+MONBUSBAR =  OPER ( nom = "MONBUSBAR",
+            sd_prod = sd_busbar,
+            UIinfo = {"groupes": ("CACHE")},
+            op = None,
+            fr = "Generateur",
+            ang = "Generator",
+
+  ID = SIMP ( statut = 'o', typ = "TXM", fr = "num bus", ang = "num bus",),
+)
+
+
+
+PARAMETRES_PSSE = PROC ( nom = "PARAMETRES_PSSE",
+             op=None,
+             docu = "",
+  COUT_COMBUSTIBLE = SIMP ( statut = "o",
+                     typ=bool,
+                     defaut=True,
+                     ),
+  COUT_DELESTAGE = SIMP ( statut = "o",
+                     typ=bool,
+                     defaut=False,
+                     ),
+  COUT_MVAR = SIMP ( statut = "o",
+                     typ=bool,
+                     defaut=False,
+                    ),
+  IMAP = SIMP ( statut = "o",
+                     typ='TXM',
+                     into=['RateA','RateB','RateC'],
+                     defaut=False,
+                    ),
+
+) 
 SIMULATION = PROC ( nom = "SIMULATION",
              op = None,
              docu = "",
+  regles             =(EXCLUS('NUMBER_PACKAGE','CONVERGENCE'),),
                
-  SAMPLE = SIMP ( statut = "o",
-                 typ = "R",
-                 val_min=0,
-                  
+  SIZE_PACKAGE = SIMP ( statut = "o",
+                 typ = "I",
+                 val_min=10,
+                 defaut=100,
                  ),
-               
+  NUMBER_PACKAGE = SIMP ( statut = "f",
+                 typ = "I",
+                 val_min=1,
+                 ),
+  CONVERGENCE = SIMP ( statut = "f",
+                 typ="I",
+                 into=[1],
+                ),
+
   STUDY = SIMP ( statut = "o",
                  typ = "TXM",
                  into = ( 'N-1', 'Load', 'Wind-1', 'Wind-2', 'PV' ),
@@ -106,55 +173,6 @@ SIMULATION = PROC ( nom = "SIMULATION",
 ) 
 
 
-OPF_Parameters = PROC ( nom = "OPF_Parameters",
-             op = None,
-             docu = "",
-               
-  Minimize_fuel_cost = SIMP ( statut = "o",
-                 typ = "TXM",
-                 into=('True','False'),
-                 defaut='False',
-                 fr="Choix cout fuel"
-                 ),
-  Minimize_adj_bus_shunt = SIMP ( statut = "o",
-                 typ = "TXM",
-                 into=('True','False'),
-                 defaut='False',
-                 fr="Choix minimize bus shunts"
-                 ),
-  Minimize_adj_bus_loads = SIMP ( statut = "o",
-                 typ = "TXM",
-                 into=('True','False'),
-                 defaut='False',
-                 fr="Choix minimize bus loads"
-                 ),
-
-)
-
-PSSe_Irate = PROC ( nom = "PSSe_Irate",
-             op = None,
-             docu = "",
-               
-  Rate_A = SIMP ( statut = "o",
-                 typ = "TXM",
-                 into=('True','False'),
-                 defaut='False',
-                 fr="Choix rate A"
-                 ),
-  Rate_B = SIMP ( statut = "o",
-                 typ = "TXM",
-                 into=('True','False'),
-                 defaut='False',
-                 fr="Choix rate B"
-                 ),
-  Rate_C = SIMP ( statut = "o",
-                 typ = "TXM",
-                 into=('True','False'),
-                 defaut='False',
-                 fr="Choix rate C"
-                 ),
-
-) 
 
 
 #================================
@@ -167,33 +185,46 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                       sd_prod = loi,
                       op = 68,
                       fr = "Definitions des lois marginales utilisees par les variables d'entree", 
-                      
+
+#====
+# Choisir generateur ou charge
+#====
+
+  TypeMachine = SIMP ( statut='o', typ='TXM',
+                      into = ('charge','vent1','vent2','pv','N-1',),
+                      ),
+  TypeComposant = SIMP (statut='o', typ='TXM',
+                      into = ('Generateur','Charge'),),
+  b_gener = BLOC (condition = "TypeComposant == 'Generateur'",
+        #Generateur   = SIMP(statut='o',typ=sd_generateur),),
+        Generateur   = SIMP(statut='o',typ=sd_generateur,max="**", homo="SansOrdreNiDoublon"),),
+  b_charge = BLOC (condition = "TypeComposant == 'Charge'",
+        #charge       = SIMP(statut='o',typ=sd_charge,max="**", homo="SansOrdreNiDoublon"),),                      
+        charge       = SIMP(statut='o',typ=sd_charge),),                      
                       
 #====
 # Type de distribution
 #====
-  Type_Model = SIMP ( statut='o', typ='TXM',
-                      into = ('type_1','type_2','type_3','type_4',
-                              ),
-                      ),
 
   Kind = SIMP ( statut = "o", typ = "TXM",
-                into = ( "Beta",
+                into = ( "NonParametrique", 
+                         #"Beta",
                          "Exponential",
-                         "Gamma",
-                         "Geometric",
-                         "Gumbel",
+                         #"Gamma",
+                         #"Geometric",
+                         #"Gumbel",
                          "Histogram",
-                         "Laplace",
-                         "Logistic",
-                         "LogNormal",
-                         "MultiNomial",
-                         "NonCentralStudent",
+                         #"Laplace",
+                         #"Logistic",
+                         #"LogNormal",
+                         #"MultiNomial",
+                         #"NonCentralStudent",
                          "Normal",
-                         "Poisson",
-                         "Rayleigh",
-                         "Student",
-                         "Triangular",
+                         #"Poisson",
+                         #"Rayleigh",
+                         #"Student",
+                         "PDF_from_file",
+                         #"Triangular",
                          "TruncatedNormal",
                          "Uniform",
                          "UserDefined",
@@ -203,79 +234,89 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                 ang = "1D marginal distribution",
                 ),
 
+                      
 #====
 # Definition des parametres selon le type de la loi
 #====
 
-  BETA = BLOC ( condition = " Kind in ( 'Beta', ) ",
+  NONPARAM = BLOC ( condition = " Kind in ( 'NonParametrique', ) ",
+             
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "Nom du modele physique",
+                    ang = "Physical model identifier",
+                    ),
+              ),
 
-                  Settings = SIMP ( statut = "o",
-                                       typ = "TXM",
-                                       max = 1,
-                                       into = ( "RT", "MuSigma" ),
-                                       defaut = "RT",
-                                       fr = "Parametrage de la loi beta",
-                                       ang = "Beta distribution parameter set",
-                                       ),
-
-                  RT_Parameters = BLOC ( condition = " Settings in ( 'RT', ) ",
-
-                                      R = SIMP ( statut = "o",
-                                                 typ = "R",
-                                                 max = 1,
-                                                 val_min = 0.,
-                                                 fr = "Parametre R de la loi | R > 0",
-                                                 ang = "R parameter | R > 0",
-                                                 ),
-
-                                      # T > R
-                                      T = SIMP ( statut = "o",
-                                                 typ = "R",
-                                                 max = 1,
-                                                 val_min = 0.,
-                                                 fr = "Parametre T de la loi | T > R",
-                                                 ang = "T parameter | T > R",
-                                                 ),
-
-                                      ), # Fin BLOC RT_Parameters
-
-
-                  MuSigma_Parameters = BLOC ( condition = " Settings in ( 'MuSigma', ) ",
-
-                                      Mu = SIMP ( statut = "o",
-                                                  typ = "R",
-                                                  max = 1,
-                                                  fr = "Moyenne de la loi",
-                                                  ang = "Mean value",
-                                                  ),
-
-                                      Sigma = SIMP ( statut = "o",
-                                                     typ = "R",
-                                                     max = 1,
-                                                     val_min = 0.,
-                                                     fr = "Ecart type de la loi",
-                                                     ang = "Standard deviation",
-                                                     ),
-
-                                      ), # Fin BLOC MuSigma_Parameters
-
-
-                  A = SIMP ( statut = "o",
-                             typ = "R",
-                             max = 1,
-                             fr = "Borne inferieure du support de la loi",
-                             ang = "Support lower bound",
-                             ),
-
-                  # B > A
-                  B = SIMP ( statut = "o",
-                             typ = "R",
-                             max = 1,
-                             fr = "Borne superieure du support de la loi",
-                             ang = "Support upper bound",
-                             ),
-
-  ), # Fin BLOC BETA
+#  BETA = BLOC ( condition = " Kind in ( 'Beta', ) ",
+#
+#                  Settings = SIMP ( statut = "o",
+#                                       typ = "TXM",
+#                                       max = 1,
+#                                       into = ( "RT", "MuSigma" ),
+#                                       defaut = "RT",
+#                                       fr = "Parametrage de la loi beta",
+#                                       ang = "Beta distribution parameter set",
+#                                       ),
+#
+#                  RT_Parameters = BLOC ( condition = " Settings in ( 'RT', ) ",
+#
+#                                      R = SIMP ( statut = "o",
+#                                                 typ = "R",
+#                                                 max = 1,
+#                                                 val_min = 0.,
+#                                                 fr = "Parametre R de la loi | R > 0",
+#                                                 ang = "R parameter | R > 0",
+#                                                 ),
+#
+#                                      # T > R
+#                                      T = SIMP ( statut = "o",
+#                                                 typ = "R",
+#                                                 max = 1,
+#                                                 val_min = 0.,
+#                                                 fr = "Parametre T de la loi | T > R",
+#                                                 ang = "T parameter | T > R",
+#                                                 ),
+#
+#                                      ), # Fin BLOC RT_Parameters
+#
+#
+#                  MuSigma_Parameters = BLOC ( condition = " Settings in ( 'MuSigma', ) ",
+#
+#                                      Mu = SIMP ( statut = "o",
+#                                                  typ = "R",
+#                                                  max = 1,
+#                                                  fr = "Moyenne de la loi",
+#                                                  ang = "Mean value",
+#                                                  ),
+#
+#                                      Sigma = SIMP ( statut = "o",
+#                                                     typ = "R",
+#                                                     max = 1,
+#                                                     val_min = 0.,
+#                                                     fr = "Ecart type de la loi",
+#                                                     ang = "Standard deviation",
+#                                                     ),
+#
+#                                      ), # Fin BLOC MuSigma_Parameters
+#
+#
+#                  A = SIMP ( statut = "o",
+#                             typ = "R",
+#                             max = 1,
+#                             fr = "Borne inferieure du support de la loi",
+#                             ang = "Support lower bound",
+#                             ),
+#
+#                  # B > A
+#                  B = SIMP ( statut = "o",
+#                             typ = "R",
+#                             max = 1,
+#                             fr = "Borne superieure du support de la loi",
+#                             ang = "Support upper bound",
+#                             ),
+#
+#  ), # Fin BLOC BETA
 
 
 
@@ -300,135 +341,135 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
 
 
-  GAMMA = BLOC ( condition = " Kind in ( 'Gamma', ) ",
-
-                   Settings = SIMP ( statut = "o",
-                                        typ = "TXM",
-                                        max = 1,
-                                        into = ( "KLambda", "MuSigma" ),
-                                        defaut = "KLambda",
-                                        fr = "Parametrage de la loi gamma",
-                                        ang = "Gamma distribution parameter set",
-                                        ),
-
-                   KLambda_Parameters = BLOC ( condition = " Settings in ( 'KLambda', ) ",
-
-                                       K = SIMP ( statut = "o",
-                                                  typ = "R",
-                                                  max = 1,
-                                                  val_min = 0.,
-                                                  fr = "Parametre K de la loi | K > 0",
-                                                  ang = "K parameter | K > 0",
-                                                  ),
-
-                                       Lambda = SIMP ( statut = "o",
-                                                       typ = "R",
-                                                       max = 1,
-                                                       val_min = 0.,
-                                                       fr = "Parametre Lambda de la loi | Lambda > 0",
-                                                       ang = "Lambda parameter | Lambda > 0",
-                                                       ),
-
-                                       ), # Fin BLOC KLambda_Parameters
-
-
-                   MuSigma_Parameters = BLOC ( condition = " Settings in ( 'MuSigma', ) ",
-
-                                       Mu = SIMP ( statut = "o",
-                                                   typ = "R",
-                                                   max = 1,
-                                                   fr = "Moyenne de la loi",
-                                                   ang = "Mean value",
-                                                   ),
-
-                                       Sigma = SIMP ( statut = "o",
-                                                      typ = "R",
-                                                      max = 1,
-                                                      val_min = 0.,
-                                                      fr = "Ecart type de la loi",
-                                                      ang = "Standard deviation",
-                                                      ),
-
-                                       ), # Fin BLOC MuSigma_Parameters
-
-                   Gamma = SIMP ( statut = "o",
-                                  typ = "R",
-                                  max = 1,
-                                  fr = "Borne inferieure du supoport de la loi",
-                                  ang = "Support lower bound",
-                                  ),
-
-
-  ), # Fin BLOC GAMMA
-
-
-
-  GEOMETRIC = BLOC ( condition = " Kind in ( 'Geometric', ) ",
-
-                       P = SIMP ( statut = "o",
-                                  typ = "R",
-                                  max = 1,
-                                  val_min = 0.,
-                                  val_max = 1.,
-                                  fr = "Parametre P | 0 < P < 1",
-                                  ang = "P parameter | 0 < P < 1",
-                                  ),
-
-  ), # Fin BLOC GEOMETRIC
+#  GAMMA = BLOC ( condition = " Kind in ( 'Gamma', ) ",
+#
+#                   Settings = SIMP ( statut = "o",
+#                                        typ = "TXM",
+#                                        max = 1,
+#                                        into = ( "KLambda", "MuSigma" ),
+#                                        defaut = "KLambda",
+#                                        fr = "Parametrage de la loi gamma",
+#                                        ang = "Gamma distribution parameter set",
+#                                        ),
+#
+#                   KLambda_Parameters = BLOC ( condition = " Settings in ( 'KLambda', ) ",
+#
+#                                       K = SIMP ( statut = "o",
+#                                                  typ = "R",
+#                                                  max = 1,
+#                                                  val_min = 0.,
+#                                                  fr = "Parametre K de la loi | K > 0",
+#                                                  ang = "K parameter | K > 0",
+#                                                  ),
+#
+#                                       Lambda = SIMP ( statut = "o",
+#                                                       typ = "R",
+#                                                       max = 1,
+#                                                       val_min = 0.,
+#                                                       fr = "Parametre Lambda de la loi | Lambda > 0",
+#                                                       ang = "Lambda parameter | Lambda > 0",
+#                                                       ),
+#
+#                                       ), # Fin BLOC KLambda_Parameters
+#
+#
+#                   MuSigma_Parameters = BLOC ( condition = " Settings in ( 'MuSigma', ) ",
+#
+#                                       Mu = SIMP ( statut = "o",
+#                                                   typ = "R",
+#                                                   max = 1,
+#                                                   fr = "Moyenne de la loi",
+#                                                   ang = "Mean value",
+#                                                   ),
+#
+#                                       Sigma = SIMP ( statut = "o",
+#                                                      typ = "R",
+#                                                      max = 1,
+#                                                      val_min = 0.,
+#                                                      fr = "Ecart type de la loi",
+#                                                      ang = "Standard deviation",
+#                                                      ),
+#
+#                                       ), # Fin BLOC MuSigma_Parameters
+#
+#                   Gamma = SIMP ( statut = "o",
+#                                  typ = "R",
+#                                  max = 1,
+#                                  fr = "Borne inferieure du supoport de la loi",
+#                                  ang = "Support lower bound",
+#                                  ),
+#
+#
+#  ), # Fin BLOC GAMMA
 
 
-
-  GUMBEL = BLOC ( condition = " Kind in ( 'Gumbel', ) ",
-
-                    Settings = SIMP ( statut = "o",
-                                         typ = "TXM",
-                                         max = 1,
-                                         into = ( "AlphaBeta", "MuSigma" ),
-                                         defaut = "AlphaBeta",
-                                         fr = "Parametrage de la loi gumbel",
-                                         ang = "Gumbel distribution parameter set",
-                                         ),
-
-                    AlphaBeta_Parameters = BLOC ( condition = " Settings in ( 'AlphaBeta', ) ",
-
-                                        Alpha = SIMP ( statut = "o",
-                                                       typ = "R",
-                                                       max = 1,
-                                                       val_min = 0.,
-                                                       fr = "Parametre Alpha de la loi | Alpha > 0",
-                                                       ang = "Alpha parameter | Alpha > 0",
-                                                       ),
-
-                                        Beta = SIMP ( statut = "o",
-                                                      typ = "R",
-                                                      max = 1,
-                                                      fr = "Parametre Beta de la loi",
-                                                      ang = "Beta parameter",
-                                                      ),
-
-                                        ), # Fin BLOC AlphaBeta_Parameters
-
-
-                    MuSigma_Parameters = BLOC ( condition = " Settings in ( 'MuSigma', ) ",
-
-                                        Mu = SIMP ( statut = "o",
-                                                    typ = "R",
-                                                    max = 1,
-                                                    fr = "Moyenne de la loi",
-                                                    ang = "Mean value",
-                                                    ),
-
-                                        Sigma = SIMP ( statut = "o",
-                                                       typ = "R",
-                                                       max = 1,
-                                                       val_min = 0.,
-                                                       fr = "Ecart type de la loi",
-                                                       ang = "Standard deviation",
-                                                       ),
-
-                                        ), # Fin BLOC MuSigma_Parameters
-
-  ), # Fin BLOC GUMBEL
+#
+#  GEOMETRIC = BLOC ( condition = " Kind in ( 'Geometric', ) ",
+#
+#                       P = SIMP ( statut = "o",
+#                                  typ = "R",
+#                                  max = 1,
+#                                  val_min = 0.,
+#                                  val_max = 1.,
+#                                  fr = "Parametre P | 0 < P < 1",
+#                                  ang = "P parameter | 0 < P < 1",
+#                                  ),
+#
+#  ), # Fin BLOC GEOMETRIC
+#
+#
+#
+#  GUMBEL = BLOC ( condition = " Kind in ( 'Gumbel', ) ",
+#
+#                    Settings = SIMP ( statut = "o",
+#                                         typ = "TXM",
+#                                         max = 1,
+#                                         into = ( "AlphaBeta", "MuSigma" ),
+#                                         defaut = "AlphaBeta",
+#                                         fr = "Parametrage de la loi gumbel",
+#                                         ang = "Gumbel distribution parameter set",
+#                                         ),
+#
+#                    AlphaBeta_Parameters = BLOC ( condition = " Settings in ( 'AlphaBeta', ) ",
+#
+#                                        Alpha = SIMP ( statut = "o",
+#                                                       typ = "R",
+#                                                       max = 1,
+#                                                       val_min = 0.,
+#                                                       fr = "Parametre Alpha de la loi | Alpha > 0",
+#                                                       ang = "Alpha parameter | Alpha > 0",
+#                                                       ),
+#
+#                                        Beta = SIMP ( statut = "o",
+#                                                      typ = "R",
+#                                                      max = 1,
+#                                                      fr = "Parametre Beta de la loi",
+#                                                      ang = "Beta parameter",
+#                                                      ),
+#
+#                                        ), # Fin BLOC AlphaBeta_Parameters
+#
+#
+#                    MuSigma_Parameters = BLOC ( condition = " Settings in ( 'MuSigma', ) ",
+#
+#                                        Mu = SIMP ( statut = "o",
+#                                                    typ = "R",
+#                                                    max = 1,
+#                                                    fr = "Moyenne de la loi",
+#                                                    ang = "Mean value",
+#                                                    ),
+#
+#                                        Sigma = SIMP ( statut = "o",
+#                                                       typ = "R",
+#                                                       max = 1,
+#                                                       val_min = 0.,
+#                                                       fr = "Ecart type de la loi",
+#                                                       ang = "Standard deviation",
+#                                                       ),
+#
+#                                        ), # Fin BLOC MuSigma_Parameters
+#
+#  ), # Fin BLOC GUMBEL
 
 
 
@@ -454,170 +495,170 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
 
 
-  LAPLACE = BLOC ( condition = " Kind in ( 'Laplace', ) ",
-
-                   Lambda = SIMP ( statut = "o",
-                                   typ = "R",
-                                   max = 1,
-                                   val_min = 0.,
-                                   fr = "Parametre Lambda | Lambda > 0",
-                                   ang = "Lambda parameter | Lambda > 0",
-                                   ),
-                   
-                   Mu = SIMP ( statut = "o",
-                               typ = "R",
-                               max = 1,
-                               fr = "Moyenne de la loi",
-                               ang = "Mean value",
-                              ),
-
-  ), # Fin BLOC LAPLACE
-
-  LOGNORMAL = BLOC ( condition = " Kind in ( 'LogNormal', ) ",
-
-                     Settings = SIMP ( statut = "o",
-                                       typ = "TXM",
-                                       max = 1,
-                                       into = ( "MuSigmaLog", "MuSigma", "MuSigmaOverMu" ),
-                                       defaut = "MuSigmaLog",
-                                       fr = "Parametrage de la loi lognormale",
-                                       ang = "Lognormal distribution parameter set",
-                                       ),
-
-                     MuSigma_Parameters = BLOC ( condition = " Settings in ( 'MuSigma', ) ",
-
-                                                 Mu = SIMP ( statut = "o",
-                                                             typ = "R",
-                                                             max = 1,
-                                                             fr = "Moyenne de la loi",
-                                                             ang = "Mean value",
-                                                             ),
-
-                                                 Sigma = SIMP ( statut = "o",
-                                                                typ = "R",
-                                                                max = 1,
-                                                                val_min = 0.,
-                                                                fr = "Ecart type de la loi",
-                                                                ang = "Standard deviation",
-                                                                ),
-
-                                                 ), # Fin BLOC MuSigma_Parameters
-
-                     MuSigmaOverMu_Parameters = BLOC ( condition = " Settings in ( 'MuSigmaOverMu', ) ",
-
-                                                 Mu = SIMP ( statut = "o",
-                                                             typ = "R",
-                                                             max = 1,
-                                                             fr = "Moyenne de la loi",
-                                                             ang = "Mean value",
-                                                             ),
-
-                                                 SigmaOverMu = SIMP ( statut = "o",
-                                                                typ = "R",
-                                                                max = 1,
-                                                                val_min = 0.,
-                                                                fr = "Rapport ecart type / moyenne de la loi",
-                                                                ang = "Standard deviation / mean value ratio",
-                                                                ),
-
-                                                 ), # Fin BLOC MuSigmaOverMu_Parameters
-
-                     MuSigmaLog_Parameters = BLOC ( condition = " Settings in ( 'MuSigmaLog', ) ",
-
-                                                    MuLog = SIMP ( statut = "o",
-                                                                   typ = "R",
-                                                                   max = 1,
-                                                                   fr = "Moyenne du log",
-                                                                   ang = "Log mean value",
-                                                                   ),
-
-                                                    SigmaLog = SIMP ( statut = "o",
-                                                                      typ = "R",
-                                                                      max = 1,
-                                                                      val_min = 0.,
-                                                                      fr = "Ecart type du log",
-                                                                      ang = "Log standard deviation",
-                                                                      ),
-                                            
-                                                    ), # Fin BLOC MuSigmaLog_Parameters
-
-                     Gamma = SIMP ( statut = "o",
-                                    typ = "R",
-                                    max = 1,
-                                    fr = "Borne inferieure du support de la loi",
-                                    ang = "Support lower bound",
-                                    ),
-
-   ), # Fin BLOC LOGNORMAL
-
-
-
-   LOGISTIC = BLOC ( condition = " Kind in ( 'Logistic', ) ",
-
-                       Alpha = SIMP ( statut = "o",
-                                      typ = "R",
-                                      max = 1,
-                                      fr = "Borne inferieure du supoport de la loi",
-                                      ang = "Support lower bound",
-                                      ),
-
-                       Beta = SIMP ( statut = "o",
-                                     typ = "R",
-                                     max = 1,
-                                     val_min = 0.,
-                                     fr = "Parametre Beta de la loi | Beta > 0",
-                                     ang = "Beta parameter | Beta > 0",
-                                     ),
-
-   ), # Fin BLOC LOGISTIC
-
-
-
-   MULTINOMIAL = BLOC ( condition = " Kind in ( 'MultiNomial', ) ",
-                         
-                         N = SIMP ( statut = "o",
-                                    typ = "I",
-                                    max = 1,
-                                    fr = "Parametre N de la loi | N > 0",
-                                    ang = "N parameter | N > 0",
-                                    ),
-
-                       # Il faut definir une collection de couples ( x,p ) 
-                       Values = SIMP ( statut = 'o',
-                                       typ = "R",
-                                       max = '**',
-                                       fr = "Liste de probabilités",
-                                       ang = "Probability list",
-                                       validators=VerifTypeTuple(('R','R')),
-                                       ),
-
-   ), # Fin BLOC MULTINOMIAL
-
-
-  NONCENTRALSTUDENT = BLOC ( condition = " Kind in ( 'NonCentralStudent', ) ",
-
-                   Nu = SIMP ( statut = "o",
-                               typ = "R",
-                               max = 1,
-                               fr = "Parametre Nu de la loi | Nu > 0",
-                               ang = "Nu parameter | Nu > 0",
-                              ),
-
-                   Delta = SIMP ( statut = "o",
-                                  typ = "R",
-                                  max = 1,
-                                  fr = "Parametre Delta de la loi | Delta > 0",
-                                  ang = "Delta parameter | Delta > 0",
-                                  ),
-                   
-                   Gamma = SIMP ( statut = "o",
-                                  typ = "R",
-                                  max = 1,
-                                  fr = "Parametre Gamma de centrage de la loi",
-                                  ang = "Gamma parameter",
-                                  ),
-
-  ), # Fin BLOC NONCENTRALSTUDENT
+#  LAPLACE = BLOC ( condition = " Kind in ( 'Laplace', ) ",
+#
+#                   Lambda = SIMP ( statut = "o",
+#                                   typ = "R",
+#                                   max = 1,
+#                                   val_min = 0.,
+#                                   fr = "Parametre Lambda | Lambda > 0",
+#                                   ang = "Lambda parameter | Lambda > 0",
+#                                   ),
+#                   
+#                   Mu = SIMP ( statut = "o",
+#                               typ = "R",
+#                               max = 1,
+#                               fr = "Moyenne de la loi",
+#                               ang = "Mean value",
+#                              ),
+#
+#  ), # Fin BLOC LAPLACE
+#
+#  LOGNORMAL = BLOC ( condition = " Kind in ( 'LogNormal', ) ",
+#
+#                     Settings = SIMP ( statut = "o",
+#                                       typ = "TXM",
+#                                       max = 1,
+#                                       into = ( "MuSigmaLog", "MuSigma", "MuSigmaOverMu" ),
+#                                       defaut = "MuSigmaLog",
+#                                       fr = "Parametrage de la loi lognormale",
+#                                       ang = "Lognormal distribution parameter set",
+#                                       ),
+#
+#                     MuSigma_Parameters = BLOC ( condition = " Settings in ( 'MuSigma', ) ",
+#
+#                                                 Mu = SIMP ( statut = "o",
+#                                                             typ = "R",
+#                                                             max = 1,
+#                                                             fr = "Moyenne de la loi",
+#                                                             ang = "Mean value",
+#                                                             ),
+#
+#                                                 Sigma = SIMP ( statut = "o",
+#                                                                typ = "R",
+#                                                                max = 1,
+#                                                                val_min = 0.,
+#                                                                fr = "Ecart type de la loi",
+#                                                                ang = "Standard deviation",
+#                                                                ),
+#
+#                                                 ), # Fin BLOC MuSigma_Parameters
+#
+#                     MuSigmaOverMu_Parameters = BLOC ( condition = " Settings in ( 'MuSigmaOverMu', ) ",
+#
+#                                                 Mu = SIMP ( statut = "o",
+#                                                             typ = "R",
+#                                                             max = 1,
+#                                                             fr = "Moyenne de la loi",
+#                                                             ang = "Mean value",
+#                                                             ),
+#
+#                                                 SigmaOverMu = SIMP ( statut = "o",
+#                                                                typ = "R",
+#                                                                max = 1,
+#                                                                val_min = 0.,
+#                                                                fr = "Rapport ecart type / moyenne de la loi",
+#                                                                ang = "Standard deviation / mean value ratio",
+#                                                                ),
+#
+#                                                 ), # Fin BLOC MuSigmaOverMu_Parameters
+#
+#                     MuSigmaLog_Parameters = BLOC ( condition = " Settings in ( 'MuSigmaLog', ) ",
+#
+#                                                    MuLog = SIMP ( statut = "o",
+#                                                                   typ = "R",
+#                                                                   max = 1,
+#                                                                   fr = "Moyenne du log",
+#                                                                   ang = "Log mean value",
+#                                                                   ),
+#
+#                                                    SigmaLog = SIMP ( statut = "o",
+#                                                                      typ = "R",
+#                                                                      max = 1,
+#                                                                      val_min = 0.,
+#                                                                      fr = "Ecart type du log",
+#                                                                      ang = "Log standard deviation",
+#                                                                      ),
+#                                            
+#                                                    ), # Fin BLOC MuSigmaLog_Parameters
+#
+#                     Gamma = SIMP ( statut = "o",
+#                                    typ = "R",
+#                                    max = 1,
+#                                    fr = "Borne inferieure du support de la loi",
+#                                    ang = "Support lower bound",
+#                                    ),
+#
+#   ), # Fin BLOC LOGNORMAL
+#
+#
+#
+#   LOGISTIC = BLOC ( condition = " Kind in ( 'Logistic', ) ",
+#
+#                       Alpha = SIMP ( statut = "o",
+#                                      typ = "R",
+#                                      max = 1,
+#                                      fr = "Borne inferieure du supoport de la loi",
+#                                      ang = "Support lower bound",
+#                                      ),
+#
+#                       Beta = SIMP ( statut = "o",
+#                                     typ = "R",
+#                                     max = 1,
+#                                     val_min = 0.,
+#                                     fr = "Parametre Beta de la loi | Beta > 0",
+#                                     ang = "Beta parameter | Beta > 0",
+#                                     ),
+#
+#   ), # Fin BLOC LOGISTIC
+#
+#
+#
+#   MULTINOMIAL = BLOC ( condition = " Kind in ( 'MultiNomial', ) ",
+#                         
+#                         N = SIMP ( statut = "o",
+#                                    typ = "I",
+#                                    max = 1,
+#                                    fr = "Parametre N de la loi | N > 0",
+#                                    ang = "N parameter | N > 0",
+#                                    ),
+#
+#                       # Il faut definir une collection de couples ( x,p ) 
+#                       Values = SIMP ( statut = 'o',
+#                                       typ = "R",
+#                                       max = '**',
+#                                       fr = "Liste de probabilités",
+#                                       ang = "Probability list",
+#                                       validators=VerifTypeTuple(('R','R')),
+#                                       ),
+#
+#   ), # Fin BLOC MULTINOMIAL
+#
+#
+#  NONCENTRALSTUDENT = BLOC ( condition = " Kind in ( 'NonCentralStudent', ) ",
+#
+#                   Nu = SIMP ( statut = "o",
+#                               typ = "R",
+#                               max = 1,
+#                               fr = "Parametre Nu de la loi | Nu > 0",
+#                               ang = "Nu parameter | Nu > 0",
+#                              ),
+#
+#                   Delta = SIMP ( statut = "o",
+#                                  typ = "R",
+#                                  max = 1,
+#                                  fr = "Parametre Delta de la loi | Delta > 0",
+#                                  ang = "Delta parameter | Delta > 0",
+#                                  ),
+#                   
+#                   Gamma = SIMP ( statut = "o",
+#                                  typ = "R",
+#                                  max = 1,
+#                                  fr = "Parametre Gamma de centrage de la loi",
+#                                  ang = "Gamma parameter",
+#                                  ),
+#
+#  ), # Fin BLOC NONCENTRALSTUDENT
 
 
    NORMAL = BLOC ( condition = " Kind in ( 'Normal', ) ",
@@ -640,93 +681,101 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
    ), # Fin BLOC NORMAL
 
 
+#
+#   POISSON = BLOC ( condition = " Kind in ( 'Poisson', ) ",
+#
+#                     Lambda = SIMP ( statut = "o",
+#                                     typ = "R",
+#                                     max = 1,
+#                                     val_min = 0.,
+#                                     fr = "Parametre Lambda de la loi | Lambda > 0",
+#                                     ang = "Lambda parameter | Lambda > 0",
+#                                     ),
+#
+#   ), # Fin BLOC POISSON
+#
+#
+#
+#  RAYLEIGH = BLOC ( condition = " Kind in ( 'Rayleigh', ) ",
+#
+#                   Sigma = SIMP ( statut = "o",
+#                                  typ = "R",
+#                                  max = 1,
+#                                  fr = "Parametre Sigma de la loi | Sigma > 0",
+#                                  ang = "Sigma parameter | Sigma > 0",
+#                                  ),
+#
+#                   Gamma = SIMP ( statut = "o",
+#                                  typ = "R",
+#                                  max = 1,
+#                                  fr = "Borne inferieure du support de la loi",
+#                                  ang = "Support lower bound",
+#                                  ),
+# ), # Fin BLOC RAYLEIGH
 
-   POISSON = BLOC ( condition = " Kind in ( 'Poisson', ) ",
-
-                     Lambda = SIMP ( statut = "o",
-                                     typ = "R",
-                                     max = 1,
-                                     val_min = 0.,
-                                     fr = "Parametre Lambda de la loi | Lambda > 0",
-                                     ang = "Lambda parameter | Lambda > 0",
-                                     ),
-
-   ), # Fin BLOC POISSON
-
-
-
-  RAYLEIGH = BLOC ( condition = " Kind in ( 'Rayleigh', ) ",
-
-                   Sigma = SIMP ( statut = "o",
-                                  typ = "R",
-                                  max = 1,
-                                  fr = "Parametre Sigma de la loi | Sigma > 0",
-                                  ang = "Sigma parameter | Sigma > 0",
-                                  ),
-
-                   Gamma = SIMP ( statut = "o",
-                                  typ = "R",
-                                  max = 1,
-                                  fr = "Borne inferieure du support de la loi",
-                                  ang = "Support lower bound",
-                                  ),
- ), # Fin BLOC RAYLEIGH
-
-
-   STUDENT = BLOC ( condition = " Kind in ( 'Student', ) ",
-
-                     Mu = SIMP ( statut = "o",
-                                 typ = "R",
-                                 max = 1,
-                                 fr = "Parametre Mu de la loi",
-                                 ang = "Mu parameter",
-                                 ),
-
-                     Nu = SIMP ( statut = "o",
-                                 typ = "R",
-                                 max = 1,
-                                 val_min = 2.,
-                                 fr = "Parametre Nu de la loi | Nu > 2",
-                                 ang = "Nu parameter | Nu > 2",
-                                 ),
-
-                   Sigma = SIMP ( statut = "o",
-                                  typ = "R",
-                                  max = 1,
-                                  fr = "Parametre Sigma de la loi",
-                                  ang = "Sigma parameter",
-                                  ),
-
-   ), # Fin BLOC STUDENT
-
-
-
-   TRIANGULAR = BLOC ( condition = " Kind in ( 'Triangular', ) ",
-
-                         A = SIMP ( statut = "o",
-                                    typ = "R",
-                                    max = 1,
-                                    fr = "Borne inferieure du support de la loi | A < M < B",
-                                    ang = "Support lower bound | A < M < B",
-                                    ),
-
-                         M = SIMP ( statut = "o",
-                                    typ = "R",
-                                    max = 1,
-                                    fr = "Mode de la loi | A < M < B",
-                                    ang = "Mode | A < M < B",
-                                    ),
-
-                         B = SIMP ( statut = "o",
-                                    typ = "R",
-                                    max = 1,
-                                    fr = "Borne superieure du support de la loi | A < M < B",
-                                    ang = "Support upper bound | A < M < B",
-                                    ),
-
-   ), # Fin BLOC TRIANGULAR
-
-
+  PDF = BLOC ( condition = " Kind in ( 'PDF_from_file', ) ",
+             
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "Nom du modele physique",
+                    ang = "Physical model identifier",
+                    ),
+              ),
+              
+#   STUDENT = BLOC ( condition = " Kind in ( 'Student', ) ",
+#
+#                     Mu = SIMP ( statut = "o",
+#                                 typ = "R",
+#                                 max = 1,
+#                                 fr = "Parametre Mu de la loi",
+#                                 ang = "Mu parameter",
+#                                 ),
+#
+#                     Nu = SIMP ( statut = "o",
+#                                 typ = "R",
+#                                 max = 1,
+#                                 val_min = 2.,
+#                                 fr = "Parametre Nu de la loi | Nu > 2",
+#                                 ang = "Nu parameter | Nu > 2",
+#                                 ),
+#
+#                   Sigma = SIMP ( statut = "o",
+#                                  typ = "R",
+#                                  max = 1,
+#                                  fr = "Parametre Sigma de la loi",
+#                                  ang = "Sigma parameter",
+#                                  ),
+#
+#   ), # Fin BLOC STUDENT
+#
+#
+#
+#   TRIANGULAR = BLOC ( condition = " Kind in ( 'Triangular', ) ",
+#
+#                         A = SIMP ( statut = "o",
+#                                    typ = "R",
+#                                    max = 1,
+#                                    fr = "Borne inferieure du support de la loi | A < M < B",
+#                                    ang = "Support lower bound | A < M < B",
+#                                    ),
+#
+#                         M = SIMP ( statut = "o",
+#                                    typ = "R",
+#                                    max = 1,
+#                                    fr = "Mode de la loi | A < M < B",
+#                                    ang = "Mode | A < M < B",
+#                                    ),
+#
+#                         B = SIMP ( statut = "o",
+#                                    typ = "R",
+#                                    max = 1,
+#                                    fr = "Borne superieure du support de la loi | A < M < B",
+#                                    ang = "Support upper bound | A < M < B",
+#                                    ),
+#
+#   ), # Fin BLOC TRIANGULAR
+#
+#
 
    TRUNCATEDNORMAL = BLOC ( condition = " Kind in ( 'TruncatedNormal', ) ",
 
@@ -894,7 +943,22 @@ CORRELATION = PROC ( nom = 'CORRELATION',
 ##
 ) 
 
-
+DIRECTORY = MACRO ( nom = 'DIRECTORY',
+        op=None,
+        fr = "Chargement des generateurs et des charges",
+        ang = "Physical model wrapper load",
+                sd_prod = opsPSEN.INCLUDE,
+                op_init = opsPSEN.INCLUDE_context,
+                #sd_prod=None,
+                fichier_ini = 1,
+        
+        fichier_sav=SIMP(statut="o", typ = ('Fichier', 'Wrapper Files (*.sav);;All Files (*)',),),
+        dossier_resultat=SIMP(statut="o",typ='Repertoire'),
+        fichier_lignes=SIMP(statut="o" ,typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
+        fichier_groupes=SIMP(statut="o", typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
+        fichier_parc=SIMP(statut="o" ,typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),        
+        chemin_psse=SIMP(statut="o",typ='Repertoire'),
+) 
 
 
 

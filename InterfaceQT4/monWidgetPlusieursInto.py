@@ -34,18 +34,21 @@ from gereListe              import GereListe
 class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        #print "MonWidgetPlusieursInto", nom, self
+        print "MonWidgetPlusieursInto", nom, self
         self.index=1
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         self.parentQt.commandesLayout.insertWidget(-1,self)
-        self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
+        # try except si la liste des possibles est vide
+        # prevoir qqchose
+        try :
+          self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
+        except :
+          pass
 
 
   def setValeurs(self):
        self.listeValeursCourantes=self.node.item.GetListeValeurs()
-       #print "dans setValeurs"
-       #print self.node.item.definition.validators
        #print self.monSimpDef.into
        #if len(self.monSimpDef.into)*20 > 400 : self.setMinimumHeight(400)
        #else : self.setMinimumHeight(len(self.monSimpDef.into)*30)
@@ -63,7 +66,14 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
             else: 
                self.listeAAfficher=self.node.item.get_liste_possible([])
        else :
-               self.listeAAfficher=self.monSimpDef.into
+               self.listeAAfficher=self.node.item.get_liste_possible([])
+
+       self.PourEtreCoche=self.listeValeursCourantes
+       if self.objSimp.wait_assd() : 
+          self.listeAAfficher=self.node.item.get_sd_avant_du_bon_type()
+          self.PourEtreCoche=[]
+          for concept in self.listeValeursCourantes:
+              self.PourEtreCoche.append(concept.nom)
        if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
        else : self.setMinimumHeight(len(self.listeAAfficher)*30)
        self.adjustSize()
@@ -75,7 +85,8 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
            nomCB="lineEditVal"+str(i+1)
            courant=getattr(self,nomCB)
            courant.setText(str(self.listeAAfficher[i]))
-           if self.monSimpDef.into[i] in self.listeValeursCourantes : 
+           #if self.monSimpDef.into[i] in self.listeValeursCourantes : 
+           if self.listeAAfficher[i] in self.PourEtreCoche : 
               courant.setChecked(True)
            self.connect(courant,SIGNAL("toggled(bool)"),self.changeValeur)
        self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)
@@ -144,7 +155,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
   def changeValeur(self):
       self.listeValeursCourantesAvant=self.listeValeursCourantes
       self.listeValeursCourantes = []
-      print "changeValeur ____________" , self.monSimpDef.into, len(self.monSimpDef.into)
+      #print "changeValeur ____________" , self.monSimpDef.into, len(self.monSimpDef.into)
       for i in range (1,len(self.listeAAfficher)+1):
           nomLineEdit="lineEditVal"+str(i)
           courant=getattr(self,nomLineEdit)

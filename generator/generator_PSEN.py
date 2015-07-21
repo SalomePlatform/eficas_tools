@@ -25,7 +25,9 @@ texte_debut+='   format="med";\n'
 import traceback
 import types,string,re,os
 from Extensions.i18n import tr
-from generator_python import PythonGenerator
+from generator_dicoImbrique import DicoImbriqueGenerator
+import pdb
+from numpy import zeros
 
 def entryPoint():
    """
@@ -40,7 +42,7 @@ def entryPoint():
           }
 
 
-class PSENGenerator(PythonGenerator):
+class PSENGenerator(DicoImbriqueGenerator):
    """
       Ce generateur parcourt un objet de type JDC et produit
       un texte au format eficas et 
@@ -53,10 +55,15 @@ class PSENGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
    def gener(self,obj,format='brut',config=None):
 
+      print "je passe dans gener"
+      #self.MachineDico = obj.MachineDico
+      #self.LoadDico = obj.LoadDico
+      #self.LineDico = obj.LineDico
+      #self.TransfoDico = obj.TransfoDico
+      
       self.initDico()
-
       # Cette instruction genere le contenu du fichier de commandes (persistance)
-      self.text=PythonGenerator.gener(self,obj,format)
+      self.text=DicoImbriqueGenerator.gener(self,obj,format)
       return self.text
 
 
@@ -65,7 +72,12 @@ class PSENGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
    
    def initDico(self) :
-      self.textePourRun = texte_debut
+      DicoImbriqueGenerator.initDico(self)
+      #self.Entete = 'MachineDico = ' + str(self.MachineDico) +'\n'
+      #self.Entete += 'LoadDico = ' + str(self.LoadDico) +'\n'
+      #self.Entete += 'LineDico = ' + str(self.LineDico) +'\n'
+      #self.Entete += 'TransfoDico = ' + str(self.TransfoDico) +'\n'
+      #self.Entete +='\n'
 
 
 #----------------------------------------------------------------------------------------
@@ -73,40 +85,29 @@ class PSENGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,fn) :
-        print self.textePourRun
+        DicoImbriqueGenerator.writeDefault(self,fn)
+        return
 
-   def ajoutRun(self) :
-        self.textePourRun+="   write_mesh_crack();\n"
-        self.textePourRun+="   do_mesh_crack(0);\n"
-        self.textePourRun+="   nice_cut(20.);\n"
-        self.textePourRun+='   export_mesh("'+self.cracked_name+'","med");\n'
-        self.textePourRun+="}"
-
+   
 
 #----------------------------------------------------------------------------------------
 #  analyse de chaque noeud de l'arbre 
 #----------------------------------------------------------------------------------------
 
-   def generMCSIMP(self,obj) :
-        """recuperation de l objet MCSIMP"""
-        #print dir(obj)
-        s=PythonGenerator.generMCSIMP(self,obj)
-        if obj.nom in ListeConcatene : 
-           stringListe=""
-           for val in obj.val:
-               stringListe+=str(val)+" "
-           self.textePourRun+="   "+obj.nom+ "='"+ stringListe[0:-1]+ "';\n"
-           return s
-        if obj.nom=="elset_radius" :
-           self.textePourRun+="   if_must_define_elset=1;\n"
-        if obj.nom=="sane_name" :
-           self.textePourRun+="   import_mesh('"+obj.val+"');\n"
-        if obj.nom=="cracked_name" : self.cracked_name=obj.val
-        if obj.nom=="repertoire" : 
-           print "PNPNPN a traiter"
-           return s
-        self.textePourRun+="   "+obj.nom+ "=" + s[0:-1]+ ";\n"
-        return s
+##   def generMCSIMP(self,obj) :
+##        """recuperation de l objet MCSIMP"""
+##        #print dir(obj)
+##        self.dicoMCSIMP[obj.nom]=obj.val
+##        self.dicoTemp[obj.nom]=obj.val
+##        s=DicoImbriqueGenerator.generMCSIMP(self,obj)
+##        return s
+##
+##   def generETAPE(self,obj):
+##        self.dicoTemp={}
+##        s=DicoImbriqueGenerator.generETAPE(self,obj)
+##        if obj.nom=="DISTRIBUTION" : self.dicoLois[obj.sd.nom]=self.dicoTemp
+##        self.dicoTemp={}
+##        return s
 
   
 # si repertoire on change tous les noms de fichier

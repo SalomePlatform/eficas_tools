@@ -79,7 +79,9 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
                   'Matrice' : tr(u'Une Matrice est attendue.  '),
                   'Fichier' : tr(u'Un fichier est attendu.  '),
                   'FichierNoAbs' : tr(u'Un fichier est attendu.  '),
-                  'Repertoire' : tr(u'Un repertoire est attendu.  ')}
+                  'Repertoire' : tr(u'Un repertoire est attendu.  '),
+                  'Heure' : tr(u'Heure sous la forme HH:MM'),
+                  'Date' :  tr(u'Date sous la forme JJ/MM/AA')}
       if mc.type[0] != types.ClassType:
          commentaire = d_aides.get(mc.type[0], tr("Type de base inconnu"))
       else : commentaire=""

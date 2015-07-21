@@ -37,5 +37,5 @@ docPath=repIni
 
 #
 catalogues=(
-   ('PSEN','default',os.path.join(repIni,'PSEN_Cata.py'),'dico','python'),
+   ('PSEN','default',os.path.join(repIni,'PSEN_Cata.py'),'PSEN','python'),
 )

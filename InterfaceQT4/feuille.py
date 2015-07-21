@@ -79,30 +79,16 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
        #  self.debutToolTip=nomTraduit+"\n"
        longueur=QFontMetrics(self.label.font()).width(nomTraduit)
        if longueur >= nomMax :
-         print "je formate"
          nouveauNom=self.formate(nomTraduit)
-         print"________"
-         print nouveauNom
-         print"________"
-         print self
-         #self.label.setTextFormat(Qt.AutoText)
          self.label.setText(nouveauNom)
-         #self.agrandit()
        else :   
          self.label.setText(nomTraduit)
 
    def agrandit(self):
        # inutile pour certains widgets
        if self.height() < 40 :
-          print "j agrandis"
           self.setMinimumHeight(50)
-          #self.setMaximumHeight(50)
           self.resize(self.width(),200)
-          #self.principalLayout.setAlignment(Qt.AlignTop)
-          #self.label.resize(self.label.width(),200)
-          print self.label.height()
-       print self.height()
-       print "__________"
 
                                  
    def setValeurs(self):
@@ -120,7 +106,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    def setCommentaire(self):
       c  = self.debutToolTip
-      if self.node.item.definition.validators : c+=self.node.item.definition.validators.aide()
+      #if self.node.item.definition.validators : c+=self.node.item.definition.validators.aide()
       self.aide=c
       if self.objSimp.get_fr() != None and self.objSimp.get_fr() != "":
           c2 = '<html><head/><body><p>'+c+str(self.objSimp.get_fr())+"</p></body></html>"

@@ -1824,67 +1824,67 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="173"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="170"/>
         <source>%s n&apos;est pas un fichier valide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="255"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="252"/>
         <source>Nombre d&apos;arguments de %s incorrect (min = %s, max = %s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="277"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="274"/>
         <source>La valeur : %s  ne fait pas partie des choix possibles %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="766"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="763"/>
         <source>%s n&apos;est pas de la bonne longueur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1189"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1186"/>
         <source>valeur dans l&apos;intervalle %s , %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1201"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1198"/>
         <source>La valeur doit etre comprise entre %s et %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1222"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1219"/>
         <source>%s doit etre inferieur a %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1225"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1222"/>
         <source>longueur de liste comprise entre  %s et %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1228"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1225"/>
         <source>Le cardinal de la liste doit etre compris entre %s et %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1255"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1252"/>
         <source>%s devrait etre de longueur inferieure a %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1258"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1255"/>
         <source>%s devrait etre de longueur superieure a %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1315"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1312"/>
         <source>%s contient des valeurs non paires</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1359"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1356"/>
         <source>%s contient des valeurs hors des choix possibles: %s </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1929,208 +1929,350 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="309"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="306"/>
         <source>%s n&apos;est pas une chaine de longueur comprise entre %s et %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="315"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="312"/>
         <source>TXM de longueur entre %s et %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="533"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="530"/>
         <source>valeur %s obligatoire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="548"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="545"/>
         <source>%s ne contient pas les elements obligatoires : %s </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="637"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="634"/>
         <source>%s absent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="686"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="683"/>
         <source>%s est un doublon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="742"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="739"/>
         <source>longueur de la chaine entre %s et %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="745"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="742"/>
         <source>Longueur de la chaine incorrecte</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="802"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="799"/>
         <source>%s n&apos;est pas une chaine</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="819"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="816"/>
         <source>liste %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="822"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="819"/>
         <source>La liste doit etre en ordre %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="834"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="831"/>
         <source>%s n&apos;est pas par valeurs croissantes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="838"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="835"/>
         <source>%s n&apos;est pas par valeurs decroissantes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="897"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="894"/>
         <source>%s n&apos;est pas du bon type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1418"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1415"/>
         <source>valeur %s pour la somme des cles A et B </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1493"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1490"/>
         <source>valeur de %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1541"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1538"/>
         <source>valeur d&apos;instance de %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1577"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1574"/>
         <source>%s devrait etre de type  %s </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1670"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1667"/>
         <source>%s n&apos;est pas dans %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1557"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1554"/>
         <source>: verifie les types dans un tuple</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="600"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="597"/>
         <source>%s ne contient pas les elements devant etre presents ensemble: %s </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="650"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="647"/>
         <source>%s n&apos;est pas autorise : %s </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1194"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1191"/>
         <source>%s devrait etre comprise entre %s et %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Extensions/commande_comm.py" line="61"/>
-        <source>Objet commande commentaris&#xe9; invalide</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Extensions/interpreteur_formule.py" line="97"/>
-        <source>La formule passee &#xe0; l&apos;interpreteur doit etre sous forme de tuple</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Extensions/nuplet.py" line="104"/>
-        <source>D&#xe9;but </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Ihm/I_FORM_ETAPE.py" line="159"/>
+        <location filename="../../Extensions/parametre_eval.py" line="170"/>
         <source>Un concept de nom %s existe d&#xe9;j&#xe0; !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Extensions/parametre.py" line="188"/>
-        <source>Pas de nom donn&#xe9; au param&#xe8;tre </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Extensions/parametre.py" line="193"/>
-        <source>Le param&#xe8;tre %s ne peut valoir None</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../generator/generator_aplat.py" line="147"/>
-        <source>Format pas impl&#xe9;ment&#xe9; : %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Ihm/I_FORM_ETAPE.py" line="138"/>
-        <source>Impossible de r&#xe9;aliser la v&#xe9;rification de la formule</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="182"/>
-        <source>Creation Param&#xc3;&#xa8;tre indisponible</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="182"/>
-        <source>les param&#xc3;&#xa8;tres sont li&#xc3;&#xa9;s &#xc3;&#xa0; un jeu de donn&#xc3;&#xa9;es</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="294"/>
-        <source>Fichier non encore nomm&#xc3;&#xa9; </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1560"/>
-        <source>Les types entr&#xc3;&#xa9;s ne sont pas permis</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="180"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="177"/>
         <source>%s n&apos;est pas un repertoire valide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="195"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="192"/>
         <source>Type non encore gere %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="196"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="193"/>
         <source>%s (de type %s) n&apos;est pas d&apos;un type autorise: %s %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="290"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="287"/>
         <source>La valeur : %s est en dehors du domaine de validite [ %s , %s ]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="585"/>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="582"/>
         <source>%s present ensemble</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../Validation/V_PROC_ETAPE.py" line="68"/>
         <source>unknown keywords : %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/viewManager.py" line="182"/>
+        <source>Creation Parametre indisponible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monFonctionPanel.py" line="62"/>
+        <source>La cardinalite n&apos;est pas correcte, la derniere valeur est ignoree</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monFonctionPanel.py" line="110"/>
+        <source> n est pas un tuple de </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monFonctionPanel.py" line="112"/>
+        <source> valeurs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="74"/>
+        <source>La Creation de parametre n est possible que dans un jeu de donn&#xc3;&#xa9;es</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="87"/>
+        <source>Valeur incorrecte</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="96"/>
+        <source> n est pas un identifiant correct
+ </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="61"/>
+        <source>Entrer un float SVP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="66"/>
+        <source>Entrer un float inferieur a </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="71"/>
+        <source>Entrer un float superieur a </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="94"/>
+        <source>Mauvaise execution </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="94"/>
+        <source>impossible d executer la methode </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="118"/>
+        <source>Mauvaise Commande </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="118"/>
+        <source>Aucune variable connue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="164"/>
+        <source>Mauvaise dimension de matrice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="162"/>
+        <source>le nombre de ligne n est pas egal a </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="164"/>
+        <source>le nombre de colonne n est pas egal a </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="172"/>
+        <source>Mauvaise Valeur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="172"/>
+        <source>l element </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetMatrice.py" line="172"/>
+        <source>n est pas correct</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="87"/>
+        <source>Modification Impossible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="87"/>
+        <source>le parametre n&apos;est pas valide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="101"/>
+        <source> n est pas un identifiant correct</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="120"/>
+        <source>Valeur incorrecte: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="123"/>
+        <source>Valeur incorrecte </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="126"/>
+        <source>Valeur correcte </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetSDCOInto.py" line="77"/>
+        <source>impossible d&apos;evaluer : </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Extensions/commande_comm.py" line="61"/>
+        <source>Objet commande commentarisee invalide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Extensions/interpreteur_formule.py" line="97"/>
+        <source>La formule passee a l&apos;interpreteur doit etre sous forme de tuple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Extensions/nuplet.py" line="104"/>
+        <source>Debut </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Extensions/parametre.py" line="188"/>
+        <source>Pas de nom donne au parametre </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Extensions/parametre.py" line="193"/>
+        <source>Le parametre %s ne peut valoir None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_aplat.py" line="147"/>
+        <source>Format non implemente : %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Ihm/I_FORM_ETAPE.py" line="138"/>
+        <source>Impossible de realiser la verification de la formule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Ihm/I_FORM_ETAPE.py" line="159"/>
+        <source>Un concept de nom %s existe deja !</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="100"/>
+        <source> existe deja
+ </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/viewManager.py" line="182"/>
+        <source>les parametres sont lies a un jeu de donnees</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/viewManager.py" line="294"/>
+        <source>Fichier non encore nomme </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1557"/>
+        <source>Les types entres ne sont pas permis</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2777,6 +2919,34 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>WidgetDate</name>
+    <message>
+        <location filename="../../UiQT4/desWidgetDate.ui" line="26"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetDate.ui" line="91"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetDate.ui" line="236"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetDate.ui" line="152"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetDate.ui" line="230"/>
+        <source>Détruit le mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WidgetFact</name>
     <message>
         <location filename="../../UiQT4/desWidgetFact.ui" line="17"/>
@@ -2813,6 +2983,47 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>WidgetHeure</name>
+    <message>
+        <location filename="../../UiQT4/desWidgetHeure.ui" line="26"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetHeure.ui" line="86"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetHeure.ui" line="209"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetHeure.ui" line="132"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetHeure.ui" line="145"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetHeure.ui" line="203"/>
+        <source>Détruit le mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WidgetInformative</name>
+    <message>
+        <location filename="../../UiQT4/desWidgetInformation.ui" line="26"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WidgetOptionnel</name>
     <message>
         <location filename="../../UiQT4/desWidgetOptionnel.ui" line="26"/>
@@ -2837,6 +3048,84 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetOptionnel.ui" line="202"/>
         <source>Shift+A, Alt+A, Alt+A, Alt+A</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WidgetParam</name>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="26"/>
+        <source>DCommandeUnique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="182"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetParam.ui" line="141"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Paramètre&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetParam.ui" line="176"/>
+        <source>Détruit le commentaire</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="460"/>
+        <source>Affiche les commandes possibles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="230"/>
+        <source>&amp;Commandes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="472"/>
+        <source>Shift+A, Alt+A, Alt+A, Alt+A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetParam.ui" line="269"/>
+        <source>Affiche le formulaire de la commande précédente</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="278"/>
+        <source>&lt;&lt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="315"/>
+        <source>Affiche le formulaire de la commande suivante</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="324"/>
+        <source>&gt;&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="385"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Valeur: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="425"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nom: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="469"/>
+        <source>Verifie la valeur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetParam.ui" line="487"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2937,6 +3226,64 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>WidgetPlusieursIntoOrdonne</name>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="26"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="91"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="606"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="157"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="176"/>
+        <source>TextLabel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="372"/>
+        <source>Remonte d&apos;une ligne</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="408"/>
+        <source>Descend d&apos;une ligne</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="444"/>
+        <source>Détruit une ligne</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="479"/>
+        <source>ajoute une ligne</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="529"/>
+        <source>visualise l&apos;ensemble des valeurs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="600"/>
+        <source>Détruit le mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WidgetRadioButton</name>
     <message>
         <location filename="../../UiQT4/desWidgetRadioButton.ui" line="32"/>
@@ -2965,6 +3312,44 @@ p, li { white-space: pre-wrap; }
     </message>
     <message encoding="UTF-8">
         <location filename="../../UiQT4/desWidgetRadioButton.ui" line="283"/>
+        <source>Détruit le mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WidgetSDCOInto</name>
+    <message>
+        <location filename="../../UiQT4/desWidgetSDCOInto.ui" line="26"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSDCOInto.ui" line="91"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSDCOInto.ui" line="315"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSDCOInto.ui" line="152"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetSDCOInto.ui" line="186"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Structures de données du type requis &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetSDCOInto.ui" line="243"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ou Nom du concept&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetSDCOInto.ui" line="309"/>
         <source>Détruit le mot-clef</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3231,6 +3616,62 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>WidgetUniqueSDCO</name>
+    <message>
+        <location filename="../../UiQT4/desWidgetUniqueSDCO.ui" line="26"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetUniqueSDCO.ui" line="82"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetUniqueSDCO.ui" line="229"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetUniqueSDCO.ui" line="143"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetUniqueSDCO.ui" line="181"/>
+        <source>Attend un objet de type CO </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetUniqueSDCO.ui" line="223"/>
+        <source>Détruit le mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WidgetVide</name>
+    <message>
+        <location filename="../../UiQT4/desWidgetVide.ui" line="26"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetVide.ui" line="296"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetVide.ui" line="129"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0055ff;&quot;&gt;Label&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetVide.ui" line="158"/>
+        <source>Attend un objet de type XXXX. Il faut le créer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>baseWidget</name>
     <message>
         <location filename="../../UiQT4/desBaseWidget.ui" line="26"/>
@@ -3271,6 +3712,52 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desRecherche.ui" line="17"/>
         <source>Next</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context encoding="UTF-8">
+    <name>desWidgetCreeParam</name>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetCreeParam.ui" line="14"/>
+        <source>Gestion des Paramètres</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCreeParam.ui" line="153"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nom: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetCreeParam.ui" line="180"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Valeur: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetCreeParam.ui" line="208"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Créer un paramètre&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>desWidgetMatrice</name>
+    <message>
+        <location filename="../../UiQT4/desWidgetMatrice.ui" line="14"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetMatrice.ui" line="64"/>
+        <source>Affiche le rapport de validation du mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetMatrice.ui" line="70"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetMatrice.ui" line="125"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

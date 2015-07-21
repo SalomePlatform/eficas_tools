@@ -29,6 +29,12 @@
    <string notr="true">background-color : rgb(248,247,246)</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QFrame" name="frame_2">
      <property name="sizePolicy">
@@ -196,8 +202,22 @@
         </item>
        </layout>
       </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>71</width>
+          <height>18</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
      <zorder>horizontalSpacer</zorder>
+     <zorder>horizontalSpacer_2</zorder>
     </widget>
    </item>
    <item>
@@ -220,7 +240,7 @@
         <x>0</x>
         <y>0</y>
         <width>1170</width>
-        <height>512</height>
+        <height>530</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -230,22 +250,6 @@
           <number>0</number>
          </property>
         </layout>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>10</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>

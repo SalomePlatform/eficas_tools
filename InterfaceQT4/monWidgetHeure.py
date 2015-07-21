@@ -26,27 +26,11 @@ from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from feuille               import Feuille
-from monWidgetSimpTuple    import MonWidgetSimpTuple 
+from monWidgetSimpBase     import MonWidgetSimpBase
 from desWidgetHeure       import Ui_WidgetHeure 
 
 
-class MonWidgetHeure (Ui_WidgetHeure,MonWidgetSimpTuple):
+class MonWidgetHeure (Ui_WidgetHeure,MonWidgetSimpBase):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        self.nbValeurs=3
-        MonWidgetSimpTuple.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-        if self.objSimp.isImmuable() :
-           self.lineEditVal1.setDisabled(True)
-           self.lineEditVal2.setDisabled(True)
-           self.lineEditVal3.setDisabled(True)
-           self.lineEditVal1.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
-           self.lineEditVal2.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
-           self.lineEditVal3.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
-           self.lineEditVal1.setToolTip(tr("Valeur non modifiable"))
-           self.lineEditVal2.setToolTip(tr("Valeur non modifiable"))
-           self.lineEditVal3.setToolTip(tr("Valeur non modifiable"))
-        else :
-           self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
-        #self.maCommande.listeAffichageWidget.append(self.lineEditVal2)
-        #self.maCommande.listeAffichageWidget.append(self.lineEditVal3)
-
+        MonWidgetSimpBase.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)

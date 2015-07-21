@@ -65,6 +65,7 @@ class DicoImbriqueGenerator(PythonGenerator):
    def initDico(self) :
  
       self.Dico={}
+      self.Entete = ''
 
 
 #----------------------------------------------------------------------------------------
@@ -75,7 +76,7 @@ class DicoImbriqueGenerator(PythonGenerator):
        print "je passe par writeDefault"
        fileDico = fn[:fn.rfind(".")] + '.py'
        f = open( str(fileDico), 'wb')
-       f.write( str(self.Dico) )
+       f.write( self.Entete + "Dico =" + str(self.Dico) )
        f.close()
 
 #----------------------------------------------------------------------------------------
@@ -84,13 +85,18 @@ class DicoImbriqueGenerator(PythonGenerator):
 
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
+
         s=PythonGenerator.generMCSIMP(self,obj)
         liste=obj.get_genealogie() 
-        dicoCourant=self.Dico
-        for i in liste [0:-1]:
-            if not(dicoCourant.has_key(i)) : dicoCourant[i]={}
-            dicoCourant=dicoCourant[i] 
-        dicoCourant[liste[-1]]=obj.valeur
+        nom=obj.etape.nom
+        if hasattr(obj.etape,'sdnom') and obj.etape.sdnom != None and obj.etape.sdnom != "" : 
+           nom = nom+ obj.etape.sdnom
+        if not(self.Dico.has_key(nom)) : dicoCourant={}
+        else : dicoCourant=self.Dico [nom]
+        if hasattr(obj.valeur,'nom'):dicoCourant[liste[-1]]=obj.valeur.nom
+        else : dicoCourant[liste[-1]]=obj.valeurFormatee
+        self.Dico[nom]=dicoCourant
+
         return s
 
   
