@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2013   EDF R&D
+# Copyright (C) 2007-2015   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -35,8 +35,8 @@ from Editeur        import session
 from Editeur        import comploader
 from Editeur        import Objecttreeitem
 from desBaseWidget  import Ui_baseWidget
-from monViewTexte   import ViewText 
-from monWidgetCreeParam import MonWidgetCreeParam 
+from monViewTexte   import ViewText
+from monWidgetCreeParam import MonWidgetCreeParam
 import browser
 import readercata
 
@@ -65,9 +65,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.vm          = vm
         self.fichier     = fichier
         self.jdc         = jdc
-        self.first	 = True
+        self.first       = True
         self.QWParent    = QWParent
-         
+
         if appli != None :
            self.salome =  self.appliEficas.salome
         else :
@@ -79,7 +79,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
         self.affiche=self.appliEficas.CONFIGURATION.affiche
         if self.code in ['MAP','CARMELCND'] : self.afficheCommandesPliees=False
-        if self.code in ['MAP',] : 
+        if self.code in ['MAP',] :
            self.widgetTree.close()
            self.widgetTree=None
            self.appliEficas.resize(1440,self.appliEficas.height())
@@ -191,7 +191,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                 jdc_item=Objecttreeitem.make_objecttreeitem( self, "nom", self.jdc )
                 if (not self.jdc.isvalid()) and (not self.nouveau) and (self.appliEficas.ssIhm == False):
                     self.viewJdcRapport()
- 
+
        # if self.code=="TELEMAC" : print "kkkkkkkk"
 
 
@@ -213,7 +213,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         if self.code == "ZCRACKS" : texte=self._newZCRACKS()
         if self.code == "TELEMAC" : texte=self._newTELEMAC()
         #   texte=self.newTexteCND
-       
+
         jdc=self.readercata.cata[0].JdC( procedure =texte,
                                          appli=self,
                                          cata=self.readercata.cata,
@@ -371,7 +371,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         f.close()
         self.connect(self.monExe, SIGNAL("readyReadStandardOutput()"), self.readFromStdOut )
         self.connect(self.monExe, SIGNAL("readyReadStandardError()"), self.readFromStdErr )
-        exe='sh /tmp/test.sh'
+        exe='sh ' + nomFichier
         self.monExe.start(exe)
         self.monExe.closeWriteChannel()
         self.w.exec_()
@@ -389,7 +389,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def readFromStdOut(self) :
         a=self.monExe.readAllStandardOutput()
         self.w.view.append(QString.fromUtf8(a.data(),len(a))) ;
-        
+
 
 
     #-----------------------#
@@ -715,7 +715,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         """
 
         fn = unicode(fn)
-       
+
         if txt == None :
             txt = self.get_text_JDC(self.format,formatLigne=formatLigne)
             eol = '\n'
@@ -978,7 +978,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
            dicoCourant=self.generator.dico
         return dicoCourant
 
-         
+
 
     #-----------------------------------------#
     def handleAjoutGroup(self,listeGroup):
@@ -1216,7 +1216,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def _newJDCCND(self):
     #---------------------------#
       extensions=tr('Fichiers Med (*.med);;''Tous les Fichiers (*)')
-      
+
       #if self.salome == 0 :
       QMessageBox.information( self,
                       tr("Fichier Med"),
@@ -1235,7 +1235,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
       texteVcut=""
       texteZs=""
       for groupe in self.listeGroupes :
-          if groupe[0:8]=='CURRENT_': 
+          if groupe[0:8]=='CURRENT_':
              texteSources +=groupe[8:]+"=SOURCE("
              texteSources +="VecteurDirecteur=(1.0,2.0,3.0,),);\n"
           if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"
