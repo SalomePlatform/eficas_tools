@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2015   EDF R&D
+# Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -24,6 +24,7 @@ from PyQt4 import *
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
 import time
+import pdb
 from datetime import date
 from Extensions.i18n import tr
 
@@ -35,8 +36,8 @@ from Editeur        import session
 from Editeur        import comploader
 from Editeur        import Objecttreeitem
 from desBaseWidget  import Ui_baseWidget
-from monViewTexte   import ViewText
-from monWidgetCreeParam import MonWidgetCreeParam
+from monViewTexte   import ViewText 
+from monWidgetCreeParam import MonWidgetCreeParam 
 import browser
 import readercata
 
@@ -65,9 +66,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.vm          = vm
         self.fichier     = fichier
         self.jdc         = jdc
-        self.first       = True
+        self.first	 = True
         self.QWParent    = QWParent
-
+         
         if appli != None :
            self.salome =  self.appliEficas.salome
         else :
@@ -79,7 +80,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
         self.affiche=self.appliEficas.CONFIGURATION.affiche
         if self.code in ['MAP','CARMELCND'] : self.afficheCommandesPliees=False
-        if self.code in ['MAP',] :
+        if self.code in ['MAP',] : 
            self.widgetTree.close()
            self.widgetTree=None
            self.appliEficas.resize(1440,self.appliEficas.height())
@@ -96,6 +97,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         if self.readercata.fic_cata == None : return    #Sortie Salome
         self.titre=self.readercata.titre
         self.Ordre_Des_Commandes=self.readercata.Ordre_Des_Commandes
+        self.Classement_Commandes_Ds_Arbre=self.readercata.Classement_Commandes_Ds_Arbre
 
         self.format =  self.appliEficas.format_fichier
 
@@ -191,13 +193,35 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                 jdc_item=Objecttreeitem.make_objecttreeitem( self, "nom", self.jdc )
                 if (not self.jdc.isvalid()) and (not self.nouveau) and (self.appliEficas.ssIhm == False):
                     self.viewJdcRapport()
-
+ 
        # if self.code=="TELEMAC" : print "kkkkkkkk"
 
 
         if jdc_item:
             self.tree = browser.JDCTree( jdc_item,  self )
         self.appliEficas.construitMenu()
+
+    #-------------------#
+    def runPSEN(self):
+    #-------------------#
+      if self.modified or self.fichier==None  :
+         QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
+         return
+        
+      #lancement avec le .bat
+      textePython="PSEN_Path='EficasV2\PSEN_Eficas\PSEN\PSSEWrapper.py'\
+      \nimport subprocess\
+      \np=subprocess.Popen(['python',PSEN_Path])\
+      \n(out,err)=p.communicate()"
+      
+ #lancement avec qteficas_psen.py      
+
+      #textePython='C:\Users\plscist\Desktop\Vico\sauveEficasPSEN~\EficasV1\PSEN_Eficas\PSEN\PSSEWrapper.py'
+      try :
+          self._viewTextExecute( textePython,"psen_run",".py")
+      except Exception, e:
+          print traceback.print_exc()
+
 
     #--------------------------------#
     def _newJDC( self ,units = None):
@@ -213,7 +237,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         if self.code == "ZCRACKS" : texte=self._newZCRACKS()
         if self.code == "TELEMAC" : texte=self._newTELEMAC()
         #   texte=self.newTexteCND
-
+       
         jdc=self.readercata.cata[0].JdC( procedure =texte,
                                          appli=self,
                                          cata=self.readercata.cata,
@@ -371,7 +395,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         f.close()
         self.connect(self.monExe, SIGNAL("readyReadStandardOutput()"), self.readFromStdOut )
         self.connect(self.monExe, SIGNAL("readyReadStandardError()"), self.readFromStdErr )
-        exe='sh ' + nomFichier
+        exe='sh /tmp/test.sh'
         self.monExe.start(exe)
         self.monExe.closeWriteChannel()
         self.w.exec_()
@@ -389,7 +413,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def readFromStdOut(self) :
         a=self.monExe.readAllStandardOutput()
         self.w.view.append(QString.fromUtf8(a.data(),len(a))) ;
-
+        
 
 
     #-----------------------#
@@ -715,7 +739,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         """
 
         fn = unicode(fn)
-
+       
         if txt == None :
             txt = self.get_text_JDC(self.format,formatLigne=formatLigne)
             eol = '\n'
@@ -743,6 +767,8 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #-----------------------------------------------------------#
       if self.code == "MAP" and not(generator.plugins.has_key(format)): format = "MAP"
       if generator.plugins.has_key(format):
+         print "get_text_JDC"
+         
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
          try :
@@ -916,7 +942,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                                  )
            return
         if hasattr(self.CONFIGURATION, "savedir"): path=self.CONFIGURATION.savedir
-        else : path=os.environ['HOME']
+        else : path='C:/'
 
         monNomFichier=""
         if self.fichier is not None and self.fichier != "" :
@@ -960,6 +986,41 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         (output, err) = p.communicate()
 
 
+    #-----------------#
+    def saveRunPSEN(self):
+    #-----------------#
+        print "saveRunPSEN"
+        self.saveFile()
+        return
+        if not(self.jdc.isvalid()):
+           QMessageBox.critical( self, tr( "Sauvegarde de l'input impossible "),
+                                tr("Un JdC valide est necessaire pour creer un .input")
+                                 )
+           return
+
+        print generator.plugins.has_key(self.format)
+        if generator.plugins.has_key(self.format):
+             # Le generateur existe on l'utilise
+             self.generator=generator.plugins[self.format]()
+             try :
+                self.generator.gener(self.jdc)
+                self.generator.writeDefault('')
+             except ValueError,e:
+                QMessageBox.critical(self, tr("Erreur a la generation"),str(e))
+             if not self.generator.cr.estvide():
+                self.affiche_infos(tr("Erreur a la generation"),Qt.red)
+                QMessageBox.critical( self, tr("Erreur a la generation"),tr("EFICAS ne sait pas convertir ce JDC"))
+                return ""
+        else:
+             # Il n'existe pas c'est une erreur
+             self.affiche_infos(tr("Format %s non reconnu" , self.format),Qt.red)
+             QMessageBox.critical( self, "Format  non reconnu" ,tr("EFICAS ne sait pas convertir le JDC selon le format "+ self.format))
+             return ""
+        print "HELLO"
+        
+
+
+
     #-----------------------------------------#
     def cherche_Groupes(self):
     #-----------------------------------------#
@@ -978,7 +1039,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
            dicoCourant=self.generator.dico
         return dicoCourant
 
-
+         
 
     #-----------------------------------------#
     def handleAjoutGroup(self,listeGroup):
@@ -1028,6 +1089,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
           self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
           fn = unicode(QDir.convertSeparators(fn))
           newName = fn
+
 
         if not (self.writeFile(fn,formatLigne=formatLigne)): return (0, None)
         self.fichier = fn
@@ -1216,7 +1278,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def _newJDCCND(self):
     #---------------------------#
       extensions=tr('Fichiers Med (*.med);;''Tous les Fichiers (*)')
-
+      
       #if self.salome == 0 :
       QMessageBox.information( self,
                       tr("Fichier Med"),
@@ -1235,7 +1297,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
       texteVcut=""
       texteZs=""
       for groupe in self.listeGroupes :
-          if groupe[0:8]=='CURRENT_':
+          if groupe[0:8]=='CURRENT_': 
              texteSources +=groupe[8:]+"=SOURCE("
              texteSources +="VecteurDirecteur=(1.0,2.0,3.0,),);\n"
           if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"

@@ -228,9 +228,9 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             if self.item.object.definition.type[0].ntuple == 2:
                from monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2
                widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-          #  elif self.item.object.definition.type[0].ntuple == 3 :
-          #     from monWidgetSimpTuple3 import MonWidgetSimpTuple3
-          #     widget=MonWidgetSimpTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            elif self.item.object.definition.type[0].ntuple == 3 :
+               from monWidgetPlusieursTuple3 import MonWidgetPlusieursTuple3
+               widget=MonWidgetPlusieursTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
                print "Pas de Tuple de longueur > 3"
                print "Prevenir la maintenance "
