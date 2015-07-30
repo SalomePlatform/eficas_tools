@@ -51,7 +51,11 @@ class CONFIG_BASE:
       else           : self.name="editeur.ini"
       self.rep_mat = None
       self.repIni  = repIni
-      self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',appli.code)
+      if sys.platform[0:5]=="linux" :
+              self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',appli.code)
+      else :
+              self.rep_user   = os.path.join('C:/','.config/Eficas',appli.code)
+
      
 
       self.setValeursParDefaut()

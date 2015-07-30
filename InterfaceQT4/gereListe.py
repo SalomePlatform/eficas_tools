@@ -35,20 +35,42 @@ class LECustom(QLineEdit):
         """
         Constructor
         """
-        QMainWindow.__init__(self,parent)
+        QLineEdit.__init__(self,parent)
         self.parentQt=parentQt
         self.num=i
+        self.dansUnTuple=False
 
  def focusInEvent(self,event):
-     print "dans focusInEvent de LECustom"
+     #print "dans focusInEvent de LECustom"
      self.parentQt.LineEditEnCours=self
      self.parentQt.NumLineEditEnCours=self.num
-     self.setFrame(True)
+     self.setStyleSheet("border: 2px solid gray")
      QLineEdit.focusInEvent(self,event)
 
  def focusOutEvent(self,event):
-     self.setFrame(False)
+     #print "dans focusOutEvent de LECustom"
+     self.setStyleSheet("border: 0px")
+     if self.dansUnTuple    : self.setStyleSheet("background:rgb(235,235,235); border: 0px;")
+     elif self.num % 2 == 1 : self.setStyleSheet("background:rgb(210,210,210)")
+     else                   : self.setStyleSheet("background:rgb(235,235,235)")
      QLineEdit.focusOutEvent(self,event)
+
+ def clean(self):
+     self.setText("")
+
+ def getValeur(self):
+     return self.text()
+
+ def setValeur(self,valeur):
+     self.setText(valeur)
+
+# --------------------------- #
+class LECustomTuple(LECustom):
+# --------------------------- #
+ def __init__(self,parent):
+   #  index sera mis a jour par TupleCustom
+   parentQt=parent.parent().parent().parent()
+   LECustom. __init__(self,parent,parentQt,0)
 
 # ---------------------------- #
 class MonLabelListeClic(QLabel):
@@ -115,21 +137,21 @@ class GereListe:
    def moinsPushed(self):
        # on supprime le dernier
        if self.NumLineEditEnCours==self.indexDernierLabel : 
-          nomLineEdit=self.nomLine+str(aRemonter)
+          nomLineEdit=self.nomLine+str(self.indexDernierLabel)
           courant=getattr(self,nomLineEdit)
-          courant.setText("")
+          courant.clean()
        else :
          for i in range (self.NumLineEditEnCours, self.indexDernierLabel):
              aRemonter=i+1
              nomLineEdit=self.nomLine+str(aRemonter)
              courant=getattr(self,nomLineEdit)
-             valeurARemonter=courant.text()
+             valeurARemonter=courant.getValeur()
              nomLineEdit=self.nomLine+str(i)
              courant=getattr(self,nomLineEdit)
-             courant.setText(valeurARemonter)
+             courant.setValeur(valeurARemonter)
          nomLineEdit=self.nomLine+str(self.indexDernierLabel)
          courant=getattr(self,nomLineEdit)
-         courant.setText("")
+         courant.clean()
        self.changeValeur(changeDePlace=False,oblige=True)
        self.setValide()
 
@@ -138,17 +160,20 @@ class GereListe:
           self.editor.affiche_infos('nb max de valeurs : '+str(self.monSimpDef.max)+' atteint')
           return
        self.ajoutLineEdit()
+       self.descendLesLignes()
+
+   def descendLesLignes(self):
        if self.NumLineEditEnCours==self.indexDernierLabel : return
        nomLineEdit=self.nomLine+str(self.NumLineEditEnCours+1)
        courant=getattr(self,nomLineEdit)
-       valeurADescendre=courant.text()
-       courant.setText("")
+       valeurADescendre=courant.getValeur()
+       courant.clean()
        for i in range (self.NumLineEditEnCours+1, self.indexDernierLabel):
              aDescendre=i+1
              nomLineEdit=self.nomLine+str(aDescendre)
              courant=getattr(self,nomLineEdit)
-             valeurAGarder=courant.text()
-             courant.setText(valeurADescendre)
+             valeurAGarder=courant.getValeur()
+             courant.setValeur(valeurADescendre)
              valeurADescendre=valeurAGarder
        self.changeValeur(changeDePlace=False)
        self.scrollArea.ensureWidgetVisible(self.LineEditEnCours)

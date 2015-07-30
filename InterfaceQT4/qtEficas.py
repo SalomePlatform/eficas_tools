@@ -137,8 +137,8 @@ class Appli(Ui_Eficas,QMainWindow):
             if hasattr(self,intituleAction):
               action=getattr(self,intituleAction)
               self.toolBar.removeAction(action)
-        if self.code in Appli.__dict__.keys():
-          listeTexte=apply(Appli.__dict__[self.code],(self,))
+        if self.code.upper() in Appli.__dict__.keys():
+          listeTexte=apply(Appli.__dict__[self.code.upper()],(self,))
 
     def initAides(self):
         #print "je passe la"
@@ -169,7 +169,7 @@ class Appli(Ui_Eficas,QMainWindow):
         if not(self.actionExecution in self.toolBar.actions()):
            self.toolBar.addAction(self.actionExecution)
         self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
-        self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
+        self.connect(self.actionExecution,SIGNAL("triggered()"),self.run)
 
     def ajoutSauveExecution(self):
         self.actionSaveRun = QAction(self)
@@ -180,7 +180,7 @@ class Appli(Ui_Eficas,QMainWindow):
         if not(self.actionSaveRun in self.toolBar.actions()):
            self.toolBar.addAction(self.actionSaveRun)
         self.actionSaveRun.setText(QApplication.translate("Eficas", "Save Run", None, QApplication.UnicodeUTF8))
-        self.connect(self.actionSaveRun,SIGNAL("activated()"),self.saveRun)
+        self.connect(self.actionSaveRun,SIGNAL("triggered()"),self.saveRun)
 
     def griserActionsStructures(self):
         self.actionCouper.setEnabled(False)
@@ -246,6 +246,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.addAction(self.actionParametres_Eficas)
         self.menuOptions.setTitle(tr("Options"))
 
+    def PSEN(self):
+        self.ajoutExecution()
+        self.ajoutSauveExecution()
 
     def ChercheGrpMesh(self):
         Msg,listeGroup=self.ChercheGrpMeshInSalome()
@@ -255,11 +258,17 @@ class Appli(Ui_Eficas,QMainWindow):
            print "il faut gerer les erreurs"
 
     def ChercheGrpMaille(self):
-        Msg,listeGroup=self.ChercheGrpMailleInSalome()
+        # Normalement la variable self.salome permet de savoir si on est ou non dans Salome
+        try:
+            Msg,listeGroup=self.ChercheGrpMailleInSalome() # recherche dans Salomé
+            #Msg = None; listeGroup = None # recherche manuelle, i.e., sans Salomé si ligne précédente commentée
+        except:
+            raise ValueError('Salome non ouvert')
         if Msg == None :
            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
            print "il faut gerer les erreurs"
+
 
     def ChercheGrp(self):
         #Msg,listeGroup=self.ChercheGrpMailleInSalome()
@@ -291,33 +300,33 @@ class Appli(Ui_Eficas,QMainWindow):
     def connecterSignaux(self) :
         self.connect(self.recentMenu,SIGNAL('aboutToShow()'),self.handleShowRecentMenu)
 
-        self.connect(self.action_Nouveau,SIGNAL("activated()"),self.fileNew)
-        self.connect(self.actionNouvel_Include,SIGNAL("activated()"),self.NewInclude)
-        self.connect(self.action_Ouvrir,SIGNAL("activated()"),self.fileOpen)
-        self.connect(self.actionEnregistrer,SIGNAL("activated()"),self.fileSave)
-        self.connect(self.actionEnregistrer_sous,SIGNAL("activated()"),self.fileSaveAs)
-        self.connect(self.actionFermer,SIGNAL("activated()"),self.fileClose)
-        self.connect(self.actionFermer_tout,SIGNAL("activated()"),self.fileCloseAll)
-        self.connect(self.actionQuitter,SIGNAL("activated()"),self.fileExit)
+        self.connect(self.action_Nouveau,SIGNAL("triggered()"),self.fileNew)
+        self.connect(self.actionNouvel_Include,SIGNAL("triggered()"),self.NewInclude)
+        self.connect(self.action_Ouvrir,SIGNAL("triggered()"),self.fileOpen)
+        self.connect(self.actionEnregistrer,SIGNAL("triggered()"),self.fileSave)
+        self.connect(self.actionEnregistrer_sous,SIGNAL("triggered()"),self.fileSaveAs)
+        self.connect(self.actionFermer,SIGNAL("triggered()"),self.fileClose)
+        self.connect(self.actionFermer_tout,SIGNAL("triggered()"),self.fileCloseAll)
+        self.connect(self.actionQuitter,SIGNAL("triggered()"),self.fileExit)
 
-        self.connect(self.actionEficas,SIGNAL("activated()"),self.aidePPal)
-        self.connect(self.actionVersion,SIGNAL("activated()"),self.version)
-        self.connect(self.actionParametres,SIGNAL("activated()"),self.gestionParam)
+        self.connect(self.actionEficas,SIGNAL("triggered()"),self.aidePPal)
+        self.connect(self.actionVersion,SIGNAL("triggered()"),self.version)
+        self.connect(self.actionParametres,SIGNAL("triggered()"),self.gestionParam)
 
-        self.connect(self.actionCouper,SIGNAL("activated()"),self.editCut)
-        self.connect(self.actionCopier,SIGNAL("activated()"),self.editCopy)
-        self.connect(self.actionColler,SIGNAL("activated()"),self.editPaste)
-        self.connect(self.actionSupprimer,SIGNAL("activated()"),self.supprimer)
-        self.connect(self.actionRechercher,SIGNAL("activated()"),self.rechercher)
-        self.connect(self.actionDeplier_replier,SIGNAL("activated()"),self.Deplier)
+        self.connect(self.actionCouper,SIGNAL("triggered()"),self.editCut)
+        self.connect(self.actionCopier,SIGNAL("triggered()"),self.editCopy)
+        self.connect(self.actionColler,SIGNAL("triggered()"),self.editPaste)
+        self.connect(self.actionSupprimer,SIGNAL("triggered()"),self.supprimer)
+        self.connect(self.actionRechercher,SIGNAL("triggered()"),self.rechercher)
+        self.connect(self.actionDeplier_replier,SIGNAL("triggered()"),self.Deplier)
 
-        self.connect(self.actionRapport_de_Validation,SIGNAL("activated()"),self.jdcRapport)
-        self.connect(self.actionFichier_Source,SIGNAL("activated()"),self.jdcFichierSource)
-        self.connect(self.actionFichier_Resultat,SIGNAL("activated()"),self.visuJdcPy)
+        self.connect(self.actionRapport_de_Validation,SIGNAL("triggered()"),self.jdcRapport)
+        self.connect(self.actionFichier_Source,SIGNAL("triggered()"),self.jdcFichierSource)
+        self.connect(self.actionFichier_Resultat,SIGNAL("triggered()"),self.visuJdcPy)
 
 
-        #self.connect(self.helpIndexAction,SIGNAL("activated()"),self.helpIndex)
-        #self.connect(self.helpContentsAction,SIGNAL("activated()"),self.helpContents)
+        #self.connect(self.helpIndexAction,SIGNAL("triggered()"),self.helpIndex)
+        #self.connect(self.helpContentsAction,SIGNAL("triggered()"),self.helpContents)
 
         # Pour Aster
         self.actionTraduitV9V10 = QAction(self)
@@ -332,28 +341,28 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionSauveLigne = QAction(self)
         self.actionSauveLigne.setText(tr("Sauve Format Ligne"))
 
-        self.connect(self.actionParametres_Eficas,SIGNAL("activated()"),self.optionEditeur)
-        self.connect(self.actionLecteur_Pdf,SIGNAL("activated()"),self.optionPdf)
-        self.connect(self.actionTraduitV9V10,SIGNAL("activated()"),self.traductionV9V10)
-        self.connect(self.actionTraduitV10V11,SIGNAL("activated()"),self.traductionV10V11)
-        self.connect(self.actionTraduitV11V12,SIGNAL("activated()"),self.traductionV11V12)
-        self.connect(self.actionSauveLigne,SIGNAL("activated()"),self.sauveLigne)
+        self.connect(self.actionParametres_Eficas,SIGNAL("triggered()"),self.optionEditeur)
+        self.connect(self.actionLecteur_Pdf,SIGNAL("triggered()"),self.optionPdf)
+        self.connect(self.actionTraduitV9V10,SIGNAL("triggered()"),self.traductionV9V10)
+        self.connect(self.actionTraduitV10V11,SIGNAL("triggered()"),self.traductionV10V11)
+        self.connect(self.actionTraduitV11V12,SIGNAL("triggered()"),self.traductionV11V12)
+        self.connect(self.actionSauveLigne,SIGNAL("triggered()"),self.sauveLigne)
 
 
         # Pour Carmel
         self.actionChercheGrpMaille = QAction(self)
         self.actionChercheGrpMaille.setText(tr("Acquiert Groupe Maille"))
-        self.connect(self.actionChercheGrpMaille,SIGNAL("activated()"),self.ChercheGrpMaille)
+        self.connect(self.actionChercheGrpMaille,SIGNAL("triggered()"),self.ChercheGrpMaille)
 
         # Pour CarmelCND
         self.actionChercheGrp = QAction(self)
         self.actionChercheGrp.setText(tr("Accquisition Groupe Maille"))
-        self.connect(self.actionChercheGrp,SIGNAL("activated()"),self.ChercheGrp)
+        self.connect(self.actionChercheGrp,SIGNAL("triggered()"),self.ChercheGrp)
 
         # Pour Aide
         self.actionCode = QAction(self)
         self.actionCode.setText(tr("Specificites Maille"))
-        self.connect(self.actionCode,SIGNAL("activated()"),self.aideCode)
+        self.connect(self.actionCode,SIGNAL("triggered()"),self.aideCode)
 
     def Deplier(self):
         self.viewmanager.handleDeplier()
@@ -407,7 +416,10 @@ class Appli(Ui_Eficas,QMainWindow):
        self.recent =  QStringList()
        try :
        #if 1 :
-           rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
+           if sys.platform[0:5]=="linux" :
+              rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
+           else :
+              rep=os.path.join('C:/','.config/Eficas',self.code)
            monFichier=rep+"/listefichiers_"+self.code
            index=0
            f=open(monFichier)

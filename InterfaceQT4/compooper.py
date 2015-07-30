@@ -72,7 +72,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
         typeNode.PopUpMenuNode.createPopUpMenu(self)
         if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome: 
            self.ViewElt = QAction(tr('View3D'),self.tree)
-           self.tree.connect(self.ViewElt,SIGNAL("activated()"),self.view3D)
+           self.tree.connect(self.ViewElt,SIGNAL("triggered()"),self.view3D)
            self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
            self.menu.addAction(self.ViewElt)
            if self.item.isvalid() :
@@ -81,7 +81,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
 	      self.ViewElt.setEnabled(0)
         if  self.item.get_nom() == "DISTRIBUTION" :
            self.Graphe = QAction(tr('Graphique'),self.tree)
-           self.tree.connect(self.Graphe,SIGNAL("activated()"),self.viewPng)
+           self.tree.connect(self.Graphe,SIGNAL("triggered()"),self.viewPng)
            self.Graphe.setStatusTip(tr("affiche la distribution "))
            self.menu.addAction(self.Graphe)
            if self.item.isvalid() :

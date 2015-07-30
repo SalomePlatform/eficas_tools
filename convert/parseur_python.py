@@ -26,7 +26,13 @@ stringsAndCommentsRE =  \
       re.compile(u"(\"\"\".*?\"\"\"|'''.*?'''|\"[^\"]*\"|\'[^\']*\'|#.*?\n)", re.DOTALL)
 allchars = string.maketrans(u"", "")
 allcharsExceptNewline = allchars[: allchars.index('\n')]+allchars[allchars.index('\n')+1:]
-allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+if sys.platform[0:5]=="linux" :
+   allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+elif sys.platform[0:3]=="win" :
+   allcharsExceptNewlineTranstable = dict((ord(char), u'*') for char in allcharsExceptNewline)#string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+else :
+   allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+   print 'Plateforme non geree'
 
 def maskStringsAndComments(src):
     """Masque tous les caracteres de src contenus dans des commentaires ou des strings multilignes (triples
@@ -40,12 +46,14 @@ def maskStringsAndComments(src):
     for i in xrange(1, len(allstrings), 2):
         if allstrings[i].startswith(u"'''")or allstrings[i].startswith('"""'):
             allstrings[i] = allstrings[i][:3]+ \
-                           allstrings[i][3:-3].translate(allcharsExceptNewlineTranstable)+ \
-                           allstrings[i][-3:]
+                            allstrings[i][3:-3].translate(allcharsExceptNewlineTranstable)+ \
+                            allstrings[i][-3:]
         else:
+            test= allstrings[i][1:-1].translate(allcharsExceptNewlineTranstable)
+            #test +\
             allstrings[i] = allstrings[i][0]+ \
-                           allstrings[i][1:-1].translate(allcharsExceptNewlineTranstable)+ \
-                           allstrings[i][-1]
+                            allstrings[i][1:-1].translate(allcharsExceptNewlineTranstable)+ \
+                            allstrings[i][-1]
 
     return "".join(allstrings)
 
@@ -119,8 +127,8 @@ def construit_genea(texte,liste_mc):
 
 
 class ENTITE_JDC :
-    """Classe de base pour tous les objets crÈÈs lors de la conversion
-       Tout objet dÈrivÈ est enregistrÈ auprËs de son pere a sa crÈation
+    """Classe de base pour tous les objets cr√©√©s lors de la conversion
+       Tout objet d√©riv√© est enregistr√© aupr√®s de son pere a sa cr√©ation
     """
     def __init__(self,pere):
         self.texte = ''
@@ -143,8 +151,8 @@ class COMMENTAIRE(ENTITE_JDC):
 
     def __str__(self):
         """
-        Retourne une chaine de caractËres reprÈsentants self
-        sous une forme interprÈtable par EFICAS
+        Retourne une chaine de caract√®res repr√©sentants self
+        sous une forme interpr√©table par EFICAS
         """
         t=repr(self.texte)
         return "COMMENTAIRE(u"+t+")\n"
@@ -160,8 +168,8 @@ class COMMENTAIRE(ENTITE_JDC):
         if texte[0] == '#':
             self.texte = self.texte+texte[1:]
         else:
-            # le diËse n'est pas sur le premier caractere
-            amont,aval = string.split(texte,'#',1) # on dÈcoupe suivant la premiËre occurrence de #
+            # le di√®se n'est pas sur le premier caractere
+            amont,aval = string.split(texte,'#',1) # on d√©coupe suivant la premi√®re occurrence de #
             self.texte = self.texte +amont + aval
         
 class COMMANDE(ENTITE_JDC):
@@ -174,12 +182,12 @@ class COMMANDE(ENTITE_JDC):
         
     def get_nb_par(self):
         """
-        Retourne la diffÈrence entre le nombre de parenthËses ouvrantes
-        et le nombre de parenthËses fermantes prÈsentes dans self.texte
-        Peut donc retourner un entier nÈgatif
+        Retourne la diff√©rence entre le nombre de parenth√®ses ouvrantes
+        et le nombre de parenth√®ses fermantes pr√©sentes dans self.texte
+        Peut donc retourner un entier n√©gatif
         """
         # faire attention aux commentaires contenus dans self.texte
-        # qui peuvent eux-memes contenir des parenthËses !!!!
+        # qui peuvent eux-memes contenir des parenth√®ses !!!!
         l_lignes = string.split(self.texte,'\n')
         nb = 0
         for ligne in l_lignes:
@@ -200,7 +208,7 @@ class AFFECTATION(ENTITE_JDC):
         
     def __str__(self):
         """
-        Retourne une expression de l'affectation comprÈhensible par ACCAS
+        Retourne une expression de l'affectation compr√©hensible par ACCAS
         et exploitable par EFICAS
         """
         nom,valeur = string.split(self.texte,'=',1)
@@ -221,7 +229,7 @@ class COMMANDE_COMMENTARISEE(ENTITE_JDC):
 
     def __str__(self):
         """
-        Retourne une expression de la commande commentarisÈe comprÈhensible par ACCAS
+        Retourne une expression de la commande commentaris√©e compr√©hensible par ACCAS
         et exploitable par EFICAS
         """
         return "COMMANDE_COMM(texte="+repr(self.texte)+")\n"
@@ -238,7 +246,7 @@ class AFFECTATION_EVAL(ENTITE_JDC):
         
     def __str__(self):
         """
-        Retourne une expression du paramËtre EVAL comprÈhensible par ACCAS
+        Retourne une expression du param√®tre EVAL compr√©hensible par ACCAS
         et exploitable par EFICAS
         """
         nom,valeur = string.split(self.texte,'=',1)
@@ -249,8 +257,8 @@ class AFFECTATION_EVAL(ENTITE_JDC):
         
 class PARSEUR_PYTHON:
     """
-    Cette classe sert a gÈnÈrer un objet PARSEUR_PYTHON qui rÈalise l'analyse d'un texte 
-    reprÈsentant un JDC Python en distinguant :
+    Cette classe sert a g√©n√©rer un objet PARSEUR_PYTHON qui r√©alise l'analyse d'un texte 
+    repr√©sentant un JDC Python en distinguant :
       - les commentaires inter commandes
       - les affectations
       - les commandes
@@ -267,12 +275,12 @@ class PARSEUR_PYTHON:
 
     def is_affectation(self,texte):
         """
-        MÈthode boolÈenne qui retourne 1 si le texte est celui d'une affectation dans un jeu de commandes
+        M√©thode bool√©enne qui retourne 1 si le texte est celui d'une affectation dans un jeu de commandes
         Aster, 0 sinon
         """
         if '=' not in texte : return 0
         if self.pattern_commande.match(texte):
-            # cas d'une procÈdure ...
+            # cas d'une proc√©dure ...
             return 0
         amont,aval = string.split(texte,'=',1)
         aval = string.strip(aval)
@@ -289,12 +297,12 @@ class PARSEUR_PYTHON:
 
     def is_eval(self,texte):
         """
-        MÈthode boolÈenne qui retourne 1 si le texte est celui d'une affectation de type EVAL
+        M√©thode bool√©enne qui retourne 1 si le texte est celui d'une affectation de type EVAL
         dans un jeu de commandes Aster, 0 sinon
         """
         if '=' not in texte : return 0
         if self.pattern_commande.match(texte):
-            # cas d'une procÈdure ...
+            # cas d'une proc√©dure ...
             return 0
         amont,aval = string.split(texte,'=',1)
         aval = string.strip(aval)
@@ -306,11 +314,11 @@ class PARSEUR_PYTHON:
             
     def is_commande(self,texte):
         """
-        MÈthode boolÈenne qui retourne 1 si le texte est celui d'une commande dans un jeu de commandes
+        M√©thode bool√©enne qui retourne 1 si le texte est celui d'une commande dans un jeu de commandes
         Aster, 0 sinon
         """
         if self.pattern_commande.match(texte):
-            # cas d'une procÈdure ...
+            # cas d'une proc√©dure ...
             return 1
         # A ce stade il faut avoir un OPER ou une MACRO, bref un '=' !
         if '=' not in texte : return 0
@@ -326,7 +334,7 @@ class PARSEUR_PYTHON:
     def analyse(self):
         """
         Eclate la chaine self.texte en self.l_objets une liste lignes d'instructions
-        et de commentaires (parmi lesquels des instructions "commentarisÈes").
+        et de commentaires (parmi lesquels des instructions "commentaris√©es").
         """
         l_lignes = string.split(self.texte,'\n')
         commentaire_courant             = None
@@ -371,24 +379,24 @@ class PARSEUR_PYTHON:
                 continue
 
             if pattern_2comments.match(ligne):
-                #on a trouvÈ une commande commentarisÈe : double commentaire sans rien devant a part des blancs
+                #on a trouv√© une commande commentaris√©e : double commentaire sans rien devant a part des blancs
                 if commentaire_courant:
                     #Si un commentaire ordinaire est en cours on le termine
                     commentaire_courant = None
 
                 if commande_courante :
-                    # on a un objet commentarisÈ a l'intÈrieur d'une commande
-                    # --> non traitÈ pour l'instant : on l'ajoute simplement a la commande courante comme
+                    # on a un objet commentaris√© a l'int√©rieur d'une commande
+                    # --> non trait√© pour l'instant : on l'ajoute simplement a la commande courante comme
                     # un commentaire ordinaire
                     commande_courante.append_text(ligne)
                 elif commande_commentarisee_courante :
                     # commande_commentarisee en cours : on ajoute la ligne
                     commande_commentarisee_courante.append_text(ligne)
-                    # on a 2 commandes commentarisÈes de suite
+                    # on a 2 commandes commentaris√©es de suite
                     if pattern_finComments.match(ligne) :
                        commande_commentarisee_courante = None
                 else:
-                    # debut de commande commentarisÈe : on crÈe un objet commande_commentarisee_courante
+                    # debut de commande commentaris√©e : on cr√©e un objet commande_commentarisee_courante
                     commande_commentarisee_courante = COMMANDE_COMMENTARISEE(self)
                     commande_commentarisee_courante.append_text(ligne)
 
@@ -402,29 +410,29 @@ class PARSEUR_PYTHON:
                     commande_commentarisee_courante = None
 
                 if commande_courante :
-                    # il s'agit d'un commentaire a l'intÈrieur d'une commande --> on ne fait rien de special
+                    # il s'agit d'un commentaire a l'int√©rieur d'une commande --> on ne fait rien de special
                     #on l'ajoute au texte de la commande 
                     commande_courante.append_text(ligne)
                 elif commentaire_courant :
-                    # il s'agit de la niËme ligne d'un commentaire entre deux commandes
+                    # il s'agit de la ni√®me ligne d'un commentaire entre deux commandes
                     # --> on ajoute cette ligne au commentaire courant
                     commentaire_courant.append_text(ligne)
                 else :
                     # il s'agit d'un nouveau commentaire entre deux commandes
-                    # --> on le crÈe et il devient le commentaire courant
+                    # --> on le cr√©e et il devient le commentaire courant
                     commentaire_courant = COMMENTAIRE(self)
                     commentaire_courant.append_text(ligne)
 
                 #on passe a la ligne suivante
                 continue
 
-            # la ligne contient des donnÈes autre qu'un Èventuel commentaire
+            # la ligne contient des donn√©es autre qu'un √©ventuel commentaire
             if commentaire_courant :
-                # on clot un Èventuel commentaire courant
+                # on clot un √©ventuel commentaire courant
                 commentaire_courant = None
 
             if commande_commentarisee_courante :
-                # on clot une Èventuelle commande commentarisee courante
+                # on clot une √©ventuelle commande commentarisee courante
                 commande_commentarisee_courante = None
 
             if commande_courante :
@@ -433,7 +441,7 @@ class PARSEUR_PYTHON:
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
-                    #la commande est terminÈe 
+                    #la commande est termin√©e 
                     #print "fin de commande"
                     self.analyse_reel(commande_courante.texte)
                     commande_courante = None
@@ -447,7 +455,7 @@ class PARSEUR_PYTHON:
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
-                    #L'affectation est terminÈe
+                    #L'affectation est termin√©e
                     affectation_courante=None
                 #on passe a la ligne suivante
                 continue
@@ -488,7 +496,7 @@ class PARSEUR_PYTHON:
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
-                    #L'affectation est terminÈe
+                    #L'affectation est termin√©e
                     affectation_courante=None
                 #on passe a la ligne suivante
                 continue
@@ -498,11 +506,11 @@ class PARSEUR_PYTHON:
                 affectation_courante = None
                 commande_courante = COMMANDE(self)
                 commande_courante.append_text(ligne)
-                #si la commande est complËte, on la termine
+                #si la commande est compl√®te, on la termine
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
-                    #la commande est terminÈe 
+                    #la commande est termin√©e 
                     #print "fin de commande"
                     self.analyse_reel(commande_courante.texte)
                     commande_courante = None
@@ -511,7 +519,7 @@ class PARSEUR_PYTHON:
 
     def enleve (self,texte) :
         """Supprime de texte tous les caracteres blancs, fins de ligne, tabulations
-           Le nouveau texte est retournÈ
+           Le nouveau texte est retourn√©
         """
         i=0
         chaine=""
@@ -588,7 +596,7 @@ class PARSEUR_PYTHON:
                              except :
                                   pass
                        mot=""
-               # ou de ( imbriqueÈs
+               # ou de ( imbrique√©s
                  else :
                     #cas du mocle facteur simple ou 
                     mot=""

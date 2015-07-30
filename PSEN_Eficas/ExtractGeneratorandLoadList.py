@@ -1,5 +1,4 @@
-NetworkFile = r"C:\Users\J15773\Documents\GTDosier\PSENdocs\Victoria\JAMAIQUE\2030Conv_HFP2.sav"
-
+NetworkFile = r"C:\Users\J15773\Documents\GTDosier\PSENdocs\Victoria ALL - EFICAS PSEN\Data\2030Conv_HFP2.sav"
 PSSE_PATH = "C:/Program Files/PTI/PSSE33/PSSBIN" #emplacement de PSSE
 
 def ExtractGeneratorandLoadList(NetworkFile,PSSE_PATH):
@@ -7,6 +6,8 @@ def ExtractGeneratorandLoadList(NetworkFile,PSSE_PATH):
     import os
     import sys
 
+    print NetworkFile
+    print PSSE_PATH
     sys.path.append(PSSE_PATH)
     os.environ['PATH'] +=  ';' + PSSE_PATH + ';'
 

@@ -29,7 +29,7 @@ from feuille                import Feuille
 from desWidgetPlusieursInto import Ui_WidgetPlusieursInto 
 from politiquesValidation   import PolitiquePlusieurs
 from qtSaisie               import SaisieValeur
-from gereListe              import GereListe
+#from gereListe              import GereListe
 
 class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
 
@@ -39,6 +39,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         self.parentQt.commandesLayout.insertWidget(-1,self)
+        self.connect(self.CBCheck, SIGNAL('stateChanged(int)'),self.change)
         # try except si la liste des possibles est vide
         # prevoir qqchose
         try :
@@ -47,12 +48,21 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
           pass
 
 
+  def change(self,int):
+       if self.CBCheck.isChecked() : 
+          for i in range(len(self.listeAAfficher)):
+              nomCB="lineEditVal"+str(i+1)
+              courant=getattr(self,nomCB)
+              courant.setChecked(True)
+       else :
+          min,max = self.node.item.GetMinMax()
+          for i in range(len(self.listeAAfficher)):
+              nomCB="lineEditVal"+str(i+1)
+              courant=getattr(self,nomCB)
+              courant.setChecked(False)
+
   def setValeurs(self):
        self.listeValeursCourantes=self.node.item.GetListeValeurs()
-       #print self.monSimpDef.into
-       #if len(self.monSimpDef.into)*20 > 400 : self.setMinimumHeight(400)
-       #else : self.setMinimumHeight(len(self.monSimpDef.into)*30)
-       #self.adjustSize()
        if hasattr(self.node.item.definition.validators,'set_MCSimp'):
             obj=self.node.item.getObject()
             self.node.item.definition.validators.set_MCSimp(obj)
@@ -173,6 +183,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
          self.editor.affiche_infos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
       else :
          self.editor.affiche_infos(tr(""))
+      if self.listeValeursCourantes== [] : self.listeValeursCourantes=None
       self.node.item.set_valeur(self.listeValeursCourantes)
       self.setValide()
       self.reaffiche()

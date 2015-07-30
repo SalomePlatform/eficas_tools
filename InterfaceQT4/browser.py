@@ -419,6 +419,10 @@ class JDCNode(QTreeWidgetItem):
         Methode externe
         """
         self.editor.init_modif()
+
+        verifiePosition=self.verifiePosition(name,pos)
+        if not verifiePosition : return 0
+        
         index = self.treeParent.children.index(self)
         if   pos == 'before': index = index
         elif pos == 'after': index = index +1
@@ -426,6 +430,40 @@ class JDCNode(QTreeWidgetItem):
             print unicode(pos), tr("  n'est pas un index valide pour append_brother")
             return 0
         return self.treeParent.append_child(name,pos=index,plier=plier)
+
+    def verifiePosition(self,name,pos):
+        from InterfaceQT4 import compojdc
+        if not (isinstance(self.treeParent, compojdc.Node)) : return True
+        if name not in self.editor.Classement_Commandes_Ds_Arbre : return True
+        indexName=self.editor.Classement_Commandes_Ds_Arbre.index(name)
+
+        etapes=self.item.jdc.etapes
+        if etapes == [] : return True
+
+        indexOu=etapes.index(self.item.object)
+        if pos=="after" : indexOu = indexOu+1
+        print self.editor.Classement_Commandes_Ds_Arbre
+        print indexOu
+        print indexName
+        print name
+        print etapes
+        for e in etapes[:indexOu] :
+            nom=e.nom
+            if nom not in self.editor.Classement_Commandes_Ds_Arbre : continue
+            indexEtape=self.editor.Classement_Commandes_Ds_Arbre.index(nom)
+            if indexEtape > indexName :
+               comment=tr('le mot clef ')+name+tr(' doit etre insere avant ')+nom
+               QMessageBox.information( None,tr('insertion impossible'),comment, )
+               return False
+        for e in etapes[indexOu:] :
+            nom=e.nom
+            if nom not in self.editor.Classement_Commandes_Ds_Arbre : continue
+            indexEtape=self.editor.Classement_Commandes_Ds_Arbre.index(nom)
+            if indexEtape < indexName :
+               comment=tr('le mot clef ')+name+tr(' doit etre insere apres ')+nom
+               QMessageBox.information( None,tr('insertion impossible'),comment, )
+               return False
+        return True
 
     def append_child(self,name,pos=None,plier=False):
         """

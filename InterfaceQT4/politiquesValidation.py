@@ -232,7 +232,7 @@ class PolitiquePlusieurs(Validation):
 
          return valide,commentaire,commentaire2,listeRetour
 
-  def AjoutTuple(self,valeurTuple,index,listecourante):
+  def AjoutTuple(self,valeurTuple,listecourante):
          listeRetour=[]
          commentaire="Nouvelle valeur acceptee"
          commentaire2=""
@@ -257,10 +257,5 @@ class PolitiquePlusieurs(Validation):
          if not encorevalide :
             commentaire2=self.node.item.info_erreur_liste()
             return valide,commentaire,commentaire2,listeRetour
-         #min,max = self.node.item.GetMinMax()
-         #if len(listecourante)  >= max :
-         #   commentaire="La liste a deja atteint le nombre maximum d'elements,ajout refuse"
-         #   valide=0
-         #   return valide,commentaire,commentaire2,listeRetour
          listeRetour.append(valeurTuple)
          return valide,commentaire,commentaire2,listeRetour

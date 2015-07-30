@@ -33,10 +33,11 @@ class PopUpMenuRacine :
     def createPopUpMenu(self):
         print "createPopUpMenu"
         self.ParamApres = QAction(tr('Parametre'),self.tree)
-        self.tree.connect(self.ParamApres,SIGNAL("activated()"),self.addParametersApres)
+        self.tree.connect(self.ParamApres,SIGNAL("triggered()"),self.addParametersApres)
         self.ParamApres.setStatusTip(tr("Insere un parametre"))
         self.menu = QMenu(self.tree)
         self.menu.addAction(self.ParamApres)
+        self.menu.setStyleSheet("background:rgb(220,220,220); ")
 
 
     def addParametersApres(self):
@@ -52,6 +53,9 @@ class PopUpMenuNodeMinimal :
         #self.appliEficas.salome=True
         self.createActions()
         self.menu = QMenu(self.tree)
+        #self.menu.setStyleSheet("background:rgb(235,235,235); QMenu::item:selected { background-color: red; }")
+        #ne fonctionne pas --> la ligne de commentaire devient rouge
+        self.menu.setStyleSheet("background:rgb(220,220,220); ")
         #items du menu
         self.menu.addAction(self.Supprime)
         if hasattr(self.appliEficas, 'mesScripts'):
@@ -71,18 +75,18 @@ class PopUpMenuNodeMinimal :
            self.action=QAction(label,self.tree)
            self.action.setStatusTip(tip)
            if numero==4: 
-              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction4)
+              self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction4)
            if numero==3: 
-              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction3)
+              self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction3)
               numero=4
            if numero==2: 
-              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction2)
+              self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction2)
               numero=3
            if numero==1: 
-              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction1)
+              self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction1)
               numero=2
            if numero==0: 
-              self.tree.connect(self.action,SIGNAL("activated()"),self.AppelleFonction0)
+              self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction0)
               numero=1
            self.menu.addAction(self.action)
 
@@ -128,24 +132,24 @@ class PopUpMenuNodeMinimal :
 
     def createActions(self):
         self.CommApres = QAction(tr('apres'),self.tree)
-        self.tree.connect(self.CommApres,SIGNAL("activated()"),self.addCommApres)
+        self.tree.connect(self.CommApres,SIGNAL("triggered()"),self.addCommApres)
         self.CommApres.setStatusTip(tr("Insere un commentaire apres la commande "))
         self.CommAvant = QAction(tr('avant'),self.tree)
-        self.tree.connect(self.CommAvant,SIGNAL("activated()"),self.addCommAvant)
+        self.tree.connect(self.CommAvant,SIGNAL("triggered()"),self.addCommAvant)
         self.CommAvant.setStatusTip(tr("Insere un commentaire avant la commande "))
 
         self.ParamApres = QAction(tr('apres'),self.tree)
-        self.tree.connect(self.ParamApres,SIGNAL("activated()"),self.addParametersApres)
+        self.tree.connect(self.ParamApres,SIGNAL("triggered()"),self.addParametersApres)
         self.ParamApres.setStatusTip(tr("Insere un parametre apres la commande "))
         self.ParamAvant = QAction(tr('avant'),self.tree)
-        self.tree.connect(self.ParamAvant,SIGNAL("activated()"),self.addParametersAvant)
+        self.tree.connect(self.ParamAvant,SIGNAL("triggered()"),self.addParametersAvant)
         self.ParamAvant.setStatusTip(tr("Insere un parametre avant la commande "))
 
         self.Supprime = QAction(tr('Supprimer'),self.tree)
-        self.tree.connect(self.Supprime,SIGNAL("activated()"),self.supprimeNoeud)
+        self.tree.connect(self.Supprime,SIGNAL("triggered()"),self.supprimeNoeud)
         self.Supprime.setStatusTip(tr("supprime le mot clef "))
         self.Documentation = QAction(tr('Documentation'),self.tree)
-        self.tree.connect(self.Documentation,SIGNAL("activated()"),self.viewDoc)
+        self.tree.connect(self.Documentation,SIGNAL("triggered()"),self.viewDoc)
         self.Documentation.setStatusTip(tr("documentation sur la commande "))
 
     def supprimeNoeud(self):
@@ -226,7 +230,7 @@ class PopUpMenuNode(PopUpMenuNodePartiel) :
     def createPopUpMenu(self):
         PopUpMenuNodePartiel.createPopUpMenu(self)
         self.Commente = QAction(tr('ce noeud'),self.tree)
-        self.tree.connect(self.Commente,SIGNAL("activated()"),self.Commenter)
+        self.tree.connect(self.Commente,SIGNAL("triggered()"),self.Commenter)
         self.Commente.setStatusTip(tr("commente le noeud "))
         self.commentMenu.addAction(self.Commente)
         self.menu.removeAction(self.Supprime)

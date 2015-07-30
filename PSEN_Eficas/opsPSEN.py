@@ -18,20 +18,18 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-import re
-#from ExtractGeneratorandLoadList import ExtractGeneratorandLoadList
-from ExtractGeneratorandLoadList import ExtractGeneratorandLoadList2
+#from ExtractGeneratorLoadLineandTransfoDico import ExtractGeneratorLoadLineandTransfoDico
+from ExtractGeneratorLoadLineandTransfoDico import ExtractGeneratorLoadLineandTransfoDico2
 
-def INCLUDE(self,chemin_psse,fichier_sav,**args):
+def INCLUDE(self,PSSE_path,sav_file,**args):
    """ 
        Fonction sd_prod pour la macro INCLUDE
    """
    
-   print "INCLUDE", self
    reevalue=0
    if hasattr(self,'fichier_ini'):
        reevalue=1
-       if self.fichier_ini == fichier_sav : return
+       if self.fichier_ini == sav_file : return
        if hasattr(self,'old_context_fichier_init' ):
          for concept in self.old_context_fichier_init.values():
              self.jdc.delete_concept(concept)
@@ -40,7 +38,7 @@ def INCLUDE(self,chemin_psse,fichier_sav,**args):
          self.reevalue_sd_jdc()
          self.jdc.reset_context()
 
-   self.fichier_ini=fichier_sav
+   self.fichier_ini=sav_file
    self.contexte_fichier_init = {}
    self.fichier_unite = 999
    self.fichier_err = None
@@ -48,9 +46,10 @@ def INCLUDE(self,chemin_psse,fichier_sav,**args):
     
    unite = 999
 
-   pattern_debut_ligne = re.compile(r'^[0-9].*')
-   try:
-     MachineListOrigin,LoadListOrigin= ExtractGeneratorandLoadList2(fichier_sav,chemin_psse)
+   try :
+   #if 1:
+     MachineDico,LoadDico,LineDico,TransfoDico = ExtractGeneratorLoadLineandTransfoDico2(sav_file,PSSE_path)
+   #else :
    except :
      if self.jdc.appli is not None:
         self.jdc.appli.affiche_alerte("Error", 'An error happened in ExtractGeneratorandLoadList execution ')
@@ -60,40 +59,17 @@ def INCLUDE(self,chemin_psse,fichier_sav,**args):
         self.fichier_err = str(exc)
         self.contexte_fichier_init = {}
 
-   MachineList=[]
-   LoadList=[]
-   BusBarList=[]
-   for m in MachineListOrigin:
-       if m in LoadListOrigin : BusBarList.append(m)
-       else : MachineList.append(m)
+   for nom in MachineDico.keys():
+      self.fichier_text += "%s=MONGENER(ID='%s',);\n" % (nom, 'a')
 
-   for m in LoadListOrigin:
-       if m not in MachineListOrigin : LoadList.append(m)
+   for nom in LoadDico.keys():
+      self.fichier_text += "%s=MACHARGE(ID='%s',);\n" % (nom, 'a')
+      
+   for nom in LineDico.keys():
+      self.fichier_text += "%s=MALIGNE(ID='%s',);\n" % (nom,'a')
 
-   for m in MachineList:
-         nouv=m[0].replace(' ','_')
-         nouveau=nouv.replace('.','_')
-         nom = nouveau+"__"+str(m[1])
-         if pattern_debut_ligne.match(nom): nom='_'+nom
-         id  = str(m[3])
-         self.fichier_text += "%s=MONGENER(ID='%s',);\n" % (nom, id)
-
-   for m in BusBarList:
-         nouv=m[0].replace(' ','_')
-         nouveau=nouv.replace('.','_')
-         nom = nouveau+"__"+str(m[1])
-         if pattern_debut_ligne.match(nom): nom='_'+nom
-         id  = str(m[3])
-         self.fichier_text += "%s=MONBUSBAR(ID='%s',);\n" % (nom, id)
-
-   for m in LoadList:
-         nouv=m[0].replace(' ','_')
-         nouveau=nouv.replace('.','_')
-         nom = nouveau+"__"+str(m[1])
-         if pattern_debut_ligne.match(nom): nom='_'+nom
-         if pattern_debut_ligne.match(nom): print 'match'
-         id  = str(m[3])
-         self.fichier_text += "%s=MACHARGE(ID='%s',);\n" % (nom, id)
+   for nom in TransfoDico.keys():
+      self.fichier_text += "%s=MONTRANSFO(ID='%s',);\n" % (nom,'a')
 
    import Extensions.jdc_include
    self.JdC_aux = Extensions.jdc_include.JDC_CATA_INCLUDE(code='PSEN', execmodul=None)
@@ -101,6 +77,10 @@ def INCLUDE(self,chemin_psse,fichier_sav,**args):
    self.old_context_fichier_init = self.contexte_fichier_init
    self.parent.record_unit(unite, self)
 
+   self.jdc.MachineDico=MachineDico
+   self.jdc.LoadDico=LoadDico
+   self.jdc.LineDico=LineDico
+   self.jdc.TransfoDico=TransfoDico
 
 def INCLUDE_context(self,d):
    """ 

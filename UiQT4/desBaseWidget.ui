@@ -42,7 +42,9 @@
      </property>
      <widget class="QWidget" name="widgetTree" native="true">
       <property name="styleSheet">
-       <string notr="true">background:rgb(247,247,247)</string>
+       <string notr="true">background:rgb(247,247,247);
+
+</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="margin">

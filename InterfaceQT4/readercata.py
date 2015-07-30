@@ -158,6 +158,10 @@ class READERCATA:
       if self.mode_nouv_commande== "initial" : self.Retrouve_Ordre_Cata_Standard()
       if hasattr(self.cata, 'Ordre_Des_Commandes') : self.Ordre_Des_Commandes=self.cata.Ordre_Des_Commandes
       else : self.Ordre_Des_Commandes=None
+      
+      if hasattr(self.cata, 'Classement_Commandes_Ds_Arbre') : 
+             self.Classement_Commandes_Ds_Arbre=self.cata.Classement_Commandes_Ds_Arbre
+      else : self.Classement_Commandes_Ds_Arbre=()
       #print self.cata.Ordre_Des_Commandes
 
       #

@@ -45,7 +45,7 @@ border: 1px solid gray;
     <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>5</number>
    </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -167,6 +167,9 @@ border: 1px solid gray;
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QScrollArea" name="scrollArea">
        <property name="sizePolicy">
@@ -211,7 +214,7 @@ border: 1px solid gray;
           <x>0</x>
           <y>0</y>
           <width>546</width>
-          <height>175</height>
+          <height>194</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -222,7 +225,7 @@ border: 1px solid gray;
         </property>
         <layout class="QVBoxLayout" name="verticalLayoutLE">
          <property name="spacing">
-          <number>1</number>
+          <number>2</number>
          </property>
          <property name="leftMargin">
           <number>2</number>
@@ -259,6 +262,9 @@ border: 1px solid gray;
         <enum>QFrame::Box</enum>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <property name="margin">
+         <number>0</number>
+        </property>
         <item>
          <spacer name="horizontalSpacer_5">
           <property name="orientation">
@@ -310,7 +316,9 @@ border: 1px solid gray;
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset theme="go-up"/>
+             <iconset theme="go-up">
+              <normaloff/>
+             </iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -347,7 +355,9 @@ border: 1px solid gray;
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset theme="go-down"/>
+             <iconset theme="go-down">
+              <normaloff/>
+             </iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -637,7 +647,9 @@ border: 1px solid gray;
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset theme="text-x-generic"/>
+          <iconset theme="text-x-generic">
+           <normaloff/>
+          </iconset>
          </property>
          <property name="iconSize">
           <size>

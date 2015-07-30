@@ -103,6 +103,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
          plier=self.editor.afficheCommandesPliees
          if nodeCourrant==self.node : nouveau=self.node.append_child(self.name,'first',plier)
          else : nouveau=nodeCourrant.append_brother(self.name,plier=plier)
+      if nouveau == 0 : return # on n a pas insere le noeud
       nouveau.setDeplie()
       #if self.editor.afficheApresInsert==True : nouveau.plieToutEtReaffiche()
       if self.editor.afficheApresInsert == True :
@@ -112,7 +113,6 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            nouveau.fenetre.donnePremier()
            #nouveau.deplieToutEtReaffiche()
       else :
-           print "je passe la"
            self.node.setSelected(False)
            nouveau.setSelected(True)
            self.node.tree.setCurrentItem(nouveau)

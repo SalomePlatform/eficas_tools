@@ -42,6 +42,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
         self.nomLine="lineEditVal"
         self.inInit=True
         self.indexDernierLabel=0
+        self.NumLineEditEnCours=0
         self.listeAffichageWidget=[]
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
@@ -63,7 +64,6 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
 
 
   def setValeurs(self):
-       print "je passe dans SetValeur"
        self.vScrollBar = self.scrollArea.verticalScrollBar()
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        # construction du min de valeur a entrer
