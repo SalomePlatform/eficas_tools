@@ -421,8 +421,8 @@ class JDCNode(QTreeWidgetItem):
         """
         self.editor.init_modif()
 
-        verifiePosition=self.verifiePosition(name,pos)
-        if not verifiePosition : return 0
+        from InterfaceQT4 import compojdc
+        if (isinstance(self.treeParent, compojdc.Node)) and not self.verifiePosition(name,pos)  : return 0
         
         index = self.treeParent.children.index(self)
         if   pos == 'before': index = index
@@ -432,22 +432,17 @@ class JDCNode(QTreeWidgetItem):
             return 0
         return self.treeParent.append_child(name,pos=index,plier=plier)
 
-    def verifiePosition(self,name,pos):
-        from InterfaceQT4 import compojdc
-        if not (isinstance(self.treeParent, compojdc.Node)) : return True
+    def verifiePosition(self,name,pos,aLaRacine=False):
         if name not in self.editor.Classement_Commandes_Ds_Arbre : return True
         indexName=self.editor.Classement_Commandes_Ds_Arbre.index(name)
 
-        etapes=self.item.jdc.etapes
+        etapes=self.item.get_jdc().etapes
         if etapes == [] : return True
 
-        indexOu=etapes.index(self.item.object)
+        if aLaRacine == False :indexOu=etapes.index(self.item.object)
+        else : indexOu=0
+
         if pos=="after" : indexOu = indexOu+1
-        #print self.editor.Classement_Commandes_Ds_Arbre
-        #print indexOu
-        #print indexName
-        #print name
-        #print etapes
         for e in etapes[:indexOu] :
             nom=e.nom
             if nom not in self.editor.Classement_Commandes_Ds_Arbre : continue
@@ -474,6 +469,8 @@ class JDCNode(QTreeWidgetItem):
            Si pos vaut None, on le place a la position du catalogue.
         """
         #print "************** append_child ",self.item.GetLabelText(), plier
+
+         
         self.editor.init_modif()
         if pos == 'first':
             index = 0
@@ -489,6 +486,12 @@ class JDCNode(QTreeWidgetItem):
             index = self.item.get_index_child(name.nom)
         else:
             index = self.item.get_index_child(name)
+
+        # si on essaye d inserer a la racine
+        if (isinstance(self.treeParent,JDCTree) and index==0) :
+           verifiePosition=self.verifiePosition(name,'first',aLaRacine=True)
+           if not verifiePosition : return 0
+
         self.tree.inhibeExpand=True
         obj=self.item.additem(name,index) #CS_pbruno emet le signal 'add'
         if obj is None:obj=0
