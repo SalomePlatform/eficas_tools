@@ -539,8 +539,10 @@ class PythonGenerator:
              break
 
          if waitTuple :
-            s = str(obj.valeur) +','
-            obj.valeurFormatee=obj.valeur
+            #s = str(obj.valeur) +','
+            #obj.valeurFormatee=obj.valeur
+            s = obj.GetText() +','
+            obj.valeurFormatee=obj.GetText()
          else :
             obj.valeurFormatee=[]
             for val in obj.valeur :

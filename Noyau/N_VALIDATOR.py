@@ -1599,6 +1599,8 @@ class VerifTypeTuple(Valid, ListVal):
         elif type_permis == 'TXM':
             if type(valeur) == types.StringType:
                 return 1
+        elif isinstance(valeur, type_permis):
+                return 1
         return 0
 
     def verif(self, valeur):

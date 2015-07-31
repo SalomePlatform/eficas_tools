@@ -34,7 +34,6 @@ from Tuple2                import Ui_Tuple2
 from Tuple3                import Ui_Tuple3
 
 
-#class TupleCustom(QWidget,Ui_Tuple2):
 class TupleCustom :
   def __init__(self,tailleTuple,parent,parentQt,index):
       QWidget.__init__(self,parent)
@@ -55,6 +54,7 @@ class TupleCustom :
 
   def valueChange(self):
       listeVal=[]
+    
       for i in range(self.tailleTuple):
          nomLE="lineEditVal_"+str(i+1)
          courant=getattr(self,nomLE)
@@ -65,6 +65,10 @@ class TupleCustom :
          try :
              valeur=eval(val,{})
          except :
+           try :
+             d=self.parentQt.objSimp.jdc.get_contexte_avant(self.parentQt.objSimp. etape)
+             valeur=eval(val,d)
+           except :
              valeur=val
          listeVal.append(valeur)
       self.valeur=listeVal
@@ -81,27 +85,24 @@ class TupleCustom :
            if str(value[i]) != "" : valeurNulle=False
          except :
            pass
-         try:
-           courant.setText(str(value[i]))
-           val=str(courant.text())
+         
+         courant.setText(str(value[i]))
+         val=str(courant.text())
+         try :
+           valeur=eval(val,{})
+         except :
            try :
-             valeur=eval(val,{})
+             d=self.parentQt.objSimp.jdc.get_contexte_avant(self.parentQt.objSimp. etape)
+             valeur=eval(val,d)
            except :
              valeur=val
-           listeVal.append(valeur)
-         except :
-           pass
+         listeVal.append(valeur)
       if  valeurNulle == True : self.valeur=None
       else                    : self.valeur=listeVal
 
   def getValeur(self):
       listeVal=[]
-      for i in range(self.tailleTuple):
-         nomLE="lineEditVal_"+str(i+1)
-         courant=getattr(self,nomLE)
-         val=str(courant.text())
-         listeVal.append(val)
-      return listeVal
+      return self.valeur
 
   def clean(self):
       self.valeur=None

@@ -190,6 +190,7 @@ class JDCNode(QTreeWidgetItem):
         elif (isinstance(self.item,compoparam.PARAMTreeItem)) : name=self.appliEficas.trUtf8(str(item.GetLabelText()[0]))
         else:   name  = self.appliEficas.trUtf8(str(tr( item.nom))+" :")
         value = self.appliEficas.trUtf8(str( item.GetText() ) )
+ 
 
         mesColonnes=QStringList()
         if self.editor.enteteQTree=='complet': mesColonnes <<  name << value
@@ -294,17 +295,17 @@ class JDCNode(QTreeWidgetItem):
         return None
 
     def affichePanneau(self) :
-        print "dans affichePanneau appel getPanel2", self.item.GetLabelText()
+        #print "dans affichePanneau appel getPanel2", self.item.GetLabelText()
         if self.item.isactif(): 
            itemParent=self
-           print self
-           print self.getPanel2
+           #print self
+           #print self.getPanel2
            while not (hasattr (itemParent,'getPanel2')) : 
                 itemParent=itemParent.treeParent 
            if itemParent!=self : 
               itemParent.affichePanneau()
               return
-           print self.getPanel2
+           #print self.getPanel2
            self.fenetre=self.getPanel2()
         else:
             from monInactifPanel import PanelInactif
@@ -442,11 +443,11 @@ class JDCNode(QTreeWidgetItem):
 
         indexOu=etapes.index(self.item.object)
         if pos=="after" : indexOu = indexOu+1
-        print self.editor.Classement_Commandes_Ds_Arbre
-        print indexOu
-        print indexName
-        print name
-        print etapes
+        #print self.editor.Classement_Commandes_Ds_Arbre
+        #print indexOu
+        #print indexName
+        #print name
+        #print etapes
         for e in etapes[:indexOu] :
             nom=e.nom
             if nom not in self.editor.Classement_Commandes_Ds_Arbre : continue
@@ -748,7 +749,7 @@ class JDCNode(QTreeWidgetItem):
 
 
     def plieToutEtReaffiche(self):
-        print "je suis dans plieToutEtReaffiche", self.item.get_nom()
+        #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
         self.editor.deplier = False
         for item in self.children :
             item.setPlie()

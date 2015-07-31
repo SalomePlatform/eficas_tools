@@ -31,7 +31,7 @@ class PopUpMenuRacine :
 
 
     def createPopUpMenu(self):
-        print "createPopUpMenu"
+        #print "createPopUpMenu"
         self.ParamApres = QAction(tr('Parametre'),self.tree)
         self.tree.connect(self.ParamApres,SIGNAL("triggered()"),self.addParametersApres)
         self.ParamApres.setStatusTip(tr("Insere un parametre"))
@@ -49,7 +49,7 @@ class PopUpMenuNodeMinimal :
 #---------------------------#
 
     def createPopUpMenu(self):
-        print "createPopUpMenu"
+        #print "createPopUpMenu"
         #self.appliEficas.salome=True
         self.createActions()
         self.menu = QMenu(self.tree)
