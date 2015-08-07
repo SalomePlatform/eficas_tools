@@ -4,15 +4,17 @@ QTRELEASE = lrelease-qt4
 .SUFFIXES : .ui .py .ts .qm
 
 
-PY_FILES = desSelectVal.py desViewTexte.py  desChoixCommandes.py desWidgetCommande.py \
-        desWidgetSimpBase.py desWidget4a6RadioButton.py desWidgetRadioButton.py  desWidgetBloc.py \
-        desWidgetCB.py desWidgetPlusieursBase.py desWidgetFact.py desWidgetFactPlie.py \
-        desWidgetSimpBool.py desWidgetSimpComplexe.py  myMain.py \
-        desChoixCata.py desWidgetPlusieursInto.py desWidgetPlusieursIntoOrdonne.py desBaseWidget.py desWidgetOptionnel.py \
-        desWidgetSimpFichier.py desWidgetSimpTxt.py desRecherche.py desWidgetCommentaire.py\
-	desWidgetTuple2.py desWidgetTuple3.py desWidgetCreeParam.py desWidgetParam.py desWidgetHeure.py desWidgetDate.py\
-        desWidgetVide.py desWidgetInformation.py desVisu.py desSelectVal.py desWidgetUniqueSDCO.py desWidgetSDCOInto.py\
-        desWidgetMatrice.py desWidgetPlusieursTuple.py Tuple2.py Tuple3.py
+PY_FILES = myMain.py desBaseWidget.py desChoixCata.py desChoixCommandes.py desRecherche.py \
+	desSelectVal.py desViewTexte.py desVisu.py desWidgetCreeParam.py desWidgetCommande.py \
+	desWidgetOptionnel.py Tuple2.py Tuple3.py  \
+	desWidgetBloc.py desWidgetCB.py desWidgetCommentaire.py desWidgetDate.py \
+	desWidgetFact.py desWidgetFactPlie.py desWidgetHeure.py desWidgetInformation.py \
+	desWidgetMatrice.py desWidgetParam.py desWidgetPlusieursBase.py desWidgetPlusieursInto.py \
+	desWidgetPlusieursIntoOrdonne.py desWidgetPlusieursTuple.py desWidgetRadioButton.py \
+	desWidget4a6RadioButton.py desWidgetSimpBase.py desWidgetSDCOInto.py desWidgetSimpBool.py \
+	desWidgetSimpComplexe.py desWidgetSimpFichier.py desWidgetSimpTxt.py desWidgetTuple2.py \
+	desWidgetTuple3.py desWidgetVide.py desWidgetUniqueSDCO.py
+
 
 
 QM_FILES=eficas_en.qm 

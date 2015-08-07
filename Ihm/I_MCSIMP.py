@@ -618,6 +618,10 @@ class MCSIMP(I_OBJECT.OBJECT):
 
   def valideMatrice(self,cr):
        #Attention, la matrice contient comme dernier tuple l ordre des variables
+       if self.valideEnteteMatrice()==False :
+           self.set_valid(0)
+           if cr == "oui" : self.cr.fatal(tr("La matrice n'a pas le bon entete"))
+           return 0
        if self.monType.methodeCalculTaille != None :
            apply (MCSIMP.__dict__[self.monType.methodeCalculTaille],(self,))
        try :
@@ -640,11 +644,23 @@ class MCSIMP(I_OBJECT.OBJECT):
        self.set_valid(0)
        return 0
 
+
   def NbDeVariables(self):
        listeVariables=self.jdc.get_variables(self.etape)
        self.monType.nbLigs=len(listeVariables)
        self.monType.nbCols=len(listeVariables)
       
+  def valideEnteteMatrice(self):
+      if self.jdc.get_distributions(self.etape) == () or self.valeur == None : return 0
+      if self.jdc.get_distributions(self.etape) != self.valeur[0] : return 0
+      return 1
+     
+  def changeEnteteMatrice(self):
+      a=[self.jdc.get_distributions(self.etape),]
+      for t in self.valeur[1:]:
+         a.append(t)
+      self.valeur=a
+
 
   def NbDeDistributions(self):
        listeVariables=self.jdc.get_distributions(self.etape)

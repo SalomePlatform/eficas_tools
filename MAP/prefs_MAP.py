@@ -38,6 +38,7 @@ encoding='iso-8859-1'
 path_doc        = os.path.join(repIni,'Doc')
 exec_acrobat    = "/usr/bin/xpdf"
 savedir         = os.environ['HOME']
+affiche         = "groupe"
 
 rep_cata=os.path.dirname(os.path.abspath(__file__))
  

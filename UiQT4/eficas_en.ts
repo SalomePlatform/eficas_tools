@@ -2566,7 +2566,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/myMain.ui" line="396"/>
         <source> Rechercher dans l&apos;arbre d&apos;etude</source>
-        <translation>Find in JdC Tree</translation>
+        <translation>Find in Data Tree</translation>
     </message>
     <message>
         <location filename="../../UiQT4/myMain.ui" line="399"/>
@@ -2631,12 +2631,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/myMain.ui" line="376"/>
         <source>Chercher Mot-Clef</source>
-        <translation> find Keyword</translation>
+        <translation> Find Keyword</translation>
     </message>
     <message>
         <location filename="../../UiQT4/myMain.ui" line="379"/>
         <source> Rechercher dans le catalogue</source>
-        <translation>find Keyword in Catalog</translation>
+        <translation>Find Keyword in Catalog</translation>
     </message>
     <message>
         <location filename="../../UiQT4/myMain.ui" line="382"/>

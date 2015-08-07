@@ -50,6 +50,16 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
 
   def connecterSignaux(self) :
       self.connect(self.TBMatrice,SIGNAL("itemChanged(QTableWidgetItem *)"),self.itemChanged)
+      self.connect(self.PBrefresh,SIGNAL("clicked()"), self.afficheEntete)
+
+  def afficheEntete(self):
+      self.objSimp.changeEnteteMatrice()
+      self.TBMatrice.clear()
+      if self.node.item.get_valeur()== None:  self.initialSsValeur()
+      else :
+         try    : self.initialValeur()
+         except : self.initialSsValeur()
+
 
   def itemChanged(self):
       monItem=self.TBMatrice.currentItem()
@@ -142,11 +152,13 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
       if (len(liste)) != self.nbLigs +1  :
          QMessageBox.critical( self,tr( "Mauvaise dimension de matrice"),tr( "le nombre de ligne n est pas egal a ") + str(self.nbLigs))
          dejaAffiche=1
+         raise  EficasException('dimension')
       for i in range(self.nbLigs):
           inter=liste[i+1]
           if (len(inter)) != self.nbCols and (dejaAffiche == 0 ) :
              QMessageBox.critical( self, tr("Mauvaise dimension de matrice"), tr("le nombre de colonne n est pas egal a ") + str(self.nbCols))
              dejaAffiche=1
+             raise  EficasException('dimension')
           for j in range(self.nbCols):
               self.TBMatrice.setItem(i,j,QTableWidgetItem(str(liste[i+1][j])))
       header=QStringList()

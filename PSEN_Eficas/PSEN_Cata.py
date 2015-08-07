@@ -30,7 +30,9 @@ class loi      ( ASSD ) : pass
 class variable ( ASSD ) : pass
 class sd_charge     ( ASSD ) : pass
 class sd_generateur ( ASSD ) : pass
-class sd_busbar ( sd_generateur,sd_charge ) : pass
+class sd_ligne     ( ASSD ) : pass
+class sd_transfo ( ASSD ) : pass
+#class sd_busbar ( sd_generateur,sd_charge ) : pass
 
 import types
 class Tuple:
@@ -108,16 +110,25 @@ MACHARGE =  OPER ( nom = "MACHARGE",
             fr = "Charge",
             ang = "Load",
 
-  ID = SIMP ( statut = 'o', typ = "TXM", fr = "num bus", ang = "num bus",),
+  ID = SIMP ( statut = 'o', typ = "TXM", fr = "nom charge", ang = "load name",),
 )
-MONBUSBAR =  OPER ( nom = "MONBUSBAR",
-            sd_prod = sd_busbar,
+MALIGNE =  OPER ( nom = "MALIGNE",
+            sd_prod = sd_ligne,
             UIinfo = {"groupes": ("CACHE")},
             op = None,
-            fr = "Generateur",
-            ang = "Generator",
+            fr = "Ligne",
+            ang = "Line",
 
-  ID = SIMP ( statut = 'o', typ = "TXM", fr = "num bus", ang = "num bus",),
+  ID = SIMP ( statut = 'o', typ = "TXM", fr = "nom ligne", ang = "line name",),
+)
+MONTRANSFO =  OPER ( nom = "MONTRANSFO",
+            sd_prod = sd_transfo,
+            UIinfo = {"groupes": ("CACHE")},
+            op = None,
+            fr = "Transformateur",
+            ang = "Transformer",
+
+  ID = SIMP ( statut = 'o', typ = "TXM", fr = "nom transformateur", ang = "transformer name",),
 )
 
 
@@ -142,8 +153,16 @@ PARAMETRES_PSSE = PROC ( nom = "PARAMETRES_PSSE",
                      into=['RateA','RateB','RateC'],
                      defaut=False,
                     ),
+  LOCK_TAPS = SIMP ( statut = "o",
+                     typ=bool,
+                     defaut=True,
+                     ),
+  P_MIN= SIMP ( statut = "o",
+                     typ=bool,
+                     defaut=True,
+                     ),
+)
 
-) 
 SIMULATION = PROC ( nom = "SIMULATION",
              op = None,
              docu = "",
@@ -163,18 +182,86 @@ SIMULATION = PROC ( nom = "SIMULATION",
                  into=[1],
                 ),
 
-  STUDY = SIMP ( statut = "o",
-                 typ = "TXM",
-                 into = ( 'N-1', 'Load', 'Wind-1', 'Wind-2', 'PV' ),
-                 max=5,
-                 fr = "Affichage du niveau de wrapper de la bibliotheque Open TURNS",
-                 ang = "Open TURNS library debug level print",
-                 ), 
+##  STUDY = SIMP ( statut = "o",
+##                 typ = "TXM",
+##                 into = ( 'N-1', 'Load', 'Wind-1', 'Wind-2', 'PV' ),
+##                 max=5,
+##                 fr = "Affichage du niveau de wrapper de la bibliotheque Open TURNS",
+##                 ang = "Open TURNS library debug level print",
+##                 ), 
 ) 
 
 
 
+#================================
+# Importation des fichiers csv N-1
+#================================
 
+N_1_LINES = PROC( nom="N_1_LINES",
+                     op = None,
+                     docu = "",
+                     fr = "N-1 lignes",
+                     ang = "N-1 lines",
+
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "chemin du fichier csv des probabilites des defauts lignes",
+                    ang = "csv file path with probabilities of line outages",
+                    ),
+              )
+
+N_1_TRANSFORMERS = PROC( nom="N_1_TRANSFORMERS",
+                     op = None,
+                     docu = "",
+                     fr = "N-1 transformateurs",
+                     ang = "N-1 transformers",
+
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "chemin du fichier csv des probabilites des defauts transformateur",
+                    ang = "csv file path with probabilities of transformer outages",
+                    ),
+              )
+N_1_GENERATORS = PROC( nom="N_1_GENERATORS",
+                     op = None,
+                     docu = "",
+                     fr = "N-1 generateurs",
+                     ang = "N-1 generators",
+
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "chemin du fichier csv des probabilites des defauts generateurs",
+                    ang = "csv file path with probabilities of generator outages",
+                    ),
+              )
+N_1_LOADS = PROC( nom="N_1_LOADS",
+                     op = None,
+                     docu = "",
+                     fr = "N-1 charges",
+                     ang = "N-1 loads",
+
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "chemin du fichier csv des probabilites des defauts charges",
+                    ang = "csv file path with probabilities of load outages",
+                    ),
+              )
+
+#================================
+LINE_LIST = PROC (nom='LINE_LIST',
+                op = None,
+                docu = "",
+                fr = "PN",
+                ang = "PN",
+
+                       Values = SIMP ( statut = 'o',
+                                       typ = Tuple(2),
+                                       max = '**', 
+                                       fr = "Liste de couples : largeur de classe, hauteur de classe",
+                                       ang = "Class bandwidth, class height couple list",
+                                       validators=VerifTypeTuple((sd_ligne,'R')),
+                                       ),
+)
 #================================
 # Definition des LOIS
 #================================
@@ -190,17 +277,24 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 # Choisir generateur ou charge
 #====
 
-  TypeMachine = SIMP ( statut='o', typ='TXM',
-                      into = ('charge','vent1','vent2','pv','N-1',),
-                      ),
-  TypeComposant = SIMP (statut='o', typ='TXM',
-                      into = ('Generateur','Charge'),),
-  b_gener = BLOC (condition = "TypeComposant == 'Generateur'",
-        #Generateur   = SIMP(statut='o',typ=sd_generateur),),
-        Generateur   = SIMP(statut='o',typ=sd_generateur,max="**", homo="SansOrdreNiDoublon"),),
-  b_charge = BLOC (condition = "TypeComposant == 'Charge'",
-        #charge       = SIMP(statut='o',typ=sd_charge,max="**", homo="SansOrdreNiDoublon"),),                      
-        charge       = SIMP(statut='o',typ=sd_charge),),                      
+##  TypeMachine = SIMP ( statut='o', typ='TXM',
+##                      into = ('charge','vent1','vent2','pv','N-1',),
+##                      ),
+  Activated = SIMP ( statut='o', typ=bool, defaut=True),
+  ComponentType = SIMP (statut='o', typ='TXM',
+                      into = ('Generator','Load','Line','Transformer'),),
+  b_gener = BLOC (condition = "ComponentType == 'Generator'",
+        Generator   = SIMP(statut='o',typ=sd_generateur,max="**", homo="SansOrdreNiDoublon"),),
+  b_charge = BLOC (condition = "ComponentType == 'Load'",
+        Load       = SIMP(statut='o',typ=sd_charge,max="**", homo="SansOrdreNiDoublon"),),
+  b_ligne = BLOC (condition = "ComponentType == 'Line'",
+        Line   = SIMP(statut='o',typ=sd_ligne,max="**", homo="SansOrdreNiDoublon"),),
+  b_transfo = BLOC (condition = "ComponentType == 'Transformer'",
+        Transformer       = SIMP(statut='o',typ=sd_transfo,max="**", homo="SansOrdreNiDoublon"),),
+##  b_gener = BLOC (condition = "TypeComposant == 'Generateur'",
+##        Generateur   = SIMP(statut='o',typ=sd_generateur,max="**", homo="SansOrdreNiDoublon"),),
+##  b_charge = BLOC (condition = "TypeComposant == 'Charge'",
+##        charge       = SIMP(statut='o',typ=sd_charge,max="**", homo="SansOrdreNiDoublon"),),  
                       
 #====
 # Type de distribution
@@ -490,6 +584,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                        ang = "Class bandwidth, class height couple list",
                                        validators=VerifTypeTuple(('R','R')),
                                        ),
+
 
   ), # Fin BLOC HISTOGRAM
 
@@ -952,19 +1047,14 @@ DIRECTORY = MACRO ( nom = 'DIRECTORY',
                 #sd_prod=None,
                 fichier_ini = 1,
         
-        fichier_sav=SIMP(statut="o", typ = ('Fichier', 'Wrapper Files (*.sav);;All Files (*)',),),
-        dossier_resultat=SIMP(statut="o",typ='Repertoire'),
-        fichier_lignes=SIMP(statut="o" ,typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
-        fichier_groupes=SIMP(statut="o", typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
-        fichier_parc=SIMP(statut="o" ,typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),        
-        chemin_psse=SIMP(statut="o",typ='Repertoire'),
+        sav_file=SIMP(statut="o", typ = ('Fichier', 'Wrapper Files (*.sav);;All Files (*)',),),
+        results_folder=SIMP(statut="o",typ='Repertoire'),
+        #lines_file=SIMP(statut="o" ,typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
+        #groups_file=SIMP(statut="o", typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
+        #generationsystem_file=SIMP(statut="o" ,typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),        
+        PSSE_path=SIMP(statut="o",typ='Repertoire'),
 ) 
 
-
-
-
-
-
-
+Classement_Commandes_Ds_Arbre=('DIRECTORY','DISTRIBUTION','CORRELATION')
 
 

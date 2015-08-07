@@ -94,38 +94,42 @@ class JDC(I_OBJECT.OBJECT):
       etapeStop=etape
       l=[]
       for etapeTraitee in self.etapes :
-          if etapeTraitee==etapeStop:
-             break
-          if etapeTraitee.nom == 'DISTRIBUTION' :
-             l.append(etapeTraitee.sd.nom)
+          if etapeTraitee==etapeStop: break
+          if etapeTraitee.nom == 'DISTRIBUTION' and etapeTraitee.sd !=None : l.append(etapeTraitee.sd.nom)
       return l
 
 
-   def set_Copules_recalcule_etat(self):
-      for etapeTraitee in self.etapes :
-          if etapeTraitee.nom == 'CORRELATION' :
-             Matrix=etapeTraitee.get_child('Matrix')
-             if Matrix !=None :
-                Correlation=etapeTraitee.get_child('CorrelationMatrix')
-                if Correlation !=None :
-                   Correlation.state='arecalculer'
-                Matrix.state='arecalculer'
+   #def set_Copules_recalcule_etat(self):
+   #   for etapeTraitee in self.etapes :
+   #       if etapeTraitee.nom == 'CORRELATION' :
+             #Matrix=etapeTraitee.get_child('Matrix')
+             #if Matrix !=None :
+   #             Correlation=etapeTraitee.get_child('CorrelationMatrix')
+   #             if Correlation !=None : Correlation.state='arecalculer'
+             #   Matrix.state='arecalculer'
      
+   #def recalcule_etat_correlation(self):
+   #   for etapeTraitee in self.etapes :
+   #       if etapeTraitee.nom == 'CORRELATION' :
+             #Matrix=etapeTraitee.get_child('Matrix')
+             #if Matrix !=None :
+   #             Matrix.state='arecalculer'
+   #             Correlation=Matrix.get_child('CorrelationMatrix')
+   #             if Correlation !=None : Correlation.state='arecalculer'
+   #                Correlation.isvalid()
+   #             Matrix.isvalid()
+   #             etapeTraitee.state='arecalculer'
+   #          if etapeTraitee.state=='arecalculer': etapeTraitee.isvalid()
+                
    def recalcule_etat_correlation(self):
       for etapeTraitee in self.etapes :
           if etapeTraitee.nom == 'CORRELATION' :
-             Matrix=etapeTraitee.get_child('Matrix')
-             if Matrix !=None :
-                Matrix.state='arecalculer'
-                Correlation=Matrix.get_child('CorrelationMatrix')
-                if Correlation !=None :
-                   Correlation.state='arecalculer'
-                   Correlation.isvalid()
-                Matrix.isvalid()
-                etapeTraitee.state='arecalculer'
-             if etapeTraitee.state=='arecalculer':
-                etapeTraitee.isvalid()
-                
+             Correlation=etapeTraitee.get_child('CorrelationMatrix')
+             if Correlation !=None : 
+                  Correlation.state='arecalculer'
+                  print Correlation.isvalid
+                  Correlation.isvalid()
+             etapeTraitee.isvalid()
 
    def recalcule_validite_apres_changement_global_jdc(self):
         #print "je passe dans recalcule_validite_apres_changement_global_jdc"

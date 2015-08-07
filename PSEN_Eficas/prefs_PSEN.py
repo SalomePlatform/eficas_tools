@@ -28,7 +28,7 @@ sys.path[:0]=[INSTALLDIR]
 
 
 # lang indique la langue utilisee pour les chaines d'aide : fr ou ang
-lang='fr'
+lang='ang' #'fr'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'

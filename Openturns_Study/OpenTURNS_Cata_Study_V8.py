@@ -74,7 +74,7 @@ JdC = JDC_CATA ( code = 'OPENTURNS_STUDY',
                  execmodul = None,
                  regles = ( AU_MOINS_UN ( 'CRITERIA' ),
                             AU_MOINS_UN ( 'MODEL' ),
-                            AVANT ( ('DISTRIBUTION', 'MODEL'), 'VARIABLE' ),
+#                            AVANT ( ('DISTRIBUTION', 'MODEL'), 'VARIABLE' ),
 #                            A_CLASSER ( 'VARIABLE',                'CORRELATION' ),
 #                            A_CLASSER ( 'VARIABLE',                'CRITERIA' ),
 #                            A_CLASSER ( 'CORRELATION',             'CRITERIA' ),
@@ -151,16 +151,19 @@ SIMULATION = PROC ( nom = "SIMULATION",
 
 # Nota : les variables de type OPER doivent etre en majuscules !
 # Nota : les variables de type OPER doivent etre de premier niveau (pas imbriquees dans un autre type)
-VARIABLE2=OPER( nom= "VARIABLE2",
+#VARIABLE2=OPER( nom= "VARIABLE2",
              
 #DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
+VARIABLE2=OPER(nom="VARIABLE2",
                       sd_prod = variable,
-                      op = 68,
+                      #sd_prod = None,
+                      op = None,
                       fr = "Definitions des lois marginales utilisees par les variables d'entree", 
                       
-NOM=SIMP(statut = "o", typ = "TXM",),
+ #VARIABLE = FACT (statut='f',max='**',
+ #             NOM=SIMP(statut = "o", typ = "TXM",),
                       
-DISTRIBUTION= FACT(statut = "o",
+#DISTRIBUTION= FACT(statut = "o",
 #====
 # Type de distribution
 #====
@@ -189,6 +192,7 @@ DISTRIBUTION= FACT(statut = "o",
                          ),
                 fr = "Choix du type de la loi marginale",
                 ang = "1D marginal distribution",
+                defaut="Beta",
                 ),
 
 #====
@@ -214,6 +218,7 @@ DISTRIBUTION= FACT(statut = "o",
                                                  val_min = 0.,
                                                  fr = "Parametre R de la loi | R > 0",
                                                  ang = "R parameter | R > 0",
+                                                 defaut=1,
                                                  ),
 
                                       # T > R
@@ -223,6 +228,7 @@ DISTRIBUTION= FACT(statut = "o",
                                                  val_min = 0.,
                                                  fr = "Parametre T de la loi | T > R",
                                                  ang = "T parameter | T > R",
+                                                 defaut=2,
                                                  ),
 
                                       ), # Fin BLOC RT_Parameters
@@ -843,9 +849,9 @@ DISTRIBUTION= FACT(statut = "o",
 
     ), # Fin BLOC WEIBULL
 
-), # Fin OPER DISTRIBUTION
+#), # Fin OPER DISTRIBUTION
+#), # Fin OPER DISTRIBUTION
 ) # Fin OPER DISTRIBUTION
-# Ordre Catalogue DISTRIBUTION
 
 
 

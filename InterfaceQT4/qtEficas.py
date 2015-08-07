@@ -74,6 +74,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.multi=multi
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
+        self.langue='fr'
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
@@ -446,6 +447,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.recent.prepend(fn)
         if len(self.recent) > 9:
             self.recent = self.recent[:9]
+        index=0
+        self.sauveRecents()
 
     def sauveRecents(self) :
        try :
@@ -497,7 +500,8 @@ class Appli(Ui_Eficas,QMainWindow):
         maD=repAide+"/../Aide"
         try :
           indexAide=maD+"/fichiers_EFICAS/index.html"
-          cmd="xdg-open "+indexAide
+          if sys.platform[0:5]=="linux" : cmd="xdg-open "+indexAide
+          else                          : cmd="start "+indexAide
           os.system(cmd)
         except:
           QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
@@ -507,7 +511,8 @@ class Appli(Ui_Eficas,QMainWindow):
         if self.code==None : return
         try :
         #if 1 :
-          cmd="xdg-open "+self.fileDoc
+          if sys.platform[0:5]=="linux" : cmd="xdg-open "+self.fileDoc
+          else                          : cmd="start "+self.fileDoc
           os.system(cmd)
         except:
         #else:

@@ -29,6 +29,22 @@ from decimal import Decimal
 # et les fichiers de donnees des materiaux de reference
 from prefs_CARMEL3D import repIni
 
+class Tuple:
+  def __init__(self,ntuple):
+    self.ntuple=ntuple
+
+  def __convert__(self,valeur):
+    if type(valeur) == types.StringType:
+      return None
+    if len(valeur) != self.ntuple:
+      return None
+    return valeur
+
+  def info(self):
+    return "Tuple de %s elements" % self.ntuple
+
+
+
 #print "catalogue carmel"
 #print "repIni = ", repIni
 
@@ -231,10 +247,12 @@ POST_COMMANDS = PROC ( nom = "POST_COMMANDS",
     CUTLINE = FACT ( statut="f", 
                             ang = "Post-processing of one cutline",
                             fr  = u"Post-traitement d'une ligne de coupe",
-                            first_point = SIMP(statut='o', typ='R', min=3, max=3, 
-                                                              ang="First point of the cutline (cartesian coordinates).", 
-                                                              fr=u"Point de départ (premier point) de la ligne de coupe (coordonnées cartésiennes)."
+                            first_point = SIMP(statut='o', 
+                            typ = Tuple(3),validators = VerifTypeTuple(('R','R','R')),
+                            ang="First point of the cutline (cartesian coordinates).", 
+                            fr=u"Point de départ (premier point) de la ligne de coupe (coordonnées cartésiennes).",
                                                              ), 
+
                             last_point = SIMP(statut='o', typ='R', min=3, max=3, 
                                                               ang="Last point of the cutline (cartesian coordinates).", 
                                                               fr=u"Point d'arrivée (dernier point) de la ligne de coupe (coordonnées cartésiennes)."

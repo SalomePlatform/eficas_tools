@@ -593,10 +593,9 @@ class JDCNode(QTreeWidgetItem):
 #    #------------------------------------------------------------------
     def onValid(self):        
 
-        #print "onValid pour ", self.item.nom
-        if hasattr(self,'fenetre') and self.fenetre: 
-           self.fenetre.setValide()
-        if self.item.nom == "VARIABLE" and self.item.isvalid():
+        print "onValid pour ", self.item.nom
+        if hasattr(self,'fenetre') and self.fenetre: self.fenetre.setValide()
+        if (self.item.nom == "VARIABLE" or self.item.nom == "DISTRIBUTION") and self.item.isvalid():
            self.item.jdc.recalcule_etat_correlation()
         if hasattr(self.item,'forceRecalcul'):
            self.forceRecalculChildren(self.item.forceRecalcul)

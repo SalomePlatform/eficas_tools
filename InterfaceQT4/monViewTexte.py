@@ -70,3 +70,14 @@ class ViewText(Ui_dView,QDialog):
                 tr("Le fichier <b>%(v_1)s</b> n'a pu etre sauvegarde. <br>Raison : %(v_2)s", {'v_1': unicode(fn), 'v_2': unicode(why)}))
            return
 
+class ViewText2(ViewText):
+    def __init__(self,parent,cmd,editor=None,entete=None,texte=None,largeur=600,hauteur=600):
+       ViewText.__init__(self,parent,editor,entete,texte,largeur,hauteur)
+       import subprocess
+       p = subprocess.Popen(cmd,stdout=subprocess.PIPE)
+       (output, err) = p.communicate()
+       if output != None : self.view.append(QString.fromUtf8(output,len(output))) ;
+       if err != None    : self.view.append(QString.fromUtf8(err,len(err))) ;
+
+
+       

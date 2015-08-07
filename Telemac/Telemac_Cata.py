@@ -1714,7 +1714,8 @@ OUTPUT_FILES = PROC(nom = "OUTPUT_FILES",op = None,
                       "Friction coefficient", "Drift along X  (m)", "Drift along Y  (m)", "Courant number ", "Supplementary variable N ", 
                       "Supplementary variable O ", "Supplementary variable R ", "Supplementary variable Z  ", "Maximum elevation", 
                       "Time of maximum elevation ", "Maximum velocity", "Time of maximum velocity", "Friction velocity  "],
-                homo="SansOrdreNiDoublon"),
+                ),
+                #homo="SansOrdreNiDoublon"),
 
 #       ------------------------------------
         Graphic_Printout_Period = SIMP(statut = 'o', typ = 'I',defaut = 1,

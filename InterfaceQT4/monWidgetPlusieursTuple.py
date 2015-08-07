@@ -101,7 +101,6 @@ class TupleCustom :
       else                    : self.valeur=listeVal
 
   def getValeur(self):
-      listeVal=[]
       return self.valeur
 
   def clean(self):

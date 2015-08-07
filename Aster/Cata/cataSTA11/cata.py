@@ -4399,7 +4399,7 @@ def C_TYPE_CHAM_INTO( type_cham=None ) : #COMMUN#
 # ======================================================================
 # person_in_charge: jean-luc.flejou at edf.fr
 AFFE_CARA_ELEM=OPER(nom="AFFE_CARA_ELEM",op=  19,sd_prod=cara_elem,
-   fr="Affectation de caractéristiques à des éléments de structure",
+   fr="Affectation de caracteristiques a des elements de structure",
    reentrant='n',
    UIinfo ={"groupes":("Modélisation",)},
    regles = (AU_MOINS_UN('POUTRE','BARRE','COQUE','CABLE','DISCRET','DISCRET_2D','MASSIF',

@@ -16,7 +16,7 @@ encoding='iso-8859-1'
 catalogues = (
 # ('Adao','V1',os.path.join(repIni,'ADAO_Cata_V1.py'),'python','python'),
  ('Adao','V760',os.path.join(repIni,'ADAO_Cata_V0_V7_6_0.py'),'python','python'),
- ('Adao','V751',os.path.join(repIni,'ADAO_Cata_V0_V7_5_1.py'),'python','python'),
+# ('Adao','V751',os.path.join(repIni,'ADAO_Cata_V0_V7_5_1.py'),'python','python'),
 )
 
 # lang indique la langue utilisée pour les chaines d'aide : fr ou ang

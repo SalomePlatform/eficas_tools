@@ -29,7 +29,7 @@ sys.path[:0]=[repIni]
 
 
 # lang indique la langue utilisee pour les chaines d'aide : fr ou ang
-lang='ang'
+lang='fr'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'

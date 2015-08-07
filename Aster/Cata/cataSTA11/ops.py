@@ -91,7 +91,6 @@ def DEBUT(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, LANG, INFO, **ar
        Fonction sdprod de la macro DEBUT
     """
     # La commande DEBUT ne peut exister qu'au niveau jdc
-    print "kkkkkkkkkkkkkkkkkkkk"
     if self.jdc is not self.parent :
         raise Accas.AsException("La commande DEBUT ne peut exister qu'au niveau jdc")
     commun_DEBUT_POURSUITE(self.jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, LANG, INFO)

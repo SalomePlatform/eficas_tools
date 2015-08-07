@@ -63,7 +63,8 @@ class FacultatifOuOptionnel:
  
   def viewDoc(self):
       try :
-          cmd="xdg-open "+self.cle_doc
+          if sys.platform[0:5]=="linux" : cmd="xdg-open "+self.cle_doc
+          else 	                        : cmd="start "+self.cle_doc
           os.system(cmd)
       except:
           QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
@@ -157,7 +158,8 @@ class ContientIcones:
        if fichier == None or str(fichier)=="" : return
        from qtCommun import ViewText
        try :
-         cmd="xdg-open "+str(fichier)
+         if sys.platform[0:5]=="linux" : cmd="xdg-open "+ str(fichier)
+         else 	                       : cmd="start "+ str(fichier)
          os.system(cmd)
        except:
          try :
