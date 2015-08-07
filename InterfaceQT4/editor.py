@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2015   EDF R&D
+# Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -67,9 +67,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.vm          = vm
         self.fichier     = fichier
         self.jdc         = jdc
-        self.first       = True
+        self.first	 = True
         self.QWParent    = QWParent
-
+         
         if appli != None :
            self.salome =  self.appliEficas.salome
         else :
@@ -80,8 +80,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.code = self.appliEficas.CONFIGURATION.code
         self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
         self.affiche=self.appliEficas.CONFIGURATION.affiche
+        #if self.code in ['MAP','CARMELCND','PSEN'] : self.afficheCommandesPliees=False
         if self.code in ['MAP','CARMELCND'] : self.afficheCommandesPliees=False
-        if self.code in ['MAP',] :
+        if self.code in ['MAP',] : 
            self.widgetTree.close()
            self.widgetTree=None
            self.appliEficas.resize(1440,self.appliEficas.height())
@@ -194,26 +195,46 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                 jdc_item=Objecttreeitem.make_objecttreeitem( self, "nom", self.jdc )
                 if (not self.jdc.isvalid()) and (not self.nouveau) and (self.appliEficas.ssIhm == False):
                     self.viewJdcRapport()
+ 
+
 
         if jdc_item:
             self.tree = browser.JDCTree( jdc_item,  self )
         self.appliEficas.construitMenu()
 
+    #-------------------#   Pour execution avec output sans une fenetre EFICAS. (erreurs encore dans la fenetre bash)
+    def runPSEN_2(self):   
     #-------------------#
+      if self.modified or self.fichier==None  :
+         QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
+         return
+        
+      #monPython="/home/A96028/salome75/prerequisites/install/Python-273-tcl8513-tk8513/bin/python"
+      #monWrapper="/local00/home/A96028/GitEficasTravail/eficas/PSEN_Eficas/PSSEWrapper.py"
+      path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','PSEN_Eficas','PSEN'))
+      monWrapper = os.path.join(path1, 'PSSEWrapper.py')
+      cmd=['python',monWrapper]
+
+      w = ViewText2( self.QWParent, cmd )
+      w.setWindowTitle( "execution" )
+      w.exec_()
+
+
+    #-------------------#  Pour execution avec output et error dans le bash
     def runPSEN(self):
     #-------------------#
       if self.modified or self.fichier==None  :
          QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
          return
         
-      monPython="/home/A96028/salome75/prerequisites/install/Python-273-tcl8513-tk8513/bin/python"
-      monWrapper="/local00/home/A96028/GitEficasTravail/eficas/PSEN_Eficas/PSSEWrapper.py"
-      cmd=[monPython,monWrapper]
-
-      w = ViewText2( self.QWParent, cmd )
-      w.setWindowTitle( "execution" )
-      w.exec_()
-
+      #lancement avec le .bat
+      path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','PSEN_Eficas','PSEN'))
+      WrapperFilePath = os.path.join(path1, 'PSSEWrapper.py') 
+      import subprocess
+      p = subprocess.Popen(['python',WrapperFilePath])
+      (out,err)=p.communicate()        
+      print out
+      print err
 
     #--------------------------------#
     def _newJDC( self ,units = None):
@@ -228,8 +249,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         if self.code == "CARMELCND" : texte=self._newJDCCND()
         if self.code == "ZCRACKS" : texte=self._newZCRACKS()
         if self.code == "TELEMAC" : texte=self._newTELEMAC()
+        if self.code == "PSEN" : texte = self._newPSEN()
         #   texte=self.newTexteCND
-
+       
         jdc=self.readercata.cata[0].JdC( procedure =texte,
                                          appli=self,
                                          cata=self.readercata.cata,
@@ -405,7 +427,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def readFromStdOut(self) :
         a=self.monExe.readAllStandardOutput()
         self.w.view.append(QString.fromUtf8(a.data(),len(a))) ;
-
+        
 
 
     #-----------------------#
@@ -733,7 +755,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         """
 
         fn = unicode(fn)
-
+       
         if txt == None :
             txt = self.get_text_JDC(self.format,formatLigne=formatLigne)
             eol = '\n'
@@ -761,7 +783,6 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #-----------------------------------------------------------#
       if self.code == "MAP" and not(generator.plugins.has_key(format)): format = "MAP"
       if generator.plugins.has_key(format):
-         print "get_text_JDC"
          
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
@@ -1033,7 +1054,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
            dicoCourant=self.generator.dico
         return dicoCourant
 
-
+         
 
     #-----------------------------------------#
     def handleAjoutGroup(self,listeGroup):
@@ -1261,6 +1282,13 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         return texte
 
     #---------------------------#
+    def _newPSEN(self):
+    #---------------------------#
+        texte="DIRECTORY() ; PSSE_PARAMETERS() ; SIMULATION() ; sansnom=DISTRIBUTION() ; sansnom=DISTRIBUTION() ; CORRELATION() ;"
+        #texte=""
+        return texte
+
+    #---------------------------#
 
     #---------------------------#
     def _newZCRACKS(self):
@@ -1272,7 +1300,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def _newJDCCND(self):
     #---------------------------#
       extensions=tr('Fichiers Med (*.med);;''Tous les Fichiers (*)')
-
+      
       #if self.salome == 0 :
       QMessageBox.information( self,
                       tr("Fichier Med"),
@@ -1291,7 +1319,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
       texteVcut=""
       texteZs=""
       for groupe in self.listeGroupes :
-          if groupe[0:8]=='CURRENT_':
+          if groupe[0:8]=='CURRENT_': 
              texteSources +=groupe[8:]+"=SOURCE("
              texteSources +="VecteurDirecteur=(1.0,2.0,3.0,),);\n"
           if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"
