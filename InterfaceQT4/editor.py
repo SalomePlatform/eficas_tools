@@ -36,8 +36,9 @@ from Editeur        import session
 from Editeur        import comploader
 from Editeur        import Objecttreeitem
 from desBaseWidget  import Ui_baseWidget
-from monViewTexte   import ViewText
-from monWidgetCreeParam import MonWidgetCreeParam
+from monViewTexte   import ViewText 
+from monViewTexte   import ViewText2
+from monWidgetCreeParam import MonWidgetCreeParam 
 import browser
 import readercata
 
@@ -194,9 +195,6 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                 if (not self.jdc.isvalid()) and (not self.nouveau) and (self.appliEficas.ssIhm == False):
                     self.viewJdcRapport()
 
-       # if self.code=="TELEMAC" : print "kkkkkkkk"
-
-
         if jdc_item:
             self.tree = browser.JDCTree( jdc_item,  self )
         self.appliEficas.construitMenu()
@@ -208,19 +206,13 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
          QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
          return
         
-      #lancement avec le .bat
-      textePython="PSEN_Path='EficasV2\PSEN_Eficas\PSEN\PSSEWrapper.py'\
-      \nimport subprocess\
-      \np=subprocess.Popen(['python',PSEN_Path])\
-      \n(out,err)=p.communicate()"
-      
- #lancement avec qteficas_psen.py      
+      monPython="/home/A96028/salome75/prerequisites/install/Python-273-tcl8513-tk8513/bin/python"
+      monWrapper="/local00/home/A96028/GitEficasTravail/eficas/PSEN_Eficas/PSSEWrapper.py"
+      cmd=[monPython,monWrapper]
 
-      #textePython='C:\Users\plscist\Desktop\Vico\sauveEficasPSEN~\EficasV1\PSEN_Eficas\PSEN\PSSEWrapper.py'
-      try :
-          self._viewTextExecute( textePython,"psen_run",".py")
-      except Exception, e:
-          print traceback.print_exc()
+      w = ViewText2( self.QWParent, cmd )
+      w.setWindowTitle( "execution" )
+      w.exec_()
 
 
     #--------------------------------#
@@ -440,6 +432,8 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def viewJdcRapport(self):
     #-----------------------#
         strRapport = unicode( self.jdc.report() )
+        # on ajoute les regles
+        
         self._viewText(strRapport, "JDC_RAPPORT")
 
     #----------------#
@@ -832,11 +826,11 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
 
           #textePython="ls -l"
           self._viewTextExecute( textePython,"map_run",".sh")
-          try:
-             commande="rm  "+self.fichierMapInput
-             os.system(commande)
-          except :
-             pass
+          #try:
+          #  commande="rm  "+self.fichierMapInput
+          #   os.system(commande)
+          #except :
+          #   pass
       except Exception, e:
           print traceback.print_exc()
 
