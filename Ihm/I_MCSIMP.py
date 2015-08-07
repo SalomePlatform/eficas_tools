@@ -117,10 +117,10 @@ class MCSIMP(I_OBJECT.OBJECT):
            else : texteVal=str(val)
            txt = txt + sep+ texteVal 
 
-        if len(txt) > 200:
-            #ligne trop longue, on tronque
-            txt=txt+" ..."
-            break
+##        if len(txt) > 200:
+##            #ligne trop longue, on tronque
+##            txt=txt+" ..."
+##            break
         sep=','
       # cas des listes de tuples de longueur 1
       if isinstance(val,types.TupleType) and len(self.valeur) == 1 : txt=txt+','

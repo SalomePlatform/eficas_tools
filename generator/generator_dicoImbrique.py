@@ -73,7 +73,6 @@ class DicoImbriqueGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,fn) :
-       print "je passe par writeDefault"
        fileDico = fn[:fn.rfind(".")] + '.py'
        f = open( str(fileDico), 'wb')
        f.write( self.Entete + "Dico =" + str(self.Dico) )
@@ -94,7 +93,21 @@ class DicoImbriqueGenerator(PythonGenerator):
         if not(self.Dico.has_key(nom)) : dicoCourant={}
         else : dicoCourant=self.Dico [nom]
         if hasattr(obj.valeur,'nom'):dicoCourant[liste[-1]]=obj.valeur.nom
-        else : dicoCourant[liste[-1]]=obj.valeurFormatee
+        else : 
+           if type(obj.valeur)  in (types.ListType,types.TupleType):
+              try :
+#PNPNPN a remplacer par plus propre
+                 if obj.definition.validators.typeDesTuples[0] !='R' :
+                    val=[]
+                    elt=[]
+                    for tupleElt in obj.valeur :
+                        elt=(str(tupleElt[0]),tupleElt[1])
+                        val.append(elt)
+                    dicoCourant[liste[-1]]=val
+                 else :dicoCourant[liste[-1]]=obj.valeur
+              except :
+                 dicoCourant[liste[-1]]=obj.valeurFormatee
+           else :dicoCourant[liste[-1]]=obj.valeurFormatee
         self.Dico[nom]=dicoCourant
 
         return s

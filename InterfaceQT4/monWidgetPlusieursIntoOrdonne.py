@@ -53,6 +53,16 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.prepareListeResultat()
         self.adjustSize()
         self.vScrollBarRE = self.scrollAreaRE.verticalScrollBar()
+        if sys.platform[0:5]!="linux":
+          repIcon=self.node.editor.appliEficas.repIcon
+          fichier=os.path.join(repIcon, 'arrow_up.png')
+          icon = QIcon(fichier)
+          self.RBHaut.setIcon(icon)
+          self.RBHaut.setIconSize(QSize(32, 32))
+          fichier2=os.path.join(repIcon, 'arrow_down.png')
+          icon2 = QIcon(fichier2)
+          self.RBBas.setIcon(icon2)
+
        
   def setValeurs(self):
        for i in self.listeLE:

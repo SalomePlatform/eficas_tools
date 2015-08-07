@@ -34,8 +34,12 @@ class MonWidgetSimpFichier (Ui_WidgetSimpFichier,MonWidgetSimpBase):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         MonWidgetSimpBase.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+        if sys.platform[0:5]!="linux" :
+          repIcon=self.node.editor.appliEficas.repIcon
+          fichier=os.path.join(repIcon, 'file-explorer.png')
+          icon = QIcon(fichier)
+          self.BFichier.setIcon(icon)
+          self.BFichier.setIconSize(QSize(32, 32))
         # deja fait dans MonWidgetSimpBase
         #self.maCommande.listeAffichageWidget.append(self.lineEditVal)
-
-
 

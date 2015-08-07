@@ -70,7 +70,11 @@ class CONFIG_BASE:
       if self.appli: self.parent=appli.top
       else: 	     self.parent=None
 
-      if not os.path.isdir(self.savedir) : self.savedir=os.environ['HOME']
+      if not os.path.isdir(self.savedir) :
+        if sys.platform[0:5]=="linux" :
+          self.savedir=os.environ['HOME']
+        else:
+          self.savedir='C:/'
       
 
 
@@ -82,7 +86,10 @@ class CONFIG_BASE:
       self.path_doc     = os.path.abspath(os.path.join(self.repIni,'..','Doc'))
       self.exec_acrobat = 'acroread'
       nomDir="Eficas_"+self.code
-      self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
+      if sys.platform[0:5]=="linux" :
+        self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
+      else:
+        self.savedir = os.path.abspath('C:/')
       self.mode_nouv_commande='initial'
       self.affiche="alpha"
  

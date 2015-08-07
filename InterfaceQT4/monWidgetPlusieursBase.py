@@ -48,6 +48,20 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
         GereListe.__init__(self)
         self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
 
+       if sys.platform[0:5]!="linux":
+          repIcon=self.node.editor.appliEficas.repIcon
+          fichier=os.path.join(repIcon, 'arrow_up.png')
+          icon = QIcon(fichier)
+          self.RBHaut.setIcon(icon)
+          self.RBHaut.setIconSize(QSize(32, 32))
+          fichier2=os.path.join(repIcon, 'arrow_down.png')
+          icon2 = QIcon(fichier2)
+          self.RBBas.setIcon(icon2)
+          fichier3=os.path.join(repIcon, 'file-explorer.png')
+          icon3 = QIcon(fichier2)
+          self.BSelectFichier.setIcon(icon3)
+          self.BSelectFichier.setIconSize(QSize(32, 32))
+
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         if self.monSimpDef.max != "**"  and self.monSimpDef.max < 7: 
            hauteur=dicoLongueur[self.monSimpDef.max]

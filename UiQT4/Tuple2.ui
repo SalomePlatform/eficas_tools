@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>539</width>
-    <height>35</height>
+    <width>482</width>
+    <height>34</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -39,7 +45,7 @@
    <item>
     <widget class="LECustomTuple" name="lineEditVal_1">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -62,6 +68,9 @@ border:0px;
 
 </string>
      </property>
+     <property name="text">
+      <string/>
+     </property>
      <property name="readOnly">
       <bool>false</bool>
      </property>
@@ -77,7 +86,7 @@ border:0px;
    <item>
     <widget class="LECustomTuple" name="lineEditVal_2">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -115,9 +124,12 @@ border:0px;</string>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Preferred</enum>
+     </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>123</width>
+       <width>5</width>
        <height>20</height>
       </size>
      </property>

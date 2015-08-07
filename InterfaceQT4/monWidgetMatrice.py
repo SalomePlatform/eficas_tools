@@ -18,7 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+import string,types,os,sys
 
 # Modules Eficas
 from PyQt4.QtGui     import *
@@ -46,6 +46,13 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
         else :
            try    : self.initialValeur()
            except : self.initialSsValeur()
+        if sys.platform[0:5]!="linux" : 
+          repIcon=self.node.editor.appliEficas.repIcon
+          fichier=os.path.join(repIcon, 'update.png')
+          icon = QIcon(fichier)
+          self.PBrefresh.setIcon(icon)
+          self.PBrefresh.setIconSize(QSize(32, 32))
+
 
 
   def connecterSignaux(self) :

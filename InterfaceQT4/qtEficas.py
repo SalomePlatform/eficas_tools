@@ -63,7 +63,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ficRecents={}
         self.listeAEnlever=[]
         self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND','MT']
-        self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
+        #self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
+        self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
 
         if self.salome:
           import Accas
@@ -74,7 +75,6 @@ class Appli(Ui_Eficas,QMainWindow):
         self.multi=multi
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
-        self.langue='fr'
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
@@ -163,8 +163,11 @@ class Appli(Ui_Eficas,QMainWindow):
     def ajoutExecution(self):
         self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
         self.actionExecution = QAction(self)
-        icon6 = QIcon(self.repIcon+"/roue.png")
-        self.actionExecution.setIcon(icon6)
+        if sys.platform[0:5]=="linux":
+          icon6 = QIcon(self.repIcon+"/roue.png")
+          self.actionExecution.setIcon(icon6)
+        else :
+          self.actionExecution.setText(QApplication.translate("Eficas", "Run", None))
         self.actionExecution.setObjectName("actionExecution")
         self.menuExecution.addAction(self.actionExecution)
         if not(self.actionExecution in self.toolBar.actions()):
@@ -249,7 +252,6 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def PSEN(self):
         self.ajoutExecution()
-        self.ajoutSauveExecution()
 
     def ChercheGrpMesh(self):
         Msg,listeGroup=self.ChercheGrpMeshInSalome()

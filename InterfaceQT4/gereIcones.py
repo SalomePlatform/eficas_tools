@@ -18,7 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os,re
+import string,types,os,re,sys
 import traceback
 
 from PyQt4 import *
@@ -156,11 +156,13 @@ class ContientIcones:
   def BFichierVisu(self):
        fichier=self.lineEditVal.text()
        if fichier == None or str(fichier)=="" : return
-       from qtCommun import ViewText
+       from monViewTexte import ViewText
        try :
-         if sys.platform[0:5]=="linux" : cmd="xdg-open "+ str(fichier)
-         else 	                       : cmd="start "+ str(fichier)
-         os.system(cmd)
+         if sys.platform[0:5]=="linux" :
+           cmd="xdg-open "+ str(fichier)
+           os.system(cmd)
+         else 	                       :
+           os.startfile(str(fichier)) 
        except:
          try :
             fp=open(fichier)

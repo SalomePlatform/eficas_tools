@@ -18,7 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+import string,types,os,sys
 
 # Modules Eficas
 from PyQt4.QtGui import *
@@ -43,6 +43,7 @@ class TupleCustom :
       self.parentQt=parentQt
       self.valeur=None
       self.index=index
+
 
       for i in range(self.tailleTuple):
          nomLE="lineEditVal_"+str(i+1)
@@ -132,6 +133,22 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
         GereListe.__init__(self)
         self.politique=PolitiquePlusieurs(self.node,self.editor)
         self.parentQt.commandesLayout.insertWidget(-1,self)
+        if sys.platform[0:5]!="linux":
+          repIcon=self.node.editor.appliEficas.repIcon
+          fichier=os.path.join(repIcon, 'arrow_up.png')
+          icon = QIcon(fichier)
+          self.RBHaut.setIcon(icon)
+          self.RBHaut.setIconSize(QSize(32, 32))
+          fichier2=os.path.join(repIcon, 'arrow_down.png')
+          icon2 = QIcon(fichier2)
+          self.RBBas.setIcon(icon2)
+          fichier3=os.path.join(repIcon, 'file-explorer.png')
+          icon3 = QIcon(fichier3)
+          self.BSelectFichier.setIcon(icon3)
+          self.BSelectFichier.setIconSize(QSize(32, 32))
+          
+        
+
 
   def ajoutLineEdit(self,valeur=None,inInit=False):
       self.indexDernierLabel=self.indexDernierLabel+1
@@ -165,6 +182,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
 
 
   def setValeurs(self):
+       self.RBListePush()
        valeurs=self.node.item.get_valeur()
        min,max=self.node.item.GetMinMax()
        if max == "**" or max > 5 : aCreer=5
@@ -222,3 +240,41 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          except :
            pass
           
+  def RBListePush(self):
+      if self.objSimp.valeur != None and self.objSimp.valeur != [] : return
+      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_ligne :
+         val=[]
+         for k in self.objSimp.jdc.LineDico.keys() :
+              try :
+               valeur=self.objSimp.jdc.get_concept(k)
+               val.append((valeur,0))
+              except :
+               pass
+         self.node.item.set_valeur(val)
+      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_generateur :
+         val=[]
+         for k in self.objSimp.jdc.MachineDico.keys() :
+              try :
+               valeur=self.objSimp.jdc.get_concept(k)
+               val.append((valeur,0))
+              except :
+               pass
+         self.node.item.set_valeur(val)
+      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_transfo :
+         val=[]
+         for k in self.objSimp.jdc.TransfoDico.keys() :
+              try :
+               valeur=self.objSimp.jdc.get_concept(k)
+               val.append((valeur,0))
+              except :
+               pass
+         self.node.item.set_valeur(val)
+      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_charge :
+         val=[]
+         for k in self.objSimp.jdc.LoadDico.keys() :
+              try :
+               valeur=self.objSimp.jdc.get_concept(k)
+               val.append((valeur,0))
+              except :
+               pass
+         self.node.item.set_valeur(val)

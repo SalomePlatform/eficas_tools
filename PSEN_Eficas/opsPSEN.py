@@ -26,6 +26,7 @@ def INCLUDE(self,PSSE_path,sav_file,**args):
        Fonction sd_prod pour la macro INCLUDE
    """
    
+   if sav_file==None: return
    reevalue=0
    if hasattr(self,'fichier_ini'):
        reevalue=1

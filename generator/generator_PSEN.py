@@ -56,10 +56,16 @@ class PSENGenerator(DicoImbriqueGenerator):
    def gener(self,obj,format='brut',config=None):
 
       print "je passe dans gener"
-      #self.MachineDico = obj.MachineDico
-      #self.LoadDico = obj.LoadDico
-      #self.LineDico = obj.LineDico
-      #self.TransfoDico = obj.TransfoDico
+      try :
+         self.MachineDico = obj.MachineDico
+         self.LoadDico = obj.LoadDico
+         self.LineDico = obj.LineDico
+         self.TransfoDico = obj.TransfoDico
+      except :
+         self.MachineDico = None
+         self.LoadDico = None
+         self.LineDico = None
+         self.TransfoDico = None
       
       self.initDico()
       # Cette instruction genere le contenu du fichier de commandes (persistance)
@@ -73,11 +79,11 @@ class PSENGenerator(DicoImbriqueGenerator):
    
    def initDico(self) :
       DicoImbriqueGenerator.initDico(self)
-      #self.Entete = 'MachineDico = ' + str(self.MachineDico) +'\n'
-      #self.Entete += 'LoadDico = ' + str(self.LoadDico) +'\n'
-      #self.Entete += 'LineDico = ' + str(self.LineDico) +'\n'
-      #self.Entete += 'TransfoDico = ' + str(self.TransfoDico) +'\n'
-      #self.Entete +='\n'
+      self.Entete = 'MachineDico = ' + str(self.MachineDico) +'\n'
+      self.Entete += 'LoadDico = ' + str(self.LoadDico) +'\n'
+      self.Entete += 'LineDico = ' + str(self.LineDico) +'\n'
+      self.Entete += 'TransfoDico = ' + str(self.TransfoDico) +'\n'
+      self.Entete +='\n'
 
 
 #----------------------------------------------------------------------------------------
@@ -85,8 +91,10 @@ class PSENGenerator(DicoImbriqueGenerator):
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,fn) :
-        DicoImbriqueGenerator.writeDefault(self,fn)
-        return
+       fileDico = "PSEN/PSENconfig.py" 
+       f = open( str(fileDico), 'wb')
+       f.write( self.Entete + "Dico =" + str(self.Dico) )
+       f.close()
 
    
 

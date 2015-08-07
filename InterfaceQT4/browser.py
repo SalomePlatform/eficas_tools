@@ -135,7 +135,7 @@ class JDCTree( QTreeWidget ):
 
     def handleOnItem(self,item,int):
         #if (len(self.selectedIndexes())!=2): return
-        #print "je passe dans handleOnItem"
+        #print "je passe dans handleOnItem pour ", self.item.nom
         self.inhibeExpand == True 
         self.itemCourrant=item
         itemParent=item
@@ -143,11 +143,10 @@ class JDCTree( QTreeWidget ):
         while not (hasattr (itemParent,'getPanel2')) : 
            if itemParent.plie==True : itemParent.setDeplie()
            itemParent=itemParent.treeParent 
-        #print itemParent
+        #print itemParent.item.nom
         #print itemParent.fenetre
         #print self.editor.afficheCommandesPliees
         if itemParent.fenetre != self.editor.fenetreCentraleAffichee : 
-            #print self.editor.afficheCommandesPliees
             if self.editor.afficheCommandesPliees : itemParent.plieToutEtReaffiche()
             else :                                  itemParent.affichePanneau()
         if itemParent!=item and item.fenetre != None: item.fenetre.rendVisible()
@@ -174,6 +173,7 @@ PARAMETERS  = "PARAMETRE"
 class JDCNode(QTreeWidgetItem):
     def __init__( self, treeParent, item):
         #print "creation d'un noeud : ", item, " ",item.nom,"", treeParent, self
+        #print "creation d'un noeud : ", item.nom
         self.a=0
         self.item        = item
         self.vraiParent  = treeParent
@@ -202,8 +202,6 @@ class JDCNode(QTreeWidgetItem):
         else :
             self.plie        = False
             self.appartientAUnNoeudPlie = False
-        #print "self.plie", self.plie
-        #print "self.appartientAUnNoeudPlie", self.appartientAUnNoeudPlie
         #print self.treeParent
 
         ajoutAuParentduNoeud=0
@@ -593,7 +591,7 @@ class JDCNode(QTreeWidgetItem):
 #    #------------------------------------------------------------------
     def onValid(self):        
 
-        print "onValid pour ", self.item.nom
+        #print "onValid pour ", self.item.nom
         if hasattr(self,'fenetre') and self.fenetre: self.fenetre.setValide()
         if (self.item.nom == "VARIABLE" or self.item.nom == "DISTRIBUTION") and self.item.isvalid():
            self.item.jdc.recalcule_etat_correlation()
@@ -754,6 +752,9 @@ class JDCNode(QTreeWidgetItem):
         #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
         self.editor.deplier = False
         for item in self.children :
+            # il ne faut pas plier les blocs 
+            from InterfaceQT4 import compobloc
+            if (isinstance(item,compobloc.Node)) : continue
             item.setPlie()
         self.affichePanneau()
 
