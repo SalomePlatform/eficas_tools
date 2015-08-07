@@ -18,7 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+import string,types,os,sys
 
 # Modules Eficas
 from PyQt4.QtGui import *
@@ -48,7 +48,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
         GereListe.__init__(self)
         self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
 
-       if sys.platform[0:5]!="linux":
+        if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon
           fichier=os.path.join(repIcon, 'arrow_up.png')
           icon = QIcon(fichier)

@@ -18,7 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+import string,types,os,sys
 
 # Modules Eficas
 from PyQt4.QtGui import *
