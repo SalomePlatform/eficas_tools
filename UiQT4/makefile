@@ -4,7 +4,7 @@ QTRELEASE = lrelease-qt4
 .SUFFIXES : .ui .py .ts .qm
 
 
-PY_FILES = myMain.py desBaseWidget.py desChoixCata.py desChoixCommandes.py desRecherche.py \
+PY_FILES = myMain.py desBaseWidget.py desChoixCata.py desChoixCode.py desChoixCommandes.py desRecherche.py \
 	desSelectVal.py desViewTexte.py desVisu.py desWidgetCreeParam.py desWidgetCommande.py \
 	desWidgetOptionnel.py Tuple2.py Tuple3.py  \
 	desWidgetBloc.py desWidgetCB.py desWidgetCommentaire.py desWidgetDate.py \
