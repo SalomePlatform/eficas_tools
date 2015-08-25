@@ -228,10 +228,10 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
         if self.object.suppentite(obj):
            if len(self._object) == 1: self.updateDelegate()     
            message = "Mot-clef " + obj.nom + " supprime"
-           self.appli.affiche_infos(message)
+           self.editor.affiche_commentaire(message)
            return 1
         else:
-           self.appli.affiche_infos(tr('Impossible de supprimer ce mot-clef'),Qt.red)
+           self.editor.affiche_infos(tr('Impossible de supprimer ce mot-clef'),Qt.red)
            return 0
 
             

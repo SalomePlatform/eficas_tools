@@ -162,6 +162,12 @@
         <enum>QFrame::NoFrame</enum>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="QScrollArea" name="scrollArea">
           <property name="sizePolicy">
@@ -190,7 +196,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>535</width>
+             <width>553</width>
              <height>220</height>
             </rect>
            </property>

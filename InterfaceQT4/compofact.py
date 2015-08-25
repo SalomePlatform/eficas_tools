@@ -133,15 +133,15 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       itemobject=item.getObject()
       if itemobject.isoblig() :
-         self.appli.affiche_infos(tr('Impossible de supprimer un mot-cle obligatoire '),Qt.red)
+         self.editor.affiche_infos(tr('Impossible de supprimer un mot-cle obligatoire '),Qt.red)
          return 0
 
       if self.object.suppentite(itemobject):
          message = tr("Mot-cle %s supprime")+ unicode(itemobject.nom)
-         self.appli.affiche_infos(message)
+         self.editor.affiche_commentaire(message)
          return 1
       else:
-         self.appli.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-cle'),Qt.red)
+         self.editor.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-cle'),Qt.red)
          return 0
 
 import Accas

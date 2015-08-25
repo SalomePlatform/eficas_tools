@@ -48,7 +48,7 @@ class SaisieValeur:
             #   self.editor.affiche_infos(commentaire)
             #self.Commentaire.setText(QString(commentaire))
             if validite :
-                self.editor.affiche_infos(commentaire)
+                self.editor.affiche_commentaire(commentaire)
             else :
                 self.editor.affiche_infos(commentaire,Qt.red)
          self.setValide()

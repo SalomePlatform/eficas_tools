@@ -157,7 +157,7 @@ class GereListe:
 
    def plusPushed(self):
        if self.indexDernierLabel == self.monSimpDef.max:
-          self.editor.affiche_infos('nb max de valeurs : '+str(self.monSimpDef.max)+' atteint')
+          self.editor.affiche_infos('nb max de valeurs : '+str(self.monSimpDef.max)+' atteint',Qt.red)
           return
        self.ajoutLineEdit()
        self.descendLesLignes()

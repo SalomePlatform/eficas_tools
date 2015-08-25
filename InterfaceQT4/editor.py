@@ -55,10 +55,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def __init__ (self,appli,fichier = None, jdc = None, QWParent=None, units = None, include=0 , vm=None):
     #----------------------------------------------------------------------------------------------------------#
 
-        self.a=0
         QtGui.QWidget.__init__(self,None)
         self.setupUi(self)
-        self.monOptionnel=None
+        self.widgetOptionnel=None
         self.fenetreCentraleAffichee=None
         self.dejaDansPlieTout=False
         self.afficheCommandesPliees = True
@@ -483,6 +482,11 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #------------------------------#
     # appele par I_MACRO_ETAPE
         QMessageBox.information( self, titre, message)
+
+    #-----------------------------------#
+    def affiche_commentaire(self,message):
+    #-----------------------------------#
+        self.labelCommentaire.setText(message)
 
     #-------------------#
     def init_modif(self):

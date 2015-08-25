@@ -133,7 +133,8 @@ QMenuBar {
     </property>
     <addaction name="action_Nouveau"/>
     <addaction name="actionNouvel_Include"/>
-    <addaction name="action_Ouvrir"/>
+    <addaction name="actionOuvrir"/>
+    <addaction name="actionARemplacer"/>
     <addaction name="separator"/>
     <addaction name="actionEnregistrer"/>
     <addaction name="actionEnregistrer_sous"/>
@@ -197,7 +198,7 @@ QMenuBar {
     <bool>false</bool>
    </attribute>
    <addaction name="action_Nouveau"/>
-   <addaction name="action_Ouvrir"/>
+   <addaction name="actionOuvrir"/>
    <addaction name="actionEnregistrer"/>
    <addaction name="separator"/>
    <addaction name="actionCopier"/>
@@ -226,7 +227,12 @@ QMenuBar {
     <string>Shift+I</string>
    </property>
   </action>
-  <action name="action_Ouvrir">
+  <action name="actionARemplacer">
+   <property name="text">
+    <string>&amp;bad</string>
+   </property>
+  </action>
+  <action name="actionOuvrir">
    <property name="icon">
     <iconset theme="document-open"/>
    </property>

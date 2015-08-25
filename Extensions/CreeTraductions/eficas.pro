@@ -112,11 +112,13 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../InterfaceQT4/feuille.py \
           ../../InterfaceQT4/gereIcones.py \
           ../../InterfaceQT4/gereListe.py \
+          ../../InterfaceQT4/gereRegles.py \
           ../../InterfaceQT4/gereTraduction.py \
           ../../InterfaceQT4/getVersion.py \
           ../../InterfaceQT4/groupe.py \
           ../../InterfaceQT4/monBoutonValide.py \
           ../../InterfaceQT4/monChoixCata.py \
+          ../../InterfaceQT4/monChoixCode.py \
           ../../InterfaceQT4/monChoixCommande.py \
           ../../InterfaceQT4/monFonctionPanel.py \
           ../../InterfaceQT4/monLabelClic.py \
@@ -143,6 +145,9 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../InterfaceQT4/monWidgetPlusieursBase.py \
           ../../InterfaceQT4/monWidgetPlusieursIntoOrdonne.py \
           ../../InterfaceQT4/monWidgetPlusieursInto.py \
+          ../../InterfaceQT4/monWidgetPlusieursTuple2.py \
+          ../../InterfaceQT4/monWidgetPlusieursTuple3.py \
+          ../../InterfaceQT4/monWidgetPlusieursTuple.py \
           ../../InterfaceQT4/monWidgetRadioButton.py \
           ../../InterfaceQT4/monWidgetSDCOInto.py \
           ../../InterfaceQT4/monWidgetSimpBase.py \
@@ -204,41 +209,47 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../Validation/V_PROC_ETAPE.py \
           ../../Validation/V_UN_PARMI.py 
 
-FORMS=    ../../UiQT4/desBaseWidget.ui \
-          ../../UiQT4/desChoixCata.ui \
-          ../../UiQT4/desChoixCommandes.ui \
-          ../../UiQT4/desRecherche.ui \
-          ../../UiQT4/desSelectVal.ui \
-          ../../UiQT4/desViewTexte.ui \
-          ../../UiQT4/desWidget4a6RadioButton.ui \
-          ../../UiQT4/desWidgetBloc.ui \
-          ../../UiQT4/desWidgetCB.ui \
-          ../../UiQT4/desWidgetCommande.ui \
-          ../../UiQT4/desWidgetCommentaire.ui \
-          ../../UiQT4/desWidgetCreeParam.ui \
-          ../../UiQT4/desWidgetDate.ui \
-          ../../UiQT4/desWidgetFactPlie.ui \
-          ../../UiQT4/desWidgetFact.ui \
-          ../../UiQT4/desWidgetHeure.ui \
-          ../../UiQT4/desWidgetInformation.ui \
-          ../../UiQT4/desWidgetMatrice.ui \
-          ../../UiQT4/desWidgetOptionnel.ui \
-          ../../UiQT4/desWidgetParam.ui \
-          ../../UiQT4/desWidgetPlusieursBase.ui \
-          ../../UiQT4/desWidgetPlusieursIntoOrdonne.ui \
-          ../../UiQT4/desWidgetPlusieursInto.ui \
-          ../../UiQT4/desWidgetRadioButton.ui \
-          ../../UiQT4/desWidgetSDCOInto.ui \
-          ../../UiQT4/desWidgetSimpBase.ui \
-          ../../UiQT4/desWidgetSimpBool.ui \
-          ../../UiQT4/desWidgetSimpComplexe.ui \
-          ../../UiQT4/desWidgetSimpFichier.ui \
-          ../../UiQT4/desWidgetSimpTxt.ui \
-          ../../UiQT4/desWidgetTuple2.ui \
-          ../../UiQT4/desWidgetTuple3.ui \
-          ../../UiQT4/desWidgetUniqueSDCO.ui \
-          ../../UiQT4/desWidgetVide.ui \
-          ../../UiQT4/desVisu.ui \
-          ../../UiQT4/myMain.ui 
+FORMS=   \
+        ../../UiQT4/myMain.ui \
+	../../UiQT4/desBaseWidget.ui \
+	../../UiQT4/desChoixCata.ui \
+	../../UiQT4/desChoixCode.ui \
+	../../UiQT4/desChoixCommandes.ui \
+	../../UiQT4/desRecherche.ui \
+	../../UiQT4/desSelectVal.ui \
+	../../UiQT4/desViewTexte.ui \
+	../../UiQT4/desVisu.ui \
+	../../UiQT4/desWidgetCreeParam.ui \
+	../../UiQT4/desWidgetCommande.ui \
+	../../UiQT4/desWidgetOptionnel.ui \
+	../../UiQT4/Tuple2.ui \
+	../../UiQT4/Tuple3.ui \
+	../../UiQT4/desWidgetBloc.ui \
+	../../UiQT4/desWidgetCB.ui \
+	../../UiQT4/desWidgetCommentaire.ui \
+	../../UiQT4/desWidgetDate.ui \
+	../../UiQT4/desWidgetFact.ui \
+	../../UiQT4/desWidgetFactPlie.ui \
+	../../UiQT4/desWidgetHeure.ui \
+	../../UiQT4/desWidgetInformation.ui \
+	../../UiQT4/desWidgetMatrice.ui \
+	../../UiQT4/desWidgetParam.ui \
+	../../UiQT4/desWidgetPlusieursBase.ui \
+	../../UiQT4/desWidgetPlusieursInto.ui \
+	../../UiQT4/desWidgetPlusieursIntoOrdonne.ui \
+	../../UiQT4/desWidgetPlusieursTuple.ui \
+	../../UiQT4/desWidgetRadioButton.ui \
+	../../UiQT4/desWidget4a6RadioButton.ui \
+	../../UiQT4/desWidgetSDCOInto.ui \
+	../../UiQT4/desWidgetSimpBase.ui \
+	../../UiQT4/desWidgetSimpBool.ui \
+	../../UiQT4/desWidgetSimpComplexe.ui \
+	../../UiQT4/desWidgetSimpFichier.ui \
+	../../UiQT4/desWidgetSimpTxt.ui \
+	../../UiQT4/desWidgetTuple2.ui \
+	../../UiQT4/desWidgetTuple3.ui \
+	../../UiQT4/desWidgetUniqueSDCO.ui \
+	../../UiQT4/desWidgetVide.ui \
+	../../UiQT4/myMain.ui 
 
 TRANSLATIONS = ../../UiQT4/eficas_fr.ts ../../UiQT4/eficas_en.ts

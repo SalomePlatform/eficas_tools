@@ -200,7 +200,7 @@ class ContientIcones:
          ulfile = os.path.abspath(unicode(fichier))
          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)
-         self.editor.affiche_infos(tr("Fichier selectionne"))
+         self.editor.affiche_commentaire(tr("Fichier selectionne"))
          self.LEValeurPressed()
          if (QFileInfo(fichier).suffix() in listeSuffixe ):
              self.image=fichier
@@ -234,7 +234,7 @@ class ContientIcones:
           
 
   def BSalomePressed(self):
-        self.editor.affiche_infos(QString(""))
+        self.editor.affiche_commentaire(QString(""))
         selection=[]
         commentaire=""
         genea=self.node.item.get_genealogie()
@@ -283,7 +283,7 @@ class ContientIcones:
         if valeur :
            ok, msgError = self.appliEficas.displayShape(valeur)
            if not ok:
-              self.appliEficas.affiche_infos(msgError,Qt.red)
+              self.editor.affiche_infos(msgError,Qt.red)
 
   def BParametresPressed(self):
         liste=self.node.item.get_liste_param_possible()

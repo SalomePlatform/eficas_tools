@@ -182,7 +182,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
    def traiteClicSurLabel(self,texte):
        #print self.aide 
        aide=self.aide+"\n"+self.aideALaSaisie()
-       self.editor.affiche_infos(aide)
+       self.editor.affiche_commentaire(aide)
 
    def formate(self,t):
        if t.find('_')==0 :

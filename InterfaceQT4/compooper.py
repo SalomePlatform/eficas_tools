@@ -51,7 +51,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
            old=self.item.GetText()
            self.monWidgetNom.setText(old)
         else :
-           self.editor.affiche_infos(tr("Nommage du concept effectue"))
+           self.editor.affiche_commentaire(tr("Nommage du concept effectue"))
            self.onValid()
            try :
 	       self.editor.panel.LENomConcept.setText(nom)
@@ -204,14 +204,14 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       # item.getObject() = MCSIMP, MCFACT, MCBLOC ou MCList 
       itemobject=item.getObject()
       if itemobject.isoblig() :
-          self.appli.affiche_infos(tr('Impossible de supprimer un mot-clef obligatoire '),Qt.red)
+          self.editor.affiche_infos(tr('Impossible de supprimer un mot-clef obligatoire '),Qt.red)
           return 0
       if self.object.suppentite(itemobject):
           message = tr("Mot-clef %s supprime " , itemobject.nom)
-          self.appli.affiche_infos(message)
+          self.editor.affiche_commentaire(message)
           return 1
       else :
-          self.appli.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-clef'),Qt.red)
+          self.editor.affiche_commentaire(tr('Pb interne : impossible de supprimer ce mot-clef'),Qt.red)
           return 0
 
   def GetText(self):

@@ -78,7 +78,8 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
          self.RBPoubelle.close() # JDC Fige
          return                  # Pas de MC Optionnels pour Carmel
       from monWidgetOptionnel import MonWidgetOptionnel
-      if hasattr(self.editor,'widgetOptionnel') : 
+      #if hasattr(self.editor,'widgetOptionnel') : 
+      if self.editor.widgetOptionnel!= None : 
         self.monOptionnel=self.editor.widgetOptionnel
       else :
         self.monOptionnel=MonWidgetOptionnel(self)
@@ -154,7 +155,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       nom = string.strip(nom)
       if nom == '' : return                  # si pas de nom, on ressort sans rien faire
       test,mess = self.node.item.nomme_sd(nom)
-      self.editor.affiche_infos(mess)
+      self.editor.affiche_commentaire(mess)
 
       #Notation scientifique
       if test :
@@ -166,6 +167,8 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       # N a pas de parentQt. doit donc etre redefini
       liste=self.ajouteMCOptionnelDesBlocs()
       #print "dans afficheOptionnel", self.monOptionnel
+      # dans le cas ou l insertion n a pas eu leiu (souci d ordre par exemple)
+      #if self.monOptionnel == None : return
       self.monOptionnel.parentMC=self
       self.monOptionnel.affiche(liste)
 
@@ -210,7 +213,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(self.f)
 
   def afficheCatalogue(self):
-      if self.editor.code != "CARMELCND" : self.monOptionnel.hide()
+      if self.editor.widgetOptionnel != None : self.monOptionnel.hide()
       self.racine.affichePanneau()
       if self.node : self.node.select()
       else : self.racine.select()

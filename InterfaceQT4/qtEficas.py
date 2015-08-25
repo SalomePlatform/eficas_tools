@@ -82,7 +82,12 @@ class Appli(Ui_Eficas,QMainWindow):
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         self.viewmanager = MyTabview(self)
-        self.recentMenu=self.menuFichier.addMenu(tr('&Recents'))
+        #self.recentMenu=self.menuFichier.addMenu(tr('&Recents'))
+        self.recentMenu=QMenu(tr('&Recents'))
+        #self.menuFichier.insertMenu(self.actionOuvrir,self.recentMenu)
+        # actionARemplacer ne sert que pour l insert Menu
+        self.menuFichier.insertMenu(self.actionARemplacer ,self.recentMenu)
+        self.menuFichier.removeAction(self.actionARemplacer)
         self.connecterSignaux()
         self.toolBar.addSeparator()
         if self.code != None : self.construitMenu()
@@ -192,6 +197,20 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionCopier.setEnabled(False)
         self.actionSupprimer.setEnabled(False)
 
+    def enleverActionsStructures(self):
+        self.toolBar.removeAction(self.actionCopier)
+        self.toolBar.removeAction(self.actionColler)
+        self.toolBar.removeAction(self.actionCouper)
+        self.menuEdition.removeAction(self.actionCouper)
+        self.menuEdition.removeAction(self.actionCopier)
+        self.menuEdition.removeAction(self.actionColler)
+
+
+    def enleverParametres(self):
+        self.toolBar.removeAction(self.actionParametres)
+        self.menuJdC.removeAction(self.actionParametres)
+
+
     def enleverNewInclude(self):
         self.actionNouvel_Include.setVisible(False)
 
@@ -208,7 +227,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.setTitle(tr("Options"))
 
     def ADAO(self):
-        self.griserActionsStructures()
+        self.enleverActionsStructures()
         self.enleverNewInclude()
         self.enleverRechercherDsCatalogue()
 
@@ -251,7 +270,15 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.setTitle(tr("Options"))
 
     def PSEN(self):
+        self.enleverActionsStructures()
+        self.enleverParametres()
+        self.enleverRechercherDsCatalogue()
+        self.enleverNewInclude()
         self.ajoutExecution()
+
+    def TELEMAC(self):
+        self.enleverActionsStructures()
+        self.enleverNewInclude()
 
     def ChercheGrpMesh(self):
         Msg,listeGroup=self.ChercheGrpMeshInSalome()
@@ -286,7 +313,7 @@ class Appli(Ui_Eficas,QMainWindow):
         icon = QIcon(self.repIcon+"/New24.png")
         self.action_Nouveau.setIcon(icon)
         icon1 = QIcon(self.repIcon+"/Open24.png")
-        self.action_Ouvrir.setIcon(icon1)
+        self.actionOuvrir.setIcon(icon1)
         icon2 = QIcon(self.repIcon+"/Save24.png")
         self.actionEnregistrer.setIcon(icon2)
         icon3 = QIcon(self.repIcon+"/Cut24.png")
@@ -305,7 +332,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.connect(self.action_Nouveau,SIGNAL("triggered()"),self.fileNew)
         self.connect(self.actionNouvel_Include,SIGNAL("triggered()"),self.NewInclude)
-        self.connect(self.action_Ouvrir,SIGNAL("triggered()"),self.fileOpen)
+        self.connect(self.actionOuvrir,SIGNAL("triggered()"),self.fileOpen)
         self.connect(self.actionEnregistrer,SIGNAL("triggered()"),self.fileSave)
         self.connect(self.actionEnregistrer_sous,SIGNAL("triggered()"),self.fileSaveAs)
         self.connect(self.actionFermer,SIGNAL("triggered()"),self.fileClose)

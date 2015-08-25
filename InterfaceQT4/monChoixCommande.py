@@ -59,6 +59,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
 
        
       self.editor.labelCommentaire.setText("")
+      if self.editor.widgetOptionnel!= None : self.editor.widgetOptionnel.close()
       self.name=None
       self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.AjouteRadioButton)
 
@@ -77,6 +78,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
          self.affiche_ordre==1;  
          self.RBOrdre.setChecked(True);  
          self.afficheOrdre()
+      if self.editor.code == "Adao" : self.frameAffichage.close()
 
   def afficheAlpha(self):
       self.affiche_alpha=1
