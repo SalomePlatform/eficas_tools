@@ -176,6 +176,11 @@ class MyTabview:
        if index < 0 : return
        self.dict_editors[index].viewJdcSource()
 
+   def handleViewJdcRegles(self):
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       self.dict_editors[index].viewJdcRegles()
+
    def handlegestionParam(self):
        index=self.myQtab.currentIndex()
        if index < 0 : 

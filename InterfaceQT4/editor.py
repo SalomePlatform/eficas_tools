@@ -457,6 +457,12 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         
         self._viewText(strRapport, "JDC_RAPPORT")
 
+    #-----------------------#
+    def viewJdcRegles(self):
+    #-----------------------#
+        if self.tree :self.tree.AppelleBuildLBRegles()
+
+
     #----------------#
     def closeIt(self):
     #----------------#

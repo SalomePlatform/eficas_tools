@@ -351,6 +351,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionDeplier_replier,SIGNAL("triggered()"),self.Deplier)
 
         self.connect(self.actionRapport_de_Validation,SIGNAL("triggered()"),self.jdcRapport)
+        self.connect(self.actionRegles_du_JdC,SIGNAL("triggered()"),self.jdcRegles)
         self.connect(self.actionFichier_Source,SIGNAL("triggered()"),self.jdcFichierSource)
         self.connect(self.actionFichier_Resultat,SIGNAL("triggered()"),self.visuJdcPy)
 
@@ -661,6 +662,9 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def jdcRapport(self):
         self.viewmanager.handleViewJdcRapport()
+
+    def jdcRegles(self):
+        self.viewmanager.handleViewJdcRegles()
 
     def gestionParam(self):
         self.viewmanager.handlegestionParam()

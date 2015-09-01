@@ -50,10 +50,15 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
           nouveauTitre=debutTitre
       self.editor.appliEficas.setWindowTitle(nouveauTitre)
 
+      print self.node.tree
 
       self.connect(self.RBalpha,SIGNAL("clicked()"),self.afficheAlpha)
       self.connect(self.RBGroupe,SIGNAL("clicked()"),self.afficheGroupe)
       self.connect(self.RBOrdre,SIGNAL("clicked()"),self.afficheOrdre)
+      if self.node.tree.item.get_regles() == () :
+         self.RBRegle.close()
+         self.labelRegle.close()
+      else : self.connect(self.RBRegle,SIGNAL("clicked()"),self.afficheRegle)
 
       if self.editor.Ordre_Des_Commandes == None : self.RBOrdre.close()
 
@@ -79,6 +84,9 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
          self.RBOrdre.setChecked(True);  
          self.afficheOrdre()
       if self.editor.code == "Adao" : self.frameAffichage.close()
+
+  def afficheRegle(self):
+      self.node.tree.AppelleBuildLBRegles()
 
   def afficheAlpha(self):
       self.affiche_alpha=1

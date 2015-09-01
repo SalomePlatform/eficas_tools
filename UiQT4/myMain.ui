@@ -161,6 +161,7 @@ QMenuBar {
      <string>&amp;JeuDeDonnées</string>
     </property>
     <addaction name="actionRapport_de_Validation"/>
+    <addaction name="actionRegles_du_JdC"/>
     <addaction name="actionFichier_Source"/>
     <addaction name="actionFichier_Resultat"/>
     <addaction name="separator"/>
@@ -210,7 +211,9 @@ QMenuBar {
   </widget>
   <action name="action_Nouveau">
    <property name="icon">
-    <iconset theme="document-new"/>
+    <iconset theme="document-new">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>&amp;Nouveau</string>
@@ -234,7 +237,9 @@ QMenuBar {
   </action>
   <action name="actionOuvrir">
    <property name="icon">
-    <iconset theme="document-open"/>
+    <iconset theme="document-open">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>&amp;Ouvrir</string>
@@ -245,7 +250,9 @@ QMenuBar {
   </action>
   <action name="actionEnregistrer">
    <property name="icon">
-    <iconset theme="document-save"/>
+    <iconset theme="document-save">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Enregistrer</string>
@@ -261,7 +268,9 @@ QMenuBar {
   </action>
   <action name="actionEnregistrer_sous">
    <property name="icon">
-    <iconset theme="document-save-as"/>
+    <iconset theme="document-save-as">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Enregistrer sous</string>
@@ -285,7 +294,9 @@ QMenuBar {
   </action>
   <action name="actionCouper">
    <property name="icon">
-    <iconset theme="edit-cut"/>
+    <iconset theme="edit-cut">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Couper</string>
@@ -299,7 +310,9 @@ QMenuBar {
   </action>
   <action name="actionCopier">
    <property name="icon">
-    <iconset theme="edit-copy"/>
+    <iconset theme="edit-copy">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Copier</string>
@@ -313,7 +326,9 @@ QMenuBar {
   </action>
   <action name="actionColler">
    <property name="icon">
-    <iconset theme="edit-paste"/>
+    <iconset theme="edit-paste">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Coller</string>
@@ -371,7 +386,9 @@ QMenuBar {
   </action>
   <action name="actionSupprimer">
    <property name="icon">
-    <iconset theme="edit-delete"/>
+    <iconset theme="edit-delete">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Supprimer</string>
@@ -393,7 +410,9 @@ QMenuBar {
   </action>
   <action name="actionRechercher">
    <property name="icon">
-    <iconset theme="edit-find"/>
+    <iconset theme="edit-find">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Rechercher</string>
@@ -442,6 +461,11 @@ QMenuBar {
   <action name="actionParametre_Eficas">
    <property name="text">
     <string>Parametre Eficas</string>
+   </property>
+  </action>
+  <action name="actionRegles_du_JdC">
+   <property name="text">
+    <string>Régles du JdC</string>
    </property>
   </action>
  </widget>

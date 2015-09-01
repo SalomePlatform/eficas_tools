@@ -31,15 +31,18 @@ listeSuffixe=('bmp','png','jpg' ,'txt','med')
 class FacultatifOuOptionnel:
 
   def setReglesEtAide(self):
-      from monWidgetCommande import MonWidgetCommande
       listeRegles=()
       try :
          listeRegles     = self.node.item.get_regles()
       except :
          pass
-      if listeRegles==() and hasattr(self,"RBRegle"): self.RBRegle.close() 
+      if hasattr(self,"RBRegle"):
+        if listeRegles==() : self.RBRegle.close() 
+        else : self.connect( self.RBRegle,SIGNAL("clicked()"),self.viewRegles)
+
       cle_doc=None
       if not hasattr(self,"RBInfo"):return
+      from monWidgetCommande import MonWidgetCommande
       if isinstance(self,MonWidgetCommande) and self.editor.code =="MAP":
          self.cle_doc = self.chercheDocMAP()
       else :
@@ -68,6 +71,9 @@ class FacultatifOuOptionnel:
           os.system(cmd)
       except:
           QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
+
+  def viewRegles(self):
+      self.node.AppelleBuildLBRegles()
 
 
   def setIconePoubelle(self):

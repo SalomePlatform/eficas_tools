@@ -227,7 +227,9 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         else :
            self.editor.affiche_infos("")
     
-        if validite :
+        if len(listeRetour) == 0 :
+           self.node.item.set_valeur(None)
+        elif validite :
            self.node.item.set_valeur(listeRetour)
         else :
            commentaire=comm+" "+comm2

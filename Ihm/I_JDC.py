@@ -63,7 +63,6 @@ class JDC(I_OBJECT.OBJECT):
       """
           Retourne la liste des concepts avant etape d'un type acceptable
       """
-      print "je suis la",self,etape,types_permis
       d=self.get_contexte_avant(etape)
       
       
@@ -127,7 +126,6 @@ class JDC(I_OBJECT.OBJECT):
              Correlation=etapeTraitee.get_child('CorrelationMatrix')
              if Correlation !=None : 
                   Correlation.state='arecalculer'
-                  print Correlation.isvalid
                   Correlation.isvalid()
              etapeTraitee.isvalid()
 

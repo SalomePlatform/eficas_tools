@@ -27,9 +27,10 @@ from PyQt4 import *
 from PyQt4.QtGui  import *
 from PyQt4.QtCore import *
 from Extensions.i18n import tr
+from gereRegles import GereRegles
 from monChoixCommande import MonChoixCommande
 
-class JDCTree( QTreeWidget ):
+class JDCTree( QTreeWidget,GereRegles ):
     def __init__( self, jdc_item, QWParent):        
         #if hasattr(QWParent,'widgetTree') : 
         self.editor	   = QWParent
@@ -170,7 +171,7 @@ class JDCTree( QTreeWidget ):
 COMMENT     = "COMMENTAIRE"
 PARAMETERS  = "PARAMETRE"
  
-class JDCNode(QTreeWidgetItem):
+class JDCNode(QTreeWidgetItem,GereRegles):
     def __init__( self, treeParent, item):
         #print "creation d'un noeud : ", item, " ",item.nom,"", treeParent, self
         #print "creation d'un noeud : ", item.nom

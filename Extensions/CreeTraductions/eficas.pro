@@ -218,6 +218,7 @@ FORMS=   \
 	../../UiQT4/desRecherche.ui \
 	../../UiQT4/desSelectVal.ui \
 	../../UiQT4/desViewTexte.ui \
+	../../UiQT4/desViewRegles.ui \
 	../../UiQT4/desVisu.ui \
 	../../UiQT4/desWidgetCreeParam.ui \
 	../../UiQT4/desWidgetCommande.ui \
