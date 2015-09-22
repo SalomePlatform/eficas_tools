@@ -68,4 +68,5 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
       texte=str(self.commentaireLE.text())
       self.editor.init_modif()
       self.node.item.set_valeur(texte)
+      self.node.update_node()
 

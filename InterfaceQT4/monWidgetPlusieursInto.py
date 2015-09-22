@@ -34,7 +34,7 @@ from qtSaisie               import SaisieValeur
 class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        print "MonWidgetPlusieursInto", nom, self
+        #print "MonWidgetPlusieursInto", nom, self
         self.index=1
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()

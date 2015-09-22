@@ -162,6 +162,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         """ Connecte la fonction callable (avec arguments args) à l'item self sur le 
             canal channel
         """
+        #print self,channel,callable,args
         CONNECTOR.Connect(self._object,channel,callable,args)
         CONNECTOR.Connect(self.object, channel,callable,args)
 

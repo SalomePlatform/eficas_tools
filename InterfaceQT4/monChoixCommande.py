@@ -50,7 +50,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
           nouveauTitre=debutTitre
       self.editor.appliEficas.setWindowTitle(nouveauTitre)
 
-      print self.node.tree
+      #print self.node.tree
 
       self.connect(self.RBalpha,SIGNAL("clicked()"),self.afficheAlpha)
       self.connect(self.RBGroupe,SIGNAL("clicked()"),self.afficheGroupe)
@@ -64,7 +64,9 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
 
        
       self.editor.labelCommentaire.setText("")
-      if self.editor.widgetOptionnel!= None : self.editor.widgetOptionnel.close()
+      if self.editor.widgetOptionnel!= None : 
+         self.editor.widgetOptionnel.close()
+         self.editor.widgetOptionnel=None
       self.name=None
       self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.AjouteRadioButton)
 
@@ -113,6 +115,8 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
          plier=self.editor.afficheCommandesPliees
          if nodeCourrant==self.node : nouveau=self.node.append_child(self.name,'first',plier)
          else : nouveau=nodeCourrant.append_brother(self.name,plier=plier)
+      else :
+         nouveau = 0
       if nouveau == 0 : return # on n a pas insere le noeud
       nouveau.setDeplie()
       #if self.editor.afficheApresInsert==True : nouveau.plieToutEtReaffiche()

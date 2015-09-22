@@ -24,15 +24,19 @@ from Extensions.i18n import tr
 escapedQuotesRE = re.compile(r"(\\\\|\\\"|\\\')")
 stringsAndCommentsRE =  \
       re.compile(u"(\"\"\".*?\"\"\"|'''.*?'''|\"[^\"]*\"|\'[^\']*\'|#.*?\n)", re.DOTALL)
+#stringsAndCommentsRE =  \
+#      re.compile(u"(\"\"\".*\"\"\"|'''.*'''|\"[^\"]*\"|\'[^\']*\'|#.*\n)", re.DOTALL)
 allchars = string.maketrans(u"", "")
 allcharsExceptNewline = allchars[: allchars.index('\n')]+allchars[allchars.index('\n')+1:]
-if sys.platform[0:5]=="linux" :
-   allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
-elif sys.platform[0:3]=="win" :
-   allcharsExceptNewlineTranstable = dict((ord(char), u'*') for char in allcharsExceptNewline)#string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
-else :
-   allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
-   print 'Plateforme non geree'
+allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+
+#if sys.platform[0:5]=="linux" :
+#   allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+#elif sys.platform[0:3]=="win" :
+#   allcharsExceptNewlineTranstable = dict((ord(char), u'*') for char in allcharsExceptNewline)#
+#else :
+#   allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+#   print 'Plateforme non geree'
 
 def maskStringsAndComments(src):
     """Masque tous les caracteres de src contenus dans des commentaires ou des strings multilignes (triples
@@ -40,7 +44,13 @@ def maskStringsAndComments(src):
        Le masquage est realise en remplacant les caracteres par des * 
        Attention : cette fonction doit etre utilisee sur un texte complet et pas ligne par ligne
     """
-    src = escapedQuotesRE.sub(u"**", src)
+# remplace les \\, les \" les \'  par **
+# supprime toutes les chaines ou commentaires ,y compris multiligne i
+# entre 3 ou 1 simples ou doubles quotes (ouvrantes fermantes) ou # 
+# laisse les non fermantes ou non ouvrantes
+    #src = escapedQuotesRE.sub(u"**", src)
+    # le u met le bazar dans le translate
+    src = escapedQuotesRE.sub("**", src)
     allstrings = stringsAndCommentsRE.split(src)
     # every odd element is a string or comment
     for i in xrange(1, len(allstrings), 2):
@@ -49,8 +59,6 @@ def maskStringsAndComments(src):
                             allstrings[i][3:-3].translate(allcharsExceptNewlineTranstable)+ \
                             allstrings[i][-3:]
         else:
-            test= allstrings[i][1:-1].translate(allcharsExceptNewlineTranstable)
-            #test +\
             allstrings[i] = allstrings[i][0]+ \
                             allstrings[i][1:-1].translate(allcharsExceptNewlineTranstable)+ \
                             allstrings[i][-1]

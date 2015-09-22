@@ -106,8 +106,9 @@ class CONNECTOR:
     try:
        receivers = self.connections[id(object)][channel]
     except KeyError:
+       #print "ds except"
        return
-    ###print "Emit",object, channel, receivers
+    #print "Emit",object, channel, receivers
     # Attention : copie pour eviter les pbs lies aux deconnexion reconnexion
     # pendant l'execution des emit
     for rfunc, fargs in copy(receivers):

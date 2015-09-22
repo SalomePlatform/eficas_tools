@@ -68,7 +68,7 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.cbPressed=None
      self.cb=None
      self.parentQt=parentQt
-     self.connect(self.bAjoutMC,SIGNAL("clicked()"), self.ajoutMC)
+     #self.connect(self.bAjoutMC,SIGNAL("clicked()"), self.ajoutMC)
      #print "fin init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
 
      

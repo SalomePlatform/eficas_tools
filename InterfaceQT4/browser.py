@@ -52,7 +52,6 @@ class JDCTree( QTreeWidget,GereRegles ):
         self.tree          = self        
         self.appliEficas   = self.editor.appliEficas
         self.childrenComplete=[]
-        self.childrenIssusDesBlocs=[]
         self.racine=self.item.itemNode(self,self.item)
  
         self.itemCourrant=None
@@ -134,9 +133,10 @@ class JDCTree( QTreeWidget,GereRegles ):
              return
         item.deplieToutEtReaffiche()
 
+
     def handleOnItem(self,item,int):
         #if (len(self.selectedIndexes())!=2): return
-        #print "je passe dans handleOnItem pour ", self.item.nom
+        #print "je passe dans handleOnItem pour ", item.item.nom, item, item.item
         self.inhibeExpand == True 
         self.itemCourrant=item
         itemParent=item
@@ -174,7 +174,6 @@ PARAMETERS  = "PARAMETRE"
 class JDCNode(QTreeWidgetItem,GereRegles):
     def __init__( self, treeParent, item):
         #print "creation d'un noeud : ", item, " ",item.nom,"", treeParent, self
-        #print "creation d'un noeud : ", item.nom
         self.a=0
         self.item        = item
         self.vraiParent  = treeParent
@@ -182,7 +181,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.tree        = self.treeParent.tree
         self.editor	 = self.treeParent.editor
         self.appliEficas = treeParent.appliEficas
-        self.treeParent.childrenIssusDesBlocs=[]
+        self.JESUISOFF=0
         self.childrenComplete=[]
                         
         from InterfaceQT4 import compocomm
@@ -203,26 +202,20 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         else :
             self.plie        = False
             self.appartientAUnNoeudPlie = False
-        #print self.treeParent
 
-        ajoutAuParentduNoeud=0
         from InterfaceQT4 import compobloc
         from InterfaceQT4 import compomclist
-        while (isinstance(self.treeParent,compobloc.Node) or ( isinstance(self.treeParent,compomclist.Node) and self.treeParent.item.isMCList())) : 
-        #while (isinstance(self.treeParent,compobloc.Node)) :
-              self.treeParent=self.treeParent.treeParent
-              ajoutAuParentduNoeud=1
-        if ajoutAuParentduNoeud :
-           treeParent.childrenComplete.append(self)
-           self.treeParent.childrenIssusDesBlocs.append(self)
-        while (isinstance(self.treeParent,compobloc.Node)) : self.treeParent=self.treeParent.treeParent
 
-        #if isinstance(self,compobloc.Node) : 
+        ajoutAuParentduNoeud=0
+        self.treeParent=treeParent
+        while (isinstance(self.treeParent,compobloc.Node) or ( isinstance(self.treeParent,compomclist.Node) and self.treeParent.item.isMCList())) : 
+              self.treeParent.childrenComplete.append(self)
+              self.treeParent=self.treeParent.vraiParent
+        self.treeParent.childrenComplete.append(self)
         if (isinstance(self,compobloc.Node) or ( isinstance(self,compomclist.Node) and self.item.isMCList())) : 
            QTreeWidgetItem.__init__(self,None,mesColonnes)
         else :
            QTreeWidgetItem.__init__(self,self.treeParent,mesColonnes)
-           self.treeParent.childrenComplete.append(self)
 
         self.setToolTip(0,QString(self.item.get_fr()))
         self.setToolTip(1,QString(self.item.get_fr()))
@@ -252,21 +245,24 @@ class JDCNode(QTreeWidgetItem,GereRegles):
     def build_children(self,posInsertion=10000):
         """ Construit la liste des enfants de self """
         """ Se charge de remettre les noeuds Expanded dans le meme etat """
-        #print "*********** build_children ",self.item, self.item.GetLabelText()
+        #print "*********** build_children ",self,self.item, self.item.nom
         
         listeExpanded=[]
-        for item in self.childrenComplete :
-            #print dir(item)
-            #if item.isExpanded():
+        for enfant in self.childrenComplete :
+            #if enfant.isExpanded():
             #   if self.childrenComplete.index(item) < posInsertion :
             #      listeExpanded.append(self.childrenComplete.index(item))
             #      print dir(item.item )
             #   else :
             #      listeExpanded.append( self.childrenComplete.index(item) +1)
-            self.detruit_les_noeuds_issus_de_blocs(item)
-            parent=item.treeParent
-            parent.removeChild(item)
 
+
+            p=enfant.vraiParent
+            parent=enfant.treeParent
+            parent.removeChild(enfant)
+
+            enfant.JESUISOFF=1
+        
         #print listeExpanded
         self.children = []
         self.childrenComplete = []
@@ -275,17 +271,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         for item in sublist :
             nouvelItem=item.itemNode(self,item)
             self.children.append(nouvelItem)
-            #print "         J ajoute ", nouvelItem ,nouvelItem.item.GetLabelText(),"dans" ,self.item.GetLabelText()
-            #print item
-            #if ind in listeExpanded : nouvelItem.setExpanded(1)
- 
-            #if ind in listeExpanded : print "plie=0"
-            #else 		    : print "plie=1"
-            #if ind in listeExpanded : nouvelItem.plie=0
-            #else 		    : nouvelItem.plie=1
-            #ind=ind+1
 
-        #print "*********** fin build_children ",self.item, self.item.GetLabelText()
         
     def chercheNoeudCorrespondant(self,objSimp):
         sublist = self.item._GetSubList()
@@ -293,35 +279,28 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             if node.item.object==objSimp : return node
         return None
 
+
     def affichePanneau(self) :
-        #print "dans affichePanneau appel getPanel2", self.item.GetLabelText()
         if self.item.isactif(): 
            itemParent=self
-           #print self
-           #print self.getPanel2
            while not (hasattr (itemParent,'getPanel2')) : 
                 itemParent=itemParent.treeParent 
            if itemParent!=self : 
               itemParent.affichePanneau()
               return
-           #print self.getPanel2
            self.fenetre=self.getPanel2()
         else:
             from monInactifPanel import PanelInactif
             self.fenetre = PanelInactif(self,self.editor)
          
         self.editor.widgetCentraleLayout.addWidget(self.fenetre)
-        #print "widgetCentraleLayout = ", self.editor.widgetCentraleLayout
-        #print "nouvelle fenetre ", self.fenetre, " associee a ", self
 
         self.editor.anciennefenetre=self.editor.fenetreCentraleAffichee
-        #print "ancienne fenetre ", self.editor.anciennefenetre
         self.editor.fenetreCentraleAffichee=self.fenetre
         self.tree.node_selected= self
 
         if self.editor.anciennefenetre != None : 
            a=self.editor.anciennefenetre.close()
-           #print "je ferme ", self.editor.anciennefenetre
 
         if self.editor.widgetTree !=None  : index=1
         else : index=0
@@ -400,7 +379,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         Rend le noeud courant (self) selectionne et deselectionne
         tous les autres
         """        
-        #print "je suis sur select"
         for item in self.tree.selectedItems() :
             item.setSelected(0)
         self.setSelected( True )    
@@ -605,28 +583,22 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.update_node_texte()
 
     def onAdd(self,object):
-        #print "onAdd pour ", self.item.nom
+        if self.JESUISOFF==1 : return
         self.editor.init_modif()
         self.update_nodes()
-        #print "dans onAdd" ,self.item 
+
         # PN -- non necessaire si item=jdc
         if hasattr(self.item,'jdc'): self.item.jdc.aReafficher=True
  
     def onSupp(self,object):
-        #print "onSupp pour ", self.item.nom
+        if self.JESUISOFF==1 : return
         self.editor.init_modif()
         self.update_nodes()
         # PN -- non necessaire si item=jdc
         if hasattr(self.item,'jdc'): self.item.jdc.aReafficher=True
          
-    def detruit_les_noeuds_issus_de_blocs(self,bloc):
-        from InterfaceQT4 import compobloc
-        if (isinstance(bloc,compobloc.Node)) :
-           for node in bloc.childrenComplete :
-               self.detruit_les_noeuds_issus_de_blocs(node)
-               parent=node.treeParent
-               #print "je detruit " , node.item.GetLabelText()
-               parent.removeChild(node)
+
+
 
     def update_node_valid(self):
         """Cette methode remet a jour la validite du noeud (icone)
@@ -676,6 +648,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """ Met a jour les noms des SD et valeurs des mots-cles """
         value = self.item.GetText()
         self.setText(1, value)
+        
 
     def update_node_texte_in_blue(self):
         self.setTextColor( 1,Qt.blue )

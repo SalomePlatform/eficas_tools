@@ -35,6 +35,7 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
   """
   def __init__(self,editor, name = None,fl = 0):
        self.editor=editor
+       self.editor.affiche_infos("")
        QDialog.__init__(self,editor)
        self.setupUi(self)
        self.connecterSignaux()
@@ -59,14 +60,17 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
            itemAvant=self.editor.tree.selectedItems()[0]
         param=itemAvant.addParameters(True)
         param.item.set_nom(nom)
+        #PN self.val permet d entrer du texte
         param.item.set_valeur(val)
         param.update_node_texte()
+        param.update_node_valid()
         self.LBParam.addItem(QString(repr(param.item)))
 
 
   def lineEditValReturnPressed(self):
         qtVal=self.lineEditVal.text()
         valString=str(self.lineEditVal.text())
+        self.val=""
         contexte={}
         exec "from math import *" in contexte
         jdc=self.editor.jdc
@@ -83,8 +87,13 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         monTexte="monParam="+valString
         try :
           exec monTexte in contexte
+          self.val=valString
         except :
-          self.editor.affiche_infos(tr("Valeur incorrecte"),Qt.red)
+          try :
+            monTexte="monParam='"+valString+"'"
+            self.val="'"+valString+"'"
+          except :
+            self.editor.affiche_infos(tr("Valeur incorrecte"),Qt.red)
         if self.lineEditNom.text()!="" and self.dejaExistant==False : self.CreeParametre()
 
 

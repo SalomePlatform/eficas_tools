@@ -75,7 +75,6 @@ class TELEMACGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,fn) :
-       print "kkkkkkkkkkkkkkkkkkkkk"
        fileDico = fn[:fn.rfind(".")] + '.py'
        f = open( str(fileDico), 'wb')
        f.write( self.texteDico )

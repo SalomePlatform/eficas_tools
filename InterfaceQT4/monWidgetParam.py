@@ -54,6 +54,10 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
       self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
       self.connect(self.bVerifie,SIGNAL("clicked()"), self.verifiePressed)
       self.editor.affiche_infos("")
+      if self.editor.widgetOptionnel!= None :
+         self.editor.widgetOptionnel.close()
+         self.editor.widgetOptionnel=None
+
 
 
        

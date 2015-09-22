@@ -183,7 +183,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.avantV=self.editor.fenetreCentraleAffichee.scrollAreaCommandes.verticalScrollBar().sliderPosition()
       self.inhibeExpand=True
       self.node.affichePanneau()
-      print "dans reaffiche de monWidgetCommande", self.avantH, self.avantV
+      #print "dans reaffiche de monWidgetCommande", self.avantH, self.avantV
       QTimer.singleShot(1, self.recentre)
       if nodeAVoir != None:
         self.f=nodeAVoir.fenetre
