@@ -24,6 +24,8 @@
 """
 import types,string,re
 from Extensions.i18n import tr
+filePattern="'[^\(\)]([^\(\)]*\([^\(\)]*\))*[^\(\)]*'"
+filePattern2='"[^\(\)]([^\(\)]*\([^\(\)]*\))*[^\(\)]*"'
 
 class Formatage :
   """ 
@@ -240,12 +242,15 @@ class Formatage :
       s=texte + label
       longueur = len(increment + label)
 
-      if ('(' not in valeur) or (valeur[0:3]=='"""'):
+      if ('(' not in valeur) or (valeur[0:3]=='"""') :
         # il s'agit d'une vraie chaîne de caractères
         val = len(valeur)
         texte = (self.l_max-2-val)*' '+valeur
         s=s+'\n'+texte
-
+      elif re.match(filePattern,valeur) or re.match(filePattern2,valeur):
+        val = len(valeur)
+        texte = (self.l_max-2-val)*' '+valeur
+        s=s+'\n'+texte
       elif ',' in valeur:
         # il s'agit d'une liste de tuple
         # c est trop complique on ne splitte pas
