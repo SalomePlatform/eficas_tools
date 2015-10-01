@@ -144,11 +144,15 @@ class GereListe:
          for i in range (self.NumLineEditEnCours, self.indexDernierLabel):
              aRemonter=i+1
              nomLineEdit=self.nomLine+str(aRemonter)
+             print nomLineEdit
              courant=getattr(self,nomLineEdit)
              valeurARemonter=courant.getValeur()
+             print valeurARemonter
              nomLineEdit=self.nomLine+str(i)
+             print nomLineEdit
              courant=getattr(self,nomLineEdit)
-             courant.setValeur(valeurARemonter)
+             if valeurARemonter != None : courant.setValeur(valeurARemonter)
+             else : courant.clean()
          nomLineEdit=self.nomLine+str(self.indexDernierLabel)
          courant=getattr(self,nomLineEdit)
          courant.clean()

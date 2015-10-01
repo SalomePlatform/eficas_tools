@@ -232,6 +232,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.item.connect("valid",self.onValid,())
         self.item.connect("supp" ,self.onSupp,())
         self.item.connect("add"  ,self.onAdd,())
+
         self.state=""
         self.fenetre=None
         try :
@@ -518,7 +519,11 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         if self.item.nom == "VARIABLE" :
            recalcule=1
            jdc=self.item.jdc
-        ret=self.vraiParent.item.suppitem(self.item)
+        ret,commentaire=self.vraiParent.item.suppitem(self.item)
+        if ret==0 :
+          self.editor.affiche_infos(commentaire,Qt.red)
+        else :
+          self.editor.affiche_infos(commentaire)
         self.treeParent.build_children()
         if self.treeParent.childrenComplete : toselect=self.treeParent.childrenComplete[index]
         else: toselect=self.treeParent

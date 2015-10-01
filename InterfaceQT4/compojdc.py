@@ -94,11 +94,10 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
           message = tr("Commentaire supprime")
        else :
           message = tr("Commande %s supprimee",itemobject.nom)
-       self.editor.affiche_commentaire(message)
-       return 1
+       return 1,message
     else:
-       self.editor.affiche_infos(tr("Pb interne : impossible de supprimer cet objet"),Qt.red)
-       return 0
+       message=tr("Pb interne : impossible de supprimer cet objet")
+       return 0,message
 
   def GetSubList(self):
     """

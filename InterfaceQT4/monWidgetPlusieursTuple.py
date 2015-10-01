@@ -126,7 +126,6 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         self.indexDernierLabel=0
-        self.NumLineEditEnCours=0
         self.nomLine="TupleVal"
         self.listeAffichageWidget=[]
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
@@ -146,6 +145,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
           icon3 = QIcon(fichier3)
           self.BSelectFichier.setIcon(icon3)
           self.BSelectFichier.setIconSize(QSize(32, 32))
+        self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
           
         
 
@@ -240,7 +240,37 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          except :
            pass
           
+  def AjoutNValeur(self,liste):
+        if len(liste)%self.nbValeurs != 0 :
+           texte="Nombre de valeur incorrecte"
+           #self.Commentaire.setText(texte)
+           self.editor.affiche_infos(texte,Qt.red)
+           return
+        i=0
+        while ( i < len(liste) ) :
+            if self.objSimp.valeur != None : indexDernierRempli=len(self.objSimp.valeur)
+            else : indexDernierRempli=0
+            try :
+              t=tuple(liste[i:i+self.nbValeurs])
+              i=i+self.nbValeurs
+            except:
+              t=tuple(liste[i:len(liste)])
+            if indexDernierRempli < self.indexDernierLabel:
+               nomLineEdit=self.nomLine+str(indexDernierRempli+1)
+               LEARemplir=getattr(self,nomLineEdit) 
+               LEARemplir.lineEditVal_1.setText(str(t[0]))
+               LEARemplir.lineEditVal_2.setText(str(t[1]))
+               if self.nbValeurs== 3 : LEARemplir.lineEditVal_3.setText(str(t[2]))
+               LEARemplir.valueChange()
+            else : 
+               self.ajoutLineEdit(t,False)
+               nomLineEdit=self.nomLine+str(self.indexDernierLabel)
+               LEARemplir=getattr(self,nomLineEdit) 
+               LEARemplir.valueChange()
+
+
   def RBListePush(self):
+  # PN a rendre generique avec un truc tel prerempli
       if self.objSimp.valeur != None and self.objSimp.valeur != [] : return
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_ligne :
          val=[]
@@ -278,3 +308,4 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
               except :
                pass
          self.node.item.set_valeur(val)
+
