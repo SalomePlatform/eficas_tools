@@ -25,16 +25,8 @@ from Extensions.i18n import tr
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
-    def getPanel(self):
-        """
-        """
-        #if self.affichage_onglet==1 :
-        #   from monRacinePanel_onglet import MonRacinePanel
-        #   return MonRacinePanel(self,parent=self.editor)
-        from monRacinePanel import MonRacinePanel
-        return MonRacinePanel(self,parent=self.editor)
 
-    def getPanel2(self):
+    def getPanel(self):
         from monChoixCommande import MonChoixCommande
         return MonChoixCommande(self,self.item, self.editor)
         

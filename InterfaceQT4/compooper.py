@@ -58,13 +58,8 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
            except :
                pass
 
-    def getPanel( self ):
-        """
-        """
-        from monCommandePanel import MonCommandePanel
-        return MonCommandePanel(self,parent=self.editor)
 
-    def getPanel2(self):
+    def getPanel(self):
         from monWidgetCommande import MonWidgetCommande
         return MonWidgetCommande(self,self.editor,self.item.object)
 
@@ -204,15 +199,15 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       # item.getObject() = MCSIMP, MCFACT, MCBLOC ou MCList 
       itemobject=item.getObject()
       if itemobject.isoblig() :
-          self.editor.affiche_infos(tr('Impossible de supprimer un mot-clef obligatoire '),Qt.red)
-          return 0
+          #self.editor.affiche_infos(tr('Impossible de supprimer un mot-clef obligatoire '),Qt.red)
+          return (0,tr('Impossible de supprimer un mot-clef obligatoire '))
       if self.object.suppentite(itemobject):
           message = tr("Mot-clef %s supprime " , itemobject.nom)
-          self.editor.affiche_commentaire(message)
-          return 1
+          #self.editor.affiche_commentaire(message)
+          return (1,message)
       else :
-          self.editor.affiche_commentaire(tr('Pb interne : impossible de supprimer ce mot-clef'),Qt.red)
-          return 0
+          #self.editor.affiche_commentaire(tr('Pb interne : impossible de supprimer ce mot-clef'),Qt.red)
+          return (0,tr('Pb interne : impossible de supprimer ce mot-clef'))
 
   def GetText(self):
       try:

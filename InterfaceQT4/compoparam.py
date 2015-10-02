@@ -34,7 +34,7 @@ import typeNode
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel): 
-    def getPanel2(self):
+    def getPanel(self):
         """        
         """    
         from monWidgetParam  import MonWidgetParam

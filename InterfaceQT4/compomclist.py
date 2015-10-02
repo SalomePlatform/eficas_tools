@@ -31,20 +31,6 @@ from Noyau.N_OBJECT import ErrorObj
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
-    def getPanel(self):
-        """        
-        """    
-        if self.item.isMCList() :
-           if self.item.ajout_possible():
-              from monMCListAjoutPanel import MonMCListAjoutPanel
-              return MonMCListAjoutPanel(self,parent=self.editor)
-           else :
-              print "MCList"
-        elif self.item.isMCFact() :
-           from monMCFactPanel import MonMCFactPanel
-           return MonMCFactPanel(self,parent=self.editor)
-        else :
-           print "MCList"
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
@@ -54,6 +40,9 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         monObjet=self.item.object
         monNom=self.item.nom
         maCommande=commande
+        #print "ds getPanelGroupe" , self.item.nom
+        #if hasattr(self,'plie'): print "self.plie", self.plie
+       # if self.item.nom == "BackgroundError" and not(self.plie): print i
         #print parentQt
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
@@ -228,11 +217,10 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
         if self.object.suppentite(obj):
            if len(self._object) == 1: self.updateDelegate()     
            message = "Mot-clef " + obj.nom + " supprime"
-           self.editor.affiche_commentaire(message)
-           return 1
+           #self.editor.affiche_commentaire(message)
+           return (1,message)
         else:
-           self.editor.affiche_infos(tr('Impossible de supprimer ce mot-clef'),Qt.red)
-           return 0
+           return (0,tr('Impossible de supprimer ce mot-clef'))
 
             
 import Accas

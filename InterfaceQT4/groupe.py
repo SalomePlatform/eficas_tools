@@ -73,7 +73,8 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
   def afficheMots(self):
       #print "ds afficheMots ",self.node.item.nom
       for node in self.node.children:
-           #print "afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie
+           #if node.item.nom == "Background" :print "afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie,node.getPanelGroupe
+           #if node.item.nom == "BackgroundError" :print "afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie,node.getPanelGroupe
            # non return mais  continue car il faut tenir compte des blocs
            if node.appartientAUnNoeudPlie==True : continue
            #print "je suis apres le if pour ",node.item.nom

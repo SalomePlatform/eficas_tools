@@ -29,11 +29,6 @@ import typeNode
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         
-    def getPanel(self):
-        """        
-        """    
-        from monMCFactPanel import MonMCFactPanel
-        return MonMCFactPanel(self,parent=self.editor)
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)

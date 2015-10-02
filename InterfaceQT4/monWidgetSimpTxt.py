@@ -33,7 +33,6 @@ class MonWidgetSimpTxt (Ui_WidgetSimpTxt,MonWidgetSimpBase):
 # c est juste la taille des differents widgets de base qui change
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        print "MonWidgetSimpTxt", nom
         MonWidgetSimpBase.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
 
 

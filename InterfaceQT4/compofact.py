@@ -30,11 +30,6 @@ from Editeur import Objecttreeitem
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
-    def getPanel(self):
-        """
-        """
-        from monMCFactPanel import MonMCFactPanel
-        return MonMCFactPanel(self,parent=self.editor) 
 
     def getPanelGroupe(self,parentQt,commande):
         maDefinition=self.item.get_definition()
@@ -43,6 +38,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         maCommande=commande
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
+        if  hasattr(self,'plie') :print self.item.nom, self.plie
         if  hasattr(self,'plie') and self.plie==True : 
            from monWidgetFactPlie import MonWidgetFactPlie
            widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
@@ -133,16 +129,16 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       itemobject=item.getObject()
       if itemobject.isoblig() :
-         self.editor.affiche_infos(tr('Impossible de supprimer un mot-cle obligatoire '),Qt.red)
-         return 0
+         #self.editor.affiche_infos(tr('Impossible de supprimer un mot-cle obligatoire '),Qt.red)
+         return (0, tr('Impossible de supprimer un mot-cle obligatoire '))
 
       if self.object.suppentite(itemobject):
          message = tr("Mot-cle %s supprime")+ unicode(itemobject.nom)
-         self.editor.affiche_commentaire(message)
-         return 1
+         #self.editor.affiche_commentaire(message)
+         return (1, message)
       else:
-         self.editor.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-cle'),Qt.red)
-         return 0
+         #self.editor.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-cle'),Qt.red)
+         return (0,tr('Pb interne : impossible de supprimer ce mot-cle'))
 
 import Accas
 objet = Accas.MCFACT

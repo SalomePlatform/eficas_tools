@@ -24,12 +24,9 @@ import typeNode
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNode):
-    def getPanel(self):
-        from monMacroPanel import MonMacroPanel
-        return MonMacroPanel(self,parent=self.editor)
 
-    def getPanel2(self):
-        #print "getPanel2 de compoproc"
+    def getPanel(self):
+        #print "getPanel de compoproc"
         from monWidgetCommande import MonWidgetCommande
         return MonWidgetCommande(self,self.editor,self.item.object)
 

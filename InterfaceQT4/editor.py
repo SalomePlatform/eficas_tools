@@ -222,9 +222,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #-------------------#  Pour execution avec output et error dans le bash
     def runPSEN(self):
     #-------------------#
-      if self.modified or self.fichier==None  :
-         QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
-         return
+      if self.modified or self.fichier==None  : self.saveFile()
         
       #lancement avec le .bat
       path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','PSEN_Eficas','PSEN'))
@@ -534,7 +532,6 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #---------------------#
     def handleDeplier(self):
     #---------------------#
-       print "je passe ici"
        if self.tree == None : return
        #self.tree.collapseAll()
        if self.deplier :

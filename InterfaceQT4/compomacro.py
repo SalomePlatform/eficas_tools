@@ -34,11 +34,8 @@ from PyQt4.QtCore import Qt, SIGNAL, QVariant
 
 
 class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):         
-    def getPanel(self):
-      from   monMacroPanel import MonMacroPanel
-      return MonMacroPanel (self,parent=self.editor )
     
-    def getPanel2(self):
+    def getPanel(self):
       from   monWidgetCommande import MonWidgetCommande
       return MonWidgetCommande (self,self.editor ,self.item.object)
 
@@ -83,11 +80,8 @@ class INCLUDETreeItemBase(MACROTreeItem):
 
 
 class INCLUDENode(browser.JDCNode,typeNode.PopUpMenuNode):    
-    def getPanel(self):
-      from   monIncludePanel import MonIncludePanel
-      return MonIncludePanel (self,parent=self.editor )
 
-    def getPanel2(self):
+    def getPanel(self):
       from   monWidgetCommande import MonWidgetCommande
       return MonWidgetCommande (self,self.editor ,self.item.object)
 
@@ -118,11 +112,8 @@ class INCLUDETreeItem(INCLUDETreeItemBase):
 # ------------------------------------
     
 class POURSUITENode(browser.JDCNode, typeNode.PopUpMenuNode):    
-    def getPanel(self):
-      from   monPoursuitePanel import MonPoursuitePanel
-      return MonPoursuitePanel (self,parent=self.editor )
 
-    def getPanel2(self):
+    def getPanel(self):
       from   monWidgetCommande import MonWidgetCommande
       return MonWidgetCommande (self,self.editor ,self.item.object)
 
@@ -155,8 +146,8 @@ class POURSUITETreeItem(INCLUDETreeItemBase):
 class MATERIAUNode(MACRONode):
 
     def getPanel(self):
-      from   monMacroPanel import MonMacroPanel
-      return MonMacroPanel (self,parent=self.editor )
+      from   monWidgetCommande import MonWidgetCommande
+      return MonWidgetCommande (self,self.editor ,self.item.object)
 
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
