@@ -95,6 +95,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         if self.jdc.appli.appliEficas.dict_reels[clefobj].has_key(self.valeur):
            txt=self.jdc.appli.appliEficas.dict_reels[clefobj][self.valeur]
     elif type(self.valeur) in (types.ListType,types.TupleType) :
+      if self.valeur==[]: return str(self.valeur)
       # Traitement des listes
       txt='('
       sep=''
