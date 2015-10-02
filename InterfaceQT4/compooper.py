@@ -31,8 +31,6 @@ import typeNode
 
 class Node(browser.JDCNode, typeNode.PopUpMenuNode):
 
-    def __init__(self,treeParent, item):
-        browser.JDCNode.__init__( self, treeParent, item)
 
     def select(self):
         browser.JDCNode.select(self)
