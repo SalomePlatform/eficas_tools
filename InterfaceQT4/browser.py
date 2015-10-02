@@ -135,28 +135,22 @@ class JDCTree( QTreeWidget,GereRegles ):
 
 
     def handleOnItem(self,item,int):
-        #if (len(self.selectedIndexes())!=2): return
-        #print "je passe dans handleOnItem pour ", item.item.nom, item, item.item
+        if (len(self.selectedIndexes())!=2): return
+        #print "je passe dans handleOnItem pour ",self, item.item.nom, item, item.item
         self.inhibeExpand == True 
         self.itemCourrant=item
         itemParent=item
-        #print self.itemCourrant
         while not (hasattr (itemParent,'getPanel')) : 
            if itemParent.plie==True : itemParent.setDeplie()
            itemParent=itemParent.treeParent 
-        #print itemParent.item.nom
-        #print itemParent.fenetre
-        #print self.editor.afficheCommandesPliees
         if itemParent.fenetre != self.editor.fenetreCentraleAffichee : 
             if self.editor.afficheCommandesPliees : itemParent.plieToutEtReaffiche()
             else :                                  itemParent.affichePanneau()
         if itemParent!=item and item.fenetre != None: item.fenetre.rendVisible()
-        #try :
-        if 1:
+        try :
            fr = item.item.get_fr()
            if self.editor: self.editor.labelCommentaire.setText(unicode(fr))
-        #except:
-        else :
+        except:
             pass
         self.inhibeExpand == False 
         #print "je mets inhibeExpand a false handleOnItem"
@@ -186,6 +180,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
                         
         from InterfaceQT4 import compocomm
         from InterfaceQT4 import compoparam
+        from InterfaceQT4 import composimp
         if   (isinstance(self.item,compocomm.COMMTreeItem)) : name=tr("Commentaire")
         elif (isinstance(self.item,compoparam.PARAMTreeItem)) : name=self.appliEficas.trUtf8(str(item.GetLabelText()[0]))
         else:   name  = self.appliEficas.trUtf8(str(tr( item.nom))+" :")
@@ -202,9 +197,10 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         else :
             self.plie        = False
             self.appartientAUnNoeudPlie = False
+
         if ancien and itemExpand     : self.plie = False
         if ancien and not itemExpand : self.plie = True 
-
+        if (isinstance(self.item,composimp.SIMPTreeItem)) : self.plie=False
 
         from InterfaceQT4 import compobloc
         from InterfaceQT4 import compomclist
@@ -253,9 +249,10 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         
         self.listeItemExpanded=[]
         self.listeItemPlie=[]
+
         for enfant in self.childrenComplete :
-            if enfant.isExpanded()      : self.listeItemExpanded.append(enfant.item)
-            if not(enfant.isExpanded()) : self.listeItemPlie.append(enfant.item)
+            if enfant.plie : self.listeItemPlie.append(enfant.item)
+            else : self.listeItemExpanded.append(enfant.item)
 
         for enfant in self.childrenComplete :
             p=enfant.vraiParent
@@ -577,14 +574,15 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def onAdd(self,object):
         if self.JESUISOFF==1 : return
+        print "onAdd pour ", self.item.nom, object.nom
         self.editor.init_modif()
         self.update_nodes()
-
         # PN -- non necessaire si item=jdc
         if hasattr(self.item,'jdc'): self.item.jdc.aReafficher=True
  
     def onSupp(self,object):
         if self.JESUISOFF==1 : return
+        print "onSup pour ", self.item.nom, object.nom
         self.editor.init_modif()
         self.update_nodes()
         # PN -- non necessaire si item=jdc
