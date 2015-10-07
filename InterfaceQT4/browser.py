@@ -117,25 +117,22 @@ class JDCTree( QTreeWidget,GereRegles ):
         itemParent=item
         item.setPlie()
         item.plieToutEtReaffiche()
+        item.select()
 
     def handleExpandedItem(self,item):
-        #print "dans ExpandItem", self.inhibeExpand  
+        #print "handleExpandedItem pour ", item.item.nom, self.inhibeExpand
         if self.inhibeExpand == True : return
-        #print "apres if"
         itemParent=item
         while not (hasattr (itemParent,'getPanel')) : 
            if itemParent.plie==True : itemParent.setDeplie()
            itemParent=itemParent.treeParent 
-        #print "apres if"
         if self.tree.node_selected != itemParent : 
              item.setExpanded(True)
-             #print "je suis la"
              return
         item.deplieToutEtReaffiche()
 
 
     def handleOnItem(self,item,int):
-        if (len(self.selectedIndexes())!=2): return
         #print "je passe dans handleOnItem pour ",self, item.item.nom, item, item.item
         self.inhibeExpand == True 
         self.itemCourrant=item
@@ -144,14 +141,23 @@ class JDCTree( QTreeWidget,GereRegles ):
            if itemParent.plie==True : itemParent.setDeplie()
            itemParent=itemParent.treeParent 
         if itemParent.fenetre != self.editor.fenetreCentraleAffichee : 
-            if self.editor.afficheCommandesPliees : itemParent.plieToutEtReaffiche()
+             # il faut afficher le parent
+            if self.editor.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
             else :                                  itemParent.affichePanneau()
-        if itemParent!=item and item.fenetre != None: item.fenetre.rendVisible()
+
+
+        from InterfaceQT4 import composimp
+        if (isinstance(item,composimp.Node)) : item.fenetre.rendVisible()
+        elif itemParent!=item:
+             #self.tree.handleExpandedItem(item)
+             #item.fenetre.donnePremier()
+             print 'il faut afficher le 1er'
         try :
            fr = item.item.get_fr()
            if self.editor: self.editor.labelCommentaire.setText(unicode(fr))
         except:
             pass
+        item.select()
         self.inhibeExpand == False 
         #print "je mets inhibeExpand a false handleOnItem"
 
@@ -297,17 +303,20 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             from monInactifPanel import PanelInactif
             self.fenetre = PanelInactif(self,self.editor)
          
-        self.editor.widgetCentraleLayout.addWidget(self.fenetre)
+        for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
+            widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
+            self.editor.widgetCentraleLayout.removeItem(widget)
+        # ceinture et bretelle
+        #print 'old fenetre = ',self.editor.fenetreCentraleAffichee
+        if self.editor.fenetreCentraleAffichee != None : 
+            #print "j enleve ", self.editor.fenetreCentraleAffichee, self.editor.fenetreCentraleAffichee.node.item.nom
+            self.editor.widgetCentraleLayout.removeWidget(self.editor.fenetreCentraleAffichee)
+            self.editor.fenetreCentraleAffichee.close()
 
-        self.editor.anciennefenetre=self.editor.fenetreCentraleAffichee
+        self.editor.widgetCentraleLayout.addWidget(self.fenetre)
+        #print "j ajoute ", self.fenetre, self.fenetre.node.item.nom
         self.editor.fenetreCentraleAffichee=self.fenetre
         self.tree.node_selected= self
-
-        if self.editor.anciennefenetre != None : 
-           a=self.editor.anciennefenetre.close()
-
-        if self.editor.widgetTree !=None  : index=1
-        else : index=0
 
         if self.editor.first :
            self.editor.splitter.setSizes((400,1400,400))
@@ -316,7 +325,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.tree.expandItem(self)
         self.select()
         self.tree.inhibeExpand=False
-        #print "fin de affichePanneau"
+        #print "fin de affichePanneau", self.item.nom
         #print "______________________________"
           
 
@@ -386,9 +395,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         for item in self.tree.selectedItems() :
             item.setSelected(0)
         self.setSelected( True )    
-        #self.setExpanded( True )    
         self.tree.setCurrentItem( self )    
-        self.tree.node_selected= self
                                
     #------------------------------------------------------------------
     # Methodes de creation et destruction de noeuds
@@ -574,7 +581,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def onAdd(self,object):
         if self.JESUISOFF==1 : return
-        print "onAdd pour ", self.item.nom, object.nom
+        #print "onAdd pour ", self.item.nom, object.nom
         self.editor.init_modif()
         self.update_nodes()
         # PN -- non necessaire si item=jdc
@@ -582,7 +589,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
  
     def onSupp(self,object):
         if self.JESUISOFF==1 : return
-        print "onSup pour ", self.item.nom, object.nom
+        #print "onSup pour ", self.item.nom, object.nom
         self.editor.init_modif()
         self.update_nodes()
         # PN -- non necessaire si item=jdc
@@ -712,6 +719,19 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         child = self.append_child(objet,pos='first')
         return child
 
+    def plieToutEtReafficheSaufItem(self, itemADeplier):
+        #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
+        self.editor.deplier = False
+        for item in self.children :
+            # il ne faut pas plier les blocs 
+            from InterfaceQT4 import compobloc
+            if (isinstance(item,compobloc.Node)) : continue
+            item.setPlie()
+            if item==itemADeplier : 
+                  print itemADeplier.item.nom
+                  itemADeplier.setDeplie()
+        
+        self.affichePanneau()
 
     def plieToutEtReaffiche(self):
         #print "je suis dans plieToutEtReaffiche", self.item.get_nom()

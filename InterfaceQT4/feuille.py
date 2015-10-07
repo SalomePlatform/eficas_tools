@@ -42,6 +42,9 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
        QWidget.__init__(self,None)
        self.node=node
        self.node.fenetre=self
+
+       # on se positionne pour les icones
+       os.chdir(os.path.abspath(os.path.join(os.path.dirname(__file__))))
        self.setupUi(self)
        self.prendLeFocus=0
 
