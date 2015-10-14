@@ -226,6 +226,8 @@ CORRELATION = PROC ( nom = 'CORRELATION',
                                              structure="symetrique"),
                                fr = "Matrice de correlation entre les variables d'entree",
                                ang = "Correlation matrix for input variables",
+                               #val_max=1.0,
+                               #val_min=-1.0
                                ),
 ##  #), # Fin BLOC Matrix
 ##
@@ -234,15 +236,15 @@ CORRELATION = PROC ( nom = 'CORRELATION',
 
 DIRECTORY = MACRO ( nom = 'DIRECTORY',
         op=None,
-        fr = "Chargement des generateurs et des charges",
-        ang = "Physical model wrapper load",
+        fr = "Chargement des directoires et fichiers",
+        ang = "Load directories and files necessary to run PSEN",
                 sd_prod = opsPSEN.INCLUDE,
                 op_init = opsPSEN.INCLUDE_context,
                 #sd_prod=None,
                 fichier_ini = 1,
 
         PSSE_path=SIMP(statut="o",typ='Repertoire',defaut='C:\Program Files\PTI\PSSE33\PSSBIN'),
-        sav_file=SIMP(statut="o", typ = ('Fichier', 'Wrapper Files (*.sav);;All Files (*)',),),
+        sav_file=SIMP(statut="o", typ = ('Fichier', 'Network Case Files (*.sav);;All Files (*)',),),
         results_folder=SIMP(statut="o",typ='Repertoire'),
         #lines_file=SIMP(statut="o" ,typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
         #groups_file=SIMP(statut="o", typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
@@ -369,12 +371,13 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 # Type de distribution
 #====
   
+  b_gener_level = BLOC (condition= "Type == 'Generator Power Level'",
 
   Law = SIMP ( statut = "o", typ = "TXM",
                 into = ( "Exponential",
                          "Histogram",
                          "Normal",
-                         "Rayleigh",
+                         #"Rayleigh",
                          "PDF_from_file",
                          "TruncatedNormal",
                          "TimeSeries_from_file",
@@ -474,8 +477,8 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
              
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
-                    fr = "Nom du modele physique",
-                    ang = "Physical model identifier",
+                    fr = "Nom du fichier .csv",
+                    ang = ".csv file name",
                     ),
               ),
               
@@ -550,8 +553,8 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
                                        max = '**', 
-                                       fr = "Liste de couples : (valeur, probabilite)",
-                                       ang = "List of pairs : (value, probability)",
+                                       fr = "Liste de couples : (valeur, prob.)",
+                                       ang = "List of pairs : (value, prob.)",
                                        validators=VerifTypeTuple(('R','R')),
                                        ),
 
@@ -621,7 +624,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
     Transfer_Function = FACT(statut='f',
                 
-        Input = SIMP ( statut='o',
+        TF_Input = SIMP ( statut='o',
                        typ = 'TXM',
                        fr = 'Entrer une fonction de transfert à partir d''un fichier .pow (vitesse de vent - puissance eolienne)\n \
                              ou entrer une liste de tuples (valeur tiree - puissance normalisee)',
@@ -629,7 +632,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                               or enter a generic list of (law output value, normalized power output) tuples',
                        into = ('.pow file', 'tuples list'),
                              ),
-        b_file = BLOC(condition = "Input == '.pow file'",
+        b_file = BLOC(condition = "TF_Input == '.pow file'",
                       File_Name = SIMP ( statut = "o",
                                         typ = ('Fichier', 'Pow files (*.pow);;All Files (*)',),
                                         fr = "Nom du fichier de transfer .pow",
@@ -667,9 +670,9 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                              ),                      
                       ), #fin du bloc FileName
 
-        b_tuples = BLOC(condition = "Input == 'tuples list'",
+        b_tuples = BLOC(condition = "TF_Input == 'tuples list'",
 
-                       Values = SIMP ( statut = 'o',
+                       TF_Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
                                        max = '**',
                                        min = 2,
@@ -680,6 +683,62 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                       ), #fin du block Tuples List
                             
         ), #fin du FACT Transfer Function
+
+  ), #fin du bloc generator level
+
+
+  b_gener_avail = BLOC (condition= "Type == 'Generator Availability'",
+
+  Law = SIMP ( statut = "o", typ = "TXM",
+                into = ( #"Exponential",
+                         #"Histogram",
+                         #"Normal",
+                         #"Rayleigh",
+                         #"PDF_from_file",
+                         #"TruncatedNormal",
+                         "TimeSeries_from_file",
+                         #"Uniform",
+                         "UserDefined",
+                         #"Weibull",
+                         ),
+                fr = "Choix du type de la loi marginale",
+                ang = "1D marginal distribution",
+                defaut="UserDefined",
+                ),
+
+                      
+#====
+# Definition des parametres selon le type de la loi
+#====
+
+
+  TimeSeries = BLOC ( condition = " Law in ( 'TimeSeries_from_file', ) ",
+             
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "Fichier CSV d'une serie temporelle",
+                    ang = "CSV file of a time series",
+                    ),
+              ),
+
+
+   USERDEFINED = BLOC ( condition = " Law in ( 'UserDefined', ) ",
+
+                       # Il faut definir une collection de couples ( x,p ) 
+                       Values = SIMP ( statut = 'o',
+                                       typ = Tuple(2),
+                                       max = '**', 
+                                       fr = "Liste de couples : (valeur, prob.)",
+                                       ang = "List of pairs : (value, prob.)",
+                                       validators=VerifTypeTuple(('R','R')),
+                                       defaut=((0,0.0),(1,1.0)),
+                                       ),
+
+  ), # Fin BLOC USERDEFINED
+                        
+
+  ), #fin du bloc generator avail
+  
 
   ), #fin du bloc generateur
                       
@@ -699,11 +758,14 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
   Load       = SIMP(statut='o',typ=sd_charge,max="**", homo="SansOrdreNiDoublon",),
 
+
+  b_charge_level = BLOC (condition = "Type == 'Load Level'",
+                         
   Law = SIMP ( statut = "o", typ = "TXM",
                 into = ( "Exponential",
                          "Histogram",
                          "Normal",
-                         "Rayleigh",
+                         #"Rayleigh",
                          "PDF_from_file",
                          "TruncatedNormal",
                          "TimeSeries_from_file",
@@ -803,8 +865,8 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
              
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
-                    fr = "Nom du modele physique",
-                    ang = "Physical model identifier",
+                    fr = "Nom du fichier .csv",
+                    ang = ".csv file name",
                     ),
               ),
               
@@ -947,6 +1009,61 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
     ), # Fin BLOC WEIBULL
 
+  ), #fin du block Load Level
+
+
+  b_charge_avail = BLOC (condition = "Type == 'Load Availability'",
+                         
+  Law = SIMP ( statut = "o", typ = "TXM",
+                into = ( #"Exponential",
+                         #"Histogram",
+                         #"Normal",
+                         #"Rayleigh",
+                         #"PDF_from_file",
+                         #"TruncatedNormal",
+                         "TimeSeries_from_file",
+                         #"Uniform",
+                         "UserDefined",
+                         #"Weibull",
+                         ),
+                fr = "Choix du type de la loi marginale",
+                ang = "1D marginal distribution",
+                defaut = "UserDefined",
+                ),
+
+                      
+#====
+# Definition des parametres selon le type de la loi
+#====
+
+  TimeSeries = BLOC ( condition = " Law in ( 'TimeSeries_from_file', ) ",
+             
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "Fichier CSV d'une serie temporelle",
+                    ang = "CSV file of a time series",
+                    ),
+              ),
+
+
+
+   USERDEFINED = BLOC ( condition = " Law in ( 'UserDefined', ) ",
+
+                       # Il faut definir une collection de couples ( x,p ) 
+                       Values = SIMP ( statut = 'o',
+                                       typ = Tuple(2),
+                                       max = '**', 
+                                       fr = "Liste de couples : (valeur, probabilite)",
+                                       ang = "List of pairs : (value, probability)",
+                                       validators=VerifTypeTuple(('R','R')),
+                                       defaut=((0,0.0),(1,1.0)),
+                                       ),
+
+  ), # Fin BLOC USERDEFINED
+
+
+  ), #fin du block Load Avail
+        
 
   ), #fin du bloc charge
  
@@ -974,7 +1091,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                          #"Rayleigh",
                          #"PDF_from_file",
                          #"TruncatedNormal",
-                         #"TimeSeries_from_file",
+                         "TimeSeries_from_file",
                          #"Uniform",
                          "UserDefined",
                          #"Weibull",
@@ -1072,8 +1189,8 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
              
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
-                    fr = "Nom du modele physique",
-                    ang = "Physical model identifier",
+                    fr = "Nom du fichier .csv",
+                    ang = ".csv file name",
                     ),
               ),
               
@@ -1254,7 +1371,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                          #"PDF_from_file",
                          #"Triangular",
                          #"TruncatedNormal",
-                         #"TimeSeries_from_file",
+                         "TimeSeries_from_file",
                          #"Uniform",
                          "UserDefined",
                          #"Weibull",
@@ -1747,8 +1864,8 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
              
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
-                    fr = "Nom du modele physique",
-                    ang = "Physical model identifier",
+                    fr = "Nom du fichier .csv",
+                    ang = ".csv file name",
                     ),
               ),
               

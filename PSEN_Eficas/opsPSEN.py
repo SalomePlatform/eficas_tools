@@ -18,8 +18,8 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-#from ExtractGeneratorLoadLineandTransfoDico import ExtractGeneratorLoadLineandTransfoDico
-from ExtractGeneratorLoadLineandTransfoDico import ExtractGeneratorLoadLineandTransfoDico2
+from ExtractGeneratorLoadLineandTransfoDico import ExtractGeneratorLoadLineandTransfoDico
+#from ExtractGeneratorLoadLineandTransfoDico import ExtractGeneratorLoadLineandTransfoDico2
 
 def INCLUDE(self,PSSE_path,sav_file,**args):
    """ 

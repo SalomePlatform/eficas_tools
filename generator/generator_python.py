@@ -529,7 +529,6 @@ class PythonGenerator:
           Convertit un objet MCSIMP en une liste de chaines de caracteres a la
           syntaxe python
       """
-      if obj.isInformation() : return ""
       waitTuple=0
       if type(obj.valeur) in (types.TupleType,types.ListType) :
          s = ''

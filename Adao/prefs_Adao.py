@@ -15,7 +15,7 @@ encoding='iso-8859-1'
 # format du Tuple (code,version,catalogue,formatOut, finit par defaut Ãventuellement)
 catalogues = (
 # ('Adao','V1',os.path.join(repIni,'ADAO_Cata_V1.py'),'python','python'),
- ('Adao','V760',os.path.join(repIni,'ADAO_Cata_V0_V7_6_0.py'),'python','python'),
+ ('Adao','V770',os.path.join(repIni,'ADAO_Cata_V0_V7_7_0.py'),'python','python'),
 # ('Adao','V751',os.path.join(repIni,'ADAO_Cata_V0_V7_5_1.py'),'python','python'),
 )
 

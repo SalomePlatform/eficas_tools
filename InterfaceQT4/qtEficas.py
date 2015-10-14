@@ -63,7 +63,6 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ficRecents={}
         self.listeAEnlever=[]
         self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND','MT']
-        #self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'../Editeur/icons')
         self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
 
         if self.salome:

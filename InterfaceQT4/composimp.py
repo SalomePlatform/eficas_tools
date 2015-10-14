@@ -115,6 +115,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                from monWidgetSDCOInto import MonWidgetSDCOInto
                widget=MonWidgetSDCOInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_assd():
+            print self.item.get_sd_avant_du_bon_type()
             if len(self.item.get_sd_avant_du_bon_type()) == 0 :
                from monWidgetVide import MonWidgetVide
                widget=MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
@@ -147,6 +148,9 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
           if self.item.wait_assd() and self.item.is_list_SansOrdreNiDoublon():
                from monWidgetPlusieursInto import MonWidgetPlusieursInto
                widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+          elif self.item.wait_assd() :
+               from monWidgetPlusieursASSDIntoOrdonne import MonWidgetPlusieursASSDIntoOrdonne
+               widget=MonWidgetPlusieursASSDIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_tuple() :
             if self.item.object.definition.type[0].ntuple == 2:
                from monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2

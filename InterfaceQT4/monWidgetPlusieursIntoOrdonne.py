@@ -41,18 +41,16 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         #print "MonWidgetPlusieursInto", nom, self
         self.nomLine="LEResultat"
         self.listeLE=[]
+        self.ouAjouter=0
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
-        self.parentQt.commandesLayout.insertWidget(-1,self)
         try :
           self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
         except :
           # cas ou on ne peut rien ajouter
           pass 
-        self.ouAjouter=0
         self.prepareListeResultat()
         self.adjustSize()
-        self.vScrollBarRE = self.scrollAreaRE.verticalScrollBar()
         if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon
           fichier=os.path.join(repIcon, 'arrow_up.png')
@@ -62,12 +60,13 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           fichier2=os.path.join(repIcon, 'arrow_down.png')
           icon2 = QIcon(fichier2)
           self.RBBas.setIcon(icon2)
+        self.parentQt.commandesLayout.insertWidget(-1,self)
 
        
-  def setValeurs(self):
-       for i in self.listeLE:
-           i.close()
+  def prepareListeResultat(self):
+       for i in self.listeLE: i.close()
        self.listeLE=[]
+       self.vScrollBar = self.scrollArea.verticalScrollBar()
        listeValeursCourantes=self.node.item.GetListeValeurs()
        if hasattr(self.node.item.definition.validators,'set_MCSimp'):
             obj=self.node.item.getObject()
@@ -80,12 +79,16 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
             else: 
                self.listeAAfficher=self.node.item.get_liste_possible([])
        else :
-               self.listeAAfficher=self.node.item.get_liste_possible(listeValeursCourantes)
+            print self.node.item.get_liste_possible
+            self.listeAAfficher=self.node.item.get_liste_possible(listeValeursCourantes)
 
+       if self.listeAAfficher==[] : 
+          self.ajoutLE(0)
+          return
+       print self.listeAAfficher
        if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
        else : self.setMinimumHeight(len(self.listeAAfficher)*30)
 
-       self.vScrollBar = self.scrollArea.verticalScrollBar()
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        for i in range(1,len(self.listeAAfficher)+1): self.ajoutLE(i)
        for i in range(len(self.listeAAfficher)):
@@ -94,7 +97,8 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
            courant.setText(str(self.listeAAfficher[i]))
        self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)
        
-  def prepareListeResultat(self):
+      
+  def setValeurs(self):
        listeValeursCourantes=self.node.item.GetListeValeurs()
        if self.monSimpDef.max == "**" : aConstruire=7
        else                           : aConstruire=self.monSimpDef.max
@@ -126,7 +130,8 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       nouveauLE.setReadOnly(True)
       if index % 2 == 1 : nouveauLE.setStyleSheet("background:rgb(210,210,210)")
       else :	          nouveauLE.setStyleSheet("background:rgb(240,240,240)")
-      self.vScrollBar.triggerAction(QScrollBar.SliderToMaximum)
+      self.vScrollBarRE = self.scrollAreaRE.verticalScrollBar()
+      self.vScrollBarRE.triggerAction(QScrollBar.SliderToMaximum)
       setattr(self,nomLE,nouveauLE)
       self.estVisibleRE=nouveauLE
       if valeur != None : 
