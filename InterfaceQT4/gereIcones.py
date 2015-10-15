@@ -122,7 +122,7 @@ class FacultatifOuOptionnel:
 
   def setRun(self):
       if hasattr(self.editor.appliEficas, 'mesScripts'):
-         if self.tree.currentItem().item.get_nom() in self.appliEficas.mesScripts.dict_commandes.keys() :
+         if self.editor.tree.currentItem().item.get_nom() in self.appliEficas.mesScripts.dict_commandes.keys() :
                print 'il faut programmer le self.ajoutScript()'
                print '#PNPNPNPN'
                return

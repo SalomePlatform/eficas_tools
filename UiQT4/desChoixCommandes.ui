@@ -150,6 +150,9 @@
             <height>35</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>selectionne les mots qui CONTIENNENT l expression</string>
+          </property>
           <property name="frameShape">
            <enum>QFrame::Box</enum>
           </property>
@@ -195,14 +198,17 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QRadioButton" name="radioButton">
+           <widget class="QRadioButton" name="RBCasse">
             <property name="text">
              <string>Sensible à la casse</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="BImportTout">
+           <widget class="QPushButton" name="RBClear">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -220,6 +226,9 @@
               <width>200</width>
               <height>40</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>ré-affiche toutes les commandes</string>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color:rgb(104,110,149);

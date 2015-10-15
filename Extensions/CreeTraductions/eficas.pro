@@ -143,6 +143,7 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../InterfaceQT4/monWidgetOptionnel.py \
           ../../InterfaceQT4/monWidgetParam.py \
           ../../InterfaceQT4/monWidgetPlusieursBase.py \
+          ../../InterfaceQT4/monWidgetPlusieursASSDIntoOrdonne.py\
           ../../InterfaceQT4/monWidgetPlusieursIntoOrdonne.py \
           ../../InterfaceQT4/monWidgetPlusieursInto.py \
           ../../InterfaceQT4/monWidgetPlusieursTuple2.py \

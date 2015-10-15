@@ -55,6 +55,8 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       self.connect(self.RBalpha,SIGNAL("clicked()"),self.afficheAlpha)
       self.connect(self.RBGroupe,SIGNAL("clicked()"),self.afficheGroupe)
       self.connect(self.RBOrdre,SIGNAL("clicked()"),self.afficheOrdre)
+      self.connect(self.RBClear,SIGNAL("clicked()"),self.clearFiltre)
+      self.connect(self.RBCasse,SIGNAL("toggled(bool)"),self.ajouteRadioButtons)
       if self.node.tree.item.get_regles() == () :
          self.RBRegle.close()
          self.labelRegle.close()
@@ -68,7 +70,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
          self.editor.widgetOptionnel.close()
          self.editor.widgetOptionnel=None
       self.name=None
-      self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.AjouteRadioButton)
+      self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.ajouteRadioButtons)
 
       self.affiche_alpha=0
       self.affiche_groupe=0
@@ -94,19 +96,19 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       self.affiche_alpha=1
       self.affiche_groupe=0
       self.affiche_ordre=0
-      self.AjouteRadioButton()
+      self.ajouteRadioButtons()
 
   def afficheGroupe(self):
       self.affiche_alpha=0
       self.affiche_groupe=1
       self.affiche_ordre=0
-      self.AjouteRadioButton()
+      self.ajouteRadioButtons()
 
   def afficheOrdre(self):
       self.affiche_alpha=0
       self.affiche_groupe=0
       self.affiche_ordre=1
-      self.AjouteRadioButton()
+      self.ajouteRadioButtons()
 
   def mouseDoubleClickEvent(self,event):
       nodeCourrant=self.node.tree.currentItem()
@@ -133,8 +135,9 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       event.accept()
       
 
-  def CreeListeCommande(self,filtre):
+  def creeListeCommande(self,filtre):
       listeGroupes,dictGroupes=self.jdc.get_groups()
+      sensibleALaCasse=self.RBCasse.isChecked()
       if "CACHE" in dictGroupes.keys():
          aExclure=dictGroupes["CACHE"]
       else:
@@ -142,11 +145,12 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       listeACreer=[]
       for l in self.jdc.get_liste_cmd():
          if l not in aExclure : 
-            if filtre != None and not filtre in l : continue
+            if sensibleALaCasse and (filtre != None and not filtre in l) : continue
+            if (not sensibleALaCasse) and filtre != None and (not filtre in l) and (not filtre.upper() in l) : continue
             listeACreer.append(l)
       return listeACreer
 
-  def AjouteRadioButton(self):
+  def ajouteRadioButtons(self):
       filtre=str(self.LEFiltre.text())
       if filtre==str("") : filtre=None
       if hasattr(self,'buttonGroup') :
@@ -159,7 +163,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
          w.close()
       self.listeWidget=[]
       if self.affiche_alpha==1 :
-         liste=self.CreeListeCommande(filtre)
+         liste=self.creeListeCommande(filtre)
          for cmd in liste :
            rbcmd=(QRadioButton(tr(cmd)))
            self.buttonGroup.addButton(rbcmd)
@@ -175,8 +179,10 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            label.setText(text)
            self.listeWidget.append(label)
            aAjouter=1
+           sensibleALaCasse=self.RBCasse.isChecked()
            for cmd in  dictGroupes[grp]:
-              if filtre != None and not filtre in cmd : continue
+              if sensibleALaCasse and (filtre != None and not filtre in cmd) : continue
+              if (not sensibleALaCasse) and filtre != None and (not filtre in cmd) and (not filtre.upper() in cmd) : continue
               if aAjouter == 1 :
                  self.commandesLayout.addWidget(label)
                  aAjouter=0
@@ -190,7 +196,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            self.listeWidget.append(label2)
            self.commandesLayout.addWidget(label2)
       elif  self.affiche_ordre==1 :
-         listeFiltre=self.CreeListeCommande(filtre)
+         listeFiltre=self.creeListeCommande(filtre)
          liste=[]
          if self.editor.Ordre_Des_Commandes == None : Ordre_Des_Commandes=listeFiltre
          else : Ordre_Des_Commandes=self.editor.Ordre_Des_Commandes
@@ -205,9 +211,10 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique) 
 
      
-  def LEfiltreReturnPressed(self):
-      self.AjouteRadioButton(filtre)
 
+  def clearFiltre(self):
+      self.LEFiltre.setText("")
+      self.ajouteRadioButtons()
 
   def rbClique(self,id):
       self.name=str(id.text().toLatin1())

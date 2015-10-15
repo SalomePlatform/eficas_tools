@@ -80,7 +80,7 @@ ask eficas team
         <translation>error when searching argument&apos;s command :</translation>
     </message>
     <message>
-        <location filename="../../Editeur/Objecttreeitem.py" line="303"/>
+        <location filename="../../Editeur/Objecttreeitem.py" line="304"/>
         <source>%d n&apos;est pas un index valide pour append_brother</source>
         <translation>%d is not a valid  index for append-brother</translation>
     </message>
@@ -310,7 +310,7 @@ ask eficas team
         <translation>Concept&apos;s name %s is already existing!</translation>
     </message>
     <message>
-        <location filename="../../generator/Formatage.py" line="127"/>
+        <location filename="../../generator/Formatage.py" line="129"/>
         <source>ERREUR</source>
         <translation>ERROR</translation>
     </message>
@@ -439,7 +439,7 @@ ask eficas team
         <translation>Name is refused : already existing concept</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="54"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="52"/>
         <source>Nommage du concept effectue</source>
         <translation>Concept named</translation>
     </message>
@@ -617,22 +617,22 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Object %s cannot be add</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="257"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="258"/>
         <source>None n&apos;est pas une valeur autorisee</source>
         <translation>None is not a valid value</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="489"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="490"/>
         <source>un concept de meme nom existe deja</source>
         <translation>concept already exists</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="511"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="512"/>
         <source>Concept cree</source>
         <translation>concept created</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="642"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="643"/>
         <source>La matrice n&apos;est pas une matrice %(n_lign)d sur %(n_col)d</source>
         <comment>n_lign</comment>
         <translation>matrix is not a %(n_lign)d x %(n_col)d matrix</translation>
@@ -648,84 +648,84 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>uncomment the command</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compofact.py" line="136"/>
+        <location filename="../../InterfaceQT4/compofact.py" line="133"/>
         <source>Impossible de supprimer un mot-cle obligatoire </source>
         <translation>mandatory keyword cannot be deleted</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compofact.py" line="140"/>
+        <location filename="../../InterfaceQT4/compofact.py" line="136"/>
         <source>Mot-cle %s supprime</source>
         <translation>Keyword %s deleted</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compofact.py" line="144"/>
+        <location filename="../../InterfaceQT4/compofact.py" line="141"/>
         <source>Pb interne : impossible de supprimer ce mot-cle</source>
         <translation>internal problem : unable to delete keyword</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compojdc.py" line="94"/>
+        <location filename="../../InterfaceQT4/compojdc.py" line="86"/>
         <source>Commentaire supprime</source>
         <translation>comment is deleted</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compojdc.py" line="96"/>
+        <location filename="../../InterfaceQT4/compojdc.py" line="88"/>
         <source>Commande %s supprimee</source>
         <translation>command %s is deleted</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compojdc.py" line="100"/>
+        <location filename="../../InterfaceQT4/compojdc.py" line="91"/>
         <source>Pb interne : impossible de supprimer cet objet</source>
         <translation>internal problem : unable to delete object</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compomacro.py" line="134"/>
+        <location filename="../../InterfaceQT4/compomacro.py" line="125"/>
         <source>Le fichier de commande n&apos;a pas pu etre converti pour etre editable par Eficas
 
 </source>
         <translation>unable to convert .comm file in order to open it with Eficas</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compomacro.py" line="166"/>
+        <location filename="../../InterfaceQT4/compomacro.py" line="157"/>
         <source>Include vide</source>
         <translation>include file is empty</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compomacro.py" line="166"/>
+        <location filename="../../InterfaceQT4/compomacro.py" line="157"/>
         <source>L&apos;include doit etre correctement initialise pour etre visualise</source>
         <translation>include file must be correct</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compomclist.py" line="234"/>
+        <location filename="../../InterfaceQT4/compomclist.py" line="223"/>
         <source>Impossible de supprimer ce mot-clef</source>
         <translation>unable to delete this keyword</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="74"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="67"/>
         <source>View3D</source>
         <translation>View3D</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="76"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="69"/>
         <source>affiche dans Geom les elements de structure</source>
         <translation>diplay SE in Geom</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="83"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="76"/>
         <source>Graphique</source>
         <translation>graphic</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="85"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="78"/>
         <source>affiche la distribution </source>
         <translation>display distribution</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="207"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="201"/>
         <source>Impossible de supprimer un mot-clef obligatoire </source>
         <translation>unable to delete a mandatory keyword</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="210"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="203"/>
         <source>Mot-clef %s supprime </source>
         <translation>Keyword %s is deleted</translation>
     </message>
@@ -745,97 +745,97 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Error when reading configuration file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="190"/>
+        <location filename="../../InterfaceQT4/editor.py" line="191"/>
         <source>Erreur fatale au chargement de %s</source>
         <translation>fatal error when loading %s</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="191"/>
+        <location filename="../../InterfaceQT4/editor.py" line="192"/>
         <source>Erreur fatale au chargement d&apos;un fichier</source>
         <translation>Fatal error when loading file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="324"/>
+        <location filename="../../InterfaceQT4/editor.py" line="323"/>
         <source>fichier modifie</source>
         <translation>file updated </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="324"/>
+        <location filename="../../InterfaceQT4/editor.py" line="323"/>
         <source>Attention! fichier change hors EFICAS</source>
         <translation>Warning ! this file was modified outside Eficas</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="378"/>
+        <location filename="../../InterfaceQT4/editor.py" line="377"/>
         <source>Type de fichier non reconnu</source>
         <translation>unsupported file type</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="335"/>
+        <location filename="../../InterfaceQT4/editor.py" line="334"/>
         <source>EFICAS ne sait pas ouvrir le type de fichier %s</source>
         <translation>Eficas is not able to open this file&apos;s type : %s</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="378"/>
+        <location filename="../../InterfaceQT4/editor.py" line="377"/>
         <source>EFICAS ne sait pas ouvrir ce type de fichier</source>
         <translation>Eficas is not able to open this file&apos;s type</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="614"/>
+        <location filename="../../InterfaceQT4/editor.py" line="612"/>
         <source>Copie impossible</source>
         <translation>unable to copy</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="588"/>
+        <location filename="../../InterfaceQT4/editor.py" line="586"/>
         <source>Veuillez selectionner un objet a copier</source>
         <translation>you have to select an object to copy</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="593"/>
+        <location filename="../../InterfaceQT4/editor.py" line="591"/>
         <source>Veuillez selectionner un seul objet : la copie se fera apres le noeud selectionne</source>
         <translation>You have to select a single object : copy will be done after the selected node</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="614"/>
+        <location filename="../../InterfaceQT4/editor.py" line="612"/>
         <source>Aucun Objet n a ete copie ou coupe</source>
         <translation>No object was cut or copied</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="638"/>
+        <location filename="../../InterfaceQT4/editor.py" line="636"/>
         <source>Copie refusee</source>
         <translation>rejected copy</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="624"/>
+        <location filename="../../InterfaceQT4/editor.py" line="622"/>
         <source>Eficas n a pas reussi a copier l objet</source>
         <translation>Eficas cannot copy this object</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="638"/>
+        <location filename="../../InterfaceQT4/editor.py" line="636"/>
         <source>Copie refusee pour ce type d objet</source>
         <translation>Copy rejected : bad object type</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="650"/>
+        <location filename="../../InterfaceQT4/editor.py" line="648"/>
         <source>Deplacement refuse</source>
         <translation>move rejected</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="650"/>
+        <location filename="../../InterfaceQT4/editor.py" line="648"/>
         <source>Deplacement refuse entre 2 fichiers. Seule la copie est autorisee </source>
         <translation>move rejected. no move between two files : only copy is available</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="685"/>
+        <location filename="../../InterfaceQT4/editor.py" line="683"/>
         <source>Copie impossible a cet endroit</source>
         <translation>unable to copy here</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="685"/>
+        <location filename="../../InterfaceQT4/editor.py" line="683"/>
         <source>Veuillez selectionner une commande, un parametre, un commentaire ou une macro</source>
         <translation>select a command; a parameter, a comment or a macro</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="746"/>
+        <location filename="../../InterfaceQT4/editor.py" line="744"/>
         <source>Choix d&apos;un fichier XML</source>
         <translation>Choice of XML file</translation>
     </message>
@@ -845,67 +845,67 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Open file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1037"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1035"/>
         <source>Erreur a la generation</source>
         <translation>Error when generating</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1037"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1035"/>
         <source>EFICAS ne sait pas convertir ce JDC</source>
         <translation>Eficas is unable to convert JDC</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1041"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1039"/>
         <source>Format %s non reconnu</source>
         <translation> not supported format %s</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="896"/>
+        <location filename="../../InterfaceQT4/editor.py" line="894"/>
         <source>Execution impossible </source>
         <translation>Unable to execute</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="833"/>
+        <location filename="../../InterfaceQT4/editor.py" line="831"/>
         <source>le JDC doit etre valide pour une execution MAP</source>
         <translation>JDC has to be valid before run</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="836"/>
+        <location filename="../../InterfaceQT4/editor.py" line="834"/>
         <source>le JDC doit contenir un et un seul composant</source>
         <translation>JDC must contains a single componant</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="936"/>
+        <location filename="../../InterfaceQT4/editor.py" line="934"/>
         <source>sauvegarde</source>
         <translation>save</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="945"/>
+        <location filename="../../InterfaceQT4/editor.py" line="943"/>
         <source>Sauvegarde du Fichier</source>
         <translation>save file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="945"/>
+        <location filename="../../InterfaceQT4/editor.py" line="943"/>
         <source>Le fichier &lt;b&gt;%s&lt;/b&gt; existe deja.</source>
         <translation>file  &lt;b&gt;%s&lt;/b&gt; already exists.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="945"/>
+        <location filename="../../InterfaceQT4/editor.py" line="943"/>
         <source>&amp;Ecraser</source>
         <translation>&amp;Replace</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1179"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1177"/>
         <source>Donnez le nom du fichier correspondant a l unite logique </source>
         <translation>Choose file corresponding to unit </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1182"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1180"/>
         <source>Choix d&apos;un fichier de poursuite</source>
         <translation>Choose poursuite file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1183"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1181"/>
         <source>Le fichier %s contient une commande POURSUITE
 </source>
         <translation>file %s contains a POURSUITE command</translation>
@@ -1387,38 +1387,38 @@ Le fichier associe n&apos;est pas defini</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="430"/>
+        <location filename="../../InterfaceQT4/browser.py" line="420"/>
         <source>  n&apos;est pas un index valide pour append_brother</source>
         <translation>is not correct - no possible &quot;append_brother&quot;</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="121"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="114"/>
         <source>Erreur interne</source>
         <translation>Internal error</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="121"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="114"/>
         <source>La PDF de la loi ne peut pas etre affichee.</source>
         <translation>unable to display law&apos;s PDF.</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="747"/>
+        <location filename="../../InterfaceQT4/editor.py" line="745"/>
         <source>Le fichier contient une commande MODEL
 </source>
         <translation>file contains MODEL command </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="748"/>
+        <location filename="../../InterfaceQT4/editor.py" line="746"/>
         <source>Donnez le nom du fichier XML qui contient la description des variables</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1177"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1175"/>
         <source>Choix unite %d </source>
         <translation>Choice for unit %d</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1180"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1178"/>
         <source>Fichier pour unite </source>
         <translation>File for unit </translation>
     </message>
@@ -1464,7 +1464,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>unable to verify formula</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/compooper.py" line="214"/>
+        <location filename="../../InterfaceQT4/compooper.py" line="208"/>
         <source>Pb interne : impossible de supprimer ce mot-clef</source>
         <translation>internal problem : unable to delete keyword</translation>
     </message>
@@ -1585,99 +1585,99 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>PARAMETER</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1042"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1040"/>
         <source>EFICAS ne sait pas convertir le JDC selon le format </source>
         <translation>Eficas does not know how to convert data according to the defined format</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="872"/>
+        <location filename="../../InterfaceQT4/editor.py" line="870"/>
         <source>le JDC doit etre valide pour une execution </source>
         <translation>Before a run action, JDC must be valid</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="896"/>
+        <location filename="../../InterfaceQT4/editor.py" line="894"/>
         <source>Sauvegarder SVP avant l&apos;execution </source>
         <translation>Save before run action</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1021"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1019"/>
         <source>Sauvegarde de l&apos;input impossible </source>
         <translation>unable to save input file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1021"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1019"/>
         <source>Un JdC valide est necessaire pour creer un .input</source>
         <translation>file must be valid to create a .input file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="965"/>
+        <location filename="../../InterfaceQT4/editor.py" line="963"/>
         <source>Choix du composant obligatoire</source>
         <translation>You have to choose a component</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1178"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1176"/>
         <source>Le fichier %s contient une commande INCLUDE 
 </source>
         <translation>file %s contains an &quot;INCLUDE&quot; command</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1184"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1182"/>
         <source>Donnez le nom du fichier dont vous 
  voulez faire une poursuite</source>
         <translation>Name the principal file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1312"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1310"/>
         <source>Fichiers Med (*.med);;Tous les Fichiers (*)</source>
         <translation>Med Files (*.med);;All Files(*)</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1315"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1313"/>
         <source>Fichier Med</source>
         <translation>Med File</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1315"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1313"/>
         <source>Veuillez selectionner un fichier Med</source>
         <translation>Choose a Med file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="135"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="138"/>
         <source>chaine de caracteres</source>
         <translation>string</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="136"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="139"/>
         <source>reel</source>
         <translation>float</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="137"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="140"/>
         <source>entier</source>
         <translation>integer</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="138"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="141"/>
         <source>complexe</source>
         <translation>complex</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="139"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="142"/>
         <source>Matrice</source>
         <translation>matrix</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="140"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="143"/>
         <source>fichier</source>
         <translation>file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="141"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="144"/>
         <source>fichier existant</source>
         <translation>existing file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="142"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="145"/>
         <source>repertoire</source>
         <translation>directory</translation>
     </message>
@@ -1738,7 +1738,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>Value is not authorized</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="390"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="389"/>
         <source>Accquisition Groupe Maille</source>
         <translation>acquier mesh groups</translation>
     </message>
@@ -1863,12 +1863,12 @@ Le fichier associe n&apos;est pas defini</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereListe.py" line="194"/>
+        <location filename="../../InterfaceQT4/gereListe.py" line="198"/>
         <source>Fichier de donnees</source>
         <translation>data file</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereListe.py" line="194"/>
+        <location filename="../../InterfaceQT4/gereListe.py" line="198"/>
         <source>Tous les  Fichiers (*)</source>
         <translation>all files (*)</translation>
     </message>
@@ -1888,17 +1888,17 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>maximum number of values</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="368"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="367"/>
         <source>TraduitV10V11</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="371"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="370"/>
         <source>TraduitV11V12</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="373"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="372"/>
         <source>Sauve Format Ligne</source>
         <translation>save file in line format</translation>
     </message>
@@ -2153,12 +2153,12 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>values</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="87"/>
+        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="96"/>
         <source>Valeur incorrecte</source>
         <translation>incorrect value</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="96"/>
+        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="105"/>
         <source> n est pas un identifiant correct
  </source>
         <translation>is not a valid name</translation>
@@ -2229,32 +2229,32 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>is not correct</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="87"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="91"/>
         <source>Modification Impossible</source>
         <translation>unable to modify</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="87"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="91"/>
         <source>le parametre n&apos;est pas valide</source>
         <translation>parameter is not valid</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="101"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="105"/>
         <source> n est pas un identifiant correct</source>
         <translation>is not a correct name</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="120"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="124"/>
         <source>Valeur incorrecte: </source>
         <translation>incorrect value :</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="123"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="127"/>
         <source>Valeur incorrecte </source>
         <translation>incorrect value</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="126"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="130"/>
         <source>Valeur correcte </source>
         <translation>valid value</translation>
     </message>
@@ -2269,38 +2269,38 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>already existing concept with name : %s !</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="74"/>
+        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="78"/>
         <source>La Creation de parametre n est possible que dans un jeu de donnees</source>
         <translation>parameter have to be created inside a JDC (a context)</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="100"/>
+        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="109"/>
         <source> existe deja
  </source>
         <translation>already exists</translation>
     </message>
     <message>
-        <location filename="../../Ihm/I_MCSIMP.py" line="623"/>
+        <location filename="../../Ihm/I_MCSIMP.py" line="624"/>
         <source>La matrice n&apos;a pas le bon entete</source>
         <translation>header does not match with matrix</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="458"/>
+        <location filename="../../InterfaceQT4/browser.py" line="448"/>
         <source>le mot clef </source>
         <translation>keyword </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="450"/>
+        <location filename="../../InterfaceQT4/browser.py" line="440"/>
         <source> doit etre insere avant </source>
         <translation> has to be inserted before </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="459"/>
+        <location filename="../../InterfaceQT4/browser.py" line="449"/>
         <source>insertion impossible</source>
         <translation>unable to insert keyword</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="458"/>
+        <location filename="../../InterfaceQT4/browser.py" line="448"/>
         <source> doit etre insere apres </source>
         <translation> has to be inserted after </translation>
     </message>
@@ -2361,59 +2361,79 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>DMacro</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="95"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="89"/>
         <source>Alphabetique</source>
         <translation>alphabetic sort</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="115"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="109"/>
         <source>Par Groupe</source>
         <translation>Sort by group</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="85"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="79"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Affichage&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Order&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="92"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="86"/>
         <source>affiche les commandes par ordre alphabetique</source>
         <translation>display commands in alphabetic order</translation>
     </message>
     <message utf8="true">
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="112"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="106"/>
         <source>affiche les commandes selon les thèmes</source>
         <translation>display commands by thema</translation>
     </message>
     <message utf8="true">
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="105"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="99"/>
         <source>Ordre de la modélisation</source>
         <translation>ordered by modelisation</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="163"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="166"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Filtre Commande&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Filters Commands&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="185"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="188"/>
         <source>filter commands</source>
         <translation>filters commands</translation>
     </message>
     <message utf8="true">
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="248"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="283"/>
         <source>affiche les régles de validité</source>
         <translation>display validity rules</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="254"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="289"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message utf8="true">
-        <location filename="../../UiQT4/desChoixCommandes.ui" line="271"/>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="306"/>
         <source>Règles de construction</source>
         <translation>Building Rules</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="203"/>
+        <source>Sensible à la casse</source>
+        <translation>case-sensitive</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="240"/>
+        <source>Effacer </source>
+        <translation>Clear</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="154"/>
+        <source>selectionne les mots qui CONTIENNENT l expression</source>
+        <translation>select words that CONTAINS the filter</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desChoixCommandes.ui" line="231"/>
+        <source>ré-affiche toutes les commandes</source>
+        <translation>re-display the list of commands</translation>
     </message>
 </context>
 <context>
@@ -2451,37 +2471,37 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>DSelVal</name>
     <message utf8="true">
-        <location filename="../../UiQT4/desSelectVal.ui" line="14"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="20"/>
         <source>Sélection de valeurs</source>
         <translation>Values Selections</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desSelectVal.ui" line="45"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="72"/>
         <source>Separateur</source>
         <translation>marker</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desSelectVal.ui" line="54"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="114"/>
         <source>espace</source>
         <translation>space</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desSelectVal.ui" line="64"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="124"/>
         <source>virgule</source>
         <translation>comma</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desSelectVal.ui" line="71"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="131"/>
         <source>point-virgule</source>
         <translation>semi-colon</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desSelectVal.ui" line="108"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="238"/>
         <source>Ajouter Selection</source>
         <translation>add selected value</translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desSelectVal.ui" line="127"/>
+        <location filename="../../UiQT4/desSelectVal.ui" line="207"/>
         <source>Importer Tout</source>
         <translation>imports all values</translation>
     </message>
@@ -2772,7 +2792,7 @@ p, li { white-space: pre-wrap; }
         <translation>Save run</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="175"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="174"/>
         <source>Run</source>
         <translation>run</translation>
     </message>
@@ -2790,22 +2810,22 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>JDCEditor</name>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="786"/>
+        <location filename="../../InterfaceQT4/editor.py" line="784"/>
         <source>Save File</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="786"/>
+        <location filename="../../InterfaceQT4/editor.py" line="784"/>
         <source>The file &lt;b&gt;%1&lt;/b&gt; could not be saved.&lt;br&gt;Reason: %2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="931"/>
+        <location filename="../../InterfaceQT4/editor.py" line="929"/>
         <source>JDC (*.comm);;All Files (*)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="945"/>
+        <location filename="../../InterfaceQT4/editor.py" line="943"/>
         <source>&amp;Abandonner</source>
         <translation>&amp;Cancel</translation>
     </message>
@@ -3186,17 +3206,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/desWidgetOptionnel.ui" line="190"/>
         <source>validation de la saisie</source>
-        <translation>Entry Validation</translation>
+        <translation type="obsolete">Entry Validation</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desWidgetOptionnel.ui" line="199"/>
         <source>&amp;Ajouter</source>
-        <translation>&amp;Add</translation>
+        <translation type="obsolete">&amp;Add</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desWidgetOptionnel.ui" line="202"/>
         <source>Shift+A, Alt+A, Alt+A, Alt+A</source>
-        <translation>Shift+A, Alt+A, Alt+A, Alt+A</translation>
+        <translation type="obsolete">Shift+A, Alt+A, Alt+A, Alt+A</translation>
     </message>
     <message>
         <location filename="../../UiQT4/desWidgetOptionnel.ui" line="26"/>
@@ -3980,7 +4000,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>self.appliEficas</name>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="751"/>
+        <location filename="../../InterfaceQT4/editor.py" line="749"/>
         <source>Wrapper Files (*.xml);;All Files (*)</source>
         <translation></translation>
     </message>
