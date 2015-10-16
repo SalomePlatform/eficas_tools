@@ -5,7 +5,7 @@
     <parameter name="icon"    value="eficas.png"/>
     <parameter name="library" value="SalomePyQtGUI"/>
     <parameter name="documentation" value="eficas_help"/>
-    <parameter name="version" value="7.6.0"/>
+    <parameter name="version" value="7.7.0"/>
   </section>
   <section name="resources">
     <!-- Module resources -->
