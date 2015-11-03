@@ -149,6 +149,11 @@ class CARMEL3DFV0Generator(PythonGenerator):
       self.dictStrand={}
       self.dictDomaine={}
       self.dictPort={}
+      self.cutlineValeur=[]
+      self.cutplaneValeur=[]
+      self.visu3dValeur=[]
+      self.fieldmapValeur=[]
+      self.fielddumpValeur=[]
       self.repertory=""
       self.frequency=""
       self.domaine=""
@@ -303,38 +308,65 @@ class CARMEL3DFV0Generator(PythonGenerator):
         if self.debug: 
             print "MCSIMP %(v_1)s  %(v_2)s" % {'v_1': obj.nom, "v_2": obj.valeur}
         s=PythonGenerator.generMCSIMP(self,obj)
-        self.dicoCourant[obj.nom]=obj.valeurFormatee
+        try:
+            self.dicoCourant[obj.nom]=obj.valeurFormatee
+        except:
+            print "Oubli des messages texte homo='information'"
         return s
 
   
 #----------------------------------------------------------------------------------------
    def generMCFACT(self,obj) :
         """recuperation de l objet MCFACT"""
+        if self.debug:
+            print "MCFACT debut %(v_1)s  %(v_2)s" % {'v_1': unicode(obj.nom), "v_2": unicode(obj.valeur)}
         dico={}
         self.dicoMCFACTCourant=dico
         self.dicoCourant=self.dicoMCFACTCourant
         s=PythonGenerator.generMCFACT(self,obj)
-        self.dicoEtapeCourant[obj.nom]=self.dicoMCFACTCourant
+        # sauvegarde, dans self.dicoEtapeCourant, de la valeur du FACT courant, pour utilisation ultérieure dans generETAPE et generPROC_ETAPE
+        # Traitement des FACT CUTLINE et CUTPLANE multiples (max='**' dans le catalogue)
+        # Ce traitement spécial est nécessaire pour le moment car le générateur bogue sinon au niveau des matériaux (non-linéaires ?)
+        if obj.nom in ('FIELDDUMP','CUTLINE', 'CUTPLANE', 'FIELDMAP', 'VISU3D' ): 
+            # Remplissage se self.dicoEtapeCourant pour le nom du FACT courant
+            # Il ne contient qu'une seule valeur (un dictionnaire) par défaut lorsque le FACT est unique (max=1 dans le catalogue),
+            # mais il peut aussi contenir plusieurs valeurs (tableau) dans le cas contraire, e.g., max='**' dans le catalogue
+            if self.dicoEtapeCourant.has_key(obj.nom): # plusieurs valeurs
+                print "self.dicoEtapeCourant= %s"%self.dicoEtapeCourant
+                if type(self.dicoEtapeCourant[obj.nom]) == types.DictType: # une seule valeur entrée jusqu'à présent
+                    dicoMCFACTprecedent = self.dicoEtapeCourant[obj.nom] # sauvegarde de la valeur précédente
+                    print "dicoMCFACTpreceden= %s self.dicoEtapeCourant= %s"%(dicoMCFACTprecedent,self.dicoEtapeCourant) 
+                    self.dicoEtapeCourant[obj.nom] = [ dicoMCFACTprecedent, self.dicoMCFACTCourant ] # restructuration en liste et insertion de la valeur précédente et de la valeur courant
+                    print "self.dicoEtapeCourant[obj.nom]= %s"%self.dicoEtapeCourant[obj.nom]
+                else: # plusieurs valeurs entrées jusqu'à présent, sous la forme d'une liste de dictionnaires
+                    self.dicoEtapeCourant[obj.nom].append(self.dicoMCFACTCourant) # extension de la liste avec cette valeur, placée en dernier
+            else: # une seule valeur ou première valeur
+                self.dicoEtapeCourant[obj.nom]=self.dicoMCFACTCourant
+        else: # traitement usuel des FACT uniques, pour ignorer le bogue décrit plus haut
+            self.dicoEtapeCourant[obj.nom]=self.dicoMCFACTCourant
         self.dicoMCFACTCourant=None
         self.dicoCourant=self.dicoEtapeCourant
+        if self.debug:
+            print "MCFACT fin %(v_1)s  %(v_2)s" % {'v_1': unicode(obj.nom), "v_2": unicode(obj.valeur)}
         return s
 
 
 #----------------------------------------------------------------------------------------
    def generPROC_ETAPE(self,obj):
         """analyse des PROC du catalogue  ( VERSION )"""
+        if self.debug: 
+            print "PROC_ETAPE initial: %(v_1)s  %(v_2)s" % {'v_1': unicode(obj.nom), "v_2": unicode(obj.valeur)}
         dico={}
         self.dicoEtapeCourant=dico
         self.dicoCourant=self.dicoEtapeCourant
         s=PythonGenerator.generPROC_ETAPE(self,obj)
-        obj.valeur=self.dicoEtapeCourant
-        
+        obj.valeur=self.dicoEtapeCourant # on passe à obj la bonne structure générée par PythonGenerator.generPROC_ETAPE, pour le traitement de chaque partie ci-dessous
         if self.debug: 
-            print "PROC_ETAPE %(v_1)s  %(v_2)s" % {'v_1': unicode(obj.nom), "v_2": unicode(obj.valeur)}
-        s=PythonGenerator.generPROC_ETAPE(self,obj)
+            print "PROC_ETAPE mis a jour: %(v_1)s  %(v_2)s" % {'v_1': unicode(obj.nom), "v_2": unicode(obj.valeur)}
         if obj.nom=="PARAMETERS" : self.generBLOC_PARAMETERS(obj)
         if obj.nom=="SOLVEUR" : self.generSOLVEUR(obj)
         if obj.nom=="POST_COMMANDS" : self.generPOST_COMMANDS(obj)
+        s=PythonGenerator.generPROC_ETAPE(self,obj) # obj.valeur a été modifiée pour le traitement ci-dessus, alors il faut tout remettre en ordre en appelant de nouveau PythonGenerator.generPROC_ETAPE
         return s
 
 
@@ -342,19 +374,21 @@ class CARMEL3DFV0Generator(PythonGenerator):
 #----------------------------------------------------------------------------------------
    def generETAPE(self,obj):
         """analyse des OPER du catalogue"""
+        if self.debug: 
+            print "ETAPE mis a jour: obj.nom = %(v_1)s , obj.valeur= %(v_2)s" % {'v_1': obj.nom, 'v_2': obj.valeur}
         dico={}
         self.dicoEtapeCourant=dico
         self.dicoCourant=self.dicoEtapeCourant
         s=PythonGenerator.generETAPE(self,obj)
-        obj.valeur=self.dicoEtapeCourant
+        obj.valeur=self.dicoEtapeCourant # cf. generPROC_ETAPE
         if self.debug: 
-            print "ETAPE : obj.nom = %(v_1)s , obj.valeur= %(v_2)s" % {'v_1': obj.nom, 'v_2': obj.valeur}
+            print "ETAPE mis a jour: obj.nom = %(v_1)s , obj.valeur= %(v_2)s" % {'v_1': obj.nom, 'v_2': obj.valeur}
         if obj.nom=="MESHGROUP" : self.generMESHGROUP(obj)
         if obj.nom=="MATERIAL" : self.generMATERIAL(obj)
         if obj.nom=="SOURCE" : self.generSOURCE(obj)
         if obj.nom=="STRANDED_INDUCTOR_GEOMETRY" : self.generSTRANDED_INDUCTOR_GEOMETRY(obj)
         if obj.nom=="MACRO_GROUPE": self.generMACRO_GROUPE(obj)
-        s=PythonGenerator.generETAPE(self,obj)
+        s=PythonGenerator.generETAPE(self,obj) # cf. generPROC_ETAPE
         return s
 
 #----------------------------------------------------------------------------------------
@@ -412,7 +446,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
             if self.debug: 
                 print "obj.valeur.keys()= %s" % obj.valeur.keys()
             if 'MATERIAL' in obj.valeur.keys() and 'SOURCE' in obj.valeur.keys(): # test d'erreur lors de presence de materiau et source a la fois
-                raise ValueError,tr(" ce groupe de maillage %s est associe a au moins un materiau  et au moins une source." % nomGroupe)
+                raise ValueError, nomGroupe + tr(" : ce groupe de maillage ne peut pas etre associe a un materiau et une source a la fois.")
             # association a un materiau
             if 'MATERIAL' in obj.valeur.keys():
                 self.dictGroupes[nomGroupe]['MATERIAL'] = obj.valeur['MATERIAL'].nom # sauvegarde de l'association entre ce groupe de maillage et un materiau ou source, par son nom, i.e. nom du concept du materiau ou de la source
@@ -464,7 +498,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
             if self.debug: 
                 print "obj.valeur.keys()= %s" % obj.valeur.keys()
             if 'MATERIAL' in obj.valeur.keys() and 'SOURCE' in obj.valeur.keys(): # test d'erreur lors de presence de materiau et source a la fois
-                raise ValueError,tr("Ce MACRO_GROUPE %s ne peut pas contenir a la fois un MATERIAL et une SOURCE." % nomGroupe)
+                raise ValueError, nomgroupe + tr(" : ce MACRO_GROUPE ne peut pas contenir a la fois un MATERIAL et une SOURCE.")
             # association a une source
             if 'SOURCE' in obj.valeur.keys():
                 self.dictGroupes[nomGroupe]['SOURCE'] = obj.valeur['SOURCE'].nom # sauvegarde de l'association entre ce macro groupe et un materiau ou source, par son nom, i.e. nom du concept du materiau ou de la source
@@ -481,7 +515,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
                     if not self.dictGroupes[groupe].has_key('STRAND'): listeStrandedInductorGeometry = False # au moins un groupe de la liste n'est pas un inducteur bobiné ou topologique (morceau ou entier).
                 self.dictGroupes['ordreListeJdC'].append(nomGroupe) # sauvegarde du nom du macro groupe associe a une source, dans l'ordre du JdC
                 if not listeStrandedInductorGeometry: # Erreur en cas de liste ne définissant pas que des inducteurs bobinés ou topologiques en morceaux
-                    raise ValueError, tr(u"Le MACRO_GROUPE %s ne doit contenir, dans LISTE_MESHGROUP, que des morceaux d'inducteurs bobines ou topologiques." % nomGroupe)
+                    raise ValueError, nomGroupe + tr(" : ce MACRO_GROUPE ne doit contenir, dans LISTE_MESHGROUP, que des morceaux d'inducteurs bobines ou topologiques.")
                 # test de présence du domaine pour les cas appropriés d'inducteur bobiné ou topologique en morceau.
                 if 'Domaine' in obj.valeur.keys():
                     if listeStrandedInductorGeometry: # Domaine seulement  en cas de liste définissant des inducteurs bobinés ou topologiques en morceaux
@@ -492,10 +526,12 @@ class CARMEL3DFV0Generator(PythonGenerator):
                         print"le texte=%s" %(texte)
                         self.dictDomaine[obj.get_sdname()]=texte                  
                     else: # Erreur si Domaine et macro-groupe pas complètement inducteur
-                        raise ValueError, tr(u"Ce MACRO_GROUPE %s contient, dans LISTE_MESHGROUP, des groupes qui ne sont pas que des morceaux d'inducteurs bobines ou topologiques. Il ne doit pas contenir de Domaine." % nomGroupe)
+                        raise ValueError, nomGroupe + tr(" : ce MACRO_GROUPE ne doit pas contenir de Domaine car il contient, dans LISTE_MESHGROUP, des groupes qui ne sont pas que des morceaux d'inducteurs bobines ou topologiques.")
                 else: # Domaine manquant
                     if listeStrandedInductorGeometry: # Erreur en cas de liste définissant des inducteurs bobinés ou topologiques en morceaux
-                        raise ValueError, tr(u"Ce MACRO_GROUPE %s de morceaux d'inducteurs bobines ou topologiques doit contenir aussi un Domaine." % nomGroupe)
+                        raise ValueError, nomGroupe + tr(" : ce MACRO_GROUPE de morceaux d'inducteurs bobines ou topologiques doit contenir aussi un Domaine.")
+            else:
+                raise ValueError, nomGroupe + tr(" : ce MACRO_GROUPE doit contenir une liste de groupes LISTE_MESHGROUP.")
             if self.debug:
                 print "self.dictGroupes= %s" % repr(self.dictGroupes)
                 print "self.dictDomaine=%s" %(self.dictDomaine)
@@ -578,7 +614,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
        # verification des proprietes du sous bloc CONDUCTOR (PERMEABILITY, CONDUCTIVITY)
        if 'PERMEABILITY' not in obj.valeur or 'CONDUCTIVITY' not in obj.valeur:
             print "ERREUR! Le matériau conducteur (CONDUCTOR) de nom %s doit contenir les propriétés PERMEABILITY et CONDUCTIVITY." % obj.get_sdname()
-            raise ValueError, tr("ERREUR! Le materiau conducteur (CONDUCTOR) de nom %s doit contenir les proprietes PERMEABILITY et CONDUCTIVITY." % obj.get_sdname())
+            raise ValueError,  obj.get_sdname() + tr(" : ce materiau conducteur (CONDUCTOR) doit contenir les proprietes PERMEABILITY et CONDUCTIVITY.")
        else:
           # parcours des proprietes du sous bloc CONDUCTOR (PERMEABILITY, CONDUCTIVITY)
           for keyN1 in ('PERMEABILITY','CONDUCTIVITY') :
@@ -664,7 +700,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
        # verification des proprietes du sous bloc ZSURFACIC (PERMEABILITY, CONDUCTIVITY)
        if 'PERMEABILITY' not in obj.valeur or 'CONDUCTIVITY' not in obj.valeur:
             print "ERREUR! Le matériau impedance de surface (ZSURFACIC) de nom %s doit contenir les propriétés PERMEABILITY et CONDUCTIVITY." % obj.get_sdname()
-            raise ValueError, tr("ERREUR! Le materiau impedance de surface (ZSURFACIC) de nom %s doit contenir les proprietes PERMEABILITY et CONDUCTIVITY." % obj.get_sdname())
+            raise ValueError, obj.get_sdname() + tr(" : ce materiau impedance de surface (ZSURFACIC) doit contenir les proprietes PERMEABILITY et CONDUCTIVITY.")
        else:
           # parcours des proprietes du sous bloc ZSURFACIC (PERMEABILITY, CONDUCTIVITY)
           for keyN1 in obj.valeur :
@@ -769,17 +805,11 @@ class CARMEL3DFV0Generator(PythonGenerator):
                wdict = obj.valeur['WAVEFORM_CONSTANT'] # dictionnaire contenant les parametres de la forme de la source
                if self.problem == HARMONIC:
                   texte+="        CURJ POLAR %s 0\n" % str(wdict['AMPLITUDE'])
-                  print tr("ATTENTION! Une source constante \
-                                  n'est possible qu'a frequence nulle \
-                                  en regime frequentiel")
             elif "WAVEFORM_SINUS" in obj.valeur:
                wdict = obj.valeur['WAVEFORM_SINUS'] # dictionnaire contenant les parametres de la forme de la source
                if self.problem == HARMONIC:
                   texte+="        CURJ POLAR %(ampli)s %(phase)s\n" \
                          % {'ampli': str(wdict['AMPLITUDE']), 'phase': str(wdict['PHASE'])}
-            else:
-               print tr("ERREUR! Une forme de la source du \
-                               type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.")
             self.dictSourceStInd[obj.get_sdname()]=texte
             if self.debug: 
                 print texte
@@ -802,16 +832,11 @@ class CARMEL3DFV0Generator(PythonGenerator):
                wdict = obj.valeur['WAVEFORM_CONSTANT'] # dictionnaire contenant les parametres de la forme de la source
                if self.problem == HARMONIC:
                   texte+="        AMP POLAR %s 0\n" % str(wdict['AMPLITUDE'])
-                  print tr("ATTENTION! Une source constante n'est \
-                                  possible qu'a frequence nulle en regime frequentiel")
             elif "WAVEFORM_SINUS" in obj.valeur:
                wdict = obj.valeur['WAVEFORM_SINUS'] # dictionnaire contenant les parametres de la forme de la source
                if self.problem == HARMONIC:
                   texte+="        AMP POLAR %(ampli)s %(phase)s\n" \
                          % {'ampli': str(wdict['AMPLITUDE']), 'phase': str(wdict['PHASE'])}
-            else:
-               print tr("ERREUR! Une forme de la source du type \
-                               WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.")
             self.dictSourceHport[obj.get_sdname()]=texte
             if self.debug: 
                 print texte
@@ -837,15 +862,11 @@ class CARMEL3DFV0Generator(PythonGenerator):
                wdict = obj.valeur['WAVEFORM_CONSTANT'] # dictionnaire contenant les parametres de la forme de la source
                if self.problem == HARMONIC:
                   texte+="        AMP POLAR %s 0\n" % str(wdict['AMPLITUDE'])
-                  print tr("ATTENTION! Une source constante n'est possible qu'a frequence nulle en regime frequentiel")
             elif "WAVEFORM_SINUS" in obj.valeur:
                wdict = obj.valeur['WAVEFORM_SINUS'] # dictionnaire contenant les parametres de la forme de la source
                if self.problem == HARMONIC:
                   texte+="        AMP POLAR %(ampli)s %(phase)s\n" \
                          % {'ampli': str(wdict['AMPLITUDE']), 'phase': str(wdict['PHASE'])}
-            else:
-               print tr("ERREUR! Une forme de la source du type \
-                               WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.")
             self.dictSourceEport[obj.get_sdname()]=texte
             if self.debug: 
                 print texte
@@ -865,33 +886,146 @@ class CARMEL3DFV0Generator(PythonGenerator):
             
         if obj.valeur.has_key('GLOBAL'):
             self.texteCarmel3D_CMD+="[\nGLOBAL\n]\n"
+            
+        if obj.valeur.has_key('DUMP'):
+            champsFieldkind={'total':'TOTAL', 'reaction':'REACTION', 'diffracted':'DIFFRACTED'}
+            self.texteCarmel3D_CMD+="[\nDUMP"
+            self.texteCarmel3D_CMD+="\n"+self.projet +  '_postgroups.txt'
+            self.texteCarmel3D_CMD+="\n"+champsFieldkind[obj.valeur["DUMP"]["fieldkind"]]+"\n]\n"
+            
+        if obj.valeur.has_key('FIELDDUMP'):
+            champs = {'T':'TFIELD','H':'HFIELD', 'B':'BFIELD', 'J':'JFIELD', 'E':'EFIELD', 'pertesJoule':'OHMLOSS_DENSITY', 'champSource':'SOURCEFIELD', 'A':'AFIELD', 'Phi':'PHIFIELD', 'Omega':'OMEGAFIELD'}
+            champsFieldkind={'total':'TOTAL', 'reaction':'REACTION', 'diffracted':'DIFFRACTED'}
+            self.texteCarmel3D_CMD+="[\nFIELDDUMP"
+            if type(obj.valeur["FIELDDUMP"]) == types.DictType: # correspondance sur une 'Fielddump'
+                self.fielddumpValeur.append(obj.valeur["FIELDDUMP"]) 
+            else:
+                self.fielddumpValeur=obj.valeur["FIELDDUMP"] # correspondance sur plusieurs 'Fielddump'
+            for indexFielddump in self.fielddumpValeur:
+                self.texteCarmel3D_CMD+="\n  [\n" +"   "+ champs[indexFielddump["field"]]
+                self.texteCarmel3D_CMD+="\n" + "   " + champsFieldkind[indexFielddump["fieldkind"]] + "\n  ]"
+            self.texteCarmel3D_CMD+="\n]\n"    
+            
+        
         if obj.valeur.has_key('VISU'):
             self.texteCarmel3D_CMD+="[\nVISU"
             # test de fichier de maillage bien lu
-            if self.fichierMaillage == "":  raise ValueError, tr("ERREUR! Le fichier de maillage n'existe pas. Le bloc PARAMETERS doit etre defini au dessus du bloc POST_COMMANDS.")
+            if self.fichierMaillage == "":  raise ValueError, tr("Le fichier de maillage n'existe pas. Le bloc PARAMETERS doit etre defini au-dessus du bloc POST_COMMANDS.")
             self.texteCarmel3D_CMD+="\n"+self.projet+"\n"
-            self.texteCarmel3D_CMD+=obj.valeur["VISU"]["VISU_Format"]+"\n"
-            self.texteCarmel3D_CMD+=obj.valeur["VISU"]["VISU_Type"]+"\n]\n"
+            self.texteCarmel3D_CMD+=obj.valeur["VISU"]["visu_format"]+"\n"
+            self.texteCarmel3D_CMD+=obj.valeur["VISU"]["visu_type"]+"\n]\n"
+    
+        if obj.valeur.has_key('VISU3D'):
+            champsField = {'T':'TFIELD','H':'HFIELD', 'B':'BFIELD', 'J':'JFIELD', 'E':'EFIELD', 'pertesJoule':'OHMLOSS_DENSITY', 'champSource':'SOURCEFIELD', 'A':'AFIELD', 'Phi':'PHIFIELD', 'Omega':'OMEGAFIELD'} # correspondance sur le nom du champ entre le catalogue (clé) et le fichier de configuration de Code_Carmel3D (valeur)
+            champsFieldkind={'total':'TOTAL', 'reaction':'REACTION', 'diffracted':'DIFFRACTED'}
+            if type(obj.valeur["VISU3D"])==types.DictType:  # correspondance sur une 'VISU3D'
+                self.visu3dValeur.append(obj.valeur["VISU3D"])
+            else:
+                self.visu3dValeur=obj.valeur["VISU3D"] # correspondance sur plusieurs 'VISU3D'
+            self.texteCarmel3D_CMD+="[\nVISU3D"
+            if self.fichierMaillage == "":  raise ValueError, tr("Le fichier de maillage n'existe pas. Le bloc PARAMETERS doit etre defini au-dessus du bloc POST_COMMANDS.")
+            self.texteCarmel3D_CMD+="\n"+ self.projet
+            self.texteCarmel3D_CMD+="\n" + self.visu3dValeur[0]["visu_format"]
+            for indexVisu3d in self.visu3dValeur:
+                if indexVisu3d["visu_format"]!=self.visu3dValeur[0]["visu_format"]:
+                    print "ERREUR! Dans les multiples VISU3D du bloc POST_COMMANDS, le parametre visu_format doit prendre la meme valeur."
+                    raise ValueError, tr("Dans les multiples VISU3D du bloc POST_COMMANDS, le parametre visu_format doit prendre la meme valeur.")
+                self.texteCarmel3D_CMD+="\n   [\n   " + champsField[indexVisu3d["field"]]
+                self.texteCarmel3D_CMD+="\n   "+ champsFieldkind[indexVisu3d["fieldkind"]]
+                self.texteCarmel3D_CMD+="\n   "+ indexVisu3d["visu_type"]+"\n   ]"
+            self.texteCarmel3D_CMD+="\n]\n" 
+            
+        if obj.valeur.has_key('ASTER_RMS_LOSSES'):
+              self.texteCarmel3D_CMD+="[\nASTER_RMS_LOSSES"  
+              if self.fichierMaillage == "":  raise ValueError, tr("Le fichier de maillage n'existe pas. Le bloc PARAMETERS doit etre defini au-dessus du bloc POST_COMMANDS.")
+              self.texteCarmel3D_CMD+="\n"+self.projet+"\n"  
+              self.texteCarmel3D_CMD+= obj.valeur["ASTER_RMS_LOSSES"]["rms_losses_format"] +"\n]\n"
+              
         if obj.valeur.has_key('CUTLINE'):
-            champs = {'H':'HFIELD', 'B':'BFIELD', 'J':'JFIELD', 'E':'EFIELD'} # correspondance sur le nom du champ entre le catalogue (clé) et le fichier de configuration de Code_Carmel3D (valeur)
-            self.texteCarmel3D_CMD+="[\nCUTLINE" 
-            self.texteCarmel3D_CMD+="\n%s" % ' '.join(map(str,obj.valeur["CUTLINE"]["first_point"]))
-            self.texteCarmel3D_CMD+="\n%s" % ' '.join(map(str,obj.valeur["CUTLINE"]["last_point"]))
-            self.texteCarmel3D_CMD+="\n%d" % (obj.valeur["CUTLINE"]["number_of_points"], )
-            self.texteCarmel3D_CMD+="\n" + obj.valeur["CUTLINE"]["name"]
             # création du champ, renommé par rapport à l'interface
-            self.texteCarmel3D_CMD+="\n" + champs[obj.valeur["CUTLINE"]["field"]]
-            self.texteCarmel3D_CMD+="\n]\n"
+            champsField = {'H':'HFIELD', 'B':'BFIELD', 'J':'JFIELD', 'E':'EFIELD', 'pertesJoule':'OHMLOSS_DENSITY', 'champSource':'SOURCEFIELD', 'A':'AFIELD', 'Phi':'PHIFIELD', 'Omega':'OMEGAFIELD', 'T':'TFIELD'} # correspondance sur le nom du champ entre le catalogue (clé) et le fichier de configuration de Code_Carmel3D (valeur)
+            champsFieldkind={'total':'TOTAL', 'reaction':'REACTION', 'diffracted':'DIFFRACTED'}
+            champsOutput={'xgraphic':'XGRAPHIC', 'gnuplot':'GNUPLOT', 'gmsh':'GMSH'}
+            champsLissage={'aucun':'NONE', 'un seul point par element':'1PTELT'}
+            if type(obj.valeur["CUTLINE"]) == types.DictType: # correspondance sur une 'Cutline'
+                self.cutlineValeur.append(obj.valeur["CUTLINE"])  # transfert d'une dictionnaire à une liste
+            else:
+                self.cutlineValeur=obj.valeur["CUTLINE"] # correspondance sur plusieurs 'Cutline'
+            for indexCutline in self.cutlineValeur: 
+                self.texteCarmel3D_CMD+="[\nCUTLINE"
+                self.texteCarmel3D_CMD+="\n%s" % ' '.join(map(str,indexCutline["first_point"]), )
+                self.texteCarmel3D_CMD+="\n%s" % ' '.join(map(str,indexCutline["last_point"]), )
+                self.texteCarmel3D_CMD+="\n%d" % (indexCutline["number_of_points"], )
+                self.texteCarmel3D_CMD+="\n" +indexCutline["name"]
+                self.texteCarmel3D_CMD+="\n" + champsField[indexCutline["field"]]
+                if indexCutline.has_key('fieldkind'):
+                    self.texteCarmel3D_CMD+="\nFIELDKIND " + champsFieldkind[indexCutline["fieldkind"]]
+                if indexCutline.has_key('output'):
+                    self.texteCarmel3D_CMD+="\nOUTPUT " +champsOutput[indexCutline["output"]]
+                if indexCutline.has_key('lissage'):
+                    self.texteCarmel3D_CMD+="\nSMOOTHLEVEL " +champsLissage[indexCutline["lissage"]]
+                self.texteCarmel3D_CMD+="\n]\n"
+                
         if obj.valeur.has_key('CUTPLANE'):
-            champs = {'H':'HFIELD', 'B':'BFIELD', 'J':'JFIELD', 'E':'EFIELD'} # correspondance sur le nom du champ entre le catalogue (clé) et le fichier de configuration de Code_Carmel3D (valeur)
+            champs = {'T':'TFIELD','H':'HFIELD', 'B':'BFIELD', 'J':'JFIELD', 'E':'EFIELD','pertesJoule':'OHMLOSS_DENSITY', 'champSource':'SOURCEFIELD', 'A':'AFIELD', 'Phi':'PHIFIELD', 'Omega':'OMEGAFIELD'} # correspondance sur le nom du champ entre le catalogue (clé) et le fichier de configuration de Code_Carmel3D (valeur)
+            champsFieldkind= {'total':'TOTAL', 'reaction':'REACTION', 'diffracted':'DIFFRACTED'}
+            champsOutput={'xgraphic':'XGRAPHIC', 'gnuplot':'GNUPLOT', 'gmsh':'GMSH'}
+            champsLissage={'aucun':'NONE', 'un seul point par element':'1PTELT'}
             axes = {'Ox':1, 'Oy':2, 'Oz':3} # correspondance de l'axe normal entre le catalogue (clé) et le fichier de configuration Code_Carmel3D (valeur)
-            self.texteCarmel3D_CMD+="[\nCUTPLANE" 
-            self.texteCarmel3D_CMD+="\n%d" % (axes[obj.valeur["CUTPLANE"]["normal_vector"]], )
-            self.texteCarmel3D_CMD+="\n%f" % (obj.valeur["CUTPLANE"]["plane_position"], )
-            self.texteCarmel3D_CMD+="\n%s" % ' '.join(map(str,obj.valeur["CUTPLANE"]["number_of_points"]))
-            self.texteCarmel3D_CMD+="\n" + obj.valeur["CUTPLANE"]["name"]
-            self.texteCarmel3D_CMD+="\n" + champs[obj.valeur["CUTPLANE"]["field"]]
-            self.texteCarmel3D_CMD+="\n]\n"
+            if type(obj.valeur["CUTPLANE"]) == types.DictType:
+                self.cutplaneValeur.append(obj.valeur["CUTPLANE"]) # correspondance sur une 'Cutplane'
+            else:
+                self.cutplaneValeur=obj.valeur["CUTPLANE"] # correspondance sur plusieurs 'Cutplane'
+            for indexCutplane in self.cutplaneValeur:
+                self.texteCarmel3D_CMD+="[\nCUTPLANE" 
+                self.texteCarmel3D_CMD+="\n%d" % (axes[indexCutplane["normal_vector"]], )
+                self.texteCarmel3D_CMD+="\n%f" % (indexCutplane["plane_position"], )
+                self.texteCarmel3D_CMD+="\n%s" % ' '.join(map(str,indexCutplane["number_of_points"]))
+                self.texteCarmel3D_CMD+="\n" + indexCutplane["name"]
+                self.texteCarmel3D_CMD+="\n" + champs[indexCutplane["field"]]
+                if indexCutplane.has_key('fieldkind'):
+                    self.texteCarmel3D_CMD+="\nFIELDKIND " + champsFieldkind[indexCutplane["fieldkind"]]
+                if indexCutplane.has_key('output'):
+                    self.texteCarmel3D_CMD+="\nOUTPUT " +champsOutput[indexCutplane["output"]]
+                if indexCutplane.has_key('lissage'):
+                    self.texteCarmel3D_CMD+="\nSMOOTHLEVEL " +champsLissage[indexCutplane["lissage"]]
+                self.texteCarmel3D_CMD+="\n]\n"
+                
+        if obj.valeur.has_key('FIELDMAP'):
+            champs = {'T':'TFIELD','H':'HFIELD', 'B':'BFIELD', 'J':'JFIELD', 'E':'EFIELD','pertesJoule':'OHMLOSS_DENSITY', 'champSource':'SOURCEFIELD', 'A':'AFIELD', 'Phi':'PHIFIELD', 'Omega':'OMEGAFIELD'} # correspondance sur le nom du champ entre le catalogue (clé) et le fichier de configuration de Code_Carmel3D (valeur)
+            champsFieldkind= {'total':'TOTAL', 'reaction':'REACTION', 'diffracted':'DIFFRACTED'}
+            champsOutput={'xgraphic':'XGRAPHIC', 'gnuplot':'GNUPLOT', 'gmsh':'GMSH'}
+            champsFieldmap_type={'equation':'EQUATION', 'fichier':'FILE'}
+            champsType={'plane':'PLANE', 'line':'LINE'}
+            axes = {'Ox':1, 'Oy':2, 'Oz':3} # correspondance de l'axe normal entre le catalogue (clé) et le fichier de configuration Code_Carmel3D (valeur)
+            if type(obj.valeur["FIELDMAP"]) == types.DictType: 
+                self.fieldmapValeur.append(obj.valeur["FIELDMAP"]) # correspondance sur une 'Fieldmap'
+            else:
+                self.fieldmapValeur=obj.valeur["FIELDMAP"]# correspondance sur plusieurs 'Fieldmap'
+            for indexFieldmap in self.fieldmapValeur:
+                self.texteCarmel3D_CMD+="[\nFIELDMAP"
+                self.texteCarmel3D_CMD+="\n" + champsFieldmap_type[indexFieldmap["fieldmap_type"]]
+                if indexFieldmap["fieldmap_type"]=="equation":
+                    self.texteCarmel3D_CMD+="\n" + champsType[indexFieldmap["type"]]
+                    if indexFieldmap["type"]=="line":
+                        self.texteCarmel3D_CMD+="\n%s" % ' '.join(map(str,indexFieldmap["first_point"]), )
+                        self.texteCarmel3D_CMD+="\n%s" % ' '.join(map(str,indexFieldmap["last_point"]), )
+                        self.texteCarmel3D_CMD+="\n%d" % (indexFieldmap["number_of_points"], )
+                    if indexFieldmap["type"]=="plane":
+                        self.texteCarmel3D_CMD+="\n%d" % (axes[indexFieldmap["normal_vector"]], )
+                        self.texteCarmel3D_CMD+="\n%f" % (indexFieldmap["plane_position"], )
+                        self.texteCarmel3D_CMD+="\n%s" % ' '.join(map(str,indexFieldmap["number_of_points"]))
+                if indexFieldmap["fieldmap_type"]=="fichier":
+                        self.fichierFieldmap=indexFieldmap["filename"]
+                        self.nomFichierFieldmap = os.path.basename(self.fichierFieldmap) # nom du fichier de fieldmap, sans le chemin
+                        self.texteCarmel3D_CMD+="\n" + self.nomFichierFieldmap
+                self.texteCarmel3D_CMD+="\n" + champs[indexFieldmap["field"]]
+                self.texteCarmel3D_CMD+="\n" + champsFieldkind[indexFieldmap["fieldkind"]]
+                self.texteCarmel3D_CMD+="\n" +indexFieldmap["name"] # nom systématique, quel que soit le fieldmap_type, placé entre fieldkind et output
+                self.texteCarmel3D_CMD+="\n" +champsOutput[indexFieldmap["output"]]
+                self.texteCarmel3D_CMD+="\n]\n"
+                        
+                
 
 
 #---------------------------------------------------------------------------------------
@@ -980,7 +1114,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
             if self.dictGroupes[nom]['MATERIAL'][:]  in dictProprietes.keys(): # test si le nom du materiau associe est du bon type
                 if dictProprietes[self.dictGroupes[nom]['MATERIAL'][:]]['valeur']['PERMEABILITY']['LAW'] == 'NONLINEAR': # Erreur si ce matériau est non-linéaire
                     print u"ERREUR! Le matériau de nom %s associé au groupe %s doit avoir sa perméabilité (PERMEABILITY) linéaire (LINEAR) seulement." % (self.dictGroupes[nom]['MATERIAL'][:],  nom)
-                    raise ValueError, tr("ERREUR! Le materiau de nom %s associe au groupe %s doit avoir sa permeabilite (PERMEABILITY) lineaire (LINEAR) seulement." % (self.dictGroupes[nom]['MATERIAL'][:],  nom))
+                    raise ValueError, self.dictGroupes[nom]['MATERIAL'][:] + ',' +  nom + tr(" : ce materiau (nom, groupe associe) doit avoir sa permeabilite (PERMEABILITY) lineaire (LINEAR) seulement.")
                 if dictProprietes[self.dictGroupes[nom]['MATERIAL'][:]]['valeur']['PERMEABILITY']['HOMOGENEOUS'] == 'FALSE' \
                  or dictProprietes[self.dictGroupes[nom]['MATERIAL'][:]]['valeur']['CONDUCTIVITY']['HOMOGENEOUS'] == 'FALSE': # recherche si matériau non-homogène
                     self.materiauxGroupesTousHomogenes = False # alors tous les matériaux ne sont pas homogènes
@@ -1008,7 +1142,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
             if self.dictGroupes[nom]['MATERIAL'][:] in dictProprietes.keys(): # test si le nom du materiau associe est du bon type
                 if dictProprietes[self.dictGroupes[nom]['MATERIAL'][:]]['valeur']['PERMEABILITY']['LAW'] == 'NONLINEAR': # Erreur si ce matériau est non-linéaire
                     print u"ERREUR! Le matériau de nom %s associé au groupe %s doit avoir sa perméabilité (PERMEABILITY) linéaire (LINEAR) seulement." % (self.dictGroupes[nom]['MATERIAL'][:],  nom)
-                    raise ValueError, tr("ERREUR! Le materiau de nom %s associe au groupe %s doit avoir sa permeabilite (PERMEABILITY) lineaire (LINEAR) seulement." % (self.dictGroupes[nom]['MATERIAL'][:],  nom))
+                    raise ValueError, self.dictGroupes[nom]['MATERIAL'][:] + ',' +  nom + tr(" : ce materiau (nom, groupe associe) doit avoir sa permeabilite (PERMEABILITY) lineaire (LINEAR) seulement.")
                 if dictProprietes[self.dictGroupes[nom]['MATERIAL'][:]]['valeur']['PERMEABILITY']['HOMOGENEOUS'] == 'FALSE': # recherche si matériau non-homogène
                     self.materiauxGroupesTousHomogenes = False # alors tous les matériaux ne sont pas homogènes
                 if dictProprietes[self.dictGroupes[nom]['MATERIAL'][:]]['valeur']['PERMEABILITY']['ISOTROPIC'] == 'FALSE': # recherche si matériau non-homogène
@@ -1200,13 +1334,13 @@ class CARMEL3DFV0Generator(PythonGenerator):
             if self.debug: print "nomSource courant=",nom
             if self.dictGroupes[nom].has_key('SOURCE'):
                 if self.dictGroupes[nom]['SOURCE'] not in self.dictPort :
-                    if not self.dictGroupes[nom].has_key('DOMAINE'): raise ValueError,  tr("Il manque le Domaine à l'inducteur de nom : "+nom)
+                    if not self.dictGroupes[nom].has_key('DOMAINE'): raise ValueError, nom + tr(" : il manque un Domaine a cet inducteur.")
                     self.texteCarmel3D_INGEND2+="\n%s" %(self.dictGroupes[nom]['DOMAINE']) # écriture du nom de domaine
             else:
-                    if not self.dictGroupes[nom].has_key('DOMAINE'): raise ValueError,  tr("Il manque le Domaine à l'inducteur de nom : "+nom)
+                    if not self.dictGroupes[nom].has_key('DOMAINE'): raise ValueError,  nom + tr(" : il manque un Domaine a cet inducteur.")
                     self.texteCarmel3D_INGEND2+="\n%s" %(self.dictGroupes[nom]['DOMAINE']) # écriture du nom de domaine                
             if self.dictGroupes[nom].has_key('STRAND'): # inducteur en un seul morceau
-                if not self.dictGroupes[nom].has_key('DOMAINE'): raise ValueError,  tr("Il manque le Domaine à l'inducteur de nom : "+nom)
+                if not self.dictGroupes[nom].has_key('DOMAINE'): raise ValueError,  nom + tr(" : il manque un Domaine a cet inducteur.")
                 strand = self.dictGroupes[nom]['STRAND'] 
                 if self.debug: print "un seul morceau : nomStrand courant=", strand
                 self.texteCarmel3D_INGEND2+=  self.dictStrand[strand]
@@ -1280,19 +1414,19 @@ class CARMEL3DFV0Generator(PythonGenerator):
             partiesNom = nom.split(sepNomGroupeMaille) # separation du nom du groupe en parties
             # les tests suivants ne generent une erreur que si le prefixe est obligatoire
             if len(partiesNom) < 2: # test d'erreur, pas de separateur donc nom incorrect, i.e. sans prefixe c'est sur
-                print tr("ERREUR! ce groupe de maille (%s) n'a pas de prefixe \
-                                indiquant le type de materiau ou de source associee", nom)
+                print "ERREUR! ce groupe de maille (%s) n'a pas de prefixe \
+                                indiquant le type de materiau ou de source associee" % (nom, )
             elif partiesNom[0] not in listePrefixesGroupeMaille: # prefixe non defini
-                print tr("ERREUR! ce groupe de maille (%s) n'a pas de prefixe valable",  nom)
+                print "ERREUR! ce groupe de maille (%s) n'a pas de prefixe valable" %  (nom, )
             else:   
                 # verification de l'adequation du prefixe avec le type de bloc demande, si fourni    
                 if typeBloc is not None:
                     if typeBloc not in dictPrefixesGroupeMaille: # test validite de typeBloc, devant etre une cle du dictionnaire
-                        print tr("ERREUR! ce type de bloc (%s) n'est pas valable", str(typeBloc))
+                        print "ERREUR! ce type de bloc (%s) n'est pas valable" % (str(typeBloc), )
                     elif partiesNom[0] not in dictPrefixesGroupeMaille[typeBloc]: # pas de prefixe correct pour ce type de bloc
-                        print tr("ERREUR! ce groupe de maille (%(nom)s) n'a pas \
+                        print "ERREUR! ce groupe de maille (%(nom)s) n'a pas \
                                         le prefixe correct pour etre associe a un type %(type_bloc)s", \
-                                        {'nom': nom, 'type_bloc': str(typeBloc)})
+                                         {'nom': nom, 'type_bloc': str(typeBloc)}
                     else: # c'est bon
                         nomReel = join(partiesNom[1:], sepNomGroupeMaille) # reconstruction du nom du groupe sans prefixe complet
                         if self.debug: 

@@ -30,11 +30,12 @@ from desWidgetOptionnel import Ui_WidgetOptionnel
 class monButtonCustom(QCheckBox):
 
    def __init__(self,texte,monOptionnel,parent=None):
-      QCheckBox.__init__(self,texte,parent)
+      QCheckBox.__init__(self,QString(tr(texte)),parent)
+      self.texte=texte
       self.monOptionnel=monOptionnel
 
    def mouseDoubleClickEvent(self, event):
-      #print "dans mouseDoubleClickEvent"
+      #print "dans mouseDoubleClickEvent", self
       if self not in self.monOptionnel.dicoCb.keys() : 
          event.accept()
          return
@@ -90,13 +91,14 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.GeneaLabel.setText(tr("Options pour \n") +texte)
 
      for cb in self.dicoCb.keys():
-         #print 'je detruit', self.dicoCb[cb], cb
+         #print 'je detruis', self.dicoCb[cb], cb
          #print cb.close()
          cb.close()
+
      self.dicoCb={}
      liste.reverse()
      for mot in liste :
-         cb = monButtonCustom(QString(mot),self)
+         cb = monButtonCustom(mot,self)
          #print "j ajoute ", mot, cb
          self.dicoCb[cb]=mot
          self.commandesOptionnellesLayout.insertWidget(0,cb)
@@ -104,7 +106,6 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
 
   def CBChecked(self):
       # ordre ?
-      #print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
       return
       for cb in self.dicoCb.keys() :
           if cb.isChecked()      and self.dicoCb[cb] not in self.listeChecked : self.listeChecked.append(self.dicoCb[cb])

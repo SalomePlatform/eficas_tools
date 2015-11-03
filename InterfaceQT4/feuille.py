@@ -181,6 +181,9 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       else :
          if hasattr(self, 'AAfficher'): self.AAfficher.setFocus(7)
 
+   def rendVisible(self):
+       #print "jjjjjjjjjjjjjjjjjjjjj"
+       pass
 
    def traiteClicSurLabel(self,texte):
        #print self.aide 

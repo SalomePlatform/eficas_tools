@@ -91,7 +91,7 @@ class PSENGenerator(DicoImbriqueGenerator):
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,fn) :
-       fileDico = "PSEN/PSENconfig.py" 
+       fileDico=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','PSEN_Eficas','PSEN','PSENconfig.py'))
        f = open( str(fileDico), 'wb')
        f.write( self.Entete + "Dico =" + str(self.Dico) )
        f.close()

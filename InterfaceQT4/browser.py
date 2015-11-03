@@ -130,10 +130,12 @@ class JDCTree( QTreeWidget,GereRegles ):
              item.setExpanded(True)
              return
         item.deplieToutEtReaffiche()
+        self.inhibeExpand == False 
 
 
     def handleOnItem(self,item,int):
         #print "je passe dans handleOnItem pour ",self, item.item.nom, item, item.item
+        
         self.inhibeExpand == True 
         self.itemCourrant=item
         itemParent=item
@@ -722,6 +724,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def plieToutEtReafficheSaufItem(self, itemADeplier):
         #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
+        from InterfaceQT4 import compojdc
+        if (isinstance(self, compojdc.Node)) : self.affichePanneau(); return 
         self.editor.deplier = False
         for item in self.children :
             # il ne faut pas plier les blocs 
@@ -729,13 +733,14 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             if (isinstance(item,compobloc.Node)) : continue
             item.setPlie()
             if item==itemADeplier : 
-                  print itemADeplier.item.nom
                   itemADeplier.setDeplie()
         
         self.affichePanneau()
 
     def plieToutEtReaffiche(self):
         #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
+        from InterfaceQT4 import compojdc
+        if (isinstance(self, compojdc.Node)) : self.affichePanneau(); return 
         self.editor.deplier = False
         for item in self.children :
             # il ne faut pas plier les blocs 

@@ -42,11 +42,6 @@ class Appli(Ui_Eficas,QMainWindow):
         """
         QMainWindow.__init__(self,parent)
         Ui_Eficas.__init__(self)
-        self.setupUi(self)
-        self.myQtab.removeTab(0)
-        self.blEntete= QBoxLayout(0,self.frameEntete)
-        self.blEntete.insertWidget(0,self.toolBar)
-        self.blEntete.insertWidget(0,self.menubar)
 
 
         version=getEficasVersion()
@@ -70,13 +65,26 @@ class Appli(Ui_Eficas,QMainWindow):
           import eficasSalome
           Accas.SalomeEntry = eficasSalome.SalomeEntry
 
-        #self.ajoutIcones()
         self.multi=multi
-        if langue=='fr': self.langue=langue
-        else           : self.langue="ang"
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
+
+        if not self.salome and hasattr(self.CONFIGURATION,'lang') : langue=self.CONFIGURATION.lang
+        if langue=='fr': self.langue=langue
+        else           : self.langue="ang"
+
+        from Extensions import localisation
+        app=QApplication
+        localisation.localise(app,langue)
+
+        self.setupUi(self)
+
+        self.myQtab.removeTab(0)
+        self.blEntete= QBoxLayout(0,self.frameEntete)
+        self.blEntete.insertWidget(0,self.toolBar)
+        self.blEntete.insertWidget(0,self.menubar)
+
 
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -90,7 +98,6 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connecterSignaux()
         self.toolBar.addSeparator()
         if self.code != None : self.construitMenu()
-
 
         self.setWindowTitle(self.VERSION_EFICAS)
         self.ouvreFichiers()
@@ -247,7 +254,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def CARMEL3D(self):
         #if self.salome == 0 : return
         self.enleverNewInclude()
-        self.menuMesh = self.menubar.addMenu("menuMesh")
+        self.menuMesh = self.menubar.addMenu(tr("Gestion Maillage"))
         self.menuMesh.setObjectName("Mesh")
         self.menuMesh.addAction(self.actionChercheGrpMaille)
         self.griserActionsStructures()
@@ -381,12 +388,12 @@ class Appli(Ui_Eficas,QMainWindow):
 
         # Pour Carmel
         self.actionChercheGrpMaille = QAction(self)
-        self.actionChercheGrpMaille.setText(tr("Acquiert Groupe Maille"))
+        self.actionChercheGrpMaille.setText(tr("Acquiert groupe mailles"))
         self.connect(self.actionChercheGrpMaille,SIGNAL("triggered()"),self.ChercheGrpMaille)
 
         # Pour CarmelCND
         self.actionChercheGrp = QAction(self)
-        self.actionChercheGrp.setText(tr("Accquisition Groupe Maille"))
+        self.actionChercheGrp.setText(tr("Acquisition Groupe Maille"))
         self.connect(self.actionChercheGrp,SIGNAL("triggered()"),self.ChercheGrp)
 
         # Pour Aide

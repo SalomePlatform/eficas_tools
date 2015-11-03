@@ -65,7 +65,7 @@ class MonWidgetRadioButtonCommun (Feuille):
          bouton=getattr(self,nomBouton)
          valeur=self.maListeDeValeur[i-1]
          if not(type(valeur) in types.StringTypes) : valeur=str(valeur)
-         bouton.setText(valeur)
+         bouton.setText(tr(valeur))
          self.dict_bouton[valeur]=bouton
          self.connect(bouton,SIGNAL("clicked()"),self.boutonclic)
          bouton.keyPressEvent=self.keyPressEvent

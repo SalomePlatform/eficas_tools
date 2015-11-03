@@ -36,7 +36,12 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
   def __init__(self,node, jdc_item, editor):
       QtGui.QWidget.__init__(self,None)
       self.setupUi(self)
-      #self.labelIcone.setText('<img src="/local00/home/A96028/Install_EficasV1/KarineEficas/InterfaceQT4/loopOff.png">');
+
+      self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
+      iconeFile=os.path.join(self.repIcon,'lettreRblanc30.png')
+      icon = QIcon(iconeFile)
+      self.RBRegle.setIcon(icon)
+      self.RBRegle.setIconSize(QtCore.QSize(21, 31))
 
       self.item = jdc_item
       self.node = node
@@ -44,6 +49,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       self.jdc  = self.item.object.get_jdc_root()
       debutTitre=self.editor.titre
       self.listeWidget=[]
+      self.dicoCmd={}
       if self.editor.fichier != None : 
           nouveauTitre=debutTitre+" "+str(os.path.basename(self.editor.fichier))
       else :
@@ -165,6 +171,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       if self.affiche_alpha==1 :
          liste=self.creeListeCommande(filtre)
          for cmd in liste :
+           self.dicoCmd[tr(cmd)]=cmd
            rbcmd=(QRadioButton(tr(cmd)))
            self.buttonGroup.addButton(rbcmd)
            self.commandesLayout.addWidget(rbcmd)
@@ -186,6 +193,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
               if aAjouter == 1 :
                  self.commandesLayout.addWidget(label)
                  aAjouter=0
+              self.dicoCmd[tr(cmd)]=cmd
               rbcmd=(QRadioButton(tr(cmd)))
               self.buttonGroup.addButton(rbcmd)
               self.commandesLayout.addWidget(rbcmd)
@@ -204,6 +212,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
             if cmd in listeFiltre :
                  liste.append(cmd)
          for cmd in liste :
+           self.dicoCmd[tr(cmd)]=cmd
            rbcmd=(QRadioButton(tr(cmd)))
            self.buttonGroup.addButton(rbcmd)
            self.commandesLayout.addWidget(rbcmd)
@@ -217,7 +226,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       self.ajouteRadioButtons()
 
   def rbClique(self,id):
-      self.name=str(id.text().toLatin1())
+      self.name=self.dicoCmd[str(id.text().toLatin1())]
       definitionEtape=getattr(self.jdc.cata[0],self.name)
       commentaire=getattr(definitionEtape,self.jdc.lang)
       try :

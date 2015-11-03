@@ -125,22 +125,10 @@ class CARMEL3DTV0Generator(PythonGenerator):
       # Paramètres divers
       self.typeSolveur = "" # type de solveur, linéaire (Solveur_lineaire) ou non-linéaire (Solveur_non_lineaire)
       #Post traitement
-      self.carteChamp=""
-      self.carteCourantInduit=""
-      self.carteForce=""
-      self.perteJoule=""
-      self.fluxInducteur=""
-      self.courantInducteur=""
-      self.tensionInducteur=""
-      self.energie=""
-      self.ForceCouple=""
-      self.fluxSpire=""
-      self.fluxGroupe=""
-      self.ddpElect=""
-      self.ddpMagn=""
-      self.fluxMagn=""
-      self.fluxJinduitTotal=""
-      self.potFlottant = ""
+      self.carteChamp="" # liste des pas de temps demandés lors du post-traitement des cartes de champ
+      self.carteCourantInduit="" # liste des pas de temps demandés lors du post-traitement des cartes de courants induits
+      self.carteForce="" # liste des pas de temps demandés lors du post-traitement des cartes de force
+      self.post_global = [] # liste des grandeurs globales demandées lors du post-traitement
 
       # on force le probleme a etre frequentiel, seul possible en l'etat des choses
       self.problem = HARMONIC
@@ -443,44 +431,52 @@ class CARMEL3DTV0Generator(PythonGenerator):
 
         #Definir Post traitement
         postraitement=ET.SubElement(root, "postraitement")
+        # Ecriture des cartes de champ
         carteChamp=ET.SubElement(postraitement, "carteChamp")
         if type(self.carteChamp)==float:
             carteChamp.text="%s" %(self.carteChamp)
-        else: carteChamp.text="%s" % ','.join(map(str,self.carteChamp))
+        else:
+            carteChamp.text="%s" % ','.join(map(str,self.carteChamp))
+        # Ecriture des cartes de courants induits
         carteCourantInduit=ET.SubElement(postraitement, "carteCourantInduit")
         if type(self.carteCourantInduit)==float:
             carteCourantInduit.text="%s" %(self.carteCourantInduit)        
-        else: carteCourantInduit.text="%s" % ','.join(map(str,self.carteCourantInduit))
+        else:
+            carteCourantInduit.text="%s" % ','.join(map(str,self.carteCourantInduit))
+        # Ecriture des cartes de force
         carteForce=ET.SubElement(postraitement, "carteForce")
         if type(self.carteForce)==float:
             carteForce.text="%s" %(self.carteForce)            
-        else: carteForce.text="%s" % ','.join(map(str,self.carteForce))
-        perteJoule=ET.SubElement(postraitement, "perteJoule")
-        perteJoule.text="%s" %(correspondance_booleen[self.perteJoule])
-        fluxInducteur=ET.SubElement(postraitement, "fluxInducteur")
-        fluxInducteur.text="%s" %(correspondance_booleen[self.fluxInducteur])
-        courantInducteur=ET.SubElement(postraitement, "courantInducteur")
-        courantInducteur.text="%s" %(correspondance_booleen[self.courantInducteur])
-        tensionInducteur=ET.SubElement(postraitement, "tensionInducteur")
-        tensionInducteur.text="%s" %(correspondance_booleen[self.tensionInducteur])
-        energie=ET.SubElement(postraitement, "energie")
-        energie.text="%s" %(correspondance_booleen[self.energie])
-        ForceCouple=ET.SubElement(postraitement, "ForceCouple")
-        ForceCouple.text="%s" %(correspondance_booleen[self.ForceCouple])
-        fluxSpire=ET.SubElement(postraitement, "fluxSpire")
-        fluxSpire.text="%s" %(correspondance_booleen[self.fluxSpire])
-        fluxGroupe=ET.SubElement(postraitement, "fluxGroupe")
-        fluxGroupe.text="%s" %(correspondance_booleen[self.fluxGroupe])   
-        ddpElect=ET.SubElement(postraitement, "ddpElect")
-        ddpElect.text="%s" %(correspondance_booleen[self.ddpElect])
-        ddpMagn=ET.SubElement(postraitement, "ddpMagn")
-        ddpMagn.text="%s" %(correspondance_booleen[self.ddpMagn])
-        fluxMagn=ET.SubElement(postraitement, "fluxMagn")
-        fluxMagn.text="%s" %(correspondance_booleen[self.fluxMagn])        
-        fluxJinduitTotal=ET.SubElement(postraitement, "fluxJinduitTotal")
-        fluxJinduitTotal.text="%s" %(correspondance_booleen[self.fluxJinduitTotal])        
-        potentielFlottant=ET.SubElement(postraitement, "potFlottant")
-        potentielFlottant.text="%s" %(correspondance_booleen[self.potFlottant])
+        else:
+            carteForce.text="%s" % ','.join(map(str,self.carteForce))
+        # Sortie des grandeurs globales, enregistrées dans self.post_global
+        # liste de correspondance entre la valeur du catalogue et le nom de la balise XML
+        # sous forme ordonnée (nomXML, valeur catalogue) 
+        correspondance_global = (('energie',  "Energie"),\
+                                                   ('perteJoule', "Pertes Joules"),\
+                                                   ('fluxInducteur', "Flux par inducteur"),\
+                                                   ('courantInducteur', "Courants par inducteur"),\
+                                                   ('tensionInducteur', "Tensions par inducteur"), \
+                                                   ('forceCouple', "Force et couple"),\
+                                                   ('fluxSpire', "Flux par spire exploratrice"),\
+                                                   ('fluxGroupe', "Flux par groupe"),\
+                                                   ('ddpElect', "Tensions electriques"),\
+                                                   ('ddpMagn', "DDP magnetiques"), \
+                                                   ('fluxMagn', "Flux magnetiques"),\
+                                                   ('fluxJinduitTotal', "Flux J induit"),\
+                                                   ('potFlottant', "Potentiel flottant"))
+        # Sortie des grandeurs demandées seulement (true)
+        for table in correspondance_global:
+            if table[1] in self.post_global:
+                post_global_item=ET.SubElement(postraitement, table[0])
+                post_global_item.text = "true"
+#        # Sortie de toutes les grandeurs possibles, avec la valeur true pour celles demandées et false sinon
+#        for table in correspondance_global:
+#            post_global_item=ET.SubElement(postraitement, table[0])
+#            if table[1] in self.post_global:
+#                post_global_item.text = "true"
+#            else:
+#                post_global_item.text = "false"
 
         self.indent(root) # indentations et retours à la ligne, à l'aide d'une fonction maison, car xml.etree.ElementTree ne sait pas faire et le module lxml n'est pas disponible dans Salomé
 
@@ -512,7 +508,10 @@ class CARMEL3DTV0Generator(PythonGenerator):
         if self.debug: 
             print "MCSIMP %(v_1)s  %(v_2)s" % {'v_1': obj.nom, "v_2": obj.valeur}
         s=PythonGenerator.generMCSIMP(self,obj)
-        self.dicoCourant[obj.nom]=obj.valeurFormatee
+        try:
+            self.dicoCourant[obj.nom]=obj.valeurFormatee
+        except:
+            print "Oubli des messages texte homo='information'"
         return s
 
 
@@ -543,7 +542,6 @@ class CARMEL3DTV0Generator(PythonGenerator):
         s=PythonGenerator.generPROC_ETAPE(self,obj)
         if obj.nom=="PARAMETERS" : self.generBLOC_PARAMETERS(obj)
         if obj.nom=="SOLVEUR" : self.generSOLVEUR(obj)
-        if obj.nom=="POST_COMMANDS" : self.generPOST_COMMANDS(obj)
         if obj.nom=="SYMETRIE" : self.generBLOC_SYMETRIE(obj)
         if obj.nom=="POST_TRAITEMENT" : self.generPOST_TRAITEMENT(obj)
         return s
@@ -669,25 +667,25 @@ class CARMEL3DTV0Generator(PythonGenerator):
                     groupe = groupe.replace('"', "") # suppression des guillement doubles
                     self.dictMacroGroupes[nomMacroGroupe]['LISTE'].append(groupe) # sauvegarde du nom au formatage correct
             else:
-                raise ValueError, tr("Ce MACRO_GROUPE %s doit contenir une liste de groupes LISTE_MESHGROUP." % nomMacroGroupe)
+                raise ValueError, nomMacroGroupe + tr(" : ce MACRO_GROUPE doit contenir une liste de groupes LISTE_MESHGROUP.")
 
             for nomGroupe in self.dictMacroGroupes[nomMacroGroupe]['LISTE']: # liste des groupes MESHGROUP de ce macro-groupe. On leur associe les propriétés du MACRO_GROUPE
                 for propriete in ('SOURCE', 'MATERIAL',  'STRANDED_INDUCTOR_GEOMETRY'): # liste des propriétés automatiques à copier du MACRO_GROUPE à chaque MESHGROUP de la liste
                     if  propriete in obj.valeur.keys(): # ce macro-groupe est associé à cette propriété
                         if self.dictGroupes[nomGroupe].has_key(propriete) and self.dictGroupes[nomGroupe][propriete] != self.dictGroupes[nomGroupe][propriete].nom: # erreur, ce meshgroup a déjà une telle propriéte définie, différente
-                            print u"ERREUR! Conflit entre la %s : %s du MACRO_GROUPE %s et celle : %s du MESHGROUP associé à ce macro-groupe." % \
+                            print u"ERREUR! Conflit entre la %s : %s du MACRO_GROUPE %s et celle : %s du MESHGROUP %s associé à ce macro-groupe." % \
                              ( propriete, obj.valeur[propriete].nom,  nomMacroGroupe, self.dictGroupes[nomGroupe][propriete],  nomGroupe )
-                            raise ValueError, tr(u"ERREUR! Conflit entre la %s : %s du MACRO_GROUPE %s et celle : %s du MESHGROUP associé à ce macro-groupe." % \
-                             ( propriete, obj.valeur[propriete].nom,  nomMacroGroupe, self.dictGroupes[nomGroupe][propriete],  nomGroupe ))
+                            raise ValueError, propriete + ',' + obj.valeur[propriete].nom + ',' + nomMacroGroupe + ',' + self.dictGroupes[nomGroupe][propriete] + ',' +  nomGroupe\
+                            + tr(" : conflit entre la propriete (#1:#2) du MACRO_GROUPE (de nom #3) et celle (#4) du MESHGROUP (#5) associe a ce macro-groupe.")
                         else : # pas de conflit de cette propriété, alors copie, meme si les propriétés sont les memes pour simplifier
                             self.dictGroupes[nomGroupe][propriete] = obj.valeur[propriete].nom # sauvegarde du nom de la propriété du macro-groupe dans le meshgroup
                 for propriete in ('CONDITION_LIMITE', ): # liste des propriétés définies à l'avance automatiques à copier du MACRO_GROUPE à chaque MESHGROUP de la liste
                     if  propriete in obj.valeur.keys(): # ce macro-groupe est associé à cette propriété
                         if self.dictGroupes[nomGroupe].has_key(propriete) and self.dictGroupes[nomGroupe][propriete] != self.dictGroupes[nomGroupe][propriete]: # erreur, ce meshgroup a déjà une telle propriéte définie, différente
-                            print u"ERREUR! Conflit entre la %s : %s du MACRO_GROUPE %s et celle : %s du MESHGROUP associé à ce macro-groupe." % \
+                            print u"ERREUR! Conflit entre la %s : %s du MACRO_GROUPE %s et celle : %s du MESHGROUP %s associé à ce macro-groupe." % \
                              ( propriete, obj.valeur[propriete],  nomMacroGroupe, self.dictGroupes[nomGroupe][propriete],  nomGroupe )
-                            raise ValueError, tr(u"ERREUR! Conflit entre la %s : %s du MACRO_GROUPE %s et celle : %s du MESHGROUP associé à ce macro-groupe." % \
-                             ( propriete, obj.valeur[propriete],  nomMacroGroupe, self.dictGroupes[nomGroupe][propriete],  nomGroupe ))
+                            raise ValueError, propriete + ',' + obj.valeur[propriete].nom + ',' + nomMacroGroupe + ',' + self.dictGroupes[nomGroupe][propriete] + ',' +  nomGroupe\
+                            + tr(" : conflit entre la propriete (#1:#2) du MACRO_GROUPE (de nom #3) et celle (#4) du MESHGROUP (#5) associe a ce macro-groupe.")
                         else : # pas de conflit de cette propriété, alors copie, meme si les propriétés sont les memes pour simplifier
                             self.dictGroupes[nomGroupe][propriete] = obj.valeur[propriete] # sauvegarde du nom de la propriété du macro-groupe dans le meshgroup
         except ValueError, err:
@@ -762,22 +760,6 @@ class CARMEL3DTV0Generator(PythonGenerator):
             print"mon dico des sources=%s" %(self.dictSource)
         except ValueError, err:
             raise ValueError, str(err)
-
-   def generPOST_COMMANDS(self, obj):
-        if self.debug: 
-            print "generation POST_COMMANDS obj.valeur = %s" % obj.valeur     
-
-
-
-        self.visu = False
-        self.post_global = False
-        if obj.valeur.has_key('GLOBAL'):
-            self.post_global = True
-        if obj.valeur.has_key('VISU'):
-            self.visu = True
-            self.visu_format=obj.valeur["VISU"]["VISU_Format"]
-         #   self.visu_type=obj.valeur["VISU"]["VISU_Type"]
-
 
 #---------------------------------------------------------------------------------------
 # traitement fichier PHYS
@@ -861,19 +843,14 @@ class CARMEL3DTV0Generator(PythonGenerator):
         self.carteChamp=obj.valeur["Cartes_des_champs"]
         self.carteCourantInduit=obj.valeur["Cartes_des_courants_induits"]
         self.carteForce=obj.valeur["Cartes_des_forces"]
-        self.perteJoule=obj.valeur["Pertes_Joules"]
-        self.fluxInducteur=obj.valeur["Flux_par_inducteur"]
-        self.courantInducteur=obj.valeur["Courants_par_inducteur"]
-        self.tensionInducteur=obj.valeur["Tensions_par_inducteur"]
-        self.energie=obj.valeur["Energie"]
-        self.ForceCouple=obj.valeur["Forces_et_couple"]
-        self.fluxSpire=obj.valeur["Flux_par_spire"]
-        self.fluxGroupe=obj.valeur["Flux_par_groupe"]
-        self.ddpElect=obj.valeur["Tensions_electriques"]
-        self.ddpMagn=obj.valeur["DDP_magnetiques"]
-        self.fluxMagn=obj.valeur["Flux_magnetiques"]
-        self.fluxJinduitTotal=obj.valeur["Flux_J_induit"]     
-        self.potFlottant=obj.valeur["Potentiel_Flottant"]
+        if obj.valeur.has_key('GLOBAL'):
+            self.post_global = obj.valeur['GLOBAL']
+            # sauvegarde de la liste au format correct, en supprimant les guillemets simples et doubles extra générés par Eficas
+            # car Eficas génère une liste ["'Energie'","'Flux par inducteur'","'Force et couple'"] enrichie
+            # à partir de l'instruction .comm correctement formatée : GLOBAL=('Energie','Flux par inducteur','Force et couple',)
+            for i in range(len(self.post_global)): 
+                self.post_global[i] = self.post_global[i].replace("'", "") # suppression des guillement simples
+                self.post_global[i] = self.post_global[i].replace('"', "") # suppression des guillement doubles
 
 #-------------------------------------
 # Methodes utilitaires
