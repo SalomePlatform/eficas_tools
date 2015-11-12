@@ -99,5 +99,5 @@ class MonSelectVal(DSelVal):
                liste.append(val2)
             except :
               pass
-        print self.FonctPanel.AjoutNValeur 
+        #print self.FonctPanel.AjoutNValeur 
         self.FonctPanel.AjoutNValeur(liste) 

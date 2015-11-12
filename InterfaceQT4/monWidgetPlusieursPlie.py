@@ -18,32 +18,43 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+import string,types,os,sys
 
 # Modules Eficas
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
-from feuille               import Feuille
-from desWidgetUniqueSDCO   import Ui_WidgetUniqueSDCO 
-from politiquesValidation  import PolitiqueUnique
-from qtSaisie              import SaisieSDCO
+from feuille                import Feuille
+from desWidgetPlusieursPlie import Ui_WidgetPlusieursPlie 
 
 
-
-
-class MonWidgetUniqueSDCO (Ui_WidgetUniqueSDCO,Feuille,SaisieSDCO):
+class MonWidgetPlusieursPlie (Ui_WidgetPlusieursPlie,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        #print "dans MonWidgetSDCO"
+        #print "MonWidgetPlusieursBase", nom
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-        self.politique=PolitiqueUnique(self.node,self.editor)
         self.parentQt.commandesLayout.insertWidget(-1,self)
-        self.maCommande.listeAffichageWidget.append(self.LESDCO)
-        self.AAficher=self.LESDCO
+        self.AAfficher=self.lineEditVal
+        self.maCommande.listeAffichageWidget.append(self.lineEditVal)
+        
+        repIcon=self.node.editor.appliEficas.repIcon
+        fichier=os.path.join(repIcon, 'plusnode.png')
+        icon = QIcon(fichier)
+        self.BVisuListe.setIcon(icon)
 
-        valeur = self.node.item.get_valeur()
-        if valeur  != "" and valeur != None : self.LESDCO.setText(valeur.nom)
-        self.connect(self.LESDCO,SIGNAL("returnPressed()"),self.LESDCOReturnPressed)
+        self.connect(self.BVisuListe,SIGNAL("clicked()"), self.selectWidgetDeplie)
 
+
+  def setValeurs(self):
+       self.listeValeursCourantes=self.node.item.GetListeValeurs()
+       if self.listeValeursCourantes != []  :  self.lineEditVal.setText(str(self.listeValeursCourantes))
+       else : self.lineEditVal.setText("")
+       self.lineEditVal.setReadOnly(True)
+       return
+
+  def selectWidgetDeplie(self):
+      self.editor.listeDesListesOuvertes.add(self.node.item)
+      self.reaffichePourDeplier()
+
+       

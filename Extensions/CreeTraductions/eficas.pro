@@ -149,6 +149,7 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../InterfaceQT4/monWidgetPlusieursTuple2.py \
           ../../InterfaceQT4/monWidgetPlusieursTuple3.py \
           ../../InterfaceQT4/monWidgetPlusieursTuple.py \
+          ../../InterfaceQT4/monWidgetPlusieursPlie.py \
           ../../InterfaceQT4/monWidgetRadioButton.py \
           ../../InterfaceQT4/monWidgetSDCOInto.py \
           ../../InterfaceQT4/monWidgetSimpBase.py \
@@ -191,6 +192,8 @@ SOURCES = ../../convert/autre_parseur.py \
           ../../Noyau/N_VALIDATOR.py \
           ../../Noyau/N_JDC.py \
           ../../CarmelCND/PourTraductionCarmel.py \
+          ../../Carmel3D/PourTraduction.py \
+          ../../monCode/EssaiTraduction.py \
           ../../Validation/V_A_CLASSER.py \
           ../../Validation/V_AU_MOINS_UN.py \
           ../../Validation/V_AU_PLUS_UN.py \
@@ -240,6 +243,7 @@ FORMS=   \
 	../../UiQT4/desWidgetPlusieursInto.ui \
 	../../UiQT4/desWidgetPlusieursIntoOrdonne.ui \
 	../../UiQT4/desWidgetPlusieursTuple.ui \
+	../../UiQT4/desWidgetPlusieursPlie.ui \
 	../../UiQT4/desWidgetRadioButton.ui \
 	../../UiQT4/desWidget4a6RadioButton.ui \
 	../../UiQT4/desWidgetSDCOInto.ui \

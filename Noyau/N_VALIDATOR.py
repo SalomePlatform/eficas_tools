@@ -672,7 +672,7 @@ class NoRepeat(ListVal):
         self.cata_info = ""
 
     def info(self):
-        return _(u": pas de présence de doublon dans la liste")
+        return _(u"Pas de doublon dans la liste")
 
     def info_erreur_liste(self):
         return _(u"Les doublons ne sont pas permis")
@@ -1037,6 +1037,7 @@ class AndVal(Valid):
         return chaine
 
     def info_erreur_liste(self):
+        chaine=""
         a = 1
         for v in self.validators:
             if v.info_erreur_liste() != " ":

@@ -30,12 +30,13 @@ from desWidgetPlusieursIntoOrdonne import Ui_WidgetPlusieursIntoOrdonne
 from politiquesValidation   import PolitiquePlusieurs
 from qtSaisie               import SaisieValeur
 from gereListe              import GereListe
+from gereListe              import GerePlie
 from gereListe              import LECustom
 from gereListe              import MonLabelListeClic
 
 
 
-class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,GereListe):
+class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,GereListe,GerePlie):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursInto", nom, self
@@ -44,6 +45,8 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.ouAjouter=0
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
+        self.initCommentaire()
+        self.gereIconePlier()
         try :
           self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
         except :
@@ -79,13 +82,11 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
             else: 
                self.listeAAfficher=self.node.item.get_liste_possible([])
        else :
-            print self.node.item.get_liste_possible
             self.listeAAfficher=self.node.item.get_liste_possible(listeValeursCourantes)
 
        if self.listeAAfficher==[] : 
           self.ajoutLE(0)
           return
-       print self.listeAAfficher
        if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
        else : self.setMinimumHeight(len(self.listeAAfficher)*30)
 
@@ -112,6 +113,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           courant.setText(str(val))
           courant.setReadOnly(True)
           index=index+1
+       self.prepareListeResultat()
 
   def moinsPushed(self):
       self.ouAjouter=self.ouAjouter-1
@@ -152,28 +154,6 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       nouveauLE.setFocus()
       setattr(self,nomLE,nouveauLE)
       
-
-  def finCommentaire(self):
-        commentaire=""
-        mc = self.node.item.get_definition()
-        d_aides = { 'TXM' : 'chaines de caracteres',
-                  'R'   : 'reels',
-                  'I'   : 'entiers',
-                  'C'   : 'complexes'}
-        type = mc.type[0]
-        if not d_aides.has_key(type) :
-           if mc.min == mc.max:
-               commentaire=tr("Entrez ")+str(mc.min)+tr(" valeurs ")
-           else :
-               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")
-        else :
-           if mc.min == mc.max:
-               commentaire=tr("Entrez ")+str(mc.min)+" "+tr(d_aides[type])
-           else :
-               commentaire=tr("Entrez entre ")+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])
-        aideval=self.node.item.aide()
-        com=commentaire + "   " + QString.toUtf8(QString(aideval))
-        return str(com)
 
 
   def traiteClicSurLabelListe(self,valeur):
@@ -246,3 +226,31 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       self.estVisibleRE.setFocus()
       self.scrollArea.ensureWidgetVisible(self.estVisibleRE,0,0)
 #
+  def initCommentaire(self):
+        commentaire=""
+        mc = self.node.item.get_definition()
+        d_aides = { 'TXM' : 'chaînes\n',
+                  'R'   : 'réels\n',
+                  'I'   : 'entiers\n',
+                  'C'   : 'complexes\n'}
+        type = mc.type[0]
+        if not d_aides.has_key(type) :
+           if mc.min == mc.max:
+               commentaire=tr("Entrez ")+str(mc.min)+(" valeurs \n ")
+           else :
+               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")
+        else :
+          # Pour la traduction
+           if type == 'TXM' : aide=tr('chaines \n')
+           if type == 'R'   : aide=tr('reels\n')
+           if type == 'I'   : aide=tr('entiers\n')
+           if type == 'C'   : aide=tr('complexes\n')
+           if mc.min == mc.max:
+               commentaire=tr("Entrez ")+str(mc.min)+" "+ aide
+           else :
+               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+" "+aide
+        aideval=self.node.item.aide()
+        commentaire=commentaire +  (aideval)
+        self.monCommentaireLabel.setText(commentaire)
+
+

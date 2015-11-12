@@ -78,14 +78,12 @@ class FacultatifOuOptionnel:
 
   def setIconePoubelle(self):
       if not(hasattr(self,"RBPoubelle")):return
-      icon1 = QtGui.QIcon()
-      repIcon=os.path.join(os.path.abspath(os.path.dirname(__file__)),'../Editeur/icons')
       if self.node.item.object.isoblig() : 
-         icon1.addPixmap(QtGui.QPixmap(repIcon+"/deleteRondVide.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-         self.RBPoubelle.setIcon(icon1)
+         icon=QIcon(self.repIcon+"/deleteRondVide.png")
+         self.RBPoubelle.setIcon(icon)
          return
-      icon1.addPixmap(QtGui.QPixmap(repIcon+"/deleteRond.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-      self.RBPoubelle.show()
+      icon=QIcon(self.repIcon+"/deleteRond.png")
+      self.RBPoubelle.setIcon(icon)
       self.connect(self.RBPoubelle,SIGNAL("clicked()"),self.aDetruire)
 
   def setIconesSalome(self):
@@ -96,10 +94,18 @@ class FacultatifOuOptionnel:
        enable_salome_selection = self.editor.salome and \
          (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or ('SalomeEntry' in repr(mctype)) or \
          (hasattr(mctype, "enable_salome_selection") and mctype.enable_salome_selection))
+
        if enable_salome_selection:
+          icon=QIcon(self.repIcon+"/flecheSalome.png")
+          self.RBSalome.setIcon(icon)
           self.connect(self.RBSalome,SIGNAL("pressed()"),self.BSalomePressed)
-          if not(('grma' in repr(mctype)) or ('grno' in repr(mctype))) or not(self.editor.salome): self.BView2D.close()
-          else : self.connect(self.RBSalomeVue,SIGNAL("clicked()"),self.BView2DPressed)
+
+          if not(('grma' in repr(mctype)) or ('grno' in repr(mctype))) or not(self.editor.salome): 
+             self.BView2D.close()
+          else : 
+             icon1=QIcon(self.repIcon+"/eye.png")
+             self.RBSalomeVue.setIcon(icon1)
+             self.connect(self.RBSalomeVue,SIGNAL("clicked()"),self.BView2DPressed)
        else:
           self.RBSalome.close()
           self.RBSalomeVue.close()
@@ -119,6 +125,9 @@ class FacultatifOuOptionnel:
 
 
 
+  def setIconesGenerales(self):
+      pass
+      
 
   def setRun(self):
       if hasattr(self.editor.appliEficas, 'mesScripts'):
@@ -136,11 +145,10 @@ class FacultatifOuOptionnel:
       #print " c est le moment de gerer le passage au suivant"
       if not(hasattr (self,'RBValide')) : return
       icon = QIcon()
-      repIcon=os.path.join(os.path.abspath(os.path.dirname(__file__)),'../Editeur/icons')
       if self.node.item.object.isvalid() : 
-         icon=QIcon(repIcon+"/ast-green-ball.png")
+         icon=QIcon(self.repIcon+"/ast-green-ball.png")
       else :
-         icon=QIcon(repIcon+"/ast-red-ball.png")
+         icon=QIcon(self.repIcon+"/ast-red-ball.png")
       self.RBValide.setIcon(icon)
 
   # il faut chercher la bonne fenetre

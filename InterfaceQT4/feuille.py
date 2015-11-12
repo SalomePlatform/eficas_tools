@@ -163,7 +163,8 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       #self.editor.affiche_infos(info)
 
    def reaffiche(self):
-      #print "dans reaffiche de feuille", self.nom
+      print "dans reaffiche de feuille", self.nom
+      self.parentQt.reaffiche()
       if self.editor.jdc.aReafficher==True :
          #print " j appelle le reaffiche de parentQt"
          self.parentQt.reaffiche()
@@ -180,6 +181,9 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
          self.editor.fenetreCentraleAffichee.afficheSuivant(self.AAfficher)
       else :
          if hasattr(self, 'AAfficher'): self.AAfficher.setFocus(7)
+
+   def reaffichePourDeplier(self):
+      self.parentQt.reaffiche()
 
    def rendVisible(self):
        #print "jjjjjjjjjjjjjjjjjjjjj"

@@ -943,22 +943,22 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>&amp;Ok</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="135"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="159"/>
         <source>Entrez </source>
         <translation>enter</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="132"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="156"/>
         <source> valeurs </source>
         <translation>values</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="137"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="161"/>
         <source>Entrez entre </source>
         <translation>enter between </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="132"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="156"/>
         <source> et </source>
         <translation> and </translation>
     </message>
@@ -1387,7 +1387,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="420"/>
+        <location filename="../../InterfaceQT4/browser.py" line="422"/>
         <source>  n&apos;est pas un index valide pour append_brother</source>
         <translation>is not correct - no possible &quot;append_brother&quot;</translation>
     </message>
@@ -1740,7 +1740,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../InterfaceQT4/qtEficas.py" line="389"/>
         <source>Accquisition Groupe Maille</source>
-        <translation>acquier mesh groups</translation>
+        <translation type="obsolete">acquier mesh groups</translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/viewManager.py" line="299"/>
@@ -1828,7 +1828,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>SETTINGS</translation>
     </message>
     <message>
-        <location filename="../../CarmelCND/PourTraductionCarmel.py" line="17"/>
+        <location filename="../../Carmel3D/PourTraduction.py" line="5"/>
         <source>RepCarmel</source>
         <translation>Carmel_Directory</translation>
     </message>
@@ -1878,27 +1878,27 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>select</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursBase.py" line="242"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="242"/>
         <source>nb min de valeurs : </source>
         <translation>minimal number of values :</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursBase.py" line="247"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="247"/>
         <source>nb max de valeurs atteint</source>
         <translation>maximum number of values</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="367"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="374"/>
         <source>TraduitV10V11</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="370"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="377"/>
         <source>TraduitV11V12</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="372"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="379"/>
         <source>Sauve Format Ligne</source>
         <translation>save file in line format</translation>
     </message>
@@ -2285,22 +2285,22 @@ Le fichier associe n&apos;est pas defini</source>
         <translation>header does not match with matrix</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="448"/>
+        <location filename="../../InterfaceQT4/browser.py" line="450"/>
         <source>le mot clef </source>
         <translation>keyword </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="440"/>
+        <location filename="../../InterfaceQT4/browser.py" line="442"/>
         <source> doit etre insere avant </source>
         <translation> has to be inserted before </translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="449"/>
+        <location filename="../../InterfaceQT4/browser.py" line="451"/>
         <source>insertion impossible</source>
         <translation>unable to insert keyword</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="448"/>
+        <location filename="../../InterfaceQT4/browser.py" line="450"/>
         <source> doit etre insere apres </source>
         <translation> has to be inserted after </translation>
     </message>
@@ -2323,6 +2323,176 @@ Le fichier associe n&apos;est pas defini</source>
         <location filename="../../InterfaceQT4/gereRegles.py" line="58"/>
         <source>pas de regle de construction pour ce jeu de commandes</source>
         <translation>No specific rules for building this dataset</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="257"/>
+        <source>Gestion Maillage</source>
+        <translation>Mesh Menu</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="391"/>
+        <source>Acquiert groupe mailles</source>
+        <translation>Read elements mesh</translation>
+    </message>
+    <message>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="396"/>
+        <source>Acquisition Groupe Maille</source>
+        <translation>Read elements mesh</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="1"/>
+        <source>VERSION</source>
+        <translation>VERSION_EN</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="2"/>
+        <source>NUM</source>
+        <translation>NUMBER</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="3"/>
+        <source>FILETYPE</source>
+        <translation>FILETYPE</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="4"/>
+        <source>PARAMETERS</source>
+        <translation>Parametres</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="6"/>
+        <source>Fichier_maillage</source>
+        <translation>FichierMaillage</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="7"/>
+        <source>Echelle_du_maillage</source>
+        <translation>MeshScale</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="8"/>
+        <source>Formulation</source>
+        <translation>Fomulation</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="9"/>
+        <source>Timeproblem</source>
+        <translation>TimeProblem</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="10"/>
+        <source>spectral </source>
+        <translation>EssaiSpectral</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="11"/>
+        <source>Basis</source>
+        <translation>Basis</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="12"/>
+        <source>Fourier</source>
+        <translation>Fourier</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="13"/>
+        <source>Ordre</source>
+        <translation>Ordre</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="14"/>
+        <source>FREQUENCY</source>
+        <translation>Frequency</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="15"/>
+        <source>minimisation</source>
+        <translation>Minimisation</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="16"/>
+        <source>no</source>
+        <translation>no</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="17"/>
+        <source>yes</source>
+        <translation>yes</translation>
+    </message>
+    <message>
+        <location filename="../../Carmel3D/PourTraduction.py" line="18"/>
+        <source>nb_procs_para</source>
+        <translation>NbProcs</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="1"/>
+        <source>POLYMER</source>
+        <translation>Polymer_en_Anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="2"/>
+        <source>MODEL_DATABASE</source>
+        <translation>MoDEL_DATa_Anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="3"/>
+        <source>Stabilise</source>
+        <translation>Srabilise_Anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="4"/>
+        <source>Non Stabilise</source>
+        <translation>Non Stabilise anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="5"/>
+        <source>Local</source>
+        <translation>local_anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="6"/>
+        <source>ESSAI_OPTION</source>
+        <translation>essai_option_anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="7"/>
+        <source>MATERIEL</source>
+        <translation>mater_anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="8"/>
+        <source>Cable</source>
+        <translation>cable_anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="9"/>
+        <source>Peinture</source>
+        <translation>peinture_anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="10"/>
+        <source>Tuyauterie</source>
+        <translation>tuyau_anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="11"/>
+        <source>Materiau_De_Cable</source>
+        <translation>mat_cable_anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="12"/>
+        <source>PE</source>
+        <translation>pe_anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="13"/>
+        <source>EPDM</source>
+        <translation>epdm_anglais</translation>
+    </message>
+    <message>
+        <location filename="../../monCode/EssaiTraduction.py" line="14"/>
+        <source>Modele</source>
+        <translation>modele_anglais</translation>
     </message>
 </context>
 <context>
@@ -2792,7 +2962,7 @@ p, li { white-space: pre-wrap; }
         <translation>Save run</translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="174"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="181"/>
         <source>Run</source>
         <translation>run</translation>
     </message>
@@ -3454,6 +3624,39 @@ p, li { white-space: pre-wrap; }
         <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="157"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
+    </message>
+</context>
+<context>
+    <name>WidgetPlusieursPlie</name>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="26"/>
+        <source>Form</source>
+        <translation></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="82"/>
+        <source>Affiche le rapport de validité du mot-clef</source>
+        <translation>Display validity report for the keyword</translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="279"/>
+        <source>...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="143"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="216"/>
+        <source>permet de gérer la liste</source>
+        <translation>manage list</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="273"/>
+        <source>Détruit le mot-clef</source>
+        <translation>Delete the keyword</translation>
     </message>
 </context>
 <context>

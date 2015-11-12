@@ -288,6 +288,7 @@ class READERCATA:
           #qApp.mainWidget().setCaption(lab)
       else:
           raise EficasException()
+        
 
    def traite_clefs_documentaires(self):
       try:

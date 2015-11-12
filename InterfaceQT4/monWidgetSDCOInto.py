@@ -35,7 +35,7 @@ from politiquesValidation  import PolitiqueUnique
 class MonWidgetSDCOInto (Ui_WidgetSDCOInto,Feuille,SaisieSDCO):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        print "MonWidgetSDCOInto init"
+        #print "MonWidgetSDCOInto init"
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.parentQt.commandesLayout.insertWidget(-1,self)

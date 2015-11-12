@@ -144,12 +144,9 @@ class GereListe:
          for i in range (self.NumLineEditEnCours, self.indexDernierLabel):
              aRemonter=i+1
              nomLineEdit=self.nomLine+str(aRemonter)
-             print nomLineEdit
              courant=getattr(self,nomLineEdit)
              valeurARemonter=courant.getValeur()
-             print valeurARemonter
              nomLineEdit=self.nomLine+str(i)
-             print nomLineEdit
              courant=getattr(self,nomLineEdit)
              if valeurARemonter != None : courant.setValeur(valeurARemonter)
              else : courant.clean()
@@ -183,7 +180,6 @@ class GereListe:
        self.scrollArea.ensureWidgetVisible(self.LineEditEnCours)
 
    def voisListePushed(self):
-       print "voisListePushed"
        texteValeurs=""
        for v in self.node.item.GetListeValeurs():
           texteValeurs+=str(v)+", "
@@ -193,7 +189,6 @@ class GereListe:
 
 
    def selectInFile(self):
-       print "selectInFile"
        init=QString( self.editor.CONFIGURATION.savedir)
        fn = QFileDialog.getOpenFileName(self.node.appliEficas,
                                          tr("Fichier de donnees"),
@@ -208,3 +203,25 @@ class GereListe:
        MonSelectVal(file=fn,parent=self).show()
 
   
+# ----------- #
+class GerePlie:
+# ----------- #
+
+   def gereIconePlier(self):
+      repIcon=self.node.editor.appliEficas.repIcon
+      if not (self.editor.afficheListesPliees):
+         fichier=os.path.join(repIcon, 'empty.png')
+         icon = QIcon(fichier)
+         self.BFermeListe.setIcon(icon)
+         return
+      fichier=os.path.join(repIcon, 'minusnode.png')
+      icon = QIcon(fichier)
+      self.BFermeListe.setIcon(icon)
+      self.connect(self.BFermeListe,SIGNAL("clicked()"), self.selectWidgetPlie)
+
+   def selectWidgetPlie(self):
+      self.editor.listeDesListesOuvertes.remove(self.node.item)
+      self.reaffichePourDeplier()
+
+        
+     

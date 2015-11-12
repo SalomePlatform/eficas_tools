@@ -43,7 +43,6 @@ class Appli(Ui_Eficas,QMainWindow):
         QMainWindow.__init__(self,parent)
         Ui_Eficas.__init__(self)
 
-
         version=getEficasVersion()
         self.VERSION_EFICAS="Eficas QT4 "+version
         self.salome=salome
@@ -79,6 +78,10 @@ class Appli(Ui_Eficas,QMainWindow):
         localisation.localise(app,langue)
 
         self.setupUi(self)
+
+        icon = QIcon(self.repIcon+"/parametres.png")
+        self.actionParametres.setIcon(icon)
+
 
         self.myQtab.removeTab(0)
         self.blEntete= QBoxLayout(0,self.frameEntete)

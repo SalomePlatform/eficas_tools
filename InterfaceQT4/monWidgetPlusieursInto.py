@@ -29,9 +29,9 @@ from feuille                import Feuille
 from desWidgetPlusieursInto import Ui_WidgetPlusieursInto 
 from politiquesValidation   import PolitiquePlusieurs
 from qtSaisie               import SaisieValeur
-#from gereListe              import GereListe
+from gereListe              import GerePlie
 
-class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
+class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursInto", nom, self
@@ -40,6 +40,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille):
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.connect(self.CBCheck, SIGNAL('stateChanged(int)'),self.change)
+        self.gereIconePlier()
         # try except si la liste des possibles est vide
         # prevoir qqchose
         try :

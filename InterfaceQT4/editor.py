@@ -61,6 +61,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.fenetreCentraleAffichee=None
         self.dejaDansPlieTout=False
         self.afficheCommandesPliees = True
+        self.listeDesListesOuvertes=set()
         self.appliEficas = appli
         self.appli       = appli  #---- attendu par IHM
         self.vm          = vm
@@ -77,6 +78,11 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code = self.appliEficas.CONFIGURATION.code
+        # tres vite a cause du tag. doit etre pase dans CONFIGURATION
+
+        self.afficheListesPliees=False
+        if self.code == "ASTER" : self.afficheListesPliees =True
+
         self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
         self.affiche=self.appliEficas.CONFIGURATION.affiche
         #if self.code in ['MAP','CARMELCND','PSEN'] : self.afficheCommandesPliees=False

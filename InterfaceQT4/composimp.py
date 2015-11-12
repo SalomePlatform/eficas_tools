@@ -36,11 +36,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
 
-    def getPanelGroupe(self,parentQt,commande):
+    def getPanelGroupe(self,parentQt,maCommande):
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
         monNom=self.item.nom
-        maCommande=commande
 
         # label informatif 
         if monObjet.isInformation():
@@ -115,7 +114,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                from monWidgetSDCOInto import MonWidgetSDCOInto
                widget=MonWidgetSDCOInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_assd():
-            print self.item.get_sd_avant_du_bon_type()
             if len(self.item.get_sd_avant_du_bon_type()) == 0 :
                from monWidgetVide import MonWidgetVide
                widget=MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
@@ -146,6 +144,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
           #if maDefinition.into != [] and maDefinition.into != None:
           # Attention pas fini --> on attend une liste de ASSD avec ordre
           if self.item.wait_assd() and self.item.is_list_SansOrdreNiDoublon():
+               #print 1
                from monWidgetPlusieursInto import MonWidgetPlusieursInto
                widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_assd() :
@@ -153,9 +152,11 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                widget=MonWidgetPlusieursASSDIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_tuple() :
             if self.item.object.definition.type[0].ntuple == 2:
+               #print 3
                from monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2
                widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif self.item.object.definition.type[0].ntuple == 3 :
+               #print 4
                from monWidgetPlusieursTuple3 import MonWidgetPlusieursTuple3
                widget=MonWidgetPlusieursTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
@@ -163,14 +164,27 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                print "Prevenir la maintenance "
           elif self.item.has_into():
             if self.item.is_list_SansOrdreNiDoublon():
+               #print 6
                from monWidgetPlusieursInto import MonWidgetPlusieursInto
                widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-               from monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
-               widget=MonWidgetPlusieursIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               #print 7
+# tres vite pour le tag mais devra etre gere dans configuration
+               if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
+                  from monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
+                  widget=MonWidgetPlusieursIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               else :
+                  from monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
-            from monWidgetPlusieursBase import MonWidgetPlusieursBase
-            widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            #print 8
+            if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees)  : 
+               from monWidgetPlusieursBase import MonWidgetPlusieursBase
+               widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            else :
+               from monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+               widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+
         self.widget=widget
         return widget
          
@@ -293,6 +307,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
          valeurspossibles = self.definition.validators.into 
       else:
          valeurspossibles = self.get_definition().into
+
+      if listeActuelle==[] : return valeurspossibles
 
       #On ne garde que les items valides
       listevalideitem=[]

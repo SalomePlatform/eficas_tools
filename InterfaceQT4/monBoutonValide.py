@@ -33,12 +33,12 @@ class MonBoutonValide(QToolButton) :
         self.parent=parent
 
      def mouseDoubleClickEvent(self, event):
-        print "dans mouseDoubleClickEvent"
+        #print "dans mouseDoubleClickEvent"
         strRapport=unicode(self.parent.node.item.object.report())
         self.parent.editor._viewText(strRapport, "JDC_RAPPORT")
 
      def mousePressEvent(self, event):
-       print "dans mousePressEvent"
+       #print "dans mousePressEvent"
        if self.parent.node.item.object.isvalid() :
           myToolTip=QString(tr("objet valide"))
           QToolTip.showText(event.globalPos(),myToolTip )

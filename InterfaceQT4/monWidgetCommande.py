@@ -112,12 +112,16 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
          if i != -1 : i=self.listeAffichageWidget.index(f)
       else :i=self.listeAffichageWidget.index(f) 
       if (i==len(self.listeAffichageWidget) -1) and next and not self.inhibe: 
-         self.listeAffichageWidget[1].setFocus(7)
-         w=self.focusWidget()
-         self.inhibe=1
-         w.focusPreviousChild()
-         self.inhibe=0
-         return True
+         try :
+           self.listeAffichageWidget[1].setFocus(7)
+           w=self.focusWidget()
+           self.inhibe=1
+           w.focusPreviousChild()
+           self.inhibe=0
+           return True
+         except :
+           print self.listeAffichageWidget
+           print "souci ds focusNextPrevChild"
       if i==0 and next==False and not self.inhibe: 
          if hasattr(self.editor.fenetreCentraleAffichee,'scrollArea'):
             self.editor.fenetreCentraleAffichee.scrollArea.ensureWidgetVisible(self.listeAffichageWidget[-1])

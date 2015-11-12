@@ -186,6 +186,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.appliEficas = treeParent.appliEficas
         self.JESUISOFF=0
         self.childrenComplete=[]
+
                         
         from InterfaceQT4 import compocomm
         from InterfaceQT4 import compoparam
