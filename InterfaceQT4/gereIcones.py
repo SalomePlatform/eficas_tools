@@ -126,12 +126,17 @@ class FacultatifOuOptionnel:
 
 
   def setIconesGenerales(self):
-      pass
+      repIcon=self.node.editor.appliEficas.repIcon
+      if hasattr(self,"BVisuListe") :
+         fichier=os.path.join(repIcon, 'plusnode.png')
+         icon = QIcon(fichier)
+         self.BVisuListe.setIcon(icon)
+
       
 
   def setRun(self):
       if hasattr(self.editor.appliEficas, 'mesScripts'):
-         if self.editor.tree.currentItem().item.get_nom() in self.appliEficas.mesScripts.dict_commandes.keys() :
+         if hasattr(self.editor,'tree') and self.editor.tree.currentItem().item.get_nom() in self.appliEficas.mesScripts.dict_commandes.keys() :
                print 'il faut programmer le self.ajoutScript()'
                print '#PNPNPNPN'
                return

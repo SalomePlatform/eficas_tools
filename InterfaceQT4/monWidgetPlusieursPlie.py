@@ -38,11 +38,6 @@ class MonWidgetPlusieursPlie (Ui_WidgetPlusieursPlie,Feuille):
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
         
-        repIcon=self.node.editor.appliEficas.repIcon
-        fichier=os.path.join(repIcon, 'plusnode.png')
-        icon = QIcon(fichier)
-        self.BVisuListe.setIcon(icon)
-
         self.connect(self.BVisuListe,SIGNAL("clicked()"), self.selectWidgetDeplie)
 
 
