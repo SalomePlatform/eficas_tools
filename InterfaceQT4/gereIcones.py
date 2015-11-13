@@ -38,10 +38,16 @@ class FacultatifOuOptionnel:
          pass
       if hasattr(self,"RBRegle"):
         if listeRegles==() : self.RBRegle.close() 
-        else : self.connect( self.RBRegle,SIGNAL("clicked()"),self.viewRegles)
+        else :
+           icon3=QIcon(self.repIcon+"/lettreRblanc30.png")
+           self.RBRegle.setIcon(icon3)
+           self.connect( self.RBRegle,SIGNAL("clicked()"),self.viewRegles)
 
       cle_doc=None
       if not hasattr(self,"RBInfo"):return
+      icon=QIcon(self.repIcon+"/point-interrogation30.png")
+      self.RBInfo.setIcon(icon)
+
       from monWidgetCommande import MonWidgetCommande
       if isinstance(self,MonWidgetCommande) and self.editor.code =="MAP":
          self.cle_doc = self.chercheDocMAP()
@@ -135,6 +141,10 @@ class FacultatifOuOptionnel:
          fichier=os.path.join(repIcon, 'plusnode.png')
          icon = QIcon(fichier)
          self.RBDeplie.setIcon(icon)
+      if hasattr(self,"RBPlie") :
+         fichier=os.path.join(repIcon, 'minusnode.png')
+         icon = QIcon(fichier)
+         self.RBPlie.setIcon(icon)
 
       
 
