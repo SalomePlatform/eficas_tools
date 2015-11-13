@@ -50,6 +50,7 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       self.repIcon=self.appliEficas.repIcon
       self.jdc=self.node.item.get_jdc()
       self.setIconePoubelle()
+      self.setIconesGenerales()
       self.setRun()
       self.setValide()
       self.setReglesEtAide()

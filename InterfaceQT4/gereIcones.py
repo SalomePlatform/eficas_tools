@@ -131,6 +131,10 @@ class FacultatifOuOptionnel:
          fichier=os.path.join(repIcon, 'plusnode.png')
          icon = QIcon(fichier)
          self.BVisuListe.setIcon(icon)
+      if hasattr(self,"RBDeplie") :
+         fichier=os.path.join(repIcon, 'plusnode.png')
+         icon = QIcon(fichier)
+         self.RBDeplie.setIcon(icon)
 
       
 
