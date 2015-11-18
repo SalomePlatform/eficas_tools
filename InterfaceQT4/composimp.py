@@ -507,6 +507,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       attend un objet GEOM, 0 sinon
       """
       return self.object.wait_geom()
+
+  def wait_TXM(self):
+     return self.object.wait_TXM()
+
     
   def wait_complex(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self

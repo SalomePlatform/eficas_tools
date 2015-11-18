@@ -40,6 +40,8 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
       self.node.fenetre=self
       self.setupUi(self)
       self.editor=editor
+      self.appliEficas=self.editor.appliEficas
+      self.repIcon=self.appliEficas.repIcon
       self.setIconePoubelle()
       self.remplitTexte()
       if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()

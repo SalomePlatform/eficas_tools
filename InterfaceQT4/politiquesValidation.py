@@ -36,6 +36,7 @@ class Validation  :
          if not validite :
                   commentaire = "impossible d'evaluer : %s " %`valeurentree`
                   return valeur,validite,commentaire
+         if self.node.item.wait_TXM() and type(valeur) not in types.StringTypes : valeur=str(valeur) 
 
          testtype,commentaire = self.node.item.object.verif_type(valeur)
          if not testtype :
@@ -78,10 +79,11 @@ class Validation  :
 
   def GetValeurTexte(self,valeur) :
          valeurTexte=valeur
+         if valeur == None : return valeur
          from decimal import Decimal
          if  isinstance(valeur,Decimal) :
-             return valeur 
-         if valeur == None : return valeur
+             if self.node.wait_TXM() and not self.is_param(valeur) : return "'"+str(valeur)+"'"
+             else : return(valeur)
          if "R" in self.node.item.object.definition.type:
                   clefobj=self.node.item.object.GetNomConcept()
                   if self.parent.appliEficas.dict_reels.has_key(clefobj):

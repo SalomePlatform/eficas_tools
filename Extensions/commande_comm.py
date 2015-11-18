@@ -1,4 +1,4 @@
-#-*- coding: ISO-8859-1 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 import os,traceback,string
+import re
 
 from Noyau.N_CR import CR
 from Noyau.N_Exception import AsException
@@ -58,7 +59,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         Génère l'objet rapport (classe CR)
         """
         self.cr=CR()
-        if not self.isvalid(): self.cr.warn(tr(u"Objet commande commentarisee invalide"))
+        if not self.isvalid(): self.cr.warn(tr("Objet commande commentarisé invalide"))
         return self.cr
 
     def copy(self):
@@ -124,6 +125,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         """
         Retourne l'attribut fr de self.definition
         """
+        if self.jdc.code=='ASTER' : return self.definition.fr
         try :
           return getattr(self.definition,self.jdc.lang)
         except:
@@ -177,6 +179,8 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         try:
             # on essaie de créer un objet JDC...
             CONTEXT.unset_current_step()
+            if re.search('Fin Commentaire',self.valeur) :
+               self.valeur=self.valeur.replace('Fin Commentaire','')
             J=self.jdc.__class__(procedure=self.valeur,
                                  definition=self.jdc.definition,
                                  cata=self.jdc.cata,

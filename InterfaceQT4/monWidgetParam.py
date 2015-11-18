@@ -44,6 +44,9 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
       self.node.fenetre=self
       self.setupUi(self)
       self.editor=editor
+      self.appliEficas=self.editor.appliEficas
+      self.repIcon=self.appliEficas.repIcon
+
       self.setIconePoubelle()
       self.remplit()
       if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
