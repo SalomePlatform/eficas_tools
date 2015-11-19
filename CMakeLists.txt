@@ -201,6 +201,9 @@ if (WITH_ZCRACKS)
   add_subdirectory ( ZCracks )
 endif (WITH_ZCRACKS)
 
+if (BUILD_DOC)
+  add_subdirectory ( Doc )
+endif (BUILD_DOC)
 
 ### Local Variables:
 ### mode: cmake
