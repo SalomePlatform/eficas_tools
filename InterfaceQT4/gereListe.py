@@ -208,6 +208,7 @@ class GerePlie:
 # ----------- #
 
    def gereIconePlier(self):
+      if not(hasattr(self,'BFermeListe')) : return
       repIcon=self.node.editor.appliEficas.repIcon
       if not (self.editor.afficheListesPliees):
          fichier=os.path.join(repIcon, 'empty.png')

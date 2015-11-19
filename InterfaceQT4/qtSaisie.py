@@ -42,7 +42,8 @@ class SaisieValeur:
          else :
             if hasattr(self,"lineEditVal"):self.lineEditVal.setText(QString(valeur.nom))
             nouvelleValeur=valeur
-         validite,commentaire=self.politique.RecordValeur(nouvelleValeur)
+         nouvelleValeurFormat=self.politique.GetValeurTexte(nouvelleValeur)
+         validite,commentaire=self.politique.RecordValeur(nouvelleValeurFormat)
          if commentaire != "" :
             #PNPNPNP Il faut trouver une solution pour les 2 cas 
             #   self.editor.affiche_infos(commentaire)

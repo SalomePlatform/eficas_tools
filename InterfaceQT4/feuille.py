@@ -165,7 +165,6 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    def reaffiche(self):
       #print "dans reaffiche de feuille", self.nom
-      self.parentQt.reaffiche()
       if self.editor.jdc.aReafficher==True :
          #print " j appelle le reaffiche de parentQt"
          self.parentQt.reaffiche()

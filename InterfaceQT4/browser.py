@@ -104,7 +104,7 @@ class JDCTree( QTreeWidget,GereRegles ):
             
 
     def handleCollapsedItem(self,item):
-        #print "dans CollapsedItem", self.inhibeExpand  
+        print "dans CollapsedItem", self.inhibeExpand  
         if self.inhibeExpand == True : return
         # On traite le cas de l item non selectionne
         itemParent=item
@@ -134,21 +134,28 @@ class JDCTree( QTreeWidget,GereRegles ):
 
 
     def handleOnItem(self,item,int):
-        #print "je passe dans handleOnItem pour ",self, item.item.nom, item, item.item
+        print "je passe dans handleOnItem pour ",self, item.item.nom, item, item.item
         
+        from InterfaceQT4 import composimp
         self.inhibeExpand == True 
         self.itemCourrant=item
         itemParent=item
+
         while not (hasattr (itemParent,'getPanel')) : 
            if itemParent.plie==True : itemParent.setDeplie()
            itemParent=itemParent.treeParent 
+
         if itemParent.fenetre != self.editor.fenetreCentraleAffichee : 
+              
+            estUneFeuille=(isinstance(item,composimp.Node))
              # il faut afficher le parent
-            if self.editor.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
-            else :                                  itemParent.affichePanneau()
+            print "estUneFeuille", estUneFeuille
+            print "afficheCommandesPliees", self.editor.afficheCommandesPliees
+            if estUneFeuille                        : itemParent.affichePanneau()
+            elif self.editor.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
+            else                                    : itemParent.affichePanneau()
 
 
-        from InterfaceQT4 import composimp
         if (isinstance(item,composimp.Node)) and item.fenetre : item.fenetre.rendVisible()
         elif itemParent!=item:
              #self.tree.handleExpandedItem(item)
@@ -327,7 +334,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
            if not(isinstance(self.fenetre,MonChoixCommande)): self.editor.first=False
         self.tree.inhibeExpand=True
         self.tree.expandItem(self)
-        self.select()
+        #self.select()
         self.tree.inhibeExpand=False
         #print "fin de affichePanneau", self.item.nom
         #print "______________________________"
@@ -396,9 +403,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         Rend le noeud courant (self) selectionne et deselectionne
         tous les autres
         """        
+        print "select pour", self.item.nom
         for item in self.tree.selectedItems() :
             item.setSelected(0)
-        self.setSelected( True )    
         self.tree.setCurrentItem( self )    
                                
     #------------------------------------------------------------------
@@ -735,7 +742,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             item.setPlie()
             if item==itemADeplier : 
                   itemADeplier.setDeplie()
-        
         self.affichePanneau()
 
     def plieToutEtReaffiche(self):
