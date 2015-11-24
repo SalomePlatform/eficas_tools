@@ -38,6 +38,7 @@ class MonWidgetInactif(QWidget,Ui_WidgetInactif):
        self.node=node
        self.editor=editor
        self.setupUi(self)
+       from monWidgetOptionnel import MonWidgetOptionnel
        if self.editor.widgetOptionnel!= None :
           self.monOptionnel=self.editor.widgetOptionnel
        else :
@@ -48,7 +49,11 @@ class MonWidgetInactif(QWidget,Ui_WidgetInactif):
        self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
        self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
        self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+       self.labelNomCommande.setText(tr(self.node.item.nom))
+       self.labelNomCommande.setEnabled(False)
 
+  def traiteClicSurLabel(self):
+      pass
   
 
   def setValide(self):
@@ -66,9 +71,8 @@ class MonWidgetInactif(QWidget,Ui_WidgetInactif):
 
   def afficheCatalogue(self):
       if self.editor.widgetOptionnel != None : self.monOptionnel.hide()
-      self.racine.affichePanneau()
-      if self.node : self.node.select()
-      else : self.racine.select()
+      self.node.tree.racine.affichePanneau()
+      self.node.tree.racine.select()
 
   def afficheApres(self):
        self.node.selectApres()
