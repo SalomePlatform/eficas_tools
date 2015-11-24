@@ -303,16 +303,21 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def affichePanneau(self) :
         #print " affichePanneau " , self.item.nom 
-        if self.item.isactif(): 
+        #if self.item.isactif(): 
+        #if self.editor.code == 'ASTER' and not(self.item.isactif()) : 
+        # posera des pb si un code decide d appeler FIN un mot clef
+        # on resoudera a ce moment la
+        # pour l instant pas de poussiere sous le tapis
+        if  not(self.item.isactif()) : 
+            from monWidgetInactif import MonWidgetInactif
+            self.fenetre = MonWidgetInactif(self,self.editor)
+        else:
            itemParent=self
            while not (hasattr (itemParent,'getPanel')) : itemParent=itemParent.treeParent 
            if itemParent!=self : 
               itemParent.affichePanneau()
               return
            self.fenetre=self.getPanel()
-        else:
-            from monInactifPanel import PanelInactif
-            self.fenetre = PanelInactif(self,self.editor)
          
         for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
             widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
@@ -842,7 +847,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             if i.item.object== cherche  : 
                node=i
                break
-        if node : node.affichePanneau()
+        if node : 
+          node.affichePanneau()
+          node.select()
 
     def selectApres(self):
         i=self.item.jdc.etapes.index(self.item.object)
@@ -855,4 +862,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             if i.item.object== cherche  : 
                node=i
                break
-        if node : node.affichePanneau()
+        if node : 
+           node.affichePanneau()
+           node.select()

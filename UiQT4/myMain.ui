@@ -173,8 +173,8 @@ QMenuBar {
      <string>&amp;Aide</string>
     </property>
     <addaction name="actionEficas"/>
-    <addaction name="actionVersion"/>
     <addaction name="actionParametres_Eficas"/>
+    <addaction name="actionVersion"/>
    </widget>
    <addaction name="menuFichier"/>
    <addaction name="menuEdition"/>

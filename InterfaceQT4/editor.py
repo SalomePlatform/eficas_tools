@@ -207,22 +207,6 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
             self.tree = browser.JDCTree( jdc_item,  self )
         self.appliEficas.construitMenu()
 
-    #-------------------#   Pour execution avec output sans une fenetre EFICAS. (erreurs encore dans la fenetre bash)
-    def runPSEN_2(self):   
-    #-------------------#
-      if self.modified or self.fichier==None  :
-         QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
-         return
-        
-      #monPython="/home/A96028/salome75/prerequisites/install/Python-273-tcl8513-tk8513/bin/python"
-      #monWrapper="/local00/home/A96028/GitEficasTravail/eficas/PSEN_Eficas/PSSEWrapper.py"
-      path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','PSEN_Eficas','PSEN'))
-      monWrapper = os.path.join(path1, 'PSSEWrapper.py')
-      cmd=['python',monWrapper]
-
-      w = ViewText2( self.QWParent, cmd )
-      w.setWindowTitle( "execution" )
-      w.exec_()
 
 
     #-------------------#  Pour execution avec output et error dans le bash

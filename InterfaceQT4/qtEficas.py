@@ -284,10 +284,20 @@ class Appli(Ui_Eficas,QMainWindow):
         self.enleverRechercherDsCatalogue()
         self.enleverNewInclude()
         self.ajoutExecution()
+        self.ajoutHelpPSEN()
+        self.ajoutIcones()
 
     def TELEMAC(self):
         self.enleverActionsStructures()
         self.enleverNewInclude()
+
+    def ajoutHelpPSEN(self):
+        self.actionParametres_Eficas.setText('Help PSEN')
+#
+        #Oself.disconnect(self.actionParametres_Eficas)
+        self.connect(self.actionParametres_Eficas,SIGNAL("triggered()"),self.aidePSEN)
+        
+
 
     def ChercheGrpMesh(self):
         Msg,listeGroup=self.ChercheGrpMeshInSalome()
@@ -319,20 +329,17 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def ajoutIcones(self) :
         # Pour pallier les soucis de repertoire d icone
-        icon = QIcon(self.repIcon+"/New24.png")
+        print self.repIcon
+        icon = QIcon(self.repIcon+"/new_file.png")
         self.action_Nouveau.setIcon(icon)
-        icon1 = QIcon(self.repIcon+"/Open24.png")
+        icon1 = QIcon(self.repIcon+"/ouvrir.png")
         self.actionOuvrir.setIcon(icon1)
-        icon2 = QIcon(self.repIcon+"/Save24.png")
+        icon2 = QIcon(self.repIcon+"/save.png")
         self.actionEnregistrer.setIcon(icon2)
-        icon3 = QIcon(self.repIcon+"/Cut24.png")
-        self.actionCouper.setIcon(icon3)
-        icon4 = QIcon(self.repIcon+"/Copy24.png")
-        self.actionCopier.setIcon(icon4)
-        icon5 = QIcon(self.repIcon+"/Paste24.png")
-        self.actionColler.setIcon(icon5)
-        icon6 = QIcon(self.repIcon+"/Delete24.png")
+        icon6 = QIcon(self.repIcon+"/delete.png")
         self.actionSupprimer.setIcon(icon6)
+        icon7 = QIcon(self.repIcon+"/roue.png")
+        self.actionExecution.setIcon(icon7)
 
 
 
@@ -381,7 +388,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionSauveLigne = QAction(self)
         self.actionSauveLigne.setText(tr("Sauve Format Ligne"))
 
-        self.connect(self.actionParametres_Eficas,SIGNAL("triggered()"),self.optionEditeur)
+        #self.connect(self.actionParametres_Eficas,SIGNAL("triggered()"),self.optionEditeur)
         self.connect(self.actionLecteur_Pdf,SIGNAL("triggered()"),self.optionPdf)
         self.connect(self.actionTraduitV9V10,SIGNAL("triggered()"),self.traductionV9V10)
         self.connect(self.actionTraduitV10V11,SIGNAL("triggered()"),self.traductionV10V11)
@@ -534,17 +541,26 @@ class Appli(Ui_Eficas,QMainWindow):
         monVisuDialg.show()
 
     def aidePPal(self) :
-        if self.code==None : return
         repAide=os.path.dirname(os.path.abspath(__file__))
-        maD=repAide+"/../Aide"
+        maD=os.path.join( repAide,'..','Doc','html')
         try :
-          indexAide=maD+"/fichiers_EFICAS/index.html"
+          indexAide=os.path.join(maD,'index.html')
           if sys.platform[0:5]=="linux" : cmd="xdg-open "+indexAide
           else                          : cmd="start "+indexAide
           os.system(cmd)
         except:
           QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
+    def aidePSEN(self) :
+        repAide=os.path.dirname(os.path.abspath(__file__))
+        maD=os.path.join( repAide,'..','Doc','html')
+        try :
+          indexAide=os.path.join(maD,'index.html')
+          if sys.platform[0:5]=="linux" : cmd="xdg-open "+indexAide
+          else                          : cmd="start "+indexAide
+          os.system(cmd)
+        except:
+          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
     def aideCode(self) :
         if self.code==None : return
