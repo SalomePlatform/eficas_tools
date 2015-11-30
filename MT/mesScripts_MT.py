@@ -8,6 +8,8 @@ def view_zone(listeparam) :
 
 def view_ligne_arbre(listeparam) :
     item=listeparam[0]
+    print "kkk"
+    return
     import visu_geom
     visu_arbre = visu_geom.VisuGeom(from_eficas=True,
                            eficas_item=item,
@@ -47,6 +49,6 @@ def import_zone(listeparam):
 dict_commandes={
 	'LIGNE_ARBRE':((view_ligne_arbre,"View",('item',),False,True,"affiche dans Geom la representation de la ligne d'arbre"),),
  	'ZONE':(
-               (view_zone,"View",('item',),False,False,"affiche dans Geom la representation de la zone "),
+               (view_zone,"View",('item',),False,True,"affiche dans Geom la representation de la zone "),
                (import_zone,"import_zone",('editor','self'),False,False,"import de fichier zone"),)
                }

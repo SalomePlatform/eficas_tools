@@ -98,6 +98,7 @@ def ufmt(uformat, *args):
             else:
                 nargs.append(arg)
         arguments = tuple(nargs)
+    formatted_string=""
     try:
         formatted_string = uformat % arguments
     except UnicodeDecodeError, err:

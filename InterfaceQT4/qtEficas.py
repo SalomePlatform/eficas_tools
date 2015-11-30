@@ -260,7 +260,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuMesh = self.menubar.addMenu(tr("Gestion Maillage"))
         self.menuMesh.setObjectName("Mesh")
         self.menuMesh.addAction(self.actionChercheGrpMaille)
-        self.griserActionsStructures()
+        #self.griserActionsStructures()
 
     def CARMELCND(self):
         self.enleverNewInclude()

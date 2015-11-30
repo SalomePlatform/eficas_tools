@@ -30,12 +30,13 @@ from desWidgetPlusieursBase import Ui_WidgetPlusieursBase
 from politiquesValidation   import PolitiquePlusieurs
 from qtSaisie               import SaisieValeur
 from gereListe              import GereListe
+from gereListe              import GerePlie
 from gereListe              import LECustom
 
 dicoLongueur={2:95,3:125,4:154,5:183,6:210}
 hauteurMax=253
 
-class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
+class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursBase", nom
@@ -46,6 +47,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe):
         self.listeAffichageWidget=[]
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
+        self.gereIconePlier()
         self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
 
         if sys.platform[0:5]!="linux":
