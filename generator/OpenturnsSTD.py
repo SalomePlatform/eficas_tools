@@ -599,11 +599,11 @@ class STDGenerateur :
         txt += "%s = %s.drawImportanceFactors()\n" % (self.variable["importanceFactorsGraph"], self.variable["myQuadraticCumul"])
         txt += "%s = '%s'\n" % (self.variable["importanceFactorsDrawing"], self.DictMCVal[ 'ImportanceFactorDrawingFilename' ])
         txt += "%s.draw( %s )\n" % (self.variable["importanceFactorsGraph"], self.variable["importanceFactorsDrawing"])
-        txt += "if is_xserver_available():\n"
-        txt += "  view = View(%s)\n" % self.variable["importanceFactorsGraph"]
-        txt += "  view.show(block=True)\n"
-        txt += "else:\n"
-        txt += "  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["importanceFactorsGraph"]
+        txt += "#if is_xserver_available():\n"
+        txt += "#  view = View(%s)\n" % self.variable["importanceFactorsGraph"]
+        txt += "#  view.show(block=True)\n"
+        txt += "#else:\n"
+        txt += "#  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["importanceFactorsGraph"]
         txt += "print 'bitmap =', %s.getBitmap()\n"  % self.variable["importanceFactorsGraph"]
         txt += "print 'postscript =', %s.getPostscript()\n"  % self.variable["importanceFactorsGraph"]
         txt += "\n"
@@ -682,11 +682,11 @@ class STDGenerateur :
         txt += "  %s = %s.drawPDF()\n" % (self.variable["kernelSmoothedGraph"], self.variable["kernelSmoothedDist"])
         txt += "  %s = '%s'\n" % (self.variable["kernelSmoothedPDFDrawing"], self.DictMCVal[ 'KernelSmoothingDrawingFilename' ])
         txt += "  %s.draw( %s )\n" % (self.variable["kernelSmoothedGraph"], self.variable["kernelSmoothedPDFDrawing"])
-        txt += "  if is_xserver_available():\n"
-        txt += "    view = View(%s)\n" % self.variable["kernelSmoothedGraph"]
-        txt += "    view.show(block=True)\n"
-        txt += "  else:\n"
-        txt += "    print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["kernelSmoothedGraph"]
+        txt += "  #if is_xserver_available():\n"
+        txt += "  #  view = View(%s)\n" % self.variable["kernelSmoothedGraph"]
+        txt += "  #  view.show(block=True)\n"
+        txt += "  #else:\n"
+        txt += "  #  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["kernelSmoothedGraph"]
         txt += "  print 'bitmap =', %s.getBitmap()\n"  % self.variable["kernelSmoothedGraph"]
         txt += "  print 'postscript =', %s.getPostscript()\n"  % self.variable["kernelSmoothedGraph"]
         txt += "\n"
@@ -794,11 +794,11 @@ class STDGenerateur :
         txt += "%s = %s.drawProbabilityConvergence( %s )\n" % (self.variable["convergenceGraph"], self.variable["myAlgo"], self.variable["alpha"])
         txt += "%s = '%s'\n" % (self.variable["convergenceDrawing"], self.DictMCVal[ 'ConvergenceDrawingFilename' ])
         txt += "%s.draw( %s )\n" % (self.variable["convergenceGraph"], self.variable["convergenceDrawing"])
-        txt += "if is_xserver_available():\n"
-        txt += "  view = View(%s)\n" % self.variable["convergenceGraph"]
-        txt += "  view.show(block=True)\n"
-        txt += "else:\n"
-        txt += "  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["convergenceGraph"]
+        txt += "#if is_xserver_available():\n"
+        txt += "#  view = View(%s)\n" % self.variable["convergenceGraph"]
+        txt += "#  view.show(block=True)\n"
+        txt += "#else:\n"
+        txt += "#  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["convergenceGraph"]
         txt += "\n"
 
     return txt
@@ -930,11 +930,11 @@ class STDGenerateur :
         txt += "%s = %s.drawImportanceFactors()\n" % (self.variable["importanceFactorsGraph"], self.variable["myResult"])
         txt += "%s = '%s'\n" % (self.variable["importanceFactorsDrawing"], self.DictMCVal[ 'ImportanceFactorDrawingFilename' ])
         txt += "%s.draw( %s )\n" % (self.variable["importanceFactorsGraph"], self.variable["importanceFactorsDrawing"])
-        txt += "if is_xserver_available():\n"
-        txt += "  view = View(%s)\n" % self.variable["importanceFactorsGraph"]
-        txt += "  view.show(block=True)\n"
-        txt += "else:\n"
-        txt += "  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["importanceFactorsGraph"]
+        txt += "#if is_xserver_available():\n"
+        txt += "#  view = View(%s)\n" % self.variable["importanceFactorsGraph"]
+        txt += "#  view.show(block=True)\n"
+        txt += "#else:\n"
+        txt += "#  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["importanceFactorsGraph"]
         txt += "print 'bitmap =', %s.getBitmap()\n"  % self.variable["importanceFactorsGraph"]
         txt += "print 'postscript =', %s.getPostscript()\n"  % self.variable["importanceFactorsGraph"]
         txt += "\n"
@@ -951,11 +951,11 @@ class STDGenerateur :
         txt += "%s = %s.drawEventProbabilitySensitivity()[0]\n" % (self.variable["eventProbabilitySensitivityGraph"], self.variable["myResult"])
         txt += "%s = '%s'\n" % (self.variable["eventProbabilitySensitivityDrawing"], self.DictMCVal[ 'FORMEventProbabilitySensitivityDrawingFilename' ])
         txt += "%s.draw( %s )\n" % (self.variable["eventProbabilitySensitivityGraph"], self.variable["eventProbabilitySensitivityDrawing"])
-        txt += "if is_xserver_available():\n"
-        txt += "  view = View(%s)\n" % self.variable["eventProbabilitySensitivityGraph"]
-        txt += "  view.show(block=True)\n"
-        txt += "else:\n"
-        txt += "  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["eventProbabilitySensitivityGraph"]
+        txt += "#if is_xserver_available():\n"
+        txt += "#  view = View(%s)\n" % self.variable["eventProbabilitySensitivityGraph"]
+        txt += "#  view.show(block=True)\n"
+        txt += "#else:\n"
+        txt += "#  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["eventProbabilitySensitivityGraph"]
         txt += "print 'bitmap =', %s.getBitmap()\n"  % self.variable["eventProbabilitySensitivityGraph"]
         txt += "print 'postscript =', %s.getPostscript()\n"  % self.variable["eventProbabilitySensitivityGraph"]
         txt += "\n"
@@ -972,11 +972,11 @@ class STDGenerateur :
         txt += "%s = %s.drawHasoferReliabilityIndexSensitivity()[0]\n" % (self.variable["hasoferReliabilityIndexSensitivityGraph"], self.variable["myResult"])
         txt += "%s = '%s'\n" % (self.variable["hasoferReliabilityIndexSensitivityDrawing"], self.DictMCVal[ 'HasoferReliabilityIndexSensitivityDrawingFilename' ])
         txt += "%s.draw( %s )\n" % (self.variable["hasoferReliabilityIndexSensitivityGraph"], self.variable["hasoferReliabilityIndexSensitivityDrawing"])
-        txt += "if is_xserver_available():\n"
-        txt += "  view = View(%s)\n" % self.variable["hasoferReliabilityIndexSensitivityGraph"]
-        txt += "  view.show(block=True)\n"
-        txt += "else:\n"
-        txt += "  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["hasoferReliabilityIndexSensitivityGraph"]
+        txt += "#if is_xserver_available():\n"
+        txt += "#  view = View(%s)\n" % self.variable["hasoferReliabilityIndexSensitivityGraph"]
+        txt += "#  view.show(block=True)\n"
+        txt += "#else:\n"
+        txt += "#  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["hasoferReliabilityIndexSensitivityGraph"]
         txt += "print 'bitmap =', %s.getBitmap()\n"  % self.variable["hasoferReliabilityIndexSensitivityGraph"]
         txt += "print 'postscript =', %s.getPostscript()\n"  % self.variable["hasoferReliabilityIndexSensitivityGraph"]
         txt += "\n"
@@ -1391,7 +1391,7 @@ class STDGenerateur :
     txt  = headerSTD % self.OpenTURNS_path
     txt += "dist = %s\n" % apply( STDGenerateur.__dict__[ loi[ 'Kind' ] ], (self, loi) )
     txt += "graph = dist.drawPDF()\n"
-    txt += "graph.draw( '%s/', '%s' , 640, 480, GraphImplementation.PNG)\n" % (chemin, fichier)
+    txt += "graph.draw( '%s/%s' , 640, 480, GraphImplementation.PNG)\n" % (chemin, fichier)
     txt += footerSTD
     return txt
   
