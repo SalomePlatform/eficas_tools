@@ -85,6 +85,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.monOptionnel=MonWidgetOptionnel(self)
         self.editor.widgetOptionnel=self.monOptionnel
         self.editor.splitter.addWidget(self.monOptionnel)
+        self.editor.restoreSplitterSizes()
       self.afficheOptionnel()
       #print "fin init de widget Commande"
       
@@ -131,6 +132,17 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
          w.focusNextChild()
          self.inhibe=0
          return True
+      if i==0 and next==True and not self.inhibe:
+         self.listeAffichageWidget[0].setFocus(7)
+         self.inhibe=1
+         w=self.focusWidget()
+         w.focusNextChild()
+         self.inhibe=0
+         return True
+      if i>0 and next==False and not self.inhibe:
+         if isinstance(self.listeAffichageWidget[i-1],QRadioButton):
+           self.listeAffichageWidget[i-1].setFocus(7)
+           return True
       return QWidget.focusNextPrevChild(self, next)
 
   def etablitOrdre(self):

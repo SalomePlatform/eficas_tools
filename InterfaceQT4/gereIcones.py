@@ -168,6 +168,7 @@ class FacultatifOuOptionnel:
          icon=QIcon(self.repIcon+"/ast-green-ball.png")
       else :
          icon=QIcon(self.repIcon+"/ast-red-ball.png")
+      print "lllllllllllllllllllllllllllllllll"
       self.RBValide.setIcon(icon)
 
   # il faut chercher la bonne fenetre

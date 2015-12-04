@@ -39,8 +39,11 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         self.parentQt.commandesLayout.insertWidget(-1,self)
+        #if len(self.listeValeursCourantes) == len(self.monSimpDef.into) : self.CBCheck.setChecked(False)
+        #else : self.CBCheck.setChecked(True)
         self.connect(self.CBCheck, SIGNAL('stateChanged(int)'),self.change)
         self.gereIconePlier()
+        self.inhibe=False
         # try except si la liste des possibles est vide
         # prevoir qqchose
         try :
@@ -50,17 +53,22 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
 
 
   def change(self,int):
-       if self.CBCheck.isChecked() : 
+       if self.inhibe:return
+       self.inhibe=True
+       if not(self.CBCheck.isChecked()) : 
           for i in range(len(self.listeAAfficher)):
               nomCB="lineEditVal"+str(i+1)
               courant=getattr(self,nomCB)
               courant.setChecked(True)
+          self.CBCheck.setChecked(False)
        else :
           min,max = self.node.item.GetMinMax()
           for i in range(len(self.listeAAfficher)):
               nomCB="lineEditVal"+str(i+1)
               courant=getattr(self,nomCB)
               courant.setChecked(False)
+          self.CBCheck.setChecked(True)
+       self.inhibe=False
 
   def setValeurs(self):
        self.listeValeursCourantes=self.node.item.GetListeValeurs()
@@ -186,6 +194,10 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
          self.editor.affiche_infos(tr(""))
       if self.listeValeursCourantes== [] : self.listeValeursCourantes=None
       self.node.item.set_valeur(self.listeValeursCourantes)
+      if self.listeValeursCourantes != None and (len(self.listeValeursCourantes) != len(self.monSimpDef.into)) : 
+         self.inhibe=True
+         self.CBCheck.setChecked(True)
+         self.inhibe=False
       self.setValide()
       self.reaffiche()
 

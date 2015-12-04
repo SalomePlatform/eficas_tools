@@ -50,6 +50,7 @@ class MonWidgetRadioButtonCommun (Feuille):
       if not(type(valeur) in types.StringTypes) : valeur=str(valeur)
       try :
         self.dict_bouton[valeur].setChecked(True)
+        self.dict_bouton[valeur].setFocus(True)
       except :
         pass
 
@@ -88,6 +89,7 @@ class MonWidgetRadioButtonCommun (Feuille):
   def keyPressEvent(self, event):
     if event.key() == Qt.Key_Right : self.selectSuivant(); return
     if event.key() == Qt.Key_Left  : self.selectPrecedent(); return
+    if event.key() == Qt.Key_Return or event.key() == Qt.Key_Space : self.checkFocused(); return
     QWidget.keyPressEvent(self,event)
 
   def selectSuivant(self):
@@ -107,6 +109,17 @@ class MonWidgetRadioButtonCommun (Feuille):
       nomBouton="radioButton_"+str(i)
       courant=getattr(self,nomBouton)
       courant.setFocus(True)
+
+  def checkFocused(self):
+      aLeFocus=self.focusWidget()
+      nom=aLeFocus.objectName()[12:]
+      i=nom.toInt()[0]
+      if i > 0 and i <= len(self.maListeDeValeur):
+        nomBouton="radioButton_"+str(i)
+        courant=getattr(self,nomBouton)
+        if not courant.isChecked():
+          courant.setChecked(True)
+          self.boutonclic()
 
 
 class MonWidgetRadioButton (Ui_WidgetRadioButton,MonWidgetRadioButtonCommun):

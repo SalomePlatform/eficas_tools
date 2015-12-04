@@ -43,6 +43,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.nomLine="LEResultat"
         self.listeLE=[]
         self.ouAjouter=0
+        self.NumLineEditEnCours=0
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
         self.initCommentaire()
@@ -67,6 +68,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
 
        
   def prepareListeResultat(self):
+       print "prepareListeResultat"
        for i in self.listeLE: i.close()
        self.listeLE=[]
        self.vScrollBar = self.scrollArea.verticalScrollBar()
@@ -154,6 +156,8 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       nouveauLE.setFocus()
       setattr(self,nomLE,nouveauLE)
       
+  def ajoutLineEdit(self):
+      self.ajoutLEResultat (self.indexDernierLabel)
 
 
   def traiteClicSurLabelListe(self,valeur):

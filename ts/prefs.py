@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2013   EDF R&D
+# Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,21 +16,9 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Modules Python
-# Modules Eficas
-
-from desWidgetBloc import Ui_WidgetBloc
-from groupe import Groupe
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-from Extensions.i18n import tr
-# Import des panels
-
-class MonWidgetBloc(Ui_WidgetBloc,Groupe):
-  """
-  """
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
-      Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
-      self.parentQt.commandesLayout.insertWidget(-1,self,1)
-
-
+code="TELEMAC" 
+import sys, os
+if os.path.dirname(os.path.abspath(__file__)) not in sys.path :
+   sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
+if os.path.join(os.path.dirname(os.path.abspath(__file__)),'..') not in sys.path:
+   sys.path.insert(0,os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))

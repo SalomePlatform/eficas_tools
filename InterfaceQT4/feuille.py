@@ -177,10 +177,28 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
          #self.editor.fenetreCentraleAffichee.rendVisibleNoeud(nodeAVoir)
          #nodeAVoir.fenetre.setFocus()
          # return  # on est bien postionne
-      if self.objSimp.isvalid() and hasattr(self, 'AAfficher'):
-         self.editor.fenetreCentraleAffichee.afficheSuivant(self.AAfficher)
+
+         if self.objSimp.isvalid() and hasattr(self, 'AAfficher'):
+            nodeAVoir=self.parentQt.node.chercheNoeudCorrespondant(self.objSimp)
+            try :
+               index=self.editor.fenetreCentraleAffichee.listeAffichageWidget.index(nodeAVoir.fenetre.AAfficher)
+               if (index==len(self.editor.fenetreCentraleAffichee.listeAffichageWidget)-1) :
+                  try :
+                     nodeAVoir.fenetre.setValeursApresBouton()
+                  except :
+                     pass
+               else :
+                  self.editor.fenetreCentraleAffichee.afficheSuivant(nodeAVoir.fenetre.AAfficher)
+            except :
+               pass
       else :
-         if hasattr(self, 'AAfficher'): self.AAfficher.setFocus(7)
+         if self.objSimp.isvalid() and hasattr(self, 'AAfficher'):
+            try :
+               self.setValeursApresBouton()
+            except :
+               self.editor.fenetreCentraleAffichee.afficheSuivant(self.AAfficher)
+         else :
+            if hasattr(self, 'AAfficher'): self.AAfficher.setFocus(7)
 
    def reaffichePourDeplier(self):
       self.parentQt.reaffiche()

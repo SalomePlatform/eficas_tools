@@ -165,8 +165,12 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
           elif self.item.has_into():
             if self.item.is_list_SansOrdreNiDoublon():
                #print 6
-               from monWidgetPlusieursInto import MonWidgetPlusieursInto
-               widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
+                  from monWidgetPlusieursInto import MonWidgetPlusieursInto
+                  widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               else :
+                  from monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
                #print 7
 # tres vite pour le tag mais devra etre gere dans configuration
@@ -303,6 +307,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return valeurs
     
   def get_liste_possible(self,listeActuelle=[]):
+      print "llllllllllllllllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
       if hasattr(self.definition.validators,'into'):
          valeurspossibles = self.definition.validators.into 
       else:
@@ -327,6 +332,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           encorevalide=self.valide_liste_partielle(item,listeActuelle)
           if encorevalide :
               listevalideliste.append(item)
+      print listevalideliste
       return listevalideliste
 
   def get_liste_param_possible(self):

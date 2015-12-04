@@ -121,3 +121,6 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      #print "dans Optionnel __ ajout de ", maListe
      self.parentMC.ajoutMC(maListe)
 
+  def hide(self):
+     self.parentQt.editor.saveSplitterSizes()
+     QWidget.hide(self)

@@ -39,7 +39,7 @@ hauteurMax=253
 class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        #print "MonWidgetPlusieursBase", nom
+        print "MonWidgetPlusieursBase", nom
         self.nomLine="lineEditVal"
         self.inInit=True
         self.indexDernierLabel=0

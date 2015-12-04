@@ -13,16 +13,14 @@ The simplest way to use this is to invoke its main method. E.g.
         HTMLTestRunner.main()
 
 
-To customize the report, instantiates a HTMLTestRunner object and set
-the parameters. HTMLTestRunner is a counterpart to unittest's
-TextTestRunner. E.g.
+For more customization options, instantiates a HTMLTestRunner object.
+HTMLTestRunner is a counterpart to unittest's TextTestRunner. E.g.
 
     # output to a file
     fp = file('my_report.html', 'wb')
     runner = HTMLTestRunner.HTMLTestRunner(
                 stream=fp,
                 title='My unit test',
-                report_attrs=[('Version','1.2.3')],
                 description='This demonstrates the report output by HTMLTestRunner.'
                 )
 
@@ -35,7 +33,7 @@ TextTestRunner. E.g.
 
 
 ------------------------------------------------------------------------
-Copyright (c) 2004-2006, Wai Yip Tung
+Copyright (c) 2004-2007, Wai Yip Tung
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -67,17 +65,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # URL: http://tungwaiyip.info/software/HTMLTestRunner.html
 
 __author__ = "Wai Yip Tung"
-__version__ = "0.8.0"
+__version__ = "0.8.2"
 
 
 """
-Changes in 0.8.0
+Change History
+
+Version 0.8.2
+* Show output inline instead of popup window (Viorel Lupu).
+
+Version in 0.8.1
+* Validated XHTML (Wolfgang Borgert).
+* Added description of test classes and test cases.
+
+Version in 0.8.0
 * Define Template_mixin class for customization.
 * Workaround a IE 6 bug that it does not treat <script> block as CDATA.
 
-Changes in 0.7.1
-* Back port to Python 2.3. Thank you Frank Horowitz.
-* Fix missing scroll bars in detail log. Thank you Podi.
+Version in 0.7.1
+* Back port to Python 2.3 (Frank Horowitz).
+* Fix missing scroll bars in detail log (Podi).
 """
 
 # TODO: color stderr
@@ -92,7 +99,7 @@ from xml.sax import saxutils
 
 
 # ------------------------------------------------------------------------
-# The redirectors below is used to capture output during testing. Output
+# The redirectors below are used to capture output during testing. Output
 # sent to sys.stdout and sys.stderr are automatically captured. However
 # in some cases sys.stdout is already cached before HTMLTestRunner is
 # invoked (e.g. calling logging.basicConfig). In order to capture those
@@ -176,16 +183,17 @@ class Template_mixin(object):
     # ------------------------------------------------------------------------
     # HTML Template
 
-    HTML_TMPL = r"""<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+    HTML_TMPL = r"""<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>%(title)s</title>
-    <meta name="generator" content="%(generator)s">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="%(generator)s"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     %(stylesheet)s
 </head>
 <body>
-<script>
+<script language="javascript" type="text/javascript"><!--
 output_list = Array();
 
 /* level - 0:Summary; 1:Failed; 2:All */
@@ -213,6 +221,7 @@ function showCase(level) {
     }
 }
 
+
 function showClassDetail(cid, count) {
     var id_list = Array(count);
     var toHide = 1;
@@ -232,6 +241,7 @@ function showClassDetail(cid, count) {
     for (var i = 0; i < count; i++) {
         tid = id_list[i];
         if (toHide) {
+            document.getElementById('div_'+tid).style.display = 'none'
             document.getElementById(tid).className = 'hiddenRow';
         }
         else {
@@ -240,6 +250,21 @@ function showClassDetail(cid, count) {
     }
 }
 
+
+function showTestDetail(div_id){
+    var details_div = document.getElementById(div_id)
+    var displayState = details_div.style.display
+    // alert(displayState)
+    if (displayState != 'block' ) {
+        displayState = 'block'
+        details_div.style.display = 'block'
+    }
+    else {
+        details_div.style.display = 'none'
+    }
+}
+
+
 function html_escape(s) {
     s = s.replace(/&/g,'&amp;');
     s = s.replace(/</g,'&lt;');
@@ -247,6 +272,7 @@ function html_escape(s) {
     return s;
 }
 
+/* obsoleted by detail in <div>
 function showOutput(id, name) {
     var w = window.open("", //url
                     name,
@@ -259,8 +285,8 @@ function showOutput(id, name) {
     d.write("</pre>\n");
     d.close();
 }
-
-</script>
+*/
+--></script>
 
 %(heading)s
 %(report)s
@@ -279,13 +305,15 @@ function showOutput(id, name) {
     #   <link rel="stylesheet" href="$url" type="text/css">
 
     STYLESHEET_TMPL = """
-<style>
+<style type="text/css" media="screen">
 body        { font-family: verdana, arial, helvetica, sans-serif; font-size: 80%; }
 table       { font-size: 100%; }
 pre         { }
 
 /* -- heading ---------------------------------------------------------------------- */
 h1 {
+	font-size: 16pt;
+	color: gray;
 }
 .heading {
     margin-top: 0ex;
@@ -302,6 +330,29 @@ h1 {
     margin-bottom: 6ex;
 }
 
+/* -- css div popup ------------------------------------------------------------------------ */
+a.popup_link {
+}
+
+a.popup_link:hover {
+    color: red;
+}
+
+.popup_window {
+    display: none;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    /*border: solid #627173 1px; */
+    padding: 10px;
+    background-color: #E6E6D6;
+    font-family: "Lucida Console", "Courier New", Courier, monospace;
+    text-align: left;
+    font-size: 8pt;
+    width: 500px;
+}
+
+}
 /* -- report ------------------------------------------------------------------------ */
 #show_detail_line {
     margin-top: 3ex;
@@ -310,7 +361,7 @@ h1 {
 #result_table {
     width: 80%;
     border-collapse: collapse;
-    border: medium solid #777;
+    border: 1px solid #777;
 }
 #header_row {
     font-weight: bold;
@@ -318,7 +369,7 @@ h1 {
     background-color: #777;
 }
 #result_table td {
-    border: thin solid #777;
+    border: 1px solid #777;
     padding: 2px;
 }
 #total_row  { font-weight: bold; }
@@ -378,7 +429,7 @@ h1 {
 <col align='right' />
 </colgroup>
 <tr id='header_row'>
-    <td>Class/Test case</td>
+    <td>Test Group/Test case</td>
     <td>Count</td>
     <td>Pass</td>
     <td>Fail</td>
@@ -397,37 +448,53 @@ h1 {
 </table>
 """ # variables: (test_list, count, Pass, fail, error)
 
-
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s'>
-    <td>%(name)s</td>
+    <td>%(desc)s</td>
     <td>%(count)s</td>
     <td>%(Pass)s</td>
     <td>%(fail)s</td>
     <td>%(error)s</td>
     <td><a href="javascript:showClassDetail('%(cid)s',%(count)s)">Detail</a></td>
 </tr>
-""" # variables: (style, name, count, Pass, fail, error, cid)
+""" # variables: (style, desc, count, Pass, fail, error, cid)
 
 
     REPORT_TEST_WITH_OUTPUT_TMPL = r"""
 <tr id='%(tid)s' class='%(Class)s'>
-    <td class='%(style)s'><div class='testcase'>%(name)s<div></td>
-    <td colspan='5' align='center'><a href="javascript:showOutput('%(tid)s', '%(name)s')">%(status)s</a></td>
+    <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_%(tid)s')" >
+        %(status)s</a>
+
+    <div id='div_%(tid)s' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_%(tid)s').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        %(script)s
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
 </tr>
-""" # variables: (tid, Class, style, name, status)
+""" # variables: (tid, Class, style, desc, status)
 
 
     REPORT_TEST_NO_OUTPUT_TMPL = r"""
 <tr id='%(tid)s' class='%(Class)s'>
-    <td class='%(style)s'><div class='testcase'>%(name)s<div></td>
+    <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
     <td colspan='5' align='center'>%(status)s</td>
 </tr>
-""" # variables: (tid, Class, style, name, status)
+""" # variables: (tid, Class, style, desc, status)
 
 
     REPORT_TEST_OUTPUT_TMPL = r"""
-<script>output_list['%(id)s'] = '%(output)s';</script>
+%(id)s: %(output)s
 """ # variables: (id, output)
 
 
@@ -439,21 +506,6 @@ h1 {
     ENDING_TMPL = """<div id='ending'>&nbsp;</div>"""
 
 # -------------------- The end of the Template class -------------------
-
-
-
-def jsEscapeString(s):
-    """ Escape s for use as a Javascript String """
-    return s.replace('\\','\\\\') \
-        .replace('\r', '\\r') \
-        .replace('\n', '\\n') \
-        .replace('"', '\\"') \
-        .replace("'", "\\'") \
-        .replace("&", '\\x26') \
-        .replace("<", '\\x3C') \
-        .replace(">", '\\x3E')
-    # Note: non-ascii unicode characters do not need to be encoded
-    # Note: previously we encode < as &lt;, etc. However IE6 fail to treat <script> block as CDATA.
 
 
 TestResult = unittest.TestResult
@@ -555,14 +607,7 @@ class _TestResult(TestResult):
 class HTMLTestRunner(Template_mixin):
     """
     """
-    def __init__(self, stream=sys.stdout, verbosity=1, title=None, report_attrs=[], description=None):
-        """
-        @param stream - output stream, default to stdout
-        @param verbosity
-        @param title - use in title and heading
-        @param report_attrs - list of (name, value) to show in report
-        @param description - test description
-        """
+    def __init__(self, stream=sys.stdout, verbosity=1, title=None, description=None):
         self.stream = stream
         self.verbosity = verbosity
         if title is None:
@@ -573,7 +618,6 @@ class HTMLTestRunner(Template_mixin):
             self.description = self.DEFAULT_DESCRIPTION
         else:
             self.description = description
-        self.report_attrs = report_attrs
 
         self.startTime = datetime.datetime.now()
 
@@ -605,26 +649,24 @@ class HTMLTestRunner(Template_mixin):
 
     def getReportAttributes(self, result):
         """
-        Add a few system generated attributes on top of users defined.
-        Override this to add other dynamic custom attributes.
-
-        @return list of (name, value).
+        Return report attributes as a list of (name, value).
+        Override this to add custom attributes.
         """
         startTime = str(self.startTime)[:19]
         duration = str(self.stopTime - self.startTime)
         status = []
-        if result.success_count: status.append('Success %s' % result.success_count)
+        if result.success_count: status.append('Pass %s'    % result.success_count)
         if result.failure_count: status.append('Failure %s' % result.failure_count)
         if result.error_count:   status.append('Error %s'   % result.error_count  )
         if status:
             status = ' '.join(status)
         else:
             status = 'none'
-
-        return [('Start Time', startTime),
-                 ('Duration', duration),
-                 ('Status', status),
-                ] + self.report_attrs
+        return [
+            ('Start Time', startTime),
+            ('Duration', duration),
+            ('Status', status),
+        ]
 
 
     def generateReport(self, test, result):
@@ -676,9 +718,17 @@ class HTMLTestRunner(Template_mixin):
                 elif n == 1: nf += 1
                 else: ne += 1
 
+            # format class description
+            if cls.__module__ == "__main__":
+                name = cls.__name__
+            else:
+                name = "%s.%s" % (cls.__module__, cls.__name__)
+            doc = cls.__doc__ and cls.__doc__.split("\n")[0] or ""
+            desc = doc and '%s: %s' % (name, doc) or name
+
             row = self.REPORT_CLASS_TMPL % dict(
                 style = ne > 0 and 'errorClass' or nf > 0 and 'failClass' or 'passClass',
-                name = "%s.%s" % (cls.__module__, cls.__name__),
+                desc = desc,
                 count = np+nf+ne,
                 Pass = np,
                 fail = nf,
@@ -705,17 +755,9 @@ class HTMLTestRunner(Template_mixin):
         has_output = bool(o or e)
         tid = (n == 0 and 'p' or 'f') + 't%s.%s' % (cid+1,tid+1)
         name = t.id().split('.')[-1]
+        doc = t.shortDescription() or ""
+        desc = doc and ('%s: %s' % (name, doc)) or name
         tmpl = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL or self.REPORT_TEST_NO_OUTPUT_TMPL
-        row = tmpl % dict(
-            tid = tid,
-            Class = (n == 0 and 'hiddenRow' or ''),
-            style = n == 2 and 'errorCase' or (n == 1 and 'failCase' or ''),
-            name = name,
-            status = self.STATUS[n],
-        )
-        rows.append(row)
-        if not has_output:
-            return
 
         # o and e should be byte string because they are collected from stdout and stderr?
         if isinstance(o,str):
@@ -731,12 +773,22 @@ class HTMLTestRunner(Template_mixin):
         else:
             ue = e
 
-        row = self.REPORT_TEST_OUTPUT_TMPL % dict(
+        script = self.REPORT_TEST_OUTPUT_TMPL % dict(
             id = tid,
-            output = jsEscapeString(uo+ue),
+            output = saxutils.escape(uo+ue),
+        )
+
+        row = tmpl % dict(
+            tid = tid,
+            Class = (n == 0 and 'hiddenRow' or 'none'),
+            style = n == 2 and 'errorCase' or (n == 1 and 'failCase' or 'none'),
+            desc = desc,
+            script = script,
+            status = self.STATUS[n],
         )
         rows.append(row)
-
+        if not has_output:
+            return
 
     def _generate_ending(self):
         return self.ENDING_TMPL

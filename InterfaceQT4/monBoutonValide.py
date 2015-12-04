@@ -43,6 +43,7 @@ class MonBoutonValide(QToolButton) :
           myToolTip=QString(tr("objet valide"))
           QToolTip.showText(event.globalPos(),myToolTip )
        else :
+          t=""
           texte=unicode(self.parent.node.item.object.report())
           deb=1
           for l in texte.split('\n')[2:-2]:

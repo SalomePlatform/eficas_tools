@@ -101,8 +101,10 @@ def ufmt(uformat, *args):
     formatted_string=""
     try:
         formatted_string = uformat % arguments
-    except UnicodeDecodeError, err:
-        print type(uformat), uformat
-        print type(arguments), arguments
-        raise
+    #except UnicodeDecodeError:
+    #    print type(uformat), uformat
+    #    print type(arguments), arguments
+        #raise
+    except :
+        pass
     return formatted_string
