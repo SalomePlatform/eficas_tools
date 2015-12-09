@@ -104,6 +104,12 @@ class TupleCustom :
   def getValeur(self):
       return self.valeur
 
+  def text(self):
+      return self.valeur
+
+  def setText(self,value):
+      self.setValeur(value)
+
   def clean(self):
       self.valeur=None
       for i in range(self.tailleTuple):
