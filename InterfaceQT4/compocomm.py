@@ -77,7 +77,7 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
         - la fonte dans laquelle afficher ce texte
         - la couleur du texte
         """
-        return 'c',None,None
+        return tr('Commentaire'),None,None
 
     def get_valeur(self):
       """

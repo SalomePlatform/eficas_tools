@@ -45,6 +45,7 @@ class MonWidgetInactif(QWidget,Ui_WidgetInactif):
           self.monOptionnel=MonWidgetOptionnel(self)
           self.editor.widgetOptionnel=self.monOptionnel
           self.editor.splitter.addWidget(self.monOptionnel)
+          self.editor.restoreSplitterSizes()
        self.afficheOptionnel()
        self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
        self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)

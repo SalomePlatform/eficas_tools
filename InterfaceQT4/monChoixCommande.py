@@ -71,7 +71,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       if self.editor.Ordre_Des_Commandes == None : self.RBOrdre.close()
 
        
-      self.editor.labelCommentaire.setText("")
+      #self.editor.labelCommentaire.setText("")
       if self.editor.widgetOptionnel!= None : 
          self.editor.widgetOptionnel.close()
          self.editor.widgetOptionnel=None
@@ -236,7 +236,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            commentaire=getattr(definitionEtape,"ang")
         except :
            commentaire=""
-      self.editor.labelCommentaire.setText(commentaire)
+      self.editor.affiche_commentaire(commentaire)
 
 
 

@@ -307,7 +307,6 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return valeurs
     
   def get_liste_possible(self,listeActuelle=[]):
-      print "llllllllllllllllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
       if hasattr(self.definition.validators,'into'):
          valeurspossibles = self.definition.validators.into 
       else:

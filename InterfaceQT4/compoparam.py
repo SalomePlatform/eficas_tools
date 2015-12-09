@@ -44,7 +44,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         typeNode.PopUpMenuNodePartiel.createPopUpMenu(self)
         self.menu.removeAction(self.Documentation)
 
-    def doPaste(self,node_selected):
+    def doPaste(self,node_selected,pos='after'):
         return None
 
 

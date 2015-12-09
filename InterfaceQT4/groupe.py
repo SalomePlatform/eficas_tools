@@ -169,7 +169,8 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
         if nouveau == None or nouveau == 0  : 
            self.editor.affiche_infos(str('insertion impossible a cet endroit pour '+nom),Qt.red)
       self.reaffiche(firstNode)
-
+      if firstNode!=None and firstNode.item!=None :
+        firstNode.select()
 
 
   def Plie(self):

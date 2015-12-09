@@ -164,7 +164,7 @@ class JDCTree( QTreeWidget,GereRegles ):
              print 'il faut afficher le 1er'
         try :
            fr = item.item.get_fr()
-           if self.editor: self.editor.labelCommentaire.setText(unicode(fr))
+           if self.editor: self.editor.affiche_commentaire(unicode(fr))
         except:
             pass
         item.select()
@@ -536,6 +536,12 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         if self.treeParent.childrenComplete : toselect=self.treeParent.childrenComplete[index]
         else: toselect=self.treeParent
         if recalcule : jdc.recalcule_etat_correlation()
+        if ret==0 :
+            if self.treeParent.childrenComplete :
+                notdeleted=self.treeParent.childrenComplete[index+1]
+                notdeleted.select()
+        else :
+            toselect.select()
         from InterfaceQT4 import compojdc
         # cas ou on detruit dans l arbre sans affichage
         if isinstance(self.treeParent,compojdc.Node) : 

@@ -242,9 +242,9 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
           
   def AjoutNValeur(self,liste):
         if len(liste)%self.nbValeurs != 0 :
-           texte="Nombre de valeur incorrecte"
+           texte="Nombre incorrect de valeurs"
            #self.Commentaire.setText(texte)
-           self.editor.affiche_infos(texte,Qt.red)
+           self.editor.affiche_infos(tr(texte),Qt.red)
            return
         i=0
         while ( i < len(liste) ) :

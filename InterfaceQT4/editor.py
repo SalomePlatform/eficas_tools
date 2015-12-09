@@ -81,7 +81,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         # tres vite a cause du tag. doit etre pase dans CONFIGURATION
 
         self.afficheListesPliees=False
-        if self.code == "ASTER" : self.afficheListesPliees =True
+        if self.code == "ASTER" or self.code == "monCode" : self.afficheListesPliees =True
 
         self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
         self.affiche=self.appliEficas.CONFIGURATION.affiche
@@ -206,6 +206,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         if jdc_item:
             self.tree = browser.JDCTree( jdc_item,  self )
         self.appliEficas.construitMenu()
+        self.splitterSizes = []
 
 
 
@@ -469,7 +470,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
            from PyQt4.QtGui import QPalette
            mapalette.setColor( QPalette.WindowText, couleur )
            self.sb.setPalette( mapalette );
-           self.sb.showMessage(QString.fromUtf8(message))#,2000)
+           self.sb.showMessage(QString.fromUtf8(message),4000)
 
     #------------------------------#
     def affiche_alerte(self,titre,message):
@@ -481,6 +482,12 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def affiche_commentaire(self,message):
     #-----------------------------------#
         self.labelCommentaire.setText(message)
+        QTimer.singleShot(6000, self.rendInvisible)
+
+    #----------------------#
+    def rendInvisible(self):
+    #----------------------#
+        self.labelCommentaire.setText("")
 
     #-------------------#
     def init_modif(self):
@@ -592,11 +599,13 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
          indexNoeudOuColler=0
          pos='before'
       else :
-         indexNoeudOuColler=noeudOuColler.treeParent.children.index(noeudOuColler)
+         #indexNoeudOuColler=noeudOuColler.treeParent.children.index(noeudOuColler)
+         indexNoeudOuColler=self.getTreeIndex(noeudOuColler)
 
       try :
        noeudACopier=self.QWParent.noeud_a_editer[0]
-       indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
+       #indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
+       indexNoeudACopier=self.getTreeIndex(noeudACopier)
       except :
        QMessageBox.information( self, tr("Copie impossible"), tr("Aucun Objet n a ete copie ou coupe"))
        return
@@ -604,8 +613,10 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
       if (self.QWParent.edit != "couper"):
         try:
            if noeudOuColler == self.tree.racine :
+              print 1 
               child=noeudOuColler.doPastePremier(noeudACopier)
            else :
+              print 2 
               child=noeudACopier.doPaste(noeudOuColler,pos)
            if child==None or child==0:
                QMessageBox.critical( self,tr( "Copie refusee"),tr('Eficas n a pas reussi a copier l objet'))
@@ -638,7 +649,8 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
 
          #if 1:
          try :
-            indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
+           # indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
+            indexNoeudACopier=self.getTreeIndex(noeudACopier)
             noeudACopier.treeParent.item.deplaceEntite(indexNoeudACopier,indexNoeudOuColler,pos)
             noeudACopier.treeParent.build_children()
 
@@ -1347,6 +1359,45 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
       self.nomMaillage="A_partir_de_SMESH"
       self.openfile.close()
 
+   #-----------------------------
+    def saveSplitterSizes(self):
+    #----------------------------
+      if self.splitter != None :
+        self.splitterSizes = self.splitter.sizes()
+
+
+    #-----------------------------
+    def restoreSplitterSizes(self):
+    #----------------------------
+      if hasattr(self,'splitterSizes') :
+        lenSizes = len(self.splitterSizes)
+        if lenSizes > 0 :
+          if self.splitter != None and self.splitter.count() >= lenSizes :
+            newSizes = self.splitter.sizes()
+            newSizes[:len(self.splitterSizes)-1] = self.splitterSizes[:len(self.splitterSizes)-1]
+            newSizes[len(newSizes)-1] = self.splitterSizes[len(self.splitterSizes)-1]
+            self.splitter.setSizes(newSizes)
+
+    #-----------------------------
+    def getTreeIndex(self,noeud):
+    #----------------------------
+      indexNoeud=-1
+      if noeud in noeud.treeParent.children :
+          indexNoeud=noeud.treeParent.children.index(noeud)
+      else :
+          if hasattr(noeud,'vraiParent') :
+              noeudVrai = noeud
+              noeudVraiParent = noeud.vraiParent
+              while noeudVraiParent != noeud.treeParent and hasattr(noeudVraiParent,'vraiParent') :
+                  noeudVrai = noeudVraiParent
+                  noeudVraiParent = noeudVraiParent.vraiParent
+                  pass
+              if noeudVraiParent == noeud.treeParent :
+                  indexNoeud=noeud.treeParent.children.index(noeudVrai)
+                  pass
+              pass
+          pass
+      return indexNoeud
 
 if __name__ == "__main__":
     self.code='ASTER'

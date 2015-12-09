@@ -153,14 +153,14 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         type = mc.type[0]
         if not d_aides.has_key(type) :
            if mc.min == mc.max:
-               commentaire=tr("Entrez ")+str(mc.min)+tr(" valeurs ")
+               commentaire=tr("Entrez ")+str(mc.min)+tr(" valeurs ")+'\n'
            else :
-               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")
+               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")+'\n'
         else :
            if mc.min == mc.max:
-               commentaire=tr("Entrez ")+str(mc.min)+" "+tr(d_aides[type])
+               commentaire=tr("Entrez ")+str(mc.min)+" "+tr(d_aides[type])+'\n'
            else :
-               commentaire=tr("Entrez entre ")+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])
+               commentaire=tr("Entrez entre ")+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])+'\n'
         aideval=self.node.item.aide()
         commentaire=commentaire + "   " + QString.toUtf8(QString(aideval))
         return str(commentaire)

@@ -36,7 +36,7 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         #print "MonWidgetSimpBase", nom
-        self.parentQt.commandesLayout.insertWidget(-1,self)
+        self.parentQt.commandesLayout.insertWidget(-1,self,1)
         self.setFocusPolicy(Qt.StrongFocus)
         self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
         self.AAfficher=self.lineEditVal
