@@ -85,7 +85,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.monOptionnel=MonWidgetOptionnel(self)
         self.editor.widgetOptionnel=self.monOptionnel
         self.editor.splitter.addWidget(self.monOptionnel)
-        self.editor.restoreSplitterSizes()
+        #self.editor.restoreSplitterSizes()
       self.afficheOptionnel()
       #print "fin init de widget Commande"
       
