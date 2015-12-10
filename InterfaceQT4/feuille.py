@@ -103,6 +103,31 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
    def finCommentaire(self):
        return ""
 
+   
+   def finCommentaireListe(self):
+        commentaire=""
+        mc = self.node.item.get_definition()
+        d_aides = { 'TXM' : 'chaines de caracteres',
+                  'R'   : 'reels',
+                  'I'   : 'entiers',
+                  'C'   : 'complexes'}
+        type = mc.type[0]
+        if not d_aides.has_key(type) :
+           if mc.min == mc.max:
+               commentaire=tr("Entrez ")+str(mc.min)+tr(" valeurs ")+'\n'
+           else :
+               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")+'\n'
+        else :
+           if mc.min == mc.max:
+               commentaire=tr("Entrez ")+str(mc.min)+" "+tr(d_aides[type])+'\n'
+           else :
+               commentaire=tr("Entrez entre ")+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])+'\n'
+        aideval=self.node.item.aide()
+        commentaire=commentaire +  QString.toUtf8(QString(aideval))
+        self.monCommentaireLabel.setText(str(commentaire))
+        return str(commentaire)
+
+
    def setSuggestion(self):
       if self.monSimpDef.get_sug() != None and self.monSimpDef.get_sug() != "":
          suggere=str('<html><head/><body><p><span style=" font-size:8pt;">suggestion : ')+str(self.monSimpDef.get_sug())+"</span></p></body></html>"

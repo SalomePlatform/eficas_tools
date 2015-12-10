@@ -113,9 +113,12 @@ class MCSIMP(I_OBJECT.OBJECT):
            if isinstance(val,types.TupleType):
               texteVal='('
               for i in val :
-                  texteVal = texteVal + str(i)+','
+                  if isinstance(i, types.StringType) : texteVal = texteVal +"'"+str(i)+"'," 
+                  else : texteVal = texteVal + str(i)+','
               texteVal=texteVal[:-1]+')'
-           else : texteVal=str(val)
+           else : 
+              if isinstance(val,types.StringType): texteVal="'"+str(val)+"'"
+              else :texteVal=str(val)
            txt = txt + sep+ texteVal 
 
 ##        if len(txt) > 200:

@@ -73,6 +73,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         else :
            self.resize(self.width(),hauteurMax)
            self.setMinimumHeight(hauteurMax)
+        self.finCommentaireListe()
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
         self.AAfficher=self.lineEditVal1
@@ -144,26 +145,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       
 
   def finCommentaire(self):
-        commentaire=""
-        mc = self.node.item.get_definition()
-        d_aides = { 'TXM' : 'chaines de caracteres',
-                  'R'   : 'reels',
-                  'I'   : 'entiers',
-                  'C'   : 'complexes'}
-        type = mc.type[0]
-        if not d_aides.has_key(type) :
-           if mc.min == mc.max:
-               commentaire=tr("Entrez ")+str(mc.min)+tr(" valeurs ")+'\n'
-           else :
-               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")+'\n'
-        else :
-           if mc.min == mc.max:
-               commentaire=tr("Entrez ")+str(mc.min)+" "+tr(d_aides[type])+'\n'
-           else :
-               commentaire=tr("Entrez entre ")+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])+'\n'
-        aideval=self.node.item.aide()
-        commentaire=commentaire + "   " + QString.toUtf8(QString(aideval))
-        return str(commentaire)
+      return self.finCommentaireListe()
 
   def ajout1Valeur(self,valeur=None):
         if valeur == None : return

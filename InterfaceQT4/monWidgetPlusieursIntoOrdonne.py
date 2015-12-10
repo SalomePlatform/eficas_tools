@@ -46,7 +46,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.NumLineEditEnCours=0
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
-        self.initCommentaire()
+        self.finCommentaireListe()
         self.gereIconePlier()
         try :
           self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
@@ -230,31 +230,5 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       self.estVisibleRE.setFocus()
       self.scrollArea.ensureWidgetVisible(self.estVisibleRE,0,0)
 #
-  def initCommentaire(self):
-        commentaire=""
-        mc = self.node.item.get_definition()
-        d_aides = { 'TXM' : 'chaînes\n',
-                  'R'   : 'réels\n',
-                  'I'   : 'entiers\n',
-                  'C'   : 'complexes\n'}
-        type = mc.type[0]
-        if not d_aides.has_key(type) :
-           if mc.min == mc.max:
-               commentaire=tr("Entrez ")+str(mc.min)+(" valeurs \n ")
-           else :
-               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")
-        else :
-          # Pour la traduction
-           if type == 'TXM' : aide=tr('chaines \n')
-           if type == 'R'   : aide=tr('reels\n')
-           if type == 'I'   : aide=tr('entiers\n')
-           if type == 'C'   : aide=tr('complexes\n')
-           if mc.min == mc.max:
-               commentaire=tr("Entrez ")+str(mc.min)+" "+ aide
-           else :
-               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+" "+aide
-        aideval=self.node.item.aide()
-        commentaire=commentaire +  (aideval)
-        self.monCommentaireLabel.setText(commentaire)
 
 

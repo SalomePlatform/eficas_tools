@@ -86,8 +86,11 @@ class TupleCustom :
            if str(value[i]) != "" : valeurNulle=False
          except :
            pass
-         
-         courant.setText(str(value[i]))
+
+         try :
+           courant.setText(str(value[i]))
+         except :
+           courant.setText("")
          val=str(courant.text())
          try :
            valeur=eval(val,{})
@@ -117,6 +120,10 @@ class TupleCustom :
          courant=getattr(self,nomLE)
          courant.setText("")
 
+  def finCommentaire(self):
+        return self.finCommentaireListe()
+
+
 class TupleCustom2(QWidget,Ui_Tuple2,TupleCustom):
   def __init__(self,tailleTuple,parent,parentQt,index):
       TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
@@ -136,6 +143,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
         self.listeAffichageWidget=[]
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
+        self.finCommentaireListe()
         self.politique=PolitiquePlusieurs(self.node,self.editor)
         self.parentQt.commandesLayout.insertWidget(-1,self)
         if sys.platform[0:5]!="linux":
