@@ -166,14 +166,11 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
              commentaire=self.ajout1Valeur(valeur)
              if (commentaire != None ):
                  self.editor.affiche_infos(commentaire,Qt.red)
-                 courant.setText("")
       min,max = self.node.item.GetMinMax()
       if len(self.listeValeursCourantes) < min : 
          self.editor.affiche_infos(tr("Nombre minimal de valeurs : ") + str(min),Qt.red)
       elif len(self.listeValeursCourantes) > max : 
          self.editor.affiche_infos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
-      else :
-         self.editor.affiche_infos(tr(""))
       if self.listeValeursCourantes== [] : self.listeValeursCourantes=None
       self.node.item.set_valeur(self.listeValeursCourantes)
       if self.listeValeursCourantes != None and (len(self.listeValeursCourantes) != len(self.monSimpDef.into)) : 
