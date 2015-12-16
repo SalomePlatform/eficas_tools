@@ -66,6 +66,11 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
       else :
          try    : self.initialValeur()
          except : self.initialSsValeur()
+      self.node.item.object.state='changed'
+      self.node.item.object.parent.state='changed'
+      self.setValide()
+      self.parentQt.setValide()
+      self.node.item.jdc.isvalid()
 
 
   def itemChanged(self):

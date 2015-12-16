@@ -3,6 +3,7 @@ import os.path
 from xml.etree import ElementTree as ET
 from xml.etree.ElementTree import *
 from xml.dom import minidom
+import re
 
 def get_file_name( theScript, theFileName, theExtension ):
 	anExt = '.'+theExtension
@@ -36,6 +37,9 @@ class TSParser:
 		anXmlRepr = aDoc.toprettyxml( indent='  ' )
 		anXmlLines = anXmlRepr.split( '\n' )[1:]
 		anXmlRepr = '\n'.join( anXmlLines )
+		anExpr = re.compile( '>\n\s+([^<>\s].*?)\n\s+</', re.DOTALL )    
+		anXmlRepr = anExpr.sub( '>\g<1></', anXmlRepr )
+		
 		#print anXmlRepr
 		aFile = open( theFileName, 'w' )
 		aFile.write( anXmlRepr )

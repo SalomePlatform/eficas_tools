@@ -13,6 +13,7 @@ PY_FILES = myMain.py desBaseWidget.py desChoixCata.py desChoixCode.py desChoixCo
 	desWidgetMatrice.py desWidgetParam.py desWidgetPlusieursBase.py desWidgetPlusieursInto.py \
 	desWidgetPlusieursIntoOrdonne.py desWidgetPlusieursTuple.py desWidgetRadioButton.py \
 	desWidget4a6RadioButton.py desWidgetSimpBase.py desWidgetSDCOInto.py desWidgetSimpBool.py \
+        desWidgetSimpSalome.py \
 	desWidgetSimpComplexe.py desWidgetSimpFichier.py desWidgetSimpTxt.py desWidgetTuple2.py \
 	desWidgetTuple3.py desWidgetVide.py desWidgetUniqueSDCO.py desWidgetPlusieursPlie.py
 

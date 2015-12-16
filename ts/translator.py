@@ -6,10 +6,12 @@ from Noyau import *
 from dicoparser import *
 
 def normalize( theTranslation ):
-	if '_' in theTranslation:
-		return '__'.join( theTranslation.split( '_' ) )
-	else:
-		return theTranslation
+	aTranslation = theTranslation
+	if '_' in aTranslation:
+		aTranslation = '__'.join( aTranslation.split( '_' ) )
+	
+	aTranslation = aTranslation.replace( ' ', '_' )
+	return aTranslation
 
 def translate( theDicoFile, theCataFile, theTSFile, theNotTranslatedFile = '' ):
 	

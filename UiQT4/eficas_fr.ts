@@ -1,7 +1,811 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0">
-<context>
+<!DOCTYPE TS><TS version="1.1">
+  <context>
     <name>@default</name>
+    <message>
+      <source>Values_Of_Tracers_In_The_Rain</source>
+      <translation>Valeurs_Des_Traceurs_Dans_La_Pluie</translation>
+    </message>
+    <message>
+      <source>Threshold_Depth_For_Receding_Procedure</source>
+      <translation>Profondeur_Limite_Pour_Procedure_De_Ressuyage</translation>
+    </message>
+    <message>
+      <source>Title</source>
+      <translation>Titre</translation>
+    </message>
+    <message>
+      <source>Spatial_Projection_Type</source>
+      <translation>Type_De_Projection_Spatiale</translation>
+    </message>
+    <message>
+      <source>Stochastic_Diffusion_Model</source>
+      <translation>Modele_De_Diffusion_Stochastique</translation>
+    </message>
+    <message>
+      <source>Drogues_File</source>
+      <translation>Fichier_Des_Flotteurs</translation>
+    </message>
+    <message>
+      <source>Origin_Coordinates</source>
+      <translation>Coordonnees_De_L'origine</translation>
+    </message>
+    <message>
+      <source>Thickness_Of_Algae</source>
+      <translation>Epaisseur_Des_Algues</translation>
+    </message>
+    <message>
+      <source>Velocities_Of_The_Sources_Along_X</source>
+      <translation>Vitesses_Des_Sources_Selon_X</translation>
+    </message>
+    <message>
+      <source>Velocities_Of_The_Sources_Along_Y</source>
+      <translation>Vitesses_Des_Sources_Selon_Y</translation>
+    </message>
+    <message>
+      <source>Finite_Volume_Scheme</source>
+      <translation>Schema_En_Volumes_Finis</translation>
+    </message>
+    <message>
+      <source>Density_Of_Algae</source>
+      <translation>Masse_Volumique_Des_Algues</translation>
+    </message>
+    <message>
+      <source>Geometry_File</source>
+      <translation>Fichier_De_Geometrie</translation>
+    </message>
+    <message>
+      <source>Turbulence_Model</source>
+      <translation>Modele_De_Turbulence</translation>
+    </message>
+    <message>
+      <source>Oil_Spill_Model</source>
+      <translation>Modele_De_Nappes_D'hydrocarbures</translation>
+    </message>
+    <message>
+      <source>Definition_Of_Zones</source>
+      <translation>Definition_De_Zones</translation>
+    </message>
+    <message>
+      <source>Rain_Or_Evaporation</source>
+      <translation>Pluie_Ou_Evaporation</translation>
+    </message>
+    <message>
+      <source>Sources_File</source>
+      <translation>Fichier_Des_Sources</translation>
+    </message>
+    <message>
+      <source>Friction_Coefficient</source>
+      <translation>Coefficient_De_Frottement</translation>
+    </message>
+    <message>
+      <source>Wind</source>
+      <translation>Vent</translation>
+    </message>
+    <message>
+      <source>Option_For_Tidal_Boundary_Conditions</source>
+      <translation>Option_Pour_Les_Conditions_Aux_Limites_De_Maree</translation>
+    </message>
+    <message>
+      <source>Coefficient_To_Calibrate_Tidal_Velocities</source>
+      <translation>Coefficient_De_Calage_Des_Vitesses_De_Courant</translation>
+    </message>
+    <message>
+      <source>Initial_Time_Set_To_Zero</source>
+      <translation>Remise_A_Zero_Du_Temps</translation>
+    </message>
+    <message>
+      <source>Maximum_Number_Of_Iterations_For_Diffusion_Of_Tracers</source>
+      <translation>Maximum_D'iterations_Pour_La_Diffusion_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Binary_Results_File</source>
+      <translation>Fichier_De_Resultats_Binaire</translation>
+    </message>
+    <message>
+      <source>Number_Of_Drogues</source>
+      <translation>Nombre_De_Flotteurs</translation>
+    </message>
+    <message>
+      <source>Air_Pressure</source>
+      <translation>Pression_Atmospherique</translation>
+    </message>
+    <message>
+      <source>Mean_Depth_For_Linearization</source>
+      <translation>Profondeur_Moyenne_Pour_La_Linearisation</translation>
+    </message>
+    <message>
+      <source>Control_Of_Limits</source>
+      <translation>Controle_Des_Limites</translation>
+    </message>
+    <message>
+      <source>Free_Surface_Gradient_Compatibility</source>
+      <translation>Compatibilite_Du_Gradient_De_Surface_Libre</translation>
+    </message>
+    <message>
+      <source>Prescribed_Tracers_Values</source>
+      <translation>Valeurs_Imposees_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>defaut</source>
+      <translation>Saint-venant_Ef</translation>
+    </message>
+    <message>
+      <source>Velocity_Diffusivity</source>
+      <translation>Coefficient_De_Diffusion_Des_Vitesses</translation>
+    </message>
+    <message>
+      <source>Time_Step</source>
+      <translation>Pas_De_Temps</translation>
+    </message>
+    <message>
+      <source>Validation</source>
+      <translation>Validation</translation>
+    </message>
+    <message>
+      <source>Roughness_Coefficient_Of_Boundaries</source>
+      <translation>Coefficient_De_Rugosite_Des_Bords</translation>
+    </message>
+    <message>
+      <source>Density_Effects</source>
+      <translation>Effets_De_Densite</translation>
+    </message>
+    <message>
+      <source>Implicitation_Coefficient_Of_Tracers</source>
+      <translation>Coefficient_D'implicitation_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Formatted_Results_File</source>
+      <translation>Fichier_De_Resultats_Formate</translation>
+    </message>
+    <message>
+      <source>Debugger</source>
+      <translation>Debugger</translation>
+    </message>
+    <message>
+      <source>Liquid_Boundaries_File</source>
+      <translation>Fichier_Des_Frontieres_Liquides</translation>
+    </message>
+    <message>
+      <source>Sections_Output_File</source>
+      <translation>Fichier_De_Sortie_Des_Sections_De_Controle</translation>
+    </message>
+    <message>
+      <source>Number_Of_Private_Arrays</source>
+      <translation>Nombre_De_Tableaux_Prives</translation>
+    </message>
+    <message>
+      <source>Coefficient_Of_Wind_Influence</source>
+      <translation>Coefficient_D'influence_Du_Vent</translation>
+    </message>
+    <message>
+      <source>Depth_In_Friction_Terms</source>
+      <translation>Hauteur_Dans_Les_Termes_De_Frottement</translation>
+    </message>
+    <message>
+      <source>Coefficient_To_Calibrate_Sea_Level</source>
+      <translation>Coefficient_De_Calage_Du_Niveau_De_Mer</translation>
+    </message>
+    <message>
+      <source>Variables_To_Be_Printed</source>
+      <translation>Variables_A_Imprimer</translation>
+    </message>
+    <message>
+      <source>Preconditioning</source>
+      <translation>Preconditionnement</translation>
+    </message>
+    <message>
+      <source>Cost_Function</source>
+      <translation>Fonction_Cout</translation>
+    </message>
+    <message>
+      <source>Type_Of_Sources</source>
+      <translation>Type_Des_Sources</translation>
+    </message>
+    <message>
+      <source>Tidal_Flats</source>
+      <translation>Bancs_Decouvrants</translation>
+    </message>
+    <message>
+      <source>Ascii_Database_For_Tide</source>
+      <translation>Base_Ascii_De_Donnees_De_Maree</translation>
+    </message>
+    <message>
+      <source>Original_Date_Of_Time</source>
+      <translation>Date_De_L'origine_Des_Temps</translation>
+    </message>
+    <message>
+      <source>Mean_Temperature</source>
+      <translation>Temperature_Moyenne</translation>
+    </message>
+    <message>
+      <source>Initial_Elevation</source>
+      <translation>Cote_Initiale</translation>
+    </message>
+    <message>
+      <source>Tubes_Data_File</source>
+      <translation>Fichier_De_Donnees_Des_Buses</translation>
+    </message>
+    <message>
+      <source>Boundary_Conditions_File</source>
+      <translation>Fichier_Des_Conditions_Aux_Limites</translation>
+    </message>
+    <message>
+      <source>Breach</source>
+      <translation>Breche</translation>
+    </message>
+    <message>
+      <source>Treatment_Of_The_Linear_System</source>
+      <translation>Traitement_Du_Systeme_Lineaire</translation>
+    </message>
+    <message>
+      <source>Prescribed_Elevations</source>
+      <translation>Cotes_Imposees</translation>
+    </message>
+    <message>
+      <source>List_Of_Points</source>
+      <translation>Liste_De_Points</translation>
+    </message>
+    <message>
+      <source>Listing_Printout_Period</source>
+      <translation>Periode_Pour_Les_Sorties_Listing</translation>
+    </message>
+    <message>
+      <source>Initial_Guess_For_H</source>
+      <translation>Ordre_Du_Tir_Initial_Pour_H</translation>
+    </message>
+    <message>
+      <source>Geometry_File_Format</source>
+      <translation>Format_Du_Fichier_De_Geometrie</translation>
+    </message>
+    <message>
+      <source>Coefficient_1_For_Law_Of_Tracers_Degradation</source>
+      <translation>Coefficient_1_De_La_Loi_De_Degradation_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Number_Of_Lagrangian_Drifts</source>
+      <translation>Nombre_De_Derives_Lagrangiennes</translation>
+    </message>
+    <message>
+      <source>Weirs_Data_File</source>
+      <translation>Fichier_De_Donnees_Des_Seuils</translation>
+    </message>
+    <message>
+      <source>Rain_Or_Evaporation_In_Mm_Per_Day</source>
+      <translation>Pluie_Ou_Evaporation_En_Mm_Par_Jour</translation>
+    </message>
+    <message>
+      <source>Minor_Constituents_Inference</source>
+      <translation>Interpolation_De_Composantes_Mineures</translation>
+    </message>
+    <message>
+      <source>Maximum_Number_Of_Friction_Domains</source>
+      <translation>Nombre_Maximum_De_Domaines_De_Frottement</translation>
+    </message>
+    <message>
+      <source>Elements_Masked_By_User</source>
+      <translation>Elements_Masques_Par_L'utilisateur</translation>
+    </message>
+    <message>
+      <source>Control_Sections</source>
+      <translation>Sections_De_Controle</translation>
+    </message>
+    <message>
+      <source>Number_Of_Time_Steps</source>
+      <translation>Nombre_De_Pas_De_Temps</translation>
+    </message>
+    <message>
+      <source>Solver_Accuracy</source>
+      <translation>Precision_Du_Solveur</translation>
+    </message>
+    <message>
+      <source>Wave_Driven_Currents</source>
+      <translation>Courants_De_Houle</translation>
+    </message>
+    <message>
+      <source>Number_Of_Culverts</source>
+      <translation>Nombre_De_Siphons</translation>
+    </message>
+    <message>
+      <source>Equations</source>
+      <translation>Equations</translation>
+    </message>
+    <message>
+      <source>Maximum_Number_Of_Iterations_For_Identification</source>
+      <translation>Maximum_D'iterations_Pour_L'identification</translation>
+    </message>
+    <message>
+      <source>Coefficient_For_Diffusion_Of_Tracers</source>
+      <translation>Coefficient_De_Diffusion_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Option_For_The_Diffusion_Of_Velocities</source>
+      <translation>Option_Pour_La_Diffusion_Des_Vitesses</translation>
+    </message>
+    <message>
+      <source>Coefficient_To_Calibrate_Tidal_Range</source>
+      <translation>Coefficient_De_Calage_Du_Marnage</translation>
+    </message>
+    <message>
+      <source>Binary_Data_File_1</source>
+      <translation>Fichier_De_Donnees_Binaire_1</translation>
+    </message>
+    <message>
+      <source>Binary_Data_File_2</source>
+      <translation>Fichier_De_Donnees_Binaire_2</translation>
+    </message>
+    <message>
+      <source>Solver</source>
+      <translation>Solveur</translation>
+    </message>
+    <message>
+      <source>Implicitation_For_Velocity</source>
+      <translation>Implicitation_Pour_La_Vitesse</translation>
+    </message>
+    <message>
+      <source>Longitude_Of_Origin_Point</source>
+      <translation>Longitude_Du_Point_Origine</translation>
+    </message>
+    <message>
+      <source>Original_Hour_Of_Time</source>
+      <translation>Heure_De_L'origine_Des_Temps</translation>
+    </message>
+    <message>
+      <source>Law_Of_Friction_On_Lateral_Boundaries</source>
+      <translation>Loi_De_Frottement_Sur_Les_Parois_Laterales</translation>
+    </message>
+    <message>
+      <source>Propagation</source>
+      <translation>Propagation</translation>
+    </message>
+    <message>
+      <source>Solver_For_Diffusion_Of_Tracers</source>
+      <translation>Solveur_Pour_La_Diffusion_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Discretizations_In_Space</source>
+      <translation>Discretisations_En_Espace</translation>
+    </message>
+    <message>
+      <source>Solver_Option</source>
+      <translation>Option_Du_Solveur</translation>
+    </message>
+    <message>
+      <source>Advection_Of_H</source>
+      <translation>Convection_De_H</translation>
+    </message>
+    <message>
+      <source>Output_Of_Initial_Conditions</source>
+      <translation>Sortie_Des_Conditions_Initiales</translation>
+    </message>
+    <message>
+      <source>Record_Number_For_Restart</source>
+      <translation>Enregistrement_Pour_Suite_De_Calcul</translation>
+    </message>
+    <message>
+      <source>Accuracy_For_Diffusion_Of_Tracers</source>
+      <translation>Precision_Pour_La_Diffusion_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Initial_Guess_For_U</source>
+      <translation>Ordre_Du_Tir_Initial_Pour_U</translation>
+    </message>
+    <message>
+      <source>Advection_Of_K_And_Epsilon</source>
+      <translation>Convection_De_K_Et_Epsilon</translation>
+    </message>
+    <message>
+      <source>Identification_Method</source>
+      <translation>Methode_D'identification</translation>
+    </message>
+    <message>
+      <source>Names_Of_Points</source>
+      <translation>Noms_Des_Points</translation>
+    </message>
+    <message>
+      <source>Zone_Number_In_Geographic_System</source>
+      <translation>Numero_De_Fuseau_Ou_Projection_Dans_Le_Systeme_Geographique</translation>
+    </message>
+    <message>
+      <source>Matrix_Storage</source>
+      <translation>Stockage_Des_Matrices</translation>
+    </message>
+    <message>
+      <source>Algae_Type</source>
+      <translation>Type_Des_Algues</translation>
+    </message>
+    <message>
+      <source>Water_Density</source>
+      <translation>Masse_Volumique_De_L'eau</translation>
+    </message>
+    <message>
+      <source>Newmark_Time_Integration_Coefficient</source>
+      <translation>Coefficient_D'integration_En_Temps_De_Newmark</translation>
+    </message>
+    <message>
+      <source>Friction_Data_File</source>
+      <translation>Fichier_De_Donnees_Pour_Le_Frottement</translation>
+    </message>
+    <message>
+      <source>Implicitation_For_Diffusion_Of_Velocity</source>
+      <translation>Implicitation_Pour_La_Diffusion_Des_Vitesses</translation>
+    </message>
+    <message>
+      <source>Limit_Values</source>
+      <translation>Valeurs_Limites</translation>
+    </message>
+    <message>
+      <source>Advection</source>
+      <translation>Convection</translation>
+    </message>
+    <message>
+      <source>Geographic_System</source>
+      <translation>Systeme_Geographique</translation>
+    </message>
+    <message>
+      <source>Results_File</source>
+      <translation>Fichier_Des_Resultats</translation>
+    </message>
+    <message>
+      <source>Algae_Transport_Model</source>
+      <translation>Modele_De_Transport_Des_Algues</translation>
+    </message>
+    <message>
+      <source>Treatment_Of_Negative_Depths</source>
+      <translation>Traitement_Des_Hauteurs_Negatives</translation>
+    </message>
+    <message>
+      <source>Ordinates_Of_Sources</source>
+      <translation>Ordonnees_Des_Sources</translation>
+    </message>
+    <message>
+      <source>Coriolis_Coefficient</source>
+      <translation>Coefficient_De_Coriolis</translation>
+    </message>
+    <message>
+      <source>Water_Discharge_Of_Sources</source>
+      <translation>Debits_Des_Sources</translation>
+    </message>
+    <message>
+      <source>Advection_Of_U_And_V</source>
+      <translation>Convection_De_U_Et_V</translation>
+    </message>
+    <message>
+      <source>Latitude_Of_Origin_Point</source>
+      <translation>Latitude_Du_Point_Origine</translation>
+    </message>
+    <message>
+      <source>Binary_Database_1_For_Tide</source>
+      <translation>Base_Binaire_1_De_Donnees_De_Maree</translation>
+    </message>
+    <message>
+      <source>Coriolis</source>
+      <translation>Coriolis</translation>
+    </message>
+    <message>
+      <source>Desired_Courant_Number</source>
+      <translation>Nombre_De_Courant_Souhaite</translation>
+    </message>
+    <message>
+      <source>Variables_For_Graphic_Printouts</source>
+      <translation>Variables_Pour_Les_Sorties_Graphiques</translation>
+    </message>
+    <message>
+      <source>Time_Range_For_Fourier_Analysis</source>
+      <translation>Bornes_En_Temps_Pour_L'analyse_De_Fourier</translation>
+    </message>
+    <message>
+      <source>Graphic_Printout_Period</source>
+      <translation>Periode_Pour_Les_Sorties_Graphiques</translation>
+    </message>
+    <message>
+      <source>Tide_Generating_Force</source>
+      <translation>Force_Generatrice_De_La_Maree</translation>
+    </message>
+    <message>
+      <source>Preconditioning_For_Diffusion_Of_Tracers</source>
+      <translation>Preconditionnement_Pour_La_Diffusion_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Number_Of_Tubes</source>
+      <translation>Nombre_De_Buses</translation>
+    </message>
+    <message>
+      <source>Vertical_Structures</source>
+      <translation>Structures_Verticales</translation>
+    </message>
+    <message>
+      <source>Stop_If_A_Steady_State_Is_Reached</source>
+      <translation>Arret_Si_Un_Etat_Permanent_Est_Atteint</translation>
+    </message>
+    <message>
+      <source>Number_Of_Weirs</source>
+      <translation>Nombre_De_Seuils</translation>
+    </message>
+    <message>
+      <source>Listing_Printout</source>
+      <translation>Sortie_Listing</translation>
+    </message>
+    <message>
+      <source>Previous_Computation_File</source>
+      <translation>Fichier_Du_Calcul_Precedent</translation>
+    </message>
+    <message>
+      <source>Fortran_File</source>
+      <translation>Fichier_Fortran</translation>
+    </message>
+    <message>
+      <source>Sections_Input_File</source>
+      <translation>Fichier_Des_Sections_De_Controle</translation>
+    </message>
+    <message>
+      <source>Binary_Database_2_For_Tide</source>
+      <translation>Base_Binaire_2_De_Donnees_De_Maree</translation>
+    </message>
+    <message>
+      <source>Results_File_Format</source>
+      <translation>Format_Du_Fichier_Des_Resultats</translation>
+    </message>
+    <message>
+      <source>Accuracy_Of_K</source>
+      <translation>Precision_Sur_K</translation>
+    </message>
+    <message>
+      <source>Tidal_Model_File</source>
+      <translation>Fichier_Du_Modele_De_Maree</translation>
+    </message>
+    <message>
+      <source>Fourier_Analysis_Periods</source>
+      <translation>Periodes_D'analyse_De_Fourier</translation>
+    </message>
+    <message>
+      <source>H_Clipping</source>
+      <translation>Clipping_De_H</translation>
+    </message>
+    <message>
+      <source>Tolerances_For_Identification</source>
+      <translation>Precisions_Pour_L'identification</translation>
+    </message>
+    <message>
+      <source>Previous_Computation_File_Format</source>
+      <translation>Format_Du_Fichier_Du_Calcul_Precedent</translation>
+    </message>
+    <message>
+      <source>Prescribed_Flowrates</source>
+      <translation>Debits_Imposes</translation>
+    </message>
+    <message>
+      <source>Bottom_Topography_File</source>
+      <translation>Fichier_Des_Fonds</translation>
+    </message>
+    <message>
+      <source>Implicitation_For_Depth</source>
+      <translation>Implicitation_Pour_La_Hauteur</translation>
+    </message>
+    <message>
+      <source>Reference_File_Format</source>
+      <translation>Format_Du_Fichier_De_Reference</translation>
+    </message>
+    <message>
+      <source>Diffusion_Of_Tracers</source>
+      <translation>Diffusion_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Formatted_Data_File_1</source>
+      <translation>Fichier_De_Donnees_Formate_1</translation>
+    </message>
+    <message>
+      <source>Formatted_Data_File_2</source>
+      <translation>Fichier_De_Donnees_Formate_2</translation>
+    </message>
+    <message>
+      <source>Computation_Continued</source>
+      <translation>Suite_De_Calcul</translation>
+    </message>
+    <message>
+      <source>Breaches_Data_File</source>
+      <translation>Fichier_De_Donnees_Des_Breches</translation>
+    </message>
+    <message>
+      <source>Diffusion_Of_Velocity</source>
+      <translation>Diffusion_Des_Vitesses</translation>
+    </message>
+    <message>
+      <source>Type_Of_Advection</source>
+      <translation>Forme_De_La_Convection</translation>
+    </message>
+    <message>
+      <source>Solver_Option_For_Tracers_Diffusion</source>
+      <translation>Option_Du_Solveur_Pour_La_Diffusion_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Advection_Of_Tracers</source>
+      <translation>Convection_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Printout_Period_For_Drogues</source>
+      <translation>Periode_Pour_Les_Sorties_De_Flotteurs</translation>
+    </message>
+    <message>
+      <source>Option_For_The_Treatment_Of_Tidal_Flats</source>
+      <translation>Option_De_Traitement_Des_Bancs_Decouvrants</translation>
+    </message>
+    <message>
+      <source>Physical_Characteristics_Of_The_Tsunami</source>
+      <translation>Parametres_Physiques_Du_Tsunami</translation>
+    </message>
+    <message>
+      <source>Maximum_Number_Of_Iterations_For_K_And_Epsilon</source>
+      <translation>Maximum_D'iterations_Pour_K_Et_Epsilon</translation>
+    </message>
+    <message>
+      <source>Tidal_Data_Base</source>
+      <translation>Base_De_Donnees_De_Maree</translation>
+    </message>
+    <message>
+      <source>Maximum_Number_Of_Iterations_For_Solver</source>
+      <translation>Maximum_D'iterations_Pour_Le_Solveur</translation>
+    </message>
+    <message>
+      <source>Number_Of_Tracers</source>
+      <translation>Nombre_De_Traceurs</translation>
+    </message>
+    <message>
+      <source>Threshold_Depth_For_Wind</source>
+      <translation>Profondeur_Limite_Pour_Le_Vent</translation>
+    </message>
+    <message>
+      <source>Gravity_Acceleration</source>
+      <translation>Acceleration_De_La_Pesanteur</translation>
+    </message>
+    <message>
+      <source>Option_For_Characteristics</source>
+      <translation>Option_Pour_Les_Caracteristiques</translation>
+    </message>
+    <message>
+      <source>Spacing_Of_Roughness_Elements</source>
+      <translation>Espacement_Des_Elements_De_Frottement</translation>
+    </message>
+    <message>
+      <source>Parallel_Processors</source>
+      <translation>Processeurs_Paralleles</translation>
+    </message>
+    <message>
+      <source>Harmonic_Constants_File</source>
+      <translation>Fichier_Des_Constantes_Harmoniques</translation>
+    </message>
+    <message>
+      <source>Spherical_Coordinates</source>
+      <translation>Coordonnees_Spheriques</translation>
+    </message>
+    <message>
+      <source>Parameter_Estimation</source>
+      <translation>Estimation_De_Parametre</translation>
+    </message>
+    <message>
+      <source>Linearized_Propagation</source>
+      <translation>Propagation_Linearisee</translation>
+    </message>
+    <message>
+      <source>Accuracy_Of_Epsilon</source>
+      <translation>Precision_Sur_Epsilon</translation>
+    </message>
+    <message>
+      <source>Diameter_Of_Roughness_Elements</source>
+      <translation>Diametre_Des_Elements_De_Frottement</translation>
+    </message>
+    <message>
+      <source>Number_Of_First_Time_Step_For_Graphic_Printouts</source>
+      <translation>Numero_Du_Premier_Pas_De_Temps_Pour_Les_Sorties_Graphiques</translation>
+    </message>
+    <message>
+      <source>Threshold_For_Negative_Depths</source>
+      <translation>Seuil_Pour_Les_Profondeurs_Negatives</translation>
+    </message>
+    <message>
+      <source>Wind_Velocity_Along_X</source>
+      <translation>Vitesse_Du_Vent_Suivant_X</translation>
+    </message>
+    <message>
+      <source>Wind_Velocity_Along_Y</source>
+      <translation>Vitesse_Du_Vent_Suivant_Y</translation>
+    </message>
+    <message>
+      <source>Information_About_Solver</source>
+      <translation>Informations_Sur_Le_Solveur</translation>
+    </message>
+    <message>
+      <source>Initial_Conditions</source>
+      <translation>Conditions_Initiales</translation>
+    </message>
+    <message>
+      <source>Culvert_Data_File</source>
+      <translation>Fichier_De_Donnees_Des_Siphons</translation>
+    </message>
+    <message>
+      <source>Maximum_Number_Of_Iterations_For_Advection_Schemes</source>
+      <translation>Maximum_D'iterations_Pour_Les_Schemas_De_Convection</translation>
+    </message>
+    <message>
+      <source>Turbulence_Model_For_Solid_Boundaries</source>
+      <translation>Regime_De_Turbulence_Pour_Les_Parois</translation>
+    </message>
+    <message>
+      <source>Continuity_Correction</source>
+      <translation>Correction_De_Continuite</translation>
+    </message>
+    <message>
+      <source>Law_Of_Bottom_Friction</source>
+      <translation>Loi_De_Frottement_Sur_Le_Fond</translation>
+    </message>
+    <message>
+      <source>Option_For_Tsunami_Generation</source>
+      <translation>Option_Pour_La_Generation_De_Tsunami</translation>
+    </message>
+    <message>
+      <source>Type_Of_Weirs</source>
+      <translation>Type_Des_Seuils</translation>
+    </message>
+    <message>
+      <source>Record_Number_In_Wave_File</source>
+      <translation>Numero_De_L'enregistrement_Dans_Le_Fichier_De_Houle</translation>
+    </message>
+    <message>
+      <source>Abscissae_Of_Sources</source>
+      <translation>Abscisses_Des_Sources</translation>
+    </message>
+    <message>
+      <source>Values_Of_The_Tracers_At_The_Sources</source>
+      <translation>Valeurs_Des_Traceurs_Des_Sources</translation>
+    </message>
+    <message>
+      <source>Treatment_Of_Fluxes_At_The_Boundaries</source>
+      <translation>Traitement_Des_Flux_Aux_Frontieres</translation>
+    </message>
+    <message>
+      <source>Printing_Cumulated_Flowrates</source>
+      <translation>Impression_Du_Cumul_Des_Flux</translation>
+    </message>
+    <message>
+      <source>Compatible_Computation_Of_Fluxes</source>
+      <translation>Calcul_Compatible_Des_Flux</translation>
+    </message>
+    <message>
+      <source>Bottom_Smoothings</source>
+      <translation>Lissages_Du_Fond</translation>
+    </message>
+    <message>
+      <source>Initial_Depth</source>
+      <translation>Hauteur_Initiale</translation>
+    </message>
+    <message>
+      <source>Minimum_Value_Of_Depth</source>
+      <translation>Valeur_Minimum_De_H</translation>
+    </message>
+    <message>
+      <source>Option_For_The_Diffusion_Of_Tracers</source>
+      <translation>Option_Pour_La_Diffusion_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Duration</source>
+      <translation>Duree_Du_Calcul</translation>
+    </message>
+    <message>
+      <source>Stop_Criteria</source>
+      <translation>Criteres_D'arret</translation>
+    </message>
+    <message>
+      <source>Prescribed_Velocities</source>
+      <translation>Vitesses_Imposees</translation>
+    </message>
+    <message>
+      <source>Initial_Values_Of_Tracers</source>
+      <translation>Valeurs_Initiales_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Reference_File</source>
+      <translation>Fichier_De_Reference</translation>
+    </message>
     <message>
         <location filename="../../convert/convert_ini.py" line="81"/>
         <source>lecture du fichier impossible :</source>
@@ -11,19 +815,6 @@
         <location filename="../../convert/convert_python.py" line="105"/>
         <source>Impossible d&apos;ouvrir le fichier %s</source>
         <translation type="unfinished"> unable to read file</translation>
-    </message>
-    <message>
-        <location filename="../../convert/convert_python.py" line="116"/>
-        <source>Impossible de convertir le fichier Python qui doit contenir des erreurs.
-
-                                  On retourne le fichier non converti. Prevenir la maintenance.
-
- %s</source>
-        <translation type="unfinished">Unable to convert Python file. it should containr error
-
-                                  source file is returned. Ask development team
-
- %s</translation>
     </message>
     <message>
         <location filename="../../convert/convert_pyth.py" line="115"/>
@@ -119,13 +910,6 @@
     <message>
         <location filename="../../Editeur/session.py" line="125"/>
         <source>le fichier include %s n&apos;existe pas</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Editeur/session.py" line="154"/>
-        <source>jdc %(v_1)s, le fichier
-                                      de commandes %(v_2)s n&apos;existe pas</source>
-        <comment>v_1</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -232,17 +1016,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas_with_log.py" line="501"/>
+        <location filename="../../Ihm/I_MCLIST.py" line="97"/>
         <source>Erreur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Extensions/commande_comm.py" line="195"/>
+        <location filename="../../Extensions/commande_comm.py" line="199"/>
         <source>Erreurs fatales</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Extensions/commande_comm.py" line="198"/>
+        <location filename="../../Extensions/commande_comm.py" line="202"/>
         <source>Impossible reconstruire commande
 </source>
         <translation type="unfinished"></translation>
@@ -668,106 +1452,6 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../convert/parseur_python.py" line="499"/>
-        <source>Eficas ne peut pas traiter plusieurs instructions 
-                                                 sur la meme ligne : %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Editeur/analyse_catalogue.py" line="209"/>
-        <source>le texte a analyser n&apos;est pas celui d&apos;une commande ou 
-                                         d&apos;un operateur : %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Editeur/analyse_catalogue.py" line="229"/>
-        <source>le texte a analyser n&apos;est pas celui d&apos;une commande connue : 
-                                        %(v_1)s %(v_2)s</source>
-        <comment>v_1</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Editeur/analyse_catalogue.py" line="231"/>
-        <source>le texte a analyser n&apos;est pas celui d&apos;une commande connue : 
-                                         %(v_1)s %(v_2)s</source>
-        <comment>v_1</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Editeur/session.py" line="149"/>
-        <source> jdc %(v_1)s manque 
-                                      fichier comm dans section %(v_2)s</source>
-        <comment>v_1</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Editeur/session.py" line="170"/>
-        <source> jdc %(v_1)s 
-                                   fichier include %(v_2)s, %(v_3)s 
-                                   n&apos;existe pas</source>
-        <comment>v_1</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Editeur/session.py" line="202"/>
-        <source> jdc %(v_1)s manque fichier comm 
-                                dans section %(v_2)s</source>
-        <comment>v_1</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Editeur/session.py" line="206"/>
-        <source>jdc %(v_1)s, le fichier de commandes 
-                                %(v_2)s n&apos;existe pas</source>
-        <comment>v_1</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="482"/>
-        <source>ATTENTION! Une source constante 
-                                  n&apos;est possible qu&apos;a frequence nulle 
-                                  en regime frequentiel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="491"/>
-        <source>ERREUR! Une forme de la source du 
-                               type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="512"/>
-        <source>ATTENTION! Une source constante n&apos;est 
-                                  possible qu&apos;a frequence nulle en regime frequentiel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="548"/>
-        <source>ERREUR! Une forme de la source du type 
-                               WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="817"/>
-        <source>ERREUR! ce groupe de maille (%s) n&apos;a pas de prefixe 
-                                indiquant le type de materiau ou de source associee</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../generator/generator_CARMEL3D.py" line="827"/>
-        <source>ERREUR! ce groupe de maille (%(nom)s) n&apos;a pas 
-                                        le prefixe correct pour etre associe a un type %(type_bloc)s</source>
-        <comment>nom</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Ihm/I_ETAPE.py" line="485"/>
-        <source>
-   Include Invalide. 
-  ne sera pas pris en compte</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../Ihm/I_MACRO_ETAPE.py" line="167"/>
         <source>Impossible de relire le fichier %s 
  </source>
@@ -779,7 +1463,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="422"/>
+        <location filename="../../InterfaceQT4/browser.py" line="435"/>
         <source>  n&apos;est pas un index valide pour append_brother</source>
         <translation type="unfinished"></translation>
     </message>
@@ -911,57 +1595,57 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="191"/>
+        <location filename="../../InterfaceQT4/editor.py" line="196"/>
         <source>Erreur fatale au chargement de %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="192"/>
+        <location filename="../../InterfaceQT4/editor.py" line="197"/>
         <source>Erreur fatale au chargement d&apos;un fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="323"/>
+        <location filename="../../InterfaceQT4/editor.py" line="313"/>
         <source>fichier modifie</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="323"/>
+        <location filename="../../InterfaceQT4/editor.py" line="313"/>
         <source>Attention! fichier change hors EFICAS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="377"/>
+        <location filename="../../InterfaceQT4/editor.py" line="367"/>
         <source>Type de fichier non reconnu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="334"/>
+        <location filename="../../InterfaceQT4/editor.py" line="324"/>
         <source>EFICAS ne sait pas ouvrir le type de fichier %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="377"/>
+        <location filename="../../InterfaceQT4/editor.py" line="367"/>
         <source>EFICAS ne sait pas ouvrir ce type de fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="612"/>
+        <location filename="../../InterfaceQT4/editor.py" line="610"/>
         <source>Copie impossible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="586"/>
+        <location filename="../../InterfaceQT4/editor.py" line="582"/>
         <source>Veuillez selectionner un objet a copier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="591"/>
+        <location filename="../../InterfaceQT4/editor.py" line="587"/>
         <source>Veuillez selectionner un seul objet : la copie se fera apres le noeud selectionne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="612"/>
+        <location filename="../../InterfaceQT4/editor.py" line="610"/>
         <source>Aucun Objet n a ete copie ou coupe</source>
         <translation type="unfinished"></translation>
     </message>
@@ -991,28 +1675,28 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="683"/>
+        <location filename="../../InterfaceQT4/editor.py" line="684"/>
         <source>Copie impossible a cet endroit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="683"/>
+        <location filename="../../InterfaceQT4/editor.py" line="684"/>
         <source>Veuillez selectionner une commande, un parametre, un commentaire ou une macro</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="744"/>
+        <location filename="../../InterfaceQT4/editor.py" line="745"/>
         <source>Choix d&apos;un fichier XML</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="745"/>
+        <location filename="../../InterfaceQT4/editor.py" line="746"/>
         <source>Le fichier contient une commande MODEL
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="746"/>
+        <location filename="../../InterfaceQT4/editor.py" line="747"/>
         <source>Donnez le nom du fichier XML qui contient la description des variables</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1022,190 +1706,165 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1035"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1036"/>
         <source>Erreur a la generation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1035"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1036"/>
         <source>EFICAS ne sait pas convertir ce JDC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1039"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1040"/>
         <source>Format %s non reconnu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1040"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1041"/>
         <source>EFICAS ne sait pas convertir le JDC selon le format </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="894"/>
+        <location filename="../../InterfaceQT4/editor.py" line="895"/>
         <source>Execution impossible </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="831"/>
+        <location filename="../../InterfaceQT4/editor.py" line="832"/>
         <source>le JDC doit etre valide pour une execution MAP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="834"/>
+        <location filename="../../InterfaceQT4/editor.py" line="835"/>
         <source>le JDC doit contenir un et un seul composant</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="870"/>
+        <location filename="../../InterfaceQT4/editor.py" line="871"/>
         <source>le JDC doit etre valide pour une execution </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="894"/>
+        <location filename="../../InterfaceQT4/editor.py" line="895"/>
         <source>Sauvegarder SVP avant l&apos;execution </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="934"/>
+        <location filename="../../InterfaceQT4/editor.py" line="935"/>
         <source>sauvegarde</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="943"/>
+        <location filename="../../InterfaceQT4/editor.py" line="944"/>
         <source>Sauvegarde du Fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="943"/>
+        <location filename="../../InterfaceQT4/editor.py" line="944"/>
         <source>Le fichier &lt;b&gt;%s&lt;/b&gt; existe deja.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="943"/>
+        <location filename="../../InterfaceQT4/editor.py" line="944"/>
         <source>&amp;Ecraser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1019"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1020"/>
         <source>Sauvegarde de l&apos;input impossible </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1019"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1020"/>
         <source>Un JdC valide est necessaire pour creer un .input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="963"/>
+        <location filename="../../InterfaceQT4/editor.py" line="964"/>
         <source>Choix du composant obligatoire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1175"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1176"/>
         <source>Choix unite %d </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1176"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1177"/>
         <source>Le fichier %s contient une commande INCLUDE 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1177"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1178"/>
         <source>Donnez le nom du fichier correspondant a l unite logique </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1178"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1179"/>
         <source>Fichier pour unite </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1180"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1181"/>
         <source>Choix d&apos;un fichier de poursuite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1181"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1182"/>
         <source>Le fichier %s contient une commande POURSUITE
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1182"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1183"/>
         <source>Donnez le nom du fichier dont vous 
  voulez faire une poursuite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1310"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1311"/>
         <source>Fichiers Med (*.med);;Tous les Fichiers (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1313"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1314"/>
         <source>Fichier Med</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="1313"/>
+        <location filename="../../InterfaceQT4/editor.py" line="1314"/>
         <source>Veuillez selectionner un fichier Med</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="138"/>
-        <source>chaine de caracteres</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="139"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="165"/>
         <source>reel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="140"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="166"/>
         <source>entier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="141"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="167"/>
         <source>complexe</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="142"/>
-        <source>Matrice</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="143"/>
-        <source>fichier</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="144"/>
-        <source>fichier existant</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/feuille.py" line="145"/>
-        <source>repertoire</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="159"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="173"/>
         <source>Entrez </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="161"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="174"/>
         <source>Entrez entre </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="156"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="174"/>
         <source> et </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1225,37 +1884,37 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="182"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="209"/>
         <source>Visualisation Fichier </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="182"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="209"/>
         <source>Impossibilite d&apos;afficher le Fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="195"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="222"/>
         <source>Sauvegarder Fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="209"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="236"/>
         <source>Fichier selectionne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="218"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="245"/>
         <source>Selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="264"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="291"/>
         <source>Export Med vers Fichier </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereIcones.py" line="264"/>
+        <location filename="../../InterfaceQT4/gereIcones.py" line="291"/>
         <source>Impossibilite d exporter le Fichier</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1303,54 +1962,24 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetOptionnel.py" line="90"/>
+        <location filename="../../InterfaceQT4/monWidgetOptionnel.py" line="91"/>
         <source>Options pour 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="156"/>
+        <location filename="../../InterfaceQT4/feuille.py" line="119"/>
         <source> valeurs </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="181"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="172"/>
         <source>Nombre minimal de valeurs : </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="183"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursInto.py" line="174"/>
         <source>Nombre maximal de valeurs : </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="76"/>
-        <source>Une chaine de caracteres est attendue.  </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="77"/>
-        <source>Un reel est attendu. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="78"/>
-        <source>Un entier est attendu.  </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="79"/>
-        <source>Une Matrice est attendue.  </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="81"/>
-        <source>Un fichier est attendu.  </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="82"/>
-        <source>Un repertoire est attendu.  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1384,12 +2013,12 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/politiquesValidation.py" line="156"/>
+        <location filename="../../InterfaceQT4/politiquesValidation.py" line="157"/>
         <source>Valeur du mot-cle enregistree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/politiquesValidation.py" line="161"/>
+        <location filename="../../InterfaceQT4/politiquesValidation.py" line="162"/>
         <source>Valeur du mot-cle non autorisee </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1469,7 +2098,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtSaisie.py" line="97"/>
+        <location filename="../../InterfaceQT4/qtSaisie.py" line="98"/>
         <source>Veuillez entrer le complexe sous forme aster ou sous forme python</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1814,7 +2443,7 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="379"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="389"/>
         <source>Sauve Format Ligne</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1824,258 +2453,48 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="252"/>
-        <source>Nombre d&apos;arguments de %s incorrect (min = %s, max = %s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="274"/>
-        <source>La valeur : %s  ne fait pas partie des choix possibles %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="762"/>
-        <source>%s n&apos;est pas de la bonne longueur</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1185"/>
-        <source>valeur dans l&apos;intervalle %s , %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1197"/>
-        <source>La valeur doit etre comprise entre %s et %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1218"/>
-        <source>%s doit etre inferieur a %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1221"/>
-        <source>longueur de liste comprise entre  %s et %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1224"/>
-        <source>Le cardinal de la liste doit etre compris entre %s et %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1251"/>
-        <source>%s devrait etre de longueur inferieure a %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1254"/>
-        <source>%s devrait etre de longueur superieure a %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1311"/>
-        <source>%s contient des valeurs non paires</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1355"/>
-        <source>%s contient des valeurs hors des choix possibles: %s </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/gereListe.py" line="198"/>
+        <location filename="../../InterfaceQT4/gereListe.py" line="193"/>
         <source>Fichier de donnees</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/gereListe.py" line="198"/>
+        <location filename="../../InterfaceQT4/gereListe.py" line="193"/>
         <source>Tous les  Fichiers (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="242"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursBase.py" line="226"/>
         <source>nb min de valeurs : </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursPlie.py" line="247"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursBase.py" line="231"/>
         <source>nb max de valeurs atteint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="374"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="384"/>
         <source>TraduitV10V11</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="377"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="387"/>
         <source>TraduitV11V12</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtSaisie.py" line="137"/>
+        <location filename="../../InterfaceQT4/qtSaisie.py" line="138"/>
         <source>Valeur du mot-clef enregistree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtSaisie.py" line="141"/>
+        <location filename="../../InterfaceQT4/qtSaisie.py" line="142"/>
         <source>Valeur du mot-clef non autorisee :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="305"/>
-        <source>%s n&apos;est pas une chaine de longueur comprise entre %s et %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="311"/>
-        <source>TXM de longueur entre %s et %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="529"/>
-        <source>valeur %s obligatoire</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="544"/>
-        <source>%s ne contient pas les elements obligatoires : %s </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="633"/>
-        <source>%s absent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="682"/>
-        <source>%s est un doublon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="738"/>
-        <source>longueur de la chaine entre %s et %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="741"/>
-        <source>Longueur de la chaine incorrecte</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="798"/>
-        <source>%s n&apos;est pas une chaine</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="815"/>
-        <source>liste %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="818"/>
-        <source>La liste doit etre en ordre %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="830"/>
-        <source>%s n&apos;est pas par valeurs croissantes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="834"/>
-        <source>%s n&apos;est pas par valeurs decroissantes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="893"/>
-        <source>%s n&apos;est pas du bon type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1414"/>
-        <source>valeur %s pour la somme des cles A et B </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1489"/>
-        <source>valeur de %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1537"/>
-        <source>valeur d&apos;instance de %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1573"/>
-        <source>%s devrait etre de type  %s </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1668"/>
-        <source>%s n&apos;est pas dans %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1553"/>
-        <source>: verifie les types dans un tuple</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="596"/>
-        <source>%s ne contient pas les elements devant etre presents ensemble: %s </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="646"/>
-        <source>%s n&apos;est pas autorise : %s </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1190"/>
-        <source>%s devrait etre comprise entre %s et %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../Extensions/parametre_eval.py" line="170"/>
         <source>Un concept de nom %s existe d&#xe9;j&#xe0; !</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="177"/>
-        <source>%s n&apos;est pas un repertoire valide</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="192"/>
-        <source>Type non encore gere %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="193"/>
-        <source>%s (de type %s) n&apos;est pas d&apos;un type autorise: %s %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="286"/>
-        <source>La valeur : %s est en dehors du domaine de validite [ %s , %s ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="581"/>
-        <source>%s present ensemble</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Validation/V_PROC_ETAPE.py" line="68"/>
-        <source>unknown keywords : %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="187"/>
-        <source>Creation Parametre indisponible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2170,43 +2589,38 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="91"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="94"/>
         <source>Modification Impossible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="91"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="94"/>
         <source>le parametre n&apos;est pas valide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="105"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="108"/>
         <source> n est pas un identifiant correct</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="124"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="127"/>
         <source>Valeur incorrecte: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="127"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="130"/>
         <source>Valeur incorrecte </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetParam.py" line="130"/>
+        <location filename="../../InterfaceQT4/monWidgetParam.py" line="133"/>
         <source>Valeur correcte </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../InterfaceQT4/monWidgetSDCOInto.py" line="77"/>
         <source>impossible d&apos;evaluer : </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Extensions/commande_comm.py" line="61"/>
-        <source>Objet commande commentarisee invalide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2251,18 +2665,8 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/viewManager.py" line="187"/>
-        <source>les parametres sont lies a un jeu de donnees</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../InterfaceQT4/viewManager.py" line="299"/>
         <source>Fichier non encore nomme </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Noyau/N_VALIDATOR.py" line="1556"/>
-        <source>Les types entres ne sont pas permis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2271,43 +2675,28 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="450"/>
+        <location filename="../../InterfaceQT4/browser.py" line="463"/>
         <source>le mot clef </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="442"/>
+        <location filename="../../InterfaceQT4/browser.py" line="455"/>
         <source> doit etre insere avant </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="451"/>
+        <location filename="../../InterfaceQT4/browser.py" line="464"/>
         <source>insertion impossible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/browser.py" line="450"/>
+        <location filename="../../InterfaceQT4/browser.py" line="463"/>
         <source> doit etre insere apres </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/monWidgetCreeParam.py" line="78"/>
-        <source>La Creation de parametre n est possible que dans un jeu de donnees</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/monWidgetPlusieursTuple.py" line="230"/>
+        <location filename="../../InterfaceQT4/monWidgetPlusieursTuple.py" line="244"/>
         <source>Nb maximum de valeurs atteint</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="83"/>
-        <source>Heure sous la forme HH:MM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../InterfaceQT4/monWidgetSimpBase.py" line="84"/>
-        <source>Date sous la forme JJ/MM/AA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2316,17 +2705,17 @@ Le fichier associe n&apos;est pas defini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="257"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="260"/>
         <source>Gestion Maillage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="391"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="401"/>
         <source>Acquiert groupe mailles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="396"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="406"/>
         <source>Acquisition Groupe Maille</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2483,6 +2872,137 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../monCode/EssaiTraduction.py" line="14"/>
         <source>Modele</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../convert/convert_python.py" line="116"/>
+        <source>Impossible de convertir le fichier Python qui doit contenir des erreurs.
+
+                                  On retourne le fichier non converti. Prevenir la maintenance.
+
+ %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../convert/parseur_python.py" line="499"/>
+        <source>Eficas ne peut pas traiter plusieurs instructions 
+                                                 sur la meme ligne : %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Editeur/analyse_catalogue.py" line="209"/>
+        <source>le texte a analyser n&apos;est pas celui d&apos;une commande ou 
+                                         d&apos;un operateur : %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Editeur/analyse_catalogue.py" line="229"/>
+        <source>le texte a analyser n&apos;est pas celui d&apos;une commande connue : 
+                                        %(v_1)s %(v_2)s</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Editeur/analyse_catalogue.py" line="231"/>
+        <source>le texte a analyser n&apos;est pas celui d&apos;une commande connue : 
+                                         %(v_1)s %(v_2)s</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Editeur/session.py" line="149"/>
+        <source> jdc %(v_1)s manque 
+                                      fichier comm dans section %(v_2)s</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Editeur/session.py" line="154"/>
+        <source>jdc %(v_1)s, le fichier
+                                      de commandes %(v_2)s n&apos;existe pas</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Editeur/session.py" line="170"/>
+        <source> jdc %(v_1)s 
+                                   fichier include %(v_2)s, %(v_3)s 
+                                   n&apos;existe pas</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Editeur/session.py" line="202"/>
+        <source> jdc %(v_1)s manque fichier comm 
+                                dans section %(v_2)s</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Editeur/session.py" line="206"/>
+        <source>jdc %(v_1)s, le fichier de commandes 
+                                %(v_2)s n&apos;existe pas</source>
+        <comment>v_1</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Extensions/commande_comm.py" line="62"/>
+        <source>Objet commande commentaris&#xe9; invalide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="482"/>
+        <source>ATTENTION! Une source constante 
+                                  n&apos;est possible qu&apos;a frequence nulle 
+                                  en regime frequentiel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="491"/>
+        <source>ERREUR! Une forme de la source du 
+                               type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="512"/>
+        <source>ATTENTION! Une source constante n&apos;est 
+                                  possible qu&apos;a frequence nulle en regime frequentiel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="548"/>
+        <source>ERREUR! Une forme de la source du type 
+                               WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="817"/>
+        <source>ERREUR! ce groupe de maille (%s) n&apos;a pas de prefixe 
+                                indiquant le type de materiau ou de source associee</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../generator/generator_CARMEL3D.py" line="827"/>
+        <source>ERREUR! ce groupe de maille (%(nom)s) n&apos;a pas 
+                                        le prefixe correct pour etre associe a un type %(type_bloc)s</source>
+        <comment>nom</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Ihm/I_ETAPE.py" line="485"/>
+        <source>
+   Include Invalide. 
+  ne sera pas pris en compte</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1554"/>
+        <source>: verifie les types dans un tuple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Noyau/N_VALIDATOR.py" line="1557"/>
+        <source>Les types entres ne sont pas permis</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2700,7 +3220,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/myMain.ui" line="219"/>
         <source>&amp;Nouveau</source>
-        <translation type="unfinished"></translation>
+        <translation>ME VOILA</translation>
     </message>
     <message>
         <location filename="../../UiQT4/myMain.ui" line="222"/>
@@ -2953,7 +3473,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/qtEficas.py" line="181"/>
+        <location filename="../../InterfaceQT4/qtEficas.py" line="184"/>
         <source>Run</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2971,22 +3491,22 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>JDCEditor</name>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="784"/>
+        <location filename="../../InterfaceQT4/editor.py" line="785"/>
         <source>Save File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="784"/>
+        <location filename="../../InterfaceQT4/editor.py" line="785"/>
         <source>The file &lt;b&gt;%1&lt;/b&gt; could not be saved.&lt;br&gt;Reason: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="929"/>
+        <location filename="../../InterfaceQT4/editor.py" line="930"/>
         <source>JDC (*.comm);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="943"/>
+        <location filename="../../InterfaceQT4/editor.py" line="944"/>
         <source>&amp;Abandonner</source>
         <translation type="unfinished">&amp;Abandonner</translation>
     </message>
@@ -3456,63 +3976,73 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="97"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="116"/>
         <source>Affiche le rapport de validation du mot-clef</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="702"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="778"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="158"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="182"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="310"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="386"/>
         <source>Remonte la ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="349"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="425"/>
         <source>Descend la ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="388"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="464"/>
         <source>supprime une ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="427"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="503"/>
         <source>Ajoute une ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="483"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="559"/>
         <source>Montre l&apos;ensemble des valeurs</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="545"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="621"/>
         <source>Sélectionne depuis Salome</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="583"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="659"/>
         <source>Visualise dans Salome</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="641"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="717"/>
         <source>Ouvre un fichier de sélection des valeurs</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="696"/>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="772"/>
         <source>Détruit le mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="78"/>
+        <source>permet de gérer la liste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursBase.ui" line="234"/>
+        <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3524,23 +4054,28 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="91"/>
+        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="110"/>
         <source>Affiche le rapport de validation du mot-clef</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="250"/>
+        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="356"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="152"/>
+        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="252"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="244"/>
+        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="350"/>
         <source>Détruit le mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetPlusieursInto.ui" line="72"/>
+        <source>permet de gérer la liste</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3552,53 +4087,58 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="91"/>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="110"/>
         <source>Affiche le rapport de validation du mot-clef</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="606"/>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="684"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="157"/>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="176"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="176"/>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="228"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="372"/>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="450"/>
         <source>Remonte d&apos;une ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="408"/>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="486"/>
         <source>Descend d&apos;une ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="444"/>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="522"/>
         <source>Détruit une ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="479"/>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="557"/>
         <source>ajoute une ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="529"/>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="607"/>
         <source>visualise l&apos;ensemble des valeurs</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="600"/>
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="678"/>
         <source>Détruit le mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../../UiQT4/desWidgetPlusieursIntoOrdonne.ui" line="72"/>
+        <source>permet de gérer la liste</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3610,27 +4150,27 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="82"/>
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="101"/>
         <source>Affiche le rapport de validité du mot-clef</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="279"/>
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="273"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="143"/>
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="162"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="216"/>
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="66"/>
         <source>permet de gérer la liste</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="273"/>
+        <location filename="../../UiQT4/desWidgetPlusieursPlie.ui" line="267"/>
         <source>Détruit le mot-clef</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3643,53 +4183,58 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="84"/>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="93"/>
         <source>Affiche le rapport de validation du mot-clef</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="555"/>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="621"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="147"/>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="161"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="271"/>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="337"/>
         <source>Remonte la ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="310"/>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="376"/>
         <source>Descend la ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="349"/>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="415"/>
         <source>supprime une ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="388"/>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="454"/>
         <source>Ajoute une ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="444"/>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="510"/>
         <source>Montre l&apos;ensemble des valeurs</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="494"/>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="560"/>
         <source>Ouvre un fichier de sélection des valeurs</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="549"/>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="615"/>
         <source>Détruit le mot-clef</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../UiQT4/desWidgetPlusieursTuple.ui" line="213"/>
+        <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4179,7 +4724,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>self.appliEficas</name>
     <message>
-        <location filename="../../InterfaceQT4/editor.py" line="749"/>
+        <location filename="../../InterfaceQT4/editor.py" line="750"/>
         <source>Wrapper Files (*.xml);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>

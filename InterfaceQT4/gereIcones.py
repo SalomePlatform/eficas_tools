@@ -106,8 +106,10 @@ class FacultatifOuOptionnel:
           self.RBSalome.setIcon(icon)
           self.connect(self.RBSalome,SIGNAL("pressed()"),self.BSalomePressed)
 
+#PNPN --> Telemac A revoir surement
+# cela ou le catalogue grpma ou salomeEntry
           if not(('grma' in repr(mctype)) or ('grno' in repr(mctype))) or not(self.editor.salome): 
-             self.BView2D.close()
+             if hasattr(self,"RBSalomeVue") : self.RBSalomeVue.close()
           else : 
              icon1=QIcon(self.repIcon+"/eye.png")
              self.RBSalomeVue.setIcon(icon1)
@@ -301,13 +303,14 @@ class ContientIcones:
            selection, commentaire = self.appliEficas.selectEntryFromSalome(kwType,editor=self.editor)
 
         if commentaire !="" :
-            self.editor.affiche_infos(tr(QString(commentaire)))
+            self.editor.affiche_infos(QString(tr(str(commentaire))))
         monTexte=""
         if selection == [] : return
         for geomElt in selection:
             monTexte=geomElt+","
         monTexte= monTexte[0:-1]
         self.lineEditVal.setText(QString(monTexte))
+        self.LEValeurPressed()
 
   def BView2DPressed(self):
         valeur=self.lineEditVal.text()
