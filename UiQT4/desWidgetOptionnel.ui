@@ -102,7 +102,7 @@ font : 'times' 9px</string>
        <number>0</number>
       </property>
       <item>
-       <widget class="QScrollArea" name="scrollAreaCommandes_2">
+       <widget class="QScrollArea" name="scrollAreaCommandesOptionnelles">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>

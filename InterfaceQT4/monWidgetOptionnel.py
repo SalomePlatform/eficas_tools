@@ -76,7 +76,7 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
 
 
   def affiche(self,liste):
-     #print "dans Optionnel ____ affiche", liste
+     print "dans Optionnel ____ affiche", liste
      self.show()
      labeltext,fonte,couleur = self.parentMC.node.item.GetLabelText()
      l=labeltext
@@ -102,7 +102,8 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
          #print "j ajoute ", mot, cb
          self.dicoCb[cb]=mot
          self.commandesOptionnellesLayout.insertWidget(0,cb)
-     #print "Fin Optionnel ____ affiche", liste
+     self.scrollAreaCommandesOptionnelles.horizontalScrollBar().setSliderPosition(0)
+     print "Fin Optionnel ____ affiche", liste
 
   def CBChecked(self):
       # ordre ?
