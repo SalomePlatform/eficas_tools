@@ -37,7 +37,7 @@ class MonSelectVal(DSelVal):
   """
   def __init__(self,file,parent,name = None,fl = 0):
         #print "MonSelectVal"
-        self.FonctPanel=parent
+        self.parent=parent
         DSelVal.__init__(self,parent,0)
         self.separateur=" "
         self.texte=" "
@@ -53,6 +53,19 @@ class MonSelectVal(DSelVal):
         self.connect(self.Bvirgule,SIGNAL("clicked()"),self.SelectVir)
         self.connect(self.BImportSel,SIGNAL("clicked()"),self.BImportSelPressed)
         self.connect(self.BImportTout,SIGNAL("clicked()"),self.BImportToutPressed)
+        self.connect(self.parent.editor.sb,SIGNAL("messageChanged(QString)"),self.messageAChanger)
+
+  def messageAChanger(self):
+      message=self.parent.editor.sb.currentMessage()
+      mapalette=self.sb.palette()
+      from PyQt4.QtGui import QPalette
+      mapalette.setColor( QPalette.WindowText, self.parent.editor.couleur )
+      self.sb.setPalette( mapalette );
+      self.sb.setText(QString.fromUtf8(message))
+      QTimer.singleShot(3000, self.efface)
+      
+  def efface(self):
+      self.sb.setText("")
 
   def readVal(self):
         if self.file == "" : return
@@ -99,5 +112,6 @@ class MonSelectVal(DSelVal):
                liste.append(val2)
             except :
               pass
-        #print self.FonctPanel.AjoutNValeur 
-        self.FonctPanel.AjoutNValeur(liste) 
+        self.parent.ajoutNValeur(liste) 
+        
+

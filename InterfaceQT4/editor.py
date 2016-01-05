@@ -69,6 +69,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         self.jdc         = jdc
         self.first	 = True
         self.QWParent    = QWParent
+        self.couleur     = Qt.black
          
         if appli != None :
            self.salome =  self.appliEficas.salome
@@ -127,6 +128,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
 
         try:
           self.CONFIGURATION.convert_module
+          print self.CONFIGURATION.convert_module
           _module = __import__(self.CONFIGURATION.convert_module)
           info = _module.entryPoint()
           convert.plugins.addEntryPoint(info)
@@ -471,6 +473,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
            mapalette.setColor( QPalette.WindowText, couleur )
            self.sb.setPalette( mapalette );
            self.sb.showMessage(QString.fromUtf8(message),4000)
+           self.couleur=couleur
 
     #------------------------------#
     def affiche_alerte(self,titre,message):

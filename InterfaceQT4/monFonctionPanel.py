@@ -93,7 +93,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
                        self.LBValeurs.addItem(QString(str(valeur)))
 
 
-  def  Ajout1Valeur(self,liste=[]):
+  def  ajout1Valeur(self,liste=[]):
         # Pour etre appele a partir du Panel Importer (donc plusieurs fois par AjouterNValeur)
         validite=1
         if liste == [] :
@@ -162,7 +162,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
            self.BuildLBValeurs(self.listeValeursCourantes)
 
 
-  def AjoutNValeur(self,liste) :
+  def ajoutNValeur(self,liste) :
         if len(liste)%self.nbValeurs != 0 :
            texte="Nombre de valeur incorrecte"
            #self.Commentaire.setText(texte)
@@ -170,7 +170,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
            return
         listeDecoupee=self.DecoupeListeValeurs(liste)
         for vals in listeDecoupee :
-            self.Ajout1Valeur(vals)
+            self.ajout1Valeur(vals)
            
   def Sup1Valeur(self):
         index=self.LBValeurs.currentRow()

@@ -169,7 +169,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       # A priori, on ne fait rien
       pass
 
-  def AjoutNValeur(self,liste) :
+  def ajoutNValeur(self,liste) :
       for val in liste :
          i=1
          ajoute=False

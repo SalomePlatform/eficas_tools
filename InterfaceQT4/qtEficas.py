@@ -103,8 +103,10 @@ class Appli(Ui_Eficas,QMainWindow):
         if self.code != None : self.construitMenu()
 
         self.setWindowTitle(self.VERSION_EFICAS)
-        self.ouvreFichiers()
-
+        try :
+          self.ouvreFichiers()
+        except EficasException, exc:
+          exit()
 
 
     def definitCode(self,code,ssCode) :

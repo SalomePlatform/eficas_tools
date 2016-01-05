@@ -129,9 +129,9 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
             lParam.append(param)
 
         try :
-          self.panel.AjoutNValeur(lParam)
+          self.panel.ajoutNValeur(lParam)
         except :
           for p in lParam :
-             self.panel.Ajout1Valeur(p)
+             self.panel.ajout1Valeur(p)
         self.close()
 

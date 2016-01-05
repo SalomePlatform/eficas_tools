@@ -25,6 +25,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
+
 from feuille               import Feuille
 from politiquesValidation  import PolitiquePlusieurs
 from qtSaisie              import SaisieValeur
@@ -32,6 +33,7 @@ from gereListe             import GereListe
 from gereListe             import LECustom
 from Tuple2                import Ui_Tuple2
 from Tuple3                import Ui_Tuple3
+from maMessageBox	   import maMessageBox
 
 
 class TupleCustom :
@@ -254,13 +256,18 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          except :
            pass
           
-  def AjoutNValeur(self,liste):
+  def ajoutNValeur(self,liste):
         if len(liste)%self.nbValeurs != 0 :
            texte="Nombre incorrect de valeurs"
-           #self.Commentaire.setText(texte)
            self.editor.affiche_infos(tr(texte),Qt.red)
-           return
         i=0
+        min,max=self.node.item.GetMinMax()
+        if self.objSimp.valeur == None : l = len(liste) and self.objSimp.valeur
+        else : l = len(liste)+len(self.objSimp.valeur)
+        if l > max : 
+           texte=tr("Nombre maximum de valeurs ")+str(max)+tr(" atteint")
+           self.editor.affiche_infos(texte,Qt.red)
+           return
         while ( i < len(liste) ) :
             if self.objSimp.valeur != None : indexDernierRempli=len(self.objSimp.valeur)
             else : indexDernierRempli=0
@@ -281,7 +288,6 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
                nomLineEdit=self.nomLine+str(self.indexDernierLabel)
                LEARemplir=getattr(self,nomLineEdit) 
                LEARemplir.valueChange()
-
 
   def RBListePush(self):
   # PN a rendre generique avec un truc tel prerempli
