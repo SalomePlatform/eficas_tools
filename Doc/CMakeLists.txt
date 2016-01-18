@@ -1,7 +1,7 @@
 find_package(Sphinx REQUIRED)
 
 if(NOT DEFINED SPHINX_THEME)
-  set(SPHINX_THEME classic)
+  set(SPHINX_THEME basic)
 endif()
 
 if(NOT DEFINED SPHINX_THEME_DIR)
