@@ -71,11 +71,6 @@ MATER2=DEFI_MATERIAU(ELAS=_F(E=100000000000.0,
                                        DT_SIGM_EPSI=0.0,
                                        SY_T=50000000.0,),);
 
-PS1=DEFI_PARA_SENSI(VALE=1.0,);
-
-PS2=DEFI_PARA_SENSI(VALE=1.0,);
-
-PS3=DEFI_PARA_SENSI(VALE=1.0,);
 
 CHMAT2=AFFE_MATERIAU(MAILLAGE=MAIL,
                      AFFE=_F(TOUT='OUI',
@@ -85,18 +80,8 @@ AAAZ=AFFE_CHAR_THER(MODELE=AFFE1,
                     TEMP_IMPO=_F(TOUT='OUI',
                                  TEMP=0.0,),);
 
-TH1=THER_LINEAIRE(MODELE=AFFE1,
-                  CHAM_MATER=CHMAT2,
-                  EXCIT=_F(CHARGE=AAAZ,),
-                  SENSIBILITE=(PS1,PS2,),);
-# 'THER_LINEAIRE', 'SENSIBILITE'       --> plusieursassdpanel
 
-ACA1=AFFE_CHAR_ACOU(MODELE=AFFE1,
-                    PRES_IMPO=_F(TOUT='OUI',
-                                 PRES=('RI',3.0,3.0,),),);
-# 'AFFE_CHAR_ACOU', 'PRES_IMPO', 'PRES' --> uniquecomppanel
-
-MACRO_MATR_ASSE(MODELE=AFFE1,
+ASSEMBLAGE(MODELE=AFFE1,
                 NUME_DDL=CO('DDL1'),
                 MATR_ASSE=_F(MATRICE=CO('MAT1'),
                              OPTION='RIGI_THER',),);

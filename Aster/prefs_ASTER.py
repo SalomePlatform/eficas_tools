@@ -49,8 +49,9 @@ rep_doc_STA11="/local/noyret/Docs/cataSTA11c_clefs_docu"
 catalogues=(
 #('ASTER','STA8.8',os.path.join(rep_cata,'cataSTA8'),'python'),
 #('ASTER','STA9.8',os.path.join(rep_cata,'cataSTA9'),'python'),
-('ASTER','STA10.3',os.path.join(rep_cata,'cataSTA10'),'python'),
-('ASTER','STA11',os.path.join(rep_cata,'cataSTA11'),'python','defaut'),
+#('ASTER','STA10.3',os.path.join(rep_cata,'cataSTA10'),'python'),
+('ASTER','STA12',os.path.join(rep_cata,'cataSTA12'),'python','defaut'),
+#('ASTER','STA11',os.path.join(rep_cata,'cataSTA11'),'python','defaut'),
 )
 exec_acrobat    = '/usr/bin/xgd-open'
 

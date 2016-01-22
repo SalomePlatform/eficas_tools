@@ -43,7 +43,7 @@ JdC = JDC_CATA (code = 'monCode',
 
 SOURCE=OPER(nom='SOURCE',op=None,sd_prod=source,UIinfo = { "groupes" : ( "CACHE", ) },
             EnveloppeConnexeInducteur=SIMP(statut='o',typ='TXM',defaut="default"),
-            VecteurDirecteur=SIMP(statut='i',typ=Tuple(3),defaut=(0,0,1),validators=VerifTypeTuple(('R','R','R'))),
+            VecteurDirecteur=SIMP(statut='i',typ=Tuple(3),validators=VerifTypeTuple(('R','R','R'))),
             Centre=SIMP(statut='o',typ=Tuple(3),validators=VerifTypeTuple(('R','R','R'))),
             SectionBobine=SIMP(statut='o',typ='R',fr='en m2',ang='(m2)'),
             Amplitude=SIMP(statut='o',typ='R',fr='en A',ang='(A)'),
