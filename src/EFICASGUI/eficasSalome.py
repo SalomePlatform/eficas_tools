@@ -3,8 +3,8 @@
 
 import sys, os, re,types
 import traceback
-from PyQt4.QtGui import QMessageBox
-from PyQt4.QtGui import QApplication
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QApplication
 
 from salome.kernel.logger import Logger
 logger = Logger( "EFICAS_SRC.EFICASGUI.eficasSalome.py" )
