@@ -19,16 +19,21 @@
 #
 
 import os, sys
-
-from PyQt4.QtGui  import *
-from PyQt4.QtCore import *
-from myMain import Ui_Eficas
-from viewManager import MyTabview
-from getVersion import getEficasVersion
+from  determine import monEnvQT5
+if monEnvQT5 :
+  from PyQt5.QtWidgets import QApplication, QMainWindow, QBoxLayout, QMenu, QAction
+  from PyQt5.QtGui import QIcon
+  from PyQt5.QtCore import Qt
+else:
+  from PyQt4.QtGui  import *
+  from PyQt4.QtCore import *
 
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
+from myMain import Ui_Eficas
+from viewManager import MyTabview
+from getVersion import getEficasVersion
 from Editeur import session
 
 
@@ -53,7 +58,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.code=code
         self.indice=0
         self.dict_reels={}
-        self.recent =  QStringList()
+        if monEnvQT5 : self.recent =  []
+        else : self.recent =  QStringList()
         self.ficRecents={}
         self.listeAEnlever=[]
         self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND','MT']
@@ -92,13 +98,13 @@ class Appli(Ui_Eficas,QMainWindow):
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         self.viewmanager = MyTabview(self)
-        #self.recentMenu=self.menuFichier.addMenu(tr('&Recents'))
         self.recentMenu=QMenu(tr('&Recents'))
         #self.menuFichier.insertMenu(self.actionOuvrir,self.recentMenu)
         # actionARemplacer ne sert que pour l insert Menu
         self.menuFichier.insertMenu(self.actionARemplacer ,self.recentMenu)
         self.menuFichier.removeAction(self.actionARemplacer)
-        self.connecterSignaux()
+        if monEnvQT5 : self.connecterSignaux()
+        else         : self.connecterSignauxQT4()
         self.toolBar.addSeparator()
         if self.code != None : self.construitMenu()
 
@@ -189,7 +195,8 @@ class Appli(Ui_Eficas,QMainWindow):
         if not(self.actionExecution in self.toolBar.actions()):
            self.toolBar.addAction(self.actionExecution)
         self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
-        self.connect(self.actionExecution,SIGNAL("triggered()"),self.run)
+        if monEnvQT5 : self.actionExecution.triggered.connect(self.run)
+        else         : self.connect(self.actionExecution,SIGNAL("triggered()"),self.run)
 
     def ajoutSauveExecution(self):
         self.actionSaveRun = QAction(self)
@@ -200,7 +207,8 @@ class Appli(Ui_Eficas,QMainWindow):
         if not(self.actionSaveRun in self.toolBar.actions()):
            self.toolBar.addAction(self.actionSaveRun)
         self.actionSaveRun.setText(QApplication.translate("Eficas", "Save Run", None, QApplication.UnicodeUTF8))
-        self.connect(self.actionSaveRun,SIGNAL("triggered()"),self.saveRun)
+        if monEnvQT5 : self.actionSaveRun.triggered.connect(self.saveRun)
+        else         : self.connect(self.actionSaveRun,SIGNAL("triggered()"),self.saveRun)
 
     def griserActionsStructures(self):
         self.actionCouper.setEnabled(False)
@@ -297,7 +305,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionParametres_Eficas.setText('Help PSEN')
 #
         #Oself.disconnect(self.actionParametres_Eficas)
-        self.connect(self.actionParametres_Eficas,SIGNAL("triggered()"),self.aidePSEN)
+        if monEnvQT5 :  self.actionParametres_Eficas.triggered.connect(self.aidePSEN)
+        else  : self.connect(self.actionParametres_Eficas,SIGNAL("triggered()"),self.aidePSEN)
         
 
 
@@ -345,7 +354,8 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
 
-    def connecterSignaux(self) :
+   
+    def connecterSignauxQT4(self) :
         self.connect(self.recentMenu,SIGNAL('aboutToShow()'),self.handleShowRecentMenu)
 
         self.connect(self.action_Nouveau,SIGNAL("triggered()"),self.fileNew)
@@ -374,8 +384,6 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionFichier_Resultat,SIGNAL("triggered()"),self.visuJdcPy)
 
 
-        #self.connect(self.helpIndexAction,SIGNAL("triggered()"),self.helpIndex)
-        #self.connect(self.helpContentsAction,SIGNAL("triggered()"),self.helpContents)
 
         # Pour Aster
         self.actionTraduitV9V10 = QAction(self)
@@ -412,6 +420,68 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionCode = QAction(self)
         self.actionCode.setText(tr("Specificites Maille"))
         self.connect(self.actionCode,SIGNAL("triggered()"),self.aideCode)
+
+    def connecterSignaux(self) :
+        self.recentMenu.aboutToShow.connect(self.handleShowRecentMenu)
+        self.action_Nouveau.triggered.connect(self.fileNew)
+        self.actionNouvel_Include.triggered.connect(self.NewInclude)
+        self.actionOuvrir.triggered.connect(self.fileOpen)
+        self.actionEnregistrer.triggered.connect(self.fileSave)
+        self.actionEnregistrer_sous.triggered.connect(self.fileSaveAs)
+        self.actionFermer.triggered.connect(self.fileClose)
+        self.actionFermer_tout.triggered.connect(self.fileCloseAll)
+        self.actionQuitter.triggered.connect(self.fileExit)
+
+        self.actionEficas.triggered.connect(self.aidePPal)
+        self.actionVersion.triggered.connect(self.version)
+        self.actionParametres.triggered.connect(self.gestionParam)
+
+        self.actionCouper.triggered.connect(self.editCut)
+        self.actionCopier.triggered.connect(self.editCopy)
+        self.actionColler.triggered.connect(self.editPaste)
+        self.actionSupprimer.triggered.connect(self.supprimer)
+        self.actionRechercher.triggered.connect(self.rechercher)
+        self.actionDeplier_replier.triggered.connect(self.Deplier)
+
+        self.actionRapport_de_Validation.triggered.connect(self.jdcRapport)
+        self.actionRegles_du_JdC.triggered.connect(self.jdcRegles)
+        self.actionFichier_Source.triggered.connect(self.jdcFichierSource)
+        self.actionFichier_Resultat.triggered.connect(self.visuJdcPy)
+
+
+        # Pour Aster
+        self.actionTraduitV9V10 = QAction(self)
+        self.actionTraduitV9V10.setObjectName("actionTraduitV9V10")
+        self.actionTraduitV9V10.setText(tr("TraduitV9V10"))
+        self.actionTraduitV10V11 = QAction(self)
+        self.actionTraduitV10V11.setObjectName("actionTraduitV10V11")
+        self.actionTraduitV10V11.setText(tr("TraduitV10V11"))
+        self.actionTraduitV11V12 = QAction(self)
+        self.actionTraduitV11V12.setObjectName("actionTraduitV11V12")
+        self.actionTraduitV11V12.setText(tr("TraduitV11V12"))
+        self.actionSauveLigne = QAction(self)
+        self.actionSauveLigne.setText(tr("Sauve Format Ligne"))
+
+        #self.actionParametres_Eficas.triggered.connect(self.optionEditeur)
+        self.actionTraduitV9V10.triggered.connect(self.traductionV9V10)
+        self.actionTraduitV10V11.triggered.connect(self.traductionV10V11)
+        self.actionTraduitV11V12.triggered.connect(self.traductionV11V12)
+        self.actionSauveLigne.triggered.connect(self.sauveLigne)
+
+        # Pour Carmel
+        self.actionChercheGrpMaille = QAction(self)
+        self.actionChercheGrpMaille.setText(tr("Acquiert Groupe Maille"))
+
+        # Pour CarmelCND
+        self.actionChercheGrp = QAction(self)
+        self.actionChercheGrp.setText(tr("Accquisition Groupe Maille"))
+        self.actionChercheGrp.triggered.connect(self.ChercheGrp)
+
+        # Pour Aide
+        self.actionCode = QAction(self)
+        self.actionCode.setText(tr("Specificites Maille"))
+        self.actionCode.triggered.connect(self.aideCode)
+
 
     def Deplier(self):
         self.viewmanager.handleDeplier()
@@ -457,14 +527,13 @@ class Appli(Ui_Eficas,QMainWindow):
             for fichier in self.listePatrons.liste[nomSsMenu]:
                id = ssmenu.addAction(fichier)
                self.ficPatrons[id]=fichier
-               self.connect(id, SIGNAL('triggered()'),self.handleOpenPatrons)
+               if monEnvQT5 :  self.id.triggered.connect(self.handleOpenPatrons)
+               else : self.connect(id, SIGNAL('triggered()'),self.handleOpenPatrons)
             #   self.Patrons.setItemParameter(id,idx)
                idx=idx+1
 
     def initRecents(self):
-       self.recent =  QStringList()
        try :
-       #if 1 :
            if sys.platform[0:5]=="linux" :
               rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
            else :
@@ -479,13 +548,21 @@ class Appli(Ui_Eficas,QMainWindow):
                  self.recent.append(l)
               index=index+1
        except :
-       #else :
            pass
 
        try    : f.close()
        except : pass
 
     def addToRecentList(self, fn):
+      if not monEnvQT5 : addToRecentListQT4(self, fn); return
+
+      while fn in self.recent: self.recent.remove(fn)
+      self.recent.insert(0,fn)
+      if len(self.recent) > 9:
+         self.recent = self.recent[:9]
+
+
+    def addToRecentListQT4(self, fn):
         """
         Public slot to add a filename to the list of recently opened files.
 
@@ -606,7 +683,8 @@ class Appli(Ui_Eficas,QMainWindow):
         for rp in self.recent:
             id = self.recentMenu.addAction(rp)
             self.ficRecents[id]=rp
-            self.connect(id, SIGNAL('triggered()'),self.handleOpenRecent)
+            if monEnvQT5 : self.id.triggered.connect(self.handleOpenRecent)
+            else         : self.connect(id, SIGNAL('triggered()'),self.handleOpenRecent)
         self.recentMenu.addSeparator()
         self.recentMenu.addAction(tr('&Effacer'), self.handleClearRecent)
 
@@ -748,7 +826,6 @@ if __name__=='__main__':
     Eficas=Appli()
     Eficas.show()
 
-    #app.connect(app, SIGNAL("lastWindowClosed()"), app, SLOT("quit()"))
     #mw.ouvreFichiers()
     #mw.show()
 

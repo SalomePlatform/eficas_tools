@@ -21,14 +21,13 @@
 import string,types,os,sys
 
 # Modules Eficas
-from PyQt4.QtGui     import *
-from PyQt4.QtCore    import *
 from Extensions.i18n import tr
 from feuille         import Feuille
 
 
 from desWidgetMatrice  import Ui_desWidgetMatrice 
 
+from determine import monEnvQT5
 
 class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
 # c est juste la taille des differents widgets de base qui change
@@ -41,7 +40,8 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
         self.nbCols=0
         self.nomVariables={}
         self.creeColonnes()
-        self.connecterSignaux()
+        if monEnvQT5 : self.connecterSignaux()
+        else : self.connecterSignauxQT4()
         if self.node.item.get_valeur()== None:  self.initialSsValeur()
         else :
            try    : self.initialValeur()
@@ -55,9 +55,13 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
 
 
 
-  def connecterSignaux(self) :
+  def connecterSignauxQT4(self) :
       self.connect(self.TBMatrice,SIGNAL("itemChanged(QTableWidgetItem *)"),self.itemChanged)
       self.connect(self.PBrefresh,SIGNAL("clicked()"), self.afficheEntete)
+
+  def connecterSignaux(self) :
+      self.TBMatrice.itemChanged.connect(self.itemChanged)
+      self.PBrefresh.clicked.connect( self.afficheEntete)
 
   def afficheEntete(self):
       self.objSimp.changeEnteteMatrice()

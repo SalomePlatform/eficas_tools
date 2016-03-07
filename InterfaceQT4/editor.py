@@ -20,9 +20,15 @@
 import types,sys,os, re
 import  subprocess
 import traceback
-from PyQt4 import *
-from PyQt4.QtGui  import *
-from PyQt4.QtCore import *
+
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication
+    from PyQt5.QtGui import QPalette
+    from PyQt5.QtCore import QProcess, QFileInfo, QTimer, Qt
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
 import time
 import pdb
 from datetime import date
@@ -37,7 +43,6 @@ from Editeur        import comploader
 from Editeur        import Objecttreeitem
 from desBaseWidget  import Ui_baseWidget
 from monViewTexte   import ViewText 
-from monViewTexte   import ViewText2
 from monWidgetCreeParam import MonWidgetCreeParam 
 import browser
 import readercata
@@ -46,7 +51,7 @@ DictExtensions= {"MAP" : ".map"}
 
 
 
-class JDCEditor(Ui_baseWidget,QtGui.QWidget):
+class JDCEditor(Ui_baseWidget,QWidget):
 # ----------------------------------------- #
     """
        Editeur de jdc
@@ -55,7 +60,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     def __init__ (self,appli,fichier = None, jdc = None, QWParent=None, units = None, include=0 , vm=None):
     #----------------------------------------------------------------------------------------------------------#
 
-        QtGui.QWidget.__init__(self,None)
+        QWidget.__init__(self,None)
         self.setupUi(self)
         self.widgetOptionnel=None
         self.fenetreCentraleAffichee=None
@@ -194,7 +199,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                 txt_exception = self.jdc.cr.get_mess_exception()
             if txt_exception:
                 self.jdc = None
-                qApp.restoreOverrideCursor()
+                QApplication.restoreOverrideCursor()
                 self.affiche_infos(tr("Erreur fatale au chargement de %s",str(fichier)),Qt.red)
                 if (self.appliEficas.ssIhm == False) : QMessageBox.critical( self, tr("Erreur fatale au chargement d'un fichier"), txt_exception)
             else:
@@ -397,8 +402,12 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         f=open(nomFichier,'w')
         f.write(txt)
         f.close()
-        self.connect(self.monExe, SIGNAL("readyReadStandardOutput()"), self.readFromStdOut )
-        self.connect(self.monExe, SIGNAL("readyReadStandardError()"), self.readFromStdErr )
+        if monEnvQT5 :
+           self.monExe.readyReadStandardOutput.connect( self.readFromStdOut)
+           self.monExe.readyReadStandardError.connect( self.readFromStdErr)
+        else :
+           self.connect(self.monExe, SIGNAL("readyReadStandardOutput()"), self.readFromStdOutQT4 )
+           self.connect(self.monExe, SIGNAL("readyReadStandardError()"), self.readFromStdErrQT4 )
         exe='sh ' + nomFichier
         self.monExe.start(exe)
         self.monExe.closeWriteChannel()
@@ -409,12 +418,19 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         except :
           pass
 
-
     def readFromStdErr(self):
+        a=self.monExe.readAllStandardError()
+        self.w.view.append(str(a.data(),len(a)))
+
+    def readFromStdErr(self) :
+        a=self.monExe.readAllStandardOutput()
+        self.w.view.append(str(a.data(),len(a)))
+
+    def readFromStdErrQT4(self):
         a=self.monExe.readAllStandardError()
         self.w.view.append(QString.fromUtf8(a.data(),len(a))) ;
 
-    def readFromStdOut(self) :
+    def readFromStdOutQT4(self) :
         a=self.monExe.readAllStandardOutput()
         self.w.view.append(QString.fromUtf8(a.data(),len(a))) ;
         
@@ -469,10 +485,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #----------------------------------------------#
         if self.sb:
            mapalette=self.sb.palette()
-           from PyQt4.QtGui import QPalette
            mapalette.setColor( QPalette.WindowText, couleur )
            self.sb.setPalette( mapalette );
-           self.sb.showMessage(QString.fromUtf8(message),4000)
+           self.sb.showMessage(message,4000)
            self.couleur=couleur
 
     #------------------------------#
@@ -753,7 +768,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
      fichier = QFileDialog.getOpenFileName(self.appliEficas,
                    tr('Ouvrir Fichier'),
                    self.appliEficas.CONFIGURATION.savedir,
-                   self.appliEficas.trUtf8('Wrapper Files (*.xml);;''All Files (*)'))
+                   tr('Wrapper Files (*.xml);;''All Files (*)'))
      return  fichier
 
     #--------------------------------------------------#
@@ -762,7 +777,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
         """
         Public slot to write the text to a file.
 
-        @param fn filename to write to (string or QString)
+        @param fn filename to write to string
         @return flag indicating success
         """
 
@@ -785,9 +800,8 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
             f.close()
             return 1
         except IOError, why:
-            QMessageBox.critical(self, self.trUtf8('Save File'),
-                self.trUtf8('The file <b>%1</b> could not be saved.<br>Reason: %2')
-                    .arg(unicode(fn)).arg(str(why)))
+            QMessageBox.critical(self, tr('Sauvegarde du Fichier'),
+                tr('Le fichier')+str(fn) + tr('n a pas pu etre sauvegarde : ') + str(why))
             return 0
 
     #-----------------------------------------------------------#
@@ -928,9 +942,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #-----------------------------------------------------#
       if DictExtensions.has_key(self.appli.code) :
          chaine1="JDC (*"+DictExtensions[self.appli.code]+");;"
-         extensions= self.trUtf8(chaine1+ "All Files (*)")
+         extensions= tr(chaine1+ "All Files (*)")
       else :
-         extensions= self.trUtf8("JDC (*.comm);;" "All Files (*)")
+         extensions= tr("JDC (*.comm);;" "All Files (*)")
 
       if self.appli.code == "MAP" :
          extensions = extensions + ";; Run (*.input);;"
@@ -940,6 +954,9 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
              extensions,None,
              QFileDialog.DontConfirmOverwrite)
       if fn.isNull(): return (0, None)
+      if fn == None : return (0, None)
+      if monEnvQT5 :  fn=fn[0]
+
       ext = QFileInfo(fn).suffix()
       if ext.isEmpty(): fn.append(extension)
 
@@ -948,7 +965,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                    tr("Sauvegarde du Fichier"),
                    tr("Le fichier <b>%s</b> existe deja.",str(fn)),
                    tr("&Ecraser"),
-                   self.trUtf8("&Abandonner"))
+                   tr("&Abandonner"))
            if abort == 1 :  return (0, "")
       return (1,fn)
 
@@ -989,15 +1006,19 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
                for b in c.children():
                   if isinstance(b,QPushButton):
                      avant=b.text()
-                     if avant.toLatin1()=="&Open":
-                        b.setText("Save")
-        mesFiltres=QStringList()
-        mesFiltres << "input Map (*.input)" << "All Files (*)"
+                     if (not monEnvQT5) and avant.toLatin1()=="&Open": b.setText("Save")
+                     if monEnvQT5 and avant=="&Open": b.setText("Save")
+        if monEnvQT5 :
+           mesFiltres= "input Map (*.input);;All Files (*)"
+        else :
+           mesFiltres=QStringList()
+           mesFiltres << "input Map (*.input)" << "All Files (*)"
         monDialog.setNameFilters(mesFiltres)
         if monNomFichier!="" : monDialog.selectFile(monNomFichier)
         BOk=monDialog.exec_()
         if BOk==0: return
-        fn=str(monDialog.selectedFiles()[0].toLatin1())
+        if monEnvQT5 : fn=str(monDialog.selectedFiles()[0])
+        else : fn=str(monDialog.selectedFiles()[0].toLatin1())
         if fn == "" or fn == None : return
         if not fn.endswith(".input"):
             fn += ".input"
@@ -1185,14 +1206,15 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
             texte = tr("Le fichier %s contient une commande POURSUITE\n", fic_origine)
             texte = texte+tr('Donnez le nom du fichier dont vous \n voulez faire une poursuite')
 
-        QMessageBox.information( self, titre,QString.fromUtf8(texte))
+        QMessageBox.information( self, titre,texte)
         fn = QFileDialog.getOpenFileName(self.appliEficas,
                    titre,
                    self.appliEficas.CONFIGURATION.savedir)
 
-        if fn.isNull():
         # ce retour est impose par le get_file d'I_JDC
-           return None," "
+        if fn.isNull(): return None," "
+        if not fn : return (0, " ")
+        if monEnvQT5 :  fn=fn[0]
 
         ulfile = os.path.abspath(unicode(fn))
         self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
@@ -1320,7 +1342,8 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
       QSfichier = QFileDialog.getOpenFileName(self.appliEficas,
                         caption='Fichier Med',
                         filter=extensions)
-      self.fichierMED=str(QSfichier.toLatin1())
+      if monEnvQT5 : QSfichier=QSfichier[0]
+      self.fichierMED=QSfichier
       from acquiertGroupes import getGroupes
       erreur,self.listeGroupes,self.nomMaillage,self.dicoCoord=getGroupes(self.fichierMED)
       if erreur != "" : print "a traiter"
@@ -1349,7 +1372,7 @@ class JDCEditor(Ui_baseWidget,QtGui.QWidget):
     #---------------------------#
 
       QSfichier=self.openfile.selectedFiles()[0]
-      self.fichierMED=str(QSfichier.toLatin1())
+      self.fichierMED=str(QSfichier)
       from acquiertGroupes import getGroupes
       erreur,self.listeGroupes,self.nomMaillage=getGroupes(self.fichierMED)
       if erreur != "" : print "a traiter"

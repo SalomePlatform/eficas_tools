@@ -21,8 +21,6 @@
 import string,types,os
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from feuille               import Feuille
@@ -71,7 +69,7 @@ class MonWidgetCBCommun (Ui_WidgetCB,Feuille):
 "     font : italic ;\n"
 "     background: rgb(235,235,235);\n"
 " }"))
-      valeur=str(self.CBChoix.currentText().toLatin1())
+      valeur=str(self.CBChoix.currentText())
       SaisieValeur.LEValeurPressed(self,valeur)
       self.reaffiche()
 

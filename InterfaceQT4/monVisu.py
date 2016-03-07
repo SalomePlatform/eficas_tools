@@ -21,9 +21,13 @@
 # Modules Eficas
 
 from desVisu import Ui_DVisu
-from PyQt4  import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets import QDialog
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 
 # Import des panels
 

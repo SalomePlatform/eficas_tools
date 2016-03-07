@@ -29,8 +29,14 @@ from Extensions.i18n import tr
 import compooper
 import browser
 import typeNode
-from PyQt4.QtGui import QAction
-from PyQt4.QtCore import Qt, SIGNAL, QVariant
+from determine import monEnvQT5
+if monEnvQT5:
+   from PyQt5.QtWidgets import QAction
+   from PyQt5.QtCore import Qt
+else :
+   from PyQt4.QtGui  import *
+   from PyQt4.QtCore import *
+
 
 
 class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):         
@@ -44,7 +50,10 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
       if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome:
            self.ViewElt = QAction(tr('View3D'),self.tree)
-           self.tree.connect(self.ViewElt,SIGNAL("triggered()"),self.view3D)
+           if monEnvQT5:
+              self.ViewElt.triggered.connect(self.View3D)
+           else :
+              self.tree.connect(self.ViewElt,SIGNAL("triggered()"),self.view3D)
            self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
            self.menu.addAction(self.ViewElt)
            if self.item.isvalid() :

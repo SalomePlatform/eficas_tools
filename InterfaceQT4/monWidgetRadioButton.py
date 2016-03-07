@@ -20,9 +20,16 @@
 # Modules Python
 import string,types,os
 
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtCore     import  Qt
+    from PyQt5.QtWidgets  import  QWidget
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+
 from Extensions.i18n import tr
 
 from feuille               import Feuille
@@ -68,7 +75,8 @@ class MonWidgetRadioButtonCommun (Feuille):
          if not(type(valeur) in types.StringTypes) : valeur=str(valeur)
          bouton.setText(tr(valeur))
          self.dict_bouton[valeur]=bouton
-         self.connect(bouton,SIGNAL("clicked()"),self.boutonclic)
+         if monEnvQT5 : bouton.clicked.connect(self.boutonclic)
+         else : self.connect(bouton,SIGNAL("clicked()"),self.boutonclic)
          bouton.keyPressEvent=self.keyPressEvent
          setattr(self,nomBouton,bouton)
          i=i+1

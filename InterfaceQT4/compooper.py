@@ -19,9 +19,15 @@
 #
 import os
 import tempfile
-from PyQt4.QtGui import QMessageBox, QAction, QApplication, QCursor
-from PyQt4.QtGui import *
-from PyQt4.QtCore import Qt, SIGNAL, QVariant
+from determine import monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtWidgets import QMessageBox, QAction, QApplication
+   from PyQt5.QtGui  import QCursor
+   from PyQt5.QtCore import Qt
+else :
+   from PyQt4.QtGui  import *
+   from PyQt4.QtCore import *
+
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
@@ -74,7 +80,8 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
 	      self.ViewElt.setEnabled(0)
         if  self.item.get_nom() == "DISTRIBUTION" :
            self.Graphe = QAction(tr('Graphique'),self.tree)
-           self.tree.connect(self.Graphe,SIGNAL("triggered()"),self.viewPng)
+           if monEnvQT5 : self.Graphe.triggered.connect(self.viewPng)
+           else : self.tree.connect(self.Graphe,SIGNAL("triggered()"),self.viewPng)
            self.Graphe.setStatusTip(tr("affiche la distribution "))
            self.menu.addAction(self.Graphe)
            if self.item.isvalid() :

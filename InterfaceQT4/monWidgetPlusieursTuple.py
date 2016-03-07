@@ -21,8 +21,13 @@
 import string,types,os,sys
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets  import QIcon, QSize, QFrame,QApplication
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import
+
 from Extensions.i18n import tr
 
 
@@ -52,7 +57,8 @@ class TupleCustom :
          courant=getattr(self,nomLE)
          courant.num=index
          courant.dansUnTuple=True
-         self.connect(courant,SIGNAL("returnPressed()"),self.valueChange)
+         if monEnvQt5 : courant.returnPressed.connect(self.valueChange)
+         else : self.connect(courant,SIGNAL("returnPressed()"),self.valueChange)
 
 
   def valueChange(self):
@@ -161,7 +167,10 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
           icon3 = QIcon(fichier3)
           self.BSelectFichier.setIcon(icon3)
           self.BSelectFichier.setIconSize(QSize(32, 32))
-        self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
+        if monEnvQt5 :
+          self.BSelectFichier.clicked.connect(self.selectInFile)
+        else :
+          self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
           
         
 
@@ -214,7 +223,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
        for i in range(len(valeurs),aCreer) : self.ajoutLineEdit(inInit=True)
 
   def rendVisibleLigne(self):
-      qApp.processEvents()
+      QApplication.processEvents()
       self.estVisible.setFocus(True)
       self.scrollArea.ensureWidgetVisible(self.estVisible,0,0)
 
@@ -249,7 +258,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
           self.listeAffichageWidget[-2].setFocus(True)
       else :
          try :
-           qApp.processEvents()
+           QApplication.processEvents()
            w=self.listeAffichageWidget[self.listeAffichageWidget.index(aLeFocus)+1]
            w.setFocus(True)
            self.scrollArea.ensureWidgetVisible(w,0,0)

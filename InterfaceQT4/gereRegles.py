@@ -18,7 +18,11 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5 :
+  from PyQt5.QtCore import Qt
+else:
+  from PyQt4.QtCore import *
 from  monViewRegles  import ViewRegles
 
 class GereRegles :

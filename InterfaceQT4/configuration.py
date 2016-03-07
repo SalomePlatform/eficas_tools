@@ -23,7 +23,11 @@
 # Modules Python
 import os, sys, string, types, re
 import traceback
-from PyQt4.QtGui import QMessageBox
+from  determine import monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtWidgets import QMessageBox
+else :
+   from PyQt4.QtGui import QMessageBox
 from  Editeur.utils import read_file
 from Extensions.i18n import tr
 

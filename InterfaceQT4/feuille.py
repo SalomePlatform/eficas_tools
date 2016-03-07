@@ -21,10 +21,15 @@
 import string,types,os
 import traceback
 
-from PyQt4 import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+   from PyQt5.QtWidgets import QToolButton ,QWidget
+   from PyQt5.QtGui import QFont, QFontMetrics
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
 from Extensions.i18n import tr
+
 
 from gereIcones import ContientIcones
 from gereIcones import FacultatifOuOptionnel
@@ -123,7 +128,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
            else :
                commentaire=tr("Entrez entre ")+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])+'\n'
         aideval=self.node.item.aide()
-        commentaire=commentaire +  QString.toUtf8(QString(aideval))
+        commentaire=commentaire +  tr(aideval)
         self.monCommentaireLabel.setText(str(commentaire))
         return str(commentaire)
 

@@ -17,12 +17,19 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
+from determine import monEnvQT5
+if monEnvQT5:
+   from PyQt5.QtCore import Qt
+   from PyQt5.QtWidgets import QWidget
+else :
+   from PyQt4.QtCore import *
+   from PyQt4.QtGui import *
+
+
 # Modules Eficas
 
-from desWidgetFact import Ui_WidgetFact
 from groupe import Groupe
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from desWidgetFact import Ui_WidgetFact
 from Extensions.i18n import tr
 # Import des panels
 

@@ -18,9 +18,6 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-from PyQt4 import *
-from PyQt4.QtGui  import *
-from PyQt4.QtCore import *
 import browser
 import typeNode
 from Extensions.i18n import tr

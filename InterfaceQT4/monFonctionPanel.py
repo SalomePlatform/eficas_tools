@@ -19,13 +19,17 @@
 #
 # Modules Python
 import string,types,os
+if monEnvQT5:
+    from PyQt5.QtCore import  Qt
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 
 # Modules Eficas
 from qtSaisie      import SaisieValeur
 from monPlusieursBasePanel import MonPlusieursBasePanel
 
-from PyQt4.QtGui  import *
-from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 # Import des panels
@@ -60,7 +64,6 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         l_valeurs=[]
         if ((len(liste)% self.nbValeursASaisir != 0 and (len(liste)% self.nbValeurs))):
             message=tr("La cardinalite n'est pas correcte, la derniere valeur est ignoree")
-            #self.Commentaire.setText(QString(commentaire)) 
             self.editor.affiche_infos(message,Qt.red)
         i=0
         while ( i < len(liste) ) :
@@ -90,7 +93,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
                        TupleEnTexte = TupleEnTexte[0:-2] +")"
                        self.LBValeurs.addItem(TupleEnTexte)
                    else :
-                       self.LBValeurs.addItem(QString(str(valeur)))
+                       self.LBValeurs.addItem(str(valeur))
 
 
   def  ajout1Valeur(self,liste=[]):
@@ -106,11 +109,11 @@ class MonFonctionPanel(MonPlusieursBasePanel):
         if liste ==[]    : return
 
         if (self.node.item.wait_tuple()== 1 and len(liste) != self.nbValeurs):
-            commentaire  = QString(str(liste)) 
-            commentaire += QString(tr(" n est pas un tuple de ")) 
-            commentaire += QString(str(self.nbValeursASaisir)) 
-            commentaire += QString(tr(" valeurs"))
-	    self.LEValeur.setText(QString(str(liste)))
+            commentaire  = str(liste) 
+            commentaire += tr(" n est pas un tuple de ") 
+            commentaire += str(self.nbValeursASaisir) 
+            commentaire += tr(" valeurs")
+	    self.LEValeur.setText(str(liste))
             self.editor.affiche_infos(commentaire,Qt.red)
             return
 
@@ -134,11 +137,11 @@ class MonFonctionPanel(MonPlusieursBasePanel):
              validite,comm,comm2,listeRetour=self.politique.AjoutTuple(liste,index,listeVal)
         else :
              validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,index,listeVal)
-        self.Commentaire.setText(QString.fromUtf8(QString(comm2)))
+        self.Commentaire.setText(tr(comm2))
         if not validite :
                 self.editor.affiche_infos(comm,Qt.red)
         else:
-           self.LEValeur.setText(QString(""))
+           self.LEValeur.setText("")
            l1=self.listeValeursCourantes[:indexListe]
            l3=self.listeValeursCourantes[indexListe:]
            if self.node.item.wait_tuple()== 1 :

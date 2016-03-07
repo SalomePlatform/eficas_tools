@@ -19,9 +19,15 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-import re
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+   from PyQt5.QtWidgets import QLabel, QFrame
+   from PyQt5.QtCore import QEvent
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
+from Extensions.i18n import tr
+
 #from Extensions.i18n import tr
 
 class MonLabelClic(QLabel) :

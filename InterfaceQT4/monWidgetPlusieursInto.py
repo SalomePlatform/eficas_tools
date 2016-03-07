@@ -21,8 +21,14 @@
 import string,types,os
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets  import QCheckBox, QScrollbar, QFrame, QApplication
+    from PyQt5.QtCore import QT
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import
+
 from Extensions.i18n import tr
 
 from feuille                import Feuille
@@ -118,7 +124,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
       if hasattr(self,nomCB) : return
       nouveauCB = QCheckBox(self.scrollArea)
       self.CBLayout.addWidget(nouveauCB)
-      qApp.processEvents()
+      QApplication.processEvents()
       nouveauCB.setText("")
       if index % 2 == 1 : nouveauCB.setStyleSheet("background:rgb(210,210,210)")
       else :	                    nouveauCB.setStyleSheet("background:rgb(240,240,240)")

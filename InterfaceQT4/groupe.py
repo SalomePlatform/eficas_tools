@@ -19,9 +19,14 @@
 # Modules Python
 # Modules Eficas
 
-from PyQt4  import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+   from PyQt5.QtWidgets import QWidget
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
+from Extensions.i18n import tr
+
 from Extensions.i18n import tr
 from gereIcones import FacultatifOuOptionnel
 import Accas 
@@ -29,11 +34,11 @@ import Accas
     
 # Import des panels
 
-class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
+class Groupe(QWidget,FacultatifOuOptionnel):
   """
   """
   def __init__(self,node,editor,parentQt,definition,obj,niveau,commande=None):
-      QtGui.QWidget.__init__(self,None)
+      QWidget.__init__(self,None)
       self.node=node
       self.node.fenetre=self
       #print "groupe : ",self.node.item.nom," ",self.node.fenetre
@@ -57,8 +62,10 @@ class Groupe(QtGui.QWidget,FacultatifOuOptionnel):
       self.afficheMots()
       self.listeMCAAjouter=[]
       self.dictMCVenantDesBlocs={}
-      if hasattr(self,'RBDeplie') : self.connect(self.RBDeplie,SIGNAL("clicked()"), self.Deplie)
-      if hasattr(self,'RBPlie') : self.connect(self.RBPlie,SIGNAL("clicked()"), self.Plie)
+      if hasattr(self,'RBDeplie') and not monEnvQT5 : self.connect(self.RBDeplie,SIGNAL("clicked()"), self.Deplie)
+      if hasattr(self,'RBPlie')  and not monEnvQT5: self.connect(self.RBPlie,SIGNAL("clicked()"), self.Plie)
+      if hasattr(self,'RBDeplie')  and monEnvQT5: self.RBDeplie.clicked.connect(self.Deplie)
+      if hasattr(self,'RBPlie')  and monEnvQT5: self.RBPlie.clicked.connect( self.Plie)
       self.setAcceptDrops(True)
       #self.donneFocus()
      

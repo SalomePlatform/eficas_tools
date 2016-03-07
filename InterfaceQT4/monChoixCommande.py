@@ -20,28 +20,33 @@
 # Modules Eficas
 
 from desChoixCommandes import Ui_ChoixCommandes
-from PyQt4  import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtWidgets import QWidget, QAction ,QButtonGroup, QRadioButton, QLabel
+   from PyQt5.QtGui  import QIcon
+   from PyQt5.QtCore import QSize
+else :
+   from PyQt4.QtGui  import *
+   from PyQt4.QtCore import *
+
 from Extensions.i18n import tr
 import os
 
     
 # Import des panels
 
-class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
+class MonChoixCommande(Ui_ChoixCommandes,QWidget):
   """
   """
   def __init__(self,node, jdc_item, editor):
-      QtGui.QWidget.__init__(self,None)
+      QWidget.__init__(self,None)
       self.setupUi(self)
 
       self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
       iconeFile=os.path.join(self.repIcon,'lettreRblanc30.png')
       icon = QIcon(iconeFile)
       self.RBRegle.setIcon(icon)
-      self.RBRegle.setIconSize(QtCore.QSize(21, 31))
+      self.RBRegle.setIconSize(QSize(21, 31))
 
       self.item = jdc_item
       self.node = node
@@ -58,15 +63,26 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
 
       #print self.node.tree
 
-      self.connect(self.RBalpha,SIGNAL("clicked()"),self.afficheAlpha)
-      self.connect(self.RBGroupe,SIGNAL("clicked()"),self.afficheGroupe)
-      self.connect(self.RBOrdre,SIGNAL("clicked()"),self.afficheOrdre)
-      self.connect(self.RBClear,SIGNAL("clicked()"),self.clearFiltre)
-      self.connect(self.RBCasse,SIGNAL("toggled(bool)"),self.ajouteRadioButtons)
+      if monEnvQT5 :
+         self.RBalpha.clicked.connect(self.afficheAlpha)
+         self.RBGroupe.clicked.connect(self.afficheGroupe)
+         self.RBOrdre.clicked.connect(self.afficheOrdre)
+         self.RBClear.clicked.connect(self.clearFiltre)
+         self.RBCasse.toggled.connect(self.ajouteRadioButtons)
+         self.LEFiltre.returnPressed.connect(self.ajouteRadioButtons)
+      else :
+         self.connect(self.RBalpha,SIGNAL("clicked()"),self.afficheAlpha)
+         self.connect(self.RBGroupe,SIGNAL("clicked()"),self.afficheGroupe)
+         self.connect(self.RBOrdre,SIGNAL("clicked()"),self.afficheOrdre)
+         self.connect(self.RBClear,SIGNAL("clicked()"),self.clearFiltre)
+         self.connect(self.RBCasse,SIGNAL("toggled(bool)"),self.ajouteRadioButtons)
+         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.ajouteRadioButtons)
       if self.node.tree.item.get_regles() == () :
          self.RBRegle.close()
          self.labelRegle.close()
-      else : self.connect(self.RBRegle,SIGNAL("clicked()"),self.afficheRegle)
+      else : 
+        if monEnvQT5 : self.RBRegle.clicked.connect(self.afficheRegle)
+        else         : self.connect(self.RBRegle,SIGNAL("clicked()"),self.afficheRegle)
 
       if self.editor.Ordre_Des_Commandes == None : self.RBOrdre.close()
 
@@ -76,7 +92,6 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
          self.editor.widgetOptionnel.close()
          self.editor.widgetOptionnel=None
       self.name=None
-      self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.ajouteRadioButtons)
 
       self.affiche_alpha=0
       self.affiche_groupe=0
@@ -176,13 +191,19 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            self.buttonGroup.addButton(rbcmd)
            self.commandesLayout.addWidget(rbcmd)
            rbcmd.mouseDoubleClickEvent=self.mouseDoubleClickEvent
-           self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique) 
+           if monEnvQT5:
+              self.buttonGroup.buttonClicked.connect(self.rbClique) 
+           else :
+              self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique) 
       elif  self.affiche_groupe==1 :
          listeGroupes,dictGroupes=self.jdc.get_groups()
          for grp in listeGroupes:
            if grp == "CACHE" : continue
            label=QLabel(self)
-           text=QString.fromUtf8('<html><head/><body><p><span style=\" font-weight:600;\">Groupe : '+tr(grp)+'</span></p></body></html>')
+           if monEnvQT5 :
+              text=tr('<html><head/><body><p><span style=\" font-weight:600;\">Groupe : '+tr(grp)+'</span></p></body></html>')
+           else :
+              text=QString.fromUtf8('<html><head/><body><p><span style=\" font-weight:600;\">Groupe : '+tr(grp)+'</span></p></body></html>')
            label.setText(text)
            self.listeWidget.append(label)
            aAjouter=1
@@ -198,7 +219,10 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
               self.buttonGroup.addButton(rbcmd)
               self.commandesLayout.addWidget(rbcmd)
               rbcmd.mouseDoubleClickEvent=self.mouseDoubleClickEvent
-              self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique)
+              if monEnvQT5:
+                 self.buttonGroup.buttonClicked.connect(self.rbClique) 
+              else :
+                  self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique)
            label2=QLabel(self)
            label2.setText(" ")
            self.listeWidget.append(label2)
@@ -217,7 +241,10 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
            self.buttonGroup.addButton(rbcmd)
            self.commandesLayout.addWidget(rbcmd)
            rbcmd.mouseDoubleClickEvent=self.mouseDoubleClickEvent
-           self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique) 
+           if monEnvQT5:
+              self.buttonGroup.buttonClicked.connect(self.rbClique) 
+           else :
+              self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique)
 
      
 
@@ -226,7 +253,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QtGui.QWidget):
       self.ajouteRadioButtons()
 
   def rbClique(self,id):
-      self.name=self.dicoCmd[str(id.text().toLatin1())]
+      self.name=self.dicoCmd[str(id.text())]
       definitionEtape=getattr(self.jdc.cata[0],self.name)
       commentaire=getattr(definitionEtape,self.jdc.lang)
       try :

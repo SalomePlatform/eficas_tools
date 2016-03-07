@@ -21,8 +21,14 @@
 # Modules Eficas
 
 from desSelectVal import Ui_DSelVal
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+
+fromm determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets import QDialog
+    from PyQt5.QtCore import QTimer
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
 
 class DSelVal(Ui_DSelVal,QDialog):
    def __init__(self,parent ,modal ) :
@@ -48,6 +54,14 @@ class MonSelectVal(DSelVal):
         self.connecterSignaux()
 
   def connecterSignaux(self) :
+        self.Bespace.clicked.connect(self.SelectEsp)
+        self.BpointVirgule.clicked.connect(self.SelectPoint)
+        self.Bvirgule.clicked.connect(self.SelectVir)
+        self.BImportSel.clicked.connect(self.BImportSelPressed)
+        self.BImportTout.clicked.connect(self.BImportToutPressed)
+        self.parent.editor.sb.messageChanged(self.messageAChanger)
+
+  def connecterSignauxQT4(self) :
         self.connect(self.Bespace,SIGNAL("clicked()"),self.SelectEsp)
         self.connect(self.BpointVirgule,SIGNAL("clicked()"),self.SelectPoint)
         self.connect(self.Bvirgule,SIGNAL("clicked()"),self.SelectVir)
@@ -61,7 +75,7 @@ class MonSelectVal(DSelVal):
       from PyQt4.QtGui import QPalette
       mapalette.setColor( QPalette.WindowText, self.parent.editor.couleur )
       self.sb.setPalette( mapalette );
-      self.sb.setText(QString.fromUtf8(message))
+      self.sb.setText(tr(message))
       QTimer.singleShot(3000, self.efface)
       
   def efface(self):

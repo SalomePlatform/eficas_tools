@@ -16,9 +16,13 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-from PyQt4 import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets import  QFileDialog, QApplication
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 import os
 from Extensions.i18n import tr
 
@@ -37,10 +41,11 @@ def traduction(directPath,editor,version):
     fn = QFileDialog.getOpenFileName( 
    			editor.appliEficas,
                         tr('Traduire Fichier'),
-			QString(directPath) ,
+			directPath ,
                         tr('Fichiers JDC  (*.comm);;''Tous les Fichiers (*)'))
 
 
+    if monEnvQT5 : fn=fn[0]
     FichieraTraduire=str(fn)
     if (FichieraTraduire == "" or FichieraTraduire == () ) : return
     i=FichieraTraduire.rfind(".")
@@ -53,11 +58,11 @@ def traduction(directPath,editor,version):
     os.system("rm -rf "+log)
     os.system("rm -rf "+FichierTraduit)
 
-    qApp.setOverrideCursor(QCursor(Qt.WaitCursor))
+    QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
     if version == "V9V10" : traduitV9V10.traduc(FichieraTraduire,FichierTraduit,log)
     if version == "V10V11" : traduitV10V11.traduc(FichieraTraduire,FichierTraduit,log)
     if version == "V11V12" : traduitV11V12.traduc(FichieraTraduire,FichierTraduit,log)
-    qApp.setOverrideCursor(QCursor(Qt.ArrowCursor))
+    QApplication.setOverrideCursor(QCursor(Qt.ArrowCursor))
 
     Entete=tr("Fichier Traduit : %s\n\n",str(FichierTraduit))
     if  os.stat(log)[6] != 0L :

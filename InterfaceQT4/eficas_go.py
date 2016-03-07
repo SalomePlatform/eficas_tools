@@ -22,14 +22,19 @@
 # Modules Python
 import sys,os
 repIni=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),".."))
-ihmQTDir=os.path.join(repIni,"UiQT4")
+from  determine import monEnvQT5
+if monEnvQT5 : 
+    ihmQTDir=os.path.join(repIni,"UiQT5")
+    from PyQt5.QtWidgets import QApplication
+else         : 
+    ihmQTDir=os.path.join(repIni,"UiQT4")
+    from PyQt4.QtGui import QApplication
 editeurDir=os.path.join(repIni,"Editeur")
 ihmDir=os.path.join(repIni,"InterfaceQT4")
 if ihmDir not in sys.path : sys.path.append(ihmDir)
 if ihmQTDir not in sys.path : sys.path.append(ihmQTDir)
 if editeurDir not in sys.path :sys.path.append(editeurDir)
 
-from PyQt4.QtGui import *
 
 def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
     """

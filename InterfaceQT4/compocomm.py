@@ -18,9 +18,14 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 import string
+
+from determine import monEnvQT5
+if monEnvQT5 :
+  from PyQt5.QtWidgets import QAction
+else :
+  from PyQt4.QtGui import *
+  from PyQt4.QtCore import *
 
 from Editeur     import Objecttreeitem
 import browser
@@ -39,7 +44,8 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodePartiel.createPopUpMenu(self)
         self.Decommente = QAction(tr("Decommenter"),self.tree)
-        self.tree.connect(self.Decommente,SIGNAL("triggered()"),self.Decommenter)
+        if monEnvQT5 : self.tree.connect(self.Decommente,SIGNAL("triggered()"),self.Decommenter)
+        else : self.Decommente.triggered(self.Decommenter)
         self.Decommente.setStatusTip(tr("Decommente la commande "))
 
         if hasattr(self.item,'uncomment'):

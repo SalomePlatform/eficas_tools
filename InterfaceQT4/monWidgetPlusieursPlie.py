@@ -21,8 +21,14 @@
 import string,types,os,sys
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+#if monEnvQT5:
+#    from PyQt5.QtWidgets  import Qicon, QScrollbar, QFrame
+#    from PyQt5.QtCore import QTimer, QSize, QT
+#else :
+#    from PyQt4.QtGui  import *
+#    from PyQt4.QtCore import
+
 from Extensions.i18n import tr
 
 from feuille                import Feuille
@@ -38,7 +44,10 @@ class MonWidgetPlusieursPlie (Ui_WidgetPlusieursPlie,Feuille):
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
         
-        self.connect(self.BVisuListe,SIGNAL("clicked()"), self.selectWidgetDeplie)
+        if monEnvQT5 :
+           self.BVisuListe.clicked(self.selectWidgetDeplie)
+        else :
+           self.connect(self.BVisuListe,SIGNAL("clicked()"), self.selectWidgetDeplie)
 
 
   def setValeurs(self):

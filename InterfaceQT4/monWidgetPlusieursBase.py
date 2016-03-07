@@ -20,9 +20,15 @@
 # Modules Python
 import string,types,os,sys
 
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtGui  import Qicon, QApplication
+    from PyQt5.QtCore import QTimer, QSize, QT
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from feuille                import Feuille
@@ -88,7 +94,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
        else                           : aConstruire=self.monSimpDef.max
        for i in range(1,aConstruire):
            self.ajoutLineEdit()
-       qApp.processEvents()
+       QApplication.processEvents()
        self.scrollArea.ensureWidgetVisible(self.lineEditVal1)
        self.listeValeursCourantes=self.node.item.GetListeValeurs()
        index=1
@@ -139,7 +145,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
 
 
   def rendVisibleLigne(self):
-      qApp.processEvents()
+      QApplication.processEvents()
       self.estVisible.setFocus()
       self.scrollArea.ensureWidgetVisible(self.estVisible,0,0)
       
@@ -177,7 +183,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
             nomLineEdit="lineEditVal"+str(i)
             courant=getattr(self,nomLineEdit)
             valeur=courant.text()
-            if valeur == None or valeur == QString("") :
+            if valeur == None or valeur == "" :
               ajoute=True
               courant.setText(str(val))
               commentaire=self.ajout1Valeur(val)

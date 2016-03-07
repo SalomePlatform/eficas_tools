@@ -17,9 +17,13 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-from PyQt4 import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets import QAction, QMenu
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 from Extensions.i18n import tr
 import types
 
@@ -33,7 +37,10 @@ class PopUpMenuRacine :
     def createPopUpMenu(self):
         #print "createPopUpMenu"
         self.ParamApres = QAction(tr('Parametre'),self.tree)
-        self.tree.connect(self.ParamApres,SIGNAL("triggered()"),self.addParametersApres)
+        if monEnvQT5 :
+          self.ParamApres.triggered.connect(self.addParametersApres)
+        else :
+          self.tree.connect(self.ParamApres,SIGNAL("triggered()"),self.addParametersApres)
         self.ParamApres.setStatusTip(tr("Insere un parametre"))
         self.menu = QMenu(self.tree)
         self.menu.addAction(self.ParamApres)
@@ -51,7 +58,8 @@ class PopUpMenuNodeMinimal :
     def createPopUpMenu(self):
         #print "createPopUpMenu"
         #self.appliEficas.salome=True
-        self.createActions()
+        if monEnvQT5 : self.createActions()
+        else :         self.createActionsQT4()
         self.menu = QMenu(self.tree)
         #self.menu.setStyleSheet("background:rgb(235,235,235); QMenu::item:selected { background-color: red; }")
         #ne fonctionne pas --> la ligne de commentaire devient rouge
@@ -74,20 +82,36 @@ class PopUpMenuNodeMinimal :
            tip=commande[5]
            self.action=QAction(label,self.tree)
            self.action.setStatusTip(tip)
-           if numero==4: 
-              self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction4)
-           if numero==3: 
-              self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction3)
-              numero=4
-           if numero==2: 
-              self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction2)
-              numero=3
-           if numero==1: 
-              self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction1)
-              numero=2
-           if numero==0: 
-              self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction0)
-              numero=1
+           if monEnvQT5 :
+              if numero==4: 
+                 self.action.triggered.connect(self.AppelleFonction4)
+              if numero==3: 
+                 self.action.triggered.connect(self.AppelleFonction3)
+                 numero=4
+              if numero==2: 
+                 self.action.triggered.connect(self.AppelleFonction2)
+                 numero=3
+              if numero==1: 
+                 self.action.triggered.connect(self.AppelleFonction1)
+                 numero=2
+              if numero==0: 
+                 self.action.triggered.connect(self.AppelleFonction0)
+                 numero=1
+           else:
+              if numero==4: 
+                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction4)
+              if numero==3: 
+                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction3)
+                 numero=4
+              if numero==2: 
+                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction2)
+                 numero=3
+              if numero==1: 
+                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction1)
+                 numero=2
+              if numero==0: 
+                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction0)
+                 numero=1
            self.menu.addAction(self.action)
 
 
@@ -114,8 +138,7 @@ class PopUpMenuNodeMinimal :
         if (self.tree.currentItem().item.isvalid() == 0 and conditionValid == True):
                  QMessageBox.warning( None, 
                              tr("item invalide"),
-                             tr("l item doit etre valide"),
-                             tr("&Ok"))
+                             tr("l item doit etre valide"),)
 		 return
         fonction=commande[0]
         listenomparam=commande[2]
@@ -130,7 +153,7 @@ class PopUpMenuNodeMinimal :
            fonction(listeparam)
 
 
-    def createActions(self):
+    def createActionsQT4(self):
         self.CommApres = QAction(tr('apres'),self.tree)
         self.tree.connect(self.CommApres,SIGNAL("triggered()"),self.addCommApres)
         self.CommApres.setStatusTip(tr("Insere un commentaire apres la commande "))
@@ -150,6 +173,27 @@ class PopUpMenuNodeMinimal :
         self.Supprime.setStatusTip(tr("supprime le mot clef "))
         self.Documentation = QAction(tr('Documentation'),self.tree)
         self.tree.connect(self.Documentation,SIGNAL("triggered()"),self.viewDoc)
+
+    def createActions(self):
+        self.CommApres = QAction(tr('apres'),self.tree)
+        self.CommApres.triggered.connect(self.addCommApres)
+        self.CommApres.setStatusTip(tr("Insere un commentaire apres la commande "))
+        self.CommAvant = QAction(tr('avant'),self.tree)
+        self.CommAvant.triggered.connect(self.addCommAvant)
+        self.CommAvant.setStatusTip(tr("Insere un commentaire avant la commande "))
+
+        self.ParamApres = QAction(tr('apres'),self.tree)
+        self.ParamApres.triggered.connect(self.addParamatersApres)
+        self.ParamApres.setStatusTip(tr("Insere un parametre apres la commande "))
+        self.ParamAvant = QAction(tr('avant'),self.tree)
+        self.ParamAvant.triggered.connect(self.addParamatersAvant)
+        self.ParamAvant.setStatusTip(tr("Insere un parametre avant la commande "))
+
+        self.Supprime = QAction(tr('Supprimer'),self.tree)
+        self.Supprime.triggered.connect(self.supprimeNoeud)
+        self.Supprime.setStatusTip(tr("supprime le mot clef "))
+        self.Documentation = QAction(tr('Documentation'),self.tree)
+        self.Documentation.triggered.connect(self.viewDoc)
         self.Documentation.setStatusTip(tr("documentation sur la commande "))
 
     def supprimeNoeud(self):

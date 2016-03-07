@@ -22,8 +22,13 @@
 
 import os,sys,re
 from desChoixCode import Ui_ChoixCode
-from PyQt4.QtGui import * 
-from PyQt4.QtCore import * 
+f monEnvQT5:
+    from PyQt5.QtWidgets import QDialog, QRadioButton
+    from PyQt5.QtGui import QPalette
+    from PyQt5.QtCore import QProcess, QFileInfo, Qt
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
 
     
 # Import des panels
@@ -41,8 +46,12 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
       self.parentAppli=parentAppli
       self.verifieInstall()
       self.code=None
-      self.connect(self.pB_OK,SIGNAL("clicked()"),self.choisitCode)
-      self.connect(self.pB_cancel,SIGNAL("clicked()"),self.sortie)
+      if monEnvQT5:
+         self.pB_OK.clicked.connect(self.choisitCode)
+         self.pB_cancel.clicked.connect(self.sortie)
+      else :
+         self.connect(self.pB_OK,SIGNAL("clicked()"),self.choisitCode)
+         self.connect(self.pB_cancel,SIGNAL("clicked()"),self.sortie)
 
   def sortie(self):
       QDialog.reject(self)

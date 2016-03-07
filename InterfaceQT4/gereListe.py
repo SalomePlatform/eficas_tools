@@ -21,9 +21,14 @@
 import string,types,os
 import traceback
 
-from PyQt4 import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+   from PyQt5.QtWidgets import QLineEdit, QLabel, QIcon
+   from PyQt5.QtCore import QEvent
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
+
 from Extensions.i18n import tr
 from monViewTexte   import ViewText
 
@@ -93,14 +98,22 @@ class GereListe:
 # ------------- #
 
    def __init__(self):
-       self.connecterSignaux()
+       if monEnvQT5 :self.connecterSignaux()
+       else : self.connecterSignauxQT4()
 
-   def connecterSignaux(self):
+   def connecterSignauxQT4(self):
        self.connect(self.RBHaut,SIGNAL("clicked()"),self.hautPushed)
        self.connect(self.RBBas,SIGNAL("clicked()"),self.basPushed)
        self.connect(self.RBMoins,SIGNAL("clicked()"),self.moinsPushed)
        self.connect(self.RBPlus,SIGNAL("clicked()"),self.plusPushed)
        self.connect(self.RBVoisListe,SIGNAL("clicked()"),self.voisListePushed)
+
+   def connecterSignaux(self):
+       self.RBHaut.clicked.connect(self.hautPushed)
+       self.RBBas.clicked.connect(self.basPushed)
+       self.RBMoins.clicked.connect(self.moinsPushed)
+       self.RBPlus.clicked.connect(self.plusPushed)
+       self.RBVoisListe.clicked.connect(self.voisListePushed)
 
    def hautPushed(self):
        if self.NumLineEditEnCours == 1 : return
@@ -218,7 +231,8 @@ class GerePlie:
       fichier=os.path.join(repIcon, 'minusnode.png')
       icon = QIcon(fichier)
       self.BFermeListe.setIcon(icon)
-      self.connect(self.BFermeListe,SIGNAL("clicked()"), self.selectWidgetPlie)
+      if monEnvQT5 : self.BFermeListe.clicked.connect( self.selectWidgetPlie)
+      else : self.connect(self.BFermeListe,SIGNAL("clicked()"), self.selectWidgetPlie)
 
    def selectWidgetPlie(self):
       self.editor.listeDesListesOuvertes.remove(self.node.item)

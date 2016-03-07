@@ -19,9 +19,14 @@
 #
 
 import os, string
-from PyQt4.QtGui  import *
-from PyQt4.QtCore import *
 from Extensions.i18n import tr
+from determine import monEnvQT5
+if monEnvQT5:
+   from  PyQt5.QtWidgets  import QFileDialog
+   from  PyQt5.QtCore  import QFileInfo
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
 
 DictExtensions= {"MAP" : ".map"}
 class MyTabview:
@@ -37,9 +42,14 @@ class MyTabview:
        self.doubles = {}
 
        self.myQtab = self.appliEficas.myQtab
-       self.myQtab.connect(self.myQtab, SIGNAL('tabCloseRequested(int)'), self.closeTab)
-       if self.appliEficas.multi== True:
-          self.myQtab.connect(self.myQtab,SIGNAL("currentChanged(int)"),self.indexChanged)
+
+       if monEnvQT5:
+          self.myQtab.currentChanged.connect(self.indexChanged)
+          self.myQtab.tabCloseRequested.connect(self.closeTab)
+       else :
+          self.myQtab.connect(self.myQtab, SIGNAL('tabCloseRequested(int)'), self.closeTab)
+          if self.appliEficas.multi== True:
+             self.myQtab.connect(self.myQtab,SIGNAL("currentChanged(int)"),self.indexChanged)
         
    def indexChanged(self):
        index=self.myQtab.currentIndex()

@@ -20,8 +20,12 @@
 #
 
 import re
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+   from PyQt5.QtWidgets import QToolButton
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 class MonBoutonValide(QToolButton) :

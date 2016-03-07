@@ -22,10 +22,15 @@ import string,re
 import types,sys,os
 import traceback
 import typeNode
-import pdb
-from PyQt4 import *
-from PyQt4.QtGui  import *
-from PyQt4.QtCore import *
+#import pdb
+
+from determine import monEnvQT5
+if monEnvQT5 :
+  from PyQt5.QtWidgets import QTreeWidget , QTreeWidgetItem
+  from PyQt5.QtGui import QIcon
+else :
+  from PyQt4.QtGui  import *
+  from PyQt4.QtCore  import *
 from Extensions.i18n import tr
 from gereRegles import GereRegles
 from monChoixCommande import MonChoixCommande
@@ -56,9 +61,14 @@ class JDCTree( QTreeWidget,GereRegles ):
  
         self.itemCourrant=None
 
-        self.connect(self, SIGNAL("itemClicked ( QTreeWidgetItem * ,int) "), self.handleOnItem)
-        self.connect(self, SIGNAL("itemCollapsed ( QTreeWidgetItem *) "), self.handleCollapsedItem)
-        self.connect(self, SIGNAL("itemExpanded ( QTreeWidgetItem *) "), self.handleExpandedItem)
+        if monEnvQT5 :
+           self.itemClicked.connect(self.handleOnItem)
+           self.itemCollapsed.connect(self.handleCollapsedItem)
+           self.itemExpanded.connect(self.handleExpandedItem)
+        else :
+           self.connect(self, SIGNAL("itemClicked ( QTreeWidgetItem * ,int) "), self.handleOnItem)
+           self.connect(self, SIGNAL("itemCollapsed ( QTreeWidgetItem *) "), self.handleCollapsedItem)
+           self.connect(self, SIGNAL("itemExpanded ( QTreeWidgetItem *) "), self.handleExpandedItem)
 
         #PNPNPN verifier dans quel cas on se trouve : affiche l arbre ou la commande
         self.node_selected=self.racine
@@ -199,14 +209,18 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         from InterfaceQT4 import compoparam
         from InterfaceQT4 import composimp
         if   (isinstance(self.item,compocomm.COMMTreeItem)) : name=tr("Commentaire")
-        elif (isinstance(self.item,compoparam.PARAMTreeItem)) : name=self.appliEficas.trUtf8(str(item.GetLabelText()[0]))
-        else:   name  = self.appliEficas.trUtf8(str(tr( item.nom))+" :")
-        value = self.appliEficas.trUtf8(str( item.GetText() ) )
+        elif (isinstance(self.item,compoparam.PARAMTreeItem)) : name=tr(str(item.GetLabelText()[0]))
+        else:   name  = tr(str(tr( item.nom))+" :")
+        value = tr(str( item.GetText() ) )
  
 
-        mesColonnes=QStringList()
-        if self.editor.enteteQTree=='complet': mesColonnes <<  name << value
-        else : mesColonnes <<  name
+        if monEnvQT5:
+           if self.editor.enteteQTree=='complet':mesColonnes=(name,value)
+           else : mesColonnes=(name,)
+        else :
+           mesColonnes=QStringList()
+           if self.editor.enteteQTree=='complet': mesColonnes <<  name << value
+           else : mesColonnes <<  name
 
         if self.treeParent.plie==True :
             self.plie        = True
@@ -233,10 +247,15 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         else :
            QTreeWidgetItem.__init__(self,self.treeParent,mesColonnes)
 
-        self.setToolTip(0,QString(self.item.get_fr()))
-        self.setToolTip(1,QString(self.item.get_fr()))
+        if monEnvQT5 :
+           self.setToolTip(0,self.item.get_fr())
+           self.setToolTip(1,self.item.get_fr())
+           repIcon=self.appliEficas.repIcon
+        else :
+           self.setToolTip(0,QString(self.item.get_fr()))
+           self.setToolTip(1,QString(self.item.get_fr()))
+           repIcon=QString(self.appliEficas.repIcon)
 
-        repIcon=QString(self.appliEficas.repIcon)
         monIcone = QIcon(repIcon+"/" +self.item.GetIconName() + ".png")
         self.setIcon(0,monIcone)
 
@@ -624,7 +643,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """Cette methode remet a jour la validite du noeud (icone)
            Elle appelle isvalid
         """
-        repIcon=QString(self.appliEficas.repIcon)
+        if monEnvQT5 : repIcon=self.appliEficas.repIcon
+        else : repIcon=QString(self.appliEficas.repIcon)
         monIcone = QIcon(repIcon+"/" +self.item.GetIconName() + ".png")
         self.setIcon(0,monIcone)
 

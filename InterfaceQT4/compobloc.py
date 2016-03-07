@@ -18,8 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-from PyQt4 import *
-from PyQt4.QtGui import *
+
 from Editeur     import Objecttreeitem
 
 import compofact

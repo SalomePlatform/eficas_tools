@@ -21,28 +21,37 @@
 # Modules Eficas
 
 from desRecherche import Ui_desRecherche
-from PyQt4  import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets import QDialog
+    from PyQt4.QtCore import Qt
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 
 # Import des panels
 
-class DRecherche(Ui_desRecherche ,QtGui.QDialog):
+class DRecherche(Ui_desRecherche ,QDialog):
   """
   Classe définissant le panel associé aux mots-clés qui demandent
   à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
   discrètes
   """
   def __init__(self,parent = None , name = None,fl = 0):
-      QtGui.QDialog.__init__(self,parent)
+      QDialog.__init__(self,parent)
       self.parentQT=parent
       self.tree=self.parentQT.tree
       self.setModal(True)
       self.setupUi(self)
       self.PBSuivant.setDefault(True)
       self.PBSuivant.setAutoDefault(False)
-      self.connect(self.PBSuivant,SIGNAL("clicked()"), self.suivantClicked)
-      self.connect(self.LERecherche,SIGNAL("returnPressed()"),self.recherche)
+      if monEnvQT5 :
+         self.PBSuivant.clicked.connect( self.suivantClicked)
+         self.LERecherche.returnPressed.connect(self.recherche)
+      else :
+         self.connect(self.PBSuivant,SIGNAL("clicked()"), self.suivantClicked)
+         self.connect(self.LERecherche,SIGNAL("returnPressed()"),self.recherche)
       self.surLigne=0
       self.listeTrouvee=()
       self.nodeSurligne=None

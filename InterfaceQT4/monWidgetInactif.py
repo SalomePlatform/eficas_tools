@@ -19,8 +19,13 @@
 # Modules Python
 # Modules Eficas
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtWidgets import QWidget
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
+
 from Extensions.i18n import tr
 from desWidgetInactif import Ui_WidgetInactif
 import Accas 
@@ -47,9 +52,14 @@ class MonWidgetInactif(QWidget,Ui_WidgetInactif):
           self.editor.splitter.addWidget(self.monOptionnel)
           self.editor.restoreSplitterSizes()
        self.afficheOptionnel()
-       self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
-       self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
-       self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+       if monEnvQT5 :
+          self.bAvant.clicked.connect(self.afficheAvant)
+          self.bApres.clicked.connect(self.afficheApres)
+          self.bCatalogue.clicked.connect(self.afficheCatalogue)
+       else :
+          self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
+          self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
+          self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
        self.labelNomCommande.setText(tr(self.node.item.nom))
        self.labelNomCommande.setEnabled(False)
 

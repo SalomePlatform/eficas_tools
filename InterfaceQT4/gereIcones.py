@@ -20,10 +20,17 @@
 # Modules Python
 import string,types,os,re,sys
 import traceback
+from  determine import monEnvQT5
+if monEnvQT5 :
+  from PyQt5.QtWidgets import QMessageBox, QFileDialog
+  from PyQt5.QtGui import QIcon
+  from PyQt5.QtCore import  QFileInfo,  Qt
 
-from PyQt4 import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+else:
+  from PyQt4.QtGui  import *
+  from PyQt4.QtCore import *
+
+
 from Extensions.i18n import tr
 listeSuffixe=('bmp','png','jpg' ,'txt','med')
 
@@ -41,7 +48,8 @@ class FacultatifOuOptionnel:
         else :
            icon3=QIcon(self.repIcon+"/lettreRblanc30.png")
            self.RBRegle.setIcon(icon3)
-           self.connect( self.RBRegle,SIGNAL("clicked()"),self.viewRegles)
+           if monEnvQT5 :self.RBRegle.clicked.connect(self.viewRegles)
+           else : self.connect( self.RBRegle,SIGNAL("clicked()"),self.viewRegles)
 
       cle_doc=None
       if not hasattr(self,"RBInfo"):return
@@ -54,6 +62,7 @@ class FacultatifOuOptionnel:
       else :
          self.cle_doc = self.node.item.get_docu()
       if self.cle_doc == None  : self.RBInfo.close()
+      elif monEnvQT5 : self.RBInfo.clicked.connect (self.viewDoc)
       else : self.connect (self.RBInfo,SIGNAL("clicked()"),self.viewDoc)
 
 
@@ -90,7 +99,8 @@ class FacultatifOuOptionnel:
          return
       icon=QIcon(self.repIcon+"/deleteRond.png")
       self.RBPoubelle.setIcon(icon)
-      self.connect(self.RBPoubelle,SIGNAL("clicked()"),self.aDetruire)
+      if monEnvQT5 : self.RBPoubelle.clicked.connect(self.aDetruire)
+      else : self.connect(self.RBPoubelle,SIGNAL("clicked()"),self.aDetruire)
 
   def setIconesSalome(self):
        if not (hasattr(self,"RBSalome")): return
@@ -104,7 +114,8 @@ class FacultatifOuOptionnel:
        if enable_salome_selection:
           icon=QIcon(self.repIcon+"/flecheSalome.png")
           self.RBSalome.setIcon(icon)
-          self.connect(self.RBSalome,SIGNAL("pressed()"),self.BSalomePressed)
+          if monEnvQT5 : self.RBSalome.pressed.connect(self.BSalomePressed)
+          else : self.connect(self.RBSalome,SIGNAL("pressed()"),self.BSalomePressed)
 
 #PNPN --> Telemac A revoir surement
 # cela ou le catalogue grpma ou salomeEntry
@@ -113,7 +124,8 @@ class FacultatifOuOptionnel:
           else : 
              icon1=QIcon(self.repIcon+"/eye.png")
              self.RBSalomeVue.setIcon(icon1)
-             self.connect(self.RBSalomeVue,SIGNAL("clicked()"),self.BView2DPressed)
+             if monEnvQT5 : self.RBSalomeVue.clicked.connect(self.BView2DPressed)
+             else : self.connect(self.RBSalomeVue,SIGNAL("clicked()"),self.BView2DPressed)
        else:
           self.RBSalome.close()
           self.RBSalomeVue.close()
@@ -125,11 +137,14 @@ class FacultatifOuOptionnel:
        mctype = mc.type[0]
        if mctype == "Repertoire":
           self.BRepertoire=self.BFichier
-          self.connect(self.BRepertoire,SIGNAL("clicked()"),self.BRepertoirePressed)
+          if monEnvQT5 : self.BRepertoire.clicked.connect(self.BRepertoirePressed)
+          else : self.connect(self.BRepertoire,SIGNAL("clicked()"),self.BRepertoirePressed)
           self.BVisuFichier.close()
        else :
-          self.connect(self.BFichier,SIGNAL("clicked()"),self.BFichierPressed)
-          self.connect(self.BVisuFichier,SIGNAL("clicked()"),self.BFichierVisu)
+          if monEnvQT5 : self.BFichier.clicked.connect(self.BFichierPressed)
+          else : self.connect(self.BFichier,SIGNAL("clicked()"),self.BFichierPressed)
+          if monEnvQT5 : self.BVisuFichier.clicked.connect(self.BFichierVisu)
+          else : self.connect(self.BVisuFichier,SIGNAL("clicked()"),self.BFichierVisu)
 
 
 
@@ -219,7 +234,7 @@ class ContientIcones:
       elif hasattr(mctype[0], "filters"):
           filters = mctype[0].filters
       else:
-          filters = QString()
+          filters = None
       if len(mctype) > 2 and mctype[2] == "Sauvegarde":
           fichier = QFileDialog.getSaveFileName(self.appliEficas,
                               tr('Sauvegarder Fichier'),
@@ -232,6 +247,7 @@ class ContientIcones:
                               filters)
 
       if not(fichier.isNull()):
+         if monEnvQT5 : fichier=fichier[0]
          ulfile = os.path.abspath(unicode(fichier))
          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)
@@ -245,7 +261,8 @@ class ContientIcones:
                self.BSelectInFile.setObjectName("BSelectInFile")
                self.gridLayout.addWidget(self.BSelectInFile,1,1,1,1)
                self.BSelectInFile.setText(tr("Selection"))
-               self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
+               if monEnvQT5 : self.BSelectInFile.clicked.connect(self.BSelectInFilePressed)
+               else : self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
              else :
                self.BSelectInFile.setVisible(1)
          elif hasattr(self, "BSelectInFile"):
@@ -314,8 +331,8 @@ class ContientIcones:
 
   def BView2DPressed(self):
         valeur=self.lineEditVal.text()
-        if valeur == QString("") : return
         valeur = str(valeur)
+        if valeur == str("") : return
         if valeur :
            ok, msgError = self.appliEficas.displayShape(valeur)
            if not ok:

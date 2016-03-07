@@ -21,10 +21,6 @@
 import string,types,os,sys
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-from Extensions.i18n import tr
-
 from feuille                import Feuille
 from desWidgetPlusieursIntoOrdonne import Ui_WidgetPlusieursIntoOrdonne 
 from politiquesValidation   import PolitiquePlusieurs
@@ -34,6 +30,13 @@ from gereListe              import GerePlie
 from gereListe              import LECustom
 from gereListe              import MonLabelListeClic
 
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets  import Qicon, QScrollbar, QFrame, QApplication
+    from PyQt5.QtCore import QTimer, QSize, Qt
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import 
 
 
 class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,GereListe,GerePlie):
@@ -44,7 +47,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.listeLE=[]
         self.ouAjouter=0
         self.NumLineEditEnCours=0
-        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parent,commanme)
         GereListe.__init__(self)
         self.finCommentaireListe()
         self.gereIconePlier()
@@ -148,7 +151,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       self.CBLayout.insertWidget(index -1,nouveauLE)
       self.listeLE.append(nouveauLE)
       nouveauLE.setFrameShape(QFrame.NoFrame)
-      qApp.processEvents()
+      QApplication.processEvents()
       nouveauLE.setText("")
       if index % 2 == 1 : nouveauLE.setStyleSheet("background:rgb(210,210,210)")
       else :	          nouveauLE.setStyleSheet("background:rgb(240,240,240)")
@@ -226,7 +229,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.setValide()
 #
   def rendVisibleLigneRE(self):
-      qApp.processEvents()
+      QApplication.processEvents()
       self.estVisibleRE.setFocus()
       self.scrollArea.ensureWidgetVisible(self.estVisibleRE,0,0)
 #

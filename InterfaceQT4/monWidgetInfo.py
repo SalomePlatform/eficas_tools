@@ -21,8 +21,12 @@
 import string,types,os
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5 :
+  from PyQt5.QtWidgets import QWidget
+else :
+  from PyQt4.QtGui import *
+  from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from desWidgetInformation  import Ui_WidgetInformative 

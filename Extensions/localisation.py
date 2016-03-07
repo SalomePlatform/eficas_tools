@@ -18,10 +18,13 @@
 Creates and loads two ``QTranslator`` objects, one for pure Qt, one for Eficas,
 and installs them to a ``QApplication``.
 
-``PyQt4`` is currently supported.
 """
 
-from PyQt4.QtCore import QTranslator
+from determine import monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtCore import QTranslator
+else :
+   from PyQt4.QtCore import QTranslator
 
 qt_translator = QTranslator()
 eficas_translator = QTranslator()
@@ -40,9 +43,15 @@ def localise(application, locale=None ):
     If no locale is specified by the user, the system locale
     is used instead, for both Qt base and Eficas translators.
     """
-    from PyQt4.QtCore import QLibraryInfo
-    from PyQt4.QtCore import QLocale
-    from PyQt4.QtGui import QApplication
+    if monEnvQT5 :
+       from PyQt5.QtCore import QLibraryInfo
+       from PyQt5.QtCore import QLocale
+       from PyQt5.QtWidgets import QApplication
+    else :
+       from PyQt4.QtCore import QLibraryInfo
+       from PyQt4.QtCore import QLocale
+       from PyQt4.QtGui import QApplication
+
     sys_locale = QLocale.system().name()
 
     if locale is None:

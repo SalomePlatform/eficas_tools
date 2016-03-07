@@ -22,8 +22,17 @@
 from desWidgetCommande import Ui_WidgetCommande
 from groupe import Groupe
 from gereIcones import FacultatifOuOptionnel
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+
+if monEnvQT5:
+   from PyQt5.QtWidgets  import QApplication, QWidget
+   from PyQt5.QtGui import QFont, QIcon
+   from PyQt5.QtCore import QTimer
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
+
+
 from Extensions.i18n import tr
 import Accas 
 import os
@@ -57,18 +66,29 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.commandesLayout.focusInEvent=self.focusInEvent
       self.scrollAreaCommandes.focusInEvent=self.focusInEvent
 
-      if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
-      else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
-      if self.editor.code in ['Adao','MAP'] : 
-            self.bAvant.close()
-            self.bApres.close()
+     
+      if monEnvQT5 :
+         if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
+         else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
+         if self.editor.code in ['Adao','MAP'] : 
+               self.bAvant.close()
+               self.bApres.close()
+         else : 
+               self.bAvant.clicked.connect(self.afficheAvant)
+               self.bApres.clicked.connect(self.afficheApres)
+         self.LENom.returnPressed.connect(self.nomChange)
       else : 
-            self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
-            self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
-
-      
-      self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
-      self.racine=self.node.tree.racine
+         if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
+         else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+         if self.editor.code in ['Adao','MAP'] : 
+               self.bAvant.close()
+               self.bApres.close()
+         else : 
+               self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
+               self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
+         self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
+   
+         self.racine=self.node.tree.racine
       if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)
 
       self.setAcceptDrops(True)
@@ -92,10 +112,10 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
   def donnePremier(self):
       #print "dans donnePremier"
-      qApp.processEvents()
+      QApplication.processEvents()
       if self.listeAffichageWidget != [] :
          self.listeAffichageWidget[0].setFocus(7)
-      qApp.processEvents()
+      QApplication.processEvents()
       #print self.focusWidget()
 
 
@@ -213,7 +233,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
 
   def recentre(self):
-      qApp.processEvents()
+      QApplication.processEvents()
       s=self.editor.fenetreCentraleAffichee.scrollAreaCommandes
       s.horizontalScrollBar().setSliderPosition(self.avantH)
       s.verticalScrollBar().setSliderPosition(self.avantV)
@@ -224,7 +244,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       QTimer.singleShot(1, self.rendVisible)
      
   def rendVisible(self):
-      qApp.processEvents()
+      QApplication.processEvents()
       self.f.setFocus(7)
       self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(self.f)
 

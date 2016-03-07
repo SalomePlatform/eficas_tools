@@ -22,8 +22,13 @@ import string,types,os
 import traceback
 
 from Extensions.i18n import tr
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+
+from determine import monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtWidgets import QDialog, QMessageBox
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
 from desViewTexte import Ui_dView
 
 # ------------------------------- #
@@ -38,8 +43,12 @@ class ViewText(Ui_dView,QDialog):
         self.setupUi(self)
 
         self.resize( QSize(largeur,hauteur).expandedTo(self.minimumSizeHint()) )
-        self.connect( self.bclose,SIGNAL("clicked()"), self, SLOT("close()") )
-        self.connect( self.bsave,SIGNAL("clicked()"), self.saveFile )
+        if monEnvQT5 :
+           self.bclose.clicked.connect(self.close)
+           self.bsave.clicked.connect(self.saveFile )
+        else :
+           self.connect( self.bclose,SIGNAL("clicked()"), self, SLOT("close()") )
+           self.connect( self.bsave,SIGNAL("clicked()"), self.saveFile )
         if entete != None : self.setWindowTitle (entete)
         if entete != None : self.setText (texte)
 
@@ -57,6 +66,9 @@ class ViewText(Ui_dView,QDialog):
                 tr("Sauvegarder le fichier"),
                 dir)
         if fn.isNull() : return
+        if fn == None : return (0, None)
+        if monEnvQT5 :  fn=fn[0]
+
         ulfile = os.path.abspath(unicode(fn))
         if self.editor != None :
            self.editor.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
@@ -67,17 +79,8 @@ class ViewText(Ui_dView,QDialog):
            return 1
         except IOError, why:
            QMessageBox.critical(self, tr("Sauvegarder le fichier"),
-                tr("Le fichier <b>%(v_1)s</b> n'a pu etre sauvegarde. <br>Raison : %(v_2)s", {'v_1': unicode(fn), 'v_2': unicode(why)}))
+                 tr('Le fichier')+str(fn) + tr('n a pas pu etre sauvegarde : ') + str(why))
            return
-
-class ViewText2(ViewText):
-    def __init__(self,parent,cmd,editor=None,entete=None,texte=None,largeur=600,hauteur=600):
-       ViewText.__init__(self,parent,editor,entete,texte,largeur,hauteur)
-       import subprocess
-       p = subprocess.Popen(cmd,stdout=subprocess.PIPE)
-       (output, err) = p.communicate()
-       if output != None : self.view.append(QString.fromUtf8(output,len(output))) ;
-       if err != None    : self.view.append(QString.fromUtf8(err,len(err))) ;
 
 
        

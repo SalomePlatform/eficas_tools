@@ -27,7 +27,6 @@
 import sys,os
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
 
-from PyQt4.QtCore import *
 import prefs
 from InterfaceQT4 import eficas_go
 eficas_go.lance_eficas(code=prefs.code)

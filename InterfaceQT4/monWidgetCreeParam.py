@@ -23,9 +23,12 @@ pattern_name       = re.compile(r'^[^\d\W]\w*\Z')
 
 # Modules Eficas
 
-from PyQt4 import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtWidgets import QDialog
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
 from Extensions.i18n import tr
 from desWidgetCreeParam import Ui_desWidgetCreeParam
 
@@ -38,16 +41,20 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
        self.editor.affiche_infos("")
        QDialog.__init__(self,editor)
        self.setupUi(self)
-       self.connecterSignaux()
+       if monEnvQT5 : self.connecterSignaux()
+       else         : self.connecterSignauxQT4()
        self.dejaExistant=0
        self.listeTousParam=self.editor.jdc.params
        self.dictListe={}
        self.initToutesVal()
 
-  def connecterSignaux(self) :
+  def connecterSignauxQT4(self) :
         self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.lineEditValReturnPressed)
         self.connect(self.lineEditNom,SIGNAL("returnPressed()"),self.lineEditNomReturnPressed)
 
+  def connecterSignaux(self) :
+        self.lineEditVal.returnPressed(self.lineEditValReturnPressed)
+        self.lineEditNom.returnPressed(self.lineEditNomReturnPressed)
 
   def CreeParametre(self):
         nom=str(self.lineEditNom.text())

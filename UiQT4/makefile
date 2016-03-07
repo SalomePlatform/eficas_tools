@@ -6,7 +6,7 @@ QTRELEASE = lrelease-qt4
 
 PY_FILES = myMain.py desBaseWidget.py desChoixCata.py desChoixCode.py desChoixCommandes.py desRecherche.py \
 	desSelectVal.py desViewTexte.py desViewRegles.py desVisu.py desWidgetCreeParam.py desWidgetCommande.py \
-	desWidgetOptionnel.py Tuple2.py Tuple3.py  \
+	desWidgetOptionnel.py desWidgetOptionnelMC.py Tuple2.py Tuple3.py  \
 	desWidgetBloc.py desWidgetCB.py desWidgetCommentaire.py desWidgetDate.py \
 	desWidgetFact.py desWidgetFactPlie.py desWidgetHeure.py desWidgetInformation.py \
         desWidgetInactif.py \

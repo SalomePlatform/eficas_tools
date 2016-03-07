@@ -19,8 +19,13 @@
 # Modules Python
 # Modules Eficas
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets import QCheckBox, QWidget
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 from Extensions.i18n import tr
 from desWidgetOptionnel import Ui_WidgetOptionnel
 
@@ -30,7 +35,7 @@ from desWidgetOptionnel import Ui_WidgetOptionnel
 class monButtonCustom(QCheckBox):
 
    def __init__(self,texte,monOptionnel,parent=None):
-      QCheckBox.__init__(self,QString(tr(texte)),parent)
+      QCheckBox.__init__(self,tr(texte),parent)
       self.texte=texte
       self.monOptionnel=monOptionnel
 

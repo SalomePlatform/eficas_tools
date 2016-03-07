@@ -19,10 +19,15 @@
 # Modules Python
 # Modules Eficas
 
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets  import QWidget
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import
+
 from desWidgetCommentaire import Ui_WidgetCommentaire
 from gereIcones import FacultatifOuOptionnel
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 from Extensions.i18n import tr
 import Accas 
 import os
@@ -45,8 +50,10 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
       self.setIconePoubelle()
       self.remplitTexte()
       if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
+      elif monEnvQT5 : self.bCatalogue.clicked.connect(self.afficheCatalogue)
       else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
-      self.connect(self.commentaireLE,SIGNAL("returnPressed()"),self.TexteCommentaireEntre)
+      if monEnvQT5 : self.commentaireLE.returnPressed(TexteCommentaireEntre)
+      else : self.connect(self.commentaireLE,SIGNAL("returnPressed()"),self.TexteCommentaireEntre)
        
   def afficheCatalogue(self):
       if self.editor.code != "CARMELCND" : self.monOptionnel.hide()
@@ -59,7 +66,7 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
       self.commentaireLE.setText(texte)
       if self.editor.code == "CARMELCND" and texte[0:16]=="Cree - fichier :" :
          self.commentaireLE.setDisabled(True)
-         self.commentaireLE.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
+         self.commentaireLE.setStyleSheet("background:rgb(244,244,244);\n" "border:0px;\n")
          self.commentaireLE.setToolTip(tr("Valeur non modifiable"))
 
   def donnePremier(self):

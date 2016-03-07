@@ -19,10 +19,14 @@
 #
 # Modules Python
 import string,types,os
-from PyQt4 import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 from Extensions.i18n import tr
+
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtCore import Qt
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
 
 
 # Import des panels
@@ -40,14 +44,14 @@ class SaisieValeur:
          if valeur == None :
             nouvelleValeur=str(self.lineEditVal.text())
          else :
-            if hasattr(self,"lineEditVal"):self.lineEditVal.setText(QString(valeur.nom))
+            if hasattr(self,"lineEditVal"):self.lineEditVal.setText(tr(valeur.nom))
             nouvelleValeur=valeur
          nouvelleValeurFormat=self.politique.GetValeurTexte(nouvelleValeur)
          validite,commentaire=self.politique.RecordValeur(nouvelleValeurFormat)
          if commentaire != "" :
             #PNPNPNP Il faut trouver une solution pour les 2 cas 
             #   self.editor.affiche_infos(commentaire)
-            #self.Commentaire.setText(QString(commentaire))
+            #self.Commentaire.setText(tr(commentaire))
             if validite :
                 self.editor.affiche_commentaire(commentaire)
             else :

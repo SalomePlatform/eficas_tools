@@ -21,14 +21,16 @@
 # Modules Eficas
 
 from desChoixCata import Ui_DChoixCata
-from PyQt4  import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from determine import monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtWidgets import QDialog
+else:
+   from PyQt4.QtGui import *
 
 from Extensions.i18n import tr
 # Import des panels
 
-class MonChoixCata(Ui_DChoixCata,QtGui.QDialog):
+class MonChoixCata(Ui_DChoixCata,QDialog):
   """
   Classe définissant le panel associé aux mots-clés qui demandent
   à l'utilisateur de choisir une seule valeur parmi une liste de valeurs

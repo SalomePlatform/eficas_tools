@@ -21,8 +21,13 @@
 
 from desWidgetParam import Ui_WidgetParam
 from gereIcones import FacultatifOuOptionnel
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets import QWidget
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 import Accas 
@@ -50,13 +55,24 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
       self.setIconePoubelle()
       self.remplit()
       if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
+      elif monEnvQt5 : self.bCatalogue.clicked.connect(self.afficheCatalogue)
       else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
-      self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
-      self.connect(self.lineEditNom,SIGNAL("returnPressed()"),self.LENomPressed)
-      self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
-      self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
-      self.connect(self.bVerifie,SIGNAL("clicked()"), self.verifiePressed)
-      self.editor.affiche_infos("")
+
+      if monEnvQt5 :
+        self.lineEditVal.returnPressed.connect.(self.LEValeurPressed)
+        self.lineEditNom.returnPressed.connect.(self.LENomPressed)
+        self.bAvant.clicked.connect.(self.afficheAvant)
+        self.bApres.clicked.connect.(self.afficheApres)
+        self.bVerifie.clicked.connect.(self.verifiePressed)
+      else :
+        self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
+        self.connect(self.lineEditNom,SIGNAL("returnPressed()"),self.LENomPressed)
+        self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
+        self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
+        self.connect(self.bVerifie,SIGNAL("clicked()"), self.verifiePressed)
+        self.editor.affiche_infos("")
+
+
       if self.editor.widgetOptionnel!= None :
          self.editor.widgetOptionnel.close()
          self.editor.widgetOptionnel=None

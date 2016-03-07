@@ -22,8 +22,13 @@ import string,types,os
 import traceback
 
 from Extensions.i18n import tr
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+   from PyQt5.QtCore import Qt
+   from PyQt5.QtWidgets import QDialog
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
 from desViewRegles import Ui_viewRegles
 
 # ------------------------------------ #
