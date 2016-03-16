@@ -183,10 +183,10 @@ class PopUpMenuNodeMinimal :
         self.CommAvant.setStatusTip(tr("Insere un commentaire avant la commande "))
 
         self.ParamApres = QAction(tr('apres'),self.tree)
-        self.ParamApres.triggered.connect(self.addParamatersApres)
+        self.ParamApres.triggered.connect(self.addParametersApres)
         self.ParamApres.setStatusTip(tr("Insere un parametre apres la commande "))
         self.ParamAvant = QAction(tr('avant'),self.tree)
-        self.ParamAvant.triggered.connect(self.addParamatersAvant)
+        self.ParamAvant.triggered.connect(self.addParametersAvant)
         self.ParamAvant.setStatusTip(tr("Insere un parametre avant la commande "))
 
         self.Supprime = QAction(tr('Supprimer'),self.tree)
@@ -274,7 +274,7 @@ class PopUpMenuNode(PopUpMenuNodePartiel) :
     def createPopUpMenu(self):
         PopUpMenuNodePartiel.createPopUpMenu(self)
         self.Commente = QAction(tr('ce noeud'),self.tree)
-        self.tree.connect(self.Commente,SIGNAL("triggered()"),self.Commenter)
+        self.Commente.triggered.connect(self.Commenter)
         self.Commente.setStatusTip(tr("commente le noeud "))
         self.commentMenu.addAction(self.Commente)
         self.menu.removeAction(self.Supprime)

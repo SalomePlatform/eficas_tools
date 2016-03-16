@@ -19,7 +19,9 @@
 #
 """
 """
-import string,traceback
+import string,traceback,re
+identifier = re.compile(r"^[^\d\W]\w*\Z", re.UNICODE)
+
 
 from Extensions.i18n import tr
 from I_MACRO_ETAPE import MACRO_ETAPE
@@ -110,6 +112,8 @@ class FORM_ETAPE(MACRO_ETAPE):
         test = 1
         arguments = arguments[1:-1] # on enlève les parenthèses ouvrante et fermante
         l_arguments = string.split(arguments,',')
+        for a in l_arguments :
+            if not re.match(identifier,str(a)) : return 0, str(a)+" n est pas un identifiant"
         return test,erreur
 
     def verif_corps(self,corps=None,arguments=None):

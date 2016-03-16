@@ -21,8 +21,13 @@
 import string,types,os
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+if monEnvQT5:
+    from PyQt5.QtWidgets import QLineEdit
+    from PyQt5.QtCore import Qt
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 from Extensions.i18n import tr
 
 from feuille               import Feuille
@@ -38,7 +43,8 @@ class MonWidgetSimpSalome (Ui_WidgetSimpSalome,Feuille):
         self.parentQt.commandesLayout.insertWidget(-1,self,1)
         self.setFocusPolicy(Qt.StrongFocus)
         self.politique=PolitiqueUnique(self.node,self.editor)
-        self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
+        if monEnvQT5: self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
+        else : self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
 

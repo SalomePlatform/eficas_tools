@@ -26,6 +26,7 @@ from Extensions.i18n import tr
 from determine import monEnvQT5
 if monEnvQT5 :
    from PyQt5.QtWidgets import QDialog, QMessageBox
+   from PyQt5.QtCore import QSize
 else :
    from PyQt4.QtGui import *
    from PyQt4.QtCore import *
@@ -65,9 +66,9 @@ class ViewText(Ui_dView,QDialog):
         fn = QFileDialog.getSaveFileName(None,
                 tr("Sauvegarder le fichier"),
                 dir)
-        if fn.isNull() : return
-        if fn == None : return (0, None)
         if monEnvQT5 :  fn=fn[0]
+        if fn == ""  : return
+        if fn == None : return (0, None)
 
         ulfile = os.path.abspath(unicode(fn))
         if self.editor != None :

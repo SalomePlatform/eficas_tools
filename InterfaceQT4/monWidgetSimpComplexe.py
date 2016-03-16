@@ -21,8 +21,14 @@
 import string,types,os
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+if monEnvQT5:
+    from PyQt5.QtWidgets import QLineEdit, QRadioButton
+    from PyQt5.QtCore import Qt
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
+
 from Extensions.i18n import tr
 
 from feuille                import Feuille
@@ -37,11 +43,18 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.setFocusPolicy(Qt.StrongFocus)
-        self.connect(self.LEImag,SIGNAL("returnPressed()"),self.LEImagRPressed)
-        self.connect(self.LEReel,SIGNAL("returnPressed()"),self.LEReelRPressed)
-        self.connect(self.RBRI,SIGNAL("clicked()"), self.ValeurPressed )
-        self.connect(self.RBMP,SIGNAL("clicked()"), self.ValeurPressed )
-        self.connect(self.LEComp,SIGNAL("returnPressed()"),self.LECompRPressed)
+        if monEnvQT5 :
+          self.LEImag.returnPressed.connect(self.LEImagRPressed)
+          self.LEReel.returnPressed.connect()"),self.LEReelRPressed)
+          self.RBRI.clicked.connect(self.ValeurPressed )
+          self.RBMP.clicked.connect(self.ValeurPressed )
+          self.LEComp.returnPressed.connect(self.LECompRPressed)
+        else :
+          self.connect(self.LEImag,SIGNAL("returnPressed()"),self.LEImagRPressed)
+          self.connect(self.LEReel,SIGNAL("returnPressed()"),self.LEReelRPressed)
+          self.connect(self.RBRI,SIGNAL("clicked()"), self.ValeurPressed )
+          self.connect(self.RBMP,SIGNAL("clicked()"), self.ValeurPressed )
+          self.connect(self.LEComp,SIGNAL("returnPressed()"),self.LECompRPressed)
         self.maCommande.listeAffichageWidget.append(self.LEComp)
         #self.maCommande.listeAffichageWidget.append(self.RBRI)
         #self.maCommande.listeAffichageWidget.append(self.RBMP)

@@ -25,7 +25,7 @@ from determine import monEnvQT5
 if monEnvQT5:
     from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication
     from PyQt5.QtGui import QPalette
-    from PyQt5.QtCore import QProcess, QFileInfo, QTimer, Qt
+    from PyQt5.QtCore import QProcess, QFileInfo, QTimer, Qt, QDir, QSize
 else :
     from PyQt4.QtGui  import *
     from PyQt4.QtCore import *
@@ -953,15 +953,23 @@ class JDCEditor(Ui_baseWidget,QWidget):
              tr("sauvegarde"), path,
              extensions,None,
              QFileDialog.DontConfirmOverwrite)
-      if fn.isNull(): return (0, None)
       if fn == None : return (0, None)
       if monEnvQT5 :  fn=fn[0]
+      if fn=='': return (0, None)
 
       ext = QFileInfo(fn).suffix()
-      if ext.isEmpty(): fn.append(extension)
+      if ext == '': fn+=extension
 
       if QFileInfo(fn).exists():
-           abort = QMessageBox.warning(self,
+           if monEnvQT5 :
+             msgBox = QMessageBox(self)
+             msgBox.setWindowTitle(tr("Sauvegarde du Fichier"))
+             msgBox.setText(tr("Le fichier <b>%s</b> existe deja.", unicode(fn)))
+             msgBox.addButton(tr("&Ecraser"),0)
+             msgBox.addButton(tr("&Abandonner"),1)
+             abort=msgBox.exec_()
+           else :
+             abort = QMessageBox.warning(self,
                    tr("Sauvegarde du Fichier"),
                    tr("Le fichier <b>%s</b> existe deja.",str(fn)),
                    tr("&Ecraser"),
@@ -1131,11 +1139,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
           bOK, fn=self.determineNomFichier(path,extension)
           if bOK == 0 : return (0, None)
           if fn == None : return (0, None)
-          if fn.isNull(): return (0, None)
+          if fn== '' : return (0, None)
 
           ulfile = os.path.abspath(unicode(fn))
           self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
-          fn = unicode(QDir.convertSeparators(fn))
+          fn = unicode(QDir.toNativeSeparators(fn))
           newName = fn
 
 
@@ -1212,7 +1220,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
                    self.appliEficas.CONFIGURATION.savedir)
 
         # ce retour est impose par le get_file d'I_JDC
-        if fn.isNull(): return None," "
+        if fn== '' : return None," "
         if not fn : return (0, " ")
         if monEnvQT5 :  fn=fn[0]
 
@@ -1388,9 +1396,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
    #-----------------------------
     def saveSplitterSizes(self):
     #----------------------------
-      if self.splitter != None :
-        self.splitterSizes = self.splitter.sizes()
-
+      if self.splitter != None : self.splitterSizes = self.splitter.sizes()
 
     #-----------------------------
     def restoreSplitterSizes(self):
@@ -1403,6 +1409,21 @@ class JDCEditor(Ui_baseWidget,QWidget):
             newSizes[:len(self.splitterSizes)-1] = self.splitterSizes[:len(self.splitterSizes)-1]
             newSizes[len(newSizes)-1] = self.splitterSizes[len(self.splitterSizes)-1]
             self.splitter.setSizes(newSizes)
+
+    #-----------------------------
+    def restoreTailleTree(self):
+    #----------------------------
+      if hasattr(self,'splitterSizes') and self.splitterSizes != [] :
+         nbFenetre=len(self.splitter.sizes())
+         if nbFenetre == len(self.splitterSizes) :
+            self.splitter.setSizes(self.splitterSizes)
+            return
+           
+      if self.widgetOptionnel==None:
+         print "kkkkkkkkkkkkkk"
+         #
+      #PN
+
 
     #-----------------------------
     def getTreeIndex(self,noeud):

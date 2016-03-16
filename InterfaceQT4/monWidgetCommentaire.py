@@ -21,10 +21,11 @@
 
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets  import QWidget
+    from PyQt5.QtWidgets import QWidget
+    from PyQt5.QtCore    import Qt
 else :
     from PyQt4.QtGui  import *
-    from PyQt4.QtCore import
+    from PyQt4.QtCore import *
 
 from desWidgetCommentaire import Ui_WidgetCommentaire
 from gereIcones import FacultatifOuOptionnel
@@ -49,33 +50,58 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
       self.repIcon=self.appliEficas.repIcon
       self.setIconePoubelle()
       self.remplitTexte()
-      if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
-      elif monEnvQT5 : self.bCatalogue.clicked.connect(self.afficheCatalogue)
-      else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
-      if monEnvQT5 : self.commentaireLE.returnPressed(TexteCommentaireEntre)
-      else : self.connect(self.commentaireLE,SIGNAL("returnPressed()"),self.TexteCommentaireEntre)
+      self.monOptionnel=None
+
+      if monEnvQT5 :
+         self.commentaireTE.textChanged.connect(self.TexteCommentaireEntre)
+         if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
+         else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
+         if self.editor.code in ['Adao','MAP'] :
+               self.bAvant.close()
+               self.bApres.close()
+         else :
+               self.bAvant.clicked.connect(self.afficheAvant)
+               self.bApres.clicked.connect(self.afficheApres)
+      else :
+         if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
+         else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+         if self.editor.code in ['Adao','MAP'] :
+               self.bAvant.close()
+               self.bApres.close()
+         else :
+               self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
+               self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
+
+  def afficheApres(self):
+       self.node.selectApres()
+
+  def afficheAvant(self):
+       self.node.selectAvant()
+
        
   def afficheCatalogue(self):
-      if self.editor.code != "CARMELCND" : self.monOptionnel.hide()
       self.node.tree.racine.affichePanneau()
       if self.node : self.node.select()
       else : self.node.tree.racine.select()
 
   def remplitTexte(self):
       texte=self.node.item.get_valeur()
-      self.commentaireLE.setText(texte)
+      self.commentaireTE.setText(texte)
       if self.editor.code == "CARMELCND" and texte[0:16]=="Cree - fichier :" :
-         self.commentaireLE.setDisabled(True)
-         self.commentaireLE.setStyleSheet("background:rgb(244,244,244);\n" "border:0px;\n")
-         self.commentaireLE.setToolTip(tr("Valeur non modifiable"))
+         self.commentaireTE.setReadOnly(True)
+         self.commentaireTE.setStyleSheet("background:rgb(244,244,244);\n" "border:0px;\n")
+         self.commentaireTE.setToolTip(tr("Valeur non modifiable"))
+      else :
+         self.commentaireTE.setReadOnly(False)
 
   def donnePremier(self):
-      self.commentaireLE.setFocus(7)
+      self.commentaireTE.setFocus(7)
 
 
   def TexteCommentaireEntre(self):
-      texte=str(self.commentaireLE.text())
+      texte=str(self.commentaireTE.toPlainText())
+      print texte
       self.editor.init_modif()
       self.node.item.set_valeur(texte)
-      self.node.update_node()
+      self.node.update_node_texte()
 

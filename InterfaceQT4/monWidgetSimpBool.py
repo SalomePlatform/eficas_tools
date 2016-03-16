@@ -21,8 +21,12 @@
 import string,types,os
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtWidgets import QRadioButton
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from feuille               import Feuille
@@ -36,8 +40,12 @@ class MonWidgetSimpBool (Ui_WidgetSimpBool,Feuille):
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
-        self.connect(self.RBTrue,SIGNAL("clicked()"),self.boutonTrueClic)
-        self.connect(self.RBFalse,SIGNAL("clicked()"),self.boutonFalseClic)
+        if monEnvQT5 :
+           self.RBTrue.clicked.connect(self.boutonTrueClic)
+           self.RBFalse.clicked.connect(self.boutonFalseClic)
+        else :
+           self.connect(self.RBTrue,SIGNAL("clicked()"),self.boutonTrueClic)
+           self.connect(self.RBFalse,SIGNAL("clicked()"),self.boutonFalseClic)
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.RBTrue)
 

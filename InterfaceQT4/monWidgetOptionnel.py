@@ -22,6 +22,7 @@
 from determine import monEnvQT5
 if monEnvQT5:
     from PyQt5.QtWidgets import QCheckBox, QWidget
+    from PyQt5.QtCore import Qt
 else :
     from PyQt4.QtGui  import *
     from PyQt4.QtCore import *

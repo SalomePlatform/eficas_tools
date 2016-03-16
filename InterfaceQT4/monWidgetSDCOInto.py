@@ -21,8 +21,13 @@
 import string,types,os
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets import QLineEdit
+    from PyQt5.QtCore import Qt
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from feuille               import Feuille
@@ -42,8 +47,13 @@ class MonWidgetSDCOInto (Ui_WidgetSDCOInto,Feuille,SaisieSDCO):
         self.maCommande.listeAffichageWidget.append(self.LESDCO)
         self.AAficher=self.LESDCO
         self.initLBSDCO()
-        self.connect(self.LESDCO, SIGNAL("returnPressed()"),self.LESDCOReturnPressed)
-        self.connect(self.LBSDCO, SIGNAL("itemDoubleClicked(QListWidgetItem*)" ), self.LBSDCODoubleClicked )
+       
+        if monEnvQT5 :
+          self.LESDCO.returnPressed.connect(self.LESDCOReturnPressed)
+          self.LBSDCO.itemDoubleClicked.connect(self.LBSDCODoubleClicked )
+        else :
+          self.connect(self.LESDCO, SIGNAL("returnPressed()"),self.LESDCOReturnPressed)
+          self.connect(self.LBSDCO, SIGNAL("itemDoubleClicked(QListWidgetItem*)" ), self.LBSDCODoubleClicked )
 
   def LESDCOReturnPressed(self) :
         self.LBSDCO.clearSelection()
@@ -56,7 +66,7 @@ class MonWidgetSDCOInto (Ui_WidgetSDCOInto,Feuille,SaisieSDCO):
             self.LBSDCO.insertItem( 1,aSDCO)
         valeur = self.node.item.get_valeur()
         if valeur  != "" and valeur != None :
-           self.LESDCO.setText(QString(valeur.nom))
+           self.LESDCO.setText(str(valeur.nom))
 
 
   def LBSDCODoubleClicked(self):
@@ -82,7 +92,7 @@ class MonWidgetSDCOInto (Ui_WidgetSDCOInto,Feuille,SaisieSDCO):
              self.node.item.delete_valeur_co(valeur=anc_val)
              self.node.item.object.etape.get_type_produit(force=1)
              self.node.item.object.etape.parent.reset_context()
-             self.LESDCO.setText(QString(nomConcept))
+             self.LESDCO.setText(nomConcept)
         else :
           commentaire = self.node.item.get_cr()
           self.reset_old_valeur(anc_val,mess=mess)

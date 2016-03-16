@@ -70,6 +70,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
          self.RBClear.clicked.connect(self.clearFiltre)
          self.RBCasse.toggled.connect(self.ajouteRadioButtons)
          self.LEFiltre.returnPressed.connect(self.ajouteRadioButtons)
+         self.LEFiltre.textChanged.connect(self.ajouteRadioButtons)
       else :
          self.connect(self.RBalpha,SIGNAL("clicked()"),self.afficheAlpha)
          self.connect(self.RBGroupe,SIGNAL("clicked()"),self.afficheGroupe)

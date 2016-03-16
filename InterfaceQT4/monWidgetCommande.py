@@ -51,7 +51,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.ensure=0
       Groupe.__init__(self,node,editor,None,etape.definition,etape,1,self)
 
-      if node.item.get_fr() != "" : self.labelDoc.setText(QString(node.item.get_fr()))
+      if node.item.get_fr() != "" : self.labelDoc.setText(node.item.get_fr())
       else : self.labelDoc.close()
       
       if (etape.get_type_produit()==None): self.LENom.close()
@@ -88,7 +88,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
                self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
          self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
    
-         self.racine=self.node.tree.racine
+      self.racine=self.node.tree.racine
       if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)
 
       self.setAcceptDrops(True)
@@ -101,6 +101,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       #if hasattr(self.editor,'widgetOptionnel') : 
       if self.editor.widgetOptionnel!= None : 
         self.monOptionnel=self.editor.widgetOptionnel
+        self.editor.restoreSplitterSizes()
       else :
         self.monOptionnel=MonWidgetOptionnel(self)
         self.editor.widgetOptionnel=self.monOptionnel

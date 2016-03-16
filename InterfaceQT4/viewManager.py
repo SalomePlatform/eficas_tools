@@ -22,7 +22,7 @@ import os, string
 from Extensions.i18n import tr
 from determine import monEnvQT5
 if monEnvQT5:
-   from  PyQt5.QtWidgets  import QFileDialog
+   from  PyQt5.QtWidgets  import QFileDialog, QMessageBox
    from  PyQt5.QtCore  import QFileInfo
 else :
     from PyQt4.QtGui  import *
@@ -77,8 +77,8 @@ class MyTabview:
                         tr('Ouvrir Fichier'),
                         self.appliEficas.CONFIGURATION.savedir,
                          extensions)
-            if fichier.isNull(): 
-              return result
+            if monEnvQT5 : fichier=fichier[0]
+            if not fichier: return result
        fichier = os.path.abspath(unicode(fichier))
        ulfile = os.path.abspath(unicode(fichier))
        self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
@@ -216,8 +216,7 @@ class MyTabview:
            QMessageBox.warning(
                      None,
                      tr("Fichier Duplique"),
-                     tr("Le fichier ne sera pas sauvegarde."),
-                     tr("&Annuler"))
+                     tr("Le fichier ne sera pas sauvegarde."),)
            return
        ok, newName = editor.saveFile()
        if ok :
@@ -233,8 +232,7 @@ class MyTabview:
            QMessageBox.warning(
                      None,
                      tr("Fichier Duplique"),
-                     tr("Le fichier ne sera pas sauvegarde."),
-                     tr("&Annuler"))
+                     tr("Le fichier ne sera pas sauvegarde."),)
            return
        ok, newName = editor.sauveLigneFile()
        if ok :
@@ -274,11 +272,19 @@ class MyTabview:
        for indexEditor in self.dict_editors.keys():
            editor=self.dict_editors[indexEditor]
            if self.samepath(fichier, editor.getFileName()):
-              abort = QMessageBox.warning(self.appliEficas,
-                        tr("Fichier"),
-                        tr("Le fichier <b>%s</b> est deja ouvert.",str(fichier)),
-                        tr("&Duplication"),
-                        tr("&Abort"))
+              if monEnvQT5 :
+                msgBox = QMessageBox()
+                msgBox.setWindowTitle(tr("Fichier"))
+                msgBox.setText(tr("Le fichier <b>%s</b> est deja ouvert", str(fichier)))
+                msgBox.addButton(tr("&Duplication"),0)
+                msgBox.addButton(tr("&Abandonner"),1)
+                abort=msgBox.exec_()
+              else :
+                abort = QMessageBox.warning(self.appliEficas,
+                      tr("Fichier"),
+                      tr("Le fichier <b>%s</b> est deja ouvert.",str(fichier)),
+                      tr("&Duplication"),
+                      tr("&Abort"))
               if abort: break
               double=editor
        else :
@@ -344,7 +350,15 @@ class MyTabview:
         """        
         res=1 
         if (editor.modified) and (editor in self.doubles.keys()) :
-            res = QMessageBox.warning(
+            if monEnvQT5 :
+              msgBox = QMessageBox(None)
+              msgBox.setWindowTitle(tr("Fichier Duplique"))
+              msgBox.setText(tr("Le fichier ne sera pas sauvegarde."))
+              msgBox.addButton(texte,0)
+              msgBox.addButton(tr("&Annuler"),1)
+              res=msgBox.exec_()
+            else:
+              res = QMessageBox.warning(
                      None,
                      tr("Fichier Duplique"),
                      tr("Le fichier ne sera pas sauvegarde."),
@@ -354,9 +368,16 @@ class MyTabview:
             return 2
         if editor.modified:
             fn = editor.getFileName()
-            if fn is None:
-                fn = self.appliEficas.trUtf8('Noname')
-            res = QMessageBox.warning(self.appliEficas, 
+            if fn is None: fn = tr('Noname')
+            if monEnvQT5 :
+              msgBox = QMessageBox(None)
+              msgBox.setWindowTitle(tr("Fichier Duplique"))
+              msgBox.setText(tr("Le fichier ne sera pas sauvegarde."))
+              msgBox.addButton(texte,0)
+              msgBox.addButton(tr("&Annuler"),1)
+              res=msgBox.exec_()
+            else :
+              res = QMessageBox.warning(self.appliEficas, 
                 tr("Fichier Modifie"),
                 tr("Le fichier %s n a pas ete sauvegarde.",str(fn)),
                 tr("&Sauvegarder"),

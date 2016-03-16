@@ -55,15 +55,15 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
       self.setIconePoubelle()
       self.remplit()
       if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
-      elif monEnvQt5 : self.bCatalogue.clicked.connect(self.afficheCatalogue)
+      elif monEnvQT5 : self.bCatalogue.clicked.connect(self.afficheCatalogue)
       else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
 
-      if monEnvQt5 :
-        self.lineEditVal.returnPressed.connect.(self.LEValeurPressed)
-        self.lineEditNom.returnPressed.connect.(self.LENomPressed)
-        self.bAvant.clicked.connect.(self.afficheAvant)
-        self.bApres.clicked.connect.(self.afficheApres)
-        self.bVerifie.clicked.connect.(self.verifiePressed)
+      if monEnvQT5 :
+        self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
+        self.lineEditNom.returnPressed.connect(self.LENomPressed)
+        self.bAvant.clicked.connect(self.afficheAvant)
+        self.bApres.clicked.connect(self.afficheApres)
+        self.bVerifie.clicked.connect(self.verifiePressed)
       else :
         self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
         self.connect(self.lineEditNom,SIGNAL("returnPressed()"),self.LENomPressed)

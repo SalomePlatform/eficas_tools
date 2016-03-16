@@ -126,10 +126,13 @@ background-color: rgb(247,247,247);
         <x>30</x>
         <y>40</y>
         <width>531</width>
-        <height>70</height>
+        <height>76</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <property name="verticalSpacing">
+        <number>12</number>
+       </property>
        <item row="1" column="1">
         <widget class="QLineEdit" name="lineEditVal">
          <property name="minimumSize">
@@ -231,6 +234,12 @@ border:0px;</string>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineEditNom</tabstop>
+  <tabstop>lineEditVal</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>LBParam</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

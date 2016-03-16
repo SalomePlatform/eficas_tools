@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1031</width>
-    <height>250</height>
+    <width>1290</width>
+    <height>540</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -32,151 +32,207 @@
    <string notr="true">background-color : rgb(224,223,222);
 font : 'times' 9px</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <layout class="QVBoxLayout" name="verticalLayout_4">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <widget class="QFrame" name="frame_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <property name="spacing">
-         <number>0</number>
-        </property>
+    <widget class="QFrame" name="frameAffichage">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>130</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>130</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(224,223,222)</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <spacer name="horizontalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>13</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="MonBoutonValide" name="RBValide">
-          <property name="minimumSize">
-           <size>
-            <width>17</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>21</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="focusPolicy">
-           <enum>Qt::ClickFocus</enum>
-          </property>
-          <property name="toolTip">
-           <string>Affiche le rapport de validité de la commande</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border : 0px</string>
-          </property>
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>../Editeur/icons/ast-green-ball.png</normaloff>../Editeur/icons/ast-green-ball.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>21</width>
-            <height>31</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>13</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="MonLabelClic" name="labelNomCommande">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>150</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;commande &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="toto">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Maximum</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>2</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LENom">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="toolTip">
-           <string>Nom de l'objet. Seuls, les objets valides peuvent être nommés</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"> QLineEdit {
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QFrame" name="frame_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <item>
+              <spacer name="horizontalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>13</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="MonBoutonValide" name="RBValide">
+               <property name="minimumSize">
+                <size>
+                 <width>17</width>
+                 <height>31</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>21</width>
+                 <height>31</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
+               <property name="toolTip">
+                <string>Affiche le rapport de validité de la commande</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border : 0px</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../Editeur/icons/ast-green-ball.png</normaloff>../Editeur/icons/ast-green-ball.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>21</width>
+                 <height>31</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>13</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="MonLabelClic" name="labelNomCommande">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>150</width>
+                 <height>31</height>
+                </size>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;commande &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="toto">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Maximum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>2</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="LENom">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Nom de l'objet. Seuls, les objets valides peuvent être nommés</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true"> QLineEdit {
      border: 2px solid gray;
      border-radius: 10px;
      padding: 0 8px;
@@ -189,363 +245,388 @@ QLineEdit:disabled
 }
 /*read-only {
      background: lightblue;*/</string>
-          </property>
-          <property name="readOnly">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Ignored</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>2</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <property name="spacing">
-           <number>4</number>
-          </property>
-          <property name="sizeConstraint">
-           <enum>QLayout::SetFixedSize</enum>
-          </property>
-          <item>
-           <widget class="QToolButton" name="RBRun">
-            <property name="minimumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::ClickFocus</enum>
-            </property>
-            <property name="toolTip">
-             <string>Lance un script associé à la commande</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">border : 0px</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>../Editeur/icons/roue.png</normaloff>../Editeur/icons/roue.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
+               </property>
+               <property name="readOnly">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>108</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Ignored</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>2</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <property name="spacing">
+                <number>4</number>
+               </property>
+               <property name="sizeConstraint">
+                <enum>QLayout::SetFixedSize</enum>
+               </property>
+               <item>
+                <widget class="QToolButton" name="RBRun">
+                 <property name="minimumSize">
+                  <size>
+                   <width>21</width>
+                   <height>31</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>21</width>
+                   <height>31</height>
+                  </size>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::ClickFocus</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string>Lance un script associé à la commande</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border : 0px</string>
+                 </property>
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>../Editeur/icons/roue.png</normaloff>../Editeur/icons/roue.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>21</width>
+                   <height>31</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QToolButton" name="RBInfo">
+                 <property name="minimumSize">
+                  <size>
+                   <width>21</width>
+                   <height>31</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>21</width>
+                   <height>31</height>
+                  </size>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::ClickFocus</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string>ouvre un navigateur sur l'aide contextuelle</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border : 0px</string>
+                 </property>
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>../Editeur/icons/point-interrogation30.png</normaloff>../Editeur/icons/point-interrogation30.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>21</width>
+                   <height>31</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QToolButton" name="RBRegle">
+                 <property name="minimumSize">
+                  <size>
+                   <width>21</width>
+                   <height>31</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>21</width>
+                   <height>31</height>
+                  </size>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::ClickFocus</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string>affiche les régles de validité</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border : 0px</string>
+                 </property>
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>../Editeur/icons/lettreRblanc30.png</normaloff>../Editeur/icons/lettreRblanc30.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>21</width>
+                   <height>31</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>13</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QToolButton" name="RBPoubelle">
+               <property name="minimumSize">
+                <size>
+                 <width>21</width>
+                 <height>31</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>21</width>
+                 <height>31</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
+               <property name="toolTip">
+                <string>Détruit la commande</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border : 0px</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../Editeur/icons/deleteRond.png</normaloff>../Editeur/icons/deleteRond.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>21</width>
+                 <height>31</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+            <zorder>RBValide</zorder>
+            <zorder>labelNomCommande</zorder>
+            <zorder>LENom</zorder>
+            <zorder>horizontalSpacer_3</zorder>
+            <zorder>horizontalSpacer_4</zorder>
+            <zorder>RBPoubelle</zorder>
+            <zorder>horizontalSpacer_5</zorder>
+            <zorder>horizontalSpacer_7</zorder>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="RBInfo">
-            <property name="minimumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::ClickFocus</enum>
-            </property>
-            <property name="toolTip">
-             <string>ouvre un navigateur sur l'aide contextuelle</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">border : 0px</string>
-            </property>
+           <widget class="QLabel" name="labelDoc">
             <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>../Editeur/icons/point-interrogation30.png</normaloff>../Editeur/icons/point-interrogation30.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="RBRegle">
-            <property name="minimumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::ClickFocus</enum>
-            </property>
-            <property name="toolTip">
-             <string>affiche les régles de validité</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">border : 0px</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>../Editeur/icons/lettreRblanc30.png</normaloff>../Editeur/icons/lettreRblanc30.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>21</width>
-              <height>31</height>
-             </size>
+             <string>TextLabel</string>
             </property>
            </widget>
           </item>
          </layout>
         </item>
         <item>
-         <spacer name="horizontalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>8</number>
           </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
+          <property name="topMargin">
+           <number>15</number>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>13</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QToolButton" name="RBPoubelle">
-          <property name="minimumSize">
-           <size>
-            <width>21</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>21</width>
-            <height>31</height>
-           </size>
-          </property>
-          <property name="focusPolicy">
-           <enum>Qt::ClickFocus</enum>
-          </property>
-          <property name="toolTip">
-           <string>Détruit la commande</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border : 0px</string>
-          </property>
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>../Editeur/icons/deleteRond.png</normaloff>../Editeur/icons/deleteRond.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>21</width>
-            <height>31</height>
-           </size>
-          </property>
-         </widget>
+          <item>
+           <widget class="QPushButton" name="bCatalogue">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>160</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::ClickFocus</enum>
+            </property>
+            <property name="toolTip">
+             <string>Affiche les commandes possibles</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(104,110,149);
+color :white;
+border-radius : 12px
+</string>
+            </property>
+            <property name="text">
+             <string>&amp;Commandes</string>
+            </property>
+            <property name="shortcut">
+             <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+            </property>
+            <property name="autoDefault">
+             <bool>true</bool>
+            </property>
+            <property name="default">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QPushButton" name="bAvant">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>60</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::ClickFocus</enum>
+              </property>
+              <property name="toolTip">
+               <string>Affiche le formulaire de la commande précédente</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color:rgb(104,110,149);
+color :white;
+border-radius : 12px
+</string>
+              </property>
+              <property name="text">
+               <string>&lt;&lt;</string>
+              </property>
+              <property name="shortcut">
+               <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+              </property>
+              <property name="autoDefault">
+               <bool>true</bool>
+              </property>
+              <property name="default">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="bApres">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>60</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::ClickFocus</enum>
+              </property>
+              <property name="toolTip">
+               <string>Affiche le formulaire de la commande suivante</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color:rgb(104,110,149);
+color :white;
+border-radius : 12px
+</string>
+              </property>
+              <property name="text">
+               <string>&gt;&gt;</string>
+              </property>
+              <property name="shortcut">
+               <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
+              </property>
+              <property name="autoDefault">
+               <bool>true</bool>
+              </property>
+              <property name="default">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </item>
        </layout>
-       <zorder>RBValide</zorder>
-       <zorder>labelNomCommande</zorder>
-       <zorder>LENom</zorder>
-       <zorder>horizontalSpacer_3</zorder>
-       <zorder>horizontalSpacer_4</zorder>
-       <zorder>RBPoubelle</zorder>
-       <zorder>horizontalSpacer_5</zorder>
-      </widget>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QPushButton" name="bCatalogue">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>160</width>
-           <height>31</height>
-          </size>
-         </property>
-         <property name="focusPolicy">
-          <enum>Qt::ClickFocus</enum>
-         </property>
-         <property name="toolTip">
-          <string>Affiche les commandes possibles</string>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color:rgb(104,110,149);
-color :white;
-border-radius : 12px
-</string>
-         </property>
-         <property name="text">
-          <string>&amp;Commandes</string>
-         </property>
-         <property name="shortcut">
-          <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
-         </property>
-         <property name="autoDefault">
-          <bool>true</bool>
-         </property>
-         <property name="default">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QPushButton" name="bAvant">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>60</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::ClickFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>Affiche le formulaire de la commande précédente</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-color:rgb(104,110,149);
-color :white;
-border-radius : 12px
-</string>
-           </property>
-           <property name="text">
-            <string>&lt;&lt;</string>
-           </property>
-           <property name="shortcut">
-            <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
-           </property>
-           <property name="autoDefault">
-            <bool>true</bool>
-           </property>
-           <property name="default">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="bApres">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>60</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::ClickFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>Affiche le formulaire de la commande suivante</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-color:rgb(104,110,149);
-color :white;
-border-radius : 12px
-</string>
-           </property>
-           <property name="text">
-            <string>&gt;&gt;</string>
-           </property>
-           <property name="shortcut">
-            <string>Shift+A, Alt+A, Alt+A, Alt+A</string>
-           </property>
-           <property name="autoDefault">
-            <bool>true</bool>
-           </property>
-           <property name="default">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QLabel" name="labelDoc">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
@@ -579,8 +660,8 @@ border-radius : 12px
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1013</width>
-        <height>129</height>
+        <width>1290</width>
+        <height>410</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -591,24 +672,17 @@ border-radius : 12px
          </property>
         </layout>
        </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>5</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
      </widget>
     </widget>
    </item>
   </layout>
+  <zorder>scrollAreaCommandes</zorder>
+  <zorder>frameAffichage</zorder>
+  <zorder></zorder>
+  <zorder>frame_2</zorder>
+  <zorder>frame_2</zorder>
+  <zorder></zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
@@ -624,6 +698,10 @@ border-radius : 12px
    <header>monLabelClic.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>scrollAreaCommandes</tabstop>
+  <tabstop>LENom</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -686,6 +686,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def update_node_texte(self):
         """ Met a jour les noms des SD et valeurs des mots-cles """
+        print "kkkkkkkkkkkk"
+        print self.item.GetText()
         value = self.item.GetText()
         self.setText(1, value)
         

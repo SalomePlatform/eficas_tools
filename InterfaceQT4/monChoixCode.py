@@ -22,10 +22,11 @@
 
 import os,sys,re
 from desChoixCode import Ui_ChoixCode
-f monEnvQT5:
+from determine import monEnvQT5
+if monEnvQT5:
     from PyQt5.QtWidgets import QDialog, QRadioButton
     from PyQt5.QtGui import QPalette
-    from PyQt5.QtCore import QProcess, QFileInfo, Qt
+    from PyQt5.QtCore import QProcess, QFileInfo, Qt, QSize
 else :
     from PyQt4.QtGui  import *
     from PyQt4.QtCore import *

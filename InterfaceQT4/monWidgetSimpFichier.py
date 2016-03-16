@@ -21,8 +21,13 @@
 import string,types,os,sys
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import  monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtGui  import QIcon
+   from PyQt5.QtCore import QSize
+else:
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from desWidgetSimpFichier  import Ui_WidgetSimpFichier 
@@ -40,6 +45,4 @@ class MonWidgetSimpFichier (Ui_WidgetSimpFichier,MonWidgetSimpBase):
           icon = QIcon(fichier)
           self.BFichier.setIcon(icon)
           self.BFichier.setIconSize(QSize(32, 32))
-        # deja fait dans MonWidgetSimpBase
-        #self.maCommande.listeAffichageWidget.append(self.lineEditVal)
 

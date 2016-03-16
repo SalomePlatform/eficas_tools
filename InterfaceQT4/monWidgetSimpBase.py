@@ -21,8 +21,12 @@
 import string,types,os
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtCore import  Qt
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from feuille               import Feuille
@@ -38,7 +42,8 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
         #print "MonWidgetSimpBase", nom
         self.parentQt.commandesLayout.insertWidget(-1,self,1)
         self.setFocusPolicy(Qt.StrongFocus)
-        self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
+        if monEnvQT5 : self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
+        else :         self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
 
@@ -54,20 +59,20 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
        self.politique=PolitiqueUnique(self.node,self.editor)
        valeur=self.node.item.get_valeur()
        valeurTexte=self.politique.GetValeurTexte(valeur)
-       chaine=QString("")
+       chaine=""
 
        if valeurTexte != None :
           from decimal import Decimal
           if isinstance(valeurTexte,Decimal):
              chaine=str(valeurTexte)
           elif repr(valeurTexte.__class__).find("PARAMETRE") > 0:
-             chaine = QString(repr(valeur))
+             chaine = repr(valeur)
           else :
              #PN ????
              #try :
              #  chaine=QString("").setNum(valeurTexte)
              #except :
-             chaine=QString(str(valeurTexte))
+             chaine=str(valeurTexte)
        self.lineEditVal.setText(chaine)
 
 

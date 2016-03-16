@@ -21,8 +21,8 @@
 import string,types,os
 
 # Modules Eficas
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+#from PyQt4.QtGui import *
+#from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from feuille               import Feuille
@@ -39,8 +39,8 @@ class MonWidgetSimpTuple2 (Ui_WidgetTuple2,MonWidgetSimpTuple):
         if self.objSimp.isImmuable() :
           self.lineEditVal1.setDisabled(True)
           self.lineEditVal2.setDisabled(True)
-          self.lineEditVal1.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
-          self.lineEditVal2.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
+          self.lineEditVal1.setStyleSheet("background:rgb(244,244,244);\n" "border:0px;\n")
+          self.lineEditVal2.setStyleSheet("background:rgb(244,244,244);\n" "border:0px;\n")
           self.lineEditVal1.setToolTip(tr("Valeur non modifiable"))
           self.lineEditVal2.setToolTip(tr("Valeur non modifiable"))
         else :

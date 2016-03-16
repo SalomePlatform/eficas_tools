@@ -23,10 +23,12 @@ import string,types,os,sys
 # Modules Eficas
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets  import QIcon, QSize, QFrame,QApplication
+    from PyQt5.QtWidgets  import QFrame,QApplication
+    from PyQt5.QtGui  import QIcon, QFrame
+    from PyQt5.QtCore  import QSize
 else :
     from PyQt4.QtGui  import *
-    from PyQt4.QtCore import
+    from PyQt4.QtCore import *
 
 from Extensions.i18n import tr
 
@@ -57,7 +59,7 @@ class TupleCustom :
          courant=getattr(self,nomLE)
          courant.num=index
          courant.dansUnTuple=True
-         if monEnvQt5 : courant.returnPressed.connect(self.valueChange)
+         if monEnvQT5 : courant.returnPressed.connect(self.valueChange)
          else : self.connect(courant,SIGNAL("returnPressed()"),self.valueChange)
 
 
@@ -167,7 +169,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
           icon3 = QIcon(fichier3)
           self.BSelectFichier.setIcon(icon3)
           self.BSelectFichier.setIconSize(QSize(32, 32))
-        if monEnvQt5 :
+        if monEnvQT5 :
           self.BSelectFichier.clicked.connect(self.selectInFile)
         else :
           self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)

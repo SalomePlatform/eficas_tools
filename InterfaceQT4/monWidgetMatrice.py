@@ -28,6 +28,12 @@ from feuille         import Feuille
 from desWidgetMatrice  import Ui_desWidgetMatrice 
 
 from determine import monEnvQT5
+if monEnvQT5 :
+   from PyQt5.QtCore import QSize
+else :
+   from PyQt4.QtGui import *
+   from PyQt4.QtCore import *
+
 
 class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
 # c est juste la taille des differents widgets de base qui change

@@ -66,6 +66,8 @@ class MonWidgetInactif(QWidget,Ui_WidgetInactif):
   def traiteClicSurLabel(self):
       pass
   
+  def donnePremier(self):
+      pass
 
   def setValide(self):
       pass 

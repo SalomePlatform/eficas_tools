@@ -24,7 +24,7 @@ from  determine import monEnvQT5
 if monEnvQT5 :
   from PyQt5.QtWidgets import QMessageBox, QFileDialog
   from PyQt5.QtGui import QIcon
-  from PyQt5.QtCore import  QFileInfo,  Qt
+  from PyQt5.QtCore import  QFileInfo,  Qt, QSize
 
 else:
   from PyQt4.QtGui  import *
@@ -246,8 +246,8 @@ class ContientIcones:
                               self.appliEficas.CONFIGURATION.savedir,
                               filters)
 
-      if not(fichier.isNull()):
-         if monEnvQT5 : fichier=fichier[0]
+      if monEnvQT5 : fichier=fichier[0]
+      if not(fichier):
          ulfile = os.path.abspath(unicode(fichier))
          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)

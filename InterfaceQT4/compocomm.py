@@ -44,8 +44,8 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodePartiel.createPopUpMenu(self)
         self.Decommente = QAction(tr("Decommenter"),self.tree)
-        if monEnvQT5 : self.tree.connect(self.Decommente,SIGNAL("triggered()"),self.Decommenter)
-        else : self.Decommente.triggered(self.Decommenter)
+        if monEnvQT5 : self.Decommente.triggered(self.Decommenter)
+        else         : self.tree.connect(self.Decommente,SIGNAL("triggered()"),self.Decommenter)
         self.Decommente.setStatusTip(tr("Decommente la commande "))
 
         if hasattr(self.item,'uncomment'):

@@ -275,7 +275,7 @@ class READERCATA:
       widgetChoix = MonChoixCata(self.appliEficas, [cata.user_name for cata in cata_choice_list], title)
       ret=widgetChoix.exec_()
       
-      lab=QString(self.VERSION_EFICAS)+" "
+      lab=str(self.VERSION_EFICAS)+" "
       lab+=tr(" pour ")
       lab+=QString(self.code) 
       lab+=tr(" avec le catalogue ")

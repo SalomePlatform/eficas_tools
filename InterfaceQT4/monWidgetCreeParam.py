@@ -26,6 +26,7 @@ pattern_name       = re.compile(r'^[^\d\W]\w*\Z')
 from determine import monEnvQT5
 if monEnvQT5 :
    from PyQt5.QtWidgets import QDialog
+   from PyQt5.QtCore import Qt
 else :
    from PyQt4.QtGui import *
    from PyQt4.QtCore import *
@@ -53,8 +54,8 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         self.connect(self.lineEditNom,SIGNAL("returnPressed()"),self.lineEditNomReturnPressed)
 
   def connecterSignaux(self) :
-        self.lineEditVal.returnPressed(self.lineEditValReturnPressed)
-        self.lineEditNom.returnPressed(self.lineEditNomReturnPressed)
+        self.lineEditVal.returnPressed.connect(self.lineEditValReturnPressed)
+        self.lineEditNom.returnPressed.connect(self.lineEditNomReturnPressed)
 
   def CreeParametre(self):
         nom=str(self.lineEditNom.text())
@@ -68,10 +69,15 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         param=itemAvant.addParameters(True)
         param.item.set_nom(nom)
         #PN self.val permet d entrer du texte
-        param.item.set_valeur(val)
+        param.item.set_valeur(self.val)
         param.update_node_texte()
         param.update_node_valid()
-        self.LBParam.addItem(QString(repr(param.item)))
+        self.LBParam.addItem((repr(param.item)))
+        param.select()
+        self.lineEditVal.setText("")
+        self.lineEditNom.setText("")
+        self.lineEditNom.setFocus(True)
+
 
 
   def lineEditValReturnPressed(self):
@@ -124,8 +130,8 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
   def initToutesVal(self):
         self.LBParam.clear()
         for param in self.listeTousParam :
-            self.LBParam.addItem(QString(repr(param)))
-            self.dictListe[QString(repr(param))] = param
+            self.LBParam.addItem((repr(param)))
+            self.dictListe[repr(param)] = param
 
   def valideParam(self):
         if self.LBParam.selectedItems()== None : return

@@ -49,7 +49,8 @@ class Appli(Ui_Eficas,QMainWindow):
         Ui_Eficas.__init__(self)
 
         version=getEficasVersion()
-        self.VERSION_EFICAS="Eficas QT4 "+version
+        self.VERSION_EFICAS="Eficas QT4 Salome "+version
+        if monEnvQT5 : self.VERSION_EFICAS="Eficas QT5 Salome "
         self.salome=salome
         self.ihm="QT"
         self.ssIhm=ssIhm
@@ -554,8 +555,7 @@ class Appli(Ui_Eficas,QMainWindow):
        except : pass
 
     def addToRecentList(self, fn):
-      if not monEnvQT5 : addToRecentListQT4(self, fn); return
-
+      if not monEnvQT5 : self.addToRecentListQT4(fn); return
       while fn in self.recent: self.recent.remove(fn)
       self.recent.insert(0,fn)
       if len(self.recent) > 9:
@@ -683,7 +683,7 @@ class Appli(Ui_Eficas,QMainWindow):
         for rp in self.recent:
             id = self.recentMenu.addAction(rp)
             self.ficRecents[id]=rp
-            if monEnvQT5 : self.id.triggered.connect(self.handleOpenRecent)
+            if monEnvQT5 : id.triggered.connect(self.handleOpenRecent)
             else         : self.connect(id, SIGNAL('triggered()'),self.handleOpenRecent)
         self.recentMenu.addSeparator()
         self.recentMenu.addAction(tr('&Effacer'), self.handleClearRecent)

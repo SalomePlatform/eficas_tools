@@ -23,8 +23,9 @@ import traceback
 
 from determine import monEnvQT5
 if monEnvQT5:
-   from PyQt5.QtWidgets import QLineEdit, QLabel, QIcon
-   from PyQt5.QtCore import QEvent
+   from PyQt5.QtWidgets import QLineEdit, QLabel
+   from PyQt5.QtCore    import QEvent
+   from PyQt5.QtGui     import QIcon
 else :
    from PyQt4.QtGui import *
    from PyQt4.QtCore import *
