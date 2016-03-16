@@ -33,10 +33,9 @@ import typeNode
 class FormuleNode(browser.JDCNode,typeNode.PopUpMenuNode):
         
     def getPanel(self):
-      
-      from monFormulePanel import MonFormulePanel
-      return MonFormulePanel(self,parent=self.editor)
-        
+      from monWidgetFormule import MonWidgetFormule
+      return MonWidgetFormule(self,self.editor,self.item.object)
+
    
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)

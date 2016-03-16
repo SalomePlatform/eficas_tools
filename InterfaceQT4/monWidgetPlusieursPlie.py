@@ -22,12 +22,12 @@ import string,types,os,sys
 
 # Modules Eficas
 from determine import monEnvQT5
-#if monEnvQT5:
-#    from PyQt5.QtWidgets  import Qicon, QScrollbar, QFrame
-#    from PyQt5.QtCore import QTimer, QSize, QT
-#else :
-#    from PyQt4.QtGui  import *
-#    from PyQt4.QtCore import
+if monEnvQT5:
+    from PyQt5.QtWidgets  import Qicon, QScrollbar, QFrame
+    from PyQt5.QtCore import QTimer, QSize, QT
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import
 
 from Extensions.i18n import tr
 
