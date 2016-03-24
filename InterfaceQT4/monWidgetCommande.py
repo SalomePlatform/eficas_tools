@@ -49,7 +49,9 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.listeAffichageWidget=[]
       self.inhibe=0
       self.ensure=0
+      editor.inhibeSplitter=1
       Groupe.__init__(self,node,editor,None,etape.definition,etape,1,self)
+      editor.inhibeSplitter=0
 
       if node.item.get_fr() != "" : self.labelDoc.setText(node.item.get_fr())
       else : self.labelDoc.close()
@@ -97,18 +99,21 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       if self.editor.code == "CARMELCND" : 
          self.RBPoubelle.close() # JDC Fige
          return                  # Pas de MC Optionnels pour Carmel
+
       from monWidgetOptionnel import MonWidgetOptionnel
-      #if hasattr(self.editor,'widgetOptionnel') : 
       if self.editor.widgetOptionnel!= None : 
         self.monOptionnel=self.editor.widgetOptionnel
-        self.editor.restoreSplitterSizes()
       else :
         self.monOptionnel=MonWidgetOptionnel(self)
         self.editor.widgetOptionnel=self.monOptionnel
+        self.editor.inhibeSplitter=1
         self.editor.splitter.addWidget(self.monOptionnel)
-        #self.editor.restoreSplitterSizes()
+        self.editor.inhibeSplitter=0
+        self.editor.ajoutOptionnel()
       self.afficheOptionnel()
-      #print "fin init de widget Commande"
+
+      self.editor.restoreSplitterSizes()
+      print "fin init de widget Commande"
       
 
   def donnePremier(self):

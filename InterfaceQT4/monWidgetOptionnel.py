@@ -65,7 +65,7 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
   """
   """
   def __init__(self,parentQt):
-     #print "dans init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
+     print "dans init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
      QWidget.__init__(self,None)
      self.setupUi(self)
      self.dicoCb={}
@@ -76,10 +76,13 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.cb=None
      self.parentQt=parentQt
      #self.connect(self.bAjoutMC,SIGNAL("clicked()"), self.ajoutMC)
-     #print "fin init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
-
-     
-
+     #self.parentQt.editor.splitterSizes[1]-=self.parentQt.editor.splitterSizes[2]
+     #print self.parentQt.editor.splitterSizes
+     self.parentQt.editor.splitterSizes[2]=self.parentQt.editor.oldSizeWidgetOptionnel
+     if self.parentQt.editor.splitterSizes[2] == 0 : self.parentQt.editor.splitterSizes[2] = 400
+     self.parentQt.editor.restoreSplitterSizes()
+     print "fin init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
+    
 
   def affiche(self,liste):
      print "dans Optionnel ____ affiche", liste
@@ -128,6 +131,3 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      #print "dans Optionnel __ ajout de ", maListe
      self.parentMC.ajoutMC(maListe)
 
-  def hide(self):
-     self.parentQt.editor.saveSplitterSizes()
-     QWidget.hide(self)

@@ -71,6 +71,8 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
          else :
                self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
                self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
+      self.editor.fermeOptionnel()
+
 
   def afficheApres(self):
        self.node.selectApres()

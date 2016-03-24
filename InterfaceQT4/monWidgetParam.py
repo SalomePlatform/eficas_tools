@@ -23,7 +23,7 @@ from desWidgetParam import Ui_WidgetParam
 from gereIcones import FacultatifOuOptionnel
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets import QWidget
+    from PyQt5.QtWidgets import QWidget, QMessageBox
 else :
     from PyQt4.QtGui  import *
     from PyQt4.QtCore import *
@@ -72,12 +72,7 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
         self.connect(self.bVerifie,SIGNAL("clicked()"), self.verifiePressed)
         self.editor.affiche_infos("")
 
-
-      if self.editor.widgetOptionnel!= None :
-         self.editor.widgetOptionnel.close()
-         self.editor.widgetOptionnel=None
-
-
+      self.editor.fermeOptionnel()
 
        
   def afficheCatalogue(self):

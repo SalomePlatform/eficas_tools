@@ -90,7 +90,7 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
    
       self.racine=self.node.tree.racine
       self.monOptionnel=None
-      #self.editor.restoreSplitterSizes()
+      self.editor.fermeOptionnel()
       #print "fin init de widget Commande"
       
 

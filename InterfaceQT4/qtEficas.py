@@ -85,6 +85,8 @@ class Appli(Ui_Eficas,QMainWindow):
         localisation.localise(app,langue)
 
         self.setupUi(self)
+        if self.code in ['MAP',] : self.resize(1440,self.height())
+        else : self.resize(1800,self.height())
 
         icon = QIcon(self.repIcon+"/parametres.png")
         self.actionParametres.setIcon(icon)

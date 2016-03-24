@@ -30,6 +30,9 @@
 font : 'times' 9px</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QFrame" name="frame_2">
      <property name="sizePolicy">
@@ -98,7 +101,16 @@ font : 'times' 9px</string>
       <property name="spacing">
        <number>0</number>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
@@ -127,7 +139,7 @@ font : 'times' 9px</string>
            <x>0</x>
            <y>0</y>
            <width>279</width>
-           <height>124</height>
+           <height>131</height>
           </rect>
          </property>
          <property name="sizePolicy">

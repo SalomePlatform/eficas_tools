@@ -22,7 +22,7 @@
 import re
 from determine import monEnvQT5
 if monEnvQT5:
-   from PyQt5.QtWidgets import QToolButton
+   from PyQt5.QtWidgets import QToolButton, QToolTip
 else :
    from PyQt4.QtGui import *
    from PyQt4.QtCore import *
@@ -44,7 +44,7 @@ class MonBoutonValide(QToolButton) :
      def mousePressEvent(self, event):
        #print "dans mousePressEvent"
        if self.parent.node.item.object.isvalid() :
-          myToolTip=QString(tr("objet valide"))
+          myToolTip=tr("objet valide")
           QToolTip.showText(event.globalPos(),myToolTip )
        else :
           t=""
@@ -61,7 +61,7 @@ class MonBoutonValide(QToolButton) :
                  t=l
               else :
                  t=t+'\n'+l
-          myToolTip=QString(t)
+          myToolTip=tr(t)
        QToolTip.showText(event.globalPos(),myToolTip )
 
 

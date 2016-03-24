@@ -371,10 +371,10 @@ class MyTabview:
             if fn is None: fn = tr('Noname')
             if monEnvQT5 :
               msgBox = QMessageBox(None)
-              msgBox.setWindowTitle(tr("Fichier Duplique"))
+              msgBox.setWindowTitle(tr("Fichier Modifie"))
               msgBox.setText(tr("Le fichier ne sera pas sauvegarde."))
-              msgBox.addButton(texte,0)
-              msgBox.addButton(tr("&Annuler"),1)
+              msgBox.addButton(tr("&Sauvegarder"),1)
+              msgBox.addButton(tr("&Quitter sans sauvegarder"),0)
               res=msgBox.exec_()
             else :
               res = QMessageBox.warning(self.appliEficas, 
@@ -382,7 +382,7 @@ class MyTabview:
                 tr("Le fichier %s n a pas ete sauvegarde.",str(fn)),
                 tr("&Sauvegarder"),
                 tr(texte),
-                tr("&Annuler") )
+                tr("&Quitter sans sauvegarder") )
             if res == 0:
                 (ok, newName) = editor.saveFile()
                 if ok:

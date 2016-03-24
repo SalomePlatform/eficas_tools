@@ -81,7 +81,13 @@ font : 'times' 9px</string>
       <property name="spacing">
        <number>0</number>
       </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
       <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
        <number>0</number>
       </property>
       <property name="bottomMargin">
@@ -665,6 +671,18 @@ border-radius : 12px
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <layout class="QVBoxLayout" name="commandesLayout">
          <property name="spacing">
@@ -679,10 +697,6 @@ border-radius : 12px
   </layout>
   <zorder>scrollAreaCommandes</zorder>
   <zorder>frameAffichage</zorder>
-  <zorder></zorder>
-  <zorder>frame_2</zorder>
-  <zorder>frame_2</zorder>
-  <zorder></zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>

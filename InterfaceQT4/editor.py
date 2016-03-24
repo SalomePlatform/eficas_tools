@@ -23,7 +23,7 @@ import traceback
 
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication
+    from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication, QSplitter
     from PyQt5.QtGui import QPalette
     from PyQt5.QtCore import QProcess, QFileInfo, QTimer, Qt, QDir, QSize
 else :
@@ -49,6 +49,7 @@ import readercata
 
 DictExtensions= {"MAP" : ".map"}
 
+    
 
 
 class JDCEditor(Ui_baseWidget,QWidget):
@@ -61,7 +62,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #----------------------------------------------------------------------------------------------------------#
 
         QWidget.__init__(self,None)
+        self.i=0
         self.setupUi(self)
+        self.inhibeSplitter=0
         self.widgetOptionnel=None
         self.fenetreCentraleAffichee=None
         self.dejaDansPlieTout=False
@@ -98,7 +101,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
            self.widgetTree=None
            self.appliEficas.resize(1440,self.appliEficas.height())
         else :
-           self.appliEficas.resize(2000,self.appliEficas.height())
+           self.appliEficas.resize(1800,self.appliEficas.height())
 
         self.version_code = session.d_env.cata
 
@@ -115,6 +118,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.format =  self.appliEficas.format_fichier
 
         self.dict_reels={}
+        self.splitterSizes =  [320,1320,320]
+        self.oldSizeWidgetOptionnel = 320
         self.liste_simp_reel=[]
         self.ihm="QT"
 
@@ -213,8 +218,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if jdc_item:
             self.tree = browser.JDCTree( jdc_item,  self )
         self.appliEficas.construitMenu()
-        self.splitterSizes = []
-
+        self.saveSplitterSizes()
+        #if monEnvQT5:
+        #   self.splitter./s
+        #else :
 
 
     #-------------------#  Pour execution avec output et error dans le bash
@@ -631,10 +638,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if (self.QWParent.edit != "couper"):
         try:
            if noeudOuColler == self.tree.racine :
-              print 1 
               child=noeudOuColler.doPastePremier(noeudACopier)
            else :
-              print 2 
               child=noeudACopier.doPaste(noeudOuColler,pos)
            if child==None or child==0:
                QMessageBox.critical( self,tr( "Copie refusee"),tr('Eficas n a pas reussi a copier l objet'))
@@ -1393,36 +1398,59 @@ class JDCEditor(Ui_baseWidget,QWidget):
       self.nomMaillage="A_partir_de_SMESH"
       self.openfile.close()
 
-   #-----------------------------
-    def saveSplitterSizes(self):
-    #----------------------------
-      if self.splitter != None : self.splitterSizes = self.splitter.sizes()
+    #-------------------------------------
+    def saveSplitterSizes(self,event=None):
+    #------------------------------------
+      if self.inhibeSplitter : return
+      if not hasattr(self,'splitter') : return
+      print "______________________"
+      print "saveSplitterSizes"
+      print self.splitterSizes
+      if self.splitterSizes[2] != 0 : self.oldSizeWidgetOptionnel = self.splitterSizes[2]
+      for i in range(len(self.splitter.sizes())):
+         self.splitterSizes[i] = self.splitter.sizes()[i]
+         self.splitter.widget(i).resizeEvent=self.saveSplitterSizes
+      print self.splitterSizes
+      print "______________________"
 
-    #-----------------------------
-    def restoreSplitterSizes(self):
-    #----------------------------
-      if hasattr(self,'splitterSizes') :
-        lenSizes = len(self.splitterSizes)
-        if lenSizes > 0 :
-          if self.splitter != None and self.splitter.count() >= lenSizes :
-            newSizes = self.splitter.sizes()
-            newSizes[:len(self.splitterSizes)-1] = self.splitterSizes[:len(self.splitterSizes)-1]
-            newSizes[len(newSizes)-1] = self.splitterSizes[len(self.splitterSizes)-1]
-            self.splitter.setSizes(newSizes)
 
-    #-----------------------------
-    def restoreTailleTree(self):
-    #----------------------------
-      if hasattr(self,'splitterSizes') and self.splitterSizes != [] :
-         nbFenetre=len(self.splitter.sizes())
-         if nbFenetre == len(self.splitterSizes) :
-            self.splitter.setSizes(self.splitterSizes)
-            return
-           
-      if self.widgetOptionnel==None:
-         print "kkkkkkkkkkkkkk"
-         #
-      #PN
+    #-----------------------------------------
+    def restoreSplitterSizes(self,nbWigdet=3):
+    #----------------------------------------
+      self.inhibeSplitter = 1
+      self.i+=1
+      if not(hasattr(self,'splitter')) : return
+      newSizes=self.splitterSizes[:nbWigdet]
+      self.splitter.setSizes(newSizes)
+      print self.splitterSizes
+      self.inhibeSplitter = 0
+   
+    #------------------------
+    def fermeOptionnel(self):
+    #------------------------
+      if self.widgetOptionnel == None : return
+
+      self.inhibeSplitter=1
+      self.splitterSizes[1] = self.splitterSizes[1] + self.splitterSizes[2]
+      if self.splitterSizes[2]!=0 : self.oldSizeWidgetOptionnel = self.splitterSizes[2]
+      self.splitterSizes[2]=0
+
+      self.widgetOptionnel.setParent(None)
+      self.widgetOptionnel.close()
+      self.widgetOptionnel.deleteLater()
+      self.widgetOptionnel=None
+      self.inhibeSplitter=0
+      self.restoreSplitterSizes(2)
+      
+    #------------------------
+    def ajoutOptionnel(self):
+    #------------------------
+      #print "ajoutOptionnel"
+      #print self.splitterSizes
+      self.splitterSizes[2] = self.oldSizeWidgetOptionnel
+      self.splitterSizes[1] = self.splitterSizes[1] - self.splitterSizes[2]
+      self.inhibeSplitter=0
+      self.restoreSplitterSizes(3)
 
 
     #-----------------------------
