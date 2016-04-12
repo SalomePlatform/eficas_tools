@@ -338,14 +338,18 @@ class JDCNode(QTreeWidgetItem,GereRegles):
               return
            self.fenetre=self.getPanel()
          
+        #print "hhhhhhhhhh", self.editor.splitter.sizes()
         for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
             widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
             self.editor.widgetCentraleLayout.removeItem(widget)
         # ceinture et bretelle
         #print 'old fenetre = ',self.editor.fenetreCentraleAffichee
+        #print "iiiiiiiiiiiiiii", self.editor.splitter.sizes()
         if self.editor.fenetreCentraleAffichee != None : 
             #print "j enleve ", self.editor.fenetreCentraleAffichee, self.editor.fenetreCentraleAffichee.node.item.nom
             self.editor.widgetCentraleLayout.removeWidget(self.editor.fenetreCentraleAffichee)
+
+            self.editor.fenetreCentraleAffichee.setParent(None)
             self.editor.fenetreCentraleAffichee.close()
 
         self.editor.widgetCentraleLayout.addWidget(self.fenetre)

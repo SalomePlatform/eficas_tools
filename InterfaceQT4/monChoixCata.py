@@ -37,7 +37,7 @@ class MonChoixCata(Ui_DChoixCata,QDialog):
   discrètes
   """
   def __init__(self, QWparent, listeCata, title = None):
-      QtGui.QDialog.__init__(self, QWparent)
+      QDialog.__init__(self, QWparent)
       self.setModal(True)
       self.setupUi(self)
       self.CBChoixCata.addItems(listeCata)

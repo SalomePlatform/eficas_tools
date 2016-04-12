@@ -29,6 +29,14 @@ from politiquesValidation  import PolitiqueUnique
 from qtSaisie              import SaisieValeur
 
 
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets import QComboBox, QCompleter
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
+
 class MonWidgetCB (Ui_WidgetCB,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
@@ -36,7 +44,11 @@ class MonWidgetCB (Ui_WidgetCB,Feuille):
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.determineChoix()
         self.setValeursApresBouton()
-        self.connect(self.CBChoix,SIGNAL("currentIndexChanged(int)"),self.ChoixSaisi)
+        if monEnvQT5:
+           self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
+        else :
+           self.connect(self.CBChoix,SIGNAL("currentIndexChanged(int)"),self.ChoixSaisi)
+
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.CBChoix)
         print self.objSimp.isoblig()
@@ -51,10 +63,14 @@ class MonWidgetCB (Ui_WidgetCB,Feuille):
       self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur))
       
   def determineChoix(self):
-      listeChoix=QStringList()
+        if monEnvQT5:
+           self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
+        else :
+
       for choix in self.monSimpDef.into:
           if not(type(choix) in types.StringTypes) : choix=str(choix)
-          listeChoix<<choix
+          if monEnvQT5: self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
+          else : self.connect(self.CBChoix,SIGNAL("currentIndexChanged(int)"),self.ChoixSaisi)
           self.CBChoix.addItem(choix)
       self.CBChoix.setEditable(True)
       monCompleteur=QCompleter(listeChoix,self) 

@@ -331,7 +331,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           encorevalide=self.valide_liste_partielle(item,listeActuelle)
           if encorevalide :
               listevalideliste.append(item)
-      print listevalideliste
+      #print listevalideliste
       return listevalideliste
 
   def get_liste_param_possible(self):

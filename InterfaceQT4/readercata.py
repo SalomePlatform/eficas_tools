@@ -44,7 +44,7 @@ from Extensions.eficas_exception import EficasException
 
 from determine import monEnvQT5
 if monEnvQT5 :
-   from PyQt5.QtWidgets import QMessageBox
+   from PyQt5.QtWidgets import QMessageBox, QApplication, QDialog
 else :
    from PyQt4.QtGui  import *
 
@@ -277,7 +277,7 @@ class READERCATA:
       
       lab=str(self.VERSION_EFICAS)+" "
       lab+=tr(" pour ")
-      lab+=QString(self.code) 
+      lab+=str(self.code) 
       lab+=tr(" avec le catalogue ")
       if ret == QDialog.Accepted:
           cata = cata_choice_list[widgetChoix.CBChoixCata.currentIndex()]
@@ -312,22 +312,43 @@ class READERCATA:
            if dict_clef_docu.has_key(oper.nom):
               oper.docu=dict_clef_docu[oper.nom]
 
-
    def cree_dico_inverse(self):
         self.dicoInverse={}
-        self.dico={}
+        self.dicoMC={} 
         listeEtapes=self.cata[0].JdC.commandes
         for e in self.cata[0].JdC.commandes:
+        #for e in (self.cata[0].JdC.commandes[0],):
+            #print e.nom
             self.traite_entite(e)
-        #print self.dicoInverse.keys()
         #for e in self.cata[0].JdC.commandes:
-        #    print "___________", e. nom , '__________________'
         #    self.cree_rubrique(e,self.dico,0)
+        #print self.dicoInverse
 
+        from Extensions import localisation
+        app=QApplication
+        # tres dommage  A Revoir
+        localisation.localise(app,"fr")
+        self.dicoInverseFrancais={}
+        self.dicoFrancaisAnglais={}
+        self.dicoAnglaisFrancais={}
+        for k in self.dicoInverse.keys():
+            listefr=[]
+            for nom, obj in self.dicoInverse[k] :
+                listefr.append((tr(nom),obj))
+                self.dicoFrancaisAnglais[tr(nom)]=nom
+                self.dicoAnglaisFrancais[nom]=tr(nom)
+            self.dicoInverseFrancais[tr(k)]=listefr
+            #print tr(k),listefr
+        if self.appliEficas.langue=="ang" : localisation.localise(app,"en")
+         
         
    def traite_entite(self,e):
+       #print "_______________"
+       #print e
+       #print e.nom
        boolIn=0
        for (nomFils, fils) in e.entites.items() :
+          self.dicoMC[nomFils]=fils
           self.traite_entite(fils)
           boolIn=1
        if boolIn==0 :
@@ -342,14 +363,12 @@ class READERCATA:
    def cree_rubrique(self,e,dico, niveau):
        from Accas import A_BLOC
        decale=niveau*"   "
-       if niveau != 0 :
-           if isinstance(e,A_BLOC.BLOC): print decale, e.condition 
-           else :                           print decale, e. nom  
+       #if niveau != 0 :
+       #    if isinstance(e,A_BLOC.BLOC): print decale, e.condition 
+       #    else :                           print decale, e. nom  
        for (nom, fils) in e.entites.items() :
            if  fils.entites.items() != [] : self.cree_rubrique(fils,dico,niveau+1)
-           else : print (niveau+1)*"   ", nom
+           #else : print (niveau+1)*"   ", nom
 
         
           
-              
-            

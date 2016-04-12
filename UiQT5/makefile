@@ -19,7 +19,7 @@ PY_FILES = myMain.py desBaseWidget.py desChoixCata.py desChoixCode.py desChoixCo
 
 
 
-QM_FILES=eficas_en.qm 
+QM_FILES=eficas_en.qm eficas_fr.qm
 
 %.py:%.ui
 	${PYUIC} -x -o $@ $<

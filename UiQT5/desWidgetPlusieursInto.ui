@@ -279,7 +279,7 @@
           <x>0</x>
           <y>0</y>
           <width>300</width>
-          <height>99</height>
+          <height>122</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
@@ -301,14 +301,14 @@
          <item row="0" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <widget class="QPushButton" name="pushButton_5">
+            <widget class="QPushButton" name="PBCata">
              <property name="text">
               <string>Catalogue</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_6">
+            <widget class="QPushButton" name="PBAlpha">
              <property name="text">
               <string>Alpha</string>
              </property>

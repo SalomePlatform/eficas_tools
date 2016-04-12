@@ -20,6 +20,7 @@
 # Modules Python
 import string,types,os
 
+from determine import monEnvQT5
 if monEnvQT5:
     from PyQt5.QtCore import Qt
 else :
@@ -49,7 +50,8 @@ class MonWidgetSimpTuple(Feuille):
            courant=getattr(self,nomLineEdit)
            if valeur !=None: courant.setText(str(valeur[i]))
            setattr(self,nomLineEdit,courant)
-           self.connect(courant,SIGNAL("returnPressed()"),self.valeursPressed)
+           if monEnvQT5: courant.returnPressed.connect(self.valeursPressed)
+           else : self.connect(courant,SIGNAL("returnPressed()"),self.valeursPressed)
 
   def valeursPressed(self):
       aLeFocus=self.focusWidget()

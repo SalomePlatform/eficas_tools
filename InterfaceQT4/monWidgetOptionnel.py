@@ -65,7 +65,7 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
   """
   """
   def __init__(self,parentQt):
-     print "dans init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
+     #print "dans init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
      QWidget.__init__(self,None)
      self.setupUi(self)
      self.dicoCb={}
@@ -81,11 +81,11 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.parentQt.editor.splitterSizes[2]=self.parentQt.editor.oldSizeWidgetOptionnel
      if self.parentQt.editor.splitterSizes[2] == 0 : self.parentQt.editor.splitterSizes[2] = 400
      self.parentQt.editor.restoreSplitterSizes()
-     print "fin init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
+     #print "fin init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
     
 
   def affiche(self,liste):
-     print "dans Optionnel ____ affiche", liste
+     #print "dans Optionnel ____ affiche", liste
      self.show()
      labeltext,fonte,couleur = self.parentMC.node.item.GetLabelText()
      l=labeltext
@@ -112,7 +112,7 @@ class MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
          self.dicoCb[cb]=mot
          self.commandesOptionnellesLayout.insertWidget(0,cb)
      self.scrollAreaCommandesOptionnelles.horizontalScrollBar().setSliderPosition(0)
-     print "Fin Optionnel ____ affiche", liste
+     #print "Fin Optionnel ____ affiche", liste
 
   def CBChecked(self):
       # ordre ?

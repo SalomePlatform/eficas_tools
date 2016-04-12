@@ -671,18 +671,6 @@ border-radius : 12px
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
        <item>
         <layout class="QVBoxLayout" name="commandesLayout">
          <property name="spacing">
@@ -690,13 +678,24 @@ border-radius : 12px
          </property>
         </layout>
        </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>5</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
     </widget>
    </item>
   </layout>
-  <zorder>scrollAreaCommandes</zorder>
-  <zorder>frameAffichage</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
@@ -713,7 +712,6 @@ border-radius : 12px
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>scrollAreaCommandes</tabstop>
   <tabstop>LENom</tabstop>
  </tabstops>
  <resources/>

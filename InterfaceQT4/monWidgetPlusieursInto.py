@@ -24,10 +24,10 @@ import string,types,os
 from determine import monEnvQT5
 if monEnvQT5:
     from PyQt5.QtWidgets  import QCheckBox, QScrollbar, QFrame, QApplication
-    from PyQt5.QtCore import QT
+    from PyQt5.QtCore import Qt
 else :
     from PyQt4.QtGui  import *
-    from PyQt4.QtCore import
+    from PyQt4.QtCore import *
 
 from Extensions.i18n import tr
 

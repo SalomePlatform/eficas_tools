@@ -56,6 +56,7 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
  
       self.setIconePoubelle()
       self.setIconesGenerales()
+      self.setValeurs()
       self.setValide()
 
      
@@ -97,6 +98,16 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
   def donnePremier(self):
       self.listeAffichageWidget[0].setFocus(7)
 
+
+  def setValeurs(self):
+        self.LENomFormule.setText(self.node.item.get_nom())
+        self.LECorpsFormule.setText(self.node.item.get_corps())
+        texte_args=""
+        if self.node.item.get_args() != None :
+            for i in self.node.item.get_args() :
+                if texte_args != "" : texte_args = texte_args +","
+                texte_args=texte_args + i
+        self.LENomsArgs.setText(texte_args)
 
 
   def nomChange(self):

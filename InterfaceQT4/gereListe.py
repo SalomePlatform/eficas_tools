@@ -24,7 +24,7 @@ import traceback
 from determine import monEnvQT5
 if monEnvQT5:
    from PyQt5.QtWidgets import QLineEdit, QLabel
-   from PyQt5.QtCore    import QEvent
+   from PyQt5.QtCore    import QEvent, Qt
    from PyQt5.QtGui     import QIcon
 else :
    from PyQt4.QtGui import *
@@ -108,6 +108,11 @@ class GereListe:
        self.connect(self.RBMoins,SIGNAL("clicked()"),self.moinsPushed)
        self.connect(self.RBPlus,SIGNAL("clicked()"),self.plusPushed)
        self.connect(self.RBVoisListe,SIGNAL("clicked()"),self.voisListePushed)
+       if hasattr(self,'PBAlpha'):
+          self.connect(self.PBAlpha,SIGNAL("clicked()"),self.alphaPushed)
+          self.connect(self.PBCata,SIGNAL("clicked()"),self.cataPushed)
+          self.connect(self.PBFind,SIGNAL("clicked()"),self.findPushed)
+          self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEFiltreReturnPressed)
 
    def connecterSignaux(self):
        self.RBHaut.clicked.connect(self.hautPushed)
@@ -115,6 +120,40 @@ class GereListe:
        self.RBMoins.clicked.connect(self.moinsPushed)
        self.RBPlus.clicked.connect(self.plusPushed)
        self.RBVoisListe.clicked.connect(self.voisListePushed)
+       if hasattr(self,'PBAlpha'):
+          self.PBCata.clicked.connect(self.cataPushed)
+          self.PBAlpha.clicked.connect(self.alphaPushed)
+          self.PBFind.clicked.connect(self.findPushed)
+          self.LEFiltre.returnPressed.connect(self.LEFiltreReturnPressed)
+
+   def filtreListe(self):
+       print self.alpha
+       l=[]
+       if self.filtre != "" :
+          for i in self.listeAAfficher :
+              if i.find(self.filtre) == 0 :l.append(i)
+          self.listeAAfficher=l
+       if self.alpha : self.listeAAfficher.sort()
+      
+   def LEFiltreReturnPressed(self):
+       self.filtre= self.LEFiltre.text()
+       self.prepareListeResultat()
+
+   def findPushed(self):
+       self.filtre= self.LEFiltre.text()
+       self.prepareListeResultat()
+
+   def alphaPushed(self):
+       print "alphaPushed" ,self.alpha
+       if self.alpha == 1 : return
+       print "lllllllmmmmmmmmmmmmmm"
+       self.alpha=1
+       self.prepareListeResultat()
+
+   def cataPushed(self):
+       if self.alpha == 0 : return
+       self.alpha=0
+       self.prepareListeResultat()
 
    def hautPushed(self):
        if self.NumLineEditEnCours == 1 : return
@@ -172,10 +211,19 @@ class GereListe:
 
    def plusPushed(self):
        if self.indexDernierLabel == self.monSimpDef.max:
-          self.editor.affiche_infos('nb max de valeurs : '+str(self.monSimpDef.max)+' atteint',Qt.red)
+          if len(self.listeValeursCourantes) < self.monSimpDef.max : self.chercheLigneVide()
+          else : self.editor.affiche_infos('nb max de valeurs : '+str(self.monSimpDef.max)+' atteint',Qt.red)
           return
        self.ajoutLineEdit()
        self.descendLesLignes()
+
+   def chercheLigneVide(self):
+       for i in range(self.indexDernierLabel) :
+          nomLineEdit=self.nomLine+str(i+1)
+          courant=getattr(self,nomLineEdit)
+          valeur=courant.getValeur()
+          if valeur=="" : courant.setFocus(7);return
+
 
    def descendLesLignes(self):
        if self.NumLineEditEnCours==self.indexDernierLabel : return

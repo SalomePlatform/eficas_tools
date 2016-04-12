@@ -26,9 +26,11 @@ from Extensions.i18n import tr
 from generator_python import PythonGenerator
 
 extensions=('.comm',)
-listeSupprime=('Jour','Mois','An','Heure','Minute','Seconde')
-DicoTransforme= {'MASS LUMPING':'MASS-LUMPING','MATRIX VECTOR' : 'MATRIX-VECTOR' , 
-                  'C U PRECON':'C-U PRECON','STAGE DISCHARGE' : 'STAGE-DISCHARGE'}
+#listeSupprime=()
+#DicoAglomere=()
+#DicoEficasToCas=()
+from aideAuxConvertisseurs import listeSupprime, DicoAglomere, DicoEficasToCas
+
 
 def entryPoint():
    """
@@ -55,6 +57,7 @@ class TELEMACGenerator(PythonGenerator):
    def gener(self,obj,format='brut',config=None):
        
       self.initDico()
+      print self.texteDico
       
       # Cette instruction genere le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)
@@ -70,6 +73,7 @@ class TELEMACGenerator(PythonGenerator):
       self.texteDico = ""
 
 
+
 #----------------------------------------------------------------------------------------
 # ecriture
 #----------------------------------------------------------------------------------------
@@ -78,7 +82,6 @@ class TELEMACGenerator(PythonGenerator):
        fileDico = fn[:fn.rfind(".")] + '.py'
        f = open( str(fileDico), 'wb')
        f.write( self.texteDico )
-       print self.texteDico
        f.close()
 
 #----------------------------------------------------------------------------------------
@@ -91,11 +94,8 @@ class TELEMACGenerator(PythonGenerator):
         nomMajuscule=obj.nom.upper()
         nom=nomMajuscule.replace('_',' ') 
         if nom in listeSupprime : return s
-        nomNouveau=nom
-        for k in DicoTransforme.keys() :
-            if k in nom :
-               nomNouveau=nom.replace(k,DicoTransforme[k])
-        self.texteDico+=nomNouveau+ "=" + s[0:-1]+ "\n"
+        if nom in DicoEficasToCas.keys() : nom=DicoEficasToCas[nom]
+        self.texteDico+=nom+ ":" + s[0:-1]+ "\n"
         return s
 
    def generMCFACT(self,obj):

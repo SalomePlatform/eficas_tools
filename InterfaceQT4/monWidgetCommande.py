@@ -25,7 +25,7 @@ from gereIcones import FacultatifOuOptionnel
 from determine import monEnvQT5
 
 if monEnvQT5:
-   from PyQt5.QtWidgets  import QApplication, QWidget
+   from PyQt5.QtWidgets  import QApplication, QWidget, QSpacerItem, QSizePolicy
    from PyQt5.QtGui import QFont, QIcon
    from PyQt5.QtCore import QTimer
 else :
@@ -113,7 +113,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.afficheOptionnel()
 
       self.editor.restoreSplitterSizes()
-      print "fin init de widget Commande"
+      #print "fin init de widget Commande"
       
 
   def donnePremier(self):

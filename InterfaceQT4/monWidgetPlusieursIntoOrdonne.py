@@ -29,28 +29,33 @@ from gereListe              import GereListe
 from gereListe              import GerePlie
 from gereListe              import LECustom
 from gereListe              import MonLabelListeClic
+from Extensions.i18n import tr
 
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets  import Qicon, QScrollbar, QFrame, QApplication
+    from PyQt5.QtWidgets  import   QFrame, QApplication, QScrollBar
     from PyQt5.QtCore import QTimer, QSize, Qt
+    from PyQt5.QtGui  import QIcon
 else :
     from PyQt4.QtGui  import *
-    from PyQt4.QtCore import 
+    from PyQt4.QtCore import *
 
 
 class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,GereListe,GerePlie):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        #print "MonWidgetPlusieursInto", nom, self
+  def __init__(self,node,monSimpDef,nom,objSimp,parent,commande):
+        print "MonWidgetPlusieursInto", nom, self
         self.nomLine="LEResultat"
         self.listeLE=[]
         self.ouAjouter=0
         self.NumLineEditEnCours=0
-        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parent,commanme)
+        self.alpha=0
+        self.filtre=""
+        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parent,commande)
         GereListe.__init__(self)
         self.finCommentaireListe()
         self.gereIconePlier()
+        self.listeValeursCourantes=self.node.item.GetListeValeurs()
         try :
           self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
         except :
@@ -71,27 +76,27 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
 
        
   def prepareListeResultat(self):
-       print "prepareListeResultat"
        for i in self.listeLE: i.close()
        self.listeLE=[]
        self.vScrollBar = self.scrollArea.verticalScrollBar()
-       listeValeursCourantes=self.node.item.GetListeValeurs()
+       self.listeValeursCourantes=self.node.item.GetListeValeurs()
        if hasattr(self.node.item.definition.validators,'set_MCSimp'):
             obj=self.node.item.getObject()
             self.node.item.definition.validators.set_MCSimp(obj)
             if self.node.item.isvalid() == 0 :
                liste=[]
-               for item in listeValeursCourantes:
+               for item in self.listeValeursCourantes:
                    if self.node.item.definition.validators.verif_item(item)==1: liste.append(item)
                self.listeAAfficher=self.node.item.get_liste_possible(liste)
             else: 
                self.listeAAfficher=self.node.item.get_liste_possible([])
        else :
-            self.listeAAfficher=self.node.item.get_liste_possible(listeValeursCourantes)
+            self.listeAAfficher=self.node.item.get_liste_possible(self.listeValeursCourantes)
 
        if self.listeAAfficher==[] : 
           self.ajoutLE(0)
           return
+       self.filtreListe()
        if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
        else : self.setMinimumHeight(len(self.listeAAfficher)*30)
 
@@ -105,14 +110,14 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
        
       
   def setValeurs(self):
-       listeValeursCourantes=self.node.item.GetListeValeurs()
+       self.listeValeursCourantes=self.node.item.GetListeValeurs()
        if self.monSimpDef.max == "**" : aConstruire=7
        else                           : aConstruire=self.monSimpDef.max
-       if len(listeValeursCourantes) > aConstruire : aConstruire=len(listeValeursCourantes)
+       if len(self.listeValeursCourantes) > aConstruire : aConstruire=len(self.listeValeursCourantes)
        for i in range(1,aConstruire+1): self.ajoutLEResultat(i)
        self.indexDernierLabel=aConstruire
        index=1
-       for val in listeValeursCourantes :
+       for val in self.listeValeursCourantes :
           nomLE="LEResultat"+str(index)
           courant=getattr(self,nomLE)
           courant.setText(str(val))
@@ -170,13 +175,13 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         if liste ==[]    : return
         listeVal=[]
 
-        listeValeursCourantes=self.node.item.GetListeValeurs()
+        self.listeValeursCourantes=self.node.item.GetListeValeurs()
         min,max = self.node.item.GetMinMax()
-        if len(listeValeursCourantes) +1 > max : 
+        if len(self.listeValeursCourantes) +1 > max : 
            self.editor.affiche_infos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
            return
         else :
-           self.editor.affiche_infos(tr(""))
+           self.editor.affiche_infos("")
 
         affiche=False
         for i in range(1,self.indexDernierLabel+1):
@@ -212,9 +217,9 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(listeVal,-1,[])
         
 
-        listeValeursCourantes=self.node.item.GetListeValeurs()
+        self.listeValeursCourantes=self.node.item.GetListeValeurs()
         min,max = self.node.item.GetMinMax()
-        if len(listeValeursCourantes) < min : 
+        if len(self.listeValeursCourantes) < min : 
            self.editor.affiche_infos(tr("Nombre minimal de valeurs : ") + str(min),Qt.red)
         else :
            self.editor.affiche_infos("")

@@ -79,7 +79,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../Editeur/icons/minusnode.png</normaloff>../Editeur/icons/minusnode.png</iconset>
+           <normaloff>../../../.designer/Editeur/icons/minusnode.png</normaloff>../../../.designer/Editeur/icons/minusnode.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -117,7 +117,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../Editeur/icons/ast-green-ball.png</normaloff>../Editeur/icons/ast-green-ball.png</iconset>
+           <normaloff>../../../.designer/Editeur/icons/ast-green-ball.png</normaloff>../../../.designer/Editeur/icons/ast-green-ball.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -232,7 +232,7 @@
          </property>
          <property name="icon">
           <iconset theme="find">
-           <normaloff>.</normaloff>.</iconset>
+           <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -247,14 +247,14 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QPushButton" name="pushButton_5">
+        <widget class="QPushButton" name="PBCata">
          <property name="text">
           <string>Catalogue</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_6">
+        <widget class="QPushButton" name="PBAlpha">
          <property name="text">
           <string>Alpha</string>
          </property>
@@ -586,7 +586,7 @@
             </property>
             <property name="icon">
              <iconset theme="go-up">
-              <normaloff>.</normaloff>.</iconset>
+              <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -621,7 +621,7 @@
             </property>
             <property name="icon">
              <iconset theme="go-down">
-              <normaloff>.</normaloff>.</iconset>
+              <normaloff>../../../.designer/backup</normaloff>../../../.designer/backup</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -656,7 +656,7 @@
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../Editeur/icons/MoinsBleu.png</normaloff>../Editeur/icons/MoinsBleu.png</iconset>
+              <normaloff>../../../.designer/Editeur/icons/MoinsBleu.png</normaloff>../../../.designer/Editeur/icons/MoinsBleu.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -691,7 +691,7 @@
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../Editeur/icons/PlusBleu.png</normaloff>../Editeur/icons/PlusBleu.png</iconset>
+              <normaloff>../../../.designer/Editeur/icons/PlusBleu.png</normaloff>../../../.designer/Editeur/icons/PlusBleu.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -741,7 +741,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../Editeur/icons/verre-loupe-icone-6087-64.png</normaloff>../Editeur/icons/verre-loupe-icone-6087-64.png</iconset>
+            <normaloff>../../../.designer/Editeur/icons/verre-loupe-icone-6087-64.png</normaloff>../../../.designer/Editeur/icons/verre-loupe-icone-6087-64.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -812,7 +812,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../Editeur/icons/deleteRond.png</normaloff>../Editeur/icons/deleteRond.png</iconset>
+         <normaloff>../../../.designer/Editeur/icons/deleteRond.png</normaloff>../../../.designer/Editeur/icons/deleteRond.png</iconset>
        </property>
        <property name="iconSize">
         <size>

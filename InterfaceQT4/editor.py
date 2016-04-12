@@ -1403,15 +1403,15 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #------------------------------------
       if self.inhibeSplitter : return
       if not hasattr(self,'splitter') : return
-      print "______________________"
-      print "saveSplitterSizes"
-      print self.splitterSizes
       if self.splitterSizes[2] != 0 : self.oldSizeWidgetOptionnel = self.splitterSizes[2]
-      for i in range(len(self.splitter.sizes())):
+      # print  self.splitterSizes
+      #print self.splitter.sizes()
+      # PNPNPNPN parfoir self.splitter.sizes() a une longueur de 4...
+      nbAGarder=len(self.splitter.sizes())
+      if nbAGarder > 3 : nbAGarder=3
+      for i in range(nbAGarder):
          self.splitterSizes[i] = self.splitter.sizes()[i]
          self.splitter.widget(i).resizeEvent=self.saveSplitterSizes
-      print self.splitterSizes
-      print "______________________"
 
 
     #-----------------------------------------
@@ -1422,7 +1422,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if not(hasattr(self,'splitter')) : return
       newSizes=self.splitterSizes[:nbWigdet]
       self.splitter.setSizes(newSizes)
-      print self.splitterSizes
       self.inhibeSplitter = 0
    
     #------------------------

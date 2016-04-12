@@ -90,7 +90,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
        
       #self.editor.labelCommentaire.setText("")
       if self.editor.widgetOptionnel!= None : 
-         self.editor.widgetOptionnel.close()
+         self.editor.fermeOptionnel()
          self.editor.widgetOptionnel=None
       self.name=None
 

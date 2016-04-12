@@ -3,6 +3,10 @@
 <context>
     <name>@default</name>
     <message>
+       <source>Hauteur constante</source>
+       <translation>Constant depth</translation>
+    </message>
+    <message>
         <location filename="../../convert/convert_ini.py" line="81"/>
         <source>lecture du fichier impossible :</source>
         <translation>unable to read file :</translation>
