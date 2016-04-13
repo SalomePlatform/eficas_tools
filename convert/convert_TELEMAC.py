@@ -32,10 +32,11 @@ pattern_OUI   = re.compile(r"^ *OUI *")
 pattern_oui   = re.compile(r"^ *oui *")
 pattern_NON   = re.compile(r"^ *NON *")
 pattern_non   = re.compile(r"^ *non *")
+pattern_vide  = re.compile(r"^ *$")
 
 from aideAuxConvertisseurs import DicoEficasToCas, ListeSupprimeCasToEficas
 from aideAuxConvertisseurs import ListeCalculCasToEficas, DicoAvecMajuscules
-from enumDicoTelemac       import DicoEnumCasEn
+from enumDicoTelemac2      import DicoEnumCasEn
 
 from Extensions import localisation
 
@@ -190,6 +191,11 @@ class TELEMACParser(PythonParser):
               while valeur[0]  == " " : valeur=valeur[1:]
               valeur=valeur[0].upper()+valeur[1:].lower()
               valeur=tr(valeur)
+          try    : valeur=eval(valeur,{})
+          except : pass
+          if nom in DicoEnumCasEn.keys(): 
+             try    : valeur=DicoEnumCasEn[nom][valeur]
+             except : pass
           if 'Fichier' in obj.type or 'TXM' in obj.type or 'Repertoire' in obj.type :
               valeur=str(valeur)
               while valeur[-1] == " " : valeur=valeur[0:-1]
@@ -200,9 +206,26 @@ class TELEMACParser(PythonParser):
             if pattern_OUI.match(valeur) or  pattern_oui.match(valeur) : self.textePy += nom + "= True,"
             if pattern_NON.match(valeur) or  pattern_non.match(valeur) : self.textePy += nom + "= False,"
             return
-          if nom in DicoEnumCasEn.keys():
-            valeur=DicoEnumCasEn[nom][valeur]
           self.textePy += nom + "=" + str(valeur) +","
+       else :
+          if pattern_vide.match(valeur) : return
+          while valeur[-1] == " " : valeur=valeur[0:-1]
+          while valeur[0]  == " " : valeur=valeur[1:]
+
+          if   ";" in valeur : valeur=valeur.split(';')
+          elif "," in valeur : valeur=valeur.split(',')
+
+          if valeur == None : return
+          newVal=[]
+          for v in valeur :
+            try :    v==eval(v,{})
+            except : pass
+            if nom in DicoEnumCasEn.keys():
+               try    : v=DicoEnumCasEn[nom][v]
+               except : pass
+            newVal.append(v)
+          self.textePy += nom + "=" + str(newVal) +","
+          
 
 
 

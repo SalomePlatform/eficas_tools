@@ -91,3 +91,8 @@ DicoFrancaisAvecApostrophe= {
 ListeSupprimeCasToEficas = ('Validation','Parallel_Processors')
 ListeCalculEficasToCas   = ('Validation',)
 ListeCalculCasToEficas   = ('Option_De_Supg', 'Forme_De_La_Convection')
+
+DicoAvecMajuscules={
+  'WGS84' : 'WGS84', 
+  'TPXO'  : 'TPXO', 
+  'Saint-venant ef' : 'Saint-venant EF'}

@@ -23,7 +23,7 @@ import string,types,os
 # Modules Eficas
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets  import QCheckBox, QScrollbar, QFrame, QApplication
+    from PyQt5.QtWidgets  import QCheckBox, QScrollBar, QFrame, QApplication
     from PyQt5.QtCore import Qt
 else :
     from PyQt4.QtGui  import *
@@ -47,7 +47,8 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
         self.parentQt.commandesLayout.insertWidget(-1,self)
         #if len(self.listeValeursCourantes) == len(self.monSimpDef.into) : self.CBCheck.setChecked(False)
         #else : self.CBCheck.setChecked(True)
-        self.connect(self.CBCheck, SIGNAL('stateChanged(int)'),self.change)
+        if monEnvQT5 : self.CBCheck.stateChanged.connect(self.change)
+        else         : self.connect(self.CBCheck, SIGNAL('stateChanged(int)'),self.change)
         self.gereIconePlier()
         self.inhibe=False
         self.finCommentaireListe()
@@ -114,7 +115,8 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
            #if self.monSimpDef.into[i] in self.listeValeursCourantes : 
            if self.listeAAfficher[i] in self.PourEtreCoche : 
               courant.setChecked(True)
-           self.connect(courant,SIGNAL("toggled(bool)"),self.changeValeur)
+           if monEnvQT5 : courant.toggled.connect(self.changeValeur)
+           else :         self.connect(courant,SIGNAL("toggled(bool)"),self.changeValeur)
        self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)
        
 
