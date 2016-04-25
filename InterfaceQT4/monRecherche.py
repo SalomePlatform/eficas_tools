@@ -24,7 +24,7 @@ from desRecherche import Ui_desRecherche
 from determine import monEnvQT5
 if monEnvQT5:
     from PyQt5.QtWidgets import QDialog
-    from PyQt4.QtCore import Qt
+    from PyQt5.QtCore import Qt
 else :
     from PyQt4.QtGui  import *
     from PyQt4.QtCore import *

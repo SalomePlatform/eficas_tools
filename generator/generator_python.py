@@ -421,7 +421,7 @@ class PythonGenerator:
          else:
            # on est en presence d'un MCSIMP : on recupere une string
            text =self.generator(v)
-           l.append(v.nom+'='+text)
+           if v.nom != "Consigne" :  l.append(v.nom+'='+text)
       # il faut etre plus subtil dans l'ajout de la virgule en differenciant 
       # le cas ou elle est obligatoire (si self a des freres cadets 
       # dans self.parent) ou non

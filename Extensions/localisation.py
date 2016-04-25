@@ -20,6 +20,7 @@ and installs them to a ``QApplication``.
 
 """
 
+import os
 from determine import monEnvQT5
 if monEnvQT5 :
    from PyQt5.QtCore import QTranslator
@@ -47,10 +48,12 @@ def localise(application, locale=None ):
        from PyQt5.QtCore import QLibraryInfo
        from PyQt5.QtCore import QLocale
        from PyQt5.QtWidgets import QApplication
+       monPath=os.path.join(os.path.dirname(__file__),'..','UiQT5')
     else :
        from PyQt4.QtCore import QLibraryInfo
        from PyQt4.QtCore import QLocale
        from PyQt4.QtGui import QApplication
+       monPath=os.path.join(os.path.dirname(__file__),'..','UiQT4')
 
     sys_locale = QLocale.system().name()
 
@@ -71,8 +74,8 @@ def localise(application, locale=None ):
     #    print "Unable to load Qt base translator!"
     
     global eficas_translator
-    import os
-    monPath=os.path.join(os.path.dirname(__file__),'..','UiQT4')
+    if locale=="ang" : locale="en"
+    #print "eficas_" + locale, monPath
     if eficas_translator.load("eficas_" + locale, monPath):
         QApplication.installTranslator(eficas_translator)
     else:

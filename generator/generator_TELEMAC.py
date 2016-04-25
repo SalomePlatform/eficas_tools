@@ -30,6 +30,7 @@ extensions=('.comm',)
 #DicoAglomere=()
 #DicoEficasToCas=()
 from aideAuxConvertisseurs import listeSupprime, DicoAglomere, DicoEficasToCas
+from enumDicoTelemac2      import DicoEnumCasEnInverse
 
 
 def entryPoint():
@@ -70,6 +71,12 @@ class TELEMACGenerator(PythonGenerator):
    
    def initDico(self) :
  
+      self.PE=False
+      self.FE=False
+      self.VE=False
+      self.textPE = 'PRESCRIBED ELEVATIONS :'
+      self.textFE = 'PRESCRIBED FLOWRATES :'
+      self.textVE = 'PRESCRIBED VELOCITY :'
       self.texteDico = ""
 
 
@@ -88,21 +95,90 @@ class TELEMACGenerator(PythonGenerator):
 #  analyse de chaque noeud de l'arbre 
 #----------------------------------------------------------------------------------------
 
+   def generPROC_ETAPE(self,obj):
+        self.texteDico += '/------------------------------------------------------/\n'
+        self.texteDico += '/\t\t\t'+obj.nom +'\n'
+        self.texteDico += '/------------------------------------------------------/\n'
+        s=PythonGenerator.generPROC_ETAPE(self,obj)
+        if obj.nom in TELEMACGenerator.__dict__.keys() : apply(TELEMACGenerator.__dict__[obj.nom],(self,obj))
+        
+        return s
+
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
         s=PythonGenerator.generMCSIMP(self,obj)
+        if obj.nom == "Title" :
+            print s
+            print str(obj.valeur)
+            print repr(obj.valeur)
+
+       
+        # Attention pas sur --> ds certains cas non traite par MCFACT ?
+        # a reflechir avec Yoann 
+        if hasattr(obj.definition,'defaut') :
+           if obj.definition.defaut == obj.valeur : return s
+
         nomMajuscule=obj.nom.upper()
         nom=nomMajuscule.replace('_',' ') 
-        if nom in listeSupprime : return s
+        if nom in listeSupprime or s == "" : return s
+
+        sTelemac=s[0:-1]
+        if not( type(obj.valeur) in (types.TupleType,types.ListType) ):
+           if obj.nom in DicoEnumCasEnInverse.keys():  
+             try : sTelemac=DicoEnumCasEnInverse[obj.nom][obj.valeur]
+             except : print "generMCSIMP Pb avec ", obj.nom, obj.valeur
+        if type(obj.valeur) in (types.TupleType,types.ListType) :
+           if obj.nom in DicoEnumCasEnInverse.keys():  
+             sT = "'"
+             for v in obj.valeur:
+               try : sT +=DicoEnumCasEnInverse[obj.nom][v] +";"
+               except : print "generMCSIMP Pb avec ", obj.nom, v
+             sTelemac=sT[0:-1]+"'"
+
         if nom in DicoEficasToCas.keys() : nom=DicoEficasToCas[nom]
-        self.texteDico+=nom+ ":" + s[0:-1]+ "\n"
+        self.texteDico+=nom+ ":" + str(sTelemac) + "\n"
         return s
 
    def generMCFACT(self,obj):
       """
-        Recalule les jours et les heures
       """
       s=PythonGenerator.generMCFACT(self,obj)
+      if obj.nom in TELEMACGenerator.__dict__.keys() : apply(TELEMACGenerator.__dict__[obj.nom],(self,obj))
+ 
       return s
 
+  
+   def Liquid_Boundaries(self,obj):
+      #print obj.nom , dir(obj)
+      if 'Type_Condition' in  obj.liste_mc_presents() :
+          objForme=obj.get_child('Type_Condition')
+          valForme=objForme.valeur
+
+          nomBloc='b_'+valForme.split(" ")[1] 
+          if nomBloc in  obj.liste_mc_presents() :
+             objBloc=obj.get_child(nomBloc)
+             objValeur=objBloc.get_child(objBloc.liste_mc_presents()[0])
+             valeur=objValeur.valeur
+             if valeur== None : valeur="0."
+          if valForme == 'Prescribed Elevations' :
+              self.PE=True
+              self.textPE += str(valeur) +"; "
+          else : self.textPE += "0.; "
+          if valForme == 'Prescribed Flowrates' :
+              self.FE=True
+              self.textFE += str(valeur) +"; "
+          else : self.textFE += "0.; "
+          if valForme == 'Prescribed Velocity'  :
+              self.VE=True
+              self.textVE += str(valeur) +"; "
+          else : self.textVE += "0.; "
+      print self.textPE, self.textFE,self.textVE
+
+   def BOUNDARY_CONDITIONS(self,obj):
+       if self.FE :  self.texteDico += self.textFE[0:-1]+'\n' 
+       if self.VE :  self.texteDico += self.textVE[0:-1]+'\n' 
+       if self.PE :  self.texteDico += self.textPE[0:-1]+'\n' 
+
+   def Validation(self,obj):
+       self.textDico += "Validation = OUI \n"
   

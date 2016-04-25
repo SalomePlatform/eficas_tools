@@ -36,8 +36,10 @@ class MonLabelClic(QLabel) :
         QLabel.__init__(self,parent)
         # Pas propre mais impossible de faire fonctionner isinstance sur Groupe, MonWidgetCommande 
         # PNPNPN ? a ameliorer
-        if isinstance (parent,QFrame):
-           parent=parent.parent()
+        if isinstance (parent,QFrame): parent=parent.parent()
+        while not( hasattr(parent,'traiteClicSurLabel')) :
+             try : parent=parent.parent()
+             except : print "pb avec MonLabelClic"; break
         self.parent=parent
 
 
