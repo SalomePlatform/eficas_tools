@@ -687,8 +687,8 @@ class STDGenerateur :
         txt += "  #  view.show(block=True)\n"
         txt += "  #else:\n"
         txt += "  #  print 'Warning: cannot display image', %s.getBitmap(), '(probably because no X server was found)'\n" % self.variable["kernelSmoothedGraph"]
-        txt += "  print 'bitmap =', %s.getBitmap()\n"  % self.variable["kernelSmoothedGraph"]
-        txt += "  print 'postscript =', %s.getPostscript()\n"  % self.variable["kernelSmoothedGraph"]
+        #txt += "  print 'bitmap =', %s.getBitmap()\n"  % self.variable["kernelSmoothedGraph"]
+        #txt += "  print 'postscript =', %s.getPostscript()\n"  % self.variable["kernelSmoothedGraph"]
         txt += "\n"
    
     return txt
