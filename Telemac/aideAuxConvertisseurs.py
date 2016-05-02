@@ -20,23 +20,26 @@
 """Ce module contient le plugin generateur de fichier au format  Code_Carmel3D pour EFICAS.
 """
 
-listeSupprime  = ( 'DAY', 'MONTH', 'YEAR', 'HOUR', 'MINUTE', 'SECOND', 'CONSIGNE'
-                   'LIMIT VALUES H', 'LIMIT VALUES U', 'LIMIT VALUES V', 'LIMIT VALUES T',
-                   'SISYPHE', 'TOMAWAC', 'DELWAQ',
-                   'ADVECTION U AND V', 'ADVECTION H',
-                   'ADVECTION TRACERS', 'ADVECTION K AND EPSILON',
-                   'TOLERANCE FOR H', 'TOLERANCE FOR U', 'TOLERANCE FOR V', 'TOLERANCE FOR COUT',
-                   'SUPG OPTION U AND V', 'SUPG OPTION H', 'SUPG OPTION TRACERS', 'SUPG OPTION K AND EPSILON',
-                   'UPWIND COEFFICIENTS Of U AND V', 'UPWIND COEFFICIENTS OF H', 
-)
-
+listeSupprime  = ( 
+      'CONSIGNE', 'TYPE CONDITION',
+      'PRESCRIBED ELEVATIONS', 'PRESCRIBED FLOWRATES', 'PRESCRIBED VELOCITY',
+      'ADVECTION U AND V', 'ADVECTION H', 'ADVECTION TRACERS', 'ADVECTION K AND EPSILON',
+      'TYPE OF ADVECTION U AND V', 'TYPE OF ADVECTION H', 
+      'TYPE OF ADVECTION TRACERS', 'TYPE OF ADVECTION K AND EPSILON',
+      'SUPG OPTION U AND V', 'SUPG OPTION H', 'SUPG OPTION TRACERS', 'SUPG OPTION K AND EPSILON',
+      'UPWIND COEFFICIENTS Of U AND V', 'UPWIND COEFFICIENTS OF H', 
+      'UPWIND COEFFICIENTS TRACERS', 'UPWIND COEFFICIENTS K AND EPSILON', 
+      'DAY', 'MONTH', 'YEAR', 'HOUR', 'MINUTE', 'SECOND', 
+) 
+               
+#                   'LIMIT VALUES H', 'LIMIT VALUES U', 'LIMIT VALUES V', 'LIMIT VALUES T',
+#                   'SISYPHE', 'TOMAWAC', 'DELWAQ',
+#                   'TOLERANCE FOR H', 'TOLERANCE FOR U', 'TOLERANCE FOR V', 'TOLERANCE FOR COUT',
+#
 DicoAglomere= {
 'LIMIT VALUES'        : ( 'Limit_Values_H', 'Limit_Values_U', 'Limit_Values_V', 'Limit_Values_T'),
 'COUPLING WITH'       : ( 'Sisyphe', 'Tomawac', 'Delwaq'),
-'TYPE OF ADVECTION'   : ( 'Advection_U_And_V', 'Advection_H', 'Advection_Tracers','Advection_K_And_Epsilon'),
 'TOLERANCE'           : ( 'Tolerance_For_H', 'Tolerance_For_U', 'Tolerance_For_V', 'Tolerance_For_cout',),
-'SUPG OPTION'         : ( 'Supg_Option_U_And_V', 'Supg_Option_H', 'Supg_Option_Tracers', 'Supg_Option_K_And_Epsilon',),
-'UPWIND COEFFICIENTS' : ( 'Upwind_Coefficients_Of_U_And_V', 'Upwind_Coefficients_Of_H', ),
 }
 
 DicoEficasToCas= {

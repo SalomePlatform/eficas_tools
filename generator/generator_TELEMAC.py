@@ -26,11 +26,8 @@ from Extensions.i18n import tr
 from generator_python import PythonGenerator
 
 extensions=('.comm',)
-#listeSupprime=()
-#DicoAglomere=()
-#DicoEficasToCas=()
 from aideAuxConvertisseurs import listeSupprime, DicoAglomere, DicoEficasToCas
-from enumDicoTelemac2      import DicoEnumCasEnInverse
+from enumDicoTelemac       import DicoEnumCasEnInverse
 
 
 def entryPoint():
@@ -58,7 +55,7 @@ class TELEMACGenerator(PythonGenerator):
    def gener(self,obj,format='brut',config=None):
        
       self.initDico()
-      print self.texteDico
+      #print self.texteDico
       
       # Cette instruction genere le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)
@@ -78,6 +75,7 @@ class TELEMACGenerator(PythonGenerator):
       self.textFE = 'PRESCRIBED FLOWRATES :'
       self.textVE = 'PRESCRIBED VELOCITY :'
       self.texteDico = ""
+ 
 
 
 
@@ -100,6 +98,8 @@ class TELEMACGenerator(PythonGenerator):
         self.texteDico += '/\t\t\t'+obj.nom +'\n'
         self.texteDico += '/------------------------------------------------------/\n'
         s=PythonGenerator.generPROC_ETAPE(self,obj)
+        #print obj
+        #print obj.nom
         if obj.nom in TELEMACGenerator.__dict__.keys() : apply(TELEMACGenerator.__dict__[obj.nom],(self,obj))
         
         return s
@@ -153,6 +153,7 @@ class TELEMACGenerator(PythonGenerator):
       if 'Type_Condition' in  obj.liste_mc_presents() :
           objForme=obj.get_child('Type_Condition')
           valForme=objForme.valeur
+          if valForme == None : return
 
           nomBloc='b_'+valForme.split(" ")[1] 
           if nomBloc in  obj.liste_mc_presents() :
@@ -172,7 +173,7 @@ class TELEMACGenerator(PythonGenerator):
               self.VE=True
               self.textVE += str(valeur) +"; "
           else : self.textVE += "0.; "
-      print self.textPE, self.textFE,self.textVE
+      #print self.textPE, self.textFE,self.textVE
 
    def BOUNDARY_CONDITIONS(self,obj):
        if self.FE :  self.texteDico += self.textFE[0:-1]+'\n' 
@@ -180,5 +181,54 @@ class TELEMACGenerator(PythonGenerator):
        if self.PE :  self.texteDico += self.textPE[0:-1]+'\n' 
 
    def Validation(self,obj):
-       self.textDico += "Validation = OUI \n"
-  
+       self.texteDico += "VALIDATION : True \n"
+ 
+   def Date_De_L_Origine_Des_Temps (self,obj):
+       an=obj.get_child('Year').valeur
+       mois=obj.get_child('Month').valeur
+       jour=obj.get_child('Day').valeur
+       #print an, mois, jour
+       self.texteDico += "ORIGINAL DATE OF TIME  :"+ str(an)+ " ,"+str(mois)+ "," +str(jour)+ "\n"
+
+   def Original_Hour_Of_Time (self,obj):
+       hh=obj.get_child('Hour').valeur
+       mm=obj.get_child('Minute').valeur
+       ss=obj.get_child('Second').valeur
+       #print hh, mm, ss
+       self.texteDico += "ORIGINAL HOUR OF TIME :"+str(hh)+" ,"+str(mm)+ ","+str(ss)+"\n"
+
+   def Type_Of_Advection(self,obj):
+       listeAdvection=[1,5,1,1]
+       listeSupg=[2,2,2,2]
+       listeUpwind=[1.,1.,1.,1.]
+       self.listeMCAdvection=[]
+       self.chercheChildren(obj)
+       dicoSuf={ 'U_And_V' : 0, 'H' : 1, 'K_And_Epsilon' : 2, 'Tracers' : 3}
+       for c in  self.listeMCAdvection:
+           #print c.nom
+           if c.nom[0:18] == 'Type_Of_Advection_' and c.valeur!=None:
+              suf=c.nom[18:]
+              index=dicoSuf[suf]
+              #print c.valeur
+              #print DicoEnumCasEnInverse['Type_Of_Advection']
+              listeAdvection[index]=DicoEnumCasEnInverse['Type_Of_Advection'][c.valeur]
+           if c.nom[0:13] == 'Supg_Option_' and c.valeur!=None:
+              suf=c.nom[13:]
+              index=dicoSuf[suf]
+              listeAdvection[index]=DicoEnumCasEnInverse['Supg_Option'][c.valeur]
+           if c.nom[0:23] == 'Upwind_Coefficients_Of_' and c.valeur!=None:
+              suf=c.nom[23:]
+              index=dicoSuf[suf]
+              listeUpwind[index]=c.valeur
+       self.texteDico += "TYPE OF ADVECTION = "+ str(listeAdvection) + "\n"
+       self.texteDico += "SUPG OPTION = "+ str(listeSupg) + "\n"
+       self.texteDico += "UPWIND COEFFICIENTS = "+ str(listeUpwind) + "\n"
+       
+   def chercheChildren(self,obj):
+       for c in obj.liste_mc_presents():
+           objc=obj.get_child(c)
+           if hasattr(objc,'liste_mc_presents') and objc.liste_mc_presents() != [] : self.chercheChildren(objc)
+           else : self.listeMCAdvection.append(objc)
+
+      
+ 

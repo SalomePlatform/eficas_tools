@@ -204,7 +204,7 @@ The data in this file shall be read on channel 25.',),
 #    ------------------------------------
      Initial_Conditions = SIMP(statut = 'o',typ = 'TXM',
 #    ------------------------------------
-          into = ['Zero elevation','Constant elevation','Zero depth','Constant depth','Special','TPXO satellite altimetry'],
+          into = ['Zero elevation','Constant elevation','Zero depth','Constant depth','Special','Tpxo satellite altimetry'],
           defaut = 'Zero elevation',
           fr = "Permet de definir les conditions initiales sur les hauteurs d'eau. Les valeurs possibles sont :\n\
     - COTE NULLE. Initialise la cote de surface libre a 0. \nLes hauteurs d'eau initiales sont alors retrouvees en faisant la difference entre les cotes de surface libre et du fond. \n\
@@ -269,7 +269,8 @@ The data in this file shall be read on channel 25.',),
 
 
 #    ------------------------------------
-     Computation_Continued = SIMP( statut = 'o',typ = bool,defaut = False,position = "global_jdc"),
+     #Computation_Continued = SIMP( statut = 'o',typ = bool,defaut = False,position = "global_jdc"),
+     Computation_Continued = SIMP( statut = 'o',typ = bool,defaut = False),
 #    ------------------------------------
 
 #    ------------------------------------
@@ -550,7 +551,7 @@ BOUNDARY_CONDITIONS = PROC(nom = "BOUNDARY_CONDITIONS",op = None,
 #    ------------------------------------
                 
 #        ------------------------------------
-         Options = SIMP(statut = 'f',typ = 'I',
+         Option_For_Liquid_Boundaries = SIMP(statut = 'f',typ = 'I',
 #        ------------------------------------
             into = ['Classical boundary conditions','Thompson method based on characteristics'],
             fr = 'On donne 1 entier par frontiere liquide',
@@ -804,7 +805,7 @@ the product of relevant options shall be made.',
 # soizic. choix 3 et 4 et 13 et 14
 #            Attention recalcul de Type_Of_Advection
 #             ------------------------------------
-              Advection_Of_U_And_V = SIMP(statut = 'o',typ = bool, defaut = True,
+              Advection_Of_U_And_V = SIMP(statut = 'f',typ = bool, defaut = True,
 #             ------------------------------------
                   fr = 'Prise en compte ou non de la convection de U et V.',
                   ang = 'The advection of U and V is taken into account or ignored.'), 
@@ -816,9 +817,9 @@ the product of relevant options shall be made.',
                        Type_Of_Advection_U_And_V = SIMP(statut = 'o',typ = 'TXM',position = "global",
 #                      ------------------------------------
                            into = ["Characteristics", "SUPG", "Conservative N-scheme",  'Conservative N-scheme',\
-                           'Conservative PSI-scheme', 'Non conservative PSI scheme', 'Implicit non conservative N scheme',\
-                           'Edge-based N-scheme'],
-                             defaut = "Characteristics", ),
+                           'Conservative PSI-scheme', 'Non conservative PSI-scheme', 'Implicit non conservative N-scheme',\
+                           'Edge-based N-scheme'], 
+                           defaut = "Characteristics", ),
 
 #                      ------------------------------------
                        b_upwind = BLOC(condition = "Type_Of_Advection_U_And_V == 'SUPG'",
@@ -846,10 +847,10 @@ the product of relevant options shall be made.',
 #                      ------------------------------------
                        Type_Of_Advection_H = SIMP(statut = 'o',typ = 'TXM',position = "global",
 #                      ------------------------------------
-                           into = ["characteristics", "SUPG", "conservative N-scheme",  'conservative N-scheme',\
-                              'conservative PSI-scheme', 'non conservative PSI scheme', 'implicit non conservative N scheme',\
-                              'edge-based N-scheme'],
-                           defaut = "conservative PSI-scheme",),
+                           into = ["Characteristics", "SUPG", "Conservative N-scheme",  'Conservative N-scheme',\
+                           'Conservative PSI-scheme', 'Non conservative PSI-scheme', 'Implicit non conservative N-scheme',\
+                           'Edge-based N-scheme'],
+                           defaut = "Conservative PSI-scheme",),
 #                      ------------------------------------
                        b_upwind_H = BLOC(condition = "Type_Of_Advection_H == 'SUPG'",
 #                      ------------------------------------
@@ -877,14 +878,14 @@ the product of relevant options shall be made.',
                        Type_Of_Advection_K_And_Epsilon = SIMP(statut = 'o',typ = 'TXM',position = "global",
 #                      ------------------------------------
                            into = ["Characteristics", "SUPG", "Conservative N-scheme",  'Conservative N-scheme',\
-                              'Conservative PSI-scheme', 'Non conservative PSI scheme', 'Implicit non conservative N scheme',\
+                              'Conservative PSI-scheme', 'Non conservative PSI-scheme', 'Implicit non conservative N-scheme',\
                               'Edge-based N-scheme'],
                            defaut = "Characteristics",),
 #                       ------------------------------------
                         b_upwind_k = BLOC(condition = "Type_Of_Advection_K_And_Epsilon == 'SUPG'",
 #                       ------------------------------------
 #                          ------------------------------------
-                           Supg_Option_Tracers = SIMP(statut = 'o', defaut = 'Modified SUPG', typ = 'TXM',
+                           Supg_Option_K_And_Epsilon = SIMP(statut = 'o', defaut = 'Modified SUPG', typ = 'TXM',
 #                          ------------------------------------
                              into = ['No upwinding', 'Classical SUPG','Modified SUPG']),
 
@@ -907,13 +908,14 @@ the product of relevant options shall be made.',
                        Type_Of_Advection_Tracers = SIMP(statut = 'o',typ = 'TXM',position = "global",
 #                      ------------------------------------
                            into = ["Characteristics", "SUPG", "Conservative N-scheme",  'Conservative N-scheme',\
-                                'Conservative PSI-scheme', 'Non conservative PSI scheme', 'Implicit non conservative N scheme',\
-                                'Edge-based N-scheme'],),
+                           'Conservative PSI-scheme', 'Non conservative PSI-scheme', 'Implicit non conservative N-scheme',\
+                           'Edge-based N-scheme'],
+                            ),
 #                       ------------------------------------
                         b_upwind_Tracers = BLOC(condition = "Type_Of_Advection_Tracers == 'SUPG'",
 #                       ------------------------------------
 #                          ------------------------------------
-                           Supg_Option_K_And_Epsilon = SIMP(statut = 'o', defaut = 'Modified SUPG', typ = 'TXM',
+                           Supg_Option_Tracers = SIMP(statut = 'o', defaut = 'Modified SUPG', typ = 'TXM',
 #                          ------------------------------------
                              into = ['No upwinding', 'Classical SUPG','Modified SUPG']),
 
@@ -1097,8 +1099,8 @@ Thus, the convergence can be speeded up when the system is being solved.',),
 #            ------------------------------------
              Option_For_The_Diffusion_Of_Velocities = SIMP( statut='o',typ='TXM',
 #            ------------------------------------
-                  defaut=1 ,
-                  into=['Diffusion in the form div( nu grad(U))','Diffusion in the form 1/h div ( h nu grad(U) )'],
+                  defaut='Diffusion in the form div( nu grad(U))' ,
+                  into=['Diffusion in the form div( nu grad(U))','Diffusion in the form 1/h div ( h nu grad(U))'],
                   fr = '1: Diffusion de la forme div( nu grad(U) )   2: Diffusion de la forme 1/h div ( h nu grad(U) )',
                   ang= '1: Diffusion in the form div( nu grad(U) )   2: Diffusion in the form 1/h div ( h nu grad(U) )',),
 
@@ -1108,9 +1110,24 @@ Thus, the convergence can be speeded up when the system is being solved.',),
      Discretization_Implicitation = FACT(statut = 'f',
 #    ------------------------------------
 
-#         ------------------------------------
-          Discretizations_In_Space = SIMP(statut = 'o',typ = 'TXM', 
-#         ------------------------------------
+#         ------------------------------------------------------------------
+          Discretizations_In_Space_U_And_V = SIMP(statut = 'o',typ = 'TXM', 
+#         ------------------------------------------------------------------
+              into = ["Linear", "Quasi-bubble", "Quadratic"],
+              defaut = "Linear",),
+#         ------------------------------------------------------------------
+          Discretizations_In_Space_H = SIMP(statut = 'o',typ = 'TXM', 
+#         ------------------------------------------------------------------
+              into = ["Linear", "Quasi-bubble", "Quadratic"],
+              defaut = "Linear",),
+#         ------------------------------------------------------------------
+          Discretizations_In_Space_K_And_Epsilon = SIMP(statut = 'f',typ = 'TXM', 
+#         ------------------------------------------------------------------
+              into = ["Linear", "Quasi-bubble", "Quadratic"],
+              defaut = "Linear",),
+#         ------------------------------------------------------------------
+          Discretizations_In_Space_Tracers = SIMP(statut = 'f',typ = 'TXM', 
+#         ------------------------------------------------------------------
               into = ["Linear", "Quasi-bubble", "Quadratic"],
               defaut = "Linear",),
 
@@ -1706,14 +1723,14 @@ OUTPUT_FILES = PROC(nom = "OUTPUT_FILES",op = None,
 #       ------------------------------------
         Variables_For_Graphic_Printouts = SIMP(statut = 'o',max = "**", typ = 'TXM',
 #       ------------------------------------
-                into=[ "Velocity along X axis  (m/s)", "Velocity along Y axis  (m/s)", "Wave celerity  (m/s)", "Water depth  (m)",
-                      "Free surface elevation  (m)", "Bottom elevation  (m)", "Froude number  ", "Scalar flowrate of fluid  (m2/s)", 
-                      "Tracer 1 etc. ", "Turbulent kinetic energy in K-Epsilon model  (J/kg)", "Dissipation of turbulent energy  (W/kg)", 
-                      "Turbulent viscosity of K-Epsilon model  (m2/s)", "Flowrate along X axis  (m2/s)", "Flowrate along Y axis  (m2/s)",
-                      "Scalar velocity  (m/s)", "Wind along X axis  (m/s)", "Wind along Y axis  (m/s)", "Air pressure  (Pa)", 
-                      "Friction coefficient", "Drift along X  (m)", "Drift along Y  (m)", "Courant number ", "Supplementary variable N ", 
-                      "Supplementary variable O ", "Supplementary variable R ", "Supplementary variable Z  ", "Maximum elevation", 
-                      "Time of maximum elevation ", "Maximum velocity", "Time of maximum velocity", "Friction velocity  "],
+                into=[ "Velocity along X axis (m/s)", "Velocity along Y axis (m/s)", "Wave celerity (m/s)", "Water depth (m)",
+                      "Free surface elevation (m)", "Bottom elevation (m)", "Froude number", "Scalar flowrate of fluid (m2/s)", 
+                      "Tracer 1 etc. ", "Turbulent kinetic energy in K-Epsilon model (J/kg)", "Dissipation of turbulent energy (W/kg)", 
+                      "Turbulent viscosity of K-Epsilon model (m2/s)", "Flowrate along X axis (m2/s)", "Flowrate along Y axis (m2/s)",
+                      "Scalar velocity (m/s)", "Wind along X axis (m/s)", "Wind along Y axis (m/s)", "Air pressure (Pa)", 
+                      "Friction coefficient", "Drift along X (m)", "Drift along Y (m)", "Courant number", "Supplementary variable N", 
+                      "Supplementary variable O", "Supplementary variable R", "Supplementary variable Z", "Maximum elevation", 
+                      "Time of maximum elevation", "Maximum velocity", "Time of maximum velocity", "Friction velocity"],
                 ),
                 #homo="SansOrdreNiDoublon"),
 
@@ -1772,7 +1789,7 @@ OUTPUT_FILES = PROC(nom = "OUTPUT_FILES",op = None,
                    "Tracer", "Turbulent kinetic energy in K-Epsilon model (J/kg)", "Dissipation of turbulent energy (W/kg)",
                    "Turbulent viscosity of K-Epsilon model (m2/s)", "Flowrate along x axis (m2/s)", "Flowrate along y axis (m2/s)",
                    "Scalar velocity (m/s)", "Wind along x axis (m/s)", "Wind along y axis (m/s)", "Air pressure (Pa)",
-                   "Friction coefficient", "Drift along x  (m)", "Drift along y  (m)", "Courant number",
+                   "Friction coefficient", "Drift along x (m)", "Drift along y (m)", "Courant number",
                    "Supplementary variable N", "Supplementary variable O", "Supplementary variable R", "Supplementary variable Z"]
 ,homo="SansOrdreNiDoublon"),
 
@@ -2032,7 +2049,8 @@ is in particular used to compute the Coriolis force. In cartesian coordinates, C
 #          ------------------------------------
             Spatial_Projection_Type = SIMP(statut = 'o',typ = 'TXM',
 #          ------------------------------------
-               into = ["Mercator","Latitude longitude"]),
+               defaut="Cartesian, not georeferenced",
+               into = ["Cartesian, not georeferenced","Mercator","Latitude longitude"]),
        ), # fin b_Spher
 
 #      ------------------------------------
@@ -2279,6 +2297,7 @@ Not recommended for use.',),
          into = ("Diagonal", "No preconditioning", "Diagonal condensed", "Crout", "Diagonal and crout", "Diagonal condensed and crout"),
          fr = 'Permet de preconditionner le systeme relatif au modele k-epsilon',
          ang = 'Preconditioning of the linear system in the diffusion step of the k-epsilon model.',
+         homo="SansOrdreNiDoublon",
      ),
 #    -----------------------------------------------------------------------
      Information_About_K_Epsilon_Model = SIMP(statut = 'o',typ = bool,defaut = True,
@@ -2314,6 +2333,7 @@ PARTICLE_TRANSPORT = PROC(nom = "PARTICLE_TRANSPORT",op = None,
 #            -----------------------------------------------------------------------
                  into = ["Sphere", "Iridaea flaccida (close to ulva)", "Pelvetiopsis limitata", "Gigartina leptorhynchos"],
                  defaut = "Sphere",
+                 homo="SansOrdreNiDoublon",
                  fr = 'Type des algues. Pour sphere les algues seront modelisees comme des spheres, pour les autres choix voir Gaylord et al.(1994)',
                  ang = 'Algae type. For sphere, the algae particles will be modeled as spheres, for the other choices see Gaylord et al.(1994)',),
 
@@ -2480,10 +2500,12 @@ TRACERS = PROC(nom = "TRACERS",op = None,
 #       -----------------------------------------------------------------------
         Solver_For_Diffusion_Of_Tracers = SIMP( statut='o',typ='TXM',
 #       -----------------------------------------------------------------------
-               defaut='1="conjugate gradient"' ,
-               into =('1="conjugate gradient"', '2="conjugate residual"', '3="conjugate gradient on a normal equation"',
-                      '4="minimum error"', '5="squared conjugate gradient"', '6="cgstab"', '7="gmres "', '8="direct"'),),
+               defaut='Conjugate gradient' ,
+               into =('Conjugate gradient', 'Conjugate residual', 'Conjugate gradient on a normal equation',
+                      'Minimum error"', 'Squared conjugate gradient', 'CGSTAB', 'GMRES', 'Direct'),
+               ),
 
+# Ne faut-il pas un bloc?
 #       -----------------------------------------------------------------------
         Solver_Option_For_Tracers_Diffusion = SIMP( statut='o',typ='I',
 #       -----------------------------------------------------------------------
@@ -2494,8 +2516,8 @@ TRACERS = PROC(nom = "TRACERS",op = None,
 #       -----------------------------------------------------------------------
         Preconditioning_For_Diffusion_Of_Tracers = SIMP( statut='o',typ='TXM',
 #       -----------------------------------------------------------------------
-         defaut='2="diagonal"' ,
-         into =('2="diagonal"', '0="no preconditioning "', '3="diagonal condensed"', '7="crout"', '14="diagonal and crout"', '21="diagonal condensed and crout"'),
+         defaut='diagonal' ,
+         into =('diagonal', 'no preconditioning', 'diagonal condensed', 'crout', 'diagonal and crout', 'diagonal condensed and crout'),
     fr = 'Permet de preconditionner le systeme relatif au traceur. Memes definition et possibilites que pour le mot-cle PRECONDITIONNEMENT.',
     ang= 'Preconditioning of the linear system in the tracer diffusion step.  Same definition and possibilities as for the keyword PRECONDITIONING',
      ),
@@ -2578,17 +2600,17 @@ TRACERS = PROC(nom = "TRACERS",op = None,
 #      ------------------------------------
        Scheme_For_Advection_Of_Tracers = SIMP( statut='o',typ='TXM',
 #      ------------------------------------
-           defaut="CHARACTERISTICS" ,
-           into =("NO ADVECTION", "CHARACTERISTICS", "EXPLICIT + SUPG", "EXPLICIT LEO POSTMA", "EXPLICIT + MURD SCHEME N", 
-               "EXPLICIT + MURD SCHEME PSI", "LEO POSTMA FOR TIDAL FLATS", "N-SCHEME FOR TIDAL FLATS"),
+           defaut="Characteristics" ,
+           into =("No advection", "Characteristics", "Explicit + SUPG", "Explicit leo postma", "explicit + murd scheme-N", 
+               "explicit + murd scheme-PSI", "Leo postma for tidal flats", "N-scheme for tidal flats"),
            fr = 'Choix du schema de convection pour les traceurs, remplace FORME DE LA CONVECTION',
            ang= 'Choice of the advection scheme for the tracers, replaces TYPE OF ADVECTION',),
 
 #      ------------------------------------
        Scheme_Option_For_Advection_Of_Tracers = SIMP( statut='o',typ='TXM',
 #      ------------------------------------
-           defaut='explicit' ,
-           into=['explicit','predictor-corrector for tracers'],
+           defaut='Explicit' ,
+           into=['Explicit','Predictor-corrector for tracers'],
            fr = 'Si present remplace et a priorite sur : OPTION POUR LES CARACTERISTIQUES OPTION DE SUPG Si schema PSI : 1=explicite 2=predicteur-correcteur pour les traceurs',
            ang= 'If present replaces and has priority over: OPTION FOR CHARACTERISTICS SUPG OPTION IF PSI SCHEME: 1=explicit 2=predictor-corrector for tracers',),
 
@@ -2611,13 +2633,13 @@ TRACERS = PROC(nom = "TRACERS",op = None,
 #        -----------------------------------------------------------------------
          Law1_Of_Tracers_Degradation = SIMP( statut='o',typ='TXM',
 #        -----------------------------------------------------------------------
-            into=["NO DEGRADATION","F(T90) LAW"],
-            defaut="NO DEGRADATION",
+            into=["No degradation","F(T90) law"],
+            defaut="No degradation",
             fr = 'Prise en compte dune loi de decroissance des traceurs',
             ang= 'Take in account a law for tracers decrease',),
 
 #        -----------------------------------------------------------------------
-         b_Law1 = BLOC(condition = 'Law1_Of_Tracers_Degradation == "F(T90) LAW"',
+         b_Law1 = BLOC(condition = 'Law1_Of_Tracers_Degradation == "F(T90) law"',
 #        -----------------------------------------------------------------------
 #            -----------------------------------------------------------------------
              Coefficient_1_For_Law_Of_Tracers_Degradation = SIMP( statut='o',typ='R',
@@ -2629,13 +2651,13 @@ TRACERS = PROC(nom = "TRACERS",op = None,
 #        -----------------------------------------------------------------------
          Law2_Of_Tracers_Degradation = SIMP( statut='o',typ='TXM',
 #        -----------------------------------------------------------------------
-            into=["NO DEGRADATION","F(T90) LAW"],
-            defaut="NO DEGRADATION",
+            into=["No degradation","F(T90) law"],
+            defaut="No degradation",
             fr = 'Prise en compte dune loi de decroissance des traceurs',
             ang= 'Take in account a law for tracers decrease',),
 
 #        -----------------------------------------------------------------------
-         b_Law2 = BLOC(condition = 'Law2_Of_Tracers_Degradation == "F(T90) LAW"',
+         b_Law2 = BLOC(condition = 'Law2_Of_Tracers_Degradation == "F(T90) law"',
 #        -----------------------------------------------------------------------
 #            -----------------------------------------------------------------------
              Coefficient_2_For_Law_Of_Tracers_Degradation = SIMP( statut='o',typ='R',

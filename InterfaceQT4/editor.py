@@ -1166,6 +1166,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         if self.jdc.isvalid() != 0 and hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fn)
+        if self.code=="TELEMAC" and hasattr(self.generator, "writeDefault"):
+            self.generator.writeDefault(fn)
 
         if self.salome :
                self.appliEficas.addJdcInSalome( self.fichier)

@@ -20,6 +20,7 @@ import re, string
 from Extensions.i18n import tr
 from Accas.A_BLOC import BLOC
 from Accas import *
+from Telemac_Cata import Tuple
 
                                                                                         
 from convert_python import PythonParser
@@ -55,7 +56,7 @@ pattern_ContientDouble=re.compile (r"^.*''.*$")
 try :
    from aideAuxConvertisseurs import DicoEficasToCas, ListeSupprimeCasToEficas
    from aideAuxConvertisseurs import ListeCalculCasToEficas, DicoAvecMajuscules
-   from enumDicoTelemac2      import DicoEnumCasEn
+   from enumDicoTelemac       import DicoEnumCasEn
 except :
    pass
 
@@ -105,7 +106,8 @@ class TELEMACParser(PythonParser):
 
           finLigne=ligne
           while finLigne != "" :
-              print finLigne
+              #print finLigne
+              if pattern_comment_slash.match(finLigne) : finLigne=""; continue
               valeur=""
               m=pattern_ligne.match(finLigne)
               if m == None : 
@@ -211,6 +213,7 @@ class TELEMACParser(PythonParser):
         ind=simp.find('-')
         if ind==len(simp)-1 : break
         simp=simp[0:ind]+'_'+simp[ind+1].upper()+simp[ind+2:]
+      return simp
 
    #----------------------------------------
    def traiteIdent(self,listeIdent):
@@ -230,6 +233,7 @@ class TELEMACParser(PythonParser):
           simp=simp[0:-1]
           while simp[-1] == " " : simp=simp[0:-1]
           if simp.find('-') > 0 : simp=self.redecoupeSimp(simp)
+
           return simp
 
 
@@ -261,30 +265,30 @@ class TELEMACParser(PythonParser):
 
    def generSIMP(self,obj,nom,valeur):
        if nom in ("Prescribed_Flowrates", "Prescribed_Velocities", "Prescribed_Elevations" ): return
-       #print "___________________________"
-       #print nom
-       #print valeur
-       if valeur == None : print nom
+       print "___________________________"
+       print nom
+       print valeur
        if obj.max==1 : 
+          if hasattr(obj.type[0],'ntuple') : 
+             lval=[]
+             for v in valeur : 
+               try :    v=eval(v,{})
+               except : pass
+               lval.append(v)
+             self.textePy += nom + "=" + str(lval) +","
+             return
           if 'TXM' in obj.type :
 
-              if pattern_ContientDouble.match(valeur):
-                 valeur=re.sub("''","\'\'",valeur)
-                 print str(valeur)
-                 print valeur
-                 print tr(valeur)
-                 print poum
+              if pattern_ContientDouble.match(str(valeur)):
+                 valeur=re.sub("''","\'\'",str(valeur))
+                 self.textePy += nom + "=" + str(valeur) +","
+                 return
               valeur=str(valeur)
 
               # ceinture et bretelle si les re sont correctes -)
               while valeur[-1] == " " or valeur[-1] == '\t' : valeur=valeur[0:-1]
               while valeur[0]  == " " or valeur[0]  == '\t' : valeur=valeur[1:]
 
-              if pattern_ContientDouble.match(valeur):
-                 valeur=re.sub("''","\'\'",valeur)
-                 print valeur
-                 print tr(valeur)
-                 print poum
 
 
           # Pour les enum
@@ -292,11 +296,14 @@ class TELEMACParser(PythonParser):
           except : pass
           if nom in DicoEnumCasEn.keys(): 
              #print "est dans le dico des enum, valeur simple"
-             try    : valeur=DicoEnumCasEn[nom][valeur]
+             try    : 
+               valeur=DicoEnumCasEn[nom][valeur]
+               self.textePy += nom + "= '" + str(valeur) +"',"
+               return
              except : pass
 
 
-          if obj.into != [] and obj.into != None :
+          if obj.into != [] and obj.into != None and not('R' in obj.type) and not('I' in obj.type):
              for possible in obj.into :
                   if possible.upper() == valeur.upper():
                      valeur=possible
@@ -369,8 +376,8 @@ class TELEMACParser(PythonParser):
       else : self.dictSimp["Parallel_Computation"]="Parallel"
  
    def decoupeListe(self,valeurs,label):
-      print "decoupeSUPG"
-      print valeurs
+      #print "decoupeListe"
+      #print valeurs
       i=0
       for prefixe in ('_U_And_V','_H'):
           labelComplet=label+prefixe
@@ -406,13 +413,27 @@ class TELEMACParser(PythonParser):
        self.dictSimp['Convection_De_U_Et_V']=True
        self.dictSimp['Convection_De_H']=True
        if len(valeurs)==2 : return
-       self.dictSimp['Advection_Of_K_And_Epsilon']=True
-       self.dictSimp['Advection_Of_Tracers']=True
+       self.dictSimp['Convection_De_K_Et_Epsilon']=True
+       self.dictSimp['Convection_Des_Traceurs']=True
 
    def Discretisations_En_Espace(self):
        self.decoupeListe( self.dictSimp["Discretisations_En_Espace"],"Discretisations_En_Espace")
        del self.dictSimp["Discretisations_En_Espace"]
        
+   def Date_De_L_Origine_Des_Temps (self):
+       valeurs=self.dictSimp["Date_De_L_Origine_Des_Temps"]
+       self.dictSimp['Annee']=valeurs[0]
+       self.dictSimp['Mois']=valeurs[1]
+       self.dictSimp['Jour']=valeurs[2]
+       del  self.dictSimp["Date_De_L_Origine_Des_Temps"]
+       
+   
+   def Heure_De_L_Origine_Des_Temps (self):
+       valeurs=self.dictSimp["Heure_De_L_Origine_Des_Temps"]
+       self.dictSimp['Heure']=valeurs[0]
+       self.dictSimp['Minute']=valeurs[1]
+       self.dictSimp['Seconde']=valeurs[2]
+       del  self.dictSimp["Heure_De_L_Origine_Des_Temps"]
 
    def Liquid_Boundaries(self):
        #print 'Liquid Boundaries'

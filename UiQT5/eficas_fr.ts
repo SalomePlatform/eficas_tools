@@ -3,6 +3,94 @@
   <context>
     <name>@default</name>
     <message>
+       <source>Year</source>
+       <translation>Annee</translation>
+    </message>
+    <message>
+       <source>Month</source>
+       <translation>Mois</translation>
+    </message>
+    <message>
+       <source>Day</source>
+       <translation>Jour</translation>
+    </message>
+    <message>
+       <source>Hour</source>
+       <translation>Heure</translation>
+    </message>
+    <message>
+       <source>Minute</source>
+       <translation>Minute</translation>
+    </message>
+    <message>
+       <source>Second</source>
+       <translation>Seconde</translation>
+    </message>
+    <message>
+       <source>Discretizations_In_Space</source>
+       <translation>Discretisations_En_Espace</translation>
+    </message>
+    <message>
+       <source>Discretizations_In_Space_Tracers</source>
+       <translation>Discretisations_En_Espace_Tracers</translation>
+    </message>
+    <message>
+       <source>Discretizations_In_Space_U_And_V</source>
+       <translation>Discretisations_En_Espace_U_And_V</translation>
+    </message>
+    <message>
+       <source>Discretizations_In_Space_K_And_Epsilon</source>
+       <translation>Discretisations_En_Espace_K_And_Epsilon</translation>
+    </message>
+    <message>
+       <source>Discretizations_In_Space_H</source>
+       <translation>Discretisations_En_Espace_H</translation>
+    </message>
+    <message>
+       <source>Supg_Option</source>
+       <translation>Option_De_Supg</translation>
+    </message>
+    <message>
+       <source>Supg_Option_Tracers</source>
+       <translation>Option_De_Supg_Tracers</translation>
+    </message>
+    <message>
+       <source>Supg_Option_U_And_V</source>
+       <translation>Option_De_Supg_U_And_V</translation>
+    </message>
+    <message>
+       <source>Supg_Option_K_And_Epsilon</source>
+       <translation>Option_De_Supg_K_And_Epsilon</translation>
+    </message>
+    <message>
+       <source>Supg_Option_H</source>
+       <translation>Option_De_Supg_H</translation>
+    </message>
+    <message>
+       <source>Type_Of_Advection</source>
+       <translation>Forme_De_La_Convection</translation>
+    </message>
+    <message>
+       <source>Forme_De_La_Convection</source>
+       <translation>Type_Of_Advection</translation>
+    </message>
+    <message>
+       <source>Type_Of_Advection_Tracers</source>
+       <translation>Forme_De_La_Convection_Tracers</translation>
+    </message>
+    <message>
+       <source>Type_Of_Advection_U_And_V</source>
+       <translation>Forme_De_La_Convection_U_And_V</translation>
+    </message>
+    <message>
+       <source>Type_Of_Advection_K_And_Epsilon</source>
+       <translation>Forme_De_La_Convection_K_And_Epsilon</translation>
+    </message>
+    <message>
+       <source>Type_Of_Advection_H</source>
+       <translation>Forme_De_La_Convection_H</translation>
+    </message>
+    <message>
        <source>Hauteur constante</source>
        <translation>Constant depth</translation>
     </message>
@@ -329,6 +417,10 @@
       <translation>Option_Pour_Les_Conditions_Aux_Limites_De_Maree</translation>
     </message>
     <message>
+      <source>Option_For_Liquid_Boundaries</source>
+      <translation>Option_Pour_Les_Frontieres_Liquides</translation>
+    </message>
+    <message>
       <source>Coefficient_To_Calibrate_Tidal_Velocities</source>
       <translation>Coefficient_De_Calage_Des_Vitesses_De_Courant</translation>
     </message>
@@ -605,10 +697,6 @@
       <translation>Solveur_Pour_La_Diffusion_Des_Traceurs</translation>
     </message>
     <message>
-      <source>Discretizations_In_Space</source>
-      <translation>Discretisations_En_Espace</translation>
-    </message>
-    <message>
       <source>Solver_Option</source>
       <translation>Option_Du_Solveur</translation>
     </message>
@@ -651,6 +739,10 @@
     <message>
       <source>Matrix_Storage</source>
       <translation>Stockage_Des_Matrices</translation>
+    </message>
+    <message>
+      <source>Matrix_Vector_Product</source>
+      <translation>Produit_Matrice_Vecteur</translation>
     </message>
     <message>
       <source>Algae_Type</source>
@@ -847,10 +939,6 @@
     <message>
       <source>Diffusion_Of_Velocity</source>
       <translation>Diffusion_Des_Vitesses</translation>
-    </message>
-    <message>
-      <source>Type_Of_Advection</source>
-      <translation>Forme_De_La_Convection</translation>
     </message>
     <message>
       <source>Solver_Option_For_Tracers_Diffusion</source>
