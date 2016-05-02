@@ -18,9 +18,12 @@
 #
 import re, string
 from Extensions.i18n import tr
-from Accas.A_BLOC import BLOC
-from Accas import *
-from Telemac_Cata import Tuple
+#from Accas import *
+print "je pas ssssssssssssssssssssss"
+#poum
+#import Accas
+#print Accas
+#print dir(Accas)
 
                                                                                         
 from convert_python import PythonParser
@@ -83,6 +86,7 @@ class TELEMACParser(PythonParser):
    """
 
    def convert(self, outformat, appli=None):
+      from Accas import A_BLOC, A_FACT, A_SIMP
       self.dicoInverseFrancais=appli.readercata.dicoInverseFrancais
       self.dicoAnglaisFrancais=appli.readercata.dicoAnglaisFrancais
       self.dicoFrancaisAnglais=appli.readercata.dicoFrancaisAnglais
@@ -174,7 +178,7 @@ class TELEMACParser(PythonParser):
           listeGenea=self.dicoInverseFrancais[simp]
           listeGeneaReverse=[]
           for (u,v) in listeGenea : 
-              if isinstance(v,BLOC): continue
+              if isinstance(v,A_BLOC.BLOC): continue
               listeGeneaReverse.append(u)
           listeGeneaReverse.reverse()
           dicoTravail=dicoParMC
@@ -238,14 +242,15 @@ class TELEMACParser(PythonParser):
 
 
    def traiteMC(self,dico) :
+       from Accas import A_BLOC, A_FACT, A_SIMP
        for k in dico.keys() :
            valeur= dico[k]
            if k not in self.dicoMC.keys() : kA=self.dicoFrancaisAnglais[k] 
            else : kA=k
            obj=self.dicoMC[kA]
-           if isinstance(obj,FACT):   self.generFACT(obj,kA,valeur)
-           elif isinstance(obj,BLOC): self.generBLOC(obj,kA,valeur)
-           elif isinstance(obj,SIMP): self.generSIMP(obj,kA,valeur)
+           if isinstance(obj,A_FACT.FACT):   self.generFACT(obj,kA,valeur)
+           elif isinstance(obj,A_BLOC.BLOC): self.generBLOC(obj,kA,valeur)
+           elif isinstance(obj,A_SIMP.SIMP): self.generSIMP(obj,kA,valeur)
            else : print "%%%%%%%%%%%\n", "pb generation pour", k, obj, "\n%%%%%%%%%%%"
 
            #print "_____________"
