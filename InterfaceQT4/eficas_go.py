@@ -92,11 +92,24 @@ def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=Non
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
     print monEditeur.jdc.cr
 
-def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None):
+def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou=None,cr=False):
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
-    print fichier
-    fileName=fichier.split(".")[0]+"_reecrit.comm"
+    if ou == None : 
+       fileName=fichier.split(".")[0]+"_reecrit.comm"
+       fn=fichier.split(".")[0]+"_cr.txt"
+    else :
+       f=fichier.split(".")[0]+"_reecrit.comm"
+       f1=os.path.basename(f)
+       fn=fichier.split(".")[0]+"_cr.txt"
+       f2=os.path.basename(fn)
+       fileName=os.path.join(ou,f1)
+       fileCr=os.path.join(ou,f2)
     monEditeur.saveFileAs(fileName=fileName)
+    if cr:
+       f = open(fileCr, 'wb')
+       f.write(str(monEditeur.jdc.report()))
+       f.close()
+
 
 def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION_STUDY'):
     """

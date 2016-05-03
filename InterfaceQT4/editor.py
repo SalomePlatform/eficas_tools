@@ -215,7 +215,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
  
 
 
-        if jdc_item:
+        if jdc_item and self.appliEficas.ssIhm==False:
             self.tree = browser.JDCTree( jdc_item,  self )
         self.appliEficas.construitMenu()
         self.saveSplitterSizes()
@@ -1139,8 +1139,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         newName = None
         fn = self.fichier
         if self.fichier is None or saveas:
-          if path is None:
-             path=self.CONFIGURATION.savedir
+          if path is None: path=self.CONFIGURATION.savedir
           bOK, fn=self.determineNomFichier(path,extension)
           if bOK == 0 : return (0, None)
           if fn == None : return (0, None)

@@ -84,6 +84,7 @@ class TELEMACGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,fn) :
+       self.texteDico+='\n&ETA\n'
        fileDico = fn[:fn.rfind(".")] + '.py'
        f = open( str(fileDico), 'wb')
        f.write( self.texteDico )
@@ -108,9 +109,9 @@ class TELEMACGenerator(PythonGenerator):
         """recuperation de l objet MCSIMP"""
         s=PythonGenerator.generMCSIMP(self,obj)
         if obj.nom == "Title" :
-            print s
+            #print s
             print str(obj.valeur)
-            print repr(obj.valeur)
+            #print repr(obj.valeur)
 
        
         # Attention pas sur --> ds certains cas non traite par MCFACT ?
@@ -125,14 +126,14 @@ class TELEMACGenerator(PythonGenerator):
         sTelemac=s[0:-1]
         if not( type(obj.valeur) in (types.TupleType,types.ListType) ):
            if obj.nom in DicoEnumCasEnInverse.keys():  
-             try : sTelemac=DicoEnumCasEnInverse[obj.nom][obj.valeur]
-             except : print "generMCSIMP Pb avec ", obj.nom, obj.valeur
+             try : sTelemac=str(DicoEnumCasEnInverse[obj.nom][obj.valeur])
+             except : print "generMCSIMP Pb valeur avec ", obj.nom, obj.valeur
         if type(obj.valeur) in (types.TupleType,types.ListType) :
            if obj.nom in DicoEnumCasEnInverse.keys():  
              sT = "'"
              for v in obj.valeur:
-               try : sT +=DicoEnumCasEnInverse[obj.nom][v] +";"
-               except : print "generMCSIMP Pb avec ", obj.nom, v
+               try : sT +=str(DicoEnumCasEnInverse[obj.nom][v]) +";"
+               except : print "generMCSIMP Pb Tuple avec ", obj.nom, v, obj.valeur
              sTelemac=sT[0:-1]+"'"
 
         if nom in DicoEficasToCas.keys() : nom=DicoEficasToCas[nom]

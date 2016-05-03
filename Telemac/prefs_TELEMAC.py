@@ -37,8 +37,8 @@ docPath=repIni
 #
 catalogues=(
    #('TELEMAC','default',os.path.join(repIni,'Telemac_Cata_nouveau.py'),'TELEMAC','python'),
-   ('TELEMAC','comm',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC','python'),
-   #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC','TELEMAC'),
+   ('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC','TELEMAC'),
+   #('TELEMAC','comm',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC','python'),
 )
 mode_nouv_commande="figee"
 affiche         = "ordre"

@@ -18,12 +18,6 @@
 #
 import re, string
 from Extensions.i18n import tr
-#from Accas import *
-print "je pas ssssssssssssssssssssss"
-#poum
-#import Accas
-#print Accas
-#print dir(Accas)
 
                                                                                         
 from convert_python import PythonParser
@@ -38,12 +32,14 @@ pattern_listeVide = re.compile(r"^\s*'\s*'\s*$")
 
 pattern_ligne=re.compile(r'^\s*(?P<ident>[^=:]*)\s*[:=]\s*(?P<reste>.*)$')
 
+pattern_variables=re.compile (r"^\s*(?P<ident>VARIABLES POUR LES SORTIES GRAPHIQUES)\s*[:=]\s*(?P<valeur>\w(,\w)*)\s*(?P<reste>.*)$")
+
 # Attention aux listes de flottants
 pattern_liste=re.compile(r'^\s*(?P<valeur>[+-.\w]+(\s*;\s*[+-.\w]+)+)\s*(?P<reste>.*)$')
 pattern_flottant=re.compile(r'^\s*(?P<valeur>[+-]?((\d+(\.\d*)?)|(\.\d+))([dDeE][+-]?\d+)?)\s*(?P<reste>.*)$')
 pattern_texteQuote  = re.compile (r"^\s*(?P<valeur>'[^']+(''[^']+)*')\s*(?P<reste>.*)$")
 pattern_texteSimple = re.compile (r"(?P<valeur>(^|\s)\s*[\w\.-]+)\s*(?P<reste>.*)$")
-pattern_texteVide  = re.compile (r"^\s*(?P<valeur>'')\s*(?P<reste>.*)$")
+pattern_texteVide   = re.compile (r"^\s*(?P<valeur>'')\s*(?P<reste>.*)$")
 
 pattern_ContientDouble=re.compile (r"^.*''.*$")
 
@@ -113,11 +109,19 @@ class TELEMACParser(PythonParser):
               #print finLigne
               if pattern_comment_slash.match(finLigne) : finLigne=""; continue
               valeur=""
+              if pattern_variables.match(finLigne) :
+                 m=pattern_variables.match(finLigne)
+                 valeur=m.group('valeur')
+                 simp=self.traiteIdent(m.group('ident'))
+                 finLigne=m.group('reste')
+                 self.dictSimp[simp]=valeur
+                 continue
+
               m=pattern_ligne.match(finLigne)
               if m == None : 
-                 print "________________________________________________"
+                 #print "________________________________________________"
                  print 'pb avec ****', finLigne , '**** dans ', ligne
-                 print "________________________________________________"
+                 #print "________________________________________________"
                  break
       
               simp=self.traiteIdent(m.group('ident'))
@@ -135,10 +139,10 @@ class TELEMACParser(PythonParser):
               elif pattern_texteSimple.match(finLigne):
                  m=pattern_texteSimple.match(finLigne)
               else :
-                 print "________________________________________________"
+                 #print "________________________________________________"
                  print 'pb avec ****', finLigne , '**** dans ', ligne
                  print "non match"
-                 print "________________________________________________"
+                 #print "________________________________________________"
                  break
               
               valeur=m.group('valeur')
@@ -173,7 +177,7 @@ class TELEMACParser(PythonParser):
              print "************"
              print "pb avec dans dicoInverseFrancais", simp,'------'
              print "************"
-             print poum
+             #print poum
              continue
           listeGenea=self.dicoInverseFrancais[simp]
           listeGeneaReverse=[]
@@ -204,7 +208,7 @@ class TELEMACParser(PythonParser):
           #print "----------- " 
            
               
-      print self.textePy
+      #print self.textePy
       return self.textePy 
 
    #----------------------------------------
@@ -248,14 +252,14 @@ class TELEMACParser(PythonParser):
            if k not in self.dicoMC.keys() : kA=self.dicoFrancaisAnglais[k] 
            else : kA=k
            obj=self.dicoMC[kA]
-           if isinstance(obj,A_FACT.FACT):   self.generFACT(obj,kA,valeur)
-           elif isinstance(obj,A_BLOC.BLOC): self.generBLOC(obj,kA,valeur)
-           elif isinstance(obj,A_SIMP.SIMP): self.generSIMP(obj,kA,valeur)
-           else : print "%%%%%%%%%%%\n", "pb generation pour", k, obj, "\n%%%%%%%%%%%"
+           if isinstance(obj,A_FACT.FACT):   self.convertFACT(obj,kA,valeur)
+           elif isinstance(obj,A_BLOC.BLOC): self.convertBLOC(obj,kA,valeur)
+           elif isinstance(obj,A_SIMP.SIMP): self.convertSIMP(obj,kA,valeur)
+           else : print "%%%%%%%%%%%\n", "pb conversion type pour", k, obj, "\n%%%%%%%%%%%"
 
            #print "_____________"
 
-   def generFACT(self,obj,nom,valeur):
+   def convertFACT(self,obj,nom,valeur):
        if nom in TELEMACParser.__dict__.keys() : 
           apply(TELEMACParser.__dict__[nom],(self,))
           return
@@ -264,15 +268,12 @@ class TELEMACParser(PythonParser):
        self.textePy += '),\n'
 
 
-   def generBLOC(self,obj,nom,valeur):
+   def convertBLOC(self,obj,nom,valeur):
        print "BLOC "
        print nom
 
-   def generSIMP(self,obj,nom,valeur):
+   def convertSIMP(self,obj,nom,valeur):
        if nom in ("Prescribed_Flowrates", "Prescribed_Velocities", "Prescribed_Elevations" ): return
-       print "___________________________"
-       print nom
-       print valeur
        if obj.max==1 : 
           if hasattr(obj.type[0],'ntuple') : 
              lval=[]
@@ -310,6 +311,7 @@ class TELEMACParser(PythonParser):
 
           if obj.into != [] and obj.into != None and not('R' in obj.type) and not('I' in obj.type):
              for possible in obj.into :
+                try :
                   if possible.upper() == valeur.upper():
                      valeur=possible
                      break
@@ -318,6 +320,8 @@ class TELEMACParser(PythonParser):
                   if possible.upper() == v2.upper():
                      valeur=possible
                      break
+                except:
+                   print "pb avec le type de ", obj.nom, obj.type, 'et la valeur ', valeur
 
           if 'Fichier' in obj.type or 'TXM' in obj.type or 'Repertoire' in obj.type :
               valeur=str(valeur)
