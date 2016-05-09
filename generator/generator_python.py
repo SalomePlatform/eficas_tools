@@ -96,7 +96,7 @@ class PythonGenerator:
       """
       self.appli=obj.get_jdc_root().appli
       #self.appli=obj.appli
-      print format
+      #print format
       liste= self.generator(obj)
       if format == 'brut':
          self.text=liste

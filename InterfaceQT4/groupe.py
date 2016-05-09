@@ -22,6 +22,7 @@
 from determine import monEnvQT5
 if monEnvQT5:
    from PyQt5.QtWidgets import QWidget
+   from PyQt5.QtCore import Qt
 else :
    from PyQt4.QtGui import *
    from PyQt4.QtCore import *
@@ -174,7 +175,7 @@ class Groupe(QWidget,FacultatifOuOptionnel):
            nouveau=widget.node.append_child(nom)
         if firstNode==None : firstNode=nouveau 
         if nouveau == None or nouveau == 0  : 
-           self.editor.affiche_infos(str('insertion impossible a cet endroit pour '+nom),Qt.red)
+           self.editor.affiche_infos(tr('insertion impossible a cet endroit pour '+nom),Qt.red)
       self.reaffiche(firstNode)
       if firstNode!=None and firstNode.item!=None :
         firstNode.select()

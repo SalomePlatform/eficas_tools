@@ -22,7 +22,7 @@ import string,types,os,sys
 
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtGui     import Qicon 
+    from PyQt5.QtGui     import QIcon 
     from PyQt5.QtWidgets import QApplication
     from PyQt5.QtCore    import QTimer, QSize, Qt
 else :

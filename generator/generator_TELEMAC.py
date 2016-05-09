@@ -26,8 +26,11 @@ from Extensions.i18n import tr
 from generator_python import PythonGenerator
 
 extensions=('.comm',)
-from aideAuxConvertisseurs import listeSupprime, DicoAglomere, DicoEficasToCas
-from enumDicoTelemac       import DicoEnumCasEnInverse
+try :
+  from aideAuxConvertisseurs import listeSupprime, DicoAglomere, DicoEficasToCas
+  from enumDicoTelemac       import DicoEnumCasEnInverse
+except :
+  pass
 
 
 def entryPoint():
