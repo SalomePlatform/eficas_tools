@@ -45,6 +45,7 @@ eficas_compile_ui ( desWidgetCreeParam.ui )
 eficas_compile_ui ( desWidgetCommande.ui )
 eficas_compile_ui ( desWidgetFormule.ui )
 eficas_compile_ui ( desWidgetOptionnel.ui )
+eficas_compile_ui ( desGroupeOptionnel.ui )
 eficas_compile_ui ( Tuple2.ui )
 eficas_compile_ui ( Tuple3.ui )
 #

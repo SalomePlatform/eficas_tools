@@ -8,8 +8,8 @@ PY_FILES = myMain.py desBaseWidget.py desChoixCata.py desChoixCode.py desChoixCo
 	desSelectVal.py desViewTexte.py desViewRegles.py desVisu.py desWidgetCreeParam.py desWidgetCommande.py \
 	desWidgetOptionnel.py desWidgetOptionnelMC.py Tuple2.py Tuple3.py  \
 	desWidgetBloc.py desWidgetCB.py desWidgetCommentaire.py desWidgetDate.py \
-	desWidgetFact.py desWidgetFactPlie.py desWidgetFormule.py desWidgetHeure.py \
-	desWidgetInformation.py desWidgetInactif.py \
+	desWidgetFact.py desWidgetFactPlie.py desWidgetFormule.py desGroupeOptionnel.py \
+	desWidgetHeure.py  desWidgetInformation.py desWidgetInactif.py \
 	desWidgetMatrice.py desWidgetParam.py desWidgetPlusieursBase.py desWidgetPlusieursInto.py \
 	desWidgetPlusieursIntoOrdonne.py desWidgetPlusieursTuple.py desWidgetRadioButton.py \
 	desWidget4a6RadioButton.py desWidgetSimpBase.py desWidgetSDCOInto.py desWidgetSimpBool.py \

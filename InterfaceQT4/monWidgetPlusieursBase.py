@@ -46,7 +46,7 @@ hauteurMax=253
 class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        print "MonWidgetPlusieursBase", nom
+        #print "MonWidgetPlusieursBase", nom
         self.nomLine="lineEditVal"
         self.inInit=True
         self.indexDernierLabel=0
@@ -55,7 +55,10 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
         self.gereIconePlier()
-        self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
+        if monEnvQT5:
+           self.BSelectFichier.clicked.connect(self.selectInFile)
+        else :
+           self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
 
         if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon
@@ -126,7 +129,10 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       if self.indexDernierLabel % 2 == 1 : nouveauLE.setStyleSheet("background:rgb(210,210,210)")
       else :	                           nouveauLE.setStyleSheet("background:rgb(235,235,235)")
       nouveauLE.setFrame(False)
-      self.connect(nouveauLE,SIGNAL("returnPressed()"),self.changeValeur)
+      if monEnvQT5:
+          nouveauLE.returnPressed.connect(self.changeValeur)
+      else :
+          self.connect(nouveauLE,SIGNAL("returnPressed()"),self.changeValeur)
       setattr(self,nomLineEdit,nouveauLE)
       self.listeAffichageWidget.append(nouveauLE)
       self.etablitOrdre()

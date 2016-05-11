@@ -133,7 +133,7 @@ font : 'times' 9px</string>
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
-        <widget class="QWidget" name="commandesOptionnellesWidget">
+        <widget class="QWidget" name="groupesOptionnelsW">
          <property name="geometry">
           <rect>
            <x>0</x>
@@ -148,7 +148,7 @@ font : 'times' 9px</string>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <layout class="QVBoxLayout" name="commandesOptionnellesLayout">
+         <layout class="QVBoxLayout" name="groupesOptionnelsLayout">
           <item>
            <spacer name="verticalSpacer">
             <property name="orientation">

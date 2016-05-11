@@ -348,9 +348,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         if self.editor.fenetreCentraleAffichee != None : 
             #print "j enleve ", self.editor.fenetreCentraleAffichee, self.editor.fenetreCentraleAffichee.node.item.nom
             self.editor.widgetCentraleLayout.removeWidget(self.editor.fenetreCentraleAffichee)
-
             self.editor.fenetreCentraleAffichee.setParent(None)
             self.editor.fenetreCentraleAffichee.close()
+            self.editor.fenetreCentraleAffichee.deleteLater()
 
         self.editor.widgetCentraleLayout.addWidget(self.fenetre)
         #print "j ajoute ", self.fenetre, self.fenetre.node.item.nom
@@ -431,7 +431,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         Rend le noeud courant (self) selectionne et deselectionne
         tous les autres
         """        
-        print "select pour", self.item.nom
+        #print "select pour", self.item.nom
         for item in self.tree.selectedItems() :
             item.setSelected(0)
         self.tree.setCurrentItem( self )    
@@ -613,6 +613,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
     def onValid(self):        
 
         #print "onValid pour ", self.item.nom
+        if self.JESUISOFF==1 : return
+ 
         if hasattr(self,'fenetre') and self.fenetre: self.fenetre.setValide()
         if (self.item.nom == "VARIABLE" or self.item.nom == "DISTRIBUTION") and self.item.isvalid():
            self.item.jdc.recalcule_etat_correlation()
@@ -640,7 +642,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         # PN -- non necessaire si item=jdc
         if hasattr(self.item,'jdc'): self.item.jdc.aReafficher=True
          
-
 
 
     def update_node_valid(self):

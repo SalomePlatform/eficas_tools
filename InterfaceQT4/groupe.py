@@ -169,9 +169,9 @@ class Groupe(QWidget,FacultatifOuOptionnel):
            nouveau=widget.node.append_child(nom)
         if firstNode==None : firstNode=nouveau 
         if nouveau == None or nouveau == 0  : 
-           self.editor.affiche_infos(tr('insertion impossible a cet endroit pour '+nom),red)
+           self.editor.affiche_infos(tr('insertion impossible a cet endroit pour '+nom),Qt.red)
       self.reaffiche(firstNode)
-      if firstNode!=None and firstNode.item!=None :
+      if firstNode!=None and firstNode !=0 and firstNode.item!=None :
         firstNode.select()
 
 

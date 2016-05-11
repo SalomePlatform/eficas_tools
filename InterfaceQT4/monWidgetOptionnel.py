@@ -59,12 +59,12 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      return groupe
 
   def vireLesAutres(self,MC):
-      print "je passe dans vireLesAutres"
+      #print "je passe dans vireLesAutres"
       genea =MC.obj.get_genealogie()
       for k in self.dicoMCWidgetOptionnel.keys():
           if k not in genea :  self.dicoMCWidgetOptionnel[k].close()
-          if k not in genea :  print k
-      print "________"
+          #if k not in genea :  print k
+      #print "________"
       
 
   def titre(self,MC):

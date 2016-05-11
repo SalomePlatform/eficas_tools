@@ -229,12 +229,12 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.node.affichePanneau()
       #print "dans reaffiche de monWidgetCommande", self.avantH, self.avantV
       QTimer.singleShot(1, self.recentre)
-      if nodeAVoir != None:
+      if nodeAVoir != None and nodeAVoir!=0:
         self.f=nodeAVoir.fenetre
         if self.f==None : 
              newNode=nodeAVoir.treeParent.chercheNoeudCorrespondant(nodeAVoir.item.object)
              self.f = newNode.fenetre 
-        print "dans reaffiche",self.f, nodeAVoir.item.nom
+        #print "dans reaffiche",self.f, nodeAVoir.item.nom
         if self.f != None and self.f.isVisible() : return
         if self.f != None : QTimer.singleShot(1, self.rendVisible)
       self.inhibeExpand=False
