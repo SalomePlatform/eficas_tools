@@ -44,8 +44,7 @@ class MonWidgetFact(Ui_WidgetFact,Groupe):
       self.GroupBox.setTextInteractionFlags(Qt.TextSelectableByMouse)
       self.parentQt.commandesLayout.insertWidget(-1,self)
 
-  def focusInEvent(self,event):
-     # print "je passe dans focusInEvent"
+  def enterEvent(self,event):
       if self.editor.code != "CARMELCND" :self.afficheOptionnel()
-      QWidget.focusInEvent(self,event)
+      QWidget.enterEvent(self,event)
 

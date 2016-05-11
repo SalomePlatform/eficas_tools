@@ -114,7 +114,7 @@ class JDCTree( QTreeWidget,GereRegles ):
             
 
     def handleCollapsedItem(self,item):
-        print "dans CollapsedItem", self.inhibeExpand  
+        #print "dans CollapsedItem", self.inhibeExpand  
         if self.inhibeExpand == True : return
         # On traite le cas de l item non selectionne
         itemParent=item

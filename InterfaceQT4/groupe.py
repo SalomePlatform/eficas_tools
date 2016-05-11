@@ -43,7 +43,6 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       self.node=node
       self.node.fenetre=self
       #print "groupe : ",self.node.item.nom," ",self.node.fenetre
-      #self.setFocusPolicy(Qt.StrongFocus)
       self.setupUi(self)
       self.editor=editor
       self.obj=obj
@@ -105,14 +104,9 @@ class Groupe(QWidget,FacultatifOuOptionnel):
         
   def afficheOptionnel(self):
         liste=self.ajouteMCOptionnelDesBlocs()
-        #chercheOptionnel=self.parentQt
-        # Boucle necessaire pour les regroupements Adao
-        #while not( hasattr(chercheOptionnel,'monOptionnel')):
-        #    chercheOptionnel=chercheOptionnel.parentQt
-        #self.monOptionnel=chercheOptionnel.monOptionnel
         self.monOptionnel=self.editor.widgetOptionnel
-        self.monOptionnel.parentMC=self
-        self.monOptionnel.affiche(liste)
+        self.monOptionnel.afficheOptionnel(liste,self)
+        #self.monOptionnel.affiche(liste)
            
 
   def ajouteMCOptionnelDesBlocs(self):
@@ -175,7 +169,7 @@ class Groupe(QWidget,FacultatifOuOptionnel):
            nouveau=widget.node.append_child(nom)
         if firstNode==None : firstNode=nouveau 
         if nouveau == None or nouveau == 0  : 
-           self.editor.affiche_infos(tr('insertion impossible a cet endroit pour '+nom),Qt.red)
+           self.editor.affiche_infos(tr('insertion impossible a cet endroit pour '+nom),red)
       self.reaffiche(firstNode)
       if firstNode!=None and firstNode.item!=None :
         firstNode.select()

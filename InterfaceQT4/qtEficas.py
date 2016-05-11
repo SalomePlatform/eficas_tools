@@ -425,6 +425,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionCode,SIGNAL("triggered()"),self.aideCode)
 
     def connecterSignaux(self) :
+
+        print QApplication.focusChanged
+        #QApplication.focusChanged.connect(self.focusChanged)
         self.recentMenu.aboutToShow.connect(self.handleShowRecentMenu)
         self.action_Nouveau.triggered.connect(self.fileNew)
         self.actionNouvel_Include.triggered.connect(self.NewInclude)
@@ -800,6 +803,10 @@ class Appli(Ui_Eficas,QMainWindow):
     def closeEvent(self,event):
       res=self.fileExit()
       if res==2 : event.ignore()
+
+    def focusChanged(self,oldW, newW) :
+      print "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+      print newW
 
 if __name__=='__main__':
 

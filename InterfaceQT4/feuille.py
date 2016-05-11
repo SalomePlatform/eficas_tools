@@ -25,6 +25,7 @@ from determine import monEnvQT5
 if monEnvQT5:
    from PyQt5.QtWidgets import QToolButton ,QWidget
    from PyQt5.QtGui import QFont, QFontMetrics
+   from PyQt5.QtCore import Qt
 else :
    from PyQt4.QtGui import *
    from PyQt4.QtCore import *
@@ -55,6 +56,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
        maPolice= QFont("Times", 10)
        self.setFont(maPolice)
+       self.setFocusPolicy(Qt.StrongFocus)
 
        self.parentQt=parentQt
        self.editor=self.node.editor
@@ -235,6 +237,11 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
    def rendVisible(self):
        #print "jjjjjjjjjjjjjjjjjjjjj"
        pass
+
+   #def enterEvent(self,event):
+   #   print "je passe dans enterEvent", self.nom
+      #if self.editor.code != "CARMELCND" :self.afficheOptionnel()
+   #   QWidget.enterEvent(self,event)
 
    def traiteClicSurLabel(self,texte):
        #print self.aide 

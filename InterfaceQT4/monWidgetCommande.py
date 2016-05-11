@@ -211,8 +211,10 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       #print "dans afficheOptionnel", self.monOptionnel
       # dans le cas ou l insertion n a pas eu leiu (souci d ordre par exemple)
       #if self.monOptionnel == None : return
-      self.monOptionnel.parentMC=self
-      self.monOptionnel.affiche(liste)
+      self.monOptionnel.parentCommande=self
+      self.monOptionnel.titre(self.obj.nom)
+      self.monGroupe=self.monOptionnel.afficheOptionnel(liste,self)
+      
 
   #def focusInEvent(self,event):
       #print "je mets a jour dans focusInEvent de monWidget Commande "
