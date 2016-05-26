@@ -383,6 +383,7 @@ class MyTabview:
                 tr("&Sauvegarder"),
                 tr(texte),
                 tr("&Quitter sans sauvegarder") )
+              if res == 2 : res = 1
             if res == 0:
                 (ok, newName) = editor.saveFile()
                 if ok:

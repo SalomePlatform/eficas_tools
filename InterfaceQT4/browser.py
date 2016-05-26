@@ -28,6 +28,7 @@ from determine import monEnvQT5
 if monEnvQT5 :
   from PyQt5.QtWidgets import QTreeWidget , QTreeWidgetItem
   from PyQt5.QtGui import QIcon
+  from PyQt5.QtCore  import Qt
 else :
   from PyQt4.QtGui  import *
   from PyQt4.QtCore  import *
@@ -291,7 +292,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             else : self.listeItemExpanded.append(enfant.item)
 
         for enfant in self.childrenComplete :
-            p=enfant.vraiParent
             parent=enfant.treeParent
             parent.removeChild(enfant)
             enfant.JESUISOFF=1
@@ -520,7 +520,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
            if not verifiePosition : return 0
 
         self.tree.inhibeExpand=True
-        obj=self.item.additem(name,index) #CS_pbruno emet le signal 'add'
+        obj=self.item.additem(name,index) # emet le signal 'add'
         if obj is None:obj=0
         if obj == 0:return 0
         try :
@@ -614,8 +614,12 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
         #print "onValid pour ", self.item.nom
         if self.JESUISOFF==1 : return
- 
-        if hasattr(self,'fenetre') and self.fenetre: self.fenetre.setValide()
+        if hasattr(self,'fenetre') and self.fenetre: 
+           try :
+             self.fenetre.setValide()
+           except :
+             print "onValid pour ", self.item.nom, self,'pb'
+
         if (self.item.nom == "VARIABLE" or self.item.nom == "DISTRIBUTION") and self.item.isvalid():
            self.item.jdc.recalcule_etat_correlation()
         if hasattr(self.item,'forceRecalcul'):

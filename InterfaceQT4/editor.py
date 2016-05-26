@@ -89,7 +89,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.code = self.appliEficas.CONFIGURATION.code
         # tres vite a cause du tag. doit etre pase dans CONFIGURATION
 
-        self.afficheListesPliees=False
+        #self.afficheListesPliees=False
+        self.afficheListesPliees=True
         if self.code == "ASTER" or self.code == "monCode" : self.afficheListesPliees =True
 
         self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
@@ -218,10 +219,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if jdc_item and self.appliEficas.ssIhm==False:
             self.tree = browser.JDCTree( jdc_item,  self )
         self.appliEficas.construitMenu()
+
+        #############
+        self.splitterSizes =  [320,1320,320]
+        self.splitter.setSizes(self.splitterSizes)
         self.saveSplitterSizes()
-        #if monEnvQT5:
-        #   self.splitter./s
-        #else :
 
 
     #-------------------#  Pour execution avec output et error dans le bash
@@ -1405,7 +1407,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if self.inhibeSplitter : return
       if not hasattr(self,'splitter') : return
       if self.splitterSizes[2] != 0 : self.oldSizeWidgetOptionnel = self.splitterSizes[2]
-      # print  self.splitterSizes
+      #print  self.splitterSizes
       #print self.splitter.sizes()
       # PNPNPNPN parfoir self.splitter.sizes() a une longueur de 4...
       nbAGarder=len(self.splitter.sizes())
@@ -1413,6 +1415,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       for i in range(nbAGarder):
          self.splitterSizes[i] = self.splitter.sizes()[i]
          self.splitter.widget(i).resizeEvent=self.saveSplitterSizes
+      #print self.splitter.sizes()
 
 
     #-----------------------------------------

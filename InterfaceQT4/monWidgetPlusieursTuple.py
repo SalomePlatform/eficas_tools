@@ -40,7 +40,6 @@ from gereListe             import GereListe
 from gereListe             import LECustom
 from Tuple2                import Ui_Tuple2
 from Tuple3                import Ui_Tuple3
-from maMessageBox	   import maMessageBox
 
 
 class TupleCustom :
@@ -333,6 +332,15 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_charge :
          val=[]
          for k in self.objSimp.jdc.LoadDico.keys() :
+              try :
+               valeur=self.objSimp.jdc.get_concept(k)
+               val.append((valeur,0))
+              except :
+               pass
+         self.node.item.set_valeur(val)
+      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_moteur :
+         val=[]
+         for k in self.objSimp.jdc.MotorDico.keys() :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))

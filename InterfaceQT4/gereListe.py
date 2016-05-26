@@ -25,7 +25,7 @@ from determine import monEnvQT5
 if monEnvQT5:
    from PyQt5.QtWidgets import QLineEdit, QLabel
    from PyQt5.QtCore    import QEvent, Qt
-   from PyQt5.QtGui     import QIcon
+   from PyQt5.QtGui     import QIcon, QPalette
 else :
    from PyQt4.QtGui import *
    from PyQt4.QtCore import *
@@ -103,11 +103,12 @@ class GereListe:
        else : self.connecterSignauxQT4()
 
    def connecterSignauxQT4(self):
-       self.connect(self.RBHaut,SIGNAL("clicked()"),self.hautPushed)
-       self.connect(self.RBBas,SIGNAL("clicked()"),self.basPushed)
-       self.connect(self.RBMoins,SIGNAL("clicked()"),self.moinsPushed)
-       self.connect(self.RBPlus,SIGNAL("clicked()"),self.plusPushed)
-       self.connect(self.RBVoisListe,SIGNAL("clicked()"),self.voisListePushed)
+       if hasattr(self,'RBHaut'):
+          self.connect(self.RBHaut,SIGNAL("clicked()"),self.hautPushed)
+          self.connect(self.RBBas,SIGNAL("clicked()"),self.basPushed)
+          self.connect(self.RBMoins,SIGNAL("clicked()"),self.moinsPushed)
+          self.connect(self.RBPlus,SIGNAL("clicked()"),self.plusPushed)
+          self.connect(self.RBVoisListe,SIGNAL("clicked()"),self.voisListePushed)
        if hasattr(self,'PBAlpha'):
           self.connect(self.PBAlpha,SIGNAL("clicked()"),self.alphaPushed)
           self.connect(self.PBCata,SIGNAL("clicked()"),self.cataPushed)
@@ -115,11 +116,12 @@ class GereListe:
           self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEFiltreReturnPressed)
 
    def connecterSignaux(self):
-       self.RBHaut.clicked.connect(self.hautPushed)
-       self.RBBas.clicked.connect(self.basPushed)
-       self.RBMoins.clicked.connect(self.moinsPushed)
-       self.RBPlus.clicked.connect(self.plusPushed)
-       self.RBVoisListe.clicked.connect(self.voisListePushed)
+       if hasattr(self,'RBHaut'):
+          self.RBHaut.clicked.connect(self.hautPushed)
+          self.RBBas.clicked.connect(self.basPushed)
+          self.RBMoins.clicked.connect(self.moinsPushed)
+          self.RBPlus.clicked.connect(self.plusPushed)
+          self.RBVoisListe.clicked.connect(self.voisListePushed)
        if hasattr(self,'PBAlpha'):
           self.PBCata.clicked.connect(self.cataPushed)
           self.PBAlpha.clicked.connect(self.alphaPushed)
@@ -137,16 +139,15 @@ class GereListe:
       
    def LEFiltreReturnPressed(self):
        self.filtre= self.LEFiltre.text()
-       self.prepareListeResultat()
+       self.prepareListeResultatFiltre()
 
    def findPushed(self):
        self.filtre= self.LEFiltre.text()
-       self.prepareListeResultat()
+       self.prepareListeResultatFiltre()
 
    def alphaPushed(self):
        print "alphaPushed" ,self.alpha
        if self.alpha == 1 : return
-       print "lllllllmmmmmmmmmmmmmm"
        self.alpha=1
        self.prepareListeResultat()
 
@@ -263,6 +264,17 @@ class GereListe:
 
        from monSelectVal import MonSelectVal
        MonSelectVal(file=fn,parent=self).show()
+
+   def noircirResultatFiltre(self):
+      filtre=str(self.LEFiltre.text())
+      for cb in self.listeCbRouge:
+          palette = QPalette(Qt.red)
+	  palette.setColor(QPalette.WindowText,Qt.black)
+	  cb.setPalette(palette)
+          t=cb.text()
+          cb.setText(t)
+      self.LEFiltre.setText("")
+      self.listeCbRouge = []
 
   
 # ----------- #

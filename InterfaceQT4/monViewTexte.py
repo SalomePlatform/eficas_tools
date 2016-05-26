@@ -25,7 +25,7 @@ from Extensions.i18n import tr
 
 from determine import monEnvQT5
 if monEnvQT5 :
-   from PyQt5.QtWidgets import QDialog, QMessageBox
+   from PyQt5.QtWidgets import QDialog, QMessageBox, QFileDialog
    from PyQt5.QtCore import QSize
 else :
    from PyQt4.QtGui import *

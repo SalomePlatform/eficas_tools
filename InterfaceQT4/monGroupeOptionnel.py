@@ -37,11 +37,13 @@ class monButtonCustom(QCheckBox):
 
    def __init__(self,texte,monOptionnel,parent=None):
       QCheckBox.__init__(self,tr(texte),parent)
+      self.mousePressed=True
       self.texte=texte
       self.monOptionnel=monOptionnel
+      self.setToolTip(tr("clicker: affichage aide, double-click: ajout"))
 
    def mouseDoubleClickEvent(self, event):
-      #print "dans mouseDoubleClickEvent", self
+      print "dans mouseDoubleClickEvent", self
       if self not in self.monOptionnel.dicoCb.keys() : 
          event.accept()
          return
@@ -51,14 +53,29 @@ class monButtonCustom(QCheckBox):
       
 
    def mousePressEvent(self, event):
-      #rint "dans mousePressEvent"
-      self.mousePressed=True
       if not( event.button() != Qt.RightButton)  : 
          event.accept()
          return
+      if self.monOptionnel.cbPressed != None :
+         self.monOptionnel.cbPressed.setChecked(False)
+      self.monOptionnel.cbPressed=self
+      if self.mousePressed == False :
+         self.mousePressed=True
+      else :
+         self.mousePressed=False
+         self.ajoutAideMC()
       QCheckBox.mousePressEvent(self, event)
       event.accept()
 
+   def ajoutAideMC(self):
+      maDefinition = self.monOptionnel.parentMC.definition.entites[self.texte]
+      maLangue =  self.monOptionnel.parentMC.jdc.lang
+      if hasattr(maDefinition,maLangue): 
+         monAide = getattr(maDefinition,self.monOptionnel.parentMC.jdc.lang)
+      else :
+         monAide = ""
+      self.monOptionnel.parentMC.editor.affiche_commentaire(monAide)
+  
 
 class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
   """
@@ -98,29 +115,14 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
      liste.reverse()
      for mot in liste :
          cb = monButtonCustom(mot,self)
-         #if monEnvQT5:
-         #  cb.clicked.connect(self.ajoutMC)
-         #else :
-         #  self.connect(cb,SIGNAL("clicked()"), self.ajoutMC)
+         if monEnvQT5:
+           cb.clicked.connect(cb.ajoutAideMC)
+         else :
+           self.connect(cb,SIGNAL("clicked()"), cb.ajoutAideMC)
          self.MCOptionnelLayout.insertWidget(0,cb)
          self.dicoCb[cb]=mot
      self.scrollAreaCommandesOptionnelles.horizontalScrollBar().setSliderPosition(0)
      #print "Fin Optionnel ____ affiche", liste
 
-  def CBChecked(self):
-      # ordre ?
-      return
-      for cb in self.dicoCb.keys() :
-          if cb.isChecked()      and self.dicoCb[cb] not in self.listeChecked : self.listeChecked.append(self.dicoCb[cb])
-          if not(cb.isChecked()) and self.dicoCb[cb] in self.listeChecked     : self.listeChecked.remove(self.dicoCb[cb])
-      self.parentMC.recalculeListeMC(self.listeChecked)
+      
 
-#
-#  def ajoutMC(self):
-#     maListe=""
-#     for cb in self.dicoCb.keys():
-#         if cb.isChecked() : maListe+="+"+str(cb.text())
-#     if maListe=="":return
-     #print "dans Optionnel __ ajout de ", maListe
-#     self.parentMC.ajoutMC(maListe)
-#

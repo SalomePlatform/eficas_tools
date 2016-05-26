@@ -61,6 +61,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
           nouveauTitre=debutTitre
       self.editor.appliEficas.setWindowTitle(nouveauTitre)
 
+
       #print self.node.tree
 
       if monEnvQT5 :
@@ -173,15 +174,18 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       return listeACreer
 
   def ajouteRadioButtons(self):
+      #print 'ds ajouteRadioButtons'
       filtre=str(self.LEFiltre.text())
       if filtre==str("") : filtre=None
       if hasattr(self,'buttonGroup') :
          for b in self.buttonGroup.buttons():
              self.buttonGroup.removeButton(b)
+             b.setParent(None)
              b.close()
       else :
          self.buttonGroup = QButtonGroup()
       for w in self.listeWidget :
+         w.setParent(None)
          w.close()
       self.listeWidget=[]
       if self.affiche_alpha==1 :

@@ -186,18 +186,18 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
     def ajoutExecution(self):
-        self.menuExecution = self.menubar.addMenu(QApplication.translate("Eficas", "Execution", None, QApplication.UnicodeUTF8))
+        self.menuExecution = self.menubar.addMenu(tr("Execution"))
         self.actionExecution = QAction(self)
         if sys.platform[0:5]=="linux":
           icon6 = QIcon(self.repIcon+"/roue.png")
           self.actionExecution.setIcon(icon6)
         else :
-          self.actionExecution.setText(QApplication.translate("Eficas", "Run", None))
+          self.actionExecution.setText(tr("Run"))
         self.actionExecution.setObjectName("actionExecution")
         self.menuExecution.addAction(self.actionExecution)
         if not(self.actionExecution in self.toolBar.actions()):
            self.toolBar.addAction(self.actionExecution)
-        self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
+        self.actionExecution.setText(tr("Execution"))
         if monEnvQT5 : self.actionExecution.triggered.connect(self.run)
         else         : self.connect(self.actionExecution,SIGNAL("triggered()"),self.run)
 
@@ -209,7 +209,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuExecution.addAction(self.actionSaveRun)
         if not(self.actionSaveRun in self.toolBar.actions()):
            self.toolBar.addAction(self.actionSaveRun)
-        self.actionSaveRun.setText(QApplication.translate("Eficas", "Save Run", None, QApplication.UnicodeUTF8))
+        self.actionSaveRun.setText(tr("Save Run"))
         if monEnvQT5 : self.actionSaveRun.triggered.connect(self.saveRun)
         else         : self.connect(self.actionSaveRun,SIGNAL("triggered()"),self.saveRun)
 
@@ -523,7 +523,7 @@ class Appli(Ui_Eficas,QMainWindow):
            self.menuPatrons = QMenu(self.menubar)
            self.menuPatrons.setObjectName("menuPatrons")
            self.menubar.addAction(self.menuPatrons.menuAction())
-           self.menuPatrons.setTitle(QApplication.translate("Eficas", "Patrons", None, QApplication.UnicodeUTF8))
+           self.menuPatrons.setTitle(tr("Patrons"))
         else :
            self.menuPatrons.clear()
         self.listePatrons = listePatrons.listePatrons(self.code)

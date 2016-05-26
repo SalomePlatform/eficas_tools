@@ -24,6 +24,7 @@ import string,types,os
 from determine import monEnvQT5
 if monEnvQT5:
     from PyQt5.QtWidgets  import QCheckBox, QScrollBar, QFrame, QApplication
+    from PyQt5.QtGui  import QPalette
     from PyQt5.QtCore import Qt
 else :
     from PyQt4.QtGui  import *
@@ -36,22 +37,31 @@ from desWidgetPlusieursInto import Ui_WidgetPlusieursInto
 from politiquesValidation   import PolitiquePlusieurs
 from qtSaisie               import SaisieValeur
 from gereListe              import GerePlie
+from gereListe              import GereListe
 
-class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
+class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        #print "MonWidgetPlusieursInto", nom, self
+        print "MonWidgetPlusieursInto", nom, self
         self.index=1
+        self.alpha=0
+        self.listeCB=[]
+        self.toto=0
+        self.listeCbRouge=[]
+        self.listeValeursCourantes=node.item.GetListeValeurs()
+        if self.listeValeursCourantes == None : self.listeValeursCourantes=[]
+
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-        self.listeValeursCourantes=self.node.item.GetListeValeurs()
+        GereListe.__init__(self)
+
         self.parentQt.commandesLayout.insertWidget(-1,self)
-        #if len(self.listeValeursCourantes) == len(self.monSimpDef.into) : self.CBCheck.setChecked(False)
-        #else : self.CBCheck.setChecked(True)
-        if monEnvQT5 : self.CBCheck.stateChanged.connect(self.change)
-        else         : self.connect(self.CBCheck, SIGNAL('stateChanged(int)'),self.change)
+        if monEnvQT5 : self.CBCheck.stateChanged.connect(self.changeTout)
+        else         : self.connect(self.CBCheck, SIGNAL('stateChanged(int)'),self.changeTout)
+
         self.gereIconePlier()
         self.inhibe=False
         self.finCommentaireListe()
+
         # try except si la liste des possibles est vide
         # prevoir qqchose
         try :
@@ -60,26 +70,37 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
           pass
 
 
-  def change(self,int):
-       if self.inhibe:return
+  def changeTout(self,int):
+       if self.inhibe : return
        self.inhibe=True
        if not(self.CBCheck.isChecked()) : 
+          min,max = self.node.item.GetMinMax()
+          if max < len(self.listeAAfficher) :
+             commentaire=tr('impossible de tout selectionner : max =')+str(max)
+             self.editor.affiche_infos(commentaire,Qt.red)
+             self.inhibe=False
+             return
           for i in range(len(self.listeAAfficher)):
               nomCB="lineEditVal"+str(i+1)
               courant=getattr(self,nomCB)
               courant.setChecked(True)
           self.CBCheck.setChecked(False)
        else :
-          min,max = self.node.item.GetMinMax()
           for i in range(len(self.listeAAfficher)):
               nomCB="lineEditVal"+str(i+1)
               courant=getattr(self,nomCB)
               courant.setChecked(False)
           self.CBCheck.setChecked(True)
        self.inhibe=False
+       self.changeValeur()
 
   def setValeurs(self):
-       self.listeValeursCourantes=self.node.item.GetListeValeurs()
+       self.listeValeursCourantes =self.node.item.get_valeur()
+       if self.listeValeursCourantes ==  None : self.listeValeursCourantes=[]
+       #print "ds set Valeur", self.listeValeursCourantes, self.node.item.get_valeur()
+       self.politique=PolitiquePlusieurs(self.node,self.editor)
+       self.vScrollBar = self.scrollArea.verticalScrollBar()
+
        if hasattr(self.node.item.definition.validators,'set_MCSimp'):
             obj=self.node.item.getObject()
             self.node.item.definition.validators.set_MCSimp(obj)
@@ -89,44 +110,53 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
                    if self.node.item.definition.validators.verif_item(item)==1:
                       liste.append(item)
                self.listeAAfficher=self.node.item.get_liste_possible(liste)
-               #print self.listeAAfficher
             else: 
                self.listeAAfficher=self.node.item.get_liste_possible([])
        else :
                self.listeAAfficher=self.node.item.get_liste_possible([])
 
-       self.PourEtreCoche=self.listeValeursCourantes
-       if self.objSimp.wait_assd() : 
-          self.listeAAfficher=self.node.item.get_sd_avant_du_bon_type()
-          self.PourEtreCoche=[]
-          for concept in self.listeValeursCourantes:
-              self.PourEtreCoche.append(concept.nom)
+       maListe=[]
+       for  i in self.listeAAfficher: maListe.append(i)  
+       if self.alpha==1 : maListe.sort()
        if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
        else : self.setMinimumHeight(len(self.listeAAfficher)*30)
-       self.adjustSize()
-       self.vScrollBar = self.scrollArea.verticalScrollBar()
-       self.politique=PolitiquePlusieurs(self.node,self.editor)
-       self.indexListe=1
-       for i in range(1,len(self.listeAAfficher)+1): self.ajoutCB(i)
-       for i in range(len(self.listeAAfficher)):
+
+
+       self.PourEtreCoche=[]
+       if self.objSimp.wait_assd() : 
+          self.listeAAfficher=self.node.item.get_sd_avant_du_bon_type()
+          for concept in self.listeValeursCourantes:
+              self.PourEtreCoche.append(concept.nom)
+       else :
+          for val in self.listeValeursCourantes:
+              self.PourEtreCoche.append(val)
+       print self.PourEtreCoche
+
+       for i in range(1,len(maListe)+1): self.ajoutCB(i)
+
+       self.inhibe=True
+       for i in range(len(maListe)):
            nomCB="lineEditVal"+str(i+1)
            courant=getattr(self,nomCB)
-           courant.setText(str(self.listeAAfficher[i]))
-           #if self.monSimpDef.into[i] in self.listeValeursCourantes : 
-           if self.listeAAfficher[i] in self.PourEtreCoche : 
-              courant.setChecked(True)
+           courant.setText(str(maListe[i]))
+           if maListe[i] in self.PourEtreCoche : courant.setChecked(True)
+           else                                : courant.setChecked(False)
+
            if monEnvQT5 : courant.toggled.connect(self.changeValeur)
-           else :         self.connect(courant,SIGNAL("toggled(bool)"),self.changeValeur)
+           else         : self.connect(courant,SIGNAL("toggled(bool)"),self.changeValeur)
+       self.inhibe=False
+
        self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)
        
 
   def ajoutCB(self,index,valeur=None):
-      #print "ajoutCB ", index
       nomCB="lineEditVal"+str(index)
       if hasattr(self,nomCB) : return
       nouveauCB = QCheckBox(self.scrollArea)
-      self.CBLayout.addWidget(nouveauCB)
-      QApplication.processEvents()
+      #self.CBLayout.addWidget(nouveauCB)
+      self.CBLayout.insertWidget(index-1,nouveauCB)
+      #QApplication.processEvents()
+      self.listeCB.append(nouveauCB)
       nouveauCB.setText("")
       if index % 2 == 1 : nouveauCB.setStyleSheet("background:rgb(210,210,210)")
       else :	                    nouveauCB.setStyleSheet("background:rgb(240,240,240)")
@@ -139,10 +169,6 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
         return self.finCommentaireListe() 
 
   def ajout1Valeur(self,valeur=None):
-        #print "________________"
-        #print self
-        #print self.node
-        #print self.node.item
         if valeur == None : return
         liste,validite=SaisieValeur.TraiteLEValeur(self,str(valeur))
         if validite == 0 : return
@@ -153,8 +179,6 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
         if (comm2 != "" and comm != None) : return comm2
         if validite : 
            self.listeValeursCourantes=self.listeValeursCourantes+listeRetour
-           if len(self.listeValeursCourantes) > self.monSimpDef.min :
-              self.node.item.set_valeur(self.listeValeursCourantes)
            return None
         else :
            return(comm2+" "+comm)
@@ -162,9 +186,11 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
 
 
   def changeValeur(self):
+      if self.inhibe == True: return
+      self.noircirResultatFiltre()
       self.listeValeursCourantesAvant=self.listeValeursCourantes
       self.listeValeursCourantes = []
-      #print "changeValeur ____________" , self.monSimpDef.into, len(self.monSimpDef.into)
+
       for i in range (1,len(self.listeAAfficher)+1):
           nomLineEdit="lineEditVal"+str(i)
           courant=getattr(self,nomLineEdit)
@@ -172,20 +198,40 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie):
           valeur=courant.text()
           if valeur != None and valeur != "" : 
              commentaire=self.ajout1Valeur(valeur)
-             if (commentaire != None ):
+             if (commentaire != None ): 
                  self.editor.affiche_infos(commentaire,Qt.red)
+                 self.listeValeursCourantesAvant=self.listeValeursCourantes
+                 self.setValeurs()
+
       min,max = self.node.item.GetMinMax()
       if len(self.listeValeursCourantes) < min : 
          self.editor.affiche_infos(tr("Nombre minimal de valeurs : ") + str(min),Qt.red)
       elif len(self.listeValeursCourantes) > max : 
          self.editor.affiche_infos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
-      if self.listeValeursCourantes== [] : self.listeValeursCourantes=None
-      self.node.item.set_valeur(self.listeValeursCourantes)
-      if self.listeValeursCourantes != None and (len(self.listeValeursCourantes) != len(self.monSimpDef.into)) : 
-         self.inhibe=True
-         self.CBCheck.setChecked(True)
-         self.inhibe=False
+
+      if self.listeValeursCourantes== [] :  self.node.item.set_valeur(None)
+      else : self.node.item.set_valeur(self.listeValeursCourantes)
+
       self.setValide()
       self.reaffiche()
 
 
+  def prepareListeResultatFiltre(self):
+      filtre=str(self.LEFiltre.text())
+      for cb in self.listeCB:
+          texte=cb.text() 
+          if texte.find(filtre) == 0 :
+            palette = QPalette(Qt.red)
+	    palette.setColor(QPalette.WindowText,Qt.red)
+	    cb.setPalette(palette)
+            t=cb.text()
+            cb.setText(t)
+            self.listeCbRouge.append(cb)
+
+  def prepareListeResultat(self):
+      self.clearAll()
+      self.setValeurs()
+
+  def clearAll(self):
+      for cb in self.listeCB :
+         cb.setText("")
