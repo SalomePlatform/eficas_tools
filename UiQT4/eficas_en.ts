@@ -2553,7 +2553,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="272"/>
         <source>La valeur : %s  ne fait pas partie des choix possibles %s</source>
-        <translation>value %s is not a valid choice</translation>
+        <translation>value %s is not a valid choice %s</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="285"/>
