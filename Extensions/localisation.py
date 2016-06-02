@@ -78,6 +78,7 @@ def localise(application, locale=None ):
     #print "eficas_" + locale, monPath
     if eficas_translator.load("eficas_" + locale, monPath):
         QApplication.installTranslator(eficas_translator)
+        print "chargement eficas_", locale, monPath
     else:
         print "Unable to load Eficas translator!"
 

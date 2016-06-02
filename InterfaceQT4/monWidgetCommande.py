@@ -62,6 +62,11 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
       maPolice= QFont("Times", 10,)
       self.setFont(maPolice)
+      print 'jjjjjjjjjjjjjjjjjjjjjjjjj'
+      print self.obj.nom
+      print tr(self.obj.nom)
+      print tr("TITLE")
+      print 'jjjjjjjjjjjjjjjjjjjjjjjjj'
       self.labelNomCommande.setText(tr(self.obj.nom))
 
       self.commandesLayout.addStretch()

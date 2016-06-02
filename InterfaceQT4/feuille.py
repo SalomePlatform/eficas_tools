@@ -83,7 +83,10 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    def setNom(self):
        self.debutToolTip=""
+       print "kkkkkkkkkkkkkkkkkk"
+       print self.objSimp.nom
        nomTraduit=tr(self.objSimp.nom)
+       print nomTraduit
        #if len(nomTraduit) >= nomMax :
        #  nom=nomTraduit[0:nomMax]+'...'
        #  self.label.setText(nomTraduit)
