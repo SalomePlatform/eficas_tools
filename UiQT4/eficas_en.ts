@@ -2217,12 +2217,12 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../generator/generator_aplat.py" line="147"/>
         <source>Format pas implémenté : %s</source>
-        <translation>Not implemented fromat</translation>
+        <translation>Not implemented format : %s</translation>
     </message>
     <message>
         <location filename="../../generator/generator_pyth.py" line="143"/>
-        <source>Type de valeur non supporte par le format pyth : n %(exception)s</source>
-        <comment>nom</comment>
+        <source>Type de valeur non supporte par le format python %(exception)s</source>
+        <comment>Python exception %(exception)</comment>
         <translation>unsupported type of value</translation>
     </message>
     <message>
@@ -2538,17 +2538,17 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="190"/>
         <source>Type non encore gÃ©rÃ© %s</source>
-        <translation>unknown type</translation>
+        <translation>unknown type %s</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="191"/>
         <source>%s (de type %s) n&apos;est pas d&apos;un type autorisÃ©: %s %s</source>
-        <translation>%s (type %s) is not a valid valid of type :%s%s</translation>
+        <translation>%s (type %s) is not a valid.  valid type :%s%s</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="250"/>
         <source>Nombre d&apos;arguments de %s incorrect (min = %s, max = %s)</source>
-        <translation>incorrect number of arguments % (min = %s, max = %s)</translation>
+        <translation>incorrect number of arguments %s (min = %s, max = %s)</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="272"/>
@@ -2563,7 +2563,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="304"/>
         <source>%s n&apos;est pas une chaine de longueur comprise entre %s et %s</source>
-        <translation>Length % is not between %s and %s</translation>
+        <translation>Length %s is not between %s and %s</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="310"/>
@@ -2588,7 +2588,7 @@ Le fichier associe n&apos;est pas defini</source>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="595"/>
         <source>%s ne contient pas les Ã©lÃ©ments devant Ãªtre prÃ©sent ensemble: %s </source>
-        <translation>%s doe not contain elements which have to be present together</translation>
+        <translation>%s does not contain elements which have to be present together</translation>
     </message>
     <message>
         <location filename="../../Noyau/N_VALIDATOR.py" line="632"/>
