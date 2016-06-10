@@ -22,9 +22,9 @@ import string,types,os,re,sys
 import traceback
 from  determine import monEnvQT5
 if monEnvQT5 :
-  from PyQt5.QtWidgets import QMessageBox, QFileDialog
+  from PyQt5.QtWidgets import QMessageBox, QFileDialog , QMenu
   from PyQt5.QtGui import QIcon
-  from PyQt5.QtCore import  QFileInfo,  Qt, QSize
+  from PyQt5.QtCore import  QFileInfo,  Qt, QSize, QVariant
 
 else:
   from PyQt4.QtGui  import *
@@ -168,10 +168,10 @@ class FacultatifOuOptionnel:
   def setRun(self):
       if hasattr(self.editor.appliEficas, 'mesScripts'):
          if hasattr(self.editor,'tree') and self.editor.tree.currentItem().item.get_nom() in self.appliEficas.mesScripts.dict_commandes.keys() :
-               print 'il faut programmer le self.ajoutScript()'
-               print '#PNPNPNPN'
+               self.ajoutScript()
                return
       if hasattr(self,"RBRun"): self.RBRun.close()
+      if hasattr(self,"CBScripts"): self.CBScripts.close()
 
 
   def aDetruire(self):
@@ -200,6 +200,55 @@ class FacultatifOuOptionnel:
       self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(newNode.fenetre)
       #newNode.fenetre.setFocus()
 
+
+  def ajoutScript(self):
+    # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
+        listeCommandes=self.appliEficas.mesScripts.dict_commandes[self.node.item.get_nom()]
+        if type(listeCommandes) != types.TupleType: listeCommandes=(listeCommandes,)
+        numero=-1
+        for commande in listeCommandes :
+          numero+=1
+          conditionSalome=commande[3]
+          if (self.appliEficas.salome == 0 and conditionSalome == True): continue
+          self.CBScripts.addItem(commande[1])
+          #self.CBScripts.addItem(commande[1],QVariant((numero)))
+        return
+        if 1 :
+           label=commande[1]
+           tip=commande[5]
+           self.action=QAction(label,self.tree)
+           self.action.setStatusTip(tip)
+           if monEnvQT5 :
+              if numero==4:
+                 self.action.triggered.connect(self.AppelleFonction4)
+              if numero==3:
+                 self.action.triggered.connect(self.AppelleFonction3)
+                 numero=4
+              if numero==2:
+                 self.action.triggered.connect(self.AppelleFonction2)
+                 numero=3
+              if numero==1:
+                 self.action.triggered.connect(self.AppelleFonction1)
+                 numero=2
+              if numero==0:
+                 self.action.triggered.connect(self.AppelleFonction0)
+                 numero=1
+           else:
+              if numero==4:
+                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction4)
+              if numero==3:
+                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction3)
+                 numero=4
+              if numero==2:
+                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction2)
+                 numero=3
+              if numero==1:
+                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction1)
+                 numero=2
+              if numero==0:
+                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction0)
+                 numero=1
+           self.menu.addAction(self.action)
 
 class ContientIcones:
 

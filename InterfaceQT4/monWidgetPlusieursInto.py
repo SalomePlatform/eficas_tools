@@ -23,8 +23,9 @@ import string,types,os
 # Modules Eficas
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets  import QCheckBox, QScrollBar, QFrame, QApplication
-    from PyQt5.QtGui  import QPalette
+    from PyQt5.QtWidgets  import QCheckBox, QScrollBar, QFrame, QApplication, QLabel
+    from PyQt5.QtWidgets  import QSizePolicy,QSpacerItem
+    from PyQt5.QtGui  import QPalette, QFont
     from PyQt5.QtCore import Qt
 else :
     from PyQt4.QtGui  import *
@@ -46,7 +47,6 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
         self.index=1
         self.alpha=0
         self.listeCB=[]
-        self.toto=0
         self.listeCbRouge=[]
         self.listeValeursCourantes=node.item.GetListeValeurs()
         if self.listeValeursCourantes == None : self.listeValeursCourantes=[]
@@ -59,8 +59,20 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
         else         : self.connect(self.CBCheck, SIGNAL('stateChanged(int)'),self.changeTout)
 
         self.gereIconePlier()
+        self.editor.listeDesListesOuvertes.add(self.node.item)
         self.inhibe=False
         self.finCommentaireListe()
+
+        if self.listeAAfficher== None or self.listeAAfficher==[] : 
+            spacerItem = QSpacerItem(30, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+            self.CBLayout.addItem(spacerItem)
+            nouveauCommentaire=QLabel()
+            maPolice= QFont("Times", 16)
+            nouveauCommentaire.setFont(maPolice);
+            nouveauCommentaire.setText(tr('Pas de valeurs possibles'))
+            self.CBLayout.addWidget(nouveauCommentaire)
+            spacerItem2 = QSpacerItem(40, 70, QSizePolicy.Fixed, QSizePolicy.Minimum)
+            self.CBLayout.addItem(spacerItem2)
 
         # try except si la liste des possibles est vide
         # prevoir qqchose
@@ -115,23 +127,22 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
        else :
                self.listeAAfficher=self.node.item.get_liste_possible([])
 
-       maListe=[]
-       for  i in self.listeAAfficher: maListe.append(i)  
-       if self.alpha==1 : maListe.sort()
+       if self.objSimp.wait_assd() : 
+          self.listeAAfficher=self.node.item.get_sd_avant_du_bon_type()
+       if self.listeAAfficher== None or self.listeAAfficher==[] : self.listeAAfficher=[]
+
        if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
        else : self.setMinimumHeight(len(self.listeAAfficher)*30)
 
-
        self.PourEtreCoche=[]
        if self.objSimp.wait_assd() : 
-          self.listeAAfficher=self.node.item.get_sd_avant_du_bon_type()
-          for concept in self.listeValeursCourantes:
-              self.PourEtreCoche.append(concept.nom)
+          for concept in self.listeValeursCourantes: self.PourEtreCoche.append(concept.nom)
        else :
-          for val in self.listeValeursCourantes:
-              self.PourEtreCoche.append(val)
-       print self.PourEtreCoche
+          for val in self.listeValeursCourantes: self.PourEtreCoche.append(val)
 
+       maListe=[]
+       for  i in self.listeAAfficher: maListe.append(i)  
+       if self.alpha==1 : maListe.sort()
        for i in range(1,len(maListe)+1): self.ajoutCB(i)
 
        self.inhibe=True
@@ -235,3 +246,5 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
   def clearAll(self):
       for cb in self.listeCB :
          cb.setText("")
+
+

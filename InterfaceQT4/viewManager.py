@@ -63,7 +63,7 @@ class MyTabview:
    def handleOpen(self,fichier=None,patron=0,units=None):
        result = None
        if fichier is None:
-            if self.appliEficas.multi==True : 
+            if self.appliEficas.demande==True : 
                self.appliEficas.definitCode(None,None)
                if self.appliEficas.code == None:return
             
@@ -173,7 +173,7 @@ class MyTabview:
        editor.handleSupprimer()
 
    def newEditor(self,include=0):
-       if self.appliEficas.multi==True : 
+       if self.appliEficas.demande==True : 
            self.appliEficas.definitCode(None,None)
            if self.appliEficas.code == None:return
        maPage=self.getEditor(include=include)

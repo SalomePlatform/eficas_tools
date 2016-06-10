@@ -21,8 +21,8 @@
 # Modules Eficas
 
 from desSelectVal import Ui_DSelVal
+from determine import monEnvQT5
 
-fromm determine import monEnvQT5
 if monEnvQT5:
     from PyQt5.QtWidgets import QDialog
     from PyQt5.QtCore import QTimer
@@ -51,7 +51,8 @@ class MonSelectVal(DSelVal):
         self.file=str(file)
         self.readVal()
         self.initVal()
-        self.connecterSignaux()
+        if monEnvQT5: self.connecterSignaux()
+        else : self.connecterSignauxQT4()
 
   def connecterSignaux(self) :
         self.Bespace.clicked.connect(self.SelectEsp)
@@ -59,7 +60,7 @@ class MonSelectVal(DSelVal):
         self.Bvirgule.clicked.connect(self.SelectVir)
         self.BImportSel.clicked.connect(self.BImportSelPressed)
         self.BImportTout.clicked.connect(self.BImportToutPressed)
-        self.parent.editor.sb.messageChanged(self.messageAChanger)
+        self.parent.editor.sb.messageChanged.connect(self.messageAChanger)
 
   def connecterSignauxQT4(self) :
         self.connect(self.Bespace,SIGNAL("clicked()"),self.SelectEsp)

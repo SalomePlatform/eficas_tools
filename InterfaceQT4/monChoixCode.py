@@ -60,7 +60,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
   def verifieInstall(self):
       self.groupCodes=QButtonGroup(self.groupBox)
       vars=os.environ.items()
-      listeCode=('Aster','Adao','Carmel3D','CarmelCND','CF','MAP','MT','PSEN','Telemac','ZCracks',)
+      listeCode=('Aster','Adao','Carmel3D','CarmelCND','CF','MAP','MT','PSEN','PSEN_N1','Telemac','ZCracks',)
       i=1
       for code in listeCode:
           nom='rB_'+code

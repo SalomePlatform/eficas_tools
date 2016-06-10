@@ -333,6 +333,13 @@ QLineEdit:disabled
                 </widget>
                </item>
                <item>
+                <widget class="QComboBox" name="CBScripts">
+                 <property name="frame">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <widget class="QToolButton" name="RBInfo">
                  <property name="minimumSize">
                   <size>

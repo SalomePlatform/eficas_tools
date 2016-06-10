@@ -283,6 +283,7 @@ class GerePlie:
 
    def gereIconePlier(self):
       if not(hasattr(self,'BFermeListe')) : return
+      self.editor.listeDesListesOuvertes.add(self.node.item)
       repIcon=self.node.editor.appliEficas.repIcon
       if not (self.editor.afficheListesPliees):
          fichier=os.path.join(repIcon, 'empty.png')

@@ -324,10 +324,10 @@ class READERCATA:
         #    self.cree_rubrique(e,self.dico,0)
         #print self.dicoInverse
 
-        from Extensions import localisation
-        app=QApplication
+        #from Extensions import localisation
+        #app=QApplication
         # tres dommage  A Revoir
-        localisation.localise(app,"fr")
+        #localisation.localise(app,"fr")
         self.dicoInverseFrancais={}
         self.dicoFrancaisAnglais={}
         self.dicoAnglaisFrancais={}
@@ -340,6 +340,7 @@ class READERCATA:
             self.dicoInverseFrancais[tr(k)]=listefr
             #print tr(k),listefr
         if self.appliEficas.langue=="ang" : localisation.localise(app,"en")
+        
          
         
    def traite_entite(self,e):

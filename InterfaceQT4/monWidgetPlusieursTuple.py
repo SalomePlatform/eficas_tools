@@ -23,9 +23,9 @@ import string,types,os,sys
 # Modules Eficas
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets  import QFrame,QApplication
-    from PyQt5.QtGui  import QIcon, QFrame
-    from PyQt5.QtCore  import QSize
+    from PyQt5.QtWidgets  import QFrame,QApplication, QFrame, QWidget
+    from PyQt5.QtGui  import QIcon
+    from PyQt5.QtCore  import QSize, Qt
 else :
     from PyQt4.QtGui  import *
     from PyQt4.QtCore import *
@@ -147,6 +147,7 @@ class TupleCustom3(QWidget,Ui_Tuple3,TupleCustom):
 class MonWidgetPlusieursTuple(Feuille,GereListe):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        print "MonWidgetPlusieursTuple"
         self.indexDernierLabel=0
         self.nomLine="TupleVal"
         self.listeAffichageWidget=[]
@@ -302,6 +303,11 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
   def RBListePush(self):
   # PN a rendre generique avec un truc tel prerempli
       if self.objSimp.valeur != None and self.objSimp.valeur != [] : return
+      if not hasattr(self.editor.readercata.cata[0],'sd_ligne') : self.editor.readercata.cata[0].sd_ligne=None
+      if not hasattr(self.editor.readercata.cata[0],'sd_generateur') : self.editor.readercata.cata[0].sd_generateur=None
+      if not hasattr(self.editor.readercata.cata[0],'sd_transfo') : self.editor.readercata.cata[0].sdtransfo=None
+      if not hasattr(self.editor.readercata.cata[0],'sd_charge') : self.editor.readercata.cata[0].sd_charge=None
+      if not hasattr(self.editor.readercata.cata[0],'sd_moteur') : self.editor.readercata.cata[0].sd_moteur=None
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_ligne :
          val=[]
          for k in self.objSimp.jdc.LineDico.keys() :

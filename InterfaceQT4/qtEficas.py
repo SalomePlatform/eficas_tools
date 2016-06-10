@@ -58,12 +58,13 @@ class Appli(Ui_Eficas,QMainWindow):
         self.QWParent=None #(Pour lancement sans IHM)
         self.code=code
         self.indice=0
+        self.first=1
         self.dict_reels={}
         if monEnvQT5 : self.recent =  []
         else : self.recent =  QStringList()
         self.ficRecents={}
         self.listeAEnlever=[]
-        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND','MT']
+        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND','MT','PSEN','PSEN_N1']
         self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
 
         if self.salome:
@@ -72,17 +73,24 @@ class Appli(Ui_Eficas,QMainWindow):
           Accas.SalomeEntry = eficasSalome.SalomeEntry
 
         self.multi=multi
+        self.demande=multi # specifique PSEN
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
 
-        if not self.salome and hasattr(self.CONFIGURATION,'lang') : langue=self.CONFIGURATION.lang
+        if not self.salome and hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'lang') : langue=self.CONFIGURATION.lang
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
 
-        from Extensions import localisation
-        app=QApplication
-        localisation.localise(app,langue)
+        #from Extensions import localisation
+        #app=QApplication
+        #localisation.localise(app,langue)
+        #print tr('FORTRAN_FILE')
+        #localisation.localise(app,langue,'titi_fr.qm')
+        #print tr('titi1')
+        #localisation.localise(app,langue,'toto.qm')
+        #print tr('titi1')
+        #print pomu
 
         self.setupUi(self)
         if self.code in ['MAP',] : self.resize(1440,self.height())
@@ -153,7 +161,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.initPatrons()
         self.initRecents()
         self.initAides()
-        for intituleMenu in ("menuTraduction","menuOptions","menuMesh","menuExecution"):
+        for intituleMenu in ("menuTraduction","menuOptions","menuMesh","menuExecution","menuN1"):
               if hasattr(self,intituleMenu):
                  menu=getattr(self,intituleMenu)
                  menu.setAttribute(Qt.WA_DeleteOnClose)
@@ -184,6 +192,37 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionCode.setEnabled(True)
         self.menuAide.addAction(self.actionCode)
 
+    def newN1(self):
+        ssCode=None
+        code="PSEN_N1"
+        self.cleanPath()
+        dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))
+        sys.path.insert(0,dirCode)
+        self.code=code
+        self.definitCode(code,ssCode)
+        self.multi=True
+        self.demande=False
+        self.fileNew()
+
+    def newPSEN(self):
+        ssCode=None
+        code="PSEN"
+        self.cleanPath()
+        dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))
+        sys.path.insert(0,dirCode)
+        self.code=code
+        self.definitCode(code,ssCode)
+        self.multi=True
+        self.demande=False
+        self.fileNew()
+
+    def ajoutN1(self):
+        self.menuN1 = self.menubar.addMenu(tr("Etude N-1"))
+        self.actionN1 = QAction(self)
+        self.actionN1.setText(tr("Etude N1"))
+        self.menuN1.addAction(self.actionN1)
+        if monEnvQT5 : self.actionN1.triggered.connect(self.newN1)
+        else         : self.connect(self.actionN1,SIGNAL("triggered()"),self.newN1)
 
     def ajoutExecution(self):
         self.menuExecution = self.menubar.addMenu(tr("Execution"))
@@ -292,11 +331,21 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.setTitle(tr("Options"))
 
     def PSEN(self):
+        if self.first:
+         self.first=0
+         if monEnvQT5:
+           self.action_Nouveau.triggered.disconnect(self.fileNew)
+           self.action_Nouveau.triggered.connect(self.newPSEN)
+           self
+         else :
+           self.disconnect(self.action_Nouveau,SIGNAL("triggered()"),self.fileNew)
+           self.connect(self.action_Nouveau,SIGNAL("triggered()"),self.newPSEN)
         self.enleverActionsStructures()
         self.enleverParametres()
         self.enleverRechercherDsCatalogue()
         self.enleverNewInclude()
         self.ajoutExecution()
+        self.ajoutN1()
         self.ajoutHelpPSEN()
         self.ajoutIcones()
 

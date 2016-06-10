@@ -1255,7 +1255,26 @@ class JDCEditor(Ui_baseWidget,QWidget):
         etape.build_includeInclude(texte)
         self.tree.racine.build_children()
 
-
+    def ajoutMC(self,etape,MCFils,valeurs):
+        print etape.nom
+        #print etape,MCFils,valeurs 
+        print dir(etape)
+        #print 'etape' , etape
+        #print MCFils.valeur
+        #print MCFils.val
+        print etape.liste_mc_presents()
+        monMC= etape.addentite('TransfosList')
+        #print etape.append_child
+        #monMC=etape.append_child('TransfosList','last')
+        print etape.liste_mc_presents()
+        # Attention ne pas faire de setValeurs
+        monMC.valeur=valeurs
+        monMC.val=valeurs
+        print monMC.val
+        #print MCFils.valeur
+        #print MCFils.val
+        print etape.liste_mc_presents()
+        print "________"
 
 
     #-------------------------------------#

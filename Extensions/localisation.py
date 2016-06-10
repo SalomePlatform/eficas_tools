@@ -30,7 +30,7 @@ else :
 qt_translator = QTranslator()
 eficas_translator = QTranslator()
 
-def localise(application, locale=None ):
+def localise(application, locale=None,file=None ):
     """
     localise(QApplication) -> None
 
@@ -74,8 +74,16 @@ def localise(application, locale=None ):
     #    print "Unable to load Qt base translator!"
     
     global eficas_translator
+    print locale
     if locale=="ang" : locale="en"
     #print "eficas_" + locale, monPath
+    if file != None :
+       print 'chagrement de ', file,monPath
+       print eficas_translator.load(file,monPath)
+       print QApplication.installTranslator(eficas_translator)
+       return
+     
+
     if eficas_translator.load("eficas_" + locale, monPath):
         QApplication.installTranslator(eficas_translator)
         print "chargement eficas_", locale, monPath

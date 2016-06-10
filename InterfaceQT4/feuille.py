@@ -83,10 +83,10 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    def setNom(self):
        self.debutToolTip=""
-       print "kkkkkkkkkkkkkkkkkk"
-       print self.objSimp.nom
+       #print "kkkkkkkkkkkkkkkkkk"
+       #print self.objSimp.nom
        nomTraduit=tr(self.objSimp.nom)
-       print nomTraduit
+       #print nomTraduit
        #if len(nomTraduit) >= nomMax :
        #  nom=nomTraduit[0:nomMax]+'...'
        #  self.label.setText(nomTraduit)
@@ -126,7 +126,10 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
            if mc.min == mc.max:
                commentaire=tr("Entrez ")+str(mc.min)+tr(" valeurs ")+'\n'
            else :
-               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")+'\n'
+               if mc.max != "**" :
+                  commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")+'\n'
+               else :
+                  commentaire=""
         else :
            if mc.min == mc.max:
                commentaire=tr("Entrez ")+str(mc.min)+" "+tr(d_aides[type])+'\n'
@@ -199,7 +202,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       #self.editor.affiche_infos(info)
 
    def reaffiche(self):
-      #print "dans reaffiche de feuille", self.nom
+      print "dans reaffiche de feuille", self.nom
       if self.editor.jdc.aReafficher==True :
          self.parentQt.reaffiche()
 

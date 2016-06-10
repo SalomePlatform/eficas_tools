@@ -1,6 +1,5 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2012   EDF R&D
+# Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,18 +17,24 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-"""
-   Ce module sert a lancer EFICAS configure pour Code_Aster
-"""
 # Modules Python
 # Modules Eficas
 
-import sys,os
-#sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
-import prefs
-name='prefs_'+prefs.code
-__import__(name)
+from  monSelectVal import MonSelectVal
 
+class MonSelectValPSEN(MonSelectVal):
+  """
+  Classe definissant le panel associe aux mots-cles qui demandent
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discretes
+  """
+  def __init__(self,file,parent,name = None,fl = 0):
+        self.MonSelectVal.__init__(file,parent,name = None,fl = 0):
 
-from InterfaceQT4 import eficas_go
-eficas_go.lance_eficas(code=prefs.code)
+  def Traitement(self):
+        print "kkkkkkkkkkkkkkkkkkkllllllllllllllllll"
+        liste1=self.textTraite.split(self.separateur)
+        print liste1
+        #self.parent.ajoutNValeur(liste) 
+        
+

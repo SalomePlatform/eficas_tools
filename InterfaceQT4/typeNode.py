@@ -71,6 +71,7 @@ class PopUpMenuNodeMinimal :
                self.ajoutScript()
     
     def ajoutScript(self):
+
     # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
         listeCommandes=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()]
         if type(listeCommandes) != types.TupleType: listeCommandes=(listeCommandes,)
