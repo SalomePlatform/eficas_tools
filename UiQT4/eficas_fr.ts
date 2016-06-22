@@ -3,6 +3,334 @@
   <context>
     <name>@default</name>
     <message>
+       <source>Year</source>
+       <translation>Annee</translation>
+    </message>
+    <message>
+       <source>Month</source>
+       <translation>Mois</translation>
+    </message>
+    <message>
+       <source>Day</source>
+       <translation>Jour</translation>
+    </message>
+    <message>
+       <source>Hour</source>
+       <translation>Heure</translation>
+    </message>
+    <message>
+       <source>Minute</source>
+       <translation>Minute</translation>
+    </message>
+    <message>
+       <source>Second</source>
+       <translation>Seconde</translation>
+    </message>
+    <message>
+       <source>Discretizations_In_Space</source>
+       <translation>Discretisations_En_Espace</translation>
+    </message>
+    <message>
+       <source>Discretizations_In_Space_Tracers</source>
+       <translation>Discretisations_En_Espace_Tracers</translation>
+    </message>
+    <message>
+       <source>Discretizations_In_Space_U_And_V</source>
+       <translation>Discretisations_En_Espace_U_And_V</translation>
+    </message>
+    <message>
+       <source>Discretizations_In_Space_K_And_Epsilon</source>
+       <translation>Discretisations_En_Espace_K_And_Epsilon</translation>
+    </message>
+    <message>
+       <source>Discretizations_In_Space_H</source>
+       <translation>Discretisations_En_Espace_H</translation>
+    </message>
+    <message>
+       <source>Supg_Option</source>
+       <translation>Option_De_Supg</translation>
+    </message>
+    <message>
+       <source>Supg_Option_Tracers</source>
+       <translation>Option_De_Supg_Tracers</translation>
+    </message>
+    <message>
+       <source>Supg_Option_U_And_V</source>
+       <translation>Option_De_Supg_U_And_V</translation>
+    </message>
+    <message>
+       <source>Supg_Option_K_And_Epsilon</source>
+       <translation>Option_De_Supg_K_And_Epsilon</translation>
+    </message>
+    <message>
+       <source>Supg_Option_H</source>
+       <translation>Option_De_Supg_H</translation>
+    </message>
+    <message>
+       <source>Type_Of_Advection</source>
+       <translation>Forme_De_La_Convection</translation>
+    </message>
+    <message>
+       <source>Forme_De_La_Convection</source>
+       <translation>Type_Of_Advection</translation>
+    </message>
+    <message>
+       <source>Type_Of_Advection_Tracers</source>
+       <translation>Forme_De_La_Convection_Tracers</translation>
+    </message>
+    <message>
+       <source>Type_Of_Advection_U_And_V</source>
+       <translation>Forme_De_La_Convection_U_And_V</translation>
+    </message>
+    <message>
+       <source>Type_Of_Advection_K_And_Epsilon</source>
+       <translation>Forme_De_La_Convection_K_And_Epsilon</translation>
+    </message>
+    <message>
+       <source>Type_Of_Advection_H</source>
+       <translation>Forme_De_La_Convection_H</translation>
+    </message>
+    <message>
+       <source>Hauteur constante</source>
+       <translation>Constant depth</translation>
+    </message>
+    <message>
+       <source>Mass_Lumping_On_H</source>
+       <translation>Mass_Lumping_Sur_H</translation>
+    </message>
+    <message>
+       <source>Mass_Lumping_On_Velocity</source>
+       <translation>Mass_Lumping_Sur_La_Vitesse</translation>
+    </message>
+    <message>
+       <source>Mass_Lumping_On_Tracers</source>
+       <translation>Mass_Lumping_Sur_Les_Traceurs</translation>
+    </message>
+    <message>
+       <source>Mass_Lumping_For_Weak_Characteristics</source>
+       <translation>Mass_Lumping_Pour_Les_Caracteristiques_Faibles</translation>
+    </message>
+    <message>
+      <source>INITIALIZATION</source>
+      <translation>INITIALISATION</translation>
+    </message>
+    <message>
+      <source>Input_Files</source>
+      <translation>Fichiers_D_Entree</translation>
+    </message>
+    <message>
+      <source>Formatted_And_Binary_Files</source>
+      <translation>Fichiers_Formates_Et_Binaires</translation>
+    </message>
+    <message>
+      <source>Initial_State</source>
+      <translation>Etat_Initial</translation>
+    </message>
+    <message>
+      <source>Coupling</source>
+      <translation>Couplage</translation>
+    </message>
+    <message>
+      <source>Mass_Balance</source>
+      <translation>Bilan_De_Masse</translation>
+    </message>
+    <message>
+      <source>BOUNDARY_CONDITIONS</source>
+      <translation>CONDITIONS_AUX_LIMITES</translation>
+    </message>
+    <message>
+      <source>NUMERICAL_PARAMETERS</source>
+      <translation>PARAMETRES_NUMERIQUES</translation>
+    </message>
+    <message>
+      <source>PHYSICAL_PARAMETERS</source>
+      <translation>PARAMETRES_PHYSIQUES</translation>
+    </message>
+    <message>
+      <source>OUTPUT_FILES</source>
+      <translation>FICHIERS_DE_SORTIE</translation>
+    </message>
+    <message>
+      <source>CONSTRUCTION_WORKS_MODELLING</source>
+      <translation>MODELISATION_DES_OUVRAGES</translation>
+    </message>
+    <message>
+      <source>GENERAL_PARAMETERS</source>
+      <translation>PARAMETRES_GENERAUX</translation>
+    </message>
+    <message>
+      <source>PARTICLE_TRANSPORT</source>
+      <translation>TRANSPORT_DE_PARTICULE</translation>
+    </message>
+    <message>
+      <source>Computation_Continued_Settings </source>
+      <translation>Parametres_De_Continuation_Du_Calcul</translation>
+    </message>
+    <message>
+      <source>Inputs_Outputs_For_Tide </source>
+      <translation>Entrees_Sorties_Pour_La_Maree</translation>
+    </message>
+    <message>
+      <source>Location</source>
+      <translation>Localisation</translation>
+    </message>
+    <message>
+      <source>Physical_Parameters </source>
+      <translation>Parametres_Physiques</translation>
+    </message>
+    <message>
+      <source>Liquid_Boundaries </source>
+      <translation>Frontieres_Liquide</translation>
+    </message>
+    <message>
+      <source>Solver_Definition </source>
+      <translation>Definition_Du_Solver</translation>
+    </message>
+    <message>
+      <source>Linearity </source>
+      <translation>Linearite</translation>
+    </message>
+    <message>
+      <source>Precondionning_Setting </source>
+      <translation>Parametres_Preconditionnement</translation>
+    </message>
+    <message>
+      <source>Matrix_Informations </source>
+      <translation>Stockage_Des_Matrices</translation>
+    </message>
+    <message>
+      <source>Advection </source>
+      <translation>Advection</translation>
+    </message>
+    <message>
+      <source>Propagation </source>
+      <translation>Propagation</translation>
+    </message>
+    <message>
+      <source>Diffusion </source>
+      <translation>Diffusion</translation>
+    </message>
+    <message>
+      <source>Discretization_Implicitation </source>
+      <translation>Discretisation</translation>
+    </message>
+    <message>
+      <source>Tidal</source>
+      <translation>Maree</translation>
+    </message>
+    <message>
+      <source>Various </source>
+      <translation>Divers</translation>
+    </message>
+    <message>
+      <source>Friction_Setting </source>
+      <translation>Parametres_De_Friction</translation>
+    </message>
+    <message>
+      <source>Meteorology </source>
+      <translation>Meteorologie</translation>
+    </message>
+    <message>
+      <source>Wave</source>
+      <translation>Houle</translation>
+    </message>
+    <message>
+      <source>Parameters_Estimation</source>
+      <translation>Parametres_A_Estimer</translation>
+    </message>
+    <message>
+      <source>Tolerances_For_Identification </source>
+      <translation>Tolerances_Pour_L_Identification</translation>
+    </message>
+    <message>
+      <source>Sources</source>
+      <translation>Sources</translation>
+    </message>
+    <message>
+      <source>Coriolis_Settings </source>
+      <translation>Parametres_Pour_Coriolis</translation>
+    </message>
+    <message>
+      <source>Various_For_Numerical </source>
+      <translation>Divers_Parametres_Numeriques</translation>
+    </message>
+    <message>
+      <source>Secondary_Currents_Settings </source>
+      <translation>Parametres_Pour_Les_Courants_Secondaires</translation>
+    </message>
+    <message>
+      <source>Tsunami </source>
+      <translation>Tsunami</translation>
+    </message>
+    <message>
+      <source>Graphic_And_Listing_Printouts </source>
+      <translation>Sorties_Listing_Et_Graphiques</translation>
+    </message>
+    <message>
+      <source>Controls</source>
+      <translation>Controles</translation>
+    </message>
+    <message>
+      <source>Fourier </source>
+      <translation>Fourier</translation>
+    </message>
+    <message>
+      <source>General_Location </source>
+      <translation>Localisation_Generale</translation>
+    </message>
+    <message>
+      <source>Time</source>
+      <translation>Temps</translation>
+    </message>
+    <message>
+      <source>Original_Date_Of_Time </source>
+      <translation>Date_A_L_Origine</translation>
+    </message>
+    <message>
+      <source>Original_Hour_Of_Time </source>
+      <translation>Temps_A_L_Origine</translation>
+    </message>
+    <message>
+      <source>Limit_Values</source>
+      <translation>Valeurs_Limites</translation>
+    </message>
+    <message>
+      <source>Tracers_Setting </source>
+      <translation>Parametres_Des_Traceurs</translation>
+    </message>
+    <message>
+      <source>Tracer</source>
+      <translation>Traceur</translation>
+    </message>
+    <message>
+      <source>Boundary_Conditions_For_Tracers</source>
+      <translation>Conditions_Aux_Limites_Pour_Les_Traceurs</translation>
+    </message>
+    <message>
+      <source>Solving</source>
+      <translation></translation>
+    </message>
+    <message>
+      <source>Accuracy </source>
+      <translation></translation>
+    </message>
+    <message>
+      <source>Source</source>
+      <translation>Source</translation>
+    </message>
+    <message>
+      <source>Metereology </source>
+      <translation>Metereologie</translation>
+    </message>
+    <message>
+      <source>Numerical</source>
+      <translation>Numerique</translation>
+    </message>
+    <message>
+      <source>Degradation</source>
+      <translation>Degradation</translation>
+    </message>
+    <message>
       <source>Values_Of_Tracers_In_The_Rain</source>
       <translation>Valeurs_Des_Traceurs_Dans_La_Pluie</translation>
     </message>
@@ -28,7 +356,7 @@
     </message>
     <message>
       <source>Origin_Coordinates</source>
-      <translation>Coordonnees_De_L'origine</translation>
+      <translation>Coordonnees_De_L_Origine</translation>
     </message>
     <message>
       <source>Thickness_Of_Algae</source>
@@ -60,7 +388,7 @@
     </message>
     <message>
       <source>Oil_Spill_Model</source>
-      <translation>Modele_De_Nappes_D'hydrocarbures</translation>
+      <translation>Modele_De_Nappes_D_Hydrocarbures</translation>
     </message>
     <message>
       <source>Definition_Of_Zones</source>
@@ -87,6 +415,10 @@
       <translation>Option_Pour_Les_Conditions_Aux_Limites_De_Maree</translation>
     </message>
     <message>
+      <source>Option_For_Liquid_Boundaries</source>
+      <translation>Option_Pour_Les_Frontieres_Liquides</translation>
+    </message>
+    <message>
       <source>Coefficient_To_Calibrate_Tidal_Velocities</source>
       <translation>Coefficient_De_Calage_Des_Vitesses_De_Courant</translation>
     </message>
@@ -96,7 +428,7 @@
     </message>
     <message>
       <source>Maximum_Number_Of_Iterations_For_Diffusion_Of_Tracers</source>
-      <translation>Maximum_D'iterations_Pour_La_Diffusion_Des_Traceurs</translation>
+      <translation>Maximum_D_Iterations_Pour_La_Diffusion_Des_Traceurs</translation>
     </message>
     <message>
       <source>Binary_Results_File</source>
@@ -152,7 +484,7 @@
     </message>
     <message>
       <source>Implicitation_Coefficient_Of_Tracers</source>
-      <translation>Coefficient_D'implicitation_Des_Traceurs</translation>
+      <translation>Coefficient_D_Implicitation_Des_Traceurs</translation>
     </message>
     <message>
       <source>Formatted_Results_File</source>
@@ -176,7 +508,7 @@
     </message>
     <message>
       <source>Coefficient_Of_Wind_Influence</source>
-      <translation>Coefficient_D'influence_Du_Vent</translation>
+      <translation>Coefficient_D_Influence_Du_Vent</translation>
     </message>
     <message>
       <source>Depth_In_Friction_Terms</source>
@@ -212,7 +544,7 @@
     </message>
     <message>
       <source>Original_Date_Of_Time</source>
-      <translation>Date_De_L'origine_Des_Temps</translation>
+      <translation>Date_De_L_origine_Des_Temps</translation>
     </message>
     <message>
       <source>Mean_Temperature</source>
@@ -248,7 +580,7 @@
     </message>
     <message>
       <source>Listing_Printout_Period</source>
-      <translation>Periode_Pour_Les_Sorties_Listing</translation>
+      <translation>Periode_De_Sortie_Listing</translation>
     </message>
     <message>
       <source>Initial_Guess_For_H</source>
@@ -284,7 +616,7 @@
     </message>
     <message>
       <source>Elements_Masked_By_User</source>
-      <translation>Elements_Masques_Par_L'utilisateur</translation>
+      <translation>Elements_Masques_Par_L_Utilisateur</translation>
     </message>
     <message>
       <source>Control_Sections</source>
@@ -312,7 +644,7 @@
     </message>
     <message>
       <source>Maximum_Number_Of_Iterations_For_Identification</source>
-      <translation>Maximum_D'iterations_Pour_L'identification</translation>
+      <translation>Maximum_D_Iterations_Pour_L_Identification</translation>
     </message>
     <message>
       <source>Coefficient_For_Diffusion_Of_Tracers</source>
@@ -348,7 +680,7 @@
     </message>
     <message>
       <source>Original_Hour_Of_Time</source>
-      <translation>Heure_De_L'origine_Des_Temps</translation>
+      <translation>Heure_De_L_origine_Des_Temps</translation>
     </message>
     <message>
       <source>Law_Of_Friction_On_Lateral_Boundaries</source>
@@ -361,10 +693,6 @@
     <message>
       <source>Solver_For_Diffusion_Of_Tracers</source>
       <translation>Solveur_Pour_La_Diffusion_Des_Traceurs</translation>
-    </message>
-    <message>
-      <source>Discretizations_In_Space</source>
-      <translation>Discretisations_En_Espace</translation>
     </message>
     <message>
       <source>Solver_Option</source>
@@ -396,7 +724,7 @@
     </message>
     <message>
       <source>Identification_Method</source>
-      <translation>Methode_D'identification</translation>
+      <translation>Methode_D_Identification</translation>
     </message>
     <message>
       <source>Names_Of_Points</source>
@@ -411,16 +739,20 @@
       <translation>Stockage_Des_Matrices</translation>
     </message>
     <message>
+      <source>Matrix_Vector_Product</source>
+      <translation>Produit_Matrice_Vecteur</translation>
+    </message>
+    <message>
       <source>Algae_Type</source>
       <translation>Type_Des_Algues</translation>
     </message>
     <message>
       <source>Water_Density</source>
-      <translation>Masse_Volumique_De_L'eau</translation>
+      <translation>Masse_Volumique_De_L_Eau</translation>
     </message>
     <message>
       <source>Newmark_Time_Integration_Coefficient</source>
-      <translation>Coefficient_D'integration_En_Temps_De_Newmark</translation>
+      <translation>Coefficient_D_Integration_En_Temps_De_Newmark</translation>
     </message>
     <message>
       <source>Friction_Data_File</source>
@@ -429,10 +761,6 @@
     <message>
       <source>Implicitation_For_Diffusion_Of_Velocity</source>
       <translation>Implicitation_Pour_La_Diffusion_Des_Vitesses</translation>
-    </message>
-    <message>
-      <source>Limit_Values</source>
-      <translation>Valeurs_Limites</translation>
     </message>
     <message>
       <source>Advection</source>
@@ -492,7 +820,7 @@
     </message>
     <message>
       <source>Time_Range_For_Fourier_Analysis</source>
-      <translation>Bornes_En_Temps_Pour_L'analyse_De_Fourier</translation>
+      <translation>Bornes_En_Temps_Pour_L_Analyse_De_Fourier</translation>
     </message>
     <message>
       <source>Graphic_Printout_Period</source>
@@ -556,7 +884,7 @@
     </message>
     <message>
       <source>Fourier_Analysis_Periods</source>
-      <translation>Periodes_D'analyse_De_Fourier</translation>
+      <translation>Periodes_D_Analyse_De_Fourier</translation>
     </message>
     <message>
       <source>H_Clipping</source>
@@ -564,7 +892,7 @@
     </message>
     <message>
       <source>Tolerances_For_Identification</source>
-      <translation>Precisions_Pour_L'identification</translation>
+      <translation>Precisions_Pour_L_Identification</translation>
     </message>
     <message>
       <source>Previous_Computation_File_Format</source>
@@ -611,10 +939,6 @@
       <translation>Diffusion_Des_Vitesses</translation>
     </message>
     <message>
-      <source>Type_Of_Advection</source>
-      <translation>Forme_De_La_Convection</translation>
-    </message>
-    <message>
       <source>Solver_Option_For_Tracers_Diffusion</source>
       <translation>Option_Du_Solveur_Pour_La_Diffusion_Des_Traceurs</translation>
     </message>
@@ -636,7 +960,7 @@
     </message>
     <message>
       <source>Maximum_Number_Of_Iterations_For_K_And_Epsilon</source>
-      <translation>Maximum_D'iterations_Pour_K_Et_Epsilon</translation>
+      <translation>Maximum_D_Iterations_Pour_K_Et_Epsilon</translation>
     </message>
     <message>
       <source>Tidal_Data_Base</source>
@@ -644,7 +968,7 @@
     </message>
     <message>
       <source>Maximum_Number_Of_Iterations_For_Solver</source>
-      <translation>Maximum_D'iterations_Pour_Le_Solveur</translation>
+      <translation>Maximum_D_Iterations_Pour_Le_Solveur</translation>
     </message>
     <message>
       <source>Number_Of_Tracers</source>
@@ -724,7 +1048,7 @@
     </message>
     <message>
       <source>Maximum_Number_Of_Iterations_For_Advection_Schemes</source>
-      <translation>Maximum_D'iterations_Pour_Les_Schemas_De_Convection</translation>
+      <translation>Maximum_D_Iterations_Pour_Les_Schemas_De_Convection</translation>
     </message>
     <message>
       <source>Turbulence_Model_For_Solid_Boundaries</source>
@@ -748,7 +1072,7 @@
     </message>
     <message>
       <source>Record_Number_In_Wave_File</source>
-      <translation>Numero_De_L'enregistrement_Dans_Le_Fichier_De_Houle</translation>
+      <translation>Numero_De_L_Enregistrement_Dans_Le_Fichier_De_Houle</translation>
     </message>
     <message>
       <source>Abscissae_Of_Sources</source>
@@ -792,7 +1116,7 @@
     </message>
     <message>
       <source>Stop_Criteria</source>
-      <translation>Criteres_D'arret</translation>
+      <translation>Criteres_D_Arret</translation>
     </message>
     <message>
       <source>Prescribed_Velocities</source>
@@ -3220,7 +3544,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../UiQT4/myMain.ui" line="219"/>
         <source>&amp;Nouveau</source>
-        <translation>ME VOILA</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../UiQT4/myMain.ui" line="222"/>

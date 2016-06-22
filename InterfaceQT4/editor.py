@@ -109,6 +109,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if not hasattr ( self.appliEficas, 'readercata') or  self.appliEficas.multi==True:
            self.readercata  = readercata.READERCATA( self, self.appliEficas )
            self.appliEficas.readercata=self.readercata
+           self.appliEficas.code=self.code
         else :
            self.readercata=self.appliEficas.readercata
         if self.readercata.fic_cata == None : return    #Sortie Salome

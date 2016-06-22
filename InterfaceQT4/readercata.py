@@ -222,13 +222,13 @@ class READERCATA:
          self.appliEficas.rep_scripts=os.path.join(rep_cata,nom_cata)
          sys.path[:0] = [self.appliEficas.rep_scripts]
          try :
-             self.appliEficas.mesScripts=__import__(mesScriptsNomFichier)
+             self.appliEficas.mesScripts[self.code]=__import__(mesScriptsNomFichier)
          except:
              pass
          sys.path=sys.path[1:]
       else :
          try :
-            self.appliEficas.mesScripts=__import__(mesScriptsNomFichier)
+            self.appliEficas.mesScripts[self.code]=__import__(mesScriptsNomFichier)
          except:
             pass
 

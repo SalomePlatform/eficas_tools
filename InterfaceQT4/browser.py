@@ -322,6 +322,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def affichePanneau(self) :
         #print " affichePanneau " , self.item.nom 
+        #print self.fenetre
         #if self.item.isactif(): 
         #if self.editor.code == 'ASTER' and not(self.item.isactif()) : 
         # posera des pb si un code decide d appeler FIN un mot clef

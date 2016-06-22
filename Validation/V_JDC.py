@@ -69,7 +69,8 @@ class JDC(V_MCCOMPO.MCCOMPO):
             texte, test = self.verif_regles()
             if test == 0:
                 if cr == 'oui':
-                    self.cr.fatal(' '.strip(texte))
+                    if texte != "" and (' '.strip(texte) == "") : self.cr.fatal(texte)
+                    else : self.cr.fatal(' '.strip(texte))
                 valid = 0
             if valid:
                 for e in self.etapes:

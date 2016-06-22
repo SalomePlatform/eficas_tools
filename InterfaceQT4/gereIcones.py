@@ -166,8 +166,11 @@ class FacultatifOuOptionnel:
       
 
   def setRun(self):
-      if hasattr(self.editor.appliEficas, 'mesScripts'):
-         if hasattr(self.editor,'tree') and self.editor.tree.currentItem().item.get_nom() in self.appliEficas.mesScripts.dict_commandes.keys() :
+
+      if hasattr(self.editor.appliEficas, 'mesScripts') :
+         if self.editor.code in  self.editor.appliEficas.mesScripts.keys() :
+            self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
+            if hasattr(self.editor,'tree') and self.editor.tree.currentItem() and self.editor.tree.currentItem().item and self.editor.tree.currentItem().item.get_nom() in self.dict_commandes_mesScripts.keys() :
                self.ajoutScript()
                return
       if hasattr(self,"RBRun"): self.RBRun.close()
@@ -202,53 +205,28 @@ class FacultatifOuOptionnel:
 
 
   def ajoutScript(self):
-    # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
-        listeCommandes=self.appliEficas.mesScripts.dict_commandes[self.node.item.get_nom()]
+        self.dictCommandes={}
+        listeCommandes=self.dict_commandes_mesScripts[self.node.item.get_nom()]
         if type(listeCommandes) != types.TupleType: listeCommandes=(listeCommandes,)
-        numero=-1
+        i=0
         for commande in listeCommandes :
-          numero+=1
           conditionSalome=commande[3]
           if (self.appliEficas.salome == 0 and conditionSalome == True): continue
           self.CBScripts.addItem(commande[1])
-          #self.CBScripts.addItem(commande[1],QVariant((numero)))
-        return
-        if 1 :
-           label=commande[1]
-           tip=commande[5]
-           self.action=QAction(label,self.tree)
-           self.action.setStatusTip(tip)
-           if monEnvQT5 :
-              if numero==4:
-                 self.action.triggered.connect(self.AppelleFonction4)
-              if numero==3:
-                 self.action.triggered.connect(self.AppelleFonction3)
-                 numero=4
-              if numero==2:
-                 self.action.triggered.connect(self.AppelleFonction2)
-                 numero=3
-              if numero==1:
-                 self.action.triggered.connect(self.AppelleFonction1)
-                 numero=2
-              if numero==0:
-                 self.action.triggered.connect(self.AppelleFonction0)
-                 numero=1
-           else:
-              if numero==4:
-                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction4)
-              if numero==3:
-                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction3)
-                 numero=4
-              if numero==2:
-                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction2)
-                 numero=3
-              if numero==1:
-                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction1)
-                 numero=2
-              if numero==0:
-                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction0)
-                 numero=1
-           self.menu.addAction(self.action)
+          self.dictCommandes[commande[1]]=i
+          i=i+1
+        if monEnvQT5:
+           #self.CBScripts.currentIndexChanged.connect(self.choixSaisi)
+           self.CBScripts.activated.connect(self.choixSaisi)
+        else :
+           #self.connect(self.CBScripts,SIGNAL("currentIndexChanged(int)"),self.choixSaisi)
+           self.connect(self.CBScripts,SIGNAL("activated(int)"),self.choixSaisi)
+
+  def choixSaisi(self):
+      fction=str(self.CBScripts.currentText())
+      numero= self.dictCommandes[fction]
+      self.node.AppelleFonction(numero,nodeTraite=self.node)
+      #self.reaffiche()
 
 class ContientIcones:
 
@@ -296,7 +274,7 @@ class ContientIcones:
                               filters)
 
       if monEnvQT5 : fichier=fichier[0]
-      if not(fichier):
+      if not(fichier == ""):
          ulfile = os.path.abspath(unicode(fichier))
          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)
@@ -322,7 +300,8 @@ class ContientIcones:
             directory = self.appliEficas.CONFIGURATION.savedir,
             options = QFileDialog.ShowDirsOnly)
 
-      if not directory.isNull():
+      if monEnvQT5 : directory=directory[0]
+      if not (directory == "") :
          absdir = os.path.abspath(unicode(directory))
          self.appliEficas.CONFIGURATION.savedir = os.path.dirname(absdir)
          self.lineEditVal.setText(directory)
@@ -354,7 +333,7 @@ class ContientIcones:
 
         if  (isinstance(mc.type,types.TupleType) and len(mc.type) > 1 and "(*.med)" in mc.type[1] ):
            selection, commentaire = self.appliEficas.selectMeshFile(editor=self.editor)
-           print selection, commentaire
+           #print selection, commentaire
            if commentaire != "" : 
                   QMessageBox.warning( None,
                   tr("Export Med vers Fichier "),

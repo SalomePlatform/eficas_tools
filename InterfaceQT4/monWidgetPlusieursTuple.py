@@ -147,7 +147,6 @@ class TupleCustom3(QWidget,Ui_Tuple3,TupleCustom):
 class MonWidgetPlusieursTuple(Feuille,GereListe):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        print "MonWidgetPlusieursTuple"
         self.indexDernierLabel=0
         self.nomLine="TupleVal"
         self.listeAffichageWidget=[]

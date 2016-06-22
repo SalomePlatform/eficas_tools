@@ -3,6 +3,50 @@
 <context>
     <name>@default</name>
     <message>
+       <source>Discretisations_En_Espace</source>
+       <translation>Discretizations_In_Space</translation>
+    </message>
+    <message>
+       <source>Option_De_Supg</source>
+       <translation>Supg_Option</translation>
+    </message>
+    <message>
+       <source>Forme_De_La_Convection</source>
+       <translation>Type_Of_Advection</translation>
+    </message>
+    <message>
+       <source>Cote constante</source>
+       <translation>Constant elevation</translation>
+    </message>
+    <message>
+       <source>Cote Nulle</source>
+       <translation>Zero elevation</translation>
+    </message>
+    <message>
+       <source>Hauteur Nulle</source>
+       <translation>Zero depth</translation>
+    </message>
+    <message>
+       <source>Hauteur constante</source>
+       <translation>Constant depth</translation>
+    </message>
+    <message>
+       <source>Particulieres</source>
+       <translation>Special</translation>
+    </message>
+    <message>
+       <source>Altimetrie satellite tpxo</source>
+       <translation>Tpxo satellite altimetry</translation>
+    </message>
+    <message>
+       <source>Sequentiel</source>
+       <translation>Sequential</translation>
+    </message>
+    <message>
+       <source>Parallele</source>
+       <translation>Parallel</translation>
+    </message>
+    <message>
         <location filename="../../convert/convert_ini.py" line="81"/>
         <source>lecture du fichier impossible :</source>
         <translation>unable to read file :</translation>

@@ -40,6 +40,10 @@ class ViewRegles(Ui_viewRegles,QDialog):
     def __init__(self,parent,liste,entete=None):
         QDialog.__init__(self,parent)
         self.setupUi(self)
+        self.setModal(False)
+        if monEnvQT5 : self.bclose.clicked.connect(self.close)
+        else         : self.connect( self.bclose,SIGNAL("clicked()"), self, SLOT("close()") )
+
         if entete != None : self.setWindowTitle (entete)
         for ligne in liste :
           texte=ligne[0]

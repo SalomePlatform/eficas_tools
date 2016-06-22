@@ -43,7 +43,6 @@ from gereListe              import GereListe
 class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        print "MonWidgetPlusieursInto", nom, self
         self.index=1
         self.alpha=0
         self.listeCB=[]

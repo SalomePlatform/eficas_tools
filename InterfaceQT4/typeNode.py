@@ -67,13 +67,19 @@ class PopUpMenuNodeMinimal :
         #items du menu
         self.menu.addAction(self.Supprime)
         if hasattr(self.appliEficas, 'mesScripts'):
-            if self.tree.currentItem().item.get_nom() in self.appliEficas.mesScripts.dict_commandes.keys() : 
-               self.ajoutScript()
+            if self.editor.code in  self.editor.appliEficas.mesScripts.keys() :
+               self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
+               if self.tree.currentItem().item.get_nom() in self.dict_commandes_mesScripts.keys() : 
+                   self.ajoutScript()
     
     def ajoutScript(self):
 
     # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
-        listeCommandes=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()]
+        if hasattr(self.appliEficas, 'mesScripts'):
+            if self.editor.code in  self.editor.appliEficas.mesScripts.keys() :
+               self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
+            else : return
+        listeCommandes=self.dict_commandes_mesScripts[self.tree.currentItem().item.get_nom()]
         if type(listeCommandes) != types.TupleType: listeCommandes=(listeCommandes,)
         numero=0
         for commande in listeCommandes :
@@ -132,8 +138,14 @@ class PopUpMenuNodeMinimal :
         self.AppelleFonction(4)
 
 
-    def AppelleFonction(self,numero):
-        listeCommandes=self.appliEficas.mesScripts.dict_commandes[self.tree.currentItem().item.get_nom()]
+    def AppelleFonction(self,numero,nodeTraite=None):
+        if nodeTraite==None : nodeTraite=self.tree.currentItem()
+        nomCmd=nodeTraite.item.get_nom()
+        if hasattr(self.appliEficas, 'mesScripts'):
+            if self.editor.code in  self.editor.appliEficas.mesScripts.keys() :
+               self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
+            else : return
+        listeCommandes=self.dict_commandes_mesScripts[nomCmd]
         commande=listeCommandes[numero]
         conditionValid=commande[4]
         if (self.tree.currentItem().item.isvalid() == 0 and conditionValid == True):
@@ -145,13 +157,15 @@ class PopUpMenuNodeMinimal :
         listenomparam=commande[2]
         listeparam=[]
         for p in listenomparam:
-            if hasattr(self.tree.currentItem(),p):
-               listeparam.append(getattr(self.tree.currentItem(),p))
+            if hasattr(nodeTraite,p):
+               listeparam.append(getattr(nodeTraite,p))
             if p=="self" : listeparam.append(self)
         try :
+        #if 1 :
            fonction(listeparam,self.appliEficas)
         except :
            fonction(listeparam)
+        
 
 
     def createActionsQT4(self):

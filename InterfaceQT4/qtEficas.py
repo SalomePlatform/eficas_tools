@@ -63,8 +63,10 @@ class Appli(Ui_Eficas,QMainWindow):
         if monEnvQT5 : self.recent =  []
         else : self.recent =  QStringList()
         self.ficRecents={}
+        self.mesScripts={}
         self.listeAEnlever=[]
         self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND','MT','PSEN','PSEN_N1']
+        self.ListePathCode=['Aster','Carmel3D','CarmelCND','MT','PSEN_Eficas','PSEN_N1']
         self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
 
         if self.salome:
@@ -836,7 +838,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.viewmanager.newIncludeEditor()
 
     def cleanPath(self):
-        for pathCode in self.ListeCode:
+        for pathCode in self.ListePathCode:
             try:
               aEnlever=os.path.abspath(os.path.join(os.path.dirname(__file__),'..',pathCode))
               sys.path.remove(aEnlever)
