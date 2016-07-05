@@ -24,7 +24,7 @@ macro ( eficas_compile_ui uifile )
   get_filename_component ( _file_we ${uifile} NAME_WE )
   set ( _pyfile "${_file_we}.py" )
   add_custom_command ( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile}
-                       COMMAND ${PYUIC4} ARGS -x -o ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile} ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
+                       COMMAND ${PYUIC5} ARGS -x -o ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile} ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
                        MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
                        COMMENT "Compiling ${uifile}"
                      )
@@ -84,7 +84,7 @@ add_custom_target ( CompileUI ALL DEPENDS ${_PYFILES}
                   )
 
 install ( FILES ${_PYFILES}
-          DESTINATION ${CMAKE_INSTALL_PREFIX}/UiQT4
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/UiQT5
         )
 
 # Rules to compile TS files
@@ -98,11 +98,12 @@ FOREACH(input ${TSFILES})
   SET(QMFILES ${QMFILES} ${output})
   ADD_CUSTOM_COMMAND(OUTPUT ${output}
     COMMAND ${QT_LRELEASE_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${input} -qm ${output}
+    #    EXECUTE_PROCESS(COMMAND \${MYLRELEASE} \${MYTSFILE} -qm \${MYFULLDIR}/\${MYOUTQMFILE})
     MAIN_DEPENDENCY ${input})
 ENDFOREACH(input ${TSFILES})
 
 ADD_CUSTOM_TARGET(CompileTS ALL DEPENDS ${QMFILES})
-INSTALL(FILES ${QMFILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/UiQT4)
+INSTALL(FILES ${QMFILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/UiQT5)
 
 ### Local Variables:
 ### mode: cmake
