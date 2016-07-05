@@ -17,7 +17,7 @@ import eficasConfig
 # ajout de InterfaceQT4 pour permettre l acces a la fenetre Option
 sys.path[:0]=[eficasConfig.eficasPath,
               os.path.join( eficasConfig.eficasPath,'Editeur'),
-              os.path.join( eficasConfig.eficasPath,'UiQT4'),
+              os.path.join( eficasConfig.eficasPath,'UiQT5'),
               os.path.join( eficasConfig.eficasPath,'InterfaceQT4'),
               #os.path.join( eficasConfig.eficasPath,'Extensions'),
               eficasConfig.eficasPath,
