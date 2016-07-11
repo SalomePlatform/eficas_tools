@@ -44,37 +44,40 @@ print '%d.%d' % ( sys.version_info[0], sys.version_info[1] )
   file ( REMOVE ${tmpPyScript} )
 endif (PYTHONINTERP_FOUND)
 message ( STATUS "Using Python version ${PYTHON_VERSION}" )
-# Detection de QT4
-find_package ( Qt4 COMPONENTS QtCore QtGui REQUIRED )
-include( ${QT_USE_FILE} )
+# Detection de QT5
+find_package ( Qt5 COMPONENTS Core REQUIRED )
 
-# Detection de PyQt4
-if (NOT PYQT4_FOUND)
-  execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "\"import PyQt4\""
+FIND_PACKAGE(Qt5LinguistTools)
+GET_TARGET_PROPERTY(QT_LRELEASE_EXECUTABLE Qt5::lrelease LOCATION)
+MARK_AS_ADVANCED(QT_LRELEASE_EXECUTABLE)
+
+# Detection de PyQt5
+if (NOT PYQT5_FOUND)
+  execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "\"import PyQt5\""
                     RESULT_VARIABLE _res
 		    OUTPUT_VARIABLE _trashout
 		    ERROR_VARIABLE  _trasherr
                   )
   if (NOT _res)
-    message ( STATUS "Looking for Python package PyQt4 - found" )
-    set ( PYQT4_FOUND 1 CACHE INTERNAL "True if Python package PyQt4 is here" )
+    message ( STATUS "Looking for Python package PyQt5 - found" )
+    set ( PYQT5_FOUND 1 CACHE INTERNAL "True if Python package PyQt5 is here" )
   else (NOT _res)
-    message ( STATUS "Looking for Python package PyQt4 - not found" )
-    set ( PYQT4_FOUND 0 CACHE INTERNAL "True if Python package PyQt4 is here" )
+    message ( STATUS "Looking for Python package PyQt5 - not found" )
+    set ( PYQT5_FOUND 0 CACHE INTERNAL "True if Python package PyQt5 is here" )
   endif (NOT _res)
-endif (NOT PYQT4_FOUND)
+endif (NOT PYQT5_FOUND)
 
-if (NOT PYQT4_FOUND)
-  message ( FATAL_ERROR "Python package PyQt4 is REQUIRED" )
-endif (NOT PYQT4_FOUND)
+if (NOT PYQT5_FOUND)
+  message ( FATAL_ERROR "Python package PyQt5 is REQUIRED" )
+endif (NOT PYQT5_FOUND)
 
-# Detection de pyuic4
-find_program ( PYUIC4 NAMES pyuic4
-               DOC  "Path to the pyuic4 compilation tool"
+# Detection de PYUIC5
+find_program ( PYUIC5 NAMES pyuic5
+               DOC  "Path to the pyuic5 compilation tool"
              )
-if (NOT PYUIC4)
-  message ( FATAL_ERROR "pyuic4 tool is REQUIRED" )
-endif (NOT PYUIC4)
+if (NOT PYUIC5)
+  message ( FATAL_ERROR "pyuic5 tool is REQUIRED" )
+endif (NOT PYUIC5)
 
 # Definition des options de CMake
 option ( WITH_ALL_PACKAGES "Install all package files" OFF )
@@ -154,7 +157,7 @@ add_subdirectory ( Extensions )
 add_subdirectory ( Ihm )
 install ( DIRECTORY InterfaceQT4 DESTINATION ${CMAKE_INSTALL_PREFIX} )
 add_subdirectory ( Noyau )
-add_subdirectory ( UiQT4 )
+add_subdirectory ( UiQT5 )
 add_subdirectory ( Validation )
 add_subdirectory ( convert )
 add_subdirectory ( generator )
