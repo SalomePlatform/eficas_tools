@@ -28,15 +28,21 @@ def INCLUDE(self,PSSE_path,sav_file,**args):
    
    if sav_file==None: return
    reevalue=0
+   listeADeTruire=[]
+   listeNouveau=[]
+   toClean=False
    if hasattr(self,'fichier_ini'):
        reevalue=1
        if self.fichier_ini == sav_file : return
+       self.fichier_ini=sav_file
        if hasattr(self,'old_context_fichier_init' ):
+         toClean=True
          for concept in self.old_context_fichier_init.values():
-             self.jdc.delete_concept(concept)
+             #self.jdc.delete_concept(concept)
+             listeADeTruire.append(concept)
          self.jdc_aux=None
          self.contexte_fichier_init={}
-         self.reevalue_sd_jdc()
+         #self.reevalue_sd_jdc()
          self.jdc.reset_context()
 
    self.fichier_ini=sav_file
@@ -47,11 +53,11 @@ def INCLUDE(self,PSSE_path,sav_file,**args):
     
    unite = 999
 
-   try :
-   #if 1:
-     MachineDico,LoadDico,LineDico,TransfoDico = ExtractGeneratorLoadLineandTransfoDico2(sav_file,PSSE_path)
-   #else :
-   except :
+   #try :
+   if 1:
+     MachineDico,LoadDico,LineDico,TransfoDico, MotorDico = ExtractGeneratorLoadLineandTransfoDico2(sav_file,PSSE_path)
+   else :
+   #except :
      if self.jdc.appli is not None:
         self.jdc.appli.affiche_alerte("Error", 'An error happened in ExtractGeneratorandLoadList execution ')
         self.g_context = {}
@@ -60,17 +66,26 @@ def INCLUDE(self,PSSE_path,sav_file,**args):
         self.fichier_err = str(exc)
         self.contexte_fichier_init = {}
 
+   
    for nom in MachineDico.keys():
       self.fichier_text += "%s=MONGENER(ID='%s',);\n" % (nom, 'a')
+      listeNouveau.append(nom)
 
    for nom in LoadDico.keys():
       self.fichier_text += "%s=MACHARGE(ID='%s',);\n" % (nom, 'a')
+      listeNouveau.append(nom)
       
    for nom in LineDico.keys():
       self.fichier_text += "%s=MALIGNE(ID='%s',);\n" % (nom,'a')
+      listeNouveau.append(nom)
 
    for nom in TransfoDico.keys():
       self.fichier_text += "%s=MONTRANSFO(ID='%s',);\n" % (nom,'a')
+      listeNouveau.append(nom)
+
+   for nom in MotorDico.keys():
+      self.fichier_text += "%s=MONMOTEUR(ID='%s',);\n" % (nom,'a')
+      listeNouveau.append(nom)
 
    import Extensions.jdc_include
    self.JdC_aux = Extensions.jdc_include.JDC_CATA_INCLUDE(code='PSEN', execmodul=None)
@@ -82,6 +97,12 @@ def INCLUDE(self,PSSE_path,sav_file,**args):
    self.jdc.LoadDico=LoadDico
    self.jdc.LineDico=LineDico
    self.jdc.TransfoDico=TransfoDico
+   self.jdc.MotorDico = MotorDico
+
+   if toClean:
+    for concept in listeADeTruire :
+      if concept.nom not in listeNouveau: self.jdc.delete_concept(concept)
+    self.reevalue_sd_jdc()
 
 def INCLUDE_context(self,d):
    """ 

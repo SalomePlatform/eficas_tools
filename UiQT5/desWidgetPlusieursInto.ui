@@ -39,7 +39,7 @@
     <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>2</number>
+    <number>5</number>
    </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -232,6 +232,22 @@
         </widget>
        </item>
        <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>5</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QToolButton" name="PBFind">
          <property name="minimumSize">
           <size>
@@ -317,7 +333,7 @@
           <x>0</x>
           <y>0</y>
           <width>300</width>
-          <height>95</height>
+          <height>92</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
@@ -423,7 +439,10 @@
       <string notr="true">background : rgb(247,247,247)</string>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Box</enum>
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
      </property>
      <property name="lineWidth">
       <number>1</number>
@@ -439,8 +458,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>422</width>
-        <height>194</height>
+        <width>424</width>
+        <height>193</height>
        </rect>
       </property>
       <property name="sizePolicy">

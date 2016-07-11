@@ -148,7 +148,7 @@ class PopUpMenuNodeMinimal :
         listeCommandes=self.dict_commandes_mesScripts[nomCmd]
         commande=listeCommandes[numero]
         conditionValid=commande[4]
-        if (self.tree.currentItem().item.isvalid() == 0 and conditionValid == True):
+        if (nodeTraite.item.isvalid() == 0 and conditionValid == True):
                  QMessageBox.warning( None, 
                              tr("item invalide"),
                              tr("l item doit etre valide"),)
@@ -160,9 +160,15 @@ class PopUpMenuNodeMinimal :
             if hasattr(nodeTraite,p):
                listeparam.append(getattr(nodeTraite,p))
             if p=="self" : listeparam.append(self)
+            print listeparam
+           
         try :
-        #if 1 :
-           fonction(listeparam,self.appliEficas)
+           res, commentaire= fonction(listeparam)
+           if not res :
+                 QMessageBox.warning( None, 
+                             tr("echec de la fonction"),
+                             tr(commentaire),)
+		 return
         except :
            fonction(listeparam)
         

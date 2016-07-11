@@ -32,6 +32,7 @@ class sd_charge     ( ASSD ) : pass
 class sd_generateur ( ASSD ) : pass
 class sd_ligne     ( ASSD ) : pass
 class sd_transfo ( ASSD ) : pass
+class sd_moteur (ASSD) : pass
 #class sd_busbar ( sd_generateur,sd_charge ) : pass
 
 import types
@@ -89,8 +90,9 @@ JdC = JDC_CATA ( code = 'PSEN',
                             AU_PLUS_UN ( 'N_1_GENERATORS' ),
                             AU_PLUS_UN ( 'N_1_LINES' ),
                             AU_PLUS_UN ( 'N_1_LOADS' ),
+                            AU_PLUS_UN ( 'N_1_MOTORS' ),
                             AU_PLUS_UN ( 'N_1_TRANSFORMERS' ),
-                            
+
                             ),
                  ) # Fin JDC_CATA
 
@@ -105,6 +107,15 @@ MONGENER =  OPER ( nom = "MONGENER",
             op = None,
             fr = "Generateur",
             ang = "Generator",
+
+  ID = SIMP ( statut = 'o', typ = "TXM", fr = "num bus", ang = "num bus",),
+)
+MONMOTEUR =  OPER ( nom = "MONMOTEUR",
+            sd_prod = sd_moteur,
+            UIinfo = {"groupes": ("CACHE")},
+            op = None,
+            fr = "Moteur",
+            ang = "Motor",
 
   ID = SIMP ( statut = 'o', typ = "TXM", fr = "num bus", ang = "num bus",),
 )
@@ -141,6 +152,22 @@ MONTRANSFO =  OPER ( nom = "MONTRANSFO",
 PSSE_PARAMETERS = PROC ( nom = "PSSE_PARAMETERS",
              op=None,
              docu = "",
+  ALGORITHM = SIMP ( statut = "o",
+                     typ='TXM',
+                     into=["Optimum Power Flow","Economic Dispatch and Power Flow"],
+                     defaut="Optimum Power Flow",
+                    ),
+  I_MAX = SIMP ( statut = "o",
+                     typ='TXM',
+                     into=['RateA','RateB','RateC'],
+                     defaut='RateA',
+                    ),
+  LOCK_TAPS = SIMP ( statut = "o",
+                     typ=bool,
+                     defaut=True,
+                     ),
+
+  b_OPF = BLOC (condition = "ALGORITHM == 'Optimum Power Flow'",
   FUEL_COST = SIMP ( statut = "o",
                      typ=bool,
                      defaut=True,
@@ -153,15 +180,29 @@ PSSE_PARAMETERS = PROC ( nom = "PSSE_PARAMETERS",
                      typ=bool,
                      defaut=False,
                     ),
-  I_MAX = SIMP ( statut = "o",
-                     typ='TXM',
-                     into=['RateA','RateB','RateC'],
-                     defaut='RateA',
-                    ),
-  LOCK_TAPS = SIMP ( statut = "o",
-                     typ=bool,
-                     defaut=True,
-                     ),
+  ITERATION_LIMIT = SIMP ( statut = "o",
+                 typ = "I",
+                 val_min=1,
+                 defaut=20,
+                 ),
+  QGEN_CONTROL = SIMP ( statut = "o",
+                        typ = bool,
+                        defaut = True,
+                        ),
+  b_QgenControl = BLOC (condition = "QGEN_CONTROL == True",
+  SAVE_CASE_BEFORE_QCONTROL = SIMP ( statut = "o",
+                        typ = bool,
+                        defaut = False,
+                        fr = "Sauvegarder des fichiers de cas avant d'avoir deconnecte les groupes ne produisant pas de la puissance active",
+                        ang = "Save network case files before having disconnected groups that dont generate active power.",
+                        ),
+  ),
+  ),
+
+  b_ECD = BLOC (condition = "ALGORITHM == 'Economic Dispatch and Power Flow'",
+  ecd_file=SIMP(statut="o", typ = ('Fichier', 'Economic Dispatch Files (*.ecd);;All Files (*)',),),
+  ),
+
 ##  P_MIN= SIMP ( statut = "o",
 ##                     typ=bool,
 ##                     defaut=True,
@@ -171,8 +212,8 @@ PSSE_PARAMETERS = PROC ( nom = "PSSE_PARAMETERS",
 SIMULATION = PROC ( nom = "SIMULATION",
              op = None,
              docu = "",
-  regles             =(EXCLUS('NUMBER_PACKAGE','CONVERGENCE'),),
-               
+  regles             =(EXCLUS('NUMBER_PACKAGE','CONVERGENCE'), UN_PARMI('NUMBER_PACKAGE','CONVERGENCE'),),
+
   SIZE_PACKAGE = SIMP ( statut = "o",
                  typ = "I",
                  val_min=10,
@@ -193,8 +234,8 @@ SIMULATION = PROC ( nom = "SIMULATION",
 ##                 max=5,
 ##                 fr = "Affichage du niveau de wrapper de la bibliotheque Open TURNS",
 ##                 ang = "Open TURNS library debug level print",
-##                 ), 
-) 
+##                 ),
+)
 
 
 #================================
@@ -218,7 +259,7 @@ CORRELATION = PROC ( nom = 'CORRELATION',
 ####                  ),
 ##
 ## # Matrix = BLOC ( condition = "Copula in ( 'Normal', )",
-##                  
+##
     CorrelationMatrix = SIMP ( statut = "o",
                                typ = Matrice(nbLigs=None,
                                              nbCols=None,
@@ -232,7 +273,7 @@ CORRELATION = PROC ( nom = 'CORRELATION',
 ##  #), # Fin BLOC Matrix
 ##
 ##
-) 
+)
 
 DIRECTORY = MACRO ( nom = 'DIRECTORY',
         op=None,
@@ -248,9 +289,9 @@ DIRECTORY = MACRO ( nom = 'DIRECTORY',
         results_folder=SIMP(statut="o",typ='Repertoire'),
         #lines_file=SIMP(statut="o" ,typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
         #groups_file=SIMP(statut="o", typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
-        #generationsystem_file=SIMP(statut="o" ,typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),        
-        
-) 
+        #generationsystem_file=SIMP(statut="o" ,typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),),
+
+)
 
 
 
@@ -313,6 +354,24 @@ N_1_GENERATORS = PROC( nom="N_1_GENERATORS",
                        ang = "Probability that the generator is not available",
                        validators=VerifTypeTuple((sd_generateur,'R')),),
               )
+N_1_MOTORS = PROC( nom="N_1_MOTORS",
+                     op = None,
+                     docu = "",
+                     fr = "N-1 moteurs",
+                     ang = "N-1 motors",
+  Activated = SIMP ( statut='o', typ=bool, defaut=True),
+##  FileName = SIMP ( statut = "o",
+##                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+##                    fr = "chemin du fichier csv des probabilites des defauts generateurs",
+##                    ang = "csv file path with probabilities of generator outages",
+##                    ),
+  Probability = SIMP ( statut = 'o',
+                       typ = Tuple(2),
+                       max = '**',
+                       fr = "Probabilite d'indisponibilite du moteur",
+                       ang = "Probability that the motor is not available",
+                       validators=VerifTypeTuple((sd_moteur,'R')),),
+              )
 N_1_LOADS = PROC( nom="N_1_LOADS",
                      op = None,
                      docu = "",
@@ -344,7 +403,7 @@ N_1_LOADS = PROC( nom="N_1_LOADS",
 DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                       sd_prod = loi,
                       op = 68,
-                      fr = "Definitions des lois marginales utilisees par les variables d'entree", 
+                      fr = "Definitions des lois marginales utilisees par les variables d'entree",
 
 #====
 # Choisir generateur ou charge
@@ -355,22 +414,29 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 ##                      ),
   Activated = SIMP ( statut='o', typ=bool, defaut=True),
   ComponentType = SIMP (statut='o', typ='TXM',
-                      into = ('Generator','Load','Line','Transformer'),),
+                      into = ('Generator','Load','Motor','Line','Transformer'),),
   b_gener = BLOC (condition = "ComponentType == 'Generator'",
-        
+
   Type = SIMP (statut= "o", typ = "TXM",
                into = ("Generator Power Level", "Generator Availability"),
-               fr = "Choisir si c'est le niveau de puissance ou la disponibilité du generateur qui sera tiree",
+               fr = "Choisir si c'est le niveau de puissance ou la disponibilitï¿½ du generateur qui sera tiree",
                ang= "Choose whether the power level or the availability of the generator will be set by the law",
                defaut = "Generator Power Level",
                ),
-                  
-  Generator   = SIMP(statut='o',typ=sd_generateur,max="**", homo="SansOrdreNiDoublon"),
+
+  Sampling = SIMP (statut= "o", typ = "TXM",
+               into = ("Same sample for all generators", "One sample per generator"),
+               fr = "Choisir si une seule tirage sera fait pour tous les generateurs ou si des tirages differents seront faits pour chaque generateur",
+               ang= "Choose whether one drawing/sample will be performed for all of the generators or whether a different drawing/sample will be performed for each generator.",
+               defaut = "Same sample for all generators",
+               ),
+
+  Generator   = SIMP(statut='o',typ=sd_generateur,max="**", homo="SansOrdreNiDoublon",docu="sd_generateur"),
 
 #====
 # Type de distribution
 #====
-  
+
   b_gener_level = BLOC (condition= "Type == 'Generator Power Level'",
 
   Law = SIMP ( statut = "o", typ = "TXM",
@@ -389,7 +455,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                 ang = "1D marginal distribution",
                 ),
 
-                      
+
 #====
 # Definition des parametres selon le type de la loi
 #====
@@ -424,10 +490,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                     ang = "Support lower bound",
                                     ),
 
-                       # Il faut definir une collection de couples ( x,p ) 
+                       # Il faut definir une collection de couples ( x,p )
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       max = '**',
                                        fr = "Liste de couples : largeur de classe, hauteur de classe",
                                        ang = "Class bandwidth, class height couple list",
                                        validators=VerifTypeTuple(('R','R')),
@@ -474,14 +540,14 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
  ), # Fin BLOC RAYLEIGH
 
   PDF = BLOC ( condition = " Law in ( 'PDF_from_file', ) ",
-             
+
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
                     fr = "Nom du fichier .csv",
                     ang = ".csv file name",
                     ),
               ),
-              
+
 
 
    TRUNCATEDNORMAL = BLOC ( condition = " Law in ( 'TruncatedNormal', ) ",
@@ -489,7 +555,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                              MuN = SIMP ( statut = "o",
                                           typ = "R",
                                           max = 1,
-                                          fr = "Moyenne de la loi Normale non tronquée",
+                                          fr = "Moyenne de la loi Normale non tronquï¿½e",
                                           ang = "Mean value of the associated non truncated normal distribution",
                                           ),
 
@@ -497,7 +563,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                              typ = "R",
                                              max = 1,
                                              val_min = 0.,
-                                             fr = "Ecart-type de la loi Normale non tronquée",
+                                             fr = "Ecart-type de la loi Normale non tronquï¿½e",
                                              ang = "Standard deviation of the associated non truncated normal distribution",
                                              ),
 
@@ -519,7 +585,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
 
   TimeSeries = BLOC ( condition = " Law in ( 'TimeSeries_from_file', ) ",
-             
+
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
                     fr = "Fichier CSV d'une serie temporelle",
@@ -549,10 +615,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
    USERDEFINED = BLOC ( condition = " Law in ( 'UserDefined', ) ",
 
-                       # Il faut definir une collection de couples ( x,p ) 
+                       # Il faut definir une collection de couples ( x,p )
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       max = '**',
                                        fr = "Liste de couples : (valeur, prob.)",
                                        ang = "List of pairs : (value, prob.)",
                                        validators=VerifTypeTuple(('R','R')),
@@ -623,10 +689,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
 
     Transfer_Function = FACT(statut='f',
-                
+
         TF_Input = SIMP ( statut='o',
                        typ = 'TXM',
-                       fr = 'Entrer une fonction de transfert à partir d''un fichier .pow (vitesse de vent - puissance eolienne)\n \
+                       fr = 'Entrer une fonction de transfert ï¿½ partir d''un fichier .pow (vitesse de vent - puissance eolienne)\n \
                              ou entrer une liste de tuples (valeur tiree - puissance normalisee)',
                        ang = 'Enter wind speed - turbine production transfer function as a .pow file, \n \
                               or enter a generic list of (law output value, normalized power output) tuples',
@@ -644,7 +710,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                         fr = 'Hauteur (en metres) a laquelle les mesures de vitesse du vent ont ete prises',
                                         ang = 'Height of wind speed measurements (m)',
                                         sug = 10,
-                                        val_min = 0, 
+                                        val_min = 0,
                                         ),
                       Hub_Height = SIMP (statut = 'o',
                                          typ = "R",
@@ -652,7 +718,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                          ang = 'wind turbine hub height',
                                          sug = 80,
                                          val_min = 0,),
-                      Alpha = SIMP (statut = 'o',
+                      AlphaWS = SIMP (statut = 'o',
                                          typ = "R",
                                          fr = 'l''alpha pour extrapoler les mesures de vitesse du vent a la hauteur du moyeu ',
                                          ang = 'alpha used to extrapolate wind speed measurements to hub height',
@@ -667,7 +733,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                          defaut = 5,
                                          val_min = 0,
                                          val_max = 100,
-                                             ),                      
+                                             ),
                       ), #fin du bloc FileName
 
         b_tuples = BLOC(condition = "TF_Input == 'tuples list'",
@@ -681,7 +747,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                        validators=VerifTypeTuple(('R','R')),
                                        ),
                       ), #fin du block Tuples List
-                            
+
         ), #fin du FACT Transfer Function
 
   ), #fin du bloc generator level
@@ -706,14 +772,14 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                 defaut="UserDefined",
                 ),
 
-                      
+
 #====
 # Definition des parametres selon le type de la loi
 #====
 
 
   TimeSeries = BLOC ( condition = " Law in ( 'TimeSeries_from_file', ) ",
-             
+
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
                     fr = "Fichier CSV d'une serie temporelle",
@@ -724,10 +790,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
    USERDEFINED = BLOC ( condition = " Law in ( 'UserDefined', ) ",
 
-                       # Il faut definir une collection de couples ( x,p ) 
+                       # Il faut definir une collection de couples ( x,p )
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       max = '**',
                                        fr = "Liste de couples : (valeur, prob.)",
                                        ang = "List of pairs : (value, prob.)",
                                        validators=VerifTypeTuple(('R','R')),
@@ -735,32 +801,40 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                        ),
 
   ), # Fin BLOC USERDEFINED
-                        
+
 
   ), #fin du bloc generator avail
-  
+
 
   ), #fin du bloc generateur
-                      
+
+#Bloc Charge
   b_charge = BLOC (condition = "ComponentType == 'Load'",
-        
+
 
 #====
 # Type de distribution
 #====
-  
+
   Type = SIMP (statut= "o", typ = "TXM",
                into = ("Load Level", "Load Availability"),
-               fr = "Choisir si c'est le niveau de charge ou la disponibilité de la charge qui sera tiree",
+               fr = "Choisir si c'est le niveau de charge ou la disponibilitï¿½ de la charge qui sera tiree",
                ang= "Choose whether the power level or the availability of the load will be set by the law",
                defaut = "Load Level",
+               ),
+
+  Sampling = SIMP (statut= "o", typ = "TXM",
+               into = ("Same sample for all loads", "One sample per load"),
+               fr = "Choisir si une seule tirage sera fait pour tous les charges ou si des tirages differents seront faits pour chaque charge",
+               ang= "Choose whether one drawing/sample will be performed for all of the loads or whether a different drawing/sample will be performed for each load.",
+               defaut = "Same sample for all loads",
                ),
 
   Load       = SIMP(statut='o',typ=sd_charge,max="**", homo="SansOrdreNiDoublon",),
 
 
   b_charge_level = BLOC (condition = "Type == 'Load Level'",
-                         
+
   Law = SIMP ( statut = "o", typ = "TXM",
                 into = ( "Exponential",
                          "Histogram",
@@ -777,7 +851,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                 ang = "1D marginal distribution",
                 ),
 
-                      
+
 #====
 # Definition des parametres selon le type de la loi
 #====
@@ -812,10 +886,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                     ang = "Support lower bound",
                                     ),
 
-                       # Il faut definir une collection de couples ( x,p ) 
+                       # Il faut definir une collection de couples ( x,p )
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       max = '**',
                                        fr = "Liste de couples : largeur de classe, hauteur de classe",
                                        ang = "Class bandwidth, class height couple list",
                                        validators=VerifTypeTuple(('R','R')),
@@ -862,14 +936,14 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
  ), # Fin BLOC RAYLEIGH
 
   PDF = BLOC ( condition = " Law in ( 'PDF_from_file', ) ",
-             
+
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
                     fr = "Nom du fichier .csv",
                     ang = ".csv file name",
                     ),
               ),
-              
+
 
 
    TRUNCATEDNORMAL = BLOC ( condition = " Law in ( 'TruncatedNormal', ) ",
@@ -877,7 +951,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                              MuN = SIMP ( statut = "o",
                                           typ = "R",
                                           max = 1,
-                                          fr = "Moyenne de la loi Normale non tronquée",
+                                          fr = "Moyenne de la loi Normale non tronquï¿½e",
                                           ang = "Mean value of the associated non truncated normal distribution",
                                           ),
 
@@ -885,7 +959,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                              typ = "R",
                                              max = 1,
                                              val_min = 0.,
-                                             fr = "Ecart-type de la loi Normale non tronquée",
+                                             fr = "Ecart-type de la loi Normale non tronquï¿½e",
                                              ang = "Standard deviation of the associated non truncated normal distribution",
                                              ),
 
@@ -907,7 +981,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
 
   TimeSeries = BLOC ( condition = " Law in ( 'TimeSeries_from_file', ) ",
-             
+
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
                     fr = "Fichier CSV d'une serie temporelle",
@@ -937,10 +1011,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
    USERDEFINED = BLOC ( condition = " Law in ( 'UserDefined', ) ",
 
-                       # Il faut definir une collection de couples ( x,p ) 
+                       # Il faut definir une collection de couples ( x,p )
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       max = '**',
                                        fr = "Liste de couples : (valeur, probabilite)",
                                        ang = "List of pairs : (value, probability)",
                                        validators=VerifTypeTuple(('R','R')),
@@ -1013,7 +1087,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
 
   b_charge_avail = BLOC (condition = "Type == 'Load Availability'",
-                         
+
   Law = SIMP ( statut = "o", typ = "TXM",
                 into = ( #"Exponential",
                          #"Histogram",
@@ -1031,13 +1105,13 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                 defaut = "UserDefined",
                 ),
 
-                      
+
 #====
 # Definition des parametres selon le type de la loi
 #====
 
   TimeSeries = BLOC ( condition = " Law in ( 'TimeSeries_from_file', ) ",
-             
+
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
                     fr = "Fichier CSV d'une serie temporelle",
@@ -1049,10 +1123,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
    USERDEFINED = BLOC ( condition = " Law in ( 'UserDefined', ) ",
 
-                       # Il faut definir une collection de couples ( x,p ) 
+                       # Il faut definir une collection de couples ( x,p )
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       max = '**',
                                        fr = "Liste de couples : (valeur, probabilite)",
                                        ang = "List of pairs : (value, probability)",
                                        validators=VerifTypeTuple(('R','R')),
@@ -1063,45 +1137,56 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
 
   ), #fin du block Load Avail
-        
+
 
   ), #fin du bloc charge
- 
 
-  b_ligne = BLOC (condition = "ComponentType == 'Line'",
-        
+
+
+#Bloc Moteur
+  b_moteur = BLOC (condition = "ComponentType == 'Motor'",
+
 
 #====
 # Type de distribution
 #====
-  
+
   Type = SIMP (statut= "o", typ = "TXM",
-               into = ("Line Availability",),
-               fr = "La disponibilite de la ligne sera tiree",
-               ang= "Line availability will be set by the law",
-               defaut = "Line Availability",
+               into = ("Motor Level", "Motor Availability"),
+               fr = "Choisir si c'est le niveau de charge du moteur ou la disponibilitï¿½ du moteur qui sera tiree",
+               ang= "Choose whether the power level or the availability of the motor will be set by the law",
+               defaut = "Motor Level",
                ),
 
-  Line   = SIMP(statut='o',typ=sd_ligne,max="**", homo="SansOrdreNiDoublon"),
+  Sampling = SIMP (statut= "o", typ = "TXM",
+               into = ("Same sample for all motors", "One sample per motor"),
+               fr = "Choisir si une seule tirage sera fait pour tous les moteurs ou si des tirages differents seront faits pour chaque moteur",
+               ang= "Choose whether one drawing/sample will be performed for all of the motors or whether a different drawing/sample will be performed for each motor.",
+               defaut = "Same sample for all motors",
+               ),
+
+  Motor       = SIMP(statut='o',typ=sd_moteur,max="**", homo="SansOrdreNiDoublon",),
+
+
+  b_moteur_level = BLOC (condition = "Type == 'Motor Level'",
 
   Law = SIMP ( statut = "o", typ = "TXM",
-                into = ( #"Exponential",
-                         #"Histogram",
-                         #"Normal",
+                into = ( "Exponential",
+                         "Histogram",
+                         "Normal",
                          #"Rayleigh",
-                         #"PDF_from_file",
-                         #"TruncatedNormal",
+                         "PDF_from_file",
+                         "TruncatedNormal",
                          "TimeSeries_from_file",
-                         #"Uniform",
+                         "Uniform",
                          "UserDefined",
-                         #"Weibull",
+                         "Weibull",
                          ),
-                defaut = "UserDefined",
                 fr = "Choix du type de la loi marginale",
                 ang = "1D marginal distribution",
                 ),
 
-                      
+
 #====
 # Definition des parametres selon le type de la loi
 #====
@@ -1136,10 +1221,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                     ang = "Support lower bound",
                                     ),
 
-                       # Il faut definir une collection de couples ( x,p ) 
+                       # Il faut definir une collection de couples ( x,p )
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       max = '**',
                                        fr = "Liste de couples : largeur de classe, hauteur de classe",
                                        ang = "Class bandwidth, class height couple list",
                                        validators=VerifTypeTuple(('R','R')),
@@ -1186,14 +1271,14 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
  ), # Fin BLOC RAYLEIGH
 
   PDF = BLOC ( condition = " Law in ( 'PDF_from_file', ) ",
-             
+
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
                     fr = "Nom du fichier .csv",
                     ang = ".csv file name",
                     ),
               ),
-              
+
 
 
    TRUNCATEDNORMAL = BLOC ( condition = " Law in ( 'TruncatedNormal', ) ",
@@ -1201,7 +1286,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                              MuN = SIMP ( statut = "o",
                                           typ = "R",
                                           max = 1,
-                                          fr = "Moyenne de la loi Normale non tronquée",
+                                          fr = "Moyenne de la loi Normale non tronquï¿½e",
                                           ang = "Mean value of the associated non truncated normal distribution",
                                           ),
 
@@ -1209,7 +1294,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                              typ = "R",
                                              max = 1,
                                              val_min = 0.,
-                                             fr = "Ecart-type de la loi Normale non tronquée",
+                                             fr = "Ecart-type de la loi Normale non tronquï¿½e",
                                              ang = "Standard deviation of the associated non truncated normal distribution",
                                              ),
 
@@ -1231,7 +1316,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
 
   TimeSeries = BLOC ( condition = " Law in ( 'TimeSeries_from_file', ) ",
-             
+
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
                     fr = "Fichier CSV d'une serie temporelle",
@@ -1261,10 +1346,341 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
    USERDEFINED = BLOC ( condition = " Law in ( 'UserDefined', ) ",
 
-                       # Il faut definir une collection de couples ( x,p ) 
+                       # Il faut definir une collection de couples ( x,p )
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       max = '**',
+                                       fr = "Liste de couples : (valeur, probabilite)",
+                                       ang = "List of pairs : (value, probability)",
+                                       validators=VerifTypeTuple(('R','R')),
+                                       ),
+
+  ), # Fin BLOC USERDEFINED
+
+
+   WEIBULL = BLOC ( condition = " Law in ( 'Weibull', ) ",
+
+                     Settings = SIMP ( statut = "o",
+                                          typ = "TXM",
+                                          max = 1,
+                                          into = ( "AlphaBeta", "MuSigma" ),
+                                          defaut = "AlphaBeta",
+                                          fr = "Parametrage de la loi weibull",
+                                          ang = "Weibull distribution parameter set",
+                                          ),
+
+                     AlphaBeta_Parameters = BLOC ( condition = " Settings in ( 'AlphaBeta', ) ",
+
+                                         Alpha = SIMP ( statut = "o",
+                                                        typ = "R",
+                                                        max = 1,
+                                                        val_min = 0.,
+                                                        fr = "Parametre Alpha de la loi | Alpha > 0",
+                                                        ang = "Alpha parameter | Alpha > 0",
+                                                        ),
+
+                                         Beta = SIMP ( statut = "o",
+                                                       typ = "R",
+                                                       max = 1,
+                                                       val_min = 0.,
+                                                       fr = "Parametre Beta de la loi | Beta > 0",
+                                                       ang = "Beta parameter | Beta > 0",
+                                                       ),
+
+                                         ), # Fin BLOC AlphaBeta_Parameters
+
+
+                     MuSigma_Parameters = BLOC ( condition = " Settings in ( 'MuSigma', ) ",
+
+                                         Mu = SIMP ( statut = "o",
+                                                     typ = "R",
+                                                     max = 1,
+                                                     fr = "Moyenne de la loi",
+                                                     ang = "Mean value",
+                                                     ),
+
+                                         Sigma = SIMP ( statut = "o",
+                                                        typ = "R",
+                                                        max = 1,
+                                                        val_min = 0.,
+                                                        fr = "Ecart type de la loi",
+                                                        ang = "Standard deviation",
+                                                        ),
+
+                                         ), # Fin BLOC MuSigma_Parameters
+
+                     Gamma = SIMP ( statut = "o",
+                                    typ = "R",
+                                    max = 1,
+                                    fr = "Borne inferieure du support de la loi",
+                                    ang = "Support lower bound",
+                                    ),
+
+    ), # Fin BLOC WEIBULL
+
+  ), #fin du block Load Level
+
+
+  b_moteur_avail = BLOC (condition = "Type == 'Motor Availability'",
+
+  Law = SIMP ( statut = "o", typ = "TXM",
+                into = ( #"Exponential",
+                         #"Histogram",
+                         #"Normal",
+                         #"Rayleigh",
+                         #"PDF_from_file",
+                         #"TruncatedNormal",
+                         "TimeSeries_from_file",
+                         #"Uniform",
+                         "UserDefined",
+                         #"Weibull",
+                         ),
+                fr = "Choix du type de la loi marginale",
+                ang = "1D marginal distribution",
+                defaut = "UserDefined",
+                ),
+
+
+#====
+# Definition des parametres selon le type de la loi
+#====
+
+  TimeSeries = BLOC ( condition = " Law in ( 'TimeSeries_from_file', ) ",
+
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "Fichier CSV d'une serie temporelle",
+                    ang = "CSV file of a time series",
+                    ),
+              ),
+
+
+
+   USERDEFINED = BLOC ( condition = " Law in ( 'UserDefined', ) ",
+
+                       # Il faut definir une collection de couples ( x,p )
+                       Values = SIMP ( statut = 'o',
+                                       typ = Tuple(2),
+                                       max = '**',
+                                       fr = "Liste de couples : (valeur, probabilite)",
+                                       ang = "List of pairs : (value, probability)",
+                                       validators=VerifTypeTuple(('R','R')),
+                                       defaut=((0,0.0),(1,1.0)),
+                                       ),
+
+  ), # Fin BLOC USERDEFINED
+
+
+  ), #fin du block Load Avail
+
+
+  ), #fin du bloc moteur
+
+
+  b_ligne = BLOC (condition = "ComponentType == 'Line'",
+
+
+#====
+# Type de distribution
+#====
+
+  Type = SIMP (statut= "o", typ = "TXM",
+               into = ("Line Availability",),
+               fr = "La disponibilite de la ligne sera tiree",
+               ang= "Line availability will be set by the law",
+               defaut = "Line Availability",
+               ),
+
+  Sampling = SIMP (statut= "o", typ = "TXM",
+               into = ("Same sample for all lines", "One sample per line"),
+               fr = "Choisir si une seule tirage sera fait pour tous les lignes ou si des tirages differents seront faits pour chaque ligne",
+               ang= "Choose whether one drawing/sample will be performed for all of the lines or whether a different drawing/sample will be performed for each line.",
+               defaut = "Same sample for all lines",
+               ),
+
+  Line   = SIMP(statut='o',typ=sd_ligne,max="**", homo="SansOrdreNiDoublon"),
+
+  Law = SIMP ( statut = "o", typ = "TXM",
+                into = ( #"Exponential",
+                         #"Histogram",
+                         #"Normal",
+                         #"Rayleigh",
+                         #"PDF_from_file",
+                         #"TruncatedNormal",
+                         "TimeSeries_from_file",
+                         #"Uniform",
+                         "UserDefined",
+                         #"Weibull",
+                         ),
+                defaut = "UserDefined",
+                fr = "Choix du type de la loi marginale",
+                ang = "1D marginal distribution",
+                ),
+
+
+#====
+# Definition des parametres selon le type de la loi
+#====
+
+
+  EXPONENTIAL = BLOC ( condition = " Law in ( 'Exponential', ) ",
+
+                         Lambda = SIMP ( statut = "o",
+                                         typ = "R",
+                                         max = 1,
+                                         val_min = 0.,
+                                         fr = "Parametre Lambda | Lambda > 0",
+                                         ang = "Lambda parameter | Lambda > 0",
+                                         ),
+
+                         Gamma = SIMP ( statut = "o",
+                                        typ = "R",
+                                        max = 1,
+                                        fr = "Borne inferieure du support de la loi",
+                                        ang = "Support lower bound",
+                                        ),
+
+  ), # Fin BLOC EXPONENTIAL
+
+
+  HISTOGRAM = BLOC ( condition = " Law in ( 'Histogram', ) ",
+
+                       First = SIMP ( statut = "o",
+                                    typ = "R",
+                                    max = 1,
+                                    fr = "Borne inferieure du supoport de la loi",
+                                    ang = "Support lower bound",
+                                    ),
+
+                       # Il faut definir une collection de couples ( x,p )
+                       Values = SIMP ( statut = 'o',
+                                       typ = Tuple(2),
+                                       max = '**',
+                                       fr = "Liste de couples : largeur de classe, hauteur de classe",
+                                       ang = "Class bandwidth, class height couple list",
+                                       validators=VerifTypeTuple(('R','R')),
+                                       ),
+
+  ), # Fin BLOC HISTOGRAM
+
+
+   NORMAL = BLOC ( condition = " Law in ( 'Normal', ) ",
+
+                    Mu = SIMP ( statut = "o",
+                                typ = "R",
+                                max = 1,
+                                fr = "Moyenne de la loi",
+                                ang = "Mean value",
+                                ),
+
+                   Sigma = SIMP ( statut = "o",
+                                  typ = "R",
+                                  max = 1,
+                                  val_min = 0.,
+                                  fr = "Ecart type de la loi",
+                                  ang = "Standard deviation",
+                                  ),
+
+   ), # Fin BLOC NORMAL
+
+
+  RAYLEIGH = BLOC ( condition = " Law in ( 'Rayleigh', ) ",
+
+                   Sigma = SIMP ( statut = "o",
+                                  typ = "R",
+                                  max = 1,
+                                  fr = "Parametre Sigma de la loi | Sigma > 0",
+                                  ang = "Sigma parameter | Sigma > 0",
+                                  ),
+
+                   Gamma = SIMP ( statut = "o",
+                                  typ = "R",
+                                  max = 1,
+                                  fr = "Borne inferieure du support de la loi",
+                                  ang = "Support lower bound",
+                                  ),
+ ), # Fin BLOC RAYLEIGH
+
+  PDF = BLOC ( condition = " Law in ( 'PDF_from_file', ) ",
+
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "Nom du fichier .csv",
+                    ang = ".csv file name",
+                    ),
+              ),
+
+
+
+   TRUNCATEDNORMAL = BLOC ( condition = " Law in ( 'TruncatedNormal', ) ",
+
+                             MuN = SIMP ( statut = "o",
+                                          typ = "R",
+                                          max = 1,
+                                          fr = "Moyenne de la loi Normale non tronquï¿½e",
+                                          ang = "Mean value of the associated non truncated normal distribution",
+                                          ),
+
+                             SigmaN = SIMP ( statut = "o",
+                                             typ = "R",
+                                             max = 1,
+                                             val_min = 0.,
+                                             fr = "Ecart-type de la loi Normale non tronquï¿½e",
+                                             ang = "Standard deviation of the associated non truncated normal distribution",
+                                             ),
+
+                             A = SIMP ( statut = "o",
+                                        typ = "R",
+                                        max = 1,
+                                        fr = "Borne inferieure de la loi | A < B",
+                                        ang = "Lower bound | A < B",
+                                        ),
+
+                             B = SIMP ( statut = "o",
+                                        typ = "R",
+                                        max = 1,
+                                        fr = "Borne superieure de la loi | A < B",
+                                        ang = "Upper bound | A < B",
+                                        ),
+
+   ), # Fin BLOC TRUNCATEDNORMAL
+
+
+  TimeSeries = BLOC ( condition = " Law in ( 'TimeSeries_from_file', ) ",
+
+  FileName = SIMP ( statut = "o",
+                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
+                    fr = "Fichier CSV d'une serie temporelle",
+                    ang = "CSV file of a time series",
+                    ),
+              ),
+
+
+   UNIFORM = BLOC ( condition = " Law in ( 'Uniform', ) ",
+
+                     A = SIMP ( statut = "o",
+                                typ = "R",
+                                max = 1,
+                                fr = "Borne inferieure du support de la loi | A < B",
+                                ang = "Support lower bound | A < B",
+                                ),
+
+                     B = SIMP ( statut = "o",
+                                typ = "R",
+                                max = 1,
+                                fr = "Borne superieure du support de la loi | A < B",
+                                ang = "Support upper bound | A < B",
+                                ),
+
+   ), # Fin BLOC UNIFORM
+
+
+   USERDEFINED = BLOC ( condition = " Law in ( 'UserDefined', ) ",
+
+                       # Il faut definir une collection de couples ( x,p )
+                       Values = SIMP ( statut = 'o',
+                                       typ = Tuple(2),
+                                       max = '**',
                                        fr = "Liste de couples : (valeur, probabilite)",
                                        ang = "List of pairs : (value, probability)",
                                        validators=VerifTypeTuple(('R','R')),
@@ -1335,14 +1751,14 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
     ), # Fin BLOC WEIBULL
 
   ), #fin du bloc ligne
-                  
+
   b_transfo = BLOC (condition = "ComponentType == 'Transformer'",
-        
+
 
 #====
 # Type de distribution
 #====
-  
+
   Type = SIMP (statut= "o", typ = "TXM",
                into = ("Transformer Availability",),
                fr = "La disponibilite du transformateur sera tiree",
@@ -1350,10 +1766,17 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                defaut = "Transformer Availability"
                ),
 
+  Sampling = SIMP (statut= "o", typ = "TXM",
+               into = ("Same sample for all transformers", "One sample per transformer"),
+               fr = "Choisir si une seule tirage sera fait pour tous les transforamteurs ou si des tirages differents seront faits pour chaque transformateur",
+               ang= "Choose whether one drawing/sample will be performed for all of the tranformers or whether a different drawing/sample will be performed for each transformer.",
+               defaut = "Same sample for all transformers",
+               ),
+
   Transformer = SIMP(statut='o',typ=sd_transfo,max="**", homo="SansOrdreNiDoublon"),
 
   Law = SIMP ( statut = "o", typ = "TXM",
-                into = ( #"Beta", 
+                into = ( #"Beta",
                          #"Exponential",
                          #"Gamma",
                          #"Geometric",
@@ -1381,13 +1804,13 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                 ang = "1D marginal distribution",
                 ),
 
-                      
+
 #====
 # Definition des parametres selon le type de la loi
 #====
 
 ##  NONPARAM = BLOC ( condition = " Law in ( 'NonParametrique', ) ",
-##             
+##
 ##  FileName = SIMP ( statut = "o",
 ##                    typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
 ##                    fr = "Nom du modele physique",
@@ -1629,10 +2052,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                     ang = "Support lower bound",
                                     ),
 
-                       # Il faut definir une collection de couples ( x,p ) 
+                       # Il faut definir une collection de couples ( x,p )
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       max = '**',
                                        fr = "Liste de couples : largeur de classe, hauteur de classe",
                                        ang = "Class bandwidth, class height couple list",
                                        validators=VerifTypeTuple(('R','R')),
@@ -1651,7 +2074,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 #                                   fr = "Parametre Lambda | Lambda > 0",
 #                                   ang = "Lambda parameter | Lambda > 0",
 #                                   ),
-#                   
+#
 #                   Mu = SIMP ( statut = "o",
 #                               typ = "R",
 #                               max = 1,
@@ -1726,7 +2149,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 #                                                                      fr = "Ecart type du log",
 #                                                                      ang = "Log standard deviation",
 #                                                                      ),
-#                                            
+#
 #                                                    ), # Fin BLOC MuSigmaLog_Parameters
 #
 #                     Gamma = SIMP ( statut = "o",
@@ -1762,7 +2185,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 #
 #
 #   MULTINOMIAL = BLOC ( condition = " Law in ( 'MultiNomial', ) ",
-#                         
+#
 #                         N = SIMP ( statut = "o",
 #                                    typ = "I",
 #                                    max = 1,
@@ -1770,11 +2193,11 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 #                                    ang = "N parameter | N > 0",
 #                                    ),
 #
-#                       # Il faut definir une collection de couples ( x,p ) 
+#                       # Il faut definir une collection de couples ( x,p )
 #                       Values = SIMP ( statut = 'o',
 #                                       typ = "R",
 #                                       max = '**',
-#                                       fr = "Liste de probabilités",
+#                                       fr = "Liste de probabilitï¿½s",
 #                                       ang = "Probability list",
 #                                       validators=VerifTypeTuple(('R','R')),
 #                                       ),
@@ -1797,7 +2220,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 #                                  fr = "Parametre Delta de la loi | Delta > 0",
 #                                  ang = "Delta parameter | Delta > 0",
 #                                  ),
-#                   
+#
 #                   Gamma = SIMP ( statut = "o",
 #                                  typ = "R",
 #                                  max = 1,
@@ -1861,14 +2284,14 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 # ), # Fin BLOC RAYLEIGH
 
   PDF = BLOC ( condition = " Law in ( 'PDF_from_file', ) ",
-             
+
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
                     fr = "Nom du fichier .csv",
                     ang = ".csv file name",
                     ),
               ),
-              
+
 #   STUDENT = BLOC ( condition = " Law in ( 'Student', ) ",
 #
 #                     Mu = SIMP ( statut = "o",
@@ -1929,7 +2352,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                              MuN = SIMP ( statut = "o",
                                           typ = "R",
                                           max = 1,
-                                          fr = "Moyenne de la loi Normale non tronquée",
+                                          fr = "Moyenne de la loi Normale non tronquï¿½e",
                                           ang = "Mean value of the associated non truncated normal distribution",
                                           ),
 
@@ -1937,7 +2360,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
                                              typ = "R",
                                              max = 1,
                                              val_min = 0.,
-                                             fr = "Ecart-type de la loi Normale non tronquée",
+                                             fr = "Ecart-type de la loi Normale non tronquï¿½e",
                                              ang = "Standard deviation of the associated non truncated normal distribution",
                                              ),
 
@@ -1959,7 +2382,7 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
 
   TimeSeries = BLOC ( condition = " Law in ( 'TimeSeries_from_file', ) ",
-             
+
   FileName = SIMP ( statut = "o",
                     typ = ('Fichier', 'Wrapper Files (*.csv);;All Files (*)',),
                     fr = "Fichier CSV d'une serie temporelle",
@@ -1989,10 +2412,10 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
    USERDEFINED = BLOC ( condition = " Law in ( 'UserDefined', ) ",
 
-                       # Il faut definir une collection de couples ( x,p ) 
+                       # Il faut definir une collection de couples ( x,p )
                        Values = SIMP ( statut = 'o',
                                        typ = Tuple(2),
-                                       max = '**', 
+                                       max = '**',
                                        fr = "Liste de couples : (valeur, probabilite)",
                                        ang = "List of pairs : (value, probability)",
                                        validators=VerifTypeTuple(('R','R')),
@@ -2064,21 +2487,12 @@ DISTRIBUTION = OPER ( nom = "DISTRIBUTION",
 
 
 
-  ), #fin du bloc transformer 
-                    
+  ), #fin du bloc transformer
 
-) 
+
+)
 
 Classement_Commandes_Ds_Arbre=('DIRECTORY', 'DISTRIBUTION', 'CORRELATION',)
 
 Ordre_Des_Commandes = ( 'DIRECTORY', 'PSSE_PARAMETERS', 'SIMULATION', 'DISTRIBUTION', 'CORRELATION',
                         'N_1_GENERATORS', 'N_1_LINES', 'N_1_TRANSFORMERS', 'N_1_LOADS',)
-
-
-
-
-
-
-
-
-

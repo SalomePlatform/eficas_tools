@@ -144,6 +144,11 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
           #if maDefinition.into != [] and maDefinition.into != None:
           # Attention pas fini --> on attend une liste de ASSD avec ordre
           if self.item.wait_assd() and self.item.is_list_SansOrdreNiDoublon():
+               #if self.item.is_list_Chargement():
+                #from monWidgetPlusieursTuple2AvecChargement import MonWidgetPlusieursTuple2AvecChargement
+                #widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+                # pass
+               #else :
                from monWidgetPlusieursInto import MonWidgetPlusieursInto
                widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_assd() :
@@ -161,10 +166,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                print "Prevenir la maintenance "
           elif self.item.has_into():
             if self.item.is_list_SansOrdreNiDoublon():
-               print 6
-               print self.editor.listeDesListesOuvertes
-               print self.item in self.editor.listeDesListesOuvertes
-               print self.editor.afficheListesPliees
+               #print (self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees)  )
+               #print ( not(self.editor.afficheListesPliees)  )
+               #print (self.editor.afficheListesPliees)  
+               
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
                   from monWidgetPlusieursInto import MonWidgetPlusieursInto
                   widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
@@ -172,7 +177,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                   from monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-               print 7
 # tres vite pour le tag mais devra etre gere dans configuration
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
                   from monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
@@ -181,7 +185,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                   from monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
-            print 8
+            #print 8
             if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees)  : 
                from monWidgetPlusieursBase import MonWidgetPlusieursBase
                widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
@@ -242,7 +246,11 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return is_a_list 
 
   def is_list_SansOrdreNiDoublon(self):
-      if self.definition.homo=="SansOrdreNiDoublon": return 1
+      if self.definition.homo=="SansOrdreNiDoublon" : return 1
+      return 0 
+
+  def is_list_Chargement(self):
+      if  self.definition.docu != "" :  return 1
       return 0 
 
   def has_into(self):

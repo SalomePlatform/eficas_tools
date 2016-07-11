@@ -51,7 +51,7 @@ class MonWidgetCB (Ui_WidgetCB,Feuille):
 
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.CBChoix)
-        print self.objSimp.isoblig()
+        #print self.objSimp.isoblig()
 
 
   def setValeursApresBouton(self):

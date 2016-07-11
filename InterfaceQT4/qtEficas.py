@@ -351,6 +351,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ajoutHelpPSEN()
         self.ajoutIcones()
 
+    def PSEN_N1(self):
+        self.ajoutExecution()
+
     def TELEMAC(self):
         self.enleverActionsStructures()
         self.enleverNewInclude()

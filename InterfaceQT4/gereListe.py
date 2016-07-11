@@ -129,7 +129,6 @@ class GereListe:
           self.LEFiltre.returnPressed.connect(self.LEFiltreReturnPressed)
 
    def filtreListe(self):
-       print self.alpha
        l=[]
        if self.filtre != "" :
           for i in self.listeAAfficher :

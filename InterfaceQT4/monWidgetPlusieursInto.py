@@ -222,6 +222,8 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
       if self.listeValeursCourantes== [] :  self.node.item.set_valeur(None)
       else : self.node.item.set_valeur(self.listeValeursCourantes)
 
+      # Exception pour PSEN
+      if self.editor.code == 'PSEN_N1' and self.nom==('Onglets') and self.listeValeursCourantes== []: self.node.item.set_valeur([])
       self.setValide()
       self.reaffiche()
 

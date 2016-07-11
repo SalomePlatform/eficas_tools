@@ -87,11 +87,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code = self.appliEficas.CONFIGURATION.code
-        # tres vite a cause du tag. doit etre pase dans CONFIGURATION
 
         #self.afficheListesPliees=False
         self.afficheListesPliees=True
         if self.code == "ASTER" or self.code == "monCode" : self.afficheListesPliees =True
+        if self.code == 'PSEN_N1' : self.afficheListesPliees = False
 
         self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
         self.affiche=self.appliEficas.CONFIGURATION.affiche
@@ -241,6 +241,33 @@ class JDCEditor(Ui_baseWidget,QWidget):
       print out
       print err
 
+    #-------------------#  Pour execution avec output et error dans le bash
+    def runPSEN_N1(self):
+    #-------------------#
+      #cmd = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','PSEN_N1','run.py'))
+      #cmd = "from run import runPSEN_N1; dico="+str(dico)
+      
+      #textePython=("python "+ cmd + " "+ str(dico))
+      #print textePython
+      #self._viewTextExecute( textePython,"psen_run",".sh")
+      if generator.plugins.has_key('dicoImbrique'):
+         self.generator=generator.plugins['dicoImbrique']()
+         jdc_formate=self.generator.gener(self.jdc)
+         dico=self.generator.Dico 
+         from variablesPSENN1 import PSEN_N1_Variables
+         mesVariables= PSEN_N1_Variables()
+         mesVariables.raz()
+         mesVariables.setValues(dico)
+         mesVariables.imprime()
+         
+      from eficas_go import getJdcParameters
+      from run import runPSEN_N1
+      res,txt_exception=runPSEN_N1(dico)
+      if res : QMessageBox.information( self, tr("fin de script run"), txt_exception)
+      else  : QMessageBox.critical( self, tr("Erreur fatale script run"), txt_exception)
+       
+      
+
     #--------------------------------#
     def _newJDC( self ,units = None):
     #--------------------------------#
@@ -255,6 +282,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if self.code == "ZCRACKS" : texte=self._newZCRACKS()
         if self.code == "TELEMAC" : texte=self._newTELEMAC()
         if self.code == "PSEN" : texte = self._newPSEN()
+        if self.code == "PSEN_N1" : texte = self._newPSEN_N1()
         #   texte=self.newTexteCND
        
         jdc=self.readercata.cata[0].JdC( procedure =texte,
@@ -840,7 +868,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #------------#
     def run(self):
     #------------#
+      print "kkkkkkkkkk"
       fonction="run"+self.code
+      print fonction
       if fonction in JDCEditor.__dict__.keys(): apply(JDCEditor.__dict__[fonction],(self,))
 
     #------------#
@@ -1256,27 +1286,40 @@ class JDCEditor(Ui_baseWidget,QWidget):
         etape.build_includeInclude(texte)
         self.tree.racine.build_children()
 
+    #-------------------------------------#
+    def deleteMC(self,etape,MCFils):
+    #-------------------------------------#
+        monMC=etape.get_child(MCFils,restreint="oui")
+        if monMC != None : print etape.suppentite(monMC)
+
+
+    #-------------------------------------#
     def ajoutMC(self,etape,MCFils,valeurs):
-        print etape.nom
-        #print etape,MCFils,valeurs 
-        print dir(etape)
-        #print 'etape' , etape
-        #print MCFils.valeur
-        #print MCFils.val
-        print etape.liste_mc_presents()
-        monMC= etape.addentite('TransfosList')
-        #print etape.append_child
-        #monMC=etape.append_child('TransfosList','last')
-        print etape.liste_mc_presents()
-        # Attention ne pas faire de setValeurs
+    #-------------------------------------#
+        print "je passe dans ajoutMC" 
+        monMC=etape.get_child(MCFils,restreint="oui")
+        if monMC== None : monMC= etape.addentite(MCFils)
         monMC.valeur=valeurs
         monMC.val=valeurs
-        print monMC.val
-        #print MCFils.valeur
-        #print MCFils.val
-        print etape.liste_mc_presents()
-        print "________"
 
+    #-------------------------------------#
+    def changeIntoMC(self,etape,MCFils,valeurs):
+    #-------------------------------------#
+        print "je passe dans changeIntoMC" 
+        monMC=etape.get_child(MCFils,restreint="oui")
+        if monMC== None : monMC= etape.addentite(MCFils)
+        monMC.definition.into=valeurs
+
+    #-------------------------------------#
+    def changeIntoMCandSet(self,etape,MCFils,into,valeurs):
+    #-------------------------------------#
+        monMC=etape.get_child(MCFils,restreint="oui")
+        if monMC== None : monMC= etape.addentite(MCFils)
+        monMC.definition.into=into
+        monMC.valeur=valeurs
+        monMC.val=valeurs
+        monMC.state='changed'
+        monMC.isvalid() 
 
     #-------------------------------------#
     def ajoutVersionCataDsJDC(self,txt):
@@ -1355,6 +1398,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
     def _newPSEN(self):
     #---------------------------#
         texte="DIRECTORY() ; PSSE_PARAMETERS() ; SIMULATION() ; sansnom=DISTRIBUTION() ; sansnom=DISTRIBUTION() ; CORRELATION() ;"
+        #texte=""
+        return texte
+
+    #---------------------------#
+    def _newPSEN_N1(self):
+    #---------------------------#
+        texte="CASE_SELECTION() ; CONTINGENCY_OPTIONS() ; OUTPUT_OPTIONS() ; "
         #texte=""
         return texte
 

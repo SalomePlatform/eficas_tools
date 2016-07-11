@@ -164,4 +164,10 @@ def ExtractGeneratorLoadLineandTransfoDico2(NetworkFile,PSSE_PATH):
     LoadDico={'C1':'C1','C2':'C2','C3':'C3','C4':'C4'}
     LineDico={'L1':'L1','L2':'L2','L3':'L3','L4':'L4'}
     TfoDico={'T1':'T1','T2':'T2','T3':'T3','T4':'T4'}
-    return MachineDico, LoadDico, LineDico, TfoDico
+    MDico={'MZ1':'MZ1','MZ2':'MZ2','MZ3':'MZ3','MZ4':'MZ4'}
+    if NetworkFile == '/home/A96028/PSEN/PSEN_V8/Code/PSEN_Eficas/faux2.sav': 
+       print "sans T1"
+       TfoDico={'T2':'T2','T3':'T3','T4':'T4'}
+
+
+    return MachineDico, LoadDico, LineDico, TfoDico, MDico

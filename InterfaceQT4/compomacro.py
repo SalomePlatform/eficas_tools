@@ -67,7 +67,6 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
         troisD.envoievisu()
 
         
-
     
 class MACROTreeItem(compooper.EtapeTreeItem):
 #  """ Cette classe hérite d'une grande partie des comportements

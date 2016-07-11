@@ -166,11 +166,10 @@ class FacultatifOuOptionnel:
       
 
   def setRun(self):
-
       if hasattr(self.editor.appliEficas, 'mesScripts') :
          if self.editor.code in  self.editor.appliEficas.mesScripts.keys() :
             self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
-            if hasattr(self.editor,'tree') and self.editor.tree.currentItem() and self.editor.tree.currentItem().item and self.editor.tree.currentItem().item.get_nom() in self.dict_commandes_mesScripts.keys() :
+            if self.obj.nom in self.dict_commandes_mesScripts.keys() :
                self.ajoutScript()
                return
       if hasattr(self,"RBRun"): self.RBRun.close()
@@ -206,7 +205,7 @@ class FacultatifOuOptionnel:
 
   def ajoutScript(self):
         self.dictCommandes={}
-        listeCommandes=self.dict_commandes_mesScripts[self.node.item.get_nom()]
+        listeCommandes=self.dict_commandes_mesScripts[self.obj.nom]
         if type(listeCommandes) != types.TupleType: listeCommandes=(listeCommandes,)
         i=0
         for commande in listeCommandes :
