@@ -24,7 +24,7 @@ import os,sys,re
 from desChoixCode import Ui_ChoixCode
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets import QDialog, QRadioButton
+    from PyQt5.QtWidgets import QDialog, QRadioButton, QGroupBox, QButtonGroup
     from PyQt5.QtGui import QPalette
     from PyQt5.QtCore import QProcess, QFileInfo, Qt, QSize
 else :
@@ -61,30 +61,22 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
       self.groupCodes=QButtonGroup(self.groupBox)
       vars=os.environ.items()
       listeCode=('Aster','Adao','Carmel3D','CarmelCND','CF','MAP','MT','PSEN','PSEN_N1','Telemac','ZCracks',)
-      i=1
       for code in listeCode:
-          nom='rB_'+code
           dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))
           try :
              l=os.listdir(dirCode)
-             bouton=QRadioButton(self)
-             bouton.setMinimumSize(QSize(0, 30))
+             bouton=QRadioButton(self.groupBox)
              bouton.setText(code)
-             bouton.setGeometry(QRect(10,20+30*i, 300, 30))
-             bouton.show()
              self.groupCodes.addButton(bouton)
-             i=i+1
+             self.vlBouton.addWidget(bouton)
           except :
              clef="PREFS_CATA_"+code
              try :
                 repIntegrateur=os.path.abspath(os.environ[clef])
                 l=os.listdir(repIntegrateur)
-                bouton=QRadioButton(self)
-                bouton.setGeometry(QRect(10,20+30*i, 300, 30))
-                bouton.setMinimumSize(QSize(0, 30))
+                bouton=QRadioButton(self.groupBox)
                 bouton.setText(code)
                 bouton.show()
-                i=i+1
                 self.groupCodes.addButton(bouton)
              except :
                 pass
@@ -98,9 +90,6 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
               repIntegrateur=os.path.abspath(os.environ[clef])
               l=os.listdir(repIntegrateur)
               bouton=QRadioButton(self)
-              bouton.setGeometry(QRect(10,20+30*i, 300, 30))
-              i=i+1
-              bouton.setMinimumSize(QSize(0, 30))
               bouton.setText(code)
               bouton.show()
               self.groupCodes.addButton(bouton)
@@ -110,6 +99,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
 
   def choisitCode(self):
       bouton=self.groupCodes.checkedButton()
+      if bouton==None : return
       code=str(bouton.text())
       codeUpper=code.upper()
       self.parentAppli.code=codeUpper

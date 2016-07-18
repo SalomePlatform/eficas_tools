@@ -204,6 +204,7 @@ class FacultatifOuOptionnel:
 
 
   def ajoutScript(self):
+        if not hasattr(self,'CBScripts') : return # Cas des Widgets Plies
         self.dictCommandes={}
         listeCommandes=self.dict_commandes_mesScripts[self.obj.nom]
         if type(listeCommandes) != types.TupleType: listeCommandes=(listeCommandes,)
