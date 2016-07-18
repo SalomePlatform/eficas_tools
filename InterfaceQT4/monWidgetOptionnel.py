@@ -62,10 +62,17 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
       #print "je passe dans vireLesAutres"
       genea =MC.obj.get_genealogie()
       for k in self.dicoMCWidgetOptionnel.keys():
-          if k not in genea :  self.dicoMCWidgetOptionnel[k].close()
+          if k not in genea :  
+             self.dicoMCWidgetOptionnel[k].close()
+             del self.dicoMCWidgetOptionnel[k]
           #if k not in genea :  print k
       #print "________"
       
+  def afficheOptionnelVide(self):
+      self.GeneaLabel.setText("")
+      for k in self.dicoMCWidgetOptionnel.keys():
+            self.dicoMCWidgetOptionnel[k].close()
+            del self.dicoMCWidgetOptionnel[k]
 
   def titre(self,MC):
      labeltext,fonte,couleur = self.parentCommande.node.item.GetLabelText()

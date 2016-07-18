@@ -79,7 +79,7 @@ class MonWidgetInactif(QWidget,Ui_WidgetInactif):
       # dans le cas ou l insertion n a pas eu leiu (souci d ordre par exemple)
       #if self.monOptionnel == None : return
       self.monOptionnel.parentMC=self
-      self.monOptionnel.affiche(liste)
+      self.monOptionnel.afficheOptionnelVide()
 
 
   def afficheCatalogue(self):

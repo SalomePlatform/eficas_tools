@@ -51,7 +51,7 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
       if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome:
            self.ViewElt = QAction(tr('View3D'),self.tree)
            if monEnvQT5:
-              self.ViewElt.triggered.connect(self.View3D)
+              self.ViewElt.triggered.connect(self.view3D)
            else :
               self.tree.connect(self.ViewElt,SIGNAL("triggered()"),self.view3D)
            self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
