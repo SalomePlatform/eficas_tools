@@ -45,7 +45,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   """
   """
   def __init__(self,node,editor,etape):
-      #print "MonWidgetCommande ", self
+      #print "MonWidgetCommande ", self,node.item.get_fr()
       self.listeAffichageWidget=[]
       self.inhibe=0
       self.ensure=0
@@ -223,20 +223,21 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
 
   def reaffiche(self,nodeAVoir=None):
+      # Attention delicat. les appels de fonctions ne semblent pas pouvoir etre supprimes!
       self.avantH=self.editor.fenetreCentraleAffichee.scrollAreaCommandes.horizontalScrollBar().sliderPosition()
       self.avantV=self.editor.fenetreCentraleAffichee.scrollAreaCommandes.verticalScrollBar().sliderPosition()
       self.inhibeExpand=True
       self.node.affichePanneau()
-      #print "dans reaffiche de monWidgetCommande", self.avantH, self.avantV
-      QTimer.singleShot(1, self.recentre)
+      #QTimer.singleShot(1, self.recentre)
       if nodeAVoir != None and nodeAVoir!=0:
         self.f=nodeAVoir.fenetre
         if self.f==None : 
              newNode=nodeAVoir.treeParent.chercheNoeudCorrespondant(nodeAVoir.item.object)
              self.f = newNode.fenetre 
-        #print "dans reaffiche",self.f, nodeAVoir.item.nom
-        if self.f != None and self.f.isVisible() : return
-        if self.f != None : QTimer.singleShot(1, self.rendVisible)
+        if self.f != None and self.f.isVisible() : self.inhibeExpand=False; return
+        if self.f != None : self.rendVisible()
+        else : self.recentre()
+      else : self.recentre()
       self.inhibeExpand=False
 
 
@@ -248,10 +249,11 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
   def rendVisibleNoeud(self,node):
       self.f=node.fenetre
-      print "dans rendVisibleNoeud",self.f, node.item.nom
+      print "dans rendVisibleNoeud",self.f
       QTimer.singleShot(1, self.rendVisible)
      
   def rendVisible(self):
+      print "dans rendVisible",self.f
       QApplication.processEvents()
       self.f.setFocus(7)
       self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(self.f)

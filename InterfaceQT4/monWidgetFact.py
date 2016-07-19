@@ -19,7 +19,7 @@
 # Modules Python
 from determine import monEnvQT5
 if monEnvQT5:
-   from PyQt5.QtCore import Qt
+   from PyQt5.QtCore import Qt, QTimer
    from PyQt5.QtWidgets import QWidget
 else :
    from PyQt4.QtCore import *
@@ -37,14 +37,25 @@ class MonWidgetFact(Ui_WidgetFact,Groupe):
   """
   """
   def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
-      #print "init de Fact"
+      #print "fact : ",node.item.nom
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
       labeltext,fonte,couleur = self.node.item.GetLabelText()
       self.GroupBox.setText(tr(labeltext))
       self.GroupBox.setTextInteractionFlags(Qt.TextSelectableByMouse)
       self.parentQt.commandesLayout.insertWidget(-1,self)
+      self.doitAfficherOptionnel=False
 
   def enterEvent(self,event):
-      if self.editor.code != "CARMELCND" :self.afficheOptionnel()
+      #print "enterEvent ", self.node.item.GetLabelText()[0]
+      self.doitAfficherOptionnel=True
       QWidget.enterEvent(self,event)
+      QTimer.singleShot(500, self.delayAffiche)
 
+  def leaveEvent(self,event):
+      #print "leaveEvent", self.node.item.GetLabelText()[0]
+      self.doitAfficherOptionnel=False
+      QWidget.leaveEvent(self,event)
+
+  def delayAffiche(self):
+      #print "delayAffiche, self.doitAfficherOptionnel = ", self.doitAfficherOptionnel
+      if self.doitAfficherOptionnel and self.editor.code != "CARMELCND" :self.afficheOptionnel()

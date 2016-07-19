@@ -226,9 +226,12 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         if self.treeParent.plie==True :
             self.plie        = True
             self.appartientAUnNoeudPlie=True
+            if self.treeParent.item.isMCList() : self.appartientAUnNoeudPlie =  self.treeParent.appartientAUnNoeudPlie
         else :
             self.plie        = False
             self.appartientAUnNoeudPlie = False
+
+        #if item.nom == "POUTRE" :print "creation d'un noeud : ", item, " ",item.nom,"", self.treeParent, self.appartientAUnNoeudPlie , self.plie
 
         if ancien and itemExpand     : self.plie = False
         if ancien and not itemExpand : self.plie = True 
@@ -321,8 +324,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
 
     def affichePanneau(self) :
-        #print " affichePanneau " , self.item.nom 
-        #print self.fenetre
         #if self.item.isactif(): 
         #if self.editor.code == 'ASTER' and not(self.item.isactif()) : 
         # posera des pb si un code decide d appeler FIN un mot clef
@@ -842,6 +843,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
                niveauPere=niveauPere.treeParent
             for c in self.children :
                 c.appartientAUnNoeudPlie=niveauPere.appartientAUnNoeudPlie
+                #print "dans setPlieChildren appartientAUnNoeudPlie=True ", c, c.item.GetLabelText()[0], "mis a la valeur ", niveauPere.appartientAUnNoeudPlie
                 c.setExpanded(False)
 
         # on affiche un niveau de plus

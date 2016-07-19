@@ -47,9 +47,10 @@ class LECustom(QLineEdit):
         self.dansUnTuple=False
 
  def focusInEvent(self,event):
-     #print "dans focusInEvent de LECustom"
+     print "dans focusInEvent de LECustom"
      self.parentQt.LineEditEnCours=self
      self.parentQt.NumLineEditEnCours=self.num
+     self.parentQt.textSelected=self.text()
      self.setStyleSheet("border: 2px solid gray")
      QLineEdit.focusInEvent(self,event)
 
@@ -69,6 +70,8 @@ class LECustom(QLineEdit):
 
  def setValeur(self,valeur):
      self.setText(valeur)
+
+
 
 # --------------------------- #
 class LECustomTuple(LECustom):

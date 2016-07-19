@@ -50,17 +50,17 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      #print "dans Optionnel ____ affiche", liste 
      self.vireLesAutres(MC)
      if self.dicoMCWidgetOptionnel.has_key(MC.node.item.nom) :
+        self.dicoMCWidgetOptionnel[MC.node.item.nom].setParent(None)
         self.dicoMCWidgetOptionnel[MC.node.item.nom].close()
      groupe = MonGroupeOptionnel(liste,self,MC)
-     
-     #self.groupesOptionnelsLayout.insertLayout(-1,groupe)
      self.groupesOptionnelsLayout.insertWidget(0,groupe)
      self.dicoMCWidgetOptionnel[MC.node.item.nom]=groupe
      return groupe
 
   def vireLesAutres(self,MC):
-      #print "je passe dans vireLesAutres"
+      print "je passe dans vireLesAutres"
       genea =MC.obj.get_genealogie()
+      print genea
       for k in self.dicoMCWidgetOptionnel.keys():
           if k not in genea :  
              self.dicoMCWidgetOptionnel[k].close()

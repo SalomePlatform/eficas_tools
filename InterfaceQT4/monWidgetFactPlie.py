@@ -28,9 +28,9 @@ class MonWidgetFactPlie(Ui_WidgetFactPlie,Groupe):
   """
   """
   def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
-      #print "init de FactPlie"
+      #print "fact plie : ",node.item.nom
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
-      self.groupBox.setText(self.obj.nom)
+      self.groupBox.setText(self.node.item.GetLabelText()[0])
       self.parentQt.commandesLayout.insertWidget(-1,self)
 
   def traiteClicSurLabel(self,texte):

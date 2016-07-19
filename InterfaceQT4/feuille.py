@@ -199,7 +199,6 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       # if self.monSimpDef.get_fr() != None and self.monSimpDef.get_fr() != "": info+=self.monSimpDef.get_sug() +" "
       # if self.monSimpDef.get_sug() != None and self.monSimpDef.get_sug() != "": info+="Valeur suggérée : "self.monSimpDef.get_sug()
       pass
-      #self.editor.affiche_infos(info)
 
    def reaffiche(self):
       #print "dans reaffiche de feuille", self.nom
@@ -246,7 +245,6 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    #def enterEvent(self,event):
    #   print "je passe dans enterEvent", self.nom
-      #if self.editor.code != "CARMELCND" :self.afficheOptionnel()
    #   QWidget.enterEvent(self,event)
 
    def traiteClicSurLabel(self,texte):

@@ -68,12 +68,13 @@ class monButtonCustom(QCheckBox):
       event.accept()
 
    def ajoutAideMC(self):
-      maDefinition = self.monOptionnel.parentMC.definition.entites[self.texte]
-      maLangue =  self.monOptionnel.parentMC.jdc.lang
-      if hasattr(maDefinition,maLangue): 
-         monAide = getattr(maDefinition,self.monOptionnel.parentMC.jdc.lang)
-      else :
-         monAide = ""
+      try :
+        maDefinition = self.monOptionnel.parentMC.definition.entites[self.texte]
+        maLangue =  self.monOptionnel.parentMC.jdc.lang
+        if hasattr(maDefinition,maLangue): 
+          monAide = getattr(maDefinition,self.monOptionnel.parentMC.jdc.lang)
+      except :
+          monAide = ""
       self.monOptionnel.parentMC.editor.affiche_commentaire(monAide)
   
 

@@ -358,7 +358,11 @@ class ContientIcones:
         self.LEValeurPressed()
 
   def BView2DPressed(self):
-        valeur=self.lineEditVal.text()
+        try :
+          # cas d un Simp de base
+          valeur=self.lineEditVal.text()
+        except :
+          valeur=self.textSelected
         valeur = str(valeur)
         if valeur == str("") : return
         if valeur :
