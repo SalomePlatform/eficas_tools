@@ -84,15 +84,9 @@ class Appli(Ui_Eficas,QMainWindow):
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
 
-        #from Extensions import localisation
-        #app=QApplication
-        #localisation.localise(app,langue)
-        #print tr('FORTRAN_FILE')
-        #localisation.localise(app,langue,'titi_fr.qm')
-        #print tr('titi1')
-        #localisation.localise(app,langue,'toto.qm')
-        #print tr('titi1')
-        #print pomu
+        from Extensions import localisation
+        app=QApplication
+        localisation.localise(app,langue)
 
         self.setupUi(self)
         if self.code in ['MAP',] : self.resize(1440,self.height())

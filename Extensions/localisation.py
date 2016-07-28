@@ -74,7 +74,6 @@ def localise(application, locale=None,file=None ):
     #    print "Unable to load Qt base translator!"
     
     global eficas_translator
-    print locale
     if locale=="ang" : locale="en"
     #print "eficas_" + locale, monPath
     if file != None :

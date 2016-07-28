@@ -4,1205 +4,1192 @@
     <name>@defaut</name>
     <message>
         <source>TITLE</source>
-        <translation>TITLE</translation>
+        <translation>Title</translation>
     </message>
     <message>
-        <source>GEOMETRY FILE FORMAT</source>
-        <translation>GEOMETRY_FILE_FORMAT</translation>
+        <source>GEOMETRY_FILE_FORMAT</source>
+        <translation>Geometry File Format</translation>
     </message>
     <message>
-        <source>GEOMETRY FILE</source>
-        <translation>GEOMETRY_FILE</translation>
+        <source>GEOMETRY_FILE</source>
+        <translation>Geometry File</translation>
     </message>
     <message>
-        <source>FORTRAN FILE</source>
-        <translation>FORTRAN_FILE</translation>
+        <source>FORTRAN_FILE</source>
+        <translation>Fortran File</translation>
     </message>
     <message>
-        <source>BOTTOM TOPOGRAPHY FILE</source>
-        <translation>BOTTOM_TOPOGRAPHY_FILE</translation>
+        <source>BOTTOM_TOPOGRAPHY_FILE</source>
+        <translation>Bottom Topography File</translation>
     </message>
     <message>
-        <source>BOTTOM SMOOTHINGS</source>
-        <translation>BOTTOM_SMOOTHINGS</translation>
+        <source>BOTTOM_SMOOTHINGS</source>
+        <translation>Bottom Smoothings</translation>
     </message>
     <message>
-        <source>BOUNDARY CONDITIONS FILE</source>
-        <translation>BOUNDARY_CONDITIONS_FILE</translation>
+        <source>BOUNDARY_CONDITIONS_FILE</source>
+        <translation>Boundary Conditions File</translation>
     </message>
     <message>
         <source>VALIDATION</source>
-        <translation>VALIDATION</translation>
+        <translation>Validation</translation>
     </message>
     <message>
-        <source>REFERENCE FILE FORMAT</source>
-        <translation>REFERENCE_FILE_FORMAT</translation>
+        <source>REFERENCE_FILE_FORMAT</source>
+        <translation>Reference File Format</translation>
     </message>
     <message>
-        <source>REFERENCE FILE</source>
-        <translation>REFERENCE_FILE</translation>
+        <source>REFERENCE_FILE</source>
+        <translation>Reference File</translation>
     </message>
     <message>
-        <source>BINARY DATA FILE 1 FORMAT</source>
-        <translation>BINARY_DATA_FILE_1_FORMAT</translation>
+        <source>BINARY_DATA_FILE_1_FORMAT</source>
+        <translation>Binary Data File 1 Format</translation>
     </message>
     <message>
-        <source>BINARY DATA FILE 1</source>
-        <translation>BINARY_DATA_FILE_1</translation>
+        <source>BINARY_DATA_FILE_1</source>
+        <translation>Binary Data File 1</translation>
     </message>
     <message>
-        <source>BINARY DATA FILE 2 FORMAT</source>
-        <translation>BINARY_DATA_FILE_2_FORMAT</translation>
+        <source>BINARY_DATA_FILE_2_FORMAT</source>
+        <translation>Binary Data File 2 Format</translation>
     </message>
     <message>
-        <source>BINARY DATA FILE 2</source>
-        <translation>BINARY_DATA_FILE_2</translation>
+        <source>BINARY_DATA_FILE_2</source>
+        <translation>Binary Data File 2</translation>
     </message>
     <message>
-        <source>FORMATTED DATA FILE 1</source>
-        <translation>FORMATTED_DATA_FILE_1</translation>
+        <source>FORMATTED_DATA_FILE_1</source>
+        <translation>Formatted Data File 1</translation>
     </message>
     <message>
-        <source>FORMATTED DATA FILE 2</source>
-        <translation>FORMATTED_DATA_FILE_2</translation>
+        <source>FORMATTED_DATA_FILE_2</source>
+        <translation>Formatted Data File 2</translation>
     </message>
     <message>
-        <source>INITIAL CONDITIONS</source>
-        <translation>INITIAL_CONDITIONS</translation>
+        <source>INITIAL_CONDITIONS</source>
+        <translation>Initial Conditions</translation>
     </message>
     <message>
-        <source>INITIAL ELEVATION</source>
-        <translation>INITIAL_ELEVATION</translation>
+        <source>INITIAL_ELEVATION</source>
+        <translation>Initial Elevation</translation>
     </message>
     <message>
-        <source>INITIAL DEPTH</source>
-        <translation>INITIAL_DEPTH</translation>
+        <source>INITIAL_DEPTH</source>
+        <translation>Initial Depth</translation>
     </message>
     <message>
-        <source>COMPUTATION CONTINUED</source>
-        <translation>COMPUTATION_CONTINUED</translation>
+        <source>COMPUTATION_CONTINUED</source>
+        <translation>Computation Continued</translation>
     </message>
     <message>
-        <source>PREVIOUS COMPUTATION FILE FORMAT</source>
-        <translation>PREVIOUS_COMPUTATION_FILE_FORMAT</translation>
+        <source>PREVIOUS_COMPUTATION_FILE_FORMAT</source>
+        <translation>Previous Computation File Format</translation>
     </message>
     <message>
-        <source>PREVIOUS COMPUTATION FILE</source>
-        <translation>PREVIOUS_COMPUTATION_FILE</translation>
+        <source>PREVIOUS_COMPUTATION_FILE</source>
+        <translation>Previous Computation File</translation>
     </message>
     <message>
-        <source>RECORD NUMBER FOR RESTART</source>
-        <translation>RECORD_NUMBER_FOR_RESTART</translation>
+        <source>RECORD_NUMBER_FOR_RESTART</source>
+        <translation>Record Number For Restart</translation>
     </message>
     <message>
-        <source>INITIAL TIME SET TO ZERO</source>
-        <translation>INITIAL_TIME_SET_TO_ZERO</translation>
+        <source>INITIAL_TIME_SET_TO_ZERO</source>
+        <translation>Initial Time Set To Zero</translation>
     </message>
     <message>
-        <source>PARALLEL PROCESSORS</source>
-        <translation>PARALLEL_PROCESSORS</translation>
+        <source>PARALLEL_PROCESSORS</source>
+        <translation>Parallel Processors</translation>
     </message>
     <message>
-        <source>CHECKING THE MESH</source>
-        <translation>CHECKING_THE_MESH</translation>
+        <source>CHECKING_THE_MESH</source>
+        <translation>Checking The Mesh</translation>
     </message>
     <message>
-        <source>MAXIMUM NUMBER OF BOUNDARIES</source>
-        <translation>MAXIMUM_NUMBER_OF_BOUNDARIES</translation>
+        <source>MAXIMUM_NUMBER_OF_BOUNDARIES</source>
+        <translation>Maximum Number Of Boundaries</translation>
     </message>
     <message>
-        <source>MAXIMUM NUMBER OF SOURCES</source>
-        <translation>MAXIMUM_NUMBER_OF_SOURCES</translation>
+        <source>MAXIMUM_NUMBER_OF_SOURCES</source>
+        <translation>Maximum Number Of Sources</translation>
     </message>
     <message>
-        <source>MAXIMUM NUMBER OF TRACERS</source>
-        <translation>MAXIMUM_NUMBER_OF_TRACERS</translation>
+        <source>MAXIMUM_NUMBER_OF_TRACERS</source>
+        <translation>Maximum Number Of Tracers</translation>
     </message>
     <message>
-        <source>PRESCRIBED ELEVATIONS</source>
-        <translation>PRESCRIBED_ELEVATIONS</translation>
+        <source>PRESCRIBED_ELEVATIONS</source>
+        <translation>Prescribed Elevations</translation>
     </message>
     <message>
-        <source>PRESCRIBED FLOWRATES</source>
-        <translation>PRESCRIBED_FLOWRATES</translation>
+        <source>PRESCRIBED_FLOWRATES</source>
+        <translation>Prescribed Flowrates</translation>
     </message>
     <message>
-        <source>PRESCRIBED VELOCITIES</source>
-        <translation>PRESCRIBED_VELOCITIES</translation>
+        <source>PRESCRIBED_VELOCITIES</source>
+        <translation>Prescribed Velocities</translation>
     </message>
     <message>
-        <source>STAGE-DISCHARGE CURVES</source>
-        <translation>STAGE_DISCHARGE_CURVES</translation>
+        <source>STAGE_DISCHARGE_CURVES</source>
+        <translation>Stage-discharge Curves</translation>
     </message>
     <message>
-        <source>STAGE-DISCHARGE CURVES FILE</source>
-        <translation>STAGE_DISCHARGE_CURVES_FILE</translation>
+        <source>STAGE_DISCHARGE_CURVES_FILE</source>
+        <translation>Stage-discharge Curves File</translation>
     </message>
     <message>
-        <source>VELOCITY PROFILES</source>
-        <translation>VELOCITY_PROFILES</translation>
+        <source>VELOCITY_PROFILES</source>
+        <translation>Velocity Profiles</translation>
     </message>
     <message>
-        <source>OPTION FOR LIQUID BOUNDARIES</source>
-        <translation>OPTION_FOR_LIQUID_BOUNDARIES</translation>
+        <source>OPTION_FOR_LIQUID_BOUNDARIES</source>
+        <translation>Option For Liquid Boundaries</translation>
     </message>
     <message>
-        <source>LIQUID BOUNDARIES FILE</source>
-        <translation>LIQUID_BOUNDARIES_FILE</translation>
+        <source>LIQUID_BOUNDARIES_FILE</source>
+        <translation>Liquid Boundaries File</translation>
     </message>
     <message>
-        <source>ELEMENTS MASKED BY USER</source>
-        <translation>ELEMENTS_MASKED_BY_USER</translation>
+        <source>ELEMENTS_MASKED_BY_USER</source>
+        <translation>Elements Masked By User</translation>
     </message>
     <message>
         <source>DEBUGGER</source>
-        <translation>DEBUGGER</translation>
+        <translation>Debugger</translation>
     </message>
     <message>
-        <source>TIME STEP</source>
-        <translation>TIME_STEP</translation>
+        <source>TIME_STEP</source>
+        <translation>Time Step</translation>
     </message>
     <message>
-        <source>NUMBER OF TIME STEPS</source>
-        <translation>NUMBER_OF_TIME_STEPS</translation>
+        <source>NUMBER_OF_TIME_STEPS</source>
+        <translation>Number Of Time Steps</translation>
     </message>
     <message>
         <source>DURATION</source>
-        <translation>DURATION</translation>
+        <translation>Duration</translation>
     </message>
     <message>
-        <source>ORIGINAL DATE OF TIME</source>
-        <translation>ORIGINAL_DATE_OF_TIME</translation>
+        <source>ORIGINAL_DATE_OF_TIME</source>
+        <translation>Original Date Of Time</translation>
     </message>
     <message>
-        <source>ORIGINAL HOUR OF TIME</source>
-        <translation>ORIGINAL_HOUR_OF_TIME</translation>
+        <source>ORIGINAL_HOUR_OF_TIME</source>
+        <translation>Original Hour Of Time</translation>
     </message>
     <message>
-        <source>STOP IF A STEADY STATE IS REACHED</source>
-        <translation>STOP_IF_A_STEADY_STATE_IS_REACHED</translation>
+        <source>STOP_IF_A_STEADY_STATE_IS_REACHED</source>
+        <translation>Stop If A Steady State Is Reached</translation>
     </message>
     <message>
-        <source>STOP CRITERIA</source>
-        <translation>STOP_CRITERIA</translation>
+        <source>STOP_CRITERIA</source>
+        <translation>Stop Criteria</translation>
     </message>
     <message>
-        <source>CONTROL OF LIMITS</source>
-        <translation>CONTROL_OF_LIMITS</translation>
+        <source>CONTROL_OF_LIMITS</source>
+        <translation>Control Of Limits</translation>
     </message>
     <message>
-        <source>LIMIT VALUES</source>
-        <translation>LIMIT_VALUES</translation>
+        <source>LIMIT_VALUES</source>
+        <translation>Limit Values</translation>
     </message>
     <message>
-        <source>VARIABLE TIME-STEP</source>
-        <translation>VARIABLE_TIME_STEP</translation>
+        <source>VARIABLE_TIME_STEP</source>
+        <translation>Variable Time-step</translation>
     </message>
     <message>
-        <source>DESIRED COURANT NUMBER</source>
-        <translation>DESIRED_COURANT_NUMBER</translation>
+        <source>DESIRED_COURANT_NUMBER</source>
+        <translation>Desired Courant Number</translation>
     </message>
     <message>
-        <source>ORIGIN COORDINATES</source>
-        <translation>ORIGIN_COORDINATES</translation>
+        <source>ORIGIN_COORDINATES</source>
+        <translation>Origin Coordinates</translation>
     </message>
     <message>
-        <source>SPHERICAL COORDINATES</source>
-        <translation>SPHERICAL_COORDINATES</translation>
+        <source>SPHERICAL_COORDINATES</source>
+        <translation>Spherical Coordinates</translation>
     </message>
     <message>
-        <source>LATITUDE OF ORIGIN POINT</source>
-        <translation>LATITUDE_OF_ORIGIN_POINT</translation>
+        <source>LATITUDE_OF_ORIGIN_POINT</source>
+        <translation>Latitude Of Origin Point</translation>
     </message>
     <message>
-        <source>LONGITUDE OF ORIGIN POINT</source>
-        <translation>LONGITUDE_OF_ORIGIN_POINT</translation>
+        <source>LONGITUDE_OF_ORIGIN_POINT</source>
+        <translation>Longitude Of Origin Point</translation>
     </message>
     <message>
         <source>NORTH</source>
-        <translation>NORTH</translation>
+        <translation>North</translation>
     </message>
     <message>
-        <source>SPATIAL PROJECTION TYPE</source>
-        <translation>SPATIAL_PROJECTION_TYPE</translation>
+        <source>SPATIAL_PROJECTION_TYPE</source>
+        <translation>Spatial Projection Type</translation>
     </message>
     <message>
-        <source>MAXIMUM NUMBER OF FRICTION DOMAINS</source>
-        <translation>MAXIMUM_NUMBER_OF_FRICTION_DOMAINS</translation>
+        <source>MAXIMUM_NUMBER_OF_FRICTION_DOMAINS</source>
+        <translation>Maximum Number Of Friction Domains</translation>
     </message>
     <message>
-        <source>FRICTION DATA</source>
-        <translation>FRICTION_DATA</translation>
+        <source>FRICTION_DATA</source>
+        <translation>Friction Data</translation>
     </message>
     <message>
-        <source>FRICTION DATA FILE</source>
-        <translation>FRICTION_DATA_FILE</translation>
+        <source>FRICTION_DATA_FILE</source>
+        <translation>Friction Data File</translation>
     </message>
     <message>
-        <source>LAW OF BOTTOM FRICTION</source>
-        <translation>LAW_OF_BOTTOM_FRICTION</translation>
+        <source>LAW_OF_BOTTOM_FRICTION</source>
+        <translation>Law Of Bottom Friction</translation>
     </message>
     <message>
-        <source>FRICTION COEFFICIENT</source>
-        <translation>FRICTION_COEFFICIENT</translation>
+        <source>FRICTION_COEFFICIENT</source>
+        <translation>Friction Coefficient</translation>
     </message>
     <message>
-        <source>MANNING DEFAULT VALUE FOR COLEBROOK-WHITE LAW</source>
-        <translation>MANNING_DEFAULT_VALUE_FOR_COLEBROOK_WHITE_LAW</translation>
+        <source>MANNING_DEFAULT_VALUE_FOR_COLEBROOK_WHITE_LAW</source>
+        <translation>Manning Default Value For Colebrook-white Law</translation>
     </message>
     <message>
-        <source>DEPTH IN FRICTION TERMS</source>
-        <translation>DEPTH_IN_FRICTION_TERMS</translation>
+        <source>DEPTH_IN_FRICTION_TERMS</source>
+        <translation>Depth In Friction Terms</translation>
     </message>
     <message>
-        <source>NON-SUBMERGED VEGETATION FRICTION</source>
-        <translation>NON_SUBMERGED_VEGETATION_FRICTION</translation>
+        <source>NON_SUBMERGED_VEGETATION_FRICTION</source>
+        <translation>Non-submerged Vegetation Friction</translation>
     </message>
     <message>
-        <source>DIAMETER OF ROUGHNESS ELEMENTS</source>
-        <translation>DIAMETER_OF_ROUGHNESS_ELEMENTS</translation>
+        <source>DIAMETER_OF_ROUGHNESS_ELEMENTS</source>
+        <translation>Diameter Of Roughness Elements</translation>
     </message>
     <message>
-        <source>SPACING OF ROUGHNESS ELEMENTS</source>
-        <translation>SPACING_OF_ROUGHNESS_ELEMENTS</translation>
+        <source>SPACING_OF_ROUGHNESS_ELEMENTS</source>
+        <translation>Spacing Of Roughness Elements</translation>
     </message>
     <message>
-        <source>LAW OF FRICTION ON LATERAL BOUNDARIES</source>
-        <translation>LAW_OF_FRICTION_ON_LATERAL_BOUNDARIES</translation>
+        <source>LAW_OF_FRICTION_ON_LATERAL_BOUNDARIES</source>
+        <translation>Law Of Friction On Lateral Boundaries</translation>
     </message>
     <message>
-        <source>ROUGHNESS COEFFICIENT OF BOUNDARIES</source>
-        <translation>ROUGHNESS_COEFFICIENT_OF_BOUNDARIES</translation>
+        <source>ROUGHNESS_COEFFICIENT_OF_BOUNDARIES</source>
+        <translation>Roughness Coefficient Of Boundaries</translation>
     </message>
     <message>
-        <source>DEFINITION OF ZONES</source>
-        <translation>DEFINITION_OF_ZONES</translation>
+        <source>DEFINITION_OF_ZONES</source>
+        <translation>Definition Of Zones</translation>
     </message>
     <message>
-        <source>ZONES FILE</source>
-        <translation>ZONES_FILE</translation>
+        <source>ZONES_FILE</source>
+        <translation>Zones File</translation>
     </message>
     <message>
         <source>WIND</source>
-        <translation>WIND</translation>
+        <translation>Wind</translation>
     </message>
     <message>
-        <source>OPTION FOR WIND</source>
-        <translation>OPTION_FOR_WIND</translation>
+        <source>OPTION_FOR_WIND</source>
+        <translation>Option For Wind</translation>
     </message>
     <message>
-        <source>COEFFICIENT OF WIND INFLUENCE</source>
-        <translation>COEFFICIENT_OF_WIND_INFLUENCE</translation>
+        <source>COEFFICIENT_OF_WIND_INFLUENCE</source>
+        <translation>Coefficient Of Wind Influence</translation>
     </message>
     <message>
-        <source>WIND VELOCITY ALONG X</source>
-        <translation>WIND_VELOCITY_ALONG_X</translation>
+        <source>WIND_VELOCITY_ALONG_X</source>
+        <translation>Wind Velocity Along X</translation>
     </message>
     <message>
-        <source>WIND VELOCITY ALONG Y</source>
-        <translation>WIND_VELOCITY_ALONG_Y</translation>
+        <source>WIND_VELOCITY_ALONG_Y</source>
+        <translation>Wind Velocity Along Y</translation>
     </message>
     <message>
-        <source>SPEED AND DIRECTION OF WIND</source>
-        <translation>SPEED_AND_DIRECTION_OF_WIND</translation>
+        <source>SPEED_AND_DIRECTION_OF_WIND</source>
+        <translation>Speed And Direction Of Wind</translation>
     </message>
     <message>
-        <source>THRESHOLD DEPTH FOR WIND</source>
-        <translation>THRESHOLD_DEPTH_FOR_WIND</translation>
+        <source>THRESHOLD_DEPTH_FOR_WIND</source>
+        <translation>Threshold Depth For Wind</translation>
     </message>
     <message>
-        <source>AIR PRESSURE</source>
-        <translation>AIR_PRESSURE</translation>
+        <source>AIR_PRESSURE</source>
+        <translation>Air Pressure</translation>
     </message>
     <message>
-        <source>VALUE OF ATMOSPHERIC PRESSURE</source>
-        <translation>VALUE_OF_ATMOSPHERIC_PRESSURE</translation>
+        <source>VALUE_OF_ATMOSPHERIC_PRESSURE</source>
+        <translation>Value Of Atmospheric Pressure</translation>
     </message>
     <message>
-        <source>RAIN OR EVAPORATION</source>
-        <translation>RAIN_OR_EVAPORATION</translation>
+        <source>RAIN_OR_EVAPORATION</source>
+        <translation>Rain Or Evaporation</translation>
     </message>
     <message>
-        <source>RAIN OR EVAPORATION IN MM PER DAY</source>
-        <translation>RAIN_OR_EVAPORATION_IN_MM_PER_DAY</translation>
+        <source>RAIN_OR_EVAPORATION_IN_MM_PER_DAY</source>
+        <translation>Rain Or Evaporation In Mm Per Day</translation>
     </message>
     <message>
-        <source>WAVE DRIVEN CURRENTS</source>
-        <translation>WAVE_DRIVEN_CURRENTS</translation>
+        <source>WAVE_DRIVEN_CURRENTS</source>
+        <translation>Wave Driven Currents</translation>
     </message>
     <message>
-        <source>RECORD NUMBER IN WAVE FILE</source>
-        <translation>RECORD_NUMBER_IN_WAVE_FILE</translation>
+        <source>RECORD_NUMBER_IN_WAVE_FILE</source>
+        <translation>Record Number In Wave File</translation>
     </message>
     <message>
-        <source>PARAMETER ESTIMATION</source>
-        <translation>PARAMETER_ESTIMATION</translation>
+        <source>PARAMETER_ESTIMATION</source>
+        <translation>Parameter Estimation</translation>
     </message>
     <message>
-        <source>COST FUNCTION</source>
-        <translation>COST_FUNCTION</translation>
+        <source>COST_FUNCTION</source>
+        <translation>Cost Function</translation>
     </message>
     <message>
-        <source>IDENTIFICATION METHOD</source>
-        <translation>IDENTIFICATION_METHOD</translation>
+        <source>IDENTIFICATION_METHOD</source>
+        <translation>Identification Method</translation>
     </message>
     <message>
-        <source>TOLERANCES FOR IDENTIFICATION</source>
-        <translation>TOLERANCES_FOR_IDENTIFICATION</translation>
+        <source>TOLERANCES_FOR_IDENTIFICATION</source>
+        <translation>Tolerances For Identification</translation>
     </message>
     <message>
-        <source>MAXIMUM NUMBER OF ITERATIONS FOR IDENTIFICATION</source>
-        <translation>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_IDENTIFICATION</translation>
+        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_IDENTIFICATION</source>
+        <translation>Maximum Number Of Iterations For Identification</translation>
     </message>
     <message>
-        <source>ABSCISSAE OF SOURCES</source>
-        <translation>ABSCISSAE_OF_SOURCES</translation>
+        <source>ABSCISSAE_OF_SOURCES</source>
+        <translation>Abscissae Of Sources</translation>
     </message>
     <message>
-        <source>ORDINATES OF SOURCES</source>
-        <translation>ORDINATES_OF_SOURCES</translation>
+        <source>ORDINATES_OF_SOURCES</source>
+        <translation>Ordinates Of Sources</translation>
     </message>
     <message>
-        <source>WATER DISCHARGE OF SOURCES</source>
-        <translation>WATER_DISCHARGE_OF_SOURCES</translation>
+        <source>WATER_DISCHARGE_OF_SOURCES</source>
+        <translation>Water Discharge Of Sources</translation>
     </message>
     <message>
-        <source>VELOCITIES OF THE SOURCES ALONG X</source>
-        <translation>VELOCITIES_OF_THE_SOURCES_ALONG_X</translation>
+        <source>VELOCITIES_OF_THE_SOURCES_ALONG_X</source>
+        <translation>Velocities Of The Sources Along X</translation>
     </message>
     <message>
-        <source>VELOCITIES OF THE SOURCES ALONG Y</source>
-        <translation>VELOCITIES_OF_THE_SOURCES_ALONG_Y</translation>
+        <source>VELOCITIES_OF_THE_SOURCES_ALONG_Y</source>
+        <translation>Velocities Of The Sources Along Y</translation>
     </message>
     <message>
-        <source>TYPE OF SOURCES</source>
-        <translation>TYPE_OF_SOURCES</translation>
+        <source>TYPE_OF_SOURCES</source>
+        <translation>Type Of Sources</translation>
     </message>
     <message>
-        <source>SOURCES FILE</source>
-        <translation>SOURCES_FILE</translation>
+        <source>SOURCES_FILE</source>
+        <translation>Sources File</translation>
     </message>
     <message>
-        <source>WATER QUALITY</source>
-        <translation>WATER_QUALITY</translation>
+        <source>WATER_QUALITY</source>
+        <translation>Water Quality</translation>
     </message>
     <message>
-        <source>WATER QUALITY PROCESS</source>
-        <translation>WATER_QUALITY_PROCESS</translation>
+        <source>WATER_QUALITY_PROCESS</source>
+        <translation>Water Quality Process</translation>
     </message>
     <message>
         <source>CORIOLIS</source>
-        <translation>CORIOLIS</translation>
+        <translation>Coriolis</translation>
     </message>
     <message>
-        <source>CORIOLIS COEFFICIENT</source>
-        <translation>CORIOLIS_COEFFICIENT</translation>
+        <source>CORIOLIS_COEFFICIENT</source>
+        <translation>Coriolis Coefficient</translation>
     </message>
     <message>
-        <source>OPTION FOR TSUNAMI GENERATION</source>
-        <translation>OPTION_FOR_TSUNAMI_GENERATION</translation>
+        <source>OPTION_FOR_TSUNAMI_GENERATION</source>
+        <translation>Option For Tsunami Generation</translation>
     </message>
     <message>
-        <source>PHYSICAL CHARACTERISTICS OF THE TSUNAMI</source>
-        <translation>PHYSICAL_CHARACTERISTICS_OF_THE_TSUNAMI</translation>
+        <source>PHYSICAL_CHARACTERISTICS_OF_THE_TSUNAMI</source>
+        <translation>Physical Characteristics Of The Tsunami</translation>
     </message>
     <message>
-        <source>WATER DENSITY</source>
-        <translation>WATER_DENSITY</translation>
+        <source>WATER_DENSITY</source>
+        <translation>Water Density</translation>
     </message>
     <message>
-        <source>GRAVITY ACCELERATION</source>
-        <translation>GRAVITY_ACCELERATION</translation>
+        <source>GRAVITY_ACCELERATION</source>
+        <translation>Gravity Acceleration</translation>
     </message>
     <message>
-        <source>VERTICAL STRUCTURES</source>
-        <translation>VERTICAL_STRUCTURES</translation>
+        <source>VERTICAL_STRUCTURES</source>
+        <translation>Vertical Structures</translation>
     </message>
     <message>
-        <source>SECONDARY CURRENTS</source>
-        <translation>SECONDARY_CURRENTS</translation>
+        <source>SECONDARY_CURRENTS</source>
+        <translation>Secondary Currents</translation>
     </message>
     <message>
-        <source>PRODUCTION COEFFICIENT FOR SECONDARY CURRENTS</source>
-        <translation>PRODUCTION_COEFFICIENT_FOR_SECONDARY_CURRENTS</translation>
+        <source>PRODUCTION_COEFFICIENT_FOR_SECONDARY_CURRENTS</source>
+        <translation>Production Coefficient For Secondary Currents</translation>
     </message>
     <message>
-        <source>DISSIPATION COEFFICIENT FOR SECONDARY CURRENTS</source>
-        <translation>DISSIPATION_COEFFICIENT_FOR_SECONDARY_CURRENTS</translation>
+        <source>DISSIPATION_COEFFICIENT_FOR_SECONDARY_CURRENTS</source>
+        <translation>Dissipation Coefficient For Secondary Currents</translation>
     </message>
     <message>
-        <source>VELOCITY DIFFUSIVITY</source>
-        <translation>VELOCITY_DIFFUSIVITY</translation>
+        <source>VELOCITY_DIFFUSIVITY</source>
+        <translation>Velocity Diffusivity</translation>
     </message>
     <message>
-        <source>TURBULENCE MODEL</source>
-        <translation>TURBULENCE_MODEL</translation>
+        <source>TURBULENCE_MODEL</source>
+        <translation>Turbulence Model</translation>
     </message>
     <message>
-        <source>SOLVER FOR K-EPSILON MODEL</source>
-        <translation>SOLVER_FOR_K_EPSILON_MODEL</translation>
+        <source>SOLVER_FOR_K_EPSILON_MODEL</source>
+        <translation>Solver For K-epsilon Model</translation>
     </message>
     <message>
-        <source>OPTION FOR THE SOLVER FOR K-EPSILON MODEL</source>
-        <translation>OPTION_FOR_THE_SOLVER_FOR_K_EPSILON_MODEL</translation>
+        <source>OPTION_FOR_THE_SOLVER_FOR_K_EPSILON_MODEL</source>
+        <translation>Option For The Solver For K-epsilon Model</translation>
     </message>
     <message>
-        <source>PRECONDITIONING FOR K-EPSILON MODEL</source>
-        <translation>PRECONDITIONING_FOR_K_EPSILON_MODEL</translation>
+        <source>PRECONDITIONING_FOR_K_EPSILON_MODEL</source>
+        <translation>Preconditioning For K-epsilon Model</translation>
     </message>
     <message>
-        <source>ACCURACY OF K</source>
-        <translation>ACCURACY_OF_K</translation>
+        <source>ACCURACY_OF_K</source>
+        <translation>Accuracy Of K</translation>
     </message>
     <message>
-        <source>ACCURACY OF EPSILON</source>
-        <translation>ACCURACY_OF_EPSILON</translation>
+        <source>ACCURACY_OF_EPSILON</source>
+        <translation>Accuracy Of Epsilon</translation>
     </message>
     <message>
-        <source>MAXIMUM NUMBER OF ITERATIONS FOR K AND EPSILON</source>
-        <translation>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_K_AND_EPSILON</translation>
+        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_K_AND_EPSILON</source>
+        <translation>Maximum Number Of Iterations For K And Epsilon</translation>
     </message>
     <message>
-        <source>NON-DIMENSIONAL DISPERSION COEFFICIENTS</source>
-        <translation>NON_DIMENSIONAL_DISPERSION_COEFFICIENTS</translation>
+        <source>NON_DIMENSIONAL_DISPERSION_COEFFICIENTS</source>
+        <translation>Non-dimensional Dispersion Coefficients</translation>
     </message>
     <message>
-        <source>TURBULENCE MODEL FOR SOLID BOUNDARIES</source>
-        <translation>TURBULENCE_MODEL_FOR_SOLID_BOUNDARIES</translation>
+        <source>TURBULENCE_MODEL_FOR_SOLID_BOUNDARIES</source>
+        <translation>Turbulence Model For Solid Boundaries</translation>
     </message>
     <message>
-        <source>INFORMATION ABOUT K-EPSILON MODEL</source>
-        <translation>INFORMATION_ABOUT_K_EPSILON_MODEL</translation>
+        <source>INFORMATION_ABOUT_K_EPSILON_MODEL</source>
+        <translation>Information About K-epsilon Model</translation>
     </message>
     <message>
-        <source>ADVECTION OF K AND EPSILON</source>
-        <translation>ADVECTION_OF_K_AND_EPSILON</translation>
+        <source>ADVECTION_OF_K_AND_EPSILON</source>
+        <translation>Advection Of K And Epsilon</translation>
     </message>
     <message>
-        <source>SCHEME FOR ADVECTION OF K-EPSILON</source>
-        <translation>SCHEME_FOR_ADVECTION_OF_K_EPSILON</translation>
+        <source>SCHEME_FOR_ADVECTION_OF_K_EPSILON</source>
+        <translation>Scheme For Advection Of K-epsilon</translation>
     </message>
     <message>
-        <source>SCHEME OPTION FOR ADVECTION OF K-EPSILON</source>
-        <translation>SCHEME_OPTION_FOR_ADVECTION_OF_K_EPSILON</translation>
+        <source>SCHEME_OPTION_FOR_ADVECTION_OF_K_EPSILON</source>
+        <translation>Scheme Option For Advection Of K-epsilon</translation>
     </message>
     <message>
-        <source>TIME STEP REDUCTION FOR K-EPSILON MODEL</source>
-        <translation>TIME_STEP_REDUCTION_FOR_K_EPSILON_MODEL</translation>
+        <source>TIME_STEP_REDUCTION_FOR_K_EPSILON_MODEL</source>
+        <translation>Time Step Reduction For K-epsilon Model</translation>
     </message>
     <message>
         <source>EQUATIONS</source>
-        <translation>EQUATIONS</translation>
+        <translation>Equations</translation>
     </message>
     <message>
-        <source>TREATMENT OF THE LINEAR SYSTEM</source>
-        <translation>TREATMENT_OF_THE_LINEAR_SYSTEM</translation>
+        <source>TREATMENT_OF_THE_LINEAR_SYSTEM</source>
+        <translation>Treatment Of The Linear System</translation>
     </message>
     <message>
-        <source>FINITE VOLUME SCHEME</source>
-        <translation>FINITE_VOLUME_SCHEME</translation>
+        <source>FINITE_VOLUME_SCHEME</source>
+        <translation>Finite Volume Scheme</translation>
     </message>
     <message>
         <source>SOLVER</source>
-        <translation>SOLVER</translation>
+        <translation>Solver</translation>
     </message>
     <message>
-        <source>SOLVER OPTION</source>
-        <translation>SOLVER_OPTION</translation>
+        <source>SOLVER_OPTION</source>
+        <translation>Solver Option</translation>
     </message>
     <message>
-        <source>SOLVER ACCURACY</source>
-        <translation>SOLVER_ACCURACY</translation>
+        <source>SOLVER_ACCURACY</source>
+        <translation>Solver Accuracy</translation>
     </message>
     <message>
-        <source>MAXIMUM NUMBER OF ITERATIONS FOR SOLVER</source>
-        <translation>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_SOLVER</translation>
+        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_SOLVER</source>
+        <translation>Maximum Number Of Iterations For Solver</translation>
     </message>
     <message>
-        <source>CONTINUITY CORRECTION</source>
-        <translation>CONTINUITY_CORRECTION</translation>
+        <source>CONTINUITY_CORRECTION</source>
+        <translation>Continuity Correction</translation>
     </message>
     <message>
         <source>PRECONDITIONING</source>
-        <translation>PRECONDITIONING</translation>
+        <translation>Preconditioning</translation>
     </message>
     <message>
-        <source>C-U PRECONDITIONING</source>
-        <translation>C_U_PRECONDITIONING</translation>
+        <source>C_U_PRECONDITIONING</source>
+        <translation>C-u Preconditioning</translation>
     </message>
     <message>
-        <source>DISCRETIZATIONS IN SPACE</source>
-        <translation>DISCRETIZATIONS_IN_SPACE</translation>
+        <source>DISCRETIZATIONS_IN_SPACE</source>
+        <translation>Discretizations In Space</translation>
     </message>
     <message>
-        <source>IMPLICITATION FOR DEPTH</source>
-        <translation>IMPLICITATION_FOR_DEPTH</translation>
+        <source>IMPLICITATION_FOR_DEPTH</source>
+        <translation>Implicitation For Depth</translation>
     </message>
     <message>
-        <source>IMPLICITATION FOR VELOCITY</source>
-        <translation>IMPLICITATION_FOR_VELOCITY</translation>
+        <source>IMPLICITATION_FOR_VELOCITY</source>
+        <translation>Implicitation For Velocity</translation>
     </message>
     <message>
         <source>PROPAGATION</source>
-        <translation>PROPAGATION</translation>
+        <translation>Propagation</translation>
     </message>
     <message>
-        <source>INITIAL GUESS FOR H</source>
-        <translation>INITIAL_GUESS_FOR_H</translation>
+        <source>INITIAL_GUESS_FOR_H</source>
+        <translation>Initial Guess For H</translation>
     </message>
     <message>
-        <source>LINEARIZED PROPAGATION</source>
-        <translation>LINEARIZED_PROPAGATION</translation>
+        <source>LINEARIZED_PROPAGATION</source>
+        <translation>Linearized Propagation</translation>
     </message>
     <message>
-        <source>INITIAL GUESS FOR U</source>
-        <translation>INITIAL_GUESS_FOR_U</translation>
+        <source>INITIAL_GUESS_FOR_U</source>
+        <translation>Initial Guess For U</translation>
     </message>
     <message>
-        <source>MEAN DEPTH FOR LINEARIZATION</source>
-        <translation>MEAN_DEPTH_FOR_LINEARIZATION</translation>
+        <source>MEAN_DEPTH_FOR_LINEARIZATION</source>
+        <translation>Mean Depth For Linearization</translation>
     </message>
     <message>
         <source>ADVECTION</source>
-        <translation>ADVECTION</translation>
+        <translation>Advection</translation>
     </message>
     <message>
-        <source>ADVECTION OF H</source>
-        <translation>ADVECTION_OF_H</translation>
+        <source>ADVECTION_OF_H</source>
+        <translation>Advection Of H</translation>
     </message>
     <message>
-        <source>ADVECTION OF U AND V</source>
-        <translation>ADVECTION_OF_U_AND_V</translation>
+        <source>ADVECTION_OF_U_AND_V</source>
+        <translation>Advection Of U And V</translation>
     </message>
     <message>
-        <source>TYPE OF ADVECTION</source>
-        <translation>TYPE_OF_ADVECTION</translation>
+        <source>TYPE_OF_ADVECTION</source>
+        <translation>Type Of Advection</translation>
     </message>
     <message>
-        <source>OPTION FOR CHARACTERISTICS</source>
-        <translation>OPTION_FOR_CHARACTERISTICS</translation>
+        <source>OPTION_FOR_CHARACTERISTICS</source>
+        <translation>Option For Characteristics</translation>
     </message>
     <message>
-        <source>SUPG OPTION</source>
-        <translation>SUPG_OPTION</translation>
+        <source>SUPG_OPTION</source>
+        <translation>Supg Option</translation>
     </message>
     <message>
-        <source>NUMBER OF GAUSS POINTS FOR WEAK CHARACTERISTICS</source>
-        <translation>NUMBER_OF_GAUSS_POINTS_FOR_WEAK_CHARACTERISTICS</translation>
+        <source>NUMBER_OF_GAUSS_POINTS_FOR_WEAK_CHARACTERISTICS</source>
+        <translation>Number Of Gauss Points For Weak Characteristics</translation>
     </message>
     <message>
-        <source>MASS-LUMPING FOR WEAK CHARACTERISTICS</source>
-        <translation>MASS_LUMPING_FOR_WEAK_CHARACTERISTICS</translation>
+        <source>MASS_LUMPING_FOR_WEAK_CHARACTERISTICS</source>
+        <translation>Mass-lumping For Weak Characteristics</translation>
     </message>
     <message>
-        <source>MAXIMUM NUMBER OF ITERATIONS FOR ADVECTION SCHEMES</source>
-        <translation>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_ADVECTION_SCHEMES</translation>
+        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_ADVECTION_SCHEMES</source>
+        <translation>Maximum Number Of Iterations For Advection Schemes</translation>
     </message>
     <message>
-        <source>UPWIND COEFFICIENTS</source>
-        <translation>UPWIND_COEFFICIENTS</translation>
+        <source>UPWIND_COEFFICIENTS</source>
+        <translation>Upwind Coefficients</translation>
     </message>
     <message>
-        <source>MASS-LUMPING ON H</source>
-        <translation>MASS_LUMPING_ON_H</translation>
+        <source>MASS_LUMPING_ON_H</source>
+        <translation>Mass-lumping On H</translation>
     </message>
     <message>
-        <source>MASS-LUMPING ON VELOCITY</source>
-        <translation>MASS_LUMPING_ON_VELOCITY</translation>
+        <source>MASS_LUMPING_ON_VELOCITY</source>
+        <translation>Mass-lumping On Velocity</translation>
     </message>
     <message>
-        <source>SCHEME FOR ADVECTION OF VELOCITIES</source>
-        <translation>SCHEME_FOR_ADVECTION_OF_VELOCITIES</translation>
+        <source>SCHEME_FOR_ADVECTION_OF_VELOCITIES</source>
+        <translation>Scheme For Advection Of Velocities</translation>
     </message>
     <message>
-        <source>SCHEME OPTION FOR ADVECTION OF VELOCITIES</source>
-        <translation>SCHEME_OPTION_FOR_ADVECTION_OF_VELOCITIES</translation>
+        <source>SCHEME_OPTION_FOR_ADVECTION_OF_VELOCITIES</source>
+        <translation>Scheme Option For Advection Of Velocities</translation>
     </message>
     <message>
-        <source>FREE SURFACE GRADIENT COMPATIBILITY</source>
-        <translation>FREE_SURFACE_GRADIENT_COMPATIBILITY</translation>
+        <source>FREE_SURFACE_GRADIENT_COMPATIBILITY</source>
+        <translation>Free Surface Gradient Compatibility</translation>
     </message>
     <message>
-        <source>NUMBER OF SUB-ITERATIONS FOR NON-LINEARITIES</source>
-        <translation>NUMBER_OF_SUB_ITERATIONS_FOR_NON_LINEARITIES</translation>
+        <source>NUMBER_OF_SUB_ITERATIONS_FOR_NON_LINEARITIES</source>
+        <translation>Number Of Sub-iterations For Non-linearities</translation>
     </message>
     <message>
-        <source>TREATMENT OF FLUXES AT THE BOUNDARIES</source>
-        <translation>TREATMENT_OF_FLUXES_AT_THE_BOUNDARIES</translation>
+        <source>TREATMENT_OF_FLUXES_AT_THE_BOUNDARIES</source>
+        <translation>Treatment Of Fluxes At The Boundaries</translation>
     </message>
     <message>
-        <source>DIFFUSION OF VELOCITY</source>
-        <translation>DIFFUSION_OF_VELOCITY</translation>
+        <source>DIFFUSION_OF_VELOCITY</source>
+        <translation>Diffusion Of Velocity</translation>
     </message>
     <message>
-        <source>OPTION FOR THE DIFFUSION OF VELOCITIES</source>
-        <translation>OPTION_FOR_THE_DIFFUSION_OF_VELOCITIES</translation>
+        <source>OPTION_FOR_THE_DIFFUSION_OF_VELOCITIES</source>
+        <translation>Option For The Diffusion Of Velocities</translation>
     </message>
     <message>
-        <source>IMPLICITATION FOR DIFFUSION OF VELOCITY</source>
-        <translation>IMPLICITATION_FOR_DIFFUSION_OF_VELOCITY</translation>
+        <source>IMPLICITATION_FOR_DIFFUSION_OF_VELOCITY</source>
+        <translation>Implicitation For Diffusion Of Velocity</translation>
     </message>
     <message>
-        <source>MATRIX STORAGE</source>
-        <translation>MATRIX_STORAGE</translation>
+        <source>MATRIX_STORAGE</source>
+        <translation>Matrix Storage</translation>
     </message>
     <message>
-        <source>MATRIX-VECTOR PRODUCT</source>
-        <translation>MATRIX_VECTOR_PRODUCT</translation>
+        <source>MATRIX_VECTOR_PRODUCT</source>
+        <translation>Matrix-vector Product</translation>
     </message>
     <message>
-        <source>NEWMARK TIME INTEGRATION COEFFICIENT</source>
-        <translation>NEWMARK_TIME_INTEGRATION_COEFFICIENT</translation>
+        <source>NEWMARK_TIME_INTEGRATION_COEFFICIENT</source>
+        <translation>Newmark Time Integration Coefficient</translation>
     </message>
     <message>
         <source>ZERO</source>
-        <translation>ZERO</translation>
+        <translation>Zero</translation>
     </message>
     <message>
-        <source>TIDAL FLATS</source>
-        <translation>TIDAL_FLATS</translation>
+        <source>TIDAL_FLATS</source>
+        <translation>Tidal Flats</translation>
     </message>
     <message>
-        <source>OPTION FOR THE TREATMENT OF TIDAL FLATS</source>
-        <translation>OPTION_FOR_THE_TREATMENT_OF_TIDAL_FLATS</translation>
+        <source>OPTION_FOR_THE_TREATMENT_OF_TIDAL_FLATS</source>
+        <translation>Option For The Treatment Of Tidal Flats</translation>
     </message>
     <message>
-        <source>TREATMENT OF NEGATIVE DEPTHS</source>
-        <translation>TREATMENT_OF_NEGATIVE_DEPTHS</translation>
+        <source>TREATMENT_OF_NEGATIVE_DEPTHS</source>
+        <translation>Treatment Of Negative Depths</translation>
     </message>
     <message>
-        <source>THRESHOLD FOR NEGATIVE DEPTHS</source>
-        <translation>THRESHOLD_FOR_NEGATIVE_DEPTHS</translation>
+        <source>THRESHOLD_FOR_NEGATIVE_DEPTHS</source>
+        <translation>Threshold For Negative Depths</translation>
     </message>
     <message>
-        <source>THRESHOLD DEPTH FOR RECEDING PROCEDURE</source>
-        <translation>THRESHOLD_DEPTH_FOR_RECEDING_PROCEDURE</translation>
+        <source>THRESHOLD_DEPTH_FOR_RECEDING_PROCEDURE</source>
+        <translation>Threshold Depth For Receding Procedure</translation>
     </message>
     <message>
-        <source>H CLIPPING</source>
-        <translation>H_CLIPPING</translation>
+        <source>H_CLIPPING</source>
+        <translation>H Clipping</translation>
     </message>
     <message>
-        <source>MINIMUM VALUE OF DEPTH</source>
-        <translation>MINIMUM_VALUE_OF_DEPTH</translation>
+        <source>MINIMUM_VALUE_OF_DEPTH</source>
+        <translation>Minimum Value Of Depth</translation>
     </message>
     <message>
-        <source>NUMBER OF TRACERS</source>
-        <translation>NUMBER_OF_TRACERS</translation>
+        <source>NUMBER_OF_TRACERS</source>
+        <translation>Number Of Tracers</translation>
     </message>
     <message>
-        <source>NAMES OF TRACERS</source>
-        <translation>NAMES_OF_TRACERS</translation>
+        <source>NAMES_OF_TRACERS</source>
+        <translation>Names Of Tracers</translation>
     </message>
     <message>
-        <source>INITIAL VALUES OF TRACERS</source>
-        <translation>INITIAL_VALUES_OF_TRACERS</translation>
+        <source>INITIAL_VALUES_OF_TRACERS</source>
+        <translation>Initial Values Of Tracers</translation>
     </message>
     <message>
-        <source>DENSITY EFFECTS</source>
-        <translation>DENSITY_EFFECTS</translation>
+        <source>DENSITY_EFFECTS</source>
+        <translation>Density Effects</translation>
     </message>
     <message>
-        <source>MEAN TEMPERATURE</source>
-        <translation>MEAN_TEMPERATURE</translation>
+        <source>MEAN_TEMPERATURE</source>
+        <translation>Mean Temperature</translation>
     </message>
     <message>
-        <source>PRESCRIBED TRACERS VALUES</source>
-        <translation>PRESCRIBED_TRACERS_VALUES</translation>
+        <source>PRESCRIBED_TRACERS_VALUES</source>
+        <translation>Prescribed Tracers Values</translation>
     </message>
     <message>
-        <source>SOLVER FOR DIFFUSION OF TRACERS</source>
-        <translation>SOLVER_FOR_DIFFUSION_OF_TRACERS</translation>
+        <source>SOLVER_FOR_DIFFUSION_OF_TRACERS</source>
+        <translation>Solver For Diffusion Of Tracers</translation>
     </message>
     <message>
-        <source>SOLVER OPTION FOR TRACERS DIFFUSION</source>
-        <translation>SOLVER_OPTION_FOR_TRACERS_DIFFUSION</translation>
+        <source>SOLVER_OPTION_FOR_TRACERS_DIFFUSION</source>
+        <translation>Solver Option For Tracers Diffusion</translation>
     </message>
     <message>
-        <source>PRECONDITIONING FOR DIFFUSION OF TRACERS</source>
-        <translation>PRECONDITIONING_FOR_DIFFUSION_OF_TRACERS</translation>
+        <source>PRECONDITIONING_FOR_DIFFUSION_OF_TRACERS</source>
+        <translation>Preconditioning For Diffusion Of Tracers</translation>
     </message>
     <message>
-        <source>ACCURACY FOR DIFFUSION OF TRACERS</source>
-        <translation>ACCURACY_FOR_DIFFUSION_OF_TRACERS</translation>
+        <source>ACCURACY_FOR_DIFFUSION_OF_TRACERS</source>
+        <translation>Accuracy For Diffusion Of Tracers</translation>
     </message>
     <message>
-        <source>MAXIMUM NUMBER OF ITERATIONS FOR DIFFUSION OF TRACERS</source>
-        <translation>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_DIFFUSION_OF_TRACERS</translation>
+        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_DIFFUSION_OF_TRACERS</source>
+        <translation>Maximum Number Of Iterations For Diffusion Of Tracers</translation>
     </message>
     <message>
-        <source>VALUES OF THE TRACERS AT THE SOURCES</source>
-        <translation>VALUES_OF_THE_TRACERS_AT_THE_SOURCES</translation>
+        <source>VALUES_OF_THE_TRACERS_AT_THE_SOURCES</source>
+        <translation>Values Of The Tracers At The Sources</translation>
     </message>
     <message>
-        <source>VALUES OF TRACERS IN THE RAIN</source>
-        <translation>VALUES_OF_TRACERS_IN_THE_RAIN</translation>
+        <source>VALUES_OF_TRACERS_IN_THE_RAIN</source>
+        <translation>Values Of Tracers In The Rain</translation>
     </message>
     <message>
-        <source>ADVECTION OF TRACERS</source>
-        <translation>ADVECTION_OF_TRACERS</translation>
+        <source>ADVECTION_OF_TRACERS</source>
+        <translation>Advection Of Tracers</translation>
     </message>
     <message>
-        <source>IMPLICITATION COEFFICIENT OF TRACERS</source>
-        <translation>IMPLICITATION_COEFFICIENT_OF_TRACERS</translation>
+        <source>IMPLICITATION_COEFFICIENT_OF_TRACERS</source>
+        <translation>Implicitation Coefficient Of Tracers</translation>
     </message>
     <message>
-        <source>DIFFUSION OF TRACERS</source>
-        <translation>DIFFUSION_OF_TRACERS</translation>
+        <source>DIFFUSION_OF_TRACERS</source>
+        <translation>Diffusion Of Tracers</translation>
     </message>
     <message>
-        <source>COEFFICIENT FOR DIFFUSION OF TRACERS</source>
-        <translation>COEFFICIENT_FOR_DIFFUSION_OF_TRACERS</translation>
+        <source>COEFFICIENT_FOR_DIFFUSION_OF_TRACERS</source>
+        <translation>Coefficient For Diffusion Of Tracers</translation>
     </message>
     <message>
-        <source>OPTION FOR THE DIFFUSION OF TRACERS</source>
-        <translation>OPTION_FOR_THE_DIFFUSION_OF_TRACERS</translation>
+        <source>OPTION_FOR_THE_DIFFUSION_OF_TRACERS</source>
+        <translation>Option For The Diffusion Of Tracers</translation>
     </message>
     <message>
-        <source>SCHEME FOR ADVECTION OF TRACERS</source>
-        <translation>SCHEME_FOR_ADVECTION_OF_TRACERS</translation>
+        <source>SCHEME_FOR_ADVECTION_OF_TRACERS</source>
+        <translation>Scheme For Advection Of Tracers</translation>
     </message>
     <message>
-        <source>SCHEME OPTION FOR ADVECTION OF TRACERS</source>
-        <translation>SCHEME_OPTION_FOR_ADVECTION_OF_TRACERS</translation>
+        <source>SCHEME_OPTION_FOR_ADVECTION_OF_TRACERS</source>
+        <translation>Scheme Option For Advection Of Tracers</translation>
     </message>
     <message>
-        <source>MASS-LUMPING ON TRACERS</source>
-        <translation>MASS_LUMPING_ON_TRACERS</translation>
+        <source>MASS_LUMPING_ON_TRACERS</source>
+        <translation>Mass-lumping On Tracers</translation>
     </message>
     <message>
-        <source>LAW OF TRACERS DEGRADATION</source>
-        <translation>LAW_OF_TRACERS_DEGRADATION</translation>
+        <source>LAW_OF_TRACERS_DEGRADATION</source>
+        <translation>Law Of Tracers Degradation</translation>
     </message>
     <message>
-        <source>COEFFICIENT 1 FOR LAW OF TRACERS DEGRADATION</source>
-        <translation>COEFFICIENT_1_FOR_LAW_OF_TRACERS_DEGRADATION</translation>
+        <source>COEFFICIENT_1_FOR_LAW_OF_TRACERS_DEGRADATION</source>
+        <translation>Coefficient 1 For Law Of Tracers Degradation</translation>
     </message>
     <message>
-        <source>NUMBER OF DROGUES</source>
-        <translation>NUMBER_OF_DROGUES</translation>
+        <source>NUMBER_OF_DROGUES</source>
+        <translation>Number Of Drogues</translation>
     </message>
     <message>
-        <source>PRINTOUT PERIOD FOR DROGUES</source>
-        <translation>PRINTOUT_PERIOD_FOR_DROGUES</translation>
+        <source>PRINTOUT_PERIOD_FOR_DROGUES</source>
+        <translation>Printout Period For Drogues</translation>
     </message>
     <message>
-        <source>DROGUES FILE</source>
-        <translation>DROGUES_FILE</translation>
+        <source>DROGUES_FILE</source>
+        <translation>Drogues File</translation>
     </message>
     <message>
-        <source>ALGAE TRANSPORT MODEL</source>
-        <translation>ALGAE_TRANSPORT_MODEL</translation>
+        <source>ALGAE_TRANSPORT_MODEL</source>
+        <translation>Algae Transport Model</translation>
     </message>
     <message>
-        <source>ALGAE TYPE</source>
-        <translation>ALGAE_TYPE</translation>
+        <source>ALGAE_TYPE</source>
+        <translation>Algae Type</translation>
     </message>
     <message>
-        <source>DIAMETER OF ALGAE</source>
-        <translation>DIAMETER_OF_ALGAE</translation>
+        <source>DIAMETER_OF_ALGAE</source>
+        <translation>Diameter Of Algae</translation>
     </message>
     <message>
-        <source>DENSITY OF ALGAE</source>
-        <translation>DENSITY_OF_ALGAE</translation>
+        <source>DENSITY_OF_ALGAE</source>
+        <translation>Density Of Algae</translation>
     </message>
     <message>
-        <source>THICKNESS OF ALGAE</source>
-        <translation>THICKNESS_OF_ALGAE</translation>
+        <source>THICKNESS_OF_ALGAE</source>
+        <translation>Thickness Of Algae</translation>
     </message>
     <message>
-        <source>OIL SPILL MODEL</source>
-        <translation>OIL_SPILL_MODEL</translation>
+        <source>OIL_SPILL_MODEL</source>
+        <translation>Oil Spill Model</translation>
     </message>
     <message>
-        <source>OIL SPILL STEERING FILE</source>
-        <translation>OIL_SPILL_STEERING_FILE</translation>
+        <source>OIL_SPILL_STEERING_FILE</source>
+        <translation>Oil Spill Steering File</translation>
     </message>
     <message>
-        <source>STOCHASTIC DIFFUSION MODEL</source>
-        <translation>STOCHASTIC_DIFFUSION_MODEL</translation>
+        <source>STOCHASTIC_DIFFUSION_MODEL</source>
+        <translation>Stochastic Diffusion Model</translation>
     </message>
     <message>
-        <source>NUMBER OF LAGRANGIAN DRIFTS</source>
-        <translation>NUMBER_OF_LAGRANGIAN_DRIFTS</translation>
+        <source>NUMBER_OF_LAGRANGIAN_DRIFTS</source>
+        <translation>Number Of Lagrangian Drifts</translation>
     </message>
     <message>
-        <source>NUMBER OF WEIRS</source>
-        <translation>NUMBER_OF_WEIRS</translation>
+        <source>NUMBER_OF_WEIRS</source>
+        <translation>Number Of Weirs</translation>
     </message>
     <message>
-        <source>WEIRS DATA FILE</source>
-        <translation>WEIRS_DATA_FILE</translation>
+        <source>WEIRS_DATA_FILE</source>
+        <translation>Weirs Data File</translation>
     </message>
     <message>
-        <source>TYPE OF WEIRS</source>
-        <translation>TYPE_OF_WEIRS</translation>
+        <source>TYPE_OF_WEIRS</source>
+        <translation>Type Of Weirs</translation>
     </message>
     <message>
-        <source>NUMBER OF CULVERTS</source>
-        <translation>NUMBER_OF_CULVERTS</translation>
+        <source>NUMBER_OF_CULVERTS</source>
+        <translation>Number Of Culverts</translation>
     </message>
     <message>
-        <source>CULVERT DATA FILE</source>
-        <translation>CULVERT_DATA_FILE</translation>
+        <source>CULVERT_DATA_FILE</source>
+        <translation>Culvert Data File</translation>
     </message>
     <message>
-        <source>NUMBER OF TUBES</source>
-        <translation>NUMBER_OF_TUBES</translation>
+        <source>NUMBER_OF_TUBES</source>
+        <translation>Number Of Tubes</translation>
     </message>
     <message>
-        <source>TUBES DATA FILE</source>
-        <translation>TUBES_DATA_FILE</translation>
+        <source>TUBES_DATA_FILE</source>
+        <translation>Tubes Data File</translation>
     </message>
     <message>
         <source>BREACH</source>
-        <translation>BREACH</translation>
+        <translation>Breach</translation>
     </message>
     <message>
-        <source>BREACHES DATA FILE</source>
-        <translation>BREACHES_DATA_FILE</translation>
+        <source>BREACHES_DATA_FILE</source>
+        <translation>Breaches Data File</translation>
     </message>
     <message>
-        <source>TIDAL DATA BASE</source>
-        <translation>TIDAL_DATA_BASE</translation>
+        <source>TIDAL_DATA_BASE</source>
+        <translation>Tidal Data Base</translation>
     </message>
     <message>
-        <source>TIDAL MODEL FILE</source>
-        <translation>TIDAL_MODEL_FILE</translation>
+        <source>TIDAL_MODEL_FILE</source>
+        <translation>Tidal Model File</translation>
     </message>
     <message>
-        <source>ASCII DATABASE FOR TIDE</source>
-        <translation>ASCII_DATABASE_FOR_TIDE</translation>
+        <source>ASCII_DATABASE_FOR_TIDE</source>
+        <translation>Ascii Database For Tide</translation>
     </message>
     <message>
-        <source>BINARY DATABASE 1 FOR TIDE</source>
-        <translation>BINARY_DATABASE_1_FOR_TIDE</translation>
+        <source>BINARY_DATABASE_1_FOR_TIDE</source>
+        <translation>Binary Database 1 For Tide</translation>
     </message>
     <message>
-        <source>BINARY DATABASE 2 FOR TIDE</source>
-        <translation>BINARY_DATABASE_2_FOR_TIDE</translation>
+        <source>BINARY_DATABASE_2_FOR_TIDE</source>
+        <translation>Binary Database 2 For Tide</translation>
     </message>
     <message>
-        <source>MINOR CONSTITUENTS INFERENCE</source>
-        <translation>MINOR_CONSTITUENTS_INFERENCE</translation>
+        <source>MINOR_CONSTITUENTS_INFERENCE</source>
+        <translation>Minor Constituents Inference</translation>
     </message>
     <message>
-        <source>HARMONIC CONSTANTS FILE</source>
-        <translation>HARMONIC_CONSTANTS_FILE</translation>
+        <source>HARMONIC_CONSTANTS_FILE</source>
+        <translation>Harmonic Constants File</translation>
     </message>
     <message>
-        <source>GEOGRAPHIC SYSTEM</source>
-        <translation>GEOGRAPHIC_SYSTEM</translation>
+        <source>GEOGRAPHIC_SYSTEM</source>
+        <translation>Geographic System</translation>
     </message>
     <message>
-        <source>ZONE NUMBER IN GEOGRAPHIC SYSTEM</source>
-        <translation>ZONE_NUMBER_IN_GEOGRAPHIC_SYSTEM</translation>
+        <source>ZONE_NUMBER_IN_GEOGRAPHIC_SYSTEM</source>
+        <translation>Zone Number In Geographic System</translation>
     </message>
     <message>
-        <source>COEFFICIENT TO CALIBRATE SEA LEVEL</source>
-        <translation>COEFFICIENT_TO_CALIBRATE_SEA_LEVEL</translation>
+        <source>COEFFICIENT_TO_CALIBRATE_SEA_LEVEL</source>
+        <translation>Coefficient To Calibrate Sea Level</translation>
     </message>
     <message>
-        <source>COEFFICIENT TO CALIBRATE TIDAL RANGE</source>
-        <translation>COEFFICIENT_TO_CALIBRATE_TIDAL_RANGE</translation>
+        <source>COEFFICIENT_TO_CALIBRATE_TIDAL_RANGE</source>
+        <translation>Coefficient To Calibrate Tidal Range</translation>
     </message>
     <message>
-        <source>COEFFICIENT TO CALIBRATE TIDAL VELOCITIES</source>
-        <translation>COEFFICIENT_TO_CALIBRATE_TIDAL_VELOCITIES</translation>
+        <source>COEFFICIENT_TO_CALIBRATE_TIDAL_VELOCITIES</source>
+        <translation>Coefficient To Calibrate Tidal Velocities</translation>
     </message>
     <message>
-        <source>TIDE GENERATING FORCE</source>
-        <translation>TIDE_GENERATING_FORCE</translation>
+        <source>TIDE_GENERATING_FORCE</source>
+        <translation>Tide Generating Force</translation>
     </message>
     <message>
-        <source>OPTION FOR TIDAL BOUNDARY CONDITIONS</source>
-        <translation>OPTION_FOR_TIDAL_BOUNDARY_CONDITIONS</translation>
+        <source>OPTION_FOR_TIDAL_BOUNDARY_CONDITIONS</source>
+        <translation>Option For Tidal Boundary Conditions</translation>
     </message>
     <message>
-        <source>COUPLING WITH</source>
-        <translation>COUPLING_WITH</translation>
+        <source>COUPLING_WITH</source>
+        <translation>Coupling With</translation>
     </message>
     <message>
-        <source>NAMES OF CLANDESTINE VARIABLES</source>
-        <translation>NAMES_OF_CLANDESTINE_VARIABLES</translation>
+        <source>NAMES_OF_CLANDESTINE_VARIABLES</source>
+        <translation>Names Of Clandestine Variables</translation>
     </message>
     <message>
-        <source>COUPLING DIRECTORY</source>
-        <translation>COUPLING_DIRECTORY</translation>
+        <source>COUPLING_DIRECTORY</source>
+        <translation>Coupling Directory</translation>
     </message>
     <message>
-        <source>DELWAQ PRINTOUT PERIOD</source>
-        <translation>DELWAQ_PRINTOUT_PERIOD</translation>
+        <source>DELWAQ_PRINTOUT_PERIOD</source>
+        <translation>Delwaq Printout Period</translation>
     </message>
     <message>
-        <source>VOLUMES DELWAQ FILE</source>
-        <translation>VOLUMES_DELWAQ_FILE</translation>
+        <source>VOLUMES_DELWAQ_FILE</source>
+        <translation>Volumes Delwaq File</translation>
     </message>
     <message>
-        <source>EXCHANGE AREAS DELWAQ FILE</source>
-        <translation>EXCHANGE_AREAS_DELWAQ_FILE</translation>
+        <source>EXCHANGE_AREAS_DELWAQ_FILE</source>
+        <translation>Exchange Areas Delwaq File</translation>
     </message>
     <message>
-        <source>VERTICAL FLUXES DELWAQ FILE</source>
-        <translation>VERTICAL_FLUXES_DELWAQ_FILE</translation>
+        <source>VERTICAL_FLUXES_DELWAQ_FILE</source>
+        <translation>Vertical Fluxes Delwaq File</translation>
     </message>
     <message>
-        <source>SALINITY DELWAQ FILE</source>
-        <translation>SALINITY_DELWAQ_FILE</translation>
+        <source>SALINITY_DELWAQ_FILE</source>
+        <translation>Salinity Delwaq File</translation>
     </message>
     <message>
-        <source>BOTTOM SURFACES DELWAQ FILE</source>
-        <translation>BOTTOM_SURFACES_DELWAQ_FILE</translation>
+        <source>BOTTOM_SURFACES_DELWAQ_FILE</source>
+        <translation>Bottom Surfaces Delwaq File</translation>
     </message>
     <message>
-        <source>EXCHANGES BETWEEN NODES DELWAQ FILE</source>
-        <translation>EXCHANGES_BETWEEN_NODES_DELWAQ_FILE</translation>
+        <source>EXCHANGES_BETWEEN_NODES_DELWAQ_FILE</source>
+        <translation>Exchanges Between Nodes Delwaq File</translation>
     </message>
     <message>
-        <source>NODES DISTANCES DELWAQ FILE</source>
-        <translation>NODES_DISTANCES_DELWAQ_FILE</translation>
+        <source>NODES_DISTANCES_DELWAQ_FILE</source>
+        <translation>Nodes Distances Delwaq File</translation>
     </message>
     <message>
-        <source>TEMPERATURE DELWAQ FILE</source>
-        <translation>TEMPERATURE_DELWAQ_FILE</translation>
+        <source>TEMPERATURE_DELWAQ_FILE</source>
+        <translation>Temperature Delwaq File</translation>
     </message>
     <message>
-        <source>VELOCITY DELWAQ FILE</source>
-        <translation>VELOCITY_DELWAQ_FILE</translation>
+        <source>VELOCITY_DELWAQ_FILE</source>
+        <translation>Velocity Delwaq File</translation>
     </message>
     <message>
-        <source>DIFFUSIVITY DELWAQ FILE</source>
-        <translation>DIFFUSIVITY_DELWAQ_FILE</translation>
+        <source>DIFFUSIVITY_DELWAQ_FILE</source>
+        <translation>Diffusivity Delwaq File</translation>
     </message>
     <message>
-        <source>DELWAQ STEERING FILE</source>
-        <translation>DELWAQ_STEERING_FILE</translation>
+        <source>DELWAQ_STEERING_FILE</source>
+        <translation>Delwaq Steering File</translation>
     </message>
     <message>
-        <source>SALINITY FOR DELWAQ</source>
-        <translation>SALINITY_FOR_DELWAQ</translation>
+        <source>SALINITY_FOR_DELWAQ</source>
+        <translation>Salinity For Delwaq</translation>
     </message>
     <message>
-        <source>TEMPERATURE FOR DELWAQ</source>
-        <translation>TEMPERATURE_FOR_DELWAQ</translation>
+        <source>TEMPERATURE_FOR_DELWAQ</source>
+        <translation>Temperature For Delwaq</translation>
     </message>
     <message>
-        <source>VELOCITY FOR DELWAQ</source>
-        <translation>VELOCITY_FOR_DELWAQ</translation>
+        <source>VELOCITY_FOR_DELWAQ</source>
+        <translation>Velocity For Delwaq</translation>
     </message>
     <message>
-        <source>DIFFUSIVITY FOR DELWAQ</source>
-        <translation>DIFFUSIVITY_FOR_DELWAQ</translation>
+        <source>DIFFUSIVITY_FOR_DELWAQ</source>
+        <translation>Diffusivity For Delwaq</translation>
     </message>
     <message>
-        <source>SISYPHE STEERING FILE</source>
-        <translation>SISYPHE_STEERING_FILE</translation>
+        <source>SISYPHE_STEERING_FILE</source>
+        <translation>Sisyphe Steering File</translation>
     </message>
     <message>
-        <source>COUPLING PERIOD FOR SISYPHE</source>
-        <translation>COUPLING_PERIOD_FOR_SISYPHE</translation>
+        <source>COUPLING_PERIOD_FOR_SISYPHE</source>
+        <translation>Coupling Period For Sisyphe</translation>
     </message>
     <message>
-        <source>TOMAWAC STEERING FILE</source>
-        <translation>TOMAWAC_STEERING_FILE</translation>
+        <source>TOMAWAC_STEERING_FILE</source>
+        <translation>Tomawac Steering File</translation>
     </message>
     <message>
-        <source>COUPLING PERIOD FOR TOMAWAC</source>
-        <translation>COUPLING_PERIOD_FOR_TOMAWAC</translation>
+        <source>COUPLING_PERIOD_FOR_TOMAWAC</source>
+        <translation>Coupling Period For Tomawac</translation>
     </message>
     <message>
-        <source>WAQTEL STEERING FILE</source>
-        <translation>WAQTEL_STEERING_FILE</translation>
+        <source>WAQTEL_STEERING_FILE</source>
+        <translation>Waqtel Steering File</translation>
     </message>
     <message>
-        <source>NUMBER OF FIRST TIME STEP FOR GRAPHIC PRINTOUTS</source>
-        <translation>NUMBER_OF_FIRST_TIME_STEP_FOR_GRAPHIC_PRINTOUTS</translation>
+        <source>NUMBER_OF_FIRST_TIME_STEP_FOR_GRAPHIC_PRINTOUTS</source>
+        <translation>Number Of First Time Step For Graphic Printouts</translation>
     </message>
     <message>
-        <source>GRAPHIC PRINTOUT PERIOD</source>
-        <translation>GRAPHIC_PRINTOUT_PERIOD</translation>
+        <source>GRAPHIC_PRINTOUT_PERIOD</source>
+        <translation>Graphic Printout Period</translation>
     </message>
     <message>
-        <source>VARIABLES FOR GRAPHIC PRINTOUTS</source>
-        <translation>VARIABLES_FOR_GRAPHIC_PRINTOUTS</translation>
+        <source>VARIABLES_FOR_GRAPHIC_PRINTOUTS</source>
+        <translation>Variables For Graphic Printouts</translation>
     </message>
     <message>
-        <source>NUMBER OF PRIVATE ARRAYS</source>
-        <translation>NUMBER_OF_PRIVATE_ARRAYS</translation>
+        <source>NUMBER_OF_PRIVATE_ARRAYS</source>
+        <translation>Number Of Private Arrays</translation>
     </message>
     <message>
-        <source>NAMES OF PRIVATE VARIABLES</source>
-        <translation>NAMES_OF_PRIVATE_VARIABLES</translation>
+        <source>NAMES_OF_PRIVATE_VARIABLES</source>
+        <translation>Names Of Private Variables</translation>
     </message>
     <message>
-        <source>RESULTS FILE FORMAT</source>
-        <translation>RESULTS_FILE_FORMAT</translation>
+        <source>RESULTS_FILE_FORMAT</source>
+        <translation>Results File Format</translation>
     </message>
     <message>
-        <source>RESULTS FILE</source>
-        <translation>RESULTS_FILE</translation>
+        <source>RESULTS_FILE</source>
+        <translation>Results File</translation>
     </message>
     <message>
-        <source>BINARY RESULTS FILE FORMAT</source>
-        <translation>BINARY_RESULTS_FILE_FORMAT</translation>
+        <source>BINARY_RESULTS_FILE_FORMAT</source>
+        <translation>Binary Results File Format</translation>
     </message>
     <message>
-        <source>BINARY RESULTS FILE</source>
-        <translation>BINARY_RESULTS_FILE</translation>
+        <source>BINARY_RESULTS_FILE</source>
+        <translation>Binary Results File</translation>
     </message>
     <message>
-        <source>FORMATTED RESULTS FILE</source>
-        <translation>FORMATTED_RESULTS_FILE</translation>
+        <source>FORMATTED_RESULTS_FILE</source>
+        <translation>Formatted Results File</translation>
     </message>
     <message>
-        <source>CONTROL SECTIONS</source>
-        <translation>CONTROL_SECTIONS</translation>
+        <source>CONTROL_SECTIONS</source>
+        <translation>Control Sections</translation>
     </message>
     <message>
-        <source>PRINTING CUMULATED FLOWRATES</source>
-        <translation>PRINTING_CUMULATED_FLOWRATES</translation>
+        <source>PRINTING_CUMULATED_FLOWRATES</source>
+        <translation>Printing Cumulated Flowrates</translation>
     </message>
     <message>
-        <source>COMPATIBLE COMPUTATION OF FLUXES</source>
-        <translation>COMPATIBLE_COMPUTATION_OF_FLUXES</translation>
+        <source>COMPATIBLE_COMPUTATION_OF_FLUXES</source>
+        <translation>Compatible Computation Of Fluxes</translation>
     </message>
     <message>
-        <source>SECTIONS INPUT FILE</source>
-        <translation>SECTIONS_INPUT_FILE</translation>
+        <source>SECTIONS_INPUT_FILE</source>
+        <translation>Sections Input File</translation>
     </message>
     <message>
-        <source>SECTIONS OUTPUT FILE</source>
-        <translation>SECTIONS_OUTPUT_FILE</translation>
+        <source>SECTIONS_OUTPUT_FILE</source>
+        <translation>Sections Output File</translation>
     </message>
     <message>
-        <source>NUMBER OF FIRST TIME STEP FOR LISTING PRINTOUTS</source>
-        <translation>NUMBER_OF_FIRST_TIME_STEP_FOR_LISTING_PRINTOUTS</translation>
+        <source>NUMBER_OF_FIRST_TIME_STEP_FOR_LISTING_PRINTOUTS</source>
+        <translation>Number Of First Time Step For Listing Printouts</translation>
     </message>
     <message>
-        <source>LISTING PRINTOUT PERIOD</source>
-        <translation>LISTING_PRINTOUT_PERIOD</translation>
+        <source>LISTING_PRINTOUT_PERIOD</source>
+        <translation>Listing Printout Period</translation>
     </message>
     <message>
-        <source>LISTING FOR PRINTOUT PERIOD</source>
-        <translation>LISTING_FOR_PRINTOUT_PERIOD</translation>
+        <source>LISTING_FOR_PRINTOUT_PERIOD</source>
+        <translation>Listing For Printout Period</translation>
     </message>
     <message>
-        <source>LISTING PRINTOUT</source>
-        <translation>LISTING_PRINTOUT</translation>
+        <source>LISTING_PRINTOUT</source>
+        <translation>Listing Printout</translation>
     </message>
     <message>
-        <source>VARIABLES TO BE PRINTED</source>
-        <translation>VARIABLES_TO_BE_PRINTED</translation>
+        <source>VARIABLES_TO_BE_PRINTED</source>
+        <translation>Variables To Be Printed</translation>
     </message>
     <message>
-        <source>MASS-BALANCE</source>
-        <translation>MASS_BALANCE</translation>
+        <source>MASS_BALANCE</source>
+        <translation>Mass-balance</translation>
     </message>
     <message>
-        <source>INFORMATION ABOUT SOLVER</source>
-        <translation>INFORMATION_ABOUT_SOLVER</translation>
+        <source>INFORMATION_ABOUT_SOLVER</source>
+        <translation>Information About Solver</translation>
     </message>
     <message>
-        <source>LIST OF POINTS</source>
-        <translation>LIST_OF_POINTS</translation>
+        <source>LIST_OF_POINTS</source>
+        <translation>List Of Points</translation>
     </message>
     <message>
-        <source>NAMES OF POINTS</source>
-        <translation>NAMES_OF_POINTS</translation>
+        <source>NAMES_OF_POINTS</source>
+        <translation>Names Of Points</translation>
     </message>
     <message>
-        <source>FOURIER ANALYSIS PERIODS</source>
-        <translation>FOURIER_ANALYSIS_PERIODS</translation>
+        <source>FOURIER_ANALYSIS_PERIODS</source>
+        <translation>Fourier Analysis Periods</translation>
     </message>
     <message>
-        <source>TIME RANGE FOR FOURIER ANALYSIS</source>
-        <translation>TIME_RANGE_FOR_FOURIER_ANALYSIS</translation>
+        <source>TIME_RANGE_FOR_FOURIER_ANALYSIS</source>
+        <translation>Time Range For Fourier Analysis</translation>
     </message>
     <message>
-        <source>NUMBER OF CORRECTIONS OF DISTRIBUTIVE SCHEMES</source>
-        <translation>NUMBER_OF_CORRECTIONS_OF_DISTRIBUTIVE_SCHEMES</translation>
+        <source>NUMBER_OF_CORRECTIONS_OF_DISTRIBUTIVE_SCHEMES</source>
+        <translation>Number Of Corrections Of Distributive Schemes</translation>
     </message>
     <message>
-        <source>NUMBER OF SUB-STEPS OF DISTRIBUTIVE SCHEMES</source>
-        <translation>NUMBER_OF_SUB_STEPS_OF_DISTRIBUTIVE_SCHEMES</translation>
+        <source>NUMBER_OF_SUB_STEPS_OF_DISTRIBUTIVE_SCHEMES</source>
+        <translation>Number Of Sub-steps Of Distributive Schemes</translation>
     </message>
     <message>
-        <source>WAVE ENHANCED FRICTION FACTOR</source>
-        <translation>WAVE_ENHANCED_FRICTION_FACTOR</translation>
+        <source>WAVE_ENHANCED_FRICTION_FACTOR</source>
+        <translation>Wave Enhanced Friction Factor</translation>
     </message>
     <message>
-        <source>LOCAL NUMBER OF THE POINT TO CALIBRATE HIGH WATER</source>
-        <translation>LOCAL_NUMBER_OF_THE_POINT_TO_CALIBRATE_HIGH_WATER</translation>
+        <source>LOCAL_NUMBER_OF_THE_POINT_TO_CALIBRATE_HIGH_WATER</source>
+        <translation>Local Number Of The Point To Calibrate High Water</translation>
     </message>
     <message>
-        <source>GLOBAL NUMBER OF THE POINT TO CALIBRATE HIGH WATER</source>
-        <translation>GLOBAL_NUMBER_OF_THE_POINT_TO_CALIBRATE_HIGH_WATER</translation>
+        <source>GLOBAL_NUMBER_OF_THE_POINT_TO_CALIBRATE_HIGH_WATER</source>
+        <translation>Global Number Of The Point To Calibrate High Water</translation>
     </message>
     <message>
-        <source>PSI SCHEME OPTION</source>
-        <translation>PSI_SCHEME_OPTION</translation>
+        <source>PSI_SCHEME_OPTION</source>
+        <translation>Psi Scheme Option</translation>
     </message>
     <message>
-        <source>PROPAGATION OPTION</source>
-        <translation>PROPAGATION_OPTION</translation>
+        <source>PROPAGATION_OPTION</source>
+        <translation>Propagation Option</translation>
     </message>
     <message>
-        <source>FREE INTEGER 20</source>
-        <translation>FREE_INTEGER_20</translation>
+        <source>FREE_INTEGER_20</source>
+        <translation>Free Integer 20</translation>
     </message>
     <message>
-        <source>VECTOR LENGTH</source>
-        <translation>VECTOR_LENGTH</translation>
+        <source>VECTOR_LENGTH</source>
+        <translation>Vector Length</translation>
     </message>
     <message>
         <source>LANGUAGE</source>
-        <translation>LANGUAGE</translation>
+        <translation>Language</translation>
     </message>
     <message>
-        <source>STEERING FILE</source>
-        <translation>STEERING_FILE</translation>
+        <source>STEERING_FILE</source>
+        <translation>Steering File</translation>
     </message>
     <message>
         <source>DICTIONARY</source>
-        <translation>DICTIONARY</translation>
+        <translation>Dictionary</translation>
     </message>
     <message>
-        <source>PARTITIONING TOOL</source>
-        <translation>PARTITIONING_TOOL</translation>
+        <source>PARTITIONING_TOOL</source>
+        <translation>Partitioning Tool</translation>
     </message>
     <message>
         <source>RELEASE</source>
-        <translation>RELEASE</translation>
+        <translation>Release</translation>
     </message>
     <message>
-        <source>LIST OF FILES</source>
-        <translation>LIST_OF_FILES</translation>
+        <source>LIST_OF_FILES</source>
+        <translation>List Of Files</translation>
     </message>
     <message>
-        <source>DESCRIPTION OF LIBRARIES</source>
-        <translation>DESCRIPTION_OF_LIBRARIES</translation>
+        <source>DESCRIPTION_OF_LIBRARIES</source>
+        <translation>Description Of Libraries</translation>
     </message>
     <message>
-        <source>DEFAULT EXECUTABLE</source>
-        <translation>DEFAULT_EXECUTABLE</translation>
+        <source>DEFAULT_EXECUTABLE</source>
+        <translation>Default Executable</translation>
     </message>
     <message>
-        <source>DEFAULT PARALLEL EXECUTABLE</source>
-        <translation>DEFAULT_PARALLEL_EXECUTABLE</translation>
+        <source>DEFAULT_PARALLEL_EXECUTABLE</source>
+        <translation>Default Parallel Executable</translation>
     </message>
-
-
-
-
-
-
-
-
-
-
-
-
-
     <name>@default</name>
     <message>
         <location filename="../../convert/convert_ini.py" line="81"/>

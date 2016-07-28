@@ -246,7 +246,10 @@ class JDCNode(QTreeWidgetItem,GereRegles):
               self.treeParent.childrenComplete.append(self)
               self.treeParent=self.treeParent.vraiParent
         self.treeParent.childrenComplete.append(self)
-        if (isinstance(self,compobloc.Node) or ( isinstance(self,compomclist.Node) and self.item.isMCList())) : 
+
+
+        if (isinstance(self,compobloc.Node) or (isinstance(self,compomclist.Node) and self.item.isMCList()) or ( hasattr(self.item.parent,'inhibeValidator') and isinstance(self,compomclist.Node) and self.item.parent.inhibeValidator)) : 
+        # Le dernier or ne sert que lorsqu'on est en train de creer une liste par les validator
            QTreeWidgetItem.__init__(self,None,mesColonnes)
         else :
            QTreeWidgetItem.__init__(self,self.treeParent,mesColonnes)

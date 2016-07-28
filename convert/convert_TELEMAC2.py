@@ -29,6 +29,8 @@ pattern_oui   = re.compile(r"^\s*(oui|OUI|YES|yes|TRUE|VRAI)\s*$")
 pattern_non   = re.compile(r"^\s*(non|NON|NO|no|FALSE|FAUX)\*s$")
 pattern_blanc = re.compile(r"^\s*$")
 pattern_listeVide = re.compile(r"^\s*'\s*'\s*$")
+pattern_tracers = re.compile(r"^\s*(NAMES OF TRACERS|NOMS DES TRACEURS).*")
+pattern_commence_par_quote=re.compile(r'^\s*[\'"].*')
 
 pattern_ligne=re.compile(r'^\s*(?P<ident>[^=:]*)\s*[:=]\s*(?P<reste>.*)$')
 
@@ -36,6 +38,7 @@ pattern_variables=re.compile (r"^\s*(?P<ident>VARIABLES POUR LES SORTIES GRAPHIQ
 
 # Attention aux listes de flottants
 pattern_liste=re.compile(r'^\s*(?P<valeur>[+-.\w]+(\s*;\s*[+-.\w]+)+)\s*(?P<reste>.*)$')
+pattern_liste_texte=re.compile(r"^\s*(?P<valeur>('.*(';\s*)))+(?P<reste>.*)$")
 pattern_flottant=re.compile(r'^\s*(?P<valeur>[+-]?((\d+(\.\d*)?)|(\.\d+))([dDeE][+-]?\d+)?)\s*(?P<reste>.*)$')
 pattern_texteQuote  = re.compile (r"^\s*(?P<valeur>'[^']+(''[^']+)*')\s*(?P<reste>.*)$")
 pattern_texteSimple = re.compile (r"(?P<valeur>(^|\s)\s*[\w\.-]+)\s*(?P<reste>.*)$")
@@ -53,6 +56,7 @@ pattern_ContientDouble=re.compile (r"^.*''.*$")
 
 #Si le code n est pas Telemac
 try :
+#if 1 :
    from aideAuxConvertisseurs import DicoEficasToCas, ListeSupprimeCasToEficas
    from aideAuxConvertisseurs import ListeCalculCasToEficas, DicoAvecMajuscules
    from enumDicoTelemac       import DicoEnumCasEn
@@ -83,9 +87,7 @@ class TELEMACParser(PythonParser):
 
    def convert(self, outformat, appli=None):
       from Accas import A_BLOC, A_FACT, A_SIMP
-      #self.dicoInverseFrancais=appli.readercata.dicoInverseFrancais
-      #self.dicoAnglaisFrancais=appli.readercata.dicoAnglaisFrancais
-      #self.dicoFrancaisAnglais=appli.readercata.dicoFrancaisAnglais
+      self.dicoCasToCata=appli.readercata.dicoCasToCata
       self.dicoInverse=appli.readercata.dicoInverse
       self.dicoMC=appli.readercata.dicoMC
       self.Ordre_Des_Commandes=appli.readercata.Ordre_Des_Commandes
@@ -95,10 +97,32 @@ class TELEMACParser(PythonParser):
       #text = PythonParser.convert(self, outformat, appli)
       
       text=""
-      l_lignes = string.split(self.text,'\n')
       self.dictSimp={}
-      for ligne in l_lignes :
 
+      # Traitement des noms des tracers qui peuvent etre sur plusieurs lignes
+      l_lignes_texte = string.split(self.text,'\n')
+      l_lignes=[]
+      i=0
+      while (i < len(l_lignes_texte)) :
+          ligne=l_lignes_texte[i]
+          i=i+1
+          if not(pattern_tracers.match(ligne)):
+             l_lignes.append(ligne)
+             continue
+          while (i < len(l_lignes_texte)):
+             ligne_complementaire=l_lignes_texte[i]
+             if not(pattern_commence_par_quote.match(ligne_complementaire)) :
+                l_lignes.append(ligne)
+                break
+             else : 
+                ligne=ligne +ligne_complementaire
+                i=i+1
+                if i == len(l_lignes_texte):
+                   l_lignes.append(ligne)
+                   continue
+  
+
+      for ligne in l_lignes :
           if pattern_comment_slash.match(ligne) : continue
           if pattern_eta.match(ligne) : continue
           if pattern_fin.match(ligne) : continue
@@ -124,12 +148,15 @@ class TELEMACParser(PythonParser):
                  #print "________________________________________________"
                  break
       
-              simp=self.traiteIdent(m.group('ident'))
-              finLigne=m.group('reste')
+              simpCas=self.traiteIdent(m.group('ident'))
+              if not simpCas : continue
 
+              finLigne=m.group('reste')
               # attention, l ordre des if est important
               if pattern_liste.match(finLigne) :
                  m=pattern_liste.match(finLigne)
+              elif pattern_liste_texte.match(finLigne) :
+                 m=pattern_liste_texte.match(finLigne)
               elif pattern_texteQuote.match(finLigne) :
                  m=pattern_texteQuote.match(finLigne)
               elif pattern_flottant.match(finLigne) : 
@@ -145,6 +172,7 @@ class TELEMACParser(PythonParser):
                  #print "________________________________________________"
                  break
               
+
               valeur=m.group('valeur')
               if pattern_blanc.match(valeur) : valeur=None
 
@@ -152,11 +180,12 @@ class TELEMACParser(PythonParser):
                  valeur=re.sub("d","e",valeur)
                  valeur=re.sub("D","E",valeur)
 
-              if pattern_liste.match(finLigne):
+              if pattern_liste.match(finLigne) or pattern_liste_texte.match(finLigne):
                  valeur=valeur.split(";")
 
+
               finLigne=m.group('reste')
-              self.dictSimp[simp]=valeur
+              self.dictSimp[simpCas]=valeur
       
       if 'TITLE' not in self.dictSimp.keys() :
           import os
@@ -197,9 +226,8 @@ class TELEMACParser(PythonParser):
       listeMC=self.tri(dicoParMC.keys())
       for k in listeMC :
           #print "----------- traitement de " , k
-          #self.textePy += self.dicoFrancaisAnglais[k] + "("
           self.textePy += str(k )+ "("
-          #self.traiteMC(dicoParMC[k])
+          self.traiteMC(dicoParMC[k])
           self.textePy += ");\n"
           #print "----------- " 
            
@@ -214,7 +242,11 @@ class TELEMACParser(PythonParser):
    #----------------------------------------
           while ident[-1] == " " or ident[-1] == '\t' : ident=ident[0:-1]
           while ident[0]  == " " or ident[0]  == '\t' : ident=ident[1:]
-          return tr(ident)
+          try : identCata=self.dicoCasToCata[ident]
+          except :  
+            print  "%%%%%%%%%%%\n", "pb conversion type pour", identCata
+            identCata=None
+          return identCata
 
 
    def traiteMC(self,dico) :
@@ -232,9 +264,10 @@ class TELEMACParser(PythonParser):
            #print "_____________"
 
    def convertFACT(self,obj,nom,valeur):
-       if nom in TELEMACParser.__dict__.keys() : 
-          apply(TELEMACParser.__dict__[nom],(self,))
-          return
+       print "convertFACT", nom,valeur
+       #if nom in TELEMACParser.__dict__.keys() : 
+       #   apply(TELEMACParser.__dict__[nom],(self,))
+       #   return
        self.textePy +=  nom + "=_F( "
        self.traiteMC(valeur)
        self.textePy += '),\n'
@@ -245,6 +278,7 @@ class TELEMACParser(PythonParser):
        print nom
 
    def convertSIMP(self,obj,nom,valeur):
+       print obj,nom,valeur
        if nom in ("PRESCRIBED_FLOWRATES", "PRESCRIBED_VELOCITIES", "PRESCRIBED_ELEVATIONS" ): return
        if obj.max==1 : 
           if hasattr(obj.type[0],'ntuple') : 
@@ -272,6 +306,7 @@ class TELEMACParser(PythonParser):
           # Pour les enum
           try    : valeur=eval(valeur,{})
           except : pass
+
           if nom in DicoEnumCasEn.keys(): 
              try    : 
                valeur=DicoEnumCasEn[nom][valeur]
@@ -311,22 +346,24 @@ class TELEMACParser(PythonParser):
           self.textePy += nom + "=" + str(valeur) +","
 
        else :
-          if pattern_listeVide.match(valeur) :
+          if valeur == () or valeur ==[] or pattern_listeVide.match(str(valeur)) :
              self.textePy += nom + "= None,"
              return
+
+          # les 4 lignes suivantes sont probablement inutiles
           while valeur[-1] == " " or  valeur[-1]=="'" : valeur=valeur[0:-1]
           while valeur[0]  == " " or  valeur[-0]=="'" : valeur=valeur[1:]
-
           if   ";" in valeur : valeur=valeur.split(';')
           elif "," in valeur : valeur=valeur.split(',')
 
+ 
           if valeur == None : return
           newVal=[]
           for v in valeur :
             try :    v=eval(v,{})
             except : pass
             if nom in DicoEnumCasEn.keys():
-               #print "est dans le dico des enum, valeurs multiples"
+               print "est dans le dico des enum, valeurs multiples"
                try    : v=DicoEnumCasEn[nom][v]
                except : pass
             newVal.append(v)
@@ -337,7 +374,8 @@ class TELEMACParser(PythonParser):
    def tri(self, listeIn):
       if len(listeIn) == 1 : return listeIn
       if self.Ordre_Des_Commandes == None : return listeIn
-      #print self.Ordre_Des_Commandes
+      print self.Ordre_Des_Commandes
+      print listeIn
       listeOut=[listeIn[0],]
       for kF in listeIn[1:]:
           k=str(self.dicoFrancaisAnglais[kF])
@@ -350,70 +388,70 @@ class TELEMACParser(PythonParser):
           listeOut.insert(i,kF)
       return listeOut
 
-   def Processeurs_Paralleles(self):
+   def PARALLEL_PROCESSORS(self):
       #YOANN
-      if self.dictSimp["Processeurs_Paralleles"] == 0 : del  self.dictSimp["Processeurs_Paralleles"]
-      else : self.dictSimp["Parallel_Computation"]="Parallel"
+      if self.dictSimp["PARALLEL_PROCESSORS"] == 0 : del  self.dictSimp["PARALLEL_PROCESSORS"]
+      #else : self.dictSimp["Parallel_Computation"]="Parallel"
  
    def decoupeListe(self,valeurs,label):
       #print "decoupeListe"
       #print valeurs
       i=0
-      for prefixe in ('_U_And_V','_H'):
+      for prefixe in ('_U_AND_V','_H'):
           labelComplet=label+prefixe
           valeur=valeurs[i]
           try    : valeur=eval(valeur,{})
           except : pass
-          if tr(label) in DicoEnumCasEn.keys(): 
-             try    : valeur=DicoEnumCasEn[tr(label)][valeur]
+          if label in DicoEnumCasEn.keys(): 
+             try    : valeur=DicoEnumCasEn[label][valeur]
              except : pass
           self.dictSimp[labelComplet]=valeur
           i=i+1
       if len(valeurs)==2 : return
-      for prefixe in ('_K_And_Epsilon','_Tracers'):
+      for prefixe in ('_K_AND_EPSILON','_TRACERS'):
           labelComplet=label+prefixe
           valeur=valeurs[i]
           try    : valeur=eval(valeur,{})
           except : pass
-          if tr(label) in DicoEnumCasEn.keys(): 
-             try    : valeur=DicoEnumCasEn[tr(label)][valeur]
+          if label in DicoEnumCasEn.keys(): 
+             try    : valeur=DicoEnumCasEn[label][valeur]
              except : pass
           self.dictSimp[labelComplet]=valeur
           i=i+1
-      
-   def Option_De_Supg(self):
+
+   def SUPG_OPTION(self):
        #print "ds Option_De_Supg"
-       self.decoupeListe( self.dictSimp["Option_De_Supg"],"Option_De_Supg")
-       del self.dictSimp["Option_De_Supg"]
+       self.decoupeListe( self.dictSimp["SUPG_OPTION"],"SUPG_OPTION")
+       del self.dictSimp["SUPG_OPTION"]
 
-   def Forme_De_La_Convection(self):
-       self.decoupeListe( self.dictSimp["Forme_De_La_Convection"],"Forme_De_La_Convection")
-       valeurs=self.dictSimp["Forme_De_La_Convection"]
-       del self.dictSimp["Forme_De_La_Convection"]
-       self.dictSimp['Convection_De_U_Et_V']=True
-       self.dictSimp['Convection_De_H']=True
+   def TYPE_OF_ADVECTION(self):
+       self.decoupeListe( self.dictSimp["TYPE_OF_ADVECTION"],"ADVECTION")
+       valeurs=self.dictSimp["TYPE_OF_ADVECTION"]
+       del self.dictSimp["TYPE_OF_ADVECTION"]
+       self.dictSimp['ADVECTION_OF_U_AND_V']=True
+       self.dictSimp['ADVECTION_OF_H']=True
        if len(valeurs)==2 : return
-       self.dictSimp['Convection_De_K_Et_Epsilon']=True
-       self.dictSimp['Convection_Des_Traceurs']=True
+       self.dictSimp['ADVECTION_OF_K_AND_EPSILON']=True
+       self.dictSimp['ADVECTION_OF_TRACERS']=True
 
-   def Discretisations_En_Espace(self):
-       self.decoupeListe( self.dictSimp["Discretisations_En_Espace"],"Discretisations_En_Espace")
+   def DISCRETIZATIONS_IN_SPACE(self):
+       self.decoupeListe( self.dictSimp["DISCRETIZATIONS_IN_SPACE"],"DISCRETIZATIONS_IN_SPACE")
        del self.dictSimp["Discretisations_En_Espace"]
        
-   def Date_De_L_Origine_Des_Temps (self):
-       valeurs=self.dictSimp["Date_De_L_Origine_Des_Temps"]
-       self.dictSimp['Annee']=valeurs[0]
-       self.dictSimp['Mois']=valeurs[1]
-       self.dictSimp['Jour']=valeurs[2]
-       del  self.dictSimp["Date_De_L_Origine_Des_Temps"]
+   #def Date_De_L_Origine_Des_Temps (self):
+   #    valeurs=self.dictSimp["Date_De_L_Origine_Des_Temps"]
+   #    self.dictSimp['Annee']=valeurs[0]
+   #    self.dictSimp['Mois']=valeurs[1]
+   #    self.dictSimp['Jour']=valeurs[2]
+   #    del  self.dictSimp["Date_De_L_Origine_Des_Temps"]
        
    
-   def Heure_De_L_Origine_Des_Temps (self):
-       valeurs=self.dictSimp["Heure_De_L_Origine_Des_Temps"]
-       self.dictSimp['Heure']=valeurs[0]
-       self.dictSimp['Minute']=valeurs[1]
-       self.dictSimp['Seconde']=valeurs[2]
-       del  self.dictSimp["Heure_De_L_Origine_Des_Temps"]
+   #def ORIGINAL_HOUR_OF_TIME (self):
+   #    valeurs=self.dictSimp["ORIGINAL_HOUR_OF_TIME"]
+   #    self.dictSimp['Heure']=valeurs[0]
+   #    self.dictSimp['Minute']=valeurs[1]
+   #    self.dictSimp['Seconde']=valeurs[2]
+   #    del  self.dictSimp["ORIGINAL_HOUR_OF_TIME"]
 
    def Liquid_Boundaries(self):
        #print 'Liquid Boundaries'

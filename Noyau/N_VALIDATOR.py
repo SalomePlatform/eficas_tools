@@ -1717,3 +1717,47 @@ class FileExtVal(RegExpVal):
 
     def info(self):
         return u'Un nom de fichier se terminant par ".%s" est attendu.' % self.ext
+
+class CreeMotClef:
+    def __init__(self,MotClef ):
+        self.MotClef=MotClef
+        self.MCSimp=None
+         
+    def convert(self, lval):
+        print "dans convert"
+        try : valeur=lval[0]
+        except  : return lval
+
+        parent= self.MCSimp.parent
+        if hasattr(parent, 'inhibeValidator') and parent.inhibeValidator: return lval
+
+
+        if parent.get_child(self.MotClef) == None : longueur=0
+        else : longueur=len(parent.get_child(self.MotClef))
+
+        pos=parent.get_index_child(self.MCSimp.nom)+1
+        while longueur < valeur : 
+           parent.inhibeValidator=1
+           parent.addentite(self.MotClef,pos)
+           pos=pos+1
+           parent.inhibeValidator=0
+           longueur=len(parent.get_child(self.MotClef))
+
+        if longueur > valeur : 
+           parent.inhibeValide=1
+           parentObj=parent.get_child(self.MotClef)
+           obj=parent.get_child(self.MotClef)[-1]
+           parentObj.suppentite(obj)
+           longueur=len(parent.get_child(self.MotClef))
+           parent.inhibeValide=0
+        return lval
+
+    def info(self):
+        return "Cree le bon nombre de Mot %s"  % self.MotClef
+
+    def verif_item(self, valeur):
+        return 1
+
+    def set_MCSimp(self, MCSimp):
+        #print "dans set_MCSimp"
+        self.MCSimp=MCSimp
