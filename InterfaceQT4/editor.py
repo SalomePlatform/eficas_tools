@@ -1289,6 +1289,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------------------------#
     def deleteMC(self,etape,MCFils):
     #-------------------------------------#
+        print "je passe dans deleteMC" 
         monMC=etape.get_child(MCFils,restreint="oui")
         if monMC != None : print etape.suppentite(monMC)
 
@@ -1301,6 +1302,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if monMC== None : monMC= etape.addentite(MCFils)
         monMC.valeur=valeurs
         monMC.val=valeurs
+        monMC.state='changed'
+        #print monMC.isvalid()
 
     #-------------------------------------#
     def changeIntoMC(self,etape,MCFils,valeurs):
@@ -1311,8 +1314,33 @@ class JDCEditor(Ui_baseWidget,QWidget):
         monMC.definition.into=valeurs
 
     #-------------------------------------#
-    def changeIntoMCandSet(self,etape,MCFils,into,valeurs):
+    def changeIntoDefMC(self,etape,listeMC,valeurs):
     #-------------------------------------#
+        definitionEtape=getattr(self.jdc.cata[0],etape)
+        ouChercher=definitionEtape
+        if len(listeMC) > 1 :
+           for mc in listeMC[0:-1]:
+             mcfact=ouChercher.entites[mc]
+             ouChercher=mcfact
+           
+        mcAccas=ouChercher.entites[listeMC[-1]]
+        mcAccas.into=valeurs
+
+    #-----------------------------------------#
+    def ajoutDefinitionMC(self,etape,nomDuMC,typ,**args):
+    #-----------------------------------------#
+        definitionEtape=getattr(self.jdc.cata[0],etape)
+        from Accas import A_SIMP
+        Nouveau=A_SIMP.SIMP(typ,**args)
+        Nouveau.pere=definitionEtape
+        Nouveau.nom=nomDuMC
+        Nouveau.ordre_mc=[]
+        definitionEtape.entites[nomDuMC]=Nouveau
+        definitionEtape.ordre_mc.append(nomDuMC)
+
+    #----------------------------------------------------#
+    def changeIntoMCandSet(self,etape,MCFils,into,valeurs):
+    #----------------------------------------------------#
         monMC=etape.get_child(MCFils,restreint="oui")
         if monMC== None : monMC= etape.addentite(MCFils)
         monMC.definition.into=into
@@ -1390,8 +1418,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #---------------------------#
     def _newTELEMAC(self):
     #---------------------------#
-        texte="INITIALIZATION();BOUNDARY_CONDITIONS();GENERAL_PARAMETERS();PHYSICAL_PARAMETERS();NUMERICAL_PARAMETERS();"
-        #texte=""
+        #texte="INITIALIZATION();BOUNDARY_CONDITIONS();GENERAL_PARAMETERS();PHYSICAL_PARAMETERS();NUMERICAL_PARAMETERS();"
+        texte=""
         return texte
 
     #---------------------------#
@@ -1404,8 +1432,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #---------------------------#
     def _newPSEN_N1(self):
     #---------------------------#
-        texte="CASE_SELECTION() ; CONTINGENCY_OPTIONS() ; OUTPUT_OPTIONS() ; "
-        #texte=""
+        #texte="CASE_SELECTION() ; CONTINGENCY_OPTIONS() ; OUTPUT_OPTIONS() ; "
+        texte=""
         return texte
 
     #---------------------------#

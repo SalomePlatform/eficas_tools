@@ -122,6 +122,11 @@ class Appli(Ui_Eficas,QMainWindow):
           exit()
 
 
+    def closeEntete(self):
+        self.menuBar().close()
+        self.toolBar.close()
+        self.frameEntete.close()
+
     def definitCode(self,code,ssCode) :
         self.code=code
         self.ssCode=ssCode
