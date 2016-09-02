@@ -89,6 +89,7 @@ from A_VALIDATOR import RangeVal, EnumVal, TypeVal, PairVal
 from A_VALIDATOR import CardVal, InstanceVal
 from A_VALIDATOR import VerifTypeTuple, VerifExiste
 from A_VALIDATOR import FileExtVal, FunctionVal
+from A_VALIDATOR import CreeMotClef 
 
 # On remplace la factory des validateurs initialement dans Noyau par celle
 # de A_VALIDATOR
