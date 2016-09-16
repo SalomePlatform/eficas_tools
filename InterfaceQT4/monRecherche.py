@@ -42,7 +42,6 @@ class DRecherche(Ui_desRecherche ,QDialog):
       QDialog.__init__(self,parent)
       self.parentQT=parent
       self.tree=self.parentQT.tree
-      self.setModal(True)
       self.setupUi(self)
       self.PBSuivant.setDefault(True)
       self.PBSuivant.setAutoDefault(False)

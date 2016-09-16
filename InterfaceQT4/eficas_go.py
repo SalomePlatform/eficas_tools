@@ -67,7 +67,6 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
     if code == None : code=options.code
 
     from qtEficas import Appli
-    app = QApplication(sys.argv)
     Eficas=Appli(code=code,ssCode=ssCode,ssIhm=True)
 
     from ssIhm  import QWParentSSIhm
@@ -91,6 +90,7 @@ def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=Non
     print monEditeur.jdc.cr
 
 def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou=None,cr=False):
+    #print 'lance_eficas_ssIhm_reecrit', fichier
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
     if ou == None : 
        fileName=fichier.split(".")[0]+"_reecrit.comm"
@@ -107,7 +107,6 @@ def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,o
        f = open(fileCr, 'wb')
        f.write(str(monEditeur.jdc.report()))
        f.close()
-
 
 def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION_STUDY'):
     """

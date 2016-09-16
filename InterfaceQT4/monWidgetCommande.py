@@ -45,7 +45,6 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   """
   """
   def __init__(self,node,editor,etape):
-      #print "MonWidgetCommande ", self,node.item.get_fr()
       self.listeAffichageWidget=[]
       self.inhibe=0
       self.ensure=0
@@ -69,27 +68,26 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.scrollAreaCommandes.focusInEvent=self.focusInEvent
 
      
-      if monEnvQT5 :
-         if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
-         else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
-         if self.editor.code in ['Adao','MAP'] : 
-               self.bAvant.close()
-               self.bApres.close()
-         else : 
-               self.bAvant.clicked.connect(self.afficheAvant)
-               self.bApres.clicked.connect(self.afficheApres)
+      if self.editor.closeFrameRechercheCommande==True : self.closeAutreCommande()
+      else :
+        if monEnvQT5 :
+         try :
+           self.bCatalogue.clicked.connect(self.afficheCatalogue)
+           self.bAvant.clicked.connect(self.afficheAvant)
+           self.bApres.clicked.connect(self.afficheApres)
+         except :
+           pass
          self.LENom.returnPressed.connect(self.nomChange)
-      else : 
-         if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
-         else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
-         if self.editor.code in ['Adao','MAP'] : 
-               self.bAvant.close()
-               self.bApres.close()
-         else : 
-               self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
-               self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
+        else : 
+         try :
+            self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+            self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
+            self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
+         except :
+            pass
          self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
    
+      if self.editor.code in ['CARMELCND',] : self.closeAutreCommande()
       self.racine=self.node.tree.racine
       if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)
 
@@ -115,6 +113,10 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.editor.restoreSplitterSizes()
       #print "fin init de widget Commande"
       
+  def closeAutreCommande(self):
+      self.bCatalogue.close()
+      self.bAvant.close()
+      self.bApres.close()
 
   def donnePremier(self):
       #print "dans donnePremier"

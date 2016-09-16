@@ -110,7 +110,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
          self.affiche_ordre==1;  
          self.RBOrdre.setChecked(True);  
          self.afficheOrdre()
-      if self.editor.code == "Adao" : self.frameAffichage.close()
+      if self.editor.closeFrameRechercheCommande == True : self.frameAffichage.close()
 
   def afficheRegle(self):
       self.node.tree.AppelleBuildLBRegles()

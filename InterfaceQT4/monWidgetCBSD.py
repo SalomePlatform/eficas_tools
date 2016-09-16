@@ -66,6 +66,7 @@ class MonWidgetCB (Ui_WidgetCB,Feuille):
         if monEnvQT5:
            self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
         else :
+           self.connect(self.CBChoix,SIGNAL("currentIndexChanged(int)"),self.ChoixSaisi
 
       for choix in self.monSimpDef.into:
           if not(type(choix) in types.StringTypes) : choix=str(choix)

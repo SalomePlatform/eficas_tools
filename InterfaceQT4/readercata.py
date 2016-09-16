@@ -317,29 +317,24 @@ class READERCATA:
         self.dicoMC={} 
         listeEtapes=self.cata[0].JdC.commandes
         for e in self.cata[0].JdC.commandes:
-        #for e in (self.cata[0].JdC.commandes[0],):
-            #print e.nom
             self.traite_entite(e)
-        #for e in self.cata[0].JdC.commandes:
-        #    self.cree_rubrique(e,self.dico,0)
-        #print self.dicoInverse
 
-        #from Extensions import localisation
-        #app=QApplication
-        # tres dommage  A Revoir
-        #localisation.localise(app,"fr")
-        self.dicoInverseFrancais={}
-        self.dicoFrancaisAnglais={}
-        self.dicoAnglaisFrancais={}
-        for k in self.dicoInverse.keys():
-            listefr=[]
-            for nom, obj in self.dicoInverse[k] :
-                listefr.append((tr(nom),obj))
-                self.dicoFrancaisAnglais[tr(nom)]=nom
-                self.dicoAnglaisFrancais[nom]=tr(nom)
-            self.dicoInverseFrancais[tr(k)]=listefr
-            #print tr(k),listefr
-        if self.appliEficas.langue=="ang" : localisation.localise(app,"en")
+        #self.dicoFrancaisAnglais={}
+        #self.dicoAnglaisFrancais={}
+        #for k in self.dicoInverse.keys():
+        #    listefr=[]
+        #    for nom, obj in self.dicoInverse[k] :
+        #        listefr.append((tr(nom),obj))
+        #        self.dicoFrancaisAnglais[tr(nom)]=nom
+        #        self.dicoAnglaisFrancais[nom]=tr(nom)
+        #    self.dicoInverseFrancais[tr(k)]=listefr
+        #    #print tr(k),listefr
+        if self.appliEficas.langue=="ang" :
+           from dicoCasEnToCata import DicoCasEnToCata as dicoCasToCata
+        else :
+           from dicoCasFrToCata import DicoCasFrToCata as dicoCasToCata
+        self.dicoCasToCata=dicoCasToCata
+        
         
          
         
@@ -360,6 +355,7 @@ class READERCATA:
                 moi=moi.pere
           liste.append((moi.nom,moi))
           self.dicoInverse[e.nom]=liste
+          self.dicoInverse[tr(e.nom)]=liste
 
    def cree_rubrique(self,e,dico, niveau):
        from Accas import A_BLOC

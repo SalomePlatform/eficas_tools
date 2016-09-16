@@ -139,6 +139,13 @@ class MyTabview:
        editor=self.dict_editors[index]
        editor.handleRechercher()
 
+   def handleRechercherDsCatalogue(self):
+       #print "passage dans handleRechercher"
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       editor=self.dict_editors[index]
+       editor.handleRechercherDsCatalogue()
+
    def handleDeplier(self):
        index=self.myQtab.currentIndex()
        if index < 0 : return
@@ -290,6 +297,7 @@ class MyTabview:
        else :
             from editor import JDCEditor
             editor = JDCEditor(self.appliEficas,fichier, jdc, self.myQtab,units=units,vm = self,include=include)
+
             if double != None : 
                self.doubles[editor]=double
             if editor.jdc: # le fichier est bien un jdc

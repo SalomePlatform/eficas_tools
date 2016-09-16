@@ -20,7 +20,10 @@
 # Modules Python
 import string,types,os
 
+
 # Modules Eficas
+from determine import monEnvQT5
+
 if monEnvQT5:
     from PyQt5.QtWidgets import QLineEdit
     from PyQt5.QtCore import Qt
