@@ -94,6 +94,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if self.code == 'PSEN_N1' : self.afficheListesPliees = False
 
         self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
+        self.closeAutreCommande=self.appliEficas.CONFIGURATION.closeAutreCommande
+        self.closeFrameRechercheCommande=self.appliEficas.CONFIGURATION.closeFrameRechercheCommande
         self.affiche=self.appliEficas.CONFIGURATION.affiche
         #if self.code in ['MAP','CARMELCND','PSEN'] : self.afficheCommandesPliees=False
         if self.code in ['MAP','CARMELCND'] : self.afficheCommandesPliees=False
@@ -221,6 +223,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             self.tree = browser.JDCTree( jdc_item,  self )
         self.appliEficas.construitMenu()
 
+        
         #############
         self.splitterSizes =  [320,1320,320]
         self.splitter.setSizes(self.splitterSizes)
@@ -582,6 +585,14 @@ class JDCEditor(Ui_baseWidget,QWidget):
       monRechercheDialg=DRecherche(parent=self,fl=0)
       monRechercheDialg.show()
 
+
+    #--------------------------------#
+    def handleRechercherDsCatalogue(self):
+    #-----------------------------#
+      from monRechercheCatalogue import DRechercheCatalogue
+      monRechercheDialg=DRechercheCatalogue(self.QWParent,self)
+      monRechercheDialg.show()
+
     #---------------------#
     def handleDeplier(self):
     #---------------------#
@@ -836,8 +847,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
             f.close()
             return 1
         except IOError, why:
-            QMessageBox.critical(self, tr('Sauvegarde du Fichier'),
+            if (self.appliEficas.ssIhm == False):
+                QMessageBox.critical(self, tr('Sauvegarde du Fichier'),
                 tr('Le fichier')+str(fn) + tr('n a pas pu etre sauvegarde : ') + str(why))
+            else :
+                print why
             return 0
 
     #-----------------------------------------------------------#
@@ -849,7 +863,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
          try :
-            jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.CONFIGURATION)
+            jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.CONFIGURATION,appli=self.appliEficas)
             if pourRun : jdc_formate=self.generator.textePourRun
          except ValueError,e:
             QMessageBox.critical(self, tr("Erreur a la generation"),str(e))

@@ -34,5 +34,5 @@ encoding='iso-8859-1'
 
 #
 catalogues=(
-   ('SPECA','default',os.path.join(repIni,'SPECA_Cata_V1.py'),'python','python'),
+   ('SPECA','V2016',os.path.join(repIni,'SPECA_Cata_V2016.py'),'python','python'),
 )

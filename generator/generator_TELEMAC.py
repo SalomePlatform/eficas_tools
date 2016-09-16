@@ -26,11 +26,19 @@ from Extensions.i18n import tr
 from generator_python import PythonGenerator
 
 extensions=('.comm',)
+#if 1:
 try :
-  from aideAuxConvertisseurs import listeSupprime, DicoAglomere, DicoEficasToCas
-  from enumDicoTelemac       import DicoEnumCasEnInverse
+   from enumDicoTelemac       import TelemacdicoEn
+   DicoEnumCasEnInverse={}
+   for motClef in TelemacdicoEn.keys():
+     d={}
+     for valTelemac in TelemacdicoEn[motClef].keys():
+        valEficas= TelemacdicoEn[motClef][valTelemac]
+        d[valEficas]=valTelemac
+     DicoEnumCasEnInverse[motClef]=d
+
 except :
-  pass
+ pass
 
 
 def entryPoint():
@@ -40,7 +48,7 @@ def entryPoint():
    """
    return {
         # Le nom du plugin
-          'name' : 'TELEMAC',
+          'name' : 'TELEMAC3',
         # La factory pour creer une instance du plugin
           'factory' : TELEMACGenerator,
           }
@@ -55,11 +63,20 @@ class TELEMACGenerator(PythonGenerator):
    """
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None):
+   def gener(self,obj,format='brut',config=None,appli=None):
        
       self.initDico()
-      #print self.texteDico
-      
+      # Pour Simplifier les verifs d ecriture
+      if hasattr(appli,'listeTelemac') : self.listeTelemac=appli.listeTelemac
+      else : self.listeTelemac = None
+
+      self.dicoCataToCas={}
+      self.dicoCasToCata=appli.readercata.dicoCasToCata
+      for motClef in self.dicoCasToCata.keys():
+           self.dicoCataToCas[self.dicoCasToCata[motClef]]=motClef
+
+
+
       # Cette instruction genere le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)
       return self.text
@@ -87,7 +104,7 @@ class TELEMACGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,fn) :
-       self.texteDico+='\n&ETA\n'
+       self.texteDico+='\n&ETA\n&FIN\n'
        fileDico = fn[:fn.rfind(".")] + '.py'
        f = open( str(fileDico), 'wb')
        f.write( self.texteDico )
@@ -104,43 +121,61 @@ class TELEMACGenerator(PythonGenerator):
         s=PythonGenerator.generPROC_ETAPE(self,obj)
         #print obj
         #print obj.nom
-        if obj.nom in TELEMACGenerator.__dict__.keys() : apply(TELEMACGenerator.__dict__[obj.nom],(self,obj))
+        #if obj.nom in TELEMACGenerator.__dict__.keys() : apply(TELEMACGenerator.__dict__[obj.nom],(self,obj))
         
         return s
 
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
         s=PythonGenerator.generMCSIMP(self,obj)
-        if obj.nom == "Title" :
+        #if obj.nom == "Title" :
             #print s
-            print str(obj.valeur)
+         #  print str(obj.valeur)
             #print repr(obj.valeur)
 
        
         # Attention pas sur --> ds certains cas non traite par MCFACT ?
         # a reflechir avec Yoann 
-        if hasattr(obj.definition,'defaut') :
-           if obj.definition.defaut == obj.valeur : return s
+        #if hasattr(obj.definition,'defaut') :
+        #   if obj.definition.defaut == obj.valeur : return s
+        if self.listeTelemac != None and obj.nom not in self.listeTelemac : return s
+ 
 
-        nomMajuscule=obj.nom.upper()
-        nom=nomMajuscule.replace('_',' ') 
-        if nom in listeSupprime or s == "" : return s
+        #nomMajuscule=obj.nom.upper()
+        #nom=nomMajuscule.replace('_',' ') 
+        #if nom in listeSupprime or s == "" : return s
+        if s == "" : return s
 
+       
         sTelemac=s[0:-1]
         if not( type(obj.valeur) in (types.TupleType,types.ListType) ):
            if obj.nom in DicoEnumCasEnInverse.keys():  
              try : sTelemac=str(DicoEnumCasEnInverse[obj.nom][obj.valeur])
              except : print "generMCSIMP Pb valeur avec ", obj.nom, obj.valeur
         if type(obj.valeur) in (types.TupleType,types.ListType) :
+           #print "je passe pour", obj.nom
            if obj.nom in DicoEnumCasEnInverse.keys():  
-             sT = "'"
+             #sT = "'"
+             sT=''
              for v in obj.valeur:
                try : sT +=str(DicoEnumCasEnInverse[obj.nom][v]) +";"
                except : print "generMCSIMP Pb Tuple avec ", obj.nom, v, obj.valeur
-             sTelemac=sT[0:-1]+"'"
+             #sTelemac=sT[0:-1]+"'"
+             sTelemac=sT[0:-1]
+           else  :
+             sTelemac=sTelemac[0:-1]
+             if sTelemac.find("'") > 0 :
+                sTelemac= sTelemac.replace (',',';\n	') 
 
-        if nom in DicoEficasToCas.keys() : nom=DicoEficasToCas[nom]
-        self.texteDico+=nom+ ":" + str(sTelemac) + "\n"
+
+        s1=str(sTelemac).replace('True','YES')
+        s2=s1.replace('False','NO')
+        s3=s2.replace(',',';')
+        if s3 != "" and s3[0]=='(' : 
+          try : s3=s3[1:-1] # cas de liste vide
+          except : s3 = ' '
+        nom=self.dicoCataToCas[obj.nom]
+        self.texteDico+=nom+ ":" + s3 + "\n"
         return s
 
    def generMCFACT(self,obj):

@@ -31,7 +31,7 @@ class Tuple:
 #
 #CONTEXT.debug = 1
 
-
+VERSION_CATALOGUE="2.0.0";
 
 JdC = JDC_CATA ( code = 'SPECA',
                 execmodul = None,
@@ -47,8 +47,11 @@ SPECIFICATION_ANALYSE= MACRO (nom       = 'SPECIFICATION_ANALYSE',
               fr        = "Specification des analyses",
               TYPE_ANALYSE     = SIMP(statut='o', typ='TXM',into=('STATIQUE', 'MODALE', 'HARMONIQUE', 'TRANSITOIRE', 'TRANSITOIRE_ACCIDENTEL','SYNTHESE')),
               # pour V1.1 flexion uniquement
-              TYPE_COMPORTEMENT = SIMP(statut='o', typ='TXM',into=('FLEXION'),defaut='FLEXION',fr="Renseignement du type de comportement voulu"),
-
+              TYPE_COMPORTEMENT = BLOC(condition = "TYPE_ANALYSE in ('MODALE','HARMONIQUE','STATIQUE','TRANSITOIRE','TRANSITOIRE_ACCIDENTEL','SYNTHESE')",
+                                        FLEXION = SIMP(statut='o',typ='TXM',into=('OUI',),defaut='OUI',fr="Inclure la flexion ?"),
+                                        TORSION = SIMP(statut='f',typ='TXM',into=('OUI','NON'),defaut='NON',fr="Inclure la torsion ?"),
+                                        COMPRESSION = SIMP(statut='f',typ='TXM',into=('OUI','NON'),defaut='NON',fr="Inclure la compression ?"),
+                                      ),
 ### ----- CALCUL STATIQUE ----- ##
               ANALYSE_STATIQUE = BLOC(condition = "TYPE_ANALYSE == 'STATIQUE' ",
               
@@ -121,6 +124,7 @@ SPECIFICATION_ANALYSE= MACRO (nom       = 'SPECIFICATION_ANALYSE',
 			      FREQ = SIMP(statut='o',typ='R',min=1,max=1,defaut=None,fr="Renseignement de la frequence centrale (Hz)"),
 			      NMAX_FREQ = SIMP(statut='o',typ='I',min=1,max=1,defaut=None,fr="Renseignement du nombre maximal de frequence"),
                       ), # fin CENTRE
+                      METHODE=SIMP(statut='f',typ='TXM',min=1,max=1,into=('QZ','SORENSEN'),defaut='SORENSEN',fr="Choix de la méthode de résolution"),
                       
                       POST_TRAITEMENTS = FACT(statut='o',max='**',fr="Choix du type de post-traitement",
 			      TYPE = SIMP(statut='o',typ='TXM',defaut=None,into=('TABLEAU_PARAM_MODAUX','DIAG_CAMPBELL'),),
@@ -236,6 +240,7 @@ SPECIFICATION_ANALYSE= MACRO (nom       = 'SPECIFICATION_ANALYSE',
 
 ### ----- CALCUL TRANSITOIRE ----- ##
               ANALYSE_TRANSISTOIRE = BLOC(condition = "TYPE_ANALYSE == 'TRANSITOIRE' ",fr="Analyse transitoire",
+                      POIDS = SIMP(statut='o',typ='TXM',into=('OUI','NON'),defaut='OUI',fr="Choix d'application d'un poids"),
                       VITESSE = SIMP(statut='o',typ='TXM',min=1,max=1,defaut=None,into=('CONSTANTE','VARIABLE'),fr="Renseignement du type de vitesse de rotation"),
                       BASE_C = BLOC(condition ="VITESSE == 'CONSTANTE'",
                               BASE_CALCUL = SIMP(statut='o',typ='TXM',into=('PHYSIQUE','MODALE'),defaut=None,fr="Choix de la base du calcul transitoire"),
@@ -338,6 +343,8 @@ SPECIFICATION_ANALYSE= MACRO (nom       = 'SPECIFICATION_ANALYSE',
                               MAGNITUDE = SIMP(statut='o',typ='R',min=1,max=1,defaut=None,fr="Renseignement de la magnitude de la charge balourd (en kg.m)"),
                               FONC_APPLI = SIMP(statut='o',typ='R',min=1,max='**',defaut=None,fr="Renseignement de la fonction appliquee de la charge balourd (autant de valeurs que de vitesses de rotation)"),
                               PHASE_DEG = SIMP(statut='o',typ='R',min=1,max=1,defaut=None,fr="Renseignement du decalage de la phase de la charge balourd (en degres)"),
+                              INST_APPLI= SIMP(statut='f',typ='R',min=1,max=1,defaut=0,fr="Renseigner l'instant pour déclencher le balourd"),
+                              TEMPS_MONTEE=SIMP(statut='f',typ='R',min=1,max=1,defaut=0,fr="Renseigner le temps pour la montée jusqu'à la valeur finale du balourd"),
                       ),# fin BALOURD
                       FORCE = BLOC(condition = "CHARGES == 'FORCE' ",fr="Application d'une force",
                               PARAM_FORCE = FACT(statut='o',min=1,max='**',fr="Parametres de la force",
@@ -390,6 +397,7 @@ SPECIFICATION_ANALYSE= MACRO (nom       = 'SPECIFICATION_ANALYSE',
                       LIST_INST = BLOC(condition = "PARAM_TEMPS == 'LISTE'",fr="Renseignement d'une liste de pas",
                               LISTE = SIMP(statut='o',typ='R',min=1,max='**',defaut=None,fr="Renseignement d'une liste de pas"),
                       ), # fin LIST_INST
+                      PAS_ARCHIVAGE = SIMP(statut='o',typ='I',max=1,defaut=None,fr="Renseignement du pas d'archivage",),
                       SCHEMA_TEMPS = SIMP(statut='o',typ='TXM',max=1,into=('NEWMARK','EULER','WILSON','ADAPT_ORDRE1','ADAPT_ORDRE2','DIFF_CENTRE'),defaut='NEWMARK',fr="Choix d'un schema temporel"),
                       NEWMARK = BLOC(condition = "SCHEMA_TEMPS == 'NEWMARK' ",fr="Choix de la methode de NEWMARK",
                               BETA = SIMP(statut='f',typ='R',max=1,defaut=0.25,fr="Renseignement de la valeur beta pour la methode de NEWMARK"),
@@ -437,6 +445,7 @@ SPECIFICATION_ANALYSE= MACRO (nom       = 'SPECIFICATION_ANALYSE',
 ### ----- CALCUL COUPLE CODE_ASTER/EYDOS ----- ##
               ANALYSE_TRANSITOIRE_ACCIDENTEL = BLOC(condition = "TYPE_ANALYSE == 'TRANSITOIRE_ACCIDENTEL' ",fr="Analyse transitoire accidentelle",
                       #BASE_MODALE = FACT(statut='o', fr="Choix des parametres de la base modale",	              		   
+		      POIDS = SIMP(statut='o',typ='TXM',into=('OUI','NON'),defaut='OUI',fr="Choix d'application d'un poids"),
 		      BASE_MODALE = BLOC(condition = "True", fr="Choix des parametres de la base modale",
 	                                 regles=UN_PARMI('NB_MODES','FREQ_MAX'),
                               NB_MODES = SIMP(statut='f',typ='I',min=1,max=1,defaut=None,fr="Renseignement du nombre de mode"),
@@ -460,6 +469,8 @@ SPECIFICATION_ANALYSE= MACRO (nom       = 'SPECIFICATION_ANALYSE',
                               MAGNITUDE = SIMP(statut='o',typ='R',min=1,max=1,defaut=None,fr="Renseignement de la magnitude de la charge balourd (en kg.m)"),
                               FONC_APPLI = SIMP(statut='o',typ='R',min=1,max='**',defaut=None,fr="Renseignement de la fonction appliquee de la charge balourd (autant de valeurs que de vitesses de rotation)"),
                               PHASE_DEG = SIMP(statut='o',typ='R',min=1,max=1,defaut=None,fr="Renseignement du decalage de la phase de la charge balourd (en degres)"),
+                              INST_APPLI= SIMP(statut='f',typ='R',min=1,max=1,defaut=0,fr="Renseigner l'instant pour déclencher le balourd"),
+                              TEMPS_MONTEE=SIMP(statut='f',typ='R',min=1,max=1,defaut=0,fr="Renseigner le temps pour la montée jusqu'à la valeur finale du balourd"),
                       ),# fin BALOURD
 		      # a commenter
 		      # 20121018 retrait de defaut_fn a la demande de EDF
@@ -502,6 +513,8 @@ SPECIFICATION_ANALYSE= MACRO (nom       = 'SPECIFICATION_ANALYSE',
                               #LISTE = SIMP(statut='f',typ='R',min=1,max='**',defaut=None,fr="Renseignement d'une liste de pas"),
                       #), # fin LIST_INST
                       PAS_ARCHIVAGE = SIMP(statut='o',typ='I',max=1,defaut=None,fr="Renseignement du pas d'archivage",),
+                      PARA_MEM = SIMP(statut='f',typ='I',max=1,defaut=6400,fr="Renseigner la taille de la memoire en Mo",),
+                      PARA_CPU = SIMP(statut='f',typ='I',max=1,defaut=10000,fr="Renseigner le temps CPU max en secondes",),
                       SCHEMA_TEMPS = SIMP(statut='o',typ='TXM',max=1,into=('EULER','ADAPT_ORDRE1','ADAPT_ORDRE2'),defaut='ADAPT_ORDRE2',fr="Choix d'un schema temporel"),
                       
                       ## POST_TRAITEMENTS de l'analyse transitoire

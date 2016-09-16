@@ -86,7 +86,7 @@ class PythonGenerator:
       fp.write(self.text)
       fp.close()
 
-   def gener(self,obj,format='brut',config=None):
+   def gener(self,obj,format='brut',config=None,appli=None):
       """
           Retourne une representation du JDC obj sous une
           forme qui est parametree par format.

@@ -96,6 +96,9 @@ class CONFIG_BASE:
         self.savedir = os.path.abspath('C:/')
       self.mode_nouv_commande='initial'
       self.affiche="alpha"
+      self.closeAutreCommande = False
+      self.closeFrameRechercheCommande = False
+
  
   #--------------------------------------
   def lecture_fichier_ini_standard(self):
