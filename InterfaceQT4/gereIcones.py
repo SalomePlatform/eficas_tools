@@ -314,7 +314,7 @@ class ContientIcones:
           
 
   def BSalomePressed(self):
-        self.editor.affiche_commentaire(QString(""))
+        self.editor.affiche_commentaire("")
         selection=[]
         commentaire=""
         genea=self.node.item.get_genealogie()
@@ -340,7 +340,7 @@ class ContientIcones:
                   tr("Impossibilite d exporter le Fichier"),)
                   return
            else :
-                  self.lineEditVal.setText(QString(selection))
+                  self.lineEditVal.setText(str(selection))
                   return
 
         from Accas import SalomeEntry
@@ -348,13 +348,13 @@ class ContientIcones:
            selection, commentaire = self.appliEficas.selectEntryFromSalome(kwType,editor=self.editor)
 
         if commentaire !="" :
-            self.editor.affiche_infos(QString(tr(str(commentaire))))
+            self.editor.affiche_infos(tr(str(commentaire)))
         monTexte=""
         if selection == [] : return
         for geomElt in selection:
             monTexte=geomElt+","
         monTexte= monTexte[0:-1]
-        self.lineEditVal.setText(QString(monTexte))
+        self.lineEditVal.setText(str(monTexte))
         self.LEValeurPressed()
 
   def BView2DPressed(self):
