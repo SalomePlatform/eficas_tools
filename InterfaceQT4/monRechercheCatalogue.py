@@ -46,11 +46,9 @@ class DRechercheCatalogue (Ui_desRechercheCatalogue ,QDialog):
       self.editor=editor
       self.CBRecherche.setEditable(True)
       if monEnvQT5 :
-         self.LERecherche.returnPressed.connect(self.rechercheLE)
          self.CBRecherche.lineEdit().returnPressed.connect(self.rechercheCB)
          self.CBRecherche.currentIndexChanged.connect(self.rechercheCB)
       else :
-         self.connect(self.LERecherche,SIGNAL("returnPressed()"),self.rechercheLE)
          self.connect(self.CBRecherche.lineEdit(),SIGNAL("returnPressed()"),self.rechercheCB)
          self.connect(self.CBRecherche,SIGNAL("currentIndexChanged(int)"),self.rechercheCB)
 
@@ -70,9 +68,6 @@ class DRechercheCatalogue (Ui_desRechercheCatalogue ,QDialog):
       motAChercher=self.CBRecherche.lineEdit().text()
       self.recherche(motAChercher)
 
-  def rechercheLE(self):
-      motAChercher=self.LERecherche.text()
-      self.recherche(motAChercher)
 
   def recherche(self,motAChercher):
       if str(motAChercher)=="" or str(motAChercher) == None : return

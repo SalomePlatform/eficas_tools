@@ -38,25 +38,6 @@
      <item>
       <widget class="QComboBox" name="CBRecherche"/>
      </item>
-     <item>
-      <widget class="QLineEdit" name="LERecherche">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>411</width>
-         <height>41</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background:rgb(240,240,240)</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>

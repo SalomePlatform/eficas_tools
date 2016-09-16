@@ -74,6 +74,7 @@ class Appli(Ui_Eficas,QMainWindow):
           import eficasSalome
           Accas.SalomeEntry = eficasSalome.SalomeEntry
 
+        #self.salome=1
         self.multi=multi
         self.demande=multi # specifique PSEN
         if self.multi == False :
@@ -101,6 +102,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.blEntete.insertWidget(0,self.toolBar)
         self.blEntete.insertWidget(0,self.menubar)
 
+        if self.CONFIGURATION.closeEntete==True : self.closeEntete()
 
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -279,6 +281,12 @@ class Appli(Ui_Eficas,QMainWindow):
     def enleverRechercherDsCatalogue(self):
         self.actionRechercherDsCatalogue.setVisible(False)
 
+    def connectRechercherDsCatalogue(self):
+        if monEnvQT5:
+          self.actionRechercherDsCatalogue.triggered.connect(self.handleRechercherDsCatalogue)
+        else :
+          self.connect(self.actionRechercherDsCatalogue,SIGNAL("triggered()"),self.handleRechercherDsCatalogue)
+
     def ZCRACKS(self):
         self.enleverNewInclude()
         self.toolBar.addSeparator()
@@ -291,7 +299,6 @@ class Appli(Ui_Eficas,QMainWindow):
     def ADAO(self):
         self.enleverActionsStructures()
         self.enleverNewInclude()
-        self.enleverRechercherDsCatalogue()
 
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
@@ -356,6 +363,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def TELEMAC(self):
         self.enleverActionsStructures()
         self.enleverNewInclude()
+        self.connectRechercherDsCatalogue()
 
     def ajoutHelpPSEN(self):
         self.actionParametres_Eficas.setText('Help PSEN')
@@ -759,6 +767,10 @@ class Appli(Ui_Eficas,QMainWindow):
     def handleClearRecent(self):
         self.recent = QStringList()
         self.sauveRecents()
+
+    def handleRechercherDsCatalogue(self):
+        if not self.viewmanager : return
+        self.viewmanager.handleRechercherDsCatalogue()
 
     def fileNew(self):
         try:

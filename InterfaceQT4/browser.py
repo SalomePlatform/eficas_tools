@@ -316,7 +316,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             nouvelItem=item.itemNode(self,item,itemExpand,ancien)
             self.children.append(nouvelItem)
 
-        #print "fin *********** build_children ",self,self.item, self.item.nom
+        #print "fin *********** build_children ",self,self.item, self.item.nom, self.children
 
         
     def chercheNoeudCorrespondant(self,objSimp):

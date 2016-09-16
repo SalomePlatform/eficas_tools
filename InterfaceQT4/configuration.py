@@ -98,6 +98,7 @@ class CONFIG_BASE:
       self.affiche="alpha"
       self.closeAutreCommande = False
       self.closeFrameRechercheCommande = False
+      self.closeEntete = False
 
  
   #--------------------------------------
