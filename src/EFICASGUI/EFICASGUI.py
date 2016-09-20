@@ -5,8 +5,9 @@ import os
 """
     Interface PyQt
 """
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+#from PyQt4.QtGui import *
+#from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QMessageBox
 
 import salome
 import SalomePyQt
@@ -40,14 +41,15 @@ elif not os.path.isdir(eficasRoot):
 class GUIcontext:
     # menus/toolbars/actions IDs
     EFICAS_MENU_ID = 90
-    ASTER_ID       = 941
-    OM_ID          = 942
-    MAP_ID         = 943
-    OT_STUDY_ID    = 944
-    OT_WRAPPER_ID  = 945
-    MULTICATALOG_ID = 946
-    CARMEL3D_ID    = 947
-    CARMELCND_ID    = 948
+    TELEMAC_ID       = 941
+    ADAO_ID          = 942
+    MAP_ID           = 943
+    CF_ID            = 944
+    MT_ID            = 945
+    SPECA_ID         = 946
+    SEP_ID           = 947
+    CARMEL3D_ID      = 948
+    MULTICATALOG_ID  = 949
 
     # constructor
     def __init__(self):
@@ -62,26 +64,38 @@ class GUIcontext:
         sgPyQt.createTool(a, self.tid)
 
         # create actions conditionally and fill menu and toolbar with actions
-        self.addActionConditionally("Aster/prefs.py", GUIcontext.ASTER_ID,
-                                    "Eficas pour Code_Aster",
-                                    "Editer un jeu de commande ASTER avec Eficas",
-                                    "eficaster.png")
-        self.addActionConditionally("Sep/prefs.py", GUIcontext.OM_ID,
-                                    "Eficas pour Outils Metier",
-                                    "Editer un jeu de commande Outils Metier avec Eficas",
-                                    "eficasOM.png")
+        self.addActionConditionally("Telemac3/prefs.py", GUIcontext.TELEMAC_ID,
+                                    "Eficas pour Telemac",
+                                    "Editer un .cas avec Eficas",
+                                    "eficasTelemac.png")
+        self.addActionConditionally("SEP/prefs.py", GUIcontext.SEP_ID,
+                                    "Eficas pour SEP",
+                                    "Editer un jeu de commande SEP avec Eficas",
+                                    "eficasSEP.png")
+        self.addActionConditionally("SPECA/prefs.py", GUIcontext.SPECA_ID,
+                                    "Eficas pour SPECA",
+                                    "Editer un jeu de commande SPECA avec Eficas",
+                                    "eficasSPECA.png")
+        self.addActionConditionally("CF/prefs.py", GUIcontext.CF_ID,
+                                    "Eficas pour CF",
+                                    "Editer un jeu de commande CF avec Eficas",
+                                    "eficasCF.png")
+        self.addActionConditionally("MT/prefs.py", GUIcontext.MT_ID,
+                                    "Eficas pour MT",
+                                    "Editer un jeu de commande MT avec Eficas",
+                                    "eficasMT.png")
+        self.addActionConditionally("Adao/prefs.py", GUIcontext.ADAO_ID,
+                                    "Eficas pour Adao",
+                                    "Editer un jeu de commande Adao avec Eficas",
+                                    "eficasAdao.png")
         self.addActionConditionally("MAP/prefs.py", GUIcontext.MAP_ID,
                                     "Eficas pour Map",
                                     "Editer un jeu de commande Map avec Eficas",
-                                    "plus.png")
-        self.addActionConditionally("CarmelCND/prefs.py", GUIcontext.CARMELCND_ID,
-                                    "Eficas pour CarmelCND",
-                                    "Editer un jeu de commande CarmelCND avec Eficas",
-                                    "eficasCND.png")
+                                    "eficasMAP.png")
         self.addActionConditionally("Carmel3D/prefs.py", GUIcontext.CARMEL3D_ID,
                                     "Eficas pour Carmel3D",
                                     "Editer un jeu de commande Carmel3D avec Eficas",
-                                    "eficascarmel.png")
+                                    "eficasCarmel3D.png")
 
     def addActionConditionally(self, fileToTest, commandId, menuLabel, tipLabel, icon):
         global eficasRoot
@@ -189,23 +203,28 @@ def runEficas():
    import eficasSalome
    eficasSalome.runEficas(multi=True)
    
-def runEficaspourAster():
+def runEficaspourTelemac():
    import eficasSalome
-   eficasSalome.runEficas( "ASTER" )
+   eficasSalome.runEficas( "TELEMAC" )
    
    
-def runEficaspourOpenturnsStudy():
-   print "runEficas Pour Openturns Study"
+def runEficaspourAdao():
+   print "runEficas Pour Ada"
    import eficasSalome
-   eficasSalome.runEficas( "OPENTURNS_STUDY" ) 
+   eficasSalome.runEficas( "ADAO" ) 
    
-def runEficaspourOpenturnsWrapper():
-   print "runEficas Pour Openturns Wrapper"
+def runEficaspourMT():
+   print "runEficas Pour MT"
    import eficasSalome
-   eficasSalome.runEficas( "OPENTURNS_WRAPPER" ) 
+   eficasSalome.runEficas( "MT" ) 
    
-def runEficaspourOM():
-   print "runEficas Pour Outils Metier"
+def runEficaspourSPECA():
+   print "runEficas Pour SPECA"
+   import eficasSalome
+   eficasSalome.runEficas( "SPECA" )
+   
+def runEficaspourSEP():
+   print "runEficas Pour SEP"
    import eficasSalome
    eficasSalome.runEficas( "SEP" )
    
@@ -220,10 +239,10 @@ def runEficaspourCarmel3D():
    import eficasSalome
    eficasSalome.runEficas( "CARMEL3D" )
    
-def runEficaspourCarmelCND():
-   print "runEficas Pour CarmelCND "
+def runEficaspourCF():
+   print "runEficas Pour CF "
    import eficasSalome
-   eficasSalome.runEficas( "CARMELCND" )
+   eficasSalome.runEficas( "CF" )
 
 def runEficasFichier(version=None):
    """
@@ -259,13 +278,14 @@ def runEficasFichier(version=None):
 # Partie applicative
 
 dict_command={
-                GUIcontext.ASTER_ID      : runEficaspourAster,
-                GUIcontext.OM_ID         : runEficaspourOM,
-                GUIcontext.MAP_ID        : runEficaspourMap,
-                GUIcontext.OT_STUDY_ID   : runEficaspourOpenturnsStudy,
-                GUIcontext.OT_WRAPPER_ID : runEficaspourOpenturnsWrapper,
-                GUIcontext.CARMELCND_ID   : runEficaspourCarmelCND,
-                GUIcontext.CARMEL3D_ID   : runEficaspourCarmel3D,
+                GUIcontext.TELEMAC_ID      : runEficaspourTelemac,
+                GUIcontext.ADAO_ID         : runEficaspourAdao,
+                GUIcontext.MT_ID           : runEficaspourMT,
+                GUIcontext.SPECA_ID        : runEficaspourSPECA,
+                GUIcontext.SEP_ID          : runEficaspourSEP,
+                GUIcontext.CF_ID           : runEficaspourCF,
+                GUIcontext.MAP_ID          : runEficaspourMap,
+                GUIcontext.CARMEL3D_ID     : runEficaspourCarmel3D,
                 GUIcontext.MULTICATALOG_ID : runEficas,
 
                 9041:runEficasFichier,

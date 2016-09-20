@@ -6,6 +6,7 @@ import traceback
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QApplication
 
+
 from salome.kernel.logger import Logger
 logger = Logger( "EFICAS_SRC.EFICASGUI.eficasSalome.py" )
 
@@ -52,20 +53,20 @@ class MyEficas( qtEficas.Appli ):
     a)la creation de groupes de mailles dans le composant SMESH de SALOME
     b)la visualisation d'elements geometrique dans le coposant GEOM de SALOME par selection dans EFICAS
     """
-    def __init__( self, parent, code = "ASTER", fichier = None, module = "EFICAS",
+    def __init__( self, parent, code = None, fichier = None, module = "EFICAS",
                   version = None, componentName = "Eficas",multi=False):
         """
         Constructeur.
         @type   parent: 
         @param  parent: widget Qt parent
         @type   code: string
-        @param  code: catalogue a lancer ( ASTER, HOMARD OPENTURNS ). optionnel ( defaut = ASTER ).
+        @param  code: catalogue a lancer 
         @type   fichier: string
         @param  fichier: chemin absolu du fichier eficas a ouvrir a das le lancement. optionnel
         """
 
-        dictPathCode={'ASTER':'Aster','OPENTURNS_STUDY':'Openturns_Study','CARMEL3D':'Carmel3D', 'CARMELCND':'CarmelCND',
-                      'OPENTURNS_WRAPPER':'Openturns_Wrapper','MAP':'MAP','SEP':'Sep', 'ZCRACKS':'ZCracks'}
+        dictPathCode={'ADAO':'Adao','MT':'MT','CARMEL3D':'Carmel3D', 'CF':'CF',
+                      'SPECA':'SPECA','MAP':'MAP','SEP':'SEP', 'TELEMAC':'Telemac3'}
         if code in dictPathCode.keys():
             pathCode=dictPathCode[code]
             sys.path[:0]=[os.path.join(eficasConfig.eficasPath,pathCode)]
@@ -573,31 +574,38 @@ class MyEficas( qtEficas.Appli ):
             if not atLeastOneStudy:
                 return ok, msgError
                         
-            fileType = { 'ASTER'    : "FICHIER_EFICAS_ASTER",
-                         'SEP'      : "FICHIER_EFICAS_SEP",
-                         'MAP'      : "FICHIER_EFICAS_MAP",
-                         'OPENTURNS': "FICHIER_EFICAS_OPENTURNS",
-                         'OPENTURNS_STUDY': "FICHIER_EFICAS_OPENTURNS_STUDY",
-                         'OPENTURNS_WRAPPER': "FICHIER_EFICAS_OPENTURNS_WRAPPER",
-                         'CARMEL3D': "FICHIER_EFICAS_CARMEL3D",
-                         'CARMELCND': "FICHIER_EFICAS_CARMELCND",
+            fileType = { 'TELEMAC'    : "FICHIER_EFICAS_TELEMAC",
+                         'ADAO'       : "FICHIER_EFICAS_ADAO",
+                         'SEP'        : "FICHIER_EFICAS_SEP",
+                         'SPECA'      : "FICHIER_EFICAS_SPECA",
+                         'MT'         : "FICHIER_EFICAS_MT",
+                         'CF'         : "FICHIER_EFICAS_CF",
+                         'MAP'        : "FICHIER_EFICAS_MAP",
+                         'CARMEL3D'   : "FICHIER_EFICAS_CARMEL3D",
                         }
                         
-            folderName = {  'ASTER'    :  'AsterFiles',
-                            'SEP'       : 'OMFiles' ,
-                            'CARMEL3D'  : 'CARMEL3DFiles' ,
-                            'CARMELCND'  : 'CARMELCNDFiles' ,
-                            'MAP'       : 'MapFiles' ,
-                            'OPENTURNS_STUDY': 'OpenturnsFiles',                                    
-                            'OPENTURNS_WRAPPER': 'OpenturnsFiles'}                                    
+                        
+            folderName = { 'TELEMAC'  : "TelemacFiles",
+                         'ADAO'       : "AdaoFiles",
+                         'SEP'        : "SepFiles",
+                         'SPECA'      : "SpecaFiles",
+                         'MT'         : "MTFiles",
+                         'CF'         : "CFFiles",
+                         'CARMEL3D'   : 'CARMEL3DFiles' ,
+                         'MAP'        : 'MapFiles' ,
+                        }
 
-            folderType = { 'ASTER':    "ASTER_FILE_FOLDER",
-                           'SEP':      "SEP_FILE_FOLDER",
-                           'MAP':      "MAP_FILE_FOLDER",
-                           'CARMEL3D': "CARMEL3D_FILE_FOLDER",
-                           'CARMELCND': "CARMELCND_FILE_FOLDER",
-                           'OPENTURNS_STUDY':"OPENTURNS_FILE_FOLDER",
-                           'OPENTURNS_WRAPPER': "OPENTURNS_FILE_FOLDER"}
+                        
+            folderType = { 'TELEMAC'    : "TELEMAC_FILE_FOLDER",
+                         'ADAO'       : "ADAO_FILE_FOLDER",
+                         'SEP'        : "SEP_FILE_FOLDER",
+                         'SPECA'      : "SPECA_FILE_FOLDER",
+                         'MT'         : "MT_FILE_FOLDER",
+                         'CF'         : "CF_FILE_FOLDER",
+                         'SEP'        : "SEP_FILE_FOLDER",
+                         'MAP'        : "MAP_FILE_FOLDER",
+                         'CARMEL3D'   : "CARMEL3D_FILE_FOLDER",
+                        }
 
                         
             moduleEntry = self.editor.findOrCreateComponent(self.module, self.componentName)
