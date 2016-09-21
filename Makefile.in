@@ -18,18 +18,20 @@ SUBDIRS = idl src doc
 RESOURCES_FILES = \
 EFICASCatalog.xml \
 EFICAS_en.xml     \
-eficashomard.png  \
-eficas.png	  \
-eficaster.png     \
-eficasternovice.png \
-eficascarmel.png \
-eficasCND.png \
-moins.png   \
-plus.png     \
+EFICAS_fr.xml     \
+SalomeApp.xml\
+eficasAdao.png \
+eficasCarmel3D.png \
+eficasCF.png \
+eficasMAP.png \
+eficasMT.png \
+eficas.png \
+eficasSEP.png \
+eficasSPECA.png \
+eficasTelemac.png \
+moins.png \
+plus.png \
 select1.png \
-SalomeApp.xml
-
-BIN_SCRIPT= \
 VERSION
 
 # copy header files in common directory
