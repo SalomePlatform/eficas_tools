@@ -547,14 +547,15 @@ class PythonGenerator:
             for val in obj.valeur :
                s =s +self.format_item(val,obj.etape,obj) + ','
                obj.valeurFormatee.append(self.format_item(val,obj.etape,obj))
-            if len(obj.valeur) > 1:
+            if len(obj.valeur) >= 1:
                s = '(' + s + '),'
-            if obj.valeur==[] : s="(),"
+            if obj.valeur==[] or obj.valeur==() : s="(),"
          if obj.nbrColonnes() :
             s=self.formatColonnes(obj.nbrColonnes(),obj.valeur,obj)
       else :
          obj.valeurFormatee=obj.valeur
          s=self.format_item(obj.valeur,obj.etape,obj) + ','
+      print s
       return s
 
 

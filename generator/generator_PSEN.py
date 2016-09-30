@@ -53,19 +53,20 @@ class PSENGenerator(DicoImbriqueGenerator):
    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None):
+   def gener(self,obj,format='brut',config=None, appli=None):
 
-      print "je passe dans gener"
       try :
          self.MachineDico = obj.MachineDico
          self.LoadDico = obj.LoadDico
          self.LineDico = obj.LineDico
          self.TransfoDico = obj.TransfoDico
+         self.MotorDico = obj.MotorDico
       except :
          self.MachineDico = None
          self.LoadDico = None
          self.LineDico = None
          self.TransfoDico = None
+         self.MotorDico = None
       
       self.initDico()
       # Cette instruction genere le contenu du fichier de commandes (persistance)
@@ -83,6 +84,7 @@ class PSENGenerator(DicoImbriqueGenerator):
       self.Entete += 'LoadDico = ' + str(self.LoadDico) +'\n'
       self.Entete += 'LineDico = ' + str(self.LineDico) +'\n'
       self.Entete += 'TransfoDico = ' + str(self.TransfoDico) +'\n'
+      self.Entete += 'MotorDico = ' + str(self.MotorDico) + '\n'
       self.Entete +='\n'
 
 

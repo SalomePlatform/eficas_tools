@@ -865,7 +865,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             return 0
 
     #-----------------------------------------------------------#
-    def get_text_JDC(self,format,pourRun=0,formatLigne="beautifie",appli=None):
+    def get_text_JDC(self,format,pourRun=0,formatLigne="beautifie"):
     #-----------------------------------------------------------#
       if self.code == "MAP" and not(generator.plugins.has_key(format)): format = "MAP"
       if generator.plugins.has_key(format):

@@ -85,7 +85,7 @@ class AplatGenerator:
       fp.write(self.text)
       fp.close()
 
-   def gener(self,obj,format='brut',config=None):
+   def gener(self,obj,format='brut',config=None,appli=None):
       """
           Retourne une représentation du JDC obj sous une forme qui est paramétrée par format.
           Si format vaut 'brut', 'standard' ou 'beautifie', retourne le texte issu de generator

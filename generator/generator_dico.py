@@ -49,7 +49,7 @@ class DicoGenerator(PythonGenerator):
    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None):
+   def gener(self,obj,format='brut',config=None,appli=None):
        
       self.initDico()
       

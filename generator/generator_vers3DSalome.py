@@ -88,7 +88,7 @@ class vers3DSalomeGenerator(PythonGenerator):
       self.commande = ""
       self.dict_attributs = {} 
 
-   def gener(self,node,config=None):
+   def gener(self,node,config=None,appli=None):
       """
       """
       self.node=node
