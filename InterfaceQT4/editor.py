@@ -199,7 +199,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
                 self.nouveau=1
 
         if self.jdc:
-            self.jdc.appli = self
+            self.jdc.appli = self # a resorber
+            self.jdc.editor = self 
             self.jdc.lang    = self.appli.langue
             self.jdc.aReafficher=False
             txt_exception  = None
@@ -233,7 +234,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------#  Pour execution avec output et error dans le bash
     def runPSEN(self):
     #-------------------#
-      if self.modified or self.fichier==None  : self.saveFile()
+      #if self.modified or self.fichier==None  : self.saveFile()
+      self.saveFile()
         
       #lancement avec le .bat
       path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','PSEN_Eficas','PSEN'))
@@ -251,25 +253,33 @@ class JDCEditor(Ui_baseWidget,QWidget):
       #cmd = "from run import runPSEN_N1; dico="+str(dico)
       
       #textePython=("python "+ cmd + " "+ str(dico))
-      #print textePython
       #self._viewTextExecute( textePython,"psen_run",".sh")
       if generator.plugins.has_key('dicoImbrique'):
          self.generator=generator.plugins['dicoImbrique']()
          jdc_formate=self.generator.gener(self.jdc)
          dico=self.generator.Dico 
-         from variablesPSENN1 import PSEN_N1_Variables
-         mesVariables= PSEN_N1_Variables()
-         mesVariables.raz()
-         mesVariables.setValues(dico)
-         mesVariables.imprime()
          
-      from eficas_go import getJdcParameters
-      from run import runPSEN_N1
-      res,txt_exception=runPSEN_N1(dico)
+         ###to delete
+         #fileDico =  r'C:\Logiciels DER\PSEN_V16\Code\ProcessOutputs_Eficas\TreatOutputs\dicoN1.py'
+         #f = open( str(fileDico), 'wb')
+         #f.write("Dico =" + str(dico) )
+         #f.close()
+         ###
+         
+      
+      path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','ProcessOutputs_Eficas','TreatOutputs'))
+      sys.path.append(path1)
+      from Run import run 
+      res,txt_exception=run(dico)
       if res : QMessageBox.information( self, tr("fin de script run"), txt_exception)
       else  : QMessageBox.critical( self, tr("Erreur fatale script run"), txt_exception)
        
-      
+
+    #-------------------#  Pour execution avec output et error dans le bash
+    def process_N1(self):
+    #-------------------#
+        return self.get_Dico()
+
 
     #--------------------------------#
     def _newJDC( self ,units = None):
@@ -855,7 +865,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             return 0
 
     #-----------------------------------------------------------#
-    def get_text_JDC(self,format,pourRun=0,formatLigne="beautifie"):
+    def get_text_JDC(self,format,pourRun=0,formatLigne="beautifie",appli=None):
     #-----------------------------------------------------------#
       if self.code == "MAP" and not(generator.plugins.has_key(format)): format = "MAP"
       if generator.plugins.has_key(format):
@@ -879,10 +889,23 @@ class JDCEditor(Ui_baseWidget,QWidget):
          QMessageBox.critical( self, "Format  non reconnu" ,tr("EFICAS ne sait pas convertir le JDC selon le format "+ self.format))
          return ""
 
+    #----------------------#
+    def get_Dico(self):
+    #---------------------#
+      if generator.plugins.has_key('dicoImbrique'):
+         self.generator=generator.plugins['dicoImbrique']()
+         jdc_formate=self.generator.gener(self.jdc)
+         dico=self.generator.Dico 
+         return dico
+      else : 
+         self.affiche_infos(tr("Format %s non reconnu" , self.format),Qt.red)
+         QMessageBox.critical( self, "Format  non reconnu" ,tr("EFICAS ne sait pas convertir le JDC selon le format "+ self.format))
+         return ""
+
+
     #------------#
     def run(self):
     #------------#
-      print "kkkkkkkkkk"
       fonction="run"+self.code
       print fonction
       if fonction in JDCEditor.__dict__.keys(): apply(JDCEditor.__dict__[fonction],(self,))
@@ -1301,31 +1324,43 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.tree.racine.build_children()
 
     #-------------------------------------#
-    def deleteMC(self,etape,MCFils):
+    def deleteMC(self,etape,MCFils,listeAvant=()):
     #-------------------------------------#
-        print "je passe dans deleteMC" 
-        monMC=etape.get_child(MCFils,restreint="oui")
-        if monMC != None : print etape.suppentite(monMC)
+        ouChercher=etape
+        for mot in listeAvant :
+              ouChercher=ouChercher.get_child(mot,restreint="oui")
+        monMC=ouChercher.get_child(MCFils,restreint="oui")
+        if monMC != None : print ouChercher.suppentite(monMC)
+        ouChercher.state='changed'
+        ouChercher.isvalid()
 
 
+
     #-------------------------------------#
-    def ajoutMC(self,etape,MCFils,valeurs):
+    def ajoutMC(self,etape,MCFils,valeurs,listeAvant=()):
     #-------------------------------------#
-        print "je passe dans ajoutMC" 
-        monMC=etape.get_child(MCFils,restreint="oui")
-        if monMC== None : monMC= etape.addentite(MCFils)
+        ouChercher=etape
+        for mot in listeAvant :
+              ouChercher=ouChercher.get_child(mot,restreint="oui")
+        monMC=etape.get_child(ouChercher,restreint="oui")
+        if monMC== None : monMC= ouChercher.addentite(MCFils)
         monMC.valeur=valeurs
         monMC.val=valeurs
         monMC.state='changed'
-        #print monMC.isvalid()
+        monMC.isvalid()
 
-    #-------------------------------------#
-    def changeIntoMC(self,etape,MCFils,valeurs):
-    #-------------------------------------#
-        print "je passe dans changeIntoMC" 
-        monMC=etape.get_child(MCFils,restreint="oui")
-        if monMC== None : monMC= etape.addentite(MCFils)
+    #-----------------------------------------------------------#
+    def changeIntoMC(self,etape,MCFils,valeurs, listeAvant=()):
+    #-----------------------------------------------------------#
+        ouChercher=etape
+        for mot in listeAvant :
+              ouChercher=ouChercher.get_child(mot,restreint="oui")
+        if ouChercher ==None : print 'SOUCI'; return
+        monMC=ouChercher.get_child(MCFils,restreint="oui")
+        if monMC== None : monMC= ouChercher.addentite(MCFils)
         monMC.definition.into=valeurs
+        monMC.state='changed'
+        monMC.isvalid()
 
     #-------------------------------------#
     def changeIntoDefMC(self,etape,listeMC,valeurs):
@@ -1340,17 +1375,34 @@ class JDCEditor(Ui_baseWidget,QWidget):
         mcAccas=ouChercher.entites[listeMC[-1]]
         mcAccas.into=valeurs
 
-    #-----------------------------------------#
-    def ajoutDefinitionMC(self,etape,nomDuMC,typ,**args):
-    #-----------------------------------------#
+    #-------------------------------------------------------------#
+    def deleteDefinitionMC(self,etape,listeAvant,nomDuMC):
+    #-------------------------------------------------------------#
+        #print 'in deleteDefinitionMC', etape,listeAvant,nomDuMC
         definitionEtape=getattr(self.jdc.cata[0],etape)
+        ouChercher=definitionEtape
+        for k in listeAvant : 
+            ouChercher=ouChercher.entites[k]
+        MCADetruire=ouChercher.entites[nomDuMC]
+        ouChercher.ordre_mc.remove(nomDuMC)
+        del ouChercher.entites[nomDuMC]
+
+
+    #-------------------------------------------------------------#
+    def ajoutDefinitionMC(self,etape,listeAvant,nomDuMC,typ,**args):
+    #-------------------------------------------------------------#
+        definitionEtape=getattr(self.jdc.cata[0],etape)
+        print self.jdc
+        ouChercher=definitionEtape
+        for k in listeAvant : 
+            ouChercher=ouChercher.entites[k]
         from Accas import A_SIMP
         Nouveau=A_SIMP.SIMP(typ,**args)
-        Nouveau.pere=definitionEtape
+        Nouveau.pere=ouChercher
         Nouveau.nom=nomDuMC
         Nouveau.ordre_mc=[]
-        definitionEtape.entites[nomDuMC]=Nouveau
-        definitionEtape.ordre_mc.append(nomDuMC)
+        ouChercher.entites[nomDuMC]=Nouveau
+        ouChercher.ordre_mc.append(nomDuMC)
 
     #----------------------------------------------------#
     def changeIntoMCandSet(self,etape,MCFils,into,valeurs):
@@ -1447,7 +1499,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     def _newPSEN_N1(self):
     #---------------------------#
         #texte="CASE_SELECTION() ; CONTINGENCY_OPTIONS() ; OUTPUT_OPTIONS() ; "
-        texte=""
+        texte="CASE_SELECTION() ; N_PROCESSING_OPTIONS() ; CONTINGENCY_OPTIONS() ; CONTINGENCY_SELECTION(); CONTINGENCY_PROCESSING(); "
         return texte
 
     #---------------------------#
