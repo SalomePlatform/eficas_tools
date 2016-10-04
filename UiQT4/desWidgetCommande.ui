@@ -40,7 +40,7 @@ font : 'times' 9px</string>
     <number>0</number>
    </property>
    <item>
-    <widget class="QFrame" name="frameAffichage">
+    <widget class="QWidget" name="frameAffichage" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -62,13 +62,16 @@ font : 'times' 9px</string>
      <property name="styleSheet">
       <string notr="true">background-color:rgb(224,223,222)</string>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
      <layout class="QGridLayout" name="gridLayout_2">
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>2</number>
+      </property>
       <item row="0" column="0">
        <widget class="QFrame" name="frame_2">
         <property name="sizePolicy">
@@ -131,7 +134,7 @@ font : 'times' 9px</string>
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../Editeur/icons/ast-green-ball.png</normaloff>../Editeur/icons/ast-green-ball.png</iconset>
+             <normaloff>../../../.designer/Editeur/icons/ast-green-ball.png</normaloff>../../../.designer/Editeur/icons/ast-green-ball.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -294,7 +297,7 @@ QLineEdit:disabled
              </property>
              <property name="icon">
               <iconset>
-               <normaloff>../Editeur/icons/roue.png</normaloff>../Editeur/icons/roue.png</iconset>
+               <normaloff>../../../.designer/Editeur/icons/roue.png</normaloff>../../../.designer/Editeur/icons/roue.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -351,7 +354,7 @@ QLineEdit:disabled
              </property>
              <property name="icon">
               <iconset>
-               <normaloff>../Editeur/icons/point-interrogation.png</normaloff>../Editeur/icons/point-interrogation.png</iconset>
+               <normaloff>../../../.designer/Editeur/icons/point-interrogation.png</normaloff>../../../.designer/Editeur/icons/point-interrogation.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -389,7 +392,7 @@ QLineEdit:disabled
              </property>
              <property name="icon">
               <iconset>
-               <normaloff>../Editeur/icons/lettreRblanc30.png</normaloff>../Editeur/icons/lettreRblanc30.png</iconset>
+               <normaloff>../../../.designer/Editeur/icons/lettreRblanc30.png</normaloff>../../../.designer/Editeur/icons/lettreRblanc30.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -445,7 +448,7 @@ QLineEdit:disabled
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../Editeur/icons/deleteRond.png</normaloff>../Editeur/icons/deleteRond.png</iconset>
+             <normaloff>../../../.designer/Editeur/icons/deleteRond.png</normaloff>../../../.designer/Editeur/icons/deleteRond.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -515,6 +518,9 @@ border-radius : 12px
       </item>
       <item row="1" column="1">
        <layout class="QGridLayout" name="gridLayout">
+        <property name="verticalSpacing">
+         <number>0</number>
+        </property>
         <item row="0" column="0">
          <widget class="QPushButton" name="bAvant">
           <property name="sizePolicy">
@@ -615,7 +621,7 @@ border-radius : 12px
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>18</height>
+            <height>0</height>
            </size>
           </property>
          </spacer>

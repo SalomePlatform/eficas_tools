@@ -52,8 +52,11 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       Groupe.__init__(self,node,editor,None,etape.definition,etape,1,self)
       editor.inhibeSplitter=0
 
+      self.frameAffichage.setMinimumHeight(20)
       if node.item.get_fr() != "" : self.labelDoc.setText(node.item.get_fr())
-      else : self.labelDoc.close()
+      else : 
+        self.labelDoc.close()
+        self.frameAffichage.resize(self.frameAffichage.width(),50)
       
       if (etape.get_type_produit()==None): self.LENom.close()
       elif (hasattr(etape, 'sdnom')) and etape.sdnom != "sansnom" and etape.sdnom != None: self.LENom.setText(etape.sdnom) 
