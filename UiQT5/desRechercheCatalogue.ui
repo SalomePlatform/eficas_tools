@@ -36,23 +36,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="LERecherche">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>411</width>
-         <height>41</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background:rgb(240,240,240)</string>
-       </property>
-      </widget>
+      <widget class="QComboBox" name="CBRecherche"/>
      </item>
     </layout>
    </item>
@@ -64,15 +48,12 @@
     </widget>
    </item>
    <item>
-    <widget class="QPlainTextEdit" name="teGenea">
+    <widget class="QTextEdit" name="teGenea">
      <property name="minimumSize">
       <size>
        <width>419</width>
        <height>91</height>
       </size>
-     </property>
-     <property name="plainText">
-      <string/>
      </property>
     </widget>
    </item>
@@ -86,15 +67,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QPlainTextEdit" name="teDoc">
+      <widget class="QTextEdit" name="teDoc">
        <property name="minimumSize">
         <size>
          <width>419</width>
          <height>101</height>
         </size>
-       </property>
-       <property name="plainText">
-        <string/>
        </property>
       </widget>
      </item>

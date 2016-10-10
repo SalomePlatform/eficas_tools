@@ -65,7 +65,14 @@ class READERCATA:
       self.fic_cata=None
       self.OpenCata()
       self.cataitem=None
-      if self.code=="TELEMAC": self.cree_dico_inverse()
+      self.cree_dico_inverse()
+      if self.code=="TELEMAC": self.cree_dico_CasToCata()
+      #for k in self.dicoInverse.keys():
+      #   genea= self.dicoInverse[k]
+      #   for t in genea :
+      #       print t[0]
+      #   print "\n"
+
 
    def OpenCata(self):
       """ 
@@ -329,6 +336,9 @@ class READERCATA:
         #        self.dicoAnglaisFrancais[nom]=tr(nom)
         #    self.dicoInverseFrancais[tr(k)]=listefr
         #    #print tr(k),listefr
+
+   
+   def cree_dico_CasToCata(self):
         if self.appliEficas.langue=="ang" :
            from dicoCasEnToCata import DicoCasEnToCata as dicoCasToCata
         else :

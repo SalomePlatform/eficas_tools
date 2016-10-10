@@ -21,6 +21,7 @@ from Extensions.i18n import tr
 import CONNECTOR
 import I_MCCOMPO
 import Noyau
+import string
 
 class MCFACT(I_MCCOMPO.MCCOMPO):
   def isrepetable(self):
@@ -57,6 +58,17 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
         return self.nom
     except:
       return tr("Erreur - mot cle facteur de nom : %s", self.nom)
+
+  def get_genealogie_precise(self):
+    nom=self.getlabeltext() 
+    if nom[-1]==':' : nom=nom[0:-1]
+    if self.parent:
+       l=self.parent.get_genealogie_precise()
+       l.append(string.strip(nom))
+       return l
+    else:
+       return [string.strip(nom)]
+
 
   def init_modif(self):
     """

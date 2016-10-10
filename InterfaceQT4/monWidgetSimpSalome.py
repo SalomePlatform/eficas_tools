@@ -59,3 +59,7 @@ class MonWidgetSimpSalome (Ui_WidgetSimpSalome,Feuille):
       self.setValeurs()
       self.reaffiche()
 
+
+  def setValeurs(self):
+      valeur=self.node.item.get_valeur()
+      if valeur != None : self.lineEditVal.setText(str(valeur))

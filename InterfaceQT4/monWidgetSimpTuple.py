@@ -64,11 +64,12 @@ class MonWidgetSimpTuple(Feuille):
              courant.setFocus(True)
              return 
           s=str(courant.text())
-          if self.objSimp.definition.validators.typeDesTuples[i] == "R" :
+          if hasattr(self.objSimp.definition.validators, 'typeDesTuples'):
+           if self.objSimp.definition.validators.typeDesTuples[i] == "R" :
              if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : 
                  s=s+'.0'
                  courant.setText(s)
-          if self.objSimp.definition.validators.typeDesTuples[i] == "TXM" :
+           if self.objSimp.definition.validators.typeDesTuples[i] == "TXM" :
              if s[0]!='"' and s[0] != "'": 
                 if s[-1]=="'": s="'"+s
                 else :         s='"'+s

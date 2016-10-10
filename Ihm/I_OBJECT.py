@@ -107,6 +107,14 @@ class OBJECT:
     """
     return [],[]
 
+  def get_genealogie_precise(self):
+    if self.parent:
+       l=self.parent.get_genealogie_precise()
+       l.append(string.strip(self.nom))
+       return l
+    else:
+       return [string.strip(self.nom)]
+
   def get_genealogie(self):
     """ 
         Retourne la liste des noms des ascendants (noms de MCSIMP,MCFACT,MCBLOC

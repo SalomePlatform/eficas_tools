@@ -52,6 +52,7 @@ class JDC(I_OBJECT.OBJECT):
       self._etape_context=None
       self.recorded_units={}
       self.old_recorded_units={}
+ 
 
    def get_index(self,objet):
       """
@@ -468,11 +469,11 @@ class JDC(I_OBJECT.OBJECT):
           Retourne 0 dans le cas contraire
       """
       #PN correction de bugs 
-      if etape not in self.etapes:
-         return 0
+      if etape not in self.etapes: return 0
 
       self.init_modif()
       index_etape=self.etapes.index(etape)
+
       self.etapes.remove(etape)
 
       if etape.niveau is not self:
@@ -640,6 +641,9 @@ class JDC(I_OBJECT.OBJECT):
                l = etape.get_liste_mc_inconnus()
                if l : l_mc.extend(l)
      return l_mc    
+
+   def get_genealogie_precise(self):
+      return []
 
    def get_genealogie(self):
       """
@@ -829,7 +833,6 @@ class JDC(I_OBJECT.OBJECT):
 
 #ATTENTION SURCHARGE : cette methode doit etre gardee en synchronisation avec celle de Noyau
    def supprime(self):
-      #print "supprime",self
       Noyau.N_JDC.JDC.supprime(self)
       for etape in self.etapes:
          etape.supprime()

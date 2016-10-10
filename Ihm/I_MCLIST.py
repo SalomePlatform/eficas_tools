@@ -219,6 +219,12 @@ class MCList:
     if self.parent:
       self.parent.fin_modif()
 
+  def get_genealogie_precise(self):
+     if self.parent: 
+        return self.parent.get_genealogie_precise()
+     else:
+        return []
+
   def get_genealogie(self):
      """
          Retourne la liste des noms des ascendants.

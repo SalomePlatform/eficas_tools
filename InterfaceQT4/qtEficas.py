@@ -21,7 +21,7 @@
 import os, sys
 from  determine import monEnvQT5
 if monEnvQT5 :
-  from PyQt5.QtWidgets import QApplication, QMainWindow, QBoxLayout, QMenu, QAction
+  from PyQt5.QtWidgets import QApplication, QMainWindow, QBoxLayout, QMenu, QAction, QMessageBox
   from PyQt5.QtGui import QIcon
   from PyQt5.QtCore import Qt
 else:
@@ -35,6 +35,7 @@ from myMain import Ui_Eficas
 from viewManager import MyTabview
 from getVersion import getEficasVersion
 from Editeur import session
+
 
 
 class Appli(Ui_Eficas,QMainWindow):
@@ -65,16 +66,16 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ficRecents={}
         self.mesScripts={}
         self.listeAEnlever=[]
-        self.ListeCode=['Aster','Carmel3D','Cuve2dg','Openturns_Study','Openturns_Wrapper','MAP','ZCracks', 'CarmelCND','MT','PSEN','PSEN_N1']
-        self.ListePathCode=['Aster','Carmel3D','CarmelCND','MT','PSEN_Eficas','PSEN_N1']
+        self.ListePathCode=['Adao','Carmel3D','Telemac','CF','MAP','ZCracks', 'SEP','SPECA','PSEN_Eficas','PSEN_N1']
+        self.listeCode=['Adao','Carmel3D','Telemac','CF','MAP','ZCracks', 'SEP','SPECA','PSEN_Eficas','PSEN_N1']
         self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
+
 
         if self.salome:
           import Accas
           import eficasSalome
           Accas.SalomeEntry = eficasSalome.SalomeEntry
 
-        #self.salome=1
         self.multi=multi
         self.demande=multi # specifique PSEN
         if self.multi == False :
@@ -102,7 +103,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.blEntete.insertWidget(0,self.toolBar)
         self.blEntete.insertWidget(0,self.menubar)
 
-        if self.CONFIGURATION.closeEntete==True : self.closeEntete()
+        if hasattr (self, 'CONFIGURATION') and self.CONFIGURATION.closeEntete==True : self.closeEntete()
 
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -121,7 +122,7 @@ class Appli(Ui_Eficas,QMainWindow):
         try :
           self.ouvreFichiers()
         except EficasException, exc:
-          exit()
+          if self.salome == 0 : exit()
 
 
     def closeEntete(self):
@@ -199,7 +200,7 @@ class Appli(Ui_Eficas,QMainWindow):
         ssCode=None
         code="PSEN_N1"
         self.cleanPath()
-        dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))
+        dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',"ProcessOutputs_Eficas"))
         sys.path.insert(0,dirCode)
         self.code=code
         self.definitCode(code,ssCode)
@@ -220,9 +221,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.fileNew()
 
     def ajoutN1(self):
-        self.menuN1 = self.menubar.addMenu(tr("Etude N-1"))
+        self.menuN1 = self.menubar.addMenu(tr("Process Output"))
         self.actionN1 = QAction(self)
-        self.actionN1.setText(tr("Etude N1"))
+        self.actionN1.setText(tr("Process Output"))
         self.menuN1.addAction(self.actionN1)
         if monEnvQT5 : self.actionN1.triggered.connect(self.newN1)
         else         : self.connect(self.actionN1,SIGNAL("triggered()"),self.newN1)
@@ -358,7 +359,12 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ajoutIcones()
 
     def PSEN_N1(self):
+        self.enleverActionsStructures()
+        self.enleverParametres()
+        self.enleverRechercherDsCatalogue()
+        self.enleverNewInclude()
         self.ajoutExecution()
+        self.ajoutIcones()
 
     def TELEMAC(self):
         self.enleverActionsStructures()
@@ -777,8 +783,7 @@ class Appli(Ui_Eficas,QMainWindow):
             self.viewmanager.newEditor()
         except EficasException, exc:
             msg = unicode(exc)
-            if msg != "":
-                QMessageBox.warning(self, tr(u"Erreur"), msg)
+            if msg != "": QMessageBox.warning(self, tr(u"Erreur"), msg)
 
     def fileOpen(self):
         try:

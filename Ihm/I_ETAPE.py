@@ -362,6 +362,9 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       l_noms.sort()
       return l_noms
 
+   def get_genealogie_precise(self):
+      return [self.nom]
+
    def get_genealogie(self):
       """ 
           Retourne la liste des noms des ascendants de l'objet self

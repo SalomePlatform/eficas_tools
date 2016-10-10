@@ -42,3 +42,4 @@ class MonWidgetInfo (Ui_WidgetInformative,QWidget):
         self.lineEditVal.setText(str(valeur))
         parentQt.commandesLayout.insertWidget(-1,self)
 
+        commande.listeAffichageWidget.append(self.lineEditVal)

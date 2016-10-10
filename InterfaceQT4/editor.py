@@ -126,6 +126,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.oldSizeWidgetOptionnel = 320
         self.liste_simp_reel=[]
         self.ihm="QT"
+        self.dicoNouveauxMC={}
 
         nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
@@ -269,10 +270,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
       
       path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','ProcessOutputs_Eficas','TreatOutputs'))
       sys.path.append(path1)
-      from Run import run 
-      res,txt_exception=run(dico)
-      if res : QMessageBox.information( self, tr("fin de script run"), txt_exception)
-      else  : QMessageBox.critical( self, tr("Erreur fatale script run"), txt_exception)
+      print 'in runPSEN_N1', dico
+      #from Run import run 
+      #res,txt_exception=run(dico)
+      #if res : QMessageBox.information( self, tr("fin de script run"), txt_exception)
+      #else  : QMessageBox.critical( self, tr("Erreur fatale script run"), txt_exception)
        
 
     #-------------------#  Pour execution avec output et error dans le bash
@@ -907,7 +909,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     def run(self):
     #------------#
       fonction="run"+self.code
-      print fonction
+      #print fonction
       if fonction in JDCEditor.__dict__.keys(): apply(JDCEditor.__dict__[fonction],(self,))
 
     #------------#
@@ -1129,7 +1131,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
                                  )
            return
 
-        print generator.plugins.has_key(self.format)
+        #print generator.plugins.has_key(self.format)
         if generator.plugins.has_key(self.format):
              # Le generateur existe on l'utilise
              self.generator=generator.plugins[self.format]()
@@ -1147,7 +1149,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
              self.affiche_infos(tr("Format %s non reconnu" , self.format),Qt.red)
              QMessageBox.critical( self, "Format  non reconnu" ,tr("EFICAS ne sait pas convertir le JDC selon le format "+ self.format))
              return ""
-        print "HELLO"
+        #print "HELLO"
         
 
 
@@ -1324,6 +1326,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.tree.racine.build_children()
 
     #-------------------------------------#
+    def deleteEtape(self,etape):
+    #-------------------------------------#
+        self.jdc.suppentite(etape)
+
+    #-------------------------------------#
     def deleteMC(self,etape,MCFils,listeAvant=()):
     #-------------------------------------#
         ouChercher=etape
@@ -1333,8 +1340,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if monMC != None : print ouChercher.suppentite(monMC)
         ouChercher.state='changed'
         ouChercher.isvalid()
-
-
 
     #-------------------------------------#
     def ajoutMC(self,etape,MCFils,valeurs,listeAvant=()):
@@ -1386,13 +1391,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
         MCADetruire=ouChercher.entites[nomDuMC]
         ouChercher.ordre_mc.remove(nomDuMC)
         del ouChercher.entites[nomDuMC]
+        del self.dicoNouveauxMC[nomDuMC]
 
 
     #-------------------------------------------------------------#
     def ajoutDefinitionMC(self,etape,listeAvant,nomDuMC,typ,**args):
     #-------------------------------------------------------------#
         definitionEtape=getattr(self.jdc.cata[0],etape)
-        print self.jdc
         ouChercher=definitionEtape
         for k in listeAvant : 
             ouChercher=ouChercher.entites[k]
@@ -1403,6 +1408,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
         Nouveau.ordre_mc=[]
         ouChercher.entites[nomDuMC]=Nouveau
         ouChercher.ordre_mc.append(nomDuMC)
+        self.dicoNouveauxMC[nomDuMC]=('ajoutDefinitionMC',etape,listeAvant,nomDuMC,typ,args)
+        #print self.dicoNouveauxMC
 
     #----------------------------------------------------#
     def changeIntoMCandSet(self,etape,MCFils,into,valeurs):

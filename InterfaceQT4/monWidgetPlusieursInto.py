@@ -60,7 +60,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
         self.gereIconePlier()
         self.editor.listeDesListesOuvertes.add(self.node.item)
         self.inhibe=False
-        self.finCommentaireListe()
+        #self.finCommentaireListe()
 
         if self.listeAAfficher== None or self.listeAAfficher==[] : 
             spacerItem = QSpacerItem(30, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
@@ -73,6 +73,8 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
             spacerItem2 = QSpacerItem(40, 70, QSizePolicy.Fixed, QSizePolicy.Minimum)
             self.CBLayout.addItem(spacerItem2)
 
+        if len(self.listeAAfficher) < 8 :
+           self.frameRecherche.close()
         # try except si la liste des possibles est vide
         # prevoir qqchose
         try :
@@ -130,8 +132,8 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
           self.listeAAfficher=self.node.item.get_sd_avant_du_bon_type()
        if self.listeAAfficher== None or self.listeAAfficher==[] : self.listeAAfficher=[]
 
-       if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
-       else : self.setMinimumHeight(len(self.listeAAfficher)*30)
+       #if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
+       #else : self.setMinimumHeight(len(self.listeAAfficher)*30)
 
        self.PourEtreCoche=[]
        if self.objSimp.wait_assd() : 
@@ -175,8 +177,6 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
       setattr(self,nomCB,nouveauCB)
       
 
-  def finCommentaire(self):
-        return self.finCommentaireListe() 
 
   def ajout1Valeur(self,valeur=None):
         if valeur == None : return
@@ -223,7 +223,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
       else : self.node.item.set_valeur(self.listeValeursCourantes)
 
       # Exception pour PSEN
-      if self.editor.code == 'PSEN_N1' and self.nom==('Onglets') and self.listeValeursCourantes== []: self.node.item.set_valeur([])
+      if min==0 and self.listeValeursCourantes== []: self.node.item.set_valeur([])
       self.setValide()
       self.reaffiche()
 

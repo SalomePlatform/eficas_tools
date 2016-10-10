@@ -95,7 +95,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
               self.groupCodes.addButton(bouton)
           except :
               pass
-      self.parentAppli.ListeCode=self.parentAppli.ListeCode+listeCodesIntegrateur
+      self.parentAppli.listeCode=self.parentAppli.listeCode+listeCodesIntegrateur
 
   def choisitCode(self):
       bouton=self.groupCodes.checkedButton()

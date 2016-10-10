@@ -30,6 +30,7 @@ class JDC_CATA:
   def get_docu(self):
     return
 
+
 #ATTENTION SURCHARGE: cette methode doit etre synchronisée avec celle du Noyau
   def enregistre(self,commande):
     """ 

@@ -156,6 +156,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       except:
         return val
     else :
+      if val ==() or val == [] : return val
       s='( '
       for item in val :
         try :

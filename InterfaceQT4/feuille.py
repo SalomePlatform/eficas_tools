@@ -127,7 +127,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
                commentaire=tr("Entrez ")+str(mc.min)+tr(" valeurs ")+'\n'
            else :
                if mc.max != "**" :
-                  commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")+'\n'
+                  commentaire=tr("entre ")+str(mc.min)+tr(" et ")+str(mc.max)+tr(" valeurs ")+'\n'
                else :
                   commentaire=""
         else :
