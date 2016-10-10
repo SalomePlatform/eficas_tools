@@ -134,7 +134,8 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       self.ajouteRadioButtons()
 
   def mouseDoubleClickEvent(self,event):
-      if self.editor.Classement_Commandes_Ds_Arbre!= None : self.chercheOu()
+      print self.editor.Classement_Commandes_Ds_Arbre
+      if self.editor.Classement_Commandes_Ds_Arbre!= () : self.chercheOu()
       nodeCourrant=self.node.tree.currentItem()
       if nodeCourrant==None: nodeCourrant=self.node.tree.racine
       if self.name != None :
