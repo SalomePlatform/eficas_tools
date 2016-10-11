@@ -19,7 +19,7 @@
 #
 from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets import QAction, QMenu
+    from PyQt5.QtWidgets import QAction, QMenu, QMessageBox
 else :
     from PyQt4.QtGui  import *
     from PyQt4.QtCore import *
@@ -139,6 +139,7 @@ class PopUpMenuNodeMinimal :
 
 
     def AppelleFonction(self,numero,nodeTraite=None):
+        #print "AppelleFonction", self,numero,nodeTraite
         if nodeTraite==None : nodeTraite=self.tree.currentItem()
         nomCmd=nodeTraite.item.get_nom()
         if hasattr(self.appliEficas, 'mesScripts'):
@@ -160,7 +161,6 @@ class PopUpMenuNodeMinimal :
             if hasattr(nodeTraite,p):
                listeparam.append(getattr(nodeTraite,p))
             if p=="self" : listeparam.append(self)
-            print listeparam
            
         try :
            res, commentaire= fonction(listeparam)
@@ -170,7 +170,7 @@ class PopUpMenuNodeMinimal :
                              tr(commentaire),)
 		 return
         except :
-           fonction(listeparam)
+           pass
         
 
 
