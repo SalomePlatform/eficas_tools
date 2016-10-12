@@ -37,7 +37,10 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
        return 0
 
   def isoblig(self):
-    return self.definition.statut=='o'
+    if self.definition.statut != 'o' : return 0
+    objet = self.parent.get_child(self.nom)
+    if len(objet) > 1 : return 0
+    else : return 1
 
   def getlabeltext(self):
     """
