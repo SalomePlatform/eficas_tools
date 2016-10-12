@@ -93,7 +93,8 @@ class FacultatifOuOptionnel:
 
   def setIconePoubelle(self):
       if not(hasattr(self,"RBPoubelle")):return
-      if self.node.item.object.isoblig() : 
+
+      if self.node.item.object.isoblig()  and not( hasattr(self.node.item.object,'isDeletable') ): 
          icon=QIcon(self.repIcon+"/deleteRondVide.png")
          self.RBPoubelle.setIcon(icon)
          return
@@ -300,7 +301,7 @@ class ContientIcones:
             directory = self.appliEficas.CONFIGURATION.savedir,
             options = QFileDialog.ShowDirsOnly)
 
-      if monEnvQT5 : directory=directory[0]
+      #if monEnvQT5 : directory=directory[0]
       if not (directory == "") :
          absdir = os.path.abspath(unicode(directory))
          self.appliEficas.CONFIGURATION.savedir = os.path.dirname(absdir)
@@ -349,10 +350,15 @@ class ContientIcones:
 
         if commentaire !="" :
             self.editor.affiche_infos(tr(str(commentaire)))
-        monTexte=""
         if selection == [] : return
-        for geomElt in selection:
-            monTexte=geomElt+","
+
+        min,max=self.node.item.GetMinMax()
+        if max > 1 : 
+           self.ajoutNValeur(selection)
+           return
+
+        monTexte=""
+        for geomElt in selection: monTexte=geomElt+","
         monTexte= monTexte[0:-1]
         self.lineEditVal.setText(str(monTexte))
         self.LEValeurPressed()
