@@ -48,6 +48,8 @@ class Appli(Ui_Eficas,QMainWindow):
         """
         QMainWindow.__init__(self,parent)
         Ui_Eficas.__init__(self)
+        self.setupUi(self)
+
 
         version=getEficasVersion()
         self.VERSION_EFICAS="Eficas QT4 Salome "+version
@@ -78,19 +80,23 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.multi=multi
         self.demande=multi # specifique PSEN
+
+
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
+
+
 
         if not self.salome and hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'lang') : langue=self.CONFIGURATION.lang
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
 
+        self.action_Nouveau.triggered.connect(self.fileNew)
         from Extensions import localisation
         app=QApplication
         localisation.localise(app,langue)
 
-        self.setupUi(self)
         if self.code in ['MAP',] : self.resize(1440,self.height())
         else : self.resize(1800,self.height())
 
@@ -121,7 +127,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.setWindowTitle(self.VERSION_EFICAS)
         try :
           self.ouvreFichiers()
-        except EficasException, exc:
+        #except EficasException, exc:
+        except:
+          print "je suis dans le except"
           if self.salome == 0 : exit()
 
 
@@ -156,10 +164,12 @@ class Appli(Ui_Eficas,QMainWindow):
         self.CONFIGStyle = None
         if hasattr(configuration,'make_config_style'):
            self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
-        if hasattr(prefsCode,'encoding'):
-           import sys
-           reload(sys)
-           sys.setdefaultencoding(prefsCode.encoding)
+        #PN --> pb d exception qui font planter salome
+        # plus supporte en python 3
+        #if hasattr(prefsCode,'encoding'):
+        #   import sys
+        #   reload(sys)
+        #   sys.setdefaultencoding(prefsCode.encoding)
 
     def construitMenu(self):
         self.initPatrons()
