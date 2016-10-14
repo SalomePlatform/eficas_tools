@@ -169,10 +169,11 @@ class JDCTree( QTreeWidget,GereRegles ):
 
         if (isinstance(item,composimp.Node)) and item.fenetre : item.fenetre.rendVisible()
         elif itemParent!=item:
-             #self.tree.handleExpandedItem(item)
+             self.tree.handleExpandedItem(item)
              #item.fenetre.donnePremier()
              #item.fenetre.rendActif()
              #print 'il faut afficher le 1er'
+
         try :
            fr = item.item.get_fr()
            if self.editor: self.editor.affiche_commentaire(unicode(fr))
