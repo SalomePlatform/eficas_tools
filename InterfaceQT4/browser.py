@@ -145,7 +145,7 @@ class JDCTree( QTreeWidget,GereRegles ):
 
 
     def handleOnItem(self,item,int):
-        print "je passe dans handleOnItem pour ",self, item.item.nom, item, item.item
+        #print "je passe dans handleOnItem pour ",self, item.item.nom, item, item.item
         
         from InterfaceQT4 import composimp
         self.inhibeExpand == True 
@@ -160,8 +160,8 @@ class JDCTree( QTreeWidget,GereRegles ):
               
             estUneFeuille=(isinstance(item,composimp.Node))
              # il faut afficher le parent
-            print "estUneFeuille", estUneFeuille
-            print "afficheCommandesPliees", self.editor.afficheCommandesPliees
+            #print "estUneFeuille", estUneFeuille
+            #print "afficheCommandesPliees", self.editor.afficheCommandesPliees
             if estUneFeuille                        : itemParent.affichePanneau()
             elif self.editor.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
             else                                    : itemParent.affichePanneau()
@@ -172,7 +172,7 @@ class JDCTree( QTreeWidget,GereRegles ):
              #self.tree.handleExpandedItem(item)
              #item.fenetre.donnePremier()
              #item.fenetre.rendActif()
-             print 'il faut afficher le 1er'
+             #print 'il faut afficher le 1er'
         try :
            fr = item.item.get_fr()
            if self.editor: self.editor.affiche_commentaire(unicode(fr))
@@ -623,7 +623,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
            try :
              self.fenetre.setValide()
            except :
-             print "onValid pour ", self.item.nom, self,'pb'
+            # print "onValid pour ", self.item.nom, self,'pb'
+            pass
 
         if (self.item.nom == "VARIABLE" or self.item.nom == "DISTRIBUTION") and self.item.isvalid():
            self.item.jdc.recalcule_etat_correlation()

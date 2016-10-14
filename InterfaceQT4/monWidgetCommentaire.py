@@ -54,8 +54,10 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
 
       if monEnvQT5 :
          self.commentaireTE.textChanged.connect(self.TexteCommentaireEntre)
+         #if self.editor.code in ['MAP','CARMELCND','CF'] : self.bCatalogue.close()
          if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
          else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
+         #if self.editor.code in ['Adao','MAP','CF'] :
          if self.editor.code in ['Adao','MAP'] :
                self.bAvant.close()
                self.bApres.close()
@@ -102,7 +104,6 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
 
   def TexteCommentaireEntre(self):
       texte=str(self.commentaireTE.toPlainText())
-      print texte
       self.editor.init_modif()
       self.node.item.set_valeur(texte)
       self.node.update_node_texte()

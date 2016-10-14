@@ -47,7 +47,7 @@ class LECustom(QLineEdit):
         self.dansUnTuple=False
 
  def focusInEvent(self,event):
-     print "dans focusInEvent de LECustom"
+     #print "dans focusInEvent de LECustom"
      self.parentQt.LineEditEnCours=self
      self.parentQt.NumLineEditEnCours=self.num
      self.parentQt.textSelected=self.text()
@@ -148,7 +148,7 @@ class GereListe:
        self.prepareListeResultatFiltre()
 
    def alphaPushed(self):
-       print "alphaPushed" ,self.alpha
+       #print "alphaPushed" ,self.alpha
        if self.alpha == 1 : return
        self.alpha=1
        self.prepareListeResultat()

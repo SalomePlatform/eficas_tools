@@ -44,7 +44,6 @@ else :
 class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,GereListe,GerePlie):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parent,commande):
-        print "MonWidgetPlusieursInto", nom, self
         self.nomLine="LEResultat"
         self.listeLE=[]
         self.ouAjouter=0
@@ -62,6 +61,9 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           # cas ou on ne peut rien ajouter
           pass 
         self.prepareListeResultat()
+        if len(self.listeAAfficher) < 8 : 
+           self.frameRecherche1.close()
+           self.frameRecherche2.close()
         self.adjustSize()
         if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon

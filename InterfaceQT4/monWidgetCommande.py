@@ -152,8 +152,9 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
            self.inhibe=0
            return True
          except :
-           print self.listeAffichageWidget
-           print "souci ds focusNextPrevChild"
+           pass
+           #print self.listeAffichageWidget
+           #print "souci ds focusNextPrevChild"
       if i==0 and next==False and not self.inhibe: 
          if hasattr(self.editor.fenetreCentraleAffichee,'scrollArea'):
             self.editor.fenetreCentraleAffichee.scrollArea.ensureWidgetVisible(self.listeAffichageWidget[-1])
@@ -254,11 +255,11 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
   def rendVisibleNoeud(self,node):
       self.f=node.fenetre
-      print "dans rendVisibleNoeud",self.f
+      #print "dans rendVisibleNoeud",self.f
       QTimer.singleShot(1, self.rendVisible)
      
   def rendVisible(self):
-      print "dans rendVisible",self.f
+      #print "dans rendVisible",self.f
       QApplication.processEvents()
       self.f.setFocus(7)
       self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(self.f)

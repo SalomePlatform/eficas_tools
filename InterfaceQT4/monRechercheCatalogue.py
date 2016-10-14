@@ -75,7 +75,6 @@ class DRechercheCatalogue (Ui_desRechercheCatalogue ,QDialog):
       try :
       #if 1  :
         genea= self.editor.readercata.dicoInverse[str(motAChercher)]
-        print genea
         listeGenea=[]
         for t in genea : listeGenea.append(t[0])
         listeGenea.reverse()

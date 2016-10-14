@@ -309,7 +309,8 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       if not hasattr(self.editor.readercata.cata[0],'sd_moteur') : self.editor.readercata.cata[0].sd_moteur=None
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_ligne :
          val=[]
-         for k in self.objSimp.jdc.LineDico.keys() :
+         if  hasattr(self.objSimp.jdc,'LineDico'):
+          for k in self.objSimp.jdc.LineDico.keys() :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))
@@ -318,7 +319,8 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          self.node.item.set_valeur(val)
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_generateur :
          val=[]
-         for k in self.objSimp.jdc.MachineDico.keys() :
+         if  hasattr(self.objSimp.jdc,'MachineDico'):
+          for k in self.objSimp.jdc.MachineDico.keys() :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))
@@ -327,7 +329,8 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          self.node.item.set_valeur(val)
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_transfo :
          val=[]
-         for k in self.objSimp.jdc.TransfoDico.keys() :
+         if  hasattr(self.objSimp.jdc,'TransfoDico'):
+          for k in self.objSimp.jdc.TransfoDico.keys() :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))
@@ -336,7 +339,8 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          self.node.item.set_valeur(val)
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_charge :
          val=[]
-         for k in self.objSimp.jdc.LoadDico.keys() :
+         if  hasattr(self.objSimp.jdc,'LoadDico'):
+          for k in self.objSimp.jdc.LoadDico.keys() :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))
@@ -345,7 +349,8 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          self.node.item.set_valeur(val)
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_moteur :
          val=[]
-         for k in self.objSimp.jdc.MotorDico.keys() :
+         if  hasattr(self.objSimp.jdc,'MotorDico'):
+          for k in self.objSimp.jdc.MotorDico.keys() :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))

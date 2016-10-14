@@ -440,7 +440,6 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return "ast-red-ball"
     else:
       return "ast-yel-ball"
-    print "invalide"
 
   def GetText(self):
     """

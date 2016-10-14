@@ -143,7 +143,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         try:
           self.CONFIGURATION.convert_module
-          print self.CONFIGURATION.convert_module
+          #print self.CONFIGURATION.convert_module
           _module = __import__(self.CONFIGURATION.convert_module)
           info = _module.entryPoint()
           convert.plugins.addEntryPoint(info)
@@ -298,6 +298,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if self.code == "TELEMAC" : texte=self._newTELEMAC()
         if self.code == "PSEN" : texte = self._newPSEN()
         if self.code == "PSEN_N1" : texte = self._newPSEN_N1()
+        #if self.code == "CF" : texte = self._new_CF()
         #   texte=self.newTexteCND
        
         jdc=self.readercata.cata[0].JdC( procedure =texte,
@@ -1337,7 +1338,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         for mot in listeAvant :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
         monMC=ouChercher.get_child(MCFils,restreint="oui")
-        if monMC != None : print ouChercher.suppentite(monMC)
+        if monMC != None :  ouChercher.suppentite(monMC)
         ouChercher.state='changed'
         ouChercher.isvalid()
 
@@ -1486,6 +1487,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
         a.close()
         ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
         return ligne
+
+
+    #---------------------------#
+    def _new_CF(self):
+    #---------------------------#
+        texte="CONDUITE_FORCEE();"
+        return texte
 
 
     #---------------------------#

@@ -129,7 +129,7 @@ class Appli(Ui_Eficas,QMainWindow):
           self.ouvreFichiers()
         #except EficasException, exc:
         except:
-          print "je suis dans le except"
+          #print "je suis dans le except"
           if self.salome == 0 : exit()
 
 
@@ -415,12 +415,13 @@ class Appli(Ui_Eficas,QMainWindow):
         #if Msg == None :
         #   self.viewmanager.handleAjoutGroup(listeGroup)
         #else :
-        print "il faut gerer "
+        #print "il faut gerer "
+        pass
 
 
     def ajoutIcones(self) :
         # Pour pallier les soucis de repertoire d icone
-        print self.repIcon
+        #print self.repIcon
         icon = QIcon(self.repIcon+"/new_file.png")
         self.action_Nouveau.setIcon(icon)
         icon1 = QIcon(self.repIcon+"/ouvrir.png")
@@ -503,8 +504,6 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def connecterSignaux(self) :
 
-        print QApplication.focusChanged
-        #QApplication.focusChanged.connect(self.focusChanged)
         self.recentMenu.aboutToShow.connect(self.handleShowRecentMenu)
         self.action_Nouveau.triggered.connect(self.fileNew)
         self.actionNouvel_Include.triggered.connect(self.NewInclude)
@@ -884,9 +883,6 @@ class Appli(Ui_Eficas,QMainWindow):
       res=self.fileExit()
       if res==2 : event.ignore()
 
-    def focusChanged(self,oldW, newW) :
-      print "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-      print newW
 
 if __name__=='__main__':
 

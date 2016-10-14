@@ -73,8 +73,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
             spacerItem2 = QSpacerItem(40, 70, QSizePolicy.Fixed, QSizePolicy.Minimum)
             self.CBLayout.addItem(spacerItem2)
 
-        if len(self.listeAAfficher) < 8 :
-           self.frameRecherche.close()
+        if len(self.listeAAfficher) < 8 : self.frameRecherche.close()
         # try except si la liste des possibles est vide
         # prevoir qqchose
         try :

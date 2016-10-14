@@ -61,8 +61,10 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
 
      
       if monEnvQT5 :
+         #if self.editor.code in ['MAP','CARMELCND','CF'] : self.bCatalogue.close()
          if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
          else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
+         #if self.editor.code in ['Adao','MAP','CF'] : 
          if self.editor.code in ['Adao','MAP'] : 
                self.bAvant.close()
                self.bApres.close()

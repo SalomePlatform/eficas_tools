@@ -54,6 +54,7 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
 
       self.setIconePoubelle()
       self.remplit()
+      #if self.editor.code in ['MAP','CARMELCND','CF'] : self.bCatalogue.close()
       if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
       elif monEnvQT5 : self.bCatalogue.clicked.connect(self.afficheCatalogue)
       else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
