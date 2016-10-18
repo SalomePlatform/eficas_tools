@@ -255,6 +255,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
       
       #textePython=("python "+ cmd + " "+ str(dico))
       #self._viewTextExecute( textePython,"psen_run",".sh")
+      if not(self.jdc.isvalid()):
+         QMessageBox.information( self, tr( "Unvalid JDC"),tr("incorrect keywords will be ignored"))
       if generator.plugins.has_key('dicoImbrique'):
          self.generator=generator.plugins['dicoImbrique']()
          jdc_formate=self.generator.gener(self.jdc)
@@ -1499,8 +1501,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #---------------------------#
     def _newTELEMAC(self):
     #---------------------------#
-        #texte="INITIALIZATION();BOUNDARY_CONDITIONS();GENERAL_PARAMETERS();PHYSICAL_PARAMETERS();NUMERICAL_PARAMETERS();"
-        texte=""
+        texte="INITIALIZATION();BOUNDARY_CONDITIONS();GENERAL_PARAMETERS();PHYSICAL_PARAMETERS();NUMERICAL_PARAMETERS();"
+        #texte=""
         return texte
 
     #---------------------------#

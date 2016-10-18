@@ -340,9 +340,9 @@ class READERCATA:
    
    def cree_dico_CasToCata(self):
         if self.appliEficas.langue=="ang" :
-           from dicoCasEnToCata import DicoCasEnToCata as dicoCasToCata
+           from dicoCasEnToCata import dicoCasEnToCata as dicoCasToCata
         else :
-           from dicoCasFrToCata import DicoCasFrToCata as dicoCasToCata
+           from dicoCasFrToCata import dicoCasFrToCata as dicoCasToCata
         self.dicoCasToCata=dicoCasToCata
         
         

@@ -65,6 +65,7 @@ class DicoImbriqueGenerator(PythonGenerator):
    def initDico(self) :
  
       self.Dico={}
+      self.DicoDejaLa={}
       self.Entete = ''
 
 
@@ -75,6 +76,7 @@ class DicoImbriqueGenerator(PythonGenerator):
    def writeDefault(self,fn) :
        fileDico = fn[:fn.rfind(".")] + '.py'
        f = open( str(fileDico), 'wb')
+
        f.write( self.Entete + "Dico =" + str(self.Dico) )
        f.close()
 
@@ -86,13 +88,35 @@ class DicoImbriqueGenerator(PythonGenerator):
         """recuperation de l objet MCSIMP"""
 
         s=PythonGenerator.generMCSIMP(self,obj)
-        liste=obj.get_genealogie() 
-        nom=obj.etape.nom
+        if obj.isInformation() : return s
+        if not obj.isvalid() :  return s 
+
+        liste=obj.get_genealogie_precise() 
+
+        if obj.etape.nom=='MODIFICATION_CATALOGUE' : return s
+        nom = obj.etape.nom
+        
         if hasattr(obj.etape,'sdnom') and obj.etape.sdnom != None and obj.etape.sdnom != "" : 
            nom = nom+ obj.etape.sdnom
+
         if not(self.Dico.has_key(nom)) : dicoCourant={}
         else : dicoCourant=self.Dico [nom]
-        if hasattr(obj.valeur,'nom'):dicoCourant[liste[-1]]=obj.valeur.nom
+
+        nomFeuille=liste[-1]
+        if dicoCourant.has_key(nomFeuille) or self.DicoDejaLa.has_key(nomFeuille) :
+           if self.DicoDejaLa.has_key(nomFeuille):
+              nomTravail= nomFeuille +'_'+str(self.DicoDejaLa[nomFeuille])
+              self.DicoDejaLa[nomFeuille]=self.DicoDejaLa[nomFeuille]+1
+              nomFeuille=nomTravail
+           else :
+              self.DicoDejaLa[nomFeuille]=3
+              nom1=nomFeuille +'_1'
+              dicoCourant[nom1]= dicoCourant[nomFeuille]
+              del dicoCourant[nomFeuille]
+              nomFeuille=nomFeuille +'_2'
+
+
+        if hasattr(obj.valeur,'nom'): dicoCourant[nomFeuille]=obj.valeur.nom
         else : 
            if type(obj.valeur)  in (types.ListType,types.TupleType):
               try :
@@ -103,11 +127,15 @@ class DicoImbriqueGenerator(PythonGenerator):
                     for tupleElt in obj.valeur :
                         elt=(str(tupleElt[0]),tupleElt[1])
                         val.append(elt)
-                    dicoCourant[liste[-1]]=val
-                 else :dicoCourant[liste[-1]]=obj.valeur
+                    dicoCourant[nomFeuille]=val
+                 else :
+                    dicoCourant[nomFeuille]=obj.valeur
               except :
-                 dicoCourant[liste[-1]]=obj.valeurFormatee
-           else :dicoCourant[liste[-1]]=obj.valeurFormatee
+                 dicoCourant[nomFeuille]=obj.valeurFormatee
+           #else :dicoCourant[nomFeuille]=obj.valeurFormatee
+           else :
+              dicoCourant[nomFeuille]=obj.valeurFormatee
+              print nomFeuille, obj.valeurFormatee
         self.Dico[nom]=dicoCourant
 
         return s

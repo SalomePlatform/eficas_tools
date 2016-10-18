@@ -43,7 +43,7 @@ class monButtonCustom(QCheckBox):
       self.setToolTip(tr("clicker: affichage aide, double-click: ajout"))
 
    def mouseDoubleClickEvent(self, event):
-      print "dans mouseDoubleClickEvent", self
+      #print "dans mouseDoubleClickEvent", self
       if self not in self.monOptionnel.dicoCb.keys() : 
          event.accept()
          return

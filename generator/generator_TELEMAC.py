@@ -175,7 +175,10 @@ class TELEMACGenerator(PythonGenerator):
           try : s3=s3[1:-1] # cas de liste vide
           except : s3 = ' '
         nom=self.dicoCataToCas[obj.nom]
-        self.texteDico+=nom+ ":" + s3 + "\n"
+        if nom == "VARIABLES FOR GRAPHIC PRINTOUTS" : s3=s3.replace(';',',')
+        ligne=nom+ " : " + s3 + "\n"
+        if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3) 
+        self.texteDico+=ligne
         return s
 
    def generMCFACT(self,obj):
@@ -271,3 +274,20 @@ class TELEMACGenerator(PythonGenerator):
 
       
  
+   def redecoupeLigne(self,nom,valeur) :
+       text=nom+ " : \n"
+       valeur=valeur
+       if valeur.find("'") > -1:
+          lval=valeur.split(";")
+          for v in lval : text+='   '+v+';'
+          text=text[0:-1]+'\n'
+       else :
+         lval=valeur.split(";")
+         ligne="   "
+         for v in lval :
+           if len(ligne) < 70 : ligne += str(v)+'; '
+           else :
+              text+= ligne+"\n"
+              ligne="   "+str(v)+'; '
+         text+= ligne[0:-2]+'\n'
+       return text

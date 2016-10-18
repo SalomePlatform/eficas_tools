@@ -546,7 +546,11 @@ class PythonGenerator:
             obj.valeurFormatee=[]
             for val in obj.valeur :
                s =s +self.format_item(val,obj.etape,obj) + ','
-               obj.valeurFormatee.append(self.format_item(val,obj.etape,obj))
+               if obj.wait_TXM() :
+                  obj.valeurFormatee.append(val)
+               else :
+                 obj.valeurFormatee.append(self.format_item(val,obj.etape,obj))
+               #print obj.valeurFormatee
             if len(obj.valeur) >= 1:
                s = '(' + s + '),'
             if obj.valeur==[] or obj.valeur==() : s="(),"
@@ -555,13 +559,13 @@ class PythonGenerator:
       else :
          obj.valeurFormatee=obj.valeur
          s=self.format_item(obj.valeur,obj.etape,obj) + ','
-      print s
+      #print s
       return s
 
 
    def formatColonnes(self,nbrColonnes,listeValeurs,obj):
       #try :
-      print listeValeurs
+      #print listeValeurs
       if 1 == 1 :
         indice=0
         textformat="("
@@ -584,5 +588,5 @@ class PythonGenerator:
       #except :
       else :
          textformat=str(obj.valeur)
-      print textformat
+      #print textformat
       return textformat
