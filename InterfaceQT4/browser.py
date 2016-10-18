@@ -132,23 +132,27 @@ class JDCTree( QTreeWidget,GereRegles ):
 
     def handleExpandedItem(self,item):
         #print "handleExpandedItem pour ", item.item.nom, self.inhibeExpand
+        #import traceback
+        #traceback.print_stack()
         if self.inhibeExpand == True : return
+        self.inhibeExpand = True 
         itemParent=item
         while not (hasattr (itemParent,'getPanel')) : 
            if itemParent.plie==True : itemParent.setDeplie()
            itemParent=itemParent.treeParent 
         if self.tree.node_selected != itemParent : 
              item.setExpanded(True)
+             self.inhibeExpand = False 
              return
         item.deplieToutEtReaffiche()
-        self.inhibeExpand == False 
+        self.inhibeExpand = False 
 
 
     def handleOnItem(self,item,int):
         #print "je passe dans handleOnItem pour ",self, item.item.nom, item, item.item
         
         from InterfaceQT4 import composimp
-        self.inhibeExpand == True 
+        self.inhibeExpand = True 
         self.itemCourrant=item
         itemParent=item
 
@@ -167,7 +171,7 @@ class JDCTree( QTreeWidget,GereRegles ):
             else                                    : itemParent.affichePanneau()
 
 
-        if (isinstance(item,composimp.Node)) and item.fenetre : item.fenetre.rendVisible()
+        elif (isinstance(item,composimp.Node)) and item.fenetre : item.fenetre.rendVisible()
         elif itemParent!=item:
              self.tree.handleExpandedItem(item)
              #item.fenetre.donnePremier()
@@ -180,7 +184,7 @@ class JDCTree( QTreeWidget,GereRegles ):
         except:
             pass
         item.select()
-        self.inhibeExpand == False 
+        self.inhibeExpand = False 
         #print "je mets inhibeExpand a false handleOnItem"
 
 
@@ -779,8 +783,12 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def plieToutEtReafficheSaufItem(self, itemADeplier):
         #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
+        self.inhibeExpand=True
         from InterfaceQT4 import compojdc
-        if (isinstance(self, compojdc.Node)) : self.affichePanneau(); return 
+        if (isinstance(self, compojdc.Node)) :
+            self.affichePanneau()
+            self.inhibeExpand=False
+            return 
         self.editor.deplier = False
         for item in self.children :
             # il ne faut pas plier les blocs 
@@ -790,11 +798,13 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             if item==itemADeplier : 
                   itemADeplier.setDeplie()
         self.affichePanneau()
+        self.inhibeExpand=False
 
     def plieToutEtReaffiche(self):
         #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
         from InterfaceQT4 import compojdc
         if (isinstance(self, compojdc.Node)) : self.affichePanneau(); return 
+        self.inhibeExpand=True
         self.editor.deplier = False
         for item in self.children :
             # il ne faut pas plier les blocs 
@@ -802,6 +812,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             if (isinstance(item,compobloc.Node)) : continue
             item.setPlie()
         self.affichePanneau()
+        self.inhibeExpand=True
 
     def deplieToutEtReaffiche(self):
         self.editor.deplier = True

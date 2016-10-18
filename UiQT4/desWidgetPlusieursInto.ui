@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1061</width>
-    <height>195</height>
+    <height>279</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -397,7 +397,7 @@
           <x>0</x>
           <y>0</y>
           <width>300</width>
-          <height>66</height>
+          <height>73</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
@@ -431,7 +431,7 @@
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;aaa&lt;/p&gt;&lt;p&gt;dqsklmdqm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -479,7 +479,7 @@
         <x>0</x>
         <y>0</y>
         <width>650</width>
-        <height>177</height>
+        <height>261</height>
        </rect>
       </property>
       <property name="sizePolicy">

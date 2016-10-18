@@ -92,7 +92,6 @@ class Appli(Ui_Eficas,QMainWindow):
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
 
-        self.action_Nouveau.triggered.connect(self.fileNew)
         from Extensions import localisation
         app=QApplication
         localisation.localise(app,langue)
@@ -125,12 +124,13 @@ class Appli(Ui_Eficas,QMainWindow):
         if self.code != None : self.construitMenu()
 
         self.setWindowTitle(self.VERSION_EFICAS)
-        try :
+        #try :
+        if 1 :
           self.ouvreFichiers()
         #except EficasException, exc:
-        except:
-          #print "je suis dans le except"
-          if self.salome == 0 : exit()
+        #except:
+        #  print "je suis dans le except"
+          #if self.salome == 0 : exit()
 
 
     def closeEntete(self):
