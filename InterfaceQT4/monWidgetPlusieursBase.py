@@ -209,10 +209,21 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       donneFocus=None
       derniereValeur=None
       self.listeValeursCourantes = []
-      for i in range (1, self.indexDernierLabel+1):
+      fin=self.indexDernierLabel
+      for i in range (1, fin):
           nomLineEdit="lineEditVal"+str(i)
           courant=getattr(self,nomLineEdit)
           valeur=courant.text()
+          lval=valeur.split(',')
+          if len (lval) > 1 : 
+             QMessageBox.warning(self,tr('saisie invalide'),tr('Entrer 1 valeur par ligne'))
+             courant.setText(lval[0])
+             break
+
+      for i in range (1, self.indexDernierLabel+1):
+          nomLineEdit="lineEditVal"+str(i)
+          courant=getattr(self,nomLineEdit)
+          ~/PSEN_21_10/Code/InterfaceQT4
           if valeur != None and valeur != "" : 
              commentaire=self.ajout1Valeur(valeur)
              if (commentaire != None ):
