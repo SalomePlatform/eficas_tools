@@ -223,7 +223,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       for i in range (1, self.indexDernierLabel+1):
           nomLineEdit="lineEditVal"+str(i)
           courant=getattr(self,nomLineEdit)
-          ~/PSEN_21_10/Code/InterfaceQT4
+          valeur=courant.text()
           if valeur != None and valeur != "" : 
              commentaire=self.ajout1Valeur(valeur)
              if (commentaire != None ):
