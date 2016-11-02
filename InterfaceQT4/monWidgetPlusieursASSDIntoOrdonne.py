@@ -25,6 +25,13 @@ from Extensions.i18n import tr
 from monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne 
 from politiquesValidation          import PolitiquePlusieurs
 
+from determine import monEnvQT5
+if monEnvQT5:
+    from PyQt5.QtWidgets  import  QScrollBar
+else :
+    from PyQt4.QtGui  import *
+    from PyQt4.QtCore import *
+
 
 
 class MonWidgetPlusieursASSDIntoOrdonne (MonWidgetPlusieursIntoOrdonne):

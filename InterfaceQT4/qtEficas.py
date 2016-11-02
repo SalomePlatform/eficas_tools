@@ -48,7 +48,6 @@ class Appli(Ui_Eficas,QMainWindow):
         """
         QMainWindow.__init__(self,parent)
         Ui_Eficas.__init__(self)
-        self.setupUi(self)
 
 
         version=getEficasVersion()
@@ -94,7 +93,9 @@ class Appli(Ui_Eficas,QMainWindow):
 
         from Extensions import localisation
         app=QApplication
-        localisation.localise(app,langue)
+        localisation.localise(None,langue)
+        self.setupUi(self)
+
 
         if self.code in ['MAP',] : self.resize(1440,self.height())
         else : self.resize(1800,self.height())
@@ -239,7 +240,7 @@ class Appli(Ui_Eficas,QMainWindow):
         else         : self.connect(self.actionN1,SIGNAL("triggered()"),self.newN1)
 
     def ajoutExecution(self):
-        self.menuExecution = self.menubar.addMenu(tr("Execution"))
+        self.menuExecution = self.menubar.addMenu(tr("Run"))
         self.actionExecution = QAction(self)
         if sys.platform[0:5]=="linux":
           icon6 = QIcon(self.repIcon+"/roue.png")
@@ -250,7 +251,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuExecution.addAction(self.actionExecution)
         if not(self.actionExecution in self.toolBar.actions()):
            self.toolBar.addAction(self.actionExecution)
-        self.actionExecution.setText(tr("Execution"))
+        self.actionExecution.setText(tr("Run"))
         if monEnvQT5 : self.actionExecution.triggered.connect(self.run)
         else         : self.connect(self.actionExecution,SIGNAL("triggered()"),self.run)
 

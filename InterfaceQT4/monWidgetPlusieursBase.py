@@ -216,9 +216,8 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
           valeur=courant.text()
           lval=valeur.split(',')
           if len (lval) > 1 : 
-             QMessageBox.warning(self,tr('saisie invalide'),tr('Entrer 1 valeur par ligne'))
              courant.setText(lval[0])
-             break
+             self.ajoutNValeur(lval[1:])
 
       for i in range (1, self.indexDernierLabel+1):
           nomLineEdit="lineEditVal"+str(i)
@@ -257,5 +256,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       self.reaffiche()
 
           
+  def entreListe(self,listeDeValeur,index):
+             self.entreListe(lval, i)
 
 # Avertissement quand on quitte le widget
