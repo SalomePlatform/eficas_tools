@@ -218,6 +218,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
           if len (lval) > 1 : 
              courant.setText(lval[0])
              self.ajoutNValeur(lval[1:])
+             self.listeValeursCourantes = []
 
       for i in range (1, self.indexDernierLabel+1):
           nomLineEdit="lineEditVal"+str(i)
