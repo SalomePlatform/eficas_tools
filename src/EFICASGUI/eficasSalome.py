@@ -550,10 +550,10 @@ class MyEficas( qtEficas.Appli ):
             if nbEntries < 1:
                raise Exception(self.tr(u"Veuillez selectionner une entree de l'arbre d'etude de Salome"))
             elif nbEntries > 1 :
-               raise Exception(self.tr(u"Une seule entrée doit être sélectionnée dans l'arbre d'étude de Salome"))
+               raise Exception(self.tr(u"Une seule entree doit être selectionnee dans l'arbre d'etude de Salome"))
 
             value = kwType.get_selected_value(entries[0], self.editor)
-            msg = self.tr(u"L'entree de l'arbre d'etude de Salome a ete sélectionnee")
+            msg = self.tr(u"L'entree de l'arbre d'etude de Salome a ete selectionnee")
             return [value], msg
         except Exception, e:
             QMessageBox.information(self, self.tr(u"Selection depuis Salome"), unicode(e))
@@ -648,7 +648,7 @@ class MyEficas( qtEficas.Appli ):
             msgError = "Can't add Eficas file to Salome study tree"
             logger.debug(msgError, exc_info = True)
             QMessageBox.warning(self, self.tr("Warning"),
-                                self.tr("%s. Raison:\n%s\n\n Voir la log pour plus de détails " % (msgError, exc)))
+                                self.tr("%s. Raison:\n%s\n\n Voir la log pour plus de details " % (msgError, exc)))
         return ok, msgError        
         
            
@@ -770,7 +770,7 @@ class SalomeEntry:
   functions.
   """
   
-  help_message = u"Une entrée de l'arbre d'étude de Salome est attendue"
+  help_message = u"Une entree de l'arbre d'etude de Salome est attendue"
   
   def __init__(self, entryStr):
     self._entry = entryStr
