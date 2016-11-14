@@ -58,9 +58,11 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.labelDoc.close()
         self.frameAffichage.resize(self.frameAffichage.width(),50)
       
-      if (etape.get_type_produit()==None): self.LENom.close()
-      elif (hasattr(etape, 'sdnom')) and etape.sdnom != "sansnom" and etape.sdnom != None: self.LENom.setText(etape.sdnom) 
+      #if (etape.get_type_produit()==None): self.LENom.close()
+      if not(hasattr(etape.definition,'sd_prod')) or (etape.definition.sd_prod==None): self.LENom.close()
+      elif (hasattr(etape, 'sdnom')) and etape.sdnom != "sansnom" and etape.sdnom != None: self.LENom.setText(etape.sdnom)
       else : self.LENom.setText("")
+
 
       maPolice= QFont("Times", 10,)
       self.setFont(maPolice)
@@ -285,6 +287,8 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
          icon=QIcon(self.repIcon+"/ast-red-ball.png")
       if self.node.item.GetIconName() == "ast-yellow-square" :
          icon=QIcon(self.repIcon+"/ast-yel-ball.png")
+      self.LENom.setDisabled(False)
+      if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)
       self.RBValide.setIcon(icon)
 
 
