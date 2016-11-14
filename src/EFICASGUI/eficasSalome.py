@@ -544,19 +544,19 @@ class MyEficas( qtEficas.Appli ):
         """
         try:            
             if self.editor.study._non_existent():
-               raise Exception(self.tr(u"L'étude Salome n'existe plus"))
+               raise Exception(self.tr(u"L'etude Salome n'existe plus"))
             entries = salome.sg.getAllSelected()
             nbEntries = len( entries )
             if nbEntries < 1:
-               raise Exception(self.tr(u"Veuillez sélectionner une entrée de l'arbre d'étude de Salome"))
+               raise Exception(self.tr(u"Veuillez selectionner une entree de l'arbre d'etude de Salome"))
             elif nbEntries > 1 :
                raise Exception(self.tr(u"Une seule entrée doit être sélectionnée dans l'arbre d'étude de Salome"))
 
             value = kwType.get_selected_value(entries[0], self.editor)
-            msg = self.tr(u"L'entrée de l'arbre d'étude de Salome a été sélectionnée")
+            msg = self.tr(u"L'entree de l'arbre d'etude de Salome a ete sélectionnee")
             return [value], msg
         except Exception, e:
-            QMessageBox.information(self, self.tr(u"Sélection depuis Salome"), unicode(e))
+            QMessageBox.information(self, self.tr(u"Selection depuis Salome"), unicode(e))
             return [], unicode(e)
 
         
