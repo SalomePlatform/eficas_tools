@@ -21,14 +21,17 @@
 # Modules Eficas
 
 from desSelectVal import Ui_DSelVal
-from determine import monEnvQT5
+from Extensions.i18n import tr
 
+from determine import monEnvQT5
 if monEnvQT5:
-    from PyQt5.QtWidgets import QDialog
-    from PyQt5.QtCore import QTimer
+    from PyQt5.QtWidgets import QDialog, QFileDialog
+    from PyQt5.QtCore import QTimer, Qt
+    from PyQt5.QtGui import QPalette
 else :
     from PyQt4.QtGui  import *
     from PyQt4.QtCore import *
+    from PyQt4.QtGui import QPalette
 
 class DSelVal(Ui_DSelVal,QDialog):
    def __init__(self,parent ,modal ) :
@@ -73,10 +76,9 @@ class MonSelectVal(DSelVal):
   def messageAChanger(self):
       message=self.parent.editor.sb.currentMessage()
       mapalette=self.sb.palette()
-      from PyQt4.QtGui import QPalette
-      mapalette.setColor( QPalette.WindowText, self.parent.editor.couleur )
-      self.sb.setPalette( mapalette );
-      self.sb.setText(tr(message))
+      mapalette.setColor( QPalette.Text,Qt.red )
+      self.sb.setPalette( mapalette )
+      self.sb.setText(message)
       QTimer.singleShot(3000, self.efface)
       
   def efface(self):

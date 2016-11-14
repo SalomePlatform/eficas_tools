@@ -23,7 +23,7 @@ import traceback
 
 from determine import monEnvQT5
 if monEnvQT5:
-   from PyQt5.QtWidgets import QLineEdit, QLabel
+   from PyQt5.QtWidgets import QLineEdit, QLabel, QFileDialog
    from PyQt5.QtCore    import QEvent, Qt
    from PyQt5.QtGui     import QIcon, QPalette
 else :
@@ -254,11 +254,12 @@ class GereListe:
 
 
    def selectInFile(self):
-       init=QString( self.editor.CONFIGURATION.savedir)
+       init=str( self.editor.CONFIGURATION.savedir)
        fn = QFileDialog.getOpenFileName(self.node.appliEficas,
                                          tr("Fichier de donnees"),
                                          init,
                                          tr('Tous les  Fichiers (*)',))
+       if monEnvQT5 : fn=fn[0]
        if fn == None : return
        if fn == "" : return
        ulfile = os.path.abspath(unicode(fn))
