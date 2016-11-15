@@ -192,7 +192,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         next=i+1
       except :
         next=1
-      if (next==len(self.listeAffichageWidget) -1 ): next =0
+      if (next==len(self.listeAffichageWidget) ): next =0
       #self.f=next
       #QTimer.singleShot(1, self.rendVisible)
       try :
