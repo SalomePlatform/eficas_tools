@@ -21,5 +21,9 @@ catalogues = (
 
 # lang indique la langue utilisée pour les chaines d'aide : fr ou ang
 lang='fr'
+closeAutreCommande = True
+closeFrameRechercheCommande = True
+closeEntete = True
+
 
 
