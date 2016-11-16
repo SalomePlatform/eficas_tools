@@ -196,6 +196,8 @@ def array(f,*tup,**args):
     """array de Numeric met en défaut la mécanique des parametres
        on la supprime dans ce cas. Il faut que la valeur du parametre soit bien définie
     """
+    originalMath=OriginalMath()
+    original_narray=originalMath.original_narray
     return original_narray(Eval(f),*tup,**args)
 def sin(f): return Unop('sin', f)
 def cos(f): return Unop('cos', f)
@@ -240,6 +242,7 @@ class  OriginalMath(object):
 
         #surcharge de la fonction array de Numeric pour les parametres
         original_narray=Numeric.array
+        self.original_narray=Numeric.array
         Numeric.array=array
 
         #surcharge de la fonction sin de math pour les parametres
