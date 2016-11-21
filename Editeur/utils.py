@@ -48,7 +48,7 @@ def get_rep_user(dir):
   if os.path.exists(rep_user_eficas):
     if os.path.isfile(rep_user_eficas) :
       print tr("Un fichier de nom %s existe deja : impossible de creer un repertoire de meme nom", rep_user_eficas)
-      sys.exit(0)
+      rep_user_eficas=None
   else :
     try:
       os.mkdir(rep_user_eficas)

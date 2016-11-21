@@ -86,7 +86,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
            print "dans JDC pas d appli ????????"
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
-        self.code = self.appliEficas.CONFIGURATION.code
+        self.code   = self.appliEficas.CONFIGURATION.code
 
         #self.afficheListesPliees=False
         self.afficheListesPliees=True
@@ -97,14 +97,15 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.closeAutreCommande=self.appliEficas.CONFIGURATION.closeAutreCommande
         self.closeFrameRechercheCommande=self.appliEficas.CONFIGURATION.closeFrameRechercheCommande
         self.affiche=self.appliEficas.CONFIGURATION.affiche
+        #self.taille = self.appliEficas.taille
+
         #if self.code in ['MAP','CARMELCND','PSEN'] : self.afficheCommandesPliees=False
         if self.code in ['MAP','CARMELCND'] : self.afficheCommandesPliees=False
-        if self.code in ['MAP',] : 
+        if self.code in ['MAP',]:
            self.widgetTree.close()
            self.widgetTree=None
-           self.appliEficas.resize(1440,self.appliEficas.height())
-        else :
-           self.appliEficas.resize(1800,self.appliEficas.height())
+
+      
 
         self.version_code = session.d_env.cata
 
@@ -122,8 +123,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.format =  self.appliEficas.format_fichier
 
         self.dict_reels={}
-        self.splitterSizes =  [320,1320,320]
-        self.oldSizeWidgetOptionnel = 320
         self.liste_simp_reel=[]
         self.ihm="QT"
         self.dicoNouveauxMC={}
@@ -162,11 +161,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.node_selected = []
         self.deplier = True
         self.message=''
-        if self.code in ['Adao','MAP'] : self.afficheApresInsert=True
+        if self.code in ['Adao','ADAO','MAP'] : self.afficheApresInsert=True
         else :  self.afficheApresInsert=False
         if self.code in ['TELEMAC',] : self.enteteQTree='premier'
         else : self.enteteQTree='complet'
-        if self.code in ['Adao','TELEMAC'] : self.affichePlie=True
+        if self.code in ['Adao','ADAO','TELEMAC'] : self.affichePlie=True
         else : self.affichePlie=False
 
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
@@ -227,9 +226,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         
         #############
-        self.splitterSizes =  [320,1320,320]
-        self.splitter.setSizes(self.splitterSizes)
-        self.saveSplitterSizes()
+        self.adjustSize()
 
 
     #-------------------#  Pour execution avec output et error dans le bash
@@ -1582,33 +1579,42 @@ class JDCEditor(Ui_baseWidget,QWidget):
       self.nomMaillage="A_partir_de_SMESH"
       self.openfile.close()
 
-    #-------------------------------------
-    def saveSplitterSizes(self,event=None):
-    #------------------------------------
-      if self.inhibeSplitter : return
-      if not hasattr(self,'splitter') : return
-      if self.splitterSizes[2] != 0 : self.oldSizeWidgetOptionnel = self.splitterSizes[2]
-      #print  self.splitterSizes
-      #print self.splitter.sizes()
-      # PNPNPNPN parfoir self.splitter.sizes() a une longueur de 4...
-      nbAGarder=len(self.splitter.sizes())
-      if nbAGarder > 3 : nbAGarder=3
-      for i in range(nbAGarder):
-         self.splitterSizes[i] = self.splitter.sizes()[i]
-         self.splitter.widget(i).resizeEvent=self.saveSplitterSizes
-      #print self.splitter.sizes()
+
+    #-----------------------------------------
+    def initSplitterSizes(self, nbWidget=3):
+    #-----------------------------------------
+       #print "je passe ds initSplitterSizes"
+       if nbWidget==3 :
+          if   self.code in [ 'Adao', 'ADAO', ] : self.splitterSizes=[1,1550,150]
+          elif self.code in [ 'MAP']            : self.splitterSizes=[700,300]
+          else                                  : self.splitterSizes=[300,700,300]
+          self.oldSizeWidgetOptionnel = 30
+       if nbWidget==2 :
+          if   self.code in [ 'Adao', 'ADAO', ] : self.splitterSizes=[5,1500]
+          else                                  : self.splitterSizes=[300,700]
+          self.oldSizeWidgetOptionnel = 30
+       self.splitter.setSizes(self.splitterSizes)
 
 
     #-----------------------------------------
-    def restoreSplitterSizes(self,nbWigdet=3):
+    def restoreSplitterSizes(self,nbWidget=3):
     #----------------------------------------
-      self.inhibeSplitter = 1
-      self.i+=1
+      #self.inhibeSplitter = 1
+      
+      #print 'ds restoreSplitterSizes'
+      #print self.splitterSizes
       if not(hasattr(self,'splitter')) : return
-      newSizes=self.splitterSizes[:nbWigdet]
+      if nbWidget==2 and len(self.splitterSizes) == 3 :
+         self.splitterSizes[1]+=self.splitterSizes[2]
+      newSizes=self.splitterSizes[:nbWidget]
       self.splitter.setSizes(newSizes)
-      self.inhibeSplitter = 0
+      QApplication.processEvents()
+      # seule la fentetre du milieu est necessaire
+      self.splitter.widget(1).resizeEvent=self.saveSplitterSizes
    
+    def saveSplitterSizes(self,event):
+      self.splitterSizes= self.splitter.sizes()
+
     #------------------------
     def fermeOptionnel(self):
     #------------------------
@@ -1629,11 +1635,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #------------------------
     def ajoutOptionnel(self):
     #------------------------
-      #print "ajoutOptionnel"
-      #print self.splitterSizes
-      self.splitterSizes[2] = self.oldSizeWidgetOptionnel
-      self.splitterSizes[1] = self.splitterSizes[1] - self.splitterSizes[2]
-      self.inhibeSplitter=0
+      if len(self.splitterSizes) == 2 : self.splitterSizes.append(self.oldSizeWidgetOptionnel)
+      else : self.splitterSizes[2] = self.oldSizeWidgetOptionnel # ceinture pour les close bizarres
+      #self.splitterSizes[1] = self.splitterSizes[1] - self.splitterSizes[2]
+      
       self.restoreSplitterSizes(3)
 
 

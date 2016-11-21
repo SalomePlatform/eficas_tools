@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QFrame" name="frame_2">
+    <widget class="QFrame" name="frameLabelCommande">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -96,7 +96,7 @@
         <x>0</x>
         <y>0</y>
         <width>382</width>
-        <height>223</height>
+        <height>225</height>
        </rect>
       </property>
       <property name="sizePolicy">

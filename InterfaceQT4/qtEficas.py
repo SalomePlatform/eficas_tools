@@ -30,6 +30,8 @@ else:
 
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
+from Extensions import param2
+
 
 from myMain import Ui_Eficas
 from viewManager import MyTabview
@@ -54,6 +56,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.VERSION_EFICAS="Eficas QT4 Salome "+version
         if monEnvQT5 : self.VERSION_EFICAS="Eficas QT5 Salome "
         self.salome=salome
+        self.parentMainWindow=parent
         self.ihm="QT"
         self.ssIhm=ssIhm
         self.top = self    #(pour CONFIGURATION)
@@ -67,8 +70,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ficRecents={}
         self.mesScripts={}
         self.listeAEnlever=[]
-        self.ListePathCode=['Adao','Carmel3D','Telemac','CF','MAP','ZCracks', 'SEP','SPECA','PSEN_Eficas','PSEN_N1']
-        self.listeCode=['Adao','Carmel3D','Telemac','CF','MAP','ZCracks', 'SEP','SPECA','PSEN_Eficas','PSEN_N1']
+        self.ListePathCode=['Adao','ADAO','Carmel3D','Telemac','CF','MAP','ZCracks', 'SEP','SPECA','PSEN_Eficas','PSEN_N1']
+        self.listeCode=['Adao','ADAO','Carmel3D','Telemac','CF','MAP','ZCracks', 'SEP','SPECA','PSEN_Eficas','PSEN_N1']
         self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
 
 
@@ -86,7 +89,6 @@ class Appli(Ui_Eficas,QMainWindow):
              if code==None: return
 
 
-
         if not self.salome and hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'lang') : langue=self.CONFIGURATION.lang
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
@@ -94,11 +96,16 @@ class Appli(Ui_Eficas,QMainWindow):
         from Extensions import localisation
         app=QApplication
         localisation.localise(None,langue)
-        self.setupUi(self)
 
+        self.setupUi(self)
+        #if parent != None : self.parentCentralWidget = parent.centralWidget()
+        #else              : self.parentCentralWidget = None 
+
+        if  hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'taille') : self.taille=self.CONFIGURATION.taille
+        else : self.taille=1500
 
         if self.code in ['MAP',] : self.resize(1440,self.height())
-        else : self.resize(1800,self.height())
+        else : self.resize(self.taille,self.height())
 
         icon = QIcon(self.repIcon+"/parametres.png")
         self.actionParametres.setIcon(icon)
@@ -109,10 +116,11 @@ class Appli(Ui_Eficas,QMainWindow):
         self.blEntete.insertWidget(0,self.toolBar)
         self.blEntete.insertWidget(0,self.menubar)
 
-        if hasattr (self, 'CONFIGURATION') and self.CONFIGURATION.closeEntete==True : self.closeEntete()
+        if hasattr (self, 'CONFIGURATION') and self.CONFIGURATION.closeEntete==True and self.salome: self.closeEntete()
 
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+        #self.resize(20,20)
         self.viewmanager = MyTabview(self)
         self.recentMenu=QMenu(tr('&Recents'))
         #self.menuFichier.insertMenu(self.actionOuvrir,self.recentMenu)
@@ -133,6 +141,7 @@ class Appli(Ui_Eficas,QMainWindow):
         #  print "je suis dans le except"
           #if self.salome == 0 : exit()
 
+        #self.adjustSize()
 
     def closeEntete(self):
         self.menuBar().close()

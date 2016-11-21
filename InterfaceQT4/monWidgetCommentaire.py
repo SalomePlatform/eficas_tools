@@ -58,7 +58,7 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
          if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
          else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
          #if self.editor.code in ['Adao','MAP','CF'] :
-         if self.editor.code in ['Adao','MAP'] :
+         if self.editor.code in ['Adao','MAP','ADAO'] :
                self.bAvant.close()
                self.bApres.close()
          else :
@@ -67,7 +67,7 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
       else :
          if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
          else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
-         if self.editor.code in ['Adao','MAP'] :
+         if self.editor.code in ['Adao','MAP','ADAO'] :
                self.bAvant.close()
                self.bApres.close()
          else :

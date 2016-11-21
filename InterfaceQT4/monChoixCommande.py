@@ -22,7 +22,7 @@
 from desChoixCommandes import Ui_ChoixCommandes
 from determine import monEnvQT5
 if monEnvQT5 :
-   from PyQt5.QtWidgets import QWidget, QAction ,QButtonGroup, QRadioButton, QLabel
+   from PyQt5.QtWidgets import QWidget, QAction ,QButtonGroup, QRadioButton, QLabel 
    from PyQt5.QtGui  import QIcon
    from PyQt5.QtCore import QSize
 else :
@@ -61,8 +61,6 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
           nouveauTitre=debutTitre
       self.editor.appliEficas.setWindowTitle(nouveauTitre)
 
-
-      #print self.node.tree
 
       if monEnvQT5 :
          self.RBalpha.clicked.connect(self.afficheAlpha)
@@ -111,6 +109,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
          self.RBOrdre.setChecked(True);  
          self.afficheOrdre()
       if self.editor.closeFrameRechercheCommande == True : self.frameAffichage.close()
+      self.editor.restoreSplitterSizes(2) 
 
   def afficheRegle(self):
       self.node.tree.AppelleBuildLBRegles()
@@ -134,7 +133,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       self.ajouteRadioButtons()
 
   def mouseDoubleClickEvent(self,event):
-      print self.editor.Classement_Commandes_Ds_Arbre
+      #print self.editor.Classement_Commandes_Ds_Arbre
       if self.editor.Classement_Commandes_Ds_Arbre!= () : self.chercheOu()
       nodeCourrant=self.node.tree.currentItem()
       if nodeCourrant==None: nodeCourrant=self.node.tree.racine

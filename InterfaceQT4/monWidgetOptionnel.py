@@ -40,11 +40,6 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.setupUi(self)
      self.dicoMCWidgetOptionnel={}
      self.parentQt=parentQt
-     self.parentQt.editor.splitterSizes[1]-=self.parentQt.editor.splitterSizes[2]
-     self.parentQt.editor.splitterSizes[2]=self.parentQt.editor.oldSizeWidgetOptionnel
-     if self.parentQt.editor.splitterSizes[2] == 0 : self.parentQt.editor.splitterSizes[2] = 400
-     self.parentQt.editor.restoreSplitterSizes()
-     self.show()
 
   def afficheOptionnel(self,liste,MC):
      #print "dans Optionnel ____ affiche", liste 
@@ -75,6 +70,9 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
             del self.dicoMCWidgetOptionnel[k]
 
   def titre(self,MC):
+     if self.parentCommande.node.editor.code in ['Adao','ADAO'] and self.parentCommande.node.editor.closeFrameRechercheCommande==True :
+        self.frameLabelCommande.close()
+        return
      labeltext,fonte,couleur = self.parentCommande.node.item.GetLabelText()
      l=tr(labeltext)
      li=[]

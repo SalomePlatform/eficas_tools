@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1244</width>
-    <height>652</height>
+    <height>262</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -400,6 +400,12 @@ border-radius : 12px
    </item>
    <item>
     <widget class="QScrollArea" name="scrollAreaCommandes">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
@@ -418,11 +424,11 @@ border-radius : 12px
         <x>0</x>
         <y>0</y>
         <width>1240</width>
-        <height>518</height>
+        <height>128</height>
        </rect>
       </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>

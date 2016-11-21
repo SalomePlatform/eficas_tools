@@ -15,8 +15,6 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-Creates and loads two ``QTranslator`` objects, one for pure Qt, one for Eficas,
-and installs them to a ``QApplication``.
 
 """
 
@@ -32,17 +30,6 @@ eficas_translator = QTranslator()
 
 def localise(application, locale=None,file=None ):
     """
-    localise(QApplication) -> None
-
-    Loads and installs to a ``QApplication`` two ``QTranslator``
-    objects, one for pure Qt for translating the strings 
-    available in Qt, and one or Eficas, for translating 
-    the strings specified precisely for Eficas.
-    If the Qt base translator cannot be loaded with the locale
-    specified by the user, one attempts to load Qt base 
-    translator with the system locale.
-    If no locale is specified by the user, the system locale
-    is used instead, for both Qt base and Eficas translators.
     """
     if monEnvQT5 :
        from PyQt5.QtCore import QLibraryInfo
@@ -57,39 +44,22 @@ def localise(application, locale=None,file=None ):
 
     sys_locale = QLocale.system().name()
 
-    if locale is None:
-        #locale = sys_locale
-        locale="fr"
-
-    #global qt_translator
-    #if qt_translator.load("qt_" + locale,
-    #                      QLibraryInfo.location(QLibraryInfo.TranslationsPath)):
-    #    application.installTranslator(qt_translator)
-    #elif qt_translator.load("qt_" + sys_locale,
-    #                        QLibraryInfo.location(QLibraryInfo.TranslationsPath)):
-    #    print "Qt base translator with default locale loaded!"
-    #    application.installTranslator(qt_translator)
-        # Try to load Qt base translator according to system locale.
-    #else:
-    #    print "Unable to load Qt base translator!"
+    if locale is None: locale="fr"
     
     global eficas_translator
     if locale=="ang" : locale="en"
-    #print "eficas_" + locale, monPath
+    print "eficas_" + locale, monPath
     if file != None :
-       #print 'chagrement de ', file,monPath
+       print 'chargement de ', file,monPath
        print eficas_translator.load(file,monPath)
        print QApplication.installTranslator(eficas_translator)
        return
      
-
     if eficas_translator.load("eficas_" + locale, monPath):
         QApplication.installTranslator(eficas_translator)
     else:
         print "Unable to load Eficas translator!"
        
-
-    
 
 if __name__ == "__main__":
     import sys

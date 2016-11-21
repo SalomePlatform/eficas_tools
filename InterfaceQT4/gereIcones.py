@@ -173,7 +173,7 @@ class FacultatifOuOptionnel:
             if self.obj.nom in self.dict_commandes_mesScripts.keys() :
                self.ajoutScript()
                icon=QIcon(self.repIcon+"/roue.png")
-               self.RBRun.setIcon(icon)
+               if hasattr(self,"RBRun"):self.RBRun.setIcon(icon)
                return
       if hasattr(self,"RBRun"): self.RBRun.close()
       if hasattr(self,"CBScripts"): self.CBScripts.close()

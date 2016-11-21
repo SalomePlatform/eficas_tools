@@ -26,7 +26,7 @@ import typeNode
 
 from determine import monEnvQT5
 if monEnvQT5 :
-  from PyQt5.QtWidgets import QTreeWidget , QTreeWidgetItem
+  from PyQt5.QtWidgets import QTreeWidget , QTreeWidgetItem,QApplication
   from PyQt5.QtGui import QIcon
   from PyQt5.QtCore  import Qt
 else :
@@ -78,14 +78,14 @@ class JDCTree( QTreeWidget,GereRegles ):
         self.inhibeExpand=False
         #print "self.editor.afficheCommandesPliees", self.editor.afficheCommandesPliees
         if self.racine.children !=[] :  
-
-            
+           self.editor.initSplitterSizes(3)
            if self.editor.afficheCommandesPliees : self.racine.children[0].plieToutEtReaffiche()
            else : self.racine.children[0].deplieToutEtReaffiche()
-        
-
            self.racine.children[0].fenetre.donnePremier()
-        else : self.racine.affichePanneau()
+        else : 
+          self.editor.initSplitterSizes(2)
+          self.racine.affichePanneau()
+          #print self.editor.splitter.sizes()
         #PNPNPN
         #pdb.set_trace()
 
@@ -332,7 +332,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
 
     def affichePanneau(self) :
-        #if self.item.isactif(): 
         #if self.editor.code == 'ASTER' and not(self.item.isactif()) : 
         # posera des pb si un code decide d appeler FIN un mot clef
         # on resoudera a ce moment la
@@ -347,16 +346,14 @@ class JDCNode(QTreeWidgetItem,GereRegles):
               itemParent.affichePanneau()
               return
            self.fenetre=self.getPanel()
+           self.editor.restoreSplitterSizes()
          
-        #print "hhhhhhhhhh", self.editor.splitter.sizes()
         for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
             widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
             self.editor.widgetCentraleLayout.removeItem(widget)
         # ceinture et bretelle
         #print 'old fenetre = ',self.editor.fenetreCentraleAffichee
-        #print "iiiiiiiiiiiiiii", self.editor.splitter.sizes()
         if self.editor.fenetreCentraleAffichee != None : 
-            #print "j enleve ", self.editor.fenetreCentraleAffichee, self.editor.fenetreCentraleAffichee.node.item.nom
             self.editor.widgetCentraleLayout.removeWidget(self.editor.fenetreCentraleAffichee)
             self.editor.fenetreCentraleAffichee.setParent(None)
             self.editor.fenetreCentraleAffichee.close()
@@ -368,11 +365,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.tree.node_selected= self
 
         if self.editor.first :
-           #self.editor.splitter.setSizes((400,1400,400))
            if not(isinstance(self.fenetre,MonChoixCommande)): self.editor.first=False
         self.tree.inhibeExpand=True
         self.tree.expandItem(self)
-        #self.select()
         self.tree.inhibeExpand=False
         #print "fin de affichePanneau", self.item.nom
         #print "______________________________"
@@ -801,7 +796,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.inhibeExpand=False
 
     def plieToutEtReaffiche(self):
-        #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
         from InterfaceQT4 import compojdc
         if (isinstance(self, compojdc.Node)) : self.affichePanneau(); return 
         self.inhibeExpand=True
@@ -812,7 +806,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             if (isinstance(item,compobloc.Node)) : continue
             item.setPlie()
         self.affichePanneau()
-        self.inhibeExpand=True
 
     def deplieToutEtReaffiche(self):
         self.editor.deplier = True
@@ -919,3 +912,14 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         if node : 
            node.affichePanneau()
            node.select()
+
+    def ouvreLesNoeudsDsLArbre(self):
+        return
+        print "ds ouvreLesNoeudsDsLArbre  ", self.item.nom
+        self.inhibeExpand = True 
+        for i in range(self.childCount()):
+            self.child(i).inhibeExpand=True
+            self.child(i).setExpanded(True)
+            self.child(i).ouvreLesNoeudsDsLArbre()
+            self.child(i).inhibeExpand=False
+        self.inhibeExpand = False 

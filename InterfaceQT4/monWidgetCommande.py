@@ -68,11 +68,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.setFont(maPolice)
       self.labelNomCommande.setText(tr(self.obj.nom))
 
-      self.commandesLayout.addStretch()
-      self.commandesLayout.focusInEvent=self.focusInEvent
-      self.scrollAreaCommandes.focusInEvent=self.focusInEvent
 
-     
       if self.editor.closeFrameRechercheCommande==True : self.closeAutreCommande()
       else :
         if monEnvQT5 :
@@ -92,6 +88,9 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
             pass
          self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
    
+      if self.editor.code in ['Adao','ADAO'] and self.editor.closeFrameRechercheCommande==True  : 
+                      self.frameAffichage.close()
+
       if self.editor.code in ['CARMELCND',] : self.closeAutreCommande()
       self.racine=self.node.tree.racine
       if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)
@@ -107,17 +106,16 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       if self.editor.widgetOptionnel!= None : 
         self.monOptionnel=self.editor.widgetOptionnel
       else :
-        self.monOptionnel=MonWidgetOptionnel(self)
+        self.monOptionnel=MonWidgetOptionnel(self.editor)
         self.editor.widgetOptionnel=self.monOptionnel
-        self.editor.inhibeSplitter=1
         self.editor.splitter.addWidget(self.monOptionnel)
-        self.editor.inhibeSplitter=0
         self.editor.ajoutOptionnel()
       self.afficheOptionnel()
+      #self.editor.restoreSplitterSizes()
 
-      self.editor.restoreSplitterSizes()
       #print "fin init de widget Commande"
       
+
   def closeAutreCommande(self):
       self.bCatalogue.close()
       self.bAvant.close()
