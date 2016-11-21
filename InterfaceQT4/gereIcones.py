@@ -163,6 +163,10 @@ class FacultatifOuOptionnel:
          fichier=os.path.join(repIcon, 'minusnode.png')
          icon = QIcon(fichier)
          self.RBPlie.setIcon(icon)
+      if hasattr(self,"BVisuFichier") :
+         fichier=os.path.join(repIcon, 'visuFichier.png')
+         icon = QIcon(fichier)
+         self.BVisuFichier.setIcon(icon)
 
       
 
