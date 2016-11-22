@@ -61,9 +61,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           # cas ou on ne peut rien ajouter
           pass 
         self.prepareListeResultat()
-        if len(self.listeAAfficher) < 8 : 
-           self.frameRecherche1.close()
-           self.frameRecherche2.close()
+        if len(self.listeAAfficher) < 8 : self.frameRecherche2.close()
         self.adjustSize()
         if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon
@@ -109,7 +107,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
            courant=getattr(self,nomLE)
            courant.setText(str(self.listeAAfficher[i]))
        self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)
-       if len(self.listeAAfficher) < 25 and hasattr(self,'frameRecherche') : self.frameRecherche.close() 
+       if len(self.listeAAfficher) < 30 and hasattr(self,'frameRecherche') : self.frameRecherche.close() 
        
       
   def setValeurs(self):
