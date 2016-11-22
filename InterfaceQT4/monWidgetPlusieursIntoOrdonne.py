@@ -109,6 +109,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
            courant=getattr(self,nomLE)
            courant.setText(str(self.listeAAfficher[i]))
        self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)
+       if len(self.listeAAfficher) < 25 and hasattr(self,'frameRecherche') : self.frameRecherche.close() 
        
       
   def setValeurs(self):
