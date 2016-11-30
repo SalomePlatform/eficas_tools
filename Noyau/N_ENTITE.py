@@ -31,10 +31,14 @@ import N_OPS
 import N_VALIDATOR
 from strfunc import ufmt
 
-try:
+from determine import monEnvQT5
+if monEnvQT5:
+    stringTypes = (str, unicode)
+else :
+  try:
     from PyQt4 import QtCore
     stringTypes = (str, unicode, QtCore.QString)
-except ImportError:
+  except ImportError:
     stringTypes = (str, unicode)
 
 
