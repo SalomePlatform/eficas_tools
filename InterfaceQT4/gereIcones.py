@@ -22,7 +22,7 @@ import string,types,os,re,sys
 import traceback
 from  determine import monEnvQT5
 if monEnvQT5 :
-  from PyQt5.QtWidgets import QMessageBox, QFileDialog , QMenu
+  from PyQt5.QtWidgets import QMessageBox, QFileDialog , QMenu, QPushButton
   from PyQt5.QtGui import QIcon
   from PyQt5.QtCore import  QFileInfo,  Qt, QSize, QVariant
 
@@ -290,15 +290,19 @@ class ContientIcones:
          if (QFileInfo(fichier).suffix() in listeSuffixe ):
              self.image=fichier
              if (not hasattr(self,"BSelectInFile")):
-               self.BSelectInFile = QPushButton(self.Widget8)
-               self.BSelectInFile.setMinimumSize(QSize(140,40))
-               self.BSelectInFile.setObjectName("BSelectInFile")
-               self.gridLayout.addWidget(self.BSelectInFile,1,1,1,1)
-               self.BSelectInFile.setText(tr("Selection"))
-               if monEnvQT5 : self.BSelectInFile.clicked.connect(self.BSelectInFilePressed)
-               else : self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
+               try :
+                 self.BSelectInFile = QPushButton(self)
+                 self.BSelectInFile.setMinimumSize(QSize(140,40))
+                 self.BSelectInFile.setObjectName("BSelectInFile")
+                 self.gridLayout.addWidget(self.BSelectInFile,1,1,1,1)
+                 self.BSelectInFile.setText(tr("Selection"))
+                 if monEnvQT5 : self.BSelectInFile.clicked.connect(self.BSelectInFilePressed)
+                 else : self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
+               except :
+                pass
              else :
                self.BSelectInFile.setVisible(1)
+               
          elif hasattr(self, "BSelectInFile"):
              self.BSelectInFile.setVisible(0)
 

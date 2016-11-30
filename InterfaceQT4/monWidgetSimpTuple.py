@@ -84,7 +84,13 @@ class MonWidgetSimpTuple(Feuille):
 
       # Passage au champ suivant
       nom=aLeFocus.objectName()[11:]
-      i=nom.toInt()[0]+1
+      try :
+        i=str(nom).toInt()[0]+1
+      except :
+        try :
+          i=i+1
+        except :
+          return
       if i == self.nbValeurs +1 : i=1
       nomLineEdit="lineEditVal"+str(i)
       courant=getattr(self,nomLineEdit)
