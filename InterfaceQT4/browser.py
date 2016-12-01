@@ -456,13 +456,19 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         from InterfaceQT4 import compojdc
         if (isinstance(self.treeParent, compojdc.Node)) and not self.verifiePosition(name,pos)  : return 0
         
-        index = self.treeParent.children.index(self)
-        if   pos == 'before': index = index
-        elif pos == 'after': index = index +1
-        else:
-            print unicode(pos), tr("  n'est pas un index valide pour append_brother")
-            return 0
-        return self.treeParent.append_child(name,pos=index,plier=plier)
+        if self.treeParent != self.vraiParent :
+          index = self.vraiParent.children.index(self)
+          if   pos == 'before': index = index
+          elif pos == 'after': index = index +1
+          return self.vraiParent.append_child(name,pos=index,plier=plier)
+        else :
+          index = self.treeParent.children.index(self)
+          if   pos == 'before': index = index
+          elif pos == 'after': index = index +1
+          else:
+              print unicode(pos), tr("  n'est pas un index valide pour append_brother")
+              return 0
+          return self.treeParent.append_child(name,pos=index,plier=plier)
 
     def verifiePosition(self,name,pos,aLaRacine=False):
         if name not in self.editor.Classement_Commandes_Ds_Arbre : return True
@@ -763,6 +769,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """
         child=None
         try :
+        #if 1 :
           child = self.append_brother(objet_a_copier,pos)
         except :
            pass
