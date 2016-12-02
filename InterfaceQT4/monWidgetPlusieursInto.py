@@ -43,6 +43,7 @@ from gereListe              import GereListe
 class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+
         self.index=1
         self.alpha=0
         self.listeCB=[]
@@ -74,6 +75,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
             self.CBLayout.addItem(spacerItem2)
 
         if len(self.listeAAfficher) < 30 and hasattr(self,'frameRecherche') : self.frameRecherche.close()
+        if len(self.listeAAfficher)  == len(self.listeValeursCourantes) : self.CBCheck.setChecked(True)
         # try except si la liste des possibles est vide
         # prevoir qqchose
         try :
@@ -164,9 +166,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
       nomCB="lineEditVal"+str(index)
       if hasattr(self,nomCB) : return
       nouveauCB = QCheckBox(self.scrollArea)
-      #self.CBLayout.addWidget(nouveauCB)
       self.CBLayout.insertWidget(index-1,nouveauCB)
-      #QApplication.processEvents()
       self.listeCB.append(nouveauCB)
       nouveauCB.setText("")
       if index % 2 == 1 : nouveauCB.setStyleSheet("background:rgb(210,210,210)")
