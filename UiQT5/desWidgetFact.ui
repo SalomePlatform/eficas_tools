@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>949</width>
-    <height>49</height>
+    <height>53</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -195,7 +195,7 @@
        <item>
         <widget class="Line" name="line_4">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -241,8 +241,7 @@
          <property name="sizeConstraint">
           <enum>QLayout::SetFixedSize</enum>
          </property>
-
-        <item>
+         <item>
           <widget class="QToolButton" name="RBRun">
            <property name="minimumSize">
             <size>

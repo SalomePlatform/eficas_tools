@@ -247,11 +247,12 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------#  Pour execution avec output et error dans le bash
     def runPSEN_N1(self):
     #-------------------#
-      #cmd = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','PSEN_N1','run.py'))
-      #cmd = "from run import runPSEN_N1; dico="+str(dico)
       
-      #textePython=("python "+ cmd + " "+ str(dico))
-      #self._viewTextExecute( textePython,"psen_run",".sh")
+
+      self.saveFile()
+      path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','ProcessOutputs_Eficas','TreatOutputs'))
+      sys.path.append(path1)
+
       if not(self.jdc.isvalid()):
          QMessageBox.information( self, tr( "Unvalid JDC"),tr("incorrect keywords will be ignored"))
       if generator.plugins.has_key('dicoImbrique'):
@@ -261,25 +262,53 @@ class JDCEditor(Ui_baseWidget,QWidget):
          
          ###to delete
          #fileDico =  r'C:\Logiciels DER\PSEN_V16\Code\ProcessOutputs_Eficas\TreatOutputs\dicoN1.py'
-         #f = open( str(fileDico), 'wb')
-         #f.write("Dico =" + str(dico) )
-         #f.close()
+         fileDico =  os.path.join(path1, 'dicoN1.py') #r'C:\Logiciels DER\PSEN_V16\Code\ProcessOutputs_Eficas\TreatOutputs\dicoN1.py'
+         f = open( str(fileDico), 'wb')
+         f.write("Dico =" + str(dico) )
+         f.close()
          ###
          
       
-      path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','ProcessOutputs_Eficas','TreatOutputs'))
-      sys.path.append(path1)
       print 'in runPSEN_N1', dico
-      #from Run import run 
+      from Run import run 
+      run(dico)
       #res,txt_exception=run(dico)
       #if res : QMessageBox.information( self, tr("fin de script run"), txt_exception)
       #else  : QMessageBox.critical( self, tr("Erreur fatale script run"), txt_exception)
        
-
     #-------------------#  Pour execution avec output et error dans le bash
     def process_N1(self):
     #-------------------#
-        return self.get_Dico()
+
+      path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','ProcessOutputs_Eficas','TreatOutputs'))
+      sys.path.append(path1)
+
+
+      if generator.plugins.has_key('dicoImbrique'):
+         self.generator=generator.plugins['dicoImbrique']()
+         jdc_formate=self.generator.gener(self.jdc)
+         dico=self.get_Dico() #generator.Dico
+
+
+         for k in dico['CONTINGENCY_PROCESSING'].keys():
+             print k
+
+             if k[0:19] == 'Component_List_For_' or k[0:21] =='Contingency_List_For_' :
+                newK=k.replace('___',' ')
+                l="'"+str(newK)+"'"
+                dico['CONTINGENCY_PROCESSING'][l]=dico['CONTINGENCY_PROCESSING'][k]
+                del dico['CONTINGENCY_PROCESSING'][k]
+
+         ###to delete
+         fileDico =  os.path.join(path1, 'dicoN1_process.py')
+         f = open( str(fileDico), 'wb')
+         f.write("Dico =" + str(dico) )
+         f.close()
+         ###
+         return dico
+
+        #return self.get_Dico()
+
 
 
     #--------------------------------#
@@ -678,12 +707,12 @@ class JDCEditor(Ui_baseWidget,QWidget):
          indexNoeudOuColler=0
          pos='before'
       else :
-         #indexNoeudOuColler=noeudOuColler.treeParent.children.index(noeudOuColler)
+         indexNoeudOuColler=noeudOuColler.treeParent.children.index(noeudOuColler)
          indexNoeudOuColler=self.getTreeIndex(noeudOuColler)
 
       try :
        noeudACopier=self.QWParent.noeud_a_editer[0]
-       #indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
+       indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
        indexNoeudACopier=self.getTreeIndex(noeudACopier)
       except :
        QMessageBox.information( self, tr("Copie impossible"), tr("Aucun Objet n a ete copie ou coupe"))
@@ -692,9 +721,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if (self.QWParent.edit != "couper"):
         try:
            if noeudOuColler == self.tree.racine :
-              child=noeudOuColler.doPastePremier(noeudACopier)
+               child=noeudOuColler.doPastePremier(noeudACopier)
            else :
-              child=noeudACopier.doPaste(noeudOuColler,pos)
+               child=noeudACopier.doPaste(noeudOuColler,pos)
            if child==None or child==0:
                QMessageBox.critical( self,tr( "Copie refusee"),tr('Eficas n a pas reussi a copier l objet'))
                self.message = ''
@@ -720,7 +749,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
       # si possible on renomme l objet comme le noeud couper
 
       if (self.QWParent.edit == "couper"):
-         #try :
          if noeudACopier.treeParent.editor != noeudOuColler.treeParent.editor:
            QMessageBox.critical( self, tr("Deplacement refuse"),tr('Deplacement refuse entre 2 fichiers. Seule la copie est autorisee '))
 
@@ -1237,7 +1265,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         if self.jdc.isvalid() != 0 and hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fn)
-        if self.code=="TELEMAC" and hasattr(self.generator, "writeDefault"):
+        elif self.code=="TELEMAC" and hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fn)
 
         if self.salome :
@@ -1498,8 +1526,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #---------------------------#
     def _newTELEMAC(self):
     #---------------------------#
-        texte="INITIALIZATION();BOUNDARY_CONDITIONS();GENERAL_PARAMETERS();PHYSICAL_PARAMETERS();NUMERICAL_PARAMETERS();"
-        #texte=""
+        #texte="INITIALIZATION();BOUNDARY_CONDITIONS();GENERAL_PARAMETERS();PHYSICAL_PARAMETERS();NUMERICAL_PARAMETERS();"
+        texte="COMPUTATION_ENVIRONMENT();HYDRO();GENERAL_PARAMETERS();NUMERICAL_PARAMETERS()"
+        #texte="TRACERS();"
         return texte
 
     #---------------------------#
@@ -1512,8 +1541,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #---------------------------#
     def _newPSEN_N1(self):
     #---------------------------#
-        #texte="CASE_SELECTION() ; CONTINGENCY_OPTIONS() ; OUTPUT_OPTIONS() ; "
-        texte="CASE_SELECTION() ; N_PROCESSING_OPTIONS() ; CONTINGENCY_OPTIONS() ; CONTINGENCY_SELECTION(); CONTINGENCY_PROCESSING(); "
+        texte="CASE_SELECTION();N_PROCESSING_OPTIONS();CONTINGENCY_OPTIONS();CONTINGENCY_SELECTION();\nCONTINGENCY_PROCESSING(); "
+        texte="CONTINGENCY_SELECTION();\nCONTINGENCY_PROCESSING(); "
         return texte
 
     #---------------------------#
@@ -1587,11 +1616,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
        if nbWidget==3 :
           if   self.code in [ 'Adao', 'ADAO', ] : self.splitterSizes=[1,1550,150]
           elif self.code in [ 'MAP']            : self.splitterSizes=[700,300]
-          else                                  : self.splitterSizes=[300,700,300]
+          else                                  : self.splitterSizes=[150,800,500]
           self.oldSizeWidgetOptionnel = 30
        if nbWidget==2 :
           if   self.code in [ 'Adao', 'ADAO', ] : self.splitterSizes=[5,1500]
-          else                                  : self.splitterSizes=[300,700]
+          else                                  : self.splitterSizes=[300,1000]
           self.oldSizeWidgetOptionnel = 30
        self.splitter.setSizes(self.splitterSizes)
 

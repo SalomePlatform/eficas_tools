@@ -1,0 +1,15 @@
+doc.fr : fr
+doc.ang : ang
+statut : statut
+PlageValeur : into
+validators : validators
+doc.docu : docu
+homo : homo
+ValeurDef : defaut
+typeAttendu : typ
+min : min_occurs
+valeur_sugg : sug
+borne_inf : val_min
+portee : position
+max : max_occurs
+borne_sup : val_max

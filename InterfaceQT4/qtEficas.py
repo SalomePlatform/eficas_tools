@@ -102,7 +102,7 @@ class Appli(Ui_Eficas,QMainWindow):
         #else              : self.parentCentralWidget = None 
 
         if  hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'taille') : self.taille=self.CONFIGURATION.taille
-        else : self.taille=1500
+        else : self.taille=1700
 
         if self.code in ['MAP',] : self.resize(1440,self.height())
         else : self.resize(self.taille,self.height())
@@ -224,6 +224,7 @@ class Appli(Ui_Eficas,QMainWindow):
         sys.path.insert(0,dirCode)
         self.code=code
         self.definitCode(code,ssCode)
+        self.initRecents()
         self.multi=True
         self.demande=False
         self.fileNew()
@@ -248,8 +249,18 @@ class Appli(Ui_Eficas,QMainWindow):
         if monEnvQT5 : self.actionN1.triggered.connect(self.newN1)
         else         : self.connect(self.actionN1,SIGNAL("triggered()"),self.newN1)
 
+
+
+        if hasattr(self,'actionOpenProcess'):return
+        
+        self.actionOpenProcess = QAction(self)
+        self.actionOpenProcess.setText(tr("Open Process_Output File"))
+        self.menuN1.addAction(self.actionOpenProcess)
+        if monEnvQT5 : self.actionOpenProcess.triggered.connect(self.openProcess)
+        else         : self.connect(self.actionOpenProcess,SIGNAL("triggered()"),self.openProcess)
+
     def ajoutExecution(self):
-        self.menuExecution = self.menubar.addMenu(tr("Run"))
+        self.menuExecution = self.menubar.addMenu(tr("&Run"))
         self.actionExecution = QAction(self)
         if sys.platform[0:5]=="linux":
           icon6 = QIcon(self.repIcon+"/roue.png")
@@ -307,6 +318,16 @@ class Appli(Ui_Eficas,QMainWindow):
           self.actionRechercherDsCatalogue.triggered.connect(self.handleRechercherDsCatalogue)
         else :
           self.connect(self.actionRechercherDsCatalogue,SIGNAL("triggered()"),self.handleRechercherDsCatalogue)
+
+    def ajoutSortieLegere(self):
+        self.actionSortieLegere = QAction(self)
+        self.actionSortieLegere.setText(tr("Sortie Legere"))
+        self.menuFichier.addAction(self.actionSortieLegere)
+        if monEnvQT5:
+          self.actionSortieLegere.triggered.connect(self.handleSortieLegere)
+        else :
+          self.connect(self.actionSortieLegere,SIGNAL("triggered()"),self.handleSortieLegere)
+
 
     def ZCRACKS(self):
         self.enleverNewInclude()
@@ -390,11 +411,10 @@ class Appli(Ui_Eficas,QMainWindow):
         self.enleverActionsStructures()
         self.enleverNewInclude()
         self.connectRechercherDsCatalogue()
+        self.ajoutSortieLegere()
 
     def ajoutHelpPSEN(self):
         self.actionParametres_Eficas.setText('Help PSEN')
-#
-        #Oself.disconnect(self.actionParametres_Eficas)
         if monEnvQT5 :  self.actionParametres_Eficas.triggered.connect(self.aidePSEN)
         else  : self.connect(self.actionParametres_Eficas,SIGNAL("triggered()"),self.aidePSEN)
         
@@ -625,6 +645,8 @@ class Appli(Ui_Eficas,QMainWindow):
                idx=idx+1
 
     def initRecents(self):
+       if monEnvQT5 : self.recent =  []
+       else : self.recent =  QStringList()
        try :
            if sys.platform[0:5]=="linux" :
               rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
@@ -635,7 +657,7 @@ class Appli(Ui_Eficas,QMainWindow):
            f=open(monFichier)
            while ( index < 9) :
               ligne=f.readline()
-              if ligne != "" :
+              if ligne != "" : 
                  l=(ligne.split("\n"))[0]
                  self.recent.append(l)
               index=index+1
@@ -765,6 +787,9 @@ class Appli(Ui_Eficas,QMainWindow):
         monOption=OptionPdf(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
         monOption.show()
 
+    def handleSortieLegere(self):
+        print "coucou"
+
     def handleShowRecentMenu(self):
         """
         Private method to set up recent files menu.
@@ -803,6 +828,20 @@ class Appli(Ui_Eficas,QMainWindow):
         except EficasException, exc:
             msg = unicode(exc)
             if msg != "": QMessageBox.warning(self, tr(u"Erreur"), msg)
+
+    def openProcess(self):
+        ssCode=None
+        code="PSEN_N1"
+        self.cleanPath()
+        dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',"ProcessOutputs_Eficas"))
+        sys.path.insert(0,dirCode)
+        self.code=code
+        self.definitCode(code,ssCode)
+        self.multi=True
+        self.demande=False
+        self.initRecents()
+        self.fileOpen()
+        
 
     def fileOpen(self):
         try:

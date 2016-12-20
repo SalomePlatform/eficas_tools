@@ -304,7 +304,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       if self.objSimp.valeur != None and self.objSimp.valeur != [] : return
       if not hasattr(self.editor.readercata.cata[0],'sd_ligne') : self.editor.readercata.cata[0].sd_ligne=None
       if not hasattr(self.editor.readercata.cata[0],'sd_generateur') : self.editor.readercata.cata[0].sd_generateur=None
-      if not hasattr(self.editor.readercata.cata[0],'sd_transfo') : self.editor.readercata.cata[0].sdtransfo=None
+      if not hasattr(self.editor.readercata.cata[0],'sd_transfo') : self.editor.readercata.cata[0].sd_transfo=None
       if not hasattr(self.editor.readercata.cata[0],'sd_charge') : self.editor.readercata.cata[0].sd_charge=None
       if not hasattr(self.editor.readercata.cata[0],'sd_moteur') : self.editor.readercata.cata[0].sd_moteur=None
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_ligne :

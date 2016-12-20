@@ -532,6 +532,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
         self.tree.inhibeExpand=True
         obj=self.item.additem(name,index) # emet le signal 'add'
+        print name
         if obj is None:obj=0
         if obj == 0:return 0
         try :
@@ -542,6 +543,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
            child=self.children[index]
         self.tree.inhibeExpand=False
         #print " fin append child"
+        print child
+        print child.item.nom
         return child
 
     def deplace(self):
@@ -680,9 +683,15 @@ class JDCNode(QTreeWidgetItem,GereRegles):
     
     def update_node_label_in_blue(self):
         if hasattr(self.appliEficas,'noeudColore'):
-           self.appliEficas.noeudColore.setTextColor( 0,Qt.black)
-           self.appliEficas.noeudColore.update_node_label()
-        self.setTextColor( 0,Qt.blue )
+           if monEnvQT5 :
+             self.appliEficas.noeudColore.setForeground(0,Qt.black)
+           else :
+             self.appliEficas.noeudColore.setTextColor( 0,Qt.black)
+             self.appliEficas.noeudColore.update_node_label()
+        if monEnvQT5 :
+             self.setForeground(0,Qt.blue)
+        else :
+           self.setTextColor( 0,Qt.blue )
         labeltext,fonte,couleur = self.item.GetLabelText()
         self.setText(0, labeltext)        
         self.appliEficas.noeudColore=self

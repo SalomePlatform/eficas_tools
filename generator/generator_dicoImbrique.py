@@ -135,7 +135,7 @@ class DicoImbriqueGenerator(PythonGenerator):
            #else :dicoCourant[nomFeuille]=obj.valeurFormatee
            else :
               dicoCourant[nomFeuille]=obj.valeurFormatee
-              print nomFeuille, obj.valeurFormatee
+              #print nomFeuille, obj.valeurFormatee
         self.Dico[nom]=dicoCourant
 
         return s

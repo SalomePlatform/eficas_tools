@@ -26,15 +26,15 @@ pattern_comment_slash   = re.compile(r"^\s*/")
 pattern_eta   = re.compile(r".*&ETA.*")
 pattern_fin   = re.compile(r".*&FIN.*")
 pattern_oui   = re.compile(r"^\s*(oui|OUI|YES|yes|TRUE|VRAI)\s*$")
-pattern_non   = re.compile(r"^\s*(non|NON|NO|no|FALSE|FAUX)\*s$")
+pattern_non   = re.compile(r"^\s*(non|NON|NO|no|FALSE|FAUX)\s*$")
 pattern_blanc = re.compile(r"^\s*$")
 pattern_listeVide = re.compile(r"^\s*'\s*'\s*$")
-pattern_tracers = re.compile(r"^\s*(NAMES OF TRACERS|NOMS DES TRACEURS).*")
 pattern_commence_par_quote=re.compile(r'^\s*[\'"].*')
+pattern_finit_par_virgule_ou_affect=re.compile(r'^.*(,|;|=|:)\s*$')
 
 pattern_ligne=re.compile(r'^\s*(?P<ident>[^=:]*)\s*[:=]\s*(?P<reste>.*)$')
 
-pattern_variables=re.compile (r"^\s*(?P<ident>VARIABLES POUR LES SORTIES GRAPHIQUES)\s*[:=]\s*(?P<valeur>\w(,\w)*)\s*(?P<reste>.*)$")
+pattern_variables=re.compile (r"^\s*(?P<ident>VARIABLES FOR GRAPHIC PRINTOUTS)\s*[:=]\s*(?P<valeur>\w(,\w)*)\s*(?P<reste>.*)$")
 
 # Attention aux listes de flottants
 pattern_liste=re.compile(r'^\s*(?P<valeur>[+-.\w]+(\s*;\s*[+-.\w]+)+)\s*(?P<reste>.*)$')
@@ -54,12 +54,12 @@ pattern_ContientDouble=re.compile (r"^.*''.*$")
 
 
 #Si le code n est pas Telemac
-try :
-#if 1 :
+#try :
+if 1 :
    from aideAuxConvertisseurs import ListeSupprimeCasToEficas
    from enumDicoTelemac       import TelemacdicoEn
-except :
-   pass
+#except :
+#   pass
 
 from Extensions import localisation
 
@@ -91,35 +91,36 @@ class TELEMACParser(PythonParser):
       self.dicoInverse=appli.readercata.dicoInverse
       self.dicoMC=appli.readercata.dicoMC
       self.Ordre_Des_Commandes=appli.readercata.Ordre_Des_Commandes
-   
+
+      if appli.langue=='fr' :
+          from enumDicoTelemac       import DicoEnumCasFrToEnumCasEn
+          for k in DicoEnumCasFrToEnumCasEn.keys() :
+              TelemacdicoEn[k]=DicoEnumCasFrToEnumCasEn[k]
 
       text=""
       self.dictSimp={}
 
-      # Traitement des noms des tracers qui peuvent etre sur plusieurs lignes
       l_lignes_texte = string.split(self.text,'\n')
       l_lignes=[]
       i=0
       while (i < len(l_lignes_texte)) :
           ligne=l_lignes_texte[i]
           i=i+1
-          if not(pattern_tracers.match(ligne)):
+          if not(pattern_finit_par_virgule_ou_affect.match(ligne)):
              l_lignes.append(ligne)
              continue
+          nouvelle_ligne=ligne
           while (i < len(l_lignes_texte)):
-             ligne_complementaire=l_lignes_texte[i]
-             if not(pattern_commence_par_quote.match(ligne_complementaire)) :
-                l_lignes.append(ligne)
+             ligne_traitee=l_lignes_texte[i]
+             i=i+1
+             nouvelle_ligne += ligne_traitee
+             if not(pattern_finit_par_virgule_ou_affect.match(ligne_traitee)):
+                l_lignes.append(nouvelle_ligne)
                 break
-             else : 
-                ligne=ligne +ligne_complementaire
-                i=i+1
-                if i == len(l_lignes_texte):
-                   l_lignes.append(ligne)
-                   continue
   
 
       for ligne in l_lignes :
+          #print "traite ligne"
           if pattern_comment_slash.match(ligne) : continue
           if pattern_eta.match(ligne) : continue
           if pattern_fin.match(ligne) : continue
@@ -132,11 +133,13 @@ class TELEMACParser(PythonParser):
               valeur=""
               if pattern_variables.match(finLigne) :
                  m=pattern_variables.match(finLigne)
+                 simpCas=self.traiteIdent(m.group('ident'))
                  valeur=m.group('valeur')
                  finLigne=m.group('reste')
-                 self.dictSimp[simp]=valeur
+                 self.dictSimp[simpCas]=valeur
                  continue
 
+              
               m=pattern_ligne.match(finLigne)
               if m == None : 
                  #print "________________________________________________"
@@ -149,7 +152,6 @@ class TELEMACParser(PythonParser):
                  finLigne=m.group('reste')
                  continue
 
-              #print simpCas
               finLigne=m.group('reste')
               # attention, l ordre des if est important
               if pattern_liste.match(finLigne) :
@@ -185,14 +187,15 @@ class TELEMACParser(PythonParser):
 
               finLigne=m.group('reste')
               self.dictSimp[simpCas]=valeur
+              #print self.dictSimp
       
       if 'TITLE' not in self.dictSimp.keys() :
           import os
-          self.dictSimp['TITLE']=os.path.basename(self.filename)
+          #self.dictSimp['TITLE']=os.path.basename(self.filename)
       
       dicoParMC={}
-      #for simp in self.dictSimp.keys():
-      #    if simp in TELEMACParser.__dict__.keys() : apply(TELEMACParser.__dict__[simp],(self,))
+      for simp in self.dictSimp.keys():
+          if simp in TELEMACParser.__dict__.keys() : apply(TELEMACParser.__dict__[simp],(self,))
 
       for simp in self.dictSimp.keys():
           if simp in ListeSupprimeCasToEficas: continue
@@ -231,7 +234,6 @@ class TELEMACParser(PythonParser):
           #print "----------- " 
            
               
-
       appli.listeTelemac=self.dictSimp.keys()  
       return self.textePy
 
@@ -241,6 +243,7 @@ class TELEMACParser(PythonParser):
    # enleve les espaces de part et autre
    # traduit du langage Telemac vers le langage Catalogue
    #----------------------------------------
+          #print ident
           while ident[-1] == " " or ident[-1] == '\t' : ident=ident[0:-1]
           while ident[0]  == " " or ident[0]  == '\t' : ident=ident[1:]
           try : identCata=self.dicoCasToCata[ident]
@@ -266,9 +269,9 @@ class TELEMACParser(PythonParser):
 
    def convertFACT(self,obj,nom,valeur):
        #print "convertFACT", nom,valeur
-       #if nom in TELEMACParser.__dict__.keys() : 
-       #   apply(TELEMACParser.__dict__[nom],(self,))
-       #   return
+       if nom in TELEMACParser.__dict__.keys() : 
+          apply(TELEMACParser.__dict__[nom],(self,))
+          return
        self.textePy +=  nom + "=_F( "
        self.traiteMC(valeur)
        self.textePy += '),\n'
@@ -279,8 +282,8 @@ class TELEMACParser(PythonParser):
        print nom
 
    def convertSIMP(self,obj,nom,valeur):
-       #print obj,nom,valeur
-       #if nom in ("PRESCRIBED_FLOWRATES", "PRESCRIBED_VELOCITIES", "PRESCRIBED_ELEVATIONS" ): return
+       #print 'in convertSIMP', nom,valeur
+       if nom in ("PRESCRIBED_FLOWRATES", "PRESCRIBED_VELOCITIES", "PRESCRIBED_ELEVATIONS" ): return
        if obj.max==1 : 
           if hasattr(obj.type[0],'ntuple') : 
              lval=[]
@@ -328,10 +331,14 @@ class TELEMACParser(PythonParser):
                      valeur=possible
                      break
                 except:
-                   print "pb avec le type de ", obj.nom, obj.type, 'et la valeur ', valeur
+                   if valeur != None :
+                      print "pb avec le type de ", obj.nom, obj.type, 'et la valeur ', valeur
 
           if 'Fichier' in obj.type or 'TXM' in obj.type or 'Repertoire' in obj.type :
               valeur=str(valeur)
+              if valeur == "" or valeur == " " : 
+                 self.textePy += nom + "= '" + str(valeur) +"' ,"
+                 return
               while valeur[-1] == " " : valeur=valeur[0:-1]
               while valeur[0]  == " " : valeur=valeur[1:]
               self.textePy += nom + "= '" + str(valeur) +"' ,"
@@ -354,9 +361,22 @@ class TELEMACParser(PythonParser):
           # les 4 lignes suivantes sont probablement inutiles
           while valeur[-1] == " " or  valeur[-1]=="'" : valeur=valeur[0:-1]
           while valeur[0]  == " " or  valeur[-0]=="'" : valeur=valeur[1:]
-          if   ";" in valeur : valeur=valeur.split(';')
-          elif "," in valeur : valeur=valeur.split(',')
+          oldValeur=valeur
+          if isinstance(valeur, basestring) :
+             if   ";" in valeur : valeur=valeur.split(';')
+             else  : valeur=valeur.split(',')
 
+          if len(valeur)< 2 and pattern_flottant.match(oldValeur):
+          # Attention : on attend une liste mais on a une seule valeur!
+             try :    oldValeur=eval(oldValeur,{})
+             except : pass
+             if nom in TelemacdicoEn.keys() :  
+                v=TelemacdicoEn[nom][oldValeur]
+                self.textePy += nom + "= ('" + str(v) +"',),"
+             else :  
+                self.textePy += nom + "= (" + str(oldValeur) +",),"
+             return
+           
  
           if valeur == None : return
           newVal=[]
@@ -377,127 +397,73 @@ class TELEMACParser(PythonParser):
       if self.Ordre_Des_Commandes == None : return listeIn
       #print listeIn
       listeOut=[listeIn[0],]
-      for kF in listeIn[1:]:
-          k=str(self.dicoFrancaisAnglais[kF])
+      for k in listeIn[1:]:
+          #k=str(self.dicoFrancaisAnglais[kF])
           ordreK=self.Ordre_Des_Commandes.index(k)
           i=0
           while i < len(listeOut):
-             ordreI=self.Ordre_Des_Commandes.index(self.dicoFrancaisAnglais[listeOut[i]])
+             #ordreI=self.Ordre_Des_Commandes.index(self.dicoFrancaisAnglais[listeOut[i]])
+             ordreI=self.Ordre_Des_Commandes.index(listeOut[i])
              if ordreK < ordreI : break
              i=i+1
-          listeOut.insert(i,kF)
+          #listeOut.insert(i,kF)
+          listeOut.insert(i,k)
       return listeOut
 
-   def PARALLEL_PROCESSORS(self):
-      #YOANN
-      if self.dictSimp["PARALLEL_PROCESSORS"] == 0 : del  self.dictSimp["PARALLEL_PROCESSORS"]
-      #else : self.dictSimp["Parallel_Computation"]="Parallel"
- 
-   def decoupeListe(self,valeurs,label):
-      #print "decoupeListe"
-      #print valeurs
-      i=0
-      for prefixe in ('_U_AND_V','_H'):
-          labelComplet=label+prefixe
-          valeur=valeurs[i]
-          try    : valeur=eval(valeur,{})
-          except : pass
-          if label in TelemacdicoEn.keys(): 
-             try    : valeur=TelemacdicoEn[label][valeur]
-             except : pass
-          self.dictSimp[labelComplet]=valeur
-          i=i+1
-      if len(valeurs)==2 : return
-      #for prefixe in ('_K_AND_EPSILON','_TRACERS'):
-      for prefixe in ('_TRACERS','_K_AND_EPSILON','_TRACERS'):
-          labelComplet=label+prefixe
-          valeur=valeurs[i]
-          try    : valeur=eval(valeur,{})
-          except : pass
-          if label in TelemacdicoEn.keys(): 
-             try    : valeur=TelemacdicoEn[label][valeur]
-             except : pass
-          self.dictSimp[labelComplet]=valeur
-          i=i+1
+   def LIQUID_BOUNDARIES(self):
+       print 'Liquid Boundaries'
+       texte_Boundaries="LIQUID_BOUNDARIES=( "
+       if 'PRESCRIBED_ELEVATIONS' in self.dictSimp.keys(): 
+              valeursPE=self.dictSimp["PRESCRIBED_ELEVATIONS"]
+              if not type(valeursPE)==list : valeursPE = (valeursPE,)
+              longueur=len(self.dictSimp["PRESCRIBED_ELEVATIONS"])
+       else : valeursPE=None
+       if 'PRESCRIBED_FLOWRATES' in self.dictSimp.keys(): 
+              valeursPF=self.dictSimp["PRESCRIBED_FLOWRATES"]
+              if not type(valeursPF)==list : valeursPF = (valeursPF,)
+              longueur=len(self.dictSimp["PRESCRIBED_FLOWRATES"])
+       else : valeursPF=None
+       if 'PRESCRIBED_VELOCITIES' in self.dictSimp.keys(): 
+              valeursPV=self.dictSimp["PRESCRIBED_VELOCITIES"]
+              if not type(valeursPV)==list : valeursPV = (valeursPV,)
+              longueur=len(self.dictSimp["PRESCRIBED_VELOCITIES"])
+       else : valeursPV=None
 
-   def SUPG_OPTION(self):
-       return
-       #print "ds Option_De_Supg"
-       self.decoupeListe( self.dictSimp["SUPG_OPTION"],"SUPG_OPTION")
-       del self.dictSimp["SUPG_OPTION"]
+       if valeursPE == None and valeursPF == None and valeursPV == None :
+             texte_Boundaries +="),\n"
+             return
 
-   def TYPE_OF_ADVECTION(self):
-       self.decoupeListe( self.dictSimp["TYPE_OF_ADVECTION"],"ADVECTION")
-       valeurs=self.dictSimp["TYPE_OF_ADVECTION"]
-       del self.dictSimp["TYPE_OF_ADVECTION"]
-       self.dictSimp['ADVECTION_OF_U_AND_V']=True
-       self.dictSimp['ADVECTION_OF_H']=True
-       if len(valeurs)==2 : return 
-       self.dictSimp['ADVECTION_OF_K_AND_EPSILON']=True
-       self.dictSimp['ADVECTION_OF_TRACERS']=True
+       if valeursPE == None or valeursPF == None or valeursPV == None :
+          listNulle=[]
+          for i in range(longueur) : listNulle.append('0') 
 
-   def DISCRETIZATIONS_IN_SPACE(self):
-       self.decoupeListe( self.dictSimp["DISCRETIZATIONS_IN_SPACE"],"DISCRETIZATIONS_IN_SPACE")
-       del self.dictSimp["Discretisations_En_Espace"]
-       
-   def ORIGINAL_DATE_OF_TIME (self):
-       valeurs=self.dictSimp["Date_De_L_Origine_Des_Temps"]
-       self.dictSimp['Annee']=valeurs[0]
-       self.dictSimp['Mois']=valeurs[1]
-       self.dictSimp['Jour']=valeurs[2]
-       del  self.dictSimp["Date_De_L_Origine_Des_Temps"]
-       
-   
-   def ORIGINAL_HOUR_OF_TIME (self):
-       valeurs=self.dictSimp["ORIGINAL_HOUR_OF_TIME"]
-       self.dictSimp['Heure']=valeurs[0]
-       self.dictSimp['Minute']=valeurs[1]
-       self.dictSimp['Seconde']=valeurs[2]
-       del  self.dictSimp["ORIGINAL_HOUR_OF_TIME"]
 
-   def Liquid_Boundaries(self):
-       #print 'Liquid Boundaries'
-       texte_Boundaries="Liquid_Boundaries=( "
-       premier=0
-       if 'Prescribed_Elevations' in self.dictSimp.keys(): 
-           valeurs=self.dictSimp["Prescribed_Elevations"]
-       elif 'Cotes_Imposees' in self.dictSimp.keys(): 
-           valeurs=self.dictSimp["Cotes_Imposees"]
-       else : valeurs=()
-       #print valeurs
-       for e in range(len(valeurs)):
-          if valeurs[e] == "" or valeurs[e] == "\n" : continue
-          if eval(valeurs[e],{})==0 : continue
-          if not premier : premier=1
-          texte_Boundaries += "_F(Type_Condition = 'Prescribed Elevations',\n"
-          texte_Boundaries += "Prescribed_Elevations = " + str(valeurs[e]) + "),\n"
+       if valeursPE == None : valeursPE = listNulle
+       if valeursPF == None : valeursPF = listNulle
+       if valeursPV == None : valeursPV = listNulle
+      
+       print valeursPE,valeursPF,valeursPV
+
+       for e in range(len(valeursPE)):
+          if valeursPE[e] != "" or valeursPE[e] != "\n" :
+            if eval(valeursPE[e],{}) != 0 : 
+               texte_Boundaries += "_F(BOUNDARY_TYPE = 'Prescribed Elevations',\n"
+               texte_Boundaries += "PRESCRIBED_ELEVATIONS = " + str(valeursPE[e]) + "),\n"
+               continue
+
+          if valeursPF[e] != "" or valeursPF[e] != "\n" :
+            if eval(valeursPF[e],{}) != 0 : 
+               texte_Boundaries += "_F(BOUNDARY_TYPE = 'Prescribed Flowrates',\n"
+               texte_Boundaries += "PRESCRIBED_FLOWRATES = " + str(valeursPF[e]) + "),\n"
+               continue
                
-       if 'Prescribed_Flowrates' in self.dictSimp.keys(): 
-          valeurs=self.dictSimp["Prescribed_Flowrates"]
-       elif 'Debits_Imposes' in self.dictSimp.keys(): 
-          valeurs=self.dictSimp["Debits_Imposes"]
-       else : valeurs=()
-       #print valeurs
-       for e in range(len(valeurs)):
-          if valeurs[e] == "" or valeurs[e] == "\n" : continue
-          if eval(valeurs[e],{})==0 : continue
-          if not premier : premier=1
-          texte_Boundaries += "_F(Type_Condition = 'Prescribed Flowrates',\n"
-          texte_Boundaries += "Prescribed_Flowrates = " + str(valeurs[e]) + "),\n"
-               
-       if 'Prescribed_Velocity' in self.dictSimp.keys(): 
-           valeurs=self.dictSimp["Prescribed_Velocity"]
-       elif 'Vitesses_Imposees' in self.dictSimp.keys(): 
-           valeurs=self.dictSimp["Vitesses_Imposees"]
-       else : valeurs=()
-       #print valeurs
-       for e in range(len(valeurs)):
-          if valeurs[e] == "" or valeurs[e] == "\n" : continue
-          if eval(valeurs[e],{})==0 : continue
-          if not premier : premier=1
-          texte_Boundaries += "_F(Type_Condition = 'Prescribed Velocity',\n"
-          texte_Boundaries += "Prescribed_Velocity = " + str(valeurs[e]) + "),\n"
-       if premier :  texte_Boundaries +="),\n"
-       else : texte_Boundaries="" ; print "pb texte_Boundaries "
+          if valeursPV[e] != "" or valeursPV[e] != "\n" :
+             if eval(valeursPV[e],{})!=0 : 
+                texte_Boundaries += "_F( BOUNDARY_TYPE= 'Prescribed Velocity',\n"
+                texte_Boundaries += "PRESCRIBED_VELOCITIES = " + str(valeursPV[e]) + "),\n"
+                continue
+          print "pb texte_Boundaries avec la valeur numero ", e
+
+       texte_Boundaries +="),\n"
        self.textePy += texte_Boundaries
       

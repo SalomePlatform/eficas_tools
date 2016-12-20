@@ -21,3 +21,4 @@ monEnvQT5=envQT().inQt5
 if __name__=='__main__':
      inQt5_1=envQT().inQt5
      inQt5_2=envQT().inQt5
+     print inQt5_1

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>949</width>
-    <height>49</height>
+    <height>61</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -241,8 +241,7 @@
          <property name="sizeConstraint">
           <enum>QLayout::SetFixedSize</enum>
          </property>
-
-        <item>
+         <item>
           <widget class="QToolButton" name="RBRun">
            <property name="minimumSize">
             <size>
@@ -404,6 +403,22 @@
        <property name="topMargin">
         <number>2</number>
        </property>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Minimum</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>2</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </item>
     </layout>

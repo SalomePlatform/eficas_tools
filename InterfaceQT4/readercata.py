@@ -256,7 +256,6 @@ class READERCATA:
           contient le nom des mots cles dans le bon ordre
       """ 
       self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyse_catalogue(self.cata)
-      #print self.cata_ordonne_dico,self.appliEficas.liste_simp_reel
 
    def Retrouve_Ordre_Cata_Standard(self):
       """ 

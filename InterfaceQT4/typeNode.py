@@ -139,7 +139,6 @@ class PopUpMenuNodeMinimal :
 
 
     def AppelleFonction(self,numero,nodeTraite=None):
-        #print "AppelleFonction", self,numero,nodeTraite
         if nodeTraite==None : nodeTraite=self.tree.currentItem()
         nomCmd=nodeTraite.item.get_nom()
         if hasattr(self.appliEficas, 'mesScripts'):

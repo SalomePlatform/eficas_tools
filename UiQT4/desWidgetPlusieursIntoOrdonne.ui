@@ -197,7 +197,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QFrame" name="frameRecherche1">
+      <widget class="QFrame" name="frameRecherche">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
          <widget class="QLineEdit" name="LEFiltre">

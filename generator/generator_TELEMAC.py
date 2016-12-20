@@ -65,10 +65,11 @@ class TELEMACGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
    def gener(self,obj,format='brut',config=None,appli=None):
        
+      self.langue=appli.langue
       self.initDico()
       # Pour Simplifier les verifs d ecriture
       if hasattr(appli,'listeTelemac') : self.listeTelemac=appli.listeTelemac
-      else : self.listeTelemac = None
+      else : self.listeTelemac = ()
 
       self.dicoCataToCas={}
       self.dicoCasToCata=appli.readercata.dicoCasToCata
@@ -91,9 +92,15 @@ class TELEMACGenerator(PythonGenerator):
       self.PE=False
       self.FE=False
       self.VE=False
-      self.textPE = 'PRESCRIBED ELEVATIONS :'
-      self.textFE = 'PRESCRIBED FLOWRATES :'
-      self.textVE = 'PRESCRIBED VELOCITY :'
+      if self.langue == "fr" :
+        self.textPE = 'COTES IMPOSEES :'
+        self.textFE = 'DEBITS IMPOSES :'
+        self.textVE = 'VITESSES IMPOSEES :'
+      else :
+        self.textPE = 'PRESCRIBED ELEVATIONS :'
+        self.textFE = 'PRESCRIBED FLOWRATES :'
+        self.textVE = 'PRESCRIBED VELOCITIES :'
+      self.nbTracers = 0
       self.texteDico = ""
  
 
@@ -121,7 +128,7 @@ class TELEMACGenerator(PythonGenerator):
         s=PythonGenerator.generPROC_ETAPE(self,obj)
         #print obj
         #print obj.nom
-        #if obj.nom in TELEMACGenerator.__dict__.keys() : apply(TELEMACGenerator.__dict__[obj.nom],(self,obj))
+        if obj.nom in TELEMACGenerator.__dict__.keys() : apply(TELEMACGenerator.__dict__[obj.nom],(self,obj))
         
         return s
 
@@ -136,9 +143,9 @@ class TELEMACGenerator(PythonGenerator):
        
         # Attention pas sur --> ds certains cas non traite par MCFACT ?
         # a reflechir avec Yoann 
-        #if hasattr(obj.definition,'defaut') :
-        #   if obj.definition.defaut == obj.valeur : return s
-        if self.listeTelemac != None and obj.nom not in self.listeTelemac : return s
+        # ajouter le statut ?
+        if hasattr(obj.definition,'defaut') and (obj.definition.defaut == obj.valeur) and (obj.nom not in self.listeTelemac) : return s
+        if hasattr(obj.definition,'defaut') and obj.definition.defaut != None and (type(obj.valeur) == types.TupleType or type(obj.valeur) == types.ListType) and (tuple(obj.definition.defaut) == tuple(obj.valeur)) and (obj.nom not in self.listeTelemac) : return s
  
 
         #nomMajuscule=obj.nom.upper()
@@ -146,6 +153,7 @@ class TELEMACGenerator(PythonGenerator):
         #if nom in listeSupprime or s == "" : return s
         if s == "" : return s
 
+      
        
         sTelemac=s[0:-1]
         if not( type(obj.valeur) in (types.TupleType,types.ListType) ):
@@ -168,17 +176,36 @@ class TELEMACGenerator(PythonGenerator):
                 sTelemac= sTelemac.replace (',',';\n	') 
 
 
-        s1=str(sTelemac).replace('True','YES')
-        s2=s1.replace('False','NO')
+        if self.langue=='fr' :
+           s1=str(sTelemac).replace('True','OUI')
+           s2=s1.replace('False','NON')
+        else :
+           s1=str(sTelemac).replace('True','YES')
+           s2=s1.replace('False','NO')
         s3=s2.replace(',',';')
         if s3 != "" and s3[0]=='(' : 
           try : s3=s3[1:-1] # cas de liste vide
           except : s3 = ' '
+        
+       
+        # LIQUID_BOUNDARIES
+        if obj.nom in ('PRESCRIBED_FLOWRATES','PRESCRIBED_VELOCITIES','PRESCRIBED_ELEVATIONS') :
+           return s
+
+        if obj.nom not in self.dicoCataToCas :
+           print obj.nom , ' non traite'
+           return s
+
         nom=self.dicoCataToCas[obj.nom]
         if nom == "VARIABLES FOR GRAPHIC PRINTOUTS" : s3=s3.replace(';',',')
+        if s3 == "" or s3 == " " : s3 = "None"
         ligne=nom+ " : " + s3 + "\n"
         if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3) 
         self.texteDico+=ligne
+        #print "_______________________"
+        #print s
+        #print ligne
+        #print "_______________________"
         return s
 
    def generMCFACT(self,obj):
@@ -190,10 +217,9 @@ class TELEMACGenerator(PythonGenerator):
       return s
 
   
-   def Liquid_Boundaries(self,obj):
-      #print obj.nom , dir(obj)
-      if 'Type_Condition' in  obj.liste_mc_presents() :
-          objForme=obj.get_child('Type_Condition')
+   def LIQUID_BOUNDARIES(self,obj):
+      if 'BOUNDARY_TYPE' in  obj.liste_mc_presents() :
+          objForme=obj.get_child('BOUNDARY_TYPE')
           valForme=objForme.valeur
           if valForme == None : return
 
@@ -215,12 +241,21 @@ class TELEMACGenerator(PythonGenerator):
               self.VE=True
               self.textVE += str(valeur) +"; "
           else : self.textVE += "0.; "
-      #print self.textPE, self.textFE,self.textVE
+      print self.textPE, self.textFE,self.textVE
 
    def BOUNDARY_CONDITIONS(self,obj):
-       if self.FE :  self.texteDico += self.textFE[0:-1]+'\n' 
-       if self.VE :  self.texteDico += self.textVE[0:-1]+'\n' 
-       if self.PE :  self.texteDico += self.textPE[0:-1]+'\n' 
+       # sans '; '
+       if self.FE :  self.texteDico += self.textFE[0:-2]+'\n' 
+       if self.PE :  self.texteDico += self.textPE[0:-2]+'\n' 
+       if self.VE :  self.texteDico += self.textVE[0:-2]+'\n' 
+
+   def TRACERS(self,obj):
+       if self.nbTracers != 0 :  self.texteDico += 'NUMBER_OF_TRACERS : '+str(self.nbTracers) + '\n'
+ 
+
+   def NAME_OF_TRACER(self,obj):
+       print dir(obj) 
+       print obj.get_genealogie_precise()
 
    def Validation(self,obj):
        self.texteDico += "VALIDATION : True \n"

@@ -18,6 +18,7 @@
 #
 # Modules Python
 # Modules Eficas
+import types
 
 from desWidgetCommande import Ui_WidgetCommande
 from groupe import Groupe
@@ -59,7 +60,9 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.frameAffichage.resize(self.frameAffichage.width(),50)
       
       #if (etape.get_type_produit()==None): self.LENom.close()
+      test,mess = self.node.item.nomme_sd('ee')
       if not(hasattr(etape.definition,'sd_prod')) or (etape.definition.sd_prod==None): self.LENom.close()
+      elif (hasattr(etape.definition,'sd_prod') and type(etape.definition.sd_prod)== types.FunctionType):self.LENom.close()
       elif (hasattr(etape, 'sdnom')) and etape.sdnom != "sansnom" and etape.sdnom != None: self.LENom.setText(etape.sdnom)
       else : self.LENom.setText("")
 

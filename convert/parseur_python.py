@@ -339,6 +339,10 @@ class PARSEUR_PYTHON:
         else:
             return 0
 
+    def is_modification_catalogue(self,texte) :
+        if self.pattern_commande.match(texte):
+           return 1
+
     def analyse(self):
         """
         Eclate la chaine self.texte en self.l_objets une liste lignes d'instructions
@@ -525,6 +529,9 @@ class PARSEUR_PYTHON:
                 #on passe a la ligne suivante
                 continue
 
+            #if self.is_modification_catalogue(ligne) :
+            #   print ligne
+ 
     def enleve (self,texte) :
         """Supprime de texte tous les caracteres blancs, fins de ligne, tabulations
            Le nouveau texte est retourné
