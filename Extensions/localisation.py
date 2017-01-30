@@ -48,7 +48,7 @@ def localise(application, locale=None,file=None ):
     
     global eficas_translator
     if locale=="ang" : locale="en"
-    print "eficas_" + locale, monPath
+
     if file != None :
        print 'chargement de ', file,monPath
        print eficas_translator.load(file,monPath)

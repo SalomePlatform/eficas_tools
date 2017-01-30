@@ -99,6 +99,7 @@ class CONFIG_BASE:
       self.closeAutreCommande = False
       self.closeFrameRechercheCommande = False
       self.closeEntete = False
+      self.force_langue=False
 
  
   #--------------------------------------

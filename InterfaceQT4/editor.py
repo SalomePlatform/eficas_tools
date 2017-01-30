@@ -47,7 +47,7 @@ from monWidgetCreeParam import MonWidgetCreeParam
 import browser
 import readercata
 
-DictExtensions= {"MAP" : ".map"}
+DictExtensions= {"MAP" : ".map", "TELEMAC" : '.comm'}
 
     
 
@@ -881,6 +881,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             txt=self.ajoutVersionCataDsJDC(txt)
             checksum=self.get_checksum(txt)
             txt=txt+checksum
+        if self.code=="TELEMAC" : return 1
         try:
             f = open(fn, 'wb')
             f.write(txt)
@@ -1216,6 +1217,37 @@ class JDCEditor(Ui_baseWidget,QWidget):
            pass
 
     #-----------------------------------------------------------------#
+    def saveFileLeger(self, path = None, saveas= 0,formatLigne="beautifie"):
+    #-----------------------------------------------------------------#
+        extension='.casR'
+        fn = self.fichier
+        #saveas=True # Pour forcer le nom
+        self.generator=generator.plugins[self.format]()
+        if self.fichier is None or saveas:
+          if path is None: path=self.CONFIGURATION.savedir
+          bOK, fn=self.determineNomFichier(path,extension)
+          if bOK == 0 : return (0, None)
+          if fn == None : return (0, None)
+          if fn== '' : return (0, None)
+
+          ulfile = os.path.abspath(unicode(fn))
+          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+          fn = unicode(QDir.toNativeSeparators(fn))
+
+        self.fichier = os.path.splitext(fn)[0]+extension
+
+        print self.fichier
+        if hasattr(self.generator, "writeLeger"):
+            self.generator.writeLeger(self.fichier,self.jdc,config=self.appliEficas.CONFIGURATION,appli=self.appliEficas)
+
+        if self.salome : self.appliEficas.addJdcInSalome( self.fichier)
+
+        self.modified = 0
+        nouveauTitre=self.titre+"              "+str(os.path.basename(self.fichier))
+        self.appliEficas.setWindowTitle(nouveauTitre)
+        return (1, self.fichier)
+
+    #-----------------------------------------------------------------#
     def saveFile(self, path = None, saveas= 0,formatLigne="beautifie"):
     #-----------------------------------------------------------------#
         """
@@ -1230,7 +1262,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if not self.modified and not saveas:
             return (0, None)      # do nothing if text wasn't changed
 
-        extension='.py'
         if DictExtensions.has_key(self.appli.code) :
            extension=DictExtensions[self.appli.code]
         else :

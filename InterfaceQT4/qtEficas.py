@@ -89,13 +89,20 @@ class Appli(Ui_Eficas,QMainWindow):
              if code==None: return
 
 
+      
         if not self.salome and hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'lang') : langue=self.CONFIGURATION.lang
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
 
+        if self.CONFIGURATION.force_langue :
+           from monChoixLangue import MonChoixLangue
+           widgetLangue = MonChoixLangue(self)
+           ret=widgetLangue.exec_()
+
+
         from Extensions import localisation
         app=QApplication
-        localisation.localise(None,langue)
+        localisation.localise(None,self.langue)
 
         self.setupUi(self)
         #if parent != None : self.parentCentralWidget = parent.centralWidget()
@@ -320,9 +327,10 @@ class Appli(Ui_Eficas,QMainWindow):
           self.connect(self.actionRechercherDsCatalogue,SIGNAL("triggered()"),self.handleRechercherDsCatalogue)
 
     def ajoutSortieLegere(self):
+        if hasattr(self,'actionSortieLegere') : return
         self.actionSortieLegere = QAction(self)
         self.actionSortieLegere.setText(tr("Sortie Legere"))
-        self.menuFichier.addAction(self.actionSortieLegere)
+        self.menuFichier.insertAction(self.actionEnregistrer_sous,self.actionSortieLegere)
         if monEnvQT5:
           self.actionSortieLegere.triggered.connect(self.handleSortieLegere)
         else :
@@ -788,7 +796,7 @@ class Appli(Ui_Eficas,QMainWindow):
         monOption.show()
 
     def handleSortieLegere(self):
-        print "coucou"
+        return self.viewmanager.saveLegerCurrentEditor()
 
     def handleShowRecentMenu(self):
         """

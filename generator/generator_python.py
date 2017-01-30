@@ -478,12 +478,13 @@ class PythonGenerator:
       return l
 
 
-   def format_item(self,valeur,etape,obj):
+   def format_item(self,valeur,etape,obj,vientDeListe=0):
       if (type(valeur) == types.FloatType or 'R' in obj.definition.type) and not(isinstance(valeur,Accas.PARAMETRE)) :
-         # Pour un flottant on utilise str
+         # Pour un flottant on utilise str ou repr si on vient d une liste
          # ou la notation scientifique
          # On ajoute un . si il n y en a pas dans la valeur
          s = str(valeur)
+         if vientDeListe and repr(valeur) != str(valeur) : s=repr(valeur)
          if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : s=s+'.0'
          clefobj=etape.get_sdname()
          if self.appli.appliEficas and self.appli.appliEficas.dict_reels.has_key(clefobj):
@@ -545,7 +546,7 @@ class PythonGenerator:
          else :
             obj.valeurFormatee=[]
             for val in obj.valeur :
-               s =s +self.format_item(val,obj.etape,obj) + ','
+               s =s +self.format_item(val,obj.etape,obj,1) + ','
                if obj.wait_TXM() :
                   obj.valeurFormatee.append(val)
                else :

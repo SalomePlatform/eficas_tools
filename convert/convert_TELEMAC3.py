@@ -34,7 +34,7 @@ pattern_finit_par_virgule_ou_affect=re.compile(r'^.*(,|;|=|:)\s*$')
 
 pattern_ligne=re.compile(r'^\s*(?P<ident>[^=:]*)\s*[:=]\s*(?P<reste>.*)$')
 
-pattern_variables=re.compile (r"^\s*(?P<ident>VARIABLES FOR GRAPHIC PRINTOUTS)\s*[:=]\s*(?P<valeur>\w(,\w)*)\s*(?P<reste>.*)$")
+pattern_variables=re.compile (r"^\s*(?P<ident>VARIABLES FOR GRAPHIC PRINTOUTS|VARIABLES POUR LES SORTIES GRAPHIQUES)\s*[:=]\s*(?P<valeur>[A-Za-z]+(\d*|\*)(,[A-Za-z]+(\d*|\*))*)\s*(?P<reste>.*)$")
 
 # Attention aux listes de flottants
 pattern_liste=re.compile(r'^\s*(?P<valeur>[+-.\w]+(\s*;\s*[+-.\w]+)+)\s*(?P<reste>.*)$')
@@ -54,12 +54,12 @@ pattern_ContientDouble=re.compile (r"^.*''.*$")
 
 
 #Si le code n est pas Telemac
-#try :
-if 1 :
+try :
+#if 1 :
    from aideAuxConvertisseurs import ListeSupprimeCasToEficas
    from enumDicoTelemac       import TelemacdicoEn
-#except :
-#   pass
+except :
+   pass
 
 from Extensions import localisation
 
@@ -100,7 +100,11 @@ class TELEMACParser(PythonParser):
       text=""
       self.dictSimp={}
 
-      l_lignes_texte = string.split(self.text,'\n')
+      l_lignes_texte_all = string.split(self.text,'\n')
+      l_lignes_texte = []
+      for l  in l_lignes_texte_all :
+        if not(pattern_comment_slash.match(l)): l_lignes_texte.append(l)
+
       l_lignes=[]
       i=0
       while (i < len(l_lignes_texte)) :
@@ -120,7 +124,6 @@ class TELEMACParser(PythonParser):
   
 
       for ligne in l_lignes :
-          #print "traite ligne"
           if pattern_comment_slash.match(ligne) : continue
           if pattern_eta.match(ligne) : continue
           if pattern_fin.match(ligne) : continue
@@ -248,7 +251,7 @@ class TELEMACParser(PythonParser):
           while ident[0]  == " " or ident[0]  == '\t' : ident=ident[1:]
           try : identCata=self.dicoCasToCata[ident]
           except :  
-            print  "---> ", "pb conversion type pour", ident
+            print  "---> ", "pb mot clef  pour", ident
             identCata=None
           return identCata
 
@@ -442,7 +445,7 @@ class TELEMACParser(PythonParser):
        if valeursPF == None : valeursPF = listNulle
        if valeursPV == None : valeursPV = listNulle
       
-       print valeursPE,valeursPF,valeursPV
+       #print valeursPE,valeursPF,valeursPV
 
        for e in range(len(valeursPE)):
           if valeursPE[e] != "" or valeursPE[e] != "\n" :

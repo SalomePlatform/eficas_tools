@@ -107,7 +107,8 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
            nomLineEdit="lineEditVal"+str(index)
            if hasattr(self,nomLineEdit) : 
               courant=getattr(self,nomLineEdit)
-              courant.setText(str(val))
+              if 'R' in self.objSimp.definition.type and str(val) != repr(val) :  courant.setText(repr(val))
+              else                     :  courant.setText(str(val))
            else :
               self.ajoutLineEdit(val)
            index=index+1

@@ -134,7 +134,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
 
   def mouseDoubleClickEvent(self,event):
       #print self.editor.Classement_Commandes_Ds_Arbre
-      if self.editor.Classement_Commandes_Ds_Arbre!= () : self.chercheOu()
+      #if self.editor.Classement_Commandes_Ds_Arbre!= () : self.chercheOu()
       nodeCourrant=self.node.tree.currentItem()
       if nodeCourrant==None: nodeCourrant=self.node.tree.racine
       if self.name != None :
@@ -158,19 +158,6 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
            self.node.tree.setCurrentItem(nouveau)
       event.accept()
       
-  def chercheOu(self):
-     if self.node.tree.racine.childrenComplete==[] : return None
-     listeNoeud=[]
-     for node in self.node.tree.racine.childrenComplete :
-         listeNoeud.append(node.item.object.nom)
-     indexAvant=-1
-     indexStop=self.editor.Classement_Commandes_Ds_Arbre.index(self.name)
-     for commande in self.editor.Classement_Commandes_Ds_Arbre[:indexStop]:
-         if commande in listeNoeud: indexAvant=indexAvant+1
-     if indexAvant==-1 : self.node.tree.setCurrentItem(None)
-     else :
-        nodeASelectionner=self.node.tree.racine.childrenComplete[indexAvant]
-        self.node.tree.setCurrentItem(nodeASelectionner)
          
 
   def creeListeCommande(self,filtre):
