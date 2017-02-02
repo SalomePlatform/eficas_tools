@@ -96,12 +96,16 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
         self.closeAutreCommande=self.appliEficas.CONFIGURATION.closeAutreCommande
         self.closeFrameRechercheCommande=self.appliEficas.CONFIGURATION.closeFrameRechercheCommande
+        self.closeArbre=self.appliEficas.CONFIGURATION.closeArbre
         self.affiche=self.appliEficas.CONFIGURATION.affiche
         #self.taille = self.appliEficas.taille
 
         #if self.code in ['MAP','CARMELCND','PSEN'] : self.afficheCommandesPliees=False
         if self.code in ['MAP','CARMELCND'] : self.afficheCommandesPliees=False
         if self.code in ['MAP',]:
+           self.widgetTree.close()
+           self.widgetTree=None
+        if self.closeArbre:
            self.widgetTree.close()
            self.widgetTree=None
 
@@ -326,6 +330,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if self.code == "TELEMAC" : texte=self._newTELEMAC()
         if self.code == "PSEN" : texte = self._newPSEN()
         if self.code == "PSEN_N1" : texte = self._newPSEN_N1()
+
+        if hasattr(self.readercata.cata[0],'TEXTE_NEW_JDC') : texte=self.readercata.cata[0].TEXTE_NEW_JDC
+
         #if self.code == "CF" : texte = self._new_CF()
         #   texte=self.newTexteCND
        

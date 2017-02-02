@@ -151,9 +151,9 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       #if self.node.item.definition.validators : c+=self.node.item.definition.validators.aide()
       self.aide=c
       if self.objSimp.get_fr() != None and self.objSimp.get_fr() != "":
-          c2 = '<html><head/><body><p>'+c+str(self.objSimp.get_fr())+"</p></body></html>"
+          c2 = '<html><head/><body><p>'+c+unicode(self.objSimp.get_fr())+"</p></body></html>"
           self.label.setToolTip(c2)
-          self.aide=str(self.objSimp.get_fr())+" "+c
+          self.aide=unicode(self.objSimp.get_fr())+" "+c
       else :
          c+=self.finCommentaire()
          if c != "" and c != None :

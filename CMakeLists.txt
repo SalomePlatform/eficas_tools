@@ -81,30 +81,12 @@ endif (NOT PYUIC5)
 
 # Definition des options de CMake
 option ( WITH_ALL_PACKAGES "Install all package files" OFF )
-option ( WITH_SALOME_MECA  "Install OT, Aster and SEP files" OFF )
-option ( WITH_OPENTURNS    "Install Open TURNS files"  OFF )
-option ( WITH_ASTER        "Install Aster files"       OFF )
 option ( WITH_MAP          "Install MAP files"         OFF )
 option ( WITH_CARMEL       "Install CARMEL files"      OFF )
 option ( WITH_SEP          "Install SEP files"         OFF )
 option ( WITH_ZCRACKS      "Install ZCRACKS files"     OFF )
+option ( WITH_TELEMAC_CATA "Install TELEMAC files"     OFF )
 option ( IN_SALOME_CONTEXT "Configure Eficas for use in Salome" OFF )
-
-set ( _OPTIONLIST
-  WITH_OPENTURNS 
-  WITH_ASTER
-  WITH_MAP
-  WITH_CARMEL
-  WITH_SALOME_MECA
-  )
-
-set ( _SALOME_MECA_LIST
-  WITH_OPENTURNS 
-  WITH_ASTER
-  WITH_SEP
-  WITH_ZCRACKS
-  IN_SALOME_CONTEXT
-  )
 
 if (WITH_ALL_PACKAGES)
   foreach ( _opt ${_OPTIONLIST} )
@@ -112,75 +94,25 @@ if (WITH_ALL_PACKAGES)
   endforeach ( _opt )
 endif (WITH_ALL_PACKAGES)
 
-if (WITH_SALOME_MECA)
-  foreach ( _opt ${_SALOME_MECA_LIST} )
-    set ( ${_opt} ON )
-  endforeach ( _opt )
-endif (WITH_SALOME_MECA)
 
-# Verification: au moins une option doit etre selectionnee
-set ( _VALIDOPT FALSE )
-foreach ( _opt ${_OPTIONLIST} )
-  if ( ${_opt} )
-    set ( _VALIDOPT TRUE )
-    string ( REPLACE WITH_ "" _opt2 ${_opt} )
-    message ( STATUS "Will install package ${_opt2}" )
-  endif ( ${_opt} )
-endforeach ( _opt )
-if ( NOT ${_VALIDOPT} )
-  message ( FATAL_ERROR "At least one option within ${_OPTIONLIST} must be selected" )
-endif ( NOT ${_VALIDOPT} )
-
-# Detection des prerequis lies aux options
-if (WITH_OPENTURNS)
-  if (IN_SALOME_CONTEXT)
-    SET(OpenTURNS_PYTHON_MODULE_DIR "")
-  else (IN_SALOME_CONTEXT)
-    find_package ( OpenTURNS REQUIRED )
-  endif (IN_SALOME_CONTEXT)
-endif (WITH_OPENTURNS)
-
-#if (WITH_ASTER)
-#  find_package ( Aster REQUIRED )
-#endif (WITH_ASTER)
-
-#if (WITH_MAP)
-#  find_package ( MAP REQUIRED )
-#endif (WITH_MAP)
 
 
 # Parcours recursif des sous-repertoires
-add_subdirectory ( Accas )
-add_subdirectory ( Aide )
-add_subdirectory ( Editeur )
-add_subdirectory ( Extensions )
-add_subdirectory ( Ihm )
-install ( DIRECTORY InterfaceQT4 DESTINATION ${CMAKE_INSTALL_PREFIX} )
-add_subdirectory ( Noyau )
-add_subdirectory ( UiQT5 )
-add_subdirectory ( Validation )
-add_subdirectory ( convert )
-add_subdirectory ( generator )
-add_subdirectory ( Traducteur )
+if ( NOT WITH_TELEMAC_CATA )
+  add_subdirectory ( Accas )
+  add_subdirectory ( Aide )
+  add_subdirectory ( Editeur )
+  add_subdirectory ( Extensions )
+  add_subdirectory ( Ihm )
+  install ( DIRECTORY InterfaceQT4 DESTINATION ${CMAKE_INSTALL_PREFIX} )
+  add_subdirectory ( Noyau )
+  add_subdirectory ( UiQT5 )
+  add_subdirectory ( Validation )
+  add_subdirectory ( convert )
+  add_subdirectory ( generator )
+  add_subdirectory ( Traducteur )
+endif ( NOT WITH_TELEMAC_CATA )
 
-# Installation des fichiers : Open TURNS
-if (WITH_OPENTURNS)
-  add_subdirectory ( Openturns_Study )
-  add_subdirectory ( Openturns_Wrapper )
-endif (WITH_OPENTURNS)
-
-# Installation des fichiers : Aster
-if (WITH_ASTER)
-  add_subdirectory ( Aster )
-endif (WITH_ASTER)
-
-if (WITH_TK)
-  add_subdirectory ( InterfaceTK )
-  add_subdirectory ( Pmw )
-  add_subdirectory ( Tools )
-  add_subdirectory ( Misc )
-  add_subdirectory ( AIDE )
-endif (WITH_TK)
 
 # Installation des fichiers : MAP
 if (WITH_MAP)
@@ -203,6 +135,11 @@ endif (WITH_SEP)
 if (WITH_ZCRACKS)
   add_subdirectory ( ZCracks )
 endif (WITH_ZCRACKS)
+
+# Installation des fichiers : Telemac
+if (WITH_TELEMAC_CATA)
+  add_subdirectory ( Telemac )
+endif (WITH_TELEMAC_CATA)
 
 if (BUILD_DOC)
   add_subdirectory ( Doc )

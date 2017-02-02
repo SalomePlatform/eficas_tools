@@ -48,7 +48,7 @@ def entryPoint():
    """
    return {
         # Le nom du plugin
-          'name' : 'TELEMAC3',
+          'name' : 'TELEMAC',
         # La factory pour creer une instance du plugin
           'factory' : TELEMACGenerator,
           }
@@ -63,8 +63,9 @@ class TELEMACGenerator(PythonGenerator):
    """
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None,appli=None):
+   def gener(self,obj,format='brut',config=None,appli=None,statut="Entier"):
        
+      self.statut=statut
       self.langue=appli.langue
       self.initDico()
       # Pour Simplifier les verifs d ecriture
@@ -107,15 +108,26 @@ class TELEMACGenerator(PythonGenerator):
 
 
 #----------------------------------------------------------------------------------------
-# ecriture
+# ecriture de tout
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,fn) :
        self.texteDico+='\n&ETA\n&FIN\n'
-       fileDico = fn[:fn.rfind(".")] + '.py'
+       if self.statut == 'Leger' : extension = ".Lcas"
+       else                      : extension = ".cas"
+       fileDico = fn[:fn.rfind(".")] + extension 
        f = open( str(fileDico), 'wb')
        f.write( self.texteDico )
        f.close()
+
+#----------------------------------------------------------------------------------------
+# ecriture de Leger
+#----------------------------------------------------------------------------------------
+
+   def writeLeger(self,fn,jdc,config,appli) :
+       jdc_formate=self.gener(jdc,config=config,appli=appli,statut="Leger")
+       self.writeDefault(fn) 
+
 
 #----------------------------------------------------------------------------------------
 #  analyse de chaque noeud de l'arbre 
@@ -144,8 +156,9 @@ class TELEMACGenerator(PythonGenerator):
         # Attention pas sur --> ds certains cas non traite par MCFACT ?
         # a reflechir avec Yoann 
         # ajouter le statut ?
-        if hasattr(obj.definition,'defaut') and (obj.definition.defaut == obj.valeur) and (obj.nom not in self.listeTelemac) : return s
-        if hasattr(obj.definition,'defaut') and obj.definition.defaut != None and (type(obj.valeur) == types.TupleType or type(obj.valeur) == types.ListType) and (tuple(obj.definition.defaut) == tuple(obj.valeur)) and (obj.nom not in self.listeTelemac) : return s
+        if self.statut == 'Leger' :
+          if hasattr(obj.definition,'defaut') and (obj.definition.defaut == obj.valeur) and (obj.nom not in self.listeTelemac) : return s
+          if hasattr(obj.definition,'defaut') and obj.definition.defaut != None and (type(obj.valeur) == types.TupleType or type(obj.valeur) == types.ListType) and (tuple(obj.definition.defaut) == tuple(obj.valeur)) and (obj.nom not in self.listeTelemac) : return s
  
 
         #nomMajuscule=obj.nom.upper()
@@ -193,11 +206,13 @@ class TELEMACGenerator(PythonGenerator):
            return s
 
         if obj.nom not in self.dicoCataToCas :
+           if obj.nom == 'Consigne' : return ""
            print obj.nom , ' non traite'
            return s
 
         nom=self.dicoCataToCas[obj.nom]
         if nom == "VARIABLES FOR GRAPHIC PRINTOUTS" : s3=s3.replace(';',',')
+        if nom == "VARIABLES POUR LES SORTIES GRAPHIQUES" : s3=s3.replace(';',',')
         if s3 == "" or s3 == " " : s3 = "None"
         ligne=nom+ " : " + s3 + "\n"
         if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3) 

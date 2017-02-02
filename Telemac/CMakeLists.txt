@@ -19,30 +19,13 @@
 #
 # ======================================================================
 
-import os,sys
-# repIni sert a localiser le fichier editeur.ini
-# Obligatoire
-repIni=os.path.dirname(os.path.abspath(__file__))
-INSTALLDIR=os.path.join(repIni,'..')
-sys.path[:0]=[INSTALLDIR]
+
+install ( FILES aideAuxConvertisseurs.py configuration_TELEMAC.py dicoCasEnToCata.py dicoCasFrToCata.py enumDicoTelemac.py prefs.py prefs_TELEMAC.py properties.py qtEficas_Telemac.py Telemac2d_Cata_auto.py 
+	  DESTINATION ${CMAKE_INSTALL_PREFIX}/Telemac
+        )
 
 
-# lang indique la langue utilisee pour les chaines d'aide : fr ou ang
-lang='ang'
-#lang='fr'
-#force_langue=True
 
-# Codage des strings qui accepte les accents (en remplacement de 'ascii')
-encoding='iso-8859-1'
-docPath=repIni
-
-#
-catalogues=(
-   #('TELEMAC','default',os.path.join(repIni,'Telemac_Cata_nouveau.py'),'TELEMAC','python'),
-   #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC','TELEMAC'),
-   ('2D','cas',os.path.join(repIni,'Telemac2d_Cata_auto.py'),'TELEMAC3','TELEMAC3'),
-   #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'python','TELEMAC3'),
-   #('TELEMAC','comm',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC2','python'),
-)
-mode_nouv_commande="figee"
-affiche         = "ordre"
+### Local Variables:
+### mode: cmake
+### End:

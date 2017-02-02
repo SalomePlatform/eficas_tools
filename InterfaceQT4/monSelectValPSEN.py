@@ -32,7 +32,6 @@ class MonSelectValPSEN(MonSelectVal):
         self.MonSelectVal.__init__(file,parent,name = None,fl = 0):
 
   def Traitement(self):
-        print "kkkkkkkkkkkkkkkkkkkllllllllllllllllll"
         liste1=self.textTraite.split(self.separateur)
         print liste1
         #self.parent.ajoutNValeur(liste) 

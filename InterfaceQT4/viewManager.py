@@ -231,6 +231,13 @@ class MyTabview:
            self.myQtab.setTabText(index,fileName)
        return ok
 
+   def saveLegerCurrentEditor(self):
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       editor=self.dict_editors[index]
+       ok, newName = editor.saveFileLeger()
+       return ok
+
    def sauveLigneCurrentEditor(self):
        index=self.myQtab.currentIndex()
        if index < 0 : return

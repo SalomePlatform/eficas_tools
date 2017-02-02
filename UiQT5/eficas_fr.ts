@@ -3,1194 +3,1917 @@
 <context>
     <name>@defaut</name>
     <message>
-        <source>TITLE</source>
-        <translation>Titre</translation>
-    </message>
-    <message>
-        <source>GEOMETRY_FILE_FORMAT</source>
-        <translation>Format Du Fichier De Geometrie</translation>
-    </message>
-    <message>
-        <source>GEOMETRY_FILE</source>
-        <translation>Fichier De Geometrie</translation>
-    </message>
-    <message>
-        <source>FORTRAN_FILE</source>
-        <translation>Fichier Fortran</translation>
+        <source>COEFFICIENT_TO_CALIBRATE_TIDAL_VELOCITIES</source>
+        <translation>Coefficient de calage des vitesses de courant</translation>
     </message>
     <message>
         <source>BOTTOM_TOPOGRAPHY_FILE</source>
-        <translation>Fichier Des Fonds</translation>
+        <translation>Fichier des fonds</translation>
     </message>
     <message>
-        <source>BOTTOM_SMOOTHINGS</source>
-        <translation>Lissages Du Fond</translation>
+        <source>NUMBER_OF_CORRECTIONS_OF_DISTRIBUTIVE_SCHEMES</source>
+        <translation>Nombre de corrections des schemas distributifs</translation>
+    </message>
+    <message>
+        <source>WATER_DENSITY</source>
+        <translation>Masse volumique de l'eau</translation>
+    </message>
+    <message>
+        <source>VALUE_OF_ATMOSPHERIC_PRESSURE</source>
+        <translation>Valeur de la pression atmospherique</translation>
+    </message>
+    <message>
+        <source>LISTING_FOR_PRINTOUT_PERIOD</source>
+        <translation>Periode pour les sorties listing</translation>
+    </message>
+    <message>
+        <source>CONSERVATIVE_N_SCHEME</source>
+        <translation>Schema n conservatif</translation>
+    </message>
+    <message>
+        <source>wave_celerity_(m/s)</source>
+        <translation>Celerite des ondes (m/s)</translation>
+    </message>
+    <message>
+        <source>scalar_flowrate_of_fluid_(m2/s)</source>
+        <translation>Debit scalaire du fluide (m2/s)</translation>
+    </message>
+    <message>
+        <source>constant_normal_profile</source>
+        <translation>Profil normal constant</translation>
+    </message>
+    <message>
+        <source>LAMBERT_4_CORSICA</source>
+        <translation>Lambert 4 corse</translation>
+    </message>
+    <message>
+        <source>MERCATOR</source>
+        <translation>Mercator</translation>
+    </message>
+    <message>
+        <source>VELOCITY_DIFFUSIVITY</source>
+        <translation>Coefficient de diffusion des vitesses</translation>
+    </message>
+    <message>
+        <source>LINEARIZED_PROPAGATION</source>
+        <translation>Propagation linearisee</translation>
+    </message>
+    <message>
+        <source>PRINTOUT_PERIOD_FOR_DROGUES</source>
+        <translation>Periode pour les sorties de flotteurs</translation>
+    </message>
+    <message>
+        <source>BINARY_RESULTS_FILE_FORMAT</source>
+        <translation>Format du fichier de resultats binaire</translation>
+    </message>
+    <message>
+        <source>COMPUTATION_CONTINUED</source>
+        <translation>Suite de calcul</translation>
+    </message>
+    <message>
+        <source>PARALLEL_PROCESSORS</source>
+        <translation>Processeurs paralleles</translation>
+    </message>
+    <message>
+        <source>COEFFICIENT_FOR_DIFFUSION_OF_TRACERS</source>
+        <translation>Coefficient de diffusion des traceurs</translation>
+    </message>
+    <message>
+        <source>LAMBERT_3_SOUTH</source>
+        <translation>Lambert 3 sud</translation>
+    </message>
+    <message>
+        <source>DIAMETER_OF_ALGAE</source>
+        <translation>Diametre des algues</translation>
+    </message>
+    <message>
+        <source>FRICTION_DATA_FILE</source>
+        <translation>Fichier de donnees pour le frottement</translation>
+    </message>
+    <message>
+        <source>Real_tide_(recommended_methodology)</source>
+        <translation>Maree reelle (methodologie recommandee)</translation>
+    </message>
+    <message>
+        <source>NAMES_OF_POINTS</source>
+        <translation>Noms des points</translation>
+    </message>
+    <message>
+        <source>GIGARTINA_LEPTORHYNCHOS</source>
+        <translation>Gigartina leptorhynchos</translation>
+    </message>
+    <message>
+        <source>STOP_CRITERIA</source>
+        <translation>Criteres d'arret</translation>
+    </message>
+    <message>
+        <source>Roe_scheme</source>
+        <translation>Schema de roe</translation>
+    </message>
+    <message>
+        <source>FINITE_VOLUME_SCHEME</source>
+        <translation>Schema en volumes finis</translation>
+    </message>
+    <message>
+        <source>IMPLICITATION_COEFFICIENT_OF_TRACERS</source>
+        <translation>Coefficient d'implicitation des traceurs</translation>
+    </message>
+    <message>
+        <source>gradient_simple</source>
+        <translation>Gradient simple</translation>
+    </message>
+    <message>
+        <source>SPATIAL_PROJECTION_TYPE</source>
+        <translation>Type de projection spatiale</translation>
+    </message>
+    <message>
+        <source>PHYSICAL_CHARACTERISTICS_OF_THE_TSUNAMI</source>
+        <translation>Parametres physiques du tsunami</translation>
+    </message>
+    <message>
+        <source>direct</source>
+        <translation>Direct</translation>
+    </message>
+    <message>
+        <source>zero</source>
+        <translation>Zero</translation>
+    </message>
+    <message>
+        <source>FRICTION_COEFFICIENT</source>
+        <translation>Coefficient de frottement</translation>
+    </message>
+    <message>
+        <source>BREACHES_DATA_FILE</source>
+        <translation>Fichier de donnees des breches</translation>
+    </message>
+    <message>
+        <source>COEFFICIENT_1_FOR_LAW_OF_TRACERS_DEGRADATION</source>
+        <translation>Coefficient 1 de la loi de degradation des traceurs</translation>
+    </message>
+    <message>
+        <source>TREATMENT_OF_FLUXES_AT_THE_BOUNDARIES</source>
+        <translation>Traitement des flux aux frontieres</translation>
+    </message>
+    <message>
+        <source>GLOBAL_NUMBER_OF_THE_POINT_TO_CALIBRATE_HIGH_WATER</source>
+        <translation>Numero global du point pour caler la pleine mer</translation>
+    </message>
+    <message>
+        <source>REFERENCE_FILE_FORMAT</source>
+        <translation>Format du fichier de reference</translation>
+    </message>
+    <message>
+        <source>conjugate_residual</source>
+        <translation>Residu conjuge</translation>
+    </message>
+    <message>
+        <source>BOTTOM_SURFACES_DELWAQ_FILE</source>
+        <translation>Fichier DELWAQ des surfaces du fond</translation>
+    </message>
+    <message>
+        <source>N_SCHEME_FOR_TIDAL_FLATS</source>
+        <translation>Schema n pour bancs decouvrants</translation>
+    </message>
+    <message>
+        <source>NO_FRICTION</source>
+        <translation>Pas de frottement</translation>
+    </message>
+    <message>
+        <source>no_preconditioning_</source>
+        <translation>Aucun</translation>
+    </message>
+    <message>
+        <source>CONTINUITY_CORRECTION</source>
+        <translation>Correction de continuite</translation>
+    </message>
+    <message>
+        <source>F(T90)_LAW</source>
+        <translation>Loi en F(T90)</translation>
+    </message>
+    <message>
+        <source>FREE_SURFACE_GRADIENT_COMPATIBILITY</source>
+        <translation>Compatibilite du gradient de surface libre</translation>
+    </message>
+    <message>
+        <source>gmres</source>
+        <translation>GMRES</translation>
+    </message>
+    <message>
+        <source>strong</source>
+        <translation>Fortes</translation>
+    </message>
+    <message>
+        <source>1/h_div_(_h_nu_grad(U)</source>
+        <translation>1/h div ( h nu grad(U)</translation>
+    </message>
+    <message>
+        <source>SMAGORINSKI</source>
+        <translation>Smagorinski</translation>
+    </message>
+    <message>
+        <source>NAMES_OF_PRIVATE_VARIABLES</source>
+        <translation>Noms des variables privees</translation>
+    </message>
+    <message>
+        <source>NODES_DISTANCES_DELWAQ_FILE</source>
+        <translation>Fichier DELWAQ des distances entre noeuds</translation>
+    </message>
+    <message>
+        <source>SCHEME_OPTION_FOR_ADVECTION_OF_TRACERS</source>
+        <translation>Option du schema pour la convection des traceurs</translation>
+    </message>
+    <message>
+        <source>MERCATOR_FOR_TELEMAC</source>
+        <translation>Mercator pour telemac</translation>
+    </message>
+    <message>
+        <source>TIME_STEP_REDUCTION_FOR_K_EPSILON_MODEL</source>
+        <translation>Reduction du pas de temps pour le modele K-Epsilon</translation>
+    </message>
+    <message>
+        <source>quasi_bubble</source>
+        <translation>Quasi-bulle</translation>
+    </message>
+    <message>
+        <source>NON_DIMENSIONAL_DISPERSION_COEFFICIENTS</source>
+        <translation>Coefficients adimensionnels de dispersion</translation>
+    </message>
+    <message>
+        <source>classical_EBE</source>
+        <translation>Ebe classique</translation>
+    </message>
+    <message>
+        <source>IMPLICIT_NON_CONSERVATIVE_N_SCHEME</source>
+        <translation>Schema n implicite non conservatif</translation>
+    </message>
+    <message>
+        <source>GEOMETRY_FILE_FORMAT</source>
+        <translation>Format du fichier de geometrie</translation>
+    </message>
+    <message>
+        <source>ORIGINAL_HOUR_OF_TIME</source>
+        <translation>Heure de l'origine des temps</translation>
+    </message>
+    <message>
+        <source>DIFFUSIVITY_FOR_DELWAQ</source>
+        <translation>Diffusion pour DELWAQ</translation>
+    </message>
+    <message>
+        <source>Q(Z)_not_programmed</source>
+        <translation>Q(Z) non programme</translation>
+    </message>
+    <message>
+        <source>DISSIPATION_COEFFICIENT_FOR_SECONDARY_CURRENTS</source>
+        <translation>Coefficient de dissipation pour courants secondaires</translation>
+    </message>
+    <message>
+        <source>ALGAE_TRANSPORT_MODEL</source>
+        <translation>Modele de transport des algues</translation>
+    </message>
+    <message>
+        <source>TOLERANCES_FOR_IDENTIFICATION</source>
+        <translation>Precisions pour l'identification</translation>
+    </message>
+    <message>
+        <source>WGS84_SOUTHERN_UTM</source>
+        <translation>WGS84 sud utm</translation>
+    </message>
+    <message>
+        <source>air_pressure_(Pa)</source>
+        <translation>Pression atmospherique (Pa)</translation>
+    </message>
+    <message>
+        <source>No_model</source>
+        <translation>Pas de modele</translation>
+    </message>
+    <message>
+        <source>DELWAQ_PRINTOUT_PERIOD</source>
+        <translation>Periode de sortie pour DELWAQ</translation>
+    </message>
+    <message>
+        <source>DROGUES_FILE</source>
+        <translation>Fichier des flotteurs</translation>
+    </message>
+    <message>
+        <source>MASS_LUMPING_FOR_WEAK_CHARACTERISTICS</source>
+        <translation>Mass-lumping pour les caracteristiques faibles</translation>
+    </message>
+    <message>
+        <source>GRAVITY_ACCELERATION</source>
+        <translation>Acceleration de la pesanteur</translation>
+    </message>
+    <message>
+        <source>BINARY_DATABASE_2_FOR_TIDE</source>
+        <translation>Base binaire 2 de donnees de maree</translation>
+    </message>
+    <message>
+        <source>6_points</source>
+        <translation>6 points</translation>
+    </message>
+    <message>
+        <source>TIME_RANGE_FOR_FOURIER_ANALYSIS</source>
+        <translation>Bornes en temps pour l'analyse de fourier</translation>
+    </message>
+    <message>
+        <source>EDGE_BASED_N_SCHEME</source>
+        <translation>Schema n par segments</translation>
+    </message>
+    <message>
+        <source>Priority_to_fluxes</source>
+        <translation>Priorite aux flux</translation>
+    </message>
+    <message>
+        <source>LAMBERT_1_NORTH</source>
+        <translation>Lambert 1 nord</translation>
+    </message>
+    <message>
+        <source>velocity_proportional_to_square_root_of_depth</source>
+        <translation>Vitesse en racine carree de H</translation>
+    </message>
+    <message>
+        <source>STRICKLER</source>
+        <translation>Strickler</translation>
+    </message>
+    <message>
+        <source>LAMBERT_2_EXTENDED</source>
+        <translation>Lambert 2 etendu</translation>
+    </message>
+    <message>
+        <source>ELEMENTS_MASKED_BY_USER</source>
+        <translation>Elements masques par l'utilisateur</translation>
+    </message>
+    <message>
+        <source>NAMES_OF_TRACERS</source>
+        <translation>Noms des traceurs</translation>
+    </message>
+    <message>
+        <source>H_CLIPPING</source>
+        <translation>Clipping de H</translation>
+    </message>
+    <message>
+        <source>conjugate_residuals</source>
+        <translation>Residu conjuge</translation>
+    </message>
+    <message>
+        <source>PARAMETER_ESTIMATION</source>
+        <translation>Estimation de parametre</translation>
+    </message>
+    <message>
+        <source>CHECKING_THE_MESH</source>
+        <translation>Verification du maillage</translation>
+    </message>
+    <message>
+        <source>SOLVER_FOR_K_EPSILON_MODEL</source>
+        <translation>Solveur pour le modele K-Epsilon</translation>
+    </message>
+    <message>
+        <source>LIST_OF_FILES</source>
+        <translation>Liste des fichiers</translation>
+    </message>
+    <message>
+        <source>Wave_equation</source>
+        <translation>Equation d'onde</translation>
+    </message>
+    <message>
+        <source>NAMES_OF_CLANDESTINE_VARIABLES</source>
+        <translation>Noms des variables clandestines</translation>
+    </message>
+    <message>
+        <source>WAQTEL_STEERING_FILE</source>
+        <translation>Fichier des parametres de waqtel</translation>
+    </message>
+    <message>
+        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_ADVECTION_SCHEMES</source>
+        <translation>Maximum d'iterations pour les schemas de convection</translation>
+    </message>
+    <message>
+        <source>squared_conjugate_gradient</source>
+        <translation>Gradient conjuge carre</translation>
+    </message>
+    <message>
+        <source>LAW_OF_BOTTOM_FRICTION</source>
+        <translation>Loi de frottement sur le fond</translation>
+    </message>
+    <message>
+        <source>MATRIX_VECTOR_PRODUCT</source>
+        <translation>Produit matrice-vecteur</translation>
+    </message>
+    <message>
+        <source>ACCURACY_FOR_DIFFUSION_OF_TRACERS</source>
+        <translation>Precision pour la diffusion des traceurs</translation>
+    </message>
+    <message>
+        <source>cgstab</source>
+        <translation>CGSTAB</translation>
+    </message>
+    <message>
+        <source>MANNING</source>
+        <translation>Manning</translation>
+    </message>
+    <message>
+        <source>SCHEME_FOR_ADVECTION_OF_TRACERS</source>
+        <translation>Schema pour la convection des traceurs</translation>
+    </message>
+    <message>
+        <source>OPTION_FOR_THE_SOLVER_FOR_K_EPSILON_MODEL</source>
+        <translation>Option du solveur pour le modele K-Epsilon</translation>
+    </message>
+    <message>
+        <source>conjugate_gradient_squared_stabilised_(cgstab)</source>
+        <translation>Gradient conjugue carre stabilise (CGSTAB)</translation>
+    </message>
+    <message>
+        <source>PELVETIOPSIS_LIMITATA</source>
+        <translation>Pelvetiopsis limitata</translation>
+    </message>
+    <message>
+        <source>LIKE_1_BUT_WITH_POROSITY_(DEFINA_METHOD)</source>
+        <translation>Comme 1 mais avec porosite (methode defina)</translation>
+    </message>
+    <message>
+        <source>FRICTION_DATA</source>
+        <translation>Donnees pour le frottement</translation>
+    </message>
+    <message>
+        <source>TUBES_DATA_FILE</source>
+        <translation>Fichier de donnees des buses</translation>
+    </message>
+    <message>
+        <source>ZONES_FILE</source>
+        <translation>Fichier des zones</translation>
+    </message>
+    <message>
+        <source>Mean_tide</source>
+        <translation>Maree moyenne (coef. presque 70)</translation>
+    </message>
+    <message>
+        <source>DENSITY_EFFECTS</source>
+        <translation>Effets de densite</translation>
+    </message>
+    <message>
+        <source>THRESHOLD_DEPTH_FOR_RECEDING_PROCEDURE</source>
+        <translation>Profondeur limite pour procedure de ressuyage</translation>
+    </message>
+    <message>
+        <source>explicit</source>
+        <translation>Explicite</translation>
+    </message>
+    <message>
+        <source>DRY_ELEMENTS_FROZEN</source>
+        <translation>Gel des elements decouvrants</translation>
+    </message>
+    <message>
+        <source>extrapolation</source>
+        <translation>Extrapolation</translation>
+    </message>
+    <message>
+        <source>conjugate_gradient_on_normal_equation</source>
+        <translation>Gradient conjugue sur equation normal</translation>
+    </message>
+    <message>
+        <source>TREATMENT_OF_NEGATIVE_DEPTHS</source>
+        <translation>Traitement des hauteurs negatives</translation>
+    </message>
+    <message>
+        <source>STEERING_FILE</source>
+        <translation>Fichier des parametres</translation>
+    </message>
+    <message>
+        <source>ZONE_NUMBER_IN_GEOGRAPHIC_SYSTEM</source>
+        <translation>Numero de fuseau ou projection dans le systeme geographique</translation>
+    </message>
+    <message>
+        <source>DIFFUSION_OF_TRACERS</source>
+        <translation>Diffusion des traceurs</translation>
+    </message>
+    <message>
+        <source>PREVIOUS_COMPUTATION_FILE</source>
+        <translation>Fichier du calcul precedent</translation>
+    </message>
+    <message>
+        <source>DIAMETER_OF_ROUGHNESS_ELEMENTS</source>
+        <translation>Diametre des elements de frottement</translation>
+    </message>
+    <message>
+        <source>friction_velocity</source>
+        <translation>Vitesse de frottement</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_TIME_STEPS</source>
+        <translation>Nombre de pas de temps</translation>
+    </message>
+    <message>
+        <source>NEWMARK_TIME_INTEGRATION_COEFFICIENT</source>
+        <translation>Coefficient d'integration en temps de newmark</translation>
+    </message>
+    <message>
+        <source>TOMAWAC_STEERING_FILE</source>
+        <translation>Fichier des parametres de TOMAWAC</translation>
+    </message>
+    <message>
+        <source>CONSTANT_VISCOSITY</source>
+        <translation>Viscosite constante</translation>
+    </message>
+    <message>
+        <source>INITIAL_DEPTH</source>
+        <translation>Hauteur initiale</translation>
+    </message>
+    <message>
+        <source>WATER_QUALITY</source>
+        <translation>Qualite d'eau</translation>
+    </message>
+    <message>
+        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_DIFFUSION_OF_TRACERS</source>
+        <translation>Maximum d'iterations pour la diffusion des traceurs</translation>
+    </message>
+    <message>
+        <source>ANGLAIS</source>
+        <translation>Anglais</translation>
+    </message>
+    <message>
+        <source>EQUATIONS_SOLVED_EVERYWHERE_WITH_CORRECTION_ON_TIDAL_FLATS</source>
+        <translation>Equations resolues partout, correction sur les bancs decouvrants</translation>
+    </message>
+    <message>
+        <source>LAW_OF_FRICTION_ON_LATERAL_BOUNDARIES</source>
+        <translation>Loi de frottement sur les parois laterales</translation>
+    </message>
+    <message>
+        <source>COUPLING_PERIOD_FOR_SISYPHE</source>
+        <translation>Periode de couplage pour sisyphe</translation>
+    </message>
+    <message>
+        <source>NON_CONSERVATIVE_PSI_SCHEME</source>
+        <translation>Schema PSI non conservatif</translation>
+    </message>
+    <message>
+        <source>STAGE_DISCHARGE_CURVES_FILE</source>
+        <translation>Fichier des courbes de tarage</translation>
+    </message>
+    <message>
+        <source>INITIAL_CONDITIONS</source>
+        <translation>Conditions initiales</translation>
+    </message>
+    <message>
+        <source>predictor_corrector</source>
+        <translation>Predicteur-correcteur</translation>
+    </message>
+    <message>
+        <source>LAMBERT</source>
+        <translation>Lambert</translation>
+    </message>
+    <message>
+        <source>OPTION_FOR_THE_DIFFUSION_OF_TRACERS</source>
+        <translation>Option pour la diffusion des traceurs</translation>
+    </message>
+    <message>
+        <source>ACCURACY_OF_EPSILON</source>
+        <translation>Precision sur epsilon</translation>
+    </message>
+    <message>
+        <source>THRESHOLD_DEPTH_FOR_WIND</source>
+        <translation>Profondeur limite pour le vent</translation>
+    </message>
+    <message>
+        <source>SOLVER_ACCURACY</source>
+        <translation>Precision du solveur</translation>
+    </message>
+    <message>
+        <source>TURBULENCE_MODEL_FOR_SOLID_BOUNDARIES</source>
+        <translation>Regime de turbulence pour les parois</translation>
     </message>
     <message>
         <source>BOUNDARY_CONDITIONS_FILE</source>
-        <translation>Fichier Des Conditions Aux Limites</translation>
+        <translation>Fichier des conditions aux limites</translation>
     </message>
     <message>
         <source>VALIDATION</source>
         <translation>Validation</translation>
     </message>
     <message>
-        <source>REFERENCE_FILE_FORMAT</source>
-        <translation>Format Du Fichier De Reference</translation>
+        <source>tracer</source>
+        <translation>Traceur</translation>
     </message>
     <message>
-        <source>REFERENCE_FILE</source>
-        <translation>Fichier De Reference</translation>
+        <source>TIDE_GENERATING_FORCE</source>
+        <translation>Force generatrice de la maree</translation>
     </message>
     <message>
-        <source>BINARY_DATA_FILE_1_FORMAT</source>
-        <translation>Format Du Fichier De Donnees Binaire 1</translation>
-    </message>
-    <message>
-        <source>BINARY_DATA_FILE_1</source>
-        <translation>Fichier De Donnees Binaire 1</translation>
-    </message>
-    <message>
-        <source>BINARY_DATA_FILE_2_FORMAT</source>
-        <translation>Format Du Fichier De Donnees Binaire 2</translation>
-    </message>
-    <message>
-        <source>BINARY_DATA_FILE_2</source>
-        <translation>Fichier De Donnees Binaire 2</translation>
-    </message>
-    <message>
-        <source>FORMATTED_DATA_FILE_1</source>
-        <translation>Fichier De Donnees Formate 1</translation>
-    </message>
-    <message>
-        <source>FORMATTED_DATA_FILE_2</source>
-        <translation>Fichier De Donnees Formate 2</translation>
-    </message>
-    <message>
-        <source>INITIAL_CONDITIONS</source>
-        <translation>Conditions Initiales</translation>
-    </message>
-    <message>
-        <source>INITIAL_ELEVATION</source>
-        <translation>Cote Initiale</translation>
-    </message>
-    <message>
-        <source>INITIAL_DEPTH</source>
-        <translation>Hauteur Initiale</translation>
-    </message>
-    <message>
-        <source>COMPUTATION_CONTINUED</source>
-        <translation>Suite De Calcul</translation>
-    </message>
-    <message>
-        <source>PREVIOUS_COMPUTATION_FILE_FORMAT</source>
-        <translation>Format Du Fichier Du Calcul Precedent</translation>
-    </message>
-    <message>
-        <source>PREVIOUS_COMPUTATION_FILE</source>
-        <translation>Fichier Du Calcul Precedent</translation>
-    </message>
-    <message>
-        <source>RECORD_NUMBER_FOR_RESTART</source>
-        <translation>Enregistrement Pour Suite De Calcul</translation>
-    </message>
-    <message>
-        <source>INITIAL_TIME_SET_TO_ZERO</source>
-        <translation>Remise A Zero Du Temps</translation>
-    </message>
-    <message>
-        <source>PARALLEL_PROCESSORS</source>
-        <translation>Processeurs Paralleles</translation>
-    </message>
-    <message>
-        <source>CHECKING_THE_MESH</source>
-        <translation>Verification Du Maillage</translation>
-    </message>
-    <message>
-        <source>MAXIMUM_NUMBER_OF_BOUNDARIES</source>
-        <translation>Nombre Maximum De Frontieres</translation>
-    </message>
-    <message>
-        <source>MAXIMUM_NUMBER_OF_SOURCES</source>
-        <translation>Nombre Maximum De Sources</translation>
-    </message>
-    <message>
-        <source>MAXIMUM_NUMBER_OF_TRACERS</source>
-        <translation>Nombre Maximum De Traceurs</translation>
-    </message>
-    <message>
-        <source>PRESCRIBED_ELEVATIONS</source>
-        <translation>Cotes Imposees</translation>
+        <source>SUPG</source>
+        <translation>SUPG</translation>
     </message>
     <message>
         <source>PRESCRIBED_FLOWRATES</source>
-        <translation>Debits Imposes</translation>
+        <translation>Debits imposes</translation>
     </message>
     <message>
-        <source>PRESCRIBED_VELOCITIES</source>
-        <translation>Vitesses Imposees</translation>
+        <source>Mean_spring_tide</source>
+        <translation>Maree de vive-eau moyenne (coef. presque 95)</translation>
     </message>
     <message>
-        <source>STAGE_DISCHARGE_CURVES</source>
-        <translation>Courbes De Tarage</translation>
+        <source>BINARY_DATABASE_1_FOR_TIDE</source>
+        <translation>Base binaire 1 de donnees de maree</translation>
     </message>
     <message>
-        <source>STAGE_DISCHARGE_CURVES_FILE</source>
-        <translation>Fichier Des Courbes De Tarage</translation>
+        <source>LAW_OF_TRACERS_DEGRADATION</source>
+        <translation>Loi de degradation des traceurs</translation>
     </message>
     <message>
-        <source>VELOCITY_PROFILES</source>
-        <translation>Profils De Vitesse</translation>
+        <source>SECTIONS_INPUT_FILE</source>
+        <translation>Fichier des sections de controle</translation>
     </message>
     <message>
-        <source>OPTION_FOR_LIQUID_BOUNDARIES</source>
-        <translation>Option Pour Les Frontieres Liquides</translation>
+        <source>MINIMUM_VALUE_OF_DEPTH</source>
+        <translation>Valeur minimum de H</translation>
     </message>
     <message>
-        <source>LIQUID_BOUNDARIES_FILE</source>
-        <translation>Fichier Des Frontieres Liquides</translation>
+        <source>No_tide</source>
+        <translation>Pas de maree</translation>
     </message>
     <message>
-        <source>ELEMENTS_MASKED_BY_USER</source>
-        <translation>Elements Masques Par L'utilisateur</translation>
+        <source>SPACING_OF_ROUGHNESS_ELEMENTS</source>
+        <translation>Espacement des elements de frottement</translation>
     </message>
     <message>
-        <source>DEBUGGER</source>
-        <translation>Debugger</translation>
+        <source>SCHEME_OPTION_FOR_ADVECTION_OF_K_EPSILON</source>
+        <translation>Option du schema pour la convection du K-Epsilon</translation>
     </message>
     <message>
-        <source>TIME_STEP</source>
-        <translation>Pas De Temps</translation>
+        <source>LISTING_PRINTOUT_PERIOD</source>
+        <translation>Periode de sortie listing</translation>
     </message>
     <message>
-        <source>NUMBER_OF_TIME_STEPS</source>
-        <translation>Nombre De Pas De Temps</translation>
+        <source>COLEBROOK_WHITE</source>
+        <translation>Colebrook-white</translation>
     </message>
     <message>
-        <source>DURATION</source>
-        <translation>Duree Du Calcul</translation>
+        <source>MINOR_CONSTITUENTS_INFERENCE</source>
+        <translation>Interpolation de composantes mineures</translation>
     </message>
     <message>
-        <source>ORIGINAL_DATE_OF_TIME</source>
-        <translation>Date De L'origine Des Temps</translation>
+        <source>CARTESIAN,_NOT_GEOREFERENCED</source>
+        <translation>Cartesien, non georeference</translation>
     </message>
     <message>
-        <source>ORIGINAL_HOUR_OF_TIME</source>
-        <translation>Heure De L'origine Des Temps</translation>
+        <source>No_Tsunami</source>
+        <translation>Pas de tsunami</translation>
     </message>
     <message>
-        <source>STOP_IF_A_STEADY_STATE_IS_REACHED</source>
-        <translation>Arret Si Un Etat Permanent Est Atteint</translation>
+        <source>drift_along_x_(m)</source>
+        <translation>Derive en X (m)</translation>
     </message>
     <message>
-        <source>STOP_CRITERIA</source>
-        <translation>Criteres D'arret</translation>
+        <source>UTM_ZONE,_E.G.</source>
+        <translation>Zone utm, par exemple</translation>
     </message>
     <message>
-        <source>CONTROL_OF_LIMITS</source>
-        <translation>Controle Des Limites</translation>
+        <source>CONSERVATIVE_PSI_SCHEME</source>
+        <translation>Schema PSI conservatif</translation>
     </message>
     <message>
-        <source>LIMIT_VALUES</source>
-        <translation>Valeurs Limites</translation>
+        <source>PREVIOUS_COMPUTATION_FILE_FORMAT</source>
+        <translation>Format du fichier du calcul precedent</translation>
     </message>
     <message>
-        <source>VARIABLE_TIME_STEP</source>
-        <translation>Pas De Temps Variable</translation>
+        <source>VALUES_OF_THE_TRACERS_AT_THE_SOURCES</source>
+        <translation>Valeurs des traceurs des sources</translation>
+    </message>
+    <message>
+        <source>linear</source>
+        <translation>Lineaire</translation>
+    </message>
+    <message>
+        <source>BINARY_RESULTS_FILE</source>
+        <translation>Fichier de resultats binaire</translation>
+    </message>
+    <message>
+        <source>diagonal</source>
+        <translation>Diagonal</translation>
+    </message>
+    <message>
+        <source>EXCHANGE_AREAS_DELWAQ_FILE</source>
+        <translation>Fichier DELWAQ des surfaces de flux</translation>
+    </message>
+    <message>
+        <source>IMPLICITATION_FOR_DIFFUSION_OF_VELOCITY</source>
+        <translation>Implicitation pour la diffusion des vitesses</translation>
+    </message>
+    <message>
+        <source>conjugate_gradient</source>
+        <translation>Gradient conjuge</translation>
+    </message>
+    <message>
+        <source>WGS84_NORTHERN_UTM</source>
+        <translation>WGS84 nord utm</translation>
+    </message>
+    <message>
+        <source>WEIRS_DATA_FILE</source>
+        <translation>Fichier de donnees des seuils</translation>
+    </message>
+    <message>
+        <source>IMPLICITATION_FOR_VELOCITY</source>
+        <translation>Implicitation pour la vitesse</translation>
+    </message>
+    <message>
+        <source>DEFINITION_OF_ZONES</source>
+        <translation>Definition de zones</translation>
+    </message>
+    <message>
+        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_K_AND_EPSILON</source>
+        <translation>Maximum d'iterations pour k et epsilon</translation>
+    </message>
+    <message>
+        <source>MEAN_DEPTH_FOR_LINEARIZATION</source>
+        <translation>Profondeur moyenne pour la linearisation</translation>
+    </message>
+    <message>
+        <source>3_points</source>
+        <translation>3 points</translation>
+    </message>
+    <message>
+        <source>wind_along_y_axis_(m/s)</source>
+        <translation>Vent suivant l'axe des Y (m/s)</translation>
+    </message>
+    <message>
+        <source>div(_nu_grad(T)_)</source>
+        <translation>Div( nu grad(t) )</translation>
+    </message>
+    <message>
+        <source>minimum_error</source>
+        <translation>Erreur minimale</translation>
+    </message>
+    <message>
+        <source>SCHEME_OPTION_FOR_ADVECTION_OF_VELOCITIES</source>
+        <translation>Option du schema pour la convection des vitesses</translation>
     </message>
     <message>
         <source>DESIRED_COURANT_NUMBER</source>
-        <translation>Nombre De Courant Souhaite</translation>
+        <translation>Nombre de courant souhaite</translation>
     </message>
     <message>
-        <source>ORIGIN_COORDINATES</source>
-        <translation>Coordonnees De L'origine</translation>
+        <source>flowrate_along_x_axis_(m2/s)</source>
+        <translation>Debit suivant l'axe des X (m2/s)</translation>
     </message>
     <message>
-        <source>SPHERICAL_COORDINATES</source>
-        <translation>Coordonnees Spheriques</translation>
+        <source>SUPG_OPTION</source>
+        <translation>Option de SUPG</translation>
     </message>
     <message>
-        <source>LATITUDE_OF_ORIGIN_POINT</source>
-        <translation>Latitude Du Point Origine</translation>
+        <source>1/h_div_(_h_nu_grad(T)</source>
+        <translation>1/h div ( h nu grad(t)</translation>
     </message>
     <message>
-        <source>LONGITUDE_OF_ORIGIN_POINT</source>
-        <translation>Longitude Du Point Origine</translation>
+        <source>crout</source>
+        <translation>Crout</translation>
+    </message>
+    <message>
+        <source>conjugate_gradient_squared</source>
+        <translation>Gradient conjugue carre</translation>
+    </message>
+    <message>
+        <source>STOP_IF_A_STEADY_STATE_IS_REACHED</source>
+        <translation>Arret si un etat permanent est atteint</translation>
+    </message>
+    <message>
+        <source>DEFAULT_PARALLEL_EXECUTABLE</source>
+        <translation>Executable parallele par defaut</translation>
+    </message>
+    <message>
+        <source>INFORMATION_ABOUT_SOLVER</source>
+        <translation>Informations sur le solveur</translation>
+    </message>
+    <message>
+        <source>K_EPSILON_MODEL</source>
+        <translation>Modele K-Epsilon</translation>
+    </message>
+    <message>
+        <source>AIR_PRESSURE</source>
+        <translation>Pression atmospherique</translation>
+    </message>
+    <message>
+        <source>RESULTS_FILE</source>
+        <translation>Fichier des resultats</translation>
+    </message>
+    <message>
+        <source>VERTICAL_FLUXES_DELWAQ_FILE</source>
+        <translation>Fichier DELWAQ des flux verticaux</translation>
+    </message>
+    <message>
+        <source>DELWAQ_STEERING_FILE</source>
+        <translation>Fichier de commande DELWAQ</translation>
+    </message>
+    <message>
+        <source>wind_along_x_axis_(m/s)</source>
+        <translation>Vent suivant l'axe des X (m/s)</translation>
+    </message>
+    <message>
+        <source>Lagrange_interp.</source>
+        <translation>Interp. de lagrange</translation>
+    </message>
+    <message>
+        <source>MASS_BALANCE</source>
+        <translation>Bilan de masse</translation>
+    </message>
+    <message>
+        <source>turbulent_viscosity_(m2/s)</source>
+        <translation>Viscosite turbulente (m2/s)</translation>
+    </message>
+    <message>
+        <source>OPTION_FOR_TIDAL_BOUNDARY_CONDITIONS</source>
+        <translation>Option pour les conditions aux limites de maree</translation>
+    </message>
+    <message>
+        <source>ADVECTION_OF_TRACERS</source>
+        <translation>Convection des traceurs</translation>
+    </message>
+    <message>
+        <source>DIFFUSION_OF_VELOCITY</source>
+        <translation>Diffusion des vitesses</translation>
+    </message>
+    <message>
+        <source>scalar_velocity_(m/s)</source>
+        <translation>Vitesse scalaire (m/s)</translation>
+    </message>
+    <message>
+        <source>COEFFICIENT_OF_WIND_INFLUENCE</source>
+        <translation>Coefficient d'influence du vent</translation>
+    </message>
+    <message>
+        <source>PRODUCTION_COEFFICIENT_FOR_SECONDARY_CURRENTS</source>
+        <translation>Coefficient de production pour courants secondaires</translation>
+    </message>
+    <message>
+        <source>HLLC_scheme_order_1</source>
+        <translation>Schéma HLLC ordre 1</translation>
+    </message>
+    <message>
+        <source>RESULTS_FILE_FORMAT</source>
+        <translation>Format du fichier des resultats</translation>
+    </message>
+    <message>
+        <source>COUPLING_PERIOD_FOR_TOMAWAC</source>
+        <translation>Periode de couplage pour TOMAWAC</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_PRIVATE_ARRAYS</source>
+        <translation>Nombre de tableaux prives</translation>
+    </message>
+    <message>
+        <source>MAXIMUM_NUMBER_OF_FRICTION_DOMAINS</source>
+        <translation>Nombre maximum de domaines de frottement</translation>
+    </message>
+    <message>
+        <source>DURATION</source>
+        <translation>Duree du calcul</translation>
+    </message>
+    <message>
+        <source>BINARY_DATA_FILE_2_FORMAT</source>
+        <translation>Format du fichier de donnees binaire 2</translation>
+    </message>
+    <message>
+        <source>HORIZONTAL_WITH_SAME_NUMBER_OF_NODES_UPSTREAM/DOWNSTREAM</source>
+        <translation>Horizontal avec meme nombre de noeuds amont/aval</translation>
+    </message>
+    <message>
+        <source>OPTION_FOR_THE_DIFFUSION_OF_VELOCITIES</source>
+        <translation>Option pour la diffusion des vitesses</translation>
+    </message>
+    <message>
+        <source>MASS_LUMPING_ON_TRACERS</source>
+        <translation>Mass-lumping sur les traceurs</translation>
     </message>
     <message>
         <source>NORTH</source>
         <translation>Nord</translation>
     </message>
     <message>
-        <source>SPATIAL_PROJECTION_TYPE</source>
-        <translation>Type De Projection Spatiale</translation>
-    </message>
-    <message>
-        <source>MAXIMUM_NUMBER_OF_FRICTION_DOMAINS</source>
-        <translation>Nombre Maximum De Domaines De Frottement</translation>
-    </message>
-    <message>
-        <source>FRICTION_DATA</source>
-        <translation>Donnees Pour Le Frottement</translation>
-    </message>
-    <message>
-        <source>FRICTION_DATA_FILE</source>
-        <translation>Fichier De Donnees Pour Le Frottement</translation>
-    </message>
-    <message>
-        <source>LAW_OF_BOTTOM_FRICTION</source>
-        <translation>Loi De Frottement Sur Le Fond</translation>
-    </message>
-    <message>
-        <source>FRICTION_COEFFICIENT</source>
-        <translation>Coefficient De Frottement</translation>
-    </message>
-    <message>
-        <source>MANNING_DEFAULT_VALUE_FOR_COLEBROOK_WHITE_LAW</source>
-        <translation>Valeur Par Defaut Du Manning Pour La Loi De Colebrook-white</translation>
-    </message>
-    <message>
-        <source>DEPTH_IN_FRICTION_TERMS</source>
-        <translation>Hauteur Dans Les Termes De Frottement</translation>
-    </message>
-    <message>
-        <source>NON_SUBMERGED_VEGETATION_FRICTION</source>
-        <translation>Frottement Pour La Vegetation Non Submergee</translation>
-    </message>
-    <message>
-        <source>DIAMETER_OF_ROUGHNESS_ELEMENTS</source>
-        <translation>Diametre Des Elements De Frottement</translation>
-    </message>
-    <message>
-        <source>SPACING_OF_ROUGHNESS_ELEMENTS</source>
-        <translation>Espacement Des Elements De Frottement</translation>
-    </message>
-    <message>
-        <source>LAW_OF_FRICTION_ON_LATERAL_BOUNDARIES</source>
-        <translation>Loi De Frottement Sur Les Parois Laterales</translation>
-    </message>
-    <message>
-        <source>ROUGHNESS_COEFFICIENT_OF_BOUNDARIES</source>
-        <translation>Coefficient De Rugosite Des Bords</translation>
-    </message>
-    <message>
-        <source>DEFINITION_OF_ZONES</source>
-        <translation>Definition De Zones</translation>
-    </message>
-    <message>
-        <source>ZONES_FILE</source>
-        <translation>Fichier Des Zones</translation>
-    </message>
-    <message>
-        <source>WIND</source>
-        <translation>Vent</translation>
-    </message>
-    <message>
-        <source>OPTION_FOR_WIND</source>
-        <translation>Option Du Vent</translation>
-    </message>
-    <message>
-        <source>COEFFICIENT_OF_WIND_INFLUENCE</source>
-        <translation>Coefficient D'influence Du Vent</translation>
-    </message>
-    <message>
-        <source>WIND_VELOCITY_ALONG_X</source>
-        <translation>Vitesse Du Vent Suivant X</translation>
-    </message>
-    <message>
-        <source>WIND_VELOCITY_ALONG_Y</source>
-        <translation>Vitesse Du Vent Suivant Y</translation>
-    </message>
-    <message>
-        <source>SPEED_AND_DIRECTION_OF_WIND</source>
-        <translation>Vitesse Et Direction Du Vent</translation>
-    </message>
-    <message>
-        <source>THRESHOLD_DEPTH_FOR_WIND</source>
-        <translation>Profondeur Limite Pour Le Vent</translation>
-    </message>
-    <message>
-        <source>AIR_PRESSURE</source>
-        <translation>Pression Atmospherique</translation>
-    </message>
-    <message>
-        <source>VALUE_OF_ATMOSPHERIC_PRESSURE</source>
-        <translation>Valeur De La Pression Atmospherique</translation>
-    </message>
-    <message>
         <source>RAIN_OR_EVAPORATION</source>
-        <translation>Pluie Ou Evaporation</translation>
+        <translation>Pluie ou evaporation</translation>
     </message>
     <message>
-        <source>RAIN_OR_EVAPORATION_IN_MM_PER_DAY</source>
-        <translation>Pluie Ou Evaporation En Mm Par Jour</translation>
-    </message>
-    <message>
-        <source>WAVE_DRIVEN_CURRENTS</source>
-        <translation>Courants De Houle</translation>
-    </message>
-    <message>
-        <source>RECORD_NUMBER_IN_WAVE_FILE</source>
-        <translation>Numero De L'enregistrement Dans Le Fichier De Houle</translation>
-    </message>
-    <message>
-        <source>PARAMETER_ESTIMATION</source>
-        <translation>Estimation De Parametre</translation>
-    </message>
-    <message>
-        <source>COST_FUNCTION</source>
-        <translation>Fonction Cout</translation>
-    </message>
-    <message>
-        <source>IDENTIFICATION_METHOD</source>
-        <translation>Methode D'identification</translation>
-    </message>
-    <message>
-        <source>TOLERANCES_FOR_IDENTIFICATION</source>
-        <translation>Precisions Pour L'identification</translation>
-    </message>
-    <message>
-        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_IDENTIFICATION</source>
-        <translation>Maximum D'iterations Pour L'identification</translation>
-    </message>
-    <message>
-        <source>ABSCISSAE_OF_SOURCES</source>
-        <translation>Abscisses Des Sources</translation>
-    </message>
-    <message>
-        <source>ORDINATES_OF_SOURCES</source>
-        <translation>Ordonnees Des Sources</translation>
-    </message>
-    <message>
-        <source>WATER_DISCHARGE_OF_SOURCES</source>
-        <translation>Debits Des Sources</translation>
-    </message>
-    <message>
-        <source>VELOCITIES_OF_THE_SOURCES_ALONG_X</source>
-        <translation>Vitesses Des Sources Selon X</translation>
-    </message>
-    <message>
-        <source>VELOCITIES_OF_THE_SOURCES_ALONG_Y</source>
-        <translation>Vitesses Des Sources Selon Y</translation>
-    </message>
-    <message>
-        <source>TYPE_OF_SOURCES</source>
-        <translation>Type Des Sources</translation>
-    </message>
-    <message>
-        <source>SOURCES_FILE</source>
-        <translation>Fichier Des Sources</translation>
-    </message>
-    <message>
-        <source>WATER_QUALITY</source>
-        <translation>Qualite D'eau</translation>
-    </message>
-    <message>
-        <source>WATER_QUALITY_PROCESS</source>
-        <translation>Processus Qualite D'eau</translation>
-    </message>
-    <message>
-        <source>CORIOLIS</source>
-        <translation>Coriolis</translation>
-    </message>
-    <message>
-        <source>CORIOLIS_COEFFICIENT</source>
-        <translation>Coefficient De Coriolis</translation>
-    </message>
-    <message>
-        <source>OPTION_FOR_TSUNAMI_GENERATION</source>
-        <translation>Option Pour La Generation De Tsunami</translation>
-    </message>
-    <message>
-        <source>PHYSICAL_CHARACTERISTICS_OF_THE_TSUNAMI</source>
-        <translation>Parametres Physiques Du Tsunami</translation>
-    </message>
-    <message>
-        <source>WATER_DENSITY</source>
-        <translation>Masse Volumique De L'eau</translation>
-    </message>
-    <message>
-        <source>GRAVITY_ACCELERATION</source>
-        <translation>Acceleration De La Pesanteur</translation>
-    </message>
-    <message>
-        <source>VERTICAL_STRUCTURES</source>
-        <translation>Structures Verticales</translation>
-    </message>
-    <message>
-        <source>SECONDARY_CURRENTS</source>
-        <translation>Courants Secondaires</translation>
-    </message>
-    <message>
-        <source>PRODUCTION_COEFFICIENT_FOR_SECONDARY_CURRENTS</source>
-        <translation>Coefficient De Production Pour Courants Secondaires</translation>
-    </message>
-    <message>
-        <source>DISSIPATION_COEFFICIENT_FOR_SECONDARY_CURRENTS</source>
-        <translation>Coefficient De Dissipation Pour Courants Secondaires</translation>
-    </message>
-    <message>
-        <source>VELOCITY_DIFFUSIVITY</source>
-        <translation>Coefficient De Diffusion Des Vitesses</translation>
-    </message>
-    <message>
-        <source>TURBULENCE_MODEL</source>
-        <translation>Modele De Turbulence</translation>
-    </message>
-    <message>
-        <source>SOLVER_FOR_K_EPSILON_MODEL</source>
-        <translation>Solveur Pour Le Modele K-epsilon</translation>
-    </message>
-    <message>
-        <source>OPTION_FOR_THE_SOLVER_FOR_K_EPSILON_MODEL</source>
-        <translation>Option Du Solveur Pour Le Modele K-epsilon</translation>
-    </message>
-    <message>
-        <source>PRECONDITIONING_FOR_K_EPSILON_MODEL</source>
-        <translation>Preconditionnement Pour Le Modele K-epsilon</translation>
-    </message>
-    <message>
-        <source>ACCURACY_OF_K</source>
-        <translation>Precision Sur K</translation>
-    </message>
-    <message>
-        <source>ACCURACY_OF_EPSILON</source>
-        <translation>Precision Sur Epsilon</translation>
-    </message>
-    <message>
-        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_K_AND_EPSILON</source>
-        <translation>Maximum D'iterations Pour K Et Epsilon</translation>
-    </message>
-    <message>
-        <source>NON_DIMENSIONAL_DISPERSION_COEFFICIENTS</source>
-        <translation>Coefficients Adimensionnels De Dispersion</translation>
-    </message>
-    <message>
-        <source>TURBULENCE_MODEL_FOR_SOLID_BOUNDARIES</source>
-        <translation>Regime De Turbulence Pour Les Parois</translation>
-    </message>
-    <message>
-        <source>INFORMATION_ABOUT_K_EPSILON_MODEL</source>
-        <translation>Informations Sur Le Modele K-epsilon</translation>
-    </message>
-    <message>
-        <source>ADVECTION_OF_K_AND_EPSILON</source>
-        <translation>Convection De K Et Epsilon</translation>
-    </message>
-    <message>
-        <source>SCHEME_FOR_ADVECTION_OF_K_EPSILON</source>
-        <translation>Schema Pour La Convection Du K-epsilon</translation>
-    </message>
-    <message>
-        <source>SCHEME_OPTION_FOR_ADVECTION_OF_K_EPSILON</source>
-        <translation>Option Du Schema Pour La Convection Du K-epsilon</translation>
-    </message>
-    <message>
-        <source>TIME_STEP_REDUCTION_FOR_K_EPSILON_MODEL</source>
-        <translation>Reduction Du Pas De Temps Pour Le Modele K-epsilon</translation>
-    </message>
-    <message>
-        <source>EQUATIONS</source>
-        <translation>Equations</translation>
-    </message>
-    <message>
-        <source>TREATMENT_OF_THE_LINEAR_SYSTEM</source>
-        <translation>Traitement Du Systeme Lineaire</translation>
-    </message>
-    <message>
-        <source>FINITE_VOLUME_SCHEME</source>
-        <translation>Schema En Volumes Finis</translation>
-    </message>
-    <message>
-        <source>SOLVER</source>
-        <translation>Solveur</translation>
-    </message>
-    <message>
-        <source>SOLVER_OPTION</source>
-        <translation>Option Du Solveur</translation>
-    </message>
-    <message>
-        <source>SOLVER_ACCURACY</source>
-        <translation>Precision Du Solveur</translation>
-    </message>
-    <message>
-        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_SOLVER</source>
-        <translation>Maximum D'iterations Pour Le Solveur</translation>
-    </message>
-    <message>
-        <source>CONTINUITY_CORRECTION</source>
-        <translation>Correction De Continuite</translation>
-    </message>
-    <message>
-        <source>PRECONDITIONING</source>
-        <translation>Preconditionnement</translation>
-    </message>
-    <message>
-        <source>C_U_PRECONDITIONING</source>
-        <translation>Preconditionnement C-u</translation>
-    </message>
-    <message>
-        <source>DISCRETIZATIONS_IN_SPACE</source>
-        <translation>Discretisations En Espace</translation>
-    </message>
-    <message>
-        <source>IMPLICITATION_FOR_DEPTH</source>
-        <translation>Implicitation Pour La Hauteur</translation>
-    </message>
-    <message>
-        <source>IMPLICITATION_FOR_VELOCITY</source>
-        <translation>Implicitation Pour La Vitesse</translation>
-    </message>
-    <message>
-        <source>PROPAGATION</source>
-        <translation>Propagation</translation>
-    </message>
-    <message>
-        <source>INITIAL_GUESS_FOR_H</source>
-        <translation>Ordre Du Tir Initial Pour H</translation>
-    </message>
-    <message>
-        <source>LINEARIZED_PROPAGATION</source>
-        <translation>Propagation Linearisee</translation>
-    </message>
-    <message>
-        <source>INITIAL_GUESS_FOR_U</source>
-        <translation>Ordre Du Tir Initial Pour U</translation>
-    </message>
-    <message>
-        <source>MEAN_DEPTH_FOR_LINEARIZATION</source>
-        <translation>Profondeur Moyenne Pour La Linearisation</translation>
-    </message>
-    <message>
-        <source>ADVECTION</source>
-        <translation>Convection</translation>
-    </message>
-    <message>
-        <source>ADVECTION_OF_H</source>
-        <translation>Convection De H</translation>
-    </message>
-    <message>
-        <source>ADVECTION_OF_U_AND_V</source>
-        <translation>Convection De U Et V</translation>
-    </message>
-    <message>
-        <source>TYPE_OF_ADVECTION</source>
-        <translation>Forme De La Convection</translation>
-    </message>
-    <message>
-        <source>OPTION_FOR_CHARACTERISTICS</source>
-        <translation>Option Pour Les Caracteristiques</translation>
-    </message>
-    <message>
-        <source>SUPG_OPTION</source>
-        <translation>Option De Supg</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_GAUSS_POINTS_FOR_WEAK_CHARACTERISTICS</source>
-        <translation>Nombre De Points De Gauss Pour Les Caracteristiques Faibles</translation>
-    </message>
-    <message>
-        <source>MASS_LUMPING_FOR_WEAK_CHARACTERISTICS</source>
-        <translation>Mass-lumping Pour Les Caracteristiques Faibles</translation>
-    </message>
-    <message>
-        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_ADVECTION_SCHEMES</source>
-        <translation>Maximum D'iterations Pour Les Schemas De Convection</translation>
-    </message>
-    <message>
-        <source>UPWIND_COEFFICIENTS</source>
-        <translation>Coefficients De Decentrement</translation>
-    </message>
-    <message>
-        <source>MASS_LUMPING_ON_H</source>
-        <translation>Mass-lumping Sur H</translation>
-    </message>
-    <message>
-        <source>MASS_LUMPING_ON_VELOCITY</source>
-        <translation>Mass-lumping Sur La Vitesse</translation>
-    </message>
-    <message>
-        <source>SCHEME_FOR_ADVECTION_OF_VELOCITIES</source>
-        <translation>Schema Pour La Convection Des Vitesses</translation>
-    </message>
-    <message>
-        <source>SCHEME_OPTION_FOR_ADVECTION_OF_VELOCITIES</source>
-        <translation>Option Du Schema Pour La Convection Des Vitesses</translation>
-    </message>
-    <message>
-        <source>FREE_SURFACE_GRADIENT_COMPATIBILITY</source>
-        <translation>Compatibilite Du Gradient De Surface Libre</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_SUB_ITERATIONS_FOR_NON_LINEARITIES</source>
-        <translation>Nombre De Sous-iterations Pour Les Non-linearites</translation>
-    </message>
-    <message>
-        <source>TREATMENT_OF_FLUXES_AT_THE_BOUNDARIES</source>
-        <translation>Traitement Des Flux Aux Frontieres</translation>
-    </message>
-    <message>
-        <source>DIFFUSION_OF_VELOCITY</source>
-        <translation>Diffusion Des Vitesses</translation>
-    </message>
-    <message>
-        <source>OPTION_FOR_THE_DIFFUSION_OF_VELOCITIES</source>
-        <translation>Option Pour La Diffusion Des Vitesses</translation>
-    </message>
-    <message>
-        <source>IMPLICITATION_FOR_DIFFUSION_OF_VELOCITY</source>
-        <translation>Implicitation Pour La Diffusion Des Vitesses</translation>
-    </message>
-    <message>
-        <source>MATRIX_STORAGE</source>
-        <translation>Stockage Des Matrices</translation>
-    </message>
-    <message>
-        <source>MATRIX_VECTOR_PRODUCT</source>
-        <translation>Produit Matrice-vecteur</translation>
-    </message>
-    <message>
-        <source>NEWMARK_TIME_INTEGRATION_COEFFICIENT</source>
-        <translation>Coefficient D'integration En Temps De Newmark</translation>
-    </message>
-    <message>
-        <source>ZERO</source>
-        <translation>Zero</translation>
-    </message>
-    <message>
-        <source>TIDAL_FLATS</source>
-        <translation>Bancs Decouvrants</translation>
-    </message>
-    <message>
-        <source>OPTION_FOR_THE_TREATMENT_OF_TIDAL_FLATS</source>
-        <translation>Option De Traitement Des Bancs Decouvrants</translation>
-    </message>
-    <message>
-        <source>TREATMENT_OF_NEGATIVE_DEPTHS</source>
-        <translation>Traitement Des Hauteurs Negatives</translation>
-    </message>
-    <message>
-        <source>THRESHOLD_FOR_NEGATIVE_DEPTHS</source>
-        <translation>Seuil Pour Les Profondeurs Negatives</translation>
-    </message>
-    <message>
-        <source>THRESHOLD_DEPTH_FOR_RECEDING_PROCEDURE</source>
-        <translation>Profondeur Limite Pour Procedure De Ressuyage</translation>
-    </message>
-    <message>
-        <source>H_CLIPPING</source>
-        <translation>Clipping De H</translation>
-    </message>
-    <message>
-        <source>MINIMUM_VALUE_OF_DEPTH</source>
-        <translation>Valeur Minimum De H</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_TRACERS</source>
-        <translation>Nombre De Traceurs</translation>
-    </message>
-    <message>
-        <source>NAMES_OF_TRACERS</source>
-        <translation>Noms Des Traceurs</translation>
-    </message>
-    <message>
-        <source>INITIAL_VALUES_OF_TRACERS</source>
-        <translation>Valeurs Initiales Des Traceurs</translation>
-    </message>
-    <message>
-        <source>DENSITY_EFFECTS</source>
-        <translation>Effets De Densite</translation>
-    </message>
-    <message>
-        <source>MEAN_TEMPERATURE</source>
-        <translation>Temperature Moyenne</translation>
-    </message>
-    <message>
-        <source>PRESCRIBED_TRACERS_VALUES</source>
-        <translation>Valeurs Imposees Des Traceurs</translation>
-    </message>
-    <message>
-        <source>SOLVER_FOR_DIFFUSION_OF_TRACERS</source>
-        <translation>Solveur Pour La Diffusion Des Traceurs</translation>
-    </message>
-    <message>
-        <source>SOLVER_OPTION_FOR_TRACERS_DIFFUSION</source>
-        <translation>Option Du Solveur Pour La Diffusion Des Traceurs</translation>
-    </message>
-    <message>
-        <source>PRECONDITIONING_FOR_DIFFUSION_OF_TRACERS</source>
-        <translation>Preconditionnement Pour La Diffusion Des Traceurs</translation>
-    </message>
-    <message>
-        <source>ACCURACY_FOR_DIFFUSION_OF_TRACERS</source>
-        <translation>Precision Pour La Diffusion Des Traceurs</translation>
-    </message>
-    <message>
-        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_DIFFUSION_OF_TRACERS</source>
-        <translation>Maximum D'iterations Pour La Diffusion Des Traceurs</translation>
-    </message>
-    <message>
-        <source>VALUES_OF_THE_TRACERS_AT_THE_SOURCES</source>
-        <translation>Valeurs Des Traceurs Des Sources</translation>
-    </message>
-    <message>
-        <source>VALUES_OF_TRACERS_IN_THE_RAIN</source>
-        <translation>Valeurs Des Traceurs Dans La Pluie</translation>
-    </message>
-    <message>
-        <source>ADVECTION_OF_TRACERS</source>
-        <translation>Convection Des Traceurs</translation>
-    </message>
-    <message>
-        <source>IMPLICITATION_COEFFICIENT_OF_TRACERS</source>
-        <translation>Coefficient D'implicitation Des Traceurs</translation>
-    </message>
-    <message>
-        <source>DIFFUSION_OF_TRACERS</source>
-        <translation>Diffusion Des Traceurs</translation>
-    </message>
-    <message>
-        <source>COEFFICIENT_FOR_DIFFUSION_OF_TRACERS</source>
-        <translation>Coefficient De Diffusion Des Traceurs</translation>
-    </message>
-    <message>
-        <source>OPTION_FOR_THE_DIFFUSION_OF_TRACERS</source>
-        <translation>Option Pour La Diffusion Des Traceurs</translation>
-    </message>
-    <message>
-        <source>SCHEME_FOR_ADVECTION_OF_TRACERS</source>
-        <translation>Schema Pour La Convection Des Traceurs</translation>
-    </message>
-    <message>
-        <source>SCHEME_OPTION_FOR_ADVECTION_OF_TRACERS</source>
-        <translation>Option Du Schema Pour La Convection Des Traceurs</translation>
-    </message>
-    <message>
-        <source>MASS_LUMPING_ON_TRACERS</source>
-        <translation>Mass-lumping Sur Les Traceurs</translation>
-    </message>
-    <message>
-        <source>LAW_OF_TRACERS_DEGRADATION</source>
-        <translation>Loi De Degradation Des Traceurs</translation>
-    </message>
-    <message>
-        <source>COEFFICIENT_1_FOR_LAW_OF_TRACERS_DEGRADATION</source>
-        <translation>Coefficient 1 De La Loi De Degradation Des Traceurs</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_DROGUES</source>
-        <translation>Nombre De Flotteurs</translation>
-    </message>
-    <message>
-        <source>PRINTOUT_PERIOD_FOR_DROGUES</source>
-        <translation>Periode Pour Les Sorties De Flotteurs</translation>
-    </message>
-    <message>
-        <source>DROGUES_FILE</source>
-        <translation>Fichier Des Flotteurs</translation>
-    </message>
-    <message>
-        <source>ALGAE_TRANSPORT_MODEL</source>
-        <translation>Modele De Transport Des Algues</translation>
-    </message>
-    <message>
-        <source>ALGAE_TYPE</source>
-        <translation>Type Des Algues</translation>
-    </message>
-    <message>
-        <source>DIAMETER_OF_ALGAE</source>
-        <translation>Diametre Des Algues</translation>
-    </message>
-    <message>
-        <source>DENSITY_OF_ALGAE</source>
-        <translation>Masse Volumique Des Algues</translation>
-    </message>
-    <message>
-        <source>THICKNESS_OF_ALGAE</source>
-        <translation>Epaisseur Des Algues</translation>
-    </message>
-    <message>
-        <source>OIL_SPILL_MODEL</source>
-        <translation>Modele De Nappes D'hydrocarbures</translation>
-    </message>
-    <message>
-        <source>OIL_SPILL_STEERING_FILE</source>
-        <translation>Fichier De Commandes Hydrocarbures</translation>
-    </message>
-    <message>
-        <source>STOCHASTIC_DIFFUSION_MODEL</source>
-        <translation>Modele De Diffusion Stochastique</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_LAGRANGIAN_DRIFTS</source>
-        <translation>Nombre De Derives Lagrangiennes</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_WEIRS</source>
-        <translation>Nombre De Seuils</translation>
-    </message>
-    <message>
-        <source>WEIRS_DATA_FILE</source>
-        <translation>Fichier De Donnees Des Seuils</translation>
-    </message>
-    <message>
-        <source>TYPE_OF_WEIRS</source>
-        <translation>Type Des Seuils</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_CULVERTS</source>
-        <translation>Nombre De Siphons</translation>
-    </message>
-    <message>
-        <source>CULVERT_DATA_FILE</source>
-        <translation>Fichier De Donnees Des Siphons</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_TUBES</source>
-        <translation>Nombre De Buses</translation>
-    </message>
-    <message>
-        <source>TUBES_DATA_FILE</source>
-        <translation>Fichier De Donnees Des Buses</translation>
-    </message>
-    <message>
-        <source>BREACH</source>
-        <translation>Breche</translation>
-    </message>
-    <message>
-        <source>BREACHES_DATA_FILE</source>
-        <translation>Fichier De Donnees Des Breches</translation>
-    </message>
-    <message>
-        <source>TIDAL_DATA_BASE</source>
-        <translation>Base De Donnees De Maree</translation>
-    </message>
-    <message>
-        <source>TIDAL_MODEL_FILE</source>
-        <translation>Fichier Du Modele De Maree</translation>
-    </message>
-    <message>
-        <source>ASCII_DATABASE_FOR_TIDE</source>
-        <translation>Base Ascii De Donnees De Maree</translation>
-    </message>
-    <message>
-        <source>BINARY_DATABASE_1_FOR_TIDE</source>
-        <translation>Base Binaire 1 De Donnees De Maree</translation>
-    </message>
-    <message>
-        <source>BINARY_DATABASE_2_FOR_TIDE</source>
-        <translation>Base Binaire 2 De Donnees De Maree</translation>
-    </message>
-    <message>
-        <source>MINOR_CONSTITUENTS_INFERENCE</source>
-        <translation>Interpolation De Composantes Mineures</translation>
-    </message>
-    <message>
-        <source>HARMONIC_CONSTANTS_FILE</source>
-        <translation>Fichier Des Constantes Harmoniques</translation>
-    </message>
-    <message>
-        <source>GEOGRAPHIC_SYSTEM</source>
-        <translation>Systeme Geographique</translation>
-    </message>
-    <message>
-        <source>ZONE_NUMBER_IN_GEOGRAPHIC_SYSTEM</source>
-        <translation>Numero De Fuseau Ou Projection Dans Le Systeme Geographique</translation>
-    </message>
-    <message>
-        <source>COEFFICIENT_TO_CALIBRATE_SEA_LEVEL</source>
-        <translation>Coefficient De Calage Du Niveau De Mer</translation>
-    </message>
-    <message>
-        <source>COEFFICIENT_TO_CALIBRATE_TIDAL_RANGE</source>
-        <translation>Coefficient De Calage Du Marnage</translation>
-    </message>
-    <message>
-        <source>COEFFICIENT_TO_CALIBRATE_TIDAL_VELOCITIES</source>
-        <translation>Coefficient De Calage Des Vitesses De Courant</translation>
-    </message>
-    <message>
-        <source>TIDE_GENERATING_FORCE</source>
-        <translation>Force Generatrice De La Maree</translation>
-    </message>
-    <message>
-        <source>OPTION_FOR_TIDAL_BOUNDARY_CONDITIONS</source>
-        <translation>Option Pour Les Conditions Aux Limites De Maree</translation>
-    </message>
-    <message>
-        <source>COUPLING_WITH</source>
-        <translation>Couplage Avec</translation>
-    </message>
-    <message>
-        <source>NAMES_OF_CLANDESTINE_VARIABLES</source>
-        <translation>Noms Des Variables Clandestines</translation>
-    </message>
-    <message>
-        <source>COUPLING_DIRECTORY</source>
-        <translation>Dossier De Couplage</translation>
-    </message>
-    <message>
-        <source>DELWAQ_PRINTOUT_PERIOD</source>
-        <translation>Periode De Sortie Pour Delwaq</translation>
-    </message>
-    <message>
-        <source>VOLUMES_DELWAQ_FILE</source>
-        <translation>Fichier Delwaq Des Volumes</translation>
-    </message>
-    <message>
-        <source>EXCHANGE_AREAS_DELWAQ_FILE</source>
-        <translation>Fichier Delwaq Des Surfaces De Flux</translation>
-    </message>
-    <message>
-        <source>VERTICAL_FLUXES_DELWAQ_FILE</source>
-        <translation>Fichier Delwaq Des Flux Verticaux</translation>
-    </message>
-    <message>
-        <source>SALINITY_DELWAQ_FILE</source>
-        <translation>Fichier Delwaq De La Salinite</translation>
-    </message>
-    <message>
-        <source>BOTTOM_SURFACES_DELWAQ_FILE</source>
-        <translation>Fichier Delwaq Des Surfaces Du Fond</translation>
-    </message>
-    <message>
-        <source>EXCHANGES_BETWEEN_NODES_DELWAQ_FILE</source>
-        <translation>Fichier Delwaq Des Echanges Entre Noeuds</translation>
-    </message>
-    <message>
-        <source>NODES_DISTANCES_DELWAQ_FILE</source>
-        <translation>Fichier Delwaq Des Distances Entre Noeuds</translation>
-    </message>
-    <message>
-        <source>TEMPERATURE_DELWAQ_FILE</source>
-        <translation>Fichier Delwaq De La Temperature</translation>
-    </message>
-    <message>
-        <source>VELOCITY_DELWAQ_FILE</source>
-        <translation>Fichier Delwaq De La Vitesse</translation>
-    </message>
-    <message>
-        <source>DIFFUSIVITY_DELWAQ_FILE</source>
-        <translation>Fichier Delwaq De La Diffusion</translation>
-    </message>
-    <message>
-        <source>DELWAQ_STEERING_FILE</source>
-        <translation>Fichier De Commande Delwaq</translation>
-    </message>
-    <message>
-        <source>SALINITY_FOR_DELWAQ</source>
-        <translation>Salinite Pour Delwaq</translation>
-    </message>
-    <message>
-        <source>TEMPERATURE_FOR_DELWAQ</source>
-        <translation>Temperature Pour Delwaq</translation>
-    </message>
-    <message>
-        <source>VELOCITY_FOR_DELWAQ</source>
-        <translation>Vitesse Pour Delwaq</translation>
-    </message>
-    <message>
-        <source>DIFFUSIVITY_FOR_DELWAQ</source>
-        <translation>Diffusion Pour Delwaq</translation>
-    </message>
-    <message>
-        <source>SISYPHE_STEERING_FILE</source>
-        <translation>Fichier Des Parametres De Sisyphe</translation>
-    </message>
-    <message>
-        <source>COUPLING_PERIOD_FOR_SISYPHE</source>
-        <translation>Periode De Couplage Pour Sisyphe</translation>
-    </message>
-    <message>
-        <source>TOMAWAC_STEERING_FILE</source>
-        <translation>Fichier Des Parametres De Tomawac</translation>
-    </message>
-    <message>
-        <source>COUPLING_PERIOD_FOR_TOMAWAC</source>
-        <translation>Periode De Couplage Pour Tomawac</translation>
-    </message>
-    <message>
-        <source>WAQTEL_STEERING_FILE</source>
-        <translation>Fichier Des Parametres De Waqtel</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_FIRST_TIME_STEP_FOR_GRAPHIC_PRINTOUTS</source>
-        <translation>Numero Du Premier Pas De Temps Pour Les Sorties Graphiques</translation>
-    </message>
-    <message>
-        <source>GRAPHIC_PRINTOUT_PERIOD</source>
-        <translation>Periode Pour Les Sorties Graphiques</translation>
-    </message>
-    <message>
-        <source>VARIABLES_FOR_GRAPHIC_PRINTOUTS</source>
-        <translation>Variables Pour Les Sorties Graphiques</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_PRIVATE_ARRAYS</source>
-        <translation>Nombre De Tableaux Prives</translation>
-    </message>
-    <message>
-        <source>NAMES_OF_PRIVATE_VARIABLES</source>
-        <translation>Noms Des Variables Privees</translation>
-    </message>
-    <message>
-        <source>RESULTS_FILE_FORMAT</source>
-        <translation>Format Du Fichier Des Resultats</translation>
-    </message>
-    <message>
-        <source>RESULTS_FILE</source>
-        <translation>Fichier Des Resultats</translation>
-    </message>
-    <message>
-        <source>BINARY_RESULTS_FILE_FORMAT</source>
-        <translation>Format Du Fichier De Resultats Binaire</translation>
-    </message>
-    <message>
-        <source>BINARY_RESULTS_FILE</source>
-        <translation>Fichier De Resultats Binaire</translation>
-    </message>
-    <message>
-        <source>FORMATTED_RESULTS_FILE</source>
-        <translation>Fichier De Resultats Formate</translation>
-    </message>
-    <message>
-        <source>CONTROL_SECTIONS</source>
-        <translation>Sections De Controle</translation>
-    </message>
-    <message>
-        <source>PRINTING_CUMULATED_FLOWRATES</source>
-        <translation>Impression Du Cumul Des Flux</translation>
-    </message>
-    <message>
-        <source>COMPATIBLE_COMPUTATION_OF_FLUXES</source>
-        <translation>Calcul Compatible Des Flux</translation>
-    </message>
-    <message>
-        <source>SECTIONS_INPUT_FILE</source>
-        <translation>Fichier Des Sections De Controle</translation>
-    </message>
-    <message>
-        <source>SECTIONS_OUTPUT_FILE</source>
-        <translation>Fichier De Sortie Des Sections De Controle</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_FIRST_TIME_STEP_FOR_LISTING_PRINTOUTS</source>
-        <translation>Numero Du Premier Pas De Temps Pour Les Sorties Listing</translation>
-    </message>
-    <message>
-        <source>LISTING_PRINTOUT_PERIOD</source>
-        <translation>Periode De Sortie Listing</translation>
-    </message>
-    <message>
-        <source>LISTING_FOR_PRINTOUT_PERIOD</source>
-        <translation>Periode Pour Les Sorties Listing</translation>
-    </message>
-    <message>
-        <source>LISTING_PRINTOUT</source>
-        <translation>Sortie Listing</translation>
-    </message>
-    <message>
-        <source>VARIABLES_TO_BE_PRINTED</source>
-        <translation>Variables A Imprimer</translation>
-    </message>
-    <message>
-        <source>MASS_BALANCE</source>
-        <translation>Bilan De Masse</translation>
-    </message>
-    <message>
-        <source>INFORMATION_ABOUT_SOLVER</source>
-        <translation>Informations Sur Le Solveur</translation>
-    </message>
-    <message>
-        <source>LIST_OF_POINTS</source>
-        <translation>Liste De Points</translation>
-    </message>
-    <message>
-        <source>NAMES_OF_POINTS</source>
-        <translation>Noms Des Points</translation>
-    </message>
-    <message>
-        <source>FOURIER_ANALYSIS_PERIODS</source>
-        <translation>Periodes D'analyse De Fourier</translation>
-    </message>
-    <message>
-        <source>TIME_RANGE_FOR_FOURIER_ANALYSIS</source>
-        <translation>Bornes En Temps Pour L'analyse De Fourier</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_CORRECTIONS_OF_DISTRIBUTIVE_SCHEMES</source>
-        <translation>Nombre De Corrections Des Schemas Distributifs</translation>
-    </message>
-    <message>
-        <source>NUMBER_OF_SUB_STEPS_OF_DISTRIBUTIVE_SCHEMES</source>
-        <translation>Nombre De Sous-pas Des Schemas Distributifs</translation>
-    </message>
-    <message>
-        <source>WAVE_ENHANCED_FRICTION_FACTOR</source>
-        <translation>Augmentation Du Frottement Par La Houle</translation>
-    </message>
-    <message>
-        <source>LOCAL_NUMBER_OF_THE_POINT_TO_CALIBRATE_HIGH_WATER</source>
-        <translation>Numero Local Du Point Pour Caler La Pleine Mer</translation>
-    </message>
-    <message>
-        <source>GLOBAL_NUMBER_OF_THE_POINT_TO_CALIBRATE_HIGH_WATER</source>
-        <translation>Numero Global Du Point Pour Caler La Pleine Mer</translation>
-    </message>
-    <message>
-        <source>PSI_SCHEME_OPTION</source>
-        <translation>Option Du Schema Psi</translation>
-    </message>
-    <message>
-        <source>PROPAGATION_OPTION</source>
-        <translation>Option De Propagation</translation>
-    </message>
-    <message>
-        <source>FREE_INTEGER_20</source>
-        <translation>Entier Libre 20</translation>
-    </message>
-    <message>
-        <source>VECTOR_LENGTH</source>
-        <translation>Longueur Du Vecteur</translation>
-    </message>
-    <message>
-        <source>LANGUAGE</source>
-        <translation>Langue</translation>
-    </message>
-    <message>
-        <source>STEERING_FILE</source>
-        <translation>Fichier Des Parametres</translation>
-    </message>
-    <message>
-        <source>DICTIONARY</source>
-        <translation>Dictionnaire</translation>
+        <source>FRANCAIS</source>
+        <translation>Francais</translation>
     </message>
     <message>
         <source>PARTITIONING_TOOL</source>
         <translation>Partitionneur</translation>
     </message>
     <message>
-        <source>RELEASE</source>
-        <translation>Numero De Version</translation>
+        <source>FORMATTED_RESULTS_FILE</source>
+        <translation>Fichier de resultats formate</translation>
     </message>
     <message>
-        <source>LIST_OF_FILES</source>
-        <translation>Liste Des Fichiers</translation>
+        <source>VERTICAL_STRUCTURES</source>
+        <translation>Structures verticales</translation>
     </message>
     <message>
-        <source>DESCRIPTION_OF_LIBRARIES</source>
-        <translation>Description Des Librairies</translation>
+        <source>OPTION_FOR_TSUNAMI_GENERATION</source>
+        <translation>Option pour la generation de tsunami</translation>
+    </message>
+    <message>
+        <source>VARIABLE_TIME_STEP</source>
+        <translation>Pas de temps variable</translation>
+    </message>
+    <message>
+        <source>IRIDAEA_FLACCIDA_(CLOSE_TO_ULVA)</source>
+        <translation>Iridaea flaccida (proche des ulves)</translation>
+    </message>
+    <message>
+        <source>PROPAGATION_OPTION</source>
+        <translation>Option de propagation</translation>
+    </message>
+    <message>
+        <source>REFERENCE_FILE</source>
+        <translation>Fichier de reference</translation>
+    </message>
+    <message>
+        <source>TIDAL_DATA_BASE</source>
+        <translation>Base de donnees de maree</translation>
+    </message>
+    <message>
+        <source>INITIAL_ELEVATION</source>
+        <translation>Cote initiale</translation>
+    </message>
+    <message>
+        <source>average</source>
+        <translation>Moyenne</translation>
+    </message>
+    <message>
+        <source>STOCHASTIC_DIFFUSION_MODEL</source>
+        <translation>Modele de diffusion stochastique</translation>
+    </message>
+    <message>
+        <source>FORTRAN_FILE</source>
+        <translation>Fichier fortran</translation>
+    </message>
+    <message>
+        <source>BREACH</source>
+        <translation>Breche</translation>
+    </message>
+    <message>
+        <source>Z(Q)</source>
+        <translation>Z(Q)</translation>
+    </message>
+    <message>
+        <source>NO_DEFAULT_VALUE</source>
+        <translation>Pas de valeur par defaut</translation>
+    </message>
+    <message>
+        <source>no_preconditioning</source>
+        <translation>Aucun</translation>
+    </message>
+    <message>
+        <source>TIME_STEP</source>
+        <translation>Pas de temps</translation>
+    </message>
+    <message>
+        <source>rough</source>
+        <translation>Rugueux</translation>
+    </message>
+    <message>
+        <source>SALINITY_DELWAQ_FILE</source>
+        <translation>Fichier DELWAQ de la salinite</translation>
+    </message>
+    <message>
+        <source>IMPLICITATION_FOR_DEPTH</source>
+        <translation>Implicitation pour la hauteur</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_LAGRANGIAN_DRIFTS</source>
+        <translation>Nombre de derives lagrangiennes</translation>
+    </message>
+    <message>
+        <source>TEMPERATURE_FOR_DELWAQ</source>
+        <translation>Temperature pour DELWAQ</translation>
+    </message>
+    <message>
+        <source>GENERAL</source>
+        <translation>Generale</translation>
+    </message>
+    <message>
+        <source>SECONDARY_CURRENTS</source>
+        <translation>Courants secondaires</translation>
+    </message>
+    <message>
+        <source>PRECONDITIONING</source>
+        <translation>Preconditionnement</translation>
+    </message>
+    <message>
+        <source>MANNING_DEFAULT_VALUE_FOR_COLEBROOK_WHITE_LAW</source>
+        <translation>Valeur par defaut du manning pour la loi de colebrook-white</translation>
+    </message>
+    <message>
+        <source>ADVECTION_OF_H</source>
+        <translation>Convection de H</translation>
+    </message>
+    <message>
+        <source>DEBUGGER</source>
+        <translation>Debugger</translation>
+    </message>
+    <message>
+        <source>LATITUDE_OF_ORIGIN_POINT</source>
+        <translation>Latitude du point origine</translation>
+    </message>
+    <message>
+        <source>PRESCRIBED_TRACERS_VALUES</source>
+        <translation>Valeurs imposees des traceurs</translation>
+    </message>
+    <message>
+        <source>RECORD_NUMBER_FOR_RESTART</source>
+        <translation>Enregistrement pour suite de calcul</translation>
+    </message>
+    <message>
+        <source>turbulent_viscosity_of_k_epsilon_model_(m2/s)</source>
+        <translation>Viscosite turbulente du modele K-Epsilon (m2/s)</translation>
+    </message>
+    <message>
+        <source>LISTING_PRINTOUT</source>
+        <translation>Sortie listing</translation>
+    </message>
+    <message>
+        <source>CORIOLIS_COEFFICIENT</source>
+        <translation>Coefficient de coriolis</translation>
+    </message>
+    <message>
+        <source>TURBULENCE_MODEL</source>
+        <translation>Modele de turbulence</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_FIRST_TIME_STEP_FOR_LISTING_PRINTOUTS</source>
+        <translation>Numero du premier pas de temps pour les sorties listing</translation>
+    </message>
+    <message>
+        <source>PRINTING_CUMULATED_FLOWRATES</source>
+        <translation>Impression du cumul des flux</translation>
+    </message>
+    <message>
+        <source>OPTION_FOR_THE_TREATMENT_OF_TIDAL_FLATS</source>
+        <translation>Option de traitement des bancs decouvrants</translation>
+    </message>
+    <message>
+        <source>variable_in_time_and_space_given_by_formated_file</source>
+        <translation>Variable en temps et en espace donne par fichier formate</translation>
+    </message>
+    <message>
+        <source>CONTROL_SECTIONS</source>
+        <translation>Sections de controle</translation>
+    </message>
+    <message>
+        <source>SOLVER_FOR_DIFFUSION_OF_TRACERS</source>
+        <translation>Solveur pour la diffusion des traceurs</translation>
+    </message>
+    <message>
+        <source>SECTIONS_OUTPUT_FILE</source>
+        <translation>Fichier de sortie des sections de controle</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_SUB_STEPS_OF_DISTRIBUTIVE_SCHEMES</source>
+        <translation>Nombre de sous-pas des schemas distributifs</translation>
+    </message>
+    <message>
+        <source>UPWIND_COEFFICIENTS</source>
+        <translation>Coefficients de decentrement</translation>
+    </message>
+    <message>
+        <source>time_of_maximum_elevation</source>
+        <translation>Temps de la cote maximum</translation>
+    </message>
+    <message>
+        <source>ALGAE_TYPE</source>
+        <translation>Type des algues</translation>
+    </message>
+    <message>
+        <source>RAIN_OR_EVAPORATION_IN_MM_PER_DAY</source>
+        <translation>Pluie ou evaporation en mm par jour</translation>
+    </message>
+    <message>
+        <source>FORMATTED_DATA_FILE_1</source>
+        <translation>Fichier de donnees formate 1</translation>
+    </message>
+    <message>
+        <source>FORMATTED_DATA_FILE_2</source>
+        <translation>Fichier de donnees formate 2</translation>
+    </message>
+    <message>
+        <source>C_U_PRECONDITIONING</source>
+        <translation>Preconditionnement C-U</translation>
+    </message>
+    <message>
+        <source>LIST_OF_POINTS</source>
+        <translation>Liste de points</translation>
+    </message>
+    <message>
+        <source>WGS84_LONGITUDE/LATITUDE_IN_REAL_DEGREES</source>
+        <translation>WGS84 longitude/latitude en degres reels</translation>
+    </message>
+    <message>
+        <source>MISCELLANEOUS_(LEGOS_NEA,_FES20XX,_PREVIMER...)</source>
+        <translation>Divers (LEGOS-NEA, FES20XX, PREVIMER...)</translation>
+    </message>
+    <message>
+        <source>conj_gradient</source>
+        <translation>Gradient conj</translation>
+    </message>
+    <message>
+        <source>weak</source>
+        <translation>Faibles</translation>
+    </message>
+    <message>
+        <source>SCHEME_FOR_ADVECTION_OF_VELOCITIES</source>
+        <translation>Schema pour la convection des vitesses</translation>
+    </message>
+    <message>
+        <source>gmres_(see_option_for_the_solver_for_k_epsilon_model)</source>
+        <translation>GMRES (voir aussi option du solveur pour le modele K-Epsilon</translation>
+    </message>
+    <message>
+        <source>NO_ADVECTION</source>
+        <translation>Pas de convection</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_FIRST_TIME_STEP_FOR_GRAPHIC_PRINTOUTS</source>
+        <translation>Numero du premier pas de temps pour les sorties graphiques</translation>
+    </message>
+    <message>
+        <source>DEPTH_IN_FRICTION_TERMS</source>
+        <translation>Hauteur dans les termes de frottement</translation>
+    </message>
+    <message>
+        <source>FOURIER_ANALYSIS_PERIODS</source>
+        <translation>Periodes d'analyse de fourier</translation>
+    </message>
+    <message>
+        <source>EQUATIONS</source>
+        <translation>Equations</translation>
+    </message>
+    <message>
+        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_IDENTIFICATION</source>
+        <translation>Maximum d'iterations pour l'identification</translation>
+    </message>
+    <message>
+        <source>WIND</source>
+        <translation>Vent</translation>
+    </message>
+    <message>
+        <source>SPEED_AND_DIRECTION_OF_WIND</source>
+        <translation>Vitesse et direction du vent</translation>
+    </message>
+    <message>
+        <source>TYPE_OF_SOURCES</source>
+        <translation>Type des sources</translation>
+    </message>
+    <message>
+        <source>TITLE</source>
+        <translation>Titre</translation>
+    </message>
+    <message>
+        <source>MASS_LUMPING_ON_H</source>
+        <translation>Mass-lumping sur H</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_SUB_ITERATIONS_FOR_NON_LINEARITIES</source>
+        <translation>Nombre de sous-iterations pour les non-linearites</translation>
+    </message>
+    <message>
+        <source>PSI_SCHEME_OPTION</source>
+        <translation>Option du schema PSI</translation>
+    </message>
+    <message>
+        <source>LIQUID_BOUNDARIES_FILE</source>
+        <translation>Fichier des frontieres liquides</translation>
+    </message>
+    <message>
+        <source>VELOCITIES_OF_THE_SOURCES_ALONG_X</source>
+        <translation>Vitesses des sources selon X</translation>
+    </message>
+    <message>
+        <source>VELOCITIES_OF_THE_SOURCES_ALONG_Y</source>
+        <translation>Vitesses des sources selon Y</translation>
+    </message>
+    <message>
+        <source>CHARACTERISTICS</source>
+        <translation>Caracteristiques</translation>
+    </message>
+    <message>
+        <source>BOTTOM_SMOOTHINGS</source>
+        <translation>Lissages du fond</translation>
+    </message>
+    <message>
+        <source>SALINITY_FOR_DELWAQ</source>
+        <translation>Salinite pour DELWAQ</translation>
+    </message>
+    <message>
+        <source>OPTION_FOR_CHARACTERISTICS</source>
+        <translation>Option pour les caracteristiques</translation>
+    </message>
+    <message>
+        <source>MAXIMUM_NUMBER_OF_TRACERS</source>
+        <translation>Nombre maximum de traceurs</translation>
+    </message>
+    <message>
+        <source>maximum_velocity</source>
+        <translation>Vitesse maximum</translation>
+    </message>
+    <message>
+        <source>FREE_INTEGER_20</source>
+        <translation>Entier libre 20</translation>
+    </message>
+    <message>
+        <source>ZERO</source>
+        <translation>Zero</translation>
+    </message>
+    <message>
+        <source>OPTION_FOR_WIND</source>
+        <translation>Option du vent</translation>
+    </message>
+    <message>
+        <source>BINARY_DATA_FILE_1</source>
+        <translation>Fichier de donnees binaire 1</translation>
+    </message>
+    <message>
+        <source>BINARY_DATA_FILE_2</source>
+        <translation>Fichier de donnees binaire 2</translation>
+    </message>
+    <message>
+        <source>free_surface_elevation_(m)</source>
+        <translation>Cote de surface libre (m)</translation>
+    </message>
+    <message>
+        <source>PRESCRIBED_VELOCITIES</source>
+        <translation>Vitesses imposees</translation>
+    </message>
+    <message>
+        <source>water_depth_(m)</source>
+        <translation>Hauteur d'eau (m)</translation>
+    </message>
+    <message>
+        <source>VELOCITY_DELWAQ_FILE</source>
+        <translation>Fichier DELWAQ de la vitesse</translation>
+    </message>
+    <message>
+        <source>kinetic_order_2</source>
+        <translation>Schéma cinetique ordre 2</translation>
+    </message>
+    <message>
+        <source>kinetic_order_1</source>
+        <translation>Schéma cinetique ordre 1</translation>
+    </message>
+    <message>
+        <source>coupled</source>
+        <translation>Traitement couple</translation>
+    </message>
+    <message>
+        <source>LAMBERT_2_CENTER</source>
+        <translation>Lambert 2 centre</translation>
+    </message>
+    <message>
+        <source>COMPATIBLE_COMPUTATION_OF_FLUXES</source>
+        <translation>Calcul compatible des flux</translation>
+    </message>
+    <message>
+        <source>Astronomical_neap_tide</source>
+        <translation>Maree de morte-eau exceptionnelle (coef. presque 20)</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_TRACERS</source>
+        <translation>Nombre de traceurs</translation>
+    </message>
+    <message>
+        <source>Dirac</source>
+        <translation>Dirac</translation>
+    </message>
+    <message>
+        <source>COUPLING_DIRECTORY</source>
+        <translation>Dossier de couplage</translation>
     </message>
     <message>
         <source>DEFAULT_EXECUTABLE</source>
-        <translation>Executable Par Defaut</translation>
+        <translation>Executable par defaut</translation>
     </message>
     <message>
-        <source>DEFAULT_PARALLEL_EXECUTABLE</source>
-        <translation>Executable Parallele Par Defaut</translation>
+        <source>GEOMETRY_FILE</source>
+        <translation>Fichier de geometrie</translation>
     </message>
-    <name>@default</name>
+    <message>
+        <source>DICTIONARY</source>
+        <translation>Dictionnaire</translation>
+    </message>
+    <message>
+        <source>WAF_scheme_order_2</source>
+        <translation>Schéma WAF ordre 2</translation>
+    </message>
+    <message>
+        <source>VARIABLES_FOR_GRAPHIC_PRINTOUTS</source>
+        <translation>Variables pour les sorties graphiques</translation>
+    </message>
+    <message>
+        <source>INFORMATION_ABOUT_K_EPSILON_MODEL</source>
+        <translation>Informations sur le modele K-Epsilon</translation>
+    </message>
+    <message>
+        <source>OIL_SPILL_STEERING_FILE</source>
+        <translation>Fichier de commandes hydrocarbures</translation>
+    </message>
+    <message>
+        <source>MAXIMUM_NUMBER_OF_BOUNDARIES</source>
+        <translation>Nombre maximum de frontieres</translation>
+    </message>
+    <message>
+        <source>DIFFUSIVITY_DELWAQ_FILE</source>
+        <translation>Fichier DELWAQ de la diffusion</translation>
+    </message>
+    <message>
+        <source>Thompson_method_based_on_characteristics</source>
+        <translation>Methode de thompson avec calcul de caracteristiques</translation>
+    </message>
+    <message>
+        <source>DESCRIPTION_OF_LIBRARIES</source>
+        <translation>Description des librairies</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_WEIRS</source>
+        <translation>Nombre de seuils</translation>
+    </message>
+    <message>
+        <source>SPHERE</source>
+        <translation>Sphere</translation>
+    </message>
+    <message>
+        <source>Computed_with_c,u,v</source>
+        <translation>Calculee avec C,U,V</translation>
+    </message>
+    <message>
+        <source>Astronomical_tide</source>
+        <translation>Maree de vive-eau exceptionnelle (coef. presque 120)</translation>
+    </message>
+    <message>
+        <source>velocity_along_y_axis_(m/s)</source>
+        <translation>Vitesse suivant l'axe des Y (m/s)</translation>
+    </message>
+    <message>
+        <source>CULVERT_DATA_FILE</source>
+        <translation>Fichier de donnees des siphons</translation>
+    </message>
+    <message>
+        <source>bottom_elevation_(m)</source>
+        <translation>Cote du fond (m)</translation>
+    </message>
+    <message>
+        <source>EXCHANGES_BETWEEN_NODES_DELWAQ_FILE</source>
+        <translation>Fichier DELWAQ des echanges entre noeuds</translation>
+    </message>
+    <message>
+        <source>SOLVER_OPTION_FOR_TRACERS_DIFFUSION</source>
+        <translation>Option du solveur pour la diffusion des traceurs</translation>
+    </message>
+    <message>
+        <source>INITIAL_VALUES_OF_TRACERS</source>
+        <translation>Valeurs initiales des traceurs</translation>
+    </message>
+    <message>
+        <source>flowrate_along_y_axis_(m2/s)</source>
+        <translation>Debit suivant l'axe des Y (m2/s)</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_TUBES</source>
+        <translation>Nombre de buses</translation>
+    </message>
+    <message>
+        <source>LONGITUDE_OF_ORIGIN_POINT</source>
+        <translation>Longitude du point origine</translation>
+    </message>
+    <message>
+        <source>MAXIMUM_NUMBER_OF_ITERATIONS_FOR_SOLVER</source>
+        <translation>Maximum d'iterations pour le solveur</translation>
+    </message>
+    <message>
+        <source>CORIOLIS</source>
+        <translation>Coriolis</translation>
+    </message>
+    <message>
+        <source>ADVECTION</source>
+        <translation>Convection</translation>
+    </message>
+    <message>
+        <source>Edge_based_storage</source>
+        <translation>Stockage par segments</translation>
+    </message>
+    <message>
+        <source>EXPLICIT_+_MURD_SCHEME_PSI</source>
+        <translation>Explicite + murd schema PSI</translation>
+    </message>
+    <message>
+        <source>previous</source>
+        <translation>Precedent</translation>
+    </message>
+    <message>
+        <source>ABSCISSAE_OF_SOURCES</source>
+        <translation>Abscisses des sources</translation>
+    </message>
+    <message>
+        <source>VECTOR_LENGTH</source>
+        <translation>Longueur du vecteur</translation>
+    </message>
+    <message>
+        <source>GRAPHIC_PRINTOUT_PERIOD</source>
+        <translation>Periode pour les sorties graphiques</translation>
+    </message>
+    <message>
+        <source>COUPLING_WITH</source>
+        <translation>Couplage avec</translation>
+    </message>
+    <message>
+        <source>CHEZY</source>
+        <translation>CHEZY</translation>
+    </message>
+    <message>
+        <source>variable_in_time_given_by_formated_file</source>
+        <translation>Variable en temps donne par fichier formate</translation>
+    </message>
+    <message>
+        <source>WATER_DISCHARGE_OF_SOURCES</source>
+        <translation>Debits des sources</translation>
+    </message>
+    <message>
+        <source>ADVECTION_OF_U_AND_V</source>
+        <translation>Convection de U et V</translation>
+    </message>
+    <message>
+        <source>Zokagoa_scheme_order_1</source>
+        <translation>Schéma Zokagoa ordre 1</translation>
+    </message>
+    <message>
+        <source>DEFINED_BY_USER</source>
+        <translation>Defini par l'utilisateur</translation>
+    </message>
+    <message>
+        <source>LATITUDE_LONGITUDE</source>
+        <translation>Latitude longitude</translation>
+    </message>
+    <message>
+        <source>VOLUMES_DELWAQ_FILE</source>
+        <translation>Fichier DELWAQ des volumes</translation>
+    </message>
+    <message>
+        <source>VELOCITY_FOR_DELWAQ</source>
+        <translation>Vitesse pour DELWAQ</translation>
+    </message>
+    <message>
+        <source>ROUGHNESS_COEFFICIENT_OF_BOUNDARIES</source>
+        <translation>Coefficient de rugosite des bords</translation>
+    </message>
+    <message>
+        <source>TPXO</source>
+        <translation>TPXO</translation>
+    </message>
+    <message>
+        <source>INITIAL_TIME_SET_TO_ZERO</source>
+        <translation>Remise a zero du temps</translation>
+    </message>
+    <message>
+        <source>EXPLICIT_+_SUPG</source>
+        <translation>Explicite + SUPG</translation>
+    </message>
+    <message>
+        <source>INITIAL_GUESS_FOR_U</source>
+        <translation>Ordre du tir initial pour U</translation>
+    </message>
+    <message>
+        <source>SCHEME_FOR_ADVECTION_OF_K_EPSILON</source>
+        <translation>Schema pour la convection du K-Epsilon</translation>
+    </message>
+    <message>
+        <source>NO_DEGRADATION</source>
+        <translation>Pas de degradation</translation>
+    </message>
+    <message>
+        <source>TEMPERATURE_DELWAQ_FILE</source>
+        <translation>Fichier DELWAQ de la temperature</translation>
+    </message>
+    <message>
+        <source>Froude_number</source>
+        <translation>Nombre de Froude</translation>
+    </message>
+    <message>
+        <source>classical</source>
+        <translation>Classique</translation>
+    </message>
+    <message>
+        <source>nombre_de_courants_</source>
+        <translation>Nombre de courants </translation>
+    </message>
+    <message>
+        <source>SOURCES_FILE</source>
+        <translation>Fichier des sources</translation>
+    </message>
+    <message>
+        <source>LOG_LAW</source>
+        <translation>Log law</translation>
+    </message>
+    <message>
+        <source>CONTROL_OF_LIMITS</source>
+        <translation>Controle des limites</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_GAUSS_POINTS_FOR_WEAK_CHARACTERISTICS</source>
+        <translation>Nombre de points de Gauss pour les caracteristiques faibles</translation>
+    </message>
+    <message>
+        <source>TYPE_OF_WEIRS</source>
+        <translation>Type des seuils</translation>
+    </message>
+    <message>
+        <source>THRESHOLD_FOR_NEGATIVE_DEPTHS</source>
+        <translation>Seuil pour les profondeurs negatives</translation>
+    </message>
+    <message>
+        <source>velocity_proportional_to_square_root_of_depth,_variant</source>
+        <translation>Vitesse en racine carree de H, variante</translation>
+    </message>
+    <message>
+        <source>VELOCITY_PROFILES</source>
+        <translation>Profils de vitesse</translation>
+    </message>
+    <message>
+        <source>LANGUAGE</source>
+        <translation>Langue</translation>
+    </message>
+    <message>
+        <source>STAGE_DISCHARGE_CURVES</source>
+        <translation>Courbes de tarage</translation>
+    </message>
+    <message>
+        <source>Courant_number_</source>
+        <translation>Nombre de courant </translation>
+    </message>
+    <message>
+        <source>COST_FUNCTION</source>
+        <translation>Fonction cout</translation>
+    </message>
+    <message>
+        <source>JMJ</source>
+        <translation>JMJ</translation>
+    </message>
+    <message>
+        <source>ORIGIN_COORDINATES</source>
+        <translation>Coordonnees de l'origine</translation>
+    </message>
+    <message>
+        <source>RECORD_NUMBER_IN_WAVE_FILE</source>
+        <translation>Numero de l'enregistrement dans le fichier de Houle</translation>
+    </message>
+    <message>
+        <source>tracer_1_etc.</source>
+        <translation>Traceur 1, etc.</translation>
+    </message>
+    <message>
+        <source>TYPE_OF_ADVECTION</source>
+        <translation>Forme de la convection</translation>
+    </message>
+    <message>
+        <source>WIND_VELOCITY_ALONG_X</source>
+        <translation>Vitesse du vent suivant X</translation>
+    </message>
+    <message>
+        <source>WIND_VELOCITY_ALONG_Y</source>
+        <translation>Vitesse du vent suivant Y</translation>
+    </message>
+    <message>
+        <source>MAXIMUM_NUMBER_OF_SOURCES</source>
+        <translation>Nombre maximum de sources</translation>
+    </message>
+    <message>
+        <source>HAALAND</source>
+        <translation>HAALAND</translation>
+    </message>
+    <message>
+        <source>div(_nu_grad(U)_)</source>
+        <translation>Div( nu grad(U) )</translation>
+    </message>
+    <message>
+        <source>DISCRETIZATIONS_IN_SPACE</source>
+        <translation>Discretisations en espace</translation>
+    </message>
+    <message>
+        <source>SISYPHE_STEERING_FILE</source>
+        <translation>Fichier des parametres de sisyphe</translation>
+    </message>
+    <message>
+        <source>ADVECTION_OF_K_AND_EPSILON</source>
+        <translation>Convection de K et epsilon</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_CULVERTS</source>
+        <translation>Nombre de siphons</translation>
+    </message>
+    <message>
+        <source>RELEASE</source>
+        <translation>Numero de version</translation>
+    </message>
+    <message>
+        <source>list_of_tests</source>
+        <translation>Plan d'experience</translation>
+    </message>
+    <message>
+        <source>PRECONDITIONING_FOR_DIFFUSION_OF_TRACERS</source>
+        <translation>Preconditionnement pour la diffusion des traceurs</translation>
+    </message>
+    <message>
+        <source>EXPLICIT_LEO_POSTMA</source>
+        <translation>Explicite Leo Postma</translation>
+    </message>
+    <message>
+        <source>LOCAL_NUMBER_OF_THE_POINT_TO_CALIBRATE_HIGH_WATER</source>
+        <translation>Numero local du point pour caler la pleine mer</translation>
+    </message>
+    <message>
+        <source>Tchamen_scheme_order_1</source>
+        <translation>Schéma tchamen ordre 1</translation>
+    </message>
+    <message>
+        <source>supplementary_variable_O</source>
+        <translation>Variable supplementaire o</translation>
+    </message>
+    <message>
+        <source>WAVE_ENHANCED_FRICTION_FACTOR</source>
+        <translation>Augmentation du frottement par la houle</translation>
+    </message>
+    <message>
+        <source>ELDER</source>
+        <translation>Elder</translation>
+    </message>
+    <message>
+        <source>supplementary_variable_N</source>
+        <translation>Variable supplementaire n</translation>
+    </message>
+    <message>
+        <source>gauss_seidel</source>
+        <translation>Gauss-Seidel</translation>
+    </message>
+    <message>
+        <source>TREATMENT_OF_THE_LINEAR_SYSTEM</source>
+        <translation>Traitement du systeme lineaire</translation>
+    </message>
+    <message>
+        <source>VARIABLES_TO_BE_PRINTED</source>
+        <translation>Variables a imprimer</translation>
+    </message>
+    <message>
+        <source>normal_velocity_given_in_ubor_in_the_conlim_file</source>
+        <translation>Vitesse normale donnee dans ubor dans le fichier conlim</translation>
+    </message>
+    <message>
+        <source>DENSITY_OF_ALGAE</source>
+        <translation>Masse volumique des algues</translation>
+    </message>
+    <message>
+        <source>NON_SUBMERGED_VEGETATION_FRICTION</source>
+        <translation>Frottement pour la vegetation non submergee</translation>
+    </message>
+    <message>
+        <source>TIDAL_FLATS</source>
+        <translation>Bancs decouvrants</translation>
+    </message>
+    <message>
+        <source>diagonal_and_crout</source>
+        <translation>Diagonal et Crout</translation>
+    </message>
+    <message>
+        <source>HARMONIC_CONSTANTS_FILE</source>
+        <translation>Fichier des constantes harmoniques</translation>
+    </message>
+    <message>
+        <source>Priority_to_prescribed_values</source>
+        <translation>Priorite aux valeurs imposees</translation>
+    </message>
+    <message>
+        <source>BINARY_DATA_FILE_1_FORMAT</source>
+        <translation>Format du fichier de donnees binaire 1</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>Normal</translation>
+    </message>
+    <message>
+        <source>nodal</source>
+        <translation>Nodale</translation>
+    </message>
+    <message>
+        <source>PRESCRIBED_ELEVATIONS</source>
+        <translation>Cotes imposees</translation>
+    </message>
+    <message>
+        <source>LIMIT_VALUES</source>
+        <translation>Valeurs limites</translation>
+    </message>
+    <message>
+        <source>quadratic</source>
+        <translation>Quadratique</translation>
+    </message>
+    <message>
+        <source>ORDINATES_OF_SOURCES</source>
+        <translation>Ordonnees des sources</translation>
+    </message>
+    <message>
+        <source>Real_tide_(methodology_before_2010)</source>
+        <translation>Maree reelle (methodologie d avant 2010)</translation>
+    </message>
+    <message>
+        <source>NUMBER_OF_DROGUES</source>
+        <translation>Nombre de flotteurs</translation>
+    </message>
+    <message>
+        <source>maximum_elevation</source>
+        <translation>Cote maximum</translation>
+    </message>
+    <message>
+        <source>dissipation_of_turbulent_energy_(W/kg)</source>
+        <translation>Dissipation de l'energie turbulente (W/kg)</translation>
+    </message>
+    <message>
+        <source>PROPAGATION</source>
+        <translation>Propagation</translation>
+    </message>
+    <message>
+        <source>constant_in_time_and_space</source>
+        <translation>Constant en temps et en espace</translation>
+    </message>
+    <message>
+        <source>Mean_neap_tide</source>
+        <translation>Maree de morte-eau moyenne (coef. presque 45)</translation>
+    </message>
+    <message>
+        <source>gmres_(see_option_for_the_solver_for_tracer_diffusion)</source>
+        <translation>GMRES (voir ausi option du solveur)</translation>
+    </message>
+    <message>
+        <source>SOLVER_OPTION</source>
+        <translation>Option du solveur</translation>
+    </message>
+    <message>
+        <source>MATRIX_STORAGE</source>
+        <translation>Stockage des matrices</translation>
+    </message>
+    <message>
+        <source>COEFFICIENT_TO_CALIBRATE_TIDAL_RANGE</source>
+        <translation>Coefficient de calage du marnage</translation>
+    </message>
+    <message>
+        <source>brownian_movement</source>
+        <translation>Mouvement brownien</translation>
+    </message>
+    <message>
+        <source>SOLVER</source>
+        <translation>Solveur</translation>
+    </message>
+    <message>
+        <source>smooth</source>
+        <translation>Lisse</translation>
+    </message>
+    <message>
+        <source>turbulent_kinetic_energy_in_k_epsilon_model_(J/kg)</source>
+        <translation>Energie turbulente du modele K-Epsilon (W/kg)</translation>
+    </message>
+    <message>
+        <source>NIKURADSE</source>
+        <translation>Nikuradse</translation>
+    </message>
+    <message>
+        <source>PRECONDITIONING_FOR_K_EPSILON_MODEL</source>
+        <translation>Preconditionnement pour le modele K-Epsilon</translation>
+    </message>
+    <message>
+        <source>drift_along_y_(m)</source>
+        <translation>Derive en Y (m)</translation>
+    </message>
+    <message>
+        <source>velocity_along_x_axis_(m/s)</source>
+        <translation>Vitesse suivant l'axe des X (m/s)</translation>
+    </message>
+    <message>
+        <source>LEO_POSTMA_FOR_TIDAL_FLATS</source>
+        <translation>Leo Postma pour bancs decouvrants</translation>
+    </message>
+    <message>
+        <source>block_diagonal_(4_9_matrices)</source>
+        <translation>Bloc-diagonal (4 ou 9 matrices)</translation>
+    </message>
+    <message>
+        <source>Computed_with_h,u,v</source>
+        <translation>Calculee sur H,u,v</translation>
+    </message>
+    <message>
+        <source>ACCURACY_OF_K</source>
+        <translation>Precision sur k</translation>
+    </message>
+    <message>
+        <source>WATER_QUALITY_PROCESS</source>
+        <translation>Processus qualite d'eau</translation>
+    </message>
+    <message>
+        <source>OPTION_FOR_LIQUID_BOUNDARIES</source>
+        <translation>Option pour les frontieres liquides</translation>
+    </message>
+    <message>
+        <source>COEFFICIENT_TO_CALIBRATE_SEA_LEVEL</source>
+        <translation>Coefficient de calage du niveau de mer</translation>
+    </message>
+    <message>
+        <source>INITIAL_GUESS_FOR_H</source>
+        <translation>Ordre du tir initial pour H</translation>
+    </message>
+    <message>
+        <source>SPHERICAL_COORDINATES</source>
+        <translation>Coordonnees spheriques</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>Non</translation>
+    </message>
+    <message>
+        <source>THICKNESS_OF_ALGAE</source>
+        <translation>Epaisseur des algues</translation>
+    </message>
+    <message>
+        <source>MEAN_TEMPERATURE</source>
+        <translation>Temperature moyenne</translation>
+    </message>
+    <message>
+        <source>IDENTIFICATION_METHOD</source>
+        <translation>Methode d'identification</translation>
+    </message>
+    <message>
+        <source>friction_coefficient</source>
+        <translation>Coefficient de frottement sur le fond</translation>
+    </message>
+    <message>
+        <source>MASS_LUMPING_ON_VELOCITY</source>
+        <translation>Mass-lumping sur la vitesse</translation>
+    </message>
+    <message>
+        <source>time_of_maximum_velocity</source>
+        <translation>Temps de la vitesse maximum</translation>
+    </message>
+    <message>
+        <source>VALUES_OF_TRACERS_IN_THE_RAIN</source>
+        <translation>Valeurs des traceurs dans la pluie</translation>
+    </message>
+    <message>
+        <source>supplementary_variable_Z</source>
+        <translation>Variable supplementaire z</translation>
+    </message>
+    <message>
+        <source>supplementary_variable_R</source>
+        <translation>Variable supplementaire r</translation>
+    </message>
+    <message>
+        <source>EXPLICIT_+_MURD_SCHEME_N</source>
+        <translation>Explicite + murd schema n</translation>
+    </message>
+    <message>
+        <source>conjugate_gradient_on_a_normal_equation</source>
+        <translation>Gradient conjuge sur equation normale</translation>
+    </message>
+    <message>
+        <source>WAVE_DRIVEN_CURRENTS</source>
+        <translation>Courants de Houle</translation>
+    </message>
+    <message>
+        <source>Tsunami_generated_on_the_basis_of_the_Okada_model_1992</source>
+        <translation>Generation d'un tsunami sur la base du modele de Okada 1992</translation>
+    </message>
+    <message>
+        <source>ASCII_DATABASE_FOR_TIDE</source>
+        <translation>Base ASCII de donnees de maree</translation>
+    </message>
+    <message>
+        <source>OIL_SPILL_MODEL</source>
+        <translation>Modele de nappes d'hydrocarbures</translation>
+    </message>
+    <message>
+        <source>1_point</source>
+        <translation>1 point</translation>
+    </message>
+    <message>
+        <source>ORIGINAL_DATE_OF_TIME</source>
+        <translation>Date de l'origine des temps</translation>
+    </message>
+    <message>
+        <source>GEOGRAPHIC_SYSTEM</source>
+        <translation>Systeme geographique</translation>
+    </message>
+    <message>
+        <source>TIDAL_MODEL_FILE</source>
+        <translation>Fichier du modele de maree</translation>
+    </message>
+    <message>
+        <source>absolute_value_of_diagonal</source>
+        <translation>Valeur absolue diagonale</translation>
+    </message>
+    <message>
+        <source>u_and_v_given_in_the_conlim_file</source>
+        <translation>U et V dans le fichier conlim</translation>
+    </message>
     <message>
         <location filename="../../convert/convert_ini.py" line="81"/>
         <source>lecture du fichier impossible :</source>

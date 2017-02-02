@@ -32,7 +32,7 @@ class CONFIG(configuration.CONFIG_BASE):
   def __init__(self,appli,repIni):
   #-----------------------------------
 
-      self.labels_user=['catalogues','lang']
+      self.labels_user=['catalogues','lang','force_langue']
       self.labels_eficas=['lang','rep_cata','catalogues']
 
       configuration.CONFIG_BASE.__init__(self,appli,'.Eficas_monCode')
