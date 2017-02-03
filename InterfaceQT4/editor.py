@@ -328,7 +328,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if self.code == "CARMELCND" : texte=self._newJDCCND()
         if self.code == "ZCRACKS" : texte=self._newZCRACKS()
         if self.code == "TELEMAC" : texte=self._newTELEMAC()
-        if self.code == "PSEN" : texte = self._newPSEN()
+        if self.code == "PSEN"    : texte = self._newPSEN()
         if self.code == "PSEN_N1" : texte = self._newPSEN_N1()
 
         if hasattr(self.readercata.cata[0],'TEXTE_NEW_JDC') : texte=self.readercata.cata[0].TEXTE_NEW_JDC

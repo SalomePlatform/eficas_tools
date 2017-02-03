@@ -101,6 +101,7 @@ class CONFIG_BASE:
       self.closeEntete = False
       self.closeArbre = False
       self.force_langue=False
+      self.suiteTelemac=False
 
  
   #--------------------------------------

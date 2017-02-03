@@ -100,6 +100,8 @@ class Appli(Ui_Eficas,QMainWindow):
            ret=widgetLangue.exec_()
 
 
+        self.suiteTelemac=self.CONFIGURATION.suiteTelemac 
+
         from Extensions import localisation
         app=QApplication
         localisation.localise(None,self.langue)
@@ -204,6 +206,7 @@ class Appli(Ui_Eficas,QMainWindow):
               self.toolBar.removeAction(action)
         if self.code.upper() in Appli.__dict__.keys():
           listeTexte=apply(Appli.__dict__[self.code.upper()],(self,))
+        if self.suiteTelemac : self.lookSuiteTelemac()
 
     def initAides(self):
         #print "je passe la"
@@ -313,6 +316,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.toolBar.removeAction(self.actionParametres)
         self.menuJdC.removeAction(self.actionParametres)
 
+    def enleverSupprimer(self):
+        self.toolBar.removeAction(self.actionSupprimer)
 
     def enleverNewInclude(self):
         self.actionNouvel_Include.setVisible(False)
@@ -420,6 +425,13 @@ class Appli(Ui_Eficas,QMainWindow):
         self.enleverNewInclude()
         self.connectRechercherDsCatalogue()
         self.ajoutSortieLegere()
+
+    def lookSuiteTelemac(self):
+        self.enleverActionsStructures()
+        self.enleverNewInclude()
+        self.enleverParametres()
+        self.enleverSupprimer()
+        self.enleverRechercherDsCatalogue()
 
     def ajoutHelpPSEN(self):
         self.actionParametres_Eficas.setText('Help PSEN')
