@@ -40,7 +40,7 @@ docPath=repIni
 catalogues=(
    #('TELEMAC','default',os.path.join(repIni,'Telemac_Cata_nouveau.py'),'TELEMAC','python'),
    #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC','TELEMAC'),
-   ('2D','cas',os.path.join(repIni,'Telemac2d_Cata_auto.py'),'TELEMAC3','TELEMAC3'),
+   ('2D','cas',os.path.join(repIni,'Telemac2d_Cata_auto.py'),'TELEMAC','TELEMAC'),
    #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'python','TELEMAC3'),
    #('TELEMAC','comm',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC2','python'),
 )
