@@ -88,6 +88,13 @@ option ( WITH_ZCRACKS      "Install ZCRACKS files"     OFF )
 option ( WITH_TELEMAC_CATA "Install TELEMAC files"     OFF )
 option ( IN_SALOME_CONTEXT "Configure Eficas for use in Salome" OFF )
 
+set ( _OPTIONLIST
+  WITH_MAP
+  WITH_CARMEL
+  WITH_TELEMAC_CATA
+  WITH_SALOME_MECA
+  )
+
 if (WITH_ALL_PACKAGES)
   foreach ( _opt ${_OPTIONLIST} )
     set ( ${_opt} ON )
@@ -95,23 +102,39 @@ if (WITH_ALL_PACKAGES)
 endif (WITH_ALL_PACKAGES)
 
 
+# Verification: au moins une option doit etre selectionnee
+set ( _VALIDOPT FALSE )
+foreach ( _opt ${_OPTIONLIST} )
+  if ( ${_opt} )
+    set ( _VALIDOPT TRUE )
+    string ( REPLACE WITH_ "" _opt2 ${_opt} )
+    message ( STATUS "Will install package ${_opt2}" )
+  endif ( ${_opt} )
+endforeach ( _opt )
+if ( NOT ${_VALIDOPT} )
+  message ( FATAL_ERROR "At least one option within ${_OPTIONLIST} must be selected" )
+endif ( NOT ${_VALIDOPT} )
+
+if (WITH_MAP)
+  find_package ( MAP REQUIRED )
+endif (WITH_MAP)
+
+
 
 
 # Parcours recursif des sous-repertoires
-if ( NOT WITH_TELEMAC_CATA )
-  add_subdirectory ( Accas )
-  add_subdirectory ( Aide )
-  add_subdirectory ( Editeur )
-  add_subdirectory ( Extensions )
-  add_subdirectory ( Ihm )
-  install ( DIRECTORY InterfaceQT4 DESTINATION ${CMAKE_INSTALL_PREFIX} )
-  add_subdirectory ( Noyau )
-  add_subdirectory ( UiQT5 )
-  add_subdirectory ( Validation )
-  add_subdirectory ( convert )
-  add_subdirectory ( generator )
-  add_subdirectory ( Traducteur )
-endif ( NOT WITH_TELEMAC_CATA )
+add_subdirectory ( Accas )
+add_subdirectory ( Aide )
+add_subdirectory ( Editeur )
+add_subdirectory ( Extensions )
+add_subdirectory ( Ihm )
+install ( DIRECTORY InterfaceQT4 DESTINATION ${CMAKE_INSTALL_PREFIX} )
+add_subdirectory ( Noyau )
+add_subdirectory ( UiQT5 )
+add_subdirectory ( Validation )
+add_subdirectory ( convert )
+add_subdirectory ( generator )
+add_subdirectory ( Traducteur )
 
 
 # Installation des fichiers : MAP
