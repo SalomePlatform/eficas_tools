@@ -65,8 +65,14 @@ class MyEficas( qtEficas.Appli ):
         @param  fichier: chemin absolu du fichier eficas a ouvrir a das le lancement. optionnel
         """
 
+        #dictPathCode={'ADAO':'Adao','MT':'MT','CARMEL3D':'Carmel3D', 'CF':'CF',
+        #              'SPECA':'SPECA','MAP':'MAP','SEP':'SEP', 'TELEMAC':'Telemac',
+        #              'pytel' : 'pytel', 'telemac2d' : 'telemac2dSalome','coupling1d2d':'coupling1d2d',
+        #               'mascaret':'mascaret','boundary_conditions':'boundary_conditions'}
+
         dictPathCode={'ADAO':'Adao','MT':'MT','CARMEL3D':'Carmel3D', 'CF':'CF',
-                      'SPECA':'SPECA','MAP':'MAP','SEP':'SEP', 'TELEMAC':'Telemac3'}
+                      'SPECA':'SPECA','MAP':'MAP','SEP':'SEP', 'TELEMAC':'Telemac'}
+
         if code in dictPathCode.keys():
             pathCode=dictPathCode[code]
             sys.path[:0]=[os.path.join(eficasConfig.eficasPath,pathCode)]
