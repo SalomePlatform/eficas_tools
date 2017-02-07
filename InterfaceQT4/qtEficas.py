@@ -91,16 +91,18 @@ class Appli(Ui_Eficas,QMainWindow):
 
       
         if not self.salome and hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'lang') : langue=self.CONFIGURATION.lang
+
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
 
-        if self.CONFIGURATION.force_langue :
-           from monChoixLangue import MonChoixLangue
-           widgetLangue = MonChoixLangue(self)
-           ret=widgetLangue.exec_()
-
-
-        self.suiteTelemac=self.CONFIGURATION.suiteTelemac 
+        self.suiteTelemac=False 
+        if hasattr (self, 'CONFIGURATION') :
+           if self.CONFIGURATION.force_langue :
+              from monChoixLangue import MonChoixLangue
+              widgetLangue = MonChoixLangue(self)
+              ret=widgetLangue.exec_()
+           self.suiteTelemac=self.CONFIGURATION.suiteTelemac 
+           
 
         from Extensions import localisation
         app=QApplication
@@ -110,12 +112,14 @@ class Appli(Ui_Eficas,QMainWindow):
         #if parent != None : self.parentCentralWidget = parent.centralWidget()
         #else              : self.parentCentralWidget = None 
 
-        if  hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'taille') : self.taille=self.CONFIGURATION.taille
-        else : self.taille=1700
+        if not self.salome :
+           if  hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'taille') : self.taille=self.CONFIGURATION.taille
+           else : self.taille=1700
 
-        if self.code in ['MAP',] : self.resize(1440,self.height())
-        else : self.resize(self.taille,self.height())
+           if self.code in ['MAP',] : self.resize(1440,self.height())
+           else : self.resize(self.taille,self.height())
 
+   
         icon = QIcon(self.repIcon+"/parametres.png")
         self.actionParametres.setIcon(icon)
 
@@ -191,6 +195,7 @@ class Appli(Ui_Eficas,QMainWindow):
         #   sys.setdefaultencoding(prefsCode.encoding)
 
     def construitMenu(self):
+        print "kjkljkljlkj"
         self.initPatrons()
         self.initRecents()
         self.initAides()
