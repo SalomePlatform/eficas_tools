@@ -195,7 +195,6 @@ class Appli(Ui_Eficas,QMainWindow):
         #   sys.setdefaultencoding(prefsCode.encoding)
 
     def construitMenu(self):
-        print "kjkljkljlkj"
         self.initPatrons()
         self.initRecents()
         self.initAides()
