@@ -155,7 +155,7 @@ if __name__ == "__main__":
        print ("__del__", self)
 
    def f(a):
-     print f, a)
+     print (f, a)
    a=A()
    b=B()
    c=B()

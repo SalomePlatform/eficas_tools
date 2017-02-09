@@ -63,9 +63,9 @@ class formule(FONCTION) :
        res=eval(self.expression,self.jdc.const_context, context)
       except :
 ####### A TRAVAILLER DEPUIS ICI !!
-       print tr(75 * '!')
-       print '! ' + tr(string.ljust("Erreur evaluation formule %s", 72), self.nom) + '!'
-       print tr(75 * '!')
+       print (tr(75 * '!'))
+       print ('! ' + tr(string.ljust("Erreur evaluation formule %s", 72), self.nom) + '!')
+       print (tr(75 * '!'))
        raise EficasException
       return res
 

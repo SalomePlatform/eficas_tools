@@ -51,7 +51,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def get_sdname(self):
       #print "SDNAME ",self.reuse,self.sd,self.sd.get_name()
       if CONTEXT.debug : 
-          print "SDNAME ",  self.reuse,  self.sd,  self.sd.get_name()
+          print ("SDNAME ",  self.reuse,  self.sd,  self.sd.get_name())
       sdname=''
       if self.reuse != None:
         sdname= self.reuse.get_name()

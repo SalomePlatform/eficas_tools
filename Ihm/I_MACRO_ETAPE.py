@@ -801,12 +801,12 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
   def make_includeCND(self,fichier=None):
       unite=999
       if fichier==None : return
-      if hasattr(self,'fichier_ini'):print self.fichier_ini
+      if hasattr(self,'fichier_ini') : print (self.fichier_ini)
       if hasattr(self,'fichier_ini') : return
       self.fichier_ini=fichier
       from acquiertGroupes import getGroupes
       erreur,listeGroupes=getGroupes(fichier)
-      if erreur != "" : print "(a traiter")
+      if erreur != "" : print ("a traiter")
       texteSources=""
       texteCond=""
       texteNoCond=""

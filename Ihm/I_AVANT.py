@@ -23,17 +23,17 @@ import types
 
 class I_AVANT:
    """
-      La règle I_AVANT vérifie que l'on trouve l ordre  des mots-clés
-      de la règle parmi les arguments d'un JDC.
+      La regle I_AVANT verifie que l'on trouve l ordre  des mots-cles
+      de la regle parmi les arguments d'un JDC.
 
-      Ces arguments sont transmis à la règle pour validation sous la forme 
-      d'une liste de noms de mots-clés ou d'un dictionnaire dont 
-      les clés sont des noms de mots-clés.
+      Ces arguments sont transmis a la regle pour validation sous la forme 
+      d'une liste de noms de mots-cles ou d'un dictionnaire dont 
+      les cles sont des noms de mots-cles.
    """
 
    def __init__(self,*args):
       if len(args) > 2 :
-        print "Erreur à la création de la règle A_CLASSER(",args,")"
+        print ("Erreur a la creation de la regle A_CLASSER(",args,")")
         return
       if type(args[0]) == types.TupleType:
 	 self.listeAvant=args[0]
@@ -46,8 +46,8 @@ class I_AVANT:
 
    def verif(self,args):
       """
-          args peut etre un dictionnaire ou une liste. Les éléments de args
-          sont soit les éléments de la liste soit les clés du dictionnaire.
+          args peut etre un dictionnaire ou une liste. Les elements de args
+          sont soit les elements de la liste soit les cles du dictionnaire.
       """
       #  on compte le nombre de mots cles presents
       text =''
