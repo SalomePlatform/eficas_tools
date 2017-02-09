@@ -804,10 +804,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       if hasattr(self,'fichier_ini'):print self.fichier_ini
       if hasattr(self,'fichier_ini') : return
       self.fichier_ini=fichier
-      print "je suis dans make_includeCND"
       from acquiertGroupes import getGroupes
       erreur,listeGroupes=getGroupes(fichier)
-      if erreur != "" : print "a traiter"
+      if erreur != "" : print "(a traiter")
       texteSources=""
       texteCond=""
       texteNoCond=""
@@ -819,7 +818,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           #if groupe[0:5]=='VCUT_':    texteVcut    +=groupe[5:]+"=VCUT();\n"
           if groupe[0:5]=='VCUT_':    texteVcut    +='V_'+groupe[5:]+"=VCUT();\n"
       texte=texteSources+texteCond+texteNoCond+texteVcut
-      print texte
+      #print (texte)
       self.build_includeInclude(texte)
       if CONTEXT.get_current_step()==None : CONTEXT.set_current_step(self)
       reevalue=0
@@ -940,7 +939,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          raise EficasException(" ")
 
       if nbVariableOut != 1 :
-         print nbVariableOut ,"nbVariableOut"
+         print (nbVariableOut ,"nbVariableOut")
          self.make_incl2_except(mess=tr("le fichier doit contenir une unique variable de sortie"))
          raise EficasException(" ")
 
@@ -953,7 +952,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          raise EficasException(" ")
       
       try:
-         print self.fichier_ini ,self.fichier_text
+         print (self.fichier_ini ,self.fichier_text)
          self.make_contexte_include(self.fichier_ini ,self.fichier_text)
          self.old_context_fichier_init=self.contexte_fichier_init
          self.parent.record_unit(unite,self)

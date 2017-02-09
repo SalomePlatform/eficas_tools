@@ -302,7 +302,7 @@ class JDC(I_OBJECT.OBJECT):
           CONNECTOR.Emit(self,"add",e)
           self.fin_modif()
           return e
-        except AsException,e:
+        except AsException as e:
           traceback.print_exc()
           self.reset_current_step()
           self.editmode=0
@@ -790,9 +790,9 @@ class JDC(I_OBJECT.OBJECT):
         child.update_concept(sd)
 
    def dump_state(self):
-      print "JDC.state: ",self.state
+      print ("JDC.state: ",self.state)
       for etape in self.etapes :
-         print etape.nom+".state: ",etape.state
+         print (etape.nom+".state: ",etape.state)
       
    def change_unit(self,unit,etape,old_unit):
       #print "change_unit",unit,etape,old_unit
@@ -891,7 +891,7 @@ class JDC(I_OBJECT.OBJECT):
       # Cette etape est indiquee par l'attribut _etape_context qui a ete
       # positionne prealablement par un appel a set_etape_context
 
-      if CONTEXT.debug : print "JDC.NommerSdprod ",sd,sdnom
+      if CONTEXT.debug : print ("JDC.NommerSdprod ",sd,sdnom)
 
       if self._etape_context:
          o=self.get_contexte_avant(self._etape_context).get(sdnom,None)
@@ -964,7 +964,7 @@ class JDC(I_OBJECT.OBJECT):
 
    def get_l_noms_etapes(self):
       """ 
-          Retourne la liste des noms des étapes de self 
+          Retourne la liste des noms des etapes de self 
       """
       l=[]
       for etape in self.etapes:

@@ -150,12 +150,12 @@ if __name__ == "__main__":
      pass
    class B:
      def add(self,a):
-       print "add ", self , a
+       print ("add ", self , a)
      def __del__(self):
-       print "__del__", self
+       print ("__del__", self)
 
    def f(a):
-     print f, a
+     print f, a)
    a=A()
    b=B()
    c=B()
@@ -164,10 +164,10 @@ if __name__ == "__main__":
    Connect(a,"add",c.add,())
    Connect(a,"add",f,())
    Emit(a,"add",1)
-   print "del b"
+   print ("del b")
    del b
    Emit(a,"add",1)
-   print "del f"
+   print ("del f")
    del f
    Emit(a,"add",1)
    Disconnect(a,"add",c.add,())
