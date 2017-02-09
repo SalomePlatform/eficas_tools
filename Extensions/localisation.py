@@ -50,15 +50,15 @@ def localise(application, locale=None,file=None ):
     if locale=="ang" : locale="en"
 
     if file != None :
-       print 'chargement de ', file,monPath
-       print eficas_translator.load(file,monPath)
-       print QApplication.installTranslator(eficas_translator)
+       print ('chargement de ', file,monPath)
+       print (eficas_translator.load(file,monPath))
+       print (QApplication.installTranslator(eficas_translator))
        return
      
     if eficas_translator.load("eficas_" + locale, monPath):
         QApplication.installTranslator(eficas_translator)
     else:
-        print "Unable to load Eficas translator!"
+        print ("Unable to load Eficas translator!")
        
 
 if __name__ == "__main__":

@@ -188,14 +188,14 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
                                  context_ini = context_ini,
                                 )
             J.analyse()
-        except Exception,e:
+        except Exception as e:
             traceback.print_exc()
             #self.jdc.set_context()
             raise AsException(tr("Erreur"),e.__str__())
         if len(J.cr.crfatal)>0 :
             # des erreurs fatales ont été rencontrées
             #self.jdc.set_context()
-            print 'erreurs fatales !!!'
+            print ('erreurs fatales !!!')
             raise AsException(tr("Erreurs fatales"),string.join(J.cr.crfatal))
         if not J.etapes :
             # des erreurs ont été rencontrées

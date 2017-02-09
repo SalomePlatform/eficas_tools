@@ -17,21 +17,24 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import string,re,sys,exceptions,types
+import string,re,sys,types
 
 from Noyau.N_CR import CR
 from Extensions.i18n import tr
 
 
-def group(*choices): return '(' + string.join(choices, '|') + ')'
-def any(*choices): return apply(group, choices) + '*'
-def maybe(*choices): return apply(group, choices) + '?'
+#def group(*choices): return '(' + string.join(choices, '|') + ')'
+#def any(*choices): return apply(group, choices) + '*'
+#def maybe(*choices): return apply(group, choices) + '?'
 
 Intnumber = r'[1-9]\d*'
 Exponent = r'[eEdD][-+]?\d+'
-Pointfloat = group(r'\d+\.\d*', r'\.\d+') + maybe(Exponent)
 Expfloat = r'[1-9]\d*' + Exponent
-Floatnumber = group(Pointfloat, Expfloat)
+#Pointfloat = group(r'\d+\.\d*', r'\.\d+') + maybe(Exponent)
+#Floatnumber = group(Pointfloat, Expfloat)
+Pointfloat=r'(\d+\.\d*|\.\d+)([eEdD][-+]?\d+)?'
+Floatnumber=r'((\d+\.\d*|\.\d+)([eEdD][-+]?\d+)?|[1-9]\d*[eEdD][-+]?\d+)'
+
 
 pat_number = re.compile(r'^([+-]?)([0-9]+)(\.\d*)?(.*)')
 pat_number_complet = re.compile(r'^([+-]?)([0-9]+)(\.\d*)?([eEdD][+-]?\d+)(.*)')
@@ -50,19 +53,19 @@ def cmp_function(arg1,arg2):
     else:
         return 1
     
-class InterpreteurException(exceptions.Exception):
+class InterpreteurException(Exception):
     """
-    Classe servant à définir les exceptions levées par l'interpréteur de formule
+    Classe servant a definir les exceptions levees par l'interpreteur de formule
     """
     def __init__(self,args=None):
         self.args = args
 
     def __str__(self):
-        return self.args
+        return str(self.args)
 
 class Interpreteur_Formule:
     """
-    Cette classe sert à construire un interpréteur de formules Aster
+    Cette classe sert a construire un interpreteur de formules Aster
     """
     l_fonctions_binaires = ['+','-','*','/','**','=','MOD','MIN','MAX','ATAN2']
     l_fonctions_unaires = ['+','-','INT','REAL','AIMAG','ABS','SQRT','EXP','LOG',
@@ -72,7 +75,7 @@ class Interpreteur_Formule:
  
     def __init__(self,formule=None,constantes=[],fonctions=[],parent=None):
         """
-        Constructeur d'interpréteurs de formule Aster
+        Constructeur d'interpreteurs de formule Aster
         - formule = tuple (nom,type,arguments,corps)
         - constantes = liste des noms de constantes externes
         - fonctions_unaires = dictionnaire {nom_fonction externe : nb arguments de cette fonction}
@@ -91,18 +94,19 @@ class Interpreteur_Formule:
     def set_formule(self,formule):
         """
         Stocke formule (tuple) dans l'attribut t_formule
-        Méthode externe
+        Methode externe
         """
-        if type(formule) != types.TupleType:
-            raise InterpreteurException,tr("La formule passee a l'interpreteur doit etre sous forme de tuple")
+        #if type(formule) != types.TupleType:
+        if type(formule) != types.tuple:
+            raise InterpreteurException(tr("La formule passee a l'interpreteur doit etre sous forme de tuple"))
         self.t_formule = formule
-        self.init_cr()
+        #self.init_cr()
         self.modify_listes()
         self.ordonne_listes()
 
     def init_cr(self):
         """
-        Initialise le cr,cad valorise les chaînes debut et fin
+        Initialise le cr,cad valorise les chaines debut et fin
         """
         nom = self.t_formule[0]
         if nom :
@@ -112,12 +116,12 @@ class Interpreteur_Formule:
         
     def str(self):
         """
-        Retourne une liste de chaînes de caractères représentant la formule
+        Retourne une liste de chaines de caracteres representant la formule
         """
         l_txt = []
         l_txt.append(self.t_formule[0])
         for oper in self.l_operateurs:
-            # oper est ici une liste décrivant oper
+            # oper est ici une liste decrivant oper
             txt = []
             for elem in oper:
                 txt.append(str(elem))
@@ -133,15 +137,15 @@ class Interpreteur_Formule:
     
     def enregistre(self,fils):
         """
-        Enregistre un opérateur fils dans la liste des children
+        Enregistre un operateur fils dans la liste des children
         """
         self.l_children.append(fils)
         self.cr.add(fils.cr)
         
     def isvalid(self):
         """
-        Booléenne qui retourne 1 si la formule est valide, 0 sinon
-        Méthode externe
+        Booleenne qui retourne 1 si la formule est valide, 0 sinon
+        Methode externe
         """
         self.l_operateurs = []
         self.cr.purge() # on vide le cr 
@@ -151,7 +155,7 @@ class Interpreteur_Formule:
 
     def interprete_formule(self):
         """
-        Réalise l'interprétation du corps de la formule
+        Realise l'interpretation du corps de la formule
         """
         texte = self.t_formule[3]
         if not texte : return
@@ -163,25 +167,25 @@ class Interpreteur_Formule:
             text_arg = string.replace(text_arg,' ','')
             try:
                 self.l_operateurs.append(self.split_operateurs(text_arg))
-            except InterpreteurException,e:
+            except InterpreteurException as e:
                 self.cr.fatal(e.__str__())
 
     def modify_listes(self):
         """
-        Modifie la liste des constantes en lui ajoutant le nom des paramètres
-        de la fonction à interpréter
+        Modifie la liste des constantes en lui ajoutant le nom des parametres
+        de la fonction a interpreter
         """
         args = self.t_formule[2]
-        # l'interpréteur de formule sert aussi à évaluer les EVAL
+        # l'interpreteur de formule sert aussi a evaluer les EVAL
         # dans ce cas il n'y a pas d'arguments puisque pas de fonction ...
         if args :
-            args = args[1:-1] # on enlève les parenthèses ouvrante et fermante
+            args = args[1:-1] # on enleve les parentheses ouvrante et fermante
             l_args = string.split(args,',')
             for arg in l_args:
                 typ,nom = string.split(arg,':')
                 nom = string.strip(nom)
                 self.l_constantes.append(nom)
-        # on considère que les fonctions unaires de base sont toutes à un seul argument :
+        # on considere que les fonctions unaires de base sont toutes a un seul argument :
         l_f = []
         self.d_fonctions_unaires = {}
         for fct in self.l_fonctions_unaires:
@@ -206,60 +210,60 @@ class Interpreteur_Formule:
 
     def split_operateurs(self,texte):
         """
-        Splite le texte passé en argument en opérateurs plus élémentaires.
-        N'analyse pas l'intérieur des opérateurs (ne fait qu'une passe)
+        Splite le texte passe en argument en operateurs plus elementaires.
+        N'analyse pas l'interieur des operateurs (ne fait qu'une passe)
         """
         l_operateurs = []
         texte = string.strip(texte)
-        # on recherche un nombre en début de texte
+        # on recherche un nombre en debut de texte
         try:
             oper,reste = self.cherche_nombre(texte)
-        except InterpreteurException,e:
-            raise InterpreteurException,e.__str__()
+        except InterpreteurException as e:
+            raise InterpreteurException (e.__str__())
         if not oper :
-            # on recherche une constante en début de texte
+            # on recherche une constante en debut de texte
             try:
                 oper,reste = self.cherche_constante(texte)
-            except InterpreteurException,e:
-                raise InterpreteurException,e.__str__()
+            except InterpreteurException as e:
+                raise InterpreteurException (e.__str__())
             if not oper :
-                # on recherche une expression entre parenthèses...
+                # on recherche une expression entre parentheses...
                 try:
                     oper,reste = self.cherche_expression_entre_parentheses(texte)
-                except InterpreteurException,e:
-                    raise InterpreteurException,e.__str__()
+                except InterpreteurException as e:
+                    raise InterpreteurException(e.__str__())
                 if not oper :
-                    # on recherche le début d'un opérateur unaire en début de texte
+                    # on recherche le debut d'un operateur unaire en debut de texte
                     try:
                         oper,reste = self.cherche_operateur_unaire(texte)
-                    except InterpreteurException,e:
-                        raise InterpreteurException,e.__str__()
+                    except InterpreteurException as e:
+                        raise InterpreteurException(e.__str__())
                     if not oper :
                         type_objet,nom_objet = self.get_type(texte)
                         if type_objet == 'constante':
-                            raise InterpreteurException, "Constante %s inconnue" %nom_objet
+                            raise InterpreteurException( "Constante %s inconnue" %nom_objet)
                         elif type_objet == 'fonction':
-                            raise InterpreteurException, "Fonction %s inconnue dans %s" %(nom_objet,texte)
+                            raise InterpreteurException( "Fonction %s inconnue dans %s" %(nom_objet,texte))
                         else:
-                            raise InterpreteurException, "Impossible d'interpréter : %s" %texte
-        # on a trouvé un opérateur (nombre, constante ou unaire)
-        # il faut encore vérifier que l'on est en fin de texte ou qu'il est bien suivi
-        # d'un opérateur binaire
+                            raise InterpreteurException( "Impossible d'interpreter : %s" %texte)
+        # on a trouve un operateur (nombre, constante ou unaire)
+        # il faut encore verifier que l'on est en fin de texte ou qu'il est bien suivi
+        # d'un operateur binaire
         l_operateurs.append(oper)
         if reste :
             texte = string.strip(reste)
             oper,reste = self.cherche_operateur_binaire(texte)
             if not oper :
-                # on a un reste et pas d'opérateur binaire --> erreur
-                raise InterpreteurException,"L'opérateur %s doit être suivi d'un opérateur binaire" %l_operateurs[-1]
+                # on a un reste et pas d'operateur binaire --> erreur
+                raise InterpreteurException("L'operateur %s doit etre suivi d'un operateur binaire" %l_operateurs[-1])
             else:
-                # on a bien trouvé un opérateur binaire:
+                # on a bien trouve un operateur binaire:
                 l_operateurs.append(oper)
                 # il faut recommencer l'analyse du reste par split_operateurs ...
                 try:
                     l_op = self.split_operateurs(reste)
-                except InterpreteurException,e:
-                    raise InterpreteurException,e.__str__()
+                except InterpreteurException as e:
+                    raise InterpreteurException(e.__str__())
                 l_operateurs.extend(l_op)
                 return l_operateurs
         else:
@@ -268,14 +272,14 @@ class Interpreteur_Formule:
 
     def cherche_nombre(self,texte):
         """
-        Cherche un nombre en début de texte
+        Cherche un nombre en debut de texte
         Retourne ce nombre et le reste ou None et le texte initial
-        Peut lever une InterpreteurException dans le cas où le nombre n'est pas valide
+        Peut lever une InterpreteurException dans le cas ou le nombre n'est pas valide
         """
         texte = string.strip(texte)
         m = pat_number_complet.match(texte)
         if m:
-            # on a trouvé un nombre avec exposant
+            # on a trouve un nombre avec exposant
             l_groups = m.groups()
             sgn = l_groups[0]
             nb = l_groups[1]
@@ -288,36 +292,36 @@ class Interpreteur_Formule:
         else:
             m = pat_number.match(texte)
             if m :
-                # on a trouvé un nombre sans exposant
+                # on a trouve un nombre sans exposant
                 l_groups = m.groups()
                 sgn = l_groups[0]
                 nb = l_groups[1]
                 if l_groups[2]:
                     nb = nb+l_groups[2]
                 nombre = sgn+nb
-                # il faut vérifier si ce nombre n'est pas suivi d'un exposant incomplet ...
+                # il faut verifier si ce nombre n'est pas suivi d'un exposant incomplet ...
                 reste = string.strip(l_groups[3])
                 if reste == '':
                     return nombre,l_groups[3]
                 if reste[0] in ('e','E','d','D') :
-                    raise InterpreteurException,"La syntaxe de l'exposant de %s est erronée " %nb
+                    raise InterpreteurException("La syntaxe de l'exposant de %s est erronee " %nb)
                 else:
                     return nombre,l_groups[3]
             else:
-                # on n'a pas trouvé de nombre
+                # on n'a pas trouve de nombre
                 return None,texte
         
     def cherche_constante_old(self,texte):
         """
-        Recherche une constante en début de texte parmi la liste des constantes.
-        Retourne le texte représentant la constante et le reste du texte ou
-        Retourne None,texte si aucune constante trouvée
+        Recherche une constante en debut de texte parmi la liste des constantes.
+        Retourne le texte representant la constante et le reste du texte ou
+        Retourne None,texte si aucune constante trouvee
         """
         txt = None
         texte = string.strip(texte)
         for cte in self.l_constantes:
             index = string.find(texte,cte)
-            #if index == 0 : print 'on a trouvé %s dans %s en %d' %(cte,texte,index)
+            #if index == 0 : print 'on a trouve %s dans %s en %d' %(cte,texte,index)
             if index == 0 :
                 txt = cte
                 zz,reste = string.split(texte,cte,1)
@@ -325,41 +329,41 @@ class Interpreteur_Formule:
         if txt :
             return txt,reste
         else:
-            # aucune constante trouvée
+            # aucune constante trouvee
             return None,texte
 
     def cherche_constante(self,texte):
         """
-        Recherche une constante en début de texte parmi la liste des constantes.
-        Retourne le texte représentant la constante et le reste du texte ou
-        Retourne None,texte si aucune constante trouvée
+        Recherche une constante en debut de texte parmi la liste des constantes.
+        Retourne le texte representant la constante et le reste du texte ou
+        Retourne None,texte si aucune constante trouvee
         """
         txt = None
         texte = string.strip(texte)
         m = pat_constante.match(texte)
         if m :
-            # on a trouvé un identificateur en début de texte
+            # on a trouve un identificateur en debut de texte
             l_groups = m.groups()
             sgn = l_groups[0]
             identificateur = string.strip(l_groups[1])
             reste = l_groups[2]
-            # il faut vérifier qu'il ne s'agit pas d'un appel à une fonction
+            # il faut verifier qu'il ne s'agit pas d'un appel a une fonction
             if reste :
                 if reste[0] == '(' :
                     # --> appel de fonction
                     return None,texte
-            # il faut encore vérifier qu'elle est bien dans la liste des constantes...
+            # il faut encore verifier qu'elle est bien dans la liste des constantes...
             if identificateur not in self.l_constantes :
-                raise InterpreteurException,"La constante %s est inconnue dans %s" %(identificateur,texte)
+                raise InterpreteurException("La constante %s est inconnue dans %s" %(identificateur,texte))
             else:
                 return sgn+identificateur,reste
         else:
-            # aucune constante trouvée
+            # aucune constante trouvee
             return None,texte
         
     def cherche_args(self,texte):
         """
-        Cherche au début de texte une liste d'arguments entre parenthèses
+        Cherche au debut de texte une liste d'arguments entre parentheses
         """
         if texte[0]!='(':
             return None,texte
@@ -369,8 +373,8 @@ class Interpreteur_Formule:
             while cpt != 0:
                 n=n+1
                 if n>= len(texte):
-                    # on a atteint la fin de texte sans avoir trouvé la parenthèse fermante --> erreur
-                    raise InterpreteurException,"Manque parenthèse fermante dans %s" %texte
+                    # on a atteint la fin de texte sans avoir trouve la parenthese fermante --> erreur
+                    raise InterpreteurException("Manque parenthese fermante dans %s" %texte)
                 if texte[n] == '(':
                     cpt=cpt+1
                 elif texte[n]==')':
@@ -394,16 +398,16 @@ class Interpreteur_Formule:
                 zz,reste = string.split(texte,oper,1)
                 break
         if txt :
-            #print 'on a trouvé :',txt
+            #print 'on a trouve :',txt
             operateur = txt
             texte = reste
             try:
                 args,reste = self.cherche_args(texte)
-            except InterpreteurException,e:
-                raise InterpreteurException,e.__str__()
+            except InterpreteurException as e:
+                raise InterpreteurException(e.__str__())
             if not args :
-                # opérateur unaire sans arguments
-                raise InterpreteurException,'opérateur unaire  %s sans arguments' %operateur
+                # operateur unaire sans arguments
+                raise InterpreteurException('operateur unaire  %s sans arguments' %operateur)
             else:
                 #operateur = operateur+args
                 args = self.split_args(txt,args,self.d_fonctions_unaires[operateur])
@@ -416,7 +420,7 @@ class Interpreteur_Formule:
                 texte = reste
                 return operateur,reste
         else:
-            # aucun opérateur unaire trouvé
+            # aucun operateur unaire trouve
             return None,texte
 
     def cherche_operateur_unaire(self,texte):
@@ -427,24 +431,24 @@ class Interpreteur_Formule:
         texte = string.strip(texte)
         m = pat_constante.match(texte)
         if m :
-            # on a trouvé un identificateur en début de texte
-            # il faut encore vérifier que l'on a bien à faire à un appel de fonction ...
+            # on a trouve un identificateur en debut de texte
+            # il faut encore verifier que l'on a bien a faire a un appel de fonction ...
             l_groups = m.groups()
             sgn = l_groups[0]
             identificateur = string.strip(l_groups[1])
             reste = l_groups[2]
             try:
                 args,reste = self.cherche_args(reste)
-            except InterpreteurException,e:
-                raise InterpreteurException,e.__str__()
+            except InterpreteurException as e:
+                raise InterpreteurException (e.__str__())
             if not args :
-                # opérateur unaire sans arguments
-                # en principe on ne doit jamais être dans ce cas car il est déjà trappé par cherche_constante ...
-                raise InterpreteurException,'Fonction %s sans arguments !' %identificateur
+                # operateur unaire sans arguments
+                # en principe on ne doit jamais etre dans ce cas car il est deja trappe par cherche_constante ...
+                raise InterpreteurException ('Fonction %s sans arguments !' %identificateur)
             else:
-                # il faut encore vérifier que l'on a bien à faire à une fonction connue
+                # il faut encore verifier que l'on a bien a faire a une fonction connue
                 if identificateur not in self.l_fonctions_unaires:
-                    raise InterpreteurException,'Fonction %s inconnue dans %s !' %(identificateur,texte)
+                    raise InterpreteurException ('Fonction %s inconnue dans %s !' %(identificateur,texte))
                 args = self.split_args(identificateur,args,self.d_fonctions_unaires[identificateur])
                 formule_operateur = (sgn+identificateur,'',self.t_formule[2],args)
                 operateur = Interpreteur_Formule(formule = formule_operateur,
@@ -458,10 +462,10 @@ class Interpreteur_Formule:
             # Il faut pouvoir trapper les expressions du type exp(-(x+1)) ...
             try :
                args,reste = self.cherche_args(texte[1:])
-            except InterpreteurException,e:
-                raise InterpreteurException,e.__str__()
+            except InterpreteurException as e:
+                raise InterpreteurException (e.__str__())
             if not args :
-               # Il ne s'agit pas de '-' comme opérateur unaire --> on retourne None
+               # Il ne s'agit pas de '-' comme operateur unaire --> on retourne None
                return None,texte
             else:
                identificateur = '-'
@@ -485,7 +489,7 @@ class Interpreteur_Formule:
         texte = string.strip(texte)
         for oper in self.l_fonctions_binaires:
             index = string.find(texte,oper)
-            #if index != -1 : print 'on a trouvé %s dans %s en %d' %(oper,texte,index)
+            #if index != -1 : print 'on a trouve %s dans %s en %d' %(oper,texte,index)
             if index == 0 :
                 txt = oper
                 zz,reste = string.split(texte,oper,1)
@@ -493,18 +497,18 @@ class Interpreteur_Formule:
         if txt :
             return txt,reste
         else:
-            # aucun opérateur unaire trouvé
+            # aucun operateur unaire trouve
             return None,texte
 
     def cherche_expression_entre_parentheses(self,texte):
         """
-        Cherche en début de texte une expression entre parentheses
+        Cherche en debut de texte une expression entre parentheses
         """
         args,reste = self.cherche_args(string.strip(texte))
         if not args :
             return None,texte
         else:
-            # on a trouvé une expression entre parenthèses en début de texte
+            # on a trouve une expression entre parentheses en debut de texte
             # --> on retourne un objet Interpreteur_Formule
             formule_operateur = ('','',self.t_formule[2],args[1:-1])
             operateur = Interpreteur_Formule(formule = formule_operateur,
@@ -517,20 +521,20 @@ class Interpreteur_Formule:
             
     def split_args(self,nom_fonction,args,nb_args):
         """
-        Tente de partager args en nb_args éléments
-        Retourne une liste de chaînes de caractères (liste de longueur nb_args)
+        Tente de partager args en nb_args elements
+        Retourne une liste de chaines de caracteres (liste de longueur nb_args)
         """
-        args = args[1:-1] # on enlève les parenthèses ouvrante et fermante
+        args = args[1:-1] # on enleve les parentheses ouvrante et fermante
         if nb_args == 1 : return args
         l_args = string.split(args,',')
         if len(l_args) != nb_args:
-            raise InterpreteurException,"La fonction %s requiert %d arguments : %d fourni(s)" %(nom_fonction,nb_args,len(l_args))
+            raise InterpreteurException  ("La fonction %s requiert %d arguments : %d fourni(s)" %(nom_fonction,nb_args,len(l_args)))
         else:
             return l_args
 
     def get_type(self,texte):
         """
-        Retourne le type de l'objet défini dans texte, à savoir:
+        Retourne le type de l'objet defini dans texte, a savoir:
         - constante
         - fonction
         - unknown
@@ -546,9 +550,9 @@ class Interpreteur_Formule:
 
     def get_nb_args(self,formule):
         """
-        Retourne le nombre d'arguments dans la définition de formule (sous forme de tuple)
+        Retourne le nombre d'arguments dans la definition de formule (sous forme de tuple)
         """
-        args = formule[2][1:-1] # on enlève les parenthèses ouvrante et fermante
+        args = formule[2][1:-1] # on enleve les parentheses ouvrante et fermante
         l_args = string.split(args,',')
         return len(l_args)
 
@@ -570,8 +574,8 @@ if __name__ == '__main__':
                                  constantes = constantes,
                                  fonctions = fonctions_unaires)
         txt = i.str()
-        print '\nformule %s = %s' %(str(formule),txt)
-        if i.isvalid() :
-            print "\n\tPas d'erreur !"
-        else:
-            print i.report()
+        print ('\nformule %s = %s' %(str(formule),txt))
+        #if i.isvalid() :
+        #    print "\n\tPas d'erreur !"
+        #else:
+        #    print i.report()

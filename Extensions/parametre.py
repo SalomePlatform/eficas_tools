@@ -18,10 +18,10 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-    Ce module contient la classe PARAMETRE qui sert à définir
-    des objets paramètres qui sont compréhensibles et donc affichables
+    Ce module contient la classe PARAMETRE qui sert a definir
+    des objets parametres qui sont comprehensibles et donc affichables
     par EFICAS.
-    Ces objets sont créés à partir de la modification du fichier de commandes
+    Ces objets sont crees a partir de la modification du fichier de commandes
     de l'utilisateur par le parseur de fichiers Python
 """
 
@@ -40,10 +40,10 @@ from Extensions.i18n import tr
 
 class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   """
-     Cette classe permet de créer des objets de type PARAMETRE
+     Cette classe permet de creer des objets de type PARAMETRE
      cad des affectations directes dans le jeu de commandes (ex: a=10.)
-     qui sont interprétées par le parseur de fichiers Python.
-     Les objets ainsi créés constituent des paramètres pour le jdc
+     qui sont interpretees par le parseur de fichiers Python.
+     Les objets ainsi crees constituent des parametres pour le jdc
   """
 
   nature = 'PARAMETRE'
@@ -51,8 +51,8 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def __init__(self,nom,valeur=None):
     self.nom = nom
-    # La classe PARAMETRE n'a pas de définition : on utilise self pour
-    # complétude
+    # La classe PARAMETRE n'a pas de definition : on utilise self pour
+    # completude
     self.definition=self
     # parent ne peut être qu'un objet de type JDC
     self.jdc = self.parent = CONTEXT.get_current_step()
@@ -68,12 +68,12 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def interprete_valeur(self,val):
     """
-    Essaie d'interpréter val (chaîne de caractères)comme :
+    Essaie d'interpreter val (chaîne de caracteres)comme :
     - un entier
-    - un réel
-    - une chaîne de caractères
-    - une liste d'items d'un type qui précède
-    Retourne la valeur interprétée
+    - un reel
+    - une chaîne de caracteres
+    - une liste d'items d'un type qui precede
+    Retourne la valeur interpretee
     """
     #if not val : return None
     valeur = None
@@ -111,10 +111,10 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
                     typ = type(v)
                 else:
                     if type(v) != typ :
-                        # la liste est hétérogène --> on refuse d'interpréter
+                        # la liste est heterogene --> on refuse d'interpreter
                         #  self comme une liste
                         # on retourne la string initiale
-                        print 'liste hétérogène ',val
+                        print ('liste heterogene ',val)
                         return val
                 l_new_val.append(v)
             return tuple(l_new_val)
@@ -125,7 +125,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
           for i in range(len(valeur)):
              self.dict_valeur.append(valeur[i])
        return valeur
-    # on retourne val comme une string car on n'a pas su l'interpréter
+    # on retourne val comme une string car on n'a pas su l'interpreter
     return val
 
   def get_valeurs(self):
@@ -139,7 +139,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def set_valeur(self,new_valeur):
     """
-    Remplace la valeur de self par new_valeur interprétée
+    Remplace la valeur de self par new_valeur interpretee
     """
     self.valeur = self.interprete_valeur(new_valeur)
     self.val=repr(self.valeur)
@@ -156,8 +156,8 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def init_modif(self):
     """
-    Méthode qui déclare l'objet courant comme modifié et propage
-    cet état modifié à ses ascendants
+    Methode qui declare l'objet courant comme modifie et propage
+    cet etat modifie a ses ascendants
     """
     self.state = 'modified'
     if self.parent:
@@ -171,7 +171,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def register(self):
     """
-    Enregistre le paramètre dans la liste des étapes de son parent (JDC)
+    Enregistre le parametre dans la liste des etapes de son parent (JDC)
     """
     self.parent.register_parametre(self)
     self.parent.register(self)
@@ -179,7 +179,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   def isvalid(self,cr='non'):
     """
     Retourne 1 si self est valide, 0 sinon
-    Un paramètre est considéré comme valide si :
+    Un parametre est considere comme valide si :
       - il a un nom
       - il a une valeur
     """
@@ -202,7 +202,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def isrepetable(self):
     """
-    Indique si self est répétable ou non : retourne toujours 1
+    Indique si self est repetable ou non : retourne toujours 1
     """
     return 1
 
@@ -211,8 +211,8 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def supprime(self):
     """
-    Méthode qui supprime toutes les boucles de références afin que 
-    l'objet puisse être correctement détruit par le garbage collector
+    Methode qui supprime toutes les boucles de references afin que 
+    l'objet puisse être correctement detruit par le garbage collector
     """
     self.parent = None
     self.jdc = None
@@ -222,7 +222,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   def active(self):
     """
     Rend l'etape courante active.
-    Il faut ajouter le paramètre au contexte global du JDC
+    Il faut ajouter le parametre au contexte global du JDC
     """
     self.actif = 1
     try:
@@ -235,7 +235,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   def inactive(self):
     """
     Rend l'etape courante inactive
-    Il faut supprimer le paramètre du contexte global du JDC
+    Il faut supprimer le parametre du contexte global du JDC
     """
     self.actif = 0
     self.jdc.del_param(self)
@@ -245,7 +245,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def isactif(self):
     """
-    Booléenne qui retourne 1 si self est actif, 0 sinon
+    Booleenne qui retourne 1 si self est actif, 0 sinon
     """
     return self.actif
 
@@ -259,15 +259,15 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def supprime_sdprods(self):
     """
-    Il faut supprimer le paramètre qui a été entré dans la liste des
-    paramètres du JDC
+    Il faut supprimer le parametre qui a ete entre dans la liste des
+    parametres du JDC
     """
     self.jdc.delete_param(self)
     self.parent.delete_concept(self)
 
   def update_context(self,d):
     """
-    Update le dictionnaire d avec le paramètre que produit self
+    Update le dictionnaire d avec le parametre que produit self
     """
     d[self.nom]=self
 
@@ -295,7 +295,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def __str__(self):
     """
-        Retourne le nom du paramètre comme représentation de self
+        Retourne le nom du parametre comme representation de self
     """
     return self.nom
 
@@ -306,14 +306,14 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
      return None
 
   def report(self):
-    """ Génère l'objet rapport (classe CR) """
+    """ Genere l'objet rapport (classe CR) """
     self.cr=CR()
     self.isvalid(cr='oui')
     return self.cr
 
   def ident(self):
     """
-    Retourne le nom interne associé à self
+    Retourne le nom interne associe a self
     Ce nom n'est jamais vu par l'utilisateur dans EFICAS
     """
     return self.nom
@@ -327,17 +327,17 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   def verif_condition_bloc(self):
     """
         Evalue les conditions de tous les blocs fils possibles
-        (en fonction du catalogue donc de la définition) de self et
+        (en fonction du catalogue donc de la definition) de self et
         retourne deux listes :
-          - la première contient les noms des blocs à rajouter
-          - la seconde contient les noms des blocs à supprimer
+          - la premiere contient les noms des blocs a rajouter
+          - la seconde contient les noms des blocs a supprimer
     """
     return [],[]
 
   def verif_condition_regles(self,liste_presents):
     """
-        Retourne la liste des mots-clés à rajouter pour satisfaire les règles
-        en fonction de la liste des mots-clés présents
+        Retourne la liste des mots-cles a rajouter pour satisfaire les regles
+        en fonction de la liste des mots-cles presents
     """
     return []
 

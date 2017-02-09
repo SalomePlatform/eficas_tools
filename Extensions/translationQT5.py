@@ -22,7 +22,8 @@ tuples, or atoms.
 
 ``PyQt4`` is currently supported.
 """
-from Extensions.eficas_exception import EficasException
+from eficas_exception import EficasException
+#from Extensions.eficas_exception import EficasException
 import re
 regex=re.compile(r"% *[0-9]+")
 
