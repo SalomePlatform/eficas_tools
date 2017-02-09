@@ -145,9 +145,9 @@ class TELEMACParser(PythonParser):
               
               m=pattern_ligne.match(finLigne)
               if m == None : 
-                 #print "________________________________________________"
-                 print 'pb avec ****', finLigne , '**** dans ', ligne
-                 #print "________________________________________________"
+                 #print( "________________________________________________")
+                 print ('pb avec ****', finLigne , '**** dans ', ligne)
+                 #print( "________________________________________________")
                  break
       
               simpCas=self.traiteIdent(m.group('ident'))
@@ -170,10 +170,10 @@ class TELEMACParser(PythonParser):
               elif pattern_texteSimple.match(finLigne):
                  m=pattern_texteSimple.match(finLigne)
               else :
-                 #print "________________________________________________"
-                 print 'pb avec ****', finLigne , '**** dans ', ligne
-                 print "non match"
-                 #print "________________________________________________"
+                 #print ("________________________________________________")
+                 print ('pb avec ****', finLigne , '**** dans ', ligne)
+                 print ("non match")
+                 #print ("________________________________________________")
                  break
               
 
@@ -190,7 +190,6 @@ class TELEMACParser(PythonParser):
 
               finLigne=m.group('reste')
               self.dictSimp[simpCas]=valeur
-              #print self.dictSimp
       
       if 'TITLE' not in self.dictSimp.keys() :
           import os
@@ -203,10 +202,9 @@ class TELEMACParser(PythonParser):
       for simp in self.dictSimp.keys():
           if simp in ListeSupprimeCasToEficas: continue
           if simp not in self.dicoInverse.keys() : 
-             #print "************"
-             print "pb avec dans dicoInverse", simp,'------'
-             #print "************"
-             #print poum
+             #print ( "************")
+             print  ("pb avec dans dicoInverse", simp,'------')
+             #print  ("************")
              continue
           listeGenea=self.dicoInverse[simp]
           listeGeneaReverse=[]
@@ -216,7 +214,6 @@ class TELEMACParser(PythonParser):
           listeGeneaReverse.reverse()
           dicoTravail=dicoParMC
           i=0
-          #print (listeGeneaReverse[0:-1])
           while i < len(listeGeneaReverse[0:-1]) : 
             mot=listeGeneaReverse[i]
             i=i+1
@@ -225,16 +222,11 @@ class TELEMACParser(PythonParser):
           dicoTravail[simp]=self.dictSimp[simp]
         
       self.textePy=""
-      #print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-      #print dicoParMC
-      #print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
       listeMC=self.tri(dicoParMC.keys())
       for k in listeMC :
-          #print "----------- traitement de " , k
           self.textePy += str(k )+ "("
           self.traiteMC(dicoParMC[k])
           self.textePy += ");\n"
-          #print "----------- " 
            
               
       appli.listeTelemac=self.dictSimp.keys()  
@@ -246,12 +238,11 @@ class TELEMACParser(PythonParser):
    # enleve les espaces de part et autre
    # traduit du langage Telemac vers le langage Catalogue
    #----------------------------------------
-          #print ident
           while ident[-1] == " " or ident[-1] == '\t' : ident=ident[0:-1]
           while ident[0]  == " " or ident[0]  == '\t' : ident=ident[1:]
           try : identCata=self.dicoCasToCata[ident]
           except :  
-            print  "---> ", "pb mot clef  pour", ident
+            print ( "---> ", "pb mot clef  pour", ident)
             identCata=None
           return identCata
 
@@ -266,12 +257,10 @@ class TELEMACParser(PythonParser):
            if isinstance(obj,A_FACT.FACT):   self.convertFACT(obj,kA,valeur)
            elif isinstance(obj,A_BLOC.BLOC): self.convertBLOC(obj,kA,valeur)
            elif isinstance(obj,A_SIMP.SIMP): self.convertSIMP(obj,kA,valeur)
-           else : print "%%%%%%%%%%%\n", "pb conversion type pour", k, obj, "\n%%%%%%%%%%%"
+           else : print ("%%%%%%%%%%%\n", "pb conversion type pour", k, obj, "\n%%%%%%%%%%%")
 
-           #print "_____________"
 
    def convertFACT(self,obj,nom,valeur):
-       #print "convertFACT", nom,valeur
        if nom in TELEMACParser.__dict__.keys() : 
           apply(TELEMACParser.__dict__[nom],(self,))
           return
@@ -281,8 +270,8 @@ class TELEMACParser(PythonParser):
 
 
    def convertBLOC(self,obj,nom,valeur):
-       print "BLOC "
-       print nom
+       print ("ANOMALIE _________ BLOC ")
+       print (nom)
 
    def convertSIMP(self,obj,nom,valeur):
        #print 'in convertSIMP', nom,valeur
@@ -335,7 +324,7 @@ class TELEMACParser(PythonParser):
                      break
                 except:
                    if valeur != None :
-                      print "pb avec le type de ", obj.nom, obj.type, 'et la valeur ', valeur
+                      print ("pb avec le type de ", obj.nom, obj.type, 'et la valeur ', valeur)
 
           if 'Fichier' in obj.type or 'TXM' in obj.type or 'Repertoire' in obj.type :
               valeur=str(valeur)
@@ -387,7 +376,6 @@ class TELEMACParser(PythonParser):
             try :    v=eval(v,{})
             except : pass
             if nom in TelemacdicoEn.keys():
-               #print "est dans le dico des enum, valeurs multiples"
                try    : v=TelemacdicoEn[nom][v]
                except : pass
             newVal.append(v)
@@ -398,7 +386,6 @@ class TELEMACParser(PythonParser):
    def tri(self, listeIn):
       if len(listeIn) == 1 : return listeIn
       if self.Ordre_Des_Commandes == None : return listeIn
-      #print listeIn
       listeOut=[listeIn[0],]
       for k in listeIn[1:]:
           #k=str(self.dicoFrancaisAnglais[kF])
@@ -414,7 +401,6 @@ class TELEMACParser(PythonParser):
       return listeOut
 
    def LIQUID_BOUNDARIES(self):
-       print 'Liquid Boundaries'
        texte_Boundaries="LIQUID_BOUNDARIES=( "
        if 'PRESCRIBED_ELEVATIONS' in self.dictSimp.keys(): 
               valeursPE=self.dictSimp["PRESCRIBED_ELEVATIONS"]
@@ -445,7 +431,6 @@ class TELEMACParser(PythonParser):
        if valeursPF == None : valeursPF = listNulle
        if valeursPV == None : valeursPV = listNulle
       
-       #print valeursPE,valeursPF,valeursPV
 
        for e in range(len(valeursPE)):
           if valeursPE[e] != "" or valeursPE[e] != "\n" :
@@ -465,7 +450,7 @@ class TELEMACParser(PythonParser):
                 texte_Boundaries += "_F( BOUNDARY_TYPE= 'Prescribed Velocity',\n"
                 texte_Boundaries += "PRESCRIBED_VELOCITIES = " + str(valeursPV[e]) + "),\n"
                 continue
-          print "pb texte_Boundaries avec la valeur numero ", e
+          print ("pb texte_Boundaries avec la valeur numero ", e)
 
        texte_Boundaries +="),\n"
        self.textePy += texte_Boundaries

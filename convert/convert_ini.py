@@ -77,7 +77,7 @@ class IniParser(ConfigParser):
    def readfile(self,filename):
       try:
          self.read(filename)
-      except Exception,e:
+      except Exception as e:
          self.cr.fatal(tr("lecture du fichier impossible :")+str(e))
 
    def convert(self,outformat,appli=None):
@@ -86,7 +86,7 @@ class IniParser(ConfigParser):
       elif outformat == 'dict':
          return self.getdict()
       else:
-        raise ExceptionException("Format de sortie : %s, non supporte", outformat)
+        raise Exception("Format de sortie : %s, non supporte", outformat)
 
 
    def getdicttext(self):

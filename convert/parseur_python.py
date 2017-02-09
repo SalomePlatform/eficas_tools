@@ -36,7 +36,6 @@ allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*le
 #   allcharsExceptNewlineTranstable = dict((ord(char), u'*') for char in allcharsExceptNewline)#
 #else :
 #   allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
-#   print 'Plateforme non geree'
 
 def maskStringsAndComments(src):
     """Masque tous les caracteres de src contenus dans des commentaires ou des strings multilignes (triples
@@ -136,7 +135,7 @@ def construit_genea(texte,liste_mc):
 
 class ENTITE_JDC :
     """Classe de base pour tous les objets créés lors de la conversion
-       Tout objet dérivé est enregistré auprès de son pere a sa création
+       Tout objet dérivé est enregistré aupres de son pere a sa création
     """
     def __init__(self,pere):
         self.texte = ''
@@ -159,7 +158,7 @@ class COMMENTAIRE(ENTITE_JDC):
 
     def __str__(self):
         """
-        Retourne une chaine de caractères représentants self
+        Retourne une chaine de caracteres représentants self
         sous une forme interprétable par EFICAS
         """
         t=repr(self.texte)
@@ -176,8 +175,8 @@ class COMMENTAIRE(ENTITE_JDC):
         if texte[0] == '#':
             self.texte = self.texte+texte[1:]
         else:
-            # le dièse n'est pas sur le premier caractere
-            amont,aval = string.split(texte,'#',1) # on découpe suivant la première occurrence de #
+            # le diese n'est pas sur le premier caractere
+            amont,aval = string.split(texte,'#',1) # on découpe suivant la premiere occurrence de #
             self.texte = self.texte +amont + aval
         
 class COMMANDE(ENTITE_JDC):
@@ -190,12 +189,12 @@ class COMMANDE(ENTITE_JDC):
         
     def get_nb_par(self):
         """
-        Retourne la différence entre le nombre de parenthèses ouvrantes
-        et le nombre de parenthèses fermantes présentes dans self.texte
+        Retourne la différence entre le nombre de parentheses ouvrantes
+        et le nombre de parentheses fermantes présentes dans self.texte
         Peut donc retourner un entier négatif
         """
         # faire attention aux commentaires contenus dans self.texte
-        # qui peuvent eux-memes contenir des parenthèses !!!!
+        # qui peuvent eux-memes contenir des parentheses !!!!
         l_lignes = string.split(self.texte,'\n')
         nb = 0
         for ligne in l_lignes:
@@ -254,7 +253,7 @@ class AFFECTATION_EVAL(ENTITE_JDC):
         
     def __str__(self):
         """
-        Retourne une expression du paramètre EVAL compréhensible par ACCAS
+        Retourne une expression du parametre EVAL compréhensible par ACCAS
         et exploitable par EFICAS
         """
         nom,valeur = string.split(self.texte,'=',1)
@@ -300,7 +299,6 @@ class PARSEUR_PYTHON:
             if m is None : return 0
             if m.start() != 0 :return 0
             if m.end() != len(s):return 0
-            #print texte,amont,aval
             return 1
 
     def is_eval(self,texte):
@@ -364,14 +362,13 @@ class PARSEUR_PYTHON:
 
         #Masquage des commentaires et strings multilignes
         srcMasked=maskStringsAndComments('\n'.join(l_lignes))
-        #print srcMasked
         masked_lines=srcMasked.split('\n')
         lineno=0
 
         for ligne in l_lignes :
             line=masked_lines[lineno]
             lineno=lineno+1
-            #print "ligne:",line
+            #print ("ligne:",line)
             # mise a jour du nombre total de parentheses ouvertes (non fermees)
             # et du nombre de commentaires non termines
             for i in range(len(implicitContinuationChars)):
@@ -381,7 +378,7 @@ class PARSEUR_PYTHON:
 
             hangingComments ^= line.count('"""') % 2
             hangingComments ^= line.count(u"'''") % 2
-            #print hangingComments,hangingBraces
+            #print (hangingComments,hangingBraces)
             if hangingBraces[0] < 0 or hangingBraces[1] < 0 or hangingBraces[2] < 0: 
                 raise ParserException()
 
@@ -426,7 +423,7 @@ class PARSEUR_PYTHON:
                     #on l'ajoute au texte de la commande 
                     commande_courante.append_text(ligne)
                 elif commentaire_courant :
-                    # il s'agit de la nième ligne d'un commentaire entre deux commandes
+                    # il s'agit de la nieme ligne d'un commentaire entre deux commandes
                     # --> on ajoute cette ligne au commentaire courant
                     commentaire_courant.append_text(ligne)
                 else :
@@ -454,7 +451,6 @@ class PARSEUR_PYTHON:
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
                     #la commande est terminée 
-                    #print "fin de commande"
                     self.analyse_reel(commande_courante.texte)
                     commande_courante = None
 
@@ -518,23 +514,20 @@ class PARSEUR_PYTHON:
                 affectation_courante = None
                 commande_courante = COMMANDE(self)
                 commande_courante.append_text(ligne)
-                #si la commande est complète, on la termine
+                #si la commande est complete, on la termine
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
-                    #la commande est terminée 
-                    #print "fin de commande"
+                    #la commande est terminee 
                     self.analyse_reel(commande_courante.texte)
                     commande_courante = None
                 #on passe a la ligne suivante
                 continue
 
-            #if self.is_modification_catalogue(ligne) :
-            #   print ligne
  
     def enleve (self,texte) :
         """Supprime de texte tous les caracteres blancs, fins de ligne, tabulations
-           Le nouveau texte est retourné
+           Le nouveau texte est retourne
         """
         i=0
         chaine=""
@@ -611,7 +604,7 @@ class PARSEUR_PYTHON:
                              except :
                                   pass
                        mot=""
-               # ou de ( imbriqueés
+               # ou de ( imbriquees
                  else :
                     #cas du mocle facteur simple ou 
                     mot=""
@@ -685,20 +678,5 @@ if __name__ == "__main__" :
        liste_simp_reel=["VALE","VALE_C","GROUP_MA","RAYON"]
     a=appli()
 
-    if 1:
-        t0=time.clock()
-        txt = PARSEUR_PYTHON(texte).get_texte(a)
-        print t0,time.clock()-t0
-    else:
-        import hotshot, hotshot.stats
-        prof = hotshot.Profile(u"stones.prof")
-        txt = prof.runcall(PARSEUR_PYTHON(texte).get_texte,a)
-        prof.close()
-        stats = hotshot.stats.load(u"stones.prof")
-        stats.strip_dirs()
-        stats.sort_stats('time', 'calls')
-        stats.print_stats(20)
-
-    print txt
     compile(txt, '<string>', 'exec')
-    print a.dict_reels
+    print (a.dict_reels)

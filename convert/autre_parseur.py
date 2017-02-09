@@ -189,7 +189,7 @@ class PARSEUR_PYTHON:
         try:
             fn = getattr(self, tokenize.tok_name[ttype])
         except AttributeError:
-            print >>sys.stderr, "No match!", tokenize.tok_name[ttype], tstring
+            print( "No match!", tokenize.tok_name[ttype], tstring)
             return
 
         if ttype != tokenize.DEDENT and ttype != tokenize.INDENT and self.please_indent:
@@ -322,7 +322,7 @@ class PARSEUR_PYTHON:
            return
 
     def ERRORTOKEN(self, tstring):
-        print "ERRORTOKEN", tstring
+        print ("ERRORTOKEN", tstring)
 
     def NAME(self, tstring):
         if self.buffer:
@@ -637,16 +637,6 @@ for k in range(1,5):
   DS1[k] = CREA_CHAMP( OPERATION='EXTR', TYPE_CHAM='NOEU_DEPL_R',
                   RESULTAT= MODESTA1, NUME_ORDRE=k, NOM_CHAM = 'DEPL');
 
-if x==1:
-   print "coucou"
-elif x==2:
-   print "coucou"
-elif x==2:
-   print "coucou"
-elif x==2:
-   print "coucou"
-else:
-   print "coucou"
 # parse: +affectation
 ff=23 # parametre bidon
 
@@ -730,7 +720,6 @@ def f(x):return x
 #comment
 def f(x):
 #comment
-  if a==1:print "coucou"
   for i in range(10): s=0
 
 #com1
@@ -902,5 +891,5 @@ def POST_GOUJ_ops(self,TABLE):
     else:
        t=text
     txt = PARSEUR_PYTHON(t).get_texte()
-    print txt
+    print (txt)
     compile(txt,"<string>",'exec')
