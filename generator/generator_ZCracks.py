@@ -152,7 +152,7 @@ class ZCrackGenerator(PythonGenerator):
         if obj.nom=="cracked_name" : self.cracked_name=obj.val
         if obj.nom=="maximum_aspect_ratio" : self.maximum_aspect_ratio=obj.val
         if obj.nom=="repertoire" : 
-           print "PNPNPN a traiter"
+           print ("PNPNPN a traiter")
            return s
         self.textePourRun+="   "+obj.nom+ "=" + s[0:-1]+ ";\n"
         return s
