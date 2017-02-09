@@ -39,7 +39,7 @@ TexteSTDFIN += "\nif error_message is not None :\n"
 TexteSTDFIN += DecalSTD + "texte  = \"\\n=================================================\""
 TexteSTDFIN += DecalSTD + "texte += \"\\nMessage d'erreur : \" + str(error_message)"
 TexteSTDFIN += DecalSTD + "texte += \"\\n=================================================\\n\""
-TexteSTDFIN += DecalSTD + "print texte"
+TexteSTDFIN += DecalSTD + "print (texte)"
 TexteSTDFIN += DecalSTD + "\nsys.exit(error_message)\n"
 
 # C.2. Definition de composants dans le fichier STD
@@ -145,7 +145,7 @@ class MonSTDGenerateur(STDGenerateur) :
     Algorithm = str (self.DictMCVal["Algorithm"])
     texte  = "\n\n# Le resultat\n"
     texte += DecalSTDsaut + NomResu + " = " + NomAlgo +  ".getResult()"
-    texte += DecalSTDsaut + "###" + "print " + NomResu
+    texte += DecalSTDsaut + "###" + "print ( " + NomResu+")"
     texte += DecalSTDsaut + "text_resu  = \"Resultats\\n=======\\n\""
 
 #   Particularites des algorithmes de fiabilite
@@ -222,7 +222,7 @@ class MonSTDGenerateur(STDGenerateur) :
 
 #   Impression
 
-    texte += DecalSTDsaut + "print \"\\n\", text_resu, \"\\n\""
+    texte += DecalSTDsaut + "print ( \"\\n\", text_resu, \" ) \\n\""
     texte += DecalSTDsaut + "file_resu = open(\"" + self.fic_resu_OpenTURNS + "\", \"w\")"
     texte += DecalSTDsaut + "file_resu.write(text_resu)"
     texte += DecalSTDsaut + "file_resu.close()"

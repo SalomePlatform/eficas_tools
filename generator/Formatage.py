@@ -126,9 +126,9 @@ class Formatage :
         try:
           increment = len(('\n'+self.indent_courant*' ')*ind + element[0])
         except:
-          print tr('ERREUR')
-          print liste
-          print element
+          print (tr('ERREUR'))
+          print (liste)
+          print (element)
         self.texte_etape = self.texte_etape + (u'\n'+self.indent_courant*' ')*ind + element[0]
         length = len(self.indent)
         self.indent.insert(length,self.indent[length-1]+len(element[0]))

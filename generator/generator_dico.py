@@ -75,7 +75,7 @@ class DicoGenerator(PythonGenerator):
        fileDico = fn[:fn.rfind(".")] + '.py'
        f = open( str(fileDico), 'wb')
        f.write( self.texteDico )
-       print self.texteDico
+       print (self.texteDico)
        f.close()
 
 #----------------------------------------------------------------------------------------

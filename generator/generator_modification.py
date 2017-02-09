@@ -29,7 +29,6 @@ class ModificationGenerator:
       texteModification=""
       for t in  obj.editor.dicoNouveauxMC.keys() :
           # 'ajoutDefinitionMC',etape,listeAvant,nomDuMC,typ,args
-          print t
           fonction,Etape,Genea,nomSIMP,typeSIMP,arguments = obj.editor.dicoNouveauxMC[t]
           texteModification += "MODIFICATION_CATALOGUE(Fonction  = '" + str(fonction)+ "',\n"
           texteModification += "                       Etape     = '" + str(Etape)   + "',\n"

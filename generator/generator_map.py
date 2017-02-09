@@ -98,7 +98,7 @@ class MapGenerator(PythonGenerator):
   
    def generRUN(self,obj,schema):
        if not(obj.isvalid()) :
-          print "TODO TODO TODO"
+          print ("TODO TODO TODO")
        self.texteEXE=""
        self.schema=schema
        textComm=self.gener(obj)

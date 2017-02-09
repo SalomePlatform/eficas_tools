@@ -80,7 +80,7 @@ class ZCrackGenerator(PythonGenerator):
    def writeDefault(self,fn) :
         fileZcrack = fn[:fn.rfind(".")] + '.z7p'
         f = open( str(fileZcrack), 'wb')
-        print self.textePourRun
+        print (self.textePourRun)
       
         self.ajoutRun()
         self.textePourRunAvecDouble=self.textePourRun.replace("'",'"')

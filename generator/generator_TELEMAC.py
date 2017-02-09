@@ -138,8 +138,6 @@ class TELEMACGenerator(PythonGenerator):
         self.texteDico += '/\t\t\t'+obj.nom +'\n'
         self.texteDico += '/------------------------------------------------------/\n'
         s=PythonGenerator.generPROC_ETAPE(self,obj)
-        #print obj
-        #print obj.nom
         if obj.nom in TELEMACGenerator.__dict__.keys() : apply(TELEMACGenerator.__dict__[obj.nom],(self,obj))
         
         return s
@@ -147,10 +145,6 @@ class TELEMACGenerator(PythonGenerator):
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
         s=PythonGenerator.generMCSIMP(self,obj)
-        #if obj.nom == "Title" :
-            #print s
-         #  print str(obj.valeur)
-            #print repr(obj.valeur)
 
        
         # Attention pas sur --> ds certains cas non traite par MCFACT ?
@@ -172,15 +166,14 @@ class TELEMACGenerator(PythonGenerator):
         if not( type(obj.valeur) in (types.TupleType,types.ListType) ):
            if obj.nom in DicoEnumCasEnInverse.keys():  
              try : sTelemac=str(DicoEnumCasEnInverse[obj.nom][obj.valeur])
-             except : print "generMCSIMP Pb valeur avec ", obj.nom, obj.valeur
+             except : print ("generMCSIMP Pb valeur avec ", obj.nom, obj.valeur)
         if type(obj.valeur) in (types.TupleType,types.ListType) :
-           #print "je passe pour", obj.nom
            if obj.nom in DicoEnumCasEnInverse.keys():  
              #sT = "'"
              sT=''
              for v in obj.valeur:
                try : sT +=str(DicoEnumCasEnInverse[obj.nom][v]) +";"
-               except : print "generMCSIMP Pb Tuple avec ", obj.nom, v, obj.valeur
+               except : print ("generMCSIMP Pb Tuple avec ", obj.nom, v, obj.valeur)
              #sTelemac=sT[0:-1]+"'"
              sTelemac=sT[0:-1]
            else  :
@@ -207,7 +200,6 @@ class TELEMACGenerator(PythonGenerator):
 
         if obj.nom not in self.dicoCataToCas :
            if obj.nom == 'Consigne' : return ""
-           print obj.nom , ' non traite'
            return s
 
         nom=self.dicoCataToCas[obj.nom]
@@ -217,11 +209,6 @@ class TELEMACGenerator(PythonGenerator):
         ligne=nom+ " : " + s3 + "\n"
         if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3) 
         self.texteDico+=ligne
-        #print "_______________________"
-        #print s
-        #print ligne
-        #print "_______________________"
-        return s
 
    def generMCFACT(self,obj):
       """
@@ -256,7 +243,6 @@ class TELEMACGenerator(PythonGenerator):
               self.VE=True
               self.textVE += str(valeur) +"; "
           else : self.textVE += "0.; "
-      print self.textPE, self.textFE,self.textVE
 
    def BOUNDARY_CONDITIONS(self,obj):
        # sans '; '
@@ -269,8 +255,8 @@ class TELEMACGenerator(PythonGenerator):
  
 
    def NAME_OF_TRACER(self,obj):
-       print dir(obj) 
-       print obj.get_genealogie_precise()
+       print (dir(obj) )
+       print (obj.get_genealogie_precise())
 
    def Validation(self,obj):
        self.texteDico += "VALIDATION : True \n"
@@ -279,14 +265,12 @@ class TELEMACGenerator(PythonGenerator):
        an=obj.get_child('Year').valeur
        mois=obj.get_child('Month').valeur
        jour=obj.get_child('Day').valeur
-       #print an, mois, jour
        self.texteDico += "ORIGINAL DATE OF TIME  :"+ str(an)+ " ,"+str(mois)+ "," +str(jour)+ "\n"
 
    def Original_Hour_Of_Time (self,obj):
        hh=obj.get_child('Hour').valeur
        mm=obj.get_child('Minute').valeur
        ss=obj.get_child('Second').valeur
-       #print hh, mm, ss
        self.texteDico += "ORIGINAL HOUR OF TIME :"+str(hh)+" ,"+str(mm)+ ","+str(ss)+"\n"
 
    def Type_Of_Advection(self,obj):
@@ -297,12 +281,9 @@ class TELEMACGenerator(PythonGenerator):
        self.chercheChildren(obj)
        dicoSuf={ 'U_And_V' : 0, 'H' : 1, 'K_And_Epsilon' : 2, 'Tracers' : 3}
        for c in  self.listeMCAdvection:
-           #print c.nom
            if c.nom[0:18] == 'Type_Of_Advection_' and c.valeur!=None:
               suf=c.nom[18:]
               index=dicoSuf[suf]
-              #print c.valeur
-              #print DicoEnumCasEnInverse['Type_Of_Advection']
               listeAdvection[index]=DicoEnumCasEnInverse['Type_Of_Advection'][c.valeur]
            if c.nom[0:13] == 'Supg_Option_' and c.valeur!=None:
               suf=c.nom[13:]

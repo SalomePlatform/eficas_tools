@@ -96,7 +96,6 @@ class PythonGenerator:
       """
       self.appli=obj.get_jdc_root().appli
       #self.appli=obj.appli
-      #print format
       liste= self.generator(obj)
       if format == 'brut':
          self.text=liste
@@ -517,7 +516,6 @@ class PythonGenerator:
             # mais seulement le nom dans le cas d'un parametre
       #      s = valeur.nom
       #   else:
-      #      print valeur
       #      s = self.generator(valeur)
 
       else :
@@ -551,7 +549,6 @@ class PythonGenerator:
                   obj.valeurFormatee.append(val)
                else :
                  obj.valeurFormatee.append(self.format_item(val,obj.etape,obj))
-               #print obj.valeurFormatee
             if len(obj.valeur) >= 1:
                s = '(' + s + '),'
             if obj.valeur==[] or obj.valeur==() : s="(),"
@@ -560,13 +557,11 @@ class PythonGenerator:
       else :
          obj.valeurFormatee=obj.valeur
          s=self.format_item(obj.valeur,obj.etape,obj) + ','
-      #print s
       return s
 
 
    def formatColonnes(self,nbrColonnes,listeValeurs,obj):
       #try :
-      #print listeValeurs
       if 1 == 1 :
         indice=0
         textformat="("
@@ -589,5 +584,4 @@ class PythonGenerator:
       #except :
       else :
          textformat=str(obj.valeur)
-      #print textformat
       return textformat

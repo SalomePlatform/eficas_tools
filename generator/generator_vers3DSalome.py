@@ -38,14 +38,14 @@ from generator_python import PythonGenerator
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
+       Retourne les informations necessaires pour le chargeur de plugins
 
-       Ces informations sont retournées dans un dictionnaire
+       Ces informations sont retournees dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'vers3DSalome',
-        # La factory pour créer une instance du plugin
+        # La factory pour creer une instance du plugin
           'factory' : vers3DSalomeGenerator,
           }
 
@@ -94,7 +94,6 @@ class vers3DSalomeGenerator(PythonGenerator):
       self.node=node
       self.list_commandes=[];
       self.generator(self.node.object)
-      #print self.list_commandes
       return self.list_commandes
 
    def generator(self,obj):
@@ -150,7 +149,7 @@ class vers3DSalomeGenerator(PythonGenerator):
 
    def generMCFACT(self,obj):
       """
-          Convertit un objet MCFACT en une liste de chaines de caractères à la
+          Convertit un objet MCFACT en une liste de chaines de caracteres a la
           syntaxe python
       """
       self.init_ligne()
@@ -205,12 +204,12 @@ class vers3DSalomeGenerator(PythonGenerator):
                val = val[0]
            if isinstance (val, Extensions.parametre.PARAMETRE):
               val=val.valeur
-              print val.__class__
+	      print ( val.__class)
               context={}
               if type(val) == type("aaa") :
                  for p in self.jdc.params:
                      context[p.nom]=eval(p.val,self.jdc.const_context, context)
-                     print context[p.nom]
+                     print (context[p.nom])
                  res=eval(val,self.jdc.const_context, context)
                  val=res
            self.dict_attributs[clef]=val
